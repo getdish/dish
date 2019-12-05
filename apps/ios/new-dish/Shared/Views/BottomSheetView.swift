@@ -34,7 +34,8 @@ struct BottomSheetView<Content: View>: View {
         switch dragState {
         case .open: return 0
         case .closed: return maxHeight - minHeight
-        case let .dragging(position): return max(position, 0)
+        case let .dragging(position):
+            return min(max(position, 0), maxHeight - minHeight)
         }
     }
 
@@ -67,21 +68,19 @@ struct BottomSheetView<Content: View>: View {
     }
 
     var body: some View {
-        GeometryReader { geometry in
-            ZStack(alignment: .bottom) {
-                Spacer()
-                    .layoutPriority(1.0)
-                VStack(spacing: 0) {
-                    self.indicator.padding()
-                    self.content
-                }
-                .background(Color(.secondarySystemBackground))
-                .frame(height: self.maxHeight)
-                .cornerRadius(Constants.radius)
-                .offset(y: self.offsetY)
-                .gesture(self.dragGesture)
-                .animation(.default)
+        ZStack(alignment: .bottom) {
+            Spacer()
+                .layoutPriority(1.0)
+            VStack(spacing: 0) {
+                self.indicator.padding()
+                self.content
             }
+            .background(Color(.secondarySystemBackground))
+            .frame(height: self.maxHeight)
+            .cornerRadius(Constants.radius)
+            .offset(y: self.offsetY)
+            .gesture(self.dragGesture)
+            .animation(.interactiveSpring())
         }
     }
 }
