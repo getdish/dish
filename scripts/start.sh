@@ -5,6 +5,6 @@ set -e
 rm -rf ~/Library/Application\ Support/Unison/
 
 export DISH_PATH=$HOME/dish
+multipass mount $DISH_PATH k3s:/app 2> /dev/null || true
 
-echo "mounting $DISH_PATH to vm"
-multipass mount $DISH_PATH k3s:/app
+printf "\n\b ✅ started! \n\n access shell with: \n - multipass shell k3s\n"
