@@ -8,3 +8,7 @@ Rio should give us basically everything you'd want in a platform: super simple, 
 
 I'm running Kubernetes locally using [Kind](https://kind.sigs.k8s.io/). It's newer and faster than Minikube and seems to be the best choice.
 
+
+rio password for now:
+iXCPqCYsZ5idUtu0
+
