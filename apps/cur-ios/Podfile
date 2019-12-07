@@ -1,0 +1,13 @@
+source 'https://github.com/CocoaPods/Specs.git'
+target 'Dish' do
+  pod 'GoogleMaps'
+  pod 'GooglePlaces'
+  pod 'Firebase/Core'
+  pod 'Firebase/Analytics'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Firestore'
+  pod 'Firebase/Storage'
+  pod 'GoogleSignIn'
+  pod 'CodableFirebase'
+  pod 'SwiftPhotoGallery'
+end

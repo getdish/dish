@@ -1,0 +1,52 @@
+XCode Problems:
+
+- Previews fail too often and don't recover until you press a key.
+  - Even starting a build, switching to a different file, all turns off preview
+- Syntax highlighting is very slow and cuts out often
+- Doesn't retain knowledge of things with syntax errors, so autocomplete/refactors all break
+
+Swift Problems:
+
+- Adding an struct init() is painful if you have a lot of variables, it goes from being super concise, to very verbose. and dont see any xcode help
+- Syntax errors can cause your file to explode with errors from all over way more often than TS
+- No SwiftFMT nearly as good as prettier
+- Slow compiling
+- Slow IDE feedback for most features (autocomplete, type lookups)
+- Cannot parse this expression (break down into smaller)
+
+SwiftUI Problems:
+
+- No HMR while running the app, just live preview which isnt nearly as helpful
+- While 99% of swift is just a huge upgrade from tsx, closing tags are a easier to navigate, and especially with swiftui's extensions ".onTapGesture", it gets weird
+  - could be fixed with some smarter highlighting/xcode comments/permanent close brace highlighting
+- Double / CGFloat / Int conversions are a pain
+- Seems really easy to cause the compiler to give this:
+  - "Expression type '(Int, @escaping () -> Void) -> some View' is ambiguous without more context"
+  - and its not clear what causes it
+- And this:
+  - "Type of expression is ambiguous without more context"
+- Getting frustrating compiler based limits:
+  - First you get a "cannot parse expression"
+  - The you refactor a piece out into a function, then you get:
+  - "Generic parameter 'ID' could not be inferred"
+  - Then you try and fix and you get "Must break separate statements into new lines"
+  - etc, basically unsolvable without a lot of research
+
+- Having to express GeometryReader body diff based on if you single return or not:
+  - "return GeometryReader { geometry in"
+  - results in:
+    - "Cannot convert return expression of type 'GeometryReader<_>' to return type 'some View'"
+  - even adding -> ScrollView then the parent body function wants a better type:
+    - "Function declares an opaque return type, but has no return statements in its body from which to infer an underlying type"
+
+- Preview doesnt update but not clear why:
+
+"""
+  The app "Dish" crashed while updating the preview. Look for crash logs in ~/Library/Logs/DiagnosticReports for more details.
+
+==================================
+
+|  Error Domain=FBSOpenApplicationServiceErrorDomain Code=1 "The request to open "com.motion.Dish" failed." UserInfo={BSErrorCodeDescription=RequestDenied, NSLocalizedDescription=The request to open "com.motion.Dish" failed., NSUnderlyingError=0x7ffb0f171610 {Error Domain=NSPOSIXErrorDomain Code=89 "Operation canceled"}, FBSOpenApplicationRequestID=0x8955, NSLocalizedFailureReason=The request was denied by service delegate (SketchBoard.SketchBoardSystemService).}
+"""
+
+SwiftUI Benefits:
