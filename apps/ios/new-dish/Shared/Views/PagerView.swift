@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PagerView<Page: View>: View {
-    @Binding var currentIndex: CGFloat
+    @Binding var currentIndex: Int
     let pages: [Page]
 
     @GestureState private var offset: CGFloat = 0
@@ -21,7 +21,7 @@ struct PagerView<Page: View>: View {
                         .frame(width: geometry.size.width)
                 }
             }
-            .offset(x: -(self.currentIndex - self.offset) * geometry.size.width)
+            .offset(x: -(CGFloat(self.currentIndex) - self.offset) * geometry.size.width)
             .frame(width: geometry.size.width, alignment: .leading)
             .animation(.interactiveSpring())
             .gesture(
@@ -29,8 +29,8 @@ struct PagerView<Page: View>: View {
                     state = value.translation.width / geometry.size.width
                 }.onEnded { value in
                     let offset = value.translation.width / geometry.size.width
-                    let newIndex = (self.currentIndex - offset).rounded()
-                    self.currentIndex = min(max(newIndex, 0), CGFloat(self.pages.count - 1))
+                    let newIndex = (CGFloat(self.currentIndex) - offset).rounded()
+                    self.currentIndex = min(max(Int(newIndex), 0), self.pages.count - 1)
                 }
             )
         }

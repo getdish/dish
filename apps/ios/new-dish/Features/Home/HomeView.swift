@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var index: CGFloat = 1.0
+    @State private var index = 1
 
     var body: some View {
         PagerView(
