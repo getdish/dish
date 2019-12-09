@@ -15,12 +15,6 @@ fileprivate enum Constants {
     static let minHeightRatio: CGFloat = 0.3
 }
 
-fileprivate enum DragState {
-    case open
-    case closed
-    case dragging(position: CGFloat)
-}
-
 struct BottomSheetView<Content: View>: View {
     @Binding var isOpen: Bool
 
@@ -28,15 +22,10 @@ struct BottomSheetView<Content: View>: View {
     let minHeight: CGFloat
     let content: Content
 
-    @State private var dragState: DragState = .closed
+    @GestureState private var translation: CGFloat = 0
 
-    private var offsetY: CGFloat {
-        switch dragState {
-        case .open: return 0
-        case .closed: return maxHeight - minHeight
-        case let .dragging(position):
-            return min(max(position, 0), maxHeight - minHeight)
-        }
+    private var offset: CGFloat {
+        isOpen ? 0 : maxHeight - minHeight
     }
 
     private var indicator: some View {
@@ -48,39 +37,33 @@ struct BottomSheetView<Content: View>: View {
         )
     }
 
-    private var dragGesture: some Gesture {
-        DragGesture().onChanged { value in
-            let position = value.startLocation.y + value.translation.height
-            self.dragState = .dragging(position: position)
-        }.onEnded { value in
-            let snapDistance = self.maxHeight * Constants.snapRatio
-            self.isOpen = value.translation.height < snapDistance
-            self.dragState = self.isOpen ? .open : .closed
-        }
-    }
-
     init(isOpen: Binding<Bool>, maxHeight: CGFloat, @ViewBuilder content: () -> Content) {
         self.minHeight = maxHeight * Constants.minHeightRatio
         self.maxHeight = maxHeight
         self.content = content()
         self._isOpen = isOpen
-        self.dragState = isOpen.wrappedValue ? .open : .closed
     }
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            Spacer()
-                .layoutPriority(1.0)
+        GeometryReader { geometry in
             VStack(spacing: 0) {
                 self.indicator.padding()
                 self.content
             }
+            .frame(width: geometry.size.width, height: self.maxHeight, alignment: .top)
             .background(Color(.secondarySystemBackground))
-            .frame(height: self.maxHeight)
             .cornerRadius(Constants.radius)
-            .offset(y: self.offsetY)
-            .gesture(self.dragGesture)
+            .frame(height: geometry.size.height, alignment: .bottom)
+            .offset(y: max(self.offset + self.translation, 0))
             .animation(.interactiveSpring())
+            .gesture(
+                DragGesture().updating(self.$translation) { value, state, _ in
+                    state = value.translation.height
+                }.onEnded { value in
+                    let snapDistance = self.maxHeight * Constants.snapRatio
+                    self.isOpen = value.translation.height < snapDistance
+                }
+            )
         }
     }
 }
