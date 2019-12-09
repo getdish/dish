@@ -8,18 +8,17 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var isBottomSheetShown = true
+    @State private var index: CGFloat = 1.0
 
     var body: some View {
-        GeometryReader { geometry in
-            MapView()
-            BottomSheetView(
-                isOpen: self.$isBottomSheetShown,
-                maxHeight: 0.75 * geometry.size.height
-            ) {
-                Rectangle().fill(Color.red)
-            }
-        }
+        PagerView(
+            currentIndex: $index,
+            pages: [
+                Color.blue,
+                Color.red,
+                Color.green
+            ]
+        )
     }
 }
 

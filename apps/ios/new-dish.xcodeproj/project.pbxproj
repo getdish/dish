@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1C3CFE6423998FF2004B2EEA /* HomeContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3CFE6323998FF2004B2EEA /* HomeContainerView.swift */; };
+		1CCEDF52239DC7C9003EE228 /* PagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCEDF51239DC7C9003EE228 /* PagerView.swift */; };
 		1CE3546523986B1B004B3A84 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3546423986B1B004B3A84 /* AppDelegate.swift */; };
 		1CE3546723986B1B004B3A84 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3546623986B1B004B3A84 /* SceneDelegate.swift */; };
 		1CE3546923986B1B004B3A84 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3546823986B1B004B3A84 /* RootView.swift */; };
@@ -25,6 +26,7 @@
 
 /* Begin PBXFileReference section */
 		1C3CFE6323998FF2004B2EEA /* HomeContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeContainerView.swift; sourceTree = "<group>"; };
+		1CCEDF51239DC7C9003EE228 /* PagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerView.swift; sourceTree = "<group>"; };
 		1CE3546123986B1B004B3A84 /* new-dish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "new-dish.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CE3546423986B1B004B3A84 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1CE3546623986B1B004B3A84 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 			children = (
 				1CE35485239870E8004B3A84 /* MapView.swift */,
 				1CE35489239871CB004B3A84 /* BottomSheetView.swift */,
+				1CCEDF51239DC7C9003EE228 /* PagerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -310,6 +313,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1CE35486239870E8004B3A84 /* MapView.swift in Sources */,
+				1CCEDF52239DC7C9003EE228 /* PagerView.swift in Sources */,
 				1CE3546523986B1B004B3A84 /* AppDelegate.swift in Sources */,
 				1CE3548A239871CB004B3A84 /* BottomSheetView.swift in Sources */,
 				1C3CFE6423998FF2004B2EEA /* HomeContainerView.swift in Sources */,
