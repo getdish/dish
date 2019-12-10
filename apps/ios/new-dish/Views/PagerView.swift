@@ -5,7 +5,7 @@ struct PagerView<Content: View>: View {
     let pageCount: Int
     let content: Content
 
-    init(pageCount: Int, currentIndex: Binding<Int>, @ViewBuilder content: @escaping () -> Content) {
+    init(pageCount: Int, currentIndex: Binding<Int>, @ViewBuilder content: () -> Content) {
         self.pageCount = pageCount
         self._currentIndex = currentIndex
         self.content = content()
