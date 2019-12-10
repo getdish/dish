@@ -16,16 +16,11 @@ struct HomeView: View {
             PagerView(
                 pageCount: 3,
                 currentIndex: self.$index
-            ) { index in
-                if index == 0 {
-                    HomeMap()
-                } else if index == 1 {
-                    Image(systemName: "photo")
-                        .resizable()
-                } else {
-                    Button("Go to first page") {
-                        self.index = 0
-                    }
+            ) {
+                HomeMap()
+                Image(systemName: "photo").resizable()
+                Button("Go to first page") {
+                    self.index = 0
                 }
             }
         }
