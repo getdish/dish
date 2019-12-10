@@ -10,12 +10,12 @@ import SwiftUI
 struct PagerView<Content: View>: View {
     @Binding var currentIndex: Int
     let pageCount: Int
-    let content: (Int) -> Content
+    let content: Content
 
-    init(pageCount: Int, currentIndex: Binding<Int>, @ViewBuilder content: @escaping (Int) -> Content) {
+    init(pageCount: Int, currentIndex: Binding<Int>, @ViewBuilder content: () -> Content) {
         self.pageCount = pageCount
         self._currentIndex = currentIndex
-        self.content = content
+        self.content = content()
     }
 
     @GestureState private var translation: CGFloat = 0
@@ -23,10 +23,7 @@ struct PagerView<Content: View>: View {
     var body: some View {
         GeometryReader { geometry in
             HStack(spacing: 0) {
-                ForEach(0..<self.pageCount) { index in
-                    self.content(index)
-                        .frame(width: geometry.size.width)
-                }
+                self.content.frame(width: geometry.size.width)
             }
             .frame(width: geometry.size.width, alignment: .leading)
             .offset(x: -CGFloat(self.currentIndex) * geometry.size.width)
@@ -50,7 +47,7 @@ struct PagerView_Previews: PreviewProvider {
         PagerView(
             pageCount: 3,
             currentIndex: .constant(0)
-        ) { index in
+        ) {
             Color.red
         }
     }

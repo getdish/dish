@@ -11,21 +11,18 @@ struct HomeView: View {
     @State private var index = 1
 
     var body: some View {
-        PagerView(
+        let pager = PagerView(
             pageCount: 3,
             currentIndex: self.$index
-        ) { index in
-            if index == 0 {
-                Color.red
-            } else if index == 1 {
-                Image(systemName: "photo")
-                    .resizable()
-            } else {
-                Button("Go to first page") {
-                    self.index = 0
-                }
+        ) {
+            Color.red
+            Image(systemName: "photo")
+                .resizable()
+            Button("Go to first page") {
+                self.index = 0
             }
         }
+        return pager
     }
 }
 
