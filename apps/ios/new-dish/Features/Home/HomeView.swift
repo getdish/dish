@@ -9,18 +9,16 @@ import SwiftUI
 
 struct HomeView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
-    @State private var index = 1
+    @State private var index = 0
     
     var body: some View {
         ZStack {
-            HomeMap()
-            
             PagerView(
                 pageCount: 3,
                 currentIndex: self.$index
             ) { index in
                 if index == 0 {
-                    Color.red
+                    HomeMap()
                 } else if index == 1 {
                     Image(systemName: "photo")
                         .resizable()
