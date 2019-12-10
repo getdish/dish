@@ -12,13 +12,20 @@ struct HomeView: View {
 
     var body: some View {
         PagerView(
-            currentIndex: $index,
-            pages: [
-                Color.blue,
-                Color.red,
-                Color.green
-            ]
-        )
+            pageCount: 3,
+            currentIndex: self.$index
+        ) { index in
+            if index == 0 {
+                Color.red
+            } else if index == 1 {
+                Image(systemName: "photo")
+                    .resizable()
+            } else {
+                Button("Go to first page") {
+                    self.index = 0
+                }
+            }
+        }
     }
 }
 
