@@ -8,17 +8,26 @@
 import SwiftUI
 
 struct HomeView: View {
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
     @State private var index = 1
 
     var body: some View {
-        PagerView(
-            currentIndex: $index,
-            pages: [
-                Color.blue,
-                Color.red,
-                Color.green
-            ]
+        ZStack {
+            HomeMap()
+            
+//            PagerView(
+//                currentIndex: $index,
+//                pages: [
+//                    Color.blue,
+//                    Color.red,
+//                    Color.green
+//                ]
+//            )
+        }
+        .background(
+            self.colorScheme == .light ? Color.white : Color.black.opacity(0.8)
         )
+        .edgesIgnoringSafeArea(.all)
     }
 }
 

@@ -7,8 +7,13 @@
 //
 import Foundation
 
-struct AppState {
+// TODO put this in the store I think
+let cameraBottom = Screen.height * 0.55
+let homeInitialDrawerHeight = Screen.height * 0.65
+let homeInitialDrawerFullHeight = Screen.height - 100
 
+struct AppState {
+    
 }
 
 enum AppAction {
