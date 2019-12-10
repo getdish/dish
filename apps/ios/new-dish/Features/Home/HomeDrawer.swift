@@ -1,22 +1,22 @@
 import SwiftUI
 import Combine
 
-// TODO how to pass in a modifier as argument to SearchInput?
-struct MainSearchFieldModifier: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .overlay(
-                RoundedRectangle(cornerRadius: 30)
-                    .stroke(Color(.secondarySystemBackground), lineWidth: 2)
-        )
-    }
-}
-
 struct HomeDrawer: View {
-    @State var showDrawer = false
+    @State var showDrawer = true
     
     var body: some View {
         ZStack {
+            // Dark background when open
+            Rectangle()
+                .animation(.spring())
+                .foregroundColor(.black)
+                .opacity(self.showDrawer ? 0.25 : 0)
+                .disabled(!self.showDrawer)
+                .onTapGesture {
+                    self.showDrawer.toggle()
+                    Keyboard.hide()
+            }
+            
             BottomSheetView(
                 isOpen: self.$showDrawer,
                 maxHeight: homeInitialDrawerFullHeight

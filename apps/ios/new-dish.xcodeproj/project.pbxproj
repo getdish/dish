@@ -48,6 +48,7 @@
 		AE7563E723A03D3C0094022B /* FeatureCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563E623A03D3C0094022B /* FeatureCard.swift */; };
 		AE7563E923A03D570094022B /* MagicMove.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563E823A03D570094022B /* MagicMove.swift */; };
 		AE7563EB23A03D8E0094022B /* HomeDrawerContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563EA23A03D8E0094022B /* HomeDrawerContent.swift */; };
+		AE861A7923A0651D004096BF /* Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7823A0651D004096BF /* Keyboard.swift */; };
 		D86ACF2A611C42837609F52F /* Pods_new_dish.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 747A16F1648AAEF4512E6322 /* Pods_new_dish.framework */; };
 /* End PBXBuildFile section */
 
@@ -98,6 +99,7 @@
 		AE7563E623A03D3C0094022B /* FeatureCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureCard.swift; sourceTree = "<group>"; };
 		AE7563E823A03D570094022B /* MagicMove.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicMove.swift; sourceTree = "<group>"; };
 		AE7563EA23A03D8E0094022B /* HomeDrawerContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDrawerContent.swift; sourceTree = "<group>"; };
+		AE861A7823A0651D004096BF /* Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyboard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,6 +175,7 @@
 				AE7563B723A036500094022B /* Screen.swift */,
 				AE7563BB23A037870094022B /* Fixtures.swift */,
 				AE7563E023A037D90094022B /* Landmark.swift */,
+				AE861A7823A0651D004096BF /* Keyboard.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -417,6 +420,7 @@
 				AE7563B823A036500094022B /* Screen.swift in Sources */,
 				1CE3548123986BC1004B3A84 /* View.swift in Sources */,
 				1CE3548323986C5C004B3A84 /* App.swift in Sources */,
+				AE861A7923A0651D004096BF /* Keyboard.swift in Sources */,
 				1CE354882398714D004B3A84 /* HomeView.swift in Sources */,
 				1CE3546923986B1B004B3A84 /* RootView.swift in Sources */,
 				AE7563E723A03D3C0094022B /* FeatureCard.swift in Sources */,
