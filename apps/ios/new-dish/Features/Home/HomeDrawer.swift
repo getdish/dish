@@ -20,7 +20,14 @@ struct HomeDrawer: View {
             BottomSheetView(
                 isOpen: self.$showDrawer,
                 maxHeight: homeInitialDrawerFullHeight,
-                snapRatio: 0.1
+                snapRatio: 0.1,
+                indicator: AnyView(
+                    BarArrow(direction: self.showDrawer ? .down : .up)
+                        .padding(.vertical)
+                        .onTapGesture {
+                            self.showDrawer.toggle()
+                        }
+                )
             ) {
                 HomeDrawerContent()
             }

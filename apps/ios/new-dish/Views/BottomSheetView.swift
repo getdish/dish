@@ -9,44 +9,54 @@ fileprivate enum Constants {
 
 struct BottomSheetView<Content: View>: View {
     @Binding var isOpen: Bool
-
+    
     let snapRatio: CGFloat
     let maxHeight: CGFloat
     let minHeight: CGFloat
     let content: Content
-
+    let userIndicator: AnyView?
+    
+    private var indicator: AnyView {
+        if userIndicator != nil {
+            return userIndicator!
+        } else {
+            return AnyView(
+                RoundedRectangle(cornerRadius: Constants.radius)
+                    .fill(Color.secondary)
+                    .frame(
+                        width: Constants.indicatorWidth,
+                        height: Constants.indicatorHeight
+                )
+                    .padding()
+            )
+        }
+    }
+    
     @GestureState private var translation: CGFloat = 0
-
+    
     private var offset: CGFloat {
         isOpen ? 0 : maxHeight - minHeight
     }
-
-    private var indicator: some View {
-        RoundedRectangle(cornerRadius: Constants.radius)
-            .fill(Color.secondary)
-            .frame(
-                width: Constants.indicatorWidth,
-                height: Constants.indicatorHeight
-        )
-    }
-
+    
     init(
         isOpen: Binding<Bool>,
         maxHeight: CGFloat,
-        snapRatio: CGFloat?,
+        snapRatio: CGFloat = 0.25,
+        indicator: AnyView? = nil,
         @ViewBuilder content: () -> Content
     ) {
         self.minHeight = maxHeight * Constants.minHeightRatio
         self.maxHeight = maxHeight
-        self.snapRatio = snapRatio ?? 0.25
+        self.snapRatio = snapRatio
+        self.userIndicator = indicator
         self.content = content()
         self._isOpen = isOpen
     }
-
+    
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
-                self.indicator.padding()
+                self.indicator
                 self.content
             }
             .frame(width: geometry.size.width, height: self.maxHeight, alignment: .top)
@@ -71,8 +81,7 @@ struct BottomSheetView_Previews: PreviewProvider {
     static var previews: some View {
         BottomSheetView(
             isOpen: .constant(false),
-            maxHeight: 600,
-            snapRatio: 0.25
+            maxHeight: 600
         ) {
             Rectangle().fill(Color.red)
         }.edgesIgnoringSafeArea(.all)
