@@ -2,7 +2,11 @@ import SwiftUI
 import Combine
 
 struct HomeDrawer: View {
-    @State var showDrawer = true
+    @EnvironmentObject var store: AppStore
+    
+    private var showDrawer: Binding<Bool> {
+        store.binding(for: \.showDrawer) { .setShowDrawer($0) }
+    }
     
     var body: some View {
         ZStack {
@@ -10,25 +14,25 @@ struct HomeDrawer: View {
             Rectangle()
                 .animation(.spring())
                 .foregroundColor(.black)
-                .opacity(self.showDrawer ? 0.25 : 0.0)
-                .disabled(!self.showDrawer)
+                .opacity(store.state.showDrawer ? 0.25 : 0.0)
+                .disabled(!store.state.showDrawer)
                 .onTapGesture {
-                    self.showDrawer.toggle()
+                    self.store.send(.toggleDrawer)
                     Keyboard.hide()
             }
             
             BottomSheetView(
-                isOpen: self.$showDrawer,
+                isOpen: self.showDrawer,
                 maxHeight: Constants.homeInitialDrawerFullHeight,
                 snapRatio: 0.1,
                 indicator: AnyView(
                     HStack {
-                        BarArrow(direction: self.showDrawer ? .down : .up)
+                        BarArrow(direction: store.state.showDrawer ? .down : .up)
                             .padding(.vertical, 10)
                     }
                     .frame(maxWidth: .infinity)
                     .onTapGesture {
-                        self.showDrawer.toggle()
+//                        AppAction.toggleDrawer()
                     }
                     .padding(.vertical, 6)
                 )

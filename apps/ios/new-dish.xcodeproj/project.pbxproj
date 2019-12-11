@@ -52,6 +52,11 @@
 		AE861A7B23A06EDC004096BF /* BarArrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7A23A06EDC004096BF /* BarArrow.swift */; };
 		AE861A7D23A07AFB004096BF /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7C23A07AFB004096BF /* Constants.swift */; };
 		AE861A7F23A07D81004096BF /* HomeMapControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7E23A07D81004096BF /* HomeMapControls.swift */; };
+		AE861A8123A16DA6004096BF /* HomeTopBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8023A16DA6004096BF /* HomeTopBar.swift */; };
+		AE861A8323A171D2004096BF /* HomeTopBarSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8223A171D2004096BF /* HomeTopBarSearch.swift */; };
+		AE861A8523A17209004096BF /* HomeTopBarSearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8423A17209004096BF /* HomeTopBarSearchResults.swift */; };
+		AE861A8723A1727B004096BF /* HomeTopBarAccountButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8623A1727B004096BF /* HomeTopBarAccountButton.swift */; };
+		AE861A8923A172E8004096BF /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8823A172E8004096BF /* BlurView.swift */; };
 		D86ACF2A611C42837609F52F /* Pods_new_dish.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 747A16F1648AAEF4512E6322 /* Pods_new_dish.framework */; };
 /* End PBXBuildFile section */
 
@@ -106,6 +111,11 @@
 		AE861A7A23A06EDC004096BF /* BarArrow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarArrow.swift; sourceTree = "<group>"; };
 		AE861A7C23A07AFB004096BF /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		AE861A7E23A07D81004096BF /* HomeMapControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMapControls.swift; sourceTree = "<group>"; };
+		AE861A8023A16DA6004096BF /* HomeTopBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTopBar.swift; sourceTree = "<group>"; };
+		AE861A8223A171D2004096BF /* HomeTopBarSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTopBarSearch.swift; sourceTree = "<group>"; };
+		AE861A8423A17209004096BF /* HomeTopBarSearchResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTopBarSearchResults.swift; sourceTree = "<group>"; };
+		AE861A8623A1727B004096BF /* HomeTopBarAccountButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTopBarAccountButton.swift; sourceTree = "<group>"; };
+		AE861A8823A172E8004096BF /* BlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,8 +187,8 @@
 		1CE3547A23986B5D004B3A84 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				1CE3547E23986B88004B3A84 /* Store.swift */,
 				1CE3548223986C5C004B3A84 /* App.swift */,
+				1CE3547E23986B88004B3A84 /* Store.swift */,
 				AE7563B723A036500094022B /* Screen.swift */,
 				AE7563BB23A037870094022B /* Fixtures.swift */,
 				AE7563E023A037D90094022B /* Landmark.swift */,
@@ -200,6 +210,7 @@
 			isa = PBXGroup;
 			children = (
 				1CE35485239870E8004B3A84 /* MapView.swift */,
+				AE861A8823A172E8004096BF /* BlurView.swift */,
 				1CE35489239871CB004B3A84 /* BottomSheetView.swift */,
 				1CCEDF51239DC7C9003EE228 /* PagerView.swift */,
 				AE7563E423A038300094022B /* SearchInput.swift */,
@@ -219,6 +230,10 @@
 				AE861A7E23A07D81004096BF /* HomeMapControls.swift */,
 				AE7563B523A036160094022B /* HomeDrawer.swift */,
 				AE7563EA23A03D8E0094022B /* HomeDrawerContent.swift */,
+				AE861A8023A16DA6004096BF /* HomeTopBar.swift */,
+				AE861A8623A1727B004096BF /* HomeTopBarAccountButton.swift */,
+				AE861A8423A17209004096BF /* HomeTopBarSearchResults.swift */,
+				AE861A8223A171D2004096BF /* HomeTopBarSearch.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -431,11 +446,16 @@
 				1CE3548123986BC1004B3A84 /* View.swift in Sources */,
 				1CE3548323986C5C004B3A84 /* App.swift in Sources */,
 				AE861A7923A0651D004096BF /* Keyboard.swift in Sources */,
+				AE861A8123A16DA6004096BF /* HomeTopBar.swift in Sources */,
+				AE861A8923A172E8004096BF /* BlurView.swift in Sources */,
+				AE861A8723A1727B004096BF /* HomeTopBarAccountButton.swift in Sources */,
 				1CE354882398714D004B3A84 /* HomeView.swift in Sources */,
+				AE861A8523A17209004096BF /* HomeTopBarSearchResults.swift in Sources */,
 				1CE3546923986B1B004B3A84 /* RootView.swift in Sources */,
 				AE7563E723A03D3C0094022B /* FeatureCard.swift in Sources */,
 				AE7563E123A037D90094022B /* Landmark.swift in Sources */,
 				AE861A7B23A06EDC004096BF /* BarArrow.swift in Sources */,
+				AE861A8323A171D2004096BF /* HomeTopBarSearch.swift in Sources */,
 				AE7563B623A036160094022B /* HomeDrawer.swift in Sources */,
 				AE7563E923A03D570094022B /* MagicMove.swift in Sources */,
 				1CE3547F23986B88004B3A84 /* Store.swift in Sources */,
