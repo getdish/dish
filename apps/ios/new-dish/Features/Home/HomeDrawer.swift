@@ -10,7 +10,7 @@ struct HomeDrawer: View {
             Rectangle()
                 .animation(.spring())
                 .foregroundColor(.black)
-                .opacity(self.showDrawer ? 0.25 : 0)
+                .opacity(self.showDrawer ? 0.25 : 0.0)
                 .disabled(!self.showDrawer)
                 .onTapGesture {
                     self.showDrawer.toggle()
@@ -19,7 +19,8 @@ struct HomeDrawer: View {
             
             BottomSheetView(
                 isOpen: self.$showDrawer,
-                maxHeight: homeInitialDrawerFullHeight
+                maxHeight: homeInitialDrawerFullHeight,
+                snapRatio: 0.1
             ) {
                 HomeDrawerContent()
             }

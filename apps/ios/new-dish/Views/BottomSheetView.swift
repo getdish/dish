@@ -4,13 +4,13 @@ fileprivate enum Constants {
     static let radius: CGFloat = 16
     static let indicatorHeight: CGFloat = 6
     static let indicatorWidth: CGFloat = 60
-    static let snapRatio: CGFloat = 0.25
     static let minHeightRatio: CGFloat = 0.3
 }
 
 struct BottomSheetView<Content: View>: View {
     @Binding var isOpen: Bool
 
+    let snapRatio: CGFloat
     let maxHeight: CGFloat
     let minHeight: CGFloat
     let content: Content
@@ -30,9 +30,15 @@ struct BottomSheetView<Content: View>: View {
         )
     }
 
-    init(isOpen: Binding<Bool>, maxHeight: CGFloat, @ViewBuilder content: () -> Content) {
+    init(
+        isOpen: Binding<Bool>,
+        maxHeight: CGFloat,
+        snapRatio: CGFloat?,
+        @ViewBuilder content: () -> Content
+    ) {
         self.minHeight = maxHeight * Constants.minHeightRatio
         self.maxHeight = maxHeight
+        self.snapRatio = snapRatio ?? 0.25
         self.content = content()
         self._isOpen = isOpen
     }
@@ -53,7 +59,7 @@ struct BottomSheetView<Content: View>: View {
                 DragGesture().updating(self.$translation) { value, state, _ in
                     state = value.translation.height
                 }.onEnded { value in
-                    let snapDistance = self.maxHeight * Constants.snapRatio
+                    let snapDistance = self.maxHeight * self.snapRatio
                     self.isOpen = value.translation.height < snapDistance
                 }
             )
@@ -63,7 +69,11 @@ struct BottomSheetView<Content: View>: View {
 
 struct BottomSheetView_Previews: PreviewProvider {
     static var previews: some View {
-        BottomSheetView(isOpen: .constant(false), maxHeight: 600) {
+        BottomSheetView(
+            isOpen: .constant(false),
+            maxHeight: 600,
+            snapRatio: 0.25
+        ) {
             Rectangle().fill(Color.red)
         }.edgesIgnoringSafeArea(.all)
     }
