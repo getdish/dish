@@ -7,11 +7,11 @@ struct HomeMapControls: View {
                 Spacer()
                 VStack(spacing: 0) {
                     Button(action: {}) { Image(systemName: "plus.magnifyingglass") }
-                        .modifier(MapButtonStyle())
+                        .buttonStyle(MapButtonStyle())
                         .cornerRadius(5, antialiased: true, corners: [.topLeft, .topRight])
                         .shadow(color: Color.black.opacity(0.75), radius: 4, y: 2)
                     Button(action: {}) { Image(systemName: "minus.magnifyingglass") }
-                        .modifier(MapButtonStyle())
+                        .buttonStyle(MapButtonStyle())
                         .cornerRadius(5, antialiased: true, corners: [.bottomLeft, .bottomRight])
                         .shadow(color: Color.black.opacity(0.75), radius: 4, y: 2)
                 }
@@ -22,5 +22,14 @@ struct HomeMapControls: View {
             Spacer()
         }
         .frame(maxHeight: .infinity)
+    }
+}
+
+struct MapButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding(.vertical, 12)
+            .padding(.horizontal, 4)
+            .background(Color(.tertiarySystemBackground))
     }
 }

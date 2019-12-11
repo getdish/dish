@@ -57,14 +57,3 @@ struct DragPagerSidebar: View {
         }
     }
 }
-
-
-
-struct MapButtonStyle: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .padding(.vertical, 12)
-            .padding(.horizontal, 4)
-            .background(Color(.tertiarySystemBackground))
-    }
-}
