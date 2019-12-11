@@ -34,6 +34,7 @@ struct HomeView: View {
             self.colorScheme == .light ? Color.white : Color.black.opacity(0.8)
         )
         .edgesIgnoringSafeArea(.all)
+        .embedInGeometryReader()
     }
 }
 
