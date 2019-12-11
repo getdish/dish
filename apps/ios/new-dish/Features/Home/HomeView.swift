@@ -8,21 +8,30 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var index = 1
-
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    @EnvironmentObject var store: AppStore
+    @State private var index = 0
+    
     var body: some View {
-        let pager = PagerView(
-            pageCount: 3,
-            currentIndex: self.$index
-        ) {
-            Color.red
-            Image(systemName: "photo")
-                .resizable()
-            Button("Go to first page") {
-                self.index = 0
+        ZStack {
+            PagerView(
+                pageCount: 3,
+                currentIndex: self.$index
+            ) {
+                HomeDishView()
+                Image(systemName: "photo").resizable()
+                Button(action: { self.index = 0 }) {
+                    Text("Go to first page")
+                }
+            }
+            .onChangePage { index in
+                AppAction.changeHomePage(index == 0 ? .home : .camera)
             }
         }
-        return pager
+        .background(
+            self.colorScheme == .light ? Color.white : Color.black.opacity(0.8)
+        )
+        .edgesIgnoringSafeArea(.all)
     }
 }
 

@@ -7,13 +7,21 @@
 //
 
 import UIKit
+import GoogleMaps
+import GooglePlaces
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // SwiftUI bugfix list backgrounds transparent
+        UITableView.appearance().backgroundColor = UIColor(named: "transparent")
+        UITableViewCell.appearance().backgroundColor = UIColor(named: "transparent")
+        
+        // Google Maps and Places
+        GMSServices.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")
+        GMSPlacesClient.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")
+        
         // Override point for customization after application launch.
         return true
     }
