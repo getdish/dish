@@ -22,11 +22,14 @@ struct HomeDrawer: View {
                 maxHeight: homeInitialDrawerFullHeight,
                 snapRatio: 0.1,
                 indicator: AnyView(
-                    BarArrow(direction: self.showDrawer ? .down : .up)
-                        .padding(.vertical)
-                        .onTapGesture {
-                            self.showDrawer.toggle()
-                        }
+                    HStack {
+                        BarArrow(direction: self.showDrawer ? .down : .up)
+                            .padding(.vertical, 16)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .onTapGesture {
+                        self.showDrawer.toggle()
+                    }
                 )
             ) {
                 HomeDrawerContent()
