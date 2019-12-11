@@ -25,6 +25,12 @@ extension View {
         NavigationView { self }
     }
 
+    func embedInGeometryReader() -> some View {
+        GeometryReader { geometry in
+            self.environment(\.geometry, geometry)
+        }
+    }
+
     func embedInScroll(alignment: Alignment = .center) -> some View {
         GeometryReader { proxy in
             ScrollView {
