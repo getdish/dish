@@ -9,10 +9,10 @@ struct HomeDishView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Rectangle()
-                    .foregroundColor(Color(.red))
+                Color
+                    .red
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                
+
                 MapView(
                     width: geometry.size.width,
                     height: self.dishMapHeight,
@@ -39,8 +39,8 @@ struct DragPagerSidebar: View {
     var body: some View {
         HStack {
             Spacer()
-            Rectangle()
-                .foregroundColor(Color.black.opacity(0.0001))
+            Color.black
+                .opacity(0.0001)
                 // idk why but Screen.height - Screen.statusBarHeight is bigger than full height
                 .frame(width: 40, height: Screen.height - Screen.statusBarHeight - 40)
                 .gesture(

@@ -35,15 +35,15 @@ func load<T: Decodable>(_ filename: String) -> T {
 }
 
 final class ImageStore {
-    typealias _ImageDictionary = [String: CGImage]
-    fileprivate var images: _ImageDictionary = [:]
+    typealias ImageDictionary = [String: CGImage]
+    fileprivate var images: ImageDictionary = [:]
     
     fileprivate static var scale = 2
     
     static var shared = ImageStore()
     
     func image(name: String) -> Image {
-        let index = _guaranteeImage(name: name)
+        let index = guaranteeImage(name: name)
         
         return Image(images.values[index], scale: CGFloat(ImageStore.scale), label: Text(verbatim: name))
     }
@@ -59,7 +59,7 @@ final class ImageStore {
         return image
     }
     
-    fileprivate func _guaranteeImage(name: String) -> _ImageDictionary.Index {
+    fileprivate func guaranteeImage(name: String) -> ImageDictionary.Index {
         if let index = images.index(forKey: name) { return index }
         
         images[name] = ImageStore.loadImage(name: name)
