@@ -10,8 +10,7 @@ struct HomeDrawerContent: View {
     }
     
     var body: some View {
-        print("render drawer")
-        return VStack(spacing: 3) {
+        VStack(spacing: 3) {
             VStack(spacing: 3) {
                 SearchInput(
                     placeholder: "Pho, Burger, Salad...",
@@ -44,6 +43,9 @@ struct HomeDrawerContent: View {
     }
 }
 
+
+// Temporary views
+
 struct DishCard: View {
     var landmark: Landmark
     
@@ -55,6 +57,41 @@ struct DishCard: View {
         }
     }
 }
+
+struct TagsBar: View {
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack {
+                Tag {Image("uber").resizable().frame(width: 42, height: 42)}
+                Tag {Image("postmates").resizable().frame(width: 42, height: 42)}
+                Tag {Image("doordash").resizable().frame(width: 42, height: 42)}
+                Tag {Image("grubhub").resizable().frame(width: 42, height: 42)}
+            }
+            .padding(.vertical, 8)
+            .padding(.horizontal)
+        }
+    }
+}
+
+struct Tag<Content>: View where Content: View {
+    let content: () -> Content
+    
+    init(@ViewBuilder content: @escaping () -> Content) {
+        self.content = content
+    }
+    
+    var body: some View {
+        HStack {
+            content()
+        }
+        .padding(.vertical, 0)
+        .padding(.horizontal, 9)
+        .background(Color(.tertiarySystemBackground).opacity(0.9))
+        .cornerRadius(5)
+        .shadow(color: Color.black.opacity(0.18), radius: 2, y: 2)
+    }
+}
+
 
 #if DEBUG
 struct HomeDrawerContent_Previews: PreviewProvider {

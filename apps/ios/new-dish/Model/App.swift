@@ -25,3 +25,5 @@ let appReducer = Reducer<AppState, AppAction> { state, action in
             state.homePageView = page
     }
 }
+
+typealias AppStore = Store<AppState, AppAction>

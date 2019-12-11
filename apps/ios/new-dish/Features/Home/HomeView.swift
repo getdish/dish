@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
+    @EnvironmentObject var store: AppStore
     @State private var index = 0
     
     var body: some View {
@@ -17,15 +18,15 @@ struct HomeView: View {
                 pageCount: 3,
                 currentIndex: self.$index
             ) {
-                HomeMap()
+                HomeDishView()
                 Image(systemName: "photo").resizable()
-                Button("Go to first page") {
-                    self.index = 0
+                Button(action: { self.index = 0 }) {
+                    Text("Go to first page")
                 }
             }
-            
-//            DishDragSide()
-//                .disabled()
+            .onChangePage { index in
+                AppAction.changeHomePage(index == 0 ? .home : .camera)
+            }
         }
         .background(
             self.colorScheme == .light ? Color.white : Color.black.opacity(0.8)
