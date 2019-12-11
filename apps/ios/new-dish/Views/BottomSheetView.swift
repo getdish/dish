@@ -1,6 +1,6 @@
 import SwiftUI
 
-fileprivate enum Constants {
+fileprivate enum ViewConstants {
     static let radius: CGFloat = 16
     static let indicatorHeight: CGFloat = 6
     static let indicatorWidth: CGFloat = 60
@@ -21,11 +21,11 @@ struct BottomSheetView<Content: View>: View {
             return userIndicator!
         } else {
             return AnyView(
-                RoundedRectangle(cornerRadius: Constants.radius)
+                RoundedRectangle(cornerRadius: ViewConstants.radius)
                     .fill(Color.secondary)
                     .frame(
-                        width: Constants.indicatorWidth,
-                        height: Constants.indicatorHeight
+                        width: ViewConstants.indicatorWidth,
+                        height: ViewConstants.indicatorHeight
                 )
                     .padding()
             )
@@ -45,7 +45,7 @@ struct BottomSheetView<Content: View>: View {
         indicator: AnyView? = nil,
         @ViewBuilder content: () -> Content
     ) {
-        self.minHeight = maxHeight * Constants.minHeightRatio
+        self.minHeight = maxHeight * ViewConstants.minHeightRatio
         self.maxHeight = maxHeight
         self.snapRatio = snapRatio
         self.userIndicator = indicator
@@ -61,7 +61,7 @@ struct BottomSheetView<Content: View>: View {
             }
             .frame(width: geometry.size.width, height: self.maxHeight, alignment: .top)
             .background(Color(.secondarySystemBackground))
-            .cornerRadius(Constants.radius)
+            .cornerRadius(ViewConstants.radius)
             .frame(height: geometry.size.height, alignment: .bottom)
             .offset(y: max(self.offset + self.translation, 0))
             .animation(.interactiveSpring())

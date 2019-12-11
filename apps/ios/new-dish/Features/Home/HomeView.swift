@@ -23,6 +23,9 @@ struct HomeView: View {
                     self.index = 0
                 }
             }
+            
+//            DishDragSide()
+//                .disabled()
         }
         .background(
             self.colorScheme == .light ? Color.white : Color.black.opacity(0.8)

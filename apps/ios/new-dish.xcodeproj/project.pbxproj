@@ -50,6 +50,7 @@
 		AE7563EB23A03D8E0094022B /* HomeDrawerContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563EA23A03D8E0094022B /* HomeDrawerContent.swift */; };
 		AE861A7923A0651D004096BF /* Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7823A0651D004096BF /* Keyboard.swift */; };
 		AE861A7B23A06EDC004096BF /* BarArrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7A23A06EDC004096BF /* BarArrow.swift */; };
+		AE861A7D23A07AFB004096BF /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7C23A07AFB004096BF /* Constants.swift */; };
 		D86ACF2A611C42837609F52F /* Pods_new_dish.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 747A16F1648AAEF4512E6322 /* Pods_new_dish.framework */; };
 /* End PBXBuildFile section */
 
@@ -102,6 +103,7 @@
 		AE7563EA23A03D8E0094022B /* HomeDrawerContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDrawerContent.swift; sourceTree = "<group>"; };
 		AE861A7823A0651D004096BF /* Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyboard.swift; sourceTree = "<group>"; };
 		AE861A7A23A06EDC004096BF /* BarArrow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarArrow.swift; sourceTree = "<group>"; };
+		AE861A7C23A07AFB004096BF /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				1CE3546423986B1B004B3A84 /* AppDelegate.swift */,
+				AE861A7C23A07AFB004096BF /* Constants.swift */,
 				1CE3546A23986B1C004B3A84 /* Assets.xcassets */,
 				1CE3547823986B2A004B3A84 /* Features */,
 				1CE3547C23986B69004B3A84 /* Extensions */,
@@ -432,6 +435,7 @@
 				AE7563B623A036160094022B /* HomeDrawer.swift in Sources */,
 				AE7563E923A03D570094022B /* MagicMove.swift in Sources */,
 				1CE3547F23986B88004B3A84 /* Store.swift in Sources */,
+				AE861A7D23A07AFB004096BF /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

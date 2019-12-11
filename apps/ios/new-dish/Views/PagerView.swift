@@ -1,9 +1,12 @@
 import SwiftUI
 
+typealias OnChangePage = (_ curPage: Int) -> Void
+
 struct PagerView<Content: View>: View {
     @Binding var currentIndex: Int
     let pageCount: Int
     let content: Content
+    var changePageAction: OnChangePage?
 
     init(pageCount: Int, currentIndex: Binding<Int>, @ViewBuilder content: () -> Content) {
         self.pageCount = pageCount
@@ -12,6 +15,12 @@ struct PagerView<Content: View>: View {
     }
 
     @GestureState private var translation: CGFloat = 0
+    
+    func onChangePage(perform action: @escaping OnChangePage) -> Self {
+        var copy = self
+        copy.changePageAction = action
+        return copy
+    }
 
     var body: some View {
         GeometryReader { geometry in
@@ -29,6 +38,10 @@ struct PagerView<Content: View>: View {
                     let offset = value.translation.width / geometry.size.width
                     let newIndex = (CGFloat(self.currentIndex) - offset).rounded()
                     self.currentIndex = min(max(Int(newIndex), 0), self.pageCount - 1)
+                    
+                    if let cb = self.changePageAction {
+                        cb(Int(self.currentIndex))
+                    }
                 }
             )
         }

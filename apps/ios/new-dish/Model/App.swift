@@ -7,19 +7,21 @@
 //
 import Foundation
 
-// TODO put this in the store I think
-let cameraBottom = Screen.height * 0.55
-let homeInitialDrawerHeight = Screen.height * 0.65
-let homeInitialDrawerFullHeight = Screen.height - 100
+enum HomePageView {
+    case home, camera
+}
 
 struct AppState {
-    
+    var homePageView: HomePageView = .home
 }
 
 enum AppAction {
-
+    case changeHomePage(_ page: HomePageView)
 }
 
 let appReducer = Reducer<AppState, AppAction> { state, action in
-
+    switch action {
+        case let .changeHomePage(page):
+            state.homePageView = page
+    }
 }

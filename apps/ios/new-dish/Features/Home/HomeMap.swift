@@ -6,7 +6,7 @@ struct HomeMap: View {
     
     // pushed map below the border radius of the bottomdrawer
     // but why the extra 40?
-    let dishMapHeight = Screen.height + Screen.statusBarHeight - homeInitialDrawerHeight + 40 + 30
+    let dishMapHeight = Screen.height + Screen.statusBarHeight - Constants.homeInitialDrawerHeight + 40 + 30
     
     var body: some View {
         GeometryReader { geometry in

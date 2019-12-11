@@ -19,7 +19,7 @@ struct HomeDrawer: View {
             
             BottomSheetView(
                 isOpen: self.$showDrawer,
-                maxHeight: homeInitialDrawerFullHeight,
+                maxHeight: Constants.homeInitialDrawerFullHeight,
                 snapRatio: 0.1,
                 indicator: AnyView(
                     HStack {
