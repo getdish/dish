@@ -24,12 +24,13 @@ struct HomeDrawer: View {
                 indicator: AnyView(
                     HStack {
                         BarArrow(direction: self.showDrawer ? .down : .up)
-                            .padding(.vertical, 16)
+                            .padding(.vertical, 10)
                     }
                     .frame(maxWidth: .infinity)
                     .onTapGesture {
                         self.showDrawer.toggle()
                     }
+                    .padding(.vertical, 6)
                 )
             ) {
                 HomeDrawerContent()
