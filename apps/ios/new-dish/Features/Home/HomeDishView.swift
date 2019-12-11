@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct HomeDishView: View {
-    @SwiftUI.Environment(\.colorScheme) var colorScheme: ColorScheme
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
     
     // pushed map below the border radius of the bottomdrawer
     let dishMapHeight = Screen.height + Screen.statusBarHeight - Constants.homeInitialDrawerHeight + 40 + 30
