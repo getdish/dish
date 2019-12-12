@@ -10,6 +10,7 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@dish/crawler": "*"
+    "@dish/crawler": "*",
+    "orkid": "0.11.0"
   }
 }
