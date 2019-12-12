@@ -1,0 +1,17 @@
+{
+  "name": "@dish/crawler",
+  "version": "0.0.1",
+  "module": "index.js",
+  "main": "_/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "start": "node _/index.js",
+    "build": "tsc -b || true",
+    "watch": "tsc -b --watch --preserveWatchOutput"
+  },
+  "dependencies": {
+    "puppeteer": "^2.0.0",
+    "lodash": "^4.17.15",
+    "urijs": "^1.19.2"
+  }
+}

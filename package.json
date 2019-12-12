@@ -1,0 +1,13 @@
+{
+  "name": "dish-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "services/*"
+  ],
+  "scripts": {
+    "start": "",
+    "build": "tsc -b",
+    "build:watch": "tsc -b -w --preserveWatchOutput"
+  }
+}
