@@ -4,8 +4,7 @@
     "composite": true,
     "strictNullChecks": true,
     "outDir": "_",
-    "rootDir": "."
+    "rootDir": "src"
   },
-  "include": ["**/*"],
-  "exclude": ["_"]
+  "include": ["src/**/*"]
 }

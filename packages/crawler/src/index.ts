@@ -34,7 +34,7 @@ export type EntryInfo = {
   fullUrl: string
 }
 
-export default class Crawler {
+export class Crawler {
   isRunning = false
   browser: puppeteer.Browser | null = null
   count = 0
@@ -44,6 +44,7 @@ export default class Crawler {
   options: Required<CrawlerOptions>
   loadingPage: boolean[] = []
   onPageCallback?: OnPageCallback
+  finishCallbacks = new Set<Function>()
 
   entryInfo: EntryInfo
 
@@ -75,7 +76,12 @@ export default class Crawler {
     if (this.isRunning) {
       throw new Error(`Already running`)
     }
-    this.resumeCrawling(startOptions)
+    this.isRunning = true
+    this.resumeCrawling(startOptions).then(() => {
+      this.isRunning = false
+      this.finishCallbacks.forEach(cb => cb())
+      this.finishCallbacks = new Set()
+    })
     return this
   }
 
@@ -88,7 +94,6 @@ export default class Crawler {
     const concurrentTabs = Math.min(maxCores ?? MAX_CORES_DEFAULT, 7)
     this.loadingPage = range(concurrentTabs).map(() => false)
     this.count = 0
-    this.isRunning = true
 
     const initialUrl = cleanUrlHash(entry)
 
@@ -113,6 +118,7 @@ export default class Crawler {
       throw new Error(`Error opening browser`)
     }
 
+    console.log(`Loading ${concurrentTabs} browser tabs`)
     const pages = await Promise.all(
       this.loadingPage.map(() => this.browser!.newPage()),
     )
@@ -133,12 +139,12 @@ export default class Crawler {
     }
 
     const runTarget = async (target: PageTarget, page: puppeteer.Page) => {
-      const { filterUrlExtensions, depth, maxRadius } = this.options
+      const { filterUrlExtensions, maxRadius } = this.options
       const crawlPage = new CrawlPage({
         page,
         target,
         entryInfo: this.entryInfo,
-        depth: this.options.depth,
+        depth,
       })
 
       console.log(`now: ${target.url}`)
@@ -149,7 +155,7 @@ export default class Crawler {
         } else if (target.radius >= maxRadius) {
           console.log(`Maximum radius reached. Radius: ${target.radius}`)
           return null
-        } else if (!matchesDepth(target.url, this.options.depth)) {
+        } else if (!matchesDepth(target.url, depth)) {
           console.log(`Path is not at same depth:`)
           console.log(`  ${URL.parse(target.url).pathname}`)
           console.log(`  ${depth}`)
@@ -181,6 +187,7 @@ export default class Crawler {
     }
 
     // do first one
+    console.log(`Start initial page`)
     await runTarget(target, pages[0]).then(finishProcessing(0))
 
     // start rest
@@ -225,19 +232,32 @@ export default class Crawler {
     return this
   }
 
-  async onEndCrawl() {
+  private async endCrawl() {
     this.isRunning = false
-    // close pages
-    if (this.browser) {
-      await this.browser.close()
-    }
-    // resolve any cancels
     if (this.cancelQueue.length) {
       this.cancelQueue.forEach(x => x())
       this.cancelQueue = []
     }
-    // return results
-    return this.queue.getValid()
+    await this.browser?.close()
+  }
+
+  async onEndCrawl() {
+    if (!this.isRunning) {
+      throw new Error(`Haven't started crawler`)
+    }
+    return await new Promise<PageTarget[]>(res => {
+      // wait for both to run
+      this.finishCallbacks.add(finish)
+      this.endCrawl().then(finish)
+
+      let done = 0
+      const getValid = this.queue.getValid
+      function finish() {
+        if (++done == 2) {
+          res(getValid())
+        }
+      }
+    })
   }
 
   getStatus = ({ includeResults = false } = {}) => {
@@ -264,9 +284,7 @@ export default class Crawler {
     return new Promise(resolve => {
       this.cancelQueue.push(() => resolve(true))
       // failsafe
-      setTimeout(() => {
-        resolve(false)
-      }, 5)
+      setTimeout(() => resolve(false), 5)
     })
   }
 }

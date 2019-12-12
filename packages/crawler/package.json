@@ -1,13 +1,13 @@
 {
   "name": "@dish/crawler",
   "version": "0.0.1",
-  "module": "index.js",
   "main": "_/index.js",
   "sideEffects": false,
   "scripts": {
     "start": "node _/index.js",
     "build": "tsc -b || true",
-    "watch": "tsc -b --watch --preserveWatchOutput"
+    "watch": "tsc -b --watch --preserveWatchOutput",
+    "test": "ava --verbose"
   },
   "dependencies": {
     "puppeteer": "^2.0.0",
