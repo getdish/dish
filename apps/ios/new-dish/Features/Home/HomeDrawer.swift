@@ -11,10 +11,10 @@ struct HomeDrawer: View {
     var body: some View {
         ZStack {
             // Dark background when open
-            Rectangle()
-                .animation(.spring())
-                .foregroundColor(.black)
+            Color
+                .black
                 .opacity(store.state.showDrawer ? 0.25 : 0.0)
+                .animation(.spring())
                 .disabled(!store.state.showDrawer)
                 .onTapGesture {
                     self.store.send(.toggleDrawer)

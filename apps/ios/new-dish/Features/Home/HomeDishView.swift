@@ -9,9 +9,7 @@ struct HomeDishView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Rectangle()
-                    .foregroundColor(Color(.red))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                Color.black.frame(maxWidth: .infinity, maxHeight: .infinity)
                 
                 MapView(
                     width: geometry.size.width,
@@ -22,6 +20,8 @@ struct HomeDishView: View {
                 HomeMapControls()
                 
                 HomeDrawer()
+                
+                HomeDishGallery()
                 
                 DragPagerSidebar()
             }

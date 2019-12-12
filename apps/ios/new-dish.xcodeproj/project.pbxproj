@@ -57,6 +57,7 @@
 		AE861A8523A17209004096BF /* HomeTopBarSearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8423A17209004096BF /* HomeTopBarSearchResults.swift */; };
 		AE861A8723A1727B004096BF /* HomeTopBarAccountButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8623A1727B004096BF /* HomeTopBarAccountButton.swift */; };
 		AE861A8923A172E8004096BF /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8823A172E8004096BF /* BlurView.swift */; };
+		AEA331EC23A1F60900B36A23 /* HomeDishGallery.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331EB23A1F60900B36A23 /* HomeDishGallery.swift */; };
 		D86ACF2A611C42837609F52F /* Pods_new_dish.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 747A16F1648AAEF4512E6322 /* Pods_new_dish.framework */; };
 /* End PBXBuildFile section */
 
@@ -116,6 +117,7 @@
 		AE861A8423A17209004096BF /* HomeTopBarSearchResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTopBarSearchResults.swift; sourceTree = "<group>"; };
 		AE861A8623A1727B004096BF /* HomeTopBarAccountButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTopBarAccountButton.swift; sourceTree = "<group>"; };
 		AE861A8823A172E8004096BF /* BlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurView.swift; sourceTree = "<group>"; };
+		AEA331EB23A1F60900B36A23 /* HomeDishGallery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDishGallery.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -227,6 +229,7 @@
 				1C3CFE6323998FF2004B2EEA /* HomeContainerView.swift */,
 				1CE354872398714D004B3A84 /* HomeView.swift */,
 				AE7563B323A035E70094022B /* HomeDishView.swift */,
+				AEA331EB23A1F60900B36A23 /* HomeDishGallery.swift */,
 				AE861A7E23A07D81004096BF /* HomeMapControls.swift */,
 				AE7563B523A036160094022B /* HomeDrawer.swift */,
 				AE7563EA23A03D8E0094022B /* HomeDrawerContent.swift */,
@@ -447,6 +450,7 @@
 				1CE3548323986C5C004B3A84 /* App.swift in Sources */,
 				AE861A7923A0651D004096BF /* Keyboard.swift in Sources */,
 				AE861A8123A16DA6004096BF /* HomeTopBar.swift in Sources */,
+				AEA331EC23A1F60900B36A23 /* HomeDishGallery.swift in Sources */,
 				AE861A8923A172E8004096BF /* BlurView.swift in Sources */,
 				AE861A8723A1727B004096BF /* HomeTopBarAccountButton.swift in Sources */,
 				1CE354882398714D004B3A84 /* HomeView.swift in Sources */,
