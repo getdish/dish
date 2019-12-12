@@ -45,7 +45,7 @@ struct SideDrawerView<Content: View, Drawer: View>: View {
             guard abs(value.translation.width) > snapDistance else {
                 return
             }
-            self.isOpen = value.translation.width > snapDistance
+            self.isOpen = value.translation.width > 0
         }
     }
 
