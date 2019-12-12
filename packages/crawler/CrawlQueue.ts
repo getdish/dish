@@ -1,14 +1,16 @@
 import { sortBy } from 'lodash'
 
+type ScoreFn = (url: string) => number
+
 type CrawlQueueOpts = {
-  scoreFn?: (url: string) => number
+  scoreFn?: ScoreFn
 }
 
 export class CrawlQueue {
   visited = []
   discoveredUrls = {}
   pageQueue = []
-  scoreFn = () => 0
+  scoreFn: ScoreFn = _ => 0
 
   constructor(private options: CrawlQueueOpts = {}) {}
 
