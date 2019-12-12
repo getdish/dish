@@ -1,7 +1,6 @@
 {
   "name": "@dish/yelp-crawler",
   "version": "0.0.1",
-  "module": "index.js",
   "main": "_/index.js",
   "sideEffects": false,
   "scripts": {
