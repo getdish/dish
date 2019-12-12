@@ -1,5 +1,7 @@
 import { sortBy } from 'lodash'
 
+import { PageTarget } from '.'
+
 type ScoreFn = (url: string) => number
 
 type CrawlQueueOpts = {
@@ -7,14 +9,14 @@ type CrawlQueueOpts = {
 }
 
 export class CrawlQueue {
-  visited = []
-  discoveredUrls = {}
-  pageQueue = []
+  visited: PageTarget[] = []
+  discovered: { [key: string]: boolean } = {}
+  pageQueue: { url: string; radius: number; score: number }[] = []
   scoreFn: ScoreFn = _ => 0
 
   constructor(private options: CrawlQueueOpts = {}) {}
 
-  add = page => {
+  add = (page: PageTarget) => {
     if (!page) {
       console.log('not storing')
       return
@@ -23,21 +25,24 @@ export class CrawlQueue {
     this.visited.push(page)
     let count = 0
     const radius = page.radius
-    page.outboundUrls.forEach(url => {
-      if (!this.discoveredUrls[url]) {
-        count++
-        const score = this.scoreFn(url)
-        this.pageQueue.push({ url, radius, score })
-        this.discoveredUrls[url] = true
-      }
-    })
-    if (count) {
-      this.pageQueue = sortBy(this.pageQueue, 'score').reverse()
-      console.log(`Added ${count} new urls to queue`)
-      console.log(`New top of queue: ${this.pageQueue[0].url}`)
-      const duplicates = page.outboundUrls.length - count
-      if (duplicates) {
-        console.log(`${page.outboundUrls.length - count} duplicates found`)
+
+    if (page.outboundUrls) {
+      page.outboundUrls.forEach(url => {
+        if (!this.discovered[url]) {
+          count++
+          const score = this.scoreFn(url)
+          this.pageQueue.push({ url, radius, score })
+          this.discovered[url] = true
+        }
+      })
+      if (count) {
+        this.pageQueue = sortBy(this.pageQueue, 'score').reverse()
+        console.log(`Added ${count} new urls to queue`)
+        console.log(`New top of queue: ${this.pageQueue[0].url}`)
+        const duplicates = page.outboundUrls.length - count
+        if (duplicates) {
+          console.log(`${page.outboundUrls.length - count} duplicates found`)
+        }
       }
     }
   }
@@ -56,9 +61,9 @@ export class CrawlQueue {
     return null
   }
 
-  getValid = () => {
-    return this.visited.filter(_ => _.contents !== null)
-  }
+  // getValid = () => {
+  //   return this.visited.filter(_ => _.contents !== null)
+  // }
 
   getAll() {
     return this.visited

@@ -10,5 +10,8 @@
     "start": "",
     "build": "tsc -b",
     "build:watch": "tsc -b -w --preserveWatchOutput"
+  },
+  "devDependencies": {
+    "typescript": "^3.7.3"
   }
 }

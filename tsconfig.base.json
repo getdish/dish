@@ -26,7 +26,7 @@
     "resolveJsonModule": true,
     "lib": ["es2017", "es2018", "dom", "esnext.array"]
   },
-  "exclude": ["**/*.test.ts", "**/*.test.tsx"],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "_"],
   "typeAcquisition": {
     "enable": true
   }
