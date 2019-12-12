@@ -2,7 +2,7 @@ import { uniq } from 'lodash'
 import puppeteer from 'puppeteer'
 import * as URL from 'url'
 
-import { EntryInfo, TargetURL } from '.'
+import { EntryInfo, PageTarget } from '.'
 import { cleanUrlHash, matchesDepth, normalizeHref } from './helpers'
 
 type CrawlPageResult = {
@@ -13,7 +13,7 @@ type CrawlPageResult = {
 export class CrawlPage {
   constructor(
     private props: {
-      target: TargetURL
+      target: PageTarget
       page: puppeteer.Page
       depth: string
       entryInfo: EntryInfo
@@ -54,7 +54,7 @@ export class CrawlPage {
   }
 
   async findOutboundLinks() {
-    const { page, entryInfo } = this.props
+    const { page, target, entryInfo } = this.props
 
     const links = await page.evaluate(() => {
       const val = Array.from(document.querySelectorAll('[href]')).map(
@@ -71,11 +71,11 @@ export class CrawlPage {
     ).filter(link => {
       const parsed = URL.parse(link)
       const noPrefix = s => s.replace(/www\./, '')
-      const isNotOriginalUrl = link !== initialUrl
+      const isNotOriginalUrl = link !== entryInfo.fullUrl
       return (
         isNotOriginalUrl &&
         matchesDepth(link, this.props.depth) &&
-        noPrefix(parsed.host) === noPrefix(host)
+        noPrefix(parsed.host) === noPrefix(entryInfo.url.host)
       )
     })
   }

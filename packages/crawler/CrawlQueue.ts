@@ -61,9 +61,9 @@ export class CrawlQueue {
     return null
   }
 
-  // getValid = () => {
-  //   return this.visited.filter(_ => _.contents !== null)
-  // }
+  getValid = () => {
+    return this.visited.filter(_ => _.parsed)
+  }
 
   getAll() {
     return this.visited

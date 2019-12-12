@@ -24,6 +24,7 @@ export type PageTarget = {
   url: string
   radius: number
   outboundUrls?: string[]
+  parsed?: boolean
 }
 
 type OnPageCallback = (page: puppeteer.Page) => void
@@ -118,9 +119,12 @@ export default class Crawler {
 
     // handlers for after loaded a page
     const finishProcessing = (tabIndex: number) => {
-      return (result: PageTarget) => {
+      return (result: PageTarget | null) => {
+        if (!result) {
+          return
+        }
         this.queue.add(result)
-        if (result && result.contents) {
+        if (result?.parsed) {
           console.log('Downloaded', this.queue.getValid().length, 'pages')
           this.count++
         }
@@ -240,7 +244,7 @@ export default class Crawler {
     const res = {
       count: this.count,
       isRunning: this.isRunning,
-      results: [] as string[],
+      results: [] as PageTarget[],
     }
     if (includeResults && this.queue) {
       const results = this.queue.getValid()
