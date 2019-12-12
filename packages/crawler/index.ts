@@ -6,9 +6,7 @@ import { parse } from 'url'
 import { CrawlQueue } from './CrawlQueue'
 import { cleanUrlHash, normalizeHref, sleep, urlMatchesExtensions, urlSimilarity } from './helpers'
 
-// dont use last two cores if possible
-// so on 4 core machine just use two
-const MAX_CORES_DEFAULT = Math.max(1, OS.cpus().length - 2)
+const MAX_CORES_DEFAULT = Math.max(1, OS.cpus().length)
 const FILTER_URL_EXTENSIONS = [
   '.png',
   '.jpg',
@@ -38,6 +36,8 @@ export type CrawlerOptions = {
   }
 }
 
+type OnPageCallback = (page: puppeteer.Page) => void
+
 export default class Crawler {
   cancelled = false
   isRunning = false
@@ -48,6 +48,7 @@ export default class Crawler {
   queue: CrawlQueue
   options: CrawlerOptions
   loadingPage: boolean[]
+  onPageCallback: OnPageCallback
 
   constructor(props: CrawlerOptions) {
     this.options = {
@@ -65,12 +66,13 @@ export default class Crawler {
     }
   }
 
-  start = async () => {
+  async start(startOptions: { depth?: string } = {}) {
     if (this.isRunning) {
       throw new Error(`Already running`)
     }
     // defaults
-    const { entry, maxCores, maxPages, depth, puppeteerOptions } = this.options
+    const { entry, maxCores, maxPages, puppeteerOptions } = this.options
+    const depth = startOptions.depth ?? this.options.depth
 
     // set state
     const concurrentTabs = Math.min(maxCores, 7)
@@ -147,7 +149,7 @@ export default class Crawler {
     console.log(`Crawler done, crawled ${this.count} pages`)
     console.log(`took ${(+Date.now() - startTime) / 1000} seconds`)
 
-    return await this.endCrawl()
+    return this
   }
 
   async isFinished(checkQueue?: boolean) {
@@ -188,6 +190,10 @@ export default class Crawler {
 
       const { outboundUrls } = await crawlPage.run()
 
+      if (this.onPageCallback) {
+        this.onPageCallback(page)
+      }
+
       console.log(`Found urls: ${outboundUrls.length}`)
       // store crawl results
       return {
@@ -196,7 +202,7 @@ export default class Crawler {
         url: target.url,
       }
     } catch (err) {
-      if (!isFinished()) {
+      if (!this.isFinished()) {
         console.log(
           `Error crawling url ${target.url}\n${err.message}\n${err.stack}`,
         )
@@ -205,7 +211,12 @@ export default class Crawler {
     }
   }
 
-  async endCrawl() {
+  async onPage(cb: OnPageCallback) {
+    this.onPageCallback = cb
+    return this
+  }
+
+  async onEndCrawl() {
     this.isRunning = false
     // close pages
     await this.browser.close()
