@@ -15,6 +15,10 @@ if [[ $(multipass list | grep dish | wc -l) -eq 0 ]]; then
     echo "wait"
     wait 1
 
+    echo "add fd for fast finding"
+    wget -q https://github.com/sharkdp/fd/releases/download/v7.4.0/fd_7.4.0_amd64.deb
+    sudo dpkg -i fd_7.4.0_amd64.deb
+
     echo "setup k3s"
     curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
 
@@ -24,7 +28,8 @@ if [[ $(multipass list | grep dish | wc -l) -eq 0 ]]; then
     echo "install rio"
     rio install
 
-    echo "all started up, lets do our initial up after mounting"
+    echo "started up, exiting shell..."
+    exit
     exit
 EOF
 fi

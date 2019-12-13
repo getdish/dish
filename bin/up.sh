@@ -2,7 +2,8 @@
 
 set -e
 
-SERVICES=$(find . -name Riofile -printf '%h\n' | sort -u)
+# assumes we have fd, setup in start.h
+SERVICES=(`fd Riofile | sed 's,/*[^/]\+/*$,,'`)
 
 echo "deploying services: $SERVICES"
 
