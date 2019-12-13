@@ -1,4 +1,5 @@
 import { uniq } from 'lodash'
+import fetch from 'node-fetch'
 import puppeteer from 'puppeteer'
 import * as URL from 'url'
 
@@ -21,20 +22,26 @@ export class CrawlPage {
   ) {}
 
   async run(): Promise<CrawlPageResult> {
+    const url = this.props.target.url
+    console.log(`loading ${url}`)
+
     // content-type whitelist
-    if (!(await this.validContentType(this.props.target.url))) {
+    if (!(await this.validContentType(url))) {
+      console.log('skipping content type')
       return {
         success: false,
       }
     }
 
     // create new page
-    await this.props.page.goto(this.props.target.url, {
+    console.log('now now now')
+    await this.props.page.goto(url, {
       waitUntil: 'domcontentloaded',
     })
 
     // TODO
     const outboundUrls = await this.findOutboundLinks()
+    console.log('outboundUrls', outboundUrls)
 
     return {
       success: true,

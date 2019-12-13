@@ -13,7 +13,7 @@ test('crawls a page', async t => {
   await crawler
     .start()
     .onPage(x => {
-      console.log('got', x)
+      console.log('got page!', x.url())
       found.push(x)
     })
     .onEndCrawl()
