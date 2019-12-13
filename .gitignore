@@ -2,6 +2,7 @@
 
 # Node
 
+dist
 tsconfig.tsbuildinfo
 node_modules
 **/_

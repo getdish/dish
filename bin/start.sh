@@ -15,6 +15,9 @@ if [[ $(multipass list | grep dish | wc -l) -eq 0 ]]; then
     echo "wait"
     wait 1
 
+    echo "install node/npm"
+    sudo apt install --yes nodejs npm
+
     echo "add fd for fast finding"
     wget -q https://github.com/sharkdp/fd/releases/download/v7.4.0/fd_7.4.0_amd64.deb
     sudo dpkg -i fd_7.4.0_amd64.deb
