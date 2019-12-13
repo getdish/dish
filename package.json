@@ -1,11 +1,16 @@
 {
   "name": "dish-monorepo",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "services/*",
-    "packages/*"
-  ],
+  "workspaces": {
+    "nohoist": [
+      "**"
+    ],
+    "packages": [
+      "apps/*",
+      "services/*",
+      "packages/*"
+    ]
+  },
   "scripts": {
     "start": "",
     "build": "tsc -b",
