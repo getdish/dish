@@ -5,6 +5,6 @@
   },
   "references": [
     { "path": "./packages/crawler" },
-    { "path": "./services/yelp-crawler" }
+    { "path": "./services/crawlers" }
   ]
 }
