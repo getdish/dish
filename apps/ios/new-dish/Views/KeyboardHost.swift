@@ -1,26 +1,23 @@
 import SwiftUI
+import Combine
 
 struct KeyboardHost<Content: View>: View {
     var dismissOnTapAway = true
     let view: Content
     
     @State private var keyboardHeight: CGFloat = 0
-    
-    private let showPublisher = NotificationCenter.Publisher.init(
-        center: .default,
-        name: UIResponder.keyboardWillShowNotification
-    ).map { (notification) -> CGFloat in
-        if let rect = notification.userInfo?["UIKeyboardFrameEndUserInfoKey"] as? CGRect {
-            return rect.size.height
-        } else {
-            return 0
-        }
+
+    private var keyboardHeightPublisher: AnyPublisher<CGFloat, Never> {
+        Publishers.Merge(
+            NotificationCenter.default
+                .publisher(for: UIResponder.keyboardWillShowNotification)
+                .compactMap { $0.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect }
+                .map { $0.height },
+            NotificationCenter.default
+                .publisher(for: UIResponder.keyboardWillHideNotification)
+                .map { _ in CGFloat(0) }
+        ).eraseToAnyPublisher()
     }
-    
-    private let hidePublisher = NotificationCenter.Publisher.init(
-        center: .default,
-        name: UIResponder.keyboardWillHideNotification
-    ).map {_ -> CGFloat in 0}
     
     // Like HStack or VStack, the only parameter is the view that this view should layout.
     // (It takes one view rather than the multiple views that Stacks can take)
@@ -31,23 +28,17 @@ struct KeyboardHost<Content: View>: View {
     var body: some View {
         ZStack {
             if self.dismissOnTapAway && self.keyboardHeight != 0.0 {
-                Rectangle()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .foregroundColor(.clear)
-                    .onTapGesture {
-                        closeCurrentKeyboard()
-                }
+                Color.clear
+                    .frameFlex()
+                    .onTapGesture { closeCurrentKeyboard() }
             }
-            
             VStack {
                 view
                 Rectangle()
                     .frame(height: keyboardHeight)
                     .animation(.default)
                     .foregroundColor(.clear)
-            }.onReceive(showPublisher.merge(with: hidePublisher)) { (height) in
-                self.keyboardHeight = height
-            }
+            }.onReceive(self.keyboardHeightPublisher) { self.keyboardHeight = $0 }
         }
     }
 }
