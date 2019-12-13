@@ -37,9 +37,22 @@ async function startProducer(task: Task) {
 
 // TODO move into own processes
 async function startConsumer(task: Task) {
-  const consumer = new Consumer(task.name, () => {
-    task.run()
+  const consumer = new Consumer(task.name, runConsumer, {
+    consumerOptions: {
+      concurrencyPerInstance: 1,
+      maxRetry: 1,
+      workerFnTimeoutMs: 3000,
+    },
   })
+
+  async function runConsumer(data: Task, metadata: any) {
+    console.log(
+      `Processing task from Queue: ${metadata.qname}. Task ID: ${metadata.id}. Data:`,
+      data,
+    )
+    await task.run()
+  }
+
   consumer.start()
 }
 
