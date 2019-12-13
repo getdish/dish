@@ -34,7 +34,6 @@ export class CrawlPage {
     }
 
     // create new page
-    console.log('now now now')
     await this.props.page.goto(url, {
       waitUntil: 'domcontentloaded',
     })
