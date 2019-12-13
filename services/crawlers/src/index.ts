@@ -4,6 +4,13 @@ import { crawlYelp } from './yelp'
 
 const sleep = (ms: number) => new Promise(res => setTimeout(res, ms))
 
+const redisOptions = {
+  port: 6379,
+  host: 'redis',
+}
+
+console.log('Running2!')
+
 type Task = {
   name: string
   intervalMinutes: number
@@ -27,7 +34,9 @@ function main() {
 }
 
 async function startProducer(task: Task) {
-  const producer = new Producer(task.name)
+  const producer = new Producer(task.name, {
+    redisOptions,
+  })
   let id = 0
   while (true) {
     id++
@@ -39,6 +48,7 @@ async function startProducer(task: Task) {
 // TODO move into own processes
 async function startConsumer(task: Task) {
   const consumer = new Consumer(task.name, runConsumer, {
+    redisOptions,
     consumerOptions: {
       concurrencyPerInstance: 1,
       maxRetry: 1,

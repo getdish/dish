@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node _/index.js",
     "build": "tsc -b || true",
-    "build:deploy": "ncc build _/index.js -m -s -o dist",
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
