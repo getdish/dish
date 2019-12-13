@@ -1,7 +1,3 @@
-//  Created by Ben McMahen on 2019-06-18.
-//  Copyright © 2019 Ben McMahen. All rights reserved.
-//
-
 import SwiftUI
 
 struct LoginSignupView: View {
@@ -13,28 +9,25 @@ struct LoginSignupView: View {
 }
 
 struct SignUpView: View {
-    
     @State var email: String = ""
     @State var password: String = ""
     @State var loading = false
     @State var error = false
     
-    @EnvironmentObject var session: SessionStore
-    
     func signUp () {
         print("sign me up")
         loading = true
         error = false
-        session.signUp(email: email, password: password) { (result, error) in
-            self.loading = false
-            if error != nil {
-                print("\(String(describing: error))")
-                self.error = true
-            } else {
-                self.email = ""
-                self.password = ""
-            }
-        }
+//        session.signUp(email: email, password: password) { (result, error) in
+//            self.loading = false
+//            if error != nil {
+//                print("\(String(describing: error))")
+//                self.error = true
+//            } else {
+//                self.email = ""
+//                self.password = ""
+//            }
+//        }
     }
     
     var body : some View {
@@ -88,20 +81,18 @@ struct SignInView: View {
     @State var loading = false
     @State var error = false
     
-    @EnvironmentObject var session: SessionStore
-    
     func signIn () {
         loading = true
         error = false
-        session.signIn(email: email, password: password) { (result, error) in
-            self.loading = false
-            if error != nil {
-                self.error = true
-            } else {
-                self.email = ""
-                self.password = ""
-            }
-        }
+//        session.signIn(email: email, password: password) { (result, error) in
+//            self.loading = false
+//            if error != nil {
+//                self.error = true
+//            } else {
+//                self.email = ""
+//                self.password = ""
+//            }
+//        }
     }
     
     var body: some View {
@@ -158,7 +149,6 @@ struct SignInView: View {
 struct LoginSignupView_Previews: PreviewProvider {
     static var previews: some View {
         LoginSignupView()
-            .environmentObject(SessionStore())
     }
 }
 #endif
