@@ -9,7 +9,7 @@ export DISH_PATH=$HOME/dish
 
 if [[ $(multipass list | grep dish | wc -l) -eq 0 ]]; then
   echo "setting up multipass vm"
-  multipass launch --name dish --mem 12G --disk 100G --cpus 4
+  multipass launch --name dish --mem 12G --disk 80G --cpus 4
 
   multipass shell dish << EOF
     echo "wait"
