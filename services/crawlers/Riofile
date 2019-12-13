@@ -1,6 +1,6 @@
 services:
   crawlers-ui:
-    image: orkid-ui
+    image: orkidio/orkid-ui
     port: 3100/http
     env:
       - HTTP_USER=user

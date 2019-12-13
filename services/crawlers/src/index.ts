@@ -19,6 +19,7 @@ const TASKS: Task[] = [
 ]
 
 function main() {
+  console.log('Starting crawlers...')
   for (const task of TASKS) {
     startProducer(task)
     startConsumer(task)
