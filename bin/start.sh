@@ -1,4 +1,5 @@
 #!/bin/bash
+
 set -e
 
 # Clear unison caches. This is surprisingly important after rebuilds and such.
@@ -8,7 +9,7 @@ export DISH_PATH=$HOME/dish
 
 if [[ $(multipass list | grep dish | wc -l) -eq 0 ]]; then
   echo "setting up multipass vm"
-  multipass launch --name dish --mem 6G --disk 150G
+  multipass launch --name dish --mem 4G --disk 100G
 
   multipass shell dish << EOF
     echo "wait"
@@ -23,13 +24,15 @@ if [[ $(multipass list | grep dish | wc -l) -eq 0 ]]; then
     echo "install rio"
     rio install
 
-    echo "done"
+    echo "all started up, lets do our initial up after mounting"
     exit
 EOF
 fi
 
 multipass mount $DISH_PATH dish:/app 2> /dev/null || true
 
-printf "\n\b ✅ started! \n\n loging into shell with: \n - multipass shell k3s\n"
+printf "\n\b ✅ local dev all set up! \n\n logging into shell with: \n - multipass shell k3s\n"
 
-multipass shell dish
+multipass shell dish  << EOF
+  echo "starting services"
+EOF

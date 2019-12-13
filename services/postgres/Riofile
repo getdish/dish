@@ -1,0 +1,10 @@
+services:
+  postgres:
+    image: postgres
+    env:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: local
+      POSTGRES_DB: main
+  postgres-admin:
+    image: adminer
+    port: 8080/http
