@@ -1,18 +1,13 @@
 services:
-  crawlers:
-    image: ./
+  crawlers-ui:
+    image: orkid-ui
     port: 3100/http
     env:
-      # This will check if HTTP_USER, HTTP_PASSWORD, REDIS_HOST are set
-      - NODE_ENV=production
-      - HTTP_USER=admin
-      # You can use $MYPASS as value too, for example,
-      # if your password is set in host environmental variable $MYPASS.
-      # Careful if your password contains $ sign. You have to use $$ (double-dollar sign)
-      # to escape that. For example, using $$ecret as value here
-      # will be evaluated as $ecret, that's gonna be your password.
-      - HTTP_PASSWORD=_secret_password_
-      # Important! IP/Host of the Redis Server.
-      # Common mistake is passing localhost or 127.0.0.1 here, unless you are sure about
-      # what you are doing.
+      - HTTP_USER=user
+      - HTTP_PASSWORD=password
+      - REDIS_HOST=redis
+  crawlers:
+    image: ./
+    port: 8888/http
+    env:
       - REDIS_HOST=redis

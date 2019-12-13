@@ -1,6 +1,6 @@
 import { Crawler } from '@dish/crawler'
 
-async function main() {
+export async function crawlYelp() {
   const query = encodeURIComponent(`pho`)
   const location = encodeURIComponent(`San Francisco`)
   const crawler = new Crawler({
@@ -17,5 +17,3 @@ async function main() {
     })
     .onEndCrawl()
 }
-
-main()
