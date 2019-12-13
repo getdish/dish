@@ -1,0 +1,15 @@
+{
+  "name": "@dish/yelp-crawler",
+  "version": "0.0.1",
+  "main": "_/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "start": "node _/index.js",
+    "build": "tsc -b || true",
+    "watch": "tsc -b --watch --preserveWatchOutput"
+  },
+  "dependencies": {
+    "@dish/crawler": "*",
+    "orkid": "0.11.0"
+  }
+}

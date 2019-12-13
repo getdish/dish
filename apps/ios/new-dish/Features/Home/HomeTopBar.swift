@@ -30,9 +30,9 @@ struct HomeTopBar: View {
                 
                 Spacer()
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: Alignment.top)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: Alignment.topLeading)
+        // how do i pad == safe area
+        .padding(.top, 40)
     }
 }
 

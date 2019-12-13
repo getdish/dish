@@ -11,16 +11,16 @@ struct HomeDrawer: View {
     var body: some View {
         ZStack {
             // Dark background when open
-            Rectangle()
+            Color
+                .black
                 .animation(.spring())
-                .foregroundColor(.black)
                 .opacity(store.state.showDrawer ? 0.25 : 0.0)
                 .disabled(!store.state.showDrawer)
                 .onTapGesture {
                     self.store.send(.toggleDrawer)
                     Keyboard.hide()
-            }
-            
+                }
+
             BottomSheetView(
                 isOpen: self.showDrawer,
                 maxHeight: Constants.homeInitialDrawerFullHeight,
@@ -32,7 +32,7 @@ struct HomeDrawer: View {
                     }
                     .frame(maxWidth: .infinity)
                     .onTapGesture {
-//                        AppAction.toggleDrawer()
+                        self.store.send(.toggleDrawer)
                     }
                     .padding(.vertical, 6)
                 )

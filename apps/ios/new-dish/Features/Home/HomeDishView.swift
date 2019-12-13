@@ -1,21 +1,23 @@
 import SwiftUI
 
 struct HomeDishView: View {
-    @Environment(\.colorScheme) var colorScheme: ColorScheme
-    
-    // pushed map below the border radius of the bottomdrawer
-    let dishMapHeight = Screen.height + Screen.statusBarHeight - Constants.homeInitialDrawerHeight + 40 + 30
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(\.geometry) var appGeometry
     
     var body: some View {
-        GeometryReader { geometry in
+        // pushed map below the border radius of the bottomdrawer
+        let appHeight = appGeometry?.size.height ?? 100
+        let dishMapHeight = appHeight - Constants.homeInitialDrawerHeight + 40 + 30
+
+        return GeometryReader { geometry in
             ZStack {
-                Rectangle()
-                    .foregroundColor(Color(.red))
+                Color
+                    .red
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                
+
                 MapView(
                     width: geometry.size.width,
-                    height: self.dishMapHeight,
+                    height: dishMapHeight,
                     darkMode: self.colorScheme == .dark
                 )
                 
@@ -39,8 +41,8 @@ struct DragPagerSidebar: View {
     var body: some View {
         HStack {
             Spacer()
-            Rectangle()
-                .foregroundColor(Color.black.opacity(0.0001))
+            Color.black
+                .opacity(0.0001)
                 // idk why but Screen.height - Screen.statusBarHeight is bigger than full height
                 .frame(width: 40, height: Screen.height - Screen.statusBarHeight - 40)
                 .gesture(

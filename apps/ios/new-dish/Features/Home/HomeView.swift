@@ -25,13 +25,16 @@ struct HomeView: View {
                 }
             }
             .onChangePage { index in
-                AppAction.changeHomePage(index == 0 ? .home : .camera)
+                self.store.send(.changeHomePage(index == 0 ? .home : .camera))
             }
+            
+            HomeTopBar()
         }
         .background(
             self.colorScheme == .light ? Color.white : Color.black.opacity(0.8)
         )
         .edgesIgnoringSafeArea(.all)
+        .embedInGeometryReader()
     }
 }
 
