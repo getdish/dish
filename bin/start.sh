@@ -12,7 +12,7 @@ if [[ $(multipass list | grep dish | wc -l) -eq 0 ]]; then
 
   multipass shell dish << EOF
     echo "wait"
-    wait 4
+    wait 1
 
     echo "setup k3s"
     curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
