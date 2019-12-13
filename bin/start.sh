@@ -9,7 +9,7 @@ export DISH_PATH=$HOME/dish
 
 if [[ $(multipass list | grep dish | wc -l) -eq 0 ]]; then
   echo "setting up multipass vm"
-  multipass launch --name dish --mem 4G --disk 100G
+  multipass launch --name dish --mem 12G --disk 100G --cpus 4
 
   multipass shell dish << EOF
     echo "wait"
@@ -29,10 +29,13 @@ if [[ $(multipass list | grep dish | wc -l) -eq 0 ]]; then
 EOF
 fi
 
+echo "mounting disk..."
 multipass mount $DISH_PATH dish:/app 2> /dev/null || true
 
 printf "\n\b ✅ local dev all set up! \n\n logging into shell with: \n - multipass shell k3s\n"
 
 multipass shell dish  << EOF
   echo "starting services"
+  cd /app
+  bin/up.sh
 EOF
