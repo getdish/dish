@@ -1,10 +1,15 @@
 services:
   postgres:
     image: postgres
+    port: 5432/tcp
     env:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: local
-      POSTGRES_DB: main
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=local
+      - POSTGRES_DB=main
   postgres-admin:
     image: adminer
     port: 8080/http
+    env:
+      - ADMINER_DEFAULT_DB_DRIVER=pgsql
+      - ADMINER_DEFAULT_DB_HOST=postgres
+      - ADMINER_DEFAULT_DB_NAME=main

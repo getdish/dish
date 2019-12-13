@@ -2,7 +2,7 @@
 
 set -e
 
-SERVICES=$(find . -name Riofile -print0 | xargs -0 -n1 dirname | sort --unique)
+SERVICES=$(find . -name Riofile -printf '%h\n' | sort -u)
 
 echo "deploying services: $SERVICES"
 
