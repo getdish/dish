@@ -59,6 +59,13 @@
 		AE861A8523A17209004096BF /* HomeTopBarSearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8423A17209004096BF /* HomeTopBarSearchResults.swift */; };
 		AE861A8723A1727B004096BF /* HomeTopBarAccountButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8623A1727B004096BF /* HomeTopBarAccountButton.swift */; };
 		AE861A8923A172E8004096BF /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8823A172E8004096BF /* BlurView.swift */; };
+		AEA331EF23A3371D00B36A23 /* DishSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331EE23A3371D00B36A23 /* DishSidebarView.swift */; };
+		AEA331F123A3373D00B36A23 /* LoginSignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F023A3373D00B36A23 /* LoginSignupView.swift */; };
+		AEA331F323A337BD00B36A23 /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F223A337BD00B36A23 /* SessionStore.swift */; };
+		AEA331F523A3381200B36A23 /* DishInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F423A3381200B36A23 /* DishInput.swift */; };
+		AEA331F723A3382100B36A23 /* DishButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F623A3382100B36A23 /* DishButton.swift */; };
+		AEA331F923A3385000B36A23 /* InlineAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F823A3385000B36A23 /* InlineAlertView.swift */; };
+		AEA331FB23A338F400B36A23 /* KeyboardHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331FA23A338F400B36A23 /* KeyboardHost.swift */; };
 		D86ACF2A611C42837609F52F /* Pods_new_dish.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 747A16F1648AAEF4512E6322 /* Pods_new_dish.framework */; };
 /* End PBXBuildFile section */
 
@@ -120,6 +127,13 @@
 		AE861A8423A17209004096BF /* HomeTopBarSearchResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTopBarSearchResults.swift; sourceTree = "<group>"; };
 		AE861A8623A1727B004096BF /* HomeTopBarAccountButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTopBarAccountButton.swift; sourceTree = "<group>"; };
 		AE861A8823A172E8004096BF /* BlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurView.swift; sourceTree = "<group>"; };
+		AEA331EE23A3371D00B36A23 /* DishSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishSidebarView.swift; sourceTree = "<group>"; };
+		AEA331F023A3373D00B36A23 /* LoginSignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSignupView.swift; sourceTree = "<group>"; };
+		AEA331F223A337BD00B36A23 /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
+		AEA331F423A3381200B36A23 /* DishInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishInput.swift; sourceTree = "<group>"; };
+		AEA331F623A3382100B36A23 /* DishButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishButton.swift; sourceTree = "<group>"; };
+		AEA331F823A3385000B36A23 /* InlineAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineAlertView.swift; sourceTree = "<group>"; };
+		AEA331FA23A338F400B36A23 /* KeyboardHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHost.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +197,7 @@
 		1CE3547823986B2A004B3A84 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				AEA331ED23A3370200B36A23 /* Sidebar */,
 				1CE3548423986DDD004B3A84 /* Home */,
 			);
 			path = Features;
@@ -197,6 +212,7 @@
 				AE7563BB23A037870094022B /* Fixtures.swift */,
 				AE7563E023A037D90094022B /* Landmark.swift */,
 				AE861A7823A0651D004096BF /* Keyboard.swift */,
+				AEA331F223A337BD00B36A23 /* SessionStore.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -223,6 +239,10 @@
 				AE7563E823A03D570094022B /* MagicMove.swift */,
 				AE861A7A23A06EDC004096BF /* BarArrow.swift */,
 				1C6B321923A2A06100F0A7E6 /* SideDrawerView.swift */,
+				AEA331F423A3381200B36A23 /* DishInput.swift */,
+				AEA331F623A3382100B36A23 /* DishButton.swift */,
+				AEA331F823A3385000B36A23 /* InlineAlertView.swift */,
+				AEA331FA23A338F400B36A23 /* KeyboardHost.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -267,6 +287,15 @@
 			);
 			name = Resources;
 			path = "../../cur-ios/Dish/Resources";
+			sourceTree = "<group>";
+		};
+		AEA331ED23A3370200B36A23 /* Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				AEA331EE23A3371D00B36A23 /* DishSidebarView.swift */,
+				AEA331F023A3373D00B36A23 /* LoginSignupView.swift */,
+			);
+			path = Sidebar;
 			sourceTree = "<group>";
 		};
 		B08534291B7EB4653A4EA4FF /* Pods */ = {
@@ -437,6 +466,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1CE35486239870E8004B3A84 /* MapView.swift in Sources */,
+				AEA331F323A337BD00B36A23 /* SessionStore.swift in Sources */,
 				1CCEDF52239DC7C9003EE228 /* PagerView.swift in Sources */,
 				AE7563B423A035E70094022B /* HomeDishView.swift in Sources */,
 				AE7563E323A038190094022B /* Array.swift in Sources */,
@@ -446,17 +476,23 @@
 				1CE3548A239871CB004B3A84 /* BottomSheetView.swift in Sources */,
 				1C3CFE6423998FF2004B2EEA /* HomeContainerView.swift in Sources */,
 				AE861A7F23A07D81004096BF /* HomeMapControls.swift in Sources */,
+				AEA331FB23A338F400B36A23 /* KeyboardHost.swift in Sources */,
 				AE7563E523A038300094022B /* SearchInput.swift in Sources */,
 				1CE3546723986B1B004B3A84 /* SceneDelegate.swift in Sources */,
 				AE7563B823A036500094022B /* Screen.swift in Sources */,
 				1CE3548123986BC1004B3A84 /* View.swift in Sources */,
+				AEA331F723A3382100B36A23 /* DishButton.swift in Sources */,
 				1CE3548323986C5C004B3A84 /* App.swift in Sources */,
 				AE861A7923A0651D004096BF /* Keyboard.swift in Sources */,
 				AE861A8123A16DA6004096BF /* HomeTopBar.swift in Sources */,
 				AE861A8923A172E8004096BF /* BlurView.swift in Sources */,
 				AE861A8723A1727B004096BF /* HomeTopBarAccountButton.swift in Sources */,
+				AEA331F923A3385000B36A23 /* InlineAlertView.swift in Sources */,
+				AEA331EF23A3371D00B36A23 /* DishSidebarView.swift in Sources */,
 				1CE2393123A19722006B7AFD /* Environment.swift in Sources */,
+				AEA331F523A3381200B36A23 /* DishInput.swift in Sources */,
 				1C6B321A23A2A06100F0A7E6 /* SideDrawerView.swift in Sources */,
+				AEA331F123A3373D00B36A23 /* LoginSignupView.swift in Sources */,
 				1CE354882398714D004B3A84 /* HomeView.swift in Sources */,
 				AE861A8523A17209004096BF /* HomeTopBarSearchResults.swift in Sources */,
 				1CE3546923986B1B004B3A84 /* RootView.swift in Sources */,

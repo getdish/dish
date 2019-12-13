@@ -1,7 +1,3 @@
-//  Created by Ben McMahen on 2019-06-19.
-//  Copyright © 2019 Ben McMahen. All rights reserved.
-//
-
 import SwiftUI
 
 struct InputModifier: ViewModifier {

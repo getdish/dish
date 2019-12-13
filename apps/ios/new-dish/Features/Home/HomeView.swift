@@ -11,22 +11,31 @@ struct HomeView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @EnvironmentObject var store: AppStore
     @State private var index = 0
+    @State private var sideDrawerShown = false
     
     var body: some View {
         ZStack {
-            PagerView(
-                pageCount: 3,
-                currentIndex: self.$index
-            ) {
-                HomeDishView()
-                Image(systemName: "photo").resizable()
-                Button(action: { self.index = 0 }) {
-                    Text("Go to first page")
+            SideDrawerView(
+                isOpen: self.$sideDrawerShown,
+                content: {
+                    PagerView(
+                        pageCount: 3,
+                        currentIndex: self.$index
+                    ) {
+                        HomeDishView()
+                        Image(systemName: "photo").resizable()
+                        Button(action: { self.index = 0 }) {
+                            Text("Go to first page")
+                        }
+                    }
+                    .onChangePage { index in
+                        self.store.send(.changeHomePage(index == 0 ? .home : .camera))
+                    }
+                },
+                drawer: {
+                   DishSidebarView()
                 }
-            }
-            .onChangePage { index in
-                self.store.send(.changeHomePage(index == 0 ? .home : .camera))
-            }
+            )
             
             HomeTopBar()
         }
