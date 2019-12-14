@@ -1,0 +1,10 @@
+{
+  "files": [],
+  "compilerOptions": {
+    "incremental": true
+  },
+  "references": [
+    { "path": "./packages/crawler" },
+    { "path": "./services/crawlers" }
+  ]
+}

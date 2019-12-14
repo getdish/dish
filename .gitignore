@@ -1,6 +1,9 @@
 # Node
 
+dist
+tsconfig.tsbuildinfo
 node_modules
+**/_
 
 .DS_Store
 # Xcode

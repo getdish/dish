@@ -19,8 +19,8 @@ struct HomeDrawer: View {
                 .onTapGesture {
                     self.store.send(.toggleDrawer)
                     Keyboard.hide()
-            }
-            
+                }
+
             BottomSheetView(
                 isOpen: self.showDrawer,
                 maxHeight: Constants.homeInitialDrawerFullHeight,
@@ -32,7 +32,7 @@ struct HomeDrawer: View {
                     }
                     .frame(maxWidth: .infinity)
                     .onTapGesture {
-//                        AppAction.toggleDrawer()
+                        self.store.send(.toggleDrawer)
                     }
                     .padding(.vertical, 6)
                 )

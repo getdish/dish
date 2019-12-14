@@ -1,0 +1,21 @@
+{
+  "name": "@dish/crawler",
+  "version": "0.0.1",
+  "main": "_/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "start": "node _/index.js",
+    "build": "tsc -b || true",
+    "watch": "tsc -b --watch --preserveWatchOutput",
+    "test": "ava --verbose"
+  },
+  "dependencies": {
+    "puppeteer": "^2.0.0",
+    "lodash": "^4.17.15",
+    "urijs": "^1.19.2",
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/puppeteer": "^2.0.0"
+  }
+}
