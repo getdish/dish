@@ -85,7 +85,7 @@ struct SideDrawerView_Previews: PreviewProvider {
             var body: some View {
                 SideDrawerView(
                     isOpen: self.$sideDrawerShown,
-                    content: { AppleMapsView() },
+                    content: { Color.blue },
                     drawer: { Color.red.frame(width: 300) }
                 )
             }

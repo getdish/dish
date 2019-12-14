@@ -15,3 +15,13 @@ New plan:
 - create image-crawlers for better images (instagram + deliver service apps)
 - create delivery-crawlers (uber eats, postmates, etc)
 - think over ranking / start on search/ranking stuff
+
+---
+
+rio password "T1W3T0BZVMZfpGbQ"
+
+---
+
+notes
+
+- randomizing top dishes a bit

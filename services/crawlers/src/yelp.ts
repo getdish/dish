@@ -1,6 +1,7 @@
 import { Crawler } from '@dish/crawler'
 
-async function main() {
+export async function crawlYelp() {
+  console.log('Starting yelp crawl')
   const query = encodeURIComponent(`pho`)
   const location = encodeURIComponent(`San Francisco`)
   const crawler = new Crawler({
@@ -8,7 +9,7 @@ async function main() {
     maxPages: 20,
   })
 
-  const results = await crawler
+  await crawler
     .start({
       depth: '/biz',
     })
@@ -17,5 +18,3 @@ async function main() {
     })
     .onEndCrawl()
 }
-
-main()

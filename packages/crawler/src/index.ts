@@ -162,7 +162,11 @@ export class Crawler {
           return null
         }
 
-        const { outboundUrls } = await crawlPage.run()
+        const { success, outboundUrls } = await crawlPage.run()
+
+        if (!success) {
+          return null
+        }
 
         if (this.onPageCallback) {
           this.onPageCallback(page)
@@ -177,7 +181,7 @@ export class Crawler {
           url: target.url,
         }
       } catch (err) {
-        if (!this.isFinished()) {
+        if (!this.isFinished(false)) {
           console.log(
             `Error crawling url ${target.url}\n${err.message}\n${err.stack}`,
           )
@@ -191,6 +195,7 @@ export class Crawler {
     await runTarget(target, pages[0]).then(finishProcessing(0))
 
     // start rest
+    console.log(`Start crawling...`)
     if (maxPages ?? Infinity > 1) {
       while (!this.isFinished(true)) {
         // TODO make throttle adjust for concurrency
@@ -214,7 +219,7 @@ export class Crawler {
     console.log(`took ${(+Date.now() - startTime) / 1000} seconds`)
   }
 
-  async isFinished(checkQueue?: boolean) {
+  async isFinished(checkQueue = true) {
     const isLoadingPage = this.loadingPage.indexOf(true) > -1
     const hasMoreInQueue = this.queue.pageQueue.length > 0
     const hasFoundEnough = this.count >= this.options.maxPages
@@ -224,7 +229,8 @@ export class Crawler {
       if (hasFoundEnough) console.log('isFinished => hasFoundEnough')
       if (queueEmpty) console.log('isFinished => queueEmpty')
     }
-    return !this.isRunning || hasFoundEnough || (checkQueue && queueEmpty)
+    const res = !this.isRunning || hasFoundEnough || (checkQueue && queueEmpty)
+    return res
   }
 
   onPage(cb: OnPageCallback) {

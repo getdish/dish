@@ -11,5 +11,8 @@
   "dependencies": {
     "@dish/crawler": "*",
     "orkid": "0.11.0"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.20.5"
   }
 }
