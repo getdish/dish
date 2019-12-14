@@ -1,5 +1,7 @@
 # Node
 
+yarn-error.log
+.next
 dist
 tsconfig.tsbuildinfo
 node_modules
