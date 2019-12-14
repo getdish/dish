@@ -1,22 +1,51 @@
-import { useQuery } from 'urql'
+import { useMutation, useQuery } from 'urql'
 
 export function Results() {
-  const [results] = useQuery({
-    query: `{ something }`,
+  const [dishes] = useQuery({
+    query: `query MyQuery {
+      __typename
+      dish_aggregate {
+        nodes {
+          name
+          id
+          updated_at
+        }
+      }
+    }`,
   })
-  console.log('results', results)
+  const [result, executeMutation] = useMutation(
+    `mutation MyMutation {
+      __typename
+      insert_dish(objects: {name: "hello world"})
+    }`,
+  )
 
   return (
     <div>
+      <button
+        onClick={() => {
+          console.log('got')
+          executeMutation()
+        }}
+      >
+        Add
+      </button>
       <ul>
-        <li>
-          <h3>Search result 1</h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eusmod tempor incididunt ut labore epstein didn't kill himself.
-          </p>
-        </li>
+        {/* {( ?? []).map((dish, i) => (
+          <li key={i}>
+            <h3>Search result {i}</h3>
+            <p>
+              <code>
+                <pre>{JSON.stringify(dish, null, 2)}</pre>
+              </code>
+            </p>
+          </li>
+        ))} */}
       </ul>
+      dishes
+      <pre>{JSON.stringify(dishes, null, 2)}</pre>
+      result
+      <pre>{JSON.stringify(result, null, 2)}</pre>
     </div>
   )
 }
