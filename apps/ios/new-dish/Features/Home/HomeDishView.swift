@@ -11,10 +11,8 @@ struct HomeDishView: View {
 
         return GeometryReader { geometry in
             ZStack {
-                Color
-                    .red
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-
+                Color.black.frame(maxWidth: .infinity, maxHeight: .infinity)
+                
                 MapView(
                     width: geometry.size.width,
                     height: dishMapHeight,
@@ -24,6 +22,8 @@ struct HomeDishView: View {
                 HomeMapControls()
                 
                 HomeDrawer()
+                
+                HomeDishGallery()
                 
                 DragPagerSidebar()
             }

@@ -13,8 +13,8 @@ struct HomeDrawer: View {
             // Dark background when open
             Color
                 .black
-                .animation(.spring())
                 .opacity(store.state.showDrawer ? 0.25 : 0.0)
+                .animation(.spring())
                 .disabled(!store.state.showDrawer)
                 .onTapGesture {
                     self.store.send(.toggleDrawer)

@@ -13,14 +13,20 @@ enum HomePageView {
 }
 
 struct AppState {
+    // home
     var homePageView: HomePageView = .home
     var showDrawer = true
+    
+    // location
     var showLocationSearch = false
     var locationSearch = ""
     var locationSearchResults: [CLLocation] = []
     var lastKnownLocation: CLLocation? = nil
     var isOnCurrentLocation = false
     var hasChangedLocationOnce = false
+    
+    // gallery
+    var galleryDish: Landmark? = nil
 }
 
 enum AppAction {
@@ -31,6 +37,8 @@ enum AppAction {
     case setLastKnownLocation(_ location: CLLocation?)
     case setLocationSearch(_ search: String)
     case setLocationSearchResults(_ locations: [CLLocation])
+    case setGalleryDish(_ dish: Landmark?)
+    case closeGallery
 }
 
 let appReducer = Reducer<AppState, AppAction> { state, action in
@@ -49,6 +57,10 @@ let appReducer = Reducer<AppState, AppAction> { state, action in
             state.locationSearchResults = locations
         case let .setLocationSearch(search):
             state.locationSearch = search
+        case let .setGalleryDish(dish):
+            state.galleryDish = dish
+        case .closeGallery:
+            state.galleryDish = nil
         
     }
 }

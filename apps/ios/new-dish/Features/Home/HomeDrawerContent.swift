@@ -48,13 +48,14 @@ struct HomeDrawerContent: View {
 
 struct DishCard: View {
     var landmark: Landmark
+    @EnvironmentObject var store: AppStore
     
     var body: some View {
         FeatureCard(landmark: landmark, at: .start)
             .cornerRadius(14)
             .onTapGesture {
-                //                Store.home.dish = self.landmark
-        }
+                self.store.send(.setGalleryDish(self.landmark))
+            }
     }
 }
 
