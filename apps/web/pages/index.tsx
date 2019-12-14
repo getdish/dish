@@ -1,20 +1,12 @@
+import { Results } from './Results'
+
 export const config = { amp: true }
 
 export default () => (
   <div>
     <input placeholder="Search..." />
 
-    <div>
-      <ul>
-        <li>
-          <h3>Search result 1</h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eusmod tempor incididunt ut labore epstein didn't kill himself.
-          </p>
-        </li>
-      </ul>
-    </div>
+    <Results />
 
     <style jsx global>{`
       * {
