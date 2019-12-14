@@ -2,9 +2,13 @@
 
 FROM mhart/alpine-node:12
 WORKDIR /app
+
 COPY package.json .
-COPY packages/crawler ./packages/crawler
+
+# copy service
 COPY services/crawlers ./services/crawlers
+# copy monorepo dependencies
+COPY packages/crawler ./packages/crawler
 
 RUN yarn install --production --no-scripts
 
