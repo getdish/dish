@@ -48,15 +48,7 @@ multipass mount $DISH_PATH dish:/app 2> /dev/null || true
 printf "\n\b ✅ local dev all set up! \n\n logging into shell with: \n - multipass shell k3s\n"
 
 multipass shell dish  << EOF
-  echo "installing and building once"
-  cd /app
-  yarn install
-  yarn build
-
   echo "starting services"
   cd /app
   bin/up.sh
-
-  echo "incremental building"
-  yarn build:watch
 EOF
