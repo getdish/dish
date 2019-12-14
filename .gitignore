@@ -1,5 +1,6 @@
 # Node
 
+.next
 dist
 tsconfig.tsbuildinfo
 node_modules
