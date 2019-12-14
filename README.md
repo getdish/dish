@@ -19,3 +19,9 @@ New plan:
 ---
 
 rio password "T1W3T0BZVMZfpGbQ"
+
+---
+
+notes
+
+- randomizing top dishes a bit
