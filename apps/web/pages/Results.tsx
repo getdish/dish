@@ -2,20 +2,15 @@ import { useMutation, useQuery } from 'urql'
 
 export function Results() {
   const [dishes] = useQuery({
-    query: `query MyQuery {
-      __typename
-      dish_aggregate {
-        nodes {
-          name
-          id
-          updated_at
-        }
+    query: `{
+      dish {
+        name
       }
-    }`,
+    }
+    `,
   })
   const [result, executeMutation] = useMutation(
-    `mutation MyMutation {
-      __typename
+    `mutation {
       insert_dish(objects: {name: "hello world"})
     }`,
   )
@@ -30,18 +25,17 @@ export function Results() {
       >
         Add
       </button>
-      <ul>
-        {/* {( ?? []).map((dish, i) => (
-          <li key={i}>
-            <h3>Search result {i}</h3>
-            <p>
-              <code>
-                <pre>{JSON.stringify(dish, null, 2)}</pre>
-              </code>
-            </p>
-          </li>
-        ))} */}
-      </ul>
+      {!dishes.fetching && (
+        <ul>
+          {dishes.data.dish.map((dish, i) => (
+            <li key={i}>
+              <h3>
+                {i}. {dish.name}
+              </h3>
+            </li>
+          ))}
+        </ul>
+      )}
       dishes
       <pre>{JSON.stringify(dishes, null, 2)}</pre>
       result
