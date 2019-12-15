@@ -2,8 +2,6 @@ import App from 'next/app'
 import React from 'react'
 import { createClient, Provider } from 'urql'
 
-console.log('providin2g')
-
 const client = createClient({
   url: 'https://hasura-fb523da8-default.927892.on-rio.io/v1/graphql',
 })
