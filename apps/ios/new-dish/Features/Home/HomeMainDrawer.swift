@@ -1,7 +1,7 @@
 import SwiftUI
 import Combine
 
-struct HomeDrawer: View {
+struct HomeMainDrawer: View {
     @EnvironmentObject var store: AppStore
     
     private var showDrawer: Binding<Bool> {

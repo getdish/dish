@@ -97,7 +97,7 @@ struct Tag<Content>: View where Content: View {
 #if DEBUG
 struct HomeDrawerContent_Previews: PreviewProvider {
     static var previews: some View {
-        HomeDrawer()
+        HomeDrawerContent()
     }
 }
 #endif

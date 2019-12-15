@@ -21,9 +21,9 @@ struct HomeDishView: View {
                 
                 HomeMapControls()
                 
-                HomeDrawer()
+                HomeMainDrawer()
                 
-                HomeDishGallery()
+                DishGalleryView()
                 
                 DragPagerSidebar()
             }
