@@ -33,7 +33,9 @@ struct HomeView: View {
                     }
                 },
                 drawer: {
-                   DishSidebarView()
+                    // TODO @majid it shows DishSidebarView()
+                    EmptyView()
+//                   DishSidebarView()
                 }
             )
             
