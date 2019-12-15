@@ -1,20 +1,18 @@
 #!/bin/bash
 
+. $(dirname $0)/script-utils.sh
+cd $ROOT
+
 set -e
 
-# assumes we have fd, setup in start.h
-SERVICES=(`fd Riofile | sed 's,/*[^/]\+/*$,,'`)
-ROOT=`pwd`
+SERVICES=("hasura" "postgres" "redis")
 
-echo "deploying services: $SERVICES"
+echo "up"
+rio up &
 
-for service in "${SERVICES[@]}"
-do
-  cd $service
-  if [ -f build.sh ]; then
-    echo "building..."
-    ./build.sh
-  fi
-  rio up
-  cd $ROOT
+for service in "${SERVICES[@]}"; do
+  echo "up $service"
+  (cd services/$service && rio up) &
 done
+
+wait

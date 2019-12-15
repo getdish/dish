@@ -23,10 +23,6 @@ if [[ $(multipass list | grep dish | wc -l) -eq 0 ]]; then
     curl -o- -L https://yarnpkg.com/install.sh | bash
     exec $SHELL
 
-    echo "add fd for fast finding"
-    wget -q https://github.com/sharkdp/fd/releases/download/v7.4.0/fd_7.4.0_amd64.deb
-    sudo dpkg -i fd_7.4.0_amd64.deb
-
     echo "setup k3s"
     curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
 
