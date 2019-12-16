@@ -13,7 +13,7 @@ struct HomeDrawerContent: View {
         VStack(spacing: 3) {
             VStack(spacing: 3) {
                 SearchInput(
-                    placeholder: "Pho, Burger, Salad...",
+                    placeholder: "Pho, Burger, Wings...",
                     inputBackgroundColor: Color.white.opacity(0.5),
                     borderColor: Color.gray.opacity(0.4),
                     scale: self.scrollAtTop ? 1.25 : 1.0,
