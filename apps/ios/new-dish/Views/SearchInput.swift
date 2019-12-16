@@ -9,6 +9,8 @@ struct EmptyModifier: ViewModifier {
 struct SearchInput: View {
     var placeholder = "Search"
     var inputBackgroundColor = Color(.secondarySystemBackground)
+    var borderColor = Color.clear
+    var borderWidth = 1
     var blur = 0
     var scale = CGFloat(1)
     var sizeRadius = CGFloat(1)
@@ -89,6 +91,10 @@ struct SearchInput: View {
                     .foregroundColor(.secondary)
                     .background(self.inputBackgroundColor)
                     .cornerRadius(10.0 * scale * sizeRadius)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10.0 * scale * sizeRadius)
+                            .stroke(borderColor, lineWidth: borderWidth)
+                    )
                 
                 if showCancelButton && !showCancelInside {
                     cancelButton
