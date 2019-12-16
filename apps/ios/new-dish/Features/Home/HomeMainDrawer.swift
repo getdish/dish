@@ -26,15 +26,17 @@ struct HomeMainDrawer: View {
                 maxHeight: Constants.homeInitialDrawerFullHeight,
                 snapRatio: 0.1,
                 indicator: AnyView(
-                    HStack {
-                        BarArrow(direction: store.state.showDrawer ? .down : .up)
-                            .padding(.vertical, 8)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .onTapGesture {
-                        self.store.send(.toggleDrawer)
-                    }
-                    .padding(.vertical, 6)
+                        HStack {
+                            store.state.showDrawer ?
+                                nil :
+                                BarArrow(direction: store.state.showDrawer ? .down : .up)
+                                    .padding(.vertical, 8)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .onTapGesture {
+                            self.store.send(.toggleDrawer)
+                        }
+                        .padding(.vertical, 6)
                 )
             ) {
                 HomeDrawerContent()

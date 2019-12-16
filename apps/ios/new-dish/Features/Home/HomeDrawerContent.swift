@@ -14,7 +14,7 @@ struct HomeDrawerContent: View {
             VStack(spacing: 3) {
                 SearchInput(
                     placeholder: "Pho, Burger, Salad...",
-                    inputBackgroundColor: Color(.secondarySystemGroupedBackground),
+                    inputBackgroundColor: Color.white.opacity(0.5),
                     scale: self.scrollAtTop ? 1.25 : 1.0,
                     sizeRadius: 2.0,
                     searchText: self.$searchText
@@ -37,7 +37,7 @@ struct HomeDrawerContent: View {
                             }
                             .padding(.horizontal, 10)
 
-                            ScrollView(.horizontal) {
+                            ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 6) {
                                     ForEach(self.items) { item in
                                         DishBrowseCard(landmark: item)
@@ -78,10 +78,10 @@ struct TagsBar: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
-                Tag {Image("uber").resizable().frame(width: 42, height: 42)}
-                Tag {Image("postmates").resizable().frame(width: 42, height: 42)}
-                Tag {Image("doordash").resizable().frame(width: 42, height: 42)}
-                Tag {Image("grubhub").resizable().frame(width: 42, height: 42)}
+                Tag { Text("Deliver").font(.system(size: 12.0)) }
+                Tag { Text("Health").font(.system(size: 12.0)) }
+                Tag { Text("Price").font(.system(size: 12.0)) }
+                Tag { Text("Diet").font(.system(size: 12.0)) }
             }
             .padding(.vertical, 8)
             .padding(.horizontal)
