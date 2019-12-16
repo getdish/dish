@@ -3,7 +3,7 @@ import SwiftUI
 struct HomeDrawerContent: View {
     @State var searchText = ""
     @State var scrollAtTop = true
-    let items = features.chunked(into: 2)
+    let items = features
     
     init() {
         UINavigationBar.appearance().backgroundColor = .clear
@@ -19,18 +19,32 @@ struct HomeDrawerContent: View {
                     sizeRadius: 2.0,
                     searchText: self.$searchText
                 )
-                    .padding(.horizontal)
+                .padding(.horizontal)
                 
-                TagsBar()
+                Spacer().frame(height: 8)
+//                TagsBar()
             }
             
             ScrollView {
                 VStack(spacing: 6) {
-                    ForEach(0 ..< self.items.count) { index in
-                        HStack(spacing: 6) {
-                            ForEach(self.items[index]) { item in
-                                DishCard(landmark: item)
+                    ForEach(0 ..< 10) { index in
+                        VStack(alignment: .leading, spacing: 6) {
+                            HStack {
+                                Text("Noodles")
+                                    .opacity(0.8)
                             }
+                            .padding(.horizontal, 8)
+
+                            ScrollView(.horizontal) {
+                                HStack(spacing: 6) {
+                                    ForEach(self.items) { item in
+                                        DishBrowseCard(landmark: item)
+                                            .frame(width: 160)
+                                    }
+                                }
+                                .padding(.horizontal, 6)
+                            }
+                            Spacer().frame(height: 8)
                         }
                     }
                     
@@ -38,7 +52,6 @@ struct HomeDrawerContent: View {
                     Spacer().frame(height: 40)
                 }
             }
-            .padding(.horizontal, 6)
         }
     }
 }
@@ -46,7 +59,7 @@ struct HomeDrawerContent: View {
 
 // Temporary views
 
-struct DishCard: View {
+struct DishBrowseCard: View {
     var landmark: Landmark
     @EnvironmentObject var store: AppStore
     

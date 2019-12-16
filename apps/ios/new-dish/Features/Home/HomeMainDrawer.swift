@@ -28,7 +28,7 @@ struct HomeMainDrawer: View {
                 indicator: AnyView(
                     HStack {
                         BarArrow(direction: store.state.showDrawer ? .down : .up)
-                            .padding(.vertical, 10)
+                            .padding(.vertical, 8)
                     }
                     .frame(maxWidth: .infinity)
                     .onTapGesture {
