@@ -9,7 +9,7 @@ struct DishGalleryView: View {
         let hidden = shown == true ? false : self.store.state.galleryDish == nil
         
         return ZStack {
-            DishGalleryPane()
+            DishGalleryBackground()
                 .overlay(
                     DishGalleryViewContent()
                 )
@@ -30,8 +30,6 @@ struct DishGalleryView: View {
                         }
                     }
             )
-            
-            DishGalleryOverlayView()
         }
         .edgesIgnoringSafeArea(.all)
         .disabled(hidden ? true : false)
@@ -41,7 +39,7 @@ struct DishGalleryView: View {
     }
 }
 
-struct DishGalleryPane: View {
+struct DishGalleryBackground: View {
     @EnvironmentObject var store: AppStore
     @State private var translationY = CGFloat(0.0)
 

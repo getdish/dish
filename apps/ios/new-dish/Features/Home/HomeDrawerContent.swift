@@ -67,7 +67,7 @@ struct DishBrowseCard: View {
     @EnvironmentObject var store: AppStore
     
     var body: some View {
-        FeatureCard(landmark: landmark, at: .start)
+        FeatureCard(landmark: landmark)
             .cornerRadius(14)
             .onTapGesture {
                 self.store.send(.setGalleryDish(self.landmark))
