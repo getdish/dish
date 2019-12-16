@@ -14,7 +14,7 @@ struct FeatureCard: View, Identifiable {
             MagicItem(getLandmarkId(landmark), at: at) {
                 self.landmark.image
                     .resizable()
-                    .aspectRatio(2 / 3, contentMode: .fit)
+                    .aspectRatio(2 / 2.5, contentMode: .fit)
                     .overlay(TextOverlay(landmark: self.landmark))
             }
         }

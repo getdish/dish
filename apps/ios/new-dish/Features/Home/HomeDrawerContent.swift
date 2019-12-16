@@ -19,7 +19,7 @@ struct HomeDrawerContent: View {
                     sizeRadius: 2.0,
                     searchText: self.$searchText
                 )
-                .padding(.horizontal)
+                .padding(.horizontal, 8)
                 
                 Spacer().frame(height: 8)
 //                TagsBar()
@@ -31,15 +31,17 @@ struct HomeDrawerContent: View {
                         VStack(alignment: .leading, spacing: 6) {
                             HStack {
                                 Text("Noodles")
+                                    .fontWeight(.bold)
+                                    .font(.system(size: 14.0))
                                     .opacity(0.8)
                             }
-                            .padding(.horizontal, 8)
+                            .padding(.horizontal, 10)
 
                             ScrollView(.horizontal) {
                                 HStack(spacing: 6) {
                                     ForEach(self.items) { item in
                                         DishBrowseCard(landmark: item)
-                                            .frame(width: 160)
+                                            .frame(width: 140)
                                     }
                                 }
                                 .padding(.horizontal, 6)
