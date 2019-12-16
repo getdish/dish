@@ -60,51 +60,6 @@ struct HomeViewContent: View {
     }
 }
 
-struct HomeBottomNav: View {
-    var body: some View {
-        VStack {
-            Spacer()
-            HStack {
-                DishHomeButton()
-            }
-            Spacer()
-                .frame(height: 80)
-        }
-    }
-}
-
-
-struct DishHomeButton: View {
-    var body: some View {
-        Button(action: {
-            // todo
-        }) {
-            Text("Filters")
-                .foregroundColor(.white)
-                .font(.system(size: 20.0))
-                .fontWeight(.bold)
-        }
-        .padding()
-        .background(
-            BlurView(style: .systemUltraThinMaterial)
-        )
-            .background(
-                LinearGradient(
-                    gradient: Gradient(colors: [Color.white.opacity(0.1),
-                                                Color.white.opacity(0.2)]),
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-        )
-            .cornerRadius(80)
-            .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
-            .overlay(
-                RoundedRectangle(cornerRadius: 80)
-                    .stroke(Color.white.opacity(0.5), lineWidth: 1)
-        )
-    }
-}
-
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {

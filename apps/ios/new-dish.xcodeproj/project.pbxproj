@@ -23,6 +23,7 @@
 		1CE35486239870E8004B3A84 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE35485239870E8004B3A84 /* MapView.swift */; };
 		1CE354882398714D004B3A84 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE354872398714D004B3A84 /* HomeView.swift */; };
 		1CE3548A239871CB004B3A84 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE35489239871CB004B3A84 /* BottomSheetView.swift */; };
+		AE6CECCD23A843E600B08870 /* HomeBottomNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6CECCC23A843E600B08870 /* HomeBottomNav.swift */; };
 		AE7563B423A035E70094022B /* HomeDishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B323A035E70094022B /* HomeDishView.swift */; };
 		AE7563B623A036160094022B /* HomeMainDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B523A036160094022B /* HomeMainDrawer.swift */; };
 		AE7563B823A036500094022B /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B723A036500094022B /* Screen.swift */; };
@@ -94,6 +95,7 @@
 		4FC1515AF7AF7D07CEA412D6 /* Pods-new-dish.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-new-dish.debug.xcconfig"; path = "Target Support Files/Pods-new-dish/Pods-new-dish.debug.xcconfig"; sourceTree = "<group>"; };
 		689FB70D8F1B2CC28C677E48 /* Pods-new-dish.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-new-dish.release.xcconfig"; path = "Target Support Files/Pods-new-dish/Pods-new-dish.release.xcconfig"; sourceTree = "<group>"; };
 		747A16F1648AAEF4512E6322 /* Pods_new_dish.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_new_dish.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE6CECCC23A843E600B08870 /* HomeBottomNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeBottomNav.swift; sourceTree = "<group>"; };
 		AE7563B323A035E70094022B /* HomeDishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDishView.swift; sourceTree = "<group>"; };
 		AE7563B523A036160094022B /* HomeMainDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainDrawer.swift; sourceTree = "<group>"; };
 		AE7563B723A036500094022B /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
@@ -258,6 +260,7 @@
 			children = (
 				1C3CFE6323998FF2004B2EEA /* HomeContainerView.swift */,
 				1CE354872398714D004B3A84 /* HomeView.swift */,
+				AE6CECCC23A843E600B08870 /* HomeBottomNav.swift */,
 				AE7563B323A035E70094022B /* HomeDishView.swift */,
 				AE861A7E23A07D81004096BF /* HomeMapControls.swift */,
 				AE7563B523A036160094022B /* HomeMainDrawer.swift */,
@@ -517,6 +520,7 @@
 				1CE3546923986B1B004B3A84 /* RootView.swift in Sources */,
 				AE7563E723A03D3C0094022B /* FeatureCard.swift in Sources */,
 				AE7563E123A037D90094022B /* Landmark.swift in Sources */,
+				AE6CECCD23A843E600B08870 /* HomeBottomNav.swift in Sources */,
 				AE861A7B23A06EDC004096BF /* BarArrow.swift in Sources */,
 				AE861A8323A171D2004096BF /* HomeTopBarSearch.swift in Sources */,
 				AE7563B623A036160094022B /* HomeMainDrawer.swift in Sources */,
