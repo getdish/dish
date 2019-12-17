@@ -16,25 +16,23 @@ struct DishGalleryViewContent: View {
 struct DishGalleryCards: View {
     let cards = features
     
-    enum AnimateTarget {
-        case cur, prev
+    struct CardAnimation {
+        enum Target { case cur, prev }
+        var x: CGFloat = 0
+        var target: Target = .cur
+        var animateToX = false
     }
     
-    @State private var animating: AnimateTarget = .cur
-
-    @State private var prevTranslateX: CGFloat = 0
-    @State private var translationX: CGFloat = 0
-    // temp workaround because no withAnimation callback
-    @State private var finishDragX: CGFloat = 0
-    @State private var isFinishingAnimation = false
+    @State private var animation: CardAnimation = CardAnimation(x: 0, target: .cur)
     @State private var curIndex = 0
     
     var body: some View {
         print("render")
         
-        let curCard = FeatureCard(landmark: features[curIndex]).cornerRadius(10)
-        let nextCard = FeatureCard(landmark: features[curIndex + 1]).cornerRadius(0)
-        let prevCard = FeatureCard(landmark: features[max(0, curIndex - 1)]).cornerRadius(50)
+        let animation = self.animation
+        let curCard = FeatureCard(landmark: features[curIndex]).modifier(CardStyle())
+        let nextCard = FeatureCard(landmark: features[curIndex + 1]).modifier(CardStyle())
+        let prevCard = FeatureCard(landmark: features[max(0, curIndex - 1)]).modifier(CardStyle())
         
         return GeometryReader { geometry in
             ZStack {
@@ -42,16 +40,14 @@ struct DishGalleryCards: View {
                 
                 ZStack {
                     curCard
-                        .shadow(
-                            color: Color.black.opacity(0.4), radius: 10, x: 0, y: 0
-                    )
-                    //                        .rotation3DEffect(
+                    // if you want rotation effect do inside ZStack here:
+                    //                    .rotation3DEffect(
                     //                            .degrees(20.0),
                     //                            axis: (0.0, 1.0, 1.0)
                     //                    )
                 }
-                .offset(x: self.animating == .cur ? self.translationX + (self.isFinishingAnimation ? self.finishDragX : 0) : 0)
-                .animation(self.isFinishingAnimation ? .spring(response: 0.3) : nil)
+                .offset(x: animation.target == .cur ? animation.x : 0)
+                .animation(animation.target == .cur && animation.animateToX ? .spring(response: 0.3) : nil)
                 .gesture(
                     DragGesture(minimumDistance: 0, coordinateSpace: .global)
                         .onChanged { value in
@@ -60,8 +56,11 @@ struct DishGalleryCards: View {
                                 print("already at start")
                                 return
                             }
-                            self.animating = x > 0 ? .prev : .cur
-                            self.translationX = x
+                            self.animation = CardAnimation(
+                                x: x,
+                                target: x > 0 ? .prev : .cur,
+                                animateToX: false
+                            )
                     }.onEnded { value in
                         let frameWidth = geometry.size.width
                         let offset = value.translation.width / frameWidth
@@ -73,37 +72,70 @@ struct DishGalleryCards: View {
                                 return
                             }
                             
-                            if newIndex < self.curIndex {
-                                self.translationX = 0
-                                self.prevTranslateX = frameWidth
+                            if newIndex > self.curIndex {
+                                // next card
+                                self.animation = CardAnimation(
+                                    x: -frameWidth,
+                                    target: .cur,
+                                    animateToX: true
+                                )
                             } else {
-                                self.finishDragX = self.translationX - frameWidth
-                                self.isFinishingAnimation = true
-                                self.translationX = 0
+                                // prev card
+                                self.animation = CardAnimation(
+                                    x: frameWidth,
+                                    target: .prev,
+                                    animateToX: true
+                                )
+                                
                             }
                             
                             // reset state
                             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                                 print("finish animation")
-                                self.animating = .cur
-                                self.isFinishingAnimation = false
-                                self.finishDragX = 0
+                                self.animation = CardAnimation(
+                                    x: 0,
+                                    target: .cur,
+                                    animateToX: false
+                                )
                                 self.curIndex = newIndex
                             }
                         } else {
-                            withAnimation(.spring(response: 0.3)) {
-                                self.translationX = 0
+                            print("under threshold reset it")
+                            
+                            if animation.target == .cur {
+                                self.animation = CardAnimation(
+                                    x: 0,
+                                    target: .cur,
+                                    animateToX: true
+                                )
+                            } else {
+                                self.animation = CardAnimation(
+                                    x: -frameWidth,
+                                    target: .prev,
+                                    animateToX: true
+                                )
                             }
                         }
                     }
                 )
                 
                 prevCard
-                    .animation(self.animating == .prev ? .spring(response: 0.3) : nil)
-                    .offset(x: -geometry.size.width + (self.animating == .prev ? self.translationX + self.prevTranslateX : 0))
+                    .animation(animation.target == .prev && animation.animateToX ? .spring(response: 0.3) : nil)
+                    .offset(x: -geometry.size.width + (animation.target == .prev ? animation.x : 0))
             }
             .padding()
         }
+    }
+}
+
+
+struct CardStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .cornerRadius(20)
+            .shadow(
+                color: Color.black.opacity(0.4), radius: 10, x: 0, y: 0
+            )
     }
 }
 
