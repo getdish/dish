@@ -178,6 +178,7 @@
 			isa = PBXGroup;
 			children = (
 				1CE3546423986B1B004B3A84 /* AppDelegate.swift */,
+				1CE3546623986B1B004B3A84 /* SceneDelegate.swift */,
 				AE861A7C23A07AFB004096BF /* Constants.swift */,
 				1CE3546A23986B1C004B3A84 /* Assets.xcassets */,
 				1CE3547823986B2A004B3A84 /* Features */,
@@ -189,7 +190,6 @@
 				1CE3546F23986B1C004B3A84 /* LaunchScreen.storyboard */,
 				1CE3546C23986B1C004B3A84 /* Preview Content */,
 				1CE3546823986B1B004B3A84 /* RootView.swift */,
-				1CE3546623986B1B004B3A84 /* SceneDelegate.swift */,
 			);
 			path = "new-dish";
 			sourceTree = "<group>";
@@ -312,8 +312,8 @@
 			children = (
 				AEBC5E1C23A6F0C70094B1BD /* DishGalleryView.swift */,
 				AEBC5E1E23A6F0E50094B1BD /* DishGalleryViewContent.swift */,
-				AEBC5E2023A6F2400094B1BD /* DishGalleryOverlayView.swift */,
 				AEBC5E2223A6F26C0094B1BD /* DishGalleryCard.swift */,
+				AEBC5E2023A6F2400094B1BD /* DishGalleryOverlayView.swift */,
 			);
 			path = Gallery;
 			sourceTree = "<group>";

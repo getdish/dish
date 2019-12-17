@@ -65,7 +65,7 @@ struct BottomSheetView<Content: View>: View {
             .frame(height: geometry.size.height, alignment: .bottom)
             .shadow(color: Color.black.opacity(0.4), radius: 20, x: 0, y: 5)
             .offset(y: max(self.offset + self.translation, 0))
-            .animation(.interactiveSpring())
+            .animation(.spring())
             .gesture(
                 DragGesture().updating(self.$translation) { value, state, _ in
                     state = value.translation.height

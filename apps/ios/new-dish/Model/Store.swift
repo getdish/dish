@@ -62,4 +62,14 @@ extension Store {
             set: { self.send(action($0)) }
         )
     }
+
+    // TODO not working
+//    func mock(_ state: State) -> Store {
+//        Store<State, Action>.init(
+//            initialState: state,
+//            reducer: Reducer<State, Action> { x, y in
+//                print("mocked, empty")
+//            }
+//        )
+//    }
 }
