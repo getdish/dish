@@ -13,35 +13,52 @@ struct DishGalleryViewContent: View {
     }
 }
 
-fileprivate let firstCard: some View = FeatureCard(landmark: features[0]).cornerRadius(24)
-fileprivate let secondCard: some View = FeatureCard(landmark: features[1]).cornerRadius(24)
-
 struct DishGalleryCards: View {
-    @GestureState private var translationX: CGFloat = 0
-    @State var curIndex = 1
+    let cards = features
+    @State private var translationX: CGFloat = 0
+    @State private var curIndex = 0
     
     var body: some View {
-        GeometryReader { geometry in
+        print("render")
+        
+        let firstCard = FeatureCard(landmark: features[curIndex]).cornerRadius(24)
+        let secondCard = FeatureCard(landmark: features[curIndex + 1]).cornerRadius(24)
+        
+        return GeometryReader { geometry in
             ZStack {
                 firstCard
                 
-                
                 ZStack {
                     secondCard
-                    .rotation3DEffect(
-                        .degrees(20.0),
-                        axis: (0.0, 0.0, 50.0)
+                        .shadow(
+                            color: Color.black.opacity(0.4), radius: 10, x: 0, y: 0
                     )
+//                        .rotation3DEffect(
+//                            .degrees(20.0),
+//                            axis: (0.0, 1.0, 1.0)
+//                    )
                 }
-                    .offset(x: self.translationX)
-                    .gesture(
-                        DragGesture().updating(self.$translationX) { value, state, _ in
-                            state = value.translation.width
+                .offset(x: self.translationX)
+                .gesture(
+                    DragGesture(minimumDistance: 0, coordinateSpace: .global)
+                        .onChanged { value in
+                            self.translationX = value.translation.width
                         }.onEnded { value in
-//                            let offset = value.translation.width / geometry.size.width
-//                            let newIndex = (CGFloat(self.currentIndex) - offset).rounded()
-//                            print("now \(newIndex)")
+                        let frameWidth = geometry.size.width
+                        let offset = value.translation.width / frameWidth
+                        let newIndex = (CGFloat(self.curIndex) - offset)
+                        print("now \(newIndex)")
+                        if abs(newIndex) > 0.5 {
+                            withAnimation(.linear(duration: 0.2)) {
+                                self.translationX = frameWidth * 2 * (newIndex > 0 ? -1 : 1)
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) {
+                                print("finish animation")
+                                self.translationX = 0
+                                self.curIndex = self.curIndex + 1
+                            }
                         }
+                    }
                 )
             }
             .padding()

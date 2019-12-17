@@ -14,7 +14,8 @@ struct FeatureCard: View, Equatable {
     }
     
     var body: some View {
-        VStack {
+        print("render featurecard")
+        return VStack {
 //            MagicItem(getLandmarkId(landmark), at: at) {
                 self.landmark.image
                     .resizable()
