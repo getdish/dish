@@ -15,51 +15,92 @@ struct DishGalleryViewContent: View {
 
 struct DishGalleryCards: View {
     let cards = features
+    
+    enum AnimateTarget {
+        case cur, prev
+    }
+    
+    @State private var animating: AnimateTarget = .cur
+
+    @State private var prevTranslateX: CGFloat = 0
     @State private var translationX: CGFloat = 0
+    // temp workaround because no withAnimation callback
+    @State private var finishDragX: CGFloat = 0
+    @State private var isFinishingAnimation = false
     @State private var curIndex = 0
     
     var body: some View {
         print("render")
         
-        let firstCard = FeatureCard(landmark: features[curIndex]).cornerRadius(24)
-        let secondCard = FeatureCard(landmark: features[curIndex + 1]).cornerRadius(24)
+        let curCard = FeatureCard(landmark: features[curIndex]).cornerRadius(10)
+        let nextCard = FeatureCard(landmark: features[curIndex + 1]).cornerRadius(0)
+        let prevCard = FeatureCard(landmark: features[max(0, curIndex - 1)]).cornerRadius(50)
         
         return GeometryReader { geometry in
             ZStack {
-                firstCard
+                nextCard
                 
                 ZStack {
-                    secondCard
+                    curCard
                         .shadow(
                             color: Color.black.opacity(0.4), radius: 10, x: 0, y: 0
                     )
-//                        .rotation3DEffect(
-//                            .degrees(20.0),
-//                            axis: (0.0, 1.0, 1.0)
-//                    )
+                    //                        .rotation3DEffect(
+                    //                            .degrees(20.0),
+                    //                            axis: (0.0, 1.0, 1.0)
+                    //                    )
                 }
-                .offset(x: self.translationX)
+                .offset(x: self.animating == .cur ? self.translationX + (self.isFinishingAnimation ? self.finishDragX : 0) : 0)
+                .animation(self.isFinishingAnimation ? .spring(response: 0.3) : nil)
                 .gesture(
                     DragGesture(minimumDistance: 0, coordinateSpace: .global)
                         .onChanged { value in
-                            self.translationX = value.translation.width
-                        }.onEnded { value in
+                            let x = value.translation.width
+                            if self.curIndex == 0 && x > 0 {
+                                print("already at start")
+                                return
+                            }
+                            self.animating = x > 0 ? .prev : .cur
+                            self.translationX = x
+                    }.onEnded { value in
                         let frameWidth = geometry.size.width
                         let offset = value.translation.width / frameWidth
-                        let newIndex = (CGFloat(self.curIndex) - offset)
-                        print("now \(newIndex)")
-                        if abs(newIndex) > 0.5 {
-                            withAnimation(.linear(duration: 0.2)) {
-                                self.translationX = frameWidth * 2 * (newIndex > 0 ? -1 : 1)
+                        print("end \(offset) \(frameWidth)")
+                        if abs(offset) > 0.35 {
+                            let newIndex = Int((CGFloat(self.curIndex) - offset).rounded())
+                            print("newIndex \(newIndex)")
+                            if newIndex < 0 {
+                                return
                             }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) {
-                                print("finish animation")
+                            
+                            if newIndex < self.curIndex {
                                 self.translationX = 0
-                                self.curIndex = self.curIndex + 1
+                                self.prevTranslateX = frameWidth
+                            } else {
+                                self.finishDragX = self.translationX - frameWidth
+                                self.isFinishingAnimation = true
+                                self.translationX = 0
+                            }
+                            
+                            // reset state
+                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                print("finish animation")
+                                self.animating = .cur
+                                self.isFinishingAnimation = false
+                                self.finishDragX = 0
+                                self.curIndex = newIndex
+                            }
+                        } else {
+                            withAnimation(.spring(response: 0.3)) {
+                                self.translationX = 0
                             }
                         }
                     }
                 )
+                
+                prevCard
+                    .animation(self.animating == .prev ? .spring(response: 0.3) : nil)
+                    .offset(x: -geometry.size.width + (self.animating == .prev ? self.translationX + self.prevTranslateX : 0))
             }
             .padding()
         }
