@@ -10,18 +10,18 @@ struct DishGalleryViewContent: View {
                 VerticalCardPager(
                     pageCount: 2,
                     currentIndex: self.$currentIndex
-                ) { index in
-                    if index == 0 {
-                        DishGalleryDish(
-                            name: "Pho",
-                            items: features
-                        )
-                    } else {
-                        DishGalleryDish(
-                            name: "Ramen",
-                            items: features
-                        )
-                    }
+                ) {
+                    Spacer()
+                        .frame(height: 550)
+
+                    DishGalleryDish(
+                        name: "Pho",
+                        items: features
+                    )
+                    DishGalleryDish(
+                        name: "Ramen",
+                        items: features
+                    )
                 }
             }
         }
@@ -32,17 +32,17 @@ struct DishGalleryViewContent: View {
 struct VerticalCardPager<Content: View>: View {
     @Binding var currentIndex: Int
     let pageCount: Int
-    let content: (Int) -> Content
+    let content: Content
     let height: CGFloat = 550
     
     init(
         pageCount: Int,
         currentIndex: Binding<Int>,
-        @ViewBuilder content: @escaping (Int) -> Content
+        @ViewBuilder content: @escaping () -> Content
     ) {
         self.pageCount = pageCount
         self._currentIndex = currentIndex
-        self.content = content
+        self.content = content()
     }
     
     @GestureState private var translation: CGFloat = 0
@@ -53,16 +53,7 @@ struct VerticalCardPager<Content: View>: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: 0) {
-                // TODO @majid how to align this better, it should be center but if i remove this next line
-                // content goes "above" instead of alignment .leading
-                Spacer()
-                    .frame(height: self.height)
-                
-                self.content(self.currentIndex)
-                    .frame(width: geometry.size.width, height: self.height)
-                
-                self.content(self.currentIndex + 1)
-                    .frame(width: geometry.size.width, height: self.height)
+                self.content
             }
             .frame(height: geometry.size.height, alignment: .leading)
             .background(Color.black.opacity(0.0001))
