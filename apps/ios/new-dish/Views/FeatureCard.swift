@@ -4,19 +4,24 @@ func getLandmarkId(_ landmark: Landmark) -> String {
     "feature-\(landmark.id)"
 }
 
-struct FeatureCard: View, Identifiable {
+struct FeatureCard: View, Equatable {
     var landmark: Landmark
-    var at: MagicItemPosition = .start
-    var id = UUID()
+    let id: Int
+    
+    init(landmark: Landmark) {
+        self.landmark = landmark
+        self.id = self.landmark.id
+    }
     
     var body: some View {
-        VStack {
-            MagicItem(getLandmarkId(landmark), at: at) {
+        print("render featurecard")
+        return VStack {
+//            MagicItem(getLandmarkId(landmark), at: at) {
                 self.landmark.image
                     .resizable()
-                    .aspectRatio(3 / 2, contentMode: .fit)
+                    .aspectRatio(2 / 2.5, contentMode: .fit)
                     .overlay(TextOverlay(landmark: self.landmark))
-            }
+//            }
         }
     }
 }

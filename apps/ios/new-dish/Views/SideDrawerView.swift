@@ -80,7 +80,7 @@ struct SideDrawerView<Content: View, Drawer: View>: View {
 struct SideDrawerView_Previews: PreviewProvider {
     static var previews: some View {
         struct PreviewView: View {
-            @State private var sideDrawerShown = false
+            @State private var sideDrawerShown = true
 
             var body: some View {
                 SideDrawerView(

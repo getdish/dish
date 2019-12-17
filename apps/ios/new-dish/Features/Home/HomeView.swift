@@ -9,8 +9,6 @@ import SwiftUI
 
 struct HomeView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
-    @EnvironmentObject var store: AppStore
-    @State private var index = 0
     @State private var sideDrawerShown = false
     
     var body: some View {
@@ -18,22 +16,12 @@ struct HomeView: View {
             SideDrawerView(
                 isOpen: self.$sideDrawerShown,
                 content: {
-                    PagerView(
-                        pageCount: 3,
-                        currentIndex: self.$index
-                    ) {
-                        HomeDishView()
-                        Image(systemName: "photo").resizable()
-                        Button(action: { self.index = 0 }) {
-                            Text("Go to first page")
-                        }
-                    }
-                    .onChangePage { index in
-                        self.store.send(.changeHomePage(index == 0 ? .home : .camera))
-                    }
+                    HomeViewContent()
                 },
                 drawer: {
-                   DishSidebarView()
+                    // TODO @majid it shows DishSidebarView() if i uncomment DishSidebarView
+                    EmptyView()
+//                   DishSidebarView()
                 }
             )
             
@@ -46,6 +34,32 @@ struct HomeView: View {
         .embedInGeometryReader()
     }
 }
+
+struct HomeViewContent: View {
+    @EnvironmentObject var store: AppStore
+    @State private var index = 0
+
+    var body: some View {
+        ZStack {
+            PagerView(
+                pageCount: 3,
+                currentIndex: self.$index
+            ) {
+                HomeDishView()
+                Image(systemName: "photo").resizable()
+                Button(action: { self.index = 0 }) {
+                    Text("Go to first page")
+                }
+            }
+            .onChangePage { index in
+                self.store.send(.changeHomePage(index == 0 ? .home : .camera))
+            }
+            
+            HomeBottomNav()
+        }
+    }
+}
+
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {

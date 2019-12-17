@@ -63,6 +63,7 @@ struct BottomSheetView<Content: View>: View {
             .background(Color(.secondarySystemBackground))
             .cornerRadius(ViewConstants.radius)
             .frame(height: geometry.size.height, alignment: .bottom)
+            .shadow(color: Color.black.opacity(0.4), radius: 20, x: 0, y: 5)
             .offset(y: max(self.offset + self.translation, 0))
             .animation(.interactiveSpring())
             .gesture(
