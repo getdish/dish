@@ -15,7 +15,7 @@ struct BottomNav: View {
                         .animation(.spring(response: 0.5))
                         .offset(y: isOnGallery ? hiddenButtonY : 0)
                     Spacer()
-                    DishHomeButton()
+                    DishFiltersButton()
                         .animation(.spring(response: 0.75))
                         .offset(y: isOnGallery ? hiddenButtonY : 0)
                     Spacer()
@@ -30,9 +30,12 @@ struct BottomNav: View {
 //                        .animation(.spring(response: 0.5))
 //                        .offset(y: !isOnGallery ? hiddenButtonY : 0)
                     Spacer()
-                    DishStarButton()
+                    BottomNavCircularButton(image: "xmark", size: 50)
                         .animation(.spring(response: 0.75))
                         .offset(y: !isOnGallery ? hiddenButtonY : 0)
+                        .onTapGesture {
+                            self.store.send(.closeGallery)
+                        }
                     Spacer()
 //                    DishForwardButton()
 //                        .animation(.spring(response: 0.5))
@@ -47,7 +50,7 @@ struct BottomNav: View {
 }
 
 
-struct DishHomeButton: View {
+struct DishFiltersButton: View {
     var body: some View {
         BottomNavButton {
             Text("Filters")
@@ -60,56 +63,44 @@ struct DishHomeButton: View {
 
 struct DishCameraButton: View {
     var body: some View {
-        BottomNavButton {
-            Image(systemName: "camera")
-                .resizable()
-                .foregroundColor(.white)
-        }
-        .frame(width: 40, height: 40)
+        BottomNavCircularButton(image: "camera", size: 40)
     }
 }
 
 struct DishMapButton: View {
     var body: some View {
-        BottomNavButton {
-            Image(systemName: "map")
-                .resizable()
-                .foregroundColor(.white)
-        }
-        .frame(width: 40, height: 40)
+        BottomNavCircularButton(image: "map", size: 40)
     }
 }
 
 struct DishStarButton: View {
     var body: some View {
-        BottomNavButton {
-            Image(systemName: "star")
-                .resizable()
-                .foregroundColor(.white)
-        }
-        .frame(width: 60, height: 60)
+        BottomNavCircularButton(image: "star", size: 60)
     }
 }
 
 struct DishBackButton: View {
     var body: some View {
-        BottomNavButton {
-            Image(systemName: "chevron.left.circle.fill")
-                .resizable()
-                .foregroundColor(.white)
-        }
-        .frame(width: 50, height: 50)
+        BottomNavCircularButton(image: "chevron.left.circle.fill", size: 50)
     }
 }
 
 struct DishForwardButton: View {
     var body: some View {
+        BottomNavCircularButton(image: "chevron.right.circle.fill", size: 50)
+    }
+}
+
+struct BottomNavCircularButton: View {
+    var image: String
+    var size: CGFloat = 40
+    var body: some View {
         BottomNavButton {
-            Image(systemName: "chevron.right.circle.fill")
+            Image(systemName: self.image)
                 .resizable()
                 .foregroundColor(.white)
         }
-        .frame(width: 50, height: 50)
+        .frame(width: size, height: size)
     }
 }
 

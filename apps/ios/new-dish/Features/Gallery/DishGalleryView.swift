@@ -57,6 +57,7 @@ struct DishGalleryView_Previews: PreviewProvider {
         DishGalleryView()
             .environmentObject(Mocks.galleryVisibleDish)
             .embedInGeometryReader()
+            .edgesIgnoringSafeArea(.all)
     }
 }
 #endif
