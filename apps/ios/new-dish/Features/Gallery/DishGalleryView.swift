@@ -43,7 +43,7 @@ struct DishGalleryBackground: View {
     var body: some View {
         Color
             .black
-            .opacity(0.5)
+            .opacity(0.85)
     }
 }
 

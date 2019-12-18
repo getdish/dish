@@ -66,6 +66,7 @@
 		AEA331F723A3382100B36A23 /* DishButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F623A3382100B36A23 /* DishButton.swift */; };
 		AEA331F923A3385000B36A23 /* InlineAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F823A3385000B36A23 /* InlineAlertView.swift */; };
 		AEA331FB23A338F400B36A23 /* KeyboardHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331FA23A338F400B36A23 /* KeyboardHost.swift */; };
+		AEBA148223A9F81D00DD28CC /* CardControlsCutout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBA148123A9F81D00DD28CC /* CardControlsCutout.swift */; };
 		AEBC5E1D23A6F0C70094B1BD /* DishGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBC5E1C23A6F0C70094B1BD /* DishGalleryView.swift */; };
 		AEBC5E1F23A6F0E50094B1BD /* DishGalleryViewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBC5E1E23A6F0E50094B1BD /* DishGalleryViewContent.swift */; };
 		AEBC5E2123A6F2400094B1BD /* DishGalleryOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBC5E2023A6F2400094B1BD /* DishGalleryOverlayView.swift */; };
@@ -138,6 +139,7 @@
 		AEA331F623A3382100B36A23 /* DishButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishButton.swift; sourceTree = "<group>"; };
 		AEA331F823A3385000B36A23 /* InlineAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineAlertView.swift; sourceTree = "<group>"; };
 		AEA331FA23A338F400B36A23 /* KeyboardHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHost.swift; sourceTree = "<group>"; };
+		AEBA148123A9F81D00DD28CC /* CardControlsCutout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardControlsCutout.swift; sourceTree = "<group>"; };
 		AEBC5E1C23A6F0C70094B1BD /* DishGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishGalleryView.swift; sourceTree = "<group>"; };
 		AEBC5E1E23A6F0E50094B1BD /* DishGalleryViewContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishGalleryViewContent.swift; sourceTree = "<group>"; };
 		AEBC5E2023A6F2400094B1BD /* DishGalleryOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishGalleryOverlayView.swift; sourceTree = "<group>"; };
@@ -314,6 +316,7 @@
 				AEBC5E1E23A6F0E50094B1BD /* DishGalleryViewContent.swift */,
 				AEBC5E2223A6F26C0094B1BD /* DishGalleryCard.swift */,
 				AEBC5E2023A6F2400094B1BD /* DishGalleryOverlayView.swift */,
+				AEBA148123A9F81D00DD28CC /* CardControlsCutout.swift */,
 			);
 			path = Gallery;
 			sourceTree = "<group>";
@@ -522,6 +525,7 @@
 				AE7563E123A037D90094022B /* Landmark.swift in Sources */,
 				AE6CECCD23A843E600B08870 /* HomeBottomNav.swift in Sources */,
 				AE861A7B23A06EDC004096BF /* BarArrow.swift in Sources */,
+				AEBA148223A9F81D00DD28CC /* CardControlsCutout.swift in Sources */,
 				AE861A8323A171D2004096BF /* HomeTopBarSearch.swift in Sources */,
 				AE7563B623A036160094022B /* HomeMainDrawer.swift in Sources */,
 				AE7563E923A03D570094022B /* MagicMove.swift in Sources */,
@@ -666,7 +670,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"new-dish/Preview Content\"";
-				DEVELOPMENT_TEAM = 2952RH3AR7;
+				DEVELOPMENT_TEAM = 399WY8X9HY;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "new-dish/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -687,7 +691,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"new-dish/Preview Content\"";
-				DEVELOPMENT_TEAM = 2952RH3AR7;
+				DEVELOPMENT_TEAM = 399WY8X9HY;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "new-dish/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (

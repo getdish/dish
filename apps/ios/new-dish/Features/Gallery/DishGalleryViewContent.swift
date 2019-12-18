@@ -1,5 +1,16 @@
 import SwiftUI
 
+struct Cutout {
+    let cardFrame = CGRect(
+        x: 0, y: 0, width: Screen.width - 16, height: Screen.height + 142
+    )
+    var clipPath = Path()
+    init() {
+        clipPath.cardControlsCutout(rect: cardFrame, circleSize: 75)
+    }
+}
+let clipPath = Cutout().clipPath
+
 struct DishGalleryViewContent: View {
     @EnvironmentObject var store: AppStore
     @State var currentIndex = 0
@@ -12,17 +23,30 @@ struct DishGalleryViewContent: View {
                     currentIndex: self.$currentIndex
                 ) {
                     Spacer()
-                        .frame(height: 550)
+                        .frame(height: 580)
 
                     DishGalleryDish(
                         name: "Pho",
                         items: features
                     )
+                    
                     DishGalleryDish(
                         name: "Ramen",
                         items: features
                     )
                 }
+            }
+            .clipShape(clipPath)
+            
+            HStack {
+                Spacer()
+                BottomNavButton {
+                    Image(systemName: "chevron.right.circle.fill")
+                        .resizable()
+                        .foregroundColor(.white)
+                }
+                .frame(width: 60, height: 60)
+                .offset(x: 2, y: 32)
             }
         }
         .environment(\.colorScheme, .dark)
@@ -33,7 +57,7 @@ struct VerticalCardPager<Content: View>: View {
     @Binding var currentIndex: Int
     let pageCount: Int
     let content: Content
-    let height: CGFloat = 550
+    let height: CGFloat = 580
     
     init(
         pageCount: Int,
@@ -101,10 +125,16 @@ struct DishGalleryDish: View {
     var items: [Landmark]
     
     var body: some View {
-        VStack(spacing: 5) {
-            Text(self.name)
-                .font(.system(size: 30))
-                .bold()
+        VStack(alignment: .leading, spacing: 5) {
+            HStack {
+                Text(self.name)
+                    .font(.system(size: 27))
+                    .bold()
+                    .shadow(color: Color.black.opacity(0.4), radius: 2, x: 1, y: 2)
+                
+                Spacer()
+            }
+            .padding(.horizontal)
             
             DishGalleryDishCards(
                 items: items
@@ -236,6 +266,7 @@ struct DishGalleryDishCards: View {
             .padding()
     }
 }
+
 
 struct DishGalleryTopNav: View {
     var body: some View {

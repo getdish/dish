@@ -1,15 +1,43 @@
 import SwiftUI
 
 struct HomeBottomNav: View {
+    @EnvironmentObject var store: AppStore
+    let hiddenButtonY: CGFloat = 100
+    
     var body: some View {
-        VStack {
+        let isOnGallery = store.state.galleryDish != nil
+        
+        return VStack {
             Spacer()
-            HStack {
-                DishMapButton()
-                Spacer()
-                DishHomeButton()
-                Spacer()
-                DishCameraButton()
+            ZStack {
+                HStack {
+                    DishMapButton()
+                        .animation(.spring(response: 0.5))
+                        .offset(y: isOnGallery ? hiddenButtonY : 0)
+                    Spacer()
+                    DishHomeButton()
+                        .animation(.spring(response: 0.75))
+                        .offset(y: isOnGallery ? hiddenButtonY : 0)
+                    Spacer()
+                    DishCameraButton()
+                        .animation(.spring(response: 0.5))
+                        .offset(y: isOnGallery ? hiddenButtonY : 0)
+                }
+                
+                HStack {
+                    DishBackButton()
+                        .opacity(0.5)
+                        .animation(.spring(response: 0.5))
+                        .offset(y: !isOnGallery ? hiddenButtonY : 0)
+                    Spacer()
+                    DishStarButton()
+                        .animation(.spring(response: 0.75))
+                        .offset(y: !isOnGallery ? hiddenButtonY : 0)
+                    Spacer()
+                    DishForwardButton()
+                        .animation(.spring(response: 0.5))
+                        .offset(y: !isOnGallery ? hiddenButtonY : 0)
+                }
             }
             .padding(.horizontal)
             Spacer()
@@ -52,6 +80,38 @@ struct DishMapButton: View {
     }
 }
 
+struct DishStarButton: View {
+    var body: some View {
+        BottomNavButton {
+            Image(systemName: "star")
+                .resizable()
+                .foregroundColor(.white)
+        }
+        .frame(width: 60, height: 60)
+    }
+}
+
+struct DishBackButton: View {
+    var body: some View {
+        BottomNavButton {
+            Image(systemName: "chevron.left.circle.fill")
+                .resizable()
+                .foregroundColor(.white)
+        }
+        .frame(width: 50, height: 50)
+    }
+}
+
+struct DishForwardButton: View {
+    var body: some View {
+        BottomNavButton {
+            Image(systemName: "chevron.right.circle.fill")
+                .resizable()
+                .foregroundColor(.white)
+        }
+        .frame(width: 50, height: 50)
+    }
+}
 
 struct BottomNavButton<Content>: View where Content: View {
     let content: () -> Content
