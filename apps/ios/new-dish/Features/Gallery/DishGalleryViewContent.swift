@@ -1,16 +1,5 @@
 import SwiftUI
 
-struct Cutout {
-    let cardFrame = CGRect(
-        x: 0, y: 0, width: Screen.width - 16, height: Screen.height + 142
-    )
-    var clipPath = Path()
-    init() {
-        clipPath.cardControlsCutout(rect: cardFrame, circleSize: 75)
-    }
-}
-let clipPath = Cutout().clipPath
-
 struct DishGalleryViewContent: View {
     @EnvironmentObject var store: AppStore
     @State var curCuisineIndex = 0
@@ -40,22 +29,25 @@ struct DishGalleryViewContent: View {
                     )
                 }
             }
-            .clipShape(clipPath)
             
-            HStack {
+            VStack {
                 Spacer()
-                BottomNavButton {
-                    Image(systemName: "chevron.right.circle.fill")
-                        .resizable()
-                        .foregroundColor(.white)
+                HStack {
+                    Spacer()
+                    BottomNavButton {
+                        Image(systemName: "chevron.right.circle.fill")
+                            .resizable()
+                            .foregroundColor(.white)
+                    }
+                    .onTapGesture {
+                        print("update it...")
+                        self.curRestaurantIndex += 1
+                    }
+                    .frame(width: 60, height: 60)
                 }
-                .onTapGesture {
-                    print("update it...")
-                    self.curRestaurantIndex += 1
-                }
-                .frame(width: 60, height: 60)
-                .offset(x: 2, y: 32)
+                .padding(.trailing, 12)
             }
+            .frame(height: 535)
         }
         .environment(\.colorScheme, .dark)
     }
@@ -271,11 +263,23 @@ struct DishGalleryDishCards: View {
                 .animation(animation.target == .prev && animation.animateToX ? .spring(response: 0.3) : nil)
                 .offset(x: -geometry.size.width + (animation.target == .prev ? animation.x : 0))
         }
+            .clipShape(clipPath)
             // for now hardcoded
             .frame(height: 500)
             .padding()
     }
 }
+
+struct Cutout {
+    let cardFrame = CGRect(
+        x: 0, y: 0, width: Screen.width, height: 510
+    )
+    var clipPath = Path()
+    init() {
+        clipPath.cardControlsCutout(rect: cardFrame, circleSize: 75)
+    }
+}
+let clipPath = Cutout().clipPath
 
 
 struct DishGalleryTopNav: View {
@@ -336,6 +340,7 @@ struct DishGalleryViewContent_Previews: PreviewProvider {
             DishGalleryViewContent()
                 .environmentObject(self.mock)
         }
+        .embedInGeometryReader()
     }
 }
 #endif

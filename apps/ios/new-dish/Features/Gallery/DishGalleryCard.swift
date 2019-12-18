@@ -24,7 +24,7 @@ struct DishGalleryCardInfo: View {
         VStack {
             TopFadeArea {
                 Text(self.landmark.name)
-                    .font(.system(size: 20))
+                    .font(.system(size: 28))
                     .bold()
                 Spacer().frame(height: 6)
                 Text(self.landmark.park)
@@ -58,10 +58,10 @@ struct TopFadeArea<Content>: View where Content: View {
     }
     
     var body: some View {
-        ZStack(alignment: .topLeading) {
+        ZStack(alignment: .top) {
             Rectangle().fill(self.gradientUp)
             VStack {
-                Spacer().frame(height: 20)
+                Spacer().frame(height: 14)
                 self.content
             }
             .padding()
@@ -89,10 +89,21 @@ struct BottomFadeArea<Content>: View where Content: View {
         ZStack(alignment: .bottomLeading) {
             Rectangle().fill(self.gradientDown)
             VStack {
-                Spacer().frame(height: 20)
+                Spacer().frame(height: 14)
                 self.content
             }
             .padding()
         }
     }
 }
+
+#if DEBUG
+struct DishGalleryCard_Previews: PreviewProvider {
+    static var previews: some View {
+        DishGalleryCard(landmark: features[0])
+            .embedInGeometryReader()
+    }
+}
+#endif
+
+

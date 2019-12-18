@@ -19,8 +19,8 @@ extension Path {
         self.addLine(to: CGPoint(x: rect.width, y: 0))
         self.addEllipse(in:
             CGRect(
-                x: rect.width - circleSize / 2 - 10,
-                y: rect.height / 2 - circleSize / 2,
+                x: rect.width - circleSize - 20,
+                y: rect.height - circleSize - 20,
                 width: circleSize,
                 height: circleSize
             )
