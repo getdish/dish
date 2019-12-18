@@ -20,31 +20,79 @@ struct DishGalleryCard: View {
 struct DishGalleryCardInfo: View {
     var landmark: Landmark
     
-    var gradient: LinearGradient {
+    var body: some View {
+        VStack {
+            TopFadeArea {
+                Text(self.landmark.name)
+                    .font(.system(size: 20))
+                    .bold()
+                Spacer().frame(height: 6)
+                Text(self.landmark.park)
+            }
+            
+            Spacer()
+            
+            BottomFadeArea {
+                Text(self.landmark.name)
+                    .font(.system(size: 16))
+            }
+        }
+        .foregroundColor(.white)
+    }
+}
+
+struct TopFadeArea<Content>: View where Content: View {
+    let content: Content
+    
+    init(@ViewBuilder content: @escaping () -> Content) {
+        self.content = content()
+    }
+    
+    var gradientUp: LinearGradient {
         LinearGradient(
             gradient: Gradient(
-                colors: [Color.black.opacity(0.6), Color.black.opacity(0)]),
+                colors: [Color.black.opacity(0), Color.black.opacity(0.6)]
+            ),
+            startPoint: .bottom,
+            endPoint: .center)
+    }
+    
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            Rectangle().fill(self.gradientUp)
+            VStack {
+                Spacer().frame(height: 20)
+                self.content
+            }
+            .padding()
+        }
+    }
+}
+
+struct BottomFadeArea<Content>: View where Content: View {
+    let content: Content
+    
+    init(@ViewBuilder content: @escaping () -> Content) {
+        self.content = content()
+    }
+    
+    var gradientDown: LinearGradient {
+        LinearGradient(
+            gradient: Gradient(
+                colors: [Color.black.opacity(0.6), Color.black.opacity(0)]
+            ),
             startPoint: .bottom,
             endPoint: .center)
     }
     
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            Rectangle().fill(gradient)
-            VStack(alignment: .leading) {
-                // add some padding above for gradient
+            Rectangle().fill(self.gradientDown)
+            VStack {
                 Spacer().frame(height: 20)
-                
-                Text(landmark.name)
-                    .font(.system(size: 20))
-                    .bold()
-                
-                Spacer().frame(height: 6)
-
-                Text(landmark.park)
+                self.content
             }
             .padding()
         }
-        .foregroundColor(.white)
     }
 }
