@@ -55,6 +55,8 @@ struct DishGalleryBackground: View {
 struct DishGalleryView_Previews: PreviewProvider {
     static var previews: some View {
         DishGalleryView()
+            .environmentObject(Mocks.galleryVisibleDish)
+            .embedInGeometryReader()
     }
 }
 #endif

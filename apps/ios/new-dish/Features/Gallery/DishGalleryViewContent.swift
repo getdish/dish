@@ -352,23 +352,15 @@ struct CategoryLabel: View {
     }
 }
 
-
 #if DEBUG
 struct DishGalleryViewContent_Previews: PreviewProvider {
-    static var mock = Store<AppState, AppAction>.init(
-        initialState: AppState(
-            galleryDish: features[0]
-        ),
-        reducer: appReducer
-    )
-    
     static var previews: some View {
         ZStack {
             Color.black
             DishGalleryViewContent()
-                .environmentObject(self.mock)
+                .environmentObject(Mocks.galleryVisibleDish)
+                .embedInGeometryReader()
         }
-        .embedInGeometryReader()
     }
 }
 #endif
