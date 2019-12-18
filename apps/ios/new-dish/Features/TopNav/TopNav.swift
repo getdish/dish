@@ -5,21 +5,21 @@ fileprivate let bottomPad = CGFloat(5)
 fileprivate let topPad = Screen.statusBarHeight
 fileprivate let totalHeight = topPad + bottomPad + 40
 
-struct HomeTopBar: View {
+struct TopNav: View {
     @State var isEditing = false
     
     var body: some View {
         ZStack {
-            HomeTopBarSearchResults()
+            TopNavSearchResults()
             
             VStack {
                 VStack {
                     HStack(spacing: 12) {
-                        HomeTopBarSearch(
+                        TopNavSearch(
                             isEditing: self.$isEditing
                         )
                         if !isEditing {
-                            HomeTopBarAccountButton()
+                            TopNavMenuButton()
                         }
                     }
                     .padding(.horizontal)
@@ -37,10 +37,10 @@ struct HomeTopBar: View {
 }
 
 #if DEBUG
-struct HomeTopBar_Previews: PreviewProvider {
+struct TopNav_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            HomeTopBar()
+            TopNav()
         }
         .background(
             LinearGradient(gradient: Gradient(colors: [.white, .red]), startPoint: .top, endPoint: .bottom)

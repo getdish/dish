@@ -1,7 +1,7 @@
 import SwiftUI
 import CoreLocation
 
-struct HomeTopBarSearchResults: View {
+struct TopNavSearchResults: View {
     @EnvironmentObject var store: AppStore
     
     var body: some View {

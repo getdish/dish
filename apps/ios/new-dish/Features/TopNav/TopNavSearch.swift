@@ -1,7 +1,7 @@
 import SwiftUI
 import CoreLocation
 
-struct HomeTopBarSearch: View {
+struct TopNavSearch: View {
     @State var search = ""
     @Binding var isEditing: Bool
     @EnvironmentObject var store: AppStore
