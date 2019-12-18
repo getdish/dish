@@ -12,30 +12,35 @@ struct HomeView: View {
     @State private var sideDrawerShown = false
     
     var body: some View {
-        ZStack {
-            SideDrawerView(
-                isOpen: self.$sideDrawerShown,
-                content: {
-                    HomeViewContent()
-                },
-                drawer: {
-                    // TODO @majid it shows DishSidebarView() if i uncomment DishSidebarView
-                    EmptyView()
-//                   DishSidebarView()
-                }
+        GeometryReader { geometry in
+            ZStack {
+//                SideDrawerView(
+//                    isOpen: self.$sideDrawerShown,
+//                    content: {
+//                        HomeViewContent(height: geometry.size.height)
+//                    },
+//                    drawer: {
+//                        // TODO @majid it shows DishSidebarView() if i uncomment DishSidebarView
+//                        EmptyView().frame(height: 100)
+//    //                   DishSidebarView()
+//                    }
+//                )
+                
+                HomeViewContent(height: geometry.size.height)
+                
+                HomeTopBar()
+            }
+            .background(
+                self.colorScheme == .light ? Color.white : Color.black.opacity(0.8)
             )
-            
-            HomeTopBar()
         }
-        .background(
-            self.colorScheme == .light ? Color.white : Color.black.opacity(0.8)
-        )
-        .edgesIgnoringSafeArea(.all)
         .embedInGeometryReader()
+        .edgesIgnoringSafeArea(.all)
     }
 }
 
 struct HomeViewContent: View {
+    var height: CGFloat = 0
     @EnvironmentObject var store: AppStore
     @State private var index = 0
 
@@ -57,6 +62,7 @@ struct HomeViewContent: View {
             
             BottomNav()
         }
+        .frame(maxHeight: self.height)
     }
 }
 
@@ -64,5 +70,6 @@ struct HomeViewContent: View {
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView()
+           .embedInAppEnvironment(Mocks.galleryVisibleDish)
     }
 }

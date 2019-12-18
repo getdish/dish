@@ -30,12 +30,12 @@ struct BottomNav: View {
 //                        .animation(.spring(response: 0.5))
 //                        .offset(y: !isOnGallery ? hiddenButtonY : 0)
                     Spacer()
-                    BottomNavCircularButton(image: "xmark", size: 50)
+                    BottomNavCircularButton(image: "xmark", size: 50, action: {
+                        print("CLOSE THAT SHIT")
+                        self.store.send(.closeGallery)
+                    })
                         .animation(.spring(response: 0.75))
                         .offset(y: !isOnGallery ? hiddenButtonY : 0)
-                        .onTapGesture {
-                            self.store.send(.closeGallery)
-                        }
                     Spacer()
 //                    DishForwardButton()
 //                        .animation(.spring(response: 0.5))
@@ -91,11 +91,14 @@ struct DishForwardButton: View {
     }
 }
 
+typealias ActionFn = (() -> Void)
+
 struct BottomNavCircularButton: View {
     var image: String
     var size: CGFloat = 40
+    var action: ActionFn? = nil
     var body: some View {
-        BottomNavButton {
+        BottomNavButton(action: self.action) {
             Image(systemName: self.image)
                 .resizable()
                 .foregroundColor(.white)
@@ -105,15 +108,19 @@ struct BottomNavCircularButton: View {
 }
 
 struct BottomNavButton<Content>: View where Content: View {
+    var action: ActionFn? = nil
     let content: () -> Content
     
-    init(@ViewBuilder content: @escaping () -> Content) {
+    init(action: ActionFn? = nil, @ViewBuilder content: @escaping () -> Content) {
+        self.action = action
         self.content = content
     }
     
     var body: some View {
         Button(action: {
-//            action()
+            if let cb = self.action {
+                cb()
+            }
         }) {
             self.content()
         }

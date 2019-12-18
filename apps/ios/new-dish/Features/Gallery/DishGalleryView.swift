@@ -32,6 +32,7 @@ struct DishGalleryView: View {
 //                    }
 //            )
         }
+        .edgesIgnoringSafeArea(.all)
         .disabled(hidden ? true : false)
         .opacity(hidden ? 0 : 1)
         .offset(y: translationY)
@@ -55,9 +56,7 @@ struct DishGalleryBackground: View {
 struct DishGalleryView_Previews: PreviewProvider {
     static var previews: some View {
         DishGalleryView()
-            .environmentObject(Mocks.galleryVisibleDish)
-            .embedInGeometryReader()
-            .edgesIgnoringSafeArea(.all)
+            .embedInAppEnvironment(Mocks.galleryVisibleDish)
     }
 }
 #endif

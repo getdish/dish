@@ -33,26 +33,26 @@ struct DishGalleryViewContent: View {
             VStack {
                 HStack {
                     Spacer()
-                    
                     Button(action: {
                         //            action()
                     }) {
                         Text("Noodles")
-                            .bold()
-                            .font(.system(size: 25))
+                            .fontWeight(.semibold)
+                            .font(.system(size: 18))
                             .foregroundColor(.white)
                     }
                     .padding(.vertical, 12)
                     .padding(.horizontal, 16)
-                    .background(Color.white.opacity(0.2))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 80)
+                            .stroke(Color.white.opacity(0.5), lineWidth: 1)
+                    )
                     .cornerRadius(80)
                     .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
-
                     Spacer()
                 }
-                .frame(height: 170)
+                .padding(.top, 110 + Screen.statusBarHeight)
                 .padding(.bottom, 20)
-                
                 Spacer()
             }
             
@@ -75,6 +75,7 @@ struct DishGalleryViewContent: View {
             }
             .frame(height: 535)
         }
+        .edgesIgnoringSafeArea(.all)
         .environment(\.colorScheme, .dark)
     }
 }
@@ -152,10 +153,10 @@ struct DishGalleryDish: View {
     var index: Binding<Int>
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
+        VStack(alignment: .leading, spacing: 0) {
             HStack {
                 Text(self.name)
-                    .font(.system(size: 24))
+                    .font(.system(size: 26))
                     .bold()
                     .shadow(color: Color.black.opacity(0.4), radius: 2, x: 1, y: 2)
                 
@@ -358,9 +359,8 @@ struct DishGalleryViewContent_Previews: PreviewProvider {
         ZStack {
             Color.black
             DishGalleryViewContent()
-                .environmentObject(Mocks.galleryVisibleDish)
-                .embedInGeometryReader()
         }
+        .embedInAppEnvironment(Mocks.galleryVisibleDish)
     }
 }
 #endif
