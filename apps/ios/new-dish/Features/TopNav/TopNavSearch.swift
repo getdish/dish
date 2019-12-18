@@ -66,7 +66,7 @@ struct TopNavSearch: View {
                             Button(action: {
                             }) {
                                 VStack {
-                                    Text("within 10 miles")
+                                    Text("~10 miles")
                                         .font(.system(size: 13))
                                 }
                                 .padding(.vertical, 4)

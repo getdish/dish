@@ -30,22 +30,30 @@ struct HomeDrawerContent: View {
                 VStack(spacing: 6) {
                     ForEach(0 ..< 10) { index in
                         VStack(alignment: .leading, spacing: 6) {
-                            HStack {
-                                Text("Noodles")
-                                    .fontWeight(.bold)
-                                    .font(.system(size: 14.0))
-                                    .opacity(0.8)
-                            }
-                            .padding(.horizontal, 10)
-
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 6) {
-                                    ForEach(self.items) { item in
-                                        DishBrowseCard(landmark: item)
-                                            .frame(width: 140)
+                            ZStack {
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(spacing: 6) {
+                                        ForEach(self.items) { item in
+                                            DishBrowseCard(landmark: item)
+                                                .frame(width: 140)
+                                        }
                                     }
+                                    .padding(.horizontal, 6)
                                 }
-                                .padding(.horizontal, 6)
+                                
+                                VStack {
+                                    Tag {
+                                        Text("Noodles")
+                                            .fontWeight(.bold)
+                                            .font(.system(size: 16.0))
+                                            .opacity(0.8)
+                                            .padding(.vertical, 5)
+                                    }
+                                    .padding(.horizontal, 10)
+                                    .offset(y: -14)
+                                    
+                                    Spacer()
+                                }
                             }
                             Spacer().frame(height: 8)
                         }
