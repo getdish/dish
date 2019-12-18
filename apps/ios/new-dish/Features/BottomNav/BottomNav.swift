@@ -54,7 +54,7 @@ struct DishFiltersButton: View {
     var body: some View {
         BottomNavButton {
             Text("Filters")
-                .foregroundColor(.white)
+                .foregroundColor(.blue)
                 .font(.system(size: 20.0))
                 .fontWeight(.bold)
         }
