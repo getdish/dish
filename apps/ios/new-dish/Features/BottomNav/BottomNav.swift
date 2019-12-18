@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct HomeBottomNav: View {
+struct BottomNav: View {
     @EnvironmentObject var store: AppStore
     let hiddenButtonY: CGFloat = 100
     
@@ -25,18 +25,18 @@ struct HomeBottomNav: View {
                 }
                 
                 HStack {
-                    DishBackButton()
-                        .opacity(0.5)
-                        .animation(.spring(response: 0.5))
-                        .offset(y: !isOnGallery ? hiddenButtonY : 0)
+//                    DishBackButton()
+//                        .opacity(0.5)
+//                        .animation(.spring(response: 0.5))
+//                        .offset(y: !isOnGallery ? hiddenButtonY : 0)
                     Spacer()
                     DishStarButton()
                         .animation(.spring(response: 0.75))
                         .offset(y: !isOnGallery ? hiddenButtonY : 0)
                     Spacer()
-                    DishForwardButton()
-                        .animation(.spring(response: 0.5))
-                        .offset(y: !isOnGallery ? hiddenButtonY : 0)
+//                    DishForwardButton()
+//                        .animation(.spring(response: 0.5))
+//                        .offset(y: !isOnGallery ? hiddenButtonY : 0)
                 }
             }
             .padding(.horizontal)

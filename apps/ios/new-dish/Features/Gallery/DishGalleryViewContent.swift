@@ -31,6 +31,32 @@ struct DishGalleryViewContent: View {
             }
             
             VStack {
+                HStack {
+                    Spacer()
+                    
+                    Button(action: {
+                        //            action()
+                    }) {
+                        Text("Noodles")
+                            .bold()
+                            .font(.system(size: 25))
+                            .foregroundColor(.white)
+                    }
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 16)
+                    .background(Color.white.opacity(0.2))
+                    .cornerRadius(80)
+                    .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
+
+                    Spacer()
+                }
+                .frame(height: 170)
+                .padding(.bottom, 20)
+                
+                Spacer()
+            }
+            
+            VStack {
                 Spacer()
                 HStack {
                     Spacer()
@@ -43,9 +69,9 @@ struct DishGalleryViewContent: View {
                         print("update it...")
                         self.curRestaurantIndex += 1
                     }
-                    .frame(width: 60, height: 60)
+                    .frame(width: 54, height: 54)
                 }
-                .padding(.trailing, 12)
+                .padding(.trailing, 2)
             }
             .frame(height: 535)
         }
@@ -129,13 +155,13 @@ struct DishGalleryDish: View {
         VStack(alignment: .leading, spacing: 5) {
             HStack {
                 Text(self.name)
-                    .font(.system(size: 27))
+                    .font(.system(size: 24))
                     .bold()
                     .shadow(color: Color.black.opacity(0.4), radius: 2, x: 1, y: 2)
                 
                 Spacer()
             }
-            .padding(.horizontal)
+            .padding(.horizontal, 30)
             
             DishGalleryDishCards(
                 items: items,
@@ -167,8 +193,8 @@ struct DishGalleryDishCards: View {
         print("render")
         
         let animation = self.animation
-        let curCard = DishGalleryCard(active: true, landmark: items[index])
-        let nextCard = DishGalleryCard(landmark: items[index + 1])
+        let curCard = DishGalleryCard(name: "Miss Saigon", active: true, landmark: items[index])
+        let nextCard = DishGalleryCard(name: "Pho 2000", landmark: items[index + 1])
         let prevCard = DishGalleryCard(landmark: items[max(0, index - 1)])
         
         let curCardWrapped = (
@@ -266,17 +292,19 @@ struct DishGalleryDishCards: View {
             .clipShape(clipPath)
             // for now hardcoded
             .frame(height: 500)
-            .padding()
+            .padding(.horizontal, 12)
+            .padding(.bottom, 25)
+            .padding(.top, 6)
     }
 }
 
 struct Cutout {
     let cardFrame = CGRect(
-        x: 0, y: 0, width: Screen.width, height: 510
+        x: 0, y: 0, width: Screen.width + 10, height: 510
     )
     var clipPath = Path()
     init() {
-        clipPath.cardControlsCutout(rect: cardFrame, circleSize: 75)
+        clipPath.cardControlsCutout(rect: cardFrame, circleSize: 68)
     }
 }
 let clipPath = Cutout().clipPath

@@ -25,7 +25,7 @@ struct HomeDishView: View {
                 
                 DishGalleryView()
                 
-                DragPagerSidebar()
+//                DragPagerSidebar()
             }
             .clipped()
             .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)

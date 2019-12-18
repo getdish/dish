@@ -1,43 +1,39 @@
 import SwiftUI
 
 struct DishGalleryCard: View {
+    var name: String? = nil
     var active = false
     var landmark: Landmark
+
     var body: some View {
         VStack {
             self.landmark.image
                 .resizable()
                 .aspectRatio(2 / 2.5, contentMode: .fit)
-                .overlay(DishGalleryCardInfo(landmark: self.landmark))
+                .overlay(
+                    VStack {
+                        TopFadeArea {
+                            Text(self.name ?? self.landmark.name)
+                                .font(.system(size: 28))
+                                .bold()
+                            Spacer().frame(height: 6)
+                            Text(self.landmark.park)
+                        }
+                        
+                        Spacer()
+                        
+                        BottomFadeArea {
+                            Text(self.landmark.name)
+                                .font(.system(size: 16))
+                        }
+                    }
+                    .foregroundColor(.white)
+                )
                 .cornerRadius(20)
                 .shadow(
                     color: Color.black.opacity(0.4), radius: 10, x: 0, y: 0
             )
         }
-    }
-}
-
-struct DishGalleryCardInfo: View {
-    var landmark: Landmark
-    
-    var body: some View {
-        VStack {
-            TopFadeArea {
-                Text(self.landmark.name)
-                    .font(.system(size: 28))
-                    .bold()
-                Spacer().frame(height: 6)
-                Text(self.landmark.park)
-            }
-            
-            Spacer()
-            
-            BottomFadeArea {
-                Text(self.landmark.name)
-                    .font(.system(size: 16))
-            }
-        }
-        .foregroundColor(.white)
     }
 }
 
@@ -61,7 +57,7 @@ struct TopFadeArea<Content>: View where Content: View {
         ZStack(alignment: .top) {
             Rectangle().fill(self.gradientUp)
             VStack {
-                Spacer().frame(height: 14)
+                Spacer().frame(height: 10)
                 self.content
             }
             .padding()
@@ -89,7 +85,7 @@ struct BottomFadeArea<Content>: View where Content: View {
         ZStack(alignment: .bottomLeading) {
             Rectangle().fill(self.gradientDown)
             VStack {
-                Spacer().frame(height: 14)
+                Spacer().frame(height: 10)
                 self.content
             }
             .padding()

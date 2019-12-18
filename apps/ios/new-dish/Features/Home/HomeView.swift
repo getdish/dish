@@ -55,7 +55,7 @@ struct HomeViewContent: View {
                 self.store.send(.changeHomePage(index == 0 ? .home : .camera))
             }
             
-            HomeBottomNav()
+            BottomNav()
         }
     }
 }

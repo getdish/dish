@@ -41,9 +41,13 @@ struct DishGalleryView: View {
 
 struct DishGalleryBackground: View {
     var body: some View {
-        Color
-            .black
-            .opacity(0.85)
+        ZStack {
+            BlurView(style: .systemUltraThinMaterialDark)
+            
+            Color
+                .black
+                .opacity(0.85)
+        }
     }
 }
 
