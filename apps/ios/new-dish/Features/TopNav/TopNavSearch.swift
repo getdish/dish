@@ -17,7 +17,7 @@ struct TopNavSearch: View {
     var body: some View {
         let isOnHome = store.state.homePageView == .home
         
-        return VStack {
+        return ZStack {            
             if store.state.showDrawer || isOnHome {
                 VStack {
                     ZStack {

@@ -10,29 +10,46 @@ struct TopNav: View {
     
     var body: some View {
         ZStack {
-            TopNavSearchResults()
-            
             VStack {
-                VStack {
-                    HStack(spacing: 12) {
-                        TopNavSearch(
-                            isEditing: self.$isEditing
+                Rectangle()
+                    .fill(
+                        LinearGradient(
+                            gradient: Gradient(
+                                colors: [Color.black.opacity(0), Color.black.opacity(0.5)]
+                            ),
+                            startPoint: .bottom,
+                            endPoint: .center
                         )
-                        if !isEditing {
-                            TopNavMenuButton()
-                        }
-                    }
-                    .padding(.horizontal)
-                }
-                .padding(.top, topPad)
-                .padding(.bottom, bottomPad)
-                .frame(maxHeight: totalHeight, alignment: Alignment.top)
-                
+                )
+                    .frame(height: 150)
                 Spacer()
             }
+            
+            ZStack {
+                TopNavSearchResults()
+                
+                VStack {
+                    VStack {
+                        HStack(spacing: 12) {
+                            TopNavSearch(
+                                isEditing: self.$isEditing
+                            )
+                            if !isEditing {
+                                TopNavMenuButton()
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                    .padding(.top, topPad)
+                    .padding(.bottom, bottomPad)
+                    .frame(maxHeight: totalHeight, alignment: Alignment.top)
+                    
+                    Spacer()
+                }
+            }
+                // how do i pad == safe area
+                .padding(.top, 40)
         }
-        // how do i pad == safe area
-        .padding(.top, 40)
     }
 }
 
@@ -42,6 +59,7 @@ struct TopNav_Previews: PreviewProvider {
         VStack {
             TopNav()
         }
+        .embedInAppEnvironment()
         .background(
             LinearGradient(gradient: Gradient(colors: [.white, .red]), startPoint: .top, endPoint: .bottom)
         )

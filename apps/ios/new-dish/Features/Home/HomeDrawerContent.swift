@@ -12,15 +12,31 @@ struct HomeDrawerContent: View {
     var body: some View {
         VStack(spacing: 3) {
             VStack(spacing: 3) {
-                SearchInput(
-                    placeholder: "Pho, Burger, Wings...",
-                    inputBackgroundColor: Color.white.opacity(0.5),
-                    borderColor: Color.gray.opacity(0.4),
-                    scale: self.scrollAtTop ? 1.25 : 1.0,
-                    sizeRadius: 2.0,
-                    searchText: self.$searchText
-                )
-                .padding(.horizontal, 8)
+                ZStack {
+                    SearchInput(
+                        placeholder: "Pho, Burger, Wings...",
+                        inputBackgroundColor: Color.white.opacity(0.5),
+                        borderColor: Color.gray.opacity(0.4),
+                        scale: self.scrollAtTop ? 1.25 : 1.0,
+                        sizeRadius: 2.0,
+                        searchText: self.$searchText
+                    )
+                        .padding(.horizontal, 8)
+                    
+                    HStack {
+                        HStack {
+                            Image("dish-icon")
+                                .resizable()
+                                .frame(width: 32, height: 32)
+                                .padding(4)
+                        }
+                        .background(Color(.secondarySystemBackground))
+                        .cornerRadius(40)
+
+                        Spacer()
+                    }
+                    .padding(.leading, 12)
+                }
                 
                 Spacer().frame(height: 8)
 //                TagsBar()
@@ -127,6 +143,8 @@ struct Tag<Content>: View where Content: View {
 struct HomeDrawerContent_Previews: PreviewProvider {
     static var previews: some View {
         HomeDrawerContent()
+            .padding(.vertical, 50)
+            .embedInAppEnvironment()
     }
 }
 #endif

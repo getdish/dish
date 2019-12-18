@@ -37,6 +37,24 @@ struct DishGalleryCard: View {
     }
 }
 
+class Gradients {
+    static let gradientUp = LinearGradient(
+        gradient: Gradient(
+            colors: [Color.black.opacity(0), Color.black.opacity(0.6)]
+        ),
+        startPoint: .bottom,
+        endPoint: .center
+    )
+
+    static let gradientDown = LinearGradient(
+        gradient: Gradient(
+            colors: [Color.black.opacity(0.6), Color.black.opacity(0)]
+        ),
+        startPoint: .bottom,
+        endPoint: .center
+    )
+}
+
 struct TopFadeArea<Content>: View where Content: View {
     let content: Content
     
@@ -44,18 +62,9 @@ struct TopFadeArea<Content>: View where Content: View {
         self.content = content()
     }
     
-    var gradientUp: LinearGradient {
-        LinearGradient(
-            gradient: Gradient(
-                colors: [Color.black.opacity(0), Color.black.opacity(0.6)]
-            ),
-            startPoint: .bottom,
-            endPoint: .center)
-    }
-    
     var body: some View {
         ZStack(alignment: .top) {
-            Rectangle().fill(self.gradientUp)
+            Rectangle().fill(Gradients.gradientUp)
             VStack {
                 Spacer().frame(height: 10)
                 self.content
@@ -71,19 +80,10 @@ struct BottomFadeArea<Content>: View where Content: View {
     init(@ViewBuilder content: @escaping () -> Content) {
         self.content = content()
     }
-    
-    var gradientDown: LinearGradient {
-        LinearGradient(
-            gradient: Gradient(
-                colors: [Color.black.opacity(0.6), Color.black.opacity(0)]
-            ),
-            startPoint: .bottom,
-            endPoint: .center)
-    }
-    
+
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            Rectangle().fill(self.gradientDown)
+            Rectangle().fill(Gradients.gradientDown)
             VStack {
                 Spacer().frame(height: 10)
                 self.content
