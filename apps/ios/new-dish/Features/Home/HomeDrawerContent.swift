@@ -42,15 +42,18 @@ struct HomeDrawerContent: View {
                                 }
                                 
                                 VStack {
-                                    Tag {
-                                        Text("Noodles")
-                                            .fontWeight(.bold)
-                                            .font(.system(size: 16.0))
-                                            .opacity(0.8)
-                                            .padding(.vertical, 5)
+                                    HStack {
+                                        Tag {
+                                            Text("Noodles")
+                                                .fontWeight(.bold)
+                                                .font(.system(size: 16.0))
+                                                .opacity(0.8)
+                                                .padding(.vertical, 5)
+                                        }
+                                        .padding(.horizontal, 10)
+                                        .offset(y: -14)
+                                        Spacer()
                                     }
-                                    .padding(.horizontal, 10)
-                                    .offset(y: -14)
                                     
                                     Spacer()
                                 }
@@ -62,6 +65,8 @@ struct HomeDrawerContent: View {
                     // bottom padding
                     Spacer().frame(height: 40)
                 }
+                // avoid clipping on first title
+                .padding(.top, 14)
             }
         }
     }
