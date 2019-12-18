@@ -13,26 +13,30 @@ let clipPath = Cutout().clipPath
 
 struct DishGalleryViewContent: View {
     @EnvironmentObject var store: AppStore
-    @State var currentIndex = 0
+    @State var curCuisineIndex = 0
+    @State var curRestaurantIndex = 0
+    @State var curRestaurantIndex2 = 0
     
     var body: some View {
         ZStack {
             VStack(alignment: .leading) {
                 VerticalCardPager(
                     pageCount: 2,
-                    currentIndex: self.$currentIndex
+                    currentIndex: self.$curCuisineIndex
                 ) {
                     Spacer()
                         .frame(height: 580)
 
                     DishGalleryDish(
                         name: "Pho",
-                        items: features
+                        items: features,
+                        index: self.$curRestaurantIndex
                     )
                     
                     DishGalleryDish(
                         name: "Ramen",
-                        items: features
+                        items: features,
+                        index: self.$curRestaurantIndex2
                     )
                 }
             }
@@ -44,6 +48,10 @@ struct DishGalleryViewContent: View {
                     Image(systemName: "chevron.right.circle.fill")
                         .resizable()
                         .foregroundColor(.white)
+                }
+                .onTapGesture {
+                    print("update it...")
+                    self.curRestaurantIndex += 1
                 }
                 .frame(width: 60, height: 60)
                 .offset(x: 2, y: 32)
@@ -123,6 +131,7 @@ struct VerticalCardPager<Content: View>: View {
 struct DishGalleryDish: View {
     var name: String
     var items: [Landmark]
+    var index: Binding<Int>
     
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
@@ -137,7 +146,8 @@ struct DishGalleryDish: View {
             .padding(.horizontal)
             
             DishGalleryDishCards(
-                items: items
+                items: items,
+                index: self.index
             )
         }
     }
@@ -148,6 +158,7 @@ struct DishGalleryDishCards: View {
     private var geometry: GeometryProxy { appGeometry! }
     
     var items: [Landmark]
+    @Binding var index: Int
     
     struct CardAnimation {
         enum Target { case cur, prev }
@@ -157,7 +168,6 @@ struct DishGalleryDishCards: View {
     }
     
     @State private var animation: CardAnimation = CardAnimation(x: 0, target: .cur)
-    @State private var curIndex = 0
     
     var width: CGFloat = 0
     
@@ -165,9 +175,9 @@ struct DishGalleryDishCards: View {
         print("render")
         
         let animation = self.animation
-        let curCard = DishGalleryCard(active: true, landmark: items[curIndex])
-        let nextCard = DishGalleryCard(landmark: items[curIndex + 1])
-        let prevCard = DishGalleryCard(landmark: items[max(0, curIndex - 1)])
+        let curCard = DishGalleryCard(active: true, landmark: items[index])
+        let nextCard = DishGalleryCard(landmark: items[index + 1])
+        let prevCard = DishGalleryCard(landmark: items[max(0, index - 1)])
         
         let curCardWrapped = (
             ZStack {
@@ -192,7 +202,7 @@ struct DishGalleryDishCards: View {
                     DragGesture()
                         .onChanged { value in
                             let x = value.translation.width
-                            if self.curIndex == 0 && x > 0 {
+                            if self.index == 0 && x > 0 {
                                 print("already at start")
                                 return
                             }
@@ -206,13 +216,13 @@ struct DishGalleryDishCards: View {
                         let offset = value.translation.width / frameWidth
                         print("end \(offset) \(frameWidth)")
                         if abs(offset) > 0.35 {
-                            let newIndex = Int((CGFloat(self.curIndex) - offset).rounded())
+                            let newIndex = Int((CGFloat(self.index) - offset).rounded())
                             print("newIndex \(newIndex)")
                             if newIndex < 0 {
                                 return
                             }
                             
-                            if newIndex > self.curIndex {
+                            if newIndex > self.index {
                                 // next card
                                 self.animation = CardAnimation(
                                     x: -frameWidth,
@@ -237,7 +247,7 @@ struct DishGalleryDishCards: View {
                                     target: .cur,
                                     animateToX: false
                                 )
-                                self.curIndex = newIndex
+                                self.index = newIndex
                             }
                         } else {
                             print("under threshold reset it")
