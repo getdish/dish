@@ -14,8 +14,10 @@ struct RootView: View {
 //            DishGalleryViewContent()
 //        }
 //        .embedInAppEnvironment(Mocks.galleryVisibleDish)
-        HomeContainerView()
-            .edgesIgnoringSafeArea(.all)
+//        HomeContainerView()
+//            .edgesIgnoringSafeArea(.all)
+        
+        Content2View()
     }
 }
 
