@@ -51,35 +51,36 @@ struct DishGalleryViewContent: View {
                     //                }
                 }
                 
-                VStack {
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            //            action()
-                        }) {
-                            Text("Noodles")
-                                .fontWeight(.semibold)
-                                .font(.system(size: 18))
-                                .foregroundColor(.white)
-                        }
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 16)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 80)
-                                .stroke(Color.white.opacity(0.5), lineWidth: 1)
-                        )
-                            .cornerRadius(80)
-                            .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
-                        Spacer()
-                    }
-                    .padding(.top, 110 + Screen.statusBarHeight)
-                    .padding(.bottom, 20)
-                    Spacer()
-                }
+//                pill style title
+//                VStack {
+//                    HStack {
+//                        Spacer()
+//                        Button(action: {
+//                            //            action()
+//                        }) {
+//                            Text("Noodles")
+//                                .fontWeight(.semibold)
+//                                .font(.system(size: 18))
+//                                .foregroundColor(.white)
+//                        }
+//                        .padding(.vertical, 12)
+//                        .padding(.horizontal, 16)
+//                        .overlay(
+//                            RoundedRectangle(cornerRadius: 80)
+//                                .stroke(Color.white.opacity(0.5), lineWidth: 1)
+//                        )
+//                            .cornerRadius(80)
+//                            .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
+//                        Spacer()
+//                    }
+//                    .padding(.top, 110 + Screen.statusBarHeight)
+//                    .padding(.bottom, 20)
+//                    Spacer()
+//                }
             }
-            .clipShape(clipPath)
-            .edgesIgnoringSafeArea(.all)
-            .environment(\.colorScheme, .dark)
+//            .clipShape(clipPath)
+//            .edgesIgnoringSafeArea(.all)
+//            .environment(\.colorScheme, .dark)
             
             VStack {
                 Spacer()
@@ -96,7 +97,13 @@ struct DishGalleryViewContent: View {
                     }
                     .frame(width: 54, height: 54)
                 }
-                .padding(.trailing, 17)
+                Spacer()
+                BottomNavButton {
+                    Image(systemName: "star")
+                        .resizable()
+                        .foregroundColor(.white)
+                }
+                .frame(width: 45, height: 45)
             }
             .frame(height: 505)
         }
@@ -207,11 +214,12 @@ struct DishGalleryCardStackCards: View {
     
     struct CardAnimation {
         enum Target { case cur, prev }
+        enum Status { case dragging, animating, idle }
         var x: CGFloat = 0
         var y: CGFloat = 0
         var rotateY: Double = 0
         var target: Target = .cur
-        var animateToX = false
+        var status: Status = .idle
     }
     
     @State private var animation: CardAnimation = CardAnimation(x: 0, target: .cur)
@@ -245,23 +253,29 @@ struct DishGalleryCardStackCards: View {
                     x: animation.target == .cur ? animation.x : CGFloat(0),
                     y: animation.y
                 )
-                    .animation(animation.target == .cur && animation.animateToX ? .spring(response: 0.3) : nil)
+                    .animation(animation.target == .cur && animation.status == .animating ? .spring(response: 0.3) : nil)
                     .simultaneousGesture(
                         DragGesture()
                             .onChanged { value in
-                                var x = value.translation.width
+                                let x = value.translation.width
                                 let y = value.translation.height
-                                print("y \(y)")
+                                let isDragging = self.animation.status == .dragging
+                                let isStartingDrag = !isDragging
                                 
+                                // if at beginning
                                 if self.index == 0 && x > 0 {
-                                    // at beginning and cant go further so we "resist"
-                                    x = x / 2
+                                    if x > 20 {
+                                        // do a little shake or something
+                                    }
+                                    if !isDragging {
+                                        return
+                                    }
                                 }
                                 
                                 var rotateY: Double = self.animation.rotateY
                                 
                                 // on start drag, rotate it based on where they grabbed at
-                                if !self.isDragging {
+                                if isStartingDrag {
                                     let cardFrameHeight = cardGeometry.size.height
                                     let grabbedYAt = value.location.y
                                     let grabYPct = grabbedYAt / cardFrameHeight
@@ -276,8 +290,11 @@ struct DishGalleryCardStackCards: View {
                                     x: x,
                                     y: y,
                                     rotateY: rotateY,
-                                    target: x > 0 ? .prev : .cur,
-                                    animateToX: false
+                                    // only change target on start of drag
+                                    target: isStartingDrag
+                                        ? (x > 0 ? .prev : .cur)
+                                        : self.animation.target,
+                                    status: .dragging
                                 )
                         }.onEnded { value in
                             let frameWidth = self.geometry.size.width
@@ -305,7 +322,7 @@ struct DishGalleryCardStackCards: View {
                                         x: -frameWidth,
                                         y: y,
                                         target: .cur,
-                                        animateToX: true
+                                        status: .animating
                                     )
                                 } else {
                                     // prev card
@@ -313,7 +330,7 @@ struct DishGalleryCardStackCards: View {
                                         x: frameWidth,
                                         y: y,
                                         target: .prev,
-                                        animateToX: true
+                                        status: .animating
                                     )
                                     
                                 }
@@ -325,7 +342,7 @@ struct DishGalleryCardStackCards: View {
                                         x: 0,
                                         y: 0,
                                         target: .cur,
-                                        animateToX: false
+                                        status: .idle
                                     )
                                     self.index = newIndex
                                 }
@@ -336,14 +353,14 @@ struct DishGalleryCardStackCards: View {
                                         x: 0,
                                         y: 0,
                                         target: .cur,
-                                        animateToX: true
+                                        status: .animating
                                     )
                                 } else {
                                     self.animation = CardAnimation(
                                         x: -frameWidth,
                                         y: 0,
                                         target: .prev,
-                                        animateToX: true
+                                        status: .animating
                                     )
                                 }
                             }
@@ -351,7 +368,10 @@ struct DishGalleryCardStackCards: View {
             }
             
             prevCard
-                .animation(animation.target == .prev && animation.animateToX ? .spring(response: 0.3) : nil)
+                .animation(animation.target == .prev && animation.status == .animating
+                    ? .spring(response: 0.3)
+                    : nil
+            )
                 .offset(
                     x: -geometry.size.width + (animation.target == .prev ? animation.x : 0),
                     y: animation.target == .prev ? animation.y : CGFloat(0)
