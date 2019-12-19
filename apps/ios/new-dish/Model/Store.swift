@@ -28,10 +28,12 @@ final class Store<State, Action>: ObservableObject {
     }
 
     func send(_ action: Action) {
+        print("send \(action)")
         reducer.reduce(&state, action)
     }
 
     func send(_ effect: Effect<Action>) {
+        print("send \(effect)")
         var cancellable: AnyCancellable?
         var didComplete = false
 

@@ -125,13 +125,13 @@ struct BottomNavButton<Content>: View where Content: View {
             self.content()
         }
         .padding(.all, 12)
-        .background(
-            BlurView(style: .systemUltraThinMaterial)
-        )
+//        .background(
+//            BlurView(style: .systemUltraThinMaterial)
+//        )
             .background(
                 LinearGradient(
-                    gradient: Gradient(colors: [Color.white.opacity(0.1),
-                                                Color.white.opacity(0.2)]),
+                    gradient: Gradient(colors: [Color.white.opacity(0.4),
+                                                Color.white.opacity(0.5)]),
                     startPoint: .top,
                     endPoint: .bottom
                 )

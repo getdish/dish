@@ -42,13 +42,7 @@ struct DishGalleryView: View {
 
 struct DishGalleryBackground: View {
     var body: some View {
-        ZStack {
-            BlurView(style: .systemUltraThinMaterialDark)
-            
-            Color
-                .black
-                .opacity(0.85)
-        }
+        BlurView(style: .systemUltraThinMaterialLight)
     }
 }
 

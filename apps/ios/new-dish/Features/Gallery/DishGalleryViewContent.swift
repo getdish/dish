@@ -9,25 +9,42 @@ struct DishGalleryViewContent: View {
     var body: some View {
         ZStack {
             VStack(alignment: .leading) {
-                VerticalCardPager(
-                    pageCount: 2,
-                    currentIndex: self.$curCuisineIndex
-                ) {
-                    Spacer()
-                        .frame(height: 580)
-
-                    DishGalleryDish(
-                        name: "Pho",
-                        items: features,
-                        index: self.$curRestaurantIndex
-                    )
-                    
-                    DishGalleryDish(
-                        name: "Ramen",
-                        items: features,
-                        index: self.$curRestaurantIndex2
-                    )
-                }
+//                Spacer()
+                
+                DishGalleryDish(
+                    name: "Pho",
+                    items: features,
+                    index: self.$curRestaurantIndex
+                )
+                
+//                Horizontal card row below
+//                ScrollView(.horizontal, showsIndicators: false) {
+//                    HStack {
+//                        ForEach(0..<10) { i in
+//                            DishBrowseCard(landmark: features[i])
+//                                .frame(width: 140)
+//                        }
+//                    }
+//                    .padding()
+//                }
+                
+                
+//                Vertical cards
+//                VerticalCardPager(
+//                    pageCount: 2,
+//                    currentIndex: self.$curCuisineIndex
+//                ) {
+//                    Spacer()
+//                        .frame(height: 580)
+//
+//
+//
+//                    DishGalleryDish(
+//                        name: "Ramen",
+//                        items: features,
+//                        index: self.$curRestaurantIndex2
+//                    )
+//                }
             }
             
             VStack {

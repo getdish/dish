@@ -13,11 +13,16 @@ struct DishGalleryCard: View {
                 .overlay(
                     VStack {
                         TopFadeArea {
-                            Text(self.name ?? self.landmark.name)
-                                .font(.system(size: 28))
-                                .bold()
-                            Spacer().frame(height: 6)
-                            Text(self.landmark.park)
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text(self.name ?? self.landmark.name)
+                                        .font(.system(size: 26))
+                                        .bold()
+                                    Spacer().frame(height: 6)
+                                    Text(self.landmark.park)
+                                }
+                                Spacer()
+                            }
                         }
                         
                         Spacer()
@@ -65,11 +70,7 @@ struct TopFadeArea<Content>: View where Content: View {
     var body: some View {
         ZStack(alignment: .top) {
             Rectangle().fill(Gradients.gradientUp)
-            VStack {
-                Spacer().frame(height: 10)
-                self.content
-            }
-            .padding()
+            self.content.padding()
         }
     }
 }
@@ -84,11 +85,7 @@ struct BottomFadeArea<Content>: View where Content: View {
     var body: some View {
         ZStack(alignment: .bottomLeading) {
             Rectangle().fill(Gradients.gradientDown)
-            VStack {
-                Spacer().frame(height: 10)
-                self.content
-            }
-            .padding()
+            self.content.padding()
         }
     }
 }
