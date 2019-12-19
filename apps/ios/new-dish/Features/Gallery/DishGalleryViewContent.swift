@@ -175,14 +175,19 @@ struct DishGalleryCardStack: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
-                Text(self.name)
-                    .font(.system(size: 26))
-                    .bold()
-                    .shadow(color: Color.black.opacity(0.4), radius: 2, x: 1, y: 2)
+                Tag {
+                    Text(self.name)
+                        .font(.system(size: 26))
+                        .bold()
+                        .shadow(color: Color.black.opacity(0.4), radius: 2, x: 1, y: 2)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 4)
+                }
                 
                 Spacer()
             }
             .padding(.horizontal, 30)
+            .padding(.bottom, 10)
             
             DishGalleryCardStackCards(
                 items: items,
