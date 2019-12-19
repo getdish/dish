@@ -51,36 +51,36 @@ struct DishGalleryViewContent: View {
                     //                }
                 }
                 
-//                pill style title
-//                VStack {
-//                    HStack {
-//                        Spacer()
-//                        Button(action: {
-//                            //            action()
-//                        }) {
-//                            Text("Noodles")
-//                                .fontWeight(.semibold)
-//                                .font(.system(size: 18))
-//                                .foregroundColor(.white)
-//                        }
-//                        .padding(.vertical, 12)
-//                        .padding(.horizontal, 16)
-//                        .overlay(
-//                            RoundedRectangle(cornerRadius: 80)
-//                                .stroke(Color.white.opacity(0.5), lineWidth: 1)
-//                        )
-//                            .cornerRadius(80)
-//                            .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
-//                        Spacer()
-//                    }
-//                    .padding(.top, 110 + Screen.statusBarHeight)
-//                    .padding(.bottom, 20)
-//                    Spacer()
-//                }
+                //                pill style title
+                //                VStack {
+                //                    HStack {
+                //                        Spacer()
+                //                        Button(action: {
+                //                            //            action()
+                //                        }) {
+                //                            Text("Noodles")
+                //                                .fontWeight(.semibold)
+                //                                .font(.system(size: 18))
+                //                                .foregroundColor(.white)
+                //                        }
+                //                        .padding(.vertical, 12)
+                //                        .padding(.horizontal, 16)
+                //                        .overlay(
+                //                            RoundedRectangle(cornerRadius: 80)
+                //                                .stroke(Color.white.opacity(0.5), lineWidth: 1)
+                //                        )
+                //                            .cornerRadius(80)
+                //                            .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
+                //                        Spacer()
+                //                    }
+                //                    .padding(.top, 110 + Screen.statusBarHeight)
+                //                    .padding(.bottom, 20)
+                //                    Spacer()
+                //                }
             }
-//            .clipShape(clipPath)
-//            .edgesIgnoringSafeArea(.all)
-//            .environment(\.colorScheme, .dark)
+            //            .clipShape(clipPath)
+            //            .edgesIgnoringSafeArea(.all)
+            //            .environment(\.colorScheme, .dark)
             
             VStack {
                 Spacer()
@@ -231,17 +231,17 @@ struct DishGalleryCardStackCards: View {
     }
     
     var body: some View {
-        print("render")
-        
         let animation = self.animation
         let curCard = DishGalleryCard(name: "Miss Saigon", active: true, landmark: items[index])
         let nextCard = DishGalleryCard(name: "Pho 2000", landmark: items[index + 1])
         let prevCard = DishGalleryCard(landmark: items[max(0, index - 1)])
         
+        print("render .. \(animation.status)")
+        
         return ZStack {
             nextCard
+                .rotationEffect(.degrees(animation.status == .idle ? 2.5 : 0.0))
                 .animation(.spring())
-                .rotationEffect(.degrees(2.5))
             
             GeometryReader { cardGeometry in
                 ZStack {
@@ -253,7 +253,10 @@ struct DishGalleryCardStackCards: View {
                     x: animation.target == .cur ? animation.x : CGFloat(0),
                     y: animation.y
                 )
-                    .animation(animation.target == .cur && animation.status == .animating ? .spring(response: 0.3) : nil)
+                    .animation(animation.target == .cur && animation.status != .idle
+                        ? .spring(response: 0.3)
+                        : nil
+                )
                     .simultaneousGesture(
                         DragGesture()
                             .onChanged { value in
@@ -304,12 +307,15 @@ struct DishGalleryCardStackCards: View {
                             // we can tune this score now based on various factors
                             // for now just average the offset + offsetEnd
                             let score = abs((offset + offsetEnd) / 2)
+                            let shouldChange = score > 0.2
+                            let newIndex = shouldChange
+                                ? self.index + (offset > 0 ? -1 : 1)
+                                : self.index
                             
                             print("score \(score) -- \(offset) \(offsetEnd)")
                             
-                            if score > 0.2 {
-                                let newIndex = self.index + (offset > 0 ? -1 : 1)
-                                print("newIndex \(newIndex)")
+                            if shouldChange {
+                                print("newIndex \(newIndex), curIndex \(self.index)")
                                 if newIndex < 0 {
                                     return
                                 }
@@ -317,6 +323,7 @@ struct DishGalleryCardStackCards: View {
                                 let y = value.predictedEndTranslation.height
                                 
                                 if newIndex > self.index {
+                                    print("next card x \(-frameWidth) y \(y)")
                                     // next card
                                     self.animation = CardAnimation(
                                         x: -frameWidth,
@@ -328,23 +335,11 @@ struct DishGalleryCardStackCards: View {
                                     // prev card
                                     self.animation = CardAnimation(
                                         x: frameWidth,
-                                        y: y,
+                                        y: 0,
                                         target: .prev,
                                         status: .animating
                                     )
                                     
-                                }
-                                
-                                // reset state
-                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                    print("finish animation")
-                                    self.animation = CardAnimation(
-                                        x: 0,
-                                        y: 0,
-                                        target: .cur,
-                                        status: .idle
-                                    )
-                                    self.index = newIndex
                                 }
                             } else {
                                 print("under threshold reset it")
@@ -364,16 +359,28 @@ struct DishGalleryCardStackCards: View {
                                     )
                                 }
                             }
+                            
+                            // reset state
+                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+                                print("finish animation")
+                                self.animation = CardAnimation(
+                                    x: 0,
+                                    y: 0,
+                                    target: .cur,
+                                    status: .idle
+                                )
+                                self.index = newIndex
+                            }
                     })
             }
             
             prevCard
-                .animation(animation.target == .prev && animation.status == .animating
+                .animation(animation.target == .prev && animation.status != .idle
                     ? .spring(response: 0.3)
                     : nil
             )
                 .offset(
-                    x: -geometry.size.width + (animation.target == .prev ? animation.x : 0),
+                    x: -geometry.size.width + (animation.target == .prev && animation.status != .idle ? animation.x : 0),
                     y: animation.target == .prev ? animation.y : CGFloat(0)
             )
         }
