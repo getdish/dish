@@ -217,7 +217,7 @@ struct DishGalleryCardStackCards: View {
                                 if isStartingDrag {
                                     let cardFrameHeight = cardGeometry.size.height
                                     let grabbedYAt = value.location.y
-                                    let grabYPct = grabbedYAt / cardFrameHeight
+                                    let grabYPct = Double(grabbedYAt / cardFrameHeight)
                                     let maxRotationDeg = 10.0
                                     if grabYPct > 0.5 {
                                         rotateY = Double((grabYPct - 0.5) * maxRotationDeg)
