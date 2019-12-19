@@ -239,6 +239,7 @@ struct DishGalleryCardStackCards: View {
                 ZStack {
                     curCard
                         .rotationEffect(.degrees(animation.rotateY))
+                        .animation(.linear(duration: 0.1))
                 }
                 .offset(
                     x: animation.target == .cur ? animation.x : CGFloat(0),
