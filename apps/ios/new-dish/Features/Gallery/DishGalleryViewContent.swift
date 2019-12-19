@@ -1,5 +1,8 @@
 import SwiftUI
 
+// TODO
+fileprivate let cardHeight: CGFloat = 580
+
 struct DishGalleryViewContent: View {
     @EnvironmentObject var store: AppStore
     @State var curCuisineIndex = 0
@@ -104,7 +107,7 @@ struct VerticalCardPager<Content: View>: View {
     @Binding var currentIndex: Int
     let pageCount: Int
     let content: Content
-    let height: CGFloat = 580
+    let height: CGFloat = cardHeight
     
     init(
         pageCount: Int,
@@ -135,8 +138,6 @@ struct VerticalCardPager<Content: View>: View {
                 DragGesture(minimumDistance: 10.0).updating(self.$translation) { value, state, _ in
                     let x = value.translation.width
                     let y = value.translation.height
-                    
-                    print("\(x) \(y)")
                     
                     DispatchQueue.main.async {
                         if self.lockedTo == .none {
@@ -208,6 +209,7 @@ struct DishGalleryCardStackCards: View {
         enum Target { case cur, prev }
         var x: CGFloat = 0
         var y: CGFloat = 0
+        var rotateY: Double = 0
         var target: Target = .cur
         var animateToX = false
     }
@@ -215,6 +217,10 @@ struct DishGalleryCardStackCards: View {
     @State private var animation: CardAnimation = CardAnimation(x: 0, target: .cur)
     
     var width: CGFloat = 0
+    
+    var isDragging: Bool {
+        return self.animation.x != 0 || self.animation.y != 0
+    }
     
     var body: some View {
         print("render")
@@ -229,96 +235,125 @@ struct DishGalleryCardStackCards: View {
                 .animation(.spring())
                 .rotationEffect(.degrees(2.5))
             
-            ZStack {
-                curCard
-            }
-            .offset(
-                x: animation.target == .cur ? animation.x : 0,
-                y: animation.y
-            )
-                .animation(animation.target == .cur && animation.animateToX ? .spring(response: 0.3) : nil)
-                .simultaneousGesture(
-                    DragGesture()
-                        .onChanged { value in
-                            var x = value.translation.width
-                            let y = value.translation.height
-                            print("y \(y)")
-                            if self.index == 0 && x > 0 {
-                                // at beginning
-                                x = x / 2
-                            }
-                            self.animation = CardAnimation(
-                                x: x,
-                                y: y,
-                                target: x > 0 ? .prev : .cur,
-                                animateToX: false
-                            )
-                    }.onEnded { value in
-                        let frameWidth = self.geometry.size.width
-                        let offset = value.translation.width / frameWidth
-                        print("end \(offset) \(frameWidth)")
-                        if abs(offset) > 0.35 {
-                            let newIndex = Int((CGFloat(self.index) - offset).rounded())
-                            print("newIndex \(newIndex)")
-                            if newIndex < 0 {
-                                return
-                            }
-                            
-                            if newIndex > self.index {
-                                // next card
-                                self.animation = CardAnimation(
-                                    x: -frameWidth,
-                                    y: 0,
-                                    target: .cur,
-                                    animateToX: true
-                                )
-                            } else {
-                                // prev card
-                                self.animation = CardAnimation(
-                                    x: frameWidth,
-                                    y: 0,
-                                    target: .prev,
-                                    animateToX: true
-                                )
+            GeometryReader { cardGeometry in
+                ZStack {
+                    curCard
+                        .rotationEffect(.degrees(animation.rotateY))
+                }
+                .offset(
+                    x: animation.target == .cur ? animation.x : CGFloat(0),
+                    y: animation.y
+                )
+                    .animation(animation.target == .cur && animation.animateToX ? .spring(response: 0.3) : nil)
+                    .simultaneousGesture(
+                        DragGesture()
+                            .onChanged { value in
+                                var x = value.translation.width
+                                let y = value.translation.height
+                                print("y \(y)")
                                 
-                            }
-                            
-                            // reset state
-                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                print("finish animation")
+                                if self.index == 0 && x > 0 {
+                                    // at beginning and cant go further so we "resist"
+                                    x = x / 2
+                                }
+                                
+                                var rotateY: Double = self.animation.rotateY
+                                
+                                // on start drag, rotate it based on where they grabbed at
+                                if !self.isDragging {
+                                    let cardFrameHeight = cardGeometry.size.height
+                                    let grabbedYAt = value.location.y
+                                    let grabYPct = grabbedYAt / cardFrameHeight
+                                    if grabYPct > 0.5 {
+                                        rotateY = Double((grabYPct - 0.5) * 8)
+                                    } else {
+                                        rotateY = Double(-(0.5 - grabYPct) * 8)
+                                    }
+                                }
+                                
                                 self.animation = CardAnimation(
-                                    x: 0,
-                                    y: 0,
-                                    target: .cur,
+                                    x: x,
+                                    y: y,
+                                    rotateY: rotateY,
+                                    target: x > 0 ? .prev : .cur,
                                     animateToX: false
                                 )
-                                self.index = newIndex
-                            }
-                        } else {
-                            print("under threshold reset it")
-                            if self.animation.target == .cur {
-                                self.animation = CardAnimation(
-                                    x: 0,
-                                    y: 0,
-                                    target: .cur,
-                                    animateToX: true
-                                )
+                        }.onEnded { value in
+                            let frameWidth = self.geometry.size.width
+                            let offset = value.translation.width / frameWidth
+                            let offsetEnd = value.predictedEndTranslation.width / frameWidth
+                            
+                            // we can tune this score now based on various factors
+                            // for now just average the offset + offsetEnd
+                            let score = abs((offset + offsetEnd) / 2)
+                            
+                            print("score \(score) -- \(offset) \(offsetEnd)")
+                            
+                            if score > 0.2 {
+                                let newIndex = self.index + (offset > 0 ? -1 : 1)
+                                print("newIndex \(newIndex)")
+                                if newIndex < 0 {
+                                    return
+                                }
+                                
+                                let y = value.predictedEndTranslation.height
+                                
+                                if newIndex > self.index {
+                                    // next card
+                                    self.animation = CardAnimation(
+                                        x: -frameWidth,
+                                        y: y,
+                                        target: .cur,
+                                        animateToX: true
+                                    )
+                                } else {
+                                    // prev card
+                                    self.animation = CardAnimation(
+                                        x: frameWidth,
+                                        y: y,
+                                        target: .prev,
+                                        animateToX: true
+                                    )
+                                    
+                                }
+                                
+                                // reset state
+                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                    print("finish animation")
+                                    self.animation = CardAnimation(
+                                        x: 0,
+                                        y: 0,
+                                        target: .cur,
+                                        animateToX: false
+                                    )
+                                    self.index = newIndex
+                                }
                             } else {
-                                self.animation = CardAnimation(
-                                    x: -frameWidth,
-                                    y: 0,
-                                    target: .prev,
-                                    animateToX: true
-                                )
+                                print("under threshold reset it")
+                                if self.animation.target == .cur {
+                                    self.animation = CardAnimation(
+                                        x: 0,
+                                        y: 0,
+                                        target: .cur,
+                                        animateToX: true
+                                    )
+                                } else {
+                                    self.animation = CardAnimation(
+                                        x: -frameWidth,
+                                        y: 0,
+                                        target: .prev,
+                                        animateToX: true
+                                    )
+                                }
                             }
-                        }
-                })
+                    })
+            }
             
             prevCard
                 .animation(animation.target == .prev && animation.animateToX ? .spring(response: 0.3) : nil)
                 .offset(
                     x: -geometry.size.width + (animation.target == .prev ? animation.x : 0),
-                    y: animation.target == .prev ? animation.y : 0
+                    y: animation.target == .prev ? animation.y : CGFloat(0)
             )
         }
             // for now hardcoded
