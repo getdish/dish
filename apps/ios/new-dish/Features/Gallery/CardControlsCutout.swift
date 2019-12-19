@@ -20,7 +20,7 @@ extension Path {
         self.addEllipse(in:
             CGRect(
                 x: rect.width - circleSize - 20,
-                y: rect.height - circleSize - 20,
+                y: rect.height * 0.8 - circleSize / 2,
                 width: circleSize,
                 height: circleSize
             )

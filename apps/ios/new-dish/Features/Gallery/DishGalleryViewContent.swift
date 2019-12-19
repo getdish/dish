@@ -8,77 +8,82 @@ struct DishGalleryViewContent: View {
     
     var body: some View {
         ZStack {
-            VStack(alignment: .leading) {
-//                Spacer()
-                
-                DishGalleryDish(
-                    name: "Pho",
-                    items: features,
-                    index: self.$curRestaurantIndex
-                )
-                
-//                Horizontal card row below
-//                ScrollView(.horizontal, showsIndicators: false) {
-//                    HStack {
-//                        ForEach(0..<10) { i in
-//                            DishBrowseCard(landmark: features[i])
-//                                .frame(width: 140)
-//                        }
-//                    }
-//                    .padding()
-//                }
-                
-                
-//                Vertical cards
-//                VerticalCardPager(
-//                    pageCount: 2,
-//                    currentIndex: self.$curCuisineIndex
-//                ) {
-//                    Spacer()
-//                        .frame(height: 580)
-//
-//
-//
-//                    DishGalleryDish(
-//                        name: "Ramen",
-//                        items: features,
-//                        index: self.$curRestaurantIndex2
-//                    )
-//                }
-            }
-            
-            VStack {
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        //            action()
-                    }) {
-                        Text("Noodles")
-                            .fontWeight(.semibold)
-                            .font(.system(size: 18))
-                            .foregroundColor(.white)
-                    }
-                    .padding(.vertical, 12)
-                    .padding(.horizontal, 16)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 80)
-                            .stroke(Color.white.opacity(0.5), lineWidth: 1)
+            ZStack {
+                VStack(alignment: .leading) {
+                    //                Spacer()
+                    
+                    DishGalleryCardStack(
+                        name: "Pho",
+                        items: features,
+                        index: self.$curRestaurantIndex
                     )
-                    .cornerRadius(80)
-                    .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
+                    
+                    //                Horizontal card row below
+                    //                ScrollView(.horizontal, showsIndicators: false) {
+                    //                    HStack {
+                    //                        ForEach(0..<10) { i in
+                    //                            DishBrowseCard(landmark: features[i])
+                    //                                .frame(width: 140)
+                    //                        }
+                    //                    }
+                    //                    .padding()
+                    //                }
+                    
+                    
+                    //                Vertical cards
+                    //                VerticalCardPager(
+                    //                    pageCount: 2,
+                    //                    currentIndex: self.$curCuisineIndex
+                    //                ) {
+                    //                    Spacer()
+                    //                        .frame(height: 580)
+                    //
+                    //
+                    //
+                    //                    DishGalleryDish(
+                    //                        name: "Ramen",
+                    //                        items: features,
+                    //                        index: self.$curRestaurantIndex2
+                    //                    )
+                    //                }
+                }
+                
+                VStack {
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            //            action()
+                        }) {
+                            Text("Noodles")
+                                .fontWeight(.semibold)
+                                .font(.system(size: 18))
+                                .foregroundColor(.white)
+                        }
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 16)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 80)
+                                .stroke(Color.white.opacity(0.5), lineWidth: 1)
+                        )
+                            .cornerRadius(80)
+                            .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
+                        Spacer()
+                    }
+                    .padding(.top, 110 + Screen.statusBarHeight)
+                    .padding(.bottom, 20)
                     Spacer()
                 }
-                .padding(.top, 110 + Screen.statusBarHeight)
-                .padding(.bottom, 20)
-                Spacer()
             }
+            .clipShape(clipPath)
+            .edgesIgnoringSafeArea(.all)
+            .environment(\.colorScheme, .dark)
             
             VStack {
                 Spacer()
                 HStack {
                     Spacer()
                     BottomNavButton {
-                        Image(systemName: "chevron.right.circle.fill")
+                        Image(systemName: "chevron.right.circle")
                             .resizable()
                             .foregroundColor(.white)
                     }
@@ -88,12 +93,10 @@ struct DishGalleryViewContent: View {
                     }
                     .frame(width: 54, height: 54)
                 }
-                .padding(.trailing, 2)
+                .padding(.trailing, 17)
             }
-            .frame(height: 535)
+            .frame(height: 505)
         }
-        .edgesIgnoringSafeArea(.all)
-        .environment(\.colorScheme, .dark)
     }
 }
 
@@ -164,7 +167,7 @@ struct VerticalCardPager<Content: View>: View {
     }
 }
 
-struct DishGalleryDish: View {
+struct DishGalleryCardStack: View {
     var name: String
     var items: [Landmark]
     var index: Binding<Int>
@@ -181,7 +184,7 @@ struct DishGalleryDish: View {
             }
             .padding(.horizontal, 30)
             
-            DishGalleryDishCards(
+            DishGalleryCardStackCards(
                 items: items,
                 index: self.index
             )
@@ -189,7 +192,7 @@ struct DishGalleryDish: View {
     }
 }
 
-struct DishGalleryDishCards: View {
+struct DishGalleryCardStackCards: View {
     @Environment(\.geometry) var appGeometry
     private var geometry: GeometryProxy { appGeometry! }
     
@@ -199,6 +202,7 @@ struct DishGalleryDishCards: View {
     struct CardAnimation {
         enum Target { case cur, prev }
         var x: CGFloat = 0
+        var y: CGFloat = 0
         var target: Target = .cur
         var animateToX = false
     }
@@ -215,35 +219,32 @@ struct DishGalleryDishCards: View {
         let nextCard = DishGalleryCard(name: "Pho 2000", landmark: items[index + 1])
         let prevCard = DishGalleryCard(landmark: items[max(0, index - 1)])
         
-        let curCardWrapped = (
-            ZStack {
-                curCard
-                // if you want rotation effect do inside ZStack here:
-                //                    .rotation3DEffect(
-                //                            .degrees(20.0),
-                //                            axis: (0.0, 1.0, 1.0)
-                //                    )
-            }
-            .offset(x: animation.target == .cur ? animation.x : 0)
-            .animation(animation.target == .cur && animation.animateToX ? .spring(response: 0.3) : nil)
-        )
-        
         return ZStack {
             nextCard
                 .animation(.spring())
                 .rotationEffect(.degrees(2.5))
             
-            curCardWrapped
+            ZStack {
+                curCard
+            }
+            .offset(
+                x: animation.target == .cur ? animation.x : 0,
+                y: animation.y
+            )
+                .animation(animation.target == .cur && animation.animateToX ? .spring(response: 0.3) : nil)
                 .simultaneousGesture(
                     DragGesture()
                         .onChanged { value in
-                            let x = value.translation.width
+                            var x = value.translation.width
+                            let y = value.translation.height
+                            print("y \(y)")
                             if self.index == 0 && x > 0 {
-                                print("already at start")
-                                return
+                                // at beginning
+                                x = x / 2
                             }
                             self.animation = CardAnimation(
                                 x: x,
+                                y: y,
                                 target: x > 0 ? .prev : .cur,
                                 animateToX: false
                             )
@@ -262,6 +263,7 @@ struct DishGalleryDishCards: View {
                                 // next card
                                 self.animation = CardAnimation(
                                     x: -frameWidth,
+                                    y: 0,
                                     target: .cur,
                                     animateToX: true
                                 )
@@ -269,6 +271,7 @@ struct DishGalleryDishCards: View {
                                 // prev card
                                 self.animation = CardAnimation(
                                     x: frameWidth,
+                                    y: 0,
                                     target: .prev,
                                     animateToX: true
                                 )
@@ -280,6 +283,7 @@ struct DishGalleryDishCards: View {
                                 print("finish animation")
                                 self.animation = CardAnimation(
                                     x: 0,
+                                    y: 0,
                                     target: .cur,
                                     animateToX: false
                                 )
@@ -290,12 +294,14 @@ struct DishGalleryDishCards: View {
                             if self.animation.target == .cur {
                                 self.animation = CardAnimation(
                                     x: 0,
+                                    y: 0,
                                     target: .cur,
                                     animateToX: true
                                 )
                             } else {
                                 self.animation = CardAnimation(
                                     x: -frameWidth,
+                                    y: 0,
                                     target: .prev,
                                     animateToX: true
                                 )
@@ -305,9 +311,11 @@ struct DishGalleryDishCards: View {
             
             prevCard
                 .animation(animation.target == .prev && animation.animateToX ? .spring(response: 0.3) : nil)
-                .offset(x: -geometry.size.width + (animation.target == .prev ? animation.x : 0))
+                .offset(
+                    x: -geometry.size.width + (animation.target == .prev ? animation.x : 0),
+                    y: animation.target == .prev ? animation.y : 0
+            )
         }
-            .clipShape(clipPath)
             // for now hardcoded
             .frame(height: 500)
             .padding(.horizontal, 12)
@@ -318,7 +326,7 @@ struct DishGalleryDishCards: View {
 
 struct Cutout {
     let cardFrame = CGRect(
-        x: 0, y: 0, width: Screen.width + 10, height: 510
+        x: 0, y: 0, width: Screen.width + 10, height: Screen.height
     )
     var clipPath = Path()
     init() {
