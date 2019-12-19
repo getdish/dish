@@ -4,13 +4,15 @@ import SwiftUI
 fileprivate let cardHeight: CGFloat = 580
 
 struct DishGalleryViewContent: View {
-    @EnvironmentObject var store: AppStore
-    @State var curCuisineIndex = 0
-    @State var curRestaurantIndex = 0
-    @State var curRestaurantIndex2 = 0
+    @Environment(\.geometry) var appGeometry
+//    @EnvironmentObject var store: AppStore
     
     var body: some View {
-        ZStack {
+        print("Render DishGalleryViewContent")
+        // TODO why is this giving me so much trouble
+        let store = CardStackStore(geometry: appGeometry)
+
+        return ZStack {
             ZStack {
                 VStack(alignment: .leading) {
                     //                Spacer()
@@ -18,7 +20,7 @@ struct DishGalleryViewContent: View {
                     DishGalleryCardStack(
                         name: "Pho",
                         items: features,
-                        index: self.$curRestaurantIndex
+                        cardStackStore: store
                     )
                     
                     //                Horizontal card row below
@@ -86,14 +88,13 @@ struct DishGalleryViewContent: View {
                 Spacer()
                 HStack {
                     Spacer()
-                    BottomNavButton {
+                    BottomNavButton(action: {
+                        print("update it...")
+                        store.next()
+                    }) {
                         Image(systemName: "chevron.right.circle")
                             .resizable()
                             .foregroundColor(.white)
-                    }
-                    .onTapGesture {
-                        print("update it...")
-                        self.curRestaurantIndex += 1
                     }
                     .frame(width: 54, height: 54)
                 }
@@ -113,7 +114,7 @@ struct DishGalleryViewContent: View {
 struct DishGalleryCardStack: View {
     var name: String
     var items: [Landmark]
-    var index: Binding<Int>
+    var cardStackStore: CardStackStore
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -134,39 +135,76 @@ struct DishGalleryCardStack: View {
             
             DishGalleryCardStackCards(
                 items: items,
-                index: self.index
+                cardStackStore: cardStackStore
             )
         }
     }
 }
 
-struct DishGalleryCardStackCards: View {
-    @Environment(\.geometry) var appGeometry
-    private var geometry: GeometryProxy { appGeometry! }
+struct CardAnimation {
+    enum Target { case cur, prev }
+    enum Status { case dragging, animating, idle }
+    var x: CGFloat = 0
+    var y: CGFloat = 0
+    var rotateY: Double = 0
+    var target: Target = .cur
+    var status: Status = .idle
+}
+
+class CardStackStore: ObservableObject {
+    @Published var index: Int = 0
+    @Published var animation: CardAnimation = CardAnimation(x: 0, target: .cur)
+    var geometry: GeometryProxy? = nil
     
-    var items: [Landmark]
-    @Binding var index: Int
-    
-    struct CardAnimation {
-        enum Target { case cur, prev }
-        enum Status { case dragging, animating, idle }
-        var x: CGFloat = 0
-        var y: CGFloat = 0
-        var rotateY: Double = 0
-        var target: Target = .cur
-        var status: Status = .idle
+    init(geometry: GeometryProxy?) {
+        self.geometry = geometry
     }
     
-    @State private var animation: CardAnimation = CardAnimation(x: 0, target: .cur)
+    func animate(_ animation: CardAnimation, index: Int? = nil) {
+        print("animate...")
+        self.animation = animation
+        if let i = index {
+            self.index = i
+        }
+        // finish after animate
+        if animation.status != .dragging && animation.status != .idle {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                self.animate(
+                    CardAnimation(
+                        x: 0,
+                        y: 0,
+                        target: .cur,
+                        status: .idle
+                    )
+                )
+            }
+        }
+    }
     
+    func next() {
+        print("next...")
+        if geometry == nil { return }
+        self.animate(
+            CardAnimation(
+                x: -geometry!.size.width,
+                y: 0,
+                target: .cur,
+                status: .animating
+            ),
+            index: self.index + 1
+        )
+    }
+}
+
+struct DishGalleryCardStackCards: View {
+    var items: [Landmark]
+    @ObservedObject var cardStackStore: CardStackStore
     var width: CGFloat = 0
     
-    var isDragging: Bool {
-        return self.animation.x != 0 || self.animation.y != 0
-    }
-    
     var body: some View {
-        let animation = self.animation
+        let geometry = self.cardStackStore.geometry!
+        let animation = self.cardStackStore.animation
+        let index = self.cardStackStore.index
         let isIdle = animation.status == .idle
         let curCard = DishGalleryCard(name: "Miss Saigon", active: true, landmark: items[index])
         let nextCard = DishGalleryCard(name: "Pho 2000", landmark: items[index + 1])
@@ -198,11 +236,11 @@ struct DishGalleryCardStackCards: View {
                             .onChanged { value in
                                 let x = value.translation.width
                                 let y = value.translation.height
-                                let isDragging = self.animation.status == .dragging
+                                let isDragging = animation.status == .dragging
                                 let isStartingDrag = !isDragging
                                 
                                 // if at beginning
-                                if self.index == 0 && x > 0 {
+                                if index == 0 && x > 0 {
                                     if x > 20 {
                                         // do a little shake or something
                                     }
@@ -211,7 +249,7 @@ struct DishGalleryCardStackCards: View {
                                     }
                                 }
                                 
-                                var rotateY: Double = self.animation.rotateY
+                                var rotateY: Double = animation.rotateY
                                 
                                 // on start drag, rotate it based on where they grabbed at
                                 if isStartingDrag {
@@ -226,87 +264,84 @@ struct DishGalleryCardStackCards: View {
                                     }
                                 }
                                 
-                                self.animation = CardAnimation(
-                                    x: x,
-                                    y: y,
-                                    rotateY: rotateY,
-                                    // only change target on start of drag
-                                    target: isStartingDrag
-                                        ? (x > 0 ? .prev : .cur)
-                                        : self.animation.target,
-                                    status: .dragging
+                                self.cardStackStore.animate(
+                                    CardAnimation(
+                                        x: x,
+                                        y: y,
+                                        rotateY: rotateY,
+                                        // only change target on start of drag
+                                        target: isStartingDrag
+                                            ? (x > 0 ? .prev : .cur)
+                                            : animation.target,
+                                        status: .dragging
+                                    )
                                 )
                         }.onEnded { value in
-                            let frameWidth = self.geometry.size.width
+                            let frameWidth = geometry.size.width
                             let offset = value.translation.width / frameWidth
-                            let offsetEnd = value.predictedEndTranslation.width / frameWidth
+                            let offsetV = value.predictedEndTranslation.width / frameWidth
                             
                             // we can tune this score now based on various factors
-                            // for now just average the offset + offsetEnd
-                            let score = abs((offset + offsetEnd) / 2)
+                            let score = abs(offset * 0.4 + offsetV * 0.6)
                             let shouldChange = score > 0.2
                             let newIndex = shouldChange
-                                ? self.index + (offset > 0 ? -1 : 1)
-                                : self.index
+                                ? index + (offset > 0 ? -1 : 1)
+                                : index
                             
-                            print("score \(score) -- \(offset) \(offsetEnd)")
+                            print("score \(score) -- \(offset) \(offsetV)")
                             
                             if shouldChange {
-                                print("newIndex \(newIndex), curIndex \(self.index)")
+                                print("newIndex \(newIndex), curIndex \(index)")
                                 if newIndex < 0 {
                                     return
                                 }
                                 
                                 let y = value.predictedEndTranslation.height
                                 
-                                if newIndex > self.index {
+                                if newIndex > index {
                                     print("next card x \(-frameWidth) y \(y)")
                                     // next card
-                                    self.animation = CardAnimation(
-                                        x: -frameWidth,
-                                        y: y,
-                                        target: .cur,
-                                        status: .animating
+                                    self.cardStackStore.animate(
+                                        CardAnimation(
+                                            x: -frameWidth,
+                                            y: y,
+                                            target: .cur,
+                                            status: .animating
+                                        )
                                     )
                                 } else {
                                     // prev card
-                                    self.animation = CardAnimation(
-                                        x: frameWidth,
-                                        y: 0,
-                                        target: .prev,
-                                        status: .animating
+                                    self.cardStackStore.animate(
+                                        CardAnimation(
+                                            x: frameWidth,
+                                            y: 0,
+                                            target: .prev,
+                                            status: .animating
+                                        )
                                     )
                                     
                                 }
                             } else {
                                 print("under threshold reset it")
-                                if self.animation.target == .cur {
-                                    self.animation = CardAnimation(
-                                        x: 0,
-                                        y: 0,
-                                        target: .cur,
-                                        status: .animating
+                                if animation.target == .cur {
+                                    self.cardStackStore.animate(
+                                        CardAnimation(
+                                            x: 0,
+                                            y: 0,
+                                            target: .cur,
+                                            status: .animating
+                                        )
                                     )
                                 } else {
-                                    self.animation = CardAnimation(
-                                        x: -frameWidth,
-                                        y: 0,
-                                        target: .prev,
-                                        status: .animating
+                                    self.cardStackStore.animate(
+                                        CardAnimation(
+                                            x: -frameWidth,
+                                            y: 0,
+                                            target: .prev,
+                                            status: .animating
+                                        )
                                     )
                                 }
-                            }
-                            
-                            // reset state
-                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-                                print("finish animation")
-                                self.animation = CardAnimation(
-                                    x: 0,
-                                    y: 0,
-                                    target: .cur,
-                                    status: .idle
-                                )
-                                self.index = newIndex
                             }
                     })
             }

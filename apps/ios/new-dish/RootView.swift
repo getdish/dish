@@ -9,17 +9,17 @@ import SwiftUI
 
 struct RootView: View {
     var body: some View {
-        ZStack {
-            Color.black
-            DishGalleryViewContent()
-        }
-        .embedInAppEnvironment(Mocks.galleryVisibleDish)
-//        HomeContainerView()
-//            .edgesIgnoringSafeArea(.all)
+//        ZStack {
+//            Color.black
+//            DishGalleryView()
+//        }
+//        .embedInAppEnvironment(Mocks.galleryVisibleDish)
+        HomeContainerView()
+            .edgesIgnoringSafeArea(.all)
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct RootView_Previews: PreviewProvider {
     static var previews: some View {
         RootView()
     }
