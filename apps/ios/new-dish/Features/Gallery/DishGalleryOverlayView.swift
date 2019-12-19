@@ -32,7 +32,7 @@ struct DishGalleryOverlayView: View {
                         .stroke(Color.white.opacity(0.5), lineWidth: 1)
             )
                 .opacity(self.store.state.galleryDish == nil ? 0.0 : 1.0)
-                .animation(Animation.spring(response: 0.3).delay(0.15))
+//                .animation(Animation.spring(response: 0.3).delay(0.15))
         }
         .padding(.bottom, 30)
     }

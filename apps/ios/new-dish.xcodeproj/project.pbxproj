@@ -24,6 +24,7 @@
 		1CE354882398714D004B3A84 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE354872398714D004B3A84 /* HomeView.swift */; };
 		1CE3548A239871CB004B3A84 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE35489239871CB004B3A84 /* BottomSheetView.swift */; };
 		AE2B6BA223AB3620007BCD25 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2B6BA123AB3620007BCD25 /* Test.swift */; };
+		AE2B6BA423AC211F007BCD25 /* VerticalCardPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */; };
 		AE6CECCD23A843E600B08870 /* BottomNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6CECCC23A843E600B08870 /* BottomNav.swift */; };
 		AE7563B423A035E70094022B /* HomeDishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B323A035E70094022B /* HomeDishView.swift */; };
 		AE7563B623A036160094022B /* HomeMainDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B523A036160094022B /* HomeMainDrawer.swift */; };
@@ -98,6 +99,7 @@
 		689FB70D8F1B2CC28C677E48 /* Pods-new-dish.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-new-dish.release.xcconfig"; path = "Target Support Files/Pods-new-dish/Pods-new-dish.release.xcconfig"; sourceTree = "<group>"; };
 		747A16F1648AAEF4512E6322 /* Pods_new_dish.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_new_dish.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE2B6BA123AB3620007BCD25 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
+		AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalCardPager.swift; sourceTree = "<group>"; };
 		AE6CECCC23A843E600B08870 /* BottomNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomNav.swift; sourceTree = "<group>"; };
 		AE7563B323A035E70094022B /* HomeDishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDishView.swift; sourceTree = "<group>"; };
 		AE7563B523A036160094022B /* HomeMainDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainDrawer.swift; sourceTree = "<group>"; };
@@ -258,6 +260,7 @@
 				AEA331F623A3382100B36A23 /* DishButton.swift */,
 				AEA331F823A3385000B36A23 /* InlineAlertView.swift */,
 				AEA331FA23A338F400B36A23 /* KeyboardHost.swift */,
+				AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -514,6 +517,7 @@
 				AE7563E323A038190094022B /* Array.swift in Sources */,
 				AE7563EB23A03D8E0094022B /* HomeDrawerContent.swift in Sources */,
 				AE7563BC23A037870094022B /* Fixtures.swift in Sources */,
+				AE2B6BA423AC211F007BCD25 /* VerticalCardPager.swift in Sources */,
 				1CE3546523986B1B004B3A84 /* AppDelegate.swift in Sources */,
 				1CE3548A239871CB004B3A84 /* BottomSheetView.swift in Sources */,
 				1C3CFE6423998FF2004B2EEA /* HomeContainerView.swift in Sources */,

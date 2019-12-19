@@ -9,13 +9,13 @@ import SwiftUI
 
 struct RootView: View {
     var body: some View {
-//        ZStack {
-//            Color.black
-//            DishGalleryViewContent()
-//        }
-//        .embedInAppEnvironment(Mocks.galleryVisibleDish)
-        HomeContainerView()
-            .edgesIgnoringSafeArea(.all)
+        ZStack {
+            Color.black
+            DishGalleryViewContent()
+        }
+        .embedInAppEnvironment(Mocks.galleryVisibleDish)
+//        HomeContainerView()
+//            .edgesIgnoringSafeArea(.all)
     }
 }
 

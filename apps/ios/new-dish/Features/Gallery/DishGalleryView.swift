@@ -36,7 +36,7 @@ struct DishGalleryView: View {
         .disabled(hidden ? true : false)
         .opacity(hidden ? 0 : 1)
         .offset(y: translationY)
-        .animation(Animation.spring())
+//        .animation(Animation.spring())
     }
 }
 
