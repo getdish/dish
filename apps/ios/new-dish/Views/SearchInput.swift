@@ -82,15 +82,16 @@ struct SearchInput: View {
                             .scaleEffect(0.9)
                     }
                 }
-                .padding(EdgeInsets(
-                    top: pad,
-                    leading: pad,
-                    bottom: pad,
-                    trailing: pad
-                ))
+                    .padding(EdgeInsets(
+                        top: pad,
+                        leading: pad,
+                        bottom: pad,
+                        trailing: pad
+                    ))
                     .foregroundColor(.secondary)
                     .background(self.inputBackgroundColor)
                     .cornerRadius(10.0 * scale * sizeRadius)
+                    .shadow(color: Color.black.opacity(0.2), radius: 15, x: 0, y: 0)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10.0 * scale * sizeRadius)
                             .stroke(self.borderColor, lineWidth: 1)

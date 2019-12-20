@@ -85,21 +85,18 @@ struct SearchBar: View {
                 sizeRadius: 2.0,
                 searchText: self.$searchText
             )
-                .padding(.horizontal, 8)
             
             HStack {
+                Spacer()
                 HStack {
                     Image("dish-icon")
                         .resizable()
                         .frame(width: 32, height: 32)
                         .padding(4)
                 }
-                .background(Color(.secondarySystemBackground))
                 .cornerRadius(40)
-                
-                Spacer()
             }
-            .padding(.leading, 12)
+            .padding(.horizontal, 6)
         }
     }
 }

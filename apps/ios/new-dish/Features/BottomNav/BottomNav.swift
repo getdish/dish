@@ -44,7 +44,7 @@ struct BottomNav: View {
             }
             .padding(.horizontal)
             Spacer()
-                .frame(height: 80)
+                .frame(height: 60)
         }
     }
 }
@@ -53,10 +53,14 @@ struct BottomNav: View {
 struct DishFiltersButton: View {
     var body: some View {
         BottomNavButton {
-            HStack {
-                Image(systemName: "dollarsign.circle")
-                Image(systemName: "tag.fill")
-                Image(systemName: "car.fill")
+            HStack(spacing: 14) {
+                Group {
+                    Image(systemName: "dollarsign.circle").resizable()
+                    Image(systemName: "tag.fill").resizable()
+                    Image(systemName: "car.fill").resizable()
+                }
+                .foregroundColor(.white)
+                .frame(width: 30, height: 30)
             }
         }
     }
