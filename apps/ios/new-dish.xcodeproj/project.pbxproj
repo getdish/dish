@@ -23,6 +23,7 @@
 		1CE35486239870E8004B3A84 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE35485239870E8004B3A84 /* MapView.swift */; };
 		1CE354882398714D004B3A84 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE354872398714D004B3A84 /* HomeView.swift */; };
 		1CE3548A239871CB004B3A84 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE35489239871CB004B3A84 /* BottomSheetView.swift */; };
+		AE08D13F23AC498400CFAC8C /* DishGalleryCardStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE08D13E23AC498400CFAC8C /* DishGalleryCardStack.swift */; };
 		AE2B6BA223AB3620007BCD25 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2B6BA123AB3620007BCD25 /* Test.swift */; };
 		AE2B6BA423AC211F007BCD25 /* VerticalCardPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */; };
 		AE6CECCD23A843E600B08870 /* BottomNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6CECCC23A843E600B08870 /* BottomNav.swift */; };
@@ -98,6 +99,7 @@
 		4FC1515AF7AF7D07CEA412D6 /* Pods-new-dish.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-new-dish.debug.xcconfig"; path = "Target Support Files/Pods-new-dish/Pods-new-dish.debug.xcconfig"; sourceTree = "<group>"; };
 		689FB70D8F1B2CC28C677E48 /* Pods-new-dish.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-new-dish.release.xcconfig"; path = "Target Support Files/Pods-new-dish/Pods-new-dish.release.xcconfig"; sourceTree = "<group>"; };
 		747A16F1648AAEF4512E6322 /* Pods_new_dish.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_new_dish.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE08D13E23AC498400CFAC8C /* DishGalleryCardStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishGalleryCardStack.swift; sourceTree = "<group>"; };
 		AE2B6BA123AB3620007BCD25 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalCardPager.swift; sourceTree = "<group>"; };
 		AE6CECCC23A843E600B08870 /* BottomNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomNav.swift; sourceTree = "<group>"; };
@@ -336,6 +338,7 @@
 			children = (
 				AEBC5E1C23A6F0C70094B1BD /* DishGalleryView.swift */,
 				AEBC5E1E23A6F0E50094B1BD /* DishGalleryViewContent.swift */,
+				AE08D13E23AC498400CFAC8C /* DishGalleryCardStack.swift */,
 				AEBC5E2223A6F26C0094B1BD /* DishGalleryCard.swift */,
 				AEBC5E2023A6F2400094B1BD /* DishGalleryOverlayView.swift */,
 				AEBA148123A9F81D00DD28CC /* CardControlsCutout.swift */,
@@ -542,6 +545,7 @@
 				1C6B321A23A2A06100F0A7E6 /* SideDrawerView.swift in Sources */,
 				AEA331F123A3373D00B36A23 /* LoginSignupView.swift in Sources */,
 				AEBC5E2323A6F26C0094B1BD /* DishGalleryCard.swift in Sources */,
+				AE08D13F23AC498400CFAC8C /* DishGalleryCardStack.swift in Sources */,
 				1CE354882398714D004B3A84 /* HomeView.swift in Sources */,
 				AE861A8523A17209004096BF /* TopNavSearchResults.swift in Sources */,
 				1CE3546923986B1B004B3A84 /* RootView.swift in Sources */,
