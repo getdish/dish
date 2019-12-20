@@ -47,14 +47,11 @@ struct HomeViewContent: View {
     var body: some View {
         ZStack {
             PagerView(
-                pageCount: 3,
+                pageCount: 2,
                 currentIndex: self.$index
             ) {
-                HomeDishView()
+                HomeMainView()
                 Image(systemName: "photo").resizable()
-                Button(action: { self.index = 0 }) {
-                    Text("Go to first page")
-                }
             }
             .onChangePage { index in
                 self.store.send(.changeHomePage(index == 0 ? .home : .camera))

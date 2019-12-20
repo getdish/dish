@@ -17,11 +17,7 @@ struct HomeMapControls: View {
                 }
             }
             .padding()
-            .frame(maxHeight: .infinity)
-            
-            Spacer()
         }
-        .frame(maxHeight: .infinity)
     }
 }
 

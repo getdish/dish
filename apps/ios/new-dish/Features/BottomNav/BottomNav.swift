@@ -53,10 +53,11 @@ struct BottomNav: View {
 struct DishFiltersButton: View {
     var body: some View {
         BottomNavButton {
-            Text("Filters")
-                .foregroundColor(.blue)
-                .font(.system(size: 20.0))
-                .fontWeight(.bold)
+            HStack {
+                Image(systemName: "dollarsign.circle")
+                Image(systemName: "tag.fill")
+                Image(systemName: "car.fill")
+            }
         }
     }
 }

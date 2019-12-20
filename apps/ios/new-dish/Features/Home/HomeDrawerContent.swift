@@ -1,89 +1,105 @@
 import SwiftUI
 
 struct HomeDrawerContent: View {
-    @State var searchText = ""
-    @State var scrollAtTop = true
-    let items = features
+    let items = features.chunked(into: 2)
     
     init() {
         UINavigationBar.appearance().backgroundColor = .clear
     }
     
     var body: some View {
-        VStack(spacing: 3) {
-            VStack(spacing: 3) {
-                ZStack {
-                    SearchInput(
-                        placeholder: "Pho, Burger, Wings...",
-                        inputBackgroundColor: Color.white.opacity(0.5),
-                        borderColor: Color.gray.opacity(0.4),
-                        scale: self.scrollAtTop ? 1.25 : 1.0,
-                        sizeRadius: 2.0,
-                        searchText: self.$searchText
-                    )
-                        .padding(.horizontal, 8)
-                    
-                    HStack {
-                        HStack {
-                            Image("dish-icon")
-                                .resizable()
-                                .frame(width: 32, height: 32)
-                                .padding(4)
+        ZStack {
+            ScrollView(.vertical, showsIndicators: false) {
+                Spacer().frame(height: 100)
+                
+                VStack(spacing: 10) {
+                    ForEach(0 ..< items.count) { index in
+                        HStack(spacing: 10) {
+                            ForEach(self.items[index]) { item in
+                                DishBrowseCard(landmark: item)
+                                    .frame(width: (Screen.width - 10 * 4) / 2)
+                            }
                         }
-                        .background(Color(.secondarySystemBackground))
-                        .cornerRadius(40)
-
-                        Spacer()
                     }
-                    .padding(.leading, 12)
                 }
                 
-                Spacer().frame(height: 8)
-//                TagsBar()
+                //                VStack(spacing: 6) {
+                //                    ForEach(0 ..< 10) { index in
+                //                        VStack(alignment: .leading, spacing: 6) {
+                //                            ZStack {
+                //                                ScrollView(.horizontal, showsIndicators: false) {
+                //                                    HStack(spacing: 6) {
+                //                                        ForEach(self.items) { item in
+                //                                            DishBrowseCard(landmark: item)
+                //                                                .frame(width: 140)
+                //                                        }
+                //                                    }
+                //                                    .padding(.horizontal, 6)
+                //                                }
+                //
+                //                                VStack {
+                //                                    HStack {
+                //                                        Tag {
+                //                                            Text("Noodles")
+                //                                                .fontWeight(.bold)
+                //                                                .font(.system(size: 16.0))
+                //                                                .opacity(0.8)
+                //                                                .padding(.vertical, 5)
+                //                                        }
+                //                                        .padding(.horizontal, 10)
+                //                                        .offset(y: -14)
+                //                                        Spacer()
+                //                                    }
+                //
+                //                                    Spacer()
+                //                                }
+                //                            }
+                //                            Spacer().frame(height: 8)
+                //                        }
+                //                    }
+                //
+                //                    // bottom padding
+                //                    Spacer().frame(height: 40)
+                //                }
+                //                    // avoid clipping on first title
+                //                    .padding(.top, 14)
             }
             
-            ScrollView {
-                VStack(spacing: 6) {
-                    ForEach(0 ..< 10) { index in
-                        VStack(alignment: .leading, spacing: 6) {
-                            ZStack {
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    HStack(spacing: 6) {
-                                        ForEach(self.items) { item in
-                                            DishBrowseCard(landmark: item)
-                                                .frame(width: 140)
-                                        }
-                                    }
-                                    .padding(.horizontal, 6)
-                                }
-                                
-                                VStack {
-                                    HStack {
-                                        Tag {
-                                            Text("Noodles")
-                                                .fontWeight(.bold)
-                                                .font(.system(size: 16.0))
-                                                .opacity(0.8)
-                                                .padding(.vertical, 5)
-                                        }
-                                        .padding(.horizontal, 10)
-                                        .offset(y: -14)
-                                        Spacer()
-                                    }
-                                    
-                                    Spacer()
-                                }
-                            }
-                            Spacer().frame(height: 8)
-                        }
-                    }
-                    
-                    // bottom padding
-                    Spacer().frame(height: 40)
+            SearchBar()
+            Spacer()
+        }
+    }
+}
+
+struct SearchBar: View {
+    @State var searchText = ""
+    @State var scrollAtTop = true
+    
+    var body: some View {
+        ZStack {
+            SearchInput(
+                placeholder: "Pho, Burger, Wings...",
+                inputBackgroundColor: Color.white,
+                borderColor: Color.gray.opacity(0.14),
+                scale: self.scrollAtTop ? 1.25 : 1.0,
+                sizeRadius: 2.0,
+                searchText: self.$searchText
+            )
+                .padding(.horizontal, 8)
+            
+            HStack {
+                HStack {
+                    Image("dish-icon")
+                        .resizable()
+                        .frame(width: 32, height: 32)
+                        .padding(4)
                 }
-                // avoid clipping on first title
-                .padding(.top, 14)
+                .background(Color(.secondarySystemBackground))
+                .cornerRadius(40)
+                
+                Spacer()
             }
+            .padding(.leading, 12)
         }
     }
 }
@@ -100,7 +116,7 @@ struct DishBrowseCard: View {
             .cornerRadius(14)
             .onTapGesture {
                 self.store.send(.setGalleryDish(self.landmark))
-            }
+        }
     }
 }
 

@@ -15,7 +15,7 @@
         "imageName": "turtlerock"
     },
     {
-        "name": "Silver Salmon Creek",
+        "name": "Wings",
         "category": "Lakes",
         "city": "Port Alsworth",
         "state": "Alaska",
@@ -30,7 +30,7 @@
         "imageName": "silversalmoncreek"
     },
     {
-        "name": "Chilkoot Trail",
+        "name": "Steak",
         "category": "Mountains",
         "city": "Skagway",
         "state": "Alaska",
@@ -60,7 +60,7 @@
         "imageName": "stmarylake"
     },
     {
-        "name": "Twin Lake",
+        "name": "Szechuan",
         "category": "Lakes",
         "city": "Twin Lakes",
         "state": "Alaska",
@@ -75,7 +75,7 @@
         "imageName": "twinlake"
     },
     {
-        "name": "Lake McDonald",
+        "name": "Poke",
         "category": "Mountains",
         "city": "West Glacier",
         "state": "Montana",
@@ -90,7 +90,7 @@
         "imageName": "lakemcdonald"
     },
     {
-        "name": "Ceasar Salad",
+        "name": "Tacos",
         "category": "Rivers",
         "city": "Eaking",
         "state": "Alaska",
@@ -105,7 +105,7 @@
         "imageName": "charleyrivers",
     },
     {
-        "name": "Icy Bay",
+        "name": "Kebab",
         "category": "Mountains",
         "city": "Icy Bay",
         "state": "Alaska",
@@ -120,7 +120,7 @@
         "imageName": "icybay"
     },
     {
-        "name": "Rainbow Lake",
+        "name": "Burger",
         "category": "Lakes",
         "city": "Willow",
         "state": "Alaska",
@@ -135,7 +135,7 @@
         "imageName": "rainbowlake"
     },
     {
-        "name": "Hidden Lake",
+        "name": "Pizza",
         "category": "Lakes",
         "city": "Newhalem",
         "state": "Washington",

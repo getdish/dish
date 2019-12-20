@@ -24,17 +24,18 @@ struct HomeMainDrawer: View {
             BottomSheetView(
                 isOpen: self.showDrawer,
                 maxHeight: Constants.homeInitialDrawerFullHeight,
+                minHeight: Constants.homeInitialDrawerHeight,
                 snapRatio: 0.1,
                 indicator: AnyView(
                         HStack {
                             BarArrow(direction: store.state.showDrawer ? .down : .up)
-                                .padding(.vertical, 8)
+                                .padding(.vertical, 7)
                         }
                         .frame(maxWidth: .infinity)
                         .onTapGesture {
                             self.store.send(.toggleDrawer)
                         }
-                        .padding(.vertical, 6)
+                        .padding(.vertical, 5)
                 )
             ) {
                 HomeDrawerContent()

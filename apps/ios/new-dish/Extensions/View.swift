@@ -43,7 +43,7 @@ extension View {
         }
     }
     
-    func embedInAppEnvironment(_ appState: Store<AppState, AppAction> = Mocks.galleryVisibleDish) -> some View {
+    func embedInAppEnvironment(_ appState: Store<AppState, AppAction> = Mocks.defaultState) -> some View {
         self
             .environmentObject(appState)
             .embedInGeometryReader()

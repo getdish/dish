@@ -66,7 +66,6 @@ class MapViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        print("didload")
         super.viewDidLoad()
         
         // Create a GMSCameraPosition that tells the map to display the
