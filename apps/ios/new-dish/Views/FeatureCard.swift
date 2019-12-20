@@ -19,7 +19,7 @@ struct FeatureCard: View, Equatable {
 //            MagicItem(getLandmarkId(landmark), at: at) {
                 self.landmark.image
                     .resizable()
-                    .aspectRatio(2 / 2.5, contentMode: .fit)
+                    .aspectRatio(2 / 2.25, contentMode: .fit)
                     .overlay(TextOverlay(landmark: self.landmark))
 //            }
         }
