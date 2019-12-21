@@ -1,9 +1,17 @@
 import SwiftUI
 
 class HomeViewState: ObservableObject {
+    @Published var appHeight: CGFloat = 0
     @Published var scrollY: CGFloat = 0
     @Published var searchY: CGFloat = 0
     @Published var dragY: CGFloat = 0
+    
+    var mapHeight: CGFloat {
+        let height = isSnappedToBottom
+            ? appHeight - 130
+            : appHeight - Constants.homeInitialDrawerHeight + y - scrollY
+        return height.rounded()
+    }
     
     var isSnappedToBottom: Bool {
         searchY + dragY > 100
@@ -32,8 +40,8 @@ fileprivate let cardRowHeight: CGFloat = 160
 
 struct HomeMainView: View {
     @Environment(\.colorScheme) var colorScheme
-    @Environment(\.geometry) var appGeometry
     @EnvironmentObject var store: AppStore
+    @Environment(\.geometry) var appGeometry
     @ObservedObject var state = HomeViewState()
     @State var searchBarMinY: CGFloat = 0
     @State var searchBarMaxY: CGFloat = 0
@@ -46,19 +54,19 @@ struct HomeMainView: View {
     
     var body: some View {
         // pushed map below the border radius of the bottomdrawer
-        let appHeight = appGeometry?.size.height ?? 100
-        let dishMapHeight = state.isSnappedToBottom
-            ? Screen.height - 120
-            : appHeight - Constants.homeInitialDrawerHeight + state.y
-        
-        
         let isOnSearchResults = self.store.state.homeState.count > 1
+        let state = self.state
         
-        print("STATE y \(state.y) dishMapHeight \(dishMapHeight)")
+        print("STATE scrollY \(state.scrollY) y \(state.y) dishMapHeight \(state.mapHeight)")
         
         return GeometryReader { geometry in
             ZStack {
                 Color.black.frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .onAppear {
+                        if let g = self.appGeometry {
+                            state.appHeight = g.size.height
+                        }
+                    }
                 
                 VStack {
                     ZStack {
@@ -69,7 +77,7 @@ struct HomeMainView: View {
                         )
                         HomeMapControls()
                     }
-                    .frame(height: dishMapHeight)
+                    .frame(height: state.mapHeight)
                     .cornerRadius(20)
                     .clipped()
                     
@@ -77,7 +85,7 @@ struct HomeMainView: View {
                 }
                 
                 VStack {
-                    Spacer().frame(height: dishMapHeight - cardRowHeight)
+                    Spacer().frame(height: state.mapHeight - cardRowHeight)
                     
                     ZStack {
                         // home
@@ -90,7 +98,7 @@ struct HomeMainView: View {
                             ForEach(1 ..< self.store.state.homeState.count) { index in
                                 HomeSearchResults(
                                     state: self.store.state.homeState[index],
-                                    height: Screen.height - dishMapHeight - 120
+                                    height: Screen.height - state.mapHeight - 120
                                 )
                                     .offset(y: 40)
                             }
@@ -100,7 +108,7 @@ struct HomeMainView: View {
                 }
                 
                 VStack {
-                    Spacer().frame(height: dishMapHeight + 31)
+                    Spacer().frame(height: state.mapHeight + 31)
                     // filters
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
@@ -110,9 +118,8 @@ struct HomeMainView: View {
                                 .onTapGesture {
                                     self.showTypeMenu = true
                                 }
-                                .popover(
-                                    isPresented: self.$showTypeMenu,
-                                    arrowEdge: .top
+                                .sheet(
+                                    isPresented: self.$showTypeMenu
                                 ) { Text("Popover") }
                                 
                             Spacer().frame(width: 10)
@@ -151,7 +158,7 @@ struct HomeMainView: View {
                     Spacer()
                 }
                 .padding(.horizontal, 10)
-                .offset(y: dishMapHeight - 23)
+                .offset(y: state.mapHeight - 23)
             }
             .clipped()
             .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
@@ -280,6 +287,7 @@ struct HomeCards: View {
 
 struct HomeCardsGrid: View {
     @EnvironmentObject var store: AppStore
+    @EnvironmentObject var homeState: HomeViewState
     
     let items = features.chunked(into: 2)
     
@@ -304,20 +312,46 @@ struct HomeCardsGrid: View {
         .frame(width: Screen.width)
     }
     
+    var initY = 0
+    
     var body: some View {
         VStack {
-            Spacer().frame(height: cardRowHeight + 40)
+            Spacer().frame(height: cardRowHeight)
             ScrollView {
                 VStack(spacing: 0) {
-                    Spacer().frame(height: 30)
-                    GeometryReader { gg in
-                        //                                self.scrollY = min(100, gg.frame(in: .global).minY - dishMapHeight)
-                        return Spacer()
-                    }
+                    ScrollListener(onScroll: { frame in
+                        let frameY = self.homeState.mapHeight
+                        let scrollY = frame.minY
+                        let realY = frameY - scrollY - 44
+                        let y = max(0, min(100, realY)).rounded()
+                        if y != self.homeState.scrollY {
+                            // attempting to have a scroll effect but its complex...
+                            print("set now to \(y) ....... frameY \(frameY), scrollY = \(scrollY)")
+//                            self.homeState.scrollY = y
+                        }
+                    })
+
+                    Spacer().frame(height: 70)
                     self.content
                 }
             }
         }
+    }
+}
+
+struct ScrollListener: View {
+    var onScroll: ((CGRect) -> Void)? = nil
+    var body: some View {
+        Color.clear
+            .frame(height: 0)
+            .overlay(
+                GeometryReader { geometry -> Color in
+                    if let cb = self.onScroll {
+                        cb(geometry.frame(in: .global))
+                    }
+                    return Color.clear
+                }
+        )
     }
 }
 
