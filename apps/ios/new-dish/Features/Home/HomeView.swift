@@ -7,7 +7,10 @@ struct HomeView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                HomeViewContent(height: geometry.size.height)
+                HomeViewContent(
+                    width: geometry.size.width,
+                    height: geometry.size.height
+                )
                 TopNav()
             }
             .background(
@@ -19,9 +22,10 @@ struct HomeView: View {
     }
 }
 
-fileprivate let pager = PagerStore()
+fileprivate let homePager = PagerStore()
 
 struct HomeViewContent: View {
+    var width: CGFloat = 0
     var height: CGFloat = 0
     @EnvironmentObject var store: AppStore
     @State private var index = 0
@@ -30,7 +34,7 @@ struct HomeViewContent: View {
         ZStack {
             PagerView(
                 pageCount: 2,
-                pagerStore: pager,
+                pagerStore: homePager,
                 disableDragging: false
                 ) {
                     HomeMainView()
@@ -39,6 +43,20 @@ struct HomeViewContent: View {
             .onChangePage { index in
                 self.store.send(.changeHomePage(index == 0 ? .home : .camera))
             }
+            .simultaneousGesture(
+                // drag to camera
+                DragGesture()
+                    .onChanged { value in
+                        // right edge
+                        if self.width - value.startLocation.x < 10 {
+                            let next = Double((0 - value.translation.width) / self.width)
+                            homePager.index = min(1, max(0, next))
+                        }
+                }
+                .onEnded { value in
+                    homePager.onDragEnd(value)
+                }
+            )
             
             BottomNav()
         }

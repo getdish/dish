@@ -105,6 +105,7 @@ struct HomeMainView: View {
                         HStack {
                             Text("🍽")
                                 .font(.system(size: 32))
+                                .padding(.horizontal, 2)
                             Spacer().frame(width: 10)
                             FilterButton(label: "American", action: {})
                             FilterButton(label: "Thai", action: {})
