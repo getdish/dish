@@ -8,11 +8,7 @@ struct HomeViewState {
         searchY + dragY > 100
     }
     var y: CGFloat {
-        if isSnappedToBottom {
-            return Screen.height - 100
-        } else {
-            return searchY + dragY
-        }
+        searchY + dragY
     }
     
     func finishDrag() -> HomeViewState {
@@ -23,6 +19,8 @@ struct HomeViewState {
     }
 }
 
+fileprivate let cardRowHeight: CGFloat = 160
+
 struct HomeMainView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.geometry) var appGeometry
@@ -32,7 +30,11 @@ struct HomeMainView: View {
     var body: some View {
         // pushed map below the border radius of the bottomdrawer
         let appHeight = appGeometry?.size.height ?? 100
-        let dishMapHeight = appHeight - Constants.homeInitialDrawerHeight + state.y
+        let dishMapHeight = state.isSnappedToBottom
+            ? Screen.height - 120
+            : appHeight - Constants.homeInitialDrawerHeight + state.y
+        
+        print("STATE y \(state.y) dishMapHeight \(dishMapHeight)")
 
         return GeometryReader { geometry in
             ZStack {
@@ -54,23 +56,30 @@ struct HomeMainView: View {
                 }
                 
                 VStack {
-                    Spacer().frame(height: dishMapHeight)
-                    ScrollView {
-                        VStack(spacing: 0) {
-                            GeometryReader { gg -> HomeCards in
-//                                self.scrollY = min(100, gg.frame(in: .global).minY - dishMapHeight)
-                                return HomeCards(
-                                    isHorizontal: self.state.isSnappedToBottom
-                                )
-                            }
-                            .frame(height: Screen.height - dishMapHeight)
-                        }
-                    }
-                    .offset(y: self.state.isSnappedToBottom ? -160 : 0)
+                    Spacer().frame(height: dishMapHeight - cardRowHeight + 40)
+                    HomeCards(isHorizontal: self.state.isSnappedToBottom)
                     // i want an alpha fade-out effect
-                    .mask(
-                        LinearGradient(gradient: Gradient(colors: [.white, .black]), startPoint: .top, endPoint: .bottom)
-                    )
+//                    .mask(
+//                        LinearGradient(gradient: Gradient(colors: [.white, .black]), startPoint: .top, endPoint: .bottom)
+//                    )
+                }
+                
+                VStack {
+                    Spacer().frame(height: dishMapHeight + 35)
+                    // filters
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            FilterButton(label: "American", action: {})
+                            FilterButton(label: "Thai", action: {})
+                            FilterButton(label: "Chinese", action: {})
+                            FilterButton(label: "Italian", action: {})
+                            FilterButton(label: "French", action: {})
+                            FilterButton(label: "Burmese", action: {})
+                            FilterButton(label: "Greek", action: {})
+                        }
+                        .padding(.horizontal)
+                    }
+                    Spacer()
                 }
                 
                 VStack {
@@ -100,21 +109,44 @@ struct HomeMainView: View {
     }
 }
 
+struct FilterButton: View {
+    var label: String
+    var action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Text(label)
+                .foregroundColor(.white)
+                .font(.system(size: 14))
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
+        .background(Color.gray.opacity(0.2))
+        .overlay(
+            RoundedRectangle(cornerRadius: 80)
+                .stroke(Color.white, lineWidth: 1)
+        )
+            .cornerRadius(80)
+            .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
+    }
+}
+
+
 struct HomeCards: View {
     var isHorizontal: Bool
     
-    @ViewBuilder
     var content: some View {
         if isHorizontal {
-            return HomeCardsRow()
+            return AnyView(HomeCardsRow())
         } else {
-            return HomeCardsGrid()
+            return AnyView(HomeCardsGrid())
         }
     }
     
     var body: some View {
         VStack {
-            HomeCardsGrid()
+            self.content
+            Spacer()
         }
         .frame(minWidth: Screen.width, maxHeight: .infinity)
     }
@@ -122,36 +154,49 @@ struct HomeCards: View {
 
 struct HomeCardsGrid: View {
     let items = features.chunked(into: 2)
-
-    var body: some View {
-        VStack {
-            Spacer().frame(height: 60)
-            VStack(spacing: 10) {
-                ForEach(0 ..< self.items.count) { index in
-                    HStack(spacing: 10) {
-                        ForEach(self.items[index]) { item in
-                            DishBrowseCard(landmark: item)
-                            //                                .frame(
-                            //                                    //                                            width: (Screen.width - 10 * 4) / 2,
-                            //                                    height: 235
-                            //                            )
-                        }
+    
+    var content: some View {
+        VStack(spacing: 10) {
+            ForEach(0 ..< self.items.count) { index in
+                HStack(spacing: 10) {
+                    ForEach(self.items[index]) { item in
+                        DishBrowseCard(landmark: item)
+                            .frame(height: 200)
                     }
                 }
             }
-            .padding(.horizontal)
+        }
+        .padding(.horizontal)
+        .frame(width: Screen.width)
+    }
+
+    var body: some View {
+        VStack {
+            Spacer().frame(height: cardRowHeight)
+            ScrollView {
+                VStack(spacing: 0) {
+                    Spacer().frame(height: 30)
+                    GeometryReader { gg in
+                        //                                self.scrollY = min(100, gg.frame(in: .global).minY - dishMapHeight)
+                        return Spacer()
+                    }
+                    self.content
+                }
+            }
         }
     }
 }
 
 struct HomeCardsRow: View {
     var body: some View {
-        ScrollView {
+        ScrollView(.horizontal, showsIndicators: false) {
             HStack {
                 ForEach(features) { item in
                     DishBrowseCard(landmark: item)
+                        .frame(width: 100, height: cardRowHeight - 40)
                 }
             }
+            .padding(.horizontal)
         }
     }
 }

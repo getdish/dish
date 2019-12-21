@@ -63,6 +63,7 @@
 		AE861A8523A17209004096BF /* TopNavSearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8423A17209004096BF /* TopNavSearchResults.swift */; };
 		AE861A8723A1727B004096BF /* TopNavMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8623A1727B004096BF /* TopNavMenuButton.swift */; };
 		AE861A8923A172E8004096BF /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8823A172E8004096BF /* BlurView.swift */; };
+		AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */; };
 		AEA331EF23A3371D00B36A23 /* DishSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331EE23A3371D00B36A23 /* DishSidebarView.swift */; };
 		AEA331F123A3373D00B36A23 /* LoginSignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F023A3373D00B36A23 /* LoginSignupView.swift */; };
 		AEA331F523A3381200B36A23 /* DishInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F423A3381200B36A23 /* DishInput.swift */; };
@@ -139,6 +140,7 @@
 		AE861A8423A17209004096BF /* TopNavSearchResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavSearchResults.swift; sourceTree = "<group>"; };
 		AE861A8623A1727B004096BF /* TopNavMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavMenuButton.swift; sourceTree = "<group>"; };
 		AE861A8823A172E8004096BF /* BlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurView.swift; sourceTree = "<group>"; };
+		AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonBordered.swift; sourceTree = "<group>"; };
 		AEA331EE23A3371D00B36A23 /* DishSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishSidebarView.swift; sourceTree = "<group>"; };
 		AEA331F023A3373D00B36A23 /* LoginSignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSignupView.swift; sourceTree = "<group>"; };
 		AEA331F423A3381200B36A23 /* DishInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishInput.swift; sourceTree = "<group>"; };
@@ -260,6 +262,7 @@
 				1C6B321923A2A06100F0A7E6 /* SideDrawerView.swift */,
 				AEA331F423A3381200B36A23 /* DishInput.swift */,
 				AEA331F623A3382100B36A23 /* DishButton.swift */,
+				AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */,
 				AEA331F823A3385000B36A23 /* InlineAlertView.swift */,
 				AEA331FA23A338F400B36A23 /* KeyboardHost.swift */,
 				AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */,
@@ -531,6 +534,7 @@
 				AE7563B823A036500094022B /* Screen.swift in Sources */,
 				1CE3548123986BC1004B3A84 /* View.swift in Sources */,
 				AEA331F723A3382100B36A23 /* DishButton.swift in Sources */,
+				AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */,
 				1CE3548323986C5C004B3A84 /* App.swift in Sources */,
 				AE861A7923A0651D004096BF /* Keyboard.swift in Sources */,
 				AE861A8123A16DA6004096BF /* TopNav.swift in Sources */,
