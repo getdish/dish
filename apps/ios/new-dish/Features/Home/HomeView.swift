@@ -1,10 +1,3 @@
-//
-//  HomeView.swift
-//  new-dish
-//
-//  Created by Majid Jabrayilov on 12/5/19.
-//  Copyright © 2019 Majid Jabrayilov. All rights reserved.
-//
 import SwiftUI
 
 struct HomeView: View {
@@ -35,18 +28,17 @@ struct HomeViewContent: View {
 
     var body: some View {
         ZStack {
-            HomeMainView()
-//            PagerView(
-//                pageCount: 2,
-//                pagerStore: pager,
-//                disableDragging: false
-//                ) {
-//                    HomeMainView()
-//                    Image(systemName: "photo").resizable()
-//            }
-//            .onChangePage { index in
-//                self.store.send(.changeHomePage(index == 0 ? .home : .camera))
-//            }
+            PagerView(
+                pageCount: 2,
+                pagerStore: pager,
+                disableDragging: false
+                ) {
+                    HomeMainView()
+                    Image(systemName: "photo").resizable()
+            }
+            .onChangePage { index in
+                self.store.send(.changeHomePage(index == 0 ? .home : .camera))
+            }
             
             BottomNav()
         }

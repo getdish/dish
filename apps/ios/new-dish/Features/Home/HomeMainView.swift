@@ -33,9 +33,7 @@ fileprivate let cardRowHeight: CGFloat = 160
 struct HomeMainView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.geometry) var appGeometry
-    
-//    @EnvironmentObject var store: AppStore
-
+    @EnvironmentObject var store: AppStore
     @ObservedObject var state = HomeViewState()
     
     var body: some View {
@@ -74,27 +72,24 @@ struct HomeMainView: View {
                 VStack {
                     Spacer().frame(height: dishMapHeight - cardRowHeight)
                     
-                    HomeCards(isHorizontal: self.state.isSnappedToBottom)
-//                        .offset(y: isOnSearchResults ? Screen.height : 0)
-//                        .animation(.spring())
-//                    ZStack {
-//                        // home
-//                        HomeCards(isHorizontal: self.state.isSnappedToBottom)
-//                            .offset(y: isOnSearchResults ? Screen.height : 0)
-//                            .animation(.spring())
-//
-//                        // pages as you drill in below home
-////                        if isOnSearchResults {
-////                            ForEach(0 ..< self.store.state.homeState.count) { index in
-////                                HomeSearchResults(
-////                                    state: self.store.state.homeState[index],
-////                                    height: Screen.height - dishMapHeight - 120
-////                                )
-////                                    .offset(y: 40)
-////                            }
-////                        }
-//                    }
-//                    .clipped()
+                    ZStack {
+                        // home
+                        HomeCards(isHorizontal: self.state.isSnappedToBottom)
+                            .offset(y: isOnSearchResults ? Screen.height : 0)
+                            .animation(.spring())
+
+                        // pages as you drill in below home
+                        if isOnSearchResults {
+                            ForEach(0 ..< self.store.state.homeState.count) { index in
+                                HomeSearchResults(
+                                    state: self.store.state.homeState[index],
+                                    height: Screen.height - dishMapHeight - 120
+                                )
+                                    .offset(y: 40)
+                            }
+                        }
+                    }
+                    .clipped()
                 }
                 
                 VStack {
@@ -223,7 +218,7 @@ struct HomeCards: View {
 }
 
 struct HomeCardsGrid: View {
-//    @EnvironmentObject var store: AppStore
+    @EnvironmentObject var store: AppStore
 
     let items = features.chunked(into: 2)
     
@@ -236,9 +231,9 @@ struct HomeCardsGrid: View {
                             .frame(height: 200)
                             .onTapGesture {
                                 print("tap on item")
-//                                self.store.send(
-//                                    .pushHomeState(HomeState(search: item.name))
-//                                )
+                                self.store.send(
+                                    .pushHomeState(HomeState(search: item.name))
+                                )
                         }
                     }
                 }

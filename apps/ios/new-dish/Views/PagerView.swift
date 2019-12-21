@@ -78,6 +78,7 @@ struct PagerView<Content: View>: View {
                 self.content
                     .frame(width: geometry.size.width)
             }
+//            .animation(.spring())
             .offset(
                 x: self.pagerStore.isGestureActive
                     ? self.pagerStore.offset
@@ -200,29 +201,28 @@ class PagerStore: ObservableObject {
     }
 }
 
-//
-//#if DEBUG
-//struct PagerTest: View {
-//    @State var dragEndValue: DragGesture.Value?
-//
-//    var body: some View {
-//        return VStack {
-//            Pager(
-//                pageTurnArrows: true,
-//                pages: features.map { FeatureCard(landmark: $0) }
-//            )
-//            //      Picker(selection: pStore.$index.animation(.easeInOut), label: Text("")) {
-//            //        ForEach(0..<4) { page in Text("\(page + 1)").tag(Double(page)) }
-//            //      }
-//            //      .pickerStyle(SegmentedPickerStyle())
-//            //      .padding()
-//        }
-//    }
-//}
-//
-//struct Pager_Previews: PreviewProvider {
-//    static var previews: some View {
-//        PagerTest()
-//    }
-//}
-//#endif
+
+#if DEBUG
+struct PagerTest: View {
+    @State var dragEndValue: DragGesture.Value?
+
+    var body: some View {
+        return VStack {
+            PagerView(
+                pageCount: 2,
+                pagerStore: PagerStore(),
+                pageTurnArrows: true
+            ) {
+                Color.red
+                Color.blue
+            }
+        }
+    }
+}
+
+struct Pager_Previews: PreviewProvider {
+    static var previews: some View {
+        PagerTest()
+    }
+}
+#endif
