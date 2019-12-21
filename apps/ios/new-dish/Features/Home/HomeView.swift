@@ -54,7 +54,9 @@ struct HomeViewContent: View {
                         }
                 }
                 .onEnded { value in
-                    homePager.onDragEnd(value)
+                    if homePager.index.rounded() != homePager.index {
+                       homePager.onDragEnd(value)
+                    }
                 }
             )
             
