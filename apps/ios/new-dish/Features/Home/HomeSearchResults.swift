@@ -13,6 +13,7 @@ struct HomeSearchResults: View {
                         .frame(height: self.height)
                 }
             }
+            .padding(.horizontal, 20)
         }
     }
 }
