@@ -71,37 +71,6 @@ struct HomeDrawerContent: View {
     }
 }
 
-struct SearchBar: View {
-    @State var searchText = ""
-    @State var scrollAtTop = true
-    
-    var body: some View {
-        ZStack {
-            SearchInput(
-                placeholder: "Pho, Burger, Wings...",
-                inputBackgroundColor: Color.white,
-                borderColor: Color.gray.opacity(0.14),
-                scale: self.scrollAtTop ? 1.25 : 1.0,
-                sizeRadius: 2.0,
-                searchText: self.$searchText
-            )
-            
-            HStack {
-                Spacer()
-                HStack {
-                    Image("dish-icon")
-                        .resizable()
-                        .frame(width: 32, height: 32)
-                        .padding(4)
-                }
-                .cornerRadius(40)
-            }
-            .padding(.horizontal, 6)
-        }
-    }
-}
-
-
 // Temporary views
 
 struct DishBrowseCard: View {

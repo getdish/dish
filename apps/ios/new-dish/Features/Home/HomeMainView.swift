@@ -1,21 +1,30 @@
 import SwiftUI
 
-struct HomeViewState {
-    var scrollY: CGFloat = 0
-    var searchY: CGFloat = 0
-    var dragY: CGFloat = 0
+class HomeViewState: ObservableObject {
+    @Published var scrollY: CGFloat = 0
+    @Published var searchY: CGFloat = 0
+    @Published var dragY: CGFloat = 0
+
     var isSnappedToBottom: Bool {
         searchY + dragY > 100
     }
+    
     var y: CGFloat {
         searchY + dragY
     }
     
-    func finishDrag() -> HomeViewState {
-        var next = self
-        next.searchY = next.dragY + next.searchY
-        next.dragY = 0
-        return next
+    func finishDrag() {
+        self.searchY = self.dragY + self.searchY
+        self.dragY = 0
+    }
+    
+    func toggleMap() {
+        if isSnappedToBottom {
+            self.dragY = 0
+            self.searchY = 0
+        } else {
+            self.dragY = 110
+        }
     }
 }
 
@@ -25,7 +34,7 @@ struct HomeMainView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.geometry) var appGeometry
     
-    @State var state = HomeViewState()
+    @ObservedObject var state = HomeViewState()
     
     var body: some View {
         // pushed map below the border radius of the bottomdrawer
@@ -87,13 +96,11 @@ struct HomeMainView: View {
                         .simultaneousGesture(
                             DragGesture()
                                 .onChanged { value in
-                                    var next = self.state
+                                    self.state.dragY = value.location.y
                                     print("\(value.location.y) \(value.translation.height)")
-                                    next.dragY = value.location.y
-                                    self.state = next
                             }
                             .onEnded { value in
-                                self.state = self.state.finishDrag()
+                                self.state.finishDrag()
                             }
                     )
                     Spacer()
@@ -106,8 +113,46 @@ struct HomeMainView: View {
             .clipped()
             .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
         }
+        .environmentObject(self.state)
     }
 }
+
+struct SearchBar: View {
+    @State var searchText = ""
+    @State var scrollAtTop = true
+    @EnvironmentObject var homeState: HomeViewState
+    
+    var body: some View {
+        ZStack {
+            SearchInput(
+                placeholder: "Pho, Burger, Wings...",
+                inputBackgroundColor: Color.white,
+                borderColor: Color.gray.opacity(0.14),
+                scale: self.scrollAtTop ? 1.25 : 1.0,
+                sizeRadius: 2.0,
+                searchText: self.$searchText
+            )
+            
+            HStack {
+                Spacer()
+                HStack {
+                    Image(systemName: "arrow.up.and.down.circle.fill")
+                        .resizable()
+                        .frame(width: 26, height: 26)
+                        .padding(4)
+                        .opacity(0.45)
+                        .onTapGesture {
+                            self.homeState.toggleMap()
+                            
+                    }
+                }
+                .cornerRadius(40)
+            }
+            .padding(.horizontal, 6)
+        }
+    }
+}
+
 
 struct FilterButton: View {
     var label: String
