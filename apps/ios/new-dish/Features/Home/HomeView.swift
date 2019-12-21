@@ -38,7 +38,7 @@ struct HomeViewContent: View {
             PagerView(
                 pageCount: 2,
                 pagerStore: pager,
-                disableDragging: true
+                disableDragging: false
                 ) {
                     HomeMainView()
                     Image(systemName: "photo").resizable()

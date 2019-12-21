@@ -80,15 +80,15 @@ struct HomeMainView: View {
                             .animation(.spring())
                         
                         // pages as you drill in below home
-                        if isOnSearchResults {
-                            ForEach(0 ..< self.store.state.homeState.count) { index in
-                                HomeSearchResults(
-                                    state: self.store.state.homeState[index],
-                                    height: Screen.height - dishMapHeight - 120
-                                )
-                                    .offset(y: 40)
-                            }
-                        }
+//                        if isOnSearchResults {
+//                            ForEach(0 ..< self.store.state.homeState.count) { index in
+//                                HomeSearchResults(
+//                                    state: self.store.state.homeState[index],
+//                                    height: Screen.height - dishMapHeight - 120
+//                                )
+//                                    .offset(y: 40)
+//                            }
+//                        }
                     }
                     .clipped()
                 }
@@ -130,8 +130,6 @@ struct HomeMainView: View {
                 }
                     .padding(.horizontal, 10)
                     .offset(y: dishMapHeight - 23)
-                
-//                DishGalleryView()
             }
             .clipped()
             .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)

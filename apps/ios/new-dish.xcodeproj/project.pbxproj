@@ -29,7 +29,6 @@
 		AE56C86423ADB78C006A156A /* HomeSearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56C86323ADB78C006A156A /* HomeSearchResults.swift */; };
 		AE6CECCD23A843E600B08870 /* BottomNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6CECCC23A843E600B08870 /* BottomNav.swift */; };
 		AE7563B423A035E70094022B /* HomeMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B323A035E70094022B /* HomeMainView.swift */; };
-		AE7563B623A036160094022B /* HomeMainDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B523A036160094022B /* HomeMainDrawer.swift */; };
 		AE7563B823A036500094022B /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B723A036500094022B /* Screen.swift */; };
 		AE7563BC23A037870094022B /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563BB23A037870094022B /* Fixtures.swift */; };
 		AE7563CF23A037B50094022B /* GMapsThemeModest.json in Resources */ = {isa = PBXBuildFile; fileRef = AE7563BE23A037B50094022B /* GMapsThemeModest.json */; };
@@ -54,7 +53,6 @@
 		AE7563E523A038300094022B /* SearchInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563E423A038300094022B /* SearchInput.swift */; };
 		AE7563E723A03D3C0094022B /* FeatureCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563E623A03D3C0094022B /* FeatureCard.swift */; };
 		AE7563E923A03D570094022B /* MagicMove.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563E823A03D570094022B /* MagicMove.swift */; };
-		AE7563EB23A03D8E0094022B /* HomeDrawerContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563EA23A03D8E0094022B /* HomeDrawerContent.swift */; };
 		AE861A7923A0651D004096BF /* Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7823A0651D004096BF /* Keyboard.swift */; };
 		AE861A7B23A06EDC004096BF /* BarArrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7A23A06EDC004096BF /* BarArrow.swift */; };
 		AE861A7D23A07AFB004096BF /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7C23A07AFB004096BF /* Constants.swift */; };
@@ -107,7 +105,6 @@
 		AE56C86323ADB78C006A156A /* HomeSearchResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchResults.swift; sourceTree = "<group>"; };
 		AE6CECCC23A843E600B08870 /* BottomNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomNav.swift; sourceTree = "<group>"; };
 		AE7563B323A035E70094022B /* HomeMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainView.swift; sourceTree = "<group>"; };
-		AE7563B523A036160094022B /* HomeMainDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainDrawer.swift; sourceTree = "<group>"; };
 		AE7563B723A036500094022B /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
 		AE7563BB23A037870094022B /* Fixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
 		AE7563BE23A037B50094022B /* GMapsThemeModest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GMapsThemeModest.json; sourceTree = "<group>"; };
@@ -132,7 +129,6 @@
 		AE7563E423A038300094022B /* SearchInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchInput.swift; sourceTree = "<group>"; };
 		AE7563E623A03D3C0094022B /* FeatureCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureCard.swift; sourceTree = "<group>"; };
 		AE7563E823A03D570094022B /* MagicMove.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicMove.swift; sourceTree = "<group>"; };
-		AE7563EA23A03D8E0094022B /* HomeDrawerContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDrawerContent.swift; sourceTree = "<group>"; };
 		AE861A7823A0651D004096BF /* Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyboard.swift; sourceTree = "<group>"; };
 		AE861A7A23A06EDC004096BF /* BarArrow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarArrow.swift; sourceTree = "<group>"; };
 		AE861A7C23A07AFB004096BF /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -280,8 +276,6 @@
 				AE7563B323A035E70094022B /* HomeMainView.swift */,
 				AE56C86323ADB78C006A156A /* HomeSearchResults.swift */,
 				AE861A7E23A07D81004096BF /* HomeMapControls.swift */,
-				AE7563B523A036160094022B /* HomeMainDrawer.swift */,
-				AE7563EA23A03D8E0094022B /* HomeDrawerContent.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -524,7 +518,6 @@
 				AE2B6BA223AB3620007BCD25 /* Test.swift in Sources */,
 				AE7563B423A035E70094022B /* HomeMainView.swift in Sources */,
 				AE7563E323A038190094022B /* Array.swift in Sources */,
-				AE7563EB23A03D8E0094022B /* HomeDrawerContent.swift in Sources */,
 				AE7563BC23A037870094022B /* Fixtures.swift in Sources */,
 				AE2B6BA423AC211F007BCD25 /* VerticalCardPager.swift in Sources */,
 				1CE3546523986B1B004B3A84 /* AppDelegate.swift in Sources */,
@@ -563,7 +556,6 @@
 				AE861A7B23A06EDC004096BF /* BarArrow.swift in Sources */,
 				AEBA148223A9F81D00DD28CC /* CardControlsCutout.swift in Sources */,
 				AE861A8323A171D2004096BF /* TopNavSearch.swift in Sources */,
-				AE7563B623A036160094022B /* HomeMainDrawer.swift in Sources */,
 				AE7563E923A03D570094022B /* MagicMove.swift in Sources */,
 				1CE3547F23986B88004B3A84 /* Store.swift in Sources */,
 				AEBC5E1F23A6F0E50094B1BD /* DishGalleryViewContent.swift in Sources */,
