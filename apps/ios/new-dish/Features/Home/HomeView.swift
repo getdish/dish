@@ -35,17 +35,18 @@ struct HomeViewContent: View {
 
     var body: some View {
         ZStack {
-            PagerView(
-                pageCount: 2,
-                pagerStore: pager,
-                disableDragging: false
-                ) {
-                    HomeMainView()
-                    Image(systemName: "photo").resizable()
-            }
-            .onChangePage { index in
-                self.store.send(.changeHomePage(index == 0 ? .home : .camera))
-            }
+            HomeMainView()
+//            PagerView(
+//                pageCount: 2,
+//                pagerStore: pager,
+//                disableDragging: false
+//                ) {
+//                    HomeMainView()
+//                    Image(systemName: "photo").resizable()
+//            }
+//            .onChangePage { index in
+//                self.store.send(.changeHomePage(index == 0 ? .home : .camera))
+//            }
             
             BottomNav()
         }
