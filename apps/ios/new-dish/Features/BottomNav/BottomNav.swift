@@ -13,13 +13,16 @@ struct BottomNav: View {
                 HStack {
                     DishMapButton()
                         .animation(.spring(response: 0.5))
+                        .opacity(0)
                         .offset(y: isOnGallery ? hiddenButtonY : 0)
                     Spacer()
                     DishFiltersButton()
                         .animation(.spring(response: 0.75))
                         .offset(y: isOnGallery ? hiddenButtonY : 0)
                     Spacer()
-                    DishCameraButton()
+                    BottomNavCircularButton(image: "camera", size: 48, action: {
+                        homePager.animateTo(1)
+                    })
                         .animation(.spring(response: 0.5))
                         .offset(y: isOnGallery ? hiddenButtonY : 0)
                 }
@@ -55,20 +58,14 @@ struct DishFiltersButton: View {
         BottomNavButton {
             HStack(spacing: 14) {
                 Group {
-                    Image(systemName: "dollarsign.circle").resizable()
-                    Image(systemName: "tag.fill").resizable()
-                    Image(systemName: "car.fill").resizable()
+                    Image(systemName: "dollarsign.circle").resizable().scaledToFit()
+                    Image(systemName: "tag.fill").resizable().scaledToFit()
+                    Image(systemName: "car.fill").resizable().scaledToFit()
                 }
                 .foregroundColor(.white)
-                .frame(width: 30, height: 30)
+                .frame(width: 26, height: 26)
             }
         }
-    }
-}
-
-struct DishCameraButton: View {
-    var body: some View {
-        BottomNavCircularButton(image: "camera", size: 40)
     }
 }
 
@@ -106,6 +103,7 @@ struct BottomNavCircularButton: View {
         BottomNavButton(action: self.action) {
             Image(systemName: self.image)
                 .resizable()
+                .scaledToFit()
                 .foregroundColor(.white)
         }
         .frame(width: size, height: size)

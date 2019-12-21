@@ -251,22 +251,22 @@
 		1CE3547D23986B70004B3A84 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				1CE35485239870E8004B3A84 /* MapView.swift */,
+				AE861A7A23A06EDC004096BF /* BarArrow.swift */,
 				AE861A8823A172E8004096BF /* BlurView.swift */,
 				1CE35489239871CB004B3A84 /* BottomSheetView.swift */,
-				1CCEDF51239DC7C9003EE228 /* PagerView.swift */,
-				AE7563E423A038300094022B /* SearchInput.swift */,
-				AE7563E623A03D3C0094022B /* FeatureCard.swift */,
-				AE7563E823A03D570094022B /* MagicMove.swift */,
-				AE861A7A23A06EDC004096BF /* BarArrow.swift */,
-				1C6B321923A2A06100F0A7E6 /* SideDrawerView.swift */,
-				AEA331F423A3381200B36A23 /* DishInput.swift */,
-				AEA331F623A3382100B36A23 /* DishButton.swift */,
 				AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */,
+				AEA331F623A3382100B36A23 /* DishButton.swift */,
+				AEA331F423A3381200B36A23 /* DishInput.swift */,
+				AE7563E623A03D3C0094022B /* FeatureCard.swift */,
 				AEA331F823A3385000B36A23 /* InlineAlertView.swift */,
 				AEA331FA23A338F400B36A23 /* KeyboardHost.swift */,
-				AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */,
+				AE7563E823A03D570094022B /* MagicMove.swift */,
+				1CE35485239870E8004B3A84 /* MapView.swift */,
+				1CCEDF51239DC7C9003EE228 /* PagerView.swift */,
+				AE7563E423A038300094022B /* SearchInput.swift */,
+				1C6B321923A2A06100F0A7E6 /* SideDrawerView.swift */,
 				AE56C86523ADD977006A156A /* TagView.swift */,
+				AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";

@@ -22,7 +22,7 @@ struct HomeView: View {
     }
 }
 
-fileprivate let homePager = PagerStore()
+let homePager = PagerStore()
 
 struct HomeViewContent: View {
     var width: CGFloat = 0
