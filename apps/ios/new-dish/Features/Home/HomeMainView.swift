@@ -275,6 +275,14 @@ struct HomeCardsRow: View {
     }
 }
 
+struct DishBrowseCard: View {
+    var landmark: Landmark
+    var body: some View {
+        FeatureCard(landmark: landmark)
+            .cornerRadius(14)
+    }
+}
+
 #if DEBUG
 struct HomeMainView_Previews: PreviewProvider {
     static var previews: some View {

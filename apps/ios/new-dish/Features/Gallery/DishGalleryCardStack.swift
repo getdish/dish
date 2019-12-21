@@ -15,7 +15,7 @@ struct DishGalleryCardStack: View {
         return ZStack {
             VStack(alignment: .leading, spacing: 0) {
                 HStack {
-                    Tag {
+                    TagView {
                         Text(self.name)
                             .font(.system(size: 26))
                             .bold()
