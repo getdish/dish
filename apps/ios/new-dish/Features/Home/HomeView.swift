@@ -14,20 +14,7 @@ struct HomeView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-//                SideDrawerView(
-//                    isOpen: self.$sideDrawerShown,
-//                    content: {
-//                        HomeViewContent(height: geometry.size.height)
-//                    },
-//                    drawer: {
-//                        // TODO @majid it shows DishSidebarView() if i uncomment DishSidebarView
-//                        EmptyView().frame(height: 100)
-//    //                   DishSidebarView()
-//                    }
-//                )
-                
                 HomeViewContent(height: geometry.size.height)
-                
                 TopNav()
             }
             .background(
@@ -39,6 +26,8 @@ struct HomeView: View {
     }
 }
 
+fileprivate let pager = PagerStore()
+
 struct HomeViewContent: View {
     var height: CGFloat = 0
     @EnvironmentObject var store: AppStore
@@ -48,10 +37,11 @@ struct HomeViewContent: View {
         ZStack {
             PagerView(
                 pageCount: 2,
-                currentIndex: self.$index
-            ) {
-                HomeMainView()
-                Image(systemName: "photo").resizable()
+                pagerStore: pager,
+                disableDragging: true
+                ) {
+                    HomeMainView()
+                    Image(systemName: "photo").resizable()
             }
             .onChangePage { index in
                 self.store.send(.changeHomePage(index == 0 ? .home : .camera))
@@ -70,3 +60,15 @@ struct HomeView_Previews: PreviewProvider {
            .embedInAppEnvironment(Mocks.galleryVisibleDish)
     }
 }
+
+//                SideDrawerView(
+//                    isOpen: self.$sideDrawerShown,
+//                    content: {
+//                        HomeViewContent(height: geometry.size.height)
+//                    },
+//                    drawer: {
+//                        // TODO @majid it shows DishSidebarView() if i uncomment DishSidebarView
+//                        EmptyView().frame(height: 100)
+//    //                   DishSidebarView()
+//                    }
+//                )

@@ -26,6 +26,7 @@
 		AE08D13F23AC498400CFAC8C /* DishGalleryCardStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE08D13E23AC498400CFAC8C /* DishGalleryCardStack.swift */; };
 		AE2B6BA223AB3620007BCD25 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2B6BA123AB3620007BCD25 /* Test.swift */; };
 		AE2B6BA423AC211F007BCD25 /* VerticalCardPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */; };
+		AE56C86423ADB78C006A156A /* HomeSearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56C86323ADB78C006A156A /* HomeSearchResults.swift */; };
 		AE6CECCD23A843E600B08870 /* BottomNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6CECCC23A843E600B08870 /* BottomNav.swift */; };
 		AE7563B423A035E70094022B /* HomeMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B323A035E70094022B /* HomeMainView.swift */; };
 		AE7563B623A036160094022B /* HomeMainDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B523A036160094022B /* HomeMainDrawer.swift */; };
@@ -103,6 +104,7 @@
 		AE08D13E23AC498400CFAC8C /* DishGalleryCardStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishGalleryCardStack.swift; sourceTree = "<group>"; };
 		AE2B6BA123AB3620007BCD25 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalCardPager.swift; sourceTree = "<group>"; };
+		AE56C86323ADB78C006A156A /* HomeSearchResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchResults.swift; sourceTree = "<group>"; };
 		AE6CECCC23A843E600B08870 /* BottomNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomNav.swift; sourceTree = "<group>"; };
 		AE7563B323A035E70094022B /* HomeMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainView.swift; sourceTree = "<group>"; };
 		AE7563B523A036160094022B /* HomeMainDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainDrawer.swift; sourceTree = "<group>"; };
@@ -276,6 +278,7 @@
 				1C3CFE6323998FF2004B2EEA /* HomeContainerView.swift */,
 				1CE354872398714D004B3A84 /* HomeView.swift */,
 				AE7563B323A035E70094022B /* HomeMainView.swift */,
+				AE56C86323ADB78C006A156A /* HomeSearchResults.swift */,
 				AE861A7E23A07D81004096BF /* HomeMapControls.swift */,
 				AE7563B523A036160094022B /* HomeMainDrawer.swift */,
 				AE7563EA23A03D8E0094022B /* HomeDrawerContent.swift */,
@@ -534,6 +537,7 @@
 				AE7563B823A036500094022B /* Screen.swift in Sources */,
 				1CE3548123986BC1004B3A84 /* View.swift in Sources */,
 				AEA331F723A3382100B36A23 /* DishButton.swift in Sources */,
+				AE56C86423ADB78C006A156A /* HomeSearchResults.swift in Sources */,
 				AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */,
 				1CE3548323986C5C004B3A84 /* App.swift in Sources */,
 				AE861A7923A0651D004096BF /* Keyboard.swift in Sources */,

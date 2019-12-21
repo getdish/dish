@@ -34,6 +34,8 @@ struct HomeMainView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.geometry) var appGeometry
     
+    @EnvironmentObject var store: AppStore
+
     @ObservedObject var state = HomeViewState()
     
     var body: some View {
@@ -42,7 +44,10 @@ struct HomeMainView: View {
         let dishMapHeight = state.isSnappedToBottom
             ? Screen.height - 120
             : appHeight - Constants.homeInitialDrawerHeight + state.y
+
         
+        let isOnSearchResults = self.store.state.homeState.count > 1
+
         print("STATE y \(state.y) dishMapHeight \(dishMapHeight)")
 
         return GeometryReader { geometry in
@@ -61,16 +66,31 @@ struct HomeMainView: View {
                     .frame(height: dishMapHeight)
                     .cornerRadius(20)
                     .clipped()
+
                     Spacer()
                 }
                 
                 VStack {
-                    Spacer().frame(height: dishMapHeight - cardRowHeight + 40)
-                    HomeCards(isHorizontal: self.state.isSnappedToBottom)
-                    // i want an alpha fade-out effect
-//                    .mask(
-//                        LinearGradient(gradient: Gradient(colors: [.white, .black]), startPoint: .top, endPoint: .bottom)
-//                    )
+                    Spacer().frame(height: dishMapHeight - cardRowHeight)
+                    
+                    ZStack {
+                        // home
+                        HomeCards(isHorizontal: self.state.isSnappedToBottom)
+                            .offset(y: isOnSearchResults ? Screen.height : 0)
+                            .animation(.spring())
+                        
+                        // pages as you drill in below home
+                        if isOnSearchResults {
+                            ForEach(0 ..< self.store.state.homeState.count) { index in
+                                HomeSearchResults(
+                                    state: self.store.state.homeState[index],
+                                    height: Screen.height - dishMapHeight - 120
+                                )
+                                    .offset(y: 40)
+                            }
+                        }
+                    }
+                    .clipped()
                 }
                 
                 VStack {
@@ -90,6 +110,9 @@ struct HomeMainView: View {
                     }
                     Spacer()
                 }
+                .offset(y: isOnSearchResults ? -100 : 0)
+                .opacity(isOnSearchResults ? 0 : 1)
+                .animation(.spring())
                 
                 VStack {
                     SearchBar()
@@ -198,6 +221,8 @@ struct HomeCards: View {
 }
 
 struct HomeCardsGrid: View {
+    @EnvironmentObject var store: AppStore
+
     let items = features.chunked(into: 2)
     
     var content: some View {
@@ -207,6 +232,12 @@ struct HomeCardsGrid: View {
                     ForEach(self.items[index]) { item in
                         DishBrowseCard(landmark: item)
                             .frame(height: 200)
+                            .onTapGesture {
+                                print("tap on item")
+                                self.store.send(
+                                    .pushHomeState(HomeState(search: item.name))
+                                )
+                        }
                     }
                 }
             }
@@ -217,7 +248,7 @@ struct HomeCardsGrid: View {
 
     var body: some View {
         VStack {
-            Spacer().frame(height: cardRowHeight)
+            Spacer().frame(height: cardRowHeight + 40)
             ScrollView {
                 VStack(spacing: 0) {
                     Spacer().frame(height: 30)
@@ -250,9 +281,7 @@ struct HomeCardsRow: View {
 struct HomeMainView_Previews: PreviewProvider {
     static var previews: some View {
         HomeMainView()
-            .embedInAppEnvironment()
+            .embedInAppEnvironment(Mocks.homeSearchedPho)
     }
 }
 #endif
-
-

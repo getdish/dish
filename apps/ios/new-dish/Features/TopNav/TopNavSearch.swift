@@ -53,11 +53,17 @@ struct TopNavSearch: View {
                                 VStack {
                                     Text("San Francisco")
                                         .fontWeight(.bold)
+                                        .shadow(color: Color.black.opacity(0.35), radius: 2, x: 0, y: 1)
                                 }
                                 .padding(.vertical, 4)
                                 .padding(.horizontal, 8)
                                 .background(Color.white.opacity(0.2))
+                                .background(Color.black.opacity(0.2))
+                                .background(
+                                    BlurView(style: .light)
+                                )
                                 .cornerRadius(20)
+                                .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
                             }
                             .foregroundColor(.white)
                             .offset(y: isOnHome ? 0 : -80)
@@ -67,12 +73,18 @@ struct TopNavSearch: View {
                             }) {
                                 VStack {
                                     Text("~10 miles")
-                                        .font(.system(size: 13))
+                                        .font(.system(size: 14))
+                                        .shadow(color: Color.black.opacity(0.35), radius: 2, x: 0, y: 1)
                                 }
                                 .padding(.vertical, 4)
                                 .padding(.horizontal, 8)
                                 .background(Color.white.opacity(0.2))
+                                .background(Color.black.opacity(0.2))
+                                .background(
+                                    BlurView(style: .light)
+                                )
                                 .cornerRadius(20)
+                                .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
                             }
                             .foregroundColor(.white)
                             .offset(y: isOnHome ? 0 : -80)
