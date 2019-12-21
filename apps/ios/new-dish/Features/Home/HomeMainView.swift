@@ -38,6 +38,7 @@ struct HomeMainView: View {
     @State var searchBarMinY: CGFloat = 0
     @State var searchBarMaxY: CGFloat = 0
     @State var isDragging = false
+    @State var showTypeMenu = false
     
     func isWithinSearchBar(_ valueY: CGFloat) -> Bool {
         return valueY >= searchBarMinY && valueY <= searchBarMaxY
@@ -106,6 +107,14 @@ struct HomeMainView: View {
                             Text("🍽")
                                 .font(.system(size: 32))
                                 .padding(.horizontal, 2)
+                                .onTapGesture {
+                                    self.showTypeMenu = true
+                                }
+                                .popover(
+                                    isPresented: self.$showTypeMenu,
+                                    arrowEdge: .top
+                                ) { Text("Popover") }
+                                
                             Spacer().frame(width: 10)
                             FilterButton(label: "American", action: {})
                             FilterButton(label: "Thai", action: {})
