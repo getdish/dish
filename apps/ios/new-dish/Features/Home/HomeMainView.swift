@@ -4,7 +4,7 @@ class HomeViewState: ObservableObject {
     @Published var scrollY: CGFloat = 0
     @Published var searchY: CGFloat = 0
     @Published var dragY: CGFloat = 0
-
+    
     var isSnappedToBottom: Bool {
         searchY + dragY > 100
     }
@@ -39,8 +39,8 @@ struct HomeMainView: View {
     @State var searchBarMaxY: CGFloat = 0
     @State var isDragging = false
     
-    func isWithinSearchBar(_ value: CGPoint) -> Bool {
-        return value.y >= searchBarMinY && value.y <= searchBarMaxY
+    func isWithinSearchBar(_ valueY: CGFloat) -> Bool {
+        return valueY >= searchBarMinY && valueY <= searchBarMaxY
     }
     
     var body: some View {
@@ -49,12 +49,12 @@ struct HomeMainView: View {
         let dishMapHeight = state.isSnappedToBottom
             ? Screen.height - 120
             : appHeight - Constants.homeInitialDrawerHeight + state.y
-
+        
         
         let isOnSearchResults = self.store.state.homeState.count > 1
-
+        
         print("STATE y \(state.y) dishMapHeight \(dishMapHeight)")
-
+        
         return GeometryReader { geometry in
             ZStack {
                 Color.black.frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -71,7 +71,7 @@ struct HomeMainView: View {
                     .frame(height: dishMapHeight)
                     .cornerRadius(20)
                     .clipped()
-
+                    
                     Spacer()
                 }
                 
@@ -83,7 +83,7 @@ struct HomeMainView: View {
                         HomeCards(isHorizontal: self.state.isSnappedToBottom)
                             .offset(y: isOnSearchResults ? Screen.height : 0)
                             .animation(.spring())
-
+                        
                         // pages as you drill in below home
                         if isOnSearchResults {
                             ForEach(1 ..< self.store.state.homeState.count) { index in
@@ -99,10 +99,13 @@ struct HomeMainView: View {
                 }
                 
                 VStack {
-                    Spacer().frame(height: dishMapHeight + 35)
+                    Spacer().frame(height: dishMapHeight + 31)
                     // filters
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
+                            Text("🍽")
+                                .font(.system(size: 32))
+                            Spacer().frame(width: 10)
                             FilterButton(label: "American", action: {})
                             FilterButton(label: "Thai", action: {})
                             FilterButton(label: "Chinese", action: {})
@@ -117,36 +120,38 @@ struct HomeMainView: View {
                 }
                 .offset(y: isOnSearchResults ? -100 : 0)
                 .opacity(isOnSearchResults ? 0 : 1)
-                .animation(.spring())
                 
                 VStack {
                     GeometryReader { searchBarGeometry -> SearchBar in
-                        DispatchQueue.main.async {
-                            let minY = searchBarGeometry.frame(in: .global).minY
-                            let maxY = searchBarGeometry.frame(in: .global).maxY
-                            if minY != self.searchBarMinY {
-                                self.searchBarMinY = minY
-                            }
-                            if maxY != self.searchBarMaxY {
-                                self.searchBarMaxY = maxY
+                        if !self.isDragging {
+                            DispatchQueue.main.async {
+                                let frame = searchBarGeometry.frame(in: .global)
+                                print("update search bar \(frame.minY) \(frame.maxY)")
+                                if frame.minY != self.searchBarMinY {
+                                    self.searchBarMinY = frame.minY
+                                }
+                                if frame.maxY != self.searchBarMaxY {
+                                    self.searchBarMaxY = frame.maxY
+                                }
                             }
                         }
                         return SearchBar()
                     }
-                    .frame(height: 50)
+                    .frame(height: 45)
                     Spacer()
                 }
-                    .padding(.horizontal, 10)
-                    .offset(y: dishMapHeight - 23)
+                .padding(.horizontal, 10)
+                .offset(y: dishMapHeight - 23)
             }
             .clipped()
             .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
             .simultaneousGesture(
                 DragGesture()
                     .onChanged { value in
-                        if self.isWithinSearchBar(value.startLocation) || self.isDragging {
+                        // why is this off 80???
+                        if self.isWithinSearchBar(value.location.y - 40) || self.isDragging {
                             self.isDragging = true
-                           self.state.dragY = value.translation.height
+                            self.state.dragY = value.translation.height
                         }
                 }
                 .onEnded { value in
@@ -203,12 +208,36 @@ struct FilterButton: View {
     var body: some View {
         Button(action: action) {
             Text(label)
-                .foregroundColor(.white)
+                .foregroundColor(Color.white.opacity(0.85))
                 .font(.system(size: 14))
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 12)
         .background(Color.gray.opacity(0.2))
+        .overlay(
+            RoundedRectangle(cornerRadius: 80)
+                .stroke(Color.white.opacity(0.7), lineWidth: 1)
+        )
+            .cornerRadius(80)
+            .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
+    }
+}
+
+
+struct FilterButtonStrong: View {
+    var label: String
+    var action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Text(label)
+                .foregroundColor(.white)
+                .fontWeight(.semibold)
+                .font(.system(size: 14))
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
+        .background(Color.blue.opacity(0.35))
         .overlay(
             RoundedRectangle(cornerRadius: 80)
                 .stroke(Color.white, lineWidth: 1)
@@ -241,7 +270,7 @@ struct HomeCards: View {
 
 struct HomeCardsGrid: View {
     @EnvironmentObject var store: AppStore
-
+    
     let items = features.chunked(into: 2)
     
     var content: some View {
@@ -264,7 +293,7 @@ struct HomeCardsGrid: View {
         .padding(.horizontal)
         .frame(width: Screen.width)
     }
-
+    
     var body: some View {
         VStack {
             Spacer().frame(height: cardRowHeight + 40)
