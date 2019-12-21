@@ -51,8 +51,7 @@ struct HomeMainView: View {
             : appHeight - Constants.homeInitialDrawerHeight + state.y
 
         
-//        let isOnSearchResults = self.store.state.homeState.count > 1
-        let isOnSearchResults = false
+        let isOnSearchResults = self.store.state.homeState.count > 1
 
         print("STATE y \(state.y) dishMapHeight \(dishMapHeight)")
 
@@ -87,7 +86,7 @@ struct HomeMainView: View {
 
                         // pages as you drill in below home
                         if isOnSearchResults {
-                            ForEach(0 ..< self.store.state.homeState.count) { index in
+                            ForEach(1 ..< self.store.state.homeState.count) { index in
                                 HomeSearchResults(
                                     state: self.store.state.homeState[index],
                                     height: Screen.height - dishMapHeight - 120
