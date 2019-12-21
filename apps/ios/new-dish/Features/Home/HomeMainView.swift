@@ -35,6 +35,13 @@ struct HomeMainView: View {
     @Environment(\.geometry) var appGeometry
     @EnvironmentObject var store: AppStore
     @ObservedObject var state = HomeViewState()
+    @State var searchBarMinY: CGFloat = 0
+    @State var searchBarMaxY: CGFloat = 0
+    @State var isDragging = false
+    
+    func isWithinSearchBar(_ value: CGPoint) -> Bool {
+        return value.y >= searchBarMinY && value.y <= searchBarMaxY
+    }
     
     var body: some View {
         // pushed map below the border radius of the bottomdrawer
@@ -114,17 +121,20 @@ struct HomeMainView: View {
                 .animation(.spring())
                 
                 VStack {
-                    SearchBar()
-                        .simultaneousGesture(
-                            DragGesture()
-                                .onChanged { value in
-                                    self.state.dragY = value.location.y
-                                    print("\(value.location.y) \(value.translation.height)")
+                    GeometryReader { searchBarGeometry -> SearchBar in
+                        DispatchQueue.main.async {
+                            let minY = searchBarGeometry.frame(in: .global).minY
+                            let maxY = searchBarGeometry.frame(in: .global).maxY
+                            if minY != self.searchBarMinY {
+                                self.searchBarMinY = minY
                             }
-                            .onEnded { value in
-                                self.state.finishDrag()
+                            if maxY != self.searchBarMaxY {
+                                self.searchBarMaxY = maxY
                             }
-                    )
+                        }
+                        return SearchBar()
+                    }
+                    .frame(height: 50)
                     Spacer()
                 }
                     .padding(.horizontal, 10)
@@ -132,6 +142,19 @@ struct HomeMainView: View {
             }
             .clipped()
             .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
+            .simultaneousGesture(
+                DragGesture()
+                    .onChanged { value in
+                        if self.isWithinSearchBar(value.startLocation) || self.isDragging {
+                            self.isDragging = true
+                           self.state.dragY = value.translation.height
+                        }
+                }
+                .onEnded { value in
+                    self.isDragging = false
+                    self.state.finishDrag()
+                }
+            )
         }
         .environmentObject(self.state)
     }
