@@ -75,6 +75,8 @@
 		AEBC5E1F23A6F0E50094B1BD /* DishGalleryViewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBC5E1E23A6F0E50094B1BD /* DishGalleryViewContent.swift */; };
 		AEBC5E2123A6F2400094B1BD /* DishGalleryOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBC5E2023A6F2400094B1BD /* DishGalleryOverlayView.swift */; };
 		AEBC5E2323A6F26C0094B1BD /* DishGalleryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBC5E2223A6F26C0094B1BD /* DishGalleryCard.swift */; };
+		AEF6556F23B0248200E49A51 /* FilterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6556E23B0248200E49A51 /* FilterButton.swift */; };
+		AEF6557123B024A100E49A51 /* ScrollListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557023B024A100E49A51 /* ScrollListener.swift */; };
 		D86ACF2A611C42837609F52F /* Pods_new_dish.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 747A16F1648AAEF4512E6322 /* Pods_new_dish.framework */; };
 /* End PBXBuildFile section */
 
@@ -152,6 +154,8 @@
 		AEBC5E1E23A6F0E50094B1BD /* DishGalleryViewContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishGalleryViewContent.swift; sourceTree = "<group>"; };
 		AEBC5E2023A6F2400094B1BD /* DishGalleryOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishGalleryOverlayView.swift; sourceTree = "<group>"; };
 		AEBC5E2223A6F26C0094B1BD /* DishGalleryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishGalleryCard.swift; sourceTree = "<group>"; };
+		AEF6556E23B0248200E49A51 /* FilterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButton.swift; sourceTree = "<group>"; };
+		AEF6557023B024A100E49A51 /* ScrollListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollListener.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -267,6 +271,8 @@
 				1C6B321923A2A06100F0A7E6 /* SideDrawerView.swift */,
 				AE56C86523ADD977006A156A /* TagView.swift */,
 				AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */,
+				AEF6556E23B0248200E49A51 /* FilterButton.swift */,
+				AEF6557023B024A100E49A51 /* ScrollListener.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -536,6 +542,7 @@
 				AE56C86423ADB78C006A156A /* HomeSearchResults.swift in Sources */,
 				AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */,
 				1CE3548323986C5C004B3A84 /* App.swift in Sources */,
+				AEF6556F23B0248200E49A51 /* FilterButton.swift in Sources */,
 				AE861A7923A0651D004096BF /* Keyboard.swift in Sources */,
 				AE861A8123A16DA6004096BF /* TopNav.swift in Sources */,
 				AEBC5E1D23A6F0C70094B1BD /* DishGalleryView.swift in Sources */,
@@ -559,6 +566,7 @@
 				AE861A7B23A06EDC004096BF /* BarArrow.swift in Sources */,
 				AEBA148223A9F81D00DD28CC /* CardControlsCutout.swift in Sources */,
 				AE861A8323A171D2004096BF /* TopNavSearch.swift in Sources */,
+				AEF6557123B024A100E49A51 /* ScrollListener.swift in Sources */,
 				AE7563E923A03D570094022B /* MagicMove.swift in Sources */,
 				1CE3547F23986B88004B3A84 /* Store.swift in Sources */,
 				AEBC5E1F23A6F0E50094B1BD /* DishGalleryViewContent.swift in Sources */,

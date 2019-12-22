@@ -11,7 +11,8 @@ class HomeViewState: ObservableObject {
         if isSnappedToBottom {
             return snappedToBottomMapHeight
         }
-        return (appHeight - Constants.homeInitialDrawerHeight + y - scrollY).rounded()
+        let h = (appHeight - Constants.homeInitialDrawerHeight + y - scrollY).rounded()
+        return max(h, 100)
     }
     
     var isSnappedToBottom: Bool {
@@ -40,22 +41,27 @@ class HomeViewState: ObservableObject {
         let wasSnappedToBottom = isSnappedToBottom
         self.dragY = y
         if !wasSnappedToBottom && isSnappedToBottom {
-            withAnimation(.spring()) {
-                self.snappedToBottomMapHeight = appHeight - 200
-            }
+            self.snapToBottom()
         } else {
             self.snappedToBottomMapHeight = self.mapHeight
+        }
+    }
+    
+    func snapToBottom() {
+        withAnimation(.spring()) {
+            self.snappedToBottomMapHeight = appHeight - 200
         }
     }
 }
 
 fileprivate let cardRowHeight: CGFloat = 160
+fileprivate let homeViewState = HomeViewState()
 
 struct HomeMainView: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var store: AppStore
     @Environment(\.geometry) var appGeometry
-    @ObservedObject var state = HomeViewState()
+    @ObservedObject var state = homeViewState
     @State var searchBarMinY: CGFloat = 0
     @State var searchBarMaxY: CGFloat = 0
     @State var isDragging = false
@@ -71,6 +77,7 @@ struct HomeMainView: View {
         let state = self.state
         
         print("STATE scrollY \(state.scrollY) y \(state.y) dishMapHeight \(state.mapHeight)")
+        print("home state \(self.store.state.homeState.count)")
         
         return GeometryReader { geometry in
             ZStack {
@@ -230,54 +237,6 @@ struct SearchBar: View {
     }
 }
 
-
-struct FilterButton: View {
-    var label: String
-    var action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            Text(label)
-                .foregroundColor(Color.white.opacity(0.85))
-                .font(.system(size: 14))
-        }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
-        .background(Color.gray.opacity(0.2))
-        .overlay(
-            RoundedRectangle(cornerRadius: 80)
-                .stroke(Color.white.opacity(0.7), lineWidth: 1)
-        )
-            .cornerRadius(80)
-            .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
-    }
-}
-
-
-struct FilterButtonStrong: View {
-    var label: String
-    var action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            Text(label)
-                .foregroundColor(.white)
-                .fontWeight(.semibold)
-                .font(.system(size: 14))
-        }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
-        .background(Color.blue.opacity(0.35))
-        .overlay(
-            RoundedRectangle(cornerRadius: 80)
-                .stroke(Color.white, lineWidth: 1)
-        )
-            .cornerRadius(80)
-            .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
-    }
-}
-
-
 struct HomeCards: View {
     var isHorizontal: Bool
     
@@ -349,22 +308,6 @@ struct HomeCardsGrid: View {
                 }
             }
         }
-    }
-}
-
-struct ScrollListener: View {
-    var onScroll: ((CGRect) -> Void)? = nil
-    var body: some View {
-        Color.clear
-            .frame(height: 0)
-            .overlay(
-                GeometryReader { geometry -> Color in
-                    if let cb = self.onScroll {
-                        cb(geometry.frame(in: .global))
-                    }
-                    return Color.clear
-                }
-        )
     }
 }
 
