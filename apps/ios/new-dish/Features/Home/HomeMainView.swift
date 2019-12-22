@@ -5,12 +5,13 @@ class HomeViewState: ObservableObject {
     @Published var scrollY: CGFloat = 0
     @Published var searchY: CGFloat = 0
     @Published var dragY: CGFloat = 0
+    @Published var snappedToBottomMapHeight: CGFloat = 0
     
     var mapHeight: CGFloat {
-        let height = isSnappedToBottom
-            ? appHeight - 130
-            : appHeight - Constants.homeInitialDrawerHeight + y - scrollY
-        return height.rounded()
+        if isSnappedToBottom {
+            return snappedToBottomMapHeight
+        }
+        return (appHeight - Constants.homeInitialDrawerHeight + y - scrollY).rounded()
     }
     
     var isSnappedToBottom: Bool {
@@ -32,6 +33,18 @@ class HomeViewState: ObservableObject {
             self.searchY = 0
         } else {
             self.dragY = 110
+        }
+    }
+    
+    func drag(_ y: CGFloat) {
+        let wasSnappedToBottom = isSnappedToBottom
+        self.dragY = y
+        if !wasSnappedToBottom && isSnappedToBottom {
+            withAnimation(.spring()) {
+                self.snappedToBottomMapHeight = appHeight - 200
+            }
+        } else {
+            self.snappedToBottomMapHeight = self.mapHeight
         }
     }
 }
@@ -167,8 +180,8 @@ struct HomeMainView: View {
                     .onChanged { value in
                         // why is this off 80???
                         if self.isWithinSearchBar(value.location.y - 40) || self.isDragging {
+                            self.state.drag(value.translation.height)
                             self.isDragging = true
-                            self.state.dragY = value.translation.height
                         }
                 }
                 .onEnded { value in
