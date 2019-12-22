@@ -3,18 +3,28 @@ import SwiftUI
 struct HomeSearchResults: View {
     var state: HomeState
     var height: CGFloat = 320
-    let items = features
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
-                ForEach(self.items) { item in
-                    DishBrowseCard(landmark: item)
+                ForEach(0 ..< 5) { item in
+                    DishRestaurantCard()
                         .frame(height: self.height)
                 }
             }
             .padding(.horizontal, 20)
         }
+    }
+}
+
+
+struct DishRestaurantCard: View {
+    var body: some View {
+        Image("hiddenlake.jpg")
+            .resizable()
+            .aspectRatio(2 / 2.25, contentMode: .fit)
+            .overlay(TextOverlay(name: "Miss Siagon"))
+            .cornerRadius(14)
     }
 }
 

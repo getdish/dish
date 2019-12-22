@@ -20,14 +20,14 @@ struct FeatureCard: View, Equatable {
                 self.landmark.image
                     .resizable()
                     .aspectRatio(2 / 2.25, contentMode: .fit)
-                    .overlay(TextOverlay(landmark: self.landmark))
+                    .overlay(TextOverlay(name: self.landmark.name))
 //            }
         }
     }
 }
 
 struct TextOverlay: View {
-    var landmark: Landmark
+    var name: String
     
     var gradient: LinearGradient {
         LinearGradient(
@@ -41,7 +41,7 @@ struct TextOverlay: View {
         ZStack(alignment: .bottomLeading) {
             Rectangle().fill(gradient)
             VStack(alignment: .leading) {
-                Text(landmark.name)
+                Text(name)
                     .font(.system(size: 20))
                     .bold()
                 //        Text(landmark.park)
