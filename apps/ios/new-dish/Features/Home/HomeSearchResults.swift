@@ -5,18 +5,21 @@ struct HomeSearchResults: View {
     var height: CGFloat = 320
     
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack {
-                ForEach(0 ..< 5) { item in
-                    DishRestaurantCard()
-                        .frame(height: self.height)
+        VStack {
+            Text("")
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack {
+                    ForEach(0 ..< 5) { item in
+                        DishRestaurantCard()
+                            .frame(height: self.height)
+                    }
                 }
+                .padding(.horizontal, 20)
             }
-            .padding(.horizontal, 20)
         }
     }
 }
-
 
 struct DishRestaurantCard: View {
     var body: some View {

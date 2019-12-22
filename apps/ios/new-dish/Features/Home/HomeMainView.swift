@@ -104,81 +104,88 @@ struct HomeMainView: View {
                     Spacer()
                 }
                 
-                VStack {
-                    Spacer().frame(height: state.mapHeight - cardRowHeight)
-                    
-                    ZStack {
-                        // home
-                        HomeCards(isHorizontal: self.state.isSnappedToBottom)
-                            .offset(y: isOnSearchResults ? Screen.height : 0)
-                            .animation(.spring())
+                // everything below the map
+                ZStack {
+                    VStack {
+                        Spacer().frame(height: state.mapHeight - cardRowHeight)
                         
-                        // pages as you drill in below home
-                        if isOnSearchResults {
-                            ForEach(1 ..< self.store.state.homeState.count) { index in
-                                HomeSearchResults(
-                                    state: self.store.state.homeState[index],
-                                    height: Screen.height - state.mapHeight - 120
-                                )
-                                    .offset(y: 40)
+                        ZStack {
+                            // home
+                            HomeCards(isHorizontal: self.state.isSnappedToBottom)
+                                .offset(y: isOnSearchResults ? Screen.height : 0)
+                                .animation(.spring())
+                            
+                            // pages as you drill in below home
+                            if isOnSearchResults {
+                                ForEach(1 ..< self.store.state.homeState.count) { index in
+                                    HomeSearchResults(
+                                        state: self.store.state.homeState[index],
+                                        height: Screen.height - state.mapHeight - 120
+                                    )
+                                        .offset(y: 40)
+                                }
                             }
                         }
+                        .clipped()
                     }
-                    .clipped()
-                }
-                
-                VStack {
-                    Spacer().frame(height: state.mapHeight + 31)
-                    // filters
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack {
-                            Text("🍽")
-                                .font(.system(size: 32))
-                                .padding(.horizontal, 2)
-                                .onTapGesture {
-                                    self.showTypeMenu = true
+                    
+                    VStack {
+                        Spacer().frame(height: state.mapHeight + 31)
+                        // filters
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack {
+                                Text("🍽")
+                                    .font(.system(size: 32))
+                                    .padding(.horizontal, 2)
+                                    .onTapGesture {
+                                        self.showTypeMenu = true
                                 }
                                 .sheet(
                                     isPresented: self.$showTypeMenu
                                 ) { Text("Popover") }
                                 
-                            Spacer().frame(width: 10)
-                            FilterButton(label: "American", action: {})
-                            FilterButton(label: "Thai", action: {})
-                            FilterButton(label: "Chinese", action: {})
-                            FilterButton(label: "Italian", action: {})
-                            FilterButton(label: "French", action: {})
-                            FilterButton(label: "Burmese", action: {})
-                            FilterButton(label: "Greek", action: {})
+                                Spacer().frame(width: 10)
+                                FilterButton(label: "American", action: {})
+                                FilterButton(label: "Thai", action: {})
+                                FilterButton(label: "Chinese", action: {})
+                                FilterButton(label: "Italian", action: {})
+                                FilterButton(label: "French", action: {})
+                                FilterButton(label: "Burmese", action: {})
+                                FilterButton(label: "Greek", action: {})
+                            }
+                            .padding(.horizontal)
                         }
-                        .padding(.horizontal)
+                        Spacer()
                     }
-                    Spacer()
-                }
-                .offset(y: isOnSearchResults ? -100 : 0)
-                .opacity(isOnSearchResults ? 0 : 1)
-                
-                VStack {
-                    GeometryReader { searchBarGeometry -> SearchBar in
-                        if !self.isDragging {
-                            DispatchQueue.main.async {
-                                let frame = searchBarGeometry.frame(in: .global)
-                                print("update search bar \(frame.minY) \(frame.maxY)")
-                                if frame.minY != self.searchBarMinY {
-                                    self.searchBarMinY = frame.minY
-                                }
-                                if frame.maxY != self.searchBarMaxY {
-                                    self.searchBarMaxY = frame.maxY
+                    .offset(y: isOnSearchResults ? -100 : 0)
+                    .opacity(isOnSearchResults ? 0 : 1)
+                    
+                    VStack {
+                        GeometryReader { searchBarGeometry -> SearchBar in
+                            if !self.isDragging {
+                                DispatchQueue.main.async {
+                                    let frame = searchBarGeometry.frame(in: .global)
+                                    print("update search bar \(frame.minY) \(frame.maxY)")
+                                    if frame.minY != self.searchBarMinY {
+                                        self.searchBarMinY = frame.minY
+                                    }
+                                    if frame.maxY != self.searchBarMaxY {
+                                        self.searchBarMaxY = frame.maxY
+                                    }
                                 }
                             }
+                            return SearchBar()
                         }
-                        return SearchBar()
+                        .frame(height: 45)
+                        Spacer()
                     }
-                    .frame(height: 45)
-                    Spacer()
+                    .padding(.horizontal, 10)
+                    .offset(y: state.mapHeight - 23)
+                    // searchinput always light
+                    .environment(\.colorScheme, .light)
                 }
-                .padding(.horizontal, 10)
-                .offset(y: state.mapHeight - 23)
+                // everything below map is always dark
+                .environment(\.colorScheme, .dark)
             }
             .clipped()
             .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
