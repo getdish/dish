@@ -5,28 +5,38 @@ fileprivate let filterBarHeight: CGFloat = 82
 fileprivate let cardRowHeight: CGFloat = 160
 
 class HomeViewState: ObservableObject {
+    enum DragState { case on, idle, off }
+
+    @Published var dragState: DragState = .idle
     @Published var appHeight: CGFloat = 0
     @Published var scrollY: CGFloat = 0
     @Published var searchY: CGFloat = 0
     @Published var dragY: CGFloat = 0
     @Published var snappedToBottomMapHeight: CGFloat = 0
     
+    var mapInitialHeight: CGFloat {
+        appHeight * 0.3
+    }
+
     var mapHeight: CGFloat {
         if isSnappedToBottom {
             return snappedToBottomMapHeight
         }
-        let h = (appHeight - Constants.homeInitialDrawerHeight + y - scrollY).rounded()
-        return max(h, 100)
+        return max(mapInitialHeight + y, 100)
+    }
+    
+    var snapToBottomAt: CGFloat {
+        appHeight * 0.1
     }
     
     var isSnappedToBottom: Bool {
-        searchY + dragY > 100
+        y > snapToBottomAt
     }
     
     var y: CGFloat {
-        max(150, searchY + dragY)
+        max(-100, searchY + dragY + scrollY)
     }
-    
+
     func finishDrag() {
         self.searchY = self.dragY + self.searchY
         self.dragY = 0
@@ -43,25 +53,40 @@ class HomeViewState: ObservableObject {
     
     func drag(_ y: CGFloat) -> Bool {
         let wasSnappedToBottom = isSnappedToBottom
-        print("set to \(y)")
         self.dragY = y
-        if !wasSnappedToBottom && isSnappedToBottom {
+        
+        let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
+        let willSnapUp = !isSnappedToBottom && wasSnappedToBottom
+        
+        if willSnapUp || willSnapDown {
+            print("SNAPPIN \(y) ----- down? \(willSnapDown)")
+        }
+
+        if willSnapDown {
             self.snapToBottom(true)
             return true
-        } else if !isSnappedToBottom && wasSnappedToBottom {
+        } else if willSnapUp {
             self.snapToBottom(false)
         } else {
             self.snappedToBottomMapHeight = self.mapHeight
         }
+
         return false
     }
     
-    func snapToBottom(_ atBottom: Bool) {
+    func snapToBottom(_ toBottom: Bool) {
+        // on snap, turn off dragging until next grab
+        self.dragState = .off
+
         withAnimation(.spring()) {
-            if atBottom {
+            // then animate
+            if toBottom {
                 self.snappedToBottomMapHeight = appHeight - 200
+                // were saying, you need to drag it 100px before it snaps back up
+                self.searchY = snapToBottomAt + 100
+                self.dragY = 0
             } else {
-                self.searchY = 0
+                self.searchY = snapToBottomAt - 1
                 self.dragY = 0
             }
         }
@@ -71,15 +96,12 @@ class HomeViewState: ObservableObject {
 fileprivate let homeViewState = HomeViewState()
 
 struct HomeMainView: View {
-    enum DragState { case on, idle, off }
-    
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var store: AppStore
     @Environment(\.geometry) var appGeometry
     @ObservedObject var state = homeViewState
     @State var searchBarMinY: CGFloat = 0
     @State var searchBarMaxY: CGFloat = 0
-    @State var dragState: DragState = .idle
     @State var showTypeMenu = false
     
     func isWithinSearchBar(_ valueY: CGFloat) -> Bool {
@@ -90,15 +112,15 @@ struct HomeMainView: View {
         // pushed map below the border radius of the bottomdrawer
         let isOnSearchResults = self.store.state.homeState.count > 1
         let state = self.state
+        let dragState = state.dragState
         
         // indicates were dragging
-        let searchDragExtraY = state.isSnappedToBottom && self.dragState != .off
+        let searchDragExtraY = state.isSnappedToBottom && dragState != .off
             ? -state.dragY / 2
             : 0
         
         print("dragSearchResistY \(searchDragExtraY)")
-        print("STATE scrollY \(state.scrollY) y \(state.y) dishMapHeight \(state.mapHeight)")
-        print("home state \(self.store.state.homeState.count)")
+        print("STATE dragY \(state.dragY) searchY \(state.searchY) scrollY \(state.scrollY) y \(state.y) dishMapHeight \(state.mapHeight)")
         
         return GeometryReader { geometry in
             ZStack {
@@ -187,9 +209,12 @@ struct HomeMainView: View {
                     .offset(y: isOnSearchResults ? -100 : 0)
                     .opacity(isOnSearchResults ? 0 : 1)
                     
+                    // keyboard dismiss
+//                    Color.black.opacity(0.0001)
+                    
                     VStack {
                         GeometryReader { searchBarGeometry -> HomeSearchBar in
-                            if self.dragState != .on {
+                            if dragState != .on {
                                 DispatchQueue.main.async {
                                     let frame = searchBarGeometry.frame(in: .global)
                                     print("update search bar \(frame.minY) \(frame.maxY)")
@@ -219,19 +244,24 @@ struct HomeMainView: View {
             .simultaneousGesture(
                 DragGesture()
                     .onChanged { value in
+                        // disable drag on off
+                        if state.dragState == .off {
+                            return
+                        }
+                        
                         // why is this off 80???
-                        if self.isWithinSearchBar(value.location.y - 40) || self.dragState == .on {
+                        if self.isWithinSearchBar(value.location.y - 40) || dragState == .on {
                             let didSnap = self.state.drag(value.translation.height)
                             if didSnap {
                                 // prevent any more dragging
-                                self.dragState = .off
+                                state.dragState = .off
                             } else {
-                                self.dragState = .on
+                                state.dragState = .on
                             }
                         }
                 }
                 .onEnded { value in
-                    self.dragState = .idle
+                    state.dragState = .idle
                     self.state.finishDrag()
                 }
             )
