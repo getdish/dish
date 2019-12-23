@@ -26,16 +26,58 @@ struct ContextMenuRootView<Content: View>: View {
     }
     
     var body: some View {
-        ZStack {
+        let activeItem = store.activeItem
+        
+        return ZStack {
             self.content
             
-            if store.activeItem != nil {
-                Color.blue.opacity(0.5)
-                store.activeItem?.menuContent
-                store.activeItem?.content
+            if activeItem != nil {
+                Color.black.opacity(0.5)
+                ContextMenuOpenView(item: activeItem!)
             }
         }
+        .edgesIgnoringSafeArea(.all)
         .environmentObject(store)
+    }
+}
+
+struct ContextMenuOpenView: View {
+    let item: ContextMenuStore
+    
+    func getMenuBoundingBox() -> CGRect {
+        let contentPos = item.contentPosition        
+        let spaceAbove = contentPos.minY
+        let spaceBelow = Screen.height - contentPos.maxY
+        let isAbove = spaceAbove > spaceBelow
+        let height = max(spaceAbove, spaceBelow) - 20
+        let width = Screen.width - 40
+        if isAbove {
+            return CGRect(x: 20, y: 20, width: width, height: height)
+        } else {
+            return CGRect(x: 20, y: contentPos.maxY + 20, width: width, height: height)
+        }
+    }
+    
+    var body: some View {
+        let pos = item.contentPosition
+        let bb = getMenuBoundingBox()
+        return ZStack {
+            HStack {
+                VStack {
+                    item.content.offset(x: pos.minX, y: pos.minY)
+                    Spacer()
+                }
+                Spacer()
+            }
+            
+            VStack {
+                item.menuContent
+            }
+            .offset(x: bb.minX, y: bb.minY)
+            .frame(width: bb.width, height: bb.height)
+            .background(Color.white)
+            .cornerRadius(20)
+        }
     }
 }
 
@@ -50,8 +92,9 @@ class ContextMenuStore: ObservableObject, Equatable {
     }
     
     @Published var state: MenuState = .closed
-    @Published var content: AnyView = AnyView(Spacer())
-    @Published var menuContent: AnyView = AnyView(Spacer())
+    var content: AnyView = AnyView(Spacer())
+    var menuContent: AnyView = AnyView(Spacer())
+    var contentPosition = CGRect()
 }
 
 struct ContextMenuView<Content: View, MenuContent: View>: View {
@@ -68,7 +111,7 @@ struct ContextMenuView<Content: View, MenuContent: View>: View {
         self.content = content()
         self.menuContent = menuContent()
         self.store.content = AnyView(self.content)
-        self.store.menuContent = AnyView(self.content)
+        self.store.menuContent = AnyView(self.menuContent)
     }
     
     var body: some View {
@@ -76,6 +119,14 @@ struct ContextMenuView<Content: View, MenuContent: View>: View {
         
         return ZStack {
             self.content
+                .background(
+                    GeometryReader { geometry -> Color in
+                        DispatchQueue.main.async {
+                            self.store.contentPosition = geometry.frame(in: .global)
+                        }
+                        return Color.clear
+                    }
+                )
         }
         .onDisappear {
             self.parentStore.setInactive(self.store)
