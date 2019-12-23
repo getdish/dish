@@ -41,19 +41,28 @@ class HomeViewState: ObservableObject {
         }
     }
     
-    func drag(_ y: CGFloat) {
+    func drag(_ y: CGFloat) -> Bool {
         let wasSnappedToBottom = isSnappedToBottom
         self.dragY = y
         if !wasSnappedToBottom && isSnappedToBottom {
-            self.snapToBottom()
+            self.snapToBottom(true)
+            return true
+        } else if !isSnappedToBottom && wasSnappedToBottom {
+            self.snapToBottom(false)
         } else {
             self.snappedToBottomMapHeight = self.mapHeight
         }
+        return false
     }
     
-    func snapToBottom() {
+    func snapToBottom(_ atBottom: Bool) {
         withAnimation(.spring()) {
-            self.snappedToBottomMapHeight = appHeight - 200
+            if atBottom {
+                self.snappedToBottomMapHeight = appHeight - 200
+            } else {
+                self.searchY = 0
+                self.dragY = 0
+            }
         }
     }
 }
@@ -61,13 +70,15 @@ class HomeViewState: ObservableObject {
 fileprivate let homeViewState = HomeViewState()
 
 struct HomeMainView: View {
+    enum DragState { case on, idle, off }
+    
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var store: AppStore
     @Environment(\.geometry) var appGeometry
     @ObservedObject var state = homeViewState
     @State var searchBarMinY: CGFloat = 0
     @State var searchBarMaxY: CGFloat = 0
-    @State var isDragging = false
+    @State var dragState: DragState = .idle
     @State var showTypeMenu = false
     
     func isWithinSearchBar(_ valueY: CGFloat) -> Bool {
@@ -78,7 +89,9 @@ struct HomeMainView: View {
         // pushed map below the border radius of the bottomdrawer
         let isOnSearchResults = self.store.state.homeState.count > 1
         let state = self.state
+        let dragSearchResistY = state.isSnappedToBottom && self.dragState != .off ? -state.dragY / 2 : 0
         
+        print("dragSearchResistY \(dragSearchResistY)")
         print("STATE scrollY \(state.scrollY) y \(state.y) dishMapHeight \(state.mapHeight)")
         print("home state \(self.store.state.homeState.count)")
         
@@ -171,7 +184,7 @@ struct HomeMainView: View {
                     
                     VStack {
                         GeometryReader { searchBarGeometry -> HomeSearchBar in
-                            if !self.isDragging {
+                            if self.dragState != .on {
                                 DispatchQueue.main.async {
                                     let frame = searchBarGeometry.frame(in: .global)
                                     print("update search bar \(frame.minY) \(frame.maxY)")
@@ -189,9 +202,9 @@ struct HomeMainView: View {
                         Spacer()
                     }
                     .padding(.horizontal, 10)
-                    .offset(y: state.mapHeight - 23)
-                        // searchinput always light
-                        .environment(\.colorScheme, .light)
+                    .offset(y: state.mapHeight - 23 - dragSearchResistY)
+                    // searchinput always light
+                    .environment(\.colorScheme, .light)
                 }
                     // everything below map is always dark
                     .environment(\.colorScheme, .dark)
@@ -202,13 +215,18 @@ struct HomeMainView: View {
                 DragGesture()
                     .onChanged { value in
                         // why is this off 80???
-                        if self.isWithinSearchBar(value.location.y - 40) || self.isDragging {
-                            self.state.drag(value.translation.height)
-                            self.isDragging = true
+                        if self.isWithinSearchBar(value.location.y - 40) || self.dragState == .on {
+                            let didSnap = self.state.drag(value.translation.height)
+                            if didSnap {
+                                // prevent any more dragging
+                                self.dragState = .off
+                            } else {
+                                self.dragState = .on
+                            }
                         }
                 }
                 .onEnded { value in
-                    self.isDragging = false
+                    self.dragState = .idle
                     self.state.finishDrag()
                 }
             )
@@ -293,6 +311,7 @@ struct HomeCardsGrid: View {
                     gradient: .init(colors: [
                         Color.white.opacity(0),
                         Color.white.opacity(0),
+                        Color.black,
                         Color.black,
                         Color.black,
                         Color.black,
