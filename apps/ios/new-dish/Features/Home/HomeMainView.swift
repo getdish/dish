@@ -24,7 +24,7 @@ class HomeViewState: ObservableObject {
     }
     
     var y: CGFloat {
-        searchY + dragY
+        max(150, searchY + dragY)
     }
     
     func finishDrag() {
@@ -43,6 +43,7 @@ class HomeViewState: ObservableObject {
     
     func drag(_ y: CGFloat) -> Bool {
         let wasSnappedToBottom = isSnappedToBottom
+        print("set to \(y)")
         self.dragY = y
         if !wasSnappedToBottom && isSnappedToBottom {
             self.snapToBottom(true)
@@ -89,9 +90,13 @@ struct HomeMainView: View {
         // pushed map below the border radius of the bottomdrawer
         let isOnSearchResults = self.store.state.homeState.count > 1
         let state = self.state
-        let dragSearchResistY = state.isSnappedToBottom && self.dragState != .off ? -state.dragY / 2 : 0
         
-        print("dragSearchResistY \(dragSearchResistY)")
+        // indicates were dragging
+        let searchDragExtraY = state.isSnappedToBottom && self.dragState != .off
+            ? -state.dragY / 2
+            : 0
+        
+        print("dragSearchResistY \(searchDragExtraY)")
         print("STATE scrollY \(state.scrollY) y \(state.y) dishMapHeight \(state.mapHeight)")
         print("home state \(self.store.state.homeState.count)")
         
@@ -202,7 +207,7 @@ struct HomeMainView: View {
                         Spacer()
                     }
                     .padding(.horizontal, 10)
-                    .offset(y: state.mapHeight - 23 - dragSearchResistY)
+                    .offset(y: state.mapHeight - 23 - searchDragExtraY)
                     // searchinput always light
                     .environment(\.colorScheme, .light)
                 }
