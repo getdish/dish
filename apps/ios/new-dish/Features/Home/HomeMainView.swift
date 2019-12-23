@@ -133,20 +133,6 @@ struct HomeMainView: View {
                         Spacer().frame(height: state.mapHeight + 31)
                         // filters
                         ZStack {
-                            HStack {
-                                Text("🍽")
-                                    .font(.system(size: 32))
-                                    .padding(.horizontal, 2)
-                                    .onTapGesture {
-                                        self.showTypeMenu = true
-                                }
-                                .sheet(
-                                    isPresented: self.$showTypeMenu
-                                ) { Text("Popover") }
-                                Spacer()
-                            }
-                            .padding(.horizontal)
-
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack {
                                     Spacer().frame(width: 50)
@@ -160,6 +146,20 @@ struct HomeMainView: View {
                                 }
                                 .padding(.horizontal)
                             }
+                            
+                            HStack {
+                                Text("🍽")
+                                    .font(.system(size: 32))
+                                    .padding(.horizontal, 2)
+                                    .onTapGesture {
+                                        self.showTypeMenu = true
+                                }
+                                .sheet(
+                                    isPresented: self.$showTypeMenu
+                                ) { Text("Popover") }
+                                Spacer()
+                            }
+                            .padding(.horizontal)
                         }
                         Spacer()
                     }
