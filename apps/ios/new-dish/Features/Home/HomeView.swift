@@ -1,10 +1,3 @@
-//
-//  HomeView.swift
-//  new-dish
-//
-//  Created by Majid Jabrayilov on 12/5/19.
-//  Copyright © 2019 Majid Jabrayilov. All rights reserved.
-//
 import SwiftUI
 
 struct HomeView: View {
@@ -12,51 +5,64 @@ struct HomeView: View {
     @State private var sideDrawerShown = false
     
     var body: some View {
-        ZStack {
-            SideDrawerView(
-                isOpen: self.$sideDrawerShown,
-                content: {
-                    HomeViewContent()
-                },
-                drawer: {
-                    // TODO @majid it shows DishSidebarView() if i uncomment DishSidebarView
-                    EmptyView()
-//                   DishSidebarView()
-                }
+        GeometryReader { geometry in
+            ZStack {
+                HomeViewContent(
+                    width: geometry.size.width,
+                    height: geometry.size.height
+                )
+                TopNav()
+            }
+            .background(
+                self.colorScheme == .light ? Color.white : Color.black.opacity(0.8)
             )
-            
-            HomeTopBar()
         }
-        .background(
-            self.colorScheme == .light ? Color.white : Color.black.opacity(0.8)
-        )
-        .edgesIgnoringSafeArea(.all)
         .embedInGeometryReader()
+        .edgesIgnoringSafeArea(.all)
     }
 }
 
+let homePager = PagerStore()
+
 struct HomeViewContent: View {
+    var width: CGFloat = 0
+    var height: CGFloat = 0
     @EnvironmentObject var store: AppStore
     @State private var index = 0
 
     var body: some View {
         ZStack {
             PagerView(
-                pageCount: 3,
-                currentIndex: self.$index
-            ) {
-                HomeDishView()
-                Image(systemName: "photo").resizable()
-                Button(action: { self.index = 0 }) {
-                    Text("Go to first page")
-                }
+                pageCount: 2,
+                pagerStore: homePager,
+                disableDragging: false
+                ) {
+                    HomeMainView()
+                    Image(systemName: "photo").resizable()
             }
             .onChangePage { index in
                 self.store.send(.changeHomePage(index == 0 ? .home : .camera))
             }
+            .simultaneousGesture(
+                // drag to camera
+                DragGesture()
+                    .onChanged { value in
+                        // right edge
+                        if self.width - value.startLocation.x < 10 {
+                            let next = Double((0 - value.translation.width) / self.width)
+                            homePager.index = min(1, max(0, next))
+                        }
+                }
+                .onEnded { value in
+                    if homePager.index.rounded() != homePager.index {
+                       homePager.onDragEnd(value)
+                    }
+                }
+            )
             
-            HomeBottomNav()
+            BottomNav()
         }
+        .frame(maxHeight: self.height)
     }
 }
 
@@ -64,5 +70,18 @@ struct HomeViewContent: View {
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView()
+           .embedInAppEnvironment(Mocks.galleryVisibleDish)
     }
 }
+
+//                SideDrawerView(
+//                    isOpen: self.$sideDrawerShown,
+//                    content: {
+//                        HomeViewContent(height: geometry.size.height)
+//                    },
+//                    drawer: {
+//                        // TODO @majid it shows DishSidebarView() if i uncomment DishSidebarView
+//                        EmptyView().frame(height: 100)
+//    //                   DishSidebarView()
+//                    }
+//                )

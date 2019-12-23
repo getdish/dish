@@ -5,11 +5,23 @@ struct MapView: UIViewControllerRepresentable {
     var width: CGFloat
     var height: CGFloat
     var darkMode: Bool?
-    var mapView: MapViewController? = nil
+
+    func makeCoordinator() -> MapView.Coordinator {
+        Coordinator(
+            MapViewController(
+                width: width,
+                height: height,
+                darkMode: darkMode
+            )
+        )
+    }
     
-    typealias UIViewControllerType = MapViewController
+    func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<MapView>) {
+        print("MapView should update the controller now")
+        context.coordinator.update()
+    }
     
-    func makeUIViewController(context: UIViewControllerRepresentableContext<MapView>) -> MapView.UIViewControllerType {
+    func makeUIViewController(context: UIViewControllerRepresentableContext<MapView>) -> UIViewController {
         MapViewController(
             width: width,
             height: height,
@@ -17,7 +29,18 @@ struct MapView: UIViewControllerRepresentable {
         )
     }
     
-    func updateUIViewController(_ uiViewController: MapView.UIViewControllerType, context: UIViewControllerRepresentableContext<MapView>) {
+    class Coordinator: NSObject {
+        var controller: MapViewController
+        
+        init(_ controller: MapViewController) {
+            self.controller = controller
+            super.init()
+            self.update()
+        }
+        
+        func update() {
+            
+        }
     }
 }
 
@@ -66,7 +89,6 @@ class MapViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        print("didload")
         super.viewDidLoad()
         
         // Create a GMSCameraPosition that tells the map to display the

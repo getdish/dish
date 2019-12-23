@@ -1,16 +1,18 @@
 import SwiftUI
 
-struct HomeTopBarAccountButton: View {
+// ratio of dish-brandmark w/h
+//fileprivate let brandRatio: CGFloat = 1.373881932
+
+struct TopNavMenuButton: View {
     var body: some View {
         Button(action: {
             //            Store.home.showMenuDrawer.toggle()
         }) {
             HStack {
-                Image(systemName: "person.crop.circle.fill") // ellipsis
+                Image("dish-icon")
                     .resizable()
-                    //          .foregroundColor(Color(.secondarySystemFill))
-                    .frame(width: 20, height: 20)
-                    .padding(6)
+                    .frame(width: 28, height: 28)
+                    .padding(4)
             }
             .background(Color(.secondarySystemBackground))
             .cornerRadius(40)

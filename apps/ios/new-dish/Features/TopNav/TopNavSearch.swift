@@ -1,7 +1,7 @@
 import SwiftUI
 import CoreLocation
 
-struct HomeTopBarSearch: View {
+struct TopNavSearch: View {
     @State var search = ""
     @Binding var isEditing: Bool
     @EnvironmentObject var store: AppStore
@@ -17,7 +17,7 @@ struct HomeTopBarSearch: View {
     var body: some View {
         let isOnHome = store.state.homePageView == .home
         
-        return VStack {
+        return ZStack {            
             if store.state.showDrawer || isOnHome {
                 VStack {
                     ZStack {
@@ -53,11 +53,17 @@ struct HomeTopBarSearch: View {
                                 VStack {
                                     Text("San Francisco")
                                         .fontWeight(.bold)
+                                        .shadow(color: Color.black.opacity(0.35), radius: 2, x: 0, y: 1)
                                 }
                                 .padding(.vertical, 4)
                                 .padding(.horizontal, 8)
                                 .background(Color.white.opacity(0.2))
+                                .background(Color.black.opacity(0.2))
+                                .background(
+                                    BlurView(style: .light)
+                                )
                                 .cornerRadius(20)
+                                .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
                             }
                             .foregroundColor(.white)
                             .offset(y: isOnHome ? 0 : -80)
@@ -66,13 +72,19 @@ struct HomeTopBarSearch: View {
                             Button(action: {
                             }) {
                                 VStack {
-                                    Text("within 10 miles")
-                                        .font(.system(size: 13))
+                                    Text("~10 miles")
+                                        .font(.system(size: 14))
+                                        .shadow(color: Color.black.opacity(0.35), radius: 2, x: 0, y: 1)
                                 }
                                 .padding(.vertical, 4)
                                 .padding(.horizontal, 8)
                                 .background(Color.white.opacity(0.2))
+                                .background(Color.black.opacity(0.2))
+                                .background(
+                                    BlurView(style: .light)
+                                )
                                 .cornerRadius(20)
+                                .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
                             }
                             .foregroundColor(.white)
                             .offset(y: isOnHome ? 0 : -80)
@@ -89,7 +101,7 @@ struct HomeTopBarSearch: View {
                 SearchInput(
                     placeholder: "Current Location",
                     inputBackgroundColor: Color(.secondarySystemGroupedBackground).opacity(self.isEditing ? 1.0 : 0.5),
-                    icon: store.state.lastKnownLocation != nil ? "location.fill" : "location",
+                    icon: AnyView(Image(systemName: store.state.lastKnownLocation != nil ? "location.fill" : "location")),
                     showCancelInside: true,
                     onEditingChanged: { isEditing in
                         withAnimation(.spring()) {

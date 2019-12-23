@@ -41,11 +41,12 @@ struct BottomSheetView<Content: View>: View {
     init(
         isOpen: Binding<Bool>,
         maxHeight: CGFloat,
+        minHeight: CGFloat? = nil,
         snapRatio: CGFloat = 0.25,
         indicator: AnyView? = nil,
         @ViewBuilder content: () -> Content
     ) {
-        self.minHeight = maxHeight * ViewConstants.minHeightRatio
+        self.minHeight = minHeight ?? maxHeight * ViewConstants.minHeightRatio
         self.maxHeight = maxHeight
         self.snapRatio = snapRatio
         self.userIndicator = indicator
@@ -55,9 +56,12 @@ struct BottomSheetView<Content: View>: View {
     
     var body: some View {
         GeometryReader { geometry in
-            VStack(spacing: 0) {
-                self.indicator
+            ZStack {
                 self.content
+                VStack {
+                    self.indicator
+                    Spacer()
+                }
             }
             .frame(width: geometry.size.width, height: self.maxHeight, alignment: .top)
             .background(Color(.secondarySystemBackground))
@@ -65,7 +69,7 @@ struct BottomSheetView<Content: View>: View {
             .frame(height: geometry.size.height, alignment: .bottom)
             .shadow(color: Color.black.opacity(0.4), radius: 20, x: 0, y: 5)
             .offset(y: max(self.offset + self.translation, 0))
-            .animation(.interactiveSpring())
+            .animation(.spring())
             .gesture(
                 DragGesture().updating(self.$translation) { value, state, _ in
                     state = value.translation.height

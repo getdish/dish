@@ -9,19 +9,16 @@ struct HomeMapControls: View {
                     Button(action: {}) { Image(systemName: "plus.magnifyingglass") }
                         .buttonStyle(MapButtonStyle())
                         .cornerRadius(5, antialiased: true, corners: [.topLeft, .topRight])
-                        .shadow(color: Color.black.opacity(0.75), radius: 4, y: 2)
+                        .shadow(color: Color.black.opacity(0.25), radius: 4, y: 2)
                     Button(action: {}) { Image(systemName: "minus.magnifyingglass") }
                         .buttonStyle(MapButtonStyle())
                         .cornerRadius(5, antialiased: true, corners: [.bottomLeft, .bottomRight])
-                        .shadow(color: Color.black.opacity(0.75), radius: 4, y: 2)
+                        .shadow(color: Color.black.opacity(0.25), radius: 4, y: 2)
                 }
             }
             .padding()
-            .frame(maxHeight: .infinity)
-            
-            Spacer()
+            .padding(.top, Screen.statusBarHeight)
         }
-        .frame(maxHeight: .infinity)
     }
 }
 

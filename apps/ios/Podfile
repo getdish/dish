@@ -8,11 +8,11 @@ target 'new-dish' do
   # Pods for new-dishi
   pod 'GoogleMaps'
   pod 'GooglePlaces'
-  pod 'Firebase/Core'
-  pod 'Firebase/Analytics'
-  pod 'Firebase/Auth'
-  pod 'Firebase/Firestore'
-  pod 'Firebase/Storage'
   pod 'GoogleSignIn'
+  # pod 'Firebase/Core'
+  # pod 'Firebase/Analytics'
+  # pod 'Firebase/Auth'
+  # pod 'Firebase/Firestore'
+  # pod 'Firebase/Storage'
 
 end

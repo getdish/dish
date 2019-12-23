@@ -1,33 +1,35 @@
 import SwiftUI
 
-func getLandmarkId(_ landmark: Landmark) -> String {
-    "feature-\(landmark.id)"
+fileprivate func getId(_ dish: DishItem) -> String {
+    "feature-\(dish.id)"
 }
 
 struct FeatureCard: View, Equatable {
-    var landmark: Landmark
+    var dish: DishItem
+    var aspectRatio: CGFloat = 2 / 2.25
     let id: Int
     
-    init(landmark: Landmark) {
-        self.landmark = landmark
-        self.id = self.landmark.id
+    init(dish: DishItem, aspectRatio: CGFloat = 2 / 2.5) {
+        self.dish = dish
+        self.aspectRatio = aspectRatio
+        self.id = self.dish.id
     }
     
     var body: some View {
         print("render featurecard")
         return VStack {
-//            MagicItem(getLandmarkId(landmark), at: at) {
-                self.landmark.image
+//            MagicItem(getId(landmark), at: at) {
+                self.dish.image
                     .resizable()
-                    .aspectRatio(2 / 2.5, contentMode: .fit)
-                    .overlay(TextOverlay(landmark: self.landmark))
+                    .aspectRatio(aspectRatio, contentMode: .fit)
+                    .overlay(TextOverlay(name: self.dish.name))
 //            }
         }
     }
 }
 
 struct TextOverlay: View {
-    var landmark: Landmark
+    var name: String
     
     var gradient: LinearGradient {
         LinearGradient(
@@ -41,10 +43,10 @@ struct TextOverlay: View {
         ZStack(alignment: .bottomLeading) {
             Rectangle().fill(gradient)
             VStack(alignment: .leading) {
-                Text(landmark.name)
+                Text(name)
                     .font(.system(size: 20))
                     .bold()
-                //        Text(landmark.park)
+                //        Text(dish.park)
             }
             .padding()
         }
@@ -54,6 +56,6 @@ struct TextOverlay: View {
 
 struct FeatureCard_Previews: PreviewProvider {
     static var previews: some View {
-        FeatureCard(landmark: features[0])
+        FeatureCard(dish: features[0])
     }
 }
