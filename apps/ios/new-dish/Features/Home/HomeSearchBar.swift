@@ -13,18 +13,13 @@ struct HomeSearchBar: View {
                 borderColor: Color.gray.opacity(0.14),
                 scale: self.scrollAtTop ? 1.25 : 1.0,
                 sizeRadius: 2.0,
-                icon: Image(systemName: "chevron.left"),
-                onTapIcon: {
-                   print("okok")
-                },
+                icon: AnyView(
+                    Image(systemName: "chevron.left").onTapGesture {
+                        print("back")
+                    }
+                ),
                 showCancelInside: true,
-                searchText: self.$searchText,
-                pinnedText: "Pho"
-            )
-            
-            HStack {
-                Spacer()
-                HStack {
+                after: AnyView(
                     Image(systemName: "arrow.up.and.down.circle.fill")
                         .resizable()
                         .frame(width: 26, height: 26)
@@ -34,10 +29,10 @@ struct HomeSearchBar: View {
                             self.homeState.toggleMap()
                             
                     }
-                }
-                .cornerRadius(40)
-            }
-            .padding(.horizontal, 6)
+                ),
+                searchText: self.$searchText,
+                pinnedText: "Pho"
+            )
         }
     }
 }

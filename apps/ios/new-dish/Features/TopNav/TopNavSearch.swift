@@ -101,7 +101,7 @@ struct TopNavSearch: View {
                 SearchInput(
                     placeholder: "Current Location",
                     inputBackgroundColor: Color(.secondarySystemGroupedBackground).opacity(self.isEditing ? 1.0 : 0.5),
-                    icon: Image(systemName: store.state.lastKnownLocation != nil ? "location.fill" : "location"),
+                    icon: AnyView(Image(systemName: store.state.lastKnownLocation != nil ? "location.fill" : "location")),
                     showCancelInside: true,
                     onEditingChanged: { isEditing in
                         withAnimation(.spring()) {

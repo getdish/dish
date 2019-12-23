@@ -14,8 +14,7 @@ struct SearchInput: View {
     var blur = 0
     var scale = CGFloat(1)
     var sizeRadius = CGFloat(1)
-    var icon: Image = Image(systemName: "magnifyingglass")
-    var onTapIcon: (() -> Void)?
+    var icon: AnyView?
     var showCancelInside = false
     var onEditingChanged: ((Bool) -> Void)?
     var onCancel: (() -> Void)?
@@ -54,13 +53,8 @@ struct SearchInput: View {
             // Search view
             HStack {
                 HStack(spacing: 4 * scale) {
-                    icon
+                    (icon ?? AnyView(Image(systemName: "magnifyingglass")))
                         .frame(width: 24 * scale, height: 24 * scale)
-                        .onTapGesture {
-                            if let cb = self.onTapIcon {
-                                cb()
-                            }
-                    }
                     
                     if hasPinnedText {
                         Text(self.pinnedText)
