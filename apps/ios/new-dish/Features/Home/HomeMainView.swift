@@ -99,7 +99,7 @@ class HomeViewState: ObservableObject {
     }
     
     func debugString() -> String {
-        return """
+        """
         dragY \(self.dragY.rounded())
         searchY \(self.searchY.rounded())
         scrollY \(self.scrollY.rounded())
@@ -301,16 +301,18 @@ struct HomeCards: View {
 struct HomeCardsGrid: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
+    @Environment(\.geometry) var appGeometry
     
     let items = features.chunked(into: 2)
+    let spacing: CGFloat = 10
     
     var content: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: self.spacing) {
             ForEach(0 ..< self.items.count) { index in
-                HStack(spacing: 10) {
+                HStack(spacing: self.spacing) {
                     ForEach(self.items[index]) { item in
                         DishBrowseCard(dish: item)
-                            .frame(height: 180)
+                            .frame(width: (self.appGeometry?.size.width ?? Screen.width) / 2 - self.spacing * 2)
                             .onTapGesture {
                                 print("tap on item")
                                 self.store.send(
@@ -395,7 +397,7 @@ struct HomeCardsRow: View {
 struct DishBrowseCard: View {
     var dish: DishItem
     var body: some View {
-        FeatureCard(dish: dish, aspectRatio: 1)
+        FeatureCard(dish: dish, aspectRatio: 1.2)
             .cornerRadius(14)
     }
 }
