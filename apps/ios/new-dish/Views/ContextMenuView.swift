@@ -2,28 +2,22 @@ import SwiftUI
 import Combine
 
 class ContextMenuParentStore: ObservableObject {
-    @Published var items: [ContextMenuStore] = []
-    var cancel: AnyCancellable?
+    @Published var activeItem: ContextMenuStore? = nil
     
-    init() {
-        self.cancel = self.$items
-            .map { store in
-                print("got a context store! \(store)")
-            }.sink {}
+    func setActive(_ item: ContextMenuStore) {
+        if self.activeItem != item {
+            self.activeItem = item
+        }
     }
     
-    func addItem(_ item: ContextMenuStore) {
-        self.items.append(item)
-    }
-    
-    func removeItem(_ item: ContextMenuStore) {
-        self.items.removeAll(where: { $0 == item })
+    func setInactive(_ item: ContextMenuStore) {
+        self.activeItem = nil
     }
 }
 
 struct ContextMenuRootView<Content: View>: View {
     let content: Content
-    let contextMenuParentStore = ContextMenuParentStore()
+    @ObservedObject var store = ContextMenuParentStore()
     
     init(
         @ViewBuilder content: () -> Content
@@ -34,8 +28,14 @@ struct ContextMenuRootView<Content: View>: View {
     var body: some View {
         ZStack {
             self.content
+            
+            if store.activeItem != nil {
+                Color.blue.opacity(0.5)
+                store.activeItem?.menuContent
+                store.activeItem?.content
+            }
         }
-        .environmentObject(contextMenuParentStore)
+        .environmentObject(store)
     }
 }
 
@@ -50,13 +50,15 @@ class ContextMenuStore: ObservableObject, Equatable {
     }
     
     @Published var state: MenuState = .closed
+    @Published var content: AnyView = AnyView(Spacer())
+    @Published var menuContent: AnyView = AnyView(Spacer())
 }
 
 struct ContextMenuView<Content: View, MenuContent: View>: View {
     let content: Content
     let menuContent: MenuContent
     
-    @EnvironmentObject var contextMenuParentStore: ContextMenuParentStore
+    @EnvironmentObject var parentStore: ContextMenuParentStore
     @ObservedObject var store = ContextMenuStore()
     
     init(
@@ -65,6 +67,8 @@ struct ContextMenuView<Content: View, MenuContent: View>: View {
     ) {
         self.content = content()
         self.menuContent = menuContent()
+        self.store.content = AnyView(self.content)
+        self.store.menuContent = AnyView(self.content)
     }
     
     var body: some View {
@@ -73,30 +77,25 @@ struct ContextMenuView<Content: View, MenuContent: View>: View {
         return ZStack {
             self.content
         }
-        .onAppear {
-            self.contextMenuParentStore.addItem(self.store)
-        }
         .onDisappear {
-            self.contextMenuParentStore.removeItem(self.store)
+            self.parentStore.setInactive(self.store)
         }
         .onTapGesture {
             print("tap tap")
             self.store.state = state == .closed ? .open : .closed
+            if self.store.state != .closed {
+                self.parentStore.setActive(self.store)
+            }
         }
         .gesture(
             DragGesture(minimumDistance: 0, coordinateSpace: .local)
                 .onChanged({ value in
-                    print("change...")
                     self.store.state = .pressing
+                    self.parentStore.setActive(self.store)
                 }).onEnded({ value in
                     self.store.state = .closed
+                    self.parentStore.setInactive(self.store)
                 })
-        )
-            .overlay(
-                state == .closed ? nil : ZStack {
-                    Color.red
-                    self.menuContent
-                }
         )
     }
 }
