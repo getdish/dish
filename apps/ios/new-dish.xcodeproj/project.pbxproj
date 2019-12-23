@@ -79,6 +79,7 @@
 		AEF6557523B0411E00E49A51 /* dishData.json in Resources */ = {isa = PBXBuildFile; fileRef = AEF6557223B03F6F00E49A51 /* dishData.json */; };
 		AEF6557723B041C400E49A51 /* RestaurantItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557623B041C400E49A51 /* RestaurantItem.swift */; };
 		AEF6557923B041F600E49A51 /* DishItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557823B041F600E49A51 /* DishItem.swift */; };
+		AEF6557B23B042CD00E49A51 /* HomeSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */; };
 		D86ACF2A611C42837609F52F /* Pods_new_dish.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 747A16F1648AAEF4512E6322 /* Pods_new_dish.framework */; };
 /* End PBXBuildFile section */
 
@@ -160,6 +161,7 @@
 		AEF6557323B0407000E49A51 /* ImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStore.swift; sourceTree = "<group>"; };
 		AEF6557623B041C400E49A51 /* RestaurantItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantItem.swift; sourceTree = "<group>"; };
 		AEF6557823B041F600E49A51 /* DishItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishItem.swift; sourceTree = "<group>"; };
+		AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -289,6 +291,7 @@
 				1C3CFE6323998FF2004B2EEA /* HomeContainerView.swift */,
 				1CE354872398714D004B3A84 /* HomeView.swift */,
 				AE7563B323A035E70094022B /* HomeMainView.swift */,
+				AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */,
 				AE56C86323ADB78C006A156A /* HomeSearchResults.swift */,
 				AE861A7E23A07D81004096BF /* HomeMapControls.swift */,
 			);
@@ -555,6 +558,7 @@
 				AEBC5E1D23A6F0C70094B1BD /* DishGalleryView.swift in Sources */,
 				AE861A8923A172E8004096BF /* BlurView.swift in Sources */,
 				AE861A8723A1727B004096BF /* TopNavMenuButton.swift in Sources */,
+				AEF6557B23B042CD00E49A51 /* HomeSearchBar.swift in Sources */,
 				AEA331F923A3385000B36A23 /* InlineAlertView.swift in Sources */,
 				AEA331EF23A3371D00B36A23 /* DishSidebarView.swift in Sources */,
 				1CE2393123A19722006B7AFD /* Environment.swift in Sources */,

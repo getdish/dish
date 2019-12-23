@@ -14,13 +14,16 @@ struct SearchInput: View {
     var blur = 0
     var scale = CGFloat(1)
     var sizeRadius = CGFloat(1)
-    var icon = "magnifyingglass"
+    var icon: Image = Image(systemName: "magnifyingglass")
+    var onTapIcon: (() -> Void)?
     var showCancelInside = false
     var onEditingChanged: ((Bool) -> Void)?
     var onCancel: (() -> Void)?
     var after: AnyView?
     
     @Binding var searchText: String
+    var pinnedText = ""
+    
     @State private var showCancelButton: Bool = false
     
     func handleEditingChanged(isEditing: Bool) {
@@ -44,24 +47,40 @@ struct SearchInput: View {
     
     var body: some View {
         let pad = 8 * (scale + 0.5) * 0.5
+        let hasPinnedText = self.pinnedText != ""
+        let fontSize = 14 * scale
         
         return VStack {
             // Search view
             HStack {
                 HStack(spacing: 4 * scale) {
-                    Image(systemName: icon)
+                    icon
                         .frame(width: 24 * scale, height: 24 * scale)
+                        .onTapGesture {
+                            if let cb = self.onTapIcon {
+                                cb()
+                            }
+                    }
+                    
+                    if hasPinnedText {
+                        Text(self.pinnedText)
+                            .font(.system(size: fontSize))
+                            .foregroundColor(.white)
+                            .padding(4)
+                            .background(Color.init(red: 0.2, green: 0.4, blue: 0.7, opacity: 0.5))
+                            .cornerRadius(4)
+                    }
                     
                     TextField(
-                        self.placeholder,
+                        hasPinnedText ? "" : self.placeholder,
                         text: self.$searchText,
                         onEditingChanged: self.handleEditingChanged,
                         onCommit: {
                             print("onCommit")
-                    }
+                        }
                     )
                         .disableAutocorrection(true)
-                        .font(.system(size: 14 * scale))
+                        .font(.system(size: fontSize))
                         .foregroundColor(.primary)
                     
                     Button(action: {

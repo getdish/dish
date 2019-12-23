@@ -95,7 +95,7 @@ struct HomeMainView: View {
                             height: Screen.height,
                             darkMode: self.colorScheme == .dark
                         )
-                        HomeMapControls()
+//                        HomeMapControls()
                     }
                     .frame(height: state.mapHeight)
                     .cornerRadius(20)
@@ -161,7 +161,7 @@ struct HomeMainView: View {
                     .opacity(isOnSearchResults ? 0 : 1)
                     
                     VStack {
-                        GeometryReader { searchBarGeometry -> SearchBar in
+                        GeometryReader { searchBarGeometry -> HomeSearchBar in
                             if !self.isDragging {
                                 DispatchQueue.main.async {
                                     let frame = searchBarGeometry.frame(in: .global)
@@ -174,7 +174,7 @@ struct HomeMainView: View {
                                     }
                                 }
                             }
-                            return SearchBar()
+                            return HomeSearchBar()
                         }
                         .frame(height: 45)
                         Spacer()
@@ -205,42 +205,6 @@ struct HomeMainView: View {
             )
         }
         .environmentObject(self.state)
-    }
-}
-
-struct SearchBar: View {
-    @State var searchText = ""
-    @State var scrollAtTop = true
-    @EnvironmentObject var homeState: HomeViewState
-    
-    var body: some View {
-        ZStack {
-            SearchInput(
-                placeholder: "Pho, Burger, Wings...",
-                inputBackgroundColor: Color.white,
-                borderColor: Color.gray.opacity(0.14),
-                scale: self.scrollAtTop ? 1.25 : 1.0,
-                sizeRadius: 2.0,
-                searchText: self.$searchText
-            )
-            
-            HStack {
-                Spacer()
-                HStack {
-                    Image(systemName: "arrow.up.and.down.circle.fill")
-                        .resizable()
-                        .frame(width: 26, height: 26)
-                        .padding(4)
-                        .opacity(0.45)
-                        .onTapGesture {
-                            self.homeState.toggleMap()
-                            
-                    }
-                }
-                .cornerRadius(40)
-            }
-            .padding(.horizontal, 6)
-        }
     }
 }
 
