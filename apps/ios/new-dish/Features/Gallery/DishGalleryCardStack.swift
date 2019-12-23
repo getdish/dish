@@ -144,15 +144,15 @@ struct DishGalleryCardStackCards: View {
         let animation = cardStackStore.animation
         let index = cardStackStore.index
         let isIdle = animation.status == .idle
-        let curCard = DishGalleryCard(name: "Miss Saigon", active: true, landmark: items[index])
-        let prevCard = DishGalleryCard(landmark: items[max(0, index - 1)])
+        let curCard = DishGalleryCard(name: "Miss Saigon", active: true, dish: items[index])
+        let prevCard = DishGalleryCard(dish: items[max(0, index - 1)])
         
         print("render2 .. \(animation.status) to (\(animation.x), \(animation.y))")
         
         return ZStack {
             // below card
             if index < items.count - 1 {
-                DishGalleryCard(name: "Pho 2000", landmark: items[index + 1])
+                DishGalleryCard(name: "Pho 2000", dish: items[index + 1])
                     .rotationEffect(.degrees(animation.status == .idle ? 2.5 : 0.0))
                     .animation(.spring())
             }

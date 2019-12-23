@@ -3,23 +3,24 @@ import SwiftUI
 struct DishGalleryCard: View {
     var name: String? = nil
     var active = false
-    var landmark: DishItem
+    var dish: DishItem
+    var aspectRatio: CGFloat = 2 / 2.5
 
     var body: some View {
         VStack {
-            self.landmark.image
+            self.dish.image
                 .resizable()
-                .aspectRatio(2 / 2.5, contentMode: .fit)
+                .aspectRatio(aspectRatio, contentMode: .fit)
                 .overlay(
                     VStack {
                         TopFadeArea {
                             HStack {
                                 VStack(alignment: .leading) {
-                                    Text(self.name ?? self.landmark.name)
+                                    Text(self.name ?? self.dish.name)
                                         .font(.system(size: 26))
                                         .bold()
                                     Spacer().frame(height: 6)
-//                                    Text(self.landmark.park)
+//                                    Text(self.dish.park)
                                 }
                                 Spacer()
                             }
@@ -28,7 +29,7 @@ struct DishGalleryCard: View {
                         Spacer()
                         
                         BottomFadeArea {
-                            Text(self.landmark.name)
+                            Text(self.dish.name)
                                 .font(.system(size: 16))
                         }
                     }
@@ -93,7 +94,7 @@ struct BottomFadeArea<Content>: View where Content: View {
 #if DEBUG
 struct DishGalleryCard_Previews: PreviewProvider {
     static var previews: some View {
-        DishGalleryCard(landmark: features[0])
+        DishGalleryCard(dish: features[0])
             .embedInGeometryReader()
     }
 }

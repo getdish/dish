@@ -132,7 +132,7 @@ struct HomeMainView: View {
                     VStack {
                         Spacer().frame(height: state.mapHeight + 31)
                         // filters
-                        ScrollView(.horizontal, showsIndicators: false) {
+                        ZStack {
                             HStack {
                                 Text("🍽")
                                     .font(.system(size: 32))
@@ -143,17 +143,23 @@ struct HomeMainView: View {
                                 .sheet(
                                     isPresented: self.$showTypeMenu
                                 ) { Text("Popover") }
-                                
-                                Spacer().frame(width: 10)
-                                FilterButton(label: "American", action: {})
-                                FilterButton(label: "Thai", action: {})
-                                FilterButton(label: "Chinese", action: {})
-                                FilterButton(label: "Italian", action: {})
-                                FilterButton(label: "French", action: {})
-                                FilterButton(label: "Burmese", action: {})
-                                FilterButton(label: "Greek", action: {})
+                                Spacer()
                             }
                             .padding(.horizontal)
+
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack {
+                                    Spacer().frame(width: 50)
+                                    FilterButton(label: "American", action: {})
+                                    FilterButton(label: "Thai", action: {})
+                                    FilterButton(label: "Chinese", action: {})
+                                    FilterButton(label: "Italian", action: {})
+                                    FilterButton(label: "French", action: {})
+                                    FilterButton(label: "Burmese", action: {})
+                                    FilterButton(label: "Greek", action: {})
+                                }
+                                .padding(.horizontal)
+                            }
                         }
                         Spacer()
                     }
@@ -239,8 +245,8 @@ struct HomeCardsGrid: View {
             ForEach(0 ..< self.items.count) { index in
                 HStack(spacing: 10) {
                     ForEach(self.items[index]) { item in
-                        DishBrowseCard(landmark: item)
-                            .frame(height: 200)
+                        DishBrowseCard(dish: item)
+                            .frame(height: 180)
                             .onTapGesture {
                                 print("tap on item")
                                 self.store.send(
@@ -287,7 +293,7 @@ struct HomeCardsRow: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
                 ForEach(features) { item in
-                    DishBrowseCard(landmark: item)
+                    DishBrowseCard(dish: item)
                         .frame(width: 100, height: cardRowHeight - 40)
                 }
             }
@@ -297,9 +303,9 @@ struct HomeCardsRow: View {
 }
 
 struct DishBrowseCard: View {
-    var landmark: DishItem
+    var dish: DishItem
     var body: some View {
-        FeatureCard(landmark: landmark)
+        FeatureCard(dish: dish, aspectRatio: 1)
             .cornerRadius(14)
     }
 }
