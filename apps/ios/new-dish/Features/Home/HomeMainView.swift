@@ -131,7 +131,9 @@ struct HomeMainView: View {
                         }
                         .mask(
                             self.state.isSnappedToBottom ?
-                                Color.white :
+                                // no alpha mask
+                                LinearGradient(gradient: .init(colors: [Color.white]), startPoint: .top, endPoint: .bottom) :
+                                // alpha mask
                                 LinearGradient(
                                     gradient: .init(colors: [
                                         Color.white.opacity(0),
