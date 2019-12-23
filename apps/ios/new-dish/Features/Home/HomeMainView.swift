@@ -6,7 +6,7 @@ fileprivate let cardRowHeight: CGFloat = 160
 
 class HomeViewState: ObservableObject {
     enum DragState { case on, idle, off }
-
+    
     @Published var dragState: DragState = .idle
     @Published var appHeight: CGFloat = 0
     @Published var scrollY: CGFloat = 0
@@ -17,7 +17,7 @@ class HomeViewState: ObservableObject {
     var mapInitialHeight: CGFloat {
         appHeight * 0.3
     }
-
+    
     var mapHeight: CGFloat {
         if isSnappedToBottom {
             return snappedToBottomMapHeight
@@ -36,7 +36,7 @@ class HomeViewState: ObservableObject {
     var y: CGFloat {
         max(-100, searchY + dragY + scrollY)
     }
-
+    
     func finishDrag() {
         self.searchY = self.dragY + self.searchY
         self.dragY = 0
@@ -66,7 +66,7 @@ class HomeViewState: ObservableObject {
         if willSnapUp || willSnapDown {
             print("SNAPPIN \(y) ----- down? \(willSnapDown)")
         }
-
+        
         if willSnapDown {
             self.snapToBottom(true)
             self.dragState = .off
@@ -206,15 +206,23 @@ struct HomeMainView: View {
                             }
                             
                             HStack {
-                                Text("🍽")
-                                    .font(.system(size: 32))
-                                    .padding(.horizontal, 2)
-                                    .onTapGesture {
-                                        self.showTypeMenu = true
+                                ContextMenuView(menuContent: {
+                                    List {
+                                        Text("Item One")
+                                        Text("Item Two")
+                                        Text("Item Three")
+                                    }
+                                }) {
+                                    Text("🍽")
+                                        .font(.system(size: 32))
+                                        .padding(.horizontal, 2)
+                                        .onTapGesture {
+                                            self.showTypeMenu = true
+                                    }
                                 }
-                                .sheet(
-                                    isPresented: self.$showTypeMenu
-                                ) { Text("Popover") }
+                                //                                .sheet(
+                                //                                    isPresented: self.$showTypeMenu
+                                //                                ) { Text("Popover") }
                                 Spacer()
                             }
                             .padding(.horizontal)
@@ -225,7 +233,7 @@ struct HomeMainView: View {
                     .opacity(isOnSearchResults ? 0 : 1)
                     
                     // keyboard dismiss
-//                    Color.black.opacity(0.0001)
+                    //                    Color.black.opacity(0.0001)
                     
                     VStack {
                         GeometryReader { searchBarGeometry -> HomeSearchBar in
@@ -247,8 +255,8 @@ struct HomeMainView: View {
                     }
                     .padding(.horizontal, 10)
                     .offset(y: state.mapHeight - 23 - searchDragExtraY)
-                    // searchinput always light
-                    .environment(\.colorScheme, .light)
+                        // searchinput always light
+                        .environment(\.colorScheme, .light)
                 }
                     // everything below map is always dark
                     .environment(\.colorScheme, .dark)
