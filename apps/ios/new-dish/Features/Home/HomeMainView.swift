@@ -40,6 +40,11 @@ class HomeViewState: ObservableObject {
     func finishDrag() {
         self.searchY = self.dragY + self.searchY
         self.dragY = 0
+        self.dragState = .idle
+        // if they dragged a little and let go before snapping back up, reset
+        if isSnappedToBottom {
+            self.setSnappedToBottomY()
+        }
     }
     
     func toggleMap() {
@@ -51,7 +56,7 @@ class HomeViewState: ObservableObject {
         }
     }
     
-    func drag(_ y: CGFloat) -> Bool {
+    func drag(_ y: CGFloat) {
         let wasSnappedToBottom = isSnappedToBottom
         self.dragY = y
         
@@ -64,32 +69,43 @@ class HomeViewState: ObservableObject {
 
         if willSnapDown {
             self.snapToBottom(true)
-            return true
+            self.dragState = .off
         } else if willSnapUp {
             self.snapToBottom(false)
+            self.dragState = .off
         } else {
             self.snappedToBottomMapHeight = self.mapHeight
+            self.dragState = .on
         }
-
-        return false
     }
     
     func snapToBottom(_ toBottom: Bool) {
-        // on snap, turn off dragging until next grab
-        self.dragState = .off
-
         withAnimation(.spring()) {
             // then animate
             if toBottom {
                 self.snappedToBottomMapHeight = appHeight - 200
-                // were saying, you need to drag it 100px before it snaps back up
-                self.searchY = snapToBottomAt + 100
-                self.dragY = 0
+                self.setSnappedToBottomY()
             } else {
                 self.searchY = snapToBottomAt - 1
                 self.dragY = 0
             }
         }
+    }
+    
+    func setSnappedToBottomY() {
+        // were saying, you need to drag it 100px before it snaps back up
+        self.searchY = snapToBottomAt + 100
+        self.dragY = 0
+    }
+    
+    func debugString() -> String {
+        return """
+        dragY \(self.dragY.rounded())
+        searchY \(self.searchY.rounded())
+        scrollY \(self.scrollY.rounded())
+        y \(self.y.rounded())
+        dishMapHeight \(self.mapHeight.rounded())
+        """
     }
 }
 
@@ -119,8 +135,7 @@ struct HomeMainView: View {
             ? -state.dragY / 2
             : 0
         
-        print("dragSearchResistY \(searchDragExtraY)")
-        print("STATE dragY \(state.dragY) searchY \(state.searchY) scrollY \(state.scrollY) y \(state.y) dishMapHeight \(state.mapHeight)")
+        print("RENDER \(state.debugString())")
         
         return GeometryReader { geometry in
             ZStack {
@@ -217,7 +232,6 @@ struct HomeMainView: View {
                             if dragState != .on {
                                 DispatchQueue.main.async {
                                     let frame = searchBarGeometry.frame(in: .global)
-                                    print("update search bar \(frame.minY) \(frame.maxY)")
                                     if frame.minY != self.searchBarMinY {
                                         self.searchBarMinY = frame.minY
                                     }
@@ -244,24 +258,18 @@ struct HomeMainView: View {
             .simultaneousGesture(
                 DragGesture()
                     .onChanged { value in
-                        // disable drag on off
-                        if state.dragState == .off {
-                            return
-                        }
-                        
-                        // why is this off 80???
-                        if self.isWithinSearchBar(value.location.y - 40) || dragState == .on {
-                            let didSnap = self.state.drag(value.translation.height)
-                            if didSnap {
-                                // prevent any more dragging
-                                state.dragState = .off
-                            } else {
-                                state.dragState = .on
+                        DispatchQueue.main.async {
+                            // disable drag on off
+                            if state.dragState == .off {
+                                return
+                            }
+                            // why is this off 80???
+                            if self.isWithinSearchBar(value.location.y - 40) || dragState == .on {
+                                self.state.drag(value.translation.height)
                             }
                         }
                 }
                 .onEnded { value in
-                    state.dragState = .idle
                     self.state.finishDrag()
                 }
             )
@@ -331,7 +339,7 @@ struct HomeCardsGrid: View {
                         let y = max(0, min(100, realY)).rounded()
                         if y != self.homeState.scrollY {
                             // attempting to have a scroll effect but its complex...
-                            print("set now to \(y) ....... frameY \(frameY), scrollY = \(scrollY)")
+                            print("scrollY \(y) ....... frameY \(frameY), scrollY = \(scrollY)")
                             //                            self.homeState.scrollY = y
                         }
                     })
