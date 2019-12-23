@@ -1,5 +1,9 @@
 import SwiftUI
 
+fileprivate let bottomNavHeight: CGFloat = 115
+fileprivate let filterBarHeight: CGFloat = 82
+fileprivate let cardRowHeight: CGFloat = 160
+
 class HomeViewState: ObservableObject {
     @Published var appHeight: CGFloat = 0
     @Published var scrollY: CGFloat = 0
@@ -54,7 +58,6 @@ class HomeViewState: ObservableObject {
     }
 }
 
-fileprivate let cardRowHeight: CGFloat = 160
 fileprivate let homeViewState = HomeViewState()
 
 struct HomeMainView: View {
@@ -86,7 +89,7 @@ struct HomeMainView: View {
                         if let g = self.appGeometry {
                             state.appHeight = g.size.height
                         }
-                    }
+                }
                 
                 VStack {
                     ZStack {
@@ -95,7 +98,7 @@ struct HomeMainView: View {
                             height: Screen.height,
                             darkMode: self.colorScheme == .dark
                         )
-//                        HomeMapControls()
+                        //                        HomeMapControls()
                     }
                     .frame(height: state.mapHeight)
                     .cornerRadius(20)
@@ -126,7 +129,19 @@ struct HomeMainView: View {
                                 }
                             }
                         }
-                        .clipped()
+                        .mask(
+                            self.state.isSnappedToBottom ?
+                                Color.white :
+                                LinearGradient(
+                                    gradient: .init(colors: [
+                                        Color.white.opacity(0),
+                                        Color.black
+                                    ]),
+                                    startPoint: .top,
+                                    endPoint: .center
+                            )
+                        )
+                            .clipped()
                     }
                     
                     VStack {
@@ -187,11 +202,11 @@ struct HomeMainView: View {
                     }
                     .padding(.horizontal, 10)
                     .offset(y: state.mapHeight - 23)
-                    // searchinput always light
-                    .environment(\.colorScheme, .light)
+                        // searchinput always light
+                        .environment(\.colorScheme, .light)
                 }
-                // everything below map is always dark
-                .environment(\.colorScheme, .dark)
+                    // everything below map is always dark
+                    .environment(\.colorScheme, .dark)
             }
             .clipped()
             .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
@@ -276,12 +291,13 @@ struct HomeCardsGrid: View {
                         if y != self.homeState.scrollY {
                             // attempting to have a scroll effect but its complex...
                             print("set now to \(y) ....... frameY \(frameY), scrollY = \(scrollY)")
-//                            self.homeState.scrollY = y
+                            //                            self.homeState.scrollY = y
                         }
                     })
-
-                    Spacer().frame(height: 70)
+                    
+                    Spacer().frame(height: filterBarHeight)
                     self.content
+                    Spacer().frame(height: bottomNavHeight)
                 }
             }
         }
@@ -296,6 +312,8 @@ struct HomeCardsRow: View {
                     DishBrowseCard(dish: item)
                         .frame(width: 100, height: cardRowHeight - 40)
                 }
+                
+                Spacer().frame(height: bottomNavHeight)
             }
             .padding(.horizontal)
         }

@@ -40,6 +40,7 @@ enum AppAction {
     case changeHomePage(_ page: HomePageView)
     case setShowDrawer(_ val: Bool)
     case pushHomeState(_ state: HomeState)
+    case popHomeState
     case toggleDrawer
     case goToCurrentLocation
     case setLastKnownLocation(_ location: CLLocation?)
@@ -71,6 +72,8 @@ let appReducer = Reducer<AppState, AppAction> { state, action in
             state.galleryDish = nil
         case let .pushHomeState(homeState):
             state.homeState.append(homeState)
+        case .popHomeState:
+            state.homeState = state.homeState.dropLast()
         
     }
 }

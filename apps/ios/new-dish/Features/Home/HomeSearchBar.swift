@@ -11,7 +11,7 @@ struct HomeSearchBar: View {
     }
     
     var body: some View {
-        return SearchInput(
+        SearchInput(
             placeholder: "Pho, Burger, Wings...",
             inputBackgroundColor: Color.white,
             borderColor: Color.gray.opacity(0.14),
@@ -29,7 +29,7 @@ struct HomeSearchBar: View {
         if store.state.homeState.count > 1 {
             return AnyView(
                 Image(systemName: "chevron.left").onTapGesture {
-                    print("back")
+                    self.store.send(.popHomeState)
                 }
             )
         } else {
