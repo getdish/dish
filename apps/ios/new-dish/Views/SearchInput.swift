@@ -85,14 +85,14 @@ struct SearchInput: View {
                             .frame(width: 24 * scale, height: 24 * scale)
                     }
                     
-                    if after != nil {
-                        after
-                            .frame(width: 24 * scale, height: 24 * scale)
-                    }
-                    
                     if showCancelButton && showCancelInside {
                         cancelButton
                             .scaleEffect(0.9)
+                    }
+                    
+                    if after != nil {
+                        after
+                            .frame(width: 24 * scale, height: 24 * scale)
                     }
                 }
                     .padding(EdgeInsets(
