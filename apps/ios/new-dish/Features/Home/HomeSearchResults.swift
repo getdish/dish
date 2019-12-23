@@ -6,7 +6,9 @@ struct HomeSearchResults: View {
     
     var body: some View {
         VStack {
-            Text("")
+            Text("Pho")
+                .font(.system(size: 18))
+                .fontWeight(.semibold)
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {

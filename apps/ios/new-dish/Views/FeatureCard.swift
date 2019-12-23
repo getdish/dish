@@ -1,14 +1,14 @@
 import SwiftUI
 
-func getLandmarkId(_ landmark: Landmark) -> String {
+func getLandmarkId(_ landmark: DishItem) -> String {
     "feature-\(landmark.id)"
 }
 
 struct FeatureCard: View, Equatable {
-    var landmark: Landmark
+    var landmark: DishItem
     let id: Int
     
-    init(landmark: Landmark) {
+    init(landmark: DishItem) {
         self.landmark = landmark
         self.id = self.landmark.id
     }

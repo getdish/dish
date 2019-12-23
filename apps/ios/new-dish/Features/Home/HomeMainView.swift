@@ -333,7 +333,7 @@ struct HomeCardsRow: View {
 }
 
 struct DishBrowseCard: View {
-    var landmark: Landmark
+    var landmark: DishItem
     var body: some View {
         FeatureCard(landmark: landmark)
             .cornerRadius(14)

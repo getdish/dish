@@ -29,7 +29,7 @@ struct AppState {
     var hasChangedLocationOnce = false
     
     // gallery
-    var galleryDish: Landmark? = nil
+    var galleryDish: DishItem? = nil
 }
 
 struct HomeState {
@@ -45,7 +45,7 @@ enum AppAction {
     case setLastKnownLocation(_ location: CLLocation?)
     case setLocationSearch(_ search: String)
     case setLocationSearchResults(_ locations: [CLLocation])
-    case setGalleryDish(_ dish: Landmark?)
+    case setGalleryDish(_ dish: DishItem?)
     case closeGallery
 }
 

@@ -21,7 +21,7 @@ struct TopNav: View {
                             endPoint: .top
                         )
                 )
-                    .frame(height: 180)
+                    .frame(height: 140)
                 Spacer()
             }
             

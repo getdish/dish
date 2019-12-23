@@ -2,7 +2,7 @@ import SwiftUI
 
 struct DishGalleryCardStack: View {
     var name: String
-    var items: [Landmark]
+    var items: [DishItem]
     
     @Environment(\.geometry) var appGeometry
     
@@ -84,12 +84,12 @@ struct CardAnimation {
 }
 
 class CardStackStore: ObservableObject {
-    var items: [Landmark]
+    var items: [DishItem]
     @Published var index: Int = 0
     @Published var animation: CardAnimation = CardAnimation(x: 0, target: .cur)
     var geometry: GeometryProxy? = nil
     
-    init(items: [Landmark], geometry: GeometryProxy?) {
+    init(items: [DishItem], geometry: GeometryProxy?) {
         self.items = items
         self.geometry = geometry
     }

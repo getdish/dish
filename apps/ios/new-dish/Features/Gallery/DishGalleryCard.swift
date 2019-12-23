@@ -3,7 +3,7 @@ import SwiftUI
 struct DishGalleryCard: View {
     var name: String? = nil
     var active = false
-    var landmark: Landmark
+    var landmark: DishItem
 
     var body: some View {
         VStack {
@@ -19,7 +19,7 @@ struct DishGalleryCard: View {
                                         .font(.system(size: 26))
                                         .bold()
                                     Spacer().frame(height: 6)
-                                    Text(self.landmark.park)
+//                                    Text(self.landmark.park)
                                 }
                                 Spacer()
                             }

@@ -17,6 +17,7 @@ struct HomeMapControls: View {
                 }
             }
             .padding()
+            .padding(.top, Screen.statusBarHeight)
         }
     }
 }
