@@ -2,7 +2,9 @@ import SwiftUI
 
 fileprivate let bottomNavHeight: CGFloat = 115
 fileprivate let filterBarHeight: CGFloat = 82
-fileprivate let cardRowHeight: CGFloat = 160
+
+// used in search results for now...
+let cardRowHeight: CGFloat = 160
 
 class HomeViewState: ObservableObject {
     enum DragState { case on, idle, off }
@@ -99,13 +101,15 @@ class HomeViewState: ObservableObject {
     }
     
     func debugString() -> String {
-        """
-        dragY \(self.dragY.rounded())
-        searchY \(self.searchY.rounded())
-        scrollY \(self.scrollY.rounded())
-        y \(self.y.rounded())
-        dishMapHeight \(self.mapHeight.rounded())
-        """
+        ""
+        // xcode bug cant do live preview with this uncommented
+//        """
+//        dragY \(self.dragY.rounded())
+//        searchY \(self.searchY.rounded())
+//        scrollY \(self.scrollY.rounded())
+//        y \(self.y.rounded())
+//        dishMapHeight \(self.mapHeight.rounded())
+//        """
     }
 }
 
@@ -129,6 +133,7 @@ struct HomeMainView: View {
         let isOnSearchResults = self.store.state.homeState.count > 1
         let state = self.state
         let dragState = state.dragState
+        let mapHeight = isOnSearchResults ? 160 : state.mapHeight
         
         // indicates were dragging
         let searchDragExtraY = state.isSnappedToBottom && dragState != .off
@@ -155,9 +160,10 @@ struct HomeMainView: View {
                         )
                         //                        HomeMapControls()
                     }
-                    .frame(height: state.mapHeight)
+                    .frame(height: mapHeight)
                     .cornerRadius(20)
                     .clipped()
+                    .animation(.spring(response: 0.3333))
                     
                     Spacer()
                 }
@@ -165,30 +171,38 @@ struct HomeMainView: View {
                 // everything below the map
                 ZStack {
                     VStack {
-                        Spacer().frame(height: state.mapHeight - cardRowHeight)
+                        Spacer()
+                            .frame(height: mapHeight - cardRowHeight)
                         
                         ZStack {
                             // home
                             HomeCards(isHorizontal: self.state.isSnappedToBottom)
-                                .offset(y: isOnSearchResults ? Screen.height : 0)
+                                .offset(y: isOnSearchResults ? 100 : 0)
+                                .opacity(isOnSearchResults ? 0 : 1)
                                 .animation(.spring())
                             
                             // pages as you drill in below home
                             if isOnSearchResults {
-                                ForEach(1 ..< self.store.state.homeState.count) { index in
-                                    HomeSearchResults(
-                                        state: self.store.state.homeState[index],
-                                        height: Screen.height - state.mapHeight - 120
-                                    )
-                                        .offset(y: 40)
+                                VStack {
+                                    Spacer().frame(height: cardRowHeight)
+
+                                    ForEach(1 ..< self.store.state.homeState.count) { index in
+                                        HomeSearchResults(
+                                            state: self.store.state.homeState[index]
+                                        )
+                                            .offset(y: isOnSearchResults ? 0 : 100)
+                                            .opacity(isOnSearchResults ? 1 : 0)
+                                            .animation(.spring())
+                                    }
                                 }
                             }
                         }
                         .clipped()
+                        .animation(.spring(response: 0.3333))
                     }
                     
                     VStack {
-                        Spacer().frame(height: state.mapHeight + 31)
+                        Spacer().frame(height: mapHeight + 31)
                         // filters
                         ZStack {
                             ScrollView(.horizontal, showsIndicators: false) {
@@ -238,6 +252,8 @@ struct HomeMainView: View {
                             }
                             .padding(.horizontal)
                         }
+                        .animation(.spring(response: 0.3333))
+                        
                         Spacer()
                     }
                     .offset(y: isOnSearchResults ? -100 : 0)
@@ -265,7 +281,7 @@ struct HomeMainView: View {
                         Spacer()
                     }
                     .padding(.horizontal, 10)
-                    .offset(y: state.mapHeight - 23 - searchDragExtraY)
+                    .offset(y: mapHeight - 23 - searchDragExtraY)
                         // searchinput always light
                         .environment(\.colorScheme, .light)
                 }
@@ -404,6 +420,7 @@ struct HomeCardsRow: View {
                 ForEach(features) { item in
                     DishBrowseCard(dish: item)
                         .frame(width: 100, height: cardRowHeight - 40)
+                        .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
                 }
                 
                 Spacer().frame(height: bottomNavHeight)

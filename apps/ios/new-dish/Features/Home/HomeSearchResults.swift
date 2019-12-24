@@ -2,34 +2,53 @@ import SwiftUI
 
 struct HomeSearchResults: View {
     var state: HomeState
-    var height: CGFloat = 320
+    let items = restaurants
     
     var body: some View {
         VStack {
-            Text("Pho")
-                .font(.system(size: 18))
-                .fontWeight(.semibold)
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
-                    ForEach(0 ..< 5) { item in
-                        DishRestaurantCard()
-                            .frame(height: self.height)
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack {
+                    Spacer().frame(height: cardRowHeight)
+
+                    ForEach(items) { item in
+                        DishRestaurantCard(restaurant: item)
                     }
                 }
-                .padding(.horizontal, 20)
+                .padding(16)
             }
         }
     }
 }
 
 struct DishRestaurantCard: View {
+    @ObservedObject var restaurant: RestaurantItem
+
     var body: some View {
-        Image("hiddenlake.jpg")
-            .resizable()
-            .aspectRatio(2 / 2.25, contentMode: .fit)
-            .overlay(TextOverlay(name: "Miss Siagon"))
-            .cornerRadius(14)
+        ZStack {
+            restaurant.image
+                .resizable()
+                .aspectRatio(2 / 2.25, contentMode: .fit)
+                .overlay(TextOverlay(name: "Miss Siagon"))
+                .cornerRadius(14)
+            
+            // left right pagination
+            
+            HStack {
+                Color.black.opacity(0.0001)
+                    .onTapGesture {
+                        print("prev!")
+                        self.restaurant.prev()
+                    }
+                
+                Color.clear
+                
+                Color.black.opacity(0.0001)
+                    .onTapGesture {
+                        print("next!")
+                        self.restaurant.next()
+                }
+            }
+        }
     }
 }
 
