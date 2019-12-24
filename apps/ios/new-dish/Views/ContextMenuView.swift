@@ -27,57 +27,12 @@ struct ContextMenuRootView<Content: View>: View {
     
     var body: some View {
         let activeItem = store.activeItem
-        
         return ZStack {
             self.content
-            
-            if activeItem != nil {
-                Color.black.opacity(0.5)
-                ContextMenuOpenView(item: activeItem!)
-            }
+            ContextMenuOpenView(item: activeItem)
         }
         .edgesIgnoringSafeArea(.all)
         .environmentObject(store)
-    }
-}
-
-struct ContextMenuOpenView: View {
-    let item: ContextMenuStore
-    
-    func getMenuBoundingBox() -> CGRect {
-        let contentPos = item.contentPosition        
-        let spaceAbove = contentPos.minY
-        let spaceBelow = Screen.height - contentPos.maxY
-        let isAbove = spaceAbove > spaceBelow
-        let height = max(spaceAbove, spaceBelow) - 20
-        let width = Screen.width - 40
-        if isAbove {
-            return CGRect(x: 20, y: 20, width: width, height: height)
-        } else {
-            return CGRect(x: 20, y: contentPos.maxY + 20, width: width, height: height)
-        }
-    }
-    
-    var body: some View {
-        let pos = item.contentPosition
-        let bb = getMenuBoundingBox()
-        return ZStack {
-            HStack {
-                VStack {
-                    item.content.offset(x: pos.minX, y: pos.minY)
-                    Spacer()
-                }
-                Spacer()
-            }
-            
-            VStack {
-                item.menuContent
-            }
-            .offset(x: bb.minX, y: bb.minY)
-            .frame(width: bb.width, height: bb.height)
-            .background(Color.white)
-            .cornerRadius(20)
-        }
     }
 }
 
@@ -95,6 +50,114 @@ class ContextMenuStore: ObservableObject, Equatable {
     var content: AnyView = AnyView(Spacer())
     var menuContent: AnyView = AnyView(Spacer())
     var contentPosition = CGRect()
+}
+
+fileprivate let defaultContextStore = ContextMenuStore()
+
+class ContextMenuOpenStore: ObservableObject {
+    @Published var item = defaultContextStore
+    
+    func open(_ item: ContextMenuStore) {
+        withAnimation {
+            self.item = item
+        }
+    }
+    
+    func close() {
+        withAnimation {
+            self.item = defaultContextStore
+        }
+    }
+}
+
+struct ContextMenuOpenView: View {
+    @ObservedObject var store: ContextMenuOpenStore
+    @State var menuFrame = CGRect()
+    
+    init(item: ContextMenuStore?) {
+        let store = ContextMenuOpenStore()
+        self.store = store
+        
+        if let i = item {
+            DispatchQueue.main.async {
+                store.open(i)
+            }
+        }
+    }
+    
+    func getMenuBoundingBox() -> CGRect {
+        let edgePad: CGFloat = 20
+        let contentPos = self.store.item.contentPosition
+        let spaceAbove = contentPos.minY
+        let spaceBelow = Screen.height - contentPos.maxY
+        let isAbove = spaceAbove > spaceBelow
+        let height = max(spaceAbove, spaceBelow) - edgePad * 2
+        let width = Screen.width - edgePad * 2
+        print("content \(contentPos)")
+        if isAbove {
+            return CGRect(x: 20, y: 20, width: width, height: height)
+        } else {
+            return CGRect(x: 20, y: contentPos.maxY + 20, width: width, height: height)
+        }
+    }
+    
+    var body: some View {
+        let item = self.store.item
+        let pos = item.contentPosition
+        let bb = getMenuBoundingBox()
+        let isActive = item != defaultContextStore
+        
+        return ZStack {
+            if isActive {
+                Color.black
+                    .opacity(0.5)
+                    .transition(.opacity)
+                    .onTapGesture {
+                        self.store.close()
+                    }
+            }
+
+            HStack {
+                VStack {
+                    if isActive {
+                        item.content
+                            .offset(x: pos.minX, y: pos.minY)
+                            .transition(.opacity)
+                    }
+                    Spacer()
+                }
+                Spacer()
+            }
+            
+            item.menuContent.opacity(0)
+                .background(
+                    GeometryReader { geometry -> Color in
+                        DispatchQueue.main.async {
+                            self.menuFrame = geometry.frame(in: .global)
+                        }
+                        return Color.clear
+                    }
+                )
+            
+            HStack {
+                VStack {
+                    if isActive {
+                        VStack {
+                            item.menuContent
+                        }
+                        .frame(width: bb.width, height: min(bb.height, self.menuFrame.height))
+                        .background(BlurView(style: .systemChromeMaterial))
+                        .background(Color.white.opacity(0.1))
+                        .cornerRadius(20)
+                        .offset(x: bb.minX, y: bb.minY)
+                        .transition(.slide)
+                    }
+                    Spacer()
+                }
+                Spacer()
+            }
+        }
+    }
 }
 
 struct ContextMenuView<Content: View, MenuContent: View>: View {
@@ -118,25 +181,32 @@ struct ContextMenuView<Content: View, MenuContent: View>: View {
         let state = self.store.state
         
         return ZStack {
-            self.content
-                .background(
-                    GeometryReader { geometry -> Color in
-                        DispatchQueue.main.async {
-                            self.store.contentPosition = geometry.frame(in: .global)
+            Button(action: {
+                // for some reason this never runs, neither onTapGesture
+            }) {
+                self.content
+                    .background(
+                        GeometryReader { geometry -> Color in
+                            DispatchQueue.main.async {
+                                self.store.contentPosition = geometry.frame(in: .global)
+                            }
+                            return Color.clear
                         }
-                        return Color.clear
-                    }
                 )
+            }
         }
+        .overlay(
+            // only way i can get taps working here
+            Color.black.opacity(0.0001).onTapGesture {
+                print("tap tap")
+                self.store.state = state == .closed ? .open : .closed
+                if self.store.state != .closed {
+                    self.parentStore.setActive(self.store)
+                }
+            }
+        )
         .onDisappear {
             self.parentStore.setInactive(self.store)
-        }
-        .onTapGesture {
-            print("tap tap")
-            self.store.state = state == .closed ? .open : .closed
-            if self.store.state != .closed {
-                self.parentStore.setActive(self.store)
-            }
         }
         .gesture(
             DragGesture(minimumDistance: 0, coordinateSpace: .local)

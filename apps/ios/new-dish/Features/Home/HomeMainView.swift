@@ -212,6 +212,7 @@ struct HomeMainView: View {
                                         Text("Item Two")
                                         Text("Item Three")
                                     }
+                                    .frame(height: 150) // todo how to get lists that shrink
                                 }) {
                                     Text("🍽")
                                         .font(.system(size: 32))
