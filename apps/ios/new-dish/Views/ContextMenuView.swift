@@ -19,17 +19,14 @@ struct ContextMenuRootView<Content: View>: View {
     let content: Content
     @ObservedObject var store = ContextMenuParentStore()
     
-    init(
-        @ViewBuilder content: () -> Content
-    ) {
+    init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
     
     var body: some View {
-        let activeItem = store.activeItem
-        return ZStack {
+        ZStack {
             self.content
-            ContextMenuOpenView(item: activeItem)
+            ContextMenuDisplay(item: store.activeItem)
         }
         .edgesIgnoringSafeArea(.all)
         .environmentObject(store)
@@ -58,19 +55,22 @@ class ContextMenuOpenStore: ObservableObject {
     @Published var item = defaultContextStore
     
     func open(_ item: ContextMenuStore) {
+        print("opening \(item)")
         withAnimation {
             self.item = item
         }
     }
     
     func close() {
+        print("closing...")
+        self.item.state = .closed
         withAnimation {
             self.item = defaultContextStore
         }
     }
 }
 
-struct ContextMenuOpenView: View {
+struct ContextMenuDisplay: View {
     @ObservedObject var store: ContextMenuOpenStore
     @State var menuFrame = CGRect()
     
@@ -93,9 +93,11 @@ struct ContextMenuOpenView: View {
         let isAbove = spaceAbove > spaceBelow
         let height = max(spaceAbove, spaceBelow) - edgePad * 2
         let width = Screen.width - edgePad * 2
-        print("content \(contentPos)")
         if isAbove {
-            return CGRect(x: 20, y: 20, width: width, height: height)
+            let menuHeight = menuFrame.maxY - menuFrame.minY
+            let buttonMinY = contentPos.minY
+            let y = buttonMinY - menuHeight - 20
+            return CGRect(x: 20, y: y, width: width, height: height)
         } else {
             return CGRect(x: 20, y: contentPos.maxY + 20, width: width, height: height)
         }
@@ -150,7 +152,7 @@ struct ContextMenuOpenView: View {
                         .background(Color.white.opacity(0.1))
                         .cornerRadius(20)
                         .offset(x: bb.minX, y: bb.minY)
-                        .transition(.slide)
+                        .transition(AnyTransition.scale.combined(with: .opacity))
                     }
                     Spacer()
                 }
@@ -198,7 +200,7 @@ struct ContextMenuView<Content: View, MenuContent: View>: View {
         .overlay(
             // only way i can get taps working here
             Color.black.opacity(0.0001).onTapGesture {
-                print("tap tap")
+                print("tap tap \(state)")
                 self.store.state = state == .closed ? .open : .closed
                 if self.store.state != .closed {
                     self.parentStore.setActive(self.store)

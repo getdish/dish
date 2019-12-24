@@ -55,15 +55,24 @@ struct BottomNav: View {
 
 struct DishFiltersButton: View {
     var body: some View {
-        BottomNavButton {
-            HStack(spacing: 14) {
-                Group {
-                    Image(systemName: "dollarsign.circle").resizable().scaledToFit()
-                    Image(systemName: "tag.fill").resizable().scaledToFit()
-                    Image(systemName: "car.fill").resizable().scaledToFit()
+        ContextMenuView(menuContent: {
+            List {
+                Text("Item One")
+                Text("Item Two")
+                Text("Item Three")
+            }
+                .frame(height: 150) // todo how to get lists that shrink
+        }) {
+            BottomNavButton {
+                HStack(spacing: 14) {
+                    Group {
+                        Image(systemName: "dollarsign.circle").resizable().scaledToFit()
+                        Image(systemName: "tag.fill").resizable().scaledToFit()
+                        Image(systemName: "car.fill").resizable().scaledToFit()
+                    }
+                    .foregroundColor(.white)
+                    .frame(width: 26, height: 26)
                 }
-                .foregroundColor(.white)
-                .frame(width: 26, height: 26)
             }
         }
     }
