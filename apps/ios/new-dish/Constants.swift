@@ -13,7 +13,7 @@ class Mocks {
     
     static let homeSearchedPho = Store<AppState, AppAction>.init(
         initialState: AppState(
-            homeState: [HomeState(search: "Pho")]
+            homeState: [HomeState(dish: "Pho")]
         ),
         reducer: appReducer
     )

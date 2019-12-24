@@ -34,6 +34,14 @@ struct AppState {
 
 struct HomeState {
     var search = ""
+    var dish = ""
+    var filters: [SearchFilter] = []
+}
+
+struct SearchFilter: Equatable {
+    enum SearchFilterType { case cuisine }
+    var type: SearchFilterType = .cuisine
+    var name = ""
 }
 
 enum AppAction {

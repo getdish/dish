@@ -1,5 +1,33 @@
 import SwiftUI
 
+// this can be expanded to handle types of filters
+struct SearchToTagColor {
+    static let dish = Color(red: 0.2, green: 0.4, blue: 0.7, opacity: 0.5)
+    static let filter = Color(red: 0.6, green: 0.2, blue: 0.4, opacity: 0.5)
+}
+
+func homeStateToTags(_ state: HomeState) -> [SearchInputTag] {
+    var tags: [SearchInputTag] = []
+    
+    if state.dish != "" {
+        tags.append(SearchInputTag(
+            color: SearchToTagColor.dish,
+            text: state.dish
+        ))
+    }
+    
+    if state.filters.count > 0 {
+        state.filters.forEach { filter in
+            tags.append(SearchInputTag(
+                color: SearchToTagColor.filter,
+                text: filter.name
+            ))
+        }
+    }
+    
+    return tags
+}
+
 struct HomeSearchBar: View {
     @State var searchText = ""
     @State var scrollAtTop = true
@@ -21,7 +49,7 @@ struct HomeSearchBar: View {
             showCancelInside: true,
             after: after,
             searchText: self.$searchText,
-            pinnedText: self.store.state.homeState.last!.search
+            tags: homeStateToTags(self.store.state.homeState.last!)
         )
     }
     

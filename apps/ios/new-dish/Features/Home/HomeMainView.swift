@@ -194,7 +194,20 @@ struct HomeMainView: View {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack {
                                     Spacer().frame(width: 50)
-                                    FilterButton(label: "American", action: {})
+                                    FilterButton(label: "American", action: {
+                                        // todo move this into action
+                                        let curState = self.store.state.homeState.last!
+                                        let filters = curState.filters.filter({ $0.type == .cuisine }) + [
+                                            SearchFilter(type: .cuisine, name: "American")
+                                        ]
+                                        self.store.send(.pushHomeState(
+                                            HomeState(
+                                                search: curState.search,
+                                                dish: curState.dish,
+                                                filters: filters
+                                            )
+                                        ))
+                                    })
                                     FilterButton(label: "Thai", action: {})
                                     FilterButton(label: "Chinese", action: {})
                                     FilterButton(label: "Italian", action: {})
@@ -221,9 +234,6 @@ struct HomeMainView: View {
                                             self.showTypeMenu = true
                                     }
                                 }
-                                //                                .sheet(
-                                //                                    isPresented: self.$showTypeMenu
-                                //                                ) { Text("Popover") }
                                 Spacer()
                             }
                             .padding(.horizontal)
@@ -325,7 +335,7 @@ struct HomeCardsGrid: View {
                             .onTapGesture {
                                 print("tap on item")
                                 self.store.send(
-                                    .pushHomeState(HomeState(search: item.name))
+                                    .pushHomeState(HomeState(dish: item.name))
                                 )
                         }
                     }

@@ -37,7 +37,7 @@ struct DishRestaurantCard: View {
 #if DEBUG
 struct HomeSearchResults_Previews: PreviewProvider {
     static var previews: some View {
-        HomeSearchResults(state: HomeState(search: "Pho"))
+        HomeSearchResults(state: HomeState(dish: "Pho"))
             .embedInAppEnvironment()
     }
 }
