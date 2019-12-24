@@ -8,11 +8,15 @@ struct HomeSearchResults: View {
         VStack {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack {
-                    Spacer().frame(height: cardRowHeight)
+                    // space below searchbar
+                    Spacer().frame(height: 20)
 
                     ForEach(items) { item in
                         DishRestaurantCard(restaurant: item)
                     }
+                    
+                    // space for bottom bottomnav
+                    Spacer().frame(height: 90)
                 }
                 .padding(16)
             }

@@ -174,31 +174,10 @@ struct HomeMainView: View {
                         Spacer()
                             .frame(height: mapHeight - cardRowHeight)
                         
-                        ZStack {
-                            // home
-                            HomeCards(isHorizontal: self.state.isSnappedToBottom)
-                                .offset(y: isOnSearchResults ? 100 : 0)
-                                .opacity(isOnSearchResults ? 0 : 1)
-                                .animation(.spring())
-                            
-                            // pages as you drill in below home
-                            if isOnSearchResults {
-                                VStack {
-                                    Spacer().frame(height: cardRowHeight)
-
-                                    ForEach(1 ..< self.store.state.homeState.count) { index in
-                                        HomeSearchResults(
-                                            state: self.store.state.homeState[index]
-                                        )
-                                            .offset(y: isOnSearchResults ? 0 : 100)
-                                            .opacity(isOnSearchResults ? 1 : 0)
-                                            .animation(.spring())
-                                    }
-                                }
-                            }
-                        }
-                        .clipped()
-                        .animation(.spring(response: 0.3333))
+                        HomeMainContent(
+                            mapHeight: mapHeight,
+                            isHorizontal: self.state.isSnappedToBottom
+                        )
                     }
                     
                     VStack {
@@ -278,10 +257,12 @@ struct HomeMainView: View {
                             return HomeSearchBar()
                         }
                         .frame(height: 45)
+                        
                         Spacer()
                     }
                     .padding(.horizontal, 10)
                     .offset(y: mapHeight - 23 - searchDragExtraY)
+                    .animation(dragState == .off || searchDragExtraY > 0 ? .spring() : .none)
                         // searchinput always light
                         .environment(\.colorScheme, .light)
                 }
@@ -339,7 +320,7 @@ struct HomeCardsGrid: View {
     @Environment(\.geometry) var appGeometry
     
     let items = features.chunked(into: 2)
-    let spacing: CGFloat = 10
+    let spacing: CGFloat = 6
     
     var content: some View {
         VStack(spacing: self.spacing) {
@@ -403,6 +384,9 @@ struct HomeCardsGrid: View {
                         Color.black,
                         Color.black,
                         Color.black,
+                        Color.black,
+                        Color.black,
+                        Color.black,
                         Color.black
                     ]),
                     startPoint: .top,
@@ -433,7 +417,7 @@ struct HomeCardsRow: View {
 struct DishBrowseCard: View {
     var dish: DishItem
     var body: some View {
-        FeatureCard(dish: dish, aspectRatio: 1.2)
+        FeatureCard(dish: dish, aspectRatio: 1.4)
             .cornerRadius(14)
     }
 }
