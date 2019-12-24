@@ -1,4 +1,11 @@
 import SwiftUI
+
+struct AppStateSelect {
+    static func isOnSearchResults(_ state: AppState) -> Bool {
+        state.homeState.last!.dish != ""
+    }
+}
+
 struct HomeMainContent: View {
     let mapHeight: CGFloat
     let isHorizontal: Bool
@@ -7,7 +14,7 @@ struct HomeMainContent: View {
     
     var body: some View {
         let mapHeight = self.mapHeight
-        let isOnSearchResults = self.store.state.homeState.count > 1
+        let isOnSearchResults = AppStateSelect.isOnSearchResults(self.store.state)
         
         return GeometryReader { geometry in
             ZStack {
