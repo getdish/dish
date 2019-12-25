@@ -62,10 +62,8 @@ class HomeViewState: ObservableObject {
         let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
         if willSnapDown {
             self.snapToBottom(true)
-            self.dragState = .off
         } else if willSnapUp {
             self.snapToBottom(false)
-            self.dragState = .off
         } else {
             self.dragState = .on
         }
@@ -80,6 +78,7 @@ class HomeViewState: ObservableObject {
     
     func snapToBottom(_ toBottom: Bool = true) {
         print("snapToBottom \(toBottom)")
+        self.dragState = .off
         withAnimation(.spring()) {
             self.searchBarYExtra = 0
             if toBottom {
@@ -338,7 +337,7 @@ struct HomeCardsGrid: View {
     var body: some View {
         VStack {
             Spacer().frame(height: cardRowHeight)
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     ScrollListener(onScroll: { frame in
                         if self.homeState.dragState == .idle {
