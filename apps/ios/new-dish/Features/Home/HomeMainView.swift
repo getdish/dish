@@ -4,7 +4,7 @@ fileprivate let bottomNavHeight: CGFloat = 115
 fileprivate let filterBarHeight: CGFloat = 82
 
 // used in search results for now...
-let cardRowHeight: CGFloat = 160
+let cardRowHeight: CGFloat = 140
 
 class HomeViewState: ObservableObject {
     enum DragState { case on, idle, off }
@@ -13,6 +13,7 @@ class HomeViewState: ObservableObject {
     @Published var appHeight: CGFloat = 0
     @Published var scrollY: CGFloat = 0
     @Published var y: CGFloat = 0
+    @Published var searchBarYExtra: CGFloat = 0
     
     var mapInitialHeight: CGFloat {
         appHeight * 0.3
@@ -23,7 +24,7 @@ class HomeViewState: ObservableObject {
     }
     
     var snapToBottomAt: CGFloat {
-        appHeight * 0.1
+        appHeight * 0.15
     }
     
     var snappedToBottomMapHeight: CGFloat {
@@ -32,10 +33,6 @@ class HomeViewState: ObservableObject {
     
     var isSnappedToBottom: Bool {
         y > snapToBottomAt
-    }
-    
-    func finishDrag() {
-        self.dragState = .idle
     }
     
     func toggleMap() {
@@ -48,13 +45,20 @@ class HomeViewState: ObservableObject {
         if dragState != .on {
             self.startDragAt = y
         }
-        let y = self.startDragAt + dragY
+        let y = self.startDragAt + (
+            // add resistance if snapped to bottom
+            isSnappedToBottom ? dragY * 0.5 : dragY
+        )
+        // make the searchbar move a little more
+        if isSnappedToBottom {
+            self.searchBarYExtra = dragY * 0.25
+        }
         let wasSnappedToBottom = isSnappedToBottom
         self.y = y
+        let willSnapUp = abs(dragY) > snapToBottomAt
         let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
-        let willSnapUp = !isSnappedToBottom && wasSnappedToBottom
         if willSnapDown {
-            self.snapToBottom(true)
+            self.snapToBottom()
             self.dragState = .off
         } else if willSnapUp {
             self.snapToBottom(false)
@@ -64,8 +68,17 @@ class HomeViewState: ObservableObject {
         }
     }
     
-    func snapToBottom(_ toBottom: Bool) {
+    func finishDrag() {
+        self.dragState = .idle
+        if isSnappedToBottom {
+            self.snapToBottom()
+        }
+    }
+    
+    func snapToBottom(_ toBottom: Bool = true) {
+        print("snapToBottom \(toBottom)")
         withAnimation(.spring()) {
+            self.searchBarYExtra = 0
             if !toBottom {
                 self.y = 0
             } else {
@@ -111,7 +124,6 @@ struct HomeMainView: View {
         let mapHeight = isOnSearchResults ? 160 : state.mapHeight
         
         // indicates were dragging
-        let searchDragExtraY: CGFloat = 0
 //            state.isSnappedToBottom && dragState != .off
 //            ? -state.y / 2
 //            : 0
@@ -237,7 +249,7 @@ struct HomeMainView: View {
                         Spacer()
                     }
                     .padding(.horizontal, 10)
-                    .offset(y: mapHeight - 23 - searchDragExtraY)
+                    .offset(y: mapHeight - 23 + state.searchBarYExtra)
 //                    .animation(dragState != .on ? .spring() : .none)
                         // searchinput always light
                         .environment(\.colorScheme, .light)
