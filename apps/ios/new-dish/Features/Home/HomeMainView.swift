@@ -19,9 +19,6 @@ class HomeViewState: ObservableObject {
     }
     
     var mapHeight: CGFloat {
-//        if isSnappedToBottom {
-//            return snappedToBottomMapHeight
-//        }
         return max(mapInitialHeight + y, 100)
     }
     
@@ -38,8 +35,6 @@ class HomeViewState: ObservableObject {
     }
     
     func finishDrag() {
-//        self.searchY = self.dragY + self.searchY
-//        self.dragY = 0
         self.dragState = .idle
         // if they dragged a little and let go before snapping back up, reset
         if isSnappedToBottom {
@@ -57,16 +52,19 @@ class HomeViewState: ObservableObject {
         }
     }
     
-    func drag(_ y: CGFloat) {
+    private var startDragAt: CGFloat = 0
+    
+    func drag(_ dragY: CGFloat) {
+        if dragState != .on {
+            self.startDragAt = y
+        }
+        
+        let y = self.startDragAt + dragY
         let wasSnappedToBottom = isSnappedToBottom
         self.y = y
         
         let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
         let willSnapUp = !isSnappedToBottom && wasSnappedToBottom
-        
-        if willSnapUp || willSnapDown {
-            print("SNAPPIN \(y) ----- down? \(willSnapDown)")
-        }
         
         if willSnapDown {
             self.snapToBottom(true)
@@ -75,20 +73,17 @@ class HomeViewState: ObservableObject {
             self.snapToBottom(false)
             self.dragState = .off
         } else {
-//            self.snappedToBottomMapHeight = self.mapHeight
             self.dragState = .on
         }
     }
     
     func snapToBottom(_ toBottom: Bool) {
-        print("snap to bottom... \(toBottom)")
         withAnimation(.spring()) {
             // then animate
             if toBottom {
                 self.setSnappedToBottomY()
             } else {
                 self.y = snapToBottomAt - 1
-//                self.dragY = 0
             }
         }
     }
@@ -96,18 +91,18 @@ class HomeViewState: ObservableObject {
     func setSnappedToBottomY() {
         // were saying, you need to drag it 100px before it snaps back up
         self.y = snapToBottomAt + 100
-//        self.dragY = 0
     }
     
     func debugString() -> String {
         // xcode bug cant do live preview with this uncommented
-        return """
-        isSnappedToBottom \(self.isSnappedToBottom)
-        dragY \(self.y.rounded())
-        scrollY \(self.scrollY.rounded())
-        y \(self.y.rounded())
-        dishMapHeight \(self.mapHeight.rounded())
-        """
+        ""
+//        return """
+//        isSnappedToBottom \(self.isSnappedToBottom)
+//        dragY \(self.y.rounded())
+//        scrollY \(self.scrollY.rounded())
+//        y \(self.y.rounded())
+//        dishMapHeight \(self.mapHeight.rounded())
+//        """
     }
 }
 
@@ -139,7 +134,7 @@ struct HomeMainView: View {
 //            ? -state.y / 2
 //            : 0
         
-        print("RENDER \(state.debugString())")
+//        print("RENDER \(state.debugString())")
         
         return GeometryReader { geometry in
             ZStack {
@@ -271,17 +266,16 @@ struct HomeMainView: View {
             .clipped()
             .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
             .simultaneousGesture(
-                DragGesture()
+                DragGesture(minimumDistance: 0)
                     .onChanged { value in
-                        DispatchQueue.main.async {
-                            // disable drag on off
-                            if state.dragState == .off {
-                                return
-                            }
-                            // why is this off 80???
-                            if self.isWithinSearchBar(value.location.y - 40) || dragState == .on {
-                                self.state.drag(value.translation.height)
-                            }
+                        // disable drag on off
+                        if state.dragState == .off {
+                            return
+                        }
+                        // why is this off 80???
+                        if self.isWithinSearchBar(value.location.y - 40) || dragState == .on {
+                            print("drag \(value.translation.height) \(value.location.y)")
+                            self.state.drag(value.translation.height)
                         }
                 }
                 .onEnded { value in
