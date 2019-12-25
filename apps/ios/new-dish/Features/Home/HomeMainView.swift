@@ -70,10 +70,10 @@ class HomeViewState: ObservableObject {
     }
     
     func finishDrag() {
-        self.dragState = .idle
         if isSnappedToBottom {
             self.snapToBottom()
         }
+        self.dragState = .idle
     }
     
     func snapToBottom(_ toBottom: Bool = true) {
