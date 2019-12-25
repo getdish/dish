@@ -58,10 +58,10 @@ class HomeViewState: ObservableObject {
         }
         let wasSnappedToBottom = isSnappedToBottom
         self.y = y
-        let willSnapUp = abs(dragY) > snapToBottomAt
+        let willSnapUp = -dragY > snapToBottomAt
         let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
         if willSnapDown {
-            self.snapToBottom()
+            self.snapToBottom(true)
             self.dragState = .off
         } else if willSnapUp {
             self.snapToBottom(false)
@@ -82,11 +82,10 @@ class HomeViewState: ObservableObject {
         print("snapToBottom \(toBottom)")
         withAnimation(.spring()) {
             self.searchBarYExtra = 0
-            if !toBottom {
-                self.y = 0
-            } else {
-                print("high \(snappedToBottomMapHeight - mapInitialHeight)")
+            if toBottom {
                 self.y = snappedToBottomMapHeight - mapInitialHeight
+            } else {
+                self.y = 0
             }
         }
     }
@@ -275,7 +274,7 @@ struct HomeMainView: View {
                         }
                 }
                 .onEnded { value in
-                    if dragState == .on {
+                    if dragState != .idle {
                         self.state.finishDrag()
                     }
                 }
@@ -342,14 +341,16 @@ struct HomeCardsGrid: View {
             ScrollView {
                 VStack(spacing: 0) {
                     ScrollListener(onScroll: { frame in
-                        let frameY = self.homeState.mapHeight
-                        let scrollY = frame.minY
-                        let realY = frameY - scrollY - 44
-                        let y = max(0, min(100, realY)).rounded()
-                        if y != self.homeState.scrollY {
-                            // attempting to have a scroll effect but its complex...
-                            print("scrollY \(y) ....... frameY \(frameY), scrollY = \(scrollY)")
-                            //                            self.homeState.scrollY = y
+                        if self.homeState.dragState == .idle {
+                            let frameY = self.homeState.mapHeight
+                            let scrollY = frame.minY
+                            let realY = frameY - scrollY - 44
+                            let y = max(0, min(100, realY)).rounded()
+                            if y != self.homeState.scrollY {
+                                // attempting to have a scroll effect but its complex...
+                                print("scrollY \(y) ....... frameY \(frameY), scrollY = \(scrollY)")
+                                //                            self.homeState.scrollY = y
+                            }
                         }
                     })
                     
