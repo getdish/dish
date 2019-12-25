@@ -35,7 +35,7 @@ struct HomeViewContent: View {
             PagerView(
                 pageCount: 2,
                 pagerStore: homePager,
-                disableDragging: false
+                disableDragging: true
                 ) {
                     HomeMainView()
                     Image(systemName: "photo").resizable()
@@ -43,8 +43,8 @@ struct HomeViewContent: View {
             .onChangePage { index in
                 self.store.send(.changeHomePage(index == 0 ? .home : .camera))
             }
+            // just drag from edge (to camera)
             .simultaneousGesture(
-                // drag to camera
                 DragGesture()
                     .onChanged { value in
                         // right edge

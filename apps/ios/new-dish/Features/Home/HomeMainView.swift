@@ -41,7 +41,10 @@ class HomeViewState: ObservableObject {
     
     private var startDragAt: CGFloat = 0
     
-    func drag(_ dragY: CGFloat) {
+    func drag(_ dragYInput: CGFloat) {
+        // prevent dragging too far up if not at bottom
+        let dragY = !isSnappedToBottom ? max(-100, dragYInput) : dragYInput
+        // remember where we started
         if dragState != .on {
             self.startDragAt = y
         }
@@ -260,19 +263,21 @@ struct HomeMainView: View {
             .clipped()
             .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
             .simultaneousGesture(
-                DragGesture(minimumDistance: 5)
+                DragGesture(minimumDistance: 10)
                     .onChanged { value in
                         // disable drag on off
-                        if state.dragState == .off {
+                        if dragState == .off {
                             return
                         }
                         // why is this off 80???
-                        if self.isWithinSearchBar(value.location.y - 40) || dragState == .on {
+                        if self.isWithinSearchBar(value.startLocation.y - 40) || dragState == .on {
                             self.state.drag(value.translation.height)
                         }
                 }
                 .onEnded { value in
-                    self.state.finishDrag()
+                    if dragState == .on {
+                        self.state.finishDrag()
+                    }
                 }
             )
         }

@@ -11,8 +11,8 @@ struct RootView: View {
     var body: some View {
         ContextMenuRootView {
             HomeContainerView()
-                .edgesIgnoringSafeArea(.all)
         }
+        .edgesIgnoringSafeArea(.all)
     }
 }
 
