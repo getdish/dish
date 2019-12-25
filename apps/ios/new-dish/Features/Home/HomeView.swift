@@ -29,18 +29,20 @@ struct HomeViewContent: View {
     var height: CGFloat = 0
     @EnvironmentObject var store: AppStore
     @State private var index = 0
+    @State private var disableDragging = true
 
     var body: some View {
         ZStack {
             PagerView(
                 pageCount: 2,
                 pagerStore: homePager,
-                disableDragging: true
+                disableDragging: self.disableDragging
                 ) {
                     HomeMainView()
                     Image(systemName: "photo").resizable()
             }
             .onChangePage { index in
+                self.disableDragging = index == 0
                 self.store.send(.changeHomePage(index == 0 ? .home : .camera))
             }
             // just drag from edge (to camera)
