@@ -32,6 +32,12 @@ struct AppState {
     var galleryDish: DishItem? = nil
 }
 
+struct AppStateSelect {
+    static func isOnSearchResults(_ state: AppState) -> Bool {
+        state.homeState.last!.dish != ""
+    }
+}
+
 struct HomeState {
     var search = ""
     var dish = ""

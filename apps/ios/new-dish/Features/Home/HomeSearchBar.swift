@@ -69,14 +69,14 @@ struct HomeSearchBar: View {
     
     var after: AnyView {
         AnyView(
-            Image(systemName: "arrow.up.and.down.circle.fill")
-                .resizable()
-                .frame(width: 26, height: 26)
-                .padding(4)
-                .opacity(0.45)
-                .onTapGesture {
-                    self.homeState.toggleMap()
-                    
+            Button(action: {
+                self.homeState.toggleMap()
+            }) {
+                Image(systemName: "arrow.up.and.down.circle.fill")
+                    .resizable()
+                    .frame(width: 26, height: 26)
+                    .padding(4)
+                    .opacity(0.45)
             }
         )
     }

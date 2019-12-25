@@ -1,11 +1,5 @@
 import SwiftUI
 
-struct AppStateSelect {
-    static func isOnSearchResults(_ state: AppState) -> Bool {
-        state.homeState.last!.dish != ""
-    }
-}
-
 struct HomeMainContent: View {
     let mapHeight: CGFloat
     let isHorizontal: Bool

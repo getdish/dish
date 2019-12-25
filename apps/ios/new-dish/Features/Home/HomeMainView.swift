@@ -12,18 +12,16 @@ class HomeViewState: ObservableObject {
     @Published var dragState: DragState = .idle
     @Published var appHeight: CGFloat = 0
     @Published var scrollY: CGFloat = 0
-    @Published var searchY: CGFloat = 0
-    @Published var dragY: CGFloat = 0
-    @Published var snappedToBottomMapHeight: CGFloat = 0
+    @Published var y: CGFloat = 0
     
     var mapInitialHeight: CGFloat {
         appHeight * 0.3
     }
     
     var mapHeight: CGFloat {
-        if isSnappedToBottom {
-            return snappedToBottomMapHeight
-        }
+//        if isSnappedToBottom {
+//            return snappedToBottomMapHeight
+//        }
         return max(mapInitialHeight + y, 100)
     }
     
@@ -31,17 +29,17 @@ class HomeViewState: ObservableObject {
         appHeight * 0.1
     }
     
+    var snappedToBottomMapHeight: CGFloat {
+        appHeight - 200
+    }
+    
     var isSnappedToBottom: Bool {
         y > snapToBottomAt
     }
     
-    var y: CGFloat {
-        max(-100, searchY + dragY + scrollY)
-    }
-    
     func finishDrag() {
-        self.searchY = self.dragY + self.searchY
-        self.dragY = 0
+//        self.searchY = self.dragY + self.searchY
+//        self.dragY = 0
         self.dragState = .idle
         // if they dragged a little and let go before snapping back up, reset
         if isSnappedToBottom {
@@ -50,17 +48,18 @@ class HomeViewState: ObservableObject {
     }
     
     func toggleMap() {
-        if isSnappedToBottom {
-            self.dragY = 0
-            self.searchY = 0
-        } else {
-            self.dragY = 110
+        withAnimation(.spring()) {
+            if isSnappedToBottom {
+                self.y = 0
+            } else {
+                self.y = snappedToBottomMapHeight - mapInitialHeight
+            }
         }
     }
     
     func drag(_ y: CGFloat) {
         let wasSnappedToBottom = isSnappedToBottom
-        self.dragY = y
+        self.y = y
         
         let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
         let willSnapUp = !isSnappedToBottom && wasSnappedToBottom
@@ -76,40 +75,39 @@ class HomeViewState: ObservableObject {
             self.snapToBottom(false)
             self.dragState = .off
         } else {
-            self.snappedToBottomMapHeight = self.mapHeight
+//            self.snappedToBottomMapHeight = self.mapHeight
             self.dragState = .on
         }
     }
     
     func snapToBottom(_ toBottom: Bool) {
+        print("snap to bottom... \(toBottom)")
         withAnimation(.spring()) {
             // then animate
             if toBottom {
-                self.snappedToBottomMapHeight = appHeight - 200
                 self.setSnappedToBottomY()
             } else {
-                self.searchY = snapToBottomAt - 1
-                self.dragY = 0
+                self.y = snapToBottomAt - 1
+//                self.dragY = 0
             }
         }
     }
     
     func setSnappedToBottomY() {
         // were saying, you need to drag it 100px before it snaps back up
-        self.searchY = snapToBottomAt + 100
-        self.dragY = 0
+        self.y = snapToBottomAt + 100
+//        self.dragY = 0
     }
     
     func debugString() -> String {
-        ""
         // xcode bug cant do live preview with this uncommented
-//        """
-//        dragY \(self.dragY.rounded())
-//        searchY \(self.searchY.rounded())
-//        scrollY \(self.scrollY.rounded())
-//        y \(self.y.rounded())
-//        dishMapHeight \(self.mapHeight.rounded())
-//        """
+        return """
+        isSnappedToBottom \(self.isSnappedToBottom)
+        dragY \(self.y.rounded())
+        scrollY \(self.scrollY.rounded())
+        y \(self.y.rounded())
+        dishMapHeight \(self.mapHeight.rounded())
+        """
     }
 }
 
@@ -130,21 +128,22 @@ struct HomeMainView: View {
     
     var body: some View {
         // pushed map below the border radius of the bottomdrawer
-        let isOnSearchResults = self.store.state.homeState.count > 1
+        let isOnSearchResults = AppStateSelect.isOnSearchResults(self.store.state)
         let state = self.state
         let dragState = state.dragState
         let mapHeight = isOnSearchResults ? 160 : state.mapHeight
         
         // indicates were dragging
-        let searchDragExtraY = state.isSnappedToBottom && dragState != .off
-            ? -state.dragY / 2
-            : 0
+        let searchDragExtraY: CGFloat = 0
+//            state.isSnappedToBottom && dragState != .off
+//            ? -state.y / 2
+//            : 0
         
         print("RENDER \(state.debugString())")
         
         return GeometryReader { geometry in
             ZStack {
-                Color.black.frame(maxWidth: .infinity, maxHeight: .infinity)
+                Color.black
                     .onAppear {
                         if let g = self.appGeometry {
                             state.appHeight = g.size.height
@@ -262,7 +261,7 @@ struct HomeMainView: View {
                     }
                     .padding(.horizontal, 10)
                     .offset(y: mapHeight - 23 - searchDragExtraY)
-                    .animation(dragState == .off || searchDragExtraY > 0 ? .spring() : .none)
+//                    .animation(dragState != .on ? .spring() : .none)
                         // searchinput always light
                         .environment(\.colorScheme, .light)
                 }
