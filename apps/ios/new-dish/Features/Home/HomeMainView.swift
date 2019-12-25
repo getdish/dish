@@ -36,20 +36,10 @@ class HomeViewState: ObservableObject {
     
     func finishDrag() {
         self.dragState = .idle
-        // if they dragged a little and let go before snapping back up, reset
-        if isSnappedToBottom {
-            self.setSnappedToBottomY()
-        }
     }
     
     func toggleMap() {
-        withAnimation(.spring()) {
-            if isSnappedToBottom {
-                self.y = 0
-            } else {
-                self.y = snappedToBottomMapHeight - mapInitialHeight
-            }
-        }
+        self.snapToBottom(!isSnappedToBottom)
     }
     
     private var startDragAt: CGFloat = 0
@@ -58,14 +48,11 @@ class HomeViewState: ObservableObject {
         if dragState != .on {
             self.startDragAt = y
         }
-        
         let y = self.startDragAt + dragY
         let wasSnappedToBottom = isSnappedToBottom
         self.y = y
-        
         let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
         let willSnapUp = !isSnappedToBottom && wasSnappedToBottom
-        
         if willSnapDown {
             self.snapToBottom(true)
             self.dragState = .off
@@ -79,18 +66,13 @@ class HomeViewState: ObservableObject {
     
     func snapToBottom(_ toBottom: Bool) {
         withAnimation(.spring()) {
-            // then animate
-            if toBottom {
-                self.setSnappedToBottomY()
+            if !toBottom {
+                self.y = 0
             } else {
-                self.y = snapToBottomAt - 1
+                print("high \(snappedToBottomMapHeight - mapInitialHeight)")
+                self.y = snappedToBottomMapHeight - mapInitialHeight
             }
         }
-    }
-    
-    func setSnappedToBottomY() {
-        // were saying, you need to drag it 100px before it snaps back up
-        self.y = snapToBottomAt + 100
     }
     
     func debugString() -> String {
@@ -266,7 +248,7 @@ struct HomeMainView: View {
             .clipped()
             .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
             .simultaneousGesture(
-                DragGesture(minimumDistance: 0)
+                DragGesture(minimumDistance: 5)
                     .onChanged { value in
                         // disable drag on off
                         if state.dragState == .off {
@@ -274,7 +256,6 @@ struct HomeMainView: View {
                         }
                         // why is this off 80???
                         if self.isWithinSearchBar(value.location.y - 40) || dragState == .on {
-                            print("drag \(value.translation.height) \(value.location.y)")
                             self.state.drag(value.translation.height)
                         }
                 }
