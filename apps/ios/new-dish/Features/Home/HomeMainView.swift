@@ -15,25 +15,14 @@ class HomeViewState: ObservableObject {
     @Published var y: CGFloat = 0
     @Published var searchBarYExtra: CGFloat = 0
     
-    var mapInitialHeight: CGFloat {
-        appHeight * 0.3
-    }
+    var mapInitialHeight: CGFloat { appHeight * 0.3 }
+    var mapHeight: CGFloat { return max(mapInitialHeight + y, 100) }
     
-    var mapHeight: CGFloat {
-        return max(mapInitialHeight + y, 100)
-    }
+    var snapToBottomAt: CGFloat { appHeight * 0.15 }
+    var snappedToBottomMapHeight: CGFloat { appHeight - 200 }
+    var isSnappedToBottom: Bool { y > snapToBottomAt }
     
-    var snapToBottomAt: CGFloat {
-        appHeight * 0.15
-    }
-    
-    var snappedToBottomMapHeight: CGFloat {
-        appHeight - 200
-    }
-    
-    var isSnappedToBottom: Bool {
-        y > snapToBottomAt
-    }
+    var aboutToSnapToBottomAt: CGFloat { snapToBottomAt - 40 }
     
     func toggleMap() {
         self.snapToBottom(!isSnappedToBottom)
@@ -48,16 +37,27 @@ class HomeViewState: ObservableObject {
         if dragState != .on {
             self.startDragAt = y
         }
-        let y = self.startDragAt + (
+        
+        var y = self.startDragAt + (
             // add resistance if snapped to bottom
             isSnappedToBottom ? dragY * 0.5 : dragY
         )
-        // make the searchbar move a little more
-        if isSnappedToBottom {
-            self.searchBarYExtra = dragY * 0.25
+        
+        let aboutToSnapToBottom = y > aboutToSnapToBottomAt && !isSnappedToBottom
+        if aboutToSnapToBottom {
+            y = aboutToSnapToBottomAt + dragY * 0.25
         }
+        
         let wasSnappedToBottom = isSnappedToBottom
         self.y = y
+        
+        // make searchbar move a little extra, either from top => bottom, or bottom => top
+        if aboutToSnapToBottom {
+            self.searchBarYExtra = (y - aboutToSnapToBottomAt)
+        } else if isSnappedToBottom {
+            self.searchBarYExtra = dragY * 0.25
+        }
+        
         let willSnapUp = -dragY > snapToBottomAt
         let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
         if willSnapDown {
