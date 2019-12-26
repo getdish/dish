@@ -11,7 +11,7 @@ struct HomeSearchResults: View {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack {
                     // space below searchbar
-                    Spacer().frame(height: 20)
+                    Spacer().frame(height: 10)
 
                     ForEach(items) { item in
                         DishRestaurantCard(restaurant: item)
@@ -35,7 +35,7 @@ struct DishRestaurantCard: View {
                 .resizable()
                 .aspectRatio(2 / 2.25, contentMode: .fit)
                 .overlay(RestaurantText(name: "Miss Siagon"))
-                .cornerRadius(14)
+                .cornerRadius(16)
             
             // left right pagination
             
@@ -95,7 +95,7 @@ struct RestaurantText: View {
                     VStack {
                         VStack {
                             Text("9")
-                                .font(.system(size: 34))
+                                .font(.system(size: 28))
                                 .bold()
                                 .foregroundColor(.blue)
                         }
@@ -113,8 +113,9 @@ struct RestaurantText: View {
                 HStack {
                     VStack(alignment: .leading, spacing: 16) {
                         HStack {
-                            TagView { Text("Cheap") }
+                            CardTagView("Cheap")
                         }
+                        .environment(\.colorScheme, .light)
                         
                         HStack(spacing: 6) {
                             Group {
@@ -139,6 +140,27 @@ struct RestaurantText: View {
             }
         }
         .foregroundColor(.white)
+    }
+}
+
+struct CardTagView: View {
+    let content: String
+    
+    init(_ content: String) {
+        self.content = content
+    }
+    
+    var body: some View {
+        VStack {
+            Text(self.content)
+                .font(.system(size: 14))
+                .foregroundColor(.black)
+        }
+        .padding(.vertical, 2)
+        .padding(.horizontal, 8)
+        .background(Color.white)
+        .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.2), radius: 2, y: 2)
     }
 }
 

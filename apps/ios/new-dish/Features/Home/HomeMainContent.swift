@@ -14,9 +14,6 @@ struct HomeMainContent: View {
             ZStack {
                 // home
                 HomeCards(isHorizontal: self.isHorizontal)
-//                    .offset(y: isOnSearchResults ? 100 : 0)
-//                    .opacity(isOnSearchResults ? 0 : 1)
-                    .animation(.spring())
                 
                 // pages as you drill in below home
                 if isOnSearchResults {
@@ -31,7 +28,6 @@ struct HomeMainContent: View {
                                     y: isOnSearchResults ? 0 : 100
                             )
                                 .opacity(isOnSearchResults ? 1 : 0)
-                                .animation(.spring())
                         }
                         .gesture(
                             DragGesture()
@@ -56,7 +52,6 @@ struct HomeMainContent: View {
                 }
             }
             .clipped()
-            .animation(.spring(response: 0.3333))
         }
     }
 }

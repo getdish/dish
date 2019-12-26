@@ -80,7 +80,6 @@
 		AEF6557723B041C400E49A51 /* RestaurantItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557623B041C400E49A51 /* RestaurantItem.swift */; };
 		AEF6557923B041F600E49A51 /* DishItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557823B041F600E49A51 /* DishItem.swift */; };
 		AEF6557B23B042CD00E49A51 /* HomeSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */; };
-		AEF6557D23B0945000E49A51 /* test.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557C23B0945000E49A51 /* test.swift */; };
 		AEF6557F23B14DBA00E49A51 /* ContextMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557E23B14DBA00E49A51 /* ContextMenuView.swift */; };
 		AEF6558123B2205F00E49A51 /* HomeMainContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6558023B2205F00E49A51 /* HomeMainContent.swift */; };
 		C7BDB448CA7019F5B1D6545F /* Pods_new_dish.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B343F398A6E8C95D41FD1804 /* Pods_new_dish.framework */; };
@@ -164,7 +163,6 @@
 		AEF6557623B041C400E49A51 /* RestaurantItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantItem.swift; sourceTree = "<group>"; };
 		AEF6557823B041F600E49A51 /* DishItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishItem.swift; sourceTree = "<group>"; };
 		AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchBar.swift; sourceTree = "<group>"; };
-		AEF6557C23B0945000E49A51 /* test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test.swift; sourceTree = "<group>"; };
 		AEF6557E23B14DBA00E49A51 /* ContextMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuView.swift; sourceTree = "<group>"; };
 		AEF6558023B2205F00E49A51 /* HomeMainContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainContent.swift; sourceTree = "<group>"; };
 		B343F398A6E8C95D41FD1804 /* Pods_new_dish.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_new_dish.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -299,7 +297,6 @@
 				1CE354872398714D004B3A84 /* HomeView.swift */,
 				AE7563B323A035E70094022B /* HomeMainView.swift */,
 				AEF6558023B2205F00E49A51 /* HomeMainContent.swift */,
-				AEF6557C23B0945000E49A51 /* test.swift */,
 				AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */,
 				AE56C86323ADB78C006A156A /* HomeSearchResults.swift */,
 				AE861A7E23A07D81004096BF /* HomeMapControls.swift */,
@@ -591,7 +588,6 @@
 				AEF6557123B024A100E49A51 /* ScrollListener.swift in Sources */,
 				AEF6558123B2205F00E49A51 /* HomeMainContent.swift in Sources */,
 				AE7563E923A03D570094022B /* MagicMove.swift in Sources */,
-				AEF6557D23B0945000E49A51 /* test.swift in Sources */,
 				1CE3547F23986B88004B3A84 /* Store.swift in Sources */,
 				AEBC5E1F23A6F0E50094B1BD /* DishGalleryViewContent.swift in Sources */,
 				AE861A7D23A07AFB004096BF /* Constants.swift in Sources */,

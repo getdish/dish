@@ -77,14 +77,15 @@ class HomeViewState: ObservableObject {
     }
     
     func snapToBottom(_ toBottom: Bool = true) {
-        print("snapToBottom \(toBottom)")
         self.dragState = .off
         withAnimation(.spring()) {
             self.searchBarYExtra = 0
             if toBottom {
                 self.y = snappedToBottomMapHeight - mapInitialHeight
             } else {
-                self.y = 0
+                // gap = amount until it snaps back down
+                let gap: CGFloat = 80
+                self.y = snapToBottomAt - gap
             }
         }
     }
@@ -167,6 +168,8 @@ struct HomeMainView: View {
                             mapHeight: mapHeight,
                             isHorizontal: self.state.isSnappedToBottom
                         )
+                        // for smoe reason this seems to slow down clicking on toggle button
+                        .animation(state.dragState == .on ? .spring(response: 0.3333) : nil)
                     }
                     
                     VStack {
@@ -328,8 +331,6 @@ struct HomeCardsGrid: View {
                 }
             }
         }
-        .padding(.horizontal)
-        .frame(width: Screen.width)
     }
     
     var initY = 0
