@@ -72,12 +72,13 @@ struct HomeSearchBar: View {
             Button(action: {
                 self.homeState.toggleMap()
             }) {
-                Image(systemName: "arrow.up.and.down.circle.fill")
+                Image(systemName: self.homeState.isSnappedToBottom ? "rectangle.grid.2x2.fill" : "map.fill")
                     .resizable()
-                    .frame(width: 26, height: 26)
-                    .padding(4)
+                    .frame(width: 20, height: 20)
                     .opacity(0.45)
             }
+            .padding(.vertical, 4)
+            .padding(.horizontal, 12)
         )
     }
 }
