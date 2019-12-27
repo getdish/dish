@@ -43,7 +43,7 @@ struct HomeViewContent: View {
             }
             .onChangePage { index in
                 self.disableDragging = index == 0
-                self.store.send(.changeHomePage(index == 0 ? .home : .camera))
+                self.store.send(.home(.changeHomePage(index == 0 ? .home : .camera)))
             }
             // just drag from edge (to camera)
             .simultaneousGesture(

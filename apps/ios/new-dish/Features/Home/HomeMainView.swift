@@ -6,6 +6,8 @@ fileprivate let filterBarHeight: CGFloat = 82
 // used in search results for now...
 let cardRowHeight: CGFloat = 140
 
+fileprivate let resistanceYBeforeSnap: CGFloat = 50
+
 class HomeViewState: ObservableObject {
     enum DragState { case on, idle, off }
     
@@ -22,7 +24,7 @@ class HomeViewState: ObservableObject {
     var snappedToBottomMapHeight: CGFloat { appHeight - 200 }
     var isSnappedToBottom: Bool { y > snapToBottomAt }
     
-    var aboutToSnapToBottomAt: CGFloat { snapToBottomAt - 40 }
+    var aboutToSnapToBottomAt: CGFloat { snapToBottomAt - resistanceYBeforeSnap }
     
     func toggleMap() {
         self.snapToBottom(!isSnappedToBottom)
@@ -32,7 +34,8 @@ class HomeViewState: ObservableObject {
     
     func drag(_ dragYInput: CGFloat) {
         // prevent dragging too far up if not at bottom
-        let dragY = !isSnappedToBottom ? max(-100, dragYInput) : dragYInput
+        let dragY = !isSnappedToBottom ? max(-120, dragYInput) : dragYInput
+
         // remember where we started
         if dragState != .on {
             self.startDragAt = y
@@ -40,20 +43,22 @@ class HomeViewState: ObservableObject {
         
         var y = self.startDragAt + (
             // add resistance if snapped to bottom
-            isSnappedToBottom ? dragY * 0.5 : dragY
+            isSnappedToBottom ? dragY * 0.25 : dragY
         )
         
-        let aboutToSnapToBottom = y > aboutToSnapToBottomAt && !isSnappedToBottom
+        // resistance before snapping down
+        let aboutToSnapToBottom = y >= aboutToSnapToBottomAt && !isSnappedToBottom
         if aboutToSnapToBottom {
-            y = aboutToSnapToBottomAt + dragY * 0.25
+            let diff = self.startDragAt + dragY - aboutToSnapToBottomAt
+            y = aboutToSnapToBottomAt + diff * 0.25
         }
         
         let wasSnappedToBottom = isSnappedToBottom
         self.y = y
         
-        // make searchbar move a little extra, either from top => bottom, or bottom => top
+        // searchbar moves faster during resistance before snap
         if aboutToSnapToBottom {
-            self.searchBarYExtra = (y - aboutToSnapToBottomAt)
+            self.searchBarYExtra = y - aboutToSnapToBottomAt
         } else if isSnappedToBottom {
             self.searchBarYExtra = dragY * 0.25
         }
@@ -73,6 +78,16 @@ class HomeViewState: ObservableObject {
         if isSnappedToBottom {
             self.snapToBottom()
         }
+        if !isSnappedToBottom && y > aboutToSnapToBottomAt {
+            withAnimation(.spring()) {
+              self.y = aboutToSnapToBottomAt
+            }
+        }
+        if searchBarYExtra != 0 {
+            withAnimation(.spring()) {
+                self.searchBarYExtra = 0
+            }
+        }
         self.dragState = .idle
     }
     
@@ -83,9 +98,7 @@ class HomeViewState: ObservableObject {
             if toBottom {
                 self.y = snappedToBottomMapHeight - mapInitialHeight
             } else {
-                // gap = amount until it snaps back down
-                let gap: CGFloat = 80
-                self.y = snapToBottomAt - gap
+                self.y = snapToBottomAt - resistanceYBeforeSnap
             }
         }
     }
@@ -181,15 +194,17 @@ struct HomeMainView: View {
                                     Spacer().frame(width: 50)
                                     FilterButton(label: "American", action: {
                                         // todo move this into action
-                                        let curState = self.store.state.homeState.last!
+                                        let curState = self.store.state.home.current.last!
                                         let filters = curState.filters.filter({ $0.type == .cuisine }) + [
                                             SearchFilter(type: .cuisine, name: "American")
                                         ]
-                                        self.store.send(.pushHomeState(
-                                            HomeState(
-                                                search: curState.search,
-                                                dish: curState.dish,
-                                                filters: filters
+                                        self.store.send(.home(
+                                            .pushHomeState(
+                                                HomeStateItem(
+                                                    search: curState.search,
+                                                    dish: curState.dish,
+                                                    filters: filters
+                                                )
                                             )
                                         ))
                                     })
@@ -324,7 +339,9 @@ struct HomeCardsGrid: View {
                             .onTapGesture {
                                 print("tap on item")
                                 self.store.send(
-                                    .pushHomeState(HomeState(dish: item.name))
+                                    .home(
+                                        .pushHomeState(HomeStateItem(dish: item.name))
+                                    )
                                 )
                         }
                     }

@@ -15,10 +15,10 @@ struct TopNavSearch: View {
     }
     
     var body: some View {
-        let isOnHome = store.state.homePageView == .home
+        let isOnHome = store.state.home.view == .home
         
         return ZStack {            
-            if store.state.showDrawer || isOnHome {
+            if store.state.home.showDrawer || isOnHome {
                 VStack {
                     ZStack {
                         // camera controls

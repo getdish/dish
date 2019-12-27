@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct HomeSearchResults: View {
-    var state: HomeState
+    var state: HomeStateItem
     let items = restaurants
     
     var body: some View {
@@ -173,7 +173,7 @@ struct TextShadowModifier: ViewModifier {
 #if DEBUG
 struct HomeSearchResults_Previews: PreviewProvider {
     static var previews: some View {
-        HomeSearchResults(state: HomeState(dish: "Pho"))
+        HomeSearchResults(state: HomeStateItem(dish: "Pho"))
             .embedInAppEnvironment()
     }
 }

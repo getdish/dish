@@ -6,7 +6,7 @@ struct SearchToTagColor {
     static let filter = Color(red: 0.6, green: 0.2, blue: 0.4, opacity: 0.5)
 }
 
-func homeStateToTags(_ state: HomeState) -> [SearchInputTag] {
+func homeStateToTags(_ state: HomeStateItem) -> [SearchInputTag] {
     var tags: [SearchInputTag] = []
     
     if state.dish != "" {
@@ -35,7 +35,7 @@ struct HomeSearchBar: View {
     @EnvironmentObject var store: AppStore
     
     var hasSearch: Bool {
-        store.state.homeState.count > 1
+        store.state.home.current.count > 1
     }
     
     var body: some View {
@@ -49,15 +49,15 @@ struct HomeSearchBar: View {
             showCancelInside: true,
             after: after,
             searchText: self.$searchText,
-            tags: homeStateToTags(self.store.state.homeState.last!)
+            tags: homeStateToTags(self.store.state.home.current.last!)
         )
     }
     
     var icon: AnyView {
-        if store.state.homeState.count > 1 {
+        if store.state.home.current.count > 1 {
             return AnyView(
                 Image(systemName: "chevron.left").onTapGesture {
-                    self.store.send(.popHomeState)
+                    self.store.send(.home(.popHomeState))
                 }
             )
         } else {
