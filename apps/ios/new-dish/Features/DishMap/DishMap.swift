@@ -10,8 +10,6 @@ struct DishMapView: View {
     @EnvironmentObject var store: AppStore
     
     var body: some View {
-        print("isOnCurrent \(store.state.location.isOnCurrent)")
-        
         return MapView(
             width: width,
             height: height,

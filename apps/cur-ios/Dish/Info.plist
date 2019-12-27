@@ -28,6 +28,8 @@
 	<string>Displaying and updating favorite dish locations</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Search restuarants on a map</string>
+	<key>CFBundleDisplayName</key>
+	<string></string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

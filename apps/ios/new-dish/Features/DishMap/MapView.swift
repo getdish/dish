@@ -77,6 +77,7 @@ class MapViewController: UIViewController {
         self.mapView.isMyLocationEnabled = true
         
         if let location: CLLocation = appStore.state.location.lastKnown {
+            print("we got locations yall")
             let camera = GMSCameraPosition.camera(
                 withLatitude: location.coordinate.latitude,
                 longitude: location.coordinate.longitude,
@@ -174,13 +175,12 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("getting location")
         appStore.send(.location(.setLastKnown(locations.last)))
-        //        AppAction.location(.setLikelyPlaces(locations)
+//        appStore.send(.location(.setLikelyPlaces(locations)))
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        print("locationManager statuss \(status)")
+        print("locationManager status \(status)")
         if status == .authorizedWhenInUse {
             manager.startUpdatingLocation()
             if !appStore.state.location.hasChangedOnce {

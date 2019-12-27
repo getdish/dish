@@ -11,7 +11,7 @@ extension AppState {
         var search = ""
         var searchResults: [CLLocation] = []
         var lastKnown: CLLocation? = nil
-        var isOnCurrent = true
+        var isOnCurrent = false
         var hasChangedOnce = false
         var likelyPlaces: [GMSPlace] = []
     }
