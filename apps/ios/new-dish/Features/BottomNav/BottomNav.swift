@@ -5,7 +5,7 @@ struct BottomNav: View {
     let hiddenButtonY: CGFloat = 100
     
     var body: some View {
-        let isOnGallery = store.state.galleryDish != nil
+        let isOnGallery = false //store.state.galleryDish != nil
         
         return VStack {
             Spacer()
@@ -35,7 +35,7 @@ struct BottomNav: View {
                     Spacer()
                     BottomNavCircularButton(image: "xmark", size: 50, action: {
                         print("CLOSE THAT SHIT")
-                        self.store.send(.closeGallery)
+//                        self.store.send(.closeGallery)
                     })
                         .animation(.spring(response: 0.75))
                         .offset(y: !isOnGallery ? hiddenButtonY : 0)

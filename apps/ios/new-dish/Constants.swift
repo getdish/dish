@@ -4,16 +4,9 @@ class Constants {
 }
 
 class Mocks {
-    static let galleryVisibleDish = Store<AppState, AppAction>.init(
-        initialState: AppState(
-            galleryDish: features[0]
-        ),
-        reducer: appReducer
-    )
-    
     static let homeSearchedPho = Store<AppState, AppAction>.init(
         initialState: AppState(
-            home: AppState.Home(
+            home: AppState.HomeState(
                 current: [HomeStateItem(), HomeStateItem(dish: "Pho")]
             )
         ),

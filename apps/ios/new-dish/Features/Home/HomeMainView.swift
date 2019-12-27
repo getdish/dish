@@ -133,7 +133,7 @@ struct HomeMainView: View {
     
     var body: some View {
         // pushed map below the border radius of the bottomdrawer
-        let isOnSearchResults = AppStateSelect.isOnSearchResults(self.store.state)
+        let isOnSearchResults = AppSelect.isOnSearchResults(self.store.state)
         let state = self.state
         let dragState = state.dragState
         let mapHeight = isOnSearchResults ? 160 : state.mapHeight
@@ -199,7 +199,7 @@ struct HomeMainView: View {
                                             SearchFilter(type: .cuisine, name: "American")
                                         ]
                                         self.store.send(.home(
-                                            .pushHomeState(
+                                            .push(
                                                 HomeStateItem(
                                                     search: curState.search,
                                                     dish: curState.dish,
@@ -340,7 +340,7 @@ struct HomeCardsGrid: View {
                                 print("tap on item")
                                 self.store.send(
                                     .home(
-                                        .pushHomeState(HomeStateItem(dish: item.name))
+                                        .push(HomeStateItem(dish: item.name))
                                     )
                                 )
                         }

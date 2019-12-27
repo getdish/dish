@@ -8,7 +8,7 @@ struct HomeMainContent: View {
     
     var body: some View {
         let mapHeight = self.mapHeight
-        let isOnSearchResults = AppStateSelect.isOnSearchResults(self.store.state)
+        let isOnSearchResults = AppSelect.isOnSearchResults(self.store.state)
         
         return GeometryReader { geometry in
             ZStack {

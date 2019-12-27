@@ -7,7 +7,7 @@ struct TopNavSearch: View {
     @EnvironmentObject var store: AppStore
     
     private var locationSearch: Binding<String> {
-        store.binding(for: \.locationSearch, { .setLocationSearch($0) })
+        store.binding(for: \.location.search, { .location(.setSearch($0)) })
     }
     
     func focus() {
@@ -101,7 +101,7 @@ struct TopNavSearch: View {
                 SearchInput(
                     placeholder: "Current Location",
                     inputBackgroundColor: Color(.secondarySystemGroupedBackground).opacity(self.isEditing ? 1.0 : 0.5),
-                    icon: AnyView(Image(systemName: store.state.lastKnownLocation != nil ? "location.fill" : "location")),
+                    icon: AnyView(Image(systemName: store.state.location.lastKnown != nil ? "location.fill" : "location")),
                     showCancelInside: true,
                     onEditingChanged: { isEditing in
                         withAnimation(.spring()) {

@@ -1,5 +1,5 @@
 extension AppState {
-    struct Home: Equatable {
+    struct HomeState: Equatable {
         var view: HomePageView = .home
         var current: [HomeStateItem] = [HomeStateItem()]
         var showDrawer: Bool = false
@@ -9,8 +9,8 @@ extension AppState {
 enum HomeAction {
     case changeHomePage(_ page: HomePageView)
     case setShowDrawer(_ val: Bool)
-    case pushHomeState(_ state: HomeStateItem)
-    case popHomeState
+    case push(_ state: HomeStateItem)
+    case pop
     case toggleDrawer
 }
 
@@ -22,14 +22,14 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
             state.home.showDrawer = val
         case .toggleDrawer:
             state.home.showDrawer = !state.home.showDrawer
-        case let .pushHomeState(homeState):
+        case let .push(homeState):
             state.home.current.append(homeState)
-        case .popHomeState:
+        case .pop:
             state.home.current = state.home.current.dropLast()
     }
 }
 
-extension AppStateSelect {
+extension AppSelect {
     static func isOnSearchResults(_ state: AppState) -> Bool {
         state.home.current.last!.dish != ""
     }

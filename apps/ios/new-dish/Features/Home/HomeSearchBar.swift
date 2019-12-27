@@ -57,7 +57,7 @@ struct HomeSearchBar: View {
         if store.state.home.current.count > 1 {
             return AnyView(
                 Image(systemName: "chevron.left").onTapGesture {
-                    self.store.send(.home(.popHomeState))
+                    self.store.send(.home(.pop))
                 }
             )
         } else {
