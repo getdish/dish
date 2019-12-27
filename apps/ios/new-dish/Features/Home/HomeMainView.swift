@@ -6,9 +6,6 @@ let cardRowHeight: CGFloat = 140
 fileprivate let resistanceYBeforeSnap: CGFloat = 50
 
 class HomeViewState: ObservableObject {
-    enum DragState { case on, idle, off }
-    
-    @Published var dragState: DragState = .idle
     @Published var appHeight: CGFloat = 0
     @Published var scrollY: CGFloat = 0
     @Published var y: CGFloat = 0
@@ -32,9 +29,9 @@ class HomeViewState: ObservableObject {
     func drag(_ dragYInput: CGFloat) {
         // prevent dragging too far up if not at bottom
         let dragY = !isSnappedToBottom ? max(-120, dragYInput) : dragYInput
-
+        
         // remember where we started
-        if dragState != .on {
+        if HomeDragLock.lock != .searchbar {
             self.startDragAt = y
         }
         
@@ -66,8 +63,6 @@ class HomeViewState: ObservableObject {
             self.snapToBottom(true)
         } else if willSnapUp {
             self.snapToBottom(false)
-        } else {
-            self.dragState = .on
         }
     }
     
@@ -77,7 +72,7 @@ class HomeViewState: ObservableObject {
         }
         if !isSnappedToBottom && y > aboutToSnapToBottomAt {
             withAnimation(.spring()) {
-              self.y = aboutToSnapToBottomAt
+                self.y = aboutToSnapToBottomAt
             }
         }
         if searchBarYExtra != 0 {
@@ -85,11 +80,10 @@ class HomeViewState: ObservableObject {
                 self.searchBarYExtra = 0
             }
         }
-        self.dragState = .idle
     }
     
     func snapToBottom(_ toBottom: Bool = true) {
-        self.dragState = .off
+        HomeDragLock.setLock(.off)
         withAnimation(.spring()) {
             self.searchBarYExtra = 0
             if toBottom {
@@ -99,41 +93,30 @@ class HomeViewState: ObservableObject {
             }
         }
     }
-    
-    func debugString() -> String {
-        // xcode bug cant do live preview with this uncommented
-        ""
-//        return """
-//        isSnappedToBottom \(self.isSnappedToBottom)
-//        dragY \(self.y.rounded())
-//        scrollY \(self.scrollY.rounded())
-//        y \(self.y.rounded())
-//        dishMapHeight \(self.mapHeight.rounded())
-//        """
-    }
 }
 
 fileprivate let homeViewState = HomeViewState()
+
+struct HomeSearchBarState {
+    static var frame: CGRect = CGRect()
+    
+    static func isWithin(_ valueY: CGFloat) -> Bool {
+        return valueY >= HomeSearchBarState.frame.minY && valueY <= HomeSearchBarState.frame.maxY
+    }
+}
 
 struct HomeMainView: View {
     @EnvironmentObject var store: AppStore
     @Environment(\.geometry) var appGeometry
     @ObservedObject var state = homeViewState
-    @State var searchBarMinY: CGFloat = 0
-    @State var searchBarMaxY: CGFloat = 0
     @State var showTypeMenu = false
-    
-    func isWithinSearchBar(_ valueY: CGFloat) -> Bool {
-        return valueY >= searchBarMinY && valueY <= searchBarMaxY
-    }
     
     var body: some View {
         // pushed map below the border radius of the bottomdrawer
         let isOnSearchResults = AppSelect.isOnSearchResults(self.store.state)
         let state = self.state
-        let dragState = state.dragState
         let mapHeight = isOnSearchResults ? 160 : state.mapHeight
-
+        
         return GeometryReader { geometry in
             ZStack {
                 Color.black
@@ -168,8 +151,8 @@ struct HomeMainView: View {
                             mapHeight: mapHeight,
                             isHorizontal: self.state.isSnappedToBottom
                         )
-                        // for smoe reason this seems to slow down clicking on toggle button
-                        .animation(state.dragState == .on ? .spring(response: 0.3333) : nil)
+                            // for smoe reason this seems to slow down clicking on toggle button
+                            .animation(HomeDragLock.lock == .searchbar ? .spring(response: 0.3333) : nil)
                     }
                     
                     VStack {
@@ -193,7 +176,7 @@ struct HomeMainView: View {
                                                     filters: filters
                                                 )
                                             )
-                                        ))
+                                            ))
                                     })
                                     FilterButton(label: "Thai", action: {})
                                     FilterButton(label: "Chinese", action: {})
@@ -212,7 +195,7 @@ struct HomeMainView: View {
                                         Text("Item Two")
                                         Text("Item Three")
                                     }
-                                    .frame(height: 150) // todo how to get lists that shrink
+                                        .frame(height: 150) // todo how to get lists that shrink
                                 }) {
                                     Text("🍽")
                                         .font(.system(size: 32))
@@ -237,17 +220,7 @@ struct HomeMainView: View {
                     
                     VStack {
                         GeometryReader { searchBarGeometry -> HomeSearchBar in
-                            if dragState != .on {
-                                DispatchQueue.main.async {
-                                    let frame = searchBarGeometry.frame(in: .global)
-                                    if frame.minY != self.searchBarMinY {
-                                        self.searchBarMinY = frame.minY
-                                    }
-                                    if frame.maxY != self.searchBarMaxY {
-                                        self.searchBarMaxY = frame.maxY
-                                    }
-                                }
-                            }
+                            HomeSearchBarState.frame = searchBarGeometry.frame(in: .global)
                             return HomeSearchBar()
                         }
                         .frame(height: 45)
@@ -256,7 +229,7 @@ struct HomeMainView: View {
                     }
                     .padding(.horizontal, 10)
                     .offset(y: mapHeight - 23 + state.searchBarYExtra)
-//                    .animation(dragState != .on ? .spring() : .none)
+                        //                    .animation(dragState != .on ? .spring() : .none)
                         // searchinput always light
                         .environment(\.colorScheme, .light)
                 }
@@ -268,19 +241,20 @@ struct HomeMainView: View {
             .simultaneousGesture(
                 DragGesture(minimumDistance: 10)
                     .onChanged { value in
-                        // disable drag on off
-                        if dragState == .off {
+                        if [.off, .pager].contains(HomeDragLock.lock) {
                             return
                         }
                         // why is this off 80???
-                        if self.isWithinSearchBar(value.startLocation.y - 40) || dragState == .on {
+                        if HomeSearchBarState.isWithin(value.startLocation.y - 40) || HomeDragLock.lock == .searchbar {
+                            HomeDragLock.setLock(.searchbar)
                             self.state.drag(value.translation.height)
                         }
                 }
                 .onEnded { value in
-                    if dragState != .idle {
+                    if [.idle, .searchbar].contains(HomeDragLock.lock) {
                         self.state.finishDrag()
                     }
+                    HomeDragLock.setLock(.idle)
                 }
             )
         }

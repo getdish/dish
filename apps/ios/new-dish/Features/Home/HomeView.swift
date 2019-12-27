@@ -32,14 +32,17 @@ struct HomeViewContent: View {
     @State private var disableDragging = true
 
     var body: some View {
-        ZStack {
+        let dragState = HomeDragLock.lock
+        
+        return ZStack {
             PagerView(
                 pageCount: 2,
                 pagerStore: homePager,
                 disableDragging: self.disableDragging
                 ) {
                     HomeMainView()
-                    DishCamera()
+                    Color.red
+//                    DishCamera()
             }
             .onChangePage { index in
                 self.disableDragging = index == 0
@@ -49,8 +52,14 @@ struct HomeViewContent: View {
             .simultaneousGesture(
                 DragGesture()
                     .onChanged { value in
+                        if dragState == .searchbar {
+                            return
+                        }
                         // right edge
                         if self.width - value.startLocation.x < 10 {
+                            if abs(value.translation.width) > 10 {
+                                HomeDragLock.setLock(.pager)
+                            }
                             let next = Double((0 - value.translation.width) / self.width)
                             homePager.index = min(1, max(0, next))
                         }
@@ -59,6 +68,7 @@ struct HomeViewContent: View {
                     if homePager.index.rounded() != homePager.index {
                        homePager.onDragEnd(value)
                     }
+                    HomeDragLock.setLock(.idle)
                 }
             )
             

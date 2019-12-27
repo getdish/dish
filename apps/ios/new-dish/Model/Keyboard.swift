@@ -1,7 +1,7 @@
 import SwiftUI
 
-struct KeyboardInstance {
-    func hide() {
+struct Keyboard {
+    static func hide() {
         let keyWindow = UIApplication.shared.connectedScenes
             .filter({$0.activationState == .foregroundActive})
             .map({$0 as? UIWindowScene})
@@ -11,5 +11,3 @@ struct KeyboardInstance {
         keyWindow?.endEditing(true)
     }
 }
-
-let Keyboard = KeyboardInstance()

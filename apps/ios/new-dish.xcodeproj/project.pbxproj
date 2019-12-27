@@ -24,6 +24,7 @@
 		1CE354882398714D004B3A84 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE354872398714D004B3A84 /* HomeView.swift */; };
 		1CE3548A239871CB004B3A84 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE35489239871CB004B3A84 /* BottomSheetView.swift */; };
 		AE0F474423B69276008F7418 /* DishCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0F474323B69276008F7418 /* DishCamera.swift */; };
+		AE0F474823B6AA39008F7418 /* DragLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0F474723B6AA39008F7418 /* DragLock.swift */; };
 		AE2B6BA423AC211F007BCD25 /* VerticalCardPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */; };
 		AE56C86423ADB78C006A156A /* HomeSearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56C86323ADB78C006A156A /* HomeSearchResults.swift */; };
 		AE56C86623ADD977006A156A /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56C86523ADD977006A156A /* TagView.swift */; };
@@ -70,7 +71,7 @@
 		AEED843E23B5A8E000407266 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED843D23B5A8E000407266 /* Mocks.swift */; };
 		AEED844123B6707100407266 /* DishMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844023B6707100407266 /* DishMap.swift */; };
 		AEED844323B6712000407266 /* HomeCardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844223B6712000407266 /* HomeCardsView.swift */; };
-		AEED844523B672D000407266 /* TopNavCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844423B672D000407266 /* TopNavCamera.swift */; };
+		AEED844523B672D000407266 /* CameraTopNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844423B672D000407266 /* CameraTopNav.swift */; };
 		AEED844823B675C300407266 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844723B675C300407266 /* CameraView.swift */; };
 		AEF6556F23B0248200E49A51 /* FilterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6556E23B0248200E49A51 /* FilterButton.swift */; };
 		AEF6557123B024A100E49A51 /* ScrollListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557023B024A100E49A51 /* ScrollListener.swift */; };
@@ -107,6 +108,7 @@
 		24F0B5F55B1972A7519C9B3C /* Pods-new-dish.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-new-dish.debug.xcconfig"; path = "Target Support Files/Pods-new-dish/Pods-new-dish.debug.xcconfig"; sourceTree = "<group>"; };
 		958FBEA937B7052DE007A65D /* Pods-new-dish.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-new-dish.release.xcconfig"; path = "Target Support Files/Pods-new-dish/Pods-new-dish.release.xcconfig"; sourceTree = "<group>"; };
 		AE0F474323B69276008F7418 /* DishCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishCamera.swift; sourceTree = "<group>"; };
+		AE0F474723B6AA39008F7418 /* DragLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragLock.swift; sourceTree = "<group>"; };
 		AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalCardPager.swift; sourceTree = "<group>"; };
 		AE56C86323ADB78C006A156A /* HomeSearchResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchResults.swift; sourceTree = "<group>"; };
 		AE56C86523ADD977006A156A /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
@@ -153,7 +155,7 @@
 		AEED843D23B5A8E000407266 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Mocks.swift; path = "/Users/nw/dish/apps/ios/new-dish/Store/Mocks.swift"; sourceTree = "<absolute>"; };
 		AEED844023B6707100407266 /* DishMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishMap.swift; sourceTree = "<group>"; };
 		AEED844223B6712000407266 /* HomeCardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCardsView.swift; sourceTree = "<group>"; };
-		AEED844423B672D000407266 /* TopNavCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavCamera.swift; sourceTree = "<group>"; };
+		AEED844423B672D000407266 /* CameraTopNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraTopNav.swift; sourceTree = "<group>"; };
 		AEED844723B675C300407266 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		AEF6556E23B0248200E49A51 /* FilterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButton.swift; sourceTree = "<group>"; };
 		AEF6557023B024A100E49A51 /* ScrollListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollListener.swift; sourceTree = "<group>"; };
@@ -248,6 +250,7 @@
 				AEF6557823B041F600E49A51 /* DishItem.swift */,
 				AE861A7823A0651D004096BF /* Keyboard.swift */,
 				AEF6557323B0407000E49A51 /* ImageStore.swift */,
+				AE0F474723B6AA39008F7418 /* DragLock.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -376,8 +379,8 @@
 		AEED844623B6733600407266 /* Camera */ = {
 			isa = PBXGroup;
 			children = (
-				AEED844423B672D000407266 /* TopNavCamera.swift */,
 				AE0F474323B69276008F7418 /* DishCamera.swift */,
+				AEED844423B672D000407266 /* CameraTopNav.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -576,7 +579,8 @@
 				AE56C86423ADB78C006A156A /* HomeSearchResults.swift in Sources */,
 				AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */,
 				AEED844823B675C300407266 /* CameraView.swift in Sources */,
-				AEED844523B672D000407266 /* TopNavCamera.swift in Sources */,
+				AEED844523B672D000407266 /* CameraTopNav.swift in Sources */,
+				AE0F474823B6AA39008F7418 /* DragLock.swift in Sources */,
 				1CE3548323986C5C004B3A84 /* App.swift in Sources */,
 				AEF6556F23B0248200E49A51 /* FilterButton.swift in Sources */,
 				AEAE67EC23B5A70A00B9D781 /* LocationState.swift in Sources */,

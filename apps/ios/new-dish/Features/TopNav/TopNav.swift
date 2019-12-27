@@ -29,9 +29,10 @@ struct TopNav: View {
                 VStack {
                     VStack {
                         HStack(spacing: 12) {
-                            TopNavSearch(
-//                                isEditing: self.$isEditing
-                            )
+                            ZStack {
+                                TopNavSearch()
+                                CameraTopNav()
+                            }
 
 //                            if !isEditing {
                                 TopNavMenuButton()

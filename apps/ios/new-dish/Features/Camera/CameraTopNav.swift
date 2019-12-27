@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct TopNavCamera: View {
+struct CameraTopNav: View {
     @EnvironmentObject var store: AppStore
     
     var body: some View {

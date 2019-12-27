@@ -37,6 +37,7 @@ extension AppSelect {
 
 // structures for HomeStore
 
+
 enum HomePageView {
     case home, camera
 }

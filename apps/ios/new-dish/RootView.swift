@@ -8,6 +8,12 @@
 import SwiftUI
 
 struct RootView: View {
+    init() {
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            print("now \(HomeDragLock.lock)")
+        }
+    }
+    
     var body: some View {
         ContextMenuRootView {
             HomeContainerView()

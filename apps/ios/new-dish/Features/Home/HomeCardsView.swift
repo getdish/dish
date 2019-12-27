@@ -60,7 +60,7 @@ struct HomeCardsGrid: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     ScrollListener(onScroll: { frame in
-                        if self.homeState.dragState == .idle {
+                        if HomeDragLock.lock == .idle {
                             let frameY = self.homeState.mapHeight
                             let scrollY = frame.minY
                             let realY = frameY - scrollY - 44

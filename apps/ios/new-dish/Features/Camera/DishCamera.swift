@@ -29,7 +29,7 @@ struct DishCamera: View {
             BottomSheetView(
                 isOpen: $isOpen,
                 maxHeight: Screen.height * 0.7,
-                minHeight: Screen.height * 0.7
+                minHeight: -100
             ) {
                 DishRestaurantDrawer()
             }
