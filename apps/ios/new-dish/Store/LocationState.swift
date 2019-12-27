@@ -1,5 +1,5 @@
-import GooglePlaces
 import Combine
+import GooglePlaces
 import CoreLocation
 
 fileprivate let placesClient = GMSPlacesClient.shared()
@@ -54,30 +54,5 @@ func locationReducer(_ state: inout AppState, action: LocationAction) {
 //                    }
 //                }
 //            })
-    }
-}
-
-
-class LocationManager: NSObject, CLLocationManagerDelegate {
-    private let manager = CLLocationManager()
-    
-    func start() {
-        manager.delegate = self
-        manager.requestWhenInUseAuthorization()
-        manager.startUpdatingLocation()
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        appStore.send(.location(.setLastKnown(locations.last)))
-//        AppAction.location(.setLikelyPlaces(locations)
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status == .authorizedWhenInUse {
-            manager.startUpdatingLocation()
-            if !appStore.state.location.hasChangedOnce {
-                appStore.send(.location(.goToCurrent))
-            }
-        }
     }
 }

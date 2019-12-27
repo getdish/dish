@@ -2,9 +2,14 @@ import SwiftUI
 import GoogleMaps
 
 struct MapView: UIViewControllerRepresentable {
+    enum MapLocation {
+        case current, uncontrolled
+    }
+    
     var width: CGFloat
     var height: CGFloat
     var darkMode: Bool?
+    var location: MapLocation
 
     func makeCoordinator() -> MapView.Coordinator {
         Coordinator(
@@ -39,7 +44,25 @@ struct MapView: UIViewControllerRepresentable {
         }
         
         func update() {
-            
+            print("update map controller!!!!!!!")
+        }
+        
+        func zoomMapToCurrentLocation() {
+            //        let location: CLLocation = self.locationStore.locations.last!
+            //        print("Location: \(location)")
+            //
+            //        let camera = GMSCameraPosition.camera(
+            //            withLatitude: location.coordinate.latitude,
+            //            longitude: location.coordinate.longitude,
+            //            zoom: zoomLevel
+            //        )
+            //
+            //        if mapView.isHidden {
+            //            mapView.isHidden = false
+            //            mapView.camera = camera
+            //        } else {
+            //            mapView.animate(to: camera)
+            //        }
         }
     }
 }
@@ -116,24 +139,6 @@ class MapViewController: UIViewController {
 }
 
 extension MapViewController {
-    func zoomMapToCurrentLocation() {
-//        let location: CLLocation = self.locationStore.locations.last!
-//        print("Location: \(location)")
-//        
-//        let camera = GMSCameraPosition.camera(
-//            withLatitude: location.coordinate.latitude,
-//            longitude: location.coordinate.longitude,
-//            zoom: zoomLevel
-//        )
-//        
-//        if mapView.isHidden {
-//            mapView.isHidden = false
-//            mapView.camera = camera
-//        } else {
-//            mapView.animate(to: camera)
-//        }
-    }
-    
     // Handle authorization for the location manager.
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
