@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 import GoogleMaps
 
 struct MapView: UIViewControllerRepresentable {
@@ -6,52 +7,61 @@ struct MapView: UIViewControllerRepresentable {
         case current, uncontrolled
     }
     
+//    var controller: MapViewController
     var width: CGFloat
     var height: CGFloat
     var darkMode: Bool?
     var location: MapLocation
+    @State var controller: MapViewController? = nil
+
+    func makeCoordinator() -> MapView.Coordinator {
+        Coordinator(self)
+    }
     
-    func createController() -> MapViewController {
-        MapViewController(
+    func makeUIViewController(context: Context) -> UIViewController {
+        let controller = MapViewController(
             width: width,
             height: height,
             darkMode: darkMode
         )
-    }
-
-    func makeCoordinator() -> MapView.Coordinator {
-        Coordinator(
-            createController(),
-            location: location
-        )
+        DispatchQueue.main.async {
+            self.controller = controller
+        }
+        return controller
     }
     
-    func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<MapView>) {
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
         print("MapView should update the controller now")
         context.coordinator.update()
     }
     
-    func makeUIViewController(context: UIViewControllerRepresentableContext<MapView>) -> UIViewController {
-        createController()
-    }
-    
     class Coordinator: NSObject {
-        var controller: MapViewController
-        var location: MapLocation
+        var parent: MapView
         let locationManager = LocationManager()
+        var cancels: [AnyCancellable] = []
         
-        init(_ controller: MapViewController, location: MapLocation) {
-            self.controller = controller
-            self.location = location
+        init(_ parent: MapView) {
+            self.parent = parent
             super.init()
             self.update()
             self.locationManager.start()
+            
+            // hacky dealy for now because mapView isn't started yet
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
+                self.cancels.append(
+                    self.locationManager.$lastLocation.map { location in
+                        if location != nil {
+                            self.parent.controller!.moveMapToCurrentLocation()
+                        }
+                    }.sink {}
+                )
+            }
         }
         
         func update() {
-            if location == .current {
-                self.controller.moveMapToCurrentLocation()
-            }
+//            if location == .current {
+//                self.controller.moveMapToCurrentLocation()
+//            }
             print("update map controller!!!!!!!")
         }
     }
@@ -74,6 +84,10 @@ class MapViewController: UIViewController {
     }
     
     func moveMapToCurrentLocation() {
+        if mapView == nil {
+            return
+        }
+
         self.mapView.isMyLocationEnabled = true
         
         if let location: CLLocation = appStore.state.location.lastKnown {
@@ -115,6 +129,8 @@ class MapViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        print("view did load...")
         
         // Create a GMSCameraPosition that tells the map to display the
         // coordinate -33.86,151.20 at zoom level 6.
@@ -161,7 +177,9 @@ extension MapViewController {
     }
 }
 
-class LocationManager: NSObject, CLLocationManagerDelegate {
+class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
+    @Published var lastLocation: CLLocation? = nil
+    
     private let manager = CLLocationManager()
     
     func start() {
@@ -176,7 +194,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         appStore.send(.location(.setLastKnown(locations.last)))
-//        appStore.send(.location(.setLikelyPlaces(locations)))
+        self.lastLocation = locations.last
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
