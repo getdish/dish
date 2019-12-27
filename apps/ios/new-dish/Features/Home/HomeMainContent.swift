@@ -13,7 +13,7 @@ struct HomeMainContent: View {
         return GeometryReader { geometry in
             ZStack {
                 // home
-                HomeCards(isHorizontal: self.isHorizontal)
+                HomeCardsView(isHorizontal: self.isHorizontal)
                 
                 // pages as you drill in below home
                 if isOnSearchResults {

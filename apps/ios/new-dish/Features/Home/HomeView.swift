@@ -75,15 +75,3 @@ struct HomeView_Previews: PreviewProvider {
            .embedInAppEnvironment()
     }
 }
-
-//                SideDrawerView(
-//                    isOpen: self.$sideDrawerShown,
-//                    content: {
-//                        HomeViewContent(height: geometry.size.height)
-//                    },
-//                    drawer: {
-//                        // TODO @majid it shows DishSidebarView() if i uncomment DishSidebarView
-//                        EmptyView().frame(height: 100)
-//    //                   DishSidebarView()
-//                    }
-//                )

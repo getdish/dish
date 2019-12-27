@@ -5,9 +5,7 @@ fileprivate let bottomPad = CGFloat(5)
 fileprivate let topPad = Screen.statusBarHeight
 fileprivate let totalHeight = topPad + bottomPad + 40
 
-struct TopNav: View {
-    @State var isEditing = false
-    
+struct TopNav: View {    
     var body: some View {
         ZStack {
             VStack {
@@ -32,11 +30,12 @@ struct TopNav: View {
                     VStack {
                         HStack(spacing: 12) {
                             TopNavSearch(
-                                isEditing: self.$isEditing
+//                                isEditing: self.$isEditing
                             )
-                            if !isEditing {
+
+//                            if !isEditing {
                                 TopNavMenuButton()
-                            }
+//                            }
                         }
                         .padding(.horizontal)
                     }
