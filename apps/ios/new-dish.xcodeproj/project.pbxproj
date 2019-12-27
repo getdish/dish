@@ -53,7 +53,6 @@
 		AE7563E923A03D570094022B /* MagicMove.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563E823A03D570094022B /* MagicMove.swift */; };
 		AE861A7923A0651D004096BF /* Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7823A0651D004096BF /* Keyboard.swift */; };
 		AE861A7B23A06EDC004096BF /* BarArrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7A23A06EDC004096BF /* BarArrow.swift */; };
-		AE861A7D23A07AFB004096BF /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7C23A07AFB004096BF /* Constants.swift */; };
 		AE861A7F23A07D81004096BF /* HomeMapControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7E23A07D81004096BF /* HomeMapControls.swift */; };
 		AE861A8123A16DA6004096BF /* TopNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8023A16DA6004096BF /* TopNav.swift */; };
 		AE861A8323A171D2004096BF /* TopNavSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8223A171D2004096BF /* TopNavSearch.swift */; };
@@ -68,6 +67,7 @@
 		AEA331F923A3385000B36A23 /* InlineAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F823A3385000B36A23 /* InlineAlertView.swift */; };
 		AEA331FB23A338F400B36A23 /* KeyboardHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331FA23A338F400B36A23 /* KeyboardHost.swift */; };
 		AEAE67EC23B5A70A00B9D781 /* LocationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAE67EB23B5A70A00B9D781 /* LocationState.swift */; };
+		AEED843E23B5A8E000407266 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED843D23B5A8E000407266 /* Mocks.swift */; };
 		AEF6556F23B0248200E49A51 /* FilterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6556E23B0248200E49A51 /* FilterButton.swift */; };
 		AEF6557123B024A100E49A51 /* ScrollListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557023B024A100E49A51 /* ScrollListener.swift */; };
 		AEF6557423B0407000E49A51 /* ImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557323B0407000E49A51 /* ImageStore.swift */; };
@@ -132,7 +132,6 @@
 		AE7563E823A03D570094022B /* MagicMove.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicMove.swift; sourceTree = "<group>"; };
 		AE861A7823A0651D004096BF /* Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyboard.swift; sourceTree = "<group>"; };
 		AE861A7A23A06EDC004096BF /* BarArrow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarArrow.swift; sourceTree = "<group>"; };
-		AE861A7C23A07AFB004096BF /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		AE861A7E23A07D81004096BF /* HomeMapControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMapControls.swift; sourceTree = "<group>"; };
 		AE861A8023A16DA6004096BF /* TopNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNav.swift; sourceTree = "<group>"; };
 		AE861A8223A171D2004096BF /* TopNavSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavSearch.swift; sourceTree = "<group>"; };
@@ -147,6 +146,7 @@
 		AEA331F823A3385000B36A23 /* InlineAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineAlertView.swift; sourceTree = "<group>"; };
 		AEA331FA23A338F400B36A23 /* KeyboardHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHost.swift; sourceTree = "<group>"; };
 		AEAE67EB23B5A70A00B9D781 /* LocationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationState.swift; sourceTree = "<group>"; };
+		AEED843D23B5A8E000407266 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Mocks.swift; path = "/Users/nw/dish/apps/ios/new-dish/Store/Mocks.swift"; sourceTree = "<absolute>"; };
 		AEF6556E23B0248200E49A51 /* FilterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButton.swift; sourceTree = "<group>"; };
 		AEF6557023B024A100E49A51 /* ScrollListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollListener.swift; sourceTree = "<group>"; };
 		AEF6557223B03F6F00E49A51 /* dishData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = dishData.json; sourceTree = "<group>"; };
@@ -196,14 +196,13 @@
 				1CE3546423986B1B004B3A84 /* AppDelegate.swift */,
 				1CE3546623986B1B004B3A84 /* SceneDelegate.swift */,
 				1CE3546823986B1B004B3A84 /* RootView.swift */,
-				AE861A7C23A07AFB004096BF /* Constants.swift */,
-				1CE3546A23986B1C004B3A84 /* Assets.xcassets */,
 				1CE3547823986B2A004B3A84 /* Features */,
-				1CE3547C23986B69004B3A84 /* Extensions */,
 				AEF6558223B59A8000E49A51 /* Store */,
 				1CE3547A23986B5D004B3A84 /* Model */,
 				1CE3547D23986B70004B3A84 /* Views */,
 				AE7563BD23A037B50094022B /* Resources */,
+				1CE3547C23986B69004B3A84 /* Extensions */,
+				1CE3546A23986B1C004B3A84 /* Assets.xcassets */,
 				1CE3547223986B1C004B3A84 /* Info.plist */,
 				1CE3546F23986B1C004B3A84 /* LaunchScreen.storyboard */,
 				1CE3546C23986B1C004B3A84 /* Preview Content */,
@@ -359,6 +358,7 @@
 			isa = PBXGroup;
 			children = (
 				1CE3548223986C5C004B3A84 /* App.swift */,
+				AEED843D23B5A8E000407266 /* Mocks.swift */,
 				AEAE67EB23B5A70A00B9D781 /* LocationState.swift */,
 				AEF6558323B59BC000E49A51 /* HomeState.swift */,
 				1CE3547E23986B88004B3A84 /* Store.swift */,
@@ -556,6 +556,7 @@
 				AE861A8723A1727B004096BF /* TopNavMenuButton.swift in Sources */,
 				AEF6557B23B042CD00E49A51 /* HomeSearchBar.swift in Sources */,
 				AEA331F923A3385000B36A23 /* InlineAlertView.swift in Sources */,
+				AEED843E23B5A8E000407266 /* Mocks.swift in Sources */,
 				AEA331EF23A3371D00B36A23 /* DishSidebarView.swift in Sources */,
 				1CE2393123A19722006B7AFD /* Environment.swift in Sources */,
 				AEF6557723B041C400E49A51 /* RestaurantItem.swift in Sources */,
@@ -574,7 +575,6 @@
 				AEF6558123B2205F00E49A51 /* HomeMainContent.swift in Sources */,
 				AE7563E923A03D570094022B /* MagicMove.swift in Sources */,
 				1CE3547F23986B88004B3A84 /* Store.swift in Sources */,
-				AE861A7D23A07AFB004096BF /* Constants.swift in Sources */,
 				AE56C86623ADD977006A156A /* TagView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
