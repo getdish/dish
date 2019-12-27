@@ -10,14 +10,19 @@ struct MapView: UIViewControllerRepresentable {
     var height: CGFloat
     var darkMode: Bool?
     var location: MapLocation
+    
+    func createController() -> MapViewController {
+        MapViewController(
+            width: width,
+            height: height,
+            darkMode: darkMode
+        )
+    }
 
     func makeCoordinator() -> MapView.Coordinator {
         Coordinator(
-            MapViewController(
-                width: width,
-                height: height,
-                darkMode: darkMode
-            )
+            createController(),
+            location: location
         )
     }
     
@@ -27,49 +32,32 @@ struct MapView: UIViewControllerRepresentable {
     }
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<MapView>) -> UIViewController {
-        MapViewController(
-            width: width,
-            height: height,
-            darkMode: darkMode
-        )
+        createController()
     }
     
     class Coordinator: NSObject {
         var controller: MapViewController
+        var location: MapLocation
+        let locationManager = LocationManager()
         
-        init(_ controller: MapViewController) {
+        init(_ controller: MapViewController, location: MapLocation) {
             self.controller = controller
+            self.location = location
             super.init()
             self.update()
+            self.locationManager.start()
         }
         
         func update() {
+            if location == .current {
+                self.controller.moveMapToCurrentLocation()
+            }
             print("update map controller!!!!!!!")
-        }
-        
-        func zoomMapToCurrentLocation() {
-            //        let location: CLLocation = self.locationStore.locations.last!
-            //        print("Location: \(location)")
-            //
-            //        let camera = GMSCameraPosition.camera(
-            //            withLatitude: location.coordinate.latitude,
-            //            longitude: location.coordinate.longitude,
-            //            zoom: zoomLevel
-            //        )
-            //
-            //        if mapView.isHidden {
-            //            mapView.isHidden = false
-            //            mapView.camera = camera
-            //        } else {
-            //            mapView.animate(to: camera)
-            //        }
         }
     }
 }
 
 class MapViewController: UIViewController {
-//    @ObservedObject var locationStore = Store.location
-    
     // want to default to city level view
     var zoomLevel: Float = 12.0
     var mapView: GMSMapView!
@@ -83,12 +71,25 @@ class MapViewController: UIViewController {
         self.height = height
         self.darkMode = darkMode
         super.init(nibName: nil, bundle: nil)
-
-//        self.locationStore.$isOnCurrentLocation.map { isOn in
-//            if isOn {
-//                self.zoomMapToCurrentLocation()
-//            }
-//        }
+    }
+    
+    func moveMapToCurrentLocation() {
+        self.mapView.isMyLocationEnabled = true
+        
+        if let location: CLLocation = appStore.state.location.lastKnown {
+            let camera = GMSCameraPosition.camera(
+                withLatitude: location.coordinate.latitude,
+                longitude: location.coordinate.longitude,
+                zoom: zoomLevel
+            )
+            
+            if mapView.isHidden {
+                mapView.isHidden = false
+                mapView.camera = camera
+            } else {
+                mapView.animate(to: camera)
+            }
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -155,6 +156,36 @@ extension MapViewController {
                 print("Location status is OK.")
             @unknown default:
                 fatalError()
+        }
+    }
+}
+
+class LocationManager: NSObject, CLLocationManagerDelegate {
+    private let manager = CLLocationManager()
+    
+    func start() {
+        manager.delegate = self
+        manager.requestWhenInUseAuthorization()
+        manager.startUpdatingLocation()
+    }
+    
+    func stop() {
+        manager.stopUpdatingLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print("getting location")
+        appStore.send(.location(.setLastKnown(locations.last)))
+        //        AppAction.location(.setLikelyPlaces(locations)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        print("locationManager statuss \(status)")
+        if status == .authorizedWhenInUse {
+            manager.startUpdatingLocation()
+            if !appStore.state.location.hasChangedOnce {
+                appStore.send(.location(.goToCurrent))
+            }
         }
     }
 }
