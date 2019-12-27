@@ -39,7 +39,7 @@ struct HomeViewContent: View {
                 disableDragging: self.disableDragging
                 ) {
                     HomeMainView()
-                    Image(systemName: "photo").resizable()
+                    DishCamera()
             }
             .onChangePage { index in
                 self.disableDragging = index == 0

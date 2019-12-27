@@ -32,11 +32,12 @@ struct CameraView: UIViewControllerRepresentable {
         }
         
         func update() {
-            let controller = self.parent.controller!
-            if self.parent.isCaptured.wrappedValue == true {
-                controller.capture()
-            } else {
-                controller.resume()
+            if let controller = self.parent.controller {            
+                if self.parent.isCaptured.wrappedValue == true {
+                    controller.capture()
+                } else {
+                    controller.resume()
+                }
             }
         }
     }
