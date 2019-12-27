@@ -3,9 +3,10 @@ import AVFoundation
 
 struct CameraView: UIViewControllerRepresentable {
     var isCaptured: Binding<Bool>
+    @State var controller: CameraViewController? = nil
     
     func makeCoordinator() -> CameraView.Coordinator {
-        Coordinator(CameraViewController(), isCaptured: self.isCaptured)
+        Coordinator(self)
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<CameraView>) {
@@ -14,26 +15,28 @@ struct CameraView: UIViewControllerRepresentable {
     }
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<CameraView>) -> UIViewController {
-        CameraViewController()
+        let controller = CameraViewController()
+        DispatchQueue.main.async {
+            self.controller = controller
+        }
+        return controller
     }
     
     class Coordinator: NSObject {
-        var isCaptured: Binding<Bool>
-        var controller: CameraViewController
+        var parent: CameraView
         
-        init(_ controller: CameraViewController, isCaptured: Binding<Bool>) {
-            self.controller = controller
-            self.isCaptured = isCaptured
+        init(_ parent: CameraView) {
+            self.parent = parent
             super.init()
             self.update()
         }
         
         func update() {
-            print("update \(self.isCaptured.wrappedValue)")
-            if self.isCaptured.wrappedValue == true {
-                self.controller.capture()
+            let controller = self.parent.controller!
+            if self.parent.isCaptured.wrappedValue == true {
+                controller.capture()
             } else {
-                self.controller.resume()
+                controller.resume()
             }
         }
     }

@@ -2,12 +2,14 @@ import SwiftUI
 import Combine
 import GoogleMaps
 
+// TODO this can be a generic view again in Views/
+// just need to clean it up a little
+
 struct MapView: UIViewControllerRepresentable {
     enum MapLocation {
         case current, uncontrolled
     }
     
-//    var controller: MapViewController
     var width: CGFloat
     var height: CGFloat
     var darkMode: Bool?
