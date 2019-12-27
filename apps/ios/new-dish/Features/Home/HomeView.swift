@@ -32,7 +32,7 @@ struct HomeViewContent: View {
     @State private var disableDragging = true
 
     var body: some View {
-        let dragState = HomeDragLock.lock
+        let dragState = HomeDragLock.state
         
         return ZStack {
             PagerView(

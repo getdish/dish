@@ -31,8 +31,9 @@ class HomeViewState: ObservableObject {
         let dragY = !isSnappedToBottom ? max(-120, dragYInput) : dragYInput
         
         // remember where we started
-        if HomeDragLock.lock != .searchbar {
+        if HomeDragLock.state != .searchbar {
             self.startDragAt = y
+            HomeDragLock.setLock(.searchbar)
         }
         
         var y = self.startDragAt + (
@@ -152,7 +153,7 @@ struct HomeMainView: View {
                             isHorizontal: self.state.isSnappedToBottom
                         )
                             // for smoe reason this seems to slow down clicking on toggle button
-                            .animation(HomeDragLock.lock == .searchbar ? .spring(response: 0.3333) : nil)
+                            .animation(HomeDragLock.state == .searchbar ? .spring(response: 0.3333) : nil)
                     }
                     
                     VStack {
@@ -241,17 +242,16 @@ struct HomeMainView: View {
             .simultaneousGesture(
                 DragGesture(minimumDistance: 10)
                     .onChanged { value in
-                        if [.off, .pager].contains(HomeDragLock.lock) {
+                        if [.off, .pager].contains(HomeDragLock.state) {
                             return
                         }
                         // why is this off 80???
-                        if HomeSearchBarState.isWithin(value.startLocation.y - 40) || HomeDragLock.lock == .searchbar {
-                            HomeDragLock.setLock(.searchbar)
+                        if HomeSearchBarState.isWithin(value.startLocation.y - 40) || HomeDragLock.state == .searchbar {
                             self.state.drag(value.translation.height)
                         }
                 }
                 .onEnded { value in
-                    if [.idle, .searchbar].contains(HomeDragLock.lock) {
+                    if [.idle, .searchbar].contains(HomeDragLock.state) {
                         self.state.finishDrag()
                     }
                     HomeDragLock.setLock(.idle)
