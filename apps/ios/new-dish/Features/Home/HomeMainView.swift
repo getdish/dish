@@ -67,15 +67,21 @@ class HomeViewState: ObservableObject {
         }
     }
     
-    func finishDrag() {
+    func finishDrag(_ value: DragGesture.Value) {
         if isSnappedToBottom {
             self.snapToBottom()
         }
-        withAnimation(.spring()) {
-            if !isSnappedToBottom && y > aboutToSnapToBottomAt {
+        // attempt to have it "continue" from your drag a bit, feels slow
+//        withAnimation(.spring(response: 0.2222)) {
+//            self.y = self.y + value.predictedEndTranslation.height / 2
+//        }
+        if !isSnappedToBottom && y > aboutToSnapToBottomAt {
+            withAnimation(.spring()) {
                 self.y = aboutToSnapToBottomAt
             }
-            if searchBarYExtra != 0 {
+        }
+        if searchBarYExtra != 0 {
+            withAnimation(.spring()) {
                 self.searchBarYExtra = 0
             }
         }
@@ -254,7 +260,7 @@ struct HomeMainView: View {
                 }
                 .onEnded { value in
                     if [.idle, .searchbar].contains(HomeDragLock.state) {
-                        self.state.finishDrag()
+                        self.state.finishDrag(value)
                     }
                     HomeDragLock.setLock(.idle)
                 }
