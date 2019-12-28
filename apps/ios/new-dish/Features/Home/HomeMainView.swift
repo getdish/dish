@@ -71,13 +71,11 @@ class HomeViewState: ObservableObject {
         if isSnappedToBottom {
             self.snapToBottom()
         }
-        if !isSnappedToBottom && y > aboutToSnapToBottomAt {
-            withAnimation(.spring()) {
+        withAnimation(.spring()) {
+            if !isSnappedToBottom && y > aboutToSnapToBottomAt {
                 self.y = aboutToSnapToBottomAt
             }
-        }
-        if searchBarYExtra != 0 {
-            withAnimation(.spring()) {
+            if searchBarYExtra != 0 {
                 self.searchBarYExtra = 0
             }
         }
@@ -118,6 +116,8 @@ struct HomeMainView: View {
         let state = self.state
         let mapHeight = isOnSearchResults ? 160 : state.mapHeight
         
+        print("render HomeMainView")
+        
         return GeometryReader { geometry in
             ZStack {
                 Color.black
@@ -152,9 +152,11 @@ struct HomeMainView: View {
                             mapHeight: mapHeight,
                             isHorizontal: self.state.isSnappedToBottom
                         )
-                            // for smoe reason this seems to slow down clicking on toggle button
-                            .animation(HomeDragLock.state == .searchbar ? .spring(response: 0.3333) : nil)
+                            .transition(AnyTransition.offset())
                     }
+                    // putting this animation with the above transition breaks, keeping it outside works...
+                    // for some reason this seems to slow down clicking on toggle button
+                        .animation(.spring(response: 0.3333))
                     
                     VStack {
                         Spacer().frame(height: mapHeight + 31)

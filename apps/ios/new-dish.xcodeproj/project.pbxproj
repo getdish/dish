@@ -293,7 +293,6 @@
 		1CE3548423986DDD004B3A84 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				AE0F474723B6AA39008F7418 /* HomeDragLock.swift */,
 				1C3CFE6323998FF2004B2EEA /* HomeContainerView.swift */,
 				1CE354872398714D004B3A84 /* HomeView.swift */,
 				AE7563B323A035E70094022B /* HomeMainView.swift */,
@@ -301,6 +300,7 @@
 				AEED844223B6712000407266 /* HomeCardsView.swift */,
 				AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */,
 				AE56C86323ADB78C006A156A /* HomeSearchResults.swift */,
+				AE0F474723B6AA39008F7418 /* HomeDragLock.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";

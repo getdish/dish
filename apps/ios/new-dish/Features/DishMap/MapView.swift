@@ -66,6 +66,37 @@ struct MapView: UIViewControllerRepresentable {
 //            }
             print("update map controller!!!!!!!")
         }
+        
+        class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
+            @Published var lastLocation: CLLocation? = nil
+            
+            private let manager = CLLocationManager()
+            
+            func start() {
+                manager.delegate = self
+                manager.requestWhenInUseAuthorization()
+                manager.startUpdatingLocation()
+            }
+            
+            func stop() {
+                manager.stopUpdatingLocation()
+            }
+            
+            func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+                appStore.send(.location(.setLastKnown(locations.last)))
+                self.lastLocation = locations.last
+            }
+            
+            func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+                if status == .authorizedWhenInUse {
+                    manager.startUpdatingLocation()
+                    if !appStore.state.location.hasChangedOnce {
+                        appStore.send(.location(.goToCurrent))
+                    }
+                }
+            }
+        }
+
     }
 }
 
@@ -95,7 +126,9 @@ class MapViewController: UIViewController {
         if let location: CLLocation = appStore.state.location.lastKnown {
             print("we got locations yall")
             let camera = GMSCameraPosition.camera(
-                withLatitude: location.coordinate.latitude,
+                // testing moving center
+                // https://gis.stackexchange.com/questions/2951/algorithm-for-offsetting-a-latitude-longitude-by-some-amount-of-meters
+                withLatitude: location.coordinate.latitude - 7000 / 111111,
                 longitude: location.coordinate.longitude,
                 zoom: zoomLevel
             )
@@ -175,37 +208,6 @@ extension MapViewController {
                 print("Location status is OK.")
             @unknown default:
                 fatalError()
-        }
-    }
-}
-
-class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
-    @Published var lastLocation: CLLocation? = nil
-    
-    private let manager = CLLocationManager()
-    
-    func start() {
-        manager.delegate = self
-        manager.requestWhenInUseAuthorization()
-        manager.startUpdatingLocation()
-    }
-    
-    func stop() {
-        manager.stopUpdatingLocation()
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        appStore.send(.location(.setLastKnown(locations.last)))
-        self.lastLocation = locations.last
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        print("locationManager status \(status)")
-        if status == .authorizedWhenInUse {
-            manager.startUpdatingLocation()
-            if !appStore.state.location.hasChangedOnce {
-                appStore.send(.location(.goToCurrent))
-            }
         }
     }
 }
