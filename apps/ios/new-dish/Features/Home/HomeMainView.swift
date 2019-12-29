@@ -261,6 +261,11 @@ struct HomeMainView: View {
                         }
                         // why is this off 80???
                         if HomeSearchBarState.isWithin(value.startLocation.y - 40) || HomeDragLock.state == .searchbar {
+                            // hide keyboard on drag
+                            if self.keyboard.state.height > 0 {
+                                self.keyboard.hide()
+                            }
+                            // drag
                             self.state.drag(value.translation.height)
                         }
                 }
