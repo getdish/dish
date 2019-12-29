@@ -111,6 +111,7 @@ struct HomeSearchBarState {
 }
 
 struct HomeMainView: View {
+    @EnvironmentObject var keyboard: Keyboard
     @EnvironmentObject var store: AppStore
     @Environment(\.geometry) var appGeometry
     @ObservedObject var state = homeViewState
@@ -225,7 +226,12 @@ struct HomeMainView: View {
                     .opacity(isOnSearchResults ? 0 : 1)
                     
                     // keyboard dismiss
-                    //                    Color.black.opacity(0.0001)
+                    if self.keyboard.state.height > 0 {
+                       Color.black.opacity(0.0001)
+                        .onTapGesture {
+                            self.keyboard.hide()
+                        }
+                    }
                     
                     VStack {
                         GeometryReader { searchBarGeometry -> HomeSearchBar in
