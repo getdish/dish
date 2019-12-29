@@ -15,8 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // SwiftUI bugfix list backgrounds transparent
-        UITableView.appearance().backgroundColor = UIColor(named: "transparent")
-        UITableViewCell.appearance().backgroundColor = UIColor(named: "transparent")
+        let colorTransparent = UIColor.init(displayP3Red: 0, green: 0, blue: 0, alpha: 0)
+        UITableView.appearance().backgroundColor = colorTransparent
+        UITableViewCell.appearance().backgroundColor = colorTransparent
         
         // Google Maps and Places
         GMSServices.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")

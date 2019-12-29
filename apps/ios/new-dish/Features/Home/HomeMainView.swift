@@ -162,7 +162,7 @@ struct HomeMainView: View {
                     }
                     // putting this animation with the above transition breaks, keeping it outside works...
                     // for some reason this seems to slow down clicking on toggle button
-                        .animation(.spring(response: 0.3333))
+                        .animation(HomeDragLock.state == .idle ? .none : .spring(response: 0.3333))
                     
                     VStack {
                         Spacer().frame(height: mapHeight + 31)

@@ -35,10 +35,13 @@ struct SearchInput: View {
     
     func handleEditingChanged(isEditing: Bool) {
         self.showCancelButton = isEditing
+        
         if let cb = onEditingChanged {
             cb(isEditing)
         }
     }
+    
+    
     
     var cancelButton: some View {
         Button("Cancel") {
