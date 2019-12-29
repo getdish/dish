@@ -8,7 +8,7 @@ import UIKit
 import Combine
 
 /// An object representing the keyboard
-public final class Keyboard: ObservableObject {
+final class Keyboard: ObservableObject {
     
     @Published public var state: Keyboard.State = .default
     

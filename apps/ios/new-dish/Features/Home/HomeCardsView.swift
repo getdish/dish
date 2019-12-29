@@ -29,7 +29,7 @@ struct HomeCardsGrid: View {
     @Environment(\.geometry) var appGeometry
     
     let items = features.chunked(into: 2)
-    let spacing: CGFloat = 6
+    let spacing: CGFloat = 10
     
     var content: some View {
         VStack(spacing: self.spacing) {

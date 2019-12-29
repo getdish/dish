@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 // used in search results for now...
 let cardRowHeight: CGFloat = 140
@@ -98,6 +99,12 @@ class HomeViewState: ObservableObject {
             }
         }
     }
+    
+    func animateTo(_ y: CGFloat) {
+        withAnimation(.spring()) {
+            self.y = y
+        }
+    }
 }
 
 fileprivate let homeViewState = HomeViewState()
@@ -124,6 +131,14 @@ struct HomeMainView: View {
         let mapHeight = isOnSearchResults ? 160 : state.mapHeight
         
         print("render HomeMainView")
+        
+        // TODO this is a horrible place to put it
+        print("now \(self.keyboard.state.height)")
+        DispatchQueue.main.async {
+            if self.keyboard.state.height > 0 {
+                self.state.animateTo(-self.appGeometry!.size.height * 0.1)
+            }
+        }
         
         return GeometryReader { geometry in
             ZStack {
