@@ -35,7 +35,7 @@ struct TopNav: View {
                             }
 
 //                            if !isEditing {
-                                TopNavMenuButton()
+//                                TopNavMenuButton()
 //                            }
                         }
                         .padding(.horizontal)

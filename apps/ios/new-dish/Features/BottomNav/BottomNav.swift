@@ -11,9 +11,10 @@ struct BottomNav: View {
             Spacer()
             ZStack {
                 HStack {
-                    DishMapButton()
+                    BottomNavCircularButton(image: "person.fill", size: 42, action: {
+                        homePager.animateTo(0)
+                    })
                         .animation(.spring(response: 0.5))
-                        .opacity(0)
                         .offset(y: isOnGallery ? hiddenButtonY : 0)
                     Spacer()
                     DishFiltersButton()
@@ -21,7 +22,7 @@ struct BottomNav: View {
                         .offset(y: isOnGallery ? hiddenButtonY : 0)
                     Spacer()
                     BottomNavCircularButton(image: "camera", size: 48, action: {
-                        homePager.animateTo(1)
+                        homePager.animateTo(2)
                     })
                         .animation(.spring(response: 0.5))
                         .offset(y: isOnGallery ? hiddenButtonY : 0)
@@ -65,13 +66,15 @@ struct DishFiltersButton: View {
         }) {
             BottomNavButton {
                 HStack(spacing: 14) {
-                    Group {
-                        Image(systemName: "dollarsign.circle").resizable().scaledToFit()
-                        Image(systemName: "tag.fill").resizable().scaledToFit()
-                        Image(systemName: "car.fill").resizable().scaledToFit()
-                    }
-                    .foregroundColor(.white)
-                    .frame(width: 26, height: 26)
+                    Text("Filter")
+                        .foregroundColor(.white)
+//                    Group {
+//                        Image(systemName: "dollarsign.circle").resizable().scaledToFit()
+//                        Image(systemName: "tag.fill").resizable().scaledToFit()
+//                        Image(systemName: "car.fill").resizable().scaledToFit()
+//                    }
+//                    .foregroundColor(.white)
+//                    .frame(width: 26, height: 26)
                 }
             }
         }
