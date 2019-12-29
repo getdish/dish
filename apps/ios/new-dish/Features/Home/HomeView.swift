@@ -22,13 +22,15 @@ struct HomeView: View {
     }
 }
 
-let homePager = PagerStore()
+fileprivate let homePageCount = 3
+let homePager = PagerStore(
+    index: 1
+)
 
 struct HomeViewContent: View {
     var width: CGFloat = 0
     var height: CGFloat = 0
     @EnvironmentObject var store: AppStore
-    @State private var index = 0
     @State private var disableDragging = true
 
     var body: some View {
@@ -36,13 +38,13 @@ struct HomeViewContent: View {
         
         return ZStack {
             PagerView(
-                pageCount: 2,
+                pageCount: homePageCount,
                 pagerStore: homePager,
                 disableDragging: self.disableDragging
                 ) {
+                    DishAccount()
                     HomeMainView()
-                    Color.red
-//                    DishCamera()
+                    DishCamera()
             }
             .onChangePage { index in
                 self.disableDragging = index == 0
@@ -55,13 +57,14 @@ struct HomeViewContent: View {
                         if dragState == .searchbar {
                             return
                         }
-                        // right edge
-                        if self.width - value.startLocation.x < 10 {
+                        let isOnRightEdge = self.width - value.startLocation.x < 10
+                        let isOnLeftEdge = value.startLocation.x < 10
+                        if isOnRightEdge || isOnLeftEdge {
                             if abs(value.translation.width) > 10 {
                                 HomeDragLock.setLock(.pager)
                             }
-                            let next = Double((0 - value.translation.width) / self.width)
-                            homePager.index = min(1, max(0, next))
+                            let dragIndexDiff = Double(-value.translation.width / self.width)
+                            homePager.drag(dragIndexDiff)
                         }
                 }
                 .onEnded { value in

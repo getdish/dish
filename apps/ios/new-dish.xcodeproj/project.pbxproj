@@ -61,7 +61,7 @@
 		AE861A8723A1727B004096BF /* TopNavMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8623A1727B004096BF /* TopNavMenuButton.swift */; };
 		AE861A8923A172E8004096BF /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8823A172E8004096BF /* BlurView.swift */; };
 		AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */; };
-		AEA331EF23A3371D00B36A23 /* DishSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331EE23A3371D00B36A23 /* DishSidebarView.swift */; };
+		AEA331EF23A3371D00B36A23 /* DishAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331EE23A3371D00B36A23 /* DishAccount.swift */; };
 		AEA331F123A3373D00B36A23 /* LoginSignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F023A3373D00B36A23 /* LoginSignupView.swift */; };
 		AEA331F523A3381200B36A23 /* DishInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F423A3381200B36A23 /* DishInput.swift */; };
 		AEA331F723A3382100B36A23 /* DishButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F623A3382100B36A23 /* DishButton.swift */; };
@@ -145,7 +145,7 @@
 		AE861A8623A1727B004096BF /* TopNavMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavMenuButton.swift; sourceTree = "<group>"; };
 		AE861A8823A172E8004096BF /* BlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurView.swift; sourceTree = "<group>"; };
 		AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonBordered.swift; sourceTree = "<group>"; };
-		AEA331EE23A3371D00B36A23 /* DishSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishSidebarView.swift; sourceTree = "<group>"; };
+		AEA331EE23A3371D00B36A23 /* DishAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishAccount.swift; sourceTree = "<group>"; };
 		AEA331F023A3373D00B36A23 /* LoginSignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSignupView.swift; sourceTree = "<group>"; };
 		AEA331F423A3381200B36A23 /* DishInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishInput.swift; sourceTree = "<group>"; };
 		AEA331F623A3382100B36A23 /* DishButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishButton.swift; sourceTree = "<group>"; };
@@ -234,7 +234,7 @@
 				AE2B6BA023AAD67E007BCD25 /* TopNav */,
 				AE2B6B9F23AAB779007BCD25 /* BottomNav */,
 				1CE3548423986DDD004B3A84 /* Home */,
-				AEA331ED23A3370200B36A23 /* Sidebar */,
+				AEA331ED23A3370200B36A23 /* Account */,
 				AEED844623B6733600407266 /* Camera */,
 				AEED843F23B6706400407266 /* DishMap */,
 			);
@@ -357,13 +357,13 @@
 			path = "../../cur-ios/Dish/Resources";
 			sourceTree = "<group>";
 		};
-		AEA331ED23A3370200B36A23 /* Sidebar */ = {
+		AEA331ED23A3370200B36A23 /* Account */ = {
 			isa = PBXGroup;
 			children = (
-				AEA331EE23A3371D00B36A23 /* DishSidebarView.swift */,
+				AEA331EE23A3371D00B36A23 /* DishAccount.swift */,
 				AEA331F023A3373D00B36A23 /* LoginSignupView.swift */,
 			);
-			path = Sidebar;
+			path = Account;
 			sourceTree = "<group>";
 		};
 		AEED843F23B6706400407266 /* DishMap */ = {
@@ -593,7 +593,7 @@
 				AEF6557B23B042CD00E49A51 /* HomeSearchBar.swift in Sources */,
 				AEA331F923A3385000B36A23 /* InlineAlertView.swift in Sources */,
 				AEED843E23B5A8E000407266 /* Mocks.swift in Sources */,
-				AEA331EF23A3371D00B36A23 /* DishSidebarView.swift in Sources */,
+				AEA331EF23A3371D00B36A23 /* DishAccount.swift in Sources */,
 				1CE2393123A19722006B7AFD /* Environment.swift in Sources */,
 				AEF6557723B041C400E49A51 /* RestaurantItem.swift in Sources */,
 				AEF6557923B041F600E49A51 /* DishItem.swift in Sources */,

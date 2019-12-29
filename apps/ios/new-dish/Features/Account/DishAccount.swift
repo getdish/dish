@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct DishSidebarView: View {
+struct DishAccount: View {
     var body: some View {
         LoginSignupView()
     }

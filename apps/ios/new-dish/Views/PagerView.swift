@@ -99,21 +99,38 @@ extension PagerView {
 }
 
 class PagerStore: ObservableObject {
-    @Published var index: Double = 0
-    @Published var indexRounded: Int = 0
+    @Published var index: Double
+    @Published var indexRounded: Int
+    @Published var indexLast: Int
     @Published var offset: CGFloat = 0
     @Published var isGestureActive: Bool = false
     var width: CGFloat = Screen.width
     var numPages = 2
-    var cancel: AnyCancellable?
+    var cancels: [AnyCancellable] = []
     var changePageAction: OnChangePage?
     
-    init() {
-        self.cancel = self.$index
-            .drop { !isRoundNumber($0) }
-            .filter(isRoundNumber)
-            .map { Int($0) }
-            .assign(to: \.indexRounded, on: self)
+    init(index: Double = 0) {
+        self.index = index
+        self.indexLast = Int(index)
+        self.indexRounded = Int(index)
+        
+        // indexRounded
+        self.cancels.append(
+            self.$index
+                .drop { !isRoundNumber($0) }
+                .filter(isRoundNumber)
+                .map { Int($0) }
+                .assign(to: \.indexRounded, on: self)
+        )
+        
+        // indexLast
+        self.cancels.append(
+            self.$index
+                .drop { !isRoundNumber($0) }
+                .filter(isRoundNumber)
+                .map { Int($0) }
+                .assign(to: \.indexRounded, on: self)
+        )
     }
     
     func animateTo(_ index: Double) {
@@ -125,9 +142,14 @@ class PagerStore: ObservableObject {
         }
         DispatchQueue.main.async {
             self.index = index
+            self.indexLast = Int(self.index)
             self.isGestureActive = false
             self.triggerPageChange()
         }
+    }
+    
+    func drag(_ offset: Double) {
+        self.index = Double(self.indexLast) + offset
     }
     
     func onDragEnd(_ value: DragGesture.Value) {
@@ -150,6 +172,7 @@ class PagerStore: ObservableObject {
             self.offset = -width * CGFloat(self.index)
         }
         DispatchQueue.main.async {
+            self.indexLast = Int(self.index)
             self.isGestureActive = false
             self.triggerPageChange()
         }
