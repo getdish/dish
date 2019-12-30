@@ -44,13 +44,14 @@ struct HomeViewContent: View {
                 pagerStore: homePager,
                 disableDragging: self.disableDragging
                 ) {
-                    DishAccount()
-                    HomeMainView()
-                    DishCamera()
+                    HomeScreenRoundedPage(content: DishAccount())
+                    HomeScreenRoundedPage(content: HomeMainView())
+                    HomeScreenRoundedPage(content: DishCamera())
             }
             .onChangePage { index in
-                self.disableDragging = index == 0
-                self.store.send(.home(.setView(homeViewsIndex[index])))
+                let view = homeViewsIndex[index]
+                self.disableDragging = view == .home
+                self.store.send(.home(.setView(view)))
             }
             // just drag from edge (to camera)
             .simultaneousGesture(
@@ -80,6 +81,20 @@ struct HomeViewContent: View {
             BottomNav()
         }
         .frame(maxHeight: self.height)
+    }
+}
+
+
+// TODO not working
+struct HomeScreenRoundedPage<Content: View>: View {
+    var content: Content
+    var body: some View {
+        VStack {
+            content
+        }
+        .clipped()
+        .cornerRadius(40)
+        .shadow(color: Color.black.opacity(0.25), radius: 20, y: 10)
     }
 }
 
