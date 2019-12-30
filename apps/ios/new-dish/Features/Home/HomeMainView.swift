@@ -305,14 +305,6 @@ struct HomeMainView: View {
     }
 }
 
-struct DishBrowseCard: View {
-    var dish: DishItem
-    var body: some View {
-        FeatureCard(dish: dish, aspectRatio: 1.4)
-            .cornerRadius(14)
-    }
-}
-
 #if DEBUG
 struct HomeMainView_Previews: PreviewProvider {
     static var previews: some View {

@@ -36,7 +36,7 @@ struct HomeCardsGrid: View {
             ForEach(0 ..< self.items.count) { index in
                 HStack(spacing: self.spacing) {
                     ForEach(self.items[index]) { item in
-                        DishBrowseCard(dish: item)
+                        DishGridCard(dish: item)
                             .frame(width: (self.appGeometry?.size.width ?? Screen.width) / 2 - self.spacing * 2)
                             .onTapGesture {
                                 print("tap on item")
@@ -107,13 +107,21 @@ struct HomeCardsGrid: View {
     }
 }
 
+struct DishGridCard: View {
+    var dish: DishItem
+    var body: some View {
+        FeatureCard(dish: dish, aspectRatio: 1.4)
+            .cornerRadius(14)
+    }
+}
+
 struct HomeCardsRow: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
                 ForEach(features) { item in
-                    DishBrowseCard(dish: item)
-                        .frame(width: 100, height: cardRowHeight - 40)
+                    DishRowCard(dish: item)
+                        .frame(width: 160, height: cardRowHeight - 40)
                         .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
                 }
                 
@@ -121,5 +129,13 @@ struct HomeCardsRow: View {
             }
             .padding(.horizontal)
         }
+    }
+}
+
+struct DishRowCard: View {
+    var dish: DishItem
+    var body: some View {
+        FeatureCard(dish: dish, aspectRatio: 1.8)
+            .cornerRadius(14)
     }
 }
