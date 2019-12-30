@@ -105,6 +105,9 @@ class HomeViewState: ObservableObject {
     }
     
     func animateTo(_ y: CGFloat) {
+        if self.y == y {
+            return
+        }
         withAnimation(.spring()) {
             self.y = y
         }
@@ -133,21 +136,36 @@ struct HomeMainView: View {
     @Environment(\.geometry) var appGeometry
     @ObservedObject var state = homeViewState
     
+    private var cancellables: Set<AnyCancellable> = []
+    
+//    init() {
+//        self.keyboard.$state.map { keyboard in
+//            DispatchQueue.main.async {
+//                // TODO escaping closure mutating
+////                if keyboard.height > 0 {
+////                    self.state.animateTo(-self.appGeometry!.size.height * 0.1)
+////                } else {
+////                    self.state.resetAfterKeyboardHide()
+////                }
+//            }
+//        }
+//        .sink {}
+//        .store(in: &cancellables)
+//    }
+    
     var body: some View {
+        print("render HomeMainView")
+        
         // pushed map below the border radius of the bottomdrawer
         let isOnSearchResults = Selectors.home.isOnSearchResults()
         let state = self.state
-        let mapHeight = isOnSearchResults ? 160 : state.mapHeight
+        let mapHeight = state.mapHeight
         
-        print("render HomeMainView")
-        
-        // TODO this is a horrible place to put it
-        print("now \(self.keyboard.state.height)")
-        DispatchQueue.main.async {
-            if self.keyboard.state.height > 0 {
-                self.state.animateTo(-self.appGeometry!.size.height * 0.1)
-            } else {
-                state.resetAfterKeyboardHide()
+        // TODO why do this in body
+        if isOnSearchResults && HomeDragLock.state == .idle {
+            DispatchQueue.main.async {
+                // animate to higher
+                self.state.animateTo(-50)
             }
         }
         

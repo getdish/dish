@@ -7,7 +7,6 @@ struct HomeMainContent: View {
     @State var dragX: CGFloat = 0
     
     var body: some View {
-        let mapHeight = self.mapHeight
         let isOnSearchResults = Selectors.home.isOnSearchResults()
         
         return GeometryReader { geometry in
@@ -18,7 +17,7 @@ struct HomeMainContent: View {
                 // pages as you drill in below home
                 if isOnSearchResults {
                     VStack {
-                        Spacer().frame(height: mapHeight)
+                        Spacer().frame(height: cardRowHeight + 20)
                         ForEach(1 ..< self.store.state.home.current.count) { index in
                             HomeSearchResults(
                                 state: self.store.state.home.current[index]
