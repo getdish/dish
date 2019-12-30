@@ -5,7 +5,8 @@ struct TopNavSearch: View {
     @EnvironmentObject var store: AppStore
     
     var body: some View {
-        let isOnHome = store.state.home.view == .home
+        let homeView = store.state.home.view
+        let isOnHome = homeView == .home
         
         return ZStack {
             VStack {

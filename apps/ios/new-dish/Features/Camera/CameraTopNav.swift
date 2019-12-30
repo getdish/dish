@@ -4,7 +4,8 @@ struct CameraTopNav: View {
     @EnvironmentObject var store: AppStore
     
     var body: some View {
-        let isOnHome = self.store.state.home.view == .home
+        let homeView = self.store.state.home.view
+        let isOnCamera = homeView == .camera
         
         return HStack {
             Button(action: {
@@ -22,9 +23,9 @@ struct CameraTopNav: View {
                 }
             }
             .foregroundColor(.white)
-            .offset(y: isOnHome ? -80 : 0)
+            .offset(y: isOnCamera ? 0 : -80)
             .animation(
-                Animation.spring().delay(!isOnHome ? 0.25 : 0.0)
+                Animation.spring().delay(!isOnCamera ? 0 : 0.25)
             )
             
             Spacer()

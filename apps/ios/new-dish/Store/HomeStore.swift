@@ -66,7 +66,7 @@ struct HomeSelectors {
 
 
 enum HomePageView {
-    case home, camera
+    case home, camera, me
 }
 
 struct HomeStateItem: Equatable {
