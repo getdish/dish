@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct HomeMainContent: View {
-    let mapHeight: CGFloat
     let isHorizontal: Bool
     @EnvironmentObject var store: AppStore
     @State var dragX: CGFloat = 0

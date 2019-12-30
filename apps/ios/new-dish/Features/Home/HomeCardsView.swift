@@ -52,7 +52,7 @@ struct HomeCardsGrid: View {
         }
     }
     
-    var initY = 0
+    @State var initY: CGFloat = 0
     
     var body: some View {
         VStack {
@@ -60,16 +60,15 @@ struct HomeCardsGrid: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     ScrollListener(onScroll: { frame in
-                        if HomeDragLock.state == .idle {
-                            let frameY = self.homeState.mapHeight
-                            let scrollY = frame.minY
-                            let realY = frameY - scrollY - 44
-                            let y = max(0, min(100, realY)).rounded()
-                            if y != self.homeState.scrollY {
-                                // attempting to have a scroll effect but its complex...
-                                print("scrollY \(y) ....... frameY \(frameY), scrollY = \(scrollY)")
-                                //                            self.homeState.scrollY = y
+                        if self.initY == 0 {
+                            DispatchQueue.main.async {
+                                self.initY = frame.minY
                             }
+                        }
+                        if HomeDragLock.state == .idle {
+                            let scrollY = frame.minY
+                            let y = self.initY - scrollY
+                            self.homeState.setScrollY(y)
                         }
                     })
                     

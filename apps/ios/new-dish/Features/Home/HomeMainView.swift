@@ -17,7 +17,11 @@ class HomeViewState: ObservableObject {
     
     let mapMinHeight: CGFloat = Screen.statusBarHeight + searchBarHeight / 2 + topNavHeight + 40
     var mapInitialHeight: CGFloat { appHeight * 0.3 }
-    var mapHeight: CGFloat { return max(mapInitialHeight + y, mapMinHeight) }
+    
+    var mapHeight: CGFloat {
+        let scrollYExtra: CGFloat = self.isSnappedToBottom ? 0 : self.scrollY
+        return max(mapInitialHeight + y - scrollYExtra, mapMinHeight)
+    }
     
     var snapToBottomAt: CGFloat { appHeight * 0.15 }
     var snappedToBottomMapHeight: CGFloat { appHeight - 200 }
@@ -66,7 +70,7 @@ class HomeViewState: ObservableObject {
             self.searchBarYExtra = dragY * 0.25
         }
         
-        let willSnapUp = -dragY > snapToBottomAt
+        let willSnapUp = -dragY > appHeight * 0.3
         let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
         if willSnapDown {
             self.snapToBottom(true)
@@ -129,6 +133,13 @@ class HomeViewState: ObservableObject {
             self.animateTo(0)
         }
     }
+    
+    func setScrollY(_ scrollY: CGFloat) {
+        let y = max(0, min(100, scrollY)).rounded()
+        if y != self.scrollY {
+            self.scrollY = y
+        }
+    }
 }
 
 fileprivate let homeViewState = HomeViewState()
@@ -175,7 +186,7 @@ struct HomeMainView: View {
         let state = self.state
         let mapHeight = state.mapHeight
         
-        print("render HomeMainView -- mapHeight \(mapHeight)")
+        print("render HomeMainView -- mapHeight \(mapHeight) state.scrollY \(state.scrollY)")
         
         // TODO why do this in body
         if isOnSearchResults && HomeDragLock.state == .idle {
@@ -216,10 +227,11 @@ struct HomeMainView: View {
                             .frame(height: mapHeight - cardRowHeight)
                         
                         HomeMainContent(
-                            mapHeight: mapHeight,
                             isHorizontal: self.state.isSnappedToBottom
                         )
+//                            .frame(height: (self.appGeometry?.size.height ?? 0) - (mapHeight - cardRowHeight) + 100)
                             .transition(AnyTransition.offset())
+//                            .offset(y: 100 - state.scrollY)
                     }
                     // putting this animation with the above transition breaks, keeping it outside works...
                     // for some reason this seems to slow down clicking on toggle button
