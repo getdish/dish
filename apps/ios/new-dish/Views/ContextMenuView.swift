@@ -2,16 +2,16 @@ import SwiftUI
 import Combine
 
 class ContextMenuParentStore: ObservableObject {
-    @Published var activeItem: ContextMenuStore? = nil
+    @Published var item: ContextMenuItemStore? = nil
     
-    func setActive(_ item: ContextMenuStore) {
-        if self.activeItem != item {
-            self.activeItem = item
+    func setActive(_ item: ContextMenuItemStore) {
+        if self.item != item {
+            self.item = item
         }
     }
     
-    func setInactive(_ item: ContextMenuStore) {
-        self.activeItem = nil
+    func setInactive(_ item: ContextMenuItemStore) {
+        self.item = nil
     }
 }
 
@@ -26,16 +26,15 @@ struct ContextMenuRootView<Content: View>: View {
     var body: some View {
         ZStack {
             self.content
-            ContextMenuDisplay(item: store.activeItem)
+            ContextMenuDisplay(parentStore: store)
         }
-        .edgesIgnoringSafeArea(.all)
         .environmentObject(store)
     }
 }
 
-class ContextMenuStore: ObservableObject, Equatable {
+class ContextMenuItemStore: ObservableObject, Equatable {
     private let id = UUID()
-    static func == (lhs: ContextMenuStore, rhs: ContextMenuStore) -> Bool {
+    static func == (lhs: ContextMenuItemStore, rhs: ContextMenuItemStore) -> Bool {
         lhs.id == rhs.id
     }
     
@@ -49,38 +48,47 @@ class ContextMenuStore: ObservableObject, Equatable {
     var contentPosition = CGRect()
 }
 
-fileprivate let defaultContextStore = ContextMenuStore()
-
-class ContextMenuOpenStore: ObservableObject {
-    @Published var item = defaultContextStore
-    
-    func open(_ item: ContextMenuStore) {
-        print("opening \(item)")
-        withAnimation {
-            self.item = item
-        }
-    }
-    
-    func close() {
-        print("closing...")
-        self.item.state = .closed
-        withAnimation {
-            self.item = defaultContextStore
-        }
-    }
-}
+fileprivate let defaultContextStore = ContextMenuItemStore()
 
 struct ContextMenuDisplay: View {
-    @ObservedObject var store: ContextMenuOpenStore
+    class ContextMenuDisplayStore: ObservableObject {
+        @Published var item = defaultContextStore
+        private var parentStore: ContextMenuParentStore
+        
+        init(parentStore: ContextMenuParentStore) {
+            self.parentStore = parentStore
+        }
+        
+        func open(_ item: ContextMenuItemStore) {
+            print("opening \(item)")
+            withAnimation {
+                self.item = item
+            }
+        }
+        
+        func close() {
+            print("closing...")
+            self.item.state = .closed
+            withAnimation {
+                self.item = defaultContextStore
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                self.parentStore.item = nil
+            }
+        }
+    }
+    
+    @ObservedObject var store: ContextMenuDisplayStore
     @State var menuFrame = CGRect()
     
-    init(item: ContextMenuStore?) {
-        let store = ContextMenuOpenStore()
+    init(parentStore: ContextMenuParentStore) {
+        let store = ContextMenuDisplayStore(
+            parentStore: parentStore
+        )
         self.store = store
-        
-        if let i = item {
+        if let item = parentStore.item {
             DispatchQueue.main.async {
-                store.open(i)
+                store.open(item)
             }
         }
     }
@@ -167,7 +175,7 @@ struct ContextMenuView<Content: View, MenuContent: View>: View {
     let menuContent: MenuContent
     
     @EnvironmentObject var parentStore: ContextMenuParentStore
-    @ObservedObject var store = ContextMenuStore()
+    @ObservedObject var store = ContextMenuItemStore()
     
     init(
         @ViewBuilder menuContent: () -> MenuContent,
