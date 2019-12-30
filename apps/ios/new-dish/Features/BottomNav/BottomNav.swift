@@ -55,24 +55,43 @@ struct BottomNav: View {
 
 
 struct DishFiltersButton: View {
+    @EnvironmentObject var store: AppStore
+    
     var body: some View {
-        ContextMenuView(menuContent: {
-            List {
-                Text("Item One")
-                Text("Item Two")
-                Text("Item Three")
-            }
-                .frame(height: 150) // todo how to get lists that shrink
-        }) {
+        let button = (
             VStack(spacing: 12) {
-//                BarArrow()
-//                    .scaleEffect(0.75)
+                //                BarArrow()
+                //                    .scaleEffect(0.75)
                 Text("🍽")
                     .shadow(color: Color.black.opacity(0.75), radius: 24, x: 0, y: 4)
                     .font(.system(size: 42))
                     .foregroundColor(.white)
             }
-            
+        )
+        
+        return ZStack {
+            if self.store.state.home.view == .home {
+                ContextMenuView(menuContent: {
+                    List {
+                        Text("Item One")
+                        Text("Item Two")
+                        Text("Item Three")
+                    }
+                        .frame(height: 150) // todo how to get lists that shrink
+                }) {
+                    button
+                }
+            } else {
+                button
+                    .onTapGesture {
+                        homePager.animateTo(1)
+                }
+            }
+        }
+    }
+}
+
+
 //            BottomNavButton {
 ////                HStack(spacing: 14) {
 //////                    Group {
@@ -84,9 +103,6 @@ struct DishFiltersButton: View {
 //////                    .frame(width: 26, height: 26)
 ////                }
 //            }
-        }
-    }
-}
 
 typealias ActionFn = (() -> Void)
 
