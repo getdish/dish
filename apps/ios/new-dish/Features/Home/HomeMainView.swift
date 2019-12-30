@@ -11,6 +11,7 @@ class HomeViewState: ObservableObject {
     @Published var scrollY: CGFloat = 0
     @Published var y: CGFloat = 0
     @Published var searchBarYExtra: CGFloat = 0
+    @Published var hasMovedBar = false
     
     var mapInitialHeight: CGFloat { appHeight * 0.3 }
     var mapHeight: CGFloat { return max(mapInitialHeight + y, 100) }
@@ -28,6 +29,9 @@ class HomeViewState: ObservableObject {
     private var startDragAt: CGFloat = 0
     
     func drag(_ dragYInput: CGFloat) {
+        // TODO we can reset this back to false in some cases for better UX
+        self.hasMovedBar = true
+        
         // prevent dragging too far up if not at bottom
         let dragY = !isSnappedToBottom ? max(-120, dragYInput) : dragYInput
         
@@ -105,6 +109,12 @@ class HomeViewState: ObservableObject {
             self.y = y
         }
     }
+    
+    func resetAfterKeyboardHide() {
+        if !self.hasMovedBar && self.y != 0 && appStore.state.home.search == "" {
+            self.animateTo(0)
+        }
+    }
 }
 
 fileprivate let homeViewState = HomeViewState()
@@ -122,11 +132,10 @@ struct HomeMainView: View {
     @EnvironmentObject var store: AppStore
     @Environment(\.geometry) var appGeometry
     @ObservedObject var state = homeViewState
-    @State var showTypeMenu = false
     
     var body: some View {
         // pushed map below the border radius of the bottomdrawer
-        let isOnSearchResults = AppSelect.isOnSearchResults(self.store.state)
+        let isOnSearchResults = Selectors.home.isOnSearchResults()
         let state = self.state
         let mapHeight = isOnSearchResults ? 160 : state.mapHeight
         
@@ -137,11 +146,14 @@ struct HomeMainView: View {
         DispatchQueue.main.async {
             if self.keyboard.state.height > 0 {
                 self.state.animateTo(-self.appGeometry!.size.height * 0.1)
+            } else {
+                state.resetAfterKeyboardHide()
             }
         }
         
         return GeometryReader { geometry in
             ZStack {
+                // weird way to set appheight
                 Color.black
                     .onAppear {
                         if let g = self.appGeometry {
@@ -182,57 +194,9 @@ struct HomeMainView: View {
                     
                     VStack {
                         Spacer().frame(height: mapHeight + 31)
+                        
                         // filters
-                        ZStack {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack {
-                                    Spacer().frame(width: 50)
-                                    FilterButton(label: "American", action: {
-                                        // todo move this into action
-                                        let curState = self.store.state.home.current.last!
-                                        let filters = curState.filters.filter({ $0.type == .cuisine }) + [
-                                            SearchFilter(type: .cuisine, name: "American")
-                                        ]
-                                        self.store.send(.home(
-                                            .push(
-                                                HomeStateItem(
-                                                    search: curState.search,
-                                                    dish: curState.dish,
-                                                    filters: filters
-                                                )
-                                            )
-                                            ))
-                                    })
-                                    FilterButton(label: "Thai", action: {})
-                                    FilterButton(label: "Chinese", action: {})
-                                    FilterButton(label: "Italian", action: {})
-                                    FilterButton(label: "French", action: {})
-                                    FilterButton(label: "Burmese", action: {})
-                                    FilterButton(label: "Greek", action: {})
-                                }
-                                .padding(.horizontal)
-                            }
-                            
-                            HStack {
-                                ContextMenuView(menuContent: {
-                                    List {
-                                        Text("Item One")
-                                        Text("Item Two")
-                                        Text("Item Three")
-                                    }
-                                        .frame(height: 150) // todo how to get lists that shrink
-                                }) {
-                                    Text("🍽")
-                                        .font(.system(size: 32))
-                                        .padding(.horizontal, 2)
-                                        .onTapGesture {
-                                            self.showTypeMenu = true
-                                    }
-                                }
-                                Spacer()
-                            }
-                            .padding(.horizontal)
-                        }
+                        HomeMainFilters()
                         .animation(.spring(response: 0.3333))
                         
                         Spacer()

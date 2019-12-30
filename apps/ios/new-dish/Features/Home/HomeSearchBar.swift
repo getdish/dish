@@ -6,28 +6,6 @@ struct SearchToTagColor {
     static let filter = Color(red: 0.6, green: 0.2, blue: 0.4, opacity: 0.5)
 }
 
-func homeStateToTags(_ state: HomeStateItem) -> [SearchInputTag] {
-    var tags: [SearchInputTag] = []
-    
-    if state.dish != "" {
-        tags.append(SearchInputTag(
-            color: SearchToTagColor.dish,
-            text: state.dish
-        ))
-    }
-    
-    if state.filters.count > 0 {
-        state.filters.forEach { filter in
-            tags.append(SearchInputTag(
-                color: SearchToTagColor.filter,
-                text: filter.name
-            ))
-        }
-    }
-    
-    return tags
-}
-
 struct HomeSearchBar: View {
     @State var searchText = ""
     @State var scrollAtTop = true
@@ -36,6 +14,10 @@ struct HomeSearchBar: View {
     
     var hasSearch: Bool {
         store.state.home.current.count > 1
+    }
+    
+    private var homeSearch: Binding<String> {
+        store.binding(for: \.home.search, { .home(.setSearch($0)) })
     }
     
     var body: some View {
@@ -48,8 +30,8 @@ struct HomeSearchBar: View {
             icon: icon,
             showCancelInside: true,
             after: after,
-            searchText: self.$searchText,
-            tags: homeStateToTags(self.store.state.home.current.last!)
+            searchText: self.homeSearch,
+            tags: Selectors.home.tags()
         )
     }
     

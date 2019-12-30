@@ -3,6 +3,7 @@ extension AppState {
         var view: HomePageView = .home
         var current: [HomeStateItem] = [HomeStateItem()]
         var showDrawer: Bool = false
+        var search: String = ""
     }
 }
 
@@ -12,10 +13,13 @@ enum HomeAction {
     case push(_ state: HomeStateItem)
     case pop
     case toggleDrawer
+    case setSearch(_ val: String)
 }
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
     switch action {
+        case let .setSearch(val):
+            state.home.search = val
         case let .changeHomePage(page):
             state.home.view = page
         case let .setShowDrawer(val):
@@ -29,9 +33,32 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     }
 }
 
-extension AppSelect {
-    static func isOnSearchResults(_ state: AppState) -> Bool {
+struct HomeSelectors {
+    func isOnSearchResults(_ state: AppState = appStore.state) -> Bool {
         state.home.current.last!.dish != ""
+    }
+    
+    func tags(_ state: AppState = appStore.state) -> [SearchInputTag] {
+        let homeState = state.home.current.last!
+        var tags: [SearchInputTag] = []
+        
+        if homeState.dish != "" {
+            tags.append(SearchInputTag(
+                color: SearchToTagColor.dish,
+                text: homeState.dish
+            ))
+        }
+        
+        if homeState.filters.count > 0 {
+            homeState.filters.forEach { filter in
+                tags.append(SearchInputTag(
+                    color: SearchToTagColor.filter,
+                    text: filter.name
+                ))
+            }
+        }
+        
+        return tags
     }
 }
 

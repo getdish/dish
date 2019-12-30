@@ -13,7 +13,12 @@ enum AppAction {
 }
 
 // select
-struct AppSelect {}
+struct AppSelect {
+    var home = HomeSelectors()
+}
+
+// Selectors
+let Selectors = AppSelect()
 
 // reducer
 let appReducer = Reducer<AppState, AppAction> { state, action in
