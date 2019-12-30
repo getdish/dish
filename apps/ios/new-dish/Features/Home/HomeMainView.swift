@@ -50,14 +50,14 @@ class HomeViewState: ObservableObject {
         
         var y = self.startDragAt + (
             // add resistance if snapped to bottom
-            isSnappedToBottom ? dragY * 0.25 : dragY
+            isSnappedToBottom ? dragY * 0.2 : dragY
         )
         
         // resistance before snapping down
         let aboutToSnapToBottom = y >= aboutToSnapToBottomAt && !isSnappedToBottom
         if aboutToSnapToBottom {
             let diff = self.startDragAt + dragY - aboutToSnapToBottomAt
-            y = aboutToSnapToBottomAt + diff * 0.25
+            y = aboutToSnapToBottomAt + diff * 0.2
         }
         
         let wasSnappedToBottom = isSnappedToBottom
@@ -70,7 +70,7 @@ class HomeViewState: ObservableObject {
             self.searchBarYExtra = dragY * 0.25
         }
         
-        let willSnapUp = -dragY > appHeight * 0.3
+        let willSnapUp = -dragY > appHeight * 0.25
         let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
         if willSnapDown {
             self.snapToBottom(true)
