@@ -8,7 +8,7 @@ extension AppState {
 }
 
 enum HomeAction {
-    case changeHomePage(_ page: HomePageView)
+    case setView(_ page: HomePageView)
     case setShowDrawer(_ val: Bool)
     case push(_ state: HomeStateItem)
     case pop
@@ -20,7 +20,7 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     switch action {
         case let .setSearch(val):
             state.home.search = val
-        case let .changeHomePage(page):
+        case let .setView(page):
             state.home.view = page
         case let .setShowDrawer(val):
             state.home.showDrawer = val

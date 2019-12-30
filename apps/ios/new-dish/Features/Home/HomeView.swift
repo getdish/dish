@@ -27,6 +27,8 @@ let homePager = PagerStore(
     index: 1
 )
 
+fileprivate let homeViewsIndex: [HomePageView] = [.me, .home, .camera]
+
 struct HomeViewContent: View {
     var width: CGFloat = 0
     var height: CGFloat = 0
@@ -48,7 +50,7 @@ struct HomeViewContent: View {
             }
             .onChangePage { index in
                 self.disableDragging = index == 0
-                self.store.send(.home(.changeHomePage(index == 0 ? .home : .camera)))
+                self.store.send(.home(.setView(homeViewsIndex[index])))
             }
             // just drag from edge (to camera)
             .simultaneousGesture(
