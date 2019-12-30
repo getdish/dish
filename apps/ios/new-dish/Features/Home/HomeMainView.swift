@@ -4,6 +4,8 @@ import Combine
 // used in search results for now...
 let cardRowHeight: CGFloat = 140
 
+fileprivate let topNavHeight: CGFloat = 45
+fileprivate let searchBarHeight: CGFloat = 45
 fileprivate let resistanceYBeforeSnap: CGFloat = 50
 
 class HomeViewState: ObservableObject {
@@ -13,8 +15,9 @@ class HomeViewState: ObservableObject {
     @Published var searchBarYExtra: CGFloat = 0
     @Published var hasMovedBar = false
     
+    let mapMinHeight: CGFloat = Screen.statusBarHeight + searchBarHeight / 2 + topNavHeight + 40
     var mapInitialHeight: CGFloat { appHeight * 0.3 }
-    var mapHeight: CGFloat { return max(mapInitialHeight + y, 100) }
+    var mapHeight: CGFloat { return max(mapInitialHeight + y, mapMinHeight) }
     
     var snapToBottomAt: CGFloat { appHeight * 0.15 }
     var snappedToBottomMapHeight: CGFloat { appHeight - 200 }
@@ -93,6 +96,7 @@ class HomeViewState: ObservableObject {
     }
     
     func snapToBottom(_ toBottom: Bool = true) {
+        self.hasMovedBar = false
         HomeDragLock.setLock(.off)
         withAnimation(.spring()) {
             self.searchBarYExtra = 0
@@ -101,6 +105,13 @@ class HomeViewState: ObservableObject {
             } else {
                 self.y = snapToBottomAt - resistanceYBeforeSnap
             }
+        }
+    }
+    
+    func snapToTop() {
+        self.hasMovedBar = false
+        withAnimation(.spring()) {
+            self.y = self.mapMinHeight - self.mapInitialHeight
         }
     }
     
@@ -130,6 +141,11 @@ struct HomeSearchBarState {
     }
 }
 
+// TODO
+// We need to have an Effect from appstate reducer that then has effects onto HomeState
+//  1. Keyboard see below init() commented out
+//  2. We need to reset hasMovedBar = false when we change certain things
+
 struct HomeMainView: View {
     @EnvironmentObject var keyboard: Keyboard
     @EnvironmentObject var store: AppStore
@@ -154,18 +170,17 @@ struct HomeMainView: View {
 //    }
     
     var body: some View {
-        print("render HomeMainView")
-        
         // pushed map below the border radius of the bottomdrawer
         let isOnSearchResults = Selectors.home.isOnSearchResults()
         let state = self.state
         let mapHeight = state.mapHeight
         
+        print("render HomeMainView -- mapHeight \(mapHeight)")
+        
         // TODO why do this in body
         if isOnSearchResults && HomeDragLock.state == .idle {
             DispatchQueue.main.async {
-                // animate to higher
-                self.state.animateTo(-50)
+                self.state.snapToTop()
             }
         }
         
@@ -235,7 +250,7 @@ struct HomeMainView: View {
                             HomeSearchBarState.frame = searchBarGeometry.frame(in: .global)
                             return HomeSearchBar()
                         }
-                        .frame(height: 45)
+                        .frame(height: searchBarHeight)
                         
                         Spacer()
                     }

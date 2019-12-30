@@ -51,6 +51,22 @@ extension View {
     }
 }
 
+// MARK - onScroll
+
+typealias ScrollCallback = (CGRect) -> Void
+
+extension View {
+    func onScroll(_ scrollHandler: @escaping ScrollCallback) -> some View {
+        background(
+            GeometryReader { geometry -> EmptyView in
+                scrollHandler(geometry.frame(in: .global))
+                return EmptyView()
+            }
+        )
+    }
+}
+
+
 struct RoundedCorner: Shape {
     var radius: CGFloat = .infinity
     var style: RoundedCornerStyle = .continuous

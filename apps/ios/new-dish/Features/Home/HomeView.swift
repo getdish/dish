@@ -44,9 +44,15 @@ struct HomeViewContent: View {
                 pagerStore: homePager,
                 disableDragging: self.disableDragging
                 ) {
-                    HomeScreenRoundedPage(content: DishAccount())
-                    HomeScreenRoundedPage(content: HomeMainView())
-                    HomeScreenRoundedPage(content: DishCamera())
+                    DishAccount()
+                        .clipped()
+                        .cornerRadius(80)
+                    HomeMainView()
+                        .clipped()
+                        .cornerRadius(80)
+                    DishCamera()
+                        .clipped()
+                        .cornerRadius(80)
             }
             .onChangePage { index in
                 let view = homeViewsIndex[index]
@@ -83,21 +89,6 @@ struct HomeViewContent: View {
         .frame(maxHeight: self.height)
     }
 }
-
-
-// TODO not working
-struct HomeScreenRoundedPage<Content: View>: View {
-    var content: Content
-    var body: some View {
-        VStack {
-            content
-        }
-        .clipped()
-        .cornerRadius(40)
-        .shadow(color: Color.black.opacity(0.25), radius: 20, y: 10)
-    }
-}
-
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {

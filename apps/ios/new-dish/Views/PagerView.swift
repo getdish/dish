@@ -37,7 +37,6 @@ struct PagerView<Content: View>: View {
                 self.content
                     .frame(width: geometry.size.width)
             }
-//            .animation(.spring())
             .offset(
                 x: self.pagerStore.isGestureActive
                     ? self.pagerStore.offset

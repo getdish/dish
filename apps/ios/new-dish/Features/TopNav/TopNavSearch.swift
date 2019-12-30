@@ -35,6 +35,8 @@ struct TopNavSearch: View {
                         .offset(y: isOnHome ? 0 : -80)
                         .animation(Animation.spring().delay(isOnHome ? 0 : 0.25))
                         
+                        Spacer()
+                        
                         Button(action: {
                         }) {
                             VStack {
@@ -55,8 +57,6 @@ struct TopNavSearch: View {
                         .foregroundColor(.white)
                         .offset(y: isOnHome ? 0 : -80)
                         .animation(Animation.spring().delay(isOnHome ? 0.2 : 0.4))
-                        
-                        Spacer()
                     }
                 }
                 .frameFlex()
