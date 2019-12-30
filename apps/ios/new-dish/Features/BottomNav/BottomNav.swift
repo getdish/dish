@@ -21,7 +21,7 @@ struct BottomNav: View {
                         .animation(.spring(response: 0.75))
                         .offset(y: isOnGallery ? hiddenButtonY : 0)
                     Spacer()
-                    BottomNavCircularButton(image: "camera", size: 48, action: {
+                    BottomNavCircularButton(image: "star", size: 48, action: {
                         homePager.animateTo(2)
                     })
                         .animation(.spring(response: 0.5))
@@ -64,44 +64,27 @@ struct DishFiltersButton: View {
             }
                 .frame(height: 150) // todo how to get lists that shrink
         }) {
-            BottomNavButton {
-                HStack(spacing: 14) {
-                    Text("Filter")
-                        .foregroundColor(.white)
-//                    Group {
-//                        Image(systemName: "dollarsign.circle").resizable().scaledToFit()
-//                        Image(systemName: "tag.fill").resizable().scaledToFit()
-//                        Image(systemName: "car.fill").resizable().scaledToFit()
-//                    }
-//                    .foregroundColor(.white)
-//                    .frame(width: 26, height: 26)
-                }
+            VStack(spacing: 12) {
+//                BarArrow()
+//                    .scaleEffect(0.75)
+                Text("🍽")
+                    .shadow(color: Color.black.opacity(0.75), radius: 24, x: 0, y: 4)
+                    .font(.system(size: 42))
+                    .foregroundColor(.white)
             }
+            
+//            BottomNavButton {
+////                HStack(spacing: 14) {
+//////                    Group {
+//////                        Image(systemName: "dollarsign.circle").resizable().scaledToFit()
+//////                        Image(systemName: "tag.fill").resizable().scaledToFit()
+//////                        Image(systemName: "car.fill").resizable().scaledToFit()
+//////                    }
+//////                    .foregroundColor(.white)
+//////                    .frame(width: 26, height: 26)
+////                }
+//            }
         }
-    }
-}
-
-struct DishMapButton: View {
-    var body: some View {
-        BottomNavCircularButton(image: "map", size: 40)
-    }
-}
-
-struct DishStarButton: View {
-    var body: some View {
-        BottomNavCircularButton(image: "star", size: 60)
-    }
-}
-
-struct DishBackButton: View {
-    var body: some View {
-        BottomNavCircularButton(image: "chevron.left.circle.fill", size: 50)
-    }
-}
-
-struct DishForwardButton: View {
-    var body: some View {
-        BottomNavCircularButton(image: "chevron.right.circle.fill", size: 50)
     }
 }
 

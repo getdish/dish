@@ -211,7 +211,7 @@ struct HomeMainView: View {
                         .animation(HomeDragLock.state == .idle ? .none : .spring(response: 0.3333))
                     
                     VStack {
-                        Spacer().frame(height: mapHeight + 31)
+                        Spacer().frame(height: mapHeight + 34)
                         
                         // filters
                         HomeMainFilters()

@@ -8,7 +8,7 @@ struct HomeMainFilters: View {
         ZStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
-                    Spacer().frame(width: 50)
+                    Spacer().frame(width: 48)
                     FilterButton(label: "American", action: {
                         // todo move this into action
                         let curState = self.store.state.home.current.last!
@@ -44,9 +44,10 @@ struct HomeMainFilters: View {
                     }
                         .frame(height: 150) // todo how to get lists that shrink
                 }) {
-                    Text("🍽")
-                        .font(.system(size: 32))
-                        .padding(.horizontal, 2)
+                    Image(systemName: "line.horizontal.3.decrease.circle")
+                        .foregroundColor(Color.white.opacity(0.5))
+                        .font(.system(size: 26))
+                        .padding(.horizontal, 6)
                         .onTapGesture {
                             self.showTypeMenu = true
                     }
