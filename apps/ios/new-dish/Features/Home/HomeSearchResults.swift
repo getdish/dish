@@ -85,10 +85,11 @@ struct RestaurantText: View {
                 HStack {
                     VStack(alignment: .leading) {
                         Text(name)
-                            .font(.system(size: 24))
+                            .font(.system(size: 22))
                             .bold()
                             .modifier(TextShadowModifier())
                     }
+                    .padding()
                     
                     Spacer()
                     
@@ -104,7 +105,6 @@ struct RestaurantText: View {
                         .cornerRadius(100)
                     }
                 }
-                .padding()
             }
             
             ZStack(alignment: .bottomLeading) {
@@ -129,10 +129,10 @@ struct RestaurantText: View {
                     Spacer()
                     
                     VStack {
-                        Image(systemName: "phone.fill")
+                        Image(systemName: "info.circle.fill")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 32, height: 32)
+                            .frame(width: 26, height: 26)
                             .modifier(TextShadowModifier())
                     }
                 }

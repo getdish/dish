@@ -96,7 +96,7 @@ class HomeViewState: ObservableObject {
     }
     
     func snapToBottom(_ toBottom: Bool = true) {
-        self.hasMovedBar = false
+//        self.hasMovedBar = false
         HomeDragLock.setLock(.off)
         withAnimation(.spring()) {
             self.searchBarYExtra = 0
@@ -109,7 +109,7 @@ class HomeViewState: ObservableObject {
     }
     
     func snapToTop() {
-        self.hasMovedBar = false
+//        self.hasMovedBar = false
         withAnimation(.spring()) {
             self.y = self.mapMinHeight - self.mapInitialHeight
         }
