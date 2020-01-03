@@ -195,6 +195,9 @@ struct HomeMainView: View {
             }
         }
         
+        let zoom = abs(state.y) / 20
+        print("zoom \(zoom)")
+        
         return GeometryReader { geometry in
             ZStack {
                 // weird way to set appheight
@@ -209,7 +212,8 @@ struct HomeMainView: View {
                     ZStack {
                         DishMapView(
                             width: geometry.size.width,
-                            height: Screen.height
+                            height: Screen.height,
+                            zoom: zoom
                         )
                     }
                     .frame(height: mapHeight)

@@ -12,6 +12,7 @@ struct MapView: UIViewControllerRepresentable {
     
     var width: CGFloat
     var height: CGFloat
+    var zoom: CGFloat
     var darkMode: Bool?
     var location: MapLocation
     @State var controller: MapViewController? = nil
@@ -21,9 +22,11 @@ struct MapView: UIViewControllerRepresentable {
     }
     
     func makeUIViewController(context: Context) -> UIViewController {
+        print("makeUIViewController \(zoom)")
         let controller = MapViewController(
             width: width,
             height: height,
+            zoom: zoom,
             darkMode: darkMode
         )
         DispatchQueue.main.async {
@@ -33,17 +36,18 @@ struct MapView: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
-        print("MapView should update the controller now")
+        print("MapView should update the controller now \(zoom)")
         context.coordinator.update()
     }
     
     class Coordinator: NSObject {
-        var parent: MapView
+        var mapView: MapView
         let locationManager = LocationManager()
         var cancels: [AnyCancellable] = []
         
-        init(_ parent: MapView) {
-            self.parent = parent
+        init(_ mapView: MapView) {
+            print("init coordinator \(mapView)")
+            self.mapView = mapView
             super.init()
             self.update()
             self.locationManager.start()
@@ -53,7 +57,7 @@ struct MapView: UIViewControllerRepresentable {
                 self.cancels.append(
                     self.locationManager.$lastLocation.map { location in
                         if location != nil {
-                            self.parent.controller!.moveMapToCurrentLocation()
+                            self.mapView.controller!.moveMapToCurrentLocation()
                         }
                     }.sink {}
                 )
@@ -61,10 +65,10 @@ struct MapView: UIViewControllerRepresentable {
         }
         
         func update() {
-//            if location == .current {
-//                self.controller.moveMapToCurrentLocation()
-//            }
-            print("update map controller!!!!!!!")
+            print("update map controller!!!!!!! \(self.mapView)")
+            if let controller = self.mapView.controller {
+                controller.update()
+            }
         }
         
         class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
@@ -102,37 +106,39 @@ struct MapView: UIViewControllerRepresentable {
 
 class MapViewController: UIViewController {
     // want to default to city level view
-    var zoomLevel: Float = 12.0
+    var zoom: CGFloat
     var mapView: GMSMapView!
     var currentLocation: CLLocation?
     var width: CGFloat
     var height: CGFloat
     var darkMode: Bool?
     
-    init(width: CGFloat, height: CGFloat, darkMode: Bool?) {
+    init(width: CGFloat, height: CGFloat, zoom: CGFloat?, darkMode: Bool?) {
+        print("init controller \(zoom)")
+        self.zoom = zoom ?? 12.0
         self.width = width
         self.height = height
         self.darkMode = darkMode
         super.init(nibName: nil, bundle: nil)
     }
     
+    func update() {
+        print("whats going on \(self.zoom)")
+    }
+    
+    func updateZoom(_ nextZoom: CGFloat) {
+        self.zoom = nextZoom
+        self.updateCamera()
+    }
+    
     func moveMapToCurrentLocation() {
-        if mapView == nil {
-            return
-        }
-
+        if mapView == nil { return }
         self.mapView.isMyLocationEnabled = true
-        
-        if let location: CLLocation = appStore.state.location.lastKnown {
-            print("we got locations yall")
-            let camera = GMSCameraPosition.camera(
-                // testing moving center
-                // https://gis.stackexchange.com/questions/2951/algorithm-for-offsetting-a-latitude-longitude-by-some-amount-of-meters
-                withLatitude: location.coordinate.latitude - 7000 / 111111,
-                longitude: location.coordinate.longitude,
-                zoom: zoomLevel
-            )
-            
+        self.updateCamera()
+    }
+    
+    private func updateCamera() {
+        if let camera = getCamera() {
             if mapView.isHidden {
                 mapView.isHidden = false
                 mapView.camera = camera
@@ -140,6 +146,19 @@ class MapViewController: UIViewController {
                 mapView.animate(to: camera)
             }
         }
+    }
+    
+    private func getCamera() -> GMSCameraPosition? {
+        if let location: CLLocation = appStore.state.location.lastKnown {
+            return GMSCameraPosition.camera(
+                // testing moving center
+                // https://gis.stackexchange.com/questions/2951/algorithm-for-offsetting-a-latitude-longitude-by-some-amount-of-meters
+                withLatitude: location.coordinate.latitude - 7000 / 111111,
+                longitude: location.coordinate.longitude,
+                zoom: Float(zoom)
+            )
+        }
+        return nil
     }
     
     required init?(coder: NSCoder) {
