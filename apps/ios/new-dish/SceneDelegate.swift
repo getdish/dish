@@ -9,20 +9,27 @@
 import UIKit
 import SwiftUI
 
+// Init state
+let appStore = Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    
-    // Init state
-    let store = Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
+    let keyboard = Keyboard()
+    let inputEvents: InputEvents = InputEvents()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
+        
+        print("start keyboard \(keyboard)")
 
         // Create the SwiftUI view that provides the window contents.
-        let contentView = RootView().environmentObject(store)
+        let contentView = RootView()
+            .environmentObject(appStore)
+            .environmentObject(keyboard)
+            .environment(\.inputEvents, inputEvents)
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {

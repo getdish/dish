@@ -5,23 +5,24 @@ struct BottomNav: View {
     let hiddenButtonY: CGFloat = 100
     
     var body: some View {
-        let isOnGallery = store.state.galleryDish != nil
+        let isOnGallery = false //store.state.galleryDish != nil
         
         return VStack {
             Spacer()
             ZStack {
                 HStack {
-                    DishMapButton()
+                    BottomNavCircularButton(image: "person.fill", size: 42, action: {
+                        homePager.animateTo(0)
+                    })
                         .animation(.spring(response: 0.5))
-                        .opacity(0)
                         .offset(y: isOnGallery ? hiddenButtonY : 0)
                     Spacer()
                     DishFiltersButton()
                         .animation(.spring(response: 0.75))
                         .offset(y: isOnGallery ? hiddenButtonY : 0)
                     Spacer()
-                    BottomNavCircularButton(image: "camera", size: 48, action: {
-                        homePager.animateTo(1)
+                    BottomNavCircularButton(image: "star", size: 48, action: {
+                        homePager.animateTo(2)
                     })
                         .animation(.spring(response: 0.5))
                         .offset(y: isOnGallery ? hiddenButtonY : 0)
@@ -35,7 +36,7 @@ struct BottomNav: View {
                     Spacer()
                     BottomNavCircularButton(image: "xmark", size: 50, action: {
                         print("CLOSE THAT SHIT")
-                        self.store.send(.closeGallery)
+//                        self.store.send(.closeGallery)
                     })
                         .animation(.spring(response: 0.75))
                         .offset(y: !isOnGallery ? hiddenButtonY : 0)
@@ -54,44 +55,54 @@ struct BottomNav: View {
 
 
 struct DishFiltersButton: View {
+    @EnvironmentObject var store: AppStore
+    
     var body: some View {
-        BottomNavButton {
-            HStack(spacing: 14) {
-                Group {
-                    Image(systemName: "dollarsign.circle").resizable().scaledToFit()
-                    Image(systemName: "tag.fill").resizable().scaledToFit()
-                    Image(systemName: "car.fill").resizable().scaledToFit()
+        let button = (
+            VStack(spacing: 12) {
+                //                BarArrow()
+                //                    .scaleEffect(0.75)
+                Text("🍽")
+                    .shadow(color: Color.black.opacity(0.75), radius: 24, x: 0, y: 4)
+                    .font(.system(size: 42))
+                    .foregroundColor(.white)
+            }
+        )
+        
+        return ZStack {
+            if self.store.state.home.view == .home {
+                ContextMenuView(menuContent: {
+                    List {
+                        Text("Item One")
+                        Text("Item Two")
+                        Text("Item Three")
+                    }
+                        .frame(height: 150) // todo how to get lists that shrink
+                }) {
+                    button
                 }
-                .foregroundColor(.white)
-                .frame(width: 26, height: 26)
+            } else {
+                button
+                    .onTapGesture {
+                        homePager.animateTo(1)
+                }
             }
         }
     }
 }
 
-struct DishMapButton: View {
-    var body: some View {
-        BottomNavCircularButton(image: "map", size: 40)
-    }
-}
 
-struct DishStarButton: View {
-    var body: some View {
-        BottomNavCircularButton(image: "star", size: 60)
-    }
-}
-
-struct DishBackButton: View {
-    var body: some View {
-        BottomNavCircularButton(image: "chevron.left.circle.fill", size: 50)
-    }
-}
-
-struct DishForwardButton: View {
-    var body: some View {
-        BottomNavCircularButton(image: "chevron.right.circle.fill", size: 50)
-    }
-}
+//            BottomNavButton {
+////                HStack(spacing: 14) {
+//////                    Group {
+//////                        Image(systemName: "dollarsign.circle").resizable().scaledToFit()
+//////                        Image(systemName: "tag.fill").resizable().scaledToFit()
+//////                        Image(systemName: "car.fill").resizable().scaledToFit()
+//////                    }
+//////                    .foregroundColor(.white)
+//////                    .frame(width: 26, height: 26)
+////                }
+//            }
 
 typealias ActionFn = (() -> Void)
 

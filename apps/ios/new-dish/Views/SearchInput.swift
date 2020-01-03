@@ -6,6 +6,14 @@ struct EmptyModifier: ViewModifier {
     }
 }
 
+struct SearchInputTag: Identifiable {
+    var color: Color
+    var text: String
+    var id: String {
+        "\(color.hashValue)\(text)"
+    }
+}
+
 struct SearchInput: View {
     var placeholder = "Search"
     var inputBackgroundColor = Color(.secondarySystemBackground)
@@ -21,16 +29,19 @@ struct SearchInput: View {
     var after: AnyView?
     
     @Binding var searchText: String
-    var pinnedText = ""
+    var tags: [SearchInputTag] = []
     
     @State private var showCancelButton: Bool = false
     
     func handleEditingChanged(isEditing: Bool) {
         self.showCancelButton = isEditing
+        
         if let cb = onEditingChanged {
             cb(isEditing)
         }
     }
+    
+    
     
     var cancelButton: some View {
         Button("Cancel") {
@@ -46,7 +57,7 @@ struct SearchInput: View {
     
     var body: some View {
         let pad = 8 * (scale + 0.5) * 0.5
-        let hasPinnedText = self.pinnedText != ""
+        let hasTags = self.tags.count > 0
         let fontSize = 14 * scale
         
         return VStack {
@@ -56,17 +67,21 @@ struct SearchInput: View {
                     (icon ?? AnyView(Image(systemName: "magnifyingglass")))
                         .frame(width: 24 * scale, height: 24 * scale)
                     
-                    if hasPinnedText {
-                        Text(self.pinnedText)
-                            .font(.system(size: fontSize))
-                            .foregroundColor(.white)
-                            .padding(4)
-                            .background(Color.init(red: 0.2, green: 0.4, blue: 0.7, opacity: 0.5))
-                            .cornerRadius(4)
+                    if hasTags {
+                        HStack {
+                            ForEach(self.tags) { tag in
+                                Text(tag.text)
+                                    .font(.system(size: fontSize))
+                                    .foregroundColor(Color.white)
+                                    .padding(4)
+                                    .background(tag.color)
+                                    .cornerRadius(4)
+                            }
+                        }
                     }
                     
                     TextField(
-                        hasPinnedText ? "" : self.placeholder,
+                        hasTags ? "" : self.placeholder,
                         text: self.$searchText,
                         onEditingChanged: self.handleEditingChanged,
                         onCommit: {
@@ -104,7 +119,7 @@ struct SearchInput: View {
                     .foregroundColor(.secondary)
                     .background(self.inputBackgroundColor)
                     .cornerRadius(10.0 * scale * sizeRadius)
-                    .shadow(color: Color.black.opacity(0.2), radius: 15, x: 0, y: 0)
+                    .shadow(color: Color.black.opacity(0.24), radius: 15, x: 0, y: 0)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10.0 * scale * sizeRadius)
                             .stroke(self.borderColor, lineWidth: 1)

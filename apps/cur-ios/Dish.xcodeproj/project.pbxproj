@@ -305,6 +305,7 @@
 		AEB2C960237B677300655E0E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				AEB2C95D237B675F00655E0E /* landmarkData.json */,
 				AEB2C95C237B675F00655E0E /* charleyrivers_feature.jpg */,
 				AEB2C95A237B675F00655E0E /* charleyrivers.jpg */,
 				AEB2C957237B675F00655E0E /* chilkoottrail.jpg */,
@@ -313,7 +314,6 @@
 				AEB2C951237B675F00655E0E /* hikeData.json */,
 				AEB2C950237B675F00655E0E /* icybay.jpg */,
 				AEB2C953237B675F00655E0E /* lakemcdonald.jpg */,
-				AEB2C95D237B675F00655E0E /* landmarkData.json */,
 				AEB2C95B237B675F00655E0E /* rainbowlake.jpg */,
 				AEB2C956237B675F00655E0E /* silversalmoncreek.jpg */,
 				AEB2C958237B675F00655E0E /* stmarylake_feature.jpg */,

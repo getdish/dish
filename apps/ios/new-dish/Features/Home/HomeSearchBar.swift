@@ -1,5 +1,11 @@
 import SwiftUI
 
+// this can be expanded to handle types of filters
+struct SearchToTagColor {
+    static let dish = Color(red: 0.2, green: 0.4, blue: 0.7, opacity: 0.5)
+    static let filter = Color(red: 0.6, green: 0.2, blue: 0.4, opacity: 0.5)
+}
+
 struct HomeSearchBar: View {
     @State var searchText = ""
     @State var scrollAtTop = true
@@ -7,7 +13,11 @@ struct HomeSearchBar: View {
     @EnvironmentObject var store: AppStore
     
     var hasSearch: Bool {
-        store.state.homeState.count > 1
+        store.state.home.current.count > 1
+    }
+    
+    private var homeSearch: Binding<String> {
+        store.binding(for: \.home.search, { .home(.setSearch($0)) })
     }
     
     var body: some View {
@@ -20,16 +30,16 @@ struct HomeSearchBar: View {
             icon: icon,
             showCancelInside: true,
             after: after,
-            searchText: self.$searchText,
-            pinnedText: self.store.state.homeState.last!.search
+            searchText: self.homeSearch,
+            tags: Selectors.home.tags()
         )
     }
     
     var icon: AnyView {
-        if store.state.homeState.count > 1 {
+        if store.state.home.current.count > 1 {
             return AnyView(
                 Image(systemName: "chevron.left").onTapGesture {
-                    self.store.send(.popHomeState)
+                    self.store.send(.home(.pop))
                 }
             )
         } else {
@@ -41,15 +51,16 @@ struct HomeSearchBar: View {
     
     var after: AnyView {
         AnyView(
-            Image(systemName: "arrow.up.and.down.circle.fill")
-                .resizable()
-                .frame(width: 26, height: 26)
-                .padding(4)
-                .opacity(0.45)
-                .onTapGesture {
-                    self.homeState.toggleMap()
-                    
+            Button(action: {
+                self.homeState.toggleMap()
+            }) {
+                Image(systemName: self.homeState.isSnappedToBottom ? "rectangle.grid.2x2.fill" : "map.fill")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .opacity(0.45)
             }
+            .padding(.vertical, 4)
+            .padding(.horizontal, 12)
         )
     }
 }

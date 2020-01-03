@@ -35,8 +35,8 @@ struct TopNavSearchResults: View {
                 .listRowBackground(Color("transparent"))
             }
         }
-        .opacity(store.state.showLocationSearch ? 1 : 0)
-        .disabled(!store.state.showLocationSearch)
+        .opacity(store.state.location.showSearch ? 1 : 0)
+        .disabled(!store.state.location.showSearch)
         .animation(.spring())
     }
 }

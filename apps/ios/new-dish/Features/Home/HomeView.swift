@@ -22,41 +22,65 @@ struct HomeView: View {
     }
 }
 
-let homePager = PagerStore()
+fileprivate let homePageCount = 3
+let homePager = PagerStore(
+    index: 1
+)
+
+fileprivate let homeViewsIndex: [HomePageView] = [.me, .home, .camera]
 
 struct HomeViewContent: View {
     var width: CGFloat = 0
     var height: CGFloat = 0
     @EnvironmentObject var store: AppStore
-    @State private var index = 0
+    @State private var disableDragging = true
 
     var body: some View {
-        ZStack {
+        let dragState = HomeDragLock.state
+        
+        return ZStack {
             PagerView(
-                pageCount: 2,
+                pageCount: homePageCount,
                 pagerStore: homePager,
-                disableDragging: false
+                disableDragging: self.disableDragging
                 ) {
+                    DishAccount()
+                        .clipped()
+                        .cornerRadius(80)
                     HomeMainView()
-                    Image(systemName: "photo").resizable()
+                        .clipped()
+                        .cornerRadius(80)
+                    DishCamera()
+                        .clipped()
+                        .cornerRadius(80)
             }
             .onChangePage { index in
-                self.store.send(.changeHomePage(index == 0 ? .home : .camera))
+                let view = homeViewsIndex[index]
+                self.disableDragging = view == .home
+                self.store.send(.home(.setView(view)))
             }
+            // just drag from edge (to camera)
             .simultaneousGesture(
-                // drag to camera
                 DragGesture()
                     .onChanged { value in
-                        // right edge
-                        if self.width - value.startLocation.x < 10 {
-                            let next = Double((0 - value.translation.width) / self.width)
-                            homePager.index = min(1, max(0, next))
+                        if dragState == .searchbar {
+                            return
+                        }
+                        let isOnRightEdge = self.width - value.startLocation.x < 10
+                        let isOnLeftEdge = value.startLocation.x < 10
+                        if isOnRightEdge || isOnLeftEdge {
+                            if abs(value.translation.width) > 10 {
+                                HomeDragLock.setLock(.pager)
+                            }
+                            let dragIndexDiff = Double(-value.translation.width / self.width)
+                            homePager.drag(dragIndexDiff)
                         }
                 }
                 .onEnded { value in
                     if homePager.index.rounded() != homePager.index {
                        homePager.onDragEnd(value)
                     }
+                    HomeDragLock.setLock(.idle)
                 }
             )
             
@@ -66,22 +90,9 @@ struct HomeViewContent: View {
     }
 }
 
-
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView()
-           .embedInAppEnvironment(Mocks.galleryVisibleDish)
+           .embedInAppEnvironment()
     }
 }
-
-//                SideDrawerView(
-//                    isOpen: self.$sideDrawerShown,
-//                    content: {
-//                        HomeViewContent(height: geometry.size.height)
-//                    },
-//                    drawer: {
-//                        // TODO @majid it shows DishSidebarView() if i uncomment DishSidebarView
-//                        EmptyView().frame(height: 100)
-//    //                   DishSidebarView()
-//                    }
-//                )

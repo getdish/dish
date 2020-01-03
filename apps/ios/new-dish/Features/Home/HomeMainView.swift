@@ -1,90 +1,207 @@
 import SwiftUI
+import Combine
 
-fileprivate let bottomNavHeight: CGFloat = 115
-fileprivate let filterBarHeight: CGFloat = 82
-fileprivate let cardRowHeight: CGFloat = 160
+// used in search results for now...
+let cardRowHeight: CGFloat = 140
+
+fileprivate let topNavHeight: CGFloat = 45
+fileprivate let searchBarHeight: CGFloat = 45
+fileprivate let resistanceYBeforeSnap: CGFloat = 50
 
 class HomeViewState: ObservableObject {
     @Published var appHeight: CGFloat = 0
     @Published var scrollY: CGFloat = 0
-    @Published var searchY: CGFloat = 0
-    @Published var dragY: CGFloat = 0
-    @Published var snappedToBottomMapHeight: CGFloat = 0
+    @Published var y: CGFloat = 0
+    @Published var searchBarYExtra: CGFloat = 0
+    @Published var hasMovedBar = false
+    
+    let mapMinHeight: CGFloat = Screen.statusBarHeight + searchBarHeight / 2 + topNavHeight + 40
+    var mapInitialHeight: CGFloat { appHeight * 0.3 }
     
     var mapHeight: CGFloat {
-        if isSnappedToBottom {
-            return snappedToBottomMapHeight
-        }
-        let h = (appHeight - Constants.homeInitialDrawerHeight + y - scrollY).rounded()
-        return max(h, 100)
+        let scrollYExtra: CGFloat = self.isSnappedToBottom ? 0 : self.scrollY
+        return max(mapInitialHeight + y - scrollYExtra, mapMinHeight)
     }
     
-    var isSnappedToBottom: Bool {
-        searchY + dragY > 100
-    }
+    var snapToBottomAt: CGFloat { appHeight * 0.15 }
+    var snappedToBottomMapHeight: CGFloat { appHeight - 200 }
+    var isSnappedToBottom: Bool { y > snapToBottomAt }
     
-    var y: CGFloat {
-        searchY + dragY
-    }
-    
-    func finishDrag() {
-        self.searchY = self.dragY + self.searchY
-        self.dragY = 0
-    }
+    var aboutToSnapToBottomAt: CGFloat { snapToBottomAt - resistanceYBeforeSnap }
     
     func toggleMap() {
-        if isSnappedToBottom {
-            self.dragY = 0
-            self.searchY = 0
-        } else {
-            self.dragY = 110
-        }
+        self.snapToBottom(!isSnappedToBottom)
     }
     
-    func drag(_ y: CGFloat) {
+    private var startDragAt: CGFloat = 0
+    
+    func drag(_ dragYInput: CGFloat) {
+        // TODO we can reset this back to false in some cases for better UX
+        self.hasMovedBar = true
+        
+        // prevent dragging too far up if not at bottom
+        let dragY = !isSnappedToBottom ? max(-120, dragYInput) : dragYInput
+        
+        // remember where we started
+        if HomeDragLock.state != .searchbar {
+            self.startDragAt = y
+            HomeDragLock.setLock(.searchbar)
+        }
+        
+        var y = self.startDragAt + (
+            // add resistance if snapped to bottom
+            isSnappedToBottom ? dragY * 0.2 : dragY
+        )
+        
+        // resistance before snapping down
+        let aboutToSnapToBottom = y >= aboutToSnapToBottomAt && !isSnappedToBottom
+        if aboutToSnapToBottom {
+            let diff = self.startDragAt + dragY - aboutToSnapToBottomAt
+            y = aboutToSnapToBottomAt + diff * 0.2
+        }
+        
         let wasSnappedToBottom = isSnappedToBottom
-        self.dragY = y
-        if !wasSnappedToBottom && isSnappedToBottom {
-            self.snapToBottom()
-        } else {
-            self.snappedToBottomMapHeight = self.mapHeight
+        self.y = y
+        
+        // searchbar moves faster during resistance before snap
+        if aboutToSnapToBottom {
+            self.searchBarYExtra = y - aboutToSnapToBottomAt
+        } else if isSnappedToBottom {
+            self.searchBarYExtra = dragY * 0.25
+        }
+        
+        let willSnapUp = -dragY > appHeight * 0.25
+        let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
+        if willSnapDown {
+            self.snapToBottom(true)
+        } else if willSnapUp {
+            self.snapToBottom(false)
         }
     }
     
-    func snapToBottom() {
+    func finishDrag(_ value: DragGesture.Value) {
+        if isSnappedToBottom {
+            self.snapToBottom()
+        }
+        // attempt to have it "continue" from your drag a bit, feels slow
+//        withAnimation(.spring(response: 0.2222)) {
+//            self.y = self.y + value.predictedEndTranslation.height / 2
+//        }
+        if !isSnappedToBottom && y > aboutToSnapToBottomAt {
+            withAnimation(.spring()) {
+                self.y = aboutToSnapToBottomAt
+            }
+        }
+        if searchBarYExtra != 0 {
+            withAnimation(.spring()) {
+                self.searchBarYExtra = 0
+            }
+        }
+    }
+    
+    func snapToBottom(_ toBottom: Bool = true) {
+//        self.hasMovedBar = false
+        HomeDragLock.setLock(.off)
         withAnimation(.spring()) {
-            self.snappedToBottomMapHeight = appHeight - 200
+            self.searchBarYExtra = 0
+            if toBottom {
+                self.y = snappedToBottomMapHeight - mapInitialHeight
+            } else {
+                self.y = snapToBottomAt - resistanceYBeforeSnap
+            }
+        }
+    }
+    
+    func snapToTop() {
+//        self.hasMovedBar = false
+        withAnimation(.spring()) {
+            self.y = self.mapMinHeight - self.mapInitialHeight
+        }
+    }
+    
+    func animateTo(_ y: CGFloat) {
+        if self.y == y {
+            return
+        }
+        withAnimation(.spring()) {
+            self.y = y
+        }
+    }
+    
+    func resetAfterKeyboardHide() {
+        if !self.hasMovedBar && self.y != 0 && appStore.state.home.search == "" {
+            self.animateTo(0)
+        }
+    }
+    
+    func setScrollY(_ scrollY: CGFloat) {
+        let y = max(0, min(100, scrollY)).rounded()
+        if y != self.scrollY {
+            self.scrollY = y
         }
     }
 }
 
 fileprivate let homeViewState = HomeViewState()
 
+struct HomeSearchBarState {
+    static var frame: CGRect = CGRect()
+    
+    static func isWithin(_ valueY: CGFloat) -> Bool {
+        return valueY >= HomeSearchBarState.frame.minY && valueY <= HomeSearchBarState.frame.maxY
+    }
+}
+
+// TODO
+// We need to have an Effect from appstate reducer that then has effects onto HomeState
+//  1. Keyboard see below init() commented out
+//  2. We need to reset hasMovedBar = false when we change certain things
+
 struct HomeMainView: View {
-    @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject var keyboard: Keyboard
     @EnvironmentObject var store: AppStore
     @Environment(\.geometry) var appGeometry
     @ObservedObject var state = homeViewState
-    @State var searchBarMinY: CGFloat = 0
-    @State var searchBarMaxY: CGFloat = 0
-    @State var isDragging = false
-    @State var showTypeMenu = false
     
-    func isWithinSearchBar(_ valueY: CGFloat) -> Bool {
-        return valueY >= searchBarMinY && valueY <= searchBarMaxY
-    }
+    private var cancellables: Set<AnyCancellable> = []
+    
+//    init() {
+//        self.keyboard.$state.map { keyboard in
+//            DispatchQueue.main.async {
+//                // TODO escaping closure mutating
+////                if keyboard.height > 0 {
+////                    self.state.animateTo(-self.appGeometry!.size.height * 0.1)
+////                } else {
+////                    self.state.resetAfterKeyboardHide()
+////                }
+//            }
+//        }
+//        .sink {}
+//        .store(in: &cancellables)
+//    }
     
     var body: some View {
         // pushed map below the border radius of the bottomdrawer
-        let isOnSearchResults = self.store.state.homeState.count > 1
+        let isOnSearchResults = Selectors.home.isOnSearchResults()
         let state = self.state
+        let mapHeight = state.mapHeight
         
-        print("STATE scrollY \(state.scrollY) y \(state.y) dishMapHeight \(state.mapHeight)")
-        print("home state \(self.store.state.homeState.count)")
+        print("render HomeMainView -- mapHeight \(mapHeight) state.scrollY \(state.scrollY)")
+        
+        // TODO why do this in body
+        if isOnSearchResults && HomeDragLock.state == .idle {
+            DispatchQueue.main.async {
+                self.state.snapToTop()
+            }
+        }
+        
+        let zoom = abs(state.y) / 20
+        print("zoom \(zoom)")
         
         return GeometryReader { geometry in
             ZStack {
-                Color.black.frame(maxWidth: .infinity, maxHeight: .infinity)
+                // weird way to set appheight
+                Color.black
                     .onAppear {
                         if let g = self.appGeometry {
                             state.appHeight = g.size.height
@@ -93,16 +210,16 @@ struct HomeMainView: View {
                 
                 VStack {
                     ZStack {
-                        MapView(
+                        DishMapView(
                             width: geometry.size.width,
                             height: Screen.height,
-                            darkMode: self.colorScheme == .dark
+                            zoom: zoom
                         )
-                        //                        HomeMapControls()
                     }
-                    .frame(height: state.mapHeight)
+                    .frame(height: mapHeight)
                     .cornerRadius(20)
                     .clipped()
+                    .animation(.spring(response: 0.3333))
                     
                     Spacer()
                 }
@@ -110,96 +227,52 @@ struct HomeMainView: View {
                 // everything below the map
                 ZStack {
                     VStack {
-                        Spacer().frame(height: state.mapHeight - cardRowHeight)
+                        Spacer()
+                            .frame(height: mapHeight - cardRowHeight)
                         
-                        ZStack {
-                            // home
-                            HomeCards(isHorizontal: self.state.isSnappedToBottom)
-                                .offset(y: isOnSearchResults ? Screen.height : 0)
-                                .animation(.spring())
-                            
-                            // pages as you drill in below home
-                            if isOnSearchResults {
-                                ForEach(1 ..< self.store.state.homeState.count) { index in
-                                    HomeSearchResults(
-                                        state: self.store.state.homeState[index],
-                                        height: Screen.height - state.mapHeight - 120
-                                    )
-                                        .offset(y: 40)
-                                }
-                            }
-                        }
-                        .mask(
-                            LinearGradient(
-                                gradient: .init(colors: [
-                                    self.state.isSnappedToBottom ? Color.black : Color.white.opacity(0),
-                                    Color.black
-                                ]),
-                                startPoint: .top,
-                                endPoint: .center
-                            )
+                        HomeMainContent(
+                            isHorizontal: self.state.isSnappedToBottom
                         )
-                            .clipped()
+//                            .frame(height: (self.appGeometry?.size.height ?? 0) - (mapHeight - cardRowHeight) + 100)
+                            .transition(AnyTransition.offset())
+//                            .offset(y: 100 - state.scrollY)
                     }
+                    // putting this animation with the above transition breaks, keeping it outside works...
+                    // for some reason this seems to slow down clicking on toggle button
+                        .animation(HomeDragLock.state == .idle ? .none : .spring(response: 0.3333))
                     
                     VStack {
-                        Spacer().frame(height: state.mapHeight + 31)
+                        Spacer().frame(height: mapHeight + 34)
+                        
                         // filters
-                        ZStack {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack {
-                                    Spacer().frame(width: 50)
-                                    FilterButton(label: "American", action: {})
-                                    FilterButton(label: "Thai", action: {})
-                                    FilterButton(label: "Chinese", action: {})
-                                    FilterButton(label: "Italian", action: {})
-                                    FilterButton(label: "French", action: {})
-                                    FilterButton(label: "Burmese", action: {})
-                                    FilterButton(label: "Greek", action: {})
-                                }
-                                .padding(.horizontal)
-                            }
-                            
-                            HStack {
-                                Text("🍽")
-                                    .font(.system(size: 32))
-                                    .padding(.horizontal, 2)
-                                    .onTapGesture {
-                                        self.showTypeMenu = true
-                                }
-                                .sheet(
-                                    isPresented: self.$showTypeMenu
-                                ) { Text("Popover") }
-                                Spacer()
-                            }
-                            .padding(.horizontal)
-                        }
+                        HomeMainFilters()
+                        .animation(.spring(response: 0.3333))
+                        
                         Spacer()
                     }
                     .offset(y: isOnSearchResults ? -100 : 0)
                     .opacity(isOnSearchResults ? 0 : 1)
                     
+                    // keyboard dismiss
+                    if self.keyboard.state.height > 0 {
+                       Color.black.opacity(0.0001)
+                        .onTapGesture {
+                            self.keyboard.hide()
+                        }
+                    }
+                    
                     VStack {
                         GeometryReader { searchBarGeometry -> HomeSearchBar in
-                            if !self.isDragging {
-                                DispatchQueue.main.async {
-                                    let frame = searchBarGeometry.frame(in: .global)
-                                    print("update search bar \(frame.minY) \(frame.maxY)")
-                                    if frame.minY != self.searchBarMinY {
-                                        self.searchBarMinY = frame.minY
-                                    }
-                                    if frame.maxY != self.searchBarMaxY {
-                                        self.searchBarMaxY = frame.maxY
-                                    }
-                                }
-                            }
+                            HomeSearchBarState.frame = searchBarGeometry.frame(in: .global)
                             return HomeSearchBar()
                         }
-                        .frame(height: 45)
+                        .frame(height: searchBarHeight)
+                        
                         Spacer()
                     }
                     .padding(.horizontal, 10)
-                    .offset(y: state.mapHeight - 23)
+                    .offset(y: mapHeight - 23 + state.searchBarYExtra)
+                        //                    .animation(dragState != .on ? .spring() : .none)
                         // searchinput always light
                         .environment(\.colorScheme, .light)
                 }
@@ -209,120 +282,30 @@ struct HomeMainView: View {
             .clipped()
             .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
             .simultaneousGesture(
-                DragGesture()
+                DragGesture(minimumDistance: 10)
                     .onChanged { value in
+                        if [.off, .pager].contains(HomeDragLock.state) {
+                            return
+                        }
                         // why is this off 80???
-                        if self.isWithinSearchBar(value.location.y - 40) || self.isDragging {
+                        if HomeSearchBarState.isWithin(value.startLocation.y - 40) || HomeDragLock.state == .searchbar {
+                            // hide keyboard on drag
+                            if self.keyboard.state.height > 0 {
+                                self.keyboard.hide()
+                            }
+                            // drag
                             self.state.drag(value.translation.height)
-                            self.isDragging = true
                         }
                 }
                 .onEnded { value in
-                    self.isDragging = false
-                    self.state.finishDrag()
+                    if [.idle, .searchbar].contains(HomeDragLock.state) {
+                        self.state.finishDrag(value)
+                    }
+                    HomeDragLock.setLock(.idle)
                 }
             )
         }
         .environmentObject(self.state)
-    }
-}
-
-struct HomeCards: View {
-    var isHorizontal: Bool
-    
-    var content: some View {
-        if isHorizontal {
-            return AnyView(HomeCardsRow())
-        } else {
-            return AnyView(HomeCardsGrid())
-        }
-    }
-    
-    var body: some View {
-        VStack {
-            self.content
-            Spacer()
-        }
-        .frame(minWidth: Screen.width, maxHeight: .infinity)
-    }
-}
-
-struct HomeCardsGrid: View {
-    @EnvironmentObject var store: AppStore
-    @EnvironmentObject var homeState: HomeViewState
-    
-    let items = features.chunked(into: 2)
-    
-    var content: some View {
-        VStack(spacing: 10) {
-            ForEach(0 ..< self.items.count) { index in
-                HStack(spacing: 10) {
-                    ForEach(self.items[index]) { item in
-                        DishBrowseCard(dish: item)
-                            .frame(height: 180)
-                            .onTapGesture {
-                                print("tap on item")
-                                self.store.send(
-                                    .pushHomeState(HomeState(search: item.name))
-                                )
-                        }
-                    }
-                }
-            }
-        }
-        .padding(.horizontal)
-        .frame(width: Screen.width)
-    }
-    
-    var initY = 0
-    
-    var body: some View {
-        VStack {
-            Spacer().frame(height: cardRowHeight)
-            ScrollView {
-                VStack(spacing: 0) {
-                    ScrollListener(onScroll: { frame in
-                        let frameY = self.homeState.mapHeight
-                        let scrollY = frame.minY
-                        let realY = frameY - scrollY - 44
-                        let y = max(0, min(100, realY)).rounded()
-                        if y != self.homeState.scrollY {
-                            // attempting to have a scroll effect but its complex...
-                            print("set now to \(y) ....... frameY \(frameY), scrollY = \(scrollY)")
-                            //                            self.homeState.scrollY = y
-                        }
-                    })
-                    
-                    Spacer().frame(height: filterBarHeight)
-                    self.content
-                    Spacer().frame(height: bottomNavHeight)
-                }
-            }
-        }
-    }
-}
-
-struct HomeCardsRow: View {
-    var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack {
-                ForEach(features) { item in
-                    DishBrowseCard(dish: item)
-                        .frame(width: 100, height: cardRowHeight - 40)
-                }
-                
-                Spacer().frame(height: bottomNavHeight)
-            }
-            .padding(.horizontal)
-        }
-    }
-}
-
-struct DishBrowseCard: View {
-    var dish: DishItem
-    var body: some View {
-        FeatureCard(dish: dish, aspectRatio: 1)
-            .cornerRadius(14)
     }
 }
 

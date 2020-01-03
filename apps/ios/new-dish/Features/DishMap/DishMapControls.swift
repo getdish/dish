@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct HomeMapControls: View {
+struct DishMapControls: View {
     var body: some View {
         VStack {
             HStack {

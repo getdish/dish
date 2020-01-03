@@ -1,8 +1,5 @@
 import SwiftUI
 
-// ratio of dish-brandmark w/h
-//fileprivate let brandRatio: CGFloat = 1.373881932
-
 struct TopNavMenuButton: View {
     var body: some View {
         Button(action: {

@@ -1,10 +1,3 @@
-//
-//  Store.swift
-//  new-dish
-//
-//  Created by Majid Jabrayilov on 12/5/19.
-//  Copyright © 2019 Majid Jabrayilov. All rights reserved.
-//
 import SwiftUI
 import Combine
 
@@ -64,14 +57,4 @@ extension Store {
             set: { self.send(action($0)) }
         )
     }
-
-    // TODO not working
-//    func mock(_ state: State) -> Store {
-//        Store<State, Action>.init(
-//            initialState: state,
-//            reducer: Reducer<State, Action> { x, y in
-//                print("mocked, empty")
-//            }
-//        )
-//    }
 }
