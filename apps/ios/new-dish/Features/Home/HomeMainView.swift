@@ -6,7 +6,7 @@ let cardRowHeight: CGFloat = 140
 
 fileprivate let topNavHeight: CGFloat = 45
 fileprivate let searchBarHeight: CGFloat = 45
-fileprivate let resistanceYBeforeSnap: CGFloat = 50
+fileprivate let resistanceYBeforeSnap: CGFloat = 55
 
 class HomeViewState: ObservableObject {
     @Published var appHeight: CGFloat = 0
@@ -20,10 +20,11 @@ class HomeViewState: ObservableObject {
     
     var mapHeight: CGFloat {
         let scrollYExtra: CGFloat = self.isSnappedToBottom ? 0 : self.scrollY
+        print("scrollYExtra \(scrollYExtra)")
         return max(mapInitialHeight + y - scrollYExtra, mapMinHeight)
     }
     
-    var snapToBottomAt: CGFloat { appHeight * 0.15 }
+    var snapToBottomAt: CGFloat { appHeight * 0.2 }
     var snappedToBottomMapHeight: CGFloat { appHeight - 200 }
     var isSnappedToBottom: Bool { y > snapToBottomAt }
     
@@ -35,12 +36,9 @@ class HomeViewState: ObservableObject {
     
     private var startDragAt: CGFloat = 0
     
-    func drag(_ dragYInput: CGFloat) {
+    func drag(_ dragY: CGFloat) {
         // TODO we can reset this back to false in some cases for better UX
         self.hasMovedBar = true
-        
-        // prevent dragging too far up if not at bottom
-        let dragY = !isSnappedToBottom ? max(-120, dragYInput) : dragYInput
         
         // remember where we started
         if HomeDragLock.state != .searchbar {
@@ -60,9 +58,12 @@ class HomeViewState: ObservableObject {
             y = aboutToSnapToBottomAt + diff * 0.2
         }
         
+        // store wasSnappedToBottom before changing y
         let wasSnappedToBottom = isSnappedToBottom
+
         self.y = y
         
+        // while snapped, have searchbar move differently
         // searchbar moves faster during resistance before snap
         if aboutToSnapToBottom {
             self.searchBarYExtra = y - aboutToSnapToBottomAt
@@ -70,12 +71,16 @@ class HomeViewState: ObservableObject {
             self.searchBarYExtra = dragY * 0.25
         }
         
-        let willSnapUp = -dragY > appHeight * 0.25
+        // snap to bottom/back logic
         let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
         if willSnapDown {
             self.snapToBottom(true)
-        } else if willSnapUp {
-            self.snapToBottom(false)
+        } else if wasSnappedToBottom {
+            // distance before snapping back up
+            let willSnapUp = -dragY > appHeight * 0.25
+            if willSnapUp {
+                self.snapToBottom(false)
+            }
         }
     }
     
@@ -103,6 +108,7 @@ class HomeViewState: ObservableObject {
 //        self.hasMovedBar = false
         HomeDragLock.setLock(.off)
         withAnimation(.spring()) {
+            self.scrollY = 0
             self.searchBarYExtra = 0
             if toBottom {
                 self.y = snappedToBottomMapHeight - mapInitialHeight
@@ -115,6 +121,7 @@ class HomeViewState: ObservableObject {
     func snapToTop() {
 //        self.hasMovedBar = false
         withAnimation(.spring()) {
+            self.scrollY = 0
             self.y = self.mapMinHeight - self.mapInitialHeight
         }
     }
@@ -135,6 +142,9 @@ class HomeViewState: ObservableObject {
     }
     
     func setScrollY(_ scrollY: CGFloat) {
+        if HomeDragLock.state != .idle {
+            return
+        }
         let y = max(0, min(100, scrollY)).rounded()
         if y != self.scrollY {
             self.scrollY = y
@@ -204,7 +214,9 @@ struct HomeMainView: View {
                 Color.black
                     .onAppear {
                         if let g = self.appGeometry {
-                            state.appHeight = g.size.height
+                            if state.appHeight != g.size.height {
+                                state.appHeight = g.size.height
+                            }
                         }
                 }
                 
