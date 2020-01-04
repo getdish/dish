@@ -110,7 +110,7 @@ struct HomeCardsGrid: View {
 struct DishGridCard: View {
     var dish: DishItem
     var body: some View {
-        FeatureCard(dish: dish, aspectRatio: 1.4)
+        FeatureCard(dish: dish, aspectRatio: 1.4, at: .start)
             .cornerRadius(14)
     }
 }
@@ -135,7 +135,7 @@ struct HomeCardsRow: View {
 struct DishRowCard: View {
     var dish: DishItem
     var body: some View {
-        FeatureCard(dish: dish, aspectRatio: 1.8)
+        FeatureCard(dish: dish, aspectRatio: 1.8, at: .end)
             .cornerRadius(14)
     }
 }

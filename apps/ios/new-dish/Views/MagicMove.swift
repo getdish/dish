@@ -1,17 +1,37 @@
 import SwiftUI
 import Combine
 
-fileprivate let magicItems = MagicItems()
+fileprivate class MagicItemsStore: ObservableObject {
+    enum MoveState {
+        case start, end, done
+    }
+    
+    @Published var startItems = [String: MagicItemDescription]()
+    @Published var endItems = [String: MagicItemDescription]()
+    @Published var state: MoveState = .done
+    
+    func animate() {
+        self.state = .start
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
+            self.state = .end
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
+            self.state = .done
+        }
+    }
+}
+
+fileprivate let magicItems = MagicItemsStore()
 
 struct MagicMove<Content>: View where Content: View {
     let content: () -> Content
     @State var lastContent: Content?
-    @ObservedObject fileprivate var mi = magicItems
+    @ObservedObject fileprivate var store = magicItems
     
     init(animate: Bool, @ViewBuilder content: @escaping () -> Content) {
         self.content = content
         if animate {
-            mi.animate()
+            store.animate()
         } else {
             self.lastContent = content()
         }
@@ -26,7 +46,7 @@ struct MagicMove<Content>: View where Content: View {
         return ZStack {
             content()
             
-            if mi.state != .done {
+            if store.state != .done {
                 ZStack(alignment: .topLeading) {
                     ForEach(keys.indices) { index -> AnyView in
                         let start = values[index]
@@ -34,10 +54,7 @@ struct MagicMove<Content>: View where Content: View {
                             return AnyView(start.view)
                         }
                         
-                        print("\(index). start \(start.id) \(start.frame)")
-                        print("\(index). end \(end.id) \(end.frame)")
-                        
-                        let cur: MagicItemDescription = self.mi.state == .start ? start : end
+                        let cur: MagicItemDescription = self.store.state == .start ? start : end
                         
                         return AnyView(
                             // what is alignment
@@ -79,26 +96,6 @@ fileprivate struct MagicItemDescription {
     var frame: CGRect
     var id: String
     var at: MagicItemPosition
-}
-
-fileprivate class MagicItems: ObservableObject {
-    enum MoveState {
-        case start, end, done
-    }
-    
-    @Published var startItems = [String: MagicItemDescription]()
-    @Published var endItems = [String: MagicItemDescription]()
-    @Published var state: MoveState = .done
-    
-    func animate() {
-        self.state = .start
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
-            self.state = .end
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
-            self.state = .done
-        }
-    }
 }
 
 struct MagicItem<Content>: View where Content: View {
