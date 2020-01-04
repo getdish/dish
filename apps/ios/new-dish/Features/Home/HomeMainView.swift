@@ -88,20 +88,23 @@ class HomeViewState: ObservableObject {
         if isSnappedToBottom {
             self.snapToBottom()
         }
-        // attempt to have it "continue" from your drag a bit, feels slow
-//        withAnimation(.spring(response: 0.2222)) {
-//            self.y = self.y + value.predictedEndTranslation.height / 2
-//        }
         if !isSnappedToBottom && y > aboutToSnapToBottomAt {
             withAnimation(.spring()) {
                 self.y = aboutToSnapToBottomAt
-            }
-        }
-        if searchBarYExtra != 0 {
-            withAnimation(.spring()) {
                 self.searchBarYExtra = 0
             }
+        } else {        
+            if searchBarYExtra != 0 {
+                withAnimation(.spring()) {
+                    self.searchBarYExtra = 0
+                }
+            }
         }
+        
+        // attempt to have it "continue" from your drag a bit, feels slow
+        //        withAnimation(.spring(response: 0.2222)) {
+        //            self.y = self.y + value.predictedEndTranslation.height / 2
+        //        }
     }
     
     func snapToBottom(_ toBottom: Bool = true) {
