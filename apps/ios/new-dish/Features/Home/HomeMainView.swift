@@ -237,7 +237,7 @@ struct HomeMainView: View {
         let state = self.state
         let mapHeight = state.mapHeight
         
-        print("render HomeMainView -- mapHeight \(mapHeight) state.scrollY \(state.scrollY)")
+        print("render HomeMainView -- mapHeight \(mapHeight) y \(state.y)")
         
         // TODO why do this in body
         if isOnSearchResults && HomeDragLock.state == .idle {
@@ -246,8 +246,7 @@ struct HomeMainView: View {
             }
         }
         
-        let zoom = abs(state.y) / 20
-        print("zoom \(zoom)")
+        let zoom = mapHeight / 250 + 10
         
         return MagicMove(animate: state.animate) {
             GeometryReader { geometry in
@@ -266,8 +265,8 @@ struct HomeMainView: View {
                         ZStack {
                             DishMapView(
                                 width: geometry.size.width,
-                                height: Screen.height
-                                //                            zoom: zoom
+                                height: Screen.height,
+                                zoom: zoom
                             )
                         }
                         .frame(height: mapHeight)

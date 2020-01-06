@@ -5,6 +5,10 @@ import GoogleMaps
 // TODO this can be a generic view again in Views/
 // just need to clean it up a little
 
+fileprivate struct Constants {
+    static let ONE_DEGREE_LAT: Double = 7000 / 111111
+}
+
 struct MapView: UIViewControllerRepresentable {
     enum MapLocation {
         case current, uncontrolled
@@ -22,7 +26,6 @@ struct MapView: UIViewControllerRepresentable {
     }
     
     func makeUIViewController(context: Context) -> UIViewController {
-        print("makeUIViewController \(zoom)")
         let controller = MapViewController(
             width: width,
             height: height,
@@ -36,38 +39,35 @@ struct MapView: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
-        print("MapView should update the controller now \(zoom)")
-        context.coordinator.update()
+        context.coordinator.update(self)
     }
     
     class Coordinator: NSObject {
         var mapView: MapView
         let locationManager = LocationManager()
-        var cancels: [AnyCancellable] = []
+        var cancels: Set<AnyCancellable> = []
         
         init(_ mapView: MapView) {
-            print("init coordinator \(mapView)")
             self.mapView = mapView
             super.init()
-            self.update()
+            self.update(mapView)
             self.locationManager.start()
             
             // hacky dealy for now because mapView isn't started yet
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
-                self.cancels.append(
-                    self.locationManager.$lastLocation.map { location in
+                self.locationManager.$lastLocation
+                    .sink { location in
                         if location != nil {
                             self.mapView.controller!.moveMapToCurrentLocation()
                         }
-                    }.sink {}
-                )
+                    }
+                .store(in: &self.cancels)
             }
         }
         
-        func update() {
-            print("update map controller!!!!!!! \(self.mapView)")
-            if let controller = self.mapView.controller {
-                controller.update()
+        func update(_ mapView: MapView) {
+            DispatchQueue.main.async {
+                self.mapView.controller?.update(mapView)
             }
         }
         
@@ -114,7 +114,6 @@ class MapViewController: UIViewController {
     var darkMode: Bool?
     
     init(width: CGFloat, height: CGFloat, zoom: CGFloat?, darkMode: Bool?) {
-        print("init controller \(zoom)")
         self.zoom = zoom ?? 12.0
         self.width = width
         self.height = height
@@ -122,8 +121,10 @@ class MapViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
-    func update() {
-        print("whats going on \(self.zoom)")
+    func update(_ mapView: MapView) {
+        if self.zoom != mapView.zoom {
+            self.updateZoom(mapView.zoom)
+        }
     }
     
     func updateZoom(_ nextZoom: CGFloat) {
@@ -148,12 +149,19 @@ class MapViewController: UIViewController {
         }
     }
     
+    // https://gis.stackexchange.com/questions/2951/algorithm-for-offsetting-a-latitude-longitude-by-some-amount-of-meters
+    private var adjustLatitude: Double {
+        let zoomAdjusted: Double = Double(max(0.1, (zoom - 10)) * 0.5)
+        let zoomAdjustY: Double = zoomAdjusted * Constants.ONE_DEGREE_LAT
+        let constAdjustY: Double = -Constants.ONE_DEGREE_LAT * 2
+        print("get lat \(zoom) - \(zoomAdjusted) - \(zoomAdjustY)")
+        return constAdjustY + zoomAdjustY
+    }
+    
     private func getCamera() -> GMSCameraPosition? {
         if let location: CLLocation = appStore.state.location.lastKnown {
             return GMSCameraPosition.camera(
-                // testing moving center
-                // https://gis.stackexchange.com/questions/2951/algorithm-for-offsetting-a-latitude-longitude-by-some-amount-of-meters
-                withLatitude: location.coordinate.latitude - 7000 / 111111,
+                withLatitude: location.coordinate.latitude + self.adjustLatitude,
                 longitude: location.coordinate.longitude,
                 zoom: Float(zoom)
             )
