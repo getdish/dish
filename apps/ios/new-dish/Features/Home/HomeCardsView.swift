@@ -42,7 +42,7 @@ struct HomeCardsGrid: View {
                                 print("tap on item")
                                 self.store.send(
                                     .home(
-                                        .push(HomeStateItem(dish: item.name))
+                                        .push(HomeStateItem(filters: [SearchFilter(name: item.name)]))
                                     )
                                 )
                         }
