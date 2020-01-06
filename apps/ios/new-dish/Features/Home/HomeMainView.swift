@@ -29,6 +29,16 @@ class HomeViewState: ObservableObject {
             .map { $0.height }
             .assign(to: \.keyboardHeight, on: self)
             .store(in: &cancellables)
+        
+        self.keyboard.$state
+            .map { $0.height }
+            .sink { value in
+                print("keyboards now \(value)")
+                withAnimation(.spring()) {
+                    self.y += value > 0 ? -200 : 200
+                }
+            }
+            .store(in: &cancellables)
     }
     
     let mapMinHeight: CGFloat = Screen.statusBarHeight + searchBarHeight / 2 + topNavHeight + 40
