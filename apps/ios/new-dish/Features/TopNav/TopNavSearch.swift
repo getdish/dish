@@ -71,6 +71,7 @@ struct TopNavSearchBar: View {
     @EnvironmentObject var store: AppStore
     @Binding var isEditing: Bool
     @State var search = ""
+    @State var tags: [SearchInputTag] = []
     
     private var locationSearch: Binding<String> {
         store.binding(for: \.location.search, { .location(.setSearch($0)) })
@@ -94,7 +95,8 @@ struct TopNavSearchBar: View {
             onCancel: {
                 //                        Store.mapSearch.showResults = false
         },
-            searchText: self.$search
+            searchText: self.$search,
+            tags: self.$tags
         )
             .shadow(color: Color.black.opacity(0.25), radius: 5, x: 0, y: 5)
             .onTapGesture {

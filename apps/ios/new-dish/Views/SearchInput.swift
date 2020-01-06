@@ -6,9 +6,10 @@ struct EmptyModifier: ViewModifier {
     }
 }
 
-struct SearchInputTag: Identifiable {
+struct SearchInputTag: Identifiable, Equatable {
     var color: Color
     var text: String
+    var deletable: Bool = true
     var id: String {
         "\(color.hashValue)\(text)"
     }
@@ -29,7 +30,7 @@ struct SearchInput: View {
     var after: AnyView?
     
     @Binding var searchText: String
-    var tags: [SearchInputTag] = []
+    @Binding var tags: [SearchInputTag]
     
     @State private var showCancelButton: Bool = false
     
@@ -40,8 +41,6 @@ struct SearchInput: View {
             cb(isEditing)
         }
     }
-    
-    
     
     var cancelButton: some View {
         Button("Cancel") {
@@ -57,7 +56,8 @@ struct SearchInput: View {
     
     var body: some View {
         let pad = 8 * (scale + 0.5) * 0.5
-        let hasTags = self.tags.count > 0
+        let numTags = self.tags.count
+        let hasTags = numTags > 0
         let fontSize = 14 * scale
         
         return VStack {
@@ -70,28 +70,41 @@ struct SearchInput: View {
                     if hasTags {
                         HStack {
                             ForEach(self.tags) { tag in
-                                Text(tag.text)
-                                    .font(.system(size: fontSize))
-                                    .foregroundColor(Color.white)
-                                    .padding(4)
-                                    .background(tag.color)
-                                    .cornerRadius(4)
+                                HStack {
+                                    Text(tag.text)
+                                        .font(.system(size: fontSize))
+                                        .foregroundColor(Color.white)
+                                        .padding(4)
+                                        .background(tag.color)
+                                        .cornerRadius(4)
+                                    
+                                    if tag.deletable {
+                                        Image(systemName: "xmark")
+                                    }
+                                }
+                                .onTapGesture {
+                                    if tag.deletable {
+                                        if let index = self.tags.firstIndex(of: tag) {
+                                            self.tags.remove(at: index)
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                     
-                    TextField(
-                        hasTags ? "" : self.placeholder,
-                        text: self.$searchText,
-                        onEditingChanged: self.handleEditingChanged,
-                        onCommit: {
-                            print("onCommit")
-                        }
-                    )
-                        .disableAutocorrection(true)
-                        .font(.system(size: fontSize))
-                        .foregroundColor(.primary)
-                    
+//                    TextField(
+//                        hasTags ? "" : self.placeholder,
+//                        text: self.$searchText,
+//                        onEditingChanged: self.handleEditingChanged,
+//                        onCommit: {
+//                            print("onCommit")
+//                        }
+//                    )
+//                        .disableAutocorrection(true)
+//                        .font(.system(size: fontSize))
+//                        .foregroundColor(.primary)
+//
                     Button(action: {
                         self.searchText = ""
                     }) {
@@ -146,10 +159,12 @@ extension UIApplication {
 #if DEBUG
 struct SearchInputPreview: View {
     @State var searchText = ""
+    @State var tags: [SearchInputTag] = []
+
     var body: some View {
         VStack {
-            SearchInput(searchText: $searchText)
-            SearchInput(scale: 1.25, searchText: $searchText)
+            SearchInput(searchText: $searchText, tags: $tags)
+            SearchInput(scale: 1.25, searchText: $searchText, tags: $tags)
         }
     }
 }

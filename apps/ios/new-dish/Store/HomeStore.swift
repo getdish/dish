@@ -14,6 +14,7 @@ enum HomeAction {
     case pop
     case toggleDrawer
     case setSearch(_ val: String)
+    case setCurrentTags(_ val: [SearchInputTag])
 }
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
@@ -30,6 +31,11 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
             state.home.current.append(homeState)
         case .pop:
             state.home.current = state.home.current.dropLast()
+        case let .setCurrentTags(val):
+            var last = state.home.current.last!
+            last.filters = val.map { SearchFilter(name: $0.text) }
+            state.home.current = state.home.current.dropLast()
+            state.home.current.append(last)
     }
 }
 
