@@ -70,18 +70,26 @@ struct SearchInput: View {
                     if hasTags {
                         HStack {
                             ForEach(self.tags) { tag in
-                                HStack {
+                                HStack(spacing: 8) {
                                     Text(tag.text)
                                         .font(.system(size: fontSize))
-                                        .foregroundColor(Color.white)
-                                        .padding(4)
-                                        .background(tag.color)
-                                        .cornerRadius(4)
                                     
                                     if tag.deletable {
-                                        Image(systemName: "xmark")
+                                        VStack {
+                                            Image(systemName: "xmark")
+                                                .resizable()
+                                                .frame(width: 10, height: 10)
+                                            .padding(3)
+                                        }
+                                        .background(tag.color.brightness(-0.1))
+                                        .cornerRadius(4)
+                                        .opacity(0.5)
                                     }
                                 }
+                                .foregroundColor(Color.white)
+                                .padding(6)
+                                .background(tag.color)
+                                .cornerRadius(4)
                                 .onTapGesture {
                                     if tag.deletable {
                                         if let index = self.tags.firstIndex(of: tag) {
