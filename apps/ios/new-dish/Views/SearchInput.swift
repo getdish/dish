@@ -93,18 +93,18 @@ struct SearchInput: View {
                         }
                     }
                     
-//                    TextField(
-//                        hasTags ? "" : self.placeholder,
-//                        text: self.$searchText,
-//                        onEditingChanged: self.handleEditingChanged,
-//                        onCommit: {
-//                            print("onCommit")
-//                        }
-//                    )
-//                        .disableAutocorrection(true)
-//                        .font(.system(size: fontSize))
-//                        .foregroundColor(.primary)
-//
+                    TextField(
+                        hasTags ? "" : self.placeholder,
+                        text: self.$searchText,
+                        onEditingChanged: self.handleEditingChanged,
+                        onCommit: {
+                            print("onCommit")
+                        }
+                    )
+                        .disableAutocorrection(true)
+                        .font(.system(size: fontSize))
+                        .foregroundColor(.primary)
+
                     Button(action: {
                         self.searchText = ""
                     }) {
