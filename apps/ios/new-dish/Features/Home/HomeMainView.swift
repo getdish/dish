@@ -49,14 +49,14 @@ class HomeViewState: ObservableObject {
     var aboutToSnapToBottomAt: CGFloat { snapToBottomAt - resistanceYBeforeSnap }
     
     func toggleMap() {
-        log.verbose("test")
+        log.info()
         self.snapToBottom(!isSnappedToBottom)
     }
     
     private var startDragAt: CGFloat = 0
     
     func drag(_ dragY: CGFloat) {
-        log.verbose("test")
+        log.info()
         // TODO we can reset this back to false in some cases for better UX
         self.hasMovedBar = true
         
@@ -105,7 +105,7 @@ class HomeViewState: ObservableObject {
     }
     
     func finishDrag(_ value: DragGesture.Value) {
-        log.verbose("test")
+        log.info()
         if isSnappedToBottom {
             self.snapToBottom()
         }
@@ -128,7 +128,7 @@ class HomeViewState: ObservableObject {
     }
     
     func snapToBottom(_ toBottom: Bool = true) {
-        log.verbose("test")
+        log.info()
         HomeDragLock.setLock(.off)
         self.animateCards()
         withAnimation(.spring()) {
@@ -143,11 +143,11 @@ class HomeViewState: ObservableObject {
     }
     
     func animateCards() {
-        log.verbose("test")
-        self.animate = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-            self.animate = false
-        }
+        log.info()
+//        self.animate = true
+//        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+//            self.animate = false
+//        }
     }
     
     var mapSnappedToTopHeight: CGFloat {
@@ -159,7 +159,7 @@ class HomeViewState: ObservableObject {
     }
     
     func snapToTop() {
-        log.verbose("test")
+        log.info()
         if !isSnappedToTop {
             //        self.hasMovedBar = false
             withAnimation(.spring()) {
@@ -170,7 +170,7 @@ class HomeViewState: ObservableObject {
     }
     
     func animateTo(_ y: CGFloat) {
-        log.verbose("test")
+        log.info()
         self.scrollY = 0
         if self.y == y {
             return
@@ -181,14 +181,14 @@ class HomeViewState: ObservableObject {
     }
     
     func resetAfterKeyboardHide() {
-        log.verbose("test")
+        log.info()
         if !self.hasMovedBar && self.y != 0 && appStore.state.home.search == "" {
             self.animateTo(0)
         }
     }
     
     func setScrollY(_ scrollY: CGFloat) {
-        log.verbose("test")
+        log.info()
         print("disabled scroll y some bugs")
 //        if HomeDragLock.state != .idle {
 //            return
