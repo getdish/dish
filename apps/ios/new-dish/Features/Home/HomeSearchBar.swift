@@ -20,8 +20,17 @@ struct HomeSearchBar: View {
         store.binding(for: \.home.search, { .home(.setSearch($0)) })
     }
     
+    private var homeTags: Binding<[SearchInputTag]> {
+        Binding<[SearchInputTag]>(
+            get: { Selectors.home.tags() },
+            set: { self.store.send(.home(.setCurrentTags($0))) }
+        )
+    }
+    
     var body: some View {
-        SearchInput(
+        print("now we have tags \(Selectors.home.tags())")
+        
+        return SearchInput(
             placeholder: "Pho, Burger, Wings...",
             inputBackgroundColor: Color.white,
             borderColor: Color.gray.opacity(0.14),
@@ -31,7 +40,7 @@ struct HomeSearchBar: View {
             showCancelInside: true,
             after: after,
             searchText: self.homeSearch,
-            tags: Selectors.home.tags()
+            tags: self.homeTags
         )
     }
     

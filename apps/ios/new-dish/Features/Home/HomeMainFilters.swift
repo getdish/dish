@@ -15,15 +15,10 @@ struct HomeMainFilters: View {
                         let filters = curState.filters.filter({ $0.type == .cuisine }) + [
                             SearchFilter(type: .cuisine, name: "American")
                         ]
-                        self.store.send(.home(
-                            .push(
-                                HomeStateItem(
-                                    search: curState.search,
-                                    dish: curState.dish,
-                                    filters: filters
-                                )
-                            )
-                            ))
+                        self.store.send(.home(.push(HomeStateItem(
+                            search: curState.search,
+                            filters: filters
+                        ))))
                     })
                     FilterButton(label: "Thai", action: {})
                     FilterButton(label: "Chinese", action: {})

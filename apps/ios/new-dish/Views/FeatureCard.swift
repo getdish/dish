@@ -8,22 +8,29 @@ struct FeatureCard: View, Equatable {
     var dish: DishItem
     var aspectRatio: CGFloat = 2 / 2.25
     let id: Int
+    var at: MagicItemPosition? = nil
     
-    init(dish: DishItem, aspectRatio: CGFloat = 2 / 2.5) {
+    init(dish: DishItem, aspectRatio: CGFloat = 2 / 2.5, at: MagicItemPosition? = nil) {
         self.dish = dish
         self.aspectRatio = aspectRatio
         self.id = self.dish.id
+        self.at = at
     }
     
     var body: some View {
         print("render featurecard")
+        let content = self.dish.image
+            .resizable()
+            .aspectRatio(aspectRatio, contentMode: .fit)
+            .overlay(TextOverlay(name: self.dish.name))
         return VStack {
-//            MagicItem(getId(landmark), at: at) {
-                self.dish.image
-                    .resizable()
-                    .aspectRatio(aspectRatio, contentMode: .fit)
-                    .overlay(TextOverlay(name: self.dish.name))
-//            }
+            if self.at != nil {
+                MagicItem(getId(self.dish), at: at!) {
+                    content
+                }
+            } else {
+                content
+            }
         }
     }
 }

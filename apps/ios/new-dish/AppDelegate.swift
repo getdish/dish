@@ -9,6 +9,9 @@
 import UIKit
 import GoogleMaps
 import GooglePlaces
+import XCGLogger
+
+let log = XCGLogger.default
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,6 +21,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let colorTransparent = UIColor.init(displayP3Red: 0, green: 0, blue: 0, alpha: 0)
         UITableView.appearance().backgroundColor = colorTransparent
         UITableViewCell.appearance().backgroundColor = colorTransparent
+        
+        // setup XGCLogger
+        log.setup(
+            level: .debug,
+            showThreadName: true,
+            showLevel: true,
+            showFileNames: true,
+            showLineNumbers: true,
+            writeToFile: "path/to/file",
+            fileLevel: .debug
+        )
         
         // Google Maps and Places
         GMSServices.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")
