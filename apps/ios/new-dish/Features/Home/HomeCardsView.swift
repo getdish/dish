@@ -56,7 +56,6 @@ struct HomeCardsGrid: View {
     
     var body: some View {
         VStack {
-            Spacer().frame(height: cardRowHeight)
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     ScrollListener(onScroll: { frame in

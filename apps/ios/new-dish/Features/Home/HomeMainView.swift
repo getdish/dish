@@ -277,38 +277,40 @@ struct HomeMainView: View {
                         Spacer()
                     }
                     
-                    // everything below the map
+                    // everything above the map
                     ZStack {
                         VStack {
-                            Spacer()
-                                .frame(height: mapHeight - cardRowHeight)
-                            
-                            HomeMainContent(
-                                isHorizontal: self.state.isSnappedToBottom
-                            )
-                                //                            .frame(height: (self.appGeometry?.size.height ?? 0) - (mapHeight - cardRowHeight) + 100)
-                                .transition(AnyTransition.offset())
-                            //                            .offset(y: 100 - state.scrollY)
+                            GeometryReader { geometry in
+                                VStack {
+                                    HomeMainContent(
+                                        isHorizontal: self.state.isSnappedToBottom
+                                    )
+                                    //                            .frame(height: (self.appGeometry?.size.height ?? 0) - (mapHeight - cardRowHeight) + 100)
+                                        .transition(AnyTransition.offset())
+                                    //                            .offset(y: 100 - state.scrollY)
+                                }
+                            }
                         }
+                            .padding(.top, mapHeight)
+                            .offset(y: state.isSnappedToBottom ? -cardRowHeight : 0)
                             // putting this animation with the above transition breaks, keeping it outside works...
                             // for some reason this seems to slow down clicking on toggle button
                             .animation(HomeDragLock.state == .idle ? .none : .spring(response: 0.3333))
                         
                         VStack {
-                            Spacer().frame(height: mapHeight + 34)
-                            
                             // filters
                             HomeMainFilters()
                                 .animation(.spring(response: 0.3333))
                             
                             Spacer()
                         }
+                        .padding(.top, mapHeight + 34)
                         .offset(y: isOnSearchResults ? -100 : 0)
                         .opacity(isOnSearchResults ? 0 : 1)
                         
                         // keyboard dismiss
                         if self.keyboard.state.height > 0 {
-                            Color.black.opacity(0.0001)
+                            Color.black.opacity(0.05)
                                 .onTapGesture {
                                     self.keyboard.hide()
                             }
@@ -325,12 +327,10 @@ struct HomeMainView: View {
                         }
                         .padding(.horizontal, 10)
                         .offset(y: mapHeight - 23 + state.searchBarYExtra)
-                            //                    .animation(dragState != .on ? .spring() : .none)
-                            // searchinput always light
-                            .environment(\.colorScheme, .light)
+                        .environment(\.colorScheme, .light)
                     }
-                        // everything below map is always dark
-                        .environment(\.colorScheme, .dark)
+                    // everything below map is always dark
+                    .environment(\.colorScheme, .dark)
                 }
                 .clipped()
                 .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
