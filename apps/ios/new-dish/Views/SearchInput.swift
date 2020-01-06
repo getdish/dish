@@ -85,6 +85,7 @@ struct SearchInput: View {
                                 .onTapGesture {
                                     if tag.deletable {
                                         if let index = self.tags.firstIndex(of: tag) {
+                                            print("removing tag at \(index)")
                                             self.tags.remove(at: index)
                                         }
                                     }
