@@ -36,6 +36,7 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
             last.filters = val.map { SearchFilter(name: $0.text) }
             state.home.current = state.home.current.dropLast()
             state.home.current.append(last)
+            print("setting it back now....... \(last.filters.count) \(state.home.current.last!)")
     }
 }
 
