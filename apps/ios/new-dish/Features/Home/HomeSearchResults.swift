@@ -173,7 +173,7 @@ struct TextShadowModifier: ViewModifier {
 #if DEBUG
 struct HomeSearchResults_Previews: PreviewProvider {
     static var previews: some View {
-        HomeSearchResults(state: HomeStateItem(dish: "Pho"))
+        HomeSearchResults(state: HomeStateItem(filters: [SearchFilter(name: "Pho")]))
             .embedInAppEnvironment()
     }
 }
