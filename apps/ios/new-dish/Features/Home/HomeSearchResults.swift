@@ -2,10 +2,11 @@ import SwiftUI
 
 struct HomeSearchResultsView: View {
     var state: HomeStateItem
-    let items = restaurants
     
     var body: some View {
-        ZStack {
+        print("HomeSearchResultsView \(state)")
+        
+        return ZStack {
             Color.black
 
             ScrollView(.vertical, showsIndicators: false) {
@@ -13,8 +14,18 @@ struct HomeSearchResultsView: View {
                     // space below searchbar
                     Spacer().frame(height: 10)
 
-                    ForEach(items) { item in
-                        DishRestaurantCard(restaurant: item)
+                    ForEach(state.searchResults.results) { item in
+                        DishRestaurantCard(restaurant:
+                            RestaurantItem(
+                                id: 0,
+                                name: item.name,
+                                imageName: "turtlerock",
+                                address: "",
+                                phone: "",
+                                tags: [],
+                                rating: 8
+                            )
+                        )
                     }
                     
                     // space for bottom bottomnav

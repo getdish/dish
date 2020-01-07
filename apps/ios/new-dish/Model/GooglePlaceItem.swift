@@ -13,7 +13,7 @@ struct GooglePlaceItem: Identifiable, Hashable, Codable {
     var icon: String
     var name: String
     
-    var rating: Int = 0
+    var rating: Double = 0.0
     
 //    struct OpeningHours: Codable, Hashable {
 //        var open_now: Int

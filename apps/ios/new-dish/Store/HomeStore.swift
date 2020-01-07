@@ -33,7 +33,19 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
             state.home.current.append(last)
         case let .setSearch(val):
             state.home.search = val
+            var last = state.home.current.last!
             
+            // push into search results
+            if last.search == "" {
+                state.home.current.append(
+                    HomeStateItem(search: val)
+                )
+            } else {
+                last.search = val
+                state.home.current = state.home.current.dropLast()
+                state.home.current.append(last)
+            }
+
             lastSearch.cancel()
             var cancelled = false
             lastSearch = AnyCancellable { cancelled = true }
@@ -78,7 +90,8 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
 
 struct HomeSelectors {
     func isOnSearchResults(_ state: AppState = appStore.state) -> Bool {
-        state.home.current.last!.filters.contains { $0.type == .cuisine }
+        let cur = state.home.current.last!
+        return cur.search != "" || cur.filters.contains { $0.type == .cuisine }
     }
     
     func tags(_ state: AppState = appStore.state) -> [SearchInputTag] {

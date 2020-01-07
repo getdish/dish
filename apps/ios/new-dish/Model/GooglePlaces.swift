@@ -52,9 +52,7 @@ class GooglePlaces {
     }
     
     func searchPlaces(_ search: String, completion: @escaping ([GooglePlaceItem]) -> Void) {
-        GooglePlacesRequestHelpers.getPlaces(with: getParameters(for: search), completion: { places in
-            print("got places \(places)")
-        })
+        GooglePlacesRequestHelpers.getPlaces(with: getParameters(for: search), completion: completion)
     }
     
     private let placesClient = GMSPlacesClient.shared()
