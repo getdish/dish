@@ -44,18 +44,18 @@ struct MapView: UIViewControllerRepresentable {
     
     class Coordinator: NSObject {
         var mapView: MapView
-        let locationManager = LocationManager()
+        let currentLocation = LocationManager()
         var cancels: Set<AnyCancellable> = []
         
         init(_ mapView: MapView) {
             self.mapView = mapView
             super.init()
             self.update(mapView)
-            self.locationManager.start()
+            self.currentLocation.start()
             
             // hacky dealy for now because mapView isn't started yet
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-                self.locationManager.$lastLocation
+                self.currentLocation.$lastLocation
                     .sink { location in
                         if location != nil {
                             log.info("center map from lastLocation")
@@ -71,37 +71,6 @@ struct MapView: UIViewControllerRepresentable {
                 self.mapView.controller?.update(mapView)
             }
         }
-        
-        class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
-            @Published var lastLocation: CLLocation? = nil
-            
-            private let manager = CLLocationManager()
-            
-            func start() {
-                manager.delegate = self
-                manager.requestWhenInUseAuthorization()
-                manager.startUpdatingLocation()
-            }
-            
-            func stop() {
-                manager.stopUpdatingLocation()
-            }
-            
-            func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-                appStore.send(.location(.setLastKnown(locations.last)))
-                self.lastLocation = locations.last
-            }
-            
-            func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-                if status == .authorizedWhenInUse {
-                    manager.startUpdatingLocation()
-                    if !appStore.state.location.hasChangedOnce {
-                        appStore.send(.location(.goToCurrent))
-                    }
-                }
-            }
-        }
-
     }
 }
 

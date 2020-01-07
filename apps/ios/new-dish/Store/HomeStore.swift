@@ -49,7 +49,7 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
                                     HomeSearchResultItem(
                                         id: place.name,
                                         name: place.name, //place.attributedPrimaryText,
-                                        coords: place.coordinate
+                                        place: place
                                     )
                                 }
                             )
@@ -106,7 +106,7 @@ enum HomePageView {
 struct HomeSearchResultItem: Identifiable {
     var id: String
     var name: String
-    var coords: CLLocationCoordinate2D? = nil
+    var place: GooglePlaceItem
 }
 
 struct HomeSearchResults: Equatable {
