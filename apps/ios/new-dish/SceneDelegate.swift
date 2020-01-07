@@ -9,9 +9,6 @@
 import UIKit
 import SwiftUI
 
-// Init state
-let appStore = Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
-
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?

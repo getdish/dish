@@ -214,6 +214,12 @@ class HomeViewState: ObservableObject {
 //            self.scrollY = y
 //        }
     }
+    
+    func moveToSearchResults() {
+        if HomeDragLock.state == .idle {
+            self.snapToTop()
+        }
+    }
 }
 
 fileprivate let homeViewState = HomeViewState()
@@ -226,36 +232,35 @@ struct HomeSearchBarState {
     }
 }
 
-// TODO
-// We need to have an Effect from appstate reducer that then has effects onto HomeState
-//  1. Keyboard see below init() commented out
-//  2. We need to reset hasMovedBar = false when we change certain things
-
 struct HomeMainView: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard
     @Environment(\.geometry) var appGeometry
     @ObservedObject var state = homeViewState
+    @State var wasOnSearchResults = false
 
     var body: some View {
         // pushed map below the border radius of the bottomdrawer
         let isOnSearchResults = Selectors.home.isOnSearchResults()
+        let isMovingToSearchResults = isOnSearchResults && !wasOnSearchResults
+        
+        if isMovingToSearchResults {
+            state.moveToSearchResults()
+        }
+        
+        // reset back
+        DispatchQueue.main.async {
+            self.wasOnSearchResults = isOnSearchResults
+        }
+        
         let state = self.state
         let mapHeight = state.mapHeight
+        let zoom = mapHeight / 250 + 10
 
         print("render HomeMainView -- mapHeight \(mapHeight) y \(state.y)")
 
-        // TODO why do this in body
-        if isOnSearchResults && HomeDragLock.state == .idle {
-            DispatchQueue.main.async {
-                self.state.snapToTop()
-            }
-        }
-
-        let zoom = mapHeight / 250 + 10
-
-        return MagicMove(animate: state.animate) {
-            GeometryReader { geometry in
+//        return MagicMove(animate: state.animate) {
+        return GeometryReader { geometry in
                 ZStack {
                     // weird way to set appheight
                     Color.black
@@ -367,7 +372,7 @@ struct HomeMainView: View {
                 )
             }
             .environmentObject(self.state)
-        }
+//        }
     }
 }
 

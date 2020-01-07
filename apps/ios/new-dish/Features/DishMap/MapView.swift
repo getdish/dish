@@ -54,10 +54,11 @@ struct MapView: UIViewControllerRepresentable {
             self.locationManager.start()
             
             // hacky dealy for now because mapView isn't started yet
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
                 self.locationManager.$lastLocation
                     .sink { location in
                         if location != nil {
+                            log.info("center map from lastLocation")
                             self.mapView.controller!.moveMapToCurrentLocation()
                         }
                     }
