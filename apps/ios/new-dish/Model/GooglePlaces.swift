@@ -9,7 +9,7 @@ fileprivate let placesClient = GMSPlacesClient.shared()
 class GooglePlaces {
     private var apiKey = "AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k"
     private var currentLocation: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid
-    private var radius: Double = 100000.0
+    private var radius: Double = 1000000
     private var strictBounds = true
     private var cancellables: Set<AnyCancellable> = []
     
@@ -83,7 +83,7 @@ class GooglePlaces {
 //            "input": text,
             "key": self.apiKey,
             "location": "\(self.currentLocation.latitude),\(self.currentLocation.longitude)",
-            "radius": "\(radius)",
+            "radius": "\(Int(radius))",
             "keyword": text
         ]
     }
@@ -157,9 +157,14 @@ private class GooglePlacesRequestHelpers {
             completion: {
                 guard let results = $0["results"] as? [[String: Any]] else { return }
                 print("got results \(results)")
-//                completion(
-//                    results.map {  }
-//                )
+                do {
+                    let res = try results.map({ json in
+                        return try GooglePlaceItem(json: json)
+                    })
+                    completion(res)
+                } catch {
+                    print(error)
+                }
         }
         )
         

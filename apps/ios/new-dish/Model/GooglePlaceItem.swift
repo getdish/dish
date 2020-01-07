@@ -30,6 +30,14 @@ struct GooglePlaceItem: Identifiable, Hashable, Codable {
     var reference: String
     var types: [String]
     var vicinity: String
-    
     // enum CodingKeys
+    
+    init(json: [String: Any]) throws {
+        let resultString = "\(json)"
+        print("string \(resultString)")
+        guard let data = resultString.data(using: .utf8) else {
+            throw NSError(domain: "JSONDecoding", code: 0, userInfo: nil)
+        }
+        self = try JSONDecoder().decode(GooglePlaceItem.self, from: data)
+    }
 }
