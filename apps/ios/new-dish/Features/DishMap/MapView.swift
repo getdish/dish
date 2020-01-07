@@ -151,10 +151,9 @@ class MapViewController: UIViewController {
     
     // https://gis.stackexchange.com/questions/2951/algorithm-for-offsetting-a-latitude-longitude-by-some-amount-of-meters
     private var adjustLatitude: Double {
-        let zoomAdjusted: Double = Double(max(0.1, (zoom - 10)) * 0.5)
-        let zoomAdjustY: Double = zoomAdjusted * Constants.ONE_DEGREE_LAT
+        let zoomAdjustY: Double = Double(max(0.1, (zoom - 10)) * 1) * Constants.ONE_DEGREE_LAT
         let constAdjustY: Double = -Constants.ONE_DEGREE_LAT * 2
-        print("get lat \(zoom) - \(zoomAdjusted) - \(zoomAdjustY)")
+        print("get lat \(zoom) - \(zoomAdjustY)")
         return constAdjustY + zoomAdjustY
     }
     
