@@ -149,13 +149,23 @@ class MapViewController: UIViewController {
         }
     }
     
-    // https://gis.stackexchange.com/questions/2951/algorithm-for-offsetting-a-latitude-longitude-by-some-amount-of-meters
+    // converts 0-1
+    private func absZoom(_ number: Double? = nil) -> Double {
+        let min = 10.0
+        let max = 13.0
+        return ((number ?? Double(self.zoom)) - min) / (max - min) * 1.0
+    }
+    
     private var adjustLatitude: Double {
-        let zoomAdjusted: Double = Double(max(0.1, (zoom - 10)) * 0.5)
-        let zoomAdjustY: Double = zoomAdjusted * Constants.ONE_DEGREE_LAT
-        let constAdjustY: Double = -Constants.ONE_DEGREE_LAT * 2
-        print("get lat \(zoom) - \(zoomAdjusted) - \(zoomAdjustY)")
-        return constAdjustY + zoomAdjustY
+        let zoom = absZoom()
+        let zoomLat = zoom * 0.4 * Constants.ONE_DEGREE_LAT
+        let constLat = (-Constants.ONE_DEGREE_LAT * 0.9)
+        var z = zoomLat + constLat
+        if zoom < 0.6 {
+            z = z - (0.6 - zoom) * Constants.ONE_DEGREE_LAT * 7
+        }
+        print("now it is \(z) \(absZoom())")
+        return z
     }
     
     private func getCamera() -> GMSCameraPosition? {

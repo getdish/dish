@@ -16,7 +16,6 @@ struct HomeMainContent: View {
                 // pages as you drill in below home
                 if isOnSearchResults {
                     VStack {
-                        Spacer().frame(height: cardRowHeight + 20)
                         ForEach(1 ..< self.store.state.home.current.count) { index in
                             HomeSearchResults(
                                 state: self.store.state.home.current[index]

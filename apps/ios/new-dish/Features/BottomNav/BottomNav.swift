@@ -10,23 +10,33 @@ struct BottomNav: View {
         return VStack {
             Spacer()
             ZStack {
+                // main controls
+                
                 HStack {
-                    BottomNavCircularButton(image: "person.fill", size: 42, action: {
-                        homePager.animateTo(0)
-                    })
-                        .animation(.spring(response: 0.5))
-                        .offset(y: isOnGallery ? hiddenButtonY : 0)
+                    DishLoginButton()
+                    .animation(.spring(response: 0.5))
+                    .offset(y: isOnGallery ? hiddenButtonY : 0)
+                    Spacer()
+                }
+                
+                HStack {
                     Spacer()
                     DishFiltersButton()
                         .animation(.spring(response: 0.75))
                         .offset(y: isOnGallery ? hiddenButtonY : 0)
                     Spacer()
-                    BottomNavCircularButton(image: "star", size: 48, action: {
+                }
+                
+                HStack {
+                    Spacer()
+                    BottomNavCircularButton(image: "heart.fill", size: 52, action: {
                         homePager.animateTo(2)
                     })
                         .animation(.spring(response: 0.5))
                         .offset(y: isOnGallery ? hiddenButtonY : 0)
                 }
+                
+                // camera controls
                 
                 HStack {
 //                    DishBackButton()
@@ -47,8 +57,48 @@ struct BottomNav: View {
                 }
             }
             .padding(.horizontal)
-            Spacer()
-                .frame(height: 60)
+            Spacer().frame(height: 56)
+        }
+    }
+}
+
+struct DishLoginButton: View {
+    var body: some View {
+        Button(action: {
+            homePager.animateTo(0)
+        }) {
+            HStack {
+//                Image(systemName: "person.fill")
+//                    .resizable()
+//                    .scaledToFit()
+//                    .frame(width: 12, height: 12)
+//                    .foregroundColor(.white)
+//                    .shadow(color: Color.black.opacity(0.75), radius: 16, x: 0, y: 2)
+                
+                Text("LOGIN")
+                    .shadow(color: Color.black.opacity(0.75), radius: 24, x: 0, y: 4)
+                    .font(.system(size: 15))
+                    .foregroundColor(.white)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(
+                BlurView(style: .systemMaterialDark)
+            )
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color.black.opacity(0.4),
+                                                    Color.black.opacity(0.5)]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+            )
+                .cornerRadius(80)
+                .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 80)
+                        .stroke(Color.white.opacity(0.5), lineWidth: 1)
+            )
         }
     }
 }
@@ -59,14 +109,31 @@ struct DishFiltersButton: View {
     
     var body: some View {
         let button = (
-            VStack(spacing: 12) {
-                //                BarArrow()
-                //                    .scaleEffect(0.75)
-                Text("🍽")
+            VStack {
+                Text("FILTER")
                     .shadow(color: Color.black.opacity(0.75), radius: 24, x: 0, y: 4)
-                    .font(.system(size: 42))
+                    .font(.system(size: 17))
                     .foregroundColor(.white)
             }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(
+                BlurView(style: .systemMaterialDark)
+            )
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color.black.opacity(0.4),
+                                                    Color.black.opacity(0.5)]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+            )
+                .cornerRadius(80)
+                .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 80)
+                        .stroke(Color.white.opacity(0.5), lineWidth: 1)
+            )
         )
         
         return ZStack {
@@ -138,7 +205,7 @@ struct BottomNavButton<Content>: View where Content: View {
         }) {
             self.content()
         }
-        .padding(.all, 12)
+        .padding(.all, 16)
         .background(
             BlurView(style: .systemMaterialDark)
         )
