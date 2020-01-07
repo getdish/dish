@@ -17,7 +17,7 @@ struct HomeMainContent: View {
                 if isOnSearchResults {
                     VStack {
                         ForEach(1 ..< self.store.state.home.current.count) { index in
-                            HomeSearchResults(
+                            HomeSearchResultsView(
                                 state: self.store.state.home.current[index]
                             )
                                 .offset(

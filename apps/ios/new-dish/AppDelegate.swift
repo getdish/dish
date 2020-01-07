@@ -11,7 +11,10 @@ import GoogleMaps
 import GooglePlaces
 import XCGLogger
 
+// Init state
 let log = XCGLogger.default
+let googlePlaces = GooglePlaces()
+let appStore = Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

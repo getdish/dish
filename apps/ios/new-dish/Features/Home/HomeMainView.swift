@@ -232,11 +232,6 @@ struct HomeSearchBarState {
     }
 }
 
-// TODO
-// We need to have an Effect from appstate reducer that then has effects onto HomeState
-//  1. Keyboard see below init() commented out
-//  2. We need to reset hasMovedBar = false when we change certain things
-
 struct HomeMainView: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard

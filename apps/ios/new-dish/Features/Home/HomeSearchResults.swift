@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct HomeSearchResults: View {
+struct HomeSearchResultsView: View {
     var state: HomeStateItem
     let items = restaurants
     
@@ -173,7 +173,9 @@ struct TextShadowModifier: ViewModifier {
 #if DEBUG
 struct HomeSearchResults_Previews: PreviewProvider {
     static var previews: some View {
-        HomeSearchResults(state: HomeStateItem(filters: [SearchFilter(name: "Pho")]))
+        HomeSearchResultsView(
+            state: HomeStateItem(filters: [SearchFilter(name: "Pho")])
+        )
             .embedInAppEnvironment()
     }
 }
