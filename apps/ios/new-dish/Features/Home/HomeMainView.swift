@@ -35,14 +35,14 @@ class HomeViewState: ObservableObject {
             .sink { value in
                 print("keyboards now \(value)")
                 withAnimation(.spring()) {
-                    self.y += value > 0 ? -200 : 200
+                    self.y += value > 0 ? -270 : 270
                 }
             }
             .store(in: &cancellables)
     }
     
     let mapMinHeight: CGFloat = Screen.statusBarHeight + searchBarHeight / 2 + topNavHeight + 40
-    var mapMaxHeight: CGFloat { appHeight - keyboardHeight - searchBarHeight - 20 }
+    var mapMaxHeight: CGFloat { appHeight - keyboardHeight - searchBarHeight - 10 }
     var mapInitialHeight: CGFloat { appHeight * 0.3 }
     
     var mapHeight: CGFloat {
@@ -51,7 +51,7 @@ class HomeViewState: ObservableObject {
         return min(mapMaxHeight, max(mapInitialHeight + y, mapMinHeight))
     }
     
-    var snapToBottomAt: CGFloat { appHeight * 0.2 }
+    var snapToBottomAt: CGFloat { appHeight * 0.25 }
     var snappedToBottomMapHeight: CGFloat { appHeight - 200 }
     var isSnappedToBottom: Bool { y > snapToBottomAt }
     var wasSnappedToBottom = false
@@ -106,8 +106,8 @@ class HomeViewState: ObservableObject {
         if willSnapDown {
             self.snapToBottom(true)
         } else if wasSnappedToBottom {
-            // distance before snapping back up
-            let willSnapUp = -dragY > appHeight * 0.25
+            let distanceUntilSnapUp = appHeight * 0.2
+            let willSnapUp = -dragY > distanceUntilSnapUp
             if willSnapUp {
                 self.snapToBottom(false)
             }
