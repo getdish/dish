@@ -18,18 +18,18 @@ class HomeViewState: ObservableObject {
     @Published var searchBarYExtra: CGFloat = 0
     @Published var hasMovedBar = false
     @Published var animate = false
-    
+
     // keyboard
     @Published var keyboardHeight: CGFloat = 0
     private var cancellables: Set<AnyCancellable> = []
     private var keyboard = Keyboard()
-    
+
     init() {
         self.keyboard.$state
             .map { $0.height }
             .assign(to: \.keyboardHeight, on: self)
             .store(in: &cancellables)
-        
+
         self.keyboard.$state
             .map { $0.height }
             .sink { value in
@@ -40,59 +40,65 @@ class HomeViewState: ObservableObject {
             }
             .store(in: &cancellables)
     }
-    
+
     let mapMinHeight: CGFloat = Screen.statusBarHeight + searchBarHeight / 2 + topNavHeight + 40
     var mapMaxHeight: CGFloat { appHeight - keyboardHeight - searchBarHeight - 10 }
     var mapInitialHeight: CGFloat { appHeight * 0.3 }
-    
+
     var mapHeight: CGFloat {
         //        let scrollYExtra: CGFloat = self.isSnappedToBottom ? 0 : self.scrollY
         //         - scrollYExtra
         return min(mapMaxHeight, max(mapInitialHeight + y, mapMinHeight))
     }
-    
-    var snapToBottomAt: CGFloat { appHeight * 0.25 }
+
+
+    var snapToBottomAt: CGFloat { appHeight * 0.2 }
     var snappedToBottomMapHeight: CGFloat { appHeight - 200 }
     var isSnappedToBottom: Bool { y > snapToBottomAt }
     var wasSnappedToBottom = false
-    
+
     var aboutToSnapToBottomAt: CGFloat { snapToBottomAt - resistanceYBeforeSnap }
-    
+
     func toggleMap() {
         log.info()
         self.snapToBottom(!isSnappedToBottom)
     }
-    
+
     private var startDragAt: CGFloat = 0
-    
+
     func drag(_ dragY: CGFloat) {
         log.info()
         // TODO we can reset this back to false in some cases for better UX
         self.hasMovedBar = true
-        
+
         // remember where we started
         if HomeDragLock.state != .searchbar {
             self.startDragAt = y
             HomeDragLock.setLock(.searchbar)
         }
-        
+
         var y = self.startDragAt + (
             // add resistance if snapped to bottom
             isSnappedToBottom ? dragY * 0.2 : dragY
         )
-        
+
         // resistance before snapping down
         let aboutToSnapToBottom = y >= aboutToSnapToBottomAt && !isSnappedToBottom
         if aboutToSnapToBottom {
             let diff = self.startDragAt + dragY - aboutToSnapToBottomAt
             y = aboutToSnapToBottomAt + diff * 0.2
         }
-        
+
         // store wasSnappedToBottom before changing y
         let wasSnappedToBottom = isSnappedToBottom
+
+        if y.rounded() == self.y.rounded() {
+            log.info("ignore same values")
+            return
+        }
         
         self.y = y
-        
+
         // while snapped, have searchbar move differently
         // searchbar moves faster during resistance before snap
         if aboutToSnapToBottom {
@@ -100,7 +106,7 @@ class HomeViewState: ObservableObject {
         } else if isSnappedToBottom {
             self.searchBarYExtra = dragY * 0.25
         }
-        
+
         // snap to bottom/back logic
         let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
         if willSnapDown {
@@ -113,7 +119,7 @@ class HomeViewState: ObservableObject {
             }
         }
     }
-    
+
     func finishDrag(_ value: DragGesture.Value) {
         log.info()
         if isSnappedToBottom {
@@ -136,7 +142,7 @@ class HomeViewState: ObservableObject {
         //            self.y = self.y + value.predictedEndTranslation.height / 2
         //        }
     }
-    
+
     func snapToBottom(_ toBottom: Bool = true) {
         log.info()
         HomeDragLock.setLock(.off)
@@ -151,7 +157,7 @@ class HomeViewState: ObservableObject {
             }
         }
     }
-    
+
     func animateCards() {
         log.info()
 //        self.animate = true
@@ -159,15 +165,15 @@ class HomeViewState: ObservableObject {
 //            self.animate = false
 //        }
     }
-    
+
     var mapSnappedToTopHeight: CGFloat {
         self.mapMinHeight - self.mapInitialHeight
     }
-    
+
     var isSnappedToTop: Bool {
         self.y == mapSnappedToTopHeight
     }
-    
+
     func snapToTop() {
         log.info()
         if !isSnappedToTop {
@@ -178,7 +184,7 @@ class HomeViewState: ObservableObject {
             }
         }
     }
-    
+
     func animateTo(_ y: CGFloat) {
         log.info()
         self.scrollY = 0
@@ -189,14 +195,14 @@ class HomeViewState: ObservableObject {
             self.y = y
         }
     }
-    
+
     func resetAfterKeyboardHide() {
         log.info()
         if !self.hasMovedBar && self.y != 0 && appStore.state.home.search == "" {
             self.animateTo(0)
         }
     }
-    
+
     func setScrollY(_ scrollY: CGFloat) {
         log.info()
         print("disabled scroll y some bugs")
@@ -214,7 +220,7 @@ fileprivate let homeViewState = HomeViewState()
 
 struct HomeSearchBarState {
     static var frame: CGRect = CGRect()
-    
+
     static func isWithin(_ valueY: CGFloat) -> Bool {
         return valueY >= HomeSearchBarState.frame.minY && valueY <= HomeSearchBarState.frame.maxY
     }
@@ -230,24 +236,24 @@ struct HomeMainView: View {
     @EnvironmentObject var keyboard: Keyboard
     @Environment(\.geometry) var appGeometry
     @ObservedObject var state = homeViewState
-    
+
     var body: some View {
         // pushed map below the border radius of the bottomdrawer
         let isOnSearchResults = Selectors.home.isOnSearchResults()
         let state = self.state
         let mapHeight = state.mapHeight
-        
+
         print("render HomeMainView -- mapHeight \(mapHeight) y \(state.y)")
-        
+
         // TODO why do this in body
         if isOnSearchResults && HomeDragLock.state == .idle {
             DispatchQueue.main.async {
                 self.state.snapToTop()
             }
         }
-        
+
         let zoom = mapHeight / 250 + 10
-        
+
         return MagicMove(animate: state.animate) {
             GeometryReader { geometry in
                 ZStack {
@@ -260,7 +266,7 @@ struct HomeMainView: View {
                                 }
                             }
                     }
-                    
+
                     VStack {
                         ZStack {
                             DishMapView(
@@ -273,54 +279,56 @@ struct HomeMainView: View {
                         .cornerRadius(20)
                         .clipped()
                         .animation(.spring(response: 0.3333))
-                        
+
                         Spacer()
                     }
-                    
-                    // everything below the map
+
+
+                    // everything above the map
                     ZStack {
                         VStack {
-                            Spacer()
-                                .frame(height: mapHeight - cardRowHeight)
-                            
-                            HomeMainContent(
-                                isHorizontal: self.state.isSnappedToBottom
-                            )
-                                //                            .frame(height: (self.appGeometry?.size.height ?? 0) - (mapHeight - cardRowHeight) + 100)
-                                .transition(AnyTransition.offset())
-                            //                            .offset(y: 100 - state.scrollY)
+                            GeometryReader { geometry in
+                                VStack {
+                                    HomeMainContent(
+                                        isHorizontal: self.state.isSnappedToBottom
+                                    )
+                                    //                            .frame(height: (self.appGeometry?.size.height ?? 0) - (mapHeight - cardRowHeight) + 100)
+                                        .transition(AnyTransition.offset())
+                                    //                            .offset(y: 100 - state.scrollY)
+                                }
+                            }
                         }
+                            .padding(.top, mapHeight)
+                            .offset(y: state.isSnappedToBottom ? -cardRowHeight : 0)
                             // putting this animation with the above transition breaks, keeping it outside works...
                             // for some reason this seems to slow down clicking on toggle button
-                            .animation(HomeDragLock.state == .idle ? .none : .spring(response: 0.3333))
-                        
+                            .animation(.spring(response: 0.3333))
+
                         VStack {
-                            Spacer().frame(height: mapHeight + 34)
-                            
                             // filters
                             HomeMainFilters()
                                 .animation(.spring(response: 0.3333))
-                            
                             Spacer()
                         }
-                        .offset(y: isOnSearchResults ? -100 : 0)
+                        .animation(.spring())
+                        .offset(y: mapHeight + searchBarHeight / 2 + 12)
                         .opacity(isOnSearchResults ? 0 : 1)
-                        
+
                         // keyboard dismiss
                         if self.keyboard.state.height > 0 {
-                            Color.black.opacity(0.0001)
+                            Color.black.opacity(0.05)
                                 .onTapGesture {
                                     self.keyboard.hide()
                             }
                         }
-                        
+
                         VStack {
                             GeometryReader { searchBarGeometry -> HomeSearchBar in
                                 HomeSearchBarState.frame = searchBarGeometry.frame(in: .global)
                                 return HomeSearchBar()
                             }
                             .frame(height: searchBarHeight)
-                            
+
                             Spacer()
                         }
                         .padding(.horizontal, 10)
