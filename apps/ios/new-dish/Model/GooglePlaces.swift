@@ -9,7 +9,7 @@ fileprivate let placesClient = GMSPlacesClient.shared()
 class GooglePlaces {
     private var apiKey = "AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k"
     private var currentLocation: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid
-    private var radius: Double = 1000000
+    private var radius: Double = 100000
     private var strictBounds = true
     private var cancellables: Set<AnyCancellable> = []
     
@@ -41,8 +41,11 @@ class GooglePlaces {
             }
             if let placeLikelihoodList = placeLikelihoodList {
                 
-                let nearest = placeLikelihoodList.likelihoods.first
+                guard let nearest = placeLikelihoodList.likelihoods.first else {
+                    return
+                }
                 print("closest to place \(nearest)")
+                self.currentLocation = nearest.place.coordinate
 //                $0.place
             }
         })
@@ -158,8 +161,8 @@ private class GooglePlacesRequestHelpers {
                 guard let results = $0["results"] as? [[String: Any]] else { return }
                 print("got results \(results)")
                 do {
-                    let res = try results.map({ json in
-                        return try GooglePlaceItem(json: json)
+                    let res = try results.map({ dictionary in
+                        return try GooglePlaceItem(dictionary: dictionary)
                     })
                     completion(res)
                 } catch {

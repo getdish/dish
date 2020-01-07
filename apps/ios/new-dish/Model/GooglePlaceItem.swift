@@ -13,10 +13,12 @@ struct GooglePlaceItem: Identifiable, Hashable, Codable {
     var icon: String
     var name: String
     
-    struct OpeningHours: Codable, Hashable {
-        var open_now: String
-    }
-    var opening_hours: OpeningHours
+    var rating: Int = 0
+    
+//    struct OpeningHours: Codable, Hashable {
+//        var open_now: Int
+//    }
+//    var opening_hours: OpeningHours? = nil
     
     struct Photo: Codable, Hashable {
         var height: Int
@@ -24,7 +26,7 @@ struct GooglePlaceItem: Identifiable, Hashable, Codable {
         var photo_reference: String
         var html_attributions: [String]
     }
-    var photos: [Photo]
+    var photos: [Photo]? = nil
     
     var place_id: String
     var reference: String
@@ -32,12 +34,7 @@ struct GooglePlaceItem: Identifiable, Hashable, Codable {
     var vicinity: String
     // enum CodingKeys
     
-    init(json: [String: Any]) throws {
-        let resultString = "\(json)"
-        print("string \(resultString)")
-        guard let data = resultString.data(using: .utf8) else {
-            throw NSError(domain: "JSONDecoding", code: 0, userInfo: nil)
-        }
-        self = try JSONDecoder().decode(GooglePlaceItem.self, from: data)
+    init(dictionary: [String: Any]) throws {
+        self = try JSONDecoder().decode(GooglePlaceItem.self, from: JSONSerialization.data(withJSONObject: dictionary))
     }
 }
