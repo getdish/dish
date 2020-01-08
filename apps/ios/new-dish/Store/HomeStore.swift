@@ -5,9 +5,8 @@ import GoogleMaps
 extension AppState {
     struct HomeState: Equatable {
         var view: HomePageView = .home
-        var current: [HomeStateItem] = [HomeStateItem()]
+        var state: [HomeStateItem] = [HomeStateItem()]
         var showDrawer: Bool = false
-        var search: String = ""
     }
 }
 
@@ -28,27 +27,26 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     
     // use this to ensure you update HomeStateItems correctly
     func updateItem(_ next: HomeStateItem) {
-        if let index = state.home.current.firstIndex(where: { $0.id == next.id }) {
+        if let index = state.home.state.firstIndex(where: { $0.id == next.id }) {
             var item = next
             item.id = uid()
-            state.home.current[index] = item
+            state.home.state[index] = item
         }
     }
     
     switch action {
         case let .setSearchResults(val):
-            var last = state.home.current.last!
+            var last = state.home.state.last!
             last.searchResults = val
             updateItem(last)
         case let .setSearch(val):
-            state.home.search = val
-            var last = state.home.current.last!
+            var last = state.home.state.last!
             
             // TODO if filter/category exists (like Pho), move it to tags not search
             
             // push into search results
             if last.search == "" {
-                state.home.current.append(
+                state.home.state.append(
                     HomeStateItem(search: val)
                 )
             } else {
@@ -89,11 +87,11 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
         case .toggleDrawer:
             state.home.showDrawer = !state.home.showDrawer
         case let .push(homeState):
-            state.home.current.append(homeState)
+            state.home.state.append(homeState)
         case .pop:
-            state.home.current = state.home.current.dropLast()
+            state.home.state = state.home.state.dropLast()
         case let .setCurrentTags(val):
-            var last = state.home.current.last!
+            var last = state.home.state.last!
             last.filters = val.map { SearchFilter(name: $0.text) }
             updateItem(last)
     }
@@ -101,12 +99,12 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
 
 struct HomeSelectors {
     func isOnSearchResults(_ state: AppState = appStore.state) -> Bool {
-        let cur = state.home.current.last!
+        let cur = state.home.state.last!
         return cur.search != "" || cur.filters.contains { $0.type == .cuisine }
     }
     
     func tags(_ state: AppState = appStore.state) -> [SearchInputTag] {
-        let homeState = state.home.current.last!
+        let homeState = state.home.state.last!
         var tags: [SearchInputTag] = []
         if homeState.filters.count > 0 {
             tags = homeState.filters.map { filter in

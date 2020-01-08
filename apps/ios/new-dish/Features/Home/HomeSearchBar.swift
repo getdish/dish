@@ -11,13 +11,14 @@ struct HomeSearchBar: View {
     @State var scrollAtTop = true
     @EnvironmentObject var homeState: HomeViewState
     @EnvironmentObject var store: AppStore
+    @EnvironmentObject var keyboard: Keyboard
     
     var hasSearch: Bool {
-        store.state.home.current.count > 1
+        store.state.home.state.count > 1
     }
     
     private var homeSearch: Binding<String> {
-        store.binding(for: \.home.search, { .home(.setSearch($0)) })
+        store.binding(for: \.home.state.last!.search, { .home(.setSearch($0)) })
     }
     
     private var homeTags: Binding<[SearchInputTag]> {
@@ -45,9 +46,10 @@ struct HomeSearchBar: View {
     }
     
     var icon: AnyView {
-        if store.state.home.current.count > 1 {
+        if store.state.home.state.count > 1 {
             return AnyView(
                 Image(systemName: "chevron.left").onTapGesture {
+                    self.keyboard.hide()
                     self.store.send(.home(.pop))
                 }
             )

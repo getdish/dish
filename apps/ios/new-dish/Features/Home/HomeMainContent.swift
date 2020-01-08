@@ -16,7 +16,7 @@ struct HomeMainContent: View {
                 // pages as you drill in below home
                 if isOnSearchResults {
                     ZStack {
-                        ForEach(self.store.state.home.current) { state in
+                        ForEach(self.store.state.home.state) { state in
                             HomeSearchResultsView(
                                 state: state
                             )

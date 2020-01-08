@@ -54,7 +54,7 @@ class HomeViewState: ObservableObject {
     }
 
 
-    var snapToBottomAt: CGFloat { appHeight * 0.2 }
+    var snapToBottomAt: CGFloat { appHeight * 0.23 }
     var snappedToBottomMapHeight: CGFloat { appHeight - 200 }
     var isSnappedToBottom: Bool { y > snapToBottomAt }
     var wasSnappedToBottom = false
@@ -200,7 +200,7 @@ class HomeViewState: ObservableObject {
 
     func resetAfterKeyboardHide() {
         log.info()
-        if !self.hasMovedBar && self.y != 0 && appStore.state.home.search == "" {
+        if !self.hasMovedBar && self.y != 0 && appStore.state.home.state.last!.search == "" {
             self.animateTo(0)
         }
     }
