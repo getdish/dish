@@ -331,18 +331,18 @@ struct HomeMainView: View {
                                 return HomeSearchBar()
                             }
                             .frame(height: searchBarHeight)
-
+                            
                             Spacer()
                         }
                         .padding(.horizontal, 10)
                         .offset(y: mapHeight - 23 + state.searchBarYExtra)
-                            //                    .animation(dragState != .on ? .spring() : .none)
-                            // searchinput always light
-                            .environment(\.colorScheme, .light)
+                        // searchinput always light
+                        .environment(\.colorScheme, .light)
                     }
                         // everything below map is always dark
                         .environment(\.colorScheme, .dark)
                 }
+                .clipped() // dont remove fixes bug cant click SearchBar
                 .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
                 .simultaneousGesture(
                     DragGesture(minimumDistance: 10)

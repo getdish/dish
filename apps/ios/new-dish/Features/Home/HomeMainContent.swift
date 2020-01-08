@@ -74,18 +74,18 @@ struct HomeMainContentContent: View {
     
     var body: some View {
         ZStack {
-            VStack {
-                HomeCardsRow()
-                Spacer()
-            }
-            .offset(y: max(100, homeState.mapHeight - cardRowHeight - 12))
-            .opacity(self.isHorizontal ? 1 : 0)
-            .disabled(self.isHorizontal ? false : true)
+            Spacer()
+            
+            HomeCardsRow()
+                .offset(y: max(100, homeState.mapHeight - cardRowHeight - 12))
+                .opacity(self.isHorizontal ? 1 : 0)
+                .disabled(!self.isHorizontal)
             
             HomeCardsGrid()
                 .opacity(self.isHorizontal ? 0 : 1)
-                .disabled(self.isHorizontal ? true : false)
+                .disabled(self.isHorizontal)
         }
+        .clipped()
     }
 }
 
@@ -123,7 +123,7 @@ struct HomeCardsGrid: View {
             }
             .offset(y: homeState.mapHeight)
             .animation(.spring())
-            .mask(self.mask.offset(y: homeState.mapHeight))
+            .mask(self.mask.offset(y: homeState.mapHeight + filterBarHeight / 2))
         }
     }
     
@@ -132,6 +132,20 @@ struct HomeCardsGrid: View {
             gradient: .init(colors: [
                 Color.white.opacity(0),
                 Color.white.opacity(0),
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
                 Color.black,
                 Color.black,
                 Color.black,

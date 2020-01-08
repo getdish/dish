@@ -43,9 +43,9 @@ struct SearchInput: View {
     }
     
     var cancelButton: some View {
-        Button("Cancel") {
+        Button("Done") {
             UIApplication.shared.endEditing(true) // this must be placed before the other commands here
-            self.searchText = ""
+//            self.searchText = ""
             self.showCancelButton = false
             if let cb = self.onCancel {
                 cb()
