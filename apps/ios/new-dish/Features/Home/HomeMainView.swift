@@ -154,7 +154,7 @@ class HomeViewState: ObservableObject {
         HomeDragLock.setLock(.off)
         self.animateCards()
         withAnimation(.spring()) {
-            self.scrollY = 0
+//            self.scrollY = 0
             self.searchBarYExtra = 0
             if toBottom {
                 self.y = snappedToBottomMapHeight - mapInitialHeight
