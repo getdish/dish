@@ -33,7 +33,7 @@ class HomeViewState: ObservableObject {
         self.keyboard.$state
             .map { $0.height }
             .sink { value in
-                if mapHeight > 300 {                
+                if self.mapHeight > 300 {                
                     print("keyboards now \(value)")
                     withAnimation(.spring()) {
                         self.y += value > 0 ? -270 : 270
