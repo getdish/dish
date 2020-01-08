@@ -9,15 +9,15 @@ struct SearchToTagColor {
 struct HomeSearchBar: View {
     @State var searchText = ""
     @State var scrollAtTop = true
-    @EnvironmentObject var homeState: HomeViewState
     @EnvironmentObject var store: AppStore
+    @EnvironmentObject var keyboard: Keyboard
     
     var hasSearch: Bool {
-        store.state.home.current.count > 1
+        store.state.home.state.count > 1
     }
     
     private var homeSearch: Binding<String> {
-        store.binding(for: \.home.search, { .home(.setSearch($0)) })
+        store.binding(for: \.home.state.last!.search, { .home(.setSearch($0)) })
     }
     
     private var homeTags: Binding<[SearchInputTag]> {
@@ -28,8 +28,7 @@ struct HomeSearchBar: View {
     }
     
     var body: some View {
-        print("now we have tags \(Selectors.home.tags())")
-        
+        print("SearchInput tags \(Selectors.home.tags())")
         return SearchInput(
             placeholder: "Pho, Burger, Wings...",
             inputBackgroundColor: Color.white,
@@ -38,16 +37,17 @@ struct HomeSearchBar: View {
             sizeRadius: 2.0,
             icon: icon,
             showCancelInside: true,
-            after: after,
+            after: AnyView(HomeSearchBarAfterView()),
             searchText: self.homeSearch,
             tags: self.homeTags
         )
     }
     
     var icon: AnyView {
-        if store.state.home.current.count > 1 {
+        if store.state.home.state.count > 1 {
             return AnyView(
                 Image(systemName: "chevron.left").onTapGesture {
+                    self.keyboard.hide()
                     self.store.send(.home(.pop))
                 }
             )
@@ -57,24 +57,27 @@ struct HomeSearchBar: View {
             )
         }
     }
-    
-    var after: AnyView {
-        AnyView(
-            Button(action: {
-                self.homeState.toggleMap()
-            }) {
-                Image(systemName: self.homeState.isSnappedToBottom
-                    ? "chevron.up"
-                    : "chevron.down"
-                )
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 16, height: 16)
-                    .opacity(0.45)
-            }
-            .padding(.vertical, 4)
-            .padding(.horizontal, 20)
-        )
-    }
 }
 
+struct HomeSearchBarAfterView: View {
+    @EnvironmentObject var homeState: HomeViewState
+    
+    var body: some View {
+        Button(action: {
+            self.homeState.toggleMap()
+        }) {
+            Image(systemName: self.homeState.isSnappedToTop ?
+                "chevron.down" :
+                self.homeState.isSnappedToBottom
+                ? "chevron.up"
+                : "chevron.up.chevron.down"
+            )
+                .resizable()
+                .scaledToFit()
+                .frame(width: 16, height: 16)
+                .opacity(0.45)
+        }
+        .padding(.vertical, 4)
+        .padding(.horizontal, 20)
+    }
+}

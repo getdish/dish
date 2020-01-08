@@ -12,7 +12,7 @@ fileprivate let resistanceYBeforeSnap: CGFloat = 55
 // then on idle we can apply .spring()
 
 class HomeViewState: ObservableObject {
-    @Published var appHeight: CGFloat = 0
+    @Published var appHeight: CGFloat = Screen.height
     @Published var scrollY: CGFloat = 0
     @Published var y: CGFloat = 0
     @Published var searchBarYExtra: CGFloat = 0
@@ -32,11 +32,19 @@ class HomeViewState: ObservableObject {
 
         self.keyboard.$state
             .map { $0.height }
-            .sink { value in
-                print("keyboards now \(value)")
-                withAnimation(.spring()) {
-                    self.y += value > 0 ? -270 : 270
+            .sink { height in
+                let isOpen = height > 0
+                
+                // disable top nav when keyboard open
+                appStore.send(.setDisableTopNav(isOpen))
+                
+                // map up/down on keyboard open/close
+                if !self.isSnappedToBottom {
+                    withAnimation(.spring()) {
+                        self.y += isOpen ? -170 : 170
+                    }
                 }
+                
             }
             .store(in: &cancellables)
     }
@@ -46,13 +54,11 @@ class HomeViewState: ObservableObject {
     var mapInitialHeight: CGFloat { appHeight * 0.3 }
 
     var mapHeight: CGFloat {
-        //        let scrollYExtra: CGFloat = self.isSnappedToBottom ? 0 : self.scrollY
-        //         - scrollYExtra
         return min(mapMaxHeight, max(mapInitialHeight + y, mapMinHeight))
     }
 
 
-    var snapToBottomAt: CGFloat { appHeight * 0.2 }
+    var snapToBottomAt: CGFloat { appHeight * 0.23 }
     var snappedToBottomMapHeight: CGFloat { appHeight - 200 }
     var isSnappedToBottom: Bool { y > snapToBottomAt }
     var wasSnappedToBottom = false
@@ -177,9 +183,8 @@ class HomeViewState: ObservableObject {
     func snapToTop() {
         log.info()
         if !isSnappedToTop {
-            //        self.hasMovedBar = false
+//            self.hasMovedBar = false
             withAnimation(.spring()) {
-                self.scrollY = 0
                 self.y = self.mapMinHeight - self.mapInitialHeight
             }
         }
@@ -187,7 +192,6 @@ class HomeViewState: ObservableObject {
 
     func animateTo(_ y: CGFloat) {
         log.info()
-        self.scrollY = 0
         if self.y == y {
             return
         }
@@ -198,7 +202,7 @@ class HomeViewState: ObservableObject {
 
     func resetAfterKeyboardHide() {
         log.info()
-        if !self.hasMovedBar && self.y != 0 && appStore.state.home.search == "" {
+        if !self.hasMovedBar && self.y != 0 && appStore.state.home.state.last!.search == "" {
             self.animateTo(0)
         }
     }
@@ -279,6 +283,15 @@ struct HomeMainView: View {
                                 height: Screen.height,
                                 zoom: zoom
                             )
+                            
+                            // keyboard dismiss (above map, below content)
+                            if self.keyboard.state.height > 0 {
+                                Color.black.opacity(0.2)
+                                    .transition(.opacity)
+                                    .onTapGesture {
+                                        self.keyboard.hide()
+                                }
+                            }
                         }
                         .frame(height: mapHeight)
                         .cornerRadius(20)
@@ -291,26 +304,13 @@ struct HomeMainView: View {
 
                     // everything above the map
                     ZStack {
-                        VStack {
-                            GeometryReader { geometry in
-                                VStack {
-                                    HomeMainContent(
-                                        isHorizontal: self.state.isSnappedToBottom
-                                    )
-                                    //                            .frame(height: (self.appGeometry?.size.height ?? 0) - (mapHeight - cardRowHeight) + 100)
-                                        .transition(AnyTransition.offset())
-                                    //                            .offset(y: 100 - state.scrollY)
-                                }
-                            }
-                        }
-                            .padding(.top, mapHeight)
-                            .offset(y: state.isSnappedToBottom ? -cardRowHeight : 0)
-                            // putting this animation with the above transition breaks, keeping it outside works...
-                            // for some reason this seems to slow down clicking on toggle button
-                            .animation(.spring(response: 0.3333))
+                        // main content
+                        HomeMainContent(
+                            isHorizontal: self.state.isSnappedToBottom
+                        )
 
+                        // filters
                         VStack {
-                            // filters
                             HomeMainFilters()
                                 .animation(.spring(response: 0.3333))
                             Spacer()
@@ -319,14 +319,7 @@ struct HomeMainView: View {
                         .offset(y: mapHeight + searchBarHeight / 2 + 12)
                         .opacity(isOnSearchResults ? 0 : 1)
 
-                        // keyboard dismiss
-                        if self.keyboard.state.height > 0 {
-                            Color.black.opacity(0.05)
-                                .onTapGesture {
-                                    self.keyboard.hide()
-                            }
-                        }
-
+                        // searchbar
                         VStack {
                             GeometryReader { searchBarGeometry -> HomeSearchBar in
                                 HomeSearchBarState.frame = searchBarGeometry.frame(in: .global)

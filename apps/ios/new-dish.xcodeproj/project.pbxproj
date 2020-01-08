@@ -29,6 +29,8 @@
 		AE56C86423ADB78C006A156A /* HomeSearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56C86323ADB78C006A156A /* HomeSearchResults.swift */; };
 		AE56C86623ADD977006A156A /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56C86523ADD977006A156A /* TagView.swift */; };
 		AE6A9C0F23C45FA800003059 /* GooglePlaces.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A9C0E23C45FA800003059 /* GooglePlaces.swift */; };
+		AE6A9C1123C5265C00003059 /* GooglePlaceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A9C1023C5265C00003059 /* GooglePlaceItem.swift */; };
+		AE6A9C1323C52B0A00003059 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A9C1223C52B0A00003059 /* LocationManager.swift */; };
 		AE6CECCD23A843E600B08870 /* BottomNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6CECCC23A843E600B08870 /* BottomNav.swift */; };
 		AE7563B423A035E70094022B /* HomeMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B323A035E70094022B /* HomeMainView.swift */; };
 		AE7563B823A036500094022B /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B723A036500094022B /* Screen.swift */; };
@@ -56,7 +58,7 @@
 		AE861A7923A0651D004096BF /* Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7823A0651D004096BF /* Keyboard.swift */; };
 		AE861A7B23A06EDC004096BF /* BarArrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7A23A06EDC004096BF /* BarArrow.swift */; };
 		AE861A7F23A07D81004096BF /* DishMapControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7E23A07D81004096BF /* DishMapControls.swift */; };
-		AE861A8123A16DA6004096BF /* TopNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8023A16DA6004096BF /* TopNav.swift */; };
+		AE861A8123A16DA6004096BF /* TopNavView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8023A16DA6004096BF /* TopNavView.swift */; };
 		AE861A8323A171D2004096BF /* TopNavSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8223A171D2004096BF /* TopNavSearch.swift */; };
 		AE861A8523A17209004096BF /* TopNavSearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8423A17209004096BF /* TopNavSearchResults.swift */; };
 		AE861A8723A1727B004096BF /* TopNavMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8623A1727B004096BF /* TopNavMenuButton.swift */; };
@@ -73,7 +75,6 @@
 		AEAE67EC23B5A70A00B9D781 /* LocationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAE67EB23B5A70A00B9D781 /* LocationState.swift */; };
 		AEED843E23B5A8E000407266 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED843D23B5A8E000407266 /* Mocks.swift */; };
 		AEED844123B6707100407266 /* DishMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844023B6707100407266 /* DishMap.swift */; };
-		AEED844323B6712000407266 /* HomeCardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844223B6712000407266 /* HomeCardsView.swift */; };
 		AEED844523B672D000407266 /* CameraTopNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844423B672D000407266 /* CameraTopNav.swift */; };
 		AEED844823B675C300407266 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844723B675C300407266 /* CameraView.swift */; };
 		AEF6556F23B0248200E49A51 /* FilterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6556E23B0248200E49A51 /* FilterButton.swift */; };
@@ -85,7 +86,7 @@
 		AEF6557B23B042CD00E49A51 /* HomeSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */; };
 		AEF6557F23B14DBA00E49A51 /* ContextMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557E23B14DBA00E49A51 /* ContextMenuView.swift */; };
 		AEF6558123B2205F00E49A51 /* HomeMainContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6558023B2205F00E49A51 /* HomeMainContent.swift */; };
-		AEF6558423B59BC000E49A51 /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6558323B59BC000E49A51 /* HomeStore.swift */; };
+		AEF6558423B59BC000E49A51 /* HomeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6558323B59BC000E49A51 /* HomeState.swift */; };
 		C7BDB448CA7019F5B1D6545F /* Pods_new_dish.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B343F398A6E8C95D41FD1804 /* Pods_new_dish.framework */; };
 /* End PBXBuildFile section */
 
@@ -116,6 +117,8 @@
 		AE56C86323ADB78C006A156A /* HomeSearchResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchResults.swift; sourceTree = "<group>"; };
 		AE56C86523ADD977006A156A /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
 		AE6A9C0E23C45FA800003059 /* GooglePlaces.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GooglePlaces.swift; sourceTree = "<group>"; };
+		AE6A9C1023C5265C00003059 /* GooglePlaceItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GooglePlaceItem.swift; sourceTree = "<group>"; };
+		AE6A9C1223C52B0A00003059 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		AE6CECCC23A843E600B08870 /* BottomNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomNav.swift; sourceTree = "<group>"; };
 		AE7563B323A035E70094022B /* HomeMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainView.swift; sourceTree = "<group>"; };
 		AE7563B723A036500094022B /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
@@ -143,7 +146,7 @@
 		AE861A7823A0651D004096BF /* Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyboard.swift; sourceTree = "<group>"; };
 		AE861A7A23A06EDC004096BF /* BarArrow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarArrow.swift; sourceTree = "<group>"; };
 		AE861A7E23A07D81004096BF /* DishMapControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishMapControls.swift; sourceTree = "<group>"; };
-		AE861A8023A16DA6004096BF /* TopNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNav.swift; sourceTree = "<group>"; };
+		AE861A8023A16DA6004096BF /* TopNavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavView.swift; sourceTree = "<group>"; };
 		AE861A8223A171D2004096BF /* TopNavSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavSearch.swift; sourceTree = "<group>"; };
 		AE861A8423A17209004096BF /* TopNavSearchResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavSearchResults.swift; sourceTree = "<group>"; };
 		AE861A8623A1727B004096BF /* TopNavMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavMenuButton.swift; sourceTree = "<group>"; };
@@ -160,7 +163,6 @@
 		AEAE67EB23B5A70A00B9D781 /* LocationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationState.swift; sourceTree = "<group>"; };
 		AEED843D23B5A8E000407266 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Mocks.swift; path = "/Users/nw/dish/apps/ios/new-dish/Store/Mocks.swift"; sourceTree = "<absolute>"; };
 		AEED844023B6707100407266 /* DishMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishMap.swift; sourceTree = "<group>"; };
-		AEED844223B6712000407266 /* HomeCardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCardsView.swift; sourceTree = "<group>"; };
 		AEED844423B672D000407266 /* CameraTopNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraTopNav.swift; sourceTree = "<group>"; };
 		AEED844723B675C300407266 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		AEF6556E23B0248200E49A51 /* FilterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButton.swift; sourceTree = "<group>"; };
@@ -172,7 +174,7 @@
 		AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchBar.swift; sourceTree = "<group>"; };
 		AEF6557E23B14DBA00E49A51 /* ContextMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuView.swift; sourceTree = "<group>"; };
 		AEF6558023B2205F00E49A51 /* HomeMainContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainContent.swift; sourceTree = "<group>"; };
-		AEF6558323B59BC000E49A51 /* HomeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeStore.swift; sourceTree = "<group>"; };
+		AEF6558323B59BC000E49A51 /* HomeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeState.swift; sourceTree = "<group>"; };
 		B343F398A6E8C95D41FD1804 /* Pods_new_dish.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_new_dish.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -256,8 +258,10 @@
 				AEF6557823B041F600E49A51 /* DishItem.swift */,
 				AE861A7823A0651D004096BF /* Keyboard.swift */,
 				AE6A9C0E23C45FA800003059 /* GooglePlaces.swift */,
+				AE6A9C1023C5265C00003059 /* GooglePlaceItem.swift */,
 				AEF6557323B0407000E49A51 /* ImageStore.swift */,
 				AEA87E4823B9923B009F07DB /* InputEvents.swift */,
+				AE6A9C1223C52B0A00003059 /* LocationManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -306,7 +310,6 @@
 				AE7563B323A035E70094022B /* HomeMainView.swift */,
 				AEA87E4223B976EB009F07DB /* HomeMainFilters.swift */,
 				AEF6558023B2205F00E49A51 /* HomeMainContent.swift */,
-				AEED844223B6712000407266 /* HomeCardsView.swift */,
 				AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */,
 				AE56C86323ADB78C006A156A /* HomeSearchResults.swift */,
 				AE0F474723B6AA39008F7418 /* HomeDragLock.swift */,
@@ -333,7 +336,7 @@
 		AE2B6BA023AAD67E007BCD25 /* TopNav */ = {
 			isa = PBXGroup;
 			children = (
-				AE861A8023A16DA6004096BF /* TopNav.swift */,
+				AE861A8023A16DA6004096BF /* TopNavView.swift */,
 				AE861A8623A1727B004096BF /* TopNavMenuButton.swift */,
 				AE861A8423A17209004096BF /* TopNavSearchResults.swift */,
 				AE861A8223A171D2004096BF /* TopNavSearch.swift */,
@@ -398,7 +401,7 @@
 			isa = PBXGroup;
 			children = (
 				1CE3548223986C5C004B3A84 /* App.swift */,
-				AEF6558323B59BC000E49A51 /* HomeStore.swift */,
+				AEF6558323B59BC000E49A51 /* HomeState.swift */,
 				AEAE67EB23B5A70A00B9D781 /* LocationState.swift */,
 				AEED843D23B5A8E000407266 /* Mocks.swift */,
 				1CE3547E23986B88004B3A84 /* Store.swift */,
@@ -574,8 +577,8 @@
 				AE2B6BA423AC211F007BCD25 /* VerticalCardPager.swift in Sources */,
 				1CE3546523986B1B004B3A84 /* AppDelegate.swift in Sources */,
 				1CE3548A239871CB004B3A84 /* BottomSheetView.swift in Sources */,
+				AE6A9C1323C52B0A00003059 /* LocationManager.swift in Sources */,
 				AEED844123B6707100407266 /* DishMap.swift in Sources */,
-				AEED844323B6712000407266 /* HomeCardsView.swift in Sources */,
 				1C3CFE6423998FF2004B2EEA /* HomeContainerView.swift in Sources */,
 				AE0F474423B69276008F7418 /* DishCamera.swift in Sources */,
 				AE861A7F23A07D81004096BF /* DishMapControls.swift in Sources */,
@@ -596,8 +599,9 @@
 				AEF6556F23B0248200E49A51 /* FilterButton.swift in Sources */,
 				AEAE67EC23B5A70A00B9D781 /* LocationState.swift in Sources */,
 				AE861A7923A0651D004096BF /* Keyboard.swift in Sources */,
-				AE861A8123A16DA6004096BF /* TopNav.swift in Sources */,
-				AEF6558423B59BC000E49A51 /* HomeStore.swift in Sources */,
+				AE861A8123A16DA6004096BF /* TopNavView.swift in Sources */,
+				AEF6558423B59BC000E49A51 /* HomeState.swift in Sources */,
+				AE6A9C1123C5265C00003059 /* GooglePlaceItem.swift in Sources */,
 				AE861A8923A172E8004096BF /* BlurView.swift in Sources */,
 				AEF6557F23B14DBA00E49A51 /* ContextMenuView.swift in Sources */,
 				AE861A8723A1727B004096BF /* TopNavMenuButton.swift in Sources */,

@@ -19,11 +19,29 @@ class RestaurantItem: Codable, Identifiable, ObservableObject {
     
     var id: Int
     var name: String
-    fileprivate var imageName: String
+    var imageName: String
     var address: String
     var phone: String
     var tags: [String]
     var rating: Double
+    
+    init(
+        id: Int,
+        name: String,
+        imageName: String,
+        address: String,
+        phone: String,
+        tags: [String],
+        rating: Double
+    ) {
+        self.id = id
+        self.name = name
+        self.imageName = imageName
+        self.address = address
+        self.phone = phone
+        self.tags = tags
+        self.rating = rating
+    }
     
     private enum CodingKeys: String, CodingKey {
         case id, name, imageName, address, phone, tags, rating

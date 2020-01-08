@@ -2,19 +2,30 @@ import SwiftUI
 
 struct HomeSearchResultsView: View {
     var state: HomeStateItem
-    let items = restaurants
     
     var body: some View {
-        ZStack {
+        print("HomeSearchResultsView \(state)")
+        
+        return ZStack {
             Color.black
 
             ScrollView(.vertical, showsIndicators: false) {
                 VStack {
                     // space below searchbar
-                    Spacer().frame(height: 10)
+                    Spacer().frame(height: 20)
 
-                    ForEach(items) { item in
-                        DishRestaurantCard(restaurant: item)
+                    ForEach(state.searchResults.results) { item in
+                        DishRestaurantCard(restaurant:
+                            RestaurantItem(
+                                id: 0,
+                                name: item.name,
+                                imageName: "turtlerock",
+                                address: "",
+                                phone: "",
+                                tags: [],
+                                rating: 8
+                            )
+                        )
                     }
                     
                     // space for bottom bottomnav
@@ -34,7 +45,7 @@ struct DishRestaurantCard: View {
             restaurant.image
                 .resizable()
                 .aspectRatio(2 / 2.25, contentMode: .fit)
-                .overlay(RestaurantText(name: "Miss Siagon"))
+                .overlay(RestaurantText(name: restaurant.name))
                 .cornerRadius(16)
             
             // left right pagination

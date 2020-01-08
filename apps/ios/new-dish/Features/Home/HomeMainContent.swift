@@ -1,5 +1,8 @@
 import SwiftUI
 
+fileprivate let filterBarHeight: CGFloat = 55
+fileprivate let bottomNavHeight: CGFloat = 115
+
 struct HomeMainContent: View {
     let isHorizontal: Bool
     @EnvironmentObject var store: AppStore
@@ -7,18 +10,17 @@ struct HomeMainContent: View {
     
     var body: some View {
         let isOnSearchResults = Selectors.home.isOnSearchResults()
-        
+
         return GeometryReader { geometry in
             ZStack {
-                // home
-                HomeCardsView(isHorizontal: self.isHorizontal)
+                HomeMainContentContent(isHorizontal: self.isHorizontal)
                 
                 // pages as you drill in below home
                 if isOnSearchResults {
-                    VStack {
-                        ForEach(1 ..< self.store.state.home.current.count) { index in
+                    ZStack {
+                        ForEach(self.store.state.home.state) { state in
                             HomeSearchResultsView(
-                                state: self.store.state.home.current[index]
+                                state: state
                             )
                                 .offset(
                                     x: self.dragX,
@@ -50,5 +52,152 @@ struct HomeMainContent: View {
             }
             .clipped()
         }
+    }
+}
+
+struct HomeMainContentContent: View {
+    let isHorizontal: Bool
+    @EnvironmentObject var homeState: HomeViewState
+    
+    var body: some View {
+        ZStack {
+            VStack {
+                HomeCardsRow()
+                Spacer()
+            }
+                .offset(y: max(100, homeState.mapHeight - cardRowHeight - 20))
+                .opacity(self.isHorizontal ? 1 : 0)
+                .disabled(self.isHorizontal ? false : true)
+            
+            HomeCardsGrid()
+                .opacity(self.isHorizontal ? 0 : 1)
+                .disabled(self.isHorizontal ? true : false)
+        }
+    }
+}
+
+struct HomeCardsGrid: View {
+    @EnvironmentObject var store: AppStore
+    @EnvironmentObject var homeState: HomeViewState
+    @Environment(\.geometry) var appGeometry
+    
+    @State var initY: CGFloat = 0
+
+    let items = features.chunked(into: 2)
+    let spacing: CGFloat = 10
+    
+    var body: some View {
+        return VStack {
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 0) {
+                    ScrollListener(onScroll: { frame in
+                        if self.initY == 0 {
+                            DispatchQueue.main.async {
+                                self.initY = frame.minY
+                            }
+                        }
+                        if HomeDragLock.state == .idle {
+                            let scrollY = frame.minY
+                            let y = self.initY - scrollY
+                            self.homeState.setScrollY(y)
+                        }
+                    })
+                    Spacer().frame(height: filterBarHeight + 18)
+                    self.content
+                    Spacer().frame(height: bottomNavHeight)
+                    Spacer().frame(height: homeState.mapHeight)
+                }
+            }
+            .offset(y: homeState.mapHeight)
+            .animation(.spring())
+            .mask(self.mask.offset(y: homeState.mapHeight))
+        }
+    }
+    
+    var mask: some View {
+        LinearGradient(
+            gradient: .init(colors: [
+                Color.white.opacity(0),
+                Color.white.opacity(0),
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black
+            ]),
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    }
+    
+    var content: some View {
+        let width = (self.appGeometry?.size.width ?? Screen.width) / 2 - self.spacing * 2
+        print("card width \(width)")
+        return VStack(spacing: self.spacing) {
+            ForEach(0 ..< self.items.count) { index in
+                HStack(spacing: self.spacing) {
+                    ForEach(self.items[index]) { item in
+                        DishGridCard(dish: item)
+                            .frame(width: width)
+                            .onTapGesture {
+                                print("tap on item")
+                                self.store.send(
+                                    .home(
+                                        .push(HomeStateItem(filters: [SearchFilter(name: item.name)]))
+                                    )
+                                )
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+}
+
+struct DishGridCard: View {
+    var dish: DishItem
+    var body: some View {
+        FeatureCard(dish: dish, aspectRatio: 1.4, at: .start)
+            .cornerRadius(14)
+    }
+}
+
+struct HomeCardsRow: View {
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack {
+                ForEach(features) { item in
+                    DishRowCard(dish: item)
+                        .frame(width: 160, height: cardRowHeight - 40)
+                        .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
+                }
+                Spacer().frame(height: bottomNavHeight)
+            }
+            .padding(.horizontal)
+        }
+        .frame(width: Screen.width)
+    }
+}
+
+struct DishRowCard: View {
+    var dish: DishItem
+    var body: some View {
+        FeatureCard(dish: dish, aspectRatio: 1.8)
+            .cornerRadius(14)
     }
 }

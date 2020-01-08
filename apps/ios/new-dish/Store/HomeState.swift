@@ -5,9 +5,8 @@ import GoogleMaps
 extension AppState {
     struct HomeState: Equatable {
         var view: HomePageView = .home
-        var current: [HomeStateItem] = [HomeStateItem()]
+        var state: [HomeStateItem] = [HomeStateItem()]
         var showDrawer: Bool = false
-        var search: String = ""
     }
 }
 
@@ -25,15 +24,36 @@ enum HomeAction {
 var lastSearch = AnyCancellable {}
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
+    
+    // use this to ensure you update HomeStateItems correctly
+    func updateItem(_ next: HomeStateItem) {
+        if let index = state.home.state.firstIndex(where: { $0.id == next.id }) {
+            var item = next
+            item.id = uid()
+            state.home.state[index] = item
+        }
+    }
+    
     switch action {
         case let .setSearchResults(val):
-            var last = state.home.current.last!
+            var last = state.home.state.last!
             last.searchResults = val
-            state.home.current = state.home.current.dropLast()
-            state.home.current.append(last)
+            updateItem(last)
         case let .setSearch(val):
-            state.home.search = val
+            var last = state.home.state.last!
             
+            // TODO if filter/category exists (like Pho), move it to tags not search
+            
+            // push into search results
+            if last.search == "" {
+                state.home.state.append(
+                    HomeStateItem(search: val)
+                )
+            } else {
+                last.search = val
+                updateItem(last)
+            }
+
             lastSearch.cancel()
             var cancelled = false
             lastSearch = AnyCancellable { cancelled = true }
@@ -42,18 +62,20 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
                     // SEARCH
                     googlePlaces.searchPlaces(val, completion: { places in
                         print("PLACES ok got \(places.count)")
-                        appStore.send(.home(.setSearchResults(
-                            HomeSearchResults(
-                                id: "0",
-                                results: places.map { place in
-                                    HomeSearchResultItem(
-                                        id: place.name,
-                                        name: place.name, //place.attributedPrimaryText,
-                                        coords: place.coordinate
-                                    )
-                                }
-                            )
-                        )))
+                        DispatchQueue.main.async {
+                            appStore.send(.home(.setSearchResults(
+                                HomeSearchResults(
+                                    id: "0",
+                                    results: places.map { place in
+                                        HomeSearchResultItem(
+                                            id: place.name,
+                                            name: place.name, //place.attributedPrimaryText,
+                                            place: place
+                                        )
+                                    }
+                                )
+                            )))
+                        }
                     })
                 }
             }
@@ -65,24 +87,24 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
         case .toggleDrawer:
             state.home.showDrawer = !state.home.showDrawer
         case let .push(homeState):
-            state.home.current.append(homeState)
+            state.home.state.append(homeState)
         case .pop:
-            state.home.current = state.home.current.dropLast()
+            state.home.state = state.home.state.dropLast()
         case let .setCurrentTags(val):
-            var last = state.home.current.last!
+            var last = state.home.state.last!
             last.filters = val.map { SearchFilter(name: $0.text) }
-            state.home.current = state.home.current.dropLast()
-            state.home.current.append(last)
+            updateItem(last)
     }
 }
 
 struct HomeSelectors {
     func isOnSearchResults(_ state: AppState = appStore.state) -> Bool {
-        state.home.current.last!.filters.contains { $0.type == .cuisine }
+        let cur = state.home.state.last!
+        return cur.search != "" || cur.filters.contains { $0.type == .cuisine }
     }
     
     func tags(_ state: AppState = appStore.state) -> [SearchInputTag] {
-        let homeState = state.home.current.last!
+        let homeState = state.home.state.last!
         var tags: [SearchInputTag] = []
         if homeState.filters.count > 0 {
             tags = homeState.filters.map { filter in
@@ -106,7 +128,7 @@ enum HomePageView {
 struct HomeSearchResultItem: Identifiable {
     var id: String
     var name: String
-    var coords: CLLocationCoordinate2D? = nil
+    var place: GooglePlaceItem
 }
 
 struct HomeSearchResults: Equatable {
@@ -120,7 +142,12 @@ struct HomeSearchResults: Equatable {
     var results: [HomeSearchResultItem] = []
 }
 
-struct HomeStateItem: Equatable {
+func uid() -> String {
+    "\(Int.random(in: 1..<100000000))"
+}
+
+struct HomeStateItem: Identifiable, Equatable {
+    var id = uid()
     var search = ""
     var filters: [SearchFilter] = []
     var searchResults: HomeSearchResults = HomeSearchResults(id: "0")

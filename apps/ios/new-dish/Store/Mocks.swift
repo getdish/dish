@@ -2,7 +2,7 @@ class Mocks {
     static let homeSearchedPho = Store<AppState, AppAction>.init(
         initialState: AppState(
             home: AppState.HomeState(
-                current: [HomeStateItem(), HomeStateItem(filters: [SearchFilter(name: "Pho")])]
+                state: [HomeStateItem(), HomeStateItem(filters: [SearchFilter(name: "Pho")])]
             )
         ),
         reducer: appReducer

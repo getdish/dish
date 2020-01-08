@@ -26,7 +26,7 @@ struct HomeMainFilters: View {
 
                     FilterButton(label: "American", action: {
                         // todo move this into action
-                        let curState = self.store.state.home.current.last!
+                        let curState = self.store.state.home.state.last!
                         let filters = curState.filters.filter({ $0.type == .cuisine }) + [
                             SearchFilter(type: .cuisine, name: "American")
                         ]
