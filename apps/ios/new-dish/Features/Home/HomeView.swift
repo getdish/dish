@@ -55,6 +55,7 @@ struct HomeViewContent: View {
                         .cornerRadius(80)
             }
             .onChangePage { index in
+                print("change page to index \(index)")
                 let view = homeViewsIndex[index]
                 self.disableDragging = view == .home
                 self.store.send(.home(.setView(view)))

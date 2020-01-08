@@ -26,6 +26,7 @@ struct PagerView<Content: View>: View {
     ) {
         self.pageCount = pageCount
         self.pagerStore = pagerStore
+        pagerStore.numPages = pageCount
         self.disableDragging = disableDragging
         self.pageTurnArrows = pageTurnArrows
         self.content = content()
@@ -152,18 +153,23 @@ class PagerStore: ObservableObject {
     }
     
     func onDragEnd(_ value: DragGesture.Value) {
-        print("drag end")
         if !isGestureActive {
             self.offset = CGFloat(self.index) * -self.width
         }
         self.isGestureActive = true
         let end = value.predictedEndTranslation.width
+        
+        // swipe to right
         if -end >= width / 4 {
             self.index = min(round(self.index + 1), Double(numPages - 1))
         }
-        if -end < width / 4 {
+        // swipe to left
+        if end >= width / 4 {
             self.index = max(0, round(self.index - 1))
         }
+        
+        print("drag end to index \(end) \(index)")
+        
         // try and match speed roughly to their drag speed
         let speed = min(1, abs(end / Screen.width))
         let springResponse = Double(max(0.15, min(0.85, 1 - speed)))
