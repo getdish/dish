@@ -12,7 +12,7 @@ fileprivate let resistanceYBeforeSnap: CGFloat = 55
 // then on idle we can apply .spring()
 
 class HomeViewState: ObservableObject {
-    @Published var appHeight: CGFloat = 0
+    @Published var appHeight: CGFloat = Screen.height
     @Published var scrollY: CGFloat = 0
     @Published var y: CGFloat = 0
     @Published var searchBarYExtra: CGFloat = 0
@@ -54,7 +54,7 @@ class HomeViewState: ObservableObject {
     var mapInitialHeight: CGFloat { appHeight * 0.3 }
 
     var mapHeight: CGFloat {
-        min(mapMaxHeight, max(mapInitialHeight + y, mapMinHeight))
+        return min(mapMaxHeight, max(mapInitialHeight + y, mapMinHeight))
     }
 
 
@@ -154,7 +154,7 @@ class HomeViewState: ObservableObject {
         HomeDragLock.setLock(.off)
         self.animateCards()
         withAnimation(.spring()) {
-//            self.scrollY = 0
+            self.scrollY = 0
             self.searchBarYExtra = 0
             if toBottom {
                 self.y = snappedToBottomMapHeight - mapInitialHeight
@@ -304,16 +304,10 @@ struct HomeMainView: View {
 
                     // everything above the map
                     ZStack {
-                        
                         // main content
                         HomeMainContent(
                             isHorizontal: self.state.isSnappedToBottom
                         )
-                            .offset(y: state.isSnappedToBottom ? -cardRowHeight : 0)
-                            .transition(.slide)
-                            // putting this animation with the above transition breaks, keeping it outside works...
-                            // for some reason this seems to slow down clicking on toggle button
-//                            .animation(.spring(response: 0.3333))
 
                         // filters
                         VStack {
