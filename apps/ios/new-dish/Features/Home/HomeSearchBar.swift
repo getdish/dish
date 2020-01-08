@@ -63,9 +63,11 @@ struct HomeSearchBar: View {
             Button(action: {
                 self.homeState.toggleMap()
             }) {
-                Image(systemName: self.homeState.isSnappedToBottom
+                Image(systemName: self.homeState.isSnappedToTop ?
+                    "chevron.down" :
+                    self.homeState.isSnappedToBottom
                     ? "chevron.up"
-                    : "chevron.down"
+                    : "chevron.up.chevron.down"
                 )
                     .resizable()
                     .scaledToFit()

@@ -33,7 +33,7 @@ class HomeViewState: ObservableObject {
         self.keyboard.$state
             .map { $0.height }
             .sink { value in
-                if self.mapHeight > 300 {                
+                if self.mapHeight > 300 {
                     print("keyboards now \(value)")
                     withAnimation(.spring()) {
                         self.y += value > 0 ? -270 : 270
@@ -284,7 +284,7 @@ struct HomeMainView: View {
                             
                             // keyboard dismiss (above map, below content)
                             if self.keyboard.state.height > 0 {
-                                Color.black.opacity(0.1)
+                                Color.black.opacity(0.2)
                                     .transition(.opacity)
                                     .onTapGesture {
                                         self.keyboard.hide()
