@@ -39,6 +39,11 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
             var last = state.home.state.last!
             last.searchResults = val
             updateItem(last)
+        case let .setCurrentTags(val):
+            var last = state.home.state.last!
+            last.search = val.last?.text ?? last.search
+            last.filters = val.map { SearchFilter(name: $0.text) }
+            updateItem(last)
         case let .setSearch(val):
             var last = state.home.state.last!
             
@@ -90,10 +95,6 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
             state.home.state.append(homeState)
         case .pop:
             state.home.state = state.home.state.dropLast()
-        case let .setCurrentTags(val):
-            var last = state.home.state.last!
-            last.filters = val.map { SearchFilter(name: $0.text) }
-            updateItem(last)
     }
 }
 

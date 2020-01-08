@@ -6,51 +6,65 @@ fileprivate let bottomNavHeight: CGFloat = 115
 struct HomeMainContent: View {
     let isHorizontal: Bool
     @EnvironmentObject var store: AppStore
+    
+    var body: some View {
+        let isOnSearchResults = Selectors.home.isOnSearchResults()
+        
+        return ZStack {
+            HomeMainContentContent(isHorizontal: self.isHorizontal)
+            
+            // pages as you drill in below home
+            if isOnSearchResults {
+                HomeMainContentSearchResults()
+            }
+        }
+        .clipped()
+    }
+}
+
+struct HomeMainContentSearchResults: View {
+    @EnvironmentObject var store: AppStore
+    @EnvironmentObject var homeState: HomeViewState
     @State var dragX: CGFloat = 0
     
     var body: some View {
         let isOnSearchResults = Selectors.home.isOnSearchResults()
-
+        
         return GeometryReader { geometry in
             ZStack {
-                HomeMainContentContent(isHorizontal: self.isHorizontal)
-                
-                // pages as you drill in below home
-                if isOnSearchResults {
-                    ZStack {
-                        ForEach(self.store.state.home.state) { state in
-                            HomeSearchResultsView(
-                                state: state
-                            )
-                                .offset(
-                                    x: self.dragX,
-                                    y: isOnSearchResults ? 0 : 100
-                            )
-                                .opacity(isOnSearchResults ? 1 : 0)
-                        }
-                        .gesture(
-                            DragGesture()
-                                .onChanged { value in
-                                    // right edge
-                                    if value.startLocation.x < 10 {
-                                        self.dragX = value.translation.width
-                                    }
-                            }
-                            .onEnded { value in
-                                let frameWidth = geometry.size.width
-                                let offset = value.translation.width / frameWidth
-                                let offsetV = value.predictedEndTranslation.width / frameWidth
-                                let score = abs(offset * 0.4 + offsetV * 0.6)
-                                let shouldChange = score > 0.2
-                                withAnimation(.spring()) {
-                                    self.dragX = shouldChange ? frameWidth : 0
-                                }
-                            }
+                ForEach(self.store.state.home.state) { state in
+                    VStack {
+                        HomeSearchResultsView(
+                            state: state
                         )
+                            .offset(
+                                x: self.dragX,
+                                y: isOnSearchResults ? 0 : 100
+                        )
+                            .opacity(isOnSearchResults ? 1 : 0)
                     }
+                    .offset(y: self.homeState.mapHeight)
                 }
+                .gesture(
+                    DragGesture()
+                        .onChanged { value in
+                            // right edge
+                            if value.startLocation.x < 10 {
+                                self.dragX = value.translation.width
+                            }
+                    }
+                    .onEnded { value in
+                        let frameWidth = geometry.size.width
+                        let offset = value.translation.width / frameWidth
+                        let offsetV = value.predictedEndTranslation.width / frameWidth
+                        let score = abs(offset * 0.4 + offsetV * 0.6)
+                        let shouldChange = score > 0.2
+                        withAnimation(.spring()) {
+                            self.dragX = shouldChange ? frameWidth : 0
+                        }
+                    }
+                )
             }
-            .clipped()
         }
     }
 }
@@ -65,9 +79,9 @@ struct HomeMainContentContent: View {
                 HomeCardsRow()
                 Spacer()
             }
-                .offset(y: max(100, homeState.mapHeight - cardRowHeight - 20))
-                .opacity(self.isHorizontal ? 1 : 0)
-                .disabled(self.isHorizontal ? false : true)
+            .offset(y: max(100, homeState.mapHeight - cardRowHeight - 20))
+            .opacity(self.isHorizontal ? 1 : 0)
+            .disabled(self.isHorizontal ? false : true)
             
             HomeCardsGrid()
                 .opacity(self.isHorizontal ? 0 : 1)
@@ -82,7 +96,7 @@ struct HomeCardsGrid: View {
     @Environment(\.geometry) var appGeometry
     
     @State var initY: CGFloat = 0
-
+    
     let items = features.chunked(into: 2)
     let spacing: CGFloat = 10
     
