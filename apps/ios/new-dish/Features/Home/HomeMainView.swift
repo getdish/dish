@@ -17,7 +17,7 @@ class HomeViewState: ObservableObject {
     @Published var y: CGFloat = 0
     @Published var searchBarYExtra: CGFloat = 0
     @Published var hasMovedBar = false
-    @Published var animate = false
+    @Published var shouldAnimateCards = false
 
     // keyboard
     @Published var keyboardHeight: CGFloat = 0
@@ -64,6 +64,11 @@ class HomeViewState: ObservableObject {
     var wasSnappedToBottom = false
 
     var aboutToSnapToBottomAt: CGFloat { snapToBottomAt - resistanceYBeforeSnap }
+    
+    var isAboutToSnap: Bool {
+        if y > aboutToSnapToBottomAt { return true }
+        return false
+    }
 
     func toggleMap() {
         log.info()
@@ -338,7 +343,6 @@ struct HomeMainView: View {
                         // everything below map is always dark
                         .environment(\.colorScheme, .dark)
                 }
-                .clipped()
                 .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
                 .simultaneousGesture(
                     DragGesture(minimumDistance: 10)

@@ -9,6 +9,7 @@ struct DishMapView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var store: AppStore
+    @EnvironmentObject var homeState: HomeViewState
     
     var body: some View {
         return MapView(
@@ -16,6 +17,7 @@ struct DishMapView: View {
             height: height,
             zoom: zoom,
             darkMode: self.colorScheme == .dark,
+            animate: true || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
             location: store.state.location.isOnCurrent ? .current : .uncontrolled,
             locations: store.state.home.state.last!.searchResults.results.map { $0.place }
         )
