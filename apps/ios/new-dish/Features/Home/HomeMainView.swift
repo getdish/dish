@@ -33,9 +33,11 @@ class HomeViewState: ObservableObject {
         self.keyboard.$state
             .map { $0.height }
             .sink { value in
-                print("keyboards now \(value)")
-                withAnimation(.spring()) {
-                    self.y += value > 0 ? -270 : 270
+                if mapHeight > 300 {                
+                    print("keyboards now \(value)")
+                    withAnimation(.spring()) {
+                        self.y += value > 0 ? -270 : 270
+                    }
                 }
             }
             .store(in: &cancellables)
@@ -279,6 +281,15 @@ struct HomeMainView: View {
                                 height: Screen.height,
                                 zoom: zoom
                             )
+                            
+                            // keyboard dismiss (above map, below content)
+                            if self.keyboard.state.height > 0 {
+                                Color.black.opacity(0.1)
+                                    .transition(.opacity)
+                                    .onTapGesture {
+                                        self.keyboard.hide()
+                                }
+                            }
                         }
                         .frame(height: mapHeight)
                         .cornerRadius(20)
@@ -291,6 +302,8 @@ struct HomeMainView: View {
 
                     // everything above the map
                     ZStack {
+                        
+                        // main content
                         VStack {
                             GeometryReader { geometry in
                                 VStack {
@@ -309,8 +322,8 @@ struct HomeMainView: View {
                             // for some reason this seems to slow down clicking on toggle button
                             .animation(.spring(response: 0.3333))
 
+                        // filters
                         VStack {
-                            // filters
                             HomeMainFilters()
                                 .animation(.spring(response: 0.3333))
                             Spacer()
@@ -319,14 +332,7 @@ struct HomeMainView: View {
                         .offset(y: mapHeight + searchBarHeight / 2 + 12)
                         .opacity(isOnSearchResults ? 0 : 1)
 
-                        // keyboard dismiss
-                        if self.keyboard.state.height > 0 {
-                            Color.black.opacity(0.05)
-                                .onTapGesture {
-                                    self.keyboard.hide()
-                            }
-                        }
-
+                        // searchbar
                         VStack {
                             GeometryReader { searchBarGeometry -> HomeSearchBar in
                                 HomeSearchBarState.frame = searchBarGeometry.frame(in: .global)
