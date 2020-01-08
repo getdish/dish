@@ -18,7 +18,6 @@ struct HomeMainContent: View {
                 HomeMainContentSearchResults()
             }
         }
-        .clipped()
     }
 }
 
@@ -79,7 +78,7 @@ struct HomeMainContentContent: View {
                 HomeCardsRow()
                 Spacer()
             }
-            .offset(y: max(100, homeState.mapHeight - cardRowHeight - 20))
+            .offset(y: max(100, homeState.mapHeight - cardRowHeight - 12))
             .opacity(self.isHorizontal ? 1 : 0)
             .disabled(self.isHorizontal ? false : true)
             
@@ -197,7 +196,7 @@ struct HomeCardsRow: View {
             HStack {
                 ForEach(features) { item in
                     DishRowCard(dish: item)
-                        .frame(width: 160, height: cardRowHeight - 40)
+                        .frame(width: 160, height: cardRowHeight)
                         .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
                 }
                 Spacer().frame(height: bottomNavHeight)
