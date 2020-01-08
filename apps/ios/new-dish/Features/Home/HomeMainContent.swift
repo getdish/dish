@@ -13,13 +13,7 @@ struct HomeMainContent: View {
 
         return GeometryReader { geometry in
             ZStack {
-                Group {
-                    if self.isHorizontal {
-                        HomeCardsRow()
-                    } else {
-                        HomeCardsGrid()
-                    }
-                }
+                HomeMainContentContent(isHorizontal: self.isHorizontal)
                 
                 // pages as you drill in below home
                 if isOnSearchResults {
@@ -57,6 +51,27 @@ struct HomeMainContent: View {
                 }
             }
             .clipped()
+        }
+    }
+}
+
+struct HomeMainContentContent: View {
+    let isHorizontal: Bool
+    @EnvironmentObject var homeState: HomeViewState
+    
+    var body: some View {
+        ZStack {
+            VStack {
+                HomeCardsRow()
+                Spacer()
+            }
+                .offset(y: max(100, homeState.mapHeight - cardRowHeight - 20))
+                .opacity(self.isHorizontal ? 1 : 0)
+                .disabled(self.isHorizontal ? false : true)
+            
+            HomeCardsGrid()
+                .opacity(self.isHorizontal ? 0 : 1)
+                .disabled(self.isHorizontal ? true : false)
         }
     }
 }
@@ -130,12 +145,14 @@ struct HomeCardsGrid: View {
     }
     
     var content: some View {
-        VStack(spacing: self.spacing) {
+        let width = (self.appGeometry?.size.width ?? Screen.width) / 2 - self.spacing * 2
+        print("card width \(width)")
+        return VStack(spacing: self.spacing) {
             ForEach(0 ..< self.items.count) { index in
                 HStack(spacing: self.spacing) {
                     ForEach(self.items[index]) { item in
                         DishGridCard(dish: item)
-                            .frame(width: (self.appGeometry?.size.width ?? Screen.width) / 2 - self.spacing * 2)
+                            .frame(width: width)
                             .onTapGesture {
                                 print("tap on item")
                                 self.store.send(
@@ -173,13 +190,14 @@ struct HomeCardsRow: View {
             }
             .padding(.horizontal)
         }
+        .frame(width: Screen.width)
     }
 }
 
 struct DishRowCard: View {
     var dish: DishItem
     var body: some View {
-        FeatureCard(dish: dish, aspectRatio: 1.8, at: .end)
+        FeatureCard(dish: dish, aspectRatio: 1.8)
             .cornerRadius(14)
     }
 }
