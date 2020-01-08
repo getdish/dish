@@ -16,7 +16,8 @@ struct DishMapView: View {
             height: height,
             zoom: zoom,
             darkMode: self.colorScheme == .dark,
-            location: store.state.location.isOnCurrent ? .current : .uncontrolled
+            location: store.state.location.isOnCurrent ? .current : .uncontrolled,
+            locations: store.state.home.current.last!.searchResults.results.map { $0.place }
         )
     }
 }

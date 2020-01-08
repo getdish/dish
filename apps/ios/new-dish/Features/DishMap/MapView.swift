@@ -19,6 +19,7 @@ struct MapView: UIViewControllerRepresentable {
     var zoom: CGFloat
     var darkMode: Bool?
     var location: MapLocation
+    var locations: [GooglePlaceItem] = []
     @State var controller: MapViewController? = nil
 
     func makeCoordinator() -> MapView.Coordinator {
@@ -77,8 +78,9 @@ struct MapView: UIViewControllerRepresentable {
 class MapViewController: UIViewController {
     // want to default to city level view
     var zoom: CGFloat
-    var mapView: GMSMapView!
+    var gmapView: GMSMapView!
     var currentLocation: CLLocation?
+    var locations: [GooglePlaceItem] = []
     var width: CGFloat
     var height: CGFloat
     var darkMode: Bool?
@@ -95,6 +97,19 @@ class MapViewController: UIViewController {
         if self.zoom != mapView.zoom {
             self.updateZoom(mapView.zoom)
         }
+        if self.locations != mapView.locations {
+            self.locations = mapView.locations
+            
+            self.locations.forEach { place in
+                let location = place.geometry.location
+                let position = CLLocationCoordinate2D(latitude: Double(location.lat), longitude: Double(location.lng))
+                let marker = GMSMarker(position: position)
+                marker.title = "\(place.name)"
+//                marker.iconView = markerView
+                marker.tracksViewChanges = true
+                marker.map = self.gmapView
+            }
+        }
     }
     
     func updateZoom(_ nextZoom: CGFloat) {
@@ -103,18 +118,18 @@ class MapViewController: UIViewController {
     }
     
     func moveMapToCurrentLocation() {
-        if mapView == nil { return }
-        self.mapView.isMyLocationEnabled = true
+        if gmapView == nil { return }
+        self.gmapView.isMyLocationEnabled = true
         self.updateCamera()
     }
     
     private func updateCamera() {
         if let camera = getCamera() {
-            if mapView.isHidden {
-                mapView.isHidden = false
-                mapView.camera = camera
+            if gmapView.isHidden {
+                gmapView.isHidden = false
+                gmapView.camera = camera
             } else {
-                mapView.animate(to: camera)
+                gmapView.animate(to: camera)
             }
         }
     }
@@ -156,13 +171,13 @@ class MapViewController: UIViewController {
     func loadTheme() {
         if darkMode == true {
             if let styleURL = Bundle.main.url(forResource: "GMapsThemeModest", withExtension: "json") {
-                mapView.mapStyle = try! GMSMapStyle(contentsOfFileURL: styleURL)
+                gmapView.mapStyle = try! GMSMapStyle(contentsOfFileURL: styleURL)
             } else {
                 print("WHAT THE FUCK")
             }
         } else {
             if let styleURL = Bundle.main.url(forResource: "GMapsThemeLight", withExtension: "json") {
-                mapView.mapStyle = try! GMSMapStyle(contentsOfFileURL: styleURL)
+                gmapView.mapStyle = try! GMSMapStyle(contentsOfFileURL: styleURL)
             } else {
                 print("WHAT THE FUCK")
             }
@@ -177,17 +192,17 @@ class MapViewController: UIViewController {
         // Create a GMSCameraPosition that tells the map to display the
         // coordinate -33.86,151.20 at zoom level 6.
         let camera = GMSCameraPosition.camera(withLatitude: -33.86, longitude: 151.20, zoom: 4.0)
-        mapView = GMSMapView.map(withFrame: CGRect(x: 0, y: 0, width: width, height: height), camera: camera)
+        gmapView = GMSMapView.map(withFrame: CGRect(x: 0, y: 0, width: width, height: height), camera: camera)
         
         self.loadTheme()
         
         // allows gestures to go up to parent
-        mapView.settings.consumesGesturesInView = true
+        gmapView.settings.consumesGesturesInView = true
         
         // disable mouse move
         //    mapView.settings.scrollGestures = false
         
-        self.view.addSubview(mapView)
+        self.view.addSubview(gmapView)
         
         // Creates a marker in the center of the map.
         //    let marker = GMSMarker()
@@ -207,7 +222,7 @@ extension MapViewController {
             case .denied:
                 print("User denied access to location.")
                 // Display the map using the default location.
-                mapView.isHidden = false
+                gmapView.isHidden = false
             case .notDetermined:
                 print("Location status not determined.")
             case .authorizedAlways: fallthrough
