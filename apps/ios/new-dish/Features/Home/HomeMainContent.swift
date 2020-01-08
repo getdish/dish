@@ -1,6 +1,6 @@
 import SwiftUI
 
-fileprivate let filterBarHeight: CGFloat = 38
+fileprivate let filterBarHeight: CGFloat = 55
 fileprivate let bottomNavHeight: CGFloat = 115
 
 struct HomeMainContent: View {
@@ -13,19 +13,11 @@ struct HomeMainContent: View {
 
         return GeometryReader { geometry in
             ZStack {
-                // home
-                VStack {
-                    Spacer()
-                    // bugfix two groups or it freezes on snaptobottom
-                    Group {
-                        if self.isHorizontal {
-                            HomeCardsRow()
-                        }
-                    }
-                    Group {
-                        if !self.isHorizontal {
-                            HomeCardsGrid()
-                        }
+                Group {
+                    if self.isHorizontal {
+                        HomeCardsRow()
+                    } else {
+                        HomeCardsGrid()
                     }
                 }
                 
@@ -69,13 +61,6 @@ struct HomeMainContent: View {
     }
 }
 
-struct MapViewSpacer: View {
-    @EnvironmentObject var homeState: HomeViewState
-    var body: some View {
-        Spacer().frame(height: homeState.mapHeight)
-    }
-}
-
 struct HomeCardsGrid: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
@@ -90,8 +75,6 @@ struct HomeCardsGrid: View {
         return VStack {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
-                    MapViewSpacer()
-
                     ScrollListener(onScroll: { frame in
                         if self.initY == 0 {
                             DispatchQueue.main.async {
@@ -104,13 +87,15 @@ struct HomeCardsGrid: View {
                             self.homeState.setScrollY(y)
                         }
                     })
-                    
-                    Spacer().frame(height: filterBarHeight)
+                    Spacer().frame(height: filterBarHeight + 18)
                     self.content
                     Spacer().frame(height: bottomNavHeight)
+                    Spacer().frame(height: homeState.mapHeight)
                 }
             }
-            .mask(self.mask.offset(y: homeState.mapHeight - filterBarHeight))
+            .offset(y: homeState.mapHeight)
+            .animation(.spring())
+            .mask(self.mask.offset(y: homeState.mapHeight))
         }
     }
     
@@ -177,18 +162,17 @@ struct DishGridCard: View {
 
 struct HomeCardsRow: View {
     var body: some View {
-        Spacer()
-//        ScrollView(.horizontal, showsIndicators: false) {
-//            HStack {
-//                ForEach(features) { item in
-//                    DishRowCard(dish: item)
-//                        .frame(width: 160, height: cardRowHeight - 40)
-//                        .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
-//                }
-//                Spacer().frame(height: bottomNavHeight)
-//            }
-//            .padding(.horizontal)
-//        }
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack {
+                ForEach(features) { item in
+                    DishRowCard(dish: item)
+                        .frame(width: 160, height: cardRowHeight - 40)
+                        .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
+                }
+                Spacer().frame(height: bottomNavHeight)
+            }
+            .padding(.horizontal)
+        }
     }
 }
 
