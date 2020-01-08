@@ -41,9 +41,11 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
             updateItem(last)
         case let .setCurrentTags(val):
             var last = state.home.state.last!
-            last.search = val.last?.text ?? last.search
             last.filters = val.map { SearchFilter(name: $0.text) }
             updateItem(last)
+            if let search = val.last?.text {
+                appStore.send(.home(.setSearch(search)))
+            }
         case let .setSearch(val):
             var last = state.home.state.last!
             
