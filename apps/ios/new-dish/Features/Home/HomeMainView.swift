@@ -6,7 +6,7 @@ let cardRowHeight: CGFloat = 140
 
 fileprivate let topNavHeight: CGFloat = 45
 fileprivate let searchBarHeight: CGFloat = 45
-fileprivate let resistanceYBeforeSnap: CGFloat = 55
+fileprivate let resistanceYBeforeSnap: CGFloat = 48
 
 // need enum animateStatus = { .will, .is, .idle }
 // then on idle we can apply .spring()
