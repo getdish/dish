@@ -15,10 +15,10 @@ struct HomeMainContent: View {
                 
                 // pages as you drill in below home
                 if isOnSearchResults {
-                    VStack {
-                        ForEach(1 ..< self.store.state.home.current.count) { index in
+                    ZStack {
+                        ForEach(self.store.state.home.current) { state in
                             HomeSearchResultsView(
-                                state: self.store.state.home.current[index]
+                                state: state
                             )
                                 .offset(
                                     x: self.dragX,

@@ -12,7 +12,7 @@ struct HomeSearchResultsView: View {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack {
                     // space below searchbar
-                    Spacer().frame(height: 10)
+                    Spacer().frame(height: 20)
 
                     ForEach(state.searchResults.results) { item in
                         DishRestaurantCard(restaurant:
@@ -45,7 +45,7 @@ struct DishRestaurantCard: View {
             restaurant.image
                 .resizable()
                 .aspectRatio(2 / 2.25, contentMode: .fit)
-                .overlay(RestaurantText(name: "Miss Siagon"))
+                .overlay(RestaurantText(name: restaurant.name))
                 .cornerRadius(16)
             
             // left right pagination

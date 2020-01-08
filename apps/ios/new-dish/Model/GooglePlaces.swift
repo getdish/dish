@@ -9,7 +9,6 @@ fileprivate let placesClient = GMSPlacesClient.shared()
 class GooglePlaces {
     private var apiKey = "AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k"
     private var currentLocation: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid
-    private var radius: Double = 100000
     private var strictBounds = true
     private var cancellables: Set<AnyCancellable> = []
     
@@ -34,58 +33,60 @@ class GooglePlaces {
             }
         .store(in: &cancellables)
         
+        // set current closest location
         placesClient.currentPlace(callback: { (placeLikelihoodList, error) -> Void in
             if let error = error {
                 print("Current Place error: \(error.localizedDescription)")
                 return
             }
             if let placeLikelihoodList = placeLikelihoodList {
-                
                 guard let nearest = placeLikelihoodList.likelihoods.first else {
                     return
                 }
                 print("closest to place \(nearest)")
                 self.currentLocation = nearest.place.coordinate
-//                $0.place
             }
         })
     }
     
-    func searchPlaces(_ search: String, completion: @escaping ([GooglePlaceItem]) -> Void) {
-        GooglePlacesRequestHelpers.getPlaces(with: getParameters(for: search), completion: completion)
+    func searchPlaces(
+        _ search: String,
+        radius: Double = 1000,
+        completion: @escaping ([GooglePlaceItem]) -> Void
+    ) {
+        GooglePlacesRequestHelpers.getPlaces(with: getParameters(for: search, radius: radius), completion: completion)
     }
     
     private let placesClient = GMSPlacesClient.shared()
     private let filter = GMSAutocompleteFilter()
     private let token = GMSAutocompleteSessionToken.init()
     
-    func getCurrentPlace() {
-        placesClient.currentPlace(callback: { (placeLikelihoodList, error) -> Void in
-            if let error = error {
-                print("Current Place error: \(error.localizedDescription)")
-                return
-            }
-            if let placeLikelihoodList = placeLikelihoodList {
-                //                self.results = placeLikelihoodList.likelihoods.map {
-                //                    MapSearchResult(
-                //                        id: $0.place.placeID!,
-                //                        name: $0.place.name!
-                //                    )
-                //                }
-            }
-        })
-    }
+//    func getCurrentPlace() {
+//        placesClient.currentPlace(callback: { (placeLikelihoodList, error) -> Void in
+//            if let error = error {
+//                print("Current Place error: \(error.localizedDescription)")
+//                return
+//            }
+//            if let placeLikelihoodList = placeLikelihoodList {
+//                //                self.results = placeLikelihoodList.likelihoods.map {
+//                //                    MapSearchResult(
+//                //                        id: $0.place.placeID!,
+//                //                        name: $0.place.name!
+//                //                    )
+//                //                }
+//            }
+//        })
+//    }
     
-    private func getParameters(for text: String) -> [String: String] {
+    private func getParameters(for text: String, radius: Double = 1000) -> [String: String] {
         if !CLLocationCoordinate2DIsValid(currentLocation) {
             print("invalid location!")
         }
         return [
-//            "input": text,
             "key": self.apiKey,
             "location": "\(self.currentLocation.latitude),\(self.currentLocation.longitude)",
             "radius": "\(Int(radius))",
-            "keyword": text
+            "query": text
         ]
     }
 }
@@ -151,13 +152,12 @@ private class GooglePlacesRequestHelpers {
         if let deviceLanguage = deviceLanguage {
             parameters["language"] = deviceLanguage
         }
-        
         doRequest(
-            "https://maps.googleapis.com/maps/api/place/nearbysearch/json",
+            "https://maps.googleapis.com/maps/api/place/textsearch/json",
             params: parameters,
             completion: {
                 guard let results = $0["results"] as? [[String: Any]] else { return }
-                print("got results \(results)")
+                print("got results \(results.count)")
                 do {
                     let res = try results.map({ dictionary in
                         return try GooglePlaceItem(dictionary: dictionary)

@@ -12,8 +12,11 @@ struct GooglePlaceItem: Identifiable, Hashable, Codable {
     var geometry: Geometry
     var icon: String
     var name: String
+    var formatted_address: String
     
-    var rating: Double = 0.0
+    var price_level: Int? = 0
+    var rating: Double? = 0.0
+    var user_ratings_total: Int? = 0
     
 //    struct OpeningHours: Codable, Hashable {
 //        var open_now: Int
@@ -31,7 +34,6 @@ struct GooglePlaceItem: Identifiable, Hashable, Codable {
     var place_id: String
     var reference: String
     var types: [String]
-    var vicinity: String
     // enum CodingKeys
     
     init(dictionary: [String: Any]) throws {

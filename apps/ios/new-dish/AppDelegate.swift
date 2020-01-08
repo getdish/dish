@@ -20,6 +20,8 @@ let appStore = Store<AppState, AppAction>.init(initialState: AppState(), reducer
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // one time setup
+        
         // SwiftUI bugfix list backgrounds transparent
         let colorTransparent = UIColor.init(displayP3Red: 0, green: 0, blue: 0, alpha: 0)
         UITableView.appearance().backgroundColor = colorTransparent
@@ -39,6 +41,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Google Maps and Places
         GMSServices.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")
         GMSPlacesClient.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")
+        
+        // initial state
+        appStore.send(.home(.setSearch("Pho")))
         
         // Override point for customization after application launch.
         return true
