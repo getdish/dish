@@ -1,6 +1,6 @@
 import SwiftUI
 
-fileprivate let filterBarHeight: CGFloat = 82
+fileprivate let filterBarHeight: CGFloat = 32
 fileprivate let bottomNavHeight: CGFloat = 115
 
 struct HomeCardsView: View {
@@ -19,7 +19,13 @@ struct HomeCardsView: View {
             self.content
             Spacer()
         }
-        .frame(minWidth: Screen.width, maxHeight: .infinity)
+    }
+}
+
+struct MapViewSpacer: View {
+    @EnvironmentObject var homeState: HomeViewState
+    var body: some View {
+        Spacer().frame(height: homeState.mapHeight)
     }
 }
 
@@ -58,6 +64,8 @@ struct HomeCardsGrid: View {
         VStack {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
+                    MapViewSpacer()
+
                     ScrollListener(onScroll: { frame in
                         if self.initY == 0 {
                             DispatchQueue.main.async {
@@ -96,11 +104,15 @@ struct HomeCardsGrid: View {
                         Color.black,
                         Color.black,
                         Color.black,
+                        Color.black,
+                        Color.black,
+                        Color.black,
                         Color.black
                     ]),
                     startPoint: .top,
                     endPoint: .bottom
                 )
+                    .offset(y: homeState.mapHeight)
             )
         }
     }

@@ -54,9 +54,7 @@ class HomeViewState: ObservableObject {
     var mapInitialHeight: CGFloat { appHeight * 0.3 }
 
     var mapHeight: CGFloat {
-        //        let scrollYExtra: CGFloat = self.isSnappedToBottom ? 0 : self.scrollY
-        //         - scrollYExtra
-        return min(mapMaxHeight, max(mapInitialHeight + y, mapMinHeight))
+        min(mapMaxHeight, max(mapInitialHeight + y, mapMinHeight))
     }
 
 
@@ -187,7 +185,6 @@ class HomeViewState: ObservableObject {
         if !isSnappedToTop {
 //            self.hasMovedBar = false
             withAnimation(.spring()) {
-                self.scrollY = 0
                 self.y = self.mapMinHeight - self.mapInitialHeight
             }
         }
@@ -309,23 +306,14 @@ struct HomeMainView: View {
                     ZStack {
                         
                         // main content
-                        VStack {
-                            GeometryReader { geometry in
-                                VStack {
-                                    HomeMainContent(
-                                        isHorizontal: self.state.isSnappedToBottom
-                                    )
-                                    //                            .frame(height: (self.appGeometry?.size.height ?? 0) - (mapHeight - cardRowHeight) + 100)
-                                        .transition(AnyTransition.offset())
-                                    //                            .offset(y: 100 - state.scrollY)
-                                }
-                            }
-                        }
-                            .padding(.top, mapHeight)
+                        HomeMainContent(
+                            isHorizontal: self.state.isSnappedToBottom
+                        )
                             .offset(y: state.isSnappedToBottom ? -cardRowHeight : 0)
+                            .transition(.slide)
                             // putting this animation with the above transition breaks, keeping it outside works...
                             // for some reason this seems to slow down clicking on toggle button
-                            .animation(.spring(response: 0.3333))
+//                            .animation(.spring(response: 0.3333))
 
                         // filters
                         VStack {
