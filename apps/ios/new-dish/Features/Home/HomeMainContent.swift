@@ -11,17 +11,17 @@ struct HomeMainContent: View {
         let isOnSearchResults = Selectors.home.isOnSearchResults()
         
         return ZStack {
-            HomeMainContentContent(isHorizontal: self.isHorizontal)
+            HomeMainContentExplore(isHorizontal: self.isHorizontal)
             
             // pages as you drill in below home
             if isOnSearchResults {
-                HomeMainContentSearchResults()
+                HomeMainContentSearchPage()
             }
         }
     }
 }
 
-struct HomeMainContentSearchResults: View {
+struct HomeMainContentSearchPage: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
     @State var dragX: CGFloat = 0
@@ -68,7 +68,7 @@ struct HomeMainContentSearchResults: View {
     }
 }
 
-struct HomeMainContentContent: View {
+struct HomeMainContentExplore: View {
     let isHorizontal: Bool
     @EnvironmentObject var homeState: HomeViewState
     
@@ -76,15 +76,16 @@ struct HomeMainContentContent: View {
         ZStack {
             Spacer()
             
-            HomeCardsRow()
-                .offset(y: max(100, homeState.mapHeight - cardRowHeight - 12))
-                .opacity(self.isHorizontal ? 1 : 0)
-                .disabled(!self.isHorizontal)
+//            HomeCardsRow()
+//                .offset(y: max(100, homeState.mapHeight - cardRowHeight - 12))
+//                .opacity(self.isHorizontal ? 1 : 0)
+//                .disabled(!self.isHorizontal)
             
             HomeCardsGrid()
                 .opacity(self.isHorizontal ? 0 : 1)
                 .disabled(self.isHorizontal)
         }
+        .edgesIgnoringSafeArea(.all)
         .clipped()
     }
 }
@@ -115,7 +116,7 @@ struct HomeCardsGrid: View {
                             self.homeState.setScrollY(y)
                         }
                     })
-                    Spacer().frame(height: filterBarHeight + 18)
+                    Spacer().frame(height: filterBarHeight + 22)
                     self.content
                     Spacer().frame(height: bottomNavHeight)
                     Spacer().frame(height: homeState.mapHeight)
@@ -123,7 +124,7 @@ struct HomeCardsGrid: View {
             }
             .offset(y: homeState.mapHeight)
             .animation(.spring())
-            .mask(self.mask.offset(y: homeState.mapHeight + filterBarHeight / 2))
+            .mask(self.mask.offset(y: homeState.mapHeight + filterBarHeight / 4))
         }
     }
     
@@ -132,6 +133,11 @@ struct HomeCardsGrid: View {
             gradient: .init(colors: [
                 Color.white.opacity(0),
                 Color.white.opacity(0),
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
+                Color.black,
                 Color.black,
                 Color.black,
                 Color.black,
