@@ -98,8 +98,8 @@ class MapViewController: UIViewController {
             self.updateZoom(mapView.zoom)
         }
         if self.locations != mapView.locations {
+            print("update locations...")
             self.locations = mapView.locations
-            
             self.locations.forEach { place in
                 let location = place.geometry.location
                 let position = CLLocationCoordinate2D(latitude: Double(location.lat), longitude: Double(location.lng))
@@ -129,7 +129,9 @@ class MapViewController: UIViewController {
                 gmapView.isHidden = false
                 gmapView.camera = camera
             } else {
-                gmapView.animate(to: camera)
+                // TODO option MapView(animateCamera: true) for snapToBottom
+                gmapView.camera = camera
+//                gmapView.animate(to: camera)
             }
         }
     }
