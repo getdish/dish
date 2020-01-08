@@ -32,13 +32,19 @@ class HomeViewState: ObservableObject {
 
         self.keyboard.$state
             .map { $0.height }
-            .sink { value in
-                if self.mapHeight > 300 {
-                    print("keyboards now \(value)")
+            .sink { height in
+                let isOpen = height > 0
+                
+                // disable top nav when keyboard open
+                appStore.send(.setDisableTopNav(isOpen))
+                
+                // map up/down on keyboard open/close
+                if !self.isSnappedToBottom {
                     withAnimation(.spring()) {
-                        self.y += value > 0 ? -270 : 270
+                        self.y += isOpen ? -170 : 170
                     }
                 }
+                
             }
             .store(in: &cancellables)
     }
@@ -179,7 +185,7 @@ class HomeViewState: ObservableObject {
     func snapToTop() {
         log.info()
         if !isSnappedToTop {
-            //        self.hasMovedBar = false
+//            self.hasMovedBar = false
             withAnimation(.spring()) {
                 self.scrollY = 0
                 self.y = self.mapMinHeight - self.mapInitialHeight
@@ -189,7 +195,6 @@ class HomeViewState: ObservableObject {
 
     func animateTo(_ y: CGFloat) {
         log.info()
-        self.scrollY = 0
         if self.y == y {
             return
         }

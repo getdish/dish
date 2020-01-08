@@ -58,7 +58,7 @@
 		AE861A7923A0651D004096BF /* Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7823A0651D004096BF /* Keyboard.swift */; };
 		AE861A7B23A06EDC004096BF /* BarArrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7A23A06EDC004096BF /* BarArrow.swift */; };
 		AE861A7F23A07D81004096BF /* DishMapControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7E23A07D81004096BF /* DishMapControls.swift */; };
-		AE861A8123A16DA6004096BF /* TopNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8023A16DA6004096BF /* TopNav.swift */; };
+		AE861A8123A16DA6004096BF /* TopNavView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8023A16DA6004096BF /* TopNavView.swift */; };
 		AE861A8323A171D2004096BF /* TopNavSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8223A171D2004096BF /* TopNavSearch.swift */; };
 		AE861A8523A17209004096BF /* TopNavSearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8423A17209004096BF /* TopNavSearchResults.swift */; };
 		AE861A8723A1727B004096BF /* TopNavMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8623A1727B004096BF /* TopNavMenuButton.swift */; };
@@ -87,7 +87,7 @@
 		AEF6557B23B042CD00E49A51 /* HomeSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */; };
 		AEF6557F23B14DBA00E49A51 /* ContextMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557E23B14DBA00E49A51 /* ContextMenuView.swift */; };
 		AEF6558123B2205F00E49A51 /* HomeMainContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6558023B2205F00E49A51 /* HomeMainContent.swift */; };
-		AEF6558423B59BC000E49A51 /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6558323B59BC000E49A51 /* HomeStore.swift */; };
+		AEF6558423B59BC000E49A51 /* HomeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6558323B59BC000E49A51 /* HomeState.swift */; };
 		C7BDB448CA7019F5B1D6545F /* Pods_new_dish.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B343F398A6E8C95D41FD1804 /* Pods_new_dish.framework */; };
 /* End PBXBuildFile section */
 
@@ -147,7 +147,7 @@
 		AE861A7823A0651D004096BF /* Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyboard.swift; sourceTree = "<group>"; };
 		AE861A7A23A06EDC004096BF /* BarArrow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarArrow.swift; sourceTree = "<group>"; };
 		AE861A7E23A07D81004096BF /* DishMapControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishMapControls.swift; sourceTree = "<group>"; };
-		AE861A8023A16DA6004096BF /* TopNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNav.swift; sourceTree = "<group>"; };
+		AE861A8023A16DA6004096BF /* TopNavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavView.swift; sourceTree = "<group>"; };
 		AE861A8223A171D2004096BF /* TopNavSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavSearch.swift; sourceTree = "<group>"; };
 		AE861A8423A17209004096BF /* TopNavSearchResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavSearchResults.swift; sourceTree = "<group>"; };
 		AE861A8623A1727B004096BF /* TopNavMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavMenuButton.swift; sourceTree = "<group>"; };
@@ -176,7 +176,7 @@
 		AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchBar.swift; sourceTree = "<group>"; };
 		AEF6557E23B14DBA00E49A51 /* ContextMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuView.swift; sourceTree = "<group>"; };
 		AEF6558023B2205F00E49A51 /* HomeMainContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainContent.swift; sourceTree = "<group>"; };
-		AEF6558323B59BC000E49A51 /* HomeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeStore.swift; sourceTree = "<group>"; };
+		AEF6558323B59BC000E49A51 /* HomeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeState.swift; sourceTree = "<group>"; };
 		B343F398A6E8C95D41FD1804 /* Pods_new_dish.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_new_dish.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -339,7 +339,7 @@
 		AE2B6BA023AAD67E007BCD25 /* TopNav */ = {
 			isa = PBXGroup;
 			children = (
-				AE861A8023A16DA6004096BF /* TopNav.swift */,
+				AE861A8023A16DA6004096BF /* TopNavView.swift */,
 				AE861A8623A1727B004096BF /* TopNavMenuButton.swift */,
 				AE861A8423A17209004096BF /* TopNavSearchResults.swift */,
 				AE861A8223A171D2004096BF /* TopNavSearch.swift */,
@@ -404,7 +404,7 @@
 			isa = PBXGroup;
 			children = (
 				1CE3548223986C5C004B3A84 /* App.swift */,
-				AEF6558323B59BC000E49A51 /* HomeStore.swift */,
+				AEF6558323B59BC000E49A51 /* HomeState.swift */,
 				AEAE67EB23B5A70A00B9D781 /* LocationState.swift */,
 				AEED843D23B5A8E000407266 /* Mocks.swift */,
 				1CE3547E23986B88004B3A84 /* Store.swift */,
@@ -603,8 +603,8 @@
 				AEF6556F23B0248200E49A51 /* FilterButton.swift in Sources */,
 				AEAE67EC23B5A70A00B9D781 /* LocationState.swift in Sources */,
 				AE861A7923A0651D004096BF /* Keyboard.swift in Sources */,
-				AE861A8123A16DA6004096BF /* TopNav.swift in Sources */,
-				AEF6558423B59BC000E49A51 /* HomeStore.swift in Sources */,
+				AE861A8123A16DA6004096BF /* TopNavView.swift in Sources */,
+				AEF6558423B59BC000E49A51 /* HomeState.swift in Sources */,
 				AE6A9C1123C5265C00003059 /* GooglePlaceItem.swift in Sources */,
 				AE861A8923A172E8004096BF /* BlurView.swift in Sources */,
 				AEF6557F23B14DBA00E49A51 /* ContextMenuView.swift in Sources */,

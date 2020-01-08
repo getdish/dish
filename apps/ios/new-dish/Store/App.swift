@@ -4,12 +4,14 @@ import Foundation
 struct AppState {
     var home = HomeState()
     var location = LocationState()
+    var disableTopNav = false
 }
 
 // action
 enum AppAction {
     case home(_ action: HomeAction)
     case location(_ action: LocationAction)
+    case setDisableTopNav(_ val: Bool)
 }
 
 // select
@@ -26,7 +28,9 @@ let appReducer = Reducer<AppState, AppAction> { state, action in
         case let .home(action):
             homeReducer(&state, action: action)
         case let .location(action):
-            locationReducer(&state, action: action)        
+            locationReducer(&state, action: action)
+        case let .setDisableTopNav(val):
+            state.disableTopNav = val
     }
 }
 

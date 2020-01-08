@@ -11,7 +11,7 @@ struct HomeView: View {
                     width: geometry.size.width,
                     height: geometry.size.height
                 )
-                TopNav()
+                TopNavView()
             }
             .background(
                 self.colorScheme == .light ? Color.white : Color.black.opacity(0.8)
