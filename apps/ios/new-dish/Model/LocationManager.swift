@@ -18,8 +18,13 @@ class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        appStore.send(.location(.setLastKnown(locations.last)))
-        self.lastLocation = locations.last
+        if let next = locations.last,
+           let last = self.lastLocation {
+            if next.distance(from: last) > 4.0 { // in meters
+                appStore.send(.location(.setLastKnown(next)))
+                self.lastLocation = next
+            }
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {

@@ -52,7 +52,8 @@ struct CameraButton: View {
 //                    )
 //                }
 //        )
-            .shadow(color: Color.black.opacity(1), radius: 25, x: 0, y: 6)
+            .shadow(color: Color.black.opacity(1), radius: 35, x: 0, y: 6)
+            .shadow(color: Color.black.opacity(1), radius: 25, x: 0, y: 3)
     }
 }
 

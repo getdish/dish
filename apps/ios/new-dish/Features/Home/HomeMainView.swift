@@ -272,6 +272,7 @@ struct HomeMainView: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard
     @Environment(\.geometry) var appGeometry
+    @ObservedObject var dragState = homeDragLock
     @ObservedObject var state = homeViewState
     @State var wasOnSearchResults = false
 
@@ -291,7 +292,10 @@ struct HomeMainView: View {
         
         let state = self.state
         let scrollRevealY = state.scrollRevealY
-        let mapHeight = state.mapHeight + (state.scrollY > scrollRevealY / 2 ? -scrollRevealY : 0)
+        let mapHeightScrollReveal: CGFloat = state.mapHeight < scrollRevealY + 100 ? 0 :
+            state.scrollY > scrollRevealY / 2 ?
+                -60 : 0
+        let mapHeight = state.mapHeight + mapHeightScrollReveal
         let zoom = mapHeight / 250 + 10
 
         print("render HomeMainView -- mapHeight \(mapHeight) y \(state.y)")
@@ -377,6 +381,10 @@ struct HomeMainView: View {
                             
                             Spacer()
                         }
+                        .animation(
+                            // dont animate when dragging
+                            self.dragState.state == .idle ? .spring() : .none
+                        )
                         .padding(.horizontal, 10)
                         .offset(y: mapHeight - 23 + state.searchBarYExtra)
                         // searchinput always light
