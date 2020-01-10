@@ -282,7 +282,15 @@ struct HomeMainView: View {
                                 }
                             }
                     }
+                    
+                    // below the map
+                    
+                    // main content
+                    HomeMainContent(
+                        isHorizontal: self.state.isSnappedToBottom
+                    )
 
+                    // map
                     VStack {
                         ZStack {
                             DishMapView(
@@ -311,11 +319,16 @@ struct HomeMainView: View {
 
                     // everything above the map
                     ZStack {
-                        // main content
-                        HomeMainContent(
-                            isHorizontal: self.state.isSnappedToBottom
-                        )
-
+                        // map search results
+                        VStack {
+                            HomeCardsRow()
+                            Spacer()
+                        }
+                        .frame(width: self.appGeometry?.size.width, height: self.appGeometry?.size.height)
+                        .offset(y: max(100, mapHeight - cardRowHeight - 16))
+                        .opacity(state.isSnappedToBottom ? 1 : 0)
+                        .disabled(!state.isSnappedToBottom)
+                        
                         // filters
                         VStack {
                             HomeMainFilters()

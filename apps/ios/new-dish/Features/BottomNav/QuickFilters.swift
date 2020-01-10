@@ -5,7 +5,7 @@ struct QuickFilters: View {
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 14) {
+            HStack(spacing: 11) {
                 ForEach(0 ..< filters.count) { index in
                     Button(action: {}) {
                         HStack {

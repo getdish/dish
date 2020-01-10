@@ -28,15 +28,6 @@ struct HomeMainContentExplore: View {
     
     var body: some View {
         ZStack {
-            VStack {
-                HomeCardsRow()
-                Spacer()
-            }
-                .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
-                .offset(y: max(100, homeState.mapHeight - cardRowHeight - 16))
-                .opacity(self.isHorizontal ? 1 : 0)
-                .disabled(!self.isHorizontal)
-            
             HomeCardsGrid()
                 .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
                 .opacity(self.isHorizontal ? 0 : 1)
