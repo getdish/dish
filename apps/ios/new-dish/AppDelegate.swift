@@ -15,12 +15,20 @@ import XCGLogger
 let log = XCGLogger.default
 let googlePlaces = GooglePlaces()
 let appStore = Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
+let keyboard = Keyboard()
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    func startDebugLoop() {
+        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
+            // set breakpoint here or we can have a shortcut in app to trigger debugger
+        }
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // one time setup
+        
+        startDebugLoop()
         
         // SwiftUI bugfix list backgrounds transparent
         let colorTransparent = UIColor.init(displayP3Red: 0, green: 0, blue: 0, alpha: 0)

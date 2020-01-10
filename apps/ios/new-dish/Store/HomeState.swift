@@ -102,8 +102,7 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
 
 struct HomeSelectors {
     func isOnSearchResults(_ state: AppState = appStore.state) -> Bool {
-        let cur = state.home.state.last!
-        return cur.search != "" || cur.filters.contains { $0.type == .cuisine }
+        return state.home.state.count > 1
     }
     
     func tags(_ state: AppState = appStore.state) -> [SearchInputTag] {

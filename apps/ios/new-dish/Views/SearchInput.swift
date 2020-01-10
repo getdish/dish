@@ -1,4 +1,5 @@
 import SwiftUI
+import Introspect
 
 struct EmptyModifier: ViewModifier {
     func body(content: Content) -> some View {
@@ -27,7 +28,9 @@ struct SearchInput: View {
     var showCancelInside = false
     var onEditingChanged: ((Bool) -> Void)?
     var onCancel: (() -> Void)?
+    var onClear: (() -> Void)?
     var after: AnyView?
+    var onTextField: ((UITextField) -> Void)?
     
     @Binding var searchText: String
     @Binding var tags: [SearchInputTag]
@@ -110,12 +113,21 @@ struct SearchInput: View {
                             print("onCommit")
                         }
                     )
-                        .disableAutocorrection(true)
+                        .introspectTextField { textField in
+                            print("we got a text field here \(textField)")
+                            if let cb = self.onTextField {
+                                cb(textField)
+                            }
+                    }
+//                        .disableAutocorrection(true)
                         .font(.system(size: fontSize))
                         .foregroundColor(.primary)
 
                     Button(action: {
                         self.searchText = ""
+                        if let cb = self.onClear {
+                            cb()
+                        }
                     }) {
                         Image(systemName: "xmark.circle.fill")
                             .opacity(self.searchText == "" ? 0.0 : 1.0)

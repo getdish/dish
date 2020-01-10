@@ -23,6 +23,7 @@ PODS:
   - GTMSessionFetcher/Core (1.3.0)
   - GTMSessionFetcher/Full (1.3.0):
     - GTMSessionFetcher/Core (= 1.3.0)
+  - Introspect (0.0.6)
   - ObjcExceptionBridging (1.0.1):
     - ObjcExceptionBridging/ObjcExceptionBridging (= 1.0.1)
   - ObjcExceptionBridging/ObjcExceptionBridging (1.0.1)
@@ -35,6 +36,7 @@ DEPENDENCIES:
   - GoogleMaps
   - GooglePlaces
   - GoogleSignIn
+  - Introspect
   - XCGLogger (~> 7.0.0)
 
 SPEC REPOS:
@@ -45,6 +47,7 @@ SPEC REPOS:
     - GoogleSignIn
     - GTMAppAuth
     - GTMSessionFetcher
+    - Introspect
     - ObjcExceptionBridging
     - XCGLogger
 
@@ -55,9 +58,10 @@ SPEC CHECKSUMS:
   GoogleSignIn: 7137d297ddc022a7e0aa4619c86d72c909fa7213
   GTMAppAuth: 4deac854479704f348309e7b66189e604cf5e01e
   GTMSessionFetcher: 43b8b64263023d4f32caa0b40f4c8bfa3c5f36d8
+  Introspect: 3575a13dbece038e564e4375eeac2117e64a0242
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: 10b4cbff64bff425ffc2575627a3f279a7ab30ba
+PODFILE CHECKSUM: 7197e83bc5f5ff789d58e310d9dabc5c98fd7587
 
 COCOAPODS: 1.8.4

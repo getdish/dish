@@ -4,9 +4,7 @@ struct HomeSearchResultsView: View {
     var state: HomeStateItem
     
     var body: some View {
-        print("HomeSearchResultsView \(state)")
-        
-        return ZStack {
+        ZStack {
             Color.black
 
             ScrollView(.vertical, showsIndicators: false) {

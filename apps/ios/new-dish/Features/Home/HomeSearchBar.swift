@@ -9,6 +9,7 @@ struct SearchToTagColor {
 struct HomeSearchBar: View {
     @State var searchText = ""
     @State var scrollAtTop = true
+    @State var textField: UITextField? = nil
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard
     
@@ -37,7 +38,24 @@ struct HomeSearchBar: View {
             sizeRadius: 2.0,
             icon: icon,
             showCancelInside: true,
+            onClear: {
+                // go back on empty search clear
+                if Selectors.home.isOnSearchResults() && appStore.state.home.state.last!.searchResults.results.count == 0 {
+                    appStore.send(.home(.pop))
+                }
+                // focus keyboard again on clear if not focused
+                if self.keyboard.state.height == 0 {
+                    print("NOW WE DO? \(self.textField)")
+                    if let field = self.textField {
+                        field.becomeFirstResponder()
+                    }
+                }
+            },
             after: AnyView(HomeSearchBarAfterView()),
+            onTextField: { field in
+                print("set text field")
+                self.textField = field
+            },
             searchText: self.homeSearch,
             tags: self.homeTags
         )
