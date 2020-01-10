@@ -18,6 +18,7 @@ struct MapView: UIViewControllerRepresentable {
     var height: CGFloat
     var zoom: CGFloat
     var darkMode: Bool?
+    var animate: Bool
     var location: MapLocation
     var locations: [GooglePlaceItem] = []
     @State var controller: MapViewController? = nil
@@ -31,7 +32,8 @@ struct MapView: UIViewControllerRepresentable {
             width: width,
             height: height,
             zoom: zoom,
-            darkMode: darkMode
+            darkMode: darkMode,
+            animate: animate
         )
         DispatchQueue.main.async {
             self.controller = controller
@@ -84,18 +86,23 @@ class MapViewController: UIViewController {
     var width: CGFloat
     var height: CGFloat
     var darkMode: Bool?
+    var animate = false
     
-    init(width: CGFloat, height: CGFloat, zoom: CGFloat?, darkMode: Bool?) {
+    init(width: CGFloat, height: CGFloat, zoom: CGFloat?, darkMode: Bool?, animate: Bool?) {
         self.zoom = zoom ?? 12.0
         self.width = width
         self.height = height
         self.darkMode = darkMode
+        self.animate = animate ?? false
         super.init(nibName: nil, bundle: nil)
     }
     
     func update(_ mapView: MapView) {
         if self.zoom != mapView.zoom {
             self.updateZoom(mapView.zoom)
+        }
+        if self.animate != mapView.animate {
+            self.animate = mapView.animate
         }
         if self.locations != mapView.locations {
             print("update locations...")
@@ -127,11 +134,10 @@ class MapViewController: UIViewController {
         if let camera = getCamera() {
             if gmapView.isHidden {
                 gmapView.isHidden = false
-                gmapView.camera = camera
-            } else {
-                // TODO option MapView(animateCamera: true) for snapToBottom
-                gmapView.camera = camera
-//                gmapView.animate(to: camera)
+            }
+            gmapView.camera = camera
+            if self.animate != false {
+                gmapView.animate(to: camera)
             }
         }
     }
@@ -200,18 +206,8 @@ class MapViewController: UIViewController {
         
         // allows gestures to go up to parent
         gmapView.settings.consumesGesturesInView = true
-        
-        // disable mouse move
-        //    mapView.settings.scrollGestures = false
-        
+
         self.view.addSubview(gmapView)
-        
-        // Creates a marker in the center of the map.
-        //    let marker = GMSMarker()
-        //    marker.position = CLLocationCoordinate2D(latitude: -33.86, longitude: 151.20)
-        //    marker.title = "Sydney"
-        //    marker.snippet = "Australia"
-        //    marker.map = mapView
     }
 }
 

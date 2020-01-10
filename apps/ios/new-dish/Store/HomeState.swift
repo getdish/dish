@@ -5,7 +5,11 @@ import GoogleMaps
 extension AppState {
     struct HomeState: Equatable {
         var view: HomePageView = .home
-        var state: [HomeStateItem] = [HomeStateItem()]
+        var state: [HomeStateItem] = [
+            HomeStateItem(filters: [
+                SearchFilter(type: .root, name: "Dish", deletable: false)
+            ])
+        ]
         var showDrawer: Bool = false
     }
 }
@@ -39,6 +43,13 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
             var last = state.home.state.last!
             last.searchResults = val
             updateItem(last)
+        case let .setCurrentTags(val):
+            var last = state.home.state.last!
+            last.filters = val.map { SearchFilter(name: $0.text) }
+            updateItem(last)
+            if let search = val.last?.text {
+                appStore.send(.home(.setSearch(search)))
+            }
         case let .setSearch(val):
             var last = state.home.state.last!
             
@@ -90,17 +101,12 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
             state.home.state.append(homeState)
         case .pop:
             state.home.state = state.home.state.dropLast()
-        case let .setCurrentTags(val):
-            var last = state.home.state.last!
-            last.filters = val.map { SearchFilter(name: $0.text) }
-            updateItem(last)
     }
 }
 
 struct HomeSelectors {
     func isOnSearchResults(_ state: AppState = appStore.state) -> Bool {
-        let cur = state.home.state.last!
-        return cur.search != "" || cur.filters.contains { $0.type == .cuisine }
+        return state.home.state.count > 1
     }
     
     func tags(_ state: AppState = appStore.state) -> [SearchInputTag] {
@@ -110,7 +116,8 @@ struct HomeSelectors {
             tags = homeState.filters.map { filter in
                 SearchInputTag(
                     color: SearchToTagColor.filter,
-                    text: filter.name
+                    text: filter.name,
+                    deletable: filter.deletable
                 )
             }
         }
@@ -154,7 +161,10 @@ struct HomeStateItem: Identifiable, Equatable {
 }
 
 struct SearchFilter: Equatable {
-    enum SearchFilterType { case cuisine }
+    enum SearchFilterType {
+        case root, cuisine
+    }
     var type: SearchFilterType = .cuisine
     var name = ""
+    var deletable = true
 }

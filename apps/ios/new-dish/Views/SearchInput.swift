@@ -1,4 +1,5 @@
 import SwiftUI
+import Introspect
 
 struct EmptyModifier: ViewModifier {
     func body(content: Content) -> some View {
@@ -27,7 +28,10 @@ struct SearchInput: View {
     var showCancelInside = false
     var onEditingChanged: ((Bool) -> Void)?
     var onCancel: (() -> Void)?
+    var onClear: (() -> Void)?
     var after: AnyView?
+    var onTextField: ((UITextField) -> Void)?
+    var isFirstResponder: Bool = false
     
     @Binding var searchText: String
     @Binding var tags: [SearchInputTag]
@@ -43,9 +47,9 @@ struct SearchInput: View {
     }
     
     var cancelButton: some View {
-        Button("Cancel") {
+        Button("Done") {
             UIApplication.shared.endEditing(true) // this must be placed before the other commands here
-            self.searchText = ""
+//            self.searchText = ""
             self.showCancelButton = false
             if let cb = self.onCancel {
                 cb()
@@ -87,7 +91,8 @@ struct SearchInput: View {
                                     }
                                 }
                                 .foregroundColor(Color.white)
-                                .padding(6)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 5)
                                 .background(tag.color)
                                 .cornerRadius(4)
                                 .onTapGesture {
@@ -102,20 +107,27 @@ struct SearchInput: View {
                         }
                     }
                     
-                    TextField(
-                        hasTags ? "" : self.placeholder,
+                    CustomTextField(
+                        placeholder: hasTags ? "" : self.placeholder,
                         text: self.$searchText,
-                        onEditingChanged: self.handleEditingChanged,
-                        onCommit: {
-                            print("onCommit")
-                        }
+                        isFirstResponder: self.isFirstResponder,
+                        onEditingChanged: self.handleEditingChanged
                     )
-                        .disableAutocorrection(true)
-                        .font(.system(size: fontSize))
-                        .foregroundColor(.primary)
+//                        .introspectTextField { textField in
+//                            print("!!!!!!! we got a text field here \(textField)")
+//                            if let cb = self.onTextField {
+//                                cb(textField)
+//                            }
+//                    }
+//                        .disableAutocorrection(true)
+//                        .font(.system(size: fontSize))
+//                        .foregroundColor(.primary)
 
                     Button(action: {
                         self.searchText = ""
+                        if let cb = self.onClear {
+                            cb()
+                        }
                     }) {
                         Image(systemName: "xmark.circle.fill")
                             .opacity(self.searchText == "" ? 0.0 : 1.0)

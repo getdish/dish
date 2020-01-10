@@ -22,13 +22,13 @@ struct TopNavViewContent: View {
                     .fill(
                         LinearGradient(
                             gradient: Gradient(
-                                colors: [Color.black.opacity(0), Color.black.opacity(0.65)]
+                                colors: [Color.black.opacity(0), Color.black.opacity(0.25)]
                             ),
                             startPoint: .bottom,
                             endPoint: .top
                         )
                 )
-                    .frame(height: 140)
+                    .frame(height: 160)
                 Spacer()
             }
             

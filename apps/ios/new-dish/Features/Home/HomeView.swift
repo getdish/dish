@@ -64,9 +64,7 @@ struct HomeViewContent: View {
             .simultaneousGesture(
                 DragGesture()
                     .onChanged { value in
-                        if dragState == .searchbar {
-                            return
-                        }
+                        if dragState == .searchbar { return }
                         let isOnRightEdge = self.width - value.startLocation.x < 10
                         let isOnLeftEdge = value.startLocation.x < 10
                         if isOnRightEdge || isOnLeftEdge {
@@ -78,9 +76,7 @@ struct HomeViewContent: View {
                         }
                 }
                 .onEnded { value in
-                    if homePager.index.rounded() != homePager.index {
-                       homePager.onDragEnd(value)
-                    }
+                    homePager.onDragEnd(value)
                     HomeDragLock.setLock(.idle)
                 }
             )

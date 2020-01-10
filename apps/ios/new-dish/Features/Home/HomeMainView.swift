@@ -6,7 +6,7 @@ let cardRowHeight: CGFloat = 140
 
 fileprivate let topNavHeight: CGFloat = 45
 fileprivate let searchBarHeight: CGFloat = 45
-fileprivate let resistanceYBeforeSnap: CGFloat = 55
+fileprivate let resistanceYBeforeSnap: CGFloat = 48
 
 // need enum animateStatus = { .will, .is, .idle }
 // then on idle we can apply .spring()
@@ -17,7 +17,7 @@ class HomeViewState: ObservableObject {
     @Published var y: CGFloat = 0
     @Published var searchBarYExtra: CGFloat = 0
     @Published var hasMovedBar = false
-    @Published var animate = false
+    @Published var shouldAnimateCards = false
 
     // keyboard
     @Published var keyboardHeight: CGFloat = 0
@@ -59,11 +59,16 @@ class HomeViewState: ObservableObject {
 
 
     var snapToBottomAt: CGFloat { appHeight * 0.23 }
-    var snappedToBottomMapHeight: CGFloat { appHeight - 200 }
+    var snappedToBottomMapHeight: CGFloat { appHeight - 190 }
     var isSnappedToBottom: Bool { y > snapToBottomAt }
     var wasSnappedToBottom = false
 
     var aboutToSnapToBottomAt: CGFloat { snapToBottomAt - resistanceYBeforeSnap }
+    
+    var isAboutToSnap: Bool {
+        if y > aboutToSnapToBottomAt { return true }
+        return false
+    }
 
     func toggleMap() {
         log.info()
@@ -73,6 +78,7 @@ class HomeViewState: ObservableObject {
     private var startDragAt: CGFloat = 0
 
     func drag(_ dragY: CGFloat) {
+        if HomeDragLock.state == .pager { return }
         log.info()
         // TODO we can reset this back to false in some cases for better UX
         self.hasMovedBar = true
@@ -127,6 +133,7 @@ class HomeViewState: ObservableObject {
     }
 
     func finishDrag(_ value: DragGesture.Value) {
+        if HomeDragLock.state == .pager { return }
         log.info()
         if isSnappedToBottom {
             self.snapToBottom()
@@ -284,7 +291,7 @@ struct HomeMainView: View {
                                 zoom: zoom
                             )
                             
-                            // keyboard dismiss (above map, below content)
+//                            // keyboard dismiss (above map, below content)
                             if self.keyboard.state.height > 0 {
                                 Color.black.opacity(0.2)
                                     .transition(.opacity)
@@ -326,19 +333,17 @@ struct HomeMainView: View {
                                 return HomeSearchBar()
                             }
                             .frame(height: searchBarHeight)
-
+                            
                             Spacer()
                         }
                         .padding(.horizontal, 10)
                         .offset(y: mapHeight - 23 + state.searchBarYExtra)
-                            //                    .animation(dragState != .on ? .spring() : .none)
-                            // searchinput always light
-                            .environment(\.colorScheme, .light)
+                        // searchinput always light
+                        .environment(\.colorScheme, .light)
                     }
-                        // everything below map is always dark
-                        .environment(\.colorScheme, .dark)
+                    .environment(\.colorScheme, .dark)
                 }
-                .clipped()
+                .clipped() // dont remove fixes bug cant click SearchBar
                 .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
                 .simultaneousGesture(
                     DragGesture(minimumDistance: 10)

@@ -8,21 +8,21 @@ struct HomeMainFilters: View {
         ZStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
-                    ContextMenuView(menuContent: {
-                        List {
-                            Text("Item One")
-                            Text("Item Two")
-                            Text("Item Three")
-                        }
-                            .frame(height: 150) // todo how to get lists that shrink
-                    }) {
-                        Text("🍽")// "line.horizontal.3.decrease.circle")
-                            .foregroundColor(Color.white.opacity(0.5))
-                            .font(.system(size: 26))
-                            .onTapGesture {
-                                self.showTypeMenu = true
-                        }
-                    }
+//                    ContextMenuView(menuContent: {
+//                        List {
+//                            Text("Item One")
+//                            Text("Item Two")
+//                            Text("Item Three")
+//                        }
+//                            .frame(height: 150) // todo how to get lists that shrink
+//                    }) {
+//                        Text("🍽")// "line.horizontal.3.decrease.circle")
+//                            .foregroundColor(Color.white.opacity(0.5))
+//                            .font(.system(size: 26))
+//                            .onTapGesture {
+//                                self.showTypeMenu = true
+//                        }
+//                    }
 
                     FilterButton(label: "American", action: {
                         // todo move this into action

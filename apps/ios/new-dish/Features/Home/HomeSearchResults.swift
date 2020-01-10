@@ -1,16 +1,31 @@
 import SwiftUI
 
+struct ClearKeyboardOnScroll: View {
+    @EnvironmentObject var homeState: HomeViewState
+    @EnvironmentObject var keyboard: Keyboard
+
+    var body: some View {
+        ScrollListener(onScroll: { frame in
+            print("\(frame.minY)")
+            if self.keyboard.state.height > 0 && abs(frame.minY) > self.homeState.mapHeight + 20  {
+                print("should hide keyboard")
+                self.keyboard.hide()
+            }
+        })
+    }
+}
+
 struct HomeSearchResultsView: View {
     var state: HomeStateItem
     
     var body: some View {
-        print("HomeSearchResultsView \(state)")
-        
-        return ZStack {
+        ZStack {
             Color.black
 
             ScrollView(.vertical, showsIndicators: false) {
                 VStack {
+                    ClearKeyboardOnScroll()
+
                     // space below searchbar
                     Spacer().frame(height: 20)
 

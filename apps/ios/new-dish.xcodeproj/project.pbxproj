@@ -25,6 +25,10 @@
 		1CE3548A239871CB004B3A84 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE35489239871CB004B3A84 /* BottomSheetView.swift */; };
 		AE0F474423B69276008F7418 /* DishCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0F474323B69276008F7418 /* DishCamera.swift */; };
 		AE0F474823B6AA39008F7418 /* HomeDragLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0F474723B6AA39008F7418 /* HomeDragLock.swift */; };
+		AE1BBDB423C8224200C58A87 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1BBDB323C8224200C58A87 /* CustomTextField.swift */; };
+		AE1BBDB623C8397900C58A87 /* CutoutCircleCentered.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1BBDB523C8397900C58A87 /* CutoutCircleCentered.swift */; };
+		AE1BBDB823C83CA100C58A87 /* CameraButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1BBDB723C83CA100C58A87 /* CameraButton.swift */; };
+		AE1BBDBA23C83E9E00C58A87 /* QuickFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1BBDB923C83E9E00C58A87 /* QuickFilters.swift */; };
 		AE2B6BA423AC211F007BCD25 /* VerticalCardPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */; };
 		AE56C86423ADB78C006A156A /* HomeSearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56C86323ADB78C006A156A /* HomeSearchResults.swift */; };
 		AE56C86623ADD977006A156A /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56C86523ADD977006A156A /* TagView.swift */; };
@@ -113,6 +117,10 @@
 		958FBEA937B7052DE007A65D /* Pods-new-dish.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-new-dish.release.xcconfig"; path = "Target Support Files/Pods-new-dish/Pods-new-dish.release.xcconfig"; sourceTree = "<group>"; };
 		AE0F474323B69276008F7418 /* DishCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishCamera.swift; sourceTree = "<group>"; };
 		AE0F474723B6AA39008F7418 /* HomeDragLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDragLock.swift; sourceTree = "<group>"; };
+		AE1BBDB323C8224200C58A87 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		AE1BBDB523C8397900C58A87 /* CutoutCircleCentered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutoutCircleCentered.swift; sourceTree = "<group>"; };
+		AE1BBDB723C83CA100C58A87 /* CameraButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraButton.swift; sourceTree = "<group>"; };
+		AE1BBDB923C83E9E00C58A87 /* QuickFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickFilters.swift; sourceTree = "<group>"; };
 		AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalCardPager.swift; sourceTree = "<group>"; };
 		AE56C86323ADB78C006A156A /* HomeSearchResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchResults.swift; sourceTree = "<group>"; };
 		AE56C86523ADD977006A156A /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
@@ -279,10 +287,13 @@
 		1CE3547D23986B70004B3A84 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				1CE35485239870E8004B3A84 /* MapView.swift */,
 				AE861A7A23A06EDC004096BF /* BarArrow.swift */,
 				AE861A8823A172E8004096BF /* BlurView.swift */,
+				AE1BBDB523C8397900C58A87 /* CutoutCircleCentered.swift */,
 				1CE35489239871CB004B3A84 /* BottomSheetView.swift */,
 				AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */,
+				AE1BBDB323C8224200C58A87 /* CustomTextField.swift */,
 				AEED844723B675C300407266 /* CameraView.swift */,
 				AEF6557E23B14DBA00E49A51 /* ContextMenuView.swift */,
 				AEA331F623A3382100B36A23 /* DishButton.swift */,
@@ -329,6 +340,8 @@
 			isa = PBXGroup;
 			children = (
 				AE6CECCC23A843E600B08870 /* BottomNav.swift */,
+				AE1BBDB923C83E9E00C58A87 /* QuickFilters.swift */,
+				AE1BBDB723C83CA100C58A87 /* CameraButton.swift */,
 			);
 			path = BottomNav;
 			sourceTree = "<group>";
@@ -383,7 +396,6 @@
 			children = (
 				AEED844023B6707100407266 /* DishMap.swift */,
 				AE861A7E23A07D81004096BF /* DishMapControls.swift */,
-				1CE35485239870E8004B3A84 /* MapView.swift */,
 			);
 			path = DishMap;
 			sourceTree = "<group>";
@@ -571,12 +583,14 @@
 				1CE35486239870E8004B3A84 /* MapView.swift in Sources */,
 				1CCEDF52239DC7C9003EE228 /* PagerView.swift in Sources */,
 				AEF6557423B0407000E49A51 /* ImageStore.swift in Sources */,
+				AE1BBDBA23C83E9E00C58A87 /* QuickFilters.swift in Sources */,
 				AE7563B423A035E70094022B /* HomeMainView.swift in Sources */,
 				AE7563E323A038190094022B /* Array.swift in Sources */,
 				AE7563BC23A037870094022B /* Fixtures.swift in Sources */,
 				AE2B6BA423AC211F007BCD25 /* VerticalCardPager.swift in Sources */,
 				1CE3546523986B1B004B3A84 /* AppDelegate.swift in Sources */,
 				1CE3548A239871CB004B3A84 /* BottomSheetView.swift in Sources */,
+				AE1BBDB623C8397900C58A87 /* CutoutCircleCentered.swift in Sources */,
 				AE6A9C1323C52B0A00003059 /* LocationManager.swift in Sources */,
 				AEED844123B6707100407266 /* DishMap.swift in Sources */,
 				1C3CFE6423998FF2004B2EEA /* HomeContainerView.swift in Sources */,
@@ -622,9 +636,11 @@
 				AE6CECCD23A843E600B08870 /* BottomNav.swift in Sources */,
 				AE861A7B23A06EDC004096BF /* BarArrow.swift in Sources */,
 				AE861A8323A171D2004096BF /* TopNavSearch.swift in Sources */,
+				AE1BBDB823C83CA100C58A87 /* CameraButton.swift in Sources */,
 				AEF6557123B024A100E49A51 /* ScrollListener.swift in Sources */,
 				AEF6558123B2205F00E49A51 /* HomeMainContent.swift in Sources */,
 				AE7563E923A03D570094022B /* MagicMove.swift in Sources */,
+				AE1BBDB423C8224200C58A87 /* CustomTextField.swift in Sources */,
 				1CE3547F23986B88004B3A84 /* Store.swift in Sources */,
 				AE56C86623ADD977006A156A /* TagView.swift in Sources */,
 				AEA87E4923B9923B009F07DB /* InputEvents.swift in Sources */,

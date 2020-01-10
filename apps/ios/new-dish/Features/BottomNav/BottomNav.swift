@@ -9,56 +9,66 @@ struct BottomNav: View {
         
         return VStack {
             Spacer()
+            
             ZStack {
                 // main controls
                 
-                HStack {
-                    DishLoginButton()
-                    .animation(.spring(response: 0.5))
-                    .offset(y: isOnGallery ? hiddenButtonY : 0)
+                VStack {
                     Spacer()
+                    QuickFilters()
                 }
                 
-                HStack {
-                    Spacer()
-                    DishFiltersButton()
-                        .animation(.spring(response: 0.75))
-                        .offset(y: isOnGallery ? hiddenButtonY : 0)
-                    Spacer()
-                }
+                //                HStack {
+                //                    DishLoginButton()
+                //                    .animation(.spring(response: 0.5))
+                //                    .offset(y: isOnGallery ? hiddenButtonY : 0)
+                //                    Spacer()
+                //                }
+                //
+                //                HStack {
+                //                    Spacer()
+                //                    DishFiltersButton()
+                //                        .animation(.spring(response: 0.75))
+                //                        .offset(y: isOnGallery ? hiddenButtonY : 0)
+                //                    Spacer()
+                //                }
                 
-                HStack {
+                VStack {
                     Spacer()
-                    BottomNavCircularButton(image: "heart.fill", size: 52, action: {
-                        homePager.animateTo(2)
-                    })
-                        .animation(.spring(response: 0.5))
-                        .offset(y: isOnGallery ? hiddenButtonY : 0)
+                    HStack {
+                        Spacer()
+                        CameraButton()
+                    }
                 }
+                .padding(.horizontal)
                 
                 // camera controls
                 
-                HStack {
-//                    DishBackButton()
-//                        .opacity(0.5)
-//                        .animation(.spring(response: 0.5))
-//                        .offset(y: !isOnGallery ? hiddenButtonY : 0)
+                VStack {
                     Spacer()
-                    BottomNavCircularButton(image: "xmark", size: 50, action: {
-                        print("CLOSE THAT SHIT")
-//                        self.store.send(.closeGallery)
-                    })
-                        .animation(.spring(response: 0.75))
-                        .offset(y: !isOnGallery ? hiddenButtonY : 0)
-                    Spacer()
-//                    DishForwardButton()
-//                        .animation(.spring(response: 0.5))
-//                        .offset(y: !isOnGallery ? hiddenButtonY : 0)
+                    HStack {
+                        //                    DishBackButton()
+                        //                        .opacity(0.5)
+                        //                        .animation(.spring(response: 0.5))
+                        //                        .offset(y: !isOnGallery ? hiddenButtonY : 0)
+                        Spacer()
+                        BottomNavCircularButton(image: "xmark", size: 50, action: {
+                            print("CLOSE THAT SHIT")
+                            //                        self.store.send(.closeGallery)
+                        })
+                            .animation(.spring(response: 0.75))
+                            .offset(y: !isOnGallery ? hiddenButtonY : 0)
+                        Spacer()
+                        //                    DishForwardButton()
+                        //                        .animation(.spring(response: 0.5))
+                        //                        .offset(y: !isOnGallery ? hiddenButtonY : 0)
+                    }
                 }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
             Spacer().frame(height: 56)
         }
+        .edgesIgnoringSafeArea(.all)
     }
 }
 
@@ -68,12 +78,12 @@ struct DishLoginButton: View {
             homePager.animateTo(0)
         }) {
             HStack {
-//                Image(systemName: "person.fill")
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(width: 12, height: 12)
-//                    .foregroundColor(.white)
-//                    .shadow(color: Color.black.opacity(0.75), radius: 16, x: 0, y: 2)
+                //                Image(systemName: "person.fill")
+                //                    .resizable()
+                //                    .scaledToFit()
+                //                    .frame(width: 12, height: 12)
+                //                    .foregroundColor(.white)
+                //                    .shadow(color: Color.black.opacity(0.75), radius: 16, x: 0, y: 2)
                 
                 Text("LOGIN")
                     .shadow(color: Color.black.opacity(0.75), radius: 24, x: 0, y: 4)
