@@ -28,7 +28,8 @@ struct QuickFilters: View {
             .padding(12)
             .offset(y: 11)
         }
-        .frame(width: Screen.width - 40, height: 80)
+        .frame(height: 80)
+        .offset(y: 1)
         .mask(
             LinearGradient(
                 gradient: .init(colors: [

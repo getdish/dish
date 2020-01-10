@@ -59,7 +59,7 @@ class HomeViewState: ObservableObject {
 
 
     var snapToBottomAt: CGFloat { appHeight * 0.23 }
-    var snappedToBottomMapHeight: CGFloat { appHeight - 200 }
+    var snappedToBottomMapHeight: CGFloat { appHeight - 190 }
     var isSnappedToBottom: Bool { y > snapToBottomAt }
     var wasSnappedToBottom = false
 
@@ -78,6 +78,7 @@ class HomeViewState: ObservableObject {
     private var startDragAt: CGFloat = 0
 
     func drag(_ dragY: CGFloat) {
+        if HomeDragLock.state == .pager { return }
         log.info()
         // TODO we can reset this back to false in some cases for better UX
         self.hasMovedBar = true
@@ -132,6 +133,7 @@ class HomeViewState: ObservableObject {
     }
 
     func finishDrag(_ value: DragGesture.Value) {
+        if HomeDragLock.state == .pager { return }
         log.info()
         if isSnappedToBottom {
             self.snapToBottom()

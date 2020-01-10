@@ -40,6 +40,7 @@ struct BottomNav: View {
                         CameraButton()
                     }
                 }
+                .padding(.horizontal)
                 
                 // camera controls
                 
@@ -63,10 +64,11 @@ struct BottomNav: View {
                         //                        .offset(y: !isOnGallery ? hiddenButtonY : 0)
                     }
                 }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
             Spacer().frame(height: 56)
         }
+        .edgesIgnoringSafeArea(.all)
     }
 }
 

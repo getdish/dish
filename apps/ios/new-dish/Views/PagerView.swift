@@ -160,14 +160,18 @@ class PagerStore: ObservableObject {
         let end = value.predictedEndTranslation.width
         
         // swipe to right
+        let last = Double(self.indexLast)
         if -end >= width / 4 {
-            self.index = min(round(self.index + 1), Double(numPages - 1))
+            self.index = min(last + 1, Double(numPages - 1))
         }
         // swipe to left
-        if end >= width / 4 {
-            self.index = max(0, round(self.index - 1))
+        else if end >= width / 4 {
+            self.index = max(0, last - 1)
         }
-        
+        // didnt finish a swipe
+        else {
+            self.index = last
+        }
         print("drag end to index \(end) \(index)")
         
         // try and match speed roughly to their drag speed
