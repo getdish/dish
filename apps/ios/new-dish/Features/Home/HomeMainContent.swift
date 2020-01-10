@@ -90,8 +90,6 @@ struct HomeCardsGrid: View {
     @EnvironmentObject var homeState: HomeViewState
     @Environment(\.geometry) var appGeometry
     
-    @State var initY: CGFloat = 0
-    
     let items = features.chunked(into: 2)
     let spacing: CGFloat = 10
     
@@ -100,15 +98,11 @@ struct HomeCardsGrid: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     ScrollListener(onScroll: { frame in
-                        if self.initY == 0 {
-                            DispatchQueue.main.async {
-                                self.initY = frame.minY
-                            }
-                        }
-                        if HomeDragLock.state == .idle {
-                            let scrollY = frame.minY
-                            let y = self.initY - scrollY
-                            self.homeState.setScrollY(y)
+                        if homeDragLock.state == .idle {
+                            let mapHeight = self.homeState.mapHeight
+                            self.homeState.setScrollY(
+                                mapHeight - frame.minY - Screen.statusBarHeight
+                            )
                         }
                     })
                     Spacer().frame(height: filterBarHeight + 22)

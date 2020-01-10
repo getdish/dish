@@ -1,11 +1,13 @@
-struct HomeDragLock {
+import Combine
+
+class HomeDragLock: ObservableObject {
     enum State {
         case idle, off, pager, searchbar
     }
 
-    static var state: State = .idle
+    @Published var state: State = .idle
     
-    static func setLock(_ lock: State) {
-        HomeDragLock.state = lock
+    func setLock(_ lock: State) {
+        self.state = lock
     }
 }

@@ -55,3 +55,11 @@ struct CameraButton: View {
             .shadow(color: Color.black.opacity(1), radius: 25, x: 0, y: 6)
     }
 }
+
+#if DEBUG
+struct CameraButton_Previews: PreviewProvider {
+    static var previews: some View {
+        CameraButton()
+    }
+}
+#endif

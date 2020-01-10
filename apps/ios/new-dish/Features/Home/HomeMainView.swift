@@ -78,15 +78,15 @@ class HomeViewState: ObservableObject {
     private var startDragAt: CGFloat = 0
 
     func drag(_ dragY: CGFloat) {
-        if HomeDragLock.state == .pager { return }
+        if homeDragLock.state == .pager { return }
         log.info()
         // TODO we can reset this back to false in some cases for better UX
         self.hasMovedBar = true
 
         // remember where we started
-        if HomeDragLock.state != .searchbar {
+        if homeDragLock.state != .searchbar {
             self.startDragAt = y
-            HomeDragLock.setLock(.searchbar)
+            homeDragLock.setLock(.searchbar)
         }
 
         var y = self.startDragAt + (
@@ -133,7 +133,7 @@ class HomeViewState: ObservableObject {
     }
 
     func finishDrag(_ value: DragGesture.Value) {
-        if HomeDragLock.state == .pager { return }
+        if homeDragLock.state == .pager { return }
         log.info()
         if isSnappedToBottom {
             self.snapToBottom()
@@ -158,7 +158,7 @@ class HomeViewState: ObservableObject {
 
     func snapToBottom(_ toBottom: Bool = true) {
         log.info()
-        HomeDragLock.setLock(.off)
+        homeDragLock.setLock(.off)
         self.animateCards()
         withAnimation(.spring()) {
             self.scrollY = 0
@@ -215,19 +215,17 @@ class HomeViewState: ObservableObject {
     }
 
     func setScrollY(_ scrollY: CGFloat) {
-        log.info()
-        print("disabled scroll y some bugs")
-//        if HomeDragLock.state != .idle {
-//            return
-//        }
-//        let y = max(0, min(100, scrollY)).rounded()
-//        if y != self.scrollY {
-//            self.scrollY = y
-//        }
+        if homeDragLock.state != .idle {
+            return
+        }
+        let y = max(0, min(100, scrollY)).rounded()
+        if y != self.scrollY {
+            self.scrollY = y
+        }
     }
     
     func moveToSearchResults() {
-        if HomeDragLock.state == .idle {
+        if homeDragLock.state == .idle {
             self.snapToTop()
         }
     }
@@ -336,7 +334,9 @@ struct HomeMainView: View {
                             Spacer()
                         }
                         .animation(.spring())
-                        .offset(y: mapHeight + searchBarHeight / 2 + 12)
+                        .offset(y: mapHeight + searchBarHeight / 2 + 12 + (
+                            state.scrollY > 10 ? -100 : 0
+                        ))
                         .opacity(isOnSearchResults ? 0 : 1)
 
                         // searchbar
@@ -361,11 +361,11 @@ struct HomeMainView: View {
                 .simultaneousGesture(
                     DragGesture(minimumDistance: 10)
                         .onChanged { value in
-                            if [.off, .pager].contains(HomeDragLock.state) {
+                            if [.off, .pager].contains(homeDragLock.state) {
                                 return
                             }
                             // why is this off 80???
-                            if HomeSearchBarState.isWithin(value.startLocation.y - 40) || HomeDragLock.state == .searchbar {
+                            if HomeSearchBarState.isWithin(value.startLocation.y - 40) || homeDragLock.state == .searchbar {
                                 // hide keyboard on drag
                                 if self.keyboard.state.height > 0 {
                                     self.keyboard.hide()
@@ -375,10 +375,10 @@ struct HomeMainView: View {
                             }
                     }
                     .onEnded { value in
-                        if [.idle, .searchbar].contains(HomeDragLock.state) {
+                        if [.idle, .searchbar].contains(homeDragLock.state) {
                             self.state.finishDrag(value)
                         }
-                        HomeDragLock.setLock(.idle)
+                        homeDragLock.setLock(.idle)
                     }
                 )
             }
@@ -391,7 +391,7 @@ struct HomeMainView: View {
 struct HomeMainView_Previews: PreviewProvider {
     static var previews: some View {
         HomeMainView()
-            .embedInAppEnvironment(Mocks.homeSearchedPho)
+            .embedInAppEnvironment() // Mocks.homeSearchedPho
     }
 }
 #endif

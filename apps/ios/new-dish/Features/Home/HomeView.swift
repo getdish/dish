@@ -36,7 +36,7 @@ struct HomeViewContent: View {
     @State private var disableDragging = true
 
     var body: some View {
-        let dragState = HomeDragLock.state
+        let dragState = homeDragLock.state
         
         return ZStack {
             PagerView(
@@ -69,7 +69,7 @@ struct HomeViewContent: View {
                         let isOnLeftEdge = value.startLocation.x < 10
                         if isOnRightEdge || isOnLeftEdge {
                             if abs(value.translation.width) > 10 {
-                                HomeDragLock.setLock(.pager)
+                                homeDragLock.setLock(.pager)
                             }
                             let dragIndexDiff = Double(-value.translation.width / self.width)
                             homePager.drag(dragIndexDiff)
@@ -77,7 +77,7 @@ struct HomeViewContent: View {
                 }
                 .onEnded { value in
                     homePager.onDragEnd(value)
-                    HomeDragLock.setLock(.idle)
+                    homeDragLock.setLock(.idle)
                 }
             )
             

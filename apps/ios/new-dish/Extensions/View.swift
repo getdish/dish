@@ -43,9 +43,14 @@ extension View {
         }
     }
     
-    func embedInAppEnvironment(_ appState: Store<AppState, AppAction> = Mocks.defaultState) -> some View {
-        self
-            .environmentObject(appState)
+    func embedInAppEnvironment(_ appState: Store<AppState, AppAction>? = nil) -> some View {
+        var res = self
+        if let state = appState {
+            res = res.environmentObject(state) as! Self
+        }
+        return res.environmentObject(appStore)
+            .environmentObject(keyboard)
+            .environment(\.inputEvents, inputEvents)
             .embedInGeometryReader()
             .edgesIgnoringSafeArea(.all)
     }

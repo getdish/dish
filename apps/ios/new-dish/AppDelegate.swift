@@ -16,6 +16,8 @@ let log = XCGLogger.default
 let googlePlaces = GooglePlaces()
 let appStore = Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
 let keyboard = Keyboard()
+let inputEvents = InputEvents()
+let homeDragLock = HomeDragLock()
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
