@@ -36,8 +36,6 @@ struct HomeViewContent: View {
     @State private var disableDragging = true
 
     var body: some View {
-        let dragState = homeDragLock.state
-        
         return ZStack {
             PagerView(
                 pageCount: homePageCount,
@@ -64,20 +62,22 @@ struct HomeViewContent: View {
             .simultaneousGesture(
                 DragGesture()
                     .onChanged { value in
-                        if dragState == .searchbar { return }
+                        if homeViewState.dragState == .searchbar { return }
                         let isOnRightEdge = self.width - value.startLocation.x < 10
                         let isOnLeftEdge = value.startLocation.x < 10
                         if isOnRightEdge || isOnLeftEdge {
                             if abs(value.translation.width) > 10 {
-                                homeDragLock.setLock(.pager)
+                                homeViewState.setLock(.pager)
                             }
                             let dragIndexDiff = Double(-value.translation.width / self.width)
                             homePager.drag(dragIndexDiff)
                         }
                 }
                 .onEnded { value in
-                    homePager.onDragEnd(value)
-                    homeDragLock.setLock(.idle)
+                    if homeViewState.dragState == .pager {
+                        homePager.onDragEnd(value)
+                        homeViewState.setLock(.idle)
+                    }
                 }
             )
             

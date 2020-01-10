@@ -12,6 +12,10 @@ fileprivate let resistanceYBeforeSnap: CGFloat = 48
 // then on idle we can apply .spring()
 
 class HomeViewState: ObservableObject {
+    enum DragState {
+        case idle, off, pager, searchbar
+    }
+    
     @Published var appHeight: CGFloat = Screen.height
     @Published var scrollY: CGFloat = 0
     @Published var y: CGFloat = 0
@@ -19,6 +23,11 @@ class HomeViewState: ObservableObject {
     @Published var hasMovedBar = false
     @Published var shouldAnimateCards = false
     @Published var hasScrolledSome = false
+    @Published var dragState: DragState = .idle
+    
+    func setLock(_ lock: DragState) {
+        self.dragState = lock
+    }
     
     var scrollRevealY: CGFloat {
         mapHeight > 120 ? 100 : 0
@@ -72,14 +81,15 @@ class HomeViewState: ObservableObject {
     }
     
     var showFiltersAbove: Bool {
-        if y > snapToBottomAt - 20 { return false }
+        if y > snapToBottomAt - 1 { return false }
         if mapHeight < 190 { return false }
         return hasScrolledSome
     }
 
     let mapMinHeight: CGFloat = Screen.statusBarHeight + searchBarHeight / 2 + topNavHeight + 40
-    var mapMaxHeight: CGFloat { appHeight - keyboardHeight - searchBarHeight - 10 }
     var mapInitialHeight: CGFloat { appHeight * 0.3 }
+    
+    var mapMaxHeight: CGFloat { appHeight - keyboardHeight - searchBarHeight }
 
     var mapHeight: CGFloat {
         return min(mapMaxHeight, max(mapInitialHeight + y, mapMinHeight))
@@ -106,15 +116,15 @@ class HomeViewState: ObservableObject {
     private var startDragAt: CGFloat = 0
 
     func drag(_ dragY: CGFloat) {
-        if homeDragLock.state == .pager { return }
+        if dragState == .pager { return }
         log.info()
         // TODO we can reset this back to false in some cases for better UX
         self.hasMovedBar = true
 
         // remember where we started
-        if homeDragLock.state != .searchbar {
+        if dragState != .searchbar {
             self.startDragAt = y
-            homeDragLock.setLock(.searchbar)
+            self.setLock(.searchbar)
         }
 
         var y = self.startDragAt + (
@@ -161,7 +171,7 @@ class HomeViewState: ObservableObject {
     }
 
     func finishDrag(_ value: DragGesture.Value) {
-        if homeDragLock.state == .pager { return }
+        if dragState == .pager { return }
         log.info()
         if isSnappedToBottom {
             self.snapToBottom()
@@ -186,7 +196,7 @@ class HomeViewState: ObservableObject {
 
     func snapToBottom(_ toBottom: Bool = true) {
         log.info()
-        homeDragLock.setLock(.off)
+        self.setLock(.off)
         self.animateCards()
         withAnimation(.spring(response: 0.22)) {
             self.scrollY = 0
@@ -243,7 +253,7 @@ class HomeViewState: ObservableObject {
     }
 
     func setScrollY(_ scrollY: CGFloat) {
-        if homeDragLock.state != .idle {
+        if dragState != .idle {
             return
         }
         let y = max(0, min(100, scrollY)).rounded()
@@ -253,13 +263,13 @@ class HomeViewState: ObservableObject {
     }
     
     func moveToSearchResults() {
-        if homeDragLock.state == .idle {
+        if dragState == .idle {
             self.snapToTop()
         }
     }
 }
 
-fileprivate let homeViewState = HomeViewState()
+let homeViewState = HomeViewState()
 
 struct HomeSearchBarState {
     static var frame: CGRect = CGRect()
@@ -273,7 +283,6 @@ struct HomeMainView: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard
     @Environment(\.geometry) var appGeometry
-    @ObservedObject var dragState = homeDragLock
     @ObservedObject var state = homeViewState
     @State var wasOnSearchResults = false
 
@@ -383,7 +392,7 @@ struct HomeMainView: View {
                             Spacer()
                         }
                         .animation(
-                            .spring(response: 0.125)
+                            state.dragState == .idle ? .spring(response: 0.25) : .spring(response: 0.1)
                         )
                         .padding(.horizontal, 10)
                         .offset(y: mapHeight - 23 + state.searchBarYExtra)
@@ -397,11 +406,11 @@ struct HomeMainView: View {
                 .simultaneousGesture(
                     DragGesture(minimumDistance: 10)
                         .onChanged { value in
-                            if [.off, .pager].contains(homeDragLock.state) {
+                            if [.off, .pager].contains(state.dragState) {
                                 return
                             }
                             // why is this off 80???
-                            if HomeSearchBarState.isWithin(value.startLocation.y - 40) || homeDragLock.state == .searchbar {
+                            if HomeSearchBarState.isWithin(value.startLocation.y - 40) || state.dragState == .searchbar {
                                 // hide keyboard on drag
                                 if self.keyboard.state.height > 0 {
                                     self.keyboard.hide()
@@ -411,10 +420,10 @@ struct HomeMainView: View {
                             }
                     }
                     .onEnded { value in
-                        if [.idle, .searchbar].contains(homeDragLock.state) {
+                        if [.idle, .searchbar].contains(state.dragState) {
                             self.state.finishDrag(value)
                         }
-                        homeDragLock.setLock(.idle)
+                        self.state.setLock(.idle)
                     }
                 )
             }
