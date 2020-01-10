@@ -12,7 +12,9 @@ struct FilterButton: View {
         }
         .padding(.vertical, 7)
         .padding(.horizontal, 12)
-        .background(Color.gray.opacity(0.2))
+        .background(
+            Color(hue: 0, saturation: 0, brightness: 0.2).opacity(0.9)
+        )
         .overlay(
             RoundedRectangle(cornerRadius: 80)
                 .stroke(Color.white.opacity(0.25), lineWidth: 2)

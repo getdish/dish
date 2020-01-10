@@ -18,6 +18,7 @@ class HomeViewState: ObservableObject {
     @Published var searchBarYExtra: CGFloat = 0
     @Published var hasMovedBar = false
     @Published var shouldAnimateCards = false
+    @Published var hasScrolledSome = false
 
     // keyboard
     @Published var keyboardHeight: CGFloat = 0
@@ -47,6 +48,20 @@ class HomeViewState: ObservableObject {
                 
             }
             .store(in: &cancellables)
+        
+        self.$scrollY.sink { y in
+            if y > 10 {
+                self.hasScrolledSome = true
+            } else {
+                self.hasScrolledSome = false
+            }
+        }.store(in: &cancellables)
+    }
+    
+    var showFiltersAbove: Bool {
+        if isSnappedToBottom { return false }
+        if mapHeight < 190 { return false }
+        return hasScrolledSome
     }
 
     let mapMinHeight: CGFloat = Screen.statusBarHeight + searchBarHeight / 2 + topNavHeight + 40
@@ -335,7 +350,7 @@ struct HomeMainView: View {
                         }
                         .animation(.spring())
                         .offset(y: mapHeight + searchBarHeight / 2 + 12 + (
-                            state.scrollY > 10 ? -100 : 0
+                            state.showFiltersAbove ? -100 : 0
                         ))
                         .opacity(isOnSearchResults ? 0 : 1)
 

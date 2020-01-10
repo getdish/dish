@@ -113,7 +113,7 @@ struct HomeCardsGrid: View {
             }
             .offset(y: homeState.mapHeight)
             .animation(.spring())
-            .mask(self.mask.offset(y: homeState.mapHeight + filterBarHeight / 4))
+//            .mask(self.mask.offset(y: homeState.mapHeight + filterBarHeight / 4))
         }
     }
     

@@ -31,6 +31,7 @@ struct TopNavViewContent: View {
                     .frame(height: 160)
                 Spacer()
             }
+            .disabled(true)
             
             ZStack {
                 TopNavSearchResults()
