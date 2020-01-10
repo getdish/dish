@@ -37,37 +37,39 @@ struct HomeSearchBar: View {
     }
     
     var body: some View {
-        SearchInput(
-            placeholder: "",
-            inputBackgroundColor: Color.white,
-            borderColor: Color.gray.opacity(0.14),
-            scale: self.scrollAtTop ? 1.25 : 1.0,
-            sizeRadius: 2.0,
-            icon: icon,
-            showCancelInside: true,
-            onClear: {
-                // go back on empty search clear
-                if Selectors.home.isOnSearchResults() && appStore.state.home.state.last!.searchResults.results.count == 0 {
-                    appStore.send(.home(.pop))
-                }
-                // focus keyboard again on clear if not focused
-                if self.keyboard.state.height == 0 {
-                    print("NOW WE DO? \(self.textField)")
-                    self.focusKeyboard()
-//                    if let field = self.textField {
-//                        field.isFirstResponder()
-//                    }
-                }
+        ZStack {
+            SearchInput(
+                placeholder: "",
+                inputBackgroundColor: Color.white,
+                borderColor: Color.gray.opacity(0.14),
+                scale: self.scrollAtTop ? 1.25 : 1.0,
+                sizeRadius: 2.0,
+                icon: icon,
+                showCancelInside: true,
+                onClear: {
+                    // go back on empty search clear
+                    if Selectors.home.isOnSearchResults() && appStore.state.home.state.last!.searchResults.results.count == 0 {
+                        appStore.send(.home(.pop))
+                    }
+                    // focus keyboard again on clear if not focused
+                    if self.keyboard.state.height == 0 {
+                        print("NOW WE DO? \(self.textField)")
+                        self.focusKeyboard()
+                        //                    if let field = self.textField {
+                        //                        field.isFirstResponder()
+                        //                    }
+                    }
             },
-            after: AnyView(HomeSearchBarAfterView()),
-            isFirstResponder: isFirstResponder,
-//            onTextField: { field in
-//                print("set text field")
-//                self.textField = field
-//            },
-            searchText: self.homeSearch,
-            tags: self.homeTags
-        )
+                after: AnyView(HomeSearchBarAfterView()),
+                isFirstResponder: isFirstResponder,
+                //            onTextField: { field in
+                //                print("set text field")
+                //                self.textField = field
+                //            },
+                searchText: self.homeSearch,
+                tags: self.homeTags
+            )
+        }
     }
     
     var icon: AnyView {

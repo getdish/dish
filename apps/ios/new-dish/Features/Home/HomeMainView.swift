@@ -289,7 +289,7 @@ struct HomeMainView: View {
                                 zoom: zoom
                             )
                             
-                            // keyboard dismiss (above map, below content)
+//                            // keyboard dismiss (above map, below content)
                             if self.keyboard.state.height > 0 {
                                 Color.black.opacity(0.2)
                                     .transition(.opacity)
@@ -339,8 +339,7 @@ struct HomeMainView: View {
                         // searchinput always light
                         .environment(\.colorScheme, .light)
                     }
-                        // everything below map is always dark
-                        .environment(\.colorScheme, .dark)
+                    .environment(\.colorScheme, .dark)
                 }
                 .clipped() // dont remove fixes bug cant click SearchBar
                 .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)

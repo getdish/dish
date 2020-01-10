@@ -6,7 +6,6 @@ struct BottomNav: View {
     
     var body: some View {
         let isOnGallery = false //store.state.galleryDish != nil
-        let filters = ["Quiet", "New", "Trending", "Healthy", "Cute"]
         
         return VStack {
             Spacer()
@@ -16,29 +15,7 @@ struct BottomNav: View {
                 
                 VStack {
                     Spacer()
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 14) {
-                            ForEach(0 ..< filters.count) { index in
-                                Button(action: {}) {
-                                    HStack {
-                                        Text(filters[index])
-                                            .foregroundColor(.blue)
-                                    }
-                                    .padding(.vertical, 4)
-                                    .padding(.horizontal, 8)
-                                    .background(Color.white)
-                                    .cornerRadius(20)
-                                    .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 3)
-                                }
-                                .offset(y: 11)
-                            }
-                            
-                            // end space for camera button
-                            Spacer().frame(width: 90)
-                        }
-                        .padding(12)
-                    }
-                    .frame(width: Screen.width - 40, height: 80)
+                    QuickFilters()
                 }
                 
                 //                HStack {
@@ -60,45 +37,7 @@ struct BottomNav: View {
                     Spacer()
                     HStack {
                         Spacer()
-                        
-                        Button(action: {
-                            homePager.animateTo(2)
-                        }) {
-                            ZStack {
-                                Group {
-                                    Image(systemName: "viewfinder")
-                                        .resizable()
-                                        .scaledToFit()
-                                    
-                                    Image(systemName: "circle.fill")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 16, height: 16)
-                                }
-                                .foregroundColor(.white)
-                            }
-                        }
-                        .padding(.all, 13)
-                        .background(
-                            LinearGradient(
-                                gradient: Gradient(colors: [
-                                    Color(red: 0.8, green: 0.5, blue: 0.8),
-                                    Color(red: 0.8 + 0.1, green: 0.5 + 0.1, blue: 0.8 + 0.1)
-                                ]),
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                        )
-                            .cornerRadius(80)
-                            .shadow(color: Color.black.opacity(1), radius: 25, x: 0, y: 6)
-                            //                        .overlay(
-                            //                            RoundedRectangle(cornerRadius: 80)
-                            //                                .stroke(Color(red: 0.8 - 2, green: 0.5 - 2, blue: 0.8 - 2).opacity(0.5), lineWidth: 2)
-                            //                    )
-                            .frame(width: 58, height: 58)
-                            .animation(.spring(response: 0.5))
-                            .offset(y: isOnGallery ? hiddenButtonY : 0)
-                        
+                        CameraButton()
                     }
                 }
                 

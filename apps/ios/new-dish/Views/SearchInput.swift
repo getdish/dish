@@ -91,7 +91,8 @@ struct SearchInput: View {
                                     }
                                 }
                                 .foregroundColor(Color.white)
-                                .padding(6)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 5)
                                 .background(tag.color)
                                 .cornerRadius(4)
                                 .onTapGesture {

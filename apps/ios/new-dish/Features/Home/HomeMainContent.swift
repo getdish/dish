@@ -21,6 +21,32 @@ struct HomeMainContent: View {
     }
 }
 
+struct HomeMainContentExplore: View {
+    let isHorizontal: Bool
+    @EnvironmentObject var homeState: HomeViewState
+    @Environment(\.geometry) var appGeometry
+    
+    var body: some View {
+        ZStack {
+            VStack {
+                HomeCardsRow()
+                Spacer()
+            }
+                .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
+                .offset(y: max(100, homeState.mapHeight - cardRowHeight - 16))
+                .opacity(self.isHorizontal ? 1 : 0)
+                .disabled(!self.isHorizontal)
+            
+            HomeCardsGrid()
+                .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
+                .opacity(self.isHorizontal ? 0 : 1)
+                .disabled(self.isHorizontal)
+        }
+        .edgesIgnoringSafeArea(.all)
+        .clipped()
+    }
+}
+
 struct HomeMainContentSearchPage: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
@@ -65,28 +91,6 @@ struct HomeMainContentSearchPage: View {
                 )
             }
         }
-    }
-}
-
-struct HomeMainContentExplore: View {
-    let isHorizontal: Bool
-    @EnvironmentObject var homeState: HomeViewState
-    
-    var body: some View {
-        ZStack {
-            Spacer()
-            
-//            HomeCardsRow()
-//                .offset(y: max(100, homeState.mapHeight - cardRowHeight - 12))
-//                .opacity(self.isHorizontal ? 1 : 0)
-//                .disabled(!self.isHorizontal)
-            
-            HomeCardsGrid()
-                .opacity(self.isHorizontal ? 0 : 1)
-                .disabled(self.isHorizontal)
-        }
-        .edgesIgnoringSafeArea(.all)
-        .clipped()
     }
 }
 
