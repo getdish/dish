@@ -12,6 +12,10 @@ final class Keyboard: ObservableObject {
     
     @Published public var state: Keyboard.State = .default
     
+    var isVisible: Bool {
+        state.height > 0
+    }
+    
     private var cancellables: Set<AnyCancellable> = []
     private var notificationCenter: NotificationCenter
     
