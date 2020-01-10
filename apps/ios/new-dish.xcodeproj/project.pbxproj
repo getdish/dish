@@ -76,7 +76,7 @@
 		AEA331FB23A338F400B36A23 /* KeyboardHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331FA23A338F400B36A23 /* KeyboardHost.swift */; };
 		AEA87E4323B976EB009F07DB /* HomeMainFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA87E4223B976EB009F07DB /* HomeMainFilters.swift */; };
 		AEA87E4923B9923B009F07DB /* InputEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA87E4823B9923B009F07DB /* InputEvents.swift */; };
-		AEAE67EC23B5A70A00B9D781 /* LocationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAE67EB23B5A70A00B9D781 /* LocationState.swift */; };
+		AEAE67EC23B5A70A00B9D781 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAE67EB23B5A70A00B9D781 /* Location.swift */; };
 		AEED843E23B5A8E000407266 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED843D23B5A8E000407266 /* Mocks.swift */; };
 		AEED844123B6707100407266 /* DishMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844023B6707100407266 /* DishMapView.swift */; };
 		AEED844523B672D000407266 /* CameraTopNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844423B672D000407266 /* CameraTopNav.swift */; };
@@ -90,7 +90,7 @@
 		AEF6557B23B042CD00E49A51 /* HomeSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */; };
 		AEF6557F23B14DBA00E49A51 /* ContextMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557E23B14DBA00E49A51 /* ContextMenuView.swift */; };
 		AEF6558123B2205F00E49A51 /* HomeMainContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6558023B2205F00E49A51 /* HomeMainContent.swift */; };
-		AEF6558423B59BC000E49A51 /* HomeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6558323B59BC000E49A51 /* HomeState.swift */; };
+		AEF6558423B59BC000E49A51 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6558323B59BC000E49A51 /* Home.swift */; };
 		C7BDB448CA7019F5B1D6545F /* Pods_new_dish.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B343F398A6E8C95D41FD1804 /* Pods_new_dish.framework */; };
 /* End PBXBuildFile section */
 
@@ -168,7 +168,7 @@
 		AEA331FA23A338F400B36A23 /* KeyboardHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHost.swift; sourceTree = "<group>"; };
 		AEA87E4223B976EB009F07DB /* HomeMainFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainFilters.swift; sourceTree = "<group>"; };
 		AEA87E4823B9923B009F07DB /* InputEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputEvents.swift; sourceTree = "<group>"; };
-		AEAE67EB23B5A70A00B9D781 /* LocationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationState.swift; sourceTree = "<group>"; };
+		AEAE67EB23B5A70A00B9D781 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		AEED843D23B5A8E000407266 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Mocks.swift; path = "/Users/nw/dish/apps/ios/new-dish/Store/Mocks.swift"; sourceTree = "<absolute>"; };
 		AEED844023B6707100407266 /* DishMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishMapView.swift; sourceTree = "<group>"; };
 		AEED844423B672D000407266 /* CameraTopNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraTopNav.swift; sourceTree = "<group>"; };
@@ -182,7 +182,7 @@
 		AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchBar.swift; sourceTree = "<group>"; };
 		AEF6557E23B14DBA00E49A51 /* ContextMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuView.swift; sourceTree = "<group>"; };
 		AEF6558023B2205F00E49A51 /* HomeMainContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainContent.swift; sourceTree = "<group>"; };
-		AEF6558323B59BC000E49A51 /* HomeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeState.swift; sourceTree = "<group>"; };
+		AEF6558323B59BC000E49A51 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		B343F398A6E8C95D41FD1804 /* Pods_new_dish.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_new_dish.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -222,12 +222,13 @@
 				1CE3546423986B1B004B3A84 /* AppDelegate.swift */,
 				1CE3546623986B1B004B3A84 /* SceneDelegate.swift */,
 				1CE3546823986B1B004B3A84 /* RootView.swift */,
-				1CE3547823986B2A004B3A84 /* Features */,
 				AEF6558223B59A8000E49A51 /* Store */,
 				1CE3547A23986B5D004B3A84 /* Model */,
+				1CE3547823986B2A004B3A84 /* Features */,
 				1CE3547D23986B70004B3A84 /* Views */,
 				AE7563BD23A037B50094022B /* Resources */,
 				1CE3547C23986B69004B3A84 /* Extensions */,
+				AE85339523C92D170045F144 /* Vendor */,
 				1CE3546A23986B1C004B3A84 /* Assets.xcassets */,
 				1CE3547223986B1C004B3A84 /* Info.plist */,
 				1CE3546F23986B1C004B3A84 /* LaunchScreen.storyboard */,
@@ -382,6 +383,22 @@
 			path = "../../cur-ios/Dish/Resources";
 			sourceTree = "<group>";
 		};
+		AE85339523C92D170045F144 /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				AE85339623C92D240045F144 /* SwiftRedux */,
+			);
+			path = Vendor;
+			sourceTree = "<group>";
+		};
+		AE85339623C92D240045F144 /* SwiftRedux */ = {
+			isa = PBXGroup;
+			children = (
+				1CE3547E23986B88004B3A84 /* Store.swift */,
+			);
+			path = SwiftRedux;
+			sourceTree = "<group>";
+		};
 		AEA331ED23A3370200B36A23 /* Account */ = {
 			isa = PBXGroup;
 			children = (
@@ -413,10 +430,9 @@
 			isa = PBXGroup;
 			children = (
 				1CE3548223986C5C004B3A84 /* App.swift */,
-				AEF6558323B59BC000E49A51 /* HomeState.swift */,
-				AEAE67EB23B5A70A00B9D781 /* LocationState.swift */,
+				AEF6558323B59BC000E49A51 /* Home.swift */,
+				AEAE67EB23B5A70A00B9D781 /* Location.swift */,
 				AEED843D23B5A8E000407266 /* Mocks.swift */,
-				1CE3547E23986B88004B3A84 /* Store.swift */,
 			);
 			path = Store;
 			sourceTree = "<group>";
@@ -611,10 +627,10 @@
 				AE0F474823B6AA39008F7418 /* HomeDragLock.swift in Sources */,
 				1CE3548323986C5C004B3A84 /* App.swift in Sources */,
 				AEF6556F23B0248200E49A51 /* FilterButton.swift in Sources */,
-				AEAE67EC23B5A70A00B9D781 /* LocationState.swift in Sources */,
+				AEAE67EC23B5A70A00B9D781 /* Location.swift in Sources */,
 				AE861A7923A0651D004096BF /* Keyboard.swift in Sources */,
 				AE861A8123A16DA6004096BF /* TopNavView.swift in Sources */,
-				AEF6558423B59BC000E49A51 /* HomeState.swift in Sources */,
+				AEF6558423B59BC000E49A51 /* Home.swift in Sources */,
 				AE6A9C1123C5265C00003059 /* GooglePlaceItem.swift in Sources */,
 				AE861A8923A172E8004096BF /* BlurView.swift in Sources */,
 				AEF6557F23B14DBA00E49A51 /* ContextMenuView.swift in Sources */,
