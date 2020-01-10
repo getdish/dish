@@ -18,6 +18,7 @@ let appStore = Store<AppState, AppAction>.init(initialState: AppState(), reducer
 let keyboard = Keyboard()
 let inputEvents = InputEvents()
 let homeDragLock = HomeDragLock()
+let q = DispatchQueue(label: "defaultQueue")
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

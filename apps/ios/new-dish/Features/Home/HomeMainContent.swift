@@ -101,17 +101,17 @@ struct HomeCardsGrid: View {
                         if homeDragLock.state == .idle {
                             let mapHeight = self.homeState.mapHeight
                             self.homeState.setScrollY(
-                                mapHeight - frame.minY - Screen.statusBarHeight
+                                mapHeight - frame.minY - Screen.statusBarHeight - self.homeState.scrollRevealY
                             )
                         }
                     })
-                    Spacer().frame(height: filterBarHeight + 22)
+                    Spacer().frame(height: filterBarHeight + 22 + self.homeState.scrollRevealY)
                     self.content
                     Spacer().frame(height: bottomNavHeight)
-                    Spacer().frame(height: homeState.mapHeight)
+                    Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)
                 }
             }
-            .offset(y: homeState.mapHeight)
+            .offset(y: homeState.mapHeight - self.homeState.scrollRevealY)
             .animation(.spring())
 //            .mask(self.mask.offset(y: homeState.mapHeight + filterBarHeight / 4))
         }

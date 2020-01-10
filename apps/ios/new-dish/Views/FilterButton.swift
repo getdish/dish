@@ -20,7 +20,7 @@ struct FilterButton: View {
                 .stroke(Color.white.opacity(0.25), lineWidth: 2)
         )
             .cornerRadius(80)
-            .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
+            .shadow(color: Color.black.opacity(0.5), radius: 7, x: 0, y: 2)
     }
 }
 

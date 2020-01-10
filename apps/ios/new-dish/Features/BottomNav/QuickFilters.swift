@@ -29,6 +29,7 @@ struct QuickFilters: View {
             .offset(y: 11)
         }
         .frame(height: 80)
+        // TODO if you change this to 2 or more it breaks...
         .offset(y: 1)
         .mask(
             LinearGradient(

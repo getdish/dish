@@ -42,7 +42,7 @@ struct HomeMainFilters: View {
                     FilterButton(label: "Burmese", action: {})
                     FilterButton(label: "Greek", action: {})
                 }
-                .padding(.horizontal)
+                .padding()
             }
         }
     }

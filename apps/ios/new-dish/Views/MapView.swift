@@ -131,6 +131,7 @@ class MapViewController: UIViewController {
     }
     
     private func updateCamera() {
+        print("updateCamera, animate \(animate)")
         if let camera = getCamera() {
             if gmapView.isHidden {
                 gmapView.isHidden = false

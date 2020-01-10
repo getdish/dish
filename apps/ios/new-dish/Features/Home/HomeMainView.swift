@@ -19,6 +19,10 @@ class HomeViewState: ObservableObject {
     @Published var hasMovedBar = false
     @Published var shouldAnimateCards = false
     @Published var hasScrolledSome = false
+    
+    var scrollRevealY: CGFloat {
+        mapHeight > 120 ? 100 : 0
+    }
 
     // keyboard
     @Published var keyboardHeight: CGFloat = 0
@@ -49,13 +53,21 @@ class HomeViewState: ObservableObject {
             }
             .store(in: &cancellables)
         
-        self.$scrollY.sink { y in
-            if y > 10 {
-                self.hasScrolledSome = true
-            } else {
-                self.hasScrolledSome = false
-            }
-        }.store(in: &cancellables)
+        let started = Date()
+        self.$scrollY
+            .sink { y in
+                print("\(Date().timeIntervalSince(started))")
+                if Date().timeIntervalSince(started) > 1 {
+                    DispatchQueue.main.async {
+                        print("scroll scroll \(y)")
+                        if y > 10 {
+                            self.hasScrolledSome = true
+                        } else {
+                            self.hasScrolledSome = false
+                        }
+                    }
+                }
+            }.store(in: &cancellables)
     }
     
     var showFiltersAbove: Bool {
@@ -175,7 +187,7 @@ class HomeViewState: ObservableObject {
         log.info()
         homeDragLock.setLock(.off)
         self.animateCards()
-        withAnimation(.spring()) {
+        withAnimation(.spring(response: 0.2)) {
             self.scrollY = 0
             self.searchBarYExtra = 0
             if toBottom {
@@ -278,7 +290,8 @@ struct HomeMainView: View {
         }
         
         let state = self.state
-        let mapHeight = state.mapHeight
+        let scrollRevealY = state.scrollRevealY
+        let mapHeight = state.mapHeight + (state.scrollY > scrollRevealY / 2 ? -scrollRevealY : 0)
         let zoom = mapHeight / 250 + 10
 
         print("render HomeMainView -- mapHeight \(mapHeight) y \(state.y)")
@@ -349,7 +362,7 @@ struct HomeMainView: View {
                             Spacer()
                         }
                         .animation(.spring())
-                        .offset(y: mapHeight + searchBarHeight / 2 + 12 + (
+                        .offset(y: mapHeight + searchBarHeight / 2 - 4 + (
                             state.showFiltersAbove ? -100 : 0
                         ))
                         .opacity(isOnSearchResults ? 0 : 1)

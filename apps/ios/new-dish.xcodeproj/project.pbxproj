@@ -78,7 +78,7 @@
 		AEA87E4923B9923B009F07DB /* InputEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA87E4823B9923B009F07DB /* InputEvents.swift */; };
 		AEAE67EC23B5A70A00B9D781 /* LocationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAE67EB23B5A70A00B9D781 /* LocationState.swift */; };
 		AEED843E23B5A8E000407266 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED843D23B5A8E000407266 /* Mocks.swift */; };
-		AEED844123B6707100407266 /* DishMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844023B6707100407266 /* DishMap.swift */; };
+		AEED844123B6707100407266 /* DishMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844023B6707100407266 /* DishMapView.swift */; };
 		AEED844523B672D000407266 /* CameraTopNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844423B672D000407266 /* CameraTopNav.swift */; };
 		AEED844823B675C300407266 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844723B675C300407266 /* CameraView.swift */; };
 		AEF6556F23B0248200E49A51 /* FilterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6556E23B0248200E49A51 /* FilterButton.swift */; };
@@ -170,7 +170,7 @@
 		AEA87E4823B9923B009F07DB /* InputEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputEvents.swift; sourceTree = "<group>"; };
 		AEAE67EB23B5A70A00B9D781 /* LocationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationState.swift; sourceTree = "<group>"; };
 		AEED843D23B5A8E000407266 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Mocks.swift; path = "/Users/nw/dish/apps/ios/new-dish/Store/Mocks.swift"; sourceTree = "<absolute>"; };
-		AEED844023B6707100407266 /* DishMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishMap.swift; sourceTree = "<group>"; };
+		AEED844023B6707100407266 /* DishMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishMapView.swift; sourceTree = "<group>"; };
 		AEED844423B672D000407266 /* CameraTopNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraTopNav.swift; sourceTree = "<group>"; };
 		AEED844723B675C300407266 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		AEF6556E23B0248200E49A51 /* FilterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButton.swift; sourceTree = "<group>"; };
@@ -394,7 +394,7 @@
 		AEED843F23B6706400407266 /* DishMap */ = {
 			isa = PBXGroup;
 			children = (
-				AEED844023B6707100407266 /* DishMap.swift */,
+				AEED844023B6707100407266 /* DishMapView.swift */,
 				AE861A7E23A07D81004096BF /* DishMapControls.swift */,
 			);
 			path = DishMap;
@@ -592,7 +592,7 @@
 				1CE3548A239871CB004B3A84 /* BottomSheetView.swift in Sources */,
 				AE1BBDB623C8397900C58A87 /* CutoutCircleCentered.swift in Sources */,
 				AE6A9C1323C52B0A00003059 /* LocationManager.swift in Sources */,
-				AEED844123B6707100407266 /* DishMap.swift in Sources */,
+				AEED844123B6707100407266 /* DishMapView.swift in Sources */,
 				1C3CFE6423998FF2004B2EEA /* HomeContainerView.swift in Sources */,
 				AE0F474423B69276008F7418 /* DishCamera.swift in Sources */,
 				AE861A7F23A07D81004096BF /* DishMapControls.swift in Sources */,
