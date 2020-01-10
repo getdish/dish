@@ -5,7 +5,11 @@ import GoogleMaps
 extension AppState {
     struct HomeState: Equatable {
         var view: HomePageView = .home
-        var state: [HomeStateItem] = [HomeStateItem()]
+        var state: [HomeStateItem] = [
+            HomeStateItem(filters: [
+                SearchFilter(type: .root, name: "Dish", deletable: false)
+            ])
+        ]
         var showDrawer: Bool = false
     }
 }
@@ -112,7 +116,8 @@ struct HomeSelectors {
             tags = homeState.filters.map { filter in
                 SearchInputTag(
                     color: SearchToTagColor.filter,
-                    text: filter.name
+                    text: filter.name,
+                    deletable: filter.deletable
                 )
             }
         }
@@ -156,7 +161,10 @@ struct HomeStateItem: Identifiable, Equatable {
 }
 
 struct SearchFilter: Equatable {
-    enum SearchFilterType { case cuisine }
+    enum SearchFilterType {
+        case root, cuisine
+    }
     var type: SearchFilterType = .cuisine
     var name = ""
+    var deletable = true
 }

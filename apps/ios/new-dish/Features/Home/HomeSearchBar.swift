@@ -38,7 +38,7 @@ struct HomeSearchBar: View {
     
     var body: some View {
         SearchInput(
-            placeholder: "Pho, Burger, Wings...",
+            placeholder: "",
             inputBackgroundColor: Color.white,
             borderColor: Color.gray.opacity(0.14),
             scale: self.scrollAtTop ? 1.25 : 1.0,
