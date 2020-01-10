@@ -131,14 +131,14 @@ class MapViewController: UIViewController {
     }
     
     private func updateCamera() {
-        print("updateCamera, animate \(animate)")
         if let camera = getCamera() {
             if gmapView.isHidden {
                 gmapView.isHidden = false
             }
-            gmapView.camera = camera
-            if self.animate != false {
+            if self.animate {
                 gmapView.animate(to: camera)
+            } else {
+                gmapView.camera = camera
             }
         }
     }
