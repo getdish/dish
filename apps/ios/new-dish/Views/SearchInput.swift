@@ -31,6 +31,7 @@ struct SearchInput: View {
     var onClear: (() -> Void)?
     var after: AnyView?
     var onTextField: ((UITextField) -> Void)?
+    var isFirstResponder: Bool = false
     
     @Binding var searchText: String
     @Binding var tags: [SearchInputTag]
@@ -105,23 +106,21 @@ struct SearchInput: View {
                         }
                     }
                     
-                    TextField(
-                        hasTags ? "" : self.placeholder,
+                    CustomTextField(
+                        placeholder: hasTags ? "" : self.placeholder,
                         text: self.$searchText,
-                        onEditingChanged: self.handleEditingChanged,
-                        onCommit: {
-                            print("onCommit")
-                        }
+                        isFirstResponder: self.isFirstResponder,
+                        onEditingChanged: self.handleEditingChanged
                     )
-                        .introspectTextField { textField in
-                            print("we got a text field here \(textField)")
-                            if let cb = self.onTextField {
-                                cb(textField)
-                            }
-                    }
+//                        .introspectTextField { textField in
+//                            print("!!!!!!! we got a text field here \(textField)")
+//                            if let cb = self.onTextField {
+//                                cb(textField)
+//                            }
+//                    }
 //                        .disableAutocorrection(true)
-                        .font(.system(size: fontSize))
-                        .foregroundColor(.primary)
+//                        .font(.system(size: fontSize))
+//                        .foregroundColor(.primary)
 
                     Button(action: {
                         self.searchText = ""

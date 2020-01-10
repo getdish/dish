@@ -10,6 +10,7 @@ struct HomeSearchBar: View {
     @State var searchText = ""
     @State var scrollAtTop = true
     @State var textField: UITextField? = nil
+    @State var isFirstResponder = false
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard
     
@@ -28,9 +29,15 @@ struct HomeSearchBar: View {
         )
     }
     
+    func focusKeyboard() {
+        self.isFirstResponder = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(10)) {
+            self.isFirstResponder = true
+        }
+    }
+    
     var body: some View {
-        print("SearchInput tags \(Selectors.home.tags())")
-        return SearchInput(
+        SearchInput(
             placeholder: "Pho, Burger, Wings...",
             inputBackgroundColor: Color.white,
             borderColor: Color.gray.opacity(0.14),
@@ -46,16 +53,18 @@ struct HomeSearchBar: View {
                 // focus keyboard again on clear if not focused
                 if self.keyboard.state.height == 0 {
                     print("NOW WE DO? \(self.textField)")
-                    if let field = self.textField {
-                        field.becomeFirstResponder()
-                    }
+                    self.focusKeyboard()
+//                    if let field = self.textField {
+//                        field.isFirstResponder()
+//                    }
                 }
             },
             after: AnyView(HomeSearchBarAfterView()),
-            onTextField: { field in
-                print("set text field")
-                self.textField = field
-            },
+            isFirstResponder: isFirstResponder,
+//            onTextField: { field in
+//                print("set text field")
+//                self.textField = field
+//            },
             searchText: self.homeSearch,
             tags: self.homeTags
         )
