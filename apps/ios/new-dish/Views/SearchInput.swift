@@ -40,7 +40,6 @@ struct SearchInput: View {
     
     func handleEditingChanged(isEditing: Bool) {
         self.showCancelButton = isEditing
-        
         if let cb = onEditingChanged {
             cb(isEditing)
         }
@@ -49,7 +48,7 @@ struct SearchInput: View {
     var cancelButton: some View {
         Button("Done") {
             UIApplication.shared.endEditing(true) // this must be placed before the other commands here
-//            self.searchText = ""
+            print("on cancel")
             self.showCancelButton = false
             if let cb = self.onCancel {
                 cb()

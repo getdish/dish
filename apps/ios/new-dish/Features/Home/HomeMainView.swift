@@ -71,7 +71,7 @@ class HomeViewState: ObservableObject {
     }
     
     var showFiltersAbove: Bool {
-        if isSnappedToBottom { return false }
+        if y > snapToBottomAt - 20 { return false }
         if mapHeight < 190 { return false }
         return hasScrolledSome
     }
@@ -166,13 +166,13 @@ class HomeViewState: ObservableObject {
             self.snapToBottom()
         }
         if !isSnappedToBottom && y > aboutToSnapToBottomAt {
-            withAnimation(.spring()) {
+            withAnimation(.spring(response: 0.2)) {
                 self.y = aboutToSnapToBottomAt
                 self.searchBarYExtra = 0
             }
         } else {
             if searchBarYExtra != 0 {
-                withAnimation(.spring()) {
+                withAnimation(.spring(response: 0.2)) {
                     self.searchBarYExtra = 0
                 }
             }
@@ -187,7 +187,7 @@ class HomeViewState: ObservableObject {
         log.info()
         homeDragLock.setLock(.off)
         self.animateCards()
-        withAnimation(.spring(response: 0.2)) {
+        withAnimation(.spring(response: 0.22)) {
             self.scrollY = 0
             self.searchBarYExtra = 0
             if toBottom {
@@ -382,8 +382,7 @@ struct HomeMainView: View {
                             Spacer()
                         }
                         .animation(
-                            // dont animate when dragging
-                            self.dragState.state == .idle ? .spring() : .none
+                            .spring(response: 0.125)
                         )
                         .padding(.horizontal, 10)
                         .offset(y: mapHeight - 23 + state.searchBarYExtra)
