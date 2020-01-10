@@ -136,7 +136,12 @@ class MapViewController: UIViewController {
                 gmapView.isHidden = false
             }
             if self.animate {
+                // to control animation duration... uncomment below
+//                CATransaction.begin()
+                // higher number = slower animation
+//                CATransaction.setValue(1.5, forKey: kCATransactionAnimationDuration)
                 gmapView.animate(to: camera)
+//                CATransaction.commit()
             } else {
                 gmapView.camera = camera
             }
