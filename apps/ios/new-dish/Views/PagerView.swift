@@ -49,20 +49,10 @@ struct PagerView<Content: View>: View {
                 .gesture(
                     self.disableDragging ? nil : DragGesture(minimumDistance: 20)
                         .onChanged({ value in
-                            print("Pager.onDrag")
-                            if !self.pagerStore.isGestureActive {
-                                if let cb = self.pagerStore.changeDragAction {
-                                    cb(true)
-                                }
-                            }
-                            self.pagerStore.isGestureActive = true
-                            self.pagerStore.offset = value.translation.width + -geometry.size.width * CGFloat(self.pagerStore.index)
+                            self.pagerStore.drag(value)
                         })
                         .onEnded({ value in
                             self.pagerStore.onDragEnd(value)
-                            if let cb = self.pagerStore.changeDragAction {
-                                cb(false)
-                            }
                         })
             )
         }
@@ -120,7 +110,7 @@ class PagerStore: ObservableObject {
     @Published var isGestureActive: Bool = false
     var width: CGFloat = Screen.width
     var numPages = 2
-    var cancels: [AnyCancellable] = []
+    var cancels: Set<AnyCancellable> = []
     var changePageAction: OnChangePage?
     var changeDragAction: OnChangeDrag?
     
@@ -130,22 +120,44 @@ class PagerStore: ObservableObject {
         self.indexRounded = Int(index)
         
         // indexRounded
-        self.cancels.append(
-            self.$index
-                .drop { !isRoundNumber($0) }
-                .filter(isRoundNumber)
-                .map { Int($0) }
-                .assign(to: \.indexRounded, on: self)
-        )
+        self.$index
+            .drop { !isRoundNumber($0) }
+            .filter(isRoundNumber)
+            .map { Int($0) }
+            .assign(to: \.indexRounded, on: self)
+            .store(in: &cancels)
         
         // indexLast
-        self.cancels.append(
-            self.$index
-                .drop { !isRoundNumber($0) }
-                .filter(isRoundNumber)
-                .map { Int($0) }
-                .assign(to: \.indexRounded, on: self)
-        )
+        self.$index
+            .drop { !isRoundNumber($0) }
+            .filter(isRoundNumber)
+            .map { Int($0) }
+            .assign(to: \.indexRounded, on: self)
+            .store(in: &cancels)
+        
+        // callback onChangeDrag
+        var last = false
+        self.$index
+            .sink { i in
+                DispatchQueue.main.async {
+                    if let cb = self.changeDragAction {
+                        let isRounded = i.truncatingRemainder(dividingBy: 1.0) == 0.0
+                        print("???? \(i) \(isRounded) \(last)")
+                        if isRounded {
+                            if last == true {
+                                last = false
+                                cb(false)
+                            }
+                        } else {
+                            if last == false {
+                                last = true
+                                cb(true)
+                            }
+                        }
+                    }
+                }
+            }
+            .store(in: &cancels)
     }
     
     func animateTo(_ index: Double) {
@@ -163,8 +175,10 @@ class PagerStore: ObservableObject {
         }
     }
     
-    func drag(_ offset: Double) {
-        self.index = Double(self.indexLast) + offset
+    func drag(_ value: DragGesture.Value) {
+        self.isGestureActive = true
+        self.index = Double(self.indexLast) + Double(-value.translation.width / self.width)
+        self.offset = CGFloat(self.index) * -self.width
     }
     
     func onDragEnd(_ value: DragGesture.Value) {

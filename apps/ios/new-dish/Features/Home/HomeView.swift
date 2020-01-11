@@ -62,7 +62,7 @@ struct HomeViewContent: View {
                         .clipped()
                         .cornerRadius(80)
                         .shadow(
-                            color: Color.black.opacity(1),
+                            color: Color.black.opacity(self.shadowStr),
                             radius: 60,
                             x: 0,
                             y: 0
@@ -74,6 +74,7 @@ struct HomeViewContent: View {
                         .zIndex(0)
             }
             .onChangeDrag { isDragging in
+                print("set isDragging \(isDragging)")
                 self.isDragging = isDragging
             }
             .onChangePage { index in
@@ -93,8 +94,7 @@ struct HomeViewContent: View {
                             if abs(value.translation.width) > 10 {
                                 homeViewState.setLock(.pager)
                             }
-                            let dragIndexDiff = Double(-value.translation.width / self.width)
-                            homePager.drag(dragIndexDiff)
+                            homePager.drag(value)
                         }
                 }
                 .onEnded { value in
