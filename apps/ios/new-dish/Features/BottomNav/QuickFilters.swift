@@ -42,6 +42,8 @@ struct QuickFilters: View {
                     Color.black,
                     Color.black,
                     Color.black,
+                    Color.black,
+                    Color.black,
                     Color.black
                 ]),
                 startPoint: .trailing,

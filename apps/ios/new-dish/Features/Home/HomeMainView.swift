@@ -317,7 +317,7 @@ struct HomeMainView: View {
             state.scrollY > scrollRevealY / 2 ?
                 -35 : 0
         let mapHeight = state.mapHeight + mapHeightScrollReveal
-        let zoom = mapHeight / 250 + 10
+        let zoom = mapHeight / 235 + 9.7
 
         print("render HomeMainView -- mapHeight \(mapHeight) y \(state.y)")
 
