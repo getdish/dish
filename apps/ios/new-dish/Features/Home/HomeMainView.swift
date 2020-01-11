@@ -70,7 +70,7 @@ class HomeViewState: ObservableObject {
                 if Date().timeIntervalSince(started) > 1 {
                     DispatchQueue.main.async {
                         print("scroll scroll \(y)")
-                        if y > 10 {
+                        if y > 20 {
                             self.hasScrolledSome = true
                         } else {
                             self.hasScrolledSome = false
@@ -175,18 +175,15 @@ class HomeViewState: ObservableObject {
         log.info()
         if isSnappedToBottom {
             self.snapToBottom()
-        }
-        if !isSnappedToBottom && y > aboutToSnapToBottomAt {
-            withAnimation(.spring(response: 0.2)) {
+        } else if y > aboutToSnapToBottomAt {
+            withAnimation(.spring(response: 2)) {
                 self.y = aboutToSnapToBottomAt
-                self.searchBarYExtra = 0
             }
-        } else {
-            if searchBarYExtra != 0 {
-                withAnimation(.spring(response: 0.2)) {
-                    self.searchBarYExtra = 0
-                }
-            }
+        }
+        if searchBarYExtra != 0 {
+//            withAnimation(.easeIn(duration: 1)) {
+//                self.searchBarYExtra = 0
+//            }
         }
         // attempt to have it "continue" from your drag a bit, feels slow
         //        withAnimation(.spring(response: 0.2222)) {
@@ -267,6 +264,10 @@ class HomeViewState: ObservableObject {
             self.snapToTop()
         }
     }
+    
+    func setAppHeight(_ val: CGFloat) {
+        self.appHeight = val
+    }
 }
 
 let homeViewState = HomeViewState()
@@ -300,11 +301,21 @@ struct HomeMainView: View {
             self.wasOnSearchResults = isOnSearchResults
         }
         
+        
+        if let height = appGeometry?.size.height {
+            if height != state.appHeight {
+                DispatchQueue.main.async {
+                    self.state.setAppHeight(height)
+                }
+            }
+        }
+        
         let state = self.state
         let scrollRevealY = state.scrollRevealY
-        let mapHeightScrollReveal: CGFloat = state.mapHeight < scrollRevealY + 100 ? 0 :
+        let shouldAvoidScrollReveal = state.mapHeight < scrollRevealY + 100
+        let mapHeightScrollReveal: CGFloat = shouldAvoidScrollReveal ? 0 :
             state.scrollY > scrollRevealY / 2 ?
-                -60 : 0
+                -35 : 0
         let mapHeight = state.mapHeight + mapHeightScrollReveal
         let zoom = mapHeight / 250 + 10
 
@@ -312,7 +323,7 @@ struct HomeMainView: View {
 
 //        return MagicMove(animate: state.animate) {
         return GeometryReader { geometry in
-                ZStack {
+            ZStack(alignment: .top) {
                     // weird way to set appheight
                     Color.black
                         .onAppear {
@@ -322,6 +333,12 @@ struct HomeMainView: View {
                                 }
                             }
                     }
+                    
+                    Color.white
+                        .frame(height: 1)
+                        .animation(.spring())
+                        .opacity(state.y > state.aboutToSnapToBottomAt - 70 ? 0.2 : 0.0)
+                        .offset(y: state.aboutToSnapToBottomAt + state.mapInitialHeight)
                     
                     // below the map
                     

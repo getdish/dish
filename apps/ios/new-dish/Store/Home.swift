@@ -7,7 +7,7 @@ extension AppState {
         var view: HomePageView = .home
         var state: [HomeStateItem] = [
             HomeStateItem(filters: [
-                SearchFilter(type: .root, name: "Dish", deletable: false)
+//                SearchFilter(type: .root, name: "Dish", deletable: false)
             ])
         ]
         var showDrawer: Bool = false

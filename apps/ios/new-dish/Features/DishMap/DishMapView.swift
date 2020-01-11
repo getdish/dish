@@ -12,14 +12,15 @@ struct DishMapView: View {
     @EnvironmentObject var homeState: HomeViewState
     
     var body: some View {
-        return MapView(
-            width: width,
-            height: height,
-            zoom: zoom,
-            darkMode: self.colorScheme == .dark,
-            animate: homeState.dragState == .idle || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
-            location: store.state.location.isOnCurrent ? .current : .uncontrolled,
-            locations: store.state.home.state.last!.searchResults.results.map { $0.place }
-        )
+        return Color.red
+//        return MapView(
+//            width: width,
+//            height: height,
+//            zoom: zoom,
+//            darkMode: self.colorScheme == .dark,
+//            animate: homeState.dragState == .idle || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
+//            location: store.state.location.isOnCurrent ? .current : .uncontrolled,
+//            locations: store.state.home.state.last!.searchResults.results.map { $0.place }
+//        )
     }
 }
