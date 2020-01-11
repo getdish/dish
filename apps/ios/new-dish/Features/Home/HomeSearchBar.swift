@@ -30,6 +30,7 @@ struct HomeSearchBar: View {
     }
     
     func focusKeyboard() {
+        log.info()
         self.isFirstResponder = false
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(10)) {
             self.isFirstResponder = true
