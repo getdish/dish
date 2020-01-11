@@ -2,6 +2,7 @@ import SwiftUI
 import Combine
 
 typealias OnChangePage = (_ curPage: Int) -> Void
+typealias OnChangeDrag = (_ isDragging: Bool) -> Void
 
 // TODO i'm just using PagerStore as a global (pStore), because @EnvironmentObject gave me
 // trouble, i couldn't get it to react inside views for some reason...
@@ -14,7 +15,7 @@ struct PagerView<Content: View>: View {
     @ObservedObject var pagerStore = PagerStore()
     var disableDragging = false
     var pageTurnArrows = false
-    var content: Content
+    var content: (Bool?) -> Content
     var pageCount: Int
     
     init(
@@ -22,20 +23,20 @@ struct PagerView<Content: View>: View {
         pagerStore: PagerStore,
         disableDragging: Bool = false,
         pageTurnArrows: Bool = false,
-        @ViewBuilder content: () -> Content
+        @ViewBuilder content: @escaping (Bool?) -> Content
     ) {
         self.pageCount = pageCount
         self.pagerStore = pagerStore
         pagerStore.numPages = pageCount
         self.disableDragging = disableDragging
         self.pageTurnArrows = pageTurnArrows
-        self.content = content()
+        self.content = content
     }
     
     var body: some View {
         GeometryReader { geometry in
             HStack(alignment: .center, spacing: 0) {
-                self.content
+                self.content(self.pagerStore.isGestureActive)
                     .frame(width: geometry.size.width)
             }
             .offset(
@@ -49,11 +50,19 @@ struct PagerView<Content: View>: View {
                     self.disableDragging ? nil : DragGesture(minimumDistance: 20)
                         .onChanged({ value in
                             print("Pager.onDrag")
+                            if !self.pagerStore.isGestureActive {
+                                if let cb = self.pagerStore.changeDragAction {
+                                    cb(true)
+                                }
+                            }
                             self.pagerStore.isGestureActive = true
                             self.pagerStore.offset = value.translation.width + -geometry.size.width * CGFloat(self.pagerStore.index)
                         })
                         .onEnded({ value in
                             self.pagerStore.onDragEnd(value)
+                            if let cb = self.pagerStore.changeDragAction {
+                                cb(false)
+                            }
                         })
             )
         }
@@ -96,6 +105,11 @@ extension PagerView {
         self.pagerStore.changePageAction = action
         return self
     }
+    
+    func onChangeDrag(perform action: @escaping OnChangeDrag) -> Self {
+        self.pagerStore.changeDragAction = action
+        return self
+    }
 }
 
 class PagerStore: ObservableObject {
@@ -108,6 +122,7 @@ class PagerStore: ObservableObject {
     var numPages = 2
     var cancels: [AnyCancellable] = []
     var changePageAction: OnChangePage?
+    var changeDragAction: OnChangeDrag?
     
     init(index: Double = 0) {
         self.index = index
@@ -207,7 +222,7 @@ struct PagerTest: View {
                 pageCount: 2,
                 pagerStore: PagerStore(),
                 pageTurnArrows: true
-            ) {
+            ) { isDragging in
                 Color.red
                 Color.blue
             }

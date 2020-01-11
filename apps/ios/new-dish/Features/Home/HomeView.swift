@@ -33,24 +33,48 @@ struct HomeViewContent: View {
     var width: CGFloat = 0
     var height: CGFloat = 0
     @EnvironmentObject var store: AppStore
-    @State private var disableDragging = true
+    @State var disableDragging = true
+    @State var isDragging = false
+    @State var shadowStr: Double = 1
 
     var body: some View {
+        // animate home shadow only
+        let next: Double = self.store.state.home.view == .home || isDragging ? 1 : 0
+        if next != self.shadowStr {
+            DispatchQueue.main.async {
+                withAnimation(.spring()) {
+                    self.shadowStr = next
+                }
+            }
+        }
+        
         return ZStack {
             PagerView(
                 pageCount: homePageCount,
                 pagerStore: homePager,
                 disableDragging: self.disableDragging
-                ) {
+                ) { isDragging in
                     DishAccount()
                         .clipped()
                         .cornerRadius(80)
+                        .zIndex(0)
                     HomeMainView()
                         .clipped()
                         .cornerRadius(80)
+                        .shadow(
+                            color: Color.black.opacity(1),
+                            radius: 60,
+                            x: 0,
+                            y: 0
+                        )
+                        .zIndex(2)
                     DishCamera()
                         .clipped()
                         .cornerRadius(80)
+                        .zIndex(0)
+            }
+            .onChangeDrag { isDragging in
+                self.isDragging = isDragging
             }
             .onChangePage { index in
                 print("change page to index \(index)")
