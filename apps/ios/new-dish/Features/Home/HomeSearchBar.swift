@@ -38,39 +38,34 @@ struct HomeSearchBar: View {
     }
     
     var body: some View {
-        ZStack {
-            SearchInput(
-                placeholder: "",
-                inputBackgroundColor: Color.white,
-                borderColor: Color.gray.opacity(0.14),
-                scale: self.scrollAtTop ? 1.25 : 1.0,
-                sizeRadius: 2.0,
-                icon: icon,
-                showCancelInside: true,
-                onClear: {
-                    // go back on empty search clear
-                    if Selectors.home.isOnSearchResults() && appStore.state.home.state.last!.searchResults.results.count == 0 {
-                        appStore.send(.home(.pop))
-                    }
-                    // focus keyboard again on clear if not focused
-                    if self.keyboard.state.height == 0 {
-                        print("NOW WE DO? \(self.textField)")
-                        self.focusKeyboard()
-                        //                    if let field = self.textField {
-                        //                        field.isFirstResponder()
-                        //                    }
-                    }
-            },
-                after: AnyView(HomeSearchBarAfterView()),
-                isFirstResponder: isFirstResponder,
-                //            onTextField: { field in
-                //                print("set text field")
-                //                self.textField = field
-                //            },
-                searchText: self.homeSearch,
-                tags: self.homeTags
-            )
-        }
+        SearchInput(
+            placeholder: "",
+            inputBackgroundColor: Color.white,
+            borderColor: Color.gray.opacity(0.14),
+            scale: self.scrollAtTop ? 1.25 : 1.0,
+            sizeRadius: 2.0,
+            icon: icon,
+            showCancelInside: true,
+            onClear: {
+                // go back on empty search clear
+                if Selectors.home.isOnSearchResults() && appStore.state.home.state.last!.searchResults.results.count == 0 {
+                    appStore.send(.home(.pop))
+                }
+                // focus keyboard again on clear if not focused
+                if self.keyboard.state.height == 0 {
+                    print("NOW WE DO? \(self.textField)")
+                    self.focusKeyboard()
+                }
+        },
+            after: AnyView(HomeSearchBarAfterView()),
+            isFirstResponder: isFirstResponder,
+            //            onTextField: { field in
+            //                print("set text field")
+            //                self.textField = field
+            //            },
+            searchText: self.homeSearch,
+            tags: self.homeTags
+        )
     }
     
     var icon: AnyView {
@@ -93,21 +88,35 @@ struct HomeSearchBarAfterView: View {
     @EnvironmentObject var homeState: HomeViewState
     
     var body: some View {
-        Button(action: {
-            self.homeState.toggleMap()
-        }) {
-            Image(systemName: self.homeState.isSnappedToTop ?
-                "chevron.down" :
-                self.homeState.isSnappedToBottom
-                ? "chevron.up"
-                : "chevron.up.chevron.down"
-            )
-                .resizable()
-                .scaledToFit()
-                .frame(width: 16, height: 16)
-                .opacity(0.45)
+        HStack {
+            Button(action: {
+                self.homeState.toggleMap()
+            }) {
+                Image(systemName: self.homeState.isSnappedToTop ?
+                    "chevron.down" :
+                    self.homeState.isSnappedToBottom
+                    ? "chevron.up"
+                    : "map"
+                )
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 16, height: 16)
+                    .opacity(0.5)
+            }
+            .padding(.vertical, 4)
+            .padding(.horizontal, 6)
+            
+            Button(action: {
+                homePager.animateTo(2)
+            }) {
+                Image(systemName: "camera.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 16, height: 16)
+                    .opacity(0.5)
+            }
+            .padding(.vertical, 4)
+            .padding(.horizontal, 6)
         }
-        .padding(.vertical, 4)
-        .padding(.horizontal, 20)
     }
 }

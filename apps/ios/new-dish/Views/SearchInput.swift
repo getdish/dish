@@ -140,7 +140,7 @@ struct SearchInput: View {
                     
                     if after != nil {
                         after
-                            .frame(width: 24 * scale, height: 24 * scale)
+                            .frame(height: 24 * scale)
                     }
                 }
                     .padding(EdgeInsets(
