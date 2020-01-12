@@ -112,11 +112,12 @@ struct HomeSearchBarAfterView: View {
                 Image(systemName: "camera.fill")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 16, height: 16)
+                    .frame(width: 20, height: 16)
                     .opacity(0.5)
             }
             .padding(.vertical, 4)
             .padding(.horizontal, 6)
         }
+        .padding(.trailing, 4)
     }
 }
