@@ -2,6 +2,7 @@ import SwiftUI
 import Combine
 
 struct DishCamera: View {
+    @EnvironmentObject var store: AppStore
     @State var isCaptured = true
     @State var isOpen = false
     var cancel: AnyCancellable?
@@ -17,15 +18,7 @@ struct DishCamera: View {
             .frame(minWidth: Screen.width, maxHeight: .infinity)
             
             DishCameraPictureOverlay()
-            
-//            @Binding var isOpen: Bool
-//
-//            let snapRatio: CGFloat
-//            let maxHeight: CGFloat
-//            let minHeight: CGFloat
-//            let content: Content
-//            let userIndicator: AnyView?
-            
+
             BottomSheetView(
                 isOpen: $isOpen,
                 maxHeight: Screen.height * 0.7,
@@ -34,6 +27,7 @@ struct DishCamera: View {
                 DishRestaurantDrawer()
             }
         }
+        .allowsHitTesting(self.store.state.home.view == .camera)
         .clipped()
     }
 }

@@ -33,14 +33,14 @@ struct BottomNav: View {
                 //                    Spacer()
                 //                }
                 
-                VStack {
-                    Spacer()
-                    HStack {
-                        Spacer()
-                        CameraButton()
-                    }
-                }
-                .padding(.horizontal)
+//                VStack {
+//                    Spacer()
+//                    HStack {
+//                        Spacer()
+//                        CameraButton()
+//                    }
+//                }
+//                .padding(.horizontal)
                 
                 // camera controls
                 

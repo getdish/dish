@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct QuickFilters: View {
-    let filters = ["Quiet", "New", "Trending", "Healthy", "Cute"]
+    let filters = ["Quiet", "New", "Trending", "Healthy", "Cute", "Quiet", "New", "Trending", "Healthy", "Cute"]
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -44,7 +44,7 @@ struct QuickFilters: View {
                     Color.black,
                     Color.black,
                     Color.black,
-                    Color.black
+                    Color.white.opacity(0)
                 ]),
                 startPoint: .trailing,
                 endPoint: .leading
