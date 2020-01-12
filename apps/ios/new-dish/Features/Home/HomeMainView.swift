@@ -417,6 +417,10 @@ struct HomeMainView: View {
                         .environment(\.colorScheme, .light)
                     }
                     .environment(\.colorScheme, .dark)
+                
+                    // make everything untouchable while dragging
+                    Color.clear
+                        .frame(width: state.dragState == .pager ? Screen.width : 0)
                 }
                 .clipped() // dont remove fixes bug cant click SearchBar
                 .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)

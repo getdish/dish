@@ -83,7 +83,7 @@ struct HomeViewContent: View {
                 self.disableDragging = view == .home
                 self.store.send(.home(.setView(view)))
             }
-            // just drag from edge (to camera)
+            // just drag from edge (to camera/account)
             .simultaneousGesture(
                 DragGesture()
                     .onChanged { value in
