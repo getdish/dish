@@ -11,7 +11,6 @@ struct HomeView: View {
                     width: geometry.size.width,
                     height: geometry.size.height
                 )
-                TopNavView()
             }
             .background(
                 self.colorScheme == .light ? Color.white : Color.black.opacity(0.8)
@@ -33,26 +32,49 @@ struct HomeViewContent: View {
     var width: CGFloat = 0
     var height: CGFloat = 0
     @EnvironmentObject var store: AppStore
-    @State private var disableDragging = true
+    @State var disableDragging = true
+    @State var isDragging = false
+    @State var shadowStr: Double = 1
 
     var body: some View {
-        let dragState = HomeDragLock.state
+        // animate home shadow only
+        let next: Double = self.store.state.home.view == .home || isDragging ? 1 : 0
+        if next != self.shadowStr {
+            DispatchQueue.main.async {
+                withAnimation(.spring()) {
+                    self.shadowStr = next
+                }
+            }
+        }
         
         return ZStack {
             PagerView(
                 pageCount: homePageCount,
                 pagerStore: homePager,
                 disableDragging: self.disableDragging
-                ) {
+                ) { isDragging in
                     DishAccount()
                         .clipped()
                         .cornerRadius(80)
+                        .zIndex(0)
                     HomeMainView()
                         .clipped()
                         .cornerRadius(80)
+                        .shadow(
+                            color: Color.black.opacity(self.shadowStr),
+                            radius: 60,
+                            x: 0,
+                            y: 0
+                        )
+                        .zIndex(2)
                     DishCamera()
                         .clipped()
                         .cornerRadius(80)
+                        .zIndex(0)
+            }
+            .onChangeDrag { isDragging in
+                print("set isDragging \(isDragging)")
+                self.isDragging = isDragging
             }
             .onChangePage { index in
                 print("change page to index \(index)")
@@ -60,26 +82,29 @@ struct HomeViewContent: View {
                 self.disableDragging = view == .home
                 self.store.send(.home(.setView(view)))
             }
-            // just drag from edge (to camera)
+            // just drag from edge (to camera/account)
             .simultaneousGesture(
                 DragGesture()
                     .onChanged { value in
-                        if dragState == .searchbar { return }
+                        if homeViewState.state == .searchbar { return }
                         let isOnRightEdge = self.width - value.startLocation.x < 10
                         let isOnLeftEdge = value.startLocation.x < 10
                         if isOnRightEdge || isOnLeftEdge {
                             if abs(value.translation.width) > 10 {
-                                HomeDragLock.setLock(.pager)
+                                homeViewState.setState(.pager)
                             }
-                            let dragIndexDiff = Double(-value.translation.width / self.width)
-                            homePager.drag(dragIndexDiff)
+                            homePager.drag(value)
                         }
                 }
                 .onEnded { value in
-                    homePager.onDragEnd(value)
-                    HomeDragLock.setLock(.idle)
+                    if homeViewState.state == .pager {
+                        homePager.onDragEnd(value)
+                        homeViewState.setState(.idle)
+                    }
                 }
             )
+            
+            TopNavView()
             
             BottomNav()
         }

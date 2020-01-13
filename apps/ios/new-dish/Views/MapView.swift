@@ -9,17 +9,17 @@ fileprivate struct Constants {
     static let ONE_DEGREE_LAT: Double = 7000 / 111111
 }
 
+enum MapViewLocation {
+    case current, uncontrolled
+}
+
 struct MapView: UIViewControllerRepresentable {
-    enum MapLocation {
-        case current, uncontrolled
-    }
-    
     var width: CGFloat
     var height: CGFloat
     var zoom: CGFloat
     var darkMode: Bool?
     var animate: Bool
-    var location: MapLocation
+    var location: MapViewLocation
     var locations: [GooglePlaceItem] = []
     @State var controller: MapViewController? = nil
 
@@ -99,13 +99,15 @@ class MapViewController: UIViewController {
     
     func update(_ mapView: MapView) {
         if self.zoom != mapView.zoom {
+            log.info("update zoom \(mapView.zoom)")
             self.updateZoom(mapView.zoom)
         }
         if self.animate != mapView.animate {
+            log.info("update animate \(mapView.animate)")
             self.animate = mapView.animate
         }
         if self.locations != mapView.locations {
-            print("update locations...")
+            log.info("update locations \(mapView.locations.count)")
             self.locations = mapView.locations
             self.locations.forEach { place in
                 let location = place.geometry.location
@@ -135,9 +137,15 @@ class MapViewController: UIViewController {
             if gmapView.isHidden {
                 gmapView.isHidden = false
             }
-            gmapView.camera = camera
-            if self.animate != false {
+            if self.animate {
+                // to control animation duration... uncomment below
+//                CATransaction.begin()
+                // higher number = slower animation
+//                CATransaction.setValue(1.5, forKey: kCATransactionAnimationDuration)
                 gmapView.animate(to: camera)
+//                CATransaction.commit()
+            } else {
+                gmapView.camera = camera
             }
         }
     }

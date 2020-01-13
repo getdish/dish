@@ -16,6 +16,8 @@ let log = XCGLogger.default
 let googlePlaces = GooglePlaces()
 let appStore = Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
 let keyboard = Keyboard()
+let inputEvents = InputEvents()
+let q = DispatchQueue(label: "defaultQueue")
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -31,9 +33,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         startDebugLoop()
         
         // SwiftUI bugfix list backgrounds transparent
-        let colorTransparent = UIColor.init(displayP3Red: 0, green: 0, blue: 0, alpha: 0)
-        UITableView.appearance().backgroundColor = colorTransparent
-        UITableViewCell.appearance().backgroundColor = colorTransparent
+//        let colorTransparent = UIColor.init(displayP3Red: 0, green: 0, blue: 0, alpha: 0)
+//        UITableView.appearance().backgroundColor = colorTransparent
+//        UITableViewCell.appearance().backgroundColor = colorTransparent
         
         // setup XGCLogger
         log.setup(

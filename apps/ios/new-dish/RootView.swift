@@ -12,7 +12,6 @@ struct RootView: View {
         ContextMenuRootView {
             HomeContainerView()
         }
-        .edgesIgnoringSafeArea(.all)
     }
 }
 

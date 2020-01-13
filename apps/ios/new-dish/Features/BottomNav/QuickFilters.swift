@@ -1,11 +1,11 @@
 import SwiftUI
 
 struct QuickFilters: View {
-    let filters = ["Quiet", "New", "Trending", "Healthy", "Cute"]
+    let filters = ["Quiet", "New", "Trending", "Healthy", "Cute", "Quiet", "New", "Trending", "Healthy", "Cute"]
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 14) {
+            HStack(spacing: 11) {
                 ForEach(0 ..< filters.count) { index in
                     Button(action: {}) {
                         HStack {
@@ -29,6 +29,7 @@ struct QuickFilters: View {
             .offset(y: 11)
         }
         .frame(height: 80)
+        // TODO if you change this to 2 or more it breaks...
         .offset(y: 1)
         .mask(
             LinearGradient(
@@ -41,7 +42,9 @@ struct QuickFilters: View {
                     Color.black,
                     Color.black,
                     Color.black,
-                    Color.black
+                    Color.black,
+                    Color.black,
+                    Color.white.opacity(0)
                 ]),
                 startPoint: .trailing,
                 endPoint: .leading

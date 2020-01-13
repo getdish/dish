@@ -7,10 +7,13 @@ fileprivate let totalHeight = topPad + bottomPad + 40
 
 struct TopNavView: View {
     @EnvironmentObject var store: AppStore
+    @ObservedObject var homeState = homeViewState
 
     var body: some View {
         TopNavViewContent()
-            .disabled(store.state.disableTopNav)
+            .allowsHitTesting(!store.state.disableTopNav)
+            .animation(.spring())
+            .offset(y: homeState.mapHeight < homeState.hideTopNavAt ? -100 : 0)
     }
 }
 
@@ -31,6 +34,7 @@ struct TopNavViewContent: View {
                     .frame(height: 160)
                 Spacer()
             }
+            .disabled(true)
             
             ZStack {
                 TopNavSearchResults()

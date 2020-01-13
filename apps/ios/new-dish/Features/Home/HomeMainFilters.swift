@@ -1,13 +1,48 @@
 import SwiftUI
 
 struct HomeMainFilters: View {
-    @EnvironmentObject var store: AppStore
-    @State var showTypeMenu = false
-
     var body: some View {
         ZStack {
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
+                HomeMainFiltersContent()
+            }
+            
+            // cover right part of filters so its untouchable and doesnt conflict with side drags
+            HStack {
+                Spacer()
+                Color.black.opacity(0.0001).frame(width: 35, height: 55)
+            }
+        }
+    }
+}
+
+struct HomeMainFiltersContent: View {
+    @EnvironmentObject var store: AppStore
+    
+    var body: some View {
+        HStack {
+            FilterButton(label: "American", action: {
+                // todo move this into action
+                let curState = self.store.state.home.state.last!
+                let filters = curState.filters.filter({ $0.type == .cuisine }) + [
+                    SearchFilter(type: .cuisine, name: "American")
+                ]
+                self.store.send(.home(.push(HomeStateItem(
+                    search: curState.search,
+                    filters: filters
+                ))))
+            })
+            FilterButton(label: "Thai", action: {})
+            FilterButton(label: "Chinese", action: {})
+            FilterButton(label: "Italian", action: {})
+            FilterButton(label: "French", action: {})
+            FilterButton(label: "Burmese", action: {})
+            FilterButton(label: "Greek", action: {})
+        }
+        .padding()
+    }
+}
+
 //                    ContextMenuView(menuContent: {
 //                        List {
 //                            Text("Item One")
@@ -23,27 +58,3 @@ struct HomeMainFilters: View {
 //                                self.showTypeMenu = true
 //                        }
 //                    }
-
-                    FilterButton(label: "American", action: {
-                        // todo move this into action
-                        let curState = self.store.state.home.state.last!
-                        let filters = curState.filters.filter({ $0.type == .cuisine }) + [
-                            SearchFilter(type: .cuisine, name: "American")
-                        ]
-                        self.store.send(.home(.push(HomeStateItem(
-                            search: curState.search,
-                            filters: filters
-                        ))))
-                    })
-                    FilterButton(label: "Thai", action: {})
-                    FilterButton(label: "Chinese", action: {})
-                    FilterButton(label: "Italian", action: {})
-                    FilterButton(label: "French", action: {})
-                    FilterButton(label: "Burmese", action: {})
-                    FilterButton(label: "Greek", action: {})
-                }
-                .padding(.horizontal)
-            }
-        }
-    }
-}

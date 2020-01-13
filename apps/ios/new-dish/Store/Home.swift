@@ -7,7 +7,7 @@ extension AppState {
         var view: HomePageView = .home
         var state: [HomeStateItem] = [
             HomeStateItem(filters: [
-                SearchFilter(type: .root, name: "Dish", deletable: false)
+//                SearchFilter(type: .root, name: "Dish", deletable: false)
             ])
         ]
         var showDrawer: Bool = false
@@ -45,10 +45,19 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
             updateItem(last)
         case let .setCurrentTags(val):
             var last = state.home.state.last!
-            last.filters = val.map { SearchFilter(name: $0.text) }
-            updateItem(last)
-            if let search = val.last?.text {
-                appStore.send(.home(.setSearch(search)))
+            // if removing last filter, pop!
+            if val.count == 0 {
+                DispatchQueue.main.async {
+                    appStore.send(.home(.pop))
+                }
+            } else {
+                last.filters = val.map { SearchFilter(name: $0.text) }
+                updateItem(last)
+                if let search = val.last?.text {
+                    DispatchQueue.main.async {
+                        appStore.send(.home(.setSearch(search)))
+                    }
+                }
             }
         case let .setSearch(val):
             var last = state.home.state.last!

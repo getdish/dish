@@ -28,15 +28,6 @@ struct HomeMainContentExplore: View {
     
     var body: some View {
         ZStack {
-            VStack {
-                HomeCardsRow()
-                Spacer()
-            }
-                .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
-                .offset(y: max(100, homeState.mapHeight - cardRowHeight - 16))
-                .opacity(self.isHorizontal ? 1 : 0)
-                .disabled(!self.isHorizontal)
-            
             HomeCardsGrid()
                 .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
                 .opacity(self.isHorizontal ? 0 : 1)
@@ -99,8 +90,6 @@ struct HomeCardsGrid: View {
     @EnvironmentObject var homeState: HomeViewState
     @Environment(\.geometry) var appGeometry
     
-    @State var initY: CGFloat = 0
-    
     let items = features.chunked(into: 2)
     let spacing: CGFloat = 10
     
@@ -109,26 +98,22 @@ struct HomeCardsGrid: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     ScrollListener(onScroll: { frame in
-                        if self.initY == 0 {
-                            DispatchQueue.main.async {
-                                self.initY = frame.minY
-                            }
-                        }
-                        if HomeDragLock.state == .idle {
-                            let scrollY = frame.minY
-                            let y = self.initY - scrollY
-                            self.homeState.setScrollY(y)
+                        if self.homeState.state == .idle {
+                            let mapHeight = self.homeState.mapHeight
+                            self.homeState.setScrollY(
+                                mapHeight - frame.minY - Screen.statusBarHeight - self.homeState.scrollRevealY
+                            )
                         }
                     })
-                    Spacer().frame(height: filterBarHeight + 22)
+                    Spacer().frame(height: filterBarHeight + 22 + self.homeState.scrollRevealY)
                     self.content
                     Spacer().frame(height: bottomNavHeight)
-                    Spacer().frame(height: homeState.mapHeight)
+                    Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)
                 }
             }
-            .offset(y: homeState.mapHeight)
+            .offset(y: homeState.mapHeight - self.homeState.scrollRevealY)
             .animation(.spring())
-            .mask(self.mask.offset(y: homeState.mapHeight + filterBarHeight / 4))
+//            .mask(self.mask.offset(y: homeState.mapHeight + filterBarHeight / 4))
         }
     }
     
