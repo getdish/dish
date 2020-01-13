@@ -87,6 +87,7 @@ class HomeViewState: ObservableObject {
         let started = Date()
         self.$scrollY
             .throttle(for: 0.1, scheduler: q, latest: true)
+            .removeDuplicates()
             .sink { y in
                 print("\(Date().timeIntervalSince(started))")
                 if Date().timeIntervalSince(started) > 1 {

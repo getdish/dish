@@ -138,6 +138,7 @@ class PagerStore: ObservableObject {
         // callback onChangeDrag
         var last = false
         self.$index
+            .removeDuplicates()
             .sink { i in
                 DispatchQueue.main.async {
                     if let cb = self.changeDragAction {
