@@ -235,6 +235,8 @@ class HomeViewState: ObservableObject {
 
     func snapToBottom(_ toBottom: Bool = true) {
         log.info()
+        // prevent dragging after snap
+        self.setDragState(.off)
         self.animate {
             self.scrollY = 0
             self.searchBarYExtra = 0
