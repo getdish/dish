@@ -224,8 +224,6 @@ class HomeViewState: ObservableObject {
 
     func snapToBottom(_ toBottom: Bool = true) {
         log.info()
-        self.setState(.off)
-        self.animateCards()
         self.animate {
             self.scrollY = 0
             self.searchBarYExtra = 0
@@ -235,14 +233,6 @@ class HomeViewState: ObservableObject {
                 self.y = snapToBottomAt - resistanceYBeforeSnap
             }
         }
-    }
-
-    func animateCards() {
-        log.info()
-//        self.animate = true
-//        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-//            self.animate = false
-//        }
     }
 
     var mapSnappedToTopHeight: CGFloat {
@@ -257,7 +247,7 @@ class HomeViewState: ObservableObject {
         log.info()
         if !isSnappedToTop {
 //            self.hasMovedBar = false
-            self.animate(.spring()) {
+            self.animate {
                 self.y = self.mapMinHeight - self.mapInitialHeight
             }
         }
@@ -266,7 +256,7 @@ class HomeViewState: ObservableObject {
     func animateTo(_ y: CGFloat) {
         log.info()
         if self.y == y { return }
-        self.animate(.spring()) {
+        self.animate {
             self.y = y
         }
     }
@@ -289,8 +279,8 @@ class HomeViewState: ObservableObject {
     
     func moveToSearchResults() {
         log.info()
-        if state == .idle {
-            self.snapToTop()
+        if state == .idle && y >= 0 {
+            self.animateTo(y - 80)
         }
     }
     
