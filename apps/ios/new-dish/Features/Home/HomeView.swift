@@ -86,20 +86,20 @@ struct HomeViewContent: View {
             .simultaneousGesture(
                 DragGesture()
                     .onChanged { value in
-                        if homeViewState.state == .searchbar { return }
+                        if homeViewState.dragState == .searchbar { return }
                         let isOnRightEdge = self.width - value.startLocation.x < 10
                         let isOnLeftEdge = value.startLocation.x < 10
                         if isOnRightEdge || isOnLeftEdge {
                             if abs(value.translation.width) > 10 {
-                                homeViewState.setState(.pager)
+                                homeViewState.setDragState(.pager)
                             }
                             homePager.drag(value)
                         }
                 }
                 .onEnded { value in
-                    if homeViewState.state == .pager {
+                    if homeViewState.dragState == .pager {
                         homePager.onDragEnd(value)
-                        homeViewState.setState(.idle)
+                        homeViewState.setDragState(.idle)
                     }
                 }
             )

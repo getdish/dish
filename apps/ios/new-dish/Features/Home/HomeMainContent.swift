@@ -98,7 +98,7 @@ struct HomeCardsGrid: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     ScrollListener(onScroll: { frame in
-                        if self.homeState.state == .idle {
+                        if self.homeState.dragState == .idle {
                             let mapHeight = self.homeState.mapHeight
                             self.homeState.setScrollY(
                                 mapHeight - frame.minY - Screen.statusBarHeight - self.homeState.scrollRevealY

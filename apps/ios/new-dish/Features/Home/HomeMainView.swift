@@ -13,8 +13,11 @@ fileprivate let resistanceYBeforeSnap: CGFloat = 48
 // then on idle we can apply .spring()
 
 class HomeViewState: ObservableObject {
-    enum State {
-        case idle, off, pager, searchbar, animating
+    enum HomeDragState {
+        case idle, off, pager, searchbar
+    }
+    enum HomeAnimationState {
+        case idle, controlled, uncontrolled
     }
     
     @Published private(set) var appHeight: CGFloat = Screen.height
@@ -24,39 +27,8 @@ class HomeViewState: ObservableObject {
     @Published private(set) var hasMovedBar = false
     @Published private(set) var shouldAnimateCards = false
     @Published private(set) var hasScrolledSome = false
-    @Published private(set) var state: State = .idle
-    
-    // note: setLock should be only way to mutate state in here
-    // and animate() should be only call to withAnimation() so we can
-    // make them coordinate with each other properly
-    
-    func setState(_ next: State) {
-        log.info()
-        self.state = next
-        if next != .animating,
-           let handle = self.cancelAnimation {
-            handle.cancel()
-        }
-    }
-    
-    private var cancelAnimation: AnyCancellable? = nil
-    func animate(_ animation: Animation? = .spring(), _ body: () -> Void) {
-        log.info()
-        var shouldEnd = true
-        self.cancelAnimation = AnyCancellable {
-            shouldEnd = false
-        }
-        self.setState(.animating)
-        withAnimation(Animation.spring()) {
-            body()
-        }
-        // TODO we need a way to know when .spring() ends...
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
-            if shouldEnd {
-                self.setState(.idle)
-            }
-        }
-    }
+    @Published private(set) var dragState: HomeDragState = .idle
+    @Published private(set) var animationState: HomeAnimationState = .idle
     
     var scrollRevealY: CGFloat {
         mapHeight > 120 ? 100 : 0
@@ -97,7 +69,7 @@ class HomeViewState: ObservableObject {
             .sink { y in
                 print("\(Date().timeIntervalSince(started))")
                 if Date().timeIntervalSince(started) > 1 {
-                    DispatchQueue.main.async {
+                    self.animate(state: .uncontrolled) {
                         print("scroll scroll \(y)")
                         if y > 20 {
                             self.hasScrolledSome = true
@@ -107,6 +79,44 @@ class HomeViewState: ObservableObject {
                     }
                 }
             }.store(in: &cancellables)
+    }
+    
+    // note: setDragState/setAnimationSate should be only way to mutate state
+    
+    func setDragState(_ next: HomeDragState) {
+        log.info()
+        self.dragState = next
+    }
+    
+    func setAnimationState(_ next: HomeAnimationState) {
+        log.info()
+        self.animationState = next
+        // cancel last controlled animation
+        if next != .controlled,
+            let handle = self.cancelAnimation {
+            handle.cancel()
+        }
+    }
+    
+    private var cancelAnimation: AnyCancellable? = nil
+    func animate(_ animation: Animation? = .spring(), state: HomeAnimationState = .controlled, _ body: @escaping () -> Void) {
+        log.info()
+        var shouldEnd = true
+        self.cancelAnimation = AnyCancellable {
+            shouldEnd = false
+        }
+//        self.setAnimationState(state)
+        DispatchQueue.main.async {
+            withAnimation(Animation.spring()) {
+                body()
+            }
+            // TODO we need a way to know when .spring() ends...
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
+                if shouldEnd {
+                    self.setAnimationState(.idle)
+                }
+            }
+        }
     }
     
     var showFiltersAbove: Bool {
@@ -149,15 +159,15 @@ class HomeViewState: ObservableObject {
     private var startDragAt: CGFloat = 0
 
     func drag(_ dragY: CGFloat) {
-        if state == .pager { return }
+        if dragState == .pager { return }
         log.info()
         // TODO we can reset this back to false in some cases for better UX
         self.hasMovedBar = true
 
         // remember where we started
-        if state != .searchbar {
+        if dragState != .searchbar {
             self.startDragAt = y
-            self.setState(.searchbar)
+            self.setDragState(.searchbar)
         }
 
         var y = self.startDragAt + (
@@ -204,16 +214,16 @@ class HomeViewState: ObservableObject {
     }
 
     func finishDrag(_ value: DragGesture.Value) {
-        if state == .pager { return }
+        if dragState == .pager { return }
         log.info()
         
         self.animate {
-            if isSnappedToBottom {
+            if self.isSnappedToBottom {
                 self.snapToBottom()
-            } else if y > aboutToSnapToBottomAt {
-                self.y = aboutToSnapToBottomAt
+            } else if self.y > self.aboutToSnapToBottomAt {
+                self.y = self.aboutToSnapToBottomAt
             }
-            if searchBarYExtra != 0 {
+            if self.searchBarYExtra != 0 {
                 self.searchBarYExtra = 0
             }
             // attempt to have it "continue" from your drag a bit, feels slow
@@ -229,9 +239,9 @@ class HomeViewState: ObservableObject {
             self.scrollY = 0
             self.searchBarYExtra = 0
             if toBottom {
-                self.y = snappedToBottomMapHeight - mapInitialHeight
+                self.y = self.snappedToBottomMapHeight - self.mapInitialHeight
             } else {
-                self.y = snapToBottomAt - resistanceYBeforeSnap
+                self.y = self.snapToBottomAt - resistanceYBeforeSnap
             }
         }
     }
@@ -270,7 +280,7 @@ class HomeViewState: ObservableObject {
     }
 
     func setScrollY(_ scrollY: CGFloat) {
-        if state != .idle { return }
+        if dragState != .idle { return }
         log.info()
         let y = max(0, min(100, scrollY)).rounded()
         if y != self.scrollY {
@@ -280,7 +290,7 @@ class HomeViewState: ObservableObject {
     
     func moveToSearchResults() {
         log.info()
-        if state == .idle && y >= 0 {
+        if dragState == .idle && y >= 0 {
             self.animateTo(y - 80)
         }
     }
@@ -434,8 +444,8 @@ struct HomeMainView: View {
                             Spacer()
                         }
 //                        .animation(
-//                            state.state == .animating ? Animation.none :
-//                                state.dragState == .idle ? .spring(response: 0.25) : Animation.spring(response: 0.1)
+//                            state.state == .animating ? .none :
+//                                state.state == .idle ? .spring(response: 0.25) : .spring(response: 0.1)
 //                        )
                         .padding(.horizontal, 10)
                         .offset(y: mapHeight - 23 + state.searchBarYExtra)
@@ -446,18 +456,18 @@ struct HomeMainView: View {
                 
                     // make everything untouchable while dragging
                 Color.black.opacity(0.0001)
-                        .frame(width: state.state == .pager ? Screen.width : 0)
+                        .frame(width: state.dragState == .pager ? Screen.width : 0)
                 }
                 .clipped() // dont remove fixes bug cant click SearchBar
                 .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
                 .simultaneousGesture(
                     DragGesture(minimumDistance: 10)
                         .onChanged { value in
-                            if [.off, .pager].contains(state.state) {
+                            if [.off, .pager].contains(state.dragState) {
                                 return
                             }
                             // why is this off 80???
-                            if HomeSearchBarState.isWithin(value.startLocation.y - 40) || state.state == .searchbar {
+                            if HomeSearchBarState.isWithin(value.startLocation.y - 40) || state.dragState == .searchbar {
                                 // hide keyboard on drag
                                 if self.keyboard.state.height > 0 {
                                     self.keyboard.hide()
@@ -467,10 +477,10 @@ struct HomeMainView: View {
                             }
                     }
                     .onEnded { value in
-                        if [.idle, .searchbar].contains(state.state) {
+                        if [.idle, .searchbar].contains(state.dragState) {
                             self.state.finishDrag(value)
                         }
-                        self.state.setState(.idle)
+                        self.state.setDragState(.idle)
                     }
                 )
             }
