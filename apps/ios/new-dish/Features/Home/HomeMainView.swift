@@ -30,6 +30,8 @@ class HomeViewState: ObservableObject {
     @Published private(set) var dragState: HomeDragState = .idle
     @Published private(set) var animationState: HomeAnimationState = .idle
     
+    private private(set) var cancelAnimation: AnyCancellable? = nil
+    
     var scrollRevealY: CGFloat {
         mapHeight > 120 ? 100 : 0
     }
@@ -123,7 +125,6 @@ class HomeViewState: ObservableObject {
         }
     }
     
-    private var cancelAnimation: AnyCancellable? = nil
     func animate(_ animation: Animation? = .spring(), state: HomeAnimationState = .controlled, _ body: @escaping () -> Void) {
         log.info()
         self.setAnimationState(state, 400)
