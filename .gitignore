@@ -72,3 +72,5 @@ fastlane/test_output
 # Code Injection
 # https://github.com/johnno1962/injectionforxcode
 iOSInjectionProject/
+
+.vim

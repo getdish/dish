@@ -1,0 +1,18 @@
+# Note that Github's web editor has linting for Github Action YAML
+# And also there is a JSON schema for validating in your local editor:
+# http://json.schemastore.org/github-workflow
+
+name: Code Health
+on: [push]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      DISH_ENV: "test"
+    steps:
+    - uses: actions/checkout@master
+    - name: Install dev dependencies
+      run: .github/workflows/install_dev_deps.sh
+    - name: Prettier linting
+      run: .github/workflows/prettier.sh
+

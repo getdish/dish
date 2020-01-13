@@ -59,7 +59,7 @@ async function startConsumer(task: Task) {
   async function runConsumer(data: Task, metadata: any) {
     console.log(
       `Processing task from Queue: ${metadata.qname}. Task ID: ${metadata.id}. Data:`,
-      data,
+      data
     )
     await task.run()
   }

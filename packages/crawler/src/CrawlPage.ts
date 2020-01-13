@@ -18,7 +18,7 @@ export class CrawlPage {
       page: puppeteer.Page
       depth: string
       entryInfo: EntryInfo
-    },
+    }
   ) {}
 
   async run(): Promise<CrawlPageResult> {
@@ -64,7 +64,7 @@ export class CrawlPage {
 
     const links = await page.evaluate(() => {
       const val = Array.from(document.querySelectorAll('[href]')).map(
-        link => link['href'],
+        link => link['href']
       )
       return val
     })
@@ -73,7 +73,7 @@ export class CrawlPage {
       links
         .filter(x => x !== null)
         .map(cleanUrlHash)
-        .map(href => normalizeHref(target.url, href)),
+        .map(href => normalizeHref(target.url, href))
     ).filter(link => {
       const parsed = URL.parse(link)
       const noPrefix = s => s.replace(/www\./, '')
