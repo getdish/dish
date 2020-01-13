@@ -47,10 +47,11 @@ class HomeViewState: ObservableObject {
             shouldEnd = false
         }
         self.setState(.animating)
-        withAnimation(.spring()) {
+        withAnimation(Animation.spring()) {
             body()
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+        // TODO we need a way to know when .spring() ends...
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
             if shouldEnd {
                 self.setState(.idle)
             }
@@ -82,7 +83,7 @@ class HomeViewState: ObservableObject {
                 
                 // map up/down on keyboard open/close
                 if !self.isSnappedToBottom {
-                    withAnimation(.spring()) {
+                    self.animate {
                         self.y += isOpen ? -170 : 170
                     }
                 }
@@ -254,8 +255,8 @@ class HomeViewState: ObservableObject {
     }
 
     func animateTo(_ y: CGFloat) {
-        log.info()
         if self.y == y { return }
+        log.info()
         self.animate {
             self.y = y
         }
@@ -314,14 +315,15 @@ struct HomeMainView: View {
         // pushed map below the border radius of the bottomdrawer
         let isOnSearchResults = Selectors.home.isOnSearchResults()
         let isMovingToSearchResults = isOnSearchResults && !wasOnSearchResults
-        
         if isMovingToSearchResults {
             state.moveToSearchResults()
         }
         
         // reset back
-        DispatchQueue.main.async {
-            self.wasOnSearchResults = isOnSearchResults
+        if isOnSearchResults != wasOnSearchResults {
+            DispatchQueue.main.async {
+                self.wasOnSearchResults = isOnSearchResults
+            }
         }
         
         
