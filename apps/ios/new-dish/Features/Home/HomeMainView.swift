@@ -107,7 +107,7 @@ class HomeViewState: ObservableObject {
         }
 //        self.setAnimationState(state)
         DispatchQueue.main.async {
-            withAnimation(Animation.spring()) {
+            withAnimation(animation) {
                 body()
             }
             // TODO we need a way to know when .spring() ends...
@@ -281,7 +281,7 @@ class HomeViewState: ObservableObject {
 
     func setScrollY(_ scrollY: CGFloat) {
         if dragState != .idle { return }
-        log.info()
+//        log.info()
         let y = max(0, min(100, scrollY)).rounded()
         if y != self.scrollY {
             self.scrollY = y

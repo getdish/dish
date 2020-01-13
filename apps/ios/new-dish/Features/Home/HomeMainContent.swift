@@ -23,12 +23,13 @@ struct HomeMainContent: View {
 
 struct HomeMainContentExplore: View {
     let isHorizontal: Bool
-    @EnvironmentObject var homeState: HomeViewState
     @Environment(\.geometry) var appGeometry
     
     var body: some View {
         ZStack {
-            HomeCardsGrid()
+            HomeScrollableContent {
+                HomeExploreDishes()
+            }
                 .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
                 .opacity(self.isHorizontal ? 0 : 1)
                 .disabled(self.isHorizontal)
@@ -85,15 +86,48 @@ struct HomeMainContentSearchPage: View {
     }
 }
 
-struct HomeCardsGrid: View {
+struct HomeExploreDishes: View {
     @EnvironmentObject var store: AppStore
-    @EnvironmentObject var homeState: HomeViewState
     @Environment(\.geometry) var appGeometry
-    
     let items = features.chunked(into: 2)
     let spacing: CGFloat = 10
     
     var body: some View {
+        let width = (self.appGeometry?.size.width ?? Screen.width) / 2 - self.spacing * 2
+        print("HomeExploreDishes \(width)")
+        return VStack(spacing: self.spacing) {
+            ForEach(0 ..< self.items.count) { index in
+                HStack(spacing: self.spacing) {
+                    ForEach(self.items[index]) { item in
+                        DishGridCard(dish: item)
+                            .frame(width: width)
+                            .onTapGesture {
+                                print("tap on item")
+                                self.store.send(
+                                    .home(
+                                        .push(HomeStateItem(filters: [SearchFilter(name: item.name)]))
+                                    )
+                                )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct HomeScrollableContent<Content>: View where Content: View {
+    @EnvironmentObject var store: AppStore
+    @EnvironmentObject var homeState: HomeViewState
+    @Environment(\.geometry) var appGeometry
+    let content: Content
+    
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+    
+    var body: some View {
+        print("!!!!!! render grid")
         return VStack {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
@@ -112,7 +146,7 @@ struct HomeCardsGrid: View {
                 }
             }
             .offset(y: homeState.mapHeight - self.homeState.scrollRevealY)
-            .animation(.spring())
+//            .animation(.spring())
 //            .mask(self.mask.offset(y: homeState.mapHeight + filterBarHeight / 4))
         }
     }
@@ -165,30 +199,6 @@ struct HomeCardsGrid: View {
             endPoint: .bottom
         )
     }
-    
-    var content: some View {
-        let width = (self.appGeometry?.size.width ?? Screen.width) / 2 - self.spacing * 2
-        print("card width \(width)")
-        return VStack(spacing: self.spacing) {
-            ForEach(0 ..< self.items.count) { index in
-                HStack(spacing: self.spacing) {
-                    ForEach(self.items[index]) { item in
-                        DishGridCard(dish: item)
-                            .frame(width: width)
-                            .onTapGesture {
-                                print("tap on item")
-                                self.store.send(
-                                    .home(
-                                        .push(HomeStateItem(filters: [SearchFilter(name: item.name)]))
-                                    )
-                                )
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
 }
 
 struct DishGridCard: View {
