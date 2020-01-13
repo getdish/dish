@@ -90,7 +90,7 @@ struct HomeExploreDishes: View {
     @EnvironmentObject var store: AppStore
     @Environment(\.geometry) var appGeometry
     let items = features.chunked(into: 2)
-    let spacing: CGFloat = 10
+    let spacing: CGFloat = 14
     
     var body: some View {
         let width = (self.appGeometry?.size.width ?? Screen.width) / 2 - self.spacing * 2
@@ -103,11 +103,9 @@ struct HomeExploreDishes: View {
                             .frame(width: width)
                             .onTapGesture {
                                 print("tap on item")
-                                self.store.send(
-                                    .home(
-                                        .push(HomeStateItem(filters: [SearchFilter(name: item.name)]))
-                                    )
-                                )
+                                self.store.send(.home(
+                                    .push(HomeStateItem(filters: [SearchFilter(name: item.name)]))
+                                ))
                         }
                     }
                 }

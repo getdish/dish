@@ -48,6 +48,13 @@ class HomeViewState: ObservableObject {
         self.keyboard.$state
             .map { $0.height }
             .sink { height in
+                // set animating while keyboard animates
+                // prevents filters jumping when focusing input
+                self.setAnimationState(.controlled)
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                    self.setAnimationState(.idle)
+                }
+                
                 let isOpen = height > 0
                 
                 // disable top nav when keyboard open
@@ -56,7 +63,9 @@ class HomeViewState: ObservableObject {
                 // map up/down on keyboard open/close
                 if !self.isSnappedToBottom {
                     self.animate {
-                        self.y += isOpen ? -170 : 170
+                        let str = max(0, 1 - (self.snapToBottomAt - self.y) / self.snapToBottomAt)
+                        let amt = CGFloat(170 * (isOpen ? -1 : 1))
+                        self.y += amt * str
                     }
                 }
                 
@@ -283,7 +292,8 @@ class HomeViewState: ObservableObject {
 
     func setScrollY(_ scrollY: CGFloat) {
         if dragState != .idle { return }
-//        log.info()
+        if animationState != .idle { return }
+        log.info()
         let y = max(0, min(100, scrollY)).rounded()
         if y != self.scrollY {
             self.scrollY = y
