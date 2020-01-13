@@ -38,6 +38,7 @@ class HomeViewState: ObservableObject {
     @Published var keyboardHeight: CGFloat = 0
     private var cancellables: Set<AnyCancellable> = []
     private var keyboard = Keyboard()
+    private var lastKeyboardAdjustY: CGFloat = 0
 
     init() {
         self.keyboard.$state
@@ -63,9 +64,14 @@ class HomeViewState: ObservableObject {
                 // map up/down on keyboard open/close
                 if !self.isSnappedToBottom {
                     self.animate {
-                        let str = max(0, 1 - (self.snapToBottomAt - self.y) / self.snapToBottomAt)
-                        let amt = CGFloat(170 * (isOpen ? -1 : 1))
-                        self.y += amt * str
+                        if isOpen {
+                            let str = max(0, 1 - (self.snapToBottomAt - self.y) / self.snapToBottomAt)
+                            let amt = 170 * str
+                            self.y -= amt
+                            self.lastKeyboardAdjustY = amt
+                        } else {
+                            self.y += self.lastKeyboardAdjustY
+                        }
                     }
                 }
                 
