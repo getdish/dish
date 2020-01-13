@@ -51,10 +51,7 @@ class HomeViewState: ObservableObject {
             .sink { height in
                 // set animating while keyboard animates
                 // prevents filters jumping when focusing input
-                self.setAnimationState(.controlled)
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                    self.setAnimationState(.idle)
-                }
+                self.setAnimationState(.controlled, 300)
                 
                 let isOpen = height > 0
                 
@@ -103,33 +100,36 @@ class HomeViewState: ObservableObject {
         self.dragState = next
     }
     
-    func setAnimationState(_ next: HomeAnimationState) {
+    func setAnimationState(_ next: HomeAnimationState, _ duration: Int = 0) {
         log.info()
         self.animationState = next
         // cancel last controlled animation
-        if next != .controlled,
+        if next != .idle,
             let handle = self.cancelAnimation {
             handle.cancel()
+        }
+        // allow timeout
+        if duration > 0 {
+            var active = true
+            self.cancelAnimation = AnyCancellable {
+                active = false
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                if active {
+                    self.setAnimationState(.idle)
+                    self.cancelAnimation = nil
+                }
+            }
         }
     }
     
     private var cancelAnimation: AnyCancellable? = nil
     func animate(_ animation: Animation? = .spring(), state: HomeAnimationState = .controlled, _ body: @escaping () -> Void) {
         log.info()
-        var shouldEnd = true
-        self.cancelAnimation = AnyCancellable {
-            shouldEnd = false
-        }
-//        self.setAnimationState(state)
+        self.setAnimationState(state, 400)
         DispatchQueue.main.async {
             withAnimation(animation) {
                 body()
-            }
-            // TODO we need a way to know when .spring() ends...
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
-                if shouldEnd {
-                    self.setAnimationState(.idle)
-                }
             }
         }
     }
