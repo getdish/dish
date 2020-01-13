@@ -11,7 +11,6 @@ struct HomeView: View {
                     width: geometry.size.width,
                     height: geometry.size.height
                 )
-                TopNavView()
             }
             .background(
                 self.colorScheme == .light ? Color.white : Color.black.opacity(0.8)
@@ -87,23 +86,25 @@ struct HomeViewContent: View {
             .simultaneousGesture(
                 DragGesture()
                     .onChanged { value in
-                        if homeViewState.dragState == .searchbar { return }
+                        if homeViewState.state == .searchbar { return }
                         let isOnRightEdge = self.width - value.startLocation.x < 10
                         let isOnLeftEdge = value.startLocation.x < 10
                         if isOnRightEdge || isOnLeftEdge {
                             if abs(value.translation.width) > 10 {
-                                homeViewState.setLock(.pager)
+                                homeViewState.setState(.pager)
                             }
                             homePager.drag(value)
                         }
                 }
                 .onEnded { value in
-                    if homeViewState.dragState == .pager {
+                    if homeViewState.state == .pager {
                         homePager.onDragEnd(value)
-                        homeViewState.setLock(.idle)
+                        homeViewState.setState(.idle)
                     }
                 }
             )
+            
+            TopNavView()
             
             BottomNav()
         }

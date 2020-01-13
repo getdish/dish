@@ -15,7 +15,7 @@ struct DishMapView: View {
             width: width,
             height: height,
             zoom: zoom,
-            animate: homeState.dragState == .idle || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
+            animate: [.idle, .animating].contains(homeState.state) || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
             location: store.state.location.isOnCurrent ? .current : .uncontrolled,
             locations: store.state.home.state.last!.searchResults.results.map { $0.place }
         )

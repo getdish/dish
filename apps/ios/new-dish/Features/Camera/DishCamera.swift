@@ -27,6 +27,7 @@ struct DishCamera: View {
                 DishRestaurantDrawer()
             }
         }
+        .edgesIgnoringSafeArea(.all)
         .allowsHitTesting(self.store.state.home.view == .camera)
         .clipped()
     }
