@@ -1,18 +1,21 @@
 {
-  "name": "@dish/yelp-crawler",
+  "name": "@dish/crawlers",
   "version": "0.0.1",
   "main": "_/index.js",
   "sideEffects": false,
   "scripts": {
     "start": "node _/index.js",
     "build": "tsc -b || true",
-    "watch": "tsc -b --watch --preserveWatchOutput"
+    "watch": "tsc -b --watch --preserveWatchOutput",
+    "worker": "node _/worker.js",
+    "worker-watch": "nodemon _/worker.js"
   },
   "dependencies": {
     "@dish/crawler": "*",
-    "orkid": "0.11.0"
+    "@dish/worker": "*"
   },
   "devDependencies": {
-    "@zeit/ncc": "^0.20.5"
+    "@zeit/ncc": "^0.20.5",
+    "nodemon": "^2.0.2"
   }
 }
