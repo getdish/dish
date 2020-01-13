@@ -11,14 +11,24 @@ struct DishMapView: View {
     @EnvironmentObject var homeState: HomeViewState
     
     var body: some View {
-        DishMapViewContent(
-            width: width,
-            height: height,
-            zoom: zoom,
-            animate: [.idle, .animating].contains(homeState.state) || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
-            location: store.state.location.isOnCurrent ? .current : .uncontrolled,
-            locations: store.state.home.state.last!.searchResults.results.map { $0.place }
-        )
+        ZStack {
+            DishMapViewContent(
+                width: width,
+                height: height,
+                zoom: zoom,
+                animate: [.idle, .animating].contains(homeState.state) || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
+                location: store.state.location.isOnCurrent ? .current : .uncontrolled,
+                locations: store.state.home.state.last!.searchResults.results.map { $0.place }
+            )
+            
+            // prevent touch on left/right sides for dragging between cards
+            HStack {
+                Color.black.opacity(0.0001).frame(width: 20)
+                Color.clear
+                Color.black.opacity(0.0001).frame(width: 20)
+            }
+                
+        }
     }
 }
 
