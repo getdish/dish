@@ -94,13 +94,16 @@ struct HomeExploreDishes: View {
     
     var body: some View {
         let width = (self.appGeometry?.size.width ?? Screen.width) / 2 - self.spacing * 2
+        let height = width * (1/1.4)
+        
         print("HomeExploreDishes \(width)")
         return VStack(spacing: self.spacing) {
             ForEach(0 ..< self.items.count) { index in
                 HStack(spacing: self.spacing) {
                     ForEach(self.items[index]) { item in
                         DishGridCard(dish: item)
-                            .frame(width: width)
+                            // without height set it will change size during animation
+                            .frame(width: width, height: height)
                             .onTapGesture {
                                 print("tap on item")
                                 self.store.send(.home(

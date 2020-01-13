@@ -104,22 +104,24 @@ class HomeViewState: ObservableObject {
     
     func setAnimationState(_ next: HomeAnimationState, _ duration: Int = 0) {
         log.info()
-        self.animationState = next
-        // cancel last controlled animation
-        if next != .idle,
-            let handle = self.cancelAnimation {
-            handle.cancel()
-        }
-        // allow timeout
-        if duration > 0 {
-            var active = true
-            self.cancelAnimation = AnyCancellable {
-                active = false
+        DispatchQueue.main.async {
+            self.animationState = next
+            // cancel last controlled animation
+            if next != .idle,
+                let handle = self.cancelAnimation {
+                handle.cancel()
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                if active {
-                    self.setAnimationState(.idle)
-                    self.cancelAnimation = nil
+            // allow timeout
+            if duration > 0 {
+                var active = true
+                self.cancelAnimation = AnyCancellable {
+                    active = false
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                    if active {
+                        self.setAnimationState(.idle)
+                        self.cancelAnimation = nil
+                    }
                 }
             }
         }
@@ -127,10 +129,12 @@ class HomeViewState: ObservableObject {
     
     func animate(_ animation: Animation? = .spring(), state: HomeAnimationState = .controlled, _ body: @escaping () -> Void) {
         log.info()
-        self.setAnimationState(state, 400)
         DispatchQueue.main.async {
-            withAnimation(animation) {
-                body()
+            self.setAnimationState(state, 400)
+            DispatchQueue.main.async {
+                withAnimation(animation) {
+                    body()
+                }
             }
         }
     }
@@ -406,6 +410,9 @@ struct HomeMainView: View {
                     VStack {
                         ZStack {
                             Color.red
+//                                .cornerRadius(20)
+//                                .scaleEffect(mapHeight < 250 ? 0.8 : 1)
+//                                .animation(.spring())
 //                            DishMapView(
 //                                width: geometry.size.width,
 //                                height: Screen.height,
@@ -486,8 +493,8 @@ struct HomeMainView: View {
                             if [.off, .pager].contains(state.dragState) {
                                 return
                             }
-                            // why is this off 80???
-                            if HomeSearchBarState.isWithin(value.startLocation.y - 40) || state.dragState == .searchbar {
+                            // why is this off some???
+                            if HomeSearchBarState.isWithin(value.startLocation.y - 37) || state.dragState == .searchbar {
                                 // hide keyboard on drag
                                 if self.keyboard.state.height > 0 {
                                     self.keyboard.hide()
