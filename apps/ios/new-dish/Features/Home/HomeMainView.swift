@@ -388,11 +388,12 @@ struct HomeMainView: View {
                     // map
                     VStack {
                         ZStack {
-                            DishMapView(
-                                width: geometry.size.width,
-                                height: Screen.height,
-                                zoom: zoom
-                            )
+                            Color.red
+//                            DishMapView(
+//                                width: geometry.size.width,
+//                                height: Screen.height,
+//                                zoom: zoom
+//                            )
                             
 //                            // keyboard dismiss (above map, below content)
                             if self.keyboard.state.height > 0 {
