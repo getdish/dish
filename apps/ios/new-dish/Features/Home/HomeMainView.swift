@@ -45,16 +45,23 @@ class HomeViewState: ObservableObject {
     init() {
         self.keyboard.$state
             .map { $0.height }
+            .removeDuplicates()
             .assign(to: \.keyboardHeight, on: self)
+            .store(in: &cancellables)
+        
+        self.keyboard.$state.map { $0.height }
+            .removeDuplicates()
+            .sink { val in
+                // set animating while keyboard animates
+                // prevents filters jumping up/down while focusing input
+                self.setAnimationState(.controlled, 350)
+            }
             .store(in: &cancellables)
 
         self.keyboard.$state
             .map { $0.height }
+            .removeDuplicates()
             .sink { height in
-                // set animating while keyboard animates
-                // prevents filters jumping when focusing input
-                self.setAnimationState(.controlled, 300)
-                
                 let isOpen = height > 0
                 
                 // disable top nav when keyboard open
@@ -83,12 +90,11 @@ class HomeViewState: ObservableObject {
             .sink { y in
                 print("\(Date().timeIntervalSince(started))")
                 if Date().timeIntervalSince(started) > 1 {
-                    self.animate(state: .uncontrolled) {
+                    let next = y > 20
+                    if next != self.hasScrolledSome {
                         print("scroll scroll \(y)")
-                        if y > 20 {
-                            self.hasScrolledSome = true
-                        } else {
-                            self.hasScrolledSome = false
+                        self.animate(state: .uncontrolled) {
+                            self.hasScrolledSome = next
                         }
                     }
                 }
@@ -177,10 +183,15 @@ class HomeViewState: ObservableObject {
     }
 
     private var startDragAt: CGFloat = 0
+    private var lastDragY: CGFloat = 0
 
     func drag(_ dragY: CGFloat) {
         if dragState == .pager { return }
-        log.info()
+        if lastDragY == dragY { return }
+        lastDragY = dragY
+
+        log.info(dragY)
+        
         // TODO we can reset this back to false in some cases for better UX
         self.hasMovedBar = true
 
@@ -295,8 +306,8 @@ class HomeViewState: ObservableObject {
     }
 
     func resetAfterKeyboardHide() {
-        log.info()
         if !self.hasMovedBar && self.y != 0 && appStore.state.home.state.last!.search == "" {
+            log.info()
             self.animateTo(0)
         }
     }
@@ -304,16 +315,16 @@ class HomeViewState: ObservableObject {
     func setScrollY(_ scrollY: CGFloat) {
         if dragState != .idle { return }
         if animationState != .idle { return }
-        log.info()
         let y = max(0, min(100, scrollY)).rounded()
         if y != self.scrollY {
+            log.info(y)
             self.scrollY = y
         }
     }
     
     func moveToSearchResults() {
-        log.info()
         if dragState == .idle && y >= 0 {
+            log.info()
             self.animateTo(y - 80)
         }
     }

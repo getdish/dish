@@ -128,8 +128,7 @@ struct HomeScrollableContent<Content>: View where Content: View {
     }
     
     var body: some View {
-        print("!!!!!! render grid")
-        return VStack {
+        VStack {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     ScrollListener(onScroll: { frame in
@@ -147,7 +146,6 @@ struct HomeScrollableContent<Content>: View where Content: View {
                 }
             }
             .offset(y: homeState.mapHeight - self.homeState.scrollRevealY)
-//            .animation(.spring())
 //            .mask(self.mask.offset(y: homeState.mapHeight + filterBarHeight / 4))
         }
     }
