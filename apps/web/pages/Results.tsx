@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from 'urql'
 
-export function Results() {
+export default function() {
   const [dishes] = useQuery({
     query: `{
       dish {
@@ -12,7 +12,7 @@ export function Results() {
   const [result, executeMutation] = useMutation(
     `mutation {
       insert_dish(objects: {name: "hello world"})
-    }`,
+    }`
   )
 
   return (

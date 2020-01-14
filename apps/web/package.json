@@ -8,11 +8,12 @@
     "start": "next start"
   },
   "dependencies": {
+    "graphql": "^14.5.8",
+    "isomorphic-unfetch": "^3.0.0",
     "next": "^9.1.5",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "urql": "^1.7.0",
-    "graphql": "^14.5.8"
+    "urql": "^1.7.0"
   },
   "devDependencies": {
     "@types/node": "^12.12.17",
