@@ -7,14 +7,20 @@ import SwiftUI
 // this is where side effects and basically any global should go
 
 struct AppInstance {
-    let googlePlacesManager = GooglePlacesManager()
+    let store = Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
+    
+    // services
     let locationService = LocationService()
+    let homeService = HomeService()
+    
+    let googlePlacesManager = GooglePlacesManager()
     let keyboard = Keyboard()
     let defaultQueue = DispatchQueue(label: "defaultQueue")
     
     func start() {
         googlePlacesManager.start()
         locationService.start()
+        homeService.start()
     }
 }
 

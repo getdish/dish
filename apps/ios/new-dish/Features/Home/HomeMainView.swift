@@ -65,7 +65,7 @@ class HomeViewState: ObservableObject {
                 let isOpen = height > 0
                 
                 // disable top nav when keyboard open
-                appStore.send(.setDisableTopNav(isOpen))
+                App.store.send(.setDisableTopNav(isOpen))
                 
                 // map up/down on keyboard open/close
                 if !self.isSnappedToBottom {
@@ -307,7 +307,7 @@ class HomeViewState: ObservableObject {
     }
 
     func resetAfterKeyboardHide() {
-        if !self.hasMovedBar && self.y != 0 && appStore.state.home.state.last!.search == "" {
+        if !self.hasMovedBar && self.y != 0 && App.store.state.home.state.last!.search == "" {
             log.info()
             self.animateTo(0)
         }

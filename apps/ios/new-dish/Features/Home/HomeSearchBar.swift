@@ -48,8 +48,8 @@ struct HomeSearchBar: View {
             showCancelInside: true,
             onClear: {
                 // go back on empty search clear
-                if Selectors.home.isOnSearchResults() && appStore.state.home.state.last!.searchResults.results.count == 0 {
-                    appStore.send(.home(.pop))
+                if Selectors.home.isOnSearchResults() && App.store.state.home.state.last!.searchResults.results.count == 0 {
+                    App.store.send(.home(.pop))
                 }
                 // focus keyboard again on clear if not focused
                 if self.keyboard.state.height == 0 {

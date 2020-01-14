@@ -30,8 +30,8 @@ class LocationService {
             .sink { location in
                 print("last location is \(location)")
                 if let location = location {
-                    appStore.send(.location(.setLastKnown(location)))
-                    appStore.send(self.setNameOfCurrentLocation(location))
+                    App.store.send(.location(.setLastKnown(location)))
+                    App.store.send(self.setNameOfCurrentLocation(location))
                 }
             }
             .store(in: &cancels)
@@ -40,8 +40,8 @@ class LocationService {
     func effectMoveToCurrentLocationOnAuthorization() {
         currentLocationManager.$authorized
             .sink { authorized in
-                if !appStore.state.location.hasChangedOnce {
-                    appStore.send(.location(.goToCurrent))
+                if !App.store.state.location.hasChangedOnce {
+                    App.store.send(.location(.goToCurrent))
                 }
             }
             .store(in: &cancels)

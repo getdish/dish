@@ -13,7 +13,6 @@ import XCGLogger
 
 // Init state
 let log = XCGLogger.default
-let appStore = Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

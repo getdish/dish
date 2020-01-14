@@ -41,19 +41,5 @@ func locationReducer(_ state: inout AppState, action: LocationAction) {
             state.location.likelyPlaces = locations
         case .listLikelyPlaces:
             state.location.likelyPlaces.removeAll()
-//            placesClient.currentPlace(callback: { (placeLikelihoods, error) -> Void in
-//                if let error = error {
-//                    // TODO: Handle the error.
-//                    print("Current Place error: \(error.localizedDescription)")
-//                    return
-//                }
-//                // Get likely places and add to the list.
-//                if let likelihoodList = placeLikelihoods {
-//                    for likelihood in likelihoodList.likelihoods {
-//                        let place = likelihood.place
-//                        state.location.likelyPlaces.append(place)
-//                    }
-//                }
-//            })
     }
 }
