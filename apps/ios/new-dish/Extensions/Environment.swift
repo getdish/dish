@@ -11,18 +11,9 @@ struct GeometryKey: EnvironmentKey {
     static let defaultValue: GeometryProxy? = nil
 }
 
-struct InputEventsKey: EnvironmentKey {
-    static let defaultValue: InputEvents? = nil
-}
-
 extension EnvironmentValues {
     var geometry: GeometryProxy? {
         get { self[GeometryKey.self] }
         set { self[GeometryKey.self] = newValue }
-    }
-    
-    var inputEvents: InputEvents? {
-        get { self[InputEventsKey.self] }
-        set { self[InputEventsKey.self] = newValue }
     }
 }

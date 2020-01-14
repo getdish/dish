@@ -86,7 +86,7 @@ class HomeViewState: ObservableObject {
         
         let started = Date()
         self.$scrollY
-            .throttle(for: 0.1, scheduler: q, latest: true)
+            .throttle(for: 0.1, scheduler: App.defaultQueue, latest: true)
             .removeDuplicates()
             .sink { y in
                 print("\(Date().timeIntervalSince(started))")
@@ -158,6 +158,7 @@ class HomeViewState: ObservableObject {
         hideTopNavAtVal - 1,
         Screen.statusBarHeight + searchBarHeight / 2 + topNavHeight + 90
     )
+
     var mapInitialHeight: CGFloat { appHeight * 0.3 }
     
     var mapMaxHeight: CGFloat { appHeight - keyboardHeight - searchBarHeight }
@@ -170,7 +171,6 @@ class HomeViewState: ObservableObject {
     var snappedToBottomMapHeight: CGFloat { appHeight - 190 }
     var isSnappedToBottom: Bool { y > snapToBottomAt }
     var wasSnappedToBottom = false
-
     var aboutToSnapToBottomAt: CGFloat { snapToBottomAt - resistanceYBeforeSnap }
     
     var isAboutToSnap: Bool {
@@ -355,8 +355,8 @@ struct HomeMainView: View {
     @Environment(\.geometry) var appGeometry
     @ObservedObject var state = homeViewState
     @State var wasOnSearchResults = false
-
-    var body: some View {
+    
+    func runSideEffects() {
         // pushed map below the border radius of the bottomdrawer
         let isOnSearchResults = Selectors.home.isOnSearchResults()
         let isMovingToSearchResults = isOnSearchResults && !wasOnSearchResults
@@ -379,8 +379,16 @@ struct HomeMainView: View {
                 }
             }
         }
+    }
+
+    var body: some View {
+        // ⚠️
+        // TODO can we put this somewhere more natural?
+        // ⚠️
+        self.runSideEffects()
         
         let state = self.state
+        let isOnSearchResults = Selectors.home.isOnSearchResults()
         let scrollRevealY = state.scrollRevealY
         let shouldAvoidScrollReveal = state.mapHeight < scrollRevealY + 100
         let mapHeightScrollReveal: CGFloat = shouldAvoidScrollReveal ? 0 :
@@ -403,14 +411,7 @@ struct HomeMainView: View {
                                 }
                             }
                     }
-                    
-                // indicator for snap point?
-//                    Color.white
-//                        .frame(height: 1)
-//                        .animation(.spring())
-//                        .opacity(state.y > state.aboutToSnapToBottomAt - 70 ? 0.2 : 0.0)
-//                        .offset(y: state.aboutToSnapToBottomAt + state.mapInitialHeight)
-                    
+
                     // below the map
                     
                     // main content
@@ -421,15 +422,15 @@ struct HomeMainView: View {
                     // map
                     VStack {
                         ZStack {
-//                            Color.red
+                            Color.red
 //                                .cornerRadius(20)
 //                                .scaleEffect(mapHeight < 250 ? 0.8 : 1)
 //                                .animation(.spring())
-                            DishMapView(
-                                width: geometry.size.width,
-                                height: Screen.height,
-                                zoom: zoom
-                            )
+//                            DishMapView(
+//                                width: geometry.size.width,
+//                                height: Screen.height,
+//                                zoom: zoom
+//                            )
                             
 //                            // keyboard dismiss (above map, below content)
                             if self.keyboard.state.height > 0 {

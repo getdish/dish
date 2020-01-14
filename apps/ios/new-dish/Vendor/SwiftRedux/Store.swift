@@ -22,31 +22,27 @@ final class Store<State, Action>: ObservableObject {
 
     func send(_ action: Action) {
         print("send \(action)")
-        DispatchQueue.main.async {
-            self.reducer.reduce(&self.state, action)
-        }
+        self.reducer.reduce(&self.state, action)
     }
 
     func send(_ effect: Effect<Action>) {
         print("send \(effect)")
-        DispatchQueue.main.async {
-            var cancellable: AnyCancellable?
-            var didComplete = false
-            
-            cancellable = effect
-                .publisher
-                .receive(on: DispatchQueue.main)
-                .sink(
-                    receiveCompletion: { [weak self] _ in
-                        didComplete = true
-                        if let effectCancellable = cancellable {
-                            self?.cancellables.remove(effectCancellable)
-                        }
-                    }, receiveValue: self.send)
-            
-            if !didComplete, let effectCancellable = cancellable {
-                self.cancellables.insert(effectCancellable)
-            }
+        var cancellable: AnyCancellable?
+        var didComplete = false
+        
+        cancellable = effect
+            .publisher
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { [weak self] _ in
+                    didComplete = true
+                    if let effectCancellable = cancellable {
+                        self?.cancellables.remove(effectCancellable)
+                    }
+                }, receiveValue: self.send)
+        
+        if !didComplete, let effectCancellable = cancellable {
+            self.cancellables.insert(effectCancellable)
         }
     }
 }

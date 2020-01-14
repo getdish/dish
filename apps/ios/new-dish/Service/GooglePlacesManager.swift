@@ -6,17 +6,17 @@ import GooglePlaces
 
 fileprivate let placesClient = GMSPlacesClient.shared()
 
-class GooglePlaces {
+class GooglePlacesManager {
     private var apiKey = "AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k"
     private var currentLocation: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid
     private var strictBounds = true
     private var cancellables: Set<AnyCancellable> = []
     
-    init() {
-        let locationManager = LocationManager()
+    func start() {
+        let locationManager = CurrentLocationService()
         locationManager.start()
+        print("starting locationmanager")
         locationManager.$lastLocation
-            .removeDuplicates()
             .sink { location in
                 print("GOT OUR LOCATION BRO \(location)")
                 if let l = location {
@@ -25,7 +25,6 @@ class GooglePlaces {
                         longitude: .init(l.coordinate.longitude)
                     )
                 } else {
-                    print("no location???????????")
                     self.currentLocation = CLLocationCoordinate2D(
                         latitude: .init(37.7749),
                         longitude: .init(122.4194)

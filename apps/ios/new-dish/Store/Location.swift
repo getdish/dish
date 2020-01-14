@@ -1,5 +1,6 @@
 import Combine
 import GooglePlaces
+import GoogleMaps
 import CoreLocation
 
 fileprivate let placesClient = GMSPlacesClient.shared()

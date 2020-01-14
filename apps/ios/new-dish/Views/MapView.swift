@@ -47,7 +47,7 @@ struct MapView: UIViewControllerRepresentable {
     
     class Coordinator: NSObject {
         var mapView: MapView
-        let currentLocation = LocationManager()
+        let currentLocation = CurrentLocationService()
         var cancels: Set<AnyCancellable> = []
         
         init(_ mapView: MapView) {

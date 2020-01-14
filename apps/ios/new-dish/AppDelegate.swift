@@ -13,11 +13,7 @@ import XCGLogger
 
 // Init state
 let log = XCGLogger.default
-let googlePlaces = GooglePlaces()
 let appStore = Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
-let keyboard = Keyboard()
-let inputEvents = InputEvents()
-let q = DispatchQueue(label: "defaultQueue")
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -52,8 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         GMSServices.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")
         GMSPlacesClient.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")
         
-        // initial state
-//        appStore.send(.home(.setSearch("Pho")))
+        App.start()
         
         // Override point for customization after application launch.
         return true
