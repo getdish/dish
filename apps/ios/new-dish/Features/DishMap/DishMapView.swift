@@ -16,7 +16,7 @@ struct DishMapView: View {
                 width: width,
                 height: height,
                 zoom: zoom,
-                animate: [.idle, .animating].contains(homeState.state) || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
+                animate: [.idle].contains(homeState.dragState) || homeState.animationState != .idle || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
                 location: store.state.location.isOnCurrent ? .current : .uncontrolled,
                 locations: store.state.home.state.last!.searchResults.results.map { $0.place }
             )
@@ -43,8 +43,7 @@ struct DishMapViewContent: View {
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
-        print("!!!!!!!!!!!!!!!!!! render map view...")
-        return MapView(
+        MapView(
             width: width,
             height: height,
             zoom: zoom,

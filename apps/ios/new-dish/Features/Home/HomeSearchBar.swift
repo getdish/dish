@@ -32,7 +32,7 @@ struct HomeSearchBar: View {
     func focusKeyboard() {
         log.info()
         self.isFirstResponder = false
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(10)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(2)) {
             self.isFirstResponder = true
         }
     }
@@ -53,7 +53,6 @@ struct HomeSearchBar: View {
                 }
                 // focus keyboard again on clear if not focused
                 if self.keyboard.state.height == 0 {
-                    print("NOW WE DO? \(self.textField)")
                     self.focusKeyboard()
                 }
         },

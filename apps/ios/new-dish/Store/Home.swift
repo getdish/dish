@@ -47,16 +47,12 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
             var last = state.home.state.last!
             // if removing last filter, pop!
             if val.count == 0 {
-                DispatchQueue.main.async {
-                    appStore.send(.home(.pop))
-                }
+                appStore.send(.home(.pop))
             } else {
                 last.filters = val.map { SearchFilter(name: $0.text) }
                 updateItem(last)
                 if let search = val.last?.text {
-                    DispatchQueue.main.async {
-                        appStore.send(.home(.setSearch(search)))
-                    }
+                    appStore.send(.home(.setSearch(search)))
                 }
             }
         case let .setSearch(val):
@@ -82,20 +78,18 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
                     // SEARCH
                     googlePlaces.searchPlaces(val, completion: { places in
                         print("PLACES ok got \(places.count)")
-                        DispatchQueue.main.async {
-                            appStore.send(.home(.setSearchResults(
-                                HomeSearchResults(
-                                    id: "0",
-                                    results: places.map { place in
-                                        HomeSearchResultItem(
-                                            id: place.name,
-                                            name: place.name, //place.attributedPrimaryText,
-                                            place: place
-                                        )
-                                    }
-                                )
-                            )))
-                        }
+                        appStore.send(.home(.setSearchResults(
+                            HomeSearchResults(
+                                id: "0",
+                                results: places.map { place in
+                                    HomeSearchResultItem(
+                                        id: place.name,
+                                        name: place.name, //place.attributedPrimaryText,
+                                        place: place
+                                    )
+                                }
+                            )
+                        )))
                     })
                 }
             }

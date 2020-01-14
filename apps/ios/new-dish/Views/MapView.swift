@@ -59,6 +59,7 @@ struct MapView: UIViewControllerRepresentable {
             // hacky dealy for now because mapView isn't started yet
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
                 self.currentLocation.$lastLocation
+                    .removeDuplicates()
                     .sink { location in
                         if location != nil {
                             log.info("center map from lastLocation")

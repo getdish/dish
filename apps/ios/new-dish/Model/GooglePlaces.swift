@@ -16,6 +16,7 @@ class GooglePlaces {
         let locationManager = LocationManager()
         locationManager.start()
         locationManager.$lastLocation
+            .removeDuplicates()
             .sink { location in
                 print("GOT OUR LOCATION BRO \(location)")
                 if let l = location {

@@ -13,8 +13,11 @@ fileprivate let resistanceYBeforeSnap: CGFloat = 48
 // then on idle we can apply .spring()
 
 class HomeViewState: ObservableObject {
-    enum State {
-        case idle, off, pager, searchbar, animating
+    enum HomeDragState {
+        case idle, off, pager, searchbar
+    }
+    enum HomeAnimationState {
+        case idle, controlled, uncontrolled
     }
     
     @Published private(set) var appHeight: CGFloat = Screen.height
@@ -24,38 +27,10 @@ class HomeViewState: ObservableObject {
     @Published private(set) var hasMovedBar = false
     @Published private(set) var shouldAnimateCards = false
     @Published private(set) var hasScrolledSome = false
-    @Published private(set) var state: State = .idle
-    
-    // note: setLock should be only way to mutate state in here
-    // and animate() should be only call to withAnimation() so we can
-    // make them coordinate with each other properly
-    
-    func setState(_ next: State) {
-        log.info()
-        self.state = next
-        if next != .animating,
-           let handle = self.cancelAnimation {
-            handle.cancel()
-        }
-    }
+    @Published private(set) var dragState: HomeDragState = .idle
+    @Published private(set) var animationState: HomeAnimationState = .idle
     
     private var cancelAnimation: AnyCancellable? = nil
-    func animate(_ animation: Animation? = .spring(), _ body: () -> Void) {
-        log.info()
-        var shouldEnd = true
-        self.cancelAnimation = AnyCancellable {
-            shouldEnd = false
-        }
-        self.setState(.animating)
-        withAnimation(.spring()) {
-            body()
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-            if shouldEnd {
-                self.setState(.idle)
-            }
-        }
-    }
     
     var scrollRevealY: CGFloat {
         mapHeight > 120 ? 100 : 0
@@ -65,15 +40,27 @@ class HomeViewState: ObservableObject {
     @Published var keyboardHeight: CGFloat = 0
     private var cancellables: Set<AnyCancellable> = []
     private var keyboard = Keyboard()
+    private var lastKeyboardAdjustY: CGFloat = 0
 
     init() {
         self.keyboard.$state
             .map { $0.height }
+            .removeDuplicates()
             .assign(to: \.keyboardHeight, on: self)
+            .store(in: &cancellables)
+        
+        self.keyboard.$state.map { $0.height }
+            .removeDuplicates()
+            .sink { val in
+                // set animating while keyboard animates
+                // prevents filters jumping up/down while focusing input
+                self.setAnimationState(.controlled, 350)
+            }
             .store(in: &cancellables)
 
         self.keyboard.$state
             .map { $0.height }
+            .removeDuplicates()
             .sink { height in
                 let isOpen = height > 0
                 
@@ -82,8 +69,15 @@ class HomeViewState: ObservableObject {
                 
                 // map up/down on keyboard open/close
                 if !self.isSnappedToBottom {
-                    withAnimation(.spring()) {
-                        self.y += isOpen ? -170 : 170
+                    self.animate {
+                        if isOpen {
+                            let str = max(0, 1 - (self.snapToBottomAt - self.y) / self.snapToBottomAt)
+                            let amt = 170 * str
+                            self.y -= amt
+                            self.lastKeyboardAdjustY = amt
+                        } else {
+                            self.y += self.lastKeyboardAdjustY
+                        }
                     }
                 }
                 
@@ -93,19 +87,63 @@ class HomeViewState: ObservableObject {
         let started = Date()
         self.$scrollY
             .throttle(for: 0.1, scheduler: q, latest: true)
+            .removeDuplicates()
             .sink { y in
                 print("\(Date().timeIntervalSince(started))")
                 if Date().timeIntervalSince(started) > 1 {
-                    DispatchQueue.main.async {
+                    let next = y > 20
+                    if next != self.hasScrolledSome {
                         print("scroll scroll \(y)")
-                        if y > 20 {
-                            self.hasScrolledSome = true
-                        } else {
-                            self.hasScrolledSome = false
+                        self.animate(state: .uncontrolled) {
+                            self.hasScrolledSome = next
                         }
                     }
                 }
             }.store(in: &cancellables)
+    }
+    
+    // note: setDragState/setAnimationSate should be only way to mutate state
+    
+    func setDragState(_ next: HomeDragState) {
+        log.info()
+        self.dragState = next
+    }
+    
+    func setAnimationState(_ next: HomeAnimationState, _ duration: Int = 0) {
+        log.info()
+        DispatchQueue.main.async {
+            self.animationState = next
+            // cancel last controlled animation
+            if next != .idle,
+                let handle = self.cancelAnimation {
+                handle.cancel()
+            }
+            // allow timeout
+            if duration > 0 {
+                var active = true
+                self.cancelAnimation = AnyCancellable {
+                    active = false
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                    if active {
+                        self.setAnimationState(.idle)
+                        self.cancelAnimation = nil
+                    }
+                }
+            }
+        }
+    }
+    
+    func animate(_ animation: Animation? = .spring(), state: HomeAnimationState = .controlled, _ body: @escaping () -> Void) {
+        log.info()
+        DispatchQueue.main.async {
+            self.setAnimationState(state, 400)
+            DispatchQueue.main.async {
+                withAnimation(animation) {
+                    body()
+                }
+            }
+        }
     }
     
     var showFiltersAbove: Bool {
@@ -146,17 +184,22 @@ class HomeViewState: ObservableObject {
     }
 
     private var startDragAt: CGFloat = 0
+    private var lastDragY: CGFloat = 0
 
     func drag(_ dragY: CGFloat) {
-        if state == .pager { return }
-        log.info()
+        if dragState == .pager { return }
+        if lastDragY == dragY { return }
+        lastDragY = dragY
+
+        log.info(dragY)
+        
         // TODO we can reset this back to false in some cases for better UX
         self.hasMovedBar = true
 
         // remember where we started
-        if state != .searchbar {
+        if dragState != .searchbar {
             self.startDragAt = y
-            self.setState(.searchbar)
+            self.setDragState(.searchbar)
         }
 
         var y = self.startDragAt + (
@@ -203,16 +246,16 @@ class HomeViewState: ObservableObject {
     }
 
     func finishDrag(_ value: DragGesture.Value) {
-        if state == .pager { return }
+        if dragState == .pager { return }
         log.info()
         
         self.animate {
-            if isSnappedToBottom {
+            if self.isSnappedToBottom {
                 self.snapToBottom()
-            } else if y > aboutToSnapToBottomAt {
-                self.y = aboutToSnapToBottomAt
+            } else if self.y > self.aboutToSnapToBottomAt {
+                self.y = self.aboutToSnapToBottomAt
             }
-            if searchBarYExtra != 0 {
+            if self.searchBarYExtra != 0 {
                 self.searchBarYExtra = 0
             }
             // attempt to have it "continue" from your drag a bit, feels slow
@@ -224,13 +267,15 @@ class HomeViewState: ObservableObject {
 
     func snapToBottom(_ toBottom: Bool = true) {
         log.info()
+        // prevent dragging after snap
+        self.setDragState(.off)
         self.animate {
             self.scrollY = 0
             self.searchBarYExtra = 0
             if toBottom {
-                self.y = snappedToBottomMapHeight - mapInitialHeight
+                self.y = self.snappedToBottomMapHeight - self.mapInitialHeight
             } else {
-                self.y = snapToBottomAt - resistanceYBeforeSnap
+                self.y = self.snapToBottomAt - resistanceYBeforeSnap
             }
         }
     }
@@ -254,32 +299,33 @@ class HomeViewState: ObservableObject {
     }
 
     func animateTo(_ y: CGFloat) {
-        log.info()
         if self.y == y { return }
+        log.info()
         self.animate {
             self.y = y
         }
     }
 
     func resetAfterKeyboardHide() {
-        log.info()
         if !self.hasMovedBar && self.y != 0 && appStore.state.home.state.last!.search == "" {
+            log.info()
             self.animateTo(0)
         }
     }
 
     func setScrollY(_ scrollY: CGFloat) {
-        if state != .idle { return }
-        log.info()
+        if dragState != .idle { return }
+        if animationState != .idle { return }
         let y = max(0, min(100, scrollY)).rounded()
         if y != self.scrollY {
+            log.info(y)
             self.scrollY = y
         }
     }
     
     func moveToSearchResults() {
-        log.info()
-        if state == .idle && y >= 0 {
+        if dragState == .idle && y >= 0 {
+            log.info()
             self.animateTo(y - 80)
         }
     }
@@ -314,14 +360,15 @@ struct HomeMainView: View {
         // pushed map below the border radius of the bottomdrawer
         let isOnSearchResults = Selectors.home.isOnSearchResults()
         let isMovingToSearchResults = isOnSearchResults && !wasOnSearchResults
-        
         if isMovingToSearchResults {
             state.moveToSearchResults()
         }
         
         // reset back
-        DispatchQueue.main.async {
-            self.wasOnSearchResults = isOnSearchResults
+        if isOnSearchResults != wasOnSearchResults {
+            DispatchQueue.main.async {
+                self.wasOnSearchResults = isOnSearchResults
+            }
         }
         
         
@@ -374,6 +421,10 @@ struct HomeMainView: View {
                     // map
                     VStack {
                         ZStack {
+//                            Color.red
+//                                .cornerRadius(20)
+//                                .scaleEffect(mapHeight < 250 ? 0.8 : 1)
+//                                .animation(.spring())
                             DishMapView(
                                 width: geometry.size.width,
                                 height: Screen.height,
@@ -432,8 +483,8 @@ struct HomeMainView: View {
                             Spacer()
                         }
 //                        .animation(
-//                            state.state == .animating ? Animation.none :
-//                                state.dragState == .idle ? .spring(response: 0.25) : Animation.spring(response: 0.1)
+//                            state.state == .animating ? .none :
+//                                state.state == .idle ? .spring(response: 0.25) : .spring(response: 0.1)
 //                        )
                         .padding(.horizontal, 10)
                         .offset(y: mapHeight - 23 + state.searchBarYExtra)
@@ -444,18 +495,18 @@ struct HomeMainView: View {
                 
                     // make everything untouchable while dragging
                 Color.black.opacity(0.0001)
-                        .frame(width: state.state == .pager ? Screen.width : 0)
+                        .frame(width: state.dragState == .pager ? Screen.width : 0)
                 }
                 .clipped() // dont remove fixes bug cant click SearchBar
                 .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
                 .simultaneousGesture(
                     DragGesture(minimumDistance: 10)
                         .onChanged { value in
-                            if [.off, .pager].contains(state.state) {
+                            if [.off, .pager].contains(state.dragState) {
                                 return
                             }
-                            // why is this off 80???
-                            if HomeSearchBarState.isWithin(value.startLocation.y - 40) || state.state == .searchbar {
+                            // why is this off some???
+                            if HomeSearchBarState.isWithin(value.startLocation.y - 37) || state.dragState == .searchbar {
                                 // hide keyboard on drag
                                 if self.keyboard.state.height > 0 {
                                     self.keyboard.hide()
@@ -465,10 +516,10 @@ struct HomeMainView: View {
                             }
                     }
                     .onEnded { value in
-                        if [.idle, .searchbar].contains(state.state) {
+                        if [.idle, .searchbar].contains(state.dragState) {
                             self.state.finishDrag(value)
                         }
-                        self.state.setState(.idle)
+                        self.state.setDragState(.idle)
                     }
                 )
             }
