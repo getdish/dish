@@ -171,7 +171,7 @@ class MapViewController: UIViewController {
     }
     
     private func getCamera() -> GMSCameraPosition? {
-        if let location: CLLocation = appStore.state.location.lastKnown {
+        if let location: CLLocation = App.store.state.location.lastKnown {
             return GMSCameraPosition.camera(
                 withLatitude: location.coordinate.latitude + self.adjustLatitude,
                 longitude: location.coordinate.longitude,

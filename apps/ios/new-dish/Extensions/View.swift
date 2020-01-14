@@ -48,7 +48,7 @@ extension View {
         if let state = appState {
             res = res.environmentObject(state) as! Self
         }
-        return res.environmentObject(appStore)
+        return res.environmentObject(App.store)
             .environmentObject(App.keyboard)
             .embedInGeometryReader()
             .edgesIgnoringSafeArea(.all)

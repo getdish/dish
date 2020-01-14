@@ -7,7 +7,7 @@ extension AppState {
         var view: HomePageView = .home
         var state: [HomeStateItem] = [
             HomeStateItem(filters: [
-//                SearchFilter(type: .root, name: "Dish", deletable: false)
+                //                SearchFilter(type: .root, name: "Dish", deletable: false)
             ])
         ]
         var showDrawer: Bool = false
@@ -27,7 +27,53 @@ enum HomeAction {
     case setMapBoundsLabel(_ val: String)
 }
 
-var lastSearch = AnyCancellable {}
+class HomeService {
+    private var cancels: Set<AnyCancellable> = []
+    
+    func start() {
+        self.effectSearchResultsOnSearch()
+    }
+    
+    func getSearchResults(_ search: String) -> Future<HomeSearchResults, Never> {
+        Future<HomeSearchResults, Never> { promise in
+            App.googlePlacesManager.searchPlaces(search, completion: { places in
+                promise(.success(
+                    HomeSearchResults(
+                        id: "0",
+                        results: places.map { place in
+                            HomeSearchResultItem(
+                                id: place.name,
+                                name: place.name, //place.attributedPrimaryText,
+                                place: place
+                            )
+                        }
+                    )
+                    ))
+            })
+        }
+    }
+    
+    func setSearchResults(_ search: String) -> Effect<AppAction> {
+        self.getSearchResults(search)
+            .map { results in
+                AppAction.home(.setSearchResults(results))
+            }
+            .eraseToEffect()
+    }
+    
+    func effectSearchResultsOnSearch() {
+        App.store.$state
+            .map { $0.home.state.last! }
+            .map { $0.search }
+            .removeDuplicates()
+            .debounce(for: .milliseconds(100), scheduler: App.defaultQueue)
+            .sink { val in
+                print("we got a new state........... \(val)")
+                App.store.send(self.setSearchResults(val))
+        }
+        .store(in: &cancels)
+    }
+}
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
     
@@ -51,19 +97,17 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
             var last = state.home.state.last!
             // if removing last filter, pop!
             if val.count == 0 {
-                appStore.send(.home(.pop))
+                App.store.send(.home(.pop))
             } else {
                 last.filters = val.map { SearchFilter(name: $0.text) }
                 updateItem(last)
                 if let search = val.last?.text {
-                    appStore.send(.home(.setSearch(search)))
+                    App.store.send(.home(.setSearch(search)))
                 }
-            }
+        }
         case let .setSearch(val):
             var last = state.home.state.last!
-            
             // TODO if filter/category exists (like Pho), move it to tags not search
-            
             // push into search results
             if last.search == "" {
                 state.home.state.append(
@@ -72,32 +116,7 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
             } else {
                 last.search = val
                 updateItem(last)
-            }
-
-            lastSearch.cancel()
-            var cancelled = false
-            lastSearch = AnyCancellable { cancelled = true }
-            DispatchQueue.main.async {
-                if !cancelled {
-                    // SEARCH
-                    App.googlePlacesManager.searchPlaces(val, completion: { places in
-                        print("PLACES ok got \(places.count)")
-                        appStore.send(.home(.setSearchResults(
-                            HomeSearchResults(
-                                id: "0",
-                                results: places.map { place in
-                                    HomeSearchResultItem(
-                                        id: place.name,
-                                        name: place.name, //place.attributedPrimaryText,
-                                        place: place
-                                    )
-                                }
-                            )
-                        )))
-                    })
-                }
-            }
-
+        }
         case let .setView(page):
             state.home.view = page
         case let .setShowDrawer(val):
@@ -112,11 +131,11 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
 }
 
 struct HomeSelectors {
-    func isOnSearchResults(_ state: AppState = appStore.state) -> Bool {
+    func isOnSearchResults(_ state: AppState = App.store.state) -> Bool {
         return state.home.state.count > 1
     }
     
-    func tags(_ state: AppState = appStore.state) -> [SearchInputTag] {
+    func tags(_ state: AppState = App.store.state) -> [SearchInputTag] {
         let homeState = state.home.state.last!
         var tags: [SearchInputTag] = []
         if homeState.filters.count > 0 {
