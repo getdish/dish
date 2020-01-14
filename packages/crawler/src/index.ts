@@ -4,7 +4,15 @@ import * as URL from 'url'
 
 import { CrawlPage } from './CrawlPage'
 import { CrawlQueue } from './CrawlQueue'
-import { cleanUrlHash, FILTER_URL_EXTENSIONS, matchesDepth, MAX_CORES_DEFAULT, sleep, urlMatchesExtensions, urlSimilarity } from './helpers'
+import {
+  cleanUrlHash,
+  FILTER_URL_EXTENSIONS,
+  matchesDepth,
+  MAX_CORES_DEFAULT,
+  sleep,
+  urlMatchesExtensions,
+  urlSimilarity,
+} from './helpers'
 
 export type CrawlerOptions = {
   entry: string
@@ -120,7 +128,7 @@ export class Crawler {
 
     console.log(`Loading ${concurrentTabs} browser tabs`)
     const pages = await Promise.all(
-      this.loadingPage.map(() => this.browser!.newPage()),
+      this.loadingPage.map(() => this.browser!.newPage())
     )
 
     // handlers for after loaded a page
@@ -183,7 +191,7 @@ export class Crawler {
       } catch (err) {
         if (!this.isFinished(false)) {
           console.log(
-            `Error crawling url ${target.url}\n${err.message}\n${err.stack}`,
+            `Error crawling url ${target.url}\n${err.message}\n${err.stack}`
           )
         }
         return null
