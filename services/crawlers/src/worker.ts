@@ -1,8 +1,8 @@
-import { Worker } from '@dish/worker'
+import { WorkerDaemon } from '@dish/worker'
 
 import { Yelp } from './Yelp'
 import { UberEats } from './UberEats'
 
-const worker = new Worker([new Yelp(), new UberEats()])
+const worker = new WorkerDaemon([Yelp, UberEats])
 
 worker.run()

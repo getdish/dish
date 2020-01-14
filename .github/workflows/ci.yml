@@ -2,7 +2,7 @@
 # And also there is a JSON schema for validating in your local editor:
 # http://json.schemastore.org/github-workflow
 
-name: Code Health
+name: CI
 on: [push]
 jobs:
   run:
@@ -13,6 +13,6 @@ jobs:
     - uses: actions/checkout@master
     - name: Install dev dependencies
       run: .github/workflows/scripts/install_dev_deps.sh
-    - name: Prettier linting
-      run: .github/workflows/scripts/prettier.sh
+    - name: Run tests
+      run: .github/workflows/scripts/tests.sh
 

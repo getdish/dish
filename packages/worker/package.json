@@ -5,14 +5,17 @@
   "sideEffects": false,
   "scripts": {
     "build": "tsc -b || true",
-    "watch": "tsc -b --watch --preserveWatchOutput"
+    "watch": "tsc -b --watch --preserveWatchOutput",
+    "test": "ava tests/* --verbose",
+    "test:watch": "ava tests/* --watch"
   },
   "dependencies": {
-    "orkid": "0.11.0",
-    "@dish/crawlers": "*"
+    "@dish/crawlers": "*",
+    "orkid": "0.11.0"
   },
   "devDependencies": {
     "@types/node": "^13.1.6",
+    "ava": "^2.4.0",
     "dotenv": "^8.2.0"
   }
 }

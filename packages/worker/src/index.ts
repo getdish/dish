@@ -28,11 +28,11 @@ export class WorkerJob {
   }
 }
 
-export class Worker {
+export class WorkerDaemon {
   jobs!: { [key: string]: () => Promise<any> }
   consumer!: Consumer
 
-  constructor(job_modules: WorkerJob[]) {
+  constructor(job_modules: { new (): WorkerJob }[]) {
     this.setupJobs(job_modules)
     this.setupConsumer()
   }
@@ -41,9 +41,10 @@ export class Worker {
     this.consumer.start()
   }
 
-  setupJobs(job_modules: WorkerJob[]) {
+  setupJobs(job_modules: { new (): WorkerJob }[]) {
     this.jobs = {}
-    for (let job of job_modules) {
+    for (let Job of job_modules) {
+      const job = new Job()
       this.jobs[job.get_name()] = job.run
     }
   }
