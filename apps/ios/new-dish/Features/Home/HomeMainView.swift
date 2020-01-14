@@ -421,15 +421,15 @@ struct HomeMainView: View {
                     // map
                     VStack {
                         ZStack {
-                            Color.red
+//                            Color.red
 //                                .cornerRadius(20)
 //                                .scaleEffect(mapHeight < 250 ? 0.8 : 1)
 //                                .animation(.spring())
-//                            DishMapView(
-//                                width: geometry.size.width,
-//                                height: Screen.height,
-//                                zoom: zoom
-//                            )
+                            DishMapView(
+                                width: geometry.size.width,
+                                height: Screen.height,
+                                zoom: zoom
+                            )
                             
 //                            // keyboard dismiss (above map, below content)
                             if self.keyboard.state.height > 0 {
