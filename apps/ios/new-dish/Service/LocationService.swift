@@ -11,6 +11,7 @@ class LocationService {
     }
     
     func start() {
+        currentLocationManager.start()
         self.effectUpdateCurrentLocation()
         self.effectMoveToCurrentLocationOnAuthorization()
     }
@@ -27,6 +28,7 @@ class LocationService {
     func effectUpdateCurrentLocation() {
         currentLocationManager.$lastLocation
             .sink { location in
+                print("last location is \(location)")
                 if let location = location {
                     appStore.send(.location(.setLastKnown(location)))
                     appStore.send(self.setNameOfCurrentLocation(location))

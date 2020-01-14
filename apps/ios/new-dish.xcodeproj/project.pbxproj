@@ -33,7 +33,6 @@
 		AE56C86623ADD977006A156A /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56C86523ADD977006A156A /* TagView.swift */; };
 		AE6A9C0F23C45FA800003059 /* GooglePlacesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A9C0E23C45FA800003059 /* GooglePlacesManager.swift */; };
 		AE6A9C1123C5265C00003059 /* GooglePlaceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A9C1023C5265C00003059 /* GooglePlaceItem.swift */; };
-		AE6A9C1323C52B0A00003059 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A9C1223C52B0A00003059 /* LocationManager.swift */; };
 		AE6CECCD23A843E600B08870 /* BottomNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6CECCC23A843E600B08870 /* BottomNav.swift */; };
 		AE7563B423A035E70094022B /* HomeMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B323A035E70094022B /* HomeMainView.swift */; };
 		AE7563B823A036500094022B /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B723A036500094022B /* Screen.swift */; };
@@ -126,7 +125,6 @@
 		AE56C86523ADD977006A156A /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
 		AE6A9C0E23C45FA800003059 /* GooglePlacesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GooglePlacesManager.swift; sourceTree = "<group>"; };
 		AE6A9C1023C5265C00003059 /* GooglePlaceItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GooglePlaceItem.swift; sourceTree = "<group>"; };
-		AE6A9C1223C52B0A00003059 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		AE6CECCC23A843E600B08870 /* BottomNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomNav.swift; sourceTree = "<group>"; };
 		AE7563B323A035E70094022B /* HomeMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainView.swift; sourceTree = "<group>"; };
 		AE7563B723A036500094022B /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
@@ -404,7 +402,6 @@
 				AE6A9C0E23C45FA800003059 /* GooglePlacesManager.swift */,
 				AE6A9C1023C5265C00003059 /* GooglePlaceItem.swift */,
 				AE872FEE23CE6E8100F84663 /* CurrentLocationService.swift */,
-				AE6A9C1223C52B0A00003059 /* LocationManager.swift */,
 				AE99091423CE646D00F1763C /* LocationService.swift */,
 			);
 			path = Service;
@@ -619,7 +616,6 @@
 				1CE3546523986B1B004B3A84 /* AppDelegate.swift in Sources */,
 				1CE3548A239871CB004B3A84 /* BottomSheetView.swift in Sources */,
 				AE1BBDB623C8397900C58A87 /* CutoutCircleCentered.swift in Sources */,
-				AE6A9C1323C52B0A00003059 /* LocationManager.swift in Sources */,
 				AEED844123B6707100407266 /* DishMapView.swift in Sources */,
 				1C3CFE6423998FF2004B2EEA /* HomeContainerView.swift in Sources */,
 				AE0F474423B69276008F7418 /* DishCamera.swift in Sources */,

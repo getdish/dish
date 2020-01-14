@@ -8,11 +8,13 @@ import SwiftUI
 
 struct AppInstance {
     let googlePlacesManager = GooglePlacesManager()
+    let locationService = LocationService()
     let keyboard = Keyboard()
     let defaultQueue = DispatchQueue(label: "defaultQueue")
     
     func start() {
         googlePlacesManager.start()
+        locationService.start()
     }
 }
 
