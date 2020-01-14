@@ -11,6 +11,7 @@ extension AppState {
             ])
         ]
         var showDrawer: Bool = false
+        var mapBoundsLabel: String = ""
     }
 }
 
@@ -23,6 +24,7 @@ enum HomeAction {
     case setSearch(_ val: String)
     case setSearchResults(_ val: HomeSearchResults)
     case setCurrentTags(_ val: [SearchInputTag])
+    case setMapBoundsLabel(_ val: String)
 }
 
 var lastSearch = AnyCancellable {}
@@ -39,6 +41,8 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     }
     
     switch action {
+        case let .setMapBoundsLabel(val):
+            state.home.mapBoundsLabel = val
         case let .setSearchResults(val):
             var last = state.home.state.last!
             last.searchResults = val
@@ -76,7 +80,7 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
             DispatchQueue.main.async {
                 if !cancelled {
                     // SEARCH
-                    googlePlaces.searchPlaces(val, completion: { places in
+                    App.googlePlacesManager.searchPlaces(val, completion: { places in
                         print("PLACES ok got \(places.count)")
                         appStore.send(.home(.setSearchResults(
                             HomeSearchResults(
