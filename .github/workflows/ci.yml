@@ -7,12 +7,27 @@ on: [push]
 jobs:
   run:
     runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis
+        ports:
+        - 6379:6379
+        options: --entrypoint redis-server
     env:
       DISH_ENV: "test"
     steps:
     - uses: actions/checkout@master
     - name: Install dev dependencies
       run: .github/workflows/scripts/install_dev_deps.sh
-    - name: Run tests
+    - name: Run unit tests, specs, etc
       run: .github/workflows/scripts/tests.sh
-
+    - name: Build docker images
+      run: .github/workflows/scripts/build.sh
+    - name: Run integration tests
+      run: .github/workflows/scripts/integration_tests.sh
+    - name: 'On fail: Output container logs'
+      run: .github/workflows/scripts/on_failure.sh
+      if: failure()
+    - name: Deploy
+      run: .github/workflows/scripts/deploy.sh
+      if: github.ref == 'refs/heads/master'

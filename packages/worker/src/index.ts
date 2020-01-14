@@ -3,16 +3,15 @@ dotenv.config()
 
 import { Consumer, Producer } from 'orkid'
 
+const is_local_redis =
+  process.env.DISH_ENV == 'development' || process.env.CI == 'true'
+
 const redisOptions = {
   port: 6379,
-  host: process.env.DISH_ENV == 'development' ? 'localhost' : 'redis',
+  host: is_local_redis ? 'localhost' : 'redis',
 }
 
 export class WorkerJob {
-  get_name() {
-    return this.constructor.name
-  }
-
   async run(): Promise<any> {
     console.log('run() not implemented')
     return false
@@ -23,13 +22,13 @@ export class WorkerJob {
       redisOptions,
     })
 
-    const task_name = this.get_name()
+    const task_name = this.constructor.name
     await producer.addTask(task_name as any)
   }
 }
 
 export class WorkerDaemon {
-  jobs!: { [key: string]: () => Promise<any> }
+  jobs!: { [key: string]: { new (): WorkerJob } }
   consumer!: Consumer
 
   constructor(job_modules: { new (): WorkerJob }[]) {
@@ -44,8 +43,7 @@ export class WorkerDaemon {
   setupJobs(job_modules: { new (): WorkerJob }[]) {
     this.jobs = {}
     for (let Job of job_modules) {
-      const job = new Job()
-      this.jobs[job.get_name()] = job.run
+      this.jobs[Job.prototype.constructor.name] = Job
     }
   }
 
@@ -65,6 +63,6 @@ export class WorkerDaemon {
       `Processing task from Queue: ${metadata.qname}. Task ID: ${metadata.id}.`
     )
 
-    await this.jobs[job]()
+    await new this.jobs[job]().run()
   }
 }

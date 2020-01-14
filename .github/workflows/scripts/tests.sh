@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -e
 
-lerna run test
+node_modules/.bin/lerna run test

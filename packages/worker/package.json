@@ -10,12 +10,11 @@
     "test:watch": "ava tests/* --watch"
   },
   "dependencies": {
-    "@dish/crawlers": "*",
-    "orkid": "0.11.0"
+    "orkid": "0.11.0",
+    "dotenv": "^8.2.0"
   },
   "devDependencies": {
     "@types/node": "^13.1.6",
-    "ava": "^2.4.0",
-    "dotenv": "^8.2.0"
+    "ava": "^2.4.0"
   }
 }
