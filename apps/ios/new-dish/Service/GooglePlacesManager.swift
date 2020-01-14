@@ -13,7 +13,7 @@ class GooglePlacesManager {
     private var cancellables: Set<AnyCancellable> = []
     
     func start() {
-        let locationManager = LocationManager()
+        let locationManager = CurrentLocationService()
         locationManager.start()
         print("starting locationmanager")
         locationManager.$lastLocation
@@ -25,7 +25,6 @@ class GooglePlacesManager {
                         longitude: .init(l.coordinate.longitude)
                     )
                 } else {
-                    print("no location???????????")
                     self.currentLocation = CLLocationCoordinate2D(
                         latitude: .init(37.7749),
                         longitude: .init(122.4194)

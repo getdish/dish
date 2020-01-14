@@ -65,6 +65,8 @@
 		AE861A8523A17209004096BF /* TopNavSearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8423A17209004096BF /* TopNavSearchResults.swift */; };
 		AE861A8723A1727B004096BF /* TopNavMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8623A1727B004096BF /* TopNavMenuButton.swift */; };
 		AE861A8923A172E8004096BF /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8823A172E8004096BF /* BlurView.swift */; };
+		AE872FED23CE6E3900F84663 /* Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE872FEC23CE6E3900F84663 /* Publisher.swift */; };
+		AE872FEF23CE6E8100F84663 /* CurrentLocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE872FEE23CE6E8100F84663 /* CurrentLocationService.swift */; };
 		AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */; };
 		AE99091223CE637200F1763C /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99091123CE637200F1763C /* App.swift */; };
 		AE99091523CE646D00F1763C /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99091423CE646D00F1763C /* LocationService.swift */; };
@@ -156,6 +158,8 @@
 		AE861A8423A17209004096BF /* TopNavSearchResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavSearchResults.swift; sourceTree = "<group>"; };
 		AE861A8623A1727B004096BF /* TopNavMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavMenuButton.swift; sourceTree = "<group>"; };
 		AE861A8823A172E8004096BF /* BlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurView.swift; sourceTree = "<group>"; };
+		AE872FEC23CE6E3900F84663 /* Publisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Publisher.swift; sourceTree = "<group>"; };
+		AE872FEE23CE6E8100F84663 /* CurrentLocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLocationService.swift; sourceTree = "<group>"; };
 		AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonBordered.swift; sourceTree = "<group>"; };
 		AE99091123CE637200F1763C /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		AE99091423CE646D00F1763C /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -277,6 +281,7 @@
 				1CE3548023986BC1004B3A84 /* View.swift */,
 				AE7563E223A038190094022B /* Array.swift */,
 				1CE2393023A19722006B7AFD /* Environment.swift */,
+				AE872FEC23CE6E3900F84663 /* Publisher.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -398,6 +403,7 @@
 			children = (
 				AE6A9C0E23C45FA800003059 /* GooglePlacesManager.swift */,
 				AE6A9C1023C5265C00003059 /* GooglePlaceItem.swift */,
+				AE872FEE23CE6E8100F84663 /* CurrentLocationService.swift */,
 				AE6A9C1223C52B0A00003059 /* LocationManager.swift */,
 				AE99091423CE646D00F1763C /* LocationService.swift */,
 			);
@@ -618,6 +624,7 @@
 				1C3CFE6423998FF2004B2EEA /* HomeContainerView.swift in Sources */,
 				AE0F474423B69276008F7418 /* DishCamera.swift in Sources */,
 				AE861A7F23A07D81004096BF /* DishMapControls.swift in Sources */,
+				AE872FEF23CE6E8100F84663 /* CurrentLocationService.swift in Sources */,
 				AEA331FB23A338F400B36A23 /* KeyboardHost.swift in Sources */,
 				AE7563E523A038300094022B /* SearchInput.swift in Sources */,
 				1CE3546723986B1B004B3A84 /* SceneDelegate.swift in Sources */,
@@ -625,6 +632,7 @@
 				1CE3548123986BC1004B3A84 /* View.swift in Sources */,
 				AEA331F723A3382100B36A23 /* DishButton.swift in Sources */,
 				AE6A9C0F23C45FA800003059 /* GooglePlacesManager.swift in Sources */,
+				AE872FED23CE6E3900F84663 /* Publisher.swift in Sources */,
 				AEA87E4323B976EB009F07DB /* HomeMainFilters.swift in Sources */,
 				AE56C86423ADB78C006A156A /* HomeSearchResults.swift in Sources */,
 				AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */,
