@@ -27,54 +27,6 @@ enum HomeAction {
     case setMapBoundsLabel(_ val: String)
 }
 
-class HomeService {
-    private var cancels: Set<AnyCancellable> = []
-    
-    func start() {
-        self.effectSearchResultsOnSearch()
-    }
-    
-    func getSearchResults(_ search: String) -> Future<HomeSearchResults, Never> {
-        Future<HomeSearchResults, Never> { promise in
-            App.googlePlacesManager.searchPlaces(search, completion: { places in
-                promise(.success(
-                    HomeSearchResults(
-                        id: "0",
-                        results: places.map { place in
-                            HomeSearchResultItem(
-                                id: place.name,
-                                name: place.name, //place.attributedPrimaryText,
-                                place: place
-                            )
-                        }
-                    )
-                    ))
-            })
-        }
-    }
-    
-    func setSearchResults(_ search: String) -> Effect<AppAction> {
-        self.getSearchResults(search)
-            .map { results in
-                AppAction.home(.setSearchResults(results))
-            }
-            .eraseToEffect()
-    }
-    
-    func effectSearchResultsOnSearch() {
-        App.store.$state
-            .map { $0.home.state.last! }
-            .map { $0.search }
-            .removeDuplicates()
-            .debounce(for: .milliseconds(100), scheduler: App.defaultQueue)
-            .sink { val in
-                print("we got a new state........... \(val)")
-                App.store.send(self.setSearchResults(val))
-        }
-        .store(in: &cancels)
-    }
-}
-
 func homeReducer(_ state: inout AppState, action: HomeAction) {
     
     // use this to ensure you update HomeStateItems correctly
@@ -95,14 +47,20 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
             updateItem(last)
         case let .setCurrentTags(val):
             var last = state.home.state.last!
+            
             // if removing last filter, pop!
             if val.count == 0 {
-                App.store.send(.home(.pop))
+                // TODO this shouldn't be here I think..
+                DispatchQueue.main.async {
+                    App.store.send(.home(.pop))
+                }
             } else {
                 last.filters = val.map { SearchFilter(name: $0.text) }
                 updateItem(last)
                 if let search = val.last?.text {
-                    App.store.send(.home(.setSearch(search)))
+                    DispatchQueue.main.async {
+                        App.store.send(.home(.setSearch(search)))
+                    }
                 }
         }
         case let .setSearch(val):

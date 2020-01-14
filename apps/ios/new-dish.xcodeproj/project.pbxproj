@@ -66,6 +66,7 @@
 		AE861A8923A172E8004096BF /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8823A172E8004096BF /* BlurView.swift */; };
 		AE872FED23CE6E3900F84663 /* Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE872FEC23CE6E3900F84663 /* Publisher.swift */; };
 		AE872FEF23CE6E8100F84663 /* CurrentLocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE872FEE23CE6E8100F84663 /* CurrentLocationService.swift */; };
+		AE872FF123CE76AE00F84663 /* HomeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE872FF023CE76AE00F84663 /* HomeService.swift */; };
 		AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */; };
 		AE99091223CE637200F1763C /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99091123CE637200F1763C /* App.swift */; };
 		AE99091523CE646D00F1763C /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99091423CE646D00F1763C /* LocationService.swift */; };
@@ -158,6 +159,7 @@
 		AE861A8823A172E8004096BF /* BlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurView.swift; sourceTree = "<group>"; };
 		AE872FEC23CE6E3900F84663 /* Publisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Publisher.swift; sourceTree = "<group>"; };
 		AE872FEE23CE6E8100F84663 /* CurrentLocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLocationService.swift; sourceTree = "<group>"; };
+		AE872FF023CE76AE00F84663 /* HomeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeService.swift; sourceTree = "<group>"; };
 		AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonBordered.swift; sourceTree = "<group>"; };
 		AE99091123CE637200F1763C /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		AE99091423CE646D00F1763C /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -402,7 +404,6 @@
 				AE6A9C0E23C45FA800003059 /* GooglePlacesManager.swift */,
 				AE6A9C1023C5265C00003059 /* GooglePlaceItem.swift */,
 				AE872FEE23CE6E8100F84663 /* CurrentLocationService.swift */,
-				AE99091423CE646D00F1763C /* LocationService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -439,7 +440,9 @@
 			children = (
 				1CE3548223986C5C004B3A84 /* AppStore.swift */,
 				AEF6558323B59BC000E49A51 /* Home.swift */,
+				AE872FF023CE76AE00F84663 /* HomeService.swift */,
 				AEAE67EB23B5A70A00B9D781 /* Location.swift */,
+				AE99091423CE646D00F1763C /* LocationService.swift */,
 				AEED843D23B5A8E000407266 /* Mocks.swift */,
 			);
 			path = Store;
@@ -638,6 +641,7 @@
 				AEF6556F23B0248200E49A51 /* FilterButton.swift in Sources */,
 				AEAE67EC23B5A70A00B9D781 /* Location.swift in Sources */,
 				AE861A7923A0651D004096BF /* Keyboard.swift in Sources */,
+				AE872FF123CE76AE00F84663 /* HomeService.swift in Sources */,
 				AE861A8123A16DA6004096BF /* TopNavView.swift in Sources */,
 				AEF6558423B59BC000E49A51 /* Home.swift in Sources */,
 				AE6A9C1123C5265C00003059 /* GooglePlaceItem.swift in Sources */,
