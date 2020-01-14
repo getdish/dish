@@ -142,6 +142,10 @@ struct HomeStateItem: Identifiable, Equatable {
     var search = ""
     var filters: [SearchFilter] = []
     var searchResults: HomeSearchResults = HomeSearchResults(id: "0")
+    
+    var queryString: String {
+        self.search + " " + self.filters.map { $0.name }.joined(separator: " ")
+    }
 }
 
 struct SearchFilter: Equatable {

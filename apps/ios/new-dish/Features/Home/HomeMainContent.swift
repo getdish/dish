@@ -101,15 +101,9 @@ struct HomeExploreDishes: View {
             ForEach(0 ..< self.items.count) { index in
                 HStack(spacing: self.spacing) {
                     ForEach(self.items[index]) { item in
-                        DishGridCard(dish: item)
+                        DishCardView(dish: item)
                             // without height set it will change size during animation
                             .frame(width: width, height: height)
-                            .onTapGesture {
-                                print("tap on item")
-                                self.store.send(.home(
-                                    .push(HomeStateItem(filters: [SearchFilter(name: item.name)]))
-                                ))
-                        }
                     }
                 }
             }
@@ -200,20 +194,12 @@ struct HomeScrollableContent<Content>: View where Content: View {
     }
 }
 
-struct DishGridCard: View {
-    var dish: DishItem
-    var body: some View {
-        FeatureCard(dish: dish, aspectRatio: 1.4, at: .start)
-            .cornerRadius(14)
-    }
-}
-
 struct HomeCardsRow: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
                 ForEach(features) { item in
-                    DishRowCard(dish: item)
+                    DishCardView(aspectRatio: 1.8, dish: item)
                         .frame(width: 160, height: cardRowHeight)
                         .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
                 }
@@ -222,6 +208,20 @@ struct HomeCardsRow: View {
             .padding(.horizontal)
         }
         .frame(width: Screen.width)
+    }
+}
+
+struct DishCardView: View {
+    var aspectRatio: CGFloat = 1.4
+    var dish: DishItem
+    var body: some View {
+        FeatureCard(dish: dish, aspectRatio: aspectRatio, at: .start)
+            .cornerRadius(14)
+            .onTapGesture {
+                App.store.send(
+                    .home(.push(HomeStateItem(filters: [SearchFilter(name: self.dish.name)])))
+                )
+        }
     }
 }
 

@@ -324,6 +324,7 @@ class HomeViewState: ObservableObject {
     }
     
     func moveToSearchResults() {
+        if isSnappedToBottom { return }
         if dragState == .idle && y >= 0 {
             log.info()
             self.animateTo(y - 80)
@@ -458,6 +459,7 @@ struct HomeMainView: View {
                             Spacer()
                         }
                         .offset(y: max(100, mapHeight - cardRowHeight - 16))
+                        .animation(.spring())
                         .opacity(state.isSnappedToBottom ? 1 : 0)
                         .allowsHitTesting(state.isSnappedToBottom)
                         

@@ -38,8 +38,7 @@ class HomeService {
     
     func effectSearchResultsOnSearch() {
         App.store.$state
-            .map { $0.home.state.last! }
-            .map { $0.search }
+            .map { $0.home.state.last!.queryString }
             .removeDuplicates()
             .debounce(for: .milliseconds(100), scheduler: App.defaultQueue)
             .sink { val in
