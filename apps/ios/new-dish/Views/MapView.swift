@@ -13,6 +13,8 @@ enum MapViewLocation {
     case current, uncontrolled
 }
 
+typealias OnChangeMapBounds = (_ target: CLLocationCoordinate2D, _ radius: Int) -> Void
+
 struct MapView: UIViewControllerRepresentable {
     var width: CGFloat
     var height: CGFloat
@@ -21,41 +23,44 @@ struct MapView: UIViewControllerRepresentable {
     var animate: Bool
     var location: MapViewLocation
     var locations: [GooglePlaceItem] = []
+    var onChangeMapBounds: OnChangeMapBounds?
+
     @State var controller: MapViewController? = nil
 
     func makeCoordinator() -> MapView.Coordinator {
         Coordinator(self)
     }
-    
+
     func makeUIViewController(context: Context) -> UIViewController {
         let controller = MapViewController(
             width: width,
             height: height,
             zoom: zoom,
             darkMode: darkMode,
-            animate: animate
+            animate: animate,
+            onChangeMapBounds: onChangeMapBounds
         )
         DispatchQueue.main.async {
             self.controller = controller
         }
         return controller
     }
-    
+
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
         context.coordinator.update(self)
     }
-    
+
     class Coordinator: NSObject {
         var mapView: MapView
         let currentLocation = CurrentLocationService()
         var cancels: Set<AnyCancellable> = []
-        
+
         init(_ mapView: MapView) {
             self.mapView = mapView
             super.init()
             self.update(mapView)
             self.currentLocation.start()
-            
+
             // hacky dealy for now because mapView isn't started yet
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
                 self.currentLocation.$lastLocation
@@ -69,7 +74,7 @@ struct MapView: UIViewControllerRepresentable {
                 .store(in: &self.cancels)
             }
         }
-        
+
         func update(_ mapView: MapView) {
             DispatchQueue.main.async {
                 self.mapView.controller?.update(mapView)
@@ -88,52 +93,65 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     var height: CGFloat
     var darkMode: Bool?
     var animate = false
-    
-    init(width: CGFloat, height: CGFloat, zoom: CGFloat?, darkMode: Bool?, animate: Bool?) {
+    var onChangeMapBounds: OnChangeMapBounds?
+
+    init(
+        width: CGFloat,
+        height: CGFloat,
+        zoom: CGFloat?,
+        darkMode: Bool?,
+        animate: Bool?,
+        onChangeMapBounds: OnChangeMapBounds? = nil
+    ) {
         self.zoom = zoom ?? 12.0
         self.width = width
         self.height = height
         self.darkMode = darkMode
         self.animate = animate ?? false
+        self.onChangeMapBounds = onChangeMapBounds
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     // delegate methods
 
     // on tap
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
         print("You tapped at \(coordinate.latitude), \(coordinate.longitude)")
     }
-    
+
     // on move
     func mapView(_ mapView: GMSMapView, willMove gesture: Bool) {
     }
-    
+
     // on map settles in new center
     func mapView(_ mapView: GMSMapView, idleAt cameraPosition: GMSCameraPosition) {
-        let geocoder = GMSGeocoder()
-        geocoder.reverseGeocodeCoordinate(cameraPosition.target) { (response, error) in
-            guard error == nil else {
-                return
-            }
-            if let result = response?.firstResult() {
-                let marker = GMSMarker()
-                marker.position = cameraPosition.target
-                marker.title = result.lines?[0]
-                marker.snippet = result.lines?[1]
-                marker.map = mapView
-            }
+        if let cb = onChangeMapBounds {
+            cb(cameraPosition.target, Int(mapView.getRadius()))
         }
+//        from google examples, find reverse geocordinate:
+//        let geocoder = GMSGeocoder()
+//        geocoder.reverseGeocodeCoordinate(cameraPosition.target) { (response, error) in
+//            guard error == nil else {
+//                return
+//            }
+//            if let result = response?.firstResult() {
+//                let marker = GMSMarker()
+//                marker.position = cameraPosition.target
+//                marker.title = result.lines?[0]
+//                marker.snippet = result.lines?[1]
+//                marker.map = mapView
+//            }
+//        }
     }
-    
+
     // changed map camera
     func mapView(_ mapView: GMSMapView, didChange cameraPosition: GMSCameraPosition) {
         let region = mapView.projection.visibleRegion()
         log.info("moved map, new bounds \(region)")
     }
-    
+
     // on props update
-    
+
     func update(_ mapView: MapView) {
         if self.zoom != mapView.zoom {
             log.info("update zoom \(mapView.zoom)")
@@ -157,18 +175,18 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
             }
         }
     }
-    
+
     func updateZoom(_ nextZoom: CGFloat) {
         self.zoom = nextZoom
         self.updateCamera()
     }
-    
+
     func moveMapToCurrentLocation() {
         if gmapView == nil { return }
         self.gmapView.isMyLocationEnabled = true
         self.updateCamera()
     }
-    
+
     private func updateCamera() {
         if let camera = getCamera() {
             if gmapView.isHidden {
@@ -186,14 +204,14 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
             }
         }
     }
-    
+
     // converts 0-1
     private func absZoom(_ number: Double? = nil) -> Double {
         let min = 10.0
         let max = 13.0
         return ((number ?? Double(self.zoom)) - min) / (max - min) * 1.0
     }
-    
+
     private var adjustLatitude: Double {
         let zoom = absZoom()
         let zoomLat = zoom * 0.4 * Constants.ONE_DEGREE_LAT
@@ -205,7 +223,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         print("now it is \(z) \(absZoom())")
         return z
     }
-    
+
     private func getCamera() -> GMSCameraPosition? {
         if let location: CLLocation = App.store.state.location.lastKnown {
             return GMSCameraPosition.camera(
@@ -216,11 +234,11 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         }
         return nil
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func loadTheme() {
         if darkMode == true {
             if let styleURL = Bundle.main.url(forResource: "GMapsThemeModest", withExtension: "json") {
@@ -236,21 +254,21 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
             }
         }
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         print("view did load...")
-        
+
         // Create a GMSCameraPosition that tells the map to display the
         // coordinate -33.86,151.20 at zoom level 6.
         let camera = GMSCameraPosition.camera(withLatitude: -33.86, longitude: 151.20, zoom: 4.0)
-        
+
         gmapView = GMSMapView.map(withFrame: CGRect(x: 0, y: 0, width: width, height: height), camera: camera)
         gmapView.delegate = self
-        
+
         self.loadTheme()
-        
+
         // allows gestures to go up to parent
         gmapView.settings.consumesGesturesInView = true
 
