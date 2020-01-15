@@ -1,7 +1,7 @@
 # Developing
 
 ## Common setup
-- To automatically build and watch all code/packages: `lerna run watch`.
+- To automatically build and watch all code/packages: `yarn workspaces run watch`.
 
 ## Worker
 The worker is a daemon/client abstraction that allows placing arbitrary code on a
@@ -10,7 +10,7 @@ retried and throttled.
 
 The daemon requires Redis, usually available from your package manager or: https://redis.io/topics/quickstart
 
-The worker daemon with `yarn run worker:watch`
+Run the worker daemon with `yarn run worker:watch`
 
 ## Crawlers
 

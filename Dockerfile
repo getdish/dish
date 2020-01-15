@@ -3,7 +3,6 @@ FROM mhart/alpine-node:12
 WORKDIR /app
 
 COPY package.json .
-COPY lerna.json .
 COPY tsconfig.base.json .
 
 # copy monorepo dependencies
