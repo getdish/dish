@@ -1,20 +1,5 @@
 import SwiftUI
 
-struct ClearKeyboardOnScroll: View {
-    @EnvironmentObject var homeState: HomeViewState
-    @EnvironmentObject var keyboard: Keyboard
-
-    var body: some View {
-        ScrollListener(onScroll: { frame in
-            print("\(frame.minY)")
-            if self.keyboard.state.height > 0 && abs(frame.minY) > self.homeState.mapHeight + 20  {
-                print("should hide keyboard")
-                self.keyboard.hide()
-            }
-        })
-    }
-}
-
 struct HomeSearchResultsView: View {
     var state: HomeStateItem
     
@@ -23,11 +8,8 @@ struct HomeSearchResultsView: View {
             Color.black
 
             ScrollView(.vertical, showsIndicators: false) {
-                VStack {
+                VStack(spacing: 20) {
                     ClearKeyboardOnScroll()
-
-                    // space below searchbar
-                    Spacer().frame(height: 20)
 
                     ForEach(state.searchResults.results) { item in
                         DishRestaurantCard(restaurant:
@@ -49,123 +31,6 @@ struct HomeSearchResultsView: View {
                 .padding(16)
             }
         }
-    }
-}
-
-struct DishRestaurantCard: View {
-    @ObservedObject var restaurant: RestaurantItem
-
-    var body: some View {
-        ZStack {
-            restaurant.image
-                .resizable()
-                .aspectRatio(2 / 2.25, contentMode: .fit)
-                .overlay(RestaurantText(name: restaurant.name))
-                .cornerRadius(16)
-            
-            // left right pagination
-            
-            HStack {
-                Color.black.opacity(0.0001)
-                    .onTapGesture {
-                        print("prev!")
-                        self.restaurant.prev()
-                    }
-                
-                Color.clear
-                
-                Color.black.opacity(0.0001)
-                    .onTapGesture {
-                        print("next!")
-                        self.restaurant.next()
-                }
-            }
-        }
-    }
-}
-
-struct RestaurantText: View {
-    var name: String
-    
-    var gradientBottom: LinearGradient {
-        LinearGradient(
-            gradient: Gradient(
-                colors: [Color.black.opacity(0.6), Color.black.opacity(0)]),
-            startPoint: .bottom,
-            endPoint: .center)
-    }
-    
-    var gradientTop: LinearGradient {
-        LinearGradient(
-            gradient: Gradient(
-                colors: [Color.black.opacity(0.6), Color.black.opacity(0)]),
-            startPoint: .top,
-            endPoint: .center)
-    }
-    
-    var body: some View {
-        ZStack {
-            ZStack(alignment: .topLeading) {
-                Rectangle().fill(gradientTop)
-                
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text(name)
-                            .font(.system(size: 22))
-                            .bold()
-                            .modifier(TextShadowModifier())
-                    }
-                    .padding()
-                    
-                    Spacer()
-                    
-                    VStack {
-                        VStack {
-                            Text("9")
-                                .font(.system(size: 28))
-                                .bold()
-                                .foregroundColor(.blue)
-                        }
-                        .frame(width: 40, height: 40)
-                        .background(Color.white)
-                        .cornerRadius(100)
-                    }
-                }
-            }
-            
-            ZStack(alignment: .bottomLeading) {
-                Rectangle().fill(gradientBottom)
-                
-                HStack {
-                    VStack(alignment: .leading, spacing: 16) {
-                        HStack {
-                            CardTagView("Cheap")
-                        }
-                        .environment(\.colorScheme, .light)
-                        
-                        HStack(spacing: 6) {
-                            Group {
-                                Text("Open").foregroundColor(.green).fontWeight(.semibold)
-                                Text("until 9:00pm")
-                            }
-                            .modifier(TextShadowModifier())
-                        }
-                    }
-                    
-                    Spacer()
-                    
-                    VStack {
-                        Image(systemName: "info.circle.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 26, height: 26)
-                            .modifier(TextShadowModifier())
-                    }
-                }
-                .padding()
-            }
-        }
-        .foregroundColor(.white)
     }
 }
 

@@ -1,6 +1,7 @@
 import SwiftUI
 import GooglePlaces
 import CoreLocation
+import Combine
 
 struct DishMapView: View {
     var width: CGFloat
@@ -17,7 +18,7 @@ struct DishMapView: View {
                 height: height,
                 zoom: zoom,
                 animate: [.idle].contains(homeState.dragState) || homeState.animationState != .idle || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
-                location: store.state.location.isOnCurrent ? .current : .uncontrolled,
+                location: store.state.map.isOnCurrent ? .current : .uncontrolled,
                 locations: store.state.home.state.last!.searchResults.results.map { $0.place }
             )
             
@@ -33,12 +34,38 @@ struct DishMapView: View {
 }
 
 struct DishMapViewContent: View {
+    class DishMapViewService: ObservableObject {
+        @Published var position: CurrentMapPosition? = nil
+        var cancels: Set<AnyCancellable> = []
+        
+        init() {
+            // sync map location to state
+            self.$position
+                .debounce(for: .milliseconds(200), scheduler: App.defaultQueue)
+                .sink { position in
+                    if let position = position {
+                        App.store.send(
+                            .map(.setLocation(
+                                MapLocationState(
+                                    radius: position.radius,
+                                    latitude: position.center.latitude,
+                                    longitude: position.center.longitude
+                                )
+                            ))
+                        )
+                    }
+            }
+            .store(in: &cancels)
+        }
+    }
+    
     var width: CGFloat
     var height: CGFloat
     var zoom: CGFloat = 12.0
     var animate: Bool = false
     var location: MapViewLocation
     var locations: [GooglePlaceItem]
+    var service = DishMapViewService()
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -50,7 +77,10 @@ struct DishMapViewContent: View {
             darkMode: self.colorScheme == .dark,
             animate: animate,
             location: location,
-            locations: locations
+            locations: locations,
+            onMapSettle: { position in
+                self.service.position = position
+            }
         )
     }
 }

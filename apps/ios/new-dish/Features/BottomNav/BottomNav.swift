@@ -15,7 +15,7 @@ struct BottomNav: View {
                 
                 VStack {
                     Spacer()
-                    QuickFilters()
+//                    QuickFilters()
                 }
                 
                 //                HStack {

@@ -10,16 +10,15 @@ struct AppInstance {
     let store = Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
     
     // services
-    let locationService = LocationService()
+    let mapService = MapService()
     let homeService = HomeService()
-    
-    let googlePlacesManager = GooglePlacesManager()
+    let googlePlacesService = GooglePlacesService()
+
     let keyboard = Keyboard()
     let defaultQueue = DispatchQueue(label: "defaultQueue")
     
     func start() {
-        googlePlacesManager.start()
-        locationService.start()
+        mapService.start()
         homeService.start()
     }
 }

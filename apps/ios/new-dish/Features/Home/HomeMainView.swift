@@ -324,6 +324,7 @@ class HomeViewState: ObservableObject {
     }
     
     func moveToSearchResults() {
+        if isSnappedToBottom { return }
         if dragState == .idle && y >= 0 {
             log.info()
             self.animateTo(y - 80)
@@ -422,15 +423,15 @@ struct HomeMainView: View {
                     // map
                     VStack {
                         ZStack {
-                            Color.red
+//                            Color.red
 //                                .cornerRadius(20)
 //                                .scaleEffect(mapHeight < 250 ? 0.8 : 1)
 //                                .animation(.spring())
-//                            DishMapView(
-//                                width: geometry.size.width,
-//                                height: Screen.height,
-//                                zoom: zoom
-//                            )
+                            DishMapView(
+                                width: geometry.size.width,
+                                height: Screen.height,
+                                zoom: zoom
+                            )
                             
 //                            // keyboard dismiss (above map, below content)
                             if self.keyboard.state.height > 0 {
@@ -454,13 +455,13 @@ struct HomeMainView: View {
                     ZStack {
                         // map search results
                         VStack {
-                            HomeCardsRow()
+                            DishMapResults()
                             Spacer()
                         }
-                        .frame(width: self.appGeometry?.size.width, height: self.appGeometry?.size.height)
                         .offset(y: max(100, mapHeight - cardRowHeight - 16))
+                        .animation(.spring())
                         .opacity(state.isSnappedToBottom ? 1 : 0)
-                        .disabled(!state.isSnappedToBottom)
+                        .allowsHitTesting(state.isSnappedToBottom)
                         
                         // filters
                         VStack {
