@@ -8,11 +8,8 @@ struct HomeSearchResultsView: View {
             Color.black
 
             ScrollView(.vertical, showsIndicators: false) {
-                VStack {
+                VStack(spacing: 20) {
                     ClearKeyboardOnScroll()
-
-                    // space below searchbar
-                    Spacer().frame(height: 20)
 
                     ForEach(state.searchResults.results) { item in
                         DishRestaurantCard(restaurant:
@@ -38,16 +35,83 @@ struct HomeSearchResultsView: View {
 }
 
 struct DishRestaurantCard: View {
-    @ObservedObject var restaurant: RestaurantItem
-    var aspectRatio: CGFloat = 2 / 2.25
+    var restaurant: RestaurantItem
+    var aspectRatio: CGFloat = 2 / 2
+    var isMini: Bool = false
+    
+    var gradientBottom: LinearGradient {
+        LinearGradient(
+            gradient: Gradient(
+                colors: [Color.black.opacity(0.6), Color.black.opacity(0)]),
+            startPoint: .bottom,
+            endPoint: .center)
+    }
+    
+    var gradientTop: LinearGradient {
+        LinearGradient(
+            gradient: Gradient(
+                colors: [Color.black.opacity(0.6), Color.black.opacity(0)]),
+            startPoint: .top,
+            endPoint: .center)
+    }
 
     var body: some View {
-        ZStack {
+        let isMini = self.isMini
+        let ratingSize: CGFloat = isMini ? 25 : 50
+        
+        return ZStack {
             restaurant.image
                 .resizable()
                 .aspectRatio(aspectRatio, contentMode: .fit)
-                .overlay(RestaurantText(name: restaurant.name))
                 .cornerRadius(16)
+            
+            ZStack(alignment: .bottomLeading) {
+                Rectangle().fill(gradientBottom)
+                
+                HStack {
+                    VStack(alignment: .leading, spacing: 16) {
+                        VStack(alignment: .leading) {
+                            Text(restaurant.name)
+                                .font(.system(size: isMini ? 14 : 22))
+                                .bold()
+                                .modifier(TextShadowModifier())
+                        }
+                        
+                        HStack {
+                            CardTagView("Cheap")
+                            
+                            if !isMini {
+                                HStack(spacing: 6) {
+                                    Group {
+                                        Text("Open")
+                                            .font(.system(size: 14))
+                                            .foregroundColor(.green).fontWeight(.semibold)
+                                        Text("to 9:00pm")
+                                            .font(.system(size: 14))
+                                    }
+                                    .modifier(TextShadowModifier())
+                                }
+                            }
+                        }
+                        .environment(\.colorScheme, .light)
+                    }
+                    
+                    Spacer()
+                    
+                    ZStack {
+                        Circle()
+                            .frame(width: ratingSize, height: ratingSize)
+                            .modifier(TextShadowModifier())
+                    
+                        Text("9")
+                            .font(.system(size: ratingSize * 0.6))
+                            .foregroundColor(.black)
+                    }
+                }
+                .padding(isMini ? 4 : 12)
+            }
+            .foregroundColor(.white)
+
             
             // left right pagination
             
@@ -70,90 +134,6 @@ struct DishRestaurantCard: View {
     }
 }
 
-struct RestaurantText: View {
-    var name: String
-    
-    var gradientBottom: LinearGradient {
-        LinearGradient(
-            gradient: Gradient(
-                colors: [Color.black.opacity(0.6), Color.black.opacity(0)]),
-            startPoint: .bottom,
-            endPoint: .center)
-    }
-    
-    var gradientTop: LinearGradient {
-        LinearGradient(
-            gradient: Gradient(
-                colors: [Color.black.opacity(0.6), Color.black.opacity(0)]),
-            startPoint: .top,
-            endPoint: .center)
-    }
-    
-    var body: some View {
-        ZStack {
-            ZStack(alignment: .topLeading) {
-                Rectangle().fill(gradientTop)
-                
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text(name)
-                            .font(.system(size: 22))
-                            .bold()
-                            .modifier(TextShadowModifier())
-                    }
-                    .padding()
-                    
-                    Spacer()
-                    
-                    VStack {
-                        VStack {
-                            Text("9")
-                                .font(.system(size: 28))
-                                .bold()
-                                .foregroundColor(.blue)
-                        }
-                        .frame(width: 40, height: 40)
-                        .background(Color.white)
-                        .cornerRadius(100)
-                    }
-                }
-            }
-            
-            ZStack(alignment: .bottomLeading) {
-                Rectangle().fill(gradientBottom)
-                
-                HStack {
-                    VStack(alignment: .leading, spacing: 16) {
-                        HStack {
-                            CardTagView("Cheap")
-                        }
-                        .environment(\.colorScheme, .light)
-                        
-                        HStack(spacing: 6) {
-                            Group {
-                                Text("Open").foregroundColor(.green).fontWeight(.semibold)
-                                Text("until 9:00pm")
-                            }
-                            .modifier(TextShadowModifier())
-                        }
-                    }
-                    
-                    Spacer()
-                    
-                    VStack {
-                        Image(systemName: "info.circle.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 26, height: 26)
-                            .modifier(TextShadowModifier())
-                    }
-                }
-                .padding()
-            }
-        }
-        .foregroundColor(.white)
-    }
-}
 
 struct CardTagView: View {
     let content: String

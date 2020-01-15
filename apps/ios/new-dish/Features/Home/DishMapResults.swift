@@ -39,7 +39,8 @@ struct DishMapDishResults: View {
                             tags: [],
                             rating: 8
                         ),
-                        aspectRatio: 1.8
+                        aspectRatio: 1.8,
+                        isMini: true
                     )
                     .frame(width: 160, height: cardRowHeight)
                     .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
