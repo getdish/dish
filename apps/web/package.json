@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
+    "watch": "true",
     "start": "next start",
     "test": "true"
   },

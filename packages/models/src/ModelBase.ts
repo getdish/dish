@@ -1,24 +1,58 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
+// For dynamically creating types so we can introspect keys.
+// Essentially allows us to only define our model keys once.
+type MapSchemaTypes = {
+  string: string
+  integer: number
+  boolean: boolean
+  float: number
+  number: number
+  regexp: RegExp
+  // TODO: Add more as you need
+}
+export type MapSchema<T extends Record<string, keyof MapSchemaTypes>> = {
+  [K in keyof T]: MapSchemaTypes[T[K]]
+}
+
 const DOMAIN = process.env.HASURA_ENDPOINT || 'http://localhost:8080'
 const AXIOS_CONF = {
   url: DOMAIN + '/v1/graphql',
-  method: 'GET',
+  method: 'POST',
   data: {
     query: '',
   },
 } as AxiosRequestConfig
 
-export default class ModelBase {
+export class ModelBase {
+  schema: {}
+
+  constructor(fields_schema: {}) {
+    this.schema = fields_schema
+  }
+
   async hasura(gql: string) {
     let conf = AXIOS_CONF
-    conf.method = gql.startsWith('mutation') ? 'POST' : 'GET'
     conf.data.query = gql
     const response = await axios(conf)
     if (response.data.errors) {
       throw response.data.errors
     }
     return response
+  }
+
+  static asSchema<T extends Record<string, keyof MapSchemaTypes>>(t: T): T {
+    return t
+  }
+
+  fields() {
+    return this.stringify(Object.keys(this.schema))
+  }
+
+  fields_bare() {
+    return this.fields()
+      .replace('[', '')
+      .replace(']', '')
   }
 
   // Implements recursive object serialization according to JSON spec

@@ -11,19 +11,28 @@ const redisOptions = {
   host: is_local_redis ? 'localhost' : 'redis',
 }
 
+type Job = {
+  className: string
+  args: any
+}
+
 export class WorkerJob {
-  async run(): Promise<any> {
-    console.log('run() not implemented')
+  async run(args?: any): Promise<any> {
+    console.error('run() not implemented')
+    console.debug(args)
     return false
   }
 
-  async run_on_worker() {
+  async run_on_worker(args?: any) {
     const producer = new Producer('consumer', {
       redisOptions,
     })
 
     const task_name = this.constructor.name
-    await producer.addTask(task_name as any)
+    await producer.addTask({
+      className: task_name,
+      args: args,
+    } as any)
   }
 }
 
@@ -58,11 +67,11 @@ export class WorkerDaemon {
     })
   }
 
-  async runConsumer(job: string, metadata: any) {
+  async runConsumer(job: Job, metadata: any) {
     console.log(
       `Processing task from Queue: ${metadata.qname}. Task ID: ${metadata.id}.`
     )
 
-    await new this.jobs[job]().run()
+    await new this.jobs[job.className]().run(job.args)
   }
 }
