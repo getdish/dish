@@ -1,7 +1,7 @@
 import SwiftUI
 
 fileprivate let filterBarHeight: CGFloat = 55
-fileprivate let bottomNavHeight: CGFloat = 115
+let bottomNavHeight: CGFloat = 115
 
 struct HomeMainContent: View {
     let isHorizontal: Bool
@@ -191,23 +191,6 @@ struct HomeScrollableContent<Content>: View where Content: View {
             startPoint: .top,
             endPoint: .bottom
         )
-    }
-}
-
-struct HomeCardsRow: View {
-    var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack {
-                ForEach(features) { item in
-                    DishCardView(aspectRatio: 1.8, dish: item)
-                        .frame(width: 160, height: cardRowHeight)
-                        .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
-                }
-                Spacer().frame(height: bottomNavHeight)
-            }
-            .padding(.horizontal)
-        }
-        .frame(width: Screen.width)
     }
 }
 

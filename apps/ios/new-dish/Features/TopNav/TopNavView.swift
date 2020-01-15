@@ -105,7 +105,7 @@ struct TopNavHome: View {
                         Button(action: {
                         }) {
                             VStack {
-                                Text("~10 miles")
+                                Text("~\(App.store.state.home.mapRadius) meters")
                                     .font(.system(size: 14))
                                     .shadow(color: Color.black.opacity(0.35), radius: 2, x: 0, y: 1)
                             }

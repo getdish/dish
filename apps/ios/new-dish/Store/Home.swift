@@ -11,6 +11,7 @@ extension AppState {
             ])
         ]
         var showDrawer: Bool = false
+        var mapRadius: Double = 8000
         var mapBoundsLabel: String = ""
     }
 }

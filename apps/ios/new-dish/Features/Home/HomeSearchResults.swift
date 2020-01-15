@@ -1,20 +1,5 @@
 import SwiftUI
 
-struct ClearKeyboardOnScroll: View {
-    @EnvironmentObject var homeState: HomeViewState
-    @EnvironmentObject var keyboard: Keyboard
-
-    var body: some View {
-        ScrollListener(onScroll: { frame in
-            print("\(frame.minY)")
-            if self.keyboard.state.height > 0 && abs(frame.minY) > self.homeState.mapHeight + 20  {
-                print("should hide keyboard")
-                self.keyboard.hide()
-            }
-        })
-    }
-}
-
 struct HomeSearchResultsView: View {
     var state: HomeStateItem
     
@@ -54,12 +39,13 @@ struct HomeSearchResultsView: View {
 
 struct DishRestaurantCard: View {
     @ObservedObject var restaurant: RestaurantItem
+    var aspectRatio: CGFloat = 2 / 2.25
 
     var body: some View {
         ZStack {
             restaurant.image
                 .resizable()
-                .aspectRatio(2 / 2.25, contentMode: .fit)
+                .aspectRatio(aspectRatio, contentMode: .fit)
                 .overlay(RestaurantText(name: restaurant.name))
                 .cornerRadius(16)
             

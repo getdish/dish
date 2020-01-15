@@ -67,6 +67,8 @@
 		AE872FED23CE6E3900F84663 /* Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE872FEC23CE6E3900F84663 /* Publisher.swift */; };
 		AE872FEF23CE6E8100F84663 /* CurrentLocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE872FEE23CE6E8100F84663 /* CurrentLocationService.swift */; };
 		AE872FF123CE76AE00F84663 /* HomeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE872FF023CE76AE00F84663 /* HomeService.swift */; };
+		AE872FF323CE976C00F84663 /* DishMapResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE872FF223CE976C00F84663 /* DishMapResults.swift */; };
+		AE872FF523CE983900F84663 /* ClearKeyboardOnScroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE872FF423CE983900F84663 /* ClearKeyboardOnScroll.swift */; };
 		AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */; };
 		AE99091223CE637200F1763C /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99091123CE637200F1763C /* App.swift */; };
 		AE99091523CE646D00F1763C /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99091423CE646D00F1763C /* LocationService.swift */; };
@@ -160,6 +162,8 @@
 		AE872FEC23CE6E3900F84663 /* Publisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Publisher.swift; sourceTree = "<group>"; };
 		AE872FEE23CE6E8100F84663 /* CurrentLocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLocationService.swift; sourceTree = "<group>"; };
 		AE872FF023CE76AE00F84663 /* HomeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeService.swift; sourceTree = "<group>"; };
+		AE872FF223CE976C00F84663 /* DishMapResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishMapResults.swift; sourceTree = "<group>"; };
+		AE872FF423CE983900F84663 /* ClearKeyboardOnScroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearKeyboardOnScroll.swift; sourceTree = "<group>"; };
 		AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonBordered.swift; sourceTree = "<group>"; };
 		AE99091123CE637200F1763C /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		AE99091423CE646D00F1763C /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -257,7 +261,6 @@
 				1CE3548423986DDD004B3A84 /* Home */,
 				AEA331ED23A3370200B36A23 /* Account */,
 				AEED844623B6733600407266 /* Camera */,
-				AEED843F23B6706400407266 /* DishMap */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -311,6 +314,7 @@
 				1C6B321923A2A06100F0A7E6 /* SideDrawerView.swift */,
 				AE56C86523ADD977006A156A /* TagView.swift */,
 				AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */,
+				AE872FF423CE983900F84663 /* ClearKeyboardOnScroll.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -325,6 +329,9 @@
 				AEF6558023B2205F00E49A51 /* HomeMainContent.swift */,
 				AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */,
 				AE56C86323ADB78C006A156A /* HomeSearchResults.swift */,
+				AEED844023B6707100407266 /* DishMapView.swift */,
+				AE872FF223CE976C00F84663 /* DishMapResults.swift */,
+				AE861A7E23A07D81004096BF /* DishMapControls.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -415,15 +422,6 @@
 				AEA331F023A3373D00B36A23 /* LoginSignupView.swift */,
 			);
 			path = Account;
-			sourceTree = "<group>";
-		};
-		AEED843F23B6706400407266 /* DishMap */ = {
-			isa = PBXGroup;
-			children = (
-				AEED844023B6707100407266 /* DishMapView.swift */,
-				AE861A7E23A07D81004096BF /* DishMapControls.swift */,
-			);
-			path = DishMap;
 			sourceTree = "<group>";
 		};
 		AEED844623B6733600407266 /* Camera */ = {
@@ -636,6 +634,7 @@
 				AE56C86423ADB78C006A156A /* HomeSearchResults.swift in Sources */,
 				AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */,
 				AEED844823B675C300407266 /* CameraView.swift in Sources */,
+				AE872FF523CE983900F84663 /* ClearKeyboardOnScroll.swift in Sources */,
 				AEED844523B672D000407266 /* CameraTopNav.swift in Sources */,
 				1CE3548323986C5C004B3A84 /* AppStore.swift in Sources */,
 				AEF6556F23B0248200E49A51 /* FilterButton.swift in Sources */,
@@ -660,6 +659,7 @@
 				AEA331F123A3373D00B36A23 /* LoginSignupView.swift in Sources */,
 				1CE354882398714D004B3A84 /* HomeView.swift in Sources */,
 				AE861A8523A17209004096BF /* TopNavSearchResults.swift in Sources */,
+				AE872FF323CE976C00F84663 /* DishMapResults.swift in Sources */,
 				1CE3546923986B1B004B3A84 /* RootView.swift in Sources */,
 				AE7563E723A03D3C0094022B /* FeatureCard.swift in Sources */,
 				AE6CECCD23A843E600B08870 /* BottomNav.swift in Sources */,

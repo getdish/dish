@@ -455,7 +455,7 @@ struct HomeMainView: View {
                     ZStack {
                         // map search results
                         VStack {
-                            HomeCardsRow()
+                            DishMapResults()
                             Spacer()
                         }
                         .offset(y: max(100, mapHeight - cardRowHeight - 16))
