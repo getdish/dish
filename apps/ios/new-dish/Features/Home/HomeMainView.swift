@@ -48,7 +48,9 @@ class HomeViewState: ObservableObject {
             .debounce(for: .milliseconds(200), scheduler: App.defaultQueue)
             .sink { val in
                 if !self.isSnappedToTop && !self.isSnappedToBottom {
-                    self.y = self.snapToBottomAt - 1
+                    DispatchQueue.main.async {                    
+                        self.y = self.snapToBottomAt - 1
+                    }
                 }
             }
             .store(in: &cancels)
