@@ -78,7 +78,7 @@ struct MapView: UIViewControllerRepresentable {
     }
 }
 
-class MapViewController: UIViewController {
+class MapViewController: UIViewController, GMSMapViewDelegate {
     // want to default to city level view
     var zoom: CGFloat
     var gmapView: GMSMapView!
@@ -97,6 +97,42 @@ class MapViewController: UIViewController {
         self.animate = animate ?? false
         super.init(nibName: nil, bundle: nil)
     }
+    
+    // delegate methods
+
+    // on tap
+    func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
+        print("You tapped at \(coordinate.latitude), \(coordinate.longitude)")
+    }
+    
+    // on move
+    func mapView(_ mapView: GMSMapView, willMove gesture: Bool) {
+    }
+    
+    // on map settles in new center
+    func mapView(_ mapView: GMSMapView, idleAt cameraPosition: GMSCameraPosition) {
+        let geocoder = GMSGeocoder()
+        geocoder.reverseGeocodeCoordinate(cameraPosition.target) { (response, error) in
+            guard error == nil else {
+                return
+            }
+            if let result = response?.firstResult() {
+                let marker = GMSMarker()
+                marker.position = cameraPosition.target
+                marker.title = result.lines?[0]
+                marker.snippet = result.lines?[1]
+                marker.map = mapView
+            }
+        }
+    }
+    
+    // changed map camera
+    func mapView(_ mapView: GMSMapView, didChange cameraPosition: GMSCameraPosition) {
+        let region = mapView.projection.visibleRegion()
+        log.info("moved map, new bounds \(region)")
+    }
+    
+    // on props update
     
     func update(_ mapView: MapView) {
         if self.zoom != mapView.zoom {
@@ -209,7 +245,9 @@ class MapViewController: UIViewController {
         // Create a GMSCameraPosition that tells the map to display the
         // coordinate -33.86,151.20 at zoom level 6.
         let camera = GMSCameraPosition.camera(withLatitude: -33.86, longitude: 151.20, zoom: 4.0)
+        
         gmapView = GMSMapView.map(withFrame: CGRect(x: 0, y: 0, width: width, height: height), camera: camera)
+        gmapView.delegate = self
         
         self.loadTheme()
         
