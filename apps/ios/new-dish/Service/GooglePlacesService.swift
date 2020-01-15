@@ -4,90 +4,32 @@ import CoreLocation
 import GoogleMaps
 import GooglePlaces
 
-fileprivate let placesClient = GMSPlacesClient.shared()
-
-class GooglePlacesManager {
+class GooglePlacesService {
     private var apiKey = "AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k"
-    private var currentLocation: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid
     private var strictBounds = true
     private var cancellables: Set<AnyCancellable> = []
-    
-    func start() {
-        let locationManager = CurrentLocationService()
-        locationManager.start()
-        print("starting locationmanager")
-        locationManager.$lastLocation
-            .sink { location in
-                print("GOT OUR LOCATION BRO \(location)")
-                if let l = location {
-                    self.currentLocation = CLLocationCoordinate2D(
-                        latitude: .init(l.coordinate.latitude),
-                        longitude: .init(l.coordinate.longitude)
-                    )
-                } else {
-                    self.currentLocation = CLLocationCoordinate2D(
-                        latitude: .init(37.7749),
-                        longitude: .init(122.4194)
-                    )
-                }
-            }
-        .store(in: &cancellables)
-        
-        // set current closest location
-        placesClient.currentPlace(callback: { (placeLikelihoodList, error) -> Void in
-            if let error = error {
-                print("Current Place error: \(error.localizedDescription)")
-                return
-            }
-            if let placeLikelihoodList = placeLikelihoodList {
-                guard let nearest = placeLikelihoodList.likelihoods.first else {
-                    return
-                }
-                print("closest to place \(nearest)")
-                self.currentLocation = nearest.place.coordinate
-            }
-        })
-    }
-    
-    func searchPlaces(
-        _ search: String,
-        radius: Double = 1000,
-        completion: @escaping ([GooglePlaceItem]) -> Void
-    ) {
-        GooglePlacesRequestHelpers.getPlaces(with: getParameters(for: search, radius: radius), completion: completion)
-    }
-    
     private let placesClient = GMSPlacesClient.shared()
     private let filter = GMSAutocompleteFilter()
     private let token = GMSAutocompleteSessionToken.init()
     
-//    func getCurrentPlace() {
-//        placesClient.currentPlace(callback: { (placeLikelihoodList, error) -> Void in
-//            if let error = error {
-//                print("Current Place error: \(error.localizedDescription)")
-//                return
-//            }
-//            if let placeLikelihoodList = placeLikelihoodList {
-//                //                self.results = placeLikelihoodList.likelihoods.map {
-//                //                    MapSearchResult(
-//                //                        id: $0.place.placeID!,
-//                //                        name: $0.place.name!
-//                //                    )
-//                //                }
-//            }
-//        })
-//    }
-    
-    private func getParameters(for text: String, radius: Double = 1000) -> [String: String] {
-        if !CLLocationCoordinate2DIsValid(currentLocation) {
+    func searchPlaces(
+        _ search: String,
+        location: CLLocationCoordinate2D,
+        radius: Double = 1000,
+        completion: @escaping ([GooglePlaceItem]) -> Void
+    ) {
+        if !CLLocationCoordinate2DIsValid(location) {
             print("invalid location!")
         }
-        return [
-            "key": self.apiKey,
-            "location": "\(self.currentLocation.latitude),\(self.currentLocation.longitude)",
-            "radius": "\(Int(radius))",
-            "query": text
-        ]
+        GooglePlacesRequestHelpers.getPlaces(
+            with: [
+                "key": self.apiKey,
+                "location": "\(location.latitude),\(location.longitude)",
+                "radius": "\(Int(radius))",
+                "query": search
+            ],
+            completion: completion
+        )
     }
 }
 
@@ -195,3 +137,40 @@ private class GooglePlacesRequestHelpers {
         return (Locale.current as NSLocale).object(forKey: NSLocale.Key.languageCode) as? String
     }
 }
+
+//func start() {
+//    let locationManager = CurrentLocationService()
+//    locationManager.start()
+//    print("starting locationmanager")
+//    locationManager.$lastLocation
+//        .sink { location in
+//            print("GOT OUR LOCATION BRO \(location)")
+//            if let l = location {
+//                self.currentLocation = CLLocationCoordinate2D(
+//                    latitude: .init(l.coordinate.latitude),
+//                    longitude: .init(l.coordinate.longitude)
+//                )
+//            } else {
+//                self.currentLocation = CLLocationCoordinate2D(
+//                    latitude: .init(37.7749),
+//                    longitude: .init(122.4194)
+//                )
+//            }
+//    }
+//    .store(in: &cancellables)
+//
+//    // set current closest location
+//    placesClient.currentPlace(callback: { (placeLikelihoodList, error) -> Void in
+//        if let error = error {
+//            print("Current Place error: \(error.localizedDescription)")
+//            return
+//        }
+//        if let placeLikelihoodList = placeLikelihoodList {
+//            guard let nearest = placeLikelihoodList.likelihoods.first else {
+//                return
+//            }
+//            print("closest to place \(nearest)")
+//            self.currentLocation = nearest.place.coordinate
+//        }
+//    })
+//}

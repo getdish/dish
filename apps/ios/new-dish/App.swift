@@ -12,13 +12,12 @@ struct AppInstance {
     // services
     let mapService = MapService()
     let homeService = HomeService()
-    
-    let googlePlacesManager = GooglePlacesManager()
+    let googlePlacesService = GooglePlacesService()
+
     let keyboard = Keyboard()
     let defaultQueue = DispatchQueue(label: "defaultQueue")
     
     func start() {
-        googlePlacesManager.start()
         mapService.start()
         homeService.start()
     }

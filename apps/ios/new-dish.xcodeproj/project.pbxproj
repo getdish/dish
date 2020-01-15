@@ -31,7 +31,7 @@
 		AE2B6BA423AC211F007BCD25 /* VerticalCardPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */; };
 		AE56C86423ADB78C006A156A /* HomeSearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56C86323ADB78C006A156A /* HomeSearchResults.swift */; };
 		AE56C86623ADD977006A156A /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56C86523ADD977006A156A /* TagView.swift */; };
-		AE6A9C0F23C45FA800003059 /* GooglePlacesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A9C0E23C45FA800003059 /* GooglePlacesManager.swift */; };
+		AE6A9C0F23C45FA800003059 /* GooglePlacesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A9C0E23C45FA800003059 /* GooglePlacesService.swift */; };
 		AE6A9C1123C5265C00003059 /* GooglePlaceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A9C1023C5265C00003059 /* GooglePlaceItem.swift */; };
 		AE6B0FE123CF9C3B00C33968 /* GMSMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6B0FE023CF9C3A00C33968 /* GMSMapView.swift */; };
 		AE6B0FE623CF9D0900C33968 /* dishData.json in Resources */ = {isa = PBXBuildFile; fileRef = AE6B0FE223CF9D0800C33968 /* dishData.json */; };
@@ -51,6 +51,7 @@
 		AE6B100123CF9D3200C33968 /* turtlerock.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AE6B0FF523CF9D3200C33968 /* turtlerock.jpg */; };
 		AE6B100223CF9D3200C33968 /* chilkoottrail.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AE6B0FF623CF9D3200C33968 /* chilkoottrail.jpg */; };
 		AE6B100323CF9D3200C33968 /* charleyrivers.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AE6B0FF723CF9D3200C33968 /* charleyrivers.jpg */; };
+		AE6B100523CFA55D00C33968 /* GooglePlacesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6B100423CFA55D00C33968 /* GooglePlacesService.swift */; };
 		AE6CECCD23A843E600B08870 /* BottomNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6CECCC23A843E600B08870 /* BottomNav.swift */; };
 		AE7563B423A035E70094022B /* HomeMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B323A035E70094022B /* HomeMainView.swift */; };
 		AE7563B823A036500094022B /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B723A036500094022B /* Screen.swift */; };
@@ -128,7 +129,7 @@
 		AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalCardPager.swift; sourceTree = "<group>"; };
 		AE56C86323ADB78C006A156A /* HomeSearchResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchResults.swift; sourceTree = "<group>"; };
 		AE56C86523ADD977006A156A /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
-		AE6A9C0E23C45FA800003059 /* GooglePlacesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GooglePlacesManager.swift; sourceTree = "<group>"; };
+		AE6A9C0E23C45FA800003059 /* GooglePlacesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GooglePlacesService.swift; sourceTree = "<group>"; };
 		AE6A9C1023C5265C00003059 /* GooglePlaceItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GooglePlaceItem.swift; sourceTree = "<group>"; };
 		AE6B0FE023CF9C3A00C33968 /* GMSMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GMSMapView.swift; sourceTree = "<group>"; };
 		AE6B0FE223CF9D0800C33968 /* dishData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = dishData.json; sourceTree = "<group>"; };
@@ -148,6 +149,7 @@
 		AE6B0FF523CF9D3200C33968 /* turtlerock.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = turtlerock.jpg; sourceTree = "<group>"; };
 		AE6B0FF623CF9D3200C33968 /* chilkoottrail.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = chilkoottrail.jpg; sourceTree = "<group>"; };
 		AE6B0FF723CF9D3200C33968 /* charleyrivers.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = charleyrivers.jpg; sourceTree = "<group>"; };
+		AE6B100423CFA55D00C33968 /* GooglePlacesService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GooglePlacesService.swift; sourceTree = "<group>"; };
 		AE6CECCC23A843E600B08870 /* BottomNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomNav.swift; sourceTree = "<group>"; };
 		AE7563B323A035E70094022B /* HomeMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainView.swift; sourceTree = "<group>"; };
 		AE7563B723A036500094022B /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
@@ -414,7 +416,8 @@
 		AE99091323CE63A100F1763C /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				AE6A9C0E23C45FA800003059 /* GooglePlacesManager.swift */,
+				AE6A9C0E23C45FA800003059 /* GooglePlacesService.swift */,
+				AE6B100423CFA55D00C33968 /* GooglePlacesService.swift */,
 				AE6A9C1023C5265C00003059 /* GooglePlaceItem.swift */,
 				AE872FEE23CE6E8100F84663 /* CurrentLocationService.swift */,
 			);
@@ -634,7 +637,7 @@
 				AE7563B823A036500094022B /* Screen.swift in Sources */,
 				1CE3548123986BC1004B3A84 /* View.swift in Sources */,
 				AEA331F723A3382100B36A23 /* DishButton.swift in Sources */,
-				AE6A9C0F23C45FA800003059 /* GooglePlacesManager.swift in Sources */,
+				AE6A9C0F23C45FA800003059 /* GooglePlacesService.swift in Sources */,
 				AE872FED23CE6E3900F84663 /* Publisher.swift in Sources */,
 				AEA87E4323B976EB009F07DB /* HomeMainFilters.swift in Sources */,
 				AE56C86423ADB78C006A156A /* HomeSearchResults.swift in Sources */,
@@ -661,6 +664,7 @@
 				AEA331EF23A3371D00B36A23 /* DishAccount.swift in Sources */,
 				1CE2393123A19722006B7AFD /* Environment.swift in Sources */,
 				AEF6557723B041C400E49A51 /* RestaurantItem.swift in Sources */,
+				AE6B100523CFA55D00C33968 /* GooglePlacesService.swift in Sources */,
 				AEF6557923B041F600E49A51 /* DishItem.swift in Sources */,
 				AEA331F523A3381200B36A23 /* DishInput.swift in Sources */,
 				1C6B321A23A2A06100F0A7E6 /* SideDrawerView.swift in Sources */,

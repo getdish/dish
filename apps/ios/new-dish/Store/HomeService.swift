@@ -33,8 +33,9 @@ class HomeService {
     
     func getSearchResults(_ search: SearchQuery) -> Future<HomeSearchResults, Never> {
         Future<HomeSearchResults, Never> { promise in
-            App.googlePlacesManager.searchPlaces(
+            App.googlePlacesService.searchPlaces(
                 search.query,
+                location: CLLocationCoordinate2D(latitude: search.location.latitude, longitude: search.location.longitude),
                 radius: search.location.radius,
                 completion: { places in
                     promise(.success(
