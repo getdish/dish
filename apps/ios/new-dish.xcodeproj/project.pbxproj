@@ -74,7 +74,7 @@
 		AE872FF723CEA5CD00F84663 /* DishRestaurantCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE872FF623CEA5CD00F84663 /* DishRestaurantCard.swift */; };
 		AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */; };
 		AE99091223CE637200F1763C /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99091123CE637200F1763C /* App.swift */; };
-		AE99091523CE646D00F1763C /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99091423CE646D00F1763C /* LocationService.swift */; };
+		AE99091523CE646D00F1763C /* MapService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99091423CE646D00F1763C /* MapService.swift */; };
 		AEA331EF23A3371D00B36A23 /* DishAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331EE23A3371D00B36A23 /* DishAccount.swift */; };
 		AEA331F123A3373D00B36A23 /* LoginSignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F023A3373D00B36A23 /* LoginSignupView.swift */; };
 		AEA331F523A3381200B36A23 /* DishInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F423A3381200B36A23 /* DishInput.swift */; };
@@ -82,7 +82,7 @@
 		AEA331F923A3385000B36A23 /* InlineAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F823A3385000B36A23 /* InlineAlertView.swift */; };
 		AEA331FB23A338F400B36A23 /* KeyboardHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331FA23A338F400B36A23 /* KeyboardHost.swift */; };
 		AEA87E4323B976EB009F07DB /* HomeMainFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA87E4223B976EB009F07DB /* HomeMainFilters.swift */; };
-		AEAE67EC23B5A70A00B9D781 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAE67EB23B5A70A00B9D781 /* Location.swift */; };
+		AEAE67EC23B5A70A00B9D781 /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAE67EB23B5A70A00B9D781 /* Map.swift */; };
 		AEED843E23B5A8E000407266 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED843D23B5A8E000407266 /* Mocks.swift */; };
 		AEED844123B6707100407266 /* DishMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844023B6707100407266 /* DishMapView.swift */; };
 		AEED844523B672D000407266 /* CameraTopNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844423B672D000407266 /* CameraTopNav.swift */; };
@@ -171,7 +171,7 @@
 		AE872FF623CEA5CD00F84663 /* DishRestaurantCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishRestaurantCard.swift; sourceTree = "<group>"; };
 		AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonBordered.swift; sourceTree = "<group>"; };
 		AE99091123CE637200F1763C /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
-		AE99091423CE646D00F1763C /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
+		AE99091423CE646D00F1763C /* MapService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapService.swift; sourceTree = "<group>"; };
 		AEA331EE23A3371D00B36A23 /* DishAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishAccount.swift; sourceTree = "<group>"; };
 		AEA331F023A3373D00B36A23 /* LoginSignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSignupView.swift; sourceTree = "<group>"; };
 		AEA331F423A3381200B36A23 /* DishInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishInput.swift; sourceTree = "<group>"; };
@@ -179,7 +179,7 @@
 		AEA331F823A3385000B36A23 /* InlineAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineAlertView.swift; sourceTree = "<group>"; };
 		AEA331FA23A338F400B36A23 /* KeyboardHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHost.swift; sourceTree = "<group>"; };
 		AEA87E4223B976EB009F07DB /* HomeMainFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainFilters.swift; sourceTree = "<group>"; };
-		AEAE67EB23B5A70A00B9D781 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		AEAE67EB23B5A70A00B9D781 /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Map.swift; sourceTree = "<group>"; };
 		AEED843D23B5A8E000407266 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Mocks.swift; path = "/Users/nw/dish/apps/ios/new-dish/Store/Mocks.swift"; sourceTree = "<absolute>"; };
 		AEED844023B6707100407266 /* DishMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishMapView.swift; sourceTree = "<group>"; };
 		AEED844423B672D000407266 /* CameraTopNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraTopNav.swift; sourceTree = "<group>"; };
@@ -445,8 +445,8 @@
 				1CE3548223986C5C004B3A84 /* AppStore.swift */,
 				AEF6558323B59BC000E49A51 /* Home.swift */,
 				AE872FF023CE76AE00F84663 /* HomeService.swift */,
-				AEAE67EB23B5A70A00B9D781 /* Location.swift */,
-				AE99091423CE646D00F1763C /* LocationService.swift */,
+				AEAE67EB23B5A70A00B9D781 /* Map.swift */,
+				AE99091423CE646D00F1763C /* MapService.swift */,
 				AEED843D23B5A8E000407266 /* Mocks.swift */,
 			);
 			path = Store;
@@ -618,7 +618,7 @@
 				AE7563B423A035E70094022B /* HomeMainView.swift in Sources */,
 				AE7563E323A038190094022B /* Array.swift in Sources */,
 				AE7563BC23A037870094022B /* Fixtures.swift in Sources */,
-				AE99091523CE646D00F1763C /* LocationService.swift in Sources */,
+				AE99091523CE646D00F1763C /* MapService.swift in Sources */,
 				AE2B6BA423AC211F007BCD25 /* VerticalCardPager.swift in Sources */,
 				1CE3546523986B1B004B3A84 /* AppDelegate.swift in Sources */,
 				1CE3548A239871CB004B3A84 /* BottomSheetView.swift in Sources */,
@@ -645,7 +645,7 @@
 				AEED844523B672D000407266 /* CameraTopNav.swift in Sources */,
 				1CE3548323986C5C004B3A84 /* AppStore.swift in Sources */,
 				AEF6556F23B0248200E49A51 /* FilterButton.swift in Sources */,
-				AEAE67EC23B5A70A00B9D781 /* Location.swift in Sources */,
+				AEAE67EC23B5A70A00B9D781 /* Map.swift in Sources */,
 				AE861A7923A0651D004096BF /* Keyboard.swift in Sources */,
 				AE872FF123CE76AE00F84663 /* HomeService.swift in Sources */,
 				AE861A8123A16DA6004096BF /* TopNavView.swift in Sources */,

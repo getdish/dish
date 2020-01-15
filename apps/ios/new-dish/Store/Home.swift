@@ -11,8 +11,6 @@ extension AppState {
             ])
         ]
         var showDrawer: Bool = false
-        var mapRadius: Double = 8000
-        var mapBoundsLabel: String = ""
     }
 }
 
@@ -25,7 +23,6 @@ enum HomeAction {
     case setSearch(_ val: String)
     case setSearchResults(_ val: HomeSearchResults)
     case setCurrentTags(_ val: [SearchInputTag])
-    case setMapBoundsLabel(_ val: String)
 }
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
@@ -40,8 +37,6 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     }
     
     switch action {
-        case let .setMapBoundsLabel(val):
-            state.home.mapBoundsLabel = val
         case let .setSearchResults(val):
             var last = state.home.state.last!
             last.searchResults = val

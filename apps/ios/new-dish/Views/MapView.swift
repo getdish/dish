@@ -13,7 +13,12 @@ enum MapViewLocation {
     case current, uncontrolled
 }
 
-typealias OnChangeMapBounds = (_ target: CLLocationCoordinate2D, _ radius: Int) -> Void
+struct CurrentMapPosition {
+    let center: CLLocationCoordinate2D
+    let radius: Double
+}
+
+typealias OnChangeSettle = (_ position: CurrentMapPosition) -> Void
 
 struct MapView: UIViewControllerRepresentable {
     var width: CGFloat
@@ -23,7 +28,7 @@ struct MapView: UIViewControllerRepresentable {
     var animate: Bool
     var location: MapViewLocation
     var locations: [GooglePlaceItem] = []
-    var onChangeMapBounds: OnChangeMapBounds?
+    var onMapSettle: OnChangeSettle?
 
     @State var controller: MapViewController? = nil
 
@@ -38,7 +43,7 @@ struct MapView: UIViewControllerRepresentable {
             zoom: zoom,
             darkMode: darkMode,
             animate: animate,
-            onChangeMapBounds: onChangeMapBounds
+            onMapSettle: onMapSettle
         )
         DispatchQueue.main.async {
             self.controller = controller
@@ -93,7 +98,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     var height: CGFloat
     var darkMode: Bool?
     var animate = false
-    var onChangeMapBounds: OnChangeMapBounds?
+    var onMapSettle: OnChangeSettle?
 
     init(
         width: CGFloat,
@@ -101,14 +106,14 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         zoom: CGFloat?,
         darkMode: Bool?,
         animate: Bool?,
-        onChangeMapBounds: OnChangeMapBounds? = nil
+        onMapSettle: OnChangeSettle? = nil
     ) {
         self.zoom = zoom ?? 12.0
         self.width = width
         self.height = height
         self.darkMode = darkMode
         self.animate = animate ?? false
-        self.onChangeMapBounds = onChangeMapBounds
+        self.onMapSettle = onMapSettle
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -123,31 +128,20 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     func mapView(_ mapView: GMSMapView, willMove gesture: Bool) {
     }
 
-    // on map settles in new center
+    // on map settle in new position
     func mapView(_ mapView: GMSMapView, idleAt cameraPosition: GMSCameraPosition) {
-        if let cb = onChangeMapBounds {
-            cb(cameraPosition.target, Int(mapView.getRadius()))
+        if let cb = onMapSettle {
+            cb(CurrentMapPosition(
+                center: cameraPosition.target,
+                radius: mapView.getRadius()
+            ))
         }
-//        from google examples, find reverse geocordinate:
-//        let geocoder = GMSGeocoder()
-//        geocoder.reverseGeocodeCoordinate(cameraPosition.target) { (response, error) in
-//            guard error == nil else {
-//                return
-//            }
-//            if let result = response?.firstResult() {
-//                let marker = GMSMarker()
-//                marker.position = cameraPosition.target
-//                marker.title = result.lines?[0]
-//                marker.snippet = result.lines?[1]
-//                marker.map = mapView
-//            }
-//        }
     }
 
-    // changed map camera
+    // on move map camera
     func mapView(_ mapView: GMSMapView, didChange cameraPosition: GMSCameraPosition) {
-        let region = mapView.projection.visibleRegion()
-        log.info("moved map, new bounds \(region)")
+//        let region = mapView.projection.visibleRegion()
+//        print("moved map, new bounds \(region)")
     }
 
     // on props update
@@ -225,7 +219,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     }
 
     private func getCamera() -> GMSCameraPosition? {
-        if let location: CLLocation = App.store.state.location.lastKnown {
+        if let location: CLLocation = App.store.state.map.lastKnown {
             return GMSCameraPosition.camera(
                 withLatitude: location.coordinate.latitude + self.adjustLatitude,
                 longitude: location.coordinate.longitude,

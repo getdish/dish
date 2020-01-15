@@ -1,12 +1,12 @@
 import Combine
 import GoogleMaps
 
-class LocationService {
+class MapService {
     let geocoder = GMSGeocoder()
     let currentLocationManager = CurrentLocationService()
     var cancels: Set<AnyCancellable> = []
     
-    enum LocationServiceError: Error {
+    enum MapServiceError: Error {
         case noLocationResults
     }
     
@@ -20,7 +20,7 @@ class LocationService {
         self.getReverseGeo(location.coordinate)
             .replaceError(with: GMSAddress())
             .map { location in
-                AppAction.home(.setMapBoundsLabel("\(location.locality ?? "no locality")"))
+                AppAction.map(.setLocationLabel("\(location.locality ?? "no locality")"))
             }
             .eraseToEffect()
     }
@@ -30,7 +30,7 @@ class LocationService {
             .sink { location in
                 print("last location is \(location)")
                 if let location = location {
-                    App.store.send(.location(.setLastKnown(location)))
+                    App.store.send(.map(.setLastKnown(location)))
                     App.store.send(self.setNameOfCurrentLocation(location))
                 }
             }
@@ -40,8 +40,8 @@ class LocationService {
     func effectMoveToCurrentLocationOnAuthorization() {
         currentLocationManager.$authorized
             .sink { authorized in
-                if !App.store.state.location.hasChangedOnce {
-                    App.store.send(.location(.goToCurrent))
+                if !App.store.state.map.hasChangedOnce {
+                    App.store.send(.map(.goToCurrent))
                 }
             }
             .store(in: &cancels)
@@ -57,7 +57,7 @@ class LocationService {
                         let firstResponse = response.firstResult() {
                         promise(.success(firstResponse))
                     } else {
-                        promise(.failure(LocationServiceError.noLocationResults))
+                        promise(.failure(MapServiceError.noLocationResults))
                     }
                 }
             }

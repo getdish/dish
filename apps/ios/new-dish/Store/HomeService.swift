@@ -9,23 +9,33 @@ class HomeService {
         self.affectSearchResults()
     }
     
+    struct SearchQuery: Equatable {
+        let query: String
+        let location: MapLocationState
+    }
+    
     func affectSearchResults() {
         App.store.$state
-            .map { $0.home.state.last!.queryString }
+            .map { state in
+                SearchQuery(
+                    query: state.home.state.last!.queryString,
+                    location: state.map.location
+                )
+            }
             .removeDuplicates()
-            .debounce(for: .milliseconds(100), scheduler: App.defaultQueue)
+            .debounce(for: .milliseconds(200), scheduler: App.defaultQueue)
             .sink { val in
                 print("we got a new state........... \(val)")
-                App.store.send(self.setSearchResults(val))
+                App.store.send(self.doSearch(val))
         }
         .store(in: &cancels)
     }
     
-    func getSearchResults(_ search: String) -> Future<HomeSearchResults, Never> {
+    func getSearchResults(_ search: SearchQuery) -> Future<HomeSearchResults, Never> {
         Future<HomeSearchResults, Never> { promise in
             App.googlePlacesManager.searchPlaces(
-                search,
-                radius: App.store.state.home.mapRadius,
+                search.query,
+                radius: search.location.radius,
                 completion: { places in
                     promise(.success(
                         HomeSearchResults(
@@ -43,7 +53,7 @@ class HomeService {
         }
     }
     
-    func setSearchResults(_ search: String) -> Effect<AppAction> {
+    func doSearch(_ search: SearchQuery) -> Effect<AppAction> {
         self.getSearchResults(search)
             .map { results in
                 AppAction.home(.setSearchResults(results))

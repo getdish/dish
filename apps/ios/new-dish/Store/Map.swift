@@ -7,7 +7,13 @@ fileprivate let placesClient = GMSPlacesClient.shared()
 fileprivate let manager = CLLocationManager()
 
 extension AppState {
-    struct LocationState: Equatable {
+    struct MapState: Equatable {
+        var location = MapLocationState(
+            radius: 8000,
+            latitude: 0.0,
+            longitude: 0.0
+        )
+        var locationLabel: String = ""
         var showSearch = false
         var search = ""
         var searchResults: [CLLocation] = []
@@ -18,7 +24,9 @@ extension AppState {
     }
 }
 
-enum LocationAction {
+enum MapAction {
+    case setLocation(_ location: MapLocationState)
+    case setLocationLabel(_ val: String)
     case listLikelyPlaces
     case setLikelyPlaces(_ locations: [GMSPlace])
     case goToCurrent
@@ -27,19 +35,29 @@ enum LocationAction {
     case setSearchResults(_ locations: [CLLocation])
 }
 
-func locationReducer(_ state: inout AppState, action: LocationAction) {
+func mapReducer(_ state: inout AppState, action: MapAction) {
     switch action {
+        case let .setLocation(location):
+            state.map.location = location
+        case let .setLocationLabel(val):
+            state.map.locationLabel = val
         case .goToCurrent:
-            state.location.isOnCurrent = true
+            state.map.isOnCurrent = true
         case let .setLastKnown(location):
-            state.location.lastKnown = location
+            state.map.lastKnown = location
         case let .setSearchResults(locations):
-            state.location.searchResults = locations
+            state.map.searchResults = locations
         case let .setSearch(search):
-            state.location.search = search
+            state.map.search = search
         case let .setLikelyPlaces(locations):
-            state.location.likelyPlaces = locations
+            state.map.likelyPlaces = locations
         case .listLikelyPlaces:
-            state.location.likelyPlaces.removeAll()
+            state.map.likelyPlaces.removeAll()
     }
+}
+
+struct MapLocationState: Equatable {
+    var radius: Double
+    var latitude: Double
+    var longitude: Double
 }
