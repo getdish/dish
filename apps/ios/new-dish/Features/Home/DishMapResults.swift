@@ -1,6 +1,5 @@
 import SwiftUI
 
-
 struct DishMapResults: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
