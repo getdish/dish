@@ -12,6 +12,6 @@ docker run \
   --net host \
   dish/crawlers > crawler.logs 2>&1 &
 
-sleep 5
+sleep 15
 
-grep 'UberEats run' worker.logs
+grep 'New York' worker.logs
