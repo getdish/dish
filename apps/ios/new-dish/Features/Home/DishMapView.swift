@@ -24,9 +24,9 @@ struct DishMapView: View {
             
             // prevent touch on left/right sides for dragging between cards
             HStack {
-                Color.black.opacity(0.0001).frame(width: 20)
+                Color.black.opacity(0.00001).frame(width: 24)
                 Color.clear
-                Color.black.opacity(0.0001).frame(width: 20)
+                Color.black.opacity(0.00001).frame(width: 24)
             }
                 
         }

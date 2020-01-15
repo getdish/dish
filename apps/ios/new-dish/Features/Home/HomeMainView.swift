@@ -38,16 +38,26 @@ class HomeViewState: ObservableObject {
 
     // keyboard
     @Published var keyboardHeight: CGFloat = 0
-    private var cancellables: Set<AnyCancellable> = []
+    private var cancels: Set<AnyCancellable> = []
     private var keyboard = Keyboard()
     private var lastKeyboardAdjustY: CGFloat = 0
 
     init() {
+        // start map height at just above snapToBottomAt
+        self.$appHeight
+            .debounce(for: .milliseconds(200), scheduler: App.defaultQueue)
+            .sink { val in
+                if !self.isSnappedToTop && !self.isSnappedToBottom {
+                    self.y = self.snapToBottomAt - 1
+                }
+            }
+            .store(in: &cancels)
+        
         self.keyboard.$state
             .map { $0.height }
             .removeDuplicates()
             .assign(to: \.keyboardHeight, on: self)
-            .store(in: &cancellables)
+            .store(in: &cancels)
         
         self.keyboard.$state.map { $0.height }
             .removeDuplicates()
@@ -56,7 +66,7 @@ class HomeViewState: ObservableObject {
                 // prevents filters jumping up/down while focusing input
                 self.setAnimationState(.controlled, 350)
             }
-            .store(in: &cancellables)
+            .store(in: &cancels)
 
         self.keyboard.$state
             .map { $0.height }
@@ -82,7 +92,7 @@ class HomeViewState: ObservableObject {
                 }
                 
             }
-            .store(in: &cancellables)
+            .store(in: &cancels)
         
         let started = Date()
         self.$scrollY
@@ -99,7 +109,7 @@ class HomeViewState: ObservableObject {
                         }
                     }
                 }
-            }.store(in: &cancellables)
+            }.store(in: &cancels)
     }
     
     // note: setDragState/setAnimationSate should be only way to mutate state
