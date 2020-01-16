@@ -67,10 +67,7 @@ struct HomeViewContent: View {
                             y: 0
                         )
                         .zIndex(2)
-                    DishCamera()
-                        .clipped()
-                        .cornerRadius(80)
-                        .zIndex(0)
+                    Color.green
             }
             .onChangeDrag { isDragging in
                 print("set isDragging \(isDragging)")

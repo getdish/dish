@@ -5,7 +5,7 @@ struct BottomNav: View {
     let hiddenButtonY: CGFloat = 100
     
     var body: some View {
-        let isOnGallery = false //store.state.galleryDish != nil
+        let isOnGallery = false
         
         return VStack {
             Spacer()
@@ -13,10 +13,10 @@ struct BottomNav: View {
             ZStack {
                 // main controls
                 
-                VStack {
-                    Spacer()
+//                VStack {
+//                    Spacer()
 //                    QuickFilters()
-                }
+//                }
                 
                 //                HStack {
                 //                    DishLoginButton()
@@ -33,14 +33,13 @@ struct BottomNav: View {
                 //                    Spacer()
                 //                }
                 
-//                VStack {
-//                    Spacer()
-//                    HStack {
-//                        Spacer()
-//                        CameraButton()
-//                    }
-//                }
-//                .padding(.horizontal)
+                VStack {
+                    Spacer()
+                    HStack {
+                        CameraButton()
+                    }
+                }
+                .padding(.horizontal)
                 
                 // camera controls
                 

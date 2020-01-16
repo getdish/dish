@@ -16,8 +16,13 @@ class HomeViewState: ObservableObject {
     enum HomeDragState {
         case idle, off, pager, searchbar
     }
+    
+    // note:
+    // idle == nothing
+    // animate == .animation()
+    // controlled = nothing (but we are animating manually using withAnimation())
     enum HomeAnimationState {
-        case idle, controlled, uncontrolled
+        case idle, controlled, animate
     }
     
     @Published private(set) var appHeight: CGFloat = Screen.height
@@ -29,6 +34,7 @@ class HomeViewState: ObservableObject {
     @Published private(set) var hasScrolledSome = false
     @Published private(set) var dragState: HomeDragState = .idle
     @Published private(set) var animationState: HomeAnimationState = .idle
+    @Published private(set) var showCamera = false
     
     private var cancelAnimation: AnyCancellable? = nil
     
@@ -48,7 +54,7 @@ class HomeViewState: ObservableObject {
             .debounce(for: .milliseconds(200), scheduler: App.defaultQueue)
             .sink { val in
                 if !self.isSnappedToTop && !self.isSnappedToBottom {
-                    DispatchQueue.main.async {                    
+                    DispatchQueue.main.async {
                         self.y = self.snapToBottomAt - 1
                     }
                 }
@@ -106,7 +112,7 @@ class HomeViewState: ObservableObject {
                     let next = y > 20
                     if next != self.hasScrolledSome {
                         print("scroll scroll \(y)")
-                        self.animate(state: .uncontrolled) {
+                        self.animate(state: .animate) {
                             self.hasScrolledSome = next
                         }
                     }
@@ -146,10 +152,10 @@ class HomeViewState: ObservableObject {
         }
     }
     
-    func animate(_ animation: Animation? = .spring(), state: HomeAnimationState = .controlled, _ body: @escaping () -> Void) {
+    func animate(_ animation: Animation? = .spring(), state: HomeAnimationState = .controlled, duration: Int = 400, _ body: @escaping () -> Void) {
         log.info()
         DispatchQueue.main.async {
-            self.setAnimationState(state, 400)
+            self.setAnimationState(state, duration)
             DispatchQueue.main.async {
                 withAnimation(animation) {
                     body()
@@ -347,6 +353,12 @@ class HomeViewState: ObservableObject {
         log.info()
         self.appHeight = val
     }
+    
+    func setShowCamera(_ val: Bool) {
+        self.animate(state: .animate) {
+           self.showCamera = val
+        }
+    }
 }
 
 let homeViewState = HomeViewState()
@@ -367,20 +379,29 @@ struct HomeMainView: View {
     @EnvironmentObject var keyboard: Keyboard
     @Environment(\.geometry) var appGeometry
     @ObservedObject var state = homeViewState
+    
     @State var wasOnSearchResults = false
+    @State var wasOnCamera = false
     
     func runSideEffects() {
         // pushed map below the border radius of the bottomdrawer
         let isOnSearchResults = Selectors.home.isOnSearchResults()
-        let isMovingToSearchResults = isOnSearchResults && !wasOnSearchResults
-        if isMovingToSearchResults {
-            state.moveToSearchResults()
-        }
-        
-        // reset back
         if isOnSearchResults != wasOnSearchResults {
             DispatchQueue.main.async {
                 self.wasOnSearchResults = isOnSearchResults
+                if isOnSearchResults {
+                    self.state.moveToSearchResults()
+                }
+            }
+        }
+        
+        // camera animation
+        let isOnCamera = App.store.state.home.showCamera
+        if isOnCamera != wasOnCamera {
+            print("CHANGE camera \(isOnCamera) \(wasOnCamera)")
+            DispatchQueue.main.async {
+                self.wasOnCamera = isOnCamera
+                self.state.setShowCamera(isOnCamera)
             }
         }
         
@@ -424,6 +445,10 @@ struct HomeMainView: View {
                                 }
                             }
                     }
+                
+                    DishCamera()
+                        .animation(.spring())
+                        .offset(y: state.showCamera ? 0 : -Screen.height)
 
                     // below the map
                     
@@ -431,6 +456,8 @@ struct HomeMainView: View {
                     HomeMainContent(
                         isHorizontal: self.state.isSnappedToBottom
                     )
+                    .offset(y: state.showCamera ? Screen.height : 0)
+                    .animation(state.animationState == .animate ? .spring() : .none)
 
                     // map
                     VStack {
@@ -456,6 +483,7 @@ struct HomeMainView: View {
                         }
                         .frame(height: mapHeight)
                         .cornerRadius(20)
+                        .shadow(color: Color.black, radius: 20, x: 0, y: 0)
                         .clipped()
 //                        .animation(state.state == .animating ? .none : .spring(response: 0.3333))
 
