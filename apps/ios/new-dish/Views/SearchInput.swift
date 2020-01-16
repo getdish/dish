@@ -16,6 +16,35 @@ struct SearchInputTag: Identifiable, Equatable {
     }
 }
 
+struct SearchInputTagView: View {
+    var tag: SearchInputTag
+    var fontSize: CGFloat
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Text(tag.text)
+                .font(.system(size: fontSize))
+            
+            if tag.deletable {
+                VStack {
+                    Image(systemName: "xmark")
+                        .resizable()
+                        .frame(width: 10, height: 10)
+                        .padding(3)
+                }
+                .background(tag.color.brightness(-0.1))
+                .cornerRadius(4)
+                .opacity(0.5)
+            }
+        }
+        .foregroundColor(Color.white)
+        .padding(.horizontal, 6)
+        .padding(.vertical, 5)
+        .background(tag.color)
+        .cornerRadius(4)
+    }
+}
+
 struct SearchInput: View {
     var placeholder = "Search"
     var inputBackgroundColor = Color(.secondarySystemBackground)
@@ -73,35 +102,20 @@ struct SearchInput: View {
                     if hasTags {
                         HStack {
                             ForEach(self.tags) { tag in
-                                HStack(spacing: 8) {
-                                    Text(tag.text)
-                                        .font(.system(size: fontSize))
-                                    
-                                    if tag.deletable {
-                                        VStack {
-                                            Image(systemName: "xmark")
-                                                .resizable()
-                                                .frame(width: 10, height: 10)
-                                            .padding(3)
-                                        }
-                                        .background(tag.color.brightness(-0.1))
-                                        .cornerRadius(4)
-                                        .opacity(0.5)
-                                    }
-                                }
-                                .foregroundColor(Color.white)
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 5)
-                                .background(tag.color)
-                                .cornerRadius(4)
-                                .onTapGesture {
-                                    if tag.deletable {
-                                        if let index = self.tags.firstIndex(of: tag) {
-                                            print("removing tag at \(index)")
-                                            self.tags.remove(at: index)
+                                SearchInputTagView(
+                                    tag: tag,
+                                    fontSize: fontSize
+                                )
+                                    .transition(.slide)
+                                    .animation(.linear(duration: 2))
+                                    .onTapGesture {
+                                        if tag.deletable {
+                                            if let index = self.tags.firstIndex(of: tag) {
+                                                print("removing tag at \(index)")
+                                                self.tags.remove(at: index)
+                                            }
                                         }
                                     }
-                                }
                             }
                         }
                     }
@@ -152,7 +166,7 @@ struct SearchInput: View {
                     .foregroundColor(.secondary)
                     .background(self.inputBackgroundColor)
                     .cornerRadius(10.0 * scale * sizeRadius)
-                    .shadow(color: Color.black.opacity(0.3), radius: 18, x: 0, y: 0)
+                    .shadow(color: Color.black.opacity(0.26), radius: 18, x: 0, y: 0)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10.0 * scale * sizeRadius)
                             .stroke(self.borderColor, lineWidth: 1)

@@ -8,6 +8,7 @@ fileprivate let topNavHeight: CGFloat = 45
 fileprivate let hideTopNavAtVal: CGFloat = 160 + Screen.statusBarHeight
 fileprivate let searchBarHeight: CGFloat = 45
 fileprivate let resistanceYBeforeSnap: CGFloat = 48
+fileprivate let snapToBottomYMovePct: CGFloat = 0.23
 
 // need enum animateStatus = { .will, .is, .idle }
 // then on idle we can apply .spring()
@@ -16,38 +17,57 @@ class HomeViewState: ObservableObject {
     enum HomeDragState {
         case idle, off, pager, searchbar
     }
+    
+    // note:
+    // idle == nothing
+    // animate == .animation()
+    // controlled = nothing (but we are animating manually using withAnimation())
     enum HomeAnimationState {
-        case idle, controlled, uncontrolled
+        case idle, controlled, animate
+    }
+    
+    enum HomeScrollState {
+        case none, some, more
     }
     
     @Published private(set) var appHeight: CGFloat = Screen.height
     @Published private(set) var scrollY: CGFloat = 0
-    @Published private(set) var y: CGFloat = 0
+    // initialize it at where the snapToBottom will be about
+    @Published private(set) var y: CGFloat = (Screen.height + Screen.statusBarHeight) * snapToBottomYMovePct - 1
     @Published private(set) var searchBarYExtra: CGFloat = 0
+    @Published private(set) var hasScrolled: HomeScrollState = .none
     @Published private(set) var hasMovedBar = false
     @Published private(set) var shouldAnimateCards = false
-    @Published private(set) var hasScrolledSome = false
     @Published private(set) var dragState: HomeDragState = .idle
     @Published private(set) var animationState: HomeAnimationState = .idle
+    @Published private(set) var showCamera = false
     
     private var cancelAnimation: AnyCancellable? = nil
-    
-    var scrollRevealY: CGFloat {
-        mapHeight > 120 ? 100 : 0
-    }
 
     // keyboard
     @Published var keyboardHeight: CGFloat = 0
-    private var cancellables: Set<AnyCancellable> = []
+    private var cancels: Set<AnyCancellable> = []
     private var keyboard = Keyboard()
     private var lastKeyboardAdjustY: CGFloat = 0
 
     init() {
+        // start map height at just above snapToBottomAt
+        self.$appHeight
+            .debounce(for: .milliseconds(200), scheduler: App.queueMain)
+            .sink { val in
+                if !self.isSnappedToTop && !self.isSnappedToBottom {
+                    DispatchQueue.main.async {
+                        self.y = self.snapToBottomAt - 1
+                    }
+                }
+            }
+            .store(in: &cancels)
+        
         self.keyboard.$state
             .map { $0.height }
             .removeDuplicates()
             .assign(to: \.keyboardHeight, on: self)
-            .store(in: &cancellables)
+            .store(in: &cancels)
         
         self.keyboard.$state.map { $0.height }
             .removeDuplicates()
@@ -56,7 +76,7 @@ class HomeViewState: ObservableObject {
                 // prevents filters jumping up/down while focusing input
                 self.setAnimationState(.controlled, 350)
             }
-            .store(in: &cancellables)
+            .store(in: &cancels)
 
         self.keyboard.$state
             .map { $0.height }
@@ -82,24 +102,25 @@ class HomeViewState: ObservableObject {
                 }
                 
             }
-            .store(in: &cancellables)
+            .store(in: &cancels)
         
         let started = Date()
         self.$scrollY
-            .throttle(for: 0.1, scheduler: App.defaultQueue, latest: true)
+            .throttle(for: 0.1, scheduler: App.queueMain, latest: true)
             .removeDuplicates()
             .sink { y in
-                print("\(Date().timeIntervalSince(started))")
                 if Date().timeIntervalSince(started) > 1 {
-                    let next = y > 20
-                    if next != self.hasScrolledSome {
+                    let next: HomeViewState.HomeScrollState = (
+                        y > 60 ? .more : y > 30 ? .some : .none
+                    )
+                    if next != self.hasScrolled {
                         print("scroll scroll \(y)")
-                        self.animate(state: .uncontrolled) {
-                            self.hasScrolledSome = next
+                        self.animate(state: .animate) {
+                            self.hasScrolled = next
                         }
                     }
                 }
-            }.store(in: &cancellables)
+            }.store(in: &cancels)
     }
     
     // note: setDragState/setAnimationSate should be only way to mutate state
@@ -110,7 +131,6 @@ class HomeViewState: ObservableObject {
     }
     
     func setAnimationState(_ next: HomeAnimationState, _ duration: Int = 0) {
-        log.info()
         DispatchQueue.main.async {
             self.animationState = next
             // cancel last controlled animation
@@ -124,7 +144,7 @@ class HomeViewState: ObservableObject {
                 self.cancelAnimation = AnyCancellable {
                     active = false
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(duration)) {
                     if active {
                         self.setAnimationState(.idle)
                         self.cancelAnimation = nil
@@ -134,14 +154,12 @@ class HomeViewState: ObservableObject {
         }
     }
     
-    func animate(_ animation: Animation? = .spring(), state: HomeAnimationState = .controlled, _ body: @escaping () -> Void) {
+    func animate(_ animation: Animation? = .spring(), state: HomeAnimationState = .controlled, duration: Int = 400, _ body: @escaping () -> Void) {
         log.info()
-        DispatchQueue.main.async {
-            self.setAnimationState(state, 400)
-            DispatchQueue.main.async {
-                withAnimation(animation) {
-                    body()
-                }
+        self.setAnimationState(state, duration)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(10)) {
+            withAnimation(animation) {
+                body()
             }
         }
     }
@@ -149,7 +167,7 @@ class HomeViewState: ObservableObject {
     var showFiltersAbove: Bool {
         if y > snapToBottomAt - 1 { return false }
         if mapHeight < 190 { return false }
-        return hasScrolledSome
+        return hasScrolled != .none
     }
     
     let hideTopNavAt: CGFloat = hideTopNavAtVal
@@ -162,12 +180,24 @@ class HomeViewState: ObservableObject {
     var mapInitialHeight: CGFloat { appHeight * 0.3 }
     
     var mapMaxHeight: CGFloat { appHeight - keyboardHeight - searchBarHeight }
-
+    
+    
+    var scrollRevealY: CGFloat {
+        if hasScrolled == .more {
+            return 40
+        }
+        return 0
+    }
+    
     var mapHeight: CGFloat {
-        return min(mapMaxHeight, max(mapInitialHeight + y, mapMinHeight))
+        return min(
+            mapMaxHeight, max(
+                mapInitialHeight + y - scrollRevealY, mapMinHeight
+            )
+        )
     }
 
-    var snapToBottomAt: CGFloat { appHeight * 0.23 }
+    var snapToBottomAt: CGFloat { appHeight * snapToBottomYMovePct }
     var snappedToBottomMapHeight: CGFloat { appHeight - 190 }
     var isSnappedToBottom: Bool { y > snapToBottomAt }
     var wasSnappedToBottom = false
@@ -318,7 +348,6 @@ class HomeViewState: ObservableObject {
         if animationState != .idle { return }
         let y = max(0, min(100, scrollY)).rounded()
         if y != self.scrollY {
-            log.info(y)
             self.scrollY = y
         }
     }
@@ -334,6 +363,12 @@ class HomeViewState: ObservableObject {
     func setAppHeight(_ val: CGFloat) {
         log.info()
         self.appHeight = val
+    }
+    
+    func setShowCamera(_ val: Bool) {
+        self.animate(state: .animate) {
+           self.showCamera = val
+        }
     }
 }
 
@@ -355,20 +390,29 @@ struct HomeMainView: View {
     @EnvironmentObject var keyboard: Keyboard
     @Environment(\.geometry) var appGeometry
     @ObservedObject var state = homeViewState
+    
     @State var wasOnSearchResults = false
+    @State var wasOnCamera = false
     
     func runSideEffects() {
         // pushed map below the border radius of the bottomdrawer
         let isOnSearchResults = Selectors.home.isOnSearchResults()
-        let isMovingToSearchResults = isOnSearchResults && !wasOnSearchResults
-        if isMovingToSearchResults {
-            state.moveToSearchResults()
-        }
-        
-        // reset back
         if isOnSearchResults != wasOnSearchResults {
             DispatchQueue.main.async {
                 self.wasOnSearchResults = isOnSearchResults
+                if isOnSearchResults {
+                    self.state.moveToSearchResults()
+                }
+            }
+        }
+        
+        // camera animation
+        let isOnCamera = App.store.state.home.showCamera
+        if isOnCamera != wasOnCamera {
+            print("CHANGE camera \(isOnCamera) \(wasOnCamera)")
+            DispatchQueue.main.async {
+                self.wasOnCamera = isOnCamera
+                self.state.setShowCamera(isOnCamera)
             }
         }
         
@@ -390,15 +434,12 @@ struct HomeMainView: View {
         
         let state = self.state
         let isOnSearchResults = Selectors.home.isOnSearchResults()
-        let scrollRevealY = state.scrollRevealY
-        let shouldAvoidScrollReveal = state.mapHeight < scrollRevealY + 100
-        let mapHeightScrollReveal: CGFloat = shouldAvoidScrollReveal ? 0 :
-            state.scrollY > scrollRevealY / 2 ?
-                -35 : 0
-        let mapHeight = state.mapHeight + mapHeightScrollReveal
+        let mapHeight = state.mapHeight
         let zoom = mapHeight / 235 + 9.7
 
-        print("render HomeMainView -- mapHeight \(mapHeight) y \(state.y)")
+        print("render HomeMainView")
+        print("  - mapHeight \(mapHeight)")
+        print("  - animationState \(state.animationState)")
 
 //        return MagicMove(animate: state.animate) {
         return GeometryReader { geometry in
@@ -412,6 +453,13 @@ struct HomeMainView: View {
                                 }
                             }
                     }
+                
+                    DishCamera()
+                
+                    // cover camera
+                    Color.black
+                        .animation(.spring())
+                        .opacity(state.showCamera ? 0 : 1)
 
                     // below the map
                     
@@ -419,14 +467,13 @@ struct HomeMainView: View {
                     HomeMainContent(
                         isHorizontal: self.state.isSnappedToBottom
                     )
+                    .offset(y: state.showCamera ? Screen.height : 0)
+                    .opacity(isOnSearchResults && state.isSnappedToBottom ? 0 : 1)
+                        .animation(.spring(), value: state.animationState == .animate)
 
                     // map
                     VStack {
                         ZStack {
-//                            Color.red
-//                                .cornerRadius(20)
-//                                .scaleEffect(mapHeight < 250 ? 0.8 : 1)
-//                                .animation(.spring())
                             DishMapView(
                                 width: geometry.size.width,
                                 height: Screen.height,
@@ -444,8 +491,11 @@ struct HomeMainView: View {
                         }
                         .frame(height: mapHeight)
                         .cornerRadius(20)
+                        .shadow(color: Color.black, radius: 20, x: 0, y: 0)
                         .clipped()
-//                        .animation(state.state == .animating ? .none : .spring(response: 0.3333))
+                        .animation(.spring(), value: state.animationState == .animate)
+                        .offset(y: state.showCamera ? -Screen.height : 0)
+                        .rotationEffect(state.showCamera ? .degrees(-15) : .degrees(0))
 
                         Spacer()
                     }
@@ -459,7 +509,7 @@ struct HomeMainView: View {
                             Spacer()
                         }
                         .offset(y: max(100, mapHeight - cardRowHeight - 16))
-                        .animation(.spring())
+                        .animation(.spring(), value: state.animationState == .animate)
                         .opacity(state.isSnappedToBottom ? 1 : 0)
                         .allowsHitTesting(state.isSnappedToBottom)
                         
@@ -468,11 +518,13 @@ struct HomeMainView: View {
                             HomeMainFilters()
                             Spacer()
                         }
-//                        .animation(state.state == .animating ? .none : .spring(response: 0.3333))
-                        .offset(y: mapHeight + searchBarHeight / 2 - 4 + (
-                            state.showFiltersAbove ? -100 : 0
-                        ))
-                        .opacity(isOnSearchResults ? 0 : 1)
+                        .offset(
+                            y: mapHeight + searchBarHeight / 2 - 4 + (
+                                state.showFiltersAbove ? -100 : 0
+                            )
+                        )
+                        .opacity(state.showCamera ? 0 : 1)
+                        .animation(.spring(response: 0.25), value: state.animationState == .animate)
 
                         // searchbar
                         VStack {
@@ -484,12 +536,13 @@ struct HomeMainView: View {
                             
                             Spacer()
                         }
-//                        .animation(
-//                            state.state == .animating ? .none :
-//                                state.state == .idle ? .spring(response: 0.25) : .spring(response: 0.1)
-//                        )
                         .padding(.horizontal, 10)
-                        .offset(y: mapHeight - 23 + state.searchBarYExtra)
+                        .animation(.spring(), value: state.animationState == .animate)
+                        .offset(y:
+                            state.showCamera ?
+                                mapHeight > Screen.height / 2 ? Screen.height * 2 : -Screen.height * 2 :
+                                mapHeight - 23 + state.searchBarYExtra
+                        )
                         // searchinput always light
                         .environment(\.colorScheme, .light)
                     }
@@ -529,6 +582,7 @@ struct HomeMainView: View {
 //        }
     }
 }
+
 
 #if DEBUG
 struct HomeMainView_Previews: PreviewProvider {

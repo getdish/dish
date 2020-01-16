@@ -80,11 +80,13 @@ struct TopNavHome: View {
                     // home controls
                     HStack {
                         Button(action: {
+                            App.store.send(.map(.moveToLocation(.init(.current))))
                         }) {
                             VStack {
                                 Text(self.store.state.map.locationLabel)
-                                    .fontWeight(.bold)
-                                    .shadow(color: Color.black.opacity(0.35), radius: 2, x: 0, y: 1)
+                                    .font(.system(size: 13))
+                                    .fontWeight(.semibold)
+                                    .shadow(color: Color.black.opacity(0.4), radius: 2, x: 0, y: 1)
                             }
                             .padding(.vertical, 4)
                             .padding(.horizontal, 8)
@@ -106,7 +108,7 @@ struct TopNavHome: View {
                         }) {
                             VStack {
                                 Text("~\(Int(App.store.state.map.location.radius / 1000)) mi")
-                                    .font(.system(size: 14))
+                                    .font(.system(size: 13))
                                     .shadow(color: Color.black.opacity(0.35), radius: 2, x: 0, y: 1)
                             }
                             .padding(.vertical, 4)

@@ -5,42 +5,27 @@ struct BottomNav: View {
     let hiddenButtonY: CGFloat = 100
     
     var body: some View {
-        let isOnGallery = false //store.state.galleryDish != nil
+        let isOnGallery = false
         
         return VStack {
             Spacer()
             
             ZStack {
-                // main controls
-                
                 VStack {
                     Spacer()
-//                    QuickFilters()
+                    ZStack {
+                        HStack {
+                            CameraButton()
+                        }
+                        HStack {
+                            if App.store.state.home.showCamera {
+                                CameraBackButton()
+                            }
+                            Spacer()
+                        }
+                    }
                 }
-                
-                //                HStack {
-                //                    DishLoginButton()
-                //                    .animation(.spring(response: 0.5))
-                //                    .offset(y: isOnGallery ? hiddenButtonY : 0)
-                //                    Spacer()
-                //                }
-                //
-                //                HStack {
-                //                    Spacer()
-                //                    DishFiltersButton()
-                //                        .animation(.spring(response: 0.75))
-                //                        .offset(y: isOnGallery ? hiddenButtonY : 0)
-                //                    Spacer()
-                //                }
-                
-//                VStack {
-//                    Spacer()
-//                    HStack {
-//                        Spacer()
-//                        CameraButton()
-//                    }
-//                }
-//                .padding(.horizontal)
+                .padding(.horizontal, 20)
                 
                 // camera controls
                 
@@ -69,6 +54,27 @@ struct BottomNav: View {
             Spacer().frame(height: 56)
         }
         .edgesIgnoringSafeArea(.all)
+    }
+}
+
+struct CameraBackButton: View {
+    @EnvironmentObject var store: AppStore
+    
+    var body: some View {
+        Button(action: {
+            if self.store.state.camera.didCapture {
+                App.store.send(.camera(.capture(false)))
+            } else {
+                App.store.send(.home(.setShowCamera(false)))
+            }
+        }) {
+            Image(systemName: "chevron.left")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 26, height: 26)
+                .foregroundColor(Color.white)
+                .shadow(color: Color.black, radius: 6)
+        }
     }
 }
 

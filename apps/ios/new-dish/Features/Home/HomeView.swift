@@ -51,12 +51,15 @@ struct HomeViewContent: View {
             PagerView(
                 pageCount: homePageCount,
                 pagerStore: homePager,
-                disableDragging: self.disableDragging
+                disableDragging: self.disableDragging || App.store.state.home.showCamera
                 ) { isDragging in
+                    // account page
                     DishAccount()
                         .clipped()
                         .cornerRadius(80)
                         .zIndex(0)
+                    
+                    // home page
                     HomeMainView()
                         .clipped()
                         .cornerRadius(80)
@@ -67,10 +70,9 @@ struct HomeViewContent: View {
                             y: 0
                         )
                         .zIndex(2)
-                    DishCamera()
-                        .clipped()
-                        .cornerRadius(80)
-                        .zIndex(0)
+                    
+                    // third page
+                    Color.black
             }
             .onChangeDrag { isDragging in
                 print("set isDragging \(isDragging)")

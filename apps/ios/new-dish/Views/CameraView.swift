@@ -73,7 +73,7 @@ class CameraViewController: UIViewController {
     }
     
     func resume() {
-        //    avSession?.startRunning()
+//        avSession?.startRunning()
     }
     
     func pause() {

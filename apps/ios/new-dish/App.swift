@@ -15,7 +15,7 @@ struct AppInstance {
     let googlePlacesService = GooglePlacesService()
 
     let keyboard = Keyboard()
-    let defaultQueue = DispatchQueue(label: "defaultQueue")
+    let queueMain = DispatchQueue.main
     
     func start() {
         mapService.start()

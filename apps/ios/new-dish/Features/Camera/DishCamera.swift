@@ -3,18 +3,30 @@ import Combine
 
 struct DishCamera: View {
     @EnvironmentObject var store: AppStore
-    @State var isCaptured = true
     @State var isOpen = false
     var cancel: AnyCancellable?
+    
+    var isCaptured: Binding<Bool> {
+        Binding<Bool>(
+            get: {
+                if self.store.state.home.showCamera == false {
+                    return true
+                } else {
+                    return self.store.state.camera.didCapture
+                }
+            },
+            set: { App.store.send(.camera(.capture($0))) }
+        )
+    }
     
     var body: some View {
         return ZStack {
             VStack {
                 CameraView(
-                    isCaptured: self.$isCaptured
+                    isCaptured: self.isCaptured
                 )
             }
-            .background(Color.orange)
+            .background(Color.black)
             .frame(minWidth: Screen.width, maxHeight: .infinity)
             
             DishCameraPictureOverlay()
