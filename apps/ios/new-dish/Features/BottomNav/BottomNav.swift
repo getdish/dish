@@ -11,35 +11,21 @@ struct BottomNav: View {
             Spacer()
             
             ZStack {
-                // main controls
-                
-//                VStack {
-//                    Spacer()
-//                    QuickFilters()
-//                }
-                
-                //                HStack {
-                //                    DishLoginButton()
-                //                    .animation(.spring(response: 0.5))
-                //                    .offset(y: isOnGallery ? hiddenButtonY : 0)
-                //                    Spacer()
-                //                }
-                //
-                //                HStack {
-                //                    Spacer()
-                //                    DishFiltersButton()
-                //                        .animation(.spring(response: 0.75))
-                //                        .offset(y: isOnGallery ? hiddenButtonY : 0)
-                //                    Spacer()
-                //                }
-                
                 VStack {
                     Spacer()
-                    HStack {
-                        CameraButton()
+                    ZStack {
+                        HStack {
+                            CameraButton()
+                        }
+                        HStack {
+                            if App.store.state.home.showCamera {
+                                CameraBackButton()
+                            }
+                            Spacer()
+                        }
                     }
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, 20)
                 
                 // camera controls
                 
@@ -68,6 +54,21 @@ struct BottomNav: View {
             Spacer().frame(height: 56)
         }
         .edgesIgnoringSafeArea(.all)
+    }
+}
+
+struct CameraBackButton: View {
+    var body: some View {
+        Button(action: {
+            App.store.send(.home(.setShowCamera(false)))
+        }) {
+            Image(systemName: "chevron.left")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 26, height: 26)
+                .foregroundColor(Color.white)
+                .shadow(color: Color.black, radius: 6)
+        }
     }
 }
 

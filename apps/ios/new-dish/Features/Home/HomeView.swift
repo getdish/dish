@@ -51,7 +51,7 @@ struct HomeViewContent: View {
             PagerView(
                 pageCount: homePageCount,
                 pagerStore: homePager,
-                disableDragging: self.disableDragging
+                disableDragging: self.disableDragging || App.store.state.home.showCamera
                 ) { isDragging in
                     // account page
                     DishAccount()
