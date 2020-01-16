@@ -25,22 +25,22 @@ class HomeViewState: ObservableObject {
         case idle, controlled, animate
     }
     
+    enum HomeScrollState {
+        case none, some, more
+    }
+    
     @Published private(set) var appHeight: CGFloat = Screen.height
     @Published private(set) var scrollY: CGFloat = 0
     @Published private(set) var y: CGFloat = 0
     @Published private(set) var searchBarYExtra: CGFloat = 0
+    @Published private(set) var hasScrolled: HomeScrollState = .none
     @Published private(set) var hasMovedBar = false
     @Published private(set) var shouldAnimateCards = false
-    @Published private(set) var hasScrolledSome = false
     @Published private(set) var dragState: HomeDragState = .idle
     @Published private(set) var animationState: HomeAnimationState = .idle
     @Published private(set) var showCamera = false
     
     private var cancelAnimation: AnyCancellable? = nil
-    
-    var scrollRevealY: CGFloat {
-        mapHeight > 120 ? 100 : 0
-    }
 
     // keyboard
     @Published var keyboardHeight: CGFloat = 0
@@ -107,13 +107,14 @@ class HomeViewState: ObservableObject {
             .throttle(for: 0.1, scheduler: App.defaultQueue, latest: true)
             .removeDuplicates()
             .sink { y in
-                print("\(Date().timeIntervalSince(started))")
                 if Date().timeIntervalSince(started) > 1 {
-                    let next = y > 20
-                    if next != self.hasScrolledSome {
+                    let next: HomeViewState.HomeScrollState = (
+                        y > 60 ? .more : y > 30 ? .some : .none
+                    )
+                    if next != self.hasScrolled {
                         print("scroll scroll \(y)")
                         self.animate(state: .animate) {
-                            self.hasScrolledSome = next
+                            self.hasScrolled = next
                         }
                     }
                 }
@@ -166,7 +167,7 @@ class HomeViewState: ObservableObject {
     var showFiltersAbove: Bool {
         if y > snapToBottomAt - 1 { return false }
         if mapHeight < 190 { return false }
-        return hasScrolledSome
+        return hasScrolled != .none
     }
     
     let hideTopNavAt: CGFloat = hideTopNavAtVal
@@ -179,9 +180,21 @@ class HomeViewState: ObservableObject {
     var mapInitialHeight: CGFloat { appHeight * 0.3 }
     
     var mapMaxHeight: CGFloat { appHeight - keyboardHeight - searchBarHeight }
-
+    
+    
+    var scrollRevealY: CGFloat {
+        if hasScrolled == .more {
+            return 40
+        }
+        return 0
+    }
+    
     var mapHeight: CGFloat {
-        return min(mapMaxHeight, max(mapInitialHeight + y, mapMinHeight))
+        return min(
+            mapMaxHeight, max(
+                mapInitialHeight + y - scrollRevealY, mapMinHeight
+            )
+        )
     }
 
     var snapToBottomAt: CGFloat { appHeight * 0.23 }
@@ -335,7 +348,6 @@ class HomeViewState: ObservableObject {
         if animationState != .idle { return }
         let y = max(0, min(100, scrollY)).rounded()
         if y != self.scrollY {
-            log.info(y)
             self.scrollY = y
         }
     }
@@ -422,12 +434,7 @@ struct HomeMainView: View {
         
         let state = self.state
         let isOnSearchResults = Selectors.home.isOnSearchResults()
-        let scrollRevealY = state.scrollRevealY
-        let shouldAvoidScrollReveal = state.mapHeight < scrollRevealY + 100
-        let mapHeightScrollReveal: CGFloat = shouldAvoidScrollReveal ? 0 :
-            state.scrollY > scrollRevealY / 2 ?
-                -35 : 0
-        let mapHeight = state.mapHeight + mapHeightScrollReveal
+        let mapHeight = state.mapHeight
         let zoom = mapHeight / 235 + 9.7
 
         print("render HomeMainView")
