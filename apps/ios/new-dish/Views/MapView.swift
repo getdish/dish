@@ -164,6 +164,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
                 let marker = GMSMarker(position: position)
                 marker.title = "\(place.name)"
 //                marker.iconView = markerView
+                marker.icon = UIImage(named: "pin")
                 marker.tracksViewChanges = true
                 marker.map = self.gmapView
             }

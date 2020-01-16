@@ -52,6 +52,7 @@
 		AE6B104923CFF20A00C33968 /* GMapsDarkMode.json in Resources */ = {isa = PBXBuildFile; fileRef = AE6B103823CFF20A00C33968 /* GMapsDarkMode.json */; };
 		AE6B104A23CFF20A00C33968 /* charleyrivers.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AE6B103923CFF20A00C33968 /* charleyrivers.jpg */; };
 		AE6B104B23CFF20A00C33968 /* rainbowlake.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AE6B103A23CFF20A00C33968 /* rainbowlake.jpg */; };
+		AE6B104D23CFF27000C33968 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = AE6B104C23CFF27000C33968 /* pin.png */; };
 		AE6CECCD23A843E600B08870 /* BottomNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6CECCC23A843E600B08870 /* BottomNav.swift */; };
 		AE7563B423A035E70094022B /* HomeMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B323A035E70094022B /* HomeMainView.swift */; };
 		AE7563B823A036500094022B /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B723A036500094022B /* Screen.swift */; };
@@ -150,6 +151,7 @@
 		AE6B103823CFF20A00C33968 /* GMapsDarkMode.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GMapsDarkMode.json; sourceTree = "<group>"; };
 		AE6B103923CFF20A00C33968 /* charleyrivers.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = charleyrivers.jpg; sourceTree = "<group>"; };
 		AE6B103A23CFF20A00C33968 /* rainbowlake.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = rainbowlake.jpg; sourceTree = "<group>"; };
+		AE6B104C23CFF27000C33968 /* pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin.png; sourceTree = "<group>"; };
 		AE6CECCC23A843E600B08870 /* BottomNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomNav.swift; sourceTree = "<group>"; };
 		AE7563B323A035E70094022B /* HomeMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainView.swift; sourceTree = "<group>"; };
 		AE7563B723A036500094022B /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
@@ -239,9 +241,9 @@
 				1CE3547A23986B5D004B3A84 /* Model */,
 				AE99091323CE63A100F1763C /* Service */,
 				1CE3547823986B2A004B3A84 /* Features */,
-				AE6B102923CFF1FC00C33968 /* Resources */,
 				1CE3547D23986B70004B3A84 /* Views */,
 				1CE3547C23986B69004B3A84 /* Extensions */,
+				AE6B102923CFF1FC00C33968 /* Resources */,
 				AE85339523C92D170045F144 /* Vendor */,
 				1CE3546A23986B1C004B3A84 /* Assets.xcassets */,
 				1CE3547223986B1C004B3A84 /* Info.plist */,
@@ -375,6 +377,7 @@
 		AE6B102923CFF1FC00C33968 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				AE6B104C23CFF27000C33968 /* pin.png */,
 				AE6B103923CFF20A00C33968 /* charleyrivers.jpg */,
 				AE6B103123CFF20900C33968 /* chilkoottrail.jpg */,
 				AE6B103423CFF20A00C33968 /* chincoteague.jpg */,
@@ -527,6 +530,7 @@
 				AE6B103D23CFF20A00C33968 /* twinlake.jpg in Resources */,
 				AE6B104B23CFF20A00C33968 /* rainbowlake.jpg in Resources */,
 				AE6B103B23CFF20A00C33968 /* GMapsThemeModest.json in Resources */,
+				AE6B104D23CFF27000C33968 /* pin.png in Resources */,
 				AE6B104423CFF20A00C33968 /* icybay.jpg in Resources */,
 				AE6B103E23CFF20A00C33968 /* turtlerock.jpg in Resources */,
 				AE6B104023CFF20A00C33968 /* lakemcdonald.jpg in Resources */,
