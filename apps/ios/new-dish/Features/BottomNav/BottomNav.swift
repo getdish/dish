@@ -58,9 +58,15 @@ struct BottomNav: View {
 }
 
 struct CameraBackButton: View {
+    @EnvironmentObject var store: AppStore
+    
     var body: some View {
         Button(action: {
-            App.store.send(.home(.setShowCamera(false)))
+            if self.store.state.camera.didCapture {
+                App.store.send(.camera(.capture(false)))
+            } else {
+                App.store.send(.home(.setShowCamera(false)))
+            }
         }) {
             Image(systemName: "chevron.left")
                 .resizable()
