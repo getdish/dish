@@ -51,7 +51,7 @@ class HomeViewState: ObservableObject {
     init() {
         // start map height at just above snapToBottomAt
         self.$appHeight
-            .debounce(for: .milliseconds(200), scheduler: App.defaultQueue)
+            .debounce(for: .milliseconds(200), scheduler: App.queueMain)
             .sink { val in
                 if !self.isSnappedToTop && !self.isSnappedToBottom {
                     DispatchQueue.main.async {
@@ -104,7 +104,7 @@ class HomeViewState: ObservableObject {
         
         let started = Date()
         self.$scrollY
-            .throttle(for: 0.1, scheduler: App.defaultQueue, latest: true)
+            .throttle(for: 0.1, scheduler: App.queueMain, latest: true)
             .removeDuplicates()
             .sink { y in
                 if Date().timeIntervalSince(started) > 1 {
@@ -142,7 +142,7 @@ class HomeViewState: ObservableObject {
                 self.cancelAnimation = AnyCancellable {
                     active = false
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(duration)) {
                     if active {
                         self.setAnimationState(.idle)
                         self.cancelAnimation = nil
@@ -154,12 +154,10 @@ class HomeViewState: ObservableObject {
     
     func animate(_ animation: Animation? = .spring(), state: HomeAnimationState = .controlled, duration: Int = 400, _ body: @escaping () -> Void) {
         log.info()
-        DispatchQueue.main.async {
-            self.setAnimationState(state, duration)
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(10)) {
-                withAnimation(animation) {
-                    body()
-                }
+        self.setAnimationState(state, duration)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(10)) {
+            withAnimation(animation) {
+                body()
             }
         }
     }
@@ -455,8 +453,11 @@ struct HomeMainView: View {
                     }
                 
                     DishCamera()
+                
+                    // cover camera
+                    Color.black
                         .animation(.spring())
-                        .offset(y: state.showCamera ? 0 : -Screen.height)
+                        .opacity(state.showCamera ? 0 : 1)
 
                     // below the map
                     
@@ -466,15 +467,11 @@ struct HomeMainView: View {
                     )
                     .offset(y: state.showCamera ? Screen.height : 0)
                     .opacity(isOnSearchResults && state.isSnappedToBottom ? 0 : 1)
-                    .animation(state.animationState == .animate ? .spring() : .none)
+                        .animation(.spring(), value: state.animationState == .animate)
 
                     // map
                     VStack {
                         ZStack {
-//                            Color.red
-//                                .cornerRadius(20)
-//                                .scaleEffect(mapHeight < 250 ? 0.8 : 1)
-//                                .animation(.spring())
                             DishMapView(
                                 width: geometry.size.width,
                                 height: Screen.height,
@@ -494,7 +491,7 @@ struct HomeMainView: View {
                         .cornerRadius(20)
                         .shadow(color: Color.black, radius: 20, x: 0, y: 0)
                         .clipped()
-                        .animation(state.animationState == .animate ? .spring() : .none)
+                        .animation(.spring(), value: state.animationState == .animate)
                         .offset(y: state.showCamera ? -Screen.height : 0)
                         .rotationEffect(state.showCamera ? .degrees(-15) : .degrees(0))
 
@@ -510,7 +507,7 @@ struct HomeMainView: View {
                             Spacer()
                         }
                         .offset(y: max(100, mapHeight - cardRowHeight - 16))
-                        .animation(state.animationState == .animate ? .spring() : .none)
+                        .animation(.spring(), value: state.animationState == .animate)
                         .opacity(state.isSnappedToBottom ? 1 : 0)
                         .allowsHitTesting(state.isSnappedToBottom)
                         
@@ -525,7 +522,7 @@ struct HomeMainView: View {
                             )
                         )
                         .opacity(state.showCamera ? 0 : 1)
-                        .animation(state.animationState == .animate ? .spring() : .none)
+                            .animation(.spring(), value: state.animationState == .animate)
 
                         // searchbar
                         VStack {
@@ -538,7 +535,7 @@ struct HomeMainView: View {
                             Spacer()
                         }
                         .padding(.horizontal, 10)
-                        .animation(state.animationState == .animate ? .spring() : .none)
+                        .animation(.spring(), value: state.animationState == .animate)
                         .offset(y:
                             state.showCamera ?
                                 Screen.statusBarHeight + topNavHeight + 40 :
@@ -583,6 +580,7 @@ struct HomeMainView: View {
 //        }
     }
 }
+
 
 #if DEBUG
 struct HomeMainView_Previews: PreviewProvider {

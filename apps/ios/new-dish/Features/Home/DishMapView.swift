@@ -41,7 +41,7 @@ struct DishMapViewContent: View {
         init() {
             // sync map location to state
             self.$position
-                .debounce(for: .milliseconds(200), scheduler: App.defaultQueue)
+                .debounce(for: .milliseconds(200), scheduler: App.queueMain)
                 .sink { position in
                     if let position = position {
                         App.store.send(
