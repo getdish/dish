@@ -8,6 +8,14 @@ jobs:
   run:
     runs-on: ubuntu-latest
     services:
+      postgres:
+        image: postgres:11.6
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 'postgres'
+          POSTGRES_DB: dish
+        ports:
+        - 5432:5432
       redis:
         image: redis
         ports:
@@ -15,10 +23,13 @@ jobs:
         options: --entrypoint redis-server
     env:
       DISH_ENV: "test"
+      HASURA_ENDPOINT: "http://localhost:8080"
     steps:
     - uses: actions/checkout@master
     - name: Install dev dependencies
       run: .github/workflows/scripts/install_dev_deps.sh
+    - name: Setup services
+      run: .github/workflows/scripts/setup_services.sh
     - name: Run unit tests, specs, etc
       run: .github/workflows/scripts/tests.sh
     - name: Build docker images

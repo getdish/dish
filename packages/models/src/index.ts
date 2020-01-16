@@ -1,0 +1,1 @@
+export { Restaurant } from './Restaurant'

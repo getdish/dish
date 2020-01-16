@@ -1,0 +1,20 @@
+{
+  "name": "@dish/models",
+  "version": "0.0.1",
+  "main": "_/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "start": "node _/index.js",
+    "build": "tsc -b || true",
+    "watch": "tsc -b --watch --preserveWatchOutput",
+    "test": "ava test/* --verbose",
+    "test:watch": "ava test/* --watch"
+  },
+  "dependencies": {
+    "axios": "^0.19.1"
+  },
+  "devDependencies": {
+    "@types/node": "^13.1.7",
+    "ava": "^2.4.0"
+  }
+}
