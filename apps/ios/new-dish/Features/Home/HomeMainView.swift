@@ -494,7 +494,9 @@ struct HomeMainView: View {
                         .cornerRadius(20)
                         .shadow(color: Color.black, radius: 20, x: 0, y: 0)
                         .clipped()
-//                        .animation(state.state == .animating ? .none : .spring(response: 0.3333))
+                        .animation(state.animationState == .animate ? .spring() : .none)
+                        .offset(y: state.showCamera ? -Screen.height : 0)
+                        .rotationEffect(state.showCamera ? .degrees(-15) : .degrees(0))
 
                         Spacer()
                     }
@@ -508,7 +510,7 @@ struct HomeMainView: View {
                             Spacer()
                         }
                         .offset(y: max(100, mapHeight - cardRowHeight - 16))
-                        .animation(.spring())
+                        .animation(state.animationState == .animate ? .spring() : .none)
                         .opacity(state.isSnappedToBottom ? 1 : 0)
                         .allowsHitTesting(state.isSnappedToBottom)
                         
@@ -517,11 +519,13 @@ struct HomeMainView: View {
                             HomeMainFilters()
                             Spacer()
                         }
-//                        .animation(state.state == .animating ? .none : .spring(response: 0.3333))
-                        .offset(y: mapHeight + searchBarHeight / 2 - 4 + (
-                            state.showFiltersAbove ? -100 : 0
-                        ))
-//                        .opacity(isOnSearchResults ? 0 : 1)
+                        .offset(
+                            y: mapHeight + searchBarHeight / 2 - 4 + (
+                                state.showFiltersAbove ? -100 : 0
+                            )
+                        )
+                        .opacity(state.showCamera ? 0 : 1)
+                        .animation(state.animationState == .animate ? .spring() : .none)
 
                         // searchbar
                         VStack {
@@ -534,11 +538,12 @@ struct HomeMainView: View {
                             Spacer()
                         }
                         .padding(.horizontal, 10)
-                        .animation(
-                            state.animationState == .animate ? .spring() : .none
-                            //                                            state.state == .idle ? .spring(response: 0.25) : .spring(response: 0.1)
+                        .animation(state.animationState == .animate ? .spring() : .none)
+                        .offset(y:
+                            state.showCamera ?
+                                Screen.statusBarHeight + topNavHeight + 40 :
+                                mapHeight - 23 + state.searchBarYExtra
                         )
-                        .offset(y: mapHeight - 23 + state.searchBarYExtra)
                         // searchinput always light
                         .environment(\.colorScheme, .light)
                     }
