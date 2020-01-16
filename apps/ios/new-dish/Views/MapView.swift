@@ -15,6 +15,7 @@ enum MapViewLocation {
 
 struct CurrentMapPosition {
     let center: CLLocationCoordinate2D
+    let location: CLLocation
     let radius: Double
 }
 
@@ -23,6 +24,7 @@ typealias OnChangeSettle = (_ position: CurrentMapPosition) -> Void
 struct MapView: UIViewControllerRepresentable {
     var width: CGFloat
     var height: CGFloat
+    var hiddenBottomPct: CGFloat = 0
     var zoom: CGFloat
     var darkMode: Bool?
     var animate: Bool
@@ -40,6 +42,7 @@ struct MapView: UIViewControllerRepresentable {
         let controller = MapViewController(
             width: width,
             height: height,
+            hiddenBottomPct: hiddenBottomPct,
             zoom: zoom,
             darkMode: darkMode,
             animate: animate,
@@ -96,13 +99,16 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     var locations: [GooglePlaceItem] = []
     var width: CGFloat
     var height: CGFloat
+    var hiddenBottomPct: CGFloat
     var darkMode: Bool?
     var animate = false
     var onMapSettle: OnChangeSettle?
+    var lastSettledAt: CurrentMapPosition? = nil
 
     init(
         width: CGFloat,
         height: CGFloat,
+        hiddenBottomPct: CGFloat = 0,
         zoom: CGFloat?,
         darkMode: Bool?,
         animate: Bool?,
@@ -111,6 +117,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         self.zoom = zoom ?? 12.0
         self.width = width
         self.height = height
+        self.hiddenBottomPct = hiddenBottomPct
         self.darkMode = darkMode
         self.animate = animate ?? false
         self.onMapSettle = onMapSettle
@@ -127,21 +134,53 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     // on move
     func mapView(_ mapView: GMSMapView, willMove gesture: Bool) {
     }
+    
+    var centerPoint: CGPoint {
+        let x = gmapView.frame.size.width / 2
+        let y = gmapView.frame.size.height / 2 * (1 - hiddenBottomPct)
+        return CGPoint(x: x, y: y)
+    }
+    
+    var centerCoordinate: CLLocationCoordinate2D {
+        let topCenterCoor = gmapView.convert(self.centerPoint, from: gmapView)
+        return gmapView.projection.coordinate(for: topCenterCoor)
+    }
 
     // on map settle in new position
     func mapView(_ mapView: GMSMapView, idleAt cameraPosition: GMSCameraPosition) {
-        if let cb = onMapSettle {
-            cb(CurrentMapPosition(
-                center: cameraPosition.target,
-                radius: mapView.getRadius()
-            ))
-        }
+        self.callbackOnSettle()
     }
 
     // on move map camera
     func mapView(_ mapView: GMSMapView, didChange cameraPosition: GMSCameraPosition) {
 //        let region = mapView.projection.visibleRegion()
 //        print("moved map, new bounds \(region)")
+    }
+    
+    func callbackOnSettle() {
+        if let cb = onMapSettle {
+            let next = CurrentMapPosition(
+                center: centerCoordinate,
+                location: CLLocation(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude),
+                radius: gmapView.getRadius() * Double(1 - self.hiddenBottomPct)
+            )
+            if let last = self.lastSettledAt {
+                print("distance is \(last.location.distance(from: next.location))")
+            }
+            
+            // only callback if we move above a threshold
+            let shouldCallback = self.lastSettledAt == nil || (
+               self.lastSettledAt!.location.distance(from: next.location) > 1000
+            ) || (
+              abs(abs(self.lastSettledAt!.radius) - abs(next.radius)) > 2000
+            )
+            
+            if shouldCallback {
+                cb(next)
+            }
+
+            self.lastSettledAt = next
+        }
     }
 
     // on props update
@@ -168,6 +207,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
                 marker.tracksViewChanges = true
                 marker.map = self.gmapView
             }
+        }
+        if self.hiddenBottomPct != mapView.hiddenBottomPct {
+            self.hiddenBottomPct = mapView.hiddenBottomPct
+            self.callbackOnSettle()
         }
     }
 
