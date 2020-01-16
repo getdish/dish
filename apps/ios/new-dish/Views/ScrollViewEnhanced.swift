@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ScrollViewEnhanced<Content: View & Identifiable>: View {
     @Binding var index: Int
+    var direction: Axis.Set = .horizontal
     @State private var offset: CGFloat = 0
     @State private var isGestureActive: Bool = false
     
@@ -10,7 +11,7 @@ struct ScrollViewEnhanced<Content: View & Identifiable>: View {
     
     var body: some View {
         GeometryReader { geometry in
-            ScrollView(.horizontal, showsIndicators: false) {
+            ScrollView(self.direction, showsIndicators: false) {
                 HStack(alignment: .center, spacing: 0) {
                     ForEach(self.pages) { page in
                         page

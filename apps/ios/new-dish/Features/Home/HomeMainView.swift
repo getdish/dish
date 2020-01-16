@@ -462,14 +462,15 @@ struct HomeMainView: View {
                         .opacity(state.showCamera ? 0 : 1)
 
                     // below the map
-                    
+
                     // main content
                     HomeMainContent(
                         isHorizontal: self.state.isSnappedToBottom
                     )
                     .offset(y: state.showCamera ? Screen.height : 0)
                     .opacity(isOnSearchResults && state.isSnappedToBottom ? 0 : 1)
-                        .animation(.spring(), value: state.animationState == .animate)
+                    .animation(.spring(), value: state.animationState == .animate)
+                    .zIndex(10)
 
                     // map
                     VStack {
@@ -503,16 +504,6 @@ struct HomeMainView: View {
 
                     // everything above the map
                     ZStack {
-                        // map search results
-                        VStack {
-                            DishMapResults()
-                            Spacer()
-                        }
-                        .offset(y: max(100, mapHeight - cardRowHeight - 16))
-                        .animation(.spring(), value: state.animationState == .animate)
-                        .opacity(state.isSnappedToBottom ? 1 : 0)
-                        .allowsHitTesting(state.isSnappedToBottom)
-                        
                         // filters
                         VStack {
                             HomeMainFilters()

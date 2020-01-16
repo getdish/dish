@@ -194,20 +194,6 @@ struct HomeScrollableContent<Content>: View where Content: View {
     }
 }
 
-struct DishCardView: View {
-    var aspectRatio: CGFloat = 1.4
-    var dish: DishItem
-    var body: some View {
-        FeatureCard(dish: dish, aspectRatio: aspectRatio, at: .start)
-            .cornerRadius(14)
-            .onTapGesture {
-                App.store.send(
-                    .home(.push(HomeStateItem(filters: [SearchFilter(name: self.dish.name)])))
-                )
-        }
-    }
-}
-
 struct DishRowCard: View {
     var dish: DishItem
     var body: some View {

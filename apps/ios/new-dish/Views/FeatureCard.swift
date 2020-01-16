@@ -4,7 +4,7 @@ fileprivate func getId(_ dish: DishItem) -> String {
     "feature-\(dish.id)"
 }
 
-struct FeatureCard: View, Equatable {
+struct FeatureCard: View, Equatable, Identifiable {
     var dish: DishItem
     var aspectRatio: CGFloat = 2 / 2.25
     let id: Int

@@ -14,6 +14,14 @@ import XCGLogger
 // Init state
 let log = XCGLogger.default
 
+func async(_ ms: Double = 0, execute: @escaping () -> Void) {
+    if ms > 0 {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(Int(ms))) { execute() }
+    } else {
+        DispatchQueue.main.async { execute() }
+    }
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func startDebugLoop() {

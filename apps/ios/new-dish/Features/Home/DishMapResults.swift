@@ -57,7 +57,7 @@ struct DishMapExploreResults: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
                 ForEach(features) { item in
-                    DishCardView(aspectRatio: 1.8, dish: item)
+                    DishCardView(dish: item)
                         .frame(width: 160, height: cardRowHeight)
                         .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
                 }
