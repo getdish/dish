@@ -32,7 +32,8 @@ class HomeViewState: ObservableObject {
     
     @Published private(set) var appHeight: CGFloat = Screen.height
     @Published private(set) var scrollY: CGFloat = 0
-    @Published private(set) var y: CGFloat = Screen.height * snapToBottomYMovePct - 20
+    // initialize it at where the snapToBottom will be about
+    @Published private(set) var y: CGFloat = (Screen.height + Screen.statusBarHeight) * snapToBottomYMovePct - 1
     @Published private(set) var searchBarYExtra: CGFloat = 0
     @Published private(set) var hasScrolled: HomeScrollState = .none
     @Published private(set) var hasMovedBar = false

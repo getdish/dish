@@ -92,6 +92,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     var lastSettledAt: CurrentMapPosition? = nil
     let currentLocationService = CurrentLocationService()
     var updateCancels: Set<AnyCancellable> = []
+    var hasSettled: Bool = false
 
     init(
         width: CGFloat,
@@ -116,6 +117,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         super.init(nibName: nil, bundle: nil)
         
         self.currentLocationService.start()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
+            self.hasSettled = true
+        }
     }
 
     // delegate methods
@@ -152,25 +157,26 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     }
     
     func callbackOnSettle() {
+        if !self.hasSettled {
+            return
+        }
+        if homeViewState.dragState != .idle || homeViewState.animationState != .idle {
+            return
+        }
         if let cb = onMapSettle {
             let next = CurrentMapPosition(
                 center: centerCoordinate,
                 location: CLLocation(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude),
                 radius: gmapView.getRadius() * Double(1 - self.hiddenBottomPct)
             )
-            if let last = self.lastSettledAt {
-                print("distance is \(last.location.distance(from: next.location))")
-            }
-            
             // only callback if we move above a threshold
             let shouldCallback = self.lastSettledAt == nil
                 || self.lastSettledAt!.location.distance(from: next.location) > 1000
                 || abs(abs(self.lastSettledAt!.radius) - abs(next.radius)) > 2000
-            
             if shouldCallback {
                 cb(next)
             }
-
+            print("we settled at \(next)")
             self.lastSettledAt = next
         }
     }
@@ -287,7 +293,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     }
 
     private func getCamera(_ givenLoc: CLLocationCoordinate2D? = nil) -> GMSCameraPosition? {
-        let location = givenLoc ?? gmapView.getCenterCoordinate()
+        let location = givenLoc ?? self.lastSettledAt?.location.coordinate ?? gmapView.getCenterCoordinate()
         return GMSCameraPosition.camera(
             withLatitude: location.latitude + self.adjustLatitude,
             longitude: location.longitude,
