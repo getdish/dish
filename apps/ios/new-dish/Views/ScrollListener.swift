@@ -6,11 +6,12 @@ struct ScrollListener: View {
         Color.clear
             .frame(height: 0)
             .overlay(
-                GeometryReader { geometry -> Color in
-                    if let cb = self.onScroll {
-                        cb(geometry.frame(in: .global))
+                GeometryReader { geometry in
+                    Run {
+                        if let cb = self.onScroll {
+                            cb(geometry.frame(in: .global))
+                        }
                     }
-                    return Color.clear
                 }
         )
     }

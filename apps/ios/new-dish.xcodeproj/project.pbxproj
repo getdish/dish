@@ -86,6 +86,8 @@
 		AEA331FB23A338F400B36A23 /* KeyboardHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331FA23A338F400B36A23 /* KeyboardHost.swift */; };
 		AEA87E4323B976EB009F07DB /* HomeMainFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA87E4223B976EB009F07DB /* HomeMainFilters.swift */; };
 		AEAE67EC23B5A70A00B9D781 /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAE67EB23B5A70A00B9D781 /* Map.swift */; };
+		AEC9AD3C23D10B7F00BCC82E /* Run.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC9AD3B23D10B7F00BCC82E /* Run.swift */; };
+		AEC9AD3E23D10C2900BCC82E /* ScrollViewEnhanced.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC9AD3D23D10C2900BCC82E /* ScrollViewEnhanced.swift */; };
 		AEED843E23B5A8E000407266 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED843D23B5A8E000407266 /* Mocks.swift */; };
 		AEED844123B6707100407266 /* DishMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844023B6707100407266 /* DishMapView.swift */; };
 		AEED844523B672D000407266 /* CameraTopNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844423B672D000407266 /* CameraTopNav.swift */; };
@@ -186,6 +188,8 @@
 		AEA331FA23A338F400B36A23 /* KeyboardHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHost.swift; sourceTree = "<group>"; };
 		AEA87E4223B976EB009F07DB /* HomeMainFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainFilters.swift; sourceTree = "<group>"; };
 		AEAE67EB23B5A70A00B9D781 /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Map.swift; sourceTree = "<group>"; };
+		AEC9AD3B23D10B7F00BCC82E /* Run.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Run.swift; sourceTree = "<group>"; };
+		AEC9AD3D23D10C2900BCC82E /* ScrollViewEnhanced.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewEnhanced.swift; sourceTree = "<group>"; };
 		AEED843D23B5A8E000407266 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Mocks.swift; path = "/Users/nw/dish/apps/ios/new-dish/Store/Mocks.swift"; sourceTree = "<absolute>"; };
 		AEED844023B6707100407266 /* DishMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishMapView.swift; sourceTree = "<group>"; };
 		AEED844423B672D000407266 /* CameraTopNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraTopNav.swift; sourceTree = "<group>"; };
@@ -303,15 +307,15 @@
 		1CE3547D23986B70004B3A84 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				1CE35485239870E8004B3A84 /* MapView.swift */,
 				AE861A7A23A06EDC004096BF /* BarArrow.swift */,
 				AE861A8823A172E8004096BF /* BlurView.swift */,
-				AE1BBDB523C8397900C58A87 /* CutoutCircleCentered.swift */,
 				1CE35489239871CB004B3A84 /* BottomSheetView.swift */,
 				AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */,
-				AE1BBDB323C8224200C58A87 /* CustomTextField.swift */,
 				AEED844723B675C300407266 /* CameraView.swift */,
+				AE872FF423CE983900F84663 /* ClearKeyboardOnScroll.swift */,
 				AEF6557E23B14DBA00E49A51 /* ContextMenuView.swift */,
+				AE1BBDB323C8224200C58A87 /* CustomTextField.swift */,
+				AE1BBDB523C8397900C58A87 /* CutoutCircleCentered.swift */,
 				AEA331F623A3382100B36A23 /* DishButton.swift */,
 				AEA331F423A3381200B36A23 /* DishInput.swift */,
 				AE7563E623A03D3C0094022B /* FeatureCard.swift */,
@@ -319,13 +323,15 @@
 				AEA331F823A3385000B36A23 /* InlineAlertView.swift */,
 				AEA331FA23A338F400B36A23 /* KeyboardHost.swift */,
 				AE7563E823A03D570094022B /* MagicMove.swift */,
+				1CE35485239870E8004B3A84 /* MapView.swift */,
 				1CCEDF51239DC7C9003EE228 /* PagerView.swift */,
+				AEC9AD3B23D10B7F00BCC82E /* Run.swift */,
 				AEF6557023B024A100E49A51 /* ScrollListener.swift */,
+				AEC9AD3D23D10C2900BCC82E /* ScrollViewEnhanced.swift */,
 				AE7563E423A038300094022B /* SearchInput.swift */,
 				1C6B321923A2A06100F0A7E6 /* SideDrawerView.swift */,
 				AE56C86523ADD977006A156A /* TagView.swift */,
 				AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */,
-				AE872FF423CE983900F84663 /* ClearKeyboardOnScroll.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -621,6 +627,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1CE35486239870E8004B3A84 /* MapView.swift in Sources */,
+				AEC9AD3C23D10B7F00BCC82E /* Run.swift in Sources */,
 				1CCEDF52239DC7C9003EE228 /* PagerView.swift in Sources */,
 				AEF6557423B0407000E49A51 /* ImageStore.swift in Sources */,
 				AE1BBDBA23C83E9E00C58A87 /* QuickFilters.swift in Sources */,
@@ -690,6 +697,7 @@
 				AE7563E923A03D570094022B /* MagicMove.swift in Sources */,
 				AE1BBDB423C8224200C58A87 /* CustomTextField.swift in Sources */,
 				1CE3547F23986B88004B3A84 /* Store.swift in Sources */,
+				AEC9AD3E23D10C2900BCC82E /* ScrollViewEnhanced.swift in Sources */,
 				AE56C86623ADD977006A156A /* TagView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
