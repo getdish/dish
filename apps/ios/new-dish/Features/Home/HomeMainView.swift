@@ -8,6 +8,7 @@ fileprivate let topNavHeight: CGFloat = 45
 fileprivate let hideTopNavAtVal: CGFloat = 160 + Screen.statusBarHeight
 fileprivate let searchBarHeight: CGFloat = 45
 fileprivate let resistanceYBeforeSnap: CGFloat = 48
+fileprivate let snapToBottomYMovePct: CGFloat = 0.23
 
 // need enum animateStatus = { .will, .is, .idle }
 // then on idle we can apply .spring()
@@ -31,7 +32,7 @@ class HomeViewState: ObservableObject {
     
     @Published private(set) var appHeight: CGFloat = Screen.height
     @Published private(set) var scrollY: CGFloat = 0
-    @Published private(set) var y: CGFloat = 0
+    @Published private(set) var y: CGFloat = Screen.height * snapToBottomYMovePct - 20
     @Published private(set) var searchBarYExtra: CGFloat = 0
     @Published private(set) var hasScrolled: HomeScrollState = .none
     @Published private(set) var hasMovedBar = false
@@ -195,7 +196,7 @@ class HomeViewState: ObservableObject {
         )
     }
 
-    var snapToBottomAt: CGFloat { appHeight * 0.23 }
+    var snapToBottomAt: CGFloat { appHeight * snapToBottomYMovePct }
     var snappedToBottomMapHeight: CGFloat { appHeight - 190 }
     var isSnappedToBottom: Bool { y > snapToBottomAt }
     var wasSnappedToBottom = false
