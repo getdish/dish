@@ -22,51 +22,68 @@ struct DishRestaurantCard: View {
     }
     
     var body: some View {
-        let isMini = self.isMini
-        let ratingSize: CGFloat = isMini ? 25 : 45
-        
-        return ZStack {
+        ZStack {
             restaurant.image
                 .resizable()
                 .aspectRatio(aspectRatio, contentMode: .fit)
+                .overlay(
+                    Rectangle().fill(gradientBottom)
+            )
+                .overlay(
+                    DishRestaurantCardText(
+                        restaurant: restaurant,
+                        isMini: isMini
+                    )
+                )
                 .cornerRadius(16)
+                .clipped()
             
-            ZStack(alignment: .bottomLeading) {
-                Rectangle().fill(gradientBottom)
+        }
+    }
+}
+
+
+
+struct DishRestaurantCardText: View {
+    var restaurant: RestaurantItem
+    var isMini: Bool
+    
+    var body: some View {
+        let ratingSize: CGFloat = isMini ? 25 : 45
+
+        return ZStack(alignment: .bottomLeading) {
+            VStack(alignment: .leading) {
+                ZStack {
+                    Circle()
+                        .frame(width: ratingSize, height: ratingSize)
+                        .modifier(TextShadowModifier())
+                    
+                    Text("9")
+                        .font(.system(size: ratingSize * 0.525))
+                        .foregroundColor(.black)
+                }
                 
-                VStack(alignment: .leading) {
-                    ZStack {
-                        Circle()
-                            .frame(width: ratingSize, height: ratingSize)
+                Spacer()
+                
+                VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading) {
+                        Text(restaurant.name)
+                            .font(.system(size: isMini ? 14 : 22))
+                            .bold()
                             .modifier(TextShadowModifier())
-                        
-                        Text("9")
-                            .font(.system(size: ratingSize * 0.525))
-                            .foregroundColor(.black)
                     }
                     
-                    Spacer()
-                    
-                    VStack(alignment: .leading, spacing: 16) {
-                        VStack(alignment: .leading) {
-                            Text(restaurant.name)
-                                .font(.system(size: isMini ? 14 : 22))
-                                .bold()
-                                .modifier(TextShadowModifier())
-                        }
-                        
+                    if !isMini {
                         HStack(spacing: 12) {
-                            if !isMini {
-                                HStack(spacing: 6) {
-                                    Group {
-                                        Text("Open")
-                                            .font(.system(size: 14))
-                                            .foregroundColor(.green).fontWeight(.semibold)
-                                        Text("9:00pm")
-                                            .font(.system(size: 14))
-                                    }
-                                    .modifier(TextShadowModifier())
+                            HStack(spacing: 6) {
+                                Group {
+                                    Text("Open")
+                                        .font(.system(size: 14))
+                                        .foregroundColor(.green).fontWeight(.semibold)
+                                    Text("9:00pm")
+                                        .font(.system(size: 14))
                                 }
+                                .modifier(TextShadowModifier())
                             }
                             
                             ScrollView(.horizontal) {
@@ -74,18 +91,14 @@ struct DishRestaurantCard: View {
                                     CardTagView("Cheap")
                                 }
                             }
-                            
                         }
                         .environment(\.colorScheme, .light)
                     }
-                    
                 }
-                .padding(isMini ? 4 : 12)
+                
             }
-            .foregroundColor(.white)
+            .padding(isMini ? 4 : 12)
             
-            
-            // left right pagination
             
             HStack {
                 Color.black.opacity(0.0001)
@@ -102,8 +115,9 @@ struct DishRestaurantCard: View {
                         self.restaurant.next()
                 }
             }
+
         }
+        .foregroundColor(.white)
+        
     }
 }
-
-

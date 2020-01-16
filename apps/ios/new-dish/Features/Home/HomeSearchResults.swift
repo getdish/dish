@@ -10,6 +10,8 @@ struct HomeSearchResultsView: View {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 20) {
                     ClearKeyboardOnScroll()
+                    
+                    Spacer().frame(height: 20)
 
                     ForEach(state.searchResults.results) { item in
                         DishRestaurantCard(restaurant:

@@ -457,6 +457,7 @@ struct HomeMainView: View {
                         isHorizontal: self.state.isSnappedToBottom
                     )
                     .offset(y: state.showCamera ? Screen.height : 0)
+                    .opacity(isOnSearchResults && state.isSnappedToBottom ? 0 : 1)
                     .animation(state.animationState == .animate ? .spring() : .none)
 
                     // map
@@ -512,7 +513,7 @@ struct HomeMainView: View {
                         .offset(y: mapHeight + searchBarHeight / 2 - 4 + (
                             state.showFiltersAbove ? -100 : 0
                         ))
-                        .opacity(isOnSearchResults ? 0 : 1)
+//                        .opacity(isOnSearchResults ? 0 : 1)
 
                         // searchbar
                         VStack {
