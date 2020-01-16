@@ -1,0 +1,3 @@
+- args:
+    sql: alter table "public"."restaurant" drop constraint "restaurant_name_address_key";
+  type: run_sql

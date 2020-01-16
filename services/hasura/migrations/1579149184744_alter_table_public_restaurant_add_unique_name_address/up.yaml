@@ -1,0 +1,4 @@
+- args:
+    sql: alter table "public"."restaurant" add constraint "restaurant_name_address_key"
+      unique ("name", "address");
+  type: run_sql
