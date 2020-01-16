@@ -41,7 +41,7 @@ class MapService {
         currentLocationManager.$authorized
             .sink { authorized in
                 if !App.store.state.map.hasChangedOnce {
-                    App.store.send(.map(.goToCurrent))
+                    App.store.send(.map(.moveToLocation(.init(.current))))
                 }
             }
             .store(in: &cancels)

@@ -9,8 +9,26 @@ fileprivate struct Constants {
     static let ONE_DEGREE_LAT: Double = 7000 / 111111
 }
 
-enum MapViewLocation {
-    case current, uncontrolled
+struct MapViewLocation: Equatable {
+    enum LocationType: Equatable {
+        case current
+        case location(lat: Double, long: Double)
+        case none
+    }
+    let at: LocationType
+    let time: NSDate
+    init(_ at: LocationType) {
+        self.at = at
+        self.time = NSDate()
+    }
+    var coordinate: CLLocationCoordinate2D? {
+        switch at {
+            case .current: return nil
+            case .none: return nil
+            case .location(let lat, let long):
+                return CLLocationCoordinate2D(latitude: lat, longitude: long)
+        }
+    }
 }
 
 struct CurrentMapPosition {
@@ -28,7 +46,7 @@ struct MapView: UIViewControllerRepresentable {
     var zoom: CGFloat
     var darkMode: Bool?
     var animate: Bool
-    var location: MapViewLocation
+    var moveToLocation: MapViewLocation?
     var locations: [GooglePlaceItem] = []
     var onMapSettle: OnChangeSettle?
 
@@ -43,7 +61,7 @@ struct MapView: UIViewControllerRepresentable {
             width: width,
             height: height,
             hiddenBottomPct: hiddenBottomPct,
-            location: location,
+            moveToLocation: moveToLocation,
             locations: locations,
             zoom: zoom,
             darkMode: darkMode,
@@ -84,7 +102,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     var width: CGFloat
     var height: CGFloat
     var hiddenBottomPct: CGFloat
-    var location: MapViewLocation
+    var moveToLocation: MapViewLocation?
     var locations: [GooglePlaceItem] = []
     var darkMode: Bool?
     var animate = false
@@ -98,7 +116,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         width: CGFloat,
         height: CGFloat,
         hiddenBottomPct: CGFloat = 0,
-        location: MapViewLocation,
+        moveToLocation: MapViewLocation?,
         locations: [GooglePlaceItem] = [],
         zoom: CGFloat?,
         darkMode: Bool?,
@@ -109,7 +127,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         self.width = width
         self.height = height
         self.hiddenBottomPct = hiddenBottomPct
-        self.location = location
+        self.moveToLocation = moveToLocation
         self.locations = locations
         self.darkMode = darkMode
         self.animate = animate ?? false
@@ -160,6 +178,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         if !self.hasSettled {
             return
         }
+        // TODO move this logic up
         if homeViewState.dragState != .idle || homeViewState.animationState != .idle {
             return
         }
@@ -200,7 +219,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
             self.locations = parent.locations
             self.updateLocations()
         }
-        if self.location != parent.location {
+        if self.moveToLocation != parent.moveToLocation {
+            self.moveToLocation = parent.moveToLocation
             self.updateMapLocation()
         }
         if self.hiddenBottomPct != parent.hiddenBottomPct {
@@ -229,29 +249,38 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     }
 
     func updateMapLocation() {
-        print("update location... \(self.location)")
-        if self.location == .current {
-            if let currentLocation = self.currentLocationService.lastLocation {
-                log.info("currentLocation \(currentLocation)")
-                self.updateCamera(currentLocation.coordinate)
-            } else {
-                // wait for location once
-                var updated = false
-                self.currentLocationService.$lastLocation
-                    .drop(while: { $0 == nil })
-                    .sink { loc in
-                        if !updated {
-                            updated = true
-                            DispatchQueue.main.async {
-                                let last = self.animate
-                                self.animate = false
-                                self.updateMapLocation()
-                                self.animate = last
-                            }
+        guard let moveTo = self.moveToLocation else { return }
+        switch moveTo.at {
+            case .current:
+                self.moveToCurrentLocation()
+            case .none:
+                return
+            case .location:
+                self.updateCamera(moveTo.coordinate)
+        }
+    }
+    
+    func moveToCurrentLocation() {
+        if let currentLocation = self.currentLocationService.lastLocation {
+            log.info("currentLocation \(currentLocation)")
+            self.updateCamera(currentLocation.coordinate)
+        } else {
+            // wait for location once
+            var updated = false
+            self.currentLocationService.$lastLocation
+                .drop(while: { $0 == nil })
+                .sink { loc in
+                    if !updated {
+                        updated = true
+                        DispatchQueue.main.async {
+                            let last = self.animate
+                            self.animate = false
+                            self.updateMapLocation()
+                            self.animate = last
                         }
                     }
-                    .store(in: &updateCancels)
             }
+            .store(in: &updateCancels)
         }
     }
 

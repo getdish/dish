@@ -13,12 +13,12 @@ extension AppState {
             latitude: 0.0,
             longitude: 0.0
         )
+        var moveToLocation: MapViewLocation? = nil
         var locationLabel: String = ""
         var showSearch = false
         var search = ""
         var searchResults: [CLLocation] = []
         var lastKnown: CLLocation? = nil
-        var isOnCurrent = true
         var hasChangedOnce = false
         var likelyPlaces: [GMSPlace] = []
     }
@@ -29,7 +29,7 @@ enum MapAction {
     case setLocationLabel(_ val: String)
     case listLikelyPlaces
     case setLikelyPlaces(_ locations: [GMSPlace])
-    case goToCurrent
+    case moveToLocation(_ location: MapViewLocation)
     case setLastKnown(_ location: CLLocation?)
     case setSearch(_ search: String)
     case setSearchResults(_ locations: [CLLocation])
@@ -41,8 +41,8 @@ func mapReducer(_ state: inout AppState, action: MapAction) {
             state.map.location = location
         case let .setLocationLabel(val):
             state.map.locationLabel = val
-        case .goToCurrent:
-            state.map.isOnCurrent = true
+        case let .moveToLocation(loc):
+            state.map.moveToLocation = loc
         case let .setLastKnown(location):
             state.map.lastKnown = location
         case let .setSearchResults(locations):

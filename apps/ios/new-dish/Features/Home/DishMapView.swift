@@ -28,7 +28,7 @@ struct DishMapView: View {
                 zoom: zoom,
                 darkMode: self.colorScheme == .dark,
                 animate: [.idle].contains(homeState.dragState) || homeState.animationState != .idle || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
-                location: store.state.map.isOnCurrent ? .current : .uncontrolled,
+                moveToLocation: store.state.map.moveToLocation,
                 locations: store.state.home.state.last!.searchResults.results.map { $0.place },
                 onMapSettle: { position in
                     self.service.position = position

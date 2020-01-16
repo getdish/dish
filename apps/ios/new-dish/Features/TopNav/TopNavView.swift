@@ -80,6 +80,7 @@ struct TopNavHome: View {
                     // home controls
                     HStack {
                         Button(action: {
+                            App.store.send(.map(.moveToLocation(.init(.current))))
                         }) {
                             VStack {
                                 Text(self.store.state.map.locationLabel)
