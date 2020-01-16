@@ -1,17 +1,9 @@
-//
-//  ContentView.swift
-//  new-dish
-//
-//  Created by Majid Jabrayilov on 12/5/19.
-//  Copyright © 2019 Majid Jabrayilov. All rights reserved.
-//
 import SwiftUI
-
-fileprivate let cardPad: CGFloat = 10.0
 
 struct RootView: View {
     var height: CGFloat = Screen.height
     var total = features.count - 4
+    var cardPad: CGFloat = 10.0
     
     @Environment(\.geometry) var appGeometry
     @State var dir: Axis.Set = .vertical {
@@ -94,7 +86,7 @@ struct RootView: View {
                     width: appGeometry?.size.width,
                     height: height
                 )
-                .animation(.spring())
+                    .animation(.spring())
                 
                 Button(action: {
                     self.dir = self.dir == .vertical ? .horizontal : .vertical
@@ -108,9 +100,9 @@ struct RootView: View {
             
             Spacer()
         }
-//        ContextMenuRootView {
-//            HomeContainerView()
-//        }
+        //        ContextMenuRootView {
+        //            HomeContainerView()
+        //        }
     }
 }
 
@@ -122,15 +114,41 @@ struct DishCardView: View, Identifiable {
     var dish: DishItem
     var display: DisplayCard = .full
     var body: some View {
-        GeometryReader { geometry in
-            FeatureCard(dish: self.dish, aspectRatio: geometry.size.width / geometry.size.height, at: .start)
-                .cornerRadius(14)
+        let display = self.display
+        let dish = self.dish
+        
+        return GeometryReader { geometry in
+            dish.image
+                .resizable()
+                .aspectRatio(geometry.size.width / geometry.size.height, contentMode: .fit)
+                .overlay(self.overlay)
+                .cornerRadius(display == .card ? 14 : 20)
                 .onTapGesture {
                     App.store.send(
-                        .home(.push(HomeStateItem(filters: [SearchFilter(name: self.dish.name)])))
+                        .home(.push(HomeStateItem(filters: [SearchFilter(name: dish.name)])))
                     )
             }
         }
+    }
+    
+    var overlay: some View {
+        ZStack(alignment: .bottomLeading) {
+            Rectangle().fill(
+                LinearGradient(
+                    gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black.opacity(0)]),
+                    startPoint: .bottom,
+                    endPoint: .center
+                )
+            )
+            VStack(alignment: .leading) {
+                Text(self.dish.name)
+                    .font(.system(size: 20))
+                    .bold()
+                //        Text(dish.park)
+            }
+            .padding()
+        }
+        .foregroundColor(.white)
     }
 }
 
