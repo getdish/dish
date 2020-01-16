@@ -191,25 +191,28 @@ class PagerStore: ObservableObject {
         
         // swipe to right
         let last = Double(self.indexLast)
-        if -end >= width / 4 {
+        if -end >= width / 3 {
             self.index = min(last + 1, Double(numPages - 1))
         }
         // swipe to left
-        else if end >= width / 4 {
+        else if end >= width / 3 {
             self.index = max(0, last - 1)
         }
         // didnt finish a swipe
         else {
             self.index = last
         }
-        print("drag end to index \(end) \(index)")
         
         // try and match speed roughly to their drag speed
         let speed = min(1, abs(end / Screen.width))
         let springResponse = Double(max(0.15, min(0.85, 1 - speed)))
+        
+        print("PagerView.dragEnd to \(end) \(index).... speed \(speed) springResponse \(springResponse)")
+        
         withAnimation(.spring(response: springResponse)) {
             self.offset = -width * CGFloat(self.index)
         }
+
         DispatchQueue.main.async {
             self.indexLast = Int(self.index)
             self.isGestureActive = false

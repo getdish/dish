@@ -522,7 +522,7 @@ struct HomeMainView: View {
                             )
                         )
                         .opacity(state.showCamera ? 0 : 1)
-                            .animation(.spring(), value: state.animationState == .animate)
+                        .animation(.spring(response: 0.25), value: state.animationState == .animate)
 
                         // searchbar
                         VStack {
@@ -538,7 +538,7 @@ struct HomeMainView: View {
                         .animation(.spring(), value: state.animationState == .animate)
                         .offset(y:
                             state.showCamera ?
-                                Screen.statusBarHeight + topNavHeight + 40 :
+                                mapHeight > Screen.height / 2 ? Screen.height * 2 : -Screen.height * 2 :
                                 mapHeight - 23 + state.searchBarYExtra
                         )
                         // searchinput always light

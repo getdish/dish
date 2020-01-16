@@ -27,7 +27,7 @@ struct DishCamera: View {
                     isCaptured: self.isCaptured
                 )
             }
-            .background(Color.orange)
+            .background(Color.black)
             .frame(minWidth: Screen.width, maxHeight: .infinity)
             
             DishCameraPictureOverlay()
