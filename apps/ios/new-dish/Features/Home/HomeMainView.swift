@@ -128,7 +128,6 @@ class HomeViewState: ObservableObject {
     }
     
     func setAnimationState(_ next: HomeAnimationState, _ duration: Int = 0) {
-        log.info()
         DispatchQueue.main.async {
             self.animationState = next
             // cancel last controlled animation
@@ -156,7 +155,7 @@ class HomeViewState: ObservableObject {
         log.info()
         DispatchQueue.main.async {
             self.setAnimationState(state, duration)
-            DispatchQueue.main.async {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(10)) {
                 withAnimation(animation) {
                     body()
                 }
@@ -431,7 +430,9 @@ struct HomeMainView: View {
         let mapHeight = state.mapHeight + mapHeightScrollReveal
         let zoom = mapHeight / 235 + 9.7
 
-        print("render HomeMainView -- mapHeight \(mapHeight) y \(state.y)")
+        print("render HomeMainView")
+        print("  - mapHeight \(mapHeight)")
+        print("  - animationState \(state.animationState)")
 
 //        return MagicMove(animate: state.animate) {
         return GeometryReader { geometry in
@@ -525,11 +526,11 @@ struct HomeMainView: View {
                             
                             Spacer()
                         }
-//                        .animation(
-//                            state.state == .animating ? .none :
-//                                state.state == .idle ? .spring(response: 0.25) : .spring(response: 0.1)
-//                        )
                         .padding(.horizontal, 10)
+                        .animation(
+                            state.animationState == .animate ? .spring() : .none
+                            //                                            state.state == .idle ? .spring(response: 0.25) : .spring(response: 0.1)
+                        )
                         .offset(y: mapHeight - 23 + state.searchBarYExtra)
                         // searchinput always light
                         .environment(\.colorScheme, .light)

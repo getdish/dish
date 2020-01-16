@@ -7,7 +7,7 @@ struct FilterButton: View {
     var body: some View {
         Button(action: action) {
             Text(label)
-                .foregroundColor(Color.white.opacity(0.85))
+                .foregroundColor(Color.primary.opacity(0.85))
                 .font(.system(size: 14))
         }
         .padding(.vertical, 7)
@@ -17,10 +17,10 @@ struct FilterButton: View {
         )
         .overlay(
             RoundedRectangle(cornerRadius: 80)
-                .stroke(Color.white.opacity(0.25), lineWidth: 2)
+                .stroke(Color.primary.opacity(0.25), lineWidth: 2)
         )
             .cornerRadius(80)
-            .shadow(color: Color.black.opacity(0.5), radius: 7, x: 0, y: 2)
+            .shadow(color: Color(.systemBackground).opacity(0.5), radius: 7, x: 0, y: 2)
     }
 }
 
