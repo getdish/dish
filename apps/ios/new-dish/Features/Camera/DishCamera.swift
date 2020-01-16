@@ -3,7 +3,6 @@ import Combine
 
 struct DishCamera: View {
     @EnvironmentObject var store: AppStore
-    @State var didPressCapture = true
     @State var isOpen = false
     var cancel: AnyCancellable?
     
@@ -13,10 +12,10 @@ struct DishCamera: View {
                 if self.store.state.home.showCamera == false {
                     return true
                 } else {
-                    return self.didPressCapture
+                    return self.store.state.camera.didCapture
                 }
             },
-            set: { self.didPressCapture = $0 }
+            set: { App.store.send(.camera(.capture($0))) }
         )
     }
     

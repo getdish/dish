@@ -53,6 +53,7 @@
 		AE6B104A23CFF20A00C33968 /* charleyrivers.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AE6B103923CFF20A00C33968 /* charleyrivers.jpg */; };
 		AE6B104B23CFF20A00C33968 /* rainbowlake.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AE6B103A23CFF20A00C33968 /* rainbowlake.jpg */; };
 		AE6B104D23CFF27000C33968 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = AE6B104C23CFF27000C33968 /* pin.png */; };
+		AE6B104F23D0E4B900C33968 /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6B104E23D0E4B900C33968 /* Camera.swift */; };
 		AE6CECCD23A843E600B08870 /* BottomNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6CECCC23A843E600B08870 /* BottomNav.swift */; };
 		AE7563B423A035E70094022B /* HomeMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B323A035E70094022B /* HomeMainView.swift */; };
 		AE7563B823A036500094022B /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B723A036500094022B /* Screen.swift */; };
@@ -152,6 +153,7 @@
 		AE6B103923CFF20A00C33968 /* charleyrivers.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = charleyrivers.jpg; sourceTree = "<group>"; };
 		AE6B103A23CFF20A00C33968 /* rainbowlake.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = rainbowlake.jpg; sourceTree = "<group>"; };
 		AE6B104C23CFF27000C33968 /* pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin.png; sourceTree = "<group>"; };
+		AE6B104E23D0E4B900C33968 /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
 		AE6CECCC23A843E600B08870 /* BottomNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomNav.swift; sourceTree = "<group>"; };
 		AE7563B323A035E70094022B /* HomeMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainView.swift; sourceTree = "<group>"; };
 		AE7563B723A036500094022B /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
@@ -342,6 +344,7 @@
 				AE872FF223CE976C00F84663 /* DishMapResults.swift */,
 				AE872FF623CEA5CD00F84663 /* DishRestaurantCard.swift */,
 				AE861A7E23A07D81004096BF /* DishMapControls.swift */,
+				AE1BBDB923C83E9E00C58A87 /* QuickFilters.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -358,8 +361,6 @@
 			isa = PBXGroup;
 			children = (
 				AE6CECCC23A843E600B08870 /* BottomNav.swift */,
-				AE1BBDB923C83E9E00C58A87 /* QuickFilters.swift */,
-				AE1BBDB723C83CA100C58A87 /* CameraButton.swift */,
 			);
 			path = BottomNav;
 			sourceTree = "<group>";
@@ -439,6 +440,7 @@
 			isa = PBXGroup;
 			children = (
 				AE0F474323B69276008F7418 /* DishCamera.swift */,
+				AE1BBDB723C83CA100C58A87 /* CameraButton.swift */,
 				AEED844423B672D000407266 /* CameraTopNav.swift */,
 			);
 			path = Camera;
@@ -450,6 +452,7 @@
 				1CE3548223986C5C004B3A84 /* AppStore.swift */,
 				AEF6558323B59BC000E49A51 /* Home.swift */,
 				AE872FF023CE76AE00F84663 /* HomeService.swift */,
+				AE6B104E23D0E4B900C33968 /* Camera.swift */,
 				AEAE67EB23B5A70A00B9D781 /* Map.swift */,
 				AE99091423CE646D00F1763C /* MapService.swift */,
 				AEED843D23B5A8E000407266 /* Mocks.swift */,
@@ -661,6 +664,7 @@
 				AEF6557F23B14DBA00E49A51 /* ContextMenuView.swift in Sources */,
 				AE861A8723A1727B004096BF /* TopNavMenuButton.swift in Sources */,
 				AEF6557B23B042CD00E49A51 /* HomeSearchBar.swift in Sources */,
+				AE6B104F23D0E4B900C33968 /* Camera.swift in Sources */,
 				AEA331F923A3385000B36A23 /* InlineAlertView.swift in Sources */,
 				AE6B0FE123CF9C3B00C33968 /* GMSMapView.swift in Sources */,
 				AEED843E23B5A8E000407266 /* Mocks.swift in Sources */,

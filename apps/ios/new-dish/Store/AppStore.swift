@@ -4,6 +4,7 @@ import Foundation
 struct AppState {
     var home = HomeState()
     var map = MapState()
+    var camera = CameraState()
     var disableTopNav = false
 }
 
@@ -11,6 +12,7 @@ struct AppState {
 enum AppAction {
     case home(_ action: HomeAction)
     case map(_ action: MapAction)
+    case camera(_ action: CameraAction)
     case setDisableTopNav(_ val: Bool)
 }
 
@@ -29,6 +31,8 @@ let appReducer = Reducer<AppState, AppAction> { state, action in
             homeReducer(&state, action: action)
         case let .map(action):
             mapReducer(&state, action: action)
+        case let .camera(action):
+            cameraReducer(&state, action: action)
         case let .setDisableTopNav(val):
             state.disableTopNav = val
     }

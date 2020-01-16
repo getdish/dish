@@ -6,19 +6,17 @@ struct CameraButton: View {
     
     var body: some View {
         ZStack {
-            ZStack {
-                Group {
-                    Image(systemName: "camera.fill")
-                        .resizable()
-                        .scaledToFit()
-                    
-//                    Image(systemName: "circle.fill")
-//                        .resizable()
-//                        .scaledToFit()
-//                        .frame(width: 17, height: 17)
-                }
-                .foregroundColor(.white)
+            Group {
+                Image(systemName: "camera.fill")
+                    .resizable()
+                    .scaledToFit()
+                
+                //                    Image(systemName: "circle.fill")
+                //                        .resizable()
+                //                        .scaledToFit()
+                //                        .frame(width: 17, height: 17)
             }
+            .foregroundColor(.white)
         }
         .padding(.all, 15)
         .background(
@@ -62,10 +60,15 @@ struct CameraButton: View {
             .opacity(self.isTapped ? 0.5 : 1)
             .onTapGesture {
                 self.lastTap = Date()
-                App.store.send(.home(.setShowCamera(!App.store.state.home.showCamera)))
+                if !App.store.state.home.showCamera {
+                    App.store.send(.home(.setShowCamera(true)))
+                } else {
+                    App.store.send(.camera(.capture(true)))
+                }
             }
-            .onLongPressGesture(minimumDuration: 0.5, pressing: { isPressing in
-//                print("CameraButton longpress isPressing... \(isPressing)")
+            .onLongPressGesture(minimumDuration: 10000, pressing: { isPressing in
+                self.isTapped = isPressing
+                print("CameraButton longpress isPressing... \(isPressing)")
 //                self.isTapped = isPressing
 //                App.store.send(.home(.setShowCamera(true)))
             }) {
