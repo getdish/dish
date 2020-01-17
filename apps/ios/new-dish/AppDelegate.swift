@@ -14,7 +14,7 @@ import XCGLogger
 // GLOBALS
 
 let log = XCGLogger.default
-
+let homeViewState = HomeViewState()
 let ANIMATION_SPEED: Double = 1
 
 func async(_ ms: Double = 0, execute: @escaping () -> Void) {

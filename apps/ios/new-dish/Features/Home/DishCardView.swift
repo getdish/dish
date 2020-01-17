@@ -22,7 +22,7 @@ struct DishCardView: View, Identifiable {
                     .scaledToFill()
                     .frame(width: self.width ?? geo.size.width, height: self.height ?? geo.size.height)
                     .overlay(self.overlay)
-                    .cornerRadius(display == .card ? 14 : 20)
+                    .cornerRadius(display == .card ? 14 : 18)
                     .clipped()
                     .shadow(color: Color.black.opacity(0.5), radius: 8, x: 0, y: 3)
                     .onTapGesture {

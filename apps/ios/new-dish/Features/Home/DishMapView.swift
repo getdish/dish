@@ -21,31 +21,28 @@ struct DishMapView: View {
 
         return VStack {
             ZStack {
-                ZStack {
-                    MapView(
-                        width: appWidth,
-                        height: appHeight,
-                        hiddenBottomPct: hiddenBottomPct,
-                        zoom: zoom,
-                        darkMode: self.colorScheme == .dark,
-                        animate: [.idle].contains(homeState.dragState) || homeState.animationState != .idle || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
-                        moveToLocation: store.state.map.moveToLocation,
-                        locations: store.state.home.state.last!.searchResults.results.map { $0.place },
-                        onMapSettle: { position in
-                            self.service.position = position
-                        }
-                    )
-                    
-                    // prevent touch on left/right sides for dragging between cards
-                    HStack {
-                        Color.black.opacity(0.00001).frame(width: 24)
-                        Color.clear
-                        Color.black.opacity(0.00001).frame(width: 24)
+                MapView(
+                    width: appWidth,
+                    height: appHeight,
+                    hiddenBottomPct: hiddenBottomPct,
+                    zoom: zoom,
+                    darkMode: self.colorScheme == .dark,
+                    animate: [.idle].contains(homeState.dragState) || homeState.animationState != .idle || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
+                    moveToLocation: store.state.map.moveToLocation,
+                    locations: store.state.home.state.last!.searchResults.results.map { $0.place },
+                    onMapSettle: { position in
+                        self.service.position = position
                     }
-                    
+                )
+                
+                // prevent touch on left/right sides for dragging between cards
+                HStack {
+                    Color.black.opacity(0.00001).frame(width: 24)
+                    Color.clear
+                    Color.black.opacity(0.00001).frame(width: 24)
                 }
                 
-                //                            // keyboard dismiss (above map, below content)
+                // keyboard dismiss (above map, below content)
                 if self.keyboard.state.height > 0 {
                     Color.black.opacity(0.2)
                         .transition(.opacity)
@@ -53,15 +50,36 @@ struct DishMapView: View {
                             self.keyboard.hide()
                     }
                 }
+                
+                if self.homeState.isNearTop {
+                    HStack {
+                        CustomButton({
+                            print("zoom out")
+                        }) {
+                            MapButton(icon: "chevron.left")
+                        }
+                        .frame(height: homeState.mapHeight)
+                        Spacer()
+                        CustomButton({
+                            print("zoom in")
+                        }) {
+                            MapButton(icon: "chevron.right")
+                        }
+                        .frame(height: homeState.mapHeight)
+                    }
+                    .frame(height: homeState.mapHeight)
+                    .animation(.spring())
+                }
             }
             .frame(height: homeState.mapHeight)
-            .cornerRadius(20)
+            .cornerRadius(self.homeState.isNearTop ? 40 : 20)
+            .scaleEffect(self.homeState.isNearTop ? 0.95 : 1)
             .shadow(color: Color.black, radius: 20, x: 0, y: 0)
             .clipped()
-                //                        .animation(.spring(), value: state.animationState == .animate)
-                .animation(.spring(response: 0.28))
-                .offset(y: homeState.showCamera ? -Screen.height : 0)
-                .rotationEffect(homeState.showCamera ? .degrees(-15) : .degrees(0))
+    //                        .animation(.spring(), value: state.animationState == .animate)
+            .animation(.spring(response: 0.28))
+            .offset(y: homeState.showCamera ? -Screen.height : 0)
+            .rotationEffect(homeState.showCamera ? .degrees(-15) : .degrees(0))
             
             Spacer()
         }
@@ -90,5 +108,59 @@ struct DishMapView: View {
             }
             .store(in: &cancels)
         }
+    }
+}
+
+struct MapButton: View {
+    let icon: String
+
+    var body: some View {
+        let cornerRadius: CGFloat = 8
+        return ZStack {
+            Group {
+                Image(systemName: icon)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 16, height: 16)
+            }
+            .foregroundColor(.white)
+        }
+        .padding(.all, 15)
+        .background(
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color.white.opacity(0),
+                    Color.white.opacity(0.4)
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
+            .background(
+                RadialGradient(
+                    gradient: Gradient(colors: [
+                        Color.white.opacity(0),
+                        Color.white.opacity(0.8)
+                    ]),
+                    center: .center,
+                    startRadius: 0,
+                    endRadius: 80
+                )
+        )
+            .cornerRadius(cornerRadius)
+            .frame(width: 58)
+            .animation(.spring(response: 0.5))
+            .shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 0)
+            .overlay(
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .stroke(Color.white.opacity(0.9), lineWidth: 1)
+        )
+            .overlay(
+                VStack {
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .stroke(Color.black.opacity(0.1), lineWidth: 1)
+                }
+                .padding(1)
+        )
     }
 }

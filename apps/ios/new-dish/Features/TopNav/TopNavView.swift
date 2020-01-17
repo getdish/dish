@@ -13,7 +13,7 @@ struct TopNavView: View {
         TopNavViewContent()
             .allowsHitTesting(!store.state.disableTopNav)
             .animation(.spring())
-            .offset(y: homeState.mapHeight < homeState.hideTopNavAt ? -100 : 0)
+            .offset(y: self.homeState.isNearTop ? -100 : 0)
     }
 }
 

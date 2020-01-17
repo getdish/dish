@@ -25,6 +25,7 @@
 		1CE3548A239871CB004B3A84 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE35489239871CB004B3A84 /* BottomSheetView.swift */; };
 		AE0C5FF523D2397D00BB5340 /* PrintGeometryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0C5FF423D2397D00BB5340 /* PrintGeometryView.swift */; };
 		AE0C5FF723D2414500BB5340 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0C5FF623D2414500BB5340 /* CustomButton.swift */; };
+		AE0C5FF923D2506800BB5340 /* HomeViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0C5FF823D2506800BB5340 /* HomeViewState.swift */; };
 		AE0F474423B69276008F7418 /* DishCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0F474323B69276008F7418 /* DishCamera.swift */; };
 		AE1BBDB423C8224200C58A87 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1BBDB323C8224200C58A87 /* CustomTextField.swift */; };
 		AE1BBDB623C8397900C58A87 /* CutoutCircleCentered.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1BBDB523C8397900C58A87 /* CutoutCircleCentered.swift */; };
@@ -129,6 +130,7 @@
 		958FBEA937B7052DE007A65D /* Pods-new-dish.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-new-dish.release.xcconfig"; path = "Target Support Files/Pods-new-dish/Pods-new-dish.release.xcconfig"; sourceTree = "<group>"; };
 		AE0C5FF423D2397D00BB5340 /* PrintGeometryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintGeometryView.swift; sourceTree = "<group>"; };
 		AE0C5FF623D2414500BB5340 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		AE0C5FF823D2506800BB5340 /* HomeViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewState.swift; sourceTree = "<group>"; };
 		AE0F474323B69276008F7418 /* DishCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishCamera.swift; sourceTree = "<group>"; };
 		AE1BBDB323C8224200C58A87 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		AE1BBDB523C8397900C58A87 /* CutoutCircleCentered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutoutCircleCentered.swift; sourceTree = "<group>"; };
@@ -347,6 +349,7 @@
 			children = (
 				1C3CFE6323998FF2004B2EEA /* HomeContainerView.swift */,
 				1CE354872398714D004B3A84 /* HomeView.swift */,
+				AE0C5FF823D2506800BB5340 /* HomeViewState.swift */,
 				AE7563B323A035E70094022B /* HomeMainView.swift */,
 				AEF6558023B2205F00E49A51 /* HomeMainContent.swift */,
 				AEA87E4223B976EB009F07DB /* HomeMainFilters.swift */,
@@ -675,6 +678,7 @@
 				AE872FF123CE76AE00F84663 /* HomeService.swift in Sources */,
 				AE861A8123A16DA6004096BF /* TopNavView.swift in Sources */,
 				AEF6558423B59BC000E49A51 /* Home.swift in Sources */,
+				AE0C5FF923D2506800BB5340 /* HomeViewState.swift in Sources */,
 				AE6A9C1123C5265C00003059 /* GooglePlaceItem.swift in Sources */,
 				AE861A8923A172E8004096BF /* BlurView.swift in Sources */,
 				AEF6557F23B14DBA00E49A51 /* ContextMenuView.swift in Sources */,
