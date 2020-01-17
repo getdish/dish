@@ -183,6 +183,13 @@ struct MagicItem<Content>: View where Content: View {
                 self.store.state == .animate ? 0 :
                     self.store.position == at ? 1 : 0
             )
+            .onDisappear {
+                if self.at == .start {
+                    magicItems.startItems[self.id] = nil
+                } else {
+                    magicItems.endItems[self.id] = nil
+                }
+            }
             .overlay(
                 GeometryReader { geometry -> Run in
                     let frame = geometry.frame(in: .global)

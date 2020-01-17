@@ -1,9 +1,11 @@
 import SwiftUI
 
-struct DishRestaurantCard: View {
+struct DishRestaurantCard: View, Identifiable {
     var restaurant: RestaurantItem
+    var id: String { restaurant.id }
     var aspectRatio: CGFloat = 2 / 2
     var isMini: Bool = false
+    var at: MagicItemPosition = .start
     
     var gradientBottom: LinearGradient {
         LinearGradient(
@@ -22,22 +24,24 @@ struct DishRestaurantCard: View {
     }
     
     var body: some View {
-        ZStack {
-            restaurant.image
-                .resizable()
-                .aspectRatio(aspectRatio, contentMode: .fit)
-                .overlay(
-                    Rectangle().fill(gradientBottom)
-            )
-                .overlay(
-                    DishRestaurantCardText(
-                        restaurant: restaurant,
-                        isMini: isMini
-                    )
+        MagicItem("restaurant-\(id)", at: at) {
+            ZStack {
+                self.restaurant.image
+                    .resizable()
+                    .aspectRatio(self.aspectRatio, contentMode: .fit)
+                    .overlay(
+                        Rectangle().fill(self.gradientBottom)
                 )
-                .cornerRadius(16)
-                .clipped()
-            
+                    .overlay(
+                        DishRestaurantCardText(
+                            restaurant: self.restaurant,
+                            isMini: self.isMini
+                        )
+                )
+                    .cornerRadius(16)
+                    .clipped()
+                
+            }
         }
     }
 }

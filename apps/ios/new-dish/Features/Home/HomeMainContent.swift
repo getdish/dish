@@ -98,9 +98,9 @@ struct HomeMapSearchResults: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
                 ForEach(Selectors.home.lastState().searchResults.results) { item in
-                    DishRestaurantCard(
+                    return DishRestaurantCard(
                         restaurant: RestaurantItem(
-                            id: 0,
+                            id: item.id,
                             name: item.name,
                             imageName: "turtlerock",
                             address: "",
@@ -109,7 +109,8 @@ struct HomeMapSearchResults: View {
                             rating: 8
                         ),
                         aspectRatio: 1.8,
-                        isMini: true
+                        isMini: true,
+                        at: .end
                     )
                         .frame(width: 140, height: cardRowHeight - 40)
                         .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)

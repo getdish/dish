@@ -15,7 +15,7 @@ struct DishCardView: View, Identifiable {
         let display = self.display
         let dish = self.dish
         
-        return MagicItem("\(id)", at: at) {
+        return MagicItem("dish-\(id)", at: at) {
             GeometryReader { geo in
                 dish.image
                     .resizable()
