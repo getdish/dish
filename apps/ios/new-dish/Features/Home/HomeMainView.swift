@@ -2,7 +2,7 @@ import SwiftUI
 import Combine
 
 // used in search results for now...
-let cardRowHeight: CGFloat = 140
+let cardRowHeight: CGFloat = 90
 
 fileprivate let topNavHeight: CGFloat = 45
 fileprivate let hideTopNavAtVal: CGFloat = 160 + Screen.statusBarHeight
@@ -467,7 +467,6 @@ struct HomeMainView: View {
                     // results
                     HomeMainContent()
                         .offset(y: state.showCamera ? Screen.height : 0)
-                        .opacity(isOnSearchResults && state.isSnappedToBottom ? 0 : 1)
                         .animation(.spring(), value: state.animationState == .animate)
                         .zIndex(
                             state.isSnappedToBottom ? 11 : 9

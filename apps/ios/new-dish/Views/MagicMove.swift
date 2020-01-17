@@ -61,7 +61,7 @@ struct MagicMove<Content>: View where Content: View {
     init(
         _ position: MagicItemPosition,
         run: NSDate? = nil,
-        duration: Double = 1000 * 2,
+        duration: Double = 500,
         @ViewBuilder content: @escaping () -> Content
     ) {
         self.content = content
@@ -184,12 +184,13 @@ struct MagicItem<Content>: View where Content: View {
                     self.store.position == at ? 1 : 0
             )
             .overlay(
-                GeometryReader { geometry in
-                    Run(debounce: 100) {
+                GeometryReader { geometry -> Run in
+                    let frame = geometry.frame(in: .global)
+                    
+                    return Run(debounce: 100) {
                         if magicItems.state != .done {
                             return
                         }
-                        let frame = geometry.frame(in: .global)
                         let item = MagicItemDescription(
                             view: self.contentView,
                             frame: frame,

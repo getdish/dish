@@ -11,11 +11,13 @@ struct Run: View {
         self.block = block
     }
     
+    func cancelLastRun() {
+        if let lr = lastRun { lr.cancel() }
+    }
+    
     var body: some View {
-        if let lr = lastRun {
-            lr.cancel()
-        }
-        var cancelled = 0
+        cancelLastRun()
+        var cancelled = 1
         async(debounce) {
             if cancelled > 1 { return }
             self.block()
@@ -26,5 +28,8 @@ struct Run: View {
             }
         }
         return AnyView(EmptyView())
+            .onDisappear {
+                self.cancelLastRun()
+        }
     }
 }

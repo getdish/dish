@@ -8,10 +8,9 @@ let bottomNavHeight: CGFloat = 115
 import SwiftUI
 
 struct HomeMainContent: View {
-    var total = features.count - 4
-    
     @Environment(\.geometry) var appGeometry
     @EnvironmentObject var homeState: HomeViewState
+    @EnvironmentObject var store: AppStore
     
     @State var animatePosition: MagicItemPosition = .start
     
@@ -28,23 +27,28 @@ struct HomeMainContent: View {
             
             MagicMove(self.animatePosition) {
                 ZStack(alignment: .topLeading) {
-                    HomeMainContentExplore()
+                    // results list below map
+                    ZStack {
+                        if Selectors.home.isOnSearchResults() {
+                            HomeSearchResultsView(
+                                state: Selectors.home.lastState()
+                            )
+                        } else {
+                            HomeMainContentExplore()
+                        }
+                    }
                         .offset(y: self.homeState.mapHeight)
                     
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 18) {
-                            ForEach(0 ..< features.count) { index in
-                                DishCardView(
-                                    dish: features[index],
-                                    at: .end,
-                                    display: .card
-                                )
-                                    .frame(width: 160, height: 100)
-                            }
+                    // results bar below map
+                    ZStack {
+                        if Selectors.home.isOnSearchResults() {
+                            HomeMainContentMapSearchResults()
+                        } else {
+                            HomeMainContentMapExplore()
                         }
-                        .padding(20)
                     }
-                    .offset(y: self.homeState.snappedToBottomMapHeight - 160)
+                        .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
+                        .offset(y: self.homeState.snappedToBottomMapHeight - 160)
                     
                     VStack {
                         Button(action: {
@@ -54,9 +58,9 @@ struct HomeMainContent: View {
                         }
                     }.padding(50)
                 }
-                
             }
             .frame(height: self.appGeometry?.size.height ?? Screen.fullHeight)
+            .clipped()
             
             Spacer()
         }
@@ -64,23 +68,54 @@ struct HomeMainContent: View {
     }
 }
 
-//struct HomeMainContent: View {
-//    let isHorizontal: Bool
-//    @EnvironmentObject var store: AppStore
-//
-//    var body: some View {
-//        let isOnSearchResults = Selectors.home.isOnSearchResults()
-//
-//        return ZStack {
-//            HomeMainContentExplore(isHorizontal: self.isHorizontal)
-//
-//            // pages as you drill in below home
-//            if isOnSearchResults {
-//                HomeMainContentSearchPage()
-//            }
-//        }
-//    }
-//}
+struct HomeMainContentMapExplore: View {
+    @EnvironmentObject var store: AppStore
+    
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 16) {
+                ForEach(0 ..< features.count) { index in
+                    DishCardView(
+                        dish: features[index],
+                        at: .end,
+                        display: .card
+                    )
+                        .frame(width: 150, height: cardRowHeight)
+                }
+            }
+            .padding(20)
+        }
+    }
+}
+
+struct HomeMainContentMapSearchResults: View {
+    @EnvironmentObject var store: AppStore
+    
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 16) {
+                ForEach(Selectors.home.lastState().searchResults.results) { item in
+                    DishRestaurantCard(
+                        restaurant: RestaurantItem(
+                            id: 0,
+                            name: item.name,
+                            imageName: "turtlerock",
+                            address: "",
+                            phone: "",
+                            tags: [],
+                            rating: 8
+                        ),
+                        aspectRatio: 1.8,
+                        isMini: true
+                    )
+                        .frame(width: 160, height: cardRowHeight)
+                        .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
+                }
+            }
+            .padding(20)
+        }
+    }
+}
 
 struct HomeMainContentExplore: View {
     @Environment(\.geometry) var appGeometry
@@ -172,13 +207,5 @@ struct HomeMainContentSearchPage: View {
                 )
             }
         }
-    }
-}
-
-struct DishRowCard: View {
-    var dish: DishItem
-    var body: some View {
-        FeatureCard(dish: dish, aspectRatio: 1.8)
-            .cornerRadius(14)
     }
 }
