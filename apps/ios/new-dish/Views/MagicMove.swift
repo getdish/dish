@@ -180,6 +180,7 @@ fileprivate struct MagicItemDescription: Identifiable, Equatable {
 
 struct MagicItem<Content>: View where Content: View {
     @ObservedObject fileprivate var store = magicItems
+    @Environment(\.geometry) var appGeometry
 
     let content: Content
     let id: String
@@ -199,12 +200,18 @@ struct MagicItem<Content>: View where Content: View {
                 .overlay(
                     GeometryReader { geometry -> Run in
                         let frame = geometry.frame(in: .global)
-                        print("frame?")
+                        
+                        // off screen avoid doing things
+                        let offYN = frame.minY + frame.height < 0
+                        let offYP = frame.minY > Screen.fullHeight
+                        let offXN = frame.minX + frame.width < 0
+                        let offXP = frame.minX > Screen.width
+                        if offYN || offYP || offXN || offXP {
+                            return Run {}
+                        }
                         return Run(throttle: 16) {
                             // could prevent during animation right?
-//                            if magicItems.state == .animate { return }
-                            
-                            print("set! \(self.id)")
+                            //                            if magicItems.state == .animate { return }
                             let item = MagicItemDescription(
                                 view: self.contentView,
                                 frame: frame,
@@ -216,6 +223,7 @@ struct MagicItem<Content>: View where Content: View {
                             let curItem = items[self.id]
                             
                             if curItem != item {
+                                print("MagicItem.set! \(self.id) xy,wh \(frame.minX.rounded()) x \(frame.minY.rounded()) | \(frame.width.rounded()) x \(frame.height.rounded())")
                                 if self.at == .start {
                                     magicItems.startItems[self.id] = item
                                 } else {

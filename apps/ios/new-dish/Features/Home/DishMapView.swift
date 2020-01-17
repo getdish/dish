@@ -56,14 +56,14 @@ struct DishMapView: View {
                         CustomButton({
                             print("zoom out")
                         }) {
-                            MapButton(icon: "chevron.left")
+                            MapButton(icon: "minus.magnifyingglass")
                         }
                         .frame(height: homeState.mapHeight)
                         Spacer()
                         CustomButton({
                             print("zoom in")
                         }) {
-                            MapButton(icon: "chevron.right")
+                            MapButton(icon: "plus.magnifyingglass")
                         }
                         .frame(height: homeState.mapHeight)
                     }
@@ -121,21 +121,23 @@ struct MapButton: View {
                 Image(systemName: icon)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 16, height: 16)
+                    .frame(width: 20, height: 20)
             }
             .foregroundColor(.white)
         }
-        .padding(.all, 15)
-        .background(
-            LinearGradient(
-                gradient: Gradient(colors: [
-                    Color.white.opacity(0),
-                    Color.white.opacity(0.4)
-                ]),
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        )
+        .padding(.horizontal, 12)
+        .padding(.vertical, 40)
+//        .background(
+//            LinearGradient(
+//                gradient: Gradient(colors: [
+//                    Color.white.opacity(0),
+//                    Color.white.opacity(0.4)
+//                ]),
+//                startPoint: .top,
+//                endPoint: .bottom
+//            )
+//            .scaledToFill()
+//        )
             .background(
                 RadialGradient(
                     gradient: Gradient(colors: [
@@ -146,14 +148,15 @@ struct MapButton: View {
                     startRadius: 0,
                     endRadius: 80
                 )
+                .scaledToFill()
         )
-            .cornerRadius(cornerRadius)
             .frame(width: 58)
+            .cornerRadius(cornerRadius)
             .animation(.spring(response: 0.5))
             .shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 0)
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(Color.white.opacity(0.9), lineWidth: 1)
+                    .stroke(Color.white.opacity(0.5), lineWidth: 1)
         )
             .overlay(
                 VStack {
