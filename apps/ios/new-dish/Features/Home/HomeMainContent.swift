@@ -3,23 +3,208 @@ import SwiftUI
 fileprivate let filterBarHeight: CGFloat = 55
 let bottomNavHeight: CGFloat = 115
 
+import SwiftUI
+
 struct HomeMainContent: View {
-    let isHorizontal: Bool
-    @EnvironmentObject var store: AppStore
+    var height: CGFloat
+    var total = features.count - 4
+    var cardPad: CGFloat = 10.0
     
-    var body: some View {
-        let isOnSearchResults = Selectors.home.isOnSearchResults()
-        
-        return ZStack {
-            HomeMainContentExplore(isHorizontal: self.isHorizontal)
-            
-            // pages as you drill in below home
-            if isOnSearchResults {
-                HomeMainContentSearchPage()
+    @EnvironmentObject var homeView: HomeViewState
+    @Environment(\.geometry) var appGeometry
+    @State var dir: Axis.Set = .vertical {
+        willSet(val) {
+            if val == .horizontal {
+                self.finalDir = val
+            } else {
+                async(400) {
+                    self.finalDir = val
+                }
             }
         }
     }
+    @State var finalDir: Axis.Set = .vertical
+    
+    var cardWidth: CGFloat {
+        switch dir {
+            case .vertical: return Screen.width - 20
+            case .horizontal: return 160.0
+            default: return 0
+        }
+    }
+    var cardHeight: CGFloat {
+        switch dir {
+            case .vertical: return Screen.width - 20
+            case .horizontal: return 160.0 * (1/1.8)
+            default: return 0
+        }
+    }
+    
+    var innerWidth: CGFloat {
+        finalDir == .vertical ? appGeometry?.size.width ?? Screen.width : CGFloat(total) * (cardWidth + cardPad)
+    }
+    
+    var innerHeight: CGFloat {
+        finalDir == .horizontal ? height : CGFloat(total) * (cardHeight + cardPad)
+    }
+    
+    func cardX(_ x: Int) -> CGFloat {
+        dir == .vertical ? cardPad : CGFloat(x) * (cardWidth + cardPad)
+    }
+    
+    func cardY(_ y: Int) -> CGFloat {
+        var val: CGFloat = dir == .horizontal ? 0 : CGFloat(y) * (cardHeight + cardPad)
+        if homeView.isSnappedToBottom {
+            val += homeView.mapHeight - cardHeight - 75
+        } else {
+            val += homeView.mapHeight + filterBarHeight + homeView.scrollRevealY
+        }
+        return val
+    }
+    
+    var body: some View {
+        VStack {
+            Run {
+                if homeViewState.isSnappedToBottom && self.dir == .vertical {
+                    self.dir = .horizontal
+                }
+                if !homeViewState.isSnappedToBottom && self.dir == .horizontal {
+                    self.dir = .vertical
+                }
+            }
+            
+            ZStack {
+//                ScrollView(showsIndicators: false) {
+//                    VStack(spacing: 0) {
+//                        ScrollListener(onScroll: { frame in
+//                            if self.homeState.dragState == .idle {
+//                                let mapHeight = self.homeState.mapHeight
+//                                self.homeState.setScrollY(
+//                                    mapHeight - frame.minY - Screen.statusBarHeight - self.homeState.scrollRevealY
+//                                )
+//                            }
+//                        })
+//                        Spacer().frame(height: filterBarHeight + 22 + self.homeState.scrollRevealY)
+//                        self.content
+//                        Spacer().frame(height: bottomNavHeight)
+//                        Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)
+//                    }
+//                }
+//                .offset(y: homeState.mapHeight - self.homeState.scrollRevealY)
+                
+                ScrollView(finalDir, showsIndicators: false) {
+                    ZStack {
+                        VStack {
+                            HStack {
+                                ZStack {
+                                    ForEach(0 ..< total) { index in
+                                        DishCardView(
+                                            dish: features[index],
+                                            display: self.dir == .vertical ? .full : .card
+                                        )
+                                            .frame(width: self.cardWidth, height: self.cardHeight)
+                                            .shadow(color: Color.black.opacity(0.5), radius: 8, x: 0, y: 3)
+                                            .offset(x: self.cardX(index), y: self.cardY(index))
+                                    }
+                                }
+                                .frame(
+                                    width: cardWidth,
+                                    height: cardHeight
+                                )
+                                Spacer()
+                            }
+                            Spacer()
+//                            Spacer().frame(height: bottomNavHeight)
+//                            Spacer().frame(height: homeViewState.mapHeight - homeViewState.scrollRevealY)
+                        }
+                    }
+                    .frame(
+                        width: innerWidth,
+                        height: innerHeight
+                    )
+                }
+                .frame(
+                    width: appGeometry?.size.width,
+                    height: height
+                )
+                    .animation(.spring())
+            }
+            .padding(.top, Screen.statusBarHeight * 2)
+            .frame(height: height)
+            .clipped()
+            
+            Spacer()
+        }
+        //        ContextMenuRootView {
+        //            HomeContainerView()
+        //        }
+    }
 }
+
+struct DishCardView: View, Identifiable {
+    enum DisplayCard {
+        case card, full, fullscreen
+    }
+    var id: Int { dish.id }
+    var dish: DishItem
+    var display: DisplayCard = .full
+    var body: some View {
+        let display = self.display
+        let dish = self.dish
+        
+        return GeometryReader { geometry in
+            dish.image
+                .resizable()
+                .aspectRatio(geometry.size.width / geometry.size.height, contentMode: .fit)
+                .overlay(self.overlay)
+                .cornerRadius(display == .card ? 14 : 20)
+                .onTapGesture {
+                    App.store.send(
+                        .home(.push(HomeStateItem(filters: [SearchFilter(name: dish.name)])))
+                    )
+            }
+        }
+    }
+    
+    var overlay: some View {
+        ZStack(alignment: .bottomLeading) {
+            Rectangle().fill(
+                LinearGradient(
+                    gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black.opacity(0)]),
+                    startPoint: .bottom,
+                    endPoint: .center
+                )
+            )
+            VStack(alignment: .leading) {
+                Text(self.dish.name)
+                    .font(.system(size: 20))
+                    .bold()
+                //        Text(dish.park)
+            }
+            .padding()
+        }
+        .foregroundColor(.white)
+    }
+}
+
+
+//struct HomeMainContent: View {
+//    let isHorizontal: Bool
+//    @EnvironmentObject var store: AppStore
+//
+//    var body: some View {
+//        let isOnSearchResults = Selectors.home.isOnSearchResults()
+//
+//        return ZStack {
+//            HomeMainContentExplore(isHorizontal: self.isHorizontal)
+//
+//            // pages as you drill in below home
+//            if isOnSearchResults {
+//                HomeMainContentSearchPage()
+//            }
+//        }
+//    }
+//}
 
 struct HomeMainContentExplore: View {
     let isHorizontal: Bool

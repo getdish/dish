@@ -53,15 +53,20 @@ struct HomeViewContent: View {
                 pagerStore: homePager,
                 disableDragging: self.disableDragging || App.store.state.home.showCamera
                 ) { isDragging in
+                    //
+                    // ⚠️ ⚠️ ⚠️
+                    //    ADDING .clipped() to any of these causes perf issues!!!
+                    //    animations below seem to be choppier
+                    // ⚠️ ⚠️ ⚠️
+                    //
+                    
                     // account page
                     DishAccount()
-                        .clipped()
                         .cornerRadius(80)
                         .zIndex(0)
                     
                     // home page
                     HomeMainView()
-                        .clipped()
                         .cornerRadius(80)
                         .shadow(
                             color: Color.black.opacity(self.shadowStr),

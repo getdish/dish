@@ -270,11 +270,11 @@
 		1CE3547823986B2A004B3A84 /* Features */ = {
 			isa = PBXGroup;
 			children = (
-				AE2B6BA023AAD67E007BCD25 /* TopNav */,
-				AE2B6B9F23AAB779007BCD25 /* BottomNav */,
-				1CE3548423986DDD004B3A84 /* Home */,
 				AEA331ED23A3370200B36A23 /* Account */,
+				AE2B6B9F23AAB779007BCD25 /* BottomNav */,
 				AEED844623B6733600407266 /* Camera */,
+				1CE3548423986DDD004B3A84 /* Home */,
+				AE2B6BA023AAD67E007BCD25 /* TopNav */,
 			);
 			path = Features;
 			sourceTree = "<group>";

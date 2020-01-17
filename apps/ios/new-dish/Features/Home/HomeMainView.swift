@@ -454,23 +454,26 @@ struct HomeMainView: View {
                             }
                     }
                 
-                    DishCamera()
-                
-                    // cover camera
-                    Color.black
-                        .animation(.spring())
-                        .opacity(state.showCamera ? 0 : 1)
+                    // camera
+                    ZStack {
+                        DishCamera()
+                        
+                        // cover camera
+                        Color.black
+                            .animation(.spring())
+                            .opacity(state.showCamera ? 0 : 1)
+                    }
 
-                    // below the map
-
-                    // main content
+                    // results
                     HomeMainContent(
-                        isHorizontal: self.state.isSnappedToBottom
+                        height: self.appGeometry?.size.height ?? Screen.fullHeight
                     )
                     .offset(y: state.showCamera ? Screen.height : 0)
                     .opacity(isOnSearchResults && state.isSnappedToBottom ? 0 : 1)
                     .animation(.spring(), value: state.animationState == .animate)
-                    .zIndex(10)
+                    .zIndex(
+                        state.isSnappedToBottom ? 11 : 9
+                    )
 
                     // map
                     VStack {
@@ -500,6 +503,7 @@ struct HomeMainView: View {
 
                         Spacer()
                     }
+                        .zIndex(10)
 
 
                     // everything above the map
@@ -537,6 +541,7 @@ struct HomeMainView: View {
                         // searchinput always light
                         .environment(\.colorScheme, .light)
                     }
+                    .zIndex(20)
                     .environment(\.colorScheme, .dark)
                 
                     // make everything untouchable while dragging
