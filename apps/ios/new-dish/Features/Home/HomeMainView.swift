@@ -1,9 +1,6 @@
 import SwiftUI
 import Combine
 
-// used in search results for now...
-let cardRowHeight: CGFloat = 90
-
 fileprivate let topNavHeight: CGFloat = 45
 fileprivate let hideTopNavAtVal: CGFloat = 160 + Screen.statusBarHeight
 fileprivate let searchBarHeight: CGFloat = 45
@@ -197,7 +194,10 @@ class HomeViewState: ObservableObject {
         )
     }
 
-    var snapToBottomAt: CGFloat { appHeight * snapToBottomYMovePct }
+    var snapToBottomAt: CGFloat {
+        appHeight * snapToBottomYMovePct
+    }
+    
     var snappedToBottomMapHeight: CGFloat { appHeight - 190 }
     var isSnappedToBottom: Bool { y > snapToBottomAt }
     var wasSnappedToBottom = false
@@ -305,7 +305,9 @@ class HomeViewState: ObservableObject {
             if toBottom {
                 self.y = self.snappedToBottomMapHeight - self.mapInitialHeight
             } else {
-                self.y = self.snapToBottomAt - resistanceYBeforeSnap
+                self.y = self.snapToBottomAt - resistanceYBeforeSnap - (
+                    Selectors.home.isOnSearchResults() ? Screen.height * 0.1 : 0
+                )
             }
         }
     }

@@ -3,7 +3,10 @@ import Combine
 
 fileprivate let items = features.chunked(into: 2)
 fileprivate let filterBarHeight: CGFloat = 55
+
 let bottomNavHeight: CGFloat = 115
+// used in search results for now...
+let cardRowHeight: CGFloat = 140
 
 import SwiftUI
 
@@ -34,7 +37,7 @@ struct HomeMainContent: View {
                                 state: Selectors.home.lastState()
                             )
                         } else {
-                            HomeMainContentExplore()
+                            HomeContentExplore()
                         }
                     }
                         .offset(y: self.homeState.mapHeight)
@@ -42,13 +45,13 @@ struct HomeMainContent: View {
                     // results bar below map
                     ZStack {
                         if Selectors.home.isOnSearchResults() {
-                            HomeMainContentMapSearchResults()
+                            HomeMapSearchResults()
                         } else {
-                            HomeMainContentMapExplore()
+                            HomeMapExplore()
                         }
                     }
                         .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
-                        .offset(y: self.homeState.snappedToBottomMapHeight - 160)
+                        .offset(y: self.homeState.snappedToBottomMapHeight - cardRowHeight - 20)
                     
                     VStack {
                         Button(action: {
@@ -68,7 +71,7 @@ struct HomeMainContent: View {
     }
 }
 
-struct HomeMainContentMapExplore: View {
+struct HomeMapExplore: View {
     @EnvironmentObject var store: AppStore
     
     var body: some View {
@@ -80,7 +83,7 @@ struct HomeMainContentMapExplore: View {
                         at: .end,
                         display: .card
                     )
-                        .frame(width: 150, height: cardRowHeight)
+                        .frame(width: 150, height: cardRowHeight - 40)
                 }
             }
             .padding(20)
@@ -88,7 +91,7 @@ struct HomeMainContentMapExplore: View {
     }
 }
 
-struct HomeMainContentMapSearchResults: View {
+struct HomeMapSearchResults: View {
     @EnvironmentObject var store: AppStore
     
     var body: some View {
@@ -108,16 +111,18 @@ struct HomeMainContentMapSearchResults: View {
                         aspectRatio: 1.8,
                         isMini: true
                     )
-                        .frame(width: 160, height: cardRowHeight)
+                        .frame(width: 140, height: cardRowHeight - 40)
                         .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
                 }
             }
+            .frame(height: cardRowHeight - 40)
             .padding(20)
         }
+        .offset(y: -40)
     }
 }
 
-struct HomeMainContentExplore: View {
+struct HomeContentExplore: View {
     @Environment(\.geometry) var appGeometry
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
