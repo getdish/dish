@@ -8,10 +8,31 @@ fileprivate class MagicItemsStore: ObservableObject {
     
     @Published var position: MagicItemPosition = .start
     @Published var state: MoveState = .done
+    @Published var triggerUpdate =  NSDate()
+    
+    var clear: () -> Void = {}
     
     var nextPosition: MagicItemPosition = .start
-    var startItems = [String: MagicItemDescription]()
-    var endItems = [String: MagicItemDescription]()
+    var startItems = [String: MagicItemDescription]() {
+        didSet {
+            self.debounceUpdate()
+        }
+    }
+    var endItems = [String: MagicItemDescription]() {
+        didSet {
+            self.debounceUpdate()
+        }
+    }
+    
+    func debounceUpdate() {
+        clear()
+        var cancel = false
+        clear = { cancel = true }
+        async(100) {
+            if cancel { return }
+            self.triggerUpdate = NSDate()
+        }
+    }
     
     func animate(_ position: MagicItemPosition, duration: Double) {
         self.state = .start
@@ -40,7 +61,7 @@ struct MagicMove<Content>: View where Content: View {
     init(
         _ position: MagicItemPosition,
         run: NSDate? = nil,
-        duration: Double = 1000,
+        duration: Double = 1000 * 2,
         @ViewBuilder content: @escaping () -> Content
     ) {
         self.content = content
@@ -64,13 +85,26 @@ struct MagicMove<Content>: View where Content: View {
         let startValues = magicItems.startItems.map { $0.value }
         let endValues = magicItems.endItems.map { $0.value }
         let keys = magicItems.startItems
-            .map { $0.key }
-            .filter { startKey in
-                magicItems.endItems.contains(where: { $0.key == startKey })
+            .filter { startItem in
+                magicItems.endItems.contains(where: { $0.value.id == startItem.value.id })
             }
+            .map { $0.key }
+        
+        print("MISSING --- \(keys.count) --- \(startValues.count - keys.count)")
         
         return ZStack {
-            content()
+            ZStack(alignment: .topLeading) {
+                content()
+
+//                easy debugging
+//                ForEach(startValues) { val in
+//                    Color.green
+//                        .opacity(0.5)
+//                        .overlay(Text("\(val.frame.minY)").foregroundColor(.white))
+//                        .frame(width: val.frame.width, height: val.frame.height)
+//                        .offset(x: val.frame.minX, y: val.frame.minY)
+//                }
+            }
             
             if store.state != .done {
                 ZStack(alignment: .topLeading) {
@@ -84,8 +118,6 @@ struct MagicMove<Content>: View where Content: View {
                             self.store.position == .start ? start : end
                         let animatePosition =
                             (self.store.nextPosition == .start ? start : end).frame
-                        
-                        print("\(animateItem.id) now its \(animatePosition.width)x\(animatePosition.height) at \(animatePosition.minY)")
                         
                         return AnyView(
                             // what is alignment
@@ -113,7 +145,9 @@ struct MagicMove<Content>: View where Content: View {
                 }
             }
         }
-        .edgesIgnoringSafeArea(.all)
+            // why...
+            .frame(height: Screen.height - 13)
+            .edgesIgnoringSafeArea(.all)
     }
 }
 
@@ -121,7 +155,7 @@ enum MagicItemPosition {
     case start, end
 }
 
-fileprivate struct MagicItemDescription {
+fileprivate struct MagicItemDescription: Identifiable {
     var view: AnyView
     var frame: CGRect
     var id: String
@@ -151,10 +185,7 @@ struct MagicItem<Content>: View where Content: View {
             )
             .overlay(
                 GeometryReader { geometry in
-                    Run {
-                        if self.at == .start{
-                            print("?? \(self.id)")
-                        }
+                    Run(debounce: 100) {
                         if magicItems.state != .done {
                             return
                         }
@@ -167,9 +198,6 @@ struct MagicItem<Content>: View where Content: View {
                         )
                         if self.at == .start {
                             magicItems.startItems[self.id] = item
-                            if self.id == "1002" {
-                                print("set to \(frame) vs \(magicItems.endItems[self.id]!.frame)")
-                            }
                         } else {
                             magicItems.endItems[self.id] = item
                         }

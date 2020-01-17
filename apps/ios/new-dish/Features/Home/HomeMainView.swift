@@ -57,7 +57,7 @@ class HomeViewState: ObservableObject {
             .sink { val in
                 if !self.isSnappedToTop && !self.isSnappedToBottom {
                     async {
-                        self.y = -100 //self.snapToBottomAt - 1
+                        self.y = self.snapToBottomAt - 1
                     }
                 }
             }
@@ -466,12 +466,12 @@ struct HomeMainView: View {
 
                     // results
                     HomeMainContent()
-                    .offset(y: state.showCamera ? Screen.height : 0)
-                    .opacity(isOnSearchResults && state.isSnappedToBottom ? 0 : 1)
-                    .animation(.spring(), value: state.animationState == .animate)
-                    .zIndex(
-                        state.isSnappedToBottom ? 11 : 9
-                    )
+                        .offset(y: state.showCamera ? Screen.height : 0)
+                        .opacity(isOnSearchResults && state.isSnappedToBottom ? 0 : 1)
+                        .animation(.spring(), value: state.animationState == .animate)
+                        .zIndex(
+                            state.isSnappedToBottom ? 11 : 9
+                        )
 
                     // map
                     VStack {

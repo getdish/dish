@@ -17,126 +17,50 @@ struct HomeMainContent: View {
     
     var body: some View {
         VStack {
-//            Run {
-//                if self.homeView.isSnappedToBottom && self.animatePosition == .start {
-//                    self.animatePosition = .end
-//                }
-//                if !self.homeView.isSnappedToBottom && self.animatePosition == .end {
-//                    self.animatePosition = .start
-//                }
-//            }
+            Run {
+                if self.homeState.isSnappedToBottom && self.animatePosition == .start {
+                    self.animatePosition = .end
+                }
+                if !self.homeState.isSnappedToBottom && self.animatePosition == .end {
+                    self.animatePosition = .start
+                }
+            }
             
             MagicMove(self.animatePosition) {
                 ZStack(alignment: .topLeading) {
-//                    HomeMainContentExplore()
-
-                    ScrollView(showsIndicators: false) {
-                        VStack(spacing: 0) {
-                            Spacer().frame(height: filterBarHeight + 22 + self.homeState.scrollRevealY)
-                            VStack(spacing: 8) {
-                                ForEach(0 ..< items.count) { index in
-                                    HStack(spacing: 8) {
-                                        ForEach(0 ..< 2) { index2 in
-                                            DishCardView(
-                                                dish: items[index][index2],
-                                                at: .start,
-                                                display: .full,
-                                                height: 120
-                                            )
-                                        }
-                                    }
-                                    .padding(.horizontal)
-                                }
-                            }
-                            Spacer().frame(height: bottomNavHeight)
-                            Spacer().frame(height: self.homeState.mapHeight - self.homeState.scrollRevealY)
-                        }
-                    }
+                    HomeMainContentExplore()
+                        .offset(y: self.homeState.mapHeight)
                     
-//                    ScrollView(.vertical) {
-//                        VStack {
-//                            ForEach(0 ..< self.total) { index in
-//                                DishCardView(
-//                                    dish: features[index],
-//                                    at: .start,
-//                                    display: .full
-//                                )
-//                                    .frame(width: 400, height: 400)
-//                                    .shadow(color: Color.black.opacity(0.5), radius: 8, x: 0, y: 3)
-//                            }
-//                        }
-//                    }
-                    
-                    ScrollView(.horizontal) {
-                        HStack {
-                            ForEach(0 ..< self.total) { index in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 18) {
+                            ForEach(0 ..< features.count) { index in
                                 DishCardView(
                                     dish: features[index],
                                     at: .end,
                                     display: .card
                                 )
-                                    .frame(width: 160, height: 120)
-                                    .shadow(color: Color.black.opacity(0.5), radius: 8, x: 0, y: 3)
+                                    .frame(width: 160, height: 100)
                             }
                         }
+                        .padding(20)
                     }
+                    .offset(y: self.homeState.snappedToBottomMapHeight - 160)
+                    
+                    VStack {
+                        Button(action: {
+                            self.animatePosition = self.animatePosition == .start ? .end : .start
+                        }) {
+                            Text("Go")
+                        }
+                    }.padding(50)
                 }
-                .offset(y: self.homeState.mapHeight)
                 
-                //                ScrollView(finalDir, showsIndicators: false) {
-                //                    VStack {
-                //                        VStack {
-                //                            HStack {
-                //                                ZStack {
-                //                                    ForEach(0 ..< total) { index in
-                //                                        DishCardView(
-                //                                            dish: features[index],
-                //                                            display: self.dir == .vertical ? .full : .card
-                //                                        )
-                //                                            .frame(width: self.cardWidth, height: self.cardHeight)
-                //                                            .shadow(color: Color.black.opacity(0.5), radius: 8, x: 0, y: 3)
-                //                                            .offset(x: self.cardX(index), y: self.cardY(index))
-                //                                    }
-                //                                }
-                //                                .frame(
-                //                                    width: cardWidth,
-                //                                    height: cardHeight
-                //                                )
-                //                                Spacer()
-                //                            }
-                //                            Spacer()
-                ////                            Spacer().frame(height: bottomNavHeight)
-                ////                            Spacer().frame(height: homeViewState.mapHeight - homeViewState.scrollRevealY)
-                //                        }
-                //                    }
-                //                    .background(Color.yellow)
-                //                    .frame(
-                //                        width: innerWidth,
-                //                        height: innerHeight
-                //                    )
-                //                    .introspectScrollView { scrollView in
-                //                        let x: UIScrollView = scrollView
-                //                        x.isDirectionalLockEnabled = true
-                //                        self.scrollView = scrollView
-                //                    }
-                //                }
-                //                .frame(
-                //                    width: appGeometry?.size.width,
-                //                    height: height
-                //                )
-                //                    .animation(.spring())
-                
-                Button(action: {
-                    self.animatePosition = self.animatePosition == .start ? .end : .start
-                }) {
-                    Text("Go")
-                }
             }
             .frame(height: self.appGeometry?.size.height ?? Screen.fullHeight)
-            .clipped()
             
             Spacer()
         }
+        .edgesIgnoringSafeArea(.all)
     }
 }
 
@@ -248,73 +172,6 @@ struct HomeMainContentSearchPage: View {
                 )
             }
         }
-    }
-}
-
-struct HomeScrollableContent<Content>: View where Content: View {
-    @EnvironmentObject var store: AppStore
-    @EnvironmentObject var homeState: HomeViewState
-    @Environment(\.geometry) var appGeometry
-    let content: Content
-    
-    init(@ViewBuilder content: () -> Content) {
-        self.content = content()
-    }
-    
-    var body: some View {
-        VStack {
-            Spacer()
-            .offset(y: -self.homeState.scrollRevealY)
-        }
-    }
-    
-    var mask: some View {
-        LinearGradient(
-            gradient: .init(colors: [
-                Color.white.opacity(0),
-                Color.white.opacity(0),
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black,
-                Color.black
-            ]),
-            startPoint: .top,
-            endPoint: .bottom
-        )
     }
 }
 
