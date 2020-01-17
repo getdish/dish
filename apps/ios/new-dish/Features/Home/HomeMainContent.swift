@@ -12,46 +12,36 @@ struct HomeMainContent: View {
     @Environment(\.geometry) var appGeometry
     @EnvironmentObject var homeView: HomeViewState
     
-    @ObservedObject var service = HomeMainContentService()
-    
-    class HomeMainContentService: ObservableObject {
-        @Published var animatePosition: MagicItemPosition = .start
-        var cancels: Set<AnyCancellable> = []
-
-        init() {
-            homeViewState.$y
-                .map { _ in
-                    homeViewState.isSnappedToBottom
-                }
-                .removeDuplicates()
-                .map { isSnappedToBottom in
-                    async {
-                        if isSnappedToBottom {
-                            self.animatePosition = .end
-                        } else {
-                            self.animatePosition = .start
-                        }
-                    }
-                }
-                .sink {}
-                .store(in: &cancels)
-        }
-    }
+    @State var animatePosition: MagicItemPosition = .start
     
     var body: some View {
         VStack {
-            //            Run {
-            //                if homeViewState.isSnappedToBottom && self.dir == .vertical {
-            //                    self.dir = .horizontal
-            //                }
-            //                if !homeViewState.isSnappedToBottom && self.dir == .horizontal {
-            //                    self.dir = .vertical
-            //                }
-            //            }
+//            Run {
+//                if self.homeView.isSnappedToBottom && self.animatePosition == .start {
+//                    self.animatePosition = .end
+//                }
+//                if !self.homeView.isSnappedToBottom && self.animatePosition == .end {
+//                    self.animatePosition = .start
+//                }
+//            }
             
-            MagicMove(self.service.animatePosition) {
+            MagicMove(self.animatePosition) {
                 ZStack(alignment: .topLeading) {
                     HomeMainContentExplore()
+                    
+//                    ScrollView(.vertical) {
+//                        VStack {
+//                            ForEach(0 ..< self.total) { index in
+//                                DishCardView(
+//                                    dish: features[index],
+//                                    at: .start,
+//                                    display: .full
+//                                )
+//                                    .frame(width: 400, height: 400)
+//                                    .shadow(color: Color.black.opacity(0.5), radius: 8, x: 0, y: 3)
+//                            }
+//                        }
+//                    }
                     
                     ScrollView(.horizontal) {
                         HStack {
@@ -67,6 +57,7 @@ struct HomeMainContent: View {
                         }
                     }
                 }
+                .offset(y: self.homeView.mapHeight)
                 
                 //                ScrollView(finalDir, showsIndicators: false) {
                 //                    VStack {
@@ -112,7 +103,7 @@ struct HomeMainContent: View {
                 //                    .animation(.spring())
                 
                 Button(action: {
-                    self.service.animatePosition = self.service.animatePosition == .start ? .end : .start
+                    self.animatePosition = self.animatePosition == .start ? .end : .start
                 }) {
                     Text("Go")
                 }
@@ -122,59 +113,8 @@ struct HomeMainContent: View {
             
             Spacer()
         }
-        .offset(y: homeView.mapHeight)
     }
 }
-
-struct DishCardView: View, Identifiable {
-    enum DisplayCard {
-        case card, full, fullscreen
-    }
-    var id: Int { dish.id }
-    var dish: DishItem
-    var at: MagicItemPosition = .start
-    var display: DisplayCard = .full
-    var body: some View {
-        let display = self.display
-        let dish = self.dish
-        
-        return MagicItem("\(id)", at: at) {
-            GeometryReader { geometry in
-                dish.image
-                    .resizable()
-                    .aspectRatio(geometry.size.width / geometry.size.height, contentMode: .fit)
-                    .overlay(self.overlay)
-                    .cornerRadius(display == .card ? 14 : 20)
-                    .onTapGesture {
-                        App.store.send(
-                            .home(.push(HomeStateItem(filters: [SearchFilter(name: dish.name)])))
-                        )
-                }
-            }
-        }
-    }
-    
-    var overlay: some View {
-        ZStack(alignment: .bottomLeading) {
-            Rectangle().fill(
-                LinearGradient(
-                    gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black.opacity(0)]),
-                    startPoint: .bottom,
-                    endPoint: .center
-                )
-            )
-            VStack(alignment: .leading) {
-                Text(self.dish.name)
-                    .font(.system(size: 20))
-                    .bold()
-                //        Text(dish.park)
-            }
-            .padding()
-        }
-        .foregroundColor(.white)
-    }
-}
-
 
 //struct HomeMainContent: View {
 //    let isHorizontal: Bool
@@ -263,21 +203,19 @@ struct HomeExploreDishes: View {
     let spacing: CGFloat = 14
     
     var body: some View {
-        let width = (self.appGeometry?.size.width ?? Screen.width) / 2 - self.spacing * 2
-        let height = width * (1/1.4)
-        return VStack(spacing: self.spacing) {
+        VStack(spacing: self.spacing) {
             ForEach(0 ..< self.items.count) { index in
                 HStack(spacing: self.spacing) {
                     ForEach(self.items[index]) { item in
                         DishCardView(
                             dish: item,
                             at: .start,
-                            display: .full
+                            display: .full,
+                            height: 120
                         )
-                            // without height set it will change size during animation
-                            .frame(width: width, height: height)
                     }
                 }
+                .padding(.horizontal)
             }
         }
     }
@@ -297,18 +235,18 @@ struct HomeScrollableContent<Content>: View where Content: View {
         VStack {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
-                    ScrollListener(onScroll: { frame in
-                        if self.homeState.dragState == .idle {
-                            let mapHeight = self.homeState.mapHeight
-                            self.homeState.setScrollY(
-                                mapHeight - frame.minY - Screen.statusBarHeight - self.homeState.scrollRevealY
-                            )
-                        }
-                    })
-                    Spacer().frame(height: filterBarHeight + 22 + self.homeState.scrollRevealY)
+//                    ScrollListener(onScroll: { frame in
+//                        if self.homeState.dragState == .idle {
+//                            let mapHeight = self.homeState.mapHeight
+//                            self.homeState.setScrollY(
+//                                mapHeight - frame.minY - Screen.statusBarHeight - self.homeState.scrollRevealY
+//                            )
+//                        }
+//                    })
+//                    Spacer().frame(height: filterBarHeight + 22 + self.homeState.scrollRevealY)
                     self.content
-                    Spacer().frame(height: bottomNavHeight)
-                    Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)
+//                    Spacer().frame(height: bottomNavHeight)
+//                    Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)
                 }
             }
             .offset(y: -self.homeState.scrollRevealY)

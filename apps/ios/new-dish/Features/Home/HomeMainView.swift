@@ -33,7 +33,7 @@ class HomeViewState: ObservableObject {
     @Published private(set) var appHeight: CGFloat = Screen.height
     @Published private(set) var scrollY: CGFloat = 0
     // initialize it at where the snapToBottom will be about
-    @Published private(set) var y: CGFloat = (Screen.height + Screen.statusBarHeight) * snapToBottomYMovePct - 1
+    @Published private(set) var y: CGFloat = Screen.fullHeight * snapToBottomYMovePct - 1
     @Published private(set) var searchBarYExtra: CGFloat = 0
     @Published private(set) var hasScrolled: HomeScrollState = .none
     @Published private(set) var hasMovedBar = false
@@ -56,8 +56,8 @@ class HomeViewState: ObservableObject {
             .debounce(for: .milliseconds(200), scheduler: App.queueMain)
             .sink { val in
                 if !self.isSnappedToTop && !self.isSnappedToBottom {
-                    DispatchQueue.main.async {
-                        self.y = self.snapToBottomAt - 1
+                    async {
+                        self.y = -100 //self.snapToBottomAt - 1
                     }
                 }
             }

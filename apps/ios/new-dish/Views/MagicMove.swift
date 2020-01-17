@@ -48,20 +48,26 @@ struct MagicMove<Content>: View where Content: View {
         self.lastContent = content()
         self.position = position
         if position != lastPosition {
+            print("animate! new pos")
             lastPosition = position
             self.lastRun = run
             store.animate(position, duration: duration)
         }
         else if run != nil && self.lastRun != run {
+            print("animate! new run")
             self.lastRun = run
             store.animate(position, duration: duration)
         }
     }
     
     var body: some View {
-        let keys = magicItems.startItems.map { $0.key }
         let startValues = magicItems.startItems.map { $0.value }
         let endValues = magicItems.endItems.map { $0.value }
+        let keys = magicItems.startItems
+            .map { $0.key }
+            .filter { startKey in
+                magicItems.endItems.contains(where: { $0.key == startKey })
+            }
         
         return ZStack {
             content()
@@ -69,11 +75,9 @@ struct MagicMove<Content>: View where Content: View {
             if store.state != .done {
                 ZStack(alignment: .topLeading) {
                     ForEach(keys.indices) { index -> AnyView in
-                        if index == 0 { print("loop") }
-
                         let start = startValues[index]
                         guard let end = endValues.first(where: { $0.id == startValues[index].id }) else {
-                            return AnyView(start.view)
+                            return AnyView(EmptyView())
                         }
                         
                         let animateItem: MagicItemDescription =
@@ -81,9 +85,7 @@ struct MagicMove<Content>: View where Content: View {
                         let animatePosition =
                             (self.store.nextPosition == .start ? start : end).frame
                         
-                        if index == 0 {
-                            print("do it \(animatePosition.minY)")
-                        }
+                        print("\(animateItem.id) now its \(animatePosition.width)x\(animatePosition.height) at \(animatePosition.minY)")
                         
                         return AnyView(
                             // what is alignment
