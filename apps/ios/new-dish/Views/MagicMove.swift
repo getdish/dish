@@ -223,7 +223,7 @@ struct MagicItem<Content>: View where Content: View {
                             let curItem = items[self.id]
                             
                             if curItem != item {
-                                print("MagicItem.set! \(self.id) xy,wh \(frame.minX.rounded()) x \(frame.minY.rounded()) | \(frame.width.rounded()) x \(frame.height.rounded())")
+                                print("sideeffect MagicItem.items[\(self.id)] = (xy,wh) \(frame.minX.rounded()) x \(frame.minY.rounded()) | \(frame.width.rounded()) x \(frame.height.rounded())")
                                 if self.at == .start {
                                     magicItems.startItems[self.id] = item
                                 } else {

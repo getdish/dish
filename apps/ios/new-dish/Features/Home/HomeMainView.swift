@@ -118,7 +118,7 @@ struct HomeMainView: View {
         // pushed map below the border radius of the bottomdrawer
         let isOnSearchResults = Selectors.home.isOnSearchResults()
         if isOnSearchResults != wasOnSearchResults {
-            DispatchQueue.main.async {
+            async {
                 self.wasOnSearchResults = isOnSearchResults
                 if isOnSearchResults {
                     self.state.moveToSearchResults()
@@ -130,18 +130,16 @@ struct HomeMainView: View {
         let isOnCamera = App.store.state.home.showCamera
         if isOnCamera != wasOnCamera {
             print("CHANGE camera \(isOnCamera) \(wasOnCamera)")
-            DispatchQueue.main.async {
+            async {
                 self.wasOnCamera = isOnCamera
                 self.state.setShowCamera(isOnCamera)
             }
         }
         
         
-        if let height = appGeometry?.size.height {
-            if height != state.appHeight {
-                DispatchQueue.main.async {
-                    self.state.setAppHeight(height)
-                }
+        if let height = appGeometry?.size.height, height != state.appHeight {
+            async {
+                self.state.setAppHeight(height)
             }
         }
     }

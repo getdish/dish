@@ -29,7 +29,17 @@ class HomeViewState: ObservableObject {
     @Published private(set) var appHeight: CGFloat = Screen.height
     @Published private(set) var scrollY: CGFloat = 0
     // initialize it at where the snapToBottom will be about
-    @Published private(set) var y: CGFloat = Screen.fullHeight * snapToBottomYMovePct - 1
+    @Published private(set) var y: CGFloat = Screen.fullHeight * 0.3 * snapToBottomYMovePct - 1 {
+        willSet(y) {
+            // util - break when the searchbar is at y
+            #if DEBUG
+            print("y \(y)")
+            if false, y > snapToBottomAt { // <- example
+                raise(SIGINT)
+            }
+            #endif
+        }
+    }
     @Published private(set) var searchBarYExtra: CGFloat = 0
     @Published private(set) var hasScrolled: HomeScrollState = .none
     @Published private(set) var hasMovedBar = false
@@ -53,7 +63,9 @@ class HomeViewState: ObservableObject {
             .sink { val in
                 if !self.isSnappedToTop && !self.isSnappedToBottom {
                     async {
-                        self.y = self.snapToBottomAt - 1
+                        let y = self.snapToBottomAt - 1
+                        print("sideeffect appHeight.setY \(y)")
+                        self.y = y
                     }
                 }
         }
@@ -86,6 +98,7 @@ class HomeViewState: ObservableObject {
                 // map up/down on keyboard open/close
                 if !self.isSnappedToBottom {
                     self.animate {
+                        print("sideeffect homeViewKeyboardState.setY \(isOpen)")
                         if isOpen {
                             let str = max(0, 1 - (self.snapToBottomAt - self.y) / self.snapToBottomAt)
                             let amt = 170 * str
