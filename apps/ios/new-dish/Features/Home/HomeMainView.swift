@@ -151,7 +151,7 @@ class HomeViewState: ObservableObject {
         }
     }
     
-    func animate(_ animation: Animation? = .spring(), state: HomeAnimationState = .controlled, duration: Int = 400, _ body: @escaping () -> Void) {
+    func animate(_ animation: Animation? = Animation.spring().speed(ANIMATION_SPEED), state: HomeAnimationState = .controlled, duration: Int = 400, _ body: @escaping () -> Void) {
         log.info()
         self.setAnimationState(state, duration)
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(10)) {

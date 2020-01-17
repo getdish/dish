@@ -28,7 +28,7 @@ struct HomeMainContent: View {
                 }
             }
             
-            MagicMove(self.animatePosition) {
+            MagicMove(self.animatePosition, duration: 500 * (1 / ANIMATION_SPEED)) {
                 ZStack(alignment: .topLeading) {
                     // results list below map
                     ZStack {

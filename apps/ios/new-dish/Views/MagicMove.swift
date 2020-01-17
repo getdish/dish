@@ -13,12 +13,12 @@ fileprivate class MagicItemsStore: ObservableObject {
     var clear: () -> Void = {}
     
     var nextPosition: MagicItemPosition = .start
-    var startItems = [String: MagicItemDescription]() {
+    var startItems = [String: MagicItemDescription?]() {
         didSet {
             self.debounceUpdate()
         }
     }
-    var endItems = [String: MagicItemDescription]() {
+    var endItems = [String: MagicItemDescription?]() {
         didSet {
             self.debounceUpdate()
         }
@@ -82,11 +82,12 @@ struct MagicMove<Content>: View where Content: View {
     }
     
     var body: some View {
-        let startValues = magicItems.startItems.map { $0.value }
-        let endValues = magicItems.endItems.map { $0.value }
+        let startValues = magicItems.startItems.map { $0.value }.filter { $0 != nil }
+        let endValues = magicItems.endItems.map { $0.value }.filter { $0 != nil }
         let keys = magicItems.startItems
+            .filter { $0.value != nil }
             .filter { startItem in
-                magicItems.endItems.contains(where: { $0.value.id == startItem.value.id })
+                endValues.contains(where: { $0!.id == startItem.value!.id })
             }
             .map { $0.key }
         
@@ -109,15 +110,15 @@ struct MagicMove<Content>: View where Content: View {
             if store.state != .done {
                 ZStack(alignment: .topLeading) {
                     ForEach(keys.indices) { index -> AnyView in
-                        let start = startValues[index]
-                        guard let end = endValues.first(where: { $0.id == startValues[index].id }) else {
+                        let start = startValues[index]!
+                        guard let end = endValues.first(where: { $0?.id == startValues[index]?.id }) else {
                             return AnyView(EmptyView())
                         }
                         
                         let animateItem: MagicItemDescription =
-                            self.store.position == .start ? start : end
+                            self.store.position == .start ? start : end!
                         let animatePosition =
-                            (self.store.nextPosition == .start ? start : end).frame
+                            (self.store.nextPosition == .start ? start : end!).frame
                         
                         return AnyView(
                             // what is alignment
@@ -184,6 +185,7 @@ struct MagicItem<Content>: View where Content: View {
                     self.store.position == at ? 1 : 0
             )
             .onDisappear {
+                print("bye \(self.id)")
                 if self.at == .start {
                     magicItems.startItems[self.id] = nil
                 } else {
@@ -193,8 +195,8 @@ struct MagicItem<Content>: View where Content: View {
             .overlay(
                 GeometryReader { geometry -> Run in
                     let frame = geometry.frame(in: .global)
-                    
                     return Run(debounce: 100) {
+                        print("set! \(self.id)")
                         if magicItems.state != .done {
                             return
                         }

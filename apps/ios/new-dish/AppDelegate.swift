@@ -11,8 +11,11 @@ import GoogleMaps
 import GooglePlaces
 import XCGLogger
 
-// Init state
+// GLOBALS
+
 let log = XCGLogger.default
+
+let ANIMATION_SPEED: Double = 0.1
 
 func async(_ ms: Double = 0, execute: @escaping () -> Void) {
     if ms > 0 {
