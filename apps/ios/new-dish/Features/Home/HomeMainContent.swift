@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 fileprivate let filterBarHeight: CGFloat = 55
 let bottomNavHeight: CGFloat = 115
@@ -6,66 +7,35 @@ let bottomNavHeight: CGFloat = 115
 import SwiftUI
 
 struct HomeMainContent: View {
-    var height: CGFloat
     var total = features.count - 4
-    var cardPad: CGFloat = 10.0
     
-    @State private var scrollView: UIScrollView? = nil
-    @State private var animatePosition: MagicItemPosition = .start
-    
-    @EnvironmentObject var homeView: HomeViewState
     @Environment(\.geometry) var appGeometry
-    @State var dir: Axis.Set = .vertical {
-        willSet(val) {
-            self.animatePosition = val == .horizontal ? .end : .start
-            if val == .horizontal {
-                async {
-                    self.finalDir = val
+    @EnvironmentObject var homeView: HomeViewState
+    
+    @ObservedObject var service = HomeMainContentService()
+    
+    class HomeMainContentService: ObservableObject {
+        @Published var animatePosition: MagicItemPosition = .start
+        var cancels: Set<AnyCancellable> = []
+
+        init() {
+            homeViewState.$y
+                .map { _ in
+                    homeViewState.isSnappedToBottom
                 }
-            } else {
-                async(400) {
-                    self.finalDir = val
+                .removeDuplicates()
+                .map { isSnappedToBottom in
+                    async {
+                        if isSnappedToBottom {
+                            self.animatePosition = .end
+                        } else {
+                            self.animatePosition = .start
+                        }
+                    }
                 }
-            }
+                .sink {}
+                .store(in: &cancels)
         }
-    }
-    @State var finalDir: Axis.Set = .vertical
-    
-    var cardWidth: CGFloat {
-        switch dir {
-            case .vertical: return Screen.width - 20
-            case .horizontal: return 160.0
-            default: return 0
-        }
-    }
-    var cardHeight: CGFloat {
-        switch dir {
-            case .vertical: return Screen.width - 20
-            case .horizontal: return 160.0 * (1/1.8)
-            default: return 0
-        }
-    }
-    
-    var innerWidth: CGFloat {
-        finalDir == .vertical ? appGeometry?.size.width ?? Screen.width : CGFloat(total) * (cardWidth + cardPad)
-    }
-    
-    var innerHeight: CGFloat {
-        finalDir == .horizontal ? height : CGFloat(total) * (cardHeight + cardPad)
-    }
-    
-    func cardX(_ x: Int) -> CGFloat {
-        dir == .vertical ? cardPad : CGFloat(x) * (cardWidth + cardPad)
-    }
-    
-    func cardY(_ y: Int) -> CGFloat {
-        var val: CGFloat = dir == .horizontal ? 0 : CGFloat(y) * (cardHeight + cardPad)
-        if dir == .horizontal {
-            val += homeView.mapHeight - cardHeight - 75
-        } else {
-            val += homeView.mapHeight + filterBarHeight + homeView.scrollRevealY
-        }
-        return val
     }
     
     var body: some View {
@@ -79,21 +49,9 @@ struct HomeMainContent: View {
             //                }
             //            }
             
-            MagicMove(self.animatePosition) {
+            MagicMove(self.service.animatePosition) {
                 ZStack(alignment: .topLeading) {
-                    ScrollView(.vertical) {
-                        VStack {
-                            ForEach(0 ..< self.total) { index in
-                                DishCardView(
-                                    dish: features[index],
-                                    at: .start,
-                                    display: .full
-                                )
-                                    .frame(width: 400, height: 400)
-                                    .shadow(color: Color.black.opacity(0.5), radius: 8, x: 0, y: 3)
-                            }
-                        }
-                    }
+                    HomeMainContentExplore()
                     
                     ScrollView(.horizontal) {
                         HStack {
@@ -109,25 +67,6 @@ struct HomeMainContent: View {
                         }
                     }
                 }
-                
-                
-                //                ScrollView(showsIndicators: false) {
-                //                    VStack(spacing: 0) {
-                //                        ScrollListener(onScroll: { frame in
-                //                            if self.homeState.dragState == .idle {
-                //                                let mapHeight = self.homeState.mapHeight
-                //                                self.homeState.setScrollY(
-                //                                    mapHeight - frame.minY - Screen.statusBarHeight - self.homeState.scrollRevealY
-                //                                )
-                //                            }
-                //                        })
-                //                        Spacer().frame(height: filterBarHeight + 22 + self.homeState.scrollRevealY)
-                //                        self.content
-                //                        Spacer().frame(height: bottomNavHeight)
-                //                        Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)
-                //                    }
-                //                }
-                //                .offset(y: homeState.mapHeight - self.homeState.scrollRevealY)
                 
                 //                ScrollView(finalDir, showsIndicators: false) {
                 //                    VStack {
@@ -173,20 +112,17 @@ struct HomeMainContent: View {
                 //                    .animation(.spring())
                 
                 Button(action: {
-                    self.dir = self.dir == .vertical ? .horizontal : .vertical
+                    self.service.animatePosition = self.service.animatePosition == .start ? .end : .start
                 }) {
                     Text("Go")
                 }
             }
-            .padding(.top, Screen.statusBarHeight * 2)
-            .frame(height: height)
+            .frame(height: self.appGeometry?.size.height ?? Screen.fullHeight)
             .clipped()
             
             Spacer()
         }
-        //        ContextMenuRootView {
-        //            HomeContainerView()
-        //        }
+        .offset(y: homeView.mapHeight)
     }
 }
 
@@ -259,7 +195,6 @@ struct DishCardView: View, Identifiable {
 //}
 
 struct HomeMainContentExplore: View {
-    let isHorizontal: Bool
     @Environment(\.geometry) var appGeometry
     
     var body: some View {
@@ -268,8 +203,6 @@ struct HomeMainContentExplore: View {
                 HomeExploreDishes()
             }
             .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
-            .opacity(self.isHorizontal ? 0 : 1)
-            .disabled(self.isHorizontal)
         }
         .edgesIgnoringSafeArea(.all)
         .clipped()
@@ -332,13 +265,15 @@ struct HomeExploreDishes: View {
     var body: some View {
         let width = (self.appGeometry?.size.width ?? Screen.width) / 2 - self.spacing * 2
         let height = width * (1/1.4)
-        
-        print("HomeExploreDishes \(width)")
         return VStack(spacing: self.spacing) {
             ForEach(0 ..< self.items.count) { index in
                 HStack(spacing: self.spacing) {
                     ForEach(self.items[index]) { item in
-                        DishCardView(dish: item)
+                        DishCardView(
+                            dish: item,
+                            at: .start,
+                            display: .full
+                        )
                             // without height set it will change size during animation
                             .frame(width: width, height: height)
                     }
@@ -376,8 +311,7 @@ struct HomeScrollableContent<Content>: View where Content: View {
                     Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)
                 }
             }
-            .offset(y: homeState.mapHeight - self.homeState.scrollRevealY)
-            //            .mask(self.mask.offset(y: homeState.mapHeight + filterBarHeight / 4))
+            .offset(y: -self.homeState.scrollRevealY)
         }
     }
     

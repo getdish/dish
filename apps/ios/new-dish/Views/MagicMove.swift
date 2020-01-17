@@ -13,12 +13,12 @@ fileprivate class MagicItemsStore: ObservableObject {
     var startItems = [String: MagicItemDescription]()
     var endItems = [String: MagicItemDescription]()
     
-    func animate(_ position: MagicItemPosition) {
+    func animate(_ position: MagicItemPosition, duration: Double) {
         self.state = .start
-        async(8) {
+        async(2) {
             self.nextPosition = position
             self.state = .animate
-            async(400.0) {
+            async(duration) {
                 self.position = position
                 self.state = .done
             }
@@ -37,19 +37,24 @@ struct MagicMove<Content>: View where Content: View {
     @ObservedObject fileprivate var store = magicItems
     var animation: Animation
     
-    init(_ position: MagicItemPosition, run: NSDate? = nil, animation: Animation = .spring(response: 0.3), @ViewBuilder content: @escaping () -> Content) {
+    init(
+        _ position: MagicItemPosition,
+        run: NSDate? = nil,
+        duration: Double = 1000,
+        @ViewBuilder content: @escaping () -> Content
+    ) {
         self.content = content
-        self.animation = animation
+        self.animation = .linear(duration: duration / 1000)
         self.lastContent = content()
         self.position = position
         if position != lastPosition {
             lastPosition = position
             self.lastRun = run
-            store.animate(position)
+            store.animate(position, duration: duration)
         }
         else if run != nil && self.lastRun != run {
             self.lastRun = run
-            store.animate(position)
+            store.animate(position, duration: duration)
         }
     }
     
