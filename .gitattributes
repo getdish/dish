@@ -1,0 +1,1 @@
+k8s/*.enc.tf filter=git-crypt diff=git-crypt
