@@ -1,10 +1,21 @@
 import SwiftUI
 
 struct HomeMainFilters: View {
+    @EnvironmentObject var store: AppStore
+    
     var body: some View {
         ZStack {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HomeMainFiltersContent()
+            if Selectors.home.isOnSearchResults() {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HomeSearchResultsFilters()
+                        .environment(\.colorScheme, .dark)
+                }
+            }
+            else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HomeMainFiltersContent()
+                        .environment(\.colorScheme, .light)
+                }
             }
             
             // cover right part of filters so its untouchable and doesnt conflict with side drags
@@ -13,6 +24,19 @@ struct HomeMainFilters: View {
                 Color.black.opacity(0.0001).frame(width: 35, height: 55)
             }
         }
+    }
+}
+
+struct HomeSearchResultsFilters: View {
+    var body: some View {
+        HStack {
+            FilterButton(label: "Hole in the Wall", action: {})
+            FilterButton(label: "Date Spot", action: {})
+            FilterButton(label: "Healthy", action: {})
+            FilterButton(label: "Quiet", action: {})
+            FilterButton(label: "Locals Favorite", action: {})
+        }
+        .padding()
     }
 }
 
