@@ -53,21 +53,21 @@ struct HomeMainContent: View {
                         .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
                         .offset(y: self.homeState.snappedToBottomMapHeight - cardRowHeight - 20)
                     
-                    VStack {
+                    ZStack(alignment: .center) {
                         Button(action: {
                             self.animatePosition = self.animatePosition == .start ? .end : .start
                         }) {
-                            Text("Go")
+                            Text("Go").padding(10)
                         }
-                    }.padding(50)
+                    }
+                    .frameFlex()
                 }
             }
-            .frame(height: self.appGeometry?.size.height ?? Screen.fullHeight)
+            .frameFlex()
             .clipped()
             
             Spacer()
         }
-        .edgesIgnoringSafeArea(.all)
     }
 }
 

@@ -110,10 +110,6 @@ struct HomeViewContent: View {
                     }
                 }
             )
-            
-            TopNavView()
-            
-            BottomNav()
         }
         .frame(maxHeight: self.height)
     }

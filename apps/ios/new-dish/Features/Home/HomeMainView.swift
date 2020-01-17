@@ -435,7 +435,6 @@ struct HomeMainView: View {
         self.runSideEffects()
         
         let state = self.state
-        let isOnSearchResults = Selectors.home.isOnSearchResults()
         let mapHeight = state.mapHeight
         let zoom = mapHeight / 235 + 9.7
 
@@ -466,14 +465,6 @@ struct HomeMainView: View {
                             .opacity(state.showCamera ? 0 : 1)
                     }
 
-                    // results
-                    HomeMainContent()
-                        .offset(y: state.showCamera ? Screen.height : 0)
-                        .animation(.spring(), value: state.animationState == .animate)
-                        .zIndex(
-                            state.isSnappedToBottom ? 11 : 9
-                        )
-
                     // map
                     VStack {
                         ZStack {
@@ -502,11 +493,19 @@ struct HomeMainView: View {
 
                         Spacer()
                     }
-                        .zIndex(10)
 
 
                     // everything above the map
                     ZStack {
+                        TopNavView()
+                        
+                        // results
+                        HomeMainContent()
+                            .offset(y: state.showCamera ? Screen.height : 0)
+                            .animation(.spring(), value: state.animationState == .animate)
+                        
+                        BottomNav()
+                        
                         // filters
                         VStack {
                             HomeMainFilters()
@@ -540,7 +539,6 @@ struct HomeMainView: View {
                         // searchinput always light
                         .environment(\.colorScheme, .light)
                     }
-                    .zIndex(20)
                     .environment(\.colorScheme, .dark)
                 
                     // make everything untouchable while dragging

@@ -15,7 +15,7 @@ import XCGLogger
 
 let log = XCGLogger.default
 
-let ANIMATION_SPEED: Double = 0.1
+let ANIMATION_SPEED: Double = 0.2
 
 func async(_ ms: Double = 0, execute: @escaping () -> Void) {
     if ms > 0 {

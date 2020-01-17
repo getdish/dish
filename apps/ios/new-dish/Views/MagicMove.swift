@@ -91,20 +91,29 @@ struct MagicMove<Content>: View where Content: View {
             }
             .map { $0.key }
         
-        print("MISSING --- \(keys.count) --- \(startValues.count - keys.count)")
+        let count = Int(startValues.count)
+        print("MagicMove --- keys \(keys.count) - startvalues \(count)")
         
         return ZStack {
+            
             ZStack(alignment: .topLeading) {
                 content()
-
-//                easy debugging
-//                ForEach(startValues) { val in
-//                    Color.green
-//                        .opacity(0.5)
-//                        .overlay(Text("\(val.frame.minY)").foregroundColor(.white))
-//                        .frame(width: val.frame.width, height: val.frame.height)
-//                        .offset(x: val.frame.minX, y: val.frame.minY)
-//                }
+                
+                // debug view
+                ForEach(0 ..< 100) { index -> AnyView  in
+                    if index < startValues.count - 1 {
+                        if let val = startValues[index] {
+                            return AnyView(
+                                Color.green
+                                    .opacity(0.5)
+                                    .overlay(Text("\(val.frame.minY)").foregroundColor(.white))
+                                    .frame(width: val.frame.width, height: val.frame.height)
+                                    .offset(x: val.frame.minX, y: val.frame.minY)
+                            )
+                        }
+                    }
+                    return AnyView(EmptyView())
+                }
             }
             
             if store.state != .done {
@@ -147,7 +156,7 @@ struct MagicMove<Content>: View where Content: View {
             }
         }
             // why...
-            .frame(height: Screen.height - 13)
+//            .frame(height: Screen.height - 13)
             .edgesIgnoringSafeArea(.all)
     }
 }
@@ -156,7 +165,11 @@ enum MagicItemPosition {
     case start, end
 }
 
-fileprivate struct MagicItemDescription: Identifiable {
+fileprivate struct MagicItemDescription: Identifiable, Equatable {
+    static func == (lhs: MagicItemDescription, rhs: MagicItemDescription) -> Bool {
+        lhs.id == rhs.id && lhs.frame.equalTo(rhs.frame) && lhs.at == rhs.at
+    }
+    
     var view: AnyView
     var frame: CGRect
     var id: String
@@ -179,7 +192,35 @@ struct MagicItem<Content>: View where Content: View {
     }
 
     var body: some View {
-        return self.content
+        return ZStack {
+            self.content
+                .overlay(
+                    GeometryReader { geometry -> Run in
+                        let frame = geometry.frame(in: .global)
+                        print("frame?")
+                        return Run(throttle: 32) {
+                            print("set! \(self.id)")
+                            let item = MagicItemDescription(
+                                view: self.contentView,
+                                frame: frame,
+                                id: self.id,
+                                at: self.at
+                            )
+                            
+                            let items = self.at == .start ? magicItems.startItems : magicItems.endItems
+                            let curItem = items[self.id]
+                            
+                            if curItem != item {
+                                if self.at == .start {
+                                    magicItems.startItems[self.id] = item
+                                } else {
+                                    magicItems.endItems[self.id] = item
+                                }
+                            }
+                        }
+                    }
+            )
+        }
             .opacity(
                 self.store.state == .animate ? 0 :
                     self.store.position == at ? 1 : 0
@@ -192,27 +233,5 @@ struct MagicItem<Content>: View where Content: View {
                     magicItems.endItems[self.id] = nil
                 }
             }
-            .overlay(
-                GeometryReader { geometry -> Run in
-                    let frame = geometry.frame(in: .global)
-                    return Run(debounce: 100) {
-                        print("set! \(self.id)")
-                        if magicItems.state != .done {
-                            return
-                        }
-                        let item = MagicItemDescription(
-                            view: self.contentView,
-                            frame: frame,
-                            id: self.id,
-                            at: self.at
-                        )
-                        if self.at == .start {
-                            magicItems.startItems[self.id] = item
-                        } else {
-                            magicItems.endItems[self.id] = item
-                        }
-                    }
-                }
-        )
     }
 }
