@@ -12,6 +12,7 @@ type MapSchemaTypes = {
   // TODO: Add more as you need
 }
 export type MapSchema<T extends Record<string, keyof MapSchemaTypes>> = {
+  // TODO: Add optional types
   [K in keyof T]: MapSchemaTypes[T[K]]
 }
 
@@ -36,6 +37,7 @@ export class ModelBase {
     conf.data.query = gql
     const response = await axios(conf)
     if (response.data.errors) {
+      console.error(gql)
       throw response.data.errors
     }
     return response
@@ -63,6 +65,9 @@ export class ModelBase {
     }
     if (typeof object !== 'object') {
       return JSON.stringify(object)
+    }
+    if (object == null) {
+      return 'null'
     }
     let props = Object.keys(object)
       .map(key => `${key}:${this.stringify(object[key])}`)

@@ -1,6 +1,8 @@
 import { ModelBase, MapSchema } from './ModelBase'
 
-const FIELDS_SCHEMA = ModelBase.asSchema({
+export const FIELDS_SCHEMA = ModelBase.asSchema({
+  restaurant_id: 'string',
+  price: 'number',
   name: 'string',
   description: 'string',
   image: 'string',
@@ -14,18 +16,18 @@ export class Dish extends ModelBase {
     super(FIELDS_SCHEMA)
   }
 
-  async create(data: DishFields) {
+  async upsert(data: DishFields) {
     this.data = data
     const query = `mutation {
       insert_dish(
         objects: ${this.stringify(this.data)},
         on_conflict: {
-          constraint: restaurant_name_address_key,
-          update_columns: ${this.stringify(Object.keys(this.data))}
+          constraint: dish_restaurant_id_name_key,
+          update_columns: ${this.fields()}
         }
       ) {
         returning {
-          name
+          restaurant_id, name
         }
       }
     }`
@@ -34,7 +36,7 @@ export class Dish extends ModelBase {
 
   async delete_all() {
     const query = `mutation {
-      delete_restaurant(where: {id: {_neq: ""}}) {
+      delete_dish(where: {id: {_neq: ""}}) {
         returning { id }
       }
     }`
