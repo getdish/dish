@@ -4,12 +4,7 @@ struct RootView: View {
     var body: some View {
         ContextMenuRootView {
             HomeContainerView()
+            PrintGeometryView("RootView")
         }
-    }
-}
-
-struct RootView_Previews: PreviewProvider {
-    static var previews: some View {
-        RootView()
     }
 }

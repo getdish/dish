@@ -18,7 +18,7 @@ struct HomeMainContent: View {
     @State var animatePosition: MagicItemPosition = .start
     
     var body: some View {
-        VStack {
+        ZStack(alignment: .topLeading) {
             Run {
                 if self.homeState.isSnappedToBottom && self.animatePosition == .start {
                     self.animatePosition = .end
@@ -27,6 +27,8 @@ struct HomeMainContent: View {
                     self.animatePosition = .start
                 }
             }
+            
+            PrintGeometryView("HomeMainContent")
             
             MagicMove(self.animatePosition, duration: 500 * (1 / ANIMATION_SPEED)) {
                 ZStack(alignment: .topLeading) {
@@ -53,20 +55,18 @@ struct HomeMainContent: View {
                         .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
                         .offset(y: self.homeState.snappedToBottomMapHeight - cardRowHeight - 20)
                     
-                    ZStack(alignment: .center) {
-                        Button(action: {
-                            self.animatePosition = self.animatePosition == .start ? .end : .start
-                        }) {
-                            Text("Go").padding(10)
-                        }
-                    }
-                    .frameFlex()
+//                    ZStack(alignment: .center) {
+//                        Button(action: {
+//                            self.animatePosition = self.animatePosition == .start ? .end : .start
+//                        }) {
+//                            Text("Go").padding(10)
+//                        }
+//                    }
+//                    .frameFlex()
                 }
             }
             .frameFlex()
             .clipped()
-            
-            Spacer()
         }
     }
 }

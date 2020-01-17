@@ -1,6 +1,8 @@
 import SwiftUI
 import Combine
 
+fileprivate let DEBUG_ANIMATION = false
+
 fileprivate class MagicItemsStore: ObservableObject {
     enum MoveState {
         case start, animate, done
@@ -51,6 +53,7 @@ fileprivate let magicItems = MagicItemsStore()
 fileprivate var lastPosition: MagicItemPosition = .start
 
 struct MagicMove<Content>: View where Content: View {
+    @Environment(\.geometry) var appGeometry
     let content: () -> Content
     @State var lastContent: Content?
     @State var lastRun: NSDate? = nil
@@ -91,28 +94,31 @@ struct MagicMove<Content>: View where Content: View {
             }
             .map { $0.key }
         
-        let count = Int(startValues.count)
-        print("MagicMove --- keys \(keys.count) - startvalues \(count)")
+        print("MagicMove --- keys \(keys.count) - startvalues \(startValues.count)")
         
         return ZStack {
-            
             ZStack(alignment: .topLeading) {
                 content()
+            }
                 
-                // debug view
-                ForEach(0 ..< 100) { index -> AnyView  in
-                    if index < startValues.count - 1 {
-                        if let val = startValues[index] {
-                            return AnyView(
-                                Color.green
-                                    .opacity(0.5)
-                                    .overlay(Text("\(val.frame.minY)").foregroundColor(.white))
-                                    .frame(width: val.frame.width, height: val.frame.height)
-                                    .offset(x: val.frame.minX, y: val.frame.minY)
-                            )
+            // debug view
+            if DEBUG_ANIMATION {
+                ZStack(alignment: .topLeading) {
+                    Color.black.opacity(0.0001)
+                    ForEach(0 ..< 100) { index -> AnyView  in
+                        if index < startValues.count - 1 {
+                            if let val = startValues[index] {
+                                return AnyView(
+                                    Color.green
+                                        .opacity(0.5)
+                                        .overlay(Text("\(val.frame.minY)").foregroundColor(.white))
+                                        .frame(width: val.frame.width, height: val.frame.height)
+                                        .offset(x: val.frame.minX, y: val.frame.minY)
+                                )
+                            }
                         }
+                        return emptyView
                     }
-                    return AnyView(EmptyView())
                 }
             }
             
@@ -140,12 +146,11 @@ struct MagicMove<Content>: View where Content: View {
                                         width: animatePosition.width,
                                         height: animatePosition.height
                                     )
-                                        .offset(
-                                            x: animatePosition.minX,
-                                            y: animatePosition.minY
+                                    .offset(
+                                        x: animatePosition.minX,
+                                        y: animatePosition.minY
                                     )
-                                        .animation(self.animation)
-                                    
+                                    .animation(self.animation)
                                     Spacer()
                                 }
                                 Spacer()
@@ -155,9 +160,6 @@ struct MagicMove<Content>: View where Content: View {
                 }
             }
         }
-            // why...
-//            .frame(height: Screen.height - 13)
-            .edgesIgnoringSafeArea(.all)
     }
 }
 
@@ -198,7 +200,10 @@ struct MagicItem<Content>: View where Content: View {
                     GeometryReader { geometry -> Run in
                         let frame = geometry.frame(in: .global)
                         print("frame?")
-                        return Run(throttle: 32) {
+                        return Run(throttle: 16) {
+                            // could prevent during animation right?
+//                            if magicItems.state == .animate { return }
+                            
                             print("set! \(self.id)")
                             let item = MagicItemDescription(
                                 view: self.contentView,

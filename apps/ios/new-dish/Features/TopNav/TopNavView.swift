@@ -46,10 +46,6 @@ struct TopNavViewContent: View {
                                 TopNavHome()
                                 CameraTopNav()
                             }
-
-//                            if !isEditing {
-//                                TopNavMenuButton()
-//                            }
                         }
                         .padding(.horizontal)
                     }
@@ -60,8 +56,7 @@ struct TopNavViewContent: View {
                     Spacer()
                 }
             }
-                // how do i pad == safe area
-                .padding(.top, 40)
+            .padding(.top, 0)
         }
     }
 }

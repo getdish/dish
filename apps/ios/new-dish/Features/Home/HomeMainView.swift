@@ -442,9 +442,8 @@ struct HomeMainView: View {
         print("  - mapHeight \(mapHeight)")
         print("  - animationState \(state.animationState)")
 
-//        return MagicMove(animate: state.animate) {
         return GeometryReader { geometry in
-            ZStack(alignment: .top) {
+            ZStack(alignment: .topLeading) {
                     // weird way to set appheight
                     Color.black
                         .onAppear {
@@ -493,6 +492,8 @@ struct HomeMainView: View {
 
                         Spacer()
                     }
+                
+                    PrintGeometryView("HomeMainView")
 
 
                     // everything above the map
@@ -554,7 +555,7 @@ struct HomeMainView: View {
                                 return
                             }
                             // why is this off some???
-                            if HomeSearchBarState.isWithin(value.startLocation.y - 37) || state.dragState == .searchbar {
+                            if HomeSearchBarState.isWithin(value.startLocation.y) || state.dragState == .searchbar {
                                 // hide keyboard on drag
                                 if self.keyboard.state.height > 0 {
                                     self.keyboard.hide()
@@ -572,7 +573,6 @@ struct HomeMainView: View {
                 )
             }
             .environmentObject(self.state)
-//        }
     }
 }
 
