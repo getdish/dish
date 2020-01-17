@@ -504,7 +504,7 @@ struct HomeMainView: View {
                         // results
                         HomeMainContent()
 //                            .animation(.spring(), value: state.animationState == .animate)
-                            .animation(.spring(response: 0.28))
+                            .animation(.spring(response: 0.38))
                             .offset(y: state.showCamera ? Screen.height : 0)
                         
                         BottomNav()
