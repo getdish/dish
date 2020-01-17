@@ -436,7 +436,6 @@ struct HomeMainView: View {
         
         let state = self.state
         let mapHeight = state.mapHeight
-        let zoom = mapHeight / 235 + 9.7
 
         print("render HomeMainView")
         print("  - mapHeight \(mapHeight)")
@@ -465,34 +464,7 @@ struct HomeMainView: View {
                     }
 
                     // map
-                    VStack {
-                        ZStack {
-                            DishMapView(
-                                width: geometry.size.width,
-                                height: Screen.height,
-                                zoom: zoom
-                            )
-                            
-//                            // keyboard dismiss (above map, below content)
-                            if self.keyboard.state.height > 0 {
-                                Color.black.opacity(0.2)
-                                    .transition(.opacity)
-                                    .onTapGesture {
-                                        self.keyboard.hide()
-                                }
-                            }
-                        }
-                        .frame(height: mapHeight)
-                        .cornerRadius(20)
-                        .shadow(color: Color.black, radius: 20, x: 0, y: 0)
-                        .clipped()
-//                        .animation(.spring(), value: state.animationState == .animate)
-                        .animation(.spring(response: 0.28))
-                        .offset(y: state.showCamera ? -Screen.height : 0)
-                        .rotationEffect(state.showCamera ? .degrees(-15) : .degrees(0))
-
-                        Spacer()
-                    }
+                    DishMapView()
                 
                     PrintGeometryView("HomeMainView")
 

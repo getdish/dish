@@ -67,14 +67,26 @@ struct HomeMainFilters: View {
     }
 }
 
+fileprivate let filterAction = {
+    // todo move this into action
+    let curState = App.store.state.home.state.last!
+    let filters = curState.filters.filter({ $0.type == .cuisine }) + [
+        SearchFilter(type: .cuisine, name: "American")
+    ]
+    App.store.send(.home(.push(HomeStateItem(
+        search: curState.search,
+        filters: filters
+    ))))
+}
+
 struct HomeSearchResultsFilters: View {
     var body: some View {
         Group {
-            FilterButton(label: "Hole in the Wall", action: {})
-            FilterButton(label: "Date Spot", action: {})
-            FilterButton(label: "Healthy", action: {})
-            FilterButton(label: "Quiet", action: {})
-            FilterButton(label: "Locals Favorite", action: {})
+            FilterButton(label: "Hole in the Wall", action: filterAction)
+            FilterButton(label: "Date Spot", action: filterAction)
+            FilterButton(label: "Healthy", action: filterAction)
+            FilterButton(label: "Quiet", action: filterAction)
+            FilterButton(label: "Locals Favorite", action: filterAction)
         }
     }
 }
@@ -84,23 +96,13 @@ struct HomeMainFiltersContent: View {
     
     var body: some View {
         Group {
-            FilterButton(label: "American", action: {
-                // todo move this into action
-                let curState = self.store.state.home.state.last!
-                let filters = curState.filters.filter({ $0.type == .cuisine }) + [
-                    SearchFilter(type: .cuisine, name: "American")
-                ]
-                self.store.send(.home(.push(HomeStateItem(
-                    search: curState.search,
-                    filters: filters
-                ))))
-            })
-            FilterButton(label: "Thai", action: {})
-            FilterButton(label: "Chinese", action: {})
-            FilterButton(label: "Italian", action: {})
-            FilterButton(label: "French", action: {})
-            FilterButton(label: "Burmese", action: {})
-            FilterButton(label: "Greek", action: {})
+            FilterButton(label: "American", action: filterAction)
+            FilterButton(label: "Thai", action: filterAction)
+            FilterButton(label: "Chinese", action: filterAction)
+            FilterButton(label: "Italian", action: filterAction)
+            FilterButton(label: "French", action: filterAction)
+            FilterButton(label: "Burmese", action: filterAction)
+            FilterButton(label: "Greek", action: filterAction)
         }
     }
 }

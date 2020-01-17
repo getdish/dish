@@ -64,6 +64,7 @@ struct HomeMainContent: View {
 //                    }
 //                    .frameFlex()
                 }
+//                .animation(.none)
             }
             .frameFlex()
             .clipped()
