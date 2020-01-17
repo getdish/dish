@@ -1,6 +1,7 @@
 import SwiftUI
 import Combine
 
+fileprivate let items = features.chunked(into: 2)
 fileprivate let filterBarHeight: CGFloat = 55
 let bottomNavHeight: CGFloat = 115
 
@@ -10,7 +11,7 @@ struct HomeMainContent: View {
     var total = features.count - 4
     
     @Environment(\.geometry) var appGeometry
-    @EnvironmentObject var homeView: HomeViewState
+    @EnvironmentObject var homeState: HomeViewState
     
     @State var animatePosition: MagicItemPosition = .start
     
@@ -27,7 +28,30 @@ struct HomeMainContent: View {
             
             MagicMove(self.animatePosition) {
                 ZStack(alignment: .topLeading) {
-                    HomeMainContentExplore()
+//                    HomeMainContentExplore()
+
+                    ScrollView(showsIndicators: false) {
+                        VStack(spacing: 0) {
+                            Spacer().frame(height: filterBarHeight + 22 + self.homeState.scrollRevealY)
+                            VStack(spacing: 8) {
+                                ForEach(0 ..< items.count) { index in
+                                    HStack(spacing: 8) {
+                                        ForEach(0 ..< 2) { index2 in
+                                            DishCardView(
+                                                dish: items[index][index2],
+                                                at: .start,
+                                                display: .full,
+                                                height: 120
+                                            )
+                                        }
+                                    }
+                                    .padding(.horizontal)
+                                }
+                            }
+                            Spacer().frame(height: bottomNavHeight)
+                            Spacer().frame(height: self.homeState.mapHeight - self.homeState.scrollRevealY)
+                        }
+                    }
                     
 //                    ScrollView(.vertical) {
 //                        VStack {
@@ -57,7 +81,7 @@ struct HomeMainContent: View {
                         }
                     }
                 }
-                .offset(y: self.homeView.mapHeight)
+                .offset(y: self.homeState.mapHeight)
                 
                 //                ScrollView(finalDir, showsIndicators: false) {
                 //                    VStack {
@@ -136,11 +160,42 @@ struct HomeMainContent: View {
 
 struct HomeMainContentExplore: View {
     @Environment(\.geometry) var appGeometry
+    @EnvironmentObject var store: AppStore
+    @EnvironmentObject var homeState: HomeViewState
+    let items = features.chunked(into: 2)
+    let spacing: CGFloat = 14
     
     var body: some View {
         ZStack {
-            HomeScrollableContent {
-                HomeExploreDishes()
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 0) {
+                    ScrollListener(onScroll: { frame in
+                        if self.homeState.dragState == .idle {
+                            let mapHeight = self.homeState.mapHeight
+                            self.homeState.setScrollY(
+                                mapHeight - frame.minY - Screen.statusBarHeight - self.homeState.scrollRevealY
+                            )
+                        }
+                    })
+                    Spacer().frame(height: filterBarHeight + 22 + self.homeState.scrollRevealY)
+                    VStack(spacing: self.spacing) {
+                        ForEach(0 ..< self.items.count) { index in
+                            HStack(spacing: self.spacing) {
+                                ForEach(self.items[index]) { item in
+                                    DishCardView(
+                                        dish: item,
+                                        at: .start,
+                                        display: .full,
+                                        height: 120
+                                    )
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                    }
+                    Spacer().frame(height: bottomNavHeight)
+                    Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)
+                }
             }
             .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
         }
@@ -196,31 +251,6 @@ struct HomeMainContentSearchPage: View {
     }
 }
 
-struct HomeExploreDishes: View {
-    @EnvironmentObject var store: AppStore
-    @Environment(\.geometry) var appGeometry
-    let items = features.chunked(into: 2)
-    let spacing: CGFloat = 14
-    
-    var body: some View {
-        VStack(spacing: self.spacing) {
-            ForEach(0 ..< self.items.count) { index in
-                HStack(spacing: self.spacing) {
-                    ForEach(self.items[index]) { item in
-                        DishCardView(
-                            dish: item,
-                            at: .start,
-                            display: .full,
-                            height: 120
-                        )
-                    }
-                }
-                .padding(.horizontal)
-            }
-        }
-    }
-}
-
 struct HomeScrollableContent<Content>: View where Content: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
@@ -233,22 +263,7 @@ struct HomeScrollableContent<Content>: View where Content: View {
     
     var body: some View {
         VStack {
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 0) {
-//                    ScrollListener(onScroll: { frame in
-//                        if self.homeState.dragState == .idle {
-//                            let mapHeight = self.homeState.mapHeight
-//                            self.homeState.setScrollY(
-//                                mapHeight - frame.minY - Screen.statusBarHeight - self.homeState.scrollRevealY
-//                            )
-//                        }
-//                    })
-//                    Spacer().frame(height: filterBarHeight + 22 + self.homeState.scrollRevealY)
-                    self.content
-//                    Spacer().frame(height: bottomNavHeight)
-//                    Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)
-                }
-            }
+            Spacer()
             .offset(y: -self.homeState.scrollRevealY)
         }
     }

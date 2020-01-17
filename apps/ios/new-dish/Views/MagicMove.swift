@@ -144,7 +144,6 @@ struct MagicItem<Content>: View where Content: View {
     }
 
     var body: some View {
-//        print("what now yo \(id) \(at) \(self.store.position)")
         return self.content
             .opacity(
                 self.store.state == .animate ? 0 :
@@ -153,6 +152,12 @@ struct MagicItem<Content>: View where Content: View {
             .overlay(
                 GeometryReader { geometry in
                     Run {
+                        if self.at == .start{
+                            print("?? \(self.id)")
+                        }
+                        if magicItems.state != .done {
+                            return
+                        }
                         let frame = geometry.frame(in: .global)
                         let item = MagicItemDescription(
                             view: self.contentView,
@@ -162,6 +167,9 @@ struct MagicItem<Content>: View where Content: View {
                         )
                         if self.at == .start {
                             magicItems.startItems[self.id] = item
+                            if self.id == "1002" {
+                                print("set to \(frame) vs \(magicItems.endItems[self.id]!.frame)")
+                            }
                         } else {
                             magicItems.endItems[self.id] = item
                         }
