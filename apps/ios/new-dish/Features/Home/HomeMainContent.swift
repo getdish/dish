@@ -10,12 +10,18 @@ struct HomeMainContent: View {
     var total = features.count - 4
     var cardPad: CGFloat = 10.0
     
+    @State private var scrollView: UIScrollView? = nil
+    @State private var animatePosition: MagicItemPosition = .start
+    
     @EnvironmentObject var homeView: HomeViewState
     @Environment(\.geometry) var appGeometry
     @State var dir: Axis.Set = .vertical {
         willSet(val) {
+            self.animatePosition = val == .horizontal ? .end : .start
             if val == .horizontal {
-                self.finalDir = val
+                async {
+                    self.finalDir = val
+                }
             } else {
                 async(400) {
                     self.finalDir = val
@@ -54,7 +60,7 @@ struct HomeMainContent: View {
     
     func cardY(_ y: Int) -> CGFloat {
         var val: CGFloat = dir == .horizontal ? 0 : CGFloat(y) * (cardHeight + cardPad)
-        if homeView.isSnappedToBottom {
+        if dir == .horizontal {
             val += homeView.mapHeight - cardHeight - 75
         } else {
             val += homeView.mapHeight + filterBarHeight + homeView.scrollRevealY
@@ -64,70 +70,113 @@ struct HomeMainContent: View {
     
     var body: some View {
         VStack {
-            Run {
-                if homeViewState.isSnappedToBottom && self.dir == .vertical {
-                    self.dir = .horizontal
-                }
-                if !homeViewState.isSnappedToBottom && self.dir == .horizontal {
-                    self.dir = .vertical
-                }
-            }
+            //            Run {
+            //                if homeViewState.isSnappedToBottom && self.dir == .vertical {
+            //                    self.dir = .horizontal
+            //                }
+            //                if !homeViewState.isSnappedToBottom && self.dir == .horizontal {
+            //                    self.dir = .vertical
+            //                }
+            //            }
             
-            ZStack {
-//                ScrollView(showsIndicators: false) {
-//                    VStack(spacing: 0) {
-//                        ScrollListener(onScroll: { frame in
-//                            if self.homeState.dragState == .idle {
-//                                let mapHeight = self.homeState.mapHeight
-//                                self.homeState.setScrollY(
-//                                    mapHeight - frame.minY - Screen.statusBarHeight - self.homeState.scrollRevealY
-//                                )
-//                            }
-//                        })
-//                        Spacer().frame(height: filterBarHeight + 22 + self.homeState.scrollRevealY)
-//                        self.content
-//                        Spacer().frame(height: bottomNavHeight)
-//                        Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)
-//                    }
-//                }
-//                .offset(y: homeState.mapHeight - self.homeState.scrollRevealY)
-                
-                ScrollView(finalDir, showsIndicators: false) {
-                    ZStack {
+            MagicMove(self.animatePosition) {
+                ZStack(alignment: .topLeading) {
+                    ScrollView(.vertical) {
                         VStack {
-                            HStack {
-                                ZStack {
-                                    ForEach(0 ..< total) { index in
-                                        DishCardView(
-                                            dish: features[index],
-                                            display: self.dir == .vertical ? .full : .card
-                                        )
-                                            .frame(width: self.cardWidth, height: self.cardHeight)
-                                            .shadow(color: Color.black.opacity(0.5), radius: 8, x: 0, y: 3)
-                                            .offset(x: self.cardX(index), y: self.cardY(index))
-                                    }
-                                }
-                                .frame(
-                                    width: cardWidth,
-                                    height: cardHeight
+                            ForEach(0 ..< self.total) { index in
+                                DishCardView(
+                                    dish: features[index],
+                                    at: .start,
+                                    display: .full
                                 )
-                                Spacer()
+                                    .frame(width: 400, height: 400)
+                                    .shadow(color: Color.black.opacity(0.5), radius: 8, x: 0, y: 3)
                             }
-                            Spacer()
-//                            Spacer().frame(height: bottomNavHeight)
-//                            Spacer().frame(height: homeViewState.mapHeight - homeViewState.scrollRevealY)
                         }
                     }
-                    .frame(
-                        width: innerWidth,
-                        height: innerHeight
-                    )
+                    
+                    ScrollView(.horizontal) {
+                        HStack {
+                            ForEach(0 ..< self.total) { index in
+                                DishCardView(
+                                    dish: features[index],
+                                    at: .end,
+                                    display: .card
+                                )
+                                    .frame(width: 160, height: 120)
+                                    .shadow(color: Color.black.opacity(0.5), radius: 8, x: 0, y: 3)
+                            }
+                        }
+                    }
                 }
-                .frame(
-                    width: appGeometry?.size.width,
-                    height: height
-                )
-                    .animation(.spring())
+                
+                
+                //                ScrollView(showsIndicators: false) {
+                //                    VStack(spacing: 0) {
+                //                        ScrollListener(onScroll: { frame in
+                //                            if self.homeState.dragState == .idle {
+                //                                let mapHeight = self.homeState.mapHeight
+                //                                self.homeState.setScrollY(
+                //                                    mapHeight - frame.minY - Screen.statusBarHeight - self.homeState.scrollRevealY
+                //                                )
+                //                            }
+                //                        })
+                //                        Spacer().frame(height: filterBarHeight + 22 + self.homeState.scrollRevealY)
+                //                        self.content
+                //                        Spacer().frame(height: bottomNavHeight)
+                //                        Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)
+                //                    }
+                //                }
+                //                .offset(y: homeState.mapHeight - self.homeState.scrollRevealY)
+                
+                //                ScrollView(finalDir, showsIndicators: false) {
+                //                    VStack {
+                //                        VStack {
+                //                            HStack {
+                //                                ZStack {
+                //                                    ForEach(0 ..< total) { index in
+                //                                        DishCardView(
+                //                                            dish: features[index],
+                //                                            display: self.dir == .vertical ? .full : .card
+                //                                        )
+                //                                            .frame(width: self.cardWidth, height: self.cardHeight)
+                //                                            .shadow(color: Color.black.opacity(0.5), radius: 8, x: 0, y: 3)
+                //                                            .offset(x: self.cardX(index), y: self.cardY(index))
+                //                                    }
+                //                                }
+                //                                .frame(
+                //                                    width: cardWidth,
+                //                                    height: cardHeight
+                //                                )
+                //                                Spacer()
+                //                            }
+                //                            Spacer()
+                ////                            Spacer().frame(height: bottomNavHeight)
+                ////                            Spacer().frame(height: homeViewState.mapHeight - homeViewState.scrollRevealY)
+                //                        }
+                //                    }
+                //                    .background(Color.yellow)
+                //                    .frame(
+                //                        width: innerWidth,
+                //                        height: innerHeight
+                //                    )
+                //                    .introspectScrollView { scrollView in
+                //                        let x: UIScrollView = scrollView
+                //                        x.isDirectionalLockEnabled = true
+                //                        self.scrollView = scrollView
+                //                    }
+                //                }
+                //                .frame(
+                //                    width: appGeometry?.size.width,
+                //                    height: height
+                //                )
+                //                    .animation(.spring())
+                
+                Button(action: {
+                    self.dir = self.dir == .vertical ? .horizontal : .vertical
+                }) {
+                    Text("Go")
+                }
             }
             .padding(.top, Screen.statusBarHeight * 2)
             .frame(height: height)
@@ -147,21 +196,24 @@ struct DishCardView: View, Identifiable {
     }
     var id: Int { dish.id }
     var dish: DishItem
+    var at: MagicItemPosition = .start
     var display: DisplayCard = .full
     var body: some View {
         let display = self.display
         let dish = self.dish
         
-        return GeometryReader { geometry in
-            dish.image
-                .resizable()
-                .aspectRatio(geometry.size.width / geometry.size.height, contentMode: .fit)
-                .overlay(self.overlay)
-                .cornerRadius(display == .card ? 14 : 20)
-                .onTapGesture {
-                    App.store.send(
-                        .home(.push(HomeStateItem(filters: [SearchFilter(name: dish.name)])))
-                    )
+        return MagicItem("\(id)", at: at) {
+            GeometryReader { geometry in
+                dish.image
+                    .resizable()
+                    .aspectRatio(geometry.size.width / geometry.size.height, contentMode: .fit)
+                    .overlay(self.overlay)
+                    .cornerRadius(display == .card ? 14 : 20)
+                    .onTapGesture {
+                        App.store.send(
+                            .home(.push(HomeStateItem(filters: [SearchFilter(name: dish.name)])))
+                        )
+                }
             }
         }
     }
@@ -215,9 +267,9 @@ struct HomeMainContentExplore: View {
             HomeScrollableContent {
                 HomeExploreDishes()
             }
-                .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
-                .opacity(self.isHorizontal ? 0 : 1)
-                .disabled(self.isHorizontal)
+            .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
+            .opacity(self.isHorizontal ? 0 : 1)
+            .disabled(self.isHorizontal)
         }
         .edgesIgnoringSafeArea(.all)
         .clipped()
@@ -325,7 +377,7 @@ struct HomeScrollableContent<Content>: View where Content: View {
                 }
             }
             .offset(y: homeState.mapHeight - self.homeState.scrollRevealY)
-//            .mask(self.mask.offset(y: homeState.mapHeight + filterBarHeight / 4))
+            //            .mask(self.mask.offset(y: homeState.mapHeight + filterBarHeight / 4))
         }
     }
     

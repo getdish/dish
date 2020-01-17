@@ -43,13 +43,13 @@ class HomeViewState: ObservableObject {
     @Published private(set) var showCamera = false
     
     private var cancelAnimation: AnyCancellable? = nil
-
+    
     // keyboard
     @Published var keyboardHeight: CGFloat = 0
     private var cancels: Set<AnyCancellable> = []
     private var keyboard = Keyboard()
     private var lastKeyboardAdjustY: CGFloat = 0
-
+    
     init() {
         // start map height at just above snapToBottomAt
         self.$appHeight
@@ -60,8 +60,8 @@ class HomeViewState: ObservableObject {
                         self.y = self.snapToBottomAt - 1
                     }
                 }
-            }
-            .store(in: &cancels)
+        }
+        .store(in: &cancels)
         
         self.keyboard.$state
             .map { $0.height }
@@ -75,9 +75,9 @@ class HomeViewState: ObservableObject {
                 // set animating while keyboard animates
                 // prevents filters jumping up/down while focusing input
                 self.setAnimationState(.controlled, 350)
-            }
-            .store(in: &cancels)
-
+        }
+        .store(in: &cancels)
+        
         self.keyboard.$state
             .map { $0.height }
             .removeDuplicates()
@@ -101,8 +101,8 @@ class HomeViewState: ObservableObject {
                     }
                 }
                 
-            }
-            .store(in: &cancels)
+        }
+        .store(in: &cancels)
         
         let started = Date()
         self.$scrollY
@@ -120,7 +120,7 @@ class HomeViewState: ObservableObject {
                         }
                     }
                 }
-            }.store(in: &cancels)
+        }.store(in: &cancels)
     }
     
     // note: setDragState/setAnimationSate should be only way to mutate state
@@ -171,12 +171,12 @@ class HomeViewState: ObservableObject {
     }
     
     let hideTopNavAt: CGFloat = hideTopNavAtVal
-
+    
     let mapMinHeight: CGFloat = max(
         hideTopNavAtVal - 1,
         Screen.statusBarHeight + searchBarHeight / 2 + topNavHeight + 90
     )
-
+    
     var mapInitialHeight: CGFloat { appHeight * 0.3 }
     
     var mapMaxHeight: CGFloat { appHeight - keyboardHeight - searchBarHeight }
@@ -196,7 +196,7 @@ class HomeViewState: ObservableObject {
             )
         )
     }
-
+    
     var snapToBottomAt: CGFloat { appHeight * snapToBottomYMovePct }
     var snappedToBottomMapHeight: CGFloat { appHeight - 190 }
     var isSnappedToBottom: Bool { y > snapToBottomAt }
@@ -207,53 +207,53 @@ class HomeViewState: ObservableObject {
         if y > aboutToSnapToBottomAt { return true }
         return false
     }
-
+    
     func toggleMap() {
         log.info()
         self.snapToBottom(!isSnappedToBottom)
     }
-
+    
     private var startDragAt: CGFloat = 0
     private var lastDragY: CGFloat = 0
-
+    
     func drag(_ dragY: CGFloat) {
         if dragState == .pager { return }
         if lastDragY == dragY { return }
         lastDragY = dragY
-
+        
         log.info(dragY)
         
         // TODO we can reset this back to false in some cases for better UX
         self.hasMovedBar = true
-
+        
         // remember where we started
         if dragState != .searchbar {
             self.startDragAt = y
             self.setDragState(.searchbar)
         }
-
+        
         var y = self.startDragAt + (
             // add resistance if snapped to bottom
             isSnappedToBottom ? dragY * 0.2 : dragY
         )
-
+        
         // resistance before snapping down
         let aboutToSnapToBottom = y >= aboutToSnapToBottomAt && !isSnappedToBottom
         if aboutToSnapToBottom {
             let diff = self.startDragAt + dragY - aboutToSnapToBottomAt
             y = aboutToSnapToBottomAt + diff * 0.2
         }
-
+        
         // store wasSnappedToBottom before changing y
         let wasSnappedToBottom = isSnappedToBottom
-
+        
         if y.rounded() == self.y.rounded() {
             log.info("ignore same values")
             return
         }
         
         self.y = y
-
+        
         // while snapped, have searchbar move differently
         // searchbar moves faster during resistance before snap
         if aboutToSnapToBottom {
@@ -261,7 +261,7 @@ class HomeViewState: ObservableObject {
         } else if isSnappedToBottom {
             self.searchBarYExtra = dragY * 0.25
         }
-
+        
         // snap to bottom/back logic
         let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
         if willSnapDown {
@@ -274,7 +274,7 @@ class HomeViewState: ObservableObject {
             }
         }
     }
-
+    
     func finishDrag(_ value: DragGesture.Value) {
         if dragState == .pager { return }
         log.info()
@@ -294,7 +294,7 @@ class HomeViewState: ObservableObject {
             //        }
         }
     }
-
+    
     func snapToBottom(_ toBottom: Bool = true) {
         log.info()
         // prevent dragging after snap
@@ -309,25 +309,25 @@ class HomeViewState: ObservableObject {
             }
         }
     }
-
+    
     var mapSnappedToTopHeight: CGFloat {
         self.mapMinHeight - self.mapInitialHeight
     }
-
+    
     var isSnappedToTop: Bool {
         self.y == mapSnappedToTopHeight
     }
-
+    
     func snapToTop() {
         log.info()
         if !isSnappedToTop {
-//            self.hasMovedBar = false
+            //            self.hasMovedBar = false
             self.animate {
                 self.y = self.mapMinHeight - self.mapInitialHeight
             }
         }
     }
-
+    
     func animateTo(_ y: CGFloat) {
         if self.y == y { return }
         log.info()
@@ -335,14 +335,14 @@ class HomeViewState: ObservableObject {
             self.y = y
         }
     }
-
+    
     func resetAfterKeyboardHide() {
         if !self.hasMovedBar && self.y != 0 && App.store.state.home.state.last!.search == "" {
             log.info()
             self.animateTo(0)
         }
     }
-
+    
     func setScrollY(_ scrollY: CGFloat) {
         if dragState != .idle { return }
         if animationState != .idle { return }
@@ -367,7 +367,7 @@ class HomeViewState: ObservableObject {
     
     func setShowCamera(_ val: Bool) {
         self.animate(state: .animate) {
-           self.showCamera = val
+            self.showCamera = val
         }
     }
 }
@@ -376,7 +376,7 @@ let homeViewState = HomeViewState()
 
 struct HomeSearchBarState {
     static var frame: CGRect = CGRect()
-
+    
     static func isWithin(_ valueY: CGFloat) -> Bool {
         // add a little padding for fat fingers
         let padding: CGFloat = 10
@@ -425,7 +425,7 @@ struct HomeMainView: View {
             }
         }
     }
-
+    
     var body: some View {
         // ⚠️
         // TODO can we put this somewhere more natural?
@@ -436,118 +436,118 @@ struct HomeMainView: View {
         let isOnSearchResults = Selectors.home.isOnSearchResults()
         let mapHeight = state.mapHeight
         let zoom = mapHeight / 235 + 9.7
-
+        
         print("render HomeMainView")
         print("  - mapHeight \(mapHeight)")
         print("  - animationState \(state.animationState)")
-
-//        return MagicMove(animate: state.animate) {
+        
+        //        return MagicMove(animate: state.animate) {
         return GeometryReader { geometry in
             ZStack(alignment: .top) {
-                    // weird way to set appheight
-                    Color.black
-                        .onAppear {
-                            if let g = self.appGeometry {
-                                if state.appHeight != g.size.height {
-                                    state.setAppHeight(g.size.height)
-                                }
-                            }
-                    }
+                //                    // weird way to set appheight
+                //                    Color.black
+                //                        .onAppear {
+                //                            if let g = self.appGeometry {
+                //                                if state.appHeight != g.size.height {
+                //                                    state.setAppHeight(g.size.height)
+                //                                }
+                //                            }
+                //                    }
+                //
+                //                    // camera
+                //                    ZStack {
+                //                        DishCamera()
+                //
+                //                        // cover camera
+                //                        Color.black
+                //                            .animation(.spring())
+                //                            .opacity(state.showCamera ? 0 : 1)
+                //                    }
                 
-                    // camera
-                    ZStack {
-                        DishCamera()
-                        
-                        // cover camera
-                        Color.black
-                            .animation(.spring())
-                            .opacity(state.showCamera ? 0 : 1)
-                    }
-
-                    // results
-                    HomeMainContent(
-                        height: self.appGeometry?.size.height ?? Screen.fullHeight
-                    )
+                // results
+                HomeMainContent(
+                    height: self.appGeometry?.size.height ?? Screen.fullHeight
+                )
                     .offset(y: state.showCamera ? Screen.height : 0)
                     .opacity(isOnSearchResults && state.isSnappedToBottom ? 0 : 1)
                     .animation(.spring(), value: state.animationState == .animate)
                     .zIndex(
                         state.isSnappedToBottom ? 11 : 9
-                    )
-
-                    // map
-                    VStack {
-                        ZStack {
-                            DishMapView(
-                                width: geometry.size.width,
-                                height: Screen.height,
-                                zoom: zoom
-                            )
-                            
-//                            // keyboard dismiss (above map, below content)
-                            if self.keyboard.state.height > 0 {
-                                Color.black.opacity(0.2)
-                                    .transition(.opacity)
-                                    .onTapGesture {
-                                        self.keyboard.hide()
-                                }
-                            }
-                        }
-                        .frame(height: mapHeight)
-                        .cornerRadius(20)
-                        .shadow(color: Color.black, radius: 20, x: 0, y: 0)
-                        .clipped()
-                        .animation(.spring(), value: state.animationState == .animate)
-                        .offset(y: state.showCamera ? -Screen.height : 0)
-                        .rotationEffect(state.showCamera ? .degrees(-15) : .degrees(0))
-
-                        Spacer()
-                    }
-                        .zIndex(10)
-
-
-                    // everything above the map
-                    ZStack {
-                        // filters
-                        VStack {
-                            HomeMainFilters()
-                            Spacer()
-                        }
-                        .offset(
-                            y: mapHeight + searchBarHeight / 2 - 4 + (
-                                state.showFiltersAbove ? -100 : 0
-                            )
-                        )
-                        .opacity(state.showCamera ? 0 : 1)
-                        .animation(.spring(response: 0.25), value: state.animationState == .animate)
-
-                        // searchbar
-                        VStack {
-                            GeometryReader { searchBarGeometry -> HomeSearchBar in
-                                HomeSearchBarState.frame = searchBarGeometry.frame(in: .global)
-                                return HomeSearchBar()
-                            }
-                            .frame(height: searchBarHeight)
-                            
-                            Spacer()
-                        }
-                        .padding(.horizontal, 10)
-                        .animation(.spring(), value: state.animationState == .animate)
-                        .offset(y:
-                            state.showCamera ?
-                                mapHeight > Screen.height / 2 ? Screen.height * 2 : -Screen.height * 2 :
-                                mapHeight - 23 + state.searchBarYExtra
-                        )
-                        // searchinput always light
-                        .environment(\.colorScheme, .light)
-                    }
-                    .zIndex(20)
-                    .environment(\.colorScheme, .dark)
+                )
                 
-                    // make everything untouchable while dragging
+//                // map
+//                VStack {
+//                    ZStack {
+//                        DishMapView(
+//                            width: geometry.size.width,
+//                            height: Screen.height,
+//                            zoom: zoom
+//                        )
+//                        
+//                        //                            // keyboard dismiss (above map, below content)
+//                        if self.keyboard.state.height > 0 {
+//                            Color.black.opacity(0.2)
+//                                .transition(.opacity)
+//                                .onTapGesture {
+//                                    self.keyboard.hide()
+//                            }
+//                        }
+//                    }
+//                    .frame(height: mapHeight)
+//                    .cornerRadius(20)
+//                    .shadow(color: Color.black, radius: 20, x: 0, y: 0)
+//                    .clipped()
+//                    .animation(.spring(), value: state.animationState == .animate)
+//                    .offset(y: state.showCamera ? -Screen.height : 0)
+//                    .rotationEffect(state.showCamera ? .degrees(-15) : .degrees(0))
+//                    
+//                    Spacer()
+//                }
+//                .zIndex(10)
+//                
+//                
+//                // everything above the map
+//                ZStack {
+//                    // filters
+//                    VStack {
+//                        HomeMainFilters()
+//                        Spacer()
+//                    }
+//                    .offset(
+//                        y: mapHeight + searchBarHeight / 2 - 4 + (
+//                            state.showFiltersAbove ? -100 : 0
+//                        )
+//                    )
+//                        .opacity(state.showCamera ? 0 : 1)
+//                        .animation(.spring(response: 0.25), value: state.animationState == .animate)
+//                    
+//                    // searchbar
+//                    VStack {
+//                        GeometryReader { searchBarGeometry -> HomeSearchBar in
+//                            HomeSearchBarState.frame = searchBarGeometry.frame(in: .global)
+//                            return HomeSearchBar()
+//                        }
+//                        .frame(height: searchBarHeight)
+//                        
+//                        Spacer()
+//                    }
+//                    .padding(.horizontal, 10)
+//                    .animation(.spring(), value: state.animationState == .animate)
+//                    .offset(y:
+//                        state.showCamera ?
+//                            mapHeight > Screen.height / 2 ? Screen.height * 2 : -Screen.height * 2 :
+//                            mapHeight - 23 + state.searchBarYExtra
+//                    )
+//                        // searchinput always light
+//                        .environment(\.colorScheme, .light)
+//                }
+//                .zIndex(20)
+//                .environment(\.colorScheme, .dark)
+                
+                // make everything untouchable while dragging
                 Color.black.opacity(0.0001)
-                        .frame(width: state.dragState == .pager ? Screen.width : 0)
-                }
+                    .frame(width: state.dragState == .pager ? Screen.width : 0)
+            }
                 .clipped() // dont remove fixes bug cant click SearchBar
                 .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
                 .simultaneousGesture(
@@ -572,10 +572,10 @@ struct HomeMainView: View {
                         }
                         self.state.setDragState(.idle)
                     }
-                )
-            }
-            .environmentObject(self.state)
-//        }
+            )
+        }
+        .environmentObject(self.state)
+        //        }
     }
 }
 
