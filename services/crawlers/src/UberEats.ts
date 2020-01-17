@@ -5,7 +5,7 @@ import fs from 'fs'
 import axios, { AxiosResponse } from 'axios'
 
 import { WorkerJob } from '@dish/worker'
-import { Restaurant } from '@dish/models'
+import { Restaurant, Dish } from '@dish/models'
 
 const UBEREATS_DOMAIN =
   process.env.UBEREATS_PROXY || 'https://www.ubereats.com/'
@@ -19,14 +19,17 @@ axios.defaults.headers.common['x-csrf-token'] = 'x'
 
 export class UberEats extends WorkerJob {
   async run(args?: any) {
+    if (typeof args == undefined || args == 'ALL') {
+      await this.getCities()
+      return
+    }
     if ('fn' in args) {
       this[args['fn']](args['args'])
+      return
     }
     if ('lat' in args) {
       this.getFeed(args['lat'], args['lon'])
-    }
-    if (typeof args == undefined || args == 'ALL') {
-      await this.getCities()
+      return
     }
   }
 
@@ -91,8 +94,9 @@ export class UberEats extends WorkerJob {
     offset: number,
     category: string
   ) {
+    const items = response.data.data.feedItems
     console.log(
-      response.data.data.feedItems.length +
+      items.length +
         ' restaurants on page: ' +
         offset / 80 +
         ', for category: "' +
@@ -100,7 +104,7 @@ export class UberEats extends WorkerJob {
         '"'
     )
 
-    for (let item of response.data.data.feedItems) {
+    for (let item of items) {
       if (item.type == 'STORE') {
         this.run_on_worker({ fn: 'getRestaurant', args: item.uuid })
       }
@@ -117,13 +121,15 @@ export class UberEats extends WorkerJob {
         },
       }
     )
-    await this.saveRestaurant(response.data.data)
+    const restaurant = response.data.data
+    const restaurant_id = await this.saveRestaurant(restaurant)
+    await this.getDishes(restaurant, restaurant_id)
   }
 
   private async saveRestaurant(data: any) {
     console.log('Saving restaurant: ' + data.title)
     const restaurant = new Restaurant()
-    await restaurant.create({
+    const response = await restaurant.upsert({
       name: data.title,
       description: data.categories && data.categories.join(', '),
       longitude: data.location.longitude,
@@ -134,6 +140,23 @@ export class UberEats extends WorkerJob {
       zip: 0,
       image: data.heroImageUrls.length > 0 ? data.heroImageUrls[0].url : '',
     })
+    return response.data.data.insert_restaurant.returning[0].id
+  }
+
+  private async getDishes(data: any, restaurant_id: string) {
+    for (const sid in data.sectionEntitiesMap) {
+      for (const did in data.sectionEntitiesMap[sid]) {
+        const item = data.sectionEntitiesMap[sid][did]
+        const dish = new Dish()
+        await dish.upsert({
+          restaurant_id: restaurant_id,
+          name: item.title,
+          description: item.description,
+          price: item.price,
+          image: item.imageUrl,
+        })
+      }
+    }
   }
 
   // TODO: Refactor out to utilities

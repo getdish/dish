@@ -1,6 +1,7 @@
 import { ModelBase, MapSchema } from './ModelBase'
+import { FIELDS_SCHEMA as DISH_SCHEMA } from './Dish'
 
-const FIELDS_SCHEMA = ModelBase.asSchema({
+export const FIELDS_SCHEMA = ModelBase.asSchema({
   name: 'string',
   description: 'string',
   longitude: 'float',
@@ -20,18 +21,18 @@ export class Restaurant extends ModelBase {
     super(FIELDS_SCHEMA)
   }
 
-  async create(data: RestaurantFields) {
+  async upsert(data: RestaurantFields) {
     this.data = data
     const query = `mutation {
       insert_restaurant(
         objects: ${this.stringify(this.data)},
         on_conflict: {
           constraint: restaurant_name_address_key,
-          update_columns: ${this.stringify(Object.keys(this.data))}
+          update_columns: ${this.fields()}
         }
       ) {
         returning {
-          name
+          name, id
         }
       }
     }`
@@ -40,9 +41,11 @@ export class Restaurant extends ModelBase {
 
   async find(key: string, value: string) {
     const response_fields = this.fields_bare()
+    const dishes = Object.keys(DISH_SCHEMA)
     const query = `query {
       restaurant(where: {${key}: {_eq: "${value}"}}) {
         ${response_fields}
+        dishes {${dishes}}
       }
     }`
     return await this.hasura(query)

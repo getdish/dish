@@ -4,7 +4,7 @@ import { Restaurant } from '../src/Restaurant'
 
 test('Adding a restaurant', async t => {
   const restaurant = new Restaurant()
-  const response = await restaurant.create({
+  const response = await restaurant.upsert({
     name: 'Test Restaurant',
     description: 'Not a real restaurant :(',
     longitude: 1.123,

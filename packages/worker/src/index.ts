@@ -3,6 +3,8 @@ dotenv.config()
 
 import { Consumer, Producer } from 'orkid'
 
+const QUEUE_NAME = 'crawler'
+
 const is_local_redis =
   process.env.DISH_ENV == 'development' || process.env.CI == 'true'
 
@@ -24,15 +26,17 @@ export class WorkerJob {
   }
 
   async run_on_worker(args?: any) {
-    const producer = new Producer('consumer', {
+    const producer = new Producer(QUEUE_NAME, {
       redisOptions,
     })
 
     const task_name = this.constructor.name
-    await producer.addTask({
+    const job = {
       className: task_name,
       args: args,
-    } as any)
+    } as any
+    console.log('Adding job to worker:', job)
+    await producer.addTask(job)
   }
 }
 
@@ -54,10 +58,14 @@ export class WorkerDaemon {
     for (let Job of job_modules) {
       this.jobs[Job.prototype.constructor.name] = Job
     }
+    console.log(
+      'Worker daemon starting with the following worker code: ',
+      this.jobs
+    )
   }
 
   setupConsumer() {
-    this.consumer = new Consumer('consumer', this.runConsumer.bind(this), {
+    this.consumer = new Consumer(QUEUE_NAME, this.runConsumer.bind(this), {
       redisOptions,
       consumerOptions: {
         concurrencyPerInstance: 1,
@@ -68,10 +76,7 @@ export class WorkerDaemon {
   }
 
   async runConsumer(job: Job, metadata: any) {
-    console.log(
-      `Processing task from Queue: ${metadata.qname}. Task ID: ${metadata.id}.`
-    )
-
+    console.log(`Job ID: ${metadata.id}`, job, metadata)
     await new this.jobs[job.className]().run(job.args)
   }
 }

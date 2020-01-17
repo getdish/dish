@@ -1,0 +1,25 @@
+- args:
+    name: restaurant_parent
+    table:
+      name: dish
+      schema: public
+    using:
+      manual_configuration:
+        column_mapping:
+          restaurant_id: id
+        remote_table:
+          name: restaurant
+          schema: public
+  type: create_array_relationship
+- args:
+    name: dishes
+    table:
+      name: restaurant
+      schema: public
+    using:
+      foreign_key_constraint_on:
+        column: restaurant_id
+        table:
+          name: dish
+          schema: public
+  type: create_array_relationship
