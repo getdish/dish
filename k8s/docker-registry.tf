@@ -77,7 +77,7 @@ resource "kubernetes_ingress" "docker-registry-ingress" {
   spec {
     tls {
       hosts = [
-        "docker.dish.tombh.co.uk",
+        "docker.${var.dish_domain}",
       ]
       secret_name = "docker-tls"
     }
@@ -86,7 +86,7 @@ resource "kubernetes_ingress" "docker-registry-ingress" {
       service_port = 5000
     }
     rule {
-      host = "docker.dish.tombh.co.uk"
+      host = "docker.${var.dish_domain}"
       http {
         path {
           path = "/*"

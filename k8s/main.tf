@@ -5,3 +5,12 @@ module "cluster" {
   do_dish_key = var.do_dish_key
   source = "./cluster"
 }
+
+variable "dish_domain" {
+  default = "dish.tombh.co.uk"
+}
+
+data "helm_repository" "stable" {
+  name = "stable"
+  url  = "https://kubernetes-charts.storage.googleapis.com/"
+}
