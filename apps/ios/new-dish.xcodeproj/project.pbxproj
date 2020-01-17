@@ -24,6 +24,7 @@
 		1CE354882398714D004B3A84 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE354872398714D004B3A84 /* HomeView.swift */; };
 		1CE3548A239871CB004B3A84 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE35489239871CB004B3A84 /* BottomSheetView.swift */; };
 		AE0C5FF523D2397D00BB5340 /* PrintGeometryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0C5FF423D2397D00BB5340 /* PrintGeometryView.swift */; };
+		AE0C5FF723D2414500BB5340 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0C5FF623D2414500BB5340 /* CustomButton.swift */; };
 		AE0F474423B69276008F7418 /* DishCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0F474323B69276008F7418 /* DishCamera.swift */; };
 		AE1BBDB423C8224200C58A87 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1BBDB323C8224200C58A87 /* CustomTextField.swift */; };
 		AE1BBDB623C8397900C58A87 /* CutoutCircleCentered.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1BBDB523C8397900C58A87 /* CutoutCircleCentered.swift */; };
@@ -127,6 +128,7 @@
 		24F0B5F55B1972A7519C9B3C /* Pods-new-dish.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-new-dish.debug.xcconfig"; path = "Target Support Files/Pods-new-dish/Pods-new-dish.debug.xcconfig"; sourceTree = "<group>"; };
 		958FBEA937B7052DE007A65D /* Pods-new-dish.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-new-dish.release.xcconfig"; path = "Target Support Files/Pods-new-dish/Pods-new-dish.release.xcconfig"; sourceTree = "<group>"; };
 		AE0C5FF423D2397D00BB5340 /* PrintGeometryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintGeometryView.swift; sourceTree = "<group>"; };
+		AE0C5FF623D2414500BB5340 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		AE0F474323B69276008F7418 /* DishCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishCamera.swift; sourceTree = "<group>"; };
 		AE1BBDB323C8224200C58A87 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		AE1BBDB523C8397900C58A87 /* CutoutCircleCentered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutoutCircleCentered.swift; sourceTree = "<group>"; };
@@ -319,6 +321,7 @@
 				AE1BBDB323C8224200C58A87 /* CustomTextField.swift */,
 				AE1BBDB523C8397900C58A87 /* CutoutCircleCentered.swift */,
 				AEA331F623A3382100B36A23 /* DishButton.swift */,
+				AE0C5FF623D2414500BB5340 /* CustomButton.swift */,
 				AEA331F423A3381200B36A23 /* DishInput.swift */,
 				AE7563E623A03D3C0094022B /* FeatureCard.swift */,
 				AEF6556E23B0248200E49A51 /* FilterButton.swift */,
@@ -658,6 +661,7 @@
 				AE872FED23CE6E3900F84663 /* Publisher.swift in Sources */,
 				AEA87E4323B976EB009F07DB /* HomeMainFilters.swift in Sources */,
 				AE56C86423ADB78C006A156A /* HomeSearchResultsView.swift in Sources */,
+				AE0C5FF723D2414500BB5340 /* CustomButton.swift in Sources */,
 				AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */,
 				AEED844823B675C300407266 /* CameraView.swift in Sources */,
 				AE872FF523CE983900F84663 /* ClearKeyboardOnScroll.swift in Sources */,

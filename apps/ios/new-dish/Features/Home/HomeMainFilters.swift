@@ -1,21 +1,61 @@
 import SwiftUI
 
 struct HomeMainFilters: View {
+    enum Filters { case cuisine, search }
+    
     @EnvironmentObject var store: AppStore
+    @State var showFilters: Filters = .cuisine
+    @State var wasOnSearchResults = false
     
     var body: some View {
-        ZStack {
-            if Selectors.home.isOnSearchResults() {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HomeSearchResultsFilters()
-                        .environment(\.colorScheme, .dark)
+        let leftPad = Spacer().frame(width: 50)
+        
+        return ZStack {
+            Run {
+                // side effect => search filters change
+                if !self.wasOnSearchResults && Selectors.home.isOnSearchResults() {
+                    self.wasOnSearchResults = true
+                    self.showFilters = .search
                 }
             }
-            else {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HomeMainFiltersContent()
-                        .environment(\.colorScheme, .light)
+            
+            ZStack(alignment: .leading) {
+                Group {
+                    if showFilters == .search {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack {
+                                leftPad
+                                HomeSearchResultsFilters()
+                            }
+                            .padding()
+                            .environment(\.colorScheme, .dark)
+                        }
+                        
+                    }
+                    else {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack {
+                                leftPad
+                                HomeMainFiltersContent()
+                            }
+                            .padding()
+                            .environment(\.colorScheme, .light)
+                        }
+                    }
+                    
+                    CustomButton({
+                        self.showFilters = self.showFilters == .cuisine ? .search : .cuisine
+                    }) {
+                        Text(self.showFilters == .cuisine ? "🍽" : "🔍")
+                            .font(.system(size: 28))
+//                            .frame(width: 24, height: 24)
+                    }
+//                    .cornerRadius(200)
+//                    .clipped()
+                    .offset(x: 20)
                 }
+                .animation(.spring(response: 0.25))
+                .transition(.slide)
             }
             
             // cover right part of filters so its untouchable and doesnt conflict with side drags
@@ -29,14 +69,13 @@ struct HomeMainFilters: View {
 
 struct HomeSearchResultsFilters: View {
     var body: some View {
-        HStack {
+        Group {
             FilterButton(label: "Hole in the Wall", action: {})
             FilterButton(label: "Date Spot", action: {})
             FilterButton(label: "Healthy", action: {})
             FilterButton(label: "Quiet", action: {})
             FilterButton(label: "Locals Favorite", action: {})
         }
-        .padding()
     }
 }
 
@@ -44,7 +83,7 @@ struct HomeMainFiltersContent: View {
     @EnvironmentObject var store: AppStore
     
     var body: some View {
-        HStack {
+        Group {
             FilterButton(label: "American", action: {
                 // todo move this into action
                 let curState = self.store.state.home.state.last!
@@ -63,22 +102,5 @@ struct HomeMainFiltersContent: View {
             FilterButton(label: "Burmese", action: {})
             FilterButton(label: "Greek", action: {})
         }
-        .padding()
     }
 }
-
-//                    ContextMenuView(menuContent: {
-//                        List {
-//                            Text("Item One")
-//                            Text("Item Two")
-//                            Text("Item Three")
-//                        }
-//                            .frame(height: 150) // todo how to get lists that shrink
-//                    }) {
-//                        Text("🍽")// "line.horizontal.3.decrease.circle")
-//                            .foregroundColor(Color.white.opacity(0.5))
-//                            .font(.system(size: 26))
-//                            .onTapGesture {
-//                                self.showTypeMenu = true
-//                        }
-//                    }

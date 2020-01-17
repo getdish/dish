@@ -486,7 +486,8 @@ struct HomeMainView: View {
                         .cornerRadius(20)
                         .shadow(color: Color.black, radius: 20, x: 0, y: 0)
                         .clipped()
-                        .animation(.spring(), value: state.animationState == .animate)
+//                        .animation(.spring(), value: state.animationState == .animate)
+                        .animation(.spring(response: 0.28))
                         .offset(y: state.showCamera ? -Screen.height : 0)
                         .rotationEffect(state.showCamera ? .degrees(-15) : .degrees(0))
 
@@ -502,8 +503,9 @@ struct HomeMainView: View {
                         
                         // results
                         HomeMainContent()
+//                            .animation(.spring(), value: state.animationState == .animate)
+                            .animation(.spring(response: 0.28))
                             .offset(y: state.showCamera ? Screen.height : 0)
-                            .animation(.spring(), value: state.animationState == .animate)
                         
                         BottomNav()
                         
