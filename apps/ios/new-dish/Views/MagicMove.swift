@@ -3,27 +3,24 @@ import Combine
 
 fileprivate class MagicItemsStore: ObservableObject {
     enum MoveState {
-        case start, end, done
+        case start, animate, done
     }
     
     @Published var position: MagicItemPosition = .start
     @Published var state: MoveState = .done
     
+    var nextPosition: MagicItemPosition = .start
     var startItems = [String: MagicItemDescription]()
     var endItems = [String: MagicItemDescription]()
     
-    let delay = 500.0
-    
     func animate(_ position: MagicItemPosition) {
-        print("magicmove \(position)")
+        self.state = .start
         async(8) {
-            self.state = .start
-            async(100 + self.delay) {
-                self.state = .end
-            }
-            async(1000 + self.delay) {
-                self.state = .done
+            self.nextPosition = position
+            self.state = .animate
+            async(400.0) {
                 self.position = position
+                self.state = .done
             }
         }
     }
@@ -58,7 +55,7 @@ struct MagicMove<Content>: View where Content: View {
     
     var body: some View {
         let keys = magicItems.startItems.map { $0.key }
-        let values = magicItems.startItems.map { $0.value }
+        let startValues = magicItems.startItems.map { $0.value }
         let endValues = magicItems.endItems.map { $0.value }
         
         return ZStack {
@@ -67,27 +64,36 @@ struct MagicMove<Content>: View where Content: View {
             if store.state != .done {
                 ZStack(alignment: .topLeading) {
                     ForEach(keys.indices) { index -> AnyView in
-                        let start = values[index]
-                        guard let end = endValues.first(where: { $0.id == values[index].id }) else {
+                        if index == 0 { print("loop") }
+
+                        let start = startValues[index]
+                        guard let end = endValues.first(where: { $0.id == startValues[index].id }) else {
                             return AnyView(start.view)
                         }
                         
-                        let cur: MagicItemDescription = self.store.state == .start ? start : end
+                        let animateItem: MagicItemDescription =
+                            self.store.position == .start ? start : end
+                        let animatePosition =
+                            (self.store.nextPosition == .start ? start : end).frame
+                        
+                        if index == 0 {
+                            print("do it \(animatePosition.minY)")
+                        }
                         
                         return AnyView(
                             // what is alignment
                             HStack {
                                 VStack {
                                     VStack {
-                                        start.view
+                                        animateItem.view
                                     }
                                     .frame(
-                                        width: cur.frame.width,
-                                        height: cur.frame.height
+                                        width: animatePosition.width,
+                                        height: animatePosition.height
                                     )
                                         .offset(
-                                            x: cur.frame.minX,
-                                            y: cur.frame.minY
+                                            x: animatePosition.minX,
+                                            y: animatePosition.minY
                                     )
                                         .animation(self.animation)
                                     
@@ -98,7 +104,6 @@ struct MagicMove<Content>: View where Content: View {
                         )
                     }
                 }
-                .background(Color.red.opacity(0.5))
             }
         }
         .edgesIgnoringSafeArea(.all)
@@ -132,9 +137,12 @@ struct MagicItem<Content>: View where Content: View {
     }
 
     var body: some View {
-        print("what now yo \(id) \(at) \(self.store.position)")
+//        print("what now yo \(id) \(at) \(self.store.position)")
         return self.content
-            .opacity(self.store.position == at ? 1 : 0)
+            .opacity(
+                self.store.state == .animate ? 0 :
+                    self.store.position == at ? 1 : 0
+            )
             .overlay(
                 GeometryReader { geometry in
                     Run {
