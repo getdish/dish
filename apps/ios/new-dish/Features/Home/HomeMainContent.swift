@@ -19,7 +19,7 @@ struct HomeMainContent: View {
     
     var body: some View {
         ZStack(alignment: .topLeading) {
-            Run {
+            SideEffect("HomeMainContent") {
                 if self.homeState.isSnappedToBottom && self.animatePosition == .start {
                     self.animatePosition = .end
                 }

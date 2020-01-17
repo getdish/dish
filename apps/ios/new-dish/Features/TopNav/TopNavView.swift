@@ -100,6 +100,7 @@ struct TopNavHome: View {
                         Spacer()
                         
                         Button(action: {
+                            App.enterRepl = true
                         }) {
                             VStack {
                                 Text("~\(Int(App.store.state.map.location.radius / 1000)) mi")

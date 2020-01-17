@@ -13,7 +13,7 @@ struct PrintGeometryView: View {
     var body: some View {
         return debugGeometry
             ? AnyView(GeometryReader { g in
-                Run { print("GEOMETRY \(self.name) WIDTH \(g.size.width) HEIGHT \(g.size.height)") }
+                SideEffect("PrintGeometryView") { print("GEOMETRY \(self.name) WIDTH \(g.size.width) HEIGHT \(g.size.height)") }
             })
             : emptyView
     }

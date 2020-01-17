@@ -28,9 +28,17 @@ func async(_ ms: Double = 0, execute: @escaping () -> Void) {
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func startDebugLoop() {
+        #if DEBUG
         Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
+            App
+            homeViewState
             // set breakpoint here or we can have a shortcut in app to trigger debugger
+            if App.enterRepl == true {
+                raise(SIGINT)
+                App.enterRepl = false
+            }
         }
+        #endif
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {

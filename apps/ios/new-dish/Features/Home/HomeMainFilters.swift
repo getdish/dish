@@ -11,7 +11,7 @@ struct HomeMainFilters: View {
         let leftPad = Spacer().frame(width: 50)
         
         return ZStack {
-            Run {
+            SideEffect("HomeMainFilters") {
                 // side effect => search filters change
                 if !self.wasOnSearchResults && Selectors.home.isOnSearchResults() {
                     self.wasOnSearchResults = true

@@ -198,7 +198,7 @@ struct MagicItem<Content>: View where Content: View {
         return ZStack {
             self.content
                 .overlay(
-                    GeometryReader { geometry -> Run in
+                    GeometryReader { geometry -> SideEffect in
                         let frame = geometry.frame(in: .global)
                         
                         // off screen avoid doing things
@@ -207,9 +207,9 @@ struct MagicItem<Content>: View where Content: View {
                         let offXN = frame.minX + frame.width < 0
                         let offXP = frame.minX > Screen.width
                         if offYN || offYP || offXN || offXP {
-                            return Run {}
+                            return SideEffect("offscreen")
                         }
-                        return Run(throttle: 16) {
+                        return SideEffect("updateMagicItems", throttle: 16) {
                             // could prevent during animation right?
                             //                            if magicItems.state == .animate { return }
                             let item = MagicItemDescription(
