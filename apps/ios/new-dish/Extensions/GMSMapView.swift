@@ -14,13 +14,18 @@ extension GMSMapView {
         let point = self.projection.coordinate(for: topCenterCoor)
         return point
     }
+    
+    func getCenterLocation() -> CLLocation {
+        let centerCoordinate = getCenterCoordinate()
+        return CLLocation(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude)
+    }
+    
+    func getTopCenterLocation() -> CLLocation {
+        let topCenterCoordinate = self.getTopCenterCoordinate()
+        return CLLocation(latitude: topCenterCoordinate.latitude, longitude: topCenterCoordinate.longitude)
+    }
 
     func getRadius() -> CLLocationDistance {
-        let centerCoordinate = getCenterCoordinate()
-        let centerLocation = CLLocation(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude)
-        let topCenterCoordinate = self.getTopCenterCoordinate()
-        let topCenterLocation = CLLocation(latitude: topCenterCoordinate.latitude, longitude: topCenterCoordinate.longitude)
-        let radius = CLLocationDistance(centerLocation.distance(from: topCenterLocation))
-        return round(radius)
+        return round(CLLocationDistance(getCenterLocation().distance(from: getTopCenterLocation())))
     }
 }

@@ -14,20 +14,7 @@ struct DishMapView: View {
     private var keyboard = Keyboard()
     
     @State var mapView: GMSMapView? = nil
-    @State var extraZoomFromButtons: CGFloat = 0.0
-    @State var lastExtraZoom: CGFloat = 0.0
-    
-    var extraZoom: Binding<CGFloat> {
-        Binding<CGFloat>(
-            get: {
-                self.homeState.mapHeight / 1000
-            },
-            set: { val in
-                self.extraZoomFromButtons = 0
-                self.lastExtraZoom = val
-            }
-        )
-    }
+    @State var extraZoom: CGFloat = 0.0
     
     var body: some View {
         let appWidth: CGFloat = appGeometry?.size.width ?? Screen.width
@@ -41,7 +28,7 @@ struct DishMapView: View {
                     width: appWidth,
                     height: appHeight,
                     hiddenBottomPct: hiddenBottomPct,
-                    extraZoom: self.extraZoom,
+                    extraZoom: self.$extraZoom,
                     darkMode: self.colorScheme == .dark,
                     animate: [.idle].contains(homeState.dragState) || homeState.animationState != .idle || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
                     moveToLocation: store.state.map.moveToLocation,
@@ -73,16 +60,14 @@ struct DishMapView: View {
                 if true || self.homeState.isNearTop {
                     HStack {
                         CustomButton({
-                            print("zoom out")
-                            self.extraZoomFromButtons -= 0.2
+                            self.extraZoom -= 1
                         }) {
                             MapButton(icon: "minus.magnifyingglass")
                         }
                         .frame(height: homeState.mapHeight)
                         Spacer()
                         CustomButton({
-                            print("zoom in")
-                            self.extraZoomFromButtons += 0.2
+                            self.extraZoom += 1
                         }) {
                             MapButton(icon: "plus.magnifyingglass")
                         }

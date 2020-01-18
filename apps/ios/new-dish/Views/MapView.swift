@@ -6,7 +6,7 @@ import GoogleMaps
 // just need to clean it up a little
 
 fileprivate struct Constants {
-    static let ONE_DEGREE_LAT: Double = 7000 / 111111
+    static let ONE_METER_TO_LAT: Double = 1 / 111111
 }
 
 struct MapViewLocation: Equatable {
@@ -72,7 +72,7 @@ struct MapView: UIViewControllerRepresentable {
             hiddenBottomPct: hiddenBottomPct,
             moveToLocation: moveToLocation,
             locations: locations,
-            extraZoom: self.extraZoom,
+            extraZoom: self.extraZoom.wrappedValue,
             darkMode: darkMode,
             animate: animate,
             onMapSettle: onMapSettle
@@ -124,7 +124,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     var updateCancels: Set<AnyCancellable> = []
     var hasSettled: Bool = false
     var zoom: CGFloat = 12.0
-    @Binding var extraZoom: CGFloat
+    var extraZoom: CGFloat
 
     init(
         width: CGFloat,
@@ -132,12 +132,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         hiddenBottomPct: CGFloat = 0,
         moveToLocation: MapViewLocation?,
         locations: [GooglePlaceItem] = [],
-        extraZoom: Binding<CGFloat>,
+        extraZoom: CGFloat,
         darkMode: Bool?,
         animate: Bool?,
         onMapSettle: OnChangeSettle? = nil
     ) {
-        self._extraZoom = extraZoom
+        self.extraZoom = extraZoom
         self.width = width
         self.height = height
         self.hiddenBottomPct = hiddenBottomPct
@@ -150,7 +150,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         
         self.currentLocationService.start()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
+        async(1000) {
             self.hasSettled = true
         }
     }
@@ -212,25 +212,26 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
                 || self.lastSettledAt!.location.distance(from: next.location) > 1000
                 || abs(abs(self.lastSettledAt!.radius) - abs(next.radius)) > 2000
             if shouldCallback {
+                print(" 🗺 onMapSettle cb \(next)")
                 cb(next)
             }
-            print("we settled at \(next)")
             self.lastSettledAt = next
         }
     }
 
     // on props update
 
-    var lastExtraZoom: CGFloat = 0.0
     func update(_ parent: MapView) {
         // cancel any pending updates
         updateCancels.forEach { $0.cancel() }
         updateCancels = []
         
+        var shouldUpdateCamera = false
+        
         let next = parent.extraZoom.wrappedValue
-        if next != lastExtraZoom  {
-            self.lastExtraZoom = next
-            self.updateZoom(next)
+        if next != self.extraZoom  {
+            self.extraZoom = next
+            shouldUpdateCamera = true
         }
         if self.animate != parent.animate {
             self.animate = parent.animate
@@ -245,7 +246,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         }
         if self.hiddenBottomPct != parent.hiddenBottomPct {
             self.hiddenBottomPct = parent.hiddenBottomPct
+            shouldUpdateCamera = true
             self.callbackOnSettle()
+        }
+        
+        if shouldUpdateCamera {
+            self.updateCamera()
         }
     }
     
@@ -262,11 +268,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
             marker.tracksViewChanges = true
             marker.map = self.gmapView
         }
-    }
-
-    func updateZoom(_ val: CGFloat) {
-        self.extraZoom = val
-        self.updateCamera()
     }
 
     func updateMapLocation() {
@@ -305,6 +306,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
             .store(in: &updateCancels)
         }
     }
+    
+    var isAnimating = false
+    var lastAnimation: AnyCancellable? = nil
 
     private func updateCamera(_ location: CLLocationCoordinate2D? = nil) {
         if let camera = getCamera(location) {
@@ -312,38 +316,35 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
                 gmapView.isHidden = false
             }
             if self.animate {
+                if let last = lastAnimation { last.cancel() }
                 // to control animation duration... uncomment below
-//                CATransaction.begin()
-                // higher number = slower animation
-//                CATransaction.setValue(1.5, forKey: kCATransactionAnimationDuration)
+                self.isAnimating = true
+                CATransaction.begin()
+                let seconds = 0.5
+                CATransaction.setValue(seconds, forKey: kCATransactionAnimationDuration)
                 gmapView.animate(to: camera)
-//                CATransaction.commit()
+                CATransaction.commit()
+                
+                var cancelled = false
+                lastAnimation = AnyCancellable { cancelled = true }
+                async(seconds * 1000) {
+                    if !cancelled {
+                        self.isAnimating = false
+                    }
+                }
             } else {
                 gmapView.camera = camera
             }
         }
     }
 
-    // converts 0-1
-    private func scaledZoom(_ number: Double? = nil) -> Double {
-        let input = number ?? Double(self.extraZoom)
-        let inputRanged = max(-5.0, min(5.0, input))
-        let min = -5.0
-        let max = 5.0
-        let val = (inputRanged - min) / (max - min) * 1.0
-        print("scaledZoom <===> \(number) \(self.extraZoom) =>>>>> \(val)")
-        return val
-    }
-
     private var adjustLatitude: Double {
-        let scaleZoom = scaledZoom()
-        let zoomLat = scaleZoom * 0.4 * Constants.ONE_DEGREE_LAT
-        let constLat = (-Constants.ONE_DEGREE_LAT * 0.9)
-        var z = zoomLat + constLat
-        if scaleZoom < 0.6 {
-            z = z - (0.6 - scaleZoom) * Constants.ONE_DEGREE_LAT * 7
-        }
-        return z
+        let mapPct = Double(1 - hiddenBottomPct)
+        let radius = Double(gmapView.getRadius())
+        let latAdj = radius * mapPct * Constants.ONE_METER_TO_LAT
+        let zoomStr = (1 / Double(self.zoom + self.extraZoom)) * 9
+        print("adjustLatitude \(hiddenBottomPct) \(latAdj) \(zoomStr)")
+        return -latAdj * zoomStr
     }
 
     private func getCamera(_ givenLoc: CLLocationCoordinate2D? = nil) -> GMSCameraPosition? {

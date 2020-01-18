@@ -19,9 +19,7 @@ struct HomeMainContent: View {
     @State var shouldUpdateMagicPositions: Bool = true
     
     var body: some View {
-        print("self.shouldUpdateMagicPositions \(self.shouldUpdateMagicPositions)")
-        
-        return ZStack(alignment: .topLeading) {
+        ZStack(alignment: .topLeading) {
             SideEffect("HomeMainContent", level: .debug) {
                 if self.homeState.isSnappedToBottom && self.animatePosition == .start {
                     self.shouldUpdateMagicPositions = false

@@ -32,12 +32,12 @@ class HomeViewState: ObservableObject {
     @Published private(set) var y: CGFloat = Screen.fullHeight * 0.3 * snapToBottomYMovePct - 1 {
         willSet(y) {
             // util - break when the searchbar is at y
-            #if DEBUG
-            print("y \(y)")
-            if false, y > snapToBottomAt { // <- example
-                raise(SIGINT)
-            }
-            #endif
+//            #if DEBUG
+//            print("y \(y)")
+//            if false, y > snapToBottomAt { // <- example
+//                raise(SIGINT)
+//            }
+//            #endif
         }
     }
     @Published private(set) var searchBarYExtra: CGFloat = 0
