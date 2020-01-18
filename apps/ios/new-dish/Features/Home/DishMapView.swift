@@ -13,8 +13,7 @@ struct DishMapView: View {
     private var service = DishMapViewService()
     private var keyboard = Keyboard()
     
-    @State var mapView: GMSMapView? = nil
-    @State var extraZoom: CGFloat = 0.0
+    @State var mapView: MapViewController? = nil
     
     var body: some View {
         let appWidth: CGFloat = appGeometry?.size.width ?? Screen.width
@@ -28,7 +27,6 @@ struct DishMapView: View {
                     width: appWidth,
                     height: appHeight,
                     hiddenBottomPct: hiddenBottomPct,
-                    extraZoom: self.$extraZoom,
                     darkMode: self.colorScheme == .dark,
                     animate: [.idle].contains(homeState.dragState) || homeState.animationState != .idle || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
                     moveToLocation: store.state.map.moveToLocation,
@@ -60,14 +58,14 @@ struct DishMapView: View {
                 if true || self.homeState.isNearTop {
                     HStack {
                         CustomButton({
-                            self.extraZoom -= 1
+                            self.mapView?.zoomIn()
                         }) {
                             MapButton(icon: "minus.magnifyingglass")
                         }
                         .frame(height: homeState.mapHeight)
                         Spacer()
                         CustomButton({
-                            self.extraZoom += 1
+                            self.mapView?.zoomOut()
                         }) {
                             MapButton(icon: "plus.magnifyingglass")
                         }
