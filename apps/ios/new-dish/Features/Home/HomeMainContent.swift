@@ -135,14 +135,14 @@ struct HomeContentExplore: View {
         ZStack {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
-                    ScrollListener(onScroll: { frame in
-                        if self.homeState.dragState == .idle {
-                            let mapHeight = self.homeState.mapHeight
-                            let scrollY = mapHeight - frame.minY - Screen.statusBarHeight - self.homeState.scrollRevealY
-                            print(" ⏩ setScrollY \(scrollY)")
-                            self.homeState.setScrollY(scrollY)
+                    ScrollListener(throttle: 80.0) { frame in
+                        if self.homeState.dragState != .idle {
+                            return
                         }
-                    })
+                        let mapHeight = self.homeState.mapHeight
+                        let scrollY = mapHeight - frame.minY - Screen.statusBarHeight - self.homeState.scrollRevealY
+                        self.homeState.setScrollY(scrollY)
+                    }
                     Spacer().frame(height: filterBarHeight + 22 + self.homeState.scrollRevealY)
                     VStack(spacing: self.spacing) {
                         ForEach(0 ..< self.items.count) { index in

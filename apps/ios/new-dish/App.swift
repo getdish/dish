@@ -16,6 +16,7 @@ class AppInstance {
 
     let keyboard = Keyboard()
     let queueMain = DispatchQueue.main
+    let magicItems = magicItemsStore
     
     var enterRepl = false
     

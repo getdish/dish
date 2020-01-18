@@ -2,9 +2,9 @@ import SwiftUI
 import Combine
 
 fileprivate let DEBUG_ANIMATION = true
-fileprivate let OFF_OPACITY = DEBUG_ANIMATION ? 0.33 : 0
+fileprivate let OFF_OPACITY = DEBUG_ANIMATION ? 0.5 : 0
 
-fileprivate class MagicItemsStore: ObservableObject {
+class MagicItemsStore: ObservableObject {
     enum MoveState {
         case start, animate, done
     }
@@ -50,7 +50,7 @@ fileprivate class MagicItemsStore: ObservableObject {
     }
 }
 
-fileprivate let magicItems = MagicItemsStore()
+let magicItemsStore = MagicItemsStore()
 fileprivate var lastPosition: MagicItemPosition = .start
 
 struct MagicMove<Content>: View where Content: View {
@@ -59,7 +59,7 @@ struct MagicMove<Content>: View where Content: View {
     @State var lastContent: Content?
     @State var lastRun: NSDate? = nil
     @State var position: MagicItemPosition = .start
-    @ObservedObject fileprivate var store = magicItems
+    @ObservedObject var store = magicItemsStore
     var animation: Animation
     
     init(
@@ -84,9 +84,9 @@ struct MagicMove<Content>: View where Content: View {
     }
     
     var body: some View {
-        let startValues = magicItems.startItems.map { $0.value }.filter { $0 != nil }
-        let endValues = magicItems.endItems.map { $0.value }.filter { $0 != nil }
-        let keys = magicItems.startItems
+        let startValues = magicItemsStore.startItems.map { $0.value }.filter { $0 != nil }
+        let endValues = magicItemsStore.endItems.map { $0.value }.filter { $0 != nil }
+        let keys = magicItemsStore.startItems
             .filter { $0.value != nil }
             .filter { startItem in
                 endValues.contains(where: { $0!.id == startItem.value!.id })
@@ -105,7 +105,7 @@ struct MagicMove<Content>: View where Content: View {
                             if index < startValues.count - 1 {
                                 if let val = startValues[index] {
                                     return AnyView(
-                                        Color.green
+                                        val.view
                                             .opacity(0.5)
                                             .overlay(Text("\(val.frame.minY)").foregroundColor(.white))
                                             .frame(width: val.frame.width, height: val.frame.height)
@@ -125,7 +125,7 @@ struct MagicMove<Content>: View where Content: View {
             
             if store.state != .done {
                 ZStack(alignment: .topLeading) {
-                    ForEach(keys.indices) { index -> AnyView in
+                    ForEach(0 ..< keys.count) { index -> AnyView in
                         let start = startValues[index]!
                         guard let end = endValues.first(where: { $0?.id == startValues[index]?.id }) else {
                             return AnyView(EmptyView())
@@ -168,7 +168,7 @@ enum MagicItemPosition {
     case start, end
 }
 
-fileprivate struct MagicItemDescription: Identifiable, Equatable {
+struct MagicItemDescription: Identifiable, Equatable {
     static func == (lhs: MagicItemDescription, rhs: MagicItemDescription) -> Bool {
         lhs.id == rhs.id && lhs.frame.equalTo(rhs.frame) && lhs.at == rhs.at
     }
@@ -180,7 +180,7 @@ fileprivate struct MagicItemDescription: Identifiable, Equatable {
 }
 
 struct MagicItem<Content>: View where Content: View {
-    @ObservedObject fileprivate var store = magicItems
+    @ObservedObject fileprivate var store = magicItemsStore
     @Environment(\.geometry) var appGeometry
 
     let content: Content
@@ -220,15 +220,15 @@ struct MagicItem<Content>: View where Content: View {
                                 at: self.at
                             )
                             
-                            let items = self.at == .start ? magicItems.startItems : magicItems.endItems
+                            let items = self.at == .start ? magicItemsStore.startItems : magicItemsStore.endItems
                             let curItem = items[self.id]
                             
                             if curItem != item {
 //                                print("sideeffect MagicItem.items[\(self.id)] = (xy,wh) \(frame.minX.rounded()) x \(frame.minY.rounded()) | \(frame.width.rounded()) x \(frame.height.rounded())")
                                 if self.at == .start {
-                                    magicItems.startItems[self.id] = item
+                                    magicItemsStore.startItems[self.id] = item
                                 } else {
-                                    magicItems.endItems[self.id] = item
+                                    magicItemsStore.endItems[self.id] = item
                                 }
                             }
                         }
@@ -242,9 +242,9 @@ struct MagicItem<Content>: View where Content: View {
             .onDisappear {
                 print("bye \(self.id)")
                 if self.at == .start {
-                    magicItems.startItems[self.id] = nil
+                    magicItemsStore.startItems[self.id] = nil
                 } else {
-                    magicItems.endItems[self.id] = nil
+                    magicItemsStore.endItems[self.id] = nil
                 }
             }
     }

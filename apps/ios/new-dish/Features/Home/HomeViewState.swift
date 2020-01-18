@@ -118,7 +118,7 @@ class HomeViewState: ObservableObject {
             .throttle(for: 0.15, scheduler: App.queueMain, latest: true)
             .removeDuplicates()
             .sink { y in
-                if Date().timeIntervalSince(started) < 1.5 {
+                if Date().timeIntervalSince(started) < 2 {
                     return
                 }
                 let next: HomeViewState.HomeScrollState =
