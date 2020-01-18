@@ -16,7 +16,7 @@ struct HomeSearchResultsView: View {
                     ForEach(state.searchResults.results) { item in
                         DishRestaurantCard(restaurant:
                             RestaurantItem(
-                                id: 0,
+                                id: item.id,
                                 name: item.name,
                                 imageName: "turtlerock",
                                 address: "",

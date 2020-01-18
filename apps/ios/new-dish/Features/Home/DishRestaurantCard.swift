@@ -1,9 +1,11 @@
 import SwiftUI
 
-struct DishRestaurantCard: View {
-    var restaurant: RestaurantItem
+struct DishRestaurantCard: View, Identifiable {
+    @ObservedObject var restaurant: RestaurantItem
+    var id: String { restaurant.id }
     var aspectRatio: CGFloat = 2 / 2
     var isMini: Bool = false
+    var at: MagicItemPosition = .start
     
     var gradientBottom: LinearGradient {
         LinearGradient(
@@ -22,35 +24,26 @@ struct DishRestaurantCard: View {
     }
     
     var body: some View {
-        ZStack {
-            restaurant.image
-                .resizable()
-                .aspectRatio(aspectRatio, contentMode: .fit)
-                .overlay(
-                    Rectangle().fill(gradientBottom)
-            )
-                .overlay(
-                    DishRestaurantCardText(
-                        restaurant: restaurant,
-                        isMini: isMini
-                    )
+        MagicItem("restaurant-\(id)", at: at) {
+            ZStack {
+                self.restaurant.image
+                    .resizable()
+                    .aspectRatio(self.aspectRatio, contentMode: .fit)
+                    .overlay(
+                        Rectangle().fill(self.gradientBottom)
                 )
-                .cornerRadius(16)
-                .clipped()
-            
+                    .overlay(
+                        self.textOverlay
+                )
+                    .cornerRadius(16)
+                    .clipped()
+                
+            }
         }
     }
-}
-
-
-
-struct DishRestaurantCardText: View {
-    var restaurant: RestaurantItem
-    var isMini: Bool
     
-    var body: some View {
+    var textOverlay: some View {
         let ratingSize: CGFloat = isMini ? 25 : 45
-
         return ZStack(alignment: .bottomLeading) {
             VStack(alignment: .leading) {
                 ZStack {
@@ -115,7 +108,7 @@ struct DishRestaurantCardText: View {
                         self.restaurant.next()
                 }
             }
-
+            
         }
         .foregroundColor(.white)
         

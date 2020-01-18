@@ -91,31 +91,29 @@ struct HomeSearchBarAfterView: View {
             Button(action: {
                 self.homeState.toggleMap()
             }) {
-                Image(systemName: self.homeState.isSnappedToTop ?
-                    "chevron.down" :
-                    self.homeState.isSnappedToBottom
-                    ? "chevron.up"
-                    : "map"
-                )
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 16, height: 16)
-                    .opacity(0.5)
+                Group {
+                    if self.homeState.isSnappedToTop {
+                        Image(systemName: "chevron.down")
+                            .resizable()
+                            .scaledToFit()
+                            
+                    }
+                    else if self.homeState.isSnappedToBottom {
+                        Image(systemName: "chevron.up")
+                            .resizable()
+                            .scaledToFit()
+                    }
+                    else {
+                        Image(systemName: "map")
+                            .resizable()
+                            .scaledToFit()
+                    }
+                }
+                .frame(width: 16, height: 16)
+                .opacity(0.5)
             }
             .padding(.vertical, 4)
             .padding(.horizontal, 6)
-            
-//            Button(action: {
-//                homePager.animateTo(2)
-//            }) {
-//                Image(systemName: "camera.fill")
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(width: 20, height: 16)
-//                    .opacity(0.5)
-//            }
-//            .padding(.vertical, 4)
-//            .padding(.horizontal, 6)
         }
         .padding(.trailing, 4)
     }

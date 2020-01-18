@@ -10,7 +10,6 @@ struct CameraView: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<CameraView>) {
-        print("CameraView should update the controller now")
         context.coordinator.update()
     }
     

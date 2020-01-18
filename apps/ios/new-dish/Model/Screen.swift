@@ -13,4 +13,8 @@ struct Screen {
         let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
         return window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
     }
+    
+    static var fullHeight: CGFloat {
+        Screen.height + Screen.statusBarHeight
+    }
 }

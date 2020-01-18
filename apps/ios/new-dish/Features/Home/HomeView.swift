@@ -7,7 +7,7 @@ struct HomeView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                HomeViewContent(
+                HomeViewInner(
                     width: geometry.size.width,
                     height: geometry.size.height
                 )
@@ -17,7 +17,6 @@ struct HomeView: View {
             )
         }
         .embedInGeometryReader()
-        .edgesIgnoringSafeArea(.all)
     }
 }
 
@@ -28,7 +27,7 @@ let homePager = PagerStore(
 
 fileprivate let homeViewsIndex: [HomePageView] = [.me, .home, .camera]
 
-struct HomeViewContent: View {
+struct HomeViewInner: View {
     var width: CGFloat = 0
     var height: CGFloat = 0
     @EnvironmentObject var store: AppStore
@@ -48,21 +47,26 @@ struct HomeViewContent: View {
         }
         
         return ZStack {
+            PrintGeometryView("HomeView")
+            
             PagerView(
                 pageCount: homePageCount,
                 pagerStore: homePager,
                 disableDragging: self.disableDragging || App.store.state.home.showCamera
                 ) { isDragging in
+                    //
+                    // ⚠️ ⚠️ ⚠️
+                    //    ADDING .clipped() to any of these causes perf issues!!!
+                    //    animations below seem to be choppier
+                    // ⚠️ ⚠️ ⚠️
+                    //
+                    
                     // account page
                     DishAccount()
-                        .clipped()
-                        .cornerRadius(80)
                         .zIndex(0)
                     
                     // home page
                     HomeMainView()
-                        .clipped()
-                        .cornerRadius(80)
                         .shadow(
                             color: Color.black.opacity(self.shadowStr),
                             radius: 60,
@@ -105,10 +109,6 @@ struct HomeViewContent: View {
                     }
                 }
             )
-            
-            TopNavView()
-            
-            BottomNav()
         }
         .frame(maxHeight: self.height)
     }

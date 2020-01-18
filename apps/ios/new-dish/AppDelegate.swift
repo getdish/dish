@@ -11,15 +11,34 @@ import GoogleMaps
 import GooglePlaces
 import XCGLogger
 
-// Init state
+// GLOBALS
+
 let log = XCGLogger.default
+let homeViewState = HomeViewState()
+let ANIMATION_SPEED: Double = 1
+
+func async(_ ms: Double = 0, execute: @escaping () -> Void) {
+    if ms > 0 {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(Int(ms))) { execute() }
+    } else {
+        DispatchQueue.main.async { execute() }
+    }
+}
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func startDebugLoop() {
+        #if DEBUG
         Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
+            App
+            homeViewState
             // set breakpoint here or we can have a shortcut in app to trigger debugger
+            if App.enterRepl == true {
+                raise(SIGINT)
+                App.enterRepl = false
+            }
         }
+        #endif
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {

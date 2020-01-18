@@ -6,7 +6,7 @@ import SwiftUI
 // basically, put your services here
 // this is where side effects and basically any global should go
 
-struct AppInstance {
+class AppInstance {
     let store = Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
     
     // services
@@ -16,6 +16,9 @@ struct AppInstance {
 
     let keyboard = Keyboard()
     let queueMain = DispatchQueue.main
+    let magicItems = magicItemsStore
+    
+    var enterRepl = false
     
     func start() {
         mapService.start()

@@ -17,7 +17,7 @@ class RestaurantItem: Codable, Identifiable, ObservableObject {
         lhs.id == rhs.id
     }
     
-    var id: Int
+    var id: String
     var name: String
     var imageName: String
     var address: String
@@ -26,7 +26,7 @@ class RestaurantItem: Codable, Identifiable, ObservableObject {
     var rating: Double
     
     init(
-        id: Int,
+        id: String,
         name: String,
         imageName: String,
         address: String,

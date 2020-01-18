@@ -13,7 +13,7 @@ struct TopNavView: View {
         TopNavViewContent()
             .allowsHitTesting(!store.state.disableTopNav)
             .animation(.spring())
-            .offset(y: homeState.mapHeight < homeState.hideTopNavAt ? -100 : 0)
+            .offset(y: self.homeState.isNearTop ? -100 : 0)
     }
 }
 
@@ -46,10 +46,6 @@ struct TopNavViewContent: View {
                                 TopNavHome()
                                 CameraTopNav()
                             }
-
-//                            if !isEditing {
-//                                TopNavMenuButton()
-//                            }
                         }
                         .padding(.horizontal)
                     }
@@ -60,8 +56,7 @@ struct TopNavViewContent: View {
                     Spacer()
                 }
             }
-                // how do i pad == safe area
-                .padding(.top, 40)
+            .padding(.top, 0)
         }
     }
 }
@@ -105,6 +100,7 @@ struct TopNavHome: View {
                         Spacer()
                         
                         Button(action: {
+                            App.enterRepl = true
                         }) {
                             VStack {
                                 Text("~\(Int(App.store.state.map.location.radius / 1000)) mi")

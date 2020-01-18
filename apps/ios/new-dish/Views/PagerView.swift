@@ -140,10 +140,10 @@ class PagerStore: ObservableObject {
         self.$index
             .removeDuplicates()
             .sink { i in
-                DispatchQueue.main.async {
+                async {
                     if let cb = self.changeDragAction {
                         let isRounded = i.truncatingRemainder(dividingBy: 1.0) == 0.0
-                        print("???? \(i) \(isRounded) \(last)")
+                        print("PagerStore.onChangeDrag \(i) \(isRounded) \(last)")
                         if isRounded {
                             if last == true {
                                 last = false

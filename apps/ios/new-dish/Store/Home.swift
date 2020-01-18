@@ -93,6 +93,10 @@ struct HomeSelectors {
         return state.home.state.count > 1
     }
     
+    func lastState(_ state: AppState = App.store.state) -> HomeStateItem {
+        return state.home.state.last!
+    }
+    
     func tags(_ state: AppState = App.store.state) -> [SearchInputTag] {
         let homeState = state.home.state.last!
         var tags: [SearchInputTag] = []
