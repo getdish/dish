@@ -2,22 +2,24 @@ import SwiftUI
 import AVFoundation
 
 struct CameraView: UIViewControllerRepresentable {
+    class CameraViewState {
+        var controller: CameraViewController? = nil
+    }
+    
+    var state = CameraViewState()
     var isCaptured: Binding<Bool>
-    @State var controller: CameraViewController? = nil
     
     func makeCoordinator() -> CameraView.Coordinator {
         Coordinator(self)
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<CameraView>) {
-        context.coordinator.update()
+        context.coordinator.update(self)
     }
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<CameraView>) -> UIViewController {
         let controller = CameraViewController()
-        DispatchQueue.main.async {
-            self.controller = controller
-        }
+        self.state.controller = controller
         return controller
     }
     
@@ -27,16 +29,12 @@ struct CameraView: UIViewControllerRepresentable {
         init(_ parent: CameraView) {
             self.parent = parent
             super.init()
-            self.update()
+            self.update(parent)
         }
         
-        func update() {
-            if let controller = self.parent.controller {            
-                if self.parent.isCaptured.wrappedValue == true {
-                    controller.capture()
-                } else {
-                    controller.resume()
-                }
+        func update(_ parent: CameraView) {
+            async {
+                self.parent.state.controller?.update(parent)
             }
         }
     }
@@ -69,6 +67,14 @@ class CameraViewController: UIViewController {
         avSession!.addOutput(capturePhotoOut!)
         
         avSession?.startRunning()
+    }
+    
+    func update(_ parent: CameraView) {
+        if parent.isCaptured.wrappedValue == true {
+            self.capture()
+        } else {
+            self.resume()
+        }
     }
     
     func resume() {

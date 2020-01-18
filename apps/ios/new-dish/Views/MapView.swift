@@ -53,14 +53,14 @@ struct MapView: UIViewControllerRepresentable {
     var moveToLocation: MapViewLocation?
     var locations: [GooglePlaceItem] = []
     var onMapSettle: OnChangeSettle?
-    var mapViewStore = MapViewStore()
+    var state = MapViewStore()
 
     func makeCoordinator() -> MapView.Coordinator {
         Coordinator(self)
     }
     
     func introspectMapView(_ cb: @escaping ((MapViewController) -> Void)) -> Self {
-        self.mapViewStore.introspectMapAction = cb
+        self.state.introspectMapAction = cb
         return self
     }
 
@@ -75,9 +75,9 @@ struct MapView: UIViewControllerRepresentable {
             animate: animate,
             onMapSettle: onMapSettle
         )
-        self.mapViewStore.controller = controller
+        self.state.controller = controller
         async {
-            if let cb = self.mapViewStore.introspectMapAction {
+            if let cb = self.state.introspectMapAction {
                 cb(controller)
             }
         }
@@ -99,7 +99,7 @@ struct MapView: UIViewControllerRepresentable {
 
         func update(_ parent: MapView) {
             async {
-                self.parent.mapViewStore.controller?.update(parent)
+                self.parent.state.controller?.update(parent)
             }
         }
     }
