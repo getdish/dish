@@ -43,7 +43,9 @@ struct HomeMainContent: View {
                       duration: 500 * (1 / ANIMATION_SPEED),
                       disableTracking: !self.shouldUpdateMagicPositions,
                       onMoveComplete: {
-                        self.shouldUpdateMagicPositions = true
+                        if !self.homeState.isSnappedToBottom {                        
+                            self.shouldUpdateMagicPositions = true
+                        }
                     }
             ) {
                 ZStack(alignment: .topLeading) {
