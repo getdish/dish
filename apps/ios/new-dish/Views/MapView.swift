@@ -181,6 +181,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         self.zoom = CGFloat(cameraPosition.zoom)
     }
     
+    func radius() -> Double {
+        gmapView.getRadius() * Double(1 - self.hiddenBottomPct)
+    }
+    
     func callbackOnSettle() {
         if !self.hasSettled {
             return
@@ -190,11 +194,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
             return
         }
         if let cb = onMapSettle {
-            let next = CurrentMapPosition(
-                center: centerCoordinate,
-                location: CLLocation(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude),
-                radius: gmapView.getRadius() * Double(1 - self.hiddenBottomPct)
-            )
+            let next = getCurrentMapPosition()
             // only callback if we move above a threshold
             let shouldCallback = self.lastSettledAt == nil
                 || self.lastSettledAt!.location.distance(from: next.location) > 1000
@@ -235,7 +235,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
                 top: 0,
                 left: 0,
                 // TODO its close but not perfect
-                bottom: self.hiddenBottomPct * Screen.fullHeight + 20,
+                bottom: self.hiddenBottomPct * Screen.fullHeight + 23.5,
                 right: 0
             )
             self.callbackOnSettle()
@@ -289,6 +289,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
             print(" 🗺 moveToCurrentLocation \(currentLocation.coordinate)")
             self.updateCamera(currentLocation.coordinate)
         } else {
+            print(" 🗺 moveToCurrentLocation (waiting for current location...)")
             // wait for location once
             var updated = false
             self.currentLocationService.$lastLocation
@@ -296,7 +297,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
                 .sink { loc in
                     if !updated {
                         updated = true
-                        DispatchQueue.main.async {
+                        async {
                             let last = self.animate
                             self.animate = false
                             self.updateMapLocation()
@@ -310,9 +311,21 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     
     var isAnimating = false
     var lastAnimation: AnyCancellable? = nil
+    
+    private func getCurrentMapPosition(_ coord: CLLocationCoordinate2D? = nil) -> CurrentMapPosition {
+        let coordinate = coord ?? centerCoordinate
+        return CurrentMapPosition(
+            center: coordinate,
+            location: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude),
+            radius: radius()
+        )
+    }
 
-    private func updateCamera(_ location: CLLocationCoordinate2D? = nil) {
-        if let camera = getCamera(location) {
+    private func updateCamera(_ coordinate: CLLocationCoordinate2D? = nil) {
+        if let camera = getCamera(coordinate) {
+            if let coord = coordinate {
+                self.lastSettledAt = getCurrentMapPosition(coord)
+            }
             if gmapView.isHidden {
                 gmapView.isHidden = false
             }

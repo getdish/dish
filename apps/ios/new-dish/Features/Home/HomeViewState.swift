@@ -239,8 +239,6 @@ class HomeViewState: ObservableObject {
         if lastDragY == dragY { return }
         lastDragY = dragY
         
-        log.info(dragY)
-        
         // TODO we can reset this back to false in some cases for better UX
         self.hasMovedBar = true
         
@@ -266,7 +264,6 @@ class HomeViewState: ObservableObject {
         let wasSnappedToBottom = isSnappedToBottom
         
         if y.rounded() == self.y.rounded() {
-            log.info("ignore same values")
             return
         }
         
