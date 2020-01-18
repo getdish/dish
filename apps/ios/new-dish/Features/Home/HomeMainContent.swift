@@ -16,21 +16,36 @@ struct HomeMainContent: View {
     @EnvironmentObject var store: AppStore
     
     @State var animatePosition: MagicItemPosition = .start
+    @State var shouldUpdateMagicPositions: Bool = true
     
     var body: some View {
-        ZStack(alignment: .topLeading) {
+        print("self.shouldUpdateMagicPositions \(self.shouldUpdateMagicPositions)")
+        
+        return ZStack(alignment: .topLeading) {
             SideEffect("HomeMainContent", level: .debug) {
                 if self.homeState.isSnappedToBottom && self.animatePosition == .start {
-                    self.animatePosition = .end
+                    self.shouldUpdateMagicPositions = false
+                    async {
+                        self.animatePosition = .end
+                    }
                 }
                 if !self.homeState.isSnappedToBottom && self.animatePosition == .end {
-                    self.animatePosition = .start
+                    self.shouldUpdateMagicPositions = false
+                    async {
+                        self.animatePosition = .start
+                    }
                 }
             }
             
             PrintGeometryView("HomeMainContent")
             
-            MagicMove(self.animatePosition, duration: 500 * (1 / ANIMATION_SPEED)) {
+            MagicMove(self.animatePosition,
+                      duration: 500 * (1 / ANIMATION_SPEED),
+                      disableTracking: !self.shouldUpdateMagicPositions,
+                      onMoveComplete: {
+                        self.shouldUpdateMagicPositions = true
+                    }
+            ) {
                 ZStack(alignment: .topLeading) {
                     // results list below map
                     ZStack {

@@ -12,32 +12,31 @@ class MagicItemsStore: ObservableObject {
     @Published var position: MagicItemPosition = .start
     @Published var state: MoveState = .done
     @Published var triggerUpdate =  NSDate()
+    var disableTracking: Bool = false
     
     var clear: () -> Void = {}
     
     var nextPosition: MagicItemPosition = .start
     var startItems = [String: MagicItemDescription?]() {
-        didSet {
-            self.debounceUpdate()
-        }
+        didSet { self.debounceUpdate() }
     }
     var endItems = [String: MagicItemDescription?]() {
-        didSet {
-            self.debounceUpdate()
-        }
+        didSet { self.debounceUpdate() }
     }
     
     func debounceUpdate() {
+        if disableTracking { return }
         clear()
         var cancel = false
         clear = { cancel = true }
         async(100) {
+            if self.disableTracking { return }
             if cancel { return }
             self.triggerUpdate = NSDate()
         }
     }
     
-    func animate(_ position: MagicItemPosition, duration: Double) {
+    func animate(_ position: MagicItemPosition, duration: Double, onMoveComplete: (() -> Void)?) {
         self.state = .start
         async(2) {
             self.nextPosition = position
@@ -45,6 +44,7 @@ class MagicItemsStore: ObservableObject {
             async(duration) {
                 self.position = position
                 self.state = .done
+                if let cb = onMoveComplete { cb() }
             }
         }
     }
@@ -60,26 +60,33 @@ struct MagicMove<Content>: View where Content: View {
     @State var lastRun: NSDate? = nil
     @State var position: MagicItemPosition = .start
     @ObservedObject var store = magicItemsStore
+    var disableTracking: Bool
     var animation: Animation
+    var onMoveComplete: (() -> Void)?
     
     init(
         _ position: MagicItemPosition,
         run: NSDate? = nil,
         duration: Double = 500,
+        disableTracking: Bool = false,
+        onMoveComplete: (() -> Void)? = nil,
         @ViewBuilder content: @escaping () -> Content
     ) {
         self.content = content
+        self.disableTracking = disableTracking
+        self.onMoveComplete = onMoveComplete
         self.animation = .linear(duration: duration / 1000)
         self.lastContent = content()
         self.position = position
+        self.store.disableTracking = disableTracking
         if position != lastPosition {
             lastPosition = position
             self.lastRun = run
-            store.animate(position, duration: duration)
+            store.animate(position, duration: duration, onMoveComplete: onMoveComplete)
         }
         else if run != nil && self.lastRun != run {
             self.lastRun = run
-            store.animate(position, duration: duration)
+            store.animate(position, duration: duration, onMoveComplete: onMoveComplete)
         }
     }
     
@@ -110,13 +117,25 @@ struct MagicMove<Content>: View where Content: View {
                 if DEBUG_ANIMATION {
                     ZStack(alignment: .topLeading) {
                         Color.black.opacity(0.0001)
-                        ForEach(0 ..< 100) { index -> AnyView  in
+                        ForEach(0 ..< 40) { index -> AnyView  in
                             if index < startValues.count - 1 {
                                 let val = startValues[index]
                                 return AnyView(
-                                    val.view
+                                    Color.blue
                                         .opacity(0.5)
-                                        .overlay(Text("\(val.frame.minY)").foregroundColor(.white))
+                                        .frame(width: val.frame.width, height: val.frame.height)
+                                        .offset(x: val.frame.minX, y: val.frame.minY)
+                                )
+                            }
+                            return emptyView
+                        }
+                        
+                        ForEach(0 ..< 40) { index -> AnyView  in
+                            if index < endValues.count - 1 {
+                                let val = endValues[index]
+                                return AnyView(
+                                    Color.red
+                                        .opacity(0.5)
                                         .frame(width: val.frame.width, height: val.frame.height)
                                         .offset(x: val.frame.minX, y: val.frame.minY)
                                 )
@@ -197,10 +216,12 @@ struct MagicItem<Content>: View where Content: View {
     let id: String
     let at: MagicItemPosition
     let contentView: AnyView
+    let disableTracking: Bool
     
-    init(_ id: String, at: MagicItemPosition, @ViewBuilder content: @escaping () -> Content) {
+    init(_ id: String, at: MagicItemPosition, disableTracking: Bool = false, @ViewBuilder content: @escaping () -> Content) {
         self.id = id
         self.at = at
+        self.disableTracking = disableTracking
         self.content = content()
         self.contentView = AnyView(self.content)
     }
@@ -210,6 +231,10 @@ struct MagicItem<Content>: View where Content: View {
             self.content
                 .overlay(
                     GeometryReader { geometry -> SideEffect in
+                        if self.disableTracking {
+                            return SideEffect.None
+                        }
+                        
                         let frame = geometry.frame(in: .global)
                         
                         // off screen avoid doing things
@@ -231,9 +256,14 @@ struct MagicItem<Content>: View where Content: View {
                         if curItem != nil && offScreen {
                             return SideEffect("offscreen", level: .debug)
                         }
+                        
                         if curItem != item {
                             return SideEffect("MagicItem.set MagicItemDescription", level: .debug, throttle: 16) {
+                                if self.disableTracking { return }
+                                if magicItemsStore.state != .done { return }
+                                if magicItemsStore.disableTracking { return }
                                 if curItem != item {
+                                    print("magicItemsStore.state \(magicItemsStore.state) \(self.disableTracking)")
                                     //                                print("sideeffect MagicItem.items[\(self.id)] = (xy,wh) \(frame.minX.rounded()) x \(frame.minY.rounded()) | \(frame.width.rounded()) x \(frame.height.rounded())")
                                     if self.at == .start {
                                         magicItemsStore.startItems[self.id] = item
@@ -243,6 +273,7 @@ struct MagicItem<Content>: View where Content: View {
                                 }
                             }
                         }
+                        
                         return SideEffect.None
                     }
             )
