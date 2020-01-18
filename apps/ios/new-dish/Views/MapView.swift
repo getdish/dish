@@ -317,7 +317,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         if zoom < 0.6 {
             z = z - (0.6 - zoom) * Constants.ONE_DEGREE_LAT * 7
         }
-        print("now it is \(z) \(absZoom())")
         return z
     }
 

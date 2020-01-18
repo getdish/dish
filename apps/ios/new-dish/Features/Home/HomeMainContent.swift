@@ -138,9 +138,9 @@ struct HomeContentExplore: View {
                     ScrollListener(onScroll: { frame in
                         if self.homeState.dragState == .idle {
                             let mapHeight = self.homeState.mapHeight
-                            self.homeState.setScrollY(
-                                mapHeight - frame.minY - Screen.statusBarHeight - self.homeState.scrollRevealY
-                            )
+                            let scrollY = mapHeight - frame.minY - Screen.statusBarHeight - self.homeState.scrollRevealY
+                            print(" ⏩ setScrollY \(scrollY)")
+                            self.homeState.setScrollY(scrollY)
                         }
                     })
                     Spacer().frame(height: filterBarHeight + 22 + self.homeState.scrollRevealY)

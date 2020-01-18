@@ -1,7 +1,8 @@
 import SwiftUI
 import Combine
 
-fileprivate let DEBUG_ANIMATION = false
+fileprivate let DEBUG_ANIMATION = true
+fileprivate let OFF_OPACITY = DEBUG_ANIMATION ? 0.33 : 0
 
 fileprivate class MagicItemsStore: ObservableObject {
     enum MoveState {
@@ -72,13 +73,11 @@ struct MagicMove<Content>: View where Content: View {
         self.lastContent = content()
         self.position = position
         if position != lastPosition {
-            print("animate! new pos")
             lastPosition = position
             self.lastRun = run
             store.animate(position, duration: duration)
         }
         else if run != nil && self.lastRun != run {
-            print("animate! new run")
             self.lastRun = run
             store.animate(position, duration: duration)
         }
@@ -98,28 +97,30 @@ struct MagicMove<Content>: View where Content: View {
         
         return ZStack {
             ZStack(alignment: .topLeading) {
-                content()
-            }
-                
-            // debug view
-            if DEBUG_ANIMATION {
-                ZStack(alignment: .topLeading) {
-                    Color.black.opacity(0.0001)
-                    ForEach(0 ..< 100) { index -> AnyView  in
-                        if index < startValues.count - 1 {
-                            if let val = startValues[index] {
-                                return AnyView(
-                                    Color.green
-                                        .opacity(0.5)
-                                        .overlay(Text("\(val.frame.minY)").foregroundColor(.white))
-                                        .frame(width: val.frame.width, height: val.frame.height)
-                                        .offset(x: val.frame.minX, y: val.frame.minY)
-                                )
+                // debug view
+                if DEBUG_ANIMATION {
+                    ZStack(alignment: .topLeading) {
+                        Color.black.opacity(0.0001)
+                        ForEach(0 ..< 100) { index -> AnyView  in
+                            if index < startValues.count - 1 {
+                                if let val = startValues[index] {
+                                    return AnyView(
+                                        Color.green
+                                            .opacity(0.5)
+                                            .overlay(Text("\(val.frame.minY)").foregroundColor(.white))
+                                            .frame(width: val.frame.width, height: val.frame.height)
+                                            .offset(x: val.frame.minX, y: val.frame.minY)
+                                    )
+                                }
                             }
+                            return emptyView
                         }
-                        return emptyView
                     }
+                    .allowsHitTesting(false)
+                    .disabled(true)
                 }
+                
+                content()
             }
             
             if store.state != .done {
@@ -235,8 +236,8 @@ struct MagicItem<Content>: View where Content: View {
             )
         }
             .opacity(
-                self.store.state == .animate ? 0 :
-                    self.store.position == at ? 1 : 0
+                self.store.state == .animate ? OFF_OPACITY :
+                    self.store.position == at ? 1 : OFF_OPACITY
             )
             .onDisappear {
                 print("bye \(self.id)")

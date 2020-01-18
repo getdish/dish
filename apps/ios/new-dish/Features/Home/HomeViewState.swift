@@ -115,19 +115,22 @@ class HomeViewState: ObservableObject {
         
         let started = Date()
         self.$scrollY
-            .throttle(for: 0.1, scheduler: App.queueMain, latest: true)
+            .throttle(for: 0.15, scheduler: App.queueMain, latest: true)
             .removeDuplicates()
             .sink { y in
-                if Date().timeIntervalSince(started) > 1 {
-                    let next: HomeViewState.HomeScrollState = (
+                if Date().timeIntervalSince(started) < 1.5 {
+                    return
+                }
+                let next: HomeViewState.HomeScrollState =
+                    homeViewState.isSnappedToBottom ? .none : (
                         y > 60 ? .more : y > 30 ? .some : .none
                     )
-                    if next != self.hasScrolled {
-                        print(" ⏩ hasScrolled = \(next) (y = \(y)")
-                        self.animate(state: .animate) {
-                            self.hasScrolled = next
-                        }
-                    }
+                if next == self.hasScrolled {
+                    return
+                }
+                print(" ⏩ hasScrolled = \(next) (y = \(y))")
+                self.animate(state: .animate) {
+                    self.hasScrolled = next
                 }
         }.store(in: &cancels)
     }
@@ -164,9 +167,9 @@ class HomeViewState: ObservableObject {
     }
     
     func animate(_ animation: Animation? = Animation.spring().speed(ANIMATION_SPEED), state: HomeAnimationState = .controlled, duration: Int = 400, _ body: @escaping () -> Void) {
-        log.info()
+        log.info("\(state) duration: \(duration)")
         self.setAnimationState(state, duration)
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(10)) {
+        async (10) {
             withAnimation(animation) {
                 body()
             }
