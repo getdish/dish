@@ -55,7 +55,7 @@ struct DishMapView: View {
                     }
                 }
                 
-                if true || self.homeState.isNearTop {
+                if self.homeState.isNearTop {
                     HStack {
                         CustomButton({
                             self.mapView?.zoomIn()

@@ -6,7 +6,7 @@ import Combine
 
 fileprivate let snapToBottomYMovePct: CGFloat = 0.23
 fileprivate let resistanceYBeforeSnap: CGFloat = 48
-fileprivate let nearTopAtVal: CGFloat = 160 + Screen.statusBarHeight
+fileprivate let nearTopAtVal: CGFloat = 120 + Screen.statusBarHeight
 fileprivate let topNavHeight: CGFloat = 45
 
 class HomeViewState: ObservableObject {
@@ -31,7 +31,7 @@ class HomeViewState: ObservableObject {
     // initialize it at where the snapToBottom will be about
     @Published private(set) var y: CGFloat = Screen.fullHeight * 0.3 * snapToBottomYMovePct - 1 {
         willSet(y) {
-            // util - break when the searchbar is at y
+//            // util - break when the searchbar is at y
 //            #if DEBUG
 //            print("y \(y)")
 //            if false, y > snapToBottomAt { // <- example
@@ -135,7 +135,61 @@ class HomeViewState: ObservableObject {
         }.store(in: &cancels)
     }
     
-    // note: setDragState/setAnimationSate should be only way to mutate state
+    var showFiltersAbove: Bool {
+        if y > snapToBottomAt - 1 { return false }
+        if mapHeight < 190 { return false }
+        return hasScrolled != .none
+    }
+    
+    let mapMinHeight: CGFloat = max(
+        nearTopAtVal - 1,
+        Screen.statusBarHeight + searchBarHeight / 2 + topNavHeight + 50
+    )
+    
+    var mapInitialHeight: CGFloat { appHeight * 0.3 }
+    var mapMaxHeight: CGFloat { appHeight - keyboardHeight - searchBarHeight }
+    
+    var mapHeight: CGFloat {
+        return min(
+            mapMaxHeight, max(
+                mapInitialHeight + y - scrollRevealY, mapMinHeight
+            )
+        )
+    }
+    
+    var scrollRevealY: CGFloat {
+        if hasScrolled == .more {
+            return 40
+        }
+        return 0
+    }
+    
+    var snapToBottomAt: CGFloat {
+        appHeight * snapToBottomYMovePct
+    }
+    
+    var snappedToBottomMapHeight: CGFloat { appHeight - 190 }
+    var isSnappedToBottom: Bool { y > snapToBottomAt }
+    var wasSnappedToBottom = false
+    var aboutToSnapToBottomAt: CGFloat { snapToBottomAt - resistanceYBeforeSnap }
+    
+    let nearTopAt: CGFloat = nearTopAtVal
+    var isNearTop: Bool {
+        self.mapHeight < self.nearTopAt
+    }
+    
+    var isAboutToSnap: Bool {
+        if y > aboutToSnapToBottomAt { return true }
+        return false
+    }
+    
+    func toggleMap() {
+        log.info()
+        self.snapToBottom(!isSnappedToBottom)
+    }
+    
+    private var startDragAt: CGFloat = 0
+    private var lastDragY: CGFloat = 0
     
     func setDragState(_ next: HomeDragState) {
         log.info()
@@ -175,65 +229,7 @@ class HomeViewState: ObservableObject {
             }
         }
     }
-    
-    var showFiltersAbove: Bool {
-        if y > snapToBottomAt - 1 { return false }
-        if mapHeight < 190 { return false }
-        return hasScrolled != .none
-    }
-    
-    let mapMinHeight: CGFloat = max(
-        nearTopAtVal - 1,
-        Screen.statusBarHeight + searchBarHeight / 2 + topNavHeight + 90
-    )
-    
-    var mapInitialHeight: CGFloat { appHeight * 0.3 }
-    
-    var mapMaxHeight: CGFloat { appHeight - keyboardHeight - searchBarHeight }
-    
-    
-    var scrollRevealY: CGFloat {
-        if hasScrolled == .more {
-            return 40
-        }
-        return 0
-    }
-    
-    var mapHeight: CGFloat {
-        return min(
-            mapMaxHeight, max(
-                mapInitialHeight + y - scrollRevealY, mapMinHeight
-            )
-        )
-    }
-    
-    var snapToBottomAt: CGFloat {
-        appHeight * snapToBottomYMovePct
-    }
-    
-    var snappedToBottomMapHeight: CGFloat { appHeight - 190 }
-    var isSnappedToBottom: Bool { y > snapToBottomAt }
-    var wasSnappedToBottom = false
-    var aboutToSnapToBottomAt: CGFloat { snapToBottomAt - resistanceYBeforeSnap }
-    
-    let nearTopAt: CGFloat = nearTopAtVal
-    var isNearTop: Bool {
-        self.mapHeight < self.nearTopAt
-    }
-    
-    var isAboutToSnap: Bool {
-        if y > aboutToSnapToBottomAt { return true }
-        return false
-    }
-    
-    func toggleMap() {
-        log.info()
-        self.snapToBottom(!isSnappedToBottom)
-    }
-    
-    private var startDragAt: CGFloat = 0
-    private var lastDragY: CGFloat = 0
-    
+
     func drag(_ dragY: CGFloat) {
         if dragState == .pager { return }
         if lastDragY == dragY { return }
