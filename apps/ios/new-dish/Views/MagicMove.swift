@@ -224,7 +224,7 @@ struct MagicItem<Content>: View where Content: View {
                             return SideEffect("offscreen", level: .debug)
                         }
                         if curItem != item {
-                            return SideEffect("MagicItem.set MagicItemDescription", level: .debug, throttle: 0) {
+                            return SideEffect("MagicItem.set MagicItemDescription", level: .debug, throttle: 16) {
                                 if curItem != item {
                                     //                                print("sideeffect MagicItem.items[\(self.id)] = (xy,wh) \(frame.minX.rounded()) x \(frame.minY.rounded()) | \(frame.width.rounded()) x \(frame.height.rounded())")
                                     if self.at == .start {
