@@ -64,7 +64,7 @@ class HomeViewState: ObservableObject {
                 if !self.isSnappedToTop && !self.isSnappedToBottom {
                     async {
                         let y = self.snapToBottomAt - 1
-                        print("sideeffect appHeight.setY \(y)")
+                        print(" ⏩ appHeight.setY \(y)")
                         self.y = y
                     }
                 }
@@ -98,7 +98,7 @@ class HomeViewState: ObservableObject {
                 // map up/down on keyboard open/close
                 if !self.isSnappedToBottom {
                     self.animate {
-                        print("sideeffect homeViewKeyboardState.setY \(isOpen)")
+                        print(" ⏩ homeViewKeyboardState.setY \(isOpen)")
                         if isOpen {
                             let str = max(0, 1 - (self.snapToBottomAt - self.y) / self.snapToBottomAt)
                             let amt = 170 * str

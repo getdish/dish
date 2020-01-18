@@ -207,7 +207,7 @@ struct MagicItem<Content>: View where Content: View {
                         let offXN = frame.minX + frame.width < 0
                         let offXP = frame.minX > Screen.width
                         if offYN || offYP || offXN || offXP {
-                            return SideEffect("offscreen")
+                            return SideEffect("offscreen", level: .debug)
                         }
                         return SideEffect("updateMagicItems", level: .debug, throttle: 16) {
                             // could prevent during animation right?
