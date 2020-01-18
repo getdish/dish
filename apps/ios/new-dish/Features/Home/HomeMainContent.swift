@@ -43,7 +43,7 @@ struct HomeMainContent: View {
                       duration: 500 * (1 / ANIMATION_SPEED),
                       disableTracking: !self.shouldUpdateMagicPositions,
                       onMoveComplete: {
-                        if !self.homeState.isSnappedToBottom {                        
+                        if !self.homeState.isSnappedToBottom {
                             self.shouldUpdateMagicPositions = true
                         }
                     }

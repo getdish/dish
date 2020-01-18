@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct DishRestaurantCard: View, Identifiable {
-    var restaurant: RestaurantItem
+    @ObservedObject var restaurant: RestaurantItem
     var id: String { restaurant.id }
     var aspectRatio: CGFloat = 2 / 2
     var isMini: Bool = false
@@ -33,10 +33,7 @@ struct DishRestaurantCard: View, Identifiable {
                         Rectangle().fill(self.gradientBottom)
                 )
                     .overlay(
-                        DishRestaurantCardText(
-                            restaurant: self.restaurant,
-                            isMini: self.isMini
-                        )
+                        self.textOverlay
                 )
                     .cornerRadius(16)
                     .clipped()
@@ -44,17 +41,9 @@ struct DishRestaurantCard: View, Identifiable {
             }
         }
     }
-}
-
-
-
-struct DishRestaurantCardText: View {
-    var restaurant: RestaurantItem
-    var isMini: Bool
     
-    var body: some View {
+    var textOverlay: some View {
         let ratingSize: CGFloat = isMini ? 25 : 45
-
         return ZStack(alignment: .bottomLeading) {
             VStack(alignment: .leading) {
                 ZStack {
@@ -119,7 +108,7 @@ struct DishRestaurantCardText: View {
                         self.restaurant.next()
                 }
             }
-
+            
         }
         .foregroundColor(.white)
         
