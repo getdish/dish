@@ -161,8 +161,6 @@ struct MagicMove<Content>: View where Content: View {
                             return AnyView(EmptyView())
                         }
                         
-                        print("\(start.id)")
-                        
                         let animateItem: MagicItemDescription =
                             self.store.position == .start ? start : end
                         let animatePosition =
@@ -266,7 +264,7 @@ struct MagicItem<Content>: View where Content: View {
                                 if magicItemsStore.state != .done { return }
                                 if magicItemsStore.disableTracking { return }
                                 if curItem != item {
-                                    print("magicItemsStore.state \(magicItemsStore.state) \(self.disableTracking)")
+//                                    print("magicItemsStore.state \(magicItemsStore.state) \(self.disableTracking)")
                                     //                                print("sideeffect MagicItem.items[\(self.id)] = (xy,wh) \(frame.minX.rounded()) x \(frame.minY.rounded()) | \(frame.width.rounded()) x \(frame.height.rounded())")
                                     if self.at == .start {
                                         magicItemsStore.startItems[self.id] = item

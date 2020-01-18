@@ -1,4 +1,5 @@
 import SwiftUI
+import GoogleMaps
 import GooglePlaces
 import CoreLocation
 import Combine
@@ -12,12 +13,15 @@ struct DishMapView: View {
     private var service = DishMapViewService()
     private var keyboard = Keyboard()
     
+    @State var mapView: GMSMapView? = nil
+    
     var body: some View {
         let appWidth: CGFloat = appGeometry?.size.width ?? Screen.width
         let appHeight: CGFloat = appGeometry?.size.height ?? Screen.height
         let visibleHeight = homeState.mapHeight - (homeState.isSnappedToBottom ? cardRowHeight : 0)
         let hiddenBottomPct: CGFloat = (appHeight - visibleHeight) / appHeight
-        let zoom = homeState.mapHeight / 235 + 9.7
+        
+        let extraZoom = homeState.mapHeight / 1000
 
         return VStack {
             ZStack {
@@ -25,7 +29,7 @@ struct DishMapView: View {
                     width: appWidth,
                     height: appHeight,
                     hiddenBottomPct: hiddenBottomPct,
-                    zoom: zoom,
+                    extraZoom: extraZoom,
                     darkMode: self.colorScheme == .dark,
                     animate: [.idle].contains(homeState.dragState) || homeState.animationState != .idle || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
                     moveToLocation: store.state.map.moveToLocation,
@@ -34,6 +38,9 @@ struct DishMapView: View {
                         self.service.position = position
                     }
                 )
+                .introspectMapView { mapView in
+                    self.mapView = mapView
+                }
                 
                 // prevent touch on left/right sides for dragging between cards
                 HStack {
@@ -51,10 +58,13 @@ struct DishMapView: View {
                     }
                 }
                 
-                if self.homeState.isNearTop {
+                if true || self.homeState.isNearTop {
                     HStack {
                         CustomButton({
                             print("zoom out")
+                            if let mapView = self.mapView {
+                                mapView.animate(toZoom: mapView.camera.zoom * 0.9)
+                            }
                         }) {
                             MapButton(icon: "minus.magnifyingglass")
                         }
@@ -62,6 +72,9 @@ struct DishMapView: View {
                         Spacer()
                         CustomButton({
                             print("zoom in")
+                            if let mapView = self.mapView {
+                                mapView.animate(toZoom: mapView.camera.zoom * 1.1)
+                            }
                         }) {
                             MapButton(icon: "plus.magnifyingglass")
                         }
