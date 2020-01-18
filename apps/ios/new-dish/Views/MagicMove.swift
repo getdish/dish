@@ -93,7 +93,7 @@ struct MagicMove<Content>: View where Content: View {
             }
             .map { $0.key }
         
-//        print("MagicMove --- keys \(keys.count) - startvalues \(startValues.count)")
+        print("MagicMove --- keys \(keys.count) - startvalues \(startValues.count) - endValues \(endValues.count)")
         
         return ZStack {
             ZStack(alignment: .topLeading) {
@@ -130,6 +130,8 @@ struct MagicMove<Content>: View where Content: View {
                         guard let end = endValues.first(where: { $0?.id == startValues[index]?.id }) else {
                             return AnyView(EmptyView())
                         }
+                        
+                        print("\(start.id)")
                         
                         let animateItem: MagicItemDescription =
                             self.store.position == .start ? start : end!
@@ -207,31 +209,33 @@ struct MagicItem<Content>: View where Content: View {
                         let offYP = frame.minY > Screen.fullHeight
                         let offXN = frame.minX + frame.width < 0
                         let offXP = frame.minX > Screen.width
-                        if offYN || offYP || offXN || offXP {
+                        let offScreen = offYN || offYP || offXN || offXP
+                        
+                        let item = MagicItemDescription(
+                            view: self.contentView,
+                            frame: frame,
+                            id: self.id,
+                            at: self.at
+                        )
+                        let items = self.at == .start ? magicItemsStore.startItems : magicItemsStore.endItems
+                        let curItem = items[self.id]
+                        
+                        if curItem != nil && offScreen {
                             return SideEffect("offscreen", level: .debug)
                         }
-                        return SideEffect("updateMagicItems", level: .debug, throttle: 16) {
-                            // could prevent during animation right?
-                            //                            if magicItems.state == .animate { return }
-                            let item = MagicItemDescription(
-                                view: self.contentView,
-                                frame: frame,
-                                id: self.id,
-                                at: self.at
-                            )
-                            
-                            let items = self.at == .start ? magicItemsStore.startItems : magicItemsStore.endItems
-                            let curItem = items[self.id]
-                            
-                            if curItem != item {
-//                                print("sideeffect MagicItem.items[\(self.id)] = (xy,wh) \(frame.minX.rounded()) x \(frame.minY.rounded()) | \(frame.width.rounded()) x \(frame.height.rounded())")
-                                if self.at == .start {
-                                    magicItemsStore.startItems[self.id] = item
-                                } else {
-                                    magicItemsStore.endItems[self.id] = item
+                        if curItem != item {
+                            return SideEffect("MagicItem.set MagicItemDescription", level: .debug, throttle: 0) {
+                                if curItem != item {
+                                    //                                print("sideeffect MagicItem.items[\(self.id)] = (xy,wh) \(frame.minX.rounded()) x \(frame.minY.rounded()) | \(frame.width.rounded()) x \(frame.height.rounded())")
+                                    if self.at == .start {
+                                        magicItemsStore.startItems[self.id] = item
+                                    } else {
+                                        magicItemsStore.endItems[self.id] = item
+                                    }
                                 }
                             }
                         }
+                        return SideEffect.None
                     }
             )
         }

@@ -12,6 +12,8 @@ enum LogLevel: Int {
 fileprivate let DEBUG_SIDE_EFFECTS: LogLevel = .info
 
 struct SideEffect: View {
+    static let None = SideEffect("", level: .off)
+    
     let level: LogLevel
     let debounce: Double
     let throttle: Double
