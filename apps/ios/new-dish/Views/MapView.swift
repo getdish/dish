@@ -48,7 +48,7 @@ struct MapView: UIViewControllerRepresentable {
     var width: CGFloat
     var height: CGFloat
     var hiddenBottomPct: CGFloat = 0
-    var extraZoom: CGFloat
+    var extraZoom: Binding<CGFloat>
     var darkMode: Bool?
     var animate: Bool
     var moveToLocation: MapViewLocation?
@@ -72,7 +72,7 @@ struct MapView: UIViewControllerRepresentable {
             hiddenBottomPct: hiddenBottomPct,
             moveToLocation: moveToLocation,
             locations: locations,
-            extraZoom: extraZoom,
+            extraZoom: self.extraZoom,
             darkMode: darkMode,
             animate: animate,
             onMapSettle: onMapSettle
@@ -80,9 +80,8 @@ struct MapView: UIViewControllerRepresentable {
         async(100) {
             if let cb = self.mapViewStore.introspectMapAction,
                 let mapView = controller.gmapView {
-                cb(controller.gmapView)
+                cb(mapView)
             }
-            print("----------------- \(self.mapViewStore.introspectMapAction)")
         }
         self.mapViewStore.controller = controller
         return controller
@@ -125,7 +124,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     var updateCancels: Set<AnyCancellable> = []
     var hasSettled: Bool = false
     var zoom: CGFloat = 12.0
-    var extraZoom: CGFloat
+    @Binding var extraZoom: CGFloat
 
     init(
         width: CGFloat,
@@ -133,12 +132,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         hiddenBottomPct: CGFloat = 0,
         moveToLocation: MapViewLocation?,
         locations: [GooglePlaceItem] = [],
-        extraZoom: CGFloat?,
+        extraZoom: Binding<CGFloat>,
         darkMode: Bool?,
         animate: Bool?,
         onMapSettle: OnChangeSettle? = nil
     ) {
-        self.extraZoom = extraZoom ?? 0.0
+        self._extraZoom = extraZoom
         self.width = width
         self.height = height
         self.hiddenBottomPct = hiddenBottomPct
@@ -188,6 +187,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         if homeViewState.animationState == .idle,
         homeViewState.dragState == .idle {
             self.zoom = CGFloat(cameraPosition.zoom)
+            self.extraZoom = 0
         }
 //        let region = mapView.projection.visibleRegion()
 //        print("moved map, new bounds \(region)")
@@ -221,13 +221,16 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
 
     // on props update
 
+    var lastExtraZoom: CGFloat = 0.0
     func update(_ parent: MapView) {
         // cancel any pending updates
         updateCancels.forEach { $0.cancel() }
         updateCancels = []
         
-        if self.extraZoom != parent.extraZoom {
-            self.updateZoom(parent.extraZoom)
+        let next = parent.extraZoom.wrappedValue
+        if next != lastExtraZoom  {
+            self.lastExtraZoom = next
+            self.updateZoom(next)
         }
         if self.animate != parent.animate {
             self.animate = parent.animate
@@ -328,6 +331,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         let min = -5.0
         let max = 5.0
         let val = (inputRanged - min) / (max - min) * 1.0
+        print("scaledZoom <===> \(number) \(self.extraZoom) =>>>>> \(val)")
         return val
     }
 

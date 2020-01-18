@@ -68,13 +68,10 @@ struct CameraButton: View {
             }
             .onLongPressGesture(minimumDuration: 10000, pressing: { isPressing in
                 self.isTapped = isPressing
-                print("CameraButton longpress isPressing... \(isPressing)")
 //                self.isTapped = isPressing
 //                App.store.send(.home(.setShowCamera(true)))
             }) {
-                print("time int \(self.lastTap.timeIntervalSinceNow)")
                 if self.lastTap.timeIntervalSinceNow > 10 {
-                    print("CameraButton finished longpress")
                     App.store.send(.home(.setShowCamera(false)))
                 }
             }

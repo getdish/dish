@@ -14,14 +14,26 @@ struct DishMapView: View {
     private var keyboard = Keyboard()
     
     @State var mapView: GMSMapView? = nil
+    @State var extraZoomFromButtons: CGFloat = 0.0
+    @State var lastExtraZoom: CGFloat = 0.0
+    
+    var extraZoom: Binding<CGFloat> {
+        Binding<CGFloat>(
+            get: {
+                self.homeState.mapHeight / 1000
+            },
+            set: { val in
+                self.extraZoomFromButtons = 0
+                self.lastExtraZoom = val
+            }
+        )
+    }
     
     var body: some View {
         let appWidth: CGFloat = appGeometry?.size.width ?? Screen.width
         let appHeight: CGFloat = appGeometry?.size.height ?? Screen.height
         let visibleHeight = homeState.mapHeight - (homeState.isSnappedToBottom ? cardRowHeight : 0)
         let hiddenBottomPct: CGFloat = (appHeight - visibleHeight) / appHeight
-        
-        let extraZoom = homeState.mapHeight / 1000
 
         return VStack {
             ZStack {
@@ -29,7 +41,7 @@ struct DishMapView: View {
                     width: appWidth,
                     height: appHeight,
                     hiddenBottomPct: hiddenBottomPct,
-                    extraZoom: extraZoom,
+                    extraZoom: self.extraZoom,
                     darkMode: self.colorScheme == .dark,
                     animate: [.idle].contains(homeState.dragState) || homeState.animationState != .idle || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
                     moveToLocation: store.state.map.moveToLocation,
@@ -62,9 +74,7 @@ struct DishMapView: View {
                     HStack {
                         CustomButton({
                             print("zoom out")
-                            if let mapView = self.mapView {
-                                mapView.animate(toZoom: mapView.camera.zoom * 0.9)
-                            }
+                            self.extraZoomFromButtons -= 0.2
                         }) {
                             MapButton(icon: "minus.magnifyingglass")
                         }
@@ -72,9 +82,7 @@ struct DishMapView: View {
                         Spacer()
                         CustomButton({
                             print("zoom in")
-                            if let mapView = self.mapView {
-                                mapView.animate(toZoom: mapView.camera.zoom * 1.1)
-                            }
+                            self.extraZoomFromButtons += 0.2
                         }) {
                             MapButton(icon: "plus.magnifyingglass")
                         }
