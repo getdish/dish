@@ -101,8 +101,8 @@ struct MagicMove<Content>: View where Content: View {
         }
         
         print("MagicMove --- keys \(keys.count) - startvalues \(startValues.count) - endValues \(endValues.count)")
-        print(" -- start \(startValues.map { $0.id })")
-        print(" -- end \(endValues.map { $0.id })")
+//        print(" -- start \(startValues.map { $0.id })")
+//        print(" -- end \(endValues.map { $0.id })")
         
         return ZStack {
             ZStack(alignment: .topLeading) {
