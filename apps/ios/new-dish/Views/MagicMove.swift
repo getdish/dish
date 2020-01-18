@@ -94,7 +94,7 @@ struct MagicMove<Content>: View where Content: View {
             }
             .map { $0.key }
         
-        print("MagicMove --- keys \(keys.count) - startvalues \(startValues.count)")
+//        print("MagicMove --- keys \(keys.count) - startvalues \(startValues.count)")
         
         return ZStack {
             ZStack(alignment: .topLeading) {
@@ -209,7 +209,7 @@ struct MagicItem<Content>: View where Content: View {
                         if offYN || offYP || offXN || offXP {
                             return SideEffect("offscreen")
                         }
-                        return SideEffect("updateMagicItems", throttle: 16) {
+                        return SideEffect("updateMagicItems", level: .debug, throttle: 16) {
                             // could prevent during animation right?
                             //                            if magicItems.state == .animate { return }
                             let item = MagicItemDescription(
@@ -223,7 +223,7 @@ struct MagicItem<Content>: View where Content: View {
                             let curItem = items[self.id]
                             
                             if curItem != item {
-                                print("sideeffect MagicItem.items[\(self.id)] = (xy,wh) \(frame.minX.rounded()) x \(frame.minY.rounded()) | \(frame.width.rounded()) x \(frame.height.rounded())")
+//                                print("sideeffect MagicItem.items[\(self.id)] = (xy,wh) \(frame.minX.rounded()) x \(frame.minY.rounded()) | \(frame.width.rounded()) x \(frame.height.rounded())")
                                 if self.at == .start {
                                     magicItems.startItems[self.id] = item
                                 } else {

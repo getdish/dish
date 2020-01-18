@@ -1,16 +1,26 @@
 import SwiftUI
 import Combine
 
-fileprivate let DEBUG_SIDE_EFFECTS = true
+enum LogLevel: Int {
+    case off = 0
+    case debug = 1
+    case info = 2
+    case warn = 3
+    case error = 4
+}
+
+fileprivate let DEBUG_SIDE_EFFECTS: LogLevel = .info
 
 struct SideEffect: View {
+    let level: LogLevel
     let debounce: Double
     let throttle: Double
     let block: () -> Void
     let name: String
     
-    init(_ name: String, debounce: Double = 0, throttle: Double = 0, block: @escaping () -> Void = {}) {
+    init(_ name: String, level: LogLevel = .info, debounce: Double = 0, throttle: Double = 0, block: @escaping () -> Void = {}) {
         self.name = name
+        self.level = level
         self.debounce = debounce
         self.throttle = throttle
         self.block = block
@@ -18,8 +28,8 @@ struct SideEffect: View {
     
     var body: some View {
         Run(debounce: debounce, throttle: throttle) {
-            if DEBUG_SIDE_EFFECTS {
-                print("sideeffect \(self.name)")
+            if self.level.rawValue >= DEBUG_SIDE_EFFECTS.rawValue {
+                print(" ⏩ \(self.name)")
             }
             self.block()
         }

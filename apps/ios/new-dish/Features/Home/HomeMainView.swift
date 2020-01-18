@@ -25,9 +25,7 @@ struct HomeMainView: View {
         let state = self.state
         let mapHeight = state.mapHeight
 
-        print("render HomeMainView")
-        print("  - mapHeight \(mapHeight)")
-        print("  - animationState \(state.animationState)")
+        print(" 👀 HomeMainView mapHeight \(mapHeight) animationState \(state.animationState)")
 
         return GeometryReader { geometry in
             ZStack(alignment: .topLeading) {

@@ -123,7 +123,7 @@ class HomeViewState: ObservableObject {
                         y > 60 ? .more : y > 30 ? .some : .none
                     )
                     if next != self.hasScrolled {
-                        print("scroll scroll \(y)")
+                        print(" ⏩ hasScrolled = \(next) (y = \(y)")
                         self.animate(state: .animate) {
                             self.hasScrolled = next
                         }
