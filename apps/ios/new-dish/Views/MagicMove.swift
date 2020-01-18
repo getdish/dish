@@ -153,7 +153,7 @@ struct MagicMove<Content>: View where Content: View {
             if store.state != .done {
                 ZStack(alignment: .topLeading) {
                     ForEach(0 ..< keys.count) { index -> AnyView in
-                        if index > startValues.count {
+                        if index >= startValues.count {
                             return emptyView
                         }
                         let start = startValues[index]
