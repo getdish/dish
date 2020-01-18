@@ -84,16 +84,25 @@ struct MagicMove<Content>: View where Content: View {
     }
     
     var body: some View {
-        let startValues = magicItemsStore.startItems.map { $0.value }.filter { $0 != nil }
-        let endValues = magicItemsStore.endItems.map { $0.value }.filter { $0 != nil }
+        var startValues: [MagicItemDescription] = []
+        var endValues: [MagicItemDescription] = []
         let keys = magicItemsStore.startItems
             .filter { $0.value != nil }
-            .filter { startItem in
-                endValues.contains(where: { $0!.id == startItem.value!.id })
-            }
+            .filter { startItem in magicItemsStore.endItems.map { $0.value }.contains(where: { $0?.id == startItem.value!.id }) }
             .map { $0.key }
+            .sorted()
+        
+        for key in keys {
+            if let startItem = magicItemsStore.startItems[key],
+                let endItem = magicItemsStore.endItems[key] {
+                startValues.append(startItem!)
+                endValues.append(endItem!)
+            }
+        }
         
         print("MagicMove --- keys \(keys.count) - startvalues \(startValues.count) - endValues \(endValues.count)")
+        print(" -- start \(startValues.map { $0.id })")
+        print(" -- end \(endValues.map { $0.id })")
         
         return ZStack {
             ZStack(alignment: .topLeading) {
@@ -103,15 +112,14 @@ struct MagicMove<Content>: View where Content: View {
                         Color.black.opacity(0.0001)
                         ForEach(0 ..< 100) { index -> AnyView  in
                             if index < startValues.count - 1 {
-                                if let val = startValues[index] {
-                                    return AnyView(
-                                        val.view
-                                            .opacity(0.5)
-                                            .overlay(Text("\(val.frame.minY)").foregroundColor(.white))
-                                            .frame(width: val.frame.width, height: val.frame.height)
-                                            .offset(x: val.frame.minX, y: val.frame.minY)
-                                    )
-                                }
+                                let val = startValues[index]
+                                return AnyView(
+                                    val.view
+                                        .opacity(0.5)
+                                        .overlay(Text("\(val.frame.minY)").foregroundColor(.white))
+                                        .frame(width: val.frame.width, height: val.frame.height)
+                                        .offset(x: val.frame.minX, y: val.frame.minY)
+                                )
                             }
                             return emptyView
                         }
@@ -126,17 +134,17 @@ struct MagicMove<Content>: View where Content: View {
             if store.state != .done {
                 ZStack(alignment: .topLeading) {
                     ForEach(0 ..< keys.count) { index -> AnyView in
-                        let start = startValues[index]!
-                        guard let end = endValues.first(where: { $0?.id == startValues[index]?.id }) else {
+                        let start = startValues[index]
+                        guard let end = endValues.first(where: { $0.id == startValues[index].id }) else {
                             return AnyView(EmptyView())
                         }
                         
                         print("\(start.id)")
                         
                         let animateItem: MagicItemDescription =
-                            self.store.position == .start ? start : end!
+                            self.store.position == .start ? start : end
                         let animatePosition =
-                            (self.store.nextPosition == .start ? start : end!).frame
+                            (self.store.nextPosition == .start ? start : end).frame
                         
                         return AnyView(
                             // what is alignment
