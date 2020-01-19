@@ -12,16 +12,18 @@ struct FilterButton: View {
         let shadowColor = Color(.black).opacity(colorScheme == .light ? 0.6 : 0.3)
         return ZStack {
             CustomButton2(action: action) {
-                Text(label)
-                    .foregroundColor(textColor)
-                    .font(.system(size: 14))
+                HStack {
+                    Text(label)
+                        .foregroundColor(textColor)
+                        .font(.system(size: 14))
+                }
+                .padding(.vertical, 7)
+                .padding(.horizontal, 12)
+                .background(schemeOppositeColor)
+                .overlay(RoundedRectangle(cornerRadius: 80).stroke(borderColor, lineWidth: 2))
+                .cornerRadius(80)
+                .shadow(color: shadowColor, radius: 7, x: 0, y: 2)
             }
-            .padding(.vertical, 7)
-            .padding(.horizontal, 12)
-            .background(schemeOppositeColor)
-            .overlay(RoundedRectangle(cornerRadius: 80).stroke(borderColor, lineWidth: 2))
-            .cornerRadius(80)
-            .shadow(color: shadowColor, radius: 7, x: 0, y: 2)
         }
     }
 }

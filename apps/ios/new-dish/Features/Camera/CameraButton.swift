@@ -42,7 +42,6 @@ struct CameraButton: View {
         )
             .cornerRadius(80)
             .frame(width: 58, height: 58)
-            .animation(.spring(response: 0.5))
             .shadow(color: Color.black.opacity(1), radius: 30, x: 0, y: 3)
             .shadow(color: Color.black.opacity(1), radius: 15, x: 0, y: 0)
             .overlay(
@@ -58,6 +57,7 @@ struct CameraButton: View {
             )
             .animation(.spring())
             .opacity(self.isTapped ? 0.5 : 1)
+            .scaleEffect(self.isTapped ? 0.9 : 1)
             .onTapGesture {
                 self.lastTap = Date()
                 if !App.store.state.home.showCamera {
