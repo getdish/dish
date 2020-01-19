@@ -285,13 +285,13 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         )
     }
     
-    func zoomOut() {
-        self.zoom = self.zoom * 1.3
+    func zoomOut(_ by: CGFloat = 0.3) {
+        self.zoom = self.zoom * (1 + by)
         self.updateCamera()
     }
     
-    func zoomIn() {
-        self.zoom = self.zoom * 0.7
+    func zoomIn(_ by: CGFloat = 0.3) {
+        self.zoom = self.zoom * (1 - by)
         self.updateCamera()
     }
     

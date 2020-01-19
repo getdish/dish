@@ -5,6 +5,47 @@ import CoreLocation
 import Combine
 
 struct DishMapView: View {
+    class DishMapViewService: ObservableObject {
+        @Published var position: CurrentMapPosition? = nil
+        var mapView: MapViewController? = nil
+        var cancels: Set<AnyCancellable> = []
+        
+        init() {
+            // sync map location to state
+            self.$position
+                .debounce(for: .milliseconds(200), scheduler: App.queueMain)
+                .sink { position in
+                    if let position = position {
+                        App.store.send(
+                            .map(.setLocation(
+                                MapLocationState(
+                                    radius: position.radius,
+                                    latitude: position.center.latitude,
+                                    longitude: position.center.longitude
+                                )
+                                ))
+                        )
+                    }
+            }
+            .store(in: &cancels)
+            
+            // mapHeight -> zoom level
+            var lastZoomAt = homeViewState.mapHeight
+            homeViewState.$y
+                .map { _ in homeViewState.mapHeight }
+                .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
+                .sink { mapHeight in
+                    let amt = -((mapHeight - lastZoomAt) / homeViewState.mapMaxHeight) / 3
+                    print("amt \(amt)")
+                    if amt != 0.0 {
+                        lastZoomAt = mapHeight
+                        self.mapView?.zoomIn(amt)
+                    }
+                }
+                .store(in: &cancels)
+        }
+    }
+    
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.geometry) var appGeometry
     @EnvironmentObject var store: AppStore
@@ -12,8 +53,6 @@ struct DishMapView: View {
     
     private var service = DishMapViewService()
     private var keyboard = Keyboard()
-    
-    @State var mapView: MapViewController? = nil
     
     var body: some View {
         let appWidth: CGFloat = appGeometry?.size.width ?? Screen.width
@@ -42,7 +81,7 @@ struct DishMapView: View {
                     }
                 )
                 .introspectMapView { mapView in
-                    self.mapView = mapView
+                    self.service.mapView = mapView
                 }
                 .offset(y: -hideEdge / 2)
                 
@@ -65,14 +104,14 @@ struct DishMapView: View {
                 if self.homeState.isNearTop {
                     HStack {
                         CustomButton({
-                            self.mapView?.zoomIn()
+                            self.service.mapView?.zoomIn()
                         }) {
                             MapButton(icon: "minus.magnifyingglass")
                         }
                         .frame(height: homeState.mapHeight)
                         Spacer()
                         CustomButton({
-                            self.mapView?.zoomOut()
+                            self.service.mapView?.zoomOut()
                         }) {
                             MapButton(icon: "plus.magnifyingglass")
                         }
@@ -93,31 +132,6 @@ struct DishMapView: View {
             .rotationEffect(homeState.showCamera ? .degrees(-15) : .degrees(0))
             
             Spacer()
-        }
-    }
-    
-    class DishMapViewService: ObservableObject {
-        @Published var position: CurrentMapPosition? = nil
-        var cancels: Set<AnyCancellable> = []
-        
-        init() {
-            // sync map location to state
-            self.$position
-                .debounce(for: .milliseconds(200), scheduler: App.queueMain)
-                .sink { position in
-                    if let position = position {
-                        App.store.send(
-                            .map(.setLocation(
-                                MapLocationState(
-                                    radius: position.radius,
-                                    latitude: position.center.latitude,
-                                    longitude: position.center.longitude
-                                )
-                                ))
-                        )
-                    }
-            }
-            .store(in: &cancels)
         }
     }
 }
