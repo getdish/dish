@@ -37,7 +37,7 @@ struct DishRestaurantCard: View, Identifiable {
                 )
                     .cornerRadius(16)
                     .clipped()
-                
+                    .shadow(color: Color.black.opacity(0.4), radius: 14, x: 0, y: 3)
             }
         }
     }
@@ -90,7 +90,7 @@ struct DishRestaurantCard: View, Identifiable {
                 }
                 
             }
-            .padding(isMini ? 4 : 12)
+            .padding(isMini ? 4 : 16)
             
             
             HStack {
