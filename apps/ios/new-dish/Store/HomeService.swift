@@ -23,7 +23,7 @@ class HomeService {
                 )
             }
             .removeDuplicates()
-            .debounce(for: .milliseconds(200), scheduler: App.queueMain)
+            .debounce(for: .milliseconds(200), scheduler: RunLoop.main)
             .sink { val in
                 App.store.send(self.doSearch(val))
         }

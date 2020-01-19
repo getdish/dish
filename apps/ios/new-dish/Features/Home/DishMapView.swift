@@ -24,7 +24,7 @@ struct DishMapView: View {
     var appWidth: CGFloat { appGeometry?.size.width ?? Screen.width }
     var appHeight: CGFloat { appGeometry?.size.height ?? Screen.height }
     
-    var hiddenHeight: CGFloat {
+    var bottomPadding: CGFloat {
         let visibleHeight = homeState.mapHeight - (homeState.isSnappedToBottom ? cardRowHeight : 0)
         return appHeight  - visibleHeight
     }
@@ -34,7 +34,7 @@ struct DishMapView: View {
     func start() {
         // sync map location to state
         self.mapViewStore.$position
-            .debounce(for: .milliseconds(200), scheduler: App.queueMain)
+            .debounce(for: .milliseconds(200), scheduler: RunLoop.main)
             .sink { position in
                 if let position = position {
                     App.store.send(
@@ -54,10 +54,9 @@ struct DishMapView: View {
         var lastZoomAt = homeViewState.mapHeight
         homeViewState.$y
             .map { _ in homeViewState.mapHeight }
-            .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
+            .throttle(for: .milliseconds(50), scheduler: RunLoop.main, latest: true)
             .sink { mapHeight in
-                let amt = -((mapHeight - lastZoomAt) / homeViewState.mapMaxHeight) / 3
-                print("amt \(amt)")
+                let amt = -((mapHeight - lastZoomAt) / homeViewState.mapMaxHeight / 2) / 3
                 if amt != 0.0 {
                     lastZoomAt = mapHeight
                     self.mapView?.zoomIn(amt)
@@ -66,17 +65,35 @@ struct DishMapView: View {
         .store(in: &cancels)
 
         // mapHeight => padding
+        // we may need to separate the two a bit, i think
         homeViewState.$y
             .map { _ in homeViewState.mapHeight }
-            .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
             .sink { mapHeight in
-                self.padding = .init(top: 0, left: 0, bottom: self.hiddenHeight, right: 0)
+                let str = 1 - (
+                    mapHeight < homeViewState.nearTopAt + 150
+                        ? (homeViewState.nearTopAt + 150 - mapHeight) / 150
+                        : 0
+                )
+                self.padding = .init(
+                    top: Screen.statusBarHeight + 60 * str,
+                    left: 0,
+                    bottom: self.bottomPadding,
+                    right: 0
+                )
         }
         .store(in: &cancels)
     }
     
+    var animate: Bool {
+        return [.idle].contains(homeState.dragState)
+            || homeState.animationState != .idle
+            || self.homeState.y > self.homeState.aboutToSnapToBottomAt
+    }
+    
     var body: some View {
         let hideEdge: CGFloat = 200
+        
+        print("map animate \(self.animate)")
 
         return ZStack {
             Color.clear.onAppear { self.start() }
@@ -88,7 +105,7 @@ struct DishMapView: View {
                     height: appHeight + hideEdge,
                     padding: self.padding,
                     darkMode: self.colorScheme == .dark,
-                    animate: [.idle].contains(homeState.dragState) || homeState.animationState != .idle || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
+                    animate: self.animate,
                     moveToLocation: store.state.map.moveToLocation,
                     locations: store.state.home.state.last!.searchResults.results.map { $0.place },
                     onMapSettle: { position in
@@ -116,7 +133,7 @@ struct DishMapView: View {
                     }
                 }
                 
-                if self.homeState.isNearTop {
+                if true || self.homeState.isNearTop {
                     HStack {
                         CustomButton({
                             self.mapView?.zoomIn()

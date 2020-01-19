@@ -59,7 +59,7 @@ class HomeViewState: ObservableObject {
     init() {
         // start map height at just above snapToBottomAt
         self.$appHeight
-            .debounce(for: .milliseconds(200), scheduler: App.queueMain)
+            .debounce(for: .milliseconds(200), scheduler: RunLoop.main)
             .sink { val in
                 if !self.isSnappedToTop && !self.isSnappedToBottom {
                     async {
@@ -115,7 +115,7 @@ class HomeViewState: ObservableObject {
         
         let started = Date()
         self.$scrollY
-            .throttle(for: 0.15, scheduler: App.queueMain, latest: true)
+            .throttle(for: 0.15, scheduler: RunLoop.main, latest: true)
             .removeDuplicates()
             .sink { y in
                 if Date().timeIntervalSince(started) < 2 {

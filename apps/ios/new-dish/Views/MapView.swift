@@ -253,23 +253,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
             if gmapView.isHidden {
                 gmapView.isHidden = false
             }
-            if self.animate {
-                if let last = lastAnimation { last.cancel() }
+            if true || self.animate {
                 // to control animation duration...
-                self.isAnimating = true
-                let seconds = 0.5
-                CATransaction.begin()
-                CATransaction.setValue(seconds, forKey: kCATransactionAnimationDuration)
                 gmapView.animate(to: camera)
-                CATransaction.commit()
-                
-                var cancelled = false
-                lastAnimation = AnyCancellable { cancelled = true }
-                async(seconds * 1000) {
-                    if !cancelled {
-                        self.isAnimating = false
-                    }
-                }
             } else {
                 gmapView.camera = camera
             }
@@ -347,9 +333,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
             .store(in: &updateCancels)
         }
     }
-    
-    var isAnimating = false
-    var lastAnimation: AnyCancellable? = nil
     
     private func getCurrentMapPosition(_ coord: CLLocationCoordinate2D? = nil) -> CurrentMapPosition {
         let coordinate = coord ?? centerCoordinate
