@@ -150,7 +150,7 @@ struct HomeContentExplore: View {
         ZStack {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
-                    ScrollListener(throttle: 80.0) { frame in
+                    ScrollListener(throttle: 30.0) { frame in
                         if self.homeState.dragState != .idle {
                             return
                         }

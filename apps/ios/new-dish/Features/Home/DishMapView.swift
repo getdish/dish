@@ -4,13 +4,12 @@ import GooglePlaces
 import CoreLocation
 import Combine
 
-var cancels: Set<AnyCancellable> = []
-
-class DishMapViewStore: ObservableObject {
-    @Published var position: CurrentMapPosition? = nil
-}
-
 struct DishMapView: View {
+    class DishMapViewStore: ObservableObject {
+        var cancels: Set<AnyCancellable> = []
+        @Published var position: CurrentMapPosition? = nil
+    }
+    
     var mapViewStore = DishMapViewStore()
     @State var mapView: MapViewController? = nil
     
@@ -18,8 +17,7 @@ struct DishMapView: View {
     @Environment(\.geometry) var appGeometry
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
-    
-    private var keyboard = Keyboard()
+    @EnvironmentObject var keyboard: Keyboard
     
     var appWidth: CGFloat { appGeometry?.size.width ?? Screen.width }
     var appHeight: CGFloat { appGeometry?.size.height ?? Screen.height }
@@ -42,7 +40,7 @@ struct DishMapView: View {
     func start() {
         // sync map location to state
         self.mapViewStore.$position
-            .debounce(for: .milliseconds(200), scheduler: RunLoop.main)
+            .debounce(for: .milliseconds(200), scheduler: App.queueMain)
             .sink { position in
                 if let position = position {
                     App.store.send(
@@ -56,71 +54,54 @@ struct DishMapView: View {
                     )
                 }
         }
-        .store(in: &cancels)
+        .store(in: &self.mapViewStore.cancels)
         
         // mapHeight => zoom level
         var lastZoomAt = homeViewState.mapHeight
         homeViewState.$y
             .map { _ in homeViewState.mapHeight }
-            .throttle(for: .milliseconds(50), scheduler: RunLoop.main, latest: true)
+            .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
+            .removeDuplicates()
+            .dropFirst()
             .sink { mapHeight in
+                if homeViewState.isAboutToSnap || homeViewState.isSnappedToBottom {
+                    return
+                }
                 let amt = -((mapHeight - lastZoomAt) / homeViewState.mapMaxHeight) * 0.25
-                if amt != 0.0 {
-                    lastZoomAt = mapHeight
-                    self.mapView?.zoomIn(amt)
+                if amt == 0.0 {
+                    return
+                }
+                lastZoomAt = mapHeight
+                self.mapView?.zoomIn(amt)
+        }
+        .store(in: &self.mapViewStore.cancels)
+        
+        // snappedToBottom => zoom
+        homeViewState.$y
+            .debounce(for: .milliseconds(50), scheduler: App.queueMain)
+            .map { _ in homeViewState.isSnappedToBottom }
+            .removeDuplicates()
+            .dropFirst()
+//            .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
+            .sink { isSnappedToBottom in
+                if isSnappedToBottom {
+                    self.mapView?.zoomIn(0.05)
+                } else {
+                    self.mapView?.zoomOut(0.05)
                 }
         }
-        .store(in: &cancels)
-        
-        //        // mapHeight => padding
-        //        // we may need to separate the two a bit, i think
-        //        homeViewState.$y
-        //            .map { _ in homeViewState.mapHeight }
-        //            .sink { mapHeight in
-        //
-        //        }
-        //        .store(in: &cancels)
-        
-        //        homeViewState.$y
-        //            .map { _ in homeViewState.isSnappedToBottom }
-        //            .removeDuplicates()
-        //            .sink { isSnappedToBottom in
-        //                self.setMapPadding()
-        //            }
-        //            .store(in: &cancels)
+        .store(in: &self.mapViewStore.cancels)
     }
-    
-    //    func setMapPadding() {
-    //        if homeViewState.isSnappedToBottom {
-    //            return
-    //        }
-    //        let mapHeight = homeViewState.mapHeight
-    //        let str = 1 - (
-    //            mapHeight < homeViewState.nearTopAt + 150
-    //                ? (homeViewState.nearTopAt + 150 - mapHeight) / 150
-    //                : 0
-    //        )
-    //        let visibleHeight = homeViewState.mapHeight - (homeViewState.isSnappedToBottom ? cardRowHeight : 0)
-    //        let bottomPadding = self.appHeight  - visibleHeight
-    //        self.padding = .init(
-    //            top: Screen.statusBarHeight + 60 * str,
-    //            left: 0,
-    //            bottom: bottomPadding,
-    //            right: 0
-    //        )
-    //    }
-    
+
     var animate: Bool {
         return [.idle].contains(homeState.dragState)
             || homeState.animationState != .idle
-            || self.homeState.y > self.homeState.aboutToSnapToBottomAt
+            || self.homeState.y > self.homeState.startSnapToBottomAt
     }
     
     var body: some View {
-        
-        print(" 🐛 \(height) \(self.padHeight) \(self.maxPadHeight)")
-        
-        return ZStack(alignment: .topLeading) {
+        ZStack(alignment: .topLeading) {
+            // start
             Color.clear.onAppear { self.start() }
             
             VStack {
