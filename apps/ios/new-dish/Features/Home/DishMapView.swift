@@ -67,7 +67,7 @@ struct DishMapView: View {
                 if homeViewState.isAboutToSnap || homeViewState.isSnappedToBottom {
                     return
                 }
-                let amt = -((mapHeight - lastZoomAt) / homeViewState.mapMaxHeight) * 0.25
+                let amt = ((mapHeight - lastZoomAt) / homeViewState.mapMaxHeight) * 0.5
                 if amt == 0.0 {
                     return
                 }

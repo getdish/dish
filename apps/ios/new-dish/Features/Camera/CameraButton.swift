@@ -5,76 +5,75 @@ struct CameraButton: View {
     @State var lastTap = Date()
     
     var body: some View {
-        ZStack {
-            Group {
-                Image(systemName: "camera.fill")
-                    .resizable()
-                    .scaledToFit()
-                
-                //                    Image(systemName: "circle.fill")
-                //                        .resizable()
-                //                        .scaledToFit()
-                //                        .frame(width: 17, height: 17)
+        CustomButton2(action: {
+            self.lastTap = Date()
+            if !App.store.state.home.showCamera {
+                App.store.send(.home(.setShowCamera(true)))
+            } else {
+                App.store.send(.camera(.capture(true)))
             }
-            .foregroundColor(.white)
-        }
-        .padding(.all, 15)
-        .background(
-            LinearGradient(
-                gradient: Gradient(colors: [
-                    Color.white.opacity(0),
-                    Color.white.opacity(0.4)
-                ]),
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        )
-        .background(
-                RadialGradient(
+        }) {
+            ZStack {
+                Group {
+                    Image(systemName: "camera.fill")
+                        .resizable()
+                        .scaledToFit()
+                    
+                    //                    Image(systemName: "circle.fill")
+                    //                        .resizable()
+                    //                        .scaledToFit()
+                    //                        .frame(width: 17, height: 17)
+                }
+                .foregroundColor(.white)
+            }
+            .padding(.all, 15)
+            .background(
+                LinearGradient(
                     gradient: Gradient(colors: [
                         Color.white.opacity(0),
-                        Color.white.opacity(0.8)
+                        Color.white.opacity(0.4)
                     ]),
-                    center: .center,
-                    startRadius: 0,
-                    endRadius: 80
+                    startPoint: .top,
+                    endPoint: .bottom
                 )
-        )
-            .cornerRadius(80)
-            .frame(width: 58, height: 58)
-            .shadow(color: Color.black.opacity(1), radius: 30, x: 0, y: 3)
-            .shadow(color: Color.black.opacity(1), radius: 15, x: 0, y: 0)
-            .overlay(
-                RoundedRectangle(cornerRadius: 80)
-                    .stroke(Color.white.opacity(0.95), lineWidth: 2)
             )
-            .overlay(
-                VStack {
+                .background(
+                    RadialGradient(
+                        gradient: Gradient(colors: [
+                            Color.white.opacity(0),
+                            Color.white.opacity(0.8)
+                        ]),
+                        center: .center,
+                        startRadius: 0,
+                        endRadius: 80
+                    )
+            )
+                .cornerRadius(80)
+                .frame(width: 58, height: 58)
+                .shadow(color: Color.black.opacity(1), radius: 30, x: 0, y: 3)
+                .shadow(color: Color.black.opacity(1), radius: 15, x: 0, y: 0)
+                .overlay(
                     RoundedRectangle(cornerRadius: 80)
-                        .stroke(Color.black.opacity(0.24), lineWidth: 2)
-                }
-                .padding(2)
+                        .stroke(Color.white.opacity(0.95), lineWidth: 2)
             )
-            .animation(.spring())
-            .opacity(self.isTapped ? 0.5 : 1)
-            .scaleEffect(self.isTapped ? 0.9 : 1)
-            .onTapGesture {
-                self.lastTap = Date()
-                if !App.store.state.home.showCamera {
-                    App.store.send(.home(.setShowCamera(true)))
-                } else {
-                    App.store.send(.camera(.capture(true)))
-                }
-            }
-            .onLongPressGesture(minimumDuration: 10000, pressing: { isPressing in
-                self.isTapped = isPressing
-//                self.isTapped = isPressing
-//                App.store.send(.home(.setShowCamera(true)))
-            }) {
-                if self.lastTap.timeIntervalSinceNow > 10 {
-                    App.store.send(.home(.setShowCamera(false)))
-                }
-            }
+                .overlay(
+                    VStack {
+                        RoundedRectangle(cornerRadius: 80)
+                            .stroke(Color.black.opacity(0.24), lineWidth: 2)
+                    }
+                    .padding(2)
+            )
+//                .animation(.spring())
+//                .opacity(self.isTapped ? 0.5 : 1)
+//                .scaleEffect(self.isTapped ? 0.9 : 1)
+            //            .onLongPressGesture(minimumDuration: 10000, pressing: { isPressing in
+            //                self.isTapped = isPressing
+            //            }) {
+            //                if self.lastTap.timeIntervalSinceNow > 10 {
+            //                    App.store.send(.home(.setShowCamera(false)))
+            //                }
+            //            }
+        }
     }
 }
 
