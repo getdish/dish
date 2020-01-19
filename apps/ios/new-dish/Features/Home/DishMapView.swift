@@ -24,19 +24,20 @@ struct DishMapView: View {
     var appWidth: CGFloat { appGeometry?.size.width ?? Screen.width }
     var appHeight: CGFloat { appGeometry?.size.height ?? Screen.height }
     
+    
     var maxPadHeight: CGFloat {
-        homeState.mapMaxHeight - homeState.mapMinHeight
+        appHeight - homeState.mapMinHeight
+    }
+    
+    var height: CGFloat {
+        (appHeight - self.maxPadHeight) + self.maxPadHeight * 2
     }
     
     var padHeight: CGFloat {
-        return 100 + (1 - homeState.mapHeight / homeState.mapMaxHeight) * maxPadHeight
+        (height - homeState.mapHeight) / 2
     }
     
     @State var padding: UIEdgeInsets = .init(top: 100, left: 0, bottom: 100, right: 0)
-    
-    func runTest() {
-        self.padding = .init(top: padHeight, left: 0, bottom: padHeight, right: 0)
-    }
     
     func start() {
         // sync map location to state
@@ -63,7 +64,7 @@ struct DishMapView: View {
             .map { _ in homeViewState.mapHeight }
             .throttle(for: .milliseconds(50), scheduler: RunLoop.main, latest: true)
             .sink { mapHeight in
-                let amt = -((mapHeight - lastZoomAt) / homeViewState.mapMaxHeight) * 0.5
+                let amt = -((mapHeight - lastZoomAt) / homeViewState.mapMaxHeight) * 0.25
                 if amt != 0.0 {
                     lastZoomAt = mapHeight
                     self.mapView?.zoomIn(amt)
@@ -116,29 +117,35 @@ struct DishMapView: View {
     }
     
     var body: some View {
-        let height: CGFloat = appHeight + self.maxPadHeight
+        
+        print(" 🐛 \(height) \(self.padHeight) \(self.maxPadHeight)")
         
         return ZStack(alignment: .topLeading) {
             Color.clear.onAppear { self.start() }
             
             VStack {
                 ZStack(alignment: .topLeading) {
-                    MapView(
-                        width: appWidth,
-                        height: height,
-                        padding: self.padding,
-                        darkMode: self.colorScheme == .dark,
-                        animate: self.animate,
-                        moveToLocation: store.state.map.moveToLocation,
-                        locations: store.state.home.state.last!.searchResults.results.map { $0.place },
-                        onMapSettle: { position in
-                            self.mapViewStore.position = position
+                    ZStack {
+                        MapView(
+                            width: appWidth,
+                            height: height,
+                            padding: self.padding,
+                            darkMode: self.colorScheme == .dark,
+                            animate: self.animate,
+                            moveToLocation: store.state.map.moveToLocation,
+                            locations: store.state.home.state.last!.searchResults.results.map { $0.place },
+                            onMapSettle: { position in
+                                self.mapViewStore.position = position
+                        }
+                        )
+                            .introspectMapView { mapView in
+                                self.mapView = mapView
+                        }
+                        .animation(.spring())
+                        .offset(y: -self.padHeight)
+                        
                     }
-                    )
-                        .introspectMapView { mapView in
-                            self.mapView = mapView
-                    }
-                    .offset(y: -self.maxPadHeight / 2)
+                    .frame(height: appHeight)
                     
                     // prevent touch on left/right sides for dragging between cards
                     HStack {
@@ -156,7 +163,7 @@ struct DishMapView: View {
                         }
                     }
                     
-                    if true || self.homeState.isNearTop {
+                    if self.homeState.isNearTop {
                         HStack {
                             CustomButton({
                                 self.mapView?.zoomOut()
@@ -166,8 +173,7 @@ struct DishMapView: View {
                             .frame(height: homeState.mapHeight)
                             Spacer()
                             CustomButton({
-                                //                            self.mapView?.zoomIn()
-                                self.runTest()
+                                self.mapView?.zoomIn()
                             }) {
                                 MapButton(icon: "plus.magnifyingglass")
                             }
@@ -177,15 +183,12 @@ struct DishMapView: View {
                         .animation(.spring())
                     }
                 }
-                .frame(height: height)
-                .cornerRadius(self.homeState.isNearTop ? 40 : 20)
-                .scaleEffect(self.homeState.isNearTop ? 0.95 : 1)
+                .frame(height: appHeight)
                 .shadow(color: Color.black, radius: 20, x: 0, y: 0)
                 .clipped()
-                    //                        .animation(.spring(), value: state.animationState == .animate)
-                    .animation(.spring(response: 0.28))
-                    .offset(y: homeState.showCamera ? -Screen.height : 0)
-                    .rotationEffect(homeState.showCamera ? .degrees(-15) : .degrees(0))
+                .animation(.spring(response: 0.28))
+                .offset(y: homeState.showCamera ? -Screen.height : 0)
+                .rotationEffect(homeState.showCamera ? .degrees(-15) : .degrees(0))
                 
                 Spacer()
             }
@@ -247,6 +250,37 @@ struct MapButton: View {
                 }
                 .padding(1)
         )
+    }
+}
+
+struct DishMapControls: View {
+    var body: some View {
+        VStack {
+            HStack {
+                Spacer()
+                VStack(spacing: 0) {
+                    Button(action: {}) { Image(systemName: "plus.magnifyingglass") }
+                        .buttonStyle(MapButtonStyle())
+                        .cornerRadius(5, antialiased: true, corners: [.topLeft, .topRight])
+                        .shadow(color: Color.black.opacity(0.25), radius: 4, y: 2)
+                    Button(action: {}) { Image(systemName: "minus.magnifyingglass") }
+                        .buttonStyle(MapButtonStyle())
+                        .cornerRadius(5, antialiased: true, corners: [.bottomLeft, .bottomRight])
+                        .shadow(color: Color.black.opacity(0.25), radius: 4, y: 2)
+                }
+            }
+            .padding()
+            .padding(.top, Screen.statusBarHeight)
+        }
+    }
+}
+
+struct MapButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding(.vertical, 12)
+            .padding(.horizontal, 4)
+            .background(Color(.tertiarySystemBackground))
     }
 }
 

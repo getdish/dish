@@ -55,7 +55,6 @@ struct HomeMainView: View {
                 
                     PrintGeometryView("HomeMainView")
 
-
                     // everything above the map
                     ZStack {
                         TopNavView()

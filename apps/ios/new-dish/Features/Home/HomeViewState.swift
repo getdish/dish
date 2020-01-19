@@ -115,7 +115,7 @@ class HomeViewState: ObservableObject {
         
         let started = Date()
         self.$scrollY
-            .throttle(for: 0.15, scheduler: RunLoop.main, latest: true)
+            .throttle(for: 0.08, scheduler: RunLoop.main, latest: true)
             .removeDuplicates()
             .sink { y in
                 if Date().timeIntervalSince(started) < 2 {
@@ -259,7 +259,7 @@ class HomeViewState: ObservableObject {
         // store wasSnappedToBottom before changing y
         let wasSnappedToBottom = isSnappedToBottom
         
-        if y.rounded() == self.y.rounded() {
+        if y == self.y {
             return
         }
         

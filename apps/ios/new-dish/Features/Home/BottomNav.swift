@@ -51,7 +51,9 @@ struct BottomNav: View {
                 }
                 .padding(.horizontal)
             }
-            Spacer().frame(height: 56)
+            
+            // bottom pad
+            Spacer().frame(height: 60)
         }
         .edgesIgnoringSafeArea(.all)
     }
