@@ -4,84 +4,99 @@ import GooglePlaces
 import CoreLocation
 import Combine
 
+var cancels: Set<AnyCancellable> = []
+
+class DishMapViewStore: ObservableObject {
+    @Published var position: CurrentMapPosition? = nil
+}
+
 struct DishMapView: View {
-    class DishMapViewService: ObservableObject {
-        @Published var position: CurrentMapPosition? = nil
-        var mapView: MapViewController? = nil
-        var cancels: Set<AnyCancellable> = []
-        
-        init() {
-            // sync map location to state
-            self.$position
-                .debounce(for: .milliseconds(200), scheduler: App.queueMain)
-                .sink { position in
-                    if let position = position {
-                        App.store.send(
-                            .map(.setLocation(
-                                MapLocationState(
-                                    radius: position.radius,
-                                    latitude: position.center.latitude,
-                                    longitude: position.center.longitude
-                                )
-                                ))
-                        )
-                    }
-            }
-            .store(in: &cancels)
-            
-            // mapHeight -> zoom level
-            var lastZoomAt = homeViewState.mapHeight
-            homeViewState.$y
-                .map { _ in homeViewState.mapHeight }
-                .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
-                .sink { mapHeight in
-                    let amt = -((mapHeight - lastZoomAt) / homeViewState.mapMaxHeight) / 3
-                    print("amt \(amt)")
-                    if amt != 0.0 {
-                        lastZoomAt = mapHeight
-                        self.mapView?.zoomIn(amt)
-                    }
-                }
-                .store(in: &cancels)
-        }
-    }
+    var mapViewStore = DishMapViewStore()
+    @State var mapView: MapViewController? = nil
     
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.geometry) var appGeometry
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
     
-    private var service = DishMapViewService()
     private var keyboard = Keyboard()
     
-    var body: some View {
-        let appWidth: CGFloat = appGeometry?.size.width ?? Screen.width
-        let appHeight: CGFloat = appGeometry?.size.height ?? Screen.height
+    var appWidth: CGFloat { appGeometry?.size.width ?? Screen.width }
+    var appHeight: CGFloat { appGeometry?.size.height ?? Screen.height }
+    
+    var hiddenHeight: CGFloat {
         let visibleHeight = homeState.mapHeight - (homeState.isSnappedToBottom ? cardRowHeight : 0)
-        let hiddenHeight: CGFloat = appHeight - visibleHeight
+        return appHeight  - visibleHeight
+    }
+    
+    @State var padding: UIEdgeInsets = .init(top: 0, left: 0, bottom: 0, right: 0)
+    
+    func start() {
+        // sync map location to state
+        self.mapViewStore.$position
+            .debounce(for: .milliseconds(200), scheduler: App.queueMain)
+            .sink { position in
+                if let position = position {
+                    App.store.send(
+                        .map(.setLocation(
+                            MapLocationState(
+                                radius: position.radius,
+                                latitude: position.center.latitude,
+                                longitude: position.center.longitude
+                            )
+                            ))
+                    )
+                }
+        }
+        .store(in: &cancels)
+
+        // mapHeight => zoom level
+        var lastZoomAt = homeViewState.mapHeight
+        homeViewState.$y
+            .map { _ in homeViewState.mapHeight }
+            .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
+            .sink { mapHeight in
+                let amt = -((mapHeight - lastZoomAt) / homeViewState.mapMaxHeight) / 3
+                print("amt \(amt)")
+                if amt != 0.0 {
+                    lastZoomAt = mapHeight
+                    self.mapView?.zoomIn(amt)
+                }
+        }
+        .store(in: &cancels)
+
+        // mapHeight => padding
+        homeViewState.$y
+            .map { _ in homeViewState.mapHeight }
+            .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
+            .sink { mapHeight in
+                self.padding = .init(top: 0, left: 0, bottom: self.hiddenHeight, right: 0)
+        }
+        .store(in: &cancels)
+    }
+    
+    var body: some View {
         let hideEdge: CGFloat = 200
 
-        return VStack {
+        return ZStack {
+            Color.clear.onAppear { self.start() }
+            
+            VStack {
             ZStack {
                 MapView(
                     width: appWidth,
                     height: appHeight + hideEdge,
-                    padding: .init(
-                        top: 0,
-                        left: 0,
-                        bottom: hiddenHeight,
-                        right: 0
-                    ),
+                    padding: self.padding,
                     darkMode: self.colorScheme == .dark,
                     animate: [.idle].contains(homeState.dragState) || homeState.animationState != .idle || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
                     moveToLocation: store.state.map.moveToLocation,
                     locations: store.state.home.state.last!.searchResults.results.map { $0.place },
                     onMapSettle: { position in
-                        self.service.position = position
+                        self.mapViewStore.position = position
                     }
                 )
                 .introspectMapView { mapView in
-                    self.service.mapView = mapView
+                    self.mapView = mapView
                 }
                 .offset(y: -hideEdge / 2)
                 
@@ -104,14 +119,14 @@ struct DishMapView: View {
                 if self.homeState.isNearTop {
                     HStack {
                         CustomButton({
-                            self.service.mapView?.zoomIn()
+                            self.mapView?.zoomIn()
                         }) {
                             MapButton(icon: "minus.magnifyingglass")
                         }
                         .frame(height: homeState.mapHeight)
                         Spacer()
                         CustomButton({
-                            self.service.mapView?.zoomOut()
+                            self.mapView?.zoomOut()
                         }) {
                             MapButton(icon: "plus.magnifyingglass")
                         }
@@ -132,6 +147,7 @@ struct DishMapView: View {
             .rotationEffect(homeState.showCamera ? .degrees(-15) : .degrees(0))
             
             Spacer()
+        }
         }
     }
 }

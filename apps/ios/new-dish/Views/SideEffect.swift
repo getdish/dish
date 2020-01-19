@@ -86,3 +86,16 @@ struct Run: View {
         return emptyView.onDisappear { self.cancelLastRun() }
     }
 }
+
+struct RunOnce: View {
+    var block: () -> Void
+    @State var hasRunOnce = false
+    
+    var body: some View {
+        Run {
+            if self.hasRunOnce { return }
+            self.block()
+            self.hasRunOnce = true
+        }
+    }
+}
