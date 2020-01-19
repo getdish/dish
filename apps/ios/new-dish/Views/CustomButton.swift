@@ -4,7 +4,7 @@ struct CustomButton<Content: View>: View {
     let action: () -> Void
     let content: Content
     
-    init(_ action: @escaping () -> Void, @ViewBuilder content: () -> Content) {
+    init(action: @escaping () -> Void, @ViewBuilder content: () -> Content) {
         self.action = action
         self.content = content()
     }
@@ -35,7 +35,7 @@ struct CustomButton2<Content: View>: View {
     let action: () -> Void
     let content: Content
     
-    init(_ action: @escaping () -> Void, @ViewBuilder content: () -> Content) {
+    init(action: @escaping () -> Void, @ViewBuilder content: () -> Content) {
         self.action = action
         self.content = content()
     }

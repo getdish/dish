@@ -17,7 +17,7 @@ struct DishCardView: View, Identifiable {
         
         return MagicItem("dish-\(id)", at: at) {
             GeometryReader { geo in
-                CustomButton2({
+                CustomButton2(action: {
                     App.store.send(
                         .home(.push(HomeStateItem(filters: [SearchFilter(name: dish.name)])))
                     )

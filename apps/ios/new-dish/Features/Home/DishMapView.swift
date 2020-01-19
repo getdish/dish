@@ -146,14 +146,14 @@ struct DishMapView: View {
                     
                     if self.homeState.isNearTop {
                         HStack {
-                            CustomButton({
+                            CustomButton(action: {
                                 self.mapView?.zoomOut()
                             }) {
                                 MapButton(icon: "minus.magnifyingglass")
                             }
                             .frame(height: homeState.mapHeight)
                             Spacer()
-                            CustomButton({
+                            CustomButton(action: {
                                 self.mapView?.zoomIn()
                             }) {
                                 MapButton(icon: "plus.magnifyingglass")

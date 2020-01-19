@@ -118,7 +118,7 @@ class HomeViewState: ObservableObject {
             .throttle(for: 0.125, scheduler: App.queueMain, latest: true)
             .removeDuplicates()
             .sink { y in
-                if Date().timeIntervalSince(started) < 2 {
+                if Date().timeIntervalSince(started) < 3 {
                     return
                 }
                 print("wut \(y)")

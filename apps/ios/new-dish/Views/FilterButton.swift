@@ -11,7 +11,7 @@ struct FilterButton: View {
         let borderColor = Color(.systemFill).opacity(0.25)
         let shadowColor = Color(.black).opacity(colorScheme == .light ? 0.6 : 0.3)
         return ZStack {
-            Button(action: action) {
+            CustomButton2(action: action) {
                 Text(label)
                     .foregroundColor(textColor)
                     .font(.system(size: 14))
