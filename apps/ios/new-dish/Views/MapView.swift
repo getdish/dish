@@ -14,13 +14,16 @@ struct MapViewLocation: Equatable {
         case current
         case location(lat: Double, long: Double)
         case none
+    
     }
     let at: LocationType
     let time: NSDate
+    
     init(_ at: LocationType) {
         self.at = at
         self.time = NSDate()
     }
+    
     var coordinate: CLLocationCoordinate2D? {
         switch at {
             case .current: return nil
@@ -47,7 +50,7 @@ struct MapView: UIViewControllerRepresentable {
     
     var width: CGFloat
     var height: CGFloat
-    var hiddenBottomPct: CGFloat = 0
+    var padding: UIEdgeInsets = .zero
     var darkMode: Bool?
     var animate: Bool
     var moveToLocation: MapViewLocation?
@@ -68,7 +71,7 @@ struct MapView: UIViewControllerRepresentable {
         let controller = MapViewController(
             width: width,
             height: height,
-            hiddenBottomPct: hiddenBottomPct,
+            padding: padding,
             moveToLocation: moveToLocation,
             locations: locations,
             darkMode: darkMode,
@@ -110,7 +113,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     var gmapView: GMSMapView!
     var width: CGFloat
     var height: CGFloat
-    var hiddenBottomPct: CGFloat
+    var padding: UIEdgeInsets
     var moveToLocation: MapViewLocation?
     var locations: [GooglePlaceItem] = []
     var darkMode: Bool?
@@ -125,7 +128,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     init(
         width: CGFloat,
         height: CGFloat,
-        hiddenBottomPct: CGFloat = 0,
+        padding: UIEdgeInsets = .zero,
         moveToLocation: MapViewLocation?,
         locations: [GooglePlaceItem] = [],
         darkMode: Bool?,
@@ -134,7 +137,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     ) {
         self.width = width
         self.height = height
-        self.hiddenBottomPct = hiddenBottomPct
+        self.padding = padding
         self.moveToLocation = moveToLocation
         self.locations = locations
         self.darkMode = darkMode
@@ -162,7 +165,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     
     var centerPoint: CGPoint {
         let x = gmapView.frame.size.width / 2
-        let y = gmapView.frame.size.height / 2 * (1 - hiddenBottomPct)
+        // TODO check:
+        let y = gmapView.frame.size.height / 2 - (padding.bottom - padding.top) / 2
         return CGPoint(x: x, y: y)
     }
     
@@ -182,7 +186,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     }
     
     func radius() -> Double {
-        gmapView.getRadius() * Double(1 - self.hiddenBottomPct)
+        gmapView.getRadius()
     }
     
     func callbackOnSettle() {
@@ -227,23 +231,58 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
             self.moveToLocation = parent.moveToLocation
             self.updateMapLocation()
         }
-        if self.hiddenBottomPct != parent.hiddenBottomPct {
-            self.hiddenBottomPct = parent.hiddenBottomPct
+        if self.padding != parent.padding {
+            self.padding = parent.padding
             shouldUpdateCamera = true
-            // update our bounds
-            gmapView.padding = .init(
-                top: 0,
-                left: 0,
-                // TODO its close but not perfect
-                bottom: self.hiddenBottomPct * Screen.fullHeight + 23.5,
-                right: 0
-            )
             self.callbackOnSettle()
         }
         
         if shouldUpdateCamera {
             self.updateCamera()
         }
+    }
+    
+    private func updateCamera(_ coordinate: CLLocationCoordinate2D? = nil) {
+        // always set current padding
+        self.gmapView?.padding = padding
+        
+        if let camera = getCamera(coordinate) {
+            if let coord = coordinate {
+                self.lastSettledAt = getCurrentMapPosition(coord)
+            }
+            if gmapView.isHidden {
+                gmapView.isHidden = false
+            }
+            if self.animate {
+                if let last = lastAnimation { last.cancel() }
+                // to control animation duration...
+                self.isAnimating = true
+                let seconds = 0.5
+                CATransaction.begin()
+                CATransaction.setValue(seconds, forKey: kCATransactionAnimationDuration)
+                gmapView.animate(to: camera)
+                CATransaction.commit()
+                
+                var cancelled = false
+                lastAnimation = AnyCancellable { cancelled = true }
+                async(seconds * 1000) {
+                    if !cancelled {
+                        self.isAnimating = false
+                    }
+                }
+            } else {
+                gmapView.camera = camera
+            }
+        }
+    }
+    
+    private func getCamera(_ givenLoc: CLLocationCoordinate2D? = nil) -> GMSCameraPosition? {
+        let location = givenLoc ?? self.lastSettledAt?.location.coordinate ?? gmapView.getCenterCoordinate()
+        return GMSCameraPosition.camera(
+            withLatitude: location.latitude,
+            longitude: location.longitude,
+            zoom: Float(self.zoom)
+        )
     }
     
     func zoomOut() {
@@ -321,46 +360,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         )
     }
 
-    private func updateCamera(_ coordinate: CLLocationCoordinate2D? = nil) {
-        if let camera = getCamera(coordinate) {
-            if let coord = coordinate {
-                self.lastSettledAt = getCurrentMapPosition(coord)
-            }
-            if gmapView.isHidden {
-                gmapView.isHidden = false
-            }
-            if self.animate {
-                if let last = lastAnimation { last.cancel() }
-                // to control animation duration... uncomment below
-                self.isAnimating = true
-                let seconds = 0.5
-                CATransaction.begin()
-                CATransaction.setValue(seconds, forKey: kCATransactionAnimationDuration)
-                gmapView.animate(to: camera)
-                CATransaction.commit()
-                
-                var cancelled = false
-                lastAnimation = AnyCancellable { cancelled = true }
-                async(seconds * 1000) {
-                    if !cancelled {
-                        self.isAnimating = false
-                    }
-                }
-            } else {
-                gmapView.camera = camera
-            }
-        }
-    }
-
-    private func getCamera(_ givenLoc: CLLocationCoordinate2D? = nil) -> GMSCameraPosition? {
-        let location = givenLoc ?? self.lastSettledAt?.location.coordinate ?? gmapView.getCenterCoordinate()
-        return GMSCameraPosition.camera(
-            withLatitude: location.latitude,
-            longitude: location.longitude,
-            zoom: Float(self.zoom)
-        )
-    }
-
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -386,7 +385,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
 
         // Create a GMSCameraPosition that tells the map to display the
         // coordinate -33.86,151.20 at zoom level 6.
-        let camera = GMSCameraPosition.camera(withLatitude: -33.86, longitude: 151.20, zoom: 4.0)
+        let camera = GMSCameraPosition.camera(withLatitude: -33.86, longitude: 151.20, zoom: Float(self.zoom))
 
         gmapView = GMSMapView.map(withFrame: CGRect(x: 0, y: 0, width: width, height: height), camera: camera)
         gmapView.delegate = self

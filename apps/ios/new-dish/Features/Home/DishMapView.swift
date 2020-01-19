@@ -19,14 +19,20 @@ struct DishMapView: View {
         let appWidth: CGFloat = appGeometry?.size.width ?? Screen.width
         let appHeight: CGFloat = appGeometry?.size.height ?? Screen.height
         let visibleHeight = homeState.mapHeight - (homeState.isSnappedToBottom ? cardRowHeight : 0)
-        let hiddenBottomPct: CGFloat = (appHeight - visibleHeight) / appHeight
+        let hiddenHeight: CGFloat = appHeight - visibleHeight
+        let hideEdge: CGFloat = 200
 
         return VStack {
             ZStack {
                 MapView(
                     width: appWidth,
-                    height: appHeight,
-                    hiddenBottomPct: hiddenBottomPct,
+                    height: appHeight + hideEdge,
+                    padding: .init(
+                        top: 0,
+                        left: 0,
+                        bottom: hiddenHeight,
+                        right: 0
+                    ),
                     darkMode: self.colorScheme == .dark,
                     animate: [.idle].contains(homeState.dragState) || homeState.animationState != .idle || self.homeState.y > self.homeState.aboutToSnapToBottomAt,
                     moveToLocation: store.state.map.moveToLocation,
@@ -38,6 +44,7 @@ struct DishMapView: View {
                 .introspectMapView { mapView in
                     self.mapView = mapView
                 }
+                .offset(y: -hideEdge / 2)
                 
                 // prevent touch on left/right sides for dragging between cards
                 HStack {
