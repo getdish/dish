@@ -28,7 +28,7 @@ struct DishMapView: View {
     }
     
     var height: CGFloat {
-        (appHeight - self.maxPadHeight) + self.maxPadHeight * 2
+        appHeight + 400
     }
     
     var padHeight: CGFloat {
@@ -50,7 +50,7 @@ struct DishMapView: View {
                                 latitude: position.center.latitude,
                                 longitude: position.center.longitude
                             )
-                            ))
+                        ))
                     )
                 }
         }
@@ -127,6 +127,7 @@ struct DishMapView: View {
                         
                     }
                     .frame(height: appHeight)
+                    .clipped()
                     
                     // prevent touch on left/right sides for dragging between cards
                     HStack {
