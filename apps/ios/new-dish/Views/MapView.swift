@@ -233,19 +233,16 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         }
         if self.padding != parent.padding {
             self.padding = parent.padding
+            self.gmapView?.padding = padding
             shouldUpdateCamera = true
             self.callbackOnSettle()
         }
-        
         if shouldUpdateCamera {
             self.updateCamera()
         }
     }
     
     private func updateCamera(_ coordinate: CLLocationCoordinate2D? = nil) {
-        // always set current padding
-        self.gmapView?.padding = padding
-        
         if let camera = getCamera(coordinate) {
             if let coord = coordinate {
                 self.lastSettledAt = getCurrentMapPosition(coord)
@@ -271,12 +268,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         )
     }
     
-    func zoomOut(_ by: CGFloat = 0.3) {
+    func zoomIn(_ by: CGFloat = 0.3) {
         self.zoom = self.zoom * (1 + by)
         self.updateCamera()
     }
     
-    func zoomIn(_ by: CGFloat = 0.3) {
+    func zoomOut(_ by: CGFloat = 0.3) {
         self.zoom = self.zoom * (1 - by)
         self.updateCamera()
     }

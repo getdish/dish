@@ -51,6 +51,7 @@ struct HomeMainView: View {
 
                     // map
                     DishMapView()
+                        .frame(height: self.appGeometry?.size.height)
                 
                     PrintGeometryView("HomeMainView")
 

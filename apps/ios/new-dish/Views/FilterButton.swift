@@ -9,7 +9,7 @@ struct FilterButton: View {
         let textColor = Color(.systemBackground).opacity(0.85)
         let schemeOppositeColor = Color(colorScheme == .dark ? .init(white: 0.95, alpha: 0.9) : .init(white: 0.15, alpha: 0.9))
         let borderColor = Color(.systemFill).opacity(0.25)
-        let shadowColor = Color(.black).opacity(colorScheme == .light ? 0.3 : 0.6)
+        let shadowColor = Color(.black).opacity(colorScheme == .light ? 0.6 : 0.3)
         return ZStack {
             Button(action: action) {
                 Text(label)
