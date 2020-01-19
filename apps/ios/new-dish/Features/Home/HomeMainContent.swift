@@ -19,9 +19,7 @@ struct HomeMainContent: View {
     @State var shouldUpdateMagicPositions: Bool = true
     
     var body: some View {
-        print("self.shouldUpdateMagicPositions \(self.shouldUpdateMagicPositions)")
-        
-        return ZStack(alignment: .topLeading) {
+        ZStack(alignment: .topLeading) {
             SideEffect("HomeMainContent", level: .debug) {
                 if self.homeState.isSnappedToBottom && self.animatePosition == .start {
                     self.shouldUpdateMagicPositions = false
@@ -152,7 +150,7 @@ struct HomeContentExplore: View {
         ZStack {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
-                    ScrollListener(throttle: 80.0) { frame in
+                    ScrollListener(throttle: 30.0) { frame in
                         if self.homeState.dragState != .idle {
                             return
                         }

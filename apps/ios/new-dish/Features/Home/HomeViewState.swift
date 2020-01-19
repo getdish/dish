@@ -6,7 +6,7 @@ import Combine
 
 fileprivate let snapToBottomYMovePct: CGFloat = 0.23
 fileprivate let resistanceYBeforeSnap: CGFloat = 48
-fileprivate let nearTopAtVal: CGFloat = 160 + Screen.statusBarHeight
+fileprivate let nearTopAtVal: CGFloat = 120 + Screen.statusBarHeight
 fileprivate let topNavHeight: CGFloat = 45
 
 class HomeViewState: ObservableObject {
@@ -31,13 +31,13 @@ class HomeViewState: ObservableObject {
     // initialize it at where the snapToBottom will be about
     @Published private(set) var y: CGFloat = Screen.fullHeight * 0.3 * snapToBottomYMovePct - 1 {
         willSet(y) {
-            // util - break when the searchbar is at y
-            #if DEBUG
-            print("y \(y)")
-            if false, y > snapToBottomAt { // <- example
-                raise(SIGINT)
-            }
-            #endif
+//            // util - break when the searchbar is at y
+//            #if DEBUG
+//            print("y \(y)")
+//            if false, y > snapToBottomAt { // <- example
+//                raise(SIGINT)
+//            }
+//            #endif
         }
     }
     @Published private(set) var searchBarYExtra: CGFloat = 0
@@ -115,12 +115,13 @@ class HomeViewState: ObservableObject {
         
         let started = Date()
         self.$scrollY
-            .throttle(for: 0.15, scheduler: App.queueMain, latest: true)
+            .throttle(for: 0.125, scheduler: App.queueMain, latest: true)
             .removeDuplicates()
             .sink { y in
-                if Date().timeIntervalSince(started) < 2 {
+                if Date().timeIntervalSince(started) < 3 {
                     return
                 }
+                print("wut \(y)")
                 let next: HomeViewState.HomeScrollState =
                     homeViewState.isSnappedToBottom ? .none : (
                         y > 60 ? .more : y > 30 ? .some : .none
@@ -135,7 +136,64 @@ class HomeViewState: ObservableObject {
         }.store(in: &cancels)
     }
     
-    // note: setDragState/setAnimationSate should be only way to mutate state
+    var showFiltersAbove: Bool {
+        if y > snapToBottomAt - 1 { return false }
+        if mapHeight < 190 { return false }
+        return hasScrolled != .none
+    }
+    
+    let mapMinHeight: CGFloat = max(
+        nearTopAtVal - 1,
+        Screen.statusBarHeight + searchBarHeight / 2 + topNavHeight + 50
+    )
+    
+    var mapInitialHeight: CGFloat { appHeight * 0.3 }
+    var mapMaxHeight: CGFloat { appHeight - keyboardHeight - searchBarHeight }
+    
+    var mapHeight: CGFloat {
+        return min(
+            mapMaxHeight, max(
+                mapInitialHeight + y - scrollRevealY, mapMinHeight
+            )
+        )
+    }
+    
+    var scrollRevealY: CGFloat {
+        if hasScrolled == .more {
+            return 40
+        }
+        return 0
+    }
+    
+    var snapToBottomAt: CGFloat {
+        appHeight * snapToBottomYMovePct
+    }
+    
+    var startSnapToBottomAt: CGFloat {
+        snapToBottomAt - resistanceYBeforeSnap
+    }
+    
+    var snappedToBottomMapHeight: CGFloat { appHeight - 190 }
+    var isSnappedToBottom: Bool { y > snapToBottomAt }
+    var wasSnappedToBottom = false
+    
+    let nearTopAt: CGFloat = nearTopAtVal
+    var isNearTop: Bool {
+        self.mapHeight < self.nearTopAt
+    }
+    
+    var isAboutToSnap: Bool {
+        if y >= startSnapToBottomAt { return true }
+        return false
+    }
+    
+    func toggleMap() {
+        log.info()
+        self.snapToBottom(!isSnappedToBottom)
+    }
+    
+    private var startDragAt: CGFloat = 0
+    private var lastDragY: CGFloat = 0
     
     func setDragState(_ next: HomeDragState) {
         log.info()
@@ -175,71 +233,11 @@ class HomeViewState: ObservableObject {
             }
         }
     }
-    
-    var showFiltersAbove: Bool {
-        if y > snapToBottomAt - 1 { return false }
-        if mapHeight < 190 { return false }
-        return hasScrolled != .none
-    }
-    
-    let mapMinHeight: CGFloat = max(
-        nearTopAtVal - 1,
-        Screen.statusBarHeight + searchBarHeight / 2 + topNavHeight + 90
-    )
-    
-    var mapInitialHeight: CGFloat { appHeight * 0.3 }
-    
-    var mapMaxHeight: CGFloat { appHeight - keyboardHeight - searchBarHeight }
-    
-    
-    var scrollRevealY: CGFloat {
-        if hasScrolled == .more {
-            return 40
-        }
-        return 0
-    }
-    
-    var mapHeight: CGFloat {
-        return min(
-            mapMaxHeight, max(
-                mapInitialHeight + y - scrollRevealY, mapMinHeight
-            )
-        )
-    }
-    
-    var snapToBottomAt: CGFloat {
-        appHeight * snapToBottomYMovePct
-    }
-    
-    var snappedToBottomMapHeight: CGFloat { appHeight - 190 }
-    var isSnappedToBottom: Bool { y > snapToBottomAt }
-    var wasSnappedToBottom = false
-    var aboutToSnapToBottomAt: CGFloat { snapToBottomAt - resistanceYBeforeSnap }
-    
-    let nearTopAt: CGFloat = nearTopAtVal
-    var isNearTop: Bool {
-        self.mapHeight < self.nearTopAt
-    }
-    
-    var isAboutToSnap: Bool {
-        if y > aboutToSnapToBottomAt { return true }
-        return false
-    }
-    
-    func toggleMap() {
-        log.info()
-        self.snapToBottom(!isSnappedToBottom)
-    }
-    
-    private var startDragAt: CGFloat = 0
-    private var lastDragY: CGFloat = 0
-    
+
     func drag(_ dragY: CGFloat) {
         if dragState == .pager { return }
         if lastDragY == dragY { return }
         lastDragY = dragY
-        
-        log.info(dragY)
         
         // TODO we can reset this back to false in some cases for better UX
         self.hasMovedBar = true
@@ -256,17 +254,16 @@ class HomeViewState: ObservableObject {
         )
         
         // resistance before snapping down
-        let aboutToSnapToBottom = y >= aboutToSnapToBottomAt && !isSnappedToBottom
+        let aboutToSnapToBottom = y >= startSnapToBottomAt && !isSnappedToBottom
         if aboutToSnapToBottom {
-            let diff = self.startDragAt + dragY - aboutToSnapToBottomAt
-            y = aboutToSnapToBottomAt + diff * 0.2
+            let diff = self.startDragAt + dragY - startSnapToBottomAt
+            y = startSnapToBottomAt + diff * 0.2
         }
         
         // store wasSnappedToBottom before changing y
         let wasSnappedToBottom = isSnappedToBottom
         
-        if y.rounded() == self.y.rounded() {
-            log.info("ignore same values")
+        if y == self.y {
             return
         }
         
@@ -275,7 +272,7 @@ class HomeViewState: ObservableObject {
         // while snapped, have searchbar move differently
         // searchbar moves faster during resistance before snap
         if aboutToSnapToBottom {
-            self.searchBarYExtra = y - aboutToSnapToBottomAt
+            self.searchBarYExtra = y - startSnapToBottomAt
         } else if isSnappedToBottom {
             self.searchBarYExtra = dragY * 0.25
         }
@@ -300,8 +297,8 @@ class HomeViewState: ObservableObject {
         self.animate {
             if self.isSnappedToBottom {
                 self.snapToBottom()
-            } else if self.y > self.aboutToSnapToBottomAt {
-                self.y = self.aboutToSnapToBottomAt
+            } else if self.y > self.startSnapToBottomAt {
+                self.y = self.startSnapToBottomAt
             }
             if self.searchBarYExtra != 0 {
                 self.searchBarYExtra = 0
@@ -323,9 +320,7 @@ class HomeViewState: ObservableObject {
             if toBottom {
                 self.y = self.snappedToBottomMapHeight - self.mapInitialHeight
             } else {
-                self.y = self.snapToBottomAt - resistanceYBeforeSnap - (
-                    Selectors.home.isOnSearchResults() ? Screen.height * 0.1 : 0
-                )
+                self.y = self.startSnapToBottomAt
             }
         }
     }
@@ -366,7 +361,7 @@ class HomeViewState: ObservableObject {
     func setScrollY(_ scrollY: CGFloat) {
         if dragState != .idle { return }
         if animationState != .idle { return }
-        let y = max(0, min(100, scrollY)).rounded()
+        let y = max(0, min(100, scrollY))
         if y != self.scrollY {
             self.scrollY = y
         }

@@ -43,7 +43,7 @@ struct HomeMainFilters: View {
                         }
                     }
                     
-                    CustomButton({
+                    CustomButton(action: {
                         self.showFilters = self.showFilters == .cuisine ? .search : .cuisine
                     }) {
                         Text(self.showFilters == .cuisine ? "🍽" : "🔍")

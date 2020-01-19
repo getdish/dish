@@ -5,8 +5,6 @@ struct HomeSearchResultsView: View {
     
     var body: some View {
         ZStack {
-            Color.black
-
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 20) {
                     ClearKeyboardOnScroll()
