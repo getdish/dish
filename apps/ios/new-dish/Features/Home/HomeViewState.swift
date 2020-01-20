@@ -121,7 +121,6 @@ class HomeViewState: ObservableObject {
                 if Date().timeIntervalSince(started) < 3 {
                     return
                 }
-                print("wut \(y)")
                 let next: HomeViewState.HomeScrollState =
                     homeViewState.isSnappedToBottom ? .none : (
                         y > 60 ? .more : y > 30 ? .some : .none
@@ -201,7 +200,7 @@ class HomeViewState: ObservableObject {
     }
     
     func setAnimationState(_ next: HomeAnimationState, _ duration: Int = 0) {
-        DispatchQueue.main.async {
+        async {
             self.animationState = next
             // cancel last controlled animation
             if next != .idle,

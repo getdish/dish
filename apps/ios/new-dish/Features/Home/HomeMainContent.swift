@@ -144,11 +144,12 @@ struct HomeContentExplore: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
     let items = features.chunked(into: 2)
+    
     let spacing: CGFloat = 14
     
     var body: some View {
         ZStack {
-            ScrollView(showsIndicators: false) {
+            ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 0) {
                     ScrollListener(throttle: 30.0) { frame in
                         if self.homeState.dragState != .idle {

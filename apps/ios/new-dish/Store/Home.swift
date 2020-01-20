@@ -58,7 +58,7 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
                 last.filters = val.map { SearchFilter(name: $0.text) }
                 updateItem(last)
                 if let search = val.last?.text {
-                    DispatchQueue.main.async {
+                    async {
                         App.store.send(.home(.setSearch(search)))
                     }
                 }
@@ -131,8 +131,11 @@ struct HomeSearchResults: Equatable {
         lhs.id == rhs.id
     }
     
+    enum FetchStatus {
+        case idle, fetching, failed, completed
+    }
+    
     var id: String
-    enum FetchStatus { case idle, fetching, failed, completed }
     var status: FetchStatus = .idle
     var results: [HomeSearchResultItem] = []
 }

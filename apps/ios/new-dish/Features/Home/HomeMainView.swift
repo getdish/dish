@@ -1,6 +1,9 @@
 import SwiftUI
 import Combine
 
+// Combine - Apples reactive library
+//   - ObservedObject / ObservableObject
+
 let searchBarHeight: CGFloat = 45
 
 struct HomeMainView: View {
