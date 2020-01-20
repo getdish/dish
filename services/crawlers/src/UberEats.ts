@@ -66,6 +66,7 @@ export class UberEats extends WorkerJob {
     lat: number,
     lon: number
   ) {
+    console.log(`Getting feed for '${category}', offset: ${offset}`)
     const response = await axios.post(
       FEED + LOCALE,
       {
@@ -132,8 +133,12 @@ export class UberEats extends WorkerJob {
     const response = await restaurant.upsert({
       name: data.title,
       description: data.categories && data.categories.join(', '),
-      longitude: data.location.longitude,
       latitude: data.location.latitude,
+      longitude: data.location.longitude,
+      location: {
+        type: 'Point',
+        coordinates: [data.location.longitude, data.location.latitude],
+      },
       address: data.location.address,
       city: data.location.city,
       state: '',
@@ -200,3 +205,4 @@ export class UberEats extends WorkerJob {
     return decodeURIComponent(cache_key)
   }
 }
+

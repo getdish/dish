@@ -1,5 +1,10 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
+type Point = {
+  type: string
+  coordinates: [number, number]
+}
+
 // For dynamically creating types so we can introspect keys.
 // Essentially allows us to only define our model keys once.
 type MapSchemaTypes = {
@@ -8,6 +13,7 @@ type MapSchemaTypes = {
   boolean: boolean
   float: number
   number: number
+  point: Point
   regexp: RegExp
   // TODO: Add more as you need
 }

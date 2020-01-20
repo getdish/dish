@@ -1,0 +1,4 @@
+- args:
+    cascade: false
+    sql: "CREATE EXTENSION postgis;\r\nCREATE EXTENSION postgis_topology;"
+  type: run_sql

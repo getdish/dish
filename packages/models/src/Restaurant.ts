@@ -6,6 +6,7 @@ export const FIELDS_SCHEMA = ModelBase.asSchema({
   description: 'string',
   longitude: 'float',
   latitude: 'float',
+  location: 'point',
   address: 'string',
   city: 'string',
   state: 'string',
