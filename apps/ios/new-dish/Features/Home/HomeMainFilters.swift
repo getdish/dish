@@ -36,10 +36,10 @@ struct HomeMainFilterBar: View {
                             .cornerRadius(80)
                             .shadow(radius: 10)
                             
-                            FilterButton(label: "Filter", action: {
+                            FilterButton(label: "💵", action: {
                                 self.homeState.showFilters = true
                             }, flex: true)
-                                .frame(width: 80)
+                                .frame(width: 60)
                                 .cornerRadius(80)
                                 .shadow(radius: 10)
                         }
