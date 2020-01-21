@@ -86,7 +86,7 @@
 		AEA331F723A3382100B36A23 /* DishButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F623A3382100B36A23 /* DishButton.swift */; };
 		AEA331F923A3385000B36A23 /* InlineAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F823A3385000B36A23 /* InlineAlertView.swift */; };
 		AEA331FB23A338F400B36A23 /* KeyboardHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331FA23A338F400B36A23 /* KeyboardHost.swift */; };
-		AEA87E4323B976EB009F07DB /* HomeMainFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA87E4223B976EB009F07DB /* HomeMainFilterBar.swift */; };
+		AEA87E4323B976EB009F07DB /* HomeMainFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA87E4223B976EB009F07DB /* HomeMainFilters.swift */; };
 		AEAE67EC23B5A70A00B9D781 /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAE67EB23B5A70A00B9D781 /* Map.swift */; };
 		AEC9AD3E23D10C2900BCC82E /* ScrollViewEnhanced.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC9AD3D23D10C2900BCC82E /* ScrollViewEnhanced.swift */; };
 		AEC9AD4023D15AFD00BCC82E /* DishCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC9AD3F23D15AFD00BCC82E /* DishCardView.swift */; };
@@ -191,7 +191,7 @@
 		AEA331F623A3382100B36A23 /* DishButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishButton.swift; sourceTree = "<group>"; };
 		AEA331F823A3385000B36A23 /* InlineAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineAlertView.swift; sourceTree = "<group>"; };
 		AEA331FA23A338F400B36A23 /* KeyboardHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHost.swift; sourceTree = "<group>"; };
-		AEA87E4223B976EB009F07DB /* HomeMainFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainFilterBar.swift; sourceTree = "<group>"; };
+		AEA87E4223B976EB009F07DB /* HomeMainFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainFilters.swift; sourceTree = "<group>"; };
 		AEAE67EB23B5A70A00B9D781 /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Map.swift; sourceTree = "<group>"; };
 		AEC9AD3D23D10C2900BCC82E /* ScrollViewEnhanced.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewEnhanced.swift; sourceTree = "<group>"; };
 		AEC9AD3F23D15AFD00BCC82E /* DishCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishCardView.swift; sourceTree = "<group>"; };
@@ -245,6 +245,7 @@
 		1CE3546323986B1B004B3A84 /* new-dish */ = {
 			isa = PBXGroup;
 			children = (
+				1CE3547223986B1C004B3A84 /* Info.plist */,
 				1CE3546A23986B1C004B3A84 /* Assets.xcassets */,
 				1CE3546423986B1B004B3A84 /* AppDelegate.swift */,
 				AE99091123CE637200F1763C /* App.swift */,
@@ -258,7 +259,6 @@
 				1CE3547C23986B69004B3A84 /* Extensions */,
 				AE6B102923CFF1FC00C33968 /* Resources */,
 				AE85339523C92D170045F144 /* Vendor */,
-				1CE3547223986B1C004B3A84 /* Info.plist */,
 				1CE3546F23986B1C004B3A84 /* LaunchScreen.storyboard */,
 				1CE3546C23986B1C004B3A84 /* Preview Content */,
 			);
@@ -353,7 +353,7 @@
 				AE872FF623CEA5CD00F84663 /* DishRestaurantCard.swift */,
 				1C3CFE6323998FF2004B2EEA /* HomeContainerView.swift */,
 				AEF6558023B2205F00E49A51 /* HomeMainContent.swift */,
-				AEA87E4223B976EB009F07DB /* HomeMainFilterBar.swift */,
+				AEA87E4223B976EB009F07DB /* HomeMainFilters.swift */,
 				AE7563B323A035E70094022B /* HomeMainView.swift */,
 				AE0C5FF823D2506800BB5340 /* HomeMainViewState.swift */,
 				AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */,
@@ -652,7 +652,7 @@
 				AEA331F723A3382100B36A23 /* DishButton.swift in Sources */,
 				AE6A9C0F23C45FA800003059 /* GooglePlacesService.swift in Sources */,
 				AE872FED23CE6E3900F84663 /* Publisher.swift in Sources */,
-				AEA87E4323B976EB009F07DB /* HomeMainFilterBar.swift in Sources */,
+				AEA87E4323B976EB009F07DB /* HomeMainFilters.swift in Sources */,
 				AE56C86423ADB78C006A156A /* HomeSearchResultsView.swift in Sources */,
 				AE0C5FF723D2414500BB5340 /* CustomButton.swift in Sources */,
 				AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */,

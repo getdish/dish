@@ -5,7 +5,7 @@ import Combine
 // then on idle we can apply .spring()
 
 fileprivate let snapToBottomYMovePct: CGFloat = 0.23
-fileprivate let resistanceYBeforeSnap: CGFloat = 48
+fileprivate let resistanceYBeforeSnap: CGFloat = 38
 fileprivate let nearTopAtVal: CGFloat = 120 + Screen.statusBarHeight
 fileprivate let topNavHeight: CGFloat = 45
 
@@ -25,6 +25,9 @@ class HomeViewState: ObservableObject {
     enum HomeScrollState {
         case none, some, more
     }
+    
+    // temp
+    @Published var showFilters: Bool = false
     
     @Published private(set) var appHeight: CGFloat = Screen.height
     @Published private(set) var scrollY: CGFloat = 0
@@ -70,6 +73,33 @@ class HomeViewState: ObservableObject {
                 }
         }
         .store(in: &cancels)
+        
+        // haptic feedback
+        let lightFeedback = UIImpactFeedbackGenerator(style: .light)
+        let strongFeedback = UIImpactFeedbackGenerator(style: .heavy)
+        enum HapticFeedbackState { case idle, light, strong }
+        var hasHapticIndicatedThisDrag: HapticFeedbackState = .idle
+        var lastSnapToBottom = false
+        // reset on finish drag
+        self.$dragState.sink { dragState in
+            if dragState == .idle {
+                hasHapticIndicatedThisDrag  = .idle
+            }
+        }.store(in: &cancels)
+        // listen for haptic events
+        self.$y
+            .sink { y in
+                if y >= self.startSnapToBottomAt + 10 && hasHapticIndicatedThisDrag == .idle {
+                    hasHapticIndicatedThisDrag = .light
+                    lightFeedback.impactOccurred()
+                }
+                if lastSnapToBottom != self.isSnappedToBottom && hasHapticIndicatedThisDrag != .strong {
+                    hasHapticIndicatedThisDrag = .strong
+                    lastSnapToBottom = self.isSnappedToBottom
+                    strongFeedback.impactOccurred()
+                }
+            }
+            .store(in: &cancels)
         
         self.keyboard.$state.map { $0.height }
             .removeDuplicates()

@@ -10,6 +10,7 @@ struct DishCardView: View, Identifiable {
     var display: DisplayCard = .full
     var width: CGFloat? = nil
     var height: CGFloat? = nil
+    var action: (() -> Void)? = nil
     
     var body: some View {
         let display = self.display
@@ -17,7 +18,7 @@ struct DishCardView: View, Identifiable {
         
         return MagicItem("dish-\(id)", at: at) {
             GeometryReader { geo in
-                CustomButton2(action: {
+                CustomButton2(action: self.action ?? {
                     App.store.send(
                         .home(.push(HomeStateItem(filters: [SearchFilter(name: dish.name)])))
                     )
