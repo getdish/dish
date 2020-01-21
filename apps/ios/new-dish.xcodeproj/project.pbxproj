@@ -245,6 +245,7 @@
 		1CE3546323986B1B004B3A84 /* new-dish */ = {
 			isa = PBXGroup;
 			children = (
+				1CE3547223986B1C004B3A84 /* Info.plist */,
 				1CE3546A23986B1C004B3A84 /* Assets.xcassets */,
 				1CE3546423986B1B004B3A84 /* AppDelegate.swift */,
 				AE99091123CE637200F1763C /* App.swift */,
@@ -258,7 +259,6 @@
 				1CE3547C23986B69004B3A84 /* Extensions */,
 				AE6B102923CFF1FC00C33968 /* Resources */,
 				AE85339523C92D170045F144 /* Vendor */,
-				1CE3547223986B1C004B3A84 /* Info.plist */,
 				1CE3546F23986B1C004B3A84 /* LaunchScreen.storyboard */,
 				1CE3546C23986B1C004B3A84 /* Preview Content */,
 			);
