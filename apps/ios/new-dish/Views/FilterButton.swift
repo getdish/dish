@@ -4,6 +4,7 @@ struct FilterButton: View {
     @Environment(\.colorScheme) var colorScheme
     var label: String
     var action: () -> Void
+    var flex: Bool = false
     
     var body: some View {
         let textColor = Color(.systemBackground).opacity(0.85)
@@ -13,12 +14,19 @@ struct FilterButton: View {
         return ZStack {
             CustomButton2(action: action) {
                 HStack {
+                    if flex {
+                        Spacer()
+                    }
                     Text(label)
                         .foregroundColor(textColor)
                         .font(.system(size: 14))
+                        .lineLimit(1)
+                    if flex {
+                        Spacer()
+                    }
                 }
                 .padding(.vertical, 7)
-                .padding(.horizontal, 12)
+                .padding(.horizontal, 10)
                 .background(schemeOppositeColor)
                 .overlay(RoundedRectangle(cornerRadius: 80).stroke(borderColor, lineWidth: 2))
                 .cornerRadius(80)

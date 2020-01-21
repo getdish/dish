@@ -22,11 +22,16 @@ struct HomeMainFilterBar: View {
             ZStack(alignment: .leading) {
                 Group {
                     if showFilters == .overview {
-                        HStack {
-                            FilterButton(label: "Craving", action: filterAction)
-                            FilterButton(label: "Cuisine", action: filterAction)
-                            FilterButton(label: "Filters", action: filterAction)
+                        HStack(spacing: 10) {
+                            FilterButton(label: "Dish", action: filterAction, flex: true)
+                                .environment(\.colorScheme, .dark)
+                            FilterButton(label: "Crave", action: filterAction, flex: true)
+                            FilterButton(label: "Cuisine", action: filterAction, flex: true)
+                            FilterButton(label: "Filter", action: filterAction, flex: true)
                         }
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 20)
+                        .environment(\.colorScheme, .light)
                     }
                     
                     if showFilters == .search {
@@ -40,7 +45,8 @@ struct HomeMainFilterBar: View {
                         }
                         
                     }
-                    else {
+                        
+                    if showFilters == .cuisine {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack {
                                 leftPad
@@ -51,16 +57,16 @@ struct HomeMainFilterBar: View {
                         }
                     }
                     
-                    CustomButton(action: {
-                        self.showFilters = self.showFilters == .cuisine ? .search : .cuisine
-                    }) {
-                        Text(self.showFilters == .cuisine ? "🍽" : "🔍")
-                            .font(.system(size: 28))
-//                            .frame(width: 24, height: 24)
+                    if showFilters != .overview {
+                        CustomButton(action: {
+                            self.showFilters = self.showFilters == .cuisine ? .search : .cuisine
+                        }) {
+                            Text(self.showFilters == .cuisine ? "🍽" : "🔍")
+                                .font(.system(size: 28))
+                            //                            .frame(width: 24, height: 24)
+                        }
+                        .offset(x: 20)
                     }
-//                    .cornerRadius(200)
-//                    .clipped()
-                    .offset(x: 20)
                 }
                 .animation(.spring(response: 0.25))
                 .transition(.slide)
