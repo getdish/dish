@@ -72,9 +72,9 @@ struct HomeMainView: View {
                         Spacer()
                     }
                     .zIndex(state.showFilters ? 100 : 0)
-                    .animation(.spring(response: 0.25), value: state.animationState == .animate)
+                    .animation(.spring(response: 0.25))
                     .offset(
-                        y: state.showFilters ? 0 : mapHeight + searchBarHeight / 2 - 4 + (
+                        y: state.showFilters ? 0 : mapHeight + searchBarHeight / 2 + (
                             state.showFiltersAbove ? -100 : 0
                         )
                     )
@@ -90,7 +90,7 @@ struct HomeMainView: View {
                         Spacer()
                     }
                     .padding(.horizontal, 10)
-                    .animation(.spring(), value: state.animationState == .animate)
+                    .animation(.spring())
                     .offset(y:
                         state.showCamera ?
                             mapHeight > Screen.height / 2 ? Screen.height * 2 : -Screen.height * 2 :

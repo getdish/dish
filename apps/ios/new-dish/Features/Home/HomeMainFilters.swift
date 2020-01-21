@@ -26,14 +26,22 @@ struct HomeMainFilterBar: View {
                     VStack {
                         Spacer().frame(maxHeight: homeState.showFilters ? .infinity : 0)
                         
-                        HStack(spacing: 10) {
-                            FilterButton(label: "Dish", action: filterAction, flex: true)
-                                .environment(\.colorScheme, .dark)
-                            FilterButton(label: "Craving", action: {
+                        HStack(spacing: 12) {
+                            HStack {
+                                FilterButton(label: "Dish", action: filterAction, flex: true)
+                                    .environment(\.colorScheme, .dark)
+                                FilterButton(label: "Craving", action: filterAction, flex: true)
+                                FilterButton(label: "Cuisine", action: filterAction, flex: true)
+                            }
+                            .cornerRadius(80)
+                            .shadow(radius: 10)
+                            
+                            FilterButton(label: "Filter", action: {
                                 self.homeState.showFilters = true
                             }, flex: true)
-                            FilterButton(label: "Cuisine", action: filterAction, flex: true)
-                            FilterButton(label: "Filter", action: filterAction, flex: true)
+                                .frame(width: 80)
+                                .cornerRadius(80)
+                                .shadow(radius: 10)
                         }
                         .padding(.vertical, 4)
                         .padding(.horizontal, 20)

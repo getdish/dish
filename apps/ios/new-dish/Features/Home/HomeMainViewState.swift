@@ -5,7 +5,7 @@ import Combine
 // then on idle we can apply .spring()
 
 fileprivate let snapToBottomYMovePct: CGFloat = 0.23
-fileprivate let resistanceYBeforeSnap: CGFloat = 48
+fileprivate let resistanceYBeforeSnap: CGFloat = 38
 fileprivate let nearTopAtVal: CGFloat = 120 + Screen.statusBarHeight
 fileprivate let topNavHeight: CGFloat = 45
 
