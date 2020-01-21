@@ -120,7 +120,7 @@ struct ContextMenuDisplay: View {
         return ZStack {
             if isActive {
                 Color.black
-                    .opacity(0.5)
+                    .opacity(0.1)
                     .transition(.opacity)
                     .onTapGesture {
                         self.store.close()
@@ -140,14 +140,14 @@ struct ContextMenuDisplay: View {
             }
             
             item.menuContent.opacity(0)
-                .background(
-                    GeometryReader { geometry -> Color in
-                        DispatchQueue.main.async {
-                            self.menuFrame = geometry.frame(in: .global)
+                .overlay(
+                    GeometryReader { geometry -> Run in
+                        let frame = geometry.frame(in: .global)
+                        return Run {
+                            self.menuFrame = frame
                         }
-                        return Color.clear
                     }
-                )
+            )
             
             HStack {
                 VStack {
@@ -191,16 +191,17 @@ struct ContextMenuView<Content: View, MenuContent: View>: View {
         let state = self.store.state
         
         return ZStack {
-            Button(action: {
+            CustomButton(action: {
+                print("tap")
                 // for some reason this never runs, neither onTapGesture
             }) {
                 self.content
-                    .background(
-                        GeometryReader { geometry -> Color in
-                            DispatchQueue.main.async {
-                                self.store.contentPosition = geometry.frame(in: .global)
+                    .overlay(
+                        GeometryReader { geometry -> Run in
+                            let frame = geometry.frame(in: .global)
+                            return Run {
+                                self.store.contentPosition = frame
                             }
-                            return Color.clear
                         }
                 )
             }

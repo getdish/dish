@@ -26,6 +26,9 @@ class HomeViewState: ObservableObject {
         case none, some, more
     }
     
+    // temp
+    @Published var showFilters: Bool = false
+    
     @Published private(set) var appHeight: CGFloat = Screen.height
     @Published private(set) var scrollY: CGFloat = 0
     // initialize it at where the snapToBottom will be about

@@ -32,14 +32,15 @@ struct HomeMainView: View {
 
         return GeometryReader { geometry in
             ZStack(alignment: .topLeading) {
+                    // dev helpers
+                    PrintGeometryView("HomeMainView")
+                
                     // weird way to set appheight
-                    Color.black
-                        .onAppear {
-                            if let g = self.appGeometry {
-                                if state.appHeight != g.size.height {
-                                    state.setAppHeight(g.size.height)
-                                }
-                            }
+                    Run {
+                        guard let g = self.appGeometry else { return }
+                        if state.appHeight != g.size.height {
+                            state.setAppHeight(g.size.height)
+                        }
                     }
                 
                     // camera
@@ -55,75 +56,70 @@ struct HomeMainView: View {
                     // map
                     DishMapView()
                         .frame(height: self.appGeometry?.size.height)
-                
-                    PrintGeometryView("HomeMainView")
 
                     // everything above the map
-                    ZStack {
-                        TopNavView()
-                        
-                        // results
-                        HomeMainContent()
-//                            .animation(.spring(), value: state.animationState == .animate)
-                            .animation(.spring(response: 0.38))
-                            .offset(y: state.showCamera ? Screen.height : 0)
-                        
-                        // filters
-                        VStack {
-                            HomeMainFilterBar()
-                            Spacer()
-                        }
-                        .offset(
-                            y: mapHeight + searchBarHeight / 2 - 4 + (
-                                state.showFiltersAbove ? -100 : 0
-                            )
+                
+                    TopNavView()
+                    
+                    // results
+                    HomeMainContent()
+                        .animation(.spring(response: 0.38))
+                        .offset(y: state.showCamera ? Screen.height : 0)
+                    
+                    // filters
+                    VStack {
+                        HomeMainFilterBar()
+                        Spacer()
+                    }
+                    .zIndex(state.showFilters ? 100 : 3)
+                    .animation(.spring(response: 0.25), value: state.animationState == .animate)
+                    .offset(
+                        y: state.showFilters ? 0 : mapHeight + searchBarHeight / 2 - 4 + (
+                            state.showFiltersAbove ? -100 : 0
                         )
+                    )
                         .opacity(state.showCamera ? 0 : 1)
-                        .animation(.spring(response: 0.25), value: state.animationState == .animate)
-
-                        // searchbar
+                    
+                    // searchbar
+                    VStack {
+                        GeometryReader { searchBarGeometry -> HomeSearchBar in
+                            HomeSearchBarState.frame = searchBarGeometry.frame(in: .global)
+                            return HomeSearchBar()
+                        }
+                        .frame(height: searchBarHeight)
+                        Spacer()
+                    }
+                    .padding(.horizontal, 10)
+                    .animation(.spring(), value: state.animationState == .animate)
+                    .offset(y:
+                        state.showCamera ?
+                            mapHeight > Screen.height / 2 ? Screen.height * 2 : -Screen.height * 2 :
+                            mapHeight - 23 + state.searchBarYExtra
+                    )
+                    // searchinput always light
+                    .environment(\.colorScheme, .light)
+                
+                    // CameraControlsOverlay
+                    ZStack {
                         VStack {
-                            GeometryReader { searchBarGeometry -> HomeSearchBar in
-                                HomeSearchBarState.frame = searchBarGeometry.frame(in: .global)
-                                return HomeSearchBar()
+                            HStack {
+                                Spacer()
+                                CameraButton(
+                                    foregroundColor: state.showCamera ? .white : .black
+                                )
+                                    .scaleEffect(state.showCamera ? 1 : 0.8)
+                                    .offset(
+                                        x: state.showCamera ? -Screen.width / 2 + 60 / 2 : -6,
+                                        y: state.showCamera ? Screen.fullHeight - 160 : state.mapHeight - 60 / 2
+                                )
+                                    .animation(Animation.spring(response: 0.8).delay(0.05))
                             }
-                            .frame(height: searchBarHeight)
                             Spacer()
                         }
-                        .padding(.horizontal, 10)
-                        .animation(.spring(), value: state.animationState == .animate)
-                        .offset(y:
-                            state.showCamera ?
-                                mapHeight > Screen.height / 2 ? Screen.height * 2 : -Screen.height * 2 :
-                                mapHeight - 23 + state.searchBarYExtra
-                        )
-                        // searchinput always light
-                        .environment(\.colorScheme, .light)
-                        
-                        // CameraControlsOverlay
-                        ZStack {
-                            VStack {
-                                HStack {
-                                    Spacer()
-                                    CameraButton(
-                                        foregroundColor: state.showCamera ? .white : .black
-                                    )
-                                        .scaleEffect(state.showCamera ? 1 : 0.8)
-                                        .offset(
-                                            x: state.showCamera ? -Screen.width / 2 + 60 / 2 : -6,
-                                            y: state.showCamera ? Screen.fullHeight - 160 : state.mapHeight - 60 / 2
-                                        )
-                                        .animation(Animation.spring(response: 0.8).delay(0.05))
-                                }
-                                Spacer()
-                            }
-                            //                            if App.store.state.home.showCamera {
-                            //                                CameraBackButton()
-                            //                            }
-                        }
-                        
-                    }  // end ZStack  "everything above map"
-                    .environment(\.colorScheme, .dark)
+                        //                            if App.store.state.home.showCamera {
+                        //                                CameraBackButton()
+                        //                            }
+                    }
                 
                     // make everything untouchable while dragging
                 Color.black.opacity(0.0001)
