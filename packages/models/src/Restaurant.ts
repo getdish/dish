@@ -60,4 +60,17 @@ export class Restaurant extends ModelBase {
     }`
     return await this.hasura(query)
   }
+
+  async findNear(lat: number, lng: number, distance: number) {
+    const query = `query {
+      restaurant ( where: { location: { _st_d_within: {
+        distance: ${distance},
+        from: { type: "Point",
+          coordinates: [${lng}, ${lat}]
+        }
+      }}})
+        {name location}
+    }`
+    return await this.hasura(query)
+  }
 }
