@@ -49,12 +49,7 @@ struct DishMapView: View {
     ]
     
     var body: some View {
-        let mapView = (
-            MapBoxView(annotations: self.$annotations)
-                .styleURL(URL(string: "mapbox://styles/nwienert/ck5lsbz6o1vae1iobqut5e8x5")!)
-                .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
-                .zoomLevel(15)
-        )
+        let testMapBox = false
         
         return ZStack(alignment: .topLeading) {
             // start
@@ -63,27 +58,30 @@ struct DishMapView: View {
             VStack {
                 ZStack(alignment: .topLeading) {
                     ZStack {
-                        mapView
-
-                        
-//                        MapView(
-//                            width: appWidth,
-//                            height: height,
-//                            padding: self.padding,
-//                            darkMode: self.colorScheme == .dark,
-//                            animate: self.animate,
-//                            moveToLocation: store.state.map.moveToLocation,
-//                            locations: store.state.home.state.last!.searchResults.results.map { $0.place },
-//                            onMapSettle: { position in
-//                                self.mapViewStore.position = position
-//                        }
-//                        )
-//                            .introspectMapView { mapView in
-//                                self.mapView = mapView
-//                        }
-//                        .animation(.spring())
-//                        .offset(y: -self.padHeight)
-                        
+                        if testMapBox {
+                            MapBoxView(annotations: self.$annotations)
+                                .styleURL(URL(string: "mapbox://styles/nwienert/ck5lsbz6o1vae1iobqut5e8x5")!)
+                                .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
+                                .zoomLevel(15)
+                        } else {
+                            MapView(
+                                width: appWidth,
+                                height: height,
+                                padding: self.padding,
+                                darkMode: self.colorScheme == .dark,
+                                animate: self.animate,
+                                moveToLocation: store.state.map.moveToLocation,
+                                locations: store.state.home.state.last!.searchResults.results.map { $0.place },
+                                onMapSettle: { position in
+                                    self.mapViewStore.position = position
+                            }
+                            )
+                                .introspectMapView { mapView in
+                                    self.mapView = mapView
+                            }
+                            .animation(.spring())
+                            .offset(y: -self.padHeight)
+                        }
                     }
                     .frame(height: appHeight)
                     .clipped()

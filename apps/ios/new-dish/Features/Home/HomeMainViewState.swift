@@ -71,12 +71,6 @@ class HomeViewState: ObservableObject {
         }
         .store(in: &cancels)
         
-        self.keyboard.$state
-            .map { $0.height }
-            .removeDuplicates()
-            .assign(to: \.keyboardHeight, on: self)
-            .store(in: &cancels)
-        
         self.keyboard.$state.map { $0.height }
             .removeDuplicates()
             .sink { val in
@@ -89,6 +83,12 @@ class HomeViewState: ObservableObject {
         self.keyboard.$state
             .map { $0.height }
             .removeDuplicates()
+            .assign(to: \.keyboardHeight, on: self)
+            .store(in: &cancels)
+        
+        self.keyboard.$state
+            .map { $0.height }
+            .removeDuplicates()
             .sink { height in
                 let isOpen = height > 0
                 
@@ -96,19 +96,19 @@ class HomeViewState: ObservableObject {
                 App.store.send(.setDisableTopNav(isOpen))
                 
                 // map up/down on keyboard open/close
-                if !self.isSnappedToBottom {
-                    self.animate {
-                        print(" ⏩ homeViewKeyboardState.setY \(isOpen)")
-                        if isOpen {
-                            let str = max(0, 1 - (self.snapToBottomAt - self.y) / self.snapToBottomAt)
-                            let amt = 170 * str
-                            self.y -= amt
-                            self.lastKeyboardAdjustY = amt
-                        } else {
-                            self.y += self.lastKeyboardAdjustY
-                        }
-                    }
-                }
+//                if !self.isSnappedToBottom {
+//                    self.animate {
+//                        print(" ⏩ homeViewKeyboardState.setY \(isOpen)")
+//                        if isOpen {
+//                            let str = max(0, 1 - (self.snapToBottomAt - self.y) / self.snapToBottomAt)
+//                            let amt = 170 * str
+//                            self.y -= amt
+//                            self.lastKeyboardAdjustY = amt
+//                        } else {
+//                            self.y += self.lastKeyboardAdjustY
+//                        }
+//                    }
+//                }
                 
         }
         .store(in: &cancels)
@@ -159,7 +159,8 @@ class HomeViewState: ObservableObject {
     
     var scrollRevealY: CGFloat {
         if hasScrolled == .more {
-            return 40
+            // TODO if you want to have it "reveal" more on scroll
+            return 0 //40
         }
         return 0
     }

@@ -25,7 +25,7 @@ struct HomeMainFilterBar: View {
                         HStack(spacing: 10) {
                             FilterButton(label: "Dish", action: filterAction, flex: true)
                                 .environment(\.colorScheme, .dark)
-                            FilterButton(label: "Crave", action: filterAction, flex: true)
+                            FilterButton(label: "Craving", action: filterAction, flex: true)
                             FilterButton(label: "Cuisine", action: filterAction, flex: true)
                             FilterButton(label: "Filter", action: filterAction, flex: true)
                         }
