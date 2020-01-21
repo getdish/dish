@@ -3,6 +3,7 @@ import GoogleMaps
 import GooglePlaces
 import CoreLocation
 import Combine
+import Mapbox
 
 struct DishMapView: View {
     class DishMapViewStore: ObservableObject {
@@ -28,7 +29,7 @@ struct DishMapView: View {
     }
     
     var height: CGFloat {
-        (appHeight - self.maxPadHeight) + self.maxPadHeight * 2
+        appHeight + Screen.height / 2
     }
     
     var padHeight: CGFloat {
@@ -36,62 +37,6 @@ struct DishMapView: View {
     }
     
     @State var padding: UIEdgeInsets = .init(top: 100, left: 0, bottom: 100, right: 0)
-    
-    func start() {
-        // sync map location to state
-        self.mapViewStore.$position
-            .debounce(for: .milliseconds(200), scheduler: App.queueMain)
-            .sink { position in
-                if let position = position {
-                    App.store.send(
-                        .map(.setLocation(
-                            MapLocationState(
-                                radius: position.radius,
-                                latitude: position.center.latitude,
-                                longitude: position.center.longitude
-                            )
-                            ))
-                    )
-                }
-        }
-        .store(in: &self.mapViewStore.cancels)
-        
-        // mapHeight => zoom level
-        var lastZoomAt = homeViewState.mapHeight
-        homeViewState.$y
-            .map { _ in homeViewState.mapHeight }
-            .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
-            .removeDuplicates()
-            .dropFirst()
-            .sink { mapHeight in
-                if homeViewState.isAboutToSnap || homeViewState.isSnappedToBottom {
-                    return
-                }
-                let amt = ((mapHeight - lastZoomAt) / homeViewState.mapMaxHeight) * 0.5
-                if amt == 0.0 {
-                    return
-                }
-                lastZoomAt = mapHeight
-                self.mapView?.zoomIn(amt)
-        }
-        .store(in: &self.mapViewStore.cancels)
-        
-        // snappedToBottom => zoom
-        homeViewState.$y
-            .debounce(for: .milliseconds(50), scheduler: App.queueMain)
-            .map { _ in homeViewState.isSnappedToBottom }
-            .removeDuplicates()
-            .dropFirst()
-//            .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
-            .sink { isSnappedToBottom in
-                if isSnappedToBottom {
-                    self.mapView?.zoomIn(0.05)
-                } else {
-                    self.mapView?.zoomOut(0.05)
-                }
-        }
-        .store(in: &self.mapViewStore.cancels)
-    }
 
     var animate: Bool {
         return [.idle].contains(homeState.dragState)
@@ -99,34 +44,47 @@ struct DishMapView: View {
             || self.homeState.y > self.homeState.startSnapToBottomAt
     }
     
+    @State var annotations: [MGLPointAnnotation] = [
+        MGLPointAnnotation(title: "Mapbox", coordinate: .init(latitude: 37.791434, longitude: -122.396267))
+    ]
+    
     var body: some View {
-        ZStack(alignment: .topLeading) {
+        let testMapBox = false
+        
+        return ZStack(alignment: .topLeading) {
             // start
             Color.clear.onAppear { self.start() }
             
             VStack {
                 ZStack(alignment: .topLeading) {
                     ZStack {
-                        MapView(
-                            width: appWidth,
-                            height: height,
-                            padding: self.padding,
-                            darkMode: self.colorScheme == .dark,
-                            animate: self.animate,
-                            moveToLocation: store.state.map.moveToLocation,
-                            locations: store.state.home.state.last!.searchResults.results.map { $0.place },
-                            onMapSettle: { position in
-                                self.mapViewStore.position = position
+                        if testMapBox {
+                            MapBoxView(annotations: self.$annotations)
+                                .styleURL(URL(string: "mapbox://styles/nwienert/ck5lsbz6o1vae1iobqut5e8x5")!)
+                                .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
+                                .zoomLevel(15)
+                        } else {
+                            MapView(
+                                width: appWidth,
+                                height: height,
+                                padding: self.padding,
+                                darkMode: self.colorScheme == .dark,
+                                animate: self.animate,
+                                moveToLocation: store.state.map.moveToLocation,
+                                locations: store.state.home.state.last!.searchResults.results.map { $0.place },
+                                onMapSettle: { position in
+                                    self.mapViewStore.position = position
+                            }
+                            )
+                                .introspectMapView { mapView in
+                                    self.mapView = mapView
+                            }
+                            .animation(.spring())
+                            .offset(y: -self.padHeight)
                         }
-                        )
-                            .introspectMapView { mapView in
-                                self.mapView = mapView
-                        }
-                        .animation(.spring())
-                        .offset(y: -self.padHeight)
-                        
                     }
                     .frame(height: appHeight)
+                    .clipped()
                     
                     // prevent touch on left/right sides for dragging between cards
                     HStack {
@@ -174,6 +132,62 @@ struct DishMapView: View {
                 Spacer()
             }
         }
+    }
+    
+    func start() {
+        // sync map location to state
+        self.mapViewStore.$position
+            .debounce(for: .milliseconds(200), scheduler: App.queueMain)
+            .sink { position in
+                if let position = position {
+                    App.store.send(
+                        .map(.setLocation(
+                            MapLocationState(
+                                radius: position.radius,
+                                latitude: position.center.latitude,
+                                longitude: position.center.longitude
+                            )
+                            ))
+                    )
+                }
+        }
+        .store(in: &self.mapViewStore.cancels)
+        
+        // mapHeight => zoom level
+        var lastZoomAt = homeViewState.mapHeight
+        homeViewState.$y
+            .map { _ in homeViewState.mapHeight }
+            .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
+            .removeDuplicates()
+            .dropFirst()
+            .sink { mapHeight in
+                if homeViewState.isAboutToSnap || homeViewState.isSnappedToBottom {
+                    return
+                }
+                let amt = ((mapHeight - lastZoomAt) / homeViewState.mapMaxHeight) * 0.5
+                if amt == 0.0 {
+                    return
+                }
+                lastZoomAt = mapHeight
+                self.mapView?.zoomIn(amt)
+        }
+        .store(in: &self.mapViewStore.cancels)
+        
+        // snappedToBottom => zoom
+        homeViewState.$y
+            .debounce(for: .milliseconds(50), scheduler: App.queueMain)
+            .map { _ in homeViewState.isSnappedToBottom }
+            .removeDuplicates()
+            .dropFirst()
+            //            .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
+            .sink { isSnappedToBottom in
+                if isSnappedToBottom {
+                    self.mapView?.zoomIn(0.05)
+                } else {
+                    self.mapView?.zoomOut(0.05)
+                }
+        }
+        .store(in: &self.mapViewStore.cancels)
     }
 }
 

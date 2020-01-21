@@ -1,6 +1,7 @@
 import SwiftUI
 import Combine
 import GoogleMaps
+import Mapbox
 
 // TODO this can be a generic view again in Views/
 // just need to clean it up a little
@@ -111,6 +112,9 @@ struct MapView: UIViewControllerRepresentable {
 class MapViewController: UIViewController, GMSMapViewDelegate {
     // want to default to city level view
     var gmapView: GMSMapView!
+    let mapView: MGLMapView = MGLMapView(frame: .zero, styleURL: MGLStyle.streetsStyleURL)
+    
+
     var width: CGFloat
     var height: CGFloat
     var padding: UIEdgeInsets

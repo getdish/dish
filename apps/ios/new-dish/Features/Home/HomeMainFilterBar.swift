@@ -1,10 +1,10 @@
 import SwiftUI
 
-struct HomeMainFilters: View {
-    enum Filters { case cuisine, search }
+struct HomeMainFilterBar: View {
+    enum Filters { case overview, cuisine, search }
     
     @EnvironmentObject var store: AppStore
-    @State var showFilters: Filters = .cuisine
+    @State var showFilters: Filters = .overview
     @State var wasOnSearchResults = false
     
     var body: some View {
@@ -21,38 +21,52 @@ struct HomeMainFilters: View {
             
             ZStack(alignment: .leading) {
                 Group {
+                    if showFilters == .overview {
+                        HStack(spacing: 10) {
+                            FilterButton(label: "Dish", action: filterAction, flex: true)
+                                .environment(\.colorScheme, .dark)
+                            FilterButton(label: "Craving", action: filterAction, flex: true)
+                            FilterButton(label: "Cuisine", action: filterAction, flex: true)
+                            FilterButton(label: "Filter", action: filterAction, flex: true)
+                        }
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 20)
+                        .environment(\.colorScheme, .light)
+                    }
+                    
                     if showFilters == .search {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack {
                                 leftPad
-                                HomeSearchResultsFilters()
+                                HomeMainFilterBarTag()
                             }
                             .padding()
                             .environment(\.colorScheme, .dark)
                         }
                         
                     }
-                    else {
+                        
+                    if showFilters == .cuisine {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack {
                                 leftPad
-                                HomeMainFiltersContent()
+                                HomeMainFilterBarCuisine()
                             }
                             .padding()
                             .environment(\.colorScheme, .light)
                         }
                     }
                     
-                    CustomButton(action: {
-                        self.showFilters = self.showFilters == .cuisine ? .search : .cuisine
-                    }) {
-                        Text(self.showFilters == .cuisine ? "🍽" : "🔍")
-                            .font(.system(size: 28))
-//                            .frame(width: 24, height: 24)
+                    if showFilters != .overview {
+                        CustomButton(action: {
+                            self.showFilters = self.showFilters == .cuisine ? .search : .cuisine
+                        }) {
+                            Text(self.showFilters == .cuisine ? "🍽" : "🔍")
+                                .font(.system(size: 28))
+                            //                            .frame(width: 24, height: 24)
+                        }
+                        .offset(x: 20)
                     }
-//                    .cornerRadius(200)
-//                    .clipped()
-                    .offset(x: 20)
                 }
                 .animation(.spring(response: 0.25))
                 .transition(.slide)
@@ -79,7 +93,7 @@ fileprivate let filterAction = {
     ))))
 }
 
-struct HomeSearchResultsFilters: View {
+struct HomeMainFilterBarTag: View {
     var body: some View {
         Group {
             FilterButton(label: "Hole in the Wall", action: filterAction)
@@ -91,7 +105,7 @@ struct HomeSearchResultsFilters: View {
     }
 }
 
-struct HomeMainFiltersContent: View {
+struct HomeMainFilterBarCuisine: View {
     @EnvironmentObject var store: AppStore
     
     var body: some View {
