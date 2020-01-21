@@ -94,19 +94,20 @@ struct HomeMainFilterFocused: View {
     
     var body: some View {
         ZStack {
-//            BlurView(style: .extraLight)
+//            Color.white
+            BlurView(style: .extraLight)
             
-            NavigationView {
+            VStack {
                 ScrollView {
-//                    HStack {
-//                        Text("Filter: Dish")
-//                            .font(.largeTitle)
-//                            .fontWeight(.bold)
-//
-//                        Spacer()
-//                    }
-//                    .padding(.top, 140)
-                
+                    HStack {
+                        Text("Filter: Dish")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                        
+                        Spacer()
+                    }
+                    .padding(.top, 90)
+
                     VStack(spacing: 12) {
                         ForEach(0 ..< self.items.count) { index in
                             HStack(spacing: 12) {
@@ -115,18 +116,18 @@ struct HomeMainFilterFocused: View {
                                         dish: item,
                                         at: .start,
                                         display: .full,
-                                        height: 120
+                                        height: 120,
+                                        action: {
+                                            homeViewState.showFilters = false
+                                        }
                                     )
                                 }
                             }
                         }
                     }
-                    .padding(.horizontal)
                 }
-                .navigationBarTitle("Dish", displayMode: .automatic)
+                .padding(.horizontal)
             }
-            .padding(.top, Screen.statusBarHeight + 100)
-            .edgesIgnoringSafeArea(.bottom)
         }
         .edgesIgnoringSafeArea(.all)
     }

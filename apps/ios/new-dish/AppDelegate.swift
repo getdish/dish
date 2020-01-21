@@ -46,10 +46,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         startDebugLoop()
         
-        // SwiftUI bugfix list backgrounds transparent
-//        let colorTransparent = UIColor.init(displayP3Red: 0, green: 0, blue: 0, alpha: 0)
-//        UITableView.appearance().backgroundColor = colorTransparent
-//        UITableViewCell.appearance().backgroundColor = colorTransparent
+        // SwiftUI bugfix list/navigation backgrounds transparent
+        let colorTransparent = UIColor.init(displayP3Red: 0, green: 0, blue: 0, alpha: 0)
+        UITableView.appearance().backgroundColor = colorTransparent
+        UITableViewCell.appearance().backgroundColor = colorTransparent
         
         // setup XGCLogger
         log.setup(
