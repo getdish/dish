@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@dish/crawler": "*",
-    "@dish/worker": "*",
     "@dish/models": "*",
+    "@dish/worker": "*",
     "axios": "^0.19.1"
   },
   "devDependencies": {

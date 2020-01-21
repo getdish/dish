@@ -10,8 +10,9 @@
     "test:watch": "ava tests/* --watch"
   },
   "dependencies": {
-    "orkid": "0.11.0",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "lodash": "^4.17.15",
+    "orkid": "0.11.0"
   },
   "devDependencies": {
     "@types/node": "^13.1.6",

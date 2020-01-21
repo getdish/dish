@@ -1,6 +1,9 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
+import './utils.js'
+import _ from 'lodash'
+
 import { Consumer, Producer } from 'orkid'
 
 const QUEUE_NAME = 'crawler'
@@ -43,9 +46,11 @@ export class WorkerJob {
 export class WorkerDaemon {
   jobs!: { [key: string]: { new (): WorkerJob } }
   consumer!: Consumer
+  runConsumerRateLimited: (job: Job, metadata: any) => {}
 
   constructor(job_modules: { new (): WorkerJob }[]) {
     this.setupJobs(job_modules)
+    this.runConsumerRateLimited = _.rateLimit(this.runConsumer, 1000)
     this.setupConsumer()
   }
 
@@ -65,14 +70,18 @@ export class WorkerDaemon {
   }
 
   setupConsumer() {
-    this.consumer = new Consumer(QUEUE_NAME, this.runConsumer.bind(this), {
-      redisOptions,
-      consumerOptions: {
-        concurrencyPerInstance: 1,
-        maxRetry: 1,
-        workerFnTimeoutMs: 3000,
-      },
-    })
+    this.consumer = new Consumer(
+      QUEUE_NAME,
+      this.runConsumerRateLimited.bind(this),
+      {
+        redisOptions,
+        consumerOptions: {
+          concurrencyPerInstance: 1,
+          maxRetry: 1,
+          workerFnTimeoutMs: 3000,
+        },
+      }
+    )
   }
 
   async runConsumer(job: Job, metadata: any) {
