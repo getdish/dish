@@ -71,7 +71,7 @@ struct HomeMainView: View {
                         HomeMainFilterBar()
                         Spacer()
                     }
-                    .zIndex(state.showFilters ? 100 : 3)
+                    .zIndex(state.showFilters ? 100 : 0)
                     .animation(.spring(response: 0.25), value: state.animationState == .animate)
                     .offset(
                         y: state.showFilters ? 0 : mapHeight + searchBarHeight / 2 - 4 + (
