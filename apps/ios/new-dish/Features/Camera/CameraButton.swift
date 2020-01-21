@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct CameraButton: View {
+    var foregroundColor: Color = .black
+    
     @State var isTapped = false
     @State var lastTap = Date()
     
@@ -24,7 +26,7 @@ struct CameraButton: View {
                     //                        .scaledToFit()
                     //                        .frame(width: 17, height: 17)
                 }
-                .foregroundColor(.black)
+                .foregroundColor(foregroundColor)
             }
             .padding(.all, 15)
             .frame(width: 60, height: 60)

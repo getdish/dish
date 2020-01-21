@@ -105,9 +105,14 @@ struct HomeMainView: View {
                             VStack {
                                 HStack {
                                     Spacer()
-                                    CameraButton()
+                                    CameraButton(
+                                        foregroundColor: state.showCamera ? .white : .black
+                                    )
                                         .scaleEffect(state.showCamera ? 1 : 0.8)
-                                        .offset(x: -6, y: state.mapHeight - 60 / 2)
+                                        .offset(
+                                            x: state.showCamera ? -Screen.width / 2 + 60 / 2 : -6,
+                                            y: state.showCamera ? Screen.fullHeight - 160 : state.mapHeight - 60 / 2
+                                        )
                                         .animation(Animation.spring(response: 0.8).delay(0.05))
                                 }
                                 Spacer()
