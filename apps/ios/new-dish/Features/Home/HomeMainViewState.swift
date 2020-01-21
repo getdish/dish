@@ -172,7 +172,7 @@ class HomeViewState: ObservableObject {
         snapToBottomAt - resistanceYBeforeSnap
     }
     
-    var snappedToBottomMapHeight: CGFloat { appHeight - 190 }
+    var snappedToBottomMapHeight: CGFloat { appHeight - 120 }
     var isSnappedToBottom: Bool { y > snapToBottomAt }
     var wasSnappedToBottom = false
     

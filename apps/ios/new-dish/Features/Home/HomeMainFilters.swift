@@ -1,10 +1,10 @@
 import SwiftUI
 
-struct HomeMainFilters: View {
-    enum Filters { case cuisine, search }
+struct HomeMainFilterBar: View {
+    enum Filters { case overview, cuisine, search }
     
     @EnvironmentObject var store: AppStore
-    @State var showFilters: Filters = .cuisine
+    @State var showFilters: Filters = .overview
     @State var wasOnSearchResults = false
     
     var body: some View {
@@ -21,11 +21,19 @@ struct HomeMainFilters: View {
             
             ZStack(alignment: .leading) {
                 Group {
+                    if showFilters == .overview {
+                        HStack {
+                            FilterButton(label: "Craving", action: filterAction)
+                            FilterButton(label: "Cuisine", action: filterAction)
+                            FilterButton(label: "Filters", action: filterAction)
+                        }
+                    }
+                    
                     if showFilters == .search {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack {
                                 leftPad
-                                HomeSearchResultsFilters()
+                                HomeMainFilterBarTag()
                             }
                             .padding()
                             .environment(\.colorScheme, .dark)
@@ -36,7 +44,7 @@ struct HomeMainFilters: View {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack {
                                 leftPad
-                                HomeMainFiltersContent()
+                                HomeMainFilterBarCuisine()
                             }
                             .padding()
                             .environment(\.colorScheme, .light)
@@ -79,7 +87,7 @@ fileprivate let filterAction = {
     ))))
 }
 
-struct HomeSearchResultsFilters: View {
+struct HomeMainFilterBarTag: View {
     var body: some View {
         Group {
             FilterButton(label: "Hole in the Wall", action: filterAction)
@@ -91,7 +99,7 @@ struct HomeSearchResultsFilters: View {
     }
 }
 
-struct HomeMainFiltersContent: View {
+struct HomeMainFilterBarCuisine: View {
     @EnvironmentObject var store: AppStore
     
     var body: some View {

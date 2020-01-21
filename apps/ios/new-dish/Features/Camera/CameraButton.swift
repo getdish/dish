@@ -24,9 +24,10 @@ struct CameraButton: View {
                     //                        .scaledToFit()
                     //                        .frame(width: 17, height: 17)
                 }
-                .foregroundColor(.white)
+                .foregroundColor(.black)
             }
             .padding(.all, 15)
+            .frame(width: 60, height: 60)
             .background(
                 LinearGradient(
                     gradient: Gradient(colors: [
@@ -49,9 +50,8 @@ struct CameraButton: View {
                     )
             )
                 .cornerRadius(80)
-                .frame(width: 58, height: 58)
-                .shadow(color: Color.black.opacity(1), radius: 30, x: 0, y: 3)
-                .shadow(color: Color.black.opacity(1), radius: 15, x: 0, y: 0)
+                .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 3)
+                .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 0)
                 .overlay(
                     RoundedRectangle(cornerRadius: 80)
                         .stroke(Color.white.opacity(0.95), lineWidth: 2)

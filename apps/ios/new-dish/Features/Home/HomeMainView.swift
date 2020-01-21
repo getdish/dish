@@ -68,11 +68,9 @@ struct HomeMainView: View {
                             .animation(.spring(response: 0.38))
                             .offset(y: state.showCamera ? Screen.height : 0)
                         
-                        BottomNav()
-                        
                         // filters
                         VStack {
-                            HomeMainFilters()
+                            HomeMainFilterBar()
                             Spacer()
                         }
                         .offset(
@@ -101,6 +99,24 @@ struct HomeMainView: View {
                         )
                         // searchinput always light
                         .environment(\.colorScheme, .light)
+                        
+                        // CameraControlsOverlay
+                        ZStack {
+                            VStack {
+                                HStack {
+                                    Spacer()
+                                    CameraButton()
+                                        .scaleEffect(state.showCamera ? 1 : 0.8)
+                                        .offset(x: -6, y: state.mapHeight - 60 / 2)
+                                        .animation(Animation.spring(response: 0.8).delay(0.05))
+                                }
+                                Spacer()
+                            }
+                            //                            if App.store.state.home.showCamera {
+                            //                                CameraBackButton()
+                            //                            }
+                        }
+                        
                     }  // end ZStack  "everything above map"
                     .environment(\.colorScheme, .dark)
                 

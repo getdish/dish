@@ -14,15 +14,7 @@ struct BottomNav: View {
                 VStack {
                     Spacer()
                     ZStack {
-                        HStack {
-                            CameraButton()
-                        }
-                        HStack {
-                            if App.store.state.home.showCamera {
-                                CameraBackButton()
-                            }
-                            Spacer()
-                        }
+                        Spacer()
                     }
                 }
                 .padding(.horizontal, 20)
