@@ -154,24 +154,24 @@ struct DishMapView: View {
         .store(in: &self.mapViewStore.cancels)
         
         // mapHeight => zoom level
-//        var lastZoomAt = homeViewState.mapHeight
-//        homeViewState.$y
-//            .map { _ in homeViewState.mapHeight }
-//            .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
-//            .removeDuplicates()
-//            .dropFirst()
-//            .sink { mapHeight in
-//                if homeViewState.isAboutToSnap || homeViewState.isSnappedToBottom {
-//                    return
-//                }
-//                let amt = ((mapHeight - lastZoomAt) / homeViewState.mapMaxHeight) * 0.5
-//                if amt == 0.0 {
-//                    return
-//                }
-//                lastZoomAt = mapHeight
-//                self.mapView?.zoomIn(amt)
-//        }
-//        .store(in: &self.mapViewStore.cancels)
+        var lastZoomAt = homeViewState.mapHeight
+        homeViewState.$y
+            .map { _ in homeViewState.mapHeight }
+            .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
+            .removeDuplicates()
+            .dropFirst()
+            .sink { mapHeight in
+                if homeViewState.isAboutToSnap || homeViewState.isSnappedToBottom {
+                    return
+                }
+                let amt = ((mapHeight - lastZoomAt) / homeViewState.mapMaxHeight) * 0.5
+                if amt == 0.0 {
+                    return
+                }
+                lastZoomAt = mapHeight
+                self.mapView?.zoomIn(amt)
+        }
+        .store(in: &self.mapViewStore.cancels)
         
         // snappedToBottom => zoom
         homeViewState.$y

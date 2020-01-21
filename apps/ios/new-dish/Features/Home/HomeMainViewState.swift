@@ -59,6 +59,9 @@ class HomeViewState: ObservableObject {
     private var keyboard = Keyboard()
     private var lastKeyboardAdjustY: CGFloat = 0
     
+    enum HapticFeedbackState { case idle, light, strong }
+    private var hasHapticIndicatedThisDrag: HapticFeedbackState = .idle
+    
     init() {
         // start map height at just above snapToBottomAt
         self.$appHeight
@@ -73,6 +76,24 @@ class HomeViewState: ObservableObject {
                 }
         }
         .store(in: &cancels)
+        
+        
+        let lightFeedback = UIImpactFeedbackGenerator(style: .light)
+
+        var lastSnapToBottom = false
+        self.$y
+            .sink { y in
+                if self.isAboutToSnap && self.hasHapticIndicatedThisDrag == .idle {
+                    self.hasHapticIndicatedThisDrag = .light
+                    lightFeedback.impactOccurred()
+                }
+                if lastSnapToBottom != self.isSnappedToBottom && self.hasHapticIndicatedThisDrag != .strong {
+                    self.hasHapticIndicatedThisDrag = .strong
+                    lastSnapToBottom = self.isSnappedToBottom
+                    lightFeedback.impactOccurred()
+                }
+                
+            }.store(in: &cancels)
         
         self.keyboard.$state.map { $0.height }
             .removeDuplicates()
@@ -296,6 +317,9 @@ class HomeViewState: ObservableObject {
     func finishDrag(_ value: DragGesture.Value) {
         if dragState == .pager { return }
         log.info()
+        
+        // reset on finish drag
+        self.hasHapticIndicatedThisDrag = .idle
         
         self.animate {
             if self.isSnappedToBottom {
