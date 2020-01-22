@@ -46,9 +46,9 @@ struct HomeMainView: View {
         
         let state = self.state
         let mapHeight = state.mapHeight
-        let enableSearchBar = state.dragState != .idle || state.animationState != .idle
+        let enableSearchBar = [.idle, .off].contains(state.dragState) && state.animationState == .idle
 
-//        print(" 👀 HomeMainView mapHeight \(mapHeight) animationState \(state.animationState)")
+        print(" 👀 HomeMainView mapHeight \(mapHeight) animationState \(state.animationState) enableSearchBar \(enableSearchBar)")
 
         return GeometryReader { geometry in
             ZStack(alignment: .topLeading) {

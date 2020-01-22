@@ -238,34 +238,15 @@ struct MagicItem<Content>: View where Content: View {
         self.contentView = AnyView(self.content)
     }
     
-    func updateItem(_ frame: CGRect) {
-        // off screen avoid doing things
-        let offYN = frame.minY + frame.height < 0
-        let offYP = frame.minY > Screen.fullHeight
-        let offXN = frame.minX + frame.width < 0
-        let offXP = frame.minX > Screen.width
-        let offScreen = offYN || offYP || offXN || offXP
-        
-        let item = MagicItemDescription(
-            view: self.contentView,
-            frame: frame,
-            id: self.id,
-            at: self.at
-        )
-        let items = self.at == .start ? magicItemsStore.startItems : magicItemsStore.endItems
-        let curItem = items[self.id]
-        
-        if curItem != nil && offScreen == true {
-            return
-        }
-        
-        if magicItemsStore.state != .done { return }
-        if curItem != item {
-            if self.at == .start {
-                magicItemsStore.startItems[self.id] = item
-            } else {
-                magicItemsStore.endItems[self.id] = item
-            }
+    var items: [String: MagicItemDescription?] {
+        self.at == .start ? magicItemsStore.startItems : magicItemsStore.endItems
+    }
+    
+    func updateItem(_ item: MagicItemDescription) {
+        if self.at == .start {
+            magicItemsStore.startItems[self.id] = item
+        } else {
+            magicItemsStore.endItems[self.id] = item
         }
     }
     
@@ -279,13 +260,30 @@ struct MagicItem<Content>: View where Content: View {
                 .overlay(
                     GeometryReader { geometry -> SideEffect in
                         let frame = geometry.frame(in: .global)
-                        return SideEffect("MagicItem.set MagicItemDescription", level: .debug) {
-                            if self.id == "dish-1002" {
-                                print("dish-1002 \(frame)")
-                            }
-                            if self.isDisabled { return }
-                            self.updateItem(frame)
-                        }
+                        let name = "MagicItem \(self.at) \(self.id) -- \(frame.minX) \(frame.minY)"
+                        
+                        // off screen avoid doing things
+                        let offYN = frame.minY + frame.height < 0
+                        let offYP = frame.minY > Screen.fullHeight
+                        let offXN = frame.minX + frame.width < 0
+                        let offXP = frame.minX > Screen.width
+                        let offScreen = offYN || offYP || offXN || offXP
+                        let isOffScreen = self.items[self.id] != nil && offScreen == true
+                        
+                        let isMagicStoreAnimating = magicItemsStore.state != .done
+                        
+                        let item = MagicItemDescription(
+                            view: self.contentView,
+                            frame: frame,
+                            id: self.id,
+                            at: self.at
+                        )
+                        let curItem = self.items[self.id]
+                        let hasChanged = curItem != item
+                        
+                        let enabled = !self.isDisabled && !isOffScreen && !isMagicStoreAnimating && hasChanged
+                        
+                        return SideEffect(name, condition: { enabled }) { self.updateItem(item) }
                     }
             )
         }
