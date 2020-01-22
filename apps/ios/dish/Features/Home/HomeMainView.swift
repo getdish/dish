@@ -105,7 +105,7 @@ struct HomeMainView: View {
                     
                     // results
                     HomeMainContent()
-                        .animation(.spring(response: 0.38))
+                        .animation(.spring(response: 0.38), value: state.dragState == .idle)
                         .offset(y: state.showCamera ? Screen.height : 0)
                     
                     // filters
