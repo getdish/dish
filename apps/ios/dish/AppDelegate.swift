@@ -1,11 +1,3 @@
-//
-//  AppDelegate.swift
-//  new-dish
-//
-//  Created by Majid Jabrayilov on 12/5/19.
-//  Copyright © 2019 Majid Jabrayilov. All rights reserved.
-//
-
 import UIKit
 import GoogleMaps
 import GooglePlaces
@@ -43,14 +35,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // one time setup
-        
+
         startDebugLoop()
-        
+
         // SwiftUI bugfix list/navigation backgrounds transparent
         let colorTransparent = UIColor.init(displayP3Red: 0, green: 0, blue: 0, alpha: 0)
         UITableView.appearance().backgroundColor = colorTransparent
         UITableViewCell.appearance().backgroundColor = colorTransparent
-        
+
         // setup XGCLogger
         log.setup(
             level: .debug,
@@ -61,13 +53,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             writeToFile: "path/to/file",
             fileLevel: .debug
         )
-        
+
         // Google Maps and Places
         GMSServices.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")
         GMSPlacesClient.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")
-        
+
         App.start()
-        
+
         // Override point for customization after application launch.
         return true
     }

@@ -1,10 +1,3 @@
-//
-//  SideDrawerView.swift
-//  new-dish
-//
-//  Created by Majid Jabrayilov on 12/12/19.
-//  Copyright © 2019 Majid Jabrayilov. All rights reserved.
-//
 import SwiftUI
 
 fileprivate enum SideDrawerViewConstants {
