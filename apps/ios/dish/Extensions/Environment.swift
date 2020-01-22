@@ -1,10 +1,3 @@
-//
-//  Environment.swift
-//  new-dish
-//
-//  Created by Majid Jabrayilov on 12/12/19.
-//  Copyright © 2019 Majid Jabrayilov. All rights reserved.
-//
 import SwiftUI
 
 struct GeometryKey: EnvironmentKey {
