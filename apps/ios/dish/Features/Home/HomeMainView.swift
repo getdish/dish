@@ -90,7 +90,7 @@ struct HomeMainView: View {
                         Spacer()
                     }
                     .padding(.horizontal, 10)
-                    .animation(.spring())
+                    .animation(.spring(response: 1.25), value: state.animationState == .animate)
                     .offset(y:
                         state.showCamera ?
                             mapHeight > Screen.height / 2 ? Screen.height * 2 : -Screen.height * 2 :
