@@ -104,6 +104,7 @@
 		AEF6557F23B14DBA00E49A51 /* ContextMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557E23B14DBA00E49A51 /* ContextMenuView.swift */; };
 		AEF6558123B2205F00E49A51 /* HomeMainContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6558023B2205F00E49A51 /* HomeMainContent.swift */; };
 		AEF6558423B59BC000E49A51 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6558323B59BC000E49A51 /* Home.swift */; };
+		AEFC3A8C23D7C7E100D9658F /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEFC3A8B23D7C7E100D9658F /* Mocks.swift */; };
 		C7BDB448CA7019F5B1D6545F /* Pods_new_dish.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B343F398A6E8C95D41FD1804 /* Pods_new_dish.framework */; };
 /* End PBXBuildFile section */
 
@@ -112,7 +113,7 @@
 		1C6B321923A2A06100F0A7E6 /* SideDrawerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideDrawerView.swift; sourceTree = "<group>"; };
 		1CCEDF51239DC7C9003EE228 /* PagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerView.swift; sourceTree = "<group>"; };
 		1CE2393023A19722006B7AFD /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
-		1CE3546123986B1B004B3A84 /* new-dish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "new-dish.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1CE3546123986B1B004B3A84 /* Dish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dish.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CE3546423986B1B004B3A84 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1CE3546623986B1B004B3A84 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		1CE3546823986B1B004B3A84 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -209,6 +210,7 @@
 		AEF6557E23B14DBA00E49A51 /* ContextMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuView.swift; sourceTree = "<group>"; };
 		AEF6558023B2205F00E49A51 /* HomeMainContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainContent.swift; sourceTree = "<group>"; };
 		AEF6558323B59BC000E49A51 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		AEFC3A8B23D7C7E100D9658F /* Mocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
 		B343F398A6E8C95D41FD1804 /* Pods_new_dish.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_new_dish.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -237,7 +239,7 @@
 		1CE3546223986B1B004B3A84 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1CE3546123986B1B004B3A84 /* new-dish.app */,
+				1CE3546123986B1B004B3A84 /* Dish.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -456,6 +458,7 @@
 		AEF6558223B59A8000E49A51 /* Store */ = {
 			isa = PBXGroup;
 			children = (
+				AEFC3A8B23D7C7E100D9658F /* Mocks.swift */,
 				1CE3548223986C5C004B3A84 /* AppStore.swift */,
 				AEF6558323B59BC000E49A51 /* Home.swift */,
 				AE872FF023CE76AE00F84663 /* HomeService.swift */,
@@ -496,7 +499,7 @@
 			);
 			name = "new-dish";
 			productName = "new-dish";
-			productReference = 1CE3546123986B1B004B3A84 /* new-dish.app */;
+			productReference = 1CE3546123986B1B004B3A84 /* Dish.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -638,6 +641,7 @@
 				AE2B6BA423AC211F007BCD25 /* VerticalCardPager.swift in Sources */,
 				1CE3546523986B1B004B3A84 /* AppDelegate.swift in Sources */,
 				1CE3548A239871CB004B3A84 /* BottomSheetView.swift in Sources */,
+				AEFC3A8C23D7C7E100D9658F /* Mocks.swift in Sources */,
 				AE1BBDB623C8397900C58A87 /* CutoutCircleCentered.swift in Sources */,
 				AEED844123B6707100407266 /* DishMapView.swift in Sources */,
 				1C3CFE6423998FF2004B2EEA /* HomeContainerView.swift in Sources */,
@@ -848,8 +852,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.motion.new-dish";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.motion.dish;
+				PRODUCT_NAME = Dish;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -869,8 +873,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.motion.new-dish";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.motion.dish;
+				PRODUCT_NAME = Dish;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

@@ -1,10 +1,14 @@
 import SwiftUI
 
 struct RootView: View {
+    @Environment(\.geometry) var appGeometry
+    
     var body: some View {
         ContextMenuRootView {
-            HomeContainerView()
-            PrintGeometryView("RootView")
+            if appGeometry != nil {
+                HomeContainerView()
+                PrintGeometryView("RootView")
+            }
         }
     }
 }
