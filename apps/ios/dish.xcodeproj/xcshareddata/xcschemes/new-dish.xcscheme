@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1CE3546023986B1B004B3A84"
-               BuildableName = "new-dish.app"
-               BlueprintName = "new-dish"
-               ReferencedContainer = "container:new-dish.xcodeproj">
+               BuildableName = "Dish.app"
+               BlueprintName = "dish"
+               ReferencedContainer = "container:dish.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1CE3546023986B1B004B3A84"
-            BuildableName = "new-dish.app"
-            BlueprintName = "new-dish"
-            ReferencedContainer = "container:new-dish.xcodeproj">
+            BuildableName = "Dish.app"
+            BlueprintName = "dish"
+            ReferencedContainer = "container:dish.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1CE3546023986B1B004B3A84"
-            BuildableName = "new-dish.app"
-            BlueprintName = "new-dish"
-            ReferencedContainer = "container:new-dish.xcodeproj">
+            BuildableName = "Dish.app"
+            BlueprintName = "dish"
+            ReferencedContainer = "container:dish.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

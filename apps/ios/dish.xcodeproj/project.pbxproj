@@ -229,7 +229,7 @@
 		1CE3545823986B1B004B3A84 = {
 			isa = PBXGroup;
 			children = (
-				1CE3546323986B1B004B3A84 /* new-dish */,
+				1CE3546323986B1B004B3A84 /* dish */,
 				1CE3546223986B1B004B3A84 /* Products */,
 				B08534291B7EB4653A4EA4FF /* Pods */,
 				A8BD4A71AA7B4F5BF3A0A2A5 /* Frameworks */,
@@ -244,7 +244,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1CE3546323986B1B004B3A84 /* new-dish */ = {
+		1CE3546323986B1B004B3A84 /* dish */ = {
 			isa = PBXGroup;
 			children = (
 				1CE3547223986B1C004B3A84 /* Info.plist */,
@@ -264,7 +264,7 @@
 				1CE3546F23986B1C004B3A84 /* LaunchScreen.storyboard */,
 				1CE3546C23986B1C004B3A84 /* Preview Content */,
 			);
-			path = "new-dish";
+			path = dish;
 			sourceTree = "<group>";
 		};
 		1CE3546C23986B1C004B3A84 /* Preview Content */ = {
@@ -482,9 +482,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1CE3546023986B1B004B3A84 /* new-dish */ = {
+		1CE3546023986B1B004B3A84 /* dish */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1CE3547523986B1C004B3A84 /* Build configuration list for PBXNativeTarget "new-dish" */;
+			buildConfigurationList = 1CE3547523986B1C004B3A84 /* Build configuration list for PBXNativeTarget "dish" */;
 			buildPhases = (
 				4EF216240C62D49CD1E9EF24 /* [CP] Check Pods Manifest.lock */,
 				1CE3545D23986B1B004B3A84 /* Sources */,
@@ -497,7 +497,7 @@
 			);
 			dependencies = (
 			);
-			name = "new-dish";
+			name = dish;
 			productName = "new-dish";
 			productReference = 1CE3546123986B1B004B3A84 /* Dish.app */;
 			productType = "com.apple.product-type.application";
@@ -517,7 +517,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 1CE3545C23986B1B004B3A84 /* Build configuration list for PBXProject "new-dish" */;
+			buildConfigurationList = 1CE3545C23986B1B004B3A84 /* Build configuration list for PBXProject "dish" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -530,7 +530,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1CE3546023986B1B004B3A84 /* new-dish */,
+				1CE3546023986B1B004B3A84 /* dish */,
 			);
 		};
 /* End PBXProject section */
@@ -883,7 +883,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1CE3545C23986B1B004B3A84 /* Build configuration list for PBXProject "new-dish" */ = {
+		1CE3545C23986B1B004B3A84 /* Build configuration list for PBXProject "dish" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1CE3547323986B1C004B3A84 /* Debug */,
@@ -892,7 +892,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1CE3547523986B1C004B3A84 /* Build configuration list for PBXNativeTarget "new-dish" */ = {
+		1CE3547523986B1C004B3A84 /* Build configuration list for PBXNativeTarget "dish" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1CE3547623986B1C004B3A84 /* Debug */,
