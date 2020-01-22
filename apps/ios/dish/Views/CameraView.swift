@@ -86,13 +86,14 @@ class CameraViewController: UIViewController {
     }
     
     func capture() {
+        self.pause()
         print("capturing")
-        //    guard let captureOut = self.capturePhotoOut else { return }
-        //    let photoSettings = AVCapturePhotoSettings()
-        //    photoSettings.isHighResolutionPhotoEnabled = true
-        //    photoSettings.embedsDepthDataInPhoto = true
-        //    photoSettings.flashMode = .auto
-        //    captureOut.capturePhoto(with: photoSettings, delegate: self)
+//        guard let captureOut = self.capturePhotoOut else { return }
+//        let photoSettings = AVCapturePhotoSettings()
+//        photoSettings.isHighResolutionPhotoEnabled = true
+//        photoSettings.embedsDepthDataInPhoto = true
+//        photoSettings.flashMode = .auto
+//        captureOut.capturePhoto(with: photoSettings, delegate: self)
     }
 }
 

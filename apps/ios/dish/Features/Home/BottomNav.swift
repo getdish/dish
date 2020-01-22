@@ -18,30 +18,6 @@ struct BottomNav: View {
                     }
                 }
                 .padding(.horizontal, 20)
-                
-                // camera controls
-                
-                VStack {
-                    Spacer()
-                    HStack {
-                        //                    DishBackButton()
-                        //                        .opacity(0.5)
-                        //                        .animation(.spring(response: 0.5))
-                        //                        .offset(y: !isOnGallery ? hiddenButtonY : 0)
-                        Spacer()
-                        BottomNavCircularButton(image: "xmark", size: 50, action: {
-                            print("CLOSE THAT SHIT")
-                            //                        self.store.send(.closeGallery)
-                        })
-                            .animation(.spring(response: 0.75))
-                            .offset(y: !isOnGallery ? hiddenButtonY : 0)
-                        Spacer()
-                        //                    DishForwardButton()
-                        //                        .animation(.spring(response: 0.5))
-                        //                        .offset(y: !isOnGallery ? hiddenButtonY : 0)
-                    }
-                }
-                .padding(.horizontal)
             }
             
             // bottom pad
@@ -51,26 +27,6 @@ struct BottomNav: View {
     }
 }
 
-struct CameraBackButton: View {
-    @EnvironmentObject var store: AppStore
-    
-    var body: some View {
-        Button(action: {
-            if self.store.state.camera.didCapture {
-                App.store.send(.camera(.capture(false)))
-            } else {
-                App.store.send(.home(.setShowCamera(false)))
-            }
-        }) {
-            Image(systemName: "chevron.left")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 26, height: 26)
-                .foregroundColor(Color.white)
-                .shadow(color: Color.black, radius: 6)
-        }
-    }
-}
 
 struct DishLoginButton: View {
     var body: some View {

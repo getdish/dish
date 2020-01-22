@@ -166,7 +166,8 @@ struct SearchInput: View {
                     .foregroundColor(.secondary)
                     .background(self.inputBackgroundColor)
                     .cornerRadius(10.0 * scale * sizeRadius)
-                    .shadow(color: Color.black.opacity(0.26), radius: 18, x: 0, y: 0)
+                    .shadow(color: Color.black.opacity(0.15), radius: 6, x: 0, y: 1)
+                    .shadow(color: Color.black.opacity(0.15), radius: 10, x: 0, y: 0)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10.0 * scale * sizeRadius)
                             .stroke(self.borderColor, lineWidth: 1)

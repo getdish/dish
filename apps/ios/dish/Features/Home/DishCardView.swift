@@ -30,7 +30,7 @@ struct DishCardView: View, Identifiable {
                         .overlay(self.overlay)
                         .cornerRadius(display == .card ? 14 : 18)
                         .clipped()
-                        .shadow(color: Color.black.opacity(0.5), radius: 8, x: 0, y: 3)
+                        .shadow(color: Color.black.opacity(0.5), radius: 6, x: 0, y: 2)
                 }
             }
         }
