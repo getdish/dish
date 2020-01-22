@@ -80,7 +80,7 @@ struct DishMapView: View {
                                     self.mapView = mapView
                             }
                             .animation(.spring())
-                            .offset(y: -self.padHeight)
+                            .offset(y: -self.padHeight + 25 /* topbar offset */)
                         }
                     }
                     .frame(height: appHeight)

@@ -56,12 +56,12 @@ struct CameraButton: View {
                 .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 0)
                 .overlay(
                     RoundedRectangle(cornerRadius: 80)
-                        .stroke(Color.white.opacity(0.8), lineWidth: 2)
+                        .stroke(Color.white.opacity(0.6), lineWidth: 2)
             )
                 .overlay(
                     VStack {
                         RoundedRectangle(cornerRadius: 80)
-                            .stroke(Color.black.opacity(0.24), lineWidth: 2)
+                            .stroke(Color.black.opacity(0.2), lineWidth: 2)
                     }
                     .padding(2)
             )

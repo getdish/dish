@@ -51,7 +51,7 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
             // if removing last filter, pop!
             if val.count == 0 {
                 // TODO this shouldn't be here I think..
-                DispatchQueue.main.async {
+                async {
                     App.store.send(.home(.pop))
                 }
             } else {
@@ -84,7 +84,9 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
         case let .push(homeState):
             state.home.state.append(homeState)
         case .pop:
-            state.home.state = state.home.state.dropLast()
+            if state.home.state.count > 1 {
+                state.home.state = state.home.state.dropLast()
+            }
     }
 }
 

@@ -6,6 +6,25 @@ import Combine
 
 let searchBarHeight: CGFloat = 45
 
+struct BrandBar: View {
+    var body: some View {
+        VStack {
+            Spacer()
+            ZStack {
+                Color(red: 184 / 255, green: 35 / 255, blue: 35 / 255)
+                    .frame(height: Screen.statusBarHeight + 5)
+                    .padding(.top, 10)
+                
+                Image("dish-top")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 120, height: 50)
+                    .offset(y: -32)
+            }
+        }
+    }
+}
+
 struct HomeMainView: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard
@@ -32,14 +51,17 @@ struct HomeMainView: View {
 
         return GeometryReader { geometry in
             ZStack(alignment: .topLeading) {
-                    // dev helpers
-                    PrintGeometryView("HomeMainView")
-                
-                    // weird way to set appheight
-                    Run {
-                        guard let g = self.appGeometry else { return }
-                        if state.appHeight != g.size.height {
-                            state.setAppHeight(g.size.height)
+                    // non visual
+                    Group {
+                        // dev helpers
+                        PrintGeometryView("HomeMainView")
+                        
+                        // weird way to set appheight
+                        Run {
+                            guard let g = self.appGeometry else { return }
+                            if state.appHeight != g.size.height {
+                                state.setAppHeight(g.size.height)
+                            }
                         }
                     }
                 
@@ -52,17 +74,33 @@ struct HomeMainView: View {
                             .animation(.spring())
                             .opacity(state.showCamera ? 0 : 1)
                     }
-
-                    // map
-                    DishMapView()
-                        .frame(height: self.appGeometry?.size.height)
-                        .animation(.spring(response: 0.8))
-                        .offset(y: state.showCamera ? -Screen.height : 0)
-                        .rotationEffect(state.showCamera ? .degrees(-15) : .degrees(0))
-
-                    // everything above the map
                 
-                    TopNavView()
+                    
+                    Group {
+                        // map
+                        DishMapView()
+                            .frame(height: self.appGeometry?.size.height)
+                            .offset(y: state.showCamera ? -Screen.height * 1.2 : 0)
+                            .opacity(state.showCamera ? 0 : 1)
+                            .animation(.spring(response: 0.8))
+                            .rotationEffect(state.showCamera ? .degrees(-10) : .degrees(0))
+                        
+                        
+                        VStack {
+                            Spacer()
+                            LinearGradient(
+                                gradient: Gradient(colors: [Color.black.opacity(0),
+                                                            Color.black.opacity(0.55)]),
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                                .frame(height: (self.appGeometry?.size.height ?? 0) - state.mapHeight)
+                        }
+                        
+                        // everything above the map
+                        TopNavView()
+                    }
+
                     
                     // results
                     HomeMainContent()
@@ -101,6 +139,8 @@ struct HomeMainView: View {
                     )
                     // searchinput always light
                     .environment(\.colorScheme, .light)
+                
+//                    BrandBar()
                 
                     // CameraControlsOverlay
                     ZStack {

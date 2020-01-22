@@ -31,9 +31,10 @@ struct TopNavViewContent: View {
                             endPoint: .top
                         )
                 )
-                    .frame(height: 160)
+                    .frame(height: Screen.statusBarHeight + 15)
                 Spacer()
             }
+            .allowsHitTesting(false)
             .disabled(true)
             
             ZStack {

@@ -2,6 +2,7 @@ import SwiftUI
 import Combine
 
 struct DishCamera: View {
+    @Environment(\.geometry) var appGeometry
     @EnvironmentObject var store: AppStore
     @State var isOpen = false
     var cancel: AnyCancellable?
@@ -29,6 +30,8 @@ struct DishCamera: View {
             .background(Color.black)
             .frame(minWidth: Screen.width, maxHeight: .infinity)
             
+            CameraBottomNav()
+            
             DishCameraPictureOverlay()
 
             BottomSheetView(
@@ -39,9 +42,45 @@ struct DishCamera: View {
                 DishRestaurantDrawer()
             }
         }
-        .edgesIgnoringSafeArea(.all)
+        .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
         .allowsHitTesting(self.store.state.home.view == .camera)
         .clipped()
+    }
+}
+
+struct CameraBottomNav: View {
+    var body: some View {
+        ZStack {
+            VStack {
+                Spacer()
+                HStack {
+                    CameraBackButton()
+                    Spacer()
+                }
+                .padding()
+            }
+        }
+    }
+}
+
+struct CameraBackButton: View {
+    @EnvironmentObject var store: AppStore
+    
+    var body: some View {
+        Button(action: {
+            if self.store.state.camera.didCapture {
+                App.store.send(.camera(.capture(false)))
+            } else {
+                App.store.send(.home(.setShowCamera(false)))
+            }
+        }) {
+            Image(systemName: "chevron.left")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 26, height: 26)
+                .foregroundColor(Color.white)
+                .shadow(color: Color.black, radius: 6)
+        }
     }
 }
 
