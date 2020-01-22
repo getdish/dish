@@ -1,7 +1,7 @@
 import SwiftUI
 import Combine
 
-fileprivate let DEBUG_ANIMATION = true
+fileprivate let DEBUG_ANIMATION = false
 fileprivate let OFF_OPACITY = DEBUG_ANIMATION ? 0.5 : 0
 
 class MagicItemsStore: ObservableObject {
@@ -73,7 +73,7 @@ struct MagicMove<Content>: View where Content: View {
         self.content = content
         self.disableTracking = disableTracking
         self.onMoveComplete = onMoveComplete
-        self.animation = .linear(duration: duration / 1000)
+        self.animation = .linear(duration: duration / 1000 * ANIMATION_SPEED)
         self.lastContent = content()
         self.position = position
         self.store.disableTracking = disableTracking
