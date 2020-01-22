@@ -14,9 +14,11 @@ class AppInstance {
     let homeService = HomeService()
     let googlePlacesService = GooglePlacesService()
 
+    // constants
     let keyboard = Keyboard()
     let queueMain = DispatchQueue.main
     let magicItems = magicItemsStore
+    let enableMapAutoZoom = false
     
     var enterRepl = false
     
