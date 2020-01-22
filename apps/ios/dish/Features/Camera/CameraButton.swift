@@ -28,8 +28,8 @@ struct CameraButton: View {
                 }
                 .foregroundColor(foregroundColor)
             }
-            .padding(.all, 15)
-            .frame(width: 60, height: 60)
+            .padding(.all, App.cameraButtonHeight * 0.25)
+            .frame(width: App.cameraButtonHeight, height: App.cameraButtonHeight)
             .background(
                 LinearGradient(
                     gradient: Gradient(colors: [
@@ -48,19 +48,19 @@ struct CameraButton: View {
                         ]),
                         center: .center,
                         startRadius: 0,
-                        endRadius: 80
+                        endRadius: App.cameraButtonHeight
                     )
             )
-                .cornerRadius(80)
+                .cornerRadius(App.cameraButtonHeight)
                 .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 3)
                 .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 0)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 80)
+                    RoundedRectangle(cornerRadius: App.cameraButtonHeight)
                         .stroke(Color.white.opacity(0.6), lineWidth: 2)
             )
                 .overlay(
                     VStack {
-                        RoundedRectangle(cornerRadius: 80)
+                        RoundedRectangle(cornerRadius: App.cameraButtonHeight)
                             .stroke(Color.black.opacity(0.2), lineWidth: 2)
                     }
                     .padding(2)

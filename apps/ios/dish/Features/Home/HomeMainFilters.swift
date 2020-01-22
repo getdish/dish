@@ -9,12 +9,10 @@ struct HomeMainFilterBar: View {
     
     var body: some View {
         ZStack {
-            SideEffect("HomeMainFilters") {
-                // side effect => search filters change
-                if !self.wasOnSearchResults && Selectors.home.isOnSearchResults() {
-                    self.wasOnSearchResults = true
-//                    self.showFilters = .search
-                }
+            SideEffect("HomeMainFilters.changeWasOnSearchResults",
+               condition: { !self.wasOnSearchResults && Selectors.home.isOnSearchResults() }
+            ) {
+                self.wasOnSearchResults = true
             }
             
             ZStack(alignment: .leading) {
