@@ -5,13 +5,14 @@ import CoreLocation
 import Combine
 import Mapbox
 
+class DishMapViewStore: ObservableObject {
+    var cancels: Set<AnyCancellable> = []
+    @Published var position: CurrentMapPosition? = nil
+}
+
+fileprivate let mapViewStore = DishMapViewStore()
+
 struct DishMapView: View {
-    class DishMapViewStore: ObservableObject {
-        var cancels: Set<AnyCancellable> = []
-        @Published var position: CurrentMapPosition? = nil
-    }
-    
-    var mapViewStore = DishMapViewStore()
     @State var mapView: MapViewController? = nil
     
     @Environment(\.colorScheme) var colorScheme
@@ -72,7 +73,7 @@ struct DishMapView: View {
                                 moveToLocation: store.state.map.moveToLocation,
                                 locations: store.state.home.state.last!.searchResults.results.map { $0.place },
                                 onMapSettle: { position in
-                                    self.mapViewStore.position = position
+                                    mapViewStore.position = position
                             }
                             )
                                 .introspectMapView { mapView in
@@ -124,9 +125,6 @@ struct DishMapView: View {
                 .frame(height: appHeight)
                 .shadow(color: Color.black, radius: 20, x: 0, y: 0)
                 .clipped()
-                .animation(.spring(response: 0.28))
-                .offset(y: homeState.showCamera ? -Screen.height : 0)
-                .rotationEffect(homeState.showCamera ? .degrees(-15) : .degrees(0))
                 
                 Spacer()
             }
@@ -135,7 +133,7 @@ struct DishMapView: View {
     
     func start() {
         // sync map location to state
-        self.mapViewStore.$position
+        mapViewStore.$position
             .debounce(for: .milliseconds(200), scheduler: App.queueMain)
             .sink { position in
                 if let position = position {
@@ -150,7 +148,7 @@ struct DishMapView: View {
                     )
                 }
         }
-        .store(in: &self.mapViewStore.cancels)
+        .store(in: &mapViewStore.cancels)
         
         // mapHeight => zoom level
         if App.enableMapAutoZoom {
@@ -171,7 +169,7 @@ struct DishMapView: View {
                     lastZoomAt = mapHeight
                     self.mapView?.zoomIn(amt)
             }
-            .store(in: &self.mapViewStore.cancels)
+            .store(in: &mapViewStore.cancels)
     
             // snappedToBottom => zoom
             homeViewState.$y
@@ -187,7 +185,7 @@ struct DishMapView: View {
                         self.mapView?.zoomOut(0.05)
                     }
             }
-            .store(in: &self.mapViewStore.cancels)
+            .store(in: &mapViewStore.cancels)
         }
     }
 }

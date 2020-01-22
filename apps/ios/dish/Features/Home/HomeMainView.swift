@@ -56,6 +56,9 @@ struct HomeMainView: View {
                     // map
                     DishMapView()
                         .frame(height: self.appGeometry?.size.height)
+                        .animation(.spring(response: 0.8))
+                        .offset(y: state.showCamera ? -Screen.height : 0)
+                        .rotationEffect(state.showCamera ? .degrees(-15) : .degrees(0))
 
                     // everything above the map
                 
