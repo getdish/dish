@@ -1,3 +1,4 @@
+{{- if (eq .Values.DISH_ENV "production") }}
 services:
   crawlers-ui:
     image: orkidio/orkid-ui
@@ -7,10 +8,25 @@ services:
       - HTTP_PASSWORD=password
       - REDIS_HOST=redis
   crawlers:
-    image: ./services/crawlers
+    image: dish/crawlers
     build:
       dockerfile: ./services/crawlers/Dockerfile
       context: ./
-    port: 8888/http
+  hasura:
+    app: hasura
+    image: hasura/graphql-engine:v1.0.0
+    ports:
+      - 8080/http
     env:
-      - REDIS_HOST=redis
+      - HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:${TF_VAR_POSTGRES_PASSWORD}@postgres-postgresql.postgres/dish
+      - HASURA_GRAPHQL_ENABLE_CONSOLE=true
+      - HASURA_GRAPHQL_ENABLED_LOG_TYPES=startup, http-log, webhook-log, websocket-log, query-log
+      - HASURA_GRAPHQL_ENABLE_TELEMETRY=false
+{{- end}}
+
+template:
+  goTemplate: true # use go templating
+  envSubst: true # use ENV vars during templating
+  questions:
+  - variable: DISH_ENV
+    description: "Environment to deploy to"

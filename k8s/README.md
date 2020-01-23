@@ -24,13 +24,7 @@ Token is avaiable in `secrets.enc.tf`
   * `doctl kubernetes cluster kubeconfig save dish` Sets up `kubectl`
   *  `./etc/helm_fix.sh` Applies Helm (k8s package manager) fix.
   * `terraform apply` Adds all the remaining resources
-
-### Helm permission error
-```
-kubectl patch deploy tiller-deploy \
-  -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller","serviceAccountName":"tiller"}}}}' \
-  -n kube-system
-```
+  * `rio up --answers env.enc.production.yaml` Bring up the main Dish services using Rio
 
 ### Connecting to an existing cluster
   * `terraform init` Connects to DO Spaces to save state. Downloads modules

@@ -1,9 +1,20 @@
 # Stage 1: copy/install
-FROM dish/base
+# Base Dish Docker image from which others can inherit
+FROM mhart/alpine-node:12
+WORKDIR /app
+
+COPY package.json .
+COPY tsconfig.base.json .
+
+# copy monorepo dependencies
+COPY packages packages
+
+RUN yarn install
+RUN yarn workspaces run build
 
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 WORKDIR /app
-COPY . services/crawlers
+COPY services/crawlers services/crawlers
 RUN yarn install
 RUN cd services/crawlers && yarn build
 

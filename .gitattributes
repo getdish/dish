@@ -1,1 +1,2 @@
 k8s/*.enc.tf filter=git-crypt diff=git-crypt
+env.enc.production.yaml filter=git-crypt diff=git-crypt

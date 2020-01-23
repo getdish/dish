@@ -33,7 +33,7 @@ resource "kubernetes_secret" "docker-registry-auth" {
   }
 
   data = {
-    "auth" = var.docker_registry_http_auth
+    "auth" = var.DOCKER_REGISTRY_HTTP_AUTH
   }
 
   type = "Opaque"
@@ -77,7 +77,7 @@ resource "kubernetes_ingress" "docker-registry-ingress" {
   spec {
     tls {
       hosts = [
-        "docker.${var.dish_domain}",
+        "docker.k8s.${var.dish_domain}",
       ]
       secret_name = "docker-tls"
     }

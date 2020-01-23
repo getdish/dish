@@ -1,13 +1,21 @@
+variable "DO_DISH_KEY" {}
+variable "DO_SPACES_ID" {}
+variable "DO_SPACES_SECRET" {}
+variable "POSTGRES_PASSWORD" {}
+variable "DOCKER_REGISTRY_HTTP_AUTH" {}
+variable "GRAFANA_PASSWORD" {}
+variable "CLOUDFLARE_DNS_API_TOKEN" {}
+
 # Keeping the cluster in its own module allows us to build it independently of
 # every other k8s resources that lives on it. This is essential when first
 # running `terraform apply`.
 module "cluster" {
-  do_dish_key = var.do_dish_key
+  DO_DISH_KEY = var.DO_DISH_KEY
   source = "./cluster"
 }
 
 variable "dish_domain" {
-  default = "dish.tombh.co.uk"
+  default = "dishapp.com"
 }
 
 data "helm_repository" "stable" {

@@ -13,6 +13,6 @@ resource "helm_release" "postgres" {
   }
   set {
     name = "postgresqlPassword"
-    value = var.postgres_password
+    value = var.POSTGRES_PASSWORD
   }
 }

@@ -1,9 +1,9 @@
-variable do_dish_key {}
+variable DO_DISH_KEY {}
 
 # The `digitalocean` provider is a third-party Terraform plugin. It needs an
 # API key to talk to the Digital Ocean platform
 provider "digitalocean" {
-  token = var.do_dish_key
+  token = var.DO_DISH_KEY
 }
 
 # The main definition of the Kubernetes cluster
@@ -11,12 +11,12 @@ provider "digitalocean" {
 resource "digitalocean_kubernetes_cluster" "dish" {
   name    = "dish"
   region  = "sfo2"
-  version = "1.16.2-do.2"
+  version = "1.16.2-do.3"
 
   # Node pools are just a way of grouping VMs
   node_pool {
     name       = "dish-pool"
-    size       = "s-2vcpu-4gb"
+    size       = "s-4vcpu-8gb"
     node_count = 3 // changing this doesn't delete the cluster
   }
 }
