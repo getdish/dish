@@ -143,8 +143,6 @@ struct HomeMainView: View {
                     // searchinput always light
                     .environment(\.colorScheme, .light)
                 
-//                    BrandBar()
-                
                     // CameraControlsOverlay
                     ZStack {
                         VStack {
@@ -155,16 +153,15 @@ struct HomeMainView: View {
                                 )
                                     .scaleEffect(state.showCamera ? 1 : 0.8)
                                     .offset(
-                                        x: state.showCamera ? -Screen.width / 2 + App.cameraButtonHeight / 2 : App.cameraButtonHeight * 0.2,
-                                        y: state.showCamera ? Screen.fullHeight - App.cameraButtonHeight - 100 : state.mapHeight - App.cameraButtonHeight / 2
+                                        x: state.showCamera ? -Screen.width / 2 + App.cameraButtonHeight / 2
+                                            : App.cameraButtonHeight * 0.05,
+                                        y: state.showCamera ? Screen.fullHeight - App.cameraButtonHeight - 100
+                                            : state.mapHeight - App.cameraButtonHeight / 2
                                 )
                                     .animation(Animation.spring(response: 0.8).delay(0.05))
                             }
                             Spacer()
                         }
-                        //                            if App.store.state.home.showCamera {
-                        //                                CameraBackButton()
-                        //                            }
                     }
                 
                     // make everything untouchable while dragging

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct FilterButton: View {
     @Environment(\.colorScheme) var colorScheme
+    var width: CGFloat? = nil
     var label: String
     var action: () -> Void
     var flex: Bool = false
@@ -25,6 +26,7 @@ struct FilterButton: View {
                         Spacer()
                     }
                 }
+                .frame(width: self.width)
                 .padding(.vertical, 7)
                 .padding(.horizontal, 10)
                 .background(schemeOppositeColor)

@@ -17,7 +17,7 @@ struct CameraButton: View {
         }) {
             ZStack {
                 Group {
-                    Image(systemName: "camera.fill")
+                    Image(systemName: "plus")
                         .resizable()
                         .scaledToFit()
                     
@@ -56,14 +56,14 @@ struct CameraButton: View {
                 .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 0)
                 .overlay(
                     RoundedRectangle(cornerRadius: App.cameraButtonHeight)
-                        .stroke(Color.white.opacity(0.6), lineWidth: 2)
+                        .stroke(Color.white.opacity(0.6), lineWidth: 1)
             )
                 .overlay(
                     VStack {
                         RoundedRectangle(cornerRadius: App.cameraButtonHeight)
-                            .stroke(Color.black.opacity(0.2), lineWidth: 2)
+                            .stroke(Color.black.opacity(0.1), lineWidth: 2)
                     }
-                    .padding(2)
+                    .padding(1)
             )
 //                .animation(.spring())
 //                .opacity(self.isTapped ? 0.5 : 1)

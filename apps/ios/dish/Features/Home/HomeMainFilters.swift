@@ -6,6 +6,7 @@ struct HomeMainFilterBar: View {
     @EnvironmentObject var homeState: HomeViewState
     @EnvironmentObject var store: AppStore
     @State var wasOnSearchResults = false
+    @State var showCuisine = false
     
     var body: some View {
         ZStack {
@@ -21,32 +22,60 @@ struct HomeMainFilterBar: View {
                 }
                 
                 Group {
-                    VStack {
-                        Spacer().frame(maxHeight: homeState.showFilters ? .infinity : 0)
-                        
+//                    VStack {
+//                        Spacer().frame(maxHeight: homeState.showFilters ? .infinity : 0)
+//
+//                        HStack(spacing: 12) {
+//                            HStack {
+//                                FilterButton(label: "Dish", action: filterAction, flex: true)
+//                                    .environment(\.colorScheme, .dark)
+//                                FilterButton(label: "Craving", action: filterAction, flex: true)
+//                                FilterButton(label: "Cuisine", action: filterAction, flex: true)
+//                            }
+//                            .cornerRadius(80)
+//                            .shadow(radius: 10)
+//
+//                            FilterButton(label: "💵", action: {
+//                                self.homeState.showFilters = true
+//                            }, flex: true)
+//                                .frame(width: 60)
+//                                .cornerRadius(80)
+//                                .shadow(radius: 10)
+//                        }
+//                        .padding(.vertical, 4)
+//                        .padding(.horizontal, 20)
+//                        .environment(\.colorScheme, .light)
+//                    }
+//                    .padding(.bottom, homeState.showFilters ? 40 : 0)
+//                    .animation(.spring())
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
-                            HStack {
-                                FilterButton(label: "Dish", action: filterAction, flex: true)
+                            Group {
+                                FilterButton(width: 50, label: self.showCuisine ? "Cuisine" : "Dish", action: { self.showCuisine = !self.showCuisine })
                                     .environment(\.colorScheme, .dark)
-                                FilterButton(label: "Craving", action: filterAction, flex: true)
-                                FilterButton(label: "Cuisine", action: filterAction, flex: true)
+                                
+                                
+                                FilterButton(label: "Price", action: {})
+                                
+                                FilterButton(label: "Spice", action: {})
+                                
+                                FilterButton(label: "Diet", action: {})
+                                
+                                FilterButton(label: "Hole in the Wall", action: filterAction)
+                                    .opacity(0.8)
+                                
+                                FilterButton(label: "Open Late", action: filterAction)
+                                    .opacity(0.8)
                             }
                             .cornerRadius(80)
-                            .shadow(radius: 10)
-                            
-                            FilterButton(label: "💵", action: {
-                                self.homeState.showFilters = true
-                            }, flex: true)
-                                .frame(width: 60)
-                                .cornerRadius(80)
-                                .shadow(radius: 10)
+                            .shadow(radius: 6)
+                            .animation(.spring())
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, 6)
                         .padding(.horizontal, 20)
                         .environment(\.colorScheme, .light)
                     }
-                    .padding(.bottom, homeState.showFilters ? 40 : 0)
-                    .animation(.spring())
                     
 //                    if showFilters == .search {
 //                        ScrollView(.horizontal, showsIndicators: false) {
@@ -150,18 +179,6 @@ fileprivate let filterAction = {
         search: curState.search,
         filters: filters
     ))))
-}
-
-struct HomeMainFilterBarTag: View {
-    var body: some View {
-        Group {
-            FilterButton(label: "Hole in the Wall", action: filterAction)
-            FilterButton(label: "Date Spot", action: filterAction)
-            FilterButton(label: "Healthy", action: filterAction)
-            FilterButton(label: "Quiet", action: filterAction)
-            FilterButton(label: "Locals Favorite", action: filterAction)
-        }
-    }
 }
 
 struct HomeMainFilterBarCuisine: View {
