@@ -27,8 +27,8 @@ struct FilterButton: View {
                     }
                 }
                 .frame(width: self.width)
-                .padding(.vertical, 7)
-                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .padding(.horizontal, 12)
                 .background(schemeOppositeColor)
 //                .cornerRadius(100, corners: self.cornerRadiusCorners)
                 .shadow(color: shadowColor, radius: 7, x: 0, y: 2)

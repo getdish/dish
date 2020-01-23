@@ -104,7 +104,7 @@ struct HomeSearchBarAfterView: View {
                             .scaledToFit()
                     }
                     else {
-                        Image(systemName: "map")
+                        Image(systemName: "chevron.down")
                             .resizable()
                             .scaledToFit()
                     }

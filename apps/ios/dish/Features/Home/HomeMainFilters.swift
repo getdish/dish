@@ -50,7 +50,7 @@ struct HomeMainFilterBar: View {
 //                    .animation(.spring())
                     
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 12) {
+                        HStack(spacing: 10) {
                             Group {
                                 FilterButton(width: 50, label: self.showCuisine ? "Cuisine" : "Dish", action: { self.showCuisine = !self.showCuisine })
                                     .environment(\.colorScheme, .dark)

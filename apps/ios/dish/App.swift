@@ -19,7 +19,7 @@ class AppInstance {
     let queueMain = DispatchQueue.main
     let magicItems = magicItemsStore
     let enableMapAutoZoom = false
-    let cameraButtonHeight: CGFloat = 66
+    let cameraButtonHeight: CGFloat = 62
     
     var enterRepl = false
     

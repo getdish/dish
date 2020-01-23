@@ -154,7 +154,7 @@ struct HomeMainView: View {
                                     .scaleEffect(state.showCamera ? 1 : 0.8)
                                     .offset(
                                         x: state.showCamera ? -Screen.width / 2 + App.cameraButtonHeight / 2
-                                            : App.cameraButtonHeight * 0.05,
+                                            : 0,
                                         y: state.showCamera ? Screen.fullHeight - App.cameraButtonHeight - 100
                                             : state.mapHeight - App.cameraButtonHeight / 2
                                 )

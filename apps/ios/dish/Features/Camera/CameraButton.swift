@@ -28,7 +28,7 @@ struct CameraButton: View {
                 }
                 .foregroundColor(foregroundColor)
             }
-            .padding(.all, App.cameraButtonHeight * 0.25)
+            .padding(.all, App.cameraButtonHeight * 0.33)
             .frame(width: App.cameraButtonHeight, height: App.cameraButtonHeight)
             .background(
                 LinearGradient(
