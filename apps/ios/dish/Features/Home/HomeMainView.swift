@@ -46,8 +46,9 @@ struct HomeMainView: View {
         
         let state = self.state
         let mapHeight = state.mapHeight
+        let enableSearchBar = [.idle, .off].contains(state.dragState) && state.animationState == .idle
 
-        print(" 👀 HomeMainView mapHeight \(mapHeight) animationState \(state.animationState)")
+        print(" 👀 HomeMainView mapHeight \(mapHeight) animationState \(state.animationState) enableSearchBar \(enableSearchBar)")
 
         return GeometryReader { geometry in
             ZStack(alignment: .topLeading) {
@@ -104,7 +105,7 @@ struct HomeMainView: View {
                     
                     // results
                     HomeMainContent()
-                        .animation(.spring(response: 0.38))
+                        .animation(.spring(response: 0.38), value: state.dragState == .idle)
                         .offset(y: state.showCamera ? Screen.height : 0)
                     
                     // filters
@@ -131,6 +132,8 @@ struct HomeMainView: View {
                         Spacer()
                     }
                     .padding(.horizontal, 10)
+                    .disabled(!enableSearchBar)
+                    .allowsHitTesting(enableSearchBar)
                     .animation(.spring(response: 1.25), value: state.animationState == .animate)
                     .offset(y:
                         state.showCamera ?
@@ -139,8 +142,6 @@ struct HomeMainView: View {
                     )
                     // searchinput always light
                     .environment(\.colorScheme, .light)
-                
-//                    BrandBar()
                 
                     // CameraControlsOverlay
                     ZStack {
@@ -152,16 +153,15 @@ struct HomeMainView: View {
                                 )
                                     .scaleEffect(state.showCamera ? 1 : 0.8)
                                     .offset(
-                                        x: state.showCamera ? -Screen.width / 2 + 60 / 2 : -6,
-                                        y: state.showCamera ? Screen.fullHeight - 160 : state.mapHeight - 60 / 2
+                                        x: state.showCamera ? -Screen.width / 2 + App.cameraButtonHeight / 2
+                                            : 0,
+                                        y: state.showCamera ? Screen.fullHeight - App.cameraButtonHeight - 100
+                                            : state.mapHeight - App.cameraButtonHeight / 2
                                 )
                                     .animation(Animation.spring(response: 0.8).delay(0.05))
                             }
                             Spacer()
                         }
-                        //                            if App.store.state.home.showCamera {
-                        //                                CameraBackButton()
-                        //                            }
                     }
                 
                     // make everything untouchable while dragging

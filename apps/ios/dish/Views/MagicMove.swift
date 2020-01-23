@@ -16,7 +16,6 @@ class MagicItemsStore: ObservableObject {
     
     var clear: () -> Void = {}
     
-    var nextPosition: MagicItemPosition = .start
     var startItems = [String: MagicItemDescription?]() {
         didSet { self.debounceUpdate() }
     }
@@ -39,10 +38,9 @@ class MagicItemsStore: ObservableObject {
     func animate(_ position: MagicItemPosition, duration: Double, onMoveComplete: (() -> Void)?) {
         self.state = .start
         async(2) {
-            self.nextPosition = position
+            self.position = position
             self.state = .animate
             async(duration) {
-                self.position = position
                 self.state = .done
                 if let cb = onMoveComplete { cb() }
             }
@@ -75,7 +73,7 @@ struct MagicMove<Content>: View where Content: View {
         self.content = content
         self.disableTracking = disableTracking
         self.onMoveComplete = onMoveComplete
-        self.animation = .linear(duration: duration / 1000)
+        self.animation = .linear(duration: duration / 1000 * ANIMATION_SPEED)
         self.lastContent = content()
         self.position = position
         self.store.disableTracking = disableTracking
@@ -152,44 +150,57 @@ struct MagicMove<Content>: View where Content: View {
             
             if store.state != .done {
                 ZStack(alignment: .topLeading) {
-                    ForEach(0 ..< keys.count) { index -> AnyView in
+                    ForEach(0 ..< keys.count) { index -> AnimatedView in
                         if index >= startValues.count {
-                            return emptyView
+                            return AnimatedView()
                         }
                         let start = startValues[index]
                         guard let end = endValues.first(where: { $0.id == startValues[index].id }) else {
-                            return AnyView(EmptyView())
+                            return AnimatedView()
                         }
                         
                         let animateItem: MagicItemDescription =
                             self.store.position == .start ? start : end
                         let animatePosition =
-                            (self.store.nextPosition == .start ? start : end).frame
+                            (self.store.position == .start ? start : end).frame
                         
-                        return AnyView(
-                            // what is alignment
-                            HStack {
-                                VStack {
-                                    VStack {
-                                        animateItem.view
-                                    }
-                                    .frame(
-                                        width: animatePosition.width,
-                                        height: animatePosition.height
-                                    )
-                                    .offset(
-                                        x: animatePosition.minX,
-                                        y: animatePosition.minY
-                                    )
-                                    .animation(self.animation)
-                                    Spacer()
-                                }
-                                Spacer()
-                            }
+                        return AnimatedView(
+                            animation: self.animation,
+                            animateItem: animateItem,
+                            animatePosition: animatePosition
                         )
                     }
                 }
             }
+        }
+    }
+}
+
+struct AnimatedView: View, Identifiable {
+    var id: String { self.animateItem?.id ?? "empty---" }
+    var animation: Animation = .default
+    var animateItem: MagicItemDescription? = nil
+    var animatePosition: CGRect? = nil
+    
+    var body: some View {
+        HStack {
+            if self.animateItem != nil || self.animatePosition != nil {
+                VStack {
+                    animateItem!.view
+                        .animation(self.animation)
+                        .frame(
+                            width: self.animatePosition!.width,
+                            height: self.animatePosition!.height
+                    )
+                        .offset(
+                            x: self.animatePosition!.minX,
+                            y: self.animatePosition!.minY
+                    )
+                    
+                    Spacer()
+                }
+            }
+            Spacer()
         }
     }
 }
@@ -226,17 +237,30 @@ struct MagicItem<Content>: View where Content: View {
         self.content = content()
         self.contentView = AnyView(self.content)
     }
+    
+    var items: [String: MagicItemDescription?] {
+        self.at == .start ? magicItemsStore.startItems : magicItemsStore.endItems
+    }
+    
+    func updateItem(_ item: MagicItemDescription) {
+        if self.at == .start {
+            magicItemsStore.startItems[self.id] = item
+        } else {
+            magicItemsStore.endItems[self.id] = item
+        }
+    }
+    
+    var isDisabled: Bool {
+        self.disableTracking || magicItemsStore.disableTracking
+    }
 
     var body: some View {
         return ZStack {
             self.content
                 .overlay(
                     GeometryReader { geometry -> SideEffect in
-                        if self.disableTracking {
-                            return SideEffect.None
-                        }
-                        
                         let frame = geometry.frame(in: .global)
+                        let name = "MagicItem \(self.at) \(self.id) -- \(frame.minX) \(frame.minY)"
                         
                         // off screen avoid doing things
                         let offYN = frame.minY + frame.height < 0
@@ -244,6 +268,9 @@ struct MagicItem<Content>: View where Content: View {
                         let offXN = frame.minX + frame.width < 0
                         let offXP = frame.minX > Screen.width
                         let offScreen = offYN || offYP || offXN || offXP
+                        let isOffScreen = self.items[self.id] != nil && offScreen == true
+                        
+                        let isMagicStoreAnimating = magicItemsStore.state != .done
                         
                         let item = MagicItemDescription(
                             view: self.contentView,
@@ -251,31 +278,12 @@ struct MagicItem<Content>: View where Content: View {
                             id: self.id,
                             at: self.at
                         )
-                        let items = self.at == .start ? magicItemsStore.startItems : magicItemsStore.endItems
-                        let curItem = items[self.id]
+                        let curItem = self.items[self.id]
+                        let hasChanged = curItem != item
                         
-                        if curItem != nil && offScreen {
-                            return SideEffect("offscreen", level: .debug)
-                        }
+                        let enabled = !self.isDisabled && !isOffScreen && !isMagicStoreAnimating && hasChanged
                         
-                        if curItem != item {
-                            return SideEffect("MagicItem.set MagicItemDescription", level: .debug, throttle: 16) {
-                                if self.disableTracking { return }
-                                if magicItemsStore.state != .done { return }
-                                if magicItemsStore.disableTracking { return }
-                                if curItem != item {
-//                                    print("magicItemsStore.state \(magicItemsStore.state) \(self.disableTracking)")
-                                    //                                print("sideeffect MagicItem.items[\(self.id)] = (xy,wh) \(frame.minX.rounded()) x \(frame.minY.rounded()) | \(frame.width.rounded()) x \(frame.height.rounded())")
-                                    if self.at == .start {
-                                        magicItemsStore.startItems[self.id] = item
-                                    } else {
-                                        magicItemsStore.endItems[self.id] = item
-                                    }
-                                }
-                            }
-                        }
-                        
-                        return SideEffect.None
+                        return SideEffect(name, condition: { enabled }) { self.updateItem(item) }
                     }
             )
         }

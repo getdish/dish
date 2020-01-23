@@ -13,22 +13,19 @@ struct DishCardView: View, Identifiable {
     var action: (() -> Void)? = nil
     
     var body: some View {
-        let display = self.display
-        let dish = self.dish
-        
-        return MagicItem("dish-\(id)", at: at) {
+        MagicItem("dish-\(id)", at: at) {
             GeometryReader { geo in
                 CustomButton2(action: self.action ?? {
                     App.store.send(
-                        .home(.push(HomeStateItem(filters: [SearchFilter(name: dish.name)])))
+                        .home(.push(HomeStateItem(filters: [SearchFilter(name: self.dish.name)])))
                     )
                 }) {
-                    dish.image
+                    self.dish.image
                         .resizable()
                         .scaledToFill()
                         .frame(width: self.width ?? geo.size.width, height: self.height ?? geo.size.height)
                         .overlay(self.overlay)
-                        .cornerRadius(display == .card ? 14 : 18)
+                        .cornerRadius(self.display == .card ? 14 : 18)
                         .clipped()
                         .shadow(color: Color.black.opacity(0.5), radius: 6, x: 0, y: 2)
                 }

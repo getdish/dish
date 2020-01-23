@@ -20,26 +20,29 @@ struct HomeMainContent: View {
     
     var body: some View {
         ZStack(alignment: .topLeading) {
-            SideEffect("HomeMainContent", level: .debug) {
-                if self.homeState.isSnappedToBottom && self.animatePosition == .start {
-                    self.shouldUpdateMagicPositions = false
-                    async {
-                        self.animatePosition = .end
-                    }
-                }
-                if !self.homeState.isSnappedToBottom && self.animatePosition == .end {
-                    self.shouldUpdateMagicPositions = false
-                    async {
-                        self.animatePosition = .start
-                    }
+            SideEffect("HomeMainContent.animateToEnd", condition: { self.homeState.isSnappedToBottom && self.animatePosition == .start }) {
+                self.shouldUpdateMagicPositions = false
+                async {
+                    self.animatePosition = .end
                 }
             }
             
+            SideEffect("HomeMainContent.animateToStart", condition: { !self.homeState.isSnappedToBottom && self.animatePosition == .end }) {
+                self.shouldUpdateMagicPositions = false
+                async {
+                    self.animatePosition = .start
+                }
+            }
+
             PrintGeometryView("HomeMainContent")
             
             MagicMove(self.animatePosition,
                       duration: 500 * (1 / ANIMATION_SPEED),
-                      disableTracking: !self.shouldUpdateMagicPositions,
+                      // TODO we need a separate "disableTracking" in homeStore that is manually set
+                      // why? when hitting "map" toggle button when above snapToBottomAt this fails for now
+                      disableTracking: self.homeState.y >= self.homeState.snapToBottomAt
+                        || self.homeState.isSnappedToBottom
+                        || self.homeState.animationState == .controlled,
                       onMoveComplete: {
                         if !self.homeState.isSnappedToBottom {
                             self.shouldUpdateMagicPositions = true
@@ -57,7 +60,7 @@ struct HomeMainContent: View {
                             HomeContentExplore()
                         }
                     }
-                        .offset(y: self.homeState.mapHeight)
+                        .offset(y: self.homeState.mapHeight - self.homeState.searchBarYExtra)
                     
                     // results bar below map
                     ZStack {
@@ -69,17 +72,7 @@ struct HomeMainContent: View {
                     }
                         .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
                         .offset(y: self.homeState.snappedToBottomMapHeight - cardRowHeight - 20)
-                    
-//                    ZStack(alignment: .center) {
-//                        Button(action: {
-//                            self.animatePosition = self.animatePosition == .start ? .end : .start
-//                        }) {
-//                            Text("Go").padding(10)
-//                        }
-//                    }
-//                    .frameFlex()
                 }
-//                .animation(.none)
             }
             .frameFlex()
             .clipped()

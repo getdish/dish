@@ -69,6 +69,8 @@ class CameraViewController: UIViewController {
         avSession?.startRunning()
     }
     
+    private var isCaptured = false
+    
     func update(_ parent: CameraView) {
         if parent.isCaptured.wrappedValue == true {
             self.capture()
@@ -86,6 +88,8 @@ class CameraViewController: UIViewController {
     }
     
     func capture() {
+        if isCaptured { return }
+        self.isCaptured = true
         self.pause()
         print("capturing")
 //        guard let captureOut = self.capturePhotoOut else { return }

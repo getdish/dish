@@ -104,14 +104,14 @@ struct HomeSearchBarAfterView: View {
                             .scaledToFit()
                     }
                     else {
-                        Image(systemName: "map")
+                        Image(systemName: "chevron.down")
                             .resizable()
                             .scaledToFit()
                     }
                 }
                 .frame(width: 16, height: 16)
                 .opacity(0.5)
-                .padding(.trailing, 50)
+                .padding(.trailing, 8 + App.cameraButtonHeight * 0.5)
             }
             .padding(.vertical, 4)
             .padding(.horizontal, 6)

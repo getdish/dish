@@ -17,12 +17,14 @@ struct SideEffect: View {
     let level: LogLevel
     let debounce: Double
     let throttle: Double
+    let condition: (() -> Bool)?
     let block: () -> Void
     let name: String
     
-    init(_ name: String, level: LogLevel = .info, debounce: Double = 0, throttle: Double = 0, block: @escaping () -> Void = {}) {
+    init(_ name: String, level: LogLevel = .info, debounce: Double = 0, throttle: Double = 0, condition: (() -> Bool)? = nil, block: @escaping () -> Void = {}) {
         self.name = name
         self.level = level
+        self.condition = condition
         self.debounce = debounce
         self.throttle = throttle
         self.block = block
@@ -30,6 +32,9 @@ struct SideEffect: View {
     
     var body: some View {
         Run(debounce: debounce, throttle: throttle) {
+            if let condition = self.condition, condition() == false {
+                return
+            }
             if self.level.rawValue >= DEBUG_SIDE_EFFECTS.rawValue {
                 print(" ⏩ \(self.name)")
             }
