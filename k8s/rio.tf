@@ -2,6 +2,13 @@ resource "kubernetes_namespace" "rio" {
   metadata {
     name = "rio-system"
   }
+
+  lifecycle {
+    ignore_changes = [
+      metadata[0].annotations,
+      metadata[0].labels
+    ]
+  }
 }
 
 data "local_file" "rio-yaml" {
@@ -64,6 +71,7 @@ resource "kubernetes_ingress" "rio-ingress" {
     tls {
       hosts = [
         "*.rio.${var.dish_domain}",
+        "lab.${var.dish_domain}"
       ]
       secret_name = "rio-wildcard-tls"
     }
@@ -72,7 +80,7 @@ resource "kubernetes_ingress" "rio-ingress" {
       service_port = 80
     }
     rule {
-      host = "*.rio.${var.dish_domain}"
+      host = "*.${var.dish_domain}"
       http {
         path {
           path = "/*"

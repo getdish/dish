@@ -13,7 +13,7 @@ const is_local_redis =
 
 const redisOptions = {
   port: 6379,
-  host: is_local_redis ? 'localhost' : 'redis',
+  host: is_local_redis ? 'localhost' : process.env.REDIS_HOST,
 }
 
 type Job = {

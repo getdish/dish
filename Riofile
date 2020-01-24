@@ -1,17 +1,5 @@
 {{- if (eq .Values.DISH_ENV "production") }}
 services:
-  crawlers-ui:
-    image: orkidio/orkid-ui
-    port: 3100/http
-    env:
-      - HTTP_USER=user
-      - HTTP_PASSWORD=password
-      - REDIS_HOST=redis
-  crawlers:
-    image: dish/crawlers
-    build:
-      dockerfile: ./services/crawlers/Dockerfile
-      context: ./
   hasura:
     app: hasura
     image: hasura/graphql-engine:v1.0.0
@@ -22,6 +10,47 @@ services:
       - HASURA_GRAPHQL_ENABLE_CONSOLE=true
       - HASURA_GRAPHQL_ENABLED_LOG_TYPES=startup, http-log, webhook-log, websocket-log, query-log
       - HASURA_GRAPHQL_ENABLE_TELEMETRY=false
+  worker-ui:
+    image: orkidio/orkid-ui
+    port: 3100/http
+    env:
+      - HTTP_USER=user
+      - HTTP_PASSWORD=password
+      - REDIS_HOST=redis-master.redis
+  worker:
+    image: dish/crawlers
+    build:
+      dockerfile: ./services/crawlers/Dockerfile
+      context: ./
+    env:
+      - REDIS_HOST=redis-master.redis
+      - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
+      - UBEREATS_PROXY=${UBEREATS_PROXY}
+    command:
+      - node
+    args:
+      - _/worker.js
+  crawlers:
+    image: dish/crawlers
+    build:
+      dockerfile: ./services/crawlers/Dockerfile
+      context: ./
+    env:
+      - REDIS_HOST=redis-master.redis
+      - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
+    command:
+      - node
+    args:
+      - _/ubereats_sanfran.js
+  lab:
+    image: dish/lab
+    build:
+      dockerfile: ./apps/lab/Dockerfile
+      context: ./
+    ports:
+      - 5000/http
+    env:
+      - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
 {{- end}}
 
 template:

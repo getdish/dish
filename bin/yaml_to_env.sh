@@ -21,4 +21,4 @@ function parse_yaml {
 
 PROJECT_ROOT=$(git rev-parse --show-toplevel)
 
-eval $(parse_yaml $PROJECT_ROOT/env.enc.production.yaml | xargs)
+parse_yaml $PROJECT_ROOT/env.enc.production.yaml | xargs

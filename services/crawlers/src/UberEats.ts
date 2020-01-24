@@ -17,6 +17,8 @@ const HEREMAPS_API_TOKEN = process.env.HEREMAPS_API_TOKEN
 axios.defaults.baseURL = UBEREATS_DOMAIN + 'api/'
 axios.defaults.headers.common['x-csrf-token'] = 'x'
 
+console.log('Starting UberEats crawler. Using domain: ' + UBEREATS_DOMAIN)
+
 export class UberEats extends WorkerJob {
   async run(args?: any) {
     if (typeof args == undefined || args == 'ALL') {
@@ -133,8 +135,6 @@ export class UberEats extends WorkerJob {
     const response = await restaurant.upsert({
       name: data.title,
       description: data.categories && data.categories.join(', '),
-      latitude: data.location.latitude,
-      longitude: data.location.longitude,
       location: {
         type: 'Point',
         coordinates: [data.location.longitude, data.location.latitude],

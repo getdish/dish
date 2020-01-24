@@ -22,7 +22,19 @@ export type MapSchema<T extends Record<string, keyof MapSchemaTypes>> = {
   [K in keyof T]: MapSchemaTypes[T[K]]
 }
 
-const DOMAIN = process.env.HASURA_ENDPOINT || 'http://localhost:8080'
+const LOCAL_HASURA = 'http://localhost:8080'
+let DOMAIN: string
+
+if (typeof window == 'undefined') {
+  DOMAIN = process.env.HASURA_ENDPOINT || LOCAL_HASURA
+} else {
+  if (window.location.hostname.includes('dish')) {
+    DOMAIN = 'https://hasura.rio.dishapp.com'
+  } else {
+    DOMAIN = LOCAL_HASURA
+  }
+}
+
 const AXIOS_CONF = {
   url: DOMAIN + '/v1/graphql',
   method: 'POST',

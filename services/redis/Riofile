@@ -1,4 +1,0 @@
-services:
-  redis:
-    image: redis
-    port: 6379/http

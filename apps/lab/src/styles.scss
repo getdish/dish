@@ -33,3 +33,26 @@ img {
   max-width: 100%;
   height: auto;
 }
+
+#map {
+  float: right;
+  width: 75%;
+}
+
+#sidebar {
+  float: left;
+  height: 100vh;
+  width: 25%;
+  overflow-y: scroll;
+  padding: 1vw;
+
+  h1, h2, h3, ul {
+    margin: 0.5em;
+  }
+
+  img {
+    margin: 2px;
+  }
+
+  #restaurant-details {}
+}

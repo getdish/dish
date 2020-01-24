@@ -34,6 +34,18 @@ export class Dish extends ModelBase {
     return await this.hasura(query)
   }
 
+  static async allDishesCount() {
+    const self = new Dish()
+    const query = `{
+      dish_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }`
+    return await self.hasura(query)
+  }
+
   async delete_all() {
     const query = `mutation {
       delete_dish(where: {id: {_neq: ""}}) {

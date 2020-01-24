@@ -13,13 +13,13 @@ RUN yarn workspaces run build
 
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 WORKDIR /app
-COPY services/crawlers services/crawlers
+COPY apps/lab apps/lab
 RUN yarn install
-RUN cd services/crawlers && yarn build
+RUN cd apps/lab && react-scripts build
 
 ## Stage 2: run
 FROM mhart/alpine-node:slim-12
 COPY --from=0 /app /app
-WORKDIR /app/services/crawlers
+WORKDIR /app/apps/lab
 
-CMD ["node", "_/index.js"]
+CMD ["./node_modules/.bin/serve", "--single", "build"]

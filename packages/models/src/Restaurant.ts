@@ -2,10 +2,9 @@ import { ModelBase, MapSchema } from './ModelBase'
 import { FIELDS_SCHEMA as DISH_SCHEMA } from './Dish'
 
 export const FIELDS_SCHEMA = ModelBase.asSchema({
+  id: 'string',
   name: 'string',
   description: 'string',
-  longitude: 'float',
-  latitude: 'float',
   location: 'point',
   address: 'string',
   city: 'string',
@@ -61,7 +60,10 @@ export class Restaurant extends ModelBase {
     return await this.hasura(query)
   }
 
-  async findNear(lat: number, lng: number, distance: number) {
+  static async findNear(lat: number, lng: number, distance: number) {
+    const self = new Restaurant()
+    const response_fields = self.fields_bare()
+    const dishes = Object.keys(DISH_SCHEMA)
     const query = `query {
       restaurant ( where: { location: { _st_d_within: {
         distance: ${distance},
@@ -69,8 +71,23 @@ export class Restaurant extends ModelBase {
           coordinates: [${lng}, ${lat}]
         }
       }}})
-        {name location}
+        {
+          ${response_fields}
+          dishes {${dishes}}
+        }
     }`
-    return await this.hasura(query)
+    return await self.hasura(query)
+  }
+
+  static async allRestaurantsCount() {
+    const self = new Restaurant()
+    const query = `{
+      restaurant_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }`
+    return await self.hasura(query)
   }
 }

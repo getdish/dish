@@ -1,7 +1,7 @@
 # Developing
 
 ## Common setup
-- To automatically build and watch all code/packages: `yarn workspaces run watch`.
+- To automatically build and watch all code/packages: `yarn wsrun watch`.
 
 ## Worker
 The worker is a daemon/client abstraction that allows placing arbitrary code on a
