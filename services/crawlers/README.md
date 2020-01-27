@@ -1,10 +1,23 @@
-Orkid UI:
 
+## Worker
+
+Crawlers send their jobs to the worker to be run: `nodemon _/worker.js`
+
+View the status of jobs on the worker:
+
+```
 docker run \
   --name orkid-ui \
   --net host \
   --rm \
   orkidio/orkid-ui:latest
+```
+
+## Crawlers
+
+Once the worker is running send jobs to it, eg: `node _/ubereats_sanfran.js`
+
+## Notes
 
 Example request for restaurants in New York
 `curl 'https://www.ubereats.com/api/getFeedV1?localeCode=en-US' -H 'x-csrf-token: x' -H 'Cookie: uev2.loc=%7B%22address%22%3A%7B%22address1%22%3A%223rd%20Avenue%22%2C%22address2%22%3A%223rd%20Ave%2C%20New%20York%2C%20NY%22%2C%22aptOrSuite%22%3A%22%22%2C%22city%22%3A%22%22%2C%22country%22%3A%22%22%2C%22eaterFormattedAddress%22%3A%223rd%20Ave%2C%20New%20York%2C%20NY%2C%20USA%22%2C%22postalCode%22%3A%22%22%2C%22region%22%3A%22%22%2C%22subtitle%22%3A%223rd%20Ave%2C%20New%20York%2C%20NY%22%2C%22title%22%3A%223rd%20Avenue%22%2C%22uuid%22%3A%22%22%7D%2C%22latitude%22%3A40.767489999999995%2C%22longitude%22%3A-73.96227999999999%2C%22reference%22%3A%22EhozcmQgQXZlLCBOZXcgWW9yaywgTlksIFVTQSIuKiwKFAoSCQEnDDLqWMKJEZ4VmpRLqnJ3EhQKEgk7CD_TpU_CiRFi_nfhBo8LyA%22%2C%22referenceType%22%3A%22google_places%22%2C%22type%22%3A%22google_places%22%2C%22source%22%3A%22manual_auto_complete%22%7D;' --data '{}' | jq -c '.[0]' | vd -f jsonl`
