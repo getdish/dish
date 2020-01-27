@@ -133,6 +133,12 @@ export class UberEats extends WorkerJob {
     console.log('Saving restaurant: ' + data.title)
     const restaurant = new Restaurant()
     const response = await restaurant.upsert({
+      // TODO: Cos of this weird emtpy id field I think the whole dynamic type
+      // generation approach should be avoided. Just use normal types and an
+      // extra class property that repeats the fields that should be bundled
+      // in queries.
+      // Our dynamic type generation method doesn't support optional fields.
+      id: '',
       name: data.title,
       description: data.categories && data.categories.join(', '),
       location: {
@@ -205,4 +211,3 @@ export class UberEats extends WorkerJob {
     return decodeURIComponent(cache_key)
   }
 }
-

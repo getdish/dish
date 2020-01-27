@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:11.6
+        image: bitnami/postgresql:12.1.0-debian-9-r53 # See k8s/yaml/postgres.yaml
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: 'postgres'

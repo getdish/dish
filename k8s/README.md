@@ -19,7 +19,7 @@ However, most of these also have oneliner `curl` commands to install simple stat
 (Token is avaiable in `enc.env.production.yaml`)
 
 ### Creating the cluster for the first time
-  * `terraform init` Connects to DO Spaces to save state. Downloads modules
+  * `terraform init -backend-config "access_key=$DO_SPACES_API_ID" -backend-config "secret_key=$DO_SPACES_API_SECRET"` (See env.enc.production.yaml for credentials) Connects to DO Spaces to save state. Downloads modules
   * `terraform apply -target=module.cluster` Just build the bare compute resources
   * `doctl kubernetes cluster kubeconfig save dish` Sets up `kubectl`
   *  `./etc/helm_fix.sh` Applies Helm (k8s package manager) fix.

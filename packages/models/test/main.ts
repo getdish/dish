@@ -5,10 +5,13 @@ import { Restaurant } from '../src/Restaurant'
 test('Adding a restaurant', async t => {
   const restaurant = new Restaurant()
   const response = await restaurant.upsert({
+    id: '',
     name: 'Test Restaurant',
     description: 'Not a real restaurant :(',
-    longitude: 1.123,
-    latitude: 3.21,
+    location: {
+      type: 'Point',
+      coordinates: [50, 0],
+    },
     address: 'No 1 Non-existent Street',
     city: 'Mars',
     state: 'Denial',

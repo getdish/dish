@@ -23,6 +23,7 @@ export class Restaurant extends ModelBase {
 
   async upsert(data: RestaurantFields) {
     this.data = data
+    delete this.data['id']
     const query = `mutation {
       insert_restaurant(
         objects: ${this.stringify(this.data)},
@@ -72,7 +73,7 @@ export class Restaurant extends ModelBase {
         }
       }}})
         {
-          ${response_fields}
+          id ${response_fields}
           dishes {${dishes}}
         }
     }`
