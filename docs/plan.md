@@ -85,18 +85,16 @@ Steps 1-4
 So steps 1 and 2 are not too hard. Step 3 I think we've done well on in a few dimensions. Let's answer those:
 
 1. We want to make finding great local food work well
-2. We'll focus just finding Dish-es first, especially often-missed cuisines (Asian)
+2. We'll focus just finding "by dish" first, especially focusing by being great at often-missed cuisines (Asian)
 3. How we'll narrow it further:
   - Focus only on SF to start (can expand to other big cities after)
   - Built only an iPhone app (can expand to android after)
 
-Step 4 is just "we need to work another month and really get a feel for where we are, how confident we feel on where we can get to.
-
-But, we should still plan this next month for the MVP. Here's what we've roughly talked about doing:
+Step 4 is just "we need to work another month and really get a feel for where we are, how confident we feel on where we can get to". But, we should still plan this next month for the MVP. Here's what we've roughly talked about doing:
 
 1. Vet out a variety of technology we will use (mostly done)
 2. iOS App with one screen for: Map, Search, Explore Dishes (needs a lot)
-3. Backend that crawls a wide variety of things and aggregates them for powering iOS app
+3. Backend that crawls a wide variety of things for powering apps
 4. Vet a lot of things difficulty (crawling, search, map/exploration, filtering, ratings accuracy)
 
 And a list of the things we are planning to crawl. We don't need to have crawled them all in a month, but to have vetted them all and gotten a good feel for how hard it is.
@@ -106,5 +104,67 @@ And a list of the things we are planning to crawl. We don't need to have crawled
 Step 5
 
 Now, we're note quite through step 4 yet. But, we have a good idea of many things we want to do in general, so here's me mapping that out.
+
+
+
+---
+
+---
+
+Marketing / Growth
+
+Lets not just pay lip service here. I think we need to do three things:
+
+1. Actually have a high quality app (ie: back up your shit talk), so we can:
+2. Generate some "news" by taking some shots at the obvious target (Yelp)
+3. While also doing some pretty intense and separate content marketing
+
+The way I see this going down is a "campaign" that is themed:
+
+#deleteYelp
+
+I know it's negative. Perhaps we can think of something better, but this will be our measuring stick because I think this campaign could really attract some attention. We also should avoid being too negative - we want to be "poking playfully" at them more than attacking them.
+
+But, then again, Yelp is the company that literally had to buy "yelpsucks.com" to try and twist the facts that they absolutely were extorting people. That they got away with it is just a testament to their own ability to spin, but even in spite of that, the fact remains that Yelp just doesn't work very well.
+
+I know someone who worked there for quite a while in sales early on and he has some really awful things to say about they, including the fact that yes, they did absolutely extort companies.
+
+So, how do we do it?
+
+Here's the general idea I have:
+
+1. We get a domain like deleteyelp.com
+2. We put up a long, fun site there explaining all the ways they suck:
+   1. We avoid claiming they extorted people, we don't want to get too deep!
+   2. They suck at asian restaurants
+   3. They over-value service
+   4. They make you work! It's like homework to find stuff
+   5. They aren't fun or simple, they are like the Facebook
+   6. They are bloated as hell
+   7. Then we can boast our features
+      1. Search across delivery services
+      2. Find locals favorites / really authentic cuisine
+   8. etc
+3. We buy 1-3 billboards in SF:
+   1. "#deleteyelp (deleteyelp.com)" (thats it!)
+   2. "Wish Yelp didn't suck at asian food?" or "Yelp, but it works for Asian Food"
+   3. Chefs and foodies find it on Dish
+   4. If you want to ratchet up the controversy - "Yelp, if it didn't only cater to white people" or something like that :P
+4. Ali Wong may actually help us out tbh - her rant on asian restaurants is so spot on and she even published an amazing spreadsheet of how to find them, we could prove we actually work for those and I bet we could get in touch somehow if we set it up right!
+
+The idea here is if we can get a little buzz going - and we really need to be careful that we don't hit the hornets nest too hard, for example if we go too negative the media could take the side against ours. But if we do it in a way that seems fun and playful, we could get ourselves a nice round of viral buzz.
+
+Now, the question is - how do we keep that buzz going?
+
+We can't afford to keep marketing like that, but perhaps we could figure out a number of small things we can do to keep ourselves in the news.
+
+Slightly cheaper advertising methods like sponsoring podcasts I think are a really good next step. I think people who are techies actually cross over with foodies a lot too so a few targeted blog ad sponsors, too.
+
+This isn't to say we are "set" on this strategy, and I'd love to find some good twists and angles here - stuff like Ali Wong is a good example where if we can get her on board then we may unlock many cascading sort of opportunities.
+
+I also have a few really key chef friends - one who has worked at a ton of top restaurants in SF and LA, another who owns Fang restaurant in SF and won Chopped twice, and a couple others, and there's perhaps a way we could get them on board too and have them connect us with people.
+
+Finally - Instagram. Instagram is a very obvious huge channel for us because it's where foodies originally went. Maybe they don't now (just post on stories), but I also have a good friend who is really well connected here too and he would do a big favor for us, so we can basically try and think of a way to get some virality here.
+
 
 
