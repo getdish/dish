@@ -5,7 +5,7 @@ import Combine
 // then on idle we can apply .spring()
 
 fileprivate let snapToBottomYMovePct: CGFloat = 0.23
-fileprivate let resistanceYBeforeSnap: CGFloat = 38
+fileprivate let resistanceYBeforeSnap: CGFloat = 35
 fileprivate let nearTopAtVal: CGFloat = 120 + Screen.statusBarHeight
 fileprivate let topNavHeight: CGFloat = 45
 
@@ -29,8 +29,9 @@ class HomeViewState: ObservableObject {
     // temp
     @Published var showFilters: Bool = false
     
+    private var scrollState = HomeMainScrollState()
+    
     @Published private(set) var appHeight: CGFloat = Screen.height
-    @Published private(set) var scrollY: CGFloat = 0
     // initialize it at where the snapToBottom will be about
     @Published private(set) var y: CGFloat = Screen.fullHeight * 0.3 * snapToBottomYMovePct - 1 {
         willSet(y) {
@@ -120,10 +121,10 @@ class HomeViewState: ObservableObject {
             .map { $0.height }
             .removeDuplicates()
             .sink { height in
-                let isOpen = height > 0
+//                let isOpen = height > 0
                 
                 // disable top nav when keyboard open
-                App.store.send(.setDisableTopNav(isOpen))
+//                App.store.send(.setDisableTopNav(isOpen))
                 
                 // map up/down on keyboard open/close
 //                if !self.isSnappedToBottom {
@@ -144,7 +145,7 @@ class HomeViewState: ObservableObject {
         .store(in: &cancels)
         
         let started = Date()
-        self.$scrollY
+        self.scrollState.$scrollY
             .throttle(for: 0.125, scheduler: App.queueMain, latest: true)
             .removeDuplicates()
             .sink { y in
@@ -345,7 +346,7 @@ class HomeViewState: ObservableObject {
         // prevent dragging after snap
         self.setDragState(.off)
         self.animate {
-            self.scrollY = 0
+            self.scrollState.setScrollY(0)
             self.searchBarYExtra = 0
             if toBottom {
                 self.y = self.snappedToBottomMapHeight - self.mapInitialHeight
@@ -388,12 +389,13 @@ class HomeViewState: ObservableObject {
         }
     }
     
-    func setScrollY(_ scrollY: CGFloat) {
+    func setScrollY(_ frame: CGRect) {
         if dragState != .idle { return }
         if animationState != .idle { return }
+        let scrollY = mapHeight - frame.minY - Screen.statusBarHeight - scrollRevealY
         let y = max(0, min(100, scrollY))
-        if y != self.scrollY {
-            self.scrollY = y
+        if y != scrollState.scrollY {
+            self.scrollState.setScrollY(y)
         }
     }
     
@@ -413,6 +415,16 @@ class HomeViewState: ObservableObject {
     func setShowCamera(_ val: Bool) {
         self.animate(state: .animate) {
             self.showCamera = val
+        }
+    }
+    
+    // this updates often and doesnt need to update parent views
+    // its essentially "private" impl detail
+    class HomeMainScrollState: ObservableObject {
+        @Published private(set) var scrollY: CGFloat = 0
+        
+        func setScrollY(_ next: CGFloat) {
+            self.scrollY = next
         }
     }
 }

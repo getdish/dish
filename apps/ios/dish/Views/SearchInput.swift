@@ -87,7 +87,7 @@ struct SearchInput: View {
     }
     
     var body: some View {
-        let pad = 8 * (scale + 0.5) * 0.5
+        let pad = 8 * (scale + 0.5) * 0.6
         let numTags = self.tags.count
         let hasTags = numTags > 0
         let fontSize = 14 * scale

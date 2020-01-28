@@ -132,8 +132,10 @@ struct HomeMainView: View {
                         Spacer()
                     }
                     .padding(.horizontal, 10)
-                    .disabled(!enableSearchBar)
-                    .allowsHitTesting(enableSearchBar)
+                    // this fixed a bug where it would focus search bar too easily
+                    // but created one where it de-focuses it instantly often
+//                    .disabled(!enableSearchBar)
+//                    .allowsHitTesting(enableSearchBar)
                     .animation(.spring(response: 1.25), value: state.animationState == .animate)
                     .offset(y:
                         state.showCamera ?
@@ -158,7 +160,7 @@ struct HomeMainView: View {
                                         y: state.showCamera ? Screen.fullHeight - App.cameraButtonHeight - 100
                                             : state.mapHeight - App.cameraButtonHeight / 2
                                 )
-                                    .animation(Animation.spring(response: 0.8).delay(0.05))
+                                    .animation(Animation.spring(response: 0.4).delay(0))
                             }
                             Spacer()
                         }

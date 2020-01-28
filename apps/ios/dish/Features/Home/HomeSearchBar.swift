@@ -42,7 +42,7 @@ struct HomeSearchBar: View {
             placeholder: "",
             inputBackgroundColor: Color.white,
             borderColor: Color.gray.opacity(0.14),
-            scale: self.scrollAtTop ? 1.25 : 1.0,
+            scale: self.scrollAtTop ? 1.25 : 1.05,
             sizeRadius: 2.0,
             icon: icon,
             showCancelInside: true,
@@ -104,9 +104,10 @@ struct HomeSearchBarAfterView: View {
                             .scaledToFit()
                     }
                     else {
-                        Image(systemName: "chevron.down")
-                            .resizable()
-                            .scaledToFit()
+                        EmptyView()
+//                        Image(systemName: "chevron.down")
+//                            .resizable()
+//                            .scaledToFit()
                     }
                 }
                 .frame(width: 16, height: 16)

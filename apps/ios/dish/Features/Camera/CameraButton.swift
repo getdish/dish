@@ -26,15 +26,15 @@ struct CameraButton: View {
                     //                        .scaledToFit()
                     //                        .frame(width: 17, height: 17)
                 }
-                .foregroundColor(foregroundColor)
+                .foregroundColor(.white)
             }
             .padding(.all, App.cameraButtonHeight * 0.33)
             .frame(width: App.cameraButtonHeight, height: App.cameraButtonHeight)
             .background(
                 LinearGradient(
                     gradient: Gradient(colors: [
-                        Color.white.opacity(0),
-                        Color.white.opacity(0.4)
+                        Color("color-brand").opacity(0.7),
+                        Color("color-brand").opacity(1)
                     ]),
                     startPoint: .top,
                     endPoint: .bottom

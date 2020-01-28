@@ -37,7 +37,7 @@ struct HomeMainContent: View {
             PrintGeometryView("HomeMainContent")
             
             MagicMove(self.animatePosition,
-                      duration: 500 * (1 / ANIMATION_SPEED),
+                      duration: 300 * (1 / ANIMATION_SPEED),
                       // TODO we need a separate "disableTracking" in homeStore that is manually set
                       // why? when hitting "map" toggle button when above snapToBottomAt this fails for now
                       disableTracking: self.homeState.y >= self.homeState.snapToBottomAt
@@ -73,6 +73,11 @@ struct HomeMainContent: View {
                         .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
                         .offset(y: self.homeState.snappedToBottomMapHeight - cardRowHeight - 20)
                 }
+                // note! be sure to put any animation on this *inside* magic move
+                // or else it messes up the magic move measurement - you can test
+                // by turning on MagicMove's fileprivate debug flag to see
+                // also: only making it bouncy during drag to avoid more problems
+                .animation(self.homeState.dragState != .idle ? .spring() : .none)
             }
             .frameFlex()
             .clipped()
@@ -144,14 +149,7 @@ struct HomeContentExplore: View {
         ZStack {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 0) {
-                    ScrollListener(throttle: 30.0) { frame in
-                        if self.homeState.dragState != .idle {
-                            return
-                        }
-                        let mapHeight = self.homeState.mapHeight
-                        let scrollY = mapHeight - frame.minY - Screen.statusBarHeight - self.homeState.scrollRevealY
-                        self.homeState.setScrollY(scrollY)
-                    }
+                    HomeMainDrawerScrollEffects()
                     Spacer().frame(height: filterBarHeight + 22 + self.homeState.scrollRevealY)
                     VStack(spacing: self.spacing) {
                         ForEach(0 ..< self.items.count) { index in
@@ -176,6 +174,16 @@ struct HomeContentExplore: View {
         }
         .edgesIgnoringSafeArea(.all)
         .clipped()
+    }
+}
+
+struct HomeMainDrawerScrollEffects: View {
+    @EnvironmentObject var homeState: HomeViewState
+
+    var body: some View {
+        ScrollListener(throttle: 16.0) { frame in
+            self.homeState.setScrollY(frame)
+        }
     }
 }
 
