@@ -156,6 +156,7 @@ struct HomeMainFilterFocused: View {
                                             homeViewState.showFilters = false
                                         }
                                     )
+//                                    .equatable()
                                     .animation(.none)
                                 }
                             }

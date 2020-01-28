@@ -1,11 +1,11 @@
 import SwiftUI
 import Combine
 
-// need enum animateStatus = { .will, .is, .idle }
-// then on idle we can apply .spring()
-
 fileprivate let snapToBottomYMovePct: CGFloat = 0.23
-fileprivate let resistanceYBeforeSnap: CGFloat = 35
+
+fileprivate let distanceUntilSnapDown: CGFloat = 30
+fileprivate let distanceUntilSnapUp: CGFloat = 35
+
 fileprivate let nearTopAtVal: CGFloat = 120 + Screen.statusBarHeight
 fileprivate let topNavHeight: CGFloat = 45
 
@@ -33,17 +33,19 @@ class HomeViewState: ObservableObject {
     
     @Published private(set) var appHeight: CGFloat = Screen.height
     // initialize it at where the snapToBottom will be about
-    @Published private(set) var y: CGFloat = Screen.fullHeight * 0.3 * snapToBottomYMovePct - 1 {
-        willSet(y) {
-//            // util - break when the searchbar is at y
-//            #if DEBUG
-//            print("y \(y)")
-//            if false, y > snapToBottomAt { // <- example
-//                raise(SIGINT)
-//            }
-//            #endif
-        }
-    }
+    @Published private(set) var y: CGFloat = Screen.fullHeight * 0.3 * snapToBottomYMovePct - 1
+//    {
+//        willSet(y) {
+////            // util - break when the searchbar is at y
+////            #if DEBUG
+////            print("y \(y)")
+////            if false, y > snapToBottomAt { // <- example
+////                raise(SIGINT)
+////            }
+////            #endif
+//        }
+//    }
+
     @Published private(set) var searchBarYExtra: CGFloat = 0
     @Published private(set) var hasScrolled: HomeScrollState = .none
     @Published private(set) var hasMovedBar = false
@@ -181,11 +183,15 @@ class HomeViewState: ObservableObject {
     var mapMaxHeight: CGFloat { appHeight - keyboardHeight - searchBarHeight }
     
     var mapHeight: CGFloat {
-        return min(
-            mapMaxHeight, max(
-                mapInitialHeight + y - scrollRevealY, mapMinHeight
-            )
-        )
+        min(mapMaxHeight, max(yToMapHeight(self.y), mapMinHeight))
+    }
+    
+    func yToMapHeight(_ y: CGFloat) -> CGFloat {
+        mapInitialHeight + y - scrollRevealY
+    }
+    
+    func mapHeightToY(_ mapHeight: CGFloat) -> CGFloat {
+        mapHeight - mapInitialHeight
     }
     
     var scrollRevealY: CGFloat {
@@ -201,7 +207,7 @@ class HomeViewState: ObservableObject {
     }
     
     var startSnapToBottomAt: CGFloat {
-        snapToBottomAt - resistanceYBeforeSnap
+        snapToBottomAt - distanceUntilSnapDown
     }
     
     var snappedToBottomMapHeight: CGFloat { appHeight - 120 }
@@ -309,35 +315,41 @@ class HomeViewState: ObservableObject {
         }
         
         // snap to bottom/back logic
-        let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
-        if willSnapDown {
-            self.snapToBottom(true)
-        } else if wasSnappedToBottom {
-            let distanceUntilSnapUp = appHeight * 0.2
-            let willSnapUp = -dragY > distanceUntilSnapUp
-            if willSnapUp {
-                self.snapToBottom(false)
-            }
-        }
+//        let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
+//        if willSnapDown {
+//            self.snapToBottom(true)
+//        } else if wasSnappedToBottom {
+//            let willSnapUp = -dragY > distanceUntilSnapUp
+//            if willSnapUp {
+//                self.snapToBottom(false)
+//            }
+//        }
     }
     
     func finishDrag(_ value: DragGesture.Value) {
         if dragState == .pager { return }
         log.info()
         
-        self.animate {
-            if self.isSnappedToBottom {
-                self.snapToBottom()
-            } else if self.y > self.startSnapToBottomAt {
-                self.y = self.startSnapToBottomAt
+        // use velocity to determine snap
+        let predictedY = mapHeightToY(value.predictedEndLocation.y)
+        let shouldSnapDown = predictedY > snapToBottomAt
+        
+        let animation: Animation = shouldSnapDown
+            ? Animation.spring().speed(ANIMATION_SPEED)
+            : Animation.easeOut.speed(ANIMATION_SPEED)
+        
+        self.animate(animation) {
+            if shouldSnapDown || self.isSnappedToBottom {
+//                self.snapToBottom()
+//                self.y = self.startSnapToBottomAt
+            } else {
+                print("🍩 predictedY \(predictedY)")
+                self.y = predictedY
             }
+            
             if self.searchBarYExtra != 0 {
                 self.searchBarYExtra = 0
             }
-            // attempt to have it "continue" from your drag a bit, feels slow
-            //        withAnimation(.spring(response: 0.2222)) {
-            //            self.y = self.y + value.predictedEndTranslation.height / 2
-            //        }
         }
     }
     
@@ -345,7 +357,7 @@ class HomeViewState: ObservableObject {
         log.info()
         // prevent dragging after snap
         self.setDragState(.off)
-        self.animate {
+        self.animate(Animation.spring().speed(ANIMATION_SPEED)) {
             self.scrollState.setScrollY(0)
             self.searchBarYExtra = 0
             if toBottom {
@@ -393,7 +405,7 @@ class HomeViewState: ObservableObject {
         if dragState != .idle { return }
         if animationState != .idle { return }
         let scrollY = mapHeight - frame.minY - Screen.statusBarHeight - scrollRevealY
-        let y = max(0, min(100, scrollY))
+        let y = max(-50, min(100, scrollY))
         if y != scrollState.scrollY {
             self.scrollState.setScrollY(y)
         }

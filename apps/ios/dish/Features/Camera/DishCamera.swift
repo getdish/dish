@@ -126,9 +126,7 @@ struct DishCameraPictureOverlay: View {
                 .offset(y: false ? 0 : 200)
                 .animation(.spring())
             }
-            .frameFlex()
         }
-        .frameFlex()
     }
 }
 

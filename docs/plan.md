@@ -18,31 +18,120 @@ Everything else here is mostly mapping out the above two things.
 
 ---
 
-A note on our business.
+A note on business:
 
-We need to build a tiny rocket and launch it and have it look really good at that launch. The unmentioned goal in the above section is actually:
+We need to raise money.
 
-1. We need to raise money
+To do that, we need to build a tiny but sexy rocket, then launch it successfully and show we are competent tiny-sexy-rocket-builders-and-launchers.
+
+We *don't* need to:
+
+1. Launch across many platforms
+2. Launch in many cities or places
+3. Have the best technology (but we do need to leverage new tech to make our lives much easier)
+4. Have clean code
+5. Solve hard technical problems first
 
 It's a position I haven't been in in a while, but it's a whole lot different than the typical strategy (post raise or bootstrapped) of making money directly.
 
-Why do we need to raise? Because we're aiming at Yelp, and there's simply no way we get close on $200k.
+Why do we need to raise? Because we're aiming at Yelp and really at a lot of companies (Eater, Michelin, Google/AppleMaps), and there's simply no way we get anwhere close to that on our current $200k.
 
-My goal is always to preserve as much equity as possible for the internal company employees, and I love the idea of doing things lean, so we'll do that, but we definitely won't be making any ad money for years, so a few million dollars will be necessary.
+So, we gotta raise. My goal is always to preserve as much equity as possible for the team, and I will always advocate for doing things more lean/bootstrapped than I think many in the valley would, so we'll do that, but we definitely won't be making any significant ad money for years, so a few million dollars will be necessary to get there.
 
 ---
 
-Ok, so how do you raise?
+Zooming out to our life goals and mission
+
+Since I'm writing a big old document, I'm going to add a section here to keep perspective.
+
+I don't want much. Don't want to run a company, work incredibly hard, achieve fame, etc. All I want is to be able to tackle things at the intersection of interesting work and real world problems. It's banal, sure, but important.
+
+So let's leave this section short. Lets aim to enjoy this venture. We can still be ruthless, frugal, passionate, efficient, etc. But lets make sure the day to day is always focused on:
+
+- Keeping our team small, focused, distraction-free
+- Surprising each other by just getting things done well
+- Finding great collaborators and bringing in fresh ideas
+- Balancing work and life
+
+---
+
+One note on how we can position ourselves in the market that is fun
+
+Ok so, first, understanding some of my influences are good. I'd say you can get a good model of my business sense through a few sources:
+
+1. Thiel's "Zero to One" is a nice, short, great guide
+2. Stratechery's writings are super valuable, especially "Aggregation Theory" [0]
+3. I don't agree with all of it, but the rest of the good advice would be based on pg's writings and YC's startup school. The choice ones would be "How to raise money" [1], "do things that don't scale" [2], "ramen profitable" [3], "fashionable problems" [4]
+
+### Aggregation Theory
+
+Aggregation theory especially is important for Dish. You can probably get most of it just from this article[5].
+
+We can become the Netflix/Zillow of food, rather than Yelp which is trying to be the first-party source of content. Same goes for food delivery, Yelp owns their own (Eat24/GrubHub) which means they wont ever show their competitors.
+
+This opens up a big opportunity because it means we can aggregate the delivery services *and* we can aggregate the food ratings, and doing so I think is sort of nicely additive: I want rating aggregation, I want delivery aggregation, I also really want great ratings while ordering delivery!
+
+Aggregation also works really well in context of the next section, which I will just start new from here.
+
+[0] https://stratechery.com/concept/aggregation-theory/
+[1] http://www.paulgraham.com/fr.html
+[2] http://www.paulgraham.com/ds.html
+[3] http://www.paulgraham.com/ramenprofitable.html
+[4] http://www.paulgraham.com/fp.html
+[5] https://stratechery.com/2018/zillow-aggregation-and-integration/
+
+---
+
+Aggregation & The Map
+
+I don't want to get too deep in this document, but this part is interesting.
+
+In the past months here's how my thinking about Dish has evolved:
+
+1. It's simple a way to fix Yelps poor ratings
+2. It's a aggregator of delivery/reviews that makes common flows (finding a non-date-spot restaurant, finding good delivery food) 10x easier
+3. It's an aggregator like above, but the Map is the most important part
+
+I've realized that todays map applications just aren't specialized at all, and the map experience is the big design problem that if we solve makes a big difference.
+
+Technically, it's not just a "map" but rather a light UI that works together with the map.
+
+There are two things that have never been done really well with maps on our computers:
+
+1. They don't feel very interactively usable
+2. They don't let you move, filter, and explore without a lot of typing and shifting between screens
+
+The result is that your research process when using these apps just feels absolutely cumbersome compared to what it could be.
+
+I think this is a results of a few things. First, the Big Guys (Apple, Google) are building very general purpose maps. They do a ton of things. So they basically have a lowest-common-denominator setup.
+
+Second, the specialized guys like Yelp seem to focus on features and sales over experience (that, or they aren't software guys like Michelin, Eater, etc). Plus, Yelp is going broader and broader.
+
+It's *fine* probably to go broader, but that doesn't mean your UX has to falter. For example, imagine Dish expands to do Plumbing reviews as well. I wouldn't say "throw it in the bag" and just start showing 🔧 icons all over the map and adding in all sorts of new filters right into our various filter locations. That would be a huge problem!
+
+Instead, you'd have a button at the very "top" (top of the tree-heirarchy of the apps states, "above" even the searchbar, which could be represented in any number of ways visually), and that button would let you switch between your "mode" of the Map. So you'd have Food mode, and then Plumbing mode.
+
+It may seem like Yelp does this in a sense, but they really don't. Their filters don't really change much at all. The map looks identical no matter the way. The ratings are calculated basically the same. They basically do a bare minimum of specialization.
+
+But being an aggregator means you *should* feel perfectly suited for what you're aggregating. We are aggregating food. We should go very deep there! Ratings, tag breakdowns, the way we pick images, etc etc. Let is all be suited for the purpose.
+
+Later on, when/if we added plumbing, we'd go in and say "whats the relevant attributes for rating/filtering/searching/exploring" and add that top level toggle and switch modes to be around it.
+
+In a sense we are thinking like a search engine rather than a first-party-platform. Aggregation is hugely powerful, not just in UX but in business leverage.
+
+---
+
+Ok, so back to the concrete game plan. We need to Raise
 
 Raising requires a variety of things. We already have a few good ones (a nice looking initial team, really). Here's the other factors we need:
 
 1. Growth
 2. A refined pitch thats been battle tested with good VCs
-3. Branding
+3. Some combination of nicely done brand/product/marketing
 
-One way to think of it is: if we are just developing for most of the month, we are failing. We need to be coordinating and creating content for half the time we work, because growth is so important.
+One way to think of it is: if we are just developing for most of the month, we are failing. We need to be focuse on growth at every step.
 
-As for Branding - we need to be somewhat sexy. Honestly, sex appeal is just under-valued.
+And for VC's - we need to be somewhat sexy. Honestly, sex appeal is just under-valued because it really multiplies with your growth numbers.
 
 I like to think of it in analogy to Tesla:
 

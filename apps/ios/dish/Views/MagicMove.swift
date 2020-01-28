@@ -283,7 +283,9 @@ struct MagicItem<Content>: View where Content: View {
                         
                         let enabled = !self.isDisabled && !isOffScreen && !isMagicStoreAnimating && hasChanged
                         
-                        return SideEffect(name, condition: { enabled }) { self.updateItem(item) }
+                        return SideEffect(name, level: .debug, condition: { enabled }) {
+                            self.updateItem(item)
+                        }
                     }
             )
         }

@@ -97,6 +97,7 @@ struct HomeMapExplore: View {
                         at: .end,
                         display: .card
                     )
+//                        .equatable()
                         .frame(width: 150, height: cardRowHeight - 40)
                 }
             }
@@ -138,15 +139,32 @@ struct HomeMapSearchResults: View {
 }
 
 struct HomeContentExplore: View {
+    class HomeScrollDelegate: NSObject, UIScrollViewDelegate, ObservableObject {
+        @Published var reverseBounceOffset: CGFloat = 0
+        
+        func scrollViewDidScroll(_ scrollView: UIScrollView) {
+            let offset = scrollView.contentOffset
+            
+            if offset.y < 0 {
+                scrollView.isScrollEnabled = false
+            }
+            
+            print("SCRRRRRRRL \(offset.y)")
+        }
+    }
+    
     @Environment(\.geometry) var appGeometry
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
-    let items = features.chunked(into: 2)
+    let items = features.chunked(into: 3)
     
     let spacing: CGFloat = 14
     
+    @ObservedObject var scrollDelegate = HomeScrollDelegate()
+    
     var body: some View {
-        ZStack {
+        print("reverseBounceOffset \(scrollDelegate.reverseBounceOffset)")
+        return ZStack {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 0) {
                     HomeMainDrawerScrollEffects()
@@ -159,8 +177,9 @@ struct HomeContentExplore: View {
                                         dish: item,
                                         at: .start,
                                         display: .full,
-                                        height: 120
+                                        height: 100
                                     )
+//                                    .equatable()
                                 }
                             }
                             .padding(.horizontal)
@@ -169,9 +188,14 @@ struct HomeContentExplore: View {
                     Spacer().frame(height: bottomNavHeight)
                     Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)
                 }
+                .introspectScrollView { scrollView in
+                    print("scrollView \(scrollView)")
+                    scrollView.delegate = self.scrollDelegate
+                }
             }
             .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
         }
+        .offset(y: scrollDelegate.reverseBounceOffset)
         .edgesIgnoringSafeArea(.all)
         .clipped()
     }

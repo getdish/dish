@@ -48,7 +48,7 @@ struct HomeMainView: View {
         let mapHeight = state.mapHeight
         let enableSearchBar = [.idle, .off].contains(state.dragState) && state.animationState == .idle
 
-        print(" 👀 HomeMainView mapHeight \(mapHeight) animationState \(state.animationState) enableSearchBar \(enableSearchBar)")
+//        print(" 👀 HomeMainView mapHeight \(mapHeight) animationState \(state.animationState) enableSearchBar \(enableSearchBar)")
 
         return GeometryReader { geometry in
             ZStack(alignment: .topLeading) {
@@ -79,13 +79,12 @@ struct HomeMainView: View {
                     
                     Group {
                         // map
-                        DishMapView()
-                            .frame(height: self.appGeometry?.size.height)
-                            .offset(y: state.showCamera ? -Screen.height * 1.2 : 0)
-                            .opacity(state.showCamera ? 0 : 1)
-                            .animation(.spring(response: 0.8))
-                            .rotationEffect(state.showCamera ? .degrees(-10) : .degrees(0))
-                        
+//                        DishMapView()
+//                            .frame(height: self.appGeometry?.size.height)
+//                            .offset(y: state.showCamera ? -Screen.height * 1.2 : 0)
+//                            .opacity(state.showCamera ? 0 : 1)
+//                            .animation(.spring(response: 0.8))
+//                            .rotationEffect(state.showCamera ? .degrees(-10) : .degrees(0))
                         
                         VStack {
                             Spacer()
@@ -114,7 +113,7 @@ struct HomeMainView: View {
                         Spacer()
                     }
                     .zIndex(state.showFilters ? 100 : 0)
-                    .animation(.spring(response: 0.25))
+                    .animation(.spring(response: 0.35))
                     .offset(
                         y: state.showFilters ? 0 : mapHeight + searchBarHeight / 2 + (
                             state.showFiltersAbove ? -100 : 0
@@ -156,7 +155,7 @@ struct HomeMainView: View {
                                     .scaleEffect(state.showCamera ? 1 : 0.8)
                                     .offset(
                                         x: state.showCamera ? -Screen.width / 2 + App.cameraButtonHeight / 2
-                                            : 0,
+                                            : -8,
                                         y: state.showCamera ? Screen.fullHeight - App.cameraButtonHeight - 100
                                             : state.mapHeight - App.cameraButtonHeight / 2
                                 )

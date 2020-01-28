@@ -286,7 +286,6 @@
 				AEA331ED23A3370200B36A23 /* Account */,
 				AEED844623B6733600407266 /* Camera */,
 				1CE3548423986DDD004B3A84 /* Home */,
-				AE2B6BA023AAD67E007BCD25 /* TopNav */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -366,6 +365,9 @@
 				AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */,
 				AE56C86323ADB78C006A156A /* HomeSearchResultsView.swift */,
 				1CE354872398714D004B3A84 /* HomeView.swift */,
+				AE861A8023A16DA6004096BF /* TopNavView.swift */,
+				AE861A8623A1727B004096BF /* TopNavMenuButton.swift */,
+				AE861A8423A17209004096BF /* TopNavSearchResults.swift */,
 				AE1BBDB923C83E9E00C58A87 /* QuickFilters.swift */,
 			);
 			path = Home;
@@ -377,16 +379,6 @@
 				8E7AE2D73D85586C4E843F83 /* Pods_dish.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		AE2B6BA023AAD67E007BCD25 /* TopNav */ = {
-			isa = PBXGroup;
-			children = (
-				AE861A8023A16DA6004096BF /* TopNavView.swift */,
-				AE861A8623A1727B004096BF /* TopNavMenuButton.swift */,
-				AE861A8423A17209004096BF /* TopNavSearchResults.swift */,
-			);
-			path = TopNav;
 			sourceTree = "<group>";
 		};
 		AE6B102923CFF1FC00C33968 /* Resources */ = {

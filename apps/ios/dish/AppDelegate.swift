@@ -19,7 +19,7 @@ func async(_ ms: Double = 0, execute: @escaping () -> Void) {
 
 fileprivate func startDebugLoop() {
     #if DEBUG
-    Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
+    Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
         App
         homeViewState
         // set breakpoint here or we can have a shortcut in app to trigger debugger
