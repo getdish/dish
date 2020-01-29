@@ -70,16 +70,16 @@ const Map = () => {
       >
         {Object.keys(state.restaurants).map(key => (
           <Feature
-            key={state.restaurants[key].data.id}
+            key={state.restaurants[key].id}
             properties={{
-              uuid: state.restaurants[key].data.id,
-              name: state.restaurants[key].data.name,
-              image: state.restaurants[key].data.image,
+              uuid: state.restaurants[key].id,
+              name: state.restaurants[key].name,
+              image: state.restaurants[key].image,
               dishes_count: Object.keys(state.dishes[key]).length,
             }}
             coordinates={[
-              state.restaurants[key].data.location.coordinates[0],
-              state.restaurants[key].data.location.coordinates[1],
+              state.restaurants[key].location.coordinates[0],
+              state.restaurants[key].location.coordinates[1],
             ]}
             onMouseEnter={(mapWithEvt: any) => {
               popup

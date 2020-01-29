@@ -131,14 +131,7 @@ export class UberEats extends WorkerJob {
 
   private async saveRestaurant(data: any) {
     console.log('Saving restaurant: ' + data.title)
-    const restaurant = new Restaurant()
-    const response = await restaurant.upsert({
-      // TODO: Cos of this weird emtpy id field I think the whole dynamic type
-      // generation approach should be avoided. Just use normal types and an
-      // extra class property that repeats the fields that should be bundled
-      // in queries.
-      // Our dynamic type generation method doesn't support optional fields.
-      id: '',
+    const restaurant = new Restaurant({
       name: data.title,
       description: data.categories && data.categories.join(', '),
       location: {
@@ -151,21 +144,22 @@ export class UberEats extends WorkerJob {
       zip: 0,
       image: data.heroImageUrls.length > 0 ? data.heroImageUrls[0].url : '',
     })
-    return response.data.data.insert_restaurant.returning[0].id
+    await restaurant.upsert()
+    return restaurant.id
   }
 
   private async getDishes(data: any, restaurant_id: string) {
     for (const sid in data.sectionEntitiesMap) {
       for (const did in data.sectionEntitiesMap[sid]) {
         const item = data.sectionEntitiesMap[sid][did]
-        const dish = new Dish()
-        await dish.upsert({
+        const dish = new Dish({
           restaurant_id: restaurant_id,
           name: item.title,
           description: item.description,
           price: item.price,
           image: item.imageUrl,
         })
+        await dish.upsert()
       }
     }
   }

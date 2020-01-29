@@ -27,16 +27,10 @@ const updateRestaurants: AsyncAction<LngLat> = async (
   { state }: { state: LabState },
   centre: LngLat
 ) => {
-  const response = await Restaurant.findNear(centre.lat, centre.lng, 1000)
-  for (const data of response.data.data.restaurant) {
-    const restaurant = new Restaurant()
-    restaurant.data = data
-    state.restaurants[data.id] = restaurant
-    state.dishes[data.id] = data.dishes.map((item: any) => {
-      const dish = new Dish()
-      dish.data = item
-      return dish
-    })
+  const restaurants = await Restaurant.findNear(centre.lat, centre.lng, 1000)
+  for (const restaurant of restaurants) {
+    state.restaurants[restaurant.id] = restaurant
+    state.dishes[restaurant.id] = restaurant.dishes
   }
 }
 
@@ -48,11 +42,8 @@ const setSelected: Action<string> = (
 }
 
 const getStats: AsyncAction = async ({ state }: { state: LabState }) => {
-  const r1 = await Restaurant.allRestaurantsCount()
-  state.stats.restaurant_count =
-    r1.data.data.restaurant_aggregate.aggregate.count
-  const r2 = await Dish.allDishesCount()
-  state.stats.dish_count = r2.data.data.dish_aggregate.aggregate.count
+  state.stats.restaurant_count = await Restaurant.allRestaurantsCount()
+  state.stats.dish_count = await Dish.allDishesCount()
 }
 
 export const config = {

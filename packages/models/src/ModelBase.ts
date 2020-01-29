@@ -1,32 +1,18 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
-type Point = {
+export type Point = {
   type: string
   coordinates: [number, number]
-}
-
-// For dynamically creating types so we can introspect keys.
-// Essentially allows us to only define our model keys once.
-type MapSchemaTypes = {
-  string: string
-  integer: number
-  boolean: boolean
-  float: number
-  number: number
-  point: Point
-  regexp: RegExp
-  // TODO: Add more as you need
-}
-export type MapSchema<T extends Record<string, keyof MapSchemaTypes>> = {
-  // TODO: Add optional types
-  [K in keyof T]: MapSchemaTypes[T[K]]
 }
 
 const LOCAL_HASURA = 'http://localhost:8080'
 let DOMAIN: string
 
 if (typeof window == 'undefined') {
-  DOMAIN = process.env.HASURA_ENDPOINT || LOCAL_HASURA
+  DOMAIN =
+    process.env.HASURA_ENDPOINT ||
+    process.env.REACT_APP_HASURA_ENDPOINT ||
+    LOCAL_HASURA
 } else {
   if (window.location.hostname.includes('dish')) {
     DOMAIN = 'https://hasura.rio.dishapp.com'
@@ -43,14 +29,32 @@ const AXIOS_CONF = {
   },
 } as AxiosRequestConfig
 
-export class ModelBase {
-  schema: {}
+export class ModelBase<T> {
+  id!: string
+  created_at!: Date
+  updated_at!: Date
 
-  constructor(fields_schema: {}) {
-    this.schema = fields_schema
+  static fields() {
+    console.error('fields() not implemented')
+    return ['']
   }
 
-  async hasura(gql: string) {
+  constructor(init?: Partial<T>) {
+    Object.assign(this, init)
+  }
+
+  asObject() {
+    let object = {}
+    // TODO: TS complains with:
+    //   `error TS2339: Property 'fields' does not exist on type 'Function'.`
+    // @ts-ignore
+    for (const field of this.constructor.fields()) {
+      object[field] = this[field]
+    }
+    return ModelBase.stringify(object)
+  }
+
+  static async hasura(gql: string) {
     let conf = AXIOS_CONF
     conf.data.query = gql
     const response = await axios(conf)
@@ -61,23 +65,19 @@ export class ModelBase {
     return response
   }
 
-  static asSchema<T extends Record<string, keyof MapSchemaTypes>>(t: T): T {
-    return t
+  static fieldsSerialized() {
+    return ModelBase.stringify(this.fields())
   }
 
-  fields() {
-    return this.stringify(Object.keys(this.schema))
-  }
-
-  fields_bare() {
-    return this.fields()
+  static fieldsBare() {
+    return this.fieldsSerialized()
       .replace('[', '')
       .replace(']', '')
   }
 
   // Implements recursive object serialization according to JSON spec
   // but without quotes around the keys.
-  stringify(object: any) {
+  static stringify(object: any) {
     if (Array.isArray(object)) {
       return JSON.stringify(object).replace(/"/g, '')
     }

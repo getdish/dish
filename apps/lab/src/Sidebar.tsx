@@ -14,7 +14,7 @@ const Sidebar = () => {
   }, 5000)
 
   const renderRestaurant = () => {
-    const restaurant = state.restaurants[state.selected].data
+    const restaurant = state.restaurants[state.selected]
     const dishes = state.dishes[state.selected]
     return (
       <>
@@ -22,8 +22,7 @@ const Sidebar = () => {
         <img width="100%" src={restaurant.image} />
         <h3>Dishes ({dishes.length})</h3>
         <ul>
-          {dishes.map(item => {
-            const dish = item.data
+          {dishes.map(dish => {
             return (
               <li>
                 {dish.image ? <img width="30px" src={dish.image} alt="" /> : ''}

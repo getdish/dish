@@ -1,41 +1,42 @@
-import { ModelBase, MapSchema } from './ModelBase'
+import { ModelBase } from './ModelBase'
 
-export const FIELDS_SCHEMA = ModelBase.asSchema({
-  restaurant_id: 'string',
-  price: 'number',
-  name: 'string',
-  description: 'string',
-  image: 'string',
-})
-type DishFields = MapSchema<typeof FIELDS_SCHEMA>
+export class Dish extends ModelBase<Dish> {
+  restaurant_id!: string
+  name!: string
+  price!: number
+  description!: string
+  image!: string
 
-export class Dish extends ModelBase {
-  data!: DishFields
-
-  constructor() {
-    super(FIELDS_SCHEMA)
+  constructor(init?: Partial<Dish>) {
+    super()
+    Object.assign(this, init)
   }
 
-  async upsert(data: DishFields) {
-    this.data = data
+  static fields() {
+    return ['restaurant_id', 'name', 'price', 'description', 'image']
+  }
+
+  async upsert() {
     const query = `mutation {
       insert_dish(
-        objects: ${this.stringify(this.data)},
+        objects: ${this.asObject()},
         on_conflict: {
           constraint: dish_restaurant_id_name_key,
-          update_columns: ${this.fields()}
+          update_columns: ${Dish.fieldsSerialized()}
         }
       ) {
         returning {
-          restaurant_id, name
+          id, created_at, updated_at, ${Dish.fieldsBare()}
         }
       }
     }`
-    return await this.hasura(query)
+    const response = await ModelBase.hasura(query)
+    // TODO: Why is this path different to the upsert for restaurants?
+    Object.assign(this, response.data.data.insert_dish.returning[0])
+    return this.id
   }
 
   static async allDishesCount() {
-    const self = new Dish()
     const query = `{
       dish_aggregate {
         aggregate {
@@ -43,15 +44,16 @@ export class Dish extends ModelBase {
         }
       }
     }`
-    return await self.hasura(query)
+    const response = await ModelBase.hasura(query)
+    return response.data.data.dish_aggregate.aggregate.count
   }
 
-  async delete_all() {
+  static async deleteOne(name: string) {
     const query = `mutation {
-      delete_dish(where: {id: {_neq: ""}}) {
+      delete_dish(where: {name: {_eq: "${name}"}}) {
         returning { id }
       }
     }`
-    return await this.hasura(query)
+    return await ModelBase.hasura(query)
   }
 }

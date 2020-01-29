@@ -1,70 +1,84 @@
-import { ModelBase, MapSchema } from './ModelBase'
-import { FIELDS_SCHEMA as DISH_SCHEMA } from './Dish'
+import { ModelBase, Point } from './ModelBase'
+import { Dish } from './Dish'
 
-export const FIELDS_SCHEMA = ModelBase.asSchema({
-  id: 'string',
-  name: 'string',
-  description: 'string',
-  location: 'point',
-  address: 'string',
-  city: 'string',
-  state: 'string',
-  zip: 'integer',
-  image: 'string',
-})
-type RestaurantFields = MapSchema<typeof FIELDS_SCHEMA>
+export class Restaurant extends ModelBase<Restaurant> {
+  name!: string
+  address!: string
+  location!: Point
+  description!: string
+  city!: string
+  state!: string
+  zip!: number
+  image!: string
+  dishes!: Dish[]
 
-export class Restaurant extends ModelBase {
-  data!: RestaurantFields
-
-  constructor() {
-    super(FIELDS_SCHEMA)
+  static fields() {
+    return [
+      'name',
+      'address',
+      'location',
+      'description',
+      'city',
+      'state',
+      'zip',
+      'image',
+    ]
   }
 
-  async upsert(data: RestaurantFields) {
-    this.data = data
-    delete this.data['id']
+  async upsert() {
     const query = `mutation {
       insert_restaurant(
-        objects: ${this.stringify(this.data)},
+        objects: ${this.asObject()},
         on_conflict: {
           constraint: restaurant_name_address_key,
-          update_columns: ${this.fields()}
+          update_columns: ${Restaurant.fieldsSerialized()}
         }
       ) {
         returning {
-          name, id
+          id, created_at, updated_at, ${Restaurant.fieldsBare()}
         }
       }
     }`
-    return await this.hasura(query)
+
+    const response = await ModelBase.hasura(query)
+    let data: Restaurant
+    if (typeof response.data.data.insert_restaurant != 'undefined') {
+      data = response.data.data.insert_restaurant.returning[0]
+    } else {
+      data = response.data.data.restaurant[0]
+    }
+
+    Object.assign(this, data)
+    return this.id
   }
 
-  async find(key: string, value: string) {
-    const response_fields = this.fields_bare()
-    const dishes = Object.keys(DISH_SCHEMA)
+  static async findOne(key: string, value: string) {
     const query = `query {
       restaurant(where: {${key}: {_eq: "${value}"}}) {
-        ${response_fields}
-        dishes {${dishes}}
+        id ${Restaurant.fieldsBare()}
+        dishes {${Dish.fieldsBare()}}
       }
     }`
-    return await this.hasura(query)
+    const response = await ModelBase.hasura(query)
+    const restaurants = response.data.data.restaurant
+    if (restaurants.length == 1) {
+      const restaurant = new Restaurant(restaurants[0])
+      return restaurant
+    } else {
+      throw new Error(restaurants.length + ' restaurants found by findOne()')
+    }
   }
 
-  async delete_all() {
+  static async deleteOne(name: string) {
     const query = `mutation {
-      delete_restaurant(where: {id: {_neq: ""}}) {
+      delete_restaurant(where: {name: {_eq: "${name}"}}) {
         returning { id }
       }
     }`
-    return await this.hasura(query)
+    return await ModelBase.hasura(query)
   }
 
   static async findNear(lat: number, lng: number, distance: number) {
-    const self = new Restaurant()
-    const response_fields = self.fields_bare()
-    const dishes = Object.keys(DISH_SCHEMA)
     const query = `query {
       restaurant ( where: { location: { _st_d_within: {
         distance: ${distance},
@@ -73,15 +87,17 @@ export class Restaurant extends ModelBase {
         }
       }}})
         {
-          id ${response_fields}
-          dishes {${dishes}}
+          id ${Restaurant.fieldsBare()}
+          dishes {${Dish.fieldsBare()}}
         }
     }`
-    return await self.hasura(query)
+    const response = await ModelBase.hasura(query)
+    return response.data.data.restaurant.map(
+      (data: Partial<Restaurant>) => new Restaurant(data)
+    )
   }
 
   static async allRestaurantsCount() {
-    const self = new Restaurant()
     const query = `{
       restaurant_aggregate {
         aggregate {
@@ -89,6 +105,7 @@ export class Restaurant extends ModelBase {
         }
       }
     }`
-    return await self.hasura(query)
+    const response = await ModelBase.hasura(query)
+    return response.data.data.restaurant_aggregate.aggregate.count
   }
 }
