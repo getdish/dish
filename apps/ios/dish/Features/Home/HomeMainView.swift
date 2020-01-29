@@ -113,7 +113,7 @@ struct HomeMainView: View {
                         Spacer()
                     }
                     .zIndex(state.showFilters ? 100 : 0)
-                    .animation(.spring(response: 0.35))
+                    .animation(.spring(response: 0.45))
                     .offset(
                         y: state.showFilters ? 0 : mapHeight + searchBarHeight / 2 + (
                             state.showFiltersAbove ? -100 : 0

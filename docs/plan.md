@@ -44,14 +44,16 @@ Zooming out to our life goals and mission
 
 Since I'm writing a big old document, I'm going to add a section here to keep perspective.
 
-I don't want much. Don't want to run a company, work incredibly hard, achieve fame, etc. All I want is to be able to tackle things at the intersection of interesting work and real world problems. It's banal, sure, but important.
+I don't want much. Don't want to run a company, work myself to the bone, achieve fame, etc. All I want is to be able to tackle things at the intersection of interesting work and real world problems and do it with some level of freedom and creativity in a nice environment. Call me cliche.
 
-So let's leave this section short. Lets aim to enjoy this venture. We can still be ruthless, frugal, passionate, efficient, etc. But lets make sure the day to day is always focused on:
+So let's leave this section short. Lets aim to enjoy this venture. We can still be about as ruthless, frugal, passionate, efficient, etc as many, but happiness and enjoyment are key parts of ensuring your machine is efficient.
+
+Some goals of mine here are:
 
 - Keeping our team small, focused, distraction-free
-- Surprising each other by just getting things done well
+- A culture of surprising each other by quietly getting things done well
 - Finding great collaborators and bringing in fresh ideas
-- Balancing work and life
+- Allowing people to work in whatever way makes them comfortable so long as we can be effective together
 
 ---
 
@@ -59,17 +61,17 @@ One note on how we can position ourselves in the market that is fun
 
 Ok so, first, understanding some of my influences are good. I'd say you can get a good model of my business sense through a few sources:
 
-1. Thiel's "Zero to One" is a nice, short, great guide
+1. Thiel's "Zero to One" is probably the best high level book.
 2. Stratechery's writings are super valuable, especially "Aggregation Theory" [0]
-3. I don't agree with all of it, but the rest of the good advice would be based on pg's writings and YC's startup school. The choice ones would be "How to raise money" [1], "do things that don't scale" [2], "ramen profitable" [3], "fashionable problems" [4]
+3. I don't agree with all of it, but the rest of the good advice would be based on a lot of pg's writings and YC's startup school. Some choice ones would be "How to raise money" [1], "Do things that don't scale" [2], "Ramen profitable" [3], "Fashionable problems" (especially relevant to us) [4]
 
 ### Aggregation Theory
 
-Aggregation theory especially is important for Dish. You can probably get most of it just from this article[5].
+Aggregation theory especially is important for Dish. You can probably get most of it just from this article [5].
 
-We can become the Netflix/Zillow of food, rather than Yelp which is trying to be the first-party source of content. Same goes for food delivery, Yelp owns their own (Eat24/GrubHub) which means they wont ever show their competitors.
+We can become the Netflix/Zillow of food, rather than Yelp which is trying to be the first-party source of content. Same goes for food delivery in a sense, Yelp owns their own delivery service (Eat24/GrubHub) which means they wont ever show their competitors.
 
-This opens up a big opportunity because it means we can aggregate the delivery services *and* we can aggregate the food ratings, and doing so I think is sort of nicely additive: I want rating aggregation, I want delivery aggregation, I also really want great ratings while ordering delivery!
+This opens up a big opportunity because it means we can aggregate the delivery services *and* we can aggregate the food ratings, and doing so I think is sort of nicely additive: as a user I want rating aggregation, I want delivery aggregation, and I especially love rating aggregation while ordering delivery!
 
 Aggregation also works really well in context of the next section, which I will just start new from here.
 
@@ -84,44 +86,77 @@ Aggregation also works really well in context of the next section, which I will 
 
 Aggregation & The Map
 
-I don't want to get too deep in this document, but this part is interesting.
+I don't want to get too too deep here, but this part is interesting.
 
 In the past months here's how my thinking about Dish has evolved:
 
-1. It's simple a way to fix Yelps poor ratings
-2. It's a aggregator of delivery/reviews that makes common flows (finding a non-date-spot restaurant, finding good delivery food) 10x easier
-3. It's an aggregator like above, but the Map is the most important part
+1. Lets fix Yelps poor ratings by focusing on the dish
+2. Lets do 1, but by aggregating things we can make delivery 10x easier
+3. What we are essentially solving is _the UX problem in finding high quality things locally_. Yes, we are focusing on dishes 100% to start, but the real pain point isn't *just* Yelp's ratings - it's Yelps that *when* Yelp's ratings fail as they do, you end up doing research constantly.
 
-I've realized that todays map applications just aren't specialized at all, and the map experience is the big design problem that if we solve makes a big difference.
+I'm currently on the tail end of the first vacation I've taken in too long in Hawaii and number 3 has really become apparent. The apps we use today feel like they don't optimize at all for the real use case they have:
 
-Technically, it's not just a "map" but rather a light UI that works together with the map.
+"I want to find great food, and I may not know exactly what is great around me, or even what I'm craving exactly, but I do know I want to find it and I do have a variety of constraints I'd like to filter down in realtime"
 
-There are two things that have never been done really well with maps on our computers:
+Instead it feels like Yelp solves it something like this:
 
-1. They don't feel very interactively usable
-2. They don't let you move, filter, and explore without a lot of typing and shifting between screens
+"We built a restaurant et al review app and we're laying in more and more features and improvements as we go"
 
-The result is that your research process when using these apps just feels absolutely cumbersome compared to what it could be.
+Whereas you'd ideally want to do something like this:
 
-I think this is a results of a few things. First, the Big Guys (Apple, Google) are building very general purpose maps. They do a ton of things. So they basically have a lowest-common-denominator setup.
+"Lets make the exploration of food nearby me as intuitive as possible, and flex as much interface improvements, especially in linking search results inside of an highly interactive, data-rich map, that lets people trust they've found something that perfectly suites their desire".
 
-Second, the specialized guys like Yelp seem to focus on features and sales over experience (that, or they aren't software guys like Michelin, Eater, etc). Plus, Yelp is going broader and broader.
+I'm having trouble putting this down exactly how I want, but I don't think it's because it's unclear - I think it just requires clarification on a few levels.
 
-It's *fine* probably to go broader, but that doesn't mean your UX has to falter. For example, imagine Dish expands to do Plumbing reviews as well. I wouldn't say "throw it in the bag" and just start showing 🔧 icons all over the map and adding in all sorts of new filters right into our various filter locations. That would be a huge problem!
+Basically - Yelp hires a ton of devs and has them work on features. They put out fires. Managers come up with ideas and sprint them. Etc.
 
-Instead, you'd have a button at the very "top" (top of the tree-heirarchy of the apps states, "above" even the searchbar, which could be represented in any number of ways visually), and that button would let you switch between your "mode" of the Map. So you'd have Food mode, and then Plumbing mode.
+The end result is this mish-mash of an app that solves *a ton of things in an ever worsening UI*.
 
-It may seem like Yelp does this in a sense, but they really don't. Their filters don't really change much at all. The map looks identical no matter the way. The ratings are calculated basically the same. They basically do a bare minimum of specialization.
+What we want to do is *start with the UI as the core feature*, because if you think about it, what you're doing when finding food is essentially attempting to leverage a little external brain as effectively as possible.
 
-But being an aggregator means you *should* feel perfectly suited for what you're aggregating. We are aggregating food. We should go very deep there! Ratings, tag breakdowns, the way we pick images, etc etc. Let is all be suited for the purpose.
+Todays map applications just aren't specialized at all, and the map experience is the big design problem that if we solve makes a big difference.
 
-Later on, when/if we added plumbing, we'd go in and say "whats the relevant attributes for rating/filtering/searching/exploring" and add that top level toggle and switch modes to be around it.
+They don't feel very usable on the map itself. It's just a bunch of pins. They don't let you see whats great vs whats ok on the map. When you move the map it often requires a new action to update the results. When you view a restaurant you are in an entirely different world that requires a number of interactions to return to the map from.
 
-In a sense we are thinking like a search engine rather than a first-party-platform. Aggregation is hugely powerful, not just in UX but in business leverage.
+With SwiftUI and probably React/Native, and hopefully Mapbox, we can really push the interface forward. We can make moving between search and restaurant result very seamless (or maybe even not necessary most of the time by just having it show enough inline, like tapping on the result cards edges to move between photos inline).
+
+The result is that your research process when using Dish should feel like a delight compared to any of todays Map app.
+
+Exploration goes from essentiall 0 to really fun. Type "Restaurant" in Yelp. It just shows you a cluster of red pins. The results don't let you filter by cuisine or by dish. It's dead, and requires you then to basically look at that list and hope you see something interesting.
+
+Lets say you see
+
+Yelp is a bunch of teams operating independently, and their app feels like Facebook for that reason. A ton of features, a cluttered mess of an interface.
+
+We'll be like Snapchat - not just lighter and faster and fun, but also where the UX is the driving force, not features.
 
 ---
 
-Ok, so back to the concrete game plan. We need to Raise
+Eventually going broad
+
+So we'll be laser focused on dishes. But just a note on how we *could* expand.
+
+It's fine, probably, to go broader, but that doesn't mean your UX has to sacrifice, in fact it should give us room to be even better.
+
+For example, imagine Dish expands to do Plumbing reviews as well. We wouldn't say "throw it in the bag" and just start showing 🔧 icons all over the map and add in a "Doesn't show buttcrack" filter next to our "Mad spicy" filter!
+
+Instead, we'd basically want to isolate our explore modes so they are specialized.
+
+Have a mode at the top of the tree-heirarchy of our app's state, "above" even the search (or next to it in a sense, which could be represented in any number of ways visually). Let's say that button looks like 🍽. It's maybe the left button next to the searchbar.
+
+Now, that button would let you switch between your "mode" of the Map. So you'd have 🍽 mode, and then 🔧 mode you could switch to.
+
+It may seem like Yelp does this in a sense, but they really don't. Their filters don't really change much at all. The map looks identical no matter the mode. The ratings aren't specialized at all. There aren't sub-ratings for anything special.
+
+But being an aggregator means you *should* feel perfectly suited for what you're aggregating. We are aggregating food. We should go very deep there! Ratings, tag breakdowns, the way we pick images, etc etc. Lets make it all suited to it's function.
+
+Then later on, when/if we added plumbing, we'd go in and say "whats the relevant attributes for rating/filtering/searching/exploring?" and "what would a map of plumbing places ideally show you?" and add that top level toggle and switch modes to be around it.
+
+It's not a huge thing, but the state of mind should lead us to a dramatically better place than Google Maps, or Yelp.
+
+---
+
+Ok, so back to the concrete game plan, aka, We need to Raise
 
 Raising requires a variety of things. We already have a few good ones (a nice looking initial team, really). Here's the other factors we need:
 
@@ -151,7 +186,7 @@ You could make the case that each of these is actually for a "round", Roadster f
 
 ## Lower level plan
 
-So let's get into the weeds. What is our Roadster?
+And into the weeds. What is our Roadster?
 
 We've had a ton of ideas and interesting insights. Many of them are really quite tempting to work on. As a great and random example, I really love the idea of being able to "plan a trip" in a sense. No app does this well at all, and when I'm vacationing I always want to find the "local favorites" to eat at first.
 

@@ -260,7 +260,7 @@ class HomeViewState: ObservableObject {
     func animate(_ animation: Animation? = Animation.spring().speed(ANIMATION_SPEED), state: HomeAnimationState = .controlled, duration: Int = 400, _ body: @escaping () -> Void) {
         log.info("\(state) duration: \(duration)")
         self.setAnimationState(state, duration)
-        async (10) {
+        async(1) {
             withAnimation(animation) {
                 body()
             }

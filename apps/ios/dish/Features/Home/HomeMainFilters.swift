@@ -153,7 +153,7 @@ struct HomeMainFilterFocused: View {
                                         display: .full,
                                         height: 120,
                                         action: {
-                                            homeViewState.showFilters = false
+//                                            homeViewState.showFilters = false
                                         }
                                     )
 //                                    .equatable()
