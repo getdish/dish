@@ -6,9 +6,10 @@
       "**"
     ],
     "packages": [
+      "packages/models",
+      "packages/*",
       "apps/*",
-      "services/*",
-      "packages/*"
+      "services/*"
     ]
   },
   "scripts": {
