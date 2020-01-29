@@ -139,20 +139,6 @@ struct HomeMapSearchResults: View {
 }
 
 struct HomeContentExplore: View {
-    class HomeScrollDelegate: NSObject, UIScrollViewDelegate, ObservableObject {
-        @Published var reverseBounceOffset: CGFloat = 0
-        
-        func scrollViewDidScroll(_ scrollView: UIScrollView) {
-            let offset = scrollView.contentOffset
-            
-            if offset.y < 0 {
-                scrollView.isScrollEnabled = false
-            }
-            
-            print("SCRRRRRRRL \(offset.y)")
-        }
-    }
-    
     @Environment(\.geometry) var appGeometry
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
@@ -160,11 +146,8 @@ struct HomeContentExplore: View {
     
     let spacing: CGFloat = 14
     
-    @ObservedObject var scrollDelegate = HomeScrollDelegate()
-    
     var body: some View {
-        print("reverseBounceOffset \(scrollDelegate.reverseBounceOffset)")
-        return ZStack {
+        ZStack {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 0) {
                     HomeMainDrawerScrollEffects()
@@ -189,13 +172,12 @@ struct HomeContentExplore: View {
                     Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)
                 }
                 .introspectScrollView { scrollView in
-                    print("scrollView \(scrollView)")
-                    scrollView.delegate = self.scrollDelegate
+                    self.homeState.setActiveScrollView(scrollView)
+                    scrollView.bounces = false
                 }
             }
             .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
         }
-        .offset(y: scrollDelegate.reverseBounceOffset)
         .edgesIgnoringSafeArea(.all)
         .clipped()
     }

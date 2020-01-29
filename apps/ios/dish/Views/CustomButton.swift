@@ -52,7 +52,10 @@ struct CustomButton2<Content: View>: View {
                 self.lastTap = Date()
                 self.action()
         }
-        .onLongPressGesture(minimumDuration: 10000, pressing: { isPressing in
+        .onLongPressGesture(
+            minimumDuration: 10000,
+            maximumDistance: 8,
+            pressing: { isPressing in
             self.isTapped = isPressing
         }) {
             if self.lastTap.timeIntervalSinceNow > 10 {

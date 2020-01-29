@@ -1,7 +1,8 @@
 import SwiftUI
 import Combine
 
-fileprivate let snapToBottomYMovePct: CGFloat = 0.23
+// TODO undo
+fileprivate let snapToBottomYMovePct: CGFloat = 1//0.23
 
 fileprivate let distanceUntilSnapDown: CGFloat = 30
 fileprivate let distanceUntilSnapUp: CGFloat = 35
@@ -54,6 +55,7 @@ class HomeViewState: ObservableObject {
     @Published private(set) var animationState: HomeAnimationState = .idle
     @Published private(set) var showCamera = false
     
+    private var activeScrollView: UIScrollView? = nil
     private var cancelAnimation: AnyCancellable? = nil
     
     // keyboard
@@ -179,19 +181,10 @@ class HomeViewState: ObservableObject {
         Screen.statusBarHeight + searchBarHeight / 2 + topNavHeight + 50
     )
     
-    var mapInitialHeight: CGFloat { appHeight * 0.3 }
     var mapMaxHeight: CGFloat { appHeight - keyboardHeight - searchBarHeight }
     
     var mapHeight: CGFloat {
-        min(mapMaxHeight, max(yToMapHeight(self.y), mapMinHeight))
-    }
-    
-    func yToMapHeight(_ y: CGFloat) -> CGFloat {
-        mapInitialHeight + y - scrollRevealY
-    }
-    
-    func mapHeightToY(_ mapHeight: CGFloat) -> CGFloat {
-        mapHeight - mapInitialHeight
+        min(mapMaxHeight, max(self.y - scrollRevealY, mapMinHeight))
     }
     
     var scrollRevealY: CGFloat {
@@ -211,8 +204,11 @@ class HomeViewState: ObservableObject {
     }
     
     var snappedToBottomMapHeight: CGFloat { appHeight - 120 }
-    var isSnappedToBottom: Bool { y > snapToBottomAt }
     var wasSnappedToBottom = false
+    
+    var isSnappedToBottom: Bool {
+        false && y > snapToBottomAt
+    }
     
     let nearTopAt: CGFloat = nearTopAtVal
     var isNearTop: Bool {
@@ -271,7 +267,7 @@ class HomeViewState: ObservableObject {
         }
     }
 
-    func drag(_ dragY: CGFloat) {
+    func setY(_ dragY: CGFloat) {
         if dragState == .pager { return }
         if lastDragY == dragY { return }
         lastDragY = dragY
@@ -331,7 +327,10 @@ class HomeViewState: ObservableObject {
         log.info()
         
         // use velocity to determine snap
-        let predictedY = mapHeightToY(value.predictedEndLocation.y)
+        
+        print("🍗🍗 what trans \(value.predictedEndTranslation.height) loc \(value.predictedEndLocation.y)")
+        
+        let predictedY = value.predictedEndLocation.y
         let shouldSnapDown = predictedY > snapToBottomAt
         
         let animation: Animation = shouldSnapDown
@@ -339,13 +338,13 @@ class HomeViewState: ObservableObject {
             : Animation.easeOut.speed(ANIMATION_SPEED)
         
         self.animate(animation) {
-            if shouldSnapDown || self.isSnappedToBottom {
+//            if shouldSnapDown || self.isSnappedToBottom {
 //                self.snapToBottom()
 //                self.y = self.startSnapToBottomAt
-            } else {
+//            } else {
                 print("🍩 predictedY \(predictedY)")
                 self.y = predictedY
-            }
+//            }
             
             if self.searchBarYExtra != 0 {
                 self.searchBarYExtra = 0
@@ -361,7 +360,7 @@ class HomeViewState: ObservableObject {
             self.scrollState.setScrollY(0)
             self.searchBarYExtra = 0
             if toBottom {
-                self.y = self.snappedToBottomMapHeight - self.mapInitialHeight
+                self.y = self.snappedToBottomMapHeight
             } else {
                 self.y = self.startSnapToBottomAt
             }
@@ -369,7 +368,7 @@ class HomeViewState: ObservableObject {
     }
     
     var mapSnappedToTopHeight: CGFloat {
-        self.mapMinHeight - self.mapInitialHeight
+        self.mapMinHeight
     }
     
     var isSnappedToTop: Bool {
@@ -381,7 +380,7 @@ class HomeViewState: ObservableObject {
         if !isSnappedToTop {
             //            self.hasMovedBar = false
             self.animate {
-                self.y = self.mapMinHeight - self.mapInitialHeight
+                self.y = self.mapMinHeight
             }
         }
     }
@@ -407,7 +406,8 @@ class HomeViewState: ObservableObject {
         let scrollY = mapHeight - frame.minY - Screen.statusBarHeight - scrollRevealY
         let y = max(-50, min(100, scrollY))
         if y != scrollState.scrollY {
-            self.scrollState.setScrollY(y)
+            print("disabled scroll stuff for now")
+//            self.scrollState.setScrollY(y)
         }
     }
     
@@ -419,9 +419,15 @@ class HomeViewState: ObservableObject {
         }
     }
     
+    var hasSetInitialY = false
     func setAppHeight(_ val: CGFloat) {
         log.info()
         self.appHeight = val
+        // do once on startup
+        if !hasSetInitialY {
+            hasSetInitialY = true
+            self.y = val * 0.3
+        }
     }
     
     func setShowCamera(_ val: Bool) {
@@ -438,5 +444,16 @@ class HomeViewState: ObservableObject {
         func setScrollY(_ next: CGFloat) {
             self.scrollY = next
         }
+    }
+}
+
+// active scroll view logic
+extension HomeViewState {
+    var isActiveScrollViewAtTop: Bool {
+        self.activeScrollView?.contentOffset.y == 0
+    }
+    
+    func setActiveScrollView(_ val: UIScrollView?) {
+        self.activeScrollView = val
     }
 }

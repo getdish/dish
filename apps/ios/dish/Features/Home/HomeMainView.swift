@@ -68,7 +68,7 @@ struct HomeMainView: View {
                 
                     // camera
                     ZStack {
-                        DishCamera()
+//                        DishCamera()
                         
                         // cover camera
                         Color.black
@@ -212,15 +212,19 @@ struct HomeMainView: View {
                 if [.off, .pager].contains(self.state.dragState) {
                     return
                 }
-                // why is this off some???
-                if HomeSearchBarState.isWithin(value.startLocation.y)
-                    || self.state.dragState == .searchbar {
+                
+                let isAlreadyDragging = self.state.dragState == .searchbar
+                let isDraggingSearchBar = HomeSearchBarState.isWithin(value.startLocation.y)
+                let isDraggingBelowSearchBar = self.state.isActiveScrollViewAtTop
+                    && HomeSearchBarState.isBelow(value.startLocation.y)
+                
+                if isAlreadyDragging || isDraggingSearchBar || isDraggingBelowSearchBar {
                     // hide keyboard on drag
                     if self.keyboard.state.height > 0 {
                         self.keyboard.hide()
                     }
                     // drag
-                    self.state.drag(value.translation.height)
+                    self.state.setY(value.translation.height)
                 }
         }
         .onEnded { value in
@@ -234,11 +238,17 @@ struct HomeMainView: View {
 
 struct HomeSearchBarState {
     static var frame: CGRect = CGRect()
+
+    // add a little padding for fat fingers
+    static let padding: CGFloat = 10
+    
     static func isWithin(_ valueY: CGFloat) -> Bool {
-        // add a little padding for fat fingers
-        let padding: CGFloat = 10
         return valueY >= HomeSearchBarState.frame.minY - padding
             && valueY <= HomeSearchBarState.frame.maxY + padding
+    }
+    
+    static func isBelow(_ valueY: CGFloat) -> Bool {
+        return valueY >= HomeSearchBarState.frame.maxY - padding
     }
 }
 
