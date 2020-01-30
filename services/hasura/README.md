@@ -1,10 +1,19 @@
 ## Developing
 
-You'll need Postgres and the Postgis extension. Once you have those:
+### Quickstart
+If you don't want or have Postgres, Postgis and Hasura on your machine The
+simplest way to install and run them is with `docker-compose up` in this folder.
+Here are the Docker Compose installation instructions:
+https://docs.docker.com/compose/install/
 
-`creatdb dish`
+You can now skip the next 2 sections.
 
-Simplest way to run Hasura itself is with:
+### Postgres and Postgis
+If you already have Postgres and Postgis on your machine your next step is only
+to create the database for Dish: `creatdb dish`
+
+### Hasura
+The simplest way to run Hasura itself is with:
 
 ```
 docker run --net=host \
@@ -12,6 +21,11 @@ docker run --net=host \
   -e HASURA_GRAPHQL_ENABLE_CONSOLE=false \
   hasura/graphql-engine:v1.0.0
 ```
+
+### Hasura CLI
+
+The Hasura CLI is useful for a variety of admin tasks such as creating/running
+migrations and serving an admin web UI.
 
 Install the Hasura CLI:
 
@@ -23,7 +37,7 @@ If this is your first install, or there's new migrations waiting to be run:
 
 `hasura migrate apply --endpoint http://localhost:8080`
 
-Then run admin using:
+Then run the admin UI using:
 
 `hasura console --endpoint http://localhost:8080`
 

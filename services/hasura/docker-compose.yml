@@ -1,0 +1,23 @@
+version: '3'
+services:
+  postgres:
+    image: bitnami/postgresql:12.1.0-debian-9-r53 # See k8s/yaml/postgres.yaml
+    volumes:
+      - ${HOME}/.dish/postgres:/bitnami/postgresql
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: dish
+    ports:
+      - 5432:5432
+  hasura:
+    image: hasura/graphql-engine:v1.0.0
+    ports:
+      - 8080:8080
+    environment:
+      - HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:postgres@postgres/dish
+      - HASURA_GRAPHQL_ENABLED_LOG_TYPES=startup, http-log, webhook-log, websocket-log, query-log
+      - HASURA_GRAPHQL_ENABLE_TELEMETRY=false
+    depends_on:
+      - "postgres"
+
