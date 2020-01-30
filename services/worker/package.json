@@ -1,5 +1,5 @@
 {
-  "name": "@dish/crawlers",
+  "name": "@dish/worker-service",
   "version": "0.0.1",
   "main": "_/index.js",
   "sideEffects": false,
@@ -12,12 +12,13 @@
     "test": "true"
   },
   "dependencies": {
-    "@dish/puppeteer-crawler": "*",
-    "@dish/models": "*",
+    "@dish/crawlers": "*",
     "@dish/worker": "*",
-    "axios": "^0.19.1"
+    "axios": "^0.19.1",
+    "bull": "^3.12.1"
   },
   "devDependencies": {
+    "@types/bull": "^3.12.0",
     "@zeit/ncc": "^0.20.5",
     "nodemon": "^2.0.2"
   }

@@ -1,6 +1,6 @@
 import test from 'ava'
 
-import { UberEats } from '../src/UberEats'
+import { UberEats } from '../src/ubereats/UberEats'
 import { Restaurant } from '@dish/models'
 
 async function getEmpanada() {

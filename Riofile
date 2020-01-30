@@ -11,16 +11,14 @@ services:
       - HASURA_GRAPHQL_ENABLED_LOG_TYPES=startup, http-log, webhook-log, websocket-log, query-log
       - HASURA_GRAPHQL_ENABLE_TELEMETRY=false
   worker-ui:
-    image: orkidio/orkid-ui
-    port: 3100/http
+    image: tombh/bull-board:latest
     env:
-      - HTTP_USER=user
-      - HTTP_PASSWORD=password
       - REDIS_HOST=redis-master.redis
+    port: 3000/http
   worker:
     image: dish/crawlers
     build:
-      dockerfile: ./services/crawlers/Dockerfile
+      dockerfile: ./services/worker/Dockerfile
       context: ./
     env:
       - REDIS_HOST=redis-master.redis
@@ -29,7 +27,7 @@ services:
     command:
       - node
     args:
-      - _/worker.js
+      - _/index.js
   crawlers:
     image: dish/crawlers
     build:
@@ -37,11 +35,11 @@ services:
       context: ./
     env:
       - REDIS_HOST=redis-master.redis
-      - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
+      - UBEREATS_PROXY=${UBEREATS_PROXY}
     command:
       - node
     args:
-      - _/ubereats_sanfran.js
+      - _/ubereats/sanfran.js
   lab:
     image: dish/lab
     build:

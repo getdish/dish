@@ -6,5 +6,5 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src/**/*", "src/ubereats/categories.json"]
+  "include": ["src/**/*"]
 }

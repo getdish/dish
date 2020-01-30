@@ -10,11 +10,12 @@
     "test:watch": "ava tests/* --watch"
   },
   "dependencies": {
+    "bull": "^3.12.1",
     "dotenv": "^8.2.0",
-    "lodash": "^4.17.15",
-    "orkid": "0.11.0"
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
+    "@types/bull": "^3.12.0",
     "@types/node": "^13.1.6",
     "ava": "^2.4.0"
   }

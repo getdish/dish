@@ -1,5 +1,5 @@
 {
-  "name": "@dish/crawler",
+  "name": "@dish/puppeteer-crawler",
   "version": "0.0.1",
   "main": "_/index.js",
   "sideEffects": false,

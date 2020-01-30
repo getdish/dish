@@ -1,11 +1,13 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
-import fs from 'fs'
 import axios, { AxiosResponse } from 'axios'
+import { QueueOptions, JobOptions } from 'bull'
 
 import { WorkerJob } from '@dish/worker'
 import { Restaurant, Dish } from '@dish/models'
+
+import categories from './categories.json'
 
 const UBEREATS_DOMAIN =
   process.env.UBEREATS_PROXY || 'https://www.ubereats.com/'
@@ -20,17 +22,32 @@ axios.defaults.headers.common['x-csrf-token'] = 'x'
 console.log('Starting UberEats crawler. Using domain: ' + UBEREATS_DOMAIN)
 
 export class UberEats extends WorkerJob {
+  static queue_config: QueueOptions = {
+    limiter: {
+      max: 1,
+      duration: 1500,
+    },
+  }
+
+  static job_config: JobOptions = {
+    attempts: 3,
+  }
+
   async run(args?: any) {
     if (typeof args == undefined || args == 'ALL') {
       await this.getCities()
       return
     }
     if ('fn' in args) {
-      this[args['fn']](args['args'])
+      if (args['fn'].constructor.name === 'AsyncFunction') {
+        await this[args['fn']](args['args'])
+      } else {
+        this[args['fn']](args['args'])
+      }
       return
     }
     if ('lat' in args) {
-      this.getFeed(args['lat'], args['lon'])
+      await this.getFeed(args['lat'], args['lon'])
       return
     }
   }
@@ -55,9 +72,7 @@ export class UberEats extends WorkerJob {
   // This is a hard-coded list of Uber Eats most popular categories.
   // TODO: I think we can do better, but I don't know how yet?
   private loadCategories() {
-    const content = fs.readFileSync('./src/ubereats_categories.json', 'utf8')
-    const json = JSON.parse(content)
-    return json.JSON.data.categories.map((obj: any) => {
+    return categories.JSON.data.categories.map((obj: any) => {
       return obj.title
     })
   }

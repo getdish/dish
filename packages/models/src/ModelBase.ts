@@ -45,10 +45,7 @@ export class ModelBase<T> {
 
   asObject() {
     let object = {}
-    // TODO: TS complains with:
-    //   `error TS2339: Property 'fields' does not exist on type 'Function'.`
-    // @ts-ignore
-    for (const field of this.constructor.fields()) {
+    for (const field of (this.constructor as typeof ModelBase).fields()) {
       object[field] = this[field]
     }
     return ModelBase.stringify(object)

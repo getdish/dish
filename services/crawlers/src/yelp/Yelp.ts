@@ -1,4 +1,4 @@
-import { Crawler } from '@dish/crawler'
+import { Crawler } from '@dish/puppeteer-crawler'
 import { WorkerJob } from '@dish/worker'
 
 export class Yelp extends WorkerJob {
