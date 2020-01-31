@@ -1,0 +1,14 @@
+{
+  "name": "@dish/common",
+  "version": "0.0.1",
+  "main": "_/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -b || true",
+    "watch": "tsc -b --watch --preserveWatchOutput"
+  },
+  "dependencies": {
+    "@sentry/node": "^5.11.2"
+  },
+  "devDependencies": {}
+}

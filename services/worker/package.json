@@ -12,6 +12,7 @@
     "test": "true"
   },
   "dependencies": {
+    "@dish/common": "*",
     "@dish/crawlers": "*",
     "@dish/worker": "*",
     "axios": "^0.19.1",

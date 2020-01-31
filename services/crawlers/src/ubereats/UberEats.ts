@@ -1,3 +1,5 @@
+import '@dish/common'
+
 import dotenv from 'dotenv'
 dotenv.config()
 

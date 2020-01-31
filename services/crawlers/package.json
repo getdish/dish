@@ -12,6 +12,7 @@
     "test": "true"
   },
   "dependencies": {
+    "@dish/common": "*",
     "@dish/puppeteer-crawler": "*",
     "@dish/models": "*",
     "@dish/worker": "*",

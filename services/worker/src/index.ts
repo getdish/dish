@@ -1,3 +1,5 @@
+import '@dish/common'
+
 import os from 'os'
 import Queue from 'bull'
 
