@@ -44,7 +44,7 @@ struct HomeMainContent: View {
                       duration: 300 * (1 / ANIMATION_SPEED),
                       // TODO we need a separate "disableTracking" in homeStore that is manually set
                       // why? when hitting "map" toggle button when above snapToBottomAt this fails for now
-                      disableTracking: state.y >= state.snapToBottomAt
+                      disableTracking: state.mapHeight >= state.snapToBottomAt
                         || state.isSnappedToBottom
                         || state.animationState == .controlled,
                       onMoveComplete: {

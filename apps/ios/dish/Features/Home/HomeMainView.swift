@@ -107,27 +107,28 @@ struct HomeMainView: View {
                         .animation(.spring(response: 0.38), value: state.dragState == .idle)
                         .offset(y: state.showCamera ? Screen.height : 0)
                     
-                    // filters
-                    VStack {
-                        HomeMainFilterBar()
-                        Spacer()
-                    }
-                    .zIndex(state.showFilters ? 100 : 0)
-                    .animation(.spring(response: 0.45))
-                    .offset(
-                        y: state.showFilters ? 0 : mapHeight + searchBarHeight / 2 + (
-                            state.showFiltersAbove ? -100 : 0
-                        )
-                    )
-                        .opacity(state.showCamera ? 0 : 1)
-                    
                     // searchbar
-                    VStack {
+                    VStack(spacing: 0) {
                         GeometryReader { searchBarGeometry -> HomeSearchBar in
                             HomeSearchBarState.frame = searchBarGeometry.frame(in: .global)
                             return HomeSearchBar()
                         }
                         .frame(height: searchBarHeight)
+                        
+                        // filters
+                        VStack {
+                            HomeMainFilterBar()
+                            Spacer()
+                        }
+                        .zIndex(state.showFilters ? 100 : 0)
+                        .animation(.spring(response: 0.45))
+                        .offset(
+                            y: state.showFilters ? 0 : (
+                                state.showFiltersAbove ? -100 : 0
+                            )
+                        )
+                            .opacity(state.showCamera ? 0 : 1)
+                        
                         Spacer()
                     }
                     .padding(.horizontal, 10)
@@ -145,25 +146,25 @@ struct HomeMainView: View {
                     .environment(\.colorScheme, .light)
                 
                     // CameraControlsOverlay
-                    ZStack {
-                        VStack {
-                            HStack {
-                                Spacer()
-                                CameraButton(
-                                    foregroundColor: state.showCamera ? .white : .black
-                                )
-                                    .scaleEffect(state.showCamera ? 1 : 0.8)
-                                    .offset(
-                                        x: state.showCamera ? -Screen.width / 2 + App.cameraButtonHeight / 2
-                                            : -8,
-                                        y: state.showCamera ? Screen.fullHeight - App.cameraButtonHeight - 100
-                                            : state.mapHeight - App.cameraButtonHeight / 2
-                                )
-                                    .animation(Animation.spring(response: 0.4).delay(0))
-                            }
-                            Spacer()
-                        }
-                    }
+//                    ZStack {
+//                        VStack {
+//                            HStack {
+//                                Spacer()
+//                                CameraButton(
+//                                    foregroundColor: state.showCamera ? .white : .black
+//                                )
+//                                    .scaleEffect(state.showCamera ? 1 : 0.8)
+//                                    .offset(
+//                                        x: state.showCamera ? -Screen.width / 2 + App.cameraButtonHeight / 2
+//                                            : -8,
+//                                        y: state.showCamera ? Screen.fullHeight - App.cameraButtonHeight - 100
+//                                            : state.mapHeight - App.cameraButtonHeight / 2
+//                                )
+//                                    .animation(Animation.spring(response: 0.4).delay(0))
+//                            }
+//                            Spacer()
+//                        }
+//                    }
                 
                     // make everything untouchable while dragging
                 Color.black.opacity(0.0001)

@@ -14,15 +14,9 @@ class HomeViewState: ObservableObject {
     enum HomeDragState {
         case idle, off, pager, searchbar
     }
-    
-    // note:
-    // idle == nothing
-    // animate == .animation()
-    // controlled = nothing (but we are animating manually using withAnimation())
     enum HomeAnimationState {
         case idle, controlled, animate
     }
-    
     enum HomeScrollState {
         case none, some, more
     }
@@ -30,36 +24,20 @@ class HomeViewState: ObservableObject {
     // temp
     @Published var showFilters: Bool = false
     
-    private var scrollState = HomeMainScrollState()
-    
     @Published private(set) var appHeight: CGFloat = Screen.height
-    // initialize it at where the snapToBottom will be about
-    @Published private(set) var y: CGFloat = Screen.fullHeight * 0.3 * snapToBottomYMovePct - 1
-//    {
-//        willSet(y) {
-////            // util - break when the searchbar is at y
-////            #if DEBUG
-////            print("y \(y)")
-////            if false, y > snapToBottomAt { // <- example
-////                raise(SIGINT)
-////            }
-////            #endif
-//        }
-//    }
-
+    // initialize it at best estimate where the snapToBottom will be
+    @Published private var y: CGFloat = Screen.fullHeight * 0.3 * snapToBottomYMovePct - 1
     @Published private(set) var searchBarYExtra: CGFloat = 0
     @Published private(set) var hasScrolled: HomeScrollState = .none
     @Published private(set) var hasMovedBar = false
-    @Published private(set) var shouldAnimateCards = false
     @Published private(set) var dragState: HomeDragState = .idle
     @Published private(set) var animationState: HomeAnimationState = .idle
     @Published private(set) var showCamera = false
+    @Published private(set) var keyboardHeight: CGFloat = 0
     
+    private var scrollState = HomeMainScrollState()
     private var activeScrollView: UIScrollView? = nil
     private var cancelAnimation: AnyCancellable? = nil
-    
-    // keyboard
-    @Published var keyboardHeight: CGFloat = 0
     private var cancels: Set<AnyCancellable> = []
     private var keyboard = Keyboard()
     private var lastKeyboardAdjustY: CGFloat = 0
@@ -79,6 +57,7 @@ class HomeViewState: ObservableObject {
         }
         .store(in: &cancels)
         
+        // TODO move this into the setY directly
         // haptic feedback
         let lightFeedback = UIImpactFeedbackGenerator(style: .light)
         let strongFeedback = UIImpactFeedbackGenerator(style: .heavy)
@@ -90,7 +69,7 @@ class HomeViewState: ObservableObject {
             if dragState == .idle {
                 hasHapticIndicatedThisDrag  = .idle
             }
-        }.store(in: &cancels)
+            }.store(in: &cancels)
         // listen for haptic events
         self.$y
             .sink { y in
@@ -331,7 +310,12 @@ class HomeViewState: ObservableObject {
         print("🍗🍗 what trans \(value.predictedEndTranslation.height) loc \(value.predictedEndLocation.y)")
         
         let predictedY = value.predictedEndLocation.y
-        let shouldSnapDown = predictedY > snapToBottomAt
+        let diff = self.y > predictedY ? -(self.y - predictedY) : predictedY - self.y
+        
+        // default scrolling is very "loose", but this should feel a bit more tight
+        let finalY = self.y + diff / 2
+        
+        let shouldSnapDown = finalY > snapToBottomAt
         
         let animation: Animation = shouldSnapDown
             ? Animation.spring().speed(ANIMATION_SPEED)
@@ -342,8 +326,8 @@ class HomeViewState: ObservableObject {
 //                self.snapToBottom()
 //                self.y = self.startSnapToBottomAt
 //            } else {
-                print("🍩 predictedY \(predictedY)")
-                self.y = predictedY
+                print("🍩 predictedY \(predictedY) finalY \(finalY)")
+                self.y = finalY
 //            }
             
             if self.searchBarYExtra != 0 {

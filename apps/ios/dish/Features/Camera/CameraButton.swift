@@ -26,45 +26,45 @@ struct CameraButton: View {
                     //                        .scaledToFit()
                     //                        .frame(width: 17, height: 17)
                 }
-                .foregroundColor(.white)
+                .foregroundColor(Color.black.opacity(0.5))
             }
             .padding(.all, App.cameraButtonHeight * 0.33)
             .frame(width: App.cameraButtonHeight, height: App.cameraButtonHeight)
-            .background(
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color("color-brand").opacity(0.7),
-                        Color("color-brand").opacity(1)
-                    ]),
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-            )
-                .background(
-                    RadialGradient(
-                        gradient: Gradient(colors: [
-                            Color.white.opacity(0),
-                            Color.white.opacity(0.8)
-                        ]),
-                        center: .center,
-                        startRadius: 0,
-                        endRadius: App.cameraButtonHeight
-                    )
-            )
+//            .background(
+//                LinearGradient(
+//                    gradient: Gradient(colors: [
+//                        Color("color-brand").opacity(0.7),
+//                        Color("color-brand").opacity(1)
+//                    ]),
+//                    startPoint: .top,
+//                    endPoint: .bottom
+//                )
+//            )
+//                .background(
+//                    RadialGradient(
+//                        gradient: Gradient(colors: [
+//                            Color.white.opacity(0),
+//                            Color.white.opacity(0.8)
+//                        ]),
+//                        center: .center,
+//                        startRadius: 0,
+//                        endRadius: App.cameraButtonHeight
+//                    )
+//            )
                 .cornerRadius(App.cameraButtonHeight)
-                .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 3)
-                .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 0)
-                .overlay(
-                    RoundedRectangle(cornerRadius: App.cameraButtonHeight)
-                        .stroke(Color.white.opacity(0.6), lineWidth: 1)
-            )
-                .overlay(
-                    VStack {
-                        RoundedRectangle(cornerRadius: App.cameraButtonHeight)
-                            .stroke(Color.black.opacity(0.1), lineWidth: 2)
-                    }
-                    .padding(1)
-            )
+//                .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 3)
+//                .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 0)
+//                .overlay(
+//                    RoundedRectangle(cornerRadius: App.cameraButtonHeight)
+//                        .stroke(Color.white.opacity(0.6), lineWidth: 1)
+//            )
+//                .overlay(
+//                    VStack {
+//                        RoundedRectangle(cornerRadius: App.cameraButtonHeight)
+//                            .stroke(Color("color-brand"), lineWidth: 2)
+//                    }
+//                    .padding(1)
+//            )
 //                .animation(.spring())
 //                .opacity(self.isTapped ? 0.5 : 1)
 //                .scaleEffect(self.isTapped ? 0.9 : 1)

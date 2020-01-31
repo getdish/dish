@@ -116,10 +116,10 @@ struct HomeMainFilterBar: View {
             }
             
             // cover right part of filters so its untouchable and doesnt conflict with side drags
-            HStack {
-                Spacer()
-                Color.black.opacity(0.0001).frame(width: 35, height: 55)
-            }
+//            HStack {
+//                Spacer()
+//                Color.black.opacity(0.0001).frame(width: 35, height: 55)
+//            }
         }
     }
 }
