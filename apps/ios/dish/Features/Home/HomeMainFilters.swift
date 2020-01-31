@@ -72,7 +72,7 @@ struct HomeMainFilterBar: View {
                             .shadow(radius: 6)
                             .animation(.spring())
                         }
-                        .padding(.vertical, 6)
+                        .padding(.vertical, 12)
                         .padding(.horizontal, 20)
                         .environment(\.colorScheme, .light)
                     }

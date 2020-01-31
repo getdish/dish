@@ -79,12 +79,12 @@ struct HomeMainView: View {
                     
                     Group {
                         // map
-//                        DishMapView()
-//                            .frame(height: self.appGeometry?.size.height)
-//                            .offset(y: state.showCamera ? -Screen.height * 1.2 : 0)
-//                            .opacity(state.showCamera ? 0 : 1)
-//                            .animation(.spring(response: 0.8))
-//                            .rotationEffect(state.showCamera ? .degrees(-10) : .degrees(0))
+                        DishMapView()
+                            .frame(height: self.appGeometry?.size.height)
+                            .offset(y: state.showCamera ? -Screen.height * 1.2 : 0)
+                            .opacity(state.showCamera ? 0 : 1)
+                            .animation(.spring(response: 0.8))
+                            .rotationEffect(state.showCamera ? .degrees(-10) : .degrees(0))
                         
                         VStack {
                             Spacer()
@@ -114,6 +114,7 @@ struct HomeMainView: View {
                             return HomeSearchBar()
                         }
                         .frame(height: searchBarHeight)
+                        .padding(.horizontal, 10)
                         
                         // filters
                         VStack {
@@ -131,7 +132,6 @@ struct HomeMainView: View {
                         
                         Spacer()
                     }
-                    .padding(.horizontal, 10)
                     // this fixed a bug where it would focus search bar too easily
                     // but created one where it de-focuses it instantly often
 //                    .disabled(!enableSearchBar)
@@ -146,25 +146,25 @@ struct HomeMainView: View {
                     .environment(\.colorScheme, .light)
                 
                     // CameraControlsOverlay
-//                    ZStack {
-//                        VStack {
-//                            HStack {
-//                                Spacer()
-//                                CameraButton(
-//                                    foregroundColor: state.showCamera ? .white : .black
-//                                )
-//                                    .scaleEffect(state.showCamera ? 1 : 0.8)
-//                                    .offset(
-//                                        x: state.showCamera ? -Screen.width / 2 + App.cameraButtonHeight / 2
-//                                            : -8,
-//                                        y: state.showCamera ? Screen.fullHeight - App.cameraButtonHeight - 100
-//                                            : state.mapHeight - App.cameraButtonHeight / 2
-//                                )
+                    ZStack {
+                        VStack {
+                            HStack {
+                                Spacer()
+                                CameraButton(
+                                    foregroundColor: state.showCamera ? .white : .black
+                                )
+                                    .scaleEffect(state.showCamera ? 1 : 0.8)
+                                    .offset(
+                                        x: state.showCamera ? -Screen.width / 2 + App.cameraButtonHeight / 2
+                                            : -8,
+                                        y: state.showCamera ? Screen.fullHeight - App.cameraButtonHeight - 100
+                                            : state.mapHeight - App.cameraButtonHeight / 2
+                                )
 //                                    .animation(Animation.spring(response: 0.4).delay(0))
-//                            }
-//                            Spacer()
-//                        }
-//                    }
+                            }
+                            Spacer()
+                        }
+                    }
                 
                     // make everything untouchable while dragging
                 Color.black.opacity(0.0001)

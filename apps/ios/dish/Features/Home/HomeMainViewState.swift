@@ -1,8 +1,7 @@
 import SwiftUI
 import Combine
 
-// TODO undo
-fileprivate let snapToBottomYMovePct: CGFloat = 1//0.23
+fileprivate let snapToBottomYMovePct: CGFloat = 0.6
 
 fileprivate let distanceUntilSnapDown: CGFloat = 30
 fileprivate let distanceUntilSnapUp: CGFloat = 35
@@ -186,7 +185,7 @@ class HomeViewState: ObservableObject {
     var wasSnappedToBottom = false
     
     var isSnappedToBottom: Bool {
-        false && y > snapToBottomAt
+        y > snapToBottomAt
     }
     
     let nearTopAt: CGFloat = nearTopAtVal
@@ -290,15 +289,15 @@ class HomeViewState: ObservableObject {
         }
         
         // snap to bottom/back logic
-//        let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
-//        if willSnapDown {
-//            self.snapToBottom(true)
-//        } else if wasSnappedToBottom {
-//            let willSnapUp = -dragY > distanceUntilSnapUp
-//            if willSnapUp {
-//                self.snapToBottom(false)
-//            }
-//        }
+        let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
+        if willSnapDown {
+            self.snapToBottom(true)
+        } else if wasSnappedToBottom {
+            let willSnapUp = -dragY > distanceUntilSnapUp
+            if willSnapUp {
+                self.snapToBottom(false)
+            }
+        }
     }
     
     func finishDrag(_ value: DragGesture.Value) {
@@ -322,13 +321,13 @@ class HomeViewState: ObservableObject {
             : Animation.easeOut.speed(ANIMATION_SPEED)
         
         self.animate(animation) {
-//            if shouldSnapDown || self.isSnappedToBottom {
-//                self.snapToBottom()
-//                self.y = self.startSnapToBottomAt
-//            } else {
+            if shouldSnapDown || self.isSnappedToBottom {
+                self.snapToBottom()
+                self.y = self.startSnapToBottomAt
+            } else {
                 print("🍩 predictedY \(predictedY) finalY \(finalY)")
                 self.y = finalY
-//            }
+            }
             
             if self.searchBarYExtra != 0 {
                 self.searchBarYExtra = 0

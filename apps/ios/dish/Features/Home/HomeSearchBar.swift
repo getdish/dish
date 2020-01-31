@@ -88,38 +88,33 @@ struct HomeSearchBarAfterView: View {
     
     var body: some View {
         HStack {
-//            Button(action: {
-//                self.homeState.toggleMap()
-//            }) {
-//                Group {
-//                    if self.homeState.isSnappedToTop {
-//                        Image(systemName: "chevron.down")
-//                            .resizable()
-//                            .scaledToFit()
-//
-//                    }
-//                    else if self.homeState.isSnappedToBottom {
-//                        Image(systemName: "chevron.up")
-//                            .resizable()
-//                            .scaledToFit()
-//                    }
-//                    else {
-//                        EmptyView()
-////                        Image(systemName: "chevron.down")
-////                            .resizable()
-////                            .scaledToFit()
-//                    }
-//                }
-//                .frame(width: 16, height: 16)
-//                .opacity(0.5)
-//                .padding(.trailing, 8 + App.cameraButtonHeight * 0.5)
-//            }
-            
-            CameraButton(
-                foregroundColor: .black
-            )
+            Button(action: {
+                self.homeState.toggleMap()
+            }) {
+                Group {
+                    if self.homeState.isSnappedToTop {
+                        Image(systemName: "chevron.down")
+                            .resizable()
+                            .scaledToFit()
+                            
+                    }
+                    else if self.homeState.isSnappedToBottom {
+                        Image(systemName: "chevron.up")
+                            .resizable()
+                            .scaledToFit()
+                    }
+                    else {
+                        Image(systemName: "chevron.down")
+                            .resizable()
+                            .scaledToFit()
+                    }
+                }
+                .frame(width: 16, height: 16)
+                .opacity(0.5)
+                .padding(.trailing, 8 + App.cameraButtonHeight * 0.5)
+            }
             .padding(.vertical, 4)
-//            .padding(.horizontal, 6)
+            .padding(.horizontal, 6)
         }
         .padding(.trailing, 4)
     }
