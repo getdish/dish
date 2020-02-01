@@ -7,6 +7,7 @@ TL;DR
 1. Build a nice iOS app for exploring good cuisine by dish in SF-first
 2. Build a content/web site and content market Listicles/data-driven-articles
 3. Set up a marketing campaign #cancelyelp, make it funny
+4. Do it all lean af, focusing on getting things in peoples hands first
 
 ## High level
 

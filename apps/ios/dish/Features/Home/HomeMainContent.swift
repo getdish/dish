@@ -243,3 +243,90 @@ struct HomeMainContentSearchPage: View {
         }
     }
 }
+
+
+// scroll view enhanced version start:
+
+//struct HomeMapExplore: View {
+//    @EnvironmentObject var store: AppStore
+//    @State var index: Int = 0
+//
+//    var body: some View {
+//        ScrollViewEnhanced(
+//            index: self.$index,
+//            direction: .horizontal,
+//            showsIndicators: false,
+//            pages: (0..<features.count).map { index in
+//                MapResultDishCard(dish: features[index])
+//            }
+//        )
+//            .frame(width: Screen.width, height: cardRowHeight)
+//        //        .padding(20)
+//    }
+//}
+
+//struct MapResultDishCard: View, Identifiable {
+//    var dish: DishItem
+//    var id: Int { self.dish.id }
+//
+//    var body: some View {
+//        DishCardView(
+//            dish: dish,
+//            at: .end,
+//            display: .card
+//        )
+//            .frame(width: 150, height: cardRowHeight - 40)
+//    }
+//}
+
+//struct HomeMapSearchResults: View {
+//    @EnvironmentObject var store: AppStore
+//    @State var index = 0
+//
+//    var body: some View {
+//        ScrollViewEnhanced(
+//            index: self.$index,
+//            direction: .horizontal,
+//            showsIndicators: false,
+//            pages: Selectors.home.lastState().searchResults.results.map { item in
+//                MapResultRestaurantCard(
+//                    restaurant: RestaurantItem(
+//                        id: item.id,
+//                        name: item.name,
+//                        imageName: "turtlerock",
+//                        address: "",
+//                        phone: "",
+//                        tags: [],
+//                        rating: 8
+//                    )
+//                )
+//            }
+//        )
+//            //        .frame(height: cardRowHeight - 40)
+//            //        .padding(20)
+//            .offset(y: -40)
+//    }
+//}
+
+//struct MapResultRestaurantCard: View, Identifiable {
+//    var restaurant: RestaurantItem
+//    var id: String { self.restaurant.id }
+//    var body: some View {
+//        DishRestaurantCard(
+//            restaurant: RestaurantItem(
+//                id: restaurant.id,
+//                name: restaurant.name,
+//                imageName: "turtlerock",
+//                address: "",
+//                phone: "",
+//                tags: [],
+//                rating: 8
+//            ),
+//            aspectRatio: 1.8,
+//            isMini: true,
+//            at: .end
+//        )
+//            .frame(width: 140, height: cardRowHeight - 40)
+//            .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
+//    }
+//}
