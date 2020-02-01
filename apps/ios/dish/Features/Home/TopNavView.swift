@@ -62,6 +62,22 @@ struct TopNavViewContent: View {
     }
 }
 
+struct TopNavButtonStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding(.vertical, 4)
+            .padding(.horizontal, 8)
+            .background(Color.white.opacity(0.15))
+            .background(Color.black.opacity(0.15))
+            .background(
+                BlurView(style: .light)
+        )
+            .cornerRadius(20)
+            .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+            .foregroundColor(.white)
+    }
+}
+
 struct TopNavHome: View {
     @EnvironmentObject var store: AppStore
     
@@ -74,28 +90,38 @@ struct TopNavHome: View {
                 ZStack {
                     // home controls
                     HStack {
-                        Button(action: {
-                            App.store.send(.map(.moveToLocation(.init(.current))))
-                        }) {
-                            VStack {
-                                Text(self.store.state.map.locationLabel)
-                                    .font(.system(size: 13))
-                                    .fontWeight(.semibold)
-                                    .shadow(color: Color.black.opacity(0.4), radius: 2, x: 0, y: 1)
+                        if self.store.state.map.locationLabel != "" {
+                            Button(action: {
+                                App.store.send(.map(.moveToLocation(.init(.current))))
+                            }) {
+                                VStack {
+                                    Text(self.store.state.map.locationLabel)
+                                        .titleBarStyle()
+                                }
+                                .modifier(TopNavButtonStyle())
                             }
-                            .padding(.vertical, 4)
-                            .padding(.horizontal, 8)
-                            .background(Color.white.opacity(0.2))
-                            .background(Color.black.opacity(0.2))
-                            .background(
-                                BlurView(style: .light)
-                            )
-                                .cornerRadius(20)
-                                .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                            .offset(y: isOnHome ? 0 : -80)
+                            .animation(Animation.spring().delay(isOnHome ? 0 : 0.25))
+                            .transition(.opacity)
                         }
-                        .foregroundColor(.white)
+                        
+                        HStack {
+                            Button(action: {
+                            }) {
+                                Text("-")
+                                    .titleBarStyle()
+                            }
+                            Button(action: {
+                            }) {
+                                Text("+")
+                                    .titleBarStyle()
+                            }
+                        }
+                        .modifier(TopNavButtonStyle())
                         .offset(y: isOnHome ? 0 : -80)
-                        .animation(Animation.spring().delay(isOnHome ? 0 : 0.25))
+                        .transition(.slide)
+                        
+                        
                         
                         Spacer()
                         
@@ -104,20 +130,11 @@ struct TopNavHome: View {
                         }) {
                             VStack {
                                 Text("~\(Int(App.store.state.map.location.radius / 1000)) mi")
-                                    .font(.system(size: 13))
-                                    .shadow(color: Color.black.opacity(0.35), radius: 2, x: 0, y: 1)
+                                    .titleBarStyle()
                             }
-                            .padding(.vertical, 4)
-                            .padding(.horizontal, 8)
-                            .background(Color.white.opacity(0.2))
-                            .background(Color.black.opacity(0.2))
-                            .background(
-                                BlurView(style: .light)
-                            )
-                                .cornerRadius(20)
-                                .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                            
                         }
-                        .foregroundColor(.white)
+                        .modifier(TopNavButtonStyle())
                         .offset(y: isOnHome ? 0 : -80)
                         .animation(Animation.spring().delay(isOnHome ? 0.2 : 0.4))
                     }

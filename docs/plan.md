@@ -1,6 +1,4 @@
-# Dish 6 month rough plan
-
-Ok, so lets really align!
+# Dish notes
 
 TL;DR
 
@@ -11,7 +9,11 @@ TL;DR
 
 ---
 
-First things, we should really understand how long of a shot this is. It's overwhelmingly likely we fail, and the absolute most likely reason is:
+So, this is a long shot. It's overwhelmingly likely we fail.
+
+That said, there's something to be said for getting a few properly motivated, skilled and creative people together who are willing to put a real effort in.
+
+The absolute most likely reason we fail is:
 
 1. We don't deliver a lean app, early, and iterate many times
 2. We don't do content marketing nearly enough or early enough
@@ -21,20 +23,16 @@ In other words, more than anything we need to:
 1. Get the app working on iOS ASAP and released to app store
 2. In parallel, have a strategy + implement content marketing
 
----
+We need to raise money. To do that, we need to build a tiny but sexy rocket, and launch it successfully, showing were competent tiny-sexy-rocket-launchers.
 
-A note on business:
-
-We need to raise money. To do that, we need to build a tiny but sexy rocket, and launch it successfully, showing were competent tiny-sexy-rocket-builders-and-launchers.
-
-We *don't* need to:
+We _don't_ need to:
 
 1. Launch on many platforms
 2. Launch in many cities or places
 3. Have the newest technology (but do want some)
 4. Have clean code or solve hard technical problems
 
-Why do we need to raise? Because we're aiming at Yelp! And really at a lot of companies (Eater, Google), and there's simply no way we get anwhere close to that on $200k.
+Why do we need to raise? Because we're aiming at Yelp! And really at a lot of companies (Eater, Google), and there's simply no way we get anwhere close to that on \$200k.
 
 The goal is always to preserve as much equity as possible for the us, and I always advocate for doing things lean, so we have to treat the raise as being not-for-sure. I don't think we can get "ramen profitable" until much later, but open to ideas. But that puts even more pressure on us needing to get some good numbers. Hockey sticks!
 
@@ -46,7 +44,7 @@ Since I'm writing a whole thing, a section on perspective.
 
 I don't want much.
 
-What I do want is to be able to tackle things at the intersection of interesting work and real world problems and *enjoy the ride* - in a free way, with creativity, in a nice environment.
+What I do want is to be able to tackle things at the intersection of interesting work and real world problems and _enjoy the ride_ - in a free way, with creativity, in a nice environment.
 
 We can still be just about as ruthless, frugal, passionate, efficient, etc as many, but let work smarter and use happiness and low cortisol levels as a productivity secret.
 
@@ -76,9 +74,9 @@ Aggregation theory which basically means "Be the early Netflix or Zillow of food
 
 I recommend this article [5].
 
-Yelp is a first-party source of ratings + delivery (Eat24/GrubHub), they *wont ever be an aggregator*.
+Yelp is a first-party source of ratings + delivery (Eat24/GrubHub), they _wont ever be an aggregator_.
 
-It means we can aggregate *both* delivery services and food ratings, and doing so seems additive: "as a user I want rating aggregation, I want delivery aggregation, and it would be especially useful in the same place so my delivery orders are way easier and I'm not hopping around apps!"
+It means we can aggregate _both_ delivery services and food ratings, and doing so seems additive: "as a user I want rating aggregation, I want delivery aggregation, and it would be especially useful in the same place so my delivery orders are way easier and I'm not hopping around apps!"
 
 I'm not positive aggregation theory is our key insight or 100% necessary, but it's a nice lense to look through.
 
@@ -97,8 +95,8 @@ One really nice startupy idea common in SV is that you should only do things tha
 
 I like how slava put it in terms of "Gamechangers and Showstoppers" [insert reference]. Basically, when evaluating what to do, always ask:
 
-1. Gamechanger - does this thing *significantly* improve chances of success?
-2. Showstopper - does this thing *significantly* detract from chance of success?
+1. Gamechanger - does this thing _significantly_ improve chances of success?
+2. Showstopper - does this thing _significantly_ detract from chance of success?
 
 I think we can do the following 10x Better:
 
@@ -125,7 +123,7 @@ Here's a 10x:
 
 Some tips as we develop
 
-If we are just developing for most of the month, we are failing. We need to be focus on growth at every step. And for VC's - we need to be somewhat sexy. Honestly, sex appeal is just under-valued because it really multiplies with your growth numbers. But it's *only* useful if combined with growth.
+If we are just developing for most of the month, we are failing. We need to be focus on growth at every step. And for VC's - we need to be somewhat sexy. Honestly, sex appeal is just under-valued because it really multiplies with your growth numbers. But it's _only_ useful if combined with growth.
 
 I like to think of it in analogy to Tesla:
 
@@ -145,7 +143,7 @@ You could make the case that each of these is actually for a "round", Roadster f
 
 Eventually going broad
 
-So we'll be laser focused on dishes. But just a note on how we *could* expand.
+So we'll be laser focused on dishes. But just a note on how we _could_ expand.
 
 Steps:
 
@@ -157,11 +155,11 @@ I do think that we could fill another gap I see generally which is that no map a
 
 As an example of a good way to expand without "genericizing" is say we're adding coffee shops:
 
- Tap 🍽 icon at the top, change it to ☕️, and see all coffee shops. But, now the map can show differnt types of inline tags (open late, has chargers, comfy seating, good lighting). Same goes for the filters. Maybe pictures aren't so important *of the coffee* but really important *of the cafe*. Etc.
+Tap 🍽 icon at the top, change it to ☕️, and see all coffee shops. But, now the map can show differnt types of inline tags (open late, has chargers, comfy seating, good lighting). Same goes for the filters. Maybe pictures aren't so important _of the coffee_ but really important _of the cafe_. Etc.
 
 I think this state of mind should lead us to a much better place than Google Maps or Yelp.
 
-In the very very long term, this nicely leads us to becoming the best local search / trip planning app essentially. You could just go to your trip location (Hawaii) and *browse* super easily. Then star stuff, maybe it goes into a bucket by that area, and have a little "auto trip planner". Boom, you have your vacation planned! It's a nice "vision" for the company.
+In the very very long term, this nicely leads us to becoming the best local search / trip planning app essentially. You could just go to your trip location (Hawaii) and _browse_ super easily. Then star stuff, maybe it goes into a bucket by that area, and have a little "auto trip planner". Boom, you have your vacation planned! It's a nice "vision" for the company.
 
 Thinking in that lens: Who knows, someday we could even have great info on history of the place, with fun historical maps, etc.
 
@@ -179,10 +177,10 @@ So, in bullets:
    5. It potentially lets you explore map nicely without needing to search
    6. We'll focus just finding "by dish" first, especially focusing by being great at often-missed cuisines (Asian)
    7. How we'll narrow it further:
-     - Focus only on SF to start (can expand to other big cities after)
-     - Built only an iPhone app (can expand to android after)
+   - Focus only on SF to start (can expand to other big cities after)
+   - Built only an iPhone app (can expand to android after)
 2. For growth/marketing:
-   1. Save about $30-40k for ad spend once ready
+   1. Save about \$30-40k for ad spend once ready
       1. cancelyelp.com may be our best play there + billboards + some social
    2. Build a website that we can publish content on
       1. Generated or contractor-written highly SEO optimized Listicles
@@ -219,10 +217,10 @@ Here's the general idea I have:
 2. We put up a long, fun site there explaining all the ways they suck:
    1. We avoid claiming they extorted people, avoid lawsuit!
    2. They suck at asian restaurants / hole in the walls
-   4. They way over-value service
-   5. They make you work! It's like homework to find stuff
-   6. They aren't fun or simple, they are like the Facebook
-   8. Then we can boast our features
+   3. They way over-value service
+   4. They make you work! It's like homework to find stuff
+   5. They aren't fun or simple, they are like the Facebook
+   6. Then we can boast our features
       1. Search across delivery services
       2. Find locals favorites / really authentic cuisine
 3. We buy 1-3 billboards in SF:
@@ -253,6 +251,3 @@ This isn't to say we are "set" on this strategy, and I'd love to find some good 
 I also have a few really key chef friends - one who has worked at a ton of top restaurants in SF and LA, another who owns Fang restaurant in SF and won Chopped twice, and a couple others, and there's perhaps a way we could get them on board too and have them connect us with people.
 
 Finally - Instagram. Instagram is a very obvious huge channel for us because it's where foodies originally went. Maybe they don't now (just post on stories), but I also have a good friend who is really well connected here too and he would do a big favor for us, so we can basically try and think of a way to get some virality here.
-
-
-
