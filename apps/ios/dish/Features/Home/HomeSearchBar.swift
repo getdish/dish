@@ -18,7 +18,7 @@ struct HomeSearchBar: View {
     
     func updatePlaceholder() {
         var i = 0
-        let placeholders = ["Bo Kho...", "Ceviche...", "Poke..."]
+        let placeholders = ["Dim Sum...", "Bo Kho...", "Ceviche...", "Poke...", "Szechuan Chicken..."]
         async(interval: 5000, intervalMax: 5) {
             self.placeholder = placeholders[i]
             i += 1
