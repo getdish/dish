@@ -2,10 +2,8 @@ import SwiftUI
 import Combine
 
 fileprivate let snapToBottomYMovePct: CGFloat = 0.6
-
-fileprivate let distanceUntilSnapDown: CGFloat = 30
-fileprivate let distanceUntilSnapUp: CGFloat = 35
-
+fileprivate let distanceUntilSnapDown: CGFloat = 42
+fileprivate let distanceUntilSnapUp: CGFloat = 85
 fileprivate let nearTopAtVal: CGFloat = 120 + Screen.statusBarHeight
 fileprivate let topNavHeight: CGFloat = 45
 
@@ -211,7 +209,7 @@ class HomeViewState: ObservableObject {
         self.dragState = next
     }
     
-    func setAnimationState(_ next: HomeAnimationState, _ duration: Int = 0) {
+    func setAnimationState(_ next: HomeAnimationState, _ duration: Double = 0) {
         async {
             self.animationState = next
             // cancel last controlled animation
@@ -225,7 +223,7 @@ class HomeViewState: ObservableObject {
                 self.cancelAnimation = AnyCancellable {
                     active = false
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(duration)) {
+                async(duration) {
                     if active {
                         self.setAnimationState(.idle)
                         self.cancelAnimation = nil
@@ -235,10 +233,16 @@ class HomeViewState: ObservableObject {
         }
     }
     
-    func animate(_ animation: Animation? = Animation.spring().speed(ANIMATION_SPEED), state: HomeAnimationState = .controlled, duration: Int = 400, _ body: @escaping () -> Void) {
+    func animate(
+        _ animation: Animation? = Animation.spring().speed(ANIMATION_SPEED),
+        state: HomeAnimationState = .controlled,
+        duration: Double = 400,
+        _ body: @escaping () -> Void
+    ) {
         log.info("\(state) duration: \(duration)")
         self.setAnimationState(state, duration)
-        async(1) {
+        
+        async(1) { // delay so it updates animationState first in body
             withAnimation(animation) {
                 body()
             }
@@ -304,15 +308,21 @@ class HomeViewState: ObservableObject {
         if dragState == .pager { return }
         log.info()
         
-        // use velocity to determine snap
-        
-        print("🍗🍗 what trans \(value.predictedEndTranslation.height) loc \(value.predictedEndLocation.y)")
-        
+        // continue movement with natural velocity
         let predictedY = value.predictedEndLocation.y
         let diff = self.y > predictedY ? -(self.y - predictedY) : predictedY - self.y
         
-        // default scrolling is very "loose", but this should feel a bit more tight
-        let finalY = self.y + diff / 2
+        // but default velocity is too "loose", tighten
+        var finalY = self.y + diff / 2
+        
+        // dont snap to bottom too easily
+        let startedJustAbove = self.y > startSnapToBottomAt - 20
+        let startedFarAbove = self.y < startSnapToBottomAt - 50
+        let finishesBelow = finalY > snapToBottomAt
+        let finishesJustBelow = finalY < snapToBottomAt + 25
+        if startedFarAbove && finishesBelow || startedJustAbove && finishesJustBelow  {
+            finalY = startSnapToBottomAt
+        }
         
         let shouldSnapDown = finalY > snapToBottomAt
         
@@ -328,7 +338,6 @@ class HomeViewState: ObservableObject {
                 print("🍩 predictedY \(predictedY) finalY \(finalY)")
                 self.y = finalY
             }
-            
             if self.searchBarYExtra != 0 {
                 self.searchBarYExtra = 0
             }

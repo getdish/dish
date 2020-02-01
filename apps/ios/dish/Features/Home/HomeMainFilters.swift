@@ -55,7 +55,6 @@ struct HomeMainFilterBar: View {
                                 FilterButton(width: 50, label: self.showCuisine ? "Cuisine" : "Dish", action: { self.showCuisine = !self.showCuisine })
                                     .environment(\.colorScheme, .dark)
                                 
-                                
                                 FilterButton(label: "Price", action: {})
                                 
                                 FilterButton(label: "Spice", action: {})
@@ -68,12 +67,10 @@ struct HomeMainFilterBar: View {
                                 FilterButton(label: "Open Late", action: filterAction)
                                     .opacity(0.8)
                             }
-                            .cornerRadius(80)
-                            .shadow(radius: 6)
                             .animation(.spring())
                         }
                         .padding(.vertical, 12)
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         .environment(\.colorScheme, .light)
                     }
                     
