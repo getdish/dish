@@ -49,7 +49,9 @@ struct HomeSearchBar: View {
     }
     
     var body: some View {
-        Group {
+        let zoomed = keyboard.state.height > 0
+        
+        return Group {
             SideEffect("HomeSearchBar.updatePlaceholder") { self.updatePlaceholder() }
             
             SearchInput(
@@ -58,7 +60,7 @@ struct HomeSearchBar: View {
                     ? Color(red: 0.2, green: 0.2, blue: 0.2)
                     : Color.white,
                 borderColor: Color.clear,
-                scale: keyboard.state.height > 0 ? 1.5 : 1.2,
+                scale: zoomed ? 1.5 : 1.3,
                 sizeRadius: 2.0,
                 icon: icon,
                 showCancelInside: true,
@@ -81,6 +83,8 @@ struct HomeSearchBar: View {
                 searchText: self.homeSearch,
                 tags: self.homeTags
             )
+            .animation(.spring())
+            .offset(y: zoomed ? -10 : 0)
         }
     }
     
