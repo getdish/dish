@@ -169,7 +169,7 @@ struct HomeMainFilterFocused: View {
 
 fileprivate let filterAction = {
     // todo move this into action
-    let curState = App.store.state.home.state.last!
+    let curState = App.store.state.home.viewStates.last!
     let filters = curState.filters.filter({ $0.type == .cuisine }) + [
         SearchFilter(type: .cuisine, name: "American")
     ]

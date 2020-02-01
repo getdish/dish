@@ -5,7 +5,7 @@ import GoogleMaps
 extension AppState {
     struct HomeState: Equatable {
         var view: HomePageView = .home
-        var state: [HomeStateItem] = [
+        var viewStates: [HomeStateItem] = [
             HomeStateItem(filters: [
                 //                SearchFilter(type: .root, name: "Dish", deletable: false)
             ])
@@ -31,10 +31,10 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     
     // use this to ensure you update HomeStateItems correctly
     func updateItem(_ next: HomeStateItem) {
-        if let index = state.home.state.firstIndex(where: { $0.id == next.id }) {
+        if let index = state.home.viewStates.firstIndex(where: { $0.id == next.id }) {
             var item = next
             item.id = uid()
-            state.home.state[index] = item
+            state.home.viewStates[index] = item
         }
     }
     
@@ -42,11 +42,11 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
         case let .setShowCamera(val):
             state.home.showCamera = val
         case let .setSearchResults(val):
-            var last = state.home.state.last!
+            var last = state.home.viewStates.last!
             last.searchResults = val
             updateItem(last)
         case let .setCurrentTags(val):
-            var last = state.home.state.last!
+            var last = state.home.viewStates.last!
             
             // if removing last filter, pop!
             if val.count == 0 {
@@ -64,11 +64,11 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
                 }
         }
         case let .setSearch(val):
-            var last = state.home.state.last!
+            var last = state.home.viewStates.last!
             // TODO if filter/category exists (like Pho), move it to tags not search
             // push into search results
             if last.search == "" {
-                state.home.state.append(
+                state.home.viewStates.append(
                     HomeStateItem(search: val)
                 )
             } else {
@@ -82,25 +82,25 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
         case .toggleDrawer:
             state.home.showDrawer = !state.home.showDrawer
         case let .push(homeState):
-            state.home.state.append(homeState)
+            state.home.viewStates.append(homeState)
         case .pop:
-            if state.home.state.count > 1 {
-                state.home.state = state.home.state.dropLast()
+            if state.home.viewStates.count > 1 {
+                state.home.viewStates = state.home.viewStates.dropLast()
             }
     }
 }
 
 struct HomeSelectors {
     func isOnSearchResults(_ state: AppState = App.store.state) -> Bool {
-        return state.home.state.count > 1
+        return state.home.viewStates.count > 1
     }
     
     func lastState(_ state: AppState = App.store.state) -> HomeStateItem {
-        return state.home.state.last!
+        return state.home.viewStates.last!
     }
     
     func tags(_ state: AppState = App.store.state) -> [SearchInputTag] {
-        let homeState = state.home.state.last!
+        let homeState = state.home.viewStates.last!
         var tags: [SearchInputTag] = []
         if homeState.filters.count > 0 {
             tags = homeState.filters.map { filter in

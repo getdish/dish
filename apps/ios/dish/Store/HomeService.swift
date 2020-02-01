@@ -18,7 +18,7 @@ class HomeService {
         App.store.$state
             .map { state in
                 SearchQuery(
-                    query: state.home.state.last!.queryString,
+                    query: state.home.viewStates.last!.queryString,
                     location: state.map.location
                 )
             }
