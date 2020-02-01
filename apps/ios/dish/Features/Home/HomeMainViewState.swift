@@ -1,11 +1,9 @@
 import SwiftUI
 import Combine
 
-// need enum animateStatus = { .will, .is, .idle }
-// then on idle we can apply .spring()
-
-fileprivate let snapToBottomYMovePct: CGFloat = 0.23
-fileprivate let resistanceYBeforeSnap: CGFloat = 38
+fileprivate let snapToBottomYMovePct: CGFloat = 0.6
+fileprivate let distanceUntilSnapDown: CGFloat = 42
+fileprivate let distanceUntilSnapUp: CGFloat = 85
 fileprivate let nearTopAtVal: CGFloat = 120 + Screen.statusBarHeight
 fileprivate let topNavHeight: CGFloat = 45
 
@@ -13,15 +11,9 @@ class HomeViewState: ObservableObject {
     enum HomeDragState {
         case idle, off, pager, searchbar
     }
-    
-    // note:
-    // idle == nothing
-    // animate == .animation()
-    // controlled = nothing (but we are animating manually using withAnimation())
     enum HomeAnimationState {
         case idle, controlled, animate
     }
-    
     enum HomeScrollState {
         case none, some, more
     }
@@ -30,31 +22,19 @@ class HomeViewState: ObservableObject {
     @Published var showFilters: Bool = false
     
     @Published private(set) var appHeight: CGFloat = Screen.height
-    @Published private(set) var scrollY: CGFloat = 0
-    // initialize it at where the snapToBottom will be about
-    @Published private(set) var y: CGFloat = Screen.fullHeight * 0.3 * snapToBottomYMovePct - 1 {
-        willSet(y) {
-//            // util - break when the searchbar is at y
-//            #if DEBUG
-//            print("y \(y)")
-//            if false, y > snapToBottomAt { // <- example
-//                raise(SIGINT)
-//            }
-//            #endif
-        }
-    }
+    // initialize it at best estimate where the snapToBottom will be
+    @Published private var y: CGFloat = Screen.fullHeight * 0.3 * snapToBottomYMovePct - 1
     @Published private(set) var searchBarYExtra: CGFloat = 0
     @Published private(set) var hasScrolled: HomeScrollState = .none
     @Published private(set) var hasMovedBar = false
-    @Published private(set) var shouldAnimateCards = false
     @Published private(set) var dragState: HomeDragState = .idle
     @Published private(set) var animationState: HomeAnimationState = .idle
     @Published private(set) var showCamera = false
+    @Published private(set) var keyboardHeight: CGFloat = 0
     
+    private var scrollState = HomeMainScrollState()
+    private var activeScrollView: UIScrollView? = nil
     private var cancelAnimation: AnyCancellable? = nil
-    
-    // keyboard
-    @Published var keyboardHeight: CGFloat = 0
     private var cancels: Set<AnyCancellable> = []
     private var keyboard = Keyboard()
     private var lastKeyboardAdjustY: CGFloat = 0
@@ -74,6 +54,7 @@ class HomeViewState: ObservableObject {
         }
         .store(in: &cancels)
         
+        // TODO move this into the setY directly
         // haptic feedback
         let lightFeedback = UIImpactFeedbackGenerator(style: .light)
         let strongFeedback = UIImpactFeedbackGenerator(style: .heavy)
@@ -85,7 +66,7 @@ class HomeViewState: ObservableObject {
             if dragState == .idle {
                 hasHapticIndicatedThisDrag  = .idle
             }
-        }.store(in: &cancels)
+            }.store(in: &cancels)
         // listen for haptic events
         self.$y
             .sink { y in
@@ -120,10 +101,10 @@ class HomeViewState: ObservableObject {
             .map { $0.height }
             .removeDuplicates()
             .sink { height in
-                let isOpen = height > 0
+//                let isOpen = height > 0
                 
                 // disable top nav when keyboard open
-                App.store.send(.setDisableTopNav(isOpen))
+//                App.store.send(.setDisableTopNav(isOpen))
                 
                 // map up/down on keyboard open/close
 //                if !self.isSnappedToBottom {
@@ -144,7 +125,7 @@ class HomeViewState: ObservableObject {
         .store(in: &cancels)
         
         let started = Date()
-        self.$scrollY
+        self.scrollState.$scrollY
             .throttle(for: 0.125, scheduler: App.queueMain, latest: true)
             .removeDuplicates()
             .sink { y in
@@ -176,15 +157,10 @@ class HomeViewState: ObservableObject {
         Screen.statusBarHeight + searchBarHeight / 2 + topNavHeight + 50
     )
     
-    var mapInitialHeight: CGFloat { appHeight * 0.3 }
     var mapMaxHeight: CGFloat { appHeight - keyboardHeight - searchBarHeight }
     
     var mapHeight: CGFloat {
-        return min(
-            mapMaxHeight, max(
-                mapInitialHeight + y - scrollRevealY, mapMinHeight
-            )
-        )
+        min(mapMaxHeight, max(self.y - scrollRevealY, mapMinHeight))
     }
     
     var scrollRevealY: CGFloat {
@@ -200,12 +176,15 @@ class HomeViewState: ObservableObject {
     }
     
     var startSnapToBottomAt: CGFloat {
-        snapToBottomAt - resistanceYBeforeSnap
+        snapToBottomAt - distanceUntilSnapDown
     }
     
     var snappedToBottomMapHeight: CGFloat { appHeight - 120 }
-    var isSnappedToBottom: Bool { y > snapToBottomAt }
     var wasSnappedToBottom = false
+    
+    var isSnappedToBottom: Bool {
+        y > snapToBottomAt
+    }
     
     let nearTopAt: CGFloat = nearTopAtVal
     var isNearTop: Bool {
@@ -230,7 +209,7 @@ class HomeViewState: ObservableObject {
         self.dragState = next
     }
     
-    func setAnimationState(_ next: HomeAnimationState, _ duration: Int = 0) {
+    func setAnimationState(_ next: HomeAnimationState, _ duration: Double = 0) {
         async {
             self.animationState = next
             // cancel last controlled animation
@@ -244,7 +223,7 @@ class HomeViewState: ObservableObject {
                 self.cancelAnimation = AnyCancellable {
                     active = false
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(duration)) {
+                async(duration) {
                     if active {
                         self.setAnimationState(.idle)
                         self.cancelAnimation = nil
@@ -254,17 +233,23 @@ class HomeViewState: ObservableObject {
         }
     }
     
-    func animate(_ animation: Animation? = Animation.spring().speed(ANIMATION_SPEED), state: HomeAnimationState = .controlled, duration: Int = 400, _ body: @escaping () -> Void) {
+    func animate(
+        _ animation: Animation? = Animation.spring().speed(ANIMATION_SPEED),
+        state: HomeAnimationState = .controlled,
+        duration: Double = 400,
+        _ body: @escaping () -> Void
+    ) {
         log.info("\(state) duration: \(duration)")
         self.setAnimationState(state, duration)
-        async (10) {
+        
+        async(1) { // delay so it updates animationState first in body
             withAnimation(animation) {
                 body()
             }
         }
     }
 
-    func drag(_ dragY: CGFloat) {
+    func setY(_ dragY: CGFloat) {
         if dragState == .pager { return }
         if lastDragY == dragY { return }
         lastDragY = dragY
@@ -312,7 +297,6 @@ class HomeViewState: ObservableObject {
         if willSnapDown {
             self.snapToBottom(true)
         } else if wasSnappedToBottom {
-            let distanceUntilSnapUp = appHeight * 0.2
             let willSnapUp = -dragY > distanceUntilSnapUp
             if willSnapUp {
                 self.snapToBottom(false)
@@ -324,19 +308,39 @@ class HomeViewState: ObservableObject {
         if dragState == .pager { return }
         log.info()
         
-        self.animate {
-            if self.isSnappedToBottom {
+        // continue movement with natural velocity
+        let predictedY = value.predictedEndLocation.y
+        let diff = self.y > predictedY ? -(self.y - predictedY) : predictedY - self.y
+        
+        // but default velocity is too "loose", tighten
+        var finalY = self.y + diff / 2
+        
+        // dont snap to bottom too easily
+        let startedJustAbove = self.y > startSnapToBottomAt - 20
+        let startedFarAbove = self.y < startSnapToBottomAt - 50
+        let finishesBelow = finalY > snapToBottomAt
+        let finishesJustBelow = finalY < snapToBottomAt + 25
+        if startedFarAbove && finishesBelow || startedJustAbove && finishesJustBelow  {
+            finalY = startSnapToBottomAt
+        }
+        
+        let shouldSnapDown = finalY > snapToBottomAt
+        
+        let animation: Animation = shouldSnapDown
+            ? Animation.spring().speed(ANIMATION_SPEED)
+            : Animation.easeOut.speed(ANIMATION_SPEED)
+        
+        self.animate(animation) {
+            if shouldSnapDown || self.isSnappedToBottom {
                 self.snapToBottom()
-            } else if self.y > self.startSnapToBottomAt {
                 self.y = self.startSnapToBottomAt
+            } else {
+                print("🍩 predictedY \(predictedY) finalY \(finalY)")
+                self.y = finalY
             }
             if self.searchBarYExtra != 0 {
                 self.searchBarYExtra = 0
             }
-            // attempt to have it "continue" from your drag a bit, feels slow
-            //        withAnimation(.spring(response: 0.2222)) {
-            //            self.y = self.y + value.predictedEndTranslation.height / 2
-            //        }
         }
     }
     
@@ -344,11 +348,15 @@ class HomeViewState: ObservableObject {
         log.info()
         // prevent dragging after snap
         self.setDragState(.off)
-        self.animate {
-            self.scrollY = 0
+        
+        self.animate(
+            Animation.spring(response: 0.5).speed(ANIMATION_SPEED),
+            duration: 300
+        ) {
+            self.scrollState.setScrollY(0)
             self.searchBarYExtra = 0
             if toBottom {
-                self.y = self.snappedToBottomMapHeight - self.mapInitialHeight
+                self.y = self.snappedToBottomMapHeight
             } else {
                 self.y = self.startSnapToBottomAt
             }
@@ -356,7 +364,7 @@ class HomeViewState: ObservableObject {
     }
     
     var mapSnappedToTopHeight: CGFloat {
-        self.mapMinHeight - self.mapInitialHeight
+        self.mapMinHeight
     }
     
     var isSnappedToTop: Bool {
@@ -368,7 +376,7 @@ class HomeViewState: ObservableObject {
         if !isSnappedToTop {
             //            self.hasMovedBar = false
             self.animate {
-                self.y = self.mapMinHeight - self.mapInitialHeight
+                self.y = self.mapMinHeight
             }
         }
     }
@@ -388,12 +396,14 @@ class HomeViewState: ObservableObject {
         }
     }
     
-    func setScrollY(_ scrollY: CGFloat) {
+    func setScrollY(_ frame: CGRect) {
         if dragState != .idle { return }
         if animationState != .idle { return }
-        let y = max(0, min(100, scrollY))
-        if y != self.scrollY {
-            self.scrollY = y
+        let scrollY = mapHeight - frame.minY - Screen.statusBarHeight - scrollRevealY
+        let y = max(-50, min(100, scrollY))
+        if y != scrollState.scrollY {
+            print("disabled scroll stuff for now")
+//            self.scrollState.setScrollY(y)
         }
     }
     
@@ -405,14 +415,41 @@ class HomeViewState: ObservableObject {
         }
     }
     
+    var hasSetInitialY = false
     func setAppHeight(_ val: CGFloat) {
         log.info()
         self.appHeight = val
+        // do once on startup
+        if !hasSetInitialY {
+            hasSetInitialY = true
+            self.y = val * 0.3
+        }
     }
     
     func setShowCamera(_ val: Bool) {
         self.animate(state: .animate) {
             self.showCamera = val
         }
+    }
+    
+    // this updates often and doesnt need to update parent views
+    // its essentially "private" impl detail
+    class HomeMainScrollState: ObservableObject {
+        @Published private(set) var scrollY: CGFloat = 0
+        
+        func setScrollY(_ next: CGFloat) {
+            self.scrollY = next
+        }
+    }
+}
+
+// active scroll view logic
+extension HomeViewState {
+    var isActiveScrollViewAtTop: Bool {
+        self.activeScrollView?.contentOffset.y == 0
+    }
+    
+    func setActiveScrollView(_ val: UIScrollView?) {
+        self.activeScrollView = val
     }
 }

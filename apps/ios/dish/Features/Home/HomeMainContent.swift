@@ -19,15 +19,19 @@ struct HomeMainContent: View {
     @State var shouldUpdateMagicPositions: Bool = true
     
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            SideEffect("HomeMainContent.animateToEnd", condition: { self.homeState.isSnappedToBottom && self.animatePosition == .start }) {
+        let state = self.homeState
+
+        return ZStack(alignment: .topLeading) {
+            SideEffect("HomeMainContent.animateToEnd",
+                       condition: { state.isSnappedToBottom && self.animatePosition == .start }) {
                 self.shouldUpdateMagicPositions = false
                 async {
                     self.animatePosition = .end
                 }
             }
             
-            SideEffect("HomeMainContent.animateToStart", condition: { !self.homeState.isSnappedToBottom && self.animatePosition == .end }) {
+            SideEffect("HomeMainContent.animateToStart",
+                       condition: { !state.isSnappedToBottom && self.animatePosition == .end }) {
                 self.shouldUpdateMagicPositions = false
                 async {
                     self.animatePosition = .start
@@ -37,14 +41,14 @@ struct HomeMainContent: View {
             PrintGeometryView("HomeMainContent")
             
             MagicMove(self.animatePosition,
-                      duration: 500 * (1 / ANIMATION_SPEED),
+                      duration: 300 * (1 / ANIMATION_SPEED),
                       // TODO we need a separate "disableTracking" in homeStore that is manually set
                       // why? when hitting "map" toggle button when above snapToBottomAt this fails for now
-                      disableTracking: self.homeState.y >= self.homeState.snapToBottomAt
-                        || self.homeState.isSnappedToBottom
-                        || self.homeState.animationState == .controlled,
+                      disableTracking: state.mapHeight >= state.snapToBottomAt
+                        || state.isSnappedToBottom
+                        || state.animationState == .controlled,
                       onMoveComplete: {
-                        if !self.homeState.isSnappedToBottom {
+                        if !state.isSnappedToBottom {
                             self.shouldUpdateMagicPositions = true
                         }
                     }
@@ -60,7 +64,7 @@ struct HomeMainContent: View {
                             HomeContentExplore()
                         }
                     }
-                        .offset(y: self.homeState.mapHeight - self.homeState.searchBarYExtra)
+                    .offset(y: state.mapHeight - state.searchBarYExtra)
                     
                     // results bar below map
                     ZStack {
@@ -73,9 +77,14 @@ struct HomeMainContent: View {
                         .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
                         .offset(y: self.homeState.snappedToBottomMapHeight - cardRowHeight - 20)
                 }
+                // note! be sure to put any animation on this *inside* magic move
+                // or else it messes up the magic move measurement - you can test
+                // by turning on MagicMove's fileprivate debug flag to see
+                // also: only making it bouncy during drag to avoid more problems
+//                .animation(self.homeState.dragState != .idle ? .spring() : .none)
             }
-            .frameFlex()
-            .clipped()
+//            .frameFlex()
+//            .clipped()
         }
     }
 }
@@ -92,6 +101,7 @@ struct HomeMapExplore: View {
                         at: .end,
                         display: .card
                     )
+                        .equatable()
                         .frame(width: 150, height: cardRowHeight - 40)
                 }
             }
@@ -136,7 +146,7 @@ struct HomeContentExplore: View {
     @Environment(\.geometry) var appGeometry
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
-    let items = features.chunked(into: 2)
+    let items = features.chunked(into: 3)
     
     let spacing: CGFloat = 14
     
@@ -144,14 +154,7 @@ struct HomeContentExplore: View {
         ZStack {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 0) {
-                    ScrollListener(throttle: 30.0) { frame in
-                        if self.homeState.dragState != .idle {
-                            return
-                        }
-                        let mapHeight = self.homeState.mapHeight
-                        let scrollY = mapHeight - frame.minY - Screen.statusBarHeight - self.homeState.scrollRevealY
-                        self.homeState.setScrollY(scrollY)
-                    }
+                    HomeMainDrawerScrollEffects()
                     Spacer().frame(height: filterBarHeight + 22 + self.homeState.scrollRevealY)
                     VStack(spacing: self.spacing) {
                         ForEach(0 ..< self.items.count) { index in
@@ -161,8 +164,9 @@ struct HomeContentExplore: View {
                                         dish: item,
                                         at: .start,
                                         display: .full,
-                                        height: 120
+                                        height: 100
                                     )
+                                    .equatable()
                                 }
                             }
                             .padding(.horizontal)
@@ -171,11 +175,25 @@ struct HomeContentExplore: View {
                     Spacer().frame(height: bottomNavHeight)
                     Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)
                 }
+                .introspectScrollView { scrollView in
+                    self.homeState.setActiveScrollView(scrollView)
+                    scrollView.bounces = false
+                }
             }
             .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
         }
         .edgesIgnoringSafeArea(.all)
         .clipped()
+    }
+}
+
+struct HomeMainDrawerScrollEffects: View {
+    @EnvironmentObject var homeState: HomeViewState
+
+    var body: some View {
+        ScrollListener(throttle: 16.0) { frame in
+            self.homeState.setScrollY(frame)
+        }
     }
 }
 
@@ -225,3 +243,90 @@ struct HomeMainContentSearchPage: View {
         }
     }
 }
+
+
+// scroll view enhanced version start:
+
+//struct HomeMapExplore: View {
+//    @EnvironmentObject var store: AppStore
+//    @State var index: Int = 0
+//
+//    var body: some View {
+//        ScrollViewEnhanced(
+//            index: self.$index,
+//            direction: .horizontal,
+//            showsIndicators: false,
+//            pages: (0..<features.count).map { index in
+//                MapResultDishCard(dish: features[index])
+//            }
+//        )
+//            .frame(width: Screen.width, height: cardRowHeight)
+//        //        .padding(20)
+//    }
+//}
+
+//struct MapResultDishCard: View, Identifiable {
+//    var dish: DishItem
+//    var id: Int { self.dish.id }
+//
+//    var body: some View {
+//        DishCardView(
+//            dish: dish,
+//            at: .end,
+//            display: .card
+//        )
+//            .frame(width: 150, height: cardRowHeight - 40)
+//    }
+//}
+
+//struct HomeMapSearchResults: View {
+//    @EnvironmentObject var store: AppStore
+//    @State var index = 0
+//
+//    var body: some View {
+//        ScrollViewEnhanced(
+//            index: self.$index,
+//            direction: .horizontal,
+//            showsIndicators: false,
+//            pages: Selectors.home.lastState().searchResults.results.map { item in
+//                MapResultRestaurantCard(
+//                    restaurant: RestaurantItem(
+//                        id: item.id,
+//                        name: item.name,
+//                        imageName: "turtlerock",
+//                        address: "",
+//                        phone: "",
+//                        tags: [],
+//                        rating: 8
+//                    )
+//                )
+//            }
+//        )
+//            //        .frame(height: cardRowHeight - 40)
+//            //        .padding(20)
+//            .offset(y: -40)
+//    }
+//}
+
+//struct MapResultRestaurantCard: View, Identifiable {
+//    var restaurant: RestaurantItem
+//    var id: String { self.restaurant.id }
+//    var body: some View {
+//        DishRestaurantCard(
+//            restaurant: RestaurantItem(
+//                id: restaurant.id,
+//                name: restaurant.name,
+//                imageName: "turtlerock",
+//                address: "",
+//                phone: "",
+//                tags: [],
+//                rating: 8
+//            ),
+//            aspectRatio: 1.8,
+//            isMini: true,
+//            at: .end
+//        )
+//            .frame(width: 140, height: cardRowHeight - 40)
+//            .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
+//    }
+//}

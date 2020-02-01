@@ -1,6 +1,10 @@
 import SwiftUI
 
-struct DishCardView: View, Identifiable {
+struct DishCardView: View, Identifiable, Equatable {
+    static func == (lhs: DishCardView, rhs: DishCardView) -> Bool {
+        lhs.id == rhs.id
+    }
+    
     enum DisplayCard {
         case card, full, fullscreen
     }
@@ -25,7 +29,7 @@ struct DishCardView: View, Identifiable {
                         .scaledToFill()
                         .frame(width: self.width ?? geo.size.width, height: self.height ?? geo.size.height)
                         .overlay(self.overlay)
-                        .cornerRadius(self.display == .card ? 14 : 18)
+                        .cornerRadius(self.display == .card ? 12 : 24)
                         .clipped()
                         .shadow(color: Color.black.opacity(0.5), radius: 6, x: 0, y: 2)
                 }
@@ -45,7 +49,7 @@ struct DishCardView: View, Identifiable {
             )
             VStack(alignment: .leading) {
                 Text(self.dish.name)
-                    .font(.system(size: 20))
+                    .font(.system(size: 17))
                     .bold()
                 //        Text(dish.park)
             }

@@ -73,7 +73,7 @@ struct MagicMove<Content>: View where Content: View {
         self.content = content
         self.disableTracking = disableTracking
         self.onMoveComplete = onMoveComplete
-        self.animation = .linear(duration: duration / 1000 * ANIMATION_SPEED)
+        self.animation = .easeInOut(duration: duration / 1000 * ANIMATION_SPEED)
         self.lastContent = content()
         self.position = position
         self.store.disableTracking = disableTracking
@@ -283,7 +283,9 @@ struct MagicItem<Content>: View where Content: View {
                         
                         let enabled = !self.isDisabled && !isOffScreen && !isMagicStoreAnimating && hasChanged
                         
-                        return SideEffect(name, condition: { enabled }) { self.updateItem(item) }
+                        return SideEffect(name, level: .debug, condition: { enabled }) {
+                            self.updateItem(item)
+                        }
                     }
             )
         }

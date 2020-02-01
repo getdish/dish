@@ -72,7 +72,6 @@ struct TopNavHome: View {
         return ZStack {
             VStack {
                 ZStack {
-                    
                     // home controls
                     HStack {
                         Button(action: {
@@ -123,7 +122,6 @@ struct TopNavHome: View {
                         .animation(Animation.spring().delay(isOnHome ? 0.2 : 0.4))
                     }
                 }
-                .frameFlex()
             }
             .frame(maxWidth: .infinity)
             .environment(\.colorScheme, .dark)

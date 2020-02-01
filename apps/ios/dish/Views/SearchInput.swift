@@ -67,6 +67,8 @@ struct SearchInput: View {
     
     @State private var showCancelButton: Bool = false
     
+    @Environment(\.colorScheme) var colorScheme
+    
     func handleEditingChanged(isEditing: Bool) {
         self.showCancelButton = isEditing
         if let cb = onEditingChanged {
@@ -77,7 +79,6 @@ struct SearchInput: View {
     var cancelButton: some View {
         Button("Done") {
             UIApplication.shared.endEditing(true) // this must be placed before the other commands here
-            print("on cancel")
             self.showCancelButton = false
             if let cb = self.onCancel {
                 cb()
@@ -87,7 +88,7 @@ struct SearchInput: View {
     }
     
     var body: some View {
-        let pad = 8 * (scale + 0.5) * 0.5
+        let pad = 8 * (scale + 0.5) * 0.6
         let numTags = self.tags.count
         let hasTags = numTags > 0
         let fontSize = 14 * scale
@@ -166,8 +167,8 @@ struct SearchInput: View {
                     .foregroundColor(.secondary)
                     .background(self.inputBackgroundColor)
                     .cornerRadius(10.0 * scale * sizeRadius)
-                    .shadow(color: Color.black.opacity(0.15), radius: 6, x: 0, y: 1)
-                    .shadow(color: Color.black.opacity(0.15), radius: 10, x: 0, y: 0)
+                    .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.4 : 0.15), radius: 6, x: 0, y: 3)
+                    .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.4 : 0.15), radius: 10, x: 0, y: 2)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10.0 * scale * sizeRadius)
                             .stroke(self.borderColor, lineWidth: 1)

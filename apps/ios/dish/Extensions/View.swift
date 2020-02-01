@@ -1,6 +1,12 @@
 import SwiftUI
 
 extension View {
+//    public func equatable() -> EquatableView<Self> {
+//        return EquatableView(content: self)
+//    }
+}
+
+extension View {
     // expand view to fit parent
     func frameFlex() -> some View {
         frame(maxWidth: .infinity, maxHeight: .infinity)

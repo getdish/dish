@@ -29,7 +29,6 @@ struct KeyboardHost<Content: View>: View {
         ZStack {
             if self.dismissOnTapAway && self.keyboardHeight != 0.0 {
                 Color.clear
-                    .frameFlex()
                     .onTapGesture { closeCurrentKeyboard() }
             }
             VStack {

@@ -40,9 +40,9 @@ struct HomeSearchBar: View {
     var body: some View {
         SearchInput(
             placeholder: "",
-            inputBackgroundColor: Color.white,
-            borderColor: Color.gray.opacity(0.14),
-            scale: self.scrollAtTop ? 1.25 : 1.0,
+            inputBackgroundColor: Color(.systemBackground),
+            borderColor: Color.clear,
+            scale: self.scrollAtTop ? 1.25 : 1.05,
             sizeRadius: 2.0,
             icon: icon,
             showCancelInside: true,
@@ -92,19 +92,19 @@ struct HomeSearchBarAfterView: View {
                 self.homeState.toggleMap()
             }) {
                 Group {
-                    if self.homeState.isSnappedToTop {
-                        Image(systemName: "chevron.down")
-                            .resizable()
-                            .scaledToFit()
-                            
-                    }
-                    else if self.homeState.isSnappedToBottom {
-                        Image(systemName: "chevron.up")
+//                    if self.homeState.isSnappedToTop {
+//                        Image(systemName: "chevron.down")
+//                            .resizable()
+//                            .scaledToFit()
+//
+//                    } else
+                    if self.homeState.isSnappedToBottom {
+                        Image(systemName: "list.bullet")
                             .resizable()
                             .scaledToFit()
                     }
                     else {
-                        Image(systemName: "chevron.down")
+                        Image(systemName: "map")
                             .resizable()
                             .scaledToFit()
                     }
