@@ -48,11 +48,16 @@ struct HomeSearchBar: View {
         }
     }
     
+    @State var lastZoomed = false
+    
     var body: some View {
         let zoomed = keyboard.state.height > 0
         
         return Group {
             SideEffect("HomeSearchBar.updatePlaceholder") { self.updatePlaceholder() }
+            Run {
+                self.lastZoomed = zoomed
+            }
             
             SearchInput(
                 placeholder: self.placeholder,
@@ -83,7 +88,7 @@ struct HomeSearchBar: View {
                 searchText: self.homeSearch,
                 tags: self.homeTags
             )
-            .animation(.spring())
+            .animation(.spring(), value: zoomed != self.lastZoomed)
             .offset(y: zoomed ? -10 : 0)
         }
     }
