@@ -56,7 +56,7 @@ export class ModelBase<T> {
     conf.data.query = gql
     const response = await axios(conf)
     if (response.data.errors) {
-      console.error(gql)
+      console.error(response.data.errors, gql)
       throw response.data.errors
     }
     return response

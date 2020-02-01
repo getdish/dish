@@ -1,4 +1,4 @@
-import '@dish/common'
+import { sentryException } from '@dish/common'
 
 import os from 'os'
 import Queue from 'bull'
@@ -18,6 +18,9 @@ function main() {
     console.log('Created Bull worker queue for: ' + queue_name)
     const path = __dirname + '/job_processor.js'
     queue.process(CONCURRENCY, path)
+    queue.on('failed', (job, err) => {
+      sentryException(err, job, { crawler: queue_name })
+    })
   }
 }
 

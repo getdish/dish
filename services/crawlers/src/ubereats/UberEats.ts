@@ -18,6 +18,7 @@ const CITIES = 'getCountriesWithCitiesV1'
 const FEED = 'getFeedV1'
 const STORE = 'getStoreV1'
 const HEREMAPS_API_TOKEN = process.env.HEREMAPS_API_TOKEN
+const PER_PAGE = 80
 axios.defaults.baseURL = UBEREATS_DOMAIN + 'api/'
 axios.defaults.headers.common['x-csrf-token'] = 'x'
 
@@ -41,7 +42,7 @@ export class UberEats extends WorkerJob {
       return
     }
     if ('fn' in args) {
-      if (args['fn'].constructor.name === 'AsyncFunction') {
+      if (this[args['fn']].constructor.name === 'AsyncFunction') {
         await this[args['fn']](args['args'])
       } else {
         this[args['fn']](args['args'])
@@ -65,33 +66,32 @@ export class UberEats extends WorkerJob {
   }
 
   async getFeed(lat: number, lon: number) {
-    const categories = this.loadCategories()
-    for (const category of categories) {
-      await this.getFeedPage(0, category, lat, lon)
-    }
-  }
-
-  // This is a hard-coded list of Uber Eats most popular categories.
-  // TODO: I think we can do better, but I don't know how yet?
-  private loadCategories() {
-    return categories.JSON.data.categories.map((obj: any) => {
-      return obj.title
+    this.run_on_worker({
+      fn: 'getFeedPage',
+      args: { offset: 0, category: '', lat: lat, lon: lon },
     })
   }
 
-  async getFeedPage(
-    offset: number,
-    category: string,
-    lat: number,
+  async getFeedPage({
+    offset,
+    category,
+    lat,
+    lon,
+  }: {
+    offset: number
+    category: string
+    lat: number
     lon: number
-  ) {
-    console.log(`Getting feed for '${category}', offset: ${offset}`)
+  }) {
+    console.log(
+      `Getting feed for coords: ${lat}, ${lon}, category: '${category}', offset: ${offset}`
+    )
     const response = await axios.post(
       FEED + LOCALE,
       {
         pageInfo: {
           offset: offset,
-          pageSize: 80,
+          pageSize: PER_PAGE,
         },
         userQuery: category,
       },
@@ -105,7 +105,15 @@ export class UberEats extends WorkerJob {
     this.extractRestaurantsFromFeed(response, offset, category)
 
     if (response.data.data.meta.hasMore) {
-      await this.getFeedPage(response.data.data.meta.offset, category, lat, lon)
+      this.run_on_worker({
+        fn: 'getFeedPage',
+        args: {
+          offset: response.data.data.meta.offset,
+          category: category,
+          lat: lat,
+          lon: lon,
+        },
+      })
     }
   }
 
@@ -205,6 +213,13 @@ export class UberEats extends WorkerJob {
       source: '',
     }
     return encodeURIComponent(JSON.stringify(location_template))
+  }
+
+  // This is a hard-coded list of Uber Eats most popular categories.
+  private loadCategories() {
+    return categories.JSON.data.categories.map((obj: any) => {
+      return obj.title
+    })
   }
 
   // It doesn't actually seem like the cache key is relevant. But keeping just in case.

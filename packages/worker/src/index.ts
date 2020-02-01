@@ -1,6 +1,3 @@
-import dotenv from 'dotenv'
-dotenv.config()
-
 import Queue, { QueueOptions, JobOptions } from 'bull'
 
 const is_local_redis =

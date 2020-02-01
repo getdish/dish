@@ -5,7 +5,8 @@
   "sideEffects": false,
   "scripts": {
     "build": "tsc -b || true",
-    "watch": "tsc -b --watch --preserveWatchOutput"
+    "watch": "tsc -b --watch --preserveWatchOutput",
+    "test": "true"
   },
   "dependencies": {
     "@sentry/node": "^5.11.2"

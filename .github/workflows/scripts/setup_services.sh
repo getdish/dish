@@ -21,7 +21,7 @@ docker run \
 
 curl -L https://github.com/hasura/graphql-engine/raw/master/cli/get.sh | bash
 
-if ! timeout --preserve-status 10 bash -c wait_until_hasura_ready; then
+if ! timeout --preserve-status 20 bash -c wait_until_hasura_ready; then
   echo "Timed out waiting for Hasura container to start"
   exit 1
 fi

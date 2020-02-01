@@ -6,12 +6,14 @@ const Sidebar = () => {
   const { state, actions } = useOvermind()
 
   useEffect(() => {
-    actions.getStats()
+    startWatchingStats()
   }, [])
 
-  setInterval(() => {
-    actions.getStats()
-  }, 5000)
+  const startWatchingStats = () => {
+    setInterval(() => {
+      actions.getStats()
+    }, 1000)
+  }
 
   const renderRestaurant = () => {
     const restaurant = state.restaurants[state.selected]
