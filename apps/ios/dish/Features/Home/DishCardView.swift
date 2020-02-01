@@ -29,7 +29,7 @@ struct DishCardView: View, Identifiable, Equatable {
                         .scaledToFill()
                         .frame(width: self.width ?? geo.size.width, height: self.height ?? geo.size.height)
                         .overlay(self.overlay)
-                        .cornerRadius(self.display == .card ? 14 : 18)
+                        .cornerRadius(self.display == .card ? 12 : 24)
                         .clipped()
                         .shadow(color: Color.black.opacity(0.5), radius: 6, x: 0, y: 2)
                 }

@@ -92,19 +92,19 @@ struct HomeSearchBarAfterView: View {
                 self.homeState.toggleMap()
             }) {
                 Group {
-                    if self.homeState.isSnappedToTop {
-                        Image(systemName: "chevron.down")
-                            .resizable()
-                            .scaledToFit()
-                            
-                    }
-                    else if self.homeState.isSnappedToBottom {
-                        Image(systemName: "chevron.up")
+//                    if self.homeState.isSnappedToTop {
+//                        Image(systemName: "chevron.down")
+//                            .resizable()
+//                            .scaledToFit()
+//
+//                    } else
+                    if self.homeState.isSnappedToBottom {
+                        Image(systemName: "list.bullet")
                             .resizable()
                             .scaledToFit()
                     }
                     else {
-                        Image(systemName: "chevron.down")
+                        Image(systemName: "map")
                             .resizable()
                             .scaledToFit()
                     }
