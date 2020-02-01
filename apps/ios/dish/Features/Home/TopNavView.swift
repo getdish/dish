@@ -110,11 +110,13 @@ struct TopNavHome: View {
                             }) {
                                 Text("-")
                                     .titleBarStyle()
+                                    .padding(.horizontal, 10)
                             }
                             Button(action: {
                             }) {
                                 Text("+")
                                     .titleBarStyle()
+                                    .padding(.horizontal, 10)
                             }
                         }
                         .modifier(TopNavButtonStyle())
