@@ -55,7 +55,10 @@ struct HomeSearchBar: View {
         let scale: CGFloat = zoomed ? 1.5 : 1.3
         
         return Group {
-            SideEffect("HomeSearchBar.updatePlaceholder") { self.updatePlaceholder() }
+            Color.clear.onAppear {
+                self.updatePlaceholder()
+            }
+
             Run {
                 self.lastZoomed = zoomed
             }

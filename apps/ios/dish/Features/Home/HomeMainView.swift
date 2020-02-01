@@ -96,10 +96,15 @@ struct HomeMainView: View {
                             )
                                 .frame(height: (self.appGeometry?.size.height ?? 0) - state.mapHeight)
                         }
-                        
-                        // everything above the map
-                        TopNavView()
                     }
+                
+                    TopNavViewContent()
+                        .offset(
+                            y: state.mapHeight + (state.isSnappedToBottom
+                                ? 0
+                                : -searchBarHeight - 64
+                            )
+                        )
 
                     
                     // results
@@ -122,7 +127,7 @@ struct HomeMainView: View {
                             Spacer()
                         }
                         .zIndex(state.showFilters ? 100 : 0)
-                        .animation(.spring(response: 0.45))
+                        .animation(.spring())
                         .offset(
                             y: state.showFilters ? 0 : (
                                 state.showFiltersAbove ? -100 : 0

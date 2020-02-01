@@ -147,8 +147,12 @@ class HomeViewState: ObservableObject {
     }
     
     var showFiltersAbove: Bool {
-        if y > snapToBottomAt - 1 { return false }
-        if mapHeight < 190 { return false }
+        if y > snapToBottomAt - 1 {
+            return true
+        }
+        if mapHeight < 190 {
+            return false
+        }
         return hasScrolled != .none
     }
     

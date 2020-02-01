@@ -20,45 +20,26 @@ struct TopNavView: View {
 struct TopNavViewContent: View {
     var body: some View {
         ZStack {
+            TopNavSearchResults()
+            
             VStack {
-                Rectangle()
-                    .fill(
-                        LinearGradient(
-                            gradient: Gradient(
-                                colors: [Color.black.opacity(0), Color.black.opacity(0.25)]
-                            ),
-                            startPoint: .bottom,
-                            endPoint: .top
-                        )
-                )
-                    .frame(height: Screen.statusBarHeight + 15)
+                VStack {
+                    HStack(spacing: 12) {
+                        ZStack {
+                            TopNavHome()
+                            CameraTopNav()
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+                .padding(.top, topPad)
+                .padding(.bottom, bottomPad)
+                .frame(maxHeight: totalHeight, alignment: Alignment.top)
+                
                 Spacer()
             }
-            .allowsHitTesting(false)
-            .disabled(true)
-            
-            ZStack {
-                TopNavSearchResults()
-                
-                VStack {
-                    VStack {
-                        HStack(spacing: 12) {
-                            ZStack {
-                                TopNavHome()
-                                CameraTopNav()
-                            }
-                        }
-                        .padding(.horizontal)
-                    }
-                    .padding(.top, topPad)
-                    .padding(.bottom, bottomPad)
-                    .frame(maxHeight: totalHeight, alignment: Alignment.top)
-                    
-                    Spacer()
-                }
-            }
-            .padding(.top, 0)
         }
+        .padding(.top, 0)
     }
 }
 
@@ -70,9 +51,9 @@ struct TopNavButtonStyle: ViewModifier {
             .padding(.horizontal, 8)
             .background(Color.white.opacity(0.075))
             .background(Color.black.opacity(0.075))
-            .background(
-                BlurView(style: .light)
-        )
+//            .background(
+//                BlurView(style: .light)
+//            )
             .cornerRadius(20)
             .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
             .foregroundColor(.white)
@@ -101,10 +82,11 @@ struct TopNavHome: View {
                                 }
                                 .modifier(TopNavButtonStyle())
                             }
-                            .offset(y: isOnHome ? 0 : -80)
                             .animation(Animation.spring().delay(isOnHome ? 0 : 0.25))
                             .transition(.opacity)
                         }
+                        
+                        Spacer()
                         
                         HStack(spacing: 0) {
                             Button(action: {
@@ -125,27 +107,23 @@ struct TopNavHome: View {
                             }
                         }
                         .modifier(TopNavButtonStyle())
-                        .offset(y: isOnHome ? 0 : -80)
                         .transition(.slide)
                         
                         
-                        
-                        Spacer()
-                        
-//                        Button(action: {
-//                            App.enterRepl = true
-//                        }) {
-//                            VStack {
-//                                Text("~\(Int(App.store.state.map.location.radius / 1000)) mi")
-//                                    .titleBarStyle()
-//                            }
-//
-//                        }
-//                        .modifier(TopNavButtonStyle())
-//                        .offset(y: isOnHome ? 0 : -80)
-//                        .animation(Animation.spring().delay(isOnHome ? 0.2 : 0.4))
+                        Button(action: {
+                            App.enterRepl = true
+                        }) {
+                            VStack {
+                                Text("~\(Int(App.store.state.map.location.radius / 1000)) mi")
+                                    .titleBarStyle()
+                            }
+
+                        }
+                        .modifier(TopNavButtonStyle())
+                        .animation(Animation.spring().delay(isOnHome ? 0.2 : 0.4))
                     }
                 }
+                .opacity(isOnHome ? 1 : 0)
             }
             .frame(maxWidth: .infinity)
             .environment(\.colorScheme, .dark)
@@ -187,6 +165,39 @@ struct TopNavSearch: View {
             .shadow(color: Color.black.opacity(0.25), radius: 5, x: 0, y: 5)
             .onTapGesture {
                 self.focus()
+        }
+    }
+}
+
+struct CameraTopNav: View {
+    @EnvironmentObject var store: AppStore
+    
+    var body: some View {
+        let homeView = self.store.state.home.view
+        let isOnCamera = homeView == .camera
+        
+        return HStack {
+            Button(action: {
+            }) {
+                VStack {
+                    Text("@ Pancho Villa Taqueria")
+                        .fontWeight(.bold)
+                }
+                .padding(.vertical, 4)
+                .padding(.horizontal, 8)
+                .background(Color.white.opacity(0.2))
+                .cornerRadius(20)
+                .onTapGesture {
+                    //                                    Store.camera.showRestaurantDrawer.toggle()
+                }
+            }
+            .foregroundColor(.white)
+            .opacity(isOnCamera ? 1 : 0)
+            .animation(
+                Animation.spring().delay(!isOnCamera ? 0 : 0.25)
+            )
+            
+            Spacer()
         }
     }
 }
