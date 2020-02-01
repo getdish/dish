@@ -6,8 +6,14 @@ struct CameraButton: View {
     @State var isTapped = false
     @State var lastTap = Date()
     
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
-        CustomButton2(action: {
+        let oppositeColor = colorScheme == .dark
+            ? Color.white
+            : Color.black
+        
+        return CustomButton2(action: {
             self.lastTap = Date()
             if !App.store.state.home.showCamera {
                 App.store.send(.home(.setShowCamera(true)))
@@ -20,13 +26,8 @@ struct CameraButton: View {
                     Image(systemName: "plus")
                         .resizable()
                         .scaledToFit()
-                    
-                    //                    Image(systemName: "circle.fill")
-                    //                        .resizable()
-                    //                        .scaledToFit()
-                    //                        .frame(width: 17, height: 17)
                 }
-                .foregroundColor(Color.black.opacity(0.5))
+                .foregroundColor(oppositeColor.opacity(0.5))
             }
             .padding(.all, App.cameraButtonHeight * 0.33)
             .frame(width: App.cameraButtonHeight, height: App.cameraButtonHeight)
@@ -54,10 +55,10 @@ struct CameraButton: View {
                 .cornerRadius(App.cameraButtonHeight)
 //                .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 3)
 //                .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 0)
-//                .overlay(
-//                    RoundedRectangle(cornerRadius: App.cameraButtonHeight)
-//                        .stroke(Color.white.opacity(0.6), lineWidth: 1)
-//            )
+                .overlay(
+                    RoundedRectangle(cornerRadius: App.cameraButtonHeight)
+                        .stroke(oppositeColor.opacity(0.1), lineWidth: 1)
+            )
 //                .overlay(
 //                    VStack {
 //                        RoundedRectangle(cornerRadius: App.cameraButtonHeight)

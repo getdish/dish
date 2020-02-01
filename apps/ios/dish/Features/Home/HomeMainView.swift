@@ -153,10 +153,12 @@ struct HomeMainView: View {
                                 )
                                     .scaleEffect(state.showCamera ? 1 : 0.8)
                                     .offset(
-                                        x: state.showCamera ? -Screen.width / 2 + App.cameraButtonHeight / 2
+                                        x: state.showCamera
+                                            ? -Screen.width / 2 + App.cameraButtonHeight / 2
                                             : -8,
-                                        y: state.showCamera ? Screen.fullHeight - App.cameraButtonHeight - 100
-                                            : state.mapHeight - App.cameraButtonHeight / 2
+                                        y: state.showCamera
+                                            ? Screen.fullHeight - App.cameraButtonHeight - 100
+                                            : state.mapHeight - App.cameraButtonHeight / 2 - 0.5
                                 )
 //                                    .animation(Animation.spring(response: 0.4).delay(0))
                             }

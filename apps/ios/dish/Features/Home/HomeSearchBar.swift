@@ -13,6 +13,13 @@ struct HomeSearchBar: View {
     @State var isFirstResponder = false
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard
+    @Environment(\.colorScheme) var colorScheme
+    
+    @State var placeholder = ""
+    
+    init() {
+        
+    }
     
     var hasSearch: Bool {
         store.state.home.state.count > 1
@@ -39,8 +46,10 @@ struct HomeSearchBar: View {
     
     var body: some View {
         SearchInput(
-            placeholder: "",
-            inputBackgroundColor: Color(.systemBackground),
+            placeholder: self.placeholder,
+            inputBackgroundColor: colorScheme == .dark
+                ? Color(red: 0.2, green: 0.2, blue: 0.2)
+                : Color.white,
             borderColor: Color.clear,
             scale: self.scrollAtTop ? 1.25 : 1.05,
             sizeRadius: 2.0,
@@ -84,6 +93,7 @@ struct HomeSearchBar: View {
 }
 
 struct HomeSearchBarAfterView: View {
+    @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
     
     var body: some View {
@@ -99,19 +109,27 @@ struct HomeSearchBarAfterView: View {
 //
 //                    } else
                     if self.homeState.isSnappedToBottom {
-                        Image(systemName: "list.bullet")
-                            .resizable()
-                            .scaledToFit()
+                        if Selectors.home.isOnSearchResults() {
+                            Image(systemName: "list.bullet")
+                                .resizable()
+                                .scaledToFit()
+                        } else {
+                            Image(systemName: "chevron.up")
+                                .resizable()
+                                .scaledToFit()
+                        }
                     }
                     else {
-                        Image(systemName: "map")
-                            .resizable()
-                            .scaledToFit()
+                        if Selectors.home.isOnSearchResults() {
+                            Image(systemName: "map")
+                                .resizable()
+                                .scaledToFit()
+                        }
                     }
                 }
                 .frame(width: 16, height: 16)
                 .opacity(0.5)
-                .padding(.trailing, 8 + App.cameraButtonHeight * 0.5)
+                .padding(.trailing, 14 + App.cameraButtonHeight * 0.5)
             }
             .padding(.vertical, 4)
             .padding(.horizontal, 6)
