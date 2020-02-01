@@ -348,7 +348,11 @@ class HomeViewState: ObservableObject {
         log.info()
         // prevent dragging after snap
         self.setDragState(.off)
-        self.animate(Animation.spring().speed(ANIMATION_SPEED)) {
+        
+        self.animate(
+            Animation.spring(response: 0.5).speed(ANIMATION_SPEED),
+            duration: 300
+        ) {
             self.scrollState.setScrollY(0)
             self.searchBarYExtra = 0
             if toBottom {

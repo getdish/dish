@@ -142,8 +142,6 @@ struct HomeMainView: View {
                             mapHeight > Screen.height / 2 ? Screen.height * 2 : -Screen.height * 2 :
                             mapHeight - 23 + state.searchBarYExtra
                     )
-                    // searchinput always light
-                    .environment(\.colorScheme, .light)
                 
                     // CameraControlsOverlay
                     ZStack {

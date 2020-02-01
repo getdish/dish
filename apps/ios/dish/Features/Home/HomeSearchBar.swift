@@ -40,8 +40,8 @@ struct HomeSearchBar: View {
     var body: some View {
         SearchInput(
             placeholder: "",
-            inputBackgroundColor: Color.white,
-            borderColor: Color.gray.opacity(0.14),
+            inputBackgroundColor: Color(.systemBackground),
+            borderColor: Color.clear,
             scale: self.scrollAtTop ? 1.25 : 1.05,
             sizeRadius: 2.0,
             icon: icon,

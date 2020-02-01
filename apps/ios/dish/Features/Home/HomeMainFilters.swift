@@ -153,7 +153,7 @@ struct HomeMainFilterFocused: View {
 //                                            homeViewState.showFilters = false
                                         }
                                     )
-//                                    .equatable()
+                                    .equatable()
                                     .animation(.none)
                                 }
                             }

@@ -101,7 +101,7 @@ struct HomeMapExplore: View {
                         at: .end,
                         display: .card
                     )
-//                        .equatable()
+                        .equatable()
                         .frame(width: 150, height: cardRowHeight - 40)
                 }
             }
@@ -166,7 +166,7 @@ struct HomeContentExplore: View {
                                         display: .full,
                                         height: 100
                                     )
-//                                    .equatable()
+                                    .equatable()
                                 }
                             }
                             .padding(.horizontal)
