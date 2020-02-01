@@ -390,7 +390,7 @@ class HomeViewState: ObservableObject {
     }
     
     func resetAfterKeyboardHide() {
-        if !self.hasMovedBar && self.y != 0 && App.store.state.home.state.last!.search == "" {
+        if !self.hasMovedBar && self.y != 0 && App.store.state.home.viewStates.last!.search == "" {
             log.info()
             self.animateTo(0)
         }

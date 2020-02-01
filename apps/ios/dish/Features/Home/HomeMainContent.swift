@@ -207,7 +207,7 @@ struct HomeMainContentSearchPage: View {
         
         return GeometryReader { geometry in
             ZStack {
-                ForEach(self.store.state.home.state) { state in
+                ForEach(self.store.state.home.viewStates) { state in
                     VStack {
                         HomeSearchResultsView(
                             state: state

@@ -65,10 +65,11 @@ struct TopNavViewContent: View {
 struct TopNavButtonStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
+            .frame(height: 20)
             .padding(.vertical, 4)
             .padding(.horizontal, 8)
-            .background(Color.white.opacity(0.15))
-            .background(Color.black.opacity(0.15))
+            .background(Color.white.opacity(0.075))
+            .background(Color.black.opacity(0.075))
             .background(
                 BlurView(style: .light)
         )
@@ -105,17 +106,21 @@ struct TopNavHome: View {
                             .transition(.opacity)
                         }
                         
-                        HStack {
+                        HStack(spacing: 0) {
                             Button(action: {
                             }) {
                                 Text("-")
-                                    .titleBarStyle()
+                                    .titleBarStyle(15)
                                     .padding(.horizontal, 10)
                             }
+                            Rectangle()
+                                .foregroundColor(.gray)
+                                .opacity(0.2)
+                                .frame(width: 1)
                             Button(action: {
                             }) {
                                 Text("+")
-                                    .titleBarStyle()
+                                    .titleBarStyle(15)
                                     .padding(.horizontal, 10)
                             }
                         }
@@ -127,18 +132,18 @@ struct TopNavHome: View {
                         
                         Spacer()
                         
-                        Button(action: {
-                            App.enterRepl = true
-                        }) {
-                            VStack {
-                                Text("~\(Int(App.store.state.map.location.radius / 1000)) mi")
-                                    .titleBarStyle()
-                            }
-                            
-                        }
-                        .modifier(TopNavButtonStyle())
-                        .offset(y: isOnHome ? 0 : -80)
-                        .animation(Animation.spring().delay(isOnHome ? 0.2 : 0.4))
+//                        Button(action: {
+//                            App.enterRepl = true
+//                        }) {
+//                            VStack {
+//                                Text("~\(Int(App.store.state.map.location.radius / 1000)) mi")
+//                                    .titleBarStyle()
+//                            }
+//
+//                        }
+//                        .modifier(TopNavButtonStyle())
+//                        .offset(y: isOnHome ? 0 : -80)
+//                        .animation(Animation.spring().delay(isOnHome ? 0.2 : 0.4))
                     }
                 }
             }

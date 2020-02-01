@@ -39,10 +39,10 @@ struct DishCardView: View, Identifiable, Equatable {
     }
     
     var overlay: some View {
-        ZStack(alignment: .bottomLeading) {
+        ZStack(alignment: .center) {
             Rectangle().fill(
                 LinearGradient(
-                    gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black.opacity(0)]),
+                    gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black.opacity(0.4)]),
                     startPoint: .bottom,
                     endPoint: .center
                 )
@@ -50,8 +50,7 @@ struct DishCardView: View, Identifiable, Equatable {
             VStack(alignment: .leading) {
                 Text(self.dish.name)
                     .font(.system(size: 17))
-                    .bold()
-                //        Text(dish.park)
+                    .fontWeight(.black)
             }
             .padding()
         }

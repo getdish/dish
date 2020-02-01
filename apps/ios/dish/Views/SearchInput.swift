@@ -51,7 +51,7 @@ struct SearchInput: View {
     var borderColor = Color.clear
     var borderWidth = 1.0
     var blur = 0
-    var scale = CGFloat(1)
+    var scale: CGFloat = 1
     var sizeRadius = CGFloat(1)
     var icon: AnyView?
     var showCancelInside = false
@@ -91,14 +91,20 @@ struct SearchInput: View {
         let pad = 8 * (scale + 0.5) * 0.6
         let numTags = self.tags.count
         let hasTags = numTags > 0
-        let fontSize = 14 * scale
+        let fontSize = 14 * scale * 2
         
         return VStack {
             // Search view
             HStack {
                 HStack(spacing: 4 * scale) {
-                    (icon ?? AnyView(Image(systemName: "magnifyingglass")))
-                        .frame(width: 24 * scale, height: 24 * scale)
+                    VStack {
+                        icon ?? AnyView(
+                            Image(systemName: "magnifyingglass")
+                            .resizable()
+                            .scaledToFit()
+                        )
+                    }
+                    .frame(width: 24 * scale, height: 24 * scale)
                     
                     if hasTags {
                         HStack {
@@ -144,8 +150,10 @@ struct SearchInput: View {
                         }
                     }) {
                         Image(systemName: "xmark.circle.fill")
-                            .opacity(self.searchText == "" ? 0.0 : 1.0)
+                            .resizable()
+                            .scaledToFit()
                             .frame(width: 24 * scale, height: 24 * scale)
+                            .opacity(self.searchText == "" ? 0.0 : 1.0)
                     }
                     
                     if showCancelButton && showCancelInside {

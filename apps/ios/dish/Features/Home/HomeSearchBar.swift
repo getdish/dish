@@ -8,25 +8,29 @@ struct SearchToTagColor {
 
 struct HomeSearchBar: View {
     @State var searchText = ""
-    @State var scrollAtTop = true
     @State var textField: UITextField? = nil
     @State var isFirstResponder = false
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard
     @Environment(\.colorScheme) var colorScheme
     
-    @State var placeholder = ""
+    @State var placeholder = "Dim Sum..."
     
-    init() {
-        
+    func updatePlaceholder() {
+        var i = 0
+        let placeholders = ["Dim Sum...", "Bo Kho...", "Ceviche...", "Poke...", "Szechuan Chicken..."]
+        async(interval: 5000, intervalMax: 5) {
+            self.placeholder = placeholders[i]
+            i += 1
+        }
     }
     
     var hasSearch: Bool {
-        store.state.home.state.count > 1
+        store.state.home.viewStates.count > 1
     }
     
     private var homeSearch: Binding<String> {
-        store.binding(for: \.home.state.last!.search, { .home(.setSearch($0)) })
+        store.binding(for: \.home.viewStates.last!.search, { .home(.setSearch($0)) })
     }
     
     private var homeTags: Binding<[SearchInputTag]> {
@@ -44,40 +48,53 @@ struct HomeSearchBar: View {
         }
     }
     
+    @State var lastZoomed = false
+    
     var body: some View {
-        SearchInput(
-            placeholder: self.placeholder,
-            inputBackgroundColor: colorScheme == .dark
-                ? Color(red: 0.2, green: 0.2, blue: 0.2)
-                : Color.white,
-            borderColor: Color.clear,
-            scale: self.scrollAtTop ? 1.25 : 1.05,
-            sizeRadius: 2.0,
-            icon: icon,
-            showCancelInside: true,
-            onClear: {
-                // go back on empty search clear
-                if Selectors.home.isOnSearchResults() && App.store.state.home.state.last!.searchResults.results.count == 0 {
-                    App.store.send(.home(.pop))
-                }
-                // focus keyboard again on clear if not focused
-                if self.keyboard.state.height == 0 {
-                    self.focusKeyboard()
-                }
-        },
-            after: AnyView(HomeSearchBarAfterView()),
-            isFirstResponder: isFirstResponder,
-            //            onTextField: { field in
-            //                print("set text field")
-            //                self.textField = field
-            //            },
-            searchText: self.homeSearch,
-            tags: self.homeTags
-        )
+        let zoomed = keyboard.state.height > 0
+        
+        return Group {
+            SideEffect("HomeSearchBar.updatePlaceholder") { self.updatePlaceholder() }
+            Run {
+                self.lastZoomed = zoomed
+            }
+            
+            SearchInput(
+                placeholder: self.placeholder,
+                inputBackgroundColor: colorScheme == .dark
+                    ? Color(red: 0.2, green: 0.2, blue: 0.2)
+                    : Color.white,
+                borderColor: Color.clear,
+                scale: zoomed ? 1.5 : 1.3,
+                sizeRadius: 2.0,
+                icon: icon,
+                showCancelInside: true,
+                onClear: {
+                    // go back on empty search clear
+                    if Selectors.home.isOnSearchResults() && App.store.state.home.viewStates.last!.searchResults.results.count == 0 {
+                        App.store.send(.home(.pop))
+                    }
+                    // focus keyboard again on clear if not focused
+                    if self.keyboard.state.height == 0 {
+                        self.focusKeyboard()
+                    }
+            },
+                after: AnyView(HomeSearchBarAfterView()),
+                isFirstResponder: isFirstResponder,
+                //            onTextField: { field in
+                //                print("set text field")
+                //                self.textField = field
+                //            },
+                searchText: self.homeSearch,
+                tags: self.homeTags
+            )
+            .animation(.spring(), value: zoomed != self.lastZoomed)
+            .offset(y: zoomed ? -10 : 0)
+        }
     }
     
     var icon: AnyView {
-        if store.state.home.state.count > 1 {
+        if store.state.home.viewStates.count > 1 {
             return AnyView(
                 Image(systemName: "chevron.left").onTapGesture {
                     self.keyboard.hide()

@@ -62,7 +62,7 @@ Ok so, first, understanding some of my influences are good. I'd say you can get 
 2. Stratechery's writings are super valuable, especially "Aggregation Theory" [0]
 3. I don't agree with all of it, but a lot of pg's writings and YC's startup school is good practical/strategical advice. Choice ones would be "How to raise money" [1], "Do things that don't scale" [2], "Ramen profitable" [3], "Fashionable problems" (especially relevant) [4]
 
-Basically, I want us to be the "SnapChat to Yelp's Facebook".
+Basically, I want us to be the "Snapchat to Yelp's Facebook".
 
 In other words branding and apps should feel more fun and quirky. They can still be polished, but lets be so extremely user friendly and light feeling that people are delighted.
 
@@ -115,9 +115,10 @@ Here's a 10x:
 
 1. Rich icons for types of dish (emoji style)
 2. Colors for types of cuisine (Red = chinese, Green = italian, etc)
-3. Updates as you move it by default
-4. Shows the three levels of ratings very differently (dots for ok, diamonds for good, pins for great)
-5. Shows name / price / tags inline on the map if space is there
+3. Updates as you move it by default showing the top restaurants for wherever you point
+4. Shows different data depending on zoom level to give you an idea of regions/groups as the data gets dense
+5. Shows the three levels of ratings very differently (dots for ok, diamonds for good, pins for great)
+6. Shows name / price / tags inline on the map if space is there
 
 ---
 

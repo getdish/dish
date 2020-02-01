@@ -14,13 +14,17 @@ let ANIMATION_SPEED: Double = 1
 func async(
     _ delay: Double = 0,
     interval: Double = 0,
+    intervalMax: Double = Double.infinity,
     queue: DispatchQueue = DispatchQueue.main,
     execute: @escaping () -> Void
 ) {
     var run = execute
     if interval > 0 {
         run = {
-            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+            var i = 0.0
+            Timer.scheduledTimer(withTimeInterval: interval / 1000, repeats: true) { timer in
+                i += 1
+                if i > intervalMax { return }
                 execute()
             }
         }
