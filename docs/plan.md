@@ -23,7 +23,7 @@ In other words, more than anything we need to:
 1. Get the app working on iOS ASAP and released to app store
 2. In parallel, have a strategy + implement content marketing
 
-We need to raise money. To do that, we need to build a tiny but sexy rocket, and launch it successfully, showing were competent tiny-sexy-rocket-launchers.
+We need to raise money if we want to have a shot against Yelp. To do that, we gotta build a tiny but sexy rocket, and launch it successfully, showing were pretty damn good tiny-sexy-rocket-launchers and hopefully really good bigger rocket launchers.
 
 We _don't_ need to:
 
