@@ -115,9 +115,10 @@ Here's a 10x:
 
 1. Rich icons for types of dish (emoji style)
 2. Colors for types of cuisine (Red = chinese, Green = italian, etc)
-3. Updates as you move it by default
-4. Shows the three levels of ratings very differently (dots for ok, diamonds for good, pins for great)
-5. Shows name / price / tags inline on the map if space is there
+3. Updates as you move it by default showing the top restaurants for wherever you point
+4. Shows different data depending on zoom level to give you an idea of regions/groups as the data gets dense
+5. Shows the three levels of ratings very differently (dots for ok, diamonds for good, pins for great)
+6. Shows name / price / tags inline on the map if space is there
 
 ---
 
