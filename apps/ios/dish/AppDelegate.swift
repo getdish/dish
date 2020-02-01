@@ -9,11 +9,26 @@ let log = XCGLogger.default
 let homeViewState = HomeViewState()
 let ANIMATION_SPEED: Double = 1
 
-func async(_ ms: Double = 0, execute: @escaping () -> Void) {
-    if ms > 0 {
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(Int(ms))) { execute() }
+// small async helper
+// todo - cancel
+func async(
+    _ delay: Double = 0,
+    interval: Double = 0,
+    queue: DispatchQueue = DispatchQueue.main,
+    execute: @escaping () -> Void
+) {
+    var run = execute
+    if interval > 0 {
+        run = {
+            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+                execute()
+            }
+        }
+    }
+    if delay > 0 {
+        queue.asyncAfter(deadline: .now() + .milliseconds(Int(delay))) { run() }
     } else {
-        DispatchQueue.main.async { execute() }
+        queue.async { run() }
     }
 }
 

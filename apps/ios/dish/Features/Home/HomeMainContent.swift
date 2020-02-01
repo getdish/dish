@@ -6,7 +6,7 @@ fileprivate let filterBarHeight: CGFloat = 55
 
 let bottomNavHeight: CGFloat = 115
 // used in search results for now...
-let cardRowHeight: CGFloat = 140
+let cardRowHeight: CGFloat = 120
 
 import SwiftUI
 
@@ -102,7 +102,7 @@ struct HomeMapExplore: View {
                         display: .card
                     )
                         .equatable()
-                        .frame(width: 150, height: cardRowHeight - 40)
+                        .frame(width: 125, height: cardRowHeight - 40)
                 }
             }
             .padding(20)
