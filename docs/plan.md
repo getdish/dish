@@ -9,7 +9,7 @@ TL;DR
 3. Set up a marketing campaign #cancelyelp, make it funny
 4. Do it all lean af, focusing on getting things in peoples hands first
 
-## High level
+---
 
 First things, we should really understand how long of a shot this is. It's overwhelmingly likely we fail, and the absolute most likely reason is:
 
@@ -21,52 +21,38 @@ In other words, more than anything we need to:
 1. Get the app working on iOS ASAP and released to app store
 2. In parallel, have a strategy + implement content marketing
 
-Everything else here is mostly mapping out the above two things.
-
 ---
 
 A note on business:
 
-We need to raise money.
-
-To do that, we need to build a tiny but sexy rocket, then launch it successfully and show we are competent tiny-sexy-rocket-builders-and-launchers.
+We need to raise money. To do that, we need to build a tiny but sexy rocket, and launch it successfully, showing were competent tiny-sexy-rocket-builders-and-launchers.
 
 We *don't* need to:
 
-1. Launch across many platforms
+1. Launch on many platforms
 2. Launch in many cities or places
 3. Have the newest technology (but do want some)
-4. Have clean code
-5. Solve hard technical problems first
+4. Have clean code or solve hard technical problems
 
-It's a position I haven't been in in a while, it's a lot different than the strategy (post raise or bootstrapped) somewhat, but not entirely.
+Why do we need to raise? Because we're aiming at Yelp! And really at a lot of companies (Eater, Google), and there's simply no way we get anwhere close to that on $200k.
 
-Why do we need to raise? Because we're aiming at Yelp and really at a lot of companies (Eater, Michelin, Google/AppleMaps), and there's simply no way we get anwhere close to that on $200k.
-
-So, we gotta raise.
-
-My goal is always to preserve as much equity as possible for the us, and I always advocate for doing things leaner than I think many in the valley would, so we'll do that.
+The goal is always to preserve as much equity as possible for the us, and I always advocate for doing things lean, so we have to treat the raise as being not-for-sure. I don't think we can get "ramen profitable" until much later, but open to ideas. But that puts even more pressure on us needing to get some good numbers. Hockey sticks!
 
 ---
 
 Zooming out
 
-Since I'm writing a big ol' document, here's section on perspective.
+Since I'm writing a whole thing, a section on perspective.
 
-I don't want much. Don't want to run a big company, work ourselves to the bone, achieve fame, etc.
+I don't want much.
 
-I want is to be able to tackle things at the intersection of interesting work and real world problems - with freedom, creativity, in a nice environment.
+What I do want is to be able to tackle things at the intersection of interesting work and real world problems and *enjoy the ride* - in a free way, with creativity, in a nice environment.
 
-Lets aim to enjoy this venture.
+We can still be just about as ruthless, frugal, passionate, efficient, etc as many, but let work smarter and use happiness and low cortisol levels as a productivity secret.
 
-We can still be about as ruthless, frugal, passionate, efficient, etc as many. But happiness and enjoyment are key parts of ensuring your machine is efficient.
-
-Lets:
-
-- Keeping the team small, focused, distraction-free
-- Surprise each other by quietly getting things done, well
-- Finding great collaborators who bring fresh ideas
-- Let people work in a way makes them comfy so long as we can be effective
+- Keep the team small by being flexible and persistent
+- Surprise each other by quietly getting things done in the "next hardest area"
+- Keep things quiet generally so we can all focus
 
 ---
 
@@ -78,19 +64,23 @@ Ok so, first, understanding some of my influences are good. I'd say you can get 
 2. Stratechery's writings are super valuable, especially "Aggregation Theory" [0]
 3. I don't agree with all of it, but a lot of pg's writings and YC's startup school is good practical/strategical advice. Choice ones would be "How to raise money" [1], "Do things that don't scale" [2], "Ramen profitable" [3], "Fashionable problems" (especially relevant) [4]
 
+Basically, I want us to be the "SnapChat to Yelp's Facebook".
+
+In other words branding and apps should feel more fun and quirky. They can still be polished, but lets be so extremely user friendly and light feeling that people are delighted.
+
+Yelp has this feeling of a bloated, product-managered, brain-drained app that's lost its glasses. They have all these ads now, and I think the advertising model makes them afraid of doing too much with the interface.
+
 ### Aggregation Theory
 
-Aggregation theory especially is important for Dish. You can probably get most of it just from this article [5].
+Aggregation theory which basically means "Be the early Netflix or Zillow of food" (ie, aggregate lots of data sources in one place: ratings + delivery), I think, is important for Dish.
 
-We can be the Netflix/Zillow of food, rather than Yelp which, being a first-party source of content especially since they own their own delivery service (Eat24/GrubHub), means they *wont* ever be an aggregator.
+I recommend this article [5].
 
-This opens up a potential opportunity because it means we can aggregate *both* delivery services and food ratings, and doing so seems additive:
+Yelp is a first-party source of ratings + delivery (Eat24/GrubHub), they *wont ever be an aggregator*.
 
-> as a user I want rating aggregation, I want delivery aggregation, and it would be especially useful in the same place!
+It means we can aggregate *both* delivery services and food ratings, and doing so seems additive: "as a user I want rating aggregation, I want delivery aggregation, and it would be especially useful in the same place so my delivery orders are way easier and I'm not hopping around apps!"
 
-It avoids the problem of "what do i want to eat" requiring a lot of decision making especially when ordering delivery, where you may have a few apps you could choose from.
-
-I'm not positive aggregation is 100% necessary, but it's a nice lense to look through.
+I'm not positive aggregation theory is our key insight or 100% necessary, but it's a nice lense to look through.
 
 [0] https://stratechery.com/concept/aggregation-theory/
 [1] http://www.paulgraham.com/fr.html
@@ -101,73 +91,47 @@ I'm not positive aggregation is 100% necessary, but it's a nice lense to look th
 
 ---
 
-10x better & The Map
+10x better
 
-I don't want to get too too deep here, but this part is interesting.
+One really nice startupy idea common in SV is that you should only do things that are 10x better. How can we be 10x better than Yelp? I think there are many ways, we should choose just a couple.
 
-I think exploration is really underserved. Look at Yelp: you search "food" and it just throws a few pins at your in your area.
+I like how slava put it in terms of "Gamechangers and Showstoppers" [insert reference]. Basically, when evaluating what to do, always ask:
 
-We can definitely do 10x better here - and doing things 10x better is a really good rule of thumb for "should we do this as a startup".
+1. Gamechanger - does this thing *significantly* improve chances of success?
+2. Showstopper - does this thing *significantly* detract from chance of success?
 
-I think we can do two, maybe three things 10x better:
+I think we can do the following 10x Better:
 
-1. Asian (and non-service-focused) restaurant ratings
-2. Just exploring of "what's good/popular in this area"
-3. Searching across all delivery services (doesn't exist...)
-
-I'm currently on the tail end of the first vacation I've taken in too long in Hawaii and number 2 has really become apparent. The apps we use today feel like they don't optimize at all for the real use case they have:
-
-"I want to find great food, and I may not know exactly what is great around me, or even what I'm craving exactly, but I do know I want to find it and I do have a variety of constraints"
+1. Finding best food by dish
+2. Finding best Asian (non-service-focused) restaurants (bad in yelp/google)
+3. Exploring whats good on a map (see next section)
+4. Searching across all delivery services (nonexistant now)
 
 ---
 
-Eventually going broad
+The Map
 
-So we'll be laser focused on dishes. But just a note on how we *could* expand.
+Exploration is really underserved. Look at Yelp/Google: you search "food" and it just throws a few pins at your in your area.
 
-I'll phrase this similar to the infamous Elon/Tesla memo. Here's the plan:
+Here's a 10x:
 
-1. Build a great local-dish finding app in a limited market
-2. Make it work better around the world
-3. Expand without "genercizing/featurizing" to being the best way to "understand/explore good stuff in a local area"
-
-Re: point 3
-
-But being an aggregator means you *should* feel perfectly suited for what you're aggregating. We are aggregating food. We should go very deep there! Ratings, tag breakdowns, the way we pick images, etc etc. Lets make it all suited to it's function.
-
-I do think that later though we could fill another gap I see generally which is that no map app does a great job of being a "become an expert in this area" really well at all. The exploration part is really poor.
-
-I'd love to tap a 🍽 icon at the top, change it to ☕️, and see all coffee shops. But, really be able to see the top 10 clearly and browse the cool stuff in my neighborhood (sorted out from the "ok"), have the filters super customized to them (open late, has chargers, comfy seating, good lighting), and have the reviews capture those aspects more clearly.
-
-I think this state of mind should lead us to a much better place than Google Maps or Yelp.
-
-Finally:
-
-In the very very long term, this nicely leads us to becoming the best local search / trip planning app essentially.
-
-You could just go to your trip location (Hawaii), browse super easily, and we can make it easy to throw a bunch of favorites into a bucket. Then take that bucks and have a little "auto trip planner" mode that helps you put together a multi-day trip with various spots in line!
+1. Rich icons for types of dish (emoji style)
+2. Colors for types of cuisine (Red = chinese, Green = italian, etc)
+3. Updates as you move it by default
+4. Shows the three levels of ratings very differently (dots for ok, diamonds for good, pins for great)
+5. Shows name / price / tags inline on the map if space is there
 
 ---
 
-Whew!
+Some tips as we develop
 
-So back to the concrete game plan (aka, We Need to Raise)
-
-Here's the other factors we need:
-
-1. Growth
-2. A pitch thats been battle tested
-3. Some combination of nicely done brand/product/marketing
-
-One way to think of it is: if we are just developing for most of the month, we are failing. We need to be focuse on growth at every step.
-
-And for VC's - we need to be somewhat sexy. Honestly, sex appeal is just under-valued because it really multiplies with your growth numbers. But it's *only* useful if combined with growth.
+If we are just developing for most of the month, we are failing. We need to be focus on growth at every step. And for VC's - we need to be somewhat sexy. Honestly, sex appeal is just under-valued because it really multiplies with your growth numbers. But it's *only* useful if combined with growth.
 
 I like to think of it in analogy to Tesla:
 
 First: Build a Roadster
 
-Small, easier to build, uses many parts from other things, high end, expensive, sexy, and meant to impress. Extremely good branding and design to prove to the world you're "worth it".
+Narrow in scope, smaller, off the shelf parts, narrow focused (high end), more expensive (we can appeal much more to foodies / early adopters in tech), sexy, and meant to impress. Great marketing + brand + product to prove to the world you're "worth it".
 
 Then, Build a Model S / X
 
@@ -179,17 +143,42 @@ You could make the case that each of these is actually for a "round", Roadster f
 
 ---
 
+Eventually going broad
+
+So we'll be laser focused on dishes. But just a note on how we *could* expand.
+
+Steps:
+
+1. Build a great local-dish finding app in a limited market
+2. Make it work better around the world + better outside dishes (cuisine, etc)
+3. Local search/guides! But don't "genercize/featurize"
+
+I do think that we could fill another gap I see generally which is that no map app does a great job of being a "become an expert in this area" or "im travleing to an area and I want to really understand it" well at all. Exploration is really poor.
+
+As an example of a good way to expand without "genericizing" is say we're adding coffee shops:
+
+ Tap 🍽 icon at the top, change it to ☕️, and see all coffee shops. But, now the map can show differnt types of inline tags (open late, has chargers, comfy seating, good lighting). Same goes for the filters. Maybe pictures aren't so important *of the coffee* but really important *of the cafe*. Etc.
+
+I think this state of mind should lead us to a much better place than Google Maps or Yelp.
+
+In the very very long term, this nicely leads us to becoming the best local search / trip planning app essentially. You could just go to your trip location (Hawaii) and *browse* super easily. Then star stuff, maybe it goes into a bucket by that area, and have a little "auto trip planner". Boom, you have your vacation planned! It's a nice "vision" for the company.
+
+Thinking in that lens: Who knows, someday we could even have great info on history of the place, with fun historical maps, etc.
+
+---
+
 ## Lower level plan
 
-I had a longer piece here describing the thinking behind the thinking, but for the sake of simplicity here is the plan:
+So, in bullets:
 
 1. Make a great local food finding app
-   1. It fixes finding good Asian food w bad service
+   1. It fixes finding good Asian food
    2. It fixes not showing places w/good service but just "ok" food
-   3. It potentially lets you search across delivery services
-   4. It potentially lets you explore map nicely without needing to search
-   2. We'll focus just finding "by dish" first, especially focusing by being great at often-missed cuisines (Asian)
-   3. How we'll narrow it further:
+   3. It fixes finding hole in the walls / single dish places
+   4. It potentially lets you search across delivery services
+   5. It potentially lets you explore map nicely without needing to search
+   6. We'll focus just finding "by dish" first, especially focusing by being great at often-missed cuisines (Asian)
+   7. How we'll narrow it further:
      - Focus only on SF to start (can expand to other big cities after)
      - Built only an iPhone app (can expand to android after)
 2. For growth/marketing:
@@ -199,15 +188,6 @@ I had a longer piece here describing the thinking behind the thinking, but for t
       1. Generated or contractor-written highly SEO optimized Listicles
       2. Data-driven insight posts on our beautiful map if we can
       3. ? Think of other good "content verticals"
-
-In terms of tech, we'll need to work another month to two max to really get a feel for where we are, how confident we feel on where we can get to.
-
-Here's what we've roughly talked about doing:
-
-1. iOS App with one screen for: Map, Search, Explore Dishes (needs a lot)
-2. Backend that crawls a wide variety of things for powering apps
-3. Vet a lot of things difficulty:
-   1. (crawling, search, map/exploration, filtering, ratings accuracy, images)
 
 ---
 
