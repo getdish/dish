@@ -10,7 +10,7 @@ const sleep = (ms: number) => new Promise(res => setTimeout(res, ms))
 let CAPTURE = 'TODO'
 
 class WorkerTest extends WorkerJob {
-  async run(message: string) {
+  async capture(message: string) {
     CAPTURE = message
   }
 }
@@ -20,13 +20,13 @@ test.before(() => {
   queue.process((job: Job) => {
     const Worker = eval(job.data.className)
     const worker = new Worker()
-    worker.run(job.data.args)
+    worker.run(job.data.fn, job.data.args)
   })
 })
 
 test('Worker runs a job', async t => {
   const job = new WorkerTest()
-  job.run_on_worker('DONE')
+  job.run_on_worker('capture', 'DONE')
   await sleep(1500)
   t.is(CAPTURE, 'DONE')
 })

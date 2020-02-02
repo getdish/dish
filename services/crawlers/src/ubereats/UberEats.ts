@@ -36,25 +36,6 @@ export class UberEats extends WorkerJob {
     attempts: 3,
   }
 
-  async run(args?: any) {
-    if (typeof args == undefined || args == 'ALL') {
-      await this.getCities()
-      return
-    }
-    if ('fn' in args) {
-      if (this[args['fn']].constructor.name === 'AsyncFunction') {
-        await this[args['fn']](args['args'])
-      } else {
-        this[args['fn']](args['args'])
-      }
-      return
-    }
-    if ('lat' in args) {
-      await this.getFeed(args['lat'], args['lon'])
-      return
-    }
-  }
-
   async getCities() {
     const response = await axios.post(CITIES, {})
     for (let country of response.data.data) {
@@ -66,9 +47,11 @@ export class UberEats extends WorkerJob {
   }
 
   async getFeed(lat: number, lon: number) {
-    this.run_on_worker({
-      fn: 'getFeedPage',
-      args: { offset: 0, category: '', lat: lat, lon: lon },
+    this.run_on_worker('getFeedPage', {
+      offset: 0,
+      category: '',
+      lat: lat,
+      lon: lon,
     })
   }
 
@@ -105,14 +88,11 @@ export class UberEats extends WorkerJob {
     this.extractRestaurantsFromFeed(response, offset, category)
 
     if (response.data.data.meta.hasMore) {
-      this.run_on_worker({
-        fn: 'getFeedPage',
-        args: {
-          offset: response.data.data.meta.offset,
-          category: category,
-          lat: lat,
-          lon: lon,
-        },
+      this.run_on_worker('getFeedPage', {
+        offset: response.data.data.meta.offset,
+        category: category,
+        lat: lat,
+        lon: lon,
       })
     }
   }
@@ -134,7 +114,7 @@ export class UberEats extends WorkerJob {
 
     for (let item of items) {
       if (item.type == 'STORE') {
-        this.run_on_worker({ fn: 'getRestaurant', args: item.uuid })
+        this.run_on_worker('getRestaurant', item.uuid)
       }
     }
   }

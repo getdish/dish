@@ -10,6 +10,7 @@ export const redisOptions = {
 
 export type JobData = {
   className: string
+  fn: string
   args?: any
 }
 
@@ -17,16 +18,19 @@ export class WorkerJob {
   static queue_config: QueueOptions = {}
   static job_config: JobOptions = {}
 
-  async run(args?: any): Promise<any> {
-    console.error('run() not implemented')
-    console.debug(args)
-    return false
+  async run(fn: string, args?: any) {
+    if (this[fn].constructor.name === 'AsyncFunction') {
+      await this[fn](args)
+    } else {
+      this[fn](args)
+    }
   }
 
-  async run_on_worker(args?: any) {
+  async run_on_worker(fn: string, args?: any) {
     const queue = new Queue(this.constructor.name, { redis: redisOptions })
     const job: JobData = {
       className: this.constructor.name,
+      fn: fn,
       args: args,
     }
     const config = (this.constructor as typeof WorkerJob).job_config
