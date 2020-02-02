@@ -27,7 +27,7 @@ const updateRestaurants: AsyncAction<LngLat> = async (
   { state }: { state: LabState },
   centre: LngLat
 ) => {
-  const restaurants = await Restaurant.findNear(centre.lat, centre.lng, 1000)
+  const restaurants = await Restaurant.findNear(centre.lat, centre.lng, 0.005)
   for (const restaurant of restaurants) {
     state.restaurants[restaurant.id] = restaurant
     state.dishes[restaurant.id] = restaurant.dishes

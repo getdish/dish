@@ -17,7 +17,7 @@ if (typeof window == 'undefined') {
   if (window.location.hostname.includes('dish')) {
     DOMAIN = 'https://hasura.rio.dishapp.com'
   } else {
-    DOMAIN = LOCAL_HASURA
+    DOMAIN = process.env.REACT_APP_HASURA_ENDPOINT || LOCAL_HASURA
   }
 }
 

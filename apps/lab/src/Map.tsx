@@ -25,7 +25,7 @@ type MapState = {
 const Map = () => {
   const initialState: MapState = {
     center: [-122.421351, 37.759251],
-    zoom: [13],
+    zoom: [15],
     bounds: {} as LngLatBounds,
   }
   const [mapState, setMapState] = useState(initialState)
@@ -38,12 +38,10 @@ const Map = () => {
   })
 
   const updateMap = (map: MapBox.Map, _event: React.SyntheticEvent) => {
-    if (mapState.bounds == ({} as LngLatBounds)) {
-      mapState.bounds = map.getBounds()
-      setMapState(mapState)
-      actions.updateRestaurants(map.getCenter())
-    }
-    if (isBoundsChanged(map.getBounds())) {
+    if (
+      mapState.bounds == ({} as LngLatBounds) ||
+      isBoundsChanged(map.getBounds())
+    ) {
       mapState.bounds = map.getBounds()
       setMapState(mapState)
       actions.updateRestaurants(map.getCenter())
