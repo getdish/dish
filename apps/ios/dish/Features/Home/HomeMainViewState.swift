@@ -5,7 +5,10 @@ fileprivate let snapToBottomYMovePct: CGFloat = 0.6
 fileprivate let distanceUntilSnapDown: CGFloat = 42
 fileprivate let distanceUntilSnapUp: CGFloat = 85
 fileprivate let nearTopAtVal: CGFloat = 120 + Screen.statusBarHeight
-fileprivate let topNavHeight: CGFloat = 45
+
+fileprivate func getInitialY(_ screenHeight: CGFloat) -> CGFloat {
+    screenHeight * 0.4
+}
 
 class HomeViewState: ObservableObject {
     enum HomeDragState {
@@ -23,7 +26,7 @@ class HomeViewState: ObservableObject {
     
     @Published private(set) var appHeight: CGFloat = Screen.height
     // initialize it at best estimate where the snapToBottom will be
-    @Published private var y: CGFloat = Screen.fullHeight * 0.3 * snapToBottomYMovePct - 1
+    @Published private var y: CGFloat = getInitialY(Screen.height)
     @Published private(set) var searchBarYExtra: CGFloat = 0
     @Published private(set) var hasScrolled: HomeScrollState = .none
     @Published private(set) var hasMovedBar = false
@@ -147,17 +150,21 @@ class HomeViewState: ObservableObject {
     }
     
     var showFiltersAbove: Bool {
-        if y > snapToBottomAt - 1 { return false }
-        if mapHeight < 190 { return false }
+        if y > snapToBottomAt - 1 {
+            return true
+        }
+        if mapHeight < 190 {
+            return false
+        }
         return hasScrolled != .none
     }
     
     let mapMinHeight: CGFloat = max(
         nearTopAtVal - 1,
-        Screen.statusBarHeight + searchBarHeight / 2 + topNavHeight + 50
+        Screen.statusBarHeight + App.searchBarHeight / 2 + App.topNavHeight + 50
     )
     
-    var mapMaxHeight: CGFloat { appHeight - keyboardHeight - searchBarHeight }
+    var mapMaxHeight: CGFloat { appHeight - keyboardHeight - App.searchBarHeight }
     
     var mapHeight: CGFloat {
         min(mapMaxHeight, max(self.y - scrollRevealY, mapMinHeight))
@@ -250,6 +257,7 @@ class HomeViewState: ObservableObject {
     }
 
     func setY(_ dragY: CGFloat) {
+        print("setY dragState \(dragState)")
         if dragState == .pager { return }
         if lastDragY == dragY { return }
         lastDragY = dragY
@@ -361,6 +369,10 @@ class HomeViewState: ObservableObject {
                 self.y = self.startSnapToBottomAt
             }
         }
+        
+        async(300) {
+            self.setDragState(.idle)
+        }
     }
     
     var mapSnappedToTopHeight: CGFloat {
@@ -419,10 +431,11 @@ class HomeViewState: ObservableObject {
     func setAppHeight(_ val: CGFloat) {
         log.info()
         self.appHeight = val
-        // do once on startup
+        
+        // only do once, move to start position
         if !hasSetInitialY {
             hasSetInitialY = true
-            self.y = val * 0.3
+            self.y = getInitialY(val)
         }
     }
     

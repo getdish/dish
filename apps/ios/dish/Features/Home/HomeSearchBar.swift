@@ -52,9 +52,13 @@ struct HomeSearchBar: View {
     
     var body: some View {
         let zoomed = keyboard.state.height > 0
+        let scale: CGFloat = zoomed ? 1.5 : 1.3
         
         return Group {
-            SideEffect("HomeSearchBar.updatePlaceholder") { self.updatePlaceholder() }
+            Color.clear.onAppear {
+                self.updatePlaceholder()
+            }
+
             Run {
                 self.lastZoomed = zoomed
             }
@@ -65,7 +69,7 @@ struct HomeSearchBar: View {
                     ? Color(red: 0.2, green: 0.2, blue: 0.2)
                     : Color.white,
                 borderColor: Color.clear,
-                scale: zoomed ? 1.5 : 1.3,
+                scale: scale,
                 sizeRadius: 2.0,
                 icon: icon,
                 showCancelInside: true,
@@ -79,7 +83,7 @@ struct HomeSearchBar: View {
                         self.focusKeyboard()
                     }
             },
-                after: AnyView(HomeSearchBarAfterView()),
+                after: AnyView(HomeSearchBarAfterView().scaleEffect(scale)),
                 isFirstResponder: isFirstResponder,
                 //            onTextField: { field in
                 //                print("set text field")
@@ -89,7 +93,7 @@ struct HomeSearchBar: View {
                 tags: self.homeTags
             )
             .animation(.spring(), value: zoomed != self.lastZoomed)
-            .offset(y: zoomed ? -10 : 0)
+            .offset(y: zoomed ? -5 : 0)
         }
     }
     

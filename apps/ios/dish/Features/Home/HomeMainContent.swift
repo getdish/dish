@@ -2,7 +2,6 @@ import SwiftUI
 import Combine
 
 fileprivate let items = features.chunked(into: 2)
-fileprivate let filterBarHeight: CGFloat = 55
 
 let bottomNavHeight: CGFloat = 115
 // used in search results for now...
@@ -75,12 +74,13 @@ struct HomeMainContent: View {
                         }
                     }
                         .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
-                        .offset(y: self.homeState.snappedToBottomMapHeight - cardRowHeight - 20)
+                    .offset(y: self.homeState.snappedToBottomMapHeight - cardRowHeight - App.filterBarHeight)
                 }
                 // note! be sure to put any animation on this *inside* magic move
                 // or else it messes up the magic move measurement - you can test
                 // by turning on MagicMove's fileprivate debug flag to see
                 // also: only making it bouncy during drag to avoid more problems
+                .animation(.spring(response: 0.38), value: state.dragState == .idle)
 //                .animation(self.homeState.dragState != .idle ? .spring() : .none)
             }
 //            .frameFlex()
@@ -155,7 +155,10 @@ struct HomeContentExplore: View {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 0) {
                     HomeMainDrawerScrollEffects()
-                    Spacer().frame(height: filterBarHeight + 22 + self.homeState.scrollRevealY)
+                    
+                    // spacer of whats above it height so it can scoll up to searchbar
+                    Spacer().frame(height: App.filterBarHeight + 24 + self.homeState.scrollRevealY)
+
                     VStack(spacing: self.spacing) {
                         ForEach(0 ..< self.items.count) { index in
                             HStack(spacing: self.spacing) {
@@ -172,12 +175,14 @@ struct HomeContentExplore: View {
                             .padding(.horizontal)
                         }
                     }
-                    Spacer().frame(height: bottomNavHeight)
+                    
+                    Spacer().frame(height: 20)
                     Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)
                 }
                 .introspectScrollView { scrollView in
                     self.homeState.setActiveScrollView(scrollView)
-                    scrollView.bounces = false
+//                    TODO attempt to have the content scroll pull down when at top
+//                    scrollView.bounces = false
                 }
             }
             .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)

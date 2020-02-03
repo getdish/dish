@@ -190,7 +190,7 @@ So, in bullets:
 
 ---
 
-Marketing / Growth
+## Marketing / Growth
 
 Lets not just pay lip service here. I think we need to do three things:
 
@@ -239,9 +239,7 @@ Plus, it totally plays well in that she loves "burning" things, and we can burn 
 
 The idea here is if we can get a little buzz going - in a platful way. Virality!
 
----
-
-The next question is - how do we keep that buzz going?
+### The next question is - how do we keep that buzz going?
 
 We can't afford to keep marketing like that, but perhaps we could figure out a number of small things we can do to keep ourselves in the news.
 
@@ -252,3 +250,21 @@ This isn't to say we are "set" on this strategy, and I'd love to find some good 
 I also have a few really key chef friends - one who has worked at a ton of top restaurants in SF and LA, another who owns Fang restaurant in SF and won Chopped twice, and a couple others, and there's perhaps a way we could get them on board too and have them connect us with people.
 
 Finally - Instagram. Instagram is a very obvious huge channel for us because it's where foodies originally went. Maybe they don't now (just post on stories), but I also have a good friend who is really well connected here too and he would do a big favor for us, so we can basically try and think of a way to get some virality here.
+
+---
+
+## Step by Step
+
+iOS
+
+- [ ] Home
+  - [ ] interaction and animation fixes
+  - [ ] filterbar work on display/function
+  - [ ]
+- [ ]
+
+Backend
+
+Web
+
+Marketing
