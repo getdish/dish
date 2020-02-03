@@ -177,7 +177,8 @@ struct HomeContentExplore: View {
                 }
                 .introspectScrollView { scrollView in
                     self.homeState.setActiveScrollView(scrollView)
-                    scrollView.bounces = false
+//                    TODO attempt to have the content scroll pull down when at top
+//                    scrollView.bounces = false
                 }
             }
             .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
