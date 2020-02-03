@@ -8,8 +8,7 @@ struct HomeMainFilterBar: View {
     @State var showCuisine = false
     
     var body: some View {
-        print("👋👋👋👋")
-        return ZStack {
+        ZStack {
             SideEffect("HomeMainFilters.changeWasOnSearchResults",
                condition: { !self.wasOnSearchResults && Selectors.home.isOnSearchResults() }
             ) {
@@ -52,7 +51,14 @@ struct HomeMainFilterBar: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 10) {
                             Group {
-                                FilterButton(width: 50, label: self.showCuisine ? "Cuisine" : "Dish", action: { self.showCuisine = !self.showCuisine })
+                                Group {
+                                    if self.showCuisine {
+                                       FilterButton(width: 50, label: "Cuisine", action: { self.showCuisine = !self.showCuisine })
+                                    } else {
+                                       FilterButton(width: 50, label: "Dish", action: { self.showCuisine = !self.showCuisine })
+                                    }
+                                    
+                                }
                                     .environment(\.colorScheme, .dark)
                                 
                                 FilterButton(label: "Price", action: {})
