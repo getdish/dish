@@ -67,7 +67,10 @@ struct HomeMainFilterBar: View {
                                 
                                 FilterButton(label: "Diet", action: {})
                                 
-                                FilterButton(label: "Hole in the Wall", action: filterAction)
+                                FilterButton(label: "Hidden Gem", action: filterAction)
+                                    .opacity(0.8)
+                                
+                                FilterButton(label: "Lunch Spot", action: filterAction)
                                     .opacity(0.8)
                                 
                                 FilterButton(label: "Open Late", action: filterAction)
