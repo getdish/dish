@@ -18,7 +18,8 @@ class AppInstance {
     let keyboard = Keyboard()
     let queueMain = DispatchQueue.main
     let magicItems = magicItemsStore
-    let enableMapAutoZoom = true
+    // y so slow
+    let enableMapAutoZoom = false
     
     let searchBarHeight: CGFloat = 54
     let topNavHeight: CGFloat = 54
