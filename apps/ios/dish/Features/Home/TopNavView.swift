@@ -44,6 +44,8 @@ struct TopNavViewContent: View {
 }
 
 struct TopNavButtonStyle: ViewModifier {
+    @Environment(\.colorScheme) var colorScheme
+    
     func body(content: Content) -> some View {
         content
             .frame(height: 20)
@@ -51,9 +53,9 @@ struct TopNavButtonStyle: ViewModifier {
             .padding(.horizontal, 8)
             .background(Color.white.opacity(0.075))
             .background(Color.black.opacity(0.075))
-//            .background(
-//                BlurView(style: .light)
-//            )
+            .background(
+                BlurView(style: colorScheme == .dark ? .dark : .light)
+            )
             .cornerRadius(20)
             .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
             .foregroundColor(.white)

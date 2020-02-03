@@ -3,13 +3,13 @@ import SwiftUI
 fileprivate let leftPad = AnyView(Spacer().frame(width: 50))
 
 struct HomeMainFilterBar: View {
-    @EnvironmentObject var homeState: HomeViewState
     @EnvironmentObject var store: AppStore
     @State var wasOnSearchResults = false
     @State var showCuisine = false
     
     var body: some View {
-        ZStack {
+        print("👋👋👋👋")
+        return ZStack {
             SideEffect("HomeMainFilters.changeWasOnSearchResults",
                condition: { !self.wasOnSearchResults && Selectors.home.isOnSearchResults() }
             ) {
@@ -17,7 +17,7 @@ struct HomeMainFilterBar: View {
             }
             
             ZStack(alignment: .leading) {
-                if homeState.showFilters {
+                if false {
                     HomeMainFilterFocused()
                 }
                 

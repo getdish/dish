@@ -91,7 +91,7 @@ struct SearchInput: View {
         let pad = 8 * (scale + 0.5) * 0.6
         let numTags = self.tags.count
         let hasTags = numTags > 0
-        let fontSize = 14 * scale * 2
+        let fontSize = 14 * (scale - 1) / 2 + 14
         
         return VStack {
             // Search view

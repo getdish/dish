@@ -30,7 +30,7 @@ struct FilterButton: View {
                 .padding(.vertical, 7)
                 .padding(.horizontal, 11)
                 .background(schemeOppositeColor)
-                .cornerRadius(10)
+                .cornerRadius(100)
 //                .cornerRadius(100, corners: self.cornerRadiusCorners)
                 .shadow(color: shadowColor, radius: 7, x: 0, y: 2)
             }
