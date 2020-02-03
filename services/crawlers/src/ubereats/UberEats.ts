@@ -1,8 +1,6 @@
 import '@dish/common'
 
-import dotenv from 'dotenv'
-dotenv.config()
-
+import _ from 'lodash'
 import axios, { AxiosResponse } from 'axios'
 import { QueueOptions, JobOptions } from 'bull'
 
@@ -11,13 +9,14 @@ import { Restaurant, Dish } from '@dish/models'
 
 import categories from './categories.json'
 
+import { aroundCoords, geocode } from '../utils'
+
 const UBEREATS_DOMAIN =
   process.env.UBEREATS_PROXY || 'https://www.ubereats.com/'
 const LOCALE = '?localeCode=en-US'
 const CITIES = 'getCountriesWithCitiesV1'
 const FEED = 'getFeedV1'
 const STORE = 'getStoreV1'
-const HEREMAPS_API_TOKEN = process.env.HEREMAPS_API_TOKEN
 const PER_PAGE = 80
 axios.defaults.baseURL = UBEREATS_DOMAIN + 'api/'
 axios.defaults.headers.common['x-csrf-token'] = 'x'
@@ -36,23 +35,48 @@ export class UberEats extends WorkerJob {
     attempts: 3,
   }
 
-  async getCities() {
-    const response = await axios.post(CITIES, {})
-    for (let country of response.data.data) {
-      console.log(country.countryDisplayName)
-      for (let city of country.cities) {
-        console.log(city.cityId, city.cityDisplayName)
-      }
+  static DELIVERY_RADIUS = 30000
+
+  async world() {
+    let cities = await this.getCities()
+    cities = _.shuffle(cities)
+    for (const city of cities) {
+      this.run_on_worker('getCity', { city: city })
     }
   }
 
-  async getFeed(lat: number, lon: number) {
-    this.run_on_worker('getFeedPage', {
-      offset: 0,
-      category: '',
-      lat: lat,
-      lon: lon,
-    })
+  async getCities() {
+    let cities: string[] = []
+    const response = await axios.post(CITIES, {})
+    for (let country of response.data.data) {
+      for (let city of country.cities) {
+        cities.push(`${city.cityDisplayName}, ${country.countryDisplayName}`)
+      }
+    }
+    return cities
+  }
+
+  async getCity({ city: city }) {
+    const coords = await geocode(city)
+    this.run_on_worker('aroundCoords', { lat: coords[0], lon: coords[1] })
+  }
+
+  aroundCoords({ lat, lon }: { lat: number; lon: number }) {
+    const delivery_radius_multiplier = 2
+    const coords_set = aroundCoords(
+      lat,
+      lon,
+      UberEats.DELIVERY_RADIUS,
+      delivery_radius_multiplier
+    )
+    for (let coords of coords_set) {
+      this.run_on_worker('getFeedPage', {
+        offset: 0,
+        category: '',
+        lat: coords[0],
+        lon: coords[1],
+      })
+    }
   }
 
   async getFeedPage({
@@ -167,15 +191,6 @@ export class UberEats extends WorkerJob {
         await dish.upsert()
       }
     }
-  }
-
-  // TODO: Refactor out to utilities
-  async geocode(address: string) {
-    const base = 'https://geocoder.ls.hereapi.com/6.2/geocode.json?apiKey='
-    const query = '&searchtext=' + address
-    const url = base + HEREMAPS_API_TOKEN + query
-    const response = await axios.get(url)
-    console.log(response.data.Response.View.Result.Location)
   }
 
   private encodeLocation(lat: number, lon: number) {

@@ -24,6 +24,7 @@ services:
       - REDIS_HOST=redis-master.redis
       - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
       - UBEREATS_PROXY=${UBEREATS_PROXY}
+      - HEREMAPS_API_TOKEN=${HEREMAPS_API_TOKEN}
     command:
       - node
     args:
@@ -39,7 +40,7 @@ services:
     command:
       - node
     args:
-      - _/ubereats/sanfran.js
+      - _/ubereats/world.js
   lab:
     image: dish/lab
     build:

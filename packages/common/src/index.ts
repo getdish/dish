@@ -1,3 +1,7 @@
+// TODO: How to make this conditional on being in Node without using async?
+// Async prevents ENV being loaded *before* the rest of the code.
+import './load_env'
+
 import * as Sentry from '@sentry/node'
 
 Sentry.init({
@@ -33,5 +37,3 @@ export const sentryException = (
     Sentry.captureException(error)
   })
 }
-
-console.log('Sentry initialised')

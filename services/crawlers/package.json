@@ -13,12 +13,14 @@
   },
   "dependencies": {
     "@dish/common": "*",
-    "@dish/puppeteer-crawler": "*",
     "@dish/models": "*",
+    "@dish/puppeteer-crawler": "*",
     "@dish/worker": "*",
-    "axios": "^0.19.1"
+    "axios": "^0.19.1",
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.149",
     "@zeit/ncc": "^0.20.5",
     "nodemon": "^2.0.2"
   }

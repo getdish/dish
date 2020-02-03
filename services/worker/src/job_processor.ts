@@ -11,8 +11,12 @@ import { WorkerJob } from '@dish/worker'
 
 // All code that the workers could possibly run needs to be passed to the
 // job processor.
-import { UberEats, Yelp } from '@dish/crawlers'
-const all = [UberEats, Yelp]
+import { CI, UberEats, Yelp } from '@dish/crawlers'
+const all: typeof WorkerJob[] = [UberEats, Yelp]
+
+if (process.env.DISH_ENV != 'production') {
+  all.push(CI)
+}
 
 let klass_map: { [key: string]: typeof WorkerJob } = {}
 
@@ -23,12 +27,12 @@ for (let klass of all) {
 export { klass_map }
 
 export default async (job: Job) => {
-  const description = `${job.data.className}.run(${JSON.stringify(
+  const description = `${job.data.className}.${job.data.fn}(${JSON.stringify(
     job.data.args
   )})`
   console.log(
     `Processing job (${job.id}, attempt: ${job.attemptsMade}): ${description}`
   )
   const worker = new klass_map[job.data.className]()
-  await worker.run(job.data.args)
+  await worker.run(job.data.fn, job.data.args)
 }

@@ -11,8 +11,8 @@ docker run \
   -e CI=true \
   --net host \
   dish/crawlers \
-  node _/ubereats/world.js > crawler.logs 2>&1 &
+  node _/ci/run.js > crawler.logs 2>&1 &
 
 sleep 15
 
-grep 'New York' worker.logs
+grep 'CI worker job ran with message: It is done' worker.logs
