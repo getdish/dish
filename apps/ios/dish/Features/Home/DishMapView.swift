@@ -153,39 +153,40 @@ struct DishMapView: View {
         // mapHeight => zoom level
         if App.enableMapAutoZoom {
             var lastZoomAt = homeViewState.mapHeight
-//            homeViewState.$y
-//                .map { _ in homeViewState.mapHeight }
-//                .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
-//                .removeDuplicates()
-//                .dropFirst()
-//                .sink { mapHeight in
-//                    if homeViewState.isAboutToSnap || homeViewState.isSnappedToBottom {
-//                        return
-//                    }
-//                    let amt = ((mapHeight - lastZoomAt) / homeViewState.mapMaxHeight) * 0.5
-//                    if amt == 0.0 {
-//                        return
-//                    }
-//                    lastZoomAt = mapHeight
-//                    self.mapView?.zoomIn(amt)
-//            }
-//            .store(in: &mapViewStore.cancels)
+            
+            homeViewState.$y
+                .map { _ in homeViewState.mapHeight }
+                .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
+                .removeDuplicates()
+                .dropFirst()
+                .sink { mapHeight in
+                    if homeViewState.isAboutToSnap || homeViewState.isSnappedToBottom {
+                        return
+                    }
+                    let amt = ((mapHeight - lastZoomAt) / homeViewState.mapMaxHeight) * 0.5
+                    if amt == 0.0 {
+                        return
+                    }
+                    lastZoomAt = mapHeight
+                    self.mapView?.zoomIn(amt)
+            }
+            .store(in: &mapViewStore.cancels)
     
             // snappedToBottom => zoom
-//            homeViewState.$y
-//                .debounce(for: .milliseconds(50), scheduler: App.queueMain)
-//                .map { _ in homeViewState.isSnappedToBottom }
-//                .removeDuplicates()
-//                .dropFirst()
-//                //            .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
-//                .sink { isSnappedToBottom in
-//                    if isSnappedToBottom {
-//                        self.mapView?.zoomIn(0.05)
-//                    } else {
-//                        self.mapView?.zoomOut(0.05)
-//                    }
-//            }
-//            .store(in: &mapViewStore.cancels)
+            homeViewState.$y
+                .debounce(for: .milliseconds(50), scheduler: App.queueMain)
+                .map { _ in homeViewState.isSnappedToBottom }
+                .removeDuplicates()
+                .dropFirst()
+                //            .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
+                .sink { isSnappedToBottom in
+                    if isSnappedToBottom {
+                        self.mapView?.zoomIn(0.05)
+                    } else {
+                        self.mapView?.zoomOut(0.05)
+                    }
+            }
+            .store(in: &mapViewStore.cancels)
         }
     }
 }
