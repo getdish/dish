@@ -93,7 +93,7 @@ struct HomeSearchBar: View {
                 tags: self.homeTags
             )
             .animation(.spring(), value: zoomed != self.lastZoomed)
-            .offset(y: zoomed ? -10 : 0)
+            .offset(y: zoomed ? -5 : 0)
         }
     }
     

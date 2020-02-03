@@ -1,30 +1,6 @@
 import SwiftUI
 import Combine
 
-// Combine - Apples reactive library
-//   - ObservedObject / ObservableObject
-
-let searchBarHeight: CGFloat = 45
-
-struct BrandBar: View {
-    var body: some View {
-        VStack {
-            Spacer()
-            ZStack {
-                Color(red: 184 / 255, green: 35 / 255, blue: 35 / 255)
-                    .frame(height: Screen.statusBarHeight + 5)
-                    .padding(.top, 10)
-                
-                Image("dish-top")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 120, height: 50)
-                    .offset(y: -32)
-            }
-        }
-    }
-}
-
 struct HomeMainView: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard
@@ -102,14 +78,13 @@ struct HomeMainView: View {
                         .offset(
                             y: state.mapHeight + (state.isSnappedToBottom
                                 ? 0
-                                : -searchBarHeight - 64
+                                : -App.searchBarHeight - App.topNavHeight
                             )
                         )
 
                     
                     // results
                     HomeMainContent()
-                        .animation(.spring(response: 0.38), value: state.dragState == .idle)
                         .offset(y: state.showCamera ? Screen.height : 0)
                 
                     // filters
@@ -120,7 +95,7 @@ struct HomeMainView: View {
                     .zIndex(state.showFilters ? 100 : 0)
 //                    .animation(.spring())
                     .offset(
-                        y: mapHeight + searchBarHeight / 2 + (
+                        y: mapHeight + App.searchBarHeight / 2 + (
                            state.showFilters ? 0 : state.showFiltersAbove ? -100 : 0
                         )
                     )
@@ -132,7 +107,7 @@ struct HomeMainView: View {
                             HomeSearchBarState.frame = searchBarGeometry.frame(in: .global)
                             return HomeSearchBar()
                         }
-                        .frame(height: searchBarHeight)
+                        .frame(height: App.searchBarHeight)
                         .padding(.horizontal, 10)
                         
                         Spacer()
@@ -145,7 +120,7 @@ struct HomeMainView: View {
                     .offset(y:
                         state.showCamera ?
                             mapHeight > Screen.height / 2 ? Screen.height * 2 : -Screen.height * 2 :
-                            mapHeight - searchBarHeight / 2 + state.searchBarYExtra
+                            mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra
                     )
                 
                     // CameraControlsOverlay
@@ -163,7 +138,7 @@ struct HomeMainView: View {
                                             : -8,
                                         y: state.showCamera
                                             ? Screen.fullHeight - App.cameraButtonHeight - 100
-                                            : state.mapHeight - App.cameraButtonHeight / 2 - 0.5
+                                            : state.mapHeight - App.cameraButtonHeight / 2 - 0.5 + ((App.searchBarHeight - App.cameraButtonHeight) / 2)
                                 )
 //                                    .animation(Animation.spring(response: 0.4).delay(0))
                             }

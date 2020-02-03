@@ -95,7 +95,6 @@
 		AEED843E23B5A8E000407266 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED843D23B5A8E000407266 /* Mocks.swift */; };
 		AEED844123B6707100407266 /* DishMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844023B6707100407266 /* DishMapView.swift */; };
 		AEED844823B675C300407266 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844723B675C300407266 /* CameraView.swift */; };
-		AEF6556F23B0248200E49A51 /* FilterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6556E23B0248200E49A51 /* FilterButton.swift */; };
 		AEF6557123B024A100E49A51 /* ScrollListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557023B024A100E49A51 /* ScrollListener.swift */; };
 		AEF6557423B0407000E49A51 /* ImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557323B0407000E49A51 /* ImageStore.swift */; };
 		AEF6557723B041C400E49A51 /* RestaurantItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557623B041C400E49A51 /* RestaurantItem.swift */; };
@@ -203,7 +202,6 @@
 		AEED843D23B5A8E000407266 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Mocks.swift; path = /Users/nw/dish/apps/ios/dish/Store/Mocks.swift; sourceTree = "<absolute>"; };
 		AEED844023B6707100407266 /* DishMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishMapView.swift; sourceTree = "<group>"; };
 		AEED844723B675C300407266 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
-		AEF6556E23B0248200E49A51 /* FilterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButton.swift; sourceTree = "<group>"; };
 		AEF6557023B024A100E49A51 /* ScrollListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollListener.swift; sourceTree = "<group>"; };
 		AEF6557323B0407000E49A51 /* ImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStore.swift; sourceTree = "<group>"; };
 		AEF6557623B041C400E49A51 /* RestaurantItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantItem.swift; sourceTree = "<group>"; };
@@ -358,7 +356,6 @@
 				1C3CFE6323998FF2004B2EEA /* HomeContainerView.swift */,
 				AEF6558023B2205F00E49A51 /* HomeMainContent.swift */,
 				AEA87E4223B976EB009F07DB /* HomeMainFilters.swift */,
-				AEF6556E23B0248200E49A51 /* FilterButton.swift */,
 				AE7563B323A035E70094022B /* HomeMainView.swift */,
 				AE0C5FF823D2506800BB5340 /* HomeMainViewState.swift */,
 				AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */,
@@ -661,7 +658,6 @@
 				AE872FF523CE983900F84663 /* ClearKeyboardOnScroll.swift in Sources */,
 				AE872FF723CEA5CD00F84663 /* DishRestaurantCard.swift in Sources */,
 				1CE3548323986C5C004B3A84 /* AppStore.swift in Sources */,
-				AEF6556F23B0248200E49A51 /* FilterButton.swift in Sources */,
 				AEAE67EC23B5A70A00B9D781 /* Map.swift in Sources */,
 				AE861A7923A0651D004096BF /* Keyboard.swift in Sources */,
 				AE0C5FF523D2397D00BB5340 /* PrintGeometryView.swift in Sources */,

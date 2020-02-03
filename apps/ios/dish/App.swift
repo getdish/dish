@@ -19,7 +19,13 @@ class AppInstance {
     let queueMain = DispatchQueue.main
     let magicItems = magicItemsStore
     let enableMapAutoZoom = false
+    
+    let searchBarHeight: CGFloat = 54
+    let topNavHeight: CGFloat = 54
+    let topNavPad: CGFloat = 12
     let cameraButtonHeight: CGFloat = 52
+    let filterBarHeight: CGFloat = 60
+    let filterBarPad: CGFloat = 12
     
     var enterRepl = false
     

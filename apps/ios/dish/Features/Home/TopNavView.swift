@@ -48,8 +48,7 @@ struct TopNavButtonStyle: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .frame(height: 20)
-            .padding(.vertical, 4)
+            .frame(height: App.topNavHeight - App.topNavPad * 2)
             .padding(.horizontal, 8)
             .background(Color.white.opacity(0.075))
             .background(Color.black.opacity(0.075))
