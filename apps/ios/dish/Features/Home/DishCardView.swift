@@ -5,6 +5,8 @@ struct DishCardView: View, Identifiable, Equatable {
         lhs.id == rhs.id
     }
     
+    @Environment(\.colorScheme) var colorScheme
+    
     enum DisplayCard {
         case card, full, fullscreen
     }
@@ -42,15 +44,19 @@ struct DishCardView: View, Identifiable, Equatable {
         ZStack(alignment: .center) {
             Rectangle().fill(
                 LinearGradient(
-                    gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black.opacity(0.4)]),
+                    gradient: Gradient(colors:
+                        colorScheme == .dark
+                         ? [Color.black.opacity(0.6), Color.black.opacity(0.4)]
+                            : [Color.black.opacity(0.4), Color.black.opacity(0.2)]
+                    ),
                     startPoint: .bottom,
                     endPoint: .center
                 )
             )
             VStack(alignment: .leading) {
                 Text(self.dish.name)
-                    .font(.system(size: 17))
-                    .fontWeight(.black)
+                    .font(.system(size: 16))
+                    .fontWeight(.bold)
             }
             .padding()
         }

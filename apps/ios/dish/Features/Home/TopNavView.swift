@@ -53,7 +53,7 @@ struct TopNavButtonStyle: ViewModifier {
             .background(Color.white.opacity(0.075))
             .background(Color.black.opacity(0.075))
             .background(
-                BlurView(style: colorScheme == .dark ? .dark : .light)
+                colorScheme == .dark ? BlurView(style: .dark) : BlurView(style: .extraLight)
             )
             .cornerRadius(20)
             .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)

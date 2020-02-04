@@ -59,9 +59,14 @@ struct DishMapView: View {
                         Group {
                             if true {
                                 MapBoxView(annotations: self.$annotations)
-                                    .styleURL(MGLStyle.satelliteStyleURL)
+                                    .styleURL(
+                                        colorScheme == .dark
+                                            ? URL(string: "mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja/draft")!
+                                            : URL(string: "mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq/draft")!
+                                        
+                                    )
                                     .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
-                                    .zoomLevel(12)
+                                    .zoomLevel(10)
                                     .frame(height: Screen.fullHeight * 2)
                             } else {
                                 MapView(
