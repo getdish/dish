@@ -158,7 +158,6 @@ struct SearchInput: View {
                     
                     if showCancelButton && showCancelInside {
                         cancelButton
-                            .scaleEffect(0.9)
                     }
                     
                     if after != nil {

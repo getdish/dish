@@ -123,12 +123,6 @@ struct HomeSearchBarAfterView: View {
                 self.homeState.toggleMap()
             }) {
                 Group {
-//                    if self.homeState.isSnappedToTop {
-//                        Image(systemName: "chevron.down")
-//                            .resizable()
-//                            .scaledToFit()
-//
-//                    } else
                     if self.homeState.isSnappedToBottom {
                         if Selectors.home.isOnSearchResults() {
                             Image(systemName: "list.bullet")
@@ -148,9 +142,12 @@ struct HomeSearchBarAfterView: View {
                         }
                     }
                 }
-                .frame(width: 16, height: 16)
+                .frame(height: 16)
                 .opacity(0.5)
-                .padding(.trailing, 14 + App.cameraButtonHeight * 0.5)
+                
+                // space for the camera button
+                Spacer()
+                    .frame(width: App.cameraButtonHeight)
             }
             .padding(.vertical, 4)
             .padding(.horizontal, 6)

@@ -19,6 +19,7 @@ struct MapBoxView: UIViewRepresentable {
     
     func makeUIView(context: UIViewRepresentableContext<MapBoxView>) -> MGLMapView {
         mapView.delegate = context.coordinator
+        mapView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         
 //        let layer = MGLSymbolStyleLayer(identifier: "coffeeshops", source: features)
 //        layer.sourceLayerIdentifier = "pois"
@@ -110,7 +111,7 @@ struct MapBoxView: UIViewRepresentable {
 //            symbol.text = "This is a cool place!"
 //            symbol.textFontSize = 16
 //            symbolAnnotationController.addStyleAnnotation(symbol)
-//            
+//
 //            let attraction2 = UIImage(named: "pin")
 //            if let styleImage2 = attraction2 {
 //                mapView.style?.setImage(styleImage2, forName: "attraction")
