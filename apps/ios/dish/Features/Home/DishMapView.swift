@@ -49,20 +49,18 @@ struct DishMapView: View {
     ]
     
     var body: some View {
-        let testMapBox = false
-        
-        return ZStack(alignment: .topLeading) {
+        ZStack(alignment: .topLeading) {
             // start
             Color.clear.onAppear { self.start() }
             
             VStack {
                 ZStack(alignment: .topLeading) {
                     ZStack {
-                        if testMapBox {
+                        if true {
                             MapBoxView(annotations: self.$annotations)
-                                .styleURL(URL(string: "mapbox://styles/nwienert/ck5lsbz6o1vae1iobqut5e8x5")!)
+                                .styleURL(MGLStyle.satelliteStyleURL)
                                 .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
-                                .zoomLevel(15)
+                                .zoomLevel(12)
                         } else {
                             MapView(
                                 width: appWidth,
