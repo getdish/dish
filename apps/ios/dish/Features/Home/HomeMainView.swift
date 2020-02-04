@@ -5,6 +5,7 @@ struct HomeMainView: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard
     @Environment(\.geometry) var appGeometry
+    @Environment(\.colorScheme) var colorScheme
     
     //
     // main state of this view and sub-views:
@@ -62,11 +63,13 @@ struct HomeMainView: View {
                             .animation(.spring(response: 0.8))
                             .rotationEffect(state.showCamera ? .degrees(-10) : .degrees(0))
                         
+                        // map fade out at bottom
                         VStack {
                             Spacer()
                             LinearGradient(
                                 gradient: Gradient(colors: [Color.black.opacity(0),
-                                                            Color.black.opacity(0.55)]),
+                                                            Color(white: 0).opacity(0.55),
+                                                            Color(white: 0).opacity(0.55)]),
                                 startPoint: .top,
                                 endPoint: .bottom
                             )
@@ -78,7 +81,7 @@ struct HomeMainView: View {
                         .offset(
                             y: state.mapHeight + (state.isSnappedToBottom
                                 ? 0
-                                : -App.searchBarHeight - App.topNavHeight
+                                : -App.searchBarHeight - App.topNavHeight - 12
                             )
                         )
 

@@ -16,50 +16,21 @@ struct HomeMainFilterBar: View {
             }
             
             ZStack(alignment: .leading) {
-                if false {
-                    HomeMainFilterFocused()
-                }
-                
+//                if false {
+//                    HomeMainFilterFocused()
+//                }
                 Group {
-//                    VStack {
-//                        Spacer().frame(maxHeight: homeState.showFilters ? .infinity : 0)
-//
-//                        HStack(spacing: 12) {
-//                            HStack {
-//                                FilterButton(label: "Dish", action: filterAction, flex: true)
-//                                    .environment(\.colorScheme, .dark)
-//                                FilterButton(label: "Craving", action: filterAction, flex: true)
-//                                FilterButton(label: "Cuisine", action: filterAction, flex: true)
-//                            }
-//                            .cornerRadius(80)
-//                            .shadow(radius: 10)
-//
-//                            FilterButton(label: "💵", action: {
-//                                self.homeState.showFilters = true
-//                            }, flex: true)
-//                                .frame(width: 60)
-//                                .cornerRadius(80)
-//                                .shadow(radius: 10)
-//                        }
-//                        .padding(.vertical, 4)
-//                        .padding(.horizontal, 20)
-//                        .environment(\.colorScheme, .light)
-//                    }
-//                    .padding(.bottom, homeState.showFilters ? 40 : 0)
-//                    .animation(.spring())
-                    
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 10) {
                             Group {
-                                Group {
-                                    if self.showCuisine {
-                                       FilterButton(width: 50, label: "Cuisine", action: { self.showCuisine = !self.showCuisine })
-                                    } else {
-                                       FilterButton(width: 50, label: "Dish", action: { self.showCuisine = !self.showCuisine })
-                                    }
-                                    
-                                }
-                                    .environment(\.colorScheme, .dark)
+//                                Group {
+//                                    if self.showCuisine {
+//                                       FilterButton(width: 50, label: "Cuisine", action: { self.showCuisine = !self.showCuisine })
+//                                    } else {
+//                                       FilterButton(width: 50, label: "Dish", action: { self.showCuisine = !self.showCuisine })
+//                                    }
+//
+//                                }
                                 
                                 FilterButton(label: "Price", action: {})
                                 
@@ -214,7 +185,9 @@ struct FilterButton: View {
     
     var body: some View {
         let textColor = Color(.systemBackground).opacity(0.85)
-        let schemeOppositeColor = Color(colorScheme == .dark ? .init(white: 0.95, alpha: 0.9) : .init(white: 0.15, alpha: 0.9))
+        let schemeOppositeColor = Color(
+            colorScheme == .dark ? .init(white: 0.95, alpha: 0.9) : .init(white: 0.08, alpha: 1)
+        )
         let shadowColor = Color(.black).opacity(colorScheme == .light ? 0.6 : 0.3)
         let fontSize: CGFloat = 14
         return ZStack {

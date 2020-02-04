@@ -25,7 +25,7 @@ class AppInstance {
     let topNavHeight: CGFloat = 54
     let topNavPad: CGFloat = 12
     let cameraButtonHeight: CGFloat = 52
-    let filterBarHeight: CGFloat = 60
+    let filterBarHeight: CGFloat = 58
     let filterBarPad: CGFloat = 12
     
     var enterRepl = false
