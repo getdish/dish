@@ -142,12 +142,12 @@ struct HomeSearchBarAfterView: View {
                         }
                     }
                 }
-                .frame(height: 16)
+                .frame(width: 16, height: 16)
                 .opacity(0.5)
                 
                 // space for the camera button
                 Spacer()
-                    .frame(width: App.cameraButtonHeight)
+                    .frame(width: App.cameraButtonHeight / 2)
             }
             .padding(.vertical, 4)
             .padding(.horizontal, 6)
