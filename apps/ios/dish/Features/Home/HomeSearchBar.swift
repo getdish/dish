@@ -14,11 +14,11 @@ struct HomeSearchBar: View {
     @EnvironmentObject var keyboard: Keyboard
     @Environment(\.colorScheme) var colorScheme
     
-    @State var placeholder = "Dim Sum..."
+    @State var placeholder = "The best dim sum..."
     
     func updatePlaceholder() {
         var i = 0
-        let placeholders = ["Dim Sum", "Bo Kho", "Ceviche", "Poke", "Szechuan Chicken"]
+        let placeholders = ["dim sum", "bo kho", "ceviche", "poke", "mapa tofu"]
         async(interval: 5000, intervalMax: 5) {
             self.placeholder = "The best \(placeholders[i])..."
             i += 1
