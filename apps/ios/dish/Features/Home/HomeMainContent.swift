@@ -2,12 +2,7 @@ import SwiftUI
 import Combine
 
 fileprivate let items = features.chunked(into: 2)
-
-let bottomNavHeight: CGFloat = 115
-// used in search results for now...
-let cardRowHeight: CGFloat = 120
-
-import SwiftUI
+fileprivate let cardRowHeight: CGFloat = 120
 
 struct HomeMainContent: View {
     @Environment(\.geometry) var appGeometry

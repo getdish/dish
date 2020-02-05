@@ -68,8 +68,8 @@ struct HomeMainView: View {
                             Spacer()
                             LinearGradient(
                                 gradient: Gradient(colors: [Color.black.opacity(0),
-                                                            Color(white: 0).opacity(0.55),
-                                                            Color(white: 0).opacity(0.55)]),
+                                                            Color(white: 0.1).opacity(0.55),
+                                                            Color(white: 0.1).opacity(0.75)]),
                                 startPoint: .top,
                                 endPoint: .bottom
                             )
@@ -81,7 +81,7 @@ struct HomeMainView: View {
                         .offset(
                             y: state.mapHeight + (state.isSnappedToBottom
                                 ? 0
-                                : -App.searchBarHeight - App.topNavHeight - 12
+                                : -App.searchBarHeight - App.topNavHeight - 4
                             )
                         )
 
@@ -99,7 +99,9 @@ struct HomeMainView: View {
 //                    .animation(.spring())
                     .offset(
                         y: mapHeight + App.searchBarHeight / 2 + (
-                           state.showFilters ? 0 : state.showFiltersAbove ? -100 : 0
+                            state.showFilters ? 0 : state.showFiltersAbove
+                                ? -App.searchBarHeight - App.filterBarHeight
+                                : 0
                         )
                     )
                     .opacity(state.showCamera ? 0 : 1)
@@ -138,7 +140,7 @@ struct HomeMainView: View {
                                     .offset(
                                         x: state.showCamera
                                             ? -Screen.width / 2 + App.cameraButtonHeight / 2
-                                            : -8,
+                                            : -12,
                                         y: state.showCamera
                                             ? Screen.fullHeight - App.cameraButtonHeight - 100
                                             : state.mapHeight + state.searchBarYExtra - App.cameraButtonHeight / 2 - 0.5 + ((App.searchBarHeight - App.cameraButtonHeight) / 2)

@@ -35,5 +35,3 @@ class AppInstance {
         homeService.start()
     }
 }
-
-let App = AppInstance()

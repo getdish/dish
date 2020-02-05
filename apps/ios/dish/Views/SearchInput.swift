@@ -152,7 +152,7 @@ struct SearchInput: View {
                         Image(systemName: "xmark.circle.fill")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 24 + 5 * scale, height: 24 + 5 * scale)
+                            .frame(width: 26 + 2 * scale, height: 24 + 5 * scale)
                             .opacity(self.searchText == "" ? 0.0 : 1.0)
                     }
                     

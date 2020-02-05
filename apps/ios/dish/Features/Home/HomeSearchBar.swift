@@ -83,7 +83,7 @@ struct HomeSearchBar: View {
                         self.focusKeyboard()
                     }
             },
-                after: AnyView(HomeSearchBarAfterView().scaleEffect(scale)),
+                after: AnyView(HomeSearchBarAfterView(scale: scale)),
                 isFirstResponder: isFirstResponder,
                 //            onTextField: { field in
                 //                print("set text field")
@@ -114,6 +114,8 @@ struct HomeSearchBar: View {
 }
 
 struct HomeSearchBarAfterView: View {
+    var scale: CGFloat
+    
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
     
@@ -142,16 +144,16 @@ struct HomeSearchBarAfterView: View {
                         }
                     }
                 }
-                .frame(width: 16, height: 16)
+                .frame(width: 16 * scale, height: 16 * scale)
                 .opacity(0.5)
-                
-                // space for the camera button
-                Spacer()
-                    .frame(width: App.cameraButtonHeight / 2)
             }
-            .padding(.vertical, 4)
-            .padding(.horizontal, 6)
+            .padding(.vertical, 4 * scale)
+            .padding(.horizontal, 6 * scale)
+            
+            // space for the camera button
+            Spacer()
+                .frame(width: App.cameraButtonHeight)
         }
-        .padding(.trailing, 4)
+        .padding(.trailing, 4 * scale)
     }
 }

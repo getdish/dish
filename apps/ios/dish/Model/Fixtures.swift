@@ -2,9 +2,6 @@ import Foundation
 import CoreLocation
 import SwiftUI
 
-let features: [DishItem] = load("dishData.json")
-let restaurants: [RestaurantItem] = load("restaurantData.json")
-
 func load<T: Decodable>(_ filename: String) -> T {
     let data: Data
     

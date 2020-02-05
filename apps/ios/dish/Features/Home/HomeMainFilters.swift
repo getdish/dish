@@ -240,3 +240,12 @@ struct FilterButtonStrong: View {
 }
 
 
+
+#if DEBUG
+struct HomeMainFilters_Previews: PreviewProvider {
+    static var previews: some View {
+        HomeMainFilterBar()
+            .embedInAppEnvironment()
+    }
+}
+#endif

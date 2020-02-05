@@ -86,34 +86,33 @@ struct TopNavHome: View {
                         
                         Spacer()
                         
-                        HStack(spacing: 0) {
-                            Button(action: {
-                            }) {
-                                Text("-")
-                                    .titleBarStyle(15)
-                                    .padding(.horizontal, 10)
-                            }
-                            Rectangle()
-                                .foregroundColor(.gray)
-                                .opacity(0.2)
-                                .frame(width: 1)
-                            Button(action: {
-                            }) {
-                                Text("+")
-                                    .titleBarStyle(15)
-                                    .padding(.horizontal, 10)
-                            }
-                        }
-                        .modifier(TopNavButtonStyle())
-                        .transition(.slide)
+//                        HStack(spacing: 0) {
+//                            Button(action: {
+//                            }) {
+//                                Text("-")
+//                                    .titleBarStyle(15)
+//                                    .padding(.horizontal, 10)
+//                            }
+//                            Rectangle()
+//                                .foregroundColor(.gray)
+//                                .opacity(0.2)
+//                                .frame(width: 1)
+//                            Button(action: {
+//                            }) {
+//                                Text("+")
+//                                    .titleBarStyle(15)
+//                                    .padding(.horizontal, 10)
+//                            }
+//                        }
+//                        .modifier(TopNavButtonStyle())
+//                        .transition(.slide)
                         
                         
                         Button(action: {
                             App.enterRepl = true
                         }) {
                             VStack {
-                                Text("~\(Int(App.store.state.map.location.radius / 1000)) mi")
-                                    .titleBarStyle()
+                                Image(systemName: "location.fill")
                             }
 
                         }

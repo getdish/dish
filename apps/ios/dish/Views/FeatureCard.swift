@@ -51,8 +51,10 @@ struct TextOverlay: View {
     }
 }
 
+#if DEBUG
 struct FeatureCard_Previews: PreviewProvider {
     static var previews: some View {
         FeatureCard(dish: features[0])
     }
 }
+#endif
