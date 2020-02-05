@@ -33,19 +33,41 @@ export class ModelBase<T> {
   id!: string
   created_at!: Date
   updated_at!: Date
+  private _klass: typeof ModelBase
+  private _upper_name: string
+  private _lower_name: string
+
+  static default_fields() {
+    return ['id', 'created_at', 'updated_at']
+  }
 
   static fields() {
     console.error('fields() not implemented')
     return ['']
   }
 
+  static upperName() {
+    return this.constructor.name
+  }
+
+  static lowerName() {
+    return this.constructor.name.toLowerCase()
+  }
+
   constructor(init?: Partial<T>) {
+    this._klass = this.constructor as typeof ModelBase
+    this._upper_name = this._klass.name
+    this._lower_name = this._upper_name.toLowerCase()
     Object.assign(this, init)
+  }
+
+  static all_fields() {
+    return this.default_fields().concat(this.fields())
   }
 
   asObject() {
     let object = {}
-    for (const field of (this.constructor as typeof ModelBase).fields()) {
+    for (const field of this._klass.fields()) {
       object[field] = this[field]
     }
     return ModelBase.stringify(object)
@@ -63,7 +85,7 @@ export class ModelBase<T> {
   }
 
   static fieldsSerialized() {
-    return ModelBase.stringify(this.fields())
+    return ModelBase.stringify(this.all_fields())
   }
 
   static fieldsBare() {
@@ -88,5 +110,57 @@ export class ModelBase<T> {
       .map(key => `${key}:${this.stringify(object[key])}`)
       .join(',')
     return `{${props}}`
+  }
+
+  async insert() {
+    const query = `mutation {
+      insert_${this._lower_name}(
+        objects: ${this.asObject()},
+      ) {
+        returning {
+          ${this._klass.fieldsBare()}
+        }
+      }
+    }`
+    const response = await ModelBase.hasura(query)
+    Object.assign(
+      this,
+      response.data.data['insert_' + this._lower_name].returning[0]
+    )
+    return this.id
+  }
+
+  async update() {
+    const query = `mutation {
+      update_${this._lower_name}(
+        where: { id: { _eq: "${this.id}" } }
+        _set: ${this.asObject()},
+      ) {
+        returning {
+          ${this._klass.fieldsBare()}
+        }
+      }
+    }`
+    const response = await ModelBase.hasura(query)
+    Object.assign(this, response.data.data[this._lower_name])
+    return this.id
+  }
+
+  async findOne(key: string, value: string) {
+    const query = `query {
+      ${this._lower_name}(where: {${key}: {_eq: "${value}"}}) {
+        id ${this._klass.fieldsBare()}
+      }
+    }`
+    const response = await ModelBase.hasura(query)
+    const objects = response.data.data[this._lower_name]
+    if (objects.length == 1) {
+      Object.assign(this, objects[0])
+      return this.id
+    } else {
+      throw new Error(
+        objects.length + ` ${this._lower_name}s found by findOne()`
+      )
+    }
   }
 }
