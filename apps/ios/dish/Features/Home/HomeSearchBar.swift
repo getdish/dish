@@ -66,7 +66,7 @@ struct HomeSearchBar: View {
             SearchInput(
                 placeholder: self.placeholder,
                 inputBackgroundColor: colorScheme == .dark
-                    ? Color(red: 0.2, green: 0.2, blue: 0.2)
+                    ? Color(red: 0.25, green: 0.25, blue: 0.25)
                     : Color.white,
                 borderColor: Color.clear,
                 scale: scale,
@@ -93,7 +93,7 @@ struct HomeSearchBar: View {
                 tags: self.homeTags
             )
             .animation(.spring(), value: zoomed != self.lastZoomed)
-            .offset(y: zoomed ? -5 : 0)
+            .offset(y: zoomed ? 0 : 0)
         }
     }
     

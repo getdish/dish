@@ -21,82 +21,26 @@ struct HomeMainFilterBar: View {
 //                }
                 Group {
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 10) {
+                        HStack(spacing: 8) {
                             Group {
-//                                Group {
-//                                    if self.showCuisine {
-//                                       FilterButton(width: 50, label: "Cuisine", action: { self.showCuisine = !self.showCuisine })
-//                                    } else {
-//                                       FilterButton(width: 50, label: "Dish", action: { self.showCuisine = !self.showCuisine })
-//                                    }
-//
-//                                }
-                                
                                 FilterButton(label: "Price", action: {})
-                                
                                 FilterButton(label: "Spice", action: {})
-                                
                                 FilterButton(label: "Diet", action: {})
-                                
                                 FilterButton(label: "Hidden Gem", action: filterAction)
-                                    .opacity(0.8)
-                                
                                 FilterButton(label: "Lunch Spot", action: filterAction)
-                                    .opacity(0.8)
-                                
                                 FilterButton(label: "Open Late", action: filterAction)
-                                    .opacity(0.8)
                             }
                             .animation(.spring())
                         }
-                        .padding(.vertical, 12)
+                        .padding(.vertical, App.filterBarPad)
                         .padding(.horizontal, 24)
                         .environment(\.colorScheme, .light)
                     }
-                    
-//                    if showFilters == .search {
-//                        ScrollView(.horizontal, showsIndicators: false) {
-//                            HStack {
-//                                leftPad
-//                                HomeMainFilterBarTag()
-//                            }
-//                            .padding()
-//                            .environment(\.colorScheme, .dark)
-//                        }
-//
-//                    }
-//
-//                    if showFilters == .cuisine {
-//                        ScrollView(.horizontal, showsIndicators: false) {
-//                            HStack {
-//                                leftPad
-//                                HomeMainFilterBarCuisine()
-//                            }
-//                            .padding()
-//                            .environment(\.colorScheme, .light)
-//                        }
-//                    }
-//
-//                    if showFilters != .overview {
-//                        CustomButton(action: {
-//                            self.showFilters = self.showFilters == .cuisine ? .search : .cuisine
-//                        }) {
-//                            Text(self.showFilters == .cuisine ? "🍽" : "🔍")
-//                                .font(.system(size: 28))
-//                            //                            .frame(width: 24, height: 24)
-//                        }
-//                        .offset(x: 20)
-//                    }
+                    .frame(height: App.filterBarHeight)
                 }
                 .animation(.spring(response: 0.25))
                 .transition(.slide)
             }
-            
-            // cover right part of filters so its untouchable and doesnt conflict with side drags
-//            HStack {
-//                Spacer()
-//                Color.black.opacity(0.0001).frame(width: 35, height: 55)
-//            }
         }
     }
 }

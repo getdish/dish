@@ -142,10 +142,10 @@ struct HomeMainView: View {
                                     .offset(
                                         x: state.showCamera
                                             ? -Screen.width / 2 + App.cameraButtonHeight / 2
-                                            : -12,
+                                            : -15,
                                         y: state.showCamera
                                             ? Screen.fullHeight - App.cameraButtonHeight - 100
-                                            : state.mapHeight + state.searchBarYExtra - App.cameraButtonHeight / 2 - 0.5 + ((App.searchBarHeight - App.cameraButtonHeight) / 2)
+                                            : state.mapHeight + state.searchBarYExtra - App.cameraButtonHeight / 2
                                 )
 //                                    .animation(Animation.spring(response: 0.4).delay(0))
                             }
