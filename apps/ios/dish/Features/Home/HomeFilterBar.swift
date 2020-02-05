@@ -3,6 +3,7 @@ import SwiftUI
 fileprivate let leftPad = AnyView(Spacer().frame(width: 50))
 
 struct HomeMainFilterBar: View {
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var store: AppStore
     @State var wasOnSearchResults = false
     @State var showCuisine = false
@@ -21,7 +22,7 @@ struct HomeMainFilterBar: View {
 //                }
                 Group {
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
+                        HStack(spacing: 10) {
                             Group {
                                 FilterButton(label: "Price", action: {})
                                 FilterButton(label: "Spice", action: {})
@@ -41,52 +42,6 @@ struct HomeMainFilterBar: View {
                 .transition(.slide)
             }
         }
-    }
-}
-
-struct HomeMainFilterFocused: View {
-    let items = features.chunked(into: 2)
-    
-    var body: some View {
-        ZStack {
-//            Color.white
-            BlurView(style: .extraLight)
-            
-            VStack {
-                ScrollView {
-                    HStack {
-                        Text("Filter: Dish")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                        
-                        Spacer()
-                    }
-                    .padding(.top, 90)
-
-                    VStack(spacing: 12) {
-                        ForEach(0 ..< self.items.count) { index in
-                            HStack(spacing: 12) {
-                                ForEach(self.items[index]) { item in
-                                    DishCardView(
-                                        dish: item,
-                                        at: .start,
-                                        display: .full,
-                                        height: 120,
-                                        action: {
-//                                            homeViewState.showFilters = false
-                                        }
-                                    )
-                                    .equatable()
-                                    .animation(.none)
-                                }
-                            }
-                        }
-                    }
-                }
-                .padding(.horizontal)
-            }
-        }
-        .edgesIgnoringSafeArea(.all)
     }
 }
 
@@ -127,32 +82,23 @@ struct FilterButton: View {
     var cornerRadiusCorners: UIRectCorner = .allCorners
     
     var body: some View {
-        let textColor = Color(.systemBackground).opacity(0.85)
+        let themeColor = Color(.systemBackground).opacity(0.85)
         let schemeOppositeColor = Color(
             colorScheme == .dark ? .init(white: 0.95, alpha: 1) : .init(white: 0.08, alpha: 1)
         )
-        let shadowColor = Color(.black).opacity(colorScheme == .light ? 0.6 : 0.3)
-        let fontSize: CGFloat = 14
         return ZStack {
             CustomButton2(action: action) {
                 HStack {
-                    if flex {
-                        Spacer()
-                    }
                     Text(label)
-                        .foregroundColor(textColor)
-                        .font(.system(size: fontSize))
+                        .foregroundColor(schemeOppositeColor)
+                        .font(.system(size: 15))
                         .lineLimit(1)
-                    if flex {
-                        Spacer()
-                    }
                 }
                 .frame(width: self.width, height: App.filterBarHeight - App.filterBarPad * 2)
                 .padding(.horizontal, 12)
-                .background(schemeOppositeColor)
-                .cornerRadius(100)
-                    //                .cornerRadius(100, corners: self.cornerRadiusCorners)
-                    .shadow(color: shadowColor, radius: 7, x: 0, y: 2)
+                .background(themeColor)
+                .cornerRadius(12)
+                .shadow(radius: 4)
             }
         }
     }

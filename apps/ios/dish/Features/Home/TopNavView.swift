@@ -46,9 +46,9 @@ struct TopNavButtonStyle: ViewModifier {
                 content
                     .frame(height: App.topNavHeight - App.topNavPad * 2)
                     .padding(.horizontal, 8)
-                    .background(Color.white.opacity(0.075))
-                    .background(Color.black.opacity(0.075))
-                    .background(BlurView(style: .extraLight))
+                    .background(Color.white.opacity(0.025))
+                    .background(Color.black.opacity(0.025))
+                    .background(BlurView(style: .systemUltraThinMaterialDark))
 
             }
         }

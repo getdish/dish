@@ -57,7 +57,7 @@ struct DishMapView: View {
                 ZStack(alignment: .topLeading) {
                     ZStack {
                         Group {
-                            if true {
+                            if false {
                                 MapBoxView(annotations: self.$annotations)
                                     .styleURL(
                                         colorScheme == .dark
@@ -68,7 +68,8 @@ struct DishMapView: View {
                                     .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
                                     .zoomLevel(10)
                                     .frame(height: Screen.fullHeight * 1.55)
-                            } else {
+                            }
+                            if true {
                                 MapView(
                                     width: appWidth,
                                     height: height,

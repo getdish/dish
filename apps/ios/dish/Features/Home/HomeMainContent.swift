@@ -152,7 +152,7 @@ struct HomeContentExplore: View {
                     HomeMainDrawerScrollEffects()
                     
                     // spacer of whats above it height so it can scoll up to searchbar
-                    Spacer().frame(height: App.filterBarHeight + 24 + self.homeState.scrollRevealY)
+                    Spacer().frame(height: App.searchBarHeight / 2 + App.filterBarHeight + self.homeState.scrollRevealY)
 
                     VStack(spacing: self.spacing) {
                         ForEach(0 ..< self.items.count) { index in

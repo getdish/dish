@@ -12,6 +12,13 @@ extension View {
         frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
+    // expand view to no bigger than screen
+    func frameLimitedToScreen() -> some View {
+        AppGeometryReader { geo in
+            self.frame(maxWidth: geo.size.width, maxHeight: geo.size.height)
+        }
+    }
+    
     // easier corner radius
     func cornerRadius(_ radius: CGFloat, antialiased: Bool = true, corners: UIRectCorner) -> some View {
         clipShape(
