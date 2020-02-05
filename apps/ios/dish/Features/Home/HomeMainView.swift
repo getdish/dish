@@ -231,7 +231,7 @@ struct HomeMainView: View {
 struct HomeMapMask: View {
     var body: some View {
         Color.black
-            .opacity(0.2)
+            .opacity(0.35)
             .clipShape(topCornerMask(
                 width: Screen.width,
                 height: Screen.fullHeight,
