@@ -144,7 +144,7 @@ struct HomeSearchBarAfterView: View {
                         }
                     }
                 }
-                .frame(width: 16 * scale, height: 16 * scale)
+                .frame(width: 14 * scale, height: 14 * scale)
                 .opacity(0.5)
             }
             .padding(.vertical, 4 * scale)

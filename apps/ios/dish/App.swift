@@ -23,7 +23,7 @@ class AppInstance {
     
     let searchBarHeight: CGFloat = 54
     let topNavHeight: CGFloat = 54
-    let topNavPad: CGFloat = 12
+    let topNavPad: CGFloat = 14
     let cameraButtonHeight: CGFloat = 44
     let filterBarHeight: CGFloat = 54
     let filterBarPad: CGFloat = 11
