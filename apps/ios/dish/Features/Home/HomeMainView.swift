@@ -67,9 +67,11 @@ struct HomeMainView: View {
                         VStack {
                             Spacer()
                             LinearGradient(
-                                gradient: Gradient(colors: [Color.black.opacity(0),
-                                                            Color(white: 0.1).opacity(0.55),
-                                                            Color(white: 0.1).opacity(0.75)]),
+                                gradient: Gradient(
+                                    colors: self.colorScheme == .light
+                                        ? [Color.black.opacity(0), Color(white: 0.2).opacity(0.55), Color(white: 0.2).opacity(0.75)]
+                                        : [Color.black.opacity(0), Color(white: 0).opacity(0.6), Color(white: 0).opacity(0.8)]
+                                ),
                                 startPoint: .top,
                                 endPoint: .bottom
                             )
@@ -136,7 +138,7 @@ struct HomeMainView: View {
                                 CameraButton(
                                     foregroundColor: state.showCamera ? .white : .black
                                 )
-                                    .scaleEffect(state.showCamera ? 1 : 0.8)
+                                    .scaleEffect(state.showCamera ? 1.3 : 1)
                                     .offset(
                                         x: state.showCamera
                                             ? -Screen.width / 2 + App.cameraButtonHeight / 2

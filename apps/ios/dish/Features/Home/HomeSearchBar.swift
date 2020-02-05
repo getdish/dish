@@ -154,6 +154,5 @@ struct HomeSearchBarAfterView: View {
             Spacer()
                 .frame(width: App.cameraButtonHeight)
         }
-        .padding(.trailing, 4 * scale)
     }
 }
