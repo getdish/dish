@@ -65,13 +65,7 @@ struct HomeMainView: View {
                             .rotationEffect(state.showCamera ? .degrees(-10) : .degrees(0))
                         
                         // map mask a bit
-                        Color.black
-                            .opacity(0.5)
-                            .clipShape(topCornerMask(
-                                width: Screen.width,
-                                height: Screen.fullHeight,
-                                cornerRadius: 20
-                            ))
+                        HomeMapMask()
                             .offset(y: mapHeight - 20)
                         
                         // map fade out at bottom
@@ -231,6 +225,18 @@ struct HomeMainView: View {
             }
             self.state.setDragState(.idle)
         }
+    }
+}
+
+struct HomeMapMask: View {
+    var body: some View {
+        Color.black
+            .opacity(0.2)
+            .clipShape(topCornerMask(
+                width: Screen.width,
+                height: Screen.fullHeight,
+                cornerRadius: 20
+            ))
     }
 }
 
