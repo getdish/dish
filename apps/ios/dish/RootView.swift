@@ -6,7 +6,7 @@ struct RootView: View {
     var body: some View {
         ContextMenuRootView {
             if appGeometry != nil {
-                HomeContainerView()
+                HomeView()
                 PrintGeometryView("RootView")
             }
         }

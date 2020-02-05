@@ -5,18 +5,6 @@ fileprivate let bottomPad = CGFloat(5)
 fileprivate let topPad = Screen.statusBarHeight
 fileprivate let totalHeight = topPad + bottomPad + 40
 
-struct TopNavView: View {
-    @EnvironmentObject var store: AppStore
-    @ObservedObject var homeState = homeViewState
-
-    var body: some View {
-        TopNavViewContent()
-            .allowsHitTesting(!store.state.disableTopNav)
-            .animation(.spring())
-            .offset(y: self.homeState.isNearTop ? -100 : 0)
-    }
-}
-
 struct TopNavViewContent: View {
     var body: some View {
         ZStack {
@@ -47,14 +35,23 @@ struct TopNavButtonStyle: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
     
     func body(content: Content) -> some View {
-        content
-            .frame(height: App.topNavHeight - App.topNavPad * 2)
-            .padding(.horizontal, 8)
-            .background(Color.white.opacity(0.075))
-            .background(Color.black.opacity(0.075))
-            .background(
-                BlurView(style: colorScheme == .dark ? .dark : .light)
-            )
+        Group {
+            if colorScheme == .dark {
+                content
+                    .frame(height: App.topNavHeight - App.topNavPad * 2)
+                    .padding(.horizontal, 8)
+                    .background(Color.black.opacity(0.2))
+                    .background(BlurView(style: .systemThickMaterialDark))
+            } else {
+                content
+                    .frame(height: App.topNavHeight - App.topNavPad * 2)
+                    .padding(.horizontal, 8)
+                    .background(Color.white.opacity(0.025))
+                    .background(Color.black.opacity(0.025))
+                    .background(BlurView(style: .systemUltraThinMaterialDark))
+
+            }
+        }
             .cornerRadius(20)
             .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
             .foregroundColor(.white)
@@ -89,34 +86,36 @@ struct TopNavHome: View {
                         
                         Spacer()
                         
-                        HStack(spacing: 0) {
-                            Button(action: {
-                            }) {
-                                Text("-")
-                                    .titleBarStyle(15)
-                                    .padding(.horizontal, 10)
-                            }
-                            Rectangle()
-                                .foregroundColor(.gray)
-                                .opacity(0.2)
-                                .frame(width: 1)
-                            Button(action: {
-                            }) {
-                                Text("+")
-                                    .titleBarStyle(15)
-                                    .padding(.horizontal, 10)
-                            }
-                        }
-                        .modifier(TopNavButtonStyle())
-                        .transition(.slide)
+//                        HStack(spacing: 0) {
+//                            Button(action: {
+//                            }) {
+//                                Text("-")
+//                                    .titleBarStyle(15)
+//                                    .padding(.horizontal, 10)
+//                            }
+//                            Rectangle()
+//                                .foregroundColor(.gray)
+//                                .opacity(0.2)
+//                                .frame(width: 1)
+//                            Button(action: {
+//                            }) {
+//                                Text("+")
+//                                    .titleBarStyle(15)
+//                                    .padding(.horizontal, 10)
+//                            }
+//                        }
+//                        .modifier(TopNavButtonStyle())
+//                        .transition(.slide)
                         
                         
                         Button(action: {
                             App.enterRepl = true
                         }) {
                             VStack {
-                                Text("~\(Int(App.store.state.map.location.radius / 1000)) mi")
-                                    .titleBarStyle()
+                                Image(systemName: "location.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 14, height: 14)
                             }
 
                         }
@@ -127,7 +126,6 @@ struct TopNavHome: View {
                 .opacity(isOnHome ? 1 : 0)
             }
             .frame(maxWidth: .infinity)
-            .environment(\.colorScheme, .dark)
         }
     }
 }
@@ -207,7 +205,7 @@ struct CameraTopNav: View {
 struct TopNav_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            TopNavView()
+            TopNavViewContent()
         }
         .embedInAppEnvironment()
         .background(

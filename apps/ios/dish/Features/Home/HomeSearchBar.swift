@@ -14,13 +14,13 @@ struct HomeSearchBar: View {
     @EnvironmentObject var keyboard: Keyboard
     @Environment(\.colorScheme) var colorScheme
     
-    @State var placeholder = "Dim Sum..."
+    @State var placeholder = "The best dim sum..."
     
     func updatePlaceholder() {
         var i = 0
-        let placeholders = ["Dim Sum...", "Bo Kho...", "Ceviche...", "Poke...", "Szechuan Chicken..."]
+        let placeholders = ["dim sum", "bo kho", "ceviche", "poke", "mapa tofu"]
         async(interval: 5000, intervalMax: 5) {
-            self.placeholder = placeholders[i]
+            self.placeholder = "The best \(placeholders[i])..."
             i += 1
         }
     }
@@ -66,7 +66,7 @@ struct HomeSearchBar: View {
             SearchInput(
                 placeholder: self.placeholder,
                 inputBackgroundColor: colorScheme == .dark
-                    ? Color(red: 0.2, green: 0.2, blue: 0.2)
+                    ? Color(red: 0.25, green: 0.25, blue: 0.25)
                     : Color.white,
                 borderColor: Color.clear,
                 scale: scale,
@@ -83,7 +83,7 @@ struct HomeSearchBar: View {
                         self.focusKeyboard()
                     }
             },
-                after: AnyView(HomeSearchBarAfterView().scaleEffect(scale)),
+                after: AnyView(HomeSearchBarAfterView(scale: scale)),
                 isFirstResponder: isFirstResponder,
                 //            onTextField: { field in
                 //                print("set text field")
@@ -93,7 +93,7 @@ struct HomeSearchBar: View {
                 tags: self.homeTags
             )
             .animation(.spring(), value: zoomed != self.lastZoomed)
-            .offset(y: zoomed ? -5 : 0)
+            .offset(y: zoomed ? 0 : 0)
         }
     }
     
@@ -114,6 +114,8 @@ struct HomeSearchBar: View {
 }
 
 struct HomeSearchBarAfterView: View {
+    var scale: CGFloat
+    
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
     
@@ -123,12 +125,6 @@ struct HomeSearchBarAfterView: View {
                 self.homeState.toggleMap()
             }) {
                 Group {
-//                    if self.homeState.isSnappedToTop {
-//                        Image(systemName: "chevron.down")
-//                            .resizable()
-//                            .scaledToFit()
-//
-//                    } else
                     if self.homeState.isSnappedToBottom {
                         if Selectors.home.isOnSearchResults() {
                             Image(systemName: "list.bullet")
@@ -148,13 +144,15 @@ struct HomeSearchBarAfterView: View {
                         }
                     }
                 }
-                .frame(width: 16, height: 16)
+                .frame(width: 14 * scale, height: 14 * scale)
                 .opacity(0.5)
-                .padding(.trailing, 14 + App.cameraButtonHeight * 0.5)
             }
-            .padding(.vertical, 4)
-            .padding(.horizontal, 6)
+            .padding(.vertical, 4 * scale)
+            .padding(.horizontal, 6 * scale)
+            
+            // space for the camera button
+            Spacer()
+                .frame(width: App.cameraButtonHeight)
         }
-        .padding(.trailing, 4)
     }
 }

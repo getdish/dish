@@ -45,9 +45,9 @@ struct CustomButton2<Content: View>: View {
     
     var body: some View {
         self.content
-            .animation(.spring())
             .scaleEffect(self.isTapped ? 0.9 : 1)
             .opacity(self.isTapped ? 0.9 : 1)
+            .animation(.spring())
             .onTapGesture {
                 self.lastTap = Date()
                 self.action()

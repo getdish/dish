@@ -4,54 +4,32 @@ import GooglePlaces
 import XCGLogger
 
 // GLOBALS
-
+// most if not all should go onto here:
+let App = AppInstance()
+// ...
+let features: [DishItem] = load("dishData.json")
+let restaurants: [RestaurantItem] = load("restaurantData.json")
 let log = XCGLogger.default
 let homeViewState = HomeViewState()
 let ANIMATION_SPEED: Double = 1
 
-// small async helper
-// todo - cancel
-func async(
-    _ delay: Double = 0,
-    interval: Double = 0,
-    intervalMax: Double = Double.infinity,
-    queue: DispatchQueue = DispatchQueue.main,
-    execute: @escaping () -> Void
-) {
-    var run = execute
-    if interval > 0 {
-        run = {
-            var i = 0.0
-            Timer.scheduledTimer(withTimeInterval: interval / 1000, repeats: true) { timer in
-                i += 1
-                if i > intervalMax { return }
-                execute()
-            }
-        }
-    }
-    if delay > 0 {
-        queue.asyncAfter(deadline: .now() + .milliseconds(Int(delay))) { run() }
-    } else {
-        queue.async { run() }
-    }
-}
-
-fileprivate func startDebugLoop() {
-    #if DEBUG
-    Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-        App
-        homeViewState
-        // set breakpoint here or we can have a shortcut in app to trigger debugger
-        if App.enterRepl == true {
-            raise(SIGINT)
-            App.enterRepl = false
-        }
-    }
-    #endif
-}
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    func startDebugLoop() {
+        #if DEBUG
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            // anything we want to ensure is available here
+            _ = App
+            _ = homeViewState
+            // set breakpoint here or we can have a shortcut in app to trigger debugger
+            if App.enterRepl == true {
+                raise(SIGINT)
+                App.enterRepl = false
+            }
+        }
+        #endif
+    }
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // one time setup
 

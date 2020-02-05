@@ -2,12 +2,7 @@ import SwiftUI
 import Combine
 
 fileprivate let items = features.chunked(into: 2)
-
-let bottomNavHeight: CGFloat = 115
-// used in search results for now...
-let cardRowHeight: CGFloat = 120
-
-import SwiftUI
+fileprivate let cardRowHeight: CGFloat = 120
 
 struct HomeMainContent: View {
     @Environment(\.geometry) var appGeometry
@@ -157,7 +152,7 @@ struct HomeContentExplore: View {
                     HomeMainDrawerScrollEffects()
                     
                     // spacer of whats above it height so it can scoll up to searchbar
-                    Spacer().frame(height: App.filterBarHeight + 24 + self.homeState.scrollRevealY)
+                    Spacer().frame(height: App.searchBarHeight / 2 + App.filterBarHeight + self.homeState.scrollRevealY)
 
                     VStack(spacing: self.spacing) {
                         ForEach(0 ..< self.items.count) { index in

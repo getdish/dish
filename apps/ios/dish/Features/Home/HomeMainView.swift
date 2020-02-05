@@ -5,6 +5,7 @@ struct HomeMainView: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard
     @Environment(\.geometry) var appGeometry
+    @Environment(\.colorScheme) var colorScheme
     
     //
     // main state of this view and sub-views:
@@ -51,56 +52,60 @@ struct HomeMainView: View {
                             .animation(.spring())
                             .opacity(state.showCamera ? 0 : 1)
                     }
+                    .frameLimitedToScreen()
                 
                     
                     Group {
                         // map
                         DishMapView()
                             .frame(height: self.appGeometry?.size.height)
-                            .offset(y: state.showCamera ? -Screen.height * 1.2 : 0)
+                            .offset(y: state.showCamera ? -Screen.height : 0)
                             .opacity(state.showCamera ? 0 : 1)
                             .animation(.spring(response: 0.8))
                             .rotationEffect(state.showCamera ? .degrees(-10) : .degrees(0))
                         
+                        // map mask a bit
+                        HomeMapMask()
+                            .offset(y: mapHeight - 20)
+                        
+                        // map fade out at bottom
                         VStack {
                             Spacer()
                             LinearGradient(
-                                gradient: Gradient(colors: [Color.black.opacity(0),
-                                                            Color.black.opacity(0.55)]),
+                                gradient: Gradient(
+                                    colors: self.colorScheme == .light
+                                        ? [Color.black.opacity(0), Color(white: 0.2).opacity(0.55), Color(white: 0.2).opacity(0.75)]
+                                        : [Color.black.opacity(0), Color(white: 0).opacity(0.6), Color(white: 0).opacity(0.8)]
+                                ),
                                 startPoint: .top,
                                 endPoint: .bottom
                             )
                                 .frame(height: (self.appGeometry?.size.height ?? 0) - state.mapHeight)
                         }
                     }
+                    .frameLimitedToScreen()
                 
-                    TopNavViewContent()
-                        .offset(
-                            y: state.mapHeight + (state.isSnappedToBottom
-                                ? 0
-                                : -App.searchBarHeight - App.topNavHeight
-                            )
-                        )
+                    VStack {
+                        TopNavViewContent()
+                        Spacer()
+                    }
+                        .frameLimitedToScreen()
+                        .offset(y: state.mapHeight - App.searchBarHeight - 56)
 
-                    
                     // results
                     HomeMainContent()
+                        .frameLimitedToScreen()
                         .offset(y: state.showCamera ? Screen.height : 0)
-                
+                    
                     // filters
                     VStack {
                         HomeMainFilterBar()
                         Spacer()
                     }
-                    .zIndex(state.showFilters ? 100 : 0)
-//                    .animation(.spring())
-                    .offset(
-                        y: mapHeight + App.searchBarHeight / 2 + (
-                           state.showFilters ? 0 : state.showFiltersAbove ? -100 : 0
-                        )
-                    )
-                    .opacity(state.showCamera ? 0 : 1)
-                    
+                        .frameLimitedToScreen()
+                        .offset(y: mapHeight + App.searchBarHeight / 2)
+//                        .animation(.spring())
+                
                     // searchbar
                     VStack(spacing: 0) {
                         GeometryReader { searchBarGeometry -> HomeSearchBar in
@@ -116,12 +121,12 @@ struct HomeMainView: View {
                     // but created one where it de-focuses it instantly often
 //                    .disabled(!enableSearchBar)
 //                    .allowsHitTesting(enableSearchBar)
-                    .animation(.spring(response: 1.25), value: state.animationState == .animate)
-                    .offset(y:
-                        state.showCamera ?
-                            mapHeight > Screen.height / 2 ? Screen.height * 2 : -Screen.height * 2 :
-                            mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra
-                    )
+                        .offset(y:
+                            state.showCamera ?
+                                mapHeight > Screen.height / 2 ? Screen.height * 2 : -Screen.height * 2 :
+                                mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra
+                        )
+                        .animation(.spring(response: 1.25), value: state.animationState == .animate)
                 
                     // CameraControlsOverlay
                     ZStack {
@@ -131,20 +136,22 @@ struct HomeMainView: View {
                                 CameraButton(
                                     foregroundColor: state.showCamera ? .white : .black
                                 )
-                                    .scaleEffect(state.showCamera ? 1 : 0.8)
+                                    .scaleEffect(state.showCamera ? 1.3 : 1)
                                     .offset(
                                         x: state.showCamera
                                             ? -Screen.width / 2 + App.cameraButtonHeight / 2
-                                            : -8,
+                                            : -15,
                                         y: state.showCamera
                                             ? Screen.fullHeight - App.cameraButtonHeight - 100
-                                            : state.mapHeight - App.cameraButtonHeight / 2 - 0.5 + ((App.searchBarHeight - App.cameraButtonHeight) / 2)
+                                            : state.mapHeight + state.searchBarYExtra - App.cameraButtonHeight / 2
                                 )
 //                                    .animation(Animation.spring(response: 0.4).delay(0))
                             }
                             Spacer()
                         }
                     }
+                    .frameLimitedToScreen()
+                
                 
                     // make everything untouchable while dragging
                 Color.black.opacity(0.0001)
@@ -191,7 +198,7 @@ struct HomeMainView: View {
         return DragGesture(minimumDistance: 10)
             .onChanged { value in
                 if [.off, .pager].contains(self.state.dragState) {
-                    print("☕️ ignore \(self.state.dragState)")
+//                    print("☕️ ignore \(self.state.dragState)")
                     return
                 }
                 
@@ -200,9 +207,10 @@ struct HomeMainView: View {
                 let isDraggingBelowSearchBar = self.state.isActiveScrollViewAtTop
                     && HomeSearchBarState.isBelow(value.startLocation.y)
                 
-                print("☕️ self.state.isActiveScrollViewAtTop \(self.state.isActiveScrollViewAtTop) isDraggingBelowSearchBar \(isDraggingBelowSearchBar) height \(value.translation.height)")
+//                print("☕️ self.state.isActiveScrollViewAtTop \(self.state.isActiveScrollViewAtTop) isDraggingBelowSearchBar \(isDraggingBelowSearchBar) height \(value.translation.height)")
+//                 || isDraggingBelowSearchBar
                 
-                if isAlreadyDragging || isDraggingSearchBar || isDraggingBelowSearchBar {
+                if isAlreadyDragging || isDraggingSearchBar {
                     // hide keyboard on drag
                     if self.keyboard.state.height > 0 {
                         self.keyboard.hide()
@@ -217,6 +225,18 @@ struct HomeMainView: View {
             }
             self.state.setDragState(.idle)
         }
+    }
+}
+
+struct HomeMapMask: View {
+    var body: some View {
+        Color.black
+            .opacity(0.35)
+            .clipShape(topCornerMask(
+                width: Screen.width,
+                height: Screen.fullHeight,
+                cornerRadius: 20
+            ))
     }
 }
 

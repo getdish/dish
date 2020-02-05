@@ -114,3 +114,12 @@ struct DishRestaurantCard: View, Identifiable {
         
     }
 }
+
+#if DEBUG
+struct DishRestaruantCard_Previews: PreviewProvider {
+    static var previews: some View {
+        DishRestaurantCard(restaurant: restaurants[0])
+            .embedInAppEnvironment()
+    }
+}
+#endif

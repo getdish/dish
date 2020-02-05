@@ -18,14 +18,15 @@ class AppInstance {
     let keyboard = Keyboard()
     let queueMain = DispatchQueue.main
     let magicItems = magicItemsStore
+    // y so slow
     let enableMapAutoZoom = false
     
     let searchBarHeight: CGFloat = 54
     let topNavHeight: CGFloat = 54
-    let topNavPad: CGFloat = 12
-    let cameraButtonHeight: CGFloat = 52
-    let filterBarHeight: CGFloat = 60
-    let filterBarPad: CGFloat = 12
+    let topNavPad: CGFloat = 14
+    let cameraButtonHeight: CGFloat = 44
+    let filterBarHeight: CGFloat = 54
+    let filterBarPad: CGFloat = 11
     
     var enterRepl = false
     
@@ -34,5 +35,3 @@ class AppInstance {
         homeService.start()
     }
 }
-
-let App = AppInstance()

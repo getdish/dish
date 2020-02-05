@@ -13,12 +13,13 @@ extension MGLPointAnnotation {
 struct MapBoxView: UIViewRepresentable {
     @Binding var annotations: [MGLPointAnnotation]
     
-    private let mapView: MGLMapView = MGLMapView(frame: .zero, styleURL: MGLStyle.streetsStyleURL)
+    private let mapView: MGLMapView = MGLMapView(frame: .zero, styleURL: MGLStyle.darkStyleURL)
     
     // MARK: - Configuring UIViewRepresentable protocol
     
     func makeUIView(context: UIViewRepresentableContext<MapBoxView>) -> MGLMapView {
         mapView.delegate = context.coordinator
+        mapView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         
 //        let layer = MGLSymbolStyleLayer(identifier: "coffeeshops", source: features)
 //        layer.sourceLayerIdentifier = "pois"
@@ -105,21 +106,21 @@ struct MapBoxView: UIViewRepresentable {
                 "center", "left", "right", "top", "bottom", "top-left", "top-right", "bottom-left", "bottom-right"
             ]
             
-            let symbol = MGLSymbolStyleAnnotation(coordinate: CLLocationCoordinate2DMake(37.791329, -122.396906));
-            symbol.iconImageName = "attraction"
-            symbol.text = "This is a cool place!"
-            symbol.textFontSize = 16
-            symbolAnnotationController.addStyleAnnotation(symbol)
-            
-            let attraction2 = UIImage(named: "pin")
-            if let styleImage2 = attraction2 {
-                mapView.style?.setImage(styleImage2, forName: "attraction")
-            }
-            let symbol2 = MGLSymbolStyleAnnotation(coordinate: CLLocationCoordinate2DMake(37.791591, -122.396349));
-            symbol2.iconImageName = "attraction"
-            symbol2.text = "This is another cool place!"
-            symbol2.textFontSize = 18
-            symbolAnnotationController.addStyleAnnotation(symbol2)
+//            let symbol = MGLSymbolStyleAnnotation(coordinate: CLLocationCoordinate2DMake(37.791329, -122.396906));
+//            symbol.iconImageName = "attraction"
+//            symbol.text = "This is a cool place!"
+//            symbol.textFontSize = 16
+//            symbolAnnotationController.addStyleAnnotation(symbol)
+//
+//            let attraction2 = UIImage(named: "pin")
+//            if let styleImage2 = attraction2 {
+//                mapView.style?.setImage(styleImage2, forName: "attraction")
+//            }
+//            let symbol2 = MGLSymbolStyleAnnotation(coordinate: CLLocationCoordinate2DMake(37.791591, -122.396349));
+//            symbol2.iconImageName = "attraction"
+//            symbol2.text = "This is another cool place!"
+//            symbol2.textFontSize = 18
+//            symbolAnnotationController.addStyleAnnotation(symbol2)
             
         }
         
