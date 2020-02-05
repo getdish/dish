@@ -93,8 +93,8 @@ struct Run: View {
 }
 
 struct RunOnce: View {
-    var block: () -> Void
     @State var hasRunOnce = false
+    var block: () -> Void
     
     var body: some View {
         Run {

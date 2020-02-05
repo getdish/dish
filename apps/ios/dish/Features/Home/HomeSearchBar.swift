@@ -55,10 +55,9 @@ struct HomeSearchBar: View {
         let scale: CGFloat = zoomed ? 1.5 : 1.3
         
         return Group {
-            Color.clear.onAppear {
+            RunOnce {
                 self.updatePlaceholder()
             }
-
             Run {
                 self.lastZoomed = zoomed
             }
@@ -93,7 +92,6 @@ struct HomeSearchBar: View {
                 tags: self.homeTags
             )
             .animation(.spring(), value: zoomed != self.lastZoomed)
-            .offset(y: zoomed ? 0 : 0)
         }
     }
     

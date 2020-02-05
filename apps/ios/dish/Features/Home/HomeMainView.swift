@@ -14,6 +14,22 @@ struct HomeMainView: View {
     
     @State var wasOnSearchResults = false
     @State var wasOnCamera = false
+    
+    var sideEffects: some View {
+        // non visual
+        Group {
+            // dev helpers
+            PrintGeometryView("HomeMainView")
+            
+            // weird way to set appheight
+            Run {
+                guard let g = self.appGeometry else { return }
+                if self.state.appHeight != g.size.height {
+                    self.state.setAppHeight(g.size.height)
+                }
+            }
+        }
+    }
 
     var body: some View {
         // ⚠️
@@ -23,39 +39,25 @@ struct HomeMainView: View {
         
         let state = self.state
         let mapHeight = state.mapHeight
-        let enableSearchBar = [.idle, .off].contains(state.dragState) && state.animationState == .idle
-
+//        let enableSearchBar = [.idle, .off].contains(state.dragState) && state.animationState == .idle
 //        print(" 👀 HomeMainView mapHeight \(mapHeight) animationState \(state.animationState) enableSearchBar \(enableSearchBar)")
 
         return GeometryReader { geometry in
             ZStack(alignment: .topLeading) {
-                    // non visual
+                    self.sideEffects
+                            
                     Group {
-                        // dev helpers
-                        PrintGeometryView("HomeMainView")
-                        
-                        // weird way to set appheight
-                        Run {
-                            guard let g = self.appGeometry else { return }
-                            if state.appHeight != g.size.height {
-                                state.setAppHeight(g.size.height)
-                            }
+                        // camera
+                        ZStack {
+                            //                        DishCamera()
+                            
+                            // cover camera
+                            Color.black
+                                .animation(.spring())
+                                .opacity(state.showCamera ? 0 : 1)
                         }
-                    }
-                
-                    // camera
-                    ZStack {
-//                        DishCamera()
+                        .frameLimitedToScreen()
                         
-                        // cover camera
-                        Color.black
-                            .animation(.spring())
-                            .opacity(state.showCamera ? 0 : 1)
-                    }
-                    .frameLimitedToScreen()
-                
-                    
-                    Group {
                         // map
                         DishMapView()
                             .frame(height: self.appGeometry?.size.height)
@@ -63,11 +65,12 @@ struct HomeMainView: View {
                             .opacity(state.showCamera ? 0 : 1)
                             .animation(.spring(response: 0.8))
                             .rotationEffect(state.showCamera ? .degrees(-10) : .degrees(0))
+                            .frameLimitedToScreen()
                         
                         // map mask a bit
                         HomeMapMask()
                             .offset(y: mapHeight - 20)
-                        
+
                         // map fade out at bottom
                         VStack {
                             Spacer()
@@ -83,37 +86,41 @@ struct HomeMainView: View {
                                 .frame(height: (self.appGeometry?.size.height ?? 0) - state.mapHeight)
                         }
                     }
-                    .frameLimitedToScreen()
                 
-                    VStack {
-                        TopNavViewContent()
-                        Spacer()
-                    }
+                    Group {
+                        // location bar
+                        VStack {
+                            TopNavViewContent()
+                            Spacer()
+                        }
                         .frameLimitedToScreen()
                         .offset(y: state.mapHeight - App.searchBarHeight - 56)
 
-                    // results
-                    HomeMainContent()
-                        .frameLimitedToScreen()
-                        .offset(y: state.showCamera ? Screen.height : 0)
-                    
-                    // filters
-                    VStack {
-                        HomeMainFilterBar()
-                        Spacer()
-                    }
+                        // results
+                        HomeMainContent()
+                            .frameLimitedToScreen()
+                            .offset(y: state.showCamera ? Screen.height : 0)
+
+                        // filters
+                        VStack {
+                            HomeMainFilterBar()
+                            Spacer()
+                        }
                         .frameLimitedToScreen()
                         .offset(y: mapHeight + App.searchBarHeight / 2)
-//                        .animation(.spring())
+                        //                        .animation(.spring())
+                    }
                 
                     // searchbar
-                    VStack(spacing: 0) {
+                    VStack {
                         GeometryReader { searchBarGeometry -> HomeSearchBar in
                             HomeSearchBarState.frame = searchBarGeometry.frame(in: .global)
                             return HomeSearchBar()
                         }
-                        .frame(height: App.searchBarHeight)
-                        .padding(.horizontal, 10)
+                        .frame(
+                            height: App.searchBarHeight
+                        )
+                        .padding(.horizontal, 12)
                         
                         Spacer()
                     }
@@ -128,7 +135,7 @@ struct HomeMainView: View {
                         )
                         .animation(.spring(response: 1.25), value: state.animationState == .animate)
                 
-                    // CameraControlsOverlay
+                    // CameraControls
                     ZStack {
                         VStack {
                             HStack {
@@ -145,16 +152,15 @@ struct HomeMainView: View {
                                             ? Screen.fullHeight - App.cameraButtonHeight - 100
                                             : state.mapHeight + state.searchBarYExtra - App.cameraButtonHeight / 2
                                 )
-//                                    .animation(Animation.spring(response: 0.4).delay(0))
+                                //                                    .animation(Animation.spring(response: 0.4).delay(0))
                             }
                             Spacer()
                         }
                     }
                     .frameLimitedToScreen()
                 
-                
                     // make everything untouchable while dragging
-                Color.black.opacity(0.0001)
+                    Color.black.opacity(0.0001)
                         .frame(width: state.dragState == .pager ? Screen.width : 0)
                 }
                 .clipped() // dont remove fixes bug cant click SearchBar
@@ -232,11 +238,14 @@ struct HomeMapMask: View {
     var body: some View {
         Color.black
             .opacity(0.35)
-            .clipShape(topCornerMask(
-                width: Screen.width,
-                height: Screen.fullHeight,
-                cornerRadius: 20
-            ))
+            .clipShape(
+                topCornerMask(
+                    width: Screen.width,
+                    height: Screen.fullHeight,
+                    cornerRadius: 20
+                )
+            )
+            .rasterize()
     }
 }
 
