@@ -67,7 +67,7 @@ struct DishMapView: View {
                                     )
                                     .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
                                     .zoomLevel(10)
-                                    .frame(height: Screen.fullHeight * 2)
+                                    .frame(height: Screen.fullHeight * 1.55)
                             } else {
                                 MapView(
                                     width: appWidth,

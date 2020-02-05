@@ -34,7 +34,6 @@ struct HomeMainFilterBar: View {
                         }
                         .padding(.vertical, App.filterBarPad)
                         .padding(.horizontal, 24)
-                        .environment(\.colorScheme, .light)
                     }
                     .frame(height: App.filterBarHeight)
                 }
@@ -130,7 +129,7 @@ struct FilterButton: View {
     var body: some View {
         let textColor = Color(.systemBackground).opacity(0.85)
         let schemeOppositeColor = Color(
-            colorScheme == .dark ? .init(white: 0.95, alpha: 0.9) : .init(white: 0.08, alpha: 1)
+            colorScheme == .dark ? .init(white: 0.95, alpha: 1) : .init(white: 0.08, alpha: 1)
         )
         let shadowColor = Color(.black).opacity(colorScheme == .light ? 0.6 : 0.3)
         let fontSize: CGFloat = 14

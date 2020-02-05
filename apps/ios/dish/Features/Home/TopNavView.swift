@@ -123,7 +123,6 @@ struct TopNavHome: View {
                 .opacity(isOnHome ? 1 : 0)
             }
             .frame(maxWidth: .infinity)
-            .environment(\.colorScheme, .dark)
         }
     }
 }
