@@ -113,6 +113,9 @@ struct TopNavHome: View {
                         }) {
                             VStack {
                                 Image(systemName: "location.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 14, height: 14)
                             }
 
                         }

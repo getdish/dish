@@ -38,8 +38,6 @@ struct HomeMainFilterBar: View {
                     }
                     .frame(height: App.filterBarHeight)
                 }
-                .animation(.spring(response: 0.25))
-                .transition(.slide)
             }
         }
     }
