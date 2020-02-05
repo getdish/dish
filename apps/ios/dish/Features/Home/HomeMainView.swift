@@ -57,12 +57,12 @@ struct HomeMainView: View {
                     
                     Group {
                         // map
-//                        DishMapView()
-//                            .frame(height: self.appGeometry?.size.height)
-//                            .offset(y: state.showCamera ? -Screen.height : 0)
-//                            .opacity(state.showCamera ? 0 : 1)
-//                            .animation(.spring(response: 0.8))
-//                            .rotationEffect(state.showCamera ? .degrees(-10) : .degrees(0))
+                        DishMapView()
+                            .frame(height: self.appGeometry?.size.height)
+                            .offset(y: state.showCamera ? -Screen.height : 0)
+                            .opacity(state.showCamera ? 0 : 1)
+                            .animation(.spring(response: 0.8))
+                            .rotationEffect(state.showCamera ? .degrees(-10) : .degrees(0))
                         
                         // map mask a bit
                         HomeMapMask()

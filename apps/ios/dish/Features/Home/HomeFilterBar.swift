@@ -88,14 +88,14 @@ struct FilterButton: View {
             CustomButton2(action: action) {
                 HStack {
                     Text(label)
-                        .foregroundColor(schemeOppositeColor)
+                        .foregroundColor(themeColor)
                         .font(.system(size: 15))
                         .lineLimit(1)
                 }
                 .frame(width: self.width, height: App.filterBarHeight - App.filterBarPad * 2)
                 .padding(.horizontal, 12)
-                .background(themeColor)
-                .cornerRadius(12)
+                .background(schemeOppositeColor)
+                .cornerRadius(50)
                 .shadow(radius: 4)
             }
         }
