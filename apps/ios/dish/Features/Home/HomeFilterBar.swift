@@ -23,7 +23,7 @@ struct HomeMainFilterBar: View {
 //                    HomeMainFilterFocused()
 //                }
                 Group {
-                    ScrollView(.horizontal, showsIndicators: false) {
+                    VStack {
                         HStack(spacing: 10) {
                             Group {
                                 Text("The Best")
@@ -34,8 +34,9 @@ struct HomeMainFilterBar: View {
                                 Picker(selection: $favoriteColor, label: Text("What is your favorite color?")) {
                                     Text("Dish").tag(0)
                                     Text("Cuisine").tag(1)
-                                    Text("Date").tag(2)
                                 }.pickerStyle(SegmentedPickerStyle())
+                                
+                                Spacer()
                                 
                                 FilterButton(icon: "line.horizontal.3.decrease.circle", action: {})
 //                                FilterButton(label: "Spice", action: {})
@@ -44,7 +45,7 @@ struct HomeMainFilterBar: View {
 //                                FilterButton(label: "Lunch Spot", action: filterAction)
 //                                FilterButton(label: "Open Late", action: filterAction)
                             }
-                            .animation(.spring())
+//                            .animation(.spring())
                         }
                         .padding(.vertical, App.filterBarPad)
                         .padding(.horizontal, 24)
