@@ -264,8 +264,8 @@ struct HomeMapBackgroundGradient: View {
         LinearGradient(
             gradient: Gradient(
                 colors: self.colorScheme == .light
-                    ? [Color.black.opacity(0), Color(white: 0.2).opacity(0.55), Color(white: 0.2).opacity(0.75)]
-                    : [Color.black.opacity(0), Color.black.opacity(0), Color.black.opacity(0), Color(white: 0).opacity(0.7)]
+                    ? [Color.black.opacity(0), Color.black.opacity(0), Color.black.opacity(0), Color(white: 0.2).opacity(0.45)]
+                    : [Color.black.opacity(0), Color.black.opacity(0), Color.black.opacity(0), Color(white: 0).opacity(0.4)]
             ),
             startPoint: .top,
             endPoint: .bottom
@@ -346,7 +346,9 @@ struct HomeMapMask: View {
     var body: some View {
         LinearGradient(
             gradient: Gradient(
-                colors: [Color(white: 0).opacity(0.7), Color(white: 0).opacity(0.25), Color.black.opacity(0)]
+                colors: [
+                    Color(white: 0).opacity(0.7), Color(white: 0).opacity(0), Color.black.opacity(0)
+                ]
             ),
             startPoint: .top,
             endPoint: .bottom
