@@ -112,27 +112,52 @@ struct HomeMapSearchResults: View {
     @State var index = 0
     
     var body: some View {
-        ScrollViewEnhanced(
-            index: self.$index,
-            direction: .horizontal,
-            showsIndicators: false,
-            pages: Selectors.home.lastState().searchResults.results.map { item in
-                MapResultRestaurantCard(
-                    restaurant: RestaurantItem(
-                        id: item.id,
-                        name: item.name,
-                        imageName: "turtlerock",
-                        address: "",
-                        phone: "",
-                        tags: [],
-                        rating: 8
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 16) {
+                ForEach(Selectors.home.lastState().searchResults.results) { item in
+                    return DishRestaurantCard(
+                        restaurant: RestaurantItem(
+                            id: item.id,
+                            name: item.name,
+                            imageName: "turtlerock",
+                            address: "",
+                            phone: "",
+                            tags: [],
+                            rating: 8
+                        ),
+                        isMini: true,
+                        at: .end
                     )
-                )
+                        .frame(width: Screen.width - 40, height: cardRowHeight - 40 + extraHeight)
+                }
             }
-        )
-        .frame(width: Screen.width, height: cardRowHeight - 40 + extraHeight)
-        .offset(y: -extraHeight + 10)
+            .frame(height: cardRowHeight - 40 + extraHeight)
+            .padding(20)
+        }
+        .offset(y: -extraHeight)
     }
+    
+    // almost working
+    //        ScrollViewEnhanced(
+    //            index: self.$index,
+    //            direction: .horizontal,
+    //            showsIndicators: false,
+    //            pages: Selectors.home.lastState().searchResults.results.map { item in
+    //                MapResultRestaurantCard(
+    //                    restaurant: RestaurantItem(
+    //                        id: item.id,
+    //                        name: item.name,
+    //                        imageName: "turtlerock",
+    //                        address: "",
+    //                        phone: "",
+    //                        tags: [],
+    //                        rating: 8
+    //                    )
+    //                )
+    //            }
+    //        )
+    //        .frame(width: Screen.width, height: cardRowHeight - 40 + extraHeight)
+    //        .offset(y: -extraHeight + 10)
 }
 
 struct MapResultRestaurantCard: View, Identifiable {
