@@ -37,7 +37,7 @@ struct HomeMainFilterBar: View {
                                     Text("Date").tag(2)
                                 }.pickerStyle(SegmentedPickerStyle())
                                 
-                                FilterButton(icon: "line.horizontal.decrease.circle.fill", action: {})
+                                FilterButton(icon: "line.horizontal.3.decrease.circle", action: {})
 //                                FilterButton(label: "Spice", action: {})
 //                                FilterButton(label: "Diet", action: {})
 //                                FilterButton(label: "Hidden Gem", action: filterAction)
