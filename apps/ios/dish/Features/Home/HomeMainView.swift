@@ -80,15 +80,7 @@ struct HomeMainView: View {
                         // map fade out at bottom
                         VStack {
                             Spacer()
-                            LinearGradient(
-                                gradient: Gradient(
-                                    colors: self.colorScheme == .light
-                                        ? [Color.black.opacity(0), Color(white: 0.2).opacity(0.55), Color(white: 0.2).opacity(0.75)]
-                                        : [Color.black.opacity(0), Color(white: 0).opacity(0.6), Color(white: 0).opacity(0.8)]
-                                ),
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
+                            HomeMapBackgroundGradient()
                                 .frame(height: (self.appGeometry?.size.height ?? 0) - state.mapHeight)
                         }
                     }
@@ -264,6 +256,23 @@ struct HomeMainView: View {
     }
 }
 
+struct HomeMapBackgroundGradient: View {
+    @Environment(\.colorScheme) var colorScheme
+    
+    var body: some View {
+        LinearGradient(
+            gradient: Gradient(
+                colors: self.colorScheme == .light
+                    ? [Color.black.opacity(0), Color(white: 0.2).opacity(0.55), Color(white: 0.2).opacity(0.75)]
+                    : [Color.black.opacity(0), Color(white: 0).opacity(0), Color(white: 0).opacity(0.75)]
+            ),
+            startPoint: .top,
+            endPoint: .bottom
+        )
+        .rasterize()
+    }
+}
+
 struct SearchBarLocation: View {
     @EnvironmentObject var store: AppStore
 
@@ -336,7 +345,7 @@ struct HomeMapMask: View {
     var body: some View {
         LinearGradient(
             gradient: Gradient(
-                colors: [Color(white: 0).opacity(0.6), Color(white: 0).opacity(0.25), Color.black.opacity(0)]
+                colors: [Color(white: 0).opacity(0.7), Color(white: 0).opacity(0.25), Color.black.opacity(0)]
             ),
             startPoint: .top,
             endPoint: .bottom
