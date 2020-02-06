@@ -20,7 +20,7 @@ class AppInstance {
     // flags
     let enableMap = true
     let enableMapAutoZoom = false
-    let enableContent = false
+    let enableContent = true
     let enableCamera = false
     
     // constants
