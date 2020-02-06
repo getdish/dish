@@ -23,13 +23,13 @@ struct CameraButton: View {
         }) {
             ZStack {
                 Group {
-                    Image(systemName: "plus")
+                    Image(systemName: "star.circle")
                         .resizable()
                         .scaledToFit()
                 }
                 .foregroundColor(oppositeColor.opacity(0.5))
             }
-            .padding(.all, App.cameraButtonHeight * 0.33)
+            .padding(.all, App.cameraButtonHeight * 0.25)
             .frame(width: App.cameraButtonHeight, height: App.cameraButtonHeight)
 //            .background(
 //                LinearGradient(

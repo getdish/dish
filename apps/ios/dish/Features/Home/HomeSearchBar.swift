@@ -103,7 +103,7 @@ struct HomeSearchBar: View {
             )
         } else {
             return AnyView(
-                Image(systemName: "magnifyingglass")
+                Text("🔥")
             )
         }
     }

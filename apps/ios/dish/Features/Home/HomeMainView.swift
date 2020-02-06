@@ -76,6 +76,7 @@ struct HomeMainView: View {
                         // map mask a bit
                         HomeMapMask()
                             .offset(y: mapHeight - 20)
+                            .animation(.spring(response: 0.4))
 
                         // map fade out at bottom
                         VStack {
@@ -264,7 +265,7 @@ struct HomeMapBackgroundGradient: View {
             gradient: Gradient(
                 colors: self.colorScheme == .light
                     ? [Color.black.opacity(0), Color(white: 0.2).opacity(0.55), Color(white: 0.2).opacity(0.75)]
-                    : [Color.black.opacity(0), Color(white: 0).opacity(0), Color(white: 0).opacity(0.75)]
+                    : [Color.black.opacity(0), Color.black.opacity(0), Color.black.opacity(0), Color(white: 0).opacity(0.7)]
             ),
             startPoint: .top,
             endPoint: .bottom

@@ -58,7 +58,7 @@ struct HomeMainContent: View {
                             HomeContentExplore()
                         }
                     }
-                    .offset(y: state.mapHeight - state.searchBarYExtra)
+                        .offset(y: state.mapHeight - state.searchBarYExtra)
                     
                     // results bar below map
                     ZStack {
@@ -69,7 +69,7 @@ struct HomeMainContent: View {
                         }
                     }
                         .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
-                    .offset(y: self.homeState.snappedToBottomMapHeight - cardRowHeight - App.filterBarHeight)
+                        .offset(y: self.homeState.snappedToBottomMapHeight - cardRowHeight - App.filterBarHeight)
                 }
                 // note! be sure to put any animation on this *inside* magic move
                 // or else it messes up the magic move measurement - you can test
@@ -138,12 +138,37 @@ struct HomeMapSearchResults: View {
 }
 
 struct HomeContentExplore: View {
+    @State var index: Int = 0
+    
+    var body: some View {
+        ZStack {
+            ScrollViewEnhanced(
+                index: self.$index,
+                direction: Axis.Set.horizontal,
+                showsIndicators: false,
+                pages: [0, 1].map { index in
+                    HomeContentExploreBy(type: index == 0 ? .dish : .cuisine)
+                }
+            )
+        }
+        .edgesIgnoringSafeArea(.all)
+        .clipped()
+    }
+}
+
+
+struct HomeContentExploreBy: View, Identifiable {
+    let id = "HomeContentExploreBy"
+    
     @Environment(\.geometry) var appGeometry
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
     let items = features.chunked(into: 3)
-    
     let spacing: CGFloat = 14
+    
+    enum ExploreContentType { case dish, cuisine }
+    
+    var type: ExploreContentType
     
     var body: some View {
         ZStack {
@@ -153,7 +178,7 @@ struct HomeContentExplore: View {
                     
                     // spacer of whats above it height so it can scoll up to searchbar
                     Spacer().frame(height: App.searchBarHeight / 2 + App.filterBarHeight + self.homeState.scrollRevealY)
-
+                    
                     VStack(spacing: self.spacing) {
                         ForEach(0 ..< self.items.count) { index in
                             HStack(spacing: self.spacing) {
@@ -164,7 +189,7 @@ struct HomeContentExplore: View {
                                         display: .full,
                                         height: 100
                                     )
-                                    .equatable()
+                                        .equatable()
                                 }
                             }
                             .padding(.horizontal)
@@ -176,8 +201,8 @@ struct HomeContentExplore: View {
                 }
                 .introspectScrollView { scrollView in
                     self.homeState.setActiveScrollView(scrollView)
-//                    TODO attempt to have the content scroll pull down when at top
-//                    scrollView.bounces = false
+                    //                    TODO attempt to have the content scroll pull down when at top
+                    //                    scrollView.bounces = false
                 }
             }
             .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
