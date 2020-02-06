@@ -1,6 +1,8 @@
 import SwiftUI
 import Combine
 
+fileprivate let searchBarTopHeight: CGFloat = 26
+
 struct HomeMainView: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard
@@ -45,7 +47,8 @@ struct HomeMainView: View {
         return GeometryReader { geometry in
             ZStack(alignment: .topLeading) {
                     self.sideEffects
-                            
+                
+                    // CAMERA
                     Group {
                         // camera
                         ZStack {
@@ -57,7 +60,10 @@ struct HomeMainView: View {
                                 .opacity(state.showCamera ? 0 : 1)
                         }
                         .frameLimitedToScreen()
-                        
+                    }
+                    
+                    // MAP
+                    Group {
                         // map
                         DishMapView()
                             .frame(height: self.appGeometry?.size.height)
@@ -87,6 +93,7 @@ struct HomeMainView: View {
                         }
                     }
                 
+                    // CONTENT / CHROME
                     Group {
                         // location bar
                         VStack {
@@ -94,7 +101,9 @@ struct HomeMainView: View {
                             Spacer()
                         }
                         .frameLimitedToScreen()
-                        .offset(y: state.mapHeight - App.searchBarHeight - 56)
+                        .offset(y: state.isSnappedToBottom
+                            ? 0
+                            : state.mapHeight - App.searchBarHeight - 56)
 
                         // results
                         HomeMainContent()
@@ -111,31 +120,52 @@ struct HomeMainView: View {
                         //                        .animation(.spring())
                     }
                 
-                    // searchbar
-                    VStack {
-                        GeometryReader { searchBarGeometry -> HomeSearchBar in
-                            HomeSearchBarState.frame = searchBarGeometry.frame(in: .global)
-                            return HomeSearchBar()
-                        }
-                        .frame(
-                            height: App.searchBarHeight
+                    // SEARCHBAR
+                    Group {
+                        // searchbar bg
+                        SearchBarBg(
+                            width: Screen.width - 24,
+                            topWidth: 134,
+                            topHeight: searchBarTopHeight,
+                            searchHeight: App.searchBarHeight
                         )
-                        .padding(.horizontal, 12)
+                            .frame(height: App.searchBarHeight)
+                            .offset(
+                                x: 12,
+                                y: mapHeight + state.searchBarYExtra - App.searchBarHeight / 2 - searchBarTopHeight
+                            )
                         
-                        Spacer()
-                    }
-                    // this fixed a bug where it would focus search bar too easily
-                    // but created one where it de-focuses it instantly often
-//                    .disabled(!enableSearchBar)
-//                    .allowsHitTesting(enableSearchBar)
-                        .offset(y:
-                            state.showCamera ?
-                                mapHeight > Screen.height / 2 ? Screen.height * 2 : -Screen.height * 2 :
-                                mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra
+                        SearchBarLocation()
+                            .offset(
+                                x: 46,
+                                y: mapHeight + state.searchBarYExtra - App.searchBarHeight / 2 - searchBarTopHeight + 3
+                            )
+                        
+                        // searchbar
+                        VStack {
+                            GeometryReader { searchBarGeometry -> HomeSearchBar in
+                                HomeSearchBarState.frame = searchBarGeometry.frame(in: .global)
+                                return HomeSearchBar()
+                            }
+                                .frame(height: App.searchBarHeight)
+                                .padding(.horizontal, 12)
+                            
+                            Spacer()
+                        }
+                            // this fixed a bug where it would focus search bar too easily
+                            // but created one where it de-focuses it instantly often
+                            //                    .disabled(!enableSearchBar)
+                            //                    .allowsHitTesting(enableSearchBar)
+                            .offset(y:
+                                state.showCamera ?
+                                    mapHeight > Screen.height / 2 ? Screen.height * 2 : -Screen.height * 2 :
+                                    mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra
                         )
-                        .animation(.spring(response: 1.25), value: state.animationState == .animate)
+                            .animation(.spring(response: 1.25), value: state.animationState == .animate)
+                    }
                 
-                    // CameraControls
+                
+                    // CAMERA CONTROLS
                     ZStack {
                         VStack {
                             HStack {
@@ -234,10 +264,83 @@ struct HomeMainView: View {
     }
 }
 
+struct SearchBarLocation: View {
+    @EnvironmentObject var store: AppStore
+
+    var body: some View {
+        Group {
+            if self.store.state.map.locationLabel != "" {
+                Button(action: {
+                    App.store.send(.map(.moveToLocation(.init(.current))))
+                }) {
+                    HStack(spacing: 4) {
+                        Text("In")
+                            .font(.system(size: 13))
+                            .fontWeight(.semibold)
+                            .foregroundColor(Color.black.opacity(0.4))
+                        
+                        VStack {
+                            Text(self.store.state.map.locationLabel)
+                                .font(.system(size: 13))
+                                .fontWeight(.bold)
+                                .foregroundColor(.blue)
+                        }
+                        .padding(.vertical, 3)
+                        .padding(.horizontal, 5)
+                        .background(Color(.lightGray).opacity(0.2))
+                        .cornerRadius(10)
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct SearchBarBg: View {
+    @Environment(\.colorScheme) var colorScheme
+    
+    var width: CGFloat = Screen.width
+    var topWidth: CGFloat = 120
+    var topHeight: CGFloat = 20
+    var topRadius: CGFloat = 10
+    var searchHeight: CGFloat = 45
+    
+    var shape: some View {
+        let searchRadius = searchHeight / 2
+        
+        return Path { path in
+            path.addRoundedRect(
+                in: CGRect(x: 0, y: topHeight, width: width, height: searchHeight),
+                cornerSize: CGSize(width: searchRadius, height: searchRadius)
+            )
+            
+            var p2 = Path()
+            p2.addRoundedRect(
+                in: CGRect(x: searchRadius, y: 0, width: topWidth, height: topHeight * 2),
+                cornerSize: CGSize(width: topRadius, height: topRadius)
+            )
+            
+            path.addPath(p2)
+        }
+    }
+
+    var body: some View {
+        self.shape
+            .foregroundColor(.white)
+            .shadow(color: Color.black.opacity(self.colorScheme == .dark ? 0.4 : 0.15), radius: 6, x: 0, y: 3)
+            .shadow(color: Color.black.opacity(self.colorScheme == .dark ? 0.4 : 0.15), radius: 10, x: 0, y: 2)
+    }
+}
+
 struct HomeMapMask: View {
     var body: some View {
-        Color.black
-            .opacity(0.35)
+        LinearGradient(
+            gradient: Gradient(
+                colors: [Color(white: 0).opacity(0.7), Color(white: 0).opacity(0.25), Color.black.opacity(0)]
+            ),
+            startPoint: .top,
+            endPoint: .bottom
+        )
             .clipShape(
                 topCornerMask(
                     width: Screen.width,
@@ -269,7 +372,8 @@ struct HomeSearchBarState {
 #if DEBUG
 struct HomeMainView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeMainView()
+        SearchBarBg()
+            .offset(y: 100)
             .embedInAppEnvironment() // Mocks.homeSearchedPho
     }
 }

@@ -14,13 +14,13 @@ struct HomeSearchBar: View {
     @EnvironmentObject var keyboard: Keyboard
     @Environment(\.colorScheme) var colorScheme
     
-    @State var placeholder = "The best dim sum..."
+    @State var placeholder = "Find the best \"dim sum\"..."
     
     func updatePlaceholder() {
         var i = 0
         let placeholders = ["dim sum", "bo kho", "ceviche", "poke", "mapa tofu"]
         async(interval: 5000, intervalMax: 5) {
-            self.placeholder = "The best \(placeholders[i])..."
+            self.placeholder = "Find the best \"\(placeholders[i])\"..."
             i += 1
         }
     }
@@ -52,7 +52,7 @@ struct HomeSearchBar: View {
     
     var body: some View {
         let zoomed = keyboard.state.height > 0
-        let scale: CGFloat = zoomed ? 1.5 : 1.3
+        let scale: CGFloat = zoomed ? 1.2 : 1.2
         
         return Group {
             RunOnce {
@@ -64,12 +64,10 @@ struct HomeSearchBar: View {
             
             SearchInput(
                 placeholder: self.placeholder,
-                inputBackgroundColor: colorScheme == .dark
-                    ? Color(red: 0.25, green: 0.25, blue: 0.25)
-                    : Color.white,
+                inputBackgroundColor: Color.clear,
                 borderColor: Color.clear,
                 scale: scale,
-                sizeRadius: 2.0,
+                sizeRadius: 3.0,
                 icon: icon,
                 showCancelInside: true,
                 onClear: {

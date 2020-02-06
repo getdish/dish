@@ -70,19 +70,7 @@ struct TopNavHome: View {
                 ZStack {
                     // home controls
                     HStack {
-                        if self.store.state.map.locationLabel != "" {
-                            Button(action: {
-                                App.store.send(.map(.moveToLocation(.init(.current))))
-                            }) {
-                                VStack {
-                                    Text(self.store.state.map.locationLabel)
-                                        .titleBarStyle()
-                                }
-                                .modifier(TopNavButtonStyle())
-                            }
-                            .animation(Animation.spring().delay(isOnHome ? 0 : 0.25))
-                            .transition(.opacity)
-                        }
+                        
                         
                         Spacer()
                         

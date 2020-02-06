@@ -100,8 +100,8 @@ struct SearchInput: View {
                     VStack {
                         icon ?? AnyView(
                             Image(systemName: "magnifyingglass")
-                            .resizable()
-                            .scaledToFit()
+                                .resizable()
+                                .scaledToFit()
                         )
                     }
                     .frame(width: 24 * scale, height: 24 * scale)
@@ -174,8 +174,6 @@ struct SearchInput: View {
                     .foregroundColor(.secondary)
                     .background(self.inputBackgroundColor)
                     .cornerRadius(10.0 * scale * sizeRadius)
-                    .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.4 : 0.15), radius: 6, x: 0, y: 3)
-                    .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.4 : 0.15), radius: 10, x: 0, y: 2)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10.0 * scale * sizeRadius)
                             .stroke(self.borderColor, lineWidth: 1)
