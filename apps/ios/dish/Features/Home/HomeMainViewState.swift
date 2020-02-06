@@ -164,7 +164,9 @@ class HomeViewState: ObservableObject {
         Screen.statusBarHeight + App.searchBarHeight + App.topNavHeight + 50
     )
     
-    var mapMaxHeight: CGFloat { appHeight - keyboardHeight - App.searchBarHeight }
+    var mapMaxHeight: CGFloat {
+        appHeight - keyboardHeight - App.searchBarHeight / 2
+    }
     
     var mapHeight: CGFloat {
         min(mapMaxHeight, max(self.y - scrollRevealY, mapMinHeight))
@@ -186,7 +188,10 @@ class HomeViewState: ObservableObject {
         snapToBottomAt - distanceUntilSnapDown
     }
     
-    var snappedToBottomMapHeight: CGFloat { appHeight - 120 }
+    var snappedToBottomMapHeight: CGFloat {
+        appHeight - 30 - App.filterBarHeight - App.searchBarHeight / 2
+    }
+    
     var wasSnappedToBottom = false
     
     var isSnappedToBottom: Bool {
