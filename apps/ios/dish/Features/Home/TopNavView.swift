@@ -60,6 +60,25 @@ struct TopNavButtonStyle: ViewModifier {
     }
 }
 
+struct SearchBarLocationLabel: View {
+    @EnvironmentObject var store: AppStore
+    
+    var body: some View {
+        let mapLabel = self.store.state.map.locationLabel
+        let label = mapLabel == "" ? "Map Area" : mapLabel
+        
+        return HStack {
+            Button(action: {
+                App.store.send(.map(.moveToLocation(.init(.current))))
+            }) {
+                Text(label)
+                    .font(.system(size: 14))
+            }
+            .modifier(TopNavButtonStyle())
+        }
+    }
+}
+
 struct TopNavHome: View {
     @EnvironmentObject var store: AppStore
     
@@ -72,6 +91,7 @@ struct TopNavHome: View {
                 ZStack {
                     // home controls
                     HStack {
+                        SearchBarLocationLabel()
                         
                         
                         Spacer()

@@ -288,7 +288,7 @@ struct MagicItem<Content>: View where Content: View {
                     GeometryReader { geometry -> SideEffect in
                         let frame = geometry.frame(in: .global)
                         let (name, enabled, item) = self.setupSideEffect(frame)
-                        return SideEffect(name, level: .debug, debounce: 1, condition: { enabled }) {
+                        return SideEffect(name, level: .debug, debounce: 16, condition: { enabled }) {
                             self.updateItem(item)
                         }
                     }

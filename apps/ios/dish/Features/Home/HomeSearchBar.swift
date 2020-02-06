@@ -81,10 +81,10 @@ struct HomeSearchBar: View {
             
             SearchInput(
                 placeholder: self.placeholder,
-                inputBackgroundColor: Color.clear,
-                borderColor: Color.clear,
+                inputBackgroundColor: Color.white,
+                borderColor: Color.white,
                 scale: scale,
-                sizeRadius: 3.0,
+                sizeRadius: 2.0,
                 icon: icon,
                 showCancelInside: true,
                 onClear: {
@@ -106,6 +106,7 @@ struct HomeSearchBar: View {
                 searchText: self.homeSearch,
                 tags: self.homeTags
             )
+                .shadow(color: Color.black.opacity(0.35), radius: 8, x: 0, y: 3)
             .animation(.spring(), value: zoomed != self.lastZoomed)
         }
     }
@@ -185,53 +186,13 @@ struct CameraButton: View {
                 }
                 .foregroundColor(oppositeColor.opacity(0.5))
             }
-            .padding(.all, App.cameraButtonHeight * 0.22)
-            .frame(width: App.cameraButtonHeight, height: App.cameraButtonHeight)
-                //            .background(
-                //                LinearGradient(
-                //                    gradient: Gradient(colors: [
-                //                        Color("color-brand").opacity(0.7),
-                //                        Color("color-brand").opacity(1)
-                //                    ]),
-                //                    startPoint: .top,
-                //                    endPoint: .bottom
-                //                )
-                //            )
-                //                .background(
-                //                    RadialGradient(
-                //                        gradient: Gradient(colors: [
-                //                            Color.white.opacity(0),
-                //                            Color.white.opacity(0.8)
-                //                        ]),
-                //                        center: .center,
-                //                        startRadius: 0,
-                //                        endRadius: App.cameraButtonHeight
-                //                    )
-                //            )
+                .padding(.all, App.cameraButtonHeight * 0.22)
+                .frame(width: App.cameraButtonHeight, height: App.cameraButtonHeight)
                 .cornerRadius(App.cameraButtonHeight)
-                //                .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 3)
-                //                .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 0)
                 .overlay(
                     RoundedRectangle(cornerRadius: App.cameraButtonHeight)
                         .stroke(oppositeColor.opacity(0.1), lineWidth: 1)
             )
-            //                .overlay(
-            //                    VStack {
-            //                        RoundedRectangle(cornerRadius: App.cameraButtonHeight)
-            //                            .stroke(Color("color-brand"), lineWidth: 2)
-            //                    }
-            //                    .padding(1)
-            //            )
-            //                .animation(.spring())
-            //                .opacity(self.isTapped ? 0.5 : 1)
-            //                .scaleEffect(self.isTapped ? 0.9 : 1)
-            //            .onLongPressGesture(minimumDuration: 10000, pressing: { isPressing in
-            //                self.isTapped = isPressing
-            //            }) {
-            //                if self.lastTap.timeIntervalSinceNow > 10 {
-            //                    App.store.send(.home(.setShowCamera(false)))
-            //                }
-            //            }
         }
     }
 }
@@ -243,23 +204,3 @@ struct CameraButton_Previews: PreviewProvider {
     }
 }
 #endif
-
-//            .mask(
-//                Path { path in
-//                    let size = 58
-//                    let q = 14
-//                    path.move(to: CGPoint(x: 0, y: 0))
-//                    path.addLine(to: CGPoint(x: 0, y: size))
-//                    path.addLine(to: CGPoint(x: size, y: size))
-//                    path.addLine(to: CGPoint(x: size, y: 0))
-//                    let r = (size - q) / 2
-//                    path.addEllipse(in:
-//                        CGRect(
-//                            x: r,
-//                            y: r,
-//                            width: q,
-//                            height: q
-//                        )
-//                    )
-//                }
-//        )

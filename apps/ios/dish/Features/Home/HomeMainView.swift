@@ -117,28 +117,6 @@ struct HomeMainView: View {
                 
                     // SEARCHBAR
                     Group {
-                        // searchbar bg
-                        SearchBarBg(
-                            width: Screen.width - 24,
-                            topWidth: state.locationLabelWidth + 16,
-                            topHeight: App.searchBarTopHeight,
-                            searchHeight: App.searchBarHeight
-                        )
-                            .frame(height: App.searchBarHeight)
-                            .offset(
-                                x: 12,
-                                y: mapHeight + state.searchBarYExtra - App.searchBarHeight / 2 - App.searchBarTopHeight
-                            )
-                        
-                        HStack {
-                            SearchBarLocationLabel()
-                            Spacer()
-                        }
-                            .offset(
-                                x: 46,
-                                y: mapHeight + state.searchBarYExtra - App.searchBarHeight / 2 - App.searchBarTopHeight + 5
-                            )
-                        
                         // searchbar
                         VStack {
                             GeometryReader { searchBarGeometry -> HomeSearchBar in
@@ -269,91 +247,13 @@ struct HomeMapBackgroundGradient: View {
         LinearGradient(
             gradient: Gradient(
                 colors: self.colorScheme == .light
-                    ? [Color.black.opacity(0), Color.black.opacity(0.2), Color(white: 0.1).opacity(0.55)]
-                    : [Color.black.opacity(0), Color.black.opacity(0.2), Color(white: 0).opacity(0.55)]
+                    ? [Color.black.opacity(0), Color.black.opacity(0.3), Color(white: 0.1).opacity(0.55)]
+                    : [Color.black.opacity(0), Color.black.opacity(0.3), Color(white: 0).opacity(0.55)]
             ),
             startPoint: .top,
             endPoint: .bottom
         )
-        .rasterize()
-    }
-}
-
-struct SearchBarLocationLabel: View {
-    @EnvironmentObject var store: AppStore
-
-    var body: some View {
-        let mapLabel = self.store.state.map.locationLabel
-        let label = mapLabel == "" ? "Map Area" : mapLabel
-        
-        return HStack {
-            Button(action: {
-                App.store.send(.map(.moveToLocation(.init(.current))))
-            }) {
-                HStack(spacing: 4) {
-                    Text("In")
-                        .font(.system(size: 13))
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color.black.opacity(0.4))
-                    
-                    VStack {
-                        Text(label)
-                            .font(.system(size: 13))
-                            .fontWeight(.bold)
-                            .foregroundColor(.blue)
-                    }
-                    .padding(.vertical, 3)
-                    .padding(.horizontal, 5)
-                    .background(Color(.lightGray).opacity(0.2))
-                    .cornerRadius(10)
-                }
-            }
-//            .overlay(
-//                GeometryReader { geo in
-//                    SideEffect("SearchBarLocationLabel update size", condition: {
-//                        geo.size.width != homeViewState.locationLabelWidth
-//                    }) {
-//                        homeViewState.setLocationLabelWidth(geo.size.width)
-//                    }
-//                }
-//            )
-        }
-    }
-}
-
-struct SearchBarBg: View {
-    @Environment(\.colorScheme) var colorScheme
-    
-    var width: CGFloat = Screen.width
-    var topWidth: CGFloat = 120
-    var topHeight: CGFloat = 20
-    var topRadius: CGFloat = 10
-    var searchHeight: CGFloat = 45
-    
-    var shape: some View {
-        let searchRadius = searchHeight / 2
-        
-        return Path { path in
-            path.addRoundedRect(
-                in: CGRect(x: 0, y: topHeight, width: width, height: searchHeight),
-                cornerSize: CGSize(width: searchRadius, height: searchRadius)
-            )
-            
-            var p2 = Path()
-            p2.addRoundedRect(
-                in: CGRect(x: searchRadius, y: 0, width: topWidth, height: topHeight * 2),
-                cornerSize: CGSize(width: topRadius, height: topRadius)
-            )
-            
-            path.addPath(p2)
-        }
-    }
-
-    var body: some View {
-        self.shape
-            .foregroundColor(.white)
-            .shadow(color: Color.black.opacity(self.colorScheme == .dark ? 0.4 : 0.15), radius: 6, x: 0, y: 3)
-            .shadow(color: Color.black.opacity(self.colorScheme == .dark ? 0.4 : 0.15), radius: 10, x: 0, y: 2)
+            .rasterize()
     }
 }
 
@@ -399,9 +299,44 @@ struct HomeSearchBarState {
 #if DEBUG
 struct HomeMainView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchBarBg()
+        HomeMainView()
             .offset(y: 100)
             .embedInAppEnvironment() // Mocks.homeSearchedPho
     }
 }
 #endif
+
+//struct SearchBarBg: View {
+//    @Environment(\.colorScheme) var colorScheme
+//
+//    var width: CGFloat = Screen.width
+//    var topWidth: CGFloat = 120
+//    var topHeight: CGFloat = 20
+//    var topRadius: CGFloat = 10
+//    var searchHeight: CGFloat = 45
+//
+//    var shape: some View {
+//        let searchRadius = searchHeight / 2
+//
+//        return Path { path in
+//            path.addRoundedRect(
+//                in: CGRect(x: 0, y: topHeight, width: width, height: searchHeight),
+//                cornerSize: CGSize(width: searchRadius, height: searchRadius)
+//            )
+//
+//            var p2 = Path()
+//            p2.addRoundedRect(
+//                in: CGRect(x: searchRadius, y: searchHeight, width: topWidth, height: topHeight * 2),
+//                cornerSize: CGSize(width: topRadius, height: topRadius)
+//            )
+//
+//            path.addPath(p2)
+//        }
+//    }
+//
+//    var body: some View {
+//        self.shape
+//            .foregroundColor(.white)
+//            .shadow(color: Color.black.opacity(self.colorScheme == .dark ? 0.6 : 0.3), radius: 8, x: 0, y: 1)
+//    }
+//}
