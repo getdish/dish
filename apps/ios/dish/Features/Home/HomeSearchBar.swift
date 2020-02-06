@@ -6,10 +6,8 @@ struct SearchToTagColor {
     static let filter = Color(red: 0.6, green: 0.2, blue: 0.4, opacity: 0.5)
 }
 
-struct HomeSearchBar: View, Equatable {
-    static func == (lhs: HomeSearchBar, rhs: HomeSearchBar) -> Bool {
-        true
-    }
+struct HomeSearchBar: View {
+    var showInput = true
     
     @State var searchText = ""
     @State var textField: UITextField? = nil
@@ -108,7 +106,8 @@ struct HomeSearchBar: View, Equatable {
                 after: after,
                 isFirstResponder: isFirstResponder,
                 searchText: self.homeSearch,
-                tags: self.homeTags
+                tags: self.homeTags,
+                showInput: showInput
             )
                 .shadow(color: Color.black.opacity(0.35), radius: 8, x: 0, y: 3)
                 .animation(.spring(), value: zoomed != self.lastZoomed)

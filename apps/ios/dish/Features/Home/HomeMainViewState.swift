@@ -1,7 +1,7 @@
 import SwiftUI
 import Combine
 
-fileprivate let snapToBottomYMovePct: CGFloat = 0.6
+fileprivate let snapToBottomYMovePct: CGFloat = 0.58
 fileprivate let distanceUntilSnapDown: CGFloat = 42
 fileprivate let distanceUntilSnapUp: CGFloat = 85
 fileprivate let nearTopAtVal: CGFloat = 120 + Screen.statusBarHeight

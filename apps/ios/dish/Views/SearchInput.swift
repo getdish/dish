@@ -61,9 +61,9 @@ struct SearchInput: View {
     var after: AnyView?
     var onTextField: ((UITextField) -> Void)?
     var isFirstResponder: Bool = false
-    
     @Binding var searchText: String
     @Binding var tags: [SearchInputTag]
+    var showInput = true
     
     @State private var showCancelButton: Bool = false
     
@@ -129,15 +129,30 @@ struct SearchInput: View {
                     
                     // TODO (performance / @majid) - snapToBottom(false) is jittery, if you replace
                     // this next view with Color.red you'll see it goes fast... why?
-                    TextField("ok", text: self.$searchText)
-                        .rotationEffect(.degrees(0.01))
+                    if showInput {
+                        CustomTextField(
+                            placeholder: hasTags ? "" : self.placeholder,
+                            text: self.$searchText,
+                            isFirstResponder: self.isFirstResponder,
+                            onEditingChanged: self.handleEditingChanged
+                        )
+                    } else {
+                        // temp bugfix for above TODO problem...
+                        HStack {
+                            Group {
+                                if self.searchText != "" {
+                                    Text(self.searchText)
+                                } else {
+                                    Text(self.placeholder).opacity(0.3)
+                                }
+                            }
+                            .font(.system(size: fontSize))
+                            Spacer()
+                        }
+                        .frameFlex()
+                    }
                     
-//                    CustomTextField(
-//                        placeholder: hasTags ? "" : self.placeholder,
-//                        text: self.$searchText,
-//                        isFirstResponder: self.isFirstResponder,
-//                        onEditingChanged: self.handleEditingChanged
-//                    )
+
 //                        .disableAutocorrection(true)
 //                        .font(.system(size: fontSize))
 //                        .foregroundColor(.primary)

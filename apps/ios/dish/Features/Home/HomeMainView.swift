@@ -40,7 +40,13 @@ struct HomeMainView: View {
         let state = self.state
         let mapHeight = state.mapHeight
 //        let enableSearchBar = [.idle, .off].contains(state.dragState) && state.animationState == .idle
-//        print(" 👀 HomeMainView mapHeight \(mapHeight) animationState \(state.animationState) enableSearchBar \(enableSearchBar)")
+        
+        print(" 👀 HomeMainView mapHeight \(mapHeight) animationState \(state.animationState)")
+        print("showInput \(state.animationState != .controlled)")
+        
+        let homeSearchBar = HomeSearchBar(
+            showInput: state.animationState != .controlled
+        )
 
         return GeometryReader { geometry in
             ZStack(alignment: .topLeading) {
@@ -127,7 +133,7 @@ struct HomeMainView: View {
                         VStack {
                             GeometryReader { searchBarGeometry -> HomeSearchBar in
                                 HomeSearchBarState.frame = searchBarGeometry.frame(in: .global)
-                                return HomeSearchBar()
+                                return homeSearchBar
                             }
                                 .frame(height: App.searchBarHeight)
                                 .padding(.horizontal, 12)
