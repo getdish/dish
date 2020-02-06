@@ -13,14 +13,20 @@ class AppInstance {
     let mapService = MapService()
     let homeService = HomeService()
     let googlePlacesService = GooglePlacesService()
-
+    
+    // dynamic
+    var enterRepl = false
+    
+    // flags
+    let enableMap = false
+    let enableMapAutoZoom = false
+    let enableContent = false
+    let enableCamera = false
+    
     // constants
     let keyboard = Keyboard()
     let queueMain = DispatchQueue.main
     let magicItems = magicItemsStore
-    // y so slow
-    let enableMapAutoZoom = false
-    
     let searchBarLabelHeight: CGFloat = 26
     let searchBarHeight: CGFloat = 50
     let topNavHeight: CGFloat = 58
@@ -28,8 +34,6 @@ class AppInstance {
     let cameraButtonHeight: CGFloat = 44
     let filterBarHeight: CGFloat = 54
     let filterBarPad: CGFloat = 11
-    
-    var enterRepl = false
     
     func start() {
         mapService.start()

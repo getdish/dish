@@ -47,72 +47,78 @@ struct HomeMainView: View {
                     self.sideEffects
                 
                     // CAMERA
-                    Group {
-                        // camera
-                        ZStack {
-                            //                        DishCamera()
-                            
-                            // cover camera
-                            Color.black
-                                .animation(.spring())
-                                .opacity(state.showCamera ? 0 : 1)
+                    if App.enableCamera {
+                        Group {
+                            // camera
+                            ZStack {
+                                DishCamera()
+                                
+                                // cover camera
+                                Color.black
+                                    .animation(.spring())
+                                    .opacity(state.showCamera ? 0 : 1)
+                            }
+                            .frameLimitedToScreen()
                         }
-                        .frameLimitedToScreen()
                     }
                     
                     // MAP
-                    Group {
-                        // map
-                        DishMapView()
-                            .frame(height: self.appGeometry?.size.height)
-                            .offset(y: state.showCamera ? -Screen.height : 0)
-                            .opacity(state.showCamera ? 0 : 1)
-                            .animation(.spring(response: 0.8))
-                            .rotationEffect(state.showCamera ? .degrees(-10) : .degrees(0))
-                            .frameLimitedToScreen()
-
-                        // map mask a bit
-                        HomeMapMask()
-                            .offset(y: mapHeight - 20)
-                            .animation(.spring(response: 0.4))
-
-                        // map fade out at bottom
-                        VStack {
-                            Spacer()
-                            HomeMapBackgroundGradient()
-                                .frame(height: (self.appGeometry?.size.height ?? 0) - state.mapHeight)
+                    if App.enableMap {
+                        Group {
+                            // map
+                            DishMapView()
+                                .frame(height: self.appGeometry?.size.height)
+                                .offset(y: state.showCamera ? -Screen.height : 0)
+                                .opacity(state.showCamera ? 0 : 1)
+                                .animation(.spring(response: 0.8))
+                                .rotationEffect(state.showCamera ? .degrees(-10) : .degrees(0))
+                                .frameLimitedToScreen()
+                            
+                            // map mask a bit
+                            HomeMapMask()
+                                .offset(y: mapHeight - 20)
+                                .animation(.spring(response: 0.4))
+                            
+                            // map fade out at bottom
+                            VStack {
+                                Spacer()
+                                HomeMapBackgroundGradient()
+                                    .frame(height: (self.appGeometry?.size.height ?? 0) - state.mapHeight)
+                            }
                         }
                     }
                 
                     // CONTENT / CHROME
-                    Group {
-                        // location bar
-                        VStack {
-                            TopNavViewContent()
-                            Spacer()
-                        }
-                        .frameLimitedToScreen()
-
-                        // content
-                        HomeMainContentContainer(
-                            isSnappedToBottom: state.isSnappedToBottom,
-                            disableMagicTracking: state.mapHeight >= state.snapToBottomAt
-                                || state.isSnappedToBottom
-                                || state.animationState == .controlled
-                        ) {
-                            HomeMainContent()
-                        }
+                    if App.enableContent {
+                        Group {
+                            // location bar
+                            VStack {
+                                TopNavViewContent()
+                                Spacer()
+                            }
+                            .frameLimitedToScreen()
+                            
+                            // content
+                            HomeMainContentContainer(
+                                isSnappedToBottom: state.isSnappedToBottom,
+                                disableMagicTracking: state.mapHeight >= state.snapToBottomAt
+                                    || state.isSnappedToBottom
+                                    || state.animationState == .controlled
+                            ) {
+                                HomeMainContent()
+                            }
                             .frameLimitedToScreen()
                             .offset(y: state.showCamera ? Screen.height : 0)
-
-                        // filters
-                        VStack {
-                            HomeMainFilterBar()
-                            Spacer()
-                        }
+                            
+                            // filters
+                            VStack {
+                                HomeMainFilterBar()
+                                Spacer()
+                            }
                             .frameLimitedToScreen()
                             .offset(y: mapHeight + App.searchBarHeight / 2)
-                        //                        .animation(.spring())
+                            //                        .animation(.spring())
+                        }
                     }
                 
                     // SEARCHBAR
@@ -142,28 +148,30 @@ struct HomeMainView: View {
                 
                 
                     // CAMERA CONTROLS
-                    ZStack {
-                        VStack {
-                            HStack {
+                    if App.enableCamera {
+                        ZStack {
+                            VStack {
+                                HStack {
+                                    Spacer()
+                                    CameraButton(
+                                        foregroundColor: state.showCamera ? .white : .black
+                                    )
+                                        .scaleEffect(state.showCamera ? 1.3 : 1)
+                                        .offset(
+                                            x: state.showCamera
+                                                ? -Screen.width / 2 + App.cameraButtonHeight / 2
+                                                : -15,
+                                            y: state.showCamera
+                                                ? Screen.fullHeight - App.cameraButtonHeight - 100
+                                                : state.mapHeight + state.searchBarYExtra - App.cameraButtonHeight / 2
+                                    )
+                                    //                                    .animation(Animation.spring(response: 0.4).delay(0))
+                                }
                                 Spacer()
-                                CameraButton(
-                                    foregroundColor: state.showCamera ? .white : .black
-                                )
-                                    .scaleEffect(state.showCamera ? 1.3 : 1)
-                                    .offset(
-                                        x: state.showCamera
-                                            ? -Screen.width / 2 + App.cameraButtonHeight / 2
-                                            : -15,
-                                        y: state.showCamera
-                                            ? Screen.fullHeight - App.cameraButtonHeight - 100
-                                            : state.mapHeight + state.searchBarYExtra - App.cameraButtonHeight / 2
-                                )
-                                //                                    .animation(Animation.spring(response: 0.4).delay(0))
                             }
-                            Spacer()
                         }
+                        .frameLimitedToScreen()
                     }
-                    .frameLimitedToScreen()
                 
                     // make everything untouchable while dragging
                     Color.black.opacity(0.0001)
