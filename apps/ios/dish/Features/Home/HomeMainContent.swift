@@ -147,7 +147,10 @@ struct HomeContentExplore: View {
                 direction: Axis.Set.horizontal,
                 showsIndicators: false,
                 pages: [0, 1].map { index in
-                    HomeContentExploreBy(type: index == 0 ? .dish : .cuisine)
+                    HomeContentExploreBy(
+                        active: index == self.index,
+                        type: index == 0 ? .dish : .cuisine
+                    )
                 }
             )
         }
@@ -168,13 +171,16 @@ struct HomeContentExploreBy: View, Identifiable {
     
     enum ExploreContentType { case dish, cuisine }
     
+    var active: Bool = false
     var type: ExploreContentType
     
     var body: some View {
         ZStack {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 0) {
-                    HomeMainDrawerScrollEffects()
+                    if active {
+                        HomeMainDrawerScrollEffects()
+                    }
                     
                     // spacer of whats above it height so it can scoll up to searchbar
                     Spacer().frame(height: App.searchBarHeight / 2 + App.filterBarHeight + self.homeState.scrollRevealY)
@@ -200,7 +206,9 @@ struct HomeContentExploreBy: View, Identifiable {
                     Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)
                 }
                 .introspectScrollView { scrollView in
-                    self.homeState.setActiveScrollView(scrollView)
+                    if self.active {
+                        self.homeState.setActiveScrollView(scrollView)
+                    }
                     //                    TODO attempt to have the content scroll pull down when at top
                     //                    scrollView.bounces = false
                 }
