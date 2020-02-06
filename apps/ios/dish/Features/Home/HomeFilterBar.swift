@@ -28,7 +28,7 @@ struct HomeMainFilterBar: View {
                             Group {
                                 CustomButton2(action: {  }) {
                                    Text("🍽")
-                                        .font(.system(size: 16))
+                                        .font(.system(size: 18))
                                 }
                                 
                                 Color.white.opacity(0.1).frame(width: 1)
