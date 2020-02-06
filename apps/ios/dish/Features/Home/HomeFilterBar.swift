@@ -8,6 +8,8 @@ struct HomeMainFilterBar: View {
     @State var wasOnSearchResults = false
     @State var showCuisine = false
     
+    @State private var favoriteColor = 0
+    
     var body: some View {
         ZStack {
             SideEffect("HomeMainFilters.changeWasOnSearchResults",
@@ -24,12 +26,23 @@ struct HomeMainFilterBar: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 10) {
                             Group {
-                                FilterButton(label: "Price", action: {})
-                                FilterButton(label: "Spice", action: {})
-                                FilterButton(label: "Diet", action: {})
-                                FilterButton(label: "Hidden Gem", action: filterAction)
-                                FilterButton(label: "Lunch Spot", action: filterAction)
-                                FilterButton(label: "Open Late", action: filterAction)
+                                Text("The Best")
+                                    .font(.system(size: 13))
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.white)
+                                
+                                Picker(selection: $favoriteColor, label: Text("What is your favorite color?")) {
+                                    Text("Dish").tag(0)
+                                    Text("Cuisine").tag(1)
+                                    Text("Date").tag(2)
+                                }.pickerStyle(SegmentedPickerStyle())
+                                
+                                FilterButton(icon: "line.horizontal.decrease.circle.fill", action: {})
+//                                FilterButton(label: "Spice", action: {})
+//                                FilterButton(label: "Diet", action: {})
+//                                FilterButton(label: "Hidden Gem", action: filterAction)
+//                                FilterButton(label: "Lunch Spot", action: filterAction)
+//                                FilterButton(label: "Open Late", action: filterAction)
                             }
                             .animation(.spring())
                         }
@@ -74,7 +87,8 @@ struct HomeMainFilterBarCuisine: View {
 struct FilterButton: View {
     @Environment(\.colorScheme) var colorScheme
     var width: CGFloat? = nil
-    var label: String
+    var label: String = ""
+    var icon: String = ""
     var action: () -> Void
     var flex: Bool = false
     var cornerRadiusCorners: UIRectCorner = .allCorners
@@ -87,10 +101,18 @@ struct FilterButton: View {
         return ZStack {
             CustomButton2(action: action) {
                 HStack {
-                    Text(label)
-                        .foregroundColor(themeColor)
-                        .font(.system(size: 15))
-                        .lineLimit(1)
+                    if icon != "" {
+                        Image(systemName: icon)
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(Color.white)
+                    }
+                    if label != "" {
+                        Text(label)
+                            .foregroundColor(themeColor)
+                            .font(.system(size: 15))
+                            .lineLimit(1)
+                    }
                 }
                 .frame(width: self.width, height: App.filterBarHeight - App.filterBarPad * 2)
                 .padding(.horizontal, 12)
