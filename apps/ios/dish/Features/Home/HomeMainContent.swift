@@ -4,20 +4,23 @@ import Combine
 fileprivate let items = features.chunked(into: 2)
 fileprivate let cardRowHeight: CGFloat = 120
 
-struct HomeMainContent: View {
-    @Environment(\.geometry) var appGeometry
-    @EnvironmentObject var homeState: HomeViewState
-    @EnvironmentObject var store: AppStore
-    
+struct HomeMainContentContainer<Content>: View where Content: View {
     @State var animatePosition: MagicItemPosition = .start
     @State var shouldUpdateMagicPositions: Bool = true
+    var isSnappedToBottom: Bool = false
+    var disableMagicTracking: Bool = false
+    var content: Content
+    
+    init(isSnappedToBottom: Bool, disableMagicTracking: Bool, @ViewBuilder content: @escaping () -> Content) {
+        self.isSnappedToBottom = isSnappedToBottom
+        self.disableMagicTracking = disableMagicTracking
+        self.content = content()
+    }
     
     var body: some View {
-        let state = self.homeState
-
-        return ZStack(alignment: .topLeading) {
+        ZStack(alignment: .topLeading) {
             SideEffect("HomeMainContent.animateToEnd",
-                       condition: { state.isSnappedToBottom && self.animatePosition == .start }) {
+                       condition: { !self.shouldUpdateMagicPositions && self.isSnappedToBottom && self.animatePosition == .start }) {
                 self.shouldUpdateMagicPositions = false
                 async {
                     self.animatePosition = .end
@@ -25,7 +28,7 @@ struct HomeMainContent: View {
             }
             
             SideEffect("HomeMainContent.animateToStart",
-                       condition: { !state.isSnappedToBottom && self.animatePosition == .end }) {
+                       condition: { !self.shouldUpdateMagicPositions && !self.isSnappedToBottom && self.animatePosition == .end }) {
                 self.shouldUpdateMagicPositions = false
                 async {
                     self.animatePosition = .start
@@ -38,49 +41,59 @@ struct HomeMainContent: View {
                       duration: 300 * (1 / ANIMATION_SPEED),
                       // TODO we need a separate "disableTracking" in homeStore that is manually set
                       // why? when hitting "map" toggle button when above snapToBottomAt this fails for now
-                      disableTracking: state.mapHeight >= state.snapToBottomAt
-                        || state.isSnappedToBottom
-                        || state.animationState == .controlled,
+                      disableTracking: disableMagicTracking,
                       onMoveComplete: {
-                        if !state.isSnappedToBottom {
+                        if !self.isSnappedToBottom {
                             self.shouldUpdateMagicPositions = true
                         }
                     }
             ) {
-                ZStack(alignment: .topLeading) {
-                    // results list below map
-                    ZStack {
-                        if Selectors.home.isOnSearchResults() {
-                            HomeSearchResultsView(
-                                state: Selectors.home.lastState()
-                            )
-                        } else {
-                            HomeContentExplore()
-                        }
-                    }
-                        .offset(y: state.mapHeight - state.searchBarYExtra)
-                    
-                    // results bar below map
-                    ZStack {
-                        if Selectors.home.isOnSearchResults() {
-                            HomeMapSearchResults()
-                        } else {
-                            HomeMapExplore()
-                        }
-                    }
-                        .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
-                        .offset(y: self.homeState.snappedToBottomMapHeight - cardRowHeight - App.searchBarTopHeight - 14)
-                }
-                // note! be sure to put any animation on this *inside* magic move
-                // or else it messes up the magic move measurement - you can test
-                // by turning on MagicMove's fileprivate debug flag to see
-                // also: only making it bouncy during drag to avoid more problems
-                .animation(.spring(response: 0.38), value: state.dragState == .idle)
-//                .animation(self.homeState.dragState != .idle ? .spring() : .none)
+                self.content
             }
-//            .frameFlex()
-//            .clipped()
         }
+    }
+}
+
+// renders on every frame of HomeViewState, so keep it fairly light
+struct HomeMainContent: View {
+    @Environment(\.geometry) var appGeometry
+    @EnvironmentObject var homeState: HomeViewState
+    @EnvironmentObject var store: AppStore
+    
+    @State var animatePosition: MagicItemPosition = .start
+    @State var shouldUpdateMagicPositions: Bool = true
+    
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            // results list below map
+            ZStack {
+                if Selectors.home.isOnSearchResults() {
+                    HomeSearchResultsView(
+                        state: Selectors.home.lastState()
+                    )
+                } else {
+                    HomeContentExplore()
+                }
+            }
+            .offset(y: self.homeState.mapHeight - self.homeState.searchBarYExtra)
+            
+            // results bar below map
+            ZStack {
+                if Selectors.home.isOnSearchResults() {
+                    HomeMapSearchResults()
+                } else {
+                    HomeMapExplore()
+                }
+            }
+            .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
+            .offset(y: self.homeState.snappedToBottomMapHeight - cardRowHeight - App.searchBarTopHeight - 14)
+        }
+        // note! be sure to put any animation on this *inside* magic move
+        // or else it messes up the magic move measurement - you can test
+        // by turning on MagicMove's fileprivate debug flag to see
+        // also: only making it bouncy during drag to avoid more problems
+        .animation(.spring(response: 0.38), value: self.homeState.dragState == .idle)
+        // .animation(self.homeState.dragState != .idle ? .spring() : .none)
     }
 }
 
@@ -261,9 +274,10 @@ struct HomeMainDrawerScrollEffects: View {
     @EnvironmentObject var homeState: HomeViewState
 
     var body: some View {
-        ScrollListener(throttle: 16.0) { frame in
-            self.homeState.setScrollY(frame)
-        }
+        Color.clear
+//        ScrollListener(throttle: 12.0) { frame in
+//            self.homeState.setScrollY(frame)
+//        }
     }
 }
 

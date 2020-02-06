@@ -6,9 +6,6 @@ struct HomeMainFilterBar: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var store: AppStore
     @State var wasOnSearchResults = false
-    @State var showCuisine = false
-    
-    @State private var favoriteColor = 0
     
     var body: some View {
         ZStack {
@@ -18,69 +15,43 @@ struct HomeMainFilterBar: View {
                 self.wasOnSearchResults = true
             }
             
-            ZStack(alignment: .leading) {
-//                if false {
-//                    HomeMainFilterFocused()
-//                }
-                Group {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
-                            Group {
-                                CustomButton2(action: {  }) {
-                                   Text("🍽")
-                                        .font(.system(size: 18))
-                                }
-                                
-                                Color.white.opacity(0.1).frame(width: 1)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    Group {
+                        CustomButton2(action: {  }) {
+                           Text("🍽")
+                                .font(.system(size: 18))
+                        }
+                        
+                        Color.white.opacity(0.1).frame(width: 1)
 //                                Image(systemName: "line.horizontal.3.decrease.circle")
 //                                    .foregroundColor(.white)
 //                                    .opacity(0.3)
-                                
-                                FilterButton(label: "$", fontSize: 20, action: {})
-                                    .frame(width: 50)
-                                FilterButton(label: "$$", fontSize: 18, action: {})
-                                    .frame(width: 60)
-                                FilterButton(label: "$$$", fontSize: 14, action: {})
-                                    .frame(width: 64)
-                                
-                                Color.white.opacity(0.1).frame(width: 1)
-                                
-                                FilterButton(label: "Delivers", fontSize: 15, action: {})
-                                    .frame(width: 92)
-                                
-                                FilterButton(label: "Open Now", fontSize: 15, action: {})
-                                    .frame(width: 110)
-                                    .environment(\.colorScheme, colorScheme == .light ? .dark : .light)
-                                
-                                FilterButton(label: "Healthy", fontSize: 15, action: {})
-    
-//                                FilterPicker(selection: $favoriteColor) {
-//                                    Text("Dish").tag(0)
-//                                    Text("Cuisine").tag(1)
-//                                }
-                                
-//                                Picker(selection: $favoriteColor) {
-//                                    Text("Dish").tag(0)
-//                                    Text("Cuisine").tag(1)
-//                                }.pickerStyle(SegmentedPickerStyle())
-
-//                                Spacer()
-
-                                
-//                                FilterButton(label: "Spice", action: {})
-//                                FilterButton(label: "Diet", action: {})
-//                                FilterButton(label: "Hidden Gem", action: filterAction)
-//                                FilterButton(label: "Lunch Spot", action: filterAction)
-//                                FilterButton(label: "Open Late", action: filterAction)
-                            }
-                        }
-                        .padding(.vertical, App.filterBarPad)
-                        .padding(.horizontal, 24)
+                        
+                        FilterButton(label: "$", fontSize: 20, action: {})
+                            .frame(width: 50)
+                        FilterButton(label: "$$", fontSize: 18, action: {})
+                            .frame(width: 60)
+                        FilterButton(label: "$$$", fontSize: 14, action: {})
+                            .frame(width: 64)
+                        
+                        Color.white.opacity(0.1).frame(width: 1)
+                        
+                        FilterButton(label: "Delivers", fontSize: 15, action: {})
+                            .frame(width: 92)
+                        
+                        FilterButton(label: "Open Now", fontSize: 15, action: {})
+                            .frame(width: 110)
+                            .environment(\.colorScheme, colorScheme == .light ? .dark : .light)
+                        
+                        FilterButton(label: "Healthy", fontSize: 15, action: {})
                     }
-                    .frame(height: App.filterBarHeight)
                 }
+                .padding(.vertical, App.filterBarPad)
+                .padding(.horizontal, 24)
             }
         }
+        .frame(height: App.filterBarHeight)
     }
 }
 

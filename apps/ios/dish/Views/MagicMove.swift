@@ -253,41 +253,46 @@ struct MagicItem<Content>: View where Content: View {
     var isDisabled: Bool {
         self.disableTracking || magicItemsStore.disableTracking
     }
+    
+    // split this out because we likely want to run it a frame after
+    func setupSideEffect(_ frame: CGRect) -> (String, Bool, MagicItemDescription) {
+        // off screen avoid doing things
+        let offYN = frame.minY + frame.height < 0
+        let offYP = frame.minY > Screen.fullHeight
+        let offXN = frame.minX + frame.width < 0
+        let offXP = frame.minX > Screen.width
+        let offScreen = offYN || offYP || offXN || offXP
+        let isOffScreen = self.items[self.id] != nil && offScreen == true
+        
+        let isMagicStoreAnimating = magicItemsStore.state != .done
+        
+        let item = MagicItemDescription(
+            view: self.contentView,
+            frame: frame,
+            id: self.id,
+            at: self.at
+        )
+        let curItem = self.items[self.id]
+        let hasChanged = curItem != item
+        
+        let name = "MagicItem \(self.at) \(self.id) -- \(frame.minX) \(frame.minY)"
+        let enabled = !self.isDisabled && !isOffScreen && !isMagicStoreAnimating && hasChanged
+        
+        return (name, enabled, item)
+    }
 
     var body: some View {
         return ZStack {
             self.content
-                .overlay(
-                    GeometryReader { geometry -> SideEffect in
-                        let frame = geometry.frame(in: .global)
-                        let name = "MagicItem \(self.at) \(self.id) -- \(frame.minX) \(frame.minY)"
-                        
-                        // off screen avoid doing things
-                        let offYN = frame.minY + frame.height < 0
-                        let offYP = frame.minY > Screen.fullHeight
-                        let offXN = frame.minX + frame.width < 0
-                        let offXP = frame.minX > Screen.width
-                        let offScreen = offYN || offYP || offXN || offXP
-                        let isOffScreen = self.items[self.id] != nil && offScreen == true
-                        
-                        let isMagicStoreAnimating = magicItemsStore.state != .done
-                        
-                        let item = MagicItemDescription(
-                            view: self.contentView,
-                            frame: frame,
-                            id: self.id,
-                            at: self.at
-                        )
-                        let curItem = self.items[self.id]
-                        let hasChanged = curItem != item
-                        
-                        let enabled = !self.isDisabled && !isOffScreen && !isMagicStoreAnimating && hasChanged
-                        
-                        return SideEffect(name, level: .debug, condition: { enabled }) {
-                            self.updateItem(item)
-                        }
-                    }
-            )
+//                .overlay(
+//                    GeometryReader { geometry -> SideEffect in
+//                        let frame = geometry.frame(in: .global)
+//                        let (name, enabled, item) = self.setupSideEffect(frame)
+//                        return SideEffect(name, level: .debug, debounce: 1, condition: { enabled }) {
+//                            self.updateItem(item)
+//                        }
+//                    }
+//            )
         }
             .opacity(
                 self.store.state == .animate ? OFF_OPACITY :

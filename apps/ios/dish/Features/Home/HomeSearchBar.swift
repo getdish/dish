@@ -70,12 +70,14 @@ struct HomeSearchBar: View {
         let scale: CGFloat = zoomed ? 1.2 : 1.2
         
         return Group {
-            RunOnce {
-                self.updatePlaceholder()
-            }
-            Run {
-                self.lastZoomed = zoomed
-            }
+//            RunOnce(name: "") {
+//                self.updatePlaceholder()
+//            }
+//            Run {
+//                if self.lastZoomed != zoomed {
+//                    self.lastZoomed = zoomed
+//                }
+//            }
             
             SearchInput(
                 placeholder: self.placeholder,

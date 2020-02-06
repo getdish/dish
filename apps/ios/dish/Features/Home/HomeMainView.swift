@@ -22,12 +22,12 @@ struct HomeMainView: View {
             PrintGeometryView("HomeMainView")
             
             // weird way to set appheight
-            Run {
-                guard let g = self.appGeometry else { return }
-                if self.state.appHeight != g.size.height {
-                    self.state.setAppHeight(g.size.height)
-                }
-            }
+//            Run {
+//                guard let g = self.appGeometry else { return }
+//                if self.state.appHeight != g.size.height {
+//                    self.state.setAppHeight(g.size.height)
+//                }
+//            }
         }
     }
 
@@ -61,28 +61,28 @@ struct HomeMainView: View {
                     }
                     
                     // MAP
-                    Group {
-                        // map
-                        DishMapView()
-                            .frame(height: self.appGeometry?.size.height)
-                            .offset(y: state.showCamera ? -Screen.height : 0)
-                            .opacity(state.showCamera ? 0 : 1)
-                            .animation(.spring(response: 0.8))
-                            .rotationEffect(state.showCamera ? .degrees(-10) : .degrees(0))
-                            .frameLimitedToScreen()
-                        
-                        // map mask a bit
-                        HomeMapMask()
-                            .offset(y: mapHeight - 20)
-                            .animation(.spring(response: 0.4))
-
-                        // map fade out at bottom
-                        VStack {
-                            Spacer()
-                            HomeMapBackgroundGradient()
-                                .frame(height: (self.appGeometry?.size.height ?? 0) - state.mapHeight)
-                        }
-                    }
+//                    Group {
+//                        // map
+//                        DishMapView()
+//                            .frame(height: self.appGeometry?.size.height)
+//                            .offset(y: state.showCamera ? -Screen.height : 0)
+//                            .opacity(state.showCamera ? 0 : 1)
+//                            .animation(.spring(response: 0.8))
+//                            .rotationEffect(state.showCamera ? .degrees(-10) : .degrees(0))
+//                            .frameLimitedToScreen()
+//
+//                        // map mask a bit
+//                        HomeMapMask()
+//                            .offset(y: mapHeight - 20)
+//                            .animation(.spring(response: 0.4))
+//
+//                        // map fade out at bottom
+//                        VStack {
+//                            Spacer()
+//                            HomeMapBackgroundGradient()
+//                                .frame(height: (self.appGeometry?.size.height ?? 0) - state.mapHeight)
+//                        }
+//                    }
                 
                     // CONTENT / CHROME
                     Group {
@@ -94,7 +94,14 @@ struct HomeMainView: View {
                         .frameLimitedToScreen()
 
                         // results
-                        HomeMainContent()
+                        HomeMainContentContainer(
+                            isSnappedToBottom: state.isSnappedToBottom,
+                            disableMagicTracking: state.mapHeight >= state.snapToBottomAt
+                                || state.isSnappedToBottom
+                                || state.animationState == .controlled
+                        ) {
+                            HomeMainContent()
+                        }
                             .frameLimitedToScreen()
                             .offset(y: state.showCamera ? Screen.height : 0)
 
@@ -103,8 +110,8 @@ struct HomeMainView: View {
                             HomeMainFilterBar()
                             Spacer()
                         }
-                        .frameLimitedToScreen()
-                        .offset(y: mapHeight + App.searchBarHeight / 2)
+                            .frameLimitedToScreen()
+                            .offset(y: mapHeight + App.searchBarHeight / 2)
                         //                        .animation(.spring())
                     }
                 
@@ -301,15 +308,15 @@ struct SearchBarLocationLabel: View {
                     .cornerRadius(10)
                 }
             }
-            .overlay(
-                GeometryReader { geo in
-                    SideEffect("SearchBarLocationLabel update size", condition: {
-                        geo.size.width != homeViewState.locationLabelWidth
-                    }) {
-                        homeViewState.setLocationLabelWidth(geo.size.width)
-                    }
-                }
-            )
+//            .overlay(
+//                GeometryReader { geo in
+//                    SideEffect("SearchBarLocationLabel update size", condition: {
+//                        geo.size.width != homeViewState.locationLabelWidth
+//                    }) {
+//                        homeViewState.setLocationLabelWidth(geo.size.width)
+//                    }
+//                }
+//            )
         }
     }
 }

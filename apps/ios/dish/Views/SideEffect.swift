@@ -31,14 +31,17 @@ struct SideEffect: View {
     }
     
     var body: some View {
-        Run(debounce: debounce, throttle: throttle) {
-            if let condition = self.condition, condition() == false {
-                return
+        Group {
+            if self.condition?() == false {
+                Color.clear
+            } else {
+                Run(self.name, debounce: debounce, throttle: throttle) {
+                    if self.level.rawValue >= DEBUG_SIDE_EFFECTS.rawValue {
+                        print(" ⏩ \(self.name)")
+                    }
+                    self.block()
+                }
             }
-            if self.level.rawValue >= DEBUG_SIDE_EFFECTS.rawValue {
-                print(" ⏩ \(self.name)")
-            }
-            self.block()
         }
     }
 }
@@ -46,13 +49,15 @@ struct SideEffect: View {
 // prefer this ^ except for extremely-often-running things
 
 struct Run: View {
+    let name: String
     let debounce: Double
     let throttle: Double
     let block: () -> Void
     @State var lastRun: AnyCancellable? = nil
     @State var lastRunAt: NSDate = NSDate()
     
-    init(debounce: Double = 0, throttle: Double = 0, block: @escaping () -> Void) {
+    init(_ name: String, debounce: Double = 0, throttle: Double = 0, block: @escaping () -> Void) {
+        self.name = name
         self.debounce = debounce
         self.throttle = throttle
         self.block = block
@@ -65,6 +70,7 @@ struct Run: View {
     var body: some View {
         if throttle > 0 {
             if abs(lastRunAt.timeIntervalSinceNow) * 1000 >= throttle {
+                print("Run.throttled \(self.name)")
                 async {
                     self.block()
                     self.lastRunAt = NSDate()
@@ -76,6 +82,7 @@ struct Run: View {
             var cancelled = 1
             async(debounce) {
                 if cancelled > 1 { return }
+                print("Run.debounced \(self.name)")
                 self.block()
             }
             async {
@@ -85,6 +92,7 @@ struct Run: View {
             }
         } else {
             async {
+                print("Run \(self.name)")
                 self.block()
             }
         }
@@ -94,10 +102,11 @@ struct Run: View {
 
 struct RunOnce: View {
     @State var hasRunOnce = false
+    let name: String
     var block: () -> Void
     
     var body: some View {
-        Run {
+        Run(self.name) {
             if self.hasRunOnce { return }
             self.block()
             self.hasRunOnce = true
