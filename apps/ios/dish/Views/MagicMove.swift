@@ -284,15 +284,15 @@ struct MagicItem<Content>: View where Content: View {
     var body: some View {
         return ZStack {
             self.content
-//                .overlay(
-//                    GeometryReader { geometry -> SideEffect in
-//                        let frame = geometry.frame(in: .global)
-//                        let (name, enabled, item) = self.setupSideEffect(frame)
-//                        return SideEffect(name, level: .debug, debounce: 1, condition: { enabled }) {
-//                            self.updateItem(item)
-//                        }
-//                    }
-//            )
+                .overlay(
+                    GeometryReader { geometry -> SideEffect in
+                        let frame = geometry.frame(in: .global)
+                        let (name, enabled, item) = self.setupSideEffect(frame)
+                        return SideEffect(name, level: .debug, debounce: 1, condition: { enabled }) {
+                            self.updateItem(item)
+                        }
+                    }
+            )
         }
             .opacity(
                 self.store.state == .animate ? OFF_OPACITY :

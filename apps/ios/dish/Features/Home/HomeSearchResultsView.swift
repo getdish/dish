@@ -7,7 +7,7 @@ struct HomeSearchResultsView: View {
         ZStack {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 20) {
-//                    ClearKeyboardOnScroll()
+                    ClearKeyboardOnScroll()
                     
                     Spacer().frame(height: 20)
 
