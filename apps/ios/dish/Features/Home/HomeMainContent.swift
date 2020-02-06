@@ -105,38 +105,49 @@ struct HomeMapExplore: View {
     }
 }
 
+fileprivate let extraHeight: CGFloat = 40
+
 struct HomeMapSearchResults: View {
     @EnvironmentObject var store: AppStore
-    
-    let extraHeight: CGFloat = 40
+    @State var index = 0
     
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 16) {
-                ForEach(Selectors.home.lastState().searchResults.results) { item in
-                    return DishRestaurantCard(
-                        restaurant: RestaurantItem(
-                            id: item.id,
-                            name: item.name,
-                            imageName: "turtlerock",
-                            address: "",
-                            phone: "",
-                            tags: [],
-                            rating: 8
-                        ),
-                        aspectRatio: 1.8,
-                        isMini: true,
-                        at: .end
+        ScrollViewEnhanced(
+            index: self.$index,
+            direction: .horizontal,
+            showsIndicators: false,
+            pages: Selectors.home.lastState().searchResults.results.map { item in
+                MapResultRestaurantCard(
+                    restaurant: RestaurantItem(
+                        id: item.id,
+                        name: item.name,
+                        imageName: "turtlerock",
+                        address: "",
+                        phone: "",
+                        tags: [],
+                        rating: 8
                     )
-                        .frame(width: 210, height: cardRowHeight - 40 + self.extraHeight)
-                }
+                )
             }
-            .frame(height: cardRowHeight - 40 + self.extraHeight)
-            .padding(20)
-        }
-        .offset(y: -extraHeight)
+        )
+        .frame(width: Screen.width, height: cardRowHeight - 40 + extraHeight)
+        .offset(y: -extraHeight + 10)
     }
 }
+
+struct MapResultRestaurantCard: View, Identifiable {
+    var restaurant: RestaurantItem
+    var id: String { self.restaurant.id }
+    var body: some View {
+        DishRestaurantCard(
+            restaurant: self.restaurant,
+            isMini: true,
+            at: .end
+        )
+            .frame(width: Screen.width - 40, height: cardRowHeight - 40 + extraHeight)
+    }
+}
+
 
 struct HomeContentExplore: View {
     @State var index: Int = 0
@@ -310,57 +321,5 @@ struct HomeMainContentSearchPage: View {
 //            display: .card
 //        )
 //            .frame(width: 150, height: cardRowHeight - 40)
-//    }
-//}
-
-//struct HomeMapSearchResults: View {
-//    @EnvironmentObject var store: AppStore
-//    @State var index = 0
-//
-//    var body: some View {
-//        ScrollViewEnhanced(
-//            index: self.$index,
-//            direction: .horizontal,
-//            showsIndicators: false,
-//            pages: Selectors.home.lastState().searchResults.results.map { item in
-//                MapResultRestaurantCard(
-//                    restaurant: RestaurantItem(
-//                        id: item.id,
-//                        name: item.name,
-//                        imageName: "turtlerock",
-//                        address: "",
-//                        phone: "",
-//                        tags: [],
-//                        rating: 8
-//                    )
-//                )
-//            }
-//        )
-//            //        .frame(height: cardRowHeight - 40)
-//            //        .padding(20)
-//            .offset(y: -40)
-//    }
-//}
-
-//struct MapResultRestaurantCard: View, Identifiable {
-//    var restaurant: RestaurantItem
-//    var id: String { self.restaurant.id }
-//    var body: some View {
-//        DishRestaurantCard(
-//            restaurant: RestaurantItem(
-//                id: restaurant.id,
-//                name: restaurant.name,
-//                imageName: "turtlerock",
-//                address: "",
-//                phone: "",
-//                tags: [],
-//                rating: 8
-//            ),
-//            aspectRatio: 1.8,
-//            isMini: true,
-//            at: .end
-//        )
-//            .frame(width: 140, height: cardRowHeight - 40)
-//            .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
 //    }
 //}

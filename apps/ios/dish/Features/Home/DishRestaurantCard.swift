@@ -3,7 +3,6 @@ import SwiftUI
 struct DishRestaurantCard: View, Identifiable {
     @ObservedObject var restaurant: RestaurantItem
     var id: String { restaurant.id }
-    var aspectRatio: CGFloat = 2 / 2
     var isMini: Bool = false
     var at: MagicItemPosition = .start
     
@@ -24,20 +23,25 @@ struct DishRestaurantCard: View, Identifiable {
     }
     
     var body: some View {
-        MagicItem("restaurant-\(id)", at: at) {
-            ZStack {
-                self.restaurant.image
-                    .resizable()
-                    .aspectRatio(self.aspectRatio, contentMode: .fit)
-                    .overlay(
-                        Rectangle().fill(self.gradientBottom)
-                )
-                    .overlay(
-                        self.textOverlay
-                )
-                    .cornerRadius(16)
-                    .clipped()
-                    .shadow(color: Color.black.opacity(0.4), radius: 14, x: 0, y: 3)
+        GeometryReader { geo in
+            MagicItem("restaurant-\(self.id)", at: self.at) {
+                ZStack {
+                    VStack {
+                        self.restaurant.image
+                            .resizable()
+                            .scaledToFill()
+                    }
+                    .frame(width: geo.size.width, height: max(geo.size.height, 40))
+                        .overlay(
+                            Rectangle().fill(self.gradientBottom)
+                    )
+                        .overlay(
+                            self.textOverlay
+                    )
+                        .cornerRadius(16)
+                        .clipped()
+                        .shadow(color: Color.black.opacity(0.4), radius: 9, x: 0, y: 3)
+                }
             }
         }
     }
