@@ -56,7 +56,9 @@ struct DishCardView: View, Identifiable, Equatable {
             VStack(alignment: .leading) {
                 Text(self.dish.name)
                     .font(.system(size: 16))
-                    .fontWeight(.bold)
+                    .fontWeight(.black)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(1)
             }
             .padding()
         }
