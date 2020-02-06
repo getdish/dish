@@ -178,7 +178,7 @@ struct HomeMainView: View {
                         .frame(width: state.dragState == .pager ? Screen.width : 0)
                 }
                 .clipped() // dont remove fixes bug cant click SearchBar
-                .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
+//                .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
                 .simultaneousGesture(self.dragGesture)
             }
             .environmentObject(self.state)

@@ -209,7 +209,7 @@ class HomeViewState: ObservableObject {
         return false
     }
     
-    func toggleMap() {
+    func toggleSnappedToBottom() {
         log.info()
         self.snapToBottom(!isSnappedToBottom)
     }
@@ -259,10 +259,35 @@ class HomeViewState: ObservableObject {
         log.info("\(state) duration: \(duration)")
         self.setAnimationState(state, duration)
         
-        async(1) { // delay so it updates animationState first in body
+        async(3) { // delay so it updates animationState first in body
             withAnimation(animation) {
                 body()
             }
+        }
+    }
+    
+    func snapToBottom(_ toBottom: Bool = true) {
+        log.info()
+        // prevent dragging after snap
+        self.setDragState(.off)
+        
+        let duration = 280.0
+        
+        self.animate(
+            Animation.spring(response: 0.28, dampingFraction: 0.9).speed(ANIMATION_SPEED),
+            duration: duration
+        ) {
+            self.searchBarYExtra = 0
+            self.scrollState.setScrollY(0)
+            if toBottom {
+                self.y = self.snappedToBottomMapHeight
+            } else {
+                self.y = self.startSnapToBottomAt
+            }
+        }
+        
+        async(duration) {
+            self.setDragState(.idle)
         }
     }
 
@@ -358,29 +383,6 @@ class HomeViewState: ObservableObject {
             if self.searchBarYExtra != 0 {
                 self.searchBarYExtra = 0
             }
-        }
-    }
-    
-    func snapToBottom(_ toBottom: Bool = true) {
-        log.info()
-        // prevent dragging after snap
-        self.setDragState(.off)
-        
-        self.animate(
-            Animation.spring(response: 0.5).speed(ANIMATION_SPEED),
-            duration: 300
-        ) {
-            self.scrollState.setScrollY(0)
-            self.searchBarYExtra = 0
-            if toBottom {
-                self.y = self.snappedToBottomMapHeight
-            } else {
-                self.y = self.startSnapToBottomAt
-            }
-        }
-        
-        async(300) {
-            self.setDragState(.idle)
         }
     }
     

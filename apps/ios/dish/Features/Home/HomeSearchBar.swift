@@ -6,7 +6,11 @@ struct SearchToTagColor {
     static let filter = Color(red: 0.6, green: 0.2, blue: 0.4, opacity: 0.5)
 }
 
-struct HomeSearchBar: View {
+struct HomeSearchBar: View, Equatable {
+    static func == (lhs: HomeSearchBar, rhs: HomeSearchBar) -> Bool {
+        true
+    }
+    
     @State var searchText = ""
     @State var textField: UITextField? = nil
     @State var isFirstResponder = false
@@ -65,6 +69,19 @@ struct HomeSearchBar: View {
         }
     }
     
+    let after = AnyView(HomeSearchBarAfterView(scale: 1.2))
+    
+    func onClear() {
+        // go back on empty search clear
+        if Selectors.home.isOnSearchResults() && App.store.state.home.viewStates.last!.searchResults.results.count == 0 {
+            App.store.send(.home(.pop))
+        }
+        // focus keyboard again on clear if not focused
+        if self.keyboard.state.height == 0 {
+            self.focusKeyboard()
+        }
+    }
+    
     var body: some View {
         let zoomed = keyboard.state.height > 0
         let scale: CGFloat = zoomed ? 1.2 : 1.2
@@ -87,27 +104,14 @@ struct HomeSearchBar: View {
                 sizeRadius: 2.0,
                 icon: icon,
                 showCancelInside: true,
-                onClear: {
-                    // go back on empty search clear
-                    if Selectors.home.isOnSearchResults() && App.store.state.home.viewStates.last!.searchResults.results.count == 0 {
-                        App.store.send(.home(.pop))
-                    }
-                    // focus keyboard again on clear if not focused
-                    if self.keyboard.state.height == 0 {
-                        self.focusKeyboard()
-                    }
-            },
-                after: AnyView(HomeSearchBarAfterView(scale: scale)),
+                onClear: self.onClear,
+                after: after,
                 isFirstResponder: isFirstResponder,
-                //            onTextField: { field in
-                //                print("set text field")
-                //                self.textField = field
-                //            },
                 searchText: self.homeSearch,
                 tags: self.homeTags
             )
                 .shadow(color: Color.black.opacity(0.35), radius: 8, x: 0, y: 3)
-            .animation(.spring(), value: zoomed != self.lastZoomed)
+                .animation(.spring(), value: zoomed != self.lastZoomed)
         }
     }
 }
@@ -121,7 +125,7 @@ struct HomeSearchBarAfterView: View {
     var body: some View {
         HStack {
             Button(action: {
-                self.homeState.toggleMap()
+                self.homeState.toggleSnappedToBottom()
             }) {
                 Group {
                     if self.homeState.isSnappedToBottom {

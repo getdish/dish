@@ -130,7 +130,6 @@ struct DishMapView: View {
 //                    }
                 }
                 .frame(height: appHeight)
-                .shadow(color: Color.black, radius: 20, x: 0, y: 0)
                 .clipped()
                 
                 Spacer()

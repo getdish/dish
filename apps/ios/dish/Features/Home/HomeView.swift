@@ -67,12 +67,6 @@ struct HomeViewInner: View {
                     
                     // home page
                     HomeMainView()
-                        .shadow(
-                            color: Color.black.opacity(self.shadowStr),
-                            radius: 60,
-                            x: 0,
-                            y: 0
-                        )
                         .zIndex(2)
                     
                     // third page

@@ -127,18 +127,17 @@ struct SearchInput: View {
                         }
                     }
                     
-                    CustomTextField(
-                        placeholder: hasTags ? "" : self.placeholder,
-                        text: self.$searchText,
-                        isFirstResponder: self.isFirstResponder,
-                        onEditingChanged: self.handleEditingChanged
-                    )
-//                        .introspectTextField { textField in
-//                            print("!!!!!!! we got a text field here \(textField)")
-//                            if let cb = self.onTextField {
-//                                cb(textField)
-//                            }
-//                    }
+                    // TODO (performance / @majid) - snapToBottom(false) is jittery, if you replace
+                    // this next view with Color.red you'll see it goes fast... why?
+                    TextField("ok", text: self.$searchText)
+                        .rotationEffect(.degrees(0.01))
+                    
+//                    CustomTextField(
+//                        placeholder: hasTags ? "" : self.placeholder,
+//                        text: self.$searchText,
+//                        isFirstResponder: self.isFirstResponder,
+//                        onEditingChanged: self.handleEditingChanged
+//                    )
 //                        .disableAutocorrection(true)
 //                        .font(.system(size: fontSize))
 //                        .foregroundColor(.primary)
