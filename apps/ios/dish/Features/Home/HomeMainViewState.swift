@@ -34,6 +34,7 @@ class HomeViewState: ObservableObject {
     @Published private(set) var animationState: HomeAnimationState = .idle
     @Published private(set) var showCamera = false
     @Published private(set) var keyboardHeight: CGFloat = 0
+    @Published private(set) var locationLabelWidth: CGFloat = 0
     
     private var scrollState = HomeMainScrollState()
     private var activeScrollView: UIScrollView? = nil
@@ -215,6 +216,10 @@ class HomeViewState: ObservableObject {
     
     private var startDragAt: CGFloat = 0
     private var lastDragY: CGFloat = 0
+    
+    func setLocationLabelWidth(_ width: CGFloat) {
+        self.locationLabelWidth = width
+    }
     
     func setDragState(_ next: HomeDragState) {
         log.info()

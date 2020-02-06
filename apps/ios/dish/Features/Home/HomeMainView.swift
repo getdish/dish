@@ -92,9 +92,6 @@ struct HomeMainView: View {
                             Spacer()
                         }
                         .frameLimitedToScreen()
-                        .offset(y: state.isSnappedToBottom
-                            ? 0
-                            : state.mapHeight - App.searchBarHeight - 56)
 
                         // results
                         HomeMainContent()
@@ -116,7 +113,7 @@ struct HomeMainView: View {
                         // searchbar bg
                         SearchBarBg(
                             width: Screen.width - 24,
-                            topWidth: 134,
+                            topWidth: state.locationLabelWidth + 16,
                             topHeight: App.searchBarTopHeight,
                             searchHeight: App.searchBarHeight
                         )
@@ -126,7 +123,10 @@ struct HomeMainView: View {
                                 y: mapHeight + state.searchBarYExtra - App.searchBarHeight / 2 - App.searchBarTopHeight
                             )
                         
-                        SearchBarLocation()
+                        HStack {
+                            SearchBarLocationLabel()
+                            Spacer()
+                        }
                             .offset(
                                 x: 46,
                                 y: mapHeight + state.searchBarYExtra - App.searchBarHeight / 2 - App.searchBarTopHeight + 5
@@ -272,34 +272,44 @@ struct HomeMapBackgroundGradient: View {
     }
 }
 
-struct SearchBarLocation: View {
+struct SearchBarLocationLabel: View {
     @EnvironmentObject var store: AppStore
 
     var body: some View {
-        Group {
-            if self.store.state.map.locationLabel != "" {
-                Button(action: {
-                    App.store.send(.map(.moveToLocation(.init(.current))))
-                }) {
-                    HStack(spacing: 4) {
-                        Text("In")
+        let mapLabel = self.store.state.map.locationLabel
+        let label = mapLabel == "" ? "Map Area" : mapLabel
+        
+        return HStack {
+            Button(action: {
+                App.store.send(.map(.moveToLocation(.init(.current))))
+            }) {
+                HStack(spacing: 4) {
+                    Text("In")
+                        .font(.system(size: 13))
+                        .fontWeight(.semibold)
+                        .foregroundColor(Color.black.opacity(0.4))
+                    
+                    VStack {
+                        Text(label)
                             .font(.system(size: 13))
-                            .fontWeight(.semibold)
-                            .foregroundColor(Color.black.opacity(0.4))
-                        
-                        VStack {
-                            Text(self.store.state.map.locationLabel)
-                                .font(.system(size: 13))
-                                .fontWeight(.bold)
-                                .foregroundColor(.blue)
-                        }
-                        .padding(.vertical, 3)
-                        .padding(.horizontal, 5)
-                        .background(Color(.lightGray).opacity(0.2))
-                        .cornerRadius(10)
+                            .fontWeight(.bold)
+                            .foregroundColor(.blue)
                     }
+                    .padding(.vertical, 3)
+                    .padding(.horizontal, 5)
+                    .background(Color(.lightGray).opacity(0.2))
+                    .cornerRadius(10)
                 }
             }
+            .overlay(
+                GeometryReader { geo in
+                    SideEffect("SearchBarLocationLabel update size", condition: {
+                        geo.size.width != homeViewState.locationLabelWidth
+                    }) {
+                        homeViewState.setLocationLabelWidth(geo.size.width)
+                    }
+                }
+            )
         }
     }
 }

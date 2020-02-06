@@ -7,27 +7,29 @@ fileprivate let totalHeight = topPad + bottomPad + 40
 
 struct TopNavViewContent: View {
     var body: some View {
-        ZStack {
-            TopNavSearchResults()
-            
-            VStack {
-                VStack {
-                    HStack(spacing: 12) {
-                        ZStack {
-                            TopNavHome()
-                            CameraTopNav()
-                        }
-                    }
-                    .padding(.horizontal)
-                }
-                .padding(.top, topPad)
-                .padding(.bottom, bottomPad)
-                .frame(maxHeight: totalHeight, alignment: Alignment.top)
+        VStack {
+            ZStack {
+                TopNavSearchResults()
                 
-                Spacer()
+                VStack {
+                    VStack {
+                        HStack(spacing: 12) {
+                            ZStack {
+                                TopNavHome()
+                                CameraTopNav()
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                    .padding(.top, topPad)
+                    .padding(.bottom, bottomPad)
+                    .frame(maxHeight: totalHeight, alignment: Alignment.top)
+                    
+                    Spacer()
+                }
             }
         }
-        .padding(.top, 0)
+        .padding(.top, 10)
     }
 }
 
@@ -52,7 +54,7 @@ struct TopNavButtonStyle: ViewModifier {
 
             }
         }
-            .cornerRadius(20)
+            .cornerRadius(8)
             .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
             .foregroundColor(.white)
     }
@@ -103,7 +105,7 @@ struct TopNavHome: View {
                                 Image(systemName: "location.fill")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 14, height: 14)
+                                .frame(width: 16, height: 16)
                             }
 
                         }

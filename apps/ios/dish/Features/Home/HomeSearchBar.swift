@@ -50,6 +50,21 @@ struct HomeSearchBar: View {
     
     @State var lastZoomed = false
     
+    var icon: AnyView {
+        if store.state.home.viewStates.count > 1 {
+            return AnyView(
+                Image(systemName: "chevron.left").onTapGesture {
+                    self.keyboard.hide()
+                    self.store.send(.home(.pop))
+                }
+            )
+        } else {
+            return AnyView(
+                Text("🔥")
+            )
+        }
+    }
+    
     var body: some View {
         let zoomed = keyboard.state.height > 0
         let scale: CGFloat = zoomed ? 1.2 : 1.2
@@ -90,21 +105,6 @@ struct HomeSearchBar: View {
                 tags: self.homeTags
             )
             .animation(.spring(), value: zoomed != self.lastZoomed)
-        }
-    }
-    
-    var icon: AnyView {
-        if store.state.home.viewStates.count > 1 {
-            return AnyView(
-                Image(systemName: "chevron.left").onTapGesture {
-                    self.keyboard.hide()
-                    self.store.send(.home(.pop))
-                }
-            )
-        } else {
-            return AnyView(
-                Text("🔥")
-            )
         }
     }
 }
