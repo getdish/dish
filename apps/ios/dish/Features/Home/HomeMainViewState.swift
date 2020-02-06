@@ -189,7 +189,7 @@ class HomeViewState: ObservableObject {
     }
     
     var snappedToBottomMapHeight: CGFloat {
-        appHeight - 30 - App.filterBarHeight - App.searchBarHeight / 2
+        appHeight - 37 - App.filterBarHeight - App.searchBarHeight / 2
     }
     
     var wasSnappedToBottom = false
