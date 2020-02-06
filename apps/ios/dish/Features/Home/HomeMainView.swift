@@ -1,8 +1,6 @@
 import SwiftUI
 import Combine
 
-fileprivate let searchBarTopHeight: CGFloat = 26
-
 struct HomeMainView: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard
@@ -119,19 +117,19 @@ struct HomeMainView: View {
                         SearchBarBg(
                             width: Screen.width - 24,
                             topWidth: 134,
-                            topHeight: searchBarTopHeight,
+                            topHeight: App.searchBarTopHeight,
                             searchHeight: App.searchBarHeight
                         )
                             .frame(height: App.searchBarHeight)
                             .offset(
                                 x: 12,
-                                y: mapHeight + state.searchBarYExtra - App.searchBarHeight / 2 - searchBarTopHeight
+                                y: mapHeight + state.searchBarYExtra - App.searchBarHeight / 2 - App.searchBarTopHeight
                             )
                         
                         SearchBarLocation()
                             .offset(
                                 x: 46,
-                                y: mapHeight + state.searchBarYExtra - App.searchBarHeight / 2 - searchBarTopHeight + 3
+                                y: mapHeight + state.searchBarYExtra - App.searchBarHeight / 2 - App.searchBarTopHeight + 5
                             )
                         
                         // searchbar
@@ -264,8 +262,8 @@ struct HomeMapBackgroundGradient: View {
         LinearGradient(
             gradient: Gradient(
                 colors: self.colorScheme == .light
-                    ? [Color.black.opacity(0), Color.black.opacity(0), Color.black.opacity(0.2), Color(white: 0.1).opacity(0.55)]
-                    : [Color.black.opacity(0), Color.black.opacity(0), Color.black.opacity(0.2), Color(white: 0).opacity(0.55)]
+                    ? [Color.black.opacity(0), Color.black.opacity(0.2), Color(white: 0.1).opacity(0.55)]
+                    : [Color.black.opacity(0), Color.black.opacity(0.2), Color(white: 0).opacity(0.55)]
             ),
             startPoint: .top,
             endPoint: .bottom

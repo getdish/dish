@@ -69,7 +69,7 @@ struct HomeMainContent: View {
                         }
                     }
                         .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
-                        .offset(y: self.homeState.snappedToBottomMapHeight - cardRowHeight - App.filterBarHeight)
+                        .offset(y: self.homeState.snappedToBottomMapHeight - cardRowHeight - App.searchBarTopHeight - 10)
                 }
                 // note! be sure to put any animation on this *inside* magic move
                 // or else it messes up the magic move measurement - you can test

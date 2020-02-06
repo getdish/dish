@@ -21,6 +21,7 @@ class AppInstance {
     // y so slow
     let enableMapAutoZoom = false
     
+    let searchBarTopHeight: CGFloat = 26
     let searchBarHeight: CGFloat = 50
     let topNavHeight: CGFloat = 54
     let topNavPad: CGFloat = 14
