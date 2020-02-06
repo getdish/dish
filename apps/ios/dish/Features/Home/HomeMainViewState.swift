@@ -267,7 +267,6 @@ class HomeViewState: ObservableObject {
     }
 
     func setY(_ dragY: CGFloat) {
-        print("setY dragState \(dragState)")
         if dragState == .pager { return }
         if lastDragY == dragY { return }
         lastDragY = dragY
