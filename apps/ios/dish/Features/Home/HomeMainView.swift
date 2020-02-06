@@ -336,7 +336,7 @@ struct HomeMapMask: View {
     var body: some View {
         LinearGradient(
             gradient: Gradient(
-                colors: [Color(white: 0).opacity(0.7), Color(white: 0).opacity(0.25), Color.black.opacity(0)]
+                colors: [Color(white: 0).opacity(0.6), Color(white: 0).opacity(0.25), Color.black.opacity(0)]
             ),
             startPoint: .top,
             endPoint: .bottom
