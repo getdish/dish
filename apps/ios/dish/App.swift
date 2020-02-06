@@ -19,7 +19,7 @@ class AppInstance {
     let queueMain = DispatchQueue.main
     let magicItems = magicItemsStore
     // y so slow
-    let enableMapAutoZoom = false
+    let enableMapAutoZoom = true
     
     let searchBarTopHeight: CGFloat = 26
     let searchBarHeight: CGFloat = 50

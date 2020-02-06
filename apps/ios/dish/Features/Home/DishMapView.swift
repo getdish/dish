@@ -109,25 +109,25 @@ struct DishMapView: View {
                         }
                     }
                     
-                    if self.homeState.isNearTop {
-                        HStack {
-                            CustomButton(action: {
-                                self.mapView?.zoomOut()
-                            }) {
-                                MapButton(icon: "minus.magnifyingglass")
-                            }
-                            .frame(height: homeState.mapHeight)
-                            Spacer()
-                            CustomButton(action: {
-                                self.mapView?.zoomIn()
-                            }) {
-                                MapButton(icon: "plus.magnifyingglass")
-                            }
-                            .frame(height: homeState.mapHeight)
-                        }
-                        .frame(height: homeState.mapHeight)
-                        .animation(.spring())
-                    }
+//                    if self.homeState.isNearTop {
+//                        HStack {
+//                            CustomButton(action: {
+//                                self.mapView?.zoomOut()
+//                            }) {
+//                                MapButton(icon: "minus.magnifyingglass")
+//                            }
+//                            .frame(height: homeState.mapHeight)
+//                            Spacer()
+//                            CustomButton(action: {
+//                                self.mapView?.zoomIn()
+//                            }) {
+//                                MapButton(icon: "plus.magnifyingglass")
+//                            }
+//                            .frame(height: homeState.mapHeight)
+//                        }
+//                        .frame(height: homeState.mapHeight)
+//                        .animation(.spring())
+//                    }
                 }
                 .frame(height: appHeight)
                 .shadow(color: Color.black, radius: 20, x: 0, y: 0)
@@ -252,28 +252,6 @@ struct MapButton: View {
                 }
                 .padding(1)
         )
-    }
-}
-
-struct DishMapControls: View {
-    var body: some View {
-        VStack {
-            HStack {
-                Spacer()
-                VStack(spacing: 0) {
-                    Button(action: {}) { Image(systemName: "plus.magnifyingglass") }
-                        .buttonStyle(MapButtonStyle())
-                        .cornerRadius(5, antialiased: true, corners: [.topLeft, .topRight])
-                        .shadow(color: Color.black.opacity(0.25), radius: 4, y: 2)
-                    Button(action: {}) { Image(systemName: "minus.magnifyingglass") }
-                        .buttonStyle(MapButtonStyle())
-                        .cornerRadius(5, antialiased: true, corners: [.bottomLeft, .bottomRight])
-                        .shadow(color: Color.black.opacity(0.25), radius: 4, y: 2)
-                }
-            }
-            .padding()
-            .padding(.top, Screen.statusBarHeight)
-        }
     }
 }
 

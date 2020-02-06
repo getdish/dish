@@ -108,6 +108,8 @@ struct HomeMapExplore: View {
 struct HomeMapSearchResults: View {
     @EnvironmentObject var store: AppStore
     
+    let extraHeight: CGFloat = 40
+    
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
@@ -126,14 +128,13 @@ struct HomeMapSearchResults: View {
                         isMini: true,
                         at: .end
                     )
-                        .frame(width: 140, height: cardRowHeight - 40)
-                        .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
+                        .frame(width: 210, height: cardRowHeight - 40 + self.extraHeight)
                 }
             }
-            .frame(height: cardRowHeight - 40)
+            .frame(height: cardRowHeight - 40 + self.extraHeight)
             .padding(20)
         }
-        .offset(y: -40)
+        .offset(y: -extraHeight)
     }
 }
 

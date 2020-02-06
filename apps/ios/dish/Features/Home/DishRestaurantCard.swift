@@ -90,7 +90,7 @@ struct DishRestaurantCard: View, Identifiable {
                 }
                 
             }
-            .padding(isMini ? 4 : 16)
+            .padding(isMini ? 8 : 16)
             
             
             HStack {

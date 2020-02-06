@@ -159,13 +159,13 @@ class HomeViewState: ObservableObject {
         return hasScrolled != .none
     }
     
-    let mapMinHeight: CGFloat = max(
-        nearTopAtVal - 1,
-        Screen.statusBarHeight + App.searchBarHeight + App.topNavHeight + 50
-    )
+    var mapMinHeight: CGFloat {
+        Screen.statusBarHeight + App.searchBarHeight + 10
+    }
     
     var mapMaxHeight: CGFloat {
-        appHeight - keyboardHeight - App.searchBarHeight / 2
+        appHeight - App.searchBarHeight / 2
+//         - keyboardHeight
     }
     
     var mapHeight: CGFloat {
