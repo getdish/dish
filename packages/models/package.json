@@ -11,7 +11,8 @@
     "test:watch": "ava test/* --watch"
   },
   "dependencies": {
-    "axios": "^0.19.1"
+    "axios": "^0.19.1",
+    "json-to-graphql-query": "^2.0.0"
   },
   "devDependencies": {
     "@types/node": "^13.1.7",

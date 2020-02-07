@@ -15,7 +15,7 @@ const scrape_fixture: Partial<Scrape> = {
 }
 
 test.beforeEach(async t => {
-  await Scrape.deleteBySourceId('abc123')
+  await Scrape.deleteAllBy('id_from_source', 'abc123')
   let scrape = new Scrape(scrape_fixture)
   await scrape.insert()
   t.context.scrape = scrape

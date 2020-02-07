@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios'
+import { jsonToGraphQLQuery, EnumType } from 'json-to-graphql-query'
 
 export type Point = {
   type: string
@@ -47,11 +48,16 @@ export class ModelBase<T> {
   }
 
   static upperName() {
-    return this.constructor.name
+    return this.name
   }
 
   static lowerName() {
-    return this.constructor.name.toLowerCase()
+    return this.name.toLowerCase()
+  }
+
+  static upsert_constraint() {
+    console.error('upsert_constraint() not implemented')
+    return ''
   }
 
   constructor(init?: Partial<T>) {
@@ -65,63 +71,54 @@ export class ModelBase<T> {
     return this.default_fields().concat(this.fields())
   }
 
+  private static _fieldsAsObject(fields: string[]) {
+    let object = {}
+    for (const key of fields) {
+      object[key] = true
+    }
+    return object
+  }
+
+  fieldsAsObject() {
+    return ModelBase._fieldsAsObject(this._klass.all_fields())
+  }
+
+  static fieldsAsObject() {
+    return ModelBase._fieldsAsObject(this.all_fields())
+  }
+
   asObject() {
     let object = {}
     for (const field of this._klass.fields()) {
       object[field] = this[field]
     }
-    return ModelBase.stringify(object)
+    return object
   }
 
-  static async hasura(gql: string) {
-    let conf = AXIOS_CONF
-    conf.data.query = gql
+  static async hasura(gql: {}) {
+    let conf = JSON.parse(JSON.stringify(AXIOS_CONF))
+    conf.data.query = jsonToGraphQLQuery(gql, { pretty: true })
     const response = await axios(conf)
     if (response.data.errors) {
-      console.error(response.data.errors, gql)
+      console.error(response.data.errors, conf.data.query)
       throw response.data.errors
     }
     return response
   }
 
-  static fieldsSerialized() {
-    return ModelBase.stringify(this.all_fields())
-  }
-
-  static fieldsBare() {
-    return this.fieldsSerialized()
-      .replace('[', '')
-      .replace(']', '')
-  }
-
-  // Implements recursive object serialization according to JSON spec
-  // but without quotes around the keys.
-  static stringify(object: any) {
-    if (Array.isArray(object)) {
-      return JSON.stringify(object).replace(/"/g, '')
-    }
-    if (typeof object !== 'object') {
-      return JSON.stringify(object)
-    }
-    if (object == null) {
-      return 'null'
-    }
-    let props = Object.keys(object)
-      .map(key => `${key}:${this.stringify(object[key])}`)
-      .join(',')
-    return `{${props}}`
-  }
-
+  // TODO: only update provided fields
   async insert() {
-    const query = `mutation {
-      insert_${this._lower_name}(
-        objects: ${this.asObject()},
-      ) {
-        returning {
-          ${this._klass.fieldsBare()}
-        }
-      }
-    }`
+    const query = {
+      mutation: {
+        ['insert_' + this._lower_name]: {
+          __args: {
+            objects: this.asObject(),
+          },
+          affected_rows: true,
+          returning: { id: true },
+        },
+      },
+    }
     const response = await ModelBase.hasura(query)
     Object.assign(
       this,
@@ -131,27 +128,38 @@ export class ModelBase<T> {
   }
 
   async update() {
-    const query = `mutation {
-      update_${this._lower_name}(
-        where: { id: { _eq: "${this.id}" } }
-        _set: ${this.asObject()},
-      ) {
-        returning {
-          ${this._klass.fieldsBare()}
-        }
-      }
-    }`
+    const query = {
+      mutation: {
+        ['update_' + this._lower_name]: {
+          __args: {
+            where: { id: { _eq: this.id } },
+            _set: this.asObject(),
+          },
+          affected_rows: true,
+          returning: {
+            id: true,
+          },
+        },
+      },
+    }
+
     const response = await ModelBase.hasura(query)
     Object.assign(this, response.data.data[this._lower_name])
     return this.id
   }
 
   async findOne(key: string, value: string) {
-    const query = `query {
-      ${this._lower_name}(where: {${key}: {_eq: "${value}"}}) {
-        id ${this._klass.fieldsBare()}
-      }
-    }`
+    const query = {
+      query: {
+        [this._lower_name]: {
+          __args: {
+            where: { [key]: { _eq: value } },
+          },
+          id: true,
+          ...this.fieldsAsObject(),
+        },
+      },
+    }
     const response = await ModelBase.hasura(query)
     const objects = response.data.data[this._lower_name]
     if (objects.length == 1) {
@@ -162,5 +170,62 @@ export class ModelBase<T> {
         objects.length + ` ${this._lower_name}s found by findOne()`
       )
     }
+  }
+
+  async upsert() {
+    const query = {
+      mutation: {
+        ['insert_' + this._lower_name]: {
+          __args: {
+            objects: this.asObject(),
+            on_conflict: {
+              constraint: new EnumType(this._klass.upsert_constraint()),
+              update_columns: this._klass
+                .all_fields()
+                .map(f => new EnumType(f)),
+            },
+          },
+          affected_rows: true,
+          returning: { id: true },
+        },
+      },
+    }
+    const response = await ModelBase.hasura(query)
+    let data = {}
+    if (
+      typeof response.data.data['insert_' + this._lower_name] != 'undefined'
+    ) {
+      data = response.data.data['insert_' + this._lower_name].returning[0]
+    } else {
+      data = response.data.data[this._lower_name][0]
+    }
+    Object.assign(this, data)
+    return this.id
+  }
+
+  static async allCount() {
+    const query = {
+      [this.lowerName() + '_aggregate']: {
+        aggregate: {
+          count: true,
+        },
+      },
+    }
+    const response = await ModelBase.hasura(query)
+    return response.data.data[this.lowerName() + '_aggregate'].aggregate.count
+  }
+
+  static async deleteAllBy(key: string, value: string) {
+    const query = {
+      mutation: {
+        ['delete_' + this.lowerName()]: {
+          __args: {
+            where: { [key]: { _eq: value } },
+          },
+          affected_rows: true,
+        },
+      },
+    }
+    return await ModelBase.hasura(query)
   }
 }

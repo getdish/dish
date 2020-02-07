@@ -31,8 +31,8 @@ const dish_fixture: Partial<Dish> = {
 }
 
 test.beforeEach(async t => {
-  Restaurant.deleteOne('Test Restaurant')
-  Dish.deleteOne('Test Dish')
+  await Restaurant.deleteAllBy('name', 'Test Restaurant')
+  await Dish.deleteAllBy('name', 'Test Dish')
   let restaurant = new Restaurant(restaurant_fixture)
   await restaurant.upsert()
   t.context.restaurant = restaurant
@@ -61,7 +61,8 @@ test('Upserting a dish', async t => {
 })
 
 test('Finding a restaurant by name', async t => {
-  const restaurant = await Restaurant.findOne('name', 'Test Restaurant')
+  const restaurant = new Restaurant()
+  await restaurant.findOne('name', 'Test Restaurant')
   t.is(restaurant.name, 'Test Restaurant')
 })
 

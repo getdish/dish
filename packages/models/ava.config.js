@@ -1,1 +1,3 @@
-export default require('../../ava.config').default
+let config = require('../../ava.config').default
+config.serial = true
+export default config

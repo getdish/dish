@@ -23,13 +23,4 @@ export class Scrape extends ModelBase<Scrape> {
     scrape.update()
     return scrape
   }
-
-  static async deleteBySourceId(id_from_source: string) {
-    const query = `mutation {
-      delete_scrape(where: {id_from_source: {_eq: "${id_from_source}"}}) {
-        returning { id }
-      }
-    }`
-    return await ModelBase.hasura(query)
-  }
 }
