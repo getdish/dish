@@ -20,28 +20,29 @@ struct HomeMainView: View {
         Group {
             PrintGeometryView("HomeMainView")
             
-            SideEffect("HomeMainView.store.setAppHeight", condition: { self.appGeometry?.size.height != self.state.appHeight }) {
+            RunOnce(name: "splash animation") {
+                async(100) {                
+                    self.state.setAnimationState(.idle)
+                }
+            }
+            
+            SideEffect(".store.setAppHeight", condition: { self.appGeometry?.size.height != self.state.appHeight }) {
                 if let height = self.appGeometry?.size.height {
                     self.state.setAppHeight(height)
                 }
             }
             
-            SideEffect("HomeMainView.store.moveToSearchResults") {
+            SideEffect(".store.moveToSearchResults", condition: { Selectors.home.isOnSearchResults() != self.wasOnSearchResults }) {
                 let val = Selectors.home.isOnSearchResults()
-                if val != self.wasOnSearchResults {
-                    self.wasOnSearchResults = val
-                    if val {
-                        self.state.moveToSearchResults()
-                    }
+                self.wasOnSearchResults = val
+                if val {
+                    self.state.moveToSearchResults()
                 }
             }
             
-            SideEffect("HomeMainView.store.setShowCamera") {
-                let val = App.store.state.home.showCamera
-                if val != self.wasOnCamera {
-                    self.wasOnCamera = val
-                    self.state.setShowCamera(val)
-                }
+            SideEffect(".store.setShowCamera", condition: { App.store.state.home.showCamera != self.wasOnCamera }) {
+                self.wasOnCamera = App.store.state.home.showCamera
+                self.state.setShowCamera(self.wasOnCamera)
             }
         }
     }

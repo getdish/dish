@@ -89,10 +89,8 @@ struct HomeSearchBar: View {
             RunOnce(name: "updatePlaceholder") {
                 self.updatePlaceholder()
             }
-            Run("updateLastZoomed") {
-                if self.lastZoomed != zoomed {
-                    self.lastZoomed = zoomed
-                }
+            SideEffect("updateLastZoomed", condition: { self.lastZoomed != zoomed }) {
+                self.lastZoomed = zoomed
             }
             
             SearchInput(
