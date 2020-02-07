@@ -11,7 +11,6 @@ let features: [DishItem] = load("dishData.json")
 let restaurants: [RestaurantItem] = load("restaurantData.json")
 let log = XCGLogger.default
 let homeViewState = HomeViewState()
-let ANIMATION_SPEED: Double = 1
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

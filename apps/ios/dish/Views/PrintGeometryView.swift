@@ -1,6 +1,6 @@
 import SwiftUI
 
-fileprivate let debugGeometry = true
+fileprivate let debugGeometry = false
 let emptyView: AnyView = AnyView(EmptyView())
 
 struct PrintGeometryView: View {

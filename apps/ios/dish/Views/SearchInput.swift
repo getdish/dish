@@ -61,9 +61,9 @@ struct SearchInput: View {
     var after: AnyView?
     var onTextField: ((UITextField) -> Void)?
     var isFirstResponder: Bool = false
-    
     @Binding var searchText: String
     @Binding var tags: [SearchInputTag]
+    var showInput = true
     
     @State private var showCancelButton: Bool = false
     
@@ -100,8 +100,8 @@ struct SearchInput: View {
                     VStack {
                         icon ?? AnyView(
                             Image(systemName: "magnifyingglass")
-                            .resizable()
-                            .scaledToFit()
+                                .resizable()
+                                .scaledToFit()
                         )
                     }
                     .frame(width: 24 * scale, height: 24 * scale)
@@ -127,18 +127,32 @@ struct SearchInput: View {
                         }
                     }
                     
-                    CustomTextField(
-                        placeholder: hasTags ? "" : self.placeholder,
-                        text: self.$searchText,
-                        isFirstResponder: self.isFirstResponder,
-                        onEditingChanged: self.handleEditingChanged
-                    )
-//                        .introspectTextField { textField in
-//                            print("!!!!!!! we got a text field here \(textField)")
-//                            if let cb = self.onTextField {
-//                                cb(textField)
-//                            }
-//                    }
+                    // TODO (performance / @majid) - snapToBottom(false) is jittery, if you replace
+                    // this next view with Color.red you'll see it goes fast... why?
+                    if showInput {
+                        CustomTextField(
+                            placeholder: hasTags ? "" : self.placeholder,
+                            text: self.$searchText,
+                            isFirstResponder: self.isFirstResponder,
+                            onEditingChanged: self.handleEditingChanged
+                        )
+                    } else {
+                        // temp bugfix for above TODO problem...
+                        HStack {
+                            Group {
+                                if self.searchText != "" {
+                                    Text(self.searchText)
+                                } else {
+                                    Text(self.placeholder).opacity(0.3)
+                                }
+                            }
+                            .font(.system(size: fontSize + 2))
+                            Spacer()
+                        }
+                        .frameFlex()
+                    }
+                    
+
 //                        .disableAutocorrection(true)
 //                        .font(.system(size: fontSize))
 //                        .foregroundColor(.primary)
@@ -152,7 +166,7 @@ struct SearchInput: View {
                         Image(systemName: "xmark.circle.fill")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 26 + 2 * scale, height: 24 + 5 * scale)
+                            .frame(width: 26 + 2 * scale, height: 24 + 2 * scale)
                             .opacity(self.searchText == "" ? 0.0 : 1.0)
                     }
                     
@@ -174,8 +188,6 @@ struct SearchInput: View {
                     .foregroundColor(.secondary)
                     .background(self.inputBackgroundColor)
                     .cornerRadius(10.0 * scale * sizeRadius)
-                    .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.4 : 0.15), radius: 6, x: 0, y: 3)
-                    .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.4 : 0.15), radius: 10, x: 0, y: 2)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10.0 * scale * sizeRadius)
                             .stroke(self.borderColor, lineWidth: 1)
@@ -185,7 +197,6 @@ struct SearchInput: View {
                     cancelButton
                 }
             }
-                .navigationBarHidden(showCancelButton) // .animation(.default) // animation does not work properly
         }
     }
 }

@@ -7,27 +7,29 @@ fileprivate let totalHeight = topPad + bottomPad + 40
 
 struct TopNavViewContent: View {
     var body: some View {
-        ZStack {
-            TopNavSearchResults()
-            
-            VStack {
-                VStack {
-                    HStack(spacing: 12) {
-                        ZStack {
-                            TopNavHome()
-                            CameraTopNav()
-                        }
-                    }
-                    .padding(.horizontal)
-                }
-                .padding(.top, topPad)
-                .padding(.bottom, bottomPad)
-                .frame(maxHeight: totalHeight, alignment: Alignment.top)
+        VStack {
+            ZStack {
+                TopNavSearchResults()
                 
-                Spacer()
+                VStack {
+                    VStack {
+                        HStack(spacing: 12) {
+                            ZStack {
+                                TopNavHome()
+                                CameraTopNav()
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                    .padding(.top, topPad)
+                    .padding(.bottom, bottomPad)
+                    .frame(maxHeight: totalHeight, alignment: Alignment.top)
+                    
+                    Spacer()
+                }
             }
         }
-        .padding(.top, 0)
+        .padding(.top, 10)
     }
 }
 
@@ -52,9 +54,28 @@ struct TopNavButtonStyle: ViewModifier {
 
             }
         }
-            .cornerRadius(20)
+            .cornerRadius(8)
             .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
             .foregroundColor(.white)
+    }
+}
+
+struct SearchBarLocationLabel: View {
+    @EnvironmentObject var store: AppStore
+    
+    var body: some View {
+        let mapLabel = self.store.state.map.locationLabel
+        let label = mapLabel == "" ? "Map Area" : mapLabel
+        
+        return HStack {
+            Button(action: {
+                App.store.send(.map(.moveToLocation(.init(.current))))
+            }) {
+                Text(label)
+                    .font(.system(size: 14))
+            }
+            .modifier(TopNavButtonStyle())
+        }
     }
 }
 
@@ -70,19 +91,8 @@ struct TopNavHome: View {
                 ZStack {
                     // home controls
                     HStack {
-                        if self.store.state.map.locationLabel != "" {
-                            Button(action: {
-                                App.store.send(.map(.moveToLocation(.init(.current))))
-                            }) {
-                                VStack {
-                                    Text(self.store.state.map.locationLabel)
-                                        .titleBarStyle()
-                                }
-                                .modifier(TopNavButtonStyle())
-                            }
-                            .animation(Animation.spring().delay(isOnHome ? 0 : 0.25))
-                            .transition(.opacity)
-                        }
+                        SearchBarLocationLabel()
+                        
                         
                         Spacer()
                         
@@ -115,12 +125,11 @@ struct TopNavHome: View {
                                 Image(systemName: "location.fill")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 14, height: 14)
+                                .frame(width: 16, height: 16)
                             }
 
                         }
                         .modifier(TopNavButtonStyle())
-                        .animation(Animation.spring().delay(isOnHome ? 0.2 : 0.4))
                     }
                 }
                 .opacity(isOnHome ? 1 : 0)

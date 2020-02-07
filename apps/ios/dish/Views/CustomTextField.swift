@@ -17,10 +17,13 @@ struct CustomTextField: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<CustomTextField>) {
-        uiView.text = text
-        uiView.placeholder = placeholder
-        
-        if isFirstResponder && !context.coordinator.didBecomeFirstResponder  {
+        if uiView.text != text {
+            uiView.text = text
+        }
+        if uiView.placeholder != placeholder {
+            uiView.placeholder = placeholder
+        }
+        if isFirstResponder && !context.coordinator.didBecomeFirstResponder && !uiView.isFirstResponder  {
             uiView.becomeFirstResponder()
             context.coordinator.didBecomeFirstResponder = true
         }

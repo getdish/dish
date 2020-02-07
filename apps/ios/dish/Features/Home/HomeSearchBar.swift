@@ -7,6 +7,8 @@ struct SearchToTagColor {
 }
 
 struct HomeSearchBar: View {
+    var showInput = true
+    
     @State var searchText = ""
     @State var textField: UITextField? = nil
     @State var isFirstResponder = false
@@ -14,13 +16,13 @@ struct HomeSearchBar: View {
     @EnvironmentObject var keyboard: Keyboard
     @Environment(\.colorScheme) var colorScheme
     
-    @State var placeholder = "The best dim sum..."
+    @State var placeholder = "Dim Sum..."
     
     func updatePlaceholder() {
         var i = 0
-        let placeholders = ["dim sum", "bo kho", "ceviche", "poke", "mapa tofu"]
+        let placeholders = ["Dim Sum", "Pho", "Ceviche", "Poke", "Mapa Tofu"]
         async(interval: 5000, intervalMax: 5) {
-            self.placeholder = "The best \(placeholders[i])..."
+            self.placeholder = "\(placeholders[i])..."
             i += 1
         }
     }
@@ -50,53 +52,6 @@ struct HomeSearchBar: View {
     
     @State var lastZoomed = false
     
-    var body: some View {
-        let zoomed = keyboard.state.height > 0
-        let scale: CGFloat = zoomed ? 1.5 : 1.3
-        
-        return Group {
-            Color.clear.onAppear {
-                self.updatePlaceholder()
-            }
-
-            Run {
-                self.lastZoomed = zoomed
-            }
-            
-            SearchInput(
-                placeholder: self.placeholder,
-                inputBackgroundColor: colorScheme == .dark
-                    ? Color(red: 0.25, green: 0.25, blue: 0.25)
-                    : Color.white,
-                borderColor: Color.clear,
-                scale: scale,
-                sizeRadius: 2.0,
-                icon: icon,
-                showCancelInside: true,
-                onClear: {
-                    // go back on empty search clear
-                    if Selectors.home.isOnSearchResults() && App.store.state.home.viewStates.last!.searchResults.results.count == 0 {
-                        App.store.send(.home(.pop))
-                    }
-                    // focus keyboard again on clear if not focused
-                    if self.keyboard.state.height == 0 {
-                        self.focusKeyboard()
-                    }
-            },
-                after: AnyView(HomeSearchBarAfterView(scale: scale)),
-                isFirstResponder: isFirstResponder,
-                //            onTextField: { field in
-                //                print("set text field")
-                //                self.textField = field
-                //            },
-                searchText: self.homeSearch,
-                tags: self.homeTags
-            )
-            .animation(.spring(), value: zoomed != self.lastZoomed)
-            .offset(y: zoomed ? 0 : 0)
-        }
-    }
-    
     var icon: AnyView {
         if store.state.home.viewStates.count > 1 {
             return AnyView(
@@ -107,22 +62,71 @@ struct HomeSearchBar: View {
             )
         } else {
             return AnyView(
-                Image(systemName: "magnifyingglass")
+//                Image(systemName: "magnifyingglass")
+                Text("🤤").font(.system(size: 18))
             )
+        }
+    }
+    
+    let after = AnyView(HomeSearchBarAfterView(scale: 1.2))
+    
+    func onClear() {
+        // go back on empty search clear
+        if Selectors.home.isOnSearchResults() && App.store.state.home.viewStates.last!.searchResults.results.count == 0 {
+            App.store.send(.home(.pop))
+        }
+        // focus keyboard again on clear if not focused
+        if self.keyboard.state.height == 0 {
+            self.focusKeyboard()
+        }
+    }
+    
+    var body: some View {
+        let zoomed = keyboard.state.height > 0
+        let scale: CGFloat = zoomed ? 1.2 : 1.2
+        
+        return ZStack {
+            RunOnce(name: "updatePlaceholder") {
+                self.updatePlaceholder()
+            }
+            SideEffect("updateLastZoomed", condition: { self.lastZoomed != zoomed }) {
+                self.lastZoomed = zoomed
+            }
+            
+            SearchInput(
+                placeholder: self.placeholder,
+                inputBackgroundColor: Color.white,
+                borderColor: Color.white,
+                scale: scale,
+                sizeRadius: 2.1,
+                icon: icon,
+                showCancelInside: true,
+                onClear: self.onClear,
+                after: after,
+                isFirstResponder: isFirstResponder,
+                searchText: self.homeSearch,
+                tags: self.homeTags,
+                showInput: showInput
+            )
+                .shadow(color: Color.black.opacity(0.35), radius: 8, x: 0, y: 3)
+                .animation(.spring(), value: zoomed != self.lastZoomed)
         }
     }
 }
 
 struct HomeSearchBarAfterView: View {
-    var scale: CGFloat
-    
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
+
+    var scale: CGFloat
     
     var body: some View {
-        HStack {
+        let oppositeColor = colorScheme == .dark ? Color.white : Color.black
+        
+        return HStack {
             Button(action: {
-                self.homeState.toggleMap()
+                self.homeState.toggleSnappedToBottom()
             }) {
                 Group {
                     if self.homeState.isSnappedToBottom {
@@ -141,6 +145,10 @@ struct HomeSearchBarAfterView: View {
                             Image(systemName: "map")
                                 .resizable()
                                 .scaledToFit()
+                        } else {
+                            Image(systemName: "chevron.down")
+                                .resizable()
+                                .scaledToFit()
                         }
                     }
                 }
@@ -151,8 +159,75 @@ struct HomeSearchBarAfterView: View {
             .padding(.horizontal, 6 * scale)
             
             // space for the camera button
-            Spacer()
+//            CustomButton2(action: {
+//
+//            }) {
+//                ZStack {
+//                    Group {
+//                        Image(systemName: "arrowtriangle.up.circle.fill")
+//                            .resizable()
+//                            .scaledToFit()
+//                            .foregroundColor(Color("color-brand").opacity(0.5))
+//                    }
+//                    .foregroundColor(oppositeColor.opacity(0.5))
+//                }
+//                .padding(.all, 40 * 0.33)
+//                .frame(width: 40, height: 40)
+//                .cornerRadius(40)
+//                .overlay(
+//                    RoundedRectangle(cornerRadius: 40)
+//                        .stroke(oppositeColor.opacity(0.1), lineWidth: 1)
+//                )
+//            }
+            Color.clear
                 .frame(width: App.cameraButtonHeight)
         }
     }
 }
+
+struct CameraButton: View {
+    var foregroundColor: Color = .black
+    
+    @State var isTapped = false
+    @State var lastTap = Date()
+    
+    @Environment(\.colorScheme) var colorScheme
+    
+    var body: some View {
+        let oppositeColor = colorScheme == .dark ? Color.white : Color.black
+        
+        return CustomButton2(action: {
+            self.lastTap = Date()
+            if !App.store.state.home.showCamera {
+                App.store.send(.home(.setShowCamera(true)))
+            } else {
+                App.store.send(.camera(.capture(true)))
+            }
+        }) {
+            ZStack {
+                Group {
+                    Image(systemName: "viewfinder")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundColor(Color("color-brand").opacity(0.5))
+                }
+                .foregroundColor(oppositeColor.opacity(0.5))
+            }
+                .padding(.all, App.cameraButtonHeight * 0.22)
+                .frame(width: App.cameraButtonHeight, height: App.cameraButtonHeight)
+                .cornerRadius(App.cameraButtonHeight)
+                .overlay(
+                    RoundedRectangle(cornerRadius: App.cameraButtonHeight)
+                        .stroke(oppositeColor.opacity(0.1), lineWidth: 1)
+            )
+        }
+    }
+}
+
+#if DEBUG
+struct CameraButton_Previews: PreviewProvider {
+    static var previews: some View {
+        CameraButton()
+    }
+}
+#endif

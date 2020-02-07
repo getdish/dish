@@ -1,7 +1,7 @@
 import SwiftUI
 import Combine
 
-fileprivate let DEBUG_ANIMATION = false
+fileprivate let DEBUG_ANIMATION = true
 fileprivate let OFF_OPACITY = DEBUG_ANIMATION ? 0.5 : 0
 
 class MagicItemsStore: ObservableObject {
@@ -12,7 +12,7 @@ class MagicItemsStore: ObservableObject {
     @Published var position: MagicItemPosition = .start
     @Published var state: MoveState = .done
     @Published var triggerUpdate =  NSDate()
-    var disableTracking: Bool = false
+    @Published var disableTracking: Bool = false
     
     var clear: () -> Void = {}
     
@@ -28,21 +28,29 @@ class MagicItemsStore: ObservableObject {
         clear()
         var cancel = false
         clear = { cancel = true }
-        async(100) {
+        async(16 * 3) {
             if self.disableTracking { return }
             if cancel { return }
             self.triggerUpdate = NSDate()
         }
     }
     
+    var cancelLast = AnyCancellable({})
+    
     func animate(_ position: MagicItemPosition, duration: Double, onMoveComplete: (() -> Void)?) {
+        print("🧙‍♀️ MagicMove animate to \(position) \(duration)")
         self.state = .start
+        self.cancelLast.cancel()
+        var cancelled = false
+        self.cancelLast = AnyCancellable { cancelled = true }
         async(2) {
             self.position = position
             self.state = .animate
             async(duration) {
-                self.state = .done
-                if let cb = onMoveComplete { cb() }
+                if !cancelled {
+                    self.state = .done
+                    if let cb = onMoveComplete { cb() }
+                }
             }
         }
     }
@@ -73,16 +81,19 @@ struct MagicMove<Content>: View where Content: View {
         self.content = content
         self.disableTracking = disableTracking
         self.onMoveComplete = onMoveComplete
-        self.animation = .easeInOut(duration: duration / 1000 * ANIMATION_SPEED)
+        self.animation = .easeInOut(duration: duration / 1000)
         self.lastContent = content()
         self.position = position
         self.store.disableTracking = disableTracking
-        if position != lastPosition {
+        
+        // run animation
+        let hasNewPosition = position != lastPosition
+        let shouldRun = run != nil && self.lastRun != run
+        if hasNewPosition {
             lastPosition = position
-            self.lastRun = run
-            store.animate(position, duration: duration, onMoveComplete: onMoveComplete)
         }
-        else if run != nil && self.lastRun != run {
+        print("🏆🏆🏆 shouldRun, hasNewPosition \((shouldRun, hasNewPosition)) ")
+        if shouldRun || hasNewPosition {
             self.lastRun = run
             store.animate(position, duration: duration, onMoveComplete: onMoveComplete)
         }
@@ -114,7 +125,6 @@ struct MagicMove<Content>: View where Content: View {
                 // debug view
                 if DEBUG_ANIMATION {
                     ZStack(alignment: .topLeading) {
-                        Color.black.opacity(0.0001)
                         ForEach(0 ..< 40) { index -> AnyView  in
                             if index < startValues.count - 1 {
                                 let val = startValues[index]
@@ -148,6 +158,7 @@ struct MagicMove<Content>: View where Content: View {
                 content()
             }
             
+            // magic move animated elements
             if store.state != .done {
                 ZStack(alignment: .topLeading) {
                     ForEach(0 ..< keys.count) { index -> AnimatedView in
@@ -165,6 +176,7 @@ struct MagicMove<Content>: View where Content: View {
                             (self.store.position == .start ? start : end).frame
                         
                         return AnimatedView(
+                            zIndex: Double(keys.count - index),
                             animation: self.animation,
                             animateItem: animateItem,
                             animatePosition: animatePosition
@@ -178,6 +190,8 @@ struct MagicMove<Content>: View where Content: View {
 
 struct AnimatedView: View, Identifiable {
     var id: String { self.animateItem?.id ?? "empty---" }
+
+    var zIndex: Double = 0.0
     var animation: Animation = .default
     var animateItem: MagicItemDescription? = nil
     var animatePosition: CGRect? = nil
@@ -187,16 +201,17 @@ struct AnimatedView: View, Identifiable {
             if self.animateItem != nil || self.animatePosition != nil {
                 VStack {
                     animateItem!.view
-                        .animation(self.animation)
                         .frame(
                             width: self.animatePosition!.width,
                             height: self.animatePosition!.height
-                    )
+                        )
                         .offset(
                             x: self.animatePosition!.minX,
                             y: self.animatePosition!.minY
-                    )
-                    
+                        )
+                        .zIndex(self.zIndex)
+                        .animation(self.animation)
+                        
                     Spacer()
                 }
             }
@@ -224,6 +239,8 @@ struct MagicItem<Content>: View where Content: View {
     @ObservedObject fileprivate var store = magicItemsStore
     @Environment(\.geometry) var appGeometry
 
+    @State private var cancels: Set<AnyCancellable> = []
+    
     let content: Content
     let id: String
     let at: MagicItemPosition
@@ -253,39 +270,65 @@ struct MagicItem<Content>: View where Content: View {
     var isDisabled: Bool {
         self.disableTracking || magicItemsStore.disableTracking
     }
+    
+    // split this out because we likely want to run it a frame after
+    func setupSideEffect(_ frame: CGRect) -> (String, Bool, MagicItemDescription) {
+        // off screen avoid doing things
+        let offYN = frame.minY + frame.height < 0
+        let offYP = frame.minY > Screen.fullHeight
+        let offXN = frame.minX + frame.width < 0
+        let offXP = frame.minX > Screen.width
+        let offScreen = offYN || offYP || offXN || offXP
+        let isOffScreen = self.items[self.id] != nil && offScreen == true
+        
+        let isMagicStoreAnimating = magicItemsStore.state != .done
+        
+        let item = MagicItemDescription(
+            view: self.contentView,
+            frame: frame,
+            id: self.id,
+            at: self.at
+        )
+        let curItem = self.items[self.id]
+        let hasChanged = curItem != item
+        
+        let name = "MagicItem \(self.at) \(self.id) -- \(frame.minX) \(frame.minY)"
+        let enabled = !self.isDisabled && !isOffScreen && !isMagicStoreAnimating && hasChanged
+//        print("enabled \(enabled) -- \(!self.isDisabled) \(!isOffScreen) \(!isMagicStoreAnimating) \(hasChanged)")
+        
+        return (name, enabled, item)
+    }
+    
+    @State var lastFrame: CGRect? = nil
 
     var body: some View {
         return ZStack {
-            self.content
-                .overlay(
-                    GeometryReader { geometry -> SideEffect in
-                        let frame = geometry.frame(in: .global)
-                        let name = "MagicItem \(self.at) \(self.id) -- \(frame.minX) \(frame.minY)"
-                        
-                        // off screen avoid doing things
-                        let offYN = frame.minY + frame.height < 0
-                        let offYP = frame.minY > Screen.fullHeight
-                        let offXN = frame.minX + frame.width < 0
-                        let offXP = frame.minX > Screen.width
-                        let offScreen = offYN || offYP || offXN || offXP
-                        let isOffScreen = self.items[self.id] != nil && offScreen == true
-                        
-                        let isMagicStoreAnimating = magicItemsStore.state != .done
-                        
-                        let item = MagicItemDescription(
-                            view: self.contentView,
-                            frame: frame,
-                            id: self.id,
-                            at: self.at
-                        )
-                        let curItem = self.items[self.id]
-                        let hasChanged = curItem != item
-                        
-                        let enabled = !self.isDisabled && !isOffScreen && !isMagicStoreAnimating && hasChanged
-                        
-                        return SideEffect(name, level: .debug, condition: { enabled }) {
+            RunOnce(name: "watchMagicMove after re-enable from parent") {
+                magicItemsStore.$disableTracking.sink { disabled in
+                    if !disabled, let frame = self.lastFrame {
+                        let (name, enabled, item) = self.setupSideEffect(frame)
+                        if enabled {
+                            log.debug("update after re-enable \(name)")
                             self.updateItem(item)
                         }
+                    }
+                }.store(in: &self.cancels)
+            }
+            
+            self.content
+                .overlay(
+                    GeometryReader { geometry -> Color in
+                        let frame = geometry.frame(in: .global)
+                        let (_, enabled, item) = self.setupSideEffect(frame)
+                        if enabled {
+                            async {
+                                if frame != self.lastFrame {
+                                    self.lastFrame = frame
+                                }
+                                self.updateItem(item)
+                            }
+                        }
+                        return Color.clear
                     }
             )
         }

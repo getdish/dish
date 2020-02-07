@@ -72,7 +72,7 @@ struct ContextMenuDisplay: View {
             withAnimation {
                 self.item = defaultContextStore
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+            async(300) {
                 self.parentStore.item = nil
             }
         }
@@ -143,7 +143,7 @@ struct ContextMenuDisplay: View {
                 .overlay(
                     GeometryReader { geometry -> Run in
                         let frame = geometry.frame(in: .global)
-                        return Run {
+                        return Run("ContextMenu.measure") {
                             self.menuFrame = frame
                         }
                     }
@@ -199,7 +199,7 @@ struct ContextMenuView<Content: View, MenuContent: View>: View {
                     .overlay(
                         GeometryReader { geometry -> Run in
                             let frame = geometry.frame(in: .global)
-                            return Run {
+                            return Run("ContextMenuView.measureContentPosition") {
                                 self.store.contentPosition = frame
                             }
                         }

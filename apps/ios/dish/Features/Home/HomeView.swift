@@ -33,20 +33,9 @@ struct HomeViewInner: View {
     @EnvironmentObject var store: AppStore
     @State var disableDragging = true
     @State var isDragging = false
-    @State var shadowStr: Double = 1
 
     var body: some View {
-        // animate home shadow only
-        let next: Double = self.store.state.home.view == .home || isDragging ? 1 : 0
-        if next != self.shadowStr {
-            DispatchQueue.main.async {
-                withAnimation(.spring()) {
-                    self.shadowStr = next
-                }
-            }
-        }
-        
-        return ZStack {
+        ZStack {
             PrintGeometryView("HomeView")
             
             PagerView(
@@ -60,21 +49,15 @@ struct HomeViewInner: View {
                     //    animations below seem to be choppier
                     // ⚠️ ⚠️ ⚠️
                     //
-                    
+
                     // account page
                     DishAccount()
                         .zIndex(0)
-                    
+
                     // home page
                     HomeMainView()
-                        .shadow(
-                            color: Color.black.opacity(self.shadowStr),
-                            radius: 60,
-                            x: 0,
-                            y: 0
-                        )
                         .zIndex(2)
-                    
+
                     // third page
                     Color.black
             }

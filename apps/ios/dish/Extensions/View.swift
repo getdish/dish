@@ -7,6 +7,11 @@ extension View {
 }
 
 extension View {
+    // rasterize a layer for performance, really helped on masks
+    func rasterize() -> some View {
+        self.blur(radius: 0.0001)
+    }
+    
     // expand view to fit parent
     func frameFlex() -> some View {
         frame(maxWidth: .infinity, maxHeight: .infinity)

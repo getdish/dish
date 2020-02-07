@@ -6,7 +6,6 @@ struct HomeMainFilterBar: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var store: AppStore
     @State var wasOnSearchResults = false
-    @State var showCuisine = false
     
     var body: some View {
         ZStack {
@@ -16,30 +15,43 @@ struct HomeMainFilterBar: View {
                 self.wasOnSearchResults = true
             }
             
-            ZStack(alignment: .leading) {
-//                if false {
-//                    HomeMainFilterFocused()
-//                }
-                Group {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 10) {
-                            Group {
-                                FilterButton(label: "Price", action: {})
-                                FilterButton(label: "Spice", action: {})
-                                FilterButton(label: "Diet", action: {})
-                                FilterButton(label: "Hidden Gem", action: filterAction)
-                                FilterButton(label: "Lunch Spot", action: filterAction)
-                                FilterButton(label: "Open Late", action: filterAction)
-                            }
-                            .animation(.spring())
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    Group {
+                        CustomButton2(action: {  }) {
+                           Text("🍽")
+                                .font(.system(size: 18))
                         }
-                        .padding(.vertical, App.filterBarPad)
-                        .padding(.horizontal, 24)
+                        
+                        Color.white.opacity(0.1).frame(width: 1)
+//                                Image(systemName: "line.horizontal.3.decrease.circle")
+//                                    .foregroundColor(.white)
+//                                    .opacity(0.3)
+                        
+                        FilterButton(label: "$", fontSize: 20, action: {})
+                            .frame(width: 50)
+                        FilterButton(label: "$$", fontSize: 18, action: {})
+                            .frame(width: 60)
+                        FilterButton(label: "$$$", fontSize: 14, action: {})
+                            .frame(width: 64)
+                        
+                        Color.white.opacity(0.1).frame(width: 1)
+                        
+                        FilterButton(label: "Delivers", fontSize: 15, action: {})
+                            .frame(width: 92)
+                        
+                        FilterButton(label: "Open Now", fontSize: 15, action: {})
+                            .frame(width: 110)
+                            .environment(\.colorScheme, colorScheme == .light ? .dark : .light)
+                        
+                        FilterButton(label: "Healthy", fontSize: 15, action: {})
                     }
-                    .frame(height: App.filterBarHeight)
                 }
+                .padding(.vertical, App.filterBarPad)
+                .padding(.horizontal, 24)
             }
         }
+        .frame(height: App.filterBarHeight)
     }
 }
 
@@ -55,48 +67,61 @@ fileprivate let filterAction = {
     ))))
 }
 
-struct HomeMainFilterBarCuisine: View {
-    @EnvironmentObject var store: AppStore
+struct FilterButtonStyle: ViewModifier {
+    @Environment(\.colorScheme) var colorScheme
     
-    var body: some View {
-        Group {
-            FilterButton(label: "American", action: filterAction)
-            FilterButton(label: "Thai", action: filterAction)
-            FilterButton(label: "Chinese", action: filterAction)
-            FilterButton(label: "Italian", action: filterAction)
-            FilterButton(label: "French", action: filterAction)
-            FilterButton(label: "Burmese", action: filterAction)
-            FilterButton(label: "Greek", action: filterAction)
-        }
+    func body(content: Content) -> some View {
+        let themeColor = Color(.systemBackground).opacity(0.85)
+        let schemeOppositeColor = Color(
+            colorScheme == .dark ? .init(white: 0.95, alpha: 1) : .init(white: 0.08, alpha: 1)
+        )
+
+        return content
+            .foregroundColor(themeColor)
+            .padding(.horizontal, 10)
+            .background(schemeOppositeColor)
+            .cornerRadius(20)
+            .shadow(radius: 4)
     }
 }
 
 struct FilterButton: View {
     @Environment(\.colorScheme) var colorScheme
     var width: CGFloat? = nil
-    var label: String
+    var label: String = ""
+    var fontSize: CGFloat = 15
+    var icon: String = ""
     var action: () -> Void
     var flex: Bool = false
     var cornerRadiusCorners: UIRectCorner = .allCorners
     
+    var height: CGFloat {
+        App.filterBarHeight - App.filterBarPad * 2
+    }
+    
     var body: some View {
-        let themeColor = Color(.systemBackground).opacity(0.85)
-        let schemeOppositeColor = Color(
-            colorScheme == .dark ? .init(white: 0.95, alpha: 1) : .init(white: 0.08, alpha: 1)
-        )
+        
         return ZStack {
             CustomButton2(action: action) {
                 HStack {
-                    Text(label)
-                        .foregroundColor(themeColor)
-                        .font(.system(size: 15))
-                        .lineLimit(1)
+                    Spacer()
+                    if icon != "" {
+                        Image(systemName: icon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: self.height * 0.6, height: self.height * 0.6)
+                    }
+                    ZStack {
+                        if label != "" {
+                            Text(label)
+                                .font(.system(size: fontSize))
+                                .lineLimit(nil)
+                        }
+                    }
+                    Spacer()
                 }
-                .frame(width: self.width, height: App.filterBarHeight - App.filterBarPad * 2)
-                .padding(.horizontal, 12)
-                .background(schemeOppositeColor)
-                .cornerRadius(50)
-                .shadow(radius: 4)
+                .frame(width: self.width, height: self.height)
+                .modifier(FilterButtonStyle())
             }
         }
     }
@@ -136,3 +161,44 @@ struct HomeMainFilters_Previews: PreviewProvider {
     }
 }
 #endif
+
+struct HomeMainFilterBarCuisine: View {
+    @EnvironmentObject var store: AppStore
+    
+    var body: some View {
+        Group {
+            FilterButton(label: "American", action: filterAction)
+            FilterButton(label: "Thai", action: filterAction)
+            FilterButton(label: "Chinese", action: filterAction)
+            FilterButton(label: "Italian", action: filterAction)
+            FilterButton(label: "French", action: filterAction)
+            FilterButton(label: "Burmese", action: filterAction)
+            FilterButton(label: "Greek", action: filterAction)
+        }
+    }
+}
+
+struct FilterPicker<Content>: View where Content: View {
+    @Binding var selection: Int
+    var content: Content
+    
+    init(selection: Binding<Int>, @ViewBuilder content: @escaping () -> Content) {
+        self._selection = selection
+        self.content = content()
+    }
+    
+    var body: some View {
+        ZStack {
+            // animated current selection
+            Color.white
+                .frame(width: 50)
+                .cornerRadius(100)
+            
+            HStack {
+                content
+            }
+            .padding(3)
+        }
+        .modifier(FilterButtonStyle())
+    }
+}

@@ -57,6 +57,9 @@ struct DishCardView: View, Identifiable, Equatable {
                 Text(self.dish.name)
                     .font(.system(size: 16))
                     .fontWeight(.bold)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(1)
+                    .shadow(color: Color.black.opacity(0.8), radius: 2, x: 0, y: 1)
             }
             .padding()
         }

@@ -1,7 +1,7 @@
 import SwiftUI
 import Combine
 
-fileprivate let snapToBottomYMovePct: CGFloat = 0.6
+fileprivate let snapToBottomYMovePct: CGFloat = 0.58
 fileprivate let distanceUntilSnapDown: CGFloat = 42
 fileprivate let distanceUntilSnapUp: CGFloat = 85
 fileprivate let nearTopAtVal: CGFloat = 120 + Screen.statusBarHeight
@@ -12,10 +12,10 @@ fileprivate func getInitialY(_ screenHeight: CGFloat) -> CGFloat {
 
 class HomeViewState: ObservableObject {
     enum HomeDragState {
-        case idle, off, pager, searchbar
+        case idle, off, pager, searchbar, contentHorizontal
     }
     enum HomeAnimationState {
-        case idle, controlled, animate
+        case idle, splash, controlled, animate
     }
     enum HomeScrollState {
         case none, some, more
@@ -31,9 +31,12 @@ class HomeViewState: ObservableObject {
     @Published private(set) var hasScrolled: HomeScrollState = .none
     @Published private(set) var hasMovedBar = false
     @Published private(set) var dragState: HomeDragState = .idle
-    @Published private(set) var animationState: HomeAnimationState = .idle
+    @Published private(set) var animationState: HomeAnimationState = .splash
     @Published private(set) var showCamera = false
     @Published private(set) var keyboardHeight: CGFloat = 0
+    @Published private(set) var locationLabelWidth: CGFloat = 0
+    
+    let snapToBottomAnimationDuration: Double = 400 * (1 / App.animationSpeed)
     
     private var scrollState = HomeMainScrollState()
     private var activeScrollView: UIScrollView? = nil
@@ -149,6 +152,10 @@ class HomeViewState: ObservableObject {
         }.store(in: &cancels)
     }
     
+    var mapFullHeight: CGFloat {
+        appHeight + Screen.height / 2
+    }
+    
     var showFiltersAbove: Bool {
         if y > snapToBottomAt - 1 {
             return true
@@ -159,12 +166,14 @@ class HomeViewState: ObservableObject {
         return hasScrolled != .none
     }
     
-    let mapMinHeight: CGFloat = max(
-        nearTopAtVal - 1,
-        Screen.statusBarHeight + App.searchBarHeight / 2 + App.topNavHeight + 50
-    )
+    var mapMinHeight: CGFloat {
+        Screen.statusBarHeight + App.searchBarHeight + 10
+    }
     
-    var mapMaxHeight: CGFloat { appHeight - keyboardHeight - App.searchBarHeight }
+    var mapMaxHeight: CGFloat {
+        appHeight - App.searchBarHeight / 2
+//         - keyboardHeight
+    }
     
     var mapHeight: CGFloat {
         min(mapMaxHeight, max(self.y - scrollRevealY, mapMinHeight))
@@ -186,7 +195,10 @@ class HomeViewState: ObservableObject {
         snapToBottomAt - distanceUntilSnapDown
     }
     
-    var snappedToBottomMapHeight: CGFloat { appHeight - 120 }
+    var snappedToBottomMapHeight: CGFloat {
+        appHeight - 37 - App.filterBarHeight - App.searchBarHeight / 2
+    }
+    
     var wasSnappedToBottom = false
     
     var isSnappedToBottom: Bool {
@@ -203,7 +215,7 @@ class HomeViewState: ObservableObject {
         return false
     }
     
-    func toggleMap() {
+    func toggleSnappedToBottom() {
         log.info()
         self.snapToBottom(!isSnappedToBottom)
     }
@@ -211,37 +223,40 @@ class HomeViewState: ObservableObject {
     private var startDragAt: CGFloat = 0
     private var lastDragY: CGFloat = 0
     
+    func setLocationLabelWidth(_ width: CGFloat) {
+        self.locationLabelWidth = width
+    }
+    
     func setDragState(_ next: HomeDragState) {
         log.info()
         self.dragState = next
     }
     
     func setAnimationState(_ next: HomeAnimationState, _ duration: Double = 0) {
-        async {
-            self.animationState = next
-            // cancel last controlled animation
-            if next != .idle,
-                let handle = self.cancelAnimation {
-                handle.cancel()
-            }
-            // allow timeout
-            if duration > 0 {
-                var active = true
-                self.cancelAnimation = AnyCancellable {
-                    active = false
-                }
-                async(duration) {
-                    if active {
-                        self.setAnimationState(.idle)
-                        self.cancelAnimation = nil
-                    }
-                }
+        // cancel last controlled animation
+        if next != .idle,
+            let handle = self.cancelAnimation {
+            handle.cancel()
+        }
+        
+        // set state
+        self.animationState = next
+        
+        // end set state
+        if duration > 0 {
+            // allows cancel
+            var cancel = false
+            self.cancelAnimation = AnyCancellable { cancel = true }
+            async(duration) {
+                if cancel { return }
+                self.setAnimationState(.idle)
+                self.cancelAnimation = nil
             }
         }
     }
     
     func animate(
-        _ animation: Animation? = Animation.spring().speed(ANIMATION_SPEED),
+        _ animation: Animation? = Animation.spring().speed(App.animationSpeed),
         state: HomeAnimationState = .controlled,
         duration: Double = 400,
         _ body: @escaping () -> Void
@@ -249,15 +264,43 @@ class HomeViewState: ObservableObject {
         log.info("\(state) duration: \(duration)")
         self.setAnimationState(state, duration)
         
-        async(1) { // delay so it updates animationState first in body
+        async(3) { // delay so it updates animationState first in body
             withAnimation(animation) {
                 body()
             }
         }
     }
+    
+    var lastSnapAt = Date()
+    
+    func snapToBottom(_ toBottom: Bool = true) {
+        log.info()
+        self.lastSnapAt = Date()
+
+        // prevent dragging after snap
+        self.setDragState(.off)
+        
+        let duration = self.snapToBottomAnimationDuration
+        
+        self.animate(
+            Animation.spring(response: 0.28, dampingFraction: 0.9).speed(App.animationSpeed),
+            duration: duration
+        ) {
+            self.searchBarYExtra = 0
+            self.scrollState.setScrollY(0)
+            if toBottom {
+                self.y = self.snappedToBottomMapHeight
+            } else {
+                self.y = self.startSnapToBottomAt
+            }
+        }
+        
+        async(duration) {
+            self.setDragState(.idle)
+        }
+    }
 
     func setY(_ dragY: CGFloat) {
-        print("setY dragState \(dragState)")
         if dragState == .pager { return }
         if lastDragY == dragY { return }
         lastDragY = dragY
@@ -335,8 +378,8 @@ class HomeViewState: ObservableObject {
         let shouldSnapDown = finalY > snapToBottomAt
         
         let animation: Animation = shouldSnapDown
-            ? Animation.spring().speed(ANIMATION_SPEED)
-            : Animation.easeOut.speed(ANIMATION_SPEED)
+            ? Animation.spring().speed(App.animationSpeed)
+            : Animation.easeOut.speed(App.animationSpeed)
         
         self.animate(animation) {
             if shouldSnapDown || self.isSnappedToBottom {
@@ -349,29 +392,6 @@ class HomeViewState: ObservableObject {
             if self.searchBarYExtra != 0 {
                 self.searchBarYExtra = 0
             }
-        }
-    }
-    
-    func snapToBottom(_ toBottom: Bool = true) {
-        log.info()
-        // prevent dragging after snap
-        self.setDragState(.off)
-        
-        self.animate(
-            Animation.spring(response: 0.5).speed(ANIMATION_SPEED),
-            duration: 300
-        ) {
-            self.scrollState.setScrollY(0)
-            self.searchBarYExtra = 0
-            if toBottom {
-                self.y = self.snappedToBottomMapHeight
-            } else {
-                self.y = self.startSnapToBottomAt
-            }
-        }
-        
-        async(300) {
-            self.setDragState(.idle)
         }
     }
     
@@ -406,6 +426,12 @@ class HomeViewState: ObservableObject {
             log.info()
             self.animateTo(0)
         }
+    }
+    
+    func isWithinDraggableArea(_ val: CGFloat) -> Bool {
+        let padding: CGFloat = 9
+        return val >= self.y - App.searchBarHeight / 2 - padding
+            && val <= self.y + App.searchBarHeight / 2 + padding
     }
     
     func setScrollY(_ frame: CGRect) {
