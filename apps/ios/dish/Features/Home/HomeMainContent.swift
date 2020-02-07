@@ -20,7 +20,7 @@ struct HomeMainContentContainer<Content>: View where Content: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             SideEffect("HomeMainContent.animateToEnd",
-                       condition: { !self.shouldUpdateMagicPositions && self.isSnappedToBottom && self.animatePosition == .start }) {
+                       condition: { self.isSnappedToBottom && self.animatePosition == .start }) {
                 self.shouldUpdateMagicPositions = false
                 async {
                     self.animatePosition = .end
@@ -28,7 +28,7 @@ struct HomeMainContentContainer<Content>: View where Content: View {
             }
             
             SideEffect("HomeMainContent.animateToStart",
-                       condition: { !self.shouldUpdateMagicPositions && !self.isSnappedToBottom && self.animatePosition == .end }) {
+                       condition: { !self.isSnappedToBottom && self.animatePosition == .end }) {
                 self.shouldUpdateMagicPositions = false
                 async {
                     self.animatePosition = .start
@@ -233,7 +233,11 @@ struct HomeContentExploreBy: View, Identifiable {
                     }
                     
                     // spacer of whats above it height so it can scoll up to searchbar
-                    Spacer().frame(height: App.searchBarHeight / 2 + App.filterBarHeight + self.homeState.scrollRevealY)
+                    Spacer().frame(
+                        height: App.searchBarHeight / 2 + App.filterBarHeight + self.homeState.scrollRevealY
+                        // why
+                         - 10
+                    )
                     
                     VStack(spacing: self.spacing) {
                         ForEach(0 ..< self.items.count) { index in

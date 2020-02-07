@@ -32,8 +32,8 @@ class AppInstance {
     let topNavHeight: CGFloat = 58
     let topNavPad: CGFloat = 14
     let cameraButtonHeight: CGFloat = 44
-    let filterBarHeight: CGFloat = 54
-    let filterBarPad: CGFloat = 11
+    let filterBarHeight: CGFloat = 60
+    let filterBarPad: CGFloat = 16
     
     func start() {
         mapService.start()

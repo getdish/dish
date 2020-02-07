@@ -62,7 +62,7 @@ struct HomeSearchBar: View {
             )
         } else {
             return AnyView(
-                Text("🔥")
+                Image(systemName: "magnifyingglass")
             )
         }
     }
@@ -116,13 +116,16 @@ struct HomeSearchBar: View {
 }
 
 struct HomeSearchBarAfterView: View {
-    var scale: CGFloat
-    
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
+
+    var scale: CGFloat
     
     var body: some View {
-        HStack {
+        let oppositeColor = colorScheme == .dark ? Color.white : Color.black
+        
+        return HStack {
             Button(action: {
                 self.homeState.toggleSnappedToBottom()
             }) {
@@ -153,8 +156,27 @@ struct HomeSearchBarAfterView: View {
             .padding(.horizontal, 6 * scale)
             
             // space for the camera button
-            Spacer()
-                .frame(width: App.cameraButtonHeight)
+            CustomButton2(action: {
+                
+            }) {
+                ZStack {
+                    Group {
+                        Image(systemName: "arrowtriangle.up.circle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(Color("color-brand").opacity(0.5))
+                    }
+                    .foregroundColor(oppositeColor.opacity(0.5))
+                }
+                .padding(.all, 40 * 0.33)
+                .frame(width: 40, height: 40)
+                .cornerRadius(40)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 40)
+                        .stroke(oppositeColor.opacity(0.1), lineWidth: 1)
+                )
+            }
+            .frame(width: 40)
         }
     }
 }
@@ -168,9 +190,7 @@ struct CameraButton: View {
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
-        let oppositeColor = colorScheme == .dark
-            ? Color.white
-            : Color.black
+        let oppositeColor = colorScheme == .dark ? Color.white : Color.black
         
         return CustomButton2(action: {
             self.lastTap = Date()

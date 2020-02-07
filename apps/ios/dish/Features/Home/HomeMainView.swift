@@ -83,7 +83,7 @@ struct HomeMainView: View {
                             // map mask a bit
                             HomeMapMask()
                                 .offset(y: mapHeight - 20)
-                                .animation(.spring(response: 0.4))
+                                .animation(.spring(response: 0.25, dampingFraction: 0.6))
                             
                             // map fade out at bottom
                             VStack {
