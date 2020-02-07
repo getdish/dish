@@ -12,7 +12,7 @@ fileprivate func getInitialY(_ screenHeight: CGFloat) -> CGFloat {
 
 class HomeViewState: ObservableObject {
     enum HomeDragState {
-        case idle, off, pager, searchbar
+        case idle, off, pager, searchbar, contentHorizontal
     }
     enum HomeAnimationState {
         case idle, splash, controlled, animate
@@ -429,7 +429,7 @@ class HomeViewState: ObservableObject {
     }
     
     func isWithinDraggableArea(_ val: CGFloat) -> Bool {
-        let padding: CGFloat = 5
+        let padding: CGFloat = 9
         return val >= self.y - App.searchBarHeight / 2 - padding
             && val <= self.y + App.searchBarHeight / 2 + padding
     }
