@@ -25,7 +25,6 @@ class AppInstance {
     let keyboard = Keyboard()
     let queueMain = DispatchQueue.main
     let magicItems = magicItemsStore
-    let searchBarLabelHeight: CGFloat = 26
     let searchBarHeight: CGFloat = 50
     let topNavHeight: CGFloat = 58
     let topNavPad: CGFloat = 14
