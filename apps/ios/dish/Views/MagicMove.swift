@@ -293,11 +293,6 @@ struct MagicItem<Content>: View where Content: View {
         let enabled = !self.isDisabled && !isOffScreen && !isMagicStoreAnimating && hasChanged
 //        print("enabled \(enabled) -- \(!self.isDisabled) \(!isOffScreen) \(!isMagicStoreAnimating) \(hasChanged)")
         
-        let dist = Date().timeIntervalSince(homeViewState.lastSnapAt)
-        if enabled && dist < 4 {
-            print("bad")
-        }
-        
         return (name, enabled, item)
     }
     
@@ -319,15 +314,18 @@ struct MagicItem<Content>: View where Content: View {
             
             self.content
                 .overlay(
-                    GeometryReader { geometry -> SideEffect in
+                    GeometryReader { geometry -> Color in
                         let frame = geometry.frame(in: .global)
-                        let (name, enabled, item) = self.setupSideEffect(frame)
-                        return SideEffect(name, level: .debug, condition: { enabled }) {
-                            if frame != self.lastFrame {
-                                self.lastFrame = frame
+                        let (_, enabled, item) = self.setupSideEffect(frame)
+                        if enabled {
+                            async {
+                                if frame != self.lastFrame {
+                                    self.lastFrame = frame
+                                }
+                                self.updateItem(item)
                             }
-                            self.updateItem(item)
                         }
+                        return Color.clear
                     }
             )
         }
