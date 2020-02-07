@@ -145,6 +145,10 @@ struct HomeSearchBarAfterView: View {
                             Image(systemName: "map")
                                 .resizable()
                                 .scaledToFit()
+                        } else {
+                            Image(systemName: "chevron.down")
+                                .resizable()
+                                .scaledToFit()
                         }
                     }
                 }

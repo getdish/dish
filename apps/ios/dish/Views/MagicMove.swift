@@ -70,21 +70,24 @@ struct MagicMove<Content>: View where Content: View {
         onMoveComplete: (() -> Void)? = nil,
         @ViewBuilder content: @escaping () -> Content
     ) {
-        let realDuration = duration * (1 / App.animationSpeed)
+        let realDuration = duration
+        print("realDuration \(realDuration)")
         
         self.content = content
         self.disableTracking = disableTracking
         self.onMoveComplete = onMoveComplete
-        self.animation = .linear(duration: 0)
+        self.animation = .easeInOut(duration: realDuration / 1000)
         self.lastContent = content()
         self.position = position
         self.store.disableTracking = disableTracking
-        if position != lastPosition {
+        
+        // run animation
+        let hasNewPosition = position != lastPosition
+        let shouldRun = run != nil && self.lastRun != run
+        if hasNewPosition {
             lastPosition = position
-            self.lastRun = run
-            store.animate(position, duration: realDuration, onMoveComplete: onMoveComplete)
         }
-        else if run != nil && self.lastRun != run {
+        if shouldRun || hasNewPosition {
             self.lastRun = run
             store.animate(position, duration: realDuration, onMoveComplete: onMoveComplete)
         }
@@ -198,6 +201,8 @@ struct AnimatedView: View, Identifiable {
                             x: self.animatePosition!.minX,
                             y: self.animatePosition!.minY
                         )
+                        .animation(self.animation)
+                        
                     Spacer()
                 }
             }
@@ -281,6 +286,11 @@ struct MagicItem<Content>: View where Content: View {
         let name = "MagicItem \(self.at) \(self.id) -- \(frame.minX) \(frame.minY)"
         let enabled = !self.isDisabled && !isOffScreen && !isMagicStoreAnimating && hasChanged
         print("enabled \(enabled) -- \(!self.isDisabled) \(!isOffScreen) \(!isMagicStoreAnimating) \(hasChanged)")
+        
+        let dist = Date().timeIntervalSince(homeViewState.lastSnapAt)
+        if enabled && dist < 5 {
+            print("bad")
+        }
         
         return (name, enabled, item)
     }

@@ -36,7 +36,7 @@ class HomeViewState: ObservableObject {
     @Published private(set) var keyboardHeight: CGFloat = 0
     @Published private(set) var locationLabelWidth: CGFloat = 0
     
-    let snapToBottomAnimationDuration: Double = 400
+    let snapToBottomAnimationDuration: Double = 400 * (1 / App.animationSpeed)
     
     private var scrollState = HomeMainScrollState()
     private var activeScrollView: UIScrollView? = nil
@@ -233,25 +233,24 @@ class HomeViewState: ObservableObject {
     }
     
     func setAnimationState(_ next: HomeAnimationState, _ duration: Double = 0) {
-        async {
-            self.animationState = next
-            // cancel last controlled animation
-            if next != .idle,
-                let handle = self.cancelAnimation {
-                handle.cancel()
-            }
-            // allow timeout
-            if duration > 0 {
-                var active = true
-                self.cancelAnimation = AnyCancellable {
-                    active = false
-                }
-                async(duration) {
-                    if active {
-                        self.setAnimationState(.idle)
-                        self.cancelAnimation = nil
-                    }
-                }
+        // cancel last controlled animation
+        if next != .idle,
+            let handle = self.cancelAnimation {
+            handle.cancel()
+        }
+        
+        // set state
+        self.animationState = next
+        
+        // end set state
+        if duration > 0 {
+            // allows cancel
+            var cancel = false
+            self.cancelAnimation = AnyCancellable { cancel = true }
+            async(duration) {
+                if cancel { return }
+                self.setAnimationState(.idle)
+                self.cancelAnimation = nil
             }
         }
     }
@@ -272,8 +271,12 @@ class HomeViewState: ObservableObject {
         }
     }
     
+    var lastSnapAt = Date()
+    
     func snapToBottom(_ toBottom: Bool = true) {
         log.info()
+        self.lastSnapAt = Date()
+
         // prevent dragging after snap
         self.setDragState(.off)
         
