@@ -61,17 +61,17 @@ struct ContextMenuDisplay: View {
         
         func open(_ item: ContextMenuItemStore) {
             print("opening \(item)")
-//            withAnimation {
-//                self.item = item
-//            }
+            withAnimation {
+                self.item = item
+            }
         }
         
         func close() {
             print("closing...")
             self.item.state = .closed
-//            withAnimation {
-//                self.item = defaultContextStore
-//            }
+            withAnimation {
+                self.item = defaultContextStore
+            }
             async(300) {
                 self.parentStore.item = nil
             }

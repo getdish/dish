@@ -189,36 +189,56 @@ struct HomeMainView: View {
     }
     
     var dragGesture: _EndedGesture<_ChangedGesture<DragGesture>> {
-        return DragGesture(minimumDistance: 10)
+        enum CurDragState { case idle, active, ignore  }
+        
+        var curDrag: CurDragState = .idle
+        
+        return DragGesture(minimumDistance: 7)
             .onChanged { value in
-                if [.off, .pager].contains(self.state.dragState) {
-                    //                    print("☕️ ignore \(self.state.dragState)")
+                let isDraggingSearchBar = self.state.isWithinDraggableArea(value.startLocation.y)
+                if curDrag == .idle {
+                    if [.off, .pager].contains(self.state.dragState) {
+                        return
+                    }
+                    if !isDraggingSearchBar {
+                        curDrag = .ignore
+                    } else {
+                        curDrag = .active
+                    }
+                }
+                if curDrag != .active {
+                    if abs(value.translation.width) > abs(value.translation.height)
+                        && abs(value.translation.width) > 15 {
+                        curDrag = .ignore
+                    }
+                }
+                if curDrag == .ignore {
                     return
                 }
-                
-                let isAlreadyDragging = self.state.dragState == .searchbar
-                let isDraggingSearchBar = self.state.isWithinDraggableArea(value.startLocation.y)
+                curDrag = .active
+
 //                let isDraggingBelowSearchBar = self.state.isActiveScrollViewAtTop
 //                    && HomeSearchBarState.isBelow(value.startLocation.y)
                 
                 //                print("☕️ self.state.isActiveScrollViewAtTop \(self.state.isActiveScrollViewAtTop) isDraggingBelowSearchBar \(isDraggingBelowSearchBar) height \(value.translation.height)")
                 
-                if isAlreadyDragging || isDraggingSearchBar {
+                let next = value.translation.height.round(nearest: 0.5)
+                if next != self.state.y {
                     if self.keyboard.state.height > 0 {
                         self.keyboard.hide()
                     }
-                    let next = value.translation.height.round(nearest: 0.5)
-                    if next != self.state.y {
-                        self.state.setY(next)
-                    }
+                    self.state.setY(next)
                 }
-        }
-        .onEnded { value in
-            if [.idle, .searchbar].contains(self.state.dragState) {
-                self.state.finishDrag(value)
             }
-            self.state.setDragState(.idle)
-        }
+            .onEnded { value in
+                if curDrag == .active {
+                    if [.idle, .searchbar].contains(self.state.dragState) {
+                        self.state.finishDrag(value)
+                    }
+                    self.state.setDragState(.idle)
+                }
+                curDrag = .idle
+            }
     }
 }
 

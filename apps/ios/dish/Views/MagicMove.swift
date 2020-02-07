@@ -176,6 +176,7 @@ struct MagicMove<Content>: View where Content: View {
                             (self.store.position == .start ? start : end).frame
                         
                         return AnimatedView(
+                            zIndex: Double(keys.count - index),
                             animation: self.animation,
                             animateItem: animateItem,
                             animatePosition: animatePosition
@@ -190,6 +191,7 @@ struct MagicMove<Content>: View where Content: View {
 struct AnimatedView: View, Identifiable {
     var id: String { self.animateItem?.id ?? "empty---" }
 
+    var zIndex: Double = 0.0
     var animation: Animation = .default
     var animateItem: MagicItemDescription? = nil
     var animatePosition: CGRect? = nil
@@ -207,6 +209,7 @@ struct AnimatedView: View, Identifiable {
                             x: self.animatePosition!.minX,
                             y: self.animatePosition!.minY
                         )
+                        .zIndex(self.zIndex)
                         .animation(self.animation)
                         
                     Spacer()

@@ -429,9 +429,9 @@ class HomeViewState: ObservableObject {
     }
     
     func isWithinDraggableArea(_ val: CGFloat) -> Bool {
-        let padding: CGFloat = 10
-        return val >= self.y - padding
-            && val <= self.y + App.searchBarHeight + padding
+        let padding: CGFloat = 5
+        return val >= self.y - App.searchBarHeight / 2 - padding
+            && val <= self.y + App.searchBarHeight / 2 + padding
     }
     
     func setScrollY(_ frame: CGRect) {
