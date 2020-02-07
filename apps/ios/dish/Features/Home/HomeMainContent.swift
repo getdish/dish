@@ -18,25 +18,18 @@ struct HomeMainContentContainer<Content>: View where Content: View {
     }
     
     var body: some View {
-        print("disableMagicTracking \(disableMagicTracking)")
+        print("📓 self.isSnappedToBottom \(self.isSnappedToBottom) self.animatePosition \(self.animatePosition) disableMagicTracking \(disableMagicTracking)")
+        
+        async {
+            if self.isSnappedToBottom && self.animatePosition == .start {
+                self.animatePosition = .end
+            }
+            if !self.isSnappedToBottom && self.animatePosition == .end {
+                self.animatePosition = .start
+            }
+        }
         
         return ZStack(alignment: .topLeading) {
-            SideEffect("HomeMainContent.animateToEnd",
-                       condition: { self.isSnappedToBottom && self.animatePosition == .start }) {
-                self.shouldUpdateMagicPositions = false
-                async {
-                    self.animatePosition = .end
-                }
-            }
-            
-            SideEffect("HomeMainContent.animateToStart",
-                       condition: { !self.isSnappedToBottom && self.animatePosition == .end }) {
-                self.shouldUpdateMagicPositions = false
-                async {
-                    self.animatePosition = .start
-                }
-            }
-
             PrintGeometryView("HomeMainContent")
             
             // note! be sure to put any animation on this *inside* magic move

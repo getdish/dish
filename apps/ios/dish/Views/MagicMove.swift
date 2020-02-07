@@ -28,21 +28,29 @@ class MagicItemsStore: ObservableObject {
         clear()
         var cancel = false
         clear = { cancel = true }
-        async(50) {
+        async(16 * 3) {
             if self.disableTracking { return }
             if cancel { return }
             self.triggerUpdate = NSDate()
         }
     }
     
+    var cancelLast = AnyCancellable({})
+    
     func animate(_ position: MagicItemPosition, duration: Double, onMoveComplete: (() -> Void)?) {
+        print("🧙‍♀️ MagicMove animate to \(position) \(duration)")
         self.state = .start
+        self.cancelLast.cancel()
+        var cancelled = false
+        self.cancelLast = AnyCancellable { cancelled = true }
         async(2) {
             self.position = position
             self.state = .animate
             async(duration) {
-                self.state = .done
-                if let cb = onMoveComplete { cb() }
+                if !cancelled {
+                    self.state = .done
+                    if let cb = onMoveComplete { cb() }
+                }
             }
         }
     }
@@ -70,13 +78,10 @@ struct MagicMove<Content>: View where Content: View {
         onMoveComplete: (() -> Void)? = nil,
         @ViewBuilder content: @escaping () -> Content
     ) {
-        let realDuration = duration
-        print("realDuration \(realDuration)")
-        
         self.content = content
         self.disableTracking = disableTracking
         self.onMoveComplete = onMoveComplete
-        self.animation = .easeInOut(duration: realDuration / 1000)
+        self.animation = .easeInOut(duration: duration / 1000)
         self.lastContent = content()
         self.position = position
         self.store.disableTracking = disableTracking
@@ -87,9 +92,10 @@ struct MagicMove<Content>: View where Content: View {
         if hasNewPosition {
             lastPosition = position
         }
+        print("🏆🏆🏆 shouldRun, hasNewPosition \((shouldRun, hasNewPosition)) ")
         if shouldRun || hasNewPosition {
             self.lastRun = run
-            store.animate(position, duration: realDuration, onMoveComplete: onMoveComplete)
+            store.animate(position, duration: duration, onMoveComplete: onMoveComplete)
         }
     }
     
@@ -285,10 +291,10 @@ struct MagicItem<Content>: View where Content: View {
         
         let name = "MagicItem \(self.at) \(self.id) -- \(frame.minX) \(frame.minY)"
         let enabled = !self.isDisabled && !isOffScreen && !isMagicStoreAnimating && hasChanged
-        print("enabled \(enabled) -- \(!self.isDisabled) \(!isOffScreen) \(!isMagicStoreAnimating) \(hasChanged)")
+//        print("enabled \(enabled) -- \(!self.isDisabled) \(!isOffScreen) \(!isMagicStoreAnimating) \(hasChanged)")
         
         let dist = Date().timeIntervalSince(homeViewState.lastSnapAt)
-        if enabled && dist < 5 {
+        if enabled && dist < 4 {
             print("bad")
         }
         
