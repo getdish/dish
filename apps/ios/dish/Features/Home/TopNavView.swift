@@ -130,7 +130,6 @@ struct TopNavHome: View {
 
                         }
                         .modifier(TopNavButtonStyle())
-                        .animation(Animation.spring().delay(isOnHome ? 0.2 : 0.4))
                     }
                 }
                 .opacity(isOnHome ? 1 : 0)

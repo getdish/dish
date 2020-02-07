@@ -36,6 +36,8 @@ class HomeViewState: ObservableObject {
     @Published private(set) var keyboardHeight: CGFloat = 0
     @Published private(set) var locationLabelWidth: CGFloat = 0
     
+    let snapToBottomAnimationDuration: Double = 400
+    
     private var scrollState = HomeMainScrollState()
     private var activeScrollView: UIScrollView? = nil
     private var cancelAnimation: AnyCancellable? = nil
@@ -275,7 +277,7 @@ class HomeViewState: ObservableObject {
         // prevent dragging after snap
         self.setDragState(.off)
         
-        let duration = 280.0
+        let duration = self.snapToBottomAnimationDuration
         
         self.animate(
             Animation.spring(response: 0.28, dampingFraction: 0.9).speed(App.animationSpeed),

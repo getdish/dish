@@ -24,23 +24,27 @@ struct ScrollViewEnhanced<Content: View & Identifiable>: View {
                 .content.offset(x: self.isGestureActive ? self.offset : -geometry.size.width * CGFloat(self.index))
                 // 3
                 .frame(width: geometry.size.width, height: nil, alignment: .leading)
-                .gesture(DragGesture().onChanged({ value in
-                    // 4
-                    self.isGestureActive = true
-                    // 5
-                    self.offset = value.translation.width + -geometry.size.width * CGFloat(self.index)
-                }).onEnded({ value in
-                    if -value.predictedEndTranslation.width > geometry.size.width / 2, self.index < self.pages.endIndex - 1 {
-                        self.index += 1
-                    }
-                    if value.predictedEndTranslation.width > geometry.size.width / 2, self.index > 0 {
-                        self.index -= 1
-                    }
-                    // 6
-                    withAnimation { self.offset = -geometry.size.width * CGFloat(self.index) }
-                    // 7
-                    DispatchQueue.main.async { self.isGestureActive = false }
-                }))
+                .gesture(
+                    DragGesture()
+                        .onChanged { value in
+                            // 4
+                            self.isGestureActive = true
+                            // 5
+                            self.offset = value.translation.width + -geometry.size.width * CGFloat(self.index)
+                        }
+                        .onEnded { value in
+                            if -value.predictedEndTranslation.width > geometry.size.width / 2, self.index < self.pages.endIndex - 1 {
+                                self.index += 1
+                            }
+                            if value.predictedEndTranslation.width > geometry.size.width / 2, self.index > 0 {
+                                self.index -= 1
+                            }
+                            // 6
+                            withAnimation { self.offset = -geometry.size.width * CGFloat(self.index) }
+                            // 7
+                            async { self.isGestureActive = false }
+                        }
+                )
         }
     }
 }

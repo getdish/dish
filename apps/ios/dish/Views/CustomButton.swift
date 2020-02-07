@@ -14,14 +14,16 @@ struct CustomButton<Content: View>: View {
     
     var body: some View {
         self.content
-            .animation(.spring())
+            // ⚠️ dont put .animation() here or every subview animates
             .opacity(self.isTapped ? 0.5 : 1)
             .onTapGesture {
                 self.lastTap = Date()
                 self.action()
             }
             .onLongPressGesture(minimumDuration: 10000, pressing: { isPressing in
-                self.isTapped = isPressing
+                withAnimation(.spring()) {
+                    self.isTapped = isPressing
+                }
             }) {
                 if self.lastTap.timeIntervalSinceNow > 10 {
                     self.action()
@@ -45,9 +47,9 @@ struct CustomButton2<Content: View>: View {
     
     var body: some View {
         self.content
+            // ⚠️ dont put .animation() here or every subview animates
             .scaleEffect(self.isTapped ? 0.9 : 1)
             .opacity(self.isTapped ? 0.9 : 1)
-            .animation(.spring())
             .onTapGesture {
                 self.lastTap = Date()
                 self.action()
@@ -56,7 +58,9 @@ struct CustomButton2<Content: View>: View {
             minimumDuration: 10000,
             maximumDistance: 8,
             pressing: { isPressing in
-            self.isTapped = isPressing
+            withAnimation(.spring()) {
+                self.isTapped = isPressing
+            }
         }) {
             if self.lastTap.timeIntervalSinceNow > 10 {
                 self.action()

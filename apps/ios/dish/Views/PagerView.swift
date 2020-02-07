@@ -165,10 +165,10 @@ class PagerStore: ObservableObject {
         print("animateTo from \(self.index) to \(index)")
         self.offset = CGFloat(self.index) * -self.width
         self.isGestureActive = true
-        withAnimation(.spring()) {
-            self.offset = -width * CGFloat(index)
-        }
-        DispatchQueue.main.async {
+//        withAnimation(.spring()) {
+//            self.offset = -width * CGFloat(index)
+//        }
+        async {
             self.index = index
             self.indexLast = Int(self.index)
             self.isGestureActive = false
@@ -213,7 +213,7 @@ class PagerStore: ObservableObject {
             self.offset = -width * CGFloat(self.index)
         }
 
-        DispatchQueue.main.async {
+        async {
             self.indexLast = Int(self.index)
             self.isGestureActive = false
             self.triggerPageChange()

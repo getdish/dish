@@ -28,7 +28,7 @@ class MagicItemsStore: ObservableObject {
         clear()
         var cancel = false
         clear = { cancel = true }
-        async(100) {
+        async(50) {
             if self.disableTracking { return }
             if cancel { return }
             self.triggerUpdate = NSDate()
@@ -75,7 +75,7 @@ struct MagicMove<Content>: View where Content: View {
         self.content = content
         self.disableTracking = disableTracking
         self.onMoveComplete = onMoveComplete
-        self.animation = .easeInOut(duration: realDuration / 1000)
+        self.animation = .linear(duration: 0)
         self.lastContent = content()
         self.position = position
         self.store.disableTracking = disableTracking
@@ -180,6 +180,7 @@ struct MagicMove<Content>: View where Content: View {
 
 struct AnimatedView: View, Identifiable {
     var id: String { self.animateItem?.id ?? "empty---" }
+
     var animation: Animation = .default
     var animateItem: MagicItemDescription? = nil
     var animatePosition: CGRect? = nil
@@ -189,16 +190,14 @@ struct AnimatedView: View, Identifiable {
             if self.animateItem != nil || self.animatePosition != nil {
                 VStack {
                     animateItem!.view
-                        .animation(self.animation)
                         .frame(
                             width: self.animatePosition!.width,
                             height: self.animatePosition!.height
-                    )
+                        )
                         .offset(
                             x: self.animatePosition!.minX,
                             y: self.animatePosition!.minY
-                    )
-                    
+                        )
                     Spacer()
                 }
             }
@@ -281,7 +280,7 @@ struct MagicItem<Content>: View where Content: View {
         
         let name = "MagicItem \(self.at) \(self.id) -- \(frame.minX) \(frame.minY)"
         let enabled = !self.isDisabled && !isOffScreen && !isMagicStoreAnimating && hasChanged
-//        print("enabled \(enabled) -- \(!self.isDisabled) \(!isOffScreen) \(!isMagicStoreAnimating) \(hasChanged)")
+        print("enabled \(enabled) -- \(!self.isDisabled) \(!isOffScreen) \(!isMagicStoreAnimating) \(hasChanged)")
         
         return (name, enabled, item)
     }

@@ -30,7 +30,7 @@ struct VerticalCardPager<Content: View>: View {
             .background(Color.black.opacity(0.0001))
             .offset(y: -CGFloat(self.currentIndex) * self.height)
             .offset(y: self.translation)
-            .animation(.spring(response: 0.4))
+//            .animation(.spring(response: 0.4))
             .simultaneousGesture(
                 DragGesture(minimumDistance: 10.0).updating(self.$translation) { value, state, _ in
                     let x = value.translation.width

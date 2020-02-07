@@ -33,76 +33,67 @@ struct HomeViewInner: View {
     @EnvironmentObject var store: AppStore
     @State var disableDragging = true
     @State var isDragging = false
-    @State var shadowStr: Double = 1
 
     var body: some View {
-        // animate home shadow only
-        let next: Double = self.store.state.home.view == .home || isDragging ? 1 : 0
-        if next != self.shadowStr {
-            DispatchQueue.main.async {
-                withAnimation(.spring()) {
-                    self.shadowStr = next
-                }
-            }
-        }
-        
-        return ZStack {
+        ZStack {
             PrintGeometryView("HomeView")
             
-            PagerView(
-                pageCount: homePageCount,
-                pagerStore: homePager,
-                disableDragging: self.disableDragging || App.store.state.home.showCamera
-                ) { isDragging in
-                    //
-                    // ⚠️ ⚠️ ⚠️
-                    //    ADDING .clipped() to any of these causes perf issues!!!
-                    //    animations below seem to be choppier
-                    // ⚠️ ⚠️ ⚠️
-                    //
-                    
-                    // account page
-                    DishAccount()
-                        .zIndex(0)
-                    
-                    // home page
-                    HomeMainView()
-                        .zIndex(2)
-                    
-                    // third page
-                    Color.black
-            }
-            .onChangeDrag { isDragging in
-                print("set isDragging \(isDragging)")
-                self.isDragging = isDragging
-            }
-            .onChangePage { index in
-                print("change page to index \(index)")
-                let view = homeViewsIndex[index]
-                self.disableDragging = view == .home
-                self.store.send(.home(.setView(view)))
-            }
-            // just drag from edge (to camera/account)
-            .simultaneousGesture(
-                DragGesture()
-                    .onChanged { value in
-                        if homeViewState.dragState == .searchbar { return }
-                        let isOnRightEdge = self.width - value.startLocation.x < 10
-                        let isOnLeftEdge = value.startLocation.x < 10
-                        if isOnRightEdge || isOnLeftEdge {
-                            if abs(value.translation.width) > 10 {
-                                homeViewState.setDragState(.pager)
-                            }
-                            homePager.drag(value)
-                        }
-                }
-                .onEnded { value in
-                    if homeViewState.dragState == .pager {
-                        homePager.onDragEnd(value)
-                        homeViewState.setDragState(.idle)
-                    }
-                }
-            )
+            HomeMainView()
+            
+//            PagerView(
+//                pageCount: homePageCount,
+//                pagerStore: homePager,
+//                disableDragging: self.disableDragging || App.store.state.home.showCamera
+//                ) { isDragging in
+//                    //
+//                    // ⚠️ ⚠️ ⚠️
+//                    //    ADDING .clipped() to any of these causes perf issues!!!
+//                    //    animations below seem to be choppier
+//                    // ⚠️ ⚠️ ⚠️
+//                    //
+//
+//                    // account page
+//                    DishAccount()
+//                        .zIndex(0)
+//
+//                    // home page
+//                    HomeMainView()
+//                        .zIndex(2)
+//
+//                    // third page
+//                    Color.black
+//            }
+//            .onChangeDrag { isDragging in
+//                print("set isDragging \(isDragging)")
+//                self.isDragging = isDragging
+//            }
+//            .onChangePage { index in
+//                print("change page to index \(index)")
+//                let view = homeViewsIndex[index]
+//                self.disableDragging = view == .home
+//                self.store.send(.home(.setView(view)))
+//            }
+//            // just drag from edge (to camera/account)
+//            .simultaneousGesture(
+//                DragGesture()
+//                    .onChanged { value in
+//                        if homeViewState.dragState == .searchbar { return }
+//                        let isOnRightEdge = self.width - value.startLocation.x < 10
+//                        let isOnLeftEdge = value.startLocation.x < 10
+//                        if isOnRightEdge || isOnLeftEdge {
+//                            if abs(value.translation.width) > 10 {
+//                                homeViewState.setDragState(.pager)
+//                            }
+//                            homePager.drag(value)
+//                        }
+//                }
+//                .onEnded { value in
+//                    if homeViewState.dragState == .pager {
+//                        homePager.onDragEnd(value)
+//                        homeViewState.setDragState(.idle)
+//                    }
+//                }
+//            )
         }
         .frame(maxHeight: self.height)
     }

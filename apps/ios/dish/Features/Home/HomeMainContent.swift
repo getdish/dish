@@ -41,7 +41,7 @@ struct HomeMainContentContainer<Content>: View where Content: View {
             
             // note! be sure to put any animation on this *inside* magic move
             MagicMove(self.animatePosition,
-                      duration: 300,
+                      duration: homeViewState.snapToBottomAnimationDuration,
                       // TODO we need a separate "disableTracking" in homeStore that is manually set
                       // why? when hitting "map" toggle button when above snapToBottomAt this fails for now
                       disableTracking: disableMagicTracking,
