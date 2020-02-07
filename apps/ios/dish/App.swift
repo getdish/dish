@@ -21,7 +21,7 @@ class AppInstance {
     let enableMap = true
     let enableMapAutoZoom = false
     let enableContent = true
-    let enableCamera = false
+    let enableCamera = true
     
     // constants
     let keyboard = Keyboard()

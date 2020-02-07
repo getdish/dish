@@ -156,27 +156,28 @@ struct HomeSearchBarAfterView: View {
             .padding(.horizontal, 6 * scale)
             
             // space for the camera button
-            CustomButton2(action: {
-                
-            }) {
-                ZStack {
-                    Group {
-                        Image(systemName: "arrowtriangle.up.circle.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundColor(Color("color-brand").opacity(0.5))
-                    }
-                    .foregroundColor(oppositeColor.opacity(0.5))
-                }
-                .padding(.all, 40 * 0.33)
-                .frame(width: 40, height: 40)
-                .cornerRadius(40)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 40)
-                        .stroke(oppositeColor.opacity(0.1), lineWidth: 1)
-                )
-            }
-            .frame(width: 40)
+//            CustomButton2(action: {
+//
+//            }) {
+//                ZStack {
+//                    Group {
+//                        Image(systemName: "arrowtriangle.up.circle.fill")
+//                            .resizable()
+//                            .scaledToFit()
+//                            .foregroundColor(Color("color-brand").opacity(0.5))
+//                    }
+//                    .foregroundColor(oppositeColor.opacity(0.5))
+//                }
+//                .padding(.all, 40 * 0.33)
+//                .frame(width: 40, height: 40)
+//                .cornerRadius(40)
+//                .overlay(
+//                    RoundedRectangle(cornerRadius: 40)
+//                        .stroke(oppositeColor.opacity(0.1), lineWidth: 1)
+//                )
+//            }
+            Color.clear
+                .frame(width: App.cameraButtonHeight)
         }
     }
 }

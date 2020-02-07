@@ -6,7 +6,6 @@ fileprivate let cardRowHeight: CGFloat = 120
 
 struct HomeMainContentContainer<Content>: View where Content: View {
     @State var animatePosition: MagicItemPosition = .start
-    @State var shouldUpdateMagicPositions: Bool = true
     var isSnappedToBottom: Bool = false
     var disableMagicTracking: Bool = false
     var content: Content
@@ -21,18 +20,12 @@ struct HomeMainContentContainer<Content>: View where Content: View {
         ZStack(alignment: .topLeading) {
             SideEffect("HomeMainContent.animateToEnd",
                        condition: { self.isSnappedToBottom && self.animatePosition == .start }) {
-                self.shouldUpdateMagicPositions = false
-                async {
-                    self.animatePosition = .end
-                }
+                self.animatePosition = .end
             }
             
             SideEffect("HomeMainContent.animateToStart",
                        condition: { !self.isSnappedToBottom && self.animatePosition == .end }) {
-                self.shouldUpdateMagicPositions = false
-                async {
-                    self.animatePosition = .start
-                }
+                self.animatePosition = .start
             }
 
             PrintGeometryView("HomeMainContent")
@@ -41,12 +34,7 @@ struct HomeMainContentContainer<Content>: View where Content: View {
                       duration: 300 * (1 / ANIMATION_SPEED),
                       // TODO we need a separate "disableTracking" in homeStore that is manually set
                       // why? when hitting "map" toggle button when above snapToBottomAt this fails for now
-                      disableTracking: disableMagicTracking,
-                      onMoveComplete: {
-                        if !self.isSnappedToBottom {
-                            self.shouldUpdateMagicPositions = true
-                        }
-                    }
+                      disableTracking: disableMagicTracking
             ) {
                 self.content
             }
@@ -86,7 +74,7 @@ struct HomeMainContent: View {
                 }
             }
             .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
-            .offset(y: self.homeState.snappedToBottomMapHeight - cardRowHeight - App.searchBarLabelHeight - 14)
+            .offset(y: self.homeState.snappedToBottomMapHeight - cardRowHeight - 16)
         }
         // note! be sure to put any animation on this *inside* magic move
         // or else it messes up the magic move measurement - you can test
