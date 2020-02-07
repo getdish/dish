@@ -76,14 +76,14 @@ struct HomeMainView: View {
                                 .frame(height: self.appGeometry?.size.height)
                                 .offset(y: state.showCamera ? -Screen.height : 0)
                                 .opacity(state.showCamera ? 0 : 1)
-                                .animation(.spring(response: 0.8))
+                                .animation(.spring(response: 0.8), value: state.animationState == .animate)
                                 .rotationEffect(state.showCamera ? .degrees(-10) : .degrees(0))
                                 .frameLimitedToScreen()
                             
                             // map mask a bit
                             HomeMapMask()
                                 .offset(y: mapHeight - 20)
-                                .animation(.spring(response: 0.25, dampingFraction: 0.6))
+                                .animation(.spring(response: 0.25, dampingFraction: 0.6), value: state.animationState == .animate)
                             
                             // map fade out at bottom
                             VStack {

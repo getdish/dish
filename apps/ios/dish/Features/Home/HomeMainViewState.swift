@@ -251,7 +251,7 @@ class HomeViewState: ObservableObject {
     }
     
     func animate(
-        _ animation: Animation? = Animation.spring().speed(ANIMATION_SPEED),
+        _ animation: Animation? = Animation.spring().speed(App.animationSpeed),
         state: HomeAnimationState = .controlled,
         duration: Double = 400,
         _ body: @escaping () -> Void
@@ -274,7 +274,7 @@ class HomeViewState: ObservableObject {
         let duration = 280.0
         
         self.animate(
-            Animation.spring(response: 0.28, dampingFraction: 0.9).speed(ANIMATION_SPEED),
+            Animation.spring(response: 0.28, dampingFraction: 0.9).speed(App.animationSpeed),
             duration: duration
         ) {
             self.searchBarYExtra = 0
@@ -369,8 +369,8 @@ class HomeViewState: ObservableObject {
         let shouldSnapDown = finalY > snapToBottomAt
         
         let animation: Animation = shouldSnapDown
-            ? Animation.spring().speed(ANIMATION_SPEED)
-            : Animation.easeOut.speed(ANIMATION_SPEED)
+            ? Animation.spring().speed(App.animationSpeed)
+            : Animation.easeOut.speed(App.animationSpeed)
         
         self.animate(animation) {
             if shouldSnapDown || self.isSnappedToBottom {
