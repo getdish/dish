@@ -1,7 +1,7 @@
 import SwiftUI
 import Combine
 
-fileprivate let DEBUG_ANIMATION = false
+fileprivate let DEBUG_ANIMATION = true
 fileprivate let OFF_OPACITY = DEBUG_ANIMATION ? 0.5 : 0
 
 class MagicItemsStore: ObservableObject {
@@ -113,8 +113,7 @@ struct MagicMove<Content>: View where Content: View {
             ZStack(alignment: .topLeading) {
                 // debug view
                 if DEBUG_ANIMATION {
-                    ZStack(alignment: .topLeading) {
-                        Color.black.opacity(0.0001)
+                    ZStack(alignment: .topLeading) {                        
                         ForEach(0 ..< 40) { index -> AnyView  in
                             if index < startValues.count - 1 {
                                 let val = startValues[index]

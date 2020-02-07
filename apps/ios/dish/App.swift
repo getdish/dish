@@ -3,9 +3,6 @@ import SwiftUI
 // For more information check "How To Control The World" - Stephen Celis
 // https://vimeo.com/291588126
 
-// basically, put your services here
-// this is where side effects and basically any global should go
-
 class AppInstance {
     let store = Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
     
@@ -20,11 +17,11 @@ class AppInstance {
     // flags
     let enableMap = true
     let enableMapAutoZoom = false
-    let enableContent = false
-    let enableCamera = false
+    let enableContent = true
+    let enableCamera = true
     
     // constants
-    let animationSpeed: Double = 1
+    let animationSpeed: Double = 0.2
     let keyboard = Keyboard()
     let queueMain = DispatchQueue.main
     let magicItems = magicItemsStore
