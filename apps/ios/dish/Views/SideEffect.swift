@@ -101,15 +101,13 @@ struct Run: View {
 }
 
 struct RunOnce: View {
-    @State var hasRunOnce = false
     let name: String
     var block: () -> Void
     
     var body: some View {
-        Run(self.name) {
-            if self.hasRunOnce { return }
+        Color.clear.onAppear {
+            print("RunOnce \(self.name)")
             self.block()
-            self.hasRunOnce = true
         }
     }
 }

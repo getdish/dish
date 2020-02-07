@@ -18,10 +18,10 @@ class AppInstance {
     var enterRepl = false
     
     // flags
-    let enableMap = false
+    let enableMap = true
     let enableMapAutoZoom = false
     let enableContent = false
-    let enableCamera = true
+    let enableCamera = false
     
     // constants
     let animationSpeed: Double = 1
