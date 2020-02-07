@@ -21,7 +21,7 @@ class AppInstance {
     let enableCamera = true
     
     // constants
-    let animationSpeed: Double = 0.2
+    let animationSpeed: Double = 0.1
     let keyboard = Keyboard()
     let queueMain = DispatchQueue.main
     let magicItems = magicItemsStore

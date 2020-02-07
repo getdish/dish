@@ -12,7 +12,7 @@ class MagicItemsStore: ObservableObject {
     @Published var position: MagicItemPosition = .start
     @Published var state: MoveState = .done
     @Published var triggerUpdate =  NSDate()
-    var disableTracking: Bool = false
+    @Published var disableTracking: Bool = false
     
     var clear: () -> Void = {}
     
@@ -70,21 +70,23 @@ struct MagicMove<Content>: View where Content: View {
         onMoveComplete: (() -> Void)? = nil,
         @ViewBuilder content: @escaping () -> Content
     ) {
+        let realDuration = duration * (1 / App.animationSpeed)
+        
         self.content = content
         self.disableTracking = disableTracking
         self.onMoveComplete = onMoveComplete
-        self.animation = .easeInOut(duration: duration / 1000 * App.animationSpeed)
+        self.animation = .easeInOut(duration: realDuration / 1000)
         self.lastContent = content()
         self.position = position
         self.store.disableTracking = disableTracking
         if position != lastPosition {
             lastPosition = position
             self.lastRun = run
-            store.animate(position, duration: duration, onMoveComplete: onMoveComplete)
+            store.animate(position, duration: realDuration, onMoveComplete: onMoveComplete)
         }
         else if run != nil && self.lastRun != run {
             self.lastRun = run
-            store.animate(position, duration: duration, onMoveComplete: onMoveComplete)
+            store.animate(position, duration: realDuration, onMoveComplete: onMoveComplete)
         }
     }
     
@@ -147,6 +149,7 @@ struct MagicMove<Content>: View where Content: View {
                 content()
             }
             
+            // magic move animated elements
             if store.state != .done {
                 ZStack(alignment: .topLeading) {
                     ForEach(0 ..< keys.count) { index -> AnimatedView in
@@ -223,6 +226,8 @@ struct MagicItem<Content>: View where Content: View {
     @ObservedObject fileprivate var store = magicItemsStore
     @Environment(\.geometry) var appGeometry
 
+    @State private var cancels: Set<AnyCancellable> = []
+    
     let content: Content
     let id: String
     let at: MagicItemPosition
@@ -276,18 +281,36 @@ struct MagicItem<Content>: View where Content: View {
         
         let name = "MagicItem \(self.at) \(self.id) -- \(frame.minX) \(frame.minY)"
         let enabled = !self.isDisabled && !isOffScreen && !isMagicStoreAnimating && hasChanged
+//        print("enabled \(enabled) -- \(!self.isDisabled) \(!isOffScreen) \(!isMagicStoreAnimating) \(hasChanged)")
         
         return (name, enabled, item)
     }
+    
+    @State var lastFrame: CGRect? = nil
 
     var body: some View {
         return ZStack {
+            RunOnce(name: "watchMagicMove after re-enable from parent") {
+                magicItemsStore.$disableTracking.sink { disabled in
+                    if !disabled, let frame = self.lastFrame {
+                        let (name, enabled, item) = self.setupSideEffect(frame)
+                        if enabled {
+                            log.debug("update after re-enable \(name)")
+                            self.updateItem(item)
+                        }
+                    }
+                }.store(in: &self.cancels)
+            }
+            
             self.content
                 .overlay(
                     GeometryReader { geometry -> SideEffect in
                         let frame = geometry.frame(in: .global)
                         let (name, enabled, item) = self.setupSideEffect(frame)
                         return SideEffect(name, level: .debug, condition: { enabled }) {
+                            if frame != self.lastFrame {
+                                self.lastFrame = frame
+                            }
                             self.updateItem(item)
                         }
                     }

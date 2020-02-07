@@ -18,7 +18,9 @@ struct HomeMainContentContainer<Content>: View where Content: View {
     }
     
     var body: some View {
-        ZStack(alignment: .topLeading) {
+        print("disableMagicTracking \(disableMagicTracking)")
+        
+        return ZStack(alignment: .topLeading) {
             SideEffect("HomeMainContent.animateToEnd",
                        condition: { self.isSnappedToBottom && self.animatePosition == .start }) {
                 self.shouldUpdateMagicPositions = false
@@ -37,8 +39,9 @@ struct HomeMainContentContainer<Content>: View where Content: View {
 
             PrintGeometryView("HomeMainContent")
             
+            // note! be sure to put any animation on this *inside* magic move
             MagicMove(self.animatePosition,
-                      duration: 300 * (1 / App.animationSpeed),
+                      duration: 300,
                       // TODO we need a separate "disableTracking" in homeStore that is manually set
                       // why? when hitting "map" toggle button when above snapToBottomAt this fails for now
                       disableTracking: disableMagicTracking,
