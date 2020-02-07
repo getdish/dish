@@ -15,7 +15,7 @@ class HomeViewState: ObservableObject {
         case idle, off, pager, searchbar
     }
     enum HomeAnimationState {
-        case idle, controlled, animate
+        case idle, splash, controlled, animate
     }
     enum HomeScrollState {
         case none, some, more
@@ -31,7 +31,7 @@ class HomeViewState: ObservableObject {
     @Published private(set) var hasScrolled: HomeScrollState = .none
     @Published private(set) var hasMovedBar = false
     @Published private(set) var dragState: HomeDragState = .idle
-    @Published private(set) var animationState: HomeAnimationState = .idle
+    @Published private(set) var animationState: HomeAnimationState = .splash
     @Published private(set) var showCamera = false
     @Published private(set) var keyboardHeight: CGFloat = 0
     @Published private(set) var locationLabelWidth: CGFloat = 0

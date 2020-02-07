@@ -18,9 +18,9 @@ class AppInstance {
     var enterRepl = false
     
     // flags
-    let enableMap = true
+    let enableMap = false
     let enableMapAutoZoom = false
-    let enableContent = true
+    let enableContent = false
     let enableCamera = true
     
     // constants

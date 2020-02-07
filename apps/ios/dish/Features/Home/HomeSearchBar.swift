@@ -62,7 +62,8 @@ struct HomeSearchBar: View {
             )
         } else {
             return AnyView(
-                Image(systemName: "magnifyingglass")
+//                Image(systemName: "magnifyingglass")
+                Text("🤤").font(.system(size: 18))
             )
         }
     }

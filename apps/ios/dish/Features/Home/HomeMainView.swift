@@ -18,26 +18,37 @@ struct HomeMainView: View {
     var sideEffects: some View {
         // non visual
         Group {
-            // dev helpers
             PrintGeometryView("HomeMainView")
             
-            // weird way to set appheight
-//            Run {
-//                guard let g = self.appGeometry else { return }
-//                if self.state.appHeight != g.size.height {
-//                    self.state.setAppHeight(g.size.height)
-//                }
-//            }
+            SideEffect("HomeMainView.store.setAppHeight", condition: { self.appGeometry?.size.height != self.state.appHeight }) {
+                if let height = self.appGeometry?.size.height {
+                    self.state.setAppHeight(height)
+                }
+            }
+            
+            SideEffect("HomeMainView.store.moveToSearchResults") {
+                let val = Selectors.home.isOnSearchResults()
+                if val != self.wasOnSearchResults {
+                    self.wasOnSearchResults = val
+                    if val {
+                        self.state.moveToSearchResults()
+                    }
+                }
+            }
+            
+            SideEffect("HomeMainView.store.setShowCamera") {
+                let val = App.store.state.home.showCamera
+                if val != self.wasOnCamera {
+                    self.wasOnCamera = val
+                    self.state.setShowCamera(val)
+                }
+            }
         }
     }
 
     var body: some View {
-        // ⚠️
-        // TODO can we put this somewhere more natural?
-        // ⚠️
-        self.runSideEffects()
-        
         let state = self.state
+        let animationState = state.animationState
         let mapHeight = state.mapHeight
 //        let enableSearchBar = [.idle, .off].contains(state.dragState) && state.animationState == .idle
         
@@ -53,7 +64,7 @@ struct HomeMainView: View {
                     self.sideEffects
                 
                     // CAMERA
-                    if App.enableCamera {
+                if App.enableCamera && animationState != .splash {
                         Group {
                             // camera
                             ZStack {
@@ -83,7 +94,10 @@ struct HomeMainView: View {
                             // map mask a bit
                             HomeMapMask()
                                 .offset(y: mapHeight - 20)
-                                .animation(.spring(response: 0.25, dampingFraction: 0.6), value: state.animationState == .animate)
+                                .animation(
+                                    .spring(response: 0.3, dampingFraction: 0.5)
+//                                    value: [.animate, .controlled].contains(state.animationState)
+                                )
                             
                             // map fade out at bottom
                             VStack {
@@ -188,36 +202,6 @@ struct HomeMainView: View {
                 .simultaneousGesture(self.dragGesture)
             }
             .environmentObject(self.state)
-    }
-    
-    private func runSideEffects() {
-        // pushed map below the border radius of the bottomdrawer
-        let isOnSearchResults = Selectors.home.isOnSearchResults()
-        if isOnSearchResults != wasOnSearchResults {
-            async {
-                self.wasOnSearchResults = isOnSearchResults
-                if isOnSearchResults {
-                    self.state.moveToSearchResults()
-                }
-            }
-        }
-        
-        // camera animation
-        let isOnCamera = App.store.state.home.showCamera
-        if isOnCamera != wasOnCamera {
-            print("CHANGE camera \(isOnCamera) \(wasOnCamera)")
-            async {
-                self.wasOnCamera = isOnCamera
-                self.state.setShowCamera(isOnCamera)
-            }
-        }
-        
-        
-        if let height = appGeometry?.size.height, height != state.appHeight {
-            async {
-                self.state.setAppHeight(height)
-            }
-        }
     }
     
     var dragGesture: _EndedGesture<_ChangedGesture<DragGesture>> {
