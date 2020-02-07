@@ -85,7 +85,7 @@ struct HomeSearchBar: View {
         let zoomed = keyboard.state.height > 0
         let scale: CGFloat = zoomed ? 1.2 : 1.2
         
-        return Group {
+        return ZStack {
             RunOnce(name: "updatePlaceholder") {
                 self.updatePlaceholder()
             }
@@ -98,7 +98,7 @@ struct HomeSearchBar: View {
                 inputBackgroundColor: Color.white,
                 borderColor: Color.white,
                 scale: scale,
-                sizeRadius: 2.0,
+                sizeRadius: 2.1,
                 icon: icon,
                 showCancelInside: true,
                 onClear: self.onClear,

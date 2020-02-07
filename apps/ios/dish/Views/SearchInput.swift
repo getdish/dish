@@ -146,7 +146,7 @@ struct SearchInput: View {
                                     Text(self.placeholder).opacity(0.3)
                                 }
                             }
-                            .font(.system(size: fontSize))
+                            .font(.system(size: fontSize + 2))
                             Spacer()
                         }
                         .frameFlex()
@@ -197,7 +197,6 @@ struct SearchInput: View {
                     cancelButton
                 }
             }
-                .navigationBarHidden(showCancelButton) // .animation(.default) // animation does not work properly
         }
     }
 }

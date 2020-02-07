@@ -3,7 +3,7 @@ import GoogleMaps
 import GooglePlaces
 import CoreLocation
 import Combine
-import Mapbox
+//import Mapbox
 
 class DishMapViewStore: ObservableObject {
     var cancels: Set<AnyCancellable> = []
@@ -18,87 +18,66 @@ struct DishMapView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.geometry) var appGeometry
     @EnvironmentObject var store: AppStore
-    @EnvironmentObject var homeState: HomeViewState
     @EnvironmentObject var keyboard: Keyboard
     
     var appWidth: CGFloat { appGeometry?.size.width ?? Screen.width }
     var appHeight: CGFloat { appGeometry?.size.height ?? Screen.height }
     
-    var maxPadHeight: CGFloat {
-        appHeight - homeState.mapMinHeight
-    }
-    
-    var height: CGFloat {
-        appHeight + Screen.height / 2
-    }
-    
-    var padHeight: CGFloat {
-        (height - homeState.mapHeight) / 2
-    }
-    
     @State var padding: UIEdgeInsets = .init(top: 100, left: 0, bottom: 100, right: 0)
 
-    var animate: Bool {
-        return [.idle].contains(homeState.dragState)
-            || homeState.animationState != .idle
-            || self.homeState.mapHeight > self.homeState.startSnapToBottomAt
-    }
+    var height: CGFloat = 100
+    var animate: Bool = false
     
-    @State var annotations: [MGLPointAnnotation] = [
-        MGLPointAnnotation(title: "Mapbox", coordinate: .init(latitude: 37.791434, longitude: -122.396267))
-    ]
+//    @State var annotations: [MGLPointAnnotation] = [
+//        MGLPointAnnotation(title: "Mapbox", coordinate: .init(latitude: 37.791434, longitude: -122.396267))
+//    ]
     
     var body: some View {
         ZStack(alignment: .topLeading) {
-            // start
-            Color.clear.onAppear { self.start() }
+            RunOnce(name: "start map") {
+                self.start()
+            }
             
             VStack {
                 ZStack(alignment: .topLeading) {
                     ZStack {
                         Group {
-                            if false {
-                                MapBoxView(annotations: self.$annotations)
-                                    .styleURL(
-                                        colorScheme == .dark
-                                            ? URL(string: "mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja/draft")!
-                                            : URL(string: "mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq/draft")!
-                                        
-                                    )
-                                    .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
-                                    .zoomLevel(10)
-                                    .frame(height: Screen.fullHeight * 1.55)
+//                            if false {
+//                                MapBoxView(annotations: self.$annotations)
+//                                    .styleURL(
+//                                        colorScheme == .dark
+//                                            ? URL(string: "mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja/draft")!
+//                                            : URL(string: "mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq/draft")!
+//
+//                                    )
+//                                    .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
+//                                    .zoomLevel(10)
+//                                    .frame(height: Screen.fullHeight * 1.55)
+//                            }
+                            MapView(
+                                width: appWidth,
+                                height: self.height,
+                                padding: self.padding,
+                                darkMode: self.colorScheme == .dark,
+                                animate: self.animate,
+                                moveToLocation: store.state.map.moveToLocation,
+                                locations: store.state.home.viewStates.last!.searchResults.results.map { $0.place },
+                                onMapSettle: { position in
+                                    mapViewStore.position = position
                             }
-                            if true {
-                                MapView(
-                                    width: appWidth,
-                                    height: height,
-                                    padding: self.padding,
-                                    darkMode: self.colorScheme == .dark,
-                                    animate: self.animate,
-                                    moveToLocation: store.state.map.moveToLocation,
-                                    locations: store.state.home.viewStates.last!.searchResults.results.map { $0.place },
-                                    onMapSettle: { position in
-                                        mapViewStore.position = position
-                                }
-                                )
-                                    .introspectMapView { mapView in
-                                        self.mapView = mapView
-                                }
+                            )
+                                .introspectMapView { mapView in
+                                    self.mapView = mapView
                             }
                         }
-                        .animation(.spring())
-                        .offset(y: -self.padHeight + 25 /* topbar offset */)
                     }
-                    .frame(height: appHeight)
-                    .clipped()
                     
                     // prevent touch on left/right sides for dragging between cards
-                    HStack {
-                        Color.black.opacity(0.00001).frame(width: 24)
-                        Color.clear
-                        Color.black.opacity(0.00001).frame(width: 24)
-                    }
+//                    HStack {
+//                        Color.black.opacity(0.00001).frame(width: 24)
+//                        Color.clear
+//                        Color.black.opacity(0.00001).frame(width: 24)
+//                    }
                     
                     // keyboard dismiss (above map, below content)
                     if self.keyboard.state.height > 0 {
@@ -108,29 +87,7 @@ struct DishMapView: View {
                                 self.keyboard.hide()
                         }
                     }
-                    
-//                    if self.homeState.isNearTop {
-//                        HStack {
-//                            CustomButton(action: {
-//                                self.mapView?.zoomOut()
-//                            }) {
-//                                MapButton(icon: "minus.magnifyingglass")
-//                            }
-//                            .frame(height: homeState.mapHeight)
-//                            Spacer()
-//                            CustomButton(action: {
-//                                self.mapView?.zoomIn()
-//                            }) {
-//                                MapButton(icon: "plus.magnifyingglass")
-//                            }
-//                            .frame(height: homeState.mapHeight)
-//                        }
-//                        .frame(height: homeState.mapHeight)
-//                        .animation(.spring())
-//                    }
                 }
-                .frame(height: appHeight)
-                .clipped()
                 
                 Spacer()
             }
@@ -150,7 +107,7 @@ struct DishMapView: View {
                                 latitude: position.center.latitude,
                                 longitude: position.center.longitude
                             )
-                            ))
+                        ))
                     )
                 }
         }
@@ -213,17 +170,6 @@ struct MapButton: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 40)
-            //        .background(
-            //            LinearGradient(
-            //                gradient: Gradient(colors: [
-            //                    Color.white.opacity(0),
-            //                    Color.white.opacity(0.4)
-            //                ]),
-            //                startPoint: .top,
-            //                endPoint: .bottom
-            //            )
-            //            .scaledToFill()
-            //        )
             .background(
                 RadialGradient(
                     gradient: Gradient(colors: [
@@ -271,3 +217,23 @@ struct DishMapView_Previews: PreviewProvider {
     }
 }
 #endif
+
+//                    if self.homeState.isNearTop {
+//                        HStack {
+//                            CustomButton(action: {
+//                                self.mapView?.zoomOut()
+//                            }) {
+//                                MapButton(icon: "minus.magnifyingglass")
+//                            }
+//                            .frame(height: homeState.mapHeight)
+//                            Spacer()
+//                            CustomButton(action: {
+//                                self.mapView?.zoomIn()
+//                            }) {
+//                                MapButton(icon: "plus.magnifyingglass")
+//                            }
+//                            .frame(height: homeState.mapHeight)
+//                        }
+//                        .frame(height: homeState.mapHeight)
+//                        .animation(.spring())
+//                    }

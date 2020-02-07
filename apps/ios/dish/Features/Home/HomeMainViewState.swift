@@ -150,6 +150,10 @@ class HomeViewState: ObservableObject {
         }.store(in: &cancels)
     }
     
+    var mapFullHeight: CGFloat {
+        appHeight + Screen.height / 2
+    }
+    
     var showFiltersAbove: Bool {
         if y > snapToBottomAt - 1 {
             return true
@@ -417,6 +421,12 @@ class HomeViewState: ObservableObject {
             log.info()
             self.animateTo(0)
         }
+    }
+    
+    func isWithinDraggableArea(_ val: CGFloat) -> Bool {
+        let padding: CGFloat = 10
+        return val >= self.y - padding
+            && val <= self.y + App.searchBarHeight + padding
     }
     
     func setScrollY(_ frame: CGRect) {
