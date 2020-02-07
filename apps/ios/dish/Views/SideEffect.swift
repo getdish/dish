@@ -35,10 +35,7 @@ struct SideEffect: View {
             if self.condition?() == false {
                 Color.clear
             } else {
-                Run(self.name, debounce: debounce, throttle: throttle) {
-                    if self.level.rawValue >= DEBUG_SIDE_EFFECTS.rawValue {
-                        print(" ⏩ \(self.name)")
-                    }
+                Run(self.name, level: self.level, debounce: debounce, throttle: throttle) {
                     self.block()
                 }
             }
@@ -50,14 +47,16 @@ struct SideEffect: View {
 
 struct Run: View {
     let name: String
+    let level: LogLevel
     let debounce: Double
     let throttle: Double
     let block: () -> Void
     @State var lastRun: AnyCancellable? = nil
     @State var lastRunAt: NSDate = NSDate()
     
-    init(_ name: String, debounce: Double = 0, throttle: Double = 0, block: @escaping () -> Void) {
+    init(_ name: String, level: LogLevel = .info, debounce: Double = 0, throttle: Double = 0, block: @escaping () -> Void) {
         self.name = name
+        self.level = level
         self.debounce = debounce
         self.throttle = throttle
         self.block = block
@@ -67,11 +66,19 @@ struct Run: View {
         if let lr = lastRun { lr.cancel() }
     }
     
+    func log() {
+        if self.level.rawValue >= DEBUG_SIDE_EFFECTS.rawValue {
+            let logThrottle = throttle > 0 ? " throttled" : ""
+            let logDebounce = debounce > 0 ? " debounced" : ""
+            print(" ⏩\(logThrottle)\(logDebounce) \(self.name)")
+        }
+    }
+    
     var body: some View {
         if throttle > 0 {
             if abs(lastRunAt.timeIntervalSinceNow) * 1000 >= throttle {
-                print("Run.throttled \(self.name)")
                 async {
+                    self.log()
                     self.block()
                     self.lastRunAt = NSDate()
                 }
@@ -82,7 +89,7 @@ struct Run: View {
             var cancelled = 1
             async(debounce) {
                 if cancelled > 1 { return }
-                print("Run.debounced \(self.name)")
+                self.log()
                 self.block()
             }
             async {
@@ -92,7 +99,7 @@ struct Run: View {
             }
         } else {
             async {
-                print("Run \(self.name)")
+                self.log()
                 self.block()
             }
         }

@@ -113,7 +113,7 @@ struct MagicMove<Content>: View where Content: View {
             ZStack(alignment: .topLeading) {
                 // debug view
                 if DEBUG_ANIMATION {
-                    ZStack(alignment: .topLeading) {                        
+                    ZStack(alignment: .topLeading) {
                         ForEach(0 ..< 40) { index -> AnyView  in
                             if index < startValues.count - 1 {
                                 let val = startValues[index]
@@ -287,7 +287,7 @@ struct MagicItem<Content>: View where Content: View {
                     GeometryReader { geometry -> SideEffect in
                         let frame = geometry.frame(in: .global)
                         let (name, enabled, item) = self.setupSideEffect(frame)
-                        return SideEffect(name, level: .debug, debounce: 16, condition: { enabled }) {
+                        return SideEffect(name, level: .debug, condition: { enabled }) {
                             self.updateItem(item)
                         }
                     }
