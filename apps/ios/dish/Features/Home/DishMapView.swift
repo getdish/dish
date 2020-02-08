@@ -20,8 +20,8 @@ struct DishMapView: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard
     
-    var appWidth: CGFloat { appGeometry?.size.width ?? Screen.width }
-    var appHeight: CGFloat { appGeometry?.size.height ?? Screen.height }
+    var appWidth: CGFloat { appGeometry?.size.width ?? App.screen.width }
+    var appHeight: CGFloat { appGeometry?.size.height ?? App.screen.height }
     
     @State var padding: UIEdgeInsets = .init(top: 100, left: 0, bottom: 100, right: 0)
 
@@ -52,7 +52,7 @@ struct DishMapView: View {
 //                                    )
 //                                    .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
 //                                    .zoomLevel(10)
-//                                    .frame(height: Screen.fullHeight * 1.55)
+//                                    .frame(height: App.screen.fullHeight * 1.55)
 //                            }
                             MapView(
                                 width: appWidth,

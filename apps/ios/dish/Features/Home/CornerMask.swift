@@ -1,8 +1,8 @@
 import SwiftUI
 
 func topCornerMask(
-    width: CGFloat = Screen.width,
-    height: CGFloat = Screen.height,
+    width: CGFloat = App.screen.width,
+    height: CGFloat = App.screen.height,
     cornerRadius: CGFloat = 20
 ) -> Path {
     Path { path in

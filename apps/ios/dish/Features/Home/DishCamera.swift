@@ -28,7 +28,7 @@ struct DishCamera: View {
                 )
             }
             .background(Color.black)
-            .frame(minWidth: Screen.width, maxHeight: .infinity)
+            .frame(minWidth: App.screen.width, maxHeight: .infinity)
             
             CameraBottomNav()
             
@@ -36,7 +36,7 @@ struct DishCamera: View {
 
             BottomSheetView(
                 isOpen: $isOpen,
-                maxHeight: Screen.height * 0.7,
+                maxHeight: App.screen.height * 0.7,
                 minHeight: -100
             ) {
                 DishRestaurantDrawer()
@@ -49,6 +49,8 @@ struct DishCamera: View {
 }
 
 struct CameraBottomNav: View {
+    @EnvironmentObject var screen: ScreenModel
+
     var body: some View {
         ZStack {
             VStack {
@@ -58,6 +60,7 @@ struct CameraBottomNav: View {
                     Spacer()
                 }
                 .padding()
+                .padding(.bottom, screen.edgeInsets.bottom)
             }
         }
     }

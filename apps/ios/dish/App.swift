@@ -11,6 +11,9 @@ class AppModel {
     let homeService = HomeService()
     let googlePlacesService = GooglePlacesService()
     
+    // models
+    let screen = ScreenModel()
+    
     // dynamic
     var enterRepl = false
     

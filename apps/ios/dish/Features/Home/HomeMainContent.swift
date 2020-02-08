@@ -137,7 +137,7 @@ struct HomeMapSearchResults: View {
                         isMini: true,
                         at: .end
                     )
-                        .frame(width: Screen.width - 40, height: cardRowHeight - 40 + extraHeight)
+                        .frame(width: App.screen.width - 40, height: cardRowHeight - 40 + extraHeight)
                 }
             }
             .frame(height: cardRowHeight - 40 + extraHeight)
@@ -165,7 +165,7 @@ struct HomeMapSearchResults: View {
     //                )
     //            }
     //        )
-    //        .frame(width: Screen.width, height: cardRowHeight - 40 + extraHeight)
+    //        .frame(width: App.screen.width, height: cardRowHeight - 40 + extraHeight)
     //        .offset(y: -extraHeight + 10)
 }
 
@@ -178,7 +178,7 @@ struct MapResultRestaurantCard: View, Identifiable {
             isMini: true,
             at: .end
         )
-            .frame(width: Screen.width - 40, height: cardRowHeight - 40 + extraHeight)
+            .frame(width: App.screen.width - 40, height: cardRowHeight - 40 + extraHeight)
     }
 }
 
@@ -344,7 +344,7 @@ struct HomeMainContentSearchPage: View {
 //                MapResultDishCard(dish: features[index])
 //            }
 //        )
-//            .frame(width: Screen.width, height: cardRowHeight)
+//            .frame(width: App.screen.width, height: cardRowHeight)
 //        //        .padding(20)
 //    }
 //}

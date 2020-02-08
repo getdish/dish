@@ -236,6 +236,7 @@ struct MagicItemDescription: Identifiable, Equatable {
 }
 
 struct MagicItem<Content>: View where Content: View {
+    @EnvironmentObject var screen: ScreenModel
     @ObservedObject fileprivate var store = magicItemsStore
     @Environment(\.geometry) var appGeometry
 
@@ -275,9 +276,9 @@ struct MagicItem<Content>: View where Content: View {
     func setupSideEffect(_ frame: CGRect) -> (String, Bool, MagicItemDescription) {
         // off screen avoid doing things
         let offYN = frame.minY + frame.height < 0
-        let offYP = frame.minY > Screen.height
+        let offYP = frame.minY > self.screen.height
         let offXN = frame.minX + frame.width < 0
-        let offXP = frame.minX > Screen.width
+        let offXP = frame.minX > self.screen.width
         let offScreen = offYN || offYP || offXN || offXP
         let isOffScreen = self.items[self.id] != nil && offScreen == true
         

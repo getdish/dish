@@ -23,9 +23,9 @@ class HomeViewState: ObservableObject {
     // temp
     @Published var showFilters: Bool = false
     
-    @Published private(set) var appHeight: CGFloat = Screen.height
+    @Published private(set) var appHeight: CGFloat = App.screen.height
     // initialize it at best estimate where the snapToBottom will be
-    @Published private(set) var y: CGFloat = getInitialY(Screen.height)
+    @Published private(set) var y: CGFloat = getInitialY(App.screen.height)
     @Published private(set) var searchBarYExtra: CGFloat = 0
     @Published private(set) var hasScrolled: HomeScrollState = .none
     @Published private(set) var hasMovedBar = false
@@ -152,7 +152,7 @@ class HomeViewState: ObservableObject {
     }
     
     var mapFullHeight: CGFloat {
-        appHeight + Screen.height / 2
+        appHeight + App.screen.height / 2
     }
     
     var showFiltersAbove: Bool {
@@ -166,11 +166,11 @@ class HomeViewState: ObservableObject {
     }
     
     var mapMinHeight: CGFloat {
-        Screen.edgeInsets.top + App.searchBarHeight + 10
+        App.screen.edgeInsets.top + App.searchBarHeight + 10
     }
     
     var mapMaxHeight: CGFloat {
-        appHeight - App.searchBarHeight / 2 - Screen.edgeInsets.bottom
+        appHeight - App.searchBarHeight / 2 - App.screen.edgeInsets.bottom
     }
     
     var mapHeight: CGFloat {
@@ -430,7 +430,7 @@ class HomeViewState: ObservableObject {
     func setScrollY(_ frame: CGRect) {
         if dragState != .idle { return }
         if animationState != .idle { return }
-        let scrollY = mapHeight - frame.minY - Screen.edgeInsets.top - scrollRevealY
+        let scrollY = mapHeight - frame.minY - App.screen.edgeInsets.top - scrollRevealY
         let y = max(-50, min(100, scrollY))
         if y != scrollState.scrollY {
             print("disabled scroll stuff for now")

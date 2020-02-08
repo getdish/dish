@@ -79,7 +79,7 @@ struct HomeMainView: View {
                             || state.mapHeight > state.startSnapToBottomAt
                     )
                         .offset(y: state.showCamera
-                            ? -Screen.height
+                            ? -App.screen.height
                             : -(state.mapFullHeight - mapHeight) / 2 + 25 /* topbar offset */
                     )
                         .opacity(
@@ -115,7 +115,7 @@ struct HomeMainView: View {
 //                        HomeMainContent()
 //                    }
 //                        .frameLimitedToScreen()
-//                        .offset(y: state.showCamera ? Screen.height : 0)
+//                        .offset(y: state.showCamera ? App.screen.height : 0)
 //
 //                    // filters
 //                    VStack {
@@ -144,7 +144,7 @@ struct HomeMainView: View {
                     //                    .allowsHitTesting(enableSearchBar)
                     .offset(y:
                         state.showCamera ?
-                            mapHeight > Screen.height / 2 ? Screen.height * 2 : -Screen.height * 2 :
+                            mapHeight > App.screen.height / 2 ? App.screen.height * 2 : -App.screen.height * 2 :
                             mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra
                 )
                     .animation(.spring(response: 1.25), value: state.animationState == .animate)
@@ -163,10 +163,10 @@ struct HomeMainView: View {
                                 .scaleEffect(state.showCamera ? 1.3 : 1)
                                 .offset(
                                     x: state.showCamera
-                                        ? -Screen.width / 2 + App.cameraButtonHeight / 2
+                                        ? -App.screen.width / 2 + App.cameraButtonHeight / 2
                                         : -15,
                                     y: state.showCamera
-                                        ? Screen.height - App.cameraButtonHeight - 100
+                                        ? App.screen.height - App.cameraButtonHeight - 100
                                         : state.mapHeight + state.searchBarYExtra - App.cameraButtonHeight / 2
                             )
                             //                                    .animation(Animation.spring(response: 0.4).delay(0))
@@ -179,7 +179,7 @@ struct HomeMainView: View {
             
             // make everything untouchable while dragging
             Color.black.opacity(0.0001)
-                .frame(width: state.dragState == .pager ? Screen.width : 0)
+                .frame(width: state.dragState == .pager ? App.screen.width : 0)
         }
             .clipped() // dont remove fixes bug cant click SearchBar
             //                .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
@@ -266,8 +266,8 @@ struct HomeMapOverlay: View {
             Color.black.opacity(0.4)
                 .clipShape(
                     topCornerMask(
-                        width: Screen.width,
-                        height: Screen.height,
+                        width: App.screen.width,
+                        height: App.screen.height,
                         cornerRadius: 25
                     )
             )
@@ -298,7 +298,7 @@ struct HomeMainView_Previews: PreviewProvider {
 //struct SearchBarBg: View {
 //    @Environment(\.colorScheme) var colorScheme
 //
-//    var width: CGFloat = Screen.width
+//    var width: CGFloat = App.screen.width
 //    var topWidth: CGFloat = 120
 //    var topHeight: CGFloat = 20
 //    var topRadius: CGFloat = 10

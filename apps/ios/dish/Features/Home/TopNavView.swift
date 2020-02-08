@@ -2,9 +2,11 @@ import SwiftUI
 import CoreLocation
 
 struct TopNavViewContent: View {
+    @EnvironmentObject var screen: ScreenModel
+    
     var body: some View {
         let bottomPad = CGFloat(5)
-        let topPad = Screen.edgeInsets.top
+        let topPad = screen.edgeInsets.top
         let totalHeight = topPad + bottomPad + 40
         
         return VStack {
