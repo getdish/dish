@@ -166,7 +166,7 @@ struct HomeMainView: View {
                                         ? -Screen.width / 2 + App.cameraButtonHeight / 2
                                         : -15,
                                     y: state.showCamera
-                                        ? Screen.fullHeight - App.cameraButtonHeight - 100
+                                        ? Screen.height - App.cameraButtonHeight - 100
                                         : state.mapHeight + state.searchBarYExtra - App.cameraButtonHeight / 2
                             )
                             //                                    .animation(Animation.spring(response: 0.4).delay(0))
@@ -267,7 +267,7 @@ struct HomeMapOverlay: View {
                 .clipShape(
                     topCornerMask(
                         width: Screen.width,
-                        height: Screen.fullHeight,
+                        height: Screen.height,
                         cornerRadius: 25
                     )
             )
