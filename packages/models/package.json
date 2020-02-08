@@ -5,7 +5,7 @@
   "sideEffects": false,
   "scripts": {
     "start": "node _/index.js",
-    "build": "tsc -b || true",
+    "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "ava test/* --verbose",
     "test:watch": "ava test/* --watch"

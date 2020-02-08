@@ -42,8 +42,8 @@ const setSelected: Action<string> = (
 }
 
 const getStats: AsyncAction = async ({ state }: { state: LabState }) => {
-  state.stats.restaurant_count = await Restaurant.allRestaurantsCount()
-  state.stats.dish_count = await Dish.allDishesCount()
+  state.stats.restaurant_count = await Restaurant.allCount()
+  state.stats.dish_count = await Dish.allCount()
 }
 
 export const config = {

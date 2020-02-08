@@ -127,6 +127,7 @@ export class ModelBase<T> {
     return this.id
   }
 
+  // TODO: should only update changed values
   async update() {
     const query = {
       mutation: {
@@ -148,15 +149,15 @@ export class ModelBase<T> {
     return this.id
   }
 
-  async findOne(key: string, value: string) {
+  async findOne(key: string, value: string, extra_returning: {} = {}) {
     const query = {
       query: {
         [this._lower_name]: {
           __args: {
             where: { [key]: { _eq: value } },
           },
-          id: true,
           ...this.fieldsAsObject(),
+          ...extra_returning,
         },
       },
     }

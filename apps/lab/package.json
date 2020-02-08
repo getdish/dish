@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@dish/models": "*",
     "mapbox-gl": "^1.6.1",
     "overmind": "^21.0.0",
     "overmind-react": "^22.0.0",

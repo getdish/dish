@@ -16,7 +16,8 @@
     "start": "",
     "build": "tsc -b",
     "build:watch": "tsc -b -w --preserveWatchOutput",
-    "test": "ava"
+    "test": "ava",
+    "clean": "bin/clean.sh"
   },
   "devDependencies": {
     "ava": "^2.4.0",

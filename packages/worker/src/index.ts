@@ -31,13 +31,16 @@ export class WorkerJob {
 
   async run(fn: string, args?: any) {
     if (this[fn].constructor.name === 'AsyncFunction') {
-      await this[fn](args)
+      await this[fn](...args)
     } else {
-      this[fn](args)
+      this[fn](...args)
     }
   }
 
-  async run_on_worker(fn: string, args?: any) {
+  async runOnWorker(fn: string, args?: any[]) {
+    if (process.env.RUN_WITHOUT_WORKER == 'true') {
+      return await this.run(fn, args)
+    }
     const job: JobData = {
       className: this.constructor.name,
       fn: fn,
@@ -46,7 +49,7 @@ export class WorkerJob {
     await this.getQueue()
     const config = (this.constructor as typeof WorkerJob).job_config
     console.log(`Adding job to worker (${this.constructor.name}):`, job)
-    await this.queue.add(job, config)
+    this.queue.add(job, config)
   }
 }
 

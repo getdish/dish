@@ -29,6 +29,15 @@ export class Restaurant extends ModelBase<Restaurant> {
     return 'restaurant_name_address_key'
   }
 
+  async findOne(key: string, value: string, extra_returning: {} = {}) {
+    extra_returning = {
+      dishes: {
+        ...Dish.fieldsAsObject(),
+      },
+    }
+    return await super.findOne(key, value, extra_returning)
+  }
+
   static async findNear(lat: number, lng: number, distance: number) {
     const query = {
       query: {

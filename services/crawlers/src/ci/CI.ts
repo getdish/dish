@@ -16,7 +16,7 @@ export class CI extends WorkerJob {
     attempts: 3,
   }
 
-  doIt({ message }: { message: string }) {
+  doIt(message: string) {
     console.log('CI worker job ran with message: ' + message)
   }
 }

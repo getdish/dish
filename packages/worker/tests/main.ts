@@ -26,7 +26,7 @@ test.before(() => {
 
 test('Worker runs a job', async t => {
   const job = new WorkerTest()
-  job.run_on_worker('capture', 'DONE')
+  job.runOnWorker('capture', ['DONE'])
   await sleep(1500)
   t.is(CAPTURE, 'DONE')
 })

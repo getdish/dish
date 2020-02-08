@@ -1,6 +1,6 @@
 import { ModelBase } from './ModelBase'
 
-type ScrapeData = { [key: string]: any }
+export type ScrapeData = { [key: string]: any }
 
 export class Scrape extends ModelBase<Scrape> {
   source!: string
@@ -19,8 +19,26 @@ export class Scrape extends ModelBase<Scrape> {
   static async mergeData(id: string, data: ScrapeData) {
     const scrape = new Scrape()
     await scrape.findOne('id', id)
-    Object.assign(scrape.data, data)
-    scrape.update()
+    await scrape.appendJsonB(data)
     return scrape
+  }
+
+  async appendJsonB(data: {}) {
+    const query = {
+      mutation: {
+        update_scrape: {
+          __args: {
+            where: { id: { _eq: this.id } },
+            _append: { data: data },
+          },
+          returning: {
+            data: true,
+          },
+        },
+      },
+    }
+    const response = await ModelBase.hasura(query)
+    Object.assign(this, response.data.data.update_scrape.returning[0])
+    return this.id
   }
 }

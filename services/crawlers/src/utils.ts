@@ -19,9 +19,9 @@ export function shiftLatLonByMetres(
   return [latO, lonO]
 }
 
-// Returns an array of coords that fill an area of radius * size.
-// Think of it as a way to fill a space with a number of equally spaced
-// boxes.
+// Returns an array of coords that fill an area. Think of it as a way
+// to fill a space with a number of equally spaced boxes. The number of
+// boxes is size*size
 export function aroundCoords(
   lat: number,
   lon: number,
@@ -30,12 +30,22 @@ export function aroundCoords(
 ) {
   let coords: [number, number][] = []
   const edge = radius * (size / 2)
-  for (let y = -edge; y <= edge; y = y + radius) {
-    for (let x = edge; x >= -edge; x = x - radius) {
-      coords.push(shiftLatLonByMetres(lat, lon, x, y))
+  for (let y = edge; y >= -edge; y = y - radius) {
+    for (let x = -edge; x <= edge; x = x + radius) {
+      coords.push(shiftLatLonByMetres(lat, lon, y, x))
     }
   }
   return coords
+}
+
+export function boundingBoxFromCentre(
+  lat: number,
+  lon: number,
+  radius: number
+): [[number, number], [number, number]] {
+  const top_right = shiftLatLonByMetres(lat, lon, radius, radius)
+  const bottom_left = shiftLatLonByMetres(lat, lon, -radius, -radius)
+  return [top_right, bottom_left]
 }
 
 export async function geocode(address: string) {

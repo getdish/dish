@@ -19,7 +19,9 @@ const FEED = 'getFeedV1'
 const STORE = 'getStoreV1'
 const PER_PAGE = 80
 axios.defaults.baseURL = UBEREATS_DOMAIN + 'api/'
-axios.defaults.headers.common['x-csrf-token'] = 'x'
+axios.defaults.headers = {
+  'x-csrf-token': 'x',
+}
 
 console.log('Starting UberEats crawler. Using domain: ' + UBEREATS_DOMAIN)
 
@@ -41,7 +43,7 @@ export class UberEats extends WorkerJob {
     let cities = await this.getCities()
     cities = _.shuffle(cities)
     for (const city of cities) {
-      this.run_on_worker('getCity', { city: city })
+      await this.runOnWorker('getCity', [city])
     }
   }
 
@@ -56,12 +58,12 @@ export class UberEats extends WorkerJob {
     return cities
   }
 
-  async getCity({ city: city }) {
+  async getCity(city: string) {
     const coords = await geocode(city)
-    this.run_on_worker('aroundCoords', { lat: coords[0], lon: coords[1] })
+    await this.runOnWorker('aroundCoords', [coords[0], coords[1]])
   }
 
-  aroundCoords({ lat, lon }: { lat: number; lon: number }) {
+  async aroundCoords(lat: number, lon: number) {
     const delivery_radius_multiplier = 2
     const coords_set = aroundCoords(
       lat,
@@ -70,26 +72,16 @@ export class UberEats extends WorkerJob {
       delivery_radius_multiplier
     )
     for (let coords of coords_set) {
-      this.run_on_worker('getFeedPage', {
-        offset: 0,
-        category: '',
-        lat: coords[0],
-        lon: coords[1],
-      })
+      await this.runOnWorker('getFeedPage', [0, '', coords[0], coords[1]])
     }
   }
 
-  async getFeedPage({
-    offset,
-    category,
-    lat,
-    lon,
-  }: {
-    offset: number
-    category: string
-    lat: number
+  async getFeedPage(
+    offset: number,
+    category: string,
+    lat: number,
     lon: number
-  }) {
+  ) {
     console.log(
       `Getting feed for coords: ${lat}, ${lon}, category: '${category}', offset: ${offset}`
     )
@@ -109,19 +101,19 @@ export class UberEats extends WorkerJob {
       }
     )
 
-    this.extractRestaurantsFromFeed(response, offset, category)
+    await this.extractRestaurantsFromFeed(response, offset, category)
 
     if (response.data.data.meta.hasMore) {
-      this.run_on_worker('getFeedPage', {
-        offset: response.data.data.meta.offset,
-        category: category,
-        lat: lat,
-        lon: lon,
-      })
+      await this.runOnWorker('getFeedPage', [
+        response.data.data.meta.offset,
+        category,
+        lat,
+        lon,
+      ])
     }
   }
 
-  extractRestaurantsFromFeed(
+  async extractRestaurantsFromFeed(
     response: AxiosResponse,
     offset: number,
     category: string
@@ -138,7 +130,7 @@ export class UberEats extends WorkerJob {
 
     for (let item of items) {
       if (item.type == 'STORE') {
-        this.run_on_worker('getRestaurant', item.uuid)
+        await this.runOnWorker('getRestaurant', [item.uuid])
       }
     }
   }

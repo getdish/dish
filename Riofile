@@ -21,10 +21,13 @@ services:
       dockerfile: ./services/worker/Dockerfile
       context: ./
     env:
+      - DISH_ENV=production
       - REDIS_HOST=redis-master.redis
       - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
       - UBEREATS_PROXY=${UBEREATS_PROXY}
       - HEREMAPS_API_TOKEN=${HEREMAPS_API_TOKEN}
+      - UBEREATS_PROXY=${UBEREATS_PROXY}
+      - YELP_PROXY=${YELP_PROXY}
     command:
       - node
     args:
@@ -35,12 +38,14 @@ services:
       dockerfile: ./services/crawlers/Dockerfile
       context: ./
     env:
+      - DISH_ENV=production
       - REDIS_HOST=redis-master.redis
       - UBEREATS_PROXY=${UBEREATS_PROXY}
+      - YELP_PROXY=${YELP_PROXY}
     command:
       - node
     args:
-      - _/ubereats/world.js
+      - _/all.js
   lab:
     image: dish/lab
     build:
@@ -49,6 +54,7 @@ services:
     ports:
       - 5000/http
     env:
+      - DISH_ENV=production
       - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
 {{- end}}
 
