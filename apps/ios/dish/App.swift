@@ -3,7 +3,7 @@ import SwiftUI
 // For more information check "How To Control The World" - Stephen Celis
 // https://vimeo.com/291588126
 
-class AppInstance {
+class AppModel {
     let store = Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
     
     // services

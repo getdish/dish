@@ -275,7 +275,7 @@ struct MagicItem<Content>: View where Content: View {
     func setupSideEffect(_ frame: CGRect) -> (String, Bool, MagicItemDescription) {
         // off screen avoid doing things
         let offYN = frame.minY + frame.height < 0
-        let offYP = frame.minY > Screen.fullHeight
+        let offYP = frame.minY > Screen.height
         let offXN = frame.minX + frame.width < 0
         let offXP = frame.minX > Screen.width
         let offScreen = offYN || offYP || offXN || offXP

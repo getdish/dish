@@ -5,7 +5,7 @@ import XCGLogger
 
 // GLOBALS
 // most if not all should go onto here:
-let App = AppInstance()
+let App = AppModel()
 // ...
 let features: [DishItem] = load("dishData.json")
 let restaurants: [RestaurantItem] = load("restaurantData.json")

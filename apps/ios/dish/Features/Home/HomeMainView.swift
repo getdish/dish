@@ -98,33 +98,32 @@ struct HomeMainView: View {
             // Content
             if App.enableContent && animationState != .splash {
                 ZStack {
-                    // location bar
+                    // top bar
                     VStack {
                         TopNavViewContent()
                         Spacer()
                     }
-                    .frameLimitedToScreen()
-                    
-                    // content
-                    HomeMainContentContainer(
-                        isSnappedToBottom: state.isSnappedToBottom,
-                        disableMagicTracking: state.mapHeight >= state.snapToBottomAt
-                            || state.isSnappedToBottom
-                            || state.animationState == .controlled
-                    ) {
-                        HomeMainContent()
-                    }
-                    .frameLimitedToScreen()
-                    .offset(y: state.showCamera ? Screen.height : 0)
-                    
-                    // filters
-                    VStack {
-                        HomeMainFilterBar()
-                        Spacer()
-                    }
-                    .frameLimitedToScreen()
-                    .offset(y: mapHeight + App.searchBarHeight / 2)
-                    //                        .animation(.spring())
+                        .frameLimitedToScreen()
+
+//                    // content
+//                    HomeMainContentContainer(
+//                        isSnappedToBottom: state.isSnappedToBottom,
+//                        disableMagicTracking: state.mapHeight >= state.snapToBottomAt
+//                            || state.isSnappedToBottom
+//                            || state.animationState == .controlled
+//                    ) {
+//                        HomeMainContent()
+//                    }
+//                        .frameLimitedToScreen()
+//                        .offset(y: state.showCamera ? Screen.height : 0)
+//
+//                    // filters
+//                    VStack {
+//                        HomeMainFilterBar()
+//                        Spacer()
+//                    }
+//                        .frameLimitedToScreen()
+//                        .offset(y: mapHeight + App.searchBarHeight / 2)
                 }
                 .transition(.opacity)
             }

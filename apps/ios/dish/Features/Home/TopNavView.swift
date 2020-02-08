@@ -1,13 +1,13 @@
 import SwiftUI
 import CoreLocation
 
-fileprivate let bottomPad = CGFloat(5)
-fileprivate let topPad = Screen.statusBarHeight
-fileprivate let totalHeight = topPad + bottomPad + 40
-
 struct TopNavViewContent: View {
     var body: some View {
-        VStack {
+        let bottomPad = CGFloat(5)
+        let topPad = Screen.edgeInsets.top
+        let totalHeight = topPad + bottomPad + 40
+        
+        return VStack {
             ZStack {
                 TopNavSearchResults()
                 

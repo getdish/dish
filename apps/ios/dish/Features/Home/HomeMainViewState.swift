@@ -4,7 +4,6 @@ import Combine
 fileprivate let snapToBottomYMovePct: CGFloat = 0.58
 fileprivate let distanceUntilSnapDown: CGFloat = 42
 fileprivate let distanceUntilSnapUp: CGFloat = 85
-fileprivate let nearTopAtVal: CGFloat = 120 + Screen.statusBarHeight
 
 fileprivate func getInitialY(_ screenHeight: CGFloat) -> CGFloat {
     screenHeight * 0.4
@@ -167,12 +166,11 @@ class HomeViewState: ObservableObject {
     }
     
     var mapMinHeight: CGFloat {
-        Screen.statusBarHeight + App.searchBarHeight + 10
+        Screen.edgeInsets.top + App.searchBarHeight + 10
     }
     
     var mapMaxHeight: CGFloat {
-        appHeight - App.searchBarHeight / 2
-//         - keyboardHeight
+        appHeight - App.searchBarHeight / 2 - Screen.edgeInsets.bottom
     }
     
     var mapHeight: CGFloat {
@@ -203,11 +201,6 @@ class HomeViewState: ObservableObject {
     
     var isSnappedToBottom: Bool {
         y > snapToBottomAt
-    }
-    
-    let nearTopAt: CGFloat = nearTopAtVal
-    var isNearTop: Bool {
-        self.mapHeight < self.nearTopAt
     }
     
     var isAboutToSnap: Bool {
@@ -437,7 +430,7 @@ class HomeViewState: ObservableObject {
     func setScrollY(_ frame: CGRect) {
         if dragState != .idle { return }
         if animationState != .idle { return }
-        let scrollY = mapHeight - frame.minY - Screen.statusBarHeight - scrollRevealY
+        let scrollY = mapHeight - frame.minY - Screen.edgeInsets.top - scrollRevealY
         let y = max(-50, min(100, scrollY))
         if y != scrollState.scrollY {
             print("disabled scroll stuff for now")
