@@ -16,4 +16,9 @@ resource "helm_release" "redis" {
     name = "metrics.enabled"
     value = "true"
   }
+
+  set {
+    name = "master.disableCommands"
+    value = ""
+  }
 }
