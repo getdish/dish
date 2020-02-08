@@ -193,21 +193,23 @@ struct HomeMainView: View {
         
         return DragGesture(minimumDistance: 10)
             .onChanged { value in
+                print("drag ignore \(ignoreThisDrag) state \(self.state.dragState)")
                 if ignoreThisDrag {
                     return
                 }
                 if [.off, .pager, .contentHorizontal].contains(self.state.dragState) {
                     return
                 }
-                if abs(value.translation.width) > abs(value.translation.height)
+                let isAlreadyDragging = self.state.dragState == .searchbar
+                if !isAlreadyDragging
+                    && abs(value.translation.width) > abs(value.translation.height)
                     && abs(value.translation.width) > 15 {
                     log.debug("ignore drag horizontal")
                     self.state.setDragState(.contentHorizontal)
+                    ignoreThisDrag = true
                     return
                 }
                 
-                
-                let isAlreadyDragging = self.state.dragState == .searchbar
                 let isDraggingSearchBar = self.state.isWithinDraggableArea(value.startLocation.y)
 //                let isDraggingBelowSearchBar = self.state.isActiveScrollViewAtTop
 //                    && HomeSearchBarState.isBelow(value.startLocation.y)

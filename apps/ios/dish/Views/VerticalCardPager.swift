@@ -36,7 +36,7 @@ struct VerticalCardPager<Content: View>: View {
                     let x = value.translation.width
                     let y = value.translation.height
                     
-                    DispatchQueue.main.async {
+                    async {
                         if self.lockedTo == .none {
                             if abs(x) < 10 && abs(y) > 10 {
                                 self.lockedTo = .on
