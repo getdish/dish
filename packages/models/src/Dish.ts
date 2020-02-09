@@ -12,6 +12,10 @@ export class Dish extends ModelBase<Dish> {
     Object.assign(this, init)
   }
 
+  static model_name() {
+    return 'Dish'
+  }
+
   static fields() {
     return ['restaurant_id', 'name', 'price', 'description', 'image']
   }

@@ -14,6 +14,10 @@ export class Restaurant extends ModelBase<Restaurant> {
   image!: string
   dishes!: Dish[]
 
+  static model_name() {
+    return 'Restaurant'
+  }
+
   static fields() {
     return [
       'name',
@@ -98,8 +102,6 @@ export class Restaurant extends ModelBase<Restaurant> {
       },
     }
     const response = await ModelBase.hasura(query)
-    console.log(response.data.data.scrape)
-
     return new Scrape(response.data.data.scrape)
   }
 }

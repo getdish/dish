@@ -47,12 +47,12 @@ export class ModelBase<T> {
     return ['']
   }
 
-  static upperName() {
-    return this.name
+  static upper_name() {
+    return this.model_name()
   }
 
-  static lowerName() {
-    return this.name.toLowerCase()
+  static lower_name() {
+    return this.model_name().toLowerCase()
   }
 
   static upsert_constraint() {
@@ -62,9 +62,14 @@ export class ModelBase<T> {
 
   constructor(init?: Partial<T>) {
     this._klass = this.constructor as typeof ModelBase
-    this._upper_name = this._klass.name
+    this._upper_name = this._klass.upper_name()
     this._lower_name = this._upper_name.toLowerCase()
     Object.assign(this, init)
+  }
+
+  static model_name() {
+    console.error('model_name() not implemented')
+    return ''
   }
 
   static all_fields() {
@@ -207,7 +212,7 @@ export class ModelBase<T> {
   static async allCount() {
     const query = {
       query: {
-        [this.lowerName() + '_aggregate']: {
+        [this.lower_name() + '_aggregate']: {
           aggregate: {
             count: true,
           },
@@ -215,13 +220,13 @@ export class ModelBase<T> {
       },
     }
     const response = await ModelBase.hasura(query)
-    return response.data.data[this.lowerName() + '_aggregate'].aggregate.count
+    return response.data.data[this.lower_name() + '_aggregate'].aggregate.count
   }
 
   static async deleteAllBy(key: string, value: string) {
     const query = {
       mutation: {
-        ['delete_' + this.lowerName()]: {
+        ['delete_' + this.lower_name()]: {
           __args: {
             where: { [key]: { _eq: value } },
           },

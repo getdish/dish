@@ -72,7 +72,6 @@ export class Yelp extends WorkerJob {
     const search_results = response.data.searchPageProps.searchResultsProps
     const objects = search_results.searchResults
     const pagination = search_results.paginationInfo
-    console.log(pagination)
     for (const data of objects) {
       await this.getRestaurant(data)
     }

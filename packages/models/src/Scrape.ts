@@ -12,6 +12,10 @@ export class Scrape extends ModelBase<Scrape> {
     Object.assign(this, init)
   }
 
+  static model_name() {
+    return 'Scrape'
+  }
+
   static fields() {
     return ['source', 'id_from_source', 'data']
   }
