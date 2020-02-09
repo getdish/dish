@@ -1,5 +1,7 @@
 import { ModelBase, Point } from './ModelBase'
 import { Dish } from './Dish'
+import { Scrape } from './Scrape'
+import { EnumType } from 'json-to-graphql-query'
 
 export class Restaurant extends ModelBase<Restaurant> {
   name!: string
@@ -56,9 +58,6 @@ export class Restaurant extends ModelBase<Restaurant> {
             },
           },
           ...Restaurant.fieldsAsObject(),
-          dishes: {
-            ...Dish.fieldsAsObject(),
-          },
         },
       },
     }
@@ -66,5 +65,41 @@ export class Restaurant extends ModelBase<Restaurant> {
     return response.data.data.restaurant.map(
       (data: Partial<Restaurant>) => new Restaurant(data)
     )
+  }
+
+  static async getLatestScrape(source: string, name: string) {
+    const query = {
+      query: {
+        scrape: {
+          __args: {
+            where: {
+              data: {
+                _contains: {
+                  data_from_map_search: {
+                    name: name,
+                  },
+                },
+              },
+              source: {
+                _eq: source,
+              },
+            },
+            order_by: {
+              updated_at: new EnumType('desc'),
+            },
+            limit: 1,
+          },
+          id: true,
+          updated_at: true,
+          source: true,
+          id_from_source: true,
+          data: true,
+        },
+      },
+    }
+    const response = await ModelBase.hasura(query)
+    console.log(response.data.data.scrape)
+
+    return new Scrape(response.data.data.scrape)
   }
 }

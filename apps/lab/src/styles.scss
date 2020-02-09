@@ -52,7 +52,12 @@ img {
 
   img {
     margin: 2px;
+    max-width: 300px;
   }
 
   #restaurant-details {}
+
+  .data_section {
+    margin-bottom: 1em;
+  }
 }

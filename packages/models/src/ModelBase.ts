@@ -206,9 +206,11 @@ export class ModelBase<T> {
 
   static async allCount() {
     const query = {
-      [this.lowerName() + '_aggregate']: {
-        aggregate: {
-          count: true,
+      query: {
+        [this.lowerName() + '_aggregate']: {
+          aggregate: {
+            count: true,
+          },
         },
       },
     }

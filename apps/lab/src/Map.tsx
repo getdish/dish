@@ -73,7 +73,6 @@ const Map = () => {
               uuid: state.restaurants[key].id,
               name: state.restaurants[key].name,
               image: state.restaurants[key].image,
-              dishes_count: Object.keys(state.dishes[key]).length,
             }}
             coordinates={[
               state.restaurants[key].location.coordinates[0],
@@ -86,7 +85,6 @@ const Map = () => {
                   `
                   <img width="60px" src="${mapWithEvt.feature.properties.image}">
                   &nbsp;${mapWithEvt.feature.properties.name}<br />
-                  ${mapWithEvt.feature.properties.dishes_count} dishes
                   `
                 )
                 .addTo(mapWithEvt.map)
@@ -95,7 +93,9 @@ const Map = () => {
               popup.remove()
             }}
             onClick={(mapWithEvt: any) => {
-              actions.setSelected(mapWithEvt.feature.properties.uuid)
+              const id = mapWithEvt.feature.properties.uuid
+              actions.setSelected(id)
+              actions.getAllDataForRestaurant()
             }}
           />
         ))}
