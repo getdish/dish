@@ -29,7 +29,7 @@ export class WorkerJob {
     await waitForBull(this.queue)
   }
 
-  async run(fn: string, args?: any) {
+  async run(fn: string, args: any[] = []) {
     if (this[fn].constructor.name === 'AsyncFunction') {
       await this[fn](...args)
     } else {

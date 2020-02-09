@@ -1,7 +1,7 @@
 import '@dish/common'
 
 import _ from 'lodash'
-import axios, { AxiosResponse } from 'axios'
+import axios_base, { AxiosResponse } from 'axios'
 import { QueueOptions, JobOptions } from 'bull'
 
 import { WorkerJob } from '@dish/worker'
@@ -18,10 +18,15 @@ const CITIES = 'getCountriesWithCitiesV1'
 const FEED = 'getFeedV1'
 const STORE = 'getStoreV1'
 const PER_PAGE = 80
-axios.defaults.baseURL = UBEREATS_DOMAIN + 'api/'
-axios.defaults.headers = {
-  'x-csrf-token': 'x',
-}
+
+const axios = axios_base.create({
+  baseURL: UBEREATS_DOMAIN + 'api/',
+  headers: {
+    common: {
+      'x-csrf-token': 'x',
+    },
+  },
+})
 
 console.log('Starting UberEats crawler. Using domain: ' + UBEREATS_DOMAIN)
 

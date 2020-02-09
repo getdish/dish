@@ -1,7 +1,7 @@
 import '@dish/common'
 
 import _ from 'lodash'
-import axios from 'axios'
+import axios_base from 'axios'
 import { QueueOptions, JobOptions } from 'bull'
 
 import { WorkerJob } from '@dish/worker'
@@ -11,10 +11,15 @@ import { aroundCoords, boundingBoxFromCentre, geocode } from '../utils'
 
 const YELP_DOMAIN = process.env.YELP_PROXY || 'https://www.yelp.com'
 const BB_SEARCH = '/search/snippet?cflt=restaurants&l='
-axios.defaults.baseURL = YELP_DOMAIN
-axios.defaults.headers = {
-  'X-My-X-Forwarded-For': 'www.yelp.com',
-}
+
+const axios = axios_base.create({
+  baseURL: YELP_DOMAIN,
+  headers: {
+    common: {
+      'X-My-X-Forwarded-For': 'www.yelp.com',
+    },
+  },
+})
 
 console.log('Starting Yelp crawler. Using domain: ' + YELP_DOMAIN)
 
