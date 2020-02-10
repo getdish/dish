@@ -79,7 +79,7 @@ struct HomeMainView: View {
                             || state.mapHeight > state.startSnapToBottomAt
                     )
                         .offset(y: state.showCamera
-                            ? -Screen.height
+                            ? -App.screen.height
                             : -(state.mapFullHeight - mapHeight) / 2 + 25 /* topbar offset */
                     )
                         .opacity(
@@ -98,33 +98,32 @@ struct HomeMainView: View {
             // Content
             if App.enableContent && animationState != .splash {
                 ZStack {
-                    // location bar
+                    // top bar
                     VStack {
                         TopNavViewContent()
                         Spacer()
                     }
-                    .frameLimitedToScreen()
-                    
-                    // content
-                    HomeMainContentContainer(
-                        isSnappedToBottom: state.isSnappedToBottom,
-                        disableMagicTracking: state.mapHeight >= state.snapToBottomAt
-                            || state.isSnappedToBottom
-                            || state.animationState == .controlled
-                    ) {
-                        HomeMainContent()
-                    }
-                    .frameLimitedToScreen()
-                    .offset(y: state.showCamera ? Screen.height : 0)
-                    
-                    // filters
-                    VStack {
-                        HomeMainFilterBar()
-                        Spacer()
-                    }
-                    .frameLimitedToScreen()
-                    .offset(y: mapHeight + App.searchBarHeight / 2)
-                    //                        .animation(.spring())
+                        .frameLimitedToScreen()
+
+//                    // content
+//                    HomeMainContentContainer(
+//                        isSnappedToBottom: state.isSnappedToBottom,
+//                        disableMagicTracking: state.mapHeight >= state.snapToBottomAt
+//                            || state.isSnappedToBottom
+//                            || state.animationState == .controlled
+//                    ) {
+//                        HomeMainContent()
+//                    }
+//                        .frameLimitedToScreen()
+//                        .offset(y: state.showCamera ? App.screen.height : 0)
+//
+//                    // filters
+//                    VStack {
+//                        HomeMainFilterBar()
+//                        Spacer()
+//                    }
+//                        .frameLimitedToScreen()
+//                        .offset(y: mapHeight + App.searchBarHeight / 2)
                 }
                 .transition(.opacity)
             }
@@ -145,7 +144,7 @@ struct HomeMainView: View {
                     //                    .allowsHitTesting(enableSearchBar)
                     .offset(y:
                         state.showCamera ?
-                            mapHeight > Screen.height / 2 ? Screen.height * 2 : -Screen.height * 2 :
+                            mapHeight > App.screen.height / 2 ? App.screen.height * 2 : -App.screen.height * 2 :
                             mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra
                 )
                     .animation(.spring(response: 1.25), value: state.animationState == .animate)
@@ -164,10 +163,10 @@ struct HomeMainView: View {
                                 .scaleEffect(state.showCamera ? 1.3 : 1)
                                 .offset(
                                     x: state.showCamera
-                                        ? -Screen.width / 2 + App.cameraButtonHeight / 2
+                                        ? -App.screen.width / 2 + App.cameraButtonHeight / 2
                                         : -15,
                                     y: state.showCamera
-                                        ? Screen.fullHeight - App.cameraButtonHeight - 100
+                                        ? App.screen.height - App.cameraButtonHeight - 100
                                         : state.mapHeight + state.searchBarYExtra - App.cameraButtonHeight / 2
                             )
                             //                                    .animation(Animation.spring(response: 0.4).delay(0))
@@ -180,7 +179,7 @@ struct HomeMainView: View {
             
             // make everything untouchable while dragging
             Color.black.opacity(0.0001)
-                .frame(width: state.dragState == .pager ? Screen.width : 0)
+                .frame(width: state.dragState == .pager ? App.screen.width : 0)
         }
             .clipped() // dont remove fixes bug cant click SearchBar
             //                .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
@@ -193,21 +192,23 @@ struct HomeMainView: View {
         
         return DragGesture(minimumDistance: 10)
             .onChanged { value in
+                print("drag ignore \(ignoreThisDrag) state \(self.state.dragState)")
                 if ignoreThisDrag {
                     return
                 }
                 if [.off, .pager, .contentHorizontal].contains(self.state.dragState) {
                     return
                 }
-                if abs(value.translation.width) > abs(value.translation.height)
+                let isAlreadyDragging = self.state.dragState == .searchbar
+                if !isAlreadyDragging
+                    && abs(value.translation.width) > abs(value.translation.height)
                     && abs(value.translation.width) > 15 {
                     log.debug("ignore drag horizontal")
                     self.state.setDragState(.contentHorizontal)
+                    ignoreThisDrag = true
                     return
                 }
                 
-                
-                let isAlreadyDragging = self.state.dragState == .searchbar
                 let isDraggingSearchBar = self.state.isWithinDraggableArea(value.startLocation.y)
 //                let isDraggingBelowSearchBar = self.state.isActiveScrollViewAtTop
 //                    && HomeSearchBarState.isBelow(value.startLocation.y)
@@ -265,8 +266,8 @@ struct HomeMapOverlay: View {
             Color.black.opacity(0.4)
                 .clipShape(
                     topCornerMask(
-                        width: Screen.width,
-                        height: Screen.fullHeight,
+                        width: App.screen.width,
+                        height: App.screen.height,
                         cornerRadius: 25
                     )
             )
@@ -297,7 +298,7 @@ struct HomeMainView_Previews: PreviewProvider {
 //struct SearchBarBg: View {
 //    @Environment(\.colorScheme) var colorScheme
 //
-//    var width: CGFloat = Screen.width
+//    var width: CGFloat = App.screen.width
 //    var topWidth: CGFloat = 120
 //    var topHeight: CGFloat = 20
 //    var topRadius: CGFloat = 10

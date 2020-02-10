@@ -1,20 +1,30 @@
 import SwiftUI
 
-struct Screen {
-    static var width: CGFloat {
-        return UIScreen.main.bounds.width
+extension View {
+    func embedInScreen(_ screen: ScreenModel) -> some View {
+        GeometryReader { g in
+            return self
+                .environmentObject(screen)
+                .overlay(
+                    Color.clear.introspectViewController { controller in
+                        print("insets \(controller.view.safeAreaInsets)")
+                        screen.edgeInsets = controller.view.safeAreaInsets
+                    }
+                )
+                .overlay(Run("setScreenSize") {
+                    let w = g.size.width
+                    let h = g.size.height
+                    async {
+                        screen.width = w
+                        screen.height = h
+                    }
+                })
+        }
     }
-    
-    static var height: CGFloat {
-        return UIScreen.main.bounds.height
-    }
-    
-    static var statusBarHeight: CGFloat {
-        let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
-        return window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
-    }
-    
-    static var fullHeight: CGFloat {
-        Screen.height + Screen.statusBarHeight
-    }
+}
+
+class ScreenModel: ObservableObject {
+    @Published var width: CGFloat = UIScreen.main.bounds.width
+    @Published var height: CGFloat = UIScreen.main.bounds.height
+    @Published var edgeInsets: UIEdgeInsets = UIEdgeInsets()
 }

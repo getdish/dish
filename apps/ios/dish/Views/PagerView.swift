@@ -108,7 +108,7 @@ class PagerStore: ObservableObject {
     @Published var indexLast: Int
     @Published var offset: CGFloat = 0
     @Published var isGestureActive: Bool = false
-    var width: CGFloat = Screen.width
+    var width: CGFloat = App.screen.width
     var numPages = 2
     var cancels: Set<AnyCancellable> = []
     var changePageAction: OnChangePage?
@@ -204,7 +204,7 @@ class PagerStore: ObservableObject {
         }
         
         // try and match speed roughly to their drag speed
-        let speed = min(1, abs(end / Screen.width))
+        let speed = min(1, abs(end / App.screen.width))
         let springResponse = Double(max(0.15, min(0.85, 1 - speed)))
         
         print("PagerView.dragEnd to \(end) \(index).... speed \(speed) springResponse \(springResponse)")

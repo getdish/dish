@@ -105,7 +105,6 @@
 		AEF6557F23B14DBA00E49A51 /* ContextMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557E23B14DBA00E49A51 /* ContextMenuView.swift */; };
 		AEF6558123B2205F00E49A51 /* HomeMainContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6558023B2205F00E49A51 /* HomeMainContent.swift */; };
 		AEF6558423B59BC000E49A51 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6558323B59BC000E49A51 /* Home.swift */; };
-		AEFC23F123D7CB7500A95A65 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEFC23F023D7CB7500A95A65 /* SplashScreen.swift */; };
 		AEFC3A8C23D7C7E100D9658F /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEFC3A8B23D7C7E100D9658F /* Mocks.swift */; };
 /* End PBXBuildFile section */
 
@@ -214,7 +213,6 @@
 		AEF6557E23B14DBA00E49A51 /* ContextMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuView.swift; sourceTree = "<group>"; };
 		AEF6558023B2205F00E49A51 /* HomeMainContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainContent.swift; sourceTree = "<group>"; };
 		AEF6558323B59BC000E49A51 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
-		AEFC23F023D7CB7500A95A65 /* SplashScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
 		AEFC3A8B23D7C7E100D9658F /* Mocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -255,7 +253,6 @@
 				1CE3546A23986B1C004B3A84 /* Assets.xcassets */,
 				1CE3546423986B1B004B3A84 /* AppDelegate.swift */,
 				AE99091123CE637200F1763C /* App.swift */,
-				AEFC23F023D7CB7500A95A65 /* SplashScreen.swift */,
 				1CE3546623986B1B004B3A84 /* SceneDelegate.swift */,
 				1CE3546823986B1B004B3A84 /* RootView.swift */,
 				1CE3547C23986B69004B3A84 /* Extensions */,
@@ -693,7 +690,6 @@
 				AE99091223CE637200F1763C /* App.swift in Sources */,
 				AEF6557123B024A100E49A51 /* ScrollListener.swift in Sources */,
 				AEF6558123B2205F00E49A51 /* HomeMainContent.swift in Sources */,
-				AEFC23F123D7CB7500A95A65 /* SplashScreen.swift in Sources */,
 				AE7563E923A03D570094022B /* MagicMove.swift in Sources */,
 				AE1BBDB423C8224200C58A87 /* CustomTextField.swift in Sources */,
 				1CE3547F23986B88004B3A84 /* Store.swift in Sources */,

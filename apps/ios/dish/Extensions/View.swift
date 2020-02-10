@@ -69,6 +69,7 @@ extension View {
         return res.environmentObject(App.store)
             .environmentObject(App.keyboard)
             .environmentObject(homeViewState)
+            .embedInScreen(App.screen)
             .embedInGeometryReader()
             .edgesIgnoringSafeArea(.all)
     }

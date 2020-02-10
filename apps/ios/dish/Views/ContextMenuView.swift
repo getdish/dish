@@ -78,6 +78,7 @@ struct ContextMenuDisplay: View {
         }
     }
     
+    @EnvironmentObject var screen: ScreenModel
     @ObservedObject var store: ContextMenuDisplayStore
     @State var menuFrame = CGRect()
     
@@ -97,10 +98,10 @@ struct ContextMenuDisplay: View {
         let edgePad: CGFloat = 20
         let contentPos = self.store.item.contentPosition
         let spaceAbove = contentPos.minY
-        let spaceBelow = Screen.height - contentPos.maxY
+        let spaceBelow = screen.height - contentPos.maxY
         let isAbove = spaceAbove > spaceBelow
         let height = max(spaceAbove, spaceBelow) - edgePad * 2
-        let width = Screen.width - edgePad * 2
+        let width = screen.width - edgePad * 2
         if isAbove {
             let menuHeight = menuFrame.maxY - menuFrame.minY
             let buttonMinY = contentPos.minY
