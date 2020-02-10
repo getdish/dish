@@ -56,6 +56,16 @@ services:
     env:
       - DISH_ENV=production
       - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
+  react-native:
+    image: dish/react-native
+    build:
+      dockerfile: ./apps/react-native/Dockerfile
+      context: ./
+    ports:
+      - 3000/http
+    env:
+      - DISH_ENV=production
+      - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
 {{- end}}
 
 template:

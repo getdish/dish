@@ -13,8 +13,8 @@ type MapAppState = {
   stats: {
     restaurant_count: number
     dish_count: number
-  },
-  map: MapState,
+  }
+  map: MapState
   getWithinCurrentBounds: Restaurant[]
 }
 
@@ -32,10 +32,12 @@ let state: MapAppState = {
     bounds: {} as LngLatBounds,
   },
   get getWithinCurrentBounds(): Restaurant[] {
-    let result = Object.values(this.restaurants).filter(x => isWithinBounds(x.location.coordinates, this.map.bounds)).slice(0, 30)
-    console.log(result) 
+    let result = Object.values(this.restaurants)
+      .filter(x => isWithinBounds(x.location.coordinates, this.map.bounds))
+      .slice(0, 30)
+    console.log(result)
     return result
-  }
+  },
 }
 
 const setSelected: Action<string> = (
@@ -47,11 +49,11 @@ const setSelected: Action<string> = (
 
 const updateRestaurants: AsyncAction<LngLat> = async (
   { state }: { state: MapAppState },
-  {centre, bounds}: { centre: LngLat, bounds: any }
+  { centre, bounds }: { centre: LngLat; bounds: any }
 ) => {
   state.map.bounds = bounds
   console.log('finding ... ')
-  const restaurants = await Restaurant.findNear(centre.lat, centre.lng, .05)
+  const restaurants = await Restaurant.findNear(centre.lat, centre.lng, 0.05)
   console.log(restaurants)
   console.log(restaurants.length)
   for (const restaurant of restaurants) {
@@ -59,7 +61,6 @@ const updateRestaurants: AsyncAction<LngLat> = async (
     state.dishes[restaurant.id] = restaurant.dishes
   }
 }
-
 
 const setMapState: Action<MapState> = (
   { state }: { state: MapAppState },
@@ -69,10 +70,10 @@ const setMapState: Action<MapState> = (
 }
 
 const getStats: AsyncAction = async ({ state }: { state: MapAppState }) => {
-  const r1 = await Restaurant.allRestaurantsCount()
+  const r1 = await Restaurant.allCount()
   state.stats.restaurant_count =
     r1.data.data.restaurant_aggregate.aggregate.count
-  const r2 = await Dish.allDishesCount()
+  const r2 = await Dish.allCount()
   state.stats.dish_count = r2.data.data.dish_aggregate.aggregate.count
 }
 
@@ -82,7 +83,7 @@ export const config = {
     setSelected: setSelected,
     updateRestaurants,
     getStats: getStats,
-    setMapState
+    setMapState,
   },
 }
 
