@@ -28,7 +28,7 @@
 		AE057BF423EA559D001B8BFA /* async.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE057BF323EA559D001B8BFA /* async.swift */; };
 		AE0C5FF523D2397D00BB5340 /* PrintGeometryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0C5FF423D2397D00BB5340 /* PrintGeometryView.swift */; };
 		AE0C5FF723D2414500BB5340 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0C5FF623D2414500BB5340 /* CustomButton.swift */; };
-		AE0C5FF923D2506800BB5340 /* HomeMainViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0C5FF823D2506800BB5340 /* HomeMainViewState.swift */; };
+		AE0C5FF923D2506800BB5340 /* HomeViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0C5FF823D2506800BB5340 /* HomeViewState.swift */; };
 		AE0C5FFB23D261F100BB5340 /* SideEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0C5FFA23D261F100BB5340 /* SideEffect.swift */; };
 		AE0F474423B69276008F7418 /* DishCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0F474323B69276008F7418 /* DishCamera.swift */; };
 		AE1BBDB423C8224200C58A87 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1BBDB323C8224200C58A87 /* CustomTextField.swift */; };
@@ -136,7 +136,7 @@
 		AE057BF323EA559D001B8BFA /* async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = async.swift; sourceTree = "<group>"; };
 		AE0C5FF423D2397D00BB5340 /* PrintGeometryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintGeometryView.swift; sourceTree = "<group>"; };
 		AE0C5FF623D2414500BB5340 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
-		AE0C5FF823D2506800BB5340 /* HomeMainViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainViewState.swift; sourceTree = "<group>"; };
+		AE0C5FF823D2506800BB5340 /* HomeViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewState.swift; sourceTree = "<group>"; };
 		AE0C5FFA23D261F100BB5340 /* SideEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideEffect.swift; sourceTree = "<group>"; };
 		AE0F474323B69276008F7418 /* DishCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishCamera.swift; sourceTree = "<group>"; };
 		AE1BBDB323C8224200C58A87 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
@@ -360,7 +360,7 @@
 				AEA87E4223B976EB009F07DB /* HomeFilterBar.swift */,
 				AEF6558023B2205F00E49A51 /* HomeMainContent.swift */,
 				AE7563B323A035E70094022B /* HomeMainView.swift */,
-				AE0C5FF823D2506800BB5340 /* HomeMainViewState.swift */,
+				AE0C5FF823D2506800BB5340 /* HomeViewState.swift */,
 				AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */,
 				AE56C86323ADB78C006A156A /* HomeSearchResultsView.swift */,
 				1CE354872398714D004B3A84 /* HomeView.swift */,
@@ -662,7 +662,7 @@
 				AE861A8123A16DA6004096BF /* TopNavView.swift in Sources */,
 				AEF6558423B59BC000E49A51 /* Home.swift in Sources */,
 				AECC17BF23D53A8D007CC388 /* MapBoxView.swift in Sources */,
-				AE0C5FF923D2506800BB5340 /* HomeMainViewState.swift in Sources */,
+				AE0C5FF923D2506800BB5340 /* HomeViewState.swift in Sources */,
 				AE6A9C1123C5265C00003059 /* GooglePlaceItem.swift in Sources */,
 				AE861A8923A172E8004096BF /* BlurView.swift in Sources */,
 				AEF6557F23B14DBA00E49A51 /* ContextMenuView.swift in Sources */,

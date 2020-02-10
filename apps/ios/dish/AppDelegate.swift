@@ -7,10 +7,11 @@ import XCGLogger
 // most if not all should go onto here:
 let App = AppModel()
 // ...
+// state
+let homeViewState = HomeViewState()
 let features: [DishItem] = load("dishData.json")
 let restaurants: [RestaurantItem] = load("restaurantData.json")
 let log = XCGLogger.default
-let homeViewState = HomeViewState()
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
