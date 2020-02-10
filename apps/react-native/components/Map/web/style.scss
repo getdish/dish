@@ -1,0 +1,121 @@
+* {
+    font-family: 'Open sans';
+}
+
+small {
+    margin: 0;
+    opacity: .5;
+    display: block;
+    font-size: .7rem;
+}
+
+.mapboxgl-map {
+    &:after {
+        position: absolute;
+        pointer-events: none;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        background: #00000026;
+        z-index: 2;
+        content: '';
+    }
+}
+
+.mapboxgl-marker {
+    will-change: transform;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.dish-marker {
+    transition: all .5s linear;
+    transform: scale(1);
+    font-size: 32px;
+    opacity: 1;
+    // marker styling
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    margin-left: 115px;
+    border-radius: 50%;
+    border: 8px solid #fff;
+    width: 8px;
+    height: 8px;
+    &:before {
+        position: absolute;
+        content: '';
+        width: 0px;
+        height: 0px;
+        bottom: -30px;
+        left: -6px;
+        border: 10px solid transparent;
+        border-top: 17px solid #fff;
+    }
+    &.onbeforeinsert {
+        transform: scale(0);
+        opacity: 0;
+    }
+    p {
+        font-size: 12px;
+        line-height: 9px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        margin: 0;
+    }
+}
+
+// Sidebar
+nav {
+    position: fixed;
+    left: 0;
+    height: 100%;
+    z-index: 21;
+    background: #fdfdfd;
+    max-width: 350px;
+    padding: 1rem;
+    transition: all .5s linear;
+    box-shadow: 0px 0px 30px -10px #00000030;
+    #dish-sidebar-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    hr {
+        margin: 1rem 0;
+        border-top: red;
+    }
+    #dish-sidebar-content {
+        ul {
+            margin: 0;
+            padding: 0;
+            li {
+                cursor: pointer;
+                display: flex;
+                list-style: none;
+                align-items: center;
+                display: flex;
+                box-shadow: 0px 10px 30px -10px #e6e6e6;
+                background: white;
+                margin: .75rem 0;
+                overflow: hidden;
+                border-radius: 8px;
+                hgroup {
+                    margin: .5rem .5rem .5rem 1rem;
+                    h5 {
+                        margin: 0
+                    }
+                }
+                img {
+                    height: 60px;
+                    width: 60px;
+                }
+            }
+        }
+    }
+}
