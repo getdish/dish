@@ -48,25 +48,27 @@ struct HomeMainView: View {
                     }
                 }
                 
-                SideEffect(".store.setShowCamera", condition: { App.store.state.home.showCamera != self.wasOnCamera }) {
-                    self.wasOnCamera = App.store.state.home.showCamera
-                    self.state.setShowCamera(self.wasOnCamera)
+                SideEffect(".store.setShowCamera", condition: {
+                    let isOnCamera = App.store.state.home.view == .camera
+                    return isOnCamera != self.wasOnCamera
+                }) {
+                    let val = App.store.state.home.view == .camera
+                    self.wasOnCamera = val
+                    self.state.setShowCamera(val)
                 }
             }
             
             // Camera
             if App.enableCamera && animationState != .splash {
-                Group {
-                    ZStack {
-                        DishCamera()
-                        
-                        // cover camera
-                        Color.black
-                            .opacity(state.showCamera ? 0 : 1)
-                            .animation(.spring())
-                    }
-                    .frameLimitedToScreen()
+                ZStack {
+                    DishCamera()
+                    
+                    // cover camera
+                    Color.black
+                        .opacity(state.showCamera ? 0 : 1)
+                        .animation(.spring())
                 }
+                .frameLimitedToScreen()
             }
             
             // Map
@@ -78,14 +80,8 @@ struct HomeMainView: View {
                             || state.animationState != .idle
                             || state.mapHeight > state.startSnapToBottomAt
                     )
-                        .offset(y: state.showCamera
-                            ? -App.screen.height
-                            : -(state.mapFullHeight - mapHeight) / 2 + 25 /* topbar offset */
-                    )
-                        .opacity(
-                            state.showCamera || animationState == .splash ? 0 : 1
-                    )
-                        .rotationEffect(state.showCamera ? .degrees(-10) : .degrees(0))
+                        .offset(y: -(state.mapFullHeight - mapHeight) / 2 + 25 /* topbar offset */)
+                        .opacity(animationState == .splash ? 0 : 1)
                         .animation(.spring(response: 0.8), value: state.animationState == .animate)
                     
                     HomeMapOverlay()
@@ -93,6 +89,7 @@ struct HomeMainView: View {
                 }
                     .frame(height: state.appHeight)
                     .clipped()
+                    .opacity(state.showCamera ? 0 : 1)
             }
             
             // Content
@@ -105,26 +102,26 @@ struct HomeMainView: View {
                     }
                         .frameLimitedToScreen()
 
-//                    // content
-//                    HomeMainContentContainer(
-//                        isSnappedToBottom: state.isSnappedToBottom,
-//                        disableMagicTracking: state.mapHeight >= state.snapToBottomAt
-//                            || state.isSnappedToBottom
-//                            || state.animationState == .controlled
-//                    ) {
-//                        HomeMainContent()
-//                    }
-//                        .frameLimitedToScreen()
-//                        .offset(y: state.showCamera ? App.screen.height : 0)
-//
-//                    // filters
-//                    VStack {
-//                        HomeMainFilterBar()
-//                        Spacer()
-//                    }
-//                        .frameLimitedToScreen()
-//                        .offset(y: mapHeight + App.searchBarHeight / 2)
+                    // content
+                    HomeMainContentContainer(
+                        isSnappedToBottom: state.isSnappedToBottom,
+                        disableMagicTracking: state.mapHeight >= state.snapToBottomAt
+                            || state.isSnappedToBottom
+                            || state.animationState == .controlled
+                    ) {
+                        HomeMainContent()
+                    }
+                        .frameLimitedToScreen()
+
+                    // filters
+                    VStack {
+                        HomeMainFilterBar()
+                        Spacer()
+                    }
+                        .frameLimitedToScreen()
+                        .offset(y: mapHeight + App.searchBarHeight / 2)
                 }
+                .opacity(state.showCamera ? 0 : 1)
                 .transition(.opacity)
             }
             
@@ -142,13 +139,10 @@ struct HomeMainView: View {
                     // but created one where it de-focuses it instantly often
                     //                    .disabled(!enableSearchBar)
                     //                    .allowsHitTesting(enableSearchBar)
-                    .offset(y:
-                        state.showCamera ?
-                            mapHeight > App.screen.height / 2 ? App.screen.height * 2 : -App.screen.height * 2 :
-                            mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra
-                )
+                    .offset(y: mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra)
                     .animation(.spring(response: 1.25), value: state.animationState == .animate)
             }
+            .opacity(state.showCamera ? 0 : 1)
             
             
             // Camera Controls

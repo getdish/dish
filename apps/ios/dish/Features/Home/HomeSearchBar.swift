@@ -198,8 +198,8 @@ struct CameraButton: View {
         
         return CustomButton2(action: {
             self.lastTap = Date()
-            if !App.store.state.home.showCamera {
-                App.store.send(.home(.setShowCamera(true)))
+            if App.store.state.home.view != .camera {
+                App.store.send(.home(.setView(.camera)))
             } else {
                 App.store.send(.camera(.capture(true)))
             }

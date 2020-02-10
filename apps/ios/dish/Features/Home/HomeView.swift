@@ -41,7 +41,7 @@ struct HomeViewInner: View {
             PagerView(
                 pageCount: homePageCount,
                 pagerStore: homePager,
-                disableDragging: self.disableDragging || App.store.state.home.showCamera
+                disableDragging: self.disableDragging || App.store.state.home.view == .camera
                 ) { isDragging in
                     //
                     // ⚠️ ⚠️ ⚠️

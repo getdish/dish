@@ -24,7 +24,6 @@ enum HomeAction {
     case setSearch(_ val: String)
     case setSearchResults(_ val: HomeSearchResults)
     case setCurrentTags(_ val: [SearchInputTag])
-    case setShowCamera(_ val: Bool)
 }
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
@@ -39,8 +38,6 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     }
     
     switch action {
-        case let .setShowCamera(val):
-            state.home.showCamera = val
         case let .setSearchResults(val):
             var last = state.home.viewStates.last!
             last.searchResults = val
