@@ -105,25 +105,25 @@ struct HomeMainView: View {
                     }
                         .frameLimitedToScreen()
 
-//                    // content
-//                    HomeMainContentContainer(
-//                        isSnappedToBottom: state.isSnappedToBottom,
-//                        disableMagicTracking: state.mapHeight >= state.snapToBottomAt
-//                            || state.isSnappedToBottom
-//                            || state.animationState == .controlled
-//                    ) {
-//                        HomeMainContent()
-//                    }
-//                        .frameLimitedToScreen()
-//                        .offset(y: state.showCamera ? App.screen.height : 0)
-//
-//                    // filters
-//                    VStack {
-//                        HomeMainFilterBar()
-//                        Spacer()
-//                    }
-//                        .frameLimitedToScreen()
-//                        .offset(y: mapHeight + App.searchBarHeight / 2)
+                    // content
+                    HomeMainContentContainer(
+                        isSnappedToBottom: state.isSnappedToBottom,
+                        disableMagicTracking: state.mapHeight >= state.snapToBottomAt
+                            || state.isSnappedToBottom
+                            || state.animationState == .controlled
+                    ) {
+                        HomeMainContent()
+                    }
+                        .frameLimitedToScreen()
+                        .offset(y: state.showCamera ? App.screen.height : 0)
+
+                    // filters
+                    VStack {
+                        HomeMainFilterBar()
+                        Spacer()
+                    }
+                        .frameLimitedToScreen()
+                        .offset(y: mapHeight + App.searchBarHeight / 2)
                 }
                 .transition(.opacity)
             }

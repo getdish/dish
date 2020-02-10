@@ -1,7 +1,7 @@
 import SwiftUI
 import Combine
 
-fileprivate let DEBUG_ANIMATION = true
+fileprivate let DEBUG_ANIMATION = false
 fileprivate let OFF_OPACITY = DEBUG_ANIMATION ? 0.5 : 0
 
 class MagicItemsStore: ObservableObject {
