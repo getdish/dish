@@ -35,12 +35,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         #endif
     }
-    
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // one time setup
 
         startDebugLoop()
-        
+
         // hasura
 //        Hasura.initialise(config: hasuraConfig, enableLogs: true)
 
