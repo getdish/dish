@@ -28,7 +28,7 @@ class MagicItemsStore: ObservableObject {
         clear()
         var cancel = false
         clear = { cancel = true }
-        async(16 * 3) {
+        async(16 * 5) {
             if self.disableTracking { return }
             if cancel { return }
             self.triggerUpdate = NSDate()

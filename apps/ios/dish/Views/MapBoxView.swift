@@ -10,10 +10,12 @@ extension MGLPointAnnotation {
     }
 }
 
+// TODO i was seeing bugs, perhaps SwiftUI is creating MapBoxView multiple times
+// if I move this out to here it works, if not addAnnotations fails after first call
+fileprivate let mapView: MGLMapView = MGLMapView(frame: .zero, styleURL: MGLStyle.darkStyleURL)
+
 struct MapBoxView: UIViewRepresentable {
     var annotations: [MGLPointAnnotation]
-    
-    private let mapView: MGLMapView = MGLMapView(frame: .zero, styleURL: MGLStyle.darkStyleURL)
     
     // MARK: - Configuring UIViewRepresentable protocol
     
@@ -64,7 +66,9 @@ struct MapBoxView: UIViewRepresentable {
         if let currentAnnotations = mapView.annotations {
             mapView.removeAnnotations(currentAnnotations)
         }
-        mapView.addAnnotations(annotations)
+        if annotations.count > 0 {
+            mapView.addAnnotations(annotations)
+        }
     }
     
     // MARK: - Implementing MGLMapViewDelegate
@@ -78,33 +82,33 @@ struct MapBoxView: UIViewRepresentable {
         
         func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
             
-            let coordinates = [
-                CLLocationCoordinate2D(latitude: 37.791329, longitude: -122.396906),
-                CLLocationCoordinate2D(latitude: 37.791591, longitude: -122.396566),
-                CLLocationCoordinate2D(latitude: 37.791147, longitude: -122.396009),
-                CLLocationCoordinate2D(latitude: 37.790883, longitude: -122.396349),
-                CLLocationCoordinate2D(latitude: 37.791329, longitude: -122.396906),
-            ]
+//            let coordinates = [
+//                CLLocationCoordinate2D(latitude: 37.791329, longitude: -122.396906),
+//                CLLocationCoordinate2D(latitude: 37.791591, longitude: -122.396566),
+//                CLLocationCoordinate2D(latitude: 37.791147, longitude: -122.396009),
+//                CLLocationCoordinate2D(latitude: 37.790883, longitude: -122.396349),
+//                CLLocationCoordinate2D(latitude: 37.791329, longitude: -122.396906),
+//            ]
+//
+//            let buildingFeature = MGLPolygonFeature(coordinates: coordinates, count: 5)
+//            let shapeSource = MGLShapeSource(identifier: "buildingSource", features: [buildingFeature], options: nil)
+//            mapView.style?.addSource(shapeSource)
+//
+//            let fillLayer = MGLFillStyleLayer(identifier: "buildingFillLayer", source: shapeSource)
+//            fillLayer.fillColor = NSExpression(forConstantValue: UIColor.blue)
+//            fillLayer.fillOpacity = NSExpression(forConstantValue: 0.5)
+//
+//            mapView.style?.addLayer(fillLayer)
             
-            let buildingFeature = MGLPolygonFeature(coordinates: coordinates, count: 5)
-            let shapeSource = MGLShapeSource(identifier: "buildingSource", features: [buildingFeature], options: nil)
-            mapView.style?.addSource(shapeSource)
-            
-            let fillLayer = MGLFillStyleLayer(identifier: "buildingFillLayer", source: shapeSource)
-            fillLayer.fillColor = NSExpression(forConstantValue: UIColor.blue)
-            fillLayer.fillOpacity = NSExpression(forConstantValue: 0.5)
-            
-            mapView.style?.addLayer(fillLayer)
-            
-            let attraction = UIImage(named: "pin")
-            if let styleImage = attraction {
-                mapView.style?.setImage(styleImage, forName: "attraction")
-            }
-            let symbolAnnotationController = MGLSymbolAnnotationController(mapView: mapView)
-            
-            symbolAnnotationController.textVariableAnchor = [
-                "center", "left", "right", "top", "bottom", "top-left", "top-right", "bottom-left", "bottom-right"
-            ]
+//            let attraction = UIImage(named: "pin")
+//            if let styleImage = attraction {
+//                mapView.style?.setImage(styleImage, forName: "attraction")
+//            }
+//            let symbolAnnotationController = MGLSymbolAnnotationController(mapView: mapView)
+//
+//            symbolAnnotationController.textVariableAnchor = [
+//                "center", "left", "right", "top", "bottom", "top-left", "top-right", "bottom-left", "bottom-right"
+//            ]
             
 //            let symbol = MGLSymbolStyleAnnotation(coordinate: CLLocationCoordinate2DMake(37.791329, -122.396906));
 //            symbol.iconImageName = "attraction"

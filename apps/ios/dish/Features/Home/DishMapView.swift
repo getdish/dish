@@ -31,13 +31,10 @@ struct DishMapView: View {
         return results.map { result in
             MGLPointAnnotation(
                 title: result.name,
-                coordinate: .init(latitude: result.coordinate.lat, longitude: result.coordinate.long)
+                coordinate: result.coordinate
             )
         }
     }
-//    = [
-//        MGLPointAnnotation(title: "Mapbox", coordinate: .init(latitude: 37.791434, longitude: -122.396267))
-//    ]
     
     func start() {
         // sync map location to state
@@ -66,8 +63,8 @@ struct DishMapView: View {
 
                                 )
                                 .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
-                                .zoomLevel(10)
-                                .frame(height: App.screen.height * 1.25)
+                                .zoomLevel(11)
+                                .frame(height: App.screen.height * 1.6)
 //                            MapView(
 //                                width: appWidth,
 //                                height: self.height,

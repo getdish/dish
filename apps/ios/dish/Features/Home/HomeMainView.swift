@@ -74,15 +74,19 @@ struct HomeMainView: View {
             // Map
             if App.enableMap {
                 ZStack {
-                    DishMapView(
-                        height: state.mapFullHeight,
-                        animate: [.idle].contains(state.dragState)
-                            || state.animationState != .idle
-                            || state.mapHeight > state.startSnapToBottomAt
-                    )
-                        .offset(y: -(state.mapFullHeight - mapHeight) / 2 + 25 /* topbar offset */)
+                    ZStack {
+                        DishMapView(
+                            height: state.mapFullHeight,
+                            animate: [.idle].contains(state.dragState)
+                                || state.animationState != .idle
+                                || state.mapHeight > state.startSnapToBottomAt
+                        )
+                            .offset(y: -(state.mapFullHeight - mapHeight) / 2 + 25 /* topbar offset */)
+                            .animation(.spring(response: 1))
+                    }
+//                        .frameLimitedToScreen()
+//                        .clipped()
                         .opacity(animationState == .splash ? 0 : 1)
-                        .animation(.spring(response: 1))
 //                        .animation(.spring(response: 0.8),
 //                                value: state.animationState == .animate
 //                                    || state.animationState == .controlled
@@ -91,8 +95,7 @@ struct HomeMainView: View {
                     HomeMapOverlay()
                         .offset(y: mapHeight - 20)
                 }
-                    .frame(height: state.appHeight)
-                    .clipped()
+                    .frameLimitedToScreen()
                     .opacity(state.showCamera ? 0 : 1)
             }
 
@@ -107,15 +110,15 @@ struct HomeMainView: View {
                         .frameLimitedToScreen()
 
                     // content
-                    HomeMainContentContainer(
-                        isSnappedToBottom: state.isSnappedToBottom,
-                        disableMagicTracking: state.mapHeight >= state.snapToBottomAt
-                            || state.isSnappedToBottom
-                            || state.animationState == .controlled
-                    ) {
-                        HomeMainContent()
-                    }
-                        .frameLimitedToScreen()
+//                    HomeMainContentContainer(
+//                        isSnappedToBottom: state.isSnappedToBottom,
+//                        disableMagicTracking: state.mapHeight >= state.snapToBottomAt
+//                            || state.isSnappedToBottom
+//                            || state.animationState == .controlled
+//                    ) {
+//                        HomeMainContent()
+//                    }
+//                        .frameLimitedToScreen()
 
                     // filters
                     VStack {

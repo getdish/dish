@@ -51,7 +51,7 @@ class HomeService {
                                     return HomeSearchResultItem(
                                         id: restaurant.name,
                                         name: restaurant.name,
-                                        coordinate: .init(lat: coords[1], long: coords[0])
+                                        coordinate: .init(latitude: coords[1], longitude: coords[0])
                                     )
                                 }
                             )
