@@ -81,7 +81,7 @@ struct MagicMove<Content>: View where Content: View {
         self.content = content
         self.disableTracking = disableTracking
         self.onMoveComplete = onMoveComplete
-        self.animation = .easeInOut(duration: duration / 1000)
+        self.animation = .spring(response: 1)
         self.lastContent = content()
         self.position = position
         self.store.disableTracking = disableTracking
@@ -92,7 +92,7 @@ struct MagicMove<Content>: View where Content: View {
         if hasNewPosition {
             lastPosition = position
         }
-        print("🏆🏆🏆 shouldRun, hasNewPosition \((shouldRun, hasNewPosition)) ")
+        print("MagicMove 🏆🏆🏆 shouldRun \(shouldRun) hasNewPosition \(hasNewPosition)")
         if shouldRun || hasNewPosition {
             self.lastRun = run
             store.animate(position, duration: duration, onMoveComplete: onMoveComplete)
@@ -304,23 +304,31 @@ struct MagicItem<Content>: View where Content: View {
 
     var body: some View {
         return ZStack {
-            RunOnce(name: "watchMagicMove after re-enable from parent") {
-                magicItemsStore.$disableTracking.sink { disabled in
-                    if !disabled, let frame = self.lastFrame {
-                        let (name, enabled, item) = self.setupSideEffect(frame)
-                        if enabled {
-                            log.debug("update after re-enable \(name)")
-                            self.updateItem(item)
+            RunOnce(name: "MagicItem.watchMagicMoveDisabled") {
+                magicItemsStore.$disableTracking
+                    .removeDuplicates()
+                    .dropFirst()
+                    .sink { disabled in
+                        if !disabled, let frame = self.lastFrame {
+                            let (name, enabled, item) = self.setupSideEffect(frame)
+                            if enabled {
+                                log.debug("update after re-enable \(name)")
+                                self.updateItem(item)
+                            }
                         }
                     }
-                }.store(in: &self.cancels)
+                    .store(in: &self.cancels)
             }
             
             self.content
                 .overlay(
                     GeometryReader { geometry -> Color in
+                        if magicItemsStore.disableTracking {
+                            return Color.clear
+                        }
                         let frame = geometry.frame(in: .global)
-                        let (_, enabled, item) = self.setupSideEffect(frame)
+                        let (name, enabled, item) = self.setupSideEffect(frame)
+                        print("geo \(name) \(frame)")
                         if enabled {
                             async {
                                 if frame != self.lastFrame {

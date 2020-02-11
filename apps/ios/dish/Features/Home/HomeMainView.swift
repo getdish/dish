@@ -82,7 +82,11 @@ struct HomeMainView: View {
                     )
                         .offset(y: -(state.mapFullHeight - mapHeight) / 2 + 25 /* topbar offset */)
                         .opacity(animationState == .splash ? 0 : 1)
-                        .animation(.spring(response: 0.8), value: state.animationState == .animate)
+                        .animation(.spring(response: 1))
+//                        .animation(.spring(response: 0.8),
+//                                value: state.animationState == .animate
+//                                    || state.animationState == .controlled
+//                            )
                     
                     HomeMapOverlay()
                         .offset(y: mapHeight - 20)
@@ -122,7 +126,6 @@ struct HomeMainView: View {
                         .offset(y: mapHeight + App.searchBarHeight / 2)
                 }
                 .opacity(state.showCamera ? 0 : 1)
-                .transition(.opacity)
             }
             
             // Search

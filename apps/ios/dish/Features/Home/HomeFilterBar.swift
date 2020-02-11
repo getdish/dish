@@ -45,6 +45,9 @@ struct HomeMainFilterBar: View {
                             .environment(\.colorScheme, colorScheme == .light ? .dark : .light)
                         
                         FilterButton(label: "Healthy", fontSize: 15, action: {})
+                        
+                        FilterButton(label: "Cash Only", fontSize: 15, action: {})
+                            .frame(width: 110)
                     }
                 }
                 .padding(.vertical, App.filterBarPad)

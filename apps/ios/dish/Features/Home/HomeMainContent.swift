@@ -32,7 +32,7 @@ struct HomeMainContentContainer<Content>: View where Content: View {
         return ZStack(alignment: .topLeading) {
             PrintGeometryView("HomeMainContent")
             
-            // note! be sure to put any animation on this *inside* magic move
+            // ⚠️ be sure to put any animation on this *inside* magic move
             MagicMove(self.animatePosition,
                       duration: homeViewState.snapToBottomAnimationDuration,
                       // TODO we need a separate "disableTracking" in homeStore that is manually set
@@ -63,26 +63,36 @@ struct HomeMainContent: View {
         ZStack(alignment: .topLeading) {
             // results list below map
             ZStack {
-                if Selectors.home.isOnSearchResults() {
-                    HomeSearchResultsView(
-                        state: Selectors.home.lastState()
-                    )
-                } else {
-                    HomeContentExplore()
+                Group {
+                    if Selectors.home.isOnSearchResults() {
+                        HomeSearchResultsView(
+                            state: Selectors.home.lastState()
+                        )
+                    } else {
+                        HomeContentExplore()
+                    }
                 }
+                .animation(.none)
             }
             .offset(y: self.homeState.mapHeight - self.homeState.searchBarYExtra)
+            .animation(.spring(response: 1))
             
             // results bar below map
-            ZStack {
+            VStack {
+                Spacer()
+                
                 if Selectors.home.isOnSearchResults() {
                     HomeMapSearchResults()
                 } else {
                     HomeMapExplore()
                 }
+                
+                // bottom pad
+                Spacer().frame(
+                    height: self.homeState.appHeight - self.homeState.snappedToBottomMapHeight + App.searchBarHeight / 2
+                )
             }
             .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
-            .offset(y: self.homeState.snappedToBottomMapHeight - cardRowHeight - 18)
         }
         // note! be sure to put any animation on this *inside* magic move
         // or else it messes up the magic move measurement - you can test
@@ -97,19 +107,28 @@ struct HomeMapExplore: View {
     @EnvironmentObject var store: AppStore
     
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 16) {
-                ForEach(0 ..< features.count) { index in
-                    DishCardView(
-                        dish: features[index],
-                        at: .end,
-                        display: .card
-                    )
-                        .equatable()
-                        .frame(width: 125, height: cardRowHeight - 40)
+        VStack(spacing: 0) {
+            //            HStack {
+            //                Text("Most popular in this area")
+            //                    .foregroundColor(.white)
+            //                    .font(.system(size: 18))
+            //                    .fontWeight(.semibold)
+            //                    .shadow(color: Color.black.opacity(0.4), radius: 3, x: 0, y: 1)
+            //
+            //                Spacer()
+            //            }
+            //            .padding(.horizontal, 20)
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 14) {
+                    ForEach(0 ..< features.count) { index in
+                        DishButtonView(dish: features[index]).equatable()
+                    }
                 }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 16)
+                .padding(.top, 12)
             }
-            .padding(20)
         }
     }
 }

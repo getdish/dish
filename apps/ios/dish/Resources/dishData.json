@@ -2,61 +2,73 @@
     {
         "name": "Pho",
         "id": 1001,
-        "imageName": "turtlerock"
+        "imageName": "turtlerock",
+        "hue": 0.5
     },
     {
-        "name": "Wings",
+        "name": "Sushi",
         "id": 1002,
-        "imageName": "silversalmoncreek"
+        "imageName": "silversalmoncreek",
+        "hue": 0.6
     },
     {
-        "name": "Steak",
+        "name": "Oysters",
         "id": 1003,
-        "imageName": "chilkoottrail"
+        "imageName": "chilkoottrail",
+        "hue": 0.7
     },
     {
-        "name": "Burrito",
+        "name": "Breakfast Burrito",
         "id": 1004,
-        "imageName": "stmarylake"
+        "imageName": "stmarylake",
+        "hue": 0.8
     },
     {
-        "name": "Szechuan",
+        "name": "Mapa Tofu",
         "id": 1005,
-        "imageName": "twinlake"
+        "imageName": "twinlake",
+        "hue": 0.9
     },
     {
         "name": "Poke",
         "id": 1006,
-        "imageName": "lakemcdonald"
+        "imageName": "lakemcdonald",
+        "hue": 0.1
     },
     {
-        "name": "Tacos",
+        "name": "Carnitas Tacos",
         "id": 1007,
-        "imageName": "charleyrivers"
+        "imageName": "charleyrivers",
+        "hue": 0.2
     },
     {
-        "name": "Kebab",
+        "name": "Chicken Tikki Masala",
         "id": 1008,
-        "imageName": "icybay"
+        "imageName": "icybay",
+        "hue": 0.3
     },
     {
         "name": "Burger",
         "id": 1009,
-        "imageName": "rainbowlake"
+        "imageName": "rainbowlake",
+        "hue": 0.4
     },
     {
         "name": "Pizza",
         "id": 1010,
-        "imageName": "hiddenlake"
+        "imageName": "hiddenlake",
+        "hue": 0.5
     },
     {
-        "name": "Chincoteague",
+        "name": "Tea Leaf Salad",
         "id": 1011,
-        "imageName": "chincoteague"
+        "imageName": "chincoteague",
+        "hue": 0.6
     },
     {
-        "name": "Lake Umbagog",
+        "name": "Biria Taco",
         "id": 1012,
-        "imageName": "umbagog"
+        "imageName": "umbagog",
+        "hue": 0.7
     }
 ]
