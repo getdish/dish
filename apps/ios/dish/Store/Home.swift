@@ -122,7 +122,6 @@ enum HomePageView {
 struct HomeSearchResultItem: Identifiable {
     var id: String
     var name: String
-    var place: GooglePlaceItem
 }
 
 struct HomeSearchResults: Equatable {

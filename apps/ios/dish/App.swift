@@ -1,4 +1,5 @@
 import SwiftUI
+import Apollo
 //import Hasura
 
 // For more information check "How To Control The World" - Stephen Celis
@@ -11,6 +12,10 @@ class AppModel {
     let mapService = MapService()
     let homeService = HomeService()
     let googlePlacesService = GooglePlacesService()
+    
+    var apollo: ApolloClient {
+        return ApolloNetwork.shared.apollo
+    }
 
     // models
     let screen = ScreenModel()

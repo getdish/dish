@@ -32,7 +32,33 @@ class HomeService {
     
     func getSearchResults(_ search: SearchQuery) -> Future<HomeSearchResults, Never> {
         Future<HomeSearchResults, Never> { promise in
-            
+            App.apollo.fetch(query: SearchRestaurantsQuery()) { result in
+                switch result {
+                    case .success(let result):
+                        if result.errors?.count ?? 0 > 0 {
+                            print("errors in search")
+                            return
+                        }
+                        guard let data = result.data else {
+                            print("no results")
+                            return
+                        }
+                        promise(.success(
+                            HomeSearchResults(
+                                id: "0",
+                                results: data.restaurant.map { restaurant in
+                                    return HomeSearchResultItem(
+                                        id: restaurant.name,
+                                        name: restaurant.name
+                                    )
+                                }
+                            )
+                        ))
+                        print("got \(result)")
+                    case .failure(let err):
+                        print("err \(err)")
+                }
+            }
             
 //            App.googlePlacesService.searchPlaces(
 //                search.query,

@@ -38,15 +38,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // one time setup
-        
-        ApolloNetwork.shared.apollo.fetch(query: SearchRestaurantsQuery()) { result in
-            switch result {
-                case .success(let result):
-                    print("got \(result)")
-                case .failure(let err):
-                    print("err \(err)")
-            }
-        }
 
         startDebugLoop()
         

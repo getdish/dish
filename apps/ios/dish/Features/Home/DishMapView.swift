@@ -61,7 +61,7 @@ struct DishMapView: View {
                                 darkMode: self.colorScheme == .dark,
                                 animate: self.animate,
                                 moveToLocation: store.state.map.moveToLocation,
-                                locations: store.state.home.viewStates.last!.searchResults.results.map { $0.place },
+                                locations: [], //store.state.home.viewStates.last!.searchResults.results.map { $0.place },
                                 onMapSettle: { position in
                                     mapViewStore.position = position
                             }
