@@ -47,9 +47,11 @@ class HomeService {
                             HomeSearchResults(
                                 id: "0",
                                 results: data.restaurant.map { restaurant in
+                                    let coords = restaurant.location?["coordinates"] as! [Double]
                                     return HomeSearchResultItem(
                                         id: restaurant.name,
-                                        name: restaurant.name
+                                        name: restaurant.name,
+                                        coordinate: .init(lat: coords[1], long: coords[0])
                                     )
                                 }
                             )

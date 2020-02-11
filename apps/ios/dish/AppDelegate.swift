@@ -17,6 +17,11 @@ let log = XCGLogger.default
 // via https://github.com/apollographql/apollo-ios/issues/36
 public typealias geometry = [String : Any?]
 
+struct APIGeometry {
+    let type: String
+    let coordinates: [Double]
+}
+
 //let hasuraConfig = ProjectConfig(projectName: "projectName")
 
 @UIApplicationMain

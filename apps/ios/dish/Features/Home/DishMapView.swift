@@ -1,9 +1,7 @@
 import SwiftUI
-import GoogleMaps
-import GooglePlaces
 import CoreLocation
 import Combine
-//import Mapbox
+import Mapbox
 
 class DishMapViewStore: ObservableObject {
     var cancels: Set<AnyCancellable> = []
@@ -27,48 +25,64 @@ struct DishMapView: View {
 
     var height: CGFloat = 100
     var animate: Bool = false
-    
-//    @State var annotations: [MGLPointAnnotation] = [
+
+    var annotations: [MGLPointAnnotation] {
+        let results = Selectors.home.lastState().searchResults.results
+        return results.map { result in
+            MGLPointAnnotation(
+                title: result.name,
+                coordinate: .init(latitude: result.coordinate.lat, longitude: result.coordinate.long)
+            )
+        }
+    }
+//    = [
 //        MGLPointAnnotation(title: "Mapbox", coordinate: .init(latitude: 37.791434, longitude: -122.396267))
 //    ]
     
+    func start() {
+        // sync map location to state
+        self.syncMapLocationToState()
+        // mapHeight => zoom level
+        self.syncMapHeightToZoomLevel()
+    }
+    
     var body: some View {
         ZStack(alignment: .topLeading) {
-            RunOnce(name: "start map") {
-                self.start()
+            Group {
+                RunOnce(name: "start map") {
+                    self.start()
+                }
             }
             
             VStack {
                 ZStack(alignment: .topLeading) {
                     ZStack {
                         Group {
-//                            if false {
-//                                MapBoxView(annotations: self.$annotations)
-//                                    .styleURL(
-//                                        colorScheme == .dark
-//                                            ? URL(string: "mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja/draft")!
-//                                            : URL(string: "mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq/draft")!
-//
-//                                    )
-//                                    .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
-//                                    .zoomLevel(10)
-//                                    .frame(height: App.screen.fullHeight * 1.55)
+                            MapBoxView(annotations: self.annotations)
+                                .styleURL(
+                                    colorScheme == .dark
+                                        ? URL(string: "mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja/draft")!
+                                        : URL(string: "mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq/draft")!
+
+                                )
+                                .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
+                                .zoomLevel(10)
+                                .frame(height: App.screen.height * 1.25)
+//                            MapView(
+//                                width: appWidth,
+//                                height: self.height,
+//                                padding: self.padding,
+//                                darkMode: self.colorScheme == .dark,
+//                                animate: self.animate,
+//                                moveToLocation: store.state.map.moveToLocation,
+//                                locations: [], //store.state.home.viewStates.last!.searchResults.results.map { $0.place },
+//                                onMapSettle: { position in
+//                                    mapViewStore.position = position
 //                            }
-                            MapView(
-                                width: appWidth,
-                                height: self.height,
-                                padding: self.padding,
-                                darkMode: self.colorScheme == .dark,
-                                animate: self.animate,
-                                moveToLocation: store.state.map.moveToLocation,
-                                locations: [], //store.state.home.viewStates.last!.searchResults.results.map { $0.place },
-                                onMapSettle: { position in
-                                    mapViewStore.position = position
-                            }
-                            )
-                                .introspectMapView { mapView in
-                                    self.mapView = mapView
-                            }
+//                            )
+//                                .introspectMapView { mapView in
+//                                    self.mapView = mapView
+//                            }
                         }
                     }
                     
@@ -94,26 +108,7 @@ struct DishMapView: View {
         }
     }
     
-    func start() {
-        // sync map location to state
-        mapViewStore.$position
-            .debounce(for: .milliseconds(200), scheduler: App.queueMain)
-            .sink { position in
-                if let position = position {
-                    App.store.send(
-                        .map(.setLocation(
-                            MapLocationState(
-                                radius: position.radius,
-                                latitude: position.center.latitude,
-                                longitude: position.center.longitude
-                            )
-                        ))
-                    )
-                }
-        }
-        .store(in: &mapViewStore.cancels)
-        
-        // mapHeight => zoom level
+    func syncMapHeightToZoomLevel() {
         if App.enableMapAutoZoom {
             var lastZoomAt = homeViewState.mapHeight
             
@@ -134,7 +129,7 @@ struct DishMapView: View {
                     self.mapView?.zoomIn(amt)
             }
             .store(in: &mapViewStore.cancels)
-    
+            
             // snappedToBottom => zoom
             homeViewState.$y
                 .debounce(for: .milliseconds(50), scheduler: App.queueMain)
@@ -151,6 +146,25 @@ struct DishMapView: View {
             }
             .store(in: &mapViewStore.cancels)
         }
+    }
+    
+    func syncMapLocationToState() {
+        mapViewStore.$position
+            .debounce(for: .milliseconds(200), scheduler: App.queueMain)
+            .sink { position in
+                if let position = position {
+                    App.store.send(
+                        .map(.setLocation(
+                            MapLocationState(
+                                radius: position.radius,
+                                latitude: position.center.latitude,
+                                longitude: position.center.longitude
+                            )
+                            ))
+                    )
+                }
+        }
+        .store(in: &mapViewStore.cancels)
     }
 }
 

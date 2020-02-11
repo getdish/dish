@@ -122,6 +122,11 @@ enum HomePageView {
 struct HomeSearchResultItem: Identifiable {
     var id: String
     var name: String
+    var coordinate: Coordinate
+    struct Coordinate {
+        let lat: Double
+        let long: Double
+    }
 }
 
 struct HomeSearchResults: Equatable {

@@ -330,6 +330,7 @@
 		1CE3547D23986B70004B3A84 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				AE045C5023EB503400FFCBA1 /* AppGeometryReader.swift */,
 				AE861A7A23A06EDC004096BF /* BarArrow.swift */,
 				AE861A8823A172E8004096BF /* BlurView.swift */,
 				1CE35489239871CB004B3A84 /* BottomSheetView.swift */,
@@ -338,7 +339,6 @@
 				AE872FF423CE983900F84663 /* ClearKeyboardOnScroll.swift */,
 				AEF6557E23B14DBA00E49A51 /* ContextMenuView.swift */,
 				AE0C5FF623D2414500BB5340 /* CustomButton.swift */,
-				AECC17BE23D53A8D007CC388 /* MapBoxView.swift */,
 				AE1BBDB323C8224200C58A87 /* CustomTextField.swift */,
 				AE1BBDB523C8397900C58A87 /* CutoutCircleCentered.swift */,
 				AEA331F623A3382100B36A23 /* DishButton.swift */,
@@ -347,6 +347,7 @@
 				AEA331F823A3385000B36A23 /* InlineAlertView.swift */,
 				AEA331FA23A338F400B36A23 /* KeyboardHost.swift */,
 				AE7563E823A03D570094022B /* MagicMove.swift */,
+				AECC17BE23D53A8D007CC388 /* MapBoxView.swift */,
 				1CE35485239870E8004B3A84 /* MapView.swift */,
 				1CCEDF51239DC7C9003EE228 /* PagerView.swift */,
 				AE0C5FF423D2397D00BB5340 /* PrintGeometryView.swift */,
@@ -357,7 +358,6 @@
 				AE0C5FFA23D261F100BB5340 /* SideEffect.swift */,
 				AE56C86523ADD977006A156A /* TagView.swift */,
 				AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */,
-				AE045C5023EB503400FFCBA1 /* AppGeometryReader.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
