@@ -5,7 +5,7 @@ import axios_base, { AxiosResponse } from 'axios'
 import { QueueOptions, JobOptions } from 'bull'
 
 import { WorkerJob } from '@dish/worker'
-import { Restaurant, Dish } from '@dish/models'
+import { Scrape } from '@dish/models'
 
 import categories from './categories.json'
 
@@ -150,44 +150,32 @@ export class UberEats extends WorkerJob {
         },
       }
     )
-    const restaurant = response.data.data
-    const restaurant_id = await this.saveRestaurant(restaurant)
-    await this.getDishes(restaurant, restaurant_id)
+    const data = response.data.data
+    const scrape = await this.saveRestaurant(data, uuid)
+    await this.getDishes(data, scrape.id)
   }
 
-  private async saveRestaurant(data: any) {
+  private async saveRestaurant(data: any, uuid: string) {
     console.log('Saving restaurant: ' + data.title)
-    const restaurant = new Restaurant({
-      name: data.title,
-      description: data.categories && data.categories.join(', '),
-      location: {
-        type: 'Point',
-        coordinates: [data.location.longitude, data.location.latitude],
+    const scrape = new Scrape({
+      source: 'ubereats',
+      id_from_source: uuid,
+      data: {
+        main: data,
       },
-      address: data.location.address,
-      city: data.location.city,
-      state: '',
-      zip: 0,
-      image: data.heroImageUrls.length > 0 ? data.heroImageUrls[0].url : '',
     })
-    await restaurant.upsert()
-    return restaurant.id
+    await scrape.insert()
+    return scrape
   }
 
-  private async getDishes(data: any, restaurant_id: string) {
+  private async getDishes(data: any, scrape_id: string) {
+    let dishes = [{}]
     for (const sid in data.sectionEntitiesMap) {
       for (const did in data.sectionEntitiesMap[sid]) {
-        const item = data.sectionEntitiesMap[sid][did]
-        const dish = new Dish({
-          restaurant_id: restaurant_id,
-          name: item.title,
-          description: item.description,
-          price: item.price,
-          image: item.imageUrl,
-        })
-        await dish.upsert()
+        dishes.push(data.sectionEntitiesMap[sid][did])
       }
     }
+    await Scrape.mergeData(scrape_id, { dishes: dishes })
   }
 
   private encodeLocation(lat: number, lon: number) {

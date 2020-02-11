@@ -71,18 +71,14 @@ export class Restaurant extends ModelBase<Restaurant> {
     )
   }
 
-  static async getLatestScrape(source: string, name: string) {
+  static async getLatestScrape(source: string, match: {}) {
     const query = {
       query: {
         scrape: {
           __args: {
             where: {
               data: {
-                _contains: {
-                  data_from_map_search: {
-                    name: name,
-                  },
-                },
+                _contains: match,
               },
               source: {
                 _eq: source,
@@ -102,6 +98,6 @@ export class Restaurant extends ModelBase<Restaurant> {
       },
     }
     const response = await ModelBase.hasura(query)
-    return new Scrape(response.data.data.scrape)
+    return new Scrape(response.data.data.scrape[0])
   }
 }

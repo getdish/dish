@@ -102,6 +102,7 @@ export class ModelBase<T> {
 
   static async hasura(gql: {}) {
     let conf = JSON.parse(JSON.stringify(AXIOS_CONF))
+    gql = ModelBase.ensureKeySyntax(gql)
     conf.data.query = jsonToGraphQLQuery(gql, { pretty: true })
     const response = await axios(conf)
     if (response.data.errors) {
@@ -235,5 +236,29 @@ export class ModelBase<T> {
       },
     }
     return await ModelBase.hasura(query)
+  }
+
+  private static ensureKeySyntax(query: {}) {
+    ModelBase.traverse(query, (object, key, value) => {
+      let fixed_key = key
+      if (key.includes('-')) {
+        fixed_key = '__HYPHEN__' + key.replace(/-/g, '_')
+        object[fixed_key] = value
+        delete object[key]
+      }
+    })
+    return query
+  }
+
+  private static traverse(
+    o: any,
+    fn: (obj: any, prop: string, value: any) => void
+  ) {
+    for (const i in o) {
+      if (o[i] !== null && typeof o[i] === 'object') {
+        ModelBase.traverse(o[i], fn)
+      }
+      fn.apply(this, [o, i, o[i]])
+    }
   }
 }
