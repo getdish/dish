@@ -54,7 +54,7 @@ public final class SearchRestaurantsQuery: GraphQLQuery {
       public static let selections: [GraphQLSelection] = [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
         GraphQLField("name", type: .nonNull(.scalar(String.self))),
-        GraphQLField("location", type: .scalar(String.self)),
+        GraphQLField("location", type: .scalar(geometry.self)),
       ]
 
       public private(set) var resultMap: ResultMap
@@ -63,7 +63,7 @@ public final class SearchRestaurantsQuery: GraphQLQuery {
         self.resultMap = unsafeResultMap
       }
 
-      public init(name: String, location: String? = nil) {
+      public init(name: String, location: geometry? = nil) {
         self.init(unsafeResultMap: ["__typename": "restaurant", "name": name, "location": location])
       }
 
@@ -85,9 +85,9 @@ public final class SearchRestaurantsQuery: GraphQLQuery {
         }
       }
 
-      public var location: String? {
+      public var location: geometry? {
         get {
-          return resultMap["location"] as? String
+          return resultMap["location"] as? geometry
         }
         set {
           resultMap.updateValue(newValue, forKey: "location")

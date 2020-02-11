@@ -12,8 +12,6 @@ class AppModel {
     let homeService = HomeService()
     let googlePlacesService = GooglePlacesService()
 
-    let apollo = ApolloNetwork.shared
-
     // models
     let screen = ScreenModel()
 

@@ -13,6 +13,10 @@ let features: [DishItem] = load("dishData.json")
 let restaurants: [RestaurantItem] = load("restaurantData.json")
 let log = XCGLogger.default
 
+// apollo
+// via https://github.com/apollographql/apollo-ios/issues/36
+public typealias geometry = [String : Any?]
+
 //let hasuraConfig = ProjectConfig(projectName: "projectName")
 
 @UIApplicationMain
@@ -34,6 +38,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // one time setup
+        
+        ApolloNetwork.shared.apollo.fetch(query: SearchRestaurantsQuery()) { result in
+            switch result {
+                case .success(let result):
+                    print("got \(result)")
+                case .failure(let err):
+                    print("err \(err)")
+            }
+        }
 
         startDebugLoop()
         

@@ -3,7 +3,8 @@ query SearchRestaurants {
         where: {
             location: {
                 _st_d_within: {
-                    distance: 0.005, from: {
+                    distance: 0.005,
+                    from: {
                         type: "Point",
                         coordinates: [-122.421351,37.759251]
                     }
