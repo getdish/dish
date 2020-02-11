@@ -105,6 +105,7 @@ struct HomeMainContent: View {
 
 struct HomeMapExplore: View {
     @EnvironmentObject var store: AppStore
+    @State var x = true
     
     var body: some View {
         VStack(spacing: 0) {
@@ -120,7 +121,18 @@ struct HomeMapExplore: View {
             //            .padding(.horizontal, 20)
             
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 14) {
+                HStack(spacing: 12) {
+                    Button(action: {
+                        self.x = !self.x
+                    }) {
+                        Text(self.x ? "🍽" : "🌎")
+                            .font(.system(size: 22))
+                    }
+                    .modifier(TopNavButtonStyle())
+                    .scaleEffect(1.1)
+                    
+                    Color.black.opacity(0.1).frame(width: 1, height: 12)
+                    
                     ForEach(0 ..< features.count) { index in
                         DishButtonView(dish: features[index]).equatable()
                     }

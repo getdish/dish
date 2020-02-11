@@ -62,8 +62,11 @@ struct HomeSearchBar: View {
             )
         } else {
             return AnyView(
-//                Image(systemName: "magnifyingglass")
-                Text("🤤").font(.system(size: 18))
+                Image(systemName: "magnifyingglass")
+//                Text(self.x ? "🍽" : "🌎").font(.system(size: 24))
+//                    .onTapGesture {
+//                        self.x = !self.x
+//                    }
             )
         }
     }

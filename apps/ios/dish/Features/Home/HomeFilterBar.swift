@@ -18,12 +18,12 @@ struct HomeMainFilterBar: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     Group {
-                        CustomButton2(action: {  }) {
-                           Text("🍽")
-                                .font(.system(size: 18))
-                        }
+//                        CustomButton2(action: {  }) {
+//                           Text("🔥")
+//                                .font(.system(size: 24))
+//                        }
                         
-                        Color.white.opacity(0.1).frame(width: 1)
+//                        Color.white.opacity(0.1).frame(width: 1)
 //                                Image(systemName: "line.horizontal.3.decrease.circle")
 //                                    .foregroundColor(.white)
 //                                    .opacity(0.3)
@@ -37,8 +37,8 @@ struct HomeMainFilterBar: View {
                         
                         Color.white.opacity(0.1).frame(width: 1)
                         
-                        FilterButton(label: "Delivers", fontSize: 15, action: {})
-                            .frame(width: 92)
+                        FilterButton(label: "🚗", fontSize: 15, action: {})
+                            .frame(width: 52)
                         
                         FilterButton(label: "Open Now", fontSize: 15, action: {})
                             .frame(width: 110)
