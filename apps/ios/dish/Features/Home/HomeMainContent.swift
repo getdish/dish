@@ -109,17 +109,6 @@ struct HomeMapExplore: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            //            HStack {
-            //                Text("Most popular in this area")
-            //                    .foregroundColor(.white)
-            //                    .font(.system(size: 18))
-            //                    .fontWeight(.semibold)
-            //                    .shadow(color: Color.black.opacity(0.4), radius: 3, x: 0, y: 1)
-            //
-            //                Spacer()
-            //            }
-            //            .padding(.horizontal, 20)
-            
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
                     Button(action: {
@@ -145,11 +134,12 @@ struct HomeMapExplore: View {
     }
 }
 
-fileprivate let extraHeight: CGFloat = 40
-
 struct HomeMapSearchResults: View {
     @EnvironmentObject var store: AppStore
     @State var index = 0
+    
+    let width: CGFloat = max(100, (App.screen.width - 40) * 0.35)
+    let height: CGFloat = 130
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -163,18 +153,18 @@ struct HomeMapSearchResults: View {
                             address: "",
                             phone: "",
                             tags: [],
-                            rating: 8
+                            stars: 3
                         ),
                         isMini: true,
-                        at: .end
+                        at: .end,
+                        width: self.width,
+                        height: self.height
                     )
-                        .frame(width: App.screen.width - 40, height: cardRowHeight - 40 + extraHeight)
                 }
             }
-            .frame(height: cardRowHeight - 40 + extraHeight)
             .padding(20)
+            .frame(height: self.height + 40)
         }
-        .offset(y: -extraHeight)
     }
     
     // almost working
@@ -200,18 +190,18 @@ struct HomeMapSearchResults: View {
     //        .offset(y: -extraHeight + 10)
 }
 
-struct MapResultRestaurantCard: View, Identifiable {
-    var restaurant: RestaurantItem
-    var id: String { self.restaurant.id }
-    var body: some View {
-        DishRestaurantCard(
-            restaurant: self.restaurant,
-            isMini: true,
-            at: .end
-        )
-            .frame(width: App.screen.width - 40, height: cardRowHeight - 40 + extraHeight)
-    }
-}
+//struct MapResultRestaurantCard: View, Identifiable {
+//    var restaurant: RestaurantItem
+//    var id: String { self.restaurant.id }
+//    var body: some View {
+//        DishRestaurantCard(
+//            restaurant: self.restaurant,
+//            isMini: true,
+//            at: .end
+//        )
+//            .frame(width: App.screen.width - 40, height: cardRowHeight - 40)
+//    }
+//}
 
 
 struct HomeContentExplore: View {

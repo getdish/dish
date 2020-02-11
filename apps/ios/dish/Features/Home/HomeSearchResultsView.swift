@@ -20,7 +20,7 @@ struct HomeSearchResultsView: View {
                                 address: "",
                                 phone: "",
                                 tags: [],
-                                rating: 8
+                                stars: 3
                             )
                         )
                     }

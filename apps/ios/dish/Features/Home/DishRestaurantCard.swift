@@ -6,6 +6,9 @@ struct DishRestaurantCard: View, Identifiable {
     var isMini: Bool = false
     var at: MagicItemPosition = .start
     
+    var width: CGFloat? = nil
+    var height: CGFloat? = nil
+    
     var gradientBottom: LinearGradient {
         LinearGradient(
             gradient: Gradient(
@@ -23,7 +26,7 @@ struct DishRestaurantCard: View, Identifiable {
     }
     
     var body: some View {
-        GeometryReader { geo in
+//        GeometryReader { geo in
             MagicItem("restaurant-\(self.id)", at: self.at) {
                 ZStack {
                     VStack {
@@ -31,16 +34,47 @@ struct DishRestaurantCard: View, Identifiable {
                             .resizable()
                             .scaledToFill()
                     }
-                    .frame(width: geo.size.width, height: max(geo.size.height, 40))
+                    .frame(width: self.width ?? App.screen.width - 40, height: self.height ?? 200)
+//                    .frame(width: geo.size.width, height: max(geo.size.height, 40))
                         .overlay(
                             Rectangle().fill(self.gradientBottom)
-                    )
+                        )
                         .overlay(
                             self.textOverlay
-                    )
+                        )
+                        .overlay(
+                            self.tapOverlay
+                        )
                         .cornerRadius(16)
                         .clipped()
                         .shadow(color: Color.black.opacity(0.4), radius: 9, x: 0, y: 3)
+                }
+            }
+//        }
+    }
+    
+    var tapOverlay: some View {
+        Group {
+            if isMini {
+                Color.black.opacity(0.00001)
+                    .onTapGesture {
+//                        App.store.send(.home(.))
+                    }
+            } else {
+                HStack {
+                    Color.black.opacity(0.0001)
+                        .onTapGesture {
+                            print("prev!")
+                            self.restaurant.prev()
+                    }
+                    
+                    Color.clear
+                    
+                    Color.black.opacity(0.0001)
+                        .onTapGesture {
+                            print("next!")
+                            self.restaurant.next()
+                    }
                 }
             }
         }
@@ -55,7 +89,11 @@ struct DishRestaurantCard: View, Identifiable {
                         .frame(width: ratingSize, height: ratingSize)
                         .modifier(TextShadowModifier())
                     
-                    Text("9")
+                    Group {
+                        ForEach(0 ..< self.restaurant.stars) { index in
+                            Text("⭐️")
+                        }
+                    }
                         .font(.system(size: ratingSize * 0.525))
                         .foregroundColor(.black)
                 }
@@ -95,24 +133,6 @@ struct DishRestaurantCard: View, Identifiable {
                 
             }
             .padding(isMini ? 8 : 16)
-            
-            
-            HStack {
-                Color.black.opacity(0.0001)
-                    .onTapGesture {
-                        print("prev!")
-                        self.restaurant.prev()
-                }
-                
-                Color.clear
-                
-                Color.black.opacity(0.0001)
-                    .onTapGesture {
-                        print("next!")
-                        self.restaurant.next()
-                }
-            }
-            
         }
         .foregroundColor(.white)
         
