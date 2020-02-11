@@ -9,6 +9,9 @@ struct DishRestaurantCard: View, Identifiable {
     var width: CGFloat? = nil
     var height: CGFloat? = nil
     
+    var ratingSize: CGFloat { isMini ? 25 : 45 }
+    var starWidth: CGFloat { ratingSize * 0.525 * 0.9 }
+    
     var gradientBottom: LinearGradient {
         LinearGradient(
             gradient: Gradient(
@@ -43,6 +46,9 @@ struct DishRestaurantCard: View, Identifiable {
                             self.textOverlay
                         )
                         .overlay(
+                            self.ratingOverlay
+                        )
+                        .overlay(
                             self.tapOverlay
                         )
                         .cornerRadius(16)
@@ -51,6 +57,31 @@ struct DishRestaurantCard: View, Identifiable {
                 }
             }
 //        }
+    }
+    
+    var ratingOverlay: some View {
+        VStack {
+            HStack {
+                HStack(spacing: 0) {
+                    ZStack {
+                        ForEach(0 ..< self.restaurant.stars) { index in
+                            Text("⭐️")
+                                .font(.system(size: self.ratingSize * 0.525))
+                                .offset(x: CGFloat(index) * self.starWidth)
+                            //                                .zIndex(CGFloat(3) - index)
+                        }
+                    }
+                    .offset(x: -self.starWidth)
+                }
+                .frame(width: CGFloat(self.restaurant.stars) * self.starWidth)
+                .padding(5)
+                .background(Color.white.opacity(0.25))
+                .cornerRadius(10)
+                
+                Spacer()
+            }
+            Spacer()
+        }
     }
     
     var tapOverlay: some View {
@@ -81,23 +112,8 @@ struct DishRestaurantCard: View, Identifiable {
     }
     
     var textOverlay: some View {
-        let ratingSize: CGFloat = isMini ? 25 : 45
         return ZStack(alignment: .bottomLeading) {
             VStack(alignment: .leading) {
-                ZStack {
-                    Circle()
-                        .frame(width: ratingSize, height: ratingSize)
-                        .modifier(TextShadowModifier())
-                    
-                    Group {
-                        ForEach(0 ..< self.restaurant.stars) { index in
-                            Text("⭐️")
-                        }
-                    }
-                        .font(.system(size: ratingSize * 0.525))
-                        .foregroundColor(.black)
-                }
-                
                 Spacer()
                 
                 VStack(alignment: .leading, spacing: 16) {
