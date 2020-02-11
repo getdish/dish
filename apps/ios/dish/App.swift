@@ -6,26 +6,26 @@ import SwiftUI
 
 class AppModel {
     let store = Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
-    
+
     // services
     let mapService = MapService()
     let homeService = HomeService()
     let googlePlacesService = GooglePlacesService()
-    
-//    let hasura = Hasura.getClient()
-    
+
+    let apollo = ApolloNetwork.shared
+
     // models
     let screen = ScreenModel()
-    
+
     // dynamic
     var enterRepl = false
-    
+
     // flags
     let enableMap = true
     let enableMapAutoZoom = false
     let enableContent = true
     let enableCamera = true
-    
+
     // constants
     let animationSpeed: Double = 1
     let keyboard = Keyboard()
@@ -37,7 +37,7 @@ class AppModel {
     let cameraButtonHeight: CGFloat = 44
     let filterBarHeight: CGFloat = 60
     let filterBarPad: CGFloat = 16
-    
+
     func start() {
         mapService.start()
         homeService.start()
