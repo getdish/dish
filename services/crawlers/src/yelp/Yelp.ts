@@ -38,7 +38,9 @@ export class Yelp extends WorkerJob {
   async allForCity(city_name: string) {
     const MAPVIEW_SIZE = 5000
     const coords = await geocode(city_name)
-    const region_coords = aroundCoords(coords[0], coords[1], MAPVIEW_SIZE, 5)
+    const region_coords = _.shuffle(
+      aroundCoords(coords[0], coords[1], MAPVIEW_SIZE, 5)
+    )
     const longest_radius = (MAPVIEW_SIZE * Math.sqrt(2)) / 2
     for (const box_centre of region_coords) {
       const bounding_box = boundingBoxFromCentre(

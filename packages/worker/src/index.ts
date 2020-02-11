@@ -50,6 +50,7 @@ export class WorkerJob {
     const config = (this.constructor as typeof WorkerJob).job_config
     console.log(`Adding job to worker (${this.constructor.name}):`, job)
     this.queue.add(job, config)
+    this.queue.close()
   }
 }
 
