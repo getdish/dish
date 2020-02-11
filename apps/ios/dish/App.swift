@@ -1,4 +1,5 @@
 import SwiftUI
+//import Hasura
 
 // For more information check "How To Control The World" - Stephen Celis
 // https://vimeo.com/291588126
@@ -10,6 +11,8 @@ class AppModel {
     let mapService = MapService()
     let homeService = HomeService()
     let googlePlacesService = GooglePlacesService()
+    
+//    let hasura = Hasura.getClient()
     
     // models
     let screen = ScreenModel()

@@ -1,4 +1,10 @@
 PODS:
+  - Apollo (0.21.0):
+    - Apollo/Core (= 0.21.0)
+  - Apollo/Core (0.21.0)
+  - Apollo/WebSocket (0.21.0):
+    - Apollo/Core
+    - Starscream (= 3.1.1)
   - AppAuth (1.2.0):
     - AppAuth/Core (= 1.2.0)
     - AppAuth/ExternalUserAgent (= 1.2.0)
@@ -32,12 +38,15 @@ PODS:
   - ObjcExceptionBridging (1.0.1):
     - ObjcExceptionBridging/ObjcExceptionBridging (= 1.0.1)
   - ObjcExceptionBridging/ObjcExceptionBridging (1.0.1)
+  - Starscream (3.1.1)
   - XCGLogger (7.0.0):
     - XCGLogger/Core (= 7.0.0)
   - XCGLogger/Core (7.0.0):
     - ObjcExceptionBridging
 
 DEPENDENCIES:
+  - Apollo
+  - Apollo/WebSocket
   - GoogleMaps
   - GooglePlaces
   - GoogleSignIn
@@ -48,6 +57,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Apollo
     - AppAuth
     - GoogleMaps
     - GooglePlaces
@@ -59,9 +69,11 @@ SPEC REPOS:
     - MapboxAnnotationExtension
     - MapboxMobileEvents
     - ObjcExceptionBridging
+    - Starscream
     - XCGLogger
 
 SPEC CHECKSUMS:
+  Apollo: 56a0aa81b744bf2810a8277e705f155c91ac9055
   AppAuth: bce82c76043657c99d91e7882e8a9e1a93650cd4
   GoogleMaps: 82f8fe307193bb4de6ef6bf9e88f1d624b718f9d
   GooglePlaces: 1b9d29cf3e164903d873600f511f42acdfe85294
@@ -73,8 +85,9 @@ SPEC CHECKSUMS:
   MapboxAnnotationExtension: d66de5561562c9d940153c0135725e671407b781
   MapboxMobileEvents: 2bc0ca2eedb627b73cf403258dce2b2fa98074a6
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
+  Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: f728b93bc008bf41d7db77c5ec51841a2705fbed
+PODFILE CHECKSUM: b7e57ac61f841eeb5ec4943a24c2723c17e20faf
 
 COCOAPODS: 1.8.4

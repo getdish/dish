@@ -93,10 +93,14 @@
 		AEC9AD3E23D10C2900BCC82E /* ScrollViewEnhanced.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC9AD3D23D10C2900BCC82E /* ScrollViewEnhanced.swift */; };
 		AEC9AD4023D15AFD00BCC82E /* DishCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC9AD3F23D15AFD00BCC82E /* DishCardView.swift */; };
 		AECC17BF23D53A8D007CC388 /* MapBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECC17BE23D53A8D007CC388 /* MapBoxView.swift */; };
+		AEE1991D23F33E3A00492B6B /* api.graphql in Resources */ = {isa = PBXBuildFile; fileRef = AEE1991C23F33E3A00492B6B /* api.graphql */; };
+		AEE1991F23F33EDB00492B6B /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE1991E23F33EDB00492B6B /* API.swift */; };
+		AEE1992123F33FA200492B6B /* ApolloNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE1992023F33FA200492B6B /* ApolloNetwork.swift */; };
 		AEE802B523ED3E8000A1A19E /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE802B423ED3E8000A1A19E /* Double.swift */; };
 		AEED843E23B5A8E000407266 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED843D23B5A8E000407266 /* Mocks.swift */; };
 		AEED844123B6707100407266 /* DishMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844023B6707100407266 /* DishMapView.swift */; };
 		AEED844823B675C300407266 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844723B675C300407266 /* CameraView.swift */; };
+		AEEF29D423F33B1300FCE400 /* schema.json in Resources */ = {isa = PBXBuildFile; fileRef = AEEF29D323F33B1300FCE400 /* schema.json */; };
 		AEF6557123B024A100E49A51 /* ScrollListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557023B024A100E49A51 /* ScrollListener.swift */; };
 		AEF6557423B0407000E49A51 /* ImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557323B0407000E49A51 /* ImageStore.swift */; };
 		AEF6557723B041C400E49A51 /* RestaurantItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6557623B041C400E49A51 /* RestaurantItem.swift */; };
@@ -201,10 +205,14 @@
 		AEC9AD3D23D10C2900BCC82E /* ScrollViewEnhanced.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewEnhanced.swift; sourceTree = "<group>"; };
 		AEC9AD3F23D15AFD00BCC82E /* DishCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishCardView.swift; sourceTree = "<group>"; };
 		AECC17BE23D53A8D007CC388 /* MapBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapBoxView.swift; sourceTree = "<group>"; };
+		AEE1991C23F33E3A00492B6B /* api.graphql */ = {isa = PBXFileReference; lastKnownFileType = text; path = api.graphql; sourceTree = "<group>"; };
+		AEE1991E23F33EDB00492B6B /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		AEE1992023F33FA200492B6B /* ApolloNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApolloNetwork.swift; sourceTree = "<group>"; };
 		AEE802B423ED3E8000A1A19E /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
 		AEED843D23B5A8E000407266 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Mocks.swift; path = /Users/nw/dish/apps/ios/dish/Store/Mocks.swift; sourceTree = "<absolute>"; };
 		AEED844023B6707100407266 /* DishMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishMapView.swift; sourceTree = "<group>"; };
 		AEED844723B675C300407266 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		AEEF29D323F33B1300FCE400 /* schema.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = schema.json; sourceTree = "<group>"; };
 		AEF6557023B024A100E49A51 /* ScrollListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollListener.swift; sourceTree = "<group>"; };
 		AEF6557323B0407000E49A51 /* ImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStore.swift; sourceTree = "<group>"; };
 		AEF6557623B041C400E49A51 /* RestaurantItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantItem.swift; sourceTree = "<group>"; };
@@ -251,8 +259,11 @@
 			children = (
 				1CE3547223986B1C004B3A84 /* Info.plist */,
 				1CE3546A23986B1C004B3A84 /* Assets.xcassets */,
+				AEEF29D323F33B1300FCE400 /* schema.json */,
 				1CE3546423986B1B004B3A84 /* AppDelegate.swift */,
 				AE99091123CE637200F1763C /* App.swift */,
+				AEE1991E23F33EDB00492B6B /* API.swift */,
+				AEE1991C23F33E3A00492B6B /* api.graphql */,
 				1CE3546623986B1B004B3A84 /* SceneDelegate.swift */,
 				1CE3546823986B1B004B3A84 /* RootView.swift */,
 				1CE3547C23986B69004B3A84 /* Extensions */,
@@ -428,6 +439,7 @@
 				AE6B100423CFA55D00C33968 /* GooglePlacesService.swift */,
 				AE6A9C1023C5265C00003059 /* GooglePlaceItem.swift */,
 				AE872FEE23CE6E8100F84663 /* CurrentLocationService.swift */,
+				AEE1992023F33FA200492B6B /* ApolloNetwork.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -480,6 +492,7 @@
 				1CE3545F23986B1B004B3A84 /* Resources */,
 				1BA3C3E1502560BE33CC9F03 /* [CP] Embed Pods Frameworks */,
 				27936A0E3A675C7027A97E70 /* [CP] Copy Pods Resources */,
+				AEEF29D523F33B3D00FCE400 /* Run Script - Apollo Generate */,
 			);
 			buildRules = (
 			);
@@ -534,6 +547,7 @@
 				AE6B104D23CFF27000C33968 /* pin.png in Resources */,
 				AE6B104423CFF20A00C33968 /* icybay.jpg in Resources */,
 				AE6B103E23CFF20A00C33968 /* turtlerock.jpg in Resources */,
+				AEEF29D423F33B1300FCE400 /* schema.json in Resources */,
 				AE6B104023CFF20A00C33968 /* lakemcdonald.jpg in Resources */,
 				AE6B103C23CFF20A00C33968 /* dishData.json in Resources */,
 				1CE3547123986B1C004B3A84 /* LaunchScreen.storyboard in Resources */,
@@ -544,6 +558,7 @@
 				AE6B104223CFF20A00C33968 /* chilkoottrail.jpg in Resources */,
 				1CE3546E23986B1C004B3A84 /* Preview Assets.xcassets in Resources */,
 				AE6B104823CFF20A00C33968 /* silversalmoncreek.jpg in Resources */,
+				AEE1991D23F33E3A00492B6B /* api.graphql in Resources */,
 				AE6B104523CFF20A00C33968 /* chincoteague.jpg in Resources */,
 				AE6B104723CFF20A00C33968 /* umbagog.jpg in Resources */,
 				AE6B103F23CFF20A00C33968 /* restaurantData.json in Resources */,
@@ -611,6 +626,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		AEEF29D523F33B3D00FCE400 /* Run Script - Apollo Generate */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script - Apollo Generate";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "SCRIPT_PATH=\"${PODS_ROOT}/Apollo/scripts\"\ncd \"${SRCROOT}/${TARGET_NAME}\"\n\"${SCRIPT_PATH}\"/run-bundled-codegen.sh codegen:generate --target=swift --includes=./**/*.graphql --localSchemaFile=\"schema.json\" API.swift\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -625,6 +658,7 @@
 				AEE802B523ED3E8000A1A19E /* Double.swift in Sources */,
 				AE7563B423A035E70094022B /* HomeMainView.swift in Sources */,
 				AE7563E323A038190094022B /* Array.swift in Sources */,
+				AEE1992123F33FA200492B6B /* ApolloNetwork.swift in Sources */,
 				AE7563BC23A037870094022B /* Fixtures.swift in Sources */,
 				AE99091523CE646D00F1763C /* MapService.swift in Sources */,
 				AE057BF423EA559D001B8BFA /* async.swift in Sources */,
@@ -652,6 +686,7 @@
 				AE0C5FF723D2414500BB5340 /* CustomButton.swift in Sources */,
 				AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */,
 				AEED844823B675C300407266 /* CameraView.swift in Sources */,
+				AEE1991F23F33EDB00492B6B /* API.swift in Sources */,
 				AE872FF523CE983900F84663 /* ClearKeyboardOnScroll.swift in Sources */,
 				AE872FF723CEA5CD00F84663 /* DishRestaurantCard.swift in Sources */,
 				1CE3548323986C5C004B3A84 /* AppStore.swift in Sources */,

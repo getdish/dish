@@ -13,6 +13,8 @@ let features: [DishItem] = load("dishData.json")
 let restaurants: [RestaurantItem] = load("restaurantData.json")
 let log = XCGLogger.default
 
+//let hasuraConfig = ProjectConfig(projectName: "projectName")
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func startDebugLoop() {
@@ -34,6 +36,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // one time setup
 
         startDebugLoop()
+        
+        // hasura
+//        Hasura.initialise(config: hasuraConfig, enableLogs: true)
 
         // SwiftUI bugfix list/navigation backgrounds transparent
         let colorTransparent = UIColor.init(displayP3Red: 0, green: 0, blue: 0, alpha: 0)
