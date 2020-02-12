@@ -6,6 +6,7 @@ variable "DOCKER_REGISTRY_HTTP_AUTH" {}
 variable "GRAFANA_PASSWORD" {}
 variable "CLOUDFLARE_DNS_API_TOKEN" {}
 variable "GMAIL_APP_PASSWORD" {}
+variable "K8S_DSN" {}
 
 # Keeping the cluster in its own module allows us to build it independently of
 # every other k8s resources that lives on it. This is essential when first
@@ -22,4 +23,9 @@ variable "dish_domain" {
 data "helm_repository" "stable" {
   name = "stable"
   url  = "https://kubernetes-charts.storage.googleapis.com/"
+}
+
+data "helm_repository" "incubator" {
+  name = "incubator"
+  url  = "https://kubernetes-charts-incubator.storage.googleapis.com/"
 }

@@ -122,3 +122,13 @@ resource "kubernetes_ingress" "sentry-ingress" {
   }
 }
 
+resource "helm_release" "k8s-errors" {
+  name      = "sentry-k8s"
+  namespace = "sentry"
+  chart     = "incubator/sentry-kubernetes"
+
+  set {
+    name ="sentry.dsn"
+    value = var.K8S_DSN
+  }
+}
