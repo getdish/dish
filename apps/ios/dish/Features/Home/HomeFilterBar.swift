@@ -42,7 +42,7 @@ struct HomeMainFilterBar: View {
                             .frame(width: 56)
                         
                         FilterButton(label: "Open", fontSize: 15, action: {})
-                            .frame(width: 110)
+                            .frame(width: 82)
                             .environment(\.colorScheme, colorScheme == .light ? .dark : .light)
                         
                         FilterButton(label: "Healthy", fontSize: 15, action: {})

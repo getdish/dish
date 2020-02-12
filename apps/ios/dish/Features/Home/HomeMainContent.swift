@@ -296,19 +296,20 @@ struct HomeMapExplore: View {
     var body: some View {
         VStack(spacing: 0) {
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {                    
+                HStack(spacing: 11) {
                     ForEach(0 ..< 4) { index in
                         Button(action: {}) {
                             Text(labels[index])
                                 .font(.system(size: 16))
                         }
-                        .padding(2)
+                        .padding(.vertical, 3)
+                        .padding(.horizontal, 2)
                         .modifier(TopNavButtonStyle())
                         .invertColorScheme(index == 0)
                     }
                 }
                 .padding(.horizontal, 20)
-                .padding(.bottom, 10)
+                .padding(.bottom, 9)
                 .padding(.top, 12)
             }
             
@@ -322,8 +323,8 @@ struct HomeMapExplore: View {
                     }
                 }
                 .padding(.horizontal, 20)
-                .padding(.bottom, 16)
-                .padding(.top, 10)
+                .padding(.bottom, 18)
+                .padding(.top, 9)
             }
         }
     }

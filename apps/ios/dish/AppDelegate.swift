@@ -45,6 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // one time setup
 
         startDebugLoop()
+        
+        UIApplication.shared.isStatusBarHidden = false
 
         // hasura
 //        Hasura.initialise(config: hasuraConfig, enableLogs: true)
