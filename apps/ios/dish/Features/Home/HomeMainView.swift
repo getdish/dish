@@ -77,16 +77,15 @@ struct HomeMainView: View {
                     ZStack {
                         DishMapView(
                             height: state.mapFullHeight,
-                            animate: true
-//                                [.idle].contains(state.dragState)
-//                                || state.animationState != .idle
-//                                || state.mapHeight > state.startSnapToBottomAt
+                            animate: [.idle].contains(state.dragState)
+                                || state.animationState != .idle
+                                || state.mapHeight > state.startSnapToBottomAt
                         )
                             .offset(y: -(state.mapFullHeight - mapHeight) / 2 + 25 /* topbar offset */)
                             .animation(.spring(response: 0.65))
                     }
-//                        .frameLimitedToScreen()
-//                        .clipped()
+                        .frameLimitedToScreen()
+                        .clipped()
                         .opacity(animationState == .splash ? 0 : 1)
 //                        .animation(.spring(response: 0.8),
 //                                value: state.animationState == .animate
