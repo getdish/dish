@@ -55,7 +55,7 @@ struct SignUpView: View {
                 
             }
             
-            DishButton(
+            DishButtonAction(
                 label: "Sign up",
                 action: signUp
             )
@@ -120,7 +120,7 @@ struct SignInView: View {
                             .padding()
                     }
                     
-                    DishButton(
+                    DishButtonAction(
                         label: "Sign in",
                         action: signIn,
                         loading: loading

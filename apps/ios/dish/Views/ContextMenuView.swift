@@ -192,7 +192,7 @@ struct ContextMenuView<Content: View, MenuContent: View>: View {
         let state = self.store.state
         
         return ZStack {
-            CustomButton(action: {
+            DishButton(action: {
                 print("tap")
                 // for some reason this never runs, neither onTapGesture
             }) {

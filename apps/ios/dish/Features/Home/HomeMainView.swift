@@ -14,6 +14,35 @@ struct HomeMainView: View {
 
     @State var wasOnSearchResults = false
     @State var wasOnCamera = false
+    
+    func start() {
+        async(500) {
+            self.state.setAnimationState(.idle)
+        }
+    }
+    
+    func sideEffects() {
+        if self.appGeometry?.size.height != self.state.appHeight {
+            if let height = self.appGeometry?.size.height {
+                self.state.setAppHeight(height)
+            }
+        }
+        
+        if Selectors.home.isOnSearchResults() != self.wasOnSearchResults {
+            let val = Selectors.home.isOnSearchResults()
+            self.wasOnSearchResults = val
+            if val {
+                self.state.moveToSearchResults()
+            }
+        }
+        
+        let isOnCamera = App.store.state.home.view == .camera
+        if isOnCamera != self.wasOnCamera {
+            let val = App.store.state.home.view == .camera
+            self.wasOnCamera = val
+            self.state.setShowCamera(val)
+        }
+    }
 
     var body: some View {
         let state = self.state
@@ -24,40 +53,11 @@ struct HomeMainView: View {
         print(" 👀 HomeMainView mapHeight \(mapHeight) animationState \(state.animationState)")
 
         return ZStack(alignment: .topLeading) {
-            // Side effects
-            Group {
-                PrintGeometryView("HomeMainView")
-
-                RunOnce(name: "splash animation") {
-                    async(100) {
-                        self.state.setAnimationState(.idle)
-                    }
-                }
-
-                SideEffect(".store.setAppHeight", condition: { self.appGeometry?.size.height != self.state.appHeight }) {
-                    if let height = self.appGeometry?.size.height {
-                        self.state.setAppHeight(height)
-                    }
-                }
-
-                SideEffect(".store.moveToSearchResults", condition: { Selectors.home.isOnSearchResults() != self.wasOnSearchResults }) {
-                    let val = Selectors.home.isOnSearchResults()
-                    self.wasOnSearchResults = val
-                    if val {
-                        self.state.moveToSearchResults()
-                    }
-                }
-
-                SideEffect(".store.setShowCamera", condition: {
-                    let isOnCamera = App.store.state.home.view == .camera
-                    return isOnCamera != self.wasOnCamera
-                }) {
-                    let val = App.store.state.home.view == .camera
-                    self.wasOnCamera = val
-                    self.state.setShowCamera(val)
-                }
-            }
-
+            Run("sideeffects") { self.sideEffects() }
+            RunOnce(name: "start") { self.start() }
+            
+            PrintGeometryView("HomeMainView")
+            
             // Camera
             if App.enableCamera && animationState != .splash {
                 ZStack {
@@ -82,7 +82,7 @@ struct HomeMainView: View {
                                 || state.mapHeight > state.startSnapToBottomAt
                         )
                             .offset(y: -(state.mapFullHeight - mapHeight) / 2 + 25 /* topbar offset */)
-                            .animation(.spring(response: 1))
+                            .animation(.spring(response: 0.65))
                     }
 //                        .frameLimitedToScreen()
 //                        .clipped()
@@ -110,18 +110,18 @@ struct HomeMainView: View {
                         .frameLimitedToScreen()
 
                     // content
-//                    HomeMainContentContainer(
-//                        isSnappedToBottom: state.isSnappedToBottom,
-//                        disableMagicTracking: state.mapHeight >= state.snapToBottomAt
-//                            || state.isSnappedToBottom
-//                            || state.animationState == .controlled
-//                    ) {
-//                        HomeMainContent()
-//                    }
-//                        .frameLimitedToScreen()
+                    HomeMainContentContainer(
+                        isSnappedToBottom: state.isSnappedToBottom,
+                        disableMagicTracking: state.mapHeight >= state.snapToBottomAt
+                            || state.isSnappedToBottom
+                            || state.animationState == .controlled
+                    ) {
+                        HomeMainContent()
+                    }
+                        .frameLimitedToScreen()
 
                     // filters
-                    VStack {
+                    VStack {    
                         HomeMainFilterBar()
                         Spacer()
                     }

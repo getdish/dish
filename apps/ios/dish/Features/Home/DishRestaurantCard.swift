@@ -31,30 +31,28 @@ struct DishRestaurantCard: View, Identifiable {
     var body: some View {
 //        GeometryReader { geo in
             MagicItem("restaurant-\(self.id)", at: self.at) {
-                ZStack {
-                    VStack {
-                        self.restaurant.image
-                            .resizable()
-                            .scaledToFill()
-                    }
-                    .frame(width: self.width ?? App.screen.width - 40, height: self.height ?? 200)
-//                    .frame(width: geo.size.width, height: max(geo.size.height, 40))
-                        .overlay(
-                            Rectangle().fill(self.gradientBottom)
-                        )
-                        .overlay(
-                            self.textOverlay
-                        )
-                        .overlay(
-                            self.ratingOverlay
-                        )
-                        .overlay(
-                            self.tapOverlay
-                        )
-                        .cornerRadius(16)
-                        .clipped()
-                        .shadow(color: Color.black.opacity(0.4), radius: 9, x: 0, y: 3)
+                VStack {
+                    self.restaurant.image
+                        .resizable()
+                        .scaledToFill()
                 }
+                .frame(width: self.width ?? App.screen.width - 40, height: self.height ?? 200)
+//                    .frame(width: geo.size.width, height: max(geo.size.height, 40))
+                    .overlay(
+                        Rectangle().fill(self.gradientBottom)
+                    )
+                    .overlay(
+                        self.textOverlay
+                    )
+                    .overlay(
+                        self.ratingOverlay
+                    )
+                    .overlay(
+                        self.tapOverlay
+                    )
+                    .cornerRadius(16)
+                    .clipped()
+                    .shadow(color: Color.black.opacity(0.4), radius: 9, x: 0, y: 3)
             }
 //        }
     }

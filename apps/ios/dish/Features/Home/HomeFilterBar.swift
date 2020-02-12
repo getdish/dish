@@ -105,7 +105,7 @@ struct FilterButton: View {
     var body: some View {
         
         return ZStack {
-            CustomButton2(action: action) {
+            DishButton(action: action) {
                 HStack {
                     Spacer()
                     if icon != "" {

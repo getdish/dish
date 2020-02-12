@@ -21,7 +21,7 @@ struct DishCardView: View, Identifiable, Equatable {
     var body: some View {
         MagicItem("dish-\(id)", at: at) {
             GeometryReader { geo in
-                CustomButton2(action: self.action ?? {
+                DishButton(action: self.action ?? {
                     App.store.send(
                         .home(.push(HomeStateItem(filters: [SearchFilter(name: self.dish.name)])))
                     )
@@ -77,28 +77,31 @@ struct DishButtonView: View, Identifiable, Equatable {
     
     var id: Int { dish.id }
     var dish: DishItem
+    var at: MagicItemPosition = .start
     var action: (() -> Void)? = nil
     
     var body: some View {
-        CustomButton2(action: self.action ?? {
-            App.store.send(
-                .home(.push(HomeStateItem(filters: [SearchFilter(name: self.dish.name)])))
-            )
-        }) {
-            HStack {
-                Text(self.dish.name)
-                    .font(.system(size: 16))
-                    .fontWeight(.bold)
-                    .foregroundColor(Color.white)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(1)
-                    .shadow(color: Color.black.opacity(0.25), radius: 1, x: 0, y: 1)
+        MagicItem("dish-button-\(id)", at: at) {
+            DishButton(action: self.action ?? {
+                App.store.send(
+                    .home(.push(HomeStateItem(filters: [SearchFilter(name: self.dish.name)])))
+                )
+            }) {
+                HStack {
+                    Text(self.dish.name)
+                        .font(.system(size: 16))
+                        .fontWeight(.bold)
+                        .foregroundColor(Color.white)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(1)
+                        .shadow(color: Color.black.opacity(0.25), radius: 1, x: 0, y: 1)
+                }
+                .padding(.vertical, 7)
+                .padding(.horizontal, 11)
+                .background(Color.init(hue: self.dish.hue, saturation: 0.8, brightness: 0.5))
+                .cornerRadius(20)
+                .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 2)
             }
-            .padding(.vertical, 7)
-            .padding(.horizontal, 11)
-            .background(Color.init(hue: self.dish.hue, saturation: 0.8, brightness: 0.5))
-            .cornerRadius(20)
-            .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 2)
         }
     }
 }

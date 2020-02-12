@@ -63,10 +63,6 @@ struct HomeSearchBar: View {
         } else {
             return AnyView(
                 Image(systemName: "magnifyingglass")
-//                Text(self.x ? "🍽" : "🌎").font(.system(size: 24))
-//                    .onTapGesture {
-//                        self.x = !self.x
-//                    }
             )
         }
     }
@@ -89,11 +85,15 @@ struct HomeSearchBar: View {
         let scale: CGFloat = zoomed ? 1.2 : 1.2
         
         return ZStack {
-            RunOnce(name: "updatePlaceholder") {
-                self.updatePlaceholder()
-            }
-            SideEffect("updateLastZoomed", condition: { self.lastZoomed != zoomed }) {
-                self.lastZoomed = zoomed
+            Group {
+                RunOnce(name: "updatePlaceholder") {
+                    self.updatePlaceholder()
+                }
+                if self.lastZoomed != zoomed {
+                    SideEffect("updateLastZoomed") {
+                        self.lastZoomed = zoomed
+                    }
+                }
             }
             
             SearchInput(
@@ -162,26 +162,6 @@ struct HomeSearchBarAfterView: View {
             .padding(.horizontal, 6 * scale)
             
             // space for the camera button
-//            CustomButton2(action: {
-//
-//            }) {
-//                ZStack {
-//                    Group {
-//                        Image(systemName: "arrowtriangle.up.circle.fill")
-//                            .resizable()
-//                            .scaledToFit()
-//                            .foregroundColor(Color("color-brand").opacity(0.5))
-//                    }
-//                    .foregroundColor(oppositeColor.opacity(0.5))
-//                }
-//                .padding(.all, 40 * 0.33)
-//                .frame(width: 40, height: 40)
-//                .cornerRadius(40)
-//                .overlay(
-//                    RoundedRectangle(cornerRadius: 40)
-//                        .stroke(oppositeColor.opacity(0.1), lineWidth: 1)
-//                )
-//            }
             Color.clear
                 .frame(width: App.cameraButtonHeight)
         }
@@ -199,7 +179,7 @@ struct CameraButton: View {
     var body: some View {
         let oppositeColor = colorScheme == .dark ? Color.white : Color.black
         
-        return CustomButton2(action: {
+        return DishButton(action: {
             self.lastTap = Date()
             if App.store.state.home.view != .camera {
                 App.store.send(.home(.setView(.camera)))

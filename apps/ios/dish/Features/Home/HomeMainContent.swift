@@ -75,7 +75,7 @@ struct HomeMainContent: View {
                 .animation(.none)
             }
             .offset(y: self.homeState.mapHeight - self.homeState.searchBarYExtra)
-            .animation(.spring(response: 1))
+            .animation(.spring(response: 0.5))
             
             // results bar below map
             VStack {
@@ -103,123 +103,26 @@ struct HomeMainContent: View {
     }
 }
 
-struct HomeMapExplore: View {
-    @EnvironmentObject var store: AppStore
-    @State var x = true
-    
-    var body: some View {
-        VStack(spacing: 0) {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    Button(action: {
-                        self.x = !self.x
-                    }) {
-                        Text(self.x ? "🍽" : "🌎")
-                            .font(.system(size: 22))
-                    }
-                    .modifier(TopNavButtonStyle())
-                    .scaleEffect(1.1)
-                    
-                    Color.black.opacity(0.1).frame(width: 1, height: 12)
-                    
-                    ForEach(0 ..< features.count) { index in
-                        DishButtonView(dish: features[index]).equatable()
-                    }
-                }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 16)
-                .padding(.top, 12)
-            }
-        }
-    }
-}
-
-struct HomeMapSearchResults: View {
-    @EnvironmentObject var store: AppStore
-    @State var index = 0
-    
-    let width: CGFloat = max(100, (App.screen.width - 40) * 0.35)
-    let height: CGFloat = 130
-    
-    var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 16) {
-                ForEach(Selectors.home.lastState().searchResults.results) { item in
-                    return DishRestaurantCard(
-                        restaurant: RestaurantItem(
-                            id: item.id,
-                            name: item.name,
-                            imageName: "turtlerock",
-                            address: "",
-                            phone: "",
-                            tags: [],
-                            stars: 3
-                        ),
-                        isMini: true,
-                        at: .end,
-                        width: self.width,
-                        height: self.height
-                    )
-                }
-            }
-            .padding(20)
-            .frame(height: self.height + 40)
-        }
-    }
-    
-    // almost working
-    //        ScrollViewEnhanced(
-    //            index: self.$index,
-    //            direction: .horizontal,
-    //            showsIndicators: false,
-    //            pages: Selectors.home.lastState().searchResults.results.map { item in
-    //                MapResultRestaurantCard(
-    //                    restaurant: RestaurantItem(
-    //                        id: item.id,
-    //                        name: item.name,
-    //                        imageName: "turtlerock",
-    //                        address: "",
-    //                        phone: "",
-    //                        tags: [],
-    //                        rating: 8
-    //                    )
-    //                )
-    //            }
-    //        )
-    //        .frame(width: App.screen.width, height: cardRowHeight - 40 + extraHeight)
-    //        .offset(y: -extraHeight + 10)
-}
-
-//struct MapResultRestaurantCard: View, Identifiable {
-//    var restaurant: RestaurantItem
-//    var id: String { self.restaurant.id }
-//    var body: some View {
-//        DishRestaurantCard(
-//            restaurant: self.restaurant,
-//            isMini: true,
-//            at: .end
-//        )
-//            .frame(width: App.screen.width - 40, height: cardRowHeight - 40)
-//    }
-//}
-
-
 struct HomeContentExplore: View {
     @State var index: Int = 0
     
     var body: some View {
         ZStack {
-            ScrollViewEnhanced(
-                index: self.$index,
-                direction: Axis.Set.horizontal,
-                showsIndicators: false,
-                pages: [0, 1].map { index in
-                    HomeContentExploreBy(
-                        active: index == self.index,
-                        type: index == 0 ? .dish : .cuisine
-                    )
-                }
+            HomeContentExploreBy(
+                active: true,
+                type: .dish
             )
+//            ScrollViewEnhanced(
+//                index: self.$index,
+//                direction: Axis.Set.horizontal,
+//                showsIndicators: false,
+//                pages: [0, 1].map { index in
+//                    HomeContentExploreBy(
+//                        active: index == self.index,
+//                        type: index == 0 ? .dish : .cuisine
+//                    )
+//                }
+//            )
         }
         .edgesIgnoringSafeArea(.all)
         .clipped()
@@ -260,11 +163,11 @@ struct HomeContentExploreBy: View, Identifiable {
                         ForEach(0 ..< self.items.count) { index in
                             HStack(spacing: self.spacing) {
                                 ForEach(self.items[index]) { item in
-                                    DishCardView(
+                                    DishButtonView(
                                         dish: item,
-                                        at: .start,
-                                        display: .full,
-                                        height: 100
+                                        at: .start
+//                                        display: .full,
+//                                        height: 100
                                     )
                                         .equatable()
                                 }
@@ -348,6 +251,112 @@ struct HomeMainContentSearchPage: View {
         }
     }
 }
+
+// 🗺 🗺 🗺  MAP  🗺 🗺 🗺
+
+struct HomeMapExplore: View {
+    @EnvironmentObject var store: AppStore
+    @State var x = true
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    Button(action: {
+                        self.x = !self.x
+                    }) {
+                        Text(self.x ? "🍽" : "🌎")
+                            .font(.system(size: 22))
+                    }
+                    .modifier(TopNavButtonStyle())
+                    .scaleEffect(1.1)
+                    
+                    Color.black.opacity(0.1).frame(width: 1, height: 12)
+                    
+                    ForEach(0 ..< features.count) { index in
+                        DishButtonView(
+                            dish: features[index],
+                            at: .end
+                        ).equatable()
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 16)
+                .padding(.top, 12)
+            }
+        }
+    }
+}
+
+struct HomeMapSearchResults: View {
+    @EnvironmentObject var store: AppStore
+    @State var index = 0
+    
+    let width: CGFloat = max(100, (App.screen.width - 40) * 0.35)
+    let height: CGFloat = 130
+    
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 16) {
+                ForEach(Selectors.home.lastState().searchResults.results) { item in
+                    return DishRestaurantCard(
+                        restaurant: RestaurantItem(
+                            id: item.id,
+                            name: item.name,
+                            imageName: "turtlerock",
+                            address: "",
+                            phone: "",
+                            tags: [],
+                            stars: 3
+                        ),
+                        isMini: true,
+                        at: .end,
+                        width: self.width,
+                        height: self.height
+                    )
+                }
+            }
+            .padding(20)
+            .frame(height: self.height + 40)
+        }
+    }
+    
+    // almost working
+    //        ScrollViewEnhanced(
+    //            index: self.$index,
+    //            direction: .horizontal,
+    //            showsIndicators: false,
+    //            pages: Selectors.home.lastState().searchResults.results.map { item in
+    //                MapResultRestaurantCard(
+    //                    restaurant: RestaurantItem(
+    //                        id: item.id,
+    //                        name: item.name,
+    //                        imageName: "turtlerock",
+    //                        address: "",
+    //                        phone: "",
+    //                        tags: [],
+    //                        rating: 8
+    //                    )
+    //                )
+    //            }
+    //        )
+    //        .frame(width: App.screen.width, height: cardRowHeight - 40 + extraHeight)
+    //        .offset(y: -extraHeight + 10)
+}
+
+//struct MapResultRestaurantCard: View, Identifiable {
+//    var restaurant: RestaurantItem
+//    var id: String { self.restaurant.id }
+//    var body: some View {
+//        DishRestaurantCard(
+//            restaurant: self.restaurant,
+//            isMini: true,
+//            at: .end
+//        )
+//            .frame(width: App.screen.width - 40, height: cardRowHeight - 40)
+//    }
+//}
+
 
 
 // scroll view enhanced version start:

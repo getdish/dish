@@ -70,7 +70,7 @@ struct CameraBackButton: View {
     @EnvironmentObject var store: AppStore
     
     var body: some View {
-        CustomButton2(action: {
+        DishButton(action: {
             if self.store.state.camera.didCapture {
                 App.store.send(.camera(.capture(false)))
             } else {

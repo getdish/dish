@@ -240,7 +240,8 @@ struct MagicItem<Content>: View where Content: View {
     @ObservedObject fileprivate var store = magicItemsStore
     @Environment(\.geometry) var appGeometry
 
-    @State private var cancels: Set<AnyCancellable> = []
+    @State var cancels: Set<AnyCancellable> = []
+    @State var forceUpdate = NSDate()
     
     let content: Content
     let id: String
@@ -260,6 +261,16 @@ struct MagicItem<Content>: View where Content: View {
         self.at == .start ? magicItemsStore.startItems : magicItemsStore.endItems
     }
     
+    func start() {
+        magicItemsStore.$disableTracking
+            .removeDuplicates()
+            .dropFirst()
+            .sink { disabled in
+                self.forceUpdate = NSDate()
+            }
+            .store(in: &self.cancels)
+    }
+    
     func updateItem(_ item: MagicItemDescription) {
         if self.at == .start {
             magicItemsStore.startItems[self.id] = item
@@ -272,18 +283,20 @@ struct MagicItem<Content>: View where Content: View {
         self.disableTracking || magicItemsStore.disableTracking
     }
     
-    // split this out because we likely want to run it a frame after
-    func setupSideEffect(_ frame: CGRect) -> (String, Bool, MagicItemDescription) {
+    func isOffscreen(_ frame: CGRect) -> Bool {
         // off screen avoid doing things
         let offYN = frame.minY + frame.height < 0
         let offYP = frame.minY > self.screen.height
         let offXN = frame.minX + frame.width < 0
         let offXP = frame.minX > self.screen.width
         let offScreen = offYN || offYP || offXN || offXP
-        let isOffScreen = self.items[self.id] != nil && offScreen == true
-        
+        return self.items[self.id] != nil && offScreen == true
+    }
+    
+    // split this out because we likely want to run it a frame after
+    func setupSideEffect(_ frame: CGRect) -> (String, Bool, MagicItemDescription) {
         let isMagicStoreAnimating = magicItemsStore.state != .done
-        
+        let isOffscreen = self.isOffscreen(frame)
         let item = MagicItemDescription(
             view: self.contentView,
             frame: frame,
@@ -292,61 +305,36 @@ struct MagicItem<Content>: View where Content: View {
         )
         let curItem = self.items[self.id]
         let hasChanged = curItem != item
-        
         let name = "MagicItem \(self.at) \(self.id) -- \(frame.minX) \(frame.minY)"
-        let enabled = !self.isDisabled && !isOffScreen && !isMagicStoreAnimating && hasChanged
-//        print("enabled \(enabled) -- \(!self.isDisabled) \(!isOffScreen) \(!isMagicStoreAnimating) \(hasChanged)")
-        
+        let enabled = !self.isDisabled && !isOffscreen && !isMagicStoreAnimating && hasChanged
         return (name, enabled, item)
     }
-    
-    @State var lastFrame: CGRect? = nil
 
     var body: some View {
-        return ZStack {
-            RunOnce(name: "MagicItem.watchMagicMoveDisabled") {
-                magicItemsStore.$disableTracking
-                    .removeDuplicates()
-                    .dropFirst()
-                    .sink { disabled in
-                        if !disabled, let frame = self.lastFrame {
-                            let (name, enabled, item) = self.setupSideEffect(frame)
-                            if enabled {
-                                log.debug("update after re-enable \(name)")
-                                self.updateItem(item)
-                            }
-                        }
-                    }
-                    .store(in: &self.cancels)
-            }
-            
-            self.content
-                .overlay(
-                    GeometryReader { geometry -> Color in
-                        if magicItemsStore.disableTracking {
-                            return Color.clear
-                        }
-                        let frame = geometry.frame(in: .global)
-                        let (name, enabled, item) = self.setupSideEffect(frame)
-                        print("geo \(name) \(frame)")
-                        if enabled {
-                            async {
-                                if frame != self.lastFrame {
-                                    self.lastFrame = frame
-                                }
-                                self.updateItem(item)
-                            }
-                        }
+        return self.content
+            .overlay(Color.clear.onAppear { self.start() })
+            .overlay(
+                GeometryReader { geometry -> Color in
+                    if magicItemsStore.disableTracking {
                         return Color.clear
                     }
+                    let frame = geometry.frame(in: .global)
+                    if !self.isOffscreen(frame) {
+                        async {
+                            let (_, enabled, item) = self.setupSideEffect(frame)
+                            if enabled {
+                                self.updateItem(item)
+                            }
+                        }
+                    }
+                    return Color.clear
+                }
             )
-        }
             .opacity(
                 self.store.state == .animate ? OFF_OPACITY :
                     self.store.position == at ? 1 : OFF_OPACITY
             )
             .onDisappear {
-                print("bye \(self.id)")
                 if self.at == .start {
                     magicItemsStore.startItems[self.id] = nil
                 } else {
