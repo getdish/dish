@@ -166,7 +166,7 @@ struct HomeContentExploreBy: View, Identifiable {
                                     .font(.system(size: 14))
                                     .fontWeight(.bold)
                                     .foregroundColor(Color.white)
-                                    .modifier(TextShadowModifier())
+                                    .modifier(TextShadowStyle())
                                     .padding(.horizontal)
                                 
                                 ScrollView(.horizontal, showsIndicators: false) {

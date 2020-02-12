@@ -94,13 +94,13 @@ struct DishButtonView: View, Identifiable, Equatable {
                         .foregroundColor(Color.white)
                         .multilineTextAlignment(.center)
                         .lineLimit(1)
-                        .shadow(color: Color.black.opacity(0.25), radius: 1, x: 0, y: 1)
+                        .shadow(color: Color.black.opacity(0.25), radius: 0, x: 0, y: 1)
                 }
                 .padding(.vertical, 7)
                 .padding(.horizontal, 11)
                 .background(Color.init(hue: self.dish.hue, saturation: 0.8, brightness: 0.5))
                 .cornerRadius(20)
-                .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 2)
+                .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
             }
         }
     }

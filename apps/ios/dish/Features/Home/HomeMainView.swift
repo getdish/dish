@@ -246,17 +246,17 @@ struct HomeMapOverlay: View {
             
             ZStack {
                 LinearGradient(
-                    gradient: Gradient(colors: [Color.black.opacity(0), Color(white: 0).opacity(0.65)]),
+                    gradient: Gradient(colors: [Color.black.opacity(0), Color(white: 0).opacity(0.35)]),
                     startPoint: .center,
                     endPoint: .bottom
                 )
                 LinearGradient(
-                    gradient: Gradient(colors: [Color.black.opacity(0), Color(white: 0).opacity(0.65)]),
+                    gradient: Gradient(colors: [Color.black.opacity(0), Color(white: 0).opacity(0.35)]),
                     startPoint: .center,
                     endPoint: .trailing
                 )
                 LinearGradient(
-                    gradient: Gradient(colors: [Color.black.opacity(0), Color(white: 0).opacity(0.65)]),
+                    gradient: Gradient(colors: [Color.black.opacity(0), Color(white: 0).opacity(0.35)]),
                     startPoint: .center,
                     endPoint: .leading
                 )
@@ -290,12 +290,12 @@ struct HomeMapOverlay: View {
 
     struct HomeMapMask: View {
         var body: some View {
-            Color.black.opacity(0.4)
+            Color(white: 0.2).opacity(0.5)
                 .clipShape(
                     topCornerMask(
                         width: App.screen.width,
                         height: App.screen.height,
-                        cornerRadius: 25
+                        cornerRadius: 30
                     )
             )
             .rasterize()

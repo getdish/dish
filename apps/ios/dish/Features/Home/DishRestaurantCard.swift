@@ -119,7 +119,7 @@ struct DishRestaurantCard: View, Identifiable {
                         Text(restaurant.name)
                             .font(.system(size: isMini ? 14 : 22))
                             .bold()
-                            .modifier(TextShadowModifier())
+                            .modifier(TextShadowStyle())
                     }
                     
                     if !isMini {
@@ -132,7 +132,7 @@ struct DishRestaurantCard: View, Identifiable {
                                     Text("9:00pm")
                                         .font(.system(size: 14))
                                 }
-                                .modifier(TextShadowModifier())
+                                .modifier(TextShadowStyle())
                             }
                             
                             ScrollView(.horizontal) {

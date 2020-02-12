@@ -55,9 +55,9 @@ struct CardTagView: View {
     }
 }
 
-struct TextShadowModifier: ViewModifier {
+struct TextShadowStyle: ViewModifier {
     func body(content: Content) -> some View {
-        content.shadow(color: Color.black.opacity(0.5), radius: 2, x: 0, y: 1)
+        content.shadow(color: Color.black.opacity(0.4), radius: 1, x: 0, y: 1)
     }
 }
 
