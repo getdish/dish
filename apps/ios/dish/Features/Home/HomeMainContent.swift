@@ -291,6 +291,21 @@ struct HomeMapExplore: View {
                     
                     Color.black.opacity(0.1).frame(width: 1, height: 12)
                     
+                    ForEach(0 ..< 4) { index in
+                        Button(action: {}) {
+                            Text(["🍣 Seafood", "🌶 Spicy", "🥗 Healthy + 💸 Cheap", "💸 Cheap", "Other"][index])
+                                .font(.system(size: 18))
+                        }
+                        .modifier(TopNavButtonStyle())
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 10)
+                .padding(.top, 12)
+            }
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
                     ForEach(0 ..< features.count) { index in
                         DishButtonView(
                             dish: features[index],
@@ -300,7 +315,7 @@ struct HomeMapExplore: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 16)
-                .padding(.top, 12)
+                .padding(.top, 10)
             }
         }
     }
