@@ -95,6 +95,7 @@
 		AECC17BF23D53A8D007CC388 /* MapBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECC17BE23D53A8D007CC388 /* MapBoxView.swift */; };
 		AED2EA0F23F34D990041A195 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED2EA0E23F34D990041A195 /* Dictionary.swift */; };
 		AED2EA1123F34FA20041A195 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED2EA1023F34FA10041A195 /* API.swift */; };
+		AED2EA1323F3A2930041A195 /* InvertColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED2EA1223F3A2930041A195 /* InvertColorScheme.swift */; };
 		AEE1991D23F33E3A00492B6B /* api.graphql in Resources */ = {isa = PBXBuildFile; fileRef = AEE1991C23F33E3A00492B6B /* api.graphql */; };
 		AEE1992123F33FA200492B6B /* ApolloNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE1992023F33FA200492B6B /* ApolloNetwork.swift */; };
 		AEE802B523ED3E8000A1A19E /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE802B423ED3E8000A1A19E /* Double.swift */; };
@@ -208,6 +209,7 @@
 		AECC17BE23D53A8D007CC388 /* MapBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapBoxView.swift; sourceTree = "<group>"; };
 		AED2EA0E23F34D990041A195 /* Dictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
 		AED2EA1023F34FA10041A195 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		AED2EA1223F3A2930041A195 /* InvertColorScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvertColorScheme.swift; sourceTree = "<group>"; };
 		AEE1991C23F33E3A00492B6B /* api.graphql */ = {isa = PBXFileReference; lastKnownFileType = text; path = api.graphql; sourceTree = "<group>"; };
 		AEE1992023F33FA200492B6B /* ApolloNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApolloNetwork.swift; sourceTree = "<group>"; };
 		AEE802B423ED3E8000A1A19E /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
@@ -331,6 +333,7 @@
 			isa = PBXGroup;
 			children = (
 				AE045C5023EB503400FFCBA1 /* AppGeometryReader.swift */,
+				AED2EA1223F3A2930041A195 /* InvertColorScheme.swift */,
 				AE861A7A23A06EDC004096BF /* BarArrow.swift */,
 				AE861A8823A172E8004096BF /* BlurView.swift */,
 				1CE35489239871CB004B3A84 /* BottomSheetView.swift */,
@@ -716,6 +719,7 @@
 				AEF6557723B041C400E49A51 /* RestaurantItem.swift in Sources */,
 				AE6B100523CFA55D00C33968 /* GooglePlacesService.swift in Sources */,
 				AEF6557923B041F600E49A51 /* DishItem.swift in Sources */,
+				AED2EA1323F3A2930041A195 /* InvertColorScheme.swift in Sources */,
 				AEA331F523A3381200B36A23 /* DishInput.swift in Sources */,
 				1C6B321A23A2A06100F0A7E6 /* SideDrawerView.swift in Sources */,
 				AEA331F123A3373D00B36A23 /* LoginSignupView.swift in Sources */,

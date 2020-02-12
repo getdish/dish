@@ -2,7 +2,7 @@ import SwiftUI
 import Combine
 
 fileprivate let items = features.chunked(into: 2)
-fileprivate let cardRowHeight: CGFloat = 120
+fileprivate let labels = ["🔥 Local Fav", "🍣 Seafood", "🌶 Spicy", "🥗 Healthy + 💸 Cheap", "💸 Cheap", "Other"]
 
 struct HomeMainContentContainer<Content>: View where Content: View {
     @State var animatePosition: MagicItemPosition = .start
@@ -129,7 +129,6 @@ struct HomeContentExplore: View {
     }
 }
 
-
 struct HomeContentExploreBy: View, Identifiable {
     let id = "HomeContentExploreBy"
     
@@ -162,12 +161,13 @@ struct HomeContentExploreBy: View, Identifiable {
                     VStack {
                         ForEach(0..<5) { i in
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(["🍣 Seafood", "🌶 Spicy", "🥗 Healthy + 💸 Cheap", "💸 Cheap", "Other"][i])
+                                Text(labels[i])
                                     .font(.system(size: 14))
                                     .fontWeight(.bold)
                                     .foregroundColor(Color.white)
                                     .modifier(TextShadowStyle())
                                     .padding(.horizontal)
+                                    .invertColorScheme(i == 0)
                                 
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     VStack(alignment: .leading, spacing: self.spacing) {
@@ -293,7 +293,7 @@ struct HomeMapExplore: View {
                     
                     ForEach(0 ..< 4) { index in
                         Button(action: {}) {
-                            Text(["🍣 Seafood", "🌶 Spicy", "🥗 Healthy + 💸 Cheap", "💸 Cheap", "Other"][index])
+                            Text(labels[index])
                                 .font(.system(size: 18))
                         }
                         .modifier(TopNavButtonStyle())
