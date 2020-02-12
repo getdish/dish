@@ -13,6 +13,17 @@ let features: [DishItem] = load("dishData.json")
 let restaurants: [RestaurantItem] = load("restaurantData.json")
 let log = XCGLogger.default
 
+// apollo
+// via https://github.com/apollographql/apollo-ios/issues/36
+public typealias geometry = [String : Any?]
+
+struct APIGeometry {
+    let type: String
+    let coordinates: [Double]
+}
+
+//let hasuraConfig = ProjectConfig(projectName: "projectName")
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func startDebugLoop() {
@@ -29,11 +40,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         #endif
     }
-    
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // one time setup
 
         startDebugLoop()
+        
+        UIApplication.shared.isStatusBarHidden = false
+
+        // hasura
+//        Hasura.initialise(config: hasuraConfig, enableLogs: true)
 
         // SwiftUI bugfix list/navigation backgrounds transparent
         let colorTransparent = UIColor.init(displayP3Red: 0, green: 0, blue: 0, alpha: 0)

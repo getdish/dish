@@ -30,8 +30,6 @@ struct DishCamera: View {
             .background(Color.black)
             .frame(minWidth: App.screen.width, maxHeight: .infinity)
             
-            CameraBottomNav()
-            
             DishCameraPictureOverlay()
 
             BottomSheetView(
@@ -41,6 +39,8 @@ struct DishCamera: View {
             ) {
                 DishRestaurantDrawer()
             }
+            
+            CameraBottomNav()
         }
         .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
         .allowsHitTesting(self.store.state.home.view == .camera)
@@ -59,8 +59,8 @@ struct CameraBottomNav: View {
                     CameraBackButton()
                     Spacer()
                 }
-                .padding()
-                .padding(.bottom, screen.edgeInsets.bottom)
+                .padding(.horizontal, 30)
+                .padding(.bottom, screen.edgeInsets.bottom + 20)
             }
         }
     }
@@ -70,11 +70,11 @@ struct CameraBackButton: View {
     @EnvironmentObject var store: AppStore
     
     var body: some View {
-        Button(action: {
+        DishButton(action: {
             if self.store.state.camera.didCapture {
                 App.store.send(.camera(.capture(false)))
             } else {
-                App.store.send(.home(.setShowCamera(false)))
+                App.store.send(.home(.setView(.home)))
             }
         }) {
             Image(systemName: "chevron.left")

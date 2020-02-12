@@ -1,34 +1,38 @@
 import SwiftUI
 
-struct DishButton : View {
-    var label: String
-    var action: () -> Void
-    var loading: Bool = false
+// hacky for now testing
+struct DishButton<Content: View>: View {
+    let action: () -> Void
+    let content: Content
+    
+    init(action: @escaping () -> Void, @ViewBuilder content: () -> Content) {
+        self.action = action
+        self.content = content()
+    }
+    
+    @State var isTapped = false
+    @State var lastTap = Date()
     
     var body: some View {
-        Button(action: action) {
-            HStack {
-                Spacer()
-                Text(label)
-                    .foregroundColor(.white)
-                    .fontWeight(.bold)
-                    .multilineTextAlignment(.center)
-                Spacer()
-            }
-            
+        self.content
+            // ⚠️ dont put .animation() here or every subview animates
+            .scaleEffect(self.isTapped ? 0.9 : 1)
+            .opacity(self.isTapped ? 0.9 : 1)
+            .onTapGesture {
+                self.lastTap = Date()
+                self.action()
         }
-        .padding()
-        .background(loading ? Color.blue.opacity(0.3) : Color.blue)
-        .cornerRadius(5)
+        .onLongPressGesture(
+            minimumDuration: 10000,
+            maximumDistance: 8,
+            pressing: { isPressing in
+            withAnimation(.spring()) {
+                self.isTapped = isPressing
+            }
+        }) {
+            if self.lastTap.timeIntervalSinceNow > 10 {
+                self.action()
+            }
+        }
     }
 }
-
-#if DEBUG
-struct DishButton_Previews : PreviewProvider {
-    static var previews: some View {
-        DishButton(label: "Sign in", action: {
-            print("hello")
-        })
-    }
-}
-#endif

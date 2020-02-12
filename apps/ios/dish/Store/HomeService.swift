@@ -32,24 +32,55 @@ class HomeService {
     
     func getSearchResults(_ search: SearchQuery) -> Future<HomeSearchResults, Never> {
         Future<HomeSearchResults, Never> { promise in
-            App.googlePlacesService.searchPlaces(
-                search.query,
-                location: CLLocationCoordinate2D(latitude: search.location.latitude, longitude: search.location.longitude),
-                radius: search.location.radius,
-                completion: { places in
-                    promise(.success(
-                        HomeSearchResults(
-                            id: "0",
-                            results: places.map { place in
-                                HomeSearchResultItem(
-                                    id: place.name,
-                                    name: place.name, //place.attributedPrimaryText,
-                                    place: place
-                                )
-                            }
-                        )
+            App.apollo.fetch(query: SearchRestaurantsQuery()) { result in
+                switch result {
+                    case .success(let result):
+                        if result.errors?.count ?? 0 > 0 {
+                            print("errors in search")
+                            return
+                        }
+                        guard let data = result.data else {
+                            print("no results")
+                            return
+                        }
+                        promise(.success(
+                            HomeSearchResults(
+                                id: "0",
+                                results: data.restaurant.map { restaurant in
+                                    let coords = restaurant.location?["coordinates"] as! [Double]
+                                    return HomeSearchResultItem(
+                                        id: restaurant.name,
+                                        name: restaurant.name,
+                                        coordinate: .init(latitude: coords[1], longitude: coords[0])
+                                    )
+                                }
+                            )
                         ))
-                })
+                        print("got \(result)")
+                    case .failure(let err):
+                        print("err \(err)")
+                }
+            }
+            
+//            App.googlePlacesService.searchPlaces(
+//                search.query,
+//                location: CLLocationCoordinate2D(latitude: search.location.latitude, longitude: search.location.longitude),
+//                radius: search.location.radius,
+//                completion: { places in
+//                    promise(.success(
+//                        HomeSearchResults(
+//                            id: "0",
+//                            results: places.map { place in
+//                                HomeSearchResultItem(
+//                                    id: place.name,
+//                                    name: place.name, //place.attributedPrimaryText,
+//                                    place: place
+//                                )
+//                            }
+//                        )
+//                        ))
+//                }
+//            )
         }
     }
     

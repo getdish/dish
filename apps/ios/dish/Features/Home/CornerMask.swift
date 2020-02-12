@@ -7,7 +7,7 @@ func topCornerMask(
 ) -> Path {
     Path { path in
         path.move(to: CGPoint(x: 0, y: 0))
-        path.addLine(to: CGPoint(x: 0, y: width))
+        path.addLine(to: CGPoint(x: 0, y: height))
         path.addLine(to: CGPoint(x: width, y: height))
         path.addLine(to: CGPoint(x: width, y: 0))
         
@@ -20,12 +20,16 @@ func topCornerMask(
             ),
             cornerSize: CGSize(width: 20, height: 20)
         )
-    }
-}
-
-struct TopCornerMask: View {
-    var body: some View {
-        topCornerMask()
+        
+        // remove extra top part
+        path.addRect(
+            CGRect(
+                x: 0,
+                y: -cornerRadius,
+                width: width,
+                height: cornerRadius
+            )
+        )
     }
 }
 
@@ -33,7 +37,6 @@ struct TopCornerMask: View {
 struct TopCornerMask_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            TopCornerMask()
             Color.red.clipShape(topCornerMask())
         }
     }

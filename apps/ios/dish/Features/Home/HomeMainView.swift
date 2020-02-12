@@ -6,95 +6,99 @@ struct HomeMainView: View {
     @EnvironmentObject var keyboard: Keyboard
     @Environment(\.geometry) var appGeometry
     @Environment(\.colorScheme) var colorScheme
-    
+
     //
     // main state of this view and sub-views:
     //
     @ObservedObject var state = homeViewState
-    
+
     @State var wasOnSearchResults = false
     @State var wasOnCamera = false
     
+    func start() {
+        async(500) {
+            self.state.setAnimationState(.idle)
+        }
+    }
+    
+    func sideEffects() {
+        if self.appGeometry?.size.height != self.state.appHeight {
+            if let height = self.appGeometry?.size.height {
+                self.state.setAppHeight(height)
+            }
+        }
+        
+        if Selectors.home.isOnSearchResults() != self.wasOnSearchResults {
+            let val = Selectors.home.isOnSearchResults()
+            self.wasOnSearchResults = val
+            if val {
+                self.state.moveToSearchResults()
+            }
+        }
+        
+        let isOnCamera = App.store.state.home.view == .camera
+        if isOnCamera != self.wasOnCamera {
+            let val = App.store.state.home.view == .camera
+            self.wasOnCamera = val
+            self.state.setShowCamera(val)
+        }
+    }
+
     var body: some View {
         let state = self.state
         let animationState = state.animationState
         let mapHeight = state.mapHeight
         //        let enableSearchBar = [.idle, .off].contains(state.dragState) && state.animationState == .idle
-        
+
         print(" 👀 HomeMainView mapHeight \(mapHeight) animationState \(state.animationState)")
-        
+
         return ZStack(alignment: .topLeading) {
-            // Side effects
-            Group {
-                PrintGeometryView("HomeMainView")
-                
-                RunOnce(name: "splash animation") {
-                    async(100) {
-                        self.state.setAnimationState(.idle)
-                    }
-                }
-                
-                SideEffect(".store.setAppHeight", condition: { self.appGeometry?.size.height != self.state.appHeight }) {
-                    if let height = self.appGeometry?.size.height {
-                        self.state.setAppHeight(height)
-                    }
-                }
-                
-                SideEffect(".store.moveToSearchResults", condition: { Selectors.home.isOnSearchResults() != self.wasOnSearchResults }) {
-                    let val = Selectors.home.isOnSearchResults()
-                    self.wasOnSearchResults = val
-                    if val {
-                        self.state.moveToSearchResults()
-                    }
-                }
-                
-                SideEffect(".store.setShowCamera", condition: { App.store.state.home.showCamera != self.wasOnCamera }) {
-                    self.wasOnCamera = App.store.state.home.showCamera
-                    self.state.setShowCamera(self.wasOnCamera)
-                }
-            }
+            Run("sideeffects") { self.sideEffects() }
+            RunOnce(name: "start") { self.start() }
+            
+            PrintGeometryView("HomeMainView")
             
             // Camera
             if App.enableCamera && animationState != .splash {
-                Group {
-                    ZStack {
-                        DishCamera()
-                        
-                        // cover camera
-                        Color.black
-                            .opacity(state.showCamera ? 0 : 1)
-                            .animation(.spring())
-                    }
-                    .frameLimitedToScreen()
+                ZStack {
+                    DishCamera()
+
+                    // cover camera
+                    Color.black
+                        .opacity(state.showCamera ? 0 : 1)
+                        .animation(.spring())
                 }
+                .frameLimitedToScreen()
             }
-            
+
             // Map
             if App.enableMap {
                 ZStack {
-                    DishMapView(
-                        height: state.mapFullHeight,
-                        animate: [.idle].contains(state.dragState)
-                            || state.animationState != .idle
-                            || state.mapHeight > state.startSnapToBottomAt
-                    )
-                        .offset(y: state.showCamera
-                            ? -App.screen.height
-                            : -(state.mapFullHeight - mapHeight) / 2 + 25 /* topbar offset */
-                    )
-                        .opacity(
-                            state.showCamera || animationState == .splash ? 0 : 1
-                    )
-                        .rotationEffect(state.showCamera ? .degrees(-10) : .degrees(0))
-                        .animation(.spring(response: 0.8), value: state.animationState == .animate)
-                    
+                    ZStack {
+                        DishMapView(
+                            height: state.mapFullHeight,
+                            animate: [.idle].contains(state.dragState)
+                                || state.animationState != .idle
+                                || state.mapHeight > state.startSnapToBottomAt
+                        )
+                            .offset(y: -(state.mapFullHeight - mapHeight) / 2 + 25 /* topbar offset */)
+                            .animation(.spring(response: 0.65))
+                    }
+                        .frameLimitedToScreen()
+                        .clipped()
+                        .opacity(animationState == .splash ? 0 : 1)
+//                        .animation(.spring(response: 0.8),
+//                                value: state.animationState == .animate
+//                                    || state.animationState == .controlled
+//                            )
+
                     HomeMapOverlay()
                         .offset(y: mapHeight - 20)
                 }
-                    .frame(height: state.appHeight)
-                    .clipped()
+                    .frameLimitedToScreen()
+                    .opacity(state.showCamera ? 0 : 1)
             }
-            
+
             // Content
             if App.enableContent && animationState != .splash {
                 ZStack {
@@ -115,7 +119,6 @@ struct HomeMainView: View {
                         HomeMainContent()
                     }
                         .frameLimitedToScreen()
-                        .offset(y: state.showCamera ? App.screen.height : 0)
 
                     // filters
                     VStack {
@@ -125,9 +128,9 @@ struct HomeMainView: View {
                         .frameLimitedToScreen()
                         .offset(y: mapHeight + App.searchBarHeight / 2)
                 }
-                .transition(.opacity)
+                .opacity(state.showCamera ? 0 : 1)
             }
-            
+
             // Search
             ZStack {
                 VStack {
@@ -136,21 +139,22 @@ struct HomeMainView: View {
                     )
                         .frame(height: App.searchBarHeight)
                         .padding(.horizontal, 12)
+                        .scaleEffect(state.dragState == .searchbar ? 1.1 : 1)
+                        .rotationEffect(.degrees(state.dragState == .searchbar ? 2 : 0))
+                        .animation(.spring(), value: state.dragState == .searchbar)
+                    
                     Spacer()
                 }
                     // this fixed a bug where it would focus search bar too easily
                     // but created one where it de-focuses it instantly often
                     //                    .disabled(!enableSearchBar)
                     //                    .allowsHitTesting(enableSearchBar)
-                    .offset(y:
-                        state.showCamera ?
-                            mapHeight > App.screen.height / 2 ? App.screen.height * 2 : -App.screen.height * 2 :
-                            mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra
-                )
+                    .offset(y: mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra)
                     .animation(.spring(response: 1.25), value: state.animationState == .animate)
             }
-            
-            
+            .opacity(state.showCamera ? 0 : 1)
+
+
             // Camera Controls
             if App.enableCamera {
                 ZStack {
@@ -176,20 +180,19 @@ struct HomeMainView: View {
                 }
                 .frameLimitedToScreen()
             }
-            
+
             // make everything untouchable while dragging
             Color.black.opacity(0.0001)
                 .frame(width: state.dragState == .pager ? App.screen.width : 0)
         }
             .clipped() // dont remove fixes bug cant click SearchBar
-            //                .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
             .simultaneousGesture(self.dragGesture)
             .environmentObject(self.state)
     }
-    
+
     var dragGesture: _EndedGesture<_ChangedGesture<DragGesture>> {
         var ignoreThisDrag = false
-        
+
         return DragGesture(minimumDistance: 10)
             .onChanged { value in
                 print("drag ignore \(ignoreThisDrag) state \(self.state.dragState)")
@@ -208,13 +211,13 @@ struct HomeMainView: View {
                     ignoreThisDrag = true
                     return
                 }
-                
+
                 let isDraggingSearchBar = self.state.isWithinDraggableArea(value.startLocation.y)
 //                let isDraggingBelowSearchBar = self.state.isActiveScrollViewAtTop
 //                    && HomeSearchBarState.isBelow(value.startLocation.y)
-                
+
                 //                print("☕️ self.state.isActiveScrollViewAtTop \(self.state.isActiveScrollViewAtTop) isDraggingBelowSearchBar \(isDraggingBelowSearchBar) height \(value.translation.height)")
-                
+
                 if isAlreadyDragging || isDraggingSearchBar {
                     if self.keyboard.state.height > 0 {
                         self.keyboard.hide()
@@ -237,51 +240,83 @@ struct HomeMainView: View {
     }
 }
 
+
 struct HomeMapOverlay: View {
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
         ZStack {
-            HomeMapBackgroundGradient()
-            HomeMapMask()
-        }
-    }
-    
-    struct HomeMapBackgroundGradient: View {
-        @Environment(\.colorScheme) var colorScheme
-        
-        var body: some View {
-            LinearGradient(
-                gradient: Gradient(
-                    colors: self.colorScheme == .light
-                        ? [Color.black.opacity(0), Color.black.opacity(0.3), Color(white: 0.1).opacity(0.55)]
-                        : [Color.black.opacity(0), Color.black.opacity(0.3), Color(white: 0).opacity(0.55)]
-                ),
-                startPoint: .top,
-                endPoint: .bottom
+            ZStack {
+                BlurView(style: colorScheme == .light
+                    ? .systemUltraThinMaterialLight
+                    : .systemUltraThinMaterialDark
+                )
+            }
+            .clipShape(
+                topCornerMask(
+                    width: App.screen.width,
+                    height: App.screen.height,
+                    cornerRadius: 30
+                )
             )
-        }
-    }
-    
-    struct HomeMapMask: View {
-        var body: some View {
-            Color.black.opacity(0.4)
-                .clipShape(
-                    topCornerMask(
-                        width: App.screen.width,
-                        height: App.screen.height,
-                        cornerRadius: 25
-                    )
+            
+            ZStack {
+                LinearGradient(
+                    gradient: Gradient(
+                        colors: [Color.red, Color.blue]
+                        //                    self.colorScheme == .light
+                        //                        ? [Color.black.opacity(0), Color(white: 0.1).opacity(1)]
+                        //                        : [Color.black.opacity(0), Color(white: 0).opacity(1)]
+                    ),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                    .opacity(self.colorScheme == .light ? 0.25 : 0.85)
+                
+                LinearGradient(
+                    gradient: Gradient(
+                        colors: [Color.black, Color.clear]
+                    ),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                    .opacity(self.colorScheme == .light ? 0.25 : 0.85)
+            }
+            .clipShape(
+                topCornerMask(
+                    width: App.screen.width,
+                    height: App.screen.height,
+                    cornerRadius: 30
+                )
             )
-            .rasterize()
+            .drawingGroup()
+            
+            ZStack {
+                LinearGradient(
+                    gradient: Gradient(colors: [Color.black.opacity(0), Color(white: 0).opacity(0.075)]),
+                    startPoint: .center,
+                    endPoint: .bottom
+                )
+                LinearGradient(
+                    gradient: Gradient(colors: [Color.black.opacity(0), Color(white: 0).opacity(0.075)]),
+                    startPoint: .center,
+                    endPoint: .trailing
+                )
+                LinearGradient(
+                    gradient: Gradient(colors: [Color.black.opacity(0), Color(white: 0).opacity(0.075)]),
+                    startPoint: .center,
+                    endPoint: .leading
+                )
+            }
+            .mask(
+                LinearGradient(
+                    gradient: Gradient(colors: [Color.black.opacity(0), Color.black.opacity(1)]),
+                    startPoint: .top,
+                    endPoint: .center
+                )
+            )
+            .drawingGroup()
         }
-        //    LinearGradient(
-        //        gradient: Gradient(
-        //        colors: [
-        //        Color(white: 0).opacity(0.7), Color(white: 0).opacity(0), Color.black.opacity(0)
-        //        ]
-        //        ),
-        //        startPoint: .top,
-        //        endPoint: .bottom
-        //    )
     }
 }
 

@@ -6,7 +6,7 @@ fileprivate let distanceUntilSnapDown: CGFloat = 42
 fileprivate let distanceUntilSnapUp: CGFloat = 85
 
 fileprivate func getInitialY(_ screenHeight: CGFloat) -> CGFloat {
-    screenHeight * 0.4
+    screenHeight * 0.7
 }
 
 class HomeViewState: ObservableObject {
@@ -35,7 +35,7 @@ class HomeViewState: ObservableObject {
     @Published private(set) var keyboardHeight: CGFloat = 0
     @Published private(set) var locationLabelWidth: CGFloat = 0
     
-    let snapToBottomAnimationDuration: Double = 400 * (1 / App.animationSpeed)
+    let snapToBottomAnimationDuration: Double = 550 * (1 / App.animationSpeed)
     
     private var scrollState = HomeMainScrollState()
     private var activeScrollView: UIScrollView? = nil
@@ -45,6 +45,8 @@ class HomeViewState: ObservableObject {
     private var lastKeyboardAdjustY: CGFloat = 0
     
     init() {
+        self.snapToBottom()
+        
         // start map height at just above snapToBottomAt
         self.$appHeight
             .debounce(for: .milliseconds(200), scheduler: App.queueMain)
@@ -152,7 +154,7 @@ class HomeViewState: ObservableObject {
     }
     
     var mapFullHeight: CGFloat {
-        appHeight + App.screen.height / 2
+        appHeight * 1.5
     }
     
     var showFiltersAbove: Bool {

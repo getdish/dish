@@ -23,7 +23,7 @@ class RestaurantItem: Codable, Identifiable, ObservableObject {
     var address: String
     var phone: String
     var tags: [String]
-    var rating: Double
+    var stars: Int
     
     init(
         id: String,
@@ -32,7 +32,7 @@ class RestaurantItem: Codable, Identifiable, ObservableObject {
         address: String,
         phone: String,
         tags: [String],
-        rating: Double
+        stars: Int
     ) {
         self.id = id
         self.name = name
@@ -40,11 +40,11 @@ class RestaurantItem: Codable, Identifiable, ObservableObject {
         self.address = address
         self.phone = phone
         self.tags = tags
-        self.rating = rating
+        self.stars = stars
     }
     
     private enum CodingKeys: String, CodingKey {
-        case id, name, imageName, address, phone, tags, rating
+        case id, name, imageName, address, phone, tags, stars
     }
 
     @Published var imageIndex = 0

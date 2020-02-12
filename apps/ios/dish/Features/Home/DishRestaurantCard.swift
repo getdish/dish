@@ -6,6 +6,12 @@ struct DishRestaurantCard: View, Identifiable {
     var isMini: Bool = false
     var at: MagicItemPosition = .start
     
+    var width: CGFloat? = nil
+    var height: CGFloat? = nil
+    
+    var ratingSize: CGFloat { isMini ? 25 : 45 }
+    var starWidth: CGFloat { ratingSize * 0.525 * 0.9 }
+    
     var gradientBottom: LinearGradient {
         LinearGradient(
             gradient: Gradient(
@@ -23,43 +29,89 @@ struct DishRestaurantCard: View, Identifiable {
     }
     
     var body: some View {
-        GeometryReader { geo in
+//        GeometryReader { geo in
             MagicItem("restaurant-\(self.id)", at: self.at) {
-                ZStack {
-                    VStack {
-                        self.restaurant.image
-                            .resizable()
-                            .scaledToFill()
+                VStack {
+                    self.restaurant.image
+                        .resizable()
+                        .scaledToFill()
+                }
+                .frame(width: self.width ?? App.screen.width - 40, height: self.height ?? 200)
+//                    .frame(width: geo.size.width, height: max(geo.size.height, 40))
+                    .overlay(
+                        Rectangle().fill(self.gradientBottom)
+                    )
+                    .overlay(
+                        self.textOverlay
+                    )
+                    .overlay(
+                        self.ratingOverlay
+                    )
+                    .overlay(
+                        self.tapOverlay
+                    )
+                    .cornerRadius(16)
+                    .clipped()
+                    .shadow(color: Color.black.opacity(0.4), radius: 9, x: 0, y: 3)
+            }
+//        }
+    }
+    
+    var ratingOverlay: some View {
+        VStack {
+            HStack {
+                HStack(spacing: 0) {
+                    ZStack {
+                        ForEach(0 ..< self.restaurant.stars) { index in
+                            Text("⭐️")
+                                .font(.system(size: self.ratingSize * 0.525))
+                                .offset(x: CGFloat(index) * self.starWidth)
+                            //                                .zIndex(CGFloat(3) - index)
+                        }
                     }
-                    .frame(width: geo.size.width, height: max(geo.size.height, 40))
-                        .overlay(
-                            Rectangle().fill(self.gradientBottom)
-                    )
-                        .overlay(
-                            self.textOverlay
-                    )
-                        .cornerRadius(16)
-                        .clipped()
-                        .shadow(color: Color.black.opacity(0.4), radius: 9, x: 0, y: 3)
+                    .offset(x: -self.starWidth)
+                }
+                .frame(width: CGFloat(self.restaurant.stars) * self.starWidth)
+                .padding(5)
+                .background(Color.white.opacity(0.25))
+                .cornerRadius(10)
+                
+                Spacer()
+            }
+            Spacer()
+        }
+    }
+    
+    var tapOverlay: some View {
+        Group {
+            if isMini {
+                Color.black.opacity(0.00001)
+                    .onTapGesture {
+//                        App.store.send(.home(.))
+                    }
+            } else {
+                HStack {
+                    Color.black.opacity(0.0001)
+                        .onTapGesture {
+                            print("prev!")
+                            self.restaurant.prev()
+                    }
+                    
+                    Color.clear
+                    
+                    Color.black.opacity(0.0001)
+                        .onTapGesture {
+                            print("next!")
+                            self.restaurant.next()
+                    }
                 }
             }
         }
     }
     
     var textOverlay: some View {
-        let ratingSize: CGFloat = isMini ? 25 : 45
         return ZStack(alignment: .bottomLeading) {
             VStack(alignment: .leading) {
-                ZStack {
-                    Circle()
-                        .frame(width: ratingSize, height: ratingSize)
-                        .modifier(TextShadowModifier())
-                    
-                    Text("9")
-                        .font(.system(size: ratingSize * 0.525))
-                        .foregroundColor(.black)
-                }
-                
                 Spacer()
                 
                 VStack(alignment: .leading, spacing: 16) {
@@ -67,7 +119,7 @@ struct DishRestaurantCard: View, Identifiable {
                         Text(restaurant.name)
                             .font(.system(size: isMini ? 14 : 22))
                             .bold()
-                            .modifier(TextShadowModifier())
+                            .modifier(TextShadowStyle())
                     }
                     
                     if !isMini {
@@ -80,7 +132,7 @@ struct DishRestaurantCard: View, Identifiable {
                                     Text("9:00pm")
                                         .font(.system(size: 14))
                                 }
-                                .modifier(TextShadowModifier())
+                                .modifier(TextShadowStyle())
                             }
                             
                             ScrollView(.horizontal) {
@@ -95,24 +147,6 @@ struct DishRestaurantCard: View, Identifiable {
                 
             }
             .padding(isMini ? 8 : 16)
-            
-            
-            HStack {
-                Color.black.opacity(0.0001)
-                    .onTapGesture {
-                        print("prev!")
-                        self.restaurant.prev()
-                }
-                
-                Color.clear
-                
-                Color.black.opacity(0.0001)
-                    .onTapGesture {
-                        print("next!")
-                        self.restaurant.next()
-                }
-            }
-            
         }
         .foregroundColor(.white)
         
