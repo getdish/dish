@@ -38,9 +38,9 @@ struct HomeMainFilterBar: View {
                         Color.white.opacity(0.1).frame(width: 1)
                         
                         FilterButton(label: "🚗", fontSize: 15, action: {})
-                            .frame(width: 52)
+                            .frame(width: 56)
                         
-                        FilterButton(label: "Open Now", fontSize: 15, action: {})
+                        FilterButton(label: "Open", fontSize: 15, action: {})
                             .frame(width: 110)
                             .environment(\.colorScheme, colorScheme == .light ? .dark : .light)
                         

@@ -90,7 +90,7 @@ struct DishButtonView: View, Identifiable, Equatable {
                 HStack {
                     Text(self.dish.name)
                         .font(.system(size: 16))
-                        .fontWeight(.bold)
+                        .fontWeight(.light)
                         .foregroundColor(Color.white)
                         .multilineTextAlignment(.center)
                         .lineLimit(1)

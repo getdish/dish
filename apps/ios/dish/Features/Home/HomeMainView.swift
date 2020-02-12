@@ -239,24 +239,61 @@ struct HomeMainView: View {
 
 
 struct HomeMapOverlay: View {
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
         ZStack {
-            HomeMapBackgroundGradient()
-            HomeMapMask()
+            ZStack {
+                BlurView(style: colorScheme == .light
+                    ? .systemUltraThinMaterialLight
+                    : .systemUltraThinMaterialDark
+                )
+                
+                ZStack {
+                    LinearGradient(
+                        gradient: Gradient(
+                            colors: [Color.red, Color.blue]
+                            //                    self.colorScheme == .light
+                            //                        ? [Color.black.opacity(0), Color(white: 0.1).opacity(1)]
+                            //                        : [Color.black.opacity(0), Color(white: 0).opacity(1)]
+                        ),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    
+                    LinearGradient(
+                        gradient: Gradient(
+                            colors: [Color.black, Color.clear]
+                        ),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                }
+                .opacity(0.85)
+                .drawingGroup()
+            }
+            .clipShape(
+                topCornerMask(
+                    width: App.screen.width,
+                    height: App.screen.height * 1.5,
+                    cornerRadius: 30
+                )
+            )
+            .drawingGroup()
             
             ZStack {
                 LinearGradient(
-                    gradient: Gradient(colors: [Color.black.opacity(0), Color(white: 0).opacity(0.35)]),
+                    gradient: Gradient(colors: [Color.black.opacity(0), Color(white: 0).opacity(0.075)]),
                     startPoint: .center,
                     endPoint: .bottom
                 )
                 LinearGradient(
-                    gradient: Gradient(colors: [Color.black.opacity(0), Color(white: 0).opacity(0.35)]),
+                    gradient: Gradient(colors: [Color.black.opacity(0), Color(white: 0).opacity(0.075)]),
                     startPoint: .center,
                     endPoint: .trailing
                 )
                 LinearGradient(
-                    gradient: Gradient(colors: [Color.black.opacity(0), Color(white: 0).opacity(0.35)]),
+                    gradient: Gradient(colors: [Color.black.opacity(0), Color(white: 0).opacity(0.075)]),
                     startPoint: .center,
                     endPoint: .leading
                 )
@@ -270,45 +307,6 @@ struct HomeMapOverlay: View {
             )
             .drawingGroup()
         }
-    }
-
-    struct HomeMapBackgroundGradient: View {
-        @Environment(\.colorScheme) var colorScheme
-
-        var body: some View {
-            LinearGradient(
-                gradient: Gradient(
-                    colors: self.colorScheme == .light
-                        ? [Color.black.opacity(0), Color.black.opacity(0.3), Color(white: 0.1).opacity(0.65)]
-                        : [Color.black.opacity(0), Color.black.opacity(0.3), Color(white: 0).opacity(0.65)]
-                ),
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        }
-    }
-
-    struct HomeMapMask: View {
-        var body: some View {
-            Color(white: 0.2).opacity(0.5)
-                .clipShape(
-                    topCornerMask(
-                        width: App.screen.width,
-                        height: App.screen.height,
-                        cornerRadius: 30
-                    )
-            )
-            .rasterize()
-        }
-        //    LinearGradient(
-        //        gradient: Gradient(
-        //        colors: [
-        //        Color(white: 0).opacity(0.7), Color(white: 0).opacity(0), Color.black.opacity(0)
-        //        ]
-        //        ),
-        //        startPoint: .top,
-        //        endPoint: .bottom
-        //    )
     }
 }
 

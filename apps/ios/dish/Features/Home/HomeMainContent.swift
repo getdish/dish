@@ -161,12 +161,25 @@ struct HomeContentExploreBy: View, Identifiable {
                     VStack {
                         ForEach(0..<5) { i in
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(labels[i])
-                                    .font(.system(size: 14))
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Color.white)
-                                    .modifier(TextShadowStyle())
-                                    .padding(.horizontal)
+                                HStack(spacing: 0) {
+                                    Text(labels[i])
+                                        .font(.system(size: 13))
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Color.white)
+                                        .modifier(TextShadowStyle())
+                                    
+                                    // line
+                                    VStack(spacing: 0) {
+                                        Color.white
+                                            .opacity(0.1)
+                                            .frame(height: 1)
+                                        Color.black
+                                            .opacity(0.1)
+                                            .frame(height: 1)
+                                    }
+                                    .padding(.horizontal, 8)
+                                }
+                                .padding(.horizontal)
                                 
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     VStack(alignment: .leading, spacing: self.spacing) {
@@ -283,18 +296,18 @@ struct HomeMapExplore: View {
                         self.x = !self.x
                     }) {
                         Text(self.x ? "🍽" : "🌎")
-                            .font(.system(size: 22))
+                            .font(.system(size: 28))
+                            .modifier(TextShadowStyle())
                     }
-                    .modifier(TopNavButtonStyle())
-                    .scaleEffect(1.1)
                     
                     Color.black.opacity(0.1).frame(width: 1, height: 12)
                     
                     ForEach(0 ..< 4) { index in
                         Button(action: {}) {
                             Text(labels[index])
-                                .font(.system(size: 18))
+                                .font(.system(size: 16))
                         }
+                        .padding(2)
                         .modifier(TopNavButtonStyle())
                         .invertColorScheme(index == 0)
                     }

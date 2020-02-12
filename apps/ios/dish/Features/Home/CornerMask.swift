@@ -20,6 +20,16 @@ func topCornerMask(
             ),
             cornerSize: CGSize(width: 20, height: 20)
         )
+        
+        // remove extra top part
+        path.addRect(
+            CGRect(
+                x: 0,
+                y: -cornerRadius,
+                width: width,
+                height: cornerRadius
+            )
+        )
     }
 }
 
