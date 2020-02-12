@@ -263,6 +263,7 @@
 			children = (
 				1CE3547223986B1C004B3A84 /* Info.plist */,
 				1CE3546A23986B1C004B3A84 /* Assets.xcassets */,
+				AED2EA1623F3E16E0041A195 /* LaunchScreen.storyboard */,
 				AEEF29D323F33B1300FCE400 /* schema.json */,
 				1CE3546423986B1B004B3A84 /* AppDelegate.swift */,
 				AE99091123CE637200F1763C /* App.swift */,
@@ -278,7 +279,6 @@
 				1CE3547D23986B70004B3A84 /* Views */,
 				AE6B102923CFF1FC00C33968 /* Resources */,
 				AE85339523C92D170045F144 /* Vendor */,
-				AED2EA1623F3E16E0041A195 /* LaunchScreen.storyboard */,
 				1CE3546C23986B1C004B3A84 /* Preview Content */,
 			);
 			path = dish;
