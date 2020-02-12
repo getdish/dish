@@ -312,22 +312,24 @@ struct MagicItem<Content>: View where Content: View {
 
     var body: some View {
         return self.content
-            .overlay(Color.clear.onAppear { self.start() })
             .overlay(
-                GeometryReader { geometry -> Color in
-                    if magicItemsStore.disableTracking {
-                        return Color.clear
-                    }
-                    let frame = geometry.frame(in: .global)
-                    if !self.isOffscreen(frame) {
-                        async {
-                            let (_, enabled, item) = self.setupSideEffect(frame)
-                            if enabled {
-                                self.updateItem(item)
+                Group {
+                    Color.clear.onAppear { self.start() }
+                    GeometryReader { geometry -> Color in
+                        if magicItemsStore.disableTracking {
+                            return Color.clear
+                        }
+                        let frame = geometry.frame(in: .global)
+                        if !self.isOffscreen(frame) {
+                            async {
+                                let (_, enabled, item) = self.setupSideEffect(frame)
+                                if enabled {
+                                    self.updateItem(item)
+                                }
                             }
                         }
+                        return Color.clear
                     }
-                    return Color.clear
                 }
             )
             .opacity(

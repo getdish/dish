@@ -77,9 +77,10 @@ struct HomeMainView: View {
                     ZStack {
                         DishMapView(
                             height: state.mapFullHeight,
-                            animate: [.idle].contains(state.dragState)
-                                || state.animationState != .idle
-                                || state.mapHeight > state.startSnapToBottomAt
+                            animate: true
+//                                [.idle].contains(state.dragState)
+//                                || state.animationState != .idle
+//                                || state.mapHeight > state.startSnapToBottomAt
                         )
                             .offset(y: -(state.mapFullHeight - mapHeight) / 2 + 25 /* topbar offset */)
                             .animation(.spring(response: 0.65))
@@ -93,6 +94,7 @@ struct HomeMainView: View {
 //                            )
 
                     HomeMapOverlay()
+                        .drawingGroup()
                         .offset(y: mapHeight - 20)
                 }
                     .frameLimitedToScreen()

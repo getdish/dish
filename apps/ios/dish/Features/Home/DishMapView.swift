@@ -55,31 +55,31 @@ struct DishMapView: View {
                 ZStack(alignment: .topLeading) {
                     ZStack {
                         Group {
-                            MapBoxView(annotations: self.annotations)
-                                .styleURL(
-                                    colorScheme == .dark
-                                        ? URL(string: "mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja/draft")!
-                                        : URL(string: "mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq/draft")!
-
-                                )
-                                .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
-                                .zoomLevel(11)
-                                .frame(height: App.screen.height * 1.6)
-//                            MapView(
-//                                width: appWidth,
-//                                height: self.height,
-//                                padding: self.padding,
-//                                darkMode: self.colorScheme == .dark,
-//                                animate: self.animate,
-//                                moveToLocation: store.state.map.moveToLocation,
-//                                locations: [], //store.state.home.viewStates.last!.searchResults.results.map { $0.place },
-//                                onMapSettle: { position in
-//                                    mapViewStore.position = position
-//                            }
-//                            )
-//                                .introspectMapView { mapView in
-//                                    self.mapView = mapView
-//                            }
+//                            MapBoxView(annotations: self.annotations)
+//                                .styleURL(
+//                                    colorScheme == .dark
+//                                        ? URL(string: "mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja/draft")!
+//                                        : URL(string: "mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq/draft")!
+//
+//                                )
+//                                .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
+//                                .zoomLevel(11)
+//                                .frame(height: App.screen.height * 1.6)
+                            MapView(
+                                width: appWidth,
+                                height: self.height,
+                                padding: self.padding,
+                                darkMode: self.colorScheme == .dark,
+                                animate: self.animate,
+                                moveToLocation: store.state.map.moveToLocation,
+                                locations: [], //store.state.home.viewStates.last!.searchResults.results.map { $0.place },
+                                onMapSettle: { position in
+                                    mapViewStore.position = position
+                            }
+                            )
+                                .introspectMapView { mapView in
+                                    self.mapView = mapView
+                            }
                         }
                     }
                     

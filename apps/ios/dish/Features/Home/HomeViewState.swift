@@ -154,7 +154,7 @@ class HomeViewState: ObservableObject {
     }
     
     var mapFullHeight: CGFloat {
-        appHeight + App.screen.height / 2
+        appHeight * 1.5
     }
     
     var showFiltersAbove: Bool {
