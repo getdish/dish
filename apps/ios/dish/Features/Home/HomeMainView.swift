@@ -93,7 +93,7 @@ struct HomeMainView: View {
 //                            )
 
                     HomeMapOverlay()
-                        .offset(y: mapHeight - 20)
+                        .offset(y: mapHeight - App.searchBarHeight / 2)
                 }
                     .frameLimitedToScreen()
                     .opacity(state.showCamera ? 0 : 1)
