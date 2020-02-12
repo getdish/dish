@@ -5,6 +5,7 @@ variable "POSTGRES_PASSWORD" {}
 variable "DOCKER_REGISTRY_HTTP_AUTH" {}
 variable "GRAFANA_PASSWORD" {}
 variable "CLOUDFLARE_DNS_API_TOKEN" {}
+variable "GMAIL_APP_PASSWORD" {}
 
 # Keeping the cluster in its own module allows us to build it independently of
 # every other k8s resources that lives on it. This is essential when first

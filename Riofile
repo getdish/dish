@@ -22,6 +22,7 @@ services:
       context: ./
     env:
       - DISH_ENV=production
+      - COMMIT_HASH=${REVISION}
       - REDIS_HOST=redis-master.redis
       - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
       - UBEREATS_PROXY=${UBEREATS_PROXY}
@@ -39,6 +40,7 @@ services:
       context: ./
     env:
       - DISH_ENV=production
+      - COMMIT_HASH=${REVISION}
       - REDIS_HOST=redis-master.redis
       - UBEREATS_PROXY=${UBEREATS_PROXY}
       - YELP_PROXY=${YELP_PROXY}
@@ -55,6 +57,7 @@ services:
       - 5000/http
     env:
       - DISH_ENV=production
+      - COMMIT_HASH=${REVISION}
       - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
   react-native:
     image: dish/react-native
@@ -65,6 +68,7 @@ services:
       - 3000/http
     env:
       - DISH_ENV=production
+      - COMMIT_HASH=${REVISION}
       - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
 {{- end}}
 
@@ -74,3 +78,5 @@ template:
   questions:
   - variable: DISH_ENV
     description: "Environment to deploy to"
+  - variable: REVISION
+    description: "Current Git commit hash (automatically added by Rio)"

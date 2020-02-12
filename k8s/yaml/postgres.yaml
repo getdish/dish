@@ -288,6 +288,8 @@ persistence:
   # storageClass: "-"
   accessModes:
     - ReadWriteOnce
+  # Initial value only. Resizing can be done independently through the
+  # Persistent Voume Claim resource(s).
   size: 5Gi
   annotations: {}
 

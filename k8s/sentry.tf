@@ -21,6 +21,11 @@ resource "helm_release" "sentry" {
   version = "4.0.0"
 
   set {
+    name ="config.configYml"
+    value = file("yaml/sentry.yaml")
+  }
+
+  set {
     name  = "postgresql.enabled"
     value = false
   }
@@ -53,6 +58,31 @@ resource "helm_release" "sentry" {
   set {
     name  = "persistence.size"
     value = "5Gi"
+  }
+
+  set {
+    name  = "email.host"
+    value = "smtp.gmail.com"
+  }
+
+  set {
+    name  = "email.port"
+    value = "587"
+  }
+
+  set {
+    name  = "email.user"
+    value = "teamdishapp@gmail.com"
+  }
+
+  set {
+    name  = "email.password"
+    value = var.GMAIL_APP_PASSWORD
+  }
+
+  set {
+    name  = "email.use_tls"
+    value = "true"
   }
 }
 

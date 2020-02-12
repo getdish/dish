@@ -1,1 +1,2 @@
 env.enc.production.yaml filter=git-crypt diff=git-crypt
+k8s/yaml/sentry.yaml filter=git-crypt diff=git-crypt
