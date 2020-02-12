@@ -20,6 +20,7 @@ test('Gets and persists a restaurant', async t => {
   await scrape.findOne('id_from_source', ID)
 
   t.is(scrape.data.data_from_map_search.name, 'Flour + Water')
+  t.deepEqual(scrape.location.coordinates, [37.758933, -122.412283])
   t.is(
     scrape.data.data_from_html_embed.bizContactInfoProps.phoneNumber,
     '(415) 826-7000'

@@ -95,7 +95,9 @@ export class ModelBase<T> {
   asObject() {
     let object = {}
     for (const field of this._klass.fields()) {
-      object[field] = this[field]
+      if (this[field]) {
+        object[field] = this[field]
+      }
     }
     return object
   }

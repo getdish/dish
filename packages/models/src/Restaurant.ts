@@ -89,11 +89,7 @@ export class Restaurant extends ModelBase<Restaurant> {
             },
             limit: 1,
           },
-          id: true,
-          updated_at: true,
-          source: true,
-          id_from_source: true,
-          data: true,
+          ...Scrape.fieldsAsObject(),
         },
       },
     }

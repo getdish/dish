@@ -1,4 +1,4 @@
-import { ModelBase } from './ModelBase'
+import { ModelBase, Point } from './ModelBase'
 
 export type ScrapeData = { [key: string]: any }
 
@@ -6,6 +6,7 @@ export class Scrape extends ModelBase<Scrape> {
   source!: string
   id_from_source!: string
   data!: ScrapeData
+  location!: Point
 
   constructor(init?: Partial<Scrape>) {
     super()
@@ -17,7 +18,7 @@ export class Scrape extends ModelBase<Scrape> {
   }
 
   static fields() {
-    return ['source', 'id_from_source', 'data']
+    return ['source', 'id_from_source', 'data', 'location']
   }
 
   static async mergeData(id: string, data: ScrapeData) {

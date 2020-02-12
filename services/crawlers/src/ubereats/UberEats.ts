@@ -163,6 +163,10 @@ export class UberEats extends WorkerJob {
       data: {
         main: data,
       },
+      location: {
+        type: 'Point',
+        coordinates: [data.location.longitude, data.location.latitude],
+      },
     })
     await scrape.insert()
     return scrape

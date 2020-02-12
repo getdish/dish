@@ -1,5 +1,6 @@
 import '@dish/common'
 
+import url from 'url'
 import _ from 'lodash'
 import axios_base from 'axios'
 import { QueueOptions, JobOptions } from 'bull'
@@ -121,7 +122,19 @@ export class Yelp extends WorkerJob {
         break
       }
     }
-    await Scrape.mergeData(id, { data_from_html_embed: data })
+    const uri = url.parse(
+      data.mapBoxProps.staticMapProps.src.replace('&amp;', '&'),
+      true
+    )
+
+    const coords = (uri.query.center as string).split(',')
+
+    let scrape = await Scrape.mergeData(id, { data_from_html_embed: data })
+    scrape.location = {
+      type: 'Point',
+      coordinates: [parseFloat(coords[0]), parseFloat(coords[1])],
+    }
+    await scrape.update()
     await this.getNextScrapes(id, data)
   }
 
