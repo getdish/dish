@@ -136,8 +136,8 @@ struct HomeContentExploreBy: View, Identifiable {
     @Environment(\.geometry) var appGeometry
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
-    let items = features.chunked(into: 3)
-    let spacing: CGFloat = 14
+    let items = features.split()
+    let spacing: CGFloat = 12
     
     enum ExploreContentType { case dish, cuisine }
     
@@ -147,7 +147,7 @@ struct HomeContentExploreBy: View, Identifiable {
     var body: some View {
         ZStack {
             ScrollView(.vertical, showsIndicators: false) {
-                VStack(spacing: 0) {
+                VStack(alignment: .leading, spacing: 0) {
                     if active {
                         HomeMainDrawerScrollEffects()
                     }
@@ -159,22 +159,40 @@ struct HomeContentExploreBy: View, Identifiable {
                          - 10
                     )
                     
-                    VStack(spacing: self.spacing) {
-                        ForEach(0 ..< self.items.count) { index in
-                            HStack(spacing: self.spacing) {
-                                ForEach(self.items[index]) { item in
-                                    DishButtonView(
-                                        dish: item,
-                                        at: .start
-//                                        display: .full,
-//                                        height: 100
-                                    )
-                                        .equatable()
+                    VStack {
+                        ForEach(0..<5) { i in
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(["🍣 Seafood", "🌶 Spicy", "🥗 Healthy + 💸 Cheap", "💸 Cheap", "Other"][i])
+                                    .font(.system(size: 14))
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color.white)
+                                    .modifier(TextShadowModifier())
+                                    .padding(.horizontal)
+                                
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    VStack(alignment: .leading, spacing: self.spacing) {
+                                        ForEach(0 ..< self.items.count) { index in
+                                            HStack(spacing: self.spacing) {
+                                                ForEach(self.items[index]) { item in
+                                                    DishButtonView(
+                                                        dish: item,
+                                                        at: .start
+                                                    )
+                                                        .equatable()
+                                                }
+                                                Spacer()
+                                            }
+                                            .padding(.horizontal)
+                                        }
+                                    }
+                                    .padding(.vertical)
                                 }
+                                
+                                Spacer().frame(height: 8)
                             }
-                            .padding(.horizontal)
                         }
                     }
+                    .padding(.top, 4)
                     
                     Spacer().frame(height: 20)
                     Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)

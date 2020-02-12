@@ -93,7 +93,6 @@ struct HomeMainView: View {
 //                            )
 
                     HomeMapOverlay()
-                        .drawingGroup()
                         .offset(y: mapHeight - 20)
                 }
                     .frameLimitedToScreen()
@@ -238,11 +237,43 @@ struct HomeMainView: View {
     }
 }
 
+extension UIView {
+    func drawShadow() {
+        let size = self.frame.size
+        self.clipsToBounds = true
+        let layer: CALayer = CALayer()
+        layer.backgroundColor = UIColor.lightGray.cgColor
+        layer.position = CGPoint(x: size.width / 2, y: -size.height / 2 + 0.5)
+        layer.bounds = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        layer.shadowColor = UIColor.darkGray.cgColor
+        layer.shadowOffset = CGSize(width: 0.5, height: 0.5)
+        layer.shadowOpacity = 0.8
+        layer.shadowRadius = 50.0
+        self.layer.addSublayer(layer)
+    }
+}
+
+struct InnerShadowView: UIViewRepresentable {
+    let size: Int
+    
+    func makeUIView(context: UIViewRepresentableContext<InnerShadowView>) -> UIView {
+        let view = UIView(frame: .zero)
+        view.backgroundColor = .red
+        view.drawShadow()
+        return view
+    }
+    
+    func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<InnerShadowView>) {
+    }
+}
+
+
 struct HomeMapOverlay: View {
     var body: some View {
         ZStack {
             HomeMapBackgroundGradient()
             HomeMapMask()
+            InnerShadowView(size: 20)
         }
     }
 
@@ -253,8 +284,8 @@ struct HomeMapOverlay: View {
             LinearGradient(
                 gradient: Gradient(
                     colors: self.colorScheme == .light
-                        ? [Color.black.opacity(0), Color.black.opacity(0.3), Color(white: 0.1).opacity(0.55)]
-                        : [Color.black.opacity(0), Color.black.opacity(0.3), Color(white: 0).opacity(0.55)]
+                        ? [Color.black.opacity(0), Color.black.opacity(0.3), Color(white: 0.1).opacity(0.65)]
+                        : [Color.black.opacity(0), Color.black.opacity(0.3), Color(white: 0).opacity(0.65)]
                 ),
                 startPoint: .top,
                 endPoint: .bottom
