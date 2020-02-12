@@ -167,7 +167,6 @@ struct HomeContentExploreBy: View, Identifiable {
                                     .foregroundColor(Color.white)
                                     .modifier(TextShadowStyle())
                                     .padding(.horizontal)
-                                    .invertColorScheme(i == 0)
                                 
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     VStack(alignment: .leading, spacing: self.spacing) {
@@ -297,6 +296,7 @@ struct HomeMapExplore: View {
                                 .font(.system(size: 18))
                         }
                         .modifier(TopNavButtonStyle())
+                        .invertColorScheme(index == 0)
                     }
                 }
                 .padding(.horizontal, 20)

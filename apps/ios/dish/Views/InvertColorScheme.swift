@@ -13,7 +13,9 @@ struct InvertColorScheme<Content>: View where Content: View {
     
     var body: some View {
         self.content
-            .environment(\.colorScheme, self.colorScheme == .dark ? .light : .dark)
+            .environment(\.colorScheme, self.invert
+                ? self.colorScheme == .dark ? .light : .dark
+                : self.colorScheme)
     }
 }
 
