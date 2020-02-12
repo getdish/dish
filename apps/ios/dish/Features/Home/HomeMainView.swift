@@ -121,7 +121,7 @@ struct HomeMainView: View {
                         .frameLimitedToScreen()
 
                     // filters
-                    VStack {    
+                    VStack {
                         HomeMainFilterBar()
                         Spacer()
                     }
@@ -139,6 +139,10 @@ struct HomeMainView: View {
                     )
                         .frame(height: App.searchBarHeight)
                         .padding(.horizontal, 12)
+                        .scaleEffect(state.dragState == .searchbar ? 1.1 : 1)
+                        .rotationEffect(.degrees(state.dragState == .searchbar ? 2 : 0))
+                        .animation(.spring(), value: state.dragState == .searchbar)
+                    
                     Spacer()
                 }
                     // this fixed a bug where it would focus search bar too easily
@@ -182,7 +186,6 @@ struct HomeMainView: View {
                 .frame(width: state.dragState == .pager ? App.screen.width : 0)
         }
             .clipped() // dont remove fixes bug cant click SearchBar
-            //                .shadow(color: Color.black.opacity(0.25), radius: 20, x: 0, y: 0)
             .simultaneousGesture(self.dragGesture)
             .environmentObject(self.state)
     }
@@ -248,34 +251,41 @@ struct HomeMapOverlay: View {
                     ? .systemUltraThinMaterialLight
                     : .systemUltraThinMaterialDark
                 )
-                
-                ZStack {
-                    LinearGradient(
-                        gradient: Gradient(
-                            colors: [Color.red, Color.blue]
-                            //                    self.colorScheme == .light
-                            //                        ? [Color.black.opacity(0), Color(white: 0.1).opacity(1)]
-                            //                        : [Color.black.opacity(0), Color(white: 0).opacity(1)]
-                        ),
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                    
-                    LinearGradient(
-                        gradient: Gradient(
-                            colors: [Color.black, Color.clear]
-                        ),
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                }
-                .opacity(0.85)
-                .drawingGroup()
             }
             .clipShape(
                 topCornerMask(
                     width: App.screen.width,
-                    height: App.screen.height * 1.5,
+                    height: App.screen.height,
+                    cornerRadius: 30
+                )
+            )
+            
+            ZStack {
+                LinearGradient(
+                    gradient: Gradient(
+                        colors: [Color.red, Color.blue]
+                        //                    self.colorScheme == .light
+                        //                        ? [Color.black.opacity(0), Color(white: 0.1).opacity(1)]
+                        //                        : [Color.black.opacity(0), Color(white: 0).opacity(1)]
+                    ),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                    .opacity(self.colorScheme == .light ? 0.25 : 0.85)
+                
+                LinearGradient(
+                    gradient: Gradient(
+                        colors: [Color.black, Color.clear]
+                    ),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                    .opacity(self.colorScheme == .light ? 0.25 : 0.85)
+            }
+            .clipShape(
+                topCornerMask(
+                    width: App.screen.width,
+                    height: App.screen.height,
                     cornerRadius: 30
                 )
             )

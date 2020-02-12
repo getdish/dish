@@ -74,7 +74,15 @@ struct HomeMainContent: View {
                 }
                 .animation(.none)
             }
-            .offset(y: self.homeState.mapHeight - self.homeState.searchBarYExtra)
+            .offset(y:
+                self.homeState.mapHeight - self.homeState.searchBarYExtra + (
+                    self.homeState.isSnappedToBottom
+                        ? 100
+                        : 0
+                )
+            )
+            .frameLimitedToScreen()
+            .clipped()
             .animation(.spring(response: 0.5))
             
             // results bar below map
@@ -186,10 +194,7 @@ struct HomeContentExploreBy: View, Identifiable {
                                         ForEach(0 ..< self.items.count) { index in
                                             HStack(spacing: self.spacing) {
                                                 ForEach(self.items[index]) { item in
-                                                    DishButtonView(
-                                                        dish: item,
-                                                        at: .start
-                                                    )
+                                                    DishButtonView(dish: item, at: .start)
                                                         .equatable()
                                                 }
                                                 Spacer()
@@ -197,6 +202,7 @@ struct HomeContentExploreBy: View, Identifiable {
                                             .padding(.horizontal)
                                         }
                                     }
+//                                    .drawingGroup()
                                     .padding(.vertical)
                                 }
                                 
@@ -286,22 +292,11 @@ struct HomeMainContentSearchPage: View {
 
 struct HomeMapExplore: View {
     @EnvironmentObject var store: AppStore
-    @State var x = true
     
     var body: some View {
         VStack(spacing: 0) {
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    Button(action: {
-                        self.x = !self.x
-                    }) {
-                        Text(self.x ? "🍽" : "🌎")
-                            .font(.system(size: 28))
-                            .modifier(TextShadowStyle())
-                    }
-                    
-                    Color.black.opacity(0.1).frame(width: 1, height: 12)
-                    
+                HStack(spacing: 12) {                    
                     ForEach(0 ..< 4) { index in
                         Button(action: {}) {
                             Text(labels[index])

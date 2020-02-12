@@ -6,6 +6,7 @@ struct HomeMainFilterBar: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var store: AppStore
     @State var wasOnSearchResults = false
+    @State var x = true
     
     var body: some View {
         ZStack {
@@ -18,15 +19,15 @@ struct HomeMainFilterBar: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     Group {
-//                        CustomButton2(action: {  }) {
-//                           Text("🔥")
-//                                .font(.system(size: 24))
+//                        DishButton(action: {
+//                            self.x = !self.x
+//                        }) {
+//                            Text(self.x ? "🍽" : "🌎")
+//                                .font(.system(size: 28))
+//                                .modifier(TextShadowStyle())
 //                        }
                         
-//                        Color.white.opacity(0.1).frame(width: 1)
-//                                Image(systemName: "line.horizontal.3.decrease.circle")
-//                                    .foregroundColor(.white)
-//                                    .opacity(0.3)
+                        Color.white.opacity(0.1).frame(width: 1)
                         
                         FilterButton(label: "$", fontSize: 20, action: {})
                             .frame(width: 50)
