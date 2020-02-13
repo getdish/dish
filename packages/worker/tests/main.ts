@@ -15,7 +15,7 @@ class WorkerTest extends WorkerJob {
   }
 }
 
-test.before(() => {
+test.before(async () => {
   const queue = new Queue('WorkerTest')
   queue.process((job: Job) => {
     const Worker = eval(job.data.className)

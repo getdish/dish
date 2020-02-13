@@ -19,16 +19,6 @@ export class WorkerJob {
   static job_config: JobOptions = {}
   queue!: Queue
 
-  async getQueue() {
-    if (typeof this.queue != 'undefined') {
-      return
-    }
-    this.queue = new BullQueue(this.constructor.name, {
-      redis: redisOptions,
-    })
-    await waitForBull(this.queue)
-  }
-
   async run(fn: string, args: any[] = []) {
     if (this[fn].constructor.name === 'AsyncFunction') {
       await this[fn](...args)
@@ -46,11 +36,11 @@ export class WorkerJob {
       fn: fn,
       args: args,
     }
-    await this.getQueue()
+    const queue = await getBullQueue(this.constructor.name)
     const config = (this.constructor as typeof WorkerJob).job_config
     console.log(`Adding job to worker (${this.constructor.name}):`, job)
-    this.queue.add(job, config)
-    this.queue.close()
+    queue.add(job, config)
+    queue.close()
   }
 }
 
@@ -58,21 +48,28 @@ export class WorkerJob {
 // get refused a connection to Redis during their startups. So here we just
 // wait until we're allowed to connect. I don't know why the connection is
 // refused as the Redis server never gets rebooted during normal deploys.
-export async function waitForBull(queue: Queue) {
+export async function getBullQueue(name: string, config: {} = {}) {
   let count = 0
-  const max_tries = 30
+  const max_tries = 300
+  let queue: Queue
   while (true) {
+    queue = new BullQueue(name, {
+      ...config,
+      redis: redisOptions,
+    })
     try {
       await queue.isReady()
       break
     } catch (e) {
+      queue.close()
       console.warn('Trying to startup up Bull queue again...')
       if (++count == max_tries) throw e
       if (e.message.includes('ECONNREFUSED')) {
-        await new Promise(r => setTimeout(r, 1000))
+        await new Promise(r => setTimeout(r, 2000))
       } else {
         throw e
       }
     }
   }
+  return queue
 }
