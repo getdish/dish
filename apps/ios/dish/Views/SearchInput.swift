@@ -23,6 +23,7 @@ struct SearchInputTagView: View {
     var body: some View {
         HStack(spacing: 8) {
             Text(tag.text)
+                .fixedSize()
                 .font(.system(size: fontSize))
             
             if tag.deletable {
@@ -114,7 +115,7 @@ struct SearchInput: View {
                                     fontSize: fontSize
                                 )
                                     .transition(.slide)
-                                    .animation(.linear(duration: 2))
+                                    .animation(.easeIn(duration: 0.3))
                                     .onTapGesture {
                                         if tag.deletable {
                                             if let index = self.tags.firstIndex(of: tag) {
