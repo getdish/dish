@@ -5,7 +5,7 @@ import Mapbox
 
 class DishMapViewStore: ObservableObject {
     var cancels: Set<AnyCancellable> = []
-    @Published var position: CurrentMapPosition? = nil
+    @Published var location: MapViewLocation? = nil
 }
 
 fileprivate let mapViewStore = DishMapViewStore()
@@ -13,12 +13,56 @@ fileprivate let mapViewStore = DishMapViewStore()
 // AppleMapView
 import MapKit
 import CoreLocation
+
+struct MapViewLocation: Equatable {
+    enum LocationType: Equatable {
+        case current
+        case location(lat: Double, long: Double)
+        case none
+        
+    }
+    
+    static let timeless = NSDate()
+    let center: LocationType
+    let radius: Double
+    let updatedAt: NSDate
+    
+    init(center: LocationType, radius: Double = 10000, refresh: Bool = false) {
+        self.center = center
+        self.radius = radius
+        self.updatedAt = refresh ? NSDate() : MapViewLocation.timeless
+    }
+    
+    var coordinate: CLLocationCoordinate2D? {
+        switch center {
+            case .current: return nil
+            case .none: return nil
+            case .location(let lat, let long):
+                return CLLocationCoordinate2D(latitude: lat, longitude: long)
+        }
+    }
+}
+
+extension MKMapView {
+    func topCenterCoordinate() -> CLLocationCoordinate2D {
+        return self.convert(CGPoint(x: self.frame.size.width / 2.0, y: 0), toCoordinateFrom: self)
+    }
+    func currentRadius() -> Double {
+        let centerLocation = CLLocation(latitude: self.centerCoordinate.latitude, longitude: self.centerCoordinate.longitude)
+        let topCenterCoordinate = self.topCenterCoordinate()
+        let topCenterLocation = CLLocation(latitude: topCenterCoordinate.latitude, longitude: topCenterCoordinate.longitude)
+        return centerLocation.distance(from: topCenterLocation)
+    }
+}
+
 struct AppleMapView: UIViewRepresentable {
     private let mapView = MKMapView()
     var currentLocation: MapViewLocation? = nil
+    var onChangeLocation: ((MapViewLocation) -> Void)? = nil
     
     func makeUIView(context: Context) -> MKMapView {
-        mapView
+        mapView.delegate = context.coordinator
+        return mapView
     }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
@@ -32,8 +76,8 @@ struct AppleMapView: UIViewRepresentable {
         Coordinator(self)
     }
     
-    final class Coordinator: NSObject {
-        var lastLocation: MapViewLocation = .init(.none)
+    final class Coordinator: NSObject, MKMapViewDelegate {
+        var lastLocation: MapViewLocation = .init(center: .none)
         var locationManager = CLLocationManager()
         var parent: AppleMapView
         
@@ -45,16 +89,28 @@ struct AppleMapView: UIViewRepresentable {
             parent.mapView
         }
         
+        func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+            if let cb = parent.onChangeLocation {
+                cb(MapViewLocation(
+                    center: .location(lat: mapView.centerCoordinate.latitude, long: mapView.centerCoordinate.longitude),
+                    radius: mapView.currentRadius()
+                ))
+            }
+        }
+        
         func setCurrentLocation(_ location: MapViewLocation?) {
             guard let location = location else {
                 return
             }
             if self.lastLocation != location {
-                switch location.at {
+                switch location.center {
                     case .current:
                         if let coordinate = locationManager.location?.coordinate {
-                            let regionRadius: Double = 1000
-                            let coordinateRegion = MKCoordinateRegion(center: coordinate, latitudinalMeters: regionRadius, longitudinalMeters: regionRadius)
+                            let coordinateRegion = MKCoordinateRegion(
+                                center: coordinate,
+                                latitudinalMeters: location.radius,
+                                longitudinalMeters: location.radius
+                            )
                             mapView.setRegion(coordinateRegion, animated: true)
                     }
                     case .location(lat: let lat, long: let long):
@@ -94,8 +150,6 @@ struct DishMapView: View {
     }
     
     func start() {
-        // sync map location to state
-        self.syncMapLocationToState()
         // mapHeight => zoom level
         self.syncMapHeightToZoomLevel()
     }
@@ -124,24 +178,30 @@ struct DishMapView: View {
                                     .zoomLevel(11)
                                     .frame(height: App.screen.height * 1.6)
                             } else if self.store.state.debugShowMap == 2 {
-                                MapView(
-                                    width: appWidth,
-                                    height: self.height,
-                                    padding: self.padding,
-                                    darkMode: self.colorScheme == .dark,
-                                    animate: self.animate,
-                                    moveToLocation: store.state.map.moveToLocation,
-                                    locations: [], //store.state.home.viewStates.last!.searchResults.results.map { $0.place },
-                                    onMapSettle: { position in
-                                        mapViewStore.position = position
-                                }
-                                )
-                                    .introspectMapView { mapView in
-                                        self.mapView = mapView
-                                }
+                                Spacer()
+//                                MapView(
+//                                    width: appWidth,
+//                                    height: self.height,
+//                                    padding: self.padding,
+//                                    darkMode: self.colorScheme == .dark,
+//                                    animate: self.animate,
+//                                    moveToLocation: store.state.map.moveToLocation,
+//                                    locations: [], //store.state.home.viewStates.last!.searchResults.results.map { $0.place },
+//                                    onMapSettle: { position in
+//                                        mapViewStore.position = position
+//                                    }
+//                                )
+//                                    .introspectMapView { mapView in
+//                                        self.mapView = mapView
+//                                }
                             } else {
                                 AppleMapView(
-                                    currentLocation: store.state.map.moveToLocation
+                                    currentLocation: store.state.map.moveToLocation,
+                                    onChangeLocation: { location in
+                                        if location != mapViewStore.location {
+                                            mapViewStore.location = location
+                                        }
+                                    }
                                 )
                                     .frame(height: App.screen.height * 1.6)
                             }
@@ -168,6 +228,16 @@ struct DishMapView: View {
                 Spacer()
             }
         }
+    }
+    
+    func syncMapLocationToState() {
+        mapViewStore.$location
+            .debounce(for: .milliseconds(200), scheduler: App.queueMain)
+            .sink { location in
+                guard let location = location else { return }
+                App.store.send(.map(.setLocation(location)))
+            }
+            .store(in: &mapViewStore.cancels)
     }
     
     func syncMapHeightToZoomLevel() {
@@ -208,25 +278,6 @@ struct DishMapView: View {
             }
             .store(in: &mapViewStore.cancels)
         }
-    }
-    
-    func syncMapLocationToState() {
-        mapViewStore.$position
-            .debounce(for: .milliseconds(200), scheduler: App.queueMain)
-            .sink { position in
-                if let position = position {
-                    App.store.send(
-                        .map(.setLocation(
-                            MapLocationState(
-                                radius: position.radius,
-                                latitude: position.center.latitude,
-                                longitude: position.center.longitude
-                            )
-                            ))
-                    )
-                }
-        }
-        .store(in: &mapViewStore.cancels)
     }
 }
 

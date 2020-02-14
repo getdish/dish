@@ -11,7 +11,7 @@ class HomeService {
     
     struct SearchQuery: Equatable {
         let query: String
-        let location: MapLocationState
+        let location: MapViewLocation
     }
     
     func affectSearchResults() {
@@ -19,7 +19,7 @@ class HomeService {
             .map { state in
                 SearchQuery(
                     query: state.home.viewStates.last!.queryString,
-                    location: state.map.location
+                    location: state.map.location ?? MapViewLocation(center: .none)
                 )
             }
             .removeDuplicates()
