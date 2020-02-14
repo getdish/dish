@@ -150,7 +150,7 @@ struct DishMapView: View {
     }
     
     func start() {
-        // mapHeight => zoom level
+        self.syncMapLocationToState()
         self.syncMapHeightToZoomLevel()
     }
     
