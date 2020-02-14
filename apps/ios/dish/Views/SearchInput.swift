@@ -71,9 +71,11 @@ struct SearchInput: View {
     @Environment(\.colorScheme) var colorScheme
     
     func handleEditingChanged(isEditing: Bool) {
-        self.showCancelButton = isEditing
-        if let cb = onEditingChanged {
-            cb(isEditing)
+        async {        
+            self.showCancelButton = isEditing
+            if let cb = onEditingChanged {
+                cb(isEditing)
+            }
         }
     }
     
