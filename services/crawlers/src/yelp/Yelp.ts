@@ -6,7 +6,7 @@ import axios_base from 'axios'
 import { QueueOptions, JobOptions } from 'bull'
 
 import { WorkerJob } from '@dish/worker'
-import { Scrape, ScrapeData } from '@dish/models'
+import { Restaurant, Scrape, ScrapeData } from '@dish/models'
 
 import { aroundCoords, boundingBoxFromCentre, geocode } from '../utils'
 
@@ -128,12 +128,20 @@ export class Yelp extends WorkerJob {
     )
 
     const coords = (uri.query.center as string).split(',')
-
+    const lon = parseFloat(coords[0])
+    const lat = parseFloat(coords[1])
     let scrape = await Scrape.mergeData(id, { data_from_html_embed: data })
+    const canonical = await Restaurant.saveCanonical(
+      lon,
+      lat,
+      scrape.data.data_from_map_search.name,
+      scrape.data.data_from_map_search.formattedAddress
+    )
     scrape.location = {
       type: 'Point',
-      coordinates: [parseFloat(coords[0]), parseFloat(coords[1])],
+      coordinates: [lon, lat],
     }
+    scrape.restaurant_id = canonical.id
     await scrape.update()
     await this.getNextScrapes(id, data)
   }

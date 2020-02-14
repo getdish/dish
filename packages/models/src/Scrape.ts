@@ -7,6 +7,7 @@ export class Scrape extends ModelBase<Scrape> {
   id_from_source!: string
   data!: ScrapeData
   location!: Point
+  restaurant_id!: string
 
   constructor(init?: Partial<Scrape>) {
     super()
@@ -18,7 +19,7 @@ export class Scrape extends ModelBase<Scrape> {
   }
 
   static fields() {
-    return ['source', 'id_from_source', 'data', 'location']
+    return ['source', 'id_from_source', 'data', 'location', 'restaurant_id']
   }
 
   static async mergeData(id: string, data: ScrapeData) {

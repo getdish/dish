@@ -2,6 +2,8 @@ import { ModelBase, Point } from './ModelBase'
 import { Dish } from './Dish'
 import { Scrape } from './Scrape'
 import { EnumType } from 'json-to-graphql-query'
+import { levenshteinDistance } from './utils'
+import { log } from 'util'
 
 export class Restaurant extends ModelBase<Restaurant> {
   name!: string
@@ -95,5 +97,52 @@ export class Restaurant extends ModelBase<Restaurant> {
     }
     const response = await ModelBase.hasura(query)
     return new Scrape(response.data.data.scrape[0])
+  }
+
+  static async saveCanonical(
+    lat: number,
+    lon: number,
+    name: string,
+    street_address: string
+  ) {
+    const nears = await Restaurant.findNear(lat, lon, 0.0005)
+    let found: Restaurant | undefined = undefined
+    for (const candidate of nears) {
+      if (
+        candidate.location.coordinates[0] == lon &&
+        candidate.location.coordinates[1] == lat
+      ) {
+        found = candidate
+        break
+      }
+
+      if (levenshteinDistance(candidate.name, name) <= 3) {
+        found = candidate
+        break
+      }
+
+      if (
+        street_address.length > 2 &&
+        candidate.address.includes(street_address)
+      ) {
+        found = candidate
+        break
+      }
+    }
+    if (found) {
+      console.log('Found existing canonical restaurant: ' + found.id)
+      return found
+    }
+    const restaurant = new Restaurant({
+      name: name,
+      address: street_address,
+      location: {
+        type: 'Point',
+        coordinates: [lon, lat],
+      },
+    })
+    await restaurant.insert()
+    console.log('Created new canonical restaurant: ' + restaurant.id)
+    return restaurant
   }
 }

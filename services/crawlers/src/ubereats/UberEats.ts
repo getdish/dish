@@ -5,7 +5,7 @@ import axios_base, { AxiosResponse } from 'axios'
 import { QueueOptions, JobOptions } from 'bull'
 
 import { WorkerJob } from '@dish/worker'
-import { Scrape } from '@dish/models'
+import { Scrape, Restaurant } from '@dish/models'
 
 import categories from './categories.json'
 
@@ -55,6 +55,8 @@ export class UberEats extends WorkerJob {
   async getCities() {
     let cities: string[] = []
     const response = await axios.post(CITIES, {})
+    console.log(response.data.data)
+
     for (let country of response.data.data) {
       for (let city of country.cities) {
         cities.push(`${city.cityDisplayName}, ${country.countryDisplayName}`)
@@ -157,6 +159,17 @@ export class UberEats extends WorkerJob {
 
   private async saveRestaurant(data: any, uuid: string) {
     console.log('Saving restaurant: ' + data.title)
+    const canonical = await Restaurant.saveCanonical(
+      data.location.longitude,
+      data.location.latitude,
+      data.title,
+      data.location.streetAddress
+    )
+    const scrape = await this.saveScrape(uuid, data, canonical.id)
+    return scrape
+  }
+
+  private async saveScrape(uuid: string, data: any, canonical_id: string) {
     const scrape = new Scrape({
       source: 'ubereats',
       id_from_source: uuid,
@@ -167,6 +180,7 @@ export class UberEats extends WorkerJob {
         type: 'Point',
         coordinates: [data.location.longitude, data.location.latitude],
       },
+      restaurant_id: canonical_id,
     })
     await scrape.insert()
     return scrape

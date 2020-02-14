@@ -240,6 +240,20 @@ export class ModelBase<T> {
     return await ModelBase.hasura(query)
   }
 
+  static async deleteAllFuzzyBy(key: string, value: string) {
+    const query = {
+      mutation: {
+        ['delete_' + this.lower_name()]: {
+          __args: {
+            where: { [key]: { _like: `%${value}%` } },
+          },
+          affected_rows: true,
+        },
+      },
+    }
+    return await ModelBase.hasura(query)
+  }
+
   private static ensureKeySyntax(query: {}) {
     ModelBase.traverse(query, (object, key, value) => {
       let fixed_key = key

@@ -31,8 +31,8 @@ const dish_fixture: Partial<Dish> = {
 }
 
 test.beforeEach(async t => {
-  await Restaurant.deleteAllBy('name', 'Test Restaurant')
-  await Dish.deleteAllBy('name', 'Test Dish')
+  await Restaurant.deleteAllFuzzyBy('name', 'Test')
+  await Dish.deleteAllFuzzyBy('name', 'Test')
   let restaurant = new Restaurant(restaurant_fixture)
   await restaurant.upsert()
   t.context.restaurant = restaurant
@@ -69,4 +69,40 @@ test('Finding a restaurant by name', async t => {
 test('Finding a restaurant by location', async t => {
   const restaurants = await Restaurant.findNear(50, 0, 100)
   t.is(restaurants[0].name, 'Test Restaurant')
+})
+
+test('Inserts a new canonical restaurant', async t => {
+  const canonical = await Restaurant.saveCanonical(
+    1,
+    51,
+    'Test Restaurant',
+    '123 The Street'
+  )
+  const restaurant = new Restaurant()
+  await restaurant.findOne('id', canonical.id)
+  t.is(restaurant.address, '123 The Street')
+})
+
+test('Identifies a canonical restaurant', async t => {
+  const canonical = await Restaurant.saveCanonical(
+    0,
+    50,
+    'Test Restaurant',
+    '123 The Street'
+  )
+  const restaurant = new Restaurant()
+  await restaurant.findOne('id', canonical.id)
+  t.deepEqual(restaurant.id, t.context.restaurant.id)
+})
+
+test('Identifies a similar restaurant', async t => {
+  const canonical = await Restaurant.saveCanonical(
+    0.00025,
+    50,
+    'Test Restaurant!',
+    '123 The Street'
+  )
+  const restaurant = new Restaurant()
+  await restaurant.findOne('id', canonical.id)
+  t.deepEqual(restaurant.id, t.context.restaurant.id)
 })
