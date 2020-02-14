@@ -87,10 +87,6 @@ struct HomeMainView: View {
                         .frameLimitedToScreen()
                         .clipped()
                         .opacity(animationState == .splash ? 0 : 1)
-//                        .animation(.spring(response: 0.8),
-//                                value: state.animationState == .animate
-//                                    || state.animationState == .controlled
-//                            )
 
                     HomeMapOverlay()
                         .offset(y: mapHeight - App.searchBarHeight / 2)

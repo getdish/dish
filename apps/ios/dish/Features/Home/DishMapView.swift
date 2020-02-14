@@ -2,6 +2,7 @@ import SwiftUI
 import CoreLocation
 import Combine
 import Mapbox
+import MapKit
 
 class DishMapViewStore: ObservableObject {
     var cancels: Set<AnyCancellable> = []
@@ -9,6 +10,15 @@ class DishMapViewStore: ObservableObject {
 }
 
 fileprivate let mapViewStore = DishMapViewStore()
+
+struct AppleMapView: UIViewRepresentable {
+    func makeUIView(context: Context) -> MKMapView {
+        MKMapView()
+    }
+    
+    func updateUIView(_ uiView: MKMapView, context: Context) {
+    }
+}
 
 struct DishMapView: View {
     @State var mapView: MapViewController? = nil
@@ -55,40 +65,45 @@ struct DishMapView: View {
                 ZStack(alignment: .topLeading) {
                     ZStack {
                         Group {
-//                            MapBoxView(annotations: self.annotations)
-//                                .styleURL(
-//                                    colorScheme == .dark
-//                                        ? URL(string: "mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja/draft")!
-//                                        : URL(string: "mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq/draft")!
-//
-//                                )
-//                                .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
-//                                .zoomLevel(11)
-//                                .frame(height: App.screen.height * 1.6)
-                            MapView(
-                                width: appWidth,
-                                height: self.height,
-                                padding: self.padding,
-                                darkMode: self.colorScheme == .dark,
-                                animate: self.animate,
-                                moveToLocation: store.state.map.moveToLocation,
-                                locations: [], //store.state.home.viewStates.last!.searchResults.results.map { $0.place },
-                                onMapSettle: { position in
-                                    mapViewStore.position = position
-                            }
-                            )
-                                .introspectMapView { mapView in
-                                    self.mapView = mapView
+                            if self.store.state.debugShowMap == 1 {
+                                MapBoxView(annotations: self.annotations)
+                                    .styleURL(
+                                        colorScheme == .dark
+                                            ? URL(string: "mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja/draft")!
+                                            : URL(string: "mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq/draft")!
+                                        
+                                )
+                                    .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
+                                    .zoomLevel(11)
+                                    .frame(height: App.screen.height * 1.6)
+                            } else if self.store.state.debugShowMap == 2 {
+                                MapView(
+                                    width: appWidth,
+                                    height: self.height,
+                                    padding: self.padding,
+                                    darkMode: self.colorScheme == .dark,
+                                    animate: self.animate,
+                                    moveToLocation: store.state.map.moveToLocation,
+                                    locations: [], //store.state.home.viewStates.last!.searchResults.results.map { $0.place },
+                                    onMapSettle: { position in
+                                        mapViewStore.position = position
+                                }
+                                )
+                                    .introspectMapView { mapView in
+                                        self.mapView = mapView
+                                }
+                            } else {
+                                AppleMapView()
                             }
                         }
                     }
                     
                     // prevent touch on left/right sides for dragging between cards
-//                    HStack {
-//                        Color.black.opacity(0.00001).frame(width: 24)
-//                        Color.clear
-//                        Color.black.opacity(0.00001).frame(width: 24)
-//                    }
+                    HStack {
+                        Color.black.opacity(0.00001).frame(width: 24)
+                        Color.clear
+                        Color.black.opacity(0.00001).frame(width: 24)
+                    }
                     
                     // keyboard dismiss (above map, below content)
                     if self.keyboard.state.height > 0 {

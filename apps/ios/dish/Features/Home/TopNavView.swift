@@ -123,7 +123,7 @@ struct TopNavHome: View {
                         
                         
                         Button(action: {
-                            App.enterRepl = true
+                            App.store.send(.setDebugShowMap(App.store.state.debugShowMap + 1 % 3))
                         }) {
                             VStack {
                                 Image(systemName: "location.fill")

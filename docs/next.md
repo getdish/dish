@@ -9,11 +9,6 @@
 
 # apps/ios
 
-~ 4 months?
-
-- Splash
-- Welcome
-- Login/Auth
 - Explore
   - Make category click work "Seafood"
   - Make going between panes have simple animation
@@ -45,3 +40,6 @@
   - Stickers
   - Current restaurant name
   - Rating selection
+- Splash
+- Welcome
+- Login/Auth
