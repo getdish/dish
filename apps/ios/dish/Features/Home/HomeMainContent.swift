@@ -298,15 +298,17 @@ struct HomeMapExplore: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 9) {
                     ForEach(0 ..< 4) { index in
-                        Button(action: {
+                        DishButton(action: {
                             self.index = index
                         }) {
-                            Text(labels[index])
-                                .font(.system(size: 17))
+                            HStack {
+                                Text(labels[index])
+                                    .font(.system(size: 17))
+                            }
+                            .padding(.horizontal, 2)
+                            .modifier(TopNavButtonStyle(height: 42))
+                            .invertColorScheme(index == self.index)
                         }
-                        .padding(.horizontal, 2)
-                        .modifier(TopNavButtonStyle(height: 42))
-                        .invertColorScheme(index == self.index)
                     }
                 }
                 .padding(.horizontal, 20)
