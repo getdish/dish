@@ -38,17 +38,19 @@ struct TopNavViewContent: View {
 struct TopNavButtonStyle: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
     
+    var height = App.topNavHeight - App.topNavPad * 2
+    
     func body(content: Content) -> some View {
         Group {
             if colorScheme == .dark {
                 content
-                    .frame(height: App.topNavHeight - App.topNavPad * 2)
+                    .frame(height: self.height)
                     .padding(.horizontal, 8)
                     .background(Color.black.opacity(0.2))
                     .background(BlurView(style: .systemThickMaterialDark))
             } else {
                 content
-                    .frame(height: App.topNavHeight - App.topNavPad * 2)
+                    .frame(height: self.height)
                     .padding(.horizontal, 8)
                     .background(Color.white.opacity(0.025))
                     .background(Color.black.opacity(0.025))

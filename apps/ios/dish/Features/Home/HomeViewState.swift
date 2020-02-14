@@ -286,7 +286,7 @@ class HomeViewState: ObservableObject {
             if toBottom {
                 self.y = self.snappedToBottomMapHeight
             } else {
-                self.y = self.startSnapToBottomAt
+                self.y = self.startSnapToBottomAt - 150
             }
         }
         

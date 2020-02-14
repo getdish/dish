@@ -2,7 +2,7 @@ import SwiftUI
 import Combine
 
 fileprivate let items = features.chunked(into: 2)
-fileprivate let labels = ["🔥 Local Fav", "🍣 Seafood", "🌶 Spicy", "🥗 Healthy + 💸 Cheap", "💸 Cheap", "Other"]
+fileprivate let labels = ["🔥 Locally", "🍽 Chef Spots", "🍣 Seafood", "🌶 Spice", "🥗 Healthy", "💸 Hole-in-the-wall", "🥩 Meat Lovers"]
 
 struct HomeMainContentContainer<Content>: View where Content: View {
     @State var animatePosition: MagicItemPosition = .start
@@ -292,20 +292,22 @@ struct HomeMainContentSearchPage: View {
 
 struct HomeMapExplore: View {
     @EnvironmentObject var store: AppStore
+    @State var index = 0
     
     var body: some View {
         VStack(spacing: 0) {
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 11) {
+                HStack(spacing: 9) {
                     ForEach(0 ..< 4) { index in
-                        Button(action: {}) {
+                        Button(action: {
+                            self.index = index
+                        }) {
                             Text(labels[index])
-                                .font(.system(size: 16))
+                                .font(.system(size: 17))
                         }
-                        .padding(.vertical, 3)
                         .padding(.horizontal, 2)
-                        .modifier(TopNavButtonStyle())
-                        .invertColorScheme(index == 0)
+                        .modifier(TopNavButtonStyle(height: 48))
+                        .invertColorScheme(index == self.index)
                     }
                 }
                 .padding(.horizontal, 20)
@@ -314,17 +316,31 @@ struct HomeMapExplore: View {
             }
             
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(0 ..< features.count) { index in
-                        DishButtonView(
-                            dish: features[index],
-                            at: .end
-                        ).equatable()
+                VStack {
+                    HStack(spacing: 11) {
+                        ForEach(0 ..< features.count) { index in
+                            DishButtonView(
+                                dish: features[index],
+                                at: .end
+                            ).equatable()
+                        }
                     }
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 9)
+                    .padding(.top, 6)
+
+                    HStack(spacing: 11) {
+                        ForEach(0 ..< features.count) { index in
+                            DishButtonView(
+                                dish: features[features.count - index - 1],
+                                at: .end
+                            ).equatable()
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 18)
+                    .padding(.top, 6)
                 }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 18)
-                .padding(.top, 9)
             }
         }
     }
