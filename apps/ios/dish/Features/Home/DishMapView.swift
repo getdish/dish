@@ -103,6 +103,7 @@ struct AppleMapView: UIViewRepresentable {
                 return
             }
             if self.lastLocation != location {
+                self.lastLocation = location
                 switch location.center {
                     case .current:
                         if let coordinate = locationManager.location?.coordinate {
@@ -232,9 +233,10 @@ struct DishMapView: View {
     
     func syncMapLocationToState() {
         mapViewStore.$location
-            .debounce(for: .milliseconds(200), scheduler: App.queueMain)
+            .debounce(for: .milliseconds(500), scheduler: App.queueMain)
             .sink { location in
                 guard let location = location else { return }
+                print("set to \(location)")
                 App.store.send(.map(.setLocation(location)))
             }
             .store(in: &mapViewStore.cancels)
