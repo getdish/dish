@@ -2,7 +2,6 @@ import SwiftUI
 import CoreLocation
 import Combine
 import Mapbox
-import MapKit
 
 class DishMapViewStore: ObservableObject {
     var cancels: Set<AnyCancellable> = []
@@ -11,12 +10,60 @@ class DishMapViewStore: ObservableObject {
 
 fileprivate let mapViewStore = DishMapViewStore()
 
+// AppleMapView
+import MapKit
+import CoreLocation
 struct AppleMapView: UIViewRepresentable {
+    private let mapView = MKMapView()
+    var currentLocation: MapViewLocation? = nil
+    
     func makeUIView(context: Context) -> MKMapView {
-        MKMapView()
+        mapView
     }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
+        let crd = context.coordinator
+        if crd.lastLocation != self.currentLocation {
+            crd.setCurrentLocation(self.currentLocation)
+        }
+    }
+    
+    func makeCoordinator() -> AppleMapView.Coordinator {
+        Coordinator(self)
+    }
+    
+    final class Coordinator: NSObject {
+        var lastLocation: MapViewLocation = .init(.none)
+        var locationManager = CLLocationManager()
+        var parent: AppleMapView
+        
+        init(_ parent: AppleMapView) {
+            self.parent = parent
+        }
+        
+        var mapView: MKMapView {
+            parent.mapView
+        }
+        
+        func setCurrentLocation(_ location: MapViewLocation?) {
+            guard let location = location else {
+                return
+            }
+            if self.lastLocation != location {
+                switch location.at {
+                    case .current:
+                        if let coordinate = locationManager.location?.coordinate {
+                            let regionRadius: Double = 1000
+                            let coordinateRegion = MKCoordinateRegion(center: coordinate, latitudinalMeters: regionRadius, longitudinalMeters: regionRadius)
+                            mapView.setRegion(coordinateRegion, animated: true)
+                    }
+                    case .location(lat: let lat, long: let long):
+                        print("todo")
+                    case .none:
+                        print("todo")
+                }
+            }
+        }
     }
 }
 
@@ -93,7 +140,10 @@ struct DishMapView: View {
                                         self.mapView = mapView
                                 }
                             } else {
-                                AppleMapView()
+                                AppleMapView(
+                                    currentLocation: store.state.map.moveToLocation
+                                )
+                                    .frame(height: App.screen.height * 1.6)
                             }
                         }
                     }
