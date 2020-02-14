@@ -94,6 +94,7 @@ struct HomeMainView: View {
 
                     HomeMapOverlay()
                         .offset(y: mapHeight - App.searchBarHeight / 2)
+                        .animation(.spring())
                 }
                     .frameLimitedToScreen()
                     .opacity(state.showCamera ? 0 : 1)
@@ -127,6 +128,7 @@ struct HomeMainView: View {
                     }
                         .frameLimitedToScreen()
                         .offset(y: mapHeight + App.searchBarHeight / 2)
+                        .animation(.spring())
                 }
                 .opacity(state.showCamera ? 0 : 1)
             }
@@ -139,9 +141,9 @@ struct HomeMainView: View {
                     )
                         .frame(height: App.searchBarHeight)
                         .padding(.horizontal, 12)
-                        .scaleEffect(state.dragState == .searchbar ? 1.1 : 1)
-                        .rotationEffect(.degrees(state.dragState == .searchbar ? 2 : 0))
-                        .animation(.spring(), value: state.dragState == .searchbar)
+//                        .scaleEffect(state.dragState == .searchbar ? 1.1 : 1)
+//                        .rotationEffect(.degrees(state.dragState == .searchbar ? 2 : 0))
+//                        .animation(.spring(), value: state.dragState == .searchbar)
                     
                     Spacer()
                 }

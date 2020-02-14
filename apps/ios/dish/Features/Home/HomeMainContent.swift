@@ -144,7 +144,6 @@ struct HomeContentExploreBy: View, Identifiable {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
     let items = features.split()
-    let spacing: CGFloat = 12
     
     enum ExploreContentType { case dish, cuisine }
     
@@ -190,9 +189,9 @@ struct HomeContentExploreBy: View, Identifiable {
                                 .padding(.horizontal)
                                 
                                 ScrollView(.horizontal, showsIndicators: false) {
-                                    VStack(alignment: .leading, spacing: self.spacing) {
+                                    VStack(alignment: .leading, spacing: 10) {
                                         ForEach(0 ..< self.items.count) { index in
-                                            HStack(spacing: self.spacing) {
+                                            HStack(spacing: 8) {
                                                 ForEach(self.items[index]) { item in
                                                     DishButtonView(dish: item, at: .start)
                                                         .equatable()
@@ -306,7 +305,7 @@ struct HomeMapExplore: View {
                                 .font(.system(size: 17))
                         }
                         .padding(.horizontal, 2)
-                        .modifier(TopNavButtonStyle(height: 48))
+                        .modifier(TopNavButtonStyle(height: 42))
                         .invertColorScheme(index == self.index)
                     }
                 }
@@ -317,7 +316,7 @@ struct HomeMapExplore: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 VStack {
-                    HStack(spacing: 11) {
+                    HStack(spacing: 6) {
                         ForEach(0 ..< features.count) { index in
                             DishButtonView(
                                 dish: features[index],
@@ -326,20 +325,20 @@ struct HomeMapExplore: View {
                         }
                     }
                     .padding(.horizontal, 20)
-                    .padding(.bottom, 9)
-                    .padding(.top, 6)
+                    .padding(.bottom, 6 + 9)
+                    .padding(.top, 3)
 
-                    HStack(spacing: 11) {
-                        ForEach(0 ..< features.count) { index in
-                            DishButtonView(
-                                dish: features[features.count - index - 1],
-                                at: .end
-                            ).equatable()
-                        }
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 18)
-                    .padding(.top, 6)
+//                    HStack(spacing: 11) {
+//                        ForEach(0 ..< features.count) { index in
+//                            DishButtonView(
+//                                dish: features[features.count - index - 1],
+//                                at: .end
+//                            ).equatable()
+//                        }
+//                    }
+//                    .padding(.horizontal, 20)
+//                    .padding(.bottom, 18)
+//                    .padding(.top, 6)
                 }
             }
         }
