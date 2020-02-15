@@ -1,6 +1,7 @@
 // https://gist.github.com/budidino/8585eecd55fd4284afaaef762450f98e
 
 import Foundation
+import SwiftUI
 
 extension String {
     enum TruncationPosition {
@@ -24,5 +25,19 @@ extension String {
             case .tail:
                 return self.prefix(limit) + leader
         }
+    }
+}
+
+extension String {
+    func image(size: Double = 24) -> UIImage? {
+        let size = CGSize(width: size, height: size)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        UIColor.clear.set()
+        let rect = CGRect(origin: .zero, size: size)
+        UIRectFill(CGRect(origin: .zero, size: size))
+        (self as AnyObject).draw(in: rect, withAttributes: [.font: UIFont.systemFont(ofSize: 24)])
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 }

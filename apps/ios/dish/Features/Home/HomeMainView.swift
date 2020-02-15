@@ -124,7 +124,7 @@ struct HomeMainView: View {
                     }
                         .frameLimitedToScreen()
                         .offset(y: mapHeight + App.searchBarHeight / 2)
-                        .animation(.spring())
+                        .animation(.spring(response: 1.5))
                 }
                 .opacity(state.showCamera ? 0 : 1)
             }
