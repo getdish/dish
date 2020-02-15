@@ -73,14 +73,26 @@ resource "kubernetes_ingress" "rio-ingress" {
         "*.rio.${var.dish_domain}",
         "lab.${var.dish_domain}"
       ]
-      secret_name = "rio-wildcard-tls"
+      secret_name = "rio-tls"
     }
     backend {
       service_name = "gateway-proxy"
       service_port = 80
     }
     rule {
-      host = "*.${var.dish_domain}"
+      host = "*.rio.${var.dish_domain}"
+      http {
+        path {
+          path = "/*"
+          backend {
+            service_name = "gateway-proxy"
+            service_port = 80
+          }
+        }
+      }
+    }
+    rule {
+      host = "lab.${var.dish_domain}"
       http {
         path {
           path = "/*"
