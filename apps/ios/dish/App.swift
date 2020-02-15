@@ -26,6 +26,7 @@ class AppModel {
     // flags
     let enableMap = true
     let enableMapAutoZoom = false
+    let enableMapFlags = true
     let enableContent = true
     let enableCamera = true
 

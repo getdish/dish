@@ -234,10 +234,9 @@ struct HomeMainDrawerScrollEffects: View {
     @EnvironmentObject var homeState: HomeViewState
 
     var body: some View {
-        Color.clear
-//        ScrollListener(throttle: 12.0) { frame in
-//            self.homeState.setScrollY(frame)
-//        }
+        ScrollListener(throttle: 32.0) { frame in
+            self.homeState.setScrollY(frame)
+        }
     }
 }
 

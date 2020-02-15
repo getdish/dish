@@ -133,10 +133,12 @@ struct AppleMapView: UIViewRepresentable {
                         annotationView.layer.zPosition = 10
 //                        annotationView.animatesDrop = true
                         annotationView.displayPriority = .required
-                        if let text = annotation.title??.replacingOccurrences(of: "flag-", with: "") {
-                            let flagImage = text.image()
-                            annotationView.image = flagImage
-                            flagMap[annotation.title!!] = flagImage
+                        if App.enableMapFlags == true {
+                            if let text = annotation.title??.replacingOccurrences(of: "flag-", with: "") {
+                                let flagImage = text.image()
+                                annotationView.image = flagImage
+                                flagMap[annotation.title!!] = flagImage
+                            }
                         }
                     }
                 } else {
@@ -158,8 +160,10 @@ struct AppleMapView: UIViewRepresentable {
             
             if let annotationView = annotationView {
                 annotationView.displayPriority = .required
-                if let index = flagMap.firstIndex(where: { $0.key == annotation.title }) {
-                    annotationView.image = flagMap[index].value
+                if App.enableMapFlags == true {
+                    if let index = flagMap.firstIndex(where: { $0.key == annotation.title }) {
+                        annotationView.image = flagMap[index].value
+                    }
                 }
             }
             

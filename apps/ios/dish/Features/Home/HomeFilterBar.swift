@@ -50,6 +50,7 @@ struct HomeMainFilterBar: View {
                         FilterButton(label: "Cash Only", fontSize: 15, action: {})
                             .frame(width: 110)
                     }
+//                    .drawingGroup()
                 }
                 .padding(.vertical, App.filterBarPad)
                 .padding(.horizontal, 24)

@@ -123,8 +123,12 @@ struct HomeMainView: View {
                         Spacer()
                     }
                         .frameLimitedToScreen()
-                        .offset(y: mapHeight + App.searchBarHeight / 2)
-                        .animation(.spring(response: 1.5))
+                    .offset(
+                        y: mapHeight + App.searchBarHeight / 2 + (
+                            state.hasScrolled == .more ? -App.filterBarHeight - App.searchBarHeight : 0
+                        )
+                    )
+                        .animation(.spring()) // response: 0.8 (slows down?)
                 }
                 .opacity(state.showCamera ? 0 : 1)
             }
