@@ -6,7 +6,9 @@ import { useOvermind } from './overmind'
 const Sidebar = () => {
   const { state, actions } = useOvermind()
   const [showDishes, setShowDishes] = useState(false)
-  const [showScrape, setShowScrape] = useState(false)
+  const [showYelp, setShowYelp] = useState(false)
+  const [showUber, setShowUber] = useState(false)
+  const [showPhotos, setShowPhotos] = useState(false)
 
   useEffect(() => {
     startWatchingStats()
@@ -20,7 +22,7 @@ const Sidebar = () => {
 
   const renderRestaurant = () => {
     const restaurant = state.selected.model
-    const scrape = state.selected.scrape
+    const scrapes = state.selected.scrapes
     if (!restaurant.name) {
       return
     }
@@ -28,6 +30,15 @@ const Sidebar = () => {
       <>
         <h3 id="restaurant-details">{restaurant.name}</h3>
         <img width="100%" src={restaurant.image} />
+        <ul>
+          <li>
+            Categories:{' '}
+            {restaurant.categories && restaurant.categories.join(', ')}
+          </li>
+          <li>Address: {restaurant.address}</li>
+          <li>Telephone: {restaurant.telephone}</li>
+          <li>Rating: {restaurant.rating}</li>
+        </ul>
         <div className="data_section">
           <button onClick={() => setShowDishes(!showDishes)}>
             Dishes ({restaurant.dishes.length})
@@ -50,10 +61,33 @@ const Sidebar = () => {
           )}
         </div>
         <div className="data_section">
-          <button onClick={() => setShowScrape(!showScrape)}>
-            Scraped Data ({roughSizeOfObject(scrape)}k)
+          <button onClick={() => setShowPhotos(!showPhotos)}>
+            Photos ({restaurant.photos ? restaurant.photos.length : 0})
           </button>
-          {showScrape && <pre>{util.inspect(scrape, { depth: Infinity })}</pre>}
+          {showPhotos && (
+            <div>
+              {restaurant.photos &&
+                restaurant.photos.map(src => {
+                  return <img width="200px" src={src} alt="" />
+                })}
+            </div>
+          )}
+        </div>
+        <div className="data_section">
+          <button onClick={() => setShowYelp(!showYelp)}>
+            Yelp Scrape ({roughSizeOfObject(scrapes.yelp)}k)
+          </button>
+          {showYelp && (
+            <pre>{util.inspect(scrapes.yelp, { depth: Infinity })}</pre>
+          )}
+        </div>
+        <div className="data_section">
+          <button onClick={() => setShowUber(!showUber)}>
+            UberEats Scrape ({roughSizeOfObject(scrapes.ubereats)}k)
+          </button>
+          {showUber && (
+            <pre>{util.inspect(scrapes.ubereats, { depth: Infinity })}</pre>
+          )}
         </div>
       </>
     )

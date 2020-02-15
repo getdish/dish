@@ -8,7 +8,9 @@ type LabState = {
   selected: {
     id: string
     model: Restaurant
-    scrape: ScrapeData
+    scrapes: {
+      [source: string]: ScrapeData
+    }
   }
   stats: {
     restaurant_count: number
@@ -22,7 +24,10 @@ let state: LabState = {
   selected: {
     id: '',
     model: {} as Restaurant,
-    scrape: {},
+    scrapes: {
+      yelp: {},
+      ubereats: {},
+    },
   },
   stats: {
     restaurant_count: 0,
@@ -56,11 +61,10 @@ const getAllDataForRestaurant: AsyncAction = async ({
   const restaurant = new Restaurant()
   await restaurant.findOne('id', state.selected.id)
   state.selected.model = restaurant
-  const scrape = await Restaurant.getLatestScrape(
-    'yelp',
-    state.restaurants[state.selected.id].name
-  )
-  state.selected.scrape = scrape[0]
+  state.selected.scrapes = {
+    yelp: (await restaurant.getLatestScrape('yelp')).data,
+    ubereats: (await restaurant.getLatestScrape('ubereats')).data,
+  }
 }
 
 const getStats: AsyncAction = async ({ state }: { state: LabState }) => {
