@@ -19,13 +19,13 @@ struct DishMapView: View {
     var height: CGFloat = 100
     var animate: Bool = false
 
-    var annotations: [MKPointAnnotation] {
+    var markers: [MapMarker] {
         let results = Selectors.home.lastState().searchResults.results
         return results.map { result in
-            let annotation = MKPointAnnotation()
-            annotation.title =  result.name
-            annotation.coordinate = result.coordinate
-            return annotation
+            MapMarker(
+                title: result.name,
+                coordinate: result.coordinate
+            )
         }
     }
     
@@ -44,51 +44,16 @@ struct DishMapView: View {
             
             VStack {
                 ZStack(alignment: .topLeading) {
-                    ZStack {
-                        Group {
-                            if self.store.state.debugShowMap == 1 {
-                                Spacer()
-//                                MapBoxView(annotations: self.annotations)
-//                                    .styleURL(
-//                                        colorScheme == .dark
-//                                            ? URL(string: "mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja/draft")!
-//                                            : URL(string: "mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq/draft")!
-//
-//                                )
-//                                    .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
-//                                    .zoomLevel(11)
-//                                    .frame(height: App.screen.height * 1.6)
-                            } else if self.store.state.debugShowMap == 2 {
-                                Spacer()
-//                                MapView(
-//                                    width: appWidth,
-//                                    height: self.height,
-//                                    padding: self.padding,
-//                                    darkMode: self.colorScheme == .dark,
-//                                    animate: self.animate,
-//                                    moveToLocation: store.state.map.moveToLocation,
-//                                    locations: [], //store.state.home.viewStates.last!.searchResults.results.map { $0.place },
-//                                    onMapSettle: { position in
-//                                        mapViewStore.position = position
-//                                    }
-//                                )
-//                                    .introspectMapView { mapView in
-//                                        self.mapView = mapView
-//                                }
-                            } else {
-                                AppleMapView(
-                                    annotations: self.annotations,
-                                    currentLocation: store.state.map.moveToLocation,
-                                    onChangeLocation: { location in
-                                        if location != mapViewStore.location {
-                                            mapViewStore.location = location
-                                        }
-                                    }
-                                )
-                                    .frame(height: App.screen.height * 1.6)
+                    AppleMapView(
+                        markers: self.markers,
+                        currentLocation: store.state.map.moveToLocation,
+                        onChangeLocation: { location in
+                            if location != mapViewStore.location {
+                                mapViewStore.location = location
                             }
                         }
-                    }
+                    )
+                        .frame(height: App.screen.height * 1.6)
                     
                     // prevent touch on left/right sides for dragging between cards
                     HStack {
@@ -242,6 +207,15 @@ fileprivate let mapViewStore = DishMapViewStore()
 import MapKit
 import CoreLocation
 
+struct MapMarker: Equatable {
+    let groupId: String = ""
+    let title: String
+    let subtitle: String? = nil
+    let coordinate: CLLocationCoordinate2D
+    let color: UIColor = .gray
+    let imageName: String = "pin"
+}
+
 struct MapViewLocation: Equatable {
     enum LocationType: Equatable {
         case current
@@ -303,7 +277,7 @@ extension CLLocationCoordinate2D: Equatable {
 
 struct AppleMapView: UIViewRepresentable {
     private let mapView = MKMapView()
-    var annotations: [MKPointAnnotation]? = nil
+    var markers: [MapMarker]? = nil
     var currentLocation: MapViewLocation? = nil
     var onChangeLocation: ((MapViewLocation) -> Void)? = nil
     
@@ -315,7 +289,7 @@ struct AppleMapView: UIViewRepresentable {
     func updateUIView(_ uiView: MKMapView, context: Context) {
         let crd = context.coordinator
         crd.updateCurrentLocation(self.currentLocation)
-        crd.updateAnnotations(self.annotations)
+        crd.updateMarkers(self.markers)
     }
     
     func makeCoordinator() -> AppleMapView.Coordinator {
@@ -323,7 +297,7 @@ struct AppleMapView: UIViewRepresentable {
     }
     
     final class Coordinator: NSObject, MKMapViewDelegate {
-        var lastAnnotations: [MKPointAnnotation] = []
+        var lastMarkers: [MapMarker] = []
         var lastLocation: MapViewLocation = .init(center: .none)
         var locationManager = CLLocationManager()
         var parent: AppleMapView
@@ -356,39 +330,17 @@ struct AppleMapView: UIViewRepresentable {
             if annotationView == nil {
 //                annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "marker")
                 annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "marker")
-                if case let annotationView as MKMarkerAnnotationView = annotationView {
+                
+                if case let annotationView as MKMarkerAnnotationView = annotationView,
+                    let marker = self.lastMarkers.first(where: { $0.coordinate == annotation.coordinate }) {
                     annotationView.annotation = annotation
                     annotationView.isEnabled = true
                     annotationView.canShowCallout = true
                     annotationView.animatesWhenAdded = false
-                    annotationView.glyphImage = UIImage(named: "pin")
-                    
-                    let item = [
-                        (UIColor.gray, "gray"),
-                        (UIColor.blue, "blue"),
-                        (UIColor.black, "black"),
-                        (UIColor.red, "red"),
-                        (UIColor.orange, "orange"),
-                        (UIColor.purple, "purple")
-                    ][0]
-                    
-                    annotationView.markerTintColor = item.0
-                    annotationView.clusteringIdentifier = item.1
+                    annotationView.glyphImage = UIImage(named: marker.imageName)
+                    annotationView.markerTintColor = marker.color
+                    annotationView.clusteringIdentifier = marker.groupId
                 }
-                
-//                annotationView = CustomAnnotationView(annotation: annotation, reuseIdentifier: annotationIdentifier)
-//                if case let annotationView as CustomAnnotationView = annotationView {
-//                    annotationView.isEnabled = true
-//                    annotationView.canShowCallout = true
-//                    annotationView.label = UILabel(frame: CGRect(x: 5.5, y: 11.0, width: 90.0, height: 30.0))
-//                    if let label = annotationView.label {
-//                        label.font = UIFont(name: "HelveticaNeue", size: 22.0)
-//                        label.textAlignment = .left
-//                        label.textColor = UIColor(white: 0, alpha: 1)
-//                        label.adjustsFontSizeToFitWidth = true
-//                        annotationView.addSubview(label)
-//                    }
-//                }
             }
 
 //            if case let annotationView as CustomAnnotationView = annotationView {
@@ -403,26 +355,29 @@ struct AppleMapView: UIViewRepresentable {
             return annotationView
         }
         
-        func contains(_ a: [MKPointAnnotation], b: MKPointAnnotation) -> Bool {
-            a.reduce(false) { Bool(Bool($0) || ($1.coordinate == b.coordinate)) }
-        }
-        
-        func updateAnnotations(_ annotations: [MKPointAnnotation]?) {
-            guard let annotations = annotations else { return }
-            if annotations.elementsEqual(lastAnnotations) {
+        func updateMarkers(_ markers: [MapMarker]?) {
+            guard let markers = markers else { return }
+            if markers.elementsEqual(lastMarkers) {
                 return
             }
-            lastAnnotations.forEach { last in
-                if !contains(annotations, b: last) {
-                    mapView.removeAnnotation(last)
+            lastMarkers.forEach { last in
+                if !markers.contains(last) {
+                    mapView.removeAnnotation(createAnnotation(last))
                 }
             }
-            annotations.forEach { next in
-                if !contains(lastAnnotations, b: next) {
-                    mapView.addAnnotation(next)
+            markers.forEach { next in
+                if !markers.contains(next) {
+                    mapView.addAnnotation(createAnnotation(next))
                 }
             }
-            self.lastAnnotations = annotations
+            self.lastMarkers = markers
+        }
+        
+        func createAnnotation(_ marker: MapMarker) -> MKAnnotation {
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = marker.coordinate
+            annotation.title = marker.title
+            return annotation
         }
         
         func updateCurrentLocation(_ location: MapViewLocation?) {
