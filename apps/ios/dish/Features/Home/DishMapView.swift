@@ -355,6 +355,18 @@ struct AppleMapView: UIViewRepresentable {
                     annotationView.canShowCallout = true
                     annotationView.animatesWhenAdded = true
                     annotationView.glyphImage = UIImage(named: "pin")
+                    
+                    let item = [
+                        (UIColor.gray, "gray"),
+                        (UIColor.blue, "blue"),
+                        (UIColor.black, "black"),
+                        (UIColor.red, "red"),
+                        (UIColor.orange, "orange"),
+                        (UIColor.purple, "purple")
+                    ][0]
+                    
+                    annotationView.markerTintColor = item.0
+                    annotationView.clusteringIdentifier = item.1
                 }
                 
 //                annotationView = CustomAnnotationView(annotation: annotation, reuseIdentifier: annotationIdentifier)
@@ -386,6 +398,7 @@ struct AppleMapView: UIViewRepresentable {
         
         func updateAnnotations(_ annotations: [MKPointAnnotation]?) {
             guard let annotations = annotations else { return }
+            mapView.removeAnnotations(mapView.annotations)
             mapView.addAnnotations(annotations)
 //            let annotation = MKPointAnnotation()
 //            annotation.coordinate = CLLocationCoordinate2D(latitude: /* latitude */, longitude: /* longitude */)
