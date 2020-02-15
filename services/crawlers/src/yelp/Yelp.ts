@@ -2,7 +2,7 @@ import '@dish/common'
 
 import url from 'url'
 import _ from 'lodash'
-import axios_base from 'axios'
+import axios_base, { AxiosResponse, AxiosRequestConfig } from 'axios'
 import { QueueOptions, JobOptions } from 'bull'
 
 import { WorkerJob } from '@dish/worker'
@@ -13,11 +13,16 @@ import { aroundCoords, boundingBoxFromCentre, geocode } from '../utils'
 const YELP_DOMAIN = process.env.YELP_PROXY || 'https://www.yelp.com'
 const BB_SEARCH = '/search/snippet?cflt=restaurants&l='
 
+const user_agent = Math.random()
+  .toString(36)
+  .substring(2, 15)
+
 const axios = axios_base.create({
   baseURL: YELP_DOMAIN,
   headers: {
     common: {
       'X-My-X-Forwarded-For': 'www.yelp.com',
+      'User-Agent': user_agent,
     },
   },
 })
@@ -34,6 +39,24 @@ export class Yelp extends WorkerJob {
 
   static job_config: JobOptions = {
     attempts: 3,
+  }
+
+  async yelpAPI(uri: string, config: AxiosRequestConfig = {}) {
+    let tries = 0
+    while (true) {
+      try {
+        return await axios.get(uri, config)
+      } catch (e) {
+        if (e.response.status != 503) {
+          throw e
+        }
+        tries++
+        if (tries > 10) {
+          throw new Error('Too many 503 errors for: ' + uri)
+        }
+        console.warn(`503 response, so retrying (${tries}): ` + uri)
+      }
+    }
   }
 
   async allForCity(city_name: string) {
@@ -71,10 +94,11 @@ export class Yelp extends WorkerJob {
     ].join(',')
     const bb = encodeURIComponent('g:' + coords)
     const uri = YELP_DOMAIN + BB_SEARCH + bb + '&start=' + start
-    const response = await axios.get(uri)
-    const search_results = response.data.searchPageProps.searchResultsProps
+    const response = await this.yelpAPI(uri)
+    const search_results = response?.data.searchPageProps.searchResultsProps
     const objects = search_results.searchResults
     const pagination = search_results.paginationInfo
+
     for (const data of objects) {
       await this.getRestaurant(data)
     }
@@ -114,7 +138,7 @@ export class Yelp extends WorkerJob {
     let data: { [keys: string]: any } = {}
     const SIG1 = '<script type="application/json" data-hypernova-key'
     const SIG2 = 'mapBoxProps'
-    const response = await axios.get(yelp_path)
+    const response = await this.yelpAPI(yelp_path)
 
     for (const line of response.data.split('\n')) {
       if (line.includes(SIG1) && line.includes(SIG2)) {
@@ -209,7 +233,7 @@ export class Yelp extends WorkerJob {
       start +
       '&dir=b'
 
-    const response = await axios.get(url, {
+    const response = await this.yelpAPI(url, {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
       },
@@ -237,7 +261,7 @@ export class Yelp extends WorkerJob {
       '/review_feed?rl=en&sort_by=relevance_desc&q=&start=' +
       start
 
-    const response = await axios.get(url, {
+    const response = await this.yelpAPI(url, {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
         'X-Requested-By-React': true,
