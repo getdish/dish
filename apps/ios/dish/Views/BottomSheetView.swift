@@ -4,7 +4,7 @@ fileprivate enum ViewConstants {
     static let radius: CGFloat = 16
     static let indicatorHeight: CGFloat = 6
     static let indicatorWidth: CGFloat = 60
-    static let minHeightRatio: CGFloat = 0.3
+    static let minHeightRatio: CGFloat = -40
 }
 
 struct BottomSheetView<Content: View>: View {

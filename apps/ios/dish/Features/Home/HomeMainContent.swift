@@ -127,9 +127,9 @@ struct HomeMainContent: View {
 
 struct HomeMapRestaurant: View {
     var body: some View {
-        Color.red
+        Color.white
             .cornerRadius(40)
-            .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
+            .shadow(color: Color.black.opacity(0.5), radius: 30, x: 0, y: 5)
     }
 }
 

@@ -43,6 +43,17 @@ struct HomeMainView: View {
             self.state.setShowCamera(val)
         }
     }
+    
+    var isRestaurantOpen: Binding<Bool> {
+        Binding<Bool>(
+            get: { Selectors.home.isOnRestaurant() },
+            set: { next in
+                if next == false {
+                    App.store.send(.home(.pop))
+                }
+            }
+        )
+    }
 
     var body: some View {
         let state = self.state
@@ -189,16 +200,17 @@ struct HomeMainView: View {
                 Color.black.opacity(0.0001)
                     .frame(width: state.dragState == .pager ? App.screen.width : 0)
             }
-            .scaleEffect(Selectors.home.isOnRestaurant() ? 0.9 : 1)
-            
-            
-            HomeMapRestaurant()
-                .offset(y: Selectors.home.isOnRestaurant() ? 90 : App.screen.height)
-                .animation(.spring())
-            
-        }
             .clipped() // dont remove fixes bug cant click SearchBar
             .simultaneousGesture(self.dragGesture)
+            .scaleEffect(Selectors.home.isOnRestaurant() ? 0.9 : 1)
+            
+            BottomSheetView(
+                isOpen: self.isRestaurantOpen, maxHeight: App.screen.height * 0.9
+            ) {
+                HomeMapRestaurant()
+            }
+            
+        }
             .environmentObject(self.state)
     }
 
