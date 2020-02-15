@@ -45,27 +45,21 @@ export class UberEats extends WorkerJob {
   static DELIVERY_RADIUS = 30000
 
   async world() {
-    let cities = await this.getCities()
-    cities = _.shuffle(cities)
-    for (const city of cities) {
-      await this.runOnWorker('getCity', [city])
-    }
-  }
-
-  async getCities() {
-    let cities: string[] = []
     const response = await axios.post(CITIES, {})
-    console.log(response.data.data)
-
-    for (let country of response.data.data) {
-      for (let city of country.cities) {
-        cities.push(`${city.cityDisplayName}, ${country.countryDisplayName}`)
+    const countries = _.shuffle(response.data.data.countryLinks.links)
+    for (let country of countries) {
+      const locale =
+        '?localeCode=en-' + country.href.split('/')[1].split('-')[1]
+      const response = await axios.post(CITIES + locale, {})
+      const cities = _.shuffle(response.data.data.cityLinks.links)
+      for (let city of cities) {
+        await this.runOnWorker('getCity', [`${city.title}, ${country.title}`])
       }
     }
-    return cities
   }
 
   async getCity(city: string) {
+    console.log('Getting UberEats for: ' + city)
     const coords = await geocode(city)
     await this.runOnWorker('aroundCoords', [coords[0], coords[1]])
   }
@@ -218,20 +212,5 @@ export class UberEats extends WorkerJob {
     return categories.JSON.data.categories.map((obj: any) => {
       return obj.title
     })
-  }
-
-  // It doesn't actually seem like the cache key is relevant. But keeping just in case.
-  // You might need it if there doesn't seem to be any other way the page/API is
-  // getting your geo location.
-  private async __getCacheKey(lat: number, lon: number) {
-    const response = await axios.get('https://www.ubereats.com/en-US/', {
-      headers: {
-        Accept: 'text/html',
-        Cookie: 'uev2.loc=' + this.encodeLocation(lat, lon),
-      },
-    })
-    const url = new URL('http://domain.com' + response.request.path)
-    const cache_key = url.searchParams.get('pl')!
-    return decodeURIComponent(cache_key)
   }
 }

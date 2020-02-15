@@ -3,10 +3,10 @@ import { Dish } from './Dish'
 import { Scrape } from './Scrape'
 import { EnumType } from 'json-to-graphql-query'
 import { levenshteinDistance } from './utils'
-import { log } from 'util'
 
 export class Restaurant extends ModelBase<Restaurant> {
   name!: string
+  rating!: number
   address!: string
   location!: Point
   description!: string
@@ -14,6 +14,10 @@ export class Restaurant extends ModelBase<Restaurant> {
   state!: string
   zip!: number
   image!: string
+  categories!: string[]
+  photos!: string[]
+  telephone!: string
+  website!: string
   dishes!: Dish[]
 
   static model_name() {
@@ -23,6 +27,7 @@ export class Restaurant extends ModelBase<Restaurant> {
   static fields() {
     return [
       'name',
+      'rating',
       'address',
       'location',
       'description',
@@ -30,6 +35,10 @@ export class Restaurant extends ModelBase<Restaurant> {
       'state',
       'zip',
       'image',
+      'categories',
+      'photos',
+      'telephone',
+      'website',
     ]
   }
 
@@ -44,6 +53,15 @@ export class Restaurant extends ModelBase<Restaurant> {
       },
     }
     return await super.findOne(key, value, extra_returning)
+  }
+
+  static async fetchBatch(
+    size: number,
+    page: number,
+    extra_returning: {} = {}
+  ) {
+    let restaurant = new Restaurant()
+    return await restaurant.fetchBatch(Restaurant, size, page, extra_returning)
   }
 
   static async findNear(lat: number, lng: number, distance: number) {
@@ -73,14 +91,14 @@ export class Restaurant extends ModelBase<Restaurant> {
     )
   }
 
-  static async getLatestScrape(source: string, match: {}) {
+  async getLatestScrape(source: string) {
     const query = {
       query: {
         scrape: {
           __args: {
             where: {
-              data: {
-                _contains: match,
+              restaurant_id: {
+                _eq: this.id,
               },
               source: {
                 _eq: source,

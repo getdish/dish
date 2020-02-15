@@ -181,6 +181,36 @@ export class ModelBase<T> {
     }
   }
 
+  async fetchBatch(
+    type: new () => T,
+    size: number,
+    page: number,
+    extra_returning: {} = {}
+  ) {
+    const query = {
+      query: {
+        [this._lower_name]: {
+          __args: {
+            offset: page * size,
+            limit: size,
+            order_by: { updated_at: new EnumType('asc') },
+          },
+          ...this.fieldsAsObject(),
+          ...extra_returning,
+        },
+      },
+    }
+    const response = await ModelBase.hasura(query)
+    const objects = response.data.data[this._lower_name]
+    const batch: T[] = []
+    for (let object of objects) {
+      let instance = new type()
+      Object.assign(instance, object)
+      batch.push(instance)
+    }
+    return batch
+  }
+
   async upsert() {
     const query = {
       mutation: {
