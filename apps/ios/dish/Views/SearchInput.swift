@@ -30,19 +30,19 @@ struct SearchInputTagView: View {
                 VStack {
                     Image(systemName: "xmark")
                         .resizable()
-                        .frame(width: 10, height: 10)
-                        .padding(3)
+                        .frame(width: 12, height: 12)
+                        .padding(5)
                 }
                 .background(tag.color.brightness(-0.1))
-                .cornerRadius(4)
+                .cornerRadius(6)
                 .opacity(0.5)
             }
         }
         .foregroundColor(Color.white)
-        .padding(.horizontal, 6)
-        .padding(.vertical, 5)
+        .padding(.horizontal, self.fontSize * 0.5)
+        .padding(.vertical, self.fontSize * 0.35)
         .background(tag.color)
-        .cornerRadius(4)
+        .cornerRadius(6)
     }
 }
 
@@ -56,6 +56,7 @@ struct SearchInput: View {
     var sizeRadius = CGFloat(1)
     var icon: AnyView?
     var showCancelInside = false
+    var onTapLeadingIcon: (() -> Void)?
     var onEditingChanged: ((Bool) -> Void)?
     var onCancel: (() -> Void)?
     var onClear: (() -> Void)?
@@ -94,20 +95,34 @@ struct SearchInput: View {
         let pad = 8 * (scale + 0.5) * 0.6
         let numTags = self.tags.count
         let hasTags = numTags > 0
-        let fontSize = 14 * (scale - 1) / 2 + 14
+        let fontSize = 14 * (scale - 1) / 2 + 16
+        let horizontalSpacing = 4 * scale
         
         return VStack {
             // Search view
             HStack {
-                HStack(spacing: 4 * scale) {
-                    VStack {
-                        icon ?? AnyView(
-                            Image(systemName: "magnifyingglass")
-                                .resizable()
-                                .scaledToFit()
-                        )
+                HStack(spacing: 0) {
+                    Button(action: {
+                        if let cb = self.onTapLeadingIcon {
+                            cb()
+                        } else {
+//                            self.isFirstResponder = true
+                        }
+                    }) {
+                        VStack {
+                            VStack {
+                                icon ?? AnyView(
+                                    Image(systemName: "magnifyingglass")
+                                        .resizable()
+                                        .scaledToFit()
+                                )
+                            }
+                            .frame(width: 24 * scale, height: 24 * scale)
+                        }
+                        .padding(horizontalSpacing)
                     }
-                    .frame(width: 24 * scale, height: 24 * scale)
+                    
+                    Spacer().frame(width: horizontalSpacing)
                     
                     if hasTags {
                         HStack {
@@ -116,6 +131,7 @@ struct SearchInput: View {
                                     tag: tag,
                                     fontSize: fontSize
                                 )
+                                    .padding(.trailing, horizontalSpacing)
                                     .transition(.slide)
                                     .animation(.easeIn(duration: 0.3))
                                     .onTapGesture {
@@ -129,6 +145,8 @@ struct SearchInput: View {
                             }
                         }
                     }
+                    
+                    Spacer().frame(width: horizontalSpacing)
                     
                     // TODO (performance / @majid) - snapToBottom(false) is jittery, if you replace
                     // this next view with Color.red you'll see it goes fast... why?
@@ -149,11 +167,13 @@ struct SearchInput: View {
                                     Text(self.placeholder).opacity(0.3)
                                 }
                             }
-                            .font(.system(size: fontSize + 2))
+                            .font(.system(size: fontSize))
                             Spacer()
                         }
                         .frameFlex()
                     }
+                    
+                    Spacer().frame(width: horizontalSpacing)
                     
 
 //                        .disableAutocorrection(true)
@@ -184,7 +204,7 @@ struct SearchInput: View {
                 }
                     .padding(EdgeInsets(
                         top: pad,
-                        leading: pad * 1.3,
+                        leading: pad * 1.3 - horizontalSpacing,
                         bottom: pad,
                         trailing: pad * 1.3
                     ))

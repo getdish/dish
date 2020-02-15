@@ -93,6 +93,10 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
 }
 
 struct HomeSelectors {
+    func isOnHome(_ state: AppState = App.store.state) -> Bool {
+        state.home.viewStates.count == 1
+    }
+    
     func isOnSearchResults(_ state: AppState = App.store.state) -> Bool {
         state.home.viewStates.count > 1
     }

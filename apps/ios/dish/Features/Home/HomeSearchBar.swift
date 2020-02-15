@@ -53,12 +53,9 @@ struct HomeSearchBar: View {
     @State var lastZoomed = false
     
     var icon: AnyView {
-        if store.state.home.viewStates.count > 1 {
+        if !Selectors.home.isOnHome() {
             return AnyView(
-                Image(systemName: "chevron.left").onTapGesture {
-                    self.keyboard.hide()
-                    self.store.send(.home(.pop))
-                }
+                Image(systemName: "chevron.left")
             )
         } else {
             return AnyView(
@@ -104,6 +101,14 @@ struct HomeSearchBar: View {
                 sizeRadius: 2.1,
                 icon: icon,
                 showCancelInside: true,
+                onTapLeadingIcon: {
+                    if Selectors.home.isOnHome() {
+                        self.isFirstResponder = true
+                    } else {
+                        self.keyboard.hide()
+                        self.store.send(.home(.pop))
+                    }
+                },
                 onClear: self.onClear,
                 after: after,
                 isFirstResponder: isFirstResponder,
