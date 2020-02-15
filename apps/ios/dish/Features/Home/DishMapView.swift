@@ -295,6 +295,12 @@ class CustomAnnotationView: MKAnnotationView {
     }
 }
 
+extension CLLocationCoordinate2D: Equatable {
+    public static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
+        lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
+    }
+}
+
 struct AppleMapView: UIViewRepresentable {
     private let mapView = MKMapView()
     var annotations: [MKPointAnnotation]? = nil
@@ -317,6 +323,7 @@ struct AppleMapView: UIViewRepresentable {
     }
     
     final class Coordinator: NSObject, MKMapViewDelegate {
+        var lastAnnotations: [MKPointAnnotation] = []
         var lastLocation: MapViewLocation = .init(center: .none)
         var locationManager = CLLocationManager()
         var parent: AppleMapView
@@ -353,7 +360,7 @@ struct AppleMapView: UIViewRepresentable {
                     annotationView.annotation = annotation
                     annotationView.isEnabled = true
                     annotationView.canShowCallout = true
-                    annotationView.animatesWhenAdded = true
+                    annotationView.animatesWhenAdded = false
                     annotationView.glyphImage = UIImage(named: "pin")
                     
                     let item = [
@@ -396,14 +403,26 @@ struct AppleMapView: UIViewRepresentable {
             return annotationView
         }
         
+        func contains(_ a: [MKPointAnnotation], b: MKPointAnnotation) -> Bool {
+            a.reduce(false) { Bool(Bool($0) || ($1.coordinate == b.coordinate)) }
+        }
+        
         func updateAnnotations(_ annotations: [MKPointAnnotation]?) {
             guard let annotations = annotations else { return }
-            mapView.removeAnnotations(mapView.annotations)
-            mapView.addAnnotations(annotations)
-//            let annotation = MKPointAnnotation()
-//            annotation.coordinate = CLLocationCoordinate2D(latitude: /* latitude */, longitude: /* longitude */)
-//            annotation.title = "Your Pin Title"
-//            mapView.addAnnotation(annotation)
+            if annotations.elementsEqual(lastAnnotations) {
+                return
+            }
+            lastAnnotations.forEach { last in
+                if !contains(annotations, b: last) {
+                    mapView.removeAnnotation(last)
+                }
+            }
+            annotations.forEach { next in
+                if !contains(lastAnnotations, b: next) {
+                    mapView.addAnnotation(next)
+                }
+            }
+            self.lastAnnotations = annotations
         }
         
         func updateCurrentLocation(_ location: MapViewLocation?) {
