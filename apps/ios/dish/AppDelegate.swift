@@ -16,7 +16,6 @@ let log = XCGLogger.default
 let features: [DishItem] = loadJSON("dishData.json")
 let restaurants: [RestaurantItem] = loadJSON("restaurantData.json")
 // fixtures, mocks
-// TODO why cant i call this direct
 let mocks = Mocks()
 
 // apollo

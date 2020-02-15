@@ -5,7 +5,7 @@
         "stars": 3,
         "address": "1234 W Street St",
         "phone": "520-555-1234",
-        "id": 1001,
+        "id": "1001",
         "imageName": "turtlerock"
     },
     {
@@ -14,7 +14,7 @@
         "stars": 3,
         "address": "1234 W Street St",
         "phone": "520-555-1234",
-        "id": 1002,
+        "id": "1002",
         "imageName": "silversalmoncreek"
     },
     {
@@ -23,7 +23,7 @@
         "stars": 2,
         "address": "1234 W Street St",
         "phone": "520-555-1234",
-        "id": 1003,
+        "id": "1003",
         "imageName": "chilkoottrail"
     },
     {
@@ -32,7 +32,7 @@
         "stars": 2,
         "address": "1234 W Street St",
         "phone": "520-555-1234",
-        "id": 1004,
+        "id": "1004",
         "imageName": "stmarylake"
     },
     {
@@ -41,7 +41,7 @@
         "stars": 2,
         "address": "1234 W Street St",
         "phone": "520-555-1234",
-        "id": 1005,
+        "id": "1005",
         "imageName": "twinlake"
     },
     {
@@ -50,7 +50,7 @@
         "stars": 3,
         "address": "1234 W Street St",
         "phone": "520-555-1234",
-        "id": 1006,
+        "id": "1006",
         "imageName": "lakemcdonald"
     },
     {
@@ -59,7 +59,7 @@
         "stars": 1,
         "address": "1234 W Street St",
         "phone": "520-555-1234",
-        "id": 1007,
+        "id": "1007",
         "imageName": "charleyrivers",
     },
     {
@@ -68,7 +68,7 @@
         "stars": 2,
         "address": "1234 W Street St",
         "phone": "520-555-1234",
-        "id": 1008,
+        "id": "1008",
         "imageName": "icybay"
     }
 ]
