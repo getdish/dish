@@ -366,7 +366,7 @@ struct AppleMapView: UIViewRepresentable {
                 }
             }
             markers.forEach { next in
-                if !markers.contains(next) {
+                if !lastMarkers.contains(next) {
                     mapView.addAnnotation(createAnnotation(next))
                 }
             }
