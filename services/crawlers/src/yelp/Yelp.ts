@@ -114,11 +114,15 @@ export class Yelp extends WorkerJob {
 
   async getRestaurant(data: ScrapeData) {
     if (data.searchResultBusiness) {
+      let biz_page: string
       const id = await this.saveDataFromMapSearch(data)
-      await this.runOnWorker('getEmbeddedJSONData', [
-        id,
-        data.searchResultBusiness.businessUrl,
-      ])
+      const uri = url.parse(data.searchResultBusiness.businessUrl, true)
+      if (uri.query.redirect_url) {
+        biz_page = decodeURI(uri.query.redirect_url as string)
+      } else {
+        biz_page = data.searchResultBusiness.businessUrl
+      }
+      await this.runOnWorker('getEmbeddedJSONData', [id, biz_page])
     }
   }
 
