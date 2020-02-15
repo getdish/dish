@@ -36,6 +36,7 @@
 		AE2B6BA423AC211F007BCD25 /* VerticalCardPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */; };
 		AE56C86423ADB78C006A156A /* HomeSearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56C86323ADB78C006A156A /* HomeSearchResultsView.swift */; };
 		AE56C86623ADD977006A156A /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56C86523ADD977006A156A /* TagView.swift */; };
+		AE65DF9223F771FF00758DD3 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE65DF9123F771FF00758DD3 /* String.swift */; };
 		AE65E9BB23E59F9E00702C30 /* Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE65E9BA23E59F9E00702C30 /* Text.swift */; };
 		AE6A9C0F23C45FA800003059 /* GooglePlacesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A9C0E23C45FA800003059 /* GooglePlacesService.swift */; };
 		AE6A9C1123C5265C00003059 /* GooglePlaceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A9C1023C5265C00003059 /* GooglePlaceItem.swift */; };
@@ -150,6 +151,7 @@
 		AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalCardPager.swift; sourceTree = "<group>"; };
 		AE56C86323ADB78C006A156A /* HomeSearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchResultsView.swift; sourceTree = "<group>"; };
 		AE56C86523ADD977006A156A /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
+		AE65DF9123F771FF00758DD3 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		AE65E9BA23E59F9E00702C30 /* Text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text.swift; sourceTree = "<group>"; };
 		AE6A9C0E23C45FA800003059 /* GooglePlacesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GooglePlacesService.swift; sourceTree = "<group>"; };
 		AE6A9C1023C5265C00003059 /* GooglePlaceItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GooglePlaceItem.swift; sourceTree = "<group>"; };
@@ -325,6 +327,7 @@
 				AE872FEC23CE6E3900F84663 /* Publisher.swift */,
 				AEE802B423ED3E8000A1A19E /* Double.swift */,
 				AED2EA0E23F34D990041A195 /* Dictionary.swift */,
+				AE65DF9123F771FF00758DD3 /* String.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -659,6 +662,7 @@
 			files = (
 				1CE35486239870E8004B3A84 /* MapView.swift in Sources */,
 				AED2EA0F23F34D990041A195 /* Dictionary.swift in Sources */,
+				AE65DF9223F771FF00758DD3 /* String.swift in Sources */,
 				1CCEDF52239DC7C9003EE228 /* PagerView.swift in Sources */,
 				AEF6557423B0407000E49A51 /* ImageStore.swift in Sources */,
 				AE1BBDBA23C83E9E00C58A87 /* QuickFilters.swift in Sources */,

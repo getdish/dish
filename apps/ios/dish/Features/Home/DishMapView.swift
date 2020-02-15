@@ -3,127 +3,6 @@ import CoreLocation
 import Combine
 import Mapbox
 
-class DishMapViewStore: ObservableObject {
-    var cancels: Set<AnyCancellable> = []
-    @Published var location: MapViewLocation? = nil
-}
-
-fileprivate let mapViewStore = DishMapViewStore()
-
-// AppleMapView
-import MapKit
-import CoreLocation
-
-struct MapViewLocation: Equatable {
-    enum LocationType: Equatable {
-        case current
-        case location(lat: Double, long: Double)
-        case none
-        
-    }
-    
-    static let timeless = NSDate()
-    let center: LocationType
-    let radius: Double
-    let updatedAt: NSDate
-    
-    init(center: LocationType, radius: Double = 10000, refresh: Bool = false) {
-        self.center = center
-        self.radius = radius
-        self.updatedAt = refresh ? NSDate() : MapViewLocation.timeless
-    }
-    
-    var coordinate: CLLocationCoordinate2D? {
-        switch center {
-            case .current: return nil
-            case .none: return nil
-            case .location(let lat, let long):
-                return CLLocationCoordinate2D(latitude: lat, longitude: long)
-        }
-    }
-}
-
-extension MKMapView {
-    func topCenterCoordinate() -> CLLocationCoordinate2D {
-        return self.convert(CGPoint(x: self.frame.size.width / 2.0, y: 0), toCoordinateFrom: self)
-    }
-    func currentRadius() -> Double {
-        let centerLocation = CLLocation(latitude: self.centerCoordinate.latitude, longitude: self.centerCoordinate.longitude)
-        let topCenterCoordinate = self.topCenterCoordinate()
-        let topCenterLocation = CLLocation(latitude: topCenterCoordinate.latitude, longitude: topCenterCoordinate.longitude)
-        return centerLocation.distance(from: topCenterLocation)
-    }
-}
-
-struct AppleMapView: UIViewRepresentable {
-    private let mapView = MKMapView()
-    var currentLocation: MapViewLocation? = nil
-    var onChangeLocation: ((MapViewLocation) -> Void)? = nil
-    
-    func makeUIView(context: Context) -> MKMapView {
-        mapView.delegate = context.coordinator
-        return mapView
-    }
-    
-    func updateUIView(_ uiView: MKMapView, context: Context) {
-        let crd = context.coordinator
-        if crd.lastLocation != self.currentLocation {
-            crd.setCurrentLocation(self.currentLocation)
-        }
-    }
-    
-    func makeCoordinator() -> AppleMapView.Coordinator {
-        Coordinator(self)
-    }
-    
-    final class Coordinator: NSObject, MKMapViewDelegate {
-        var lastLocation: MapViewLocation = .init(center: .none)
-        var locationManager = CLLocationManager()
-        var parent: AppleMapView
-        
-        init(_ parent: AppleMapView) {
-            self.parent = parent
-        }
-        
-        var mapView: MKMapView {
-            parent.mapView
-        }
-        
-        func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-            if let cb = parent.onChangeLocation {
-                cb(MapViewLocation(
-                    center: .location(lat: mapView.centerCoordinate.latitude, long: mapView.centerCoordinate.longitude),
-                    radius: mapView.currentRadius()
-                ))
-            }
-        }
-        
-        func setCurrentLocation(_ location: MapViewLocation?) {
-            guard let location = location else {
-                return
-            }
-            if self.lastLocation != location {
-                self.lastLocation = location
-                switch location.center {
-                    case .current:
-                        if let coordinate = locationManager.location?.coordinate {
-                            let coordinateRegion = MKCoordinateRegion(
-                                center: coordinate,
-                                latitudinalMeters: location.radius,
-                                longitudinalMeters: location.radius
-                            )
-                            mapView.setRegion(coordinateRegion, animated: true)
-                    }
-                    case .location(lat: let lat, long: let long):
-                        print("todo")
-                    case .none:
-                        print("todo")
-                }
-            }
-        }
-    }
-}
-
 struct DishMapView: View {
     @State var mapView: MapViewController? = nil
     
@@ -140,13 +19,13 @@ struct DishMapView: View {
     var height: CGFloat = 100
     var animate: Bool = false
 
-    var annotations: [MGLPointAnnotation] {
+    var annotations: [MKPointAnnotation] {
         let results = Selectors.home.lastState().searchResults.results
         return results.map { result in
-            MGLPointAnnotation(
-                title: result.name,
-                coordinate: result.coordinate
-            )
+            let annotation = MKPointAnnotation()
+            annotation.title =  result.name
+            annotation.coordinate = result.coordinate
+            return annotation
         }
     }
     
@@ -168,16 +47,17 @@ struct DishMapView: View {
                     ZStack {
                         Group {
                             if self.store.state.debugShowMap == 1 {
-                                MapBoxView(annotations: self.annotations)
-                                    .styleURL(
-                                        colorScheme == .dark
-                                            ? URL(string: "mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja/draft")!
-                                            : URL(string: "mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq/draft")!
-                                        
-                                )
-                                    .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
-                                    .zoomLevel(11)
-                                    .frame(height: App.screen.height * 1.6)
+                                Spacer()
+//                                MapBoxView(annotations: self.annotations)
+//                                    .styleURL(
+//                                        colorScheme == .dark
+//                                            ? URL(string: "mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja/draft")!
+//                                            : URL(string: "mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq/draft")!
+//
+//                                )
+//                                    .centerCoordinate(.init(latitude: 37.791329, longitude: -122.396906))
+//                                    .zoomLevel(11)
+//                                    .frame(height: App.screen.height * 1.6)
                             } else if self.store.state.debugShowMap == 2 {
                                 Spacer()
 //                                MapView(
@@ -197,6 +77,7 @@ struct DishMapView: View {
 //                                }
                             } else {
                                 AppleMapView(
+                                    annotations: self.annotations,
                                     currentLocation: store.state.map.moveToLocation,
                                     onChangeLocation: { location in
                                         if location != mapViewStore.location {
@@ -347,22 +228,184 @@ struct DishMapView_Previews: PreviewProvider {
 }
 #endif
 
-//                    if self.homeState.isNearTop {
-//                        HStack {
-//                            CustomButton(action: {
-//                                self.mapView?.zoomOut()
-//                            }) {
-//                                MapButton(icon: "minus.magnifyingglass")
-//                            }
-//                            .frame(height: homeState.mapHeight)
-//                            Spacer()
-//                            CustomButton(action: {
-//                                self.mapView?.zoomIn()
-//                            }) {
-//                                MapButton(icon: "plus.magnifyingglass")
-//                            }
-//                            .frame(height: homeState.mapHeight)
-//                        }
-//                        .frame(height: homeState.mapHeight)
-//                        .animation(.spring())
+// keep this here for now, no need to split it into own file until we need to
+
+class DishMapViewStore: ObservableObject {
+    var cancels: Set<AnyCancellable> = []
+    @Published var location: MapViewLocation? = nil
+}
+
+fileprivate let mapViewStore = DishMapViewStore()
+
+// MARK -- Apple MapView
+
+import MapKit
+import CoreLocation
+
+struct MapViewLocation: Equatable {
+    enum LocationType: Equatable {
+        case current
+        case location(lat: Double, long: Double)
+        case none
+        
+    }
+    
+    static let timeless = NSDate()
+    let center: LocationType
+    let radius: Double
+    let updatedAt: NSDate
+    
+    init(center: LocationType, radius: Double = 10000, refresh: Bool = false) {
+        self.center = center
+        self.radius = radius
+        self.updatedAt = refresh ? NSDate() : MapViewLocation.timeless
+    }
+    
+    var coordinate: CLLocationCoordinate2D? {
+        switch center {
+            case .current: return nil
+            case .none: return nil
+            case .location(let lat, let long):
+                return CLLocationCoordinate2D(latitude: lat, longitude: long)
+        }
+    }
+}
+
+extension MKMapView {
+    func topCenterCoordinate() -> CLLocationCoordinate2D {
+        return self.convert(CGPoint(x: self.frame.size.width / 2.0, y: 0), toCoordinateFrom: self)
+    }
+    func currentRadius() -> Double {
+        let centerLocation = CLLocation(latitude: self.centerCoordinate.latitude, longitude: self.centerCoordinate.longitude)
+        let topCenterCoordinate = self.topCenterCoordinate()
+        let topCenterLocation = CLLocation(latitude: topCenterCoordinate.latitude, longitude: topCenterCoordinate.longitude)
+        return centerLocation.distance(from: topCenterLocation)
+    }
+}
+
+class CustomAnnotationView: MKAnnotationView {
+    var label: UILabel?
+    
+    override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
+        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+}
+
+struct AppleMapView: UIViewRepresentable {
+    private let mapView = MKMapView()
+    var annotations: [MKPointAnnotation]? = nil
+    var currentLocation: MapViewLocation? = nil
+    var onChangeLocation: ((MapViewLocation) -> Void)? = nil
+    
+    func makeUIView(context: Context) -> MKMapView {
+        mapView.delegate = context.coordinator
+        return mapView
+    }
+    
+    func updateUIView(_ uiView: MKMapView, context: Context) {
+        let crd = context.coordinator
+        crd.updateCurrentLocation(self.currentLocation)
+        crd.updateAnnotations(self.annotations)
+    }
+    
+    func makeCoordinator() -> AppleMapView.Coordinator {
+        Coordinator(self)
+    }
+    
+    final class Coordinator: NSObject, MKMapViewDelegate {
+        var lastLocation: MapViewLocation = .init(center: .none)
+        var locationManager = CLLocationManager()
+        var parent: AppleMapView
+        
+        init(_ parent: AppleMapView) {
+            self.parent = parent
+        }
+        
+        var mapView: MKMapView {
+            parent.mapView
+        }
+        
+        func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+            if let cb = parent.onChangeLocation {
+                cb(MapViewLocation(
+                    center: .location(lat: mapView.centerCoordinate.latitude, long: mapView.centerCoordinate.longitude),
+                    // why * x? - idk but its not matching, may be related to that we make map view 1.6x taller than screen?
+                    radius: mapView.currentRadius() * 0.575
+                ))
+            }
+        }
+        
+//        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+//            let annotationIdentifier = "MyCustomAnnotation"
+//            guard !annotation.isKind(of: MKUserLocation.self) else {
+//                return nil
+//            }
+//            
+//            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: annotationIdentifier)
+//            if annotationView == nil {
+//                annotationView = CustomAnnotationView(annotation: annotation, reuseIdentifier: annotationIdentifier)
+//                if case let annotationView as CustomAnnotationView = annotationView {
+//                    annotationView.isEnabled = true
+//                    annotationView.canShowCallout = false
+//                    annotationView.label = UILabel(frame: CGRect(x: -5.5, y: 11.0, width: 22.0, height: 16.5))
+//                    if let label = annotationView.label {
+//                        label.font = UIFont(name: "HelveticaNeue", size: 16.0)
+//                        label.textAlignment = .center
+//                        label.textColor = UIColor(white: 0, alpha: 1)
+//                        label.adjustsFontSizeToFitWidth = true
+//                        annotationView.addSubview(label)
 //                    }
+//                }
+//            }
+//            
+//            if case let annotationView as CustomAnnotationView = annotationView {
+//                annotationView.annotation = annotation
+//                annotationView.image = UIImage(named: "pin")
+//                if let title = annotation.title,
+//                    let label = annotationView.label {
+//                    label.text = title
+//                }
+//            }
+//            
+//            return annotationView
+//        }
+        
+        func updateAnnotations(_ annotations: [MKPointAnnotation]?) {
+            guard let annotations = annotations else { return }
+            mapView.addAnnotations(annotations)
+//            let annotation = MKPointAnnotation()
+//            annotation.coordinate = CLLocationCoordinate2D(latitude: /* latitude */, longitude: /* longitude */)
+//            annotation.title = "Your Pin Title"
+//            mapView.addAnnotation(annotation)
+        }
+        
+        func updateCurrentLocation(_ location: MapViewLocation?) {
+            guard let location = location else {
+                return
+            }
+            if self.lastLocation == location {
+                return
+            }
+            self.lastLocation = location
+            switch location.center {
+                case .current:
+                    if let coordinate = locationManager.location?.coordinate {
+                        let coordinateRegion = MKCoordinateRegion(
+                            center: coordinate,
+                            latitudinalMeters: location.radius,
+                            longitudinalMeters: location.radius
+                        )
+                        mapView.setRegion(coordinateRegion, animated: true)
+                }
+                case .location(lat: let lat, long: let long):
+                    print("todo")
+                case .none:
+                    print("todo")
+            }
+        }
+    }
+}

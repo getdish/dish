@@ -56,7 +56,6 @@ class HomeService {
                                 }
                             )
                         ))
-                        print("got \(result)")
                     case .failure(let err):
                         print("err \(err)")
                 }

@@ -201,9 +201,13 @@ struct HomeMainView: View {
                     return
                 }
                 let isAlreadyDragging = self.state.dragState == .searchbar
+                let isDraggingBelowSearchbar = value.startLocation.y > self.state.y
+                let isDraggingHorizontal = abs(value.translation.width) > abs(value.translation.height)
+                    && abs(value.translation.width) > 15
                 if !isAlreadyDragging
-                    && abs(value.translation.width) > abs(value.translation.height)
-                    && abs(value.translation.width) > 15 {
+                    && isDraggingBelowSearchbar
+                    && isDraggingHorizontal
+                     {
                     log.debug("ignore drag horizontal")
                     self.state.setDragState(.contentHorizontal)
                     ignoreThisDrag = true

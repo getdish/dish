@@ -21,12 +21,12 @@ final class Store<State, Action>: ObservableObject {
     }
 
     func send(_ action: Action) {
-        print(" 🔀 (action) \(action)")
+        print(" 🔀 (action) \(String(describing: action).truncated(limit: 250))")
         self.reducer.reduce(&self.state, action)
     }
 
     func send(_ effect: Effect<Action>) {
-        print(" 🔀 (effect) \(effect)")
+        print(" 🔀 (effect) \(String(describing: effect).truncated(limit: 250))")
         var cancellable: AnyCancellable?
         var didComplete = false
         
