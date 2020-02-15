@@ -69,7 +69,7 @@ struct HomeMapSearchResults: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
                 ForEach(Selectors.home.lastState().searchResults.results) { item in
-                    return DishRestaurantCard(
+                    DishRestaurantCard(
                         restaurant: RestaurantItem(
                             id: item.id,
                             name: item.name,
@@ -84,6 +84,7 @@ struct HomeMapSearchResults: View {
                         width: self.width,
                         height: self.height
                     )
+                    // .equatable() may help
                 }
             }
             .padding(20)

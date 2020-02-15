@@ -29,7 +29,9 @@ struct DishRestaurantCard: View, Identifiable {
     }
     
     var body: some View {
-//        GeometryReader { geo in
+        DishButton(action: {
+            App.store.send(.home(.navigateToRestaurant(self.restaurant)))
+        }) {
             MagicItem("restaurant-\(self.id)", at: self.at) {
                 VStack {
                     self.restaurant.image
@@ -37,7 +39,6 @@ struct DishRestaurantCard: View, Identifiable {
                         .scaledToFill()
                 }
                 .frame(width: self.width ?? App.screen.width - 40, height: self.height ?? 200)
-//                    .frame(width: geo.size.width, height: max(geo.size.height, 40))
                     .overlay(
                         Rectangle().fill(self.gradientBottom)
                     )
@@ -54,7 +55,7 @@ struct DishRestaurantCard: View, Identifiable {
                     .clipped()
                     .shadow(color: Color.black.opacity(0.4), radius: 9, x: 0, y: 3)
             }
-//        }
+        }
     }
     
     var ratingOverlay: some View {

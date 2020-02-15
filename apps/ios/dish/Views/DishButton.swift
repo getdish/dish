@@ -1,6 +1,5 @@
 import SwiftUI
 
-// hacky for now testing
 struct DishButton<Content: View>: View {
     let action: () -> Void
     let content: Content
@@ -29,10 +28,15 @@ struct DishButton<Content: View>: View {
             withAnimation(.spring()) {
                 self.isTapped = isPressing
             }
-        }) {
-            if self.lastTap.timeIntervalSinceNow > 10 {
+            if isPressing {
+                self.lastTap = Date()
+            } else {
                 self.action()
             }
+        }) {
+//            if self.lastTap.timeIntervalSinceNow > 10 {
+//                self.action()
+//            }
         }
     }
 }

@@ -18,6 +18,7 @@ extension AppState {
 enum HomeAction {
     case setView(_ page: HomePageView)
     case setShowDrawer(_ val: Bool)
+    case navigateToRestaurant(_ restaurant: RestaurantItem)
     case push(_ state: HomeStateItem)
     case pop
     case toggleDrawer
@@ -38,6 +39,10 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     }
     
     switch action {
+        case let .navigateToRestaurant(resaurant):
+            var homeState = state.home.viewStates.last!
+            homeState.restaurant = resaurant
+            state.home.viewStates.append(homeState)
         case let .setSearchResults(val):
             var last = state.home.viewStates.last!
             last.searchResults = val
@@ -89,11 +94,19 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
 
 struct HomeSelectors {
     func isOnSearchResults(_ state: AppState = App.store.state) -> Bool {
-        return state.home.viewStates.count > 1
+        state.home.viewStates.count > 1
+    }
+    
+    func isOnRestaurant(_ state: AppState = App.store.state) -> Bool {
+        self.restaurant() != nil
+    }
+    
+    func restaurant(_ state: AppState = App.store.state) -> RestaurantItem? {
+        state.home.viewStates.last!.restaurant
     }
     
     func lastState(_ state: AppState = App.store.state) -> HomeStateItem {
-        return state.home.viewStates.last!
+        state.home.viewStates.last!
     }
     
     func tags(_ state: AppState = App.store.state) -> [SearchInputTag] {
@@ -114,6 +127,26 @@ struct HomeSelectors {
 
 // structures for HomeStore
 
+struct HomeStateItem: Identifiable, Equatable {
+    var id = uid()
+    var search = ""
+    var filters: [SearchFilter] = []
+    var searchResults: HomeSearchResults = HomeSearchResults(id: "0")
+    var restaurant: RestaurantItem? = nil
+    
+    var queryString: String {
+        self.search + " " + self.filters.map { $0.name }.joined(separator: " ")
+    }
+}
+
+struct SearchFilter: Equatable {
+    enum SearchFilterType {
+        case root, cuisine
+    }
+    var type: SearchFilterType = .cuisine
+    var name = ""
+    var deletable = true
+}
 
 enum HomePageView {
     case home, camera, me
@@ -141,24 +174,4 @@ struct HomeSearchResults: Equatable {
 
 func uid() -> String {
     "\(Int.random(in: 1..<100000000))"
-}
-
-struct HomeStateItem: Identifiable, Equatable {
-    var id = uid()
-    var search = ""
-    var filters: [SearchFilter] = []
-    var searchResults: HomeSearchResults = HomeSearchResults(id: "0")
-    
-    var queryString: String {
-        self.search + " " + self.filters.map { $0.name }.joined(separator: " ")
-    }
-}
-
-struct SearchFilter: Equatable {
-    enum SearchFilterType {
-        case root, cuisine
-    }
-    var type: SearchFilterType = .cuisine
-    var name = ""
-    var deletable = true
 }

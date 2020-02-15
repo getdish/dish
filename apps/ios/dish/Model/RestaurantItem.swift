@@ -12,7 +12,7 @@ let images = [
     "icybay"
 ]
 
-class RestaurantItem: Codable, Identifiable, ObservableObject {
+class RestaurantItem: Codable, Identifiable, ObservableObject, Equatable {
     static func == (lhs: RestaurantItem, rhs: RestaurantItem) -> Bool {
         lhs.id == rhs.id
     }

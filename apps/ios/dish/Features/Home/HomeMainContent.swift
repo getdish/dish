@@ -86,15 +86,20 @@ struct HomeMainContent: View {
             .clipped()
             .animation(.spring(response: 0.5))
             
-            // results bar below map
+            // results bar above map
             VStack {
                 Spacer()
                 
-                if Selectors.home.isOnSearchResults() {
-                    HomeMapSearchResults()
-                } else {
-                    HomeMapExplore()
+                Group {
+                    if Selectors.home.isOnSearchResults() {
+                        HomeMapSearchResults()
+                            .transition(.slide)
+                    } else {
+                        HomeMapExplore()
+                            .transition(.slide)
+                    }
                 }
+                
                 
                 // bottom pad
                 Spacer().frame(
@@ -109,6 +114,14 @@ struct HomeMainContent: View {
         // also: only making it bouncy during drag to avoid more problems
         .animation(.spring(response: 0.38), value: self.homeState.dragState == .idle)
         // .animation(self.homeState.dragState != .idle ? .spring() : .none)
+    }
+}
+
+struct HomeMapRestaurant: View {
+    var body: some View {
+        Color.red
+            .cornerRadius(40)
+            .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 5)
     }
 }
 
