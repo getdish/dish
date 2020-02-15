@@ -11,7 +11,6 @@ class AppModel {
     // services
     let mapService = MapService()
     let homeService = HomeService()
-    let googlePlacesService = GooglePlacesService()
     
     var apollo: ApolloClient {
         return ApolloNetwork.shared.apollo

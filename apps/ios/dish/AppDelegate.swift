@@ -6,12 +6,18 @@ import XCGLogger
 // GLOBALS
 // most if not all should go onto here:
 let App = AppModel()
-// ...
+
+// ... globals i cant seem to put on App.
 // state
 let homeViewState = HomeViewState()
-let features: [DishItem] = load("dishData.json")
-let restaurants: [RestaurantItem] = load("restaurantData.json")
 let log = XCGLogger.default
+
+// TODO why cant i put this on App:
+let features: [DishItem] = loadJSON("dishData.json")
+let restaurants: [RestaurantItem] = loadJSON("restaurantData.json")
+// fixtures, mocks
+// TODO why cant i call this direct
+let mocks = Mocks()
 
 // apollo
 // via https://github.com/apollographql/apollo-ios/issues/36

@@ -311,7 +311,6 @@
 			isa = PBXGroup;
 			children = (
 				AE7563B723A036500094022B /* Screen.swift */,
-				AE7563BB23A037870094022B /* Fixtures.swift */,
 				AEF6557623B041C400E49A51 /* RestaurantItem.swift */,
 				AEF6557823B041F600E49A51 /* DishItem.swift */,
 				AE861A7823A0651D004096BF /* Keyboard.swift */,
@@ -472,6 +471,7 @@
 			isa = PBXGroup;
 			children = (
 				AEFC3A8B23D7C7E100D9658F /* Mocks.swift */,
+				AE7563BB23A037870094022B /* Fixtures.swift */,
 				1CE3548223986C5C004B3A84 /* AppStore.swift */,
 				AEF6558323B59BC000E49A51 /* Home.swift */,
 				AE872FF023CE76AE00F84663 /* HomeService.swift */,
