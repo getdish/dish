@@ -25,7 +25,7 @@ struct MapViewLocation: Equatable {
     let radius: Double
     let updatedAt: NSDate
     
-    init(center: LocationType, radius: Double = 10000, refresh: Bool = false) {
+    init(center: LocationType, radius: Double = 1000, refresh: Bool = false) {
         self.center = center
         self.radius = radius
         self.updatedAt = refresh ? NSDate() : MapViewLocation.timeless

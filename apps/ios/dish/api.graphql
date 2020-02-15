@@ -1,13 +1,10 @@
-query SearchRestaurants {
+query SearchRestaurants($radius: Float!, $geo: geometry!) {
     restaurant(
         where: {
             location: {
                 _st_d_within: {
-                    distance: 0.005,
-                    from: {
-                        type: "Point",
-                        coordinates: [-122.421351,37.759251]
-                    }
+                    distance: $radius,
+                    from: $geo
                 }
             }
         }

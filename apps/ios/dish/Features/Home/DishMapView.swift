@@ -136,61 +136,6 @@ struct DishMapView: View {
     }
 }
 
-struct MapButton: View {
-    let icon: String
-    
-    var body: some View {
-        let cornerRadius: CGFloat = 8
-        return ZStack {
-            Group {
-                Image(systemName: icon)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 20, height: 20)
-            }
-            .foregroundColor(.white)
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 40)
-            .background(
-                RadialGradient(
-                    gradient: Gradient(colors: [
-                        Color.white.opacity(0),
-                        Color.white.opacity(0.8)
-                    ]),
-                    center: .center,
-                    startRadius: 0,
-                    endRadius: 80
-                )
-                    .scaledToFill()
-        )
-            .frame(width: 58)
-            .cornerRadius(cornerRadius)
-            .animation(.spring(response: 0.5))
-            .shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 0)
-            .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(Color.white.opacity(0.5), lineWidth: 1)
-        )
-            .overlay(
-                VStack {
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .stroke(Color.black.opacity(0.1), lineWidth: 1)
-                }
-                .padding(1)
-        )
-    }
-}
-
-struct MapButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .padding(.vertical, 12)
-            .padding(.horizontal, 4)
-            .background(Color(.tertiarySystemBackground))
-    }
-}
-
 #if DEBUG
 struct DishMapView_Previews: PreviewProvider {
     static var previews: some View {

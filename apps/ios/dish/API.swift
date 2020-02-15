@@ -7,8 +7,8 @@ public final class SearchRestaurantsQuery: GraphQLQuery {
   /// The raw GraphQL definition of this operation.
   public let operationDefinition =
     """
-    query SearchRestaurants {
-      restaurant(where: {location: {_st_d_within: {distance: 0.005, from: {type: "Point", coordinates: [-122.421351, 37.759251]}}}}) {
+    query SearchRestaurants($radius: Float!, $geo: geometry!) {
+      restaurant(where: {location: {_st_d_within: {distance: $radius, from: $geo}}}) {
         __typename
         name
         location
@@ -18,14 +18,23 @@ public final class SearchRestaurantsQuery: GraphQLQuery {
 
   public let operationName = "SearchRestaurants"
 
-  public init() {
+  public var radius: Double
+  public var geo: geometry
+
+  public init(radius: Double, geo: geometry) {
+    self.radius = radius
+    self.geo = geo
+  }
+
+  public var variables: GraphQLMap? {
+    return ["radius": radius, "geo": geo]
   }
 
   public struct Data: GraphQLSelectionSet {
     public static let possibleTypes = ["query_root"]
 
     public static let selections: [GraphQLSelection] = [
-      GraphQLField("restaurant", arguments: ["where": ["location": ["_st_d_within": ["distance": 0.005, "from": ["type": "Point", "coordinates": [-122.421351, 37.759251]]]]]], type: .nonNull(.list(.nonNull(.object(Restaurant.selections))))),
+      GraphQLField("restaurant", arguments: ["where": ["location": ["_st_d_within": ["distance": GraphQLVariable("radius"), "from": GraphQLVariable("geo")]]]], type: .nonNull(.list(.nonNull(.object(Restaurant.selections))))),
     ]
 
     public private(set) var resultMap: ResultMap

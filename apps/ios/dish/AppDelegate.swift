@@ -16,6 +16,7 @@ let log = XCGLogger.default
 // apollo
 // via https://github.com/apollographql/apollo-ios/issues/36
 public typealias geometry = [String : Any?]
+public typealias SearchGeometry = geometry
 
 struct APIGeometry {
     let type: String
