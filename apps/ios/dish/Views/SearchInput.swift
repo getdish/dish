@@ -23,8 +23,9 @@ struct SearchInputTagView: View {
     var body: some View {
         HStack(spacing: 8) {
             Text(tag.text)
-                .fixedSize()
+//                .fixedSize()
                 .font(.system(size: fontSize))
+                .frame(minWidth: CGFloat(min(14, tag.text.count) * 9) + 6, maxWidth: 140)
             
             if tag.deletable {
                 VStack {
@@ -124,54 +125,60 @@ struct SearchInput: View {
                     
                     Spacer().frame(width: horizontalSpacing)
                     
-                    if hasTags {
-                        HStack {
-                            ForEach(self.tags) { tag in
-                                SearchInputTagView(
-                                    tag: tag,
-                                    fontSize: fontSize
-                                )
-                                    .padding(.trailing, horizontalSpacing)
-                                    .transition(.slide)
-                                    .animation(.easeIn(duration: 0.3))
-                                    .onTapGesture {
-                                        if tag.deletable {
-                                            if let index = self.tags.firstIndex(of: tag) {
-                                                print("removing tag at \(index)")
-                                                self.tags.remove(at: index)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 0) {
+                            if hasTags {
+                                HStack {
+                                    ForEach(self.tags) { tag in
+                                        DishButton(action: {
+                                            if tag.deletable {
+                                                if let index = self.tags.firstIndex(of: tag) {
+                                                    print("removing tag at \(index)")
+                                                    self.tags.remove(at: index)
+                                                }
                                             }
+                                        }) {
+                                            SearchInputTagView(
+                                                tag: tag,
+                                                fontSize: fontSize
+                                            )
+                                                .padding(.trailing, horizontalSpacing)
                                         }
+                                        .transition(.slide)
+                                        .animation(.easeIn(duration: 0.3))
                                     }
-                            }
-                        }
-                    }
-                    
-                    Spacer().frame(width: horizontalSpacing)
-                    
-                    // TODO (performance / @majid) - snapToBottom(false) is jittery, if you replace
-                    // this next view with Color.red you'll see it goes fast... why?
-                    if showInput {
-                        CustomTextField(
-                            placeholder: hasTags ? "" : self.placeholder,
-                            text: self.$searchText,
-                            isFirstResponder: self.isFirstResponder,
-                            onEditingChanged: self.handleEditingChanged
-                        )
-                    } else {
-                        // temp bugfix for above TODO problem...
-                        HStack {
-                            Group {
-                                if self.searchText != "" {
-                                    Text(self.searchText)
-                                } else {
-                                    Text(self.placeholder).opacity(0.3)
                                 }
                             }
-                            .font(.system(size: fontSize))
-                            Spacer()
+                            
+                            Spacer().frame(width: horizontalSpacing)
+                            
+                            // TODO (performance / @majid) - snapToBottom(false) is jittery, if you replace
+                            // this next view with Color.red you'll see it goes fast... why?
+                            if showInput {
+                                CustomTextField(
+                                    placeholder: hasTags ? "" : self.placeholder,
+                                    text: self.$searchText,
+                                    isFirstResponder: self.isFirstResponder,
+                                    onEditingChanged: self.handleEditingChanged
+                                )
+                            } else {
+                                // temp bugfix for above TODO problem...
+                                HStack {
+                                    Group {
+                                        if self.searchText != "" {
+                                            Text(self.searchText)
+                                        } else {
+                                            Text(self.placeholder).opacity(0.3)
+                                        }
+                                    }
+                                    .font(.system(size: fontSize))
+                                    Spacer()
+                                }
+                                .frameFlex()
+                            }
                         }
-                        .frameFlex()
                     }
+                    
                     
                     Spacer().frame(width: horizontalSpacing)
                     
