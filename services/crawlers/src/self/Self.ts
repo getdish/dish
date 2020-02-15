@@ -15,8 +15,8 @@ export class Self extends WorkerJob {
 
   static queue_config: QueueOptions = {
     limiter: {
-      max: 1,
-      duration: 100,
+      max: 3,
+      duration: 1000,
     },
   }
 
