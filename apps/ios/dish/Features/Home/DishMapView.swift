@@ -339,29 +339,39 @@ struct AppleMapView: UIViewRepresentable {
             }
         }
         
-//        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-//            let annotationIdentifier = "MyCustomAnnotation"
-//            guard !annotation.isKind(of: MKUserLocation.self) else {
-//                return nil
-//            }
-//            
-//            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: annotationIdentifier)
-//            if annotationView == nil {
+        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            let annotationIdentifier = "MyCustomAnnotation"
+            guard !annotation.isKind(of: MKUserLocation.self) else {
+                return nil
+            }
+
+            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: annotationIdentifier)
+            if annotationView == nil {
+//                annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "marker")
+                annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "marker")
+                if case let annotationView as MKMarkerAnnotationView = annotationView {
+                    annotationView.annotation = annotation
+                    annotationView.isEnabled = true
+                    annotationView.canShowCallout = true
+                    annotationView.animatesWhenAdded = true
+                    annotationView.glyphImage = UIImage(named: "pin")
+                }
+                
 //                annotationView = CustomAnnotationView(annotation: annotation, reuseIdentifier: annotationIdentifier)
 //                if case let annotationView as CustomAnnotationView = annotationView {
 //                    annotationView.isEnabled = true
-//                    annotationView.canShowCallout = false
-//                    annotationView.label = UILabel(frame: CGRect(x: -5.5, y: 11.0, width: 22.0, height: 16.5))
+//                    annotationView.canShowCallout = true
+//                    annotationView.label = UILabel(frame: CGRect(x: 5.5, y: 11.0, width: 90.0, height: 30.0))
 //                    if let label = annotationView.label {
-//                        label.font = UIFont(name: "HelveticaNeue", size: 16.0)
-//                        label.textAlignment = .center
+//                        label.font = UIFont(name: "HelveticaNeue", size: 22.0)
+//                        label.textAlignment = .left
 //                        label.textColor = UIColor(white: 0, alpha: 1)
 //                        label.adjustsFontSizeToFitWidth = true
 //                        annotationView.addSubview(label)
 //                    }
 //                }
-//            }
-//            
+            }
+
 //            if case let annotationView as CustomAnnotationView = annotationView {
 //                annotationView.annotation = annotation
 //                annotationView.image = UIImage(named: "pin")
@@ -370,9 +380,9 @@ struct AppleMapView: UIViewRepresentable {
 //                    label.text = title
 //                }
 //            }
-//            
-//            return annotationView
-//        }
+
+            return annotationView
+        }
         
         func updateAnnotations(_ annotations: [MKPointAnnotation]?) {
             guard let annotations = annotations else { return }
