@@ -90,20 +90,28 @@ struct HomeMainContent: View {
             VStack {
                 Spacer()
                 
-                Group {
-                    if Selectors.home.isOnSearchResults() {
-                        HomeMapSearchResults()
-                            .transition(.slide)
-                    } else {
-                        HomeMapExplore()
-                            .transition(.slide)
+                VStack {
+                    Group {
+                        if Selectors.home.isOnSearchResults() {
+                            HomeMapSearchResults()
+                                .transition(.slide)
+                        } else {
+                            HomeMapExplore()
+                                .transition(.slide)
+                        }
                     }
+                    
+                    // bottom pad
+                    Spacer().frame(
+                        height: self.homeState.appHeight - self.homeState.snappedToBottomMapHeight + App.searchBarHeight / 2
+                    )
                 }
-                
-                
-                // bottom pad
-                Spacer().frame(
-                    height: self.homeState.appHeight - self.homeState.snappedToBottomMapHeight + App.searchBarHeight / 2
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [.clear, .black]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
                 )
             }
             .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
