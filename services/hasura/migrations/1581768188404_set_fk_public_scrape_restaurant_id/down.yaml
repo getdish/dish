@@ -1,0 +1,6 @@
+- args:
+    sql: "\n          alter table \"public\".\"scrape\" drop constraint \"scrape_restaurant_id_fkey\",\n
+      \         add constraint \"scrape_restaurant_id_fkey\"\n          foreign key
+      (\"restaurant_id\")\n          references \"public\".\"restaurant\"\n          (\"id\")\n
+      \         on update restrict\n          on delete restrict;\n        "
+  type: run_sql

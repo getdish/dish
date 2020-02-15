@@ -1,4 +1,10 @@
-import BullQueue, { Queue, QueueOptions, JobOptions } from 'bull'
+import BullQueue, {
+  Queue,
+  QueueOptions,
+  JobOptions,
+  EveryRepeatOptions,
+} from 'bull'
+import _ from 'lodash'
 
 const is_local_redis =
   process.env.DISH_ENV == 'development' || process.env.CI == 'true'
@@ -27,7 +33,11 @@ export class WorkerJob {
     }
   }
 
-  async runOnWorker(fn: string, args?: any[]) {
+  async runOnWorker(
+    fn: string,
+    args?: any[],
+    specific_config: JobOptions = {}
+  ) {
     if (process.env.RUN_WITHOUT_WORKER == 'true') {
       return await this.run(fn, args)
     }
@@ -37,10 +47,50 @@ export class WorkerJob {
       args: args,
     }
     const queue = await getBullQueue(this.constructor.name)
-    const config = (this.constructor as typeof WorkerJob).job_config
-    console.log(`Adding job to worker (${this.constructor.name}):`, job)
-    queue.add(job, config)
-    queue.close()
+    const default_config = (this.constructor as typeof WorkerJob).job_config
+    const config = { ...default_config, ...specific_config }
+    if ('repeat' in config) {
+      await this.manageRepeatable(queue, job, config)
+    } else {
+      await this.addJob(queue, job, config)
+    }
+    await queue.close()
+  }
+
+  private async addJob(
+    queue: Queue,
+    job: JobData,
+    config: JobOptions,
+    repeatable: boolean = false
+  ) {
+    if (repeatable) {
+      let run_now = _.cloneDeep(config)
+      delete run_now.repeat
+      console.log(`Adding instant run of repeatable job ...`)
+      await this.addJob(queue, job, run_now)
+    }
+    console.log(`Adding job to worker (${this.constructor.name}):`, job, config)
+    await queue.add(job, config)
+  }
+
+  private async manageRepeatable(
+    queue: Queue,
+    job: JobData,
+    config: JobOptions
+  ) {
+    const repeats = await queue.getRepeatableJobs()
+    const existing = repeats.find(job => job.id == config.jobId)
+    if (!existing) {
+      await this.addJob(queue, job, config, true)
+    } else {
+      if (existing.every != (config?.repeat as EveryRepeatOptions).every) {
+        console.log('Removing job for update: ', existing)
+        await queue.removeRepeatableByKey(existing.key)
+        await this.addJob(queue, job, config, true)
+      } else {
+        console.log('Repeating job already exists: ', job, config)
+      }
+    }
   }
 }
 
