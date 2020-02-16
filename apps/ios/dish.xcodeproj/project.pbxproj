@@ -663,7 +663,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "SCRIPT_PATH=\"${PODS_ROOT}/Apollo/scripts\"\ncd \"${SRCROOT}/${TARGET_NAME}\"\n\"${SCRIPT_PATH}\"/run-bundled-codegen.sh codegen:generate --passthroughCustomScalars --target=swift --includes=./**/*.graphql --localSchemaFile=\"schema.json\" API.swift\n";
+			shellScript = "SCRIPT_PATH=\"${PODS_ROOT}/Apollo/scripts\"\ncd \"${SRCROOT}/${TARGET_NAME}\"\n\n# fix for previews stopping working\n# see https://github.com/apollographql/apollo-tooling/issues/1573\n\n\"${SCRIPT_PATH}\"/run-bundled-codegen.sh codegen:generate --passthroughCustomScalars --target=swift --includes=./**/*.graphql --localSchemaFile=\"schema.json\" API.swift.new\nif ! diff -q API.swift.new API.swift; then\n  mv API.swift.new API.swift\nelse\n  rm API.swift.new\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
