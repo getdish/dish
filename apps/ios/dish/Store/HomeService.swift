@@ -11,7 +11,7 @@ class HomeService {
     
     struct SearchQuery: Equatable {
         let query: String
-        let location: MapLocationState
+        let location: MapViewLocation
     }
     
     func affectSearchResults() {
@@ -19,7 +19,7 @@ class HomeService {
             .map { state in
                 SearchQuery(
                     query: state.home.viewStates.last!.queryString,
-                    location: state.map.location
+                    location: state.map.location ?? MapViewLocation(center: .none)
                 )
             }
             .removeDuplicates()
@@ -32,7 +32,17 @@ class HomeService {
     
     func getSearchResults(_ search: SearchQuery) -> Future<HomeSearchResults, Never> {
         Future<HomeSearchResults, Never> { promise in
-            App.apollo.fetch(query: SearchRestaurantsQuery()) { result in
+            let query = SearchRestaurantsQuery(
+                radius: search.location.radius / 100000,
+                geo: [
+                    "type": "Point",
+                    "coordinates": [
+                        search.location.coordinate?.longitude ?? 0.0,
+                        search.location.coordinate?.latitude ?? 0.0
+                    ]
+                ]
+            )
+            App.apollo.fetch(query: query) { result in
                 switch result {
                     case .success(let result):
                         if result.errors?.count ?? 0 > 0 {
@@ -56,7 +66,6 @@ class HomeService {
                                 }
                             )
                         ))
-                        print("got \(result)")
                     case .failure(let err):
                         print("err \(err)")
                 }

@@ -65,7 +65,7 @@ struct TextShadowStyle: ViewModifier {
 struct HomeSearchResults_Previews: PreviewProvider {
     static var previews: some View {
         HomeSearchResultsView(
-            state: HomeStateItem(filters: [SearchFilter(name: "Pho")])
+            state: HomeStateItem(dishes: [DishFilterItem(name: "Pho")])
         )
             .embedInAppEnvironment()
     }

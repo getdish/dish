@@ -8,11 +8,7 @@ fileprivate let manager = CLLocationManager()
 
 extension AppState {
     struct MapState: Equatable {
-        var location = MapLocationState(
-            radius: 8000,
-            latitude: 0.0,
-            longitude: 0.0
-        )
+        var location: MapViewLocation? = nil
         var moveToLocation: MapViewLocation? = nil
         var locationLabel: String = ""
         var showSearch = false
@@ -25,11 +21,12 @@ extension AppState {
 }
 
 enum MapAction {
-    case setLocation(_ location: MapLocationState)
+    case setLocation(_ location: MapViewLocation)
     case setLocationLabel(_ val: String)
     case listLikelyPlaces
     case setLikelyPlaces(_ locations: [GMSPlace])
     case moveToLocation(_ location: MapViewLocation)
+    case moveToCurrentLocation
     case setLastKnown(_ location: CLLocation?)
     case setSearch(_ search: String)
     case setSearchResults(_ locations: [CLLocation])
@@ -41,6 +38,8 @@ func mapReducer(_ state: inout AppState, action: MapAction) {
             state.map.location = location
         case let .setLocationLabel(val):
             state.map.locationLabel = val
+        case .moveToCurrentLocation:
+            state.map.moveToLocation = .init(center: .current, radius: state.map.location?.radius ?? 10000, refresh: true)
         case let .moveToLocation(loc):
             state.map.moveToLocation = loc
         case let .setLastKnown(location):

@@ -2,7 +2,7 @@ import Foundation
 import CoreLocation
 import SwiftUI
 
-func load<T: Decodable>(_ filename: String) -> T {
+public func loadJSON<T: Decodable>(_ filename: String) -> T {
     let data: Data
     
     guard let file = Bundle.main.url(forResource: filename, withExtension: nil)

@@ -23,25 +23,27 @@ struct SearchInputTagView: View {
     var body: some View {
         HStack(spacing: 8) {
             Text(tag.text)
+//                .fixedSize()
                 .font(.system(size: fontSize))
+                .frame(minWidth: CGFloat(min(14, tag.text.count) * 9) + 6, maxWidth: 140)
             
             if tag.deletable {
                 VStack {
                     Image(systemName: "xmark")
                         .resizable()
-                        .frame(width: 10, height: 10)
-                        .padding(3)
+                        .frame(width: 12, height: 12)
+                        .padding(5)
                 }
                 .background(tag.color.brightness(-0.1))
-                .cornerRadius(4)
+                .cornerRadius(6)
                 .opacity(0.5)
             }
         }
         .foregroundColor(Color.white)
-        .padding(.horizontal, 6)
-        .padding(.vertical, 5)
+        .padding(.horizontal, self.fontSize * 0.5)
+        .padding(.vertical, self.fontSize * 0.35)
         .background(tag.color)
-        .cornerRadius(4)
+        .cornerRadius(6)
     }
 }
 
@@ -55,6 +57,7 @@ struct SearchInput: View {
     var sizeRadius = CGFloat(1)
     var icon: AnyView?
     var showCancelInside = false
+    var onTapLeadingIcon: (() -> Void)?
     var onEditingChanged: ((Bool) -> Void)?
     var onCancel: (() -> Void)?
     var onClear: (() -> Void)?
@@ -70,9 +73,11 @@ struct SearchInput: View {
     @Environment(\.colorScheme) var colorScheme
     
     func handleEditingChanged(isEditing: Bool) {
-        self.showCancelButton = isEditing
-        if let cb = onEditingChanged {
-            cb(isEditing)
+        async {
+            self.showCancelButton = isEditing
+            if let cb = self.onEditingChanged {
+                cb(isEditing)
+            }
         }
     }
     
@@ -91,66 +96,91 @@ struct SearchInput: View {
         let pad = 8 * (scale + 0.5) * 0.6
         let numTags = self.tags.count
         let hasTags = numTags > 0
-        let fontSize = 14 * (scale - 1) / 2 + 14
+        let fontSize = 14 * (scale - 1) / 2 + 16
+        let horizontalSpacing = 4 * scale
         
         return VStack {
             // Search view
             HStack {
-                HStack(spacing: 4 * scale) {
-                    VStack {
-                        icon ?? AnyView(
-                            Image(systemName: "magnifyingglass")
-                                .resizable()
-                                .scaledToFit()
-                        )
-                    }
-                    .frame(width: 24 * scale, height: 24 * scale)
-                    
-                    if hasTags {
-                        HStack {
-                            ForEach(self.tags) { tag in
-                                SearchInputTagView(
-                                    tag: tag,
-                                    fontSize: fontSize
-                                )
-                                    .transition(.slide)
-                                    .animation(.linear(duration: 2))
-                                    .onTapGesture {
-                                        if tag.deletable {
-                                            if let index = self.tags.firstIndex(of: tag) {
-                                                print("removing tag at \(index)")
-                                                self.tags.remove(at: index)
-                                            }
-                                        }
-                                    }
-                            }
+                HStack(spacing: 0) {
+                    Button(action: {
+                        if let cb = self.onTapLeadingIcon {
+                            cb()
+                        } else {
+//                            self.isFirstResponder = true
                         }
+                    }) {
+                        VStack {
+                            VStack {
+                                icon ?? AnyView(
+                                    Image(systemName: "magnifyingglass")
+                                        .resizable()
+                                        .scaledToFit()
+                                )
+                            }
+                            .frame(width: 24 * scale, height: 24 * scale)
+                        }
+                        .padding(horizontalSpacing)
                     }
                     
-                    // TODO (performance / @majid) - snapToBottom(false) is jittery, if you replace
-                    // this next view with Color.red you'll see it goes fast... why?
-                    if showInput {
-                        CustomTextField(
-                            placeholder: hasTags ? "" : self.placeholder,
-                            text: self.$searchText,
-                            isFirstResponder: self.isFirstResponder,
-                            onEditingChanged: self.handleEditingChanged
-                        )
-                    } else {
-                        // temp bugfix for above TODO problem...
-                        HStack {
-                            Group {
-                                if self.searchText != "" {
-                                    Text(self.searchText)
-                                } else {
-                                    Text(self.placeholder).opacity(0.3)
+                    Spacer().frame(width: horizontalSpacing)
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 0) {
+                            if hasTags {
+                                HStack {
+                                    ForEach(self.tags) { tag in
+                                        DishButton(action: {
+                                            if tag.deletable {
+                                                if let index = self.tags.firstIndex(of: tag) {
+                                                    print("removing tag at \(index)")
+                                                    self.tags.remove(at: index)
+                                                }
+                                            }
+                                        }) {
+                                            SearchInputTagView(
+                                                tag: tag,
+                                                fontSize: fontSize
+                                            )
+                                                .padding(.trailing, horizontalSpacing)
+                                        }
+                                        .transition(.slide)
+                                        .animation(.easeIn(duration: 0.3))
+                                    }
                                 }
                             }
-                            .font(.system(size: fontSize + 2))
-                            Spacer()
+                            
+                            Spacer().frame(width: horizontalSpacing)
+                            
+                            // TODO (performance / @majid) - snapToBottom(false) is jittery, if you replace
+                            // this next view with Color.red you'll see it goes fast... why?
+                            if showInput {
+                                CustomTextField(
+                                    placeholder: hasTags ? "" : self.placeholder,
+                                    text: self.$searchText,
+                                    isFirstResponder: self.isFirstResponder,
+                                    onEditingChanged: self.handleEditingChanged
+                                )
+                            } else {
+                                // temp bugfix for above TODO problem...
+                                HStack {
+                                    Group {
+                                        if self.searchText != "" {
+                                            Text(self.searchText)
+                                        } else {
+                                            Text(self.placeholder).opacity(0.3)
+                                        }
+                                    }
+                                    .font(.system(size: fontSize))
+                                    Spacer()
+                                }
+                                .frameFlex()
+                            }
                         }
-                        .frameFlex()
                     }
+                    
+                    
+                    Spacer().frame(width: horizontalSpacing)
                     
 
 //                        .disableAutocorrection(true)
@@ -181,7 +211,7 @@ struct SearchInput: View {
                 }
                     .padding(EdgeInsets(
                         top: pad,
-                        leading: pad * 1.3,
+                        leading: pad * 1.3 - horizontalSpacing,
                         bottom: pad,
                         trailing: pad * 1.3
                     ))

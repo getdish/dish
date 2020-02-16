@@ -9,31 +9,6 @@ fileprivate struct Constants {
     static let ONE_METER_TO_LAT: Double = 1 / 111111
 }
 
-struct MapViewLocation: Equatable {
-    enum LocationType: Equatable {
-        case current
-        case location(lat: Double, long: Double)
-        case none
-    
-    }
-    let at: LocationType
-    let time: NSDate
-    
-    init(_ at: LocationType) {
-        self.at = at
-        self.time = NSDate()
-    }
-    
-    var coordinate: CLLocationCoordinate2D? {
-        switch at {
-            case .current: return nil
-            case .none: return nil
-            case .location(let lat, let long):
-                return CLLocationCoordinate2D(latitude: lat, longitude: long)
-        }
-    }
-}
-
 struct CurrentMapPosition {
     let center: CLLocationCoordinate2D
     let location: CLLocation
@@ -296,8 +271,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
 
     func updateMapLocation() {
         guard let moveTo = self.moveToLocation else { return }
-        print(" 🗺 updateMapLocation \(moveTo.at)")
-        switch moveTo.at {
+        print(" 🗺 updateMapLocation \(moveTo.center)")
+        switch moveTo.center {
             case .current:
                 self.moveToCurrentLocation()
             case .none:

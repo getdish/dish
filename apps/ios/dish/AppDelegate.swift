@@ -6,16 +6,20 @@ import XCGLogger
 // GLOBALS
 // most if not all should go onto here:
 let App = AppModel()
-// ...
+
+// ... globals i cant seem to put on App.
 // state
 let homeViewState = HomeViewState()
-let features: [DishItem] = load("dishData.json")
-let restaurants: [RestaurantItem] = load("restaurantData.json")
 let log = XCGLogger.default
+
+// TODO why cant i put this on App:
+let features: [DishItem] = loadJSON("dishData.json")
+let restaurants: [RestaurantItem] = loadJSON("restaurantData.json")
 
 // apollo
 // via https://github.com/apollographql/apollo-ios/issues/36
 public typealias geometry = [String : Any?]
+public typealias SearchGeometry = geometry
 
 struct APIGeometry {
     let type: String

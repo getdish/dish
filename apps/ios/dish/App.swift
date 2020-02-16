@@ -6,12 +6,14 @@ import Apollo
 // https://vimeo.com/291588126
 
 class AppModel {
+    // to easily test entire app in a certain state, replace this line with a commented out line below
     let store = Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
+//    let store = Mocks.homeSearchedPho
+//    let store = Mocks.homeSearchedPhoSelectedRestaurant
 
     // services
     let mapService = MapService()
     let homeService = HomeService()
-    let googlePlacesService = GooglePlacesService()
     
     var apollo: ApolloClient {
         return ApolloNetwork.shared.apollo
@@ -26,6 +28,7 @@ class AppModel {
     // flags
     let enableMap = true
     let enableMapAutoZoom = false
+    let enableMapFlags = true
     let enableContent = true
     let enableCamera = true
 

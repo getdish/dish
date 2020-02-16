@@ -286,7 +286,7 @@ class HomeViewState: ObservableObject {
             if toBottom {
                 self.y = self.snappedToBottomMapHeight
             } else {
-                self.y = self.startSnapToBottomAt
+                self.y = self.startSnapToBottomAt - 150
             }
         }
         
@@ -435,8 +435,7 @@ class HomeViewState: ObservableObject {
         let scrollY = mapHeight - frame.minY - App.screen.edgeInsets.top - scrollRevealY
         let y = max(-50, min(100, scrollY))
         if y != scrollState.scrollY {
-            print("disabled scroll stuff for now")
-//            self.scrollState.setScrollY(y)
+            self.scrollState.setScrollY(y)
         }
     }
     

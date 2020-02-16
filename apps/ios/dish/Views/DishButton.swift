@@ -1,8 +1,7 @@
 import SwiftUI
 
-// hacky for now testing
 struct DishButton<Content: View>: View {
-    let action: () -> Void
+    let action: (() -> Void)?
     let content: Content
     
     init(action: @escaping () -> Void, @ViewBuilder content: () -> Content) {
@@ -20,7 +19,7 @@ struct DishButton<Content: View>: View {
             .opacity(self.isTapped ? 0.9 : 1)
             .onTapGesture {
                 self.lastTap = Date()
-                self.action()
+                if let cb = self.action { cb() }
         }
         .onLongPressGesture(
             minimumDuration: 10000,
@@ -29,10 +28,15 @@ struct DishButton<Content: View>: View {
             withAnimation(.spring()) {
                 self.isTapped = isPressing
             }
-        }) {
-            if self.lastTap.timeIntervalSinceNow > 10 {
-                self.action()
+            if isPressing {
+                self.lastTap = Date()
+            } else {
+                if let cb = self.action { cb() }
             }
+        }) {
+//            if self.lastTap.timeIntervalSinceNow > 10 {
+//                self.action()
+//            }
         }
     }
 }

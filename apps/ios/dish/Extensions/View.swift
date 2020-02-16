@@ -62,11 +62,8 @@ extension View {
     }
     
     func embedInAppEnvironment(_ appState: Store<AppState, AppAction>? = nil) -> some View {
-        var res = self
-        if let state = appState {
-            res = res.environmentObject(state) as! Self
-        }
-        return res.environmentObject(App.store)
+        return self
+            .environmentObject(appState ?? App.store)
             .environmentObject(App.keyboard)
             .environmentObject(homeViewState)
             .embedInScreen(App.screen)
