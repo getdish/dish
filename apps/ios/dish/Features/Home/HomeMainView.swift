@@ -43,17 +43,6 @@ struct HomeMainView: View {
             self.state.setShowCamera(val)
         }
     }
-    
-    var isRestaurantOpen: Binding<Bool> {
-        Binding<Bool>(
-            get: { Selectors.home.isOnRestaurant() },
-            set: { next in
-                if next == false {
-                    self.store.send(.home(.pop))
-                }
-            }
-        )
-    }
 
     var body: some View {
         let state = self.state
@@ -204,11 +193,7 @@ struct HomeMainView: View {
             .simultaneousGesture(self.dragGesture)
             .scaleEffect(Selectors.home.isOnRestaurant() ? 0.9 : 1)
             
-            BottomSheetView(
-                isOpen: self.isRestaurantOpen, maxHeight: App.screen.height * 0.9
-            ) {
-                HomeMapRestaurant()
-            }
+            DishRestaurantView()
             
         }
             .environmentObject(self.state)

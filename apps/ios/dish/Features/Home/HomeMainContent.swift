@@ -123,14 +123,6 @@ struct HomeMainContent: View {
     }
 }
 
-struct HomeMapRestaurant: View {
-    var body: some View {
-        Color.white
-            .cornerRadius(40)
-            .shadow(color: Color.black.opacity(0.5), radius: 30, x: 0, y: 5)
-    }
-}
-
 struct HomeContentExplore: View {
     @State var index: Int = 0
     
