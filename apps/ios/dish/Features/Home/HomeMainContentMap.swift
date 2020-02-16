@@ -8,12 +8,12 @@ struct HomeMapExplore: View {
         VStack(spacing: 0) {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 9) {
-                    ForEach(0 ..< labels.count - 1) { index in
+                    ForEach(0 ..< self.store.state.home.labels.count - 1) { index in
                         DishButton(action: {
                             self.index = index
                         }) {
                             HStack {
-                                Text(labels[index])
+                                Text(self.store.state.home.labels[index])
                                     .font(.system(size: 17))
                             }
                             .padding(.horizontal, 2)

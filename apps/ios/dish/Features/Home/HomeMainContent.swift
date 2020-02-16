@@ -2,8 +2,6 @@ import SwiftUI
 import Combine
 
 fileprivate let items = features.chunked(into: 2)
-// TODO api-ify
-let labels = ["🏆", "♥️ Locals", "🔥 New", "👩‍🍳 Picks", "🍣", "🌶 Spicy", "🥗 Healthy", "💸 Cheap", "🕒 Fast"]
 
 struct HomeMainContentContainer<Content>: View where Content: View {
     @State var animatePosition: MagicItemPosition = .start
@@ -188,10 +186,10 @@ struct HomeContentExploreBy: View, Identifiable {
                     )
                     
                     VStack {
-                        ForEach(0..<5) { i in
+                        ForEach(0 ..< self.store.state.home.labels.count) { index in
                             VStack(alignment: .leading, spacing: 4) {
                                 HStack(spacing: 0) {
-                                    Text(labels[i])
+                                    Text(self.store.state.home.labels[index])
                                         .font(.system(size: 13))
                                         .fontWeight(.bold)
                                         .foregroundColor(Color.white)

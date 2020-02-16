@@ -2,7 +2,7 @@ class Mocks {
     static let homeSearchedPho = Store<AppState, AppAction>.init(
         initialState: AppState(
             home: AppState.HomeState(
-                viewStates: [HomeStateItem(), HomeStateItem(filters: [SearchFilter(name: "Pho")])]
+                viewStates: [HomeStateItem(), HomeStateItem(dishes: [DishFilterItem(name: "Pho")])]
             )
         ),
         reducer: appReducer
@@ -13,8 +13,8 @@ class Mocks {
             home: AppState.HomeState(
                 viewStates: [
                     HomeStateItem(),
-                    HomeStateItem(filters: [SearchFilter(name: "Pho")]),
-                    HomeStateItem(filters: [SearchFilter(name: "Pho")], restaurant: restaurants[0])
+                    HomeStateItem(dishes: [DishFilterItem(name: "Pho")]),
+                    HomeStateItem(dishes: [DishFilterItem(name: "Pho")], restaurant: restaurants[0])
                 ]
             )
         ),

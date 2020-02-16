@@ -11,6 +11,7 @@
 
 - Explore
   - Make category click work "Seafood"
+  - Cache for categories results
   - Make going between panes have simple animation
 - Search UI
   - Tapping searchbar moves it all the way to top

@@ -2,14 +2,36 @@ import SwiftUI
 import Combine
 import GoogleMaps
 
+fileprivate let initialLabels = [
+    "🏆",
+    "👌 Locals",
+    "🔥 New",
+    "👩‍🍳 Picks",
+    "💎 Date Night",
+    "🥬",
+    "🐟",
+    "💸 Cheap",
+    "🕒 Fast"
+]
+
+fileprivate let initialFilters: [FilterItem] = [
+    FilterItem(name: "$", fontSize: 20, groupId: "price"),
+    FilterItem(name: "$$", fontSize: 18, groupId: "price"),
+    FilterItem(name: "$$$", fontSize: 14, groupId: "price"),
+    FilterItem(name: "🚗", fontSize: 15, groupId: "quick"),
+    FilterItem(name: "Open", fontSize: 15, groupId: "normal"),
+    FilterItem(name: "Healthy", fontSize: 15, groupId: "normal"),
+    FilterItem(name: "Cash Only", fontSize: 15, groupId: "normal")
+]
+
 extension AppState {
     struct HomeState: Equatable {
         var view: HomePageView = .home
-        var viewStates: [HomeStateItem] = [
-            HomeStateItem(filters: [
-                //                SearchFilter(type: .root, name: "Dish", deletable: false)
-            ])
-        ]
+        var viewStates: [HomeStateItem] = [HomeStateItem()]
+        var filters: [FilterItem] = initialFilters
+        var labels = initialLabels
+        var labelActive = 0
+        var labelDishes = [String: [DishItem]]()
         var showDrawer: Bool = false
         var showCamera: Bool = false
     }
@@ -18,13 +40,15 @@ extension AppState {
 enum HomeAction {
     case setView(_ page: HomePageView)
     case setShowDrawer(_ val: Bool)
-    case navigateToRestaurant(_ restaurant: RestaurantItem)
-    case push(_ state: HomeStateItem)
+    case navigateToRestaurant(_ val: RestaurantItem)
+    case push(_ val: HomeStateItem)
     case pop
     case toggleDrawer
     case setSearch(_ val: String)
     case setSearchResults(_ val: HomeSearchResults)
     case setCurrentTags(_ val: [SearchInputTag])
+    case setLabelActive(_ val: Int)
+    case setLabelDishes(id: String, dishes: [DishItem])
 }
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
@@ -39,6 +63,10 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     }
     
     switch action {
+        case .setLabelDishes(let id, let dishes):
+            state.home.labelDishes[id] = dishes
+        case let .setLabelActive(index):
+            state.home.labelActive = index
         case let .navigateToRestaurant(resaurant):
             var homeState = state.home.viewStates.last!
             homeState.restaurant = resaurant
@@ -57,7 +85,7 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
                     App.store.send(.home(.pop))
                 }
             } else {
-                last.filters = val.map { SearchFilter(name: $0.text) }
+                last.dishes = val.map { DishFilterItem(name: $0.text) }
                 updateItem(last)
                 if let search = val.last?.text {
                     async {
@@ -116,12 +144,12 @@ struct HomeSelectors {
     func tags(_ store: AppStore = App.store) -> [SearchInputTag] {
         let homeState = store.state.home.viewStates.last!
         var tags: [SearchInputTag] = []
-        if homeState.filters.count > 0 {
-            tags = homeState.filters.map { filter in
+        if homeState.dishes.count > 0 {
+            tags = homeState.dishes.map { dish in
                 SearchInputTag(
                     color: SearchToTagColor.filter,
-                    text: filter.name,
-                    deletable: filter.deletable
+                    text: dish.name,
+                    deletable: dish.deletable
                 )
             }
         }
@@ -131,19 +159,29 @@ struct HomeSelectors {
 
 // structures for HomeStore
 
+struct FilterItem: Identifiable, Equatable {
+    var name: String
+    var id: String { name }
+    enum FilterType { case toggle, select }
+    var type: FilterType = .toggle
+    var active: Bool = false
+    var fontSize: CGFloat = 20
+    var groupId: String = ""
+}
+
 struct HomeStateItem: Identifiable, Equatable {
     var id = uid()
     var search = ""
-    var filters: [SearchFilter] = []
+    var dishes: [DishFilterItem] = []
     var searchResults: HomeSearchResults = HomeSearchResults(id: "0")
     var restaurant: RestaurantItem? = nil
     
     var queryString: String {
-        self.search + " " + self.filters.map { $0.name }.joined(separator: " ")
+        self.search + " " + self.dishes.map { $0.name }.joined(separator: " ")
     }
 }
 
-struct SearchFilter: Equatable {
+struct DishFilterItem: Equatable {
     enum SearchFilterType {
         case root, cuisine
     }

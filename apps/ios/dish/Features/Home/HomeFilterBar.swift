@@ -19,38 +19,17 @@ struct HomeMainFilterBar: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     Group {
-//                        DishButton(action: {
-//                            self.x = !self.x
-//                        }) {
-//                            Text(self.x ? "🍽" : "🌎")
-//                                .font(.system(size: 28))
-//                                .modifier(TextShadowStyle())
-//                        }
-                        
                         Color.white.opacity(0.1).frame(width: 1)
                         
-                        FilterButton(label: "$", fontSize: 20, action: {})
-                            .frame(width: 50)
-                        FilterButton(label: "$$", fontSize: 18, action: {})
-                            .frame(width: 60)
-                        FilterButton(label: "$$$", fontSize: 14, action: {})
-                            .frame(width: 64)
-                        
-                        Color.white.opacity(0.1).frame(width: 1)
-                        
-                        FilterButton(label: "🚗", fontSize: 15, action: {})
-                            .frame(width: 56)
-                        
-                        FilterButton(label: "Open", fontSize: 15, action: {})
-                            .frame(width: 82)
-                            .environment(\.colorScheme, colorScheme == .light ? .dark : .light)
-                        
-                        FilterButton(label: "Healthy", fontSize: 15, action: {})
-                        
-                        FilterButton(label: "Cash Only", fontSize: 15, action: {})
-                            .frame(width: 110)
+                        ForEach(self.store.state.home.filters) { filter in
+                            FilterButton(
+                                label: filter.name,
+                                fontSize: filter.fontSize,
+                                active: filter.active,
+                                action: {}
+                            )
+                        }
                     }
-//                    .drawingGroup()
                 }
                 .padding(.vertical, App.filterBarPad)
                 .padding(.horizontal, 24)
@@ -84,7 +63,8 @@ struct FilterButton: View {
     var label: String = ""
     var fontSize: CGFloat = 15
     var icon: String = ""
-    var action: () -> Void
+    var active: Bool = false
+    var action: (() -> Void)? = nil
     var flex: Bool = false
     var cornerRadiusCorners: UIRectCorner = .allCorners
     
@@ -95,7 +75,7 @@ struct FilterButton: View {
     var body: some View {
         
         return ZStack {
-            DishButton(action: action) {
+            DishButton(action: action ?? {}) {
                 HStack {
                     Spacer()
                     if icon != "" {
@@ -109,6 +89,7 @@ struct FilterButton: View {
                             Text(label)
                                 .font(.system(size: fontSize))
                                 .lineLimit(nil)
+                                .fixedSize()
                         }
                     }
                     Spacer()
@@ -116,35 +97,14 @@ struct FilterButton: View {
                 .frame(width: self.width, height: self.height)
                 .modifier(FilterButtonStyle())
             }
+            .environment(\.colorScheme,
+                self.active
+                    ? colorScheme == .light ? .dark : .light
+                    : colorScheme
+            )
         }
     }
 }
-
-
-struct FilterButtonStrong: View {
-    var label: String
-    var action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            Text(label)
-                .foregroundColor(.white)
-                .fontWeight(.semibold)
-                .font(.system(size: 14))
-        }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
-        .background(Color.blue.opacity(0.35))
-        .overlay(
-            RoundedRectangle(cornerRadius: 80)
-                .stroke(Color.white, lineWidth: 1)
-        )
-            .cornerRadius(80)
-            .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
-    }
-}
-
-
 
 #if DEBUG
 struct HomeMainFilters_Previews: PreviewProvider {
@@ -154,56 +114,3 @@ struct HomeMainFilters_Previews: PreviewProvider {
     }
 }
 #endif
-
-struct HomeMainFilterBarCuisine: View {
-    @EnvironmentObject var store: AppStore
-    
-    func filterAction() {
-        // todo move this into action
-        let curState = self.store.state.home.viewStates.last!
-        let filters = curState.filters.filter({ $0.type == .cuisine }) + [
-            SearchFilter(type: .cuisine, name: "American")
-        ]
-        self.store.send(.home(.push(HomeStateItem(
-            search: curState.search,
-            filters: filters
-        ))))
-    }
-    
-    var body: some View {
-        Group {
-            FilterButton(label: "American", action: filterAction)
-            FilterButton(label: "Thai", action: filterAction)
-            FilterButton(label: "Chinese", action: filterAction)
-            FilterButton(label: "Italian", action: filterAction)
-            FilterButton(label: "French", action: filterAction)
-            FilterButton(label: "Burmese", action: filterAction)
-            FilterButton(label: "Greek", action: filterAction)
-        }
-    }
-}
-
-struct FilterPicker<Content>: View where Content: View {
-    @Binding var selection: Int
-    var content: Content
-    
-    init(selection: Binding<Int>, @ViewBuilder content: @escaping () -> Content) {
-        self._selection = selection
-        self.content = content()
-    }
-    
-    var body: some View {
-        ZStack {
-            // animated current selection
-            Color.white
-                .frame(width: 50)
-                .cornerRadius(100)
-            
-            HStack {
-                content
-            }
-            .padding(3)
-        }
-        .modifier(FilterButtonStyle())
-    }
-}

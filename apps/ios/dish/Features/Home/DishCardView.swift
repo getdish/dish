@@ -23,7 +23,7 @@ struct DishCardView: View, Identifiable, Equatable {
             GeometryReader { geo in
                 DishButton(action: self.action ?? {
                     App.store.send(
-                        .home(.push(HomeStateItem(filters: [SearchFilter(name: self.dish.name)])))
+                        .home(.push(HomeStateItem(dishes: [DishFilterItem(name: self.dish.name)])))
                     )
                 }) {
                     self.dish.image
@@ -84,7 +84,7 @@ struct DishButtonView: View, Identifiable, Equatable {
         MagicItem("dish-button-\(id)", at: at) {
             DishButton(action: self.action ?? {
                 App.store.send(
-                    .home(.push(HomeStateItem(filters: [SearchFilter(name: self.dish.name)])))
+                    .home(.push(HomeStateItem(dishes: [DishFilterItem(name: self.dish.name)])))
                 )
             }) {
                 VStack {
