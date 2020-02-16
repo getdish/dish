@@ -15,8 +15,6 @@ let log = XCGLogger.default
 // TODO why cant i put this on App:
 let features: [DishItem] = loadJSON("dishData.json")
 let restaurants: [RestaurantItem] = loadJSON("restaurantData.json")
-// fixtures, mocks
-let mocks = Mocks()
 
 // apollo
 // via https://github.com/apollographql/apollo-ios/issues/36

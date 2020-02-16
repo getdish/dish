@@ -36,9 +36,9 @@ struct HomeMainView: View {
             }
         }
         
-        let isOnCamera = App.store.state.home.view == .camera
+        let isOnCamera = self.store.state.home.view == .camera
         if isOnCamera != self.wasOnCamera {
-            let val = App.store.state.home.view == .camera
+            let val = self.store.state.home.view == .camera
             self.wasOnCamera = val
             self.state.setShowCamera(val)
         }
@@ -49,7 +49,7 @@ struct HomeMainView: View {
             get: { Selectors.home.isOnRestaurant() },
             set: { next in
                 if next == false {
-                    App.store.send(.home(.pop))
+                    self.store.send(.home(.pop))
                 }
             }
         )

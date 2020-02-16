@@ -93,28 +93,28 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
 }
 
 struct HomeSelectors {
-    func isOnHome(_ state: AppState = App.store.state) -> Bool {
-        state.home.viewStates.count == 1
+    func isOnHome(_ store: AppStore = App.store) -> Bool {
+        store.state.home.viewStates.count == 1
     }
     
-    func isOnSearchResults(_ state: AppState = App.store.state) -> Bool {
-        state.home.viewStates.count > 1
+    func isOnSearchResults(_ store: AppStore = App.store) -> Bool {
+        store.state.home.viewStates.count > 1
     }
     
-    func isOnRestaurant(_ state: AppState = App.store.state) -> Bool {
-        self.restaurant() != nil
+    func isOnRestaurant(_ store: AppStore = App.store) -> Bool {
+        self.restaurant(store) != nil
     }
     
-    func restaurant(_ state: AppState = App.store.state) -> RestaurantItem? {
-        state.home.viewStates.last!.restaurant
+    func restaurant(_ store: AppStore = App.store) -> RestaurantItem? {
+        store.state.home.viewStates.last!.restaurant
     }
     
-    func lastState(_ state: AppState = App.store.state) -> HomeStateItem {
-        state.home.viewStates.last!
+    func lastState(_ store: AppStore = App.store) -> HomeStateItem {
+        store.state.home.viewStates.last!
     }
     
-    func tags(_ state: AppState = App.store.state) -> [SearchInputTag] {
-        let homeState = state.home.viewStates.last!
+    func tags(_ store: AppStore = App.store) -> [SearchInputTag] {
+        let homeState = store.state.home.viewStates.last!
         var tags: [SearchInputTag] = []
         if homeState.filters.count > 0 {
             tags = homeState.filters.map { filter in

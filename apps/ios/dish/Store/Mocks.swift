@@ -1,5 +1,5 @@
 class Mocks {
-    let homeSearchedPho = Store<AppState, AppAction>.init(
+    static let homeSearchedPho = Store<AppState, AppAction>.init(
         initialState: AppState(
             home: AppState.HomeState(
                 viewStates: [HomeStateItem(), HomeStateItem(filters: [SearchFilter(name: "Pho")])]
@@ -8,7 +8,7 @@ class Mocks {
         reducer: appReducer
     )
     
-    let homeSearchedPhoSelectedRestaurant = Store<AppState, AppAction>.init(
+    static let homeSearchedPhoSelectedRestaurant = Store<AppState, AppAction>.init(
         initialState: AppState(
             home: AppState.HomeState(
                 viewStates: [
@@ -21,7 +21,7 @@ class Mocks {
         reducer: appReducer
     )
     
-    let defaultState = Store<AppState, AppAction>.init(
+    static let defaultState = Store<AppState, AppAction>.init(
         initialState: AppState(),
         reducer: appReducer
     )

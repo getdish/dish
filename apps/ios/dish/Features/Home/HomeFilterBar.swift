@@ -60,18 +60,6 @@ struct HomeMainFilterBar: View {
     }
 }
 
-fileprivate let filterAction = {
-    // todo move this into action
-    let curState = App.store.state.home.viewStates.last!
-    let filters = curState.filters.filter({ $0.type == .cuisine }) + [
-        SearchFilter(type: .cuisine, name: "American")
-    ]
-    App.store.send(.home(.push(HomeStateItem(
-        search: curState.search,
-        filters: filters
-    ))))
-}
-
 struct FilterButtonStyle: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
     
@@ -169,6 +157,18 @@ struct HomeMainFilters_Previews: PreviewProvider {
 
 struct HomeMainFilterBarCuisine: View {
     @EnvironmentObject var store: AppStore
+    
+    func filterAction() {
+        // todo move this into action
+        let curState = self.store.state.home.viewStates.last!
+        let filters = curState.filters.filter({ $0.type == .cuisine }) + [
+            SearchFilter(type: .cuisine, name: "American")
+        ]
+        self.store.send(.home(.push(HomeStateItem(
+            search: curState.search,
+            filters: filters
+        ))))
+    }
     
     var body: some View {
         Group {

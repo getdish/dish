@@ -6,7 +6,7 @@ import Apollo
 // https://vimeo.com/291588126
 
 class AppModel {
-    let store = Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
+    let store = Mocks.homeSearchedPhoSelectedRestaurant //Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
 
     // services
     let mapService = MapService()
