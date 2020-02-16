@@ -91,6 +91,7 @@
 		AEA331F923A3385000B36A23 /* InlineAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F823A3385000B36A23 /* InlineAlertView.swift */; };
 		AEA331FB23A338F400B36A23 /* KeyboardHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331FA23A338F400B36A23 /* KeyboardHost.swift */; };
 		AEA87E4323B976EB009F07DB /* HomeFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA87E4223B976EB009F07DB /* HomeFilterBar.swift */; };
+		AEAAAA0C23F9D66500ABED23 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAAAA0B23F9D66500ABED23 /* Sequence.swift */; };
 		AEAE67EC23B5A70A00B9D781 /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAE67EB23B5A70A00B9D781 /* Map.swift */; };
 		AEC9AD3E23D10C2900BCC82E /* ScrollViewEnhanced.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC9AD3D23D10C2900BCC82E /* ScrollViewEnhanced.swift */; };
 		AEC9AD4023D15AFD00BCC82E /* DishCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC9AD3F23D15AFD00BCC82E /* DishCardView.swift */; };
@@ -208,6 +209,7 @@
 		AEA331F823A3385000B36A23 /* InlineAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineAlertView.swift; sourceTree = "<group>"; };
 		AEA331FA23A338F400B36A23 /* KeyboardHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHost.swift; sourceTree = "<group>"; };
 		AEA87E4223B976EB009F07DB /* HomeFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFilterBar.swift; sourceTree = "<group>"; };
+		AEAAAA0B23F9D66500ABED23 /* Sequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
 		AEAE67EB23B5A70A00B9D781 /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Map.swift; sourceTree = "<group>"; };
 		AEC9AD3D23D10C2900BCC82E /* ScrollViewEnhanced.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewEnhanced.swift; sourceTree = "<group>"; };
 		AEC9AD3F23D15AFD00BCC82E /* DishCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishCardView.swift; sourceTree = "<group>"; };
@@ -331,6 +333,7 @@
 				AEE802B423ED3E8000A1A19E /* Double.swift */,
 				AED2EA0E23F34D990041A195 /* Dictionary.swift */,
 				AE65DF9123F771FF00758DD3 /* String.swift */,
+				AEAAAA0B23F9D66500ABED23 /* Sequence.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -689,6 +692,7 @@
 				AEED844123B6707100407266 /* DishMapView.swift in Sources */,
 				AE0F474423B69276008F7418 /* DishCamera.swift in Sources */,
 				AE872FEF23CE6E8100F84663 /* CurrentLocationService.swift in Sources */,
+				AEAAAA0C23F9D66500ABED23 /* Sequence.swift in Sources */,
 				AE65E9BB23E59F9E00702C30 /* Text.swift in Sources */,
 				AEA331FB23A338F400B36A23 /* KeyboardHost.swift in Sources */,
 				AE7563E523A038300094022B /* SearchInput.swift in Sources */,

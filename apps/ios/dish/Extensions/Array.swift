@@ -12,6 +12,7 @@ extension Array {
         
         return chunkedArray
     }
+
     
     func split() -> [[Element]] {
         let ct = self.count

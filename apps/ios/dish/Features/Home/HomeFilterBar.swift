@@ -5,29 +5,33 @@ fileprivate let leftPad = AnyView(Spacer().frame(width: 50))
 struct HomeMainFilterBar: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var store: AppStore
-    @State var wasOnSearchResults = false
-    @State var x = true
+    
+    var filterGroups: [[FilterItem]] {
+        var items: [[FilterItem]] = []
+        var lastGroup = ""
+        self.store.state.home.filters.forEach { filter in
+            if lastGroup != filter.groupId {
+                items.append([filter])
+                lastGroup = filter.groupId
+            } else {
+                items[items.count - 1].append(filter)
+            }
+        }
+        return items
+    }
     
     var body: some View {
         ZStack {
-            SideEffect("HomeMainFilters.changeWasOnSearchResults",
-               condition: { !self.wasOnSearchResults && Selectors.home.isOnSearchResults() }
-            ) {
-                self.wasOnSearchResults = true
-            }
-            
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     Group {
-                        Color.white.opacity(0.1).frame(width: 1)
-                        
-                        ForEach(self.store.state.home.filters) { filter in
-                            FilterButton(
-                                label: filter.name,
-                                fontSize: filter.fontSize,
-                                active: filter.active,
-                                action: {}
-                            )
+                        ForEach(0 ..< self.filterGroups.count) { index in
+                            Group {
+                                ForEach(self.filterGroups[index]) { filter in
+                                    FilterButton(filter: filter)
+                                }
+                                Color.white.opacity(0.1).frame(width: 1)
+                            }
                         }
                     }
                 }
@@ -59,46 +63,41 @@ struct FilterButtonStyle: ViewModifier {
 
 struct FilterButton: View {
     @Environment(\.colorScheme) var colorScheme
-    var width: CGFloat? = nil
-    var label: String = ""
-    var fontSize: CGFloat = 15
-    var icon: String = ""
-    var active: Bool = false
-    var action: (() -> Void)? = nil
-    var flex: Bool = false
-    var cornerRadiusCorners: UIRectCorner = .allCorners
     
+    var filter: FilterItem
     var height: CGFloat {
         App.filterBarHeight - App.filterBarPad * 2
     }
     
     var body: some View {
-        
-        return ZStack {
-            DishButton(action: action ?? {}) {
+        ZStack {
+            DishButton(action: {
+                if self.filter.type == .toggle {
+                    App.store.send(.home(.setFilterActive(filter: self.filter, val: !self.filter.active)))
+                }
+            }) {
                 HStack {
                     Spacer()
-                    if icon != "" {
-                        Image(systemName: icon)
+                    if self.filter.icon != nil {
+                        Image(systemName: self.filter.icon!)
                             .resizable()
                             .scaledToFit()
                             .frame(width: self.height * 0.6, height: self.height * 0.6)
                     }
                     ZStack {
-                        if label != "" {
-                            Text(label)
-                                .font(.system(size: fontSize))
-                                .lineLimit(nil)
+                        if self.filter.name != "" {
+                            Text(self.filter.name)
+                                .font(.system(size: self.filter.fontSize))
                                 .fixedSize()
                         }
                     }
                     Spacer()
                 }
-                .frame(width: self.width, height: self.height)
+                .frame(height: self.height)
                 .modifier(FilterButtonStyle())
             }
             .environment(\.colorScheme,
-                self.active
+                 self.filter.active
                     ? colorScheme == .light ? .dark : .light
                     : colorScheme
             )

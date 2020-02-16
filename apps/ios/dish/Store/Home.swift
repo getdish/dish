@@ -49,6 +49,7 @@ enum HomeAction {
     case setCurrentTags(_ val: [SearchInputTag])
     case setLabelActive(_ val: Int)
     case setLabelDishes(id: String, dishes: [DishItem])
+    case setFilterActive(filter: FilterItem, val: Bool)
 }
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
@@ -63,6 +64,15 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     }
     
     switch action {
+        case .setFilterActive(let target, let val):
+            state.home.filters = state.home.filters.map { filter in
+                if filter == target {
+                    var next = filter
+                    next.active = val
+                    return next
+                }
+                return filter
+            }
         case .setLabelDishes(let id, let dishes):
             state.home.labelDishes[id] = dishes
         case let .setLabelActive(index):
@@ -160,9 +170,14 @@ struct HomeSelectors {
 // structures for HomeStore
 
 struct FilterItem: Identifiable, Equatable {
-    var name: String
+    enum FilterType {
+        case toggle, select
+    }
+    
     var id: String { name }
-    enum FilterType { case toggle, select }
+
+    var name: String
+    var icon: String? = nil
     var type: FilterType = .toggle
     var active: Bool = false
     var fontSize: CGFloat = 20
