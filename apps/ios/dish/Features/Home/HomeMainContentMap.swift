@@ -8,6 +8,7 @@ struct HomeMapExplore: View {
         VStack(spacing: 0) {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 9) {
+                    Spacer()
                     ForEach(0 ..< self.store.state.home.labels.count - 1) { index in
                         DishButton(action: {
                             self.index = index
@@ -34,7 +35,7 @@ struct HomeMapExplore: View {
                             DishButtonView(
                                 dish: features[index],
                                 at: .end
-                            ).equatable()
+                            )
                         }
                     }
                     .padding(.horizontal, 20)

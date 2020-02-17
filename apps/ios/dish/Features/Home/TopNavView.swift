@@ -38,29 +38,33 @@ struct TopNavViewContent: View {
 struct TopNavButtonStyle: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
     
-    var height = App.topNavHeight - App.topNavPad * 2
+    var height: CGFloat = 36
+    var hPad: CGFloat = 11
     
     func body(content: Content) -> some View {
-        Group {
-            if colorScheme == .dark {
-                content
-                    .frame(height: self.height)
-                    .padding(.horizontal, 8)
-                    .background(Color.black.opacity(0.2))
-                    .background(BlurView(style: .systemThickMaterialDark))
-            } else {
-                content
-                    .frame(height: self.height)
-                    .padding(.horizontal, 8)
-                    .background(Color.white.opacity(0.025))
-                    .background(Color.black.opacity(0.025))
-                    .background(BlurView(style: .systemUltraThinMaterialDark))
-
+        ZStack {
+            Group {
+                if colorScheme == .dark {
+                    content
+                        .frame(height: self.height)
+                        .padding(.horizontal, self.hPad)
+                        .background(Color.black.opacity(0.2))
+                        .background(BlurView(style: .systemThickMaterialDark))
+                } else {
+                    content
+                        .frame(height: self.height)
+                        .padding(.horizontal, self.hPad)
+                        .background(Color.white.opacity(0.025))
+                        .background(Color.black.opacity(0.025))
+                        .background(BlurView(style: .systemUltraThinMaterialDark))
+                    
+                }
             }
-        }
             .cornerRadius(8)
             .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
             .foregroundColor(.white)
+        }
+        .padding(3)
     }
 }
 
@@ -76,7 +80,7 @@ struct SearchBarLocationLabel: View {
                 App.store.send(.map(.moveToCurrentLocation))
             }) {
                 Text(label)
-                    .font(.system(size: 14))
+                    .font(.system(size: 16))
             }
             .modifier(TopNavButtonStyle())
         }
@@ -94,9 +98,19 @@ struct TopNavHome: View {
             VStack {
                 ZStack {
                     // home controls
-                    HStack {
+                    HStack(spacing: 4) {
                         SearchBarLocationLabel()
                         
+                        Button(action: {
+                        }) {
+                            VStack {
+                                Image(systemName: "person")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 16, height: 16)
+                            }
+                        }
+                        .modifier(TopNavButtonStyle())
                         
                         Spacer()
                         
