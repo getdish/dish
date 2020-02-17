@@ -8,7 +8,7 @@ public final class SearchRestaurantsQuery: GraphQLQuery {
   public let operationDefinition =
     """
     query SearchRestaurants($radius: Float!, $geo: geometry!) {
-      restaurant(where: {location: {_st_d_within: {distance: $radius, from: $geo}}}) {
+      restaurant(where: {location: {_st_d_within: {distance: $radius, from: $geo}}}, limit: 30) {
         __typename
         name
         location
@@ -34,7 +34,7 @@ public final class SearchRestaurantsQuery: GraphQLQuery {
     public static let possibleTypes = ["query_root"]
 
     public static let selections: [GraphQLSelection] = [
-      GraphQLField("restaurant", arguments: ["where": ["location": ["_st_d_within": ["distance": GraphQLVariable("radius"), "from": GraphQLVariable("geo")]]]], type: .nonNull(.list(.nonNull(.object(Restaurant.selections))))),
+      GraphQLField("restaurant", arguments: ["where": ["location": ["_st_d_within": ["distance": GraphQLVariable("radius"), "from": GraphQLVariable("geo")]]], "limit": 30], type: .nonNull(.list(.nonNull(.object(Restaurant.selections))))),
     ]
 
     public private(set) var resultMap: ResultMap

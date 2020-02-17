@@ -15,14 +15,13 @@ struct DishRestaurantView: View {
     }
     
     var body: some View {
-        BottomSheetView(
-            isOpen: self.isRestaurantOpen, maxHeight: App.screen.height * 0.9
-        ) {
-            ScrollView(.vertical) {
-                Spacer().frame(height: 40)
-                
-                DishRestaurantViewContent()
-            }
+        Color.clear
+            .sheet(isPresented: self.isRestaurantOpen, onDismiss: {}) {
+                ScrollView(.vertical) {
+                    Spacer().frame(height: 40)
+                    
+                    DishRestaurantViewContent()
+                }
         }
     }
 }
