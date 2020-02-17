@@ -191,7 +191,6 @@ struct HomeMainView: View {
             }
             .clipped() // dont remove fixes bug cant click SearchBar
             .simultaneousGesture(self.dragGesture)
-            .scaleEffect(Selectors.home.isOnRestaurant() ? 0.9 : 1)
             
             DishRestaurantView()
             
