@@ -10,7 +10,7 @@ struct DishRestaurantView: View {
                 if next == false {
                     self.store.send(.home(.pop))
                 }
-        }
+            }
         )
     }
     
@@ -27,6 +27,8 @@ struct DishRestaurantViewContent: View {
     @EnvironmentObject var store: AppStore
     @Environment(\.colorScheme) var colorScheme
     
+     let dishes = features.chunked(into: 2)
+    
     var restaurant: RestaurantItem {
         Selectors.home.lastState().restaurant ?? restaurants[0]
     }
@@ -35,24 +37,42 @@ struct DishRestaurantViewContent: View {
         HStack {
             VStack(alignment: .leading, spacing: 0) {
                 Text("\(self.restaurant.name)")
-                    .modifier(TextTitleStyle())
+                    .modifier(TextStyle())
                     .padding(.horizontal, 10)
                     .padding(.bottom, 10)
+                
+                HStack {
+                    DividerView()
+                    DishRatingView(
+                        isMini: false,
+                        restaurant: self.restaurant
+                    )
+                        .frame(width: 80, height: 32)
+                    DividerView()
+                }
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        Spacer()
+                        HStack(spacing: 20) {
+                            ForEach(0 ..< self.restaurant.tags.count) { index in
+                                // self.restaurant.tags[index]
+                                return Text("\(self.store.state.home.labels[index])")
+                            }
+                        }
+                        .padding(.horizontal)
+                        .padding(.vertical, 12)
+                        Spacer()
+                    }
+                }
                 
                 VStack {
                     self.restaurant.image
                         .resizable()
                         .scaledToFill()
                 }
-                .frame(maxWidth: .infinity, maxHeight: 250)
+                .frame(maxWidth: .infinity, maxHeight: 390)
                 .clipped()
-                
-                AppleMapView(
-                    markers: []
-                )
-                    .frame(height: 150)
-                
-                Divider()
                 
                 HStack(spacing: 0) {
                     Group {
@@ -86,55 +106,42 @@ struct DishRestaurantViewContent: View {
                 .padding(.horizontal, 10)
                 .padding(.vertical, 6)
                 
-                Divider()
+                DividerView()
+
+                HStack {
+                    AppleMapView(
+                        markers: []
+                    )
+                    Color.gray
+                }
+                    .frame(height: 120)
                 
+                DividerView()
                 
-//                List {
-//
-//                    Text("\(self.restaurant.imageName)")
-//                    Text("\(self.restaurant.phone)")
-//                    Text("\(self.restaurant.stars)")
-//                }
+                VStack {
+                    Text("Top Dishes")
+                        .font(.headline)
+                        .padding(.bottom)
+                    
+                    ForEach(0 ..< dishes.count) { index in
+                        HStack {
+                            ForEach(self.dishes[index]) { dish in
+                                DishCardView(
+                                    dish: dish,
+                                    at: .end,
+                                    display: .card
+                                )
+                                    .frame(height: 120)
+                            }
+                        }
+                    }
+                }
+                .padding()
                 
                 Spacer()
             }
             Spacer()
         }
-    }
-}
-
-struct Divider: View {
-    enum DividerDirection {
-        case horizontal, vertical
-    }
-    
-    @Environment(\.colorScheme) var colorScheme
-    
-    var direction: DividerDirection
-    var opacity: Double
-        
-    init(_ direction: DividerDirection = .horizontal, opacity: Double = 0.1) {
-        self.direction = direction
-        self.opacity = opacity
-    }
-    
-    var body: some View {
-        let color = Color(self.colorScheme == .dark ? .white : .black)
-            .opacity(self.opacity)
-        return Group {
-            if self.direction == .horizontal {
-                color.frame(height: 1).padding(.horizontal)
-            } else {
-                color.frame(width: 1).padding(.vertical)
-            }
-        }
-    }
-}
-
-struct TextTitleStyle: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .font(.largeTitle)
     }
 }
 
