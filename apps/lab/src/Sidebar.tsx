@@ -17,7 +17,7 @@ const Sidebar = () => {
   const startWatchingStats = () => {
     setInterval(() => {
       actions.getStats()
-    }, 1000)
+    }, 60 * 1000)
   }
 
   const renderRestaurant = () => {

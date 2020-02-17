@@ -39,6 +39,7 @@ export class Self extends WorkerJob {
   }
 
   async mergeAll(restaurant: Restaurant) {
+    console.log('Merging: ' + restaurant.name)
     this.restaurant = restaurant
     await this.getScrapeData()
     if (!('data' in this.yelp)) {

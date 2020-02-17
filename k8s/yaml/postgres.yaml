@@ -161,7 +161,11 @@ extraEnv: []
 ## Alternatively, you can put your *.conf under the files/conf.d/ directory
 ## https://github.com/bitnami/bitnami-docker-postgresql#allow-settings-to-be-loaded-from-files-other-than-the-default-postgresqlconf
 ##
-# postgresqlExtendedConf:
+postgresqlExtendedConf:
+  {
+    "maxConnections": "300",
+    "sharedBuffers": "1000MB"
+  }
 
 ## PostgreSQL client authentication configuration
 ## Specify content for pg_hba.conf
@@ -406,7 +410,7 @@ readinessProbe:
 ## Configure metrics exporter
 ##
 metrics:
-  enabled: false
+  enabled: true
   # resources: {}
   service:
     type: ClusterIP
