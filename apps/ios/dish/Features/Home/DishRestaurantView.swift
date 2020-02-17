@@ -16,7 +16,9 @@ struct DishRestaurantView: View {
     
     var body: some View {
         Color.clear
-            .sheet(isPresented: self.isRestaurantOpen, onDismiss: {}) {
+            .sheet(isPresented: self.isRestaurantOpen, onDismiss: {
+//                
+            }) {
                 ScrollView(.vertical) {
                     Spacer().frame(height: 40)
                     

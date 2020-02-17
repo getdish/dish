@@ -160,30 +160,30 @@ struct HomeMainView: View {
                 
                 
                 // Camera Controls
-                if App.enableCamera {
-                    ZStack {
-                        VStack {
-                            HStack {
-                                Spacer()
-                                CameraButton(
-                                    foregroundColor: state.showCamera ? .white : .black
-                                )
-                                    .scaleEffect(state.showCamera ? 1.3 : 1)
-                                    .offset(
-                                        x: state.showCamera
-                                            ? -App.screen.width / 2 + App.cameraButtonHeight / 2
-                                            : -15,
-                                        y: state.showCamera
-                                            ? App.screen.height - App.cameraButtonHeight - 100
-                                            : state.mapHeight + state.searchBarYExtra - App.cameraButtonHeight / 2
-                                )
-                                //                                    .animation(Animation.spring(response: 0.4).delay(0))
-                            }
-                            Spacer()
-                        }
-                    }
-                    .frameLimitedToScreen()
-                }
+//                if App.enableCamera {
+//                    ZStack {
+//                        VStack {
+//                            HStack {
+//                                Spacer()
+//                                CameraButton(
+//                                    foregroundColor: state.showCamera ? .white : .black
+//                                )
+//                                    .scaleEffect(state.showCamera ? 1.3 : 1)
+//                                    .offset(
+//                                        x: state.showCamera
+//                                            ? -App.screen.width / 2 + App.cameraButtonHeight / 2
+//                                            : -15,
+//                                        y: state.showCamera
+//                                            ? App.screen.height - App.cameraButtonHeight - 100
+//                                            : state.mapHeight + state.searchBarYExtra - App.cameraButtonHeight / 2
+//                                )
+//                                //                                    .animation(Animation.spring(response: 0.4).delay(0))
+//                            }
+//                            Spacer()
+//                        }
+//                    }
+//                    .frameLimitedToScreen()
+//                }
                 
                 // make everything untouchable while dragging
                 Color.black.opacity(0.0001)

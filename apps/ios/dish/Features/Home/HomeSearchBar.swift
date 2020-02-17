@@ -16,17 +16,6 @@ struct HomeSearchBar: View {
     @EnvironmentObject var keyboard: Keyboard
     @Environment(\.colorScheme) var colorScheme
     
-    @State var placeholder = "Dim Sum..."
-    
-    func updatePlaceholder() {
-        var i = 0
-        let placeholders = ["Dim Sum", "Pho", "Ceviche", "Poke", "Mapa Tofu"]
-        async(interval: 5000, intervalMax: 5) {
-            self.placeholder = "\(placeholders[i])..."
-            i += 1
-        }
-    }
-    
     var hasSearch: Bool {
         store.state.home.viewStates.count > 1
     }
@@ -83,9 +72,6 @@ struct HomeSearchBar: View {
         
         return ZStack {
             Group {
-                RunOnce(name: "updatePlaceholder") {
-                    self.updatePlaceholder()
-                }
                 if self.lastZoomed != zoomed {
                     SideEffect("updateLastZoomed") {
                         self.lastZoomed = zoomed
@@ -94,7 +80,7 @@ struct HomeSearchBar: View {
             }
             
             SearchInput(
-                placeholder: self.placeholder,
+                placeholder: "",
                 inputBackgroundColor: Color.white,
                 borderColor: Color.white,
                 scale: scale,
@@ -167,8 +153,8 @@ struct HomeSearchBarAfterView: View {
             .padding(.horizontal, 6 * scale)
             
             // space for the camera button
-            Color.clear
-                .frame(width: App.cameraButtonHeight)
+//            Color.clear
+//                .frame(width: App.cameraButtonHeight)
         }
     }
 }

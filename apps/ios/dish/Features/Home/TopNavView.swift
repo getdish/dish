@@ -126,11 +126,12 @@ struct TopNavHome: View {
                             App.enterRepl = true
                         }) {
                             VStack {
-                                Image(systemName: "location.fill")
+                                Image(systemName: "camera")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 16, height: 16)
+                                .frame(width: 22, height: 22)
                             }
+                            .padding(5)
 
                         }
                         .modifier(TopNavButtonStyle())

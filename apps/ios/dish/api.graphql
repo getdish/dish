@@ -14,3 +14,4 @@ query SearchRestaurants($radius: Float!, $geo: geometry!) {
         location
     }
 }
+
