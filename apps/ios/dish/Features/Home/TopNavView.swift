@@ -21,7 +21,7 @@ struct TopNavViewContent: View {
                                 CameraTopNav()
                             }
                         }
-                        .padding(.horizontal)
+                        .padding(.horizontal, 8)
                     }
                     .padding(.top, topPad)
                     .padding(.bottom, bottomPad)
@@ -38,7 +38,7 @@ struct TopNavViewContent: View {
 struct TopNavButtonStyle: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
     
-    var height: CGFloat = 36
+    var height: CGFloat = 35
     var hPad: CGFloat = 11
     
     func body(content: Content) -> some View {
@@ -97,10 +97,14 @@ struct TopNavHome: View {
         return ZStack {
             VStack {
                 ZStack {
+                    HStack {
+                        Spacer()
+                        SearchBarLocationLabel()
+                        Spacer()
+                    }
+                    
                     // home controls
                     HStack(spacing: 4) {
-                        SearchBarLocationLabel()
-                        
                         Button(action: {
                         }) {
                             VStack {
@@ -145,7 +149,6 @@ struct TopNavHome: View {
                                 .scaledToFit()
                                 .frame(width: 22, height: 22)
                             }
-                            .padding(5)
 
                         }
                         .modifier(TopNavButtonStyle())

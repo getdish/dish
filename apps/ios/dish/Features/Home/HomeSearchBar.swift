@@ -84,7 +84,7 @@ struct HomeSearchBar: View {
                 inputBackgroundColor: Color.white,
                 borderColor: Color.white,
                 scale: scale,
-                sizeRadius: 2.1,
+                sizeRadius: 2.25,
                 icon: icon,
                 showCancelInside: true,
                 onTapLeadingIcon: {

@@ -8,6 +8,7 @@ fileprivate let initialLabels = [
     "🔥 New",
     "👩‍🍳 Picks",
     "💎 Date Night",
+    "💁‍♀️ Great Service",
     "🥬",
     "🐟",
     "💸 Cheap",

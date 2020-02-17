@@ -211,9 +211,9 @@ struct SearchInput: View {
                 }
                     .padding(EdgeInsets(
                         top: pad,
-                        leading: pad * 1.3 - horizontalSpacing,
+                        leading: pad * 1.5 - horizontalSpacing,
                         bottom: pad,
-                        trailing: pad * 1.3
+                        trailing: pad * 1.5
                     ))
                     .foregroundColor(.secondary)
                     .background(self.inputBackgroundColor)
