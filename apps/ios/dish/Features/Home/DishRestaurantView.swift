@@ -18,7 +18,11 @@ struct DishRestaurantView: View {
         BottomSheetView(
             isOpen: self.isRestaurantOpen, maxHeight: App.screen.height * 0.9
         ) {
-            DishRestaurantViewContent()
+            ScrollView(.vertical) {
+                Spacer().frame(height: 40)
+                
+                DishRestaurantViewContent()
+            }
         }
     }
 }
