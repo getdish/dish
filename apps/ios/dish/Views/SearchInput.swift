@@ -65,7 +65,6 @@ struct SearchInput: View {
     var onTextField: ((UITextField) -> Void)?
     var isFirstResponder: Bool = false
     @Binding var searchText: String
-    @Binding var tags: [SearchInputTag]
     var showInput = true
     
     @State private var showCancelButton: Bool = false
@@ -93,11 +92,9 @@ struct SearchInput: View {
     }
     
     var body: some View {
-        let pad = 8 * (scale + 0.5) * 0.6
-        let numTags = self.tags.count
-        let hasTags = numTags > 0
+        let pad = 10 * scale
         let fontSize = 14 * (scale - 1) / 2 + 16
-        let horizontalSpacing = 4 * scale
+        let horizontalSpacing = 8 * scale
         
         return VStack {
             // Search view
@@ -120,43 +117,43 @@ struct SearchInput: View {
                             }
                             .frame(width: 24 * scale, height: 24 * scale)
                         }
-                        .padding(horizontalSpacing)
+                        .padding(.horizontal, horizontalSpacing)
                     }
                     
                     Spacer().frame(width: horizontalSpacing)
                     
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 0) {
-                            if hasTags {
-                                HStack {
-                                    ForEach(self.tags) { tag in
-                                        DishButton(action: {
-                                            if tag.deletable {
-                                                if let index = self.tags.firstIndex(of: tag) {
-                                                    print("removing tag at \(index)")
-                                                    self.tags.remove(at: index)
-                                                }
-                                            }
-                                        }) {
-                                            SearchInputTagView(
-                                                tag: tag,
-                                                fontSize: fontSize
-                                            )
-                                                .padding(.trailing, horizontalSpacing)
-                                        }
-                                        .transition(.slide)
-                                        .animation(.easeIn(duration: 0.3))
-                                    }
-                                }
-                            }
+//                            if hasTags {
+//                                HStack {
+//                                    ForEach(self.tags) { tag in
+//                                        DishButton(action: {
+//                                            if tag.deletable {
+//                                                if let index = self.tags.firstIndex(of: tag) {
+//                                                    print("removing tag at \(index)")
+//                                                    self.tags.remove(at: index)
+//                                                }
+//                                            }
+//                                        }) {
+//                                            SearchInputTagView(
+//                                                tag: tag,
+//                                                fontSize: fontSize
+//                                            )
+//                                                .padding(.trailing, horizontalSpacing)
+//                                        }
+//                                        .transition(.slide)
+//                                        .animation(.easeIn(duration: 0.3))
+//                                    }
+//                                }
+//                            }
                             
-                            Spacer().frame(width: horizontalSpacing)
+//                            Spacer().frame(width: horizontalSpacing)
                             
                             // TODO (performance / @majid) - snapToBottom(false) is jittery, if you replace
                             // this next view with Color.red you'll see it goes fast... why?
                             if showInput {
                                 CustomTextField(
-                                    placeholder: hasTags ? "" : self.placeholder,
+                                    placeholder: self.placeholder,
                                     text: self.$searchText,
                                     isFirstResponder: self.isFirstResponder,
                                     onEditingChanged: self.handleEditingChanged
@@ -178,30 +175,33 @@ struct SearchInput: View {
                             }
                         }
                     }
-                    
-                    
+
                     Spacer().frame(width: horizontalSpacing)
-                    
 
-//                        .disableAutocorrection(true)
-//                        .font(.system(size: fontSize))
-//                        .foregroundColor(.primary)
-
-                    Button(action: {
-                        self.searchText = ""
-                        if let cb = self.onClear {
-                            cb()
+                    if self.searchText != "" {
+                        Group {
+                            Button(action: {
+                                self.searchText = ""
+                                if let cb = self.onClear {
+                                    cb()
+                                }
+                            }) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 20 + 2 * scale, height: 20 + 2 * scale)
+                            }
+                            .transition(.slide)
+                            
+                            Spacer().frame(width: horizontalSpacing)
                         }
-                    }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 26 + 2 * scale, height: 24 + 2 * scale)
-                            .opacity(self.searchText == "" ? 0.0 : 1.0)
                     }
                     
                     if showCancelButton && showCancelInside {
-                        cancelButton
+                        Group {
+                            cancelButton
+                            Spacer().frame(width: horizontalSpacing)
+                        }
                     }
                     
                     if after != nil {
@@ -243,12 +243,11 @@ extension UIApplication {
 #if DEBUG
 struct SearchInputPreview: View {
     @State var searchText = ""
-    @State var tags: [SearchInputTag] = []
 
     var body: some View {
         VStack {
-            SearchInput(searchText: $searchText, tags: $tags)
-            SearchInput(scale: 1.25, searchText: $searchText, tags: $tags)
+            SearchInput(searchText: $searchText)
+            SearchInput(scale: 1.25, searchText: $searchText)
         }
     }
 }

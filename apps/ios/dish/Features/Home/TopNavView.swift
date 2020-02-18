@@ -31,7 +31,7 @@ struct TopNavViewContent: View {
                 }
             }
         }
-        .padding(.top, 10)
+        .padding(.top, 4)
     }
 }
 
@@ -189,8 +189,7 @@ struct TopNavSearch: View {
             onCancel: {
                 //                        Store.mapSearch.showResults = false
         },
-            searchText: self.$search,
-            tags: self.$tags
+            searchText: self.$search
         )
             .shadow(color: Color.black.opacity(0.25), radius: 5, x: 0, y: 5)
             .onTapGesture {

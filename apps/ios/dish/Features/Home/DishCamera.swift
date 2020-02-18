@@ -135,7 +135,6 @@ struct DishCameraPictureOverlay: View {
 
 struct DishRestaurantDrawer: View {
     @State var searchText = ""
-    @State var tags: [SearchInputTag] = []
     
     var body: some View {
         VStack(spacing: 3) {
@@ -145,8 +144,7 @@ struct DishRestaurantDrawer: View {
                     inputBackgroundColor: Color(.secondarySystemGroupedBackground),
                     scale: 1.25,
                     sizeRadius: 2.0,
-                    searchText: self.$searchText,
-                    tags: self.$tags
+                    searchText: self.$searchText
                 )
                     .padding(.horizontal)
             }

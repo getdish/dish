@@ -24,13 +24,6 @@ struct HomeSearchBar: View {
         store.binding(for: \.home.viewStates.last!.search, { .home(.setSearch($0)) })
     }
     
-    private var homeTags: Binding<[SearchInputTag]> {
-        Binding<[SearchInputTag]>(
-            get: { Selectors.home.tags() },
-            set: { self.store.send(.home(.setCurrentTags($0))) }
-        )
-    }
-    
     func focusKeyboard() {
         log.info()
         self.isFirstResponder = false
@@ -99,7 +92,6 @@ struct HomeSearchBar: View {
                 after: after,
                 isFirstResponder: isFirstResponder,
                 searchText: self.homeSearch,
-                tags: self.homeTags,
                 showInput: showInput
             )
                 .shadow(color: Color.black.opacity(0.35), radius: 8, x: 0, y: 3)
