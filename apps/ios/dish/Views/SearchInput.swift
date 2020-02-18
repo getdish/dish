@@ -123,11 +123,12 @@ struct SearchInput: View {
                     Spacer().frame(width: horizontalSpacing)
                     
                     if showInput {
-                        CustomTextField(
-                            placeholder: self.placeholder,
+                        TextField(
+                            self.placeholder,
                             text: self.$searchText,
-                            isFirstResponder: self.isFirstResponder,
                             onEditingChanged: self.handleEditingChanged
+//                            isFirstResponder: self.isFirstResponder,
+//                            onEditingChanged: self.handleEditingChanged
                         )
                     } else {
                         // temp bugfix for above TODO problem...

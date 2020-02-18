@@ -10,9 +10,7 @@ struct TopNavViewContent: View {
         let totalHeight = topPad + bottomPad + 40
         
         return VStack {
-            ZStack {
-                TopNavSearchResults()
-                
+            ZStack {                
                 VStack {
                     VStack {
                         HStack(spacing: 12) {
@@ -93,6 +91,7 @@ struct TopNavHome: View {
     var body: some View {
         let homeView = store.state.home.view
         let isOnHome = homeView == .home
+        let isOnSearch = store.state.home.showSearch == .location
         
         return ZStack {
             VStack {
@@ -117,29 +116,7 @@ struct TopNavHome: View {
                         .modifier(TopNavButtonStyle())
                         
                         Spacer()
-                        
-//                        HStack(spacing: 0) {
-//                            Button(action: {
-//                            }) {
-//                                Text("-")
-//                                    .titleBarStyle(15)
-//                                    .padding(.horizontal, 10)
-//                            }
-//                            Rectangle()
-//                                .foregroundColor(.gray)
-//                                .opacity(0.2)
-//                                .frame(width: 1)
-//                            Button(action: {
-//                            }) {
-//                                Text("+")
-//                                    .titleBarStyle(15)
-//                                    .padding(.horizontal, 10)
-//                            }
-//                        }
-//                        .modifier(TopNavButtonStyle())
-//                        .transition(.slide)
-                        
-                        
+
                         Button(action: {
                             App.enterRepl = true
                         }) {
@@ -153,6 +130,7 @@ struct TopNavHome: View {
                         }
                         .modifier(TopNavButtonStyle())
                     }
+                    .offset(y: )
                 }
                 .opacity(isOnHome ? 1 : 0)
             }

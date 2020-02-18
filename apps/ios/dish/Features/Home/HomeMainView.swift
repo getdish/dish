@@ -149,7 +149,7 @@ struct HomeMainView: View {
                             HomeSearchBar(
                                 showInput: state.animationState == .idle
                             )
-                                .frame(height: App.searchBarHeight)
+                                .frame(width: App.screen.width - 24, height: App.searchBarHeight)
                                 .padding(.horizontal, 12)
                             //                        .scaleEffect(state.dragState == .searchbar ? 1.1 : 1)
                             //                        .rotationEffect(.degrees(state.dragState == .searchbar ? 2 : 0))
@@ -158,7 +158,7 @@ struct HomeMainView: View {
                             Spacer()
                         }
                         .offset(y: showSearch
-                            ? App.screen.edgeInsets.top + 20
+                            ? App.screen.edgeInsets.top + 20 + 55
                             : mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra
                         )
                             .animation(.spring(response: 1.25), value: state.animationState == .animate)

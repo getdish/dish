@@ -24,6 +24,10 @@ struct HomeSearchBar: View {
         store.binding(for: \.home.viewStates.last!.search, { .home(.setSearch($0)) })
     }
     
+    private var homeLocation: Binding<String> {
+        store.binding(for: \.map.locationLabel, { .map(.setLocationLabel($0)) })
+    }
+    
     func focusKeyboard() {
         log.info()
         self.isFirstResponder = false
@@ -35,13 +39,14 @@ struct HomeSearchBar: View {
     @State var lastZoomed = false
     
     var icon: AnyView {
-        if !Selectors.home.isOnHome() {
+        let isOnHome = Selectors.home.isOnHome()
+        if isOnHome || self.store.state.home.showSearch {
             return AnyView(
-                Image(systemName: "chevron.left")
+                Image(systemName: "magnifyingglass")
             )
         } else {
             return AnyView(
-                Image(systemName: "magnifyingglass")
+                Image(systemName: "chevron.left")
             )
         }
     }
@@ -50,9 +55,8 @@ struct HomeSearchBar: View {
     
     func onClear() {
         // go back on empty search clear
-        if Selectors.home.isOnSearchResults() && self.store.state.home.viewStates.last!.searchResults.results.count == 0 {
-            self.store.send(.home(.pop))
-        }
+        self.store.send(.home(.clearSearch))
+
         // focus keyboard again on clear if not focused
         if self.keyboard.state.height == 0 {
             self.focusKeyboard()
@@ -62,6 +66,7 @@ struct HomeSearchBar: View {
     var body: some View {
         let zoomed = keyboard.state.height > 0
         let scale: CGFloat = zoomed ? 1.2 : 1.2
+        let isOnSearch = self.store.state.home.showSearch
         
         return ZStack {
             Group {
@@ -97,12 +102,15 @@ struct HomeSearchBar: View {
                     }
                 },
                 onClear: self.onClear,
-                after: after,
+                after: isOnSearch ? AnyView(EmptyView()) : after,
                 isFirstResponder: isFirstResponder,
                 searchText: self.homeSearch,
                 showInput: showInput
             )
-                .shadow(color: Color.black.opacity(0.35), radius: 8, x: 0, y: 3)
+                .shadow(color: Color.black.opacity(isOnSearch ? 0 : 0.35), radius: 8, x: 0, y: 3)
+                .overlay(RoundedRectangle(cornerRadius: 80)
+                    .stroke(Color.black.opacity(isOnSearch ? 0.1 : 0), lineWidth: 1)
+                )
                 .animation(.spring(), value: zoomed != self.lastZoomed)
         }
     }
