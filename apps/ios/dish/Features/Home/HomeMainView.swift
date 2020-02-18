@@ -48,6 +48,7 @@ struct HomeMainView: View {
         let state = self.state
         let animationState = state.animationState
         let mapHeight = state.mapHeight
+        let showSearch = store.state.home.showSearch
         //        let enableSearchBar = [.idle, .off].contains(state.dragState) && state.animationState == .idle
 
         print(" 👀 HomeMainView mapHeight \(mapHeight) animationState \(state.animationState)")
@@ -137,6 +138,9 @@ struct HomeMainView: View {
                 
                 // Search
                 ZStack {
+                    HomeSearchAutocomplete()
+                        .opacity(showSearch ? 1 : 0)
+                    
                     VStack {
                         HomeSearchBar(
                             showInput: state.animationState == .idle
@@ -153,7 +157,10 @@ struct HomeMainView: View {
                         // but created one where it de-focuses it instantly often
                         //                    .disabled(!enableSearchBar)
                         //                    .allowsHitTesting(enableSearchBar)
-                        .offset(y: mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra)
+                        .offset(y: showSearch
+                            ? App.screen.edgeInsets.top + 20
+                            : mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra
+                        )
                         .animation(.spring(response: 1.25), value: state.animationState == .animate)
                 }
                 .opacity(state.showCamera ? 0 : 1)
@@ -252,6 +259,27 @@ struct HomeMainView: View {
     }
 }
 
+
+struct HomeSearchAutocomplete: View {
+    var body: some View {
+        VStack {
+            Spacer()
+                .frame(height: App.searchBarHeight + 40)
+            
+            Text("Search Results").modifier(TextStyle(.title))
+            
+            List {
+                HStack { Text("Suggested item 1") }
+                HStack { Text("Suggested item 2") }
+                HStack { Text("Suggested item 3") }
+                HStack { Text("Suggested item 4") }
+            }
+        }
+        .background(Color.white)
+        .frameLimitedToScreen()
+        .clipped()
+    }
+}
 
 struct HomeMapOverlay: View {
     @Environment(\.colorScheme) var colorScheme

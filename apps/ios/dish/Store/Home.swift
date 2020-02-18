@@ -33,6 +33,7 @@ extension AppState {
         var labels = initialLabels
         var labelActive = 0
         var labelDishes = [String: [DishItem]]()
+        var showSearch: Bool = false
         var showDrawer: Bool = false
         var showCamera: Bool = false
     }
@@ -49,6 +50,7 @@ enum HomeAction {
     case setSearchResults(_ val: HomeSearchResults)
     case setLabelActive(_ val: Int)
     case setLabelDishes(id: String, dishes: [DishItem])
+    case setShowSearch(_ val: Bool)
     case setFilterActive(filter: FilterItem, val: Bool)
 }
 
@@ -64,6 +66,8 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     }
     
     switch action {
+        case .setShowSearch(let val):
+            state.home.showSearch = val
         case .setFilterActive(let target, let val):
             state.home.filters = state.home.filters.map { filter in
                 if filter == target {

@@ -88,6 +88,14 @@ struct HomeSearchBar: View {
                         self.store.send(.home(.pop))
                     }
                 },
+                onEditingChanged: { val in
+                    if val == true {
+                        App.store.send(.home(.setShowSearch(true)))
+                    } else {
+                        // todo we may need to not auto close...?
+                        App.store.send(.home(.setShowSearch(false)))
+                    }
+                },
                 onClear: self.onClear,
                 after: after,
                 isFirstResponder: isFirstResponder,
