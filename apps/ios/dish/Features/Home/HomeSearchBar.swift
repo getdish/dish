@@ -40,9 +40,13 @@ struct HomeSearchBar: View {
     
     var icon: AnyView {
         let isOnHome = Selectors.home.isOnHome()
-        if isOnHome || self.store.state.home.showSearch {
+        if isOnHome || self.store.state.home.showSearch == .search {
             return AnyView(
                 Image(systemName: "magnifyingglass")
+            )
+        } else if self.store.state.home.showSearch == .location {
+            return AnyView(
+                Image(systemName: "map")
             )
         } else {
             return AnyView(
@@ -66,7 +70,7 @@ struct HomeSearchBar: View {
     var body: some View {
         let zoomed = keyboard.state.height > 0
         let scale: CGFloat = zoomed ? 1.2 : 1.2
-        let isOnSearch = self.store.state.home.showSearch
+        let isOnSearch = self.store.state.home.showSearch == .search
         
         return ZStack {
             Group {
@@ -95,10 +99,10 @@ struct HomeSearchBar: View {
                 },
                 onEditingChanged: { val in
                     if val == true {
-                        App.store.send(.home(.setShowSearch(true)))
+                        App.store.send(.home(.setShowSearch(.search)))
                     } else {
                         // todo we may need to not auto close...?
-                        App.store.send(.home(.setShowSearch(false)))
+                        App.store.send(.home(.setShowSearch(.off)))
                     }
                 },
                 onClear: self.onClear,

@@ -91,7 +91,7 @@ struct TopNavHome: View {
     var body: some View {
         let homeView = store.state.home.view
         let isOnHome = homeView == .home
-        let isOnSearch = store.state.home.showSearch == .location
+        let isOnLocationSearch = store.state.home.showSearch == .location
         
         return ZStack {
             VStack {
@@ -130,48 +130,12 @@ struct TopNavHome: View {
                         }
                         .modifier(TopNavButtonStyle())
                     }
-                    .offset(y: )
+                    .offset(y: isOnLocationSearch ? -100 : 0)
+                    .animation(.spring())
                 }
                 .opacity(isOnHome ? 1 : 0)
             }
             .frame(maxWidth: .infinity)
-        }
-    }
-}
-
-struct TopNavSearch: View {
-    @EnvironmentObject var store: AppStore
-    @Binding var isEditing: Bool
-    @State var search = ""
-    @State var tags: [SearchInputTag] = []
-    
-    private var locationSearch: Binding<String> {
-        store.binding(for: \.map.search, { .map(.setSearch($0)) })
-    }
-    
-    func focus() {
-        //        searchStore.showResults = true
-    }
-    
-    var body: some View {
-        SearchInput(
-            placeholder: "Current Location",
-            inputBackgroundColor: Color(.secondarySystemGroupedBackground).opacity(self.isEditing ? 1.0 : 0.5),
-            icon: AnyView(Image(systemName: store.state.map.lastKnown != nil ? "location.fill" : "location")),
-            showCancelInside: true,
-            onEditingChanged: { isEditing in
-                withAnimation(.spring()) {
-                    self.isEditing = isEditing
-                }
-        },
-            onCancel: {
-                //                        Store.mapSearch.showResults = false
-        },
-            searchText: self.$search
-        )
-            .shadow(color: Color.black.opacity(0.25), radius: 5, x: 0, y: 5)
-            .onTapGesture {
-                self.focus()
         }
     }
 }

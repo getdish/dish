@@ -143,7 +143,7 @@ struct HomeMainView: View {
                     // Search
                     ZStack {
                         HomeSearchAutocomplete()
-                            .opacity(showSearch ? 1 : 0)
+                            .opacity(showSearch == .search ? 1 : 0)
                         
                         VStack {
                             HomeSearchBar(
@@ -157,7 +157,7 @@ struct HomeMainView: View {
                             
                             Spacer()
                         }
-                        .offset(y: showSearch
+                        .offset(y: showSearch == .search
                             ? App.screen.edgeInsets.top + 20 + 55
                             : mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra
                         )
@@ -240,9 +240,7 @@ struct HomeSearchAutocomplete: View {
     var body: some View {
         VStack {
             Spacer()
-                .frame(height: App.searchBarHeight + 40)
-            
-            Text("Search Results").modifier(TextStyle(.title))
+                .frame(height: App.screen.edgeInsets.top + App.searchBarHeight + 60)
             
             List {
                 HStack { Text("Suggested item 1") }
