@@ -57,11 +57,16 @@ export class Restaurant extends ModelBase<Restaurant> {
 
   static async fetchBatch(
     size: number,
-    page: number,
+    previous_id: string,
     extra_returning: {} = {}
   ) {
     let restaurant = new Restaurant()
-    return await restaurant.fetchBatch(Restaurant, size, page, extra_returning)
+    return await restaurant.fetchBatch(
+      Restaurant,
+      size,
+      previous_id,
+      extra_returning
+    )
   }
 
   static async findNear(lat: number, lng: number, distance: number) {

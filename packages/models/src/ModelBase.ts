@@ -184,18 +184,18 @@ export class ModelBase<T> {
   async fetchBatch(
     type: new () => T,
     size: number,
-    page: number,
+    previous_id: string,
     extra_returning: {} = {}
   ) {
     const query = {
       query: {
         [this._lower_name]: {
           __args: {
-            offset: page * size,
             limit: size,
-            order_by: { updated_at: new EnumType('asc') },
+            order_by: { id: new EnumType('asc') },
+            where: { id: { _gt: previous_id } },
           },
-          ...this.fieldsAsObject(),
+          id: true,
           ...extra_returning,
         },
       },

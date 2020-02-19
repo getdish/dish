@@ -15,7 +15,7 @@ export class Self extends WorkerJob {
 
   static queue_config: QueueOptions = {
     limiter: {
-      max: 3,
+      max: 50,
       duration: 1000,
     },
   }
@@ -25,22 +25,24 @@ export class Self extends WorkerJob {
   }
 
   async main() {
-    const total = await Restaurant.allCount()
-    for (let page = 0; page * PER_PAGE <= total; page++) {
-      this.runOnWorker('fetchBatch', [page])
+    let previous_id = '00000000-0000-0000-0000-000000000000'
+    while (true) {
+      const results = await Restaurant.fetchBatch(PER_PAGE, previous_id)
+      if (results.length == 0) {
+        break
+      }
+      for (const result of results) {
+        this.runOnWorker('mergeAll', [result.id])
+        previous_id = result.id
+      }
     }
   }
 
-  async fetchBatch(page: number) {
-    const restaurants = await Restaurant.fetchBatch(PER_PAGE, page)
-    for (let restaurant of restaurants) {
-      this.mergeAll(restaurant)
-    }
-  }
-
-  async mergeAll(restaurant: Restaurant) {
-    console.log('Merging: ' + restaurant.name)
+  async mergeAll(id: string) {
+    let restaurant = new Restaurant()
+    await restaurant.findOne('id', id)
     this.restaurant = restaurant
+    console.log('Merging: ' + this.restaurant.name)
     await this.getScrapeData()
     if (!('data' in this.yelp)) {
       return

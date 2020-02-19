@@ -7,14 +7,14 @@ async function one() {
   const restaurant = new Restaurant()
   await restaurant.findOne('name', name)
   const dish = new Self()
-  await dish.mergeAll(restaurant)
+  await dish.mergeAll(restaurant.id)
   await restaurant.findOne('name', name)
   console.log(restaurant)
 }
 
-async function batch() {
+async function all() {
   const dish = new Self()
   await dish.main()
 }
 
-batch()
+all()

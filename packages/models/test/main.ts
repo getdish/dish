@@ -67,7 +67,7 @@ test('Finding a restaurant by name', async t => {
 })
 
 test('Finding a restaurant by location', async t => {
-  const restaurants = await Restaurant.findNear(50, 0, 100)
+  const restaurants = await Restaurant.findNear(0, 50, 0.025)
   t.is(restaurants[0].name, 'Test Restaurant')
 })
 
