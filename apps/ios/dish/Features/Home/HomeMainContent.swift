@@ -52,6 +52,7 @@ struct HomeMainContentContainer<Content>: View where Content: View {
 // renders on every frame of HomeViewState, so keep it fairly light
 struct HomeMainContent: View {
     @Environment(\.geometry) var appGeometry
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var homeState: HomeViewState
     @EnvironmentObject var store: AppStore
     
@@ -105,11 +106,17 @@ struct HomeMainContent: View {
                     )
                 }
                 .background(
-                    LinearGradient(
-                        gradient: Gradient(colors: [.clear, .black]),
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
+                    self.colorScheme == .dark
+                      ? LinearGradient(
+                            gradient: Gradient(colors: [.clear, .black]),
+                            startPoint: .top,
+                            endPoint: .center
+                        )
+                      : LinearGradient(
+                            gradient: Gradient(colors: [.clear, .black]),
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
                 )
             }
             .opacity(self.homeState.isSnappedToBottom ? 1 : 0)

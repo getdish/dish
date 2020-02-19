@@ -10,7 +10,7 @@ extension AppState {
     struct MapState: Equatable {
         var location: MapViewLocation? = nil
         var moveToLocation: MapViewLocation? = nil
-        var locationLabel: String = ""
+        var locationLabel: String = "Map Area"
         var search = ""
         var searchResults: [CLLocation] = []
         var lastKnown: CLLocation? = nil

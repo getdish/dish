@@ -104,16 +104,13 @@ struct HomeMainView: View {
                         .opacity(state.showCamera ? 0 : 1)
                     }
                     
+                    // top bar
+                    TopNavView()
+                    .frameLimitedToScreen()
+                    
                     // Content
                     if App.enableContent && animationState != .splash {
                         ZStack {
-                            // top bar
-                            VStack {
-                                TopNavViewContent()
-                                Spacer()
-                            }
-                            .frameLimitedToScreen()
-                            
                             // content
                             HomeMainContentContainer(
                                 isSnappedToBottom: state.isSnappedToBottom,
