@@ -25,7 +25,7 @@ struct TopSheetView<Content: View>: View {
     }
     
     private var offset: CGFloat {
-        isOpen ? 0 : maxHeight - minHeight
+        isOpen ? maxHeight : minHeight
     }
     
     var body: some View {
@@ -33,13 +33,12 @@ struct TopSheetView<Content: View>: View {
             ZStack {
                 self.content
             }
-            .frame(width: geometry.size.width, height: self.maxHeight, alignment: .top)
-            .background(BlurView(style: .dark))
+            .frame(width: geometry.size.width, height: self.maxHeight, alignment: .bottom)
             .cornerRadius(self.borderRadius)
             .frame(height: geometry.size.height, alignment: .top)
             .shadow(color: Color.black.opacity(0.4), radius: 20, x: 0, y: 5)
-            .offset(y: -geometry.size.height + max(self.offset + self.translation, 0))
-            .animation(.spring())
+            .offset(y: -self.maxHeight + max(self.offset + self.translation, 0))
+            .animation(self.translation == 0 ? .spring() : .none)
             .gesture(
                 DragGesture().updating(self.$translation) { value, state, _ in
                     state = value.translation.height
@@ -62,7 +61,7 @@ struct TopSheetView_Previews: PreviewProvider {
             maxHeight: 600,
             minHeight: 100
         ) {
-            Rectangle().fill(Color.red)
+            Color.red
         }.edgesIgnoringSafeArea(.all)
     }
 }

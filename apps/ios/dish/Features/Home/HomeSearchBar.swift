@@ -86,7 +86,7 @@ struct HomeSearchBar: View {
                 inputBackgroundColor: Color.white,
                 borderColor: Color.white,
                 scale: scale,
-                sizeRadius: 2.25,
+                sizeRadius: 1,
                 icon: icon,
                 showCancelInside: true,
                 onTapLeadingIcon: {
@@ -111,8 +111,6 @@ struct HomeSearchBar: View {
                 searchText: self.homeSearch,
                 showInput: showInput
             )
-                .shadow(color: Color.black.opacity(isOnSearch ? 0.2 : 0.35), radius: 8, x: 0, y: 3)
-                .animation(.spring(), value: zoomed != self.lastZoomed)
         }
     }
 }

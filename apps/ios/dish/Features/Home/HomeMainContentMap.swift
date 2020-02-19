@@ -29,34 +29,6 @@ struct HomeMapExplore: View {
                 .padding(.bottom, 8)
                 .padding(.top, 12)
             }
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                VStack {
-                    HStack(spacing: 4) {
-                        ForEach(0 ..< features.count) { index in
-                            DishButtonView(
-                                dish: features[index],
-                                at: .end
-                            )
-                        }
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 16)
-                    .padding(.top, 3)
-                    
-                    //                    HStack(spacing: 11) {
-                    //                        ForEach(0 ..< features.count) { index in
-                    //                            DishButtonView(
-                    //                                dish: features[features.count - index - 1],
-                    //                                at: .end
-                    //                            ).equatable()
-                    //                        }
-                    //                    }
-                    //                    .padding(.horizontal, 20)
-                    //                    .padding(.bottom, 18)
-                    //                    .padding(.top, 6)
-                }
-            }
         }
     }
 }

@@ -108,63 +108,54 @@ struct HomeMainView: View {
                     TopNavView()
                     .frameLimitedToScreen()
                     
-                    // Content
-                    if App.enableContent && animationState != .splash {
-                        ZStack {
-                            // content
-                            HomeMainContentContainer(
-                                isSnappedToBottom: state.isSnappedToBottom,
-                                disableMagicTracking: state.mapHeight >= state.snapToBottomAt
-                                    || state.isSnappedToBottom
-                                    || state.animationState == .controlled
-                            ) {
-                                HomeMainContent()
-                            }
-                            .frameLimitedToScreen()
-                            
-                            // filters
-                            VStack {
-                                HomeMainFilterBar()
-                                Spacer()
-                            }
-                            .frameLimitedToScreen()
-                            .offset(
-                                y: mapHeight + App.searchBarHeight / 2 + (
-                                    state.hasScrolled == .more ? -App.filterBarHeight - App.searchBarHeight : 0
-                                )
-                            )
-                                .animation(.spring()) // response: 0.8 (slows down?)
-                        }
-                        .opacity(state.showCamera ? 0 : 1)
-                    }
-                    
-                    // Search
-                    ZStack {
-                        HomeSearchAutocomplete()
-                            .opacity(showSearch == .search ? 1 : 0)
-                        
-                        HomeSearchLocationAutocomplete()
-                            .opacity(showSearch == .location ? 1 : 0)
-                        
+                    BottomSlideDrawer(
+                        position: .bottom,
+                        snapPoints: [100, 400, 600]
+                    ) {
                         VStack {
-                            HomeSearchBar(
-                                showInput: state.animationState == .idle
-                            )
-                                .frame(width: App.screen.width - 24, height: App.searchBarHeight)
-                                .padding(.horizontal, 12)
-                            //                        .scaleEffect(state.dragState == .searchbar ? 1.1 : 1)
-                            //                        .rotationEffect(.degrees(state.dragState == .searchbar ? 2 : 0))
-                            //                        .animation(.spring(), value: state.dragState == .searchbar)
-                            
+                            HomeSearchBar()
+                            HomeMainContent()
                             Spacer()
                         }
-                        .offset(y: isOnShowSearch
-                            ? App.screen.edgeInsets.top + 20
-                            : mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra
-                        )
-                            .animation(.spring(response: 1.25), value: state.animationState == .animate)
                     }
-                    .opacity(state.showCamera ? 0 : 1)
+                    
+                    // content
+//                    HomeMainContentContainer(
+//                        isSnappedToBottom: state.isSnappedToBottom,
+//                        disableMagicTracking: state.mapHeight >= state.snapToBottomAt
+//                            || state.isSnappedToBottom
+//                            || state.animationState == .controlled
+//                    ) {
+//                        HomeSearchBar(
+//                            showInput: state.animationState == .idle
+//                        )
+//                            .frame(width: App.screen.width - 24, height: App.searchBarHeight)
+//                            .padding(.horizontal, 12)
+//
+//                        HomeMainContent()
+//                    }
+//                    .frameLimitedToScreen()
+                    
+                    // Search
+//                    ZStack {
+//                        HomeSearchAutocomplete()
+//                            .opacity(showSearch == .search ? 1 : 0)
+//
+//                        VStack {
+//
+//                            //                        .scaleEffect(state.dragState == .searchbar ? 1.1 : 1)
+//                            //                        .rotationEffect(.degrees(state.dragState == .searchbar ? 2 : 0))
+//                            //                        .animation(.spring(), value: state.dragState == .searchbar)
+//
+//                            Spacer()
+//                        }
+//                        .offset(y: isOnShowSearch
+//                            ? App.screen.edgeInsets.top + 20
+//                            : mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra
+//                        )
+//                            .animation(.spring(response: 1.25), value: state.animationState == .animate)
+//                    }
+//                    .opacity(state.showCamera ? 0 : 1)
                     
                     // make everything untouchable while dragging
                     Color.black.opacity(0.0001)

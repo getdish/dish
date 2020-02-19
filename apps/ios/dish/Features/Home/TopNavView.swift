@@ -5,20 +5,21 @@ struct TopNavView: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var screen: ScreenModel
     @EnvironmentObject var store: AppStore
+    @State var isOpen = false
     
     var topPad: CGFloat {
         screen.edgeInsets.top
     }
     
     var body: some View {
-//        let homeView = store.state.home.view
-//        let isOnHome = homeView == .home
-//        let isOnLocationSearch = store.state.home.showSearch == .location
-        
-        return TopSheetView(isOpen: .constant(false), maxHeight: self.screen.height * 0.8) {
+        TopSheetView(
+            isOpen: self.$isOpen,
+            maxHeight: self.screen.height * 0.8,
+            minHeight: screen.edgeInsets.top + 50
+        ) {
             VStack {
                 Spacer()
-                HStack(spacing: 12) {
+                HStack(spacing: 10) {
                     self.accountButton
                     self.searchBar
                     self.cameraButton
@@ -28,9 +29,6 @@ struct TopNavView: View {
             .padding(.horizontal, 8)
             .padding(.bottom, 8)
         }
-        .cornerRadius(8)
-        .clipped()
-        .shadow(color: Color.black.opacity(0.5), radius: 10, y: 2)
     }
     
     var locationSearch: Binding<String> {
@@ -38,10 +36,7 @@ struct TopNavView: View {
     }
     
     var searchBar: some View {
-//        let mapLabel = locationSearch.wrappedValue
-//        let label = mapLabel == "" ? "Map Area" : mapLabel
-        
-        return HStack {
+        HStack {
             TextField("", text: self.locationSearch)
                 .font(.system(size: 14))
                 .multilineTextAlignment(.center)
@@ -59,15 +54,6 @@ struct TopNavView: View {
                     }
                     .padding(.leading, 12)
                 )
-                
-//            Button(action: {
-//                homeViewState.setAnimationState(.animate)
-//                App.store.send(.home(.setShowSearch(.location)))
-//            }) {
-//                Text(label)
-//                    .font(.system(size: 15))
-//            }
-            
         }
     }
     
@@ -154,11 +140,11 @@ struct TopNavButtonStyle: ViewModifier {
                         .padding(.horizontal, self.hPad)
                         .background(Color.white.opacity(active ? 0.5 : 0.2))
                         .foregroundColor(.white)
-                        .background(BlurView(style: .systemThickMaterialDark))
+                        .background(BlurView(style: .systemUltraThinMaterialDark))
                 }
             }
             .cornerRadius(8)
-            .shadow(color: Color.black.opacity(0.25), radius: 4, x: 0, y: 2)
+            .shadow(color: Color.black.opacity(0.15), radius: 3, x: 0, y: 1)
         }
         .padding(3)
     }
