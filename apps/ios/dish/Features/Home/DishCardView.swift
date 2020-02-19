@@ -90,15 +90,15 @@ struct DishButtonView: View, Identifiable, Equatable {
                 VStack {
                     HStack {
                         Text(self.dish.name)
-                            .font(.system(size: 16))
-                            .fontWeight(.light)
+                            .font(.system(size: 15))
+                            .fontWeight(.medium)
                             .foregroundColor(Color.white)
                             .multilineTextAlignment(.center)
                             .lineLimit(1)
                             .shadow(color: Color.black.opacity(0.25), radius: 0, x: 0, y: 1)
                     }
-                    .padding(.vertical, 7)
-                    .padding(.horizontal, 11)
+                    .padding(.vertical, 9)
+                    .padding(.horizontal, 13)
                     .background(Color.init(hue: self.dish.hue, saturation: 0.8, brightness: 0.5))
                     .cornerRadius(20)
                     .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)

@@ -16,8 +16,12 @@ struct HomeMapExplore: View {
                                 Text(self.store.state.home.labels[index])
                                     .font(.system(size: 17))
                             }
-                            .modifier(TopNavButtonStyle(height: 38))
-                            .invertColorScheme(index == self.index)
+                            .modifier(
+                                TopNavButtonStyle(
+                                    active: index == self.index,
+                                    height: 38
+                                )
+                            )
                         }
                     }
                 }

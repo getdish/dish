@@ -48,16 +48,10 @@ struct FilterButtonStyle: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
     
     func body(content: Content) -> some View {
-//        let themeColor = Color(.systemBackground).opacity(0.85)
-//        let schemeOppositeColor = Color(
-//            colorScheme == .dark ? .init(white: 0.95, alpha: 1) : .init(white: 0.08, alpha: 1)
-//        )
-        
         let a = Color.white
         let b = Color(white: 0.15)
         let bg = active ? a : b
         let fg = active ? b : a
-
         return content
             .foregroundColor(fg)
             .padding(.horizontal, 10)

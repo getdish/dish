@@ -36,6 +36,7 @@ struct TopNavViewContent: View {
 struct TopNavButtonStyle: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
     
+    var active: Bool = false
     var height: CGFloat = 34
     var hPad: CGFloat = 11
     
@@ -46,21 +47,20 @@ struct TopNavButtonStyle: ViewModifier {
                     content
                         .frame(height: self.height)
                         .padding(.horizontal, self.hPad)
-                        .background(Color.black.opacity(0.2))
-                        .background(BlurView(style: .systemThickMaterialDark))
+                        .foregroundColor(.white)
+                        .background(Color.black.opacity(active ? 0.4 : 0.8))
+                        .background(BlurView(style: active ? .systemMaterialLight : .systemMaterial))
                 } else {
                     content
                         .frame(height: self.height)
                         .padding(.horizontal, self.hPad)
-                        .background(Color.white.opacity(0.025))
-                        .background(Color.black.opacity(0.025))
-                        .background(BlurView(style: .systemUltraThinMaterialDark))
-                    
+                        .background(Color.white.opacity(active ? 0.5 : 0.2))
+                        .foregroundColor(.black)
+                        .background(BlurView(style: .systemThickMaterialDark))
                 }
             }
             .cornerRadius(8)
-            .shadow(color: Color.black.opacity(0.15), radius: 4, x: 0, y: 2)
-            .foregroundColor(.white)
+            .shadow(color: Color.black.opacity(0.25), radius: 4, x: 0, y: 2)
         }
         .padding(3)
     }
