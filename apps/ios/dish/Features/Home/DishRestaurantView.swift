@@ -10,33 +10,142 @@ struct DishRestaurantView: View {
                 if next == false {
                     self.store.send(.home(.pop))
                 }
-        }
+            }
         )
     }
     
     var body: some View {
-        BottomSheetView(
-            isOpen: self.isRestaurantOpen, maxHeight: App.screen.height * 0.9
-        ) {
-            DishRestaurantViewContent()
+        Color.clear
+            .sheet(isPresented: self.isRestaurantOpen, onDismiss: {
+//                
+            }) {
+                ScrollView(.vertical) {
+                    Spacer().frame(height: 40)
+                    
+                    DishRestaurantViewContent()
+                }
         }
     }
 }
 
 struct DishRestaurantViewContent: View {
     @EnvironmentObject var store: AppStore
+    @Environment(\.colorScheme) var colorScheme
+    
+     let dishes = features.chunked(into: 2)
     
     var restaurant: RestaurantItem {
         Selectors.home.lastState().restaurant ?? restaurants[0]
     }
     
     var body: some View {
-        VStack {
-            Text("\(self.restaurant.name)")
-            Text("\(self.restaurant.address)")
-            Text("\(self.restaurant.imageName)")
-            Text("\(self.restaurant.phone)")
-            Text("\(self.restaurant.stars)")
+        HStack {
+            VStack(alignment: .leading, spacing: 0) {
+                Text("\(self.restaurant.name)")
+                    .modifier(TextStyle())
+                    .padding(.horizontal, 10)
+                    .padding(.bottom, 10)
+                
+                HStack {
+                    DividerView()
+                    DishRatingView(
+                        isMini: false,
+                        restaurant: self.restaurant
+                    )
+                        .frame(width: 80, height: 32)
+                    DividerView()
+                }
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        Spacer()
+                        HStack(spacing: 20) {
+                            ForEach(0 ..< self.restaurant.tags.count) { index in
+                                // self.restaurant.tags[index]
+                                return Text("\(self.store.state.home.labels[index])")
+                            }
+                        }
+                        .padding(.horizontal)
+                        .padding(.vertical, 12)
+                        Spacer()
+                    }
+                }
+                
+                VStack {
+                    self.restaurant.image
+                        .resizable()
+                        .scaledToFill()
+                }
+                .frame(maxWidth: .infinity, maxHeight: 390)
+                .clipped()
+                
+                HStack(spacing: 0) {
+                    Group {
+                        Button(action: {}) {
+                            HStack {
+                                Image(systemName: "map")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 20, height: 20)
+                                
+                                VStack(alignment: .leading) {
+                                    Text("\(self.restaurant.address)")
+                                    Text("San Francisco, CA, 94131")
+                                        .font(.caption)
+                                        .opacity(0.5)
+                                }
+                                Spacer()
+                            }
+                            .padding(4)
+                        }
+                        Button(action: {}) {
+                            Image(systemName: "phone")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 26, height: 26)
+                                .padding(4)
+                        }
+                    }
+                    .foregroundColor(self.colorScheme == .light ? .black : .white)
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                
+                DividerView()
+
+                HStack {
+                    AppleMapView(
+                        markers: []
+                    )
+                    Color.gray
+                }
+                    .frame(height: 120)
+                
+                DividerView()
+                
+                VStack {
+                    Text("Top Dishes")
+                        .font(.headline)
+                        .padding(.bottom)
+                    
+                    ForEach(0 ..< dishes.count) { index in
+                        HStack {
+                            ForEach(self.dishes[index]) { dish in
+                                DishCardView(
+                                    dish: dish,
+                                    at: .end,
+                                    display: .card
+                                )
+                                    .frame(height: 120)
+                            }
+                        }
+                    }
+                }
+                .padding()
+                
+                Spacer()
+            }
+            Spacer()
         }
     }
 }
@@ -44,8 +153,11 @@ struct DishRestaurantViewContent: View {
 #if DEBUG
 struct DishRestaurantViewContent_Previews: PreviewProvider {
     static var previews: some View {
-        DishRestaurantViewContent()
-            .embedInAppEnvironment(Mocks.homeSearchedPhoSelectedRestaurant)
+        VStack {
+            DishRestaurantViewContent()
+                .embedInAppEnvironment(Mocks.homeSearchedPhoSelectedRestaurant)
+        }
+        .padding(.top, 20)
     }
 }
 #endif

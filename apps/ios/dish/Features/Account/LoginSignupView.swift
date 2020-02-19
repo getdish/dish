@@ -62,7 +62,7 @@ struct SignUpView: View {
                 .disabled(loading)
                 .padding()
             
-            Divider()
+            DividerView()
             
             Text("An account will allow you to save and access recipe information across devices. You can delete your account at any time and your information will not be shared.")
                 .font(.footnote)
@@ -129,7 +129,7 @@ struct SignInView: View {
                 .padding(.horizontal)
                 
                 VStack {
-                    Divider()
+                    DividerView()
                     HStack(alignment: .center) {
                         Text("Don't have an account?")
                             .font(.footnote)

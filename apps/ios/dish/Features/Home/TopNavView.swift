@@ -10,9 +10,7 @@ struct TopNavViewContent: View {
         let totalHeight = topPad + bottomPad + 40
         
         return VStack {
-            ZStack {
-                TopNavSearchResults()
-                
+            ZStack {                
                 VStack {
                     VStack {
                         HStack(spacing: 12) {
@@ -21,7 +19,7 @@ struct TopNavViewContent: View {
                                 CameraTopNav()
                             }
                         }
-                        .padding(.horizontal)
+                        .padding(.horizontal, 8)
                     }
                     .padding(.top, topPad)
                     .padding(.bottom, bottomPad)
@@ -31,36 +29,40 @@ struct TopNavViewContent: View {
                 }
             }
         }
-        .padding(.top, 10)
+        .padding(.top, 4)
     }
 }
 
 struct TopNavButtonStyle: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
     
-    var height = App.topNavHeight - App.topNavPad * 2
+    var active: Bool = false
+    var height: CGFloat = 34
+    var hPad: CGFloat = 11
     
     func body(content: Content) -> some View {
-        Group {
-            if colorScheme == .dark {
-                content
-                    .frame(height: self.height)
-                    .padding(.horizontal, 8)
-                    .background(Color.black.opacity(0.2))
-                    .background(BlurView(style: .systemThickMaterialDark))
-            } else {
-                content
-                    .frame(height: self.height)
-                    .padding(.horizontal, 8)
-                    .background(Color.white.opacity(0.025))
-                    .background(Color.black.opacity(0.025))
-                    .background(BlurView(style: .systemUltraThinMaterialDark))
-
+        ZStack {
+            Group {
+                if colorScheme == .dark {
+                    content
+                        .frame(height: self.height)
+                        .padding(.horizontal, self.hPad)
+                        .foregroundColor(.white)
+                        .background(Color.black.opacity(active ? 0.4 : 0.8))
+                        .background(BlurView(style: active ? .systemMaterialLight : .systemMaterial))
+                } else {
+                    content
+                        .frame(height: self.height)
+                        .padding(.horizontal, self.hPad)
+                        .background(Color.white.opacity(active ? 0.5 : 0.2))
+                        .foregroundColor(.black)
+                        .background(BlurView(style: .systemThickMaterialDark))
+                }
             }
-        }
             .cornerRadius(8)
-            .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
-            .foregroundColor(.white)
+            .shadow(color: Color.black.opacity(0.25), radius: 4, x: 0, y: 2)
+        }
+        .padding(3)
     }
 }
 
@@ -73,10 +75,11 @@ struct SearchBarLocationLabel: View {
         
         return HStack {
             Button(action: {
-                App.store.send(.map(.moveToCurrentLocation))
+                homeViewState.setAnimationState(.animate)
+                App.store.send(.home(.setShowSearch(.location)))
             }) {
                 Text(label)
-                    .font(.system(size: 14))
+                    .font(.system(size: 15))
             }
             .modifier(TopNavButtonStyle())
         }
@@ -89,47 +92,40 @@ struct TopNavHome: View {
     var body: some View {
         let homeView = store.state.home.view
         let isOnHome = homeView == .home
+        let isOnLocationSearch = store.state.home.showSearch == .location
         
         return ZStack {
             VStack {
                 ZStack {
-                    // home controls
                     HStack {
+                        Spacer()
                         SearchBarLocationLabel()
-                        
+                        Spacer()
+                    }
+                    
+                    // home controls
+                    HStack(spacing: 4) {
+                        Button(action: {
+                        }) {
+                            VStack {
+                                Image(systemName: "person")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 16, height: 16)
+                            }
+                        }
+                        .modifier(TopNavButtonStyle())
                         
                         Spacer()
-                        
-//                        HStack(spacing: 0) {
-//                            Button(action: {
-//                            }) {
-//                                Text("-")
-//                                    .titleBarStyle(15)
-//                                    .padding(.horizontal, 10)
-//                            }
-//                            Rectangle()
-//                                .foregroundColor(.gray)
-//                                .opacity(0.2)
-//                                .frame(width: 1)
-//                            Button(action: {
-//                            }) {
-//                                Text("+")
-//                                    .titleBarStyle(15)
-//                                    .padding(.horizontal, 10)
-//                            }
-//                        }
-//                        .modifier(TopNavButtonStyle())
-//                        .transition(.slide)
-                        
-                        
+
                         Button(action: {
                             App.enterRepl = true
                         }) {
                             VStack {
-                                Image(systemName: "location.fill")
+                                Image(systemName: "camera")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 16, height: 16)
+                                .frame(width: 22, height: 22)
                             }
 
                         }
@@ -137,46 +133,10 @@ struct TopNavHome: View {
                     }
                 }
                 .opacity(isOnHome ? 1 : 0)
+                .offset(y: isOnLocationSearch ? -100 : 0)
+                .animation(.spring())
             }
             .frame(maxWidth: .infinity)
-        }
-    }
-}
-
-struct TopNavSearch: View {
-    @EnvironmentObject var store: AppStore
-    @Binding var isEditing: Bool
-    @State var search = ""
-    @State var tags: [SearchInputTag] = []
-    
-    private var locationSearch: Binding<String> {
-        store.binding(for: \.map.search, { .map(.setSearch($0)) })
-    }
-    
-    func focus() {
-        //        searchStore.showResults = true
-    }
-    
-    var body: some View {
-        SearchInput(
-            placeholder: "Current Location",
-            inputBackgroundColor: Color(.secondarySystemGroupedBackground).opacity(self.isEditing ? 1.0 : 0.5),
-            icon: AnyView(Image(systemName: store.state.map.lastKnown != nil ? "location.fill" : "location")),
-            showCancelInside: true,
-            onEditingChanged: { isEditing in
-                withAnimation(.spring()) {
-                    self.isEditing = isEditing
-                }
-        },
-            onCancel: {
-                //                        Store.mapSearch.showResults = false
-        },
-            searchText: self.$search,
-            tags: self.$tags
-        )
-            .shadow(color: Color.black.opacity(0.25), radius: 5, x: 0, y: 5)
-            .onTapGesture {
-                self.focus()
         }
     }
 }

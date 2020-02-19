@@ -8,6 +8,7 @@ fileprivate let initialLabels = [
     "🔥 New",
     "👩‍🍳 Picks",
     "💎 Date Night",
+    "💁‍♀️ Great Service",
     "🥬",
     "🐟",
     "💸 Cheap",
@@ -32,24 +33,23 @@ extension AppState {
         var labels = initialLabels
         var labelActive = 0
         var labelDishes = [String: [DishItem]]()
-        var showDrawer: Bool = false
+        var showSearch: HomeUISearchState = .off
         var showCamera: Bool = false
     }
 }
 
 enum HomeAction {
     case setView(_ page: HomePageView)
-    case setShowDrawer(_ val: Bool)
     case navigateToRestaurant(_ val: RestaurantItem)
     case push(_ val: HomeStateItem)
     case pop
-    case toggleDrawer
     case setSearch(_ val: String)
     case setSearchResults(_ val: HomeSearchResults)
-    case setCurrentTags(_ val: [SearchInputTag])
     case setLabelActive(_ val: Int)
     case setLabelDishes(id: String, dishes: [DishItem])
+    case setShowSearch(_ val: HomeUISearchState)
     case setFilterActive(filter: FilterItem, val: Bool)
+    case clearSearch
 }
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
@@ -64,6 +64,12 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     }
     
     switch action {
+        case .clearSearch:
+            if state.home.viewStates.count > 1 {
+                state.home.viewStates = Array(state.home.viewStates.drop { $0.search != "" })
+            }
+        case .setShowSearch(let val):
+            state.home.showSearch = val
         case .setFilterActive(let target, let val):
             state.home.filters = state.home.filters.map { filter in
                 if filter == target {
@@ -85,24 +91,6 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
             var last = state.home.viewStates.last!
             last.searchResults = val
             updateItem(last)
-        case let .setCurrentTags(val):
-            var last = state.home.viewStates.last!
-            
-            // if removing last filter, pop!
-            if val.count == 0 {
-                // TODO this shouldn't be here I think..
-                async {
-                    App.store.send(.home(.pop))
-                }
-            } else {
-                last.dishes = val.map { DishFilterItem(name: $0.text) }
-                updateItem(last)
-                if let search = val.last?.text {
-                    async {
-                        App.store.send(.home(.setSearch(search)))
-                    }
-                }
-        }
         case let .setSearch(val):
             var last = state.home.viewStates.last!
             // TODO if filter/category exists (like Pho), move it to tags not search
@@ -117,10 +105,6 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
         }
         case let .setView(page):
             state.home.view = page
-        case let .setShowDrawer(val):
-            state.home.showDrawer = val
-        case .toggleDrawer:
-            state.home.showDrawer = !state.home.showDrawer
         case let .push(homeState):
             state.home.viewStates.append(homeState)
         case .pop:
@@ -150,24 +134,13 @@ struct HomeSelectors {
     func lastState(_ store: AppStore = App.store) -> HomeStateItem {
         store.state.home.viewStates.last!
     }
-    
-    func tags(_ store: AppStore = App.store) -> [SearchInputTag] {
-        let homeState = store.state.home.viewStates.last!
-        var tags: [SearchInputTag] = []
-        if homeState.dishes.count > 0 {
-            tags = homeState.dishes.map { dish in
-                SearchInputTag(
-                    color: SearchToTagColor.filter,
-                    text: dish.name,
-                    deletable: dish.deletable
-                )
-            }
-        }
-        return tags
-    }
 }
 
 // structures for HomeStore
+
+enum HomeUISearchState {
+    case off, search, location
+}
 
 struct FilterItem: Identifiable, Equatable {
     enum FilterType {

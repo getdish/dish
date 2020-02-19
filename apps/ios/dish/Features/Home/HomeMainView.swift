@@ -14,6 +14,7 @@ struct HomeMainView: View {
 
     @State var wasOnSearchResults = false
     @State var wasOnCamera = false
+    @State var contentWrappingView: UIView? = nil
     
     func start() {
         async(500) {
@@ -48,6 +49,8 @@ struct HomeMainView: View {
         let state = self.state
         let animationState = state.animationState
         let mapHeight = state.mapHeight
+        let showSearch = store.state.home.showSearch
+        let isOnShowSearch = store.state.home.showSearch != .off
         //        let enableSearchBar = [.idle, .off].contains(state.dragState) && state.animationState == .idle
 
         print(" 👀 HomeMainView mapHeight \(mapHeight) animationState \(state.animationState)")
@@ -60,138 +63,121 @@ struct HomeMainView: View {
             
             // below restaurant card
             ZStack {
-                // Camera
-                if App.enableCamera && animationState != .splash {
-                    ZStack {
-                        DishCamera()
-                        
-                        // cover camera
-                        Color.black
-                            .opacity(state.showCamera ? 0 : 1)
-                            .animation(.spring())
-                    }
-                    .frameLimitedToScreen()
-                }
-                
-                // Map
-                if App.enableMap {
-                    ZStack {
-                        ZStack {
-                            DishMapView(
-                                height: state.mapFullHeight,
-                                animate: [.idle].contains(state.dragState)
-                                    || state.animationState != .idle
-                                    || state.mapHeight > state.startSnapToBottomAt
-                            )
-                                .offset(y: -(state.mapFullHeight - mapHeight) / 2 + 25 /* topbar offset */)
-                                .animation(.spring(response: 0.65))
-                        }
-                        .frameLimitedToScreen()
-                        .clipped()
-                        .opacity(animationState == .splash ? 0 : 1)
-                        
-                        HomeMapOverlay()
-                            .offset(y: mapHeight - App.searchBarHeight / 2)
-                            .animation(.spring())
-                    }
-                    .frameLimitedToScreen()
-                    .opacity(state.showCamera ? 0 : 1)
-                }
-                
-                // Content
-                if App.enableContent && animationState != .splash {
-                    ZStack {
-                        // top bar
-                        VStack {
-                            TopNavViewContent()
-                            Spacer()
-                        }
-                        .frameLimitedToScreen()
-                        
-                        // content
-                        HomeMainContentContainer(
-                            isSnappedToBottom: state.isSnappedToBottom,
-                            disableMagicTracking: state.mapHeight >= state.snapToBottomAt
-                                || state.isSnappedToBottom
-                                || state.animationState == .controlled
-                        ) {
-                            HomeMainContent()
-                        }
-                        .frameLimitedToScreen()
-                        
-                        // filters
-                        VStack {
-                            HomeMainFilterBar()
-                            Spacer()
-                        }
-                        .frameLimitedToScreen()
-                        .offset(
-                            y: mapHeight + App.searchBarHeight / 2 + (
-                                state.hasScrolled == .more ? -App.filterBarHeight - App.searchBarHeight : 0
-                            )
-                        )
-                            .animation(.spring()) // response: 0.8 (slows down?)
-                    }
-                    .opacity(state.showCamera ? 0 : 1)
-                }
-                
-                // Search
+                // wrapper to handle disabling touch events during dragging
                 ZStack {
-                    VStack {
-                        HomeSearchBar(
-                            showInput: state.animationState == .idle
-                        )
-                            .frame(height: App.searchBarHeight)
-                            .padding(.horizontal, 12)
-                        //                        .scaleEffect(state.dragState == .searchbar ? 1.1 : 1)
-                        //                        .rotationEffect(.degrees(state.dragState == .searchbar ? 2 : 0))
-                        //                        .animation(.spring(), value: state.dragState == .searchbar)
-                        
-                        Spacer()
+                    
+                    // Camera
+                    if App.enableCamera && animationState != .splash {
+                        ZStack {
+                            DishCamera()
+                            
+                            // cover camera
+                            Color.black
+                                .opacity(state.showCamera ? 0 : 1)
+                                .animation(.spring())
+                        }
+                        .frameLimitedToScreen()
                     }
-                        // this fixed a bug where it would focus search bar too easily
-                        // but created one where it de-focuses it instantly often
-                        //                    .disabled(!enableSearchBar)
-                        //                    .allowsHitTesting(enableSearchBar)
-                        .offset(y: mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra)
-                        .animation(.spring(response: 1.25), value: state.animationState == .animate)
-                }
-                .opacity(state.showCamera ? 0 : 1)
-                
-                
-                // Camera Controls
-                if App.enableCamera {
-                    ZStack {
-                        VStack {
-                            HStack {
-                                Spacer()
-                                CameraButton(
-                                    foregroundColor: state.showCamera ? .white : .black
+                    
+                    // Map
+                    if App.enableMap {
+                        ZStack {
+                            ZStack {
+                                DishMapView(
+                                    height: state.mapFullHeight,
+                                    animate: [.idle].contains(state.dragState)
+                                        || state.animationState != .idle
+                                        || state.mapHeight > state.startSnapToBottomAt
                                 )
-                                    .scaleEffect(state.showCamera ? 1.3 : 1)
-                                    .offset(
-                                        x: state.showCamera
-                                            ? -App.screen.width / 2 + App.cameraButtonHeight / 2
-                                            : -15,
-                                        y: state.showCamera
-                                            ? App.screen.height - App.cameraButtonHeight - 100
-                                            : state.mapHeight + state.searchBarYExtra - App.cameraButtonHeight / 2
-                                )
-                                //                                    .animation(Animation.spring(response: 0.4).delay(0))
+                                    .offset(y: -(state.mapFullHeight - mapHeight) / 2 + 25 /* topbar offset */)
+                                    .animation(.spring(response: 0.65))
                             }
+                            .frameLimitedToScreen()
+                            .clipped()
+                            .opacity(animationState == .splash ? 0 : 1)
+                            
+                            HomeMapOverlay()
+                                .offset(y: mapHeight - App.searchBarHeight / 2)
+                                .animation(.spring())
+                        }
+                        .frameLimitedToScreen()
+                        .opacity(state.showCamera ? 0 : 1)
+                    }
+                    
+                    // Content
+                    if App.enableContent && animationState != .splash {
+                        ZStack {
+                            // top bar
+                            VStack {
+                                TopNavViewContent()
+                                Spacer()
+                            }
+                            .frameLimitedToScreen()
+                            
+                            // content
+                            HomeMainContentContainer(
+                                isSnappedToBottom: state.isSnappedToBottom,
+                                disableMagicTracking: state.mapHeight >= state.snapToBottomAt
+                                    || state.isSnappedToBottom
+                                    || state.animationState == .controlled
+                            ) {
+                                HomeMainContent()
+                            }
+                            .frameLimitedToScreen()
+                            
+                            // filters
+                            VStack {
+                                HomeMainFilterBar()
+                                Spacer()
+                            }
+                            .frameLimitedToScreen()
+                            .offset(
+                                y: mapHeight + App.searchBarHeight / 2 + (
+                                    state.hasScrolled == .more ? -App.filterBarHeight - App.searchBarHeight : 0
+                                )
+                            )
+                                .animation(.spring()) // response: 0.8 (slows down?)
+                        }
+                        .opacity(state.showCamera ? 0 : 1)
+                    }
+                    
+                    // Search
+                    ZStack {
+                        HomeSearchAutocomplete()
+                            .opacity(showSearch == .search ? 1 : 0)
+                        
+                        HomeSearchLocationAutocomplete()
+                            .opacity(showSearch == .location ? 1 : 0)
+                        
+                        VStack {
+                            HomeSearchBar(
+                                showInput: state.animationState == .idle
+                            )
+                                .frame(width: App.screen.width - 24, height: App.searchBarHeight)
+                                .padding(.horizontal, 12)
+                            //                        .scaleEffect(state.dragState == .searchbar ? 1.1 : 1)
+                            //                        .rotationEffect(.degrees(state.dragState == .searchbar ? 2 : 0))
+                            //                        .animation(.spring(), value: state.dragState == .searchbar)
+                            
                             Spacer()
                         }
+                        .offset(y: isOnShowSearch
+                            ? App.screen.edgeInsets.top + 20
+                            : mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra
+                        )
+                            .animation(.spring(response: 1.25), value: state.animationState == .animate)
                     }
-                    .frameLimitedToScreen()
+                    .opacity(state.showCamera ? 0 : 1)
+                    
+                    // make everything untouchable while dragging
+                    Color.black.opacity(0.0001)
+                        .frame(width: state.dragState == .pager ? App.screen.width : 0)
                 }
-                
-                // make everything untouchable while dragging
-                Color.black.opacity(0.0001)
-                    .frame(width: state.dragState == .pager ? App.screen.width : 0)
+                // cancels started touch events once drag starts
+                .disabled(state.dragState != .idle)
             }
             .clipped() // dont remove fixes bug cant click SearchBar
             .simultaneousGesture(self.dragGesture)
-            .scaleEffect(Selectors.home.isOnRestaurant() ? 0.9 : 1)
             
             DishRestaurantView()
             
@@ -253,6 +239,44 @@ struct HomeMainView: View {
     }
 }
 
+
+struct HomeSearchAutocomplete: View {
+    var body: some View {
+        VStack {
+            Spacer()
+                .frame(height: App.screen.edgeInsets.top + App.searchBarHeight + 60)
+            
+            List {
+                HStack { Text("Suggested item 1") }
+                HStack { Text("Suggested item 2") }
+                HStack { Text("Suggested item 3") }
+                HStack { Text("Suggested item 4") }
+            }
+        }
+        .background(Color.white)
+        .frameLimitedToScreen()
+        .clipped()
+    }
+}
+
+struct HomeSearchLocationAutocomplete: View {
+    var body: some View {
+        VStack {
+            Spacer()
+                .frame(height: App.screen.edgeInsets.top + App.searchBarHeight + 60)
+            
+            List {
+                HStack { Text("Suggested item 1") }
+                HStack { Text("Suggested item 2") }
+                HStack { Text("Suggested item 3") }
+                HStack { Text("Suggested item 4") }
+            }
+        }
+        .background(Color.white)
+        .frameLimitedToScreen()
+        .clipped()
+    }
+}
 
 struct HomeMapOverlay: View {
     @Environment(\.colorScheme) var colorScheme

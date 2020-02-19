@@ -44,18 +44,18 @@ struct HomeMainFilterBar: View {
 }
 
 struct FilterButtonStyle: ViewModifier {
+    var active = false
     @Environment(\.colorScheme) var colorScheme
     
     func body(content: Content) -> some View {
-        let themeColor = Color(.systemBackground).opacity(0.85)
-        let schemeOppositeColor = Color(
-            colorScheme == .dark ? .init(white: 0.95, alpha: 1) : .init(white: 0.08, alpha: 1)
-        )
-
+        let a = Color.white
+        let b = Color(white: 0.15)
+        let bg = active ? a : b
+        let fg = active ? b : a
         return content
-            .foregroundColor(themeColor)
+            .foregroundColor(fg)
             .padding(.horizontal, 10)
-            .background(schemeOppositeColor)
+            .background(bg)
             .cornerRadius(20)
             .shadow(radius: 4)
     }
@@ -94,13 +94,8 @@ struct FilterButton: View {
                     Spacer()
                 }
                 .frame(height: self.height)
-                .modifier(FilterButtonStyle())
+                .modifier(FilterButtonStyle(active: self.filter.active))
             }
-            .environment(\.colorScheme,
-                 self.filter.active
-                    ? colorScheme == .light ? .dark : .light
-                    : colorScheme
-            )
         }
     }
 }

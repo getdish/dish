@@ -7,7 +7,7 @@ struct HomeMapExplore: View {
     var body: some View {
         VStack(spacing: 0) {
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 9) {
+                HStack(spacing: 6) {
                     ForEach(0 ..< self.store.state.home.labels.count - 1) { index in
                         DishButton(action: {
                             self.index = index
@@ -16,29 +16,32 @@ struct HomeMapExplore: View {
                                 Text(self.store.state.home.labels[index])
                                     .font(.system(size: 17))
                             }
-                            .padding(.horizontal, 2)
-                            .modifier(TopNavButtonStyle(height: 38))
-                            .invertColorScheme(index == self.index)
+                            .modifier(
+                                TopNavButtonStyle(
+                                    active: index == self.index,
+                                    height: 38
+                                )
+                            )
                         }
                     }
                 }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 9)
+                .padding(.horizontal, 20 - 3)
+                .padding(.bottom, 8)
                 .padding(.top, 12)
             }
             
             ScrollView(.horizontal, showsIndicators: false) {
                 VStack {
-                    HStack(spacing: 6) {
+                    HStack(spacing: 4) {
                         ForEach(0 ..< features.count) { index in
                             DishButtonView(
                                 dish: features[index],
                                 at: .end
-                            ).equatable()
+                            )
                         }
                     }
                     .padding(.horizontal, 20)
-                    .padding(.bottom, 6 + 9)
+                    .padding(.bottom, 16)
                     .padding(.top, 3)
                     
                     //                    HStack(spacing: 11) {

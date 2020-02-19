@@ -16,17 +16,6 @@ struct HomeSearchBar: View {
     @EnvironmentObject var keyboard: Keyboard
     @Environment(\.colorScheme) var colorScheme
     
-    @State var placeholder = "Dim Sum..."
-    
-    func updatePlaceholder() {
-        var i = 0
-        let placeholders = ["Dim Sum", "Pho", "Ceviche", "Poke", "Mapa Tofu"]
-        async(interval: 5000, intervalMax: 5) {
-            self.placeholder = "\(placeholders[i])..."
-            i += 1
-        }
-    }
-    
     var hasSearch: Bool {
         store.state.home.viewStates.count > 1
     }
@@ -35,17 +24,14 @@ struct HomeSearchBar: View {
         store.binding(for: \.home.viewStates.last!.search, { .home(.setSearch($0)) })
     }
     
-    private var homeTags: Binding<[SearchInputTag]> {
-        Binding<[SearchInputTag]>(
-            get: { Selectors.home.tags() },
-            set: { self.store.send(.home(.setCurrentTags($0))) }
-        )
+    private var homeLocation: Binding<String> {
+        store.binding(for: \.map.locationLabel, { .map(.setLocationLabel($0)) })
     }
     
     func focusKeyboard() {
         log.info()
         self.isFirstResponder = false
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(2)) {
+        async(2) {
             self.isFirstResponder = true
         }
     }
@@ -53,13 +39,18 @@ struct HomeSearchBar: View {
     @State var lastZoomed = false
     
     var icon: AnyView {
-        if !Selectors.home.isOnHome() {
+        let isOnHome = Selectors.home.isOnHome()
+        if isOnHome || self.store.state.home.showSearch == .search {
             return AnyView(
-                Image(systemName: "chevron.left")
+                Image(systemName: "magnifyingglass")
+            )
+        } else if self.store.state.home.showSearch == .location {
+            return AnyView(
+                Image(systemName: "map")
             )
         } else {
             return AnyView(
-                Image(systemName: "magnifyingglass")
+                Image(systemName: "chevron.left")
             )
         }
     }
@@ -68,9 +59,8 @@ struct HomeSearchBar: View {
     
     func onClear() {
         // go back on empty search clear
-        if Selectors.home.isOnSearchResults() && self.store.state.home.viewStates.last!.searchResults.results.count == 0 {
-            self.store.send(.home(.pop))
-        }
+        self.store.send(.home(.clearSearch))
+
         // focus keyboard again on clear if not focused
         if self.keyboard.state.height == 0 {
             self.focusKeyboard()
@@ -80,12 +70,10 @@ struct HomeSearchBar: View {
     var body: some View {
         let zoomed = keyboard.state.height > 0
         let scale: CGFloat = zoomed ? 1.2 : 1.2
+        let isOnSearch = self.store.state.home.showSearch == .search
         
         return ZStack {
             Group {
-                RunOnce(name: "updatePlaceholder") {
-                    self.updatePlaceholder()
-                }
                 if self.lastZoomed != zoomed {
                     SideEffect("updateLastZoomed") {
                         self.lastZoomed = zoomed
@@ -94,11 +82,11 @@ struct HomeSearchBar: View {
             }
             
             SearchInput(
-                placeholder: self.placeholder,
+                placeholder: "",
                 inputBackgroundColor: Color.white,
                 borderColor: Color.white,
                 scale: scale,
-                sizeRadius: 2.1,
+                sizeRadius: 2.25,
                 icon: icon,
                 showCancelInside: true,
                 onTapLeadingIcon: {
@@ -109,14 +97,21 @@ struct HomeSearchBar: View {
                         self.store.send(.home(.pop))
                     }
                 },
+                onEditingChanged: { val in
+                    if val == true {
+                        App.store.send(.home(.setShowSearch(.search)))
+                    } else {
+                        // todo we may need to not auto close...?
+                        App.store.send(.home(.setShowSearch(.off)))
+                    }
+                },
                 onClear: self.onClear,
-                after: after,
+                after: isOnSearch ? AnyView(EmptyView()) : after,
                 isFirstResponder: isFirstResponder,
                 searchText: self.homeSearch,
-                tags: self.homeTags,
                 showInput: showInput
             )
-                .shadow(color: Color.black.opacity(0.35), radius: 8, x: 0, y: 3)
+                .shadow(color: Color.black.opacity(isOnSearch ? 0.2 : 0.35), radius: 8, x: 0, y: 3)
                 .animation(.spring(), value: zoomed != self.lastZoomed)
         }
     }
@@ -132,7 +127,7 @@ struct HomeSearchBarAfterView: View {
     var body: some View {
         let oppositeColor = colorScheme == .dark ? Color.white : Color.black
         
-        return HStack {
+        return HStack(spacing: 12 * scale) {
             Button(action: {
                 self.homeState.toggleSnappedToBottom()
             }) {
@@ -166,9 +161,12 @@ struct HomeSearchBarAfterView: View {
             .padding(.vertical, 4 * scale)
             .padding(.horizontal, 6 * scale)
             
-            // space for the camera button
-            Color.clear
-                .frame(width: App.cameraButtonHeight)
+            DishButton(action: {
+                App.store.send(.map(.moveToCurrentLocation))
+            }) {
+                Image(systemName: "location")
+                    .foregroundColor(.blue)
+            }
         }
     }
 }

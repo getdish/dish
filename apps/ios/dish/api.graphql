@@ -7,9 +7,11 @@ query SearchRestaurants($radius: Float!, $geo: geometry!) {
                     from: $geo
                 }
             }
-        }
+        },
+        limit: 30
     ) {
         name
         location
     }
 }
+
