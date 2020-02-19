@@ -75,7 +75,7 @@ struct SearchBarLocationLabel: View {
         
         return HStack {
             Button(action: {
-                App.store.send(.map(.moveToCurrentLocation))
+                
             }) {
                 Text(label)
                     .font(.system(size: 16))

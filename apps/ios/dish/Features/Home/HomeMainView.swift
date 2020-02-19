@@ -158,7 +158,7 @@ struct HomeMainView: View {
                             Spacer()
                         }
                         .offset(y: showSearch == .search
-                            ? App.screen.edgeInsets.top + 20 + 55
+                            ? App.screen.edgeInsets.top + 20
                             : mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra
                         )
                             .animation(.spring(response: 1.25), value: state.animationState == .animate)

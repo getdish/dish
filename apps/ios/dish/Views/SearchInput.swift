@@ -183,7 +183,7 @@ struct SearchInput: View {
                         top: pad,
                         leading: pad * 1.5 - horizontalSpacing,
                         bottom: pad,
-                        trailing: pad * 1.5
+                        trailing: pad * 1.5 + horizontalSpacing
                     ))
                     .foregroundColor(.secondary)
                     .background(self.inputBackgroundColor)

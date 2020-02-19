@@ -81,7 +81,7 @@ struct DishButtonView: View, Identifiable, Equatable {
     var action: (() -> Void)? = nil
     
     var body: some View {
-        MagicItem("dish-button-\(id)", at: at) {
+//        MagicItem("dish-button-\(id)", at: at) {
             DishButton(action: self.action ?? {
                 App.store.send(
                     .home(.push(HomeStateItem(search: self.dish.name)))
@@ -105,6 +105,6 @@ struct DishButtonView: View, Identifiable, Equatable {
                 }
                 .padding(4)
             }
-        }
+//        }
     }
 }

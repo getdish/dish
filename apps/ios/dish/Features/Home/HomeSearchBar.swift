@@ -111,7 +111,7 @@ struct HomeSearchBar: View {
                 searchText: self.homeSearch,
                 showInput: showInput
             )
-                .shadow(color: Color.black.opacity(isOnSearch ? 0 : 0.35), radius: 8, x: 0, y: 3)
+                .shadow(color: Color.black.opacity(isOnSearch ? 0.15 : 0.35), radius: 8, x: 0, y: 3)
                 .overlay(RoundedRectangle(cornerRadius: 80)
                     .stroke(Color.black.opacity(isOnSearch ? 0.1 : 0), lineWidth: 1)
                 )
@@ -130,7 +130,7 @@ struct HomeSearchBarAfterView: View {
     var body: some View {
         let oppositeColor = colorScheme == .dark ? Color.white : Color.black
         
-        return HStack {
+        return HStack(spacing: 12 * scale) {
             Button(action: {
                 self.homeState.toggleSnappedToBottom()
             }) {
@@ -164,9 +164,12 @@ struct HomeSearchBarAfterView: View {
             .padding(.vertical, 4 * scale)
             .padding(.horizontal, 6 * scale)
             
-            // space for the camera button
-//            Color.clear
-//                .frame(width: App.cameraButtonHeight)
+            DishButton(action: {
+                App.store.send(.map(.moveToCurrentLocation))
+            }) {
+                Image(systemName: "location")
+                    .foregroundColor(.blue)
+            }
         }
     }
 }
