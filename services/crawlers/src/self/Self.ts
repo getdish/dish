@@ -8,6 +8,20 @@ import { Scrape, Restaurant, Dish } from '@dish/models'
 
 const PER_PAGE = 50
 
+const sleep = (ms: number) => new Promise(res => setTimeout(res, ms))
+
+const sanfran = {
+  location: {
+    _st_d_within: {
+      distance: 0.1,
+      from: {
+        type: 'Point',
+        coordinates: [-122.421351, 37.759251],
+      },
+    },
+  },
+}
+
 export class Self extends WorkerJob {
   yelp!: Scrape
   ubereats!: Scrape
@@ -27,13 +41,21 @@ export class Self extends WorkerJob {
   async main() {
     let previous_id = '00000000-0000-0000-0000-000000000000'
     while (true) {
-      const results = await Restaurant.fetchBatch(PER_PAGE, previous_id)
+      const results = await Restaurant.fetchBatch(
+        PER_PAGE,
+        previous_id,
+        {},
+        sanfran
+      )
       if (results.length == 0) {
         break
       }
       for (const result of results) {
         this.runOnWorker('mergeAll', [result.id])
         previous_id = result.id
+        if ((process.env.RUN_WITHOUT_WORKER = 'true')) {
+          await sleep(100)
+        }
       }
     }
   }
