@@ -7,6 +7,33 @@
 - Splash / marketing website / landing
 - Launch blog post
 
+# backend
+
+- filters API, two types:
+  - lense, simple
+    - lense: uses emojis, can be voted on or controlled by us
+    - simple: combines with lense: price, open now, delivers, etc
+  - { query GetFilters(type: "lense") { name, type, id } }
+- search
+  - can pass it filters
+  - { query SearchRequest(filters: [{ id: "0", value: true }], geoLocation: {} { restaurants } }
+- dishes
+  - also take filters
+    - so we can see "top dishes for these filters"
+  - { query GetTopDishesForMap(filters: [], geoLocation: {}) { name, id } }
+- restaurant info
+  - geolocation, address, phone
+  - dishes
+  - rating
+- ratings
+  - 1, 2, or 3 stars
+  - should be returned in all areas for both dish + restaurant
+  - restaurant is just generated as an aggregate of dish + yelp and other crawled info we use
+  - mutation for rating dish
+- lenses
+  - this is for the community / admin
+  - { mutation VoteRestaurantLense(userId: "", filterId: "", value: true) }
+
 # apps/ios
 
 - Explore
