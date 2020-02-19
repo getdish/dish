@@ -36,7 +36,7 @@ struct TopNavViewContent: View {
 struct TopNavButtonStyle: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
     
-    var height: CGFloat = 35
+    var height: CGFloat = 34
     var hPad: CGFloat = 11
     
     func body(content: Content) -> some View {
@@ -75,10 +75,10 @@ struct SearchBarLocationLabel: View {
         
         return HStack {
             Button(action: {
-                
+                App.store.send(.home(.setShowSearch(.location)))
             }) {
                 Text(label)
-                    .font(.system(size: 16))
+                    .font(.system(size: 15))
             }
             .modifier(TopNavButtonStyle())
         }
@@ -130,10 +130,10 @@ struct TopNavHome: View {
                         }
                         .modifier(TopNavButtonStyle())
                     }
-                    .offset(y: isOnLocationSearch ? -100 : 0)
-                    .animation(.spring())
                 }
                 .opacity(isOnHome ? 1 : 0)
+                .offset(y: isOnLocationSearch ? -100 : 0)
+                .animation(.spring())
             }
             .frame(maxWidth: .infinity)
         }

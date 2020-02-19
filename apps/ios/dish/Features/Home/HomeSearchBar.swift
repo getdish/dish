@@ -111,10 +111,7 @@ struct HomeSearchBar: View {
                 searchText: self.homeSearch,
                 showInput: showInput
             )
-                .shadow(color: Color.black.opacity(isOnSearch ? 0.15 : 0.35), radius: 8, x: 0, y: 3)
-                .overlay(RoundedRectangle(cornerRadius: 80)
-                    .stroke(Color.black.opacity(isOnSearch ? 0.1 : 0), lineWidth: 1)
-                )
+                .shadow(color: Color.black.opacity(isOnSearch ? 0.2 : 0.35), radius: 8, x: 0, y: 3)
                 .animation(.spring(), value: zoomed != self.lastZoomed)
         }
     }

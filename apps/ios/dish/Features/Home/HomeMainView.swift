@@ -50,6 +50,7 @@ struct HomeMainView: View {
         let animationState = state.animationState
         let mapHeight = state.mapHeight
         let showSearch = store.state.home.showSearch
+        let isOnShowSearch = store.state.home.showSearch != .off
         //        let enableSearchBar = [.idle, .off].contains(state.dragState) && state.animationState == .idle
 
         print(" 👀 HomeMainView mapHeight \(mapHeight) animationState \(state.animationState)")
@@ -145,6 +146,9 @@ struct HomeMainView: View {
                         HomeSearchAutocomplete()
                             .opacity(showSearch == .search ? 1 : 0)
                         
+                        HomeSearchLocationAutocomplete()
+                            .opacity(showSearch == .location ? 1 : 0)
+                        
                         VStack {
                             HomeSearchBar(
                                 showInput: state.animationState == .idle
@@ -157,7 +161,7 @@ struct HomeMainView: View {
                             
                             Spacer()
                         }
-                        .offset(y: showSearch == .search
+                        .offset(y: isOnShowSearch
                             ? App.screen.edgeInsets.top + 20
                             : mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra
                         )
@@ -237,6 +241,25 @@ struct HomeMainView: View {
 
 
 struct HomeSearchAutocomplete: View {
+    var body: some View {
+        VStack {
+            Spacer()
+                .frame(height: App.screen.edgeInsets.top + App.searchBarHeight + 60)
+            
+            List {
+                HStack { Text("Suggested item 1") }
+                HStack { Text("Suggested item 2") }
+                HStack { Text("Suggested item 3") }
+                HStack { Text("Suggested item 4") }
+            }
+        }
+        .background(Color.white)
+        .frameLimitedToScreen()
+        .clipped()
+    }
+}
+
+struct HomeSearchLocationAutocomplete: View {
     var body: some View {
         VStack {
             Spacer()
