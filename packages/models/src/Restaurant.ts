@@ -58,14 +58,16 @@ export class Restaurant extends ModelBase<Restaurant> {
   static async fetchBatch(
     size: number,
     previous_id: string,
-    extra_returning: {} = {}
+    extra_returning: {} = {},
+    extra_where: {} = {}
   ) {
     let restaurant = new Restaurant()
     return await restaurant.fetchBatch(
       Restaurant,
       size,
       previous_id,
-      extra_returning
+      extra_returning,
+      extra_where
     )
   }
 

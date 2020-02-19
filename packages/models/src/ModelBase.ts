@@ -185,7 +185,8 @@ export class ModelBase<T> {
     type: new () => T,
     size: number,
     previous_id: string,
-    extra_returning: {} = {}
+    extra_returning: {} = {},
+    extra_where: {} = {}
   ) {
     const query = {
       query: {
@@ -193,7 +194,10 @@ export class ModelBase<T> {
           __args: {
             limit: size,
             order_by: { id: new EnumType('asc') },
-            where: { id: { _gt: previous_id } },
+            where: {
+              id: { _gt: previous_id },
+              ...extra_where,
+            },
           },
           id: true,
           ...extra_returning,
