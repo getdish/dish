@@ -75,6 +75,7 @@ struct SearchBarLocationLabel: View {
         
         return HStack {
             Button(action: {
+                homeViewState.setAnimationState(.animate)
                 App.store.send(.home(.setShowSearch(.location)))
             }) {
                 Text(label)
