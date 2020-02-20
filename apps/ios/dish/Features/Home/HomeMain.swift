@@ -149,9 +149,6 @@ struct HomeMainView: View {
                             HomeSearchBar()
                                 .padding(.horizontal, 5)
                                 .padding(.top, 5)
-                            
-//                            DividerView()
-
                             HomeMainContent()
                             Spacer()
                         }

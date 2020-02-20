@@ -33,12 +33,6 @@ struct BottomDrawer<Content: View>: View {
 
     var body: some View {
         let screenHeight = screen.height
-        let drag = DragGesture()
-            .updating($dragState) { drag, state, transaction in
-                state = .dragging(translation: drag.translation)
-            }
-            .onEnded(onDragEnded)
-        
         return VStack(spacing: 0) {
             if handle != nil {
                 self.handle
@@ -55,7 +49,13 @@ struct BottomDrawer<Content: View>: View {
         .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.13), radius: 10.0)
         .offset(y: self.draggedPositionY)
         .animation(self.dragState.isDragging ? nil : .interpolatingSpring(stiffness: 300.0, damping: 30.0, initialVelocity: 10.0))
-        .gesture(drag)
+        .gesture(
+            DragGesture()
+                .updating($dragState) { drag, state, transaction in
+                    state = .dragging(translation: drag.translation)
+                }
+                .onEnded(onDragEnded)
+        )
         .onGeometryChange { geometry in
             self.callbackChangePosition()
         }
