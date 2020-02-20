@@ -83,7 +83,7 @@ struct HomeMainContent: View {
             // results bar above map
 //            VStack {
 //                Spacer()
-//                
+//
 //                VStack {
 //                    Group {
 //                        if Selectors.home.isOnSearchResults() {
@@ -122,24 +122,69 @@ struct HomeMainContent: View {
 
 struct HomeContentExplore: View {
     @State var index: Int = 0
+    let dishes = features.chunked(into: 2)
+    let items = features.split()
     
     var body: some View {
         ZStack {
-            HomeContentExploreBy(
-                active: true,
-                type: .dish
-            )
-//            ScrollViewEnhanced(
-//                index: self.$index,
-//                direction: Axis.Set.horizontal,
-//                showsIndicators: false,
-//                pages: [0, 1].map { index in
-//                    HomeContentExploreBy(
-//                        active: index == self.index,
-//                        type: index == 0 ? .dish : .cuisine
-//                    )
-//                }
-//            )
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 0) {
+                    Text("Most popular in San Francisco")
+                        .font(.system(size: 13))
+                        .fontWeight(.bold)
+                        .modifier(TextShadowStyle())
+                    
+                    // line
+                    VStack(spacing: 0) {
+                        Color.white
+                            .opacity(0.1)
+                            .frame(height: 1)
+                        Color.black
+                            .opacity(0.1)
+                            .frame(height: 1)
+                    }
+                    .padding(.horizontal, 8)
+                }
+                .padding(.horizontal)
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 10) {
+                        ForEach(0 ..< self.items.count) { index in
+                            HStack(spacing: 8) {
+                                ForEach(self.items[index]) { item in
+                                    DishButtonView(dish: item, at: .start)
+                                        .equatable()
+                                }
+                                Spacer()
+                            }
+                            .padding(.horizontal)
+                        }
+                    }
+                    .padding(.vertical)
+                }
+                
+                Spacer().frame(height: 8)
+                
+                VStack {
+                    Text("Explore by Dish")
+                        .font(.headline)
+                        .padding(.bottom)
+                    
+                    ForEach(0 ..< self.dishes.count) { index in
+                        HStack {
+                            ForEach(self.dishes[index]) { dish in
+                                DishCardView(
+                                    dish: dish,
+                                    at: .end,
+                                    display: .card
+                                )
+                                    .frame(height: 120)
+                            }
+                        }
+                    }
+                }
+                .padding()
+            }
         }
         .edgesIgnoringSafeArea(.all)
         .clipped()
