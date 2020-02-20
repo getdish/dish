@@ -9,18 +9,30 @@
 
 # backend
 
-- filters API, two types:
-  - lense, simple
+- filters API
+  - types: lense, cuisine, simple
     - lense: uses emojis, can be voted on or controlled by us
     - simple: combines with lense: price, open now, delivers, etc
-  - { query GetFilters(type: "lense") { name, type, id } }
+  - { query GetFilters(type: "lense") { name, icon, type, id } }
+    - icon is a String / emoji
+  - cuisine ("country")
+    - one type of filter we'll have is cuisines, on the home screen:
+      - grouped by continent! right now i'm doing something like:
+        - "North American": "🇺🇸 American", "🇲🇽 Mexican"
+        - so perhaps we want something like groupID on filters, and then i can just hardcode which ids map to which continents for simplicity like so:
+          - 1001 = Americas
+          - 1002 = Africa
+          - ...
+    - i'll fetch all the filters on startup essentially
 - search
   - can pass it filters
   - { query SearchRequest(filters: [{ id: "0", value: true }], geoLocation: {} { restaurants } }
-- dishes
-  - also take filters
-    - so we can see "top dishes for these filters"
-  - { query GetTopDishesForMap(filters: [], geoLocation: {}) { name, id } }
+- home
+  - shows the top dishes based on your current filters
+  - heres an example filter:
+    - [Delivers: true, Cuisine: 🇺🇸, Lense: "Chef Picks"]
+  - all we fetch from this is top dishes like so:
+    - { query GetTopDishesFor(filters: [], geoLocation: {}) { name, id, image } }
 - restaurant info
   - geolocation, address, phone
   - dishes
