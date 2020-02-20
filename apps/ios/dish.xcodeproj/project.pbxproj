@@ -82,6 +82,7 @@
 		AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */; };
 		AE99091223CE637200F1763C /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99091123CE637200F1763C /* App.swift */; };
 		AE99091523CE646D00F1763C /* MapService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99091423CE646D00F1763C /* MapService.swift */; };
+		AEA09E6D23FEFF8A00E2EC28 /* DishLenseFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA09E6C23FEFF8A00E2EC28 /* DishLenseFilterBar.swift */; };
 		AEA331EF23A3371D00B36A23 /* DishAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331EE23A3371D00B36A23 /* DishAccount.swift */; };
 		AEA331F123A3373D00B36A23 /* LoginSignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F023A3373D00B36A23 /* LoginSignupView.swift */; };
 		AEA331F523A3381200B36A23 /* DishInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F423A3381200B36A23 /* DishInput.swift */; };
@@ -204,6 +205,7 @@
 		AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonBordered.swift; sourceTree = "<group>"; };
 		AE99091123CE637200F1763C /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		AE99091423CE646D00F1763C /* MapService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapService.swift; sourceTree = "<group>"; };
+		AEA09E6C23FEFF8A00E2EC28 /* DishLenseFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishLenseFilterBar.swift; sourceTree = "<group>"; };
 		AEA331EE23A3371D00B36A23 /* DishAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishAccount.swift; sourceTree = "<group>"; };
 		AEA331F023A3373D00B36A23 /* LoginSignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSignupView.swift; sourceTree = "<group>"; };
 		AEA331F423A3381200B36A23 /* DishInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishInput.swift; sourceTree = "<group>"; };
@@ -400,6 +402,7 @@
 				AEAAAA0D23F9DBA700ABED23 /* DishRestaurantView.swift */,
 				AEA87E4223B976EB009F07DB /* HomeFilterBar.swift */,
 				AE7563B323A035E70094022B /* HomeMain.swift */,
+				AEA09E6C23FEFF8A00E2EC28 /* DishLenseFilterBar.swift */,
 				AEF6558023B2205F00E49A51 /* HomeMainContent.swift */,
 				AEE6C1E323FDD6FA001AC6B0 /* BottomDrawer.swift */,
 				AE65DF9323F79A2B00758DD3 /* HomeMainContentMap.swift */,
@@ -725,6 +728,7 @@
 				AE56C86423ADB78C006A156A /* HomeSearchResultsView.swift in Sources */,
 				AE0C5FF723D2414500BB5340 /* DishButton.swift in Sources */,
 				AEAAAA1223FA214900ABED23 /* DividerView.swift in Sources */,
+				AEA09E6D23FEFF8A00E2EC28 /* DishLenseFilterBar.swift in Sources */,
 				AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */,
 				AEED844823B675C300407266 /* CameraView.swift in Sources */,
 				AE872FF523CE983900F84663 /* ClearKeyboardOnScroll.swift in Sources */,

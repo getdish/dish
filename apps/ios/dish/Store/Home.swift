@@ -2,17 +2,29 @@ import SwiftUI
 import Combine
 import GoogleMaps
 
-fileprivate let initialLabels = [
-    "🏆",
-    "👌 Locals",
-    "🔥 New",
-    "👩‍🍳 Picks",
-    "💎 Date Night",
-    "💁‍♀️ Great Service",
-    "🥬",
-    "🐟",
-    "💸 Cheap",
-    "🕒 Fast"
+struct LenseItem: Equatable, Identifiable {
+    let id: String
+    let name: String
+    let icon: String
+}
+
+struct CuisineItem: Equatable, Identifiable {
+    let id: String
+    let name: String
+    let icon: String
+}
+
+fileprivate let initialLenses = [
+    LenseItem(id: "0", name: "", icon: "🏆"),
+    LenseItem(id: "1", name: "Locals", icon: "👌"),
+    LenseItem(id: "2", name: "New", icon: "🔥"),
+    LenseItem(id: "3", name: "Picks", icon: "👩‍🍳"),
+    LenseItem(id: "4", name: "Date Night", icon: "💎"),
+    LenseItem(id: "5", name: "Great Service", icon: "💁‍♀️"),
+    LenseItem(id: "6", name: "", icon: "🥬"),
+    LenseItem(id: "7", name: "", icon: "🐟"),
+    LenseItem(id: "8", name: "Cheap", icon: "💸"),
+    LenseItem(id: "9", name: "Fast", icon: "🕒")
 ]
 
 fileprivate let initialFilters: [FilterItem] = [
@@ -26,7 +38,15 @@ fileprivate let initialFilters: [FilterItem] = [
 ]
 
 fileprivate let initialCuisines = [
-    "🇺🇸 American", "🇧🇷 Brazilian", "🇨🇳 Chinese", "🇬🇷 Greek", "🇮🇳 Indian", "🇮🇹 Italian", "🇯🇵 Japanese", "🇹🇭 Thai", "🇻🇳 Vietnamese"
+    CuisineItem(id: "0", name: "American", icon: "🇺🇸"),
+    CuisineItem(id: "1", name: "Brazilian", icon: "🇧🇷"),
+    CuisineItem(id: "2", name: "Chinese", icon: "🇨🇳"),
+    CuisineItem(id: "3", name: "Greek", icon: "🇬🇷"),
+    CuisineItem(id: "4", name: "Indian", icon: "🇮🇳"),
+    CuisineItem(id: "5", name: "Italian", icon: "🇮🇹"),
+    CuisineItem(id: "6", name: "Japanese", icon: "🇯🇵"),
+    CuisineItem(id: "7", name: "Thai", icon: "🇹🇭"),
+    CuisineItem(id: "8", name: "Vietnamese", icon: "🇻🇳")
 ]
 
 extension AppState {
@@ -36,10 +56,10 @@ extension AppState {
         var view: HomePageView = .home
         var viewStates: [HomeStateItem] = [HomeStateItem()]
         var filters: [FilterItem] = initialFilters
-        var cuisines: [String] = initialCuisines
-        var labels = initialLabels
-        var labelActive = 0
-        var labelDishes = [String: [DishItem]]()
+        var cuisines: [CuisineItem] = initialCuisines
+        var lenses: [LenseItem] = initialLenses
+        var lenseActive = 0
+        var lenseToDishes = [String: [DishItem]]()
         var searchFocus: SearchFocusState = .off
         var drawerPosition: BottomDrawerPosition = .bottom
         var showCamera: Bool = false
@@ -53,8 +73,8 @@ enum HomeAction {
     case pop
     case setSearch(_ val: String)
     case setSearchResults(_ val: HomeSearchResults)
-    case setLabelActive(_ val: Int)
-    case setLabelDishes(id: String, dishes: [DishItem])
+    case setLenseActive(_ val: Int)
+    case setLenseToDishes(id: String, dishes: [DishItem])
     case setSearchFocus(_ val: SearchFocusState)
     case setFilterActive(filter: FilterItem, val: Bool)
     case setDrawerPosition(_ position: BottomDrawerPosition)
@@ -63,6 +83,8 @@ enum HomeAction {
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
     
+    // utils
+
     // use this to ensure you update HomeStateItems correctly
     func updateItem(_ next: HomeStateItem) {
         if let index = state.home.viewStates.firstIndex(where: { $0.id == next.id }) {
@@ -71,6 +93,8 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
             state.home.viewStates[index] = item
         }
     }
+    
+    // switch
     
     switch action {
         case .setDrawerPosition(let position):
@@ -90,10 +114,10 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
                 }
                 return filter
             }
-        case .setLabelDishes(let id, let dishes):
-            state.home.labelDishes[id] = dishes
-        case let .setLabelActive(index):
-            state.home.labelActive = index
+        case .setLenseToDishes(let id, let dishes):
+            state.home.lenseToDishes[id] = dishes
+        case let .setLenseActive(index):
+            state.home.lenseActive = index
         case let .navigateToRestaurant(resaurant):
             var homeState = state.home.viewStates.last!
             homeState.restaurant = resaurant

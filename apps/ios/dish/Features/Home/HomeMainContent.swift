@@ -169,21 +169,22 @@ struct HomeContentExploreBy: View, Identifiable {
     
     var active: Bool = false
     var type: ExploreContentType
+    let items = features.split()
     
-    var body: some View {        
+    var body: some View {
         return ZStack {
 //            ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 0) {
                     VStack {
-                        ForEach(0 ..< self.store.state.home.labels.count) { index in
+                        ForEach(0 ..< self.store.state.home.lenses.count) { index in
                             VStack(alignment: .leading, spacing: 4) {
                                 HStack(spacing: 0) {
-                                    Text(self.store.state.home.labels[index])
+                                    Text("\(self.store.state.home.lenses[index].name)")
                                         .font(.system(size: 13))
                                         .fontWeight(.bold)
                                         .foregroundColor(Color.white)
                                         .modifier(TextShadowStyle())
-                                    
+
                                     // line
                                     VStack(spacing: 0) {
                                         Color.white
