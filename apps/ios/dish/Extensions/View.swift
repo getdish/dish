@@ -61,6 +61,16 @@ extension View {
         }
     }
     
+    func onGeometryChange(_ onGeometry: @escaping (GeometryProxy) -> Void) -> some View {
+        self.overlay(
+            GeometryReader { proxy in
+                Run("onGeometryChange") {
+                    onGeometry(proxy)
+                }
+            }
+        )
+    }
+    
     func embedInAppEnvironment(_ appState: Store<AppState, AppAction>? = nil) -> some View {
         return self
             .environmentObject(appState ?? App.store)
@@ -69,6 +79,17 @@ extension View {
             .embedInScreen(App.screen)
             .embedInGeometryReader()
             .edgesIgnoringSafeArea(.all)
+    }
+    
+    func borderRounded(
+        radius: CGFloat = 12,
+        width: CGFloat = 1,
+        color: Color = Color.gray
+    ) -> some View {
+        self.overlay(
+            RoundedRectangle(cornerRadius: radius)
+                .stroke(color, lineWidth: width)
+        )
     }
 }
 

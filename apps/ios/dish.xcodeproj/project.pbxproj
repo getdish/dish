@@ -63,7 +63,7 @@
 		AE6B104D23CFF27000C33968 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = AE6B104C23CFF27000C33968 /* pin.png */; };
 		AE6B104F23D0E4B900C33968 /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6B104E23D0E4B900C33968 /* Camera.swift */; };
 		AE6CECCD23A843E600B08870 /* BottomNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6CECCC23A843E600B08870 /* BottomNav.swift */; };
-		AE7563B423A035E70094022B /* HomeMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B323A035E70094022B /* HomeMainView.swift */; };
+		AE7563B423A035E70094022B /* HomeMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B323A035E70094022B /* HomeMain.swift */; };
 		AE7563B823A036500094022B /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563B723A036500094022B /* Screen.swift */; };
 		AE7563BC23A037870094022B /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563BB23A037870094022B /* Fixtures.swift */; };
 		AE7563E323A038190094022B /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563E223A038190094022B /* Array.swift */; };
@@ -82,6 +82,7 @@
 		AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */; };
 		AE99091223CE637200F1763C /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99091123CE637200F1763C /* App.swift */; };
 		AE99091523CE646D00F1763C /* MapService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99091423CE646D00F1763C /* MapService.swift */; };
+		AEA09E6D23FEFF8A00E2EC28 /* DishLenseFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA09E6C23FEFF8A00E2EC28 /* DishLenseFilterBar.swift */; };
 		AEA331EF23A3371D00B36A23 /* DishAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331EE23A3371D00B36A23 /* DishAccount.swift */; };
 		AEA331F123A3373D00B36A23 /* LoginSignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F023A3373D00B36A23 /* LoginSignupView.swift */; };
 		AEA331F523A3381200B36A23 /* DishInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F423A3381200B36A23 /* DishInput.swift */; };
@@ -104,6 +105,9 @@
 		AED2EA1723F3E16E0041A195 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AED2EA1623F3E16E0041A195 /* LaunchScreen.storyboard */; };
 		AEE1991D23F33E3A00492B6B /* api.graphql in Resources */ = {isa = PBXBuildFile; fileRef = AEE1991C23F33E3A00492B6B /* api.graphql */; };
 		AEE1992123F33FA200492B6B /* ApolloNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE1992023F33FA200492B6B /* ApolloNetwork.swift */; };
+		AEE561DC23FF278300B51F80 /* DishCuisineFilterPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE561DB23FF278300B51F80 /* DishCuisineFilterPopup.swift */; };
+		AEE6C1E223FDC434001AC6B0 /* TopSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE6C1E123FDC434001AC6B0 /* TopSheetView.swift */; };
+		AEE6C1E423FDD6FA001AC6B0 /* BottomDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE6C1E323FDD6FA001AC6B0 /* BottomDrawer.swift */; };
 		AEE802B523ED3E8000A1A19E /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE802B423ED3E8000A1A19E /* Double.swift */; };
 		AEED844123B6707100407266 /* DishMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844023B6707100407266 /* DishMapView.swift */; };
 		AEED844823B675C300407266 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844723B675C300407266 /* CameraView.swift */; };
@@ -183,7 +187,7 @@
 		AE6B104C23CFF27000C33968 /* pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin.png; sourceTree = "<group>"; };
 		AE6B104E23D0E4B900C33968 /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
 		AE6CECCC23A843E600B08870 /* BottomNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomNav.swift; sourceTree = "<group>"; };
-		AE7563B323A035E70094022B /* HomeMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMainView.swift; sourceTree = "<group>"; };
+		AE7563B323A035E70094022B /* HomeMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMain.swift; sourceTree = "<group>"; };
 		AE7563B723A036500094022B /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
 		AE7563BB23A037870094022B /* Fixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
 		AE7563E223A038190094022B /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
@@ -202,6 +206,7 @@
 		AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonBordered.swift; sourceTree = "<group>"; };
 		AE99091123CE637200F1763C /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		AE99091423CE646D00F1763C /* MapService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapService.swift; sourceTree = "<group>"; };
+		AEA09E6C23FEFF8A00E2EC28 /* DishLenseFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishLenseFilterBar.swift; sourceTree = "<group>"; };
 		AEA331EE23A3371D00B36A23 /* DishAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishAccount.swift; sourceTree = "<group>"; };
 		AEA331F023A3373D00B36A23 /* LoginSignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSignupView.swift; sourceTree = "<group>"; };
 		AEA331F423A3381200B36A23 /* DishInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishInput.swift; sourceTree = "<group>"; };
@@ -225,6 +230,9 @@
 		AED2EA1623F3E16E0041A195 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AEE1991C23F33E3A00492B6B /* api.graphql */ = {isa = PBXFileReference; lastKnownFileType = text; path = api.graphql; sourceTree = "<group>"; };
 		AEE1992023F33FA200492B6B /* ApolloNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApolloNetwork.swift; sourceTree = "<group>"; };
+		AEE561DB23FF278300B51F80 /* DishCuisineFilterPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishCuisineFilterPopup.swift; sourceTree = "<group>"; };
+		AEE6C1E123FDC434001AC6B0 /* TopSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopSheetView.swift; sourceTree = "<group>"; };
+		AEE6C1E323FDD6FA001AC6B0 /* BottomDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomDrawer.swift; sourceTree = "<group>"; };
 		AEE802B423ED3E8000A1A19E /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
 		AEED843D23B5A8E000407266 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Mocks.swift; path = /Users/nw/dish/apps/ios/dish/Store/Mocks.swift; sourceTree = "<absolute>"; };
 		AEED844023B6707100407266 /* DishMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishMapView.swift; sourceTree = "<group>"; };
@@ -329,16 +337,16 @@
 		1CE3547C23986B69004B3A84 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				1CE3548023986BC1004B3A84 /* View.swift */,
-				AE65E9BA23E59F9E00702C30 /* Text.swift */,
-				AE6B0FE023CF9C3A00C33968 /* GMSMapView.swift */,
 				AE7563E223A038190094022B /* Array.swift */,
-				1CE2393023A19722006B7AFD /* Environment.swift */,
-				AE872FEC23CE6E3900F84663 /* Publisher.swift */,
-				AEE802B423ED3E8000A1A19E /* Double.swift */,
 				AED2EA0E23F34D990041A195 /* Dictionary.swift */,
-				AE65DF9123F771FF00758DD3 /* String.swift */,
+				AEE802B423ED3E8000A1A19E /* Double.swift */,
+				1CE2393023A19722006B7AFD /* Environment.swift */,
+				AE6B0FE023CF9C3A00C33968 /* GMSMapView.swift */,
+				AE872FEC23CE6E3900F84663 /* Publisher.swift */,
 				AEAAAA0B23F9D66500ABED23 /* Sequence.swift */,
+				AE65DF9123F771FF00758DD3 /* String.swift */,
+				AE65E9BA23E59F9E00702C30 /* Text.swift */,
+				1CE3548023986BC1004B3A84 /* View.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -395,15 +403,19 @@
 				AEAAAA0F23FA1FE300ABED23 /* DishRatingView.swift */,
 				AEAAAA0D23F9DBA700ABED23 /* DishRestaurantView.swift */,
 				AEA87E4223B976EB009F07DB /* HomeFilterBar.swift */,
+				AE7563B323A035E70094022B /* HomeMain.swift */,
+				AEA09E6C23FEFF8A00E2EC28 /* DishLenseFilterBar.swift */,
 				AEF6558023B2205F00E49A51 /* HomeMainContent.swift */,
+				AEE6C1E323FDD6FA001AC6B0 /* BottomDrawer.swift */,
+				AEE561DB23FF278300B51F80 /* DishCuisineFilterPopup.swift */,
 				AE65DF9323F79A2B00758DD3 /* HomeMainContentMap.swift */,
-				AE7563B323A035E70094022B /* HomeMainView.swift */,
 				AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */,
 				AE56C86323ADB78C006A156A /* HomeSearchResultsView.swift */,
 				1CE354872398714D004B3A84 /* HomeView.swift */,
 				AE0C5FF823D2506800BB5340 /* HomeViewState.swift */,
 				AE1BBDB923C83E9E00C58A87 /* QuickFilters.swift */,
 				AE861A8023A16DA6004096BF /* TopNavView.swift */,
+				AEE6C1E123FDC434001AC6B0 /* TopSheetView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -518,7 +530,6 @@
 				1CE3545E23986B1B004B3A84 /* Frameworks */,
 				1CE3545F23986B1B004B3A84 /* Resources */,
 				1BA3C3E1502560BE33CC9F03 /* [CP] Embed Pods Frameworks */,
-				27936A0E3A675C7027A97E70 /* [CP] Copy Pods Resources */,
 				AEEF29D523F33B3D00FCE400 /* Run Script - Apollo Generate */,
 			);
 			buildRules = (
@@ -614,23 +625,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-dish/Pods-dish-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		27936A0E3A675C7027A97E70 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-dish/Pods-dish-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-dish/Pods-dish-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-dish/Pods-dish-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		4EF216240C62D49CD1E9EF24 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -685,7 +679,7 @@
 				AEF6557423B0407000E49A51 /* ImageStore.swift in Sources */,
 				AE1BBDBA23C83E9E00C58A87 /* QuickFilters.swift in Sources */,
 				AEE802B523ED3E8000A1A19E /* Double.swift in Sources */,
-				AE7563B423A035E70094022B /* HomeMainView.swift in Sources */,
+				AE7563B423A035E70094022B /* HomeMain.swift in Sources */,
 				AE7563E323A038190094022B /* Array.swift in Sources */,
 				AEE1992123F33FA200492B6B /* ApolloNetwork.swift in Sources */,
 				AE7563BC23A037870094022B /* Fixtures.swift in Sources */,
@@ -719,11 +713,13 @@
 				AE56C86423ADB78C006A156A /* HomeSearchResultsView.swift in Sources */,
 				AE0C5FF723D2414500BB5340 /* DishButton.swift in Sources */,
 				AEAAAA1223FA214900ABED23 /* DividerView.swift in Sources */,
+				AEA09E6D23FEFF8A00E2EC28 /* DishLenseFilterBar.swift in Sources */,
 				AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */,
 				AEED844823B675C300407266 /* CameraView.swift in Sources */,
 				AE872FF523CE983900F84663 /* ClearKeyboardOnScroll.swift in Sources */,
 				AE872FF723CEA5CD00F84663 /* DishRestaurantCard.swift in Sources */,
 				1CE3548323986C5C004B3A84 /* AppStore.swift in Sources */,
+				AEE6C1E223FDC434001AC6B0 /* TopSheetView.swift in Sources */,
 				AEAE67EC23B5A70A00B9D781 /* Map.swift in Sources */,
 				AE861A7923A0651D004096BF /* Keyboard.swift in Sources */,
 				AE0C5FF523D2397D00BB5340 /* PrintGeometryView.swift in Sources */,
@@ -738,6 +734,8 @@
 				AE861A8923A172E8004096BF /* BlurView.swift in Sources */,
 				AEF6557F23B14DBA00E49A51 /* ContextMenuView.swift in Sources */,
 				AEF6557B23B042CD00E49A51 /* HomeSearchBar.swift in Sources */,
+				AEE6C1E423FDD6FA001AC6B0 /* BottomDrawer.swift in Sources */,
+				AEE561DC23FF278300B51F80 /* DishCuisineFilterPopup.swift in Sources */,
 				AE0C5FFB23D261F100BB5340 /* SideEffect.swift in Sources */,
 				AE6B104F23D0E4B900C33968 /* Camera.swift in Sources */,
 				AEA331F923A3385000B36A23 /* InlineAlertView.swift in Sources */,

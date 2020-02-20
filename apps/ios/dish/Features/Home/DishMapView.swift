@@ -1,7 +1,6 @@
 import SwiftUI
-import CoreLocation
+import MapKit
 import Combine
-import Mapbox
 
 class DishMapViewStore: ObservableObject {
     var cancels: Set<AnyCancellable> = []
@@ -11,7 +10,7 @@ class DishMapViewStore: ObservableObject {
 fileprivate let mapViewStore = DishMapViewStore()
 
 struct DishMapView: View {
-    @State var mapView: MapViewController? = nil
+    @State var mapView: MKMapView? = nil
     
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.geometry) var appGeometry
@@ -52,13 +51,21 @@ struct DishMapView: View {
             VStack {
                 ZStack(alignment: .topLeading) {
                     AppleMapView(
-                        markers: self.markers,
                         currentLocation: store.state.map.moveToLocation,
+                        markers: self.markers,
                         onChangeLocation: { location in
                             if location != mapViewStore.location {
                                 mapViewStore.location = location
                             }
-                        }
+                        },
+                        // TODO this is tracking the *user* geolocation not the map location
+                        // we should probably have both tracking and running things
+                        onChangeLocationName: { placemark in
+                            if let cityName = placemark.locality {
+                                self.store.send(.map(.setLocationLabel(cityName)))
+                            }
+                        },
+                        showsUserLocation: true
                     )
                         .frame(height: App.screen.height * 1.6)
                     
@@ -113,7 +120,8 @@ struct DishMapView: View {
                         return
                     }
                     lastZoomAt = mapHeight
-                    self.mapView?.zoomIn(amt)
+                    print("TODO ZOOM")
+//                    self.mapView?.zoomIn(amt)
             }
             .store(in: &mapViewStore.cancels)
             
@@ -125,11 +133,12 @@ struct DishMapView: View {
                 .dropFirst()
                 //            .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
                 .sink { isSnappedToBottom in
-                    if isSnappedToBottom {
-                        self.mapView?.zoomIn(0.05)
-                    } else {
-                        self.mapView?.zoomOut(0.05)
-                    }
+                    print("TODO ZOOM")
+//                    if isSnappedToBottom {
+//                        self.mapView?.zoomIn(0.05)
+//                    } else {
+//                        self.mapView?.zoomOut(0.05)
+//                    }
             }
             .store(in: &mapViewStore.cancels)
         }

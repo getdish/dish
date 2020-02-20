@@ -7,18 +7,18 @@ target 'dish' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 
-  pod 'GoogleMaps'
-  pod 'GooglePlaces'
-  pod 'GoogleSignIn'
+  # pod 'GoogleMaps'
+  # pod 'GooglePlaces'
+  # pod 'GoogleSignIn'
   pod 'XCGLogger', '~> 7.0.0'
   # pod 'Firebase/Core'
   # pod 'Firebase/Analytics'
   # pod 'Firebase/Auth'
   # pod 'Firebase/Firestore'
   # pod 'Firebase/Storage'
-  pod 'Introspect'
-  pod 'Mapbox-iOS-SDK', '~> 5.6'
-  pod 'MapboxAnnotationExtension', '0.0.1-beta.1'
+  pod 'Introspect', :git => 'git@github.com:siteline/SwiftUI-Introspect.git'
+  # pod 'Mapbox-iOS-SDK', '~> 5.6'
+  # pod 'MapboxAnnotationExtension', '0.0.1-beta.1'
 
   # pod 'Hasura'
   pod 'Apollo'

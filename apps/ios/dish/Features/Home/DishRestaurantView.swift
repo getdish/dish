@@ -62,7 +62,7 @@ struct DishRestaurantViewContent: View {
                         HStack(spacing: 20) {
                             ForEach(0 ..< self.restaurant.tags.count) { index in
                                 // self.restaurant.tags[index]
-                                return Text("\(self.store.state.home.labels[index])")
+                                return Text("\(self.store.state.home.lenses[index].name)")
                             }
                         }
                         .padding(.horizontal)

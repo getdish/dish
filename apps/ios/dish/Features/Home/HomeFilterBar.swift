@@ -1,7 +1,5 @@
 import SwiftUI
 
-fileprivate let leftPad = AnyView(Spacer().frame(width: 50))
-
 struct HomeMainFilterBar: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var store: AppStore
@@ -20,18 +18,29 @@ struct HomeMainFilterBar: View {
         return items
     }
     
+    var separator: some View {
+        Color(white: 0.5).opacity(0.1).frame(width: 1)
+    }
+    
     var body: some View {
         ZStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
-                    Group {
-                        ForEach(0 ..< self.filterGroups.count) { index in
-                            Group {
-                                ForEach(self.filterGroups[index]) { filter in
-                                    FilterButton(filter: filter)
-                                }
-                                Color.white.opacity(0.1).frame(width: 1)
+                    FilterButton(
+                        filter: FilterItem(name: self.store.state.home.cuisineFilter),
+                        onTap: {
+                            self.store.send(.home(.toggleShowCuisineFilter))
+                        }
+                    )
+                    
+                    ForEach(0 ..< self.filterGroups.count) { index in
+                        Group {
+                            // separator
+                            if self.filterGroups[index][0].stack == false
+                                && index != 0 {
+                                self.separator
                             }
+                            FilterGroupView(group: self.filterGroups[index])
                         }
                     }
                 }
@@ -43,21 +52,77 @@ struct HomeMainFilterBar: View {
     }
 }
 
-struct FilterButtonStyle: ViewModifier {
-    var active = false
-    @Environment(\.colorScheme) var colorScheme
+struct FilterGroupView: View {
+    var group: [FilterItem]
+    @State var isExpanded = false
+    @State var widthById = [String: CGFloat]()
+    var spacing: CGFloat = 10
     
-    func body(content: Content) -> some View {
-        let a = Color.white
-        let b = Color(white: 0.15)
-        let bg = active ? a : b
-        let fg = active ? b : a
-        return content
-            .foregroundColor(fg)
-            .padding(.horizontal, 10)
-            .background(bg)
-            .cornerRadius(20)
-            .shadow(radius: 4)
+    var widths: [CGFloat] {
+        let calculated = self.widthById.compactMap { $0.value }
+        if calculated.count > 0 {
+            return calculated
+        } else {
+            return Array(0..<group.count).map { CGFloat($0) }
+        }
+    }
+    
+    var expandedWidth: CGFloat {
+        self.widths.reduce(0) { $0 + $1 + self.spacing }
+    }
+
+    var body: some View {
+        print("filterbar \(self.isExpanded) \(self.expandedWidth)")
+        return Group {
+            if self.group[0].stack {
+                ZStack {
+                    ForEach(0 ..< self.group.count) { index in
+                        self.filterButtonGroup(index)
+                    }
+                }
+                .frame(
+                    width: self.isExpanded ? self.expandedWidth : self.widths[0],
+                    alignment: .leading
+                )
+                .overlay(
+                    self.overlayStack
+                )
+            }
+            else {
+                ForEach(self.group) { filter in
+                    FilterButton(filter: filter)
+                }
+            }
+        }
+    }
+    
+    func filterButtonGroup(_ index: Int) -> some View {
+        let isExpanded = self.isExpanded
+        let filter = self.group[index]
+        let xBefore: CGFloat = self.widths[0..<index].reduce(0) { $0 + $1 + self.spacing }
+        let xOffset: CGFloat = isExpanded ? xBefore : 0
+        
+        return FilterButton(filter: filter)
+            .frame(width: isExpanded ? self.widths[index] : nil)
+            .onGeometryChange { geometry in
+                if !self.isExpanded {
+                    let width = geometry.size.width
+                    if width != self.widthById[filter.id] {
+                        self.widthById[filter.id] = width
+                    }
+                }
+            }
+            .opacity(isExpanded || index == 0 ? 1 : 0)
+            .offset(x: xOffset)
+            .zIndex(Double(self.group.count - index))
+    }
+    
+    var overlayStack: some View {
+        Color.black.opacity(0.00001)
+            .onTapGesture {
+                self.isExpanded = !self.isExpanded
+            }
+            .allowsHitTesting(!self.isExpanded)
     }
 }
 
@@ -65,6 +130,7 @@ struct FilterButton: View {
     @Environment(\.colorScheme) var colorScheme
     
     var filter: FilterItem
+    var onTap: (() -> Void)? = nil
     var height: CGFloat {
         App.filterBarHeight - App.filterBarPad * 2
     }
@@ -72,8 +138,14 @@ struct FilterButton: View {
     var body: some View {
         ZStack {
             DishButton(action: {
-                if self.filter.type == .toggle {
-                    App.store.send(.home(.setFilterActive(filter: self.filter, val: !self.filter.active)))
+                if let cb = self.onTap {
+                    cb()
+                } else {
+                    if self.filter.type == .toggle {
+                        App.store.send(.home(.setFilterActive(filter: self.filter, val: !self.filter.active)))
+                    } else {
+                        // TODO
+                    }
                 }
             }) {
                 HStack {
@@ -97,6 +169,24 @@ struct FilterButton: View {
                 .modifier(FilterButtonStyle(active: self.filter.active))
             }
         }
+    }
+}
+
+struct FilterButtonStyle: ViewModifier {
+    var active = false
+    @Environment(\.colorScheme) var colorScheme
+    
+    func body(content: Content) -> some View {
+        let a = Color.white
+        let b = Color(white: 0.2)
+        let bg = active ? a : b
+        let fg = active ? b : a
+        return content
+            .foregroundColor(fg)
+            .padding(.horizontal, 10)
+            .background(bg)
+            .cornerRadius(20)
+            .shadow(radius: 4)
     }
 }
 

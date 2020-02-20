@@ -1,21 +1,17 @@
 import Combine
-import GooglePlaces
-import GoogleMaps
 import CoreLocation
 
-fileprivate let placesClient = GMSPlacesClient.shared()
 fileprivate let manager = CLLocationManager()
 
 extension AppState {
     struct MapState: Equatable {
         var location: MapViewLocation? = nil
         var moveToLocation: MapViewLocation? = nil
-        var locationLabel: String = ""
+        var locationLabel: String = "Map Area"
         var search = ""
         var searchResults: [CLLocation] = []
         var lastKnown: CLLocation? = nil
         var hasChangedOnce = false
-        var likelyPlaces: [GMSPlace] = []
     }
 }
 

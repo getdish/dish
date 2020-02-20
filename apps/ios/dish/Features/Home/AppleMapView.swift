@@ -2,92 +2,30 @@ import SwiftUI
 import MapKit
 import CoreLocation
 
-struct MapMarker: Equatable {
-    let groupId: String = ""
-    let title: String
-    let subtitle: String? = nil
-    let coordinate: CLLocationCoordinate2D
-    let color: UIColor = .gray
-    let imageName: String = "pin"
-    let countryIcon: String = "🇲🇽"
-}
-
-struct MapViewLocation: Equatable {
-    enum LocationType: Equatable {
-        case current
-        case location(lat: Double, long: Double)
-        case none
-        
-    }
-    
-    static let timeless = NSDate()
-    let center: LocationType
-    let radius: Double
-    let updatedAt: NSDate
-    
-    init(center: LocationType, radius: Double = 1000, refresh: Bool = false) {
-        self.center = center
-        self.radius = radius
-        self.updatedAt = refresh ? NSDate() : MapViewLocation.timeless
-    }
-    
-    var coordinate: CLLocationCoordinate2D? {
-        switch center {
-            case .current: return nil
-            case .none: return nil
-            case .location(let lat, let long):
-                return CLLocationCoordinate2D(latitude: lat, longitude: long)
-        }
-    }
-}
-
-extension MKMapView {
-    func topCenterCoordinate() -> CLLocationCoordinate2D {
-        return self.convert(CGPoint(x: self.frame.size.width / 2.0, y: 0), toCoordinateFrom: self)
-    }
-    func currentRadius() -> Double {
-        let centerLocation = CLLocation(latitude: self.centerCoordinate.latitude, longitude: self.centerCoordinate.longitude)
-        let topCenterCoordinate = self.topCenterCoordinate()
-        let topCenterLocation = CLLocation(latitude: topCenterCoordinate.latitude, longitude: topCenterCoordinate.longitude)
-        return centerLocation.distance(from: topCenterLocation)
-    }
-}
-
-class CustomAnnotationView: MKAnnotationView {
-    var label: UILabel?
-    
-    override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
-        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-}
-
-extension CLLocationCoordinate2D: Equatable {
-    public static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
-        lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
-    }
-}
-
 fileprivate var flagMap = [String: UIImage]()
 
 struct AppleMapView: UIViewRepresentable {
     private let mapView = MKMapView()
-    var markers: [MapMarker]? = nil
+    
+    // props
     var currentLocation: MapViewLocation? = nil
+    var markers: [MapMarker]? = nil
     var onChangeLocation: ((MapViewLocation) -> Void)? = nil
+    var onChangeLocationName: ((CLPlacemark) -> Void)? = nil
+    var showsUserLocation: Bool = false
     
     func makeUIView(context: Context) -> MKMapView {
         mapView.delegate = context.coordinator
+        self.update(context.coordinator)
         return mapView
     }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
-        let crd = context.coordinator
-        crd.updateCurrentLocation(self.currentLocation)
-        crd.updateMarkers(self.markers)
+        self.update(context.coordinator)
+    }
+    
+    func update(_ coordinator: AppleMapView.Coordinator) {
+        coordinator.updateProps(self)
     }
     
     func makeCoordinator() -> AppleMapView.Coordinator {
@@ -95,6 +33,9 @@ struct AppleMapView: UIViewRepresentable {
     }
     
     final class Coordinator: NSObject, MKMapViewDelegate {
+        let geocoder = CLGeocoder()
+        var currentLocation: CLLocation? = nil
+        var lastGeocodeTime: Date? = nil
         var lastMarkers: [MapMarker] = []
         var lastLocation: MapViewLocation = .init(center: .none)
         var locationManager = CLLocationManager()
@@ -108,6 +49,7 @@ struct AppleMapView: UIViewRepresentable {
             parent.mapView
         }
         
+        // change location
         func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
             if let cb = parent.onChangeLocation {
                 cb(MapViewLocation(
@@ -118,6 +60,7 @@ struct AppleMapView: UIViewRepresentable {
             }
         }
         
+        // annotations
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             guard !annotation.isKind(of: MKUserLocation.self) else {
                 return nil
@@ -168,6 +111,46 @@ struct AppleMapView: UIViewRepresentable {
             }
             
             return annotationView
+        }
+        
+        // user location
+        func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+            guard let newLocation = userLocation.location else { return }
+            
+            let currentTime = Date()
+            let lastLocation = self.currentLocation
+            self.currentLocation = newLocation
+            
+            // Only get new placemark information if you don't have a previous location,
+            // if the user has moved a meaningful distance from the previous location, such as 1000 meters,
+            // and if it's been 60 seconds since the last geocode request.
+            if let lastLocation = lastLocation,
+                newLocation.distance(from: lastLocation) <= 1000,
+                let lastTime = lastGeocodeTime,
+                currentTime.timeIntervalSince(lastTime) < 60 {
+                return
+            }
+            
+            // Convert the user's location to a user-friendly place name by reverse geocoding the location.
+            lastGeocodeTime = currentTime
+            geocoder.reverseGeocodeLocation(newLocation) { (placemarks, error) in
+                guard error == nil else {
+                    print("ERROR in location \(error)")
+                    return
+                }
+                
+                // Most geocoding requests contain only one result.
+                if let firstPlacemark = placemarks?.first,
+                    let cb = self.parent.onChangeLocationName {
+                    cb(firstPlacemark)
+                }
+            }
+        }
+        
+        func updateProps(_ parent: AppleMapView) {
+            self.updateCurrentLocation(parent.currentLocation)
+            self.updateMarkers(parent.markers)
+            self.mapView.showsUserLocation = parent.showsUserLocation
         }
         
         func updateMarkers(_ markers: [MapMarker]?) {
@@ -240,5 +223,74 @@ struct AppleMapView: UIViewRepresentable {
                     print("todo")
             }
         }
+    }
+}
+
+struct MapMarker: Equatable {
+    let groupId: String = ""
+    let title: String
+    let subtitle: String? = nil
+    let coordinate: CLLocationCoordinate2D
+    let color: UIColor = .gray
+    let imageName: String = "pin"
+    let countryIcon: String = "🇲🇽"
+}
+
+struct MapViewLocation: Equatable {
+    enum LocationType: Equatable {
+        case current
+        case location(lat: Double, long: Double)
+        case none
+        
+    }
+    
+    static let timeless = NSDate()
+    let center: LocationType
+    let radius: Double
+    let updatedAt: NSDate
+    
+    init(center: LocationType, radius: Double = 1000, refresh: Bool = false) {
+        self.center = center
+        self.radius = radius
+        self.updatedAt = refresh ? NSDate() : MapViewLocation.timeless
+    }
+    
+    var coordinate: CLLocationCoordinate2D? {
+        switch center {
+            case .current: return nil
+            case .none: return nil
+            case .location(let lat, let long):
+                return CLLocationCoordinate2D(latitude: lat, longitude: long)
+        }
+    }
+}
+
+extension MKMapView {
+    func topCenterCoordinate() -> CLLocationCoordinate2D {
+        return self.convert(CGPoint(x: self.frame.size.width / 2.0, y: 0), toCoordinateFrom: self)
+    }
+    func currentRadius() -> Double {
+        let centerLocation = CLLocation(latitude: self.centerCoordinate.latitude, longitude: self.centerCoordinate.longitude)
+        let topCenterCoordinate = self.topCenterCoordinate()
+        let topCenterLocation = CLLocation(latitude: topCenterCoordinate.latitude, longitude: topCenterCoordinate.longitude)
+        return centerLocation.distance(from: topCenterLocation)
+    }
+}
+
+class CustomAnnotationView: MKAnnotationView {
+    var label: UILabel?
+    
+    override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
+        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+}
+
+extension CLLocationCoordinate2D: Equatable {
+    public static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
+        lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
     }
 }

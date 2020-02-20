@@ -17,34 +17,35 @@ struct HomeMainContentContainer<Content>: View where Content: View {
     }
     
     var body: some View {
-        print("📓 self.isSnappedToBottom \(self.isSnappedToBottom) self.animatePosition \(self.animatePosition) disableMagicTracking \(disableMagicTracking)")
-        
-        async {
-            if self.isSnappedToBottom && self.animatePosition == .start {
-                self.animatePosition = .end
-            }
-            if !self.isSnappedToBottom && self.animatePosition == .end {
-                self.animatePosition = .start
-            }
-        }
+//        print("📓 self.isSnappedToBottom \(self.isSnappedToBottom) self.animatePosition \(self.animatePosition) disableMagicTracking \(disableMagicTracking)")
+//        async {
+//            if self.isSnappedToBottom && self.animatePosition == .start {
+//                self.animatePosition = .end
+//            }
+//            if !self.isSnappedToBottom && self.animatePosition == .end {
+//                self.animatePosition = .start
+//            }
+//        }
         
         return ZStack(alignment: .topLeading) {
             PrintGeometryView("HomeMainContent")
             
-            // ⚠️ be sure to put any animation on this *inside* magic move
-            MagicMove(self.animatePosition,
-                      duration: homeViewState.snapToBottomAnimationDuration,
-                      // TODO we need a separate "disableTracking" in homeStore that is manually set
-                      // why? when hitting "map" toggle button when above snapToBottomAt this fails for now
-                      disableTracking: disableMagicTracking,
-                      onMoveComplete: {
-                        if !self.isSnappedToBottom {
-                            self.shouldUpdateMagicPositions = true
-                        }
-                    }
-            ) {
-                self.content
-            }
+            self.content
+
+//            // ⚠️ be sure to put any animation on this *inside* magic move
+//            MagicMove(self.animatePosition,
+//                      duration: homeViewState.snapToBottomAnimationDuration,
+//                      // TODO we need a separate "disableTracking" in homeStore that is manually set
+//                      // why? when hitting "map" toggle button when above snapToBottomAt this fails for now
+//                      disableTracking: disableMagicTracking,
+//                      onMoveComplete: {
+//                        if !self.isSnappedToBottom {
+//                            self.shouldUpdateMagicPositions = true
+//                        }
+//                    }
+//            ) {
+//
+//            }
         }
     }
 }
@@ -52,6 +53,7 @@ struct HomeMainContentContainer<Content>: View where Content: View {
 // renders on every frame of HomeViewState, so keep it fairly light
 struct HomeMainContent: View {
     @Environment(\.geometry) var appGeometry
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var homeState: HomeViewState
     @EnvironmentObject var store: AppStore
     
@@ -61,58 +63,56 @@ struct HomeMainContent: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             // results list below map
-            ZStack {
-                Group {
-                    if Selectors.home.isOnSearchResults() {
-                        HomeSearchResultsView(
-                            state: Selectors.home.lastState()
-                        )
-                    } else {
-                        HomeContentExplore()
-                    }
+            VStack(spacing: 0) {
+                HomeMainFilterBar()
+                
+                ScrollView {                
+                    HomeContentExplore()
                 }
-                .animation(.none)
+                
+//                Group {
+//                    if Selectors.home.isOnSearchResults() {
+//                        HomeSearchResultsView(
+//                            state: Selectors.home.lastState()
+//                        )
+//                    } else {
+//                        HomeContentExplore()
+//                    }
+//                }
+//                .animation(.none)
             }
-            .offset(y:
-                self.homeState.mapHeight - self.homeState.searchBarYExtra + (
-                    self.homeState.isSnappedToBottom
-                        ? 100
-                        : 0
-                )
-            )
-            .frameLimitedToScreen()
-            .clipped()
             .animation(.spring(response: 0.5))
             
             // results bar above map
-            VStack {
-                Spacer()
-                
-                VStack {
-                    Group {
-                        if Selectors.home.isOnSearchResults() {
-                            HomeMapSearchResults()
-                                .transition(.slide)
-                        } else {
-                            HomeMapExplore()
-                                .transition(.slide)
-                        }
-                    }
-                    
-                    // bottom pad
-                    Spacer().frame(
-                        height: self.homeState.appHeight - self.homeState.snappedToBottomMapHeight + App.searchBarHeight / 2
-                    )
-                }
-                .background(
-                    LinearGradient(
-                        gradient: Gradient(colors: [.clear, .black]),
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
-            }
-            .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
+//            VStack {
+//                Spacer()
+//
+//                VStack {
+//                    Group {
+//                        if Selectors.home.isOnSearchResults() {
+//                            HomeMapSearchResults()
+//                                .transition(.slide)
+//                        } else {
+//                            HomeMapExplore()
+//                                .transition(.slide)
+//                        }
+//                    }
+//                }
+//                .background(
+//                    self.colorScheme == .dark
+//                      ? LinearGradient(
+//                            gradient: Gradient(colors: [.clear, .black]),
+//                            startPoint: .top,
+//                            endPoint: .center
+//                        )
+//                      : LinearGradient(
+//                            gradient: Gradient(colors: [.clear, .black]),
+//                            startPoint: .top,
+//                            endPoint: .bottom
+//                        )
+//                )
+//            }
+//            .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
         }
         // note! be sure to put any animation on this *inside* magic move
         // or else it messes up the magic move measurement - you can test
@@ -125,24 +125,36 @@ struct HomeMainContent: View {
 
 struct HomeContentExplore: View {
     @State var index: Int = 0
+    let dishes = features.chunked(into: 2)
+    let items = features.split()
     
     var body: some View {
         ZStack {
-            HomeContentExploreBy(
-                active: true,
-                type: .dish
-            )
-//            ScrollViewEnhanced(
-//                index: self.$index,
-//                direction: Axis.Set.horizontal,
-//                showsIndicators: false,
-//                pages: [0, 1].map { index in
-//                    HomeContentExploreBy(
-//                        active: index == self.index,
-//                        type: index == 0 ? .dish : .cuisine
-//                    )
-//                }
-//            )
+            VStack(alignment: .leading, spacing: 4) {
+                HomeContentExploreBy(
+                    type: .cuisine
+                )
+                
+                VStack {
+                    Text("Explore by Dish")
+                        .font(.headline)
+                        .padding(.bottom)
+                    
+                    ForEach(0 ..< self.dishes.count) { index in
+                        HStack {
+                            ForEach(self.dishes[index]) { dish in
+                                DishCardView(
+                                    dish: dish,
+                                    at: .end,
+                                    display: .card
+                                )
+                                    .frame(height: 120)
+                            }
+                        }
+                    }
+                }
+                .padding()
+            }
         }
         .edgesIgnoringSafeArea(.all)
         .clipped()
@@ -155,38 +167,27 @@ struct HomeContentExploreBy: View, Identifiable {
     @Environment(\.geometry) var appGeometry
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var homeState: HomeViewState
-    let items = features.split()
     
     enum ExploreContentType { case dish, cuisine }
     
     var active: Bool = false
     var type: ExploreContentType
+    let items = features.split()
     
     var body: some View {
-        ZStack {
-            ScrollView(.vertical, showsIndicators: false) {
+        return ZStack {
+//            ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 0) {
-                    if active {
-                        HomeMainDrawerScrollEffects()
-                    }
-                    
-                    // spacer of whats above it height so it can scoll up to searchbar
-                    Spacer().frame(
-                        height: App.searchBarHeight / 2 + App.filterBarHeight + self.homeState.scrollRevealY
-                        // why
-                         - 10
-                    )
-                    
                     VStack {
-                        ForEach(0 ..< self.store.state.home.labels.count) { index in
+                        ForEach(0 ..< self.store.state.home.lenses.count) { index in
                             VStack(alignment: .leading, spacing: 4) {
                                 HStack(spacing: 0) {
-                                    Text(self.store.state.home.labels[index])
+                                    Text("\(self.store.state.home.lenses[index].name)")
                                         .font(.system(size: 13))
                                         .fontWeight(.bold)
                                         .foregroundColor(Color.white)
                                         .modifier(TextShadowStyle())
-                                    
+
                                     // line
                                     VStack(spacing: 0) {
                                         Color.white
@@ -213,7 +214,6 @@ struct HomeContentExploreBy: View, Identifiable {
                                             .padding(.horizontal)
                                         }
                                     }
-//                                    .drawingGroup()
                                     .padding(.vertical)
                                 }
                                 
@@ -222,22 +222,19 @@ struct HomeContentExploreBy: View, Identifiable {
                         }
                     }
                     .padding(.top, 4)
-                    
-                    Spacer().frame(height: 20)
-                    Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)
                 }
-                .introspectScrollView { scrollView in
-                    if self.active {
-                        self.homeState.setActiveScrollView(scrollView)
-                    }
-                    //                    TODO attempt to have the content scroll pull down when at top
-                    //                    scrollView.bounces = false
-                }
-            }
-            .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
+//                .introspectScrollView { scrollView in
+//                    if self.active {
+//                        self.homeState.setActiveScrollView(scrollView)
+//                    }
+//                    //                    TODO attempt to have the content scroll pull down when at top
+//                    //                    scrollView.bounces = false
+//                }
+//            }
+//            .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
         }
-        .edgesIgnoringSafeArea(.all)
-        .clipped()
+//        .edgesIgnoringSafeArea(.all)
+//        .clipped()
     }
 }
 

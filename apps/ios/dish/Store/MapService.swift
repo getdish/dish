@@ -1,8 +1,8 @@
 import Combine
-import GoogleMaps
+import MapKit
 
 class MapService {
-    let geocoder = GMSGeocoder()
+//    let geocoder = GMSGeocoder()
     let currentLocationManager = CurrentLocationService()
     var cancels: Set<AnyCancellable> = []
     
@@ -12,30 +12,30 @@ class MapService {
     
     func start() {
         currentLocationManager.start()
-        self.effectUpdateCurrentLocation()
+//        self.effectUpdateCurrentLocation()
         self.effectMoveToCurrentLocationOnAuthorization()
     }
     
-    func setNameOfCurrentLocation(_ location: CLLocation) -> Effect<AppAction> {
-        self.getReverseGeo(location.coordinate)
-            .replaceError(with: GMSAddress())
-            .map { location in
-                AppAction.map(.setLocationLabel("\(location.locality ?? "no locality")"))
-            }
-            .eraseToEffect()
-    }
+//    func setNameOfCurrentLocation(_ location: CLLocation) -> Effect<AppAction> {
+//        self.getReverseGeo(location.coordinate)
+//            .replaceError(with: GMSAddress())
+//            .map { location in
+//                AppAction.map(.setLocationLabel("\(location.locality ?? "no locality")"))
+//            }
+//            .eraseToEffect()
+//    }
     
-    func effectUpdateCurrentLocation() {
-        currentLocationManager.$lastLocation
-            .sink { location in
-                print("last location is \(location)")
-                if let location = location {
-                    App.store.send(.map(.setLastKnown(location)))
-                    App.store.send(self.setNameOfCurrentLocation(location))
-                }
-            }
-            .store(in: &cancels)
-    }
+//    func effectUpdateCurrentLocation() {
+//        currentLocationManager.$lastLocation
+//            .sink { location in
+//                print("last location is \(location)")
+//                if let location = location {
+//                    App.store.send(.map(.setLastKnown(location)))
+//                    App.store.send(self.setNameOfCurrentLocation(location))
+//                }
+//            }
+//            .store(in: &cancels)
+//    }
     
     func effectMoveToCurrentLocationOnAuthorization() {
         currentLocationManager.$authorized
@@ -47,22 +47,22 @@ class MapService {
             .store(in: &cancels)
     }
     
-    func getReverseGeo(_ location: CLLocationCoordinate2D) -> AnyPublisher<GMSAddress, Error> {
-        return Future<GMSAddress, Error> { promise in
-            self.geocoder.reverseGeocodeCoordinate(location) { (res, err) in
-                if let error = err {
-                    promise(.failure(error))
-                } else {
-                    if let response = res,
-                        let firstResponse = response.firstResult() {
-                        promise(.success(firstResponse))
-                    } else {
-                        promise(.failure(MapServiceError.noLocationResults))
-                    }
-                }
-            }
-        }
-        .eraseToAnyPublisher()
-    }
+//    func getReverseGeo(_ location: CLLocationCoordinate2D) -> AnyPublisher<GMSAddress, Error> {
+//        return Future<GMSAddress, Error> { promise in
+//            self.geocoder.reverseGeocodeCoordinate(location) { (res, err) in
+//                if let error = err {
+//                    promise(.failure(error))
+//                } else {
+//                    if let response = res,
+//                        let firstResponse = response.firstResult() {
+//                        promise(.success(firstResponse))
+//                    } else {
+//                        promise(.failure(MapServiceError.noLocationResults))
+//                    }
+//                }
+//            }
+//        }
+//        .eraseToAnyPublisher()
+//    }
 }
 

@@ -5,36 +5,7 @@ PODS:
   - Apollo/WebSocket (0.21.0):
     - Apollo/Core
     - Starscream (= 3.1.1)
-  - AppAuth (1.2.0):
-    - AppAuth/Core (= 1.2.0)
-    - AppAuth/ExternalUserAgent (= 1.2.0)
-  - AppAuth/Core (1.2.0)
-  - AppAuth/ExternalUserAgent (1.2.0)
-  - GoogleMaps (3.6.0):
-    - GoogleMaps/Maps (= 3.6.0)
-  - GoogleMaps/Base (3.6.0)
-  - GoogleMaps/Maps (3.6.0):
-    - GoogleMaps/Base
-  - GooglePlaces (3.6.0):
-    - GoogleMaps/Base (= 3.6.0)
-  - GoogleSignIn (5.0.2):
-    - AppAuth (~> 1.2)
-    - GTMAppAuth (~> 1.0)
-    - GTMSessionFetcher/Core (~> 1.1)
-  - GTMAppAuth (1.0.0):
-    - AppAuth/Core (~> 1.0)
-    - GTMSessionFetcher (~> 1.1)
-  - GTMSessionFetcher (1.3.0):
-    - GTMSessionFetcher/Full (= 1.3.0)
-  - GTMSessionFetcher/Core (1.3.0)
-  - GTMSessionFetcher/Full (1.3.0):
-    - GTMSessionFetcher/Core (= 1.3.0)
-  - Introspect (0.0.6)
-  - Mapbox-iOS-SDK (5.6.1):
-    - MapboxMobileEvents (= 0.10.2)
-  - MapboxAnnotationExtension (0.0.1-beta.1):
-    - Mapbox-iOS-SDK (~> 5.2)
-  - MapboxMobileEvents (0.10.2)
+  - Introspect (0.1.0)
   - ObjcExceptionBridging (1.0.1):
     - ObjcExceptionBridging/ObjcExceptionBridging (= 1.0.1)
   - ObjcExceptionBridging/ObjcExceptionBridging (1.0.1)
@@ -47,47 +18,32 @@ PODS:
 DEPENDENCIES:
   - Apollo
   - Apollo/WebSocket
-  - GoogleMaps
-  - GooglePlaces
-  - GoogleSignIn
-  - Introspect
-  - Mapbox-iOS-SDK (~> 5.6)
-  - MapboxAnnotationExtension (= 0.0.1-beta.1)
+  - "Introspect (from `git@github.com:siteline/SwiftUI-Introspect.git`)"
   - XCGLogger (~> 7.0.0)
 
 SPEC REPOS:
   trunk:
     - Apollo
-    - AppAuth
-    - GoogleMaps
-    - GooglePlaces
-    - GoogleSignIn
-    - GTMAppAuth
-    - GTMSessionFetcher
-    - Introspect
-    - Mapbox-iOS-SDK
-    - MapboxAnnotationExtension
-    - MapboxMobileEvents
     - ObjcExceptionBridging
     - Starscream
     - XCGLogger
 
+EXTERNAL SOURCES:
+  Introspect:
+    :git: "git@github.com:siteline/SwiftUI-Introspect.git"
+
+CHECKOUT OPTIONS:
+  Introspect:
+    :commit: de5c32c15ae169cfcb27397ffb2734dcd0e1e6d5
+    :git: "git@github.com:siteline/SwiftUI-Introspect.git"
+
 SPEC CHECKSUMS:
   Apollo: 56a0aa81b744bf2810a8277e705f155c91ac9055
-  AppAuth: bce82c76043657c99d91e7882e8a9e1a93650cd4
-  GoogleMaps: 82f8fe307193bb4de6ef6bf9e88f1d624b718f9d
-  GooglePlaces: 1b9d29cf3e164903d873600f511f42acdfe85294
-  GoogleSignIn: 7137d297ddc022a7e0aa4619c86d72c909fa7213
-  GTMAppAuth: 4deac854479704f348309e7b66189e604cf5e01e
-  GTMSessionFetcher: 43b8b64263023d4f32caa0b40f4c8bfa3c5f36d8
-  Introspect: 3575a13dbece038e564e4375eeac2117e64a0242
-  Mapbox-iOS-SDK: b31bd62a5dd5b7e688eab787acd3d093a122f4d6
-  MapboxAnnotationExtension: d66de5561562c9d940153c0135725e671407b781
-  MapboxMobileEvents: 2bc0ca2eedb627b73cf403258dce2b2fa98074a6
+  Introspect: ad32f2b7b9e7ac2c008b9dfec3d5325fbd3660fa
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
   Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: b7e57ac61f841eeb5ec4943a24c2723c17e20faf
+PODFILE CHECKSUM: 9a97c4742fe8011f7d3352a826918b18838bca92
 
 COCOAPODS: 1.8.4

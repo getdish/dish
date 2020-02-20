@@ -36,15 +36,14 @@ struct HomeSearchBar: View {
         }
     }
     
-    @State var lastZoomed = false
-    
     var icon: AnyView {
         let isOnHome = Selectors.home.isOnHome()
-        if isOnHome || self.store.state.home.showSearch == .search {
+        let searchFocus = self.store.state.home.searchFocus
+        if isOnHome || searchFocus == .search {
             return AnyView(
                 Image(systemName: "magnifyingglass")
             )
-        } else if self.store.state.home.showSearch == .location {
+        } else if searchFocus == .location {
             return AnyView(
                 Image(systemName: "map")
             )
@@ -60,60 +59,43 @@ struct HomeSearchBar: View {
     func onClear() {
         // go back on empty search clear
         self.store.send(.home(.clearSearch))
-
-        // focus keyboard again on clear if not focused
-        if self.keyboard.state.height == 0 {
-            self.focusKeyboard()
-        }
     }
     
     var body: some View {
-        let zoomed = keyboard.state.height > 0
-        let scale: CGFloat = zoomed ? 1.2 : 1.2
-        let isOnSearch = self.store.state.home.showSearch == .search
-        
-        return ZStack {
-            Group {
-                if self.lastZoomed != zoomed {
-                    SideEffect("updateLastZoomed") {
-                        self.lastZoomed = zoomed
-                    }
+        let scale: CGFloat = 1
+//        let isOnSearch = self.store.state.home.showSearch == .search
+        return SearchInput(
+            placeholder: "",
+            inputBackgroundColor: Color.init(white: 0.5, opacity: 0.1),
+            borderColor: Color.clear, //Color.init(white: 0.5, opacity: 0.1),
+            scale: scale,
+            sizeRadius: 2.2,
+            icon: icon,
+            showCancelInside: true,
+            onTapLeadingIcon: {
+                if Selectors.home.isOnHome() {
+                    self.isFirstResponder = true
+                } else {
+                    self.keyboard.hide()
+                    self.store.send(.home(.pop))
                 }
-            }
-            
-            SearchInput(
-                placeholder: "",
-                inputBackgroundColor: Color.white,
-                borderColor: Color.white,
-                scale: scale,
-                sizeRadius: 2.25,
-                icon: icon,
-                showCancelInside: true,
-                onTapLeadingIcon: {
-                    if Selectors.home.isOnHome() {
-                        self.isFirstResponder = true
-                    } else {
-                        self.keyboard.hide()
-                        self.store.send(.home(.pop))
-                    }
-                },
-                onEditingChanged: { val in
-                    if val == true {
-                        App.store.send(.home(.setShowSearch(.search)))
-                    } else {
-                        // todo we may need to not auto close...?
-                        App.store.send(.home(.setShowSearch(.off)))
-                    }
-                },
-                onClear: self.onClear,
-                after: isOnSearch ? AnyView(EmptyView()) : after,
-                isFirstResponder: isFirstResponder,
-                searchText: self.homeSearch,
-                showInput: showInput
-            )
-                .shadow(color: Color.black.opacity(isOnSearch ? 0.2 : 0.35), radius: 8, x: 0, y: 3)
-                .animation(.spring(), value: zoomed != self.lastZoomed)
-        }
+        },
+            onEditingChanged: { val in
+                if val == true {
+                    App.store.send(.home(.setSearchFocus(.search)))
+                } else {
+                    // todo we may need to not auto close...?
+                    App.store.send(.home(.setSearchFocus(.off)))
+                }
+        },
+            onClear: self.onClear,
+//            after: isOnSearch ? AnyView(EmptyView()) : after,
+            isFirstResponder: isFirstResponder,
+            searchText: self.homeSearch,
+            showInput: showInput
+        )
+            .padding(.horizontal, 5)
+            .padding(.top, 5)
     }
 }
 
@@ -214,7 +196,8 @@ struct CameraButton: View {
 #if DEBUG
 struct CameraButton_Previews: PreviewProvider {
     static var previews: some View {
-        CameraButton()
+        HomeSearchBar()
+            .embedInAppEnvironment()
     }
 }
 #endif

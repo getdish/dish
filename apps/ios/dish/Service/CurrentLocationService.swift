@@ -1,5 +1,5 @@
 import Combine
-import GoogleMaps
+import MapKit
 
 // uses a delegate so separate it out...
 class CurrentLocationService: NSObject, CLLocationManagerDelegate, ObservableObject {
