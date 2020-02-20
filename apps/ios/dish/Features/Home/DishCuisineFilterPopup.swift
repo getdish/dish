@@ -51,6 +51,7 @@ struct DishCuisineFilterPopup: View {
                                     let cuisineFlag = "\(activeCountries[index].prefix(1))"
                                     self.store.send(.home(.setCuisineFilter(cuisineFlag)))
                                     self.active = ""
+                                    self.store.send(.home(.toggleShowCuisineFilter))
                                 }) {
                                     Text("\(activeCountries[index])")
                                 }
