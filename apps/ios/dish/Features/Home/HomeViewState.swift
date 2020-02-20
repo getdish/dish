@@ -296,7 +296,9 @@ class HomeViewState: ObservableObject {
     }
 
     func setY(_ dragY: CGFloat) {
-        self.y = dragY
+        if dragY != y {        
+            self.y = dragY
+        }
     }
     
     func finishDrag(_ value: DragGesture.Value) {

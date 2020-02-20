@@ -25,6 +25,10 @@ fileprivate let initialFilters: [FilterItem] = [
     FilterItem(name: "Cash Only", fontSize: 15, groupId: "normal")
 ]
 
+fileprivate let initialCuisines = [
+    "🇺🇸 American", "🇧🇷 Brazilian", "🇨🇳 Chinese", "🇬🇷 Greek", "🇮🇳 Indian", "🇮🇹 Italian", "🇯🇵 Japanese", "🇹🇭 Thai", "🇻🇳 Vietnamese"
+]
+
 extension AppState {
     typealias SearchFocus = SearchFocusState
     
@@ -32,6 +36,7 @@ extension AppState {
         var view: HomePageView = .home
         var viewStates: [HomeStateItem] = [HomeStateItem()]
         var filters: [FilterItem] = initialFilters
+        var cuisines: [String] = initialCuisines
         var labels = initialLabels
         var labelActive = 0
         var labelDishes = [String: [DishItem]]()

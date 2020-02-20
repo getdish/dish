@@ -35,6 +35,8 @@ struct TopNavView: View {
         store.binding(for: \.map.locationLabel, { .map(.setLocationLabel($0)) })
     }
     
+    @State var textField: UITextField? = nil
+    
     var searchBar: some View {
         HStack {
             TextField("", text: self.locationSearch, onEditingChanged: { isEditing in
@@ -42,8 +44,17 @@ struct TopNavView: View {
                     if self.store.state.home.drawerPosition != .bottom {
                         self.store.send(.home(.setDrawerPosition(.bottom)))
                     }
+                    
+                    // select all text
+                    if let textField = self.textField {
+                        textField.becomeFirstResponder()
+                        textField.selectAll(nil)
+                    }
                 }
             })
+                .introspectTextField { next in
+                    self.textField = next
+                }
                 .font(.system(size: 14))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 20)
