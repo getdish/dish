@@ -28,12 +28,12 @@ fileprivate let initialLenses = [
 ]
 
 fileprivate let initialFilters: [FilterItem] = [
-    FilterItem(name: "★", fontSize: 18, groupId: "rating", stack: true),
-    FilterItem(name: "★★", fontSize: 16, groupId: "rating", stack: true),
-    FilterItem(name: "★★★", fontSize: 14, groupId: "rating", stack: true),
-    FilterItem(name: "$", fontSize: 20, groupId: "price", stack: true),
-    FilterItem(name: "$$", fontSize: 18, groupId: "price", stack: true),
-    FilterItem(name: "$$$", fontSize: 14, groupId: "price", stack: true),
+    FilterItem(name: "★", fontSize: 18, groupId: "main", stack: true),
+    FilterItem(name: "★★", fontSize: 16, groupId: "main", stack: true),
+    FilterItem(name: "★★★", fontSize: 14, groupId: "main", stack: true),
+    FilterItem(name: "$", fontSize: 20, groupId: "main", stack: true),
+    FilterItem(name: "$$", fontSize: 18, groupId: "main", stack: true),
+    FilterItem(name: "$$$", fontSize: 14, groupId: "main", stack: true),
     FilterItem(name: "🚗", fontSize: 15, groupId: "quick"),
     FilterItem(name: "Open", fontSize: 15, groupId: "normal"),
     FilterItem(name: "Healthy", fontSize: 15, groupId: "normal"),

@@ -157,7 +157,7 @@ struct TopNavButtonStyle: ViewModifier {
                         .padding(.horizontal, self.hPad)
                         .background(Color.white.opacity(active ? 0.5 : 0.2))
                         .foregroundColor(.white)
-                        .background(BlurView(style: .systemUltraThinMaterialDark))
+                        .background(BlurView(style: .systemThinMaterialDark))
                 }
             }
             .cornerRadius(8)

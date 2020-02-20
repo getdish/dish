@@ -18,16 +18,24 @@ struct HomeMainFilterBar: View {
         return items
     }
     
+    var separator: some View {
+        Color(white: 0.5).opacity(0.1).frame(width: 1)
+    }
+    
     var body: some View {
         ZStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
+                    FilterButton(
+                        filter: FilterItem(name: "🌍")
+                    )
+                    
                     ForEach(0 ..< self.filterGroups.count) { index in
                         Group {
                             FilterGroupView(group: self.filterGroups[index])
                             // separator
                             if index < self.filterGroups.count - 1 {
-                                Color(white: 0.5).opacity(0.1).frame(width: 1)
+                                self.separator
                             }
                         }
                     }
@@ -118,6 +126,7 @@ struct FilterButton: View {
     @Environment(\.colorScheme) var colorScheme
     
     var filter: FilterItem
+    var onTap: (() -> Void)? = nil
     var height: CGFloat {
         App.filterBarHeight - App.filterBarPad * 2
     }
@@ -127,6 +136,10 @@ struct FilterButton: View {
             DishButton(action: {
                 if self.filter.type == .toggle {
                     App.store.send(.home(.setFilterActive(filter: self.filter, val: !self.filter.active)))
+                } else {
+                    if let cb = self.onTap {
+                        cb()
+                    }
                 }
             }) {
                 HStack {
