@@ -1,7 +1,7 @@
 ## Developing
 
 ### Quickstart
-If you don't want or have Postgres, Postgis and Hasura on your machine The
+If you don't want or have Postgres, Postgis and Hasura on your machine, the
 simplest way to install and run them is with `docker-compose up` in this folder.
 Here are the Docker Compose installation instructions:
 https://docs.docker.com/compose/install/
