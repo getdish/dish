@@ -58,6 +58,11 @@ struct DishMapView: View {
                                 mapViewStore.location = location
                             }
                         },
+                        onChangeLocationName: { placemark in
+                            if let cityName = placemark.locality {
+                                self.store.send(.map(.setLocationLabel(cityName)))
+                            }
+                        },
                         showsUserLocation: true
                     )
                         .frame(height: App.screen.height * 1.6)
