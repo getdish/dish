@@ -27,7 +27,10 @@ struct HomeMainFilterBar: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     FilterButton(
-                        filter: FilterItem(name: "🌍")
+                        filter: FilterItem(name: "🌍"),
+                        onTap: {
+                            self.store.send(.home(.toggleShowCuisineFilter))
+                        }
                     )
                     
                     ForEach(0 ..< self.filterGroups.count) { index in
@@ -134,11 +137,13 @@ struct FilterButton: View {
     var body: some View {
         ZStack {
             DishButton(action: {
-                if self.filter.type == .toggle {
-                    App.store.send(.home(.setFilterActive(filter: self.filter, val: !self.filter.active)))
+                if let cb = self.onTap {
+                    cb()
                 } else {
-                    if let cb = self.onTap {
-                        cb()
+                    if self.filter.type == .toggle {
+                        App.store.send(.home(.setFilterActive(filter: self.filter, val: !self.filter.active)))
+                    } else {
+                        // TODO
                     }
                 }
             }) {

@@ -12,6 +12,10 @@ struct DishButton<Content: View>: View {
     @State var isTapped = false
     @State var lastTap = Date()
     
+    func callbackAction() {
+        if let cb = self.action { cb() }
+    }
+    
     var body: some View {
         self.content
             // ⚠️ dont put .animation() here or every subview animates
@@ -19,7 +23,7 @@ struct DishButton<Content: View>: View {
             .opacity(self.isTapped ? 0.9 : 1)
             .onTapGesture {
                 self.lastTap = Date()
-                if let cb = self.action { cb() }
+                self.callbackAction()
         }
         .onLongPressGesture(
             minimumDuration: 10000,
@@ -31,12 +35,12 @@ struct DishButton<Content: View>: View {
             if isPressing {
                 self.lastTap = Date()
             } else {
-                if let cb = self.action { cb() }
+//                self.callbackAction()
             }
         }) {
-//            if self.lastTap.timeIntervalSinceNow > 10 {
-//                self.action()
-//            }
+            if self.lastTap.timeIntervalSinceNow > 10 {
+                self.callbackAction()
+            }
         }
     }
 }

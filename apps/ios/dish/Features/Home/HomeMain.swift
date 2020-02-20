@@ -154,6 +154,31 @@ struct HomeMainView: View {
                         }
                     }
                     
+                    if self.store.state.home.showCuisineFilter {
+                        ZStack {
+                            Color.black.opacity(0.3)
+                                .onTapGesture {
+                                    self.store.send(.home(.toggleShowCuisineFilter))
+                                }
+                            
+                            GeometryReader { geometry in
+                                VStack {
+                                    Text("Select cuisine")
+                                }
+                                .padding(20)
+                                .frame(
+                                    width: geometry.size.width - 20,
+                                    height: geometry.size.width - 20
+                                )
+                                .background(
+                                    BlurView(style: .regular)
+                                )
+                                .cornerRadius(50)
+                                .clipped()
+                            }
+                        }
+                    }
+                    
                     // content
 //                    HomeMainContentContainer(
 //                        isSnappedToBottom: state.isSnappedToBottom,

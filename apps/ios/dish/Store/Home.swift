@@ -66,6 +66,7 @@ extension AppState {
         var searchFocus: SearchFocusState = .off
         var drawerPosition: BottomDrawerPosition = .bottom
         var showCamera: Bool = false
+        var showCuisineFilter: Bool = false
     }
 }
 
@@ -82,6 +83,7 @@ enum HomeAction {
     case setFilterActive(filter: FilterItem, val: Bool)
     case setDrawerPosition(_ position: BottomDrawerPosition)
     case clearSearch
+    case toggleShowCuisineFilter
 }
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
@@ -100,6 +102,8 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     // switch
     
     switch action {
+        case .toggleShowCuisineFilter:
+            state.home.showCuisineFilter = !state.home.showCuisineFilter
         case .setDrawerPosition(let position):
             state.home.drawerPosition = position
         case .clearSearch:
