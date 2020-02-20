@@ -97,9 +97,9 @@ struct HomeMainView: View {
                             .clipped()
                             .opacity(animationState == .splash ? 0 : 1)
                             
-                            HomeMapOverlay()
-                                .offset(y: mapHeight - App.searchBarHeight / 2)
-                                .animation(.spring())
+//                            HomeMapOverlay()
+//                                .offset(y: mapHeight - App.searchBarHeight / 2)
+//                                .animation(.spring())
                         }
                         .frameLimitedToScreen()
                         .opacity(state.showCamera ? 0 : 1)
@@ -107,14 +107,20 @@ struct HomeMainView: View {
                     
                     // top bar
                     TopNavView()
-                    .frameLimitedToScreen()
+                        .frameLimitedToScreen()
+                    
+                    VStack {
+                        DishLenseFilterBar()
+                        Spacer()
+                    }
+                        .offset(y: self.screen.height * 0.8 - 68)
                     
                     BottomSlideDrawer(
-                        position: .top,
+                        position: .bottom,
                         snapPoints: [
-                            180,
+                            150,
                             self.screen.height * 0.5,
-                            self.screen.height * 0.9
+                            self.screen.height * 0.8
                         ],
                         handle: nil
                     ) {
@@ -171,7 +177,7 @@ struct HomeMainView: View {
                 .disabled(state.dragState != .idle)
             }
             .clipped() // dont remove fixes bug cant click SearchBar
-            .simultaneousGesture(self.dragGesture)
+//            .simultaneousGesture(self.dragGesture)
             
             DishRestaurantView()
             

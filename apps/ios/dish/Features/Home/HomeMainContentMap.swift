@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct HomeMapExplore: View {
+struct DishLenseFilterBar: View {
     @EnvironmentObject var store: AppStore
     @State var index = 0
     

@@ -81,35 +81,35 @@ struct HomeMainContent: View {
             .animation(.spring(response: 0.5))
             
             // results bar above map
-            VStack {
-                Spacer()
-                
-                VStack {
-                    Group {
-                        if Selectors.home.isOnSearchResults() {
-                            HomeMapSearchResults()
-                                .transition(.slide)
-                        } else {
-                            HomeMapExplore()
-                                .transition(.slide)
-                        }
-                    }
-                }
-                .background(
-                    self.colorScheme == .dark
-                      ? LinearGradient(
-                            gradient: Gradient(colors: [.clear, .black]),
-                            startPoint: .top,
-                            endPoint: .center
-                        )
-                      : LinearGradient(
-                            gradient: Gradient(colors: [.clear, .black]),
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                )
-            }
-            .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
+//            VStack {
+//                Spacer()
+//                
+//                VStack {
+//                    Group {
+//                        if Selectors.home.isOnSearchResults() {
+//                            HomeMapSearchResults()
+//                                .transition(.slide)
+//                        } else {
+//                            HomeMapExplore()
+//                                .transition(.slide)
+//                        }
+//                    }
+//                }
+//                .background(
+//                    self.colorScheme == .dark
+//                      ? LinearGradient(
+//                            gradient: Gradient(colors: [.clear, .black]),
+//                            startPoint: .top,
+//                            endPoint: .center
+//                        )
+//                      : LinearGradient(
+//                            gradient: Gradient(colors: [.clear, .black]),
+//                            startPoint: .top,
+//                            endPoint: .bottom
+//                        )
+//                )
+//            }
+//            .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
         }
         // note! be sure to put any animation on this *inside* magic move
         // or else it messes up the magic move measurement - you can test

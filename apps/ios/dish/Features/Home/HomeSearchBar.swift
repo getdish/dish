@@ -93,7 +93,7 @@ struct HomeSearchBar: View {
                 }
         },
             onClear: self.onClear,
-            after: isOnSearch ? AnyView(EmptyView()) : after,
+//            after: isOnSearch ? AnyView(EmptyView()) : after,
             isFirstResponder: isFirstResponder,
             searchText: self.homeSearch,
             showInput: showInput
