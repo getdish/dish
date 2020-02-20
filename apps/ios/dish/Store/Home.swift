@@ -1,6 +1,6 @@
 import SwiftUI
 import Combine
-import GoogleMaps
+import MapKit
 
 struct LenseItem: Equatable, Identifiable {
     let id: String
@@ -28,9 +28,12 @@ fileprivate let initialLenses = [
 ]
 
 fileprivate let initialFilters: [FilterItem] = [
-    FilterItem(name: "$", fontSize: 20, groupId: "price"),
-    FilterItem(name: "$$", fontSize: 18, groupId: "price"),
-    FilterItem(name: "$$$", fontSize: 14, groupId: "price"),
+    FilterItem(name: "★", fontSize: 18, groupId: "rating", stack: true),
+    FilterItem(name: "★★", fontSize: 16, groupId: "rating", stack: true),
+    FilterItem(name: "★★★", fontSize: 14, groupId: "rating", stack: true),
+    FilterItem(name: "$", fontSize: 20, groupId: "price", stack: true),
+    FilterItem(name: "$$", fontSize: 18, groupId: "price", stack: true),
+    FilterItem(name: "$$$", fontSize: 14, groupId: "price", stack: true),
     FilterItem(name: "🚗", fontSize: 15, groupId: "quick"),
     FilterItem(name: "Open", fontSize: 15, groupId: "normal"),
     FilterItem(name: "Healthy", fontSize: 15, groupId: "normal"),
@@ -190,6 +193,7 @@ struct FilterItem: Identifiable, Equatable {
     var active: Bool = false
     var fontSize: CGFloat = 20
     var groupId: String = ""
+    var stack: Bool = false
 }
 
 struct HomeStateItem: Identifiable, Equatable {

@@ -527,7 +527,6 @@
 				1CE3545E23986B1B004B3A84 /* Frameworks */,
 				1CE3545F23986B1B004B3A84 /* Resources */,
 				1BA3C3E1502560BE33CC9F03 /* [CP] Embed Pods Frameworks */,
-				27936A0E3A675C7027A97E70 /* [CP] Copy Pods Resources */,
 				AEEF29D523F33B3D00FCE400 /* Run Script - Apollo Generate */,
 			);
 			buildRules = (
@@ -621,23 +620,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-dish/Pods-dish-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		27936A0E3A675C7027A97E70 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-dish/Pods-dish-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-dish/Pods-dish-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-dish/Pods-dish-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		4EF216240C62D49CD1E9EF24 /* [CP] Check Pods Manifest.lock */ = {

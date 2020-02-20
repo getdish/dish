@@ -1,6 +1,6 @@
 import SwiftUI
 import Combine
-import GoogleMaps
+import MapKit
 
 class HomeService {
     private var cancels: Set<AnyCancellable> = []

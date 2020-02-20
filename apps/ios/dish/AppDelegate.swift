@@ -1,6 +1,4 @@
 import UIKit
-import GoogleMaps
-import GooglePlaces
 import XCGLogger
 
 // GLOBALS
@@ -72,8 +70,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         )
 
         // Google Maps and Places
-        GMSServices.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")
-        GMSPlacesClient.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")
+//        GMSServices.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")
+//        GMSPlacesClient.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")
 
         App.start()
 

@@ -62,13 +62,13 @@ extension View {
     }
     
     func onGeometryChange(_ onGeometry: @escaping (GeometryProxy) -> Void) -> some View {
-        GeometryReader { proxy in
-            self.overlay(
+        self.overlay(
+            GeometryReader { proxy in
                 Run("onGeometryChange") {
                     onGeometry(proxy)
                 }
-            )
-        }
+            }
+        )
     }
     
     func embedInAppEnvironment(_ appState: Store<AppState, AppAction>? = nil) -> some View {

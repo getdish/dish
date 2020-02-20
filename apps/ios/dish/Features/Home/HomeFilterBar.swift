@@ -27,9 +27,7 @@ struct HomeMainFilterBar: View {
                     Group {
                         ForEach(0 ..< self.filterGroups.count) { index in
                             Group {
-                                ForEach(self.filterGroups[index]) { filter in
-                                    FilterButton(filter: filter)
-                                }
+                                FilterGroupView(group: self.filterGroups[index])
                                 Color.white.opacity(0.1).frame(width: 1)
                             }
                         }
@@ -40,6 +38,48 @@ struct HomeMainFilterBar: View {
             }
         }
         .frame(height: App.filterBarHeight)
+    }
+}
+
+struct FilterGroupView: View {
+    var group: [FilterItem]
+    @State var isOpen = false
+    @State var widths = [String: CGFloat]()
+    
+    var maxWidth: CGFloat {
+        self.widths.compactMap { $0.value }.reduce(0) { max($0, $1) }
+    }
+
+    var body: some View {
+        print("filter group -- \(self.maxWidth)")
+        
+        return Group {
+            if self.group[0].stack {
+                ZStack {
+                    ForEach(0 ..< self.group.count) { index in
+                        FilterButton(filter: self.group[index])
+                            .onGeometryChange { geometry in
+                                let width = geometry.size.width
+                                let filter = self.group[index]
+                                if width != self.widths[filter.id] {
+                                    print("set width \(width)")
+                                    self.widths[filter.id] = width
+                                }
+                            }
+                            .offset(x: CGFloat(index * 10))
+                            .zIndex(Double(self.group.count - index))
+//                            .rotationEffect(.degrees(Double(-2 + index * 2)))
+                    }
+                }
+                .frame(width: self.maxWidth > 0 ? self.maxWidth : nil)
+            }
+            else {
+                ForEach(self.group) { filter in
+                    FilterButton(filter: filter)
+                        .offset(x: CGFloat(filter.stack ? -40 : 0))
+                }
+            }
+        }
     }
 }
 

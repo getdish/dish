@@ -1,7 +1,6 @@
 import SwiftUI
-import CoreLocation
+import MapKit
 import Combine
-import Mapbox
 
 class DishMapViewStore: ObservableObject {
     var cancels: Set<AnyCancellable> = []
@@ -11,7 +10,7 @@ class DishMapViewStore: ObservableObject {
 fileprivate let mapViewStore = DishMapViewStore()
 
 struct DishMapView: View {
-    @State var mapView: MapViewController? = nil
+    @State var mapView: MKMapView? = nil
     
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.geometry) var appGeometry
@@ -113,7 +112,8 @@ struct DishMapView: View {
                         return
                     }
                     lastZoomAt = mapHeight
-                    self.mapView?.zoomIn(amt)
+                    print("TODO ZOOM")
+//                    self.mapView?.zoomIn(amt)
             }
             .store(in: &mapViewStore.cancels)
             
@@ -125,11 +125,12 @@ struct DishMapView: View {
                 .dropFirst()
                 //            .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
                 .sink { isSnappedToBottom in
-                    if isSnappedToBottom {
-                        self.mapView?.zoomIn(0.05)
-                    } else {
-                        self.mapView?.zoomOut(0.05)
-                    }
+                    print("TODO ZOOM")
+//                    if isSnappedToBottom {
+//                        self.mapView?.zoomIn(0.05)
+//                    } else {
+//                        self.mapView?.zoomOut(0.05)
+//                    }
             }
             .store(in: &mapViewStore.cancels)
         }

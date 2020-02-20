@@ -1,9 +1,6 @@
 import Combine
-import GooglePlaces
-import GoogleMaps
 import CoreLocation
 
-fileprivate let placesClient = GMSPlacesClient.shared()
 fileprivate let manager = CLLocationManager()
 
 extension AppState {
@@ -15,7 +12,6 @@ extension AppState {
         var searchResults: [CLLocation] = []
         var lastKnown: CLLocation? = nil
         var hasChangedOnce = false
-        var likelyPlaces: [GMSPlace] = []
     }
 }
 
