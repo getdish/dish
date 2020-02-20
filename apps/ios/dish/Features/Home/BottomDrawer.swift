@@ -33,32 +33,41 @@ struct BottomDrawer<Content: View>: View {
 
     var body: some View {
         let screenHeight = screen.height
-        return VStack(spacing: 0) {
-            if handle != nil {
-                self.handle
-                Spacer().frame(height: 12)
+        return ZStack {
+            RunOnce(name: "BottomDrawer.start") {
+                async(10) {
+                    self.callbackChangePosition()
+                }
             }
-            self.content()
-            // pad bottom so it wont go below
-            Spacer()
-                .frame(height: max(0, screenHeight - self.snapPoints.last! - screen.edgeInsets.bottom))
+            
+            VStack(spacing: 0) {
+                if handle != nil {
+                    self.handle
+                    Spacer().frame(height: 12)
+                }
+                self.content()
+                // pad bottom so it wont go below
+                Spacer()
+                    .frame(height: max(0, screenHeight - self.snapPoints.last! - screen.edgeInsets.bottom))
+            }
         }
         .frame(height: screenHeight, alignment: .top)
         .background(self.background)
         .cornerRadius(self.cornerRadius)
         .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.13), radius: 10.0)
         .offset(y: self.draggedPositionY)
-        .animation(self.dragState.isDragging ? nil : .interpolatingSpring(stiffness: 300.0, damping: 30.0, initialVelocity: 10.0))
+        .animation(self.dragState.isDragging
+            ? nil
+            : .interpolatingSpring(stiffness: 200.0, damping: 30.0, initialVelocity: 1.0)
+        )
         .gesture(
             DragGesture()
                 .updating($dragState) { drag, state, transaction in
                     state = .dragging(translation: drag.translation)
+                    self.callbackChangePosition()
                 }
                 .onEnded(onDragEnded)
         )
-        .onGeometryChange { geometry in
-            self.callbackChangePosition()
-        }
     }
     
     private func onDragEnded(drag: DragGesture.Value) {
@@ -89,6 +98,8 @@ struct BottomDrawer<Content: View>: View {
         } else {
             self.position = closestPosition
         }
+        
+        self.callbackChangePosition()
     }
     
     private func callbackChangePosition() {
