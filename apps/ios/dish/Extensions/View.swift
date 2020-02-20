@@ -70,6 +70,17 @@ extension View {
             .embedInGeometryReader()
             .edgesIgnoringSafeArea(.all)
     }
+    
+    func borderRounded(
+        radius: CGFloat = 12,
+        width: CGFloat = 1,
+        color: Color = Color.gray
+    ) -> some View {
+        self.overlay(
+            RoundedRectangle(cornerRadius: radius)
+                .stroke(color, lineWidth: width)
+        )
+    }
 }
 
 // MARK - onScroll

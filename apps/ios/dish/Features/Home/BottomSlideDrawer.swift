@@ -4,21 +4,30 @@ struct BottomSlideDrawer<Content: View>: View {
     @EnvironmentObject var screen: ScreenModel
     
     @GestureState private var dragState = DragState.inactive
-    @State var position = CardPosition.top
+    @Binding var position: BottomSlideDrawerPosition
+    
     var snapPoints: [CGFloat] = [100, 400, 600]
+    var background: AnyView = AnyView(Color.white)
     var cornerRadius: CGFloat = 12.0
     var handle: AnyView? = AnyView(RoundedRectangle(cornerRadius: 5 / 2.0)
         .frame(width: 40, height: 5)
         .foregroundColor(Color.secondary)
         .padding(5))
     
-    func getSnapPoint(_ position: CardPosition) -> CGFloat {
+    func getSnapPoint(_ position: BottomSlideDrawerPosition) -> CGFloat {
         self.snapPoints[position == .top ? 0 : position == .middle ? 1 : 2]
     }
     
     var positionY: CGFloat {
         getSnapPoint(self.position)
     }
+    
+    var draggedPositionY: CGFloat {
+        self.positionY + self.dragState.translation.height
+    }
+    
+    typealias OnChangePositionCB = (BottomSlideDrawerPosition, CGFloat) -> Void
+    var onChangePosition: OnChangePositionCB? = nil
     
     var content: () -> Content
 
@@ -27,8 +36,11 @@ struct BottomSlideDrawer<Content: View>: View {
         let drag = DragGesture()
             .updating($dragState) { drag, state, transaction in
                 state = .dragging(translation: drag.translation)
-        }
-        .onEnded(onDragEnded)
+                async {
+                    self.callbackChangePosition()
+                }
+            }
+            .onEnded(onDragEnded)
         
         return VStack(spacing: 0) {
             if handle != nil {
@@ -41,10 +53,10 @@ struct BottomSlideDrawer<Content: View>: View {
                 .frame(height: max(0, screenHeight - self.snapPoints.last! - screen.edgeInsets.bottom))
         }
         .frame(height: screenHeight, alignment: .top)
-        .background(Color.white)
+        .background(self.background)
         .cornerRadius(self.cornerRadius)
         .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.13), radius: 10.0)
-        .offset(y: self.positionY + self.dragState.translation.height)
+        .offset(y: self.draggedPositionY)
         .animation(self.dragState.isDragging ? nil : .interpolatingSpring(stiffness: 300.0, damping: 30.0, initialVelocity: 10.0))
         .gesture(drag)
     }
@@ -52,9 +64,9 @@ struct BottomSlideDrawer<Content: View>: View {
     private func onDragEnded(drag: DragGesture.Value) {
         let verticalDirection = drag.predictedEndLocation.y - drag.location.y
         let cardTopEdgeLocation = self.positionY + drag.translation.height
-        let positionAbove: CardPosition
-        let positionBelow: CardPosition
-        let closestPosition: CardPosition
+        let positionAbove: BottomSlideDrawerPosition
+        let positionBelow: BottomSlideDrawerPosition
+        let closestPosition: BottomSlideDrawerPosition
         
         if cardTopEdgeLocation <= getSnapPoint(.middle) {
             positionAbove = .top
@@ -77,12 +89,20 @@ struct BottomSlideDrawer<Content: View>: View {
         } else {
             self.position = closestPosition
         }
+        
+        self.callbackChangePosition()
+    }
+    
+    private func callbackChangePosition() {
+        if let cb = self.onChangePosition {
+            cb(self.position, self.draggedPositionY)
+        }
     }
 }
 
 // swiftui preview breaks if i put these inside the above struct :(
 
-enum CardPosition {
+enum BottomSlideDrawerPosition {
     case top, middle, bottom
 }
 
@@ -113,7 +133,7 @@ enum DragState {
 struct BottomSlideDrawer_Previews: PreviewProvider {
     static var previews: some View {
         BottomSlideDrawer(
-            position: .top,
+            position: .constant(.top),
             snapPoints: [100, 400, 700]
         ) {
             VStack {

@@ -17,13 +17,29 @@ struct HomeMainView: View {
     @State var wasOnCamera = false
     @State var contentWrappingView: UIView? = nil
     
+    @State var position: BottomSlideDrawerPosition = .bottom
+
+    var drawerPosition: Binding<BottomSlideDrawerPosition> {
+        store.binding(for: \.home.drawerPosition, { .home(.setDrawerPosition($0)) })
+    }
+    
     func start() {
         async(500) {
             self.state.setAnimationState(.idle)
         }
     }
     
+    @State var lastSearchFocus: SearchFocusState = .off
+    
     func sideEffects() {
+        // on focus search move drawer up
+        let searchFocus = store.state.home.searchFocus
+        if searchFocus != self.lastSearchFocus {
+            self.lastSearchFocus = searchFocus
+            store.send(.home(.setDrawerPosition(searchFocus != .off ? .top : .bottom)))
+        }
+        
+        // set app height
         if self.appGeometry?.size.height != self.state.appHeight {
             if let height = self.appGeometry?.size.height {
                 self.state.setAppHeight(height)
@@ -50,8 +66,7 @@ struct HomeMainView: View {
         let state = self.state
         let animationState = state.animationState
         let mapHeight = state.mapHeight
-        let showSearch = store.state.home.showSearch
-        let isOnShowSearch = store.state.home.showSearch != .off
+//        let isOnShowSearch = searchFocus != .off
         //        let enableSearchBar = [.idle, .off].contains(state.dragState) && state.animationState == .idle
 
         print(" 👀 HomeMainView mapHeight \(mapHeight) animationState \(state.animationState)")
@@ -116,16 +131,25 @@ struct HomeMainView: View {
                         .offset(y: self.screen.height * 0.8 - 68)
                     
                     BottomSlideDrawer(
-                        position: .bottom,
+                        position: self.drawerPosition,
                         snapPoints: [
-                            150,
+                            self.screen.edgeInsets.top,
                             self.screen.height * 0.5,
                             self.screen.height * 0.8
                         ],
-                        handle: nil
+                        cornerRadius: 20,
+                        handle: nil,
+                        onChangePosition: { (_, y) in
+                            print("drag at \(y)")
+                        }
                     ) {
-                        VStack {
+                        VStack(spacing: 0) {
                             HomeSearchBar()
+                                .padding(.horizontal, 5)
+                                .padding(.top, 5)
+                            
+//                            DividerView()
+
                             HomeMainContent()
                             Spacer()
                         }
@@ -361,7 +385,6 @@ struct HomeMapOverlay: View {
 struct HomeMainView_Previews: PreviewProvider {
     static var previews: some View {
         HomeMainView()
-            .offset(y: 100)
             .embedInAppEnvironment() // Mocks.homeSearchedPho
     }
 }

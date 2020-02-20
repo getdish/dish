@@ -38,11 +38,12 @@ struct HomeSearchBar: View {
     
     var icon: AnyView {
         let isOnHome = Selectors.home.isOnHome()
-        if isOnHome || self.store.state.home.showSearch == .search {
+        let searchFocus = self.store.state.home.searchFocus
+        if isOnHome || searchFocus == .search {
             return AnyView(
                 Image(systemName: "magnifyingglass")
             )
-        } else if self.store.state.home.showSearch == .location {
+        } else if searchFocus == .location {
             return AnyView(
                 Image(systemName: "map")
             )
@@ -66,14 +67,14 @@ struct HomeSearchBar: View {
     }
     
     var body: some View {
-        let scale: CGFloat = 1.2
-        let isOnSearch = self.store.state.home.showSearch == .search
+        let scale: CGFloat = 1
+//        let isOnSearch = self.store.state.home.showSearch == .search
         return SearchInput(
             placeholder: "",
-            inputBackgroundColor: Color.white,
-            borderColor: Color.white,
+            inputBackgroundColor: Color.init(white: 0.5, opacity: 0.1),
+            borderColor: Color.clear, //Color.init(white: 0.5, opacity: 0.1),
             scale: scale,
-            sizeRadius: 1,
+            sizeRadius: 2.2,
             icon: icon,
             showCancelInside: true,
             onTapLeadingIcon: {
@@ -86,10 +87,10 @@ struct HomeSearchBar: View {
         },
             onEditingChanged: { val in
                 if val == true {
-                    App.store.send(.home(.setShowSearch(.search)))
+                    App.store.send(.home(.setSearchFocus(.search)))
                 } else {
                     // todo we may need to not auto close...?
-                    App.store.send(.home(.setShowSearch(.off)))
+                    App.store.send(.home(.setSearchFocus(.off)))
                 }
         },
             onClear: self.onClear,
@@ -98,6 +99,8 @@ struct HomeSearchBar: View {
             searchText: self.homeSearch,
             showInput: showInput
         )
+            .padding(.horizontal, 5)
+            .padding(.top, 5)
     }
 }
 
@@ -198,7 +201,8 @@ struct CameraButton: View {
 #if DEBUG
 struct CameraButton_Previews: PreviewProvider {
     static var previews: some View {
-        CameraButton()
+        HomeSearchBar()
+            .embedInAppEnvironment()
     }
 }
 #endif

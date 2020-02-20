@@ -26,6 +26,8 @@ fileprivate let initialFilters: [FilterItem] = [
 ]
 
 extension AppState {
+    typealias SearchFocus = SearchFocusState
+    
     struct HomeState: Equatable {
         var view: HomePageView = .home
         var viewStates: [HomeStateItem] = [HomeStateItem()]
@@ -33,7 +35,8 @@ extension AppState {
         var labels = initialLabels
         var labelActive = 0
         var labelDishes = [String: [DishItem]]()
-        var showSearch: HomeUISearchState = .off
+        var searchFocus: SearchFocusState = .off
+        var drawerPosition: BottomSlideDrawerPosition = .bottom
         var showCamera: Bool = false
     }
 }
@@ -47,8 +50,9 @@ enum HomeAction {
     case setSearchResults(_ val: HomeSearchResults)
     case setLabelActive(_ val: Int)
     case setLabelDishes(id: String, dishes: [DishItem])
-    case setShowSearch(_ val: HomeUISearchState)
+    case setSearchFocus(_ val: SearchFocusState)
     case setFilterActive(filter: FilterItem, val: Bool)
+    case setDrawerPosition(_ position: BottomSlideDrawerPosition)
     case clearSearch
 }
 
@@ -64,12 +68,14 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     }
     
     switch action {
+        case .setDrawerPosition(let position):
+            state.home.drawerPosition = position
         case .clearSearch:
             if state.home.viewStates.count > 1 {
                 state.home.viewStates = Array(state.home.viewStates.drop { $0.search != "" })
             }
-        case .setShowSearch(let val):
-            state.home.showSearch = val
+        case .setSearchFocus(let val):
+            state.home.searchFocus = val
         case .setFilterActive(let target, let val):
             state.home.filters = state.home.filters.map { filter in
                 if filter == target {
@@ -138,7 +144,7 @@ struct HomeSelectors {
 
 // structures for HomeStore
 
-enum HomeUISearchState {
+enum SearchFocusState {
     case off, search, location
 }
 

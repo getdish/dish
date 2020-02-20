@@ -49,7 +49,7 @@ struct FilterButtonStyle: ViewModifier {
     
     func body(content: Content) -> some View {
         let a = Color.white
-        let b = Color(white: 0.15)
+        let b = Color(white: 0.2)
         let bg = active ? a : b
         let fg = active ? b : a
         return content
