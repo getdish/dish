@@ -36,8 +36,6 @@ struct HomeSearchBar: View {
         }
     }
     
-    @State var lastZoomed = false
-    
     var icon: AnyView {
         let isOnHome = Selectors.home.isOnHome()
         if isOnHome || self.store.state.home.showSearch == .search {
@@ -68,50 +66,38 @@ struct HomeSearchBar: View {
     }
     
     var body: some View {
-        let zoomed = keyboard.state.height > 0
-        let scale: CGFloat = zoomed ? 1.2 : 1.2
+        let scale: CGFloat = 1.2
         let isOnSearch = self.store.state.home.showSearch == .search
-        
-        return ZStack {
-            Group {
-                if self.lastZoomed != zoomed {
-                    SideEffect("updateLastZoomed") {
-                        self.lastZoomed = zoomed
-                    }
+        return SearchInput(
+            placeholder: "",
+            inputBackgroundColor: Color.white,
+            borderColor: Color.white,
+            scale: scale,
+            sizeRadius: 1,
+            icon: icon,
+            showCancelInside: true,
+            onTapLeadingIcon: {
+                if Selectors.home.isOnHome() {
+                    self.isFirstResponder = true
+                } else {
+                    self.keyboard.hide()
+                    self.store.send(.home(.pop))
                 }
-            }
-            
-            SearchInput(
-                placeholder: "",
-                inputBackgroundColor: Color.white,
-                borderColor: Color.white,
-                scale: scale,
-                sizeRadius: 1,
-                icon: icon,
-                showCancelInside: true,
-                onTapLeadingIcon: {
-                    if Selectors.home.isOnHome() {
-                        self.isFirstResponder = true
-                    } else {
-                        self.keyboard.hide()
-                        self.store.send(.home(.pop))
-                    }
-                },
-                onEditingChanged: { val in
-                    if val == true {
-                        App.store.send(.home(.setShowSearch(.search)))
-                    } else {
-                        // todo we may need to not auto close...?
-                        App.store.send(.home(.setShowSearch(.off)))
-                    }
-                },
-                onClear: self.onClear,
-                after: isOnSearch ? AnyView(EmptyView()) : after,
-                isFirstResponder: isFirstResponder,
-                searchText: self.homeSearch,
-                showInput: showInput
-            )
-        }
+        },
+            onEditingChanged: { val in
+                if val == true {
+                    App.store.send(.home(.setShowSearch(.search)))
+                } else {
+                    // todo we may need to not auto close...?
+                    App.store.send(.home(.setShowSearch(.off)))
+                }
+        },
+            onClear: self.onClear,
+            after: isOnSearch ? AnyView(EmptyView()) : after,
+            isFirstResponder: isFirstResponder,
+            searchText: self.homeSearch,
+            showInput: showInput
+        )
     }
 }
 

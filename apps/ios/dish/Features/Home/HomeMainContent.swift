@@ -17,34 +17,35 @@ struct HomeMainContentContainer<Content>: View where Content: View {
     }
     
     var body: some View {
-        print("📓 self.isSnappedToBottom \(self.isSnappedToBottom) self.animatePosition \(self.animatePosition) disableMagicTracking \(disableMagicTracking)")
-        
-        async {
-            if self.isSnappedToBottom && self.animatePosition == .start {
-                self.animatePosition = .end
-            }
-            if !self.isSnappedToBottom && self.animatePosition == .end {
-                self.animatePosition = .start
-            }
-        }
+//        print("📓 self.isSnappedToBottom \(self.isSnappedToBottom) self.animatePosition \(self.animatePosition) disableMagicTracking \(disableMagicTracking)")
+//        async {
+//            if self.isSnappedToBottom && self.animatePosition == .start {
+//                self.animatePosition = .end
+//            }
+//            if !self.isSnappedToBottom && self.animatePosition == .end {
+//                self.animatePosition = .start
+//            }
+//        }
         
         return ZStack(alignment: .topLeading) {
             PrintGeometryView("HomeMainContent")
             
-            // ⚠️ be sure to put any animation on this *inside* magic move
-            MagicMove(self.animatePosition,
-                      duration: homeViewState.snapToBottomAnimationDuration,
-                      // TODO we need a separate "disableTracking" in homeStore that is manually set
-                      // why? when hitting "map" toggle button when above snapToBottomAt this fails for now
-                      disableTracking: disableMagicTracking,
-                      onMoveComplete: {
-                        if !self.isSnappedToBottom {
-                            self.shouldUpdateMagicPositions = true
-                        }
-                    }
-            ) {
-                self.content
-            }
+            self.content
+
+//            // ⚠️ be sure to put any animation on this *inside* magic move
+//            MagicMove(self.animatePosition,
+//                      duration: homeViewState.snapToBottomAnimationDuration,
+//                      // TODO we need a separate "disableTracking" in homeStore that is manually set
+//                      // why? when hitting "map" toggle button when above snapToBottomAt this fails for now
+//                      disableTracking: disableMagicTracking,
+//                      onMoveComplete: {
+//                        if !self.isSnappedToBottom {
+//                            self.shouldUpdateMagicPositions = true
+//                        }
+//                    }
+//            ) {
+//
+//            }
         }
     }
 }
@@ -64,27 +65,19 @@ struct HomeMainContent: View {
             // results list below map
             VStack {
                 HomeMainFilterBar()
+                HomeContentExplore()
                 
-                Group {
-                    if Selectors.home.isOnSearchResults() {
-                        HomeSearchResultsView(
-                            state: Selectors.home.lastState()
-                        )
-                    } else {
-                        HomeContentExplore()
-                    }
-                }
-                .animation(.none)
+//                Group {
+//                    if Selectors.home.isOnSearchResults() {
+//                        HomeSearchResultsView(
+//                            state: Selectors.home.lastState()
+//                        )
+//                    } else {
+//                        HomeContentExplore()
+//                    }
+//                }
+//                .animation(.none)
             }
-            .offset(y:
-                self.homeState.mapHeight - self.homeState.searchBarYExtra + (
-                    self.homeState.isSnappedToBottom
-                        ? 100
-                        : 0
-                )
-            )
-            .frameLimitedToScreen()
-            .clipped()
             .animation(.spring(response: 0.5))
             
             // results bar above map
@@ -101,11 +94,6 @@ struct HomeMainContent: View {
                                 .transition(.slide)
                         }
                     }
-                    
-                    // bottom pad
-                    Spacer().frame(
-                        height: self.homeState.appHeight - self.homeState.snappedToBottomMapHeight + App.searchBarHeight / 2
-                    )
                 }
                 .background(
                     self.colorScheme == .dark
@@ -173,19 +161,8 @@ struct HomeContentExploreBy: View, Identifiable {
     
     var body: some View {
         ZStack {
-            ScrollView(.vertical, showsIndicators: false) {
+//            ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 0) {
-                    if active {
-                        HomeMainDrawerScrollEffects()
-                    }
-                    
-                    // spacer of whats above it height so it can scoll up to searchbar
-                    Spacer().frame(
-                        height: App.searchBarHeight / 2 + App.filterBarHeight + self.homeState.scrollRevealY
-                        // why
-                         - 10
-                    )
-                    
                     VStack {
                         ForEach(0 ..< self.store.state.home.labels.count) { index in
                             VStack(alignment: .leading, spacing: 4) {
@@ -222,7 +199,6 @@ struct HomeContentExploreBy: View, Identifiable {
                                             .padding(.horizontal)
                                         }
                                     }
-//                                    .drawingGroup()
                                     .padding(.vertical)
                                 }
                                 
@@ -231,22 +207,19 @@ struct HomeContentExploreBy: View, Identifiable {
                         }
                     }
                     .padding(.top, 4)
-                    
-                    Spacer().frame(height: 20)
-                    Spacer().frame(height: homeState.mapHeight - self.homeState.scrollRevealY)
                 }
-                .introspectScrollView { scrollView in
-                    if self.active {
-                        self.homeState.setActiveScrollView(scrollView)
-                    }
-                    //                    TODO attempt to have the content scroll pull down when at top
-                    //                    scrollView.bounces = false
-                }
-            }
-            .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
+//                .introspectScrollView { scrollView in
+//                    if self.active {
+//                        self.homeState.setActiveScrollView(scrollView)
+//                    }
+//                    //                    TODO attempt to have the content scroll pull down when at top
+//                    //                    scrollView.bounces = false
+//                }
+//            }
+//            .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
         }
-        .edgesIgnoringSafeArea(.all)
-        .clipped()
+//        .edgesIgnoringSafeArea(.all)
+//        .clipped()
     }
 }
 

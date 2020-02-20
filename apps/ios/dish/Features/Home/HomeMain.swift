@@ -2,6 +2,7 @@ import SwiftUI
 import Combine
 
 struct HomeMainView: View {
+    @EnvironmentObject var screen: ScreenModel
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard
     @Environment(\.geometry) var appGeometry
@@ -109,8 +110,13 @@ struct HomeMainView: View {
                     .frameLimitedToScreen()
                     
                     BottomSlideDrawer(
-                        position: .bottom,
-                        snapPoints: [100, 400, 600]
+                        position: .top,
+                        snapPoints: [
+                            180,
+                            self.screen.height * 0.5,
+                            self.screen.height * 0.9
+                        ],
+                        handle: nil
                     ) {
                         VStack {
                             HomeSearchBar()
