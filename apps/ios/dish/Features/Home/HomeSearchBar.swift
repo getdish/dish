@@ -59,11 +59,6 @@ struct HomeSearchBar: View {
     func onClear() {
         // go back on empty search clear
         self.store.send(.home(.clearSearch))
-
-        // focus keyboard again on clear if not focused
-        if self.keyboard.state.height == 0 {
-            self.focusKeyboard()
-        }
     }
     
     var body: some View {

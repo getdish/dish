@@ -22,15 +22,12 @@ struct HomeMainFilterBar: View {
         ZStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
-                    Group {
-                        ForEach(0 ..< self.filterGroups.count) { index in
-                            Group {
-                                FilterGroupView(group: self.filterGroups[index])
-                                // separator
-                                if index < self.filterGroups.count - 1 {
-                                    Color(white: 0.5).opacity(0.1).frame(width: 1)
-                                    Spacer().frame(width: 8)
-                                }
+                    ForEach(0 ..< self.filterGroups.count) { index in
+                        Group {
+                            FilterGroupView(group: self.filterGroups[index])
+                            // separator
+                            if index < self.filterGroups.count - 1 {
+                                Color(white: 0.5).opacity(0.1).frame(width: 1)
                             }
                         }
                     }

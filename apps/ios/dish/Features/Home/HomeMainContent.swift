@@ -63,9 +63,12 @@ struct HomeMainContent: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             // results list below map
-            VStack {
+            VStack(spacing: 0) {
                 HomeMainFilterBar()
-                HomeContentExplore()
+                
+                ScrollView {                
+                    HomeContentExplore()
+                }
                 
 //                Group {
 //                    if Selectors.home.isOnSearchResults() {

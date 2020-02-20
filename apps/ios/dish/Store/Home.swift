@@ -103,9 +103,7 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
         case .setDrawerPosition(let position):
             state.home.drawerPosition = position
         case .clearSearch:
-            if state.home.viewStates.count > 1 {
-                state.home.viewStates = Array(state.home.viewStates.drop { $0.search != "" })
-            }
+            state.home.viewStates = [state.home.viewStates[0]]
         case .setSearchFocus(let val):
             state.home.searchFocus = val
         case .setFilterActive(let target, let val):
