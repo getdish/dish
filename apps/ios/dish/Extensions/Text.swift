@@ -1,10 +1,24 @@
 import SwiftUI
 
 extension Text {
-    func titleBarStyle(_ size: CGFloat = 13) -> some View {
-        self
-            .font(.system(size: size))
-            .fontWeight(.semibold)
-            .shadow(color: Color.black.opacity(0.4), radius: 2, x: 0, y: 1)
+    // our own text styles
+    enum Style {
+        case h1, h2, iconLabel
     }
+    
+    func style(_ style: Style) -> Text {
+        switch style {
+            case .h1:
+                return font(.system(size: 24))
+                        .fontWeight(.semibold)
+            case .h2:
+                return font(.system(size: 20))
+                        .fontWeight(.medium)
+            
+            case .iconLabel:
+                return font(.system(size: 14))
+                        .fontWeight(.semibold)
+        }
+    }
+
 }

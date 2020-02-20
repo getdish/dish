@@ -42,7 +42,7 @@ struct DishRestaurantViewContent: View {
         HStack {
             VStack(alignment: .leading, spacing: 0) {
                 Text("\(self.restaurant.name)")
-                    .modifier(TextStyle())
+                    .style(.h1)
                     .padding(.horizontal, 10)
                     .padding(.bottom, 10)
                 
