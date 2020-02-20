@@ -27,7 +27,7 @@ struct HomeMainFilterBar: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     FilterButton(
-                        filter: FilterItem(name: "🌍"),
+                        filter: FilterItem(name: self.store.state.home.cuisineFilter),
                         onTap: {
                             self.store.send(.home(.toggleShowCuisineFilter))
                         }
