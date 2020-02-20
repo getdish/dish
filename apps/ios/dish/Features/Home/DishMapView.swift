@@ -51,13 +51,14 @@ struct DishMapView: View {
             VStack {
                 ZStack(alignment: .topLeading) {
                     AppleMapView(
-                        markers: self.markers,
                         currentLocation: store.state.map.moveToLocation,
+                        markers: self.markers,
                         onChangeLocation: { location in
                             if location != mapViewStore.location {
                                 mapViewStore.location = location
                             }
-                        }
+                        },
+                        showsUserLocation: true
                     )
                         .frame(height: App.screen.height * 1.6)
                     
