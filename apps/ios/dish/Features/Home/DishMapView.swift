@@ -58,6 +58,8 @@ struct DishMapView: View {
                                 mapViewStore.location = location
                             }
                         },
+                        // TODO this is tracking the *user* geolocation not the map location
+                        // we should probably have both tracking and running things
                         onChangeLocationName: { placemark in
                             if let cityName = placemark.locality {
                                 self.store.send(.map(.setLocationLabel(cityName)))
