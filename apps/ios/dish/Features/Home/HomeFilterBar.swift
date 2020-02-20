@@ -1,7 +1,5 @@
 import SwiftUI
 
-fileprivate let leftPad = AnyView(Spacer().frame(width: 50))
-
 struct HomeMainFilterBar: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var store: AppStore
@@ -28,7 +26,7 @@ struct HomeMainFilterBar: View {
                         ForEach(0 ..< self.filterGroups.count) { index in
                             Group {
                                 FilterGroupView(group: self.filterGroups[index])
-                                Color.white.opacity(0.1).frame(width: 1)
+                                Color(white: 0.5).opacity(0.1).frame(width: 1)
                             }
                         }
                     }
@@ -43,61 +41,75 @@ struct HomeMainFilterBar: View {
 
 struct FilterGroupView: View {
     var group: [FilterItem]
-    @State var isOpen = false
-    @State var widths = [String: CGFloat]()
+    @State var isExpanded = false
+    @State var widthById = [String: CGFloat]()
+    var spacing: CGFloat = 10
     
-    var maxWidth: CGFloat {
-        self.widths.compactMap { $0.value }.reduce(0) { max($0, $1) }
+    var widths: [CGFloat] {
+        let calculated = self.widthById.compactMap { $0.value }
+        if calculated.count > 0 {
+            return calculated
+        } else {
+            return Array(0..<group.count).map { CGFloat($0) }
+        }
+    }
+    
+    var expandedWidth: CGFloat {
+        self.widths.reduce(0) { $0 + $1 + self.spacing }
     }
 
     var body: some View {
-        print("filter group -- \(self.maxWidth)")
-        
+        print("filterbar \(self.isExpanded) \(self.expandedWidth)")
         return Group {
             if self.group[0].stack {
                 ZStack {
                     ForEach(0 ..< self.group.count) { index in
-                        FilterButton(filter: self.group[index])
-                            .onGeometryChange { geometry in
-                                let width = geometry.size.width
-                                let filter = self.group[index]
-                                if width != self.widths[filter.id] {
-                                    print("set width \(width)")
-                                    self.widths[filter.id] = width
-                                }
-                            }
-                            .offset(x: CGFloat(index * 10))
-                            .zIndex(Double(self.group.count - index))
-//                            .rotationEffect(.degrees(Double(-2 + index * 2)))
+                        self.filterButtonGroup(index)
                     }
                 }
-                .frame(width: self.maxWidth > 0 ? self.maxWidth : nil)
+                .frame(
+                    width: self.isExpanded ? self.expandedWidth : self.widths[0],
+                    alignment: .leading
+                )
+                .overlay(
+                    self.overlayStack
+                )
             }
             else {
                 ForEach(self.group) { filter in
                     FilterButton(filter: filter)
-                        .offset(x: CGFloat(filter.stack ? -40 : 0))
                 }
             }
         }
     }
-}
-
-struct FilterButtonStyle: ViewModifier {
-    var active = false
-    @Environment(\.colorScheme) var colorScheme
     
-    func body(content: Content) -> some View {
-        let a = Color.white
-        let b = Color(white: 0.2)
-        let bg = active ? a : b
-        let fg = active ? b : a
-        return content
-            .foregroundColor(fg)
-            .padding(.horizontal, 10)
-            .background(bg)
-            .cornerRadius(20)
-            .shadow(radius: 4)
+    func filterButtonGroup(_ index: Int) -> some View {
+        let isExpanded = self.isExpanded
+        let filter = self.group[index]
+        let xBefore: CGFloat = self.widths[0..<index].reduce(0) { $0 + $1 + self.spacing }
+        let xOffset: CGFloat = isExpanded ? xBefore : 0
+        
+        return FilterButton(filter: filter)
+            .frame(width: isExpanded ? self.widths[index] : nil)
+            .onGeometryChange { geometry in
+                if !self.isExpanded {
+                    let width = geometry.size.width
+                    if width != self.widthById[filter.id] {
+                        self.widthById[filter.id] = width
+                    }
+                }
+            }
+            .opacity(isExpanded || index == 0 ? 1 : 0)
+            .offset(x: xOffset)
+            .zIndex(Double(self.group.count - index))
+    }
+    
+    var overlayStack: some View {
+        Color.black.opacity(0.00001)
+            .onTapGesture {
+                self.isExpanded = !self.isExpanded
+            }
+            .allowsHitTesting(!self.isExpanded)
     }
 }
 
@@ -137,6 +149,24 @@ struct FilterButton: View {
                 .modifier(FilterButtonStyle(active: self.filter.active))
             }
         }
+    }
+}
+
+struct FilterButtonStyle: ViewModifier {
+    var active = false
+    @Environment(\.colorScheme) var colorScheme
+    
+    func body(content: Content) -> some View {
+        let a = Color.white
+        let b = Color(white: 0.2)
+        let bg = active ? a : b
+        let fg = active ? b : a
+        return content
+            .foregroundColor(fg)
+            .padding(.horizontal, 10)
+            .background(bg)
+            .cornerRadius(20)
+            .shadow(radius: 4)
     }
 }
 
