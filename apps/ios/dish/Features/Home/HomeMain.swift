@@ -17,9 +17,9 @@ struct HomeMainView: View {
     @State var wasOnCamera = false
     @State var contentWrappingView: UIView? = nil
     
-    @State var position: BottomSlideDrawerPosition = .bottom
+    @State var position: BottomDrawerPosition = .bottom
 
-    var drawerPosition: Binding<BottomSlideDrawerPosition> {
+    var drawerPosition: Binding<BottomDrawerPosition> {
         store.binding(for: \.home.drawerPosition, { .home(.setDrawerPosition($0)) })
     }
     
@@ -128,19 +128,21 @@ struct HomeMainView: View {
                         DishLenseFilterBar()
                         Spacer()
                     }
-                        .offset(y: self.screen.height * 0.8 - 68)
+                    // dont go up beyond mid-point
+                    .offset(y: max(self.screen.height * 0.5 - 68, state.y - 68))
+                    .animation(.spring())
                     
-                    BottomSlideDrawer(
+                    BottomDrawer(
                         position: self.drawerPosition,
                         snapPoints: [
-                            self.screen.edgeInsets.top,
+                            self.screen.edgeInsets.top + 50,
                             self.screen.height * 0.5,
                             self.screen.height * 0.8
                         ],
                         cornerRadius: 20,
                         handle: nil,
                         onChangePosition: { (_, y) in
-                            print("drag at \(y)")
+                            homeViewState.setY(y)
                         }
                     ) {
                         VStack(spacing: 0) {

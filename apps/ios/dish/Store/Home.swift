@@ -36,7 +36,7 @@ extension AppState {
         var labelActive = 0
         var labelDishes = [String: [DishItem]]()
         var searchFocus: SearchFocusState = .off
-        var drawerPosition: BottomSlideDrawerPosition = .bottom
+        var drawerPosition: BottomDrawerPosition = .bottom
         var showCamera: Bool = false
     }
 }
@@ -52,7 +52,7 @@ enum HomeAction {
     case setLabelDishes(id: String, dishes: [DishItem])
     case setSearchFocus(_ val: SearchFocusState)
     case setFilterActive(filter: FilterItem, val: Bool)
-    case setDrawerPosition(_ position: BottomSlideDrawerPosition)
+    case setDrawerPosition(_ position: BottomDrawerPosition)
     case clearSearch
 }
 

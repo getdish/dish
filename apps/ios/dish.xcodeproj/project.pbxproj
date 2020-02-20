@@ -105,7 +105,7 @@
 		AEE1991D23F33E3A00492B6B /* api.graphql in Resources */ = {isa = PBXBuildFile; fileRef = AEE1991C23F33E3A00492B6B /* api.graphql */; };
 		AEE1992123F33FA200492B6B /* ApolloNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE1992023F33FA200492B6B /* ApolloNetwork.swift */; };
 		AEE6C1E223FDC434001AC6B0 /* TopSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE6C1E123FDC434001AC6B0 /* TopSheetView.swift */; };
-		AEE6C1E423FDD6FA001AC6B0 /* BottomSlideDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE6C1E323FDD6FA001AC6B0 /* BottomSlideDrawer.swift */; };
+		AEE6C1E423FDD6FA001AC6B0 /* BottomDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE6C1E323FDD6FA001AC6B0 /* BottomDrawer.swift */; };
 		AEE802B523ED3E8000A1A19E /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE802B423ED3E8000A1A19E /* Double.swift */; };
 		AEED844123B6707100407266 /* DishMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844023B6707100407266 /* DishMapView.swift */; };
 		AEED844823B675C300407266 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEED844723B675C300407266 /* CameraView.swift */; };
@@ -228,7 +228,7 @@
 		AEE1991C23F33E3A00492B6B /* api.graphql */ = {isa = PBXFileReference; lastKnownFileType = text; path = api.graphql; sourceTree = "<group>"; };
 		AEE1992023F33FA200492B6B /* ApolloNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApolloNetwork.swift; sourceTree = "<group>"; };
 		AEE6C1E123FDC434001AC6B0 /* TopSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopSheetView.swift; sourceTree = "<group>"; };
-		AEE6C1E323FDD6FA001AC6B0 /* BottomSlideDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSlideDrawer.swift; sourceTree = "<group>"; };
+		AEE6C1E323FDD6FA001AC6B0 /* BottomDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomDrawer.swift; sourceTree = "<group>"; };
 		AEE802B423ED3E8000A1A19E /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
 		AEED843D23B5A8E000407266 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Mocks.swift; path = /Users/nw/dish/apps/ios/dish/Store/Mocks.swift; sourceTree = "<absolute>"; };
 		AEED844023B6707100407266 /* DishMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishMapView.swift; sourceTree = "<group>"; };
@@ -333,16 +333,16 @@
 		1CE3547C23986B69004B3A84 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				1CE3548023986BC1004B3A84 /* View.swift */,
-				AE65E9BA23E59F9E00702C30 /* Text.swift */,
-				AE6B0FE023CF9C3A00C33968 /* GMSMapView.swift */,
 				AE7563E223A038190094022B /* Array.swift */,
-				1CE2393023A19722006B7AFD /* Environment.swift */,
-				AE872FEC23CE6E3900F84663 /* Publisher.swift */,
-				AEE802B423ED3E8000A1A19E /* Double.swift */,
 				AED2EA0E23F34D990041A195 /* Dictionary.swift */,
-				AE65DF9123F771FF00758DD3 /* String.swift */,
+				AEE802B423ED3E8000A1A19E /* Double.swift */,
+				1CE2393023A19722006B7AFD /* Environment.swift */,
+				AE6B0FE023CF9C3A00C33968 /* GMSMapView.swift */,
+				AE872FEC23CE6E3900F84663 /* Publisher.swift */,
 				AEAAAA0B23F9D66500ABED23 /* Sequence.swift */,
+				AE65DF9123F771FF00758DD3 /* String.swift */,
+				AE65E9BA23E59F9E00702C30 /* Text.swift */,
+				1CE3548023986BC1004B3A84 /* View.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -401,7 +401,7 @@
 				AEA87E4223B976EB009F07DB /* HomeFilterBar.swift */,
 				AE7563B323A035E70094022B /* HomeMain.swift */,
 				AEF6558023B2205F00E49A51 /* HomeMainContent.swift */,
-				AEE6C1E323FDD6FA001AC6B0 /* BottomSlideDrawer.swift */,
+				AEE6C1E323FDD6FA001AC6B0 /* BottomDrawer.swift */,
 				AE65DF9323F79A2B00758DD3 /* HomeMainContentMap.swift */,
 				AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */,
 				AE56C86323ADB78C006A156A /* HomeSearchResultsView.swift */,
@@ -745,7 +745,7 @@
 				AE861A8923A172E8004096BF /* BlurView.swift in Sources */,
 				AEF6557F23B14DBA00E49A51 /* ContextMenuView.swift in Sources */,
 				AEF6557B23B042CD00E49A51 /* HomeSearchBar.swift in Sources */,
-				AEE6C1E423FDD6FA001AC6B0 /* BottomSlideDrawer.swift in Sources */,
+				AEE6C1E423FDD6FA001AC6B0 /* BottomDrawer.swift in Sources */,
 				AE0C5FFB23D261F100BB5340 /* SideEffect.swift in Sources */,
 				AE6B104F23D0E4B900C33968 /* Camera.swift in Sources */,
 				AEA331F923A3385000B36A23 /* InlineAlertView.swift in Sources */,

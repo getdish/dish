@@ -61,6 +61,16 @@ extension View {
         }
     }
     
+    func onGeometryChange(_ onGeometry: @escaping (GeometryProxy) -> Void) -> some View {
+        GeometryReader { proxy in
+            self.overlay(
+                Run("onGeometryChange") {
+                    onGeometry(proxy)
+                }
+            )
+        }
+    }
+    
     func embedInAppEnvironment(_ appState: Store<AppState, AppAction>? = nil) -> some View {
         return self
             .environmentObject(appState ?? App.store)

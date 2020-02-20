@@ -37,7 +37,13 @@ struct TopNavView: View {
     
     var searchBar: some View {
         HStack {
-            TextField("", text: self.locationSearch)
+            TextField("", text: self.locationSearch, onEditingChanged: { isEditing in
+                if isEditing {
+                    if self.store.state.home.drawerPosition != .bottom {
+                        self.store.send(.home(.setDrawerPosition(.bottom)))
+                    }
+                }
+            })
                 .font(.system(size: 14))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 20)

@@ -296,58 +296,7 @@ class HomeViewState: ObservableObject {
     }
 
     func setY(_ dragY: CGFloat) {
-        if dragState == .pager { return }
-        if lastDragY == dragY { return }
-        lastDragY = dragY
-        
-        // TODO we can reset this back to false in some cases for better UX
-        self.hasMovedBar = true
-        
-        // remember where we started
-        if dragState != .searchbar {
-            self.startDragAt = y
-            self.setDragState(.searchbar)
-        }
-        
-        var y = self.startDragAt + (
-            // add resistance if snapped to bottom
-            isSnappedToBottom ? dragY * 0.2 : dragY
-        )
-        
-        // resistance before snapping down
-        let aboutToSnapToBottom = y >= startSnapToBottomAt && !isSnappedToBottom
-        if aboutToSnapToBottom {
-            let diff = self.startDragAt + dragY - startSnapToBottomAt
-            y = startSnapToBottomAt + diff * 0.2
-        }
-        
-        // store wasSnappedToBottom before changing y
-        let wasSnappedToBottom = isSnappedToBottom
-        
-        if y == self.y {
-            return
-        }
-        
-        self.y = y
-        
-        // while snapped, have searchbar move differently
-        // searchbar moves faster during resistance before snap
-        if aboutToSnapToBottom {
-            self.searchBarYExtra = y - startSnapToBottomAt
-        } else if isSnappedToBottom {
-            self.searchBarYExtra = dragY * 0.25
-        }
-        
-        // snap to bottom/back logic
-        let willSnapDown = !wasSnappedToBottom && isSnappedToBottom
-        if willSnapDown {
-            self.snapToBottom(true)
-        } else if wasSnappedToBottom {
-            let willSnapUp = -dragY > distanceUntilSnapUp
-            if willSnapUp {
-                self.snapToBottom(false)
-            }
-        }
+        self.y = dragY
     }
     
     func finishDrag(_ value: DragGesture.Value) {
