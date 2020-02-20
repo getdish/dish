@@ -36,7 +36,7 @@ struct TopSheetView<Content: View>: View {
             .frame(width: geometry.size.width, height: self.maxHeight, alignment: .bottom)
             .cornerRadius(self.borderRadius)
             .frame(height: geometry.size.height, alignment: .top)
-            .shadow(color: Color.black.opacity(0.4), radius: 20, x: 0, y: 5)
+//            .shadow(color: Color.black.opacity(0.4), radius: 20, x: 0, y: 5)
             .offset(y: -self.maxHeight + max(self.offset + self.translation, 0))
             .animation(self.translation == 0 ? .spring() : .none)
             .gesture(
