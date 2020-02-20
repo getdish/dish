@@ -1,0 +1,23 @@
+- args:
+    cascade: false
+    sql: |
+      CREATE TABLE top_dishes_results(category text, frequency bigint);
+
+      CREATE FUNCTION top_dishes(lon numeric, lat numeric, radius numeric) RETURNS
+      SETOF top_dishes_results AS $$
+        SELECT DISTINCT cats::text AS name, count(cats) AS frequency
+          FROM (SELECT jsonb_array_elements(categories)
+                  FROM restaurant WHERE
+                    ST_DWithin(location, ST_SetSRID(ST_MakePoint(lon, lat), 0), radius)
+                ) AS dt(cats)
+          GROUP BY cats ORDER BY frequency DESC limit 50
+      $$ LANGUAGE SQL STABLE;
+  type: run_sql
+- args:
+    name: top_dishes_results
+    schema: public
+  type: add_existing_table_or_view
+- args:
+    name: top_dishes
+    schema: public
+  type: track_function
