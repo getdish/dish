@@ -134,7 +134,7 @@ struct DishRestaurantViewContent: View {
                                 DishCardView(
                                     at: .end,
                                     dish: dish,
-                                    display: .card,
+                                    display: .small,
                                     height: 120
                                 )
                             }

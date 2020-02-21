@@ -143,14 +143,14 @@ struct HomeContentExplore: View {
                         DishCardView(
                             at: .end,
                             dish: dish,
-                            display: .card,
+                            display: .small,
                             height: 120
                         )
                     }
                 }
             }
         }
-        .padding(.horizontal)
+        .padding()
     }
 }
 

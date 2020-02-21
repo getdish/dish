@@ -109,10 +109,6 @@ struct HomeMainView: View {
                             .frameLimitedToScreen()
                             .clipped()
                             .opacity(animationState == .splash ? 0 : 1)
-                            
-//                            HomeMapOverlay()
-//                                .offset(y: mapHeight - App.searchBarHeight / 2)
-//                                .animation(.spring())
                         }
                         .frameLimitedToScreen()
                         .opacity(state.showCamera ? 0 : 1)

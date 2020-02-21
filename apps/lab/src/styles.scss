@@ -1,63 +1,218 @@
-html {
-  box-sizing: border-box;
-  font-size: 16px;
+#app {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  pointer-events: none;
 }
 
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
+#app > * {
+  pointer-events: auto;
 }
 
-body,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-ol,
-ul {
+.reset * {
+  all: initial;
+}
+
+.hide-scrollbars {
+  -webkit-overflow-scrolling: initial;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbars::-webkit-scrollbar {
+  height: 0 !important;
+  width: 0 !important;
+  background: transparent;
+  display: none;
+}
+
+.hide-scrollbars::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+button,
+input {
+  font-size: inherit;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
   margin: 0;
   padding: 0;
-  font-weight: normal;
+  color: #333;
+  background: transparent;
+  font-size: 14px;
+  line-height: 1.3rem;
+  font-weight: 300;
+  -webkit-overflow-scrolling: touch;
+  -webkit-text-size-adjust: 100%;
+  overflow: hidden;
+  text-rendering: optimizeLegibility;
+  font-kerning: auto;
 }
 
-ol,
-ul {
-  list-style: none;
+/* Change Autocomplete styles in Chrome*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus input:-webkit-autofill,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: #000;
+  background-color: inherit;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
-img {
-  max-width: 100%;
-  height: auto;
+i,
+b,
+em,
+strong {
+  display: inline-block;
 }
 
-#map {
-  float: right;
-  width: 75%;
+input[type='checkbox'],
+input[type='radio'] {
+  display: inline;
 }
 
-#sidebar {
-  float: left;
-  height: 100vh;
-  width: 25%;
-  overflow-y: scroll;
-  padding: 1vw;
+/* dont change select style it will reset it to flat looking */
+input,
+textarea {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
 
-  h1, h2, h3, ul {
-    margin: 0.5em;
-  }
+body {
+  display: flex;
+  flex-flow: column;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  align-items: stretch;
+  outline: 0;
+  /* flexbox has super weird behavior otherwise where things dont "shrink to fit" unless you set this */
+  min-width: 0;
+}
 
-  img {
-    margin: 2px;
-    max-width: 300px;
-  }
+body * {
+  outline: 0;
+}
 
-  #restaurant-details {}
+style {
+  display: none;
+}
 
-  .data_section {
-    margin-bottom: 1em;
-  }
+/* prevent overscroll bounce */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  background: transparent;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+/*
+ * Remove text-shadow in selection highlight:
+ * https://twitter.com/miketaylr/status/12228805301
+ *
+ * These selection rule sets have to be separate.
+ * Customize the background color to match your design.
+ */
+
+::selection {
+  background: rgb(203, 211, 255);
+  color: #111;
+  text-shadow: none;
+}
+*::selection {
+  background: rgb(203, 211, 255);
+  color: #111;
+  text-shadow: none;
+}
+
+.theme-dark ::selection {
+  background: rgb(203, 211, 255);
+  color: #fff;
+  text-shadow: none;
+}
+.theme-dark *::selection {
+  background: rgb(203, 211, 255);
+  color: #fff;
+  text-shadow: none;
+}
+
+/*
+ * A better looking default horizontal rule
+ */
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}
+
+/*
+ * Remove the gap between audio, canvas, iframes,
+ * images, videos and the bottom of their containers:
+ * https://github.com/h5bp/html5-boilerplate/issues/440
+ */
+
+audio,
+canvas,
+iframe,
+img,
+svg,
+video {
+  vertical-align: middle;
+}
+
+/*
+ * Remove default fieldset styles.
+ */
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+code {
+  line-height: 16px;
+  border-radius: 5px;
+  white-space: pre;
+  overflow: auto;
+}
+
+div code {
+  padding: 10px;
+}
+
+.paragraph code,
+p code,
+li code {
+  padding: 0px 4px;
+  margin: -8px 0;
+  line-height: inherit;
+  overflow: hidden;
+  display: inline;
+  white-space: pre-wrap;
+}
+
+pre code {
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 3px;
+  white-space: pre;
+  overflow-x: auto;
 }

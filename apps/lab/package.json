@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@dish/models": "*",
+    "@o/ui": "^2.7.3",
     "mapbox-gl": "^1.6.1",
     "overmind": "^21.0.0",
     "overmind-react": "^22.0.0",

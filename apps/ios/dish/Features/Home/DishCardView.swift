@@ -8,13 +8,13 @@ struct DishCardView: View, Identifiable, Equatable {
     @Environment(\.colorScheme) var colorScheme
     
     enum DisplayCard {
-        case card, full, fullscreen
+        case small, large
     }
     
     var action: (() -> Void)? = nil
     var at: MagicItemPosition = .start
     var dish: DishItem
-    var display: DisplayCard = .full
+    var display: DisplayCard = .small
     var height: CGFloat? = nil
     var id: Int { dish.id }
     var width: CGFloat? = nil
@@ -30,7 +30,7 @@ struct DishCardView: View, Identifiable, Equatable {
                 .scaledToFill()
                 .frame(width: self.width, height: self.height)
                 .overlay(self.overlay)
-                .cornerRadius(self.display == .card ? 12 : 24)
+                .cornerRadius(self.display == .small ? 12 : 24)
                 .clipped()
                 .shadow(color: Color.black.opacity(0.5), radius: 6, x: 0, y: 2)
         }

@@ -56,6 +56,11 @@ struct BottomDrawer<Content: View>: View {
         .cornerRadius(self.cornerRadius)
         .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.13), radius: 10.0)
         .offset(y: self.draggedPositionY)
+        .onGeometryChange { geometry in
+            async {
+                self.callbackChangePosition()
+            }
+        }
         .animation(self.dragState.isDragging
             ? nil
             : .interpolatingSpring(stiffness: 200.0, damping: 30.0, initialVelocity: 1.0)
@@ -64,14 +69,13 @@ struct BottomDrawer<Content: View>: View {
             DragGesture()
                 .updating($dragState) { drag, state, transaction in
                     state = .dragging(translation: drag.translation)
-                    self.callbackChangePosition()
                 }
                 .onEnded(onDragEnded)
         )
     }
     
     private func onDragEnded(drag: DragGesture.Value) {
-        let verticalDirection = drag.predictedEndLocation.y - drag.location.y
+        var throwDirection = drag.predictedEndLocation.y - drag.location.y
         let cardTopEdgeLocation = self.positionY + drag.translation.height
         let positionAbove: BottomDrawerPosition
         let positionBelow: BottomDrawerPosition
@@ -85,15 +89,24 @@ struct BottomDrawer<Content: View>: View {
             positionBelow = .bottom
         }
         
-        if (cardTopEdgeLocation - getSnapPoint(positionAbove)) < (getSnapPoint(positionBelow) - cardTopEdgeLocation) {
-            closestPosition = positionAbove
+        let curPosition = getSnapPoint(self.position)
+        let distanceFromCurrentEdge = curPosition > cardTopEdgeLocation
+            ? curPosition - cardTopEdgeLocation
+            : cardTopEdgeLocation - curPosition
+        if distanceFromCurrentEdge < 25 && abs(throwDirection) < 50 {
+            throwDirection = 0
+            closestPosition = self.position
         } else {
-            closestPosition = positionBelow
+            if (cardTopEdgeLocation - getSnapPoint(positionAbove)) < (getSnapPoint(positionBelow) - cardTopEdgeLocation) {
+                closestPosition = positionAbove
+            } else {
+                closestPosition = positionBelow
+            }
         }
         
-        if verticalDirection > 0 {
+        if throwDirection > 0 {
             self.position = positionBelow
-        } else if verticalDirection < 0 {
+        } else if throwDirection < 0 {
             self.position = positionAbove
         } else {
             self.position = closestPosition

@@ -100,7 +100,7 @@ struct HomeMapSearchResults: View {
 //        DishCardView(
 //            dish: dish,
 //            at: .end,
-//            display: .card
+//            display: .small
 //        )
 //            .frame(width: 150, height: cardRowHeight - 40)
 //    }
