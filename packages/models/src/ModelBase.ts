@@ -1,12 +1,18 @@
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import ApolloClient from 'apollo-client'
+import { split } from 'apollo-link'
+import { HttpLink } from 'apollo-link-http'
+import { WebSocketLink } from 'apollo-link-ws'
+import { getMainDefinition } from 'apollo-utilities'
 import axios, { AxiosRequestConfig } from 'axios'
-import { jsonToGraphQLQuery, EnumType } from 'json-to-graphql-query'
+import { EnumType, jsonToGraphQLQuery } from 'json-to-graphql-query'
 
 export type Point = {
   type: string
   coordinates: [number, number]
 }
 
-const LOCAL_HASURA = 'http://localhost:8080'
+const LOCAL_HASURA = 'https://hasura.rio.dishapp.com' || 'http://localhost:8080'
 let DOMAIN: string
 
 if (typeof window == 'undefined') {
@@ -30,6 +36,46 @@ const AXIOS_CONF = {
   },
 } as AxiosRequestConfig
 
+// const getHeaders = () => {
+//   const headers: any = {}
+//   const token = window.localStorage.getItem('apollo-token')
+//   if (token) {
+//     headers.authorization = `Bearer ${token}`
+//   }
+//   return headers
+// }
+
+// Create an http link:
+const httpLink = new HttpLink({
+  uri: 'http://localhost:3000/graphql',
+})
+
+// Create a WebSocket link:
+const wsLink = new WebSocketLink({
+  uri: `wss://${DOMAIN.replace('http://', '').replace('https://', '')}`,
+  options: {
+    reconnect: true,
+    // connectionParams: () => {
+    //   return { headers: getHeaders() }
+    // },
+  },
+})
+
+// using the ability to split links, you can send data to each link
+// depending on what kind of operation is being sent
+const link = split(
+  // split based on operation type
+  ({ query }) => {
+    const definition = getMainDefinition(query)
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    )
+  },
+  wsLink,
+  httpLink
+)
+
 export class ModelBase<T> {
   id!: string
   created_at!: Date
@@ -37,6 +83,13 @@ export class ModelBase<T> {
   private _klass: typeof ModelBase
   private _upper_name: string
   private _lower_name: string
+
+  static client = new ApolloClient({
+    link: link,
+    cache: new InMemoryCache({
+      addTypename: true,
+    }),
+  })
 
   static default_fields() {
     return ['id', 'created_at', 'updated_at']
@@ -112,6 +165,10 @@ export class ModelBase<T> {
       throw response.data.errors
     }
     return response
+  }
+
+  static async subscribe() {
+    this.client.subscribe
   }
 
   // TODO: only update provided fields

@@ -37,6 +37,7 @@ struct BottomDrawer<Content: View>: View {
 
     var body: some View {
         let screenHeight = screen.height
+        let belowHeight = max(0, screenHeight - (screenHeight - getSnapPoint(self.position)))
         return ZStack {
             RunOnce(name: "BottomDrawer.start") {
                 async(10) {
@@ -51,14 +52,13 @@ struct BottomDrawer<Content: View>: View {
                 }
                 self.content()
                 // pad bottom so it wont go below
-                Spacer()
-                    .frame(height: max(0, screenHeight - self.snapPoints.last! - screen.edgeInsets.bottom))
+                Spacer().frame(height: belowHeight)
             }
         }
         .frame(height: screenHeight, alignment: .top)
         .background(colorScheme == .dark ? Color.black : Color.white)
         .cornerRadius(self.cornerRadius)
-        .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.13), radius: 10.0)
+        .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.2), radius: 18.0)
         .offset(y: self.draggedPositionY)
         .onGeometryChange { geometry in
             async {
@@ -76,7 +76,7 @@ struct BottomDrawer<Content: View>: View {
     
     var gesture: _EndedGesture<GestureStateGesture<DragGesture, DragState>> {
         print("get gesture")
-        return DragGesture()
+        return DragGesture(minimumDistance: 12)
             .updating($dragState) { drag, state, transaction in
                 if self.lock != .drawer {
                     if App.store.state.home.drawerPosition != .bottom {
@@ -101,12 +101,16 @@ struct BottomDrawer<Content: View>: View {
                         
                     }
                 }
-                if self.lock != .drawer {
-                    async {
-                        self.lock = .drawer
+                let h = drag.translation.height
+                let validDrag = h > 12 || h < -12
+                if validDrag {
+                    if self.lock != .drawer {
+                        async {
+                            self.lock = .drawer
+                        }
                     }
+                    state = .dragging(translation: drag.translation)
                 }
-                state = .dragging(translation: drag.translation)
             }
             .onEnded(onDragEnded)
     }

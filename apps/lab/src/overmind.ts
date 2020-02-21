@@ -7,7 +7,6 @@ import * as map from './map/overmind-map'
 
 export const config = merge(
   {
-    onInitialize: function() {},
     // state,
     // actions,
     // effects,

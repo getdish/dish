@@ -39,8 +39,7 @@ class AppModel {
     let magicItems = magicItemsStore
     let searchBarHeight: CGFloat = 50
     let cameraButtonHeight: CGFloat = 44
-    let filterBarHeight: CGFloat = 66
-    let filterBarPad: CGFloat = 16
+    let filterBarHeight: CGFloat = 60
 
     func start() {
         mapService.start()

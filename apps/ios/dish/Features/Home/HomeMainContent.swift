@@ -140,17 +140,27 @@ struct HomeContentExplore: View {
             ForEach(0 ..< self.dishes.count) { index in
                 HStack {
                     ForEach(self.dishes[index]) { dish in
-                        DishCardView(
-                            at: .end,
-                            dish: dish,
-                            display: .small,
-                            height: 100
-                        )
+                        DishButton(action: {}) {
+                            HStack {
+                                dish.image
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 42, height: 42)
+                                    .cornerRadiusSquircle(18)
+                                Text("\(dish.name)")
+                                    .fontWeight(.semibold)
+                                    .lineLimit(1)
+                                    .font(.system(size: 15))
+                                Spacer()
+                            }
+                        }
                     }
                 }
             }
         }
-        .padding()
+        .padding(.horizontal)
+        .padding(.bottom)
+        .padding(.top, 5)
     }
 }
 

@@ -1,5 +1,7 @@
 import SwiftUI
 
+fileprivate let filterBarPad: CGFloat = 12
+
 struct HomeMainFilterBar: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var store: AppStore
@@ -46,7 +48,7 @@ struct HomeMainFilterBar: View {
                         }
                     }
                 }
-                .padding(.vertical, App.filterBarPad)
+                .padding(.vertical, filterBarPad)
                 .padding(.horizontal, 24)
             }
         }
@@ -167,7 +169,7 @@ struct FilterButton: View {
     var filter: FilterItem
     var onTap: (() -> Void)? = nil
     var height: CGFloat {
-        App.filterBarHeight - App.filterBarPad * 2
+        App.filterBarHeight - filterBarPad * 2
     }
     
     var body: some View {

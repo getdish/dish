@@ -218,12 +218,14 @@ struct DishDrawer: View, Equatable {
     }
     
     var body: some View {
-        BottomDrawer(
+        let topContentHeight = App.searchBarHeight + App.filterBarHeight + 10
+        
+        return BottomDrawer(
             position: self.drawerPosition,
             snapPoints: [
                 self.screen.edgeInsets.top + 50,
-                self.screen.height * 0.5,
-                self.screen.height - 105 - self.screen.edgeInsets.bottom
+                self.screen.height * 0.55,
+                self.screen.height - 100 - self.screen.edgeInsets.bottom
             ],
             cornerRadius: 20,
             handle: nil,
@@ -231,15 +233,32 @@ struct DishDrawer: View, Equatable {
                 homeViewState.setY(y)
         }
         ) {
-            VStack(spacing: 0) {
-                HomeSearchBar()
-                    .padding(.horizontal, 5)
-                    .padding(.top, 5)
-                HomeMainFilterBar()
-                ScrollView {
-                    HomeContentExplore()
+            ZStack {
+                VStack {
+                    ScrollView {
+                        Spacer().frame(height: topContentHeight)
+                        HomeContentExplore()
+                        Spacer().frame(height: 20 + self.screen.edgeInsets.bottom)
+                    }
+                    Spacer()
                 }
-                Spacer()
+                VStack(spacing: 0) {
+                    Color.white.frame(height: topContentHeight / 2 + 10)
+                    LinearGradient(
+                        gradient: .init(colors: [.white, .init(white: 1, opacity: 0)]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                        .frame(height: topContentHeight / 2)
+                    Spacer()
+                }
+                VStack(spacing: 0) {
+                    HomeSearchBar()
+                        .padding(.horizontal, 10)
+                        .padding(.top, 10)
+                    HomeMainFilterBar()
+                    Spacer()
+                }
             }
         }
     }
