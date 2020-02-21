@@ -132,11 +132,11 @@ struct DishRestaurantViewContent: View {
                         HStack {
                             ForEach(self.dishes[index]) { dish in
                                 DishCardView(
-                                    dish: dish,
                                     at: .end,
-                                    display: .card
+                                    dish: dish,
+                                    display: .card,
+                                    height: 120
                                 )
-                                    .frame(height: 120)
                             }
                         }
                     }

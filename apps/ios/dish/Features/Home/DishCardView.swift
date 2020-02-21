@@ -10,34 +10,30 @@ struct DishCardView: View, Identifiable, Equatable {
     enum DisplayCard {
         case card, full, fullscreen
     }
-    var id: Int { dish.id }
-    var dish: DishItem
-    var at: MagicItemPosition = .start
-    var display: DisplayCard = .full
-    var width: CGFloat? = nil
-    var height: CGFloat? = nil
+    
     var action: (() -> Void)? = nil
+    var at: MagicItemPosition = .start
+    var dish: DishItem
+    var display: DisplayCard = .full
+    var height: CGFloat? = nil
+    var id: Int { dish.id }
+    var width: CGFloat? = nil
     
     var body: some View {
-        MagicItem("dish-\(id)", at: at) {
-            GeometryReader { geo in
-                DishButton(action: self.action ?? {
-                    App.store.send(
-                        .home(.push(HomeStateItem(dishes: [DishFilterItem(name: self.dish.name)])))
-                    )
-                }) {
-                    self.dish.image
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: self.width ?? geo.size.width, height: self.height ?? geo.size.height)
-                        .overlay(self.overlay)
-                        .cornerRadius(self.display == .card ? 12 : 24)
-                        .clipped()
-                        .shadow(color: Color.black.opacity(0.5), radius: 6, x: 0, y: 2)
-                }
-            }
+        DishButton(action: self.action ?? {
+            App.store.send(
+                .home(.push(HomeStateItem(dishes: [DishFilterItem(name: self.dish.name)])))
+            )
+        }) {
+            self.dish.image
+                .resizable()
+                .scaledToFill()
+                .frame(width: self.width, height: self.height)
+                .overlay(self.overlay)
+                .cornerRadius(self.display == .card ? 12 : 24)
+                .clipped()
+                .shadow(color: Color.black.opacity(0.5), radius: 6, x: 0, y: 2)
         }
-        .frame(height: self.height)
     }
     
     var overlay: some View {

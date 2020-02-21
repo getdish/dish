@@ -64,7 +64,7 @@ extension AppState {
         var lenseActive = 0
         var lenseToDishes = [String: [DishItem]]()
         var searchFocus: SearchFocusState = .off
-        var drawerPosition: BottomDrawerPosition = .bottom
+        var drawerPosition: BottomDrawerPosition = .middle
         var showCamera: Bool = false
         var showCuisineFilter: Bool = false
         var cuisineFilter: String = "🌍"

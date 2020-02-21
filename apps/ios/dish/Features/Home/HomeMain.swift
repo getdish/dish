@@ -16,8 +16,6 @@ struct HomeMainView: View {
     @State var wasOnSearchResults = false
     @State var wasOnCamera = false
     @State var contentWrappingView: UIView? = nil
-    
-    @State var position: BottomDrawerPosition = .bottom
 
     var drawerPosition: Binding<BottomDrawerPosition> {
         store.binding(for: \.home.drawerPosition, { .home(.setDrawerPosition($0)) })
@@ -137,7 +135,7 @@ struct HomeMainView: View {
                         snapPoints: [
                             self.screen.edgeInsets.top + 50,
                             self.screen.height * 0.5,
-                            self.screen.height * 0.8
+                            self.screen.height - 105 - self.screen.edgeInsets.bottom
                         ],
                         cornerRadius: 20,
                         handle: nil,
