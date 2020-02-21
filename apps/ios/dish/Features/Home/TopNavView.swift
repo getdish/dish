@@ -41,9 +41,19 @@ struct TopNavView: View {
         HStack {
             TextField("", text: self.locationSearch, onEditingChanged: { isEditing in
                 if isEditing {
-                    if self.store.state.home.drawerPosition != .bottom {
-                        self.store.send(.home(.setDrawerPosition(.bottom)))
+                    App.store.send(.home(.setSearchFocus(.location)))
+                } else {
+                    async {
+                        if self.store.state.home.searchFocus == .location {
+                            App.store.send(.home(.setSearchFocus(.off)))
+                        }
                     }
+                }
+                
+                if isEditing {
+//                    if self.store.state.home.drawerPosition != .top {
+//                        self.store.send(.home(.setDrawerPosition(.top)))
+//                    }
                     
                     // select all text
                     if let textField = self.textField {
@@ -72,6 +82,13 @@ struct TopNavView: View {
                     .padding(.leading, 12)
                 )
         }
+//        .offset(
+//            y: self.store.state.home.searchFocus == .location ? 65 : 0
+//        )
+//        .scaleEffect(
+//            self.store.state.home.searchFocus == .location // || self.store.state.home.drawerPosition == .top
+//                ? 1.2 : 1
+//        )
     }
     
     var accountButton: some View {
@@ -138,8 +155,10 @@ struct TopNavButtonStyle: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
     
     var active: Bool = false
+    var background: Color = .clear
     var height: CGFloat = 34
     var hPad: CGFloat = 11
+
     
     func body(content: Content) -> some View {
         ZStack {
@@ -160,6 +179,7 @@ struct TopNavButtonStyle: ViewModifier {
                         .background(BlurView(style: .systemThinMaterialDark))
                 }
             }
+            .background(self.background)
             .cornerRadius(8)
             .shadow(color: Color.black.opacity(0.15), radius: 3, x: 0, y: 1)
         }

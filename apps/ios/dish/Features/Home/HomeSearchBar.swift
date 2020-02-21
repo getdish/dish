@@ -81,11 +81,14 @@ struct HomeSearchBar: View {
                 }
         },
             onEditingChanged: { val in
-                if val == true {
+                if val {
                     App.store.send(.home(.setSearchFocus(.search)))
                 } else {
-                    // todo we may need to not auto close...?
-                    App.store.send(.home(.setSearchFocus(.off)))
+                    async {
+                        if self.store.state.home.searchFocus == .search {
+                            App.store.send(.home(.setSearchFocus(.off)))
+                        }
+                    }
                 }
         },
             onClear: self.onClear,

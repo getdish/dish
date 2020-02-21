@@ -1,8 +1,8 @@
+import MapBox, { LngLatBounds, Popup } from 'mapbox-gl'
 import React, { useState } from 'react'
 import ReactMap, { Feature, Layer } from 'react-mapbox-gl'
-import MapBox, { LngLatBounds, Popup } from 'mapbox-gl'
 
-import { useOvermind } from './overmind'
+import { useOvermind } from '../overmind'
 
 const accessToken =
   'pk.eyJ1IjoidG9tYmgiLCJhIjoiY2p4cWlqNnY1MDFhZDNscXc5YXJpcTJzciJ9.7gGR5t8KEAY0ZoXfTVBcng'
@@ -44,7 +44,7 @@ const Map = () => {
     ) {
       mapState.bounds = map.getBounds()
       setMapState(mapState)
-      actions.updateRestaurants(map.getCenter())
+      actions.map.updateRestaurants(map.getCenter())
     }
   }
 
@@ -66,17 +66,17 @@ const Map = () => {
         // See: https://github.com/mapbox/mapbox-gl-styles/blob/master/README.md
         layout={{ 'icon-image': 'restaurant-15' }}
       >
-        {Object.keys(state.restaurants).map(key => (
+        {Object.keys(state.map.restaurants).map(key => (
           <Feature
-            key={state.restaurants[key].id}
+            key={state.map.restaurants[key].id}
             properties={{
-              uuid: state.restaurants[key].id,
-              name: state.restaurants[key].name,
-              image: state.restaurants[key].image,
+              uuid: state.map.restaurants[key].id,
+              name: state.map.restaurants[key].name,
+              image: state.map.restaurants[key].image,
             }}
             coordinates={[
-              state.restaurants[key].location.coordinates[0],
-              state.restaurants[key].location.coordinates[1],
+              state.map.restaurants[key].location.coordinates[0],
+              state.map.restaurants[key].location.coordinates[1],
             ]}
             onMouseEnter={(mapWithEvt: any) => {
               popup
@@ -94,8 +94,8 @@ const Map = () => {
             }}
             onClick={(mapWithEvt: any) => {
               const id = mapWithEvt.feature.properties.uuid
-              actions.setSelected(id)
-              actions.getAllDataForRestaurant()
+              actions.map.setSelected(id)
+              actions.map.getAllDataForRestaurant()
             }}
           />
         ))}

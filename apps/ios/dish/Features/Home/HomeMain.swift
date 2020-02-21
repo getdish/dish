@@ -16,8 +16,6 @@ struct HomeMainView: View {
     @State var wasOnSearchResults = false
     @State var wasOnCamera = false
     @State var contentWrappingView: UIView? = nil
-    
-    @State var position: BottomDrawerPosition = .bottom
 
     var drawerPosition: Binding<BottomDrawerPosition> {
         store.binding(for: \.home.drawerPosition, { .home(.setDrawerPosition($0)) })
@@ -36,7 +34,9 @@ struct HomeMainView: View {
         let searchFocus = store.state.home.searchFocus
         if searchFocus != self.lastSearchFocus {
             self.lastSearchFocus = searchFocus
-            store.send(.home(.setDrawerPosition(searchFocus != .off ? .top : .bottom)))
+            if searchFocus == .search {
+                store.send(.home(.setDrawerPosition(.top)))
+            }
         }
         
         // set app height
@@ -111,91 +111,30 @@ struct HomeMainView: View {
                             .frameLimitedToScreen()
                             .clipped()
                             .opacity(animationState == .splash ? 0 : 1)
-                            
-//                            HomeMapOverlay()
-//                                .offset(y: mapHeight - App.searchBarHeight / 2)
-//                                .animation(.spring())
                         }
                         .frameLimitedToScreen()
                         .opacity(state.showCamera ? 0 : 1)
                     }
-                    
-                    // top bar
-                    TopNavView()
-                        .frameLimitedToScreen()
                     
                     VStack {
                         DishLenseFilterBar()
                         Spacer()
                     }
                     // dont go up beyond mid-point
-                    .offset(y: max(self.screen.height * 0.5 - 68, state.y - 68))
+                    .offset(y: max(self.screen.height * 0.5 - 68 - 30, state.y - 68))
                     .animation(.spring())
                     
-                    BottomDrawer(
-                        position: self.drawerPosition,
-                        snapPoints: [
-                            self.screen.edgeInsets.top + 50,
-                            self.screen.height * 0.5,
-                            self.screen.height * 0.8
-                        ],
-                        cornerRadius: 20,
-                        handle: nil,
-                        onChangePosition: { (_, y) in
-                            homeViewState.setY(y)
-                        }
-                    ) {
-                        VStack(spacing: 0) {
-                            HomeSearchBar()
-                                .padding(.horizontal, 5)
-                                .padding(.top, 5)
-                            HomeMainContent()
-                            Spacer()
-                        }
-                    }
+                    DishDrawer()
+                        .equatable()
                     
-                    if self.store.state.home.showCuisineFilter {
-                        DishCuisineFilterPopup()
-                    }
+                    // top bar
+                    TopNavView()
+                        .frameLimitedToScreen()
                     
-                    // content
-//                    HomeMainContentContainer(
-//                        isSnappedToBottom: state.isSnappedToBottom,
-//                        disableMagicTracking: state.mapHeight >= state.snapToBottomAt
-//                            || state.isSnappedToBottom
-//                            || state.animationState == .controlled
-//                    ) {
-//                        HomeSearchBar(
-//                            showInput: state.animationState == .idle
-//                        )
-//                            .frame(width: App.screen.width - 24, height: App.searchBarHeight)
-//                            .padding(.horizontal, 12)
-//
-//                        HomeMainContent()
-//                    }
-//                    .frameLimitedToScreen()
-                    
-                    // Search
-//                    ZStack {
-//                        HomeSearchAutocomplete()
-//                            .opacity(showSearch == .search ? 1 : 0)
-//
-//                        VStack {
-//
-//                            //                        .scaleEffect(state.dragState == .searchbar ? 1.1 : 1)
-//                            //                        .rotationEffect(.degrees(state.dragState == .searchbar ? 2 : 0))
-//                            //                        .animation(.spring(), value: state.dragState == .searchbar)
-//
-//                            Spacer()
-//                        }
-//                        .offset(y: isOnShowSearch
-//                            ? App.screen.edgeInsets.top + 20
-//                            : mapHeight - App.searchBarHeight / 2 + state.searchBarYExtra
-//                        )
-//                            .animation(.spring(response: 1.25), value: state.animationState == .animate)
-//                    }
-//                    .opacity(state.showCamera ? 0 : 1)
-                    
+                    DishCuisineFilterPopup(
+                        active: self.store.state.home.showCuisineFilter
+                    )
+
                     // make everything untouchable while dragging
                     Color.black.opacity(0.0001)
                         .frame(width: state.dragState == .pager ? App.screen.width : 0)
@@ -266,6 +205,46 @@ struct HomeMainView: View {
     }
 }
 
+struct DishDrawer: View, Equatable {
+    static func == (lhs: DishDrawer, rhs: DishDrawer) -> Bool {
+        true
+    }
+    
+    @EnvironmentObject var screen: ScreenModel
+    @EnvironmentObject var store: AppStore
+    
+    var drawerPosition: Binding<BottomDrawerPosition> {
+        store.binding(for: \.home.drawerPosition, { .home(.setDrawerPosition($0)) })
+    }
+    
+    var body: some View {
+        BottomDrawer(
+            position: self.drawerPosition,
+            snapPoints: [
+                self.screen.edgeInsets.top + 50,
+                self.screen.height * 0.5,
+                self.screen.height - 105 - self.screen.edgeInsets.bottom
+            ],
+            cornerRadius: 20,
+            handle: nil,
+            onChangePosition: { (_, y) in
+                homeViewState.setY(y)
+        }
+        ) {
+            VStack(spacing: 0) {
+                HomeSearchBar()
+                    .padding(.horizontal, 5)
+                    .padding(.top, 5)
+                HomeMainFilterBar()
+                ScrollView {
+                    HomeContentExplore()
+                }
+                Spacer()
+            }
+        }
+    }
+}
+
 
 struct HomeSearchAutocomplete: View {
     var body: some View {
@@ -302,85 +281,6 @@ struct HomeSearchLocationAutocomplete: View {
         .background(Color.white)
         .frameLimitedToScreen()
         .clipped()
-    }
-}
-
-struct HomeMapOverlay: View {
-    @Environment(\.colorScheme) var colorScheme
-
-    var body: some View {
-        ZStack {
-            ZStack {
-                BlurView(style: colorScheme == .light
-                    ? .systemUltraThinMaterialLight
-                    : .systemUltraThinMaterialDark
-                )
-            }
-            .clipShape(
-                topCornerMask(
-                    width: App.screen.width,
-                    height: App.screen.height,
-                    cornerRadius: 30
-                )
-            )
-            
-            ZStack {
-                LinearGradient(
-                    gradient: Gradient(
-                        colors: [Color.red, Color.blue]
-                        //                    self.colorScheme == .light
-                        //                        ? [Color.black.opacity(0), Color(white: 0.1).opacity(1)]
-                        //                        : [Color.black.opacity(0), Color(white: 0).opacity(1)]
-                    ),
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                    .opacity(self.colorScheme == .light ? 0.25 : 0.85)
-                
-                LinearGradient(
-                    gradient: Gradient(
-                        colors: [Color.black, Color.clear]
-                    ),
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                    .opacity(self.colorScheme == .light ? 0.25 : 0.85)
-            }
-            .clipShape(
-                topCornerMask(
-                    width: App.screen.width,
-                    height: App.screen.height,
-                    cornerRadius: 30
-                )
-            )
-            .drawingGroup()
-            
-            ZStack {
-                LinearGradient(
-                    gradient: Gradient(colors: [Color.black.opacity(0), Color(white: 0).opacity(0.075)]),
-                    startPoint: .center,
-                    endPoint: .bottom
-                )
-                LinearGradient(
-                    gradient: Gradient(colors: [Color.black.opacity(0), Color(white: 0).opacity(0.075)]),
-                    startPoint: .center,
-                    endPoint: .trailing
-                )
-                LinearGradient(
-                    gradient: Gradient(colors: [Color.black.opacity(0), Color(white: 0).opacity(0.075)]),
-                    startPoint: .center,
-                    endPoint: .leading
-                )
-            }
-            .mask(
-                LinearGradient(
-                    gradient: Gradient(colors: [Color.black.opacity(0), Color.black.opacity(1)]),
-                    startPoint: .top,
-                    endPoint: .center
-                )
-            )
-            .drawingGroup()
-        }
     }
 }
 

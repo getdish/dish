@@ -29,7 +29,10 @@ struct DishLenseButton: View, Identifiable {
     
     var body: some View {
         DishButton(action: {
-            App.store.send(.home(.setLenseActive(self.index)))
+            self.store.send(.home(.setLenseActive(self.index)))
+            if self.store.state.home.drawerPosition == .middle {
+                self.store.send(.home(.setDrawerPosition(.bottom)))
+            }
         }) {
             HStack {
                 Text("\(self.lense.icon)\(self.lense.name != "" ? " \(self.lense.name)" : "")")
@@ -38,6 +41,7 @@ struct DishLenseButton: View, Identifiable {
             .modifier(
                 TopNavButtonStyle(
                     active: self.index == self.store.state.home.lenseActive,
+                    background: .init(red: lense.rgb[0], green: lense.rgb[1], blue: lense.rgb[2]),
                     height: 38
                 )
             )

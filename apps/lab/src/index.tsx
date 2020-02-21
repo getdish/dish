@@ -1,27 +1,45 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import './styles.scss'
 
+import { ProvideUI, Stack, themes } from '@o/ui'
 import { createOvermind } from 'overmind'
 import { Provider } from 'overmind-react'
+import React, { useState } from 'react'
+import ReactDOM from 'react-dom'
+
+import { LabDishes } from './dishes'
+import { LabMap } from './map'
 import { config } from './overmind'
-
-import Map from './Map'
-import Sidebar from './Sidebar'
-
-import './styles.scss'
 
 const overmind = createOvermind(config)
 
-ReactDOM.render(
-  <Provider value={overmind}>
-    <Map />
-  </Provider>,
-  document.getElementById('map')
-)
+ReactDOM.render(<RootView />, document.getElementById('app'))
 
-ReactDOM.render(
-  <Provider value={overmind}>
-    <Sidebar />
-  </Provider>,
-  document.getElementById('root')
-)
+function RootView() {
+  const [tab, setTab] = useState(0)
+
+  return (
+    <ProvideUI themes={themes} activeTheme="light">
+      <Provider value={overmind}>
+        <Stack direction="horizontal">
+          <button
+            onClick={() => {
+              setTab(0)
+            }}
+          >
+            Map
+          </button>
+          <button
+            onClick={() => {
+              setTab(1)
+            }}
+          >
+            Dishes
+          </button>
+        </Stack>
+
+        {tab == 0 && <LabMap />}
+        {tab == 1 && <LabDishes />}
+      </Provider>
+    </ProvideUI>
+  )
+}

@@ -5,8 +5,7 @@
     "strictNullChecks": true,
     "outDir": "_",
     "rootDir": "src",
-    "baseUrl": "src",
-    "allowJs": true
+    "baseUrl": "src"
   },
   "include": ["src/**/*"]
 }

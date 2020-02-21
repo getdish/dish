@@ -40,7 +40,9 @@ struct HomeMainFilterBar: View {
                                 && index != 0 {
                                 self.separator
                             }
-                            FilterGroupView(group: self.filterGroups[index])
+                            FilterGroupView(
+                                group: self.filterGroups[index]
+                            )
                         }
                     }
                 }
@@ -52,11 +54,25 @@ struct HomeMainFilterBar: View {
     }
 }
 
+struct SegmentedItem: Equatable {
+    var isFirst = false
+    var isMiddle = false
+    var isLast = false
+}
+
+//struct GroupingPreferenceKey: PreferenceKey {
+//    typealias Value = GroupingPreference
+//    static var defaultValue: GroupingPreference = GroupingPreference()
+//    static func reduce(value: inout GroupingPreference, nextValue: () -> GroupingPreference) {
+//        value = nextValue()
+//    }
+//}
+
 struct FilterGroupView: View {
     var group: [FilterItem]
     @State var isExpanded = false
     @State var widthById = [String: CGFloat]()
-    var spacing: CGFloat = 10
+    var spacing: CGFloat = 0
     
     var widths: [CGFloat] {
         let calculated = self.widthById.compactMap { $0.value }
@@ -101,8 +117,21 @@ struct FilterGroupView: View {
         let filter = self.group[index]
         let xBefore: CGFloat = self.widths[0..<index].reduce(0) { $0 + $1 + self.spacing }
         let xOffset: CGFloat = isExpanded ? xBefore : 0
+        let total = self.widths.count
+        let stacks = filter.stack
+        let itemSegment = isExpanded && stacks ?
+            SegmentedItem(
+                isFirst: index == 0,
+                isMiddle: index < total - 1 && index > 0,
+                isLast: index == total - 1
+                )
+            : SegmentedItem(
+                isFirst: true,
+                isMiddle: false,
+                isLast: true
+            )
         
-        return FilterButton(filter: filter)
+        return FilterButton(expandable: index == 0 && !isExpanded, filter: filter)
             .frame(width: isExpanded ? self.widths[index] : nil)
             .onGeometryChange { geometry in
                 if !self.isExpanded {
@@ -115,6 +144,11 @@ struct FilterGroupView: View {
             .opacity(isExpanded || index == 0 ? 1 : 0)
             .offset(x: xOffset)
             .zIndex(Double(self.group.count - index))
+            .environment(\.itemSegment, itemSegment)
+//            .preference(
+//                key: SegmentedItemKey.self,
+//                value: groupPref
+//            )
     }
     
     var overlayStack: some View {
@@ -129,6 +163,7 @@ struct FilterGroupView: View {
 struct FilterButton: View {
     @Environment(\.colorScheme) var colorScheme
     
+    var expandable: Bool = false
     var filter: FilterItem
     var onTap: (() -> Void)? = nil
     var height: CGFloat {
@@ -163,6 +198,13 @@ struct FilterButton: View {
                                 .fixedSize()
                         }
                     }
+                    if expandable {
+                        Image(systemName: "arrowtriangle.right.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 5, height: 5)
+                        .opacity(0.2)
+                    }
                     Spacer()
                 }
                 .frame(height: self.height)
@@ -174,18 +216,27 @@ struct FilterButton: View {
 
 struct FilterButtonStyle: ViewModifier {
     var active = false
+    @Environment(\.itemSegment) var itemSegment
     @Environment(\.colorScheme) var colorScheme
+    @State var display: SegmentedItem? = nil
     
     func body(content: Content) -> some View {
         let a = Color.white
         let b = Color(white: 0.2)
         let bg = active ? a : b
         let fg = active ? b : a
+        print("what the fuck \(self.active) \(itemSegment)")
+        let corners: [UIRectCorner] = itemSegment == nil || itemSegment?.isLast == true && itemSegment?.isFirst == true
+            ? [.allCorners]
+            : itemSegment?.isMiddle == true
+                ? []
+                    : itemSegment?.isLast == true
+                    ? [.topRight, .bottomRight] : [.topLeft, .bottomLeft]
         return content
             .foregroundColor(fg)
             .padding(.horizontal, 10)
             .background(bg)
-            .cornerRadius(20)
+            .cornerRadius(20, corners: .init(corners))
             .shadow(radius: 4)
     }
 }

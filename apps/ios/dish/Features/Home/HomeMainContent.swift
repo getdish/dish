@@ -61,103 +61,96 @@ struct HomeMainContent: View {
     @State var shouldUpdateMagicPositions: Bool = true
     
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            // results list below map
-            VStack(spacing: 0) {
-                HomeMainFilterBar()
-                
-                ScrollView {                
-                    HomeContentExplore()
-                }
-                
-//                Group {
-//                    if Selectors.home.isOnSearchResults() {
-//                        HomeSearchResultsView(
-//                            state: Selectors.home.lastState()
-//                        )
-//                    } else {
-//                        HomeContentExplore()
-//                    }
-//                }
-//                .animation(.none)
+        VStack(spacing: 0) {
+            HomeMainFilterBar()
+            ScrollView {
+                HomeContentExplore()
             }
-            .animation(.spring(response: 0.5))
-            
-            // results bar above map
-//            VStack {
-//                Spacer()
-//
-//                VStack {
-//                    Group {
-//                        if Selectors.home.isOnSearchResults() {
-//                            HomeMapSearchResults()
-//                                .transition(.slide)
-//                        } else {
-//                            HomeMapExplore()
-//                                .transition(.slide)
-//                        }
-//                    }
-//                }
-//                .background(
-//                    self.colorScheme == .dark
-//                      ? LinearGradient(
-//                            gradient: Gradient(colors: [.clear, .black]),
-//                            startPoint: .top,
-//                            endPoint: .center
-//                        )
-//                      : LinearGradient(
-//                            gradient: Gradient(colors: [.clear, .black]),
-//                            startPoint: .top,
-//                            endPoint: .bottom
-//                        )
-//                )
-//            }
-//            .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
         }
-        // note! be sure to put any animation on this *inside* magic move
-        // or else it messes up the magic move measurement - you can test
-        // by turning on MagicMove's fileprivate debug flag to see
-        // also: only making it bouncy during drag to avoid more problems
-        .animation(.spring(response: 0.38), value: self.homeState.dragState == .idle)
-        // .animation(self.homeState.dragState != .idle ? .spring() : .none)
+//        ZStack(alignment: .topLeading) {
+//            // results list below map
+//            VStack(spacing: 0) {
+//                HomeMainFilterBar()
+//
+//                ScrollView {
+//                    HomeContentExplore()
+//                }
+//
+////                Group {
+////                    if Selectors.home.isOnSearchResults() {
+////                        HomeSearchResultsView(
+////                            state: Selectors.home.lastState()
+////                        )
+////                    } else {
+////                        HomeContentExplore()
+////                    }
+////                }
+////                .animation(.none)
+//            }
+//            .animation(.spring(response: 0.5))
+//
+//            // results bar above map
+////            VStack {
+////                Spacer()
+////
+////                VStack {
+////                    Group {
+////                        if Selectors.home.isOnSearchResults() {
+////                            HomeMapSearchResults()
+////                                .transition(.slide)
+////                        } else {
+////                            HomeMapExplore()
+////                                .transition(.slide)
+////                        }
+////                    }
+////                }
+////                .background(
+////                    self.colorScheme == .dark
+////                      ? LinearGradient(
+////                            gradient: Gradient(colors: [.clear, .black]),
+////                            startPoint: .top,
+////                            endPoint: .center
+////                        )
+////                      : LinearGradient(
+////                            gradient: Gradient(colors: [.clear, .black]),
+////                            startPoint: .top,
+////                            endPoint: .bottom
+////                        )
+////                )
+////            }
+////            .opacity(self.homeState.isSnappedToBottom ? 1 : 0)
+//        }
+//        // note! be sure to put any animation on this *inside* magic move
+//        // or else it messes up the magic move measurement - you can test
+//        // by turning on MagicMove's fileprivate debug flag to see
+//        // also: only making it bouncy during drag to avoid more problems
+//        .animation(.spring(response: 0.38), value: self.homeState.dragState == .idle)
+//        // .animation(self.homeState.dragState != .idle ? .spring() : .none)
     }
 }
 
 struct HomeContentExplore: View {
-    @State var index: Int = 0
     let dishes = features.chunked(into: 2)
-    let items = features.split()
     
     var body: some View {
-        ZStack {
-            VStack(alignment: .leading, spacing: 4) {
-                HomeContentExploreBy(
-                    type: .cuisine
-                )
-                
-                VStack {
-                    Text("Explore by Dish")
-                        .font(.headline)
-                        .padding(.bottom)
-                    
-                    ForEach(0 ..< self.dishes.count) { index in
-                        HStack {
-                            ForEach(self.dishes[index]) { dish in
-                                DishCardView(
-                                    dish: dish,
-                                    at: .end,
-                                    display: .card
-                                )
-                                    .frame(height: 120)
-                            }
-                        }
+        VStack {
+//            Text("Most popular")
+//                .font(.headline)
+            
+            ForEach(0 ..< self.dishes.count) { index in
+                HStack {
+                    ForEach(self.dishes[index]) { dish in
+                        DishCardView(
+                            at: .end,
+                            dish: dish,
+                            display: .small,
+                            height: 100
+                        )
                     }
                 }
-                .padding()
             }
         }
-        .edgesIgnoringSafeArea(.all)
-        .clipped()
+        .padding()
     }
 }
 
