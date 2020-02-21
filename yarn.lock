@@ -2557,10 +2557,10 @@
     "@babel/runtime" "^7.0.0"
     memoize-one ">=3.1.1 <6"
 
-"@o/ui@^2.7.3":
-  version "2.7.3"
-  resolved "https://registry.npmjs.org/@o/ui/-/ui-2.7.3.tgz#1b5d80b530bc1b658fa3157573980c63e5004ddb"
-  integrity sha512-P6NEZmg9GUGoObnsDcnRdelMeVEc6mDXf5eaN7l36kwD0j5q7856o836clemdFyQtOGoCSR2ijOGK8vm8harwQ==
+"@o/ui@^2.7.4":
+  version "2.7.4"
+  resolved "https://registry.npmjs.org/@o/ui/-/ui-2.7.4.tgz#fefb6f784945c98ec31ec9af82f07a8e8f2a5c71"
+  integrity sha512-z4Y4JZicYJ7BrLt/5XpbvG/xAwzVc96+o1jhGJ9mCiz7v5PfP+gaVI1rb7Uk2V7ah3pxdkWcmmBm7shkcX3hAw==
   dependencies:
     "@o/color" "^2.7.1"
     "@o/css" "^2.7.1"
@@ -2579,8 +2579,8 @@
     css-typed-om "^0.4.0"
     date-fns "2.0.0-alpha.7"
     framer-motion "1.6.15"
-    gloss "^2.7.1"
-    gloss-theme "^2.7.1"
+    gloss "^2.7.4"
+    gloss-theme "^2.7.4"
     hash-sum "2.0.0"
     invariant "^2.2.4"
     keycode "^2.1.9"
@@ -8303,19 +8303,19 @@ globule@^1.0.0:
     lodash "~4.17.10"
     minimatch "~3.0.2"
 
-gloss-theme@^2.7.1:
-  version "2.7.1"
-  resolved "https://registry.npmjs.org/gloss-theme/-/gloss-theme-2.7.1.tgz#76e8d113739e5d7d9a8254166c761b4ea5bce0e5"
-  integrity sha512-849LX6EyLbKhpC6HOpDgjvJAk8GuxKLAfs1p3SOpO9uqYPIfLliNyHzW1bnwOFnwsEur1Vav4CNWk9j9nqnirw==
+gloss-theme@^2.7.4:
+  version "2.7.4"
+  resolved "https://registry.npmjs.org/gloss-theme/-/gloss-theme-2.7.4.tgz#d5bba477eb6d287309193028eb1b6aaca99ce3d1"
+  integrity sha512-CHqvxd7oa1Yyar0+x4H1Zd6P2fV+U91bwyVbFDt6m8G5OZthhVRdLpqz06NO3cAwLbnz7iqLhelf+qvoszEplQ==
   dependencies:
     "@o/css" "^2.7.1"
     "@o/fast-compare" "^2.7.1"
-    gloss "^2.7.1"
+    gloss "^2.7.4"
 
-gloss@^2.7.1:
-  version "2.7.1"
-  resolved "https://registry.npmjs.org/gloss/-/gloss-2.7.1.tgz#5b9f60e4dd29611cb8ec070bdab8ca9365b70bcf"
-  integrity sha512-n1xnTHp6je77O7I5apiHxnwP/vQjyjJAYGPSKv94vZBap/szPIqPoCLn23+Nwl18t5D7pwqrqQr6WQVfNCLlSw==
+gloss@^2.7.4:
+  version "2.7.4"
+  resolved "https://registry.npmjs.org/gloss/-/gloss-2.7.4.tgz#ee9676b7bd227738b871f272da442b918ad34dc4"
+  integrity sha512-e+8DZ3GTh3PBED2NbwCSQq28vVISfO4qXycmLYnm5/e33KihvcYOKewZm1QaREvw9C+BasAxNeypeljka8FWBA==
   dependencies:
     "@o/css" "^2.7.1"
     "@o/fast-compare" "^2.7.1"
