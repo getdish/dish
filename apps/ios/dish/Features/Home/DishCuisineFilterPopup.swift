@@ -4,7 +4,8 @@ struct DishCuisineFilterPopup: View {
     @EnvironmentObject var screen: ScreenModel
     @EnvironmentObject var store: AppStore
     
-    @State var active: String = ""
+    var active: Bool = false
+    @State var activeContinent: String = ""
     
     let continentNames = ["African", "Asian", "European", "North American", "South American"]
 
@@ -17,7 +18,7 @@ struct DishCuisineFilterPopup: View {
     ]
     
     var activeCountries: [String] {
-        if let selected = self.continents[active] {
+        if let selected = self.continents[activeContinent] {
             return selected
         }
         return []
@@ -27,13 +28,16 @@ struct DishCuisineFilterPopup: View {
         let activeCountries = self.activeCountries
         
         return ZStack {
-            Color.black.opacity(0.3)
+            Color.black
                 .onTapGesture {
                     self.store.send(.home(.toggleShowCuisineFilter))
-            }
+                }
+                .opacity(active ? 0.3 : 0)
+                .animation(.spring())
+            
             
             VStack {
-                if self.active == "" {
+                if self.activeContinent == "" {
                     VStack {
                         Text("Continent")
                             .style(.h1)
@@ -42,7 +46,7 @@ struct DishCuisineFilterPopup: View {
                             let name = self.continentNames[index]
                             return AnyView(
                                 Button(action: {
-                                    self.active = name
+                                    self.activeContinent = name
                                 }) {
                                     IconView(
                                         label: name
@@ -59,7 +63,7 @@ struct DishCuisineFilterPopup: View {
                                 Button(action: {
                                     let cuisineFlag = "\(activeCountries[index].prefix(1))"
                                     self.store.send(.home(.setCuisineFilter(cuisineFlag)))
-                                    self.active = ""
+                                    self.activeContinent = ""
                                     self.store.send(.home(.toggleShowCuisineFilter))
                                 }) {
                                     Text("\(activeCountries[index])")
@@ -69,16 +73,19 @@ struct DishCuisineFilterPopup: View {
                     }
                 }
             }
-            .padding(20)
-            .frame(
-                width: self.screen.width - 20,
-                height: self.screen.width - 20
-            )
+                .padding(20)
+                .frame(
+                    width: self.screen.width - 40,
+                    height: self.screen.width - 40
+                )
                 .background(
                     BlurView(style: .light)
-            )
+                )
                 .cornerRadius(50)
                 .clipped()
+                .opacity(active ? 1 : 0)
+                .scaleEffect(active ? 1 : 0.9)
+                .animation(.spring())
         }
     }
 }

@@ -29,6 +29,9 @@ struct BottomDrawer<Content: View>: View {
     typealias OnChangePositionCB = (BottomDrawerPosition, CGFloat) -> Void
     var onChangePosition: OnChangePositionCB? = nil
     
+    enum Lock { case drawer, content, filters }
+    @State var lock: Lock = .drawer
+    
     var content: () -> Content
 
     var body: some View {
@@ -68,6 +71,34 @@ struct BottomDrawer<Content: View>: View {
         .gesture(
             DragGesture()
                 .updating($dragState) { drag, state, transaction in
+                    if self.lock != .drawer {
+                        if App.store.state.home.drawerPosition != .bottom {
+                            print("\(drag.translation.height)")
+                            let distToScrollable: CGFloat = 120
+                            if drag.startLocation.y > self.draggedPositionY + distToScrollable,
+                                drag.translation.height < 25 {
+                                async {
+                                    self.lock = .content
+                                }
+                                return
+                            }
+                            
+                            let distToFilterBar: CGFloat = 60
+                            if drag.startLocation.y > self.draggedPositionY + distToFilterBar,
+                                drag.translation.height < 12 {
+                                async {
+                                    self.lock = .filters
+                                }
+                                return
+                            }
+                            
+                        }
+                    }
+                    if self.lock != .drawer {
+                        async {
+                            self.lock = .drawer
+                        }
+                    }
                     state = .dragging(translation: drag.translation)
                 }
                 .onEnded(onDragEnded)
@@ -111,6 +142,8 @@ struct BottomDrawer<Content: View>: View {
         } else {
             self.position = closestPosition
         }
+        
+        self.lock = .drawer
         
         self.callbackChangePosition()
     }

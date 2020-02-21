@@ -138,8 +138,10 @@ struct TopNavButtonStyle: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
     
     var active: Bool = false
+    var background: Color = .clear
     var height: CGFloat = 34
     var hPad: CGFloat = 11
+
     
     func body(content: Content) -> some View {
         ZStack {
@@ -160,6 +162,7 @@ struct TopNavButtonStyle: ViewModifier {
                         .background(BlurView(style: .systemThinMaterialDark))
                 }
             }
+            .background(self.background)
             .cornerRadius(8)
             .shadow(color: Color.black.opacity(0.15), radius: 3, x: 0, y: 1)
         }

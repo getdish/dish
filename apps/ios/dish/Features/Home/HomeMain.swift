@@ -123,7 +123,7 @@ struct HomeMainView: View {
                         Spacer()
                     }
                     // dont go up beyond mid-point
-                    .offset(y: max(self.screen.height * 0.5 - 68, state.y - 68))
+                    .offset(y: max(self.screen.height * 0.5 - 68 - 30, state.y - 68))
                     .animation(.spring())
                     
                     BottomDrawer(
@@ -143,14 +143,17 @@ struct HomeMainView: View {
                             HomeSearchBar()
                                 .padding(.horizontal, 5)
                                 .padding(.top, 5)
-                            HomeMainContent()
+                            HomeMainFilterBar()
+                            ScrollView {
+                                HomeContentExplore()
+                            }
                             Spacer()
                         }
                     }
                     
-                    if self.store.state.home.showCuisineFilter {
-                        DishCuisineFilterPopup()
-                    }
+                    DishCuisineFilterPopup(
+                        active: self.store.state.home.showCuisineFilter
+                    )
                     
                     // content
 //                    HomeMainContentContainer(

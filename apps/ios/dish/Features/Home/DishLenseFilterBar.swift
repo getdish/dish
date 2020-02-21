@@ -41,6 +41,7 @@ struct DishLenseButton: View, Identifiable {
             .modifier(
                 TopNavButtonStyle(
                     active: self.index == self.store.state.home.lenseActive,
+                    background: .init(red: lense.rgb[0], green: lense.rgb[1], blue: lense.rgb[2]),
                     height: 38
                 )
             )

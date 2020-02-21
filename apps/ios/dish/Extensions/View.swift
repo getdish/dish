@@ -91,6 +91,10 @@ extension View {
                 .stroke(color, lineWidth: width)
         )
     }
+    
+    func cornerRadiusSquircle(_ radius: CGFloat) -> some View {
+        clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
+    }
 }
 
 // MARK - onScroll

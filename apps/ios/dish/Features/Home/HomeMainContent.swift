@@ -144,7 +144,7 @@ struct HomeContentExplore: View {
                             at: .end,
                             dish: dish,
                             display: .small,
-                            height: 120
+                            height: 100
                         )
                     }
                 }

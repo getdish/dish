@@ -17,7 +17,7 @@ struct IconView: View {
                 .frame(width: self.imageSize, height: self.imageSize)
                 .padding(self.padding)
                 .background(self.background)
-                .clipShape(RoundedRectangle(cornerRadius: self.cornerRadius, style: .continuous))
+                .cornerRadiusSquircle(self.cornerRadius)
             
             VStack(alignment: .center) {
                 Text(self.label)

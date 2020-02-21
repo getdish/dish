@@ -6,6 +6,7 @@ struct LenseItem: Equatable, Identifiable {
     let id: String
     let name: String
     let icon: String
+    var rgb: [Double] = [0.5, 0.2, 0.5]
 }
 
 struct CuisineItem: Equatable, Identifiable {
@@ -14,17 +15,17 @@ struct CuisineItem: Equatable, Identifiable {
     let icon: String
 }
 
-fileprivate let initialLenses = [
-    LenseItem(id: "0", name: "", icon: "🏆"),
-    LenseItem(id: "1", name: "Locals", icon: "👌"),
-    LenseItem(id: "2", name: "New", icon: "🔥"),
-    LenseItem(id: "3", name: "Picks", icon: "👩‍🍳"),
-    LenseItem(id: "4", name: "Date Night", icon: "💎"),
-    LenseItem(id: "5", name: "Great Service", icon: "💁‍♀️"),
-    LenseItem(id: "6", name: "", icon: "🥬"),
-    LenseItem(id: "7", name: "", icon: "🐟"),
-    LenseItem(id: "8", name: "Cheap", icon: "💸"),
-    LenseItem(id: "9", name: "Fast", icon: "🕒")
+fileprivate let initialLenses: [LenseItem] = [
+    LenseItem(id: "0", name: "", icon: "🏆", rgb: [0.5, 0.2, 0.5]),
+    LenseItem(id: "1", name: "Locals", icon: "👌", rgb: [0.2, 0.5, 0.5]),
+    LenseItem(id: "2", name: "New", icon: "🔥", rgb: [0.5, 0.5, 0.2]),
+    LenseItem(id: "3", name: "Picks", icon: "👩‍🍳", rgb: [0.5, 0.2, 0.5]),
+    LenseItem(id: "4", name: "Date Night", icon: "💎", rgb: [0.5, 0.2, 0.5]),
+    LenseItem(id: "5", name: "Great Service", icon: "💁‍♀️", rgb: [0.5, 0.2, 0.5]),
+    LenseItem(id: "6", name: "", icon: "🥬", rgb: [0.5, 0.2, 0.5]),
+    LenseItem(id: "7", name: "", icon: "🐟", rgb: [0.5, 0.2, 0.5]),
+    LenseItem(id: "8", name: "Cheap", icon: "💸", rgb: [0.5, 0.2, 0.5]),
+    LenseItem(id: "9", name: "Fast", icon: "🕒, rgb: [0.5, 0.2, 0.5]")
 ]
 
 fileprivate let initialFilters: [FilterItem] = [
