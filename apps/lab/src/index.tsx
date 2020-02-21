@@ -1,6 +1,6 @@
 import './styles.scss'
 
-import { ProvideUI, themes } from '@o/ui'
+import { ProvideUI, Stack, themes } from '@o/ui'
 import { createOvermind } from 'overmind'
 import { Provider } from 'overmind-react'
 import React, { useState } from 'react'
@@ -12,7 +12,7 @@ import { config } from './overmind'
 
 const overmind = createOvermind(config)
 
-ReactDOM.render(<RootView />, document.getElementById('root'))
+ReactDOM.render(<RootView />, document.getElementById('app'))
 
 function RootView() {
   const [tab, setTab] = useState(0)
@@ -20,20 +20,22 @@ function RootView() {
   return (
     <ProvideUI themes={themes} activeTheme="light">
       <Provider value={overmind}>
-        <button
-          onClick={() => {
-            setTab(0)
-          }}
-        >
-          Map
-        </button>
-        <button
-          onClick={() => {
-            setTab(1)
-          }}
-        >
-          Dishes
-        </button>
+        <Stack direction="horizontal">
+          <button
+            onClick={() => {
+              setTab(0)
+            }}
+          >
+            Map
+          </button>
+          <button
+            onClick={() => {
+              setTab(1)
+            }}
+          >
+            Dishes
+          </button>
+        </Stack>
 
         {tab == 0 && <LabMap />}
         {tab == 1 && <LabDishes />}
