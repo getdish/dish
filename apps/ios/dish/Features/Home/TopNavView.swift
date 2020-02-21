@@ -41,8 +41,18 @@ struct TopNavView: View {
         HStack {
             TextField("", text: self.locationSearch, onEditingChanged: { isEditing in
                 if isEditing {
-                    if self.store.state.home.drawerPosition != .bottom {
-                        self.store.send(.home(.setDrawerPosition(.bottom)))
+                    App.store.send(.home(.setSearchFocus(.location)))
+                } else {
+                    async {
+                        if self.store.state.home.searchFocus == .location {
+                            App.store.send(.home(.setSearchFocus(.off)))
+                        }
+                    }
+                }
+                
+                if isEditing {
+                    if self.store.state.home.drawerPosition != .top {
+                        self.store.send(.home(.setDrawerPosition(.top)))
                     }
                     
                     // select all text
@@ -72,6 +82,13 @@ struct TopNavView: View {
                     .padding(.leading, 12)
                 )
         }
+        .offset(
+            y: self.store.state.home.searchFocus == .location ? 65 : 0
+        )
+//        .scaleEffect(
+//            self.store.state.home.searchFocus == .location // || self.store.state.home.drawerPosition == .top
+//                ? 1.2 : 1
+//        )
     }
     
     var accountButton: some View {

@@ -34,7 +34,9 @@ struct HomeMainView: View {
         let searchFocus = store.state.home.searchFocus
         if searchFocus != self.lastSearchFocus {
             self.lastSearchFocus = searchFocus
-            store.send(.home(.setDrawerPosition(searchFocus != .off ? .top : .bottom)))
+            if searchFocus == .search {
+                store.send(.home(.setDrawerPosition(.top)))
+            }
         }
         
         // set app height
@@ -114,10 +116,6 @@ struct HomeMainView: View {
                         .opacity(state.showCamera ? 0 : 1)
                     }
                     
-                    // top bar
-                    TopNavView()
-                        .frameLimitedToScreen()
-                    
                     VStack {
                         DishLenseFilterBar()
                         Spacer()
@@ -150,6 +148,10 @@ struct HomeMainView: View {
                             Spacer()
                         }
                     }
+                    
+                    // top bar
+                    TopNavView()
+                        .frameLimitedToScreen()
                     
                     DishCuisineFilterPopup(
                         active: self.store.state.home.showCuisineFilter
