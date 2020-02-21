@@ -1,7 +1,7 @@
-import util from 'util'
 import React, { useEffect, useState } from 'react'
+import util from 'util'
 
-import { useOvermind } from './overmind'
+import { useOvermind } from '../overmind'
 
 const Sidebar = () => {
   const { state, actions } = useOvermind()
@@ -16,13 +16,13 @@ const Sidebar = () => {
 
   const startWatchingStats = () => {
     setInterval(() => {
-      actions.getStats()
+      actions.map.getStats()
     }, 60 * 1000)
   }
 
   const renderRestaurant = () => {
-    const restaurant = state.selected.model
-    const scrapes = state.selected.scrapes
+    const restaurant = state.map.selected.model
+    const scrapes = state.map.selected.scrapes
     if (!restaurant.name) {
       return
     }
@@ -98,15 +98,15 @@ const Sidebar = () => {
       <h2>Labs</h2>
       <h3>Crawler Status</h3>
       <ul>
-        <li>Restaurants: {state.stats.restaurant_count}</li>
-        <li>Dishes: {state.stats.dish_count}</li>
-        <li>Scrapes: {state.stats.scrape_count}</li>
+        <li>Restaurants: {state.map.stats.restaurant_count}</li>
+        <li>Dishes: {state.map.stats.dish_count}</li>
+        <li>Scrapes: {state.map.stats.scrape_count}</li>
         <li>
           Restaurants currently rendered:{' '}
-          {Object.keys(state.restaurants).length.toString()}
+          {Object.keys(state.map.restaurants).length.toString()}
         </li>
       </ul>
-      {state.selected.id != ''
+      {state.map.selected.id != ''
         ? renderRestaurant()
         : 'Click restaurant to see details'}
     </div>

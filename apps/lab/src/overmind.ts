@@ -1,87 +1,22 @@
-import { Action, AsyncAction, IConfig } from 'overmind'
+import { IConfig } from 'overmind'
 import { createHook } from 'overmind-react'
-import { Restaurant, Dish, Scrape, ScrapeData } from '@dish/models'
-import { LngLat } from 'mapbox-gl'
+import { merge, namespaced } from 'overmind/config'
 
-type LabState = {
-  restaurants: { [key: string]: Restaurant }
-  selected: {
-    id: string
-    model: Restaurant
-    scrapes: {
-      [source: string]: ScrapeData
-    }
-  }
-  stats: {
-    restaurant_count: number
-    dish_count: number
-    scrape_count: number
-  }
-}
+import * as dishes from './dishes/overmind-dishes'
+import * as map from './map/overmind-map'
 
-let state: LabState = {
-  restaurants: {},
-  selected: {
-    id: '',
-    model: {} as Restaurant,
-    scrapes: {
-      yelp: {},
-      ubereats: {},
-    },
+export const config = merge(
+  {
+    onInitialize: function() {},
+    // state,
+    // actions,
+    // effects,
   },
-  stats: {
-    restaurant_count: 0,
-    dish_count: 0,
-    scrape_count: 0,
-  },
-}
-
-const updateRestaurants: AsyncAction<LngLat> = async (
-  { state }: { state: LabState },
-  centre: LngLat
-) => {
-  const restaurants = await Restaurant.findNear(centre.lat, centre.lng, 0.015)
-  for (const restaurant of restaurants) {
-    state.restaurants[restaurant.id] = restaurant
-  }
-}
-
-const setSelected: Action<string> = (
-  { state }: { state: LabState },
-  id: string
-) => {
-  state.selected.id = id
-}
-
-const getAllDataForRestaurant: AsyncAction = async ({
-  state,
-}: {
-  state: LabState
-}) => {
-  const restaurant = new Restaurant()
-  await restaurant.findOne('id', state.selected.id)
-  state.selected.model = restaurant
-  state.selected.scrapes = {
-    yelp: (await restaurant.getLatestScrape('yelp')).data,
-    ubereats: (await restaurant.getLatestScrape('ubereats')).data,
-  }
-}
-
-const getStats: AsyncAction = async ({ state }: { state: LabState }) => {
-  state.stats.restaurant_count = await Restaurant.allCount()
-  state.stats.dish_count = await Dish.allCount()
-  state.stats.scrape_count = await Scrape.allCount()
-}
-
-export const config = {
-  state: state,
-  actions: {
-    updateRestaurants: updateRestaurants,
-    setSelected: setSelected,
-    getStats: getStats,
-    getAllDataForRestaurant: getAllDataForRestaurant,
-  },
-}
+  namespaced({
+    map,
+    dishes,
+  })
+)
 
 declare module 'overmind' {
   interface Config extends IConfig<typeof config> {}
