@@ -108,6 +108,7 @@
 		AEE561DC23FF278300B51F80 /* DishCuisineFilterPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE561DB23FF278300B51F80 /* DishCuisineFilterPopup.swift */; };
 		AEE561DE23FF64E800B51F80 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE561DD23FF64E800B51F80 /* GridView.swift */; };
 		AEE561E023FF64FA00B51F80 /* IconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE561DF23FF64FA00B51F80 /* IconView.swift */; };
+		AEE561E423FFB98B00B51F80 /* HomeMapOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE561E323FFB98B00B51F80 /* HomeMapOverlay.swift */; };
 		AEE6C1E223FDC434001AC6B0 /* TopSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE6C1E123FDC434001AC6B0 /* TopSheetView.swift */; };
 		AEE6C1E423FDD6FA001AC6B0 /* BottomDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE6C1E323FDD6FA001AC6B0 /* BottomDrawer.swift */; };
 		AEE802B523ED3E8000A1A19E /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE802B423ED3E8000A1A19E /* Double.swift */; };
@@ -235,6 +236,8 @@
 		AEE561DB23FF278300B51F80 /* DishCuisineFilterPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishCuisineFilterPopup.swift; sourceTree = "<group>"; };
 		AEE561DD23FF64E800B51F80 /* GridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
 		AEE561DF23FF64FA00B51F80 /* IconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconView.swift; sourceTree = "<group>"; };
+		AEE561E223FFB5D900B51F80 /* dish.profdata */ = {isa = PBXFileReference; lastKnownFileType = file; path = dish.profdata; sourceTree = "<group>"; };
+		AEE561E323FFB98B00B51F80 /* HomeMapOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMapOverlay.swift; sourceTree = "<group>"; };
 		AEE6C1E123FDC434001AC6B0 /* TopSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopSheetView.swift; sourceTree = "<group>"; };
 		AEE6C1E323FDD6FA001AC6B0 /* BottomDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomDrawer.swift; sourceTree = "<group>"; };
 		AEE802B423ED3E8000A1A19E /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
@@ -272,6 +275,7 @@
 				1CE3546223986B1B004B3A84 /* Products */,
 				B08534291B7EB4653A4EA4FF /* Pods */,
 				A8BD4A71AA7B4F5BF3A0A2A5 /* Frameworks */,
+				AEE561E123FFB5D900B51F80 /* OptimizationProfiles */,
 			);
 			sourceTree = "<group>";
 		};
@@ -400,21 +404,22 @@
 			isa = PBXGroup;
 			children = (
 				AE65DF9523F7BA8E00758DD3 /* AppleMapView.swift */,
+				AEE6C1E323FDD6FA001AC6B0 /* BottomDrawer.swift */,
 				AE6CECCC23A843E600B08870 /* BottomNav.swift */,
 				AE045C5223EB5A2400FFCBA1 /* CornerMask.swift */,
 				AE0F474323B69276008F7418 /* DishCamera.swift */,
 				AEC9AD3F23D15AFD00BCC82E /* DishCardView.swift */,
+				AEE561DB23FF278300B51F80 /* DishCuisineFilterPopup.swift */,
+				AEA09E6C23FEFF8A00E2EC28 /* DishLenseFilterBar.swift */,
 				AEED844023B6707100407266 /* DishMapView.swift */,
-				AE872FF623CEA5CD00F84663 /* DishRestaurantCard.swift */,
 				AEAAAA0F23FA1FE300ABED23 /* DishRatingView.swift */,
+				AE872FF623CEA5CD00F84663 /* DishRestaurantCard.swift */,
 				AEAAAA0D23F9DBA700ABED23 /* DishRestaurantView.swift */,
 				AEA87E4223B976EB009F07DB /* HomeFilterBar.swift */,
 				AE7563B323A035E70094022B /* HomeMain.swift */,
-				AEA09E6C23FEFF8A00E2EC28 /* DishLenseFilterBar.swift */,
 				AEF6558023B2205F00E49A51 /* HomeMainContent.swift */,
-				AEE6C1E323FDD6FA001AC6B0 /* BottomDrawer.swift */,
-				AEE561DB23FF278300B51F80 /* DishCuisineFilterPopup.swift */,
 				AE65DF9323F79A2B00758DD3 /* HomeMainContentMap.swift */,
+				AEE561E323FFB98B00B51F80 /* HomeMapOverlay.swift */,
 				AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */,
 				AE56C86323ADB78C006A156A /* HomeSearchResultsView.swift */,
 				1CE354872398714D004B3A84 /* HomeView.swift */,
@@ -495,6 +500,14 @@
 				AEA331F023A3373D00B36A23 /* LoginSignupView.swift */,
 			);
 			path = Account;
+			sourceTree = "<group>";
+		};
+		AEE561E123FFB5D900B51F80 /* OptimizationProfiles */ = {
+			isa = PBXGroup;
+			children = (
+				AEE561E223FFB5D900B51F80 /* dish.profdata */,
+			);
+			path = OptimizationProfiles;
 			sourceTree = "<group>";
 		};
 		AEF6558223B59A8000E49A51 /* Store */ = {
@@ -713,6 +726,7 @@
 				AEC9AD4023D15AFD00BCC82E /* DishCardView.swift in Sources */,
 				1CE3546723986B1B004B3A84 /* SceneDelegate.swift in Sources */,
 				AE7563B823A036500094022B /* Screen.swift in Sources */,
+				AEE561E423FFB98B00B51F80 /* HomeMapOverlay.swift in Sources */,
 				1CE3548123986BC1004B3A84 /* View.swift in Sources */,
 				AEA331F723A3382100B36A23 /* DishButtonAction.swift in Sources */,
 				AE6A9C0F23C45FA800003059 /* GooglePlacesService.swift in Sources */,
@@ -895,6 +909,7 @@
 			baseConfigurationReference = A23C1891F8C99F7D21337438 /* Pods-dish.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_USE_OPTIMIZATION_PROFILE = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"dish/Preview Content\"";
 				DEVELOPMENT_TEAM = 399WY8X9HY;
@@ -916,6 +931,7 @@
 			baseConfigurationReference = 97EF8D88B0AA90C59F9C0ED2 /* Pods-dish.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_USE_OPTIMIZATION_PROFILE = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"dish/Preview Content\"";
 				DEVELOPMENT_TEAM = 399WY8X9HY;
