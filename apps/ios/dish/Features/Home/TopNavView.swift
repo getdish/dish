@@ -51,9 +51,9 @@ struct TopNavView: View {
                 }
                 
                 if isEditing {
-                    if self.store.state.home.drawerPosition != .top {
-                        self.store.send(.home(.setDrawerPosition(.top)))
-                    }
+//                    if self.store.state.home.drawerPosition != .top {
+//                        self.store.send(.home(.setDrawerPosition(.top)))
+//                    }
                     
                     // select all text
                     if let textField = self.textField {
@@ -82,9 +82,9 @@ struct TopNavView: View {
                     .padding(.leading, 12)
                 )
         }
-        .offset(
-            y: self.store.state.home.searchFocus == .location ? 65 : 0
-        )
+//        .offset(
+//            y: self.store.state.home.searchFocus == .location ? 65 : 0
+//        )
 //        .scaleEffect(
 //            self.store.state.home.searchFocus == .location // || self.store.state.home.drawerPosition == .top
 //                ? 1.2 : 1
