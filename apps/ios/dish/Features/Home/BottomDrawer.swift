@@ -37,7 +37,9 @@ struct BottomDrawer<Content: View>: View {
 
     var body: some View {
         let screenHeight = screen.height
-        let belowHeight = max(0, screenHeight - (screenHeight - getSnapPoint(self.position)))
+        let belowHeight = self.dragState.isDragging
+            ? 0
+            : max(0, screenHeight - (screenHeight - getSnapPoint(self.position)))
         return ZStack {
             RunOnce(name: "BottomDrawer.start") {
                 async(10) {

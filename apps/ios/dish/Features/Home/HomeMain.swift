@@ -238,7 +238,7 @@ struct DishDrawer: View, Equatable {
                     ScrollView {
                         Spacer().frame(height: topContentHeight)
                         HomeContentExplore()
-                        Spacer().frame(height: 20 + self.screen.edgeInsets.bottom)
+                        Spacer().frame(height: 5 + self.screen.edgeInsets.bottom)
                     }
                     Spacer()
                 }
