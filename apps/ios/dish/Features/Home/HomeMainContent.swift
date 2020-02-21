@@ -150,7 +150,7 @@ struct HomeContentExplore: View {
                 }
             }
         }
-        .padding()
+        .padding(.horizontal)
     }
 }
 

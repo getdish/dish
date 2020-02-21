@@ -48,38 +48,43 @@
 
 # apps/ios
 
-- Explore
-  - Make category click work "Seafood"
-  - Cache for categories results
-  - Make going between panes have simple animation
-- Search UI
-  - Tapping searchbar moves it all the way to top
-  - Search API needs to return all types:
-    - Restaurant, Dish, Locations
-- Location Search UI
-  - Tapping location tab bing up Search UI, focused on location
-  - "Current Location" + may want recent locations etc
-- Restaurant UI
-  - Tapping on restaurant brings up drawer
-  - Menu display
-  - Rating calculation breakdown
-- Restaurant Gallery UI
-  - From restaurant need to go into a gallery of images
-- Filters bar working w/search API
-  - "Open" filter should have optional time picker
-- Result card improvements (many)
-  - Ratings, tags, call, info, quick view images
-- Searchbar fix tags
-- Map view:
-  - Google, mapbox, apple?
-  - Pins showing from our search results
-  - Re-search on move + option (default on)
-- Review/Camera UI
-  - Needs endpoints for uploading images
-  - Filters
-  - Stickers
-  - Current restaurant name
-  - Rating selection
-- Splash
-- Welcome
-- Login/Auth
+Following are all "chunks" that will make significant improvements in feel/usability:
+
+- [ ] Search/map should have a loading spinner while searching and dim out previous results
+- [ ] Filters stack should probably be connected pill button style
+- [ ] Animate in the cuisine filters and improve display
+- [ ] De-focusing search should move drawer back to previous position
+- [ ] Map should zoom in/out as you move drawer between top/middle/bottom
+- [ ] Bugfix drawer moves up when you scroll down
+- [ ] Get search autocomplete interface integrated
+- [ ] Fix clicking DishCardView should move drawer down from top and do search
+- [ ] Slide in Restaurant cards for map results when drawer at .bottom
+  - [ ] Tapping on map grouping should show those selected results at bottom
+- [ ] Restore Bottom of map shows restaurant result cards
+- [ ] Tap location search selects search text
+- [ ] Location search returns locations on search
+- [ ] Map icon clustering fixes
+  - [ ] Ratings on map? important to figure out
+  - [ ] Cuisines colored on map?
+- [ ] Tap account/camera moves to left/right + move camera into right
+- [ ] Add back in "current location" button somewhere subtle
+- [ ] Search has a separate List interface for showing more than just dishes
+  - [ ] shows restaurants as well
+  - [ ] shows locations as well and tapping changes location bar instead
+- [ ] Location search can be smaller (scaleEffect) when not focused a bit
+- [ ] Image gallery for restaurant images
+- [ ] Camera capturing images
+  - [ ] Save to camera roll automatically
+  - [ ] Share button that works
+  - [ ] Review popover on capture
+- [ ] Account pane
+  - [ ] Working signup/login
+  - [ ] Show account information/menu on logged in
+  - [ ] Logout
+- [ ] Final splash
+- [ ] Welcome popup
+
+Idea for really sexy things that will catch attention (later):
+
+- [ ] Animate from restaurant card at bottom of map up above to the RestaruantView page
+- [ ] Camera shows current guessed restaurant name at top and lets you drag it on as a sticker
