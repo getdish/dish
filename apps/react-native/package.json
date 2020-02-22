@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start",
-    "test": "true"
+    "start": "next start"
   },
   "dependencies": {
     "css-loader": "^3.4.2",
