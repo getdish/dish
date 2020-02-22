@@ -54,7 +54,15 @@ export const LabDishes = () => {
   const dish = (dishQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
   const taxonomies = { continent, dish, country }
 
-  const TaxonomyList = ({ type }: { type: TaxonomyType }) => {
+  useEffect(() => {
+    const [row, col] = active
+    const next = [continent, country, dish][row][col]
+    if (next) {
+      setDraft(next)
+    }
+  }, [active])
+
+  const TaxonomyList = ({ type, row }: { type: TaxonomyType; row: number }) => {
     const [_, _2, upsert] = upsertTaxonomy()
     return (
       <>
@@ -62,13 +70,20 @@ export const LabDishes = () => {
           {type}
         </Title>
         <Stack overflow="scroll" flex={1}>
+          <Button
+            onClick={() => {
+              upsert({ type, name: 'New', icon: '' })
+            }}
+          >
+            Add new
+          </Button>
           {taxonomies[type].map((taxonomy, index) => {
             return (
               <EditableField
                 key={`${taxonomy.id}${taxonomy.updated_at}`}
-                row={0}
+                row={row}
                 col={index}
-                isActive={active[0] == 0 && active[1] == index}
+                isActive={active[0] == row && active[1] == index}
                 taxonomy={taxonomy}
                 setActive={setActive}
                 upsert={upsert}
@@ -84,17 +99,17 @@ export const LabDishes = () => {
     <Stack flex={1} overflow="hidden">
       <Stack flex={2} direction="horizontal" overflow="hidden">
         <Stack flex={1}>
-          <TaxonomyList type="continent" />
+          <TaxonomyList row={0} type="continent" />
         </Stack>
 
         <Stack position="relative" flex={1}>
           <BorderLeft />
-          <TaxonomyList type="country" />
+          <TaxonomyList row={1} type="country" />
         </Stack>
 
         <Stack position="relative" flex={1}>
           <BorderLeft />
-          <TaxonomyList type="dish" />
+          <TaxonomyList row={2} type="dish" />
         </Stack>
 
         <Stack position="relative" flex={1}>
@@ -151,11 +166,11 @@ const EditableField = ({
   setActive,
   upsert,
 }: {
-  row: number
-  col: number
+  row?: number
+  col?: number
   taxonomy: TaxonomyRecord
-  isActive: boolean
-  setActive: Function
+  isActive?: boolean
+  setActive?: Function
   upsert: Function
 }) => {
   const text = `${taxonomy.icon} ${taxonomy.name}`
@@ -172,7 +187,9 @@ const EditableField = ({
           isActive
             ? null
             : () => {
-                setActive([row, col])
+                if (setActive && typeof row == 'number') {
+                  setActive([row, col])
+                }
               }
         }
         onDoubleClick={() => {
