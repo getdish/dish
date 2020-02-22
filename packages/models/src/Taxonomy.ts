@@ -12,6 +12,8 @@ export type TaxonomyRecord = {
   alternates?: string[]
   parentId?: string
   parentType?: TaxonomyType
+  updated_at?: Date
+  created_at?: Date
 }
 
 export class Taxonomy extends ModelBase<Taxonomy> {
@@ -71,6 +73,7 @@ export class Taxonomy extends ModelBase<Taxonomy> {
       mutation AddTaxonomy {
         insert_taxonomy(
           objects: {
+            id: ${next.id ? `"${next.id}"` : null},
             name: "${next.name ?? ''}",
             icon: "${next.icon ?? ''}",
             type: "${next.type ?? 'continent'}",

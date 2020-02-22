@@ -1,30 +1,29 @@
-import { gql, useMutation, useSubscription } from '@apollo/client'
-import { Taxonomy, TaxonomyRecord, TaxonomyType } from '@dish/models'
+import { FetchResult, gql, useSubscription } from '@apollo/client'
+import { ModelBase, Taxonomy, TaxonomyRecord, TaxonomyType } from '@dish/models'
 import { BorderLeft, Button, Card, Input, Stack, Surface, Text, Theme, Title } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 
-const ALL_TAXONOMY_SUBSCRIPTION = gql`
+const TAXONOMY_SUBSCRIPTION = gql`
   subscription Taxonomy($type: String!) {
-    taxonomy(where: { type: { _eq: $type } }) {
-      ${Taxonomy.fieldsQuery}
-    }
-  }
-`
-
-const TAXONOMY_BY_TYPE_SUBSCRIPTION = gql`
-  subscription Taxonomy($type: String!) {
-    taxonomy(where: { type: { _eq: $type } }) {
-      ${Taxonomy.fieldsQuery}
+    taxonomy(where: { type: { _eq: $type } }, order_by: {order: asc}) {
+      id ${Taxonomy.fieldsQuery}
     }
   }
 `
 
 const upsertTaxonomy = () => {
   const [draft, setDraft] = useState<TaxonomyRecord>({ type: 'continent' })
-  const [upsert, response] = useMutation(Taxonomy.upsert(draft))
+  const [response, setResponse] = useState<FetchResult<TaxonomyRecord> | null>(
+    null
+  )
   const update = (x: TaxonomyRecord = draft) => {
+    console.log('upsert', x)
+    ModelBase.client
+      .mutate({
+        mutation: Taxonomy.upsert(x),
+      })
+      .then(setResponse)
     setDraft(x)
-    upsert()
   }
   return [draft, update, response] as const
 }
@@ -33,13 +32,13 @@ export const LabDishes = () => {
   const [active, setActive] = useState<[number, number]>([0, 0])
   const [draft, setDraft] = upsertTaxonomy()
 
-  const continentQuery = useSubscription(ALL_TAXONOMY_SUBSCRIPTION, {
+  const continentQuery = useSubscription(TAXONOMY_SUBSCRIPTION, {
     variables: { type: 'continent' },
   })
-  const countryQuery = useSubscription(ALL_TAXONOMY_SUBSCRIPTION, {
+  const countryQuery = useSubscription(TAXONOMY_SUBSCRIPTION, {
     variables: { type: 'country' },
   })
-  const dishQuery = useSubscription(ALL_TAXONOMY_SUBSCRIPTION, {
+  const dishQuery = useSubscription(TAXONOMY_SUBSCRIPTION, {
     variables: { type: 'dish' },
   })
   const continent = (continentQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
@@ -48,31 +47,34 @@ export const LabDishes = () => {
   const taxonomies = { continent, dish, country }
 
   const TaxonomyList = ({ type }: { type: TaxonomyType }) => {
+    const [_, upsert] = upsertTaxonomy()
     return (
       <>
         <Title size="sm" padding={10}>
           {type}
         </Title>
-        {taxonomies[type].map((taxonomy, index) => {
-          return (
-            <EditableField
-              key={taxonomy.id}
-              row={0}
-              col={index}
-              isActive={active[0] == 0 && active[1] == index}
-              taxonomy={taxonomy}
-              setActive={setActive}
-              upsert={setDraft}
-            />
-          )
-        })}
+        <Stack overflow="scroll" flex={1}>
+          {taxonomies[type].map((taxonomy, index) => {
+            return (
+              <EditableField
+                key={`${taxonomy.id}${taxonomy.updated_at}`}
+                row={0}
+                col={index}
+                isActive={active[0] == 0 && active[1] == index}
+                taxonomy={taxonomy}
+                setActive={setActive}
+                upsert={upsert}
+              />
+            )
+          })}
+        </Stack>
       </>
     )
   }
 
   return (
-    <Stack flex={1}>
-      <Stack flex={2} direction="horizontal">
+    <Stack flex={1} overflow="hidden">
+      <Stack flex={2} direction="horizontal" overflow="hidden">
         <Stack flex={1}>
           <TaxonomyList type="continent" />
         </Stack>
@@ -172,12 +174,15 @@ const EditableField = ({
             size="xl"
             onEnter={e => {
               setIsEditing(false)
-              const [icon, name] = [...e.target['value'].split(' '), '']
-              upsert({
+              const [icon, ...nameParts] = e.target['value'].split(' ')
+              const name = nameParts.join(' ')
+              const next: TaxonomyRecord = {
                 ...taxonomy,
                 icon,
                 name,
-              })
+              }
+              console.log('next is', next)
+              upsert(next)
             }}
             defaultValue={text as any}
           />

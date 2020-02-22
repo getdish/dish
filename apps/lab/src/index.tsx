@@ -23,7 +23,7 @@ function RootView() {
     <ApolloProvider client={ModelBase.client}>
       <ProvideUI themes={themes} activeTheme="light">
         <Provider value={overmind}>
-          <Stack minHeight="100vh">
+          <Stack height="100vh" overflow="hidden">
             <Stack direction="horizontal">
               <Button
                 onClick={() => {
