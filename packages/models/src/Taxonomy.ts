@@ -5,6 +5,7 @@ import { ModelBase } from './ModelBase'
 export type TaxonomyType = 'continent' | 'country' | 'dish'
 
 export type TaxonomyRecord = {
+  id?: string
   type: TaxonomyType
   name?: string
   icon?: string

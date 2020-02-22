@@ -2,7 +2,7 @@ import './styles.scss'
 
 import { ApolloProvider } from '@apollo/client'
 import { ModelBase } from '@dish/models'
-import { ProvideUI, Stack, themes } from '@o/ui'
+import { Button, ProvideUI, Stack, themes } from '@o/ui'
 import { createOvermind } from 'overmind'
 import { Provider } from 'overmind-react'
 import React, { useState } from 'react'
@@ -23,25 +23,28 @@ function RootView() {
     <ApolloProvider client={ModelBase.client}>
       <ProvideUI themes={themes} activeTheme="light">
         <Provider value={overmind}>
-          <Stack direction="horizontal">
-            <button
-              onClick={() => {
-                setTab(0)
-              }}
-            >
-              Map
-            </button>
-            <button
-              onClick={() => {
-                setTab(1)
-              }}
-            >
-              Dishes
-            </button>
-          </Stack>
+          <Stack minHeight="100vh">
+            <Stack direction="horizontal">
+              <Button
+                onClick={() => {
+                  setTab(0)
+                }}
+              >
+                Dishes
+              </Button>
 
-          {tab == 0 && <LabMap />}
-          {tab == 1 && <LabDishes />}
+              <Button
+                onClick={() => {
+                  setTab(1)
+                }}
+              >
+                Map
+              </Button>
+            </Stack>
+
+            {tab == 1 && <LabMap />}
+            {tab == 0 && <LabDishes />}
+          </Stack>
         </Provider>
       </ProvideUI>
     </ApolloProvider>
