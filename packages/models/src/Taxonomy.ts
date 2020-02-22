@@ -73,7 +73,7 @@ export class Taxonomy extends ModelBase<Taxonomy> {
       mutation AddTaxonomy {
         insert_taxonomy(
           objects: {
-            id: ${next.id ? `"${next.id}"` : null},
+            ${next.id ? `id: "${next.id}",` : ''}
             name: "${next.name ?? ''}",
             icon: "${next.icon ?? ''}",
             type: "${next.type ?? 'continent'}",

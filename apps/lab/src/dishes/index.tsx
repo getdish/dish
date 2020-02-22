@@ -1,12 +1,20 @@
 import { FetchResult, gql, useSubscription } from '@apollo/client'
 import { ModelBase, Taxonomy, TaxonomyRecord, TaxonomyType } from '@dish/models'
-import { BorderLeft, Button, Card, Input, Stack, Surface, Text, Theme, Title } from '@o/ui'
+import { BorderLeft, Button, Card, Icon, Input, Stack, Surface, Text, Theme, Title } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 
 const TAXONOMY_SUBSCRIPTION = gql`
-  subscription Taxonomy($type: String!) {
-    taxonomy(where: { type: { _eq: $type } }, order_by: {order: asc}) {
-      id ${Taxonomy.fieldsQuery}
+subscription Taxonomy($type: String!) {
+  taxonomy(where: { type: { _eq: $type } }, order_by: {order: asc}) {
+    id ${Taxonomy.fieldsQuery}
+  }
+}
+`
+
+const TAXONOMY_DELETE = gql`
+  mutation Delete($id: uuid!) {
+    delete_taxonomy(where: { id: { _eq: $id } }) {
+      affected_rows
     }
   }
 `
@@ -25,12 +33,12 @@ const upsertTaxonomy = () => {
       .then(setResponse)
     setDraft(x)
   }
-  return [draft, update, response] as const
+  return [draft, setDraft, update, response] as const
 }
 
 export const LabDishes = () => {
   const [active, setActive] = useState<[number, number]>([0, 0])
-  const [draft, setDraft] = upsertTaxonomy()
+  const [draft, setDraft, upsertDraft] = upsertTaxonomy()
 
   const continentQuery = useSubscription(TAXONOMY_SUBSCRIPTION, {
     variables: { type: 'continent' },
@@ -47,7 +55,7 @@ export const LabDishes = () => {
   const taxonomies = { continent, dish, country }
 
   const TaxonomyList = ({ type }: { type: TaxonomyType }) => {
-    const [_, upsert] = upsertTaxonomy()
+    const [_, _2, upsert] = upsertTaxonomy()
     return (
       <>
         <Title size="sm" padding={10}>
@@ -101,19 +109,19 @@ export const LabDishes = () => {
           <Input
             onChange={e => setDraft({ ...draft, id: e.target['value'] })}
             defaultValue={draft.id}
-            onEnter={setDraft}
+            onEnter={upsertDraft}
           />
           Name{' '}
           <Input
             onChange={e => setDraft({ ...draft, name: e.target['value'] })}
             defaultValue={draft.name}
-            onEnter={setDraft}
+            onEnter={upsertDraft}
           />
           Icon{' '}
           <Input
             onChange={e => setDraft({ ...draft, icon: e.target['value'] })}
             defaultValue={draft.icon}
-            onEnter={setDraft}
+            onEnter={upsertDraft}
           />
           <select
             onChange={e => setDraft({ ...draft, type: e.target.value as any })}
@@ -124,12 +132,12 @@ export const LabDishes = () => {
           </select>
           <Button
             onClick={() => {
-              setDraft({ type: 'continent' })
+              upsertDraft({ type: 'continent' })
             }}
           >
             Clear
           </Button>
-          <Button onClick={() => setDraft()}>Create</Button>
+          <Button onClick={() => upsertDraft()}>Create</Button>
         </Stack>
       </Card>
     </Stack>
@@ -152,6 +160,8 @@ const EditableField = ({
 }) => {
   const text = `${taxonomy.icon} ${taxonomy.name}`
   const [isEditing, setIsEditing] = useState(false)
+  const [hidden, setHidden] = useState(false)
+  if (hidden) return null
   return (
     <Theme name={isActive ? 'selected' : null}>
       <Surface
@@ -169,25 +179,44 @@ const EditableField = ({
           setIsEditing(true)
         }}
       >
-        {isEditing && (
-          <Input
-            size="xl"
-            onEnter={e => {
-              setIsEditing(false)
-              const [icon, ...nameParts] = e.target['value'].split(' ')
-              const name = nameParts.join(' ')
-              const next: TaxonomyRecord = {
-                ...taxonomy,
-                icon,
-                name,
-              }
-              console.log('next is', next)
-              upsert(next)
+        <Stack flex={1} direction="horizontal" alignItems="center">
+          {isEditing && (
+            <Input
+              size="xl"
+              onEnter={e => {
+                setIsEditing(false)
+                const [icon, ...nameParts] = e.target['value'].split(' ')
+                const name = nameParts.join(' ')
+                const next: TaxonomyRecord = {
+                  ...taxonomy,
+                  icon,
+                  name,
+                }
+                console.log('next is', next)
+                upsert(next)
+              }}
+              defaultValue={text as any}
+            />
+          )}
+          {!isEditing && <Text size="xl">{text}</Text>}
+
+          <div style={{ flex: 1 }} />
+
+          <Icon
+            name="cross"
+            opacity={0.5}
+            onClick={e => {
+              e.stopPropagation()
+              setHidden(true)
+              ModelBase.client.mutate({
+                variables: {
+                  id: taxonomy.id,
+                },
+                mutation: TAXONOMY_DELETE,
+              })
             }}
-            defaultValue={text as any}
           />
-        )}
-        {!isEditing && <Text size="xl">{text}</Text>}
+        </Stack>
       </Surface>
     </Theme>
   )
