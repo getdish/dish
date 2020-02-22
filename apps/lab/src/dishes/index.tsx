@@ -1,6 +1,6 @@
 import { gql, useMutation, useSubscription } from '@apollo/client'
 import { Taxonomy, TaxonomyRecord } from '@dish/models'
-import { BorderLeft, Button, Card, Input, Stack, Text, Title } from '@o/ui'
+import { BorderLeft, Button, Card, Input, Stack, Surface, Text, Theme, Title } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 
 const ALL_TAXONOMY_SUBSCRIPTION = gql`
@@ -19,67 +19,61 @@ const TAXONOMY_BY_TYPE_SUBSCRIPTION = gql`
   }
 `
 
-export const LabDishes = () => {
+const upsertTaxonomy = () => {
   const [draft, setDraft] = useState<TaxonomyRecord>({ type: 'continent' })
   const [upsert, response] = useMutation(Taxonomy.upsert(draft))
-  const saveDraft = (x: TaxonomyRecord) => {
+  const update = (x: TaxonomyRecord) => {
     setDraft(x)
     upsert()
   }
+  return [draft, update, response] as const
+}
+
+export const LabDishes = () => {
+  const [active, setActive] = useState<[number, number]>([0, 0])
+  const [draft, setDraft] = upsertTaxonomy()
 
   const continentsQuery = useSubscription(ALL_TAXONOMY_SUBSCRIPTION, {
     variables: { type: 'continent' },
   })
-  const continents = (continentsQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
-
   const countriesQuery = useSubscription(ALL_TAXONOMY_SUBSCRIPTION, {
     variables: { type: 'country' },
   })
-  const countries = (countriesQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
-
   const dishesQuery = useSubscription(ALL_TAXONOMY_SUBSCRIPTION, {
     variables: { type: 'dish' },
   })
+  const continents = (continentsQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
+  const countries = (countriesQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
   const dishes = (dishesQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
+  const taxonomies = { continents, dishes, countries }
 
-  const EditableField = ({ taxonomy }: { taxonomy: TaxonomyRecord }) => {
-    const text = `${taxonomy.icon} ${taxonomy.name}`
-    const [isEditing, setIsEditing] = useState(false)
+  const TaxonomyList = ({ type }: { type: TaxonomyType }) => {
     return (
-      <Stack padding="sm" key={taxonomy.id} direction="horizontal">
-        {isEditing && (
-          <Input
-            size="xl"
-            onEnter={e => {
-              setIsEditing(false)
-              const [icon, name] = [...e.target['value'].split(' '), '']
-              saveDraft({
-                ...taxonomy,
-                icon,
-                name,
-              })
-            }}
-            defaultValue={text as any}
-          />
-        )}
-        {!isEditing && (
-          <Text size="xl" onClick={() => setIsEditing(true)}>
-            {text}
-          </Text>
-        )}
-      </Stack>
+      <>
+        <Title size="sm" padding={10}>
+          {type}
+        </Title>
+        {taxonomies[type].map((taxonomy, index) => {
+          return (
+            <EditableField
+              key={taxonomy.id}
+              row={0}
+              col={index}
+              isActive={active[0] == 0 && active[1] == index}
+              taxonomy={taxonomy}
+              setActive={setActive}
+              upsert={setDraft}
+            />
+          )
+        })}
+      </>
     )
   }
 
   return (
     <Stack flex={1}>
       <Stack flex={2} direction="horizontal">
-        <Stack flex={1}>
-          <Title padding={10}>Continents</Title>
-          {continents.map(taxonomy => {
-            return <EditableField key={taxonomy.id} taxonomy={taxonomy} />
-          })}
-        </Stack>
+        <Stack flex={1}></Stack>
 
         <Stack position="relative" flex={1}>
           <BorderLeft />
@@ -116,16 +110,24 @@ export const LabDishes = () => {
       </Stack>
 
       <Card defaultWidth={500} defaultHeight={350} elevation={6} visible>
-        <Stack padding space>
+        <Stack direction="horizontal" padding space>
+          ID{' '}
+          <Input
+            onChange={e => setDraft({ ...draft, id: e.target['value'] })}
+            defaultValue={draft.id}
+            onEnter={setDraft}
+          />
           Name{' '}
           <Input
             onChange={e => setDraft({ ...draft, name: e.target['value'] })}
-            onEnter={upsert}
+            defaultValue={draft.name}
+            onEnter={setDraft}
           />
           Icon{' '}
           <Input
             onChange={e => setDraft({ ...draft, icon: e.target['value'] })}
-            onEnter={upsert}
+            defaultValue={draft.icon}
+            onEnter={setDraft}
           />
           <select
             onChange={e => saveDraft({ ...draft, type: e.target.value as any })}
@@ -136,14 +138,68 @@ export const LabDishes = () => {
           </select>
           <Button
             onClick={() => {
-              upsert()
+              setDraft({ type: 'continent' })
             }}
           >
-            Create
+            Clear
           </Button>
-          <p>response: {!!response}</p>
+          <Button onClick={() => setDraft()}>Create</Button>
         </Stack>
       </Card>
     </Stack>
+  )
+}
+const EditableField = ({
+  row,
+  col,
+  taxonomy,
+  isActive,
+  setActive,
+  upsert,
+}: {
+  row: number
+  col: number
+  taxonomy: TaxonomyRecord
+  isActive: boolean
+  setActive: Function
+  upsert: Function
+}) => {
+  const text = `${taxonomy.icon} ${taxonomy.name}`
+  const [isEditing, setIsEditing] = useState(false)
+  return (
+    <Theme name={isActive ? 'selected' : null}>
+      <Surface
+        padding="sm"
+        key={taxonomy.id}
+        direction="horizontal"
+        onClick={
+          isActive
+            ? null
+            : () => {
+                setActive([row, col])
+              }
+        }
+        onDoubleClick={() => {
+          setIsEditing(true)
+        }}
+      >
+        {isEditing && (
+          <Input
+            size="xl"
+            onEnter={e => {
+              setIsEditing(false)
+              const [icon, name] = [...e.target['value'].split(' '), '']
+              upsert({
+                ...taxonomy,
+                icon,
+                name,
+              })
+            }}
+            defaultValue={text as any}
+          />
+        )}
+        {!isEditing && <Text size="xl">{text}</Text>}
+      </Surface>
+    </Theme>
   )
 }
