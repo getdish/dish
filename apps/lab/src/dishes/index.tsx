@@ -3,9 +3,25 @@ import { ModelBase, Taxonomy, TaxonomyRecord, TaxonomyType } from '@dish/models'
 import { BorderLeft, Button, Card, Icon, Input, Stack, Surface, Text, Theme, Title } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 
-const TAXONOMY_SUBSCRIPTION = gql`
-subscription Taxonomy($type: String!) {
-  taxonomy(where: { type: { _eq: $type } }, order_by: {order: asc}) {
+const CONTINENTS_SUBSCRIPTION = gql`
+subscription Taxonomy {
+  taxonomy(where: { type: { _eq: "continent" } }, order_by: {order: asc}) {
+    id ${Taxonomy.fieldsQuery}
+  }
+}
+`
+
+const COUNTRIES_SUBSCRIPTION = gql`
+subscription Taxonomy($parentId: uuid!) {
+  taxonomy(where: { type: { _eq: "country" }, parentId: { _eq: $parentId }, parentType: { _eq: "continent" } }, order_by: {order: asc}) {
+    id ${Taxonomy.fieldsQuery}
+  }
+}
+`
+
+const DISHES_SUBSCRIPTION = gql`
+subscription Taxonomy($parentId: uuid!) {
+  taxonomy(where: { type: { _eq: "dish" }, parentId: { _eq: $parentId }, parentType: { _eq: "country" } }, order_by: {order: asc}) {
     id ${Taxonomy.fieldsQuery}
   }
 }
@@ -40,18 +56,34 @@ export const LabDishes = () => {
   const [active, setActive] = useState<[number, number]>([0, 0])
   const [draft, setDraft, upsertDraft] = upsertTaxonomy()
 
-  const continentQuery = useSubscription(TAXONOMY_SUBSCRIPTION, {
-    variables: { type: 'continent' },
-  })
-  const countryQuery = useSubscription(TAXONOMY_SUBSCRIPTION, {
-    variables: { type: 'country' },
-  })
-  const dishQuery = useSubscription(TAXONOMY_SUBSCRIPTION, {
-    variables: { type: 'dish' },
-  })
+  const [activeByRow, setActiveByRow] = useState<[number, number, number]>([
+    0,
+    0,
+    0,
+  ])
+  useEffect(() => {
+    activeByRow[active[0]] = active[1]
+    setActiveByRow(activeByRow)
+  }, [...active])
+
+  const continentQuery = useSubscription(CONTINENTS_SUBSCRIPTION, {})
   const continent = (continentQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
+  const selectedContinentId = continent[activeByRow[0]]?.id ?? ''
+  const countryQuery = useSubscription(COUNTRIES_SUBSCRIPTION, {
+    variables: { parentId: selectedContinentId },
+  })
   const country = (countryQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
+  const selectedCountryId = country[activeByRow[1]]?.id ?? ''
+  const dishQuery = useSubscription(DISHES_SUBSCRIPTION, {
+    variables: { parentId: selectedCountryId },
+  })
   const dish = (dishQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
+  const selectedDishId = country[activeByRow[2]]?.id ?? ''
+  const selectedIds = {
+    continent: selectedContinentId,
+    country: selectedCountryId,
+    dish: selectedDishId,
+  }
   const taxonomies = { continent, dish, country }
 
   useEffect(() => {
@@ -64,6 +96,12 @@ export const LabDishes = () => {
 
   const TaxonomyList = ({ type, row }: { type: TaxonomyType; row: number }) => {
     const [_, _2, upsert] = upsertTaxonomy()
+    const parentType: TaxonomyType =
+      type === 'continent'
+        ? 'continent'
+        : type === 'country'
+        ? 'continent'
+        : 'country'
     return (
       <>
         <Title size="sm" padding={10}>
@@ -72,7 +110,18 @@ export const LabDishes = () => {
         <Stack overflow="scroll" flex={1}>
           <Button
             onClick={() => {
-              upsert({ type, name: 'New', icon: '' })
+              upsert({
+                type,
+                name: 'New',
+                icon: '',
+                parentId:
+                  parentType === 'country'
+                    ? selectedCountryId
+                    : parentType == 'continent'
+                    ? selectedContinentId
+                    : '',
+                parentType,
+              })
             }}
           >
             Add new
@@ -84,6 +133,7 @@ export const LabDishes = () => {
                 row={row}
                 col={index}
                 isActive={active[0] == row && active[1] == index}
+                isFormerlyActive={taxonomy.id === selectedIds[type]}
                 taxonomy={taxonomy}
                 setActive={setActive}
                 upsert={upsert}
@@ -163,6 +213,7 @@ const EditableField = ({
   col,
   taxonomy,
   isActive,
+  isFormerlyActive,
   setActive,
   upsert,
 }: {
@@ -171,6 +222,7 @@ const EditableField = ({
   taxonomy: TaxonomyRecord
   isActive?: boolean
   setActive?: Function
+  isFormerlyActive?: boolean
   upsert: Function
 }) => {
   const text = `${taxonomy.icon} ${taxonomy.name}`
@@ -178,7 +230,10 @@ const EditableField = ({
   const [hidden, setHidden] = useState(false)
   if (hidden) return null
   return (
-    <Theme name={isActive ? 'selected' : null}>
+    <Theme
+      name={isActive ? 'selected' : null}
+      coat={isFormerlyActive ? 'selectedInactive' : null}
+    >
       <Surface
         padding="sm"
         key={taxonomy.id}

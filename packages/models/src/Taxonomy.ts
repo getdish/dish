@@ -77,7 +77,7 @@ export class Taxonomy extends ModelBase<Taxonomy> {
             name: "${next.name ?? ''}",
             icon: "${next.icon ?? ''}",
             type: "${next.type ?? 'continent'}",
-            parentId: ${next.parentId ? next.parentId : null},
+            parentId: ${next.parentId ? `"${next.parentId}"` : null},
             parentType: "${next.parentType ?? ''}"
           },
           on_conflict: {
