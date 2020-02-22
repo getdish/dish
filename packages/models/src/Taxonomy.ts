@@ -48,7 +48,7 @@ export class Taxonomy extends ModelBase<Taxonomy> {
     return res.taxonomy.map((data: Partial<Taxonomy>) => new Taxonomy(data))
   }
 
-  static create(next: Partial<Taxonomy>): DocumentNode {
+  static create(next: TaxonomyRecord): DocumentNode {
     return gql`
       mutation AddTaxonomy {
         insert_taxonomy(objects: {
@@ -58,6 +58,30 @@ export class Taxonomy extends ModelBase<Taxonomy> {
           parentId: ${next.parentId ? next.parentId : null},
           parentType: "${next.parentType ?? ''}"
         }) {
+          returning {
+            id
+          }
+        }
+      }
+    `
+  }
+
+  static upsert(next: TaxonomyRecord): DocumentNode {
+    return gql`
+      mutation AddTaxonomy {
+        insert_taxonomy(
+          objects: {
+            name: "${next.name ?? ''}",
+            icon: "${next.icon ?? ''}",
+            type: "${next.type ?? 'continent'}",
+            parentId: ${next.parentId ? next.parentId : null},
+            parentType: "${next.parentType ?? ''}"
+          },
+          on_conflict: {
+            constraint: taxonomy_pkey,
+            update_columns: [name, icon, type, parentId, parentType]
+          }
+        ) {
           returning {
             id
           }
