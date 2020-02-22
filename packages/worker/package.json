@@ -16,6 +16,6 @@
   "devDependencies": {
     "@types/bull": "^3.12.0",
     "@types/node": "^13.1.6",
-    "ava": "^2.4.0"
+    "ava": "^3.3.0"
   }
 }

@@ -22,7 +22,7 @@
     "ws": "^7.2.1"
   },
   "devDependencies": {
-    "@types/node": "^13.1.7",
-    "ava": "^2.4.0"
+    "@types/node": "^13.7.4",
+    "ava": "^3.3.0"
   }
 }
