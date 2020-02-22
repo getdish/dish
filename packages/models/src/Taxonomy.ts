@@ -1,6 +1,17 @@
+import { DocumentNode, gql } from '@apollo/client'
+
 import { ModelBase } from './ModelBase'
 
 export type TaxonomyType = 'continent' | 'country' | 'dish'
+
+export type TaxonomyRecord = {
+  type: TaxonomyType
+  name?: string
+  icon?: string
+  alternates?: string[]
+  parentId?: string
+  parentType?: TaxonomyType
+}
 
 export class Taxonomy extends ModelBase<Taxonomy> {
   type!: TaxonomyType
@@ -23,22 +34,34 @@ export class Taxonomy extends ModelBase<Taxonomy> {
     return ['type', 'name', 'icon', 'alternates', 'parentId', 'parentType']
   }
 
+  static get fieldsQuery(): string {
+    return Taxonomy.fields().join(' ')
+  }
+
   static async findContinents() {
-    const query = {
-      query: {
-        taxonomy: {
-          __args: {
-            where: {
-              type: { _eq: 'continent' },
-            },
-          },
-          ...Taxonomy.fieldsAsObject(),
-        },
-      },
-    }
-    const response = await ModelBase.hasura(query)
-    return response.data.data.taxonomy.map(
-      (data: Partial<Taxonomy>) => new Taxonomy(data)
-    )
+    const res = await ModelBase.query(`{
+      taxonomy(where: { type: { _eq: "continent" } }) {
+        ${this.fields().join(' ')}
+      }
+    }`)
+    return res.taxonomy.map((data: Partial<Taxonomy>) => new Taxonomy(data))
+  }
+
+  static create(next: Partial<Taxonomy>): DocumentNode {
+    return gql`
+      mutation AddTaxonomy {
+        insert_taxonomy(objects: {
+          name: "${next.name ?? ''}",
+          icon: "${next.icon ?? ''}",
+          type: "${next.type ?? 'continent'}",
+          parentId: ${next.parentId ? next.parentId : null},
+          parentType: "${next.parentType ?? ''}"
+        }) {
+          returning {
+            id
+          }
+        }
+      }
+    `
   }
 }

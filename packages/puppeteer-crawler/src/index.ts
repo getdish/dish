@@ -4,15 +4,7 @@ import * as URL from 'url'
 
 import { CrawlPage } from './CrawlPage'
 import { CrawlQueue } from './CrawlQueue'
-import {
-  cleanUrlHash,
-  FILTER_URL_EXTENSIONS,
-  matchesDepth,
-  MAX_CORES_DEFAULT,
-  sleep,
-  urlMatchesExtensions,
-  urlSimilarity,
-} from './helpers'
+import { cleanUrlHash, FILTER_URL_EXTENSIONS, matchesDepth, MAX_CORES_DEFAULT, sleep, urlMatchesExtensions, urlSimilarity } from './helpers'
 
 export type CrawlerOptions = {
   entry: string
@@ -267,7 +259,7 @@ export class Crawler {
       let done = 0
       const getValid = this.queue.getValid
       function finish() {
-        if (++done == 2) {
+        if (++done === 2) {
           res(getValid())
         }
       }

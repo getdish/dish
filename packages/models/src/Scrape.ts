@@ -34,7 +34,7 @@ export class Scrape extends ModelBase<Scrape> {
     const keys = path.split('.')
     const length = keys.length
     let index = -1
-    if (typeof obj == 'undefined') {
+    if (typeof obj === 'undefined') {
       return default_value
     }
     for (let i = 0; i < length; i++) {
@@ -51,7 +51,7 @@ export class Scrape extends ModelBase<Scrape> {
         if (index >= 0) {
           obj = obj[index]
         }
-        if (typeof obj == 'undefined') {
+        if (typeof obj === 'undefined') {
           return default_value
         }
       } else {

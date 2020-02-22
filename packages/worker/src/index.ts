@@ -1,13 +1,8 @@
-import BullQueue, {
-  Queue,
-  QueueOptions,
-  JobOptions,
-  EveryRepeatOptions,
-} from 'bull'
+import BullQueue, { EveryRepeatOptions, JobOptions, Queue, QueueOptions } from 'bull'
 import _ from 'lodash'
 
 const is_local_redis =
-  process.env.DISH_ENV == 'development' || process.env.CI == 'true'
+  process.env.DISH_ENV === 'development' || process.env.CI === 'true'
 
 export const redisOptions = {
   port: 6379,

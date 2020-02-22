@@ -1,9 +1,6 @@
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import ApolloClient from 'apollo-client'
-import { split } from 'apollo-link'
-import { HttpLink } from 'apollo-link-http'
-import { WebSocketLink } from 'apollo-link-ws'
-import { getMainDefinition } from 'apollo-utilities'
+import { ApolloClient, gql, HttpLink, InMemoryCache, split } from '@apollo/client'
+import { getMainDefinition } from '@apollo/client/utilities'
+import { WebSocketLink } from '@apollo/link-ws'
 import axios, { AxiosRequestConfig } from 'axios'
 import { EnumType, jsonToGraphQLQuery } from 'json-to-graphql-query'
 
@@ -12,19 +9,21 @@ export type Point = {
   coordinates: [number, number]
 }
 
-const LOCAL_HASURA = 'https://hasura.rio.dishapp.com' || 'http://localhost:8080'
+const LOCAL_HASURA = 'hasura.rio.dishapp.com' || 'localhost:8080'
+const LOCAL_HASURA_HTTP = `https://${LOCAL_HASURA}`
+
 let DOMAIN: string
 
-if (typeof window == 'undefined') {
+if (typeof window === 'undefined') {
   DOMAIN =
     process.env.HASURA_ENDPOINT ||
     process.env.REACT_APP_HASURA_ENDPOINT ||
-    LOCAL_HASURA
+    LOCAL_HASURA_HTTP
 } else {
   if (window.location.hostname.includes('dish')) {
-    DOMAIN = 'https://hasura.rio.dishapp.com'
+    DOMAIN = 'hasura.rio.dishapp.com'
   } else {
-    DOMAIN = process.env.REACT_APP_HASURA_ENDPOINT || LOCAL_HASURA
+    DOMAIN = process.env.REACT_APP_HASURA_ENDPOINT || LOCAL_HASURA_HTTP
   }
 }
 
@@ -36,35 +35,23 @@ const AXIOS_CONF = {
   },
 } as AxiosRequestConfig
 
-// const getHeaders = () => {
-//   const headers: any = {}
-//   const token = window.localStorage.getItem('apollo-token')
-//   if (token) {
-//     headers.authorization = `Bearer ${token}`
-//   }
-//   return headers
-// }
-
-// Create an http link:
 const httpLink = new HttpLink({
-  uri: 'http://localhost:3000/graphql',
+  uri: DOMAIN + '/v1/graphql',
 })
 
-// Create a WebSocket link:
 const wsLink = new WebSocketLink({
-  uri: `wss://${DOMAIN.replace('http://', '').replace('https://', '')}`,
+  uri: `ws://${LOCAL_HASURA}/v1/graphql`,
   options: {
     reconnect: true,
-    // connectionParams: () => {
-    //   return { headers: getHeaders() }
-    // },
   },
 })
 
-// using the ability to split links, you can send data to each link
-// depending on what kind of operation is being sent
+// The split function takes three parameters:
+//
+// * A function that's called for each operation to execute
+// * The Link to use for an operation if the function returns a "truthy" value
+// * The Link to use for an operation if the function returns a "falsy" value
 const link = split(
-  // split based on operation type
   ({ query }) => {
     const definition = getMainDefinition(query)
     return (
@@ -76,6 +63,13 @@ const link = split(
   httpLink
 )
 
+const client = new ApolloClient({
+  link: link,
+  cache: new InMemoryCache({
+    addTypename: true,
+  }),
+})
+
 export class ModelBase<T> {
   id!: string
   created_at!: Date
@@ -84,12 +78,7 @@ export class ModelBase<T> {
   private _upper_name: string
   private _lower_name: string
 
-  static client = new ApolloClient({
-    link: link,
-    cache: new InMemoryCache({
-      addTypename: true,
-    }),
-  })
+  static client = client
 
   static default_fields() {
     return ['id', 'created_at', 'updated_at']
@@ -153,6 +142,15 @@ export class ModelBase<T> {
       }
     }
     return object
+  }
+
+  static async query<T = any>(query: string): Promise<T> {
+    const res = await client.query({
+      query: gql`
+        ${query}
+      `,
+    })
+    return res.data
   }
 
   static async hasura(gql: {}) {
@@ -228,7 +226,7 @@ export class ModelBase<T> {
     }
     const response = await ModelBase.hasura(query)
     const objects = response.data.data[this._lower_name]
-    if (objects.length == 1) {
+    if (objects.length === 1) {
       Object.assign(this, objects[0])
       return this.id
     } else {
@@ -369,3 +367,6 @@ export class ModelBase<T> {
     }
   }
 }
+
+console.log('ModelBase', ModelBase)
+window['ModelBase'] = ModelBase
