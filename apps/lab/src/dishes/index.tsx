@@ -1,5 +1,5 @@
 import { gql, useMutation, useSubscription } from '@apollo/client'
-import { Taxonomy, TaxonomyRecord } from '@dish/models'
+import { Taxonomy, TaxonomyRecord, TaxonomyType } from '@dish/models'
 import { BorderLeft, Button, Card, Input, Stack, Surface, Text, Theme, Title } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 
@@ -22,7 +22,7 @@ const TAXONOMY_BY_TYPE_SUBSCRIPTION = gql`
 const upsertTaxonomy = () => {
   const [draft, setDraft] = useState<TaxonomyRecord>({ type: 'continent' })
   const [upsert, response] = useMutation(Taxonomy.upsert(draft))
-  const update = (x: TaxonomyRecord) => {
+  const update = (x: TaxonomyRecord = draft) => {
     setDraft(x)
     upsert()
   }
@@ -33,19 +33,19 @@ export const LabDishes = () => {
   const [active, setActive] = useState<[number, number]>([0, 0])
   const [draft, setDraft] = upsertTaxonomy()
 
-  const continentsQuery = useSubscription(ALL_TAXONOMY_SUBSCRIPTION, {
+  const continentQuery = useSubscription(ALL_TAXONOMY_SUBSCRIPTION, {
     variables: { type: 'continent' },
   })
-  const countriesQuery = useSubscription(ALL_TAXONOMY_SUBSCRIPTION, {
+  const countryQuery = useSubscription(ALL_TAXONOMY_SUBSCRIPTION, {
     variables: { type: 'country' },
   })
-  const dishesQuery = useSubscription(ALL_TAXONOMY_SUBSCRIPTION, {
+  const dishQuery = useSubscription(ALL_TAXONOMY_SUBSCRIPTION, {
     variables: { type: 'dish' },
   })
-  const continents = (continentsQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
-  const countries = (countriesQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
-  const dishes = (dishesQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
-  const taxonomies = { continents, dishes, countries }
+  const continent = (continentQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
+  const country = (countryQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
+  const dish = (dishQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
+  const taxonomies = { continent, dish, country }
 
   const TaxonomyList = ({ type }: { type: TaxonomyType }) => {
     return (
@@ -73,34 +73,18 @@ export const LabDishes = () => {
   return (
     <Stack flex={1}>
       <Stack flex={2} direction="horizontal">
-        <Stack flex={1}></Stack>
-
-        <Stack position="relative" flex={1}>
-          <BorderLeft />
-          <Title padding={10}>Countries</Title>
-          {countries.map(taxonomy => {
-            return (
-              <Stack padding="sm" key={taxonomy.id} direction="horizontal">
-                <Text size="lg">
-                  {taxonomy.icon} {taxonomy.name}
-                </Text>
-              </Stack>
-            )
-          })}
+        <Stack flex={1}>
+          <TaxonomyList type="continent" />
         </Stack>
 
         <Stack position="relative" flex={1}>
           <BorderLeft />
-          <Title padding={10}>Dishes</Title>
-          {dishes.map(taxonomy => {
-            return (
-              <Stack padding="sm" key={taxonomy.id} direction="horizontal">
-                <Text>
-                  {taxonomy.icon} {taxonomy.name}
-                </Text>
-              </Stack>
-            )
-          })}
+          <TaxonomyList type="country" />
+        </Stack>
+
+        <Stack position="relative" flex={1}>
+          <BorderLeft />
+          <TaxonomyList type="dish" />
         </Stack>
 
         <Stack position="relative" flex={1}>
@@ -130,7 +114,7 @@ export const LabDishes = () => {
             onEnter={setDraft}
           />
           <select
-            onChange={e => saveDraft({ ...draft, type: e.target.value as any })}
+            onChange={e => setDraft({ ...draft, type: e.target.value as any })}
           >
             <option id="continent">Continent</option>
             <option id="country">Country</option>
