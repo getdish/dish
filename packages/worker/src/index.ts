@@ -1,4 +1,9 @@
-import BullQueue, { EveryRepeatOptions, JobOptions, Queue, QueueOptions } from 'bull'
+import BullQueue, {
+  EveryRepeatOptions,
+  JobOptions,
+  Queue,
+  QueueOptions,
+} from 'bull'
 import _ from 'lodash'
 
 const is_local_redis =

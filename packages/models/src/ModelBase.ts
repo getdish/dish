@@ -1,4 +1,10 @@
-import { ApolloClient, gql, HttpLink, InMemoryCache, split } from '@apollo/client'
+import {
+  ApolloClient,
+  gql,
+  HttpLink,
+  InMemoryCache,
+  split,
+} from '@apollo/client'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { WebSocketLink } from '@apollo/link-ws'
 import axios, { AxiosRequestConfig } from 'axios'
@@ -367,6 +373,3 @@ export class ModelBase<T> {
     }
   }
 }
-
-console.log('ModelBase', ModelBase)
-window['ModelBase'] = ModelBase

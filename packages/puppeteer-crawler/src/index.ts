@@ -4,7 +4,15 @@ import * as URL from 'url'
 
 import { CrawlPage } from './CrawlPage'
 import { CrawlQueue } from './CrawlQueue'
-import { cleanUrlHash, FILTER_URL_EXTENSIONS, matchesDepth, MAX_CORES_DEFAULT, sleep, urlMatchesExtensions, urlSimilarity } from './helpers'
+import {
+  cleanUrlHash,
+  FILTER_URL_EXTENSIONS,
+  matchesDepth,
+  MAX_CORES_DEFAULT,
+  sleep,
+  urlMatchesExtensions,
+  urlSimilarity,
+} from './helpers'
 
 export type CrawlerOptions = {
   entry: string
