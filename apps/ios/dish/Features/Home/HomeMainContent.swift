@@ -213,6 +213,7 @@ struct DishListItem: View {
             }
         }
         .frame(height: imageSize + 10)
+        .animation(.spring())
     }
 }
 
