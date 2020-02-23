@@ -166,7 +166,7 @@ struct DishListItem: View {
     var number: Int
     var dish: DishItem
     var body: some View {
-        let imageSize: CGFloat = isActive ? 80 : 60
+        let imageSize: CGFloat = isActive ? 70 : 60
         
         let image = DishButton(action: {}) {
             dish.image
@@ -181,6 +181,8 @@ struct DishListItem: View {
             ScrollListener(throttle: 32.0) { frame in
                 if frame.minX < 0 && !self.isActive {
                     self.isActive = true
+                } else if frame.minX == 0 && self.isActive {
+                    self.isActive = false
                 }
             }
             
