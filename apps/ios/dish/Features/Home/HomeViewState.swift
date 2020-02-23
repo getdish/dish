@@ -211,7 +211,7 @@ class HomeViewState: ObservableObject {
     }
     
     func toggleSnappedToBottom() {
-        log.info()
+        logger.info()
         self.snapToBottom(!isSnappedToBottom)
     }
     
@@ -223,7 +223,7 @@ class HomeViewState: ObservableObject {
     }
     
     func setDragState(_ next: HomeDragState) {
-        log.info()
+        logger.info()
         self.dragState = next
     }
     
@@ -256,7 +256,7 @@ class HomeViewState: ObservableObject {
         duration: Double = 400,
         _ body: @escaping () -> Void
     ) {
-        log.info("\(state) duration: \(duration)")
+        logger.info("\(state) duration: \(duration)")
         self.setAnimationState(state, duration)
         
         async(3) { // delay so it updates animationState first in body
@@ -269,7 +269,7 @@ class HomeViewState: ObservableObject {
     var lastSnapAt = Date()
     
     func snapToBottom(_ toBottom: Bool = true) {
-        log.info()
+        logger.info()
         self.lastSnapAt = Date()
 
         // prevent dragging after snap
@@ -303,7 +303,7 @@ class HomeViewState: ObservableObject {
     
     func finishDrag(_ value: DragGesture.Value) {
         if dragState == .pager { return }
-        log.info()
+        logger.info()
         
         // continue movement with natural velocity
         let predictedY = value.predictedEndLocation.y
@@ -350,7 +350,7 @@ class HomeViewState: ObservableObject {
     }
     
     func snapToTop() {
-        log.info()
+        logger.info()
         if !isSnappedToTop {
             //            self.hasMovedBar = false
             self.animate {
@@ -361,7 +361,7 @@ class HomeViewState: ObservableObject {
     
     func animateTo(_ y: CGFloat) {
         if self.y == y { return }
-        log.info()
+        logger.info()
         self.animate {
             self.y = y
         }
@@ -369,7 +369,7 @@ class HomeViewState: ObservableObject {
     
     func resetAfterKeyboardHide() {
         if !self.hasMovedBar && self.y != 0 && App.store.state.home.viewStates.last!.search == "" {
-            log.info()
+            logger.info()
             self.animateTo(0)
         }
     }
@@ -393,14 +393,14 @@ class HomeViewState: ObservableObject {
     func moveToSearchResults() {
         if isSnappedToBottom { return }
         if dragState == .idle && y >= 0 {
-            log.info()
+            logger.info()
             self.animateTo(y - 80)
         }
     }
     
     var hasSetInitialY = false
     func setAppHeight(_ val: CGFloat) {
-        log.info()
+        logger.info()
         self.appHeight = val
         
         // only do once, move to start position

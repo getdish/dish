@@ -10,6 +10,7 @@ struct AppleMapView: UIViewRepresentable {
     // props
     var currentLocation: MapViewLocation? = nil
     var markers: [MapMarker]? = nil
+    @Binding var mapZoom: Double
     var onChangeLocation: ((MapViewLocation) -> Void)? = nil
     var onChangeLocationName: ((CLPlacemark) -> Void)? = nil
     var showsUserLocation: Bool = false
@@ -40,13 +41,23 @@ struct AppleMapView: UIViewRepresentable {
         var lastLocation: MapViewLocation = .init(center: .none)
         var locationManager = CLLocationManager()
         var parent: AppleMapView
+        var zoomingIn = false
+        var zoomingAnnotation: MKAnnotation? = nil
+        var mapZoom: Double
         
         init(_ parent: AppleMapView) {
             self.parent = parent
+            self.mapZoom = parent.mapView.zoomLevel()
         }
         
         var mapView: MKMapView {
             parent.mapView
+        }
+        
+        // on select annotation
+        func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+            print("selected annotation \(view)")
+//            zoomToAnnotation(view.annotation!)
         }
         
         // change location
@@ -147,10 +158,28 @@ struct AppleMapView: UIViewRepresentable {
             }
         }
         
+        func zoomToAnnotation(_ annotation: MKAnnotation) {
+            let zoomOutRegion = MKCoordinateRegion(
+                center: mapView.region.center,
+                span: MKCoordinateSpan(latitudeDelta: 0.09, longitudeDelta: 0.09)
+            )
+            zoomingIn = true
+            zoomingAnnotation = annotation
+            mapView.setRegion(zoomOutRegion, animated: true)
+        }
+        
         func updateProps(_ parent: AppleMapView) {
             self.updateCurrentLocation(parent.currentLocation)
             self.updateMarkers(parent.markers)
             self.mapView.showsUserLocation = parent.showsUserLocation
+            if parent.mapZoom != self.mapZoom {
+                self.mapZoom = parent.mapZoom
+                self.mapView.setCenterCoordinate(
+                    centerCoordinate: mapView.centerCoordinate,
+                    zoomLevel: self.mapZoom,
+                    animated: true
+                )
+            }
         }
         
         func updateMarkers(_ markers: [MapMarker]?) {
@@ -218,9 +247,14 @@ struct AppleMapView: UIViewRepresentable {
                         mapView.setRegion(coordinateRegion, animated: true)
                 }
                 case .location(lat: let lat, long: let long):
-                    print("todo")
+                    let coordinateRegion = MKCoordinateRegion(
+                        center: .init(latitude: lat, longitude: long),
+                        latitudinalMeters: mapView.currentRadius(),
+                        longitudinalMeters: mapView.currentRadius()
+                    )
+                    mapView.setRegion(coordinateRegion, animated: true)
                 case .none:
-                    print("todo")
+                    print("none")
             }
         }
     }

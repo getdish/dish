@@ -16,6 +16,7 @@ struct DishMapView: View {
     @Environment(\.geometry) var appGeometry
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard
+    @State var mapZoom = 0.0
     
     var appWidth: CGFloat { appGeometry?.size.width ?? App.screen.width }
     var appHeight: CGFloat { appGeometry?.size.height ?? App.screen.height }
@@ -53,6 +54,7 @@ struct DishMapView: View {
                     AppleMapView(
                         currentLocation: store.state.map.moveToLocation,
                         markers: self.markers,
+                        mapZoom: self.$mapZoom,
                         onChangeLocation: { location in
                             if location != mapViewStore.location {
                                 mapViewStore.location = location

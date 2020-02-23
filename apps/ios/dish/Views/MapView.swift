@@ -255,7 +255,7 @@
 //    }
 //
 //    func updateLocations() {
-//        log.info("update locations \(self.locations.count)")
+//        logger.info("update locations \(self.locations.count)")
 //        self.gmapView.clear()
 //        self.locations.forEach { place in
 //            let location = place.geometry.location

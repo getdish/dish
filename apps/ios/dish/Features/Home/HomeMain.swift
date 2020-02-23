@@ -160,7 +160,7 @@ struct HomeMainView: View {
                     && isDraggingBelowSearchbar
                     && isDraggingHorizontal
                      {
-                    log.debug("ignore drag horizontal")
+                    logger.debug("ignore drag horizontal")
                     self.state.setDragState(.contentHorizontal)
                     ignoreThisDrag = true
                     return

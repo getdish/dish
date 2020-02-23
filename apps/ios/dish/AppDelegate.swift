@@ -8,7 +8,7 @@ let App = AppModel()
 // ... globals i cant seem to put on App.
 // state
 let homeViewState = HomeViewState()
-let log = XCGLogger.default
+let logger = XCGLogger.default
 
 // TODO why cant i put this on App:
 let features: [DishItem] = loadJSON("dishData.json")
@@ -59,7 +59,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITableViewCell.appearance().backgroundColor = colorTransparent
 
         // setup XGCLogger
-        log.setup(
+        logger.setup(
             level: .debug,
             showThreadName: true,
             showLevel: true,

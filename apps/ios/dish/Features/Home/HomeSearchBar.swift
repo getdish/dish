@@ -29,7 +29,7 @@ struct HomeSearchBar: View {
     }
     
     func focusKeyboard() {
-        log.info()
+        logger.info()
         self.isFirstResponder = false
         async(2) {
             self.isFirstResponder = true

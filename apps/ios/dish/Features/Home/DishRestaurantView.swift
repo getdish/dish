@@ -31,6 +31,7 @@ struct DishRestaurantView: View {
 struct DishRestaurantViewContent: View {
     @EnvironmentObject var store: AppStore
     @Environment(\.colorScheme) var colorScheme
+    @State var mapZoom = 0.0
     
      let dishes = features.chunked(into: 2)
     
@@ -115,7 +116,8 @@ struct DishRestaurantViewContent: View {
 
                 HStack {
                     AppleMapView(
-                        markers: []
+                        markers: [],
+                        mapZoom: self.$mapZoom
                     )
                     Color.gray
                 }
