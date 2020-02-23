@@ -4,17 +4,7 @@ import { ModelBase } from './ModelBase'
 
 export type TaxonomyType = 'continent' | 'country' | 'dish'
 
-export type TaxonomyRecord = {
-  id?: string
-  type: TaxonomyType
-  name?: string
-  icon?: string
-  alternates?: string[]
-  parentId?: string
-  parentType?: TaxonomyType
-  updated_at?: Date
-  created_at?: Date
-}
+export type TaxonomyRecord = Partial<Taxonomy> & Pick<Taxonomy, 'type'>
 
 export class Taxonomy extends ModelBase<Taxonomy> {
   type!: TaxonomyType
