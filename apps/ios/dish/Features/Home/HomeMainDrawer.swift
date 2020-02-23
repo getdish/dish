@@ -185,12 +185,12 @@ struct HomeContentExplore: View {
 struct DishListItem: View {
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var screen: ScreenModel
-    @State var isActive = false
+    @State var isScrolled: Bool = false
     
     var number: Int
     var dish: DishItem
     var body: some View {
-        let imageSize: CGFloat = isActive ? 70 : 60
+        let imageSize: CGFloat = isScrolled ? 70 : 60
         
         let image = DishButton(action: {}) {
             dish.image
@@ -201,15 +201,7 @@ struct DishListItem: View {
                 .animation(.spring())
         }
         
-        return ScrollView(.horizontal, showsIndicators: false) {
-            ScrollListener(throttle: 32.0) { frame in
-                if frame.minX < 0 && !self.isActive {
-                    self.isActive = true
-                } else if frame.minX == 0 && self.isActive {
-                    self.isActive = false
-                }
-            }
-            
+        return ListItemHScroll(isScrolled: self.$isScrolled) {
             HStack {
                 DishButton(action: {
                     App.store.send(
@@ -217,11 +209,11 @@ struct DishListItem: View {
                     )
                 }) {
                     HStack {
-                        Text("\(number).")
+                        Text("\(self.number).")
                             .font(.system(size: 24))
                             .fontWeight(.black)
                         
-                        Text("\(dish.name)")
+                        Text("\(self.dish.name)")
                             .fontWeight(.light)
                             .lineLimit(1)
                             .font(.system(size: 22))
@@ -242,6 +234,30 @@ struct DishListItem: View {
         }
         .frame(height: imageSize + 10)
         .animation(.spring())
+    }
+}
+
+struct ListItemHScroll<Content>: View where Content: View {
+    @Binding var isScrolled: Bool
+    var content: Content
+    
+    init (isScrolled: Binding<Bool>, @ViewBuilder _ content: @escaping () -> Content) {
+        self.content = content()
+        self._isScrolled = isScrolled
+    }
+    
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            ScrollListener(throttle: 32.0) { frame in
+                if frame.minX < 0 && !self.isScrolled {
+                    self.isScrolled = true
+                } else if frame.minX == 0 && self.isScrolled {
+                    self.isScrolled = false
+                }
+            }
+            
+            self.content
+        }
     }
 }
 
