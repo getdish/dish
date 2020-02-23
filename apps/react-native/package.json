@@ -21,7 +21,8 @@
     "react-native-web": "^0.11.6",
     "sass-loader": "^8.0.2",
     "style-loader": "^1.1.3",
-    "@dish/models": "*"
+    "@dish/models": "*",
+    "unfetch": "^4.1.0"
   },
   "devDependencies": {
     "@types/react": "^16.9.19",
