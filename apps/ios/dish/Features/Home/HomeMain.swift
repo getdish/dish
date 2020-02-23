@@ -113,7 +113,7 @@ struct HomeMainView: View {
                     .offset(y: max(App.drawerSnapPoints[1] - 68 - 30, state.y - 68))
                     .animation(.spring())
                     
-                    DishDrawer()
+                    HomeMainDrawer()
                         .equatable()
                     
                     // top bar
@@ -194,114 +194,6 @@ struct HomeMainView: View {
     }
 }
 
-struct DishDrawer: View, Equatable {
-    static func == (lhs: DishDrawer, rhs: DishDrawer) -> Bool {
-        true
-    }
-    
-    @EnvironmentObject var screen: ScreenModel
-    @EnvironmentObject var store: AppStore
-    
-    var drawerPosition: Binding<BottomDrawerPosition> {
-        Binding<BottomDrawerPosition>(
-            get: {
-                if self.store.state.home.searchFocus != .off {
-                    return .top
-                }
-                return self.store.state.home.drawerPosition
-                
-        },
-            set: { self.store.send(.home(.setDrawerPosition($0))) }
-        )
-        
-    }
-    
-    var body: some View {
-        let topContentHeight = App.searchBarHeight + App.filterBarHeight + 10
-        
-        return BottomDrawer(
-            position: self.drawerPosition,
-            snapPoints: App.drawerSnapPoints,
-            cornerRadius: 20,
-            handle: nil,
-            onChangePosition: { (_, y) in
-                homeViewState.setY(y)
-                if self.store.state.home.searchFocus != .off &&
-                    y > App.drawerSnapPoints[0] + 100 {
-
-                }
-        }
-        ) {
-            ZStack {
-                VStack {
-                    ScrollView {
-                        Spacer().frame(height: topContentHeight)
-                        HomeContentExplore()
-                        Spacer().frame(height: 5 + self.screen.edgeInsets.bottom)
-                    }
-                    Spacer()
-                }
-                VStack(spacing: 0) {
-                    Color.white.frame(height: topContentHeight / 2 + 10)
-                    LinearGradient(
-                        gradient: .init(colors: [.white, .init(white: 1, opacity: 0)]),
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                        .frame(height: topContentHeight / 2)
-                    Spacer()
-                }
-                VStack(spacing: 0) {
-                    HomeSearchBar()
-                        .padding(.horizontal, 10)
-                        .padding(.top, 10)
-                    HomeMainFilterBar()
-                    Spacer()
-                }
-            }
-        }
-    }
-}
-
-
-struct HomeSearchAutocomplete: View {
-    var body: some View {
-        VStack {
-            Spacer()
-                .frame(height: App.screen.edgeInsets.top + App.searchBarHeight + 60)
-            
-            List {
-                HStack { Text("Suggested item 1") }
-                HStack { Text("Suggested item 2") }
-                HStack { Text("Suggested item 3") }
-                HStack { Text("Suggested item 4") }
-            }
-        }
-        .background(Color.white)
-        .frameLimitedToScreen()
-        .clipped()
-    }
-}
-
-struct HomeSearchLocationAutocomplete: View {
-    var body: some View {
-        VStack {
-            Spacer()
-                .frame(height: App.screen.edgeInsets.top + App.searchBarHeight + 60)
-            
-            List {
-                HStack { Text("Suggested item 1") }
-                HStack { Text("Suggested item 2") }
-                HStack { Text("Suggested item 3") }
-                HStack { Text("Suggested item 4") }
-            }
-        }
-        .background(Color.white)
-        .frameLimitedToScreen()
-        .clipped()
-    }
-}
-
 #if DEBUG
 struct HomeMainView_Previews: PreviewProvider {
     static var previews: some View {
@@ -310,38 +202,3 @@ struct HomeMainView_Previews: PreviewProvider {
     }
 }
 #endif
-
-//struct SearchBarBg: View {
-//    @Environment(\.colorScheme) var colorScheme
-//
-//    var width: CGFloat = App.screen.width
-//    var topWidth: CGFloat = 120
-//    var topHeight: CGFloat = 20
-//    var topRadius: CGFloat = 10
-//    var searchHeight: CGFloat = 45
-//
-//    var shape: some View {
-//        let searchRadius = searchHeight / 2
-//
-//        return Path { path in
-//            path.addRoundedRect(
-//                in: CGRect(x: 0, y: topHeight, width: width, height: searchHeight),
-//                cornerSize: CGSize(width: searchRadius, height: searchRadius)
-//            )
-//
-//            var p2 = Path()
-//            p2.addRoundedRect(
-//                in: CGRect(x: searchRadius, y: searchHeight, width: topWidth, height: topHeight * 2),
-//                cornerSize: CGSize(width: topRadius, height: topRadius)
-//            )
-//
-//            path.addPath(p2)
-//        }
-//    }
-//
-//    var body: some View {
-//        self.shape
-//            .foregroundColor(.white)
-//            .shadow(color: Color.black.opacity(self.colorScheme == .dark ? 0.6 : 0.3), radius: 8, x: 0, y: 1)
-//    }
-//}
