@@ -24,7 +24,7 @@ The simplest way to run Hasura itself is with:
 docker run --net=host \
   -e HASURA_GRAPHQL_DATABASE_URL=postgres://postgres@localhost/dish\
   -e HASURA_GRAPHQL_ENABLE_CONSOLE=false \
-  hasura/graphql-engine:v1.0.0
+  hasura/graphql-engine:v1.1.0
 ```
 
 ### Hasura CLI
