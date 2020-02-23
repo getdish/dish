@@ -1,13 +1,13 @@
 import SwiftUI
 
 struct ScrollListener: View {
-    typealias Cb = ((CGRect) -> Void)
+    typealias OnScroll = ((CGRect) -> Void)
     
     let debounce: Double
     let throttle: Double
-    var onScroll: Cb?
+    var onScroll: OnScroll?
     
-    init(debounce: Double = 0, throttle: Double = 0, onScroll: Cb? = nil) {
+    init(debounce: Double = 0, throttle: Double = 0, onScroll: OnScroll? = nil) {
         self.debounce = debounce
         self.throttle = throttle
         self.onScroll = onScroll
@@ -18,7 +18,7 @@ struct ScrollListener: View {
             .frame(height: 0)
             .overlay(
                 GeometryReader { geometry -> Run in
-                    let frame = geometry.frame(in: .global)
+                    let frame: CGRect = geometry.frame(in: .global)
                     return Run("ScrollListener", debounce: self.debounce, throttle: self.throttle) {
                         if let cb = self.onScroll {
                             cb(frame)

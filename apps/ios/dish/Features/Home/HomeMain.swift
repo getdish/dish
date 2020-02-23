@@ -121,7 +121,7 @@ struct HomeMainView: View {
                         Spacer()
                     }
                     // dont go up beyond mid-point
-                    .offset(y: max(self.screen.height * 0.5 - 68 - 30, state.y - 68))
+                    .offset(y: max(App.drawerSnapPoints[1] - 68 - 30, state.y - 68))
                     .animation(.spring())
                     
                     DishDrawer()
@@ -222,11 +222,7 @@ struct DishDrawer: View, Equatable {
         
         return BottomDrawer(
             position: self.drawerPosition,
-            snapPoints: [
-                self.screen.edgeInsets.top + 50,
-                self.screen.height * 0.55,
-                self.screen.height - 100 - self.screen.edgeInsets.bottom
-            ],
+            snapPoints: App.drawerSnapPoints,
             cornerRadius: 20,
             handle: nil,
             onChangePosition: { (_, y) in

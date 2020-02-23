@@ -130,37 +130,87 @@ struct HomeMainContent: View {
 }
 
 struct HomeContentExplore: View {
-    let dishes = features.chunked(into: 2)
+    @EnvironmentObject var store: AppStore
+    let dishes = features
     
     var body: some View {
-        VStack {
-//            Text("Most popular")
-//                .font(.headline)
+        let title = Selectors.home.activeLense().description ?? ""
+        return VStack {
+            HStack(spacing: 6) {
+                Text(title)
+                    .style(.h1)
+                Text("dishes")
+                    .fontWeight(.light)
+                    .style(.h1)
+                    .opacity(0.5)
+                Spacer()
+            }
+            .padding(.horizontal)
             
             ForEach(0 ..< self.dishes.count) { index in
-                HStack {
-                    ForEach(self.dishes[index]) { dish in
-                        DishButton(action: {}) {
-                            HStack {
-                                dish.image
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 42, height: 42)
-                                    .cornerRadiusSquircle(18)
-                                Text("\(dish.name)")
-                                    .fontWeight(.semibold)
-                                    .lineLimit(1)
-                                    .font(.system(size: 15))
-                                Spacer()
-                            }
-                        }
+                DishListItem(
+                    number: index + 1,
+                    dish: self.dishes[index]
+                )
+            }
+        }
+        .padding(.bottom)
+        .padding(.top, 5)
+    }
+}
+
+struct DishListItem: View {
+    @EnvironmentObject var screen: ScreenModel
+    @State var isActive = false
+    
+    var number: Int
+    var dish: DishItem
+    var body: some View {
+        let imageSize: CGFloat = isActive ? 80 : 60
+        
+        let image = DishButton(action: {}) {
+            dish.image
+                .resizable()
+                .scaledToFill()
+                .frame(width: imageSize, height: imageSize)
+                .cornerRadiusSquircle(18)
+                .animation(.spring())
+        }
+        
+        return ScrollView(.horizontal, showsIndicators: false) {
+            ScrollListener(throttle: 32.0) { frame in
+                if frame.minX < 0 && !self.isActive {
+                    self.isActive = true
+                }
+            }
+            
+            HStack {
+                DishButton(action: {}) {
+                    HStack {
+                        Text("\(number).")
+                            .font(.system(size: 24))
+                            .fontWeight(.black)
+                        
+                        Text("\(dish.name)")
+                            .fontWeight(.light)
+                            .lineLimit(1)
+                            .font(.system(size: dish.name.count > 15 ? 20 : 24))
+                        
+                        Spacer()
                     }
+                    .padding(.horizontal)
+                    .frame(width: self.screen.width - 120 - 20)
+                }
+                
+                HStack {
+                    image
+                    image
+                    image
+                    image
                 }
             }
         }
-        .padding(.horizontal)
-        .padding(.bottom)
-        .padding(.top, 5)
+        .frame(height: imageSize + 10)
     }
 }
 
