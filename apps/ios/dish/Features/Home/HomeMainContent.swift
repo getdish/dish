@@ -196,7 +196,7 @@ struct DishListItem: View {
                         Text("\(dish.name)")
                             .fontWeight(.light)
                             .lineLimit(1)
-                            .font(.system(size: dish.name.count > 15 ? 20 : 24))
+                            .font(.system(size: 22))
                         
                         Spacer()
                     }
