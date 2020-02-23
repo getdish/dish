@@ -16,7 +16,7 @@ struct DishMapView: View {
     @Environment(\.geometry) var appGeometry
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard
-    @State var mapZoom = 0.0
+    @State var mapZoom = 10.0
     
     var appWidth: CGFloat { appGeometry?.size.width ?? App.screen.width }
     var appHeight: CGFloat { appGeometry?.size.height ?? App.screen.height }

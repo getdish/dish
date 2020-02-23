@@ -26,8 +26,6 @@ struct HomeMainView: View {
     @State var lastSearchFocus: SearchFocusState = .off
     
     func sideEffects() {
-        print("running side effects \(self.store.state.home.searchFocus) \(self.store.state.home.drawerPosition)")
-        
         // set app height
         if self.appGeometry?.size.height != self.state.appHeight {
             if let height = self.appGeometry?.size.height {

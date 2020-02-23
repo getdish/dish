@@ -41,6 +41,16 @@ extension MKMapView {
         let scaledMapWidth = Double(mapSizeInPixels.width) * zoomScale
         let scaledMapHeight = Double(mapSizeInPixels.height) * zoomScale;
         
+        if scaledMapWidth == 0 || scaledMapHeight == 0 {
+            // error!
+            print("🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨")
+            print("🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨")
+            print("🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨")
+            print("🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨")
+            print("🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨")
+            print(" note your map hasnt sized yet.. ")
+        }
+        
         // figure out the position of the top-left pixel
         let topLeftPixelX = centerPixelX - (scaledMapWidth / 2);
         let topLeftPixelY = centerPixelY - (scaledMapHeight / 2);
@@ -56,7 +66,8 @@ extension MKMapView {
         let latitudeDelta = -1 * (maxLat - minLat)
         
         // create and return the lat/lng span
-        return MKCoordinateSpan.init(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta)
+        print("final span deltas \(mapSizeInPixels.width) \(zoomScale) \((scaledMapWidth,scaledMapHeight)) \((minLng, maxLng)) \(latitudeDelta) \(longitudeDelta)")
+        return MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta)
     }
     
     func zoomLevel() -> Double {

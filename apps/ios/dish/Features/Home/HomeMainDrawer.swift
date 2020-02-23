@@ -190,7 +190,7 @@ struct DishListItem: View {
     var number: Int
     var dish: DishItem
     var body: some View {
-        let imageSize: CGFloat = isScrolled ? 70 : 60
+        let imageSize: CGFloat = 60 //isScrolled ? 70 : 60
         
         let image = DishButton(action: {}) {
             dish.image
@@ -230,6 +230,7 @@ struct DishListItem: View {
                     image
                     image
                 }
+                .padding(.trailing)
             }
         }
         .frame(height: imageSize + 10)

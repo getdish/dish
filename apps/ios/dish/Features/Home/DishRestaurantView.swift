@@ -31,7 +31,7 @@ struct DishRestaurantView: View {
 struct DishRestaurantViewContent: View {
     @EnvironmentObject var store: AppStore
     @Environment(\.colorScheme) var colorScheme
-    @State var mapZoom = 0.0
+    @State var mapZoom = 1.0
     
      let dishes = features.chunked(into: 2)
     

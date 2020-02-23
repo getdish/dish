@@ -53,6 +53,9 @@ struct BottomDrawer<Content: View>: View {
                     Spacer().frame(height: 12)
                 }
                 self.content()
+                    .disabled(self.position != .top)
+                    .allowsHitTesting(self.position == .top)
+                
                 // pad bottom so it wont go below
                 Spacer().frame(height: belowHeight)
             }
@@ -77,9 +80,10 @@ struct BottomDrawer<Content: View>: View {
     }
     
     var gesture: _EndedGesture<GestureStateGesture<DragGesture, DragState>> {
-        print("get gesture")
-        return DragGesture(minimumDistance: 12)
+        DragGesture(minimumDistance: 12)
             .updating($dragState) { drag, state, transaction in
+                print("update me? y \(drag.location.y) height \(drag.translation.height)")
+                
                 if self.lock != .drawer {
                     if App.store.state.home.drawerPosition != .bottom {
                         print("\(drag.translation.height)")
@@ -163,7 +167,6 @@ struct BottomDrawer<Content: View>: View {
     private func callbackChangePosition() {
         async {
             if let cb = self.onChangePosition {
-                print("onchange... \(self.draggedPositionY)")
                 cb(self.position, self.draggedPositionY)
             }
         }

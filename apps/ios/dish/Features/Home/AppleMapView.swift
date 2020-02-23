@@ -50,6 +50,10 @@ struct AppleMapView: UIViewRepresentable {
             self.mapZoom = parent.mapView.zoomLevel()
         }
         
+        func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
+            self.updateProps(self.parent)
+        }
+        
         var mapView: MKMapView {
             parent.mapView
         }
@@ -63,11 +67,12 @@ struct AppleMapView: UIViewRepresentable {
         // change location
         func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
             if let cb = parent.onChangeLocation {
-                cb(MapViewLocation(
+                let location = MapViewLocation(
                     center: .location(lat: mapView.centerCoordinate.latitude, long: mapView.centerCoordinate.longitude),
                     // why * x? - idk but its not matching, may be related to that we make map view 1.6x taller than screen?
                     radius: mapView.currentRadius() * 0.575
-                ))
+                )
+                cb(location)
             }
         }
         
@@ -169,14 +174,21 @@ struct AppleMapView: UIViewRepresentable {
         }
         
         func updateProps(_ parent: AppleMapView) {
+            if self.mapView.bounds.width == 0 || self.mapView.bounds.height == 0 {
+                print("map not loaded yet or not visible")
+                return
+            }
+            
             self.updateCurrentLocation(parent.currentLocation)
             self.updateMarkers(parent.markers)
             self.mapView.showsUserLocation = parent.showsUserLocation
             if parent.mapZoom != self.mapZoom {
+                print("AppleMapView setting zoom level to \(parent.mapZoom) from \(self.mapZoom)")
                 self.mapZoom = parent.mapZoom
+                let center = self.getCurrentCenter() ?? mapView.centerCoordinate
                 self.mapView.setCenterCoordinate(
-                    centerCoordinate: mapView.centerCoordinate,
-                    zoomLevel: self.mapZoom,
+                    centerCoordinate: center,
+                    zoomLevel: parent.mapZoom,
                     animated: true
                 )
             }
@@ -209,9 +221,10 @@ struct AppleMapView: UIViewRepresentable {
         
         func addAnnotation(_ marker: MapMarker) {
             mapView.addAnnotation(createAnnotation(marker))
-            if marker.countryIcon != "" {
-                mapView.addAnnotation(createFlagAnnotation(marker))
-            }
+            // disable showing country flags until we get time to polish
+//            if marker.countryIcon != "" {
+//                mapView.addAnnotation(createFlagAnnotation(marker))
+//            }
         }
         
         func createAnnotation(_ marker: MapMarker) -> MKAnnotation {
@@ -228,6 +241,23 @@ struct AppleMapView: UIViewRepresentable {
             return annotation
         }
         
+        func getCurrentCenter(_ location: MapViewLocation? = nil) -> CLLocationCoordinate2D? {
+            guard let location = location ?? self.parent.currentLocation else {
+                return nil
+            }
+            switch location.center {
+                case .current:
+                    if let coordinate = locationManager.location?.coordinate {
+                        return coordinate
+                    }
+                case .location(lat: let lat, long: let long):
+                    return .init(latitude: lat, longitude: long)
+                case .none:
+                    return nil
+            }
+            return nil
+        }
+        
         func updateCurrentLocation(_ location: MapViewLocation?) {
             guard let location = location else {
                 return
@@ -236,25 +266,13 @@ struct AppleMapView: UIViewRepresentable {
                 return
             }
             self.lastLocation = location
-            switch location.center {
-                case .current:
-                    if let coordinate = locationManager.location?.coordinate {
-                        let coordinateRegion = MKCoordinateRegion(
-                            center: coordinate,
-                            latitudinalMeters: location.radius,
-                            longitudinalMeters: location.radius
-                        )
-                        mapView.setRegion(coordinateRegion, animated: true)
-                }
-                case .location(lat: let lat, long: let long):
-                    let coordinateRegion = MKCoordinateRegion(
-                        center: .init(latitude: lat, longitude: long),
-                        latitudinalMeters: mapView.currentRadius(),
-                        longitudinalMeters: mapView.currentRadius()
-                    )
-                    mapView.setRegion(coordinateRegion, animated: true)
-                case .none:
-                    print("none")
+            if let center = self.getCurrentCenter(location) {
+                let coordinateRegion = MKCoordinateRegion(
+                    center: center,
+                    latitudinalMeters: mapView.currentRadius(),
+                    longitudinalMeters: mapView.currentRadius()
+                )
+                mapView.setRegion(coordinateRegion, animated: true)
             }
         }
     }
