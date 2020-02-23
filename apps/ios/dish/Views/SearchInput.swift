@@ -94,7 +94,7 @@ struct SearchInput: View {
     var body: some View {
         let pad = 10 * scale
         let fontSize = 14 * (scale - 1) / 2 + 16
-        let horizontalSpacing = 8 * scale
+        let horizontalSpacing = 12 * scale
         
         return VStack {
             // Search view
@@ -117,7 +117,7 @@ struct SearchInput: View {
                             }
                             .frame(width: 24 * scale, height: 24 * scale)
                         }
-                        .padding(.horizontal, horizontalSpacing)
+                        
                     }
                     
                     Spacer().frame(width: horizontalSpacing)
@@ -161,7 +161,7 @@ struct SearchInput: View {
                                     .scaledToFit()
                                     .frame(width: 20 + 2 * scale, height: 20 + 2 * scale)
                             }
-                            .transition(.slide)
+                            .transition(.opacity)
                             
                             Spacer().frame(width: horizontalSpacing)
                         }
@@ -170,20 +170,22 @@ struct SearchInput: View {
                     if showCancelButton && showCancelInside {
                         Group {
                             cancelButton
-                            Spacer().frame(width: horizontalSpacing)
                         }
                     }
                     
                     if after != nil {
-                        after
-                            .frame(height: 24 * scale)
+                        Group {
+                            Spacer().frame(width: horizontalSpacing)
+                            after
+                                .frame(height: 24 * scale)
+                        }
                     }
                 }
                     .padding(EdgeInsets(
                         top: pad,
-                        leading: pad * 1.5 - horizontalSpacing,
+                        leading: pad,
                         bottom: pad,
-                        trailing: pad * 1.5 + horizontalSpacing
+                        trailing: pad
                     ))
                     .foregroundColor(.secondary)
                     .background(self.inputBackgroundColor)

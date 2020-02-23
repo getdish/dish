@@ -44,9 +44,9 @@ struct HomeMainDrawer: View, Equatable {
                 // home content
                 ZStack {
                     VStack {
-                        ScrollView {
+                        ScrollView(.vertical, showsIndicators: false) {
                             Spacer().frame(height: topContentHeight)
-                            HomeMainContent()
+                            HomeMainDrawerContent()
                             Spacer().frame(height: 5 + self.screen.edgeInsets.bottom)
                         }
                         Spacer()
@@ -72,66 +72,70 @@ struct HomeMainDrawer: View, Equatable {
                 .opacity(isOnLocationSearch ? 0 : 1)
                 
                 // Location search
-                ZStack {
-                    Text("Search location")
-                    ScrollView {
-                        List {
-                            HStack { Text("Search result") }
-                        }
-                    }
-                }
-                .opacity(isOnLocationSearch ? 1 : 0)
+//                ZStack {
+//                    Text("Search location")
+//                    ScrollView {
+//                        List {
+//                            HStack { Text("Search result") }
+//                        }
+//                    }
+//                }
+//                .opacity(isOnLocationSearch ? 1 : 0)
             }
         }
     }
 }
 
 
-struct HomeMainContent: View {
+struct HomeMainDrawerContent: View {
     @EnvironmentObject var store: AppStore
     @State var dragX: CGFloat = 0
 
     var body: some View {
         let viewStates = self.store.state.home.viewStates
-        return GeometryReader { geometry in
-            ZStack {
-                ForEach(0 ..< viewStates.count) { index in
-                    HomeScreen(
-                        viewState: viewStates[index],
-                        isActive: Selectors.home.lastState() == viewStates[index],
-                        index: index
-                    )
-                }
+        print("viewStates \(viewStates.count)")
+        return ZStack {
+            ForEach(viewStates) { viewState in
+                HomeScreen(
+                    viewState: viewState,
+                    isActive: Selectors.home.lastState() == viewState,
+                    index: viewStates.firstIndex(of: viewState) ?? 0
+                )
             }
-            .gesture(
-                DragGesture()
-                    .onChanged { value in
-                        // right edge
-                        if value.startLocation.x < 10 {
-                            self.dragX = value.translation.width
-                        }
-                }
-                .onEnded { value in
-                    let frameWidth = geometry.size.width
-                    let offset = value.translation.width / frameWidth
-                    let offsetV = value.predictedEndTranslation.width / frameWidth
-                    let score = abs(offset * 0.4 + offsetV * 0.6)
-                    let shouldChange = score > 0.2
-                    withAnimation(.spring()) {
-                        self.dragX = shouldChange ? frameWidth : 0
-                    }
-                }
-            )
+            // todo only start on edge
+//            .gesture(
+//                DragGesture()
+//                    .onChanged { value in
+//                        // right edge
+//                        if value.startLocation.x < 10 {
+//                            self.dragX = value.translation.width
+//                        }
+//                }
+//                .onEnded { value in
+//                    let frameWidth = geometry.size.width
+//                    let offset = value.translation.width / frameWidth
+//                    let offsetV = value.predictedEndTranslation.width / frameWidth
+//                    let score = abs(offset * 0.4 + offsetV * 0.6)
+//                    let shouldChange = score > 0.2
+//                    withAnimation(.spring()) {
+//                        self.dragX = shouldChange ? frameWidth : 0
+//                    }
+//                }
+//            )
         }
     }
 }
 
-struct HomeScreen: View {
+struct HomeScreen: View, Identifiable {
+    var id: String { self.viewState.id }
+    @EnvironmentObject var store: AppStore
     var viewState: HomeStateItem
     var isActive: Bool
     var index: Int
     
     var body: some View {
+        print("render home screen \(index) \(viewState.search)")
+        
         return ZStack {
             Color.white
             
@@ -179,6 +183,7 @@ struct HomeContentExplore: View {
 }
 
 struct DishListItem: View {
+    @EnvironmentObject var store: AppStore
     @EnvironmentObject var screen: ScreenModel
     @State var isActive = false
     
@@ -206,7 +211,11 @@ struct DishListItem: View {
             }
             
             HStack {
-                DishButton(action: {}) {
+                DishButton(action: {
+                    App.store.send(
+                        .home(.push(HomeStateItem(search: self.dish.name)))
+                    )
+                }) {
                     HStack {
                         Text("\(number).")
                             .font(.system(size: 24))
