@@ -1,6 +1,6 @@
-import { FetchResult, gql, useSubscription } from '@apollo/client'
+import { FetchResult, gql, useQuery, useSubscription } from '@apollo/client'
 import { ModelBase, Taxonomy, TaxonomyRecord, TaxonomyType } from '@dish/models'
-import { BorderLeft, Button, Card, Icon, Input, Stack, Surface, Text, Theme, Title } from '@o/ui'
+import { BorderLeft, Button, Card, Icon, Input, Stack, Surface, Text, Theme, Title, useDebounceValue } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 
 const CONTINENTS_SUBSCRIPTION = gql`
@@ -31,6 +31,15 @@ const TAXONOMY_DELETE = gql`
   mutation Delete($id: uuid!) {
     delete_taxonomy(where: { id: { _eq: $id } }) {
       affected_rows
+    }
+  }
+`
+
+const DISHES_SEARCH = gql`
+  query DishesSearch($limit: Int!, $search: String!) {
+    dish(limit: $limit, where: { name: { _ilike: $search } }) {
+      id
+      name
     }
   }
 `
@@ -128,7 +137,7 @@ export const LabDishes = () => {
           </Button>
           {taxonomies[type].map((taxonomy, index) => {
             return (
-              <EditableField
+              <ListItem
                 key={`${taxonomy.id}${taxonomy.updated_at}`}
                 row={row}
                 col={index}
@@ -165,6 +174,7 @@ export const LabDishes = () => {
         <Stack position="relative" flex={1}>
           <BorderLeft />
           <Title padding={10}>Menu Items</Title>
+          <MenuItems active={active} setActive={setActive} />
         </Stack>
       </Stack>
 
@@ -208,22 +218,26 @@ export const LabDishes = () => {
     </Stack>
   )
 }
-const EditableField = ({
+const ListItem = ({
   row,
   col,
   taxonomy,
   isActive,
   isFormerlyActive,
   setActive,
+  editable = true,
+  deletable = false,
   upsert,
 }: {
+  editable?: boolean
+  deletable?: boolean
   row?: number
   col?: number
   taxonomy: TaxonomyRecord
   isActive?: boolean
   setActive?: Function
   isFormerlyActive?: boolean
-  upsert: Function
+  upsert?: Function
 }) => {
   const text = `${taxonomy.icon} ${taxonomy.name}`
   const [isEditing, setIsEditing] = useState(false)
@@ -238,17 +252,19 @@ const EditableField = ({
         padding="sm"
         key={taxonomy.id}
         direction="horizontal"
-        onClick={
-          isActive
-            ? null
-            : () => {
-                if (setActive && typeof row == 'number') {
-                  setActive([row, col])
-                }
+        onClick={() => {
+          setTimeout(() => {
+            if (!isActive) {
+              if (setActive && typeof row == 'number') {
+                setActive([row, col])
               }
-        }
+            }
+          })
+        }}
         onDoubleClick={() => {
-          setIsEditing(true)
+          if (editable) {
+            setIsEditing(true)
+          }
         }}
       >
         <Stack flex={1} direction="horizontal" alignItems="center">
@@ -274,22 +290,77 @@ const EditableField = ({
 
           <div style={{ flex: 1 }} />
 
-          <Icon
-            name="cross"
-            opacity={0.5}
-            onClick={e => {
-              e.stopPropagation()
-              setHidden(true)
-              ModelBase.client.mutate({
-                variables: {
-                  id: taxonomy.id,
-                },
-                mutation: TAXONOMY_DELETE,
-              })
-            }}
-          />
+          {deletable && (
+            <Icon
+              name="cross"
+              opacity={0.5}
+              onClick={e => {
+                e.stopPropagation()
+                setHidden(true)
+                ModelBase.client.mutate({
+                  variables: {
+                    id: taxonomy.id,
+                  },
+                  mutation: TAXONOMY_DELETE,
+                })
+              }}
+            />
+          )}
         </Stack>
       </Surface>
     </Theme>
+  )
+}
+
+function MenuItems({
+  active,
+  setActive,
+}: {
+  active: [number, number]
+  setActive: Function
+}) {
+  const [search, setSearch] = useState('')
+  const searchDebounced = useDebounceValue(search, 200)
+  const { loading, error, data } = useQuery(DISHES_SEARCH, {
+    variables: {
+      limit: 100,
+      search: searchDebounced,
+    },
+  })
+
+  console.log({ search, loading, error, data })
+
+  return (
+    <>
+      <Input
+        onChange={e => setSearch(e.target['value'])}
+        placeholder="Search all MenuItems"
+      />
+      <Stack direction="vertical" flex={1} overflowY="scroll">
+        {loading && <Text>Loading...</Text>}
+        {!loading &&
+          data.dish.map((dish, index) => {
+            const isActive = active[0] === 0 && index === active[1]
+            return (
+              <Theme name={isActive ? 'selected' : null}>
+                <Surface
+                  padding="sm"
+                  key={dish.id}
+                  direction="horizontal"
+                  onClick={() => {
+                    setTimeout(() => {
+                      if (!isActive) {
+                        setActive([4, index])
+                      }
+                    })
+                  }}
+                >
+                  <Text size="xl">{dish.name}</Text>
+                </Surface>
+              </Theme>
+            )
+          })}
+      </Stack>
+    </>
   )
 }
