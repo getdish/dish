@@ -17,10 +17,6 @@ struct HomeMainView: View {
     @State var wasOnCamera = false
     @State var contentWrappingView: UIView? = nil
 
-    var drawerPosition: Binding<BottomDrawerPosition> {
-        store.binding(for: \.home.drawerPosition, { .home(.setDrawerPosition($0)) })
-    }
-    
     func start() {
         async(500) {
             self.state.setAnimationState(.idle)
@@ -30,14 +26,7 @@ struct HomeMainView: View {
     @State var lastSearchFocus: SearchFocusState = .off
     
     func sideEffects() {
-        // on focus search move drawer up
-        let searchFocus = store.state.home.searchFocus
-        if searchFocus != self.lastSearchFocus {
-            self.lastSearchFocus = searchFocus
-            if searchFocus == .search {
-                store.send(.home(.setDrawerPosition(.top)))
-            }
-        }
+        print("running side effects \(self.store.state.home.searchFocus) \(self.store.state.home.drawerPosition)")
         
         // set app height
         if self.appGeometry?.size.height != self.state.appHeight {
@@ -214,7 +203,17 @@ struct DishDrawer: View, Equatable {
     @EnvironmentObject var store: AppStore
     
     var drawerPosition: Binding<BottomDrawerPosition> {
-        store.binding(for: \.home.drawerPosition, { .home(.setDrawerPosition($0)) })
+        Binding<BottomDrawerPosition>(
+            get: {
+                if self.store.state.home.searchFocus != .off {
+                    return .top
+                }
+                return self.store.state.home.drawerPosition
+                
+        },
+            set: { self.store.send(.home(.setDrawerPosition($0))) }
+        )
+        
     }
     
     var body: some View {
@@ -227,6 +226,10 @@ struct DishDrawer: View, Equatable {
             handle: nil,
             onChangePosition: { (_, y) in
                 homeViewState.setY(y)
+                if self.store.state.home.searchFocus != .off &&
+                    y > App.drawerSnapPoints[0] + 100 {
+
+                }
         }
         ) {
             ZStack {

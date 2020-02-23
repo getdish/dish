@@ -19,7 +19,7 @@ struct ScrollListener: View {
             .overlay(
                 GeometryReader { geometry -> Run in
                     let frame: CGRect = geometry.frame(in: .global)
-                    return Run("ScrollListener", debounce: self.debounce, throttle: self.throttle) {
+                    return Run("ScrollListener", level: .debug, debounce: self.debounce, throttle: self.throttle) {
                         if let cb = self.onScroll {
                             cb(frame)
                         }
