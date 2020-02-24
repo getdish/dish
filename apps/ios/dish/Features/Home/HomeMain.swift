@@ -108,12 +108,12 @@ struct HomeMainView: View {
                         .offset(y: max(App.drawerSnapPoints[1] - 68 - 30, state.y - 68))
                         .animation(.spring(response: 1))
                     
-                    HomeMainDrawer()
-                        .equatable()
-                    
                     // top bar
                     TopNavView()
                         .frameLimitedToScreen()
+                    
+                    HomeMainDrawer()
+                        .equatable()
                     
                     DishCuisineFilterPopup(
                         active: self.store.state.home.showCuisineFilter

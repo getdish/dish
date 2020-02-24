@@ -6,6 +6,7 @@ struct BottomDrawer<Content: View>: View {
     
     @GestureState private var dragState = DragState.inactive
     @Binding var position: BottomDrawerPosition
+    @State var mass: Double = 1.5
     
     var snapPoints: [CGFloat] = [100, 400, 600]
     var background: AnyView? = nil
@@ -84,7 +85,7 @@ struct BottomDrawer<Content: View>: View {
             }
             .animation(self.dragState.isDragging
                 ? nil
-                : .interpolatingSpring(mass: 2.0, stiffness: 90.0, damping: 25.0, initialVelocity: 0)
+                : .interpolatingSpring(mass: self.mass, stiffness: 90.0, damping: 25.0, initialVelocity: 0)
             )
             .gesture(
                 self.gesture
@@ -176,7 +177,7 @@ struct BottomDrawer<Content: View>: View {
         // then release it, you then want to be more lenient and have it snap to middle more often
         let distanceToSnap: CGFloat = closestPosition == self.position ? 70 : 160
         
-//        print("distanceToSnap \(distanceToSnap) throwDirection \(throwDirection) closestPoint \(closestPoint) closestPosition \(closestPosition)")
+        print("distanceToSnap \(distanceToSnap) throwDirection \(throwDirection) closestPoint \(closestPoint) closestPosition \(closestPosition)")
         
         if cardTopEdgeLocation < getSnapPoint(.top) {
             self.position = .top
@@ -192,6 +193,8 @@ struct BottomDrawer<Content: View>: View {
             }
         }
         
+        // makes the animation speed match the throw velocity
+        self.mass = 2.65 - max(1, (max(1, min(100, Double(abs(throwDirection)))) / 50))
         self.lock = .drawer
         
         if let cb = self.onDragState { cb(self.dragState) }
