@@ -40,7 +40,7 @@ class AppModel {
     let searchBarHeight: CGFloat = 50
     let cameraButtonHeight: CGFloat = 44
     let filterBarHeight: CGFloat = 60
-    let mapBarHeight: CGFloat = 90
+    let mapBarHeight: CGFloat = 80
     
     var drawerSnapPoints: [CGFloat] {
         [

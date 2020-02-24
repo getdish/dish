@@ -53,6 +53,8 @@ struct HomeMainView: View {
         let state = self.state
         let animationState = state.animationState
         let mapHeight = state.mapHeight
+        let showMapRow = self.store.state.home.drawerPosition == .bottom
+            && !self.store.state.home.drawerIsDragging
 //        let isOnShowSearch = searchFocus != .off
         //        let enableSearchBar = [.idle, .off].contains(state.dragState) && state.animationState == .idle
 
@@ -103,13 +105,16 @@ struct HomeMainView: View {
                         .opacity(state.showCamera ? 0 : 1)
                     }
                     
-                    HomeMapResultsBar()
-                        .offset(y: max(state.y, App.drawerSnapPoints[1]) + (
-                            self.store.state.home.drawerPosition == .bottom && !self.store.state.home.drawerIsDragging
-                                ? -App.mapBarHeight
+                    VStack {
+                        HomeMapResultsBar()
+                        Spacer()
+                    }
+                    .offset(y: (showMapRow ? App.drawerSnapPoints[2] : self.screen.height) + (
+                            showMapRow
+                                ? -App.mapBarHeight - 68
                                 : 0
                         ))
-                        .animation(.spring())
+                        .animation(.spring(response: 1))
                     
                     VStack(spacing: 0) {
                         DishLenseFilterBar()
