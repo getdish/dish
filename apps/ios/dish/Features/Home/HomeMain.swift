@@ -13,8 +13,6 @@ struct HomeMainView: View {
     //
     @ObservedObject var state = homeViewState
 
-    @State var wasOnSearchResults = false
-    @State var wasOnCamera = false
     @State var contentWrappingView: UIView? = nil
 
     func start() {
@@ -53,23 +51,18 @@ struct HomeMainView: View {
                 ZStack {
                     
                     // Camera
-                    if App.enableCamera && animationState != .splash {
-                        ZStack {
-                            DishCamera()
-                        }
-                        .frameLimitedToScreen()
-                    }
+//                    if App.enableCamera && animationState != .splash {
+//                        ZStack {
+//                            DishCamera()
+//                        }
+//                        .frameLimitedToScreen()
+//                    }
                     
                     // Map
                     if App.enableMap {
                         ZStack {
                             ZStack {
-                                DishMapView(
-                                    height: state.mapFullHeight,
-                                    animate: [.idle].contains(state.dragState)
-                                        || state.animationState != .idle
-                                )
-                                    
+                                DishMapViewContainer()
                                     .offset(y:
                                         // centered
                                         (self.screen.height - state.mapFullHeight) * 0.5
