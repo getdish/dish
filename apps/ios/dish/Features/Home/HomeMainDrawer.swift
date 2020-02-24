@@ -49,7 +49,7 @@ struct HomeMainDrawer: View, Equatable {
                     VStack {
                         ScrollView(.vertical, showsIndicators: false) {
                             Spacer().frame(height: topContentHeight)
-                            HomeMainDrawerContent()
+                            HomeMainDrawerContent().equatable()
                             Spacer().frame(height: 5 + self.screen.edgeInsets.bottom)
                         }
                         .mask(
@@ -84,7 +84,12 @@ struct HomeMainDrawer: View, Equatable {
 }
 
 
-struct HomeMainDrawerContent: View {
+struct HomeMainDrawerContent: View, Equatable {
+    static func == (lhs: HomeMainDrawerContent, rhs: HomeMainDrawerContent) -> Bool {
+        true
+    }
+    
+    
     @EnvironmentObject var store: AppStore
     @State var dragX: CGFloat = 0
 

@@ -54,10 +54,12 @@
 
 Following are all "chunks" that will make significant improvements in feel/usability:
 
+- [ ] fix map positioning
+- [ ] fix overall slow speed with current drwaer
 - [ ] Search/map should have a loading spinner while searching and dim out previous results
-- [ ] Filters stack should probably be connected pill button style
+- [x] Filters stack should probably be connected pill button style
 - [ ] Animate in the cuisine filters and improve display
-- [ ] De-focusing search should move drawer back to previous position
+- [x] De-focusing search should move drawer back to previous position
 - [ ] Map should zoom in/out as you move drawer between top/middle/bottom
 - [ ] Bugfix drawer moves up when you scroll down
 - [ ] Get search autocomplete interface integrated

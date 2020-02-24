@@ -133,13 +133,25 @@ struct BottomDrawer<Content: View>: View {
             .onEnded(onDragEnded)
     }
     
+    private func getDistance(_ position: BottomDrawerPosition, from: CGFloat) -> CGFloat {
+        let y = getSnapPoint(position)
+        return y > from ? y - from : from - y
+    }
+    
     private func onDragEnded(drag: DragGesture.Value) {
         var throwDirection = drag.predictedEndLocation.y - drag.location.y
         let cardTopEdgeLocation = self.positionY + drag.translation.height
         let positionAbove: BottomDrawerPosition
         let positionBelow: BottomDrawerPosition
-        let closestPosition: BottomDrawerPosition
+        var closestPosition: BottomDrawerPosition
         
+        let distanceToTop = getDistance(.top, from: drag.predictedEndLocation.y)
+        let distanceToMid = getDistance(.middle, from: drag.predictedEndLocation.y)
+        let distanceToBottom = getDistance(.bottom, from: drag.predictedEndLocation.y)
+        let closestPoint = min(distanceToTop, distanceToMid, distanceToBottom)
+        
+        closestPosition = closestPoint == distanceToTop ? .top : closestPoint == distanceToMid ? .middle : .bottom
+
         if cardTopEdgeLocation <= getSnapPoint(.middle) {
             positionAbove = .top
             positionBelow = .middle
@@ -148,19 +160,14 @@ struct BottomDrawer<Content: View>: View {
             positionBelow = .bottom
         }
         
-        let curPosition = getSnapPoint(self.position)
-        let distanceFromCurrentEdge = curPosition > cardTopEdgeLocation
-            ? curPosition - cardTopEdgeLocation
-            : cardTopEdgeLocation - curPosition
-        if distanceFromCurrentEdge < 25 && abs(throwDirection) < 50 {
+        // NOTE: this is a nice little interaction tweak
+        // we basically are "more likely to snap away" if you release near your current snapPoint
+        // this is maybe unintuitive, but think of it like this: you want to do a small flick
+        // to move it away. But if you are dragging from the top, and hold it "over" the middle,
+        // then release it, you then want to be more lenient and have it snap to middle more often
+        let distanceToSnap: CGFloat = closestPosition == self.position ? 100 : 150
+        if closestPoint < distanceToSnap {
             throwDirection = 0
-            closestPosition = self.position
-        } else {
-            if (cardTopEdgeLocation - getSnapPoint(positionAbove)) < (getSnapPoint(positionBelow) - cardTopEdgeLocation) {
-                closestPosition = positionAbove
-            } else {
-                closestPosition = positionBelow
-            }
         }
         
         if throwDirection > 0 {
