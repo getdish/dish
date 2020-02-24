@@ -63,7 +63,6 @@ struct HomeMainView: View {
         return ZStack(alignment: .topLeading) {
             Run("sideeffects") { self.sideEffects() }
             RunOnce(name: "start") { self.start() }
-            
             PrintGeometryView("HomeMainView")
             
             // below restaurant card
@@ -153,65 +152,11 @@ struct HomeMainView: View {
                 .disabled(state.dragState != .idle)
             }
             .clipped() // dont remove fixes bug cant click SearchBar
-//            .simultaneousGesture(self.dragGesture)
             
             DishRestaurantView()
             
         }
             .environmentObject(self.state)
-    }
-
-    var dragGesture: _EndedGesture<_ChangedGesture<DragGesture>> {
-        var ignoreThisDrag = false
-
-        return DragGesture(minimumDistance: 10)
-            .onChanged { value in
-                print("drag ignore \(ignoreThisDrag) state \(self.state.dragState)")
-                if ignoreThisDrag {
-                    return
-                }
-                if [.off, .pager, .contentHorizontal].contains(self.state.dragState) {
-                    return
-                }
-                let isAlreadyDragging = self.state.dragState == .searchbar
-                let isDraggingBelowSearchbar = value.startLocation.y > self.state.y
-                let isDraggingHorizontal = abs(value.translation.width) > abs(value.translation.height)
-                    && abs(value.translation.width) > 15
-                if !isAlreadyDragging
-                    && isDraggingBelowSearchbar
-                    && isDraggingHorizontal
-                     {
-                    logger.debug("ignore drag horizontal")
-                    self.state.setDragState(.contentHorizontal)
-                    ignoreThisDrag = true
-                    return
-                }
-
-                let isDraggingSearchBar = self.state.isWithinDraggableArea(value.startLocation.y)
-//                let isDraggingBelowSearchBar = self.state.isActiveScrollViewAtTop
-//                    && HomeSearchBarState.isBelow(value.startLocation.y)
-
-                //                print("☕️ self.state.isActiveScrollViewAtTop \(self.state.isActiveScrollViewAtTop) isDraggingBelowSearchBar \(isDraggingBelowSearchBar) height \(value.translation.height)")
-
-                if isAlreadyDragging || isDraggingSearchBar {
-                    if self.keyboard.state.height > 0 {
-                        self.keyboard.hide()
-                    }
-                    let next = value.translation.height.round(nearest: 0.5)
-                    if next != self.state.y {
-                        self.state.setY(next)
-                    }
-                }
-            }
-            .onEnded { value in
-                if !ignoreThisDrag {
-                    if [.idle, .searchbar].contains(self.state.dragState) {
-                        self.state.finishDrag(value)
-                    }
-                    self.state.setDragState(.idle)
-                }
-                ignoreThisDrag = false
-            }
     }
 }
 

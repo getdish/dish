@@ -8,6 +8,7 @@ struct HomeMainDrawer: View, Equatable {
     
     @EnvironmentObject var screen: ScreenModel
     @EnvironmentObject var store: AppStore
+    @State var scrollView: UIScrollView? = nil
     
     var drawerPosition: Binding<BottomDrawerPosition> {
         Binding<BottomDrawerPosition>(
@@ -21,6 +22,32 @@ struct HomeMainDrawer: View, Equatable {
             set: { self.store.send(.home(.setDrawerPosition($0))) }
         )
         
+    }
+    
+    class HandleScrollView: NSObject, UIGestureRecognizerDelegate {
+        init(_ scrollView: UIScrollView) {
+            super.init()
+            
+            let panGesture = UIPanGestureRecognizer.init()
+            panGesture.delegate = self
+            scrollView.addGestureRecognizer(panGesture)
+        }
+        
+        func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+            print("what")
+            return false
+        }
+        
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+            print("should receive???")
+            return false
+        }
+    }
+    
+    func start() {
+        if let scrollView = self.scrollView {
+            _ = HandleScrollView(scrollView)
+        }
     }
     
     var body: some View {
@@ -49,6 +76,12 @@ struct HomeMainDrawer: View, Equatable {
                     VStack {
                         ScrollView(.vertical, showsIndicators: false) {
                             Spacer().frame(height: topContentHeight)
+                                .introspectScrollView { scrollView in
+                                    if self.scrollView == nil {
+                                        self.scrollView = scrollView
+                                        self.start()
+                                    }
+                                }
                             HomeMainDrawerContent()
                             Spacer().frame(height: 5 + self.screen.edgeInsets.bottom)
                         }
@@ -176,91 +209,6 @@ struct HomeContentExplore: View {
         .padding(.bottom)
         .padding(.top, 5)
         .animation(.spring())
-    }
-}
-
-struct DishListItem: View, Equatable {
-    static func == (lhs: DishListItem, rhs: DishListItem) -> Bool {
-        lhs.dish == rhs.dish
-    }
-    
-    @EnvironmentObject var screen: ScreenModel
-    @State var isScrolled: Bool = false
-    
-    var number: Int
-    var dish: DishItem
-    var body: some View {
-        let imageSize: CGFloat = 60 //isScrolled ? 70 : 60
-        
-        let image = DishButton(action: {}) {
-            dish.image
-                .resizable()
-                .scaledToFill()
-                .frame(width: imageSize, height: imageSize)
-                .cornerRadiusSquircle(18)
-                .animation(.spring())
-        }
-        
-        return ListItemHScroll(isScrolled: self.$isScrolled) {
-            HStack {
-                DishButton(action: {
-                    App.store.send(
-                        .home(.push(HomeStateItem(search: self.dish.name)))
-                    )
-                }) {
-                    HStack {
-                        Text("\(self.number).")
-                            .font(.system(size: 20))
-                            .fontWeight(.bold)
-                            .opacity(0.3)
-                        
-                        Text("\(self.dish.name)")
-                            .fontWeight(.light)
-                            .lineLimit(1)
-                            .font(.system(size: 22))
-                        
-                        Spacer()
-                    }
-                    .padding(.horizontal)
-                    .frame(width: self.screen.width - 120 - 20)
-                }
-                
-                HStack {
-                    image
-                    image
-                    image
-                    image
-                }
-                .drawingGroup()
-                .padding(.trailing)
-            }
-        }
-        .frame(height: imageSize + 10)
-        .animation(.spring())
-    }
-}
-
-struct ListItemHScroll<Content>: View where Content: View {
-    @Binding var isScrolled: Bool
-    var content: Content
-    
-    init (isScrolled: Binding<Bool>, @ViewBuilder _ content: @escaping () -> Content) {
-        self.content = content()
-        self._isScrolled = isScrolled
-    }
-    
-    var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            ScrollListener(throttle: 32.0) { frame in
-                if frame.minX < 0 && !self.isScrolled {
-                    self.isScrolled = true
-                } else if frame.minX == 0 && self.isScrolled {
-                    self.isScrolled = false
-                }
-            }
-            
-            self.content
-        }
     }
 }
 
