@@ -20,17 +20,20 @@ struct HomeMapResultsBar: View {
             Spacer().frame(height: 120)
         }
         .background(
-            self.colorScheme == .dark
-              ? LinearGradient(
-                    gradient: Gradient(colors: [.clear, .black]),
-                    startPoint: .top,
-                    endPoint: .center
+            ZStack {
+                self.colorScheme == .dark
+                    ? LinearGradient(
+                        gradient: Gradient(colors: [.clear, .black]),
+                        startPoint: .top,
+                        endPoint: .center
+                        )
+                    : LinearGradient(
+                        gradient: Gradient(colors: [Color.clear, Color.init(white: 0, opacity: 0.75)]),
+                        startPoint: .top,
+                        endPoint: .bottom
                 )
-              : LinearGradient(
-                gradient: Gradient(colors: [Color.clear, Color.init(white: 0, opacity: 0.75)]),
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
+            }
+            .drawingGroup()
         )
     }
 }
@@ -45,20 +48,12 @@ struct HomeMapExplore: View {
                 ForEach(features) { item in
                     MapResultDishCard(dish: item)
                         .equatable()
-                    //                    DishButtonView(dish: item, at: .start)
                 }
+//                .drawingGroup()
             }
             .padding(.horizontal, 20)
         }
         .frame(width: App.screen.width, height: App.mapBarHeight)
-//        ScrollViewEnhanced(
-//            index: self.$index,
-//            direction: .horizontal,
-//            showsIndicators: false,
-//            pages: (0..<features.count).map { index in
-//                MapResultDishCard(dish: features[index])
-//            }
-//        )
     }
 }
 

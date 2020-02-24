@@ -78,7 +78,7 @@ struct BottomDrawer<Content: View>: View {
             .cornerRadius(self.cornerRadius)
             .shadow(color: Color(white: 0, opacity: 0.27), radius: 20.0)
             .offset(y: self.draggedPositionY)
-            .onGeometryChange { geometry in
+            .onGeometryFrameChange { geometry in
                 async {
                     self.callbackChangePosition()
                 }

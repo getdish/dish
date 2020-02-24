@@ -139,9 +139,8 @@ struct FilterGroupView: View {
         
         return FilterButton(expandable: index == 0 && !isExpanded, filter: filter)
             .frame(width: isExpanded ? self.widths[index] : nil)
-            .onGeometryChange { geometry in
+            .onGeometrySizeChange { width, _ in
                 if !self.isExpanded {
-                    let width = geometry.size.width
                     if width != self.widthById[filter.id] {
                         self.widthById[filter.id] = width
                     }

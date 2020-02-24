@@ -61,12 +61,37 @@ extension View {
         }
     }
     
-    func onGeometryChange(_ onGeometry: @escaping (GeometryProxy) -> Void) -> some View {
-        self.overlay(
-            GeometryReader { proxy in
-                Run("onGeometryChange") {
-                    onGeometry(proxy)
+    func onGeometryFrameChange(_ callback: @escaping (GeometryProxy) -> Void) -> some View {
+        var last: CGRect? = nil
+        return self.overlay(
+            GeometryReader { proxy -> Color in
+                let next = proxy.frame(in: .global)
+                if last != next {
+                    last = next
+                    async {
+                        callback(proxy)
+                    }
                 }
+                return Color.clear
+            }
+        )
+    }
+    
+    func onGeometrySizeChange(_ callback: @escaping (CGFloat, CGFloat) -> Void) -> some View {
+        var lastWidth: CGFloat = -1
+        var lastHeight: CGFloat = -1
+        return self.overlay(
+            GeometryReader { proxy -> Color in
+                let nextWidth = proxy.size.width
+                let nextHeight = proxy.size.width
+                if nextWidth != lastWidth || nextHeight != lastHeight {
+                    lastHeight = nextHeight
+                    lastWidth = nextWidth
+                    async {
+                        callback(nextWidth, nextHeight)
+                    }
+                }
+                return Color.clear
             }
         )
     }
