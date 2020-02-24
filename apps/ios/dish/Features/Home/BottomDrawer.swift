@@ -68,23 +68,25 @@ struct BottomDrawer<Content: View>: View {
                 Spacer().frame(height: belowHeight)
             }
         }
-        .frame(height: screenHeight, alignment: .top)
-        .background(colorScheme == .dark ? Color.black : Color.white)
-        .cornerRadius(self.cornerRadius)
-        .shadow(color: Color(white: 0, opacity: 0.27), radius: 20.0)
-        .offset(y: self.draggedPositionY)
-        .onGeometryChange { geometry in
-            async {
-                self.callbackChangePosition()
+            .frame(height: screenHeight, alignment: .top)
+            .background(
+                BlurView(style: colorScheme == .dark ? .systemMaterialDark : .systemMaterialLight)
+            )
+            .cornerRadius(self.cornerRadius)
+            .shadow(color: Color(white: 0, opacity: 0.27), radius: 20.0)
+            .offset(y: self.draggedPositionY)
+            .onGeometryChange { geometry in
+                async {
+                    self.callbackChangePosition()
+                }
             }
-        }
-        .animation(self.dragState.isDragging
-            ? nil
-            : .interpolatingSpring(stiffness: 200.0, damping: 30.0, initialVelocity: 1.0)
-        )
-        .gesture(
-            self.gesture
-        )
+            .animation(self.dragState.isDragging
+                ? nil
+                : .interpolatingSpring(stiffness: 100.0, damping: 30.0, initialVelocity: 0)
+            )
+            .gesture(
+                self.gesture
+            )
     }
     
     var gesture: _EndedGesture<GestureStateGesture<DragGesture, DragState>> {

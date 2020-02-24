@@ -52,19 +52,21 @@ struct HomeMainDrawer: View, Equatable {
                             HomeMainDrawerContent()
                             Spacer().frame(height: 5 + self.screen.edgeInsets.bottom)
                         }
-                        Spacer()
-                    }
-                    VStack(spacing: 0) {
-                        Color(.systemBackground).frame(height: topContentHeight / 2 + 10)
-                        LinearGradient(
-                            gradient: .init(colors: [
-                                Color(.systemBackground),
-                                Color(.systemBackground).opacity(0)
-                            ]),
-                            startPoint: .top,
-                            endPoint: .bottom
+                        .mask(
+                            LinearGradient(
+                                gradient: Gradient(colors: [
+                                    Color.black.opacity(0),
+                                    Color.black.opacity(1),
+                                    Color.black.opacity(1),
+                                    Color.black.opacity(1),
+                                    Color.black.opacity(1),
+                                    Color.black.opacity(1)
+                                ]),
+                                startPoint: .top,
+                                endPoint: .center
+                            )
+                                .offset(y: App.searchBarHeight + 10)
                         )
-                            .frame(height: topContentHeight / 2)
                         Spacer()
                     }
                     VStack(spacing: 0) {
@@ -76,17 +78,6 @@ struct HomeMainDrawer: View, Equatable {
                     }
                 }
                 .opacity(isOnLocationSearch ? 0 : 1)
-                
-                // Location search
-//                ZStack {
-//                    Text("Search location")
-//                    ScrollView {
-//                        List {
-//                            HStack { Text("Search result") }
-//                        }
-//                    }
-//                }
-//                .opacity(isOnLocationSearch ? 1 : 0)
             }
         }
     }
@@ -143,7 +134,6 @@ struct HomeScreen: View, Identifiable {
         print("render home screen \(index) \(viewState.search)")
         
         return ZStack {
-            Color(.systemBackground)
             if index == 0 {
                 HomeContentExplore()
             } else {
