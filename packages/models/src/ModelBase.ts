@@ -10,6 +10,16 @@ import { WebSocketLink } from '@apollo/link-ws'
 import axios, { AxiosRequestConfig } from 'axios'
 import { EnumType, jsonToGraphQLQuery } from 'json-to-graphql-query'
 
+const isNode = typeof window == 'undefined'
+let WebSocket: WebSocket
+
+if (isNode) {
+  require('isomorphic-fetch')
+  WebSocket = require('ws')
+} else {
+  WebSocket = window['WebSocket'] as any
+}
+
 export type Point = {
   type: string
   coordinates: [number, number]
@@ -43,6 +53,7 @@ const AXIOS_CONF = {
 
 const httpLink = new HttpLink({
   uri: DOMAIN + '/v1/graphql',
+  fetch,
 })
 
 const wsLink = new WebSocketLink({
@@ -50,6 +61,7 @@ const wsLink = new WebSocketLink({
   options: {
     reconnect: true,
   },
+  webSocketImpl: WebSocket,
 })
 
 // The split function takes three parameters:
