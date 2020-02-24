@@ -24,6 +24,7 @@ struct DishMapViewContainer: View {
                         currentLocation: store.state.map.moveToLocation,
                         markers: markers
                     )
+                        .equatable()
                         .frame(height: homeViewState.mapFullHeight)
                     
                     // prevent touch on left/right sides for dragging between cards
@@ -49,7 +50,12 @@ struct DishMapViewContainer: View {
     }
 }
 
-struct DishMapView: View {
+struct DishMapView: View, Equatable {
+    static func == (lhs: DishMapView, rhs: DishMapView) -> Bool {
+        lhs.currentLocation == rhs.currentLocation &&
+            lhs.markers.elementsEqual(rhs.markers)
+    }
+    
     @State var mapZoom = 10.0
 
     var currentLocation: MapViewLocation?
