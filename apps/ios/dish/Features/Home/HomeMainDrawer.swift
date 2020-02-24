@@ -24,7 +24,6 @@ struct HomeMainDrawer: View, Equatable {
     }
     
     var body: some View {
-        let topContentHeight = App.searchBarHeight + App.filterBarHeight + 10
         let isOnLocationSearch = self.store.state.home.searchFocus == .location
         
         return BottomDrawer(
@@ -40,45 +39,93 @@ struct HomeMainDrawer: View, Equatable {
                 }
             },
             onDragState: { state in
-                self.store.send(.home(.setDrawerIsDragging(state.isDragging)))
+                if state.isDragging != self.store.state.home.drawerIsDragging {
+                    self.store.send(.home(.setDrawerIsDragging(state.isDragging)))
+                }
             }
         ) {
+            HomeMainDrawerContentContainer(
+                isOnLocationSearch: isOnLocationSearch
+            )
+        }
+    }
+}
+
+struct HomeMainDrawerContentContainer: View {
+    @EnvironmentObject var screen: ScreenModel
+    @State var scrollView: UIScrollView? = nil
+    var isOnLocationSearch: Bool
+    
+    class HandleScrollView: NSObject, UIGestureRecognizerDelegate {
+        init(_ scrollView: UIScrollView) {
+            super.init()
+            
+            let panGesture = UIPanGestureRecognizer.init()
+            panGesture.delegate = self
+            scrollView.addGestureRecognizer(panGesture)
+        }
+        
+        func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+            print("what")
+            return false
+        }
+        
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+            print("should receive???")
+            return false
+        }
+    }
+    
+    func start() {
+        if let scrollView = self.scrollView {
+            _ = HandleScrollView(scrollView)
+        }
+    }
+
+    var body: some View {
+        let topContentHeight = App.searchBarHeight + App.filterBarHeight + 10
+        
+        return ZStack {
+            // home content
             ZStack {
-                // home content
-                ZStack {
-                    VStack {
-                        ScrollView(.vertical, showsIndicators: false) {
-                            Spacer().frame(height: topContentHeight)
-                            HomeMainDrawerContent()
-                            Spacer().frame(height: 5 + self.screen.edgeInsets.bottom)
+                VStack {
+                    ScrollView(.vertical, showsIndicators: false) {
+                        Spacer().frame(height: topContentHeight)
+                            .introspectScrollView { scrollView in
+                                if self.scrollView == nil {
+                                    self.scrollView = scrollView
+                                    self.start()
+                                }
                         }
-                        .mask(
-                            LinearGradient(
-                                gradient: Gradient(colors: [
-                                    Color.black.opacity(0),
-                                    Color.black.opacity(1),
-                                    Color.black.opacity(1),
-                                    Color.black.opacity(1),
-                                    Color.black.opacity(1),
-                                    Color.black.opacity(1)
-                                ]),
-                                startPoint: .top,
-                                endPoint: .center
-                            )
-                                .offset(y: App.searchBarHeight + 10)
+                        HomeMainDrawerContent()
+                        Spacer().frame(height: 5 + self.screen.edgeInsets.bottom)
+                    }
+                    .mask(
+                        LinearGradient(
+                            gradient: Gradient(colors: [
+                                Color.black.opacity(0),
+                                Color.black.opacity(1),
+                                Color.black.opacity(1),
+                                Color.black.opacity(1),
+                                Color.black.opacity(1),
+                                Color.black.opacity(1)
+                            ]),
+                            startPoint: .top,
+                            endPoint: .center
                         )
-                        Spacer()
-                    }
-                    VStack(spacing: 0) {
-                        HomeSearchBar()
-                            .padding(.horizontal, 10)
-                            .padding(.top, 10)
-                        HomeMainFilterBar()
-                        Spacer()
-                    }
+                            .offset(y: App.searchBarHeight + 10)
+                    )
+                    Spacer()
                 }
-                .opacity(isOnLocationSearch ? 0 : 1)
+                VStack(spacing: 0) {
+                    HomeSearchBar()
+                        .padding(.horizontal, 10)
+                        .padding(.top, 10)
+                    HomeMainFilterBar()
+                    Spacer()
+                }
             }
+            .opacity(isOnLocationSearch ? 0 : 1)
         }
     }
 }
@@ -176,91 +223,6 @@ struct HomeContentExplore: View {
         .padding(.bottom)
         .padding(.top, 5)
         .animation(.spring())
-    }
-}
-
-struct DishListItem: View, Equatable {
-    static func == (lhs: DishListItem, rhs: DishListItem) -> Bool {
-        lhs.dish == rhs.dish
-    }
-    
-    @EnvironmentObject var screen: ScreenModel
-    @State var isScrolled: Bool = false
-    
-    var number: Int
-    var dish: DishItem
-    var body: some View {
-        let imageSize: CGFloat = 60 //isScrolled ? 70 : 60
-        
-        let image = DishButton(action: {}) {
-            dish.image
-                .resizable()
-                .scaledToFill()
-                .frame(width: imageSize, height: imageSize)
-                .cornerRadiusSquircle(18)
-                .animation(.spring())
-        }
-        
-        return ListItemHScroll(isScrolled: self.$isScrolled) {
-            HStack {
-                DishButton(action: {
-                    App.store.send(
-                        .home(.push(HomeStateItem(search: self.dish.name)))
-                    )
-                }) {
-                    HStack {
-                        Text("\(self.number).")
-                            .font(.system(size: 20))
-                            .fontWeight(.bold)
-                            .opacity(0.3)
-                        
-                        Text("\(self.dish.name)")
-                            .fontWeight(.light)
-                            .lineLimit(1)
-                            .font(.system(size: 22))
-                        
-                        Spacer()
-                    }
-                    .padding(.horizontal)
-                    .frame(width: self.screen.width - 120 - 20)
-                }
-                
-                HStack {
-                    image
-                    image
-                    image
-                    image
-                }
-                .drawingGroup()
-                .padding(.trailing)
-            }
-        }
-        .frame(height: imageSize + 10)
-        .animation(.spring())
-    }
-}
-
-struct ListItemHScroll<Content>: View where Content: View {
-    @Binding var isScrolled: Bool
-    var content: Content
-    
-    init (isScrolled: Binding<Bool>, @ViewBuilder _ content: @escaping () -> Content) {
-        self.content = content()
-        self._isScrolled = isScrolled
-    }
-    
-    var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            ScrollListener(throttle: 32.0) { frame in
-                if frame.minX < 0 && !self.isScrolled {
-                    self.isScrolled = true
-                } else if frame.minX == 0 && self.isScrolled {
-                    self.isScrolled = false
-                }
-            }
-            
-            self.content
-        }
     }
 }
 

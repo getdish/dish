@@ -27,7 +27,7 @@ struct HomeMapResultsBar: View {
                     endPoint: .center
                 )
               : LinearGradient(
-                gradient: Gradient(colors: [Color.clear, Color.init(white: 0, opacity: 0.5)]),
+                gradient: Gradient(colors: [Color.clear, Color.init(white: 0, opacity: 0.75)]),
                     startPoint: .top,
                     endPoint: .bottom
                 )

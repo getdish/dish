@@ -21,7 +21,6 @@ struct DishRestaurantView: View {
             }) {
                 ScrollView(.vertical) {
                     Spacer().frame(height: 40)
-                    
                     DishRestaurantViewContent()
                 }
         }
@@ -29,7 +28,6 @@ struct DishRestaurantView: View {
 }
 
 struct DishRestaurantViewContent: View {
-    @EnvironmentObject var store: AppStore
     @Environment(\.colorScheme) var colorScheme
     @State var mapZoom = 1.0
     
@@ -63,7 +61,7 @@ struct DishRestaurantViewContent: View {
                         HStack(spacing: 20) {
                             ForEach(0 ..< self.restaurant.tags.count) { index in
                                 // self.restaurant.tags[index]
-                                return Text("\(self.store.state.home.lenses[index].name)")
+                                return Text("\(App.store.state.home.lenses[index].name)")
                             }
                         }
                         .padding(.horizontal)

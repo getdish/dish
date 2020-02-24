@@ -32,38 +32,19 @@ struct HomeMainView: View {
                 self.state.setAppHeight(height)
             }
         }
-        
-        if Selectors.home.isOnSearchResults() != self.wasOnSearchResults {
-            let val = Selectors.home.isOnSearchResults()
-            self.wasOnSearchResults = val
-            if val {
-                self.state.moveToSearchResults()
-            }
-        }
-        
-        let isOnCamera = self.store.state.home.view == .camera
-        if isOnCamera != self.wasOnCamera {
-            let val = self.store.state.home.view == .camera
-            self.wasOnCamera = val
-            self.state.setShowCamera(val)
-        }
     }
 
     var body: some View {
         let state = self.state
         let animationState = state.animationState
-        let mapHeight = state.mapHeight
         let showMapRow = self.store.state.home.drawerPosition == .bottom
             && !self.store.state.home.drawerIsDragging
-//        let isOnShowSearch = searchFocus != .off
-        //        let enableSearchBar = [.idle, .off].contains(state.dragState) && state.animationState == .idle
 
-        print(" 👀 HomeMainView mapHeight \(mapHeight) animationState \(state.animationState)")
+        print(" 👀 HomeMainView animationState \(state.animationState)")
 
         return ZStack(alignment: .topLeading) {
             Run("sideeffects") { self.sideEffects() }
             RunOnce(name: "start") { self.start() }
-            
             PrintGeometryView("HomeMainView")
             
             // below restaurant card
@@ -75,11 +56,6 @@ struct HomeMainView: View {
                     if App.enableCamera && animationState != .splash {
                         ZStack {
                             DishCamera()
-                            
-                            // cover camera
-                            Color.black
-                                .opacity(state.showCamera ? 0 : 1)
-                                .animation(.spring())
                         }
                         .frameLimitedToScreen()
                     }
@@ -92,7 +68,6 @@ struct HomeMainView: View {
                                     height: state.mapFullHeight,
                                     animate: [.idle].contains(state.dragState)
                                         || state.animationState != .idle
-                                        || state.mapHeight > state.startSnapToBottomAt
                                 )
                                     
                                     .offset(y:
@@ -110,7 +85,6 @@ struct HomeMainView: View {
                             .opacity(animationState == .splash ? 0 : 1)
                         }
                         .frameLimitedToScreen()
-                        .opacity(state.showCamera ? 0 : 1)
                     }
                     
                     VStack {
@@ -153,65 +127,11 @@ struct HomeMainView: View {
                 .disabled(state.dragState != .idle)
             }
             .clipped() // dont remove fixes bug cant click SearchBar
-//            .simultaneousGesture(self.dragGesture)
             
             DishRestaurantView()
             
         }
             .environmentObject(self.state)
-    }
-
-    var dragGesture: _EndedGesture<_ChangedGesture<DragGesture>> {
-        var ignoreThisDrag = false
-
-        return DragGesture(minimumDistance: 10)
-            .onChanged { value in
-                print("drag ignore \(ignoreThisDrag) state \(self.state.dragState)")
-                if ignoreThisDrag {
-                    return
-                }
-                if [.off, .pager, .contentHorizontal].contains(self.state.dragState) {
-                    return
-                }
-                let isAlreadyDragging = self.state.dragState == .searchbar
-                let isDraggingBelowSearchbar = value.startLocation.y > self.state.y
-                let isDraggingHorizontal = abs(value.translation.width) > abs(value.translation.height)
-                    && abs(value.translation.width) > 15
-                if !isAlreadyDragging
-                    && isDraggingBelowSearchbar
-                    && isDraggingHorizontal
-                     {
-                    logger.debug("ignore drag horizontal")
-                    self.state.setDragState(.contentHorizontal)
-                    ignoreThisDrag = true
-                    return
-                }
-
-                let isDraggingSearchBar = self.state.isWithinDraggableArea(value.startLocation.y)
-//                let isDraggingBelowSearchBar = self.state.isActiveScrollViewAtTop
-//                    && HomeSearchBarState.isBelow(value.startLocation.y)
-
-                //                print("☕️ self.state.isActiveScrollViewAtTop \(self.state.isActiveScrollViewAtTop) isDraggingBelowSearchBar \(isDraggingBelowSearchBar) height \(value.translation.height)")
-
-                if isAlreadyDragging || isDraggingSearchBar {
-                    if self.keyboard.state.height > 0 {
-                        self.keyboard.hide()
-                    }
-                    let next = value.translation.height.round(nearest: 0.5)
-                    if next != self.state.y {
-                        self.state.setY(next)
-                    }
-                }
-            }
-            .onEnded { value in
-                if !ignoreThisDrag {
-                    if [.idle, .searchbar].contains(self.state.dragState) {
-                        self.state.finishDrag(value)
-                    }
-                    self.state.setDragState(.idle)
-                }
-                ignoreThisDrag = false
-            }
     }
 }
 
