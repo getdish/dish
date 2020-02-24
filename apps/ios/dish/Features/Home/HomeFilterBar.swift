@@ -2,7 +2,11 @@ import SwiftUI
 
 fileprivate let filterBarPad: CGFloat = 12
 
-struct HomeMainFilterBar: View {
+struct HomeMainFilterBar: View, Equatable {
+    static func == (lhs: HomeMainFilterBar, rhs: HomeMainFilterBar) -> Bool {
+        true
+    }
+    
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var store: AppStore
     

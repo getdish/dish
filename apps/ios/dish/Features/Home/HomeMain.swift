@@ -122,8 +122,8 @@ struct HomeMainView: View {
                                 ? -App.mapBarHeight - 68
                                 : 0
                         ))
-                        .animation(.spring(response: 1))
                         .opacity(showMapRow ? 1 : 0)
+                        .animation(.spring(response: 1))
                         .disabled(!showMapRow)
                     
                     VStack(spacing: 0) {

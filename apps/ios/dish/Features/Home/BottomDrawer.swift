@@ -166,7 +166,7 @@ struct BottomDrawer<Content: View>: View {
         // this is maybe unintuitive, but think of it like this: you want to do a small flick
         // to move it away. But if you are dragging from the top, and hold it "over" the middle,
         // then release it, you then want to be more lenient and have it snap to middle more often
-        let distanceToSnap: CGFloat = closestPosition == self.position ? 120 : 180
+        let distanceToSnap: CGFloat = closestPosition == self.position ? 100 : 160
         if closestPoint < distanceToSnap {
             throwDirection = 0
         }
