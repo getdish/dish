@@ -17,12 +17,17 @@ struct HomeSearchResultsView: View {
                         stars: 3
                     )
                 )
+                .equatable()
             }
         }
     }
 }
 
-struct DishRestaurantResult: View {
+struct DishRestaurantResult: View, Equatable {
+    static func == (lhs: DishRestaurantResult, rhs: DishRestaurantResult) -> Bool {
+        lhs.restaurant == rhs.restaurant
+    }
+    
     @EnvironmentObject var screen: ScreenModel
     @State var isScrolled = false
     var restaurant: RestaurantItem

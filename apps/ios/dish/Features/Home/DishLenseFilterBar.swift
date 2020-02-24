@@ -11,7 +11,12 @@ struct DishLenseFilterBar: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 6) {
                 ForEach(0 ..< self.lenses.count - 1) { index in
-                    DishLenseButton(lense: self.lenses[index], index: index)
+                    DishLenseButton(
+                        active: index == self.store.state.home.lenseActive,
+                        lense: self.lenses[index],
+                        index: index
+                    )
+                        .equatable()
                 }
             }
             .padding(.horizontal, 20 - 3)
@@ -21,15 +26,19 @@ struct DishLenseFilterBar: View {
     }
 }
 
-struct DishLenseButton: View, Identifiable {
-    @EnvironmentObject var store: AppStore
+struct DishLenseButton: View, Identifiable, Equatable {
+    static func == (lhs: DishLenseButton, rhs: DishLenseButton) -> Bool {
+        lhs.active == rhs.active && lhs.index == rhs.index && lhs.id == rhs.id
+    }
+    
+    var active: Bool
     var id: String { self.lense.id }
     var lense: LenseItem
     var index: Int
     
     var body: some View {
         DishButton(action: {
-            self.store.send(.home(.setLenseActive(self.index)))
+            App.store.send(.home(.setLenseActive(self.index)))
 //            if self.store.state.home.drawerPosition == .middle {
 //                self.store.send(.home(.setDrawerPosition(.bottom)))
 //            }
@@ -40,7 +49,7 @@ struct DishLenseButton: View, Identifiable {
             }
             .modifier(
                 TopNavButtonStyle(
-                    active: self.index == self.store.state.home.lenseActive,
+                    active: active,
                     background: .init(red: lense.rgb[0], green: lense.rgb[1], blue: lense.rgb[2]),
                     height: 38
                 )

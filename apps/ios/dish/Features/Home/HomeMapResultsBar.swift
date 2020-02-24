@@ -87,8 +87,8 @@ struct HomeMapSearchResults: View {
                         width: width,
                         height: App.mapBarHeight
                     )
+                        .equatable()
                         .frame(width: width, height: App.mapBarHeight)
-                    // .equatable() may help
                 }
             }
             .padding(.horizontal, 20)
