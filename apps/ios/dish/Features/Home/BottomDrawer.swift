@@ -70,7 +70,8 @@ struct BottomDrawer<Content: View>: View {
         }
             .frame(height: screenHeight, alignment: .top)
             .background(
-                BlurView(style: colorScheme == .dark ? .systemMaterialDark : .systemMaterialLight)
+                Color(.systemBackground)
+//                BlurView(style: colorScheme == .dark ? .systemMaterialDark : .systemMaterialLight)
             )
             .cornerRadius(self.cornerRadius)
             .shadow(color: Color(white: 0, opacity: 0.27), radius: 20.0)

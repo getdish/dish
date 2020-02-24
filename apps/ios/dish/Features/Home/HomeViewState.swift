@@ -5,10 +5,6 @@ fileprivate let snapToBottomYMovePct: CGFloat = 0.58
 fileprivate let distanceUntilSnapDown: CGFloat = 42
 fileprivate let distanceUntilSnapUp: CGFloat = 85
 
-fileprivate func getInitialY(_ screenHeight: CGFloat) -> CGFloat {
-    screenHeight * 0.7
-}
-
 class HomeViewState: ObservableObject {
     enum HomeDragState {
         case idle, off, pager, searchbar, contentHorizontal
@@ -25,7 +21,7 @@ class HomeViewState: ObservableObject {
     
     @Published private(set) var appHeight: CGFloat = App.screen.height
     // initialize it at best estimate where the snapToBottom will be
-    @Published private(set) var y: CGFloat = getInitialY(App.screen.height)
+    @Published private(set) var y: CGFloat = 0
     @Published private(set) var searchBarYExtra: CGFloat = 0
     @Published private(set) var hasScrolled: HomeScrollState = .none
     @Published private(set) var hasMovedBar = false
@@ -398,16 +394,9 @@ class HomeViewState: ObservableObject {
         }
     }
     
-    var hasSetInitialY = false
     func setAppHeight(_ val: CGFloat) {
         logger.info()
         self.appHeight = val
-        
-        // only do once, move to start position
-        if !hasSetInitialY {
-            hasSetInitialY = true
-            self.y = getInitialY(val)
-        }
     }
     
     func setShowCamera(_ val: Bool) {

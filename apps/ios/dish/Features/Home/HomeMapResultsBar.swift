@@ -44,6 +44,7 @@ struct HomeMapExplore: View {
             HStack(spacing: 12) {
                 ForEach(features) { item in
                     MapResultDishCard(dish: item)
+                        .equatable()
                     //                    DishButtonView(dish: item, at: .start)
                 }
             }
@@ -134,7 +135,9 @@ struct HomeMapSearchResults: View {
 
 // scroll view enhanced version start:
 
-struct MapResultDishCard: View, Identifiable {
+struct MapResultDishCard: View, Identifiable, Equatable {
+    
+    
     var dish: DishItem
     var id: Int { self.dish.id }
 

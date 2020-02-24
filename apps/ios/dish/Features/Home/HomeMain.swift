@@ -94,7 +94,15 @@ struct HomeMainView: View {
                                         || state.animationState != .idle
                                         || state.mapHeight > state.startSnapToBottomAt
                                 )
-                                    .offset(y: -(state.mapFullHeight - mapHeight) / 2 + 25 /* topbar offset */)
+                                    
+                                    .offset(y:
+                                        // centered
+                                        (self.screen.height - state.mapFullHeight) * 0.5
+                                        // move with drawer (but just a bit less than half because when fully open, we show a bottom results drawer)
+                                        + (state.y - App.drawerSnapPoints[1]) * 0.4
+                                        // subtract just a bit because LenseBar is taller than TopNav
+                                        - 20
+                                    )
                                     .animation(.spring(response: 0.65))
                             }
                             .frameLimitedToScreen()

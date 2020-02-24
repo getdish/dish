@@ -49,7 +49,7 @@ struct HomeMainDrawer: View, Equatable {
                     VStack {
                         ScrollView(.vertical, showsIndicators: false) {
                             Spacer().frame(height: topContentHeight)
-                            HomeMainDrawerContent().equatable()
+                            HomeMainDrawerContent()
                             Spacer().frame(height: 5 + self.screen.edgeInsets.bottom)
                         }
                         .mask(
@@ -84,12 +84,7 @@ struct HomeMainDrawer: View, Equatable {
 }
 
 
-struct HomeMainDrawerContent: View, Equatable {
-    static func == (lhs: HomeMainDrawerContent, rhs: HomeMainDrawerContent) -> Bool {
-        true
-    }
-    
-    
+struct HomeMainDrawerContent: View {
     @EnvironmentObject var store: AppStore
     @State var dragX: CGFloat = 0
 
@@ -130,14 +125,12 @@ struct HomeMainDrawerContent: View, Equatable {
 
 struct HomeScreen: View, Identifiable {
     var id: String { self.viewState.id }
-    @EnvironmentObject var store: AppStore
     var viewState: HomeStateItem
     var isActive: Bool
     var index: Int
     
     var body: some View {
         print("render home screen \(index) \(viewState.search)")
-        
         return ZStack {
             if index == 0 {
                 HomeContentExplore()
@@ -175,6 +168,7 @@ struct HomeContentExplore: View {
                     number: index + 1,
                     dish: self.dishes[index]
                 )
+                    .equatable()
                     .transition(.slide)
                     .animation(.ripple(index: index))
             }
@@ -185,8 +179,11 @@ struct HomeContentExplore: View {
     }
 }
 
-struct DishListItem: View {
-    @EnvironmentObject var store: AppStore
+struct DishListItem: View, Equatable {
+    static func == (lhs: DishListItem, rhs: DishListItem) -> Bool {
+        lhs.dish == rhs.dish
+    }
+    
     @EnvironmentObject var screen: ScreenModel
     @State var isScrolled: Bool = false
     
