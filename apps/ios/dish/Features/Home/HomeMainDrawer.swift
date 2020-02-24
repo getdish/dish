@@ -32,11 +32,7 @@ struct HomeMainDrawer: View, Equatable {
             cornerRadius: 20,
             handle: nil,
             onChangePosition: { (_, y) in
-                homeViewState.setY(y)
-                if self.store.state.home.searchFocus != .off &&
-                    y > App.drawerSnapPoints[0] + 100 {
-                    
-                }
+//                homeViewState.setY(y)
             },
             onDragState: { state in
                 if state.isDragging != self.store.state.home.drawerIsDragging {
