@@ -104,9 +104,9 @@ struct HomeMainView: View {
                         DishLenseFilterBar()
                         Spacer()
                     }
-                    // dont go up beyond mid-point
-                    .offset(y: max(App.drawerSnapPoints[1] - 68 - 30, state.y - 68))
-                    .animation(.spring())
+                        // dont go up beyond mid-point
+                        .offset(y: max(App.drawerSnapPoints[1] - 68 - 30, state.y - 68))
+                        .animation(.spring(response: 1))
                     
                     HomeMainDrawer()
                         .equatable()

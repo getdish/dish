@@ -178,7 +178,9 @@ struct BottomDrawer<Content: View>: View {
         
 //        print("distanceToSnap \(distanceToSnap) throwDirection \(throwDirection) closestPoint \(closestPoint) closestPosition \(closestPosition)")
         
-        if closestPoint < distanceToSnap {
+        if cardTopEdgeLocation < getSnapPoint(.top) {
+            self.position = .top
+        } else if closestPoint < distanceToSnap {
             self.position = closestPosition
         } else {
             // not within the safe zone that snaps back to closest position
