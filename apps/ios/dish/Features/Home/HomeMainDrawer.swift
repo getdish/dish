@@ -52,9 +52,12 @@ struct HomeMainDrawer: View, Equatable {
                         Spacer()
                     }
                     VStack(spacing: 0) {
-                        Color.white.frame(height: topContentHeight / 2 + 10)
+                        Color(.systemBackground).frame(height: topContentHeight / 2 + 10)
                         LinearGradient(
-                            gradient: .init(colors: [.white, .init(white: 1, opacity: 0)]),
+                            gradient: .init(colors: [
+                                Color(.systemBackground),
+                                Color(.systemBackground).opacity(0)
+                            ]),
                             startPoint: .top,
                             endPoint: .bottom
                         )
@@ -210,8 +213,9 @@ struct DishListItem: View {
                 }) {
                     HStack {
                         Text("\(self.number).")
-                            .font(.system(size: 24))
-                            .fontWeight(.black)
+                            .font(.system(size: 20))
+                            .fontWeight(.bold)
+                            .opacity(0.3)
                         
                         Text("\(self.dish.name)")
                             .fontWeight(.light)
@@ -230,6 +234,7 @@ struct DishListItem: View {
                     image
                     image
                 }
+                .drawingGroup()
                 .padding(.trailing)
             }
         }

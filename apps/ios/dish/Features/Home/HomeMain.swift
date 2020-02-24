@@ -103,7 +103,15 @@ struct HomeMainView: View {
                         .opacity(state.showCamera ? 0 : 1)
                     }
                     
-                    VStack {
+                    HomeMapResultsBar()
+                        .offset(y: App.drawerSnapPoints[1] + (
+                            self.store.state.home.drawerPosition == .bottom
+                                ? -App.mapBarHeight
+                                : 0
+                        ))
+                        .animation(.spring())
+                    
+                    VStack(spacing: 0) {
                         DishLenseFilterBar()
                         Spacer()
                     }

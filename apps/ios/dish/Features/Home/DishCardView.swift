@@ -35,7 +35,7 @@ struct DishCardView: View, Identifiable, Equatable {
                 )
                 .clipped()
 //                .borderRounded(radius: self.display == .small ? 20 : 35, width: 2, color: Color.gray.opacity(0.2))
-                .shadow(color: Color.black.opacity(0.6), radius: 3, x: 0, y: 1)
+                .shadow(color: Color.black.opacity(0.46), radius: 3, x: 0, y: 1)
         }
     }
     

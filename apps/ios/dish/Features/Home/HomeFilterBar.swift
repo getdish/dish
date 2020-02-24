@@ -147,10 +147,6 @@ struct FilterGroupView: View {
             .offset(x: xOffset)
             .zIndex(Double(self.group.count - index))
             .environment(\.itemSegment, itemSegment)
-//            .preference(
-//                key: SegmentedItemKey.self,
-//                value: groupPref
-//            )
     }
     
     var overlayStack: some View {
@@ -201,7 +197,7 @@ struct FilterButton: View {
                         }
                     }
                     if expandable {
-                        Image(systemName: "arrowtriangle.right.fill")
+                        Image(systemName: "arrowtriangle.down.fill")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 5, height: 5)
