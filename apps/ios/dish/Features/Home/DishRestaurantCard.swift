@@ -1,6 +1,10 @@
 import SwiftUI
 
-struct DishRestaurantCard: View, Identifiable {
+struct DishRestaurantCard: View, Identifiable, Equatable {
+    static func == (lhs: DishRestaurantCard, rhs: DishRestaurantCard) -> Bool {
+        lhs.id == rhs.id
+    }
+    
     @ObservedObject var restaurant: RestaurantItem
     var id: String { restaurant.id }
     var isMini: Bool = false
@@ -29,7 +33,7 @@ struct DishRestaurantCard: View, Identifiable {
         DishButton(action: {
             App.store.send(.home(.navigateToRestaurant(self.restaurant)))
         }) {
-            MagicItem("restaurant-\(self.id)", at: self.at) {
+//            MagicItem("restaurant-\(self.id)", at: self.at) {
                 VStack {
                     self.restaurant.image
                         .resizable()
@@ -53,8 +57,8 @@ struct DishRestaurantCard: View, Identifiable {
                     )
                     .cornerRadius(16)
                     .clipped()
-                    .shadow(color: Color.black.opacity(0.4), radius: 9, x: 0, y: 3)
-            }
+                    .shadow(color: Color.black.opacity(0.4), radius: 4, x: 0, y: 1)
+//            }
         }
     }
     

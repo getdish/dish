@@ -1,24 +1,45 @@
+import {
+  ApolloClient,
+  gql,
+  HttpLink,
+  InMemoryCache,
+  split,
+} from '@apollo/client'
+import { getMainDefinition } from '@apollo/client/utilities'
+import { WebSocketLink } from '@apollo/link-ws'
 import axios, { AxiosRequestConfig } from 'axios'
-import { jsonToGraphQLQuery, EnumType } from 'json-to-graphql-query'
+import { EnumType, jsonToGraphQLQuery } from 'json-to-graphql-query'
+
+const isNode = typeof window == 'undefined'
+let WebSocket: WebSocket
+
+if (isNode) {
+  require('isomorphic-fetch')
+  WebSocket = require('ws')
+} else {
+  WebSocket = window['WebSocket'] as any
+}
 
 export type Point = {
   type: string
   coordinates: [number, number]
 }
 
-const LOCAL_HASURA = 'http://localhost:8080'
+const LOCAL_HASURA = 'hasura.rio.dishapp.com' || 'localhost:8080'
+const LOCAL_HASURA_HTTP = `https://${LOCAL_HASURA}`
+
 let DOMAIN: string
 
-if (typeof window == 'undefined') {
+if (typeof window === 'undefined') {
   DOMAIN =
     process.env.HASURA_ENDPOINT ||
     process.env.REACT_APP_HASURA_ENDPOINT ||
-    LOCAL_HASURA
+    LOCAL_HASURA_HTTP
 } else {
   if (window.location.hostname.includes('dish')) {
-    DOMAIN = 'https://hasura.rio.dishapp.com'
+    DOMAIN = 'hasura.rio.dishapp.com'
   } else {
-    DOMAIN = process.env.REACT_APP_HASURA_ENDPOINT || LOCAL_HASURA
+    DOMAIN = process.env.REACT_APP_HASURA_ENDPOINT || LOCAL_HASURA_HTTP
   }
 }
 
@@ -30,6 +51,43 @@ const AXIOS_CONF = {
   },
 } as AxiosRequestConfig
 
+const httpLink = new HttpLink({
+  uri: DOMAIN + '/v1/graphql',
+  fetch,
+})
+
+const wsLink = new WebSocketLink({
+  uri: `ws://${LOCAL_HASURA}/v1/graphql`,
+  options: {
+    reconnect: true,
+  },
+  webSocketImpl: WebSocket,
+})
+
+// The split function takes three parameters:
+//
+// * A function that's called for each operation to execute
+// * The Link to use for an operation if the function returns a "truthy" value
+// * The Link to use for an operation if the function returns a "falsy" value
+const link = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query)
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    )
+  },
+  wsLink,
+  httpLink
+)
+
+const client = new ApolloClient({
+  link: link,
+  cache: new InMemoryCache({
+    addTypename: true,
+  }),
+})
+
 export class ModelBase<T> {
   id!: string
   created_at!: Date
@@ -37,6 +95,8 @@ export class ModelBase<T> {
   private _klass: typeof ModelBase
   private _upper_name: string
   private _lower_name: string
+
+  static client = client
 
   static default_fields() {
     return ['id', 'created_at', 'updated_at']
@@ -102,6 +162,15 @@ export class ModelBase<T> {
     return object
   }
 
+  static async query<T = any>(query: string): Promise<T> {
+    const res = await client.query({
+      query: gql`
+        ${query}
+      `,
+    })
+    return res.data
+  }
+
   static async hasura(gql: {}) {
     let conf = JSON.parse(JSON.stringify(AXIOS_CONF))
     gql = ModelBase.ensureKeySyntax(gql)
@@ -112,6 +181,10 @@ export class ModelBase<T> {
       throw response.data.errors
     }
     return response
+  }
+
+  static async subscribe() {
+    this.client.subscribe
   }
 
   // TODO: only update provided fields
@@ -171,7 +244,7 @@ export class ModelBase<T> {
     }
     const response = await ModelBase.hasura(query)
     const objects = response.data.data[this._lower_name]
-    if (objects.length == 1) {
+    if (objects.length === 1) {
       Object.assign(this, objects[0])
       return this.id
     } else {

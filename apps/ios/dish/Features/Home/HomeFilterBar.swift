@@ -1,6 +1,12 @@
 import SwiftUI
 
-struct HomeMainFilterBar: View {
+fileprivate let filterBarPad: CGFloat = 12
+
+struct HomeMainFilterBar: View, Equatable {
+    static func == (lhs: HomeMainFilterBar, rhs: HomeMainFilterBar) -> Bool {
+        true
+    }
+    
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var store: AppStore
     
@@ -46,7 +52,7 @@ struct HomeMainFilterBar: View {
                         }
                     }
                 }
-                .padding(.vertical, App.filterBarPad)
+                .padding(.vertical, filterBarPad)
                 .padding(.horizontal, 24)
             }
         }
@@ -145,10 +151,6 @@ struct FilterGroupView: View {
             .offset(x: xOffset)
             .zIndex(Double(self.group.count - index))
             .environment(\.itemSegment, itemSegment)
-//            .preference(
-//                key: SegmentedItemKey.self,
-//                value: groupPref
-//            )
     }
     
     var overlayStack: some View {
@@ -167,7 +169,7 @@ struct FilterButton: View {
     var filter: FilterItem
     var onTap: (() -> Void)? = nil
     var height: CGFloat {
-        App.filterBarHeight - App.filterBarPad * 2
+        App.filterBarHeight - filterBarPad * 2
     }
     
     var body: some View {
@@ -199,7 +201,7 @@ struct FilterButton: View {
                         }
                     }
                     if expandable {
-                        Image(systemName: "arrowtriangle.right.fill")
+                        Image(systemName: "arrowtriangle.down.fill")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 5, height: 5)

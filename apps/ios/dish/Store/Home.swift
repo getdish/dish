@@ -6,7 +6,8 @@ struct LenseItem: Equatable, Identifiable {
     let id: String
     let name: String
     let icon: String
-    var rgb: [Double] = [0.5, 0.2, 0.5]
+    var rgb: [Double] = [0.65, 0.2, 0.65]
+    var description: String?
 }
 
 struct CuisineItem: Equatable, Identifiable {
@@ -16,16 +17,15 @@ struct CuisineItem: Equatable, Identifiable {
 }
 
 fileprivate let initialLenses: [LenseItem] = [
-    LenseItem(id: "0", name: "", icon: "🏆", rgb: [0.5, 0.2, 0.5]),
-    LenseItem(id: "1", name: "Locals", icon: "👌", rgb: [0.2, 0.5, 0.5]),
-    LenseItem(id: "2", name: "New", icon: "🔥", rgb: [0.5, 0.5, 0.2]),
-    LenseItem(id: "3", name: "Picks", icon: "👩‍🍳", rgb: [0.5, 0.2, 0.5]),
-    LenseItem(id: "4", name: "Date Night", icon: "💎", rgb: [0.5, 0.2, 0.5]),
-    LenseItem(id: "5", name: "Great Service", icon: "💁‍♀️", rgb: [0.5, 0.2, 0.5]),
-    LenseItem(id: "6", name: "", icon: "🥬", rgb: [0.5, 0.2, 0.5]),
-    LenseItem(id: "7", name: "", icon: "🐟", rgb: [0.5, 0.2, 0.5]),
-    LenseItem(id: "8", name: "Cheap", icon: "💸", rgb: [0.5, 0.2, 0.5]),
-    LenseItem(id: "9", name: "Fast", icon: "🕒, rgb: [0.5, 0.2, 0.5]")
+    LenseItem(id: "0", name: "", icon: "🔥", rgb: [0.65, 0.2, 0.65], description: "The most popular"),
+    LenseItem(id: "1", name: "Locals", icon: "👌", rgb: [0.2, 0.65, 0.65], description: "Locals picks"),
+    LenseItem(id: "2", name: "New", icon: "🔥", rgb: [0.65, 0.65, 0.2], description: "🔥 & New"),
+    LenseItem(id: "3", name: "Picks", icon: "👩‍🍳", rgb: [0.65, 0.2, 0.65], description: "Chefs picks"),
+    LenseItem(id: "4", name: "Date Night", icon: "💎", rgb: [0.65, 0.2, 0.65], description: "Best date spots"),
+    LenseItem(id: "5", name: "Great Service", icon: "💁‍♀️", rgb: [0.65, 0.2, 0.65], description: ""),
+    LenseItem(id: "6", name: "", icon: "🥬", rgb: [0.65, 0.2, 0.65], description: "The best vegetarian"),
+    LenseItem(id: "7", name: "", icon: "🐟", rgb: [0.65, 0.2, 0.65], description: "The best seafood"),
+    LenseItem(id: "8", name: "Cheap", icon: "💸", rgb: [0.65, 0.2, 0.65], description: "The best cheap eats")
 ]
 
 fileprivate let initialFilters: [FilterItem] = [
@@ -66,6 +66,7 @@ extension AppState {
         var lenseToDishes = [String: [DishItem]]()
         var searchFocus: SearchFocusState = .off
         var drawerPosition: BottomDrawerPosition = .middle
+        var drawerIsDragging = false
         var showCamera: Bool = false
         var showCuisineFilter: Bool = false
         var cuisineFilter: String = "🌍"
@@ -87,6 +88,7 @@ enum HomeAction {
     case clearSearch
     case toggleShowCuisineFilter
     case setCuisineFilter(_ cuisine: String)
+    case setDrawerIsDragging(_ val: Bool)
 }
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
@@ -105,6 +107,8 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     // switch
     
     switch action {
+        case .setDrawerIsDragging(let val):
+            state.home.drawerIsDragging = val
         case .setCuisineFilter(let cuisine):
             state.home.cuisineFilter = cuisine
         case .toggleShowCuisineFilter:
@@ -178,6 +182,10 @@ struct HomeSelectors {
     
     func lastState(_ store: AppStore = App.store) -> HomeStateItem {
         store.state.home.viewStates.last!
+    }
+    
+    func activeLense(_ store: AppStore = App.store) -> LenseItem {
+        store.state.home.lenses[store.state.home.lenseActive]
     }
 }
 

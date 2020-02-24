@@ -9,7 +9,7 @@ class CurrentLocationService: NSObject, CLLocationManagerDelegate, ObservableObj
     private let manager = CLLocationManager()
     
     func start() {
-        log.info()
+        logger.info()
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
         manager.requestWhenInUseAuthorization()
@@ -17,7 +17,7 @@ class CurrentLocationService: NSObject, CLLocationManagerDelegate, ObservableObj
     }
     
     func stop() {
-        log.info()
+        logger.info()
         manager.stopUpdatingLocation()
     }
     
@@ -25,14 +25,14 @@ class CurrentLocationService: NSObject, CLLocationManagerDelegate, ObservableObj
         let last = self.lastLocation
         if let next = locations.first {
             if last == nil || next.distance(from: last!) > 10.0 { // in meters
-                log.info("got new location \(next.coordinate.latitude) \(next.coordinate.longitude)")
+                logger.info("got new location \(next.coordinate.latitude) \(next.coordinate.longitude)")
                 self.lastLocation = next
             }
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        log.info()
+        logger.info()
         if status == .authorizedWhenInUse {
             manager.startUpdatingLocation()
             self.authorized = true

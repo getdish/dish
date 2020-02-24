@@ -21,7 +21,7 @@ struct TopNavView: View {
                 Spacer()
                 HStack(spacing: 10) {
                     self.accountButton
-                    self.searchBar
+                    TopNavLocationSearchBarView()
                     self.cameraButton
                 }
             }
@@ -29,66 +29,6 @@ struct TopNavView: View {
             .padding(.horizontal, 8)
             .padding(.bottom, 8)
         }
-    }
-    
-    var locationSearch: Binding<String> {
-        store.binding(for: \.map.locationLabel, { .map(.setLocationLabel($0)) })
-    }
-    
-    @State var textField: UITextField? = nil
-    
-    var searchBar: some View {
-        HStack {
-            TextField("", text: self.locationSearch, onEditingChanged: { isEditing in
-                if isEditing {
-                    App.store.send(.home(.setSearchFocus(.location)))
-                } else {
-                    async {
-                        if self.store.state.home.searchFocus == .location {
-                            App.store.send(.home(.setSearchFocus(.off)))
-                        }
-                    }
-                }
-                
-                if isEditing {
-//                    if self.store.state.home.drawerPosition != .top {
-//                        self.store.send(.home(.setDrawerPosition(.top)))
-//                    }
-                    
-                    // select all text
-                    if let textField = self.textField {
-                        textField.becomeFirstResponder()
-                        textField.selectAll(nil)
-                    }
-                }
-            })
-                .introspectTextField { next in
-                    self.textField = next
-                }
-                .font(.system(size: 14))
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 20)
-                .modifier(TopNavButtonStyle())
-                .overlay(
-                    HStack {
-                        Image(systemName: "magnifyingglass")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 12, height: 12)
-                            .foregroundColor(.white)
-                            .opacity(0.25)
-                        Spacer()
-                    }
-                    .padding(.leading, 12)
-                )
-        }
-//        .offset(
-//            y: self.store.state.home.searchFocus == .location ? 65 : 0
-//        )
-//        .scaleEffect(
-//            self.store.state.home.searchFocus == .location // || self.store.state.home.drawerPosition == .top
-//                ? 1.2 : 1
-//        )
     }
     
     var accountButton: some View {

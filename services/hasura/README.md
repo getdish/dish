@@ -1,18 +1,23 @@
 ## Developing
 
 ### Quickstart
+
 If you don't want or have Postgres, Postgis and Hasura on your machine, the
 simplest way to install and run them is with `docker-compose up` in this folder.
 Here are the Docker Compose installation instructions:
 https://docs.docker.com/compose/install/
 
+> Note: had to run docker-compose a few times so postgres could generate encryption keys
+
 You can now skip the next 2 sections.
 
 ### Postgres and Postgis
+
 If you already have Postgres and Postgis on your machine your next step is only
 to create the database for Dish: `creatdb dish`
 
 ### Hasura
+
 The simplest way to run Hasura itself is with:
 
 ```

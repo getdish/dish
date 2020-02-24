@@ -39,8 +39,16 @@ class AppModel {
     let magicItems = magicItemsStore
     let searchBarHeight: CGFloat = 50
     let cameraButtonHeight: CGFloat = 44
-    let filterBarHeight: CGFloat = 66
-    let filterBarPad: CGFloat = 16
+    let filterBarHeight: CGFloat = 60
+    let mapBarHeight: CGFloat = 80
+    
+    var drawerSnapPoints: [CGFloat] {
+        [
+            App.screen.edgeInsets.top + 50,
+            App.screen.edgeInsets.top + App.screen.height * 0.33,
+            App.screen.height - 100 - App.screen.edgeInsets.bottom
+        ]
+    }
 
     func start() {
         mapService.start()

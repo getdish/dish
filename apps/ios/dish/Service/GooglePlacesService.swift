@@ -42,7 +42,7 @@
 //
 //        guard let url = components?.url else { return }
 //
-//        log.info("doRequest \(url.absoluteString)")
+//        logger.info("doRequest \(url.absoluteString)")
 //
 //        let task = URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
 //            if let error = error {

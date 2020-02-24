@@ -29,7 +29,7 @@ struct HomeSearchBar: View {
     }
     
     func focusKeyboard() {
-        log.info()
+        logger.info()
         self.isFirstResponder = false
         async(2) {
             self.isFirstResponder = true
@@ -69,7 +69,7 @@ struct HomeSearchBar: View {
             inputBackgroundColor: Color.init(white: 0.5, opacity: 0.1),
             borderColor: Color.clear, //Color.init(white: 0.5, opacity: 0.1),
             scale: scale,
-            sizeRadius: 2.2,
+            sizeRadius: 1.2,
             icon: icon,
             showCancelInside: true,
             onTapLeadingIcon: {
@@ -97,8 +97,6 @@ struct HomeSearchBar: View {
             searchText: self.homeSearch,
             showInput: showInput
         )
-            .padding(.horizontal, 5)
-            .padding(.top, 5)
     }
 }
 

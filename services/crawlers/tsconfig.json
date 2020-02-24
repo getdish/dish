@@ -10,7 +10,6 @@
   "references": [
     { "path": "../../packages/common" },
     { "path": "../../packages/models" },
-    { "path": "../../packages/puppeteer-crawler" },
     { "path": "../../packages/worker" }
   ]
 }

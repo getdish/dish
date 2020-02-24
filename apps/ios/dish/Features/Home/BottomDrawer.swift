@@ -24,11 +24,19 @@ struct BottomDrawer<Content: View>: View {
     }
     
     var draggedPositionY: CGFloat {
-        self.positionY + self.dragState.translation.height
+        let dragHeight = self.dragState.translation.height
+        let at = self.positionY + dragHeight
+        
+        if at < snapPoints[0] {
+            return snapPoints[0] - (snapPoints[0] - at) * 0.2
+        }
+        
+        return at
     }
     
     typealias OnChangePositionCB = (BottomDrawerPosition, CGFloat) -> Void
     var onChangePosition: OnChangePositionCB? = nil
+    var onDragState: ((DragState) -> Void)? = nil
     
     enum Lock { case drawer, content, filters }
     @State var lock: Lock = .drawer
@@ -37,6 +45,9 @@ struct BottomDrawer<Content: View>: View {
 
     var body: some View {
         let screenHeight = screen.height
+        let belowHeight = self.dragState.isDragging
+            ? 0
+            : max(0, screenHeight - (screenHeight - getSnapPoint(self.position)))
         return ZStack {
             RunOnce(name: "BottomDrawer.start") {
                 async(10) {
@@ -50,33 +61,37 @@ struct BottomDrawer<Content: View>: View {
                     Spacer().frame(height: 12)
                 }
                 self.content()
+                    .disabled(self.position != .top)
+                    .allowsHitTesting(self.position == .top)
+                
                 // pad bottom so it wont go below
-                Spacer()
-                    .frame(height: max(0, screenHeight - self.snapPoints.last! - screen.edgeInsets.bottom))
+                Spacer().frame(height: belowHeight)
             }
         }
-        .frame(height: screenHeight, alignment: .top)
-        .background(colorScheme == .dark ? Color.black : Color.white)
-        .cornerRadius(self.cornerRadius)
-        .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.13), radius: 10.0)
-        .offset(y: self.draggedPositionY)
-        .onGeometryChange { geometry in
-            async {
-                self.callbackChangePosition()
+            .frame(height: screenHeight, alignment: .top)
+            .background(
+                Color(.systemBackground)
+//                BlurView(style: colorScheme == .dark ? .systemMaterialDark : .systemMaterialLight)
+            )
+            .cornerRadius(self.cornerRadius)
+            .shadow(color: Color(white: 0, opacity: 0.27), radius: 20.0)
+            .offset(y: self.draggedPositionY)
+            .onGeometryChange { geometry in
+                async {
+                    self.callbackChangePosition()
+                }
             }
-        }
-        .animation(self.dragState.isDragging
-            ? nil
-            : .interpolatingSpring(stiffness: 200.0, damping: 30.0, initialVelocity: 1.0)
-        )
-        .gesture(
-            self.gesture
-        )
+            .animation(self.dragState.isDragging
+                ? nil
+                : .interpolatingSpring(stiffness: 90.0, damping: 25.0, initialVelocity: 0)
+            )
+            .gesture(
+                self.gesture
+            )
     }
     
     var gesture: _EndedGesture<GestureStateGesture<DragGesture, DragState>> {
-        print("get gesture")
-        return DragGesture()
+        DragGesture(minimumDistance: 12)
             .updating($dragState) { drag, state, transaction in
                 if self.lock != .drawer {
                     if App.store.state.home.drawerPosition != .bottom {
@@ -101,14 +116,27 @@ struct BottomDrawer<Content: View>: View {
                         
                     }
                 }
-                if self.lock != .drawer {
-                    async {
-                        self.lock = .drawer
+                let h = drag.translation.height
+                let validDrag = h > 12 || h < -12
+                if validDrag {
+                    if self.lock != .drawer {
+                        async {
+                            self.lock = .drawer
+                        }
+                    }
+                    let wasDragging = self.dragState.isDragging
+                    state = .dragging(translation: drag.translation)
+                    if !wasDragging {
+                        if let cb = self.onDragState { cb(state) }
                     }
                 }
-                state = .dragging(translation: drag.translation)
             }
             .onEnded(onDragEnded)
+    }
+    
+    private func getDistance(_ position: BottomDrawerPosition, from: CGFloat) -> CGFloat {
+        let y = getSnapPoint(position)
+        return y > from ? y - from : from - y
     }
     
     private func onDragEnded(drag: DragGesture.Value) {
@@ -116,8 +144,15 @@ struct BottomDrawer<Content: View>: View {
         let cardTopEdgeLocation = self.positionY + drag.translation.height
         let positionAbove: BottomDrawerPosition
         let positionBelow: BottomDrawerPosition
-        let closestPosition: BottomDrawerPosition
+        var closestPosition: BottomDrawerPosition
         
+        let distanceToTop = getDistance(.top, from: drag.predictedEndLocation.y)
+        let distanceToMid = getDistance(.middle, from: drag.predictedEndLocation.y)
+        let distanceToBottom = getDistance(.bottom, from: drag.predictedEndLocation.y)
+        let closestPoint = min(distanceToTop, distanceToMid, distanceToBottom)
+        
+        closestPosition = closestPoint == distanceToTop ? .top : closestPoint == distanceToMid ? .middle : .bottom
+
         if cardTopEdgeLocation <= getSnapPoint(.middle) {
             positionAbove = .top
             positionBelow = .middle
@@ -126,19 +161,14 @@ struct BottomDrawer<Content: View>: View {
             positionBelow = .bottom
         }
         
-        let curPosition = getSnapPoint(self.position)
-        let distanceFromCurrentEdge = curPosition > cardTopEdgeLocation
-            ? curPosition - cardTopEdgeLocation
-            : cardTopEdgeLocation - curPosition
-        if distanceFromCurrentEdge < 25 && abs(throwDirection) < 50 {
+        // NOTE: this is a nice little interaction tweak
+        // we basically are "more likely to snap away" if you release near your current snapPoint
+        // this is maybe unintuitive, but think of it like this: you want to do a small flick
+        // to move it away. But if you are dragging from the top, and hold it "over" the middle,
+        // then release it, you then want to be more lenient and have it snap to middle more often
+        let distanceToSnap: CGFloat = closestPosition == self.position ? 100 : 160
+        if closestPoint < distanceToSnap {
             throwDirection = 0
-            closestPosition = self.position
-        } else {
-            if (cardTopEdgeLocation - getSnapPoint(positionAbove)) < (getSnapPoint(positionBelow) - cardTopEdgeLocation) {
-                closestPosition = positionAbove
-            } else {
-                closestPosition = positionBelow
-            }
         }
         
         if throwDirection > 0 {
@@ -151,13 +181,13 @@ struct BottomDrawer<Content: View>: View {
         
         self.lock = .drawer
         
+        if let cb = self.onDragState { cb(self.dragState) }
         self.callbackChangePosition()
     }
     
     private func callbackChangePosition() {
         async {
             if let cb = self.onChangePosition {
-                print("onchange... \(self.draggedPositionY)")
                 cb(self.position, self.draggedPositionY)
             }
         }

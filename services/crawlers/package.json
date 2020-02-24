@@ -14,7 +14,6 @@
   "dependencies": {
     "@dish/common": "*",
     "@dish/models": "*",
-    "@dish/puppeteer-crawler": "*",
     "@dish/worker": "*",
     "axios": "^0.19.1",
     "lodash": "^4.17.15"

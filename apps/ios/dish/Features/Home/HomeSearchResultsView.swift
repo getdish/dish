@@ -4,31 +4,72 @@ struct HomeSearchResultsView: View {
     var state: HomeStateItem
     
     var body: some View {
-        ZStack {
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack(spacing: 20) {
-//                    ClearKeyboardOnScroll()
-                    
-                    Spacer().frame(height: 20)
+        VStack(spacing: 20) {
+            ForEach(state.searchResults.results) { item in
+                DishRestaurantResult(restaurant:
+                    RestaurantItem(
+                        id: item.id,
+                        name: item.name,
+                        imageName: "turtlerock",
+                        address: "",
+                        phone: "",
+                        tags: [],
+                        stars: 3
+                    )
+                )
+                .equatable()
+            }
+        }
+    }
+}
 
-                    ForEach(state.searchResults.results) { item in
-                        DishRestaurantCard(restaurant:
-                            RestaurantItem(
-                                id: item.id,
-                                name: item.name,
-                                imageName: "turtlerock",
-                                address: "",
-                                phone: "",
-                                tags: [],
-                                stars: 3
-                            )
-                        )
+struct DishRestaurantResult: View, Equatable {
+    static func == (lhs: DishRestaurantResult, rhs: DishRestaurantResult) -> Bool {
+        lhs.restaurant == rhs.restaurant
+    }
+    
+    @EnvironmentObject var screen: ScreenModel
+    @State var isScrolled = false
+    var restaurant: RestaurantItem
+    
+    var body: some View {
+        ListItemHScroll(isScrolled: self.$isScrolled) {
+            HStack {
+                DishButton(action: {
+//                    App.store.send(
+//                        .home(.push(HomeStateItem(search: self.dish.name)))
+//                    )
+                }) {
+                    HStack(alignment: .top) {
+                        VStack {
+                            Text("\(self.restaurant.name)")
+                                .fontWeight(.light)
+                                .lineLimit(1)
+                                .font(.system(size: 22))
+                            
+                            HStack {
+                                Text("\(self.restaurant.address)")
+                                    .lineLimit(1)
+                                    .font(.system(size: 15))
+                                
+                                Text("\(self.restaurant.phone)")
+                                    .lineLimit(1)
+                                    .font(.system(size: 15))
+                                
+                            }
+                            
+                            Text("\(self.restaurant.tags.joined(separator: ", "))")
+                                .lineLimit(1)
+                                .font(.system(size: 15))
+                        }
+                        
+                        Spacer()
                     }
-                    
-                    // space for bottom bottomnav
-                    Spacer().frame(height: 90)
+                    .padding(.horizontal)
+                    .frame(width: self.screen.width - 120 - 20)
                 }
-                .padding(16)
+                
+                DishRestaurantCard(restaurant: self.restaurant)
             }
         }
     }

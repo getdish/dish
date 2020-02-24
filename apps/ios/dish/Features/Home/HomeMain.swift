@@ -17,10 +17,6 @@ struct HomeMainView: View {
     @State var wasOnCamera = false
     @State var contentWrappingView: UIView? = nil
 
-    var drawerPosition: Binding<BottomDrawerPosition> {
-        store.binding(for: \.home.drawerPosition, { .home(.setDrawerPosition($0)) })
-    }
-    
     func start() {
         async(500) {
             self.state.setAnimationState(.idle)
@@ -30,15 +26,6 @@ struct HomeMainView: View {
     @State var lastSearchFocus: SearchFocusState = .off
     
     func sideEffects() {
-        // on focus search move drawer up
-        let searchFocus = store.state.home.searchFocus
-        if searchFocus != self.lastSearchFocus {
-            self.lastSearchFocus = searchFocus
-            if searchFocus == .search {
-                store.send(.home(.setDrawerPosition(.top)))
-            }
-        }
-        
         // set app height
         if self.appGeometry?.size.height != self.state.appHeight {
             if let height = self.appGeometry?.size.height {
@@ -66,6 +53,8 @@ struct HomeMainView: View {
         let state = self.state
         let animationState = state.animationState
         let mapHeight = state.mapHeight
+        let showMapRow = self.store.state.home.drawerPosition == .bottom
+            && !self.store.state.home.drawerIsDragging
 //        let isOnShowSearch = searchFocus != .off
         //        let enableSearchBar = [.idle, .off].contains(state.dragState) && state.animationState == .idle
 
@@ -105,7 +94,15 @@ struct HomeMainView: View {
                                         || state.animationState != .idle
                                         || state.mapHeight > state.startSnapToBottomAt
                                 )
-                                    .offset(y: -(state.mapFullHeight - mapHeight) / 2 + 25 /* topbar offset */)
+                                    
+                                    .offset(y:
+                                        // centered
+                                        (self.screen.height - state.mapFullHeight) * 0.5
+                                        // move with drawer (but just a bit less than half because when fully open, we show a bottom results drawer)
+                                        + (state.y - App.drawerSnapPoints[1]) * 0.4
+                                        // subtract just a bit because LenseBar is taller than TopNav
+                                        - 20
+                                    )
                                     .animation(.spring(response: 0.65))
                             }
                             .frameLimitedToScreen()
@@ -117,14 +114,27 @@ struct HomeMainView: View {
                     }
                     
                     VStack {
+                        HomeMapResultsBar()
+                        Spacer()
+                    }
+                        .offset(y: App.drawerSnapPoints[2] + (
+                            showMapRow
+                                ? -App.mapBarHeight - 68
+                                : 0
+                        ))
+                        .opacity(showMapRow ? 1 : 0)
+                        .animation(.spring(response: 1))
+                        .disabled(!showMapRow)
+                    
+                    VStack(spacing: 0) {
                         DishLenseFilterBar()
                         Spacer()
                     }
                     // dont go up beyond mid-point
-                    .offset(y: max(self.screen.height * 0.5 - 68 - 30, state.y - 68))
+                    .offset(y: max(App.drawerSnapPoints[1] - 68 - 30, state.y - 68))
                     .animation(.spring())
                     
-                    DishDrawer()
+                    HomeMainDrawer()
                         .equatable()
                     
                     // top bar
@@ -171,7 +181,7 @@ struct HomeMainView: View {
                     && isDraggingBelowSearchbar
                     && isDraggingHorizontal
                      {
-                    log.debug("ignore drag horizontal")
+                    logger.debug("ignore drag horizontal")
                     self.state.setDragState(.contentHorizontal)
                     ignoreThisDrag = true
                     return
@@ -205,85 +215,6 @@ struct HomeMainView: View {
     }
 }
 
-struct DishDrawer: View, Equatable {
-    static func == (lhs: DishDrawer, rhs: DishDrawer) -> Bool {
-        true
-    }
-    
-    @EnvironmentObject var screen: ScreenModel
-    @EnvironmentObject var store: AppStore
-    
-    var drawerPosition: Binding<BottomDrawerPosition> {
-        store.binding(for: \.home.drawerPosition, { .home(.setDrawerPosition($0)) })
-    }
-    
-    var body: some View {
-        BottomDrawer(
-            position: self.drawerPosition,
-            snapPoints: [
-                self.screen.edgeInsets.top + 50,
-                self.screen.height * 0.5,
-                self.screen.height - 105 - self.screen.edgeInsets.bottom
-            ],
-            cornerRadius: 20,
-            handle: nil,
-            onChangePosition: { (_, y) in
-                homeViewState.setY(y)
-        }
-        ) {
-            VStack(spacing: 0) {
-                HomeSearchBar()
-                    .padding(.horizontal, 5)
-                    .padding(.top, 5)
-                HomeMainFilterBar()
-                ScrollView {
-                    HomeContentExplore()
-                }
-                Spacer()
-            }
-        }
-    }
-}
-
-
-struct HomeSearchAutocomplete: View {
-    var body: some View {
-        VStack {
-            Spacer()
-                .frame(height: App.screen.edgeInsets.top + App.searchBarHeight + 60)
-            
-            List {
-                HStack { Text("Suggested item 1") }
-                HStack { Text("Suggested item 2") }
-                HStack { Text("Suggested item 3") }
-                HStack { Text("Suggested item 4") }
-            }
-        }
-        .background(Color.white)
-        .frameLimitedToScreen()
-        .clipped()
-    }
-}
-
-struct HomeSearchLocationAutocomplete: View {
-    var body: some View {
-        VStack {
-            Spacer()
-                .frame(height: App.screen.edgeInsets.top + App.searchBarHeight + 60)
-            
-            List {
-                HStack { Text("Suggested item 1") }
-                HStack { Text("Suggested item 2") }
-                HStack { Text("Suggested item 3") }
-                HStack { Text("Suggested item 4") }
-            }
-        }
-        .background(Color.white)
-        .frameLimitedToScreen()
-        .clipped()
-    }
-}
-
 #if DEBUG
 struct HomeMainView_Previews: PreviewProvider {
     static var previews: some View {
@@ -292,38 +223,3 @@ struct HomeMainView_Previews: PreviewProvider {
     }
 }
 #endif
-
-//struct SearchBarBg: View {
-//    @Environment(\.colorScheme) var colorScheme
-//
-//    var width: CGFloat = App.screen.width
-//    var topWidth: CGFloat = 120
-//    var topHeight: CGFloat = 20
-//    var topRadius: CGFloat = 10
-//    var searchHeight: CGFloat = 45
-//
-//    var shape: some View {
-//        let searchRadius = searchHeight / 2
-//
-//        return Path { path in
-//            path.addRoundedRect(
-//                in: CGRect(x: 0, y: topHeight, width: width, height: searchHeight),
-//                cornerSize: CGSize(width: searchRadius, height: searchRadius)
-//            )
-//
-//            var p2 = Path()
-//            p2.addRoundedRect(
-//                in: CGRect(x: searchRadius, y: searchHeight, width: topWidth, height: topHeight * 2),
-//                cornerSize: CGSize(width: topRadius, height: topRadius)
-//            )
-//
-//            path.addPath(p2)
-//        }
-//    }
-//
-//    var body: some View {
-//        self.shape
-//            .foregroundColor(.white)
-//            .shadow(color: Color.black.opacity(self.colorScheme == .dark ? 0.6 : 0.3), radius: 8, x: 0, y: 1)
-//    }
-//}
