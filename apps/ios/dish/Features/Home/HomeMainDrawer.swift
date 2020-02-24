@@ -38,7 +38,10 @@ struct HomeMainDrawer: View, Equatable {
                     y > App.drawerSnapPoints[0] + 100 {
                     
                 }
-        }
+            },
+            onDragState: { state in
+                self.store.send(.home(.setDrawerIsDragging(state.isDragging)))
+            }
         ) {
             ZStack {
                 // home content

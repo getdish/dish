@@ -29,6 +29,7 @@ struct BottomDrawer<Content: View>: View {
     
     typealias OnChangePositionCB = (BottomDrawerPosition, CGFloat) -> Void
     var onChangePosition: OnChangePositionCB? = nil
+    var onDragState: ((DragState) -> Void)? = nil
     
     enum Lock { case drawer, content, filters }
     @State var lock: Lock = .drawer
@@ -82,8 +83,6 @@ struct BottomDrawer<Content: View>: View {
     var gesture: _EndedGesture<GestureStateGesture<DragGesture, DragState>> {
         DragGesture(minimumDistance: 12)
             .updating($dragState) { drag, state, transaction in
-                print("update me? y \(drag.location.y) height \(drag.translation.height)")
-                
                 if self.lock != .drawer {
                     if App.store.state.home.drawerPosition != .bottom {
                         print("\(drag.translation.height)")
@@ -115,7 +114,11 @@ struct BottomDrawer<Content: View>: View {
                             self.lock = .drawer
                         }
                     }
+                    let wasDragging = self.dragState.isDragging
                     state = .dragging(translation: drag.translation)
+                    if !wasDragging {
+                        if let cb = self.onDragState { cb(state) }
+                    }
                 }
             }
             .onEnded(onDragEnded)
@@ -161,6 +164,7 @@ struct BottomDrawer<Content: View>: View {
         
         self.lock = .drawer
         
+        if let cb = self.onDragState { cb(self.dragState) }
         self.callbackChangePosition()
     }
     

@@ -104,8 +104,8 @@ struct HomeMainView: View {
                     }
                     
                     HomeMapResultsBar()
-                        .offset(y: App.drawerSnapPoints[1] + (
-                            self.store.state.home.drawerPosition == .bottom
+                        .offset(y: max(state.y, App.drawerSnapPoints[1]) + (
+                            self.store.state.home.drawerPosition == .bottom && !self.store.state.home.drawerIsDragging
                                 ? -App.mapBarHeight
                                 : 0
                         ))
