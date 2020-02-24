@@ -83,7 +83,7 @@ struct BottomDrawer<Content: View>: View {
             }
             .animation(self.dragState.isDragging
                 ? nil
-                : .interpolatingSpring(stiffness: 100.0, damping: 30.0, initialVelocity: 0)
+                : .interpolatingSpring(stiffness: 90.0, damping: 25.0, initialVelocity: 0)
             )
             .gesture(
                 self.gesture
@@ -166,7 +166,7 @@ struct BottomDrawer<Content: View>: View {
         // this is maybe unintuitive, but think of it like this: you want to do a small flick
         // to move it away. But if you are dragging from the top, and hold it "over" the middle,
         // then release it, you then want to be more lenient and have it snap to middle more often
-        let distanceToSnap: CGFloat = closestPosition == self.position ? 100 : 150
+        let distanceToSnap: CGFloat = closestPosition == self.position ? 120 : 180
         if closestPoint < distanceToSnap {
             throwDirection = 0
         }

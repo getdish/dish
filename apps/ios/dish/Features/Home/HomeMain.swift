@@ -117,12 +117,14 @@ struct HomeMainView: View {
                         HomeMapResultsBar()
                         Spacer()
                     }
-                    .offset(y: (showMapRow ? App.drawerSnapPoints[2] : self.screen.height) + (
+                        .offset(y: App.drawerSnapPoints[2] + (
                             showMapRow
                                 ? -App.mapBarHeight - 68
                                 : 0
                         ))
                         .animation(.spring(response: 1))
+                        .opacity(showMapRow ? 1 : 0)
+                        .disabled(!showMapRow)
                     
                     VStack(spacing: 0) {
                         DishLenseFilterBar()
