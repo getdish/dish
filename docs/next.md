@@ -7,6 +7,10 @@
 - Splash / marketing website / landing
 - Launch blog post
 
+# triage
+
+- put all graphql queries from `apps/lab/src/dishes/index.tsx` and the swift app `api.graphql` into its own area as .graphql files and import/reference them from their respective places.
+
 # backend
 
 - filters API
