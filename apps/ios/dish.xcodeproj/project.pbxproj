@@ -32,7 +32,6 @@
 		AE0F474423B69276008F7418 /* DishCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0F474323B69276008F7418 /* DishCamera.swift */; };
 		AE1BBDB423C8224200C58A87 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1BBDB323C8224200C58A87 /* CustomTextField.swift */; };
 		AE1BBDB623C8397900C58A87 /* CutoutCircleCentered.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1BBDB523C8397900C58A87 /* CutoutCircleCentered.swift */; };
-		AE1BBDBA23C83E9E00C58A87 /* QuickFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1BBDB923C83E9E00C58A87 /* QuickFilters.swift */; };
 		AE2B6BA423AC211F007BCD25 /* VerticalCardPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */; };
 		AE56C86423ADB78C006A156A /* HomeSearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56C86323ADB78C006A156A /* HomeSearchResultsView.swift */; };
 		AE56C86623ADD977006A156A /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56C86523ADD977006A156A /* TagView.swift */; };
@@ -163,7 +162,6 @@
 		AE0F474323B69276008F7418 /* DishCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishCamera.swift; sourceTree = "<group>"; };
 		AE1BBDB323C8224200C58A87 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		AE1BBDB523C8397900C58A87 /* CutoutCircleCentered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutoutCircleCentered.swift; sourceTree = "<group>"; };
-		AE1BBDB923C83E9E00C58A87 /* QuickFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickFilters.swift; sourceTree = "<group>"; };
 		AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalCardPager.swift; sourceTree = "<group>"; };
 		AE56C86323ADB78C006A156A /* HomeSearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchResultsView.swift; sourceTree = "<group>"; };
 		AE56C86523ADD977006A156A /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
@@ -375,6 +373,7 @@
 			isa = PBXGroup;
 			children = (
 				AE045C5023EB503400FFCBA1 /* AppGeometryReader.swift */,
+				AE045C5223EB5A2400FFCBA1 /* CornerMask.swift */,
 				AE861A7A23A06EDC004096BF /* BarArrow.swift */,
 				AE5CEDCF240465680046B944 /* ListItemHScroll.swift */,
 				AE861A8823A172E8004096BF /* BlurView.swift */,
@@ -418,6 +417,7 @@
 			children = (
 				1CE354872398714D004B3A84 /* HomeView.swift */,
 				AE7563B323A035E70094022B /* HomeMain.swift */,
+				AE0C5FF823D2506800BB5340 /* HomeViewState.swift */,
 				AEF6558023B2205F00E49A51 /* HomeMainDrawer.swift */,
 				AEE6C1E323FDD6FA001AC6B0 /* BottomDrawer.swift */,
 				AE65DF9323F79A2B00758DD3 /* HomeMapResultsBar.swift */,
@@ -426,7 +426,6 @@
 				AEAAAA0D23F9DBA700ABED23 /* DishRestaurantView.swift */,
 				AE65DF9523F7BA8E00758DD3 /* AppleMapView.swift */,
 				AE6CECCC23A843E600B08870 /* BottomNav.swift */,
-				AE045C5223EB5A2400FFCBA1 /* CornerMask.swift */,
 				AE5CEDD12404657A0046B944 /* DishListItem.swift */,
 				AE0F474323B69276008F7418 /* DishCamera.swift */,
 				AEC9AD3F23D15AFD00BCC82E /* DishCardView.swift */,
@@ -437,8 +436,6 @@
 				AEA87E4223B976EB009F07DB /* HomeFilterBar.swift */,
 				AEE561E323FFB98B00B51F80 /* HomeMapOverlay.swift */,
 				AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */,
-				AE0C5FF823D2506800BB5340 /* HomeViewState.swift */,
-				AE1BBDB923C83E9E00C58A87 /* QuickFilters.swift */,
 				AE861A8023A16DA6004096BF /* TopNavView.swift */,
 				AE5CEDC924023C7B0046B944 /* TopNavLocationSearchBarView.swift */,
 				AEE6C1E123FDC434001AC6B0 /* TopSheetView.swift */,
@@ -712,7 +709,6 @@
 				AEE561DE23FF64E800B51F80 /* GridView.swift in Sources */,
 				1CCEDF52239DC7C9003EE228 /* PagerView.swift in Sources */,
 				AEF6557423B0407000E49A51 /* ImageStore.swift in Sources */,
-				AE1BBDBA23C83E9E00C58A87 /* QuickFilters.swift in Sources */,
 				AEE802B523ED3E8000A1A19E /* Double.swift in Sources */,
 				AE7563B423A035E70094022B /* HomeMain.swift in Sources */,
 				AE5CEDCA24023C7B0046B944 /* TopNavLocationSearchBarView.swift in Sources */,

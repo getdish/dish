@@ -32,33 +32,15 @@ struct HomeMainView: View {
                 self.state.setAppHeight(height)
             }
         }
-        
-        if Selectors.home.isOnSearchResults() != self.wasOnSearchResults {
-            let val = Selectors.home.isOnSearchResults()
-            self.wasOnSearchResults = val
-            if val {
-                self.state.moveToSearchResults()
-            }
-        }
-        
-        let isOnCamera = self.store.state.home.view == .camera
-        if isOnCamera != self.wasOnCamera {
-            let val = self.store.state.home.view == .camera
-            self.wasOnCamera = val
-            self.state.setShowCamera(val)
-        }
     }
 
     var body: some View {
         let state = self.state
         let animationState = state.animationState
-        let mapHeight = state.mapHeight
         let showMapRow = self.store.state.home.drawerPosition == .bottom
             && !self.store.state.home.drawerIsDragging
-//        let isOnShowSearch = searchFocus != .off
-        //        let enableSearchBar = [.idle, .off].contains(state.dragState) && state.animationState == .idle
 
-        print(" 👀 HomeMainView mapHeight \(mapHeight) animationState \(state.animationState)")
+        print(" 👀 HomeMainView animationState \(state.animationState)")
 
         return ZStack(alignment: .topLeading) {
             Run("sideeffects") { self.sideEffects() }
@@ -74,11 +56,6 @@ struct HomeMainView: View {
                     if App.enableCamera && animationState != .splash {
                         ZStack {
                             DishCamera()
-                            
-                            // cover camera
-                            Color.black
-                                .opacity(state.showCamera ? 0 : 1)
-                                .animation(.spring())
                         }
                         .frameLimitedToScreen()
                     }
@@ -91,7 +68,6 @@ struct HomeMainView: View {
                                     height: state.mapFullHeight,
                                     animate: [.idle].contains(state.dragState)
                                         || state.animationState != .idle
-                                        || state.mapHeight > state.startSnapToBottomAt
                                 )
                                     
                                     .offset(y:
@@ -109,7 +85,6 @@ struct HomeMainView: View {
                             .opacity(animationState == .splash ? 0 : 1)
                         }
                         .frameLimitedToScreen()
-                        .opacity(state.showCamera ? 0 : 1)
                     }
                     
                     VStack {

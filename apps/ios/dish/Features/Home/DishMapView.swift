@@ -2,13 +2,6 @@ import SwiftUI
 import MapKit
 import Combine
 
-class DishMapViewStore: ObservableObject {
-    var cancels: Set<AnyCancellable> = []
-    @Published var location: MapViewLocation? = nil
-}
-
-fileprivate let mapViewStore = DishMapViewStore()
-
 struct DishMapView: View {
     @State var mapView: MKMapView? = nil
     
@@ -37,8 +30,6 @@ struct DishMapView: View {
     }
     
     func start() {
-        self.syncMapLocationToState()
-        self.syncMapHeightToZoomLevel()
     }
     
     var body: some View {
@@ -56,9 +47,8 @@ struct DishMapView: View {
                         markers: self.markers,
                         mapZoom: self.$mapZoom,
                         onChangeLocation: { location in
-                            if location != mapViewStore.location {
-                                mapViewStore.location = location
-                            }
+                            print("changing location")
+                            App.store.send(.map(.setLocation(location)))
                         },
                         // TODO this is tracking the *user* geolocation not the map location
                         // we should probably have both tracking and running things
@@ -90,59 +80,6 @@ struct DishMapView: View {
                 
                 Spacer()
             }
-        }
-    }
-    
-    func syncMapLocationToState() {
-        mapViewStore.$location
-            .debounce(for: .milliseconds(500), scheduler: App.queueMain)
-            .sink { location in
-                guard let location = location else { return }
-                print("set to \(location)")
-                App.store.send(.map(.setLocation(location)))
-            }
-            .store(in: &mapViewStore.cancels)
-    }
-    
-    func syncMapHeightToZoomLevel() {
-        if App.enableMapAutoZoom {
-            var lastZoomAt = homeViewState.mapHeight
-            
-            homeViewState.$y
-                .map { _ in homeViewState.mapHeight }
-                .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
-                .removeDuplicates()
-                .dropFirst()
-                .sink { mapHeight in
-                    if homeViewState.isAboutToSnap || homeViewState.isSnappedToBottom {
-                        return
-                    }
-                    let amt = ((mapHeight - lastZoomAt) / homeViewState.mapMaxHeight) * 0.5
-                    if amt == 0.0 {
-                        return
-                    }
-                    lastZoomAt = mapHeight
-                    print("TODO ZOOM")
-//                    self.mapView?.zoomIn(amt)
-            }
-            .store(in: &mapViewStore.cancels)
-            
-            // snappedToBottom => zoom
-            homeViewState.$y
-                .debounce(for: .milliseconds(50), scheduler: App.queueMain)
-                .map { _ in homeViewState.isSnappedToBottom }
-                .removeDuplicates()
-                .dropFirst()
-                //            .throttle(for: .milliseconds(50), scheduler: App.queueMain, latest: true)
-                .sink { isSnappedToBottom in
-                    print("TODO ZOOM")
-//                    if isSnappedToBottom {
-//                        self.mapView?.zoomIn(0.05)
-//                    } else {
-//                        self.mapView?.zoomOut(0.05)
-//                    }
-            }
-            .store(in: &mapViewStore.cancels)
         }
     }
 }

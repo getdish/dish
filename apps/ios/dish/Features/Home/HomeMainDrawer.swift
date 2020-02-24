@@ -8,7 +8,6 @@ struct HomeMainDrawer: View, Equatable {
     
     @EnvironmentObject var screen: ScreenModel
     @EnvironmentObject var store: AppStore
-    @State var scrollView: UIScrollView? = nil
     
     var drawerPosition: Binding<BottomDrawerPosition> {
         Binding<BottomDrawerPosition>(
@@ -23,6 +22,39 @@ struct HomeMainDrawer: View, Equatable {
         )
         
     }
+    
+    var body: some View {
+        let isOnLocationSearch = self.store.state.home.searchFocus == .location
+        
+        return BottomDrawer(
+            position: self.drawerPosition,
+            snapPoints: App.drawerSnapPoints,
+            cornerRadius: 20,
+            handle: nil,
+            onChangePosition: { (_, y) in
+                homeViewState.setY(y)
+                if self.store.state.home.searchFocus != .off &&
+                    y > App.drawerSnapPoints[0] + 100 {
+                    
+                }
+            },
+            onDragState: { state in
+                if state.isDragging != self.store.state.home.drawerIsDragging {
+                    self.store.send(.home(.setDrawerIsDragging(state.isDragging)))
+                }
+            }
+        ) {
+            HomeMainDrawerContentContainer(
+                isOnLocationSearch: isOnLocationSearch
+            )
+        }
+    }
+}
+
+struct HomeMainDrawerContentContainer: View {
+    @EnvironmentObject var screen: ScreenModel
+    @State var scrollView: UIScrollView? = nil
+    var isOnLocationSearch: Bool
     
     class HandleScrollView: NSObject, UIGestureRecognizerDelegate {
         init(_ scrollView: UIScrollView) {
@@ -49,69 +81,51 @@ struct HomeMainDrawer: View, Equatable {
             _ = HandleScrollView(scrollView)
         }
     }
-    
+
     var body: some View {
         let topContentHeight = App.searchBarHeight + App.filterBarHeight + 10
-        let isOnLocationSearch = self.store.state.home.searchFocus == .location
         
-        return BottomDrawer(
-            position: self.drawerPosition,
-            snapPoints: App.drawerSnapPoints,
-            cornerRadius: 20,
-            handle: nil,
-            onChangePosition: { (_, y) in
-                homeViewState.setY(y)
-                if self.store.state.home.searchFocus != .off &&
-                    y > App.drawerSnapPoints[0] + 100 {
-                    
-                }
-            },
-            onDragState: { state in
-                self.store.send(.home(.setDrawerIsDragging(state.isDragging)))
-            }
-        ) {
+        return ZStack {
+            // home content
             ZStack {
-                // home content
-                ZStack {
-                    VStack {
-                        ScrollView(.vertical, showsIndicators: false) {
-                            Spacer().frame(height: topContentHeight)
-                                .introspectScrollView { scrollView in
-                                    if self.scrollView == nil {
-                                        self.scrollView = scrollView
-                                        self.start()
-                                    }
+                VStack {
+                    ScrollView(.vertical, showsIndicators: false) {
+                        Spacer().frame(height: topContentHeight)
+                            .introspectScrollView { scrollView in
+                                if self.scrollView == nil {
+                                    self.scrollView = scrollView
+                                    self.start()
                                 }
-                            HomeMainDrawerContent()
-                            Spacer().frame(height: 5 + self.screen.edgeInsets.bottom)
                         }
-                        .mask(
-                            LinearGradient(
-                                gradient: Gradient(colors: [
-                                    Color.black.opacity(0),
-                                    Color.black.opacity(1),
-                                    Color.black.opacity(1),
-                                    Color.black.opacity(1),
-                                    Color.black.opacity(1),
-                                    Color.black.opacity(1)
-                                ]),
-                                startPoint: .top,
-                                endPoint: .center
-                            )
-                                .offset(y: App.searchBarHeight + 10)
+                        HomeMainDrawerContent()
+                        Spacer().frame(height: 5 + self.screen.edgeInsets.bottom)
+                    }
+                    .mask(
+                        LinearGradient(
+                            gradient: Gradient(colors: [
+                                Color.black.opacity(0),
+                                Color.black.opacity(1),
+                                Color.black.opacity(1),
+                                Color.black.opacity(1),
+                                Color.black.opacity(1),
+                                Color.black.opacity(1)
+                            ]),
+                            startPoint: .top,
+                            endPoint: .center
                         )
-                        Spacer()
-                    }
-                    VStack(spacing: 0) {
-                        HomeSearchBar()
-                            .padding(.horizontal, 10)
-                            .padding(.top, 10)
-                        HomeMainFilterBar()
-                        Spacer()
-                    }
+                            .offset(y: App.searchBarHeight + 10)
+                    )
+                    Spacer()
                 }
-                .opacity(isOnLocationSearch ? 0 : 1)
+                VStack(spacing: 0) {
+                    HomeSearchBar()
+                        .padding(.horizontal, 10)
+                        .padding(.top, 10)
+                    HomeMainFilterBar()
+                    Spacer()
+                }
             }
+            .opacity(isOnLocationSearch ? 0 : 1)
         }
     }
 }

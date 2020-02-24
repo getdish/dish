@@ -84,7 +84,7 @@ struct BottomDrawer<Content: View>: View {
             }
             .animation(self.dragState.isDragging
                 ? nil
-                : .interpolatingSpring(stiffness: 90.0, damping: 25.0, initialVelocity: 0)
+                : .interpolatingSpring(mass: 2.0, stiffness: 90.0, damping: 25.0, initialVelocity: 0)
             )
             .gesture(
                 self.gesture

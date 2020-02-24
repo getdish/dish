@@ -54,7 +54,6 @@ struct HomeSearchBar: View {
         }
     }
     
-    let after = AnyView(HomeSearchBarAfterView(scale: 1.2))
     
     func onClear() {
         // go back on empty search clear
@@ -92,65 +91,10 @@ struct HomeSearchBar: View {
                 }
         },
             onClear: self.onClear,
-//            after: isOnSearch ? AnyView(EmptyView()) : after,
             isFirstResponder: isFirstResponder,
             searchText: self.homeSearch,
             showInput: showInput
         )
-    }
-}
-
-struct HomeSearchBarAfterView: View {
-    @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var store: AppStore
-    @EnvironmentObject var homeState: HomeViewState
-
-    var scale: CGFloat
-    
-    var body: some View {
-        let oppositeColor = colorScheme == .dark ? Color.white : Color.black
-        
-        return HStack(spacing: 12 * scale) {
-            Button(action: {
-                self.homeState.toggleSnappedToBottom()
-            }) {
-                Group {
-                    if self.homeState.isSnappedToBottom {
-                        if Selectors.home.isOnSearchResults() {
-                            Image(systemName: "list.bullet")
-                                .resizable()
-                                .scaledToFit()
-                        } else {
-                            Image(systemName: "chevron.up")
-                                .resizable()
-                                .scaledToFit()
-                        }
-                    }
-                    else {
-                        if Selectors.home.isOnSearchResults() {
-                            Image(systemName: "map")
-                                .resizable()
-                                .scaledToFit()
-                        } else {
-                            Image(systemName: "chevron.down")
-                                .resizable()
-                                .scaledToFit()
-                        }
-                    }
-                }
-                .frame(width: 14 * scale, height: 14 * scale)
-                .opacity(0.5)
-            }
-            .padding(.vertical, 4 * scale)
-            .padding(.horizontal, 6 * scale)
-            
-            DishButton(action: {
-                App.store.send(.map(.moveToCurrentLocation))
-            }) {
-                Image(systemName: "location")
-                    .foregroundColor(.blue)
-            }
-        }
     }
 }
 
