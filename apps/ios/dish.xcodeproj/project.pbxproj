@@ -38,6 +38,7 @@
 		AE56C86623ADD977006A156A /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56C86523ADD977006A156A /* TagView.swift */; };
 		AE5CEDCA24023C7B0046B944 /* TopNavLocationSearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5CEDC924023C7B0046B944 /* TopNavLocationSearchBarView.swift */; };
 		AE5CEDCC24027E760046B944 /* MKMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5CEDCB24027E760046B944 /* MKMapView.swift */; };
+		AE5CEDCE24037A440046B944 /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5CEDCD24037A440046B944 /* Animation.swift */; };
 		AE65DF9223F771FF00758DD3 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE65DF9123F771FF00758DD3 /* String.swift */; };
 		AE65DF9423F79A2B00758DD3 /* HomeMapResultsBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE65DF9323F79A2B00758DD3 /* HomeMapResultsBar.swift */; };
 		AE65DF9623F7BA8E00758DD3 /* AppleMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE65DF9523F7BA8E00758DD3 /* AppleMapView.swift */; };
@@ -166,6 +167,7 @@
 		AE56C86523ADD977006A156A /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
 		AE5CEDC924023C7B0046B944 /* TopNavLocationSearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavLocationSearchBarView.swift; sourceTree = "<group>"; };
 		AE5CEDCB24027E760046B944 /* MKMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKMapView.swift; sourceTree = "<group>"; };
+		AE5CEDCD24037A440046B944 /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		AE65DF9123F771FF00758DD3 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		AE65DF9323F79A2B00758DD3 /* HomeMapResultsBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMapResultsBar.swift; sourceTree = "<group>"; };
 		AE65DF9523F7BA8E00758DD3 /* AppleMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMapView.swift; sourceTree = "<group>"; };
@@ -360,6 +362,7 @@
 				AE65DF9123F771FF00758DD3 /* String.swift */,
 				AE65E9BA23E59F9E00702C30 /* Text.swift */,
 				1CE3548023986BC1004B3A84 /* View.swift */,
+				AE5CEDCD24037A440046B944 /* Animation.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -707,6 +710,7 @@
 				AEE802B523ED3E8000A1A19E /* Double.swift in Sources */,
 				AE7563B423A035E70094022B /* HomeMain.swift in Sources */,
 				AE5CEDCA24023C7B0046B944 /* TopNavLocationSearchBarView.swift in Sources */,
+				AE5CEDCE24037A440046B944 /* Animation.swift in Sources */,
 				AEE561E023FF64FA00B51F80 /* IconView.swift in Sources */,
 				AE7563E323A038190094022B /* Array.swift in Sources */,
 				AEE1992123F33FA200492B6B /* ApolloNetwork.swift in Sources */,

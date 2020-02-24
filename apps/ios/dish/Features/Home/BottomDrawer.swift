@@ -24,7 +24,14 @@ struct BottomDrawer<Content: View>: View {
     }
     
     var draggedPositionY: CGFloat {
-        self.positionY + self.dragState.translation.height
+        let dragHeight = self.dragState.translation.height
+        let at = self.positionY + dragHeight
+        
+        if at < snapPoints[0] {
+            return snapPoints[0] - (snapPoints[0] - at) * 0.2
+        }
+        
+        return at
     }
     
     typealias OnChangePositionCB = (BottomDrawerPosition, CGFloat) -> Void
@@ -64,7 +71,7 @@ struct BottomDrawer<Content: View>: View {
         .frame(height: screenHeight, alignment: .top)
         .background(colorScheme == .dark ? Color.black : Color.white)
         .cornerRadius(self.cornerRadius)
-        .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.2), radius: 18.0)
+        .shadow(color: Color(white: 0, opacity: 0.27), radius: 20.0)
         .offset(y: self.draggedPositionY)
         .onGeometryChange { geometry in
             async {

@@ -143,8 +143,7 @@ struct HomeScreen: View, Identifiable {
         print("render home screen \(index) \(viewState.search)")
         
         return ZStack {
-            Color.white
-            
+            Color(.systemBackground)
             if index == 0 {
                 HomeContentExplore()
             } else {
@@ -171,8 +170,9 @@ struct HomeContentExplore: View {
                         .opacity(0.5)
                     Spacer()
                 }
-                .padding(.horizontal)
-                .transition(.slide)
+                    .padding(.horizontal)
+                    .transition(.slide)
+                    .animation(.ripple())
             }
             
             ForEach(0 ..< self.dishes.count) { index in
@@ -180,6 +180,8 @@ struct HomeContentExplore: View {
                     number: index + 1,
                     dish: self.dishes[index]
                 )
+                    .transition(.slide)
+                    .animation(.ripple(index: index))
             }
         }
         .padding(.bottom)
