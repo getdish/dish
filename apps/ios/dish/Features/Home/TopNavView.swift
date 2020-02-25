@@ -12,23 +12,24 @@ struct TopNavView: View {
     }
     
     var body: some View {
-        TopSheetView(
-            isOpen: self.$isOpen,
-            maxHeight: self.screen.height * 0.8,
-            minHeight: screen.edgeInsets.top + 50
-        ) {
+        // TODO there was a perf regression on map panning smoothness with TopSheetView
+//        TopSheetView(
+//            isOpen: self.$isOpen,
+//            maxHeight: self.screen.height * 0.8,
+//            minHeight: screen.edgeInsets.top + 50
+//        ) {
             VStack {
-                Spacer()
                 HStack(spacing: 10) {
                     self.accountButton
                     TopNavLocationSearchBarView()
                     self.cameraButton
                 }
+                Spacer()
             }
             .padding(.top, topPad)
             .padding(.horizontal, 8)
             .padding(.bottom, 8)
-        }
+//        }
     }
     
     var accountButton: some View {
@@ -98,6 +99,7 @@ struct TopNavButtonStyle: ViewModifier {
     var background: Color = .clear
     var height: CGFloat = 34
     var hPad: CGFloat = 11
+    var showBlurBackground: Bool = true
 
     
     func body(content: Content) -> some View {
@@ -109,14 +111,14 @@ struct TopNavButtonStyle: ViewModifier {
                         .padding(.horizontal, self.hPad)
                         .foregroundColor(.white)
                         .background(Color.black.opacity(active ? 0.4 : 0.8))
-                        .background(BlurView(style: active ? .systemMaterialLight : .systemMaterial))
+                        .background(showBlurBackground ? BlurView(style: active ? .systemMaterialLight : .systemMaterial) : nil)
                 } else {
                     content
                         .frame(height: self.height)
                         .padding(.horizontal, self.hPad)
                         .background(Color.white.opacity(active ? 0.5 : 0.2))
                         .foregroundColor(.white)
-                        .background(BlurView(style: .systemThinMaterialDark))
+                        .background(showBlurBackground ? BlurView(style: .systemThinMaterialDark) : nil)
                 }
             }
             .background(self.background)

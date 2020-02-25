@@ -63,6 +63,8 @@ struct BottomDrawer<Content: View>: View {
                 }
                 
                 self.content()
+                    .disabled(self.position != .top)
+                    .allowsHitTesting(self.position == .top)
                 
                 // pad bottom so it wont go below
                 Spacer().frame(height: belowHeight)

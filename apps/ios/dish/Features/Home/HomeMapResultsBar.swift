@@ -49,7 +49,7 @@ struct HomeMapExplore: View {
                     MapResultDishCard(dish: item)
                         .equatable()
                 }
-//                .drawingGroup()
+                .drawingGroup()
             }
             .padding(.horizontal, 20)
         }

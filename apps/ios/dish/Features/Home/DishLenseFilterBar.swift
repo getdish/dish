@@ -47,13 +47,19 @@ struct DishLenseButton: View, Identifiable, Equatable {
                 Text("\(self.lense.icon)\(self.lense.name != "" ? " \(self.lense.name)" : "")")
                     .font(.system(size: 17))
             }
-            .modifier(
-                TopNavButtonStyle(
-                    active: active,
-                    background: .init(red: lense.rgb[0], green: lense.rgb[1], blue: lense.rgb[2]),
-                    height: 38
+                .modifier(
+                    TopNavButtonStyle(
+                        active: active,
+                        background: .init(
+                            red: lense.rgb[0] + (active ? 0 : -0.2),
+                            green: lense.rgb[1] + (active ? 0 : -0.2),
+                            blue: lense.rgb[2] + (active ? 0 : -0.2)
+                        ),
+                        height: 38,
+                        showBlurBackground: false
+                    )
                 )
-            )
+                .animation(.spring())
         }
     }
 }

@@ -5,7 +5,7 @@ struct HomeMainDrawer: View, Equatable {
     static func == (lhs: HomeMainDrawer, rhs: HomeMainDrawer) -> Bool {
         true
     }
-    
+
     @EnvironmentObject var screen: ScreenModel
     @EnvironmentObject var store: AppStore
     
@@ -20,7 +20,6 @@ struct HomeMainDrawer: View, Equatable {
         },
             set: { self.store.send(.home(.setDrawerPosition($0))) }
         )
-        
     }
     
     var body: some View {
