@@ -9,7 +9,7 @@ enum LogLevel: Int {
     case error = 4
 }
 
-fileprivate let DEBUG_SIDE_EFFECTS: LogLevel = .info
+fileprivate let DEBUG_SIDE_EFFECTS: LogLevel = .debug
 
 struct SideEffect: View {
     static let None = SideEffect("", level: .off)
@@ -51,8 +51,34 @@ struct Run: View {
     let debounce: Double
     let throttle: Double
     let block: () -> Void
-    @State var lastRun: AnyCancellable? = nil
-    @State var lastRunAt: NSDate = NSDate()
+    
+    class RunState: ObservableObject {
+        @Published var debounceRun: Date = Date()
+        @Published var throttleRun: Date = Date()
+        var cancellables: Set<AnyCancellable> = []
+        var unmounted = false
+        
+        func start(_ parent: Run) {
+            if parent.debounce > 0 {
+                self.$debounceRun
+                    .debounce(for: .milliseconds(Int(parent.debounce)), scheduler: App.queueMain)
+                    .sink { _ in
+                        parent.run()
+                    }
+                    .store(in: &self.cancellables)
+            }
+            else if parent.throttle > 0 {
+                self.$throttleRun
+                    .throttle(for: .milliseconds(Int(parent.throttle)), scheduler: App.queueMain, latest: true)
+                    .sink { _ in
+                        parent.run()
+                    }
+                    .store(in: &self.cancellables)
+            }
+        }
+    }
+    
+    var state = RunState()
     
     init(_ name: String, level: LogLevel = .info, debounce: Double = 0, throttle: Double = 0, block: @escaping () -> Void) {
         self.name = name
@@ -62,8 +88,26 @@ struct Run: View {
         self.block = block
     }
     
-    func cancelLastRun() {
-        if let lr = lastRun { lr.cancel() }
+    var body: some View {
+        if throttle > 0 {
+            self.state.throttleRun = Date()
+        } else if debounce > 0 {
+            self.state.debounceRun = Date()
+        } else {
+            async { self.run() }
+        }
+        return Color.clear
+            .onAppear {
+                self.state.start(self)
+            }
+            .onDisappear {
+                self.state.unmounted = true
+            }
+    }
+    
+    func run() {
+        self.log()
+        self.block()
     }
     
     func log() {
@@ -72,38 +116,6 @@ struct Run: View {
             let logDebounce = debounce > 0 ? " debounced" : ""
             print(" ⏩\(logThrottle)\(logDebounce) \(self.name)")
         }
-    }
-    
-    var body: some View {
-        if throttle > 0 {
-            if abs(lastRunAt.timeIntervalSinceNow) * 1000 >= throttle {
-                async {
-                    self.log()
-                    self.block()
-                    self.lastRunAt = NSDate()
-                }
-            }
-        } else if debounce > 0 {
-            // debounce
-            cancelLastRun()
-            var cancelled = 1
-            async(debounce) {
-                if cancelled > 1 { return }
-                self.log()
-                self.block()
-            }
-            async {
-                self.lastRun = AnyCancellable {
-                    cancelled += 1
-                }
-            }
-        } else {
-            async {
-                self.log()
-                self.block()
-            }
-        }
-        return emptyView.onDisappear { self.cancelLastRun() }
     }
 }
 

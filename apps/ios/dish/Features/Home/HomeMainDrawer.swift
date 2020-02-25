@@ -124,7 +124,6 @@ struct HomeMainDrawerContentContainer: View {
 
 struct HomeMainDrawerContent: View {
     @EnvironmentObject var store: AppStore
-    @State var dragX: CGFloat = 0
 
     var body: some View {
         let viewStates = self.store.state.home.viewStates
@@ -132,48 +131,65 @@ struct HomeMainDrawerContent: View {
         return ZStack {
             ForEach(viewStates) { viewState in
                 HomeScreen(
-                    viewState: viewState,
+                    index: viewStates.firstIndex(of: viewState) ?? 0,
                     isActive: Selectors.home.lastState() == viewState,
-                    index: viewStates.firstIndex(of: viewState) ?? 0
+                    isLast: viewStates.firstIndex(of: viewState) == viewStates.count - 1,
+                    onSwipeBack: {
+                        self.store.send(.home(.pop))
+                    },
+                    viewState: viewState
                 )
             }
-            // todo only start on edge
-//            .gesture(
-//                DragGesture()
-//                    .onChanged { value in
-//                        // right edge
-//                        if value.startLocation.x < 10 {
-//                            self.dragX = value.translation.width
-//                        }
-//                }
-//                .onEnded { value in
-//                    let frameWidth = geometry.size.width
-//                    let offset = value.translation.width / frameWidth
-//                    let offsetV = value.predictedEndTranslation.width / frameWidth
-//                    let score = abs(offset * 0.4 + offsetV * 0.6)
-//                    let shouldChange = score > 0.2
-//                    withAnimation(.spring()) {
-//                        self.dragX = shouldChange ? frameWidth : 0
-//                    }
-//                }
-//            )
         }
     }
 }
 
 struct HomeScreen: View, Identifiable {
+    @EnvironmentObject var screen: ScreenModel
+    @State var dragX: CGFloat = 0
+    
     var id: String { self.viewState.id }
-    var viewState: HomeStateItem
-    var isActive: Bool
     var index: Int
+    var isActive: Bool
+    var isLast: Bool
+    var onSwipeBack: () -> Void
+    var viewState: HomeStateItem
     
     var body: some View {
         print("render home screen \(index) \(viewState.search)")
         return ZStack {
-            if index == 0 {
-                HomeContentExplore()
-            } else {
-                HomeSearchResultsView(state: viewState)
+            if isActive {            
+                if index == 0 {
+                    HomeContentExplore()
+                } else {
+                    HomeSearchResultsView(state: viewState)
+                }
+            }
+            
+            if isLast {
+                HStack {
+                    Color.black.opacity(0.00001).frame(width: 40)
+                        .gesture(
+                            DragGesture(minimumDistance: 0)
+                                .onChanged { value in
+                                    // left edge
+                                    if value.startLocation.x < 20 {
+                                        self.dragX = value.translation.width
+                                    }
+                            }
+                            .onEnded { value in
+                                let frameWidth = self.screen.width
+                                let offset = value.translation.width / frameWidth
+                                let offsetV = value.predictedEndTranslation.width / frameWidth
+                                let score = abs(offset * 0.4 + offsetV * 0.6)
+                                let shouldChange = score > 0.2
+                                withAnimation(.spring()) {
+                                    self.dragX = shouldChange ? frameWidth : 0
+                                }
+                            }
+                    )
+                    Spacer()
+                }
             }
         }
     }
