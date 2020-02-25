@@ -55,7 +55,7 @@ struct SearchInput: View {
     var blur = 0
     var scale: CGFloat = 1
     var sizeRadius = CGFloat(1)
-    var icon: AnyView?
+    var icon: Image?
     var showCancelInside = false
     var onTapLeadingIcon: (() -> Void)?
     var onEditingChanged: ((Bool) -> Void)?
@@ -109,15 +109,12 @@ struct SearchInput: View {
                     }) {
                         VStack {
                             VStack {
-                                icon ?? AnyView(
-                                    Image(systemName: "magnifyingglass")
-                                        .resizable()
-                                        .scaledToFit()
-                                )
+                                (icon ?? Image(systemName: "magnifyingglass"))
+                                    .resizable()
+                                    .scaledToFit()
                             }
                             .frame(width: 24 * scale, height: 24 * scale)
                         }
-                        
                     }
                     
                     Spacer().frame(width: horizontalSpacing)

@@ -83,21 +83,21 @@ struct HomeMainDrawerContentContainer: View {
             ZStack {
                 VStack {
                     HomeMainDrawerContent()
-                    .mask(
-                        LinearGradient(
-                            gradient: Gradient(colors: [
-                                Color.black.opacity(0),
-                                Color.black.opacity(1),
-                                Color.black.opacity(1),
-                                Color.black.opacity(1),
-                                Color.black.opacity(1),
-                                Color.black.opacity(1)
-                            ]),
-                            startPoint: .top,
-                            endPoint: .center
+                        .mask(
+                            LinearGradient(
+                                gradient: Gradient(colors: [
+                                    Color.black.opacity(0),
+                                    Color.black.opacity(1),
+                                    Color.black.opacity(1),
+                                    Color.black.opacity(1),
+                                    Color.black.opacity(1),
+                                    Color.black.opacity(1)
+                                ]),
+                                startPoint: .top,
+                                endPoint: .center
+                            )
+                                .offset(y: App.searchBarHeight + 10)
                         )
-                            .offset(y: App.searchBarHeight + 10)
-                    )
                     Spacer()
                 }
                 VStack(spacing: 0) {

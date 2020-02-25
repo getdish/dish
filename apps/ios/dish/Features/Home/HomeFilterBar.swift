@@ -54,6 +54,8 @@ struct HomeMainFilterBar: View, Equatable {
                 }
                 .padding(.vertical, filterBarPad)
                 .padding(.horizontal, 24)
+                // this heavily fixes map pan
+                .drawingGroup()
             }
         }
         .frame(height: App.filterBarHeight)

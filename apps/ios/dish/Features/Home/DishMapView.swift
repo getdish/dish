@@ -25,7 +25,6 @@ struct DishMapViewContainer: View {
                         markers: markers
                     )
                         .equatable()
-                        .frame(height: homeViewState.mapFullHeight)
                     
                     // prevent touch on left/right sides for dragging between cards
                     HStack {
