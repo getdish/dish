@@ -75,19 +75,27 @@ But most importantly, vetting the restaurants just a huge pain in the ass.
 
 Here's a not-so-secret secret: Yelp and Google absolutely do not capture "good" asian food almost at all. They capture "ok" asian food with "great" service/ambiance, but they negatively filter out "great" asian food with "bad" service/ambiance. But with delivery - I don't care about service, or ambiance, or even if they make everything else on the menu horribly except for just the one type of Pho we were craving.
 
-That was the lightbulb.
+I launched into a rant, which essentially went, "why cant i just find the best of a single dish? like why do i have to manually sort through so many reviews to filter out service and all these other factors?".
+
+And with the advent of Instagram and Facebook Stories, in a world where delivery food is growing more and more, I found something that looked like a startup.
+
+Where Coffee Shop Trading Cards fell flat - it was too complex, in explaining to people, and in how it solved problems - the idea of "Dish", or "dish-only reviews" went the other way - it simplified a convoluted system, ie, one star rating for everything from service to every plate they served, into the most fundamental unit - did I like the specific plate I ate.
+
+It was the stripping down that resonated. Start by doing less - a lot less, but in a way that fixes a big pain points. I liked it.
 
 It wasn't just that delivery services had poor ratings (they do), or that Yelp/Google totally miss out on ranking asian food based on the food quality (they do), but it was this:
 
-As a millenial, most of the time, I don't give two fucks if a restaurant is dimly lit, the waiters are somewhat rude, and there's no parking.
-
-I love discovering amazing cuisine and having a "deck" of top spots in the city. And I realized, time and time again, that searching Yelp for "the absolute best of X", where X is a dish, was just not great.
+As a millenial, most of the time, I don't give two fucks if a restaurant is dimly lit, the waiters are somewhat rude, and there's no parking. Most of the time. I love discovering amazing cuisine and having a "deck" of great spots in the city. And I realized, time and time again, that searching Yelp, or even Google for "the absolute best of X", where X is a dish, was just not great. It didn't _nerd out enough_ about the data. Or if it was decent, like The Infatuated or Eater, it wasn't in a nice and easy to use app that integrated with delivery information.
 
 Yelp and Google review _restaurants_.
 
 What I realized was, I didn't necessarily need to do the trading cards idea - instead of rating things on _many_ factors, we could just fix most of my problems by instead rating them on _even less_ factors.
 
-Instead of rating the restaurant, just rate the single plate of food you ordered.
+An aside -
+
+Listen, I know what you're thinking. This isn't a novel idea. It isn't a moonshot.
+
+What it is is a genuine attempt by a couple nerds at finally aligning my passions behind my work, and something that is just plain fun to build, think about, and geek out about for years to come.
 
 ---
 
