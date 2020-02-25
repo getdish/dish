@@ -102,7 +102,6 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     func updateItem(_ next: HomeStateItem) {
         if let index = state.home.viewStates.firstIndex(where: { $0.id == next.id }) {
             var item = next
-            item.id = uid()
             state.home.viewStates[index] = item
         }
     }

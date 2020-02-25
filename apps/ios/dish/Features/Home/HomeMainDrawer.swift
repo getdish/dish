@@ -124,19 +124,21 @@ struct HomeMainDrawerContentContainer: View {
 
 struct HomeMainDrawerContent: View {
     @EnvironmentObject var store: AppStore
+    
+    func onSwipeBack() {
+        self.store.send(.home(.pop))
+    }
 
     var body: some View {
         let viewStates = self.store.state.home.viewStates
         print("viewStates \(viewStates.count)")
         return ZStack {
-            ForEach(viewStates) { viewState in
+            ForEach(viewStates, id: \.id) { viewState in
                 HomeScreen(
                     index: viewStates.firstIndex(of: viewState) ?? 0,
                     isActive: Selectors.home.lastState() == viewState,
                     isLast: viewStates.firstIndex(of: viewState) == viewStates.count - 1,
-                    onSwipeBack: {
-                        self.store.send(.home(.pop))
-                    },
+                    onSwipeBack: self.onSwipeBack,
                     viewState: viewState
                 )
             }
@@ -154,11 +156,12 @@ struct HomeScreen: View, Identifiable {
     var isLast: Bool
     var onSwipeBack: () -> Void
     var viewState: HomeStateItem
+    let uid = UUID().uuidString
     
     var body: some View {
-        print("render home screen \(index) \(viewState.search)")
+        print("render home screen \(index) --  \(uid) -- \(isActive) \(viewState.search)")
         return ZStack {
-            if isActive {            
+            if isActive {
                 if index == 0 {
                     HomeContentExplore()
                 } else {
@@ -296,14 +299,41 @@ struct HomeContentExplore: View {
         .id(self.id)
     }
     
-    @State var lastScrollStartedAt: CGFloat = 0
-    
-    let state = ScrollState()
     class ScrollState: ObservableObject {
         @Published var lastY: CGFloat = 0
+        @Published var lastScrollStartedAt: CGFloat = 0
+        private var cancellables: Set<AnyCancellable> = []
+        var scrollView: UIScrollView? = nil
+        
+        func start(_ parent: HomeContentExplore) {
+            guard let scrollView = self.scrollView else { return }
+            self.$lastY
+                .throttle(for: .milliseconds(4), scheduler: App.queueMain, latest: false)
+                .collect(.byTimeOrCount(App.queueMain, 1, 4))
+                .sink { lastFew in
+                    let x: [CGFloat] = lastFew
+                    // if pulling it down
+                    // doing the lastFew fixes bugs where it shows ~ -100 for a sec after drawer drag
+                    if x.allSatisfy({ $0 < -11 }) {
+                        App.store.send(.home(.setDrawerPosition(.middle)))
+                    }
+                }
+                .store(in: &self.cancellables)
+            
+            self.$lastScrollStartedAt
+                .removeDuplicates()
+                .sink { startedAt in
+                    // drawer not at .top
+                    if App.store.state.home.drawerPosition == .top { return }
+                    // scroll at top
+                    if round(startedAt) != 0 { return }
+                    scrollView.bounces = false
+                }
+                .store(in: &self.cancellables)
+        }
     }
     
-    @State var cancellables: Set<AnyCancellable> = []
+    @State var state: ScrollState? = nil
 
     var body: some View {
         let isDisabled = self.store.state.home.drawerIsDragging
@@ -314,28 +344,24 @@ struct HomeContentExplore: View {
             } else {
                 ZStack {
                     Color.clear.onAppear {
-                        self.state.$lastY
-                            .throttle(for: .milliseconds(4), scheduler: App.queueMain, latest: false)
-                            .collect(.byTimeOrCount(App.queueMain, 1, 4))
-                            .sink { lastFew in
-                                let x: [CGFloat] = lastFew
-                                // if pulling it down
-//                                print("now \(y)")
-                                if x.allSatisfy({ $0 < -11 }) {
-                                    self.store.send(.home(.setDrawerPosition(.middle)))
-                                }
-                            }
-                            .store(in: &self.cancellables)
+                        self.state = ScrollState()
                     }
+                    
                     GeometryReader { geo in
                         ScrollView(.vertical, showsIndicators: false) {
+                            Color.clear.introspectScrollView { x in
+                                if let state = self.state {
+                                    state.scrollView = x
+                                    state.start(self)
+                                }
+                            }
                             ScrollListener(debounce: 50) { frame in
-                                self.lastScrollStartedAt = self.state.lastY
+                                self.state?.lastScrollStartedAt = self.state?.lastY ?? 0
                             }
                             ScrollListener(throttle: 16) { frame in
-                                if self.lastScrollStartedAt == 0
+                                if self.state?.lastScrollStartedAt == 0
                                     && self.store.state.home.drawerPosition == .top {
-                                    self.state.lastY = geo.frame(in: .global).minY - frame.minY
+                                    self.state?.lastY = geo.frame(in: .global).minY - frame.minY
                                 }
                             }
                             
