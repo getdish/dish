@@ -9,7 +9,7 @@ enum LogLevel: Int {
     case error = 4
 }
 
-fileprivate let DEBUG_SIDE_EFFECTS: LogLevel = .debug
+fileprivate let DEBUG_SIDE_EFFECTS: LogLevel = .info
 
 struct SideEffect: View {
     static let None = SideEffect("", level: .off)
