@@ -37,6 +37,25 @@ class Auth {
     }
   }
 
+  getHeaders() {
+    let auth_headers = {}
+    if (this.is_logged_in) {
+      if (this.is_admin) {
+        auth_headers = {
+          'X-Hasura-Admin-Secret':
+            process.env.HASURA_SECRET ||
+            process.env.REACT_APP_HASURA_SECRET ||
+            'password',
+        }
+      } else {
+        auth_headers = {
+          Authorization: 'Bearer ' + this.jwt,
+        }
+      }
+    }
+    return auth_headers
+  }
+
   async api(
     method: AxiosRequestConfig['method'],
     path: string,

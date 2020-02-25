@@ -27,8 +27,8 @@ export type Point = {
   coordinates: [number, number]
 }
 
-const LOCAL_HASURA = 'hasura.rio.dishapp.com' || 'localhost:8080'
-const LOCAL_HASURA_HTTP = `https://${LOCAL_HASURA}`
+const LOCAL_HASURA = 'localhost:8080'
+const LOCAL_HASURA_HTTP = `http://${LOCAL_HASURA}`
 
 let DOMAIN: string
 
@@ -62,6 +62,9 @@ const wsLink = new WebSocketLink({
   uri: `ws://${LOCAL_HASURA}/v1/graphql`,
   options: {
     reconnect: true,
+    connectionParams: {
+      headers: { 'X-Hasura-Admin-Secret': process.env.REACT_APP_HASURA_SECRET },
+    },
   },
   webSocketImpl: WebSocket,
 })
@@ -173,30 +176,11 @@ export class ModelBase<T> {
     return res.data
   }
 
-  static getAuth() {
-    let auth_headers = {}
-    if (auth.is_logged_in) {
-      if (auth.is_admin) {
-        auth_headers = {
-          'X-Hasura-Admin-Secret':
-            process.env.HASURA_SECRET ||
-            process.env.REACT_APP_HASURA_SECRET ||
-            'password',
-        }
-      } else {
-        auth_headers = {
-          Authorization: 'Bearer ' + auth.jwt,
-        }
-      }
-    }
-    return auth_headers
-  }
-
   static async hasura(gql: {}) {
     let conf = JSON.parse(JSON.stringify(AXIOS_CONF))
     gql = ModelBase.ensureKeySyntax(gql)
     conf.data.query = jsonToGraphQLQuery(gql, { pretty: true })
-    conf.headers = ModelBase.getAuth()
+    conf.headers = auth.getHeaders()
     const response = await axios(conf)
     if (response.data.errors) {
       throw new HasuraError(conf.data.query, response.data.errors)
