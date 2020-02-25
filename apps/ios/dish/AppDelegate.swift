@@ -54,6 +54,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        Hasura.initialise(config: hasuraConfig, enableLogs: true)
 
         // SwiftUI bugfix list/navigation backgrounds transparent
+        UITableView.appearance().separatorStyle = .none
+        UITableView.appearance().separatorColor = .clear
         let colorTransparent = UIColor.init(displayP3Red: 0, green: 0, blue: 0, alpha: 0)
         UITableView.appearance().backgroundColor = colorTransparent
         UITableViewCell.appearance().backgroundColor = colorTransparent

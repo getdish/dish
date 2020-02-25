@@ -22,8 +22,7 @@ struct DishListItem: View, Equatable {
                 .animation(.spring())
         }
         
-        return ListItemHScroll(isScrolled: self.$isScrolled) {
-            HStack {
+        return HStack {
                 DishButton(action: {
                     App.store.send(
                         .home(.push(HomeStateItem(search: self.dish.name)))
@@ -55,7 +54,7 @@ struct DishListItem: View, Equatable {
                 .drawingGroup()
                 .padding(.trailing)
             }
-        }
+//        }
         .frame(height: imageSize + 10)
         .animation(.spring())
     }

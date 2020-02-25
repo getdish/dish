@@ -32,7 +32,7 @@ struct HomeMainDrawer: View, Equatable {
             cornerRadius: 20,
             handle: nil,
             onChangePosition: { (_, y) in
-//                homeViewState.setY(y)
+                homeViewState.setY(y)
             },
             onDragState: { state in
                 if state.isDragging != self.store.state.home.drawerIsDragging {
@@ -79,23 +79,11 @@ struct HomeMainDrawerContentContainer: View {
     }
 
     var body: some View {
-        let topContentHeight = App.searchBarHeight + App.filterBarHeight + 10
-        
-        return ZStack {
+        ZStack {
             // home content
             ZStack {
                 VStack {
-                    ScrollView(.vertical, showsIndicators: false) {
-                        Spacer().frame(height: topContentHeight)
-                            .introspectScrollView { scrollView in
-                                if self.scrollView == nil {
-                                    self.scrollView = scrollView
-                                    self.start()
-                                }
-                        }
-                        HomeMainDrawerContent()
-                        Spacer().frame(height: 5 + self.screen.edgeInsets.bottom)
-                    }
+                    HomeMainDrawerContent()
                     .mask(
                         LinearGradient(
                             gradient: Gradient(colors: [
@@ -184,16 +172,50 @@ struct HomeScreen: View, Identifiable {
     }
 }
 
-struct HomeContentExplore: View {
-    @EnvironmentObject var store: AppStore
-    let dishes = features
+struct HomeContentPadAbove: View {
+    var body: some View {
+        let topContentHeight = App.searchBarHeight + App.filterBarHeight + 10
+        return Spacer().frame(height: topContentHeight)
+    }
+}
+
+struct HomeContentPadBelow: View {
+    @EnvironmentObject var screen: ScreenModel
+    var body: some View {
+        Spacer().frame(height: 5 + self.screen.edgeInsets.bottom)
+    }
+}
+
+struct IdentifiableView<Content>: View, Identifiable where Content: View {
+    var id: String
+    var content: () -> Content
+    
+    init(id: String, @ViewBuilder content: @escaping () -> Content) {
+        self.id = id
+        self.content = content
+    }
     
     var body: some View {
-        let title = Selectors.home.activeLense().description ?? ""
-        return VStack {
+        self.content()
+    }
+}
+
+struct HomeContentExplore: View {
+    @EnvironmentObject var screen: ScreenModel
+    @EnvironmentObject var store: AppStore
+    let dishes = features
+    let testListView = false
+    let id = UUID().uuidString
+    
+    var title: String {
+        Selectors.home.activeLense().description ?? ""
+    }
+    
+    var titleView: some View {
+        Group {
             if self.store.state.home.searchFocus != .search {
                 HStack(spacing: 6) {
-                    Text(title)
+                    Text(self.title)
                         .style(.h1)
                     Text("dishes")
                         .fontWeight(.light)
@@ -201,24 +223,69 @@ struct HomeContentExplore: View {
                         .opacity(0.5)
                     Spacer()
                 }
-                    .padding(.horizontal)
-                    .transition(.slide)
-                    .animation(.ripple())
+                .padding(.horizontal)
+                .padding(.bottom)
+                .transition(.slide)
+                .animation(.ripple())
             }
-            
-            ForEach(0 ..< self.dishes.count) { index in
-                DishListItem(
+        }
+    }
+    
+    var listView: some View {
+        var items: [IdentifiableView<AnyView>] = [
+            IdentifiableView(id: "0") { AnyView(HomeContentPadAbove()) },
+            IdentifiableView(id: "1") { AnyView(self.titleView) }
+        ]
+        
+        items = items + (0 ..< self.dishes.count).map { index in
+            let dish = self.dishes[index]
+            return IdentifiableView(id: "dish-\(dish.id)") {
+                AnyView(DishListItem(
                     number: index + 1,
                     dish: self.dishes[index]
                 )
-                    .equatable()
                     .transition(.slide)
                     .animation(.ripple(index: index))
+                )
             }
         }
-        .padding(.bottom)
-        .padding(.top, 5)
-        .animation(.spring())
+        
+        items = items + [
+            IdentifiableView(id: "3") { AnyView(HomeContentPadBelow()) }
+        ]
+        
+        return List(items) { item in
+            item
+                .listRowInsets(EdgeInsets())
+        }
+        .id(self.id)
+    }
+    
+    var body: some View {
+        Group {
+            if testListView {
+                self.listView
+            } else {
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        HomeContentPadAbove()
+                        self.titleView
+                        ForEach(0..<self.dishes.count) { index in
+                            DishListItem(
+                                number: index + 1,
+                                dish: self.dishes[index]
+                            )
+                                .equatable()
+                                .transition(.slide)
+                                .animation(.ripple(index: index))
+                        }
+                        HomeContentPadBelow()
+                    }
+                }
+                .frame(width: self.screen.width, alignment: .leading)
+                .clipped()
+            }
+        }
     }
 }
 

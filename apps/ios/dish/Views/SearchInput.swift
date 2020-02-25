@@ -170,6 +170,9 @@ struct SearchInput: View {
                     if showCancelButton && showCancelInside {
                         Group {
                             cancelButton
+                            if after == nil {
+                                Spacer().frame(width: horizontalSpacing)
+                            }
                         }
                     }
                     
