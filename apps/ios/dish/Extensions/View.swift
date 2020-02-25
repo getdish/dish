@@ -61,6 +61,19 @@ extension View {
         }
     }
     
+    func shadowNeomorphic(
+        cornerRadius: CGFloat = 15.0,
+        themeColor: UIColor = UIColor(red: 241/255, green: 243/255, blue: 246/255, alpha: 1.0),
+        shadowRadius: CGFloat = 3.0,
+        shadowOffset: CGFloat? = nil
+    ) -> some View {
+        let so = shadowOffset ?? shadowRadius
+        return self
+            .shadow(color: Color.init(red: 223/255, green: 223/255, blue: 223/255), radius: shadowRadius, x: so, y: so)
+            .shadow(color: .white, radius: shadowRadius, x: -so, y: -so)
+    }
+
+    
     func onGeometryFrameChange(_ callback: @escaping (GeometryProxy) -> Void) -> some View {
         var last: CGRect? = nil
         return self.overlay(

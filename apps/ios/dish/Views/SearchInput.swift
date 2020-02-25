@@ -94,9 +94,9 @@ struct SearchInput: View {
     var body: some View {
         let pad = 10 * scale
         let fontSize = 14 * (scale - 1) / 2 + 16
-        let horizontalSpacing = 12 * scale
+        let horizontalSpacing = 14 * scale
         
-        return VStack {
+        return ZStack {
             // Search view
             HStack {
                 HStack(spacing: 0) {
@@ -113,7 +113,7 @@ struct SearchInput: View {
                                     .resizable()
                                     .scaledToFit()
                             }
-                            .frame(width: 24 * scale, height: 24 * scale)
+                            .frame(width: 18 * scale, height: 18 * scale)
                         }
                     }
                     

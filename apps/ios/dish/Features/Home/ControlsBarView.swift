@@ -1,7 +1,11 @@
 import SwiftUI
 import CoreLocation
 
-struct TopNavView: View {
+struct ControlsBar: View, Equatable {
+    static func == (lhs: ControlsBar, rhs: ControlsBar) -> Bool {
+        true
+    }
+    
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var screen: ScreenModel
     @EnvironmentObject var store: AppStore
@@ -21,8 +25,8 @@ struct TopNavView: View {
             VStack {
                 HStack(spacing: 10) {
                     self.accountButton
-                    TopNavLocationSearchBarView()
-                    self.cameraButton
+                    ControlsLocationSearchBarView()
+                    self.locationButton
                 }
                 Spacer()
             }
@@ -35,31 +39,31 @@ struct TopNavView: View {
     var accountButton: some View {
         Button(action: {
         }) {
-            Image(systemName: "person")
+            Image(systemName: "person.fill")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 16, height: 16)
         }
-        .modifier(TopNavButtonStyle())
+        .modifier(ControlsButtonStyle())
     }
     
-    var cameraButton: some View {
+    var locationButton: some View {
         Button(action: {
-            App.enterRepl = true
+            //
         }) {
             VStack {
-                Image(systemName: "camera")
+                Image(systemName: "location.fill")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 22, height: 22)
+                    .frame(width: 16, height: 16)
             }
             
         }
-        .modifier(TopNavButtonStyle())
+        .modifier(ControlsButtonStyle())
     }
 }
 
-struct CameraTopNav: View {
+struct CameraControls: View {
     @EnvironmentObject var store: AppStore
     
     var body: some View {
@@ -92,7 +96,7 @@ struct CameraTopNav: View {
     }
 }
 
-struct TopNavButtonStyle: ViewModifier {
+struct ControlsButtonStyle: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
     
     var active: Bool = false
@@ -131,10 +135,10 @@ struct TopNavButtonStyle: ViewModifier {
 
 
 #if DEBUG
-struct TopNav_Previews: PreviewProvider {
+struct Controls_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            TopNavView()
+            ControlsBar()
         }
         .embedInAppEnvironment()
         .background(

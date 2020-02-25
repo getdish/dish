@@ -27,6 +27,7 @@ struct HomeMainDrawer: View, Equatable {
         
         return BottomDrawer(
             position: self.drawerPosition,
+            background: Color(.systemBackground),
             snapPoints: App.drawerSnapPoints,
             cornerRadius: 20,
             handle: nil,
@@ -101,10 +102,12 @@ struct HomeMainDrawerContentContainer: View {
                     Spacer()
                 }
                 VStack(spacing: 0) {
-                    HomeSearchBar()
-                        .padding(.horizontal, 10)
-                        .padding(.top, 10)
-                    HomeMainFilterBar()
+                    VStack(spacing: 0) {
+                        HomeSearchBar()
+                            .padding(.horizontal, 10)
+                            .padding(.top, 10)
+                        HomeMainFilterBar()
+                    }
                     Spacer()
                 }
             }

@@ -8,8 +8,8 @@ struct BottomDrawer<Content: View>: View {
     @Binding var position: BottomDrawerPosition
     @State var mass: Double = 1.5
     
+    var background: Color? = nil
     var snapPoints: [CGFloat] = [100, 400, 600]
-    var background: AnyView? = nil
     var cornerRadius: CGFloat = 12.0
     var handle: AnyView? = AnyView(RoundedRectangle(cornerRadius: 5 / 2.0)
         .frame(width: 40, height: 5)
@@ -49,6 +49,7 @@ struct BottomDrawer<Content: View>: View {
         let belowHeight = self.dragState.isDragging
             ? 0
             : max(0, screenHeight - (screenHeight - getSnapPoint(self.position)))
+
         return ZStack {
             RunOnce(name: "BottomDrawer.start") {
                 async(10) {
@@ -72,8 +73,7 @@ struct BottomDrawer<Content: View>: View {
         }
             .frame(height: screenHeight, alignment: .top)
             .background(
-                Color(.systemBackground)
-//                BlurView(style: colorScheme == .dark ? .systemMaterialDark : .systemMaterialLight)
+                self.background
             )
             .cornerRadius(self.cornerRadius)
             .shadow(color: Color(white: 0, opacity: 0.27), radius: 20.0)

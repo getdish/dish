@@ -12,6 +12,7 @@ struct HomeSearchBar: View {
     @State var searchText = ""
     @State var textField: UITextField? = nil
     @State var isFirstResponder = false
+    @EnvironmentObject var screen: ScreenModel
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var keyboard: Keyboard
     @Environment(\.colorScheme) var colorScheme
@@ -77,21 +78,53 @@ struct HomeSearchBar: View {
     var body: some View {
         let scale: CGFloat = 1
 //        let isOnSearch = self.store.state.home.showSearch == .search
-        return SearchInput(
-            placeholder: "",
-            inputBackgroundColor: Color.init(white: 0.5, opacity: 0.1),
-            borderColor: Color.clear, //Color.init(white: 0.5, opacity: 0.1),
-            scale: scale,
-            sizeRadius: 1.2,
-            icon: icon,
-            showCancelInside: true,
-            onTapLeadingIcon: self.onTapLeadingIcon,
-            onEditingChanged: self.onEditingChanged,
-            onClear: self.onClear,
-            isFirstResponder: isFirstResponder,
-            searchText: self.homeSearch,
-            showInput: showInput
-        )
+        return HStack {
+            SearchInput(
+                placeholder: "",
+                inputBackgroundColor: Color.init(white: 0.5, opacity: 0),
+                borderColor: Color.clear, //Color.init(white: 0.5, opacity: 0.1),
+                scale: scale,
+                sizeRadius: 1.2,
+                icon: icon,
+                showCancelInside: true,
+                onTapLeadingIcon: self.onTapLeadingIcon,
+                onEditingChanged: self.onEditingChanged,
+                onClear: self.onClear,
+                isFirstResponder: isFirstResponder,
+                searchText: self.homeSearch,
+                showInput: showInput
+            )
+            
+            Button(action: {
+                App.enterRepl = true
+            }) {
+                VStack {
+                    Image(systemName: "camera")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 22, height: 22)
+                }
+                
+            }
+            .buttonStyle(NeomorphicStyle())
+        }
+    }
+}
+
+struct NeomorphicStyle: ButtonStyle {
+    func makeBody(configuration: Self.Configuration) -> some View {
+        let isPressed = configuration.isPressed
+//        let x = Color(.systemGroupedBackground)
+        let background: Color = isPressed ? Color(.systemBackground) : Color(.systemGroupedBackground)
+        let darkShadow: Color = .init(red: 0.9, green: 0.9, blue: 0.9)
+        let lightShadow: Color = .init(white: 1, opacity: 1)
+        
+        return configuration.label
+            .padding(10)
+            .background(background)
+            .cornerRadius(100)
+            .shadow(color: isPressed ? lightShadow : darkShadow, radius: 10, x: 10, y: 10)
+            .shadow(color: isPressed ? darkShadow : lightShadow, radius: 10, x: -10, y: -10)
     }
 }
 

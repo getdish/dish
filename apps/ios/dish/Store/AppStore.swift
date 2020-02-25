@@ -5,7 +5,6 @@ struct AppState {
     var home = HomeState()
     var map = MapState()
     var camera = CameraState()
-    var disableTopNav = false
     var debugShowMap = 0
 }
 
@@ -14,7 +13,6 @@ enum AppAction {
     case home(_ action: HomeAction)
     case map(_ action: MapAction)
     case camera(_ action: CameraAction)
-    case setDisableTopNav(_ val: Bool)
     case setDebugShowMap(_ val: Int)
 }
 
@@ -35,8 +33,6 @@ func appReducer(state: inout AppState, action: AppAction) {
             mapReducer(&state, action: action)
         case let .camera(action):
             cameraReducer(&state, action: action)
-        case let .setDisableTopNav(val):
-            state.disableTopNav = val
         case let .setDebugShowMap(val):
             state.debugShowMap = val
     }

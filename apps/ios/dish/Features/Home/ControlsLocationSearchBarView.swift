@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct TopNavLocationSearchBarView: View {
+struct ControlsLocationSearchBarView: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var screen: ScreenModel
     @EnvironmentObject var store: AppStore
@@ -64,7 +64,7 @@ struct TopNavLocationSearchBarView: View {
                 .font(.system(size: 14))
                 .multilineTextAlignment(isFocused ? .leading : .center)
                 .padding(.horizontal, 20)
-                .modifier(TopNavButtonStyle())
+                .modifier(ControlsButtonStyle())
                 .overlay(
                     HStack {
                         Image(systemName: "magnifyingglass")

@@ -35,7 +35,7 @@
 		AE2B6BA423AC211F007BCD25 /* VerticalCardPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */; };
 		AE56C86423ADB78C006A156A /* HomeSearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56C86323ADB78C006A156A /* HomeSearchResultsView.swift */; };
 		AE56C86623ADD977006A156A /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE56C86523ADD977006A156A /* TagView.swift */; };
-		AE5CEDCA24023C7B0046B944 /* TopNavLocationSearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5CEDC924023C7B0046B944 /* TopNavLocationSearchBarView.swift */; };
+		AE5CEDCA24023C7B0046B944 /* ControlsLocationSearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5CEDC924023C7B0046B944 /* ControlsLocationSearchBarView.swift */; };
 		AE5CEDCC24027E760046B944 /* MKMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5CEDCB24027E760046B944 /* MKMapView.swift */; };
 		AE5CEDCE24037A440046B944 /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5CEDCD24037A440046B944 /* Animation.swift */; };
 		AE5CEDD0240465680046B944 /* ListItemHScroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5CEDCF240465680046B944 /* ListItemHScroll.swift */; };
@@ -77,7 +77,7 @@
 		AE7563E923A03D570094022B /* MagicMove.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7563E823A03D570094022B /* MagicMove.swift */; };
 		AE861A7923A0651D004096BF /* Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7823A0651D004096BF /* Keyboard.swift */; };
 		AE861A7B23A06EDC004096BF /* BarArrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A7A23A06EDC004096BF /* BarArrow.swift */; };
-		AE861A8123A16DA6004096BF /* TopNavView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8023A16DA6004096BF /* TopNavView.swift */; };
+		AE861A8123A16DA6004096BF /* ControlsBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8023A16DA6004096BF /* ControlsBarView.swift */; };
 		AE861A8923A172E8004096BF /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE861A8823A172E8004096BF /* BlurView.swift */; };
 		AE872FED23CE6E3900F84663 /* Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE872FEC23CE6E3900F84663 /* Publisher.swift */; };
 		AE872FEF23CE6E8100F84663 /* CurrentLocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE872FEE23CE6E8100F84663 /* CurrentLocationService.swift */; };
@@ -166,7 +166,7 @@
 		AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalCardPager.swift; sourceTree = "<group>"; };
 		AE56C86323ADB78C006A156A /* HomeSearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchResultsView.swift; sourceTree = "<group>"; };
 		AE56C86523ADD977006A156A /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
-		AE5CEDC924023C7B0046B944 /* TopNavLocationSearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavLocationSearchBarView.swift; sourceTree = "<group>"; };
+		AE5CEDC924023C7B0046B944 /* ControlsLocationSearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlsLocationSearchBarView.swift; sourceTree = "<group>"; };
 		AE5CEDCB24027E760046B944 /* MKMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKMapView.swift; sourceTree = "<group>"; };
 		AE5CEDCD24037A440046B944 /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		AE5CEDCF240465680046B944 /* ListItemHScroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemHScroll.swift; sourceTree = "<group>"; };
@@ -209,7 +209,7 @@
 		AE7563E823A03D570094022B /* MagicMove.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicMove.swift; sourceTree = "<group>"; };
 		AE861A7823A0651D004096BF /* Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyboard.swift; sourceTree = "<group>"; };
 		AE861A7A23A06EDC004096BF /* BarArrow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarArrow.swift; sourceTree = "<group>"; };
-		AE861A8023A16DA6004096BF /* TopNavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavView.swift; sourceTree = "<group>"; };
+		AE861A8023A16DA6004096BF /* ControlsBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlsBarView.swift; sourceTree = "<group>"; };
 		AE861A8823A172E8004096BF /* BlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurView.swift; sourceTree = "<group>"; };
 		AE872FEC23CE6E3900F84663 /* Publisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Publisher.swift; sourceTree = "<group>"; };
 		AE872FEE23CE6E8100F84663 /* CurrentLocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLocationService.swift; sourceTree = "<group>"; };
@@ -439,8 +439,8 @@
 				AEA87E4223B976EB009F07DB /* HomeFilterBar.swift */,
 				AEE561E323FFB98B00B51F80 /* HomeMapOverlay.swift */,
 				AEF6557A23B042CD00E49A51 /* HomeSearchBar.swift */,
-				AE861A8023A16DA6004096BF /* TopNavView.swift */,
-				AE5CEDC924023C7B0046B944 /* TopNavLocationSearchBarView.swift */,
+				AE861A8023A16DA6004096BF /* ControlsBarView.swift */,
+				AE5CEDC924023C7B0046B944 /* ControlsLocationSearchBarView.swift */,
 				AEE6C1E123FDC434001AC6B0 /* TopSheetView.swift */,
 			);
 			path = Home;
@@ -714,7 +714,7 @@
 				AEF6557423B0407000E49A51 /* ImageStore.swift in Sources */,
 				AEE802B523ED3E8000A1A19E /* Double.swift in Sources */,
 				AE7563B423A035E70094022B /* HomeMain.swift in Sources */,
-				AE5CEDCA24023C7B0046B944 /* TopNavLocationSearchBarView.swift in Sources */,
+				AE5CEDCA24023C7B0046B944 /* ControlsLocationSearchBarView.swift in Sources */,
 				AE5CEDCE24037A440046B944 /* Animation.swift in Sources */,
 				AEE561E023FF64FA00B51F80 /* IconView.swift in Sources */,
 				AE7563E323A038190094022B /* Array.swift in Sources */,
@@ -764,7 +764,7 @@
 				AE861A7923A0651D004096BF /* Keyboard.swift in Sources */,
 				AE0C5FF523D2397D00BB5340 /* PrintGeometryView.swift in Sources */,
 				AE872FF123CE76AE00F84663 /* HomeService.swift in Sources */,
-				AE861A8123A16DA6004096BF /* TopNavView.swift in Sources */,
+				AE861A8123A16DA6004096BF /* ControlsBarView.swift in Sources */,
 				AEF6558423B59BC000E49A51 /* Home.swift in Sources */,
 				AECC17BF23D53A8D007CC388 /* MapBoxView.swift in Sources */,
 				AE65DF9623F7BA8E00758DD3 /* AppleMapView.swift in Sources */,

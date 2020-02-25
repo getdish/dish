@@ -48,7 +48,7 @@ struct DishLenseButton: View, Identifiable, Equatable {
                     .font(.system(size: 17))
             }
                 .modifier(
-                    TopNavButtonStyle(
+                    ControlsButtonStyle(
                         active: active,
                         background: .init(
                             red: lense.rgb[0] + (active ? 0 : -0.2),
