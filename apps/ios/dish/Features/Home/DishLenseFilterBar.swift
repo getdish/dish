@@ -50,11 +50,7 @@ struct DishLenseButton: View, Identifiable, Equatable {
                 .modifier(
                     ControlsButtonStyle(
                         active: active,
-                        background: .init(
-                            red: lense.rgb[0] + (active ? 0 : -0.2),
-                            green: lense.rgb[1] + (active ? 0 : -0.2),
-                            blue: lense.rgb[2] + (active ? 0 : -0.2)
-                        ),
+                        background: lense.color,
                         height: 38,
                         showBlurBackground: false
                     )

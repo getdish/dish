@@ -31,11 +31,11 @@ struct DishCardView: View, Identifiable, Equatable {
                 .frame(width: self.width, height: self.height)
                 .overlay(self.overlay)
                 .cornerRadiusSquircle(
-                    self.display == .small ? 20 : 35
+                    self.display == .small ? 16 : 20
                 )
                 .clipped()
 //                .borderRounded(radius: self.display == .small ? 20 : 35, width: 2, color: Color.gray.opacity(0.2))
-                .shadow(color: Color.black.opacity(0.4), radius: 3, x: 0, y: 1)
+                .shadow(color: Color.black.opacity(0.4), radius: 7, x: 0, y: 1)
         }
     }
     
@@ -54,11 +54,11 @@ struct DishCardView: View, Identifiable, Equatable {
             )
             VStack(alignment: .leading) {
                 Text(self.dish.name)
-                    .font(.system(size: 18))
-                    .fontWeight(.bold)
+                    .font(.system(size: 16))
+                    .fontWeight(.semibold)
                     .multilineTextAlignment(.center)
-                    .lineLimit(3)
-                    .shadow(color: Color.black.opacity(0.68), radius: 2, x: 0, y: 1)
+                    .lineLimit(2)
+                    .shadow(color: Color.black.opacity(0.6), radius: 2, x: 0, y: 1)
             }
             .padding()
         }
@@ -89,18 +89,18 @@ struct DishButtonView: View, Identifiable, Equatable {
                 VStack {
                     HStack {
                         Text(self.dish.name)
-                            .font(.system(size: 15))
+                            .font(.system(size: 14))
                             .fontWeight(.medium)
                             .foregroundColor(Color.white)
                             .multilineTextAlignment(.center)
                             .lineLimit(1)
                             .shadow(color: Color.black.opacity(0.25), radius: 0, x: 0, y: 1)
                     }
-                    .padding(.vertical, 9)
+                    .padding(.vertical, 8)
                     .padding(.horizontal, 13)
                     .background(Color.init(hue: self.dish.hue, saturation: 0.8, brightness: 0.5))
-                    .cornerRadius(20)
-                    .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
+                    .cornerRadiusSquircle(12)
+                    .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 2)
                 }
                 .padding(4)
             }

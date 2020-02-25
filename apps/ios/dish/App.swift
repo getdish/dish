@@ -38,7 +38,6 @@ class AppModel {
     let queueMain = DispatchQueue.main
     let magicItems = magicItemsStore
     let searchBarHeight: CGFloat = 50
-    let cameraButtonHeight: CGFloat = 44
     let filterBarHeight: CGFloat = 60
     let mapBarHeight: CGFloat = 80
     

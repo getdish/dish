@@ -1,6 +1,8 @@
 import SwiftUI
 import Combine
 
+fileprivate let topContentHeight = App.filterBarHeight + 18
+
 struct HomeMainDrawer: View, Equatable {
     static func == (lhs: HomeMainDrawer, rhs: HomeMainDrawer) -> Bool {
         true
@@ -79,10 +81,11 @@ struct HomeMainDrawerContentContainer: View {
     }
 
     var body: some View {
-        ZStack {
+        return ZStack {
             // home content
             ZStack {
-                VStack {
+                VStack(spacing: 0) {
+                    Spacer().frame(height: App.searchBarHeight)
                     HomeMainDrawerContent()
                         .mask(
                             LinearGradient(
@@ -92,12 +95,14 @@ struct HomeMainDrawerContentContainer: View {
                                     Color.black.opacity(1),
                                     Color.black.opacity(1),
                                     Color.black.opacity(1),
+                                    Color.black.opacity(1),
+                                    Color.black.opacity(1),
                                     Color.black.opacity(1)
                                 ]),
                                 startPoint: .top,
                                 endPoint: .center
                             )
-                                .offset(y: App.searchBarHeight + 10)
+                                .offset(y: App.searchBarHeight)
                         )
                     Spacer()
                 }
@@ -176,7 +181,6 @@ struct HomeScreen: View, Identifiable {
 
 struct HomeContentPadAbove: View {
     var body: some View {
-        let topContentHeight = App.searchBarHeight + App.filterBarHeight + 10
         return Spacer().frame(height: topContentHeight)
     }
 }
@@ -209,9 +213,15 @@ struct HomeContentExplore: View {
     let testListView = false
     let id = UUID().uuidString
     
-    var title: String {
-        Selectors.home.activeLense().description ?? ""
+    var lense: LenseItem {
+        Selectors.home.activeLense(self.store)
     }
+    
+    var title: String {
+        lense.description ?? ""
+    }
+    
+    @State var searchDishes = true
     
     var titleView: some View {
         Group {
@@ -219,10 +229,17 @@ struct HomeContentExplore: View {
                 HStack(spacing: 6) {
                     Text(self.title)
                         .style(.h1)
-                    Text("dishes")
-                        .fontWeight(.light)
-                        .style(.h1)
-                        .opacity(0.5)
+                        .foregroundColor(lense.color)
+                    
+                    DishButton(action: {
+                        self.searchDishes = !self.searchDishes
+                    }) {
+                        Text(searchDishes ? "dishes 🍽" : "restaurants")
+                            .fontWeight(.light)
+                            .style(.h1)
+                            .opacity(0.5)
+                    }
+                    
                     Spacer()
                 }
                 .padding(.horizontal)
@@ -263,30 +280,71 @@ struct HomeContentExplore: View {
         .id(self.id)
     }
     
+    @State var lastScrollStartedAt: CGFloat = 0
+    
+    let state = ScrollState()
+    class ScrollState: ObservableObject {
+        @Published var lastY: CGFloat = 0
+    }
+    
+    @State var cancellables: Set<AnyCancellable> = []
+
     var body: some View {
-        Group {
+        let isDisabled = self.store.state.home.drawerIsDragging
+        
+        return Group {
             if testListView {
                 self.listView
             } else {
-                ScrollView(.vertical, showsIndicators: false) {
-                    VStack(spacing: 0) {
-                        HomeContentPadAbove()
-                        self.titleView
-                        ForEach(0..<self.dishes.count) { index in
-                            DishListItem(
-                                number: index + 1,
-                                dish: self.dishes[index]
-                            )
-                                .equatable()
-                                .transition(.slide)
-                                .animation(.ripple(index: index))
+                ZStack {
+                    Color.clear.onAppear {
+                        self.state.$lastY
+                            .throttle(for: .milliseconds(4), scheduler: App.queueMain, latest: false)
+                            .collect(.byTimeOrCount(App.queueMain, 1, 4))
+                            .sink { lastFew in
+                                let x: [CGFloat] = lastFew
+                                // if pulling it down
+//                                print("now \(y)")
+                                if x.allSatisfy({ $0 < -11 }) {
+                                    self.store.send(.home(.setDrawerPosition(.middle)))
+                                }
+                            }
+                            .store(in: &self.cancellables)
+                    }
+                    GeometryReader { geo in
+                        ScrollView(.vertical, showsIndicators: false) {
+                            ScrollListener(debounce: 50) { frame in
+                                self.lastScrollStartedAt = self.state.lastY
+                            }
+                            ScrollListener(throttle: 16) { frame in
+                                if self.lastScrollStartedAt == 0
+                                    && self.store.state.home.drawerPosition == .top {
+                                    self.state.lastY = geo.frame(in: .global).minY - frame.minY
+                                }
+                            }
+                            
+                            VStack(spacing: 0) {
+                                HomeContentPadAbove()
+                                self.titleView
+                                ForEach(0..<self.dishes.count) { index in
+                                    DishListItem(
+                                        number: index + 1,
+                                        dish: self.dishes[index]
+                                    )
+                                        .equatable()
+                                        .transition(.slide)
+                                        .animation(.ripple(index: index))
+                                }
+                                HomeContentPadBelow()
+                            }
                         }
-                        HomeContentPadBelow()
+                        .disabled(isDisabled)
+                        .allowsHitTesting(!isDisabled)
+                        .frame(width: self.screen.width, alignment: .leading)
+                        .clipped()
                     }
                 }
-                .frame(width: self.screen.width, alignment: .leading)
-                .clipped()
-            }
+                }
         }
     }
 }

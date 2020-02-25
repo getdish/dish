@@ -131,7 +131,9 @@ extension View {
     }
     
     func cornerRadiusSquircle(_ radius: CGFloat) -> some View {
-        clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
+        clipShape(
+            RoundedRectangle(cornerRadius: radius, style: .continuous)
+        )
     }
 }
 

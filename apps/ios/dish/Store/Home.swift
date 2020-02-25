@@ -8,6 +8,10 @@ struct LenseItem: Equatable, Identifiable {
     let icon: String
     var rgb: [Double] = [0.65, 0.2, 0.65]
     var description: String?
+    
+    var color: Color {
+        Color(red: self.rgb[0], green: self.rgb[1], blue: self.rgb[2])
+    }
 }
 
 struct CuisineItem: Equatable, Identifiable {
@@ -17,15 +21,14 @@ struct CuisineItem: Equatable, Identifiable {
 }
 
 fileprivate let initialLenses: [LenseItem] = [
-    LenseItem(id: "0", name: "", icon: "🔥", rgb: [0.65, 0.2, 0.65], description: "The most popular"),
-    LenseItem(id: "1", name: "Locals", icon: "👌", rgb: [0.2, 0.65, 0.65], description: "Locals picks"),
-    LenseItem(id: "2", name: "New", icon: "🔥", rgb: [0.65, 0.65, 0.2], description: "🔥 & New"),
-    LenseItem(id: "3", name: "Picks", icon: "👩‍🍳", rgb: [0.65, 0.2, 0.65], description: "Chefs picks"),
-    LenseItem(id: "4", name: "Date Night", icon: "💎", rgb: [0.65, 0.2, 0.65], description: "Best date spots"),
-    LenseItem(id: "5", name: "Great Service", icon: "💁‍♀️", rgb: [0.65, 0.2, 0.65], description: ""),
-    LenseItem(id: "6", name: "", icon: "🥬", rgb: [0.65, 0.2, 0.65], description: "The best vegetarian"),
-    LenseItem(id: "7", name: "", icon: "🐟", rgb: [0.65, 0.2, 0.65], description: "The best seafood"),
-    LenseItem(id: "8", name: "Cheap", icon: "💸", rgb: [0.65, 0.2, 0.65], description: "The best cheap eats")
+    LenseItem(id: "0", name: "Top", icon: "🔥", rgb: [0.8, 0.1, 0.1], description: "Top"),
+    LenseItem(id: "1", name: "Locals", icon: "👌", rgb: [0.2, 0.65, 0.65], description: "Locals"),
+    LenseItem(id: "2", name: "New", icon: "🔥", rgb: [0.9, 0.6, 0.1], description: "🔥 new"),
+    LenseItem(id: "3", name: "Picks", icon: "👩‍🍳", rgb: [0.6, 0.1, 0.5], description: "Foodies"),
+    LenseItem(id: "4", name: "Date Night", icon: "💎", rgb: [0.35, 0.2, 0.65], description: "Date"),
+    LenseItem(id: "6", name: "", icon: "🥬", rgb: [0.2, 0.9, 0.4], description: "Plant based"),
+    LenseItem(id: "7", name: "", icon: "🐟", rgb: [0.65, 0.2, 0.65], description: "Sea based"),
+    LenseItem(id: "8", name: "Cheap", icon: "💸", rgb: [0.65, 0.2, 0.65], description: "Cheap")
 ]
 
 fileprivate let initialFilters: [FilterItem] = [

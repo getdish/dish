@@ -99,19 +99,19 @@ struct HomeSearchBar: View {
                 App.enterRepl = true
             }) {
                 VStack {
-                    Image(systemName: "camera")
+                    Image(systemName: "camera.fill")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 22, height: 22)
                 }
                 
             }
-            .buttonStyle(NeomorphicStyle())
+            .buttonStyle(IndentedStyle())
         }
     }
 }
 
-struct NeomorphicStyle: ButtonStyle {
+struct IndentedStyle: ButtonStyle {
     func makeBody(configuration: Self.Configuration) -> some View {
         let isPressed = configuration.isPressed
 //        let x = Color(.systemGroupedBackground)
@@ -120,9 +120,18 @@ struct NeomorphicStyle: ButtonStyle {
         let lightShadow: Color = .init(white: 1, opacity: 1)
         
         return configuration.label
-            .foregroundColor(Color(white: 0.5, opacity: 0.5))
-            .padding(10)
-            .background(background)
+            .foregroundColor(Color(white: 0.35, opacity: 0.5))
+            .padding(16)
+            .background(
+                LinearGradient(
+                    gradient: .init(colors: isPressed
+                        ? [background, background]
+                        : [Color(.systemBackground), background]
+                    ),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
             .cornerRadius(100)
             .shadow(color: isPressed ? lightShadow : darkShadow, radius: 10, x: 10, y: 10)
             .shadow(color: isPressed ? darkShadow : lightShadow, radius: 10, x: -10, y: -10)
@@ -130,7 +139,7 @@ struct NeomorphicStyle: ButtonStyle {
 }
 
 #if DEBUG
-struct CameraButton_Previews: PreviewProvider {
+struct HomeSearchBar_Previews: PreviewProvider {
     static var previews: some View {
         HomeSearchBar()
             .embedInAppEnvironment()

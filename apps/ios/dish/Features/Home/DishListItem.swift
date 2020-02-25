@@ -8,6 +8,8 @@ struct DishListItem: View, Equatable {
     @EnvironmentObject var screen: ScreenModel
     @State var isScrolled: Bool = false
     
+    @GestureState private var translationX: CGFloat = 0
+    
     var number: Int
     var dish: DishItem
     var body: some View {
@@ -22,7 +24,7 @@ struct DishListItem: View, Equatable {
                 .animation(.spring())
         }
         
-        return HStack {
+        return ZStack {
                 DishButton(action: {
                     App.store.send(
                         .home(.push(HomeStateItem(search: self.dish.name)))
@@ -40,23 +42,40 @@ struct DishListItem: View, Equatable {
                             .font(.system(size: 22))
                         
                         Spacer()
+                            .frame(width: self.screen.width - 120)
                     }
-                    .padding(.horizontal)
-                    .frame(width: self.screen.width - 120 - 20)
+                        .padding(.horizontal)
                 }
+                    .frame(width: self.screen.width)
                 
                 HStack {
-                    image
-                    image
-                    image
-                    image
+                    Spacer()
+                        .frame(width: self.screen.width - 120)
+                    
+                    HStack {
+                        image
+                        image
+                        image
+                        image
+                    }
                 }
+                .offset(x: self.translationX)
+                .gesture(
+                    DragGesture(minimumDistance: 0)
+                        .updating($translationX) { value, state, _ in
+                            state = value.translation.width
+                    }.onEnded { value in
+//                        guard abs(value.translation.width) > snapDistance else {
+//                            return
+//                        }
+//                        self.isOpen = value.translation.width > 0
+                    }
+                )
                 .drawingGroup()
                 .padding(.trailing)
-            }
-//        }
-        .frame(height: imageSize + 10)
-        .animation(.spring())
+        }
+            .frame(width: self.screen.width, height: imageSize + 10)
+            .animation(.spring())
     }
 }
 

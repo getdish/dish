@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct HomeMapResultsBar: View {
+struct DishMapResultsBar: View {
     @EnvironmentObject var store: AppStore
     @Environment(\.colorScheme) var colorScheme
 
@@ -9,10 +9,10 @@ struct HomeMapResultsBar: View {
             Group {
                 if Selectors.home.isOnSearchResults(self.store) {
                     HomeMapSearchResults()
-                        .transition(.slide)
+                        .transition(.opacity)
                 } else {
                     HomeMapExplore()
-                        .transition(.slide)
+                        .transition(.opacity)
                 }
             }
             
@@ -28,7 +28,7 @@ struct HomeMapResultsBar: View {
                         endPoint: .center
                         )
                     : LinearGradient(
-                        gradient: Gradient(colors: [Color.clear, Color.init(white: 0, opacity: 0.75)]),
+                        gradient: Gradient(colors: [Color.clear, Color.init(white: 0, opacity: 0.2)]),
                         startPoint: .top,
                         endPoint: .bottom
                 )
@@ -49,12 +49,28 @@ struct HomeMapExplore: View {
                     MapResultDishCard(dish: item)
                         .equatable()
                 }
-                .drawingGroup()
             }
             .padding(.horizontal, 20)
+            .drawingGroup()
         }
         .frame(width: App.screen.width, height: App.mapBarHeight)
     }
+    
+    
+    struct MapResultDishCard: View, Identifiable, Equatable {
+        var dish: DishItem
+        var id: Int { self.dish.id }
+        
+        var body: some View {
+            DishCardView(
+                dish: dish,
+                display: .small,
+                height: App.mapBarHeight - 10
+            )
+                .frame(width: 120, height: App.mapBarHeight)
+        }
+    }
+
 }
 
 struct HomeMapSearchResults: View {
@@ -129,20 +145,4 @@ struct HomeMapSearchResults: View {
 //}
 
 // scroll view enhanced version start:
-
-struct MapResultDishCard: View, Identifiable, Equatable {
-    
-    
-    var dish: DishItem
-    var id: Int { self.dish.id }
-
-    var body: some View {
-        DishCardView(
-            dish: dish,
-            display: .small,
-            height: App.mapBarHeight - 10
-        )
-            .frame(width: 120, height: App.mapBarHeight)
-    }
-}
 

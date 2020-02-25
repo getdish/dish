@@ -1,5 +1,32 @@
 import SwiftUI
 
+enum BottomDrawerPosition {
+    case top, middle, bottom
+}
+
+enum DragState {
+    case inactive
+    case dragging(translation: CGSize)
+    
+    var translation: CGSize {
+        switch self {
+            case .inactive:
+                return .zero
+            case .dragging(let translation):
+                return translation
+        }
+    }
+    
+    var isDragging: Bool {
+        switch self {
+            case .inactive:
+                return false
+            case .dragging:
+                return true
+        }
+    }
+}
+
 struct BottomDrawer<Content: View>: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var screen: ScreenModel
@@ -11,10 +38,7 @@ struct BottomDrawer<Content: View>: View {
     var background: Color? = nil
     var snapPoints: [CGFloat] = [100, 400, 600]
     var cornerRadius: CGFloat = 12.0
-    var handle: AnyView? = AnyView(RoundedRectangle(cornerRadius: 5 / 2.0)
-        .frame(width: 40, height: 5)
-        .foregroundColor(Color.secondary)
-        .padding(5))
+    var handle: AnyView? = nil
     
     func getSnapPoint(_ position: BottomDrawerPosition) -> CGFloat {
         self.snapPoints[position == .top ? 0 : position == .middle ? 1 : 2]
@@ -42,6 +66,8 @@ struct BottomDrawer<Content: View>: View {
     enum Lock { case drawer, content, filters }
     @State var lock: Lock = .drawer
     
+    @State var isMounting = true
+    
     var content: () -> Content
 
     var body: some View {
@@ -55,17 +81,25 @@ struct BottomDrawer<Content: View>: View {
                 async(10) {
                     self.callbackChangePosition()
                 }
+                async(1000) {
+                    self.isMounting = false
+                }
             }
             
+            VStack {
+                RoundedRectangle(cornerRadius: 5)
+                    .frame(width: 40, height: 5)
+                    .opacity(0.35)
+                    .padding(.vertical, 5)
+                Spacer()
+            }
+            .opacity(self.dragState.isDragging || self.isMounting ? 1 : 0)
+            .animation(Animation.spring().delay(self.isMounting ? 1 : self.dragState.isDragging ? 0 : 0.5))
+            
             VStack(spacing: 0) {
-                if handle != nil {
-                    self.handle
-                    Spacer().frame(height: 12)
-                }
-                
                 self.content()
-                    .disabled(self.position != .top)
-                    .allowsHitTesting(self.position == .top)
+//                    .disabled(self.position != .top)
+//                    .allowsHitTesting(self.position == .top)
                 
                 // pad bottom so it wont go below
                 Spacer().frame(height: belowHeight)
@@ -93,7 +127,7 @@ struct BottomDrawer<Content: View>: View {
     }
     
     var gesture: _EndedGesture<GestureStateGesture<DragGesture, DragState>> {
-        DragGesture(minimumDistance: 12)
+        DragGesture(minimumDistance: self.position == .top ? 22 : self.position == .middle ? 15 : 12)
             .updating($dragState) { drag, state, transaction in
                 if self.lock != .drawer {
                     if App.store.state.home.drawerPosition != .bottom {
@@ -145,7 +179,7 @@ struct BottomDrawer<Content: View>: View {
         let throwDirection = drag.predictedEndLocation.y - drag.location.y
         // were adding more friction here
         let predictedEnd = drag.location.y + throwDirection * 0.66
-//        print("predictedEnd \(predictedEnd) \(drag.predictedEndLocation.y)")
+        print("predictedEnd \(predictedEnd) \(drag.predictedEndLocation.y)")
         
         let cardTopEdgeLocation = self.positionY + drag.translation.height
         let positionAbove: BottomDrawerPosition
@@ -172,9 +206,9 @@ struct BottomDrawer<Content: View>: View {
         // this is maybe unintuitive, but think of it like this: you want to do a small flick
         // to move it away. But if you are dragging from the top, and hold it "over" the middle,
         // then release it, you then want to be more lenient and have it snap to middle more often
-        let distanceToSnap: CGFloat = closestPosition == self.position ? 90 : 160
+        let distanceToSnap: CGFloat = closestPosition == self.position ? 80 : 160
         
-//        print("distanceToSnap \(distanceToSnap) throwDirection \(throwDirection) closestPoint \(closestPoint) closestPosition \(closestPosition)")
+        print("distanceToSnap \(distanceToSnap) throwDirection \(throwDirection) closestPoint \(closestPoint) closestPosition \(closestPosition)")
         
         if predictedEnd < getSnapPoint(.top) {
             self.position = .top
@@ -189,6 +223,8 @@ struct BottomDrawer<Content: View>: View {
                 self.position = positionAbove
             }
         }
+        
+        print("🥦🥦🥦 \(self.position)")
         
         // makes the animation speed match the throw velocity
         self.mass = 2.65 - max(1, (max(1, min(100, Double(abs(throwDirection)))) / 50))
@@ -208,33 +244,6 @@ struct BottomDrawer<Content: View>: View {
 }
 
 // swiftui preview breaks if i put these inside the above struct :(
-
-enum BottomDrawerPosition {
-    case top, middle, bottom
-}
-
-enum DragState {
-    case inactive
-    case dragging(translation: CGSize)
-    
-    var translation: CGSize {
-        switch self {
-            case .inactive:
-                return .zero
-            case .dragging(let translation):
-                return translation
-        }
-    }
-    
-    var isDragging: Bool {
-        switch self {
-            case .inactive:
-                return false
-            case .dragging:
-                return true
-        }
-    }
-}
 
 #if DEBUG
 struct BottomDrawer_Previews: PreviewProvider {

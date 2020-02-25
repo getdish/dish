@@ -79,7 +79,7 @@ struct HomeMainView: View {
                     }
                     
                     VStack {
-                        HomeMapResultsBar()
+                        DishMapResultsBar()
                         Spacer()
                     }
                         .offset(y: App.drawerSnapPoints[2] + (
