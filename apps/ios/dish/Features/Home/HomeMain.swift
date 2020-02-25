@@ -12,6 +12,9 @@ struct HomeMainView: View {
     // main state of this view and sub-views:
     //
     @ObservedObject var state = homeViewState
+    
+    // used to write into bottomdrawer position
+    private var bottomDrawerStore = BottomDrawerStore()
 
     @State var contentWrappingView: UIView? = nil
 
@@ -123,6 +126,7 @@ struct HomeMainView: View {
             
         }
             .environmentObject(self.state)
+            .environmentObject(self.bottomDrawerStore)
     }
 }
 

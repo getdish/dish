@@ -14,7 +14,7 @@ class HomeViewState: ObservableObject {
     
     @Published private(set) var appHeight: CGFloat = App.screen.height
     // initialize it at best estimate where the snapToBottom will be
-    @Published private(set) var y: CGFloat = 0
+    @Published private(set) var y: CGFloat = App.drawerSnapPoints[1]
     @Published private(set) var hasScrolled: HomeScrollState = .none
     @Published private(set) var dragState: HomeDragState = .idle
     @Published private(set) var animationState: HomeAnimationState = .splash

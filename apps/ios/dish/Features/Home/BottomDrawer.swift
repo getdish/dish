@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 enum BottomDrawerPosition {
     case top, middle, bottom
@@ -27,13 +28,24 @@ enum DragState {
     }
 }
 
+class BottomDrawerStore: ObservableObject {
+    struct PositionState {
+        enum ControlledBy { case inside, outside }
+        let controlledBy: ControlledBy
+        let y: CGFloat
+    }
+    @Published var positionY: PositionState = .init(controlledBy: .inside, y: 0)
+}
+
 struct BottomDrawer<Content: View>: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var screen: ScreenModel
+    @EnvironmentObject var bottomDrawerStore: BottomDrawerStore
     
     @GestureState private var dragState = DragState.inactive
     @Binding var position: BottomDrawerPosition
     @State var mass: Double = 1.5
+    @State var cancellables: Set<AnyCancellable> = []
     
     var background: Color? = nil
     var snapPoints: [CGFloat] = [100, 400, 600]
@@ -69,6 +81,26 @@ struct BottomDrawer<Content: View>: View {
     @State var isMounting = true
     
     var content: () -> Content
+    
+    func start() {
+        async(10) {
+            self.afterChangePosition()
+        }
+        async(2000) {
+            self.isMounting = false
+        }
+        
+        self.bottomDrawerStore.$positionY
+            .filter { $0.controlledBy == .outside }
+            .sink { val in
+                print("outside scroll we got \(val)")
+            }
+            .store(in: &self.cancellables)
+    }
+    
+    func updateStore() {
+        self.bottomDrawerStore.positionY = .init(controlledBy: .inside, y: self.positionY)
+    }
 
     var body: some View {
         let screenHeight = screen.height
@@ -77,13 +109,8 @@ struct BottomDrawer<Content: View>: View {
             : max(0, screenHeight - (screenHeight - getSnapPoint(self.position)))
 
         return ZStack {
-            RunOnce(name: "BottomDrawer.start") {
-                async(10) {
-                    self.callbackChangePosition()
-                }
-                async(1000) {
-                    self.isMounting = false
-                }
+            Color.clear.onAppear {
+                self.start()
             }
             
             VStack {
@@ -114,7 +141,7 @@ struct BottomDrawer<Content: View>: View {
             .offset(y: self.draggedPositionY)
             .onGeometryFrameChange { geometry in
                 async {
-                    self.callbackChangePosition()
+                    self.afterChangePosition()
                 }
             }
             .animation(self.dragState.isDragging
@@ -162,6 +189,7 @@ struct BottomDrawer<Content: View>: View {
                     }
                     let wasDragging = self.dragState.isDragging
                     state = .dragging(translation: drag.translation)
+                    self.updateStore()
                     if !wasDragging {
                         if let cb = self.onDragState { cb(state) }
                     }
@@ -208,7 +236,7 @@ struct BottomDrawer<Content: View>: View {
         // then release it, you then want to be more lenient and have it snap to middle more often
         let distanceToSnap: CGFloat = closestPosition == self.position ? 80 : 160
         
-        print("distanceToSnap \(distanceToSnap) throwDirection \(throwDirection) closestPoint \(closestPoint) closestPosition \(closestPosition)")
+//        print("distanceToSnap \(distanceToSnap) throwDirection \(throwDirection) closestPoint \(closestPoint) closestPosition \(closestPosition)")
         
         if predictedEnd < getSnapPoint(.top) {
             self.position = .top
@@ -224,17 +252,16 @@ struct BottomDrawer<Content: View>: View {
             }
         }
         
-        print("🥦🥦🥦 \(self.position)")
-        
         // makes the animation speed match the throw velocity
         self.mass = 2.65 - max(1, (max(1, min(100, Double(abs(throwDirection)))) / 50))
         self.lock = .drawer
-        
         if let cb = self.onDragState { cb(self.dragState) }
-        self.callbackChangePosition()
+        self.afterChangePosition()
     }
     
-    private func callbackChangePosition() {
+    private func afterChangePosition() {
+        self.updateStore()
+        
         async {
             if let cb = self.onChangePosition {
                 cb(self.position, self.draggedPositionY)
