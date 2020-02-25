@@ -41,6 +41,8 @@ test('Authed request failure', async t => {
 test('Authed request success', async t => {
   const response = await login()
   const jwt = response.data
-  const users = await axios.get(BASE + '/user', { headers: { Auth: jwt } })
-  t.deepEqual(users.data[0].username, 'admin')
+  const user = await axios.get(BASE + '/user/admin', {
+    headers: { Auth: jwt },
+  })
+  t.deepEqual(user.data.username, 'admin')
 })

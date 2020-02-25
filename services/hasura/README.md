@@ -27,6 +27,9 @@ docker run --net=host \
   hasura/graphql-engine:v1.1.0
 ```
 
+See `docker-compose.yml` for extra ENV variables needed for working with things like
+auth and JWT tokens.
+
 ### Hasura CLI
 
 The Hasura CLI is useful for a variety of admin tasks such as creating/running
@@ -40,16 +43,16 @@ curl -L https://github.com/hasura/graphql-engine/raw/master/cli/get.sh | bash
 
 If this is your first install, or there's new migrations waiting to be run:
 
-`hasura migrate apply --endpoint http://localhost:8080`
+`hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password`
 
 Then run the admin UI using:
 
-`hasura console --endpoint http://localhost:8080`
+`hasura console --endpoint http://localhost:8080 --admin-secret=password`
 
 This will set up two way persistence so when you modify tables it persists to
 your migrations.
 
 You might want to try the experimental migration squasher as the console tends
-to create a new migration for every single unit of change.
+to verbosely create a new migration for every single unit of change.
 
-`hasura migrate squash --from <timestamp of most recently committed migration> --endpoint http://localhost:8080`
+`hasura migrate squash --from <timestamp of most recently committed migration> --endpoint http://localhost:8080 --admin-secret=password`

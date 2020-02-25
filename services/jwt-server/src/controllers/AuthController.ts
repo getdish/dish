@@ -28,7 +28,14 @@ class AuthController {
     }
 
     const token = jwt.sign(
-      { userId: user.id, username: user.username },
+      {
+        userId: user.id,
+        username: user.username,
+        'https://hasura.io/jwt/claims': {
+          'x-hasura-allowed-roles': [user.role],
+          'x-hasura-default-role': user.role,
+        },
+      },
       config.jwtSecret,
       { expiresIn: '1h' }
     )

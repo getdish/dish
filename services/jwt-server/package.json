@@ -9,11 +9,8 @@
     "@types/helmet": "0.0.45",
     "@types/jsonwebtoken": "^8.3.0",
     "@types/node": "^13.7.4",
-    "ava": "^3.3.0",
     "axios": "^0.19.2",
-    "ts-node": "^8.6.2",
-    "ts-node-dev": "^1.0.0-pre.32",
-    "typescript": "^3.8.2"
+    "ts-node-dev": "^1.0.0-pre.32"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -29,6 +26,7 @@
   },
   "scripts": {
     "build": "tsc -b",
+    "watch": "tsc -b --watch --preserveWatchOutput",
     "start": "set debug=* && ts-node-dev --respawn --transpileOnly --no-notify ./src/index.ts",
     "run": "node ./_/app.js",
     "test": "ava test/main.ts --verbose"

@@ -20,6 +20,8 @@ if (isNode) {
   WebSocket = window['WebSocket'] as any
 }
 
+import auth from '@dish/auth'
+
 export type Point = {
   type: string
   coordinates: [number, number]
@@ -43,7 +45,7 @@ if (typeof window === 'undefined') {
   }
 }
 
-const AXIOS_CONF = {
+let AXIOS_CONF = {
   url: DOMAIN + '/v1/graphql',
   method: 'POST',
   data: {
@@ -171,14 +173,33 @@ export class ModelBase<T> {
     return res.data
   }
 
+  static getAuth() {
+    let auth_headers = {}
+    if (auth.is_logged_in) {
+      if (auth.is_admin) {
+        auth_headers = {
+          'X-Hasura-Admin-Secret':
+            process.env.HASURA_SECRET ||
+            process.env.REACT_APP_HASURA_SECRET ||
+            'password',
+        }
+      } else {
+        auth_headers = {
+          Authorization: 'Bearer ' + auth.jwt,
+        }
+      }
+    }
+    return auth_headers
+  }
+
   static async hasura(gql: {}) {
     let conf = JSON.parse(JSON.stringify(AXIOS_CONF))
     gql = ModelBase.ensureKeySyntax(gql)
     conf.data.query = jsonToGraphQLQuery(gql, { pretty: true })
+    conf.headers = ModelBase.getAuth()
     const response = await axios(conf)
     if (response.data.errors) {
-      console.error(response.data.errors, conf.data.query)
-      throw response.data.errors
+      throw new HasuraError(conf.data.query, response.data.errors)
     }
     return response
   }
@@ -187,7 +208,6 @@ export class ModelBase<T> {
     this.client.subscribe
   }
 
-  // TODO: only update provided fields
   async insert() {
     const query = {
       mutation: {
@@ -352,7 +372,7 @@ export class ModelBase<T> {
       mutation: {
         ['delete_' + this.lower_name()]: {
           __args: {
-            where: { [key]: { _like: `%${value}%` } },
+            where: { [key]: { _ilike: `%${value}%` } },
           },
           affected_rows: true,
         },
@@ -383,5 +403,11 @@ export class ModelBase<T> {
       }
       fn.apply(this, [o, i, o[i]])
     }
+  }
+}
+
+class HasuraError extends Error {
+  constructor(public query: string, public errors: {} = {}) {
+    super()
   }
 }

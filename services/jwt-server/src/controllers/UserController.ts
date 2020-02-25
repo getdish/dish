@@ -14,14 +14,17 @@ class UserController {
     res.send(users)
   }
 
-  static getOneById = async (req: Request, res: Response) => {
-    const id: string = req.params.id
+  static getOneByUsername = async (req: Request, res: Response) => {
+    const username: string = req.params.username
 
     const userRepository = getRepository(User)
     try {
-      const user = await userRepository.findOneOrFail(id, {
-        select: ['id', 'username', 'role'], //We dont want to send the password on response
-      })
+      const user = await userRepository.findOneOrFail(
+        { username: username },
+        {
+          select: ['id', 'username', 'role'], //We dont want to send the password on response
+        }
+      )
       res.send(user)
     } catch (error) {
       res.status(404).send('User not found')
@@ -29,12 +32,11 @@ class UserController {
   }
 
   static newUser = async (req: Request, res: Response) => {
-    //Get parameters from the body
-    let { username, password, role } = req.body
+    let { username, password } = req.body
     let user = new User()
     user.username = username
     user.password = password
-    user.role = role
+    user.role = 'user'
 
     const errors = await validate(user)
     if (errors.length > 0) {
@@ -48,7 +50,7 @@ class UserController {
     try {
       await userRepository.save(user)
     } catch (e) {
-      res.status(409).send('username already in use')
+      res.status(409).send('Username already in use')
       return
     }
 

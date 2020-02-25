@@ -10,13 +10,13 @@ router.get('/', [checkJwt, checkRole(['ADMIN'])], UserController.listAll)
 
 // Get one user
 router.get(
-  '/:id([0-9]+)',
+  '/:username',
   [checkJwt, checkRole(['ADMIN'])],
-  UserController.getOneById
+  UserController.getOneByUsername
 )
 
 //Create a new user
-router.post('/', [checkJwt, checkRole(['ADMIN'])], UserController.newUser)
+router.post('/', [UserController.newUser])
 
 //Edit one user
 router.patch(
