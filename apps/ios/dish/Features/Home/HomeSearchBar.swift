@@ -120,51 +120,12 @@ struct NeomorphicStyle: ButtonStyle {
         let lightShadow: Color = .init(white: 1, opacity: 1)
         
         return configuration.label
+            .foregroundColor(Color(white: 0.5, opacity: 0.5))
             .padding(10)
             .background(background)
             .cornerRadius(100)
             .shadow(color: isPressed ? lightShadow : darkShadow, radius: 10, x: 10, y: 10)
             .shadow(color: isPressed ? darkShadow : lightShadow, radius: 10, x: -10, y: -10)
-    }
-}
-
-struct CameraButton: View {
-    var foregroundColor: Color = .black
-    
-    @State var isTapped = false
-    @State var lastTap = Date()
-    
-    @EnvironmentObject var store: AppStore
-    @Environment(\.colorScheme) var colorScheme
-    
-    var body: some View {
-        let oppositeColor = colorScheme == .dark ? Color.white : Color.black
-        
-        return DishButton(action: {
-            self.lastTap = Date()
-            if self.store.state.home.view != .camera {
-                self.store.send(.home(.setView(.camera)))
-            } else {
-                self.store.send(.camera(.capture(true)))
-            }
-        }) {
-            ZStack {
-                Group {
-                    Image(systemName: "viewfinder")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundColor(Color("color-brand").opacity(0.5))
-                }
-                .foregroundColor(oppositeColor.opacity(0.5))
-            }
-                .padding(.all, App.cameraButtonHeight * 0.22)
-                .frame(width: App.cameraButtonHeight, height: App.cameraButtonHeight)
-                .cornerRadius(App.cameraButtonHeight)
-                .overlay(
-                    RoundedRectangle(cornerRadius: App.cameraButtonHeight)
-                        .stroke(oppositeColor.opacity(0.1), lineWidth: 1)
-            )
-        }
     }
 }
 

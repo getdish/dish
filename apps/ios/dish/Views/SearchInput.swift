@@ -113,7 +113,7 @@ struct SearchInput: View {
                                     .resizable()
                                     .scaledToFit()
                             }
-                            .frame(width: 18 * scale, height: 18 * scale)
+                            .frame(width: 20 * scale, height: 20 * scale)
                         }
                     }
                     
