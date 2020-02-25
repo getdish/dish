@@ -17,16 +17,12 @@ struct AppleMapView: UIViewRepresentable {
     
     func makeUIView(context: Context) -> MKMapView {
         mapView.delegate = context.coordinator
-        self.update(context.coordinator)
+        context.coordinator.updateProps(self)
         return mapView
     }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
-        self.update(context.coordinator)
-    }
-    
-    func update(_ coordinator: AppleMapView.Coordinator) {
-        coordinator.updateProps(self)
+        context.coordinator.updateProps(self)
     }
     
     func makeCoordinator() -> AppleMapView.Coordinator {
@@ -48,6 +44,27 @@ struct AppleMapView: UIViewRepresentable {
         init(_ parent: AppleMapView) {
             self.parent = parent
             self.mapZoom = parent.mapView.zoomLevel()
+        }
+        
+        func updateProps(_ parent: AppleMapView) {
+            if self.mapView.bounds.width == 0 || self.mapView.bounds.height == 0 {
+                print("map not loaded yet or not visible")
+                return
+            }
+            
+            self.updateCurrentLocation(parent.currentLocation)
+            self.updateMarkers(parent.markers)
+            self.mapView.showsUserLocation = parent.showsUserLocation
+            if parent.mapZoom != self.mapZoom {
+                print("AppleMapView setting zoom level to \(parent.mapZoom) from \(self.mapZoom)")
+                self.mapZoom = parent.mapZoom
+                let center = self.getCurrentCenter() ?? mapView.centerCoordinate
+                self.mapView.setCenterCoordinate(
+                    centerCoordinate: center,
+                    zoomLevel: parent.mapZoom,
+                    animated: true
+                )
+            }
         }
         
         func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
@@ -171,27 +188,6 @@ struct AppleMapView: UIViewRepresentable {
             zoomingIn = true
             zoomingAnnotation = annotation
             mapView.setRegion(zoomOutRegion, animated: true)
-        }
-        
-        func updateProps(_ parent: AppleMapView) {
-            if self.mapView.bounds.width == 0 || self.mapView.bounds.height == 0 {
-                print("map not loaded yet or not visible")
-                return
-            }
-            
-            self.updateCurrentLocation(parent.currentLocation)
-            self.updateMarkers(parent.markers)
-            self.mapView.showsUserLocation = parent.showsUserLocation
-            if parent.mapZoom != self.mapZoom {
-                print("AppleMapView setting zoom level to \(parent.mapZoom) from \(self.mapZoom)")
-                self.mapZoom = parent.mapZoom
-                let center = self.getCurrentCenter() ?? mapView.centerCoordinate
-                self.mapView.setCenterCoordinate(
-                    centerCoordinate: center,
-                    zoomLevel: parent.mapZoom,
-                    animated: true
-                )
-            }
         }
         
         func updateMarkers(_ markers: [MapMarker]?) {

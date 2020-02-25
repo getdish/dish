@@ -27,7 +27,7 @@ struct AppSelect {
 let Selectors = AppSelect()
 
 // reducer
-let appReducer = Reducer<AppState, AppAction> { state, action in
+func appReducer(state: inout AppState, action: AppAction) {
     switch action {
         case let .home(action):
             homeReducer(&state, action: action)

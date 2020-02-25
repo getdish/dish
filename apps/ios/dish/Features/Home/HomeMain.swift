@@ -13,8 +13,6 @@ struct HomeMainView: View {
     //
     @ObservedObject var state = homeViewState
 
-    @State var wasOnSearchResults = false
-    @State var wasOnCamera = false
     @State var contentWrappingView: UIView? = nil
 
     func start() {
@@ -53,23 +51,18 @@ struct HomeMainView: View {
                 ZStack {
                     
                     // Camera
-                    if App.enableCamera && animationState != .splash {
-                        ZStack {
-                            DishCamera()
-                        }
-                        .frameLimitedToScreen()
-                    }
+//                    if App.enableCamera && animationState != .splash {
+//                        ZStack {
+//                            DishCamera()
+//                        }
+//                        .frameLimitedToScreen()
+//                    }
                     
                     // Map
                     if App.enableMap {
                         ZStack {
                             ZStack {
-                                DishMapView(
-                                    height: state.mapFullHeight,
-                                    animate: [.idle].contains(state.dragState)
-                                        || state.animationState != .idle
-                                )
-                                    
+                                DishMapViewContainer()
                                     .offset(y:
                                         // centered
                                         (self.screen.height - state.mapFullHeight) * 0.5
@@ -80,8 +73,6 @@ struct HomeMainView: View {
                                     )
                                     .animation(.spring(response: 0.65))
                             }
-                            .frameLimitedToScreen()
-                            .clipped()
                             .opacity(animationState == .splash ? 0 : 1)
                         }
                         .frameLimitedToScreen()
@@ -99,22 +90,21 @@ struct HomeMainView: View {
                         .opacity(showMapRow ? 1 : 0)
                         .animation(.spring(response: 1))
                         .disabled(!showMapRow)
-                    
+
                     VStack(spacing: 0) {
                         DishLenseFilterBar()
                         Spacer()
                     }
-                    // dont go up beyond mid-point
-                    .offset(y: max(App.drawerSnapPoints[1] - 68 - 30, state.y - 68))
-                    .animation(.spring())
-                    
-                    HomeMainDrawer()
-                        .equatable()
-                    
+                        // dont go up beyond mid-point
+                        .offset(y: max(App.drawerSnapPoints[1] - 68 - 30, state.y - 68))
+                        .animation(.spring(response: 1))
+
                     // top bar
                     TopNavView()
-                        .frameLimitedToScreen()
-                    
+
+                    HomeMainDrawer()
+                        .equatable()
+
                     DishCuisineFilterPopup(
                         active: self.store.state.home.showCuisineFilter
                     )

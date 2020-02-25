@@ -6,6 +6,7 @@ struct BottomDrawer<Content: View>: View {
     
     @GestureState private var dragState = DragState.inactive
     @Binding var position: BottomDrawerPosition
+    @State var mass: Double = 1.5
     
     var snapPoints: [CGFloat] = [100, 400, 600]
     var background: AnyView? = nil
@@ -77,14 +78,14 @@ struct BottomDrawer<Content: View>: View {
             .cornerRadius(self.cornerRadius)
             .shadow(color: Color(white: 0, opacity: 0.27), radius: 20.0)
             .offset(y: self.draggedPositionY)
-            .onGeometryChange { geometry in
+            .onGeometryFrameChange { geometry in
                 async {
                     self.callbackChangePosition()
                 }
             }
             .animation(self.dragState.isDragging
                 ? nil
-                : .interpolatingSpring(mass: 2.0, stiffness: 90.0, damping: 25.0, initialVelocity: 0)
+                : .interpolatingSpring(mass: self.mass, stiffness: 90.0, damping: 25.0, initialVelocity: 0)
             )
             .gesture(
                 self.gesture
@@ -142,24 +143,21 @@ struct BottomDrawer<Content: View>: View {
     
     private func onDragEnded(drag: DragGesture.Value) {
         let throwDirection = drag.predictedEndLocation.y - drag.location.y
-        let diff = throwDirection > 0 ? drag.predictedEndLocation.y - drag.location.y : drag.predictedEndLocation.y - drag.location.y
         // were adding more friction here
-        let predictedEnd = drag.location.y + diff * 0.5
+        let predictedEnd = drag.location.y + throwDirection * 0.66
+//        print("predictedEnd \(predictedEnd) \(drag.predictedEndLocation.y)")
         
         let cardTopEdgeLocation = self.positionY + drag.translation.height
         let positionAbove: BottomDrawerPosition
         let positionBelow: BottomDrawerPosition
-        var closestPosition: BottomDrawerPosition
         
         let distanceToTop = getDistance(.top, from: predictedEnd)
         let distanceToMid = getDistance(.middle, from: predictedEnd)
         let distanceToBottom = getDistance(.bottom, from: predictedEnd)
         let closestPoint = min(distanceToTop, distanceToMid, distanceToBottom)
         
-        closestPosition = closestPoint == distanceToTop
-            ? .top :
-                closestPoint == distanceToMid
-                    ? .middle : .bottom
+        let closestPosition: BottomDrawerPosition = closestPoint == distanceToTop
+            ? .top : closestPoint == distanceToMid ? .middle : .bottom
 
         if cardTopEdgeLocation <= getSnapPoint(.middle) {
             positionAbove = .top
@@ -174,11 +172,13 @@ struct BottomDrawer<Content: View>: View {
         // this is maybe unintuitive, but think of it like this: you want to do a small flick
         // to move it away. But if you are dragging from the top, and hold it "over" the middle,
         // then release it, you then want to be more lenient and have it snap to middle more often
-        let distanceToSnap: CGFloat = closestPosition == self.position ? 70 : 160
+        let distanceToSnap: CGFloat = closestPosition == self.position ? 90 : 160
         
 //        print("distanceToSnap \(distanceToSnap) throwDirection \(throwDirection) closestPoint \(closestPoint) closestPosition \(closestPosition)")
         
-        if closestPoint < distanceToSnap {
+        if predictedEnd < getSnapPoint(.top) {
+            self.position = .top
+        } else if closestPoint < distanceToSnap {
             self.position = closestPosition
         } else {
             // not within the safe zone that snaps back to closest position
@@ -190,6 +190,8 @@ struct BottomDrawer<Content: View>: View {
             }
         }
         
+        // makes the animation speed match the throw velocity
+        self.mass = 2.65 - max(1, (max(1, min(100, Double(abs(throwDirection)))) / 50))
         self.lock = .drawer
         
         if let cb = self.onDragState { cb(self.dragState) }

@@ -36,28 +36,42 @@ struct HomeSearchBar: View {
         }
     }
     
-    var icon: AnyView {
+    var icon: Image {
         let isOnHome = Selectors.home.isOnHome()
         let searchFocus = self.store.state.home.searchFocus
         if isOnHome || searchFocus == .search {
-            return AnyView(
-                Image(systemName: "magnifyingglass")
-            )
+            return Image(systemName: "magnifyingglass")
         } else if searchFocus == .location {
-            return AnyView(
-                Image(systemName: "map")
-            )
+            return Image(systemName: "map")
         } else {
-            return AnyView(
-                Image(systemName: "chevron.left")
-            )
+            return Image(systemName: "chevron.left")
         }
     }
-    
     
     func onClear() {
         // go back on empty search clear
         self.store.send(.home(.clearSearch))
+    }
+    
+    func onTapLeadingIcon() {
+        if Selectors.home.isOnHome() {
+            self.isFirstResponder = true
+        } else {
+            self.keyboard.hide()
+            self.store.send(.home(.pop))
+        }
+    }
+    
+    func onEditingChanged(_ val: Bool) {
+        if val {
+            App.store.send(.home(.setSearchFocus(.search)))
+        } else {
+            async {
+                if self.store.state.home.searchFocus == .search {
+                    App.store.send(.home(.setSearchFocus(.off)))
+                }
+            }
+        }
     }
     
     var body: some View {
@@ -71,25 +85,8 @@ struct HomeSearchBar: View {
             sizeRadius: 1.2,
             icon: icon,
             showCancelInside: true,
-            onTapLeadingIcon: {
-                if Selectors.home.isOnHome() {
-                    self.isFirstResponder = true
-                } else {
-                    self.keyboard.hide()
-                    self.store.send(.home(.pop))
-                }
-        },
-            onEditingChanged: { val in
-                if val {
-                    App.store.send(.home(.setSearchFocus(.search)))
-                } else {
-                    async {
-                        if self.store.state.home.searchFocus == .search {
-                            App.store.send(.home(.setSearchFocus(.off)))
-                        }
-                    }
-                }
-        },
+            onTapLeadingIcon: self.onTapLeadingIcon,
+            onEditingChanged: self.onEditingChanged,
             onClear: self.onClear,
             isFirstResponder: isFirstResponder,
             searchText: self.homeSearch,

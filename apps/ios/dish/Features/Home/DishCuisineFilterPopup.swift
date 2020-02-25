@@ -35,7 +35,6 @@ struct DishCuisineFilterPopup: View {
                 .opacity(active ? 0.3 : 0)
                 .animation(.spring())
             
-            
             VStack {
                 if self.activeContinent == "" {
                     VStack {
@@ -83,6 +82,7 @@ struct DishCuisineFilterPopup: View {
                 )
                 .cornerRadius(50)
                 .clipped()
+                .disabled(!active)
                 .opacity(active ? 1 : 0)
                 .scaleEffect(active ? 1 : 0.9)
                 .animation(.spring())

@@ -54,6 +54,8 @@ struct HomeMainFilterBar: View, Equatable {
                 }
                 .padding(.vertical, filterBarPad)
                 .padding(.horizontal, 24)
+                // this heavily fixes map pan
+                .drawingGroup()
             }
         }
         .frame(height: App.filterBarHeight)
@@ -139,9 +141,8 @@ struct FilterGroupView: View {
         
         return FilterButton(expandable: index == 0 && !isExpanded, filter: filter)
             .frame(width: isExpanded ? self.widths[index] : nil)
-            .onGeometryChange { geometry in
+            .onGeometrySizeChange { width, _ in
                 if !self.isExpanded {
-                    let width = geometry.size.width
                     if width != self.widthById[filter.id] {
                         self.widthById[filter.id] = width
                     }
