@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct DishScrollView<Content>: UIViewRepresentable where Content: View {
-    var content: () -> Content
+    var content: Content
     
-    init(@ViewBuilder content: @escaping () -> Content) {
-        self.content = content
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
     }
     
     func makeUIView(context: UIViewRepresentableContext<DishScrollView<Content>>) -> UIScrollView {
@@ -46,8 +46,8 @@ final class DishScrollViewVC<Content>: UIViewController where Content: View {
     }
     
     
-    func add(@ViewBuilder content: @escaping () -> Content) {
-        self.contentVC = UIHostingController(rootView: content())
+    func add(content: Content) {
+        self.contentVC = UIHostingController(rootView: content)
         self.contentView = self.contentVC.view!
         self.scrollView.addSubview(contentView)
         self.contentView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor).isActive = true

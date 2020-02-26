@@ -44,8 +44,8 @@ class AppModel {
     var drawerSnapPoints: [CGFloat] {
         [
             App.screen.edgeInsets.top + 50,
-            App.screen.edgeInsets.top + App.screen.height * 0.33,
-            App.screen.height - 100 - App.screen.edgeInsets.bottom
+            App.screen.edgeInsets.top + App.screen.height * 0.4,
+            App.screen.height - 110 - App.screen.edgeInsets.bottom
         ]
     }
 

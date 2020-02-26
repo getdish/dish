@@ -156,11 +156,11 @@ struct BottomNavCircularButton: View {
 
 struct BottomNavButton<Content>: View where Content: View {
     var action: ActionFn? = nil
-    let content: () -> Content
+    let content: Content
     
-    init(action: ActionFn? = nil, @ViewBuilder content: @escaping () -> Content) {
+    init(action: ActionFn? = nil, @ViewBuilder content: () -> Content) {
         self.action = action
-        self.content = content
+        self.content = content()
     }
     
     var body: some View {
@@ -169,7 +169,7 @@ struct BottomNavButton<Content>: View where Content: View {
                 cb()
             }
         }) {
-            self.content()
+            self.content
         }
         .padding(.all, 16)
         .background(

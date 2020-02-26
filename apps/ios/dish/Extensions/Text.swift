@@ -3,7 +3,7 @@ import SwiftUI
 extension Text {
     // our own text styles
     enum Style {
-        case h1, h2, iconLabel
+        case h1, h2, iconLabel, smallCapsSmallTitle
     }
     
     func style(_ style: Style) -> Text {
@@ -18,6 +18,10 @@ extension Text {
             case .iconLabel:
                 return font(.system(size: 14))
                         .fontWeight(.semibold)
+            
+            case .smallCapsSmallTitle:
+                return font(.system(size: 16))
+                    .fontWeight(.bold)
         }
     }
 

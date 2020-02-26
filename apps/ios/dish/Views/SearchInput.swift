@@ -56,6 +56,7 @@ struct SearchInput: View {
     var scale: CGFloat = 1
     var sizeRadius = CGFloat(1)
     var icon: Image?
+    var iconSize: CGFloat = 20
     var showCancelInside = false
     var onTapLeadingIcon: (() -> Void)?
     var onEditingChanged: ((Bool) -> Void)?
@@ -113,7 +114,7 @@ struct SearchInput: View {
                                     .resizable()
                                     .scaledToFit()
                             }
-                            .frame(width: 20 * scale, height: 20 * scale)
+                            .frame(width: self.iconSize * scale, height: self.iconSize * scale)
                         }
                     }
                     
@@ -156,7 +157,7 @@ struct SearchInput: View {
                                 Image(systemName: "xmark.circle.fill")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 20 + 2 * scale, height: 20 + 2 * scale)
+                                    .frame(width: 18 + 2 * scale, height: 18 + 2 * scale)
                             }
                             .transition(.opacity)
                             

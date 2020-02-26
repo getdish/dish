@@ -1,13 +1,24 @@
 import SwiftUI
 
 struct DishButton<Content: View>: View {
-    let action: (() -> Void)?
-    let content: Content
+    typealias Action = (() -> Void)
     
-    init(action: @escaping () -> Void, @ViewBuilder content: () -> Content) {
-        self.action = action
+    @inlinable init(
+        action: Action? = nil,
+        opacityEffect: Double = 0.9,
+        scaleEffect: CGFloat = 0.9,
+        @ViewBuilder content: () -> Content
+    ) {
         self.content = content()
+        self.action = action
+        self.opacityEffect = opacityEffect
+        self.scaleEffect = scaleEffect
     }
+    
+    var action: Action? = nil
+    var opacityEffect: Double
+    var scaleEffect: CGFloat
+    var content: Content
     
     @State var isTapped = false
     @State var lastTap = Date()
@@ -19,8 +30,8 @@ struct DishButton<Content: View>: View {
     var body: some View {
         self.content
             // ⚠️ dont put .animation() here or every subview animates
-            .scaleEffect(self.isTapped ? 0.9 : 1)
-            .opacity(self.isTapped ? 0.9 : 1)
+            .scaleEffect(self.isTapped ? self.scaleEffect : 1)
+            .opacity(self.isTapped ? self.opacityEffect : 1)
             .onTapGesture {
                 self.lastTap = Date()
                 self.callbackAction()

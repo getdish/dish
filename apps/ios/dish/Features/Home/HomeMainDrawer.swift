@@ -207,28 +207,31 @@ struct HomeContentExplore: View {
         Selectors.home.activeLense(self.store)
     }
     
-    var title: String {
-        lense.description ?? ""
-    }
-    
     @State var searchDishes = true
     
     var titleView: some View {
         Group {
             if self.store.state.home.searchFocus != .search {
                 HStack(spacing: 6) {
-                    Text(self.title)
-                        .style(.h1)
+                    Spacer()
+                    
+                    Text(lense.description ?? "")
+                        .style(.smallCapsSmallTitle)
                         .foregroundColor(lense.color)
                     
                     DishButton(action: {
                         self.searchDishes = !self.searchDishes
                     }) {
                         Text(searchDishes ? "dishes 🍽" : "restaurants")
-                            .fontWeight(.light)
-                            .style(.h1)
+                            .fontWeight(.semibold)
+                            .style(.smallCapsSmallTitle)
                             .opacity(0.5)
                     }
+                    
+                    Text("in SF")
+                        .fontWeight(.light)
+                        .style(.smallCapsSmallTitle)
+                        .opacity(0.5)
                     
                     Spacer()
                 }

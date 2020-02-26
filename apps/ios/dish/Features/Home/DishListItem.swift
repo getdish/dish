@@ -25,54 +25,59 @@ struct DishListItem: View, Equatable {
         }
         
         return ZStack {
-                DishButton(action: {
-                    App.store.send(
-                        .home(.push(HomeStateItem(search: self.dish.name)))
-                    )
-                }) {
-                    HStack {
-                        Text("\(self.number).")
-                            .font(.system(size: 20))
-                            .fontWeight(.bold)
-                            .opacity(0.3)
-                        
-                        Text("\(self.dish.name)")
-                            .fontWeight(.light)
-                            .lineLimit(1)
-                            .font(.system(size: 22))
-                        
-                        Spacer()
-                        
-                        Spacer()
-                            .frame(width: self.screen.width - (self.screen.width - 120))
-                    }
+                DishButton(
+                    action: {
+                        App.store.send(
+                            .home(.push(HomeStateItem(search: self.dish.name)))
+                        )
+                    },
+                    scaleEffect: 1.0
+                ) {
+                    ZStack {
+                        HStack {
+                            Text("\(self.number).")
+                                .font(.system(size: 20))
+                                .fontWeight(.bold)
+                                .opacity(0.3)
+                            
+                            Text("\(self.dish.name)")
+                                .fontWeight(.light)
+                                .lineLimit(1)
+                                .font(.system(size: 22))
+                            
+                            Spacer()
+                            
+                            Spacer()
+                                .frame(width: self.screen.width - (self.screen.width - 120))
+                        }
                         .padding(.horizontal)
+                        
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack {
+                                Spacer()
+                                    .frame(width: self.screen.width - 120)
+                                
+                                HStack {
+                                    image
+                                    image
+                                    image
+                                    image
+                                    image
+                                    image
+                                    image
+                                    image
+                                    image
+                                    image
+                                }
+                                .frame(width: 72 * 10)
+                            }
+                            .padding(.trailing)
+                            .offset(x: self.translationX)
+                            .drawingGroup()
+                        }
+                    }
                 }
                     .frame(width: self.screen.width)
-                
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        Spacer()
-                            .frame(width: self.screen.width - 120)
-                        
-                        HStack {
-                            image
-                            image
-                            image
-                            image
-                            image
-                            image
-                            image
-                            image
-                            image
-                            image
-                        }
-                        .frame(width: 72 * 10)
-                    }
-                    .padding(.trailing)
-                    .offset(x: self.translationX)
-                    .drawingGroup()
-                }
         }
             .frame(width: self.screen.width, height: imageSize + 10)
             .animation(.spring())

@@ -37,18 +37,6 @@ struct HomeSearchBar: View {
         }
     }
     
-    var icon: Image {
-        let isOnHome = Selectors.home.isOnHome()
-        let searchFocus = self.store.state.home.searchFocus
-        if isOnHome || searchFocus == .search {
-            return Image(systemName: "magnifyingglass")
-        } else if searchFocus == .location {
-            return Image(systemName: "map")
-        } else {
-            return Image(systemName: "chevron.left")
-        }
-    }
-    
     func onClear() {
         // go back on empty search clear
         self.store.send(.home(.clearSearch))
@@ -77,6 +65,21 @@ struct HomeSearchBar: View {
     
     var body: some View {
         let scale: CGFloat = 1
+        let isOnHome = Selectors.home.isOnHome()
+        let searchFocus = self.store.state.home.searchFocus
+        let showSearchIcon = isOnHome || searchFocus == .search
+        var iconSize: CGFloat = 20
+        let icon: Image = {
+            if showSearchIcon {
+                return Image(systemName: "magnifyingglass")
+            } else if searchFocus == .location {
+                return Image(systemName: "map")
+            } else {
+                iconSize = 16
+                return Image(systemName: "chevron.left")
+            }
+        }()
+        
 //        let isOnSearch = self.store.state.home.showSearch == .search
         return HStack {
             SearchInput(
@@ -86,6 +89,7 @@ struct HomeSearchBar: View {
                 scale: scale,
                 sizeRadius: 1.2,
                 icon: icon,
+                iconSize: iconSize,
                 showCancelInside: true,
                 onTapLeadingIcon: self.onTapLeadingIcon,
                 onEditingChanged: self.onEditingChanged,

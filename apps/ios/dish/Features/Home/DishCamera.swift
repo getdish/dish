@@ -80,7 +80,7 @@ struct CameraBackButton: View {
             Image(systemName: "chevron.left")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 26, height: 26)
+                .frame(width: 22, height: 22)
                 .foregroundColor(Color.white)
                 .shadow(color: Color.black, radius: 6)
         }
