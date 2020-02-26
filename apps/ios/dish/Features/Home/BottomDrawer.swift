@@ -172,10 +172,13 @@ struct BottomDrawer<Content: View>: View {
     }
     
     var gesture: _EndedGesture<GestureStateGesture<DragGesture, DragState>> {
-        DragGesture(minimumDistance: self.position == .top ? 15 : self.position == .middle ? 15 : 12)
+        DragGesture(minimumDistance: self.position == .top ? 15 : self.position == .middle ? 15 : 8)
             .updating($dragState) { drag, state, transaction in
+                print("BottomDrawer.drag self.lock \(self.lock) targetLock \(mainContentScrollState.scrollTargetLock)")
+                
                 // avoid conflicting drags
-                if  mainContentScrollState.scrollTargetLock == .drawer {
+                if mainContentScrollState.scrollTargetLock == .drawer && self.lock != .drawer ||
+                    mainContentScrollState.scrollTargetLock == .content {
                     return
                 }
                 
@@ -194,11 +197,12 @@ struct BottomDrawer<Content: View>: View {
                     }
                 }
                 let h = drag.translation.height
-                let validDrag = h > 12 || h < -12
+                let validDrag = h > 8 || h < -8
                 if validDrag {
                     if self.lock != .drawer {
                         async {
                             self.lock = .drawer
+                            // todo bad state sync
                             mainContentScrollState.scrollTargetLock = .drawer
                         }
                     }
@@ -219,6 +223,10 @@ struct BottomDrawer<Content: View>: View {
     }
     
     private func onDragEnded(drag: DragGesture.Value) {
+        // todo bad state sync
+        if self.lock == .drawer {
+            mainContentScrollState.scrollTargetLock = .idle
+        }
         self.finishDrag(drag.predictedEndLocation.y - drag.location.y, currentY: self.positionY + drag.translation.height)
     }
     

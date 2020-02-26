@@ -50,35 +50,7 @@ struct HomeMainDrawer: View, Equatable {
 }
 
 struct HomeMainDrawerContentContainer: View {
-    @EnvironmentObject var screen: ScreenModel
-    @State var scrollView: UIScrollView? = nil
     var isOnLocationSearch: Bool
-    
-    class HandleScrollView: NSObject, UIGestureRecognizerDelegate {
-        init(_ scrollView: UIScrollView) {
-            super.init()
-            
-            let panGesture = UIPanGestureRecognizer.init()
-            panGesture.delegate = self
-            scrollView.addGestureRecognizer(panGesture)
-        }
-        
-        func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-            print("what")
-            return false
-        }
-        
-        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-            print("should receive???")
-            return false
-        }
-    }
-    
-    func start() {
-        if let scrollView = self.scrollView {
-            _ = HandleScrollView(scrollView)
-        }
-    }
 
     var body: some View {
         let occludeTopHeight = App.searchBarHeight + 5
@@ -382,7 +354,7 @@ class ScrollState: NSObject, ObservableObject, UIScrollViewDelegate, UIGestureRe
                         self.scrollTargetLock = .drawer
                         self.scrollView?.panGestureRecognizer.isEnabled = false
                     }
-                    if y < -8 {
+                    if y < -3 {
                         self.scrollTargetLock = .content
                         self.scrollView?.bounces = true
                     }
