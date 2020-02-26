@@ -229,7 +229,6 @@ struct HomeContentExplore: View {
     @EnvironmentObject var screen: ScreenModel
     @EnvironmentObject var store: AppStore
     let dishes = features
-    let testListView = false
     let id = UUID().uuidString
     
     var lense: LenseItem {
@@ -269,44 +268,55 @@ struct HomeContentExplore: View {
         }
     }
     
-    var listView: some View {
-        var items: [IdentifiableView<AnyView>] = [
-            IdentifiableView(id: "0") { AnyView(HomeContentPadAbove()) },
-            IdentifiableView(id: "1") { AnyView(self.titleView) }
-        ]
-        
-        items = items + (0 ..< self.dishes.count).map { index in
-            let dish = self.dishes[index]
-            return IdentifiableView(id: "dish-\(dish.id)") {
-                AnyView(DishListItem(
-                    number: index + 1,
-                    dish: self.dishes[index]
-                )
-                    .transition(.slide)
-                    .animation(.ripple(index: index))
-                )
-            }
-        }
-        
-        items = items + [
-            IdentifiableView(id: "3") { AnyView(HomeContentPadBelow()) }
-        ]
-        
-        return List(items) { item in
-            item
-                .listRowInsets(EdgeInsets())
-        }
-        .id(self.id)
-    }
-    
-    class ScrollState: ObservableObject {
+    class ScrollState: NSObject, ObservableObject, UIScrollViewDelegate, UIGestureRecognizerDelegate {
         @Published var lastY: CGFloat = 0
         @Published var lastScrollStartedAt: CGFloat = 0
         private var cancellables: Set<AnyCancellable> = []
         var scrollView: UIScrollView? = nil
         
+        var preventBounce: Bool {
+            let startedAtTop = round(self.lastScrollStartedAt) == 0
+            let drawerIsDownDraggable = App.store.state.home.drawerPosition != .bottom
+            return startedAtTop && drawerIsDownDraggable
+        }
+        
+        func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+            print("set preventBounce \(preventBounce)")
+            scrollView.bounces = !preventBounce
+        }
+        
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+            return preventBounce
+        }
+
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+            return otherGestureRecognizer.view == scrollView
+        }
+        
+        @objc func panGestureDetected(_ recognizer: UIPanGestureRecognizer) {
+            if recognizer.state == .changed {
+                let y = recognizer.translation(in: self.scrollView).y
+                if y > 5 {
+                    bottomDrawerStore.positionY = y
+                }
+                print("woo \(y)")
+            }
+            if recognizer.state == .ended {
+                bottomDrawerStore.endPan = .velocity(recognizer.velocity(in: self.scrollView))
+            }
+        }
+        
         func start(_ parent: HomeContentExplore) {
             guard let scrollView = self.scrollView else { return }
+            
+            scrollView.delegate = self
+            scrollView.canCancelContentTouches = false
+            scrollView.delaysContentTouches = false
+            
+            let r = UIPanGestureRecognizer.init(target: self, action: #selector(ScrollState.panGestureDetected(_:)))
+            r.delegate = self
+            scrollView.addGestureRecognizer(r)
+            
             self.$lastY
                 .throttle(for: .milliseconds(4), scheduler: App.queueMain, latest: false)
                 .collect(.byTimeOrCount(App.queueMain, 1, 4))
@@ -319,17 +329,6 @@ struct HomeContentExplore: View {
                     }
                 }
                 .store(in: &self.cancellables)
-            
-            self.$lastScrollStartedAt
-                .removeDuplicates()
-                .sink { startedAt in
-                    // drawer not at .top
-                    if App.store.state.home.drawerPosition == .top { return }
-                    // scroll at top
-                    if round(startedAt) != 0 { return }
-                    scrollView.bounces = false
-                }
-                .store(in: &self.cancellables)
         }
     }
     
@@ -337,148 +336,71 @@ struct HomeContentExplore: View {
 
     var body: some View {
         let isDisabled = self.store.state.home.drawerIsDragging
-        
+
+        //        self.listView
         return Group {
-            if testListView {
-                self.listView
-            } else {
-                ZStack {
-                    Color.clear.onAppear {
-                        self.state = ScrollState()
-                    }
-                    
-                    GeometryReader { geo in
-                        ScrollView(.vertical, showsIndicators: false) {
-                            Color.clear.introspectScrollView { x in
-                                if let state = self.state {
-                                    state.scrollView = x
-                                    state.start(self)
-                                }
-                            }
-                            ScrollListener(debounce: 50) { frame in
-                                self.state?.lastScrollStartedAt = self.state?.lastY ?? 0
-                            }
-                            ScrollListener(throttle: 16) { frame in
-                                if self.state?.lastScrollStartedAt == 0
-                                    && self.store.state.home.drawerPosition == .top {
-                                    self.state?.lastY = geo.frame(in: .global).minY - frame.minY
-                                }
-                            }
-                            
-                            VStack(spacing: 0) {
-                                HomeContentPadAbove()
-                                self.titleView
-                                ForEach(0..<self.dishes.count) { index in
-                                    DishListItem(
-                                        number: index + 1,
-                                        dish: self.dishes[index]
-                                    )
-                                        .equatable()
-                                        .transition(.slide)
-                                        .animation(.ripple(index: index))
-                                }
-                                HomeContentPadBelow()
+            ZStack {
+                Color.clear.onAppear {
+                    self.state = ScrollState()
+                }
+                
+                GeometryReader { geo in
+                    ScrollView(.vertical, showsIndicators: false) {
+                        Color.clear.introspectScrollView { x in
+                            if let state = self.state {
+                                state.scrollView = x
+                                state.start(self)
                             }
                         }
-                        .disabled(isDisabled)
-                        .allowsHitTesting(!isDisabled)
-                        .frame(width: self.screen.width, alignment: .leading)
-                        .clipped()
+                        ScrollListener(debounce: 50) { frame in
+                            self.state?.lastScrollStartedAt = self.state?.lastY ?? 0
+                        }
+                        ScrollListener(throttle: 16) { frame in
+                            if self.state?.lastScrollStartedAt == 0
+                                && self.store.state.home.drawerPosition == .top {
+                                self.state?.lastY = geo.frame(in: .global).minY - frame.minY
+                            }
+                        }
+                        
+                        VStack(spacing: 0) {
+                            HomeContentPadAbove()
+                            self.titleView
+                            ForEach(0..<self.dishes.count) { index in
+                                DishListItem(
+                                    number: index + 1,
+                                    dish: self.dishes[index]
+                                )
+                                    .equatable()
+                                    .transition(.slide)
+                                    .animation(.ripple(index: index))
+                            }
+                            HomeContentPadBelow()
+                        }
                     }
+//                    .simultaneousGesture(
+//                        DragGesture(minimumDistance: 0).onChanged { val in
+//                            print("got em \(val)")
+////                            let dp = App.store.state.home.drawerPosition
+////                            if dp != .bottom {
+////                                if let scrollView = self.state?.scrollView {
+////                                    if scrollView.bounces == false {
+////                                        if val.translation.height > 12 {
+////                                            App.store.send(.home(.setDrawerPosition(dp == .middle ? .bottom : .middle)))
+////                                        }
+////                                    }
+////                                }
+////                            }
+//                        }
+//                    )
+                    .disabled(isDisabled)
+                    .allowsHitTesting(!isDisabled)
+                    .frame(width: self.screen.width, alignment: .leading)
+                    .clipped()
                 }
-                }
+            }
         }
     }
 }
-
-//fileprivate let items = features.chunked(into: 2)
-
-//struct HomeContentExploreBy: View, Identifiable {
-//    let id = "HomeContentExploreBy"
-//
-//    @Environment(\.geometry) var appGeometry
-//    @EnvironmentObject var store: AppStore
-//    @EnvironmentObject var homeState: HomeViewState
-//
-//    enum ExploreContentType { case dish, cuisine }
-//
-//    var active: Bool = false
-//    var type: ExploreContentType
-//    let items = features.split()
-//
-//    var body: some View {
-//        return ZStack {
-////            ScrollView(.vertical, showsIndicators: false) {
-//                VStack(alignment: .leading, spacing: 0) {
-//                    VStack {
-//                        ForEach(0 ..< self.store.state.home.lenses.count) { index in
-//                            VStack(alignment: .leading, spacing: 4) {
-//                                HStack(spacing: 0) {
-//                                    Text("\(self.store.state.home.lenses[index].name)")
-//                                        .font(.system(size: 13))
-//                                        .fontWeight(.bold)
-//                                        .foregroundColor(Color.white)
-//                                        .modifier(TextShadowStyle())
-//
-//                                    // line
-//                                    VStack(spacing: 0) {
-//                                        Color.white
-//                                            .opacity(0.1)
-//                                            .frame(height: 1)
-//                                        Color.black
-//                                            .opacity(0.1)
-//                                            .frame(height: 1)
-//                                    }
-//                                    .padding(.horizontal, 8)
-//                                }
-//                                .padding(.horizontal)
-//
-//                                ScrollView(.horizontal, showsIndicators: false) {
-//                                    VStack(alignment: .leading, spacing: 10) {
-//                                        ForEach(0 ..< self.items.count) { index in
-//                                            HStack(spacing: 8) {
-//                                                ForEach(self.items[index]) { item in
-//                                                    DishButtonView(dish: item, at: .start)
-//                                                        .equatable()
-//                                                }
-//                                                Spacer()
-//                                            }
-//                                            .padding(.horizontal)
-//                                        }
-//                                    }
-//                                    .padding(.vertical)
-//                                }
-//
-//                                Spacer().frame(height: 8)
-//                            }
-//                        }
-//                    }
-//                    .padding(.top, 4)
-//                }
-////                .introspectScrollView { scrollView in
-////                    if self.active {
-////                        self.homeState.setActiveScrollView(scrollView)
-////                    }
-////                    //                    TODO attempt to have the content scroll pull down when at top
-////                    //                    scrollView.bounces = false
-////                }
-////            }
-////            .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
-//        }
-////        .edgesIgnoringSafeArea(.all)
-////        .clipped()
-//    }
-//}
-
-//struct HomeMainDrawerScrollEffects: View {
-//    @EnvironmentObject var homeState: HomeViewState
-//
-//    var body: some View {
-//        ScrollListener(throttle: 32.0) { frame in
-//            self.homeState.setScrollY(frame)
-//        }
-//    }
-//}
 
 //struct HomeMainContentContainer<Content>: View where Content: View {
 //    @State var animatePosition: MagicItemPosition = .start
@@ -527,3 +449,33 @@ struct HomeContentExplore: View {
 //    }
 //}
 
+
+//var listView: some View {
+//    var items: [IdentifiableView<AnyView>] = [
+//        IdentifiableView(id: "0") { AnyView(HomeContentPadAbove()) },
+//        IdentifiableView(id: "1") { AnyView(self.titleView) }
+//    ]
+//
+//    items = items + (0 ..< self.dishes.count).map { index in
+//        let dish = self.dishes[index]
+//        return IdentifiableView(id: "dish-\(dish.id)") {
+//            AnyView(DishListItem(
+//                number: index + 1,
+//                dish: self.dishes[index]
+//            )
+//                .transition(.slide)
+//                .animation(.ripple(index: index))
+//            )
+//        }
+//    }
+//
+//    items = items + [
+//        IdentifiableView(id: "3") { AnyView(HomeContentPadBelow()) }
+//    ]
+//
+//    return List(items) { item in
+//        item
+//            .listRowInsets(EdgeInsets())
+//    }
+//    .id(self.id)
+//}

@@ -45,7 +45,7 @@ struct HomeMapExplore: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
-                ForEach(features) { item in
+                ForEach(features, id: \.id) { item in
                     MapResultDishCard(dish: item)
                         .equatable()
                 }

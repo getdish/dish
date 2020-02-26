@@ -130,13 +130,14 @@ struct DishRestaurantViewContent: View {
                     
                     ForEach(0 ..< dishes.count) { index in
                         HStack {
-                            ForEach(self.dishes[index]) { dish in
+                            ForEach(self.dishes[index], id: \.id) { dish in
                                 DishCardView(
                                     at: .end,
                                     dish: dish,
                                     display: .small,
                                     height: 120
                                 )
+                                    .equatable()
                             }
                         }
                     }

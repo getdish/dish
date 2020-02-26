@@ -29,18 +29,20 @@ enum DragState {
 }
 
 class BottomDrawerStore: ObservableObject {
-    struct PositionState {
-        enum ControlledBy { case inside, outside }
-        let controlledBy: ControlledBy
-        let y: CGFloat
+    @Published var positionY: CGFloat = 0
+    
+    enum EndPan {
+        case velocity(_ speed: CGPoint)
     }
-    @Published var positionY: PositionState = .init(controlledBy: .inside, y: 0)
+    
+    @Published var endPan: EndPan? = nil
 }
+
+let bottomDrawerStore = BottomDrawerStore()
 
 struct BottomDrawer<Content: View>: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var screen: ScreenModel
-    @EnvironmentObject var bottomDrawerStore: BottomDrawerStore
     
     @GestureState private var dragState = DragState.inactive
     @Binding var position: BottomDrawerPosition
@@ -60,9 +62,11 @@ struct BottomDrawer<Content: View>: View {
         getSnapPoint(self.position)
     }
     
+    @State var externalDragY: CGFloat = 0
+    
     var draggedPositionY: CGFloat {
         let dragHeight = self.dragState.translation.height
-        let at = self.positionY + dragHeight
+        let at = self.positionY + dragHeight + self.externalDragY
         
         if at < snapPoints[0] {
             return snapPoints[0] - (snapPoints[0] - at) * 0.2
@@ -77,7 +81,6 @@ struct BottomDrawer<Content: View>: View {
     
     enum Lock { case drawer, content, filters }
     @State var lock: Lock = .drawer
-    
     @State var isMounting = true
     
     var content: () -> Content
@@ -90,16 +93,31 @@ struct BottomDrawer<Content: View>: View {
             self.isMounting = false
         }
         
-        self.bottomDrawerStore.$positionY
-            .filter { $0.controlledBy == .outside }
+        bottomDrawerStore.$positionY
+            .dropFirst()
+            .sink { y in
+                self.externalDragY = y
+            }
+            .store(in: &self.cancellables)
+        
+        bottomDrawerStore.$endPan
+            .dropFirst()
+            .compactMap { $0 }
             .sink { val in
-                print("outside scroll we got \(val)")
+                switch val {
+                    case .velocity(let speed):
+                        print("end at speed \(speed)")
+                        self.finishDrag(self.draggedPositionY + 50, currentY: self.draggedPositionY)
+                }
             }
             .store(in: &self.cancellables)
     }
     
     func updateStore() {
-        self.bottomDrawerStore.positionY = .init(controlledBy: .inside, y: self.positionY)
+//        let next = BottomDrawerStore.PositionState(controlledBy: .inside, y: self.draggedPositionY)
+//        if bottomDrawerStore.positionY != next {
+//            bottomDrawerStore.positionY = next
+//        }
     }
 
     var body: some View {
@@ -156,6 +174,7 @@ struct BottomDrawer<Content: View>: View {
     var gesture: _EndedGesture<GestureStateGesture<DragGesture, DragState>> {
         DragGesture(minimumDistance: self.position == .top ? 22 : self.position == .middle ? 15 : 12)
             .updating($dragState) { drag, state, transaction in
+                print("🌦🌦🌦")
                 if self.lock != .drawer {
                     if App.store.state.home.drawerPosition != .bottom {
                         print("\(drag.translation.height)")
@@ -204,12 +223,14 @@ struct BottomDrawer<Content: View>: View {
     }
     
     private func onDragEnded(drag: DragGesture.Value) {
-        let throwDirection = drag.predictedEndLocation.y - drag.location.y
-        // were adding more friction here
-        let predictedEnd = drag.location.y + throwDirection * 0.66
-        print("predictedEnd \(predictedEnd) \(drag.predictedEndLocation.y)")
+        self.finishDrag(drag.predictedEndLocation.y - drag.location.y, currentY: self.positionY + drag.translation.height)
+    }
+    
+    func finishDrag(_ throwAmount: CGFloat, currentY: CGFloat) {
+        self.externalDragY = 0
         
-        let cardTopEdgeLocation = self.positionY + drag.translation.height
+        let predictedEnd = currentY + throwAmount * 0.66
+        let cardTopEdgeLocation = currentY
         let positionAbove: BottomDrawerPosition
         let positionBelow: BottomDrawerPosition
         
@@ -220,7 +241,7 @@ struct BottomDrawer<Content: View>: View {
         
         let closestPosition: BottomDrawerPosition = closestPoint == distanceToTop
             ? .top : closestPoint == distanceToMid ? .middle : .bottom
-
+        
         if cardTopEdgeLocation <= getSnapPoint(.middle) {
             positionAbove = .top
             positionBelow = .middle
@@ -236,10 +257,12 @@ struct BottomDrawer<Content: View>: View {
         // then release it, you then want to be more lenient and have it snap to middle more often
         let distanceToSnap: CGFloat = closestPosition == self.position ? 80 : 160
         
-//        print("distanceToSnap \(distanceToSnap) throwDirection \(throwDirection) closestPoint \(closestPoint) closestPosition \(closestPosition)")
+        print("predictedEnd \(predictedEnd) distanceToSnap \(distanceToSnap) throwAmount \(throwAmount) closestPoint \(closestPoint) closestPosition \(closestPosition)")
         
         if predictedEnd < getSnapPoint(.top) {
             self.position = .top
+        } else if predictedEnd > getSnapPoint(.bottom) {
+            self.position = .bottom
         } else if closestPoint < distanceToSnap {
             self.position = closestPosition
         } else {
@@ -253,7 +276,7 @@ struct BottomDrawer<Content: View>: View {
         }
         
         // makes the animation speed match the throw velocity
-        self.mass = 2.65 - max(1, (max(1, min(100, Double(abs(throwDirection)))) / 50))
+        self.mass = 2.65 - max(1, (max(1, min(100, Double(abs(throwAmount)))) / 50))
         self.lock = .drawer
         if let cb = self.onDragState { cb(self.dragState) }
         self.afterChangePosition()
