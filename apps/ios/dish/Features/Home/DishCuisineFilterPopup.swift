@@ -7,14 +7,13 @@ struct DishCuisineFilterPopup: View {
     var active: Bool = false
     @State var activeContinent: String = ""
     
-    let continentNames = ["African", "Asian", "European", "North American", "South American"]
-
+    let continentNames = ["African", "Asian", "European", "American"]
+    let continentIcons = ["🌍", "🥢", "🇪🇺", "🌎"]
     let continents: [String: [String]] = [
         "African": ["🇺🇸 American", "🇲🇽 Mexican"],
         "Asian": ["🇺🇸 American", "🇲🇽 Mexican"],
         "European": ["🇺🇸 American", "🇲🇽 Mexican"],
-        "North American": ["🇺🇸 American", "🇲🇽 Mexican"],
-        "South American": ["🇺🇸 American", "🇲🇽 Mexican"]
+        "American": ["🇺🇸 American", "🇲🇽 Mexican"]
     ]
     
     var activeCountries: [String] {
@@ -41,13 +40,16 @@ struct DishCuisineFilterPopup: View {
                         Text("Continent")
                             .style(.h1)
                         
-                        GridView(rows: 2, cols: 3) { row, col, index -> AnyView in
+                        GridView(rows: 2, cols: 2) { row, col, index -> AnyView in
                             let name = self.continentNames[index]
                             return AnyView(
                                 Button(action: {
                                     self.activeContinent = name
                                 }) {
                                     IconView(
+                                        background: Color(red: 0.2, green: 0.2, blue: 0.2, opacity: 0.1),
+                                        image: AnyView(Text(self.continentIcons[index]).font(.system(size: 42))),
+                                        imageSize: 42,
                                         label: name
                                     )
                                         .padding(.vertical, 10)

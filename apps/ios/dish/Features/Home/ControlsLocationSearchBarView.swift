@@ -39,10 +39,6 @@ struct ControlsLocationSearchBarView: View {
                             }
                             
                             if isEditing {
-                                //                    if self.store.state.home.drawerPosition != .top {
-                                //                        self.store.send(.home(.setDrawerPosition(.top)))
-                                //                    }
-                                
                                 // select all text
                                 if let textField = self.textField {
                                     textField.becomeFirstResponder()

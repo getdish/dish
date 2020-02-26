@@ -21,23 +21,23 @@ struct CuisineItem: Equatable, Identifiable {
 }
 
 fileprivate let initialLenses: [LenseItem] = [
-    LenseItem(id: "0", name: "Top", icon: "🔥", rgb: [0.8, 0.1, 0.1], description: "Top"),
+    LenseItem(id: "0", name: "Top", icon: "🏆", rgb: [0.8, 0.1, 0.1], description: "Top"),
     LenseItem(id: "1", name: "Locals", icon: "👌", rgb: [0.2, 0.65, 0.65], description: "Locals"),
     LenseItem(id: "2", name: "New", icon: "🔥", rgb: [0.9, 0.6, 0.1], description: "🔥 new"),
     LenseItem(id: "3", name: "Picks", icon: "👩‍🍳", rgb: [0.6, 0.1, 0.5], description: "Foodies"),
     LenseItem(id: "4", name: "Date Night", icon: "💎", rgb: [0.35, 0.2, 0.65], description: "Date"),
-    LenseItem(id: "6", name: "", icon: "🥬", rgb: [0.2, 0.9, 0.4], description: "Plant based"),
-    LenseItem(id: "7", name: "", icon: "🐟", rgb: [0.65, 0.2, 0.65], description: "Sea based"),
+    LenseItem(id: "6", name: "", icon: "🥬 Planty", rgb: [0.2, 0.9, 0.4], description: "Plant based"),
+    LenseItem(id: "7", name: "", icon: "🐟 Fresh", rgb: [0.65, 0.2, 0.65], description: "Sea based"),
     LenseItem(id: "8", name: "Cheap", icon: "💸", rgb: [0.65, 0.2, 0.65], description: "Cheap")
 ]
 
 fileprivate let initialFilters: [FilterItem] = [
     FilterItem(name: "★", fontSize: 18, groupId: "rating", stack: true),
-    FilterItem(name: "★★", fontSize: 16, groupId: "rating", stack: true),
-    FilterItem(name: "★★★", fontSize: 14, groupId: "rating", stack: true),
-    FilterItem(name: "$", fontSize: 20, groupId: "price", stack: true),
-    FilterItem(name: "$$", fontSize: 18, groupId: "price", stack: true),
-    FilterItem(name: "$$$", fontSize: 14, groupId: "price", stack: true),
+    FilterItem(name: "★★", fontSize: 15, groupId: "rating", stack: true),
+    FilterItem(name: "★★★", fontSize: 13, groupId: "rating", stack: true),
+    FilterItem(name: "$", fontSize: 18, groupId: "price", stack: true),
+    FilterItem(name: "$$", fontSize: 15, groupId: "price", stack: true),
+    FilterItem(name: "$$$", fontSize: 13, groupId: "price", stack: true),
     FilterItem(name: "🚗", fontSize: 15, groupId: "quick"),
     FilterItem(name: "Open", fontSize: 15, groupId: "normal"),
     FilterItem(name: "Healthy", fontSize: 15, groupId: "normal"),
@@ -101,8 +101,7 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     // use this to ensure you update HomeStateItems correctly
     func updateItem(_ next: HomeStateItem) {
         if let index = state.home.viewStates.firstIndex(where: { $0.id == next.id }) {
-            var item = next
-            state.home.viewStates[index] = item
+            state.home.viewStates[index] = next
         }
     }
     

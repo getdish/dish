@@ -25,7 +25,7 @@ struct GridView<Content: View>: View {
                     HStack(spacing: self.spacing) {
                         ForEach(0 ..< self.cols, id: \.self) { column in
                             self
-                                .content(row, column, row * column + column)
+                                .content(row, column, row * self.cols + column)
                                 .frame(width: geometry.size.width / CGFloat(self.cols), alignment: .center)
                         }
                     }

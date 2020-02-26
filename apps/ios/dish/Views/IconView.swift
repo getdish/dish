@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct IconView: View {
-    var background: AnyView = AnyView(Color.red)
+    var background: Color = Color.red
     var cornerRadius: CGFloat = 16
-    var image: Image = Image(systemName: "star")
+    var image: AnyView = AnyView(Image(systemName: "star").resizable().scaledToFit())
     var imageSize: CGFloat = 32
     var padding: CGFloat = 12
     var label: String = "Hello World"
@@ -12,8 +12,6 @@ struct IconView: View {
     var body: some View {
         VStack {
             self.image
-                .resizable()
-                .scaledToFit()
                 .frame(width: self.imageSize, height: self.imageSize)
                 .padding(self.padding)
                 .background(self.background)

@@ -16,24 +16,17 @@ struct ControlsBar: View, Equatable {
     }
     
     var body: some View {
-        // TODO there was a perf regression on map panning smoothness with TopSheetView
-//        TopSheetView(
-//            isOpen: self.$isOpen,
-//            maxHeight: self.screen.height * 0.8,
-//            minHeight: screen.edgeInsets.top + 50
-//        ) {
-            VStack {
-                HStack(spacing: 10) {
-                    self.accountButton
-                    ControlsLocationSearchBarView()
-                    self.locationButton
-                }
-                Spacer()
+        VStack {
+            HStack(spacing: 10) {
+                self.accountButton
+                ControlsLocationSearchBarView()
+                self.locationButton
             }
-            .padding(.top, topPad)
-            .padding(.horizontal, 8)
-            .padding(.bottom, 8)
-//        }
+            Spacer()
+        }
+        .padding(.top, topPad)
+        .padding(.horizontal, 8)
+        .padding(.bottom, 8)
     }
     
     var accountButton: some View {
@@ -49,10 +42,10 @@ struct ControlsBar: View, Equatable {
     
     var locationButton: some View {
         Button(action: {
-            //
+            App.store.send(.map(.moveToCurrentLocation))
         }) {
             VStack {
-                Image(systemName: "location.fill")
+                Image(systemName: self.store.state.map.location?.center == .current ? "location" : "location.fill")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 16, height: 16)
@@ -104,7 +97,7 @@ struct ControlsButtonStyle: ViewModifier {
     var height: CGFloat = 34
     var hPad: CGFloat = 11
     var showBlurBackground: Bool = true
-
+    
     
     func body(content: Content) -> some View {
         ZStack {

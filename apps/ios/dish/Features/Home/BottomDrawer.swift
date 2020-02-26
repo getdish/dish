@@ -102,12 +102,12 @@ struct BottomDrawer<Content: View>: View {
         
         bottomDrawerStore.$endPan
             .dropFirst()
+            .debounce(for: .milliseconds(16), scheduler: App.queueMain)
             .compactMap { $0 }
             .sink { val in
                 switch val {
                     case .velocity(let speed):
-                        print("end at speed \(speed)")
-                        self.finishDrag(self.draggedPositionY + 50, currentY: self.draggedPositionY)
+                        self.finishDrag(speed.y, currentY: self.draggedPositionY)
                 }
             }
             .store(in: &self.cancellables)
@@ -172,21 +172,16 @@ struct BottomDrawer<Content: View>: View {
     }
     
     var gesture: _EndedGesture<GestureStateGesture<DragGesture, DragState>> {
-        DragGesture(minimumDistance: self.position == .top ? 22 : self.position == .middle ? 15 : 12)
+        DragGesture(minimumDistance: self.position == .top ? 15 : self.position == .middle ? 15 : 12)
             .updating($dragState) { drag, state, transaction in
-                print("🌦🌦🌦")
+                // avoid conflicting drags
+                if  mainContentScrollState.scrollTargetLock == .drawer {
+                    return
+                }
+                
                 if self.lock != .drawer {
                     if App.store.state.home.drawerPosition != .bottom {
                         print("\(drag.translation.height)")
-                        let distToScrollable: CGFloat = 120
-                        if drag.startLocation.y > self.draggedPositionY + distToScrollable,
-                            drag.translation.height < 25 {
-                            async {
-                                self.lock = .content
-                            }
-                            return
-                        }
-                        
                         let distToFilterBar: CGFloat = 60
                         if drag.startLocation.y > self.draggedPositionY + distToFilterBar,
                             drag.translation.height < 12 {
@@ -204,6 +199,7 @@ struct BottomDrawer<Content: View>: View {
                     if self.lock != .drawer {
                         async {
                             self.lock = .drawer
+                            mainContentScrollState.scrollTargetLock = .drawer
                         }
                     }
                     let wasDragging = self.dragState.isDragging

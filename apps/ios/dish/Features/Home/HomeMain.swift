@@ -22,15 +22,6 @@ struct HomeMainView: View {
     }
     
     @State var lastSearchFocus: SearchFocusState = .off
-    
-    func sideEffects() {
-        // set app height
-        if self.appGeometry?.size.height != self.state.appHeight {
-            if let height = self.appGeometry?.size.height {
-                self.state.setAppHeight(height)
-            }
-        }
-    }
 
     var body: some View {
         let state = self.state
@@ -38,10 +29,12 @@ struct HomeMainView: View {
         let showMapRow = self.store.state.home.drawerPosition == .bottom
             && !self.store.state.home.drawerIsDragging
 
-        print(" 👀 HomeMainView animationState \(state.animationState)")
-
         return ZStack(alignment: .topLeading) {
-            Run("sideeffects") { self.sideEffects() }
+            SideEffect("sideeffects", condition: { self.appGeometry?.size.height != self.state.appHeight }) {
+                if let height = self.appGeometry?.size.height {
+                    self.state.setAppHeight(height)
+                }
+            }
             RunOnce(name: "start") { self.start() }
             PrintGeometryView("HomeMainView")
             

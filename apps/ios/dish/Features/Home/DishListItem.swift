@@ -13,7 +13,7 @@ struct DishListItem: View, Equatable {
     var number: Int
     var dish: DishItem
     var body: some View {
-        let imageSize: CGFloat = 60 //isScrolled ? 70 : 60
+        let imageSize: CGFloat = 66 //isScrolled ? 70 : 60
         
         let image = DishButton(action: {}) {
             dish.image
@@ -42,37 +42,37 @@ struct DishListItem: View, Equatable {
                             .font(.system(size: 22))
                         
                         Spacer()
-                            .frame(width: self.screen.width - 120)
+                        
+                        Spacer()
+                            .frame(width: self.screen.width - (self.screen.width - 120))
                     }
                         .padding(.horizontal)
                 }
                     .frame(width: self.screen.width)
                 
-                HStack {
-                    Spacer()
-                        .frame(width: self.screen.width - 120)
-                    
+                ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        image
-                        image
-                        image
-                        image
+                        Spacer()
+                            .frame(width: self.screen.width - 120)
+                        
+                        HStack {
+                            image
+                            image
+                            image
+                            image
+                            image
+                            image
+                            image
+                            image
+                            image
+                            image
+                        }
+                        .frame(width: 72 * 10)
                     }
+                    .padding(.trailing)
+                    .offset(x: self.translationX)
+                    .drawingGroup()
                 }
-                .offset(x: self.translationX)
-                .gesture(
-                    DragGesture(minimumDistance: 0)
-                        .updating($translationX) { value, state, _ in
-                            state = value.translation.width
-                    }.onEnded { value in
-//                        guard abs(value.translation.width) > snapDistance else {
-//                            return
-//                        }
-//                        self.isOpen = value.translation.width > 0
-                    }
-                )
-                .drawingGroup()
-                .padding(.trailing)
         }
             .frame(width: self.screen.width, height: imageSize + 10)
             .animation(.spring())

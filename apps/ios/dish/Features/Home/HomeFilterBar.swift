@@ -201,17 +201,13 @@ struct FilterButton: View {
                                 .fixedSize()
                         }
                     }
-                    if expandable {
-                        Image(systemName: "arrowtriangle.down.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 5, height: 5)
-                        .opacity(0.2)
-                    }
                     Spacer()
                 }
                 .frame(height: self.height)
-                .modifier(FilterButtonStyle(active: self.filter.active))
+                .modifier(FilterButtonStyle(
+                    active: self.filter.active,
+                    bordered: expandable
+                ))
             }
         }
     }
@@ -219,16 +215,16 @@ struct FilterButton: View {
 
 struct FilterButtonStyle: ViewModifier {
     var active = false
+    var bordered = false
     @Environment(\.itemSegment) var itemSegment
     @Environment(\.colorScheme) var colorScheme
     @State var display: SegmentedItem? = nil
     
     func body(content: Content) -> some View {
-        let a = Color.white
-        let b = Color(white: 0.2)
+        let a = Color.black
+        let b = Color(white: 0.9)
         let bg = active ? a : b
         let fg = active ? b : a
-        print("what the fuck \(self.active) \(itemSegment)")
         let corners: [UIRectCorner] = itemSegment == nil || itemSegment?.isLast == true && itemSegment?.isFirst == true
             ? [.allCorners]
             : itemSegment?.isMiddle == true
@@ -236,11 +232,10 @@ struct FilterButtonStyle: ViewModifier {
                     : itemSegment?.isLast == true
                     ? [.topRight, .bottomRight] : [.topLeft, .bottomLeft]
         return content
-            .foregroundColor(fg)
-            .padding(.horizontal, 10)
+            .foregroundColor(bordered ? nil : fg)
+            .padding(.horizontal, 8)
             .background(bg)
             .cornerRadius(20, corners: .init(corners))
-            .shadow(radius: 4)
     }
 }
 

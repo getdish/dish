@@ -81,11 +81,12 @@ struct HomeMainDrawerContentContainer: View {
     }
 
     var body: some View {
+        let occludeTopHeight = App.searchBarHeight + 5
         return ZStack {
             // home content
             ZStack {
                 VStack(spacing: 0) {
-                    Spacer().frame(height: App.searchBarHeight)
+                    Spacer().frame(height: occludeTopHeight)
                     HomeMainDrawerContent()
                         .mask(
                             LinearGradient(
@@ -95,17 +96,16 @@ struct HomeMainDrawerContentContainer: View {
                                     Color.black.opacity(1),
                                     Color.black.opacity(1),
                                     Color.black.opacity(1),
-                                    Color.black.opacity(1),
-                                    Color.black.opacity(1),
                                     Color.black.opacity(1)
                                 ]),
                                 startPoint: .top,
                                 endPoint: .center
                             )
-                                .offset(y: App.searchBarHeight)
+                                .offset(y: occludeTopHeight)
                         )
                     Spacer()
                 }
+                
                 VStack(spacing: 0) {
                     VStack(spacing: 0) {
                         HomeSearchBar()
@@ -268,71 +268,8 @@ struct HomeContentExplore: View {
         }
     }
     
-    class ScrollState: NSObject, ObservableObject, UIScrollViewDelegate, UIGestureRecognizerDelegate {
-        @Published var lastY: CGFloat = 0
-        @Published var lastScrollStartedAt: CGFloat = 0
-        private var cancellables: Set<AnyCancellable> = []
-        var scrollView: UIScrollView? = nil
-        
-        var preventBounce: Bool {
-            let startedAtTop = round(self.lastScrollStartedAt) == 0
-            let drawerIsDownDraggable = App.store.state.home.drawerPosition != .bottom
-            return startedAtTop && drawerIsDownDraggable
-        }
-        
-        func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-            print("set preventBounce \(preventBounce)")
-            scrollView.bounces = !preventBounce
-        }
-        
-        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-            return preventBounce
-        }
-
-        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-            return otherGestureRecognizer.view == scrollView
-        }
-        
-        @objc func panGestureDetected(_ recognizer: UIPanGestureRecognizer) {
-            if recognizer.state == .changed {
-                let y = recognizer.translation(in: self.scrollView).y
-                if y > 5 {
-                    bottomDrawerStore.positionY = y
-                }
-                print("woo \(y)")
-            }
-            if recognizer.state == .ended {
-                bottomDrawerStore.endPan = .velocity(recognizer.velocity(in: self.scrollView))
-            }
-        }
-        
-        func start(_ parent: HomeContentExplore) {
-            guard let scrollView = self.scrollView else { return }
-            
-            scrollView.delegate = self
-            scrollView.canCancelContentTouches = false
-            scrollView.delaysContentTouches = false
-            
-            let r = UIPanGestureRecognizer.init(target: self, action: #selector(ScrollState.panGestureDetected(_:)))
-            r.delegate = self
-            scrollView.addGestureRecognizer(r)
-            
-            self.$lastY
-                .throttle(for: .milliseconds(4), scheduler: App.queueMain, latest: false)
-                .collect(.byTimeOrCount(App.queueMain, 1, 4))
-                .sink { lastFew in
-                    let x: [CGFloat] = lastFew
-                    // if pulling it down
-                    // doing the lastFew fixes bugs where it shows ~ -100 for a sec after drawer drag
-                    if x.allSatisfy({ $0 < -11 }) {
-                        App.store.send(.home(.setDrawerPosition(.middle)))
-                    }
-                }
-                .store(in: &self.cancellables)
-        }
-    }
-    
     @State var state: ScrollState? = nil
+    @State var targetLock: ScrollState.ScrollTargetLock = .idle
 
     var body: some View {
         let isDisabled = self.store.state.home.drawerIsDragging
@@ -341,7 +278,19 @@ struct HomeContentExplore: View {
         return Group {
             ZStack {
                 Color.clear.onAppear {
-                    self.state = ScrollState()
+                    self.state = mainContentScrollState
+                    self.state!.$scrollTargetLock
+                        .map { target in
+                            // side effect
+                            if target == .drawer {
+                                self.state?.scrollView?.panGestureRecognizer.isEnabled = false
+                            } else {
+                                self.state?.scrollView?.panGestureRecognizer.isEnabled = true
+                            }
+                            return target
+                        }
+                        .assign(to: \.targetLock, on: self)
+                        .store(in: &self.state!.cancellables)
                 }
                 
                 GeometryReader { geo in
@@ -350,15 +299,6 @@ struct HomeContentExplore: View {
                             if let state = self.state {
                                 state.scrollView = x
                                 state.start(self)
-                            }
-                        }
-                        ScrollListener(debounce: 50) { frame in
-                            self.state?.lastScrollStartedAt = self.state?.lastY ?? 0
-                        }
-                        ScrollListener(throttle: 16) { frame in
-                            if self.state?.lastScrollStartedAt == 0
-                                && self.store.state.home.drawerPosition == .top {
-                                self.state?.lastY = geo.frame(in: .global).minY - frame.minY
                             }
                         }
                         
@@ -377,21 +317,6 @@ struct HomeContentExplore: View {
                             HomeContentPadBelow()
                         }
                     }
-//                    .simultaneousGesture(
-//                        DragGesture(minimumDistance: 0).onChanged { val in
-//                            print("got em \(val)")
-////                            let dp = App.store.state.home.drawerPosition
-////                            if dp != .bottom {
-////                                if let scrollView = self.state?.scrollView {
-////                                    if scrollView.bounces == false {
-////                                        if val.translation.height > 12 {
-////                                            App.store.send(.home(.setDrawerPosition(dp == .middle ? .bottom : .middle)))
-////                                        }
-////                                    }
-////                                }
-////                            }
-//                        }
-//                    )
                     .disabled(isDisabled)
                     .allowsHitTesting(!isDisabled)
                     .frame(width: self.screen.width, alignment: .leading)
@@ -399,6 +324,83 @@ struct HomeContentExplore: View {
                 }
             }
         }
+    }
+}
+
+let mainContentScrollState = ScrollState()
+
+class ScrollState: NSObject, ObservableObject, UIScrollViewDelegate, UIGestureRecognizerDelegate {
+    var scrollInitialY: CGFloat = 0
+    var cancellables: Set<AnyCancellable> = []
+    var scrollView: UIScrollView? = nil
+    @Published var scrollTargetLock: ScrollTargetLock = .idle
+    
+    enum ScrollTargetLock {
+        case content, drawer, idle
+    }
+    
+    var isAbleToPullDrawer: Bool {
+        let startedAtTop = round(self.scrollInitialY) == 0
+        let drawerIsDownDraggable = App.store.state.home.drawerPosition != .bottom
+        return startedAtTop && drawerIsDownDraggable
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        self.scrollInitialY = scrollView.contentOffset.y
+        scrollView.bounces = !isAbleToPullDrawer
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        async(20) {
+            self.scrollTargetLock = .idle
+        }
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        isAbleToPullDrawer
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        otherGestureRecognizer.view == scrollView
+    }
+    
+    @objc func panGestureDetected(_ recognizer: UIPanGestureRecognizer) {
+        if recognizer.state == .ended {
+            self.scrollView?.panGestureRecognizer.isEnabled = true
+            if self.scrollTargetLock == .drawer {
+                bottomDrawerStore.endPan = .velocity(recognizer.velocity(in: self.scrollView))
+                return
+            }
+        }
+        
+        let y = recognizer.translation(in: self.scrollView).y
+        
+        if isAbleToPullDrawer {
+            if recognizer.state == .changed {
+                if self.scrollTargetLock == .idle {
+                    if y > 8 {
+                        self.scrollTargetLock = .drawer
+                        self.scrollView?.panGestureRecognizer.isEnabled = false
+                    }
+                    if y < -8 {
+                        self.scrollTargetLock = .content
+                        self.scrollView?.bounces = true
+                    }
+                }
+            }
+        }
+        
+        if self.scrollTargetLock == .drawer {
+            bottomDrawerStore.positionY = y
+        }
+    }
+    
+    func start(_ parent: HomeContentExplore) {
+        guard let scrollView = self.scrollView else { return }
+        scrollView.delegate = self
+        let r = UIPanGestureRecognizer.init(target: self, action: #selector(ScrollState.panGestureDetected(_:)))
+        r.delegate = self
+        scrollView.addGestureRecognizer(r)
     }
 }
 
