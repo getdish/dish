@@ -1,7 +1,20 @@
 import { FetchResult, gql, useQuery, useSubscription } from '@apollo/client'
-import { ModelBase, Taxonomy, TaxonomyRecord, TaxonomyType } from '@dish/models'
-import { BorderLeft, Button, Card, Icon, Input, Stack, Surface, Text, Theme, Title, useDebounceValue } from '@o/ui'
+import { Taxonomy, TaxonomyRecord, TaxonomyType } from '@dish/models'
+import {
+  BorderLeft,
+  Button,
+  Card,
+  Icon,
+  Input,
+  Stack,
+  Surface,
+  Text,
+  Theme,
+  Title,
+  useDebounceValue,
+} from '@o/ui'
 import React, { useEffect, useState } from 'react'
+import { useOvermind } from '../overmind'
 
 const CONTINENTS_SUBSCRIPTION = gql`
 subscription Taxonomy {
@@ -49,9 +62,9 @@ const upsertTaxonomy = () => {
   const [response, setResponse] = useState<FetchResult<TaxonomyRecord> | null>(
     null
   )
+  const { state } = useOvermind()
   const update = (x: TaxonomyRecord = draft) => {
-    console.log('upsert', x)
-    ModelBase.client
+    state.auth.apollo_client
       .mutate({
         mutation: Taxonomy.upsert(x),
       })
@@ -242,7 +255,9 @@ const ListItem = ({
   const text = `${taxonomy.icon} ${taxonomy.name}`
   const [isEditing, setIsEditing] = useState(false)
   const [hidden, setHidden] = useState(false)
+  const { state } = useOvermind()
   if (hidden) return null
+
   return (
     <Theme
       name={isActive ? 'selected' : null}
@@ -297,7 +312,7 @@ const ListItem = ({
               onClick={e => {
                 e.stopPropagation()
                 setHidden(true)
-                ModelBase.client.mutate({
+                state.auth.apollo_client.mutate({
                   variables: {
                     id: taxonomy.id,
                   },

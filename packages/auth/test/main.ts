@@ -18,11 +18,10 @@ test('Creating a user', async t => {
 
 test('Login a user', async t => {
   await auth.register('tester', 'password')
-  const [status, token] = await auth.login('tester', 'password')
+  const [status, user] = await auth.login('tester', 'password')
   t.is(status, 200)
-  t.assert(token.length > 200)
+  t.is(user.username, 'tester')
   t.assert(auth.jwt.length > 200)
-  t.assert(!token.includes(' '))
   t.assert(!auth.jwt.includes(' '))
 })
 

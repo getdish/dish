@@ -6,12 +6,12 @@ import { checkRole } from '../middlewares/checkRole'
 const router = Router()
 
 //Get all users
-router.get('/', [checkJwt, checkRole(['ADMIN'])], UserController.listAll)
+router.get('/', [checkJwt, checkRole(['admin'])], UserController.listAll)
 
 // Get one user
 router.get(
   '/:username',
-  [checkJwt, checkRole(['ADMIN'])],
+  [checkJwt, checkRole(['admin'])],
   UserController.getOneByUsername
 )
 
@@ -21,14 +21,14 @@ router.post('/', [UserController.newUser])
 //Edit one user
 router.patch(
   '/:id([0-9]+)',
-  [checkJwt, checkRole(['ADMIN'])],
+  [checkJwt, checkRole(['admin'])],
   UserController.editUser
 )
 
 //Delete one user
 router.delete(
   '/:id([0-9]+)',
-  [checkJwt, checkRole(['ADMIN'])],
+  [checkJwt, checkRole(['admin'])],
   UserController.deleteUser
 )
 

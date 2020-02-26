@@ -62,17 +62,17 @@ services:
       - DISH_ENV=production
       - COMMIT_HASH=${REVISION}
       - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
-  react-native:
-    image: dish/react-native
+  jwt-server:
+    image: dish/jwt-server
     build:
-      dockerfile: ./apps/react-native/Dockerfile
+      dockerfile: ./services/jwt-server/Dockerfile
       context: ./
     ports:
-      - 3000/http
+      - 31013/http
     env:
       - DISH_ENV=production
+      - ADMIN_PASSWORD=${JWT_ADMIN_PASSWORD}
       - COMMIT_HASH=${REVISION}
-      - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
 {{- end}}
 
 template:

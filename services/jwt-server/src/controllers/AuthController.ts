@@ -40,7 +40,9 @@ class AuthController {
       { expiresIn: '1h' }
     )
 
-    res.send(token)
+    delete user.password
+
+    res.send({ user: user, token: token })
   }
 
   static changePassword = async (req: Request, res: Response) => {

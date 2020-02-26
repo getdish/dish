@@ -70,9 +70,6 @@ class Auth {
       config.data = data
     }
     const response = await axios(config)
-    if (response.status >= 300) {
-      console.error(response.data)
-    }
     return response
   }
 
@@ -90,9 +87,15 @@ class Auth {
       password: password,
     })
     if (response.status == 200) {
-      this.jwt = response.data
+      this.is_logged_in = true
+      this.jwt = response.data.token
     }
-    return [response.status, response.data]
+    return [response.status, response.data.user]
+  }
+
+  async logout() {
+    this.is_logged_in = false
+    this.jwt = ''
   }
 }
 

@@ -40,7 +40,7 @@ test('Authed request failure', async t => {
 
 test('Authed request success', async t => {
   const response = await login()
-  const jwt = response.data
+  const jwt = response.data.token
   const user = await axios.get(BASE + '/user/admin', {
     headers: { Auth: jwt },
   })

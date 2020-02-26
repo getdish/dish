@@ -61,7 +61,7 @@ export class User {
       user = new User()
       Object.assign(user, {
         username: 'admin',
-        role: 'ADMIN',
+        role: 'admin',
         password: ADMIN_PASSWORD,
       })
       user.hashPassword()

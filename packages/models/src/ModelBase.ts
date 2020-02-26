@@ -4,11 +4,13 @@ import {
   HttpLink,
   InMemoryCache,
   split,
+  NormalizedCacheObject,
 } from '@apollo/client'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { WebSocketLink } from '@apollo/link-ws'
 import axios, { AxiosRequestConfig } from 'axios'
 import { EnumType, jsonToGraphQLQuery } from 'json-to-graphql-query'
+import auth from '@dish/auth'
 
 const isNode = typeof window == 'undefined'
 let WebSocket: WebSocket
@@ -19,8 +21,6 @@ if (isNode) {
 } else {
   WebSocket = window['WebSocket'] as any
 }
-
-import auth from '@dish/auth'
 
 export type Point = {
   type: string
@@ -53,45 +53,52 @@ let AXIOS_CONF = {
   },
 } as AxiosRequestConfig
 
-const httpLink = new HttpLink({
-  uri: DOMAIN + '/v1/graphql',
-  fetch,
-})
+let apollo_client: ApolloClient<NormalizedCacheObject>
 
-const wsLink = new WebSocketLink({
-  uri: `ws://${LOCAL_HASURA}/v1/graphql`,
-  options: {
-    reconnect: true,
-    connectionParams: {
-      headers: { 'X-Hasura-Admin-Secret': process.env.REACT_APP_HASURA_SECRET },
+export function createApolloClient() {
+  const httpLink = new HttpLink({
+    uri: DOMAIN + '/v1/graphql',
+    headers: auth.getHeaders(),
+    fetch,
+  })
+
+  const wsLink = new WebSocketLink({
+    uri: `ws://${LOCAL_HASURA}/v1/graphql`,
+    options: {
+      reconnect: true,
+      connectionParams: {
+        headers: auth.getHeaders(),
+      },
     },
-  },
-  webSocketImpl: WebSocket,
-})
+    webSocketImpl: WebSocket,
+  })
 
-// The split function takes three parameters:
-//
-// * A function that's called for each operation to execute
-// * The Link to use for an operation if the function returns a "truthy" value
-// * The Link to use for an operation if the function returns a "falsy" value
-const link = split(
-  ({ query }) => {
-    const definition = getMainDefinition(query)
-    return (
-      definition.kind === 'OperationDefinition' &&
-      definition.operation === 'subscription'
-    )
-  },
-  wsLink,
-  httpLink
-)
+  // The split function takes three parameters:
+  //
+  // * A function that's called for each operation to execute
+  // * The Link to use for an operation if the function returns a "truthy" value
+  // * The Link to use for an operation if the function returns a "falsy" value
+  const link = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query)
+      return (
+        definition.kind === 'OperationDefinition' &&
+        definition.operation === 'subscription'
+      )
+    },
+    wsLink,
+    httpLink
+  )
 
-const client = new ApolloClient({
-  link: link,
-  cache: new InMemoryCache({
-    addTypename: true,
-  }),
-})
+  apollo_client = new ApolloClient({
+    link: link,
+    cache: new InMemoryCache({
+      addTypename: true,
+    }),
+  })
+
+  return apollo_client
+}
 
 export class ModelBase<T> {
   id!: string
@@ -100,8 +107,6 @@ export class ModelBase<T> {
   private _klass: typeof ModelBase
   private _upper_name: string
   private _lower_name: string
-
-  static client = client
 
   static default_fields() {
     return ['id', 'created_at', 'updated_at']
@@ -168,7 +173,7 @@ export class ModelBase<T> {
   }
 
   static async query<T = any>(query: string): Promise<T> {
-    const res = await client.query({
+    const res = await apollo_client.query({
       query: gql`
         ${query}
       `,
@@ -186,10 +191,6 @@ export class ModelBase<T> {
       throw new HasuraError(conf.data.query, response.data.errors)
     }
     return response
-  }
-
-  static async subscribe() {
-    this.client.subscribe
   }
 
   async insert() {
