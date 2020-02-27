@@ -25,9 +25,9 @@ fileprivate let initialLenses: [LenseItem] = [
     LenseItem(id: "1", name: "My 👌", icon: "", rgb: [0.2, 0.65, 0.65], description: "Locals favorite"),
     LenseItem(id: "2", name: "New", icon: "🔥", rgb: [0.5, 0.1, 0.1], description: "New"),
     LenseItem(id: "3", name: "Picks", icon: "👩‍🍳", rgb: [0.6, 0.1, 0.5], description: "Chef choice"),
-    LenseItem(id: "4", name: "Date", icon: "💎", rgb: [0.35, 0.2, 0.65], description: "Date night"),
-    LenseItem(id: "6", name: "", icon: "🥬 Planty", rgb: [0.2, 0.7, 0.2], description: "Plant based"),
-    LenseItem(id: "7", name: "", icon: "🐟 Fresh", rgb: [0.65, 0.2, 0.65], description: "Seafood"),
+    LenseItem(id: "4", name: "Date 💎", icon: "", rgb: [0.35, 0.2, 0.65], description: "Date night"),
+    LenseItem(id: "6", name: "", icon: "Planty 🥬", rgb: [0.2, 0.7, 0.2], description: "Plant based"),
+    LenseItem(id: "7", name: "", icon: "Fresh 🐟", rgb: [0.65, 0.2, 0.65], description: "Seafood"),
     LenseItem(id: "8", name: "Cheap", icon: "💸", rgb: [0.65, 0.2, 0.65], description: "Cheap")
 ]
 
@@ -92,6 +92,7 @@ enum HomeAction {
     case toggleShowCuisineFilter
     case setCuisineFilter(_ cuisine: String)
     case setDrawerIsDragging(_ val: Bool)
+    case setSelectedMarkers(_ val: [MapMarker])
 }
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
@@ -108,6 +109,16 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     // switch
     
     switch action {
+        case .setSelectedMarkers(let markers):
+            var last = state.home.viewStates.last!
+            last.searchResults = HomeSearchResults(
+                id: "lense-\(markers)",
+                status: .completed,
+                results: markers.compactMap { marker in
+                    last.searchResults.results.first { $0.name == marker.title }
+                }
+            )
+            updateItem(last)
         case .setDrawerIsDragging(let val):
             state.home.drawerIsDragging = val
         case .setCuisineFilter(let cuisine):

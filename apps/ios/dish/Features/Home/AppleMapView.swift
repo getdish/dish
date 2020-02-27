@@ -13,6 +13,7 @@ struct AppleMapView: UIViewRepresentable {
     @Binding var mapZoom: Double
     var onChangeLocation: ((MapViewLocation) -> Void)? = nil
     var onChangeLocationName: ((CLPlacemark) -> Void)? = nil
+    var onSelectMarkers: (([MapMarker]) -> Void)? = nil
     var showsUserLocation: Bool = false
     
     func makeUIView(context: Context) -> MKMapView {
@@ -78,7 +79,20 @@ struct AppleMapView: UIViewRepresentable {
         
         // on select annotation
         func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-            print("selected annotation \(view)")
+            if let cluster = view.annotation as? MKClusterAnnotation {
+                let arrayList = cluster.memberAnnotations
+                print("tapped cluster \(arrayList)")
+                
+                let markers: [MapMarker] = arrayList.compactMap { annotation in
+                    parent.markers?.first { $0.title == annotation.title }
+                }
+                if let cb = parent.onSelectMarkers { cb(markers) }
+                
+                // If you want the map to display the cluster members
+                mapView.showAnnotations(cluster.memberAnnotations, animated: true)
+                
+            }
+            
 //            zoomToAnnotation(view.annotation!)
         }
         

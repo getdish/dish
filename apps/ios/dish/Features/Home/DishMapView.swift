@@ -90,6 +90,9 @@ struct DishMapView: View {
                         App.store.send(.map(.setLocationLabel(cityName)))
                     }
             },
+                onSelectMarkers: { markers in
+                    App.store.send(.home(.setSelectedMarkers(markers)))
+            },
                 showsUserLocation: true
             )
         }
