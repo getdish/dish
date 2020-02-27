@@ -216,13 +216,14 @@ struct FilterButton: View {
 struct FilterButtonStyle: ViewModifier {
     var active = false
     var bordered = false
+    @Environment(\.lenseColor) var lenseColor
     @Environment(\.itemSegment) var itemSegment
     @Environment(\.colorScheme) var colorScheme
     @State var display: SegmentedItem? = nil
     
     func body(content: Content) -> some View {
         let a = Color.black
-        let b = Color(white: 0).opacity(0.15)
+        let b = self.lenseColor ?? Color(white: 0)
         let bg = active ? a : b
         let fg = active ? b : a
         let corners: [UIRectCorner] = itemSegment == nil || itemSegment?.isLast == true && itemSegment?.isFirst == true
@@ -234,7 +235,7 @@ struct FilterButtonStyle: ViewModifier {
         return content
             .foregroundColor(bordered ? nil : fg)
             .padding(.horizontal, 8)
-            .background(bg)
+            .background(bg.opacity(0.15))
             .cornerRadius(20, corners: .init(corners))
     }
 }

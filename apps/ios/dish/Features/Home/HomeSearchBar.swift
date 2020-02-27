@@ -123,15 +123,15 @@ struct IndentedStyle: ButtonStyle {
     var rgb: [Double]
     
     var bg: Color {
-        self.genColor(rgb, adjust: 0.8)
+        self.genColor(rgb, adjust: 0.9)
     }
     
     var bgDark: Color {
-        self.genColor(rgb, adjust: 0.65)
+        self.genColor(rgb, adjust: 0.7)
     }
     
     var darkShadow: Color {
-        self.genColor(rgb, adjust: 0.55)
+        self.genColor(rgb, adjust: 0.6)
     }
     
     var lightShadow: Color {
@@ -167,8 +167,8 @@ struct IndentedStyle: ButtonStyle {
                 )
             )
             .cornerRadius(100)
-            .shadow(color: isPressed ? lightShadow : darkShadow, radius: 8, x: 8, y: 8)
-            .shadow(color: isPressed ? darkShadow : lightShadow, radius: 6, x: -8, y: -8)
+            .shadow(color: isPressed ? lightShadow : darkShadow, radius: 6, x: 6, y: 6)
+            .shadow(color: isPressed ? darkShadow : lightShadow, radius: 6, x: -6, y: -6)
             .animation(.spring(response: 0.3))
     }
 }

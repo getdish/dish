@@ -25,6 +25,10 @@ struct HomeMainDrawer: View, Equatable {
         )
     }
     
+    var drawerBackgroundColor: Color {
+        Selectors.home.drawerColor(colorScheme: self.colorScheme)
+    }
+    
     var body: some View {
         let isOnLocationSearch = self.store.state.home.searchFocus == .location
         
@@ -34,7 +38,7 @@ struct HomeMainDrawer: View, Equatable {
         
         return BottomDrawer(
             position: self.drawerPosition,
-            background: Selectors.home.drawerColor(colorScheme: self.colorScheme),
+            background: self.drawerBackgroundColor,
             snapPoints: App.drawerSnapPoints,
             cornerRadius: 20,
             handle: nil,
@@ -51,6 +55,8 @@ struct HomeMainDrawer: View, Equatable {
                 isOnLocationSearch: isOnLocationSearch
             )
         }
+        .environment(\.drawerBackgroundColor, self.drawerBackgroundColor)
+        .environment(\.lenseColor, Selectors.home.activeLense().color)
     }
 }
 
@@ -58,7 +64,7 @@ struct HomeMainDrawerContentContainer: View {
     var isOnLocationSearch: Bool
 
     var body: some View {
-        let occludeTopHeight = App.searchBarHeight + 5
+        let occludeTopHeight = App.searchBarHeight + 13
         return ZStack {
             // home content
             ZStack {
