@@ -62,7 +62,7 @@ const wsLink = new WebSocketLink({
     reconnect: true,
   },
   webSocketImpl: WebSocket,
-})
+}) as any
 
 // The split function takes three parameters:
 //

@@ -2,11 +2,7 @@
   "name": "dish-monorepo",
   "private": true,
   "workspaces": {
-    "nohoist": [
-      "**"
-    ],
     "packages": [
-      "packages/models",
       "packages/*",
       "apps/*",
       "services/*"
