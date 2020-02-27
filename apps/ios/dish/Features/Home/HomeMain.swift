@@ -42,15 +42,6 @@ struct HomeMainView: View {
             ZStack {
                 // wrapper to handle disabling touch events during dragging
                 ZStack {
-                    
-                    // Camera
-//                    if App.enableCamera && animationState != .splash {
-//                        ZStack {
-//                            DishCamera()
-//                        }
-//                        .frameLimitedToScreen()
-//                    }
-                    
                     // Map
                     if App.enableMap {
                         ZStack {

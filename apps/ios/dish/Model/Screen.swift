@@ -27,4 +27,8 @@ class ScreenModel: ObservableObject {
     @Published var width: CGFloat = UIScreen.main.bounds.width
     @Published var height: CGFloat = UIScreen.main.bounds.height
     @Published var edgeInsets: UIEdgeInsets = UIEdgeInsets()
+    
+    var cornerRadius: CGFloat {
+        self.edgeInsets.top > 0 ? 38.5 : 0
+    }
 }
