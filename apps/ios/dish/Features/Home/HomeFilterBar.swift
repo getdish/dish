@@ -222,7 +222,7 @@ struct FilterButtonStyle: ViewModifier {
     
     func body(content: Content) -> some View {
         let a = Color.black
-        let b = Color(white: 0.9)
+        let b = Color(white: 0).opacity(0.15)
         let bg = active ? a : b
         let fg = active ? b : a
         let corners: [UIRectCorner] = itemSegment == nil || itemSegment?.isLast == true && itemSegment?.isFirst == true

@@ -68,9 +68,16 @@ struct BottomDrawer<Content: View>: View {
         let dragHeight = self.dragState.translation.height
         let at = self.positionY + dragHeight + self.externalDragY
         
+        // top overflow damp
         if at < snapPoints[0] {
-            return snapPoints[0] - (snapPoints[0] - at) * 0.2
+            return snapPoints[0] - (snapPoints[0] - at) * 0.15
         }
+        
+        // bottom overflow damp
+        if at > snapPoints[2] {
+            return snapPoints[2] + (at - snapPoints[2]) * 0.15
+        }
+        
         
         return at
     }
@@ -97,8 +104,8 @@ struct BottomDrawer<Content: View>: View {
             .dropFirst()
             .sink { y in
                 self.externalDragY = y
-            }
-            .store(in: &self.cancellables)
+        }
+        .store(in: &self.cancellables)
         
         bottomDrawerStore.$endPan
             .dropFirst()
@@ -109,23 +116,23 @@ struct BottomDrawer<Content: View>: View {
                     case .velocity(let speed):
                         self.finishDrag(speed.y, currentY: self.draggedPositionY)
                 }
-            }
-            .store(in: &self.cancellables)
+        }
+        .store(in: &self.cancellables)
     }
     
     func updateStore() {
-//        let next = BottomDrawerStore.PositionState(controlledBy: .inside, y: self.draggedPositionY)
-//        if bottomDrawerStore.positionY != next {
-//            bottomDrawerStore.positionY = next
-//        }
+        //        let next = BottomDrawerStore.PositionState(controlledBy: .inside, y: self.draggedPositionY)
+        //        if bottomDrawerStore.positionY != next {
+        //            bottomDrawerStore.positionY = next
+        //        }
     }
-
+    
     var body: some View {
         let screenHeight = screen.height
         let belowHeight = self.dragState.isDragging
             ? 0
             : max(0, screenHeight - (screenHeight - getSnapPoint(self.position)))
-
+        
         return ZStack {
             Color.clear.onAppear {
                 self.start()
@@ -143,32 +150,37 @@ struct BottomDrawer<Content: View>: View {
             
             VStack(spacing: 0) {
                 self.content()
-//                    .disabled(self.position != .top)
-//                    .allowsHitTesting(self.position == .top)
+                //                    .disabled(self.position != .top)
+                //                    .allowsHitTesting(self.position == .top)
                 
                 // pad bottom so it wont go below
                 Spacer().frame(height: belowHeight)
             }
         }
-            .frame(height: screenHeight, alignment: .top)
-            .background(
-                self.background
-            )
+        .frame(height: screenHeight, alignment: .top)
+        .background(
+            self.background
+        )
             .cornerRadius(self.cornerRadius)
-            .shadow(color: Color(white: 0, opacity: 0.27), radius: 20.0)
+            .shadow(
+                color: self.colorScheme == .dark
+                    ? Color(white: 0, opacity: 0.7)
+                    : Color(white: 0, opacity: 0.27),
+                radius: 20.0
+        )
             .offset(y: self.draggedPositionY)
             .onGeometryFrameChange { geometry in
                 async {
                     self.afterChangePosition()
                 }
-            }
-            .animation(self.dragState.isDragging
-                ? nil
-                : .interpolatingSpring(mass: self.mass, stiffness: 90.0, damping: 25.0, initialVelocity: 0)
-            )
+        }
+        .animation(self.dragState.isDragging
+            ? nil
+            : .interpolatingSpring(mass: self.mass, stiffness: 90.0, damping: 25.0, initialVelocity: 0)
+        )
             .gesture(
                 self.gesture
-            )
+        )
     }
     
     var gesture: _EndedGesture<GestureStateGesture<DragGesture, DragState>> {
@@ -213,8 +225,8 @@ struct BottomDrawer<Content: View>: View {
                         if let cb = self.onDragState { cb(state) }
                     }
                 }
-            }
-            .onEnded(onDragEnded)
+        }
+        .onEnded(onDragEnded)
     }
     
     private func getDistance(_ position: BottomDrawerPosition, from: CGFloat) -> CGFloat {

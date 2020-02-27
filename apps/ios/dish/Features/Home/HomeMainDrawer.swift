@@ -10,6 +10,7 @@ struct HomeMainDrawer: View, Equatable {
 
     @EnvironmentObject var screen: ScreenModel
     @EnvironmentObject var store: AppStore
+    @Environment(\.colorScheme) var colorScheme
     
     var drawerPosition: Binding<BottomDrawerPosition> {
         Binding<BottomDrawerPosition>(
@@ -27,9 +28,13 @@ struct HomeMainDrawer: View, Equatable {
     var body: some View {
         let isOnLocationSearch = self.store.state.home.searchFocus == .location
         
+//        self.colorScheme == .dark
+//            ? Color.init(white: 0.075)
+//            : Color.white
+        
         return BottomDrawer(
             position: self.drawerPosition,
-            background: Color(.systemBackground),
+            background: Selectors.home.activeLense().color,
             snapPoints: App.drawerSnapPoints,
             cornerRadius: 20,
             handle: nil,

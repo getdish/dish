@@ -106,22 +106,42 @@ struct HomeSearchBar: View {
                     Image(systemName: "camera.fill")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 22, height: 22)
+                        .frame(width: 28, height: 28)
                 }
                 
             }
-            .buttonStyle(IndentedStyle())
+            .buttonStyle(IndentedStyle(
+                colorScheme: self.colorScheme,
+                rgb: Selectors.home.activeLense().rgb
+            ))
         }
     }
 }
 
 struct IndentedStyle: ButtonStyle {
+    var colorScheme: ColorScheme
+    var rgb: [Double]
+    
+    var bg: Color {
+        Color(red: rgb[0] * 0.8, green: rgb[1] * 0.8, blue: rgb[2] * 0.8)
+    }
+    
+    var bgDark: Color {
+        Color(red: rgb[0] * 0.65, green: rgb[1] * 0.65, blue: rgb[2] * 0.65)
+    }
+    
+    var darkShadow: Color {
+        Color(red: rgb[0] * 0.5, green: rgb[1] * 0.5, blue: rgb[2] * 0.5)
+    }
+    
+    var lightShadow: Color {
+        Color(red: rgb[0] * 1.2, green: rgb[1] * 1.2, blue: rgb[2] * 1.2)
+    }
+    
     func makeBody(configuration: Self.Configuration) -> some View {
         let isPressed = configuration.isPressed
 //        let x = Color(.systemGroupedBackground)
-        let background: Color = isPressed ? Color(.systemBackground) : Color(.systemGroupedBackground)
-        let darkShadow: Color = .init(red: 0.9, green: 0.9, blue: 0.9)
-        let lightShadow: Color = .init(white: 1, opacity: 1)
+        let background: Color = isPressed ? self.bg : self.bgDark
         
         return configuration.label
             .foregroundColor(Color(white: 0.35, opacity: 0.5))
@@ -130,7 +150,7 @@ struct IndentedStyle: ButtonStyle {
                 LinearGradient(
                     gradient: .init(colors: isPressed
                         ? [background, background]
-                        : [Color(.systemBackground), background]
+                        : [lightShadow, background]
                     ),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
@@ -139,6 +159,7 @@ struct IndentedStyle: ButtonStyle {
             .cornerRadius(100)
             .shadow(color: isPressed ? lightShadow : darkShadow, radius: 10, x: 10, y: 10)
             .shadow(color: isPressed ? darkShadow : lightShadow, radius: 10, x: -10, y: -10)
+            .animation(.spring(response: 0.3))
     }
 }
 
