@@ -55,6 +55,7 @@ struct AppleMapView: UIViewRepresentable {
             self.updateCurrentLocation(parent.currentLocation)
             self.updateMarkers(parent.markers)
             self.mapView.showsUserLocation = parent.showsUserLocation
+            self.mapView.userLocation.title = nil
             if parent.mapZoom != self.mapZoom {
                 print("AppleMapView setting zoom level to \(parent.mapZoom) from \(self.mapZoom)")
                 self.mapZoom = parent.mapZoom
