@@ -50,6 +50,7 @@ struct HomeMapExplore: View {
                         .equatable()
                 }
             }
+            .padding(.vertical, 10)
             .padding(.horizontal, 20)
             .drawingGroup()
         }
