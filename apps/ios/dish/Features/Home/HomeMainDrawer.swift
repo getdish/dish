@@ -34,7 +34,7 @@ struct HomeMainDrawer: View, Equatable {
         
         return BottomDrawer(
             position: self.drawerPosition,
-            background: Selectors.home.drawerColor(),
+            background: Selectors.home.drawerColor(colorScheme: self.colorScheme),
             snapPoints: App.drawerSnapPoints,
             cornerRadius: 20,
             handle: nil,

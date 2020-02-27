@@ -112,7 +112,7 @@ struct HomeSearchBar: View {
             }
             .buttonStyle(IndentedStyle(
                 colorScheme: self.colorScheme,
-                rgb: Selectors.home.drawerRGB()
+                rgb: Selectors.home.drawerRGB(colorScheme: self.colorScheme)
             ))
         }
     }
@@ -142,10 +142,13 @@ struct IndentedStyle: ButtonStyle {
         let isPressed = configuration.isPressed
 //        let x = Color(.systemGroupedBackground)
         let background: Color = isPressed ? self.bg : self.bgDark
-        let drgb = Selectors.home.drawerRGB()
         
         return configuration.label
-            .foregroundColor(Color(red: drgb[0] * 1.2, green: drgb[1] * 1.2, blue: drgb[2] * 1.2))
+            .foregroundColor(
+                self.colorScheme == .light
+                    ? Color(white: 0.5)
+                    : Color(red: rgb[0] * 1.2, green: rgb[1] * 1.2, blue: rgb[2] * 1.2)
+            )
             .padding(16)
             .background(
                 LinearGradient(
@@ -159,7 +162,7 @@ struct IndentedStyle: ButtonStyle {
             )
             .cornerRadius(100)
             .shadow(color: isPressed ? lightShadow : darkShadow, radius: 8, x: 8, y: 8)
-            .shadow(color: isPressed ? darkShadow : lightShadow, radius: 8, x: -8, y: -8)
+            .shadow(color: isPressed ? darkShadow : lightShadow, radius: 6, x: -8, y: -8)
             .animation(.spring(response: 0.3))
     }
 }

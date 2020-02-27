@@ -200,13 +200,15 @@ struct HomeSelectors {
         store.state.home.lenses[store.state.home.lenseActive]
     }
     
-    func drawerRGB(_ store: AppStore = App.store) -> [Double] {
-        let c = Selectors.home.activeLense().rgb
-        return [c[0] * 0.5, c[1] * 0.5, c[2] * 0.5]
+    func drawerRGB(_ store: AppStore = App.store, colorScheme: ColorScheme) -> [Double] {
+        let c = activeLense(store).rgb
+        return colorScheme == .dark
+            ? [c[0] * 0.5, c[1] * 0.5, c[2] * 0.5]
+            : [1, 1, 1]
     }
     
-    func drawerColor(_ store: AppStore = App.store) -> Color {
-        let d = drawerRGB()
+    func drawerColor(_ store: AppStore = App.store, colorScheme: ColorScheme) -> Color {
+        let d = drawerRGB(store, colorScheme: colorScheme)
         return Color(red: d[0], green: d[1], blue: d[2])
     }
 }
