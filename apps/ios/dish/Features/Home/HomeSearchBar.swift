@@ -106,9 +106,9 @@ struct HomeSearchBar: View {
                     Image(systemName: "camera.fill")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 28, height: 28)
+                        .frame(width: 24, height: 24)
                 }
-                
+                .padding(4)
             }
             .buttonStyle(IndentedStyle(
                 colorScheme: self.colorScheme,
@@ -123,19 +123,25 @@ struct IndentedStyle: ButtonStyle {
     var rgb: [Double]
     
     var bg: Color {
-        Color(red: rgb[0] * 0.8, green: rgb[1] * 0.8, blue: rgb[2] * 0.8)
+        self.genColor(rgb, adjust: 0.8)
     }
     
     var bgDark: Color {
-        Color(red: rgb[0] * 0.65, green: rgb[1] * 0.65, blue: rgb[2] * 0.65)
+        self.genColor(rgb, adjust: 0.65)
     }
     
     var darkShadow: Color {
-        Color(red: rgb[0] * 0.5, green: rgb[1] * 0.5, blue: rgb[2] * 0.5)
+        self.genColor(rgb, adjust: 0.5)
     }
     
     var lightShadow: Color {
-        Color(red: rgb[0] * 1.2, green: rgb[1] * 1.2, blue: rgb[2] * 1.2)
+        self.genColor(rgb, adjust: 1.2)
+    }
+    
+    func genColor(_ rgb: [Double], adjust: Double) -> Color {
+        let diff = adjust > 1 ? adjust - 1 : 1 - adjust
+        let x = adjust + diff * (self.colorScheme == .light ? 0.4 : 1)
+        return Color(red: rgb[0] * x, green: rgb[1] * x, blue: rgb[2] * x)
     }
     
     func makeBody(configuration: Self.Configuration) -> some View {
@@ -146,7 +152,7 @@ struct IndentedStyle: ButtonStyle {
         return configuration.label
             .foregroundColor(
                 self.colorScheme == .light
-                    ? Color(white: 0.5)
+                    ? Color(white: 0.38)
                     : Color(red: rgb[0] * 1.2, green: rgb[1] * 1.2, blue: rgb[2] * 1.2)
             )
             .padding(16)

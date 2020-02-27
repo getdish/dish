@@ -113,7 +113,7 @@ struct ControlsButtonStyle: ViewModifier {
                     content
                         .frame(height: self.height)
                         .padding(.horizontal, self.hPad)
-                        .background(Color.black.opacity(active ? 0 : 0.3))
+                        .background(Color.white.opacity(active ? 0 : 0.2))
                         .foregroundColor(.white)
                         .background(showBlurBackground ? BlurView(style: .systemThinMaterialDark) : nil)
                 }
