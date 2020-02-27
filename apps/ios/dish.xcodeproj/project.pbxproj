@@ -95,7 +95,6 @@
 		AEA331F923A3385000B36A23 /* InlineAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F823A3385000B36A23 /* InlineAlertView.swift */; };
 		AEA331FB23A338F400B36A23 /* KeyboardHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331FA23A338F400B36A23 /* KeyboardHost.swift */; };
 		AEA87E4323B976EB009F07DB /* HomeFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA87E4223B976EB009F07DB /* HomeFilterBar.swift */; };
-		AEAAAA0C23F9D66500ABED23 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAAAA0B23F9D66500ABED23 /* Sequence.swift */; };
 		AEAAAA0E23F9DBA800ABED23 /* DishRestaurantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAAAA0D23F9DBA700ABED23 /* DishRestaurantView.swift */; };
 		AEAAAA1023FA1FE300ABED23 /* DishRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAAAA0F23FA1FE300ABED23 /* DishRatingView.swift */; };
 		AEAAAA1223FA214900ABED23 /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAAAA1123FA214900ABED23 /* DividerView.swift */; };
@@ -227,7 +226,6 @@
 		AEA331F823A3385000B36A23 /* InlineAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineAlertView.swift; sourceTree = "<group>"; };
 		AEA331FA23A338F400B36A23 /* KeyboardHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHost.swift; sourceTree = "<group>"; };
 		AEA87E4223B976EB009F07DB /* HomeFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFilterBar.swift; sourceTree = "<group>"; };
-		AEAAAA0B23F9D66500ABED23 /* Sequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
 		AEAAAA0D23F9DBA700ABED23 /* DishRestaurantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishRestaurantView.swift; sourceTree = "<group>"; };
 		AEAAAA0F23FA1FE300ABED23 /* DishRatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishRatingView.swift; sourceTree = "<group>"; };
 		AEAAAA1123FA214900ABED23 /* DividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
@@ -362,7 +360,6 @@
 				AE6B0FE023CF9C3A00C33968 /* GMSMapView.swift */,
 				AE5CEDCB24027E760046B944 /* MKMapView.swift */,
 				AE872FEC23CE6E3900F84663 /* Publisher.swift */,
-				AEAAAA0B23F9D66500ABED23 /* Sequence.swift */,
 				AE65DF9123F771FF00758DD3 /* String.swift */,
 				AE65E9BA23E59F9E00702C30 /* Text.swift */,
 				1CE3548023986BC1004B3A84 /* View.swift */,
@@ -734,7 +731,6 @@
 				AE0F474423B69276008F7418 /* DishCamera.swift in Sources */,
 				AEAAAA1023FA1FE300ABED23 /* DishRatingView.swift in Sources */,
 				AE872FEF23CE6E8100F84663 /* CurrentLocationService.swift in Sources */,
-				AEAAAA0C23F9D66500ABED23 /* Sequence.swift in Sources */,
 				AE65E9BB23E59F9E00702C30 /* Text.swift in Sources */,
 				AEA331FB23A338F400B36A23 /* KeyboardHost.swift in Sources */,
 				AE7563E523A038300094022B /* SearchInput.swift in Sources */,

@@ -12,11 +12,14 @@ struct ControlsLocationSearchBarView: View {
     }
     
     var cancelButton: some View {
-        Button("Done") {
+        Button(action: {
             UIApplication.shared.endEditing(true) // this must be placed before the other commands here
             self.isFocused = false
+        }) {
+            Text("Done")
+                .foregroundColor(.white)
+                .fontWeight(.bold)
         }
-        .foregroundColor(Color(.systemBlue))
     }
     
     var body: some View {
@@ -54,13 +57,15 @@ struct ControlsLocationSearchBarView: View {
                 
                 if isFocused {
                     cancelButton
-                        .transition(.slide)
+                        .transition(.opacity)
                 }
             }
                 .font(.system(size: 14))
                 .multilineTextAlignment(isFocused ? .leading : .center)
-                .padding(.horizontal, 20)
+                .padding(.leading, 20)
+                .padding(.trailing, 10)
                 .modifier(ControlsButtonStyle())
+                .animation(.spring())
                 .overlay(
                     HStack {
                         Image(systemName: "magnifyingglass")
