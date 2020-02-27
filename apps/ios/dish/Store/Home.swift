@@ -199,6 +199,16 @@ struct HomeSelectors {
     func activeLense(_ store: AppStore = App.store) -> LenseItem {
         store.state.home.lenses[store.state.home.lenseActive]
     }
+    
+    func drawerRGB(_ store: AppStore = App.store) -> [Double] {
+        let c = Selectors.home.activeLense().rgb
+        return [c[0] * 0.5, c[1] * 0.5, c[2] * 0.5]
+    }
+    
+    func drawerColor(_ store: AppStore = App.store) -> Color {
+        let d = drawerRGB()
+        return Color(red: d[0], green: d[1], blue: d[2])
+    }
 }
 
 // structures for HomeStore

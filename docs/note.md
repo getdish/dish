@@ -1,6 +1,10 @@
-The nerds guide to everything.
+Premium?
+
+Horizontal value?
 
 ---
+
+The nerds guide to everything.
 
 There's a problem with the internet. Google says quantity > quality. It seems more often than ever to find anything good you need to "know the spots".
 
@@ -18,9 +22,7 @@ The keys, I think, to fixing the problem are three: Trust, Experts, Community. I
 
 Meanwhile there is a long tail of hard working bloggers, fanatics and nerds who are willing to put in the time and effort if they see the potential for a trustworthy community to curate, organize, and debate "what is good".
 
----
-
-Last year I pushed myself harder than I've ever done before, which is saying a lot for someone five years and three pivots into building their own startup, something I'd been in a sense spending my whole life building towards.
+---Last year I pushed myself harder than I've ever done before, which is saying a lot for someone five years and three pivots into building their own startup, something I'd been in a sense spending my whole life building towards.
 
 I was burnt out. Heavily.
 
