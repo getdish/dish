@@ -69,7 +69,7 @@ const login: AsyncAction<{ username: string; password: string }> = async (
       om.state.auth.messages = formatErrors(data)
     }
   } else {
-    om.state.auth.apollo_client = await createApolloClient()
+    om.state.auth.apollo_client = createApolloClient()
     om.state.auth.is_logged_in = true
     om.state.auth.user = data
   }

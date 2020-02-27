@@ -20,6 +20,6 @@ RUN cd services/jwt-server && yarn build
 ## Stage 2: run
 FROM mhart/alpine-node:slim-12
 COPY --from=0 /app /app
-WORKDIR /app/jwt-server/crawlers
+WORKDIR /app/services/jwt-server
 
 CMD ["node", "_/index.js"]

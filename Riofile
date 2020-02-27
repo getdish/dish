@@ -12,7 +12,7 @@ services:
       - HASURA_GRAPHQL_ENABLE_TELEMETRY=false
       - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anon
       - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}
-      - HASURA_GRAPHQL_JWT_SECRET='{"type":"HS256", "key": "${JWT_KEY}"}'
+    command: ['graphql-engine', 'serve', '--jwt-secret', '{"type":"HS256", "key":"${JWT_KEY}"}']
   worker-ui:
     image: tombh/bull-board:latest
     env:
@@ -68,11 +68,14 @@ services:
       dockerfile: ./services/jwt-server/Dockerfile
       context: ./
     ports:
-      - 31013/http
+      - 3000/http
     env:
       - DISH_ENV=production
       - ADMIN_PASSWORD=${JWT_ADMIN_PASSWORD}
+      - JWT_SECRET=${JWT_KEY}
       - COMMIT_HASH=${REVISION}
+      - POSTGRES_HOST=postgres-postgresql.postgres
+      - POSTGRES_PASSWORD=${TF_VAR_POSTGRES_PASSWORD}
 {{- end}}
 
 template:

@@ -1,5 +1,6 @@
 import {
   ApolloClient,
+  ApolloLink,
   gql,
   HttpLink,
   InMemoryCache,
@@ -27,8 +28,7 @@ export type Point = {
   coordinates: [number, number]
 }
 
-const LOCAL_HASURA = 'localhost:8080'
-const LOCAL_HASURA_HTTP = `http://${LOCAL_HASURA}`
+const LOCAL_HASURA = `http://localhost:8080`
 
 let DOMAIN: string
 
@@ -36,12 +36,12 @@ if (typeof window === 'undefined') {
   DOMAIN =
     process.env.HASURA_ENDPOINT ||
     process.env.REACT_APP_HASURA_ENDPOINT ||
-    LOCAL_HASURA_HTTP
+    LOCAL_HASURA
 } else {
   if (window.location.hostname.includes('dish')) {
-    DOMAIN = 'hasura.rio.dishapp.com'
+    DOMAIN = 'https://hasura.rio.dishapp.com'
   } else {
-    DOMAIN = process.env.REACT_APP_HASURA_ENDPOINT || LOCAL_HASURA_HTTP
+    DOMAIN = process.env.REACT_APP_HASURA_ENDPOINT || LOCAL_HASURA
   }
 }
 
@@ -62,8 +62,20 @@ export function createApolloClient() {
     fetch,
   })
 
+  const hostname = new URL(DOMAIN).hostname
+  let port = new URL(DOMAIN).port
+  if (port != '') {
+    port = ':' + port
+  }
+  let protocol = new URL(DOMAIN).protocol
+  if (protocol == 'https:') {
+    protocol = 'wss:'
+  } else {
+    protocol = 'ws:'
+  }
+
   const wsLink = new WebSocketLink({
-    uri: `ws://${LOCAL_HASURA}/v1/graphql`,
+    uri: `${protocol}//${hostname + port}/v1/graphql`,
     options: {
       reconnect: true,
       connectionParams: {
@@ -86,6 +98,9 @@ export function createApolloClient() {
         definition.operation === 'subscription'
       )
     },
+    // See this error:
+    // https://github.com/apollographql/apollo-link/issues/538#issuecomment-571839546
+    // @ts-ignore
     wsLink,
     httpLink
   )
