@@ -131,7 +131,7 @@ struct IndentedStyle: ButtonStyle {
     }
     
     var darkShadow: Color {
-        self.genColor(rgb, adjust: 0.5)
+        self.genColor(rgb, adjust: 0.55)
     }
     
     var lightShadow: Color {
@@ -140,7 +140,7 @@ struct IndentedStyle: ButtonStyle {
     
     func genColor(_ rgb: [Double], adjust: Double) -> Color {
         let diff = adjust > 1 ? adjust - 1 : 1 - adjust
-        let x = adjust + diff * (self.colorScheme == .light ? 0.4 : 1)
+        let x = adjust + diff * (self.colorScheme == .light ? 0.35 : 1)
         return Color(red: rgb[0] * x, green: rgb[1] * x, blue: rgb[2] * x)
     }
     

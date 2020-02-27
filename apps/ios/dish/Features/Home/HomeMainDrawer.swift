@@ -297,13 +297,13 @@ struct HomeContentExplore: View {
                             HomeContentPadBelow()
                         }
                     }
-                    .disabled(isDisabled)
-                    .allowsHitTesting(!isDisabled)
                     .frame(width: self.screen.width, alignment: .leading)
-                    .clipped()
                 }
             }
         }
+        .disabled(isDisabled)
+        .allowsHitTesting(!isDisabled)
+        .clipped()
     }
 }
 
