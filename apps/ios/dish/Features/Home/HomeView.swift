@@ -60,20 +60,14 @@ struct HomeViewInner: View {
 
                     // account page
                     DishAccount()
-                        .cornerRadiusSquircle(self.screen.cornerRadius)
-                        .clipped()
                         .zIndex(0)
 
                     // home page
                     HomeMainView()
-                        .cornerRadiusSquircle(self.screen.cornerRadius)
-                        .clipped()
                         .zIndex(2)
 
                     // camera page
                     DishCamera()
-                        .cornerRadiusSquircle(self.screen.cornerRadius)
-                        .clipped()
                         .zIndex(0)
             }
             .onChangeDrag { isDragging in
