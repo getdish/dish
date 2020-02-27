@@ -60,6 +60,7 @@ extension AppState {
     typealias SearchFocus = SearchFocusState
     
     struct HomeState: Equatable {
+        var showSplash = true
         var view: HomePageView = .home
         var viewStates: [HomeStateItem] = [HomeStateItem()]
         var filters: [FilterItem] = initialFilters
@@ -70,13 +71,13 @@ extension AppState {
         var searchFocus: SearchFocusState = .off
         var drawerPosition: BottomDrawerPosition = .middle
         var drawerIsDragging = false
-        var showCamera: Bool = false
         var showCuisineFilter: Bool = false
         var cuisineFilter: String = "🌍"
     }
 }
 
 enum HomeAction {
+    case hideSplash
     case setView(_ page: HomePageView)
     case navigateToRestaurant(_ val: RestaurantItem)
     case push(_ val: HomeStateItem)
@@ -109,6 +110,8 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     // switch
     
     switch action {
+        case .hideSplash:
+            state.home.showSplash = false
         case .setSelectedMarkers(let markers):
             var last = state.home.viewStates.last!
             last.searchResults = HomeSearchResults(
@@ -244,6 +247,10 @@ struct HomeStateItem: Identifiable, Equatable {
     
     var queryString: String {
         self.search + " " + self.dishes.map { $0.name }.joined(separator: " ")
+    }
+    
+    var isLoading: Bool {
+        self.searchResults.status == .failed
     }
 }
 

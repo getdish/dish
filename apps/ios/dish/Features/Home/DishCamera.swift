@@ -10,7 +10,7 @@ struct DishCamera: View {
     var isCaptured: Binding<Bool> {
         Binding<Bool>(
             get: {
-                if self.store.state.home.showCamera == false {
+                if self.store.state.home.view != .camera {
                     return true
                 } else {
                     return self.store.state.camera.didCapture
@@ -21,16 +21,12 @@ struct DishCamera: View {
     }
     
     var body: some View {
-        return ZStack {
-            VStack {
-                CameraView(
-                    isCaptured: self.isCaptured
-                )
-            }
-            .background(Color.black)
-            .frame(minWidth: App.screen.width, maxHeight: .infinity)
+        ZStack {
+            CameraView(
+                isCaptured: self.isCaptured
+            )
             
-            DishCameraPictureOverlay()
+            DishCameraPictureTakenOverlay()
 
             BottomSheetView(
                 isOpen: $isOpen,
@@ -40,15 +36,15 @@ struct DishCamera: View {
                 DishRestaurantDrawer()
             }
             
-            CameraBottomNav()
+            DishCameraControls()
         }
-        .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
+        .frameLimitedToScreen()
         .allowsHitTesting(self.store.state.home.view == .camera)
         .clipped()
     }
 }
 
-struct CameraBottomNav: View {
+struct DishCameraControls: View {
     @EnvironmentObject var screen: ScreenModel
 
     var body: some View {
@@ -56,17 +52,51 @@ struct CameraBottomNav: View {
             VStack {
                 Spacer()
                 HStack {
-                    CameraBackButton()
+                    DishCameraBackButton()
                     Spacer()
                 }
-                .padding(.horizontal, 30)
-                .padding(.bottom, screen.edgeInsets.bottom + 20)
+                
+                HStack {
+                    Spacer()
+                    DishCameraCaptureButton()
+                    Spacer()
+                }
             }
+            .padding(.horizontal, 30)
+            .padding(.bottom, screen.edgeInsets.bottom + 20)
         }
     }
 }
 
-struct CameraBackButton: View {
+struct DishCameraCaptureButton: View {
+    var body: some View {
+        VStack {
+            Color.clear
+        }
+            .background(
+                LinearGradient(
+                    gradient: Gradient(colors: [Color.black.opacity(0),
+                                                Color.black.opacity(0.3)]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
+            .frame(width: 80, height: 80)
+            .cornerRadius(80)
+            .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
+            .overlay(
+                RoundedRectangle(cornerRadius: 80)
+                    .stroke(Color.black.opacity(1), lineWidth: 2)
+                    .padding(2)
+        )
+            .overlay(
+                RoundedRectangle(cornerRadius: 80)
+                    .stroke(Color.white.opacity(1), lineWidth: 2)
+        )
+    }
+}
+
+struct DishCameraBackButton: View {
     @EnvironmentObject var store: AppStore
     
     var body: some View {
@@ -87,7 +117,7 @@ struct CameraBackButton: View {
     }
 }
 
-struct DishCameraPictureOverlay: View {
+struct DishCameraPictureTakenOverlay: View {
     var body: some View {
         print("Render camera picture overlay")
         return ZStack {

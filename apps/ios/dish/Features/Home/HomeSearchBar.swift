@@ -70,6 +70,9 @@ struct HomeSearchBar: View {
         let showSearchIcon = isOnHome || searchFocus == .search
         var iconSize: CGFloat = 20
         let icon: Image = {
+            if Selectors.home.lastState().isLoading {
+                return Image(systemName: "dots")
+            }
             if showSearchIcon {
                 return Image(systemName: "magnifyingglass")
             } else if searchFocus == .location {

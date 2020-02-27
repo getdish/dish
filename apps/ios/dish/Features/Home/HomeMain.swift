@@ -57,7 +57,7 @@ struct HomeMainView: View {
                                     )
                                     .animation(.spring(response: 0.65))
                             }
-                            .opacity(animationState == .splash ? 0 : 1)
+                            .opacity(self.store.state.home.showSplash ? 0 : 1)
                         }
                         .frameLimitedToScreen()
                     }

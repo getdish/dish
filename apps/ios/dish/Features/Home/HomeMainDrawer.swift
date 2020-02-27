@@ -124,12 +124,17 @@ struct HomeMainDrawerContent: View {
                     onSwipeBack: self.onSwipeBack,
                     viewState: viewState
                 )
+                .equatable()
             }
         }
     }
 }
 
-struct HomeScreen: View, Identifiable {
+struct HomeScreen: View, Identifiable, Equatable {
+    static func == (l: Self, r: Self) -> Bool {
+        l.id == r.id && l.index == r.index && l.isActive == r.isActive && l.isLast == r.isLast
+    }
+    
     @EnvironmentObject var screen: ScreenModel
     @State var dragX: CGFloat = 0
     

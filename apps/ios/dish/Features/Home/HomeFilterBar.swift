@@ -58,6 +58,7 @@ struct HomeMainFilterBar: View, Equatable {
                 .drawingGroup()
             }
         }
+        .animation(.none)
         .frame(height: App.filterBarHeight)
     }
 }
@@ -67,14 +68,6 @@ struct SegmentedItem: Equatable {
     var isMiddle = false
     var isLast = false
 }
-
-//struct GroupingPreferenceKey: PreferenceKey {
-//    typealias Value = GroupingPreference
-//    static var defaultValue: GroupingPreference = GroupingPreference()
-//    static func reduce(value: inout GroupingPreference, nextValue: () -> GroupingPreference) {
-//        value = nextValue()
-//    }
-//}
 
 struct FilterGroupView: View {
     var group: [FilterItem]
@@ -96,8 +89,7 @@ struct FilterGroupView: View {
     }
 
     var body: some View {
-        print("filterbar \(self.isExpanded) \(self.expandedWidth)")
-        return Group {
+        Group {
             if self.group[0].stack {
                 ZStack {
                     ForEach(0 ..< self.group.count) { index in
@@ -150,6 +142,7 @@ struct FilterGroupView: View {
             }
             .opacity(isExpanded || index == 0 ? 1 : 0)
             .offset(x: xOffset)
+            .animation(.spring(response: 0.3))
             .zIndex(Double(self.group.count - index))
             .environment(\.itemSegment, itemSegment)
     }
