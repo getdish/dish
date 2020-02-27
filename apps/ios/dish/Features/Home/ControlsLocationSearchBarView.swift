@@ -22,6 +22,15 @@ struct ControlsLocationSearchBarView: View {
         }
     }
     
+    private class TextFieldObserver: NSObject {
+        @objc
+        func textFieldDidBeginEditing(_ textField: UITextField) {
+            textField.selectAll(nil)
+        }
+    }
+    
+     private let textFieldObserver = TextFieldObserver()
+    
     var body: some View {
         HStack {
             HStack {
@@ -31,6 +40,7 @@ struct ControlsLocationSearchBarView: View {
                             async {
                                 self.isFocused = isEditing
                             }
+                            
                             if isEditing {
                                 App.store.send(.home(.setSearchFocus(.location)))
                             } else {
@@ -51,6 +61,12 @@ struct ControlsLocationSearchBarView: View {
                 })
                     .introspectTextField { next in
                         self.textField = next
+                        
+                        next.addTarget(
+                            self.textFieldObserver,
+                            action: #selector(TextFieldObserver.textFieldDidBeginEditing),
+                            for: .editingDidBegin
+                        )
                     }
                 
                 Spacer()
