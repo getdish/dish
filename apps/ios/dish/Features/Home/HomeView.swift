@@ -5,18 +5,13 @@ struct HomeView: View {
     @State private var sideDrawerShown = false
     
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                HomeViewInner(
-                    width: geometry.size.width,
-                    height: geometry.size.height
-                )
-            }
+        HomeViewInner()
+            .equatable()
             .background(
                 self.colorScheme == .light ? Color.white : Color.black.opacity(0.8)
             )
-        }
-        .embedInGeometryReader()
+            .frameLimitedToScreen()
+            .embedInGeometryReader()
     }
 }
 
@@ -27,9 +22,9 @@ let homePager = PagerStore(
 
 fileprivate let homeViewsIndex: [HomePageView] = [.me, .home, .camera]
 
-struct HomeViewInner: View {
-    var width: CGFloat = 0
-    var height: CGFloat = 0
+struct HomeViewInner: View, Equatable {
+    static func == (l: Self, r: Self) -> Bool { true }
+    
     @EnvironmentObject var store: AppStore
     @EnvironmentObject var screen: ScreenModel
     @State var disableDragging = true
@@ -45,7 +40,6 @@ struct HomeViewInner: View {
             
             PrintGeometryView("HomeView")
             
-            HomeMainView()
             PagerView(
                 pageCount: homePageCount,
                 pagerStore: homePager,
@@ -56,8 +50,6 @@ struct HomeViewInner: View {
                     //    ADDING .clipped() to any of these causes perf issues!!!
                     //    animations below seem to be choppier
                     // ⚠️ ⚠️ ⚠️
-                    //
-
                     // account page
                     DishAccount()
                         .zIndex(0)
@@ -85,7 +77,7 @@ struct HomeViewInner: View {
                 DragGesture()
                     .onChanged { value in
                         if homeViewState.dragState == .searchbar { return }
-                        let isOnRightEdge = self.width - value.startLocation.x < 10
+                        let isOnRightEdge = self.screen.width - value.startLocation.x < 10
                         let isOnLeftEdge = value.startLocation.x < 10
                         if isOnRightEdge || isOnLeftEdge {
                             if abs(value.translation.width) > 10 {
@@ -102,7 +94,6 @@ struct HomeViewInner: View {
                 }
             )
         }
-        .frame(maxHeight: self.height)
     }
 }
 

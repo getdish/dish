@@ -5,17 +5,17 @@ struct RootView: View {
     @Environment(\.geometry) var appGeometry
 
     func start() {
-        async(1000) {
-            self.store.send(.home(.hideSplash))
-            async(200) {
-                self.store.send(.home(.setAppLoaded))
+        async(3000) {
+            self.store.send(.hideSplash)
+            async(500) {
+                self.store.send(.setAppLoaded)
             }
         }
     }
     
     var body: some View {
-        let size: CGFloat = self.store.state.home.appLoaded
-            ? 500
+        let size: CGFloat = self.store.state.showSplash
+            ? 1000
             : 0
         
         return ZStack {
@@ -27,6 +27,14 @@ struct RootView: View {
                 HomeView()
                 PrintGeometryView("RootView")
             }
+            
+            Color.red
+                .opacity(0.25)
+                .frame(width: size, height: size)
+                .cornerRadius(1000)
+                .animation(.spring())
+                .frameLimitedToScreen()
+                .clipped()
             
 //            Circle()
 //                .frame(width: size, height: size)

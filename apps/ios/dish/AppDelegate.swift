@@ -76,11 +76,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        GMSPlacesClient.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")
 
         App.start()
-        
-        // hide splash
-        async(100) {
-            App.store.send(.home(.hideSplash))
-        }
 
         // Override point for customization after application launch.
         return true

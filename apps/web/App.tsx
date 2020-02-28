@@ -12,7 +12,6 @@ export default function App() {
     <ApolloProvider client={ModelBase.client}>
       <Provider value={om}>
         <View style={styles.container}>
-          <Text>Open up App.tsx to start working on your app!</Text>
           <LabDishes />
         </View>
       </Provider>

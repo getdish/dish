@@ -186,7 +186,7 @@ struct BottomDrawer<Content: View>: View {
     var gesture: _EndedGesture<GestureStateGesture<DragGesture, DragState>> {
         DragGesture(minimumDistance: self.position == .top ? 15 : self.position == .middle ? 15 : 8)
             .updating($dragState) { drag, state, transaction in
-                print("BottomDrawer.drag self.lock \(self.lock) targetLock \(mainContentScrollState.scrollTargetLock)")
+//                print("BottomDrawer.drag self.lock \(self.lock) targetLock \(mainContentScrollState.scrollTargetLock)")
                 
                 // avoid conflicting drags
                 if mainContentScrollState.scrollTargetLock == .drawer && self.lock != .drawer ||

@@ -6,6 +6,8 @@ struct AppState {
     var map = MapState()
     var camera = CameraState()
     var debugShowMap = 0
+    var appLoaded = false
+    var showSplash = true
 }
 
 // action
@@ -14,6 +16,8 @@ enum AppAction {
     case map(_ action: MapAction)
     case camera(_ action: CameraAction)
     case setDebugShowMap(_ val: Int)
+    case setAppLoaded
+    case hideSplash
 }
 
 // select
@@ -35,6 +39,10 @@ func appReducer(state: inout AppState, action: AppAction) {
             cameraReducer(&state, action: action)
         case let .setDebugShowMap(val):
             state.debugShowMap = val
+        case .setAppLoaded:
+            state.appLoaded = true
+        case .hideSplash:
+            state.showSplash = false
     }
 }
 

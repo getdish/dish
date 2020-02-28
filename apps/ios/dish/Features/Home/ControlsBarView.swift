@@ -31,6 +31,7 @@ struct ControlsBar: View, Equatable {
     
     var accountButton: some View {
         Button(action: {
+            App.store.send(.home(.setView(.me)))
         }) {
             Image(systemName: "person.fill")
                 .resizable()

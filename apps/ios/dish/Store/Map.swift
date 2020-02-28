@@ -33,6 +33,12 @@ func mapReducer(_ state: inout AppState, action: MapAction) {
             state.map.moveToLocation = .init(center: .current, radius: state.map.location?.radius ?? 10000, refresh: true)
         case let .moveToLocation(loc):
             state.map.moveToLocation = loc
+            // we track if they have moved off center or not
+            if loc.center == .current {
+                state.map.hasChangedOnce = false
+            } else {
+                state.map.hasChangedOnce = true
+            }
         case let .setLastKnown(location):
             state.map.lastKnown = location
     }

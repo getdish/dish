@@ -114,7 +114,6 @@ struct HomeMainDrawerContent: View {
 
     var body: some View {
         let viewStates = self.store.state.home.viewStates
-        print("viewStates \(viewStates.count)")
         return ZStack {
             ForEach(viewStates, id: \.id) { viewState in
                 HomeScreen(
@@ -183,6 +182,7 @@ struct HomeScreen: View, Identifiable, Equatable {
                 }
             }
         }
+        .frameLimitedToScreen()
     }
 }
 
@@ -295,8 +295,10 @@ struct HomeContentExplore: View {
                         
                         VStack(spacing: 0) {
                             HomeContentPadAbove()
+                            
                             self.titleView
-                            ForEach(0..<(self.store.state.home.appLoaded ? self.dishes.count : 5)) { index in
+                            
+                            ForEach(0..<(self.store.state.appLoaded ? self.dishes.count : 5)) { index in
                                 DishListItem(
                                     number: index + 1,
                                     dish: self.dishes[index]
@@ -305,6 +307,9 @@ struct HomeContentExplore: View {
                                     .transition(.slide)
                                     .animation(.ripple(index: index))
                             }
+                            .id(self.store.state.appLoaded ? "0" : "1")
+                            
+                            
                             HomeContentPadBelow()
                         }
                     }

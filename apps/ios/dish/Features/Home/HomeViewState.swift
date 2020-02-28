@@ -63,10 +63,6 @@ class HomeViewState: ObservableObject {
         }.store(in: &cancels)
     }
     
-    var mapFullHeight: CGFloat {
-        appHeight * 1.5
-    }
-    
     var scrollRevealY: CGFloat {
         if hasScrolled == .more {
             // TODO if you want to have it "reveal" more on scroll
@@ -133,11 +129,6 @@ class HomeViewState: ObservableObject {
         if y != scrollState.scrollY {
             self.scrollState.setScrollY(y)
         }
-    }
-    
-    func setAppHeight(_ val: CGFloat) {
-        logger.info()
-        self.appHeight = val
     }
     
     // this updates often and doesnt need to update parent views

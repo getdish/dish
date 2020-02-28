@@ -4,6 +4,7 @@ import { ModelBase, Taxonomy, TaxonomyRecord, TaxonomyType } from '@dish/models'
 import { View, Text, Button, TextInput, TouchableNativeFeedback } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons';
+import Tappable from "../../views/Tappable";
 
 const CONTINENTS_SUBSCRIPTION = gql`
 subscription Taxonomy {
@@ -250,8 +251,8 @@ const ListItem = ({
     //   name={isActive ? 'selected' : null}
     //   coat={isFormerlyActive ? 'selectedInactive' : null}
     // >
-      <Row
-        onPress={() => {
+      <Tappable
+        onTap={() => {
           setTimeout(() => {
             if (!isActive) {
               if (setActive && typeof row == 'number') {
@@ -260,54 +261,56 @@ const ListItem = ({
             }
           })
         }}
-        // onDoubleClick={() => {
-        //   if (editable) {
-        //     setIsEditing(true)
-        //   }
-        // }}
+        onDoubleTap={() => {
+            if (editable) {
+              setIsEditing(true)
+            }
+          }}
       >
-        <Row size={1}>
-          {isEditing && (
-            <TextInput
-              // onEnter={e => {
-              //   setIsEditing(false)
-              //   const [icon, ...nameParts] = e.target['value'].split(' ')
-              //   const name = nameParts.join(' ')
-              //   const next: TaxonomyRecord = {
-              //     ...taxonomy,
-              //     icon,
-              //     name,
-              //   }
-              //   console.log('next is', next)
-              //   upsert(next)
-              // }}
-              defaultValue={text as any}
-            />
-          )}
-          {!isEditing && <Text>{text}</Text>}
+        <Row>
+          <Row size={1}>
+            {isEditing && (
+              <TextInput
+                // onEnter={e => {
+                //   setIsEditing(false)
+                //   const [icon, ...nameParts] = e.target['value'].split(' ')
+                //   const name = nameParts.join(' ')
+                //   const next: TaxonomyRecord = {
+                //     ...taxonomy,
+                //     icon,
+                //     name,
+                //   }
+                //   console.log('next is', next)
+                //   upsert(next)
+                // }}
+                defaultValue={text as any}
+              />
+            )}
+            {!isEditing && <Text>{text}</Text>}
 
-          <div style={{ flex: 1 }} />
+            <div style={{ flex: 1 }} />
 
-          {deletable && (
-            <TouchableNativeFeedback
-              onPress={e => {
-                e.stopPropagation()
-                setHidden(true)
-                ModelBase.client.mutate({
-                  variables: {
-                    id: taxonomy.id,
-                  },
-                  mutation: TAXONOMY_DELETE,
-                })
-              }}
-            >
-                <Ionicons
-                  name="md-checkmark-circle"
-                />
-            </TouchableNativeFeedback>
-          )}
+            {deletable && (
+              <TouchableNativeFeedback
+                onPress={e => {
+                  e.stopPropagation()
+                  setHidden(true)
+                  ModelBase.client.mutate({
+                    variables: {
+                      id: taxonomy.id,
+                    },
+                    mutation: TAXONOMY_DELETE,
+                  })
+                }}
+              >
+                  <Ionicons
+                    name="md-checkmark-circle"
+                  />
+              </TouchableNativeFeedback>
+            )}
+          </Row>
         </Row>
-      </Row>
+      </Tappable>
     // </Theme>
   )
 }

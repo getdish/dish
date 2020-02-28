@@ -21,6 +21,7 @@ struct DishMapViewContainer: View {
             VStack {
                 ZStack(alignment: .topLeading) {
                     DishMapView(
+                        animated: store.state.appLoaded,
                         currentLocation: store.state.map.moveToLocation,
                         markers: markers
                     )
@@ -52,6 +53,7 @@ struct DishMapView: View {
     @State var mapZoom = 10.0
     @State var cancellables: Set<AnyCancellable> = []
 
+    var animated: Bool
     var currentLocation: MapViewLocation?
     var markers: [MapMarker]
     
@@ -76,6 +78,7 @@ struct DishMapView: View {
             }
             
             AppleMapView(
+                animated: self.animated,
                 currentLocation: currentLocation,
                 markers: self.markers,
                 mapZoom: self.$mapZoom,

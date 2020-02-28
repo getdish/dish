@@ -24,10 +24,12 @@ class HomeService {
                 )
             }
             .removeDuplicates()
+            // for now dont run if no search query
+            .filter { $0.query != "" }
             .sink { val in
                 App.store.send(self.doSearch(val))
-        }
-        .store(in: &cancels)
+            }
+            .store(in: &cancels)
     }
     
     func getSearchResults(_ search: SearchQuery) -> Future<HomeStateItem.SearchResults, Never> {

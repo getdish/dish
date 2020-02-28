@@ -7,7 +7,6 @@ extension View {
                 .environmentObject(screen)
                 .overlay(
                     Color.clear.introspectViewController { controller in
-                        print("insets \(controller.view.safeAreaInsets)")
                         screen.edgeInsets = controller.view.safeAreaInsets
                     }
                 )

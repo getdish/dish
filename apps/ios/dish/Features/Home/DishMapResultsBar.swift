@@ -42,9 +42,13 @@ struct HomeMapExplore: View {
     @EnvironmentObject var store: AppStore
     @State var index: Int = 0
     
+    var id: String {
+        self.store.state.appLoaded ? "0" : "1"
+    }
+    
     
     var items: [DishItem] {
-        self.store.state.home.showSplash ? Array(features[0..<3]) : features
+        self.store.state.appLoaded ? features : Array(features[0..<3])
     }
 
     var body: some View {
@@ -54,6 +58,7 @@ struct HomeMapExplore: View {
                     MapResultDishCard(dish: item)
                         .equatable()
                 }
+                .id(self.id)
             }
             .padding(.vertical, 10)
             .padding(.horizontal, 20)

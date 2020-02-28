@@ -8,6 +8,7 @@ struct AppleMapView: UIViewRepresentable {
     private let mapView = MKMapView()
     
     // props
+    var animated: Bool = true
     var currentLocation: MapViewLocation? = nil
     var markers: [MapMarker]? = nil
     @Binding var mapZoom: Double
@@ -36,37 +37,32 @@ struct AppleMapView: UIViewRepresentable {
         var lastGeocodeTime: Date? = nil
         var lastMarkers: [MapMarker] = []
         var lastLocation: MapViewLocation = .init(center: .none)
+        var lastMapLocation: MapViewLocation = .init(center: .none)
         var locationManager = CLLocationManager()
         var parent: AppleMapView
         var zoomingIn = false
         var zoomingAnnotation: MKAnnotation? = nil
         var mapZoom: Double
+        var animated: Bool
         
         init(_ parent: AppleMapView) {
             self.parent = parent
             self.mapZoom = parent.mapView.zoomLevel()
+            self.animated = parent.animated
         }
         
         func updateProps(_ parent: AppleMapView) {
-            if self.mapView.bounds.width == 0 || self.mapView.bounds.height == 0 {
-                print("map not loaded yet or not visible")
-                return
-            }
-            
-            self.updateCurrentLocation(parent.currentLocation)
-            self.updateMarkers(parent.markers)
+            self.animated = parent.animated
             self.mapView.showsUserLocation = parent.showsUserLocation
             self.mapView.userLocation.title = nil
-            if parent.mapZoom != self.mapZoom {
-                print("AppleMapView setting zoom level to \(parent.mapZoom) from \(self.mapZoom)")
-                self.mapZoom = parent.mapZoom
-                let center = self.getCurrentCenter() ?? mapView.centerCoordinate
-                self.mapView.setCenterCoordinate(
-                    centerCoordinate: center,
-                    zoomLevel: parent.mapZoom,
-                    animated: true
-                )
+
+            if self.mapView.bounds.width == 0 || self.mapView.bounds.height == 0 {
+                // map not loaded yet
+                return
             }
+
+            self.updateMarkers(parent.markers)
+            self.updateCurrentLocation(parent.currentLocation)
         }
         
         func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
@@ -104,7 +100,10 @@ struct AppleMapView: UIViewRepresentable {
                     // why * x? - idk but its not matching, may be related to that we make map view 1.6x taller than screen?
                     radius: mapView.currentRadius() * 0.575
                 )
-                cb(location)
+                if location != self.lastLocation {
+                    self.lastLocation = location
+                    cb(location)
+                }
             }
         }
         
@@ -166,14 +165,14 @@ struct AppleMapView: UIViewRepresentable {
             guard let newLocation = userLocation.location else { return }
             
             let currentTime = Date()
-            let lastLocation = self.currentLocation
+            let lastMapLocation = self.currentLocation
             self.currentLocation = newLocation
             
             // Only get new placemark information if you don't have a previous location,
             // if the user has moved a meaningful distance from the previous location, such as 1000 meters,
             // and if it's been 60 seconds since the last geocode request.
-            if let lastLocation = lastLocation,
-                newLocation.distance(from: lastLocation) <= 1000,
+            if let lastMapLocation = lastMapLocation,
+                newLocation.distance(from: lastMapLocation) <= 1000,
                 let lastTime = lastGeocodeTime,
                 currentTime.timeIntervalSince(lastTime) < 60 {
                 return
@@ -270,21 +269,17 @@ struct AppleMapView: UIViewRepresentable {
         }
         
         func updateCurrentLocation(_ location: MapViewLocation?) {
-            guard let location = location else {
+            guard let location = location else { return }
+            if self.lastMapLocation == location && self.mapZoom == parent.mapZoom {
                 return
             }
-            if self.lastLocation == location {
-                return
-            }
-            self.lastLocation = location
-            if let center = self.getCurrentCenter(location) {
-                let coordinateRegion = MKCoordinateRegion(
-                    center: center,
-                    latitudinalMeters: mapView.currentRadius(),
-                    longitudinalMeters: mapView.currentRadius()
-                )
-                mapView.setRegion(coordinateRegion, animated: true)
-            }
+            self.lastMapLocation = location
+            self.mapZoom = parent.mapZoom
+            self.mapView.setCenterCoordinate(
+                centerCoordinate: self.getCurrentCenter() ?? mapView.centerCoordinate,
+                zoomLevel: self.mapZoom,
+                animated: self.animated
+            )
         }
     }
 }

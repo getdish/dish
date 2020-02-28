@@ -21,20 +21,18 @@ struct HomeMainView: View {
         }
     }
     
+    var mapFullHeight: CGFloat {
+        self.screen.height * 1.5
+    }
+    
     @State var lastSearchFocus: SearchFocusState = .off
 
     var body: some View {
         let state = self.state
-        let animationState = state.animationState
         let showMapRow = self.store.state.home.drawerPosition == .bottom
             && !self.store.state.home.drawerIsDragging
 
         return ZStack(alignment: .topLeading) {
-            SideEffect("sideeffects", condition: { self.appGeometry?.size.height != self.state.appHeight }) {
-                if let height = self.appGeometry?.size.height {
-                    self.state.setAppHeight(height)
-                }
-            }
             RunOnce(name: "start") { self.start() }
             PrintGeometryView("HomeMainView")
             
@@ -49,7 +47,7 @@ struct HomeMainView: View {
                                 DishMapViewContainer()
                                     .offset(y:
                                         // centered
-                                        (self.screen.height - state.mapFullHeight) * 0.5
+                                        (self.screen.height - self.mapFullHeight) * 0.5
                                         // move with drawer (but just a bit less than half because when fully open, we show a bottom results drawer)
                                         + (state.y - App.drawerSnapPoints[1]) * 0.4
                                         // subtract just a bit because LenseBar is taller than TopNav
@@ -57,24 +55,24 @@ struct HomeMainView: View {
                                     )
                                     .animation(.spring(response: 0.65))
                             }
-                            .opacity(self.store.state.home.showSplash ? 0 : 1)
+                            .opacity(self.store.state.showSplash ? 0 : 1)
                         }
-                        .frameLimitedToScreen()
                     }
                     
+                    // below drawer
                     VStack {
                         DishMapResultsBar()
                         Spacer()
                     }
-                        .offset(y: App.drawerSnapPoints[2] + (
-                            showMapRow
-                                ? -App.mapBarHeight - 68
-                                : 0
+                    .offset(y: App.drawerSnapPoints[2] + (
+                        showMapRow
+                            ? -App.mapBarHeight - 68
+                            : 0
                         ))
                         .opacity(showMapRow ? 1 : 0)
                         .animation(.spring(response: 1))
                         .disabled(!showMapRow)
-
+                    
                     VStack(spacing: 0) {
                         DishLenseFilterBar()
                         Spacer()
@@ -89,7 +87,7 @@ struct HomeMainView: View {
                     
                     HomeMainDrawer()
                         .equatable()
-
+                    
                     DishCuisineFilterPopup(
                         active: self.store.state.home.showCuisineFilter
                     )
