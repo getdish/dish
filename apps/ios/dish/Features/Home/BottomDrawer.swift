@@ -53,6 +53,7 @@ struct BottomDrawer<Content: View>: View {
   @State var lock: Lock = .idle
   @State var isMounting = true
   @State var ignoreInitialDrags = 0
+  @State var shouldAnimate = false
 
   var background: Color?
   var content: Content
@@ -179,10 +180,8 @@ struct BottomDrawer<Content: View>: View {
       .offset(y: self.draggedPositionY)
       .onGeometryFrameChange(self.onGeometryFrameChange)
       .animation(
-        self.dragState.isDragging
-          ? nil
-          : .interpolatingSpring(
-            mass: self.mass, stiffness: 90.0, damping: 25.0, initialVelocity: 0)
+        self.dragState.isDragging && !self.shouldAnimate ? nil
+          : .interpolatingSpring(mass: self.mass, stiffness: 120.0, damping: 20.0, initialVelocity: 0)
       )
       .gesture(
         DragGesture(minimumDistance: self.position == .top ? 15 : self.position == .middle ? 15 : 8)
@@ -193,6 +192,8 @@ struct BottomDrawer<Content: View>: View {
 
       )
   }
+  
+  @State var dragOngoing = false
 
   func onUpdateDrag(
     _ drag: DragGesture.Value, state: inout DragState, transaction: inout Transaction
@@ -205,6 +206,18 @@ struct BottomDrawer<Content: View>: View {
     {
       return
     }
+    
+    if dragOngoing == false {
+      async {
+        self.dragOngoing = true
+        // one time actions
+        self.shouldAnimate = true
+        async(50) {
+          self.shouldAnimate = false
+        }
+      }
+    }
+    
 
     if self.lock != .drawer {
       if App.store.state.home.drawerPosition != .bottom {
@@ -279,9 +292,10 @@ struct BottomDrawer<Content: View>: View {
   }
 
   func finishDrag(_ throwAmount: CGFloat, currentY: CGFloat) {
+    self.dragOngoing = false
     self.externalDragY = 0
 
-    let predictedEnd = currentY + throwAmount * 0.66
+    let predictedEnd = currentY + throwAmount * 0.45
     let cardTopEdgeLocation = currentY
     let positionAbove: BottomDrawerPosition
     let positionBelow: BottomDrawerPosition
@@ -331,7 +345,10 @@ struct BottomDrawer<Content: View>: View {
 
     // makes the animation speed match the throw velocity
     self.mass = 2.65 - max(1, (max(1, min(100, Double(abs(throwAmount)))) / 50))
+    
     self.lock = .idle
+    
+    // callbacks
     if let cb = self.onDragState { cb(self.dragState) }
     self.afterChangePosition()
   }
