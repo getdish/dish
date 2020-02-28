@@ -5,7 +5,7 @@ enum BottomDrawerPosition {
     case top, middle, bottom
 }
 
-enum DragState {
+enum DragState: Equatable {
     case inactive
     case dragging(translation: CGSize)
     
@@ -136,13 +136,6 @@ struct BottomDrawer<Content: View>: View {
         .store(in: &self.cancellables)
     }
     
-    func updateStore() {
-        //        let next = BottomDrawerStore.PositionState(controlledBy: .inside, y: self.draggedPositionY)
-        //        if bottomDrawerStore.positionY != next {
-        //            bottomDrawerStore.positionY = next
-        //        }
-    }
-    
     var body: some View {
         let screenHeight = screen.height
         let belowHeight = self.dragState.isDragging
@@ -235,7 +228,6 @@ struct BottomDrawer<Content: View>: View {
                     }
                     let wasDragging = self.dragState.isDragging
                     state = .dragging(translation: drag.translation)
-                    self.updateStore()
                     if !wasDragging {
                         if let cb = self.onDragState { cb(state) }
                     }
@@ -314,8 +306,6 @@ struct BottomDrawer<Content: View>: View {
     }
     
     private func afterChangePosition() {
-        self.updateStore()
-        
         async {
             if let cb = self.onChangePosition {
                 cb(self.position, self.draggedPositionY)
