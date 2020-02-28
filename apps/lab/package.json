@@ -25,7 +25,8 @@
   "eslintConfig": {
     "extends": "react-app",
     "rules": {
-      "react-hooks/rules-of-hooks": "off"
+      "react-hooks/rules-of-hooks": "off",
+      "jsx-a11y/anchor-is-valid": "off"
     }
   },
   "scripts": {

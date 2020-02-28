@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { Button, Input, Image, Form } from '@o/ui'
+// import { Button, Input, Image, Form } from '@o/ui'
 import { useOvermind } from '../overmind'
 import logo from '../assets/dish-brandmark-200.png'
 
@@ -50,7 +50,7 @@ export const LabAuth = () => {
   }
 
   const button = (
-    <Button
+    <button
       type="submit"
       onClick={async () => {
         if (isLogin) {
@@ -69,7 +69,7 @@ export const LabAuth = () => {
       }}
     >
       {button_text()}
-    </Button>
+    </button>
   )
 
   const messages = () => {
@@ -80,28 +80,24 @@ export const LabAuth = () => {
   }
   return (
     <div className="login-box">
-      <Image src={logo} />
-      <Form>
-        <Input
+      <img alt="" src={logo} />
+      <form>
+        <input
           id="username"
           placeholder="username"
           value={username}
-          onChange={event =>
-            setUsername((event.target as HTMLTextAreaElement).value)
-          }
+          onChange={event => setUsername(event.target.value)}
         />
-        <Input
+        <input
           id="password"
           value={password}
           placeholder="password"
           type="password"
-          onChange={event =>
-            setPassword((event.target as HTMLTextAreaElement).value)
-          }
+          onChange={event => setPassword(event.target.value)}
         />
         {button}
         {or_swap}
-      </Form>
+      </form>
       {messages()}
     </div>
   )
