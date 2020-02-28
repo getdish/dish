@@ -18,7 +18,8 @@
     "build": "tsc -b",
     "build:watch": "tsc -b -w --preserveWatchOutput",
     "test": "ava",
-    "clean": "bin/clean.sh"
+    "clean": "bin/clean.sh",
+    "format": "swift-format --recursive --in-place ./apps/ios/dish"
   },
   "devDependencies": {
     "@types/node": "^13.7.4",
