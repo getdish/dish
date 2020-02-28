@@ -42,7 +42,7 @@ let bottomDrawerStore = BottomDrawerStore()
 
 struct BottomDrawer<Content: View>: View {
     typealias OnChangePositionCB = (BottomDrawerPosition, CGFloat) -> Void
-    enum Lock { case drawer, content, filters }
+    enum Lock { case idle, drawer, content, filters }
 
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var screen: ScreenModel
@@ -50,8 +50,9 @@ struct BottomDrawer<Content: View>: View {
     @State var mass: Double = 1.5
     @State var cancellables: Set<AnyCancellable> = []
     @State var externalDragY: CGFloat = 0
-    @State var lock: Lock = .drawer
+    @State var lock: Lock = .idle
     @State var isMounting = true
+    @State var ignoreInitialDrags = 0
     
     var background: Color?
     var content: Content
@@ -112,7 +113,7 @@ struct BottomDrawer<Content: View>: View {
         async(10) {
             self.afterChangePosition()
         }
-        async(2000) {
+        async(200) {
             self.isMounting = false
         }
         
@@ -120,14 +121,17 @@ struct BottomDrawer<Content: View>: View {
             .dropFirst()
             .sink { y in
                 self.externalDragY = y
-        }
-        .store(in: &self.cancellables)
+            }
+            .store(in: &self.cancellables)
         
         bottomDrawerStore.$endPan
             .dropFirst()
             .debounce(for: .milliseconds(16), scheduler: App.queueMain)
             .compactMap { $0 }
             .sink { val in
+                self.ignoreInitialDrags = 0
+                self.lock = .idle
+                
                 switch val {
                     case .velocity(let speed):
                         self.finishDrag(speed.y, currentY: self.draggedPositionY)
@@ -143,9 +147,7 @@ struct BottomDrawer<Content: View>: View {
             : max(0, screenHeight - (screenHeight - getSnapPoint(self.position)))
         
         return ZStack {
-            Color.clear.onAppear {
-                self.start()
-            }
+            Color.clear.onAppear(perform: self.start)
             
             VStack {
                 RoundedRectangle(cornerRadius: 5)
@@ -219,7 +221,23 @@ struct BottomDrawer<Content: View>: View {
                 let h = drag.translation.height
                 let validDrag = h > 8 || h < -8
                 if validDrag {
+                    print("BottomDrawer try \(self.lock) \(self.ignoreInitialDrags)")
                     if self.lock != .drawer {
+                        // fix bug where it was catching both scrollview + bottomdrawer on fast drags
+                        if self.ignoreInitialDrags < 2 {
+                            async {
+                                self.ignoreInitialDrags += 1
+                                let cur = self.ignoreInitialDrags
+                                async(50) {
+                                    if self.ignoreInitialDrags == cur {
+                                        // hasnt dragged, lets reset its likely happening in scrollview
+                                        self.ignoreInitialDrags = 0
+                                    }
+                                }
+                            }
+                            return
+                        }
+                        
                         async {
                             self.lock = .drawer
                             // todo bad state sync
@@ -227,6 +245,7 @@ struct BottomDrawer<Content: View>: View {
                         }
                     }
                     let wasDragging = self.dragState.isDragging
+                    print("🙈 BottomDrawer.setDragState")
                     state = .dragging(translation: drag.translation)
                     if !wasDragging {
                         if let cb = self.onDragState { cb(state) }
@@ -242,6 +261,7 @@ struct BottomDrawer<Content: View>: View {
     }
     
     private func onDragEnded(drag: DragGesture.Value) {
+        self.ignoreInitialDrags = 0
         // todo bad state sync
         if self.lock == .drawer {
             mainContentScrollState.scrollTargetLock = .idle
@@ -300,7 +320,7 @@ struct BottomDrawer<Content: View>: View {
         
         // makes the animation speed match the throw velocity
         self.mass = 2.65 - max(1, (max(1, min(100, Double(abs(throwAmount)))) / 50))
-        self.lock = .drawer
+        self.lock = .idle
         if let cb = self.onDragState { cb(self.dragState) }
         self.afterChangePosition()
     }

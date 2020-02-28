@@ -265,7 +265,6 @@ struct HomeContentExplore: View {
     var body: some View {
         let isDisabled = self.store.state.home.drawerIsDragging
 
-        //        self.listView
         return Group {
             ZStack {
                 Color.clear.onAppear {
@@ -342,6 +341,7 @@ class ScrollState: NSObject, ObservableObject, UIScrollViewDelegate, UIGestureRe
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        print("🙈 scrollViewWillBeginDragging")
         self.scrollInitialY = scrollView.contentOffset.y
         scrollView.bounces = !isAbleToPullDrawer
     }
