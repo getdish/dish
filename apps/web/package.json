@@ -13,7 +13,8 @@
     "web": "expo start --web",
     "start": "react-native start",
     "test": "jest",
-    "postinstall": "rm -r node_modules/@apollo/client/node_modules/react || true"
+    "postinstall": "rm -r node_modules/@apollo/client/node_modules/react || true",
+    "build": "true"
   },
   "dependencies": {
     "expo": "36.0.0",

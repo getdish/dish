@@ -34,17 +34,7 @@ public final class SearchRestaurantsQuery: GraphQLQuery {
     public static let possibleTypes = ["query_root"]
 
     public static let selections: [GraphQLSelection] = [
-      GraphQLField(
-        "restaurant",
-        arguments: [
-          "where": [
-            "location": [
-              "_st_d_within": [
-                "distance": GraphQLVariable("radius"), "from": GraphQLVariable("geo")
-              ]
-            ]
-          ], "limit": 30
-        ], type: .nonNull(.list(.nonNull(.object(Restaurant.selections))))),
+      GraphQLField("restaurant", arguments: ["where": ["location": ["_st_d_within": ["distance": GraphQLVariable("radius"), "from": GraphQLVariable("geo")]]], "limit": 30], type: .nonNull(.list(.nonNull(.object(Restaurant.selections))))),
     ]
 
     public private(set) var resultMap: ResultMap
@@ -54,23 +44,16 @@ public final class SearchRestaurantsQuery: GraphQLQuery {
     }
 
     public init(restaurant: [Restaurant]) {
-      self.init(unsafeResultMap: [
-        "__typename": "query_root",
-        "restaurant": restaurant.map { (value: Restaurant) -> ResultMap in value.resultMap },
-      ])
+      self.init(unsafeResultMap: ["__typename": "query_root", "restaurant": restaurant.map { (value: Restaurant) -> ResultMap in value.resultMap }])
     }
 
     /// fetch data from the table: "restaurant"
     public var restaurant: [Restaurant] {
       get {
-        return (resultMap["restaurant"] as! [ResultMap]).map { (value: ResultMap) -> Restaurant in
-          Restaurant(unsafeResultMap: value)
-        }
+        return (resultMap["restaurant"] as! [ResultMap]).map { (value: ResultMap) -> Restaurant in Restaurant(unsafeResultMap: value) }
       }
       set {
-        resultMap.updateValue(
-          newValue.map { (value: Restaurant) -> ResultMap in value.resultMap }, forKey: "restaurant"
-        )
+        resultMap.updateValue(newValue.map { (value: Restaurant) -> ResultMap in value.resultMap }, forKey: "restaurant")
       }
     }
 
