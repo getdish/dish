@@ -1,14 +1,17 @@
 import {
   ApolloClient,
+  ApolloLink,
   gql,
   HttpLink,
   InMemoryCache,
   split,
+  NormalizedCacheObject,
 } from '@apollo/client'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { WebSocketLink } from '@apollo/link-ws'
 import axios, { AxiosRequestConfig } from 'axios'
 import { EnumType, jsonToGraphQLQuery } from 'json-to-graphql-query'
+import auth from '@dish/auth'
 
 const isNode = typeof window == 'undefined'
 let WebSocket: WebSocket
@@ -25,8 +28,7 @@ export type Point = {
   coordinates: [number, number]
 }
 
-const LOCAL_HASURA = 'hasura.rio.dishapp.com' || 'localhost:8080'
-const LOCAL_HASURA_HTTP = `https://${LOCAL_HASURA}`
+const LOCAL_HASURA = `http://localhost:8080`
 
 let DOMAIN: string
 
@@ -34,16 +36,16 @@ if (typeof window === 'undefined') {
   DOMAIN =
     process.env.HASURA_ENDPOINT ||
     process.env.REACT_APP_HASURA_ENDPOINT ||
-    LOCAL_HASURA_HTTP
+    LOCAL_HASURA
 } else {
   if (window.location.hostname.includes('dish')) {
-    DOMAIN = 'hasura.rio.dishapp.com'
+    DOMAIN = 'https://hasura.rio.dishapp.com'
   } else {
-    DOMAIN = process.env.REACT_APP_HASURA_ENDPOINT || LOCAL_HASURA_HTTP
+    DOMAIN = process.env.REACT_APP_HASURA_ENDPOINT || LOCAL_HASURA
   }
 }
 
-const AXIOS_CONF = {
+let AXIOS_CONF = {
   url: DOMAIN + '/v1/graphql',
   method: 'POST',
   data: {
@@ -51,42 +53,67 @@ const AXIOS_CONF = {
   },
 } as AxiosRequestConfig
 
-const httpLink = new HttpLink({
-  uri: DOMAIN + '/v1/graphql',
-  fetch,
-})
+let apollo_client: ApolloClient<NormalizedCacheObject>
 
-const wsLink = new WebSocketLink({
-  uri: `ws://${LOCAL_HASURA}/v1/graphql`,
-  options: {
-    reconnect: true,
-  },
-  webSocketImpl: WebSocket,
-}) as any
+export function createApolloClient() {
+  const httpLink = new HttpLink({
+    uri: DOMAIN + '/v1/graphql',
+    headers: auth.getHeaders(),
+    fetch,
+  })
 
-// The split function takes three parameters:
-//
-// * A function that's called for each operation to execute
-// * The Link to use for an operation if the function returns a "truthy" value
-// * The Link to use for an operation if the function returns a "falsy" value
-const link = split(
-  ({ query }) => {
-    const definition = getMainDefinition(query)
-    return (
-      definition.kind === 'OperationDefinition' &&
-      definition.operation === 'subscription'
-    )
-  },
-  wsLink,
-  httpLink
-)
+  const hostname = new URL(DOMAIN).hostname
+  let port = new URL(DOMAIN).port
+  if (port != '') {
+    port = ':' + port
+  }
+  let protocol = new URL(DOMAIN).protocol
+  if (protocol == 'https:') {
+    protocol = 'wss:'
+  } else {
+    protocol = 'ws:'
+  }
 
-const client = new ApolloClient({
-  link: link,
-  cache: new InMemoryCache({
-    addTypename: true,
-  }),
-})
+  const wsLink = new WebSocketLink({
+    uri: `${protocol}//${hostname + port}/v1/graphql`,
+    options: {
+      reconnect: true,
+      connectionParams: {
+        headers: auth.getHeaders(),
+      },
+    },
+    webSocketImpl: WebSocket,
+  })
+
+  // The split function takes three parameters:
+  //
+  // * A function that's called for each operation to execute
+  // * The Link to use for an operation if the function returns a "truthy" value
+  // * The Link to use for an operation if the function returns a "falsy" value
+  const link = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query)
+      return (
+        definition.kind === 'OperationDefinition' &&
+        definition.operation === 'subscription'
+      )
+    },
+    // See this error:
+    // https://github.com/apollographql/apollo-link/issues/538#issuecomment-571839546
+    // @ts-ignore
+    wsLink,
+    httpLink
+  )
+
+  apollo_client = new ApolloClient({
+    link: link,
+    cache: new InMemoryCache({
+      addTypename: true,
+    }),
+  })
+
+  return apollo_client
+}
 
 export class ModelBase<T> {
   id!: string
@@ -95,8 +122,6 @@ export class ModelBase<T> {
   private _klass: typeof ModelBase
   private _upper_name: string
   private _lower_name: string
-
-  static client = client
 
   static default_fields() {
     return ['id', 'created_at', 'updated_at']
@@ -163,7 +188,7 @@ export class ModelBase<T> {
   }
 
   static async query<T = any>(query: string): Promise<T> {
-    const res = await client.query({
+    const res = await apollo_client.query({
       query: gql`
         ${query}
       `,
@@ -175,19 +200,14 @@ export class ModelBase<T> {
     let conf = JSON.parse(JSON.stringify(AXIOS_CONF))
     gql = ModelBase.ensureKeySyntax(gql)
     conf.data.query = jsonToGraphQLQuery(gql, { pretty: true })
+    conf.headers = auth.getHeaders()
     const response = await axios(conf)
     if (response.data.errors) {
-      console.error(response.data.errors, conf.data.query)
-      throw response.data.errors
+      throw new HasuraError(conf.data.query, response.data.errors)
     }
     return response
   }
 
-  static async subscribe() {
-    this.client.subscribe
-  }
-
-  // TODO: only update provided fields
   async insert() {
     const query = {
       mutation: {
@@ -352,7 +372,7 @@ export class ModelBase<T> {
       mutation: {
         ['delete_' + this.lower_name()]: {
           __args: {
-            where: { [key]: { _like: `%${value}%` } },
+            where: { [key]: { _ilike: `%${value}%` } },
           },
           affected_rows: true,
         },
@@ -383,5 +403,11 @@ export class ModelBase<T> {
       }
       fn.apply(this, [o, i, o[i]])
     }
+  }
+}
+
+class HasuraError extends Error {
+  constructor(public query: string, public errors: {} = {}) {
+    super()
   }
 }

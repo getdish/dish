@@ -65,6 +65,7 @@ resource "kubernetes_ingress" "rio-ingress" {
       "kubernetes.io/ingress.class" = "nginx"
       "cert-manager.io/cluster-issuer": "letsencrypt-prod"
       "cert-manager.io/acme-challenge-type": "dns01"
+      "nginx.org/websocket-services": "gateway-proxy"
     }
   }
   spec {

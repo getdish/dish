@@ -1,0 +1,18 @@
+- args:
+    role: contributor
+    table:
+      name: taxonomy
+      schema: public
+  type: drop_delete_permission
+- args:
+    role: contributor
+    table:
+      name: taxonomy
+      schema: public
+  type: drop_update_permission
+- args:
+    role: contributor
+    table:
+      name: taxonomy
+      schema: public
+  type: drop_insert_permission

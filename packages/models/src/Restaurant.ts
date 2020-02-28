@@ -170,4 +170,8 @@ export class Restaurant extends ModelBase<Restaurant> {
     console.log('Created new canonical restaurant: ' + restaurant.id)
     return restaurant
   }
+
+  async delete() {
+    await Restaurant.deleteAllBy('id', this.id)
+  }
 }

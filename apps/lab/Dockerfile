@@ -15,7 +15,7 @@ ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 WORKDIR /app
 COPY apps/lab apps/lab
 RUN yarn install
-RUN cd apps/lab && react-scripts build
+RUN cd apps/lab && yarn build
 
 ## Stage 2: run
 FROM mhart/alpine-node:slim-12

@@ -1,8 +1,13 @@
 {
   "name": "dish-monorepo",
   "private": true,
+  "engines": {
+    "node": "13.5.0"
+  },
   "workspaces": {
     "packages": [
+      "packages/auth",
+      "packages/models",
       "packages/*",
       "apps/*",
       "services/*"
@@ -16,7 +21,8 @@
     "clean": "bin/clean.sh"
   },
   "devDependencies": {
-    "ava": "^2.4.0",
+    "@types/node": "^13.7.4",
+    "ava": "^3.4.0",
     "prettier": "^1.19.1",
     "ts-node": "^8.5.4",
     "tsconfig-paths": "^3.9.0",

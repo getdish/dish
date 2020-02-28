@@ -1,0 +1,14 @@
+{
+  "name": "@dish/hasura",
+  "version": "0.0.1",
+  "description": "",
+  "devDependencies": {},
+  "dependencies": {
+    "@dish/auth": "*"
+  },
+  "scripts": {
+    "build": "true",
+    "test": "ava test/main.ts --verbose",
+    "watch": "true"
+  }
+}

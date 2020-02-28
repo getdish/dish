@@ -2,7 +2,7 @@
 services:
   hasura:
     app: hasura
-    image: hasura/graphql-engine:v1.0.0
+    image: hasura/graphql-engine:v1.1.0
     ports:
       - 8080/http
     env:
@@ -10,6 +10,9 @@ services:
       - HASURA_GRAPHQL_ENABLE_CONSOLE=true
       - HASURA_GRAPHQL_ENABLED_LOG_TYPES=startup, http-log, webhook-log, websocket-log, query-log
       - HASURA_GRAPHQL_ENABLE_TELEMETRY=false
+      - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anon
+      - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}
+    command: ['graphql-engine', 'serve', '--jwt-secret', '{"type":"HS256", "key":"${JWT_KEY}"}']
   worker-ui:
     image: tombh/bull-board:latest
     env:
@@ -59,17 +62,20 @@ services:
       - DISH_ENV=production
       - COMMIT_HASH=${REVISION}
       - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
-  react-native:
-    image: dish/react-native
+  jwt-server:
+    image: dish/jwt-server
     build:
-      dockerfile: ./apps/react-native/Dockerfile
+      dockerfile: ./services/jwt-server/Dockerfile
       context: ./
     ports:
       - 3000/http
     env:
       - DISH_ENV=production
+      - ADMIN_PASSWORD=${JWT_ADMIN_PASSWORD}
+      - JWT_SECRET=${JWT_KEY}
       - COMMIT_HASH=${REVISION}
-      - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
+      - POSTGRES_HOST=postgres-postgresql.postgres
+      - POSTGRES_PASSWORD=${TF_VAR_POSTGRES_PASSWORD}
 {{- end}}
 
 template:

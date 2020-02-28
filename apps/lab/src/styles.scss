@@ -35,8 +35,7 @@ input {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
   margin: 0;
   padding: 0;
   color: #333;
@@ -80,8 +79,7 @@ input[type='radio'] {
 /* dont change select style it will reset it to flat looking */
 input,
 textarea {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
 body {
@@ -91,6 +89,7 @@ body {
   flex-shrink: 0;
   align-items: stretch;
   outline: 0;
+
   /* flexbox has super weird behavior otherwise where things dont "shrink to fit" unless you set this */
   min-width: 0;
 }
@@ -132,6 +131,7 @@ a {
   color: #111;
   text-shadow: none;
 }
+
 *::selection {
   background: rgb(203, 211, 255);
   color: #111;
@@ -143,6 +143,7 @@ a {
   color: #fff;
   text-shadow: none;
 }
+
 .theme-dark *::selection {
   background: rgb(203, 211, 255);
   color: #fff;
@@ -215,4 +216,30 @@ pre code {
   border-radius: 3px;
   white-space: pre;
   overflow-x: auto;
+}
+
+.login-box {
+  position: relative;
+  left: 50%;
+  margin-left: -100px;
+  top: 50%;
+  margin-top: -150px;
+  width: 200px;
+  height: 200px;
+
+  .or_swap {
+    text-align: right;
+  }
+
+  .messages {
+    border-top: 1px solid var(--borderColor);
+    padding-top: 0.5em;
+    margin-top: 0.5em;
+  }
+}
+
+.auth_menu {
+  position: absolute;
+  right: 5px;
+  top: 5px;
 }

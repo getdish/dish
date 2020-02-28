@@ -13,8 +13,8 @@ async function one() {
 }
 
 async function all() {
-  const dish = new Self()
-  await dish.main()
+  const internal = new Self()
+  await internal.main()
 }
 
-one()
+all()
