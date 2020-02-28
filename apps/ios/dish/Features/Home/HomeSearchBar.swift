@@ -22,7 +22,7 @@ struct HomeSearchBar: View {
     }
     
     private var homeSearch: Binding<String> {
-        store.binding(for: \.home.viewStates.last!.search, { .home(.setSearch($0)) })
+        store.binding(for: \.home.viewStates.last!.queryString, { .home(.setSearch($0)) })
     }
     
     private var homeLocation: Binding<String> {

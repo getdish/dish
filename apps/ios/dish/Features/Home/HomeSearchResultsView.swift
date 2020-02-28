@@ -5,7 +5,7 @@ struct HomeSearchResultsView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            ForEach(state.searchResults.results) { item in
+            ForEach(state.searchResults?.results ?? []) { item in
                 DishRestaurantResult(restaurant:
                     RestaurantItem(
                         id: item.id,
@@ -106,7 +106,7 @@ struct TextShadowStyle: ViewModifier {
 struct HomeSearchResults_Previews: PreviewProvider {
     static var previews: some View {
         HomeSearchResultsView(
-            state: HomeStateItem(dishes: [DishFilterItem(name: "Pho")])
+            state: HomeStateItem(state: .search(search: "Pho"))
         )
             .embedInAppEnvironment()
     }

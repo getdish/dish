@@ -83,7 +83,7 @@ struct HomeMapSearchResults: View {
 
         return ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
-                ForEach(Selectors.home.lastState().searchResults.results) { item in
+                ForEach(Selectors.home.latestResultsItems()) { item in
                     DishRestaurantCard(
                         restaurant: RestaurantItem(
                             id: item.id,

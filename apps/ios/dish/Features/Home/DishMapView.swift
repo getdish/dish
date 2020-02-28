@@ -7,7 +7,7 @@ struct DishMapViewContainer: View {
     @EnvironmentObject var keyboard: Keyboard
 
     var markers: [MapMarker] {
-        let results = Selectors.home.lastState().searchResults.results
+        let results = Selectors.home.latestResultsItems()
         return results.map { result in
             MapMarker(
                 title: result.name,

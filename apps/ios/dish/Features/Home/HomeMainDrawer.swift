@@ -147,7 +147,7 @@ struct HomeScreen: View, Identifiable, Equatable {
     let uid = UUID().uuidString
     
     var body: some View {
-        print("render home screen \(index) --  \(uid) -- \(isActive) \(viewState.search)")
+        print("render home screen \(index) --  \(uid) -- \(isActive) \(viewState.state)")
         return ZStack {
             if isActive {
                 if index == 0 {

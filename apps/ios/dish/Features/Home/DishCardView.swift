@@ -22,7 +22,7 @@ struct DishCardView: View, Identifiable, Equatable {
     var body: some View {
         DishButton(action: self.action ?? {
             App.store.send(
-                .home(.push(HomeStateItem(dishes: [DishFilterItem(name: self.dish.name)])))
+                .home(.push(HomeStateItem(state: .search(search: self.dish.name))))
             )
         }) {
             self.dish.image
@@ -83,7 +83,7 @@ struct DishButtonView: View, Identifiable, Equatable {
 //        MagicItem("dish-button-\(id)", at: at) {
             DishButton(action: self.action ?? {
                 App.store.send(
-                    .home(.push(HomeStateItem(search: self.dish.name)))
+                    .home(.push(HomeStateItem(state: .search(search: self.dish.name))))
                 )
             }) {
                 VStack {

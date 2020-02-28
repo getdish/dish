@@ -34,7 +34,7 @@ struct DishRestaurantViewContent: View {
      let dishes = features.chunked(into: 2)
     
     var restaurant: RestaurantItem {
-        Selectors.home.lastState().restaurant ?? restaurants[0]
+        return Selectors.home.lastState().restaurant ?? restaurants[0]
     }
     
     var body: some View {

@@ -30,8 +30,8 @@ class HomeService {
         .store(in: &cancels)
     }
     
-    func getSearchResults(_ search: SearchQuery) -> Future<HomeSearchResults, Never> {
-        Future<HomeSearchResults, Never> { promise in
+    func getSearchResults(_ search: SearchQuery) -> Future<HomeStateItem.SearchResults, Never> {
+        Future<HomeStateItem.SearchResults, Never> { promise in
             let query = SearchRestaurantsQuery(
                 radius: search.location.radius / 100000,
                 geo: [
@@ -54,11 +54,11 @@ class HomeService {
                             return
                         }
                         promise(.success(
-                            HomeSearchResults(
+                            HomeStateItem.SearchResults(
                                 id: "0",
                                 results: data.restaurant.map { restaurant in
                                     let coords = restaurant.location?["coordinates"] as! [Double]
-                                    return HomeSearchResultItem(
+                                    return HomeStateItem.Item(
                                         id: restaurant.name,
                                         name: restaurant.name,
                                         coordinate: .init(latitude: coords[1], longitude: coords[0])

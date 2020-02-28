@@ -28,7 +28,7 @@ struct DishListItem: View, Equatable {
                 DishButton(
                     action: {
                         App.store.send(
-                            .home(.push(HomeStateItem(search: self.dish.name)))
+                            .home(.push(HomeStateItem(state: .search(search: self.dish.name))))
                         )
                     },
                     scaleEffect: 1.0
