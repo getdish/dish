@@ -57,10 +57,8 @@ function Main() {
 
 function RootView() {
   return (
-    <ProvideUI themes={themes} activeTheme="light">
-      <Provider value={overmind}>
-        <Main />
-      </Provider>
-    </ProvideUI>
+    <Provider value={overmind}>
+      <Main />
+    </Provider>
   )
 }

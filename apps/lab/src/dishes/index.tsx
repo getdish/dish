@@ -1,3 +1,5 @@
+export default {}
+
 // // import { FetchResult, gql, useQuery, useSubscription } from '@apollo/client'
 // // import { ModelBase, Taxonomy, TaxonomyRecord, TaxonomyType } from '@dish/models'
 // // import { BorderLeft, Button, Card, Icon, Input, Stack, Surface, Text, Theme, Title, useDebounceValue } from 'react-native-web'
