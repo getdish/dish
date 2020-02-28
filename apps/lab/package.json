@@ -3,25 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@dish/models": "*",
     "@o/ui": "^2.7.5",
-    "mapbox-gl": "^1.6.1",
+    "@dish/models": "*",
     "overmind": "^21.0.0",
     "overmind-react": "^22.0.0",
+    "@apollo/client": "3.0.0-beta.37",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-mapbox-gl": "^4.8.2",
     "react-props": "^0.0.3",
-    "serve": "^11.3.0",
-    "@apollo/client": "3.0.0-beta.37"
+    "serve": "^11.3.0"
   },
   "devDependencies": {
-    "@types/mapbox-gl": "^1.6.3",
     "@types/node": "^13.1.8",
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
     "node-sass": "^4.13.1",
-    "overmind-devtools": "^22.0.0",
     "react-scripts": "^3.3.0",
     "typescript": "^3.8.2"
   },
