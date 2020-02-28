@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "main": "_/index.js",
   "sideEffects": false,
+  "private": true,
   "scripts": {
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput",
