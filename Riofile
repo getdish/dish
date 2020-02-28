@@ -28,9 +28,10 @@ services:
       - COMMIT_HASH=${REVISION}
       - REDIS_HOST=redis-master.redis
       - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
+      - HASURA_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}
       - UBEREATS_PROXY=${UBEREATS_PROXY}
       - HEREMAPS_API_TOKEN=${HEREMAPS_API_TOKEN}
-      - UBEREATS_PROXY=${UBEREATS_PROXY}
+      - INFATUATED_PROXY=${INFATUATED_PROXY}
       - YELP_PROXY=${YELP_PROXY}
     command:
       - node
@@ -47,6 +48,7 @@ services:
       - REDIS_HOST=redis-master.redis
       - UBEREATS_PROXY=${UBEREATS_PROXY}
       - YELP_PROXY=${YELP_PROXY}
+      - INFATUATED_PROXY=${INFATUATED_PROXY}
     command:
       - node
     args:

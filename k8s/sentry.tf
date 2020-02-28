@@ -41,23 +41,13 @@ resource "helm_release" "sentry" {
   }
 
   set {
-    name  = "redis.enabled"
-    value = false
-  }
-
-  set {
-    name  = "redis.host"
-    value = "redis-master.redis"
+    name  = "persistence.size"
+    value = "5Gi"
   }
 
   set {
     name  = "service.type"
     value = "ClusterIP"
-  }
-
-  set {
-    name  = "persistence.size"
-    value = "5Gi"
   }
 
   set {

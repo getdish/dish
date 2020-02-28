@@ -155,12 +155,12 @@ export class Yelp extends WorkerJob {
     )
 
     const coords = (uri.query.center as string).split(',')
-    const lon = parseFloat(coords[0])
-    const lat = parseFloat(coords[1])
+    const lat = parseFloat(coords[0])
+    const lon = parseFloat(coords[1])
     let scrape = await Scrape.mergeData(id, { data_from_html_embed: data })
     const canonical = await Restaurant.saveCanonical(
-      lon,
       lat,
+      lon,
       scrape.data.data_from_map_search.name,
       scrape.data.data_from_map_search.formattedAddress
     )
