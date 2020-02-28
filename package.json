@@ -5,9 +5,6 @@
     "node": "12.16.1"
   },
   "workspaces": {
-    "nohoist": [
-      "**"
-    ],
     "packages": [
       "packages/auth",
       "packages/models",

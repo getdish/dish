@@ -3,6 +3,12 @@
   "version": "0.0.1",
   "main": "_/index.js",
   "sideEffects": false,
+  "private": false,
+  "workspaces": {
+    "nohoist": [
+      "**"
+    ]
+  },
   "scripts": {
     "start": "node _/index.js",
     "build": "tsc -b",
