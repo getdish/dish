@@ -37,19 +37,19 @@ struct HomeMainDrawer: View, Equatable {
 //            : Color.white
         
         return BottomDrawer(
-            position: self.drawerPosition,
             background: self.drawerBackgroundColor,
-            snapPoints: App.drawerSnapPoints,
             cornerRadius: 20,
             handle: nil,
             onChangePosition: { (_, y) in
                 homeViewState.setY(y)
-            },
+        },
             onDragState: { state in
                 if state.isDragging != self.store.state.home.drawerIsDragging {
                     self.store.send(.home(.setDrawerIsDragging(state.isDragging)))
                 }
-            }
+        },
+            position: self.drawerPosition,
+            snapPoints: App.drawerSnapPoints
         ) {
             HomeMainDrawerContentContainer(
                 isOnLocationSearch: isOnLocationSearch

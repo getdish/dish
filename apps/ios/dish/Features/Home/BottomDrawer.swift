@@ -41,18 +41,46 @@ class BottomDrawerStore: ObservableObject {
 let bottomDrawerStore = BottomDrawerStore()
 
 struct BottomDrawer<Content: View>: View {
+    typealias OnChangePositionCB = (BottomDrawerPosition, CGFloat) -> Void
+    enum Lock { case drawer, content, filters }
+
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var screen: ScreenModel
-    
     @GestureState private var dragState = DragState.inactive
-    @Binding var position: BottomDrawerPosition
     @State var mass: Double = 1.5
     @State var cancellables: Set<AnyCancellable> = []
+    @State var externalDragY: CGFloat = 0
+    @State var lock: Lock = .drawer
+    @State var isMounting = true
     
-    var background: Color? = nil
-    var snapPoints: [CGFloat] = [100, 400, 600]
-    var cornerRadius: CGFloat = 12.0
+    var background: Color?
+    var content: Content
+    var cornerRadius: CGFloat
     var handle: AnyView? = nil
+    var onChangePosition: OnChangePositionCB?
+    var onDragState: ((DragState) -> Void)?
+    @Binding var position: BottomDrawerPosition
+    var snapPoints: [CGFloat]
+    
+    init(
+        background: Color? = nil,
+        cornerRadius: CGFloat = 12.0,
+        handle: AnyView? = nil,
+        onChangePosition: OnChangePositionCB? = nil,
+        onDragState: ((DragState) -> Void)? = nil,
+        position: Binding<BottomDrawerPosition>,
+        snapPoints: [CGFloat] = [100, 400, 600],
+        content: () -> Content
+    ) {
+        self.background = background
+        self.snapPoints = snapPoints
+        self.cornerRadius = cornerRadius
+        self.handle = handle
+        self.onChangePosition = onChangePosition
+        self.onDragState = onDragState
+        self._position = position
+        self.content = content()
+    }
     
     func getSnapPoint(_ position: BottomDrawerPosition) -> CGFloat {
         self.snapPoints[position == .top ? 0 : position == .middle ? 1 : 2]
@@ -61,8 +89,6 @@ struct BottomDrawer<Content: View>: View {
     var positionY: CGFloat {
         getSnapPoint(self.position)
     }
-    
-    @State var externalDragY: CGFloat = 0
     
     var draggedPositionY: CGFloat {
         let dragHeight = self.dragState.translation.height
@@ -81,16 +107,6 @@ struct BottomDrawer<Content: View>: View {
         
         return at
     }
-    
-    typealias OnChangePositionCB = (BottomDrawerPosition, CGFloat) -> Void
-    var onChangePosition: OnChangePositionCB? = nil
-    var onDragState: ((DragState) -> Void)? = nil
-    
-    enum Lock { case drawer, content, filters }
-    @State var lock: Lock = .drawer
-    @State var isMounting = true
-    
-    var content: () -> Content
     
     func start() {
         async(10) {
@@ -149,10 +165,7 @@ struct BottomDrawer<Content: View>: View {
             .animation(Animation.spring().delay(self.isMounting ? 1 : self.dragState.isDragging ? 0 : 0.5))
             
             VStack(spacing: 0) {
-                self.content()
-                //                    .disabled(self.position != .top)
-                //                    .allowsHitTesting(self.position == .top)
-                
+                self.content
                 // pad bottom so it wont go below
                 Spacer().frame(height: belowHeight)
             }
@@ -169,24 +182,26 @@ struct BottomDrawer<Content: View>: View {
                 radius: 20.0
         )
             .offset(y: self.draggedPositionY)
-            .onGeometryFrameChange { geometry in
-                async {
-                    self.afterChangePosition()
-                }
-        }
-        .animation(self.dragState.isDragging
-            ? nil
-            : .interpolatingSpring(mass: self.mass, stiffness: 90.0, damping: 25.0, initialVelocity: 0)
+            .onGeometryFrameChange(self.onGeometryFrameChange)
+            .animation(self.dragState.isDragging
+                ? nil
+                : .interpolatingSpring(mass: self.mass, stiffness: 90.0, damping: 25.0, initialVelocity: 0)
         )
             .gesture(
                 self.gesture
         )
     }
     
+    func onGeometryFrameChange(_ geometry: GeometryProxy) {
+        async {
+            self.afterChangePosition()
+        }
+    }
+    
     var gesture: _EndedGesture<GestureStateGesture<DragGesture, DragState>> {
         DragGesture(minimumDistance: self.position == .top ? 15 : self.position == .middle ? 15 : 8)
             .updating($dragState) { drag, state, transaction in
-//                print("BottomDrawer.drag self.lock \(self.lock) targetLock \(mainContentScrollState.scrollTargetLock)")
+                //                print("BottomDrawer.drag self.lock \(self.lock) targetLock \(mainContentScrollState.scrollTargetLock)")
                 
                 // avoid conflicting drags
                 if mainContentScrollState.scrollTargetLock == .drawer && self.lock != .drawer ||
