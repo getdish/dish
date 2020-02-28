@@ -183,76 +183,77 @@ struct BottomDrawer<Content: View>: View {
                 : .interpolatingSpring(mass: self.mass, stiffness: 90.0, damping: 25.0, initialVelocity: 0)
         )
             .gesture(
-                self.gesture
+                DragGesture(minimumDistance: self.position == .top ? 15 : self.position == .middle ? 15 : 8)
+                    .updating($dragState) { drag, state, transaction in
+                        self.onUpdateDrag(drag, state: &state, transaction: &transaction)
+                    }
+                    .onEnded(onDragEnded)
+                
         )
+    }
+    
+    func onUpdateDrag(_ drag: DragGesture.Value, state: inout DragState, transaction: inout Transaction) {
+        //                print("BottomDrawer.drag self.lock \(self.lock) targetLock \(mainContentScrollState.scrollTargetLock)")
+        
+        // avoid conflicting drags
+        if mainContentScrollState.scrollTargetLock == .drawer && self.lock != .drawer ||
+            mainContentScrollState.scrollTargetLock == .content {
+            return
+        }
+        
+        if self.lock != .drawer {
+            if App.store.state.home.drawerPosition != .bottom {
+                print("\(drag.translation.height)")
+                let distToFilterBar: CGFloat = 60
+                if drag.startLocation.y > self.draggedPositionY + distToFilterBar,
+                    drag.translation.height < 12 {
+                    async {
+                        self.lock = .filters
+                    }
+                    return
+                }
+                
+            }
+        }
+        let h = drag.translation.height
+        let validDrag = h > 8 || h < -8
+        if validDrag {
+            print("BottomDrawer try \(self.lock) \(self.ignoreInitialDrags)")
+            if self.lock != .drawer {
+                // fix bug where it was catching both scrollview + bottomdrawer on fast drags
+                if self.ignoreInitialDrags < 2 {
+                    async {
+                        self.ignoreInitialDrags += 1
+                        let cur = self.ignoreInitialDrags
+                        async(50) {
+                            if self.ignoreInitialDrags == cur {
+                                // hasnt dragged, lets reset its likely happening in scrollview
+                                self.ignoreInitialDrags = 0
+                            }
+                        }
+                    }
+                    return
+                }
+                
+                async {
+                    self.lock = .drawer
+                    // todo bad state sync
+                    mainContentScrollState.scrollTargetLock = .drawer
+                }
+            }
+            let wasDragging = self.dragState.isDragging
+            print("🙈 BottomDrawer.setDragState")
+            state = .dragging(translation: drag.translation)
+            if !wasDragging {
+                if let cb = self.onDragState { cb(state) }
+            }
+        }
     }
     
     func onGeometryFrameChange(_ geometry: GeometryProxy) {
         async {
             self.afterChangePosition()
         }
-    }
-    
-    var gesture: _EndedGesture<GestureStateGesture<DragGesture, DragState>> {
-        DragGesture(minimumDistance: self.position == .top ? 15 : self.position == .middle ? 15 : 8)
-            .updating($dragState) { drag, state, transaction in
-                //                print("BottomDrawer.drag self.lock \(self.lock) targetLock \(mainContentScrollState.scrollTargetLock)")
-                
-                // avoid conflicting drags
-                if mainContentScrollState.scrollTargetLock == .drawer && self.lock != .drawer ||
-                    mainContentScrollState.scrollTargetLock == .content {
-                    return
-                }
-                
-                if self.lock != .drawer {
-                    if App.store.state.home.drawerPosition != .bottom {
-                        print("\(drag.translation.height)")
-                        let distToFilterBar: CGFloat = 60
-                        if drag.startLocation.y > self.draggedPositionY + distToFilterBar,
-                            drag.translation.height < 12 {
-                            async {
-                                self.lock = .filters
-                            }
-                            return
-                        }
-                        
-                    }
-                }
-                let h = drag.translation.height
-                let validDrag = h > 8 || h < -8
-                if validDrag {
-                    print("BottomDrawer try \(self.lock) \(self.ignoreInitialDrags)")
-                    if self.lock != .drawer {
-                        // fix bug where it was catching both scrollview + bottomdrawer on fast drags
-                        if self.ignoreInitialDrags < 2 {
-                            async {
-                                self.ignoreInitialDrags += 1
-                                let cur = self.ignoreInitialDrags
-                                async(50) {
-                                    if self.ignoreInitialDrags == cur {
-                                        // hasnt dragged, lets reset its likely happening in scrollview
-                                        self.ignoreInitialDrags = 0
-                                    }
-                                }
-                            }
-                            return
-                        }
-                        
-                        async {
-                            self.lock = .drawer
-                            // todo bad state sync
-                            mainContentScrollState.scrollTargetLock = .drawer
-                        }
-                    }
-                    let wasDragging = self.dragState.isDragging
-                    print("🙈 BottomDrawer.setDragState")
-                    state = .dragging(translation: drag.translation)
-                    if !wasDragging {
-                        if let cb = self.onDragState { cb(state) }
-                    }
-                }
-        }
-        .onEnded(onDragEnded)
     }
     
     private func getDistance(_ position: BottomDrawerPosition, from: CGFloat) -> CGFloat {
