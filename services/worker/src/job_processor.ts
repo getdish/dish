@@ -11,8 +11,8 @@ import { WorkerJob } from '@dish/worker'
 
 // All code that the workers could possibly run needs to be passed to the
 // job processor.
-import { CI, UberEats, Yelp, Self } from '@dish/crawlers'
-const all: typeof WorkerJob[] = [UberEats, Yelp, Self]
+import { CI, UberEats, Yelp, Self, Infatuated } from '@dish/crawlers'
+const all: typeof WorkerJob[] = [UberEats, Yelp, Self, Infatuated]
 
 if (process.env.DISH_ENV != 'production') {
   all.push(CI)

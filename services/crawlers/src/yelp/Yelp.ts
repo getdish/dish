@@ -27,8 +27,6 @@ const axios = axios_base.create({
   },
 })
 
-console.log('Starting Yelp crawler. Using domain: ' + YELP_DOMAIN)
-
 export class Yelp extends WorkerJob {
   static queue_config: QueueOptions = {
     limiter: {
@@ -60,6 +58,7 @@ export class Yelp extends WorkerJob {
   }
 
   async allForCity(city_name: string) {
+    console.log('Starting Yelp crawler. Using domain: ' + YELP_DOMAIN)
     const MAPVIEW_SIZE = 5000
     const coords = await geocode(city_name)
     const region_coords = _.shuffle(

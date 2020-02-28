@@ -28,8 +28,6 @@ const axios = axios_base.create({
   },
 })
 
-console.log('Starting UberEats crawler. Using domain: ' + UBEREATS_DOMAIN)
-
 export class UberEats extends WorkerJob {
   static queue_config: QueueOptions = {
     limiter: {
@@ -45,6 +43,7 @@ export class UberEats extends WorkerJob {
   static DELIVERY_RADIUS = 30000
 
   async world() {
+    console.log('Starting UberEats crawler. Using domain: ' + UBEREATS_DOMAIN)
     const response = await axios.post(CITIES, {})
     const countries = _.shuffle(response.data.data.countryLinks.links)
     for (let country of countries) {
