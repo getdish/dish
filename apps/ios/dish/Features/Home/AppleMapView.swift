@@ -15,6 +15,7 @@ struct AppleMapView: UIViewRepresentable {
   @Binding var mapZoom: Double
   var onChangeLocation: ((MapViewLocation) -> Void)? = nil
   var onChangeLocationName: ((CLPlacemark) -> Void)? = nil
+  var onChangeUserLocation: ((CLLocation, CLPlacemark) -> Void)? = nil
   var onSelectMarkers: (([MapMarker]) -> Void)? = nil
   var showsUserLocation: Bool = false
 
@@ -39,6 +40,7 @@ struct AppleMapView: UIViewRepresentable {
     var lastMarkers: [MapMarker] = []
     var lastLocation: MapViewLocation = .init(center: .none)
     var lastMapLocation: MapViewLocation = .init(center: .none)
+    var lastUserLocation: CLLocation = .init()
     var locationManager = CLLocationManager()
     var parent: AppleMapView
     var zoomingIn = false
@@ -93,7 +95,7 @@ struct AppleMapView: UIViewRepresentable {
       //            zoomToAnnotation(view.annotation!)
     }
 
-    // change location
+    // change region
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
       if let cb = parent.onChangeLocation {
         let location = MapViewLocation(
@@ -105,6 +107,21 @@ struct AppleMapView: UIViewRepresentable {
         if location != self.lastLocation {
           self.lastLocation = location
           cb(location)
+        }
+      }
+      
+      if let cb = self.parent.onChangeLocationName {
+        // Convert the user's location to a user-friendly place name by reverse geocoding the location.
+        geocoder.reverseGeocodeLocation(
+          .init(
+            latitude: mapView.centerCoordinate.latitude,
+            longitude: mapView.centerCoordinate.longitude
+          )
+        ) { (placemarks, error) in
+          guard error == nil else { return }
+          if let firstPlacemark = placemarks?.first {
+            cb(firstPlacemark)
+          }
         }
       }
     }
@@ -164,38 +181,24 @@ struct AppleMapView: UIViewRepresentable {
       return annotationView
     }
 
-    // user location
+    // cahnge user location
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
       guard let newLocation = userLocation.location else { return }
 
-      let currentTime = Date()
-      let lastMapLocation = self.currentLocation
-      self.currentLocation = newLocation
-
-      // Only get new placemark information if you don't have a previous location,
-      // if the user has moved a meaningful distance from the previous location, such as 1000 meters,
-      // and if it's been 60 seconds since the last geocode request.
-      if let lastMapLocation = lastMapLocation,
-        newLocation.distance(from: lastMapLocation) <= 1000,
-        let lastTime = lastGeocodeTime,
-        currentTime.timeIntervalSince(lastTime) < 60
-      {
+      // if the user has moved a meaningful distance from the previous location
+      if newLocation.distance(from: self.lastUserLocation) < 10 {
         return
       }
-
-      // Convert the user's location to a user-friendly place name by reverse geocoding the location.
-      lastGeocodeTime = currentTime
-      geocoder.reverseGeocodeLocation(newLocation) { (placemarks, error) in
-        guard error == nil else {
-          print("ERROR in location \(error)")
-          return
-        }
-
-        // Most geocoding requests contain only one result.
-        if let firstPlacemark = placemarks?.first,
-          let cb = self.parent.onChangeLocationName
-        {
-          cb(firstPlacemark)
+      
+      self.lastUserLocation = newLocation
+      
+      
+      if let cb = self.parent.onChangeUserLocation {
+        geocoder.reverseGeocodeLocation(newLocation) { (placemarks, error) in
+          guard error == nil else { return }
+          if let firstPlacemark = placemarks?.first {
+            cb(newLocation, firstPlacemark)
+          }
         }
       }
     }

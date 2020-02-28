@@ -1,6 +1,8 @@
 import Combine
 import SwiftUI
 
+// TODO dont set mass dynamically, set initialVelocity, make it spingy on throw!...
+
 enum BottomDrawerPosition {
   case top, middle, bottom
 }
