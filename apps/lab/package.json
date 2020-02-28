@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@o/ui": "^2.7.5",
     "@dish/models": "*",
     "overmind": "^21.0.0",
     "overmind-react": "^22.0.0",
