@@ -42,21 +42,16 @@ struct HomeMainView: View {
                 ZStack {
                     // Map
                     if App.enableMap {
-                        ZStack {
-                            ZStack {
-                                DishMapViewContainer()
-                                    .offset(y:
-                                        // centered
-                                        (self.screen.height - self.mapFullHeight) * 0.5
-                                        // move with drawer (but just a bit less than half because when fully open, we show a bottom results drawer)
-                                        + (state.y - App.drawerSnapPoints[1]) * 0.4
-                                        // subtract just a bit because LenseBar is taller than TopNav
-                                        - 20
-                                    )
-                                    .animation(.spring(response: 0.65))
-                            }
-                            .opacity(self.store.state.showSplash ? 0 : 1)
-                        }
+                        DishMapViewContainer()
+                            .offset(y:
+                                // centered
+                                (self.screen.height - self.mapFullHeight) * 0.5
+                                // move with drawer (but just a bit less than half because when fully open, we show a bottom results drawer)
+                                + (state.y - App.drawerSnapPoints[1]) * 0.4
+                                // subtract just a bit because LenseBar is taller than TopNav
+                                - 20
+                            )
+                            .animation(.spring(response: 0.65))
                     }
                     
                     // below drawer

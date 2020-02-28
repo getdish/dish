@@ -5,8 +5,8 @@ fileprivate let manager = CLLocationManager()
 
 extension AppState {
     struct MapState: Equatable {
-        var location: MapViewLocation? = nil
-        var moveToLocation: MapViewLocation? = nil
+        var location: MapViewLocation = .init(center: .current)
+        var moveToLocation: MapViewLocation = .init(center: .current)
         var locationLabel: String = "Map Area"
         var search = ""
         var searchResults: [CLLocation] = []
@@ -30,7 +30,7 @@ func mapReducer(_ state: inout AppState, action: MapAction) {
         case let .setLocationLabel(val):
             state.map.locationLabel = val
         case .moveToCurrentLocation:
-            state.map.moveToLocation = .init(center: .current, radius: state.map.location?.radius ?? 10000, refresh: true)
+            state.map.moveToLocation = .init(center: .current, radius: state.map.location.radius, refresh: true)
         case let .moveToLocation(loc):
             state.map.moveToLocation = loc
             // we track if they have moved off center or not
