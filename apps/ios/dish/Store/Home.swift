@@ -113,6 +113,7 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
         case .hideSplash:
             state.home.showSplash = false
         case .setSelectedMarkers(let markers):
+            let last = state.home.viewStates.last!
             if case .search(_, let results) = last.state {
                 state.home.viewStates.append(
                     HomeStateItem(
