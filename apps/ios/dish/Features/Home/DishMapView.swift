@@ -80,9 +80,8 @@ struct DishMapView: View {
                 markers: self.markers,
                 mapZoom: self.$mapZoom,
                 onChangeLocation: { location in
-                    print("changing location")
                     App.store.send(.map(.setLocation(location)))
-            },
+                },
                 // TODO this is tracking the *user* geolocation not the map location
                 // we should probably have both tracking and running things
                 onChangeLocationName: { placemark in

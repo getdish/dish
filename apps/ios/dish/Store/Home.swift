@@ -60,6 +60,7 @@ extension AppState {
     typealias SearchFocus = SearchFocusState
     
     struct HomeState: Equatable {
+        var appLoaded = true
         var showSplash = true
         var view: HomePageView = .home
         var viewStates: [HomeStateItem] = [HomeStateItem()]
@@ -77,6 +78,7 @@ extension AppState {
 }
 
 enum HomeAction {
+    case setAppLoaded
     case hideSplash
     case setView(_ page: HomePageView)
     case navigateToRestaurant(_ val: RestaurantItem)
@@ -110,6 +112,8 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     // switch
     
     switch action {
+        case .setAppLoaded:
+            state.home.appLoaded = true
         case .hideSplash:
             state.home.showSplash = false
         case .setSelectedMarkers(let markers):

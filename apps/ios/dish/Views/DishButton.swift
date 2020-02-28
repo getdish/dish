@@ -3,7 +3,7 @@ import SwiftUI
 struct DishButton<Content: View>: View {
     typealias Action = (() -> Void)
     
-    @inlinable init(
+    init(
         action: Action? = nil,
         opacityEffect: Double = 0.9,
         scaleEffect: CGFloat = 0.9,
@@ -32,26 +32,34 @@ struct DishButton<Content: View>: View {
             // ⚠️ dont put .animation() here or every subview animates
             .scaleEffect(self.isTapped ? self.scaleEffect : 1)
             .opacity(self.isTapped ? self.opacityEffect : 1)
-            .onTapGesture {
-                self.lastTap = Date()
-                self.callbackAction()
+            .onTapGesture(perform: self.onTap)
+            .onLongPressGesture(
+                minimumDuration: 10000,
+                maximumDistance: 8,
+                pressing: self.onPressing,
+                perform: self.onPressed
+            )
+    }
+    
+    func onPressing(_ isPressing: Bool) {
+        withAnimation(.spring()) {
+            self.isTapped = isPressing
         }
-        .onLongPressGesture(
-            minimumDuration: 10000,
-            maximumDistance: 8,
-            pressing: { isPressing in
-            withAnimation(.spring()) {
-                self.isTapped = isPressing
-            }
-            if isPressing {
-                self.lastTap = Date()
-            } else {
-//                self.callbackAction()
-            }
-        }) {
-            if self.lastTap.timeIntervalSinceNow > 10 {
-                self.callbackAction()
-            }
+        if isPressing {
+            self.lastTap = Date()
+        } else {
+            //                self.callbackAction()
         }
+    }
+
+    func onPressed() {
+        if self.lastTap.timeIntervalSinceNow > 10 {
+            self.callbackAction()
+        }
+    }
+    
+    func onTap() {
+        self.lastTap = Date()
+        self.callbackAction()
     }
 }

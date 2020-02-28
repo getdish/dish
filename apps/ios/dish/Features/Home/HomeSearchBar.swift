@@ -68,7 +68,7 @@ struct HomeSearchBar: View {
         let isOnHome = Selectors.home.isOnHome()
         let searchFocus = self.store.state.home.searchFocus
         let showSearchIcon = isOnHome || searchFocus == .search
-        var iconSize: CGFloat = 20
+        var iconSize: CGFloat = 18
         let icon: Image = {
             if Selectors.home.lastState().isLoading {
                 return Image(systemName: "dots")
@@ -109,9 +109,9 @@ struct HomeSearchBar: View {
                     Image(systemName: "camera.fill")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 24, height: 24)
+                        .frame(width: 22, height: 22)
                 }
-                .padding(4)
+                .padding(2)
             }
             .buttonStyle(IndentedStyle(
                 colorScheme: self.colorScheme,

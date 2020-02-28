@@ -296,7 +296,7 @@ struct HomeContentExplore: View {
                         VStack(spacing: 0) {
                             HomeContentPadAbove()
                             self.titleView
-                            ForEach(0..<self.dishes.count) { index in
+                            ForEach(0..<(self.store.state.home.appLoaded ? self.dishes.count : 5)) { index in
                                 DishListItem(
                                     number: index + 1,
                                     dish: self.dishes[index]

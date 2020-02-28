@@ -41,11 +41,16 @@ struct DishMapResultsBar: View {
 struct HomeMapExplore: View {
     @EnvironmentObject var store: AppStore
     @State var index: Int = 0
+    
+    
+    var items: [DishItem] {
+        self.store.state.home.showSplash ? Array(features[0..<3]) : features
+    }
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
-                ForEach(features, id: \.id) { item in
+                ForEach(self.items, id: \.id) { item in
                     MapResultDishCard(dish: item)
                         .equatable()
                 }

@@ -16,6 +16,7 @@ class HomeService {
     
     func affectSearchResults() {
         App.store.$state
+            .debounce(for: .milliseconds(200), scheduler: App.queueMain)
             .map { state in
                 SearchQuery(
                     query: state.home.viewStates.last!.queryString,
@@ -23,7 +24,6 @@ class HomeService {
                 )
             }
             .removeDuplicates()
-            .debounce(for: .milliseconds(200), scheduler: App.queueMain)
             .sink { val in
                 App.store.send(self.doSearch(val))
         }
