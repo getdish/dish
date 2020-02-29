@@ -1,7 +1,7 @@
 import Combine
 import SwiftUI
 
-fileprivate let topContentHeight = App.filterBarHeight + 18
+fileprivate let topContentHeight = App.filterBarHeight + 4
 
 struct HomeMainDrawer: View, Equatable {
   static func == (lhs: HomeMainDrawer, rhs: HomeMainDrawer) -> Bool {
@@ -80,6 +80,12 @@ struct HomeMainDrawerContentContainer: View {
                   Color.black.opacity(1),
                   Color.black.opacity(1),
                   Color.black.opacity(1),
+                  Color.black.opacity(1),
+                  Color.black.opacity(1),
+                  Color.black.opacity(1),
+                  Color.black.opacity(1),
+                  Color.black.opacity(1),
+                  Color.black.opacity(1)
                 ]),
                 startPoint: .top,
                 endPoint: .center
@@ -261,27 +267,33 @@ struct HomeContentExplore: View {
 
   @State var state: ScrollState? = nil
   @State var targetLock: ScrollState.ScrollTargetLock = .idle
+  
+  var total: Int {
+    self.store.state.appLoaded ? self.dishes.count : 5
+  }
+  
+  func start() {
+    self.state = mainContentScrollState
+    self.state!.$scrollTargetLock
+      .map { target in
+        // side effect
+        if target == .drawer {
+          self.state?.scrollView?.panGestureRecognizer.isEnabled = false
+        } else {
+          self.state?.scrollView?.panGestureRecognizer.isEnabled = true
+        }
+        return target
+      }
+      .assign(to: \.targetLock, on: self)
+      .store(in: &self.state!.cancellables)
+  }
 
   var body: some View {
     let isDisabled = self.store.state.home.drawerIsDragging
 
     return Group {
       ZStack {
-        Color.clear.onAppear {
-          self.state = mainContentScrollState
-          self.state!.$scrollTargetLock
-            .map { target in
-              // side effect
-              if target == .drawer {
-                self.state?.scrollView?.panGestureRecognizer.isEnabled = false
-              } else {
-                self.state?.scrollView?.panGestureRecognizer.isEnabled = true
-              }
-              return target
-            }
-            .assign(to: \.targetLock, on: self)
-            .store(in: &self.state!.cancellables)
-        }
+        Color.clear.onAppear(perform: self.start)
 
         GeometryReader { geo in
           ScrollView(.vertical, showsIndicators: false) {
@@ -297,14 +309,17 @@ struct HomeContentExplore: View {
 
               self.titleView
 
-              ForEach(0..<(self.store.state.appLoaded ? self.dishes.count : 5)) { index in
+              ForEach(0..<self.total) { index in
                 DishListItem(
+                  dish: self.dishes[index],
                   number: index + 1,
-                  dish: self.dishes[index]
+                  onScrollStart: {
+                    // todo reset the others
+                  }
                 )
                   .equatable()
-                  .transition(.slide)
-                  .animation(.ripple(index: index))
+//                  .transition(.slide)
+//                  .animation(.ripple(index: index))
               }
                 .id(self.store.state.appLoaded ? "0" : "1")
 
