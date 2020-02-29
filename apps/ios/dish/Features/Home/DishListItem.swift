@@ -2,7 +2,7 @@ import SwiftUI
 
 fileprivate let total: Int = 10
 fileprivate let size: CGFloat = 90
-fileprivate let imageSize: CGFloat = size - 7
+fileprivate let imageSize: CGFloat = size - 5
 
 struct DishListItem: View, Equatable {
   static func == (lhs: DishListItem, rhs: DishListItem) -> Bool {
@@ -18,7 +18,11 @@ struct DishListItem: View, Equatable {
   @State var scrollX: CGFloat = 0
   
   var body: some View {
-    let activeIndex = Int(self.scrollX / size)
+    let activeIndex = CGFloat(self.scrollX / size)
+    let text = Text(self.dish.name)
+      .fontWeight(.bold)
+      .lineLimit(1)
+      .font(.system(size: 18))
     return ZStack {
       DishButton(
         action: {
@@ -29,14 +33,12 @@ struct DishListItem: View, Equatable {
         scaleEffect: 1.0
       ) {
         ZStack {
-          HStack {
-            Text("\(self.dish.icon)")
-              .font(.system(size: 26))
+          HStack(spacing: 12) {
+            Text(self.dish.icon)
+              .font(.system(size: 30))
 
-            Text("\(self.dish.name)")
-              .fontWeight(.light)
-              .lineLimit(1)
-              .font(.system(size: 22))
+            text
+              .shadow(color: Color.black.opacity(0.1), radius: 0, x: 0, y: 1)
 
             Spacer()
 
@@ -75,7 +77,7 @@ struct DishListItem: View, Equatable {
         .frame(width: self.screen.width)
     }
       .frame(width: self.screen.width, height: imageSize + 10)
-      .animation(.spring())
+      .animation(.none)
   }
   
   func getImageXPosition(_ index: Int, activeIndex: Int) -> CGFloat {
@@ -86,29 +88,53 @@ struct DishListItem: View, Equatable {
 }
 
 struct DishListItemImage: View, Identifiable {
-  var id: Int { self.dish.id }
+  var id: String { "\(self.dish.id)\(self.index)" }
   var dish: DishItem
   var index: Int
-  var activeIndex: Int
+  var activeIndex: CGFloat
   
-  @State var isActive = false
+  func scaleFactor(_ index: Double? = nil, minIndex: CGFloat = 0) -> CGFloat {
+    let x0 = activeIndex - 0.5 - CGFloat(index ?? Double(self.index))
+    let x1 = min(2, max(minIndex, x0)) // 0 = stage left, 1 = onstage, 2 = stage right
+    let x2 = x1 > 0.5 && x1 < 1.5 ? 1 : x1
+    return x2
+  }
+
+  var scale: CGFloat {
+    let s = scaleFactor()
+    return 1 + (
+      s > 1
+        ? ((2 - s) * 0.7)
+        : s * 0.7
+    )
+  }
+  
+  var opacityScaled: Double {
+    let x = min(1, scaleFactor(Double(index) + 1.5))
+    return x == 0 ? 1 : Double(0.5 - x)
+  }
+  
+  var isActive: Bool {
+    activeIndex == CGFloat(Double(index) + 0.5)
+  }
   
   var body: some View {
-    let next = self.index < self.activeIndex
-    if next != self.isActive {
-      async {
-        withAnimation(.spring()) {
-          self.isActive = next
-        }
-      }
+    // -0.5 = at edge of other cards
+    // 0 = starts zooming
+    // 0.5 = pops onto stage
+    // 1.5 pops off stage
+    // 2 = offstage left
+    let strength = scaleFactor(Double(index), minIndex: -4.0)
+    let isOnStage = strength >= 0.5 && strength <= 1.5
+    let sizeScaled = imageSize * scale
+    
+    if index == 2 {
+      print("isOnStage \(isOnStage) scaleFactor \(scaleFactor()) strength \((strength * 10).rounded() / 10) --  \(activeIndex)")
     }
-    
-//    let imgs = self.isActive ? 120 : imageSize
-    
     return self.dish.image
       .resizable()
       .scaledToFill()
-      .frame(width: imageSize, height: imageSize)
+      .frame(width: sizeScaled, height: sizeScaled)
       .onGeometryFrameChange { geo in
         if self.isActive {
           App.store.send(.home(.setListItemFocusedDish(
@@ -121,13 +147,18 @@ struct DishListItemImage: View, Identifiable {
       }
       .cornerRadiusSquircle(18)
       .shadow(radius: 4)
-      .opacity(index + 1 < activeIndex ? 0 : 1)
-      .scaleEffect(self.isActive ? 1.5 : 1)
-      .animation(.spring(response: 0.35))
-      .position(
-        x: 0,
-        y: size / 2 + (index < activeIndex ? 0 : 0)
+      .opacity(opacityScaled)
+      .rotation3DEffect(.degrees(Double(1 - self.scale) * -5), axis: (0, 1, 0))
+      .animation(
+        .interpolatingSpring(mass: 1, stiffness: 300, damping: 12, initialVelocity: 0)
       )
-      .zIndex(Double(activeIndex - index))
+      .position(
+        x: 0,// self.activeIndex > CGFloat(Double(index) + 0.5) ? -40 : 0,
+        y: size / 2
+      )
+      .zIndex(
+        isOnStage ? 100 :
+          Double(strength)
+      )
   }
 }
