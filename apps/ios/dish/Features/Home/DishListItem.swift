@@ -1,8 +1,8 @@
 import SwiftUI
 
 fileprivate let total: Int = 10
-fileprivate let size: CGFloat = 90
-fileprivate let imageSize: CGFloat = size - 5
+fileprivate let size: CGFloat = 92
+fileprivate let imageSize: CGFloat = size - 4
 
 struct DishListItem: View, Equatable {
   static func == (lhs: DishListItem, rhs: DishListItem) -> Bool {
@@ -76,7 +76,7 @@ struct DishListItem: View, Equatable {
       }
         .frame(width: self.screen.width)
     }
-      .frame(width: self.screen.width, height: imageSize + 10)
+      .frame(width: self.screen.width, height: imageSize)
       .animation(.none)
   }
   
@@ -109,7 +109,7 @@ struct DishListItemImage: View, Identifiable {
   
   func scaleFactor(_ index: Double? = nil, minIndex: CGFloat = 0) -> CGFloat {
     let x1 = getStrength(index, minIndex: minIndex)
-    let x2 = x1 > CGFloat(lB) && x1 < CGFloat(uB) ? 1 : x1
+    let x2 = x1 >= CGFloat(lB) && x1 <= CGFloat(uB) ? 1 : x1
     return x2
   }
 
@@ -123,8 +123,8 @@ struct DishListItemImage: View, Identifiable {
   }
   
   var opacityScaled: Double {
-    let x = min(1, scaleFactor(Double(index) + uB + 0.3))
-    return x == 0 ? 1 : lB - Double(x)
+    let x = min(1, scaleFactor(Double(index) + uB + 0.5))
+    return max(0.5, x == 0 ? 1 : lB - Double(x))
   }
   
   var isActive: Bool {
@@ -142,8 +142,7 @@ struct DishListItemImage: View, Identifiable {
     let isOnStage = sf == 1
     let sizeScaled = imageSize * scale
     
-    var x = strength > uB ? -80 :
-      strength > lB ? -20 : -(strength / 5) * 10
+    var x = strength > lB ? -20 : -(strength / 5) * 10
     
     if isActive {
       x = x - (uB - strength) * 100
@@ -182,10 +181,9 @@ struct DishListItemImage: View, Identifiable {
       )
       .shadow(radius: 4)
       .opacity(opacityScaled)
-      .rotation3DEffect(.degrees(Double(1 - self.scale) * -5), axis: (0, 1, 0))
-      .animation(
-        .interpolatingSpring(mass: 1.2, stiffness: 200, damping: 18, initialVelocity: 0)
-      )
+      .rotation3DEffect(.degrees(Double(1 - self.scale) * -7), axis: (0, 1, 0))
+      .animation(.spring(), value: !self.isActive)
+      .animation(.none, value: self.isActive)
       .position(
         x: CGFloat(x),
         y: size / 2

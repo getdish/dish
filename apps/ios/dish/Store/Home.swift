@@ -174,7 +174,9 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
 
   switch action {
     case .setListItemFocusedDish(let dish):
-      state.home.listItemFocusedDish = dish
+      if state.home.drawerIsDragging == false {      
+        state.home.listItemFocusedDish = dish
+      }
   case .setSelectedMarkers(let markers):
     let last = state.home.viewStates.last!
     if case .search(_, let results) = last.state {

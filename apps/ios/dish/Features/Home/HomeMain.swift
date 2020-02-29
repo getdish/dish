@@ -112,7 +112,7 @@ struct HomeFocusedDishView: View {
   var focusedDish: FocusedDishItem? = nil
   
   var height: CGFloat {
-    120
+    140
   }
   
   var body: some View {
@@ -123,24 +123,39 @@ struct HomeFocusedDishView: View {
     ) {
       VStack {
         HStack {
-          VStack {
+          VStack(spacing: 14) {
             Text("Miss Saigon")
-              .font(.system(size: 18))
+              .font(.system(size: 20))
               .fontWeight(.bold)
-            Text("★★★")
-              .font(.system(size: 14))
+            Text("Traditional northern style pho known for the broth.")
+              .font(.system(size: 16))
             Text("Closes 8pm · Vietnamese 🇻🇳")
-              .font(.system(size: 13))
+              .font(.system(size: 14))
           }
           .environment(\.colorScheme, .dark)
-          .padding()
+          .padding(.horizontal, 20)
+          .padding(.vertical, 15)
           .background(Color.black.opacity(0.8))
-          .cornerRadiusSquircle(40)
+          .cornerRadiusSquircle(23)
           .frame(width: 260, height: self.height)
-          .shadow(color: Color.black.opacity(0.5), radius: 20, y: 5)
+          .overlay(
+            VStack {
+              HStack {
+                Spacer()
+                Image(systemName: "bookmark")
+                  .padding(20)
+                  .modifier(ControlsButtonStyle())
+                  .offset(x: 15, y: -15)
+              }
+              Spacer()
+            }
+          )
+          .shadow(color: Color.black.opacity(0.25), radius: 16, y: 5)
+          .shadow(color: Color.black.opacity(0.25), radius: 10, x: -10, y: 5)
           
           Spacer()
         }
+        .padding(.leading, 12)
         Spacer()
       }
     }
