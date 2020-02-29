@@ -83,6 +83,10 @@ struct HomeMainView: View {
 
           HomeMainDrawer()
             .equatable()
+          
+          HomeFocusedDishView(
+            focusedDish: self.store.state.home.listItemFocusedDish
+          )
 
           DishCuisineFilterPopup(
             active: self.store.state.home.showCuisineFilter
@@ -101,6 +105,110 @@ struct HomeMainView: View {
 
     }
       .environmentObject(self.state)
+  }
+}
+
+struct HomeFocusedDishView: View {
+  var focusedDish: FocusedDishItem? = nil
+  
+  var height: CGFloat {
+    120
+  }
+  
+  var body: some View {
+    SwipeDownToDismissView(
+      onClose: {
+        App.store.send(.home(.setListItemFocusedDish(nil)))
+      }
+    ) {
+      VStack {
+        HStack {
+          VStack {
+            Text("Miss Saigon")
+              .font(.system(size: 18))
+              .fontWeight(.bold)
+            Text("★★★")
+              .font(.system(size: 14))
+            Text("Closes 8pm · Vietnamese 🇻🇳")
+              .font(.system(size: 13))
+          }
+          .environment(\.colorScheme, .dark)
+          .padding()
+          .background(Color.black.opacity(0.8))
+          .cornerRadiusSquircle(40)
+          .frame(width: 260, height: self.height)
+          .shadow(color: Color.black.opacity(0.5), radius: 20, y: 5)
+          
+          Spacer()
+        }
+        Spacer()
+      }
+    }
+      .id(self.focusedDish?.dish.id ?? 0)
+      .opacity(self.focusedDish == nil ? 0 : 1)
+      .offset(y: (self.focusedDish?.targetMinY ?? 0) - self.height - 20)
+      .animation(.spring())
+  }
+}
+
+
+struct SwipeDownToDismissView<Content>: View where Content: View {
+  @State var dragY: CGFloat = 0
+  @State var animateY: CGFloat = 0
+  @State var opacity: Double = 1
+  
+  var onClose: (() -> Void)? = nil
+  var content: () -> Content
+  
+  func scalePull(_ number: CGFloat) -> CGFloat {
+    return ((number - 0) / (-500 - 0) * 4) + 1
+  }
+  
+  var body: some View {
+    ZStack {
+      self.content()
+      .offset(
+        y: self.animateY + self.dragY
+      )
+      .opacity(self.opacity)
+      .gesture(
+        DragGesture()
+          .onChanged { drag in
+            var dy = drag.translation.height
+            
+            let lim: CGFloat = -60
+            if dy < lim {
+              let extra = dy + 60
+              dy = lim + extra * (1 / self.scalePull(dy + 60))
+            }
+            
+            self.dragY = dy
+          }
+          .onEnded { drag in
+            let endY = drag.location.y + drag.predictedEndLocation.y
+            let shouldClose = endY > 500
+            print("ok endY \(endY)")
+            
+            if shouldClose {
+              let continueY = drag.predictedEndTranslation.height
+              let duration: Double = Double(continueY) / 500
+              withAnimation(.easeOut(duration: duration)) {
+                self.animateY = continueY
+                self.opacity = 0
+              }
+              async(duration / 1000) {
+                if let cb = self.onClose {
+                  cb()
+                }
+              }
+            } else {
+              withAnimation(.spring()) {
+                self.dragY = 0
+              }
+            }
+          }
+      )
+    }
   }
 }
 

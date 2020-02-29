@@ -52,10 +52,18 @@ struct HomeMainDrawer: View, Equatable {
       snapPoints: App.drawerSnapPoints
     ) {
       ZStack {
-        HomeMainDrawerContentContainer(
-          isOnLocationSearch: isOnLocationSearch
-        )
         HomeMainDrawerScrollableContent()
+        
+        VStack(spacing: 0) {
+          VStack(spacing: 0) {
+            HomeSearchBar()
+              .padding(.horizontal, 10)
+              .padding(.top, 10)
+            HomeMainFilterBar()
+          }
+          Spacer()
+        }
+        .opacity(isOnLocationSearch ? 0 : 1)
       }
     }
       .environment(\.drawerBackgroundColor, self.drawerBackgroundColor)
@@ -97,28 +105,6 @@ struct HomeMainDrawerScrollableContent: View {
   }
 }
 
-
-struct HomeMainDrawerContentContainer: View {
-  var isOnLocationSearch: Bool
-
-  var body: some View {
-    return ZStack {
-      // home content
-      ZStack {
-        VStack(spacing: 0) {
-          VStack(spacing: 0) {
-            HomeSearchBar()
-              .padding(.horizontal, 10)
-              .padding(.top, 10)
-            HomeMainFilterBar()
-          }
-          Spacer()
-        }
-      }
-        .opacity(isOnLocationSearch ? 0 : 1)
-    }
-  }
-}
 
 struct HomeMainDrawerContent: View {
   @EnvironmentObject var store: AppStore
@@ -165,9 +151,13 @@ struct HomeScreen: View, Identifiable, Equatable {
     return ZStack {
       if isActive {
         if index == 0 {
-          HomeContentExplore()
+          HomeContentScrollView {
+            HomeContentExplore()
+          }
         } else {
-          HomeSearchResultsView(state: viewState)
+          HomeContentScrollView {
+            HomeSearchResultsView(state: viewState)
+          }
         }
       }
 
@@ -229,11 +219,68 @@ struct IdentifiableView<Content>: View, Identifiable where Content: View {
   }
 }
 
+let mainContentScrollState = ScrollState()
+
+struct HomeContentScrollView<Content>: View where Content: View {
+  @EnvironmentObject var screen: ScreenModel
+  @EnvironmentObject var store: AppStore
+  @State var state: ScrollState = mainContentScrollState
+  @State var targetLock: ScrollState.ScrollTargetLock = .idle
+  var content: Content
+  
+  init(content: () -> Content) {
+    self.content = content()
+  }
+  
+  func start() {
+    self.state.$scrollTargetLock
+      .map { target in
+        // side effect
+        if target == .drawer {
+          self.state.scrollView?.panGestureRecognizer.isEnabled = false
+        } else {
+          self.state.scrollView?.panGestureRecognizer.isEnabled = true
+        }
+        return target
+    }
+    .assign(to: \.targetLock, on: self)
+    .store(in: &self.state.cancellables)
+  }
+  
+  var body: some View {
+    let isDisabled = self.store.state.home.drawerIsDragging
+    
+    return Group {
+      ZStack {
+        Color.clear.onAppear(perform: self.start)
+        
+        GeometryReader { geo in
+          ScrollView(.vertical, showsIndicators: false) {
+            Color.clear.introspectScrollView { x in
+              self.state.scrollView = x
+              self.state.start()
+            }
+            
+            VStack(spacing: 0) {
+              HomeContentPadAbove()
+              self.content
+              HomeContentPadBelow()
+            }
+          }
+          .frame(width: self.screen.width, alignment: .leading)
+        }
+      }
+    }
+    .disabled(isDisabled)
+    .allowsHitTesting(!isDisabled)
+    .clipped()
+  }
+}
+
 struct HomeContentExplore: View {
   @EnvironmentObject var screen: ScreenModel
   @EnvironmentObject var store: AppStore
   let dishes = features
-  let id = UUID().uuidString
 
   var lense: LenseItem {
     Selectors.home.activeLense(self.store)
@@ -274,79 +321,28 @@ struct HomeContentExplore: View {
       }
     }
   }
-
-  @State var state: ScrollState? = nil
-  @State var targetLock: ScrollState.ScrollTargetLock = .idle
   
   var total: Int {
     self.store.state.appLoaded ? self.dishes.count : 5
   }
-  
-  func start() {
-    self.state = mainContentScrollState
-    self.state!.$scrollTargetLock
-      .map { target in
-        // side effect
-        if target == .drawer {
-          self.state?.scrollView?.panGestureRecognizer.isEnabled = false
-        } else {
-          self.state?.scrollView?.panGestureRecognizer.isEnabled = true
-        }
-        return target
-      }
-      .assign(to: \.targetLock, on: self)
-      .store(in: &self.state!.cancellables)
-  }
 
   var body: some View {
-    let isDisabled = self.store.state.home.drawerIsDragging
-
-    return Group {
-      ZStack {
-        Color.clear.onAppear(perform: self.start)
-
-        GeometryReader { geo in
-          ScrollView(.vertical, showsIndicators: false) {
-            Color.clear.introspectScrollView { x in
-              if let state = self.state {
-                state.scrollView = x
-                state.start(self)
-              }
-            }
-
-            VStack(spacing: 0) {
-              HomeContentPadAbove()
-
-              self.titleView
-
-              ForEach(0..<self.total) { index in
-                DishListItem(
-                  dish: self.dishes[index],
-                  number: index + 1,
-                  onScrollStart: {
-                    // todo reset the others
-                  }
-                )
-                  .equatable()
-//                  .transition(.slide)
-//                  .animation(.ripple(index: index))
-              }
-                .id(self.store.state.appLoaded ? "0" : "1")
-
-              HomeContentPadBelow()
-            }
-          }
-            .frame(width: self.screen.width, alignment: .leading)
+    VStack {
+      self.titleView
+      ForEach(0..<self.total) { index in
+        DishListItem(
+          dish: self.dishes[index],
+          number: index + 1,
+          onScrollStart: {
+            // todo reset the others
         }
+        )
+          .equatable()
       }
+      .id(self.store.state.appLoaded ? "0" : "1")
     }
-      .disabled(isDisabled)
-      .allowsHitTesting(!isDisabled)
-      .clipped()
   }
 }
-
-let mainContentScrollState = ScrollState()
 
 class ScrollState: NSObject, ObservableObject, UIScrollViewDelegate, UIGestureRecognizerDelegate {
   var scrollInitialY: CGFloat = 0
@@ -427,7 +423,7 @@ class ScrollState: NSObject, ObservableObject, UIScrollViewDelegate, UIGestureRe
     }
   }
 
-  func start(_ parent: HomeContentExplore) {
+  func start() {
     guard let scrollView = self.scrollView else { return }
     scrollView.delegate = self
     let r = UIPanGestureRecognizer.init(

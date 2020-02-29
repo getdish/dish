@@ -112,6 +112,11 @@ fileprivate let initialCuisines = [
   CuisineItem(id: "8", name: "Vietnamese", icon: "🇻🇳"),
 ]
 
+struct FocusedDishItem: Equatable {
+  var dish: DishItem
+  var targetMinY: CGFloat
+}
+
 extension AppState {
   typealias SearchFocus = SearchFocusState
 
@@ -128,6 +133,7 @@ extension AppState {
     var drawerIsDragging = false
     var showCuisineFilter: Bool = false
     var cuisineFilter: String = "🌍"
+    var listItemFocusedDish: FocusedDishItem? = nil
   }
 }
 
@@ -148,6 +154,7 @@ enum HomeAction {
   case setCuisineFilter(_ cuisine: String)
   case setDrawerIsDragging(_ val: Bool)
   case setSelectedMarkers(_ val: [MapMarker])
+  case setListItemFocusedDish(_ dish: FocusedDishItem?)
 }
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
@@ -166,6 +173,8 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
   // switch
 
   switch action {
+    case .setListItemFocusedDish(let dish):
+      state.home.listItemFocusedDish = dish
   case .setSelectedMarkers(let markers):
     let last = state.home.viewStates.last!
     if case .search(_, let results) = last.state {

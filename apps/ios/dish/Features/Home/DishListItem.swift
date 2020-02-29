@@ -109,6 +109,16 @@ struct DishListItemImage: View, Identifiable {
       .resizable()
       .scaledToFill()
       .frame(width: imageSize, height: imageSize)
+      .onGeometryFrameChange { geo in
+        if self.isActive {
+          App.store.send(.home(.setListItemFocusedDish(
+            FocusedDishItem(
+              dish: self.dish,
+              targetMinY: geo.frame(in: .global).minY
+            )
+          )))
+        }
+      }
       .cornerRadiusSquircle(18)
       .shadow(radius: 4)
       .opacity(index + 1 < activeIndex ? 0 : 1)

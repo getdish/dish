@@ -69,26 +69,26 @@ struct HomeViewInner: View, Equatable {
           self.store.send(.home(.setView(view)))
         }
         // just drag from edge (to camera/account)
-        .simultaneousGesture(
-          DragGesture()
-            .onChanged { value in
-              if homeViewState.dragState == .searchbar { return }
-              let isOnRightEdge = self.screen.width - value.startLocation.x < 10
-              let isOnLeftEdge = value.startLocation.x < 10
-              if isOnRightEdge || isOnLeftEdge {
-                if abs(value.translation.width) > 10 {
-                  homeViewState.setDragState(.pager)
-                }
-                homePager.drag(value)
-              }
-            }
-            .onEnded { value in
-              if homeViewState.dragState == .pager {
-                homePager.onDragEnd(value)
-                homeViewState.setDragState(.idle)
-              }
-            }
-        )
+//        .simultaneousGesture(
+//          DragGesture()
+//            .onChanged { value in
+//              if homeViewState.dragState == .searchbar { return }
+//              let isOnRightEdge = self.screen.width - value.startLocation.x < 10
+//              let isOnLeftEdge = value.startLocation.x < 10
+//              if isOnRightEdge || isOnLeftEdge {
+//                if abs(value.translation.width) > 10 {
+//                  homeViewState.setDragState(.pager)
+//                }
+//                homePager.drag(value)
+//              }
+//            }
+//            .onEnded { value in
+//              if homeViewState.dragState == .pager {
+//                homePager.onDragEnd(value)
+//                homeViewState.setDragState(.idle)
+//              }
+//            }
+//        )
     }
   }
 }
