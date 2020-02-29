@@ -48,9 +48,17 @@ struct DishListItem: View, Equatable {
 
           ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 0) {
-              ScrollListener(onScrollStart: self.onScrollStart, onScrollEnd: self.onScrollEnd) { frame in
+              ScrollListener(
+                name: "DishListItem",
+                onScrollStart: self.onScrollStart,
+                onScrollEnd: self.onScrollEnd
+              ) { frame in
                 async {
-                  self.scrollX = -frame.minX
+                  let x = -frame.minX
+                  self.scrollX = x
+                  if x <= 0 {
+                    App.store.send(.home(.setListItemFocusedDish(nil)))
+                  }
                 }
               }
               
@@ -141,10 +149,10 @@ struct DishListItemImage: View, Identifiable {
     let isOnStage = sf == 1
     let sizeScaled = imageSize * scale
     
-    var x = strength > lB ? -20 : -(strength / 5) * 10
+    var x: Double = strength > lB ? -20 : -(strength / 5) * 10
     
     if isActive {
-      x = x - (uB - strength) * 100
+      x = x - (uB - strength) * Double(size)
     }
     
     if index == 0 {
@@ -182,12 +190,13 @@ struct DishListItemImage: View, Identifiable {
       .shadow(radius: 4)
       .opacity(opacityScaled)
       .rotation3DEffect(.degrees(Double(1 - self.scale) * -7), axis: (0, 1, 0))
-      .animation(.spring(), value: !self.isActive)
-      .animation(.none, value: self.isActive)
+//      .animation(.spring(), value: !self.isActive)
+//      .animation(.none, value: self.isActive)
       .position(
         x: CGFloat(x),
         y: size / 2 - 10
       )
+      .animation(.none)
       .zIndex(
         isOnStage ? 100 : strength
       )

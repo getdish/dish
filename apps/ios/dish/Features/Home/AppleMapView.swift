@@ -70,6 +70,7 @@ struct AppleMapView: UIViewRepresentable {
 
     func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
       self.updateProps(self.parent)
+      self.callbackOnChangeLocationName()
     }
 
     var mapView: MKMapView {
@@ -110,6 +111,10 @@ struct AppleMapView: UIViewRepresentable {
         }
       }
       
+      self.callbackOnChangeLocationName()
+    }
+    
+    func callbackOnChangeLocationName() {
       if let cb = self.parent.onChangeLocationName {
         // Convert the user's location to a user-friendly place name by reverse geocoding the location.
         geocoder.reverseGeocodeLocation(

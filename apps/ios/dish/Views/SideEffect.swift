@@ -20,6 +20,7 @@ struct SideEffect: View {
   let condition: (() -> Bool)?
   let block: () -> Void
   let name: String
+  let runState = RunState()
 
   init(
     _ name: String, level: LogLevel = .info, debounce: Double = 0, throttle: Double = 0,
@@ -38,9 +39,7 @@ struct SideEffect: View {
       if self.condition?() == false {
         Color.clear
       } else {
-        Run(self.name, level: self.level, debounce: debounce, throttle: throttle) {
-          self.block()
-        }
+        Run(self.name, level: self.level, debounce: debounce, throttle: throttle, state: self.runState, block: self.block)
       }
     }
   }
@@ -48,43 +47,45 @@ struct SideEffect: View {
 
 // prefer this ^ except for extremely-often-running things
 
+class RunState: ObservableObject {
+  @Published var debounceRun: Date = Date()
+  @Published var throttleRun: Date = Date()
+  var cancellables: Set<AnyCancellable> = []
+  
+  func start(_ parent: Run) {
+    print("starting \(parent.name)")
+    if parent.debounce > 0 {
+      self.$debounceRun
+        .debounce(for: .milliseconds(Int(parent.debounce)), scheduler: DispatchQueue.main)
+        .sink { _ in
+          parent.run()
+      }
+      .store(in: &self.cancellables)
+    }
+    if parent.throttle > 0 {
+      self.$throttleRun
+        .throttle(
+          for: .milliseconds(Int(parent.throttle)), scheduler: DispatchQueue.main, latest: true
+      )
+        .sink { _ in
+          parent.run()
+      }
+      .store(in: &self.cancellables)
+    }
+  }
+}
+
 struct Run: View {
   let name: String
   let level: LogLevel
   let debounce: Double
   let throttle: Double
   let block: () -> Void
-
-  class RunState: ObservableObject {
-    @Published var debounceRun: Date = Date()
-    @Published var throttleRun: Date = Date()
-    var cancellables: Set<AnyCancellable> = []
-    var unmounted = false
-
-    func start(_ parent: Run) {
-      if parent.debounce > 0 {
-        self.$debounceRun
-          .debounce(for: .milliseconds(Int(parent.debounce)), scheduler: App.queueMain)
-          .sink { _ in
-            parent.run()
-          }
-          .store(in: &self.cancellables)
-      } else if parent.throttle > 0 {
-        self.$throttleRun
-          .throttle(
-            for: .milliseconds(Int(parent.throttle)), scheduler: App.queueMain, latest: true)
-          .sink { _ in
-            parent.run()
-          }
-          .store(in: &self.cancellables)
-      }
-    }
-  }
-
-  var state = RunState()
+  let state: RunState
 
   init(
     _ name: String, level: LogLevel = .info, debounce: Double = 0, throttle: Double = 0,
+    state: RunState = RunState(),
     block: @escaping () -> Void
   ) {
     self.name = name
@@ -92,23 +93,21 @@ struct Run: View {
     self.debounce = debounce
     self.throttle = throttle
     self.block = block
+    self.state = state
   }
 
   var body: some View {
-    if throttle > 0 {
-      self.state.throttleRun = Date()
-    } else if debounce > 0 {
-      self.state.debounceRun = Date()
-    } else {
-      async { self.run() }
+    async {
+      if self.throttle > 0 {
+        self.state.throttleRun = Date()
+      } else if self.debounce > 0 {
+        self.state.debounceRun = Date()
+      } else {
+        self.run()
+      }
     }
     return Color.clear
-      .onAppear {
-        self.state.start(self)
-      }
-      .onDisappear {
-        self.state.unmounted = true
-      }
+      .onAppear { self.state.start(self) }
   }
 
   func run() {

@@ -2,10 +2,11 @@ import SwiftUI
 import Combine
 
 struct ScrollListener: View {
+  var name: String = "ScrollListener"
   var debounce: Double = 0
-  var throttle: Double = 0
   var onScrollStart: (() -> Void)? = nil
   var onScrollEnd: (() -> Void)? = nil
+  var throttle: Double = 0
   
   @State var didSendStart = false
   @State private var cancellables: Set<AnyCancellable> = []
@@ -25,11 +26,15 @@ struct ScrollListener: View {
       .onAppear {
         // callbacks
         events.$lastScroll
+          .dropFirst()
+          .removeDuplicates()
           .map { _ in
             if !self.didSendStart,
               let cb = self.onScrollStart {
-              self.didSendStart = true
-              cb()
+              async {
+                self.didSendStart = true
+                cb()
+              }
             }
           }
           .debounce(for: .milliseconds(120), scheduler: App.queueMain)
@@ -45,9 +50,7 @@ struct ScrollListener: View {
         GeometryReader { geometry -> Run in
           let frame: CGRect = geometry.frame(in: .global)
           self.events.lastScroll = Int.random(in: 0...10000)
-          return Run(
-            "ScrollListener", level: .debug, debounce: self.debounce, throttle: self.throttle
-          ) {
+          return Run(self.name, level: .debug, debounce: self.debounce, throttle: self.throttle) {
             if let cb = self.onScroll {
               cb(frame)
             }

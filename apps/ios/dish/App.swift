@@ -41,6 +41,7 @@ class AppModel {
 
   let keyboard = Keyboard()
   let queueMain = DispatchQueue.main
+  let queueMainInteractive = DispatchQueue(label: "", qos: .userInteractive, attributes: .concurrent, target: .main)
   let magicItems = magicItemsStore
   let searchBarHeight: CGFloat = 50
   let filterBarHeight: CGFloat = 60

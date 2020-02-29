@@ -1,7 +1,7 @@
 import Combine
 import SwiftUI
 
-fileprivate let topContentHeight = App.filterBarHeight + 4
+fileprivate let topContentHeight = App.filterBarHeight
 
 struct HomeMainDrawer: View, Equatable {
   static func == (lhs: HomeMainDrawer, rhs: HomeMainDrawer) -> Bool {
@@ -95,7 +95,7 @@ struct HomeMainDrawerScrollableContent: View {
             startPoint: .top,
             endPoint: .center
           )
-            .offset(y: occludeTopHeight)
+            .offset(y: occludeTopHeight - 15)
       )
     }
   }
