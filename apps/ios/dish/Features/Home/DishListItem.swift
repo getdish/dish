@@ -158,19 +158,28 @@ struct DishListItemImage: View, Identifiable {
       .frame(width: sizeScaled, height: sizeScaled)
       .onGeometryFrameChange { geo in
         if self.isActive {
-          App.store.send(.home(.setListItemFocusedDish(
-            FocusedDishItem(
-              dish: self.dish,
-              targetMinY: geo.frame(in: .global).minY
-            )
-          )))
-        } else {
-          if self.index == 0 {
-            App.store.send(.home(.setListItemFocusedDish(nil)))
+          let next = FocusedDishItem(
+            dish: self.dish,
+            targetMinY: geo.frame(in: .global).minY
+          )
+          if next != App.store.state.home.listItemFocusedDish {
+            App.store.send(.home(.setListItemFocusedDish(next)))
           }
         }
       }
       .cornerRadiusSquircle(18)
+      .overlay(
+        VStack {
+          Spacer()
+          HStack {
+            if index == 0 {
+              Text("⭐️")
+                .offset(x: -4, y: 4)
+            }
+            Spacer()
+          }
+        }
+      )
       .shadow(radius: 4)
       .opacity(opacityScaled)
       .rotation3DEffect(.degrees(Double(1 - self.scale) * -5), axis: (0, 1, 0))

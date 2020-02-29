@@ -31,11 +31,6 @@ struct HomeMainDrawer: View, Equatable {
 
   var body: some View {
     let isOnLocationSearch = self.store.state.home.searchFocus == .location
-
-    //        self.colorScheme == .dark
-    //            ? Color.init(white: 0.075)
-    //            : Color.white
-
     return BottomDrawer(
       background: self.drawerBackgroundColor,
       cornerRadius: 20,

@@ -88,9 +88,9 @@ fileprivate let initialLenses: [LenseItem] = [
 ]
 
 fileprivate let initialFilters: [FilterItem] = [
-  FilterItem(name: "★", fontSize: 18, groupId: "rating", stack: true),
-  FilterItem(name: "★★", fontSize: 15, groupId: "rating", stack: true),
-  FilterItem(name: "★★★", fontSize: 13, groupId: "rating", stack: true),
+//  FilterItem(name: "★", fontSize: 18, groupId: "rating"),
+//  FilterItem(name: "★★", fontSize: 15, groupId: "rating", stack: true),
+//  FilterItem(name: "★★★", fontSize: 13, groupId: "rating", stack: true),
   FilterItem(name: "$", fontSize: 18, groupId: "price", stack: true),
   FilterItem(name: "$$", fontSize: 15, groupId: "price", stack: true),
   FilterItem(name: "$$$", fontSize: 13, groupId: "price", stack: true),

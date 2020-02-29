@@ -2,7 +2,7 @@
     {
         "name": "Miss Saigon Vietnamese Bistro",
         "tags": ["Cheap", "Good Service", "Locals Favorite", "Bad Neighborhood"],
-        "stars": 3,
+        "stars": 1,
         "address": "1234 W Street St",
         "phone": "520-555-1234",
         "id": "1001",
@@ -11,7 +11,7 @@
     {
         "name": "Pho 2000",
         "tags": ["Cheap", "Good Service", "Locals Favorite", "Bad Neighborhood"],
-        "stars": 3,
+        "stars": 1,
         "address": "1234 W Street St",
         "phone": "520-555-1234",
         "id": "1002",
@@ -20,7 +20,7 @@
     {
         "name": "Kevins Noodle House",
         "tags": ["Cheap", "Good Service", "Locals Favorite", "Bad Neighborhood"],
-        "stars": 2,
+        "stars": 1,
         "address": "1234 W Street St",
         "phone": "520-555-1234",
         "id": "1003",
@@ -29,7 +29,7 @@
     {
         "name": "Mau",
         "tags": ["Cheap", "Good Service", "Locals Favorite", "Bad Neighborhood"],
-        "stars": 2,
+        "stars": 1,
         "address": "1234 W Street St",
         "phone": "520-555-1234",
         "id": "1004",
@@ -38,7 +38,7 @@
     {
         "name": "Turtle Tower",
         "tags": ["Cheap", "Good Service", "Locals Favorite", "Bad Neighborhood"],
-        "stars": 2,
+        "stars": 1,
         "address": "1234 W Street St",
         "phone": "520-555-1234",
         "id": "1005",
@@ -47,7 +47,7 @@
     {
         "name": "Noodle Girl",
         "tags": ["Cheap", "Good Service", "Locals Favorite", "Bad Neighborhood"],
-        "stars": 3,
+        "stars": 0,
         "address": "1234 W Street St",
         "phone": "520-555-1234",
         "id": "1006",
@@ -56,7 +56,7 @@
     {
         "name": "Anh Chi",
         "tags": ["Cheap", "Good Service", "Locals Favorite", "Bad Neighborhood"],
-        "stars": 1,
+        "stars": 0,
         "address": "1234 W Street St",
         "phone": "520-555-1234",
         "id": "1007",
@@ -65,7 +65,7 @@
     {
         "name": "Little Window",
         "tags": ["Cheap", "Good Service", "Locals Favorite", "Bad Neighborhood"],
-        "stars": 2,
+        "stars": 0,
         "address": "1234 W Street St",
         "phone": "520-555-1234",
         "id": "1008",
