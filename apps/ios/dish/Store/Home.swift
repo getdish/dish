@@ -95,13 +95,18 @@ fileprivate let initialFilters: [FilterItem] = [
 //  FilterItem(name: "★", fontSize: 18, groupId: "rating"),
 //  FilterItem(name: "★★", fontSize: 15, groupId: "rating", stack: true),
 //  FilterItem(name: "★★★", fontSize: 13, groupId: "rating", stack: true),
-  FilterItem(name: "$", fontSize: 18, groupId: "price", stack: true),
-  FilterItem(name: "$$", fontSize: 15, groupId: "price", stack: true),
-  FilterItem(name: "$$$", fontSize: 13, groupId: "price", stack: true),
-  FilterItem(name: "🚗", fontSize: 15, groupId: "quick"),
+  FilterItem(name: "$", fontSize: 18, groupId: "first", stack: true),
+  FilterItem(name: "$$", fontSize: 15, groupId: "first", stack: true),
+  FilterItem(name: "$$$", fontSize: 13, groupId: "first", stack: true),
+  FilterItem(name: "🚗", fontSize: 15, groupId: "first"),
   FilterItem(name: "Open", fontSize: 15, groupId: "normal"),
   FilterItem(name: "Healthy", fontSize: 15, groupId: "normal"),
   FilterItem(name: "Cash Only", fontSize: 15, groupId: "normal"),
+  FilterItem(name: "Diet", fontSize: 15, groupId: "diet", stack: true),
+  FilterItem(name: "Vegan", fontSize: 15, groupId: "diet", stack: true),
+  FilterItem(name: "Veggie", fontSize: 15, groupId: "diet", stack: true),
+  FilterItem(name: "Pescatarian", fontSize: 15, groupId: "diet", stack: true),
+  FilterItem(name: "Gluten-free", fontSize: 15, groupId: "diet", stack: true),
 ]
 
 fileprivate let initialCuisines = [

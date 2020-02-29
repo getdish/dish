@@ -28,6 +28,8 @@ extension String {
   }
 }
 
+// MARK - for string subscripts
+
 extension String {
   func image(size: Double = 24) -> UIImage? {
     let size = CGSize(width: size, height: size)
