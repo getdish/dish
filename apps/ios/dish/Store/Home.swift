@@ -2,6 +2,61 @@ import Combine
 import MapKit
 import SwiftUI
 
+struct HomeStateItem: Identifiable, Equatable {
+  struct Item: Identifiable, Equatable {
+    var id: String
+    var name: String
+    var coordinate: CLLocationCoordinate2D
+  }
+  
+  struct SearchResults: Equatable {
+    enum FetchStatus { case idle, fetching, failed, completed }
+    var id = uid()
+    var status: FetchStatus = .fetching
+    var results: [Item] = []
+  }
+  
+  enum State: Equatable {
+    case home
+    case search(search: String, results: SearchResults = SearchResults())
+    case selection(items: [Item])
+    case restaurantDetail(restaurant: RestaurantItem)
+  }
+  
+  var id = uid()
+  var state: State = .home
+  
+  // computed value helpers
+  
+  var queryString: String {
+    if case .search(let query, _) = state {
+      return query
+    }
+    return ""
+  }
+  
+  var isLoading: Bool {
+    if case .search(_, let results) = state {
+      return results.status == .fetching
+    }
+    return false
+  }
+  
+  var restaurant: RestaurantItem? {
+    if case .restaurantDetail(let val) = state {
+      return val
+    }
+    return nil
+  }
+  
+  var searchResults: HomeStateItem.SearchResults? {
+    if case .search(_, let val) = state {
+      return val
+    }
+    return nil
+  }
+}
+
 struct LenseItem: Equatable, Identifiable {
   let id: String
   let name: String
@@ -102,7 +157,9 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
   // use this to ensure you update HomeStateItems correctly
   func updateItem(_ next: HomeStateItem) {
     if let index = state.home.viewStates.firstIndex(where: { $0.id == next.id }) {
-      state.home.viewStates[index] = next
+      var insert = next
+      insert.id = UUID().uuidString
+      state.home.viewStates[index] = insert
     }
   }
 
@@ -263,66 +320,6 @@ struct FilterItem: Identifiable, Equatable {
   var fontSize: CGFloat = 20
   var groupId: String = ""
   var stack: Bool = false
-}
-
-struct HomeStateItem: Identifiable, Equatable {
-  struct Item: Identifiable, Equatable {
-    var id: String
-    var name: String
-    var coordinate: CLLocationCoordinate2D
-  }
-
-  struct SearchResults: Equatable {
-    static func == (lhs: Self, rhs: Self) -> Bool { lhs.id == rhs.id }
-
-    enum FetchStatus {
-      case idle, fetching, failed, completed
-    }
-
-    var id = uid()
-    var status: FetchStatus = .fetching
-    var results: [Item] = []
-  }
-
-  enum State: Equatable {
-    case home
-    case search(search: String, results: SearchResults = SearchResults())
-    case selection(items: [Item])
-    case restaurantDetail(restaurant: RestaurantItem)
-  }
-
-  var id = uid()
-  var state: State = .home
-
-  // computed value helpers
-
-  var queryString: String {
-    if case .search(let query, _) = state {
-      return query
-    }
-    return ""
-  }
-
-  var isLoading: Bool {
-    if case .search(_, let results) = state {
-      return results.status == .fetching
-    }
-    return false
-  }
-
-  var restaurant: RestaurantItem? {
-    if case .restaurantDetail(let val) = state {
-      return val
-    }
-    return nil
-  }
-
-  var searchResults: HomeStateItem.SearchResults? {
-    if case .search(_, let val) = state {
-      return val
-    }
-    return nil
-  }
 }
 
 enum HomePageView {

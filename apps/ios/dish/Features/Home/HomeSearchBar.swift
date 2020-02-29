@@ -71,7 +71,7 @@ struct HomeSearchBar: View {
     var iconSize: CGFloat = 18
     let icon: Image = {
       if Selectors.home.lastState().isLoading {
-        return Image(systemName: "dots")
+        return Image(systemName: "slowmo")
       }
       if showSearchIcon {
         return Image(systemName: "magnifyingglass")

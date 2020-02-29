@@ -95,7 +95,7 @@ struct SearchInput: View {
 
   var body: some View {
     let pad = 10 * scale
-    let fontSize = 14 * (scale - 1) / 2 + 16
+    let fontSize = 16 * (scale - 1) / 2 + 16
     let horizontalSpacing = 14 * scale
 
     return ZStack {

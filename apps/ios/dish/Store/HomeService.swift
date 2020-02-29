@@ -59,6 +59,7 @@ class HomeService {
             .success(
               HomeStateItem.SearchResults(
                 id: "0",
+                status: .completed,
                 results: data.restaurant.map { restaurant in
                   let coords = restaurant.location?["coordinates"] as! [Double]
                   return HomeStateItem.Item(

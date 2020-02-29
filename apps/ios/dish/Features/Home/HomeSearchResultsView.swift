@@ -4,8 +4,10 @@ struct HomeSearchResultsView: View {
   var state: HomeStateItem
 
   var body: some View {
-    VStack(spacing: 20) {
-      ForEach(state.searchResults?.results ?? []) { item in
+    let results: [HomeStateItem.Item] = state.searchResults?.results ?? []
+    print("results \(results)")
+    return VStack(spacing: 20) {
+      ForEach(results) { item in
         DishRestaurantResult(
           restaurant:
             RestaurantItem(
@@ -18,17 +20,12 @@ struct HomeSearchResultsView: View {
               stars: 3
             )
         )
-          .equatable()
       }
     }
   }
 }
 
-struct DishRestaurantResult: View, Equatable {
-  static func == (lhs: DishRestaurantResult, rhs: DishRestaurantResult) -> Bool {
-    lhs.restaurant == rhs.restaurant
-  }
-
+struct DishRestaurantResult: View {
   @EnvironmentObject var screen: ScreenModel
   @State var isScrolled = false
   var restaurant: RestaurantItem

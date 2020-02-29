@@ -355,17 +355,21 @@ class ScrollState: NSObject, ObservableObject, UIScrollViewDelegate, UIGestureRe
   }
 
   func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-    print("🙈 scrollViewWillBeginDragging")
+    print("🙈 scrollViewWillBeginDragging isAbleToPullDrawer \(isAbleToPullDrawer)")
     self.scrollInitialY = scrollView.contentOffset.y
-    scrollView.bounces = !isAbleToPullDrawer
+    let bounces = !self.isAbleToPullDrawer
+    if bounces != scrollView.bounces {
+      scrollView.bounces = bounces
+    }
   }
 
   func scrollViewWillEndDragging(
     _ scrollView: UIScrollView, withVelocity velocity: CGPoint,
     targetContentOffset: UnsafeMutablePointer<CGPoint>
   ) {
-    async(20) {
+    async {
       self.scrollTargetLock = .idle
+      self.scrollView?.panGestureRecognizer.isEnabled = true
     }
   }
 
