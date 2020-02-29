@@ -42,11 +42,11 @@ struct HomeMainFilterBar: View, Equatable {
           ForEach(0..<self.filterGroups.count) { index in
             Group {
               // separator
-              if self.filterGroups[index][0].stack == false
-                && index != 0
-              {
-                self.separator
-              }
+//              if self.filterGroups[index][0].stack == false
+//                && index != 0
+//              {
+//                self.separator
+//              }
               FilterGroupView(
                 group: self.filterGroups[index]
               )
