@@ -51,52 +51,60 @@ struct HomeMainDrawer: View, Equatable {
       position: self.drawerPosition,
       snapPoints: App.drawerSnapPoints
     ) {
-      HomeMainDrawerContentContainer(
-        isOnLocationSearch: isOnLocationSearch
-      )
+      ZStack {
+        HomeMainDrawerContentContainer(
+          isOnLocationSearch: isOnLocationSearch
+        )
+        HomeMainDrawerScrollableContent()
+      }
     }
       .environment(\.drawerBackgroundColor, self.drawerBackgroundColor)
       .environment(\.lenseColor, Selectors.home.activeLense().color)
   }
 }
 
+
+struct HomeMainDrawerScrollableContent: View {
+  var body: some View {
+    let occludeTopHeight = App.searchBarHeight + 13
+    
+    return VStack(spacing: 0) {
+      Spacer().frame(height: occludeTopHeight)
+      
+      HomeMainDrawerContent()
+        .mask(
+          LinearGradient(
+            gradient: Gradient(colors: [
+              Color.black.opacity(0),
+              Color.black.opacity(1),
+              Color.black.opacity(1),
+              Color.black.opacity(1),
+              Color.black.opacity(1),
+              Color.black.opacity(1),
+              Color.black.opacity(1),
+              Color.black.opacity(1),
+              Color.black.opacity(1),
+              Color.black.opacity(1),
+              Color.black.opacity(1),
+              Color.black.opacity(1)
+            ]),
+            startPoint: .top,
+            endPoint: .center
+          )
+            .offset(y: occludeTopHeight)
+      )
+    }
+  }
+}
+
+
 struct HomeMainDrawerContentContainer: View {
   var isOnLocationSearch: Bool
 
   var body: some View {
-    let occludeTopHeight = App.searchBarHeight + 13
     return ZStack {
       // home content
       ZStack {
-        VStack(spacing: 0) {
-          Spacer().frame(height: occludeTopHeight)
-          
-          HomeMainDrawerContent()
-            .mask(
-              LinearGradient(
-                gradient: Gradient(colors: [
-                  Color.black.opacity(0),
-                  Color.black.opacity(1),
-                  Color.black.opacity(1),
-                  Color.black.opacity(1),
-                  Color.black.opacity(1),
-                  Color.black.opacity(1),
-                  Color.black.opacity(1),
-                  Color.black.opacity(1),
-                  Color.black.opacity(1),
-                  Color.black.opacity(1),
-                  Color.black.opacity(1),
-                  Color.black.opacity(1)
-                ]),
-                startPoint: .top,
-                endPoint: .center
-              )
-                .offset(y: occludeTopHeight)
-            )
-          
-          Spacer()
-        }
-
         VStack(spacing: 0) {
           VStack(spacing: 0) {
             HomeSearchBar()

@@ -112,11 +112,11 @@ struct DishListItemImage: View, Identifiable {
       .cornerRadiusSquircle(18)
       .shadow(radius: 4)
       .opacity(index + 1 < activeIndex ? 0 : 1)
-      .scaleEffect(self.isActive ? 2 : 1)
-      .animation(.spring())
+      .scaleEffect(self.isActive ? 1.5 : 1)
+      .animation(.spring(response: 0.5))
       .position(
         x: 0,
-        y: size / 2 + (index < activeIndex ? -imageSize / 2 : 0)
+        y: size / 2 + (index < activeIndex ? 0 : 0)
     )
       .zIndex(Double(activeIndex - index))
   }
