@@ -38,7 +38,7 @@ struct ControlsBar: View, Equatable {
         .scaledToFit()
         .frame(width: 16, height: 16)
     }
-      .modifier(ControlsButtonStyle())
+      .controlButtonStyle()
   }
 
   var locationButton: some View {
@@ -55,7 +55,7 @@ struct ControlsBar: View, Equatable {
       }
 
     }
-      .modifier(ControlsButtonStyle())
+      .controlButtonStyle()
   }
 }
 
@@ -89,43 +89,6 @@ struct CameraControls: View {
 
       Spacer()
     }
-  }
-}
-
-struct ControlsButtonStyle: ViewModifier {
-  @Environment(\.colorScheme) var colorScheme
-
-  var active: Bool = false
-  var background: Color = .clear
-  var cornerRadius: CGFloat = 9
-  var height: CGFloat = 34
-  var hPad: CGFloat = 11
-  var showBlurBackground: Bool = true
-
-  func body(content: Content) -> some View {
-    ZStack {
-      Group {
-        if colorScheme == .dark {
-          content
-            .frame(height: self.height)
-            .padding(.horizontal, self.hPad)
-            .foregroundColor(.white)
-            .background(Color.black.opacity(active ? 0 : 0.3))
-            .background(showBlurBackground ? BlurView(style: .systemThinMaterialDark) : nil)
-        } else {
-          content
-            .frame(height: self.height)
-            .padding(.horizontal, self.hPad)
-            .background(Color.white.opacity(active ? 0 : 0.2))
-            .foregroundColor(.white)
-            .background(showBlurBackground ? BlurView(style: .systemThinMaterialDark) : nil)
-        }
-      }
-        .background(self.background)
-        .cornerRadiusSquircle(cornerRadius)
-        .shadow(color: Color.black.opacity(0.15), radius: 3, x: 0, y: 1)
-    }
-      .padding(3)
   }
 }
 

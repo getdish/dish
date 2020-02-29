@@ -20,7 +20,11 @@ struct DishCardView: View, Identifiable, Equatable {
   var width: CGFloat? = nil
 
   var body: some View {
-    DishButton(
+    let radius: CGFloat = self.display == .small ? 18 : 22
+    // drawingGroup is removing our shadows... hacky version for now
+    let shadow = Color.black.opacity(0.1).cornerRadius(radius)
+
+    return DishButton(
       action: self.action ?? {
         App.store.send(
           .home(.push(HomeStateItem(state: .search(search: self.dish.name))))
@@ -31,13 +35,28 @@ struct DishCardView: View, Identifiable, Equatable {
         .resizable()
         .scaledToFill()
         .frame(width: self.width, height: self.height)
-        .overlay(self.overlay)
-        .cornerRadiusSquircle(
-          self.display == .small ? 16 : 20
-        )
-        .clipped()
-        //                .borderRounded(radius: self.display == .small ? 20 : 35, width: 2, color: Color.gray.opacity(0.2))
         .shadow(color: Color.black.opacity(0.4), radius: 7, x: 0, y: 1)
+        .overlay(self.overlay)
+        .cornerRadius(radius)
+        .background(
+          ZStack {
+            shadow.offset(y: 3).scaleEffect(1.02)
+            shadow.offset(y: 2).scaleEffect(1.01)
+            shadow.offset(y: 1)
+          }
+        )
+        .overlay(
+          VStack {
+            HStack {
+              Text(self.dish.icon)
+                .font(.system(size: 32))
+                .shadow(color: Color.black.opacity(0.5), radius: 2, y: 1)
+                .position(x: 8, y: 8)
+              Spacer()
+            }
+            Spacer()
+          }
+        )
     }
   }
 
@@ -48,19 +67,19 @@ struct DishCardView: View, Identifiable, Equatable {
           gradient: Gradient(
             colors:
               colorScheme == .dark
-              ? [Color.black.opacity(0.6), Color.black.opacity(0.4)]
-              : [Color.black.opacity(0.4), Color.black.opacity(0)]
+              ? [Color.black.opacity(0.3), Color.black.opacity(0.6)]
+                : [Color.black.opacity(0.2), Color.black.opacity(0.5)]
           ),
-          startPoint: .bottom,
-          endPoint: .center
+          startPoint: .top,
+          endPoint: .bottom
         )
       )
-      VStack(alignment: .leading) {
+      VStack {
         Text(self.dish.name)
-          .font(.system(size: 16))
+          .font(.system(size: self.dish.name.count > 8 ? 14 : 16))
           .fontWeight(.semibold)
-          .multilineTextAlignment(.center)
           .lineLimit(2)
+          .multilineTextAlignment(.center)
           .shadow(color: Color.black.opacity(0.6), radius: 2, x: 0, y: 1)
       }
         .padding()

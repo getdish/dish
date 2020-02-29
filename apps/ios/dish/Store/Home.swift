@@ -127,6 +127,10 @@ struct FocusedDishItem: Equatable {
   var targetMinY: CGFloat
 }
 
+enum HomeTopLevelFilter {
+  case dish, restaurant
+}
+
 extension AppState {
   typealias SearchFocus = SearchFocusState
 
@@ -134,6 +138,7 @@ extension AppState {
     var view: HomePageView = .home
     var viewStates: [HomeStateItem] = [HomeStateItem()]
     var filters: [FilterItem] = initialFilters
+    var filterTopLevel: HomeTopLevelFilter = .dish
     var cuisines: [CuisineItem] = initialCuisines
     var lenses: [LenseItem] = initialLenses
     var lenseActive = 0

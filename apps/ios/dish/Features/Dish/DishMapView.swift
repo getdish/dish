@@ -26,12 +26,12 @@ struct DishMapViewContainer: View {
             markers: markers
           )
 
-          // prevent touch on left/right sides for dragging between cards
-          HStack {
-            Color.black.opacity(0.00001).frame(width: 24)
-            Color.clear
-            Color.black.opacity(0.00001).frame(width: 24)
-          }
+//          // prevent touch on left/right sides for dragging between cards
+//          HStack {
+//            Color.black.opacity(0.00001).frame(width: 24)
+//            Color.clear
+//            Color.black.opacity(0.00001).frame(width: 24)
+//          }
 
           // keyboard dismiss (above map, below content)
           if self.keyboard.state.height > 0 {

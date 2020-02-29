@@ -67,8 +67,8 @@
         "tags": ["Cheap", "Good Service", "Locals Favorite", "Bad Neighborhood"],
         "stars": 0,
         "address": "1234 W Street St",
-        "phone": "520-555-1234",
         "id": "1008",
+        "phone": "520-555-1234",
         "imageName": "icybay"
     }
 ]

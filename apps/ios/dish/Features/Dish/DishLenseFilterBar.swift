@@ -47,12 +47,12 @@ struct DishLenseButton: View, Identifiable, Equatable {
         .modifier(
           ControlsButtonStyle(
             active: active,
-            background: active ? lense.color : lense.color.opacity(0.8),
+            background: active ? lense.colorBright : lense.color.opacity(0.6),
             height: 38
           )
         )
-        .scaleEffect(active ? 1.05 : 0.95)
-        .shadow(color: active ? lense.colorBright : Color.clear, radius: 5)
+        .scaleEffect(active ? 1.1 : 1)
+        .shadow(color: lense.color, radius: 2)
         .animation(.spring())
     }
   }

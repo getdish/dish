@@ -12,7 +12,7 @@ struct DishRatingView: View {
         HStack(spacing: 0) {
           ZStack {
             ForEach(0..<self.restaurant.stars) { index in
-              Text("★")
+              Text("⭐️")
                 .font(.system(size: self.ratingSize * 0.525))
                 .offset(x: CGFloat(index) * self.starWidth)
             }

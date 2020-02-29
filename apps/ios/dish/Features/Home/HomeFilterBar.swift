@@ -27,13 +27,22 @@ struct HomeMainFilterBar: View, Equatable {
   var separator: some View {
     Color(white: 0.5).opacity(0.1).frame(width: 1)
   }
+  
+  @State var x = false
 
   var body: some View {
     ZStack {
       ScrollView(.horizontal, showsIndicators: false) {
         HStack(spacing: 8) {
+//          Text(x ? "🥂" : "🍽") //
+//            .font(.system(size: 26))
+//            .onTapGesture {
+//              self.x = !self.x
+//            }
+//          .padding(.trailing, 4)
+          
           FilterButton(
-            filter: FilterItem(name: self.store.state.home.cuisineFilter),
+            filter: FilterItem(name: self.store.state.home.cuisineFilter, fontSize: 13),
             onTap: {
               self.store.send(.home(.toggleShowCuisineFilter))
             }

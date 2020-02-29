@@ -52,7 +52,7 @@ struct HomeMapExplore: View {
 
   var body: some View {
     ScrollView(.horizontal, showsIndicators: false) {
-      HStack(spacing: 12) {
+      HStack(spacing: 15) {
         ForEach(self.items, id: \.id) { item in
           MapResultDishCard(dish: item)
             .equatable()
@@ -74,7 +74,7 @@ struct HomeMapExplore: View {
       DishCardView(
         dish: dish,
         display: .small,
-        height: App.mapBarHeight - 10
+        height: App.mapBarHeight - 15
       )
         .frame(width: 120, height: App.mapBarHeight)
     }

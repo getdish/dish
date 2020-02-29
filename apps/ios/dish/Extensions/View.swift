@@ -179,3 +179,73 @@ struct ResignKeyboardOnDragGesture: ViewModifier {
     content.gesture(gesture)
   }
 }
+
+extension View {
+  func floatingButtonStyle() -> some View {
+    self.padding(.all, 16)
+      .background(
+        BlurView(style: .systemMaterialDark)
+    )
+      .background(
+        LinearGradient(
+          gradient: Gradient(colors: [
+            Color.white.opacity(0.4),
+            Color.white.opacity(0.5),
+          ]),
+          startPoint: .top,
+          endPoint: .bottom
+        )
+    )
+      .cornerRadius(80)
+      .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 8)
+      .overlay(
+        RoundedRectangle(cornerRadius: 80)
+          .stroke(Color.white.opacity(0.5), lineWidth: 1)
+    )
+  }
+}
+
+
+extension View {
+  func controlButtonStyle() -> some View {
+    modifier(ControlsButtonStyle())
+  }
+}
+
+
+struct ControlsButtonStyle: ViewModifier {
+  @Environment(\.colorScheme) var colorScheme
+  
+  var active: Bool = false
+  var background: Color = .clear
+  var cornerRadius: CGFloat = 9
+  var height: CGFloat = 34
+  var hPad: CGFloat = 11
+  var showBlurBackground: Bool = true
+  
+  func body(content: Content) -> some View {
+    ZStack {
+      Group {
+        if colorScheme == .dark {
+          content
+            .frame(height: self.height)
+            .padding(.horizontal, self.hPad)
+            .foregroundColor(.white)
+            .background(Color.black.opacity(active ? 0 : 0.3))
+            .background(showBlurBackground ? BlurView(style: .systemThinMaterialDark) : nil)
+        } else {
+          content
+            .frame(height: self.height)
+            .padding(.horizontal, self.hPad)
+            .background(Color.white.opacity(active ? 0 : 0.2))
+            .foregroundColor(.white)
+            .background(showBlurBackground ? BlurView(style: .systemThinMaterialDark) : nil)
+        }
+      }
+      .background(self.background)
+      .cornerRadiusSquircle(cornerRadius)
+      .shadow(color: Color.black.opacity(0.15), radius: 3, x: 0, y: 1)
+    }
+    .padding(3)
+  }
+}
