@@ -49,6 +49,7 @@ services:
       - UBEREATS_PROXY=${UBEREATS_PROXY}
       - YELP_PROXY=${YELP_PROXY}
       - INFATUATED_PROXY=${INFATUATED_PROXY}
+      - MICHELIN_PROXY=${MICHELIN_PROXY}
     command:
       - node
     args:

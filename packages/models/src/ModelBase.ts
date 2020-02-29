@@ -1,6 +1,6 @@
+import util from 'util'
 import {
   ApolloClient,
-  ApolloLink,
   gql,
   HttpLink,
   InMemoryCache,
@@ -409,5 +409,6 @@ export class ModelBase<T> {
 class HasuraError extends Error {
   constructor(public query: string, public errors: {} = {}) {
     super()
+    this.message = util.inspect(errors)
   }
 }

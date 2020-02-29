@@ -155,7 +155,9 @@ export class Restaurant extends ModelBase<Restaurant> {
       }
     }
     if (found) {
-      console.log('Found existing canonical restaurant: ' + found.id)
+      if (process.env.RUN_WITHOUT_WORKER != 'true') {
+        console.log('Found existing canonical restaurant: ' + found.id)
+      }
       return found
     }
     const restaurant = new Restaurant({
@@ -167,7 +169,9 @@ export class Restaurant extends ModelBase<Restaurant> {
       },
     })
     await restaurant.insert()
-    console.log('Created new canonical restaurant: ' + restaurant.id)
+    if (process.env.RUN_WITHOUT_WORKER != 'true') {
+      console.log('Created new canonical restaurant: ' + restaurant.id)
+    }
     return restaurant
   }
 
