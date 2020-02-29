@@ -92,11 +92,24 @@ struct DishListItemImage: View, Identifiable {
   var dish: DishItem
   var index: Int
   var activeIndex: CGFloat
+  let stageTime = 0.9
+  
+  var lB: Double {
+    1 - stageTime
+  }
+  
+  var uB: Double {
+    stageTime
+  }
+  
+  func getStrength(_ index: Double? = nil, minIndex: CGFloat = 0) -> CGFloat {
+    let x0 = activeIndex - 0.5 - CGFloat(index ?? Double(self.index))
+    return min(2, max(minIndex, x0)) // 0 = stage left, 1 = onstage, 2 = stage right
+  }
   
   func scaleFactor(_ index: Double? = nil, minIndex: CGFloat = 0) -> CGFloat {
-    let x0 = activeIndex - 0.5 - CGFloat(index ?? Double(self.index))
-    let x1 = min(2, max(minIndex, x0)) // 0 = stage left, 1 = onstage, 2 = stage right
-    let x2 = x1 > 0.5 && x1 < 1.5 ? 1 : x1
+    let x1 = getStrength(index, minIndex: minIndex)
+    let x2 = x1 > CGFloat(lB) && x1 < CGFloat(uB) ? 1 : x1
     return x2
   }
 
@@ -104,18 +117,18 @@ struct DishListItemImage: View, Identifiable {
     let s = scaleFactor()
     return 1 + (
       s > 1
-        ? ((2 - s) * 0.7)
-        : s * 0.7
+        ? ((2 - s) * 0.8)
+        : s * 0.8
     )
   }
   
   var opacityScaled: Double {
-    let x = min(1, scaleFactor(Double(index) + 1.5))
-    return x == 0 ? 1 : Double(0.5 - x)
+    let x = min(1, scaleFactor(Double(index) + uB + 0.3))
+    return x == 0 ? 1 : lB - Double(x)
   }
   
   var isActive: Bool {
-    activeIndex == CGFloat(Double(index) + 0.5)
+    return self.scaleFactor() == 1
   }
   
   var body: some View {
@@ -124,11 +137,19 @@ struct DishListItemImage: View, Identifiable {
     // 0.5 = pops onto stage
     // 1.5 pops off stage
     // 2 = offstage left
-    let strength = scaleFactor(Double(index), minIndex: -4.0)
-    let isOnStage = strength >= 0.5 && strength <= 1.5
+    let sf = scaleFactor()
+    let strength = Double(getStrength(minIndex: -4.0))
+    let isOnStage = sf == 1
     let sizeScaled = imageSize * scale
     
-    if index == 2 {
+    var x = strength > uB ? -80 :
+      strength > lB ? -20 : -(strength / 5) * 10
+    
+    if isActive {
+      x = x - (uB - strength) * 100
+    }
+    
+    if index == 0 {
       print("isOnStage \(isOnStage) scaleFactor \(scaleFactor()) strength \((strength * 10).rounded() / 10) --  \(activeIndex)")
     }
     return self.dish.image
@@ -143,6 +164,10 @@ struct DishListItemImage: View, Identifiable {
               targetMinY: geo.frame(in: .global).minY
             )
           )))
+        } else {
+          if self.index == 0 {
+            App.store.send(.home(.setListItemFocusedDish(nil)))
+          }
         }
       }
       .cornerRadiusSquircle(18)
@@ -150,15 +175,14 @@ struct DishListItemImage: View, Identifiable {
       .opacity(opacityScaled)
       .rotation3DEffect(.degrees(Double(1 - self.scale) * -5), axis: (0, 1, 0))
       .animation(
-        .interpolatingSpring(mass: 1, stiffness: 300, damping: 12, initialVelocity: 0)
+        .interpolatingSpring(mass: 1.2, stiffness: 200, damping: 18, initialVelocity: 0)
       )
       .position(
-        x: 0,// self.activeIndex > CGFloat(Double(index) + 0.5) ? -40 : 0,
+        x: CGFloat(x),
         y: size / 2
       )
       .zIndex(
-        isOnStage ? 100 :
-          Double(strength)
+        isOnStage ? 100 : strength
       )
   }
 }
