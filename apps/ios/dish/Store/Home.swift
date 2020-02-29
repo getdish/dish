@@ -67,6 +67,10 @@ struct LenseItem: Equatable, Identifiable {
   var color: Color {
     Color(red: self.rgb[0], green: self.rgb[1], blue: self.rgb[2])
   }
+  
+  var colorBright: Color {
+    Color(red: self.rgb[0] * 1.2, green: self.rgb[1] * 1.2, blue: self.rgb[2] * 1.2)
+  }
 }
 
 struct CuisineItem: Equatable, Identifiable {

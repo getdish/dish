@@ -51,7 +51,8 @@ struct DishLenseButton: View, Identifiable, Equatable {
             height: 38
           )
         )
-        .shadow(color: active ? lense.color : Color.clear, radius: 5)
+        .scaleEffect(active ? 1.05 : 0.95)
+        .shadow(color: active ? lense.colorBright : Color.clear, radius: 5)
         .animation(.spring())
     }
   }
