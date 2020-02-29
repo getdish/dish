@@ -111,7 +111,6 @@ struct HomeSearchBar: View {
             .scaledToFit()
             .frame(width: 22, height: 22)
         }
-          .padding(2)
       }
         .buttonStyle(
           IndentedStyle(
@@ -159,7 +158,7 @@ struct IndentedStyle: ButtonStyle {
           ? Color(white: 0.38)
           : Color(red: rgb[0] * 1.2, green: rgb[1] * 1.2, blue: rgb[2] * 1.2)
       )
-      .padding(16)
+      .padding(14)
       .background(
         LinearGradient(
           gradient: .init(

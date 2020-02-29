@@ -114,6 +114,7 @@ fileprivate let initialCuisines = [
 
 struct FocusedDishItem: Equatable {
   var dish: DishItem
+  var rank: Int
   var targetMinY: CGFloat
 }
 
@@ -174,7 +175,7 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
 
   switch action {
     case .setListItemFocusedDish(let dish):
-      if state.home.drawerIsDragging == false {      
+      if state.home.drawerIsDragging == false {
         state.home.listItemFocusedDish = dish
       }
   case .setSelectedMarkers(let markers):

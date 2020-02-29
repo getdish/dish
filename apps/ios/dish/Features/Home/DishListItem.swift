@@ -1,8 +1,8 @@
 import SwiftUI
 
 fileprivate let total: Int = 10
-fileprivate let size: CGFloat = 92
-fileprivate let imageSize: CGFloat = size - 4
+fileprivate let size: CGFloat = 90
+fileprivate let imageSize: CGFloat = size - 5
 
 struct DishListItem: View, Equatable {
   static func == (lhs: DishListItem, rhs: DishListItem) -> Bool {
@@ -19,10 +19,6 @@ struct DishListItem: View, Equatable {
   
   var body: some View {
     let activeIndex = CGFloat(self.scrollX / size)
-    let text = Text(self.dish.name)
-      .fontWeight(.bold)
-      .lineLimit(1)
-      .font(.system(size: 18))
     return ZStack {
       DishButton(
         action: {
@@ -37,13 +33,16 @@ struct DishListItem: View, Equatable {
             Text(self.dish.icon)
               .font(.system(size: 30))
 
-            text
+            Text(self.dish.name)
+              .fontWeight(.bold)
+              .lineLimit(2)
+              .font(.system(size: 16))
               .shadow(color: Color.black.opacity(0.1), radius: 0, x: 0, y: 1)
 
             Spacer()
 
             Spacer()
-              .frame(width: self.screen.width - (self.screen.width - 120))
+              .frame(width: self.screen.width - (self.screen.width - 105))
           }
             .padding(.horizontal)
 
@@ -61,7 +60,7 @@ struct DishListItem: View, Equatable {
               }
               
               Spacer()
-                .frame(width: self.screen.width - 120)
+                .frame(width: self.screen.width - 105)
 
               HStack {
                 ForEach(0..<total) { index in
@@ -159,6 +158,7 @@ struct DishListItemImage: View, Identifiable {
         if self.isActive {
           let next = FocusedDishItem(
             dish: self.dish,
+            rank: self.index + 1,
             targetMinY: geo.frame(in: .global).minY
           )
           if next != App.store.state.home.listItemFocusedDish {
@@ -186,7 +186,7 @@ struct DishListItemImage: View, Identifiable {
       .animation(.none, value: self.isActive)
       .position(
         x: CGFloat(x),
-        y: size / 2
+        y: size / 2 - 10
       )
       .zIndex(
         isOnStage ? 100 : strength

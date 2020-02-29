@@ -97,6 +97,7 @@ struct ControlsButtonStyle: ViewModifier {
 
   var active: Bool = false
   var background: Color = .clear
+  var cornerRadius: CGFloat = 9
   var height: CGFloat = 34
   var hPad: CGFloat = 11
   var showBlurBackground: Bool = true
@@ -121,7 +122,7 @@ struct ControlsButtonStyle: ViewModifier {
         }
       }
         .background(self.background)
-        .cornerRadius(8)
+        .cornerRadiusSquircle(cornerRadius)
         .shadow(color: Color.black.opacity(0.15), radius: 3, x: 0, y: 1)
     }
       .padding(3)

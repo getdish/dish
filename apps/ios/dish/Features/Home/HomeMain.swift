@@ -133,7 +133,7 @@ struct HomeFocusedDishView: View {
               .font(.system(size: 14))
           }
           .environment(\.colorScheme, .dark)
-          .padding(.horizontal, 20)
+          .padding(.horizontal, 25)
           .padding(.vertical, 15)
           .background(Color.black.opacity(0.8))
           .cornerRadiusSquircle(23)
@@ -141,11 +141,22 @@ struct HomeFocusedDishView: View {
           .overlay(
             VStack {
               HStack {
+                Text("\(self.focusedDish?.rank ?? 0).")
+                  .font(.system(size: 16))
+                  .fontWeight(.black)
+                  .frame(width: 32, height: 32)
+                  .background(Color.white)
+                  .cornerRadius(32)
+                  .rotationEffect(.degrees(-17))
+                  .offset(x: 12, y: -12)
                 Spacer()
                 Image(systemName: "bookmark")
                   .padding(20)
-                  .modifier(ControlsButtonStyle())
-                  .offset(x: 15, y: -15)
+                  .modifier(
+                    ControlsButtonStyle(background: Color.purple, cornerRadius: 100, hPad: 0)
+                  )
+                  .offset(x: 18, y: -18)
+                  .scaleEffect(1.1)
               }
               Spacer()
             }
