@@ -137,7 +137,7 @@ extension AppState {
     var drawerPosition: BottomDrawerPosition = .middle
     var drawerIsDragging = false
     var showCuisineFilter: Bool = false
-    var cuisineFilter: String = "🌍"
+    var cuisineFilter: String = "🍽"
     var listItemFocusedDish: FocusedDishItem? = nil
   }
 }

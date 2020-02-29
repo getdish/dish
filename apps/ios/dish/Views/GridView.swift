@@ -31,7 +31,7 @@ struct GridView<Content: View>: View {
           }
         }
       }
-        .frame(width: geometry.size.width, alignment: .center)
+      .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
     }
   }
 }

@@ -34,9 +34,9 @@ struct DishListItem: View, Equatable {
               .font(.system(size: 30))
 
             Text(self.dish.name)
-              .fontWeight(.bold)
+              .fontWeight(.regular)
               .lineLimit(2)
-              .font(.system(size: 16))
+              .font(.system(size: 18))
               .shadow(color: Color.black.opacity(0.1), radius: 0, x: 0, y: 1)
 
             Spacer()
@@ -84,7 +84,6 @@ struct DishListItem: View, Equatable {
         .frame(width: self.screen.width)
     }
       .frame(width: self.screen.width, height: imageSize)
-      .animation(.none)
   }
   
   func getImageXPosition(_ index: Int, activeIndex: Int) -> CGFloat {
@@ -99,7 +98,8 @@ struct DishListItemImage: View, Identifiable {
   var dish: DishItem
   var index: Int
   var activeIndex: CGFloat
-  let stageTime = 0.9
+  let stageTime = 0.99
+  let stageActiveOffset: CGFloat = 0.8
   
   var lB: Double {
     1 - stageTime
@@ -110,7 +110,7 @@ struct DishListItemImage: View, Identifiable {
   }
   
   func getStrength(_ index: Double? = nil, minIndex: CGFloat = 0) -> CGFloat {
-    let x0 = activeIndex - 0.5 - CGFloat(index ?? Double(self.index))
+    let x0 = activeIndex - stageActiveOffset - CGFloat(index ?? Double(self.index))
     return min(2, max(minIndex, x0)) // 0 = stage left, 1 = onstage, 2 = stage right
   }
   
@@ -124,7 +124,7 @@ struct DishListItemImage: View, Identifiable {
     let s = scaleFactor()
     return 1 + (
       s > 1
-        ? ((2 - s) * 0.8)
+        ? max(((2 - s) * 0.8), 0.6)
         : s * 0.8
     )
   }
@@ -148,6 +148,7 @@ struct DishListItemImage: View, Identifiable {
     let strength = Double(getStrength(minIndex: -4.0))
     let isOnStage = sf == 1
     let sizeScaled = imageSize * scale
+    let zIndex = isOnStage ? 100 : strength
     
     var x: Double = strength > lB ? -20 : -(strength / 5) * 10
     
@@ -158,6 +159,9 @@ struct DishListItemImage: View, Identifiable {
     if index == 0 {
       print("isOnStage \(isOnStage) scaleFactor \(scaleFactor()) strength \((strength * 10).rounded() / 10) --  \(activeIndex)")
     }
+    
+    print("zIndex \(zIndex)")
+    
     return self.dish.image
       .resizable()
       .scaledToFill()
@@ -194,11 +198,10 @@ struct DishListItemImage: View, Identifiable {
 //      .animation(.none, value: self.isActive)
       .position(
         x: CGFloat(x),
-        y: size / 2 - 10
+        y: size * 0.5 - (size - imageSize)
       )
+      .transition(.slide)
       .animation(.none)
-      .zIndex(
-        isOnStage ? 100 : strength
-      )
+      .zIndex(zIndex)
   }
 }

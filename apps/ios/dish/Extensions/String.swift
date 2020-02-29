@@ -9,22 +9,21 @@ extension String {
     case middle
     case tail
   }
-
-  func truncated(limit: Int, position: TruncationPosition = .tail, leader: String = "...") -> String
-  {
+  
+  func truncated(limit: Int, position: TruncationPosition = .tail, leader: String = "...") -> String {
     guard self.count > limit else { return self }
-
+    
     switch position {
-    case .head:
-      return leader + self.suffix(limit)
-    case .middle:
-      let headCharactersCount = Int(ceil(Float(limit - leader.count) / 2.0))
-
-      let tailCharactersCount = Int(floor(Float(limit - leader.count) / 2.0))
-
-      return "\(self.prefix(headCharactersCount))\(leader)\(self.suffix(tailCharactersCount))"
-    case .tail:
-      return self.prefix(limit) + leader
+      case .head:
+        return leader + self.suffix(limit)
+      case .middle:
+        let headCharactersCount = Int(ceil(Float(limit - leader.count) / 2.0))
+        
+        let tailCharactersCount = Int(floor(Float(limit - leader.count) / 2.0))
+        
+        return "\(self.prefix(headCharactersCount))\(leader)\(self.suffix(tailCharactersCount))"
+      case .tail:
+        return self.prefix(limit) + leader
     }
   }
 }
@@ -40,5 +39,25 @@ extension String {
     let image = UIGraphicsGetImageFromCurrentImageContext()
     UIGraphicsEndImageContext()
     return image
+  }
+}
+
+extension StringProtocol {
+  subscript(_ offset: Int)                     -> Element     { self[index(startIndex, offsetBy: offset)] }
+  subscript(_ range: Range<Int>)               -> SubSequence { prefix(range.lowerBound+range.count).suffix(range.count) }
+  subscript(_ range: ClosedRange<Int>)         -> SubSequence { prefix(range.lowerBound+range.count).suffix(range.count) }
+  subscript(_ range: PartialRangeThrough<Int>) -> SubSequence { prefix(range.upperBound.advanced(by: 1)) }
+  subscript(_ range: PartialRangeUpTo<Int>)    -> SubSequence { prefix(range.upperBound) }
+  subscript(_ range: PartialRangeFrom<Int>)    -> SubSequence { suffix(Swift.max(0, count-range.lowerBound)) }
+}
+
+extension LosslessStringConvertible {
+  var string: String { .init(self) }
+}
+
+extension BidirectionalCollection {
+  subscript(safe offset: Int) -> Element? {
+    guard !isEmpty, let i = index(startIndex, offsetBy: offset, limitedBy: index(before: endIndex)) else { return nil }
+    return self[i]
   }
 }
