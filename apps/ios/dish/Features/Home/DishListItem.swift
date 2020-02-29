@@ -1,8 +1,8 @@
 import SwiftUI
 
 fileprivate let total: Int = 10
-fileprivate let size: CGFloat = 72
-fileprivate let imageSize: CGFloat = 66
+fileprivate let size: CGFloat = 90
+fileprivate let imageSize: CGFloat = size - 7
 
 struct DishListItem: View, Equatable {
   static func == (lhs: DishListItem, rhs: DishListItem) -> Bool {
@@ -30,10 +30,8 @@ struct DishListItem: View, Equatable {
       ) {
         ZStack {
           HStack {
-            Text("\(self.number).")
-              .font(.system(size: 20))
-              .fontWeight(.bold)
-              .opacity(0.3)
+            Text("\(self.dish.icon)")
+              .font(.system(size: 26))
 
             Text("\(self.dish.name)")
               .fontWeight(.light)
@@ -66,10 +64,6 @@ struct DishListItem: View, Equatable {
               HStack {
                 ForEach(0..<total) { index in
                   DishListItemImage(dish: self.dish, index: index, activeIndex: activeIndex)
-                    .position(
-                      x: self.getImageXPosition(index, activeIndex: activeIndex),
-                      y: size / 2 + (index < activeIndex ? 90 : 0)
-                    )
                 }
               }
                 .frame(width: size * CGFloat(total))
@@ -109,20 +103,21 @@ struct DishListItemImage: View, Identifiable {
       }
     }
     
-    let imgs = self.isActive ? 120 : imageSize
+//    let imgs = self.isActive ? 120 : imageSize
     
-    return Color.clear
+    return self.dish.image
+      .resizable()
+      .scaledToFill()
       .frame(width: imageSize, height: imageSize)
-      .overlay(
-        self.dish.image
-          .resizable()
-          .scaledToFill()
-          .frame(width: imageSize, height: imageSize)
-          .cornerRadiusSquircle(18)
-          .shadow(radius: 4)
-          .opacity(index + 2 < activeIndex ? 0 : 1)
-          .scaleEffect(self.isActive ? 3 : 1)
-          .animation(.spring())
+      .cornerRadiusSquircle(18)
+      .shadow(radius: 4)
+      .opacity(index + 1 < activeIndex ? 0 : 1)
+      .scaleEffect(self.isActive ? 2 : 1)
+      .animation(.spring())
+      .position(
+        x: 0,
+        y: size / 2 + (index < activeIndex ? -imageSize / 2 : 0)
     )
+      .zIndex(Double(activeIndex - index))
   }
 }

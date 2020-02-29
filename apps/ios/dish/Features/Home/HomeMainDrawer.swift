@@ -70,6 +70,7 @@ struct HomeMainDrawerContentContainer: View {
       ZStack {
         VStack(spacing: 0) {
           Spacer().frame(height: occludeTopHeight)
+          
           HomeMainDrawerContent()
             .mask(
               LinearGradient(
@@ -92,6 +93,7 @@ struct HomeMainDrawerContentContainer: View {
               )
                 .offset(y: occludeTopHeight)
             )
+          
           Spacer()
         }
 

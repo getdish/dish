@@ -2,6 +2,7 @@ import SwiftUI
 
 struct DishItem: Hashable, Codable, Identifiable {
   var id: Int
+  var icon: String
   var name: String
   var hue: Double
   fileprivate var imageName: String
