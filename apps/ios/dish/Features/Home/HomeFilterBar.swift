@@ -1,6 +1,6 @@
 import SwiftUI
 
-fileprivate let filterBarPad: CGFloat = 10
+fileprivate let filterBarPad: CGFloat = 7
 
 struct HomeMainFilterBar: View, Equatable {
   static func == (lhs: HomeMainFilterBar, rhs: HomeMainFilterBar) -> Bool {
