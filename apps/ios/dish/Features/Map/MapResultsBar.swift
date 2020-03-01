@@ -108,20 +108,23 @@ struct DishMapResultItem: View, Equatable {
     ) {
       HStack(spacing: 12) {
         Text(self.dish.icon)
-          .font(.system(size: 32))
+          .font(.system(size: 28))
         
         Text(self.dish.name)
-          .fontWeight(.light)
+          .fontWeight(.bold)
           .lineLimit(2)
-          .font(.system(size: 16))
+          .font(.system(size: 15))
           .shadow(color: Color.black.opacity(0.1), radius: 0, x: 0, y: 1)
       }
       .padding(.horizontal, 18)
       .padding(.vertical, 5)
-      .background(Color(.systemBackground).opacity(0.73))
+      .padding(.leading, 36)
       .invertColorScheme()
+      .background(Color(.systemBackground).opacity(0.3))
+      .background(BlurView(style: .systemThinMaterialDark))
       .cornerRadius(25)
+      .shadow(color: Color.black.opacity(0.25), radius: 10, y: 4)
     }
-    .offset(y: -20)
+    .offset(x: -50, y: -20)
   }
 }

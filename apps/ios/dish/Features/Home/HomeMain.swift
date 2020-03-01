@@ -54,24 +54,28 @@ struct HomeMainView: View {
               .animation(.spring(response: 0.65))
           }
           
-//          Color.clear
-//            .frame(height)
-//            .background(
-//              ZStack {
-//                self.colorScheme == .dark
-//                  ? LinearGradient(
-//                    gradient: Gradient(colors: [.clear, .black]),
-//                    startPoint: .top,
-//                    endPoint: .center
-//                    )
-//                  : LinearGradient(
-//                    gradient: Gradient(colors: [Color.clear, Color.init(white: 0, opacity: 0.2)]),
-//                    startPoint: .top,
-//                    endPoint: .bottom
-//                )
-//              }
-//              .drawingGroup()
-//          )
+          // map overlay fade to bottom
+          VStack {
+            Spacer()
+            ZStack {
+              self.colorScheme == .dark
+                ? LinearGradient(
+                  gradient: Gradient(colors: [.clear, .black]),
+                  startPoint: .top,
+                  endPoint: .bottom
+                  )
+                : LinearGradient(
+                  gradient: Gradient(colors: [
+                    Color.clear,
+                    Color(white: 1, opacity: 0.9)
+                  ]),
+                  startPoint: .top,
+                  endPoint: .bottom
+              )
+            }
+            .frame(height: 320)
+          }
+          .drawingGroup()
 
           VStack(spacing: 0) {
             DishLenseFilterBar()
@@ -104,7 +108,9 @@ struct HomeMainView: View {
             .equatable()
           
           HomeFocusedItemView(
-            focusedItem: self.store.state.home.focusedItem
+            focusedItem: self.store.state.home.focusedItem,
+            showBookmark: self.store.state.home.drawerPosition != .bottom,
+            showDescription: self.store.state.home.drawerPosition != .bottom
           )
 
           HomeCuisineFilterPopup(

@@ -93,18 +93,15 @@ extension View {
     )
   }
 
-  func onGeometrySizeChange(_ callback: @escaping (CGFloat, CGFloat) -> Void) -> some View {
-    var lastWidth: CGFloat = -1
-    var lastHeight: CGFloat = -1
+  func onGeometrySizeChange(_ callback: @escaping (CGSize) -> Void) -> some View {
+    var last: CGSize = .zero
     return self.overlay(
       GeometryReader { proxy -> Color in
-        let nextWidth = proxy.size.width
-        let nextHeight = proxy.size.width
-        if nextWidth != lastWidth || nextHeight != lastHeight {
-          lastHeight = nextHeight
-          lastWidth = nextWidth
+        let next = proxy.size
+        if next != last {
+          last = next
           async {
-            callback(nextWidth, nextHeight)
+            callback(next)
           }
         }
         return Color.clear

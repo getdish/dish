@@ -3,9 +3,15 @@ import SwiftUI
 struct HomeFocusedItemView: View {
   @EnvironmentObject var screen: ScreenModel
   var focusedItem: HomeFocusedItem? = nil
+  var showBookmark = true
+  var showDescription = true
   
   var height: CGFloat {
-    140
+    var x: CGFloat = 60
+    if showDescription {
+      x += 40
+    }
+    return x
   }
   
   @State var lastItem: HomeFocusedItem? = nil
@@ -28,8 +34,10 @@ struct HomeFocusedItemView: View {
             Text("Miss Saigon")
               .font(.system(size: 18))
               .fontWeight(.bold)
-            Text("Traditional northern style pho known for the broth.")
-              .font(.system(size: 15))
+            if self.showDescription {
+              Text("Traditional northern style pho known for the broth.")
+                .font(.system(size: 15))
+            }
             Text("Closes 8pm · Vietnamese 🇻🇳")
               .font(.system(size: 14))
           }
@@ -51,18 +59,20 @@ struct HomeFocusedItemView: View {
                   .rotationEffect(.degrees(-20))
                   .offset(x: 5, y: -15)
                 Spacer()
-                Image(systemName: "star")
-                  .frame(width: 42)
-                  .modifier(
-                    ControlsButtonStyle(
-                      background: Color.purple,
-                      cornerRadius: 100,
-                      height: 42,
-                      hPad: 0
-                    )
-                )
-                  .offset(x: 12, y: -18)
-                  .scaleEffect(1.1)
+                if self.showBookmark {
+                  Image(systemName: "plus")
+                    .frame(width: 42)
+                    .modifier(
+                      ControlsButtonStyle(
+                        background: Color.purple,
+                        cornerRadius: 100,
+                        height: 42,
+                        hPad: 0
+                      )
+                  )
+                    .offset(x: 12, y: -18)
+                    .scaleEffect(1.1)
+                }
               }
               Spacer()
             }
