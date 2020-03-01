@@ -1,46 +1,65 @@
 import SwiftUI
 
 struct DishButton<Content: View>: View {
-    let action: (() -> Void)?
-    let content: Content
-    
-    init(action: @escaping () -> Void, @ViewBuilder content: () -> Content) {
-        self.action = action
-        self.content = content()
+  typealias Action = (() -> Void)
+
+  init(
+    action: Action? = nil,
+    opacityEffect: Double = 0.9,
+    scaleEffect: CGFloat = 0.9,
+    @ViewBuilder content: () -> Content
+  ) {
+    self.content = content()
+    self.action = action
+    self.opacityEffect = opacityEffect
+    self.scaleEffect = scaleEffect
+  }
+
+  var action: Action? = nil
+  var opacityEffect: Double
+  var scaleEffect: CGFloat
+  var content: Content
+
+  @State var isPressed = false
+  @State var lastTap = Date()
+
+  private func callbackAction() {
+    if let cb = self.action { cb() }
+  }
+
+  var body: some View {
+    self.content
+      // ⚠️ dont put .animation() here or every subview animates
+      .scaleEffect(self.isPressed ? self.scaleEffect : 1)
+      .opacity(self.isPressed ? self.opacityEffect : 1)
+      .onTapGesture(perform: self.handleTap)
+      .onLongPressGesture(
+        minimumDuration: 10000,
+        maximumDistance: 8,
+        pressing: self.handlePress,
+        perform: self.handlePerform
+      )
+  }
+
+  private func handlePress(_ isPressing: Bool) {
+    withAnimation(.spring()) {
+      self.isPressed = isPressing
     }
-    
-    @State var isTapped = false
-    @State var lastTap = Date()
-    
-    func callbackAction() {
-        if let cb = self.action { cb() }
+    if isPressing {
+      self.lastTap = Date()
+    } else {
+      //                self.callbackAction()
     }
-    
-    var body: some View {
-        self.content
-            // ⚠️ dont put .animation() here or every subview animates
-            .scaleEffect(self.isTapped ? 0.9 : 1)
-            .opacity(self.isTapped ? 0.9 : 1)
-            .onTapGesture {
-                self.lastTap = Date()
-                self.callbackAction()
-        }
-        .onLongPressGesture(
-            minimumDuration: 10000,
-            maximumDistance: 8,
-            pressing: { isPressing in
-            withAnimation(.spring()) {
-                self.isTapped = isPressing
-            }
-            if isPressing {
-                self.lastTap = Date()
-            } else {
-//                self.callbackAction()
-            }
-        }) {
-            if self.lastTap.timeIntervalSinceNow > 10 {
-                self.callbackAction()
-            }
-        }
+  }
+
+  private func handlePerform() {
+    if self.lastTap.timeIntervalSinceNow > 10 {
+      self.callbackAction()
     }
+  }
+
+  private func handleTap() {
+    self.lastTap = Date()
+    self.callbackAction()
+  }
 }

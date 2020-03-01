@@ -1,10 +1,10 @@
 {
   "name": "dish-monorepo",
   "private": true,
+  "engines": {
+    "node": "12.16.1"
+  },
   "workspaces": {
-    "nohoist": [
-      "**"
-    ],
     "packages": [
       "packages/auth",
       "packages/models",
@@ -18,7 +18,8 @@
     "build": "tsc -b",
     "build:watch": "tsc -b -w --preserveWatchOutput",
     "test": "ava",
-    "clean": "bin/clean.sh"
+    "clean": "bin/clean.sh",
+    "format": "swift-format --recursive --in-place ./apps/ios/dish"
   },
   "devDependencies": {
     "@types/node": "^13.7.4",

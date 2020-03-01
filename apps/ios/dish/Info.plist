@@ -25,7 +25,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Taking pictures of dishes to review</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Search restuarants on a map</string>
+	<string>Search restauarants on a map</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

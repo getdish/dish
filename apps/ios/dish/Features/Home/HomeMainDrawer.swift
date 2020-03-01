@@ -1,381 +1,412 @@
-import SwiftUI
 import Combine
+import SwiftUI
+
+fileprivate let topContentHeight = App.filterBarHeight
 
 struct HomeMainDrawer: View, Equatable {
-    static func == (lhs: HomeMainDrawer, rhs: HomeMainDrawer) -> Bool {
-        true
-    }
+  static func == (lhs: HomeMainDrawer, rhs: HomeMainDrawer) -> Bool {
+    true
+  }
 
-    @EnvironmentObject var screen: ScreenModel
-    @EnvironmentObject var store: AppStore
-    
-    var drawerPosition: Binding<BottomDrawerPosition> {
-        Binding<BottomDrawerPosition>(
-            get: {
-                if self.store.state.home.searchFocus != .off {
-                    return .top
-                }
-                return self.store.state.home.drawerPosition
-                
-        },
-            set: { self.store.send(.home(.setDrawerPosition($0))) }
-        )
-    }
-    
-    var body: some View {
-        let isOnLocationSearch = self.store.state.home.searchFocus == .location
-        
-        return BottomDrawer(
-            position: self.drawerPosition,
-            snapPoints: App.drawerSnapPoints,
-            cornerRadius: 20,
-            handle: nil,
-            onChangePosition: { (_, y) in
-                homeViewState.setY(y)
-            },
-            onDragState: { state in
-                if state.isDragging != self.store.state.home.drawerIsDragging {
-                    self.store.send(.home(.setDrawerIsDragging(state.isDragging)))
-                }
-            }
-        ) {
-            HomeMainDrawerContentContainer(
-                isOnLocationSearch: isOnLocationSearch
-            )
-        }
-    }
-}
+  @EnvironmentObject var screen: ScreenModel
+  @EnvironmentObject var store: AppStore
+  @Environment(\.colorScheme) var colorScheme
 
-struct HomeMainDrawerContentContainer: View {
-    @EnvironmentObject var screen: ScreenModel
-    @State var scrollView: UIScrollView? = nil
-    var isOnLocationSearch: Bool
-    
-    class HandleScrollView: NSObject, UIGestureRecognizerDelegate {
-        init(_ scrollView: UIScrollView) {
-            super.init()
-            
-            let panGesture = UIPanGestureRecognizer.init()
-            panGesture.delegate = self
-            scrollView.addGestureRecognizer(panGesture)
+  var drawerPosition: Binding<BottomDrawerPosition> {
+    Binding<BottomDrawerPosition>(
+      get: {
+        if self.store.state.home.searchFocus != .off {
+          return .top
         }
-        
-        func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-            print("what")
-            return false
-        }
-        
-        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-            print("should receive???")
-            return false
-        }
-    }
-    
-    func start() {
-        if let scrollView = self.scrollView {
-            _ = HandleScrollView(scrollView)
-        }
-    }
+        return self.store.state.home.drawerPosition
 
-    var body: some View {
-        ZStack {
-            // home content
-            ZStack {
-                VStack {
-                    HomeMainDrawerContent()
-                        .mask(
-                            LinearGradient(
-                                gradient: Gradient(colors: [
-                                    Color.black.opacity(0),
-                                    Color.black.opacity(1),
-                                    Color.black.opacity(1),
-                                    Color.black.opacity(1),
-                                    Color.black.opacity(1),
-                                    Color.black.opacity(1)
-                                ]),
-                                startPoint: .top,
-                                endPoint: .center
-                            )
-                                .offset(y: App.searchBarHeight + 10)
-                        )
-                    Spacer()
-                }
-                VStack(spacing: 0) {
-                    HomeSearchBar()
-                        .padding(.horizontal, 10)
-                        .padding(.top, 10)
-                    HomeMainFilterBar()
-                    Spacer()
-                }
-            }
-            .opacity(isOnLocationSearch ? 0 : 1)
+      },
+      set: { self.store.send(.home(.setDrawerPosition($0))) }
+    )
+  }
+
+  var drawerBackgroundColor: Color {
+    Selectors.home.drawerColor(colorScheme: self.colorScheme)
+  }
+
+  var body: some View {
+    let isOnLocationSearch = self.store.state.home.searchFocus == .location
+    return BottomDrawer(
+      background: self.drawerBackgroundColor,
+      cornerRadius: 20,
+      handle: nil,
+      onChangePosition: { (_, y) in
+        homeViewState.setY(y)
+      },
+      onDragState: { state in
+        App.store.send(.home(.setFocusedItem(nil)))
+        if state.isDragging != self.store.state.home.drawerIsDragging {
+          self.store.send(.home(.setDrawerIsDragging(state.isDragging)))
         }
+      },
+      position: self.drawerPosition,
+      snapPoints: App.drawerSnapPoints
+    ) {
+      ZStack {
+        HomeMainDrawerContent()
+        
+        VStack(spacing: 0) {
+          VStack(spacing: 0) {
+            HomeSearchBar()
+              .padding(.horizontal, 10)
+              .padding(.top, 10)
+              .padding(.bottom, 5)
+            HomeMainFilterBar()
+          }
+          Spacer()
+        }
+        .opacity(isOnLocationSearch ? 0 : 1)
+      }
     }
+      .environment(\.drawerBackgroundColor, self.drawerBackgroundColor)
+      .environment(\.lenseColor, Selectors.home.activeLense().color)
+  }
 }
 
 
 struct HomeMainDrawerContent: View {
-    @EnvironmentObject var store: AppStore
-    @State var dragX: CGFloat = 0
+  @EnvironmentObject var store: AppStore
 
-    var body: some View {
-        let viewStates = self.store.state.home.viewStates
-        print("viewStates \(viewStates.count)")
-        return ZStack {
-            ForEach(viewStates) { viewState in
-                HomeScreen(
-                    viewState: viewState,
-                    isActive: Selectors.home.lastState() == viewState,
-                    index: viewStates.firstIndex(of: viewState) ?? 0
-                )
-            }
-            // todo only start on edge
-//            .gesture(
-//                DragGesture()
-//                    .onChanged { value in
-//                        // right edge
-//                        if value.startLocation.x < 10 {
-//                            self.dragX = value.translation.width
-//                        }
-//                }
-//                .onEnded { value in
-//                    let frameWidth = geometry.size.width
-//                    let offset = value.translation.width / frameWidth
-//                    let offsetV = value.predictedEndTranslation.width / frameWidth
-//                    let score = abs(offset * 0.4 + offsetV * 0.6)
-//                    let shouldChange = score > 0.2
-//                    withAnimation(.spring()) {
-//                        self.dragX = shouldChange ? frameWidth : 0
-//                    }
-//                }
-//            )
+  func onSwipeBack() {
+    self.store.send(.home(.pop))
+  }
+
+  var body: some View {
+    let viewStates = self.store.state.home.viewStates
+    let occludeTopHeight = App.searchBarHeight + 13
+    return VStack(spacing: 0) {
+      Spacer().frame(height: occludeTopHeight)
+      ZStack {
+        ForEach(viewStates, id: \.id) { viewState in
+          HomeScreen(
+            index: viewStates.firstIndex(of: viewState) ?? 0,
+            isActive: Selectors.home.lastState() == viewState,
+            isLast: viewStates.firstIndex(of: viewState) == viewStates.count - 1,
+            onSwipeBack: self.onSwipeBack,
+            viewState: viewState
+          )
+            .equatable()
         }
+      }
+        .mask(HomeMainDrawerContent.maskGradient.offset(y: occludeTopHeight - 15))
     }
+  }
+  
+  static let maskGradient = LinearGradient(
+    gradient: Gradient(colors: [
+      Color.black.opacity(0),
+      Color.black.opacity(1),
+      Color.black.opacity(1),
+      Color.black.opacity(1),
+      Color.black.opacity(1),
+      Color.black.opacity(1),
+      Color.black.opacity(1),
+      Color.black.opacity(1),
+      Color.black.opacity(1),
+      Color.black.opacity(1),
+      Color.black.opacity(1),
+      Color.black.opacity(1)
+    ]),
+    startPoint: .top,
+    endPoint: .center
+  )
 }
 
-struct HomeScreen: View, Identifiable {
-    var id: String { self.viewState.id }
-    var viewState: HomeStateItem
-    var isActive: Bool
-    var index: Int
-    
-    var body: some View {
-        print("render home screen \(index) \(viewState.search)")
-        return ZStack {
-            if index == 0 {
-                HomeContentExplore()
-            } else {
-                HomeSearchResultsView(state: viewState)
-            }
+struct HomeScreen: View, Identifiable, Equatable {
+  static func == (l: Self, r: Self) -> Bool {
+    l.id == r.id && l.index == r.index && l.isActive == r.isActive && l.isLast == r.isLast
+  }
+
+  @EnvironmentObject var screen: ScreenModel
+  @State var dragX: CGFloat = 0
+
+  var id: String { self.viewState.id }
+  var index: Int
+  var isActive: Bool
+  var isLast: Bool
+  var onSwipeBack: () -> Void
+  var viewState: HomeStateItem
+  let uid = UUID().uuidString
+
+  var body: some View {
+//    print("render home screen \(index) --  \(uid) -- \(isActive) \(viewState.state)")
+    return ZStack {
+      if isActive {
+        if index == 0 {
+          HomeContentScrollView {
+            HomeContentExplore()
+          }
+        } else {
+          HomeContentScrollView {
+            HomeSearchResultsView(state: viewState)
+          }
         }
+      }
+
+      if isLast {
+        HStack {
+          Color.black.opacity(0.00001).frame(width: 40)
+            .gesture(
+              DragGesture(minimumDistance: 0)
+                .onChanged { value in
+                  // left edge
+                  if value.startLocation.x < 20 {
+                    self.dragX = value.translation.width
+                  }
+                }
+                .onEnded { value in
+                  let frameWidth = self.screen.width
+                  let offset = value.translation.width / frameWidth
+                  let offsetV = value.predictedEndTranslation.width / frameWidth
+                  let score = abs(offset * 0.4 + offsetV * 0.6)
+                  let shouldChange = score > 0.2
+                  withAnimation(.spring()) {
+                    self.dragX = shouldChange ? frameWidth : 0
+                  }
+                }
+            )
+          Spacer()
+        }
+      }
     }
+      .frameLimitedToScreen()
+  }
 }
 
 struct HomeContentPadAbove: View {
-    var body: some View {
-        let topContentHeight = App.searchBarHeight + App.filterBarHeight + 10
-        return Spacer().frame(height: topContentHeight)
-    }
+  var body: some View {
+    return Spacer().frame(height: topContentHeight)
+  }
 }
 
 struct HomeContentPadBelow: View {
-    @EnvironmentObject var screen: ScreenModel
-    var body: some View {
-        Spacer().frame(height: 5 + self.screen.edgeInsets.bottom)
-    }
+  @EnvironmentObject var screen: ScreenModel
+
+  var body: some View {
+    Spacer().frame(height: 5 + self.screen.edgeInsets.bottom)
+  }
 }
 
 struct IdentifiableView<Content>: View, Identifiable where Content: View {
-    var id: String
-    var content: () -> Content
-    
-    init(id: String, @ViewBuilder content: @escaping () -> Content) {
-        self.id = id
-        self.content = content
+  var id: String
+  var content: () -> Content
+
+  init(id: String, @ViewBuilder content: @escaping () -> Content) {
+    self.id = id
+    self.content = content
+  }
+
+  var body: some View {
+    self.content()
+  }
+}
+
+let mainContentScrollState = ScrollState()
+
+struct HomeContentScrollView<Content>: View where Content: View {
+  @EnvironmentObject var screen: ScreenModel
+  @EnvironmentObject var store: AppStore
+  @State var state: ScrollState = mainContentScrollState
+  @State var targetLock: ScrollState.ScrollTargetLock = .idle
+  var content: Content
+  
+  init(content: () -> Content) {
+    self.content = content()
+  }
+  
+  func start() {
+    self.state.$scrollTargetLock
+      .map { target in
+        // side effect
+        if target == .drawer {
+          self.state.scrollView?.panGestureRecognizer.isEnabled = false
+        } else {
+          self.state.scrollView?.panGestureRecognizer.isEnabled = true
+        }
+        return target
     }
+    .assign(to: \.targetLock, on: self)
+    .store(in: &self.state.cancellables)
+  }
+  
+  var body: some View {
+    let isDisabled = self.store.state.home.drawerIsDragging
     
-    var body: some View {
-        self.content()
+    return Group {
+      ZStack {
+        Color.clear.onAppear(perform: self.start)
+        
+        GeometryReader { geo in
+          ScrollView(.vertical, showsIndicators: false) {
+            Color.clear.introspectScrollView { x in
+              self.state.scrollView = x
+              self.state.start()
+            }
+            
+            VStack(spacing: 0) {
+              HomeContentPadAbove()
+              self.content
+              HomeContentPadBelow()
+            }
+          }
+          .frame(width: self.screen.width, alignment: .leading)
+        }
+      }
     }
+    .disabled(isDisabled)
+    .allowsHitTesting(!isDisabled)
+    .clipped()
+  }
 }
 
 struct HomeContentExplore: View {
-    @EnvironmentObject var screen: ScreenModel
-    @EnvironmentObject var store: AppStore
-    let dishes = features
-    let testListView = false
-    let id = UUID().uuidString
-    
-    var title: String {
-        Selectors.home.activeLense().description ?? ""
-    }
-    
-    var titleView: some View {
-        Group {
-            if self.store.state.home.searchFocus != .search {
-                HStack(spacing: 6) {
-                    Text(self.title)
-                        .style(.h1)
-                    Text("dishes")
-                        .fontWeight(.light)
-                        .style(.h1)
-                        .opacity(0.5)
-                    Spacer()
-                }
-                .padding(.horizontal)
-                .padding(.bottom)
-                .transition(.slide)
-                .animation(.ripple())
-            }
+  @EnvironmentObject var screen: ScreenModel
+  @EnvironmentObject var store: AppStore
+  let dishes = features
+
+  var lense: LenseItem {
+    Selectors.home.activeLense(self.store)
+  }
+
+  var titleView: some View {
+    Group {
+      if self.store.state.home.searchFocus != .search {
+        HStack(spacing: 6) {
+          Spacer()
+
+          Text(lense.description ?? "")
+            .style(.smallCapsSmallTitle)
+            .foregroundColor(lense.color)
+
+          Text(self.store.state.home.filterTopLevel == .dish ? "dishes 🍽" : "restaurants 🧂")
+            .fontWeight(.semibold)
+            .style(.smallCapsSmallTitle)
+            .opacity(0.5)
+
+          Spacer()
         }
+          .padding(.horizontal)
+          .padding(.bottom)
+          .transition(.slide)
+          .animation(.ripple())
+      }
     }
-    
-    var listView: some View {
-        var items: [IdentifiableView<AnyView>] = [
-            IdentifiableView(id: "0") { AnyView(HomeContentPadAbove()) },
-            IdentifiableView(id: "1") { AnyView(self.titleView) }
-        ]
-        
-        items = items + (0 ..< self.dishes.count).map { index in
-            let dish = self.dishes[index]
-            return IdentifiableView(id: "dish-\(dish.id)") {
-                AnyView(DishListItem(
-                    number: index + 1,
-                    dish: self.dishes[index]
-                )
-                    .transition(.slide)
-                    .animation(.ripple(index: index))
-                )
-            }
+  }
+  
+  var total: Int {
+    self.store.state.appLoaded ? self.dishes.count : 5
+  }
+
+  var body: some View {
+    VStack {
+      self.titleView
+      ForEach(0..<self.total) { index in
+        DishListItem(
+          dish: self.dishes[index],
+          onScrollStart: {
+            // todo reset the others
         }
-        
-        items = items + [
-            IdentifiableView(id: "3") { AnyView(HomeContentPadBelow()) }
-        ]
-        
-        return List(items) { item in
-            item
-                .listRowInsets(EdgeInsets())
-        }
-        .id(self.id)
+        )
+          .equatable()
+      }
+      .id(self.store.state.appLoaded ? "0" : "1")
     }
-    
-    var body: some View {
-        Group {
-            if testListView {
-                self.listView
-            } else {
-                ScrollView(.vertical, showsIndicators: false) {
-                    VStack(spacing: 0) {
-                        HomeContentPadAbove()
-                        self.titleView
-                        ForEach(0..<self.dishes.count) { index in
-                            DishListItem(
-                                number: index + 1,
-                                dish: self.dishes[index]
-                            )
-                                .equatable()
-                                .transition(.slide)
-                                .animation(.ripple(index: index))
-                        }
-                        HomeContentPadBelow()
-                    }
-                }
-                .frame(width: self.screen.width, alignment: .leading)
-                .clipped()
-            }
-        }
-    }
+  }
 }
 
-//fileprivate let items = features.chunked(into: 2)
+class ScrollState: NSObject, ObservableObject, UIScrollViewDelegate, UIGestureRecognizerDelegate {
+  var scrollInitialY: CGFloat = 0
+  var cancellables: Set<AnyCancellable> = []
+  var scrollView: UIScrollView? = nil
+  @Published var scrollTargetLock: ScrollTargetLock = .idle
 
-//struct HomeContentExploreBy: View, Identifiable {
-//    let id = "HomeContentExploreBy"
-//
-//    @Environment(\.geometry) var appGeometry
-//    @EnvironmentObject var store: AppStore
-//    @EnvironmentObject var homeState: HomeViewState
-//
-//    enum ExploreContentType { case dish, cuisine }
-//
-//    var active: Bool = false
-//    var type: ExploreContentType
-//    let items = features.split()
-//
-//    var body: some View {
-//        return ZStack {
-////            ScrollView(.vertical, showsIndicators: false) {
-//                VStack(alignment: .leading, spacing: 0) {
-//                    VStack {
-//                        ForEach(0 ..< self.store.state.home.lenses.count) { index in
-//                            VStack(alignment: .leading, spacing: 4) {
-//                                HStack(spacing: 0) {
-//                                    Text("\(self.store.state.home.lenses[index].name)")
-//                                        .font(.system(size: 13))
-//                                        .fontWeight(.bold)
-//                                        .foregroundColor(Color.white)
-//                                        .modifier(TextShadowStyle())
-//
-//                                    // line
-//                                    VStack(spacing: 0) {
-//                                        Color.white
-//                                            .opacity(0.1)
-//                                            .frame(height: 1)
-//                                        Color.black
-//                                            .opacity(0.1)
-//                                            .frame(height: 1)
-//                                    }
-//                                    .padding(.horizontal, 8)
-//                                }
-//                                .padding(.horizontal)
-//
-//                                ScrollView(.horizontal, showsIndicators: false) {
-//                                    VStack(alignment: .leading, spacing: 10) {
-//                                        ForEach(0 ..< self.items.count) { index in
-//                                            HStack(spacing: 8) {
-//                                                ForEach(self.items[index]) { item in
-//                                                    DishButtonView(dish: item, at: .start)
-//                                                        .equatable()
-//                                                }
-//                                                Spacer()
-//                                            }
-//                                            .padding(.horizontal)
-//                                        }
-//                                    }
-//                                    .padding(.vertical)
-//                                }
-//
-//                                Spacer().frame(height: 8)
-//                            }
-//                        }
-//                    }
-//                    .padding(.top, 4)
-//                }
-////                .introspectScrollView { scrollView in
-////                    if self.active {
-////                        self.homeState.setActiveScrollView(scrollView)
-////                    }
-////                    //                    TODO attempt to have the content scroll pull down when at top
-////                    //                    scrollView.bounces = false
-////                }
-////            }
-////            .frame(width: appGeometry?.size.width, height: appGeometry?.size.height)
-//        }
-////        .edgesIgnoringSafeArea(.all)
-////        .clipped()
-//    }
-//}
+  enum ScrollTargetLock {
+    case content, drawer, idle
+  }
 
-//struct HomeMainDrawerScrollEffects: View {
-//    @EnvironmentObject var homeState: HomeViewState
-//
-//    var body: some View {
-//        ScrollListener(throttle: 32.0) { frame in
-//            self.homeState.setScrollY(frame)
-//        }
-//    }
-//}
+  var isAbleToPullDrawer: Bool {
+    let startedAtTop = round(self.scrollInitialY) == 0
+    let drawerIsDownDraggable = App.store.state.home.drawerPosition != .bottom
+    return startedAtTop && drawerIsDownDraggable
+  }
+
+  func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+    print("🙈 scrollViewWillBeginDragging isAbleToPullDrawer \(isAbleToPullDrawer)")
+    self.scrollInitialY = scrollView.contentOffset.y
+    let bounces = !self.isAbleToPullDrawer
+    if bounces != scrollView.bounces {
+      scrollView.bounces = bounces
+    }
+  }
+
+  func scrollViewWillEndDragging(
+    _ scrollView: UIScrollView, withVelocity velocity: CGPoint,
+    targetContentOffset: UnsafeMutablePointer<CGPoint>
+  ) {
+    async {
+      self.scrollTargetLock = .idle
+      self.scrollView?.panGestureRecognizer.isEnabled = true
+    }
+  }
+
+  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch)
+    -> Bool
+  {
+    isAbleToPullDrawer
+  }
+
+  func gestureRecognizer(
+    _ gestureRecognizer: UIGestureRecognizer,
+    shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+  ) -> Bool {
+    otherGestureRecognizer.view == scrollView
+  }
+
+  @objc func panGestureDetected(_ recognizer: UIPanGestureRecognizer) {
+    if recognizer.state == .ended {
+      self.scrollView?.panGestureRecognizer.isEnabled = true
+      if self.scrollTargetLock == .drawer {
+        bottomDrawerStore.endPan = .velocity(recognizer.velocity(in: self.scrollView))
+        return
+      }
+    }
+
+    let y = recognizer.translation(in: self.scrollView).y
+
+    if isAbleToPullDrawer {
+      if recognizer.state == .changed {
+        if self.scrollTargetLock == .idle {
+          if y > 8 {
+            self.scrollTargetLock = .drawer
+            self.scrollView?.panGestureRecognizer.isEnabled = false
+          }
+          if y < -3 {
+            self.scrollTargetLock = .content
+            self.scrollView?.bounces = true
+          }
+        }
+      }
+    }
+
+    if self.scrollTargetLock == .drawer {
+      bottomDrawerStore.positionY = y
+    }
+  }
+
+  func start() {
+    guard let scrollView = self.scrollView else { return }
+    scrollView.delegate = self
+    let r = UIPanGestureRecognizer.init(
+      target: self, action: #selector(ScrollState.panGestureDetected(_:)))
+    r.delegate = self
+    scrollView.addGestureRecognizer(r)
+  }
+}
 
 //struct HomeMainContentContainer<Content>: View where Content: View {
 //    @State var animatePosition: MagicItemPosition = .start
@@ -424,3 +455,32 @@ struct HomeContentExplore: View {
 //    }
 //}
 
+//var listView: some View {
+//    var items: [IdentifiableView<AnyView>] = [
+//        IdentifiableView(id: "0") { AnyView(HomeContentPadAbove()) },
+//        IdentifiableView(id: "1") { AnyView(self.titleView) }
+//    ]
+//
+//    items = items + (0 ..< self.dishes.count).map { index in
+//        let dish = self.dishes[index]
+//        return IdentifiableView(id: "dish-\(dish.id)") {
+//            AnyView(DishListItem(
+//                number: index + 1,
+//                dish: self.dishes[index]
+//            )
+//                .transition(.slide)
+//                .animation(.ripple(index: index))
+//            )
+//        }
+//    }
+//
+//    items = items + [
+//        IdentifiableView(id: "3") { AnyView(HomeContentPadBelow()) }
+//    ]
+//
+//    return List(items) { item in
+//        item
+//            .listRowInsets(EdgeInsets())
+//    }
+//    .id(self.id)
+//}

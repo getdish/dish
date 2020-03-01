@@ -3,72 +3,84 @@
         "name": "Pho",
         "id": 1001,
         "imageName": "turtlerock",
+        "icon": "🍜",
         "hue": 0.5
     },
     {
         "name": "Sushi",
         "id": 1002,
         "imageName": "silversalmoncreek",
+        "icon": "🍣",
         "hue": 0.6
     },
     {
         "name": "Oysters",
         "id": 1003,
         "imageName": "chilkoottrail",
+        "icon": "🦪",
         "hue": 0.7
     },
     {
         "name": "Breakfast Burrito Without Rice (Long Title)",
         "id": 1004,
         "imageName": "stmarylake",
+        "icon": "🌯",
         "hue": 0.8
     },
     {
         "name": "Mapa Tofu",
         "id": 1005,
         "imageName": "twinlake",
+        "icon": "🥬",
         "hue": 0.9
     },
     {
         "name": "Poke",
         "id": 1006,
         "imageName": "lakemcdonald",
+        "icon": "🍣",
         "hue": 0.1
     },
     {
         "name": "Carnitas Tacos",
         "id": 1007,
         "imageName": "charleyrivers",
+        "icon": "🌮",
         "hue": 0.2
     },
     {
         "name": "Chicken Tikki Masala",
         "id": 1008,
         "imageName": "icybay",
+        "icon": "🐓",
         "hue": 0.3
     },
     {
-        "name": "Burger",
+        "name": "Burgers",
         "id": 1009,
         "imageName": "rainbowlake",
+        "icon": "🍔",
         "hue": 0.4
     },
     {
         "name": "Pizza",
         "id": 1010,
         "imageName": "hiddenlake",
+        "icon": "🍕",
         "hue": 0.5
     },
     {
         "name": "Tea Leaf Salad",
         "id": 1011,
         "imageName": "chincoteague",
+        "icon": "🥗",
         "hue": 0.6
     },
     {
         "name": "Biria Taco",
         "id": 1012,
         "imageName": "umbagog",
+        "icon": "🌮",
         "hue": 0.7
     }
 ]

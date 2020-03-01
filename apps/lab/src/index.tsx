@@ -1,13 +1,11 @@
 import './styles.scss'
 
 import { ApolloProvider } from '@apollo/client'
-import { Button, ProvideUI, Stack, themes } from '@o/ui'
 import { createOvermind } from 'overmind'
 import { Provider } from 'overmind-react'
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
-import { LabDishes } from './dishes'
 import { LabAuth } from './auth'
 import { LabMap } from './map'
 import { config, useOvermind } from './overmind'
@@ -22,37 +20,32 @@ function Authenticated() {
 
   return (
     <ApolloProvider client={state.auth.apollo_client}>
-      <Stack height="100vh" overflow="hidden">
-        <Stack direction="horizontal">
-          <Button
-            onClick={() => {
-              setTab(0)
-            }}
-          >
-            Dishes
-          </Button>
+      <Provider value={overmind}>
+        <div>
+          <div>
+            <button
+              onClick={() => {
+                setTab(1)
+              }}
+            >
+              Map
+            </button>
+          </div>
 
-          <Button
-            onClick={() => {
-              setTab(1)
-            }}
-          >
-            Map
-          </Button>
+          {tab === 1 && <LabMap />}
+
           <span className="auth_menu">
             {state.auth.user.username + ' | '}{' '}
-            <a
+            <button
               onClick={() => {
                 actions.auth.logout()
               }}
             >
               Logout
-            </a>
+            </button>
           </span>
-        </Stack>
-        {tab == 1 && <LabMap />}
-        {tab == 0 && <LabDishes />}
-      </Stack>
+        </div>
+      </Provider>
     </ApolloProvider>
   )
 }
@@ -64,10 +57,8 @@ function Main() {
 
 function RootView() {
   return (
-    <ProvideUI themes={themes} activeTheme="light">
-      <Provider value={overmind}>
-        <Main />
-      </Provider>
-    </ProvideUI>
+    <Provider value={overmind}>
+      <Main />
+    </Provider>
   )
 }
