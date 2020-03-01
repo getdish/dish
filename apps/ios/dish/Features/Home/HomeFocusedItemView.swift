@@ -15,7 +15,7 @@ struct HomeFocusedItemView: View {
     let focusedY = self.focusedItem?.targetMinY ?? 0
     let lastY = self.lastItem?.targetMinY ?? 0
     let minY: CGFloat = isFocused ? focusedY : lastY - 20
-    let y: CGFloat = minY - self.height - 8
+    let y: CGFloat = minY - self.height - 2
     
     return SwipeDownToDismissView(
       onClose: {
@@ -24,18 +24,18 @@ struct HomeFocusedItemView: View {
     ) {
       VStack {
         HStack {
-          VStack(spacing: 14) {
+          VStack(alignment: .center, spacing: 12) {
             Text("Miss Saigon")
               .font(.system(size: 18))
               .fontWeight(.bold)
             Text("Traditional northern style pho known for the broth.")
-              .font(.system(size: 16))
+              .font(.system(size: 15))
             Text("Closes 8pm · Vietnamese 🇻🇳")
               .font(.system(size: 14))
           }
           .environment(\.colorScheme, .dark)
-          .padding(.horizontal, 25)
-          .padding(.vertical, 15)
+          .padding(.horizontal, 19)
+          .padding(.vertical, 14)
           .background(Color.black.opacity(0.8))
           .cornerRadiusSquircle(23)
           .frame(width: self.screen.width * 0.7, height: self.height)
@@ -49,7 +49,7 @@ struct HomeFocusedItemView: View {
                   .background(Color.white)
                   .cornerRadius(32)
                   .rotationEffect(.degrees(-20))
-                  .offset(x: 12, y: -12)
+                  .offset(x: 5, y: -15)
                 Spacer()
                 Image(systemName: "star")
                   .frame(width: 42)
@@ -57,6 +57,7 @@ struct HomeFocusedItemView: View {
                     ControlsButtonStyle(
                       background: Color.purple,
                       cornerRadius: 100,
+                      height: 42,
                       hPad: 0
                     )
                 )
@@ -66,12 +67,12 @@ struct HomeFocusedItemView: View {
               Spacer()
             }
           )
-            .shadow(color: Color.black.opacity(0.3), radius: 20, y: 5)
+            .shadow(color: Color.black.opacity(0.4), radius: 16, y: 5)
             .shadow(color: Color.black.opacity(0.3), radius: 13, x: -10, y: 5)
           
           Spacer()
         }
-        .padding(.leading, 12)
+        .padding(.leading, 8)
         Spacer()
       }
     }
