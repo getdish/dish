@@ -48,7 +48,7 @@ struct HomeMainDrawer: View, Equatable {
       snapPoints: App.drawerSnapPoints
     ) {
       ZStack {
-        HomeMainDrawerScrollableContent()
+        HomeMainDrawerContent()
         
         VStack(spacing: 0) {
           VStack(spacing: 0) {
@@ -68,40 +68,6 @@ struct HomeMainDrawer: View, Equatable {
 }
 
 
-struct HomeMainDrawerScrollableContent: View {
-  var body: some View {
-    let occludeTopHeight = App.searchBarHeight + 13
-    
-    return VStack(spacing: 0) {
-      Spacer().frame(height: occludeTopHeight)
-      
-      HomeMainDrawerContent()
-        .mask(
-          LinearGradient(
-            gradient: Gradient(colors: [
-              Color.black.opacity(0),
-              Color.black.opacity(1),
-              Color.black.opacity(1),
-              Color.black.opacity(1),
-              Color.black.opacity(1),
-              Color.black.opacity(1),
-              Color.black.opacity(1),
-              Color.black.opacity(1),
-              Color.black.opacity(1),
-              Color.black.opacity(1),
-              Color.black.opacity(1),
-              Color.black.opacity(1)
-            ]),
-            startPoint: .top,
-            endPoint: .center
-          )
-            .offset(y: occludeTopHeight - 15)
-      )
-    }
-  }
-}
-
-
 struct HomeMainDrawerContent: View {
   @EnvironmentObject var store: AppStore
 
@@ -111,19 +77,43 @@ struct HomeMainDrawerContent: View {
 
   var body: some View {
     let viewStates = self.store.state.home.viewStates
-    return ZStack {
-      ForEach(viewStates, id: \.id) { viewState in
-        HomeScreen(
-          index: viewStates.firstIndex(of: viewState) ?? 0,
-          isActive: Selectors.home.lastState() == viewState,
-          isLast: viewStates.firstIndex(of: viewState) == viewStates.count - 1,
-          onSwipeBack: self.onSwipeBack,
-          viewState: viewState
-        )
-          .equatable()
+    let occludeTopHeight = App.searchBarHeight + 13
+    return VStack(spacing: 0) {
+      Spacer().frame(height: occludeTopHeight)
+      ZStack {
+        ForEach(viewStates, id: \.id) { viewState in
+          HomeScreen(
+            index: viewStates.firstIndex(of: viewState) ?? 0,
+            isActive: Selectors.home.lastState() == viewState,
+            isLast: viewStates.firstIndex(of: viewState) == viewStates.count - 1,
+            onSwipeBack: self.onSwipeBack,
+            viewState: viewState
+          )
+            .equatable()
+        }
       }
+        .mask(HomeMainDrawerContent.maskGradient.offset(y: occludeTopHeight - 15))
     }
   }
+  
+  static let maskGradient = LinearGradient(
+    gradient: Gradient(colors: [
+      Color.black.opacity(0),
+      Color.black.opacity(1),
+      Color.black.opacity(1),
+      Color.black.opacity(1),
+      Color.black.opacity(1),
+      Color.black.opacity(1),
+      Color.black.opacity(1),
+      Color.black.opacity(1),
+      Color.black.opacity(1),
+      Color.black.opacity(1),
+      Color.black.opacity(1),
+      Color.black.opacity(1)
+    ]),
+    startPoint: .top,
+    endPoint: .center
+  )
 }
 
 struct HomeScreen: View, Identifiable, Equatable {
@@ -143,7 +133,7 @@ struct HomeScreen: View, Identifiable, Equatable {
   let uid = UUID().uuidString
 
   var body: some View {
-    print("render home screen \(index) --  \(uid) -- \(isActive) \(viewState.state)")
+//    print("render home screen \(index) --  \(uid) -- \(isActive) \(viewState.state)")
     return ZStack {
       if isActive {
         if index == 0 {

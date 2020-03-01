@@ -42,7 +42,7 @@ struct HomeMainView: View {
         ZStack {
           // Map
           if App.enableMap {
-            DishMapViewContainer()
+            MapViewContainer()
               .offset(
                 y:  // centered
                 (self.screen.height - self.mapFullHeight) * 0.5
@@ -54,21 +54,6 @@ struct HomeMainView: View {
               .animation(.spring(response: 0.65))
           }
 
-          // below drawer
-          VStack {
-            DishMapResultsBar()
-            Spacer()
-          }
-            .offset(
-              y: App.drawerSnapPoints[2] + (
-                showMapRow
-                  ? -App.mapBarHeight - 68
-                  : 0
-              ))
-            .opacity(showMapRow ? 1 : 0)
-            .animation(.spring(response: 1))
-            .disabled(!showMapRow)
-
           VStack(spacing: 0) {
             DishLenseFilterBar()
             Spacer()
@@ -77,6 +62,21 @@ struct HomeMainView: View {
             .offset(y: max(App.drawerSnapPoints[1] - 68 - 30, state.y - 68))
             .animation(.spring(response: 1))
 
+          // map results bar
+          VStack {
+            MapResultsBar()
+            Spacer()
+          }
+          .offset(
+            y: App.drawerSnapPoints[2] + (
+              showMapRow
+                ? -App.mapBarHeight - 68
+                : 0
+            ))
+            .opacity(showMapRow ? 1 : 0)
+            .animation(.spring(response: 1))
+            .disabled(!showMapRow)
+          
           // top bar
           ControlsBar()
             .equatable()
@@ -88,7 +88,7 @@ struct HomeMainView: View {
             focusedDish: self.store.state.home.listItemFocusedDish
           )
 
-          DishCuisineFilterPopup(
+          HomeCuisineFilterPopup(
             active: self.store.state.home.showCuisineFilter
           )
 

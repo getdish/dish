@@ -33,7 +33,6 @@ struct DishRestaurantCard: View, Identifiable, Equatable {
     DishButton(action: {
       App.store.send(.home(.navigateToRestaurant(self.restaurant)))
     }) {
-      //            MagicItem("restaurant-\(self.id)", at: self.at) {
       VStack {
         self.restaurant.image
           .resizable()
@@ -46,61 +45,28 @@ struct DishRestaurantCard: View, Identifiable, Equatable {
         .overlay(
           self.textOverlay
         )
+        .cornerRadius(16)
+        .clipped()
+        .shadow(color: Color.black.opacity(0.4), radius: 4, x: 0, y: 1)
         .overlay(
           DishRatingView(
             isMini: self.isMini,
             restaurant: self.restaurant
           )
-        )
-        .overlay(
-          self.tapOverlay
-        )
-        .cornerRadius(16)
-        .clipped()
-        .shadow(color: Color.black.opacity(0.4), radius: 4, x: 0, y: 1)
-      //            }
-    }
-  }
-
-  var tapOverlay: some View {
-    Group {
-      if isMini {
-        Color.black.opacity(0.00001)
-          .onTapGesture {
-            //                        App.store.send(.home(.))
-          }
-      } else {
-        HStack {
-          Color.black.opacity(0.0001)
-            .onTapGesture {
-              print("prev!")
-              self.restaurant.prev()
-            }
-
-          Color.clear
-
-          Color.black.opacity(0.0001)
-            .onTapGesture {
-              print("next!")
-              self.restaurant.next()
-            }
-        }
-      }
+      )
     }
   }
 
   var textOverlay: some View {
     return ZStack(alignment: .bottomLeading) {
-      VStack(alignment: .leading) {
-        Spacer()
-
-        VStack(alignment: .leading, spacing: 16) {
-          VStack(alignment: .leading) {
-            Text(restaurant.name)
-              .font(.system(size: isMini ? 14 : 22))
-              .bold()
-              .modifier(TextShadowStyle())
-          }
+      VStack {
+        HStack(spacing: 16) {
+          Text(restaurant.name)
+            .font(.system(size: isMini ? 14 : 22))
+            .fontWeight(.bold)
+            .modifier(TextShadowStyle())
+          
+          Spacer()
 
           if !isMini {
             HStack(spacing: 12) {
@@ -124,7 +90,7 @@ struct DishRestaurantCard: View, Identifiable, Equatable {
               .environment(\.colorScheme, .light)
           }
         }
-
+        Spacer()
       }
         .padding(isMini ? 8 : 16)
     }

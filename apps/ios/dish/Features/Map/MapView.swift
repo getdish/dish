@@ -2,7 +2,7 @@ import Combine
 import MapKit
 import SwiftUI
 
-struct DishMapViewContainer: View {
+struct MapViewContainer: View {
   @EnvironmentObject var store: AppStore
   @EnvironmentObject var keyboard: Keyboard
 
@@ -20,7 +20,7 @@ struct DishMapViewContainer: View {
     ZStack(alignment: .topLeading) {
       VStack {
         ZStack(alignment: .topLeading) {
-          DishMapView(
+          MapView(
             animated: store.state.appLoaded,
             currentLocation: store.state.map.moveToLocation,
             markers: markers
@@ -49,7 +49,7 @@ struct DishMapViewContainer: View {
   }
 }
 
-struct DishMapView: View {
+struct MapView: View {
   @State var mapZoom = 10.0
   @State var cancellables: Set<AnyCancellable> = []
 
@@ -102,9 +102,9 @@ struct DishMapView: View {
 }
 
 #if DEBUG
-  struct DishMapView_Previews: PreviewProvider {
+  struct MapView_Previews: PreviewProvider {
     static var previews: some View {
-      DishMapViewContainer()
+      MapViewContainer()
         .embedInAppEnvironment()
     }
   }

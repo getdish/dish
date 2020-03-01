@@ -8,25 +8,14 @@ struct DishRatingView: View {
 
   var body: some View {
     VStack {
+      Spacer()
       HStack {
-        HStack(spacing: 0) {
-          ZStack {
-            ForEach(0..<self.restaurant.stars) { index in
-              Text("⭐️")
-                .font(.system(size: self.ratingSize * 0.525))
-                .offset(x: CGFloat(index) * self.starWidth)
-            }
-          }
-            .offset(x: -self.starWidth)
+        if self.restaurant.stars > 2 {
+          Text("⭐️")
+            .offset(x: -4, y: 4)
         }
-          .frame(width: CGFloat(self.restaurant.stars) * self.starWidth)
-          .padding(5)
-          .background(Color.white.opacity(0.25))
-          .cornerRadius(10)
-
         Spacer()
       }
-      Spacer()
     }
   }
 }
