@@ -16,25 +16,8 @@ struct MapResultsBar: View {
         }
       }
       
-      // account for DishLenseBar  - todo make this a variable
       Spacer().frame(height: 130)
     }
-    .background(
-        ZStack {
-          self.colorScheme == .dark
-            ? LinearGradient(
-              gradient: Gradient(colors: [.clear, .black]),
-              startPoint: .top,
-              endPoint: .center
-            )
-            : LinearGradient(
-              gradient: Gradient(colors: [Color.clear, Color.init(white: 0, opacity: 0.2)]),
-              startPoint: .top,
-              endPoint: .bottom
-            )
-        }
-          .drawingGroup()
-      )
   }
 }
 

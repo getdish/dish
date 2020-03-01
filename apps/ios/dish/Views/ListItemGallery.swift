@@ -59,7 +59,6 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
             }
             .padding(.leading, 20)
       )
-        
         ScrollView(.horizontal, showsIndicators: false) {
           HStack(spacing: 0) {
             ScrollListener(
@@ -107,6 +106,15 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
           }
           .padding(.trailing, self.screen.width / 2.5)
         }
+        .overlay(
+          HStack {
+            if self.scrollX == 0 {
+              Color.black.opacity(0.0001)
+                .frame(width: contentWidth)
+            }
+            Spacer()
+          }
+        )
       }
       .frame(width: self.screen.width, height: imageSize)
   }

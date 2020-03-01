@@ -53,6 +53,25 @@ struct HomeMainView: View {
               )
               .animation(.spring(response: 0.65))
           }
+          
+//          Color.clear
+//            .frame(height)
+//            .background(
+//              ZStack {
+//                self.colorScheme == .dark
+//                  ? LinearGradient(
+//                    gradient: Gradient(colors: [.clear, .black]),
+//                    startPoint: .top,
+//                    endPoint: .center
+//                    )
+//                  : LinearGradient(
+//                    gradient: Gradient(colors: [Color.clear, Color.init(white: 0, opacity: 0.2)]),
+//                    startPoint: .top,
+//                    endPoint: .bottom
+//                )
+//              }
+//              .drawingGroup()
+//          )
 
           VStack(spacing: 0) {
             DishLenseFilterBar()
