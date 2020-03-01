@@ -38,6 +38,9 @@ struct HomeMainView: View {
 
       // below restaurant card
       ZStack {
+        // matches LinearGradient below for covering map
+        Color(.systemBackground)
+        
         // wrapper to handle disabling touch events during dragging
         ZStack {
           // Map
@@ -51,9 +54,9 @@ struct HomeMainView: View {
                   // subtract just a bit because LenseBar is taller than TopNav
                   - 20
               )
-              .animation(.spring(response: 0.65))
+              .animation(.spring(response: 0.35))
           }
-          
+
           // map overlay fade to bottom
           VStack {
             Spacer()
@@ -76,6 +79,8 @@ struct HomeMainView: View {
             .frame(height: 320)
           }
           .drawingGroup()
+          .allowsHitTesting(false)
+          .disabled(true)
 
           VStack(spacing: 0) {
             DishLenseFilterBar()
@@ -83,7 +88,7 @@ struct HomeMainView: View {
           }
           // dont go up beyond mid-point
             .offset(y: max(App.drawerSnapPoints[1] - 68 - 30, state.y - 68))
-            .animation(.spring(response: 1))
+            .animation(.spring(response: 0.6))
 
           // map results bar
           VStack {
@@ -99,14 +104,14 @@ struct HomeMainView: View {
             .opacity(showMapRow ? 1 : 0)
             .animation(.spring(response: 1))
             .disabled(!showMapRow)
-          
+
           // top bar
           ControlsBar()
             .equatable()
 
           HomeMainDrawer()
             .equatable()
-          
+
           HomeFocusedItemView(
             focusedItem: self.store.state.home.focusedItem,
             showBookmark: self.store.state.home.drawerPosition != .bottom,

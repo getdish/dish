@@ -33,7 +33,7 @@ struct HomeViewInner: View, Equatable {
         homePager.animateTo(Double(homeViewsIndex.firstIndex(of: self.store.state.home.view)!))
       }
     }
-    return ZStack {
+    return ZStack {      
       PrintGeometryView("HomeView")
 
       PagerView(

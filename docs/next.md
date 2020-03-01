@@ -11,9 +11,20 @@
 
 - put all graphql queries from `apps/lab/src/dishes/index.tsx` and the swift app `api.graphql` into its own area as .graphql files and import/reference them from their respective places.
 
+# admin
+
+- spreadsheet view into data
+  - dishes/restaurants
+  - search
+  - voting
+- taxonomy view for managing categorization
+- city view for seeing the top unique best places per-city for the explore page
+
 # website
 
-- just a sexy splash page, search bar
+- sexy splash page for home
+- signup for beta
+- spreadsheet view into all data next to a simple map
 
 # community
 
@@ -24,6 +35,7 @@
 
 # blog
 
+- need to write a good intro or two blog posts for launch
 - simple static blog generator or similar
 - we should start idea gathering soon for posts
 - start sketching out posts
@@ -31,6 +43,9 @@
 # marketing
 
 - cheap billboards in smaller markets?
+- maybe one expnsive one going from the airport into the city for tourists
+  - capture: "Your insider app for the best stuff to see/do in SF"
+  - airport ad?
 - travellers may really want this (cheaper markets?)
 
 # backend
@@ -76,9 +91,11 @@
 
 Following are all "chunks" that will make significant improvements in feel/usability:
 
-- rating needs work, stars seem clunky
+- make the dishlistitem tap => dish search results better transition
+  - design sprint on search results page
+  - swipe back
+- show our sub-ratings inside restuarant view: michelin, infatuated, etc
 - tap image in DishListItem to go straight to gallery
-- design sprint on search results page
 - peek card at bottom when tapping on individual restaurant
   - pull it up to see full restaurant card
   - lets you swipe between images easily
