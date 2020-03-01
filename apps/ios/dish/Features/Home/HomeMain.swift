@@ -77,8 +77,8 @@ struct HomeMainView: View {
               )
             }
             .frame(height: 320)
+            .drawingGroup()
           }
-          .drawingGroup()
           .allowsHitTesting(false)
           .disabled(true)
 
