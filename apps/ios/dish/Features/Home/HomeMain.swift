@@ -85,7 +85,7 @@ struct HomeMainView: View {
             .equatable()
           
           HomeFocusedDishView(
-            focusedDish: self.store.state.home.listItemFocusedDish
+            focusedDish: self.store.state.home.focusedItem
           )
 
           HomeCuisineFilterPopup(

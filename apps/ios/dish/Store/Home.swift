@@ -69,7 +69,15 @@ struct LenseItem: Equatable, Identifiable {
   }
   
   var colorBright: Color {
-    Color(red: self.rgb[0] * 1.2, green: self.rgb[1] * 1.2, blue: self.rgb[2] * 1.2)
+    let (r, g, b) = (rgb[0], rgb[1], rgb[2])
+    var c0 = RGB(r: r, g: g, b: b).hsv
+    c0.s = 1.0
+    let c1 = c0.rgb
+    return Color(
+      red: c1.r,
+      green: c1.g,
+      blue: c1.b
+    )
   }
 }
 
@@ -121,7 +129,7 @@ fileprivate let initialCuisines = [
   CuisineItem(id: "8", name: "Vietnamese", icon: "🇻🇳"),
 ]
 
-struct FocusedDishItem: Equatable {
+struct HomeFocusedItem: Equatable {
   var dish: DishItem
   var rank: Int
   var targetMinY: CGFloat
@@ -137,6 +145,7 @@ extension AppState {
   struct HomeState: Equatable {
     var view: HomePageView = .home
     var viewStates: [HomeStateItem] = [HomeStateItem()]
+    var focusedItem: HomeFocusedItem? = nil
     var filters: [FilterItem] = initialFilters
     var filterTopLevel: HomeTopLevelFilter = .dish
     var cuisines: [CuisineItem] = initialCuisines
@@ -148,7 +157,6 @@ extension AppState {
     var drawerIsDragging = false
     var showCuisineFilter: Bool = false
     var cuisineFilter: String = "🍽"
-    var listItemFocusedDish: FocusedDishItem? = nil
   }
 }
 
@@ -169,7 +177,7 @@ enum HomeAction {
   case setCuisineFilter(_ cuisine: String)
   case setDrawerIsDragging(_ val: Bool)
   case setSelectedMarkers(_ val: [MapMarker])
-  case setListItemFocusedDish(_ dish: FocusedDishItem?)
+  case setFocusedItem(_ dish: HomeFocusedItem?)
 }
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
@@ -188,9 +196,9 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
   // switch
 
   switch action {
-    case .setListItemFocusedDish(let dish):
+    case .setFocusedItem(let dish):
       if state.home.drawerIsDragging == false {
-        state.home.listItemFocusedDish = dish
+        state.home.focusedItem = dish
       }
   case .setSelectedMarkers(let markers):
     let last = state.home.viewStates.last!

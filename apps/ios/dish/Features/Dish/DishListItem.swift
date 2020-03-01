@@ -37,7 +37,7 @@ struct DishListItem: View, Equatable {
           imageSize: imageSize,
           total: total,
           onScrolledToStart: {
-            App.store.send(.home(.setListItemFocusedDish(nil)))
+            App.store.send(.home(.setFocusedItem(nil)))
             if let cb = self.onScrollStart {
               cb()
             }
@@ -88,13 +88,13 @@ struct DishListItemRestaurantCard: View {
       .shadow(radius: 4)
       .onGeometryFrameChange { geo in
         if self.isActive {
-          let next = FocusedDishItem(
+          let next = HomeFocusedItem(
             dish: self.dish,
             rank: self.index + 1,
             targetMinY: geo.frame(in: .global).minY
           )
-          if next != App.store.state.home.listItemFocusedDish {
-            App.store.send(.home(.setListItemFocusedDish(next)))
+          if next != App.store.state.home.focusedItem {
+            App.store.send(.home(.setFocusedItem(next)))
           }
         }
       }

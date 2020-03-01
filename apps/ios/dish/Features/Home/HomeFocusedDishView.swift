@@ -2,7 +2,7 @@ import SwiftUI
 
 struct HomeFocusedDishView: View {
   @EnvironmentObject var screen: ScreenModel
-  var focusedDish: FocusedDishItem? = nil
+  var focusedDish: HomeFocusedItem? = nil
   
   var height: CGFloat {
     140
@@ -11,7 +11,7 @@ struct HomeFocusedDishView: View {
   var body: some View {
     SwipeDownToDismissView(
       onClose: {
-        App.store.send(.home(.setListItemFocusedDish(nil)))
+        App.store.send(.home(.setFocusedItem(nil)))
     }
     ) {
       VStack {

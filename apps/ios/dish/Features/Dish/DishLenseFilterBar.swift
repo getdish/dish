@@ -23,6 +23,8 @@ struct DishLenseFilterBar: View {
         .padding(.bottom, 8)
         .padding(.top, 12)
     }
+    .offset(y: self.store.state.home.drawerPosition == .bottom && self.store.state.home.focusedItem != nil ? 40 : 0)
+    .animation(.spring())
   }
 }
 
