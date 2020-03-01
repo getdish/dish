@@ -20,30 +20,30 @@ struct DishButton<Content: View>: View {
   var scaleEffect: CGFloat
   var content: Content
 
-  @State var isTapped = false
+  @State var isPressed = false
   @State var lastTap = Date()
 
-  func callbackAction() {
+  private func callbackAction() {
     if let cb = self.action { cb() }
   }
 
   var body: some View {
     self.content
       // ⚠️ dont put .animation() here or every subview animates
-      .scaleEffect(self.isTapped ? self.scaleEffect : 1)
-      .opacity(self.isTapped ? self.opacityEffect : 1)
-      .onTapGesture(perform: self.onTap)
+      .scaleEffect(self.isPressed ? self.scaleEffect : 1)
+      .opacity(self.isPressed ? self.opacityEffect : 1)
+      .onTapGesture(perform: self.handleTap)
       .onLongPressGesture(
         minimumDuration: 10000,
         maximumDistance: 8,
-        pressing: self.onPressing,
-        perform: self.onPressed
+        pressing: self.handlePress,
+        perform: self.handlePerform
       )
   }
 
-  func onPressing(_ isPressing: Bool) {
+  private func handlePress(_ isPressing: Bool) {
     withAnimation(.spring()) {
-      self.isTapped = isPressing
+      self.isPressed = isPressing
     }
     if isPressing {
       self.lastTap = Date()
@@ -52,13 +52,13 @@ struct DishButton<Content: View>: View {
     }
   }
 
-  func onPressed() {
+  private func handlePerform() {
     if self.lastTap.timeIntervalSinceNow > 10 {
       self.callbackAction()
     }
   }
 
-  func onTap() {
+  private func handleTap() {
     self.lastTap = Date()
     self.callbackAction()
   }

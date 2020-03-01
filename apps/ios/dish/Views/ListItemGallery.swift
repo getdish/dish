@@ -5,15 +5,19 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
   
   var getImage: ListItemGalleryContentFn
   var content: Content
+  var defaultImagesVisible: Double
   var imageSize: CGFloat
-  var defaultImagesVisible: Double = 1.3
   var total: Int
   var onScrollStart: (() -> Void)?
   var onScrollEnd: (() -> Void)?
   var onScrolledToStart: (() -> Void)?
   var padding: CGFloat
+  enum DisplayContent { case scrolling, fixed }
+  var displayContent: DisplayContent
   
   init(
+    defaultImagesVisible: Double = 1.5,
+    displayContent: DisplayContent = .scrolling,
     getImage: @escaping ListItemGalleryContentFn,
     imageSize: CGFloat = 90,
     total: Int = 1,
@@ -23,6 +27,8 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
     padding: CGFloat = 3,
     @ViewBuilder content: () -> Content
   ) {
+    self.defaultImagesVisible = defaultImagesVisible
+    self.displayContent = displayContent
     self.imageSize = imageSize
     self.total = total
     self.onScrollStart = onScrollStart
@@ -42,8 +48,18 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
   
   var body: some View {
     let activeIndex = CGFloat(self.scrollX / size)
+    let contentWidth = self.screen.width - self.imageSize * CGFloat(self.defaultImagesVisible)
     return ZStack {
-      ZStack {
+        Color.clear
+          .overlay(displayContent == .scrolling ? nil :
+            HStack(spacing: 0) {
+              self.content
+              Spacer()
+              Spacer().frame(width: contentWidth * 0.75)
+            }
+            .padding(.leading, 20)
+      )
+        
         ScrollView(.horizontal, showsIndicators: false) {
           HStack(spacing: 0) {
             ScrollListener(
@@ -67,9 +83,14 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
               x.clipsToBounds = false
             }
             
-            self.content.frame(width:
-              self.screen.width - (self.imageSize + self.padding) * CGFloat(self.defaultImagesVisible)
-            )
+            // contents
+            Color.clear
+              .frame(width: contentWidth)
+              .overlay(
+                displayContent == .scrolling ? self.content : nil
+              )
+            
+            Spacer().frame(width: 24)
             
             HStack {
               ForEach(0..<self.total) { index in
@@ -88,7 +109,6 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
         }
       }
       .frame(width: self.screen.width, height: imageSize)
-    }
   }
   
   func getImageXPosition(_ index: Int, activeIndex: Int) -> CGFloat {

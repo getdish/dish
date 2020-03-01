@@ -30,7 +30,7 @@ struct DishCardView: View, Identifiable, Equatable {
           .home(.push(HomeStateItem(state: .search(search: self.dish.name))))
         )
       }
-    ) {
+    ) { 
       self.dish.image
         .resizable()
         .scaledToFill()
@@ -108,7 +108,7 @@ struct DishButtonView: View, Identifiable, Equatable {
           .home(.push(HomeStateItem(state: .search(search: self.dish.name))))
         )
       }
-    ) {
+    ) { 
       VStack {
         HStack {
           Text(self.dish.name)

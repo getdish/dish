@@ -196,7 +196,7 @@ struct ContextMenuView<Content: View, MenuContent: View>: View {
       DishButton(action: {
         print("tap")
         // for some reason this never runs, neither onTapGesture
-      }) {
+      }) { 
         self.content
           .overlay(
             GeometryReader { geometry -> Run in

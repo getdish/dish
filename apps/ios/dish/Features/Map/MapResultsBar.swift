@@ -8,16 +8,16 @@ struct MapResultsBar: View {
     VStack {
       Group {
         if Selectors.home.isOnSearchResults(self.store) {
-          HomeMapSearchResults()
+          MapSearchResults()
             .transition(.opacity)
         } else {
-          HomeMapExplore()
+          MapExplore()
             .transition(.opacity)
         }
       }
       
       // account for DishLenseBar  - todo make this a variable
-      Spacer().frame(height: 120)
+      Spacer().frame(height: 130)
     }
     .background(
         ZStack {
@@ -38,7 +38,7 @@ struct MapResultsBar: View {
   }
 }
 
-struct HomeMapExplore: View {
+struct MapExplore: View {
   @EnvironmentObject var store: AppStore
   @State var index: Int = 0
 
@@ -82,16 +82,63 @@ struct HomeMapExplore: View {
 
 }
 
-struct HomeMapSearchResults: View {
+struct MapSearchResults: View {
   @EnvironmentObject var store: AppStore
   @State var index = 0
+  var dish = features[0]
 
   var body: some View {
-//    let width: CGFloat = max(100, (App.screen.width - 40) * 0.4)
-//    let results = Selectors.home.latestResultsItems(store)
-    return DishListItem(
-      dish: features[0],
-      number: index + 1
+    return DishMapResultItem(
+      dish: features[0]
     )
+  }
+}
+
+fileprivate let total: Int = 10
+fileprivate let imageSize: CGFloat = 100
+
+struct DishMapResultItem: View, Equatable {
+  static func == (lhs: Self, rhs: Self) -> Bool {
+    lhs.dish == rhs.dish
+  }
+  @Environment(\.colorScheme) var colorScheme
+  @EnvironmentObject var screen: ScreenModel
+  var dish: DishItem
+  
+  var body: some View {
+    ListItemGallery(
+      defaultImagesVisible: 1.5,
+      displayContent: .fixed,
+      getImage: { (index, size, isActive) in
+        DishListItemRestaurantCard(
+          dish: self.dish,
+          index: index,
+          isActive: isActive,
+          size: size
+        )
+    },
+      imageSize: imageSize,
+      total: total,
+      onScrolledToStart: {
+        App.store.send(.home(.setFocusedItem(nil)))
+    }
+    ) {
+      HStack(spacing: 12) {
+        Text(self.dish.icon)
+          .font(.system(size: 32))
+        
+        Text(self.dish.name)
+          .fontWeight(.light)
+          .lineLimit(2)
+          .font(.system(size: 16))
+          .shadow(color: Color.black.opacity(0.1), radius: 0, x: 0, y: 1)
+      }
+      .padding(.horizontal, 18)
+      .padding(.vertical, 5)
+      .background(Color(.systemBackground).opacity(0.73))
+      .invertColorScheme()
+      .cornerRadius(25)
+    }
+    .offset(y: -20)
   }
 }

@@ -37,7 +37,7 @@ struct DishRestaurantResult: View {
           //                    App.store.send(
           //                        .home(.push(HomeStateItem(search: self.dish.name)))
           //                    )
-        }) {
+        }) { 
           HStack(alignment: .top) {
             VStack {
               Text("\(self.restaurant.name)")

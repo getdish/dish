@@ -1,6 +1,6 @@
 import SwiftUI
 
-fileprivate let filterBarPad: CGFloat = 12
+fileprivate let filterBarPad: CGFloat = 10
 
 struct HomeMainFilterBar: View, Equatable {
   static func == (lhs: HomeMainFilterBar, rhs: HomeMainFilterBar) -> Bool {
@@ -33,7 +33,7 @@ struct HomeMainFilterBar: View, Equatable {
   var body: some View {
     ZStack {
       ScrollView(.horizontal, showsIndicators: false) {
-        HStack(spacing: 8) {
+        HStack(spacing: 0) {
 //          Text(x ? "🥂" : "🍽") //
 //            .font(.system(size: 26))
 //            .onTapGesture {
@@ -62,7 +62,6 @@ struct HomeMainFilterBar: View, Equatable {
             }
           }
         }
-          .padding(.vertical, filterBarPad)
           .padding(.horizontal, 24)
           // this heavily fixes map pan
           .drawingGroup()
@@ -167,18 +166,19 @@ struct FilterGroupView: View {
 
 struct FilterButton: View {
   @Environment(\.colorScheme) var colorScheme
+  @Environment(\.itemSegment) var itemSegment
 
   var expandable: Bool = false
   var filter: FilterItem
   var onTap: (() -> Void)? = nil
 
   var height: CGFloat {
-    App.filterBarHeight - filterBarPad * 2
+    App.filterBarHeight - filterBarPad
   }
 
   var body: some View {
-    ZStack {
-      DishButton(action: {
+    DishButton(
+      action: {
         if let cb = self.onTap {
           cb()
         } else {
@@ -188,7 +188,9 @@ struct FilterButton: View {
             // TODO
           }
         }
-      }) {
+      }
+    ) {
+      VStack {
         HStack {
           Spacer()
           if self.filter.icon != nil {
@@ -206,30 +208,30 @@ struct FilterButton: View {
           }
           Spacer()
         }
-          .frame(height: self.height)
-          .modifier(
-            FilterButtonStyle(
-              active: self.filter.active,
-              bordered: expandable
-            ))
+        .frame(height: self.height)
       }
+      .modifier(FilterButtonStyle(
+        active: self.filter.active,
+        pressed: false
+      ))
+        .padding(filterBarPad)
     }
   }
 }
 
 struct FilterButtonStyle: ViewModifier {
   var active = false
-  var bordered = false
-  @Environment(\.lenseColor) var lenseColor
+  var pressed = false
   @Environment(\.itemSegment) var itemSegment
+  @Environment(\.lenseColor) var lenseColor
   @Environment(\.colorScheme) var colorScheme
   @State var display: SegmentedItem? = nil
 
   func body(content: Content) -> some View {
-    let a = Color.black
-    let b = self.lenseColor ?? Color(white: 0)
-    let bg = active ? a : b
-    let fg = active ? b : a
+    let fg0: Color = colorScheme == .light ? Color(white: 0.3) : Color.black
+    let bg0 = colorScheme == .light ? Color(white: 0.97) : Color.white
+    let fg = !active ? fg0 : bg0
+    let bg = !active ? bg0 : fg0
     let corners: [UIRectCorner] = itemSegment == nil
       || itemSegment?.isLast == true && itemSegment?.isFirst == true
       ? [.allCorners]
@@ -237,11 +239,20 @@ struct FilterButtonStyle: ViewModifier {
       ? []
       : itemSegment?.isLast == true
       ? [.topRight, .bottomRight] : [.topLeft, .bottomLeft]
+    
+    let gradient: [Color] = [active ? bg : bg.opacity(0.05), .clear]
     return
       content
-      .foregroundColor(bordered ? nil : fg)
-      .padding(.horizontal, 8)
-      .background(bg.opacity(0.15))
+      .padding(.horizontal, 9)
+      .background(bg)
+      .foregroundColor(fg)
+      .background(
+        LinearGradient(
+          gradient: Gradient(colors: pressed ? gradient.reversed() : gradient),
+          startPoint: .top,
+          endPoint: .trailing
+        )
+      )
       .cornerRadius(20, corners: .init(corners))
   }
 }

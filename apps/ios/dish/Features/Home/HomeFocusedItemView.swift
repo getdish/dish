@@ -1,15 +1,23 @@
 import SwiftUI
 
-struct HomeFocusedDishView: View {
+struct HomeFocusedItemView: View {
   @EnvironmentObject var screen: ScreenModel
-  var focusedDish: HomeFocusedItem? = nil
+  var focusedItem: HomeFocusedItem? = nil
   
   var height: CGFloat {
     140
   }
   
+  @State var lastItem: HomeFocusedItem? = nil
+  
   var body: some View {
-    SwipeDownToDismissView(
+    let isFocused = self.focusedItem != nil
+    let focusedY = self.focusedItem?.targetMinY ?? 0
+    let lastY = self.lastItem?.targetMinY ?? 0
+    let minY: CGFloat = isFocused ? focusedY : lastY - 20
+    let y: CGFloat = minY - self.height - 8
+    
+    return SwipeDownToDismissView(
       onClose: {
         App.store.send(.home(.setFocusedItem(nil)))
     }
@@ -34,7 +42,7 @@ struct HomeFocusedDishView: View {
           .overlay(
             VStack {
               HStack {
-                Text("\(self.focusedDish?.rank ?? 0).")
+                Text("\(self.focusedItem?.rank ?? 0).")
                   .font(.system(size: 18))
                   .fontWeight(.black)
                   .frame(width: 36, height: 36)
@@ -67,9 +75,9 @@ struct HomeFocusedDishView: View {
         Spacer()
       }
     }
-    .id(self.focusedDish?.dish.id ?? 0)
-    .opacity(self.focusedDish == nil ? 0 : 1)
-    .offset(y: (self.focusedDish?.targetMinY ?? 0) - self.height - 20)
+    .id(self.focusedItem?.dish.id ?? 0)
+    .opacity(self.focusedItem == nil ? 0 : 1)
+    .offset(y: y)
     .animation(.spring())
   }
 }

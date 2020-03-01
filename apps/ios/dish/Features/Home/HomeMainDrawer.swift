@@ -55,6 +55,7 @@ struct HomeMainDrawer: View, Equatable {
             HomeSearchBar()
               .padding(.horizontal, 10)
               .padding(.top, 10)
+              .padding(.bottom, 5)
             HomeMainFilterBar()
           }
           Spacer()
@@ -307,7 +308,6 @@ struct HomeContentExplore: View {
       ForEach(0..<self.total) { index in
         DishListItem(
           dish: self.dishes[index],
-          number: index + 1,
           onScrollStart: {
             // todo reset the others
         }

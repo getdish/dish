@@ -114,7 +114,6 @@ struct HomeSearchBar: View {
       }
         .buttonStyle(
           IndentedStyle(
-            colorScheme: self.colorScheme,
             rgb: Selectors.home.drawerRGB(colorScheme: self.colorScheme)
           ))
     }
@@ -122,7 +121,7 @@ struct HomeSearchBar: View {
 }
 
 struct IndentedStyle: ButtonStyle {
-  var colorScheme: ColorScheme
+  @Environment(\.colorScheme) var colorScheme
   var rgb: [Double]
 
   var bg: Color {

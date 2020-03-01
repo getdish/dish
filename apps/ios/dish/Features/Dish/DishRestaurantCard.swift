@@ -32,7 +32,7 @@ struct DishRestaurantCard: View, Identifiable, Equatable {
   var body: some View {
     DishButton(action: {
       App.store.send(.home(.navigateToRestaurant(self.restaurant)))
-    }) {
+    }) { 
       VStack {
         self.restaurant.image
           .resizable()

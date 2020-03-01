@@ -11,7 +11,6 @@ struct DishListItem: View, Equatable {
   @EnvironmentObject var screen: ScreenModel
   
   var dish: DishItem
-  var number: Int
   var onScrollStart: (() -> Void)? = nil
   var onScrollEnd: (() -> Void)? = nil
   @State var scrollX: CGFloat = 0
@@ -24,8 +23,9 @@ struct DishListItem: View, Equatable {
         )
     },
       scaleEffect: 1.0
-    ) {
+    ) { 
         ListItemGallery(
+          defaultImagesVisible: 1.5,
           getImage: { (index, size, isActive) in
             DishListItemRestaurantCard(
               dish: self.dish,
@@ -36,6 +36,8 @@ struct DishListItem: View, Equatable {
           },
           imageSize: imageSize,
           total: total,
+          onScrollStart: self.onScrollStart,
+          onScrollEnd: self.onScrollEnd,
           onScrolledToStart: {
             App.store.send(.home(.setFocusedItem(nil)))
             if let cb = self.onScrollStart {
@@ -45,12 +47,12 @@ struct DishListItem: View, Equatable {
         ) {
           HStack(spacing: 12) {
             Text(self.dish.icon)
-              .font(.system(size: 30))
+              .font(.system(size: 32))
             
             Text(self.dish.name)
-              .fontWeight(.regular)
+              .fontWeight(.light)
               .lineLimit(2)
-              .font(.system(size: 18))
+              .font(.system(size: 16))
               .shadow(color: Color.black.opacity(0.1), radius: 0, x: 0, y: 1)
             
             Spacer()

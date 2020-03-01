@@ -23,13 +23,13 @@ struct DishLenseFilterBar: View {
         .padding(.bottom, 8)
         .padding(.top, 12)
     }
-    .offset(y: self.store.state.home.drawerPosition == .bottom && self.store.state.home.focusedItem != nil ? 40 : 0)
+    .offset(y: self.store.state.home.drawerPosition == .bottom && self.store.state.home.focusedItem != nil ? 30 : 0)
     .animation(.spring())
   }
 }
 
 struct DishLenseButton: View, Identifiable, Equatable {
-  static func == (lhs: DishLenseButton, rhs: DishLenseButton) -> Bool {
+  static func == (lhs: Self, rhs: Self) -> Bool {
     lhs.active == rhs.active && lhs.index == rhs.index && lhs.id == rhs.id
   }
 
@@ -49,12 +49,12 @@ struct DishLenseButton: View, Identifiable, Equatable {
         .modifier(
           ControlsButtonStyle(
             active: active,
-            background: active ? lense.colorBright : lense.color.opacity(0.6),
+            background: active ? lense.colorBright : lense.color.opacity(0.3),
             height: 38
           )
         )
         .scaleEffect(active ? 1.1 : 1)
-        .shadow(color: lense.color, radius: 2)
+        .shadow(color: lense.color.opacity(0.5), radius: 2, y: 2)
         .animation(.spring())
     }
   }

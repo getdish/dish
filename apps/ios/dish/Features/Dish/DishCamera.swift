@@ -108,7 +108,7 @@ struct DishCameraBackButton: View {
       } else {
         App.store.send(.home(.setView(.home)))
       }
-    }) {
+    }) { 
       Image(systemName: "chevron.left")
         .resizable()
         .scaledToFit()

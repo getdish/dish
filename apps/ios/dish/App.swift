@@ -44,7 +44,7 @@ class AppModel {
   let queueMainInteractive = DispatchQueue(label: "", qos: .userInteractive, attributes: .concurrent, target: .main)
   let magicItems = magicItemsStore
   let searchBarHeight: CGFloat = 50
-  let filterBarHeight: CGFloat = 60
+  let filterBarHeight: CGFloat = 50
   let mapBarHeight: CGFloat = 80
 
   var drawerSnapPoints: [CGFloat] {
