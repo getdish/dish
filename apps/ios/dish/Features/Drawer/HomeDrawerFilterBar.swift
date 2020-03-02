@@ -27,26 +27,21 @@ struct HomeDrawerFilterBar: View, Equatable {
   var separator: some View {
     Color(white: 0.5).opacity(0.1).frame(width: 1)
   }
-  
-  @State var x = false
 
   var body: some View {
     ZStack {
       ScrollView(.horizontal, showsIndicators: false) {
         HStack(spacing: 0) {
-//          Text(x ? "🥂" : "🍽") //
-//            .font(.system(size: 26))
-//            .onTapGesture {
-//              self.x = !self.x
-//            }
-//          .padding(.trailing, 4)
+          DishButton(action: {
+            self.store.send(.home(.toggleShowCuisineFilter))
+          }) {
+            Text("\(self.store.state.home.cuisineFilter)")
+              .font(.system(size: 28))
+              .shadow(color: Color(white: 0, opacity: 0.25), radius: 2, y: 0)
+              .padding(10)
+          }
           
-          FilterButton(
-            filter: FilterItem(name: self.store.state.home.cuisineFilter, fontSize: 13),
-            onTap: {
-              self.store.send(.home(.toggleShowCuisineFilter))
-            }
-          )
+          Spacer().frame(width: 5)
 
           ForEach(0..<self.filterGroups.count) { index in
             Group {

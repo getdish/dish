@@ -46,6 +46,20 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
     imageSize + padding * 2
   }
   
+  func onScroll(_ frame: CGRect) {
+    let x = -frame.minX
+    if x != self.scrollX {
+      async {
+        self.scrollX = x
+        if x <= 0 {
+          if let cb = self.onScrolledToStart {
+            cb()
+          }
+        }
+      }
+    }
+  }
+  
   var body: some View {
     let activeIndex = CGFloat(self.scrollX / size)
     let contentWidth = self.screen.width - self.imageSize * CGFloat(self.defaultImagesVisible)
@@ -64,18 +78,9 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
             ScrollListener(
               name: "ListItemGallery",
               onScrollStart: self.onScrollStart,
-              onScrollEnd: self.onScrollEnd
-            ) { frame in
-              async {
-                let x = -frame.minX
-                self.scrollX = x
-                if x <= 0 {
-                  if let cb = self.onScrolledToStart {
-                    cb()
-                  }
-                }
-              }
-            }
+              onScrollEnd: self.onScrollEnd,
+              onScroll: self.onScroll
+            )
             
             Color.clear.introspectScrollView { scrollView in
               let x: UIScrollView = scrollView
@@ -117,6 +122,7 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
         )
       }
       .frame(width: self.screen.width, height: imageSize)
+      .clipped()
   }
   
   func getImageXPosition(_ index: Int, activeIndex: Int) -> CGFloat {

@@ -41,7 +41,7 @@ struct HomeDrawerView: View, Equatable {
         homeViewState.setY(y)
       },
       onDragState: { state in
-        if App.store.state.home.focusedItem != nil {        
+        if App.store.state.home.focusedItem != nil {
           App.store.send(.home(.setFocusedItem(nil)))
         }
         if state.isDragging != self.store.state.home.drawerIsDragging {
@@ -53,19 +53,19 @@ struct HomeDrawerView: View, Equatable {
     ) {
       ZStack {
         Spacer()
-//        HomeMainDrawerContent()
+        HomeMainDrawerContent()
         
-//        VStack(spacing: 0) {
-//          VStack(spacing: 0) {
-//            HomeDrawerSearchBar()
-//              .padding(.horizontal, 10)
-//              .padding(.top, 10)
-//              .padding(.bottom, 5)
-//            HomeDrawerFilterBar()
-//          }
-//          Spacer()
-//        }
-//        .opacity(isOnLocationSearch ? 0 : 1)
+        VStack(spacing: 0) {
+          VStack(spacing: 0) {
+            HomeDrawerSearchBar()
+              .padding(.horizontal, 10)
+              .padding(.top, 10)
+              .padding(.bottom, 5)
+            HomeDrawerFilterBar()
+          }
+          Spacer()
+        }
+        .opacity(isOnLocationSearch ? 0 : 1)
       }
     }
       .environment(\.drawerBackgroundColor, self.drawerBackgroundColor)
@@ -143,10 +143,9 @@ struct HomeScreen: View, Identifiable, Equatable {
     return ZStack {
       if isActive {
         if index == 0 {
-          Color.red
-//          HomeContentScrollView {
-//            HomeDrawerExplorView()
-//          }
+          HomeContentScrollView {
+            HomeDrawerExplorView()
+          }
         } else {
           HomeContentScrollView {
             HomeDrawerSearchResultsView(state: viewState)
@@ -287,15 +286,15 @@ struct HomeDrawerExplorView: View {
   var body: some View {
     VStack {
       self.titleView
-//      ForEach(0..<self.total) { index in
-//        DishListItem(
-//          dish: self.dishes[index],
-//          onScrollStart: {
-//            // todo reset the others
-//        }
-//        )
-//          .equatable()
-//      }
+      ForEach(0..<self.total) { index in
+        DishListItem(
+          dish: self.dishes[index],
+          onScrollStart: {
+            // todo reset the others
+        }
+        )
+          .equatable()
+      }
       .id(self.store.state.appLoaded ? "0" : "1")
     }
   }
