@@ -14,7 +14,7 @@ struct Effect<Action> {
   let publisher: AnyPublisher<Action, Never>
 }
 
-final class Store<State, Action>: ObservableObject {
+final class Store<State, Action>: ObservableObject where State: Equatable {
 
   @Published private(set) var state: State
 
@@ -28,8 +28,11 @@ final class Store<State, Action>: ObservableObject {
   }
 
   func send(_ action: Action) {
-    print(" 🔀 (action) \(String(describing: action).truncated(limit: 250))")
+    let prev = state
     reducer(&state, action)
+    if state != prev {
+      print(" 🔀 (action) \(String(describing: action).truncated(limit: 250))")
+    }
   }
 
   func send(_ effect: Effect<Action>) {

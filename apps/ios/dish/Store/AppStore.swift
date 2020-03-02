@@ -1,7 +1,7 @@
 import Foundation
 
 // state
-struct AppState {
+struct AppState: Equatable {
   var home = HomeState()
   var map = MapState()
   var camera = CameraState()

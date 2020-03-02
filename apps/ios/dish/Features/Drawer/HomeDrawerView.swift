@@ -41,7 +41,9 @@ struct HomeDrawerView: View, Equatable {
         homeViewState.setY(y)
       },
       onDragState: { state in
-        App.store.send(.home(.setFocusedItem(nil)))
+        if App.store.state.home.focusedItem != nil {        
+          App.store.send(.home(.setFocusedItem(nil)))
+        }
         if state.isDragging != self.store.state.home.drawerIsDragging {
           self.store.send(.home(.setDrawerIsDragging(state.isDragging)))
         }

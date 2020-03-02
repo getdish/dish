@@ -48,11 +48,11 @@ struct HomeView: View {
             MapViewContainer()
               .offset(
                 y:  // centered
-                (self.screen.height - self.mapFullHeight) * 0.5
+                (self.screen.height - self.mapFullHeight) * 0.75
                   // move with drawer (but just a bit less than half because when fully open, we show a bottom results drawer)
                   + (state.y - App.drawerSnapPoints[1]) * 0.4
-                  // subtract just a bit because LenseBar is taller than TopNav
-                  - 20
+                  // adjust for any awkwardness
+                  + 20
               )
               .animation(.spring(response: 0.35))
           }

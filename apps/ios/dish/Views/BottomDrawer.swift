@@ -225,7 +225,6 @@ struct BottomDrawer<Content: View>: View {
 
     if self.lock != .drawer {
       if App.store.state.home.drawerPosition != .bottom {
-        print("\(drag.translation.height)")
         let distToFilterBar: CGFloat = 60
         if drag.startLocation.y > self.draggedPositionY + distToFilterBar,
           drag.translation.height < 12
@@ -241,7 +240,6 @@ struct BottomDrawer<Content: View>: View {
     let h = drag.translation.height
     let validDrag = h > 8 || h < -8
     if validDrag {
-      print("BottomDrawer try \(self.lock) \(self.ignoreInitialDrags)")
       if self.lock != .drawer {
         // fix bug where it was catching both scrollview + bottomdrawer on fast drags
         if self.ignoreInitialDrags < 2 {
@@ -265,7 +263,6 @@ struct BottomDrawer<Content: View>: View {
         }
       }
       let wasDragging = self.dragState.isDragging
-      print("🙈 BottomDrawer.setDragState")
       state = .dragging(translation: drag.translation)
       if !wasDragging {
         if let cb = self.onDragState { cb(state) }
@@ -327,9 +324,9 @@ struct BottomDrawer<Content: View>: View {
     // then release it, you then want to be more lenient and have it snap to middle more often
     let distanceToSnap: CGFloat = closestPosition == self.position ? 80 : 160
 
-    print(
-      "predictedEnd \(predictedEnd) distanceToSnap \(distanceToSnap) throwAmount \(throwAmount) closestPoint \(closestPoint) closestPosition \(closestPosition)"
-    )
+//    print(
+//      "predictedEnd \(predictedEnd) distanceToSnap \(distanceToSnap) throwAmount \(throwAmount) closestPoint \(closestPoint) closestPosition \(closestPosition)"
+//    )
 
     if predictedEnd < getSnapPoint(.top) {
       self.position = .top
