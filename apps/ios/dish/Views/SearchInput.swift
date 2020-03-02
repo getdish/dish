@@ -94,11 +94,39 @@ struct SearchInput: View {
   }
 
   var body: some View {
-    let pad = 10 * scale
+    let pad = 11 * scale
     let fontSize = 16 * (scale - 1) / 2 + 16
     let horizontalSpacing = 14 * scale
 
     return ZStack {
+      Group {
+        if showInput {
+          TextField(
+            self.placeholder,
+            text: self.$searchText,
+            onEditingChanged: self.handleEditingChanged
+            //                            isFirstResponder: self.isFirstResponder,
+            //                            onEditingChanged: self.handleEditingChanged
+          )
+        } else {
+          // temp bugfix for above TODO problem...
+          HStack {
+            Group {
+              if self.searchText != "" {
+                Text(self.searchText)
+              } else {
+                Text(self.placeholder).opacity(0.3)
+              }
+            }
+            .font(.system(size: fontSize))
+            Spacer()
+          }
+        }
+      }
+      .frame(height: pad * 2 + fontSize * 1.2)
+//      .padding(.vertical, pad)
+//      .frameFlex()
+      
       // Search view
       HStack {
         HStack(spacing: 0) {
@@ -120,30 +148,8 @@ struct SearchInput: View {
           }
 
           Spacer().frame(width: horizontalSpacing)
-
-          if showInput {
-            TextField(
-              self.placeholder,
-              text: self.$searchText,
-              onEditingChanged: self.handleEditingChanged
-                //                            isFirstResponder: self.isFirstResponder,
-                //                            onEditingChanged: self.handleEditingChanged
-            )
-          } else {
-            // temp bugfix for above TODO problem...
-            HStack {
-              Group {
-                if self.searchText != "" {
-                  Text(self.searchText)
-                } else {
-                  Text(self.placeholder).opacity(0.3)
-                }
-              }
-                .font(.system(size: fontSize))
-              Spacer()
-            }
-              .frameFlex()
-          }
+          
+          Spacer().allowsHitTesting(false).disabled(true)
 
           Spacer().frame(width: horizontalSpacing)
 
@@ -183,15 +189,8 @@ struct SearchInput: View {
             }
           }
         }
-          .padding(
-            EdgeInsets(
-              top: pad,
-              leading: pad,
-              bottom: pad,
-              trailing: pad
-            ))
+          .padding(.horizontal, pad)
           .foregroundColor(.secondary)
-          .background(self.inputBackgroundColor)
           .cornerRadius(10.0 * scale * sizeRadius)
           .overlay(
             RoundedRectangle(cornerRadius: 10.0 * scale * sizeRadius)
@@ -203,6 +202,7 @@ struct SearchInput: View {
         }
       }
     }
+    .background(self.inputBackgroundColor)
   }
 }
 

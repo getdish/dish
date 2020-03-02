@@ -1,8 +1,6 @@
 import Combine
 import SwiftUI
 
-fileprivate let topContentHeight = App.filterBarHeight
-
 struct HomeDrawerView: View, Equatable {
   static func == (lhs: Self, rhs: Self) -> Bool {
     true
@@ -49,6 +47,7 @@ struct HomeDrawerView: View, Equatable {
         }
       },
       position: self.drawerPosition,
+      preventDragAboveSnapPoint: .middle,
       snapPoints: App.drawerSnapPoints
     ) {
       ZStack {
@@ -83,7 +82,7 @@ struct HomeMainDrawerContent: View {
 
   var body: some View {
     let viewStates = self.store.state.home.viewStates
-    let occludeTopHeight = App.searchBarHeight + 13
+    let occludeTopHeight = App.searchBarHeight
     return VStack(spacing: 0) {
       Spacer().frame(height: occludeTopHeight)
       ZStack {
@@ -98,7 +97,9 @@ struct HomeMainDrawerContent: View {
             .equatable()
         }
       }
-        .mask(HomeMainDrawerContent.maskGradient.offset(y: occludeTopHeight - 15))
+        .mask(HomeMainDrawerContent.maskGradient.offset(y: occludeTopHeight - (
+          self.store.state.home.showFilters ? 5 : App.filterBarHeight + 15
+        )))
     }
   }
   
@@ -120,6 +121,67 @@ struct HomeMainDrawerContent: View {
     startPoint: .top,
     endPoint: .center
   )
+}
+
+let mainContentScrollState = ScrollState()
+
+struct HomeContentScrollView<Content>: View where Content: View {
+  @EnvironmentObject var screen: ScreenModel
+  @EnvironmentObject var store: AppStore
+  @State var state: ScrollState = mainContentScrollState
+  @State var targetLock: ScrollState.ScrollTargetLock = .idle
+  var content: Content
+  
+  init(content: () -> Content) {
+    self.content = content()
+  }
+  
+  func start() {
+    self.state.$scrollTargetLock
+      .map { target in
+        // side effect
+        if target == .drawer {
+          self.state.scrollView?.panGestureRecognizer.isEnabled = false
+        } else {
+          self.state.scrollView?.panGestureRecognizer.isEnabled = true
+        }
+        return target
+    }
+    .assign(to: \.targetLock, on: self)
+    .store(in: &self.state.cancellables)
+  }
+  
+  var body: some View {
+    let isDisabled = self.store.state.home.drawerIsDragging
+    let topContentHeight = self.store.state.home.showFilters
+      ? App.filterBarHeight : 12
+    return Group {
+      ZStack {
+        Color.clear.onAppear(perform: self.start)
+        
+        GeometryReader { geo in
+          ScrollView(.vertical, showsIndicators: false) {
+            Color.clear.introspectScrollView { x in
+              if self.state.scrollView == nil {
+                self.state.scrollView = x
+                self.state.start()
+              }
+            }
+            
+            VStack(spacing: 0) {
+              Spacer().frame(height: topContentHeight)
+              self.content
+              Spacer().frame(height: 5 + self.screen.edgeInsets.bottom + self.screen.height / 2)
+            }
+          }
+          .frame(width: self.screen.width, alignment: .leading)
+        }
+      }
+    }
+    .disabled(isDisabled)
+    .allowsHitTesting(!isDisabled)
+    .clipped()
+  }
 }
 
 struct HomeScreen: View, Identifiable, Equatable {
@@ -194,65 +256,6 @@ struct IdentifiableView<Content>: View, Identifiable where Content: View {
 
   var body: some View {
     self.content()
-  }
-}
-
-let mainContentScrollState = ScrollState()
-
-struct HomeContentScrollView<Content>: View where Content: View {
-  @EnvironmentObject var screen: ScreenModel
-  @EnvironmentObject var store: AppStore
-  @State var state: ScrollState = mainContentScrollState
-  @State var targetLock: ScrollState.ScrollTargetLock = .idle
-  var content: Content
-  
-  init(content: () -> Content) {
-    self.content = content()
-  }
-  
-  func start() {
-    self.state.$scrollTargetLock
-      .map { target in
-        // side effect
-        if target == .drawer {
-          self.state.scrollView?.panGestureRecognizer.isEnabled = false
-        } else {
-          self.state.scrollView?.panGestureRecognizer.isEnabled = true
-        }
-        return target
-    }
-    .assign(to: \.targetLock, on: self)
-    .store(in: &self.state.cancellables)
-  }
-  
-  var body: some View {
-    let isDisabled = self.store.state.home.drawerIsDragging
-    return Group {
-      ZStack {
-        Color.clear.onAppear(perform: self.start)
-        
-        GeometryReader { geo in
-          ScrollView(.vertical, showsIndicators: false) {
-            Color.clear.introspectScrollView { x in
-              if self.state.scrollView == nil {
-                self.state.scrollView = x
-                self.state.start()
-              }
-            }
-            
-            VStack(spacing: 0) {
-              Spacer().frame(height: topContentHeight)
-              self.content
-              Spacer().frame(height: 5 + self.screen.edgeInsets.bottom + self.screen.height / 2)
-            }
-          }
-          .frame(width: self.screen.width, alignment: .leading)
-        }
-      }
-    }
-    .disabled(isDisabled)
-    .allowsHitTesting(!isDisabled)
-    .clipped()
   }
 }
 

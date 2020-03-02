@@ -2,7 +2,7 @@
 
 - data for bay area / california
 - ratings + admin
-- infra/api - auth, search + filters, app, restaurant, dish, rating
+- infra/api - auth, search + filters, restaurant, dish, rating
 - ios app
 - website w/splash / potentially community site
 - launch blog post
@@ -12,14 +12,14 @@
 - prove we can get good ratings for specific test dishes
   - Pho, Chinese Dumplings, Risotto, Uni Pasta, Carnitas Tacos, Tandoori, etc
 - get an alpha ios app out for friends and fam
-- basic community and admin pages up
+- admin pages
+- basic community
 
 # april, may, june
 
 - April will be beta app + community ready for launch
 - May will be community building, app refinement and feature building
 - June goal will likely be to kickoff ad campaign and launch publicly
--
 
 # triage
 
@@ -93,7 +93,7 @@
   - dishes
   - rating
 - ratings
-  - 1, 2, or 3 stars
+  - star or no star
   - should be returned in all areas for both dish + restaurant
   - restaurant is just generated as an aggregate of dish + yelp and other crawled info we use
   - mutation for rating dish
@@ -105,7 +105,6 @@
 
 - potential design moves:
   - make filterbuttons just blur + overlay
-  -
 - make the dishlistitem tap => dish search results better transition
   - design sprint on search results page
   - swipe back
@@ -143,7 +142,6 @@
   - logout
 - final splash
 - welcome popup
-
 - map
   - Ratings on map? important to figure out
   - Cuisines colored on map?

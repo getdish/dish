@@ -64,7 +64,6 @@ struct HomeDrawerSearchBar: View {
   }
 
   var body: some View {
-    let scale: CGFloat = 1
     let isOnHome = Selectors.home.isOnHome()
     let searchFocus = self.store.state.home.searchFocus
     let showSearchIcon = isOnHome || searchFocus == .search
@@ -84,12 +83,12 @@ struct HomeDrawerSearchBar: View {
     }()
 
     //        let isOnSearch = self.store.state.home.showSearch == .search
-    return HStack {
+    return HStack(spacing: 6) {
       SearchInput(
         placeholder: "",
-        inputBackgroundColor: Color.init(white: 0.5, opacity: 0),
+        inputBackgroundColor: Color.clear,
         borderColor: Color.clear,  //Color.init(white: 0.5, opacity: 0.1),
-        scale: scale,
+        scale: 1.2,
         sizeRadius: 1.2,
         icon: icon,
         iconSize: iconSize,
@@ -101,6 +100,17 @@ struct HomeDrawerSearchBar: View {
         searchText: self.homeSearch,
         showInput: showInput
       )
+      
+      DishButton(action: {
+        App.store.send(.home(.toggleShowFilters))
+      }) {
+        Image(systemName: "line.horizontal.3.decrease.circle")
+          .resizable()
+          .scaledToFit()
+          .frame(width: 28, height: 28)
+          .padding(6)
+          .opacity(0.4)
+      }
 
       HomeCameraButton()
     }

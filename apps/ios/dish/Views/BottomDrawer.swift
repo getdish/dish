@@ -3,8 +3,10 @@ import SwiftUI
 
 // TODO dont set mass dynamically, set initialVelocity, make it spingy on throw!...
 
-enum BottomDrawerPosition {
-  case top, middle, bottom
+enum BottomDrawerPosition: Int {
+  case top = 0
+  case middle = 1
+  case bottom = 2
 }
 
 enum DragState: Equatable {
@@ -57,6 +59,7 @@ struct BottomDrawer<Content: View>: View {
   @State var ignoreInitialDrags = 0
   @State var shouldAnimate = false
 
+  var preventDragAboveSnapPoint: BottomDrawerPosition?
   var background: Color?
   var content: Content
   var cornerRadius: CGFloat
@@ -73,6 +76,7 @@ struct BottomDrawer<Content: View>: View {
     onChangePosition: OnChangePositionCB? = nil,
     onDragState: ((DragState) -> Void)? = nil,
     position: Binding<BottomDrawerPosition>,
+    preventDragAboveSnapPoint: BottomDrawerPosition? = nil,
     snapPoints: [CGFloat] = [100, 400, 600],
     content: () -> Content
   ) {
@@ -84,6 +88,7 @@ struct BottomDrawer<Content: View>: View {
     self.onDragState = onDragState
     self._position = position
     self.content = content()
+    self.preventDragAboveSnapPoint = preventDragAboveSnapPoint
   }
 
   func getSnapPoint(_ position: BottomDrawerPosition) -> CGFloat {
@@ -93,19 +98,30 @@ struct BottomDrawer<Content: View>: View {
   var positionY: CGFloat {
     getSnapPoint(self.position)
   }
+  
+  let overflowDamping: CGFloat = 0.25
 
   var draggedPositionY: CGFloat {
     let dragHeight = self.dragState.translation.height
     let at = self.positionY + dragHeight + self.externalDragY
+    
+    // mid (user conf) overflow damp (before top)
+    if dragState.isDragging,
+      let snapPoint = preventDragAboveSnapPoint {
+      let i = snapPoint.rawValue
+      if at < snapPoints[i] {
+        return snapPoints[i] - (snapPoints[i] - at) * overflowDamping
+      }
+    }
 
     // top overflow damp
     if at < snapPoints[0] {
-      return snapPoints[0] - (snapPoints[0] - at) * 0.15
+      return snapPoints[0] - (snapPoints[0] - at) * overflowDamping
     }
 
     // bottom overflow damp
     if at > snapPoints[2] {
-      return snapPoints[2] + (at - snapPoints[2]) * 0.15
+      return snapPoints[2] + (at - snapPoints[2]) * overflowDamping
     }
 
     return at
@@ -284,26 +300,39 @@ struct BottomDrawer<Content: View>: View {
     }
     self.finishDrag(
       drag.predictedEndLocation.y - drag.location.y,
-      currentY: self.positionY + drag.translation.height)
+      currentY: self.positionY + drag.translation.height
+    )
   }
 
   func finishDrag(_ throwAmount: CGFloat, currentY: CGFloat) {
-    self.dragOngoing = false
     self.externalDragY = 0
-
+    let next = self.getNextPosition(throwAmount, currentY: currentY)
+    if let min = preventDragAboveSnapPoint, next.rawValue >= min.rawValue {
+      self.position = next
+    }
+    // roughly makes animation speed match throw velocity
+    self.mass = 2.65 - max(1, (max(1, min(100, Double(abs(throwAmount)))) / 50))
+    self.dragOngoing = false
+    self.lock = .idle
+    // callbacks
+    if let cb = self.onDragState { cb(self.dragState) }
+    self.afterChangePosition()
+  }
+  
+  private func getNextPosition(_ throwAmount: CGFloat, currentY: CGFloat) -> BottomDrawerPosition {
     let predictedEnd = currentY + throwAmount * 0.45
     let cardTopEdgeLocation = currentY
     let positionAbove: BottomDrawerPosition
     let positionBelow: BottomDrawerPosition
-
+    
     let distanceToTop = getDistance(.top, from: predictedEnd)
     let distanceToMid = getDistance(.middle, from: predictedEnd)
     let distanceToBottom = getDistance(.bottom, from: predictedEnd)
     let closestPoint = min(distanceToTop, distanceToMid, distanceToBottom)
-
+    
     let closestPosition: BottomDrawerPosition = closestPoint == distanceToTop
       ? .top : closestPoint == distanceToMid ? .middle : .bottom
-
+    
     if cardTopEdgeLocation <= getSnapPoint(.middle) {
       positionAbove = .top
       positionBelow = .middle
@@ -311,42 +340,32 @@ struct BottomDrawer<Content: View>: View {
       positionAbove = .middle
       positionBelow = .bottom
     }
-
+    
     // NOTE: this is a nice little interaction tweak
     // we basically are "more likely to snap away" if you release near your current snapPoint
     // this is maybe unintuitive, but think of it like this: you want to do a small flick
     // to move it away. But if you are dragging from the top, and hold it "over" the middle,
     // then release it, you then want to be more lenient and have it snap to middle more often
     let distanceToSnap: CGFloat = closestPosition == self.position ? 80 : 160
-
-//    print(
-//      "predictedEnd \(predictedEnd) distanceToSnap \(distanceToSnap) throwAmount \(throwAmount) closestPoint \(closestPoint) closestPosition \(closestPosition)"
-//    )
-
+    
+    //    print(
+    //      "predictedEnd \(predictedEnd) distanceToSnap \(distanceToSnap) throwAmount \(throwAmount) closestPoint \(closestPoint) closestPosition \(closestPosition)"
+    //    )
+    
     if predictedEnd < getSnapPoint(.top) {
-      self.position = .top
+      return .top
     } else if predictedEnd > getSnapPoint(.bottom) {
-      self.position = .bottom
+      return .bottom
     } else if closestPoint < distanceToSnap {
-      self.position = closestPosition
+      return closestPosition
     } else {
       // not within the safe zone that snaps back to closest position
       // instead just snap to the one were headed towards
       if cardTopEdgeLocation > getSnapPoint(self.position) {
-        self.position = positionBelow
-      } else {
-        self.position = positionAbove
+        return positionBelow
       }
     }
-
-    // makes the animation speed match the throw velocity
-    self.mass = 2.65 - max(1, (max(1, min(100, Double(abs(throwAmount)))) / 50))
-    
-    self.lock = .idle
-    
-    // callbacks
-    if let cb = self.onDragState { cb(self.dragState) }
-    self.afterChangePosition()
+    return positionAbove
   }
 
   private func afterChangePosition() {

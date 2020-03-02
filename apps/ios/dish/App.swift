@@ -43,7 +43,7 @@ class AppModel {
   let queueMain = DispatchQueue.main
   let queueMainInteractive = DispatchQueue(label: "", qos: .userInteractive, attributes: .concurrent, target: .main)
   let magicItems = magicItemsStore
-  let searchBarHeight: CGFloat = 50
+  let searchBarHeight: CGFloat = 70
   let filterBarHeight: CGFloat = 46
   let mapBarHeight: CGFloat = 80
 

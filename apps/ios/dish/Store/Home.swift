@@ -156,6 +156,7 @@ extension AppState {
     var drawerIsDragging = false
     var showCuisineFilter: Bool = false
     var cuisineFilter: String = "🍽"
+    var showFilters = false
   }
 }
 
@@ -176,6 +177,7 @@ enum HomeAction {
   case setDrawerIsDragging(_ val: Bool)
   case setSelectedMarkers(_ val: [MapMarker])
   case setFocusedItem(_ dish: HomeFocusedItem?)
+  case toggleShowFilters
 }
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
@@ -194,6 +196,8 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
   // switch
   
   switch action {
+    case .toggleShowFilters:
+      state.home.showFilters = !state.home.showFilters
     case .setFocusedItem(let dish):
       if state.home.drawerIsDragging == false {
         if state.home.focusedItem != dish {
