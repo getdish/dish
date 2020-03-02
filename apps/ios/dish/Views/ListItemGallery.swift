@@ -122,7 +122,6 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
         )
       }
       .frame(width: self.screen.width, height: imageSize)
-      .clipped()
   }
   
   func getImageXPosition(_ index: Int, activeIndex: Int) -> CGFloat {
@@ -198,7 +197,8 @@ struct ListItemGalleryImage<Content>: View, Identifiable where Content: View {
       x = x - (uB - strength) * Double(size)
     }
     
-    return self.getImage(index, sizeScaled, isOnStage)
+    return self
+      .getImage(index, sizeScaled, isOnStage)
       .opacity(opacityScaled)
       .rotation3DEffect(.degrees(Double(1 - self.scale) * -7), axis: (0, 1, 0))
       //      .animation(.spring(), value: !self.isActive)
@@ -206,8 +206,7 @@ struct ListItemGalleryImage<Content>: View, Identifiable where Content: View {
       .position(
         x: CGFloat(x),
         y: size * 0.5 - (size - imageSize)
-    )
-      .transition(.slide)
+      )
       .animation(.none)
       .zIndex(zIndex)
   }

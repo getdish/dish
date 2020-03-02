@@ -144,10 +144,6 @@ struct BottomDrawer<Content: View>: View {
 
   var body: some View {
     let screenHeight = screen.height
-    let belowHeight = self.dragState.isDragging
-      ? 0
-      : max(0, screenHeight - (screenHeight - getSnapPoint(self.position)))
-
     return ZStack {
       Color.clear.onAppear(perform: self.start)
       
@@ -162,12 +158,11 @@ struct BottomDrawer<Content: View>: View {
       }
         .opacity(self.dragState.isDragging || self.isMounting ? 1 : 0)
         .animation(
-          Animation.spring().delay(self.isMounting ? 1 : self.dragState.isDragging ? 0 : 0.5))
+          Animation.spring()
+            .delay(self.isMounting ? 1 : self.dragState.isDragging ? 0 : 0.5))
 
       VStack(spacing: 0) {
         self.content
-        // pad bottom so it wont go below
-        Spacer().frame(height: belowHeight)
       }
     }
       .frame(height: screenHeight, alignment: .top)

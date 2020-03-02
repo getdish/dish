@@ -144,7 +144,7 @@ struct HomeScreen: View, Identifiable, Equatable {
       if isActive {
         if index == 0 {
           HomeContentScrollView {
-            HomeDrawerExplorView()
+            HomeDrawerExploreView()
           }
         } else {
           HomeContentScrollView {
@@ -180,20 +180,6 @@ struct HomeScreen: View, Identifiable, Equatable {
       }
     }
       .frameLimitedToScreen()
-  }
-}
-
-struct HomeContentPadAbove: View {
-  var body: some View {
-    return Spacer().frame(height: topContentHeight)
-  }
-}
-
-struct HomeContentPadBelow: View {
-  @EnvironmentObject var screen: ScreenModel
-
-  var body: some View {
-    Spacer().frame(height: 5 + self.screen.edgeInsets.bottom)
   }
 }
 
@@ -241,7 +227,6 @@ struct HomeContentScrollView<Content>: View where Content: View {
   
   var body: some View {
     let isDisabled = self.store.state.home.drawerIsDragging
-    
     return Group {
       ZStack {
         Color.clear.onAppear(perform: self.start)
@@ -249,14 +234,16 @@ struct HomeContentScrollView<Content>: View where Content: View {
         GeometryReader { geo in
           ScrollView(.vertical, showsIndicators: false) {
             Color.clear.introspectScrollView { x in
-              self.state.scrollView = x
-              self.state.start()
+              if self.state.scrollView == nil {
+                self.state.scrollView = x
+                self.state.start()
+              }
             }
             
             VStack(spacing: 0) {
-              HomeContentPadAbove()
+              Spacer().frame(height: topContentHeight)
               self.content
-              HomeContentPadBelow()
+              Spacer().frame(height: 5 + self.screen.edgeInsets.bottom + self.screen.height / 2)
             }
           }
           .frame(width: self.screen.width, alignment: .leading)
@@ -269,7 +256,7 @@ struct HomeContentScrollView<Content>: View where Content: View {
   }
 }
 
-struct HomeDrawerExplorView: View {
+struct HomeDrawerExploreView: View {
   @Environment(\.colorScheme) var colorScheme
   @EnvironmentObject var screen: ScreenModel
   @EnvironmentObject var store: AppStore
