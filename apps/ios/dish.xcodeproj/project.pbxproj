@@ -39,7 +39,7 @@
 		AE5CEDD22404657A0046B944 /* DishListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5CEDD12404657A0046B944 /* DishListItem.swift */; };
 		AE5CEDD424049B830046B944 /* DishScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5CEDD324049B830046B944 /* DishScrollView.swift */; };
 		AE65DF9223F771FF00758DD3 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE65DF9123F771FF00758DD3 /* String.swift */; };
-		AE65DF9423F79A2B00758DD3 /* MapResultsBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE65DF9323F79A2B00758DD3 /* MapResultsBar.swift */; };
+		AE65DF9423F79A2B00758DD3 /* MapViewResultsBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE65DF9323F79A2B00758DD3 /* MapViewResultsBar.swift */; };
 		AE65DF9623F7BA8E00758DD3 /* AppleMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE65DF9523F7BA8E00758DD3 /* AppleMapView.swift */; };
 		AE65E9BB23E59F9E00702C30 /* Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE65E9BA23E59F9E00702C30 /* Text.swift */; };
 		AE6A9C0F23C45FA800003059 /* GooglePlacesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A9C0E23C45FA800003059 /* GooglePlacesService.swift */; };
@@ -86,7 +86,7 @@
 		AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */; };
 		AE99091223CE637200F1763C /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99091123CE637200F1763C /* App.swift */; };
 		AE99091523CE646D00F1763C /* MapService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99091423CE646D00F1763C /* MapService.swift */; };
-		AEA09E6D23FEFF8A00E2EC28 /* MapLenseFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA09E6C23FEFF8A00E2EC28 /* MapLenseFilterBar.swift */; };
+		AEA09E6D23FEFF8A00E2EC28 /* MapViewLenseFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA09E6C23FEFF8A00E2EC28 /* MapViewLenseFilterBar.swift */; };
 		AEA331EF23A3371D00B36A23 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331EE23A3371D00B36A23 /* AccountView.swift */; };
 		AEA331F123A3373D00B36A23 /* AccountLoginSignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F023A3373D00B36A23 /* AccountLoginSignupView.swift */; };
 		AEA331F523A3381200B36A23 /* DishInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F423A3381200B36A23 /* DishInput.swift */; };
@@ -111,7 +111,7 @@
 		AED2EA1723F3E16E0041A195 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AED2EA1623F3E16E0041A195 /* LaunchScreen.storyboard */; };
 		AEE1991D23F33E3A00492B6B /* api.graphql in Resources */ = {isa = PBXBuildFile; fileRef = AEE1991C23F33E3A00492B6B /* api.graphql */; };
 		AEE1992123F33FA200492B6B /* ApolloNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE1992023F33FA200492B6B /* ApolloNetwork.swift */; };
-		AEE561DC23FF278300B51F80 /* HomeCuisineFilterPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE561DB23FF278300B51F80 /* HomeCuisineFilterPopup.swift */; };
+		AEE561DC23FF278300B51F80 /* HomeViewCuisineFilterPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE561DB23FF278300B51F80 /* HomeViewCuisineFilterPopup.swift */; };
 		AEE561DE23FF64E800B51F80 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE561DD23FF64E800B51F80 /* GridView.swift */; };
 		AEE561E023FF64FA00B51F80 /* IconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE561DF23FF64FA00B51F80 /* IconView.swift */; };
 		AEE6C1E223FDC434001AC6B0 /* TopSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE6C1E123FDC434001AC6B0 /* TopSheetView.swift */; };
@@ -170,7 +170,7 @@
 		AE5CEDD12404657A0046B944 /* DishListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishListItem.swift; sourceTree = "<group>"; };
 		AE5CEDD324049B830046B944 /* DishScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishScrollView.swift; sourceTree = "<group>"; };
 		AE65DF9123F771FF00758DD3 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
-		AE65DF9323F79A2B00758DD3 /* MapResultsBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapResultsBar.swift; sourceTree = "<group>"; };
+		AE65DF9323F79A2B00758DD3 /* MapViewResultsBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewResultsBar.swift; sourceTree = "<group>"; };
 		AE65DF9523F7BA8E00758DD3 /* AppleMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMapView.swift; sourceTree = "<group>"; };
 		AE65E9BA23E59F9E00702C30 /* Text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text.swift; sourceTree = "<group>"; };
 		AE6A9C0E23C45FA800003059 /* GooglePlacesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GooglePlacesService.swift; sourceTree = "<group>"; };
@@ -218,7 +218,7 @@
 		AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonBordered.swift; sourceTree = "<group>"; };
 		AE99091123CE637200F1763C /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		AE99091423CE646D00F1763C /* MapService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapService.swift; sourceTree = "<group>"; };
-		AEA09E6C23FEFF8A00E2EC28 /* MapLenseFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapLenseFilterBar.swift; sourceTree = "<group>"; };
+		AEA09E6C23FEFF8A00E2EC28 /* MapViewLenseFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewLenseFilterBar.swift; sourceTree = "<group>"; };
 		AEA331EE23A3371D00B36A23 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		AEA331F023A3373D00B36A23 /* AccountLoginSignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountLoginSignupView.swift; sourceTree = "<group>"; };
 		AEA331F423A3381200B36A23 /* DishInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishInput.swift; sourceTree = "<group>"; };
@@ -244,7 +244,7 @@
 		AED2EA1623F3E16E0041A195 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AEE1991C23F33E3A00492B6B /* api.graphql */ = {isa = PBXFileReference; lastKnownFileType = text; path = api.graphql; sourceTree = "<group>"; };
 		AEE1992023F33FA200492B6B /* ApolloNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApolloNetwork.swift; sourceTree = "<group>"; };
-		AEE561DB23FF278300B51F80 /* HomeCuisineFilterPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCuisineFilterPopup.swift; sourceTree = "<group>"; };
+		AEE561DB23FF278300B51F80 /* HomeViewCuisineFilterPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewCuisineFilterPopup.swift; sourceTree = "<group>"; };
 		AEE561DD23FF64E800B51F80 /* GridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
 		AEE561DF23FF64FA00B51F80 /* IconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconView.swift; sourceTree = "<group>"; };
 		AEE561E223FFB5D900B51F80 /* dish.profdata */ = {isa = PBXFileReference; lastKnownFileType = file; path = dish.profdata; sourceTree = "<group>"; };
@@ -428,8 +428,8 @@
 		1CE3548423986DDD004B3A84 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				AEE561DB23FF278300B51F80 /* HomeCuisineFilterPopup.swift */,
 				AE7563B323A035E70094022B /* HomeView.swift */,
+				AEE561DB23FF278300B51F80 /* HomeViewCuisineFilterPopup.swift */,
 				AEB4A7CA240AF4570057343E /* HomeViewFocusedItem.swift */,
 				AE0C5FF823D2506800BB5340 /* HomeViewState.swift */,
 			);
@@ -551,8 +551,8 @@
 			isa = PBXGroup;
 			children = (
 				AEED844023B6707100407266 /* MapView.swift */,
-				AEA09E6C23FEFF8A00E2EC28 /* MapLenseFilterBar.swift */,
-				AE65DF9323F79A2B00758DD3 /* MapResultsBar.swift */,
+				AEA09E6C23FEFF8A00E2EC28 /* MapViewLenseFilterBar.swift */,
+				AE65DF9323F79A2B00758DD3 /* MapViewResultsBar.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -792,7 +792,7 @@
 				AEB4A7CD240AF4680057343E /* SwipeDownToDismissView.swift in Sources */,
 				AE0C5FF723D2414500BB5340 /* DishButton.swift in Sources */,
 				AEAAAA1223FA214900ABED23 /* DividerView.swift in Sources */,
-				AEA09E6D23FEFF8A00E2EC28 /* MapLenseFilterBar.swift in Sources */,
+				AEA09E6D23FEFF8A00E2EC28 /* MapViewLenseFilterBar.swift in Sources */,
 				AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */,
 				AEED844823B675C300407266 /* CameraView.swift in Sources */,
 				AE872FF523CE983900F84663 /* ClearKeyboardOnScroll.swift in Sources */,
@@ -807,13 +807,13 @@
 				AEF6558423B59BC000E49A51 /* Home.swift in Sources */,
 				AE65DF9623F7BA8E00758DD3 /* AppleMapView.swift in Sources */,
 				AE0C5FF923D2506800BB5340 /* HomeViewState.swift in Sources */,
-				AE65DF9423F79A2B00758DD3 /* MapResultsBar.swift in Sources */,
+				AE65DF9423F79A2B00758DD3 /* MapViewResultsBar.swift in Sources */,
 				AE6A9C1123C5265C00003059 /* GooglePlaceItem.swift in Sources */,
 				AE861A8923A172E8004096BF /* BlurView.swift in Sources */,
 				AEF6557F23B14DBA00E49A51 /* ContextMenuView.swift in Sources */,
 				AEF6557B23B042CD00E49A51 /* HomeDrawerSearchBar.swift in Sources */,
 				AEE6C1E423FDD6FA001AC6B0 /* BottomDrawer.swift in Sources */,
-				AEE561DC23FF278300B51F80 /* HomeCuisineFilterPopup.swift in Sources */,
+				AEE561DC23FF278300B51F80 /* HomeViewCuisineFilterPopup.swift in Sources */,
 				AE0C5FFB23D261F100BB5340 /* SideEffect.swift in Sources */,
 				AE5CEDD424049B830046B944 /* DishScrollView.swift in Sources */,
 				AE5CEDCC24027E760046B944 /* MKMapView.swift in Sources */,

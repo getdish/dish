@@ -20,11 +20,11 @@ struct MapViewContainer: View {
     ZStack(alignment: .topLeading) {
       VStack {
         ZStack(alignment: .topLeading) {
-//          MapView(
-//            animated: store.state.appLoaded,
-//            currentLocation: store.state.map.moveToLocation,
-//            markers: markers
-//          )
+          MapView(
+            animated: store.state.appLoaded,
+            currentLocation: store.state.map.moveToLocation,
+            markers: markers
+          )
 
 //          // prevent touch on left/right sides for dragging between cards
 //          HStack {
@@ -64,18 +64,23 @@ struct MapView: View {
       .removeDuplicates()
       .sink { cur in
         if last == cur { return }
-        if cur == .top || cur == .middle && last == .bottom { self.mapZoom -= 0.5 }
-        if cur == .bottom || cur == .middle && last == .top { self.mapZoom += 0.5 }
+        if cur == .top || cur == .middle && last == .bottom {
+          self.mapZoom -= 0.5
+        }
+        if cur == .bottom || cur == .middle && last == .top {
+          self.mapZoom += 0.5
+        }
         last = cur
       }
       .store(in: &self.cancellables)
   }
 
   var body: some View {
-    ZStack {
-      Color.clear.onAppear {
-        self.start()
-      }
+    
+    print("mapoom \(mapZoom)")
+    
+    return ZStack {
+      Color.clear.onAppear(perform: self.start)
 
       AppleMapView(
         animated: self.animated,
