@@ -83,7 +83,7 @@ struct HomeView: View {
           .disabled(true)
 
           VStack(spacing: 0) {
-            DishLenseFilterBar()
+            MapViewLenseFilterBar()
             Spacer()
           }
           // dont go up beyond mid-point
@@ -112,13 +112,13 @@ struct HomeView: View {
           HomeDrawerView()
             .equatable()
 
-          HomeFocusedItemView(
+          HomeViewFocusedItem(
             focusedItem: self.store.state.home.focusedItem,
             showBookmark: self.store.state.home.drawerPosition != .bottom,
             showDescription: self.store.state.home.drawerPosition != .bottom
           )
 
-          HomeCuisineFilterPopup(
+          HomeViewCuisineFilterPopup(
             active: self.store.state.home.showCuisineFilter
           )
 

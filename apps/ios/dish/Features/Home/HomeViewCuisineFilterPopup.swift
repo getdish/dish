@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct HomeCuisineFilterPopup: View {
+struct HomeViewCuisineFilterPopup: View {
   @EnvironmentObject var screen: ScreenModel
   @EnvironmentObject var store: AppStore
   

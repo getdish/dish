@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct MapLenseFilterBar: View {
+struct MapViewLenseFilterBar: View {
   @EnvironmentObject var store: AppStore
 
   var lenses: [LenseItem] {

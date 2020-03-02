@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct HomeFocusedItemView: View {
+struct HomeViewFocusedItem: View {
   @EnvironmentObject var screen: ScreenModel
   var focusedItem: HomeFocusedItem? = nil
   var showBookmark = true
