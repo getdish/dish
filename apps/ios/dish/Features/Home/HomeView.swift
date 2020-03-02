@@ -58,69 +58,69 @@ struct HomeView: View {
           }
 
           // map overlay fade to bottom
-//          VStack {
-//            Spacer()
-//            ZStack {
-//              self.colorScheme == .dark
-//                ? LinearGradient(
-//                  gradient: Gradient(colors: [.clear, .black]),
-//                  startPoint: .top,
-//                  endPoint: .bottom
-//                  )
-//                : LinearGradient(
-//                  gradient: Gradient(colors: [
-//                    Color.clear,
-//                    Color(white: 1, opacity: 1)
-//                  ]),
-//                  startPoint: .top,
-//                  endPoint: .bottom
-//              )
-//            }
-//            .frame(height: self.screen.height / 2)
-//            .drawingGroup()
-//          }
-//          .allowsHitTesting(false)
-//          .disabled(true)
+          VStack {
+            Spacer()
+            ZStack {
+              self.colorScheme == .dark
+                ? LinearGradient(
+                  gradient: Gradient(colors: [.clear, .black]),
+                  startPoint: .top,
+                  endPoint: .bottom
+                  )
+                : LinearGradient(
+                  gradient: Gradient(colors: [
+                    Color.clear,
+                    Color(white: 1, opacity: 1)
+                  ]),
+                  startPoint: .top,
+                  endPoint: .bottom
+              )
+            }
+            .frame(height: self.screen.height / 2)
+            .drawingGroup()
+          }
+          .allowsHitTesting(false)
+          .disabled(true)
 
-//          VStack(spacing: 0) {
-//            DishLenseFilterBar()
-//            Spacer()
-//          }
-//          // dont go up beyond mid-point
-//            .offset(y: max(App.drawerSnapPoints[1] - 68 - 30, state.y - 68))
-//            .animation(.spring(response: 0.6))
-//
-//          // map results bar
-//          VStack {
-//            MapResultsBar()
-//            Spacer()
-//          }
-//          .offset(
-//            y: App.drawerSnapPoints[2] + (
-//              showMapRow
-//                ? -App.mapBarHeight - 68
-//                : 0
-//            ))
-//            .opacity(showMapRow ? 1 : 0)
-//            .animation(.spring(response: 1))
-//            .disabled(!showMapRow)
-//
-//          // top bar
-//          ControlsBar()
-//            .equatable()
+          VStack(spacing: 0) {
+            DishLenseFilterBar()
+            Spacer()
+          }
+          // dont go up beyond mid-point
+            .offset(y: max(App.drawerSnapPoints[1] - 68 - 30, state.y - 68))
+            .animation(.spring(response: 0.6))
+
+          // map results bar
+          VStack {
+            MapResultsBar()
+            Spacer()
+          }
+          .offset(
+            y: App.drawerSnapPoints[2] + (
+              showMapRow
+                ? -App.mapBarHeight - 68
+                : 0
+            ))
+            .opacity(showMapRow ? 1 : 0)
+            .animation(.spring(response: 1))
+            .disabled(!showMapRow)
+
+          // top bar
+          ControlsBar()
+            .equatable()
 
           HomeDrawerView()
             .equatable()
 
-//          HomeFocusedItemView(
-//            focusedItem: self.store.state.home.focusedItem,
-//            showBookmark: self.store.state.home.drawerPosition != .bottom,
-//            showDescription: self.store.state.home.drawerPosition != .bottom
-//          )
-//
-//          HomeCuisineFilterPopup(
-//            active: self.store.state.home.showCuisineFilter
-//          )
+          HomeFocusedItemView(
+            focusedItem: self.store.state.home.focusedItem,
+            showBookmark: self.store.state.home.drawerPosition != .bottom,
+            showDescription: self.store.state.home.drawerPosition != .bottom
+          )
+
+          HomeCuisineFilterPopup(
+            active: self.store.state.home.showCuisineFilter
+          )
 
           // make everything untouchable while dragging
           Color.black.opacity(0.0001)
