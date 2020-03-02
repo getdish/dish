@@ -103,8 +103,9 @@
 
 # apps/ios
 
-Following are all "chunks" that will make significant improvements in feel/usability:
-
+- potential design moves:
+  - make filterbuttons just blur + overlay
+  -
 - make the dishlistitem tap => dish search results better transition
   - design sprint on search results page
   - swipe back

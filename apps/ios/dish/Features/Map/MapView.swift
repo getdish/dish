@@ -20,11 +20,11 @@ struct MapViewContainer: View {
     ZStack(alignment: .topLeading) {
       VStack {
         ZStack(alignment: .topLeading) {
-          MapView(
-            animated: store.state.appLoaded,
-            currentLocation: store.state.map.moveToLocation,
-            markers: markers
-          )
+//          MapView(
+//            animated: store.state.appLoaded,
+//            currentLocation: store.state.map.moveToLocation,
+//            markers: markers
+//          )
 
 //          // prevent touch on left/right sides for dragging between cards
 //          HStack {

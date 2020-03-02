@@ -1,7 +1,14 @@
 import SwiftUI
 
+fileprivate let homePageCount = 3
+let homePager = PagerStore(index: 1)
+fileprivate let rootViews: [HomePageView] = [.me, .home, .camera]
+
 struct RootView: View {
   @EnvironmentObject var store: AppStore
+  @EnvironmentObject var screen: ScreenModel
+  @State var disableDragging = true
+  @State var isDragging = false
   @Environment(\.geometry) var appGeometry
 
   func start() {
@@ -14,105 +21,85 @@ struct RootView: View {
   }
 
   var body: some View {
-    let size: CGFloat = self.store.state.showSplash
-      ? 1000
-      : 0
-
+    async {
+      if self.store.state.view != rootViews[Int(homePager.index)] {
+        homePager.animateTo(Double(rootViews.firstIndex(of: self.store.state.view)!))
+      }
+    }
+    
     return ZStack {
       Color.black
-
       PrintGeometryView("RootView")
-      Color.clear.onAppear {
-        self.start()
-      }
-
+      Color.clear.onAppear(perform: self.start)
       VStack {
-        if appGeometry != nil {
-          HomeView()
-        }
-      }
-
-      ZStack {
-        Color("color-brand-background")
-          .frame(width: size, height: size)
-          .cornerRadius(1000)
-          .frameLimitedToScreen()
-          .animation(.spring())
-
-        VStack {
-          if self.store.state.showSplash {
-            VStack {
-              Image("LaunchScreen2")
-                .resizable()
-                .scaledToFill()
-                .mask(
-                  Circle().frame(width: 200, height: 200)
-                )
+        if self.appGeometry != nil {
+          ZStack {
+            PagerView(
+              pageCount: homePageCount,
+              pagerStore: homePager,
+              disableDragging: store.state.view == .home
+            ) { isDragging in
+              //
+              // ⚠️ ⚠️ ⚠️
+              //    ADDING .clipped() to any of these causes perf issues!!!
+              //    animations below seem to be choppier
+              // ⚠️ ⚠️ ⚠️
+              // account page
+              AccountView()
+                .zIndex(0)
+              
+              // home page
+              HomeView()
+                .zIndex(2)
+              
+              // camera page
+              DishCameraView()
+                .zIndex(0)
             }
-              .transition(.fly)
+            .onChangeDrag { isDragging in
+              print("set isDragging \(isDragging)")
+              self.isDragging = isDragging
+            }
+            .onChangePage { index in
+              print("change page to index \(index)")
+              let view = rootViews[index]
+              self.disableDragging = view == .home
+              self.store.send(.setView(view))
+            }
           }
         }
       }
-        .frameLimitedToScreen()
+      SplashView()
     }
+//    .invertColorScheme()
   }
 }
 
-extension AnyTransition {
-  static var flipVertical: AnyTransition {
-    AnyTransition.modifier(
-      active: RotationModifier(degrees: 0, x: 0),
-      identity: RotationModifier(degrees: 45, x: 1)
-    )
+struct RootView_Previews: PreviewProvider {
+  static var previews: some View {
+    RootView()
+      .embedInAppEnvironment()
   }
 }
 
-struct RotationModifier: ViewModifier {
-  var degrees: Double = 45
-  var x: CGFloat = 0
-  var y: CGFloat = 0
-  var z: CGFloat = 0
-
-  func body(content: Content) -> some View {
-    content.rotation3DEffect(.degrees(degrees), axis: (x, y, z))
-  }
-}
-
-extension AnyTransition {
-  static var fly: AnyTransition {
-    AnyTransition.modifier(active: FlyTransition(pct: 0), identity: FlyTransition(pct: 1))
-  }
-}
-
-struct FlyTransition: GeometryEffect {
-  var pct: Double
-
-  var animatableData: Double {
-    get { pct }
-    set { pct = newValue }
-  }
-
-  func effectValue(size: CGSize) -> ProjectionTransform {
-
-    let rotationPercent = pct
-    let a = CGFloat(Angle(degrees: 90 * (1 - rotationPercent)).radians)
-
-    var transform3d = CATransform3DIdentity
-    transform3d.m34 = -1 / max(size.width, size.height)
-
-    transform3d = CATransform3DRotate(transform3d, a, 1, 0, 0)
-    transform3d = CATransform3DTranslate(transform3d, -size.width / 2.0, -size.height / 2.0, 0)
-
-    let affineTransform1 = ProjectionTransform(
-      CGAffineTransform(translationX: size.width / 2.0, y: size.height / 2.0))
-    let affineTransform2 = ProjectionTransform(
-      CGAffineTransform(scaleX: CGFloat(pct * 2), y: CGFloat(pct * 2)))
-
-    if pct <= 0.5 {
-      return ProjectionTransform(transform3d).concatenating(affineTransform2).concatenating(
-        affineTransform1)
-    } else {
-      return ProjectionTransform(transform3d).concatenating(affineTransform1)
-    }
-  }
-}
+// just drag from edge (to camera/account)
+//        .simultaneousGesture(
+//          DragGesture()
+//            .onChanged { value in
+//              if rootViewstate.dragState == .searchbar { return }
+//              let isOnRightEdge = self.screen.width - value.startLocation.x < 10
+//              let isOnLeftEdge = value.startLocation.x < 10
+//              if isOnRightEdge || isOnLeftEdge {
+//                if abs(value.translation.width) > 10 {
+//                  rootViewstate.setDragState(.pager)
+//                }
+//                homePager.drag(value)
+//              }
+//            }
+//            .onEnded { value in
+//              if rootViewstate.dragState == .pager {
+//                homePager.onDragEnd(value)
+//                rootViewstate.setDragState(.idle)
+//              }
+//            }
+//        )

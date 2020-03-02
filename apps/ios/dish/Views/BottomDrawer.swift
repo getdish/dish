@@ -150,6 +150,8 @@ struct BottomDrawer<Content: View>: View {
 
     return ZStack {
       Color.clear.onAppear(perform: self.start)
+      
+      BlurView(style: self.colorScheme == .dark ? .dark : .light)
 
       VStack {
         RoundedRectangle(cornerRadius: 5)
@@ -177,7 +179,7 @@ struct BottomDrawer<Content: View>: View {
         color: self.colorScheme == .dark
           ? Color(white: 0, opacity: 0.7)
           : Color(white: 0, opacity: 0.27),
-        radius: 20.0
+        radius: 10
       )
       .offset(y: self.draggedPositionY)
       .onGeometryFrameChange(self.onGeometryFrameChange)

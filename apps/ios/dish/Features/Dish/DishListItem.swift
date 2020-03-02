@@ -50,10 +50,9 @@ struct DishListItem: View, Equatable {
               .font(.system(size: 32))
             
             Text(self.dish.name)
-              .fontWeight(.light)
+              .fontWeight(.bold)
               .lineLimit(2)
-              .font(.system(size: 16))
-              .shadow(color: Color.black.opacity(0.1), radius: 0, x: 0, y: 1)
+              .font(.system(size: 18))
             
             Spacer()
           }
@@ -87,7 +86,7 @@ struct DishListItemRestaurantCard: View {
           }
         }
       )
-      .shadow(radius: 4)
+      .shadow(radius: 3)
       .onGeometryFrameChange { geo in
         if self.isActive {
           let next = HomeFocusedItem(

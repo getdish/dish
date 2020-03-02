@@ -1,101 +1,148 @@
+import Combine
 import SwiftUI
 
 struct HomeView: View {
-  @Environment(\.colorScheme) var colorScheme: ColorScheme
-  @State private var sideDrawerShown = false
-
-  var body: some View {
-    HomeViewInner()
-      .equatable()
-      .frameLimitedToScreen()
-      .embedInGeometryReader()
-  }
-}
-
-fileprivate let homePageCount = 3
-let homePager = PagerStore(
-  index: 1
-)
-
-fileprivate let homeViewsIndex: [HomePageView] = [.me, .home, .camera]
-
-struct HomeViewInner: View, Equatable {
-  static func == (l: Self, r: Self) -> Bool { true }
-
-  @EnvironmentObject var store: AppStore
   @EnvironmentObject var screen: ScreenModel
-  @State var disableDragging = true
-  @State var isDragging = false
+  @EnvironmentObject var store: AppStore
+  @EnvironmentObject var keyboard: Keyboard
+  @Environment(\.geometry) var appGeometry
+  @Environment(\.colorScheme) var colorScheme
+
+  //
+  // fast moving state of this view and sub-views:
+  //
+  @ObservedObject var state = homeViewState
+
+  @State var contentWrappingView: UIView? = nil
+
+  func start() {
+    async(500) {
+      self.state.setAnimationState(.idle)
+    }
+  }
+
+  var mapFullHeight: CGFloat {
+    self.screen.height * 1.5
+  }
+
+  @State var lastSearchFocus: SearchFocusState = .off
 
   var body: some View {
-    async {
-      if self.store.state.home.view != homeViewsIndex[Int(homePager.index)] {
-        homePager.animateTo(Double(homeViewsIndex.firstIndex(of: self.store.state.home.view)!))
-      }
-    }
-    return ZStack {      
+    let state = self.state
+    let showMapRow = self.store.state.home.drawerPosition == .bottom
+      && !self.store.state.home.drawerIsDragging
+
+    return ZStack(alignment: .topLeading) {
+      RunOnce(name: "start") { self.start() }
       PrintGeometryView("HomeView")
 
-      PagerView(
-        pageCount: homePageCount,
-        pagerStore: homePager,
-        disableDragging: store.state.home.view == .home
-      ) { isDragging in
-        //
-        // ⚠️ ⚠️ ⚠️
-        //    ADDING .clipped() to any of these causes perf issues!!!
-        //    animations below seem to be choppier
-        // ⚠️ ⚠️ ⚠️
-        // account page
-        DishAccount()
-          .zIndex(0)
+      // below restaurant card
+      ZStack {
+        // matches LinearGradient below for covering map
+        Color(.systemBackground)
+        
+        // wrapper to handle disabling touch events during dragging
+        ZStack {
+          // Map
+          if App.enableMap {
+            MapViewContainer()
+              .offset(
+                y:  // centered
+                (self.screen.height - self.mapFullHeight) * 0.5
+                  // move with drawer (but just a bit less than half because when fully open, we show a bottom results drawer)
+                  + (state.y - App.drawerSnapPoints[1]) * 0.4
+                  // subtract just a bit because LenseBar is taller than TopNav
+                  - 20
+              )
+              .animation(.spring(response: 0.35))
+          }
 
-        // home page
-        HomeMainView()
-          .zIndex(2)
+          // map overlay fade to bottom
+//          VStack {
+//            Spacer()
+//            ZStack {
+//              self.colorScheme == .dark
+//                ? LinearGradient(
+//                  gradient: Gradient(colors: [.clear, .black]),
+//                  startPoint: .top,
+//                  endPoint: .bottom
+//                  )
+//                : LinearGradient(
+//                  gradient: Gradient(colors: [
+//                    Color.clear,
+//                    Color(white: 1, opacity: 1)
+//                  ]),
+//                  startPoint: .top,
+//                  endPoint: .bottom
+//              )
+//            }
+//            .frame(height: self.screen.height / 2)
+//            .drawingGroup()
+//          }
+//          .allowsHitTesting(false)
+//          .disabled(true)
 
-        // camera page
-        DishCamera()
-          .zIndex(0)
+//          VStack(spacing: 0) {
+//            DishLenseFilterBar()
+//            Spacer()
+//          }
+//          // dont go up beyond mid-point
+//            .offset(y: max(App.drawerSnapPoints[1] - 68 - 30, state.y - 68))
+//            .animation(.spring(response: 0.6))
+//
+//          // map results bar
+//          VStack {
+//            MapResultsBar()
+//            Spacer()
+//          }
+//          .offset(
+//            y: App.drawerSnapPoints[2] + (
+//              showMapRow
+//                ? -App.mapBarHeight - 68
+//                : 0
+//            ))
+//            .opacity(showMapRow ? 1 : 0)
+//            .animation(.spring(response: 1))
+//            .disabled(!showMapRow)
+//
+//          // top bar
+//          ControlsBar()
+//            .equatable()
+
+          HomeDrawerView()
+            .equatable()
+
+//          HomeFocusedItemView(
+//            focusedItem: self.store.state.home.focusedItem,
+//            showBookmark: self.store.state.home.drawerPosition != .bottom,
+//            showDescription: self.store.state.home.drawerPosition != .bottom
+//          )
+//
+//          HomeCuisineFilterPopup(
+//            active: self.store.state.home.showCuisineFilter
+//          )
+
+          // make everything untouchable while dragging
+          Color.black.opacity(0.0001)
+            .frame(width: state.dragState == .pager ? App.screen.width : 0)
+        }
+        // cancels started touch events once drag starts
+          .disabled(state.dragState != .idle)
       }
-        .onChangeDrag { isDragging in
-          print("set isDragging \(isDragging)")
-          self.isDragging = isDragging
-        }
-        .onChangePage { index in
-          print("change page to index \(index)")
-          let view = homeViewsIndex[index]
-          self.disableDragging = view == .home
-          self.store.send(.home(.setView(view)))
-        }
-        // just drag from edge (to camera/account)
-//        .simultaneousGesture(
-//          DragGesture()
-//            .onChanged { value in
-//              if homeViewState.dragState == .searchbar { return }
-//              let isOnRightEdge = self.screen.width - value.startLocation.x < 10
-//              let isOnLeftEdge = value.startLocation.x < 10
-//              if isOnRightEdge || isOnLeftEdge {
-//                if abs(value.translation.width) > 10 {
-//                  homeViewState.setDragState(.pager)
-//                }
-//                homePager.drag(value)
-//              }
-//            }
-//            .onEnded { value in
-//              if homeViewState.dragState == .pager {
-//                homePager.onDragEnd(value)
-//                homeViewState.setDragState(.idle)
-//              }
-//            }
-//        )
+        .clipped()  // dont remove fixes bug cant click SearchBar
+
+      DishRestaurantView()
+
+    }
+      .environmentObject(self.state)
+  }
+}
+
+#if DEBUG
+  struct HomeMainView_Previews: PreviewProvider {
+    static var previews: some View {
+      HomeView()
+        .embedInAppEnvironment()  // Mocks.homeSearchedPho
     }
   }
-}
-
-struct HomeView_Previews: PreviewProvider {
-  static var previews: some View {
-    HomeView()
-      .embedInAppEnvironment()
-  }
-}
+#endif
