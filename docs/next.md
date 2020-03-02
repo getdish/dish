@@ -1,11 +1,25 @@
-# high level mvp
+# to launch
 
-- Data gathering for bay area / california
-- Ratings + admin for seeing ratings/activity
-- Infra/API for auth, search, app
-- iOS app that covers all functionality for bay
-- Splash / marketing website / landing
-- Launch blog post
+- data for bay area / california
+- ratings + admin
+- infra/api - auth, search + filters, app, restaurant, dish, rating
+- ios app
+- website w/splash / potentially community site
+- launch blog post
+
+# march goal
+
+- prove we can get good ratings for specific test dishes
+  - Pho, Chinese Dumplings, Risotto, Uni Pasta, Carnitas Tacos, Tandoori, etc
+- get an alpha ios app out for friends and fam
+- basic community and admin pages up
+
+# april, may, june
+
+- April will be beta app + community ready for launch
+- May will be community building, app refinement and feature building
+- June goal will likely be to kickoff ad campaign and launch publicly
+-
 
 # triage
 
@@ -89,8 +103,9 @@
 
 # apps/ios
 
-Following are all "chunks" that will make significant improvements in feel/usability:
-
+- potential design moves:
+  - make filterbuttons just blur + overlay
+  -
 - make the dishlistitem tap => dish search results better transition
   - design sprint on search results page
   - swipe back

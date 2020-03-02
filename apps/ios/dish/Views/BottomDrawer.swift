@@ -144,12 +144,10 @@ struct BottomDrawer<Content: View>: View {
 
   var body: some View {
     let screenHeight = screen.height
-    let belowHeight = self.dragState.isDragging
-      ? 0
-      : max(0, screenHeight - (screenHeight - getSnapPoint(self.position)))
-
     return ZStack {
       Color.clear.onAppear(perform: self.start)
+      
+      BlurView(style: self.colorScheme == .dark ? .dark : .light)
 
       VStack {
         RoundedRectangle(cornerRadius: 5)
@@ -160,12 +158,11 @@ struct BottomDrawer<Content: View>: View {
       }
         .opacity(self.dragState.isDragging || self.isMounting ? 1 : 0)
         .animation(
-          Animation.spring().delay(self.isMounting ? 1 : self.dragState.isDragging ? 0 : 0.5))
+          Animation.spring()
+            .delay(self.isMounting ? 1 : self.dragState.isDragging ? 0 : 0.5))
 
       VStack(spacing: 0) {
         self.content
-        // pad bottom so it wont go below
-        Spacer().frame(height: belowHeight)
       }
     }
       .frame(height: screenHeight, alignment: .top)
@@ -177,7 +174,7 @@ struct BottomDrawer<Content: View>: View {
         color: self.colorScheme == .dark
           ? Color(white: 0, opacity: 0.7)
           : Color(white: 0, opacity: 0.27),
-        radius: 20.0
+        radius: 10
       )
       .offset(y: self.draggedPositionY)
       .onGeometryFrameChange(self.onGeometryFrameChange)
@@ -223,7 +220,6 @@ struct BottomDrawer<Content: View>: View {
 
     if self.lock != .drawer {
       if App.store.state.home.drawerPosition != .bottom {
-        print("\(drag.translation.height)")
         let distToFilterBar: CGFloat = 60
         if drag.startLocation.y > self.draggedPositionY + distToFilterBar,
           drag.translation.height < 12
@@ -239,7 +235,6 @@ struct BottomDrawer<Content: View>: View {
     let h = drag.translation.height
     let validDrag = h > 8 || h < -8
     if validDrag {
-      print("BottomDrawer try \(self.lock) \(self.ignoreInitialDrags)")
       if self.lock != .drawer {
         // fix bug where it was catching both scrollview + bottomdrawer on fast drags
         if self.ignoreInitialDrags < 2 {
@@ -263,7 +258,6 @@ struct BottomDrawer<Content: View>: View {
         }
       }
       let wasDragging = self.dragState.isDragging
-      print("🙈 BottomDrawer.setDragState")
       state = .dragging(translation: drag.translation)
       if !wasDragging {
         if let cb = self.onDragState { cb(state) }
@@ -325,9 +319,9 @@ struct BottomDrawer<Content: View>: View {
     // then release it, you then want to be more lenient and have it snap to middle more often
     let distanceToSnap: CGFloat = closestPosition == self.position ? 80 : 160
 
-    print(
-      "predictedEnd \(predictedEnd) distanceToSnap \(distanceToSnap) throwAmount \(throwAmount) closestPoint \(closestPoint) closestPosition \(closestPosition)"
-    )
+//    print(
+//      "predictedEnd \(predictedEnd) distanceToSnap \(distanceToSnap) throwAmount \(throwAmount) closestPoint \(closestPoint) closestPosition \(closestPosition)"
+//    )
 
     if predictedEnd < getSnapPoint(.top) {
       self.position = .top

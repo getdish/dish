@@ -31,7 +31,7 @@ struct ControlsBar: View, Equatable {
 
   var accountButton: some View {
     Button(action: {
-      App.store.send(.home(.setView(.me)))
+      App.store.send(.setView(.me))
     }) {
       Image(systemName: "person.fill")
         .resizable()
@@ -63,7 +63,7 @@ struct CameraControls: View {
   @EnvironmentObject var store: AppStore
 
   var body: some View {
-    let homeView = self.store.state.home.view
+    let homeView = self.store.state.view
     let isOnCamera = homeView == .camera
 
     return HStack {

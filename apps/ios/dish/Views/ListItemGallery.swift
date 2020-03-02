@@ -46,6 +46,20 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
     imageSize + padding * 2
   }
   
+  func onScroll(_ frame: CGRect) {
+    let x = -frame.minX
+    if x != self.scrollX {
+      async {
+        self.scrollX = x
+        if x <= 0 {
+          if let cb = self.onScrolledToStart {
+            cb()
+          }
+        }
+      }
+    }
+  }
+  
   var body: some View {
     let activeIndex = CGFloat(self.scrollX / size)
     let contentWidth = self.screen.width - self.imageSize * CGFloat(self.defaultImagesVisible)
@@ -64,18 +78,9 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
             ScrollListener(
               name: "ListItemGallery",
               onScrollStart: self.onScrollStart,
-              onScrollEnd: self.onScrollEnd
-            ) { frame in
-              async {
-                let x = -frame.minX
-                self.scrollX = x
-                if x <= 0 {
-                  if let cb = self.onScrolledToStart {
-                    cb()
-                  }
-                }
-              }
-            }
+              onScrollEnd: self.onScrollEnd,
+              onScroll: self.onScroll
+            )
             
             Color.clear.introspectScrollView { scrollView in
               let x: UIScrollView = scrollView
@@ -192,7 +197,8 @@ struct ListItemGalleryImage<Content>: View, Identifiable where Content: View {
       x = x - (uB - strength) * Double(size)
     }
     
-    return self.getImage(index, sizeScaled, isOnStage)
+    return self
+      .getImage(index, sizeScaled, isOnStage)
       .opacity(opacityScaled)
       .rotation3DEffect(.degrees(Double(1 - self.scale) * -7), axis: (0, 1, 0))
       //      .animation(.spring(), value: !self.isActive)
@@ -200,8 +206,7 @@ struct ListItemGalleryImage<Content>: View, Identifiable where Content: View {
       .position(
         x: CGFloat(x),
         y: size * 0.5 - (size - imageSize)
-    )
-      .transition(.slide)
+      )
       .animation(.none)
       .zIndex(zIndex)
   }

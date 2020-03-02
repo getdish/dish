@@ -37,44 +37,40 @@ struct AppleMapView: UIViewRepresentable {
     let geocoder = CLGeocoder()
     var currentLocation: CLLocation? = nil
     var lastGeocodeTime: Date? = nil
-    var lastMarkers: [MapMarker] = []
     var lastLocation: MapViewLocation = .init(center: .none)
     var lastMapLocation: MapViewLocation = .init(center: .none)
     var lastUserLocation: CLLocation = .init()
     var locationManager = CLLocationManager()
-    var parent: AppleMapView
+    var current: AppleMapView
     var zoomingIn = false
     var zoomingAnnotation: MKAnnotation? = nil
-    var mapZoom: Double
-    var animated: Bool
 
     init(_ parent: AppleMapView) {
-      self.parent = parent
-      self.mapZoom = parent.mapView.zoomLevel()
-      self.animated = parent.animated
+      self.current = parent
     }
-
-    func updateProps(_ parent: AppleMapView) {
-      self.animated = parent.animated
-      self.mapView.showsUserLocation = parent.showsUserLocation
+    
+    var mapView: MKMapView {
+      current.mapView
+    }
+    
+    func updateProps(_ next: AppleMapView) {
+      self.mapView.showsUserLocation = next.showsUserLocation
       self.mapView.userLocation.title = nil
 
+      // map not loaded yet
       if self.mapView.bounds.width == 0 || self.mapView.bounds.height == 0 {
-        // map not loaded yet
+        self.current = next
         return
       }
 
-      self.updateMarkers(parent.markers)
-      self.updateCurrentLocation(parent.currentLocation)
+      // do updates before updating next
+      self.updateMarkers(next.markers)
+      self.updateCurrentLocation(next)
     }
 
     func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
-      self.updateProps(self.parent)
+      self.updateProps(self.current)
       self.callbackOnChangeLocationName()
-    }
-
-    var mapView: MKMapView {
-      parent.mapView
     }
 
     // on select annotation
@@ -84,9 +80,9 @@ struct AppleMapView: UIViewRepresentable {
         print("tapped cluster \(arrayList)")
 
         let markers: [MapMarker] = arrayList.compactMap { annotation in
-          parent.markers?.first { $0.title == annotation.title }
+          current.markers?.first { $0.title == annotation.title }
         }
-        if let cb = parent.onSelectMarkers { cb(markers) }
+        if let cb = current.onSelectMarkers { cb(markers) }
 
         // If you want the map to display the cluster members
         mapView.showAnnotations(cluster.memberAnnotations, animated: true)
@@ -98,7 +94,7 @@ struct AppleMapView: UIViewRepresentable {
 
     // change region
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-      if let cb = parent.onChangeLocation {
+      if let cb = current.onChangeLocation {
         let location = MapViewLocation(
           center: .location(
             lat: mapView.centerCoordinate.latitude, long: mapView.centerCoordinate.longitude),
@@ -115,7 +111,7 @@ struct AppleMapView: UIViewRepresentable {
     }
     
     func callbackOnChangeLocationName() {
-      if let cb = self.parent.onChangeLocationName {
+      if let cb = self.current.onChangeLocationName {
         // Convert the user's location to a user-friendly place name by reverse geocoding the location.
         geocoder.reverseGeocodeLocation(
           .init(
@@ -159,7 +155,7 @@ struct AppleMapView: UIViewRepresentable {
         } else {
           annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "marker")
           if case let annotationView as MKMarkerAnnotationView = annotationView,
-            let marker = self.lastMarkers.first(where: { $0.coordinate == annotation.coordinate })
+            let marker = self.current.markers?.first(where: { $0.coordinate == annotation.coordinate })
           {
             annotationView.annotation = annotation
             annotationView.layer.zPosition = 0
@@ -198,7 +194,7 @@ struct AppleMapView: UIViewRepresentable {
       self.lastUserLocation = newLocation
       
       
-      if let cb = self.parent.onChangeUserLocation {
+      if let cb = self.current.onChangeUserLocation {
         geocoder.reverseGeocodeLocation(newLocation) { (placemarks, error) in
           guard error == nil else { return }
           if let firstPlacemark = placemarks?.first {
@@ -218,22 +214,21 @@ struct AppleMapView: UIViewRepresentable {
       mapView.setRegion(zoomOutRegion, animated: true)
     }
 
-    func updateMarkers(_ markers: [MapMarker]?) {
-      guard let markers = markers else { return }
-      if markers.elementsEqual(lastMarkers) {
-        return
-      }
-      lastMarkers.forEach { last in
-        if !markers.contains(last) {
-          removeAnnotation(last)
+    func updateMarkers(_ next: [MapMarker]?) {
+      if let next = next,
+        let cur = current.markers {
+        if next.elementsEqual(cur) { return }
+        cur.forEach { last in
+          if !next.contains(last) {
+            removeAnnotation(last)
+          }
+        }
+        next.forEach { next in
+          if !cur.contains(next) {
+            addAnnotation(next)
+          }
         }
       }
-      markers.forEach { next in
-        if !lastMarkers.contains(next) {
-          addAnnotation(next)
-        }
-      }
-      self.lastMarkers = markers
     }
 
     func removeAnnotation(_ marker: MapMarker) {
@@ -266,7 +261,7 @@ struct AppleMapView: UIViewRepresentable {
     }
 
     func getCurrentCenter(_ location: MapViewLocation? = nil) -> CLLocationCoordinate2D? {
-      guard let location = location ?? self.parent.currentLocation else {
+      guard let location = location ?? self.current.currentLocation else {
         return nil
       }
       switch location.center {
@@ -282,17 +277,16 @@ struct AppleMapView: UIViewRepresentable {
       return nil
     }
 
-    func updateCurrentLocation(_ location: MapViewLocation?) {
-      guard let location = location else { return }
-      if self.lastMapLocation == location && self.mapZoom == parent.mapZoom {
+    func updateCurrentLocation(_ next: AppleMapView) {
+      if current.currentLocation == next.currentLocation
+        && current.mapZoom == next.mapZoom
+        && current.animated == next.animated {
         return
       }
-      self.lastMapLocation = location
-      self.mapZoom = parent.mapZoom
       self.mapView.setCenterCoordinate(
         centerCoordinate: self.getCurrentCenter() ?? mapView.centerCoordinate,
-        zoomLevel: self.mapZoom,
-        animated: self.animated
+        zoomLevel: next.mapZoom,
+        animated: next.animated
       )
     }
   }

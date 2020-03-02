@@ -63,7 +63,7 @@ struct LenseItem: Equatable, Identifiable {
   let icon: String
   var rgb: [Double] = [0.65, 0.2, 0.65]
   var description: String?
-
+  
   var color: Color {
     Color(red: self.rgb[0], green: self.rgb[1], blue: self.rgb[2])
   }
@@ -100,9 +100,9 @@ fileprivate let initialLenses: [LenseItem] = [
 ]
 
 fileprivate let initialFilters: [FilterItem] = [
-//  FilterItem(name: "★", fontSize: 18, groupId: "rating"),
-//  FilterItem(name: "★★", fontSize: 15, groupId: "rating", stack: true),
-//  FilterItem(name: "★★★", fontSize: 13, groupId: "rating", stack: true),
+  //  FilterItem(name: "★", fontSize: 18, groupId: "rating"),
+  //  FilterItem(name: "★★", fontSize: 15, groupId: "rating", stack: true),
+  //  FilterItem(name: "★★★", fontSize: 13, groupId: "rating", stack: true),
   FilterItem(name: "$", fontSize: 18, groupId: "price", stack: true),
   FilterItem(name: "$$", fontSize: 15, groupId: "price", stack: true),
   FilterItem(name: "$$$", fontSize: 13, groupId: "price", stack: true),
@@ -141,9 +141,8 @@ enum HomeTopLevelFilter {
 
 extension AppState {
   typealias SearchFocus = SearchFocusState
-
+  
   struct HomeState: Equatable {
-    var view: HomePageView = .home
     var viewStates: [HomeStateItem] = [HomeStateItem()]
     var focusedItem: HomeFocusedItem? = nil
     var filters: [FilterItem] = initialFilters
@@ -161,7 +160,6 @@ extension AppState {
 }
 
 enum HomeAction {
-  case setView(_ page: HomePageView)
   case navigateToRestaurant(_ val: RestaurantItem)
   case push(_ val: HomeStateItem)
   case pop
@@ -181,9 +179,9 @@ enum HomeAction {
 }
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
-
+  
   // utils
-
+  
   // use this to ensure you update HomeStateItems correctly
   func updateItem(_ next: HomeStateItem) {
     if let index = state.home.viewStates.firstIndex(where: { $0.id == next.id }) {
@@ -192,83 +190,87 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
       state.home.viewStates[index] = insert
     }
   }
-
+  
   // switch
-
+  
   switch action {
     case .setFocusedItem(let dish):
       if state.home.drawerIsDragging == false {
-        state.home.focusedItem = dish
-      }
-  case .setSelectedMarkers(let markers):
-    let last = state.home.viewStates.last!
-    if case .search(_, let results) = last.state {
-      state.home.viewStates.append(
-        HomeStateItem(
-          id: "lense-\(markers)",
-          state: .selection(
-            items: markers.compactMap { marker in
-              results.results.first { $0.name == marker.title }
-            }
+        if state.home.focusedItem != dish {
+          state.home.focusedItem = dish
+        }
+    }
+    case .setSelectedMarkers(let markers):
+      let last = state.home.viewStates.last!
+      if case .search(_, let results) = last.state {
+        state.home.viewStates.append(
+          HomeStateItem(
+            id: "lense-\(markers)",
+            state: .selection(
+              items: markers.compactMap { marker in
+                results.results.first { $0.name == marker.title }
+              }
+            )
           )
         )
-      )
     }
-  case .setDrawerIsDragging(let val):
-    state.home.drawerIsDragging = val
-  case .setCuisineFilter(let cuisine):
-    state.home.cuisineFilter = cuisine
-  case .toggleShowCuisineFilter:
-    state.home.showCuisineFilter = !state.home.showCuisineFilter
-  case .setDrawerPosition(let position):
-    state.home.drawerPosition = position
-  case .clearSearch:
-    state.home.viewStates = [state.home.viewStates[0]]
-  case .setSearchFocus(let val):
-    state.home.searchFocus = val
-  case .setFilterActive(let target, let val):
-    state.home.filters = state.home.filters.map { filter in
-      if filter == target {
-        var next = filter
-        next.active = val
-        return next
+    case .setDrawerIsDragging(let val):
+      if val != state.home.drawerIsDragging {
+        state.home.drawerIsDragging = val
       }
-      return filter
+    case .setCuisineFilter(let cuisine):
+      state.home.cuisineFilter = cuisine
+    case .toggleShowCuisineFilter:
+      state.home.showCuisineFilter = !state.home.showCuisineFilter
+    case .setDrawerPosition(let position):
+      if position != state.home.drawerPosition {
+        state.home.drawerPosition = position
+      }
+    case .clearSearch:
+      state.home.viewStates = [state.home.viewStates[0]]
+    case .setSearchFocus(let val):
+      state.home.searchFocus = val
+    case .setFilterActive(let target, let val):
+      state.home.filters = state.home.filters.map { filter in
+        if filter == target {
+          var next = filter
+          next.active = val
+          return next
+        }
+        return filter
     }
-  case .setLenseToDishes(let id, let dishes):
-    state.home.lenseToDishes[id] = dishes
-  case let .setLenseActive(index):
-    state.home.lenseActive = index
-  case let .navigateToRestaurant(restaurant):
-    state.home.viewStates.append(
-      HomeStateItem(state: .restaurantDetail(restaurant: restaurant))
-    )
-  case let .setSearchResults(val):
-    var last = state.home.viewStates.last!
-    if case .search(let search, _) = last.state {
-      last.state = .search(search: search, results: val)
-      updateItem(last)
-    }
-  case let .setSearch(val):
-    var last = state.home.viewStates.last!
-    // push into search results
-    if case .search(_, var results) = last.state {
-      results.results = []
-      results.status = .fetching
-      last.state = .search(search: val, results: results)
-      updateItem(last)
-    } else {
+    case .setLenseToDishes(let id, let dishes):
+      state.home.lenseToDishes[id] = dishes
+    case let .setLenseActive(index):
+      state.home.lenseActive = index
+    case let .navigateToRestaurant(restaurant):
       state.home.viewStates.append(
-        HomeStateItem(state: .search(search: val))
-      )
+        HomeStateItem(state: .restaurantDetail(restaurant: restaurant))
+    )
+    case let .setSearchResults(val):
+      var last = state.home.viewStates.last!
+      if case .search(let search, _) = last.state {
+        last.state = .search(search: search, results: val)
+        updateItem(last)
     }
-  case let .setView(page):
-    state.home.view = page
-  case let .push(homeState):
-    state.home.viewStates.append(homeState)
-  case .pop:
-    if state.home.viewStates.count > 1 {
-      state.home.viewStates = state.home.viewStates.dropLast()
+    case let .setSearch(val):
+      var last = state.home.viewStates.last!
+      // push into search results
+      if case .search(_, var results) = last.state {
+        results.results = []
+        results.status = .fetching
+        last.state = .search(search: val, results: results)
+        updateItem(last)
+      } else {
+        state.home.viewStates.append(
+          HomeStateItem(state: .search(search: val))
+        )
+    }
+    case let .push(homeState):
+      state.home.viewStates.append(homeState)
+    case .pop:
+      if state.home.viewStates.count > 1 {
+        state.home.viewStates = state.home.viewStates.dropLast()
     }
   }
 }
@@ -277,23 +279,23 @@ struct HomeSelectors {
   func isOnHome(_ store: AppStore = App.store) -> Bool {
     store.state.home.viewStates.count == 1
   }
-
+  
   func isOnSearchResults(_ store: AppStore = App.store) -> Bool {
     store.state.home.viewStates.count > 1
   }
-
+  
   func isOnRestaurant(_ store: AppStore = App.store) -> Bool {
     self.restaurant(store) != nil
   }
-
+  
   func restaurant(_ store: AppStore = App.store) -> RestaurantItem? {
     lastState(store).restaurant
   }
-
+  
   func lastState(_ store: AppStore = App.store) -> HomeStateItem {
     store.state.home.viewStates.last!
   }
-
+  
   func latestResults(_ store: AppStore = App.store) -> HomeStateItem.SearchResults? {
     let last = self.lastState(store)
     if case .search(_, results: let results) = last.state {
@@ -301,14 +303,14 @@ struct HomeSelectors {
     }
     return nil
   }
-
+  
   func latestResultsItems(_ store: AppStore = App.store) -> [HomeStateItem.Item] {
     if let searchResults = self.latestResults(store) {
       return searchResults.results
     }
     return []
   }
-
+  
   func latestSearch(_ store: AppStore = App.store) -> String {
     let last = self.lastState(store)
     if case .search(let query, _) = last.state {
@@ -316,18 +318,18 @@ struct HomeSelectors {
     }
     return ""
   }
-
+  
   func activeLense(_ store: AppStore = App.store) -> LenseItem {
     store.state.home.lenses[store.state.home.lenseActive]
   }
-
+  
   func drawerRGB(_ store: AppStore = App.store, colorScheme: ColorScheme) -> [Double] {
     let c = activeLense(store).rgb
     return colorScheme == .dark
       ? [c[0] * 0.5, c[1] * 0.5, c[2] * 0.5]
       : [1, 1, 1]
   }
-
+  
   func drawerColor(_ store: AppStore = App.store, colorScheme: ColorScheme) -> Color {
     let d = drawerRGB(store, colorScheme: colorScheme)
     return Color(red: d[0], green: d[1], blue: d[2])
@@ -344,9 +346,9 @@ struct FilterItem: Identifiable, Equatable {
   enum FilterType {
     case toggle, select
   }
-
+  
   var id: String { name }
-
+  
   var name: String
   var icon: String? = nil
   var type: FilterType = .toggle

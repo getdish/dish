@@ -21,9 +21,3 @@ struct PrintGeometryView: View {
       : emptyView
   }
 }
-
-struct RootView_Previews: PreviewProvider {
-  static var previews: some View {
-    RootView()
-  }
-}

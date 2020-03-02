@@ -53,7 +53,6 @@ class RunState: ObservableObject {
   var cancellables: Set<AnyCancellable> = []
   
   func start(_ parent: Run) {
-    print("starting \(parent.name)")
     if parent.debounce > 0 {
       self.$debounceRun
         .debounce(for: .milliseconds(Int(parent.debounce)), scheduler: DispatchQueue.main)

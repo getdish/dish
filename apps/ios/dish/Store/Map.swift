@@ -26,12 +26,17 @@ enum MapAction {
 func mapReducer(_ state: inout AppState, action: MapAction) {
   switch action {
   case let .setLocation(location):
-    state.map.location = location
+    if location != state.map.location {
+      state.map.location = location
+    }
   case let .setLocationLabel(val):
-    state.map.locationLabel = val
+    if val != state.map.locationLabel {
+      state.map.locationLabel = val
+    }
   case .moveToCurrentLocation:
     state.map.moveToLocation = .init(
-      center: .current, radius: state.map.location.radius, refresh: true)
+      center: .current, radius: state.map.location.radius, refresh: true
+    )
   case let .moveToLocation(loc):
     state.map.moveToLocation = loc
     // we track if they have moved off center or not
