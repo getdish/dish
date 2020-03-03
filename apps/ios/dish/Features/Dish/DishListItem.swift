@@ -57,7 +57,6 @@ struct DishListItem: View, Equatable {
             Spacer()
           }
       }
-      Spacer()
     }
   }
 }
@@ -73,7 +72,7 @@ struct DishListItemRestaurantCard: View {
       .resizable()
       .scaledToFill()
       .frame(width: size, height: size)
-      .cornerRadiusSquircle(18)
+      .cornerRadiusSquircle(16)
       .overlay(
         VStack {
           Spacer()

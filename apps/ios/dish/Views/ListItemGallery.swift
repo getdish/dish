@@ -62,7 +62,9 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
   
   var body: some View {
     let activeIndex = CGFloat(self.scrollX / size)
-    let contentWidth = self.screen.width - self.imageSize * CGFloat(self.defaultImagesVisible)
+    let spaceSize: CGFloat = 20
+    let contentWidth = self.screen.width - self.size * CGFloat(self.defaultImagesVisible) - spaceSize
+    let prePad: CGFloat = 16
     
     return ZStack {
       if displayContent == .fixed {
@@ -71,23 +73,30 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
           Spacer()
           Spacer().frame(width: contentWidth * 0.72)
         }
-        .padding(.leading, 16)
+        .padding(.leading, prePad)
       }
     
       ScrollView(.horizontal, showsIndicators: false) {
         HStack(spacing: 0) {
-          ScrollListener(
-            name: "ListItemGallery",
-            onScrollStart: self.onScrollStart,
-            onScrollEnd: self.onScrollEnd,
-            onScroll: self.onScroll
+          // side effects
+          Color.clear.frame(width: 0).overlay(
+            Group {
+              ScrollListener(
+                name: "ListItemGallery",
+                onScrollStart: self.onScrollStart,
+                onScrollEnd: self.onScrollEnd,
+                onScroll: self.onScroll
+              )
+              
+              Color.clear.introspectScrollView { scrollView in
+                let x: UIScrollView = scrollView
+                x.clipsToBounds = false
+              }
+            }
           )
           
-          Color.clear.introspectScrollView { scrollView in
-            let x: UIScrollView = scrollView
-            x.clipsToBounds = false
-          }
-          
+          Spacer().frame(width: prePad)
+
           // CONTENT
           Group {
             if displayContent == .scrolling {
@@ -96,12 +105,14 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
               Color.clear
             }
           }
-          .frame(width: contentWidth - 20)
+          .frame(width: contentWidth)
           
-          Spacer().frame(width: 20)
+          Spacer()
+          
+          Color.clear.frame(width: spaceSize)
           
           HStack(spacing: 0) {
-            ForEach(0..<self.total) { index in
+            ForEach(0..<total) { index in
               ListItemGalleryImage(
                 activeIndex: activeIndex,
                 imageSize: self.imageSize,
@@ -113,10 +124,9 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
             Spacer().frame(width: self.screen.width / 2.5)
           }
           .frame(width: size * CGFloat(total) + self.screen.width / 2.5)
-          .overlay(Color.blue.opacity(0.5))
         }
       }
-      .frame(width: self.screen.width, alignment: .leading)
+      .frame(width: self.screen.width)
       .overlay(
         HStack {
           if self.scrollX == 0 {
@@ -197,7 +207,11 @@ struct ListItemGalleryImage<Content>: View, Identifiable where Content: View {
     let sizeScaled = imageSize * scale
     let zIndex = isOnStage ? 100 : strength
     
-    var x: Double = Double(scale / 2) + strength > lB ? -20 : 0
+    var x: Double = Double(self.imageSize / 2)
+    
+    if Double(scale / 2) + strength > lB {
+      x = x - 20
+    }
     
     if isActive {
       x = x - (uB - strength) * Double(size)
@@ -207,8 +221,6 @@ struct ListItemGalleryImage<Content>: View, Identifiable where Content: View {
       .getImage(index, sizeScaled, isOnStage)
       .opacity(opacityScaled)
       .rotation3DEffect(.degrees(Double(1 - self.scale) * -7), axis: (0, 1, 0))
-      .animation(.spring())
-      //      .animation(.none, value: self.isActive)
       .position(
         x: CGFloat(x),
         y: size * 0.5 - (size - imageSize)
