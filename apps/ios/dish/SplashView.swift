@@ -21,9 +21,9 @@ struct SplashView: View {
             Image("LaunchScreen2")
               .resizable()
               .scaledToFill()
-              .mask(
-                Circle().frame(width: 200, height: 200)
-            )
+//              .mask(
+//                Circle().frame(width: 200, height: 200)
+//            )
           }
           .transition(.fly)
         }
