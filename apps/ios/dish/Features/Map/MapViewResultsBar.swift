@@ -8,10 +8,10 @@ struct MapResultsBar: View {
     VStack {
       Group {
         if Selectors.home.isOnSearchResults(self.store) {
-          MapSearchResults()
+          MapResultsBarSearch()
             .transition(.opacity)
         } else {
-          MapResultsExplore()
+          MapResultsBarExplore()
             .transition(.opacity)
         }
       }
@@ -21,7 +21,7 @@ struct MapResultsBar: View {
   }
 }
 
-struct MapResultsExplore: View {
+struct MapResultsBarExplore: View {
   @EnvironmentObject var store: AppStore
   @State var index: Int = 0
 
@@ -57,7 +57,7 @@ struct MapResultsExplore: View {
       DishCardView(
         dish: dish,
         display: .small,
-        height: App.mapBarHeight - 25
+        height: App.mapBarHeight - 15
       )
         .frame(width: 125, height: App.mapBarHeight)
     }
@@ -65,7 +65,7 @@ struct MapResultsExplore: View {
 
 }
 
-struct MapSearchResults: View {
+struct MapResultsBarSearch: View {
   @EnvironmentObject var store: AppStore
   @State var index = 0
   var dish = features[0]

@@ -15,9 +15,11 @@ extension View {
           Run("setScreenSize") {
             let w = g.size.width
             let h = g.size.height
-            async {
-              screen.width = w
-              screen.height = h
+            if w != screen.width || h != screen.height {            
+              async {
+                screen.width = w
+                screen.height = h
+              }
             }
           })
     }

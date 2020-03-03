@@ -406,7 +406,6 @@ struct BottomDrawer<Content: View>: View {
       ) {
         VStack {
           Color.red
-          Color.blue
           Spacer()
         }
       }

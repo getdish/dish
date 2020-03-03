@@ -47,6 +47,7 @@ struct HomeView: View {
               MapViewContainer()
                 .offset(y: y)
                 .animation(.spring(response: 0.15))
+                .invertColorScheme()
             }
             .frameLimitedToScreen()
             .clipped()

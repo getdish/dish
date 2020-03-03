@@ -63,66 +63,71 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
   var body: some View {
     let activeIndex = CGFloat(self.scrollX / size)
     let contentWidth = self.screen.width - self.imageSize * CGFloat(self.defaultImagesVisible)
+    
     return ZStack {
-        Color.clear
-          .overlay(displayContent == .scrolling ? nil :
-            HStack(spacing: 0) {
-              self.content
-              Spacer()
-              Spacer().frame(width: contentWidth * 0.72)
-            }
-            .padding(.leading, 16)
-      )
-        ScrollView(.horizontal, showsIndicators: false) {
-          HStack(spacing: 0) {
-            ScrollListener(
-              name: "ListItemGallery",
-              onScrollStart: self.onScrollStart,
-              onScrollEnd: self.onScrollEnd,
-              onScroll: self.onScroll
-            )
-            
-            Color.clear.introspectScrollView { scrollView in
-              let x: UIScrollView = scrollView
-              x.clipsToBounds = false
-            }
-            
-            // CONTENT
-            // overlay to fix some tap/focus issues
-            Color.clear
-              .frame(width: contentWidth - 20)
-              .overlay(
-                displayContent == .scrolling ? self.content : nil
-              )
-            
-            Spacer().frame(width: 20)
-            
-            HStack {
-              ForEach(0..<self.total) { index in
-                ListItemGalleryImage(
-                  activeIndex: activeIndex,
-                  imageSize: self.imageSize,
-                  index: index,
-                  size: self.size,
-                  getImage: self.getImage
-                )
-              }
-            }
-            .frame(width: size * CGFloat(total))
-          }
-          .padding(.trailing, self.screen.width / 2.5)
+      if displayContent == .fixed {
+        HStack(spacing: 0) {
+          self.content
+          Spacer()
+          Spacer().frame(width: contentWidth * 0.72)
         }
-        .overlay(
-          HStack {
-            if self.scrollX == 0 {
-              Color.black.opacity(0.0001)
-                .frame(width: contentWidth)
-            }
-            Spacer()
-          }
-        )
+        .padding(.leading, 16)
       }
-      .frame(width: self.screen.width, height: imageSize)
+    
+      ScrollView(.horizontal, showsIndicators: false) {
+        HStack(spacing: 0) {
+          ScrollListener(
+            name: "ListItemGallery",
+            onScrollStart: self.onScrollStart,
+            onScrollEnd: self.onScrollEnd,
+            onScroll: self.onScroll
+          )
+          
+          Color.clear.introspectScrollView { scrollView in
+            let x: UIScrollView = scrollView
+            x.clipsToBounds = false
+          }
+          
+          // CONTENT
+          Group {
+            if displayContent == .scrolling {
+              self.content
+            } else {
+              Color.clear
+            }
+          }
+          .frame(width: contentWidth - 20)
+          
+          Spacer().frame(width: 20)
+          
+          HStack(spacing: 0) {
+            ForEach(0..<self.total) { index in
+              ListItemGalleryImage(
+                activeIndex: activeIndex,
+                imageSize: self.imageSize,
+                index: index,
+                size: self.size,
+                getImage: self.getImage
+              )
+            }
+            Spacer().frame(width: self.screen.width / 2.5)
+          }
+          .frame(width: size * CGFloat(total) + self.screen.width / 2.5)
+          .overlay(Color.blue.opacity(0.5))
+        }
+      }
+      .frame(width: self.screen.width, alignment: .leading)
+      .overlay(
+        HStack {
+          if self.scrollX == 0 {
+            Color.black.opacity(0.0001)
+              .frame(width: contentWidth)
+          }
+          Spacer()
+        }
+      )
+    }
+    .frame(width: self.screen.width, height: imageSize)
   }
   
   func getImageXPosition(_ index: Int, activeIndex: Int) -> CGFloat {
@@ -192,7 +197,7 @@ struct ListItemGalleryImage<Content>: View, Identifiable where Content: View {
     let sizeScaled = imageSize * scale
     let zIndex = isOnStage ? 100 : strength
     
-    var x: Double = strength > lB ? -20 : -(strength / 5) * 10
+    var x: Double = Double(scale / 2) + strength > lB ? -20 : 0
     
     if isActive {
       x = x - (uB - strength) * Double(size)
@@ -202,7 +207,7 @@ struct ListItemGalleryImage<Content>: View, Identifiable where Content: View {
       .getImage(index, sizeScaled, isOnStage)
       .opacity(opacityScaled)
       .rotation3DEffect(.degrees(Double(1 - self.scale) * -7), axis: (0, 1, 0))
-      //      .animation(.spring(), value: !self.isActive)
+      .animation(.spring())
       //      .animation(.none, value: self.isActive)
       .position(
         x: CGFloat(x),
