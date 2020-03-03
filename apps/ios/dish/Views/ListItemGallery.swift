@@ -69,9 +69,9 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
             HStack(spacing: 0) {
               self.content
               Spacer()
-              Spacer().frame(width: contentWidth * 0.75)
+              Spacer().frame(width: contentWidth * 0.72)
             }
-            .padding(.leading, 20)
+            .padding(.leading, 16)
       )
         ScrollView(.horizontal, showsIndicators: false) {
           HStack(spacing: 0) {
@@ -87,14 +87,15 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
               x.clipsToBounds = false
             }
             
-            // contents
+            // CONTENT
+            // overlay to fix some tap/focus issues
             Color.clear
-              .frame(width: contentWidth)
+              .frame(width: contentWidth - 20)
               .overlay(
                 displayContent == .scrolling ? self.content : nil
               )
             
-            Spacer().frame(width: 24)
+            Spacer().frame(width: 20)
             
             HStack {
               ForEach(0..<self.total) { index in

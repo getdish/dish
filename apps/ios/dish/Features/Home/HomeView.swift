@@ -54,7 +54,7 @@ struct HomeView: View {
                   // adjust for any awkwardness
                   + 20
               )
-              .animation(.spring(response: 0.35))
+              .animation(.spring(response: 0.15))
           }
 
           // map overlay fade to bottom
@@ -63,9 +63,9 @@ struct HomeView: View {
             ZStack {
               self.colorScheme == .dark
                 ? LinearGradient(
-                  gradient: Gradient(colors: [.clear, .black]),
-                  startPoint: .top,
-                  endPoint: .bottom
+                    gradient: Gradient(colors: [.clear, Color(white: 0, opacity: 1)]),
+                    startPoint: .top,
+                    endPoint: .bottom
                   )
                 : LinearGradient(
                   gradient: Gradient(colors: [

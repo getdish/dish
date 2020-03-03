@@ -116,7 +116,7 @@ struct DishButtonView: View, Identifiable, Equatable {
             .fontWeight(.medium)
             .foregroundColor(Color.white)
             .multilineTextAlignment(.center)
-            .lineLimit(1)
+            .lineLimit(2)
             .shadow(color: Color.black.opacity(0.25), radius: 0, x: 0, y: 1)
         }
           .padding(.vertical, 8)

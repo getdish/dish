@@ -55,7 +55,7 @@ struct MapLenseButton: View, Identifiable, Equatable {
         )
         .scaleEffect(active ? 1.1 : 1)
         .shadow(color: Color.black.opacity(0.5), radius: 2, y: 2)
-        .animation(.spring())
+        .animation(.spring(response: 0.35))
     }
   }
 }

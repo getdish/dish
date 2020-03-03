@@ -16,7 +16,8 @@ class AppModel {
   // services
   let mapService = MapService()
 
-  let homeService = HomeService()
+  // side effects
+  let homeSideEffects = HomeSideEffects()
 
   var apollo: ApolloClient {
     return ApolloNetwork.shared.apollo
@@ -50,13 +51,13 @@ class AppModel {
   var drawerSnapPoints: [CGFloat] {
     [
       App.screen.edgeInsets.top + 50,
-      App.screen.edgeInsets.top + 190,
+      App.screen.edgeInsets.top + 210,
       App.screen.height - 110 - App.screen.edgeInsets.bottom,
     ]
   }
 
   func start() {
     mapService.start()
-    homeService.start()
+    homeSideEffects.start()
   }
 }

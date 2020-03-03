@@ -57,9 +57,6 @@ struct HomeDrawerView: View, Equatable {
         VStack(spacing: 0) {
           VStack(spacing: 0) {
             HomeDrawerSearchBar()
-              .padding(.horizontal, 10)
-              .padding(.top, 10)
-              .padding(.bottom, 5)
             HomeDrawerFilterBar()
           }
           Spacer()
@@ -84,7 +81,7 @@ struct HomeMainDrawerContent: View {
     let viewStates = self.store.state.home.viewStates
     let occludeTopHeight = App.searchBarHeight
     return VStack(spacing: 0) {
-      Spacer().frame(height: occludeTopHeight)
+//      Spacer().frame(height: occludeTopHeight)
       ZStack {
         ForEach(viewStates, id: \.id) { viewState in
           HomeScreen(
@@ -97,26 +94,31 @@ struct HomeMainDrawerContent: View {
             .equatable()
         }
       }
-        .mask(HomeMainDrawerContent.maskGradient.offset(y: occludeTopHeight - (
-          self.store.state.home.showFilters ? 5 : App.filterBarHeight + 15
-        )))
+        .mask(
+          HomeMainDrawerContent.maskGradient.offset(
+            y: occludeTopHeight - (
+              self.store.state.home.showFilters
+                ? -20
+                : 0
+          ))
+      )
     }
   }
   
   static let maskGradient = LinearGradient(
     gradient: Gradient(colors: [
       Color.black.opacity(0),
-      Color.black.opacity(1),
-      Color.black.opacity(1),
-      Color.black.opacity(1),
-      Color.black.opacity(1),
-      Color.black.opacity(1),
-      Color.black.opacity(1),
-      Color.black.opacity(1),
-      Color.black.opacity(1),
-      Color.black.opacity(1),
-      Color.black.opacity(1),
-      Color.black.opacity(1)
+      Color.black,
+      Color.black,
+      Color.black,
+      Color.black,
+      Color.black,
+      Color.black,
+      Color.black,
+      Color.black,
+      Color.black,
+      Color.black,
+      Color.black
     ]),
     startPoint: .top,
     endPoint: .center
@@ -153,8 +155,8 @@ struct HomeContentScrollView<Content>: View where Content: View {
   
   var body: some View {
     let isDisabled = self.store.state.home.drawerIsDragging
-    let topContentHeight = self.store.state.home.showFilters
-      ? App.filterBarHeight : 12
+    let topContentHeight = App.searchBarHeight + (self.store.state.home.showFilters
+      ? App.filterBarHeight : 0)
     return Group {
       ZStack {
         Color.clear.onAppear(perform: self.start)
@@ -265,17 +267,13 @@ struct HomeDrawerExploreView: View {
   @EnvironmentObject var store: AppStore
   let dishes = features
 
-  var lense: LenseItem {
-    Selectors.home.activeLense(self.store)
-  }
-
   var total: Int {
     self.store.state.appLoaded ? self.dishes.count : 5
   }
 
   var body: some View {
     VStack {
-      self.titleView
+      DrawerTitleView()
       ForEach(0..<self.total) { index in
         DishListItem(
           dish: self.dishes[index],
@@ -288,23 +286,38 @@ struct HomeDrawerExploreView: View {
       .id(self.store.state.appLoaded ? "0" : "1")
     }
   }
+}
+
+struct DrawerTitleView: View {
+  @Environment(\.colorScheme) var colorScheme
+  @EnvironmentObject var screen: ScreenModel
+  @EnvironmentObject var store: AppStore
   
-  var titleView: some View {
-    Group {
+  var lense: LenseItem {
+    Selectors.home.activeLense(self.store)
+  }
+  
+  var body: some View {
+    let locationName = self.store.state.map.locationLabel
+    return Group {
       if self.store.state.home.searchFocus != .search {
         HStack(spacing: 6) {
-          Spacer()
+          Group {
+            Text("\(lense.icon) \(lense.name)")
+            if locationName != "Map area" {
+              Text("in ")
+              Text("\(locationName)")
+            }
+          }
+          .font(.system(size: 22))
+          .foregroundColor(colorScheme == .light ?
+            Color(white: 0, opacity: 0.5) : Color(white: 1, opacity: 0.5))
           
-          Text(lense.description ?? "")
-            .font(.system(size: 24))
-            .foregroundColor(colorScheme == .light ?
-              Color(white: 0, opacity: 0.5) : Color(white: 1, opacity: 0.5))
-          
-          Text(self.store.state.home.filterTopLevel == .dish ? "dishes 🍽" : "restaurants 🧂")
-            .fontWeight(.semibold)
-            .font(.system(size: 24))
-            .style(.smallCapsSmallTitle)
-            .foregroundColor(colorScheme == .light ? .black : .white)
+          //          Text(self.store.state.home.filterTopLevel == .dish ? "dishes 🍽" : "restaurants 🧂")
+          //            .fontWeight(.semibold)
+          //            .font(.system(size: 24))
+          //            .style(.smallCapsSmallTitle)
+          //            .foregroundColor(colorScheme == .light ? .black : .white)
           
           Spacer()
         }
@@ -316,7 +329,6 @@ struct HomeDrawerExploreView: View {
       }
     }
   }
-  
 }
 
 class ScrollState: NSObject, ObservableObject, UIScrollViewDelegate, UIGestureRecognizerDelegate {

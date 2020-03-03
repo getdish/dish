@@ -89,6 +89,7 @@ struct BottomDrawer<Content: View>: View {
     self._position = position
     self.content = content()
     self.preventDragAboveSnapPoint = preventDragAboveSnapPoint
+    logger.info("preventDragAboveSnapPoint \(preventDragAboveSnapPoint)")
   }
 
   func getSnapPoint(_ position: BottomDrawerPosition) -> CGFloat {
@@ -163,8 +164,22 @@ struct BottomDrawer<Content: View>: View {
     return ZStack {
       Color.clear.onAppear(perform: self.start)
       
+//      if self.colorScheme == .dark {
+//        LinearGradient(
+//          gradient: .init(colors: [.clear, .black]),
+//          startPoint: .top,
+//          endPoint: .bottom
+//        )
+//      }
+      
       BlurView(style: self.colorScheme == .dark ? .dark : .light)
+      
+//      if self.colorScheme == .dark {
+//        App.store.state.home.lenses[App.store.state.home.lenseActive].color
+//          .opacity(0.1)
+//      }
 
+      // handle
       VStack {
         RoundedRectangle(cornerRadius: 5)
           .frame(width: 40, height: 5)
@@ -177,9 +192,7 @@ struct BottomDrawer<Content: View>: View {
           Animation.spring()
             .delay(self.isMounting ? 1 : self.dragState.isDragging ? 0 : 0.5))
 
-      VStack(spacing: 0) {
-        self.content
-      }
+      self.content
     }
       .frame(height: screenHeight, alignment: .top)
       .background(
@@ -307,8 +320,13 @@ struct BottomDrawer<Content: View>: View {
   func finishDrag(_ throwAmount: CGFloat, currentY: CGFloat) {
     self.externalDragY = 0
     let next = self.getNextPosition(throwAmount, currentY: currentY)
-    if let min = preventDragAboveSnapPoint, next.rawValue >= min.rawValue {
-      self.position = next
+    if let min = preventDragAboveSnapPoint {
+      if next.rawValue >= min.rawValue {
+        self.position = next
+      }
+      else if min == .middle && next == .top {
+        self.position = .middle
+      }
     }
     // roughly makes animation speed match throw velocity
     self.mass = 2.65 - max(1, (max(1, min(100, Double(abs(throwAmount)))) / 50))

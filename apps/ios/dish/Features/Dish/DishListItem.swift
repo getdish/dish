@@ -47,7 +47,7 @@ struct DishListItem: View, Equatable {
         ) {
           HStack(spacing: 12) {
             Text(self.dish.icon)
-              .font(.system(size: 32))
+              .font(.system(size: 30))
             
             Text(self.dish.name)
               .fontWeight(.bold)

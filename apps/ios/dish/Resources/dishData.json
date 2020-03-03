@@ -1,5 +1,12 @@
 [
     {
+      "name": "Chicken Tikki Masala",
+      "id": 1008,
+      "imageName": "icybay",
+      "icon": "🐓",
+      "hue": 0.3
+    },
+    {
         "name": "Pho",
         "id": 1001,
         "imageName": "turtlerock",
@@ -47,13 +54,6 @@
         "imageName": "charleyrivers",
         "icon": "🌮",
         "hue": 0.2
-    },
-    {
-        "name": "Chicken Tikki Masala",
-        "id": 1008,
-        "imageName": "icybay",
-        "icon": "🐓",
-        "hue": 0.3
     },
     {
         "name": "Burgers",

@@ -70,6 +70,7 @@ struct SearchInput: View {
   var showInput = true
 
   @State private var showCancelButton: Bool = false
+  @State var inputSize: CGSize = .zero
 
   @Environment(\.colorScheme) var colorScheme
 
@@ -99,33 +100,38 @@ struct SearchInput: View {
     let horizontalSpacing = 14 * scale
 
     return ZStack {
-      Group {
-        if showInput {
-          TextField(
-            self.placeholder,
-            text: self.$searchText,
-            onEditingChanged: self.handleEditingChanged
-            //                            isFirstResponder: self.isFirstResponder,
-            //                            onEditingChanged: self.handleEditingChanged
-          )
-        } else {
-          // temp bugfix for above TODO problem...
-          HStack {
-            Group {
-              if self.searchText != "" {
-                Text(self.searchText)
-              } else {
-                Text(self.placeholder).opacity(0.3)
+      HStack(spacing: 0) {
+        Spacer().frame(width: 56)
+        
+        Group {
+          if showInput {
+            TextField(
+              self.placeholder,
+              text: self.$searchText,
+              onEditingChanged: self.handleEditingChanged
+              //                            isFirstResponder: self.isFirstResponder,
+              //                            onEditingChanged: self.handleEditingChanged
+            )
+          } else {
+            // temp bugfix for above TODO problem...
+            HStack {
+              Group {
+                if self.searchText != "" {
+                  Text(self.searchText)
+                } else {
+                  Text(self.placeholder).opacity(0.3)
+                }
               }
+              .font(.system(size: fontSize))
+              Spacer()
             }
-            .font(.system(size: fontSize))
-            Spacer()
           }
         }
+        .frame(width: self.inputSize.width)
+        
+        Spacer()
       }
       .frame(height: pad * 2 + fontSize * 1.2)
-//      .padding(.vertical, pad)
-//      .frameFlex()
       
       // Search view
       HStack {
@@ -146,15 +152,22 @@ struct SearchInput: View {
                 .frame(width: self.iconSize * scale, height: self.iconSize * scale)
             }
           }
-
-          Spacer().frame(width: horizontalSpacing)
           
-          Spacer().allowsHitTesting(false).disabled(true)
-
-          Spacer().frame(width: horizontalSpacing)
+          Group {
+            Spacer().frame(width: horizontalSpacing)
+            Spacer()
+              .onGeometrySizeChange {
+                self.inputSize = $0
+            }
+            Spacer().frame(width: horizontalSpacing)
+          }
+          .allowsHitTesting(false)
+          .disabled(true)
+          
 
           if self.searchText != "" {
             Group {
+              Spacer().frame(width: horizontalSpacing)
               Button(action: {
                 self.searchText = ""
                 if let cb = self.onClear {
@@ -167,25 +180,20 @@ struct SearchInput: View {
                   .frame(width: 18 + 2 * scale, height: 18 + 2 * scale)
               }
                 .transition(.opacity)
-
-              Spacer().frame(width: horizontalSpacing)
             }
           }
 
           if showCancelButton && showCancelInside {
             Group {
+              Spacer().frame(width: horizontalSpacing)
               cancelButton
-              if after == nil {
-                Spacer().frame(width: horizontalSpacing)
-              }
             }
           }
 
           if after != nil {
             Group {
               Spacer().frame(width: horizontalSpacing)
-              after
-                .frame(height: 24 * scale)
+              after.frame(height: 24 * scale)
             }
           }
         }

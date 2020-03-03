@@ -11,7 +11,7 @@ struct MapResultsBar: View {
           MapSearchResults()
             .transition(.opacity)
         } else {
-          MapExplore()
+          MapResultsExplore()
             .transition(.opacity)
         }
       }
@@ -21,7 +21,7 @@ struct MapResultsBar: View {
   }
 }
 
-struct MapExplore: View {
+struct MapResultsExplore: View {
   @EnvironmentObject var store: AppStore
   @State var index: Int = 0
 
@@ -35,7 +35,7 @@ struct MapExplore: View {
 
   var body: some View {
     ScrollView(.horizontal, showsIndicators: false) {
-      HStack(spacing: 15) {
+      HStack(spacing: 20) {
         ForEach(self.items, id: \.id) { item in
           MapResultDishCard(dish: item)
             .equatable()
@@ -57,9 +57,9 @@ struct MapExplore: View {
       DishCardView(
         dish: dish,
         display: .small,
-        height: App.mapBarHeight - 15
+        height: App.mapBarHeight - 25
       )
-        .frame(width: 120, height: App.mapBarHeight)
+        .frame(width: 125, height: App.mapBarHeight)
     }
   }
 
@@ -114,6 +114,7 @@ struct DishMapResultItem: View, Equatable {
           .fontWeight(.bold)
           .lineLimit(2)
           .font(.system(size: 15))
+          .foregroundColor(self.colorScheme == .light ? .black : .white)
           .shadow(color: Color.black.opacity(0.1), radius: 0, x: 0, y: 1)
       }
       .padding(.horizontal, 18)
