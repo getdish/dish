@@ -33,6 +33,7 @@ services:
       - HEREMAPS_API_TOKEN=${HEREMAPS_API_TOKEN}
       - INFATUATED_PROXY=${INFATUATED_PROXY}
       - YELP_PROXY=${YELP_PROXY}
+      - TRIPADVISOR_PROXY=${TRIPADVISOR_PROXY}
     command:
       - node
     args:
@@ -50,6 +51,7 @@ services:
       - YELP_PROXY=${YELP_PROXY}
       - INFATUATED_PROXY=${INFATUATED_PROXY}
       - MICHELIN_PROXY=${MICHELIN_PROXY}
+      - TRIPADVISOR_PROXY=${TRIPADVISOR_PROXY}
     command:
       - node
     args:
