@@ -103,6 +103,7 @@ struct MapView: View {
         },
         showsUserLocation: true
       )
+        .frame(height: App.screen.height * 2)
 //      .invertColorScheme()
     }
   }

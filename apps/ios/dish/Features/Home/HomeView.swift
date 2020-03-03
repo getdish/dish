@@ -15,12 +15,6 @@ struct HomeView: View {
 
   @State var contentWrappingView: UIView? = nil
 
-  func start() {
-    async(500) {
-      self.state.setAnimationState(.idle)
-    }
-  }
-
   var mapFullHeight: CGFloat {
     self.screen.height * 1.5
   }
@@ -31,9 +25,13 @@ struct HomeView: View {
     let state = self.state
     let showMapRow = self.store.state.home.drawerPosition == .bottom
       && !self.store.state.home.drawerIsDragging
+    let y: CGFloat = (self.screen.height - self.mapFullHeight) * 0.75
+      // move with drawer (but just a bit less than half because when fully open, we show a bottom results drawer)
+      + (state.y - App.drawerSnapPoints[1]) * 0.4
+      // adjust for any awkwardness
+      + 20
 
     return ZStack(alignment: .topLeading) {
-      RunOnce(name: "start") { self.start() }
       PrintGeometryView("HomeView")
 
       // below restaurant card
@@ -45,16 +43,13 @@ struct HomeView: View {
         ZStack {
           // Map
           if App.enableMap {
-            MapViewContainer()
-              .offset(
-                y:  // centered
-                (self.screen.height - self.mapFullHeight) * 0.75
-                  // move with drawer (but just a bit less than half because when fully open, we show a bottom results drawer)
-                  + (state.y - App.drawerSnapPoints[1]) * 0.4
-                  // adjust for any awkwardness
-                  + 20
-              )
-              .animation(.spring(response: 0.15))
+            ZStack {
+              MapViewContainer()
+                .offset(y: y)
+                .animation(.spring(response: 0.15))
+            }
+            .frameLimitedToScreen()
+            .clipped()
           }
 
           // map overlay fade to bottom
@@ -63,7 +58,7 @@ struct HomeView: View {
             ZStack {
               self.colorScheme == .dark
                 ? LinearGradient(
-                    gradient: Gradient(colors: [.clear, Color(white: 0, opacity: 1)]),
+                  gradient: Gradient(colors: [.clear, Color(white: 0, opacity: 0.3)]),
                     startPoint: .top,
                     endPoint: .bottom
                   )

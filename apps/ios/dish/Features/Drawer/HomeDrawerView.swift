@@ -22,6 +22,8 @@ struct HomeDrawerView: View, Equatable {
       set: { self.store.send(.home(.setDrawerPosition($0))) }
     )
   }
+  
+  @State var lastPosition: BottomDrawerPosition? = nil
 
   var drawerBackgroundColor: Color {
     self.colorScheme == .dark
@@ -35,8 +37,12 @@ struct HomeDrawerView: View, Equatable {
       background: self.drawerBackgroundColor,
       cornerRadius: 25,
       handle: nil,
-      onChangePosition: { (_, y) in
-        homeViewState.setY(y)
+      onChangePosition: { (pos, y) in
+        let didChangePos = pos != self.lastPosition
+        if didChangePos {
+          self.lastPosition = pos
+        }
+        homeViewState.setY(y, animate: didChangePos)
       },
       onDragState: { state in
         if App.store.state.home.focusedItem != nil {
