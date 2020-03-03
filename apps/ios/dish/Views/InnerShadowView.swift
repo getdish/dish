@@ -51,7 +51,7 @@ struct InnerShadowView: View {
 }
 
 extension View {
-  func innerShadow(color: Color = Color.black, edges: [UnitPoint], opacity: Float = 0.6, radius: CGFloat = 3.0) -> some View {
+  func innerShadow(color: Color = Color.black, edges: [UnitPoint] = [.top, .bottom, .leading, .trailing], opacity: Float = 0.6, radius: CGFloat = 3.0) -> some View {
     background(
       InnerShadowView(
         color: color,
@@ -62,7 +62,7 @@ extension View {
     )
   }
   
-  func innerGlow(color: Color = Color.black, edges: [UnitPoint], opacity: Float = 0.6, radius: CGFloat = 3.0) -> some View {
+  func innerGlow(color: Color = Color.white, edges: [UnitPoint] = [.top, .bottom, .leading, .trailing], opacity: Float = 0.6, radius: CGFloat = 3.0) -> some View {
     overlay(
       InnerShadowView(
         color: color,

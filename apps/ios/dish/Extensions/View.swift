@@ -240,8 +240,9 @@ struct ControlsButtonStyle: ViewModifier {
         }
       }
       .background(self.background)
+      .innerGlow(color: Color.white.opacity(0.025), radius: 30)
       .cornerRadiusSquircle(cornerRadius)
-      .shadow(color: Color.black.opacity(0.15), radius: 3, x: 0, y: 1)
+      .shadow(color: Color.black.opacity(0.35), radius: 5, x: 0, y: 1)
     }
     .padding(3)
   }
