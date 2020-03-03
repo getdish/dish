@@ -27,8 +27,8 @@ struct HomeDrawerView: View, Equatable {
 
   var drawerBackgroundColor: Color {
     self.colorScheme == .dark
-      ? Color(white: 0.05).opacity(0.35)
-      : Color(white: 0.95).opacity(1)
+      ? Color(white: 0).opacity(0.55)
+      : Color(white: 0.8).opacity(1)
   }
 
   var body: some View {

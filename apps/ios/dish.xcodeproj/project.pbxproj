@@ -23,6 +23,9 @@
 		AE045C5123EB503400FFCBA1 /* AppGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE045C5023EB503400FFCBA1 /* AppGeometryReader.swift */; };
 		AE045C5323EB5A2400FFCBA1 /* CornerMask.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE045C5223EB5A2400FFCBA1 /* CornerMask.swift */; };
 		AE057BF423EA559D001B8BFA /* async.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE057BF323EA559D001B8BFA /* async.swift */; };
+		AE0743B0240E1A9500225741 /* HomeViewMapOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0743AF240E1A9500225741 /* HomeViewMapOverlay.swift */; };
+		AE0743B2240E4CC300225741 /* InnerShadowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0743B1240E4CC300225741 /* InnerShadowView.swift */; };
+		AE0743B4240E4E5000225741 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0743B3240E4E5000225741 /* Color.swift */; };
 		AE0C5FF523D2397D00BB5340 /* PrintGeometryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0C5FF423D2397D00BB5340 /* PrintGeometryView.swift */; };
 		AE0C5FF723D2414500BB5340 /* DishButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0C5FF623D2414500BB5340 /* DishButton.swift */; };
 		AE0C5FF923D2506800BB5340 /* HomeViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0C5FF823D2506800BB5340 /* HomeViewState.swift */; };
@@ -154,6 +157,9 @@
 		AE045C5023EB503400FFCBA1 /* AppGeometryReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGeometryReader.swift; sourceTree = "<group>"; };
 		AE045C5223EB5A2400FFCBA1 /* CornerMask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerMask.swift; sourceTree = "<group>"; };
 		AE057BF323EA559D001B8BFA /* async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = async.swift; sourceTree = "<group>"; };
+		AE0743AF240E1A9500225741 /* HomeViewMapOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewMapOverlay.swift; sourceTree = "<group>"; };
+		AE0743B1240E4CC300225741 /* InnerShadowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InnerShadowView.swift; sourceTree = "<group>"; };
+		AE0743B3240E4E5000225741 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		AE0C5FF423D2397D00BB5340 /* PrintGeometryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintGeometryView.swift; sourceTree = "<group>"; };
 		AE0C5FF623D2414500BB5340 /* DishButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishButton.swift; sourceTree = "<group>"; };
 		AE0C5FF823D2506800BB5340 /* HomeViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewState.swift; sourceTree = "<group>"; };
@@ -363,6 +369,7 @@
 			isa = PBXGroup;
 			children = (
 				AE7563E223A038190094022B /* Array.swift */,
+				AE0743B3240E4E5000225741 /* Color.swift */,
 				AED2EA0E23F34D990041A195 /* Dictionary.swift */,
 				AEE802B423ED3E8000A1A19E /* Double.swift */,
 				1CE2393023A19722006B7AFD /* Environment.swift */,
@@ -421,6 +428,7 @@
 				AEE6C1E123FDC434001AC6B0 /* TopSheetView.swift */,
 				AE2B6BA323AC211F007BCD25 /* VerticalCardPager.swift */,
 				AEAAAA1523FA225B00ABED23 /* DividerView.swift */,
+				AE0743B1240E4CC300225741 /* InnerShadowView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -429,6 +437,7 @@
 			isa = PBXGroup;
 			children = (
 				AE7563B323A035E70094022B /* HomeView.swift */,
+				AE0743AF240E1A9500225741 /* HomeViewMapOverlay.swift */,
 				AEE561DB23FF278300B51F80 /* HomeViewCuisineFilterPopup.swift */,
 				AEB4A7CA240AF4570057343E /* HomeViewFocusedItem.swift */,
 				AE0C5FF823D2506800BB5340 /* HomeViewState.swift */,
@@ -759,6 +768,7 @@
 				AEE561E023FF64FA00B51F80 /* IconView.swift in Sources */,
 				AE7563E323A038190094022B /* Array.swift in Sources */,
 				AEE1992123F33FA200492B6B /* ApolloNetwork.swift in Sources */,
+				AE0743B2240E4CC300225741 /* InnerShadowView.swift in Sources */,
 				AE7563BC23A037870094022B /* Fixtures.swift in Sources */,
 				AE99091523CE646D00F1763C /* MapService.swift in Sources */,
 				AEB4A7D5240B38250057343E /* ColorsRGBHSV.swift in Sources */,
@@ -802,6 +812,7 @@
 				AEAE67EC23B5A70A00B9D781 /* Map.swift in Sources */,
 				AE861A7923A0651D004096BF /* Keyboard.swift in Sources */,
 				AE0C5FF523D2397D00BB5340 /* PrintGeometryView.swift in Sources */,
+				AE0743B0240E1A9500225741 /* HomeViewMapOverlay.swift in Sources */,
 				AE872FF123CE76AE00F84663 /* HomeSideEffects.swift in Sources */,
 				AE861A8123A16DA6004096BF /* ControlsBarView.swift in Sources */,
 				AEF6558423B59BC000E49A51 /* Home.swift in Sources */,
@@ -829,6 +840,7 @@
 				AED2EA1323F3A2930041A195 /* InvertColorScheme.swift in Sources */,
 				AEA331F523A3381200B36A23 /* DishInput.swift in Sources */,
 				AE79BCE8240CDB8C00224842 /* AnyTransition.swift in Sources */,
+				AE0743B4240E4E5000225741 /* Color.swift in Sources */,
 				AE79BCEF240CDDDD00224842 /* DishCameraView.swift in Sources */,
 				1C6B321A23A2A06100F0A7E6 /* SideDrawerView.swift in Sources */,
 				AEA331F123A3373D00B36A23 /* AccountLoginSignupView.swift in Sources */,

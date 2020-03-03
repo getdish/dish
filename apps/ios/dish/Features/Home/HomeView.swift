@@ -53,29 +53,7 @@ struct HomeView: View {
           }
 
           // map overlay fade to bottom
-          VStack {
-            Spacer()
-            ZStack {
-              self.colorScheme == .dark
-                ? LinearGradient(
-                  gradient: Gradient(colors: [.clear, Color(white: 0, opacity: 0.3)]),
-                    startPoint: .top,
-                    endPoint: .bottom
-                  )
-                : LinearGradient(
-                  gradient: Gradient(colors: [
-                    Color.clear,
-                    Color(white: 1, opacity: 1)
-                  ]),
-                  startPoint: .top,
-                  endPoint: .bottom
-              )
-            }
-            .frame(height: self.screen.height / 2)
-            .drawingGroup()
-          }
-          .allowsHitTesting(false)
-          .disabled(true)
+          HomeViewMapOverlay()
 
           VStack(spacing: 0) {
             MapViewLenseFilterBar()

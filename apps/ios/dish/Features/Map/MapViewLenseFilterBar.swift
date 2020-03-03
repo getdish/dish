@@ -49,12 +49,12 @@ struct MapLenseButton: View, Identifiable, Equatable {
         .modifier(
           ControlsButtonStyle(
             active: active,
-            background: active ? lense.colorBright : lense.color.opacity(0.3),
-            height: 38
+            background: active ? lense.colorBright : .clear,
+            height: 42
           )
         )
         .scaleEffect(active ? 1.1 : 1)
-        .shadow(color: Color.black.opacity(0.5), radius: 2, y: 2)
+        .shadow(color: Color.black.opacity(0.45), radius: 1, y: 1)
         .animation(.spring(response: 0.35))
     }
   }
