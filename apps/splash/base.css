@@ -14,10 +14,9 @@ body {
   background: transparent;
   font-size: 14px;
   line-height: 1.3rem;
-  font-weight: 300;
+  font-weight: 400;
   -webkit-overflow-scrolling: touch;
   -webkit-text-size-adjust: 100%;
-  overflow: hidden;
   text-rendering: optimizeLegibility;
   font-kerning: auto;
 }
@@ -47,7 +46,6 @@ textarea {
     'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
-body,
 div,
 nav,
 main,
@@ -115,35 +113,6 @@ fieldset {
   padding: 0;
 }
 
-code {
-  line-height: 16px;
-  border-radius: 5px;
-  white-space: pre;
-  overflow: auto;
-}
-
-div code {
-  padding: 10px;
-}
-
-p code,
-li code {
-  padding: 0px 4px;
-  margin: -8px 0;
-  line-height: inherit;
-  overflow: hidden;
-  display: inline;
-  white-space: pre-wrap;
-}
-
-pre code {
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 3px;
-  white-space: pre;
-  overflow-x: auto;
-}
-
 /* our styles */
 
 body {
@@ -160,11 +129,11 @@ h4,
 p,
 p img,
 p ul {
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.25rem;
 }
 
 p {
-  line-height: 2.25rem;
+  line-height: 2.35rem;
 }
 
 @media screen and (min-width: 820px) {
@@ -187,4 +156,8 @@ p {
 .main-logo-img {
   width: 400px;
   margin: 20px;
+}
+
+.footer {
+  font-size: 60%;
 }
