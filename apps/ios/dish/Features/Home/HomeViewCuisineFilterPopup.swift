@@ -52,7 +52,7 @@ struct HomeViewCuisineFilterPopup: View {
                 Spacer()
                 Button(action: {
                   self.activeContinent = "All"
-                  self.store.send(.home(.setCuisineFilter("🍽")))
+                  self.store.send(.home(.setCuisineFilter("Cuisine")))
                   self.store.send(.home(.toggleShowCuisineFilter))
                 }) {
                   Text("Clear")

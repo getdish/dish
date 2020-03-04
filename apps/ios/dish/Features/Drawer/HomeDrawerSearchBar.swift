@@ -80,11 +80,12 @@ struct HomeDrawerSearchBar: View {
         return Image(systemName: "chevron.left")
       }
     }()
+    let lense = Selectors.home.activeLense()
 
     //        let isOnSearch = self.store.state.home.showSearch == .search
     return HStack(spacing: 0) {
         SearchInput(
-          placeholder: "",
+          placeholder: "\(lense.name) in \(store.state.map.locationLabel)...",
           inputBackgroundColor: Color.clear,
           borderColor: Color.clear,  //Color.init(white: 0.5, opacity: 0.1),
           scale: 1.2,

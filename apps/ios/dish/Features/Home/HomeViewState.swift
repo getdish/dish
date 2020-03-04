@@ -80,12 +80,21 @@ class HomeViewState: ObservableObject {
     logger.info()
     self.dragState = next
   }
+  
+  var isAnimating = false
 
   func setY(_ dragY: CGFloat, animate: Bool = false) {
+    if isAnimating {
+      return
+    }
     if dragY != y {
       if animate {
+        self.isAnimating = true
         withAnimation(.spring()) {
           self.y = dragY
+        }
+        async(300) {
+          self.isAnimating = false
         }
       } else {
         self.y = dragY

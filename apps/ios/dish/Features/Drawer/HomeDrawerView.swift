@@ -3,8 +3,10 @@ import SwiftUI
 
 struct HomeDrawerView: View, Equatable {
   static func == (lhs: Self, rhs: Self) -> Bool {
-    true
+    lhs.snapPoints.elementsEqual(rhs.snapPoints)
   }
+  
+  var snapPoints: [CGFloat]
 
   @EnvironmentObject var screen: ScreenModel
   @EnvironmentObject var store: AppStore
@@ -19,7 +21,9 @@ struct HomeDrawerView: View, Equatable {
         return self.store.state.home.drawerPosition
 
       },
-      set: { self.store.send(.home(.setDrawerPosition($0))) }
+      set: {
+        self.store.send(.home(.setDrawerPosition($0)))
+      }
     )
   }
   
@@ -57,33 +61,20 @@ struct HomeDrawerView: View, Equatable {
       },
       position: self.drawerPosition,
       preventDragAboveSnapPoint: .middle,
-      snapPoints: App.drawerSnapPoints
+      snapPoints: self.snapPoints
     ) {
       ZStack {
         Spacer()
         
         LinearGradient(
           gradient: .init(
-            colors: [Color(white: 0, opacity: 0.6), Color.clear]
+            colors: [Color(white: 0, opacity: 0.5), Color.clear]
           ),
           startPoint: .top,
           endPoint: .center
         )
         
         HomeMainDrawerContent()
-        
-//        VStack {
-//          BlurView(style: .light)
-//            .frame(height: 100)
-//            .mask(
-//              LinearGradient(
-//                gradient: Gradient(colors: [.clear, .black]), startPoint: .top, endPoint: .bottom
-//              )
-//          )
-//          Spacer()
-//        }
-//        .allowsHitTesting(false)
-//        .disabled(true)
         
         VStack(spacing: 0) {
           VStack(spacing: 0) {
@@ -319,7 +310,7 @@ struct HomeDrawerExploreView: View {
 
   var body: some View {
     VStack {
-      DrawerTitleView()
+//      DrawerTitleView()
       ForEach(0..<self.total) { index in
         DishListItem(
           dish: self.dishes[index],

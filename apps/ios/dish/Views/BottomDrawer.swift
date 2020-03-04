@@ -329,6 +329,7 @@ struct BottomDrawer<Content: View>: View {
     }
     // roughly makes animation speed match throw velocity
     self.mass = 2.65 - max(1, (max(1, min(100, Double(abs(throwAmount)))) / 50))
+    print("🐱 finishing with mass \(self.mass)")
     self.dragOngoing = false
     self.lock = .idle
     // callbacks

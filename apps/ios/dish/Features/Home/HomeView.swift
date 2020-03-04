@@ -18,6 +18,13 @@ struct HomeView: View {
   var mapFullHeight: CGFloat {
     self.screen.height * 1.5
   }
+  
+  var snapPoints: [CGFloat] {
+    return store.state.home.drawerPosition == .bottom &&
+      store.state.home.showFilters == false
+      ? [App.drawerSnapPoints[0], App.drawerSnapPoints[1], App.drawerSnapPoints[2] + App.filterBarHeight]
+      : App.drawerSnapPoints
+  }
 
   @State var lastSearchFocus: SearchFocusState = .off
 
@@ -27,7 +34,7 @@ struct HomeView: View {
       && !self.store.state.home.drawerIsDragging
     let y: CGFloat = (self.screen.height - self.mapFullHeight) * 0.75
       // move with drawer (but just a bit less than half because when fully open, we show a bottom results drawer)
-      + (state.y - App.drawerSnapPoints[1]) * 0.4
+      + (state.y - self.snapPoints[1]) * 0.4
       // adjust for any awkwardness
       + 20
 
@@ -46,7 +53,7 @@ struct HomeView: View {
             ZStack {
               MapViewContainer()
                 .offset(y: y)
-                .animation(.spring(response: 0.15))
+                .animation(.spring(response: 2))
                 .invertColorScheme()
             }
             .frameLimitedToScreen()
@@ -61,7 +68,7 @@ struct HomeView: View {
             Spacer()
           }
           // dont go up beyond mid-point
-            .offset(y: max(App.drawerSnapPoints[1] - 68 - 30, state.y - 68))
+            .offset(y: max(self.snapPoints[1] - 68 - 30, state.y - 68))
             .animation(.spring(response: 0.6))
 
           // map results bar
@@ -70,7 +77,7 @@ struct HomeView: View {
             Spacer()
           }
           .offset(
-            y: App.drawerSnapPoints[2] + (
+            y: self.snapPoints[2] + (
               showMapRow
                 ? -App.mapBarHeight - 68
                 : 0
@@ -83,7 +90,9 @@ struct HomeView: View {
           ControlsBar()
             .equatable()
 
-          HomeDrawerView()
+          HomeDrawerView(
+            snapPoints: self.snapPoints
+          )
             .equatable()
 
           HomeViewFocusedItem(
