@@ -145,16 +145,15 @@ export class Self extends WorkerJob {
     ]
     ratings = ratings.concat(this._getMichelinRating())
     ratings = ratings.map(r => parseFloat(r))
-    for (const rating of ratings) {
-      if (Number.isNaN(rating)) {
-        return
-      }
-    }
+    ratings = ratings.filter(r => !Number.isNaN(r))
     this.restaurant.rating = _.mean(ratings)
   }
 
   private _getMichelinRating() {
     const rating = this.michelin.getData('main.michelin_award')
+    if (rating == '') {
+      return []
+    }
     switch (rating) {
       case 'ONE_STAR':
         return [5.0, 5.0]
