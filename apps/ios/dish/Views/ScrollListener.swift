@@ -10,8 +10,8 @@ struct ScrollListener: View {
   
   @State var didSendStart = false
   @State private var cancellables: Set<AnyCancellable> = []
+  @State var events = ScrollEvents()
   
-  let events = ScrollEvents()
   class ScrollEvents: ObservableObject {
     @Published var lastScroll = 0
   }

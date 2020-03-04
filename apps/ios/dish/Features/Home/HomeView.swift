@@ -90,20 +90,20 @@ struct HomeView: View {
           ControlsBar()
             .equatable()
 
-//          HomeDrawerView(
-//            snapPoints: self.snapPoints
-//          )
-//            .equatable()
-//
-//          HomeViewFocusedItem(
-//            focusedItem: self.store.state.home.focusedItem,
-//            showBookmark: self.store.state.home.drawerPosition != .bottom,
-//            showDescription: self.store.state.home.drawerPosition != .bottom
-//          )
-//
-//          HomeViewCuisineFilterPopup(
-//            active: self.store.state.home.showCuisineFilter
-//          )
+          HomeDrawerView(
+            snapPoints: self.snapPoints
+          )
+            .equatable()
+
+          HomeViewFocusedItem(
+            focusedItem: self.store.state.home.focusedItem,
+            showBookmark: self.store.state.home.drawerPosition != .bottom,
+            showDescription: self.store.state.home.drawerPosition != .bottom
+          )
+
+          HomeViewCuisineFilterPopup(
+            active: self.store.state.home.showCuisineFilter
+          )
 
           // make everything untouchable while dragging
           Color.black.opacity(0.0001)

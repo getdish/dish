@@ -38,8 +38,6 @@ struct HomeDrawerView: View, Equatable {
   var body: some View {
     let isOnLocationSearch = self.store.state.home.searchFocus == .location
     
-    print("drawerPosition \(drawerPosition)")
-    
     return BottomDrawer(
       background: self.drawerBackgroundColor,
       cornerRadius: 25,
@@ -81,7 +79,6 @@ struct HomeDrawerView: View, Equatable {
             HomeDrawerSearchBar()
               .background(
                 BlurView(style: .dark)
-//                Color.black.opacity(0.6)
               )
             HomeDrawerFilterBar()
           }
@@ -105,7 +102,7 @@ struct HomeMainDrawerContent: View {
 
   var body: some View {
     let viewStates = self.store.state.home.viewStates
-    let occludeTopHeight = App.searchBarHeight
+//    let occludeTopHeight = App.searchBarHeight
     return VStack(spacing: 0) {
       ZStack {
         ForEach(viewStates, id: \.id) { viewState in
@@ -185,36 +182,26 @@ struct HomeContentScrollView<Content>: View where Content: View {
     let topContentHeight = App.searchBarHeight + (self.store.state.home.showFilters
       ? App.filterBarHeight : 0)
     
-    print("render")
-    
     return Group {
       ZStack {
         Color.clear.onAppear(perform: self.start)
-        
-        GeometryReader { geo in
-          ScrollView(.vertical, showsIndicators: false) {
-            Color.clear.introspectScrollView { x in
-              if self.state.scrollView == nil {
-                self.state.scrollView = x
-                self.state.start()
-              }
-            }
-            
-            ScrollListener(
-              name: "HomeContentScroll",
-              throttle: 140
-            ) { frame in
-              App.store.send(.home(.setFocusedItem(nil)))
-            }
-            
-            VStack(spacing: 0) {
-              Spacer().frame(height: topContentHeight)
-              self.content
-              Spacer().frame(height: 5 + self.screen.edgeInsets.bottom + self.screen.height / 2)
+        ScrollView(.vertical, showsIndicators: false) {
+          Color.clear.introspectScrollView { x in
+            if self.state.scrollView == nil {
+              self.state.scrollView = x
+              self.state.start()
             }
           }
-          .frame(width: self.screen.width, alignment: .leading)
+          
+          Color.black
+          
+          VStack(spacing: 0) {
+            Spacer().frame(height: topContentHeight)
+            self.content
+            Spacer().frame(height: 5 + self.screen.edgeInsets.bottom + self.screen.height / 2)
+          }
         }
+        .frame(width: self.screen.width, alignment: .leading)
       }
     }
     .disabled(isDisabled)
@@ -310,7 +297,19 @@ struct HomeDrawerExploreView: View {
 
   var body: some View {
     VStack {
-//      DrawerTitleView()
+      HStack {
+        Image(systemName: "arrowtriangle.left.fill")
+          .resizable().scaledToFit().frame(width: 10).opacity(0.34)
+        Spacer()
+        Text("All".uppercased()).tracking(5).fontWeight(.light)
+          .opacity(0.5)
+        Spacer()
+        Image(systemName: "arrowtriangle.right.fill")
+          .resizable().scaledToFit().frame(width: 10).opacity(0.34)
+      }
+      .padding(.horizontal)
+      .offset(y: -10)
+      
       ForEach(0..<self.total) { index in
         DishListItem(
           dish: self.dishes[index],

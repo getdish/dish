@@ -62,10 +62,10 @@ struct HomeDrawerFilterBar: View, Equatable {
           .drawingGroup()
         }
         .transition(AnyTransition.slide.combined(with: .opacity))
+        .animation(.spring(response: 0.8))
+        .frame(height: App.filterBarHeight)
       }
     }
-      .animation(.spring(response: 0.5))
-      .frame(height: App.filterBarHeight)
   }
 }
 
