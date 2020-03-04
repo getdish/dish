@@ -50,7 +50,7 @@ struct MapLenseButton: View, Identifiable, Equatable {
           ControlsButtonStyle(
             active: active,
             background: active ? lense.colorBright : .clear,
-            blurBackground: .systemThickMaterial,
+//            blurBackground: .prominent,
             height: 42
           )
         )

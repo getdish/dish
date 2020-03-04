@@ -47,6 +47,8 @@ struct InnerShadowView: View {
         Spacer()
       }
     }
+    .disabled(true)
+    .allowsHitTesting(false)
   }
 }
 
