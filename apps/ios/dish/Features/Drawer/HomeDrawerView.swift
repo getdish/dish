@@ -210,8 +210,7 @@ struct HomeContentScrollView<Content>: View where Content: View {
               name: "HomeContentScroll",
               throttle: 140
             ) { frame in
-              print("scroll")
-//              App.store.send(.home(.setFocusedItem(nil)))
+              App.store.send(.home(.setFocusedItem(nil)))
             }
             
             VStack(spacing: 0) {
