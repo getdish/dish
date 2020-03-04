@@ -215,10 +215,10 @@ struct ControlsButtonStyle: ViewModifier {
   
   var active: Bool = false
   var background: Color = .clear
+  var blurBackground: UIBlurEffect.Style? = .systemThickMaterialDark
   var cornerRadius: CGFloat = 9
   var height: CGFloat = 34
   var hPad: CGFloat = 11
-  var showBlurBackground: Bool = true
   
   func body(content: Content) -> some View {
     ZStack {
@@ -229,14 +229,14 @@ struct ControlsButtonStyle: ViewModifier {
             .padding(.horizontal, self.hPad)
             .foregroundColor(.white)
             .background(Color.black.opacity(active ? 0 : 0.3))
-            .background(showBlurBackground ? BlurView(style: .systemThinMaterialDark) : nil)
+            .background(blurBackground != nil ? BlurView(style: blurBackground!) : nil)
         } else {
           content
             .frame(height: self.height)
             .padding(.horizontal, self.hPad)
             .background(Color.white.opacity(active ? 0 : 0.2))
             .foregroundColor(.white)
-            .background(showBlurBackground ? BlurView(style: .systemThinMaterialDark) : nil)
+            .background(blurBackground != nil ? BlurView(style: blurBackground!) : nil)
         }
       }
       .background(self.background)
