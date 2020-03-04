@@ -33,6 +33,9 @@ struct HomeDrawerView: View, Equatable {
 
   var body: some View {
     let isOnLocationSearch = self.store.state.home.searchFocus == .location
+    
+    print("drawerPosition \(drawerPosition)")
+    
     return BottomDrawer(
       background: self.drawerBackgroundColor,
       cornerRadius: 25,
