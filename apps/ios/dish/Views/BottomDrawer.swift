@@ -89,7 +89,6 @@ struct BottomDrawer<Content: View>: View {
     self._position = position
     self.content = content()
     self.preventDragAboveSnapPoint = preventDragAboveSnapPoint
-    logger.info("preventDragAboveSnapPoint \(preventDragAboveSnapPoint)")
   }
 
   func getSnapPoint(_ position: BottomDrawerPosition) -> CGFloat {

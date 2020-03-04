@@ -30,7 +30,6 @@ struct HomeDrawerSearchBar: View {
   }
 
   func focusKeyboard() {
-    logger.info()
     self.isFirstResponder = false
     async(2) {
       self.isFirstResponder = true

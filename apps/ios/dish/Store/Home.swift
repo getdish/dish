@@ -200,10 +200,8 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
       state.home.showFilters = !state.home.showFilters
     case .setFocusedItem(let dish):
       if state.home.drawerIsDragging == false {
-        if state.home.focusedItem != dish {
-          state.home.focusedItem = dish
-        }
-    }
+        state.home.focusedItem = dish
+      }
     case .setSelectedMarkers(let markers):
       let last = state.home.viewStates.last!
       if case .search(_, let results) = last.state {
