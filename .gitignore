@@ -80,3 +80,5 @@ iOSInjectionProject/
 .vim
 .env
 k8s/.terraform/*
+
+hasura.logs
