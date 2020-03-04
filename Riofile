@@ -45,6 +45,8 @@ services:
       context: ./
     env:
       - DISH_ENV=production
+      - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
+      - HASURA_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}
       - COMMIT_HASH=${REVISION}
       - REDIS_HOST=redis-master.redis
       - UBEREATS_PROXY=${UBEREATS_PROXY}
