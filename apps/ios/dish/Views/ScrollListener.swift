@@ -19,33 +19,9 @@ struct ScrollListener: View {
   var onScroll: ((CGRect) -> Void)? = nil
 
   var body: some View {
-    let events = self.events
-    
-    return Color.clear
+    Color.clear
       .frame(height: 0)
-      .onAppear {
-        // callbacks
-        events.$lastScroll
-          .dropFirst()
-          .removeDuplicates()
-          .map { _ in
-            if !self.didSendStart,
-              let cb = self.onScrollStart {
-              async {
-                self.didSendStart = true
-                cb()
-              }
-            }
-          }
-          .debounce(for: .milliseconds(120), scheduler: App.queueMain)
-          .sink { _ in
-            self.didSendStart = false
-            if let cb = self.onScrollEnd {
-              cb()
-            }
-          }
-          .store(in: &self.cancellables)
-      }
+      .onAppear(perform: self.start)
       .overlay(
         GeometryReader { geometry -> Run in
           let frame: CGRect = geometry.frame(in: .global)
@@ -57,5 +33,29 @@ struct ScrollListener: View {
           }
         }
       )
+  }
+  
+  func start() {
+    // callbacks
+    events.$lastScroll
+      .dropFirst()
+      .removeDuplicates()
+      .map { _ in
+        if !self.didSendStart,
+          let cb = self.onScrollStart {
+          async {
+            self.didSendStart = true
+            cb()
+          }
+        }
+    }
+    .debounce(for: .milliseconds(120), scheduler: App.queueMain)
+    .sink { _ in
+      self.didSendStart = false
+      if let cb = self.onScrollEnd {
+        cb()
+      }
+    }
+    .store(in: &self.cancellables)
   }
 }
