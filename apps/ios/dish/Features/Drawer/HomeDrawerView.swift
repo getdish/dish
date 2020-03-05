@@ -296,12 +296,14 @@ struct HomeDrawerExploreView: View {
   }
 
   var body: some View {
-    VStack {
+    let lense = Selectors.home.activeLense(store)
+    
+    return VStack {
       HStack {
         Image(systemName: "arrowtriangle.left.fill")
           .resizable().scaledToFit().frame(width: 10).opacity(0.34)
         Spacer()
-        Text("All".uppercased()).tracking(5).fontWeight(.light)
+        Text("\(lense.description ?? "")".uppercased()).tracking(5).fontWeight(.light)
           .opacity(0.5)
         Spacer()
         Image(systemName: "arrowtriangle.right.fill")

@@ -50,7 +50,7 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
     let x = -frame.minX
     if x != self.scrollX {
       async {
-        self.scrollX = x
+        self.scrollX = max(0, x)
         if x <= 0 {
           if let cb = self.onScrolledToStart {
             cb()
@@ -121,6 +121,8 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
                 getImage: self.getImage
               )
             }
+            .id(activeIndex)
+            
             Spacer().frame(width: self.screen.width / 2.5)
           }
           .frame(width: size * CGFloat(total) + self.screen.width / 2.5)
@@ -147,7 +149,7 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
   }
 }
 
-struct ListItemGalleryImage<Content>: View, Identifiable where Content: View {
+struct ListItemGalleryImage<Content>: View where Content: View {
   var activeIndex: CGFloat
   var imageSize: CGFloat
   var index: Int
@@ -155,8 +157,6 @@ struct ListItemGalleryImage<Content>: View, Identifiable where Content: View {
   let stageActiveOffset: CGFloat = 0.8
   let stageTime = 0.99
   var getImage: (Int, CGFloat, Bool) -> Content
-  
-  var id: Int { self.index }
   
   var lB: Double {
     1 - stageTime
@@ -216,6 +216,8 @@ struct ListItemGalleryImage<Content>: View, Identifiable where Content: View {
     if isActive {
       x = x - (uB - strength) * Double(size)
     }
+    
+    print("render \(x)")
     
     return self
       .getImage(index, sizeScaled, isOnStage)

@@ -77,7 +77,7 @@ extension View {
       .shadow(color: .white, radius: shadowRadius, x: -so, y: -so)
   }
 
-  func onGeometryFrameChange(_ callback: @escaping (GeometryProxy) -> Void) -> some View {
+  func onGeometryFrameChange(_ callback: @escaping (CGRect) -> Void) -> some View {
     var last: CGRect? = nil
     return self.overlay(
       GeometryReader { proxy -> Color in
@@ -85,7 +85,7 @@ extension View {
         if last != next {
           last = next
           async {
-            callback(proxy)
+            callback(next)
           }
         }
         return Color.clear

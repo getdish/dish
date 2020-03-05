@@ -293,7 +293,7 @@ struct BottomDrawer<Content: View>: View {
     }
   }
 
-  func onGeometryFrameChange(_ geometry: GeometryProxy) {
+  func onGeometryFrameChange(_ geometry: CGRect) {
     async {
       self.afterChangePosition()
     }

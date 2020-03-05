@@ -86,12 +86,12 @@ struct DishListItemRestaurantCard: View {
         }
       )
       .shadow(radius: 3)
-      .onGeometryFrameChange { geo in
+      .onGeometryFrameChange { frame in
         if self.isActive {
           let next = HomeFocusedItem(
             dish: self.dish,
             rank: self.index + 1,
-            targetMinY: geo.frame(in: .global).minY
+            targetMinY: frame.minY
           )
           if next != App.store.state.home.focusedItem {
             App.store.send(.home(.setFocusedItem(next)))

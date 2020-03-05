@@ -72,6 +72,7 @@ struct RootView: View {
       
       SplashView()
     }
+    .environment(\.colorScheme, .dark)
   }
 }
 
