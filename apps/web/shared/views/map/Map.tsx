@@ -45,6 +45,7 @@ const Map = () => {
     ) {
       mapState.bounds = map.getBounds()
       setMapState(mapState)
+      actions.map.setMapCentre(map.getCenter())
       actions.map.updateRestaurants(map.getCenter())
     }
   }
@@ -96,7 +97,6 @@ const Map = () => {
             onClick={(mapWithEvt: any) => {
               const id = mapWithEvt.feature.properties.uuid
               actions.map.setSelected(id)
-              actions.map.getAllDataForRestaurant()
             }}
           />
         ))}

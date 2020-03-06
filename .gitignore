@@ -82,3 +82,5 @@ iOSInjectionProject/
 k8s/.terraform/*
 
 hasura.logs
+
+web-build

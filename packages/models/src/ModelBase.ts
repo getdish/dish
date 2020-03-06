@@ -46,6 +46,8 @@ if (typeof window === 'undefined') {
   }
 }
 
+DOMAIN = 'https://hasura.rio.dishapp.com'
+
 let AXIOS_CONF = {
   url: DOMAIN + '/v1/graphql',
   method: 'POST',
@@ -128,7 +130,7 @@ export class ModelBase<T> {
     if (isNode) {
       return ['id', 'created_at', 'updated_at']
     }
-    return []
+    return ['id']
   }
 
   static fields() {

@@ -69,6 +69,17 @@ services:
       - DISH_ENV=production
       - COMMIT_HASH=${REVISION}
       - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
+  web:
+    image: dish/web
+    build:
+      dockerfile: ./apps/web/Dockerfile
+      context: ./
+    ports:
+      - 5000/http
+    env:
+      - DISH_ENV=production
+      - COMMIT_HASH=${REVISION}
+      - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
   jwt-server:
     image: dish/jwt-server
     build:

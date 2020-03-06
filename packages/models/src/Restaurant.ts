@@ -98,6 +98,41 @@ export class Restaurant extends ModelBase<Restaurant> {
     )
   }
 
+  static async search(
+    lat: number,
+    lng: number,
+    distance: number,
+    search_query: string
+  ) {
+    const query = {
+      query: {
+        restaurant: {
+          __args: {
+            where: {
+              name: { _ilike: '%' + search_query + '%' },
+              location: {
+                _st_d_within: {
+                  distance: distance,
+                  from: {
+                    type: 'Point',
+                    coordinates: [lng, lat],
+                  },
+                },
+              },
+            },
+            limit: 10,
+          },
+          id: true,
+          name: true,
+        },
+      },
+    }
+    const response = await ModelBase.hasura(query)
+    return response.data.data.restaurant.map(
+      (data: Partial<Restaurant>) => data
+    )
+  }
+
   async getLatestScrape(source: string) {
     const query = {
       query: {
