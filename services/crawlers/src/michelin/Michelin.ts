@@ -32,9 +32,12 @@ export class Michelin extends WorkerJob {
     attempts: 3,
   }
 
-  async allForRegion(region: string, page: number = 1) {
+  constructor() {
+    super()
     console.log('Starting Michelin crawler. Using domain: ' + MICHELIN_DOMAIN)
+  }
 
+  async allForRegion(region: string, page: number = 1) {
     const [uri, data] = this.buildRequest(region, page)
     const response = await axios.post(uri as string, data)
     const restaurants = response.data.results[0].hits

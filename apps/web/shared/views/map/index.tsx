@@ -6,7 +6,6 @@ import Sidebar from './Sidebar'
 export const LabMap = () => {
   return (
     <div>
-      <Sidebar />
       <Map />
     </div>
   )

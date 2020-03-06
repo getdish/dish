@@ -2,8 +2,9 @@ import { IConfig, createOvermind } from 'overmind'
 import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/config'
 
-import * as dishes from './dishes/overmind-dishes'
-import * as map from './map/overmind-map'
+import * as dishes from './dishes'
+import * as map from './map'
+import * as auth from './auth'
 
 export const config = merge(
   {
@@ -14,6 +15,7 @@ export const config = merge(
   namespaced({
     map,
     dishes,
+    auth,
   })
 )
 

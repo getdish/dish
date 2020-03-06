@@ -14,6 +14,7 @@ import { EnumType, jsonToGraphQLQuery } from 'json-to-graphql-query'
 import auth from '@dish/auth'
 
 const isNode = typeof window == 'undefined'
+const isBrowserProd = !isNode && window.location.hostname.includes('dish')
 let WebSocket: WebSocket
 
 if (isNode) {
@@ -38,7 +39,7 @@ if (typeof window === 'undefined') {
     process.env.REACT_APP_HASURA_ENDPOINT ||
     LOCAL_HASURA
 } else {
-  if (window.location.hostname.includes('dish')) {
+  if (isBrowserProd) {
     DOMAIN = 'https://hasura.rio.dishapp.com'
   } else {
     DOMAIN = process.env.REACT_APP_HASURA_ENDPOINT || LOCAL_HASURA
@@ -124,7 +125,10 @@ export class ModelBase<T> {
   private _lower_name: string
 
   static default_fields() {
-    return ['id', 'created_at', 'updated_at']
+    if (isNode) {
+      return ['id', 'created_at', 'updated_at']
+    }
+    return []
   }
 
   static fields() {
@@ -408,7 +412,6 @@ export class ModelBase<T> {
 
 class HasuraError extends Error {
   constructor(public query: string, public errors: {} = {}) {
-    super()
-    this.message = util.inspect(errors)
+    super(isBrowserProd ? JSON.stringify(errors) : util.inspect(errors))
   }
 }

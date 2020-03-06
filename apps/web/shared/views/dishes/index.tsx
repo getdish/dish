@@ -1,10 +1,16 @@
-import { Col, Row, Grid } from "react-native-easy-grid";
+import { Col, Row, Grid } from 'react-native-easy-grid'
 import { FetchResult, gql, useQuery, useSubscription } from '@apollo/client'
 import { ModelBase, Taxonomy, TaxonomyRecord, TaxonomyType } from '@dish/models'
-import { View, Text, Button, TextInput, TouchableNativeFeedback } from 'react-native'
+import {
+  View,
+  Text,
+  Button,
+  TextInput,
+  TouchableNativeFeedback,
+} from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { Ionicons } from '@expo/vector-icons';
-import Tappable from "../../views/Tappable";
+import { Ionicons } from '@expo/vector-icons'
+import Tappable from '..//Tappable'
 
 const CONTINENTS_SUBSCRIPTION = gql`
 subscription Taxonomy {
@@ -118,9 +124,7 @@ export const LabDishes = () => {
         : 'country'
     return (
       <>
-        <Text>
-          {type}
-        </Text>
+        <Text>{type}</Text>
         <Col>
           <Button
             title="Add new"
@@ -251,66 +255,64 @@ const ListItem = ({
     //   name={isActive ? 'selected' : null}
     //   coat={isFormerlyActive ? 'selectedInactive' : null}
     // >
-      <Tappable
-        onTap={() => {
-          setTimeout(() => {
-            if (!isActive) {
-              if (setActive && typeof row == 'number') {
-                setActive([row, col])
-              }
+    <Tappable
+      onTap={() => {
+        setTimeout(() => {
+          if (!isActive) {
+            if (setActive && typeof row == 'number') {
+              setActive([row, col])
             }
-          })
-        }}
-        onDoubleTap={() => {
-            if (editable) {
-              setIsEditing(true)
-            }
-          }}
-      >
-        <Row>
-          <Row size={1}>
-            {isEditing && (
-              <TextInput
-                // onEnter={e => {
-                //   setIsEditing(false)
-                //   const [icon, ...nameParts] = e.target['value'].split(' ')
-                //   const name = nameParts.join(' ')
-                //   const next: TaxonomyRecord = {
-                //     ...taxonomy,
-                //     icon,
-                //     name,
-                //   }
-                //   console.log('next is', next)
-                //   upsert(next)
-                // }}
-                defaultValue={text as any}
-              />
-            )}
-            {!isEditing && <Text>{text}</Text>}
+          }
+        })
+      }}
+      onDoubleTap={() => {
+        if (editable) {
+          setIsEditing(true)
+        }
+      }}
+    >
+      <Row>
+        <Row size={1}>
+          {isEditing && (
+            <TextInput
+              // onEnter={e => {
+              //   setIsEditing(false)
+              //   const [icon, ...nameParts] = e.target['value'].split(' ')
+              //   const name = nameParts.join(' ')
+              //   const next: TaxonomyRecord = {
+              //     ...taxonomy,
+              //     icon,
+              //     name,
+              //   }
+              //   console.log('next is', next)
+              //   upsert(next)
+              // }}
+              defaultValue={text as any}
+            />
+          )}
+          {!isEditing && <Text>{text}</Text>}
 
-            <div style={{ flex: 1 }} />
+          <div style={{ flex: 1 }} />
 
-            {deletable && (
-              <TouchableNativeFeedback
-                onPress={e => {
-                  e.stopPropagation()
-                  setHidden(true)
-                  ModelBase.client.mutate({
-                    variables: {
-                      id: taxonomy.id,
-                    },
-                    mutation: TAXONOMY_DELETE,
-                  })
-                }}
-              >
-                  <Ionicons
-                    name="md-checkmark-circle"
-                  />
-              </TouchableNativeFeedback>
-            )}
-          </Row>
+          {deletable && (
+            <TouchableNativeFeedback
+              onPress={e => {
+                e.stopPropagation()
+                setHidden(true)
+                ModelBase.client.mutate({
+                  variables: {
+                    id: taxonomy.id,
+                  },
+                  mutation: TAXONOMY_DELETE,
+                })
+              }}
+            >
+              <Ionicons name="md-checkmark-circle" />
+            </TouchableNativeFeedback>
+          )}
         </Row>
-      </Tappable>
+      </Row>
+    </Tappable>
     // </Theme>
   )
 }
@@ -345,19 +347,19 @@ function MenuItems({
           data.dish.map((dish, index) => {
             const isActive = active[0] === 0 && index === active[1]
             return (
-                <Col
-                  // name={isActive ? 'selected' : null}
-                  key={dish.id}
-                  onPress={() => {
-                    setTimeout(() => {
-                      if (!isActive) {
-                        setActive([4, index])
-                      }
-                    })
-                  }}
-                >
-                  <Text>{dish.name}</Text>
-                </Col>
+              <Col
+                // name={isActive ? 'selected' : null}
+                key={dish.id}
+                onPress={() => {
+                  setTimeout(() => {
+                    if (!isActive) {
+                      setActive([4, index])
+                    }
+                  })
+                }}
+              >
+                <Text>{dish.name}</Text>
+              </Col>
             )
           })}
       </Col>

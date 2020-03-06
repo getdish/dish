@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import util from 'util'
 
-import { useOvermind } from '../overmind'
+import { useOvermind } from '../../state/om'
 
 const Sidebar = () => {
   const { state, actions } = useOvermind()

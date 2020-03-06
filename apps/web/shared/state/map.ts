@@ -1,4 +1,4 @@
-import { Dish, Restaurant, Scrape, ScrapeData } from '@dish/models'
+import { Dish, Restaurant, ScrapeData } from '@dish/models'
 import { LngLat } from 'mapbox-gl'
 import { Action, AsyncAction } from 'overmind'
 
@@ -50,21 +50,10 @@ const getAllDataForRestaurant: AsyncAction = async om => {
   const restaurant = new Restaurant()
   await restaurant.findOne('id', state.selected.id)
   om.state.map.selected.model = restaurant
-  om.state.map.selected.scrapes = {
-    yelp: (await restaurant.getLatestScrape('yelp')).data,
-    ubereats: (await restaurant.getLatestScrape('ubereats')).data,
-  }
-}
-
-const getStats: AsyncAction = async om => {
-  om.state.map.stats.restaurant_count = await Restaurant.allCount()
-  om.state.map.stats.dish_count = await Dish.allCount()
-  om.state.map.stats.scrape_count = await Scrape.allCount()
 }
 
 export const actions = {
   updateRestaurants: updateRestaurants,
   setSelected: setSelected,
-  getStats: getStats,
   getAllDataForRestaurant: getAllDataForRestaurant,
 }
