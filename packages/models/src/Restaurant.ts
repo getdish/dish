@@ -210,6 +210,41 @@ export class Restaurant extends ModelBase<Restaurant> {
     return restaurant
   }
 
+  static async highestRatedByDish(
+    lat: number,
+    lng: number,
+    distance: number,
+    dishes: string[]
+  ) {
+    const query = {
+      query: {
+        restaurant: {
+          __args: {
+            where: {
+              categories: { _contains: dishes },
+              location: {
+                _st_d_within: {
+                  distance: distance,
+                  from: {
+                    type: 'Point',
+                    coordinates: [lng, lat],
+                  },
+                },
+              },
+            },
+            limit: 50,
+            order_by: { rating: new EnumType('desc_nulls_last') },
+          },
+          ...Restaurant.fieldsAsObject(),
+        },
+      },
+    }
+    const response = await ModelBase.hasura(query)
+    return response.data.data.restaurant.map(
+      (data: Partial<Restaurant>) => data
+    )
+  }
+
   async delete() {
     await Restaurant.deleteAllBy('id', this.id)
   }

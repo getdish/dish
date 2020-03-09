@@ -104,9 +104,6 @@ function Content() {
     >
       <View style={styles.container}>
         <Switch>
-          <Route exact path="/">
-            <LabMap />
-          </Route>
           <Route path="/login">
             <LabAuth />
           </Route>
@@ -116,6 +113,9 @@ function Content() {
           <PrivateRoute path="/taxonomy">
             <LabDishes />
           </PrivateRoute>
+          <Route path="/">
+            <LabMap />
+          </Route>
         </Switch>
       </View>
       <TouchableOpacity

@@ -69,13 +69,6 @@ export class Self extends WorkerJob {
     this.restaurant = restaurant
     console.log('Merging: ' + this.restaurant.name)
     await this.getScrapeData()
-    if (!('data' in this.yelp) && !('data' in this.ubereats)) {
-      console.log(
-        `Deleting ${this.restaurant.name} for not having any scrape data`
-      )
-      await this.restaurant.delete()
-      return
-    }
     this.mergeName()
     this.mergeTelephone()
     this.mergeAddress()
@@ -237,6 +230,9 @@ export class Self extends WorkerJob {
     let photos: string[] = []
     let page = 0
     let key: string
+    if (!this.yelp.data) {
+      return []
+    }
     while (true) {
       key = 'photosp' + page
       if (key in this.yelp.data) {

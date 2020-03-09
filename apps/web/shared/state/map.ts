@@ -1,31 +1,41 @@
-import { Dish, Restaurant, ScrapeData } from '@dish/models'
+import { ModelBase, Dish, Restaurant, ScrapeData } from '@dish/models'
 import { LngLat } from 'mapbox-gl'
 import { Action, AsyncAction } from 'overmind'
 import SlidingUpPanel from 'rn-sliding-up-panel'
 import { Dimensions } from 'react-native'
 
+type TopDish = {
+  category: string
+  frequency: number
+}
+
 type LabState = {
   restaurants: { [key: string]: Restaurant }
-  selected: {
-    id: string
-    model: Restaurant
-  }
   panel: SlidingUpPanel
   centre: LngLat
-  search_results: Partial<Restaurant>
+  search_results: Partial<Restaurant>[]
+  top_dishes: TopDish[]
+  top_restaurants: Partial<Restaurant>[]
+  current_dish: string
+  current_restaurant: Partial<Restaurant>
 }
 
 const RADIUS = 0.015
 
 export const state: LabState = {
   restaurants: {},
-  selected: {
-    id: '',
-    model: {} as Restaurant,
-  },
   panel: {} as SlidingUpPanel,
-  centre: {} as LngLat,
-  search_results: [] as Partial<Restaurant>,
+  centre: { lng: -122.421351, lat: 37.759251 } as LngLat,
+  search_results: [],
+  top_dishes: [],
+  top_restaurants: [],
+  current_dish: '',
+  current_restaurant: {},
+}
+
+const openPanel = om => {
+  const height = Dimensions.get('window').height
+  om.state.map.panel.show(height / 2)
 }
 
 const updateRestaurants: AsyncAction<LngLat> = async (om, centre: LngLat) => {
@@ -35,24 +45,58 @@ const updateRestaurants: AsyncAction<LngLat> = async (om, centre: LngLat) => {
   }
 }
 
-const setSelected: Action<string> = (om, id: string) => {
-  const height = Dimensions.get('window').height
-  om.state.map.selected.id = id
-  om.actions.map.getAllDataForRestaurant()
-  om.state.map.panel.show(height / 2)
+const getCurrentRestaurant: ActionAsync<string> = async (om, slug: string) => {
+  const restaurant = new Restaurant()
+  const response = await restaurant.findOne('id', slug)
+  om.state.map.current_restaurant = restaurant
+  om.state.map.centre = {
+    lng: restaurant.location.coordinates[0],
+    lat: restaurant.location.coordinates[1] - 0.0037,
+  }
+  openPanel(om)
 }
 
 const setPanel: Action<SlidingUpPanel> = (om, panel: SlidingUpPanel) => {
   om.state.map.panel = panel
 }
 
-const getAllDataForRestaurant: AsyncAction = async om => {
-  const restaurant = new Restaurant()
-  await restaurant.findOne('id', om.state.map.selected.id)
-  om.state.map.selected.model = restaurant
+const getTopDishes: AsyncAction = async om => {
+  const query = {
+    query: {
+      top_dishes: {
+        __args: {
+          args: {
+            lon: om.state.map.centre.lng,
+            lat: om.state.map.centre.lat,
+            radius: RADIUS,
+          },
+        },
+        category: true,
+        frequency: true,
+      },
+    },
+  }
+  const response = await ModelBase.hasura(query)
+  om.state.map.top_dishes = response.data.data.top_dishes
+  openPanel(om)
 }
 
-const getTopDishes: AsyncAction = async om => {}
+const setFilters: Action<string[]> = (om, filters: string[]) => {}
+
+const getTopRestaurantsByDish: AsyncAction<string> = async (
+  om,
+  dish: string
+) => {
+  om.state.map.top_restaurants = []
+  om.state.map.top_restaurants = await Restaurant.highestRatedByDish(
+    om.state.map.centre.lat,
+    om.state.map.centre.lng,
+    RADIUS * 10,
+    [dish]
+  )
+  om.state.map.current_dish = dish
+  openPanel(om)
+}
 
 const restaurantSearch: AsyncAction<string> = async (om, query: string) => {
   om.state.map.search_results = [{ name: 'searching...' }]
@@ -70,8 +114,8 @@ const setMapCentre: Action<LngLat> = (om, centre: LngLat) => {
 
 export const actions = {
   updateRestaurants: updateRestaurants,
-  setSelected: setSelected,
-  getAllDataForRestaurant: getAllDataForRestaurant,
+  getCurrentRestaurant: getCurrentRestaurant,
+  getTopRestaurantsByDish: getTopRestaurantsByDish,
   setPanel: setPanel,
   getTopDishes: getTopDishes,
   restaurantSearch: restaurantSearch,

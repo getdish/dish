@@ -1,7 +1,11 @@
-import React, { JSX } from 'react'
+import React, { JSX, useEffect } from 'react'
 import { Image, Text, View } from 'react-native'
+import { Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import { useOvermind } from '../../state/om'
+
+import { Restaurant } from '@dish/models'
 
 const styles = {
   container: {},
@@ -10,11 +14,16 @@ const styles = {
   },
 }
 
-export default function Restaurant() {
+export default function RestaurantView() {
   const { state, actions } = useOvermind()
-  const restaurant = state.map.selected.model
+  const { slug } = useParams()
+  let restaurant = state.map.current_restaurant
+  if (slug != state.map.current_restaurant.id) {
+    restaurant = {}
+    actions.map.getCurrentRestaurant(slug)
+  }
   if (typeof restaurant.name == 'undefined') {
-    return null
+    return <Text>Loading...</Text>
   }
   const categories = restaurant.categories || []
   let images: JSX.Element[] = []
@@ -27,11 +36,27 @@ export default function Restaurant() {
       />
     )
   }
+  let categories_links: JSX.Element[] = []
+  for (let i = 0; i < categories.length; i++) {
+    const category = categories[i]
+    const separator = i == categories.length - 1 ? '' : ', '
+    categories_links.push(
+      <Text>
+        <Link to={'/best/' + category}>{category}</Link>
+        {separator}
+      </Text>
+    )
+  }
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={{ fontSize: 30 }}>{restaurant.name} ⭐⭐⭐⭐</Text>
-        <Text style={{ fontSize: 15 }}>{categories.join(', ')}</Text>
+        <Text style={{ fontSize: 30 }}>
+          {restaurant.name} // {restaurant.rating}⭐
+        </Text>
+        <Text style={{ fontSize: 15 }}>{categories_links}</Text>
+        <Link to="/" style={{ alignSelf: 'flex-end' }}>
+          Back to Top Dishes
+        </Link>
       </View>
       <View>
         <Image

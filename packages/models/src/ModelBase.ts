@@ -33,7 +33,7 @@ const LOCAL_HASURA = `http://localhost:8080`
 
 let DOMAIN: string
 
-if (typeof window === 'undefined') {
+if (isNode) {
   DOMAIN =
     process.env.HASURA_ENDPOINT ||
     process.env.REACT_APP_HASURA_ENDPOINT ||
@@ -45,8 +45,6 @@ if (typeof window === 'undefined') {
     DOMAIN = process.env.REACT_APP_HASURA_ENDPOINT || LOCAL_HASURA
   }
 }
-
-DOMAIN = 'https://hasura.rio.dishapp.com'
 
 let AXIOS_CONF = {
   url: DOMAIN + '/v1/graphql',

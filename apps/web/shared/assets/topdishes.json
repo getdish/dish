@@ -1,0 +1,688 @@
+[
+  {
+    "name": "\"Sandwiches\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/RU_PCwepKUox5tHY80egNw/l.jpg",
+    "frequency": 173
+  },
+  {
+    "name": "\"Breakfast & Brunch\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/s4wk-rB82X-KlWqQwaqf1Q/l.jpg",
+    "frequency": 152
+  },
+  {
+    "name": "\"Chinese\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/ytRuBoVbePT-jf184ZB2EA/l.jpg",
+    "frequency": 138
+  },
+  {
+    "name": "\"American (New)\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/s4wk-rB82X-KlWqQwaqf1Q/l.jpg",
+    "frequency": 127
+  },
+  {
+    "name": "\"Mexican\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/42V-qXByWmZaD4xiEJbU-g/l.jpg",
+    "frequency": 119
+  },
+  {
+    "name": "\"Seafood\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/gvEPu9jGnaPNf9iTOuFtug/l.jpg",
+    "frequency": 113
+  },
+  {
+    "name": "\"Pizza\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/xsdPnMFwKJJK-WJZ9-m1rQ/l.jpg",
+    "frequency": 101
+  },
+  {
+    "name": "\"American (Traditional)\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/f_-srGHdq-U9OofpoyC17g/l.jpg",
+    "frequency": 97
+  },
+  {
+    "name": "\"Italian\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/2IdfAzkuNqkQJa4drYHa2Q/l.jpg",
+    "frequency": 95
+  },
+  {
+    "name": "\"Japanese\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/tBmRml-1iPfNQC8oeqKAWw/l.jpg",
+    "frequency": 89
+  },
+  {
+    "name": "\"Sushi Bars\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/8zec3jzRYv8cwnMs2Da04Q/l.jpg",
+    "frequency": 86
+  },
+  {
+    "name": "\"Coffee & Tea\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/s1kLMdXBuOkoeoKB-0N1pg/o.jpg",
+    "frequency": 83
+  },
+  {
+    "name": "\"Burgers\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/B4n-WqplJSnw0DhPoCwEtA/l.jpg",
+    "frequency": 81
+  },
+  {
+    "name": "\"Vietnamese\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/kcegZZiES-NVdZpudJxH8g/l.jpg",
+    "frequency": 78
+  },
+  {
+    "name": "\"Noodles\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/fMAY-waUPruz5d31hPz0Yw/l.jpg",
+    "frequency": 75
+  },
+  {
+    "name": "\"Cafes\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/s4wk-rB82X-KlWqQwaqf1Q/l.jpg",
+    "frequency": 71
+  },
+  {
+    "name": "\"Thai\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/lCLfNrSZS4QtzILpyOqigA/l.jpg",
+    "frequency": 69
+  },
+  {
+    "name": "\"Asian Fusion\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/AGk4fg4PP6SW6T8_f7CEvg/l.jpg",
+    "frequency": 63
+  },
+  {
+    "name": "\"Cocktail Bars\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/7nTqLJLJzSQVBWeZOvJdnw/l.jpg",
+    "frequency": 63
+  },
+  {
+    "name": "\"Mediterranean\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/40mXxiAb_2Sd7QKlkOFhdQ/l.jpg",
+    "frequency": 60
+  },
+  {
+    "name": "\"Wine Bars\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/BdaPAQ1vu2WbiteNsh37Sg/l.jpg",
+    "frequency": 59
+  },
+  {
+    "name": "\"Bars\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/HokxeoQQh2wxZgjVT5CViQ/l.jpg",
+    "frequency": 58
+  },
+  {
+    "name": "\"Delis\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/RU_PCwepKUox5tHY80egNw/l.jpg",
+    "frequency": 58
+  },
+  {
+    "name": "\"Indian\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/nECnJAHDizwaoghvlM6t7g/l.jpg",
+    "frequency": 48
+  },
+  {
+    "name": "\"Dim Sum\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/xC1x-ZrNGKLgOyZ7xcdxHg/l.jpg",
+    "frequency": 47
+  },
+  {
+    "name": "\"Korean\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/nJ6oSj85YxEI4Hw_d1gm5w/l.jpg",
+    "frequency": 47
+  },
+  {
+    "name": "\"Salad\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/lb_v-HW0FbQIfvGIX1lVrA/l.jpg",
+    "frequency": 45
+  },
+  {
+    "name": "\"Ramen\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/2lUFO5HWD7_RLDWlT5Nvuw/l.jpg",
+    "frequency": 43
+  },
+  {
+    "name": "\"Fast Food\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/d0g1-EQ02--ORtp4j4a_xA/l.jpg",
+    "frequency": 40
+  },
+  {
+    "name": "\"Barbeque\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/zIBtTUROwf2M1KIfY7E8Bw/l.jpg",
+    "frequency": 38
+  },
+  {
+    "name": "\"Bakeries\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/_lUQ88DByHQwLW_NEGr2vQ/l.jpg",
+    "frequency": 36
+  },
+  {
+    "name": "\"Desserts\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/2IdfAzkuNqkQJa4drYHa2Q/l.jpg",
+    "frequency": 35
+  },
+  {
+    "name": "\"Chicken Wings\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/AGk4fg4PP6SW6T8_f7CEvg/l.jpg",
+    "frequency": 31
+  },
+  {
+    "name": "\"Tapas/Small Plates\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/hAU-m8FEBFdMKsTd08EBrw/l.jpg",
+    "frequency": 28
+  },
+  {
+    "name": "\"Cantonese\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/PrydbbW0HGMnpK5XLlg7zQ/l.jpg",
+    "frequency": 27
+  },
+  {
+    "name": "\"Filipino\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/ABuuTbu7nwNPJw6_I3K3wA/l.jpg",
+    "frequency": 25
+  },
+  {
+    "name": "\"French\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/YLoZeFiwpqb-gNMi_qFeQQ/l.jpg",
+    "frequency": 25
+  },
+  {
+    "name": "\"Venues & Event Spaces\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/wvTCIBwYUix2zPx4NOTydA/l.jpg",
+    "frequency": 24
+  },
+  {
+    "name": "\"Beer, Wine & Spirits\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/9PEIR2uNA9duxlyAh9bT0g/l.jpg",
+    "frequency": 23
+  },
+  {
+    "name": "\"Hot Pot\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/if7INClNHThK5gVp6mu7bg/l.jpg",
+    "frequency": 23
+  },
+  {
+    "name": "\"Sports Bars\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/pNgS799R6U-Ydb8H6_r2bg/l.jpg",
+    "frequency": 23
+  },
+  {
+    "name": "\"Latin American\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/D_p2n7XVI4lc6nfHPsqvIQ/l.jpg",
+    "frequency": 22
+  },
+  {
+    "name": "\"Bubble Tea\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/lFs0UWLYhefpDnmKRWTOAQ/l.jpg",
+    "frequency": 20
+  },
+  {
+    "name": "\"Salvadoran\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/BEWMQoyfWgWrnumG4Oj0Iw/l.jpg",
+    "frequency": 20
+  },
+  {
+    "name": "\"Caterers\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/X0VLOUiPJj3k91QGT-2E6w/l.jpg",
+    "frequency": 19
+  },
+  {
+    "name": "\"Juice Bars & Smoothies\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/6V8FNLDRMryWw9XMt89yhg/l.jpg",
+    "frequency": 19
+  },
+  {
+    "name": "\"Middle Eastern\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/HKNpeIPlKb1ofh26ZAzsFQ/l.jpg",
+    "frequency": 19
+  },
+  {
+    "name": "\"Pop-Up Restaurants\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/d85IT3yM0X-wJ-KAx58Ogw/l.jpg",
+    "frequency": 19
+  },
+  {
+    "name": "\"Soup\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/fMAY-waUPruz5d31hPz0Yw/l.jpg",
+    "frequency": 19
+  },
+  {
+    "name": "\"Gastropubs\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/FKp7GNDf-9os_zR4Is1zqA/l.jpg",
+    "frequency": 18
+  },
+  {
+    "name": "\"Halal\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/yD4wbjvAS8G0yxnQ-C-JKA/l.jpg",
+    "frequency": 18
+  },
+  {
+    "name": "\"Steakhouses\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/ObOuf1SDnG4Rbffq-BYvfA/l.jpg",
+    "frequency": 18
+  },
+  {
+    "name": "\"Grocery\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/O-JuPcmCwd5f4iYzQzht7A/l.jpg",
+    "frequency": 17
+  },
+  {
+    "name": "\"Hawaiian\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/0oxafVtJHvhzumRzXAOr4g/l.jpg",
+    "frequency": 17
+  },
+  {
+    "name": "\"Gluten-Free\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/1yXDZJmr62xhhOEk7MMakw/l.jpg",
+    "frequency": 16
+  },
+  {
+    "name": "\"Greek\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/YAjeBu1fTdR4tyT7-DPdWQ/l.jpg",
+    "frequency": 16
+  },
+  {
+    "name": "\"Hong Kong Style Cafe\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/PrydbbW0HGMnpK5XLlg7zQ/l.jpg",
+    "frequency": 16
+  },
+  {
+    "name": "\"Diners\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/UEI-HwnXWrTklLn-klgFag/l.jpg",
+    "frequency": 15
+  },
+  {
+    "name": "\"Peruvian\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/wYR02iGQbAHdjj5aTT3PzA/l.jpg",
+    "frequency": 15
+  },
+  {
+    "name": "\"Tacos\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/XLMNd7xMZB-elzwionAm9g/l.jpg",
+    "frequency": 15
+  },
+  {
+    "name": "\"Turkish\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/HKNpeIPlKb1ofh26ZAzsFQ/l.jpg",
+    "frequency": 15
+  },
+  {
+    "name": "\"Vegetarian\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/lb_v-HW0FbQIfvGIX1lVrA/l.jpg",
+    "frequency": 15
+  },
+  {
+    "name": "\"Bagels\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/RU_PCwepKUox5tHY80egNw/l.jpg",
+    "frequency": 14
+  },
+  {
+    "name": "\"Chicken Shop\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/mgWQtAcbtc0fZ4PXBAHlKA/l.jpg",
+    "frequency": 14
+  },
+  {
+    "name": "\"Cajun/Creole\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/MHCAko9r1IXZwu4elJ_J7Q/l.jpg",
+    "frequency": 13
+  },
+  {
+    "name": "\"Food Trucks\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/mjA_wYGhC6BdYNQ2mOPt2A/l.jpg",
+    "frequency": 13
+  },
+  {
+    "name": "\"Izakaya\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/-1BWnyjrsDmTmXH_3wZl_w/l.jpg",
+    "frequency": 13
+  },
+  {
+    "name": "\"Southern\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/3df1ro4jFVpDJTNbEQE6Ng/l.jpg",
+    "frequency": 13
+  },
+  {
+    "name": "\"Beer Bar\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/QeIATe-5SIU-bTrAjHfdDQ/l.jpg",
+    "frequency": 12
+  },
+  {
+    "name": "\"Comfort Food\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/-P5svRZM0FiPmd4LMFfhnA/l.jpg",
+    "frequency": 12
+  },
+  {
+    "name": "\"Himalayan/Nepalese\"",
+    "image": "https://secure-cf-c.ooyala.com/JoaGpzaDE6jwpkuM6vAndW7Ig-JkhPeu/Ut_HKthATH4eww8X4xMDoxOjBhOzV3Va",
+    "frequency": 12
+  },
+  {
+    "name": "\"Tapas Bars\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/-vv358FKLfNscUdn23EfbA/l.jpg",
+    "frequency": 12
+  },
+  { "name": "\"Breweries\"", "image": null, "frequency": 11 },
+  {
+    "name": "\"Burmese\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/eGj4Xr73QB7RwJcZO2yQ4w/l.jpg",
+    "frequency": 10
+  },
+  {
+    "name": "\"Food Stands\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/FsrHpo7ZUPa6dqRNIOadhg/o.jpg",
+    "frequency": 10
+  },
+  {
+    "name": "\"Lounges\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/XY0ukUHy6-duohHnkyOmdg/l.jpg",
+    "frequency": 10
+  },
+  {
+    "name": "\"Spanish\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/vfo34oL9X0oJjX0xU2Q1aA/l.jpg",
+    "frequency": 10
+  },
+  {
+    "name": "\"Szechuan\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/QOBPIFQVOXYDM1cdYwwatg/l.jpg",
+    "frequency": 10
+  },
+  {
+    "name": "\"Vegan\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/-I8J0Ebb-Q-62VS1fpQYrQ/l.jpg",
+    "frequency": 10
+  },
+  {
+    "name": "\"Buffets\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/pjd_QmBovdQljI-oUyefIA/l.jpg",
+    "frequency": 9
+  },
+  {
+    "name": "\"Donuts\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/4YjSSNUn23CEFd-v6XvFKw/l.jpg",
+    "frequency": 9
+  },
+  {
+    "name": "\"German\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/KieulF5MOZ3rUS7WpeRJ_A/l.jpg",
+    "frequency": 9
+  },
+  {
+    "name": "\"Japanese Curry\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/9xXFxj5ZncgBQqUoVKiN2w/l.jpg",
+    "frequency": 9
+  },
+  {
+    "name": "\"Poke\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/ywd7Zmrch8IdWbDoRJHSXQ/l.jpg",
+    "frequency": 9
+  },
+  {
+    "name": "\"Taiwanese\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/PsEyIZMZx1DnBcf0PeOqlA/l.jpg",
+    "frequency": 9
+  },
+  {
+    "name": "\"Brazilian\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/6CuykWTSWxV4sn7uiCoDdw/l.jpg",
+    "frequency": 8
+  },
+  {
+    "name": "\"Creperies\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/gccHe5ofFMpNyh8vmS0VSw/l.jpg",
+    "frequency": 8
+  },
+  {
+    "name": "\"Live/Raw Food\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/HiI7Hv6o-blruMjRhUhiEA/l.jpg",
+    "frequency": 8
+  },
+  {
+    "name": "\"Moroccan\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/L60yLsIQweRYIs_8hqjTaQ/l.jpg",
+    "frequency": 8
+  },
+  {
+    "name": "\"Pubs\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/BuvWZonKHSzntPgkCXNaIg/l.jpg",
+    "frequency": 8
+  },
+  {
+    "name": "\"Soul Food\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/6v_pQ8yALkbzuQly4m5npw/l.jpg",
+    "frequency": 8
+  },
+  {
+    "name": "\"Ethiopian\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/pUg-HAc0dCxV4iORG8NJZA/l.jpg",
+    "frequency": 7
+  },
+  {
+    "name": "\"Hot Dogs\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/iz1jI1pZ_i9lSFK-ELN1Pg/l.jpg",
+    "frequency": 7
+  },
+  {
+    "name": "\"Ice Cream & Frozen Yogurt\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/x3mg6oywtQGG8A2vBJ17HQ/l.jpg",
+    "frequency": 7
+  },
+  {
+    "name": "\"Pakistani\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/GfFjceOEj__ep4vx_CYcPA/l.jpg",
+    "frequency": 7
+  },
+  {
+    "name": "\"Cheesesteaks\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/AR3uoBYgcL_tH6B41FNF7w/l.jpg",
+    "frequency": 6
+  },
+  {
+    "name": "\"Meat Shops\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/yfKuh0hA85SUl3CLuhH0kg/l.jpg",
+    "frequency": 6
+  },
+  { "name": "\"Restaurants\"", "image": null, "frequency": 6 },
+  {
+    "name": "\"Karaoke\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/WxJXAuBWIyutbXQapR6anA/o.jpg",
+    "frequency": 5
+  },
+  {
+    "name": "\"Laotian\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/Z_aMfshNFBh1u7R5eOtuJw/l.jpg",
+    "frequency": 5
+  },
+  {
+    "name": "\"Russian\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/zWK38e8P-6yzFuCW4nUorQ/l.jpg",
+    "frequency": 5
+  },
+  {
+    "name": "\"Shanghainese\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/fU6g0z0vwzPRML20g72RIQ/l.jpg",
+    "frequency": 5
+  },
+  {
+    "name": "\"Tea Rooms\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/UB7V356ZR194ApKrrLTsyA/l.jpg",
+    "frequency": 5
+  },
+  {
+    "name": "\"Waffles\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/3df1ro4jFVpDJTNbEQE6Ng/l.jpg",
+    "frequency": 5
+  },
+  { "name": "\"Basque\"", "image": null, "frequency": 4 },
+  {
+    "name": "\"Beer Gardens\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/D_ljKcPpDfqUAr1xqNwFIA/l.jpg",
+    "frequency": 4
+  },
+  {
+    "name": "\"Caribbean\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/jB86HphvnnfoCQygEFC1BQ/l.jpg",
+    "frequency": 4
+  },
+  {
+    "name": "\"Convenience Stores\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/XqN8tjtQz-qIagTUhHWwBA/l.jpg",
+    "frequency": 4
+  },
+  { "name": "\"Conveyor Belt Sushi\"", "image": null, "frequency": 4 },
+  { "name": "\"Cuban\"", "image": null, "frequency": 4 },
+  {
+    "name": "\"Fish & Chips\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/TnrEIGpQr5zmYa4-QZoQQg/l.jpg",
+    "frequency": 4
+  },
+  { "name": "\"Malaysian\"", "image": null, "frequency": 4 },
+  {
+    "name": "\"Music Venues\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/nm--ePX0eGIwmuQKTPLekw/l.jpg",
+    "frequency": 4
+  },
+  {
+    "name": "\"Pasta Shops\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/2yk0U7vH-dukWQppke4z_w/l.jpg",
+    "frequency": 4
+  },
+  { "name": "\"Singaporean\"", "image": null, "frequency": 4 },
+  {
+    "name": "\"Acai Bowls\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/6V8FNLDRMryWw9XMt89yhg/l.jpg",
+    "frequency": 3
+  },
+  { "name": "\"Arabian\"", "image": null, "frequency": 3 },
+  {
+    "name": "\"Art Galleries\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/BUDofvWCM33XnbNf3EqvgQ/l.jpg",
+    "frequency": 3
+  },
+  {
+    "name": "\"Brewpubs\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/5caHGNZ4I2qPcCW4Bj7VwQ/l.jpg",
+    "frequency": 3
+  },
+  {
+    "name": "\"British\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/XTACGGX1f25Rw22wQO_1pw/l.jpg",
+    "frequency": 3
+  },
+  {
+    "name": "\"Cheese Shops\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/Qe2S6V6YdaA1MMnWU8dqgw/l.jpg",
+    "frequency": 3
+  },
+  {
+    "name": "\"Colombian\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/C3vj9jwVIOB0DG53ho04LA/l.jpg",
+    "frequency": 3
+  },
+  {
+    "name": "\"Dive Bars\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/B5UcvKFCAMNZ5O8e-bx-pg/l.jpg",
+    "frequency": 3
+  },
+  {
+    "name": "\"Indonesian\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/X0VLOUiPJj3k91QGT-2E6w/l.jpg",
+    "frequency": 3
+  },
+  {
+    "name": "\"Kebab\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/IvjQdXK4OCZPE9tdiPH5hA/l.jpg",
+    "frequency": 3
+  },
+  {
+    "name": "\"Modern European\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/dXOIe7bWMUoDzfnM3LKThw/l.jpg",
+    "frequency": 3
+  },
+  {
+    "name": "\"Mongolian\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/zA-sNT17f-nFJH7aR2hufQ/l.jpg",
+    "frequency": 3
+  },
+  { "name": "\"Nicaraguan\"", "image": null, "frequency": 3 },
+  {
+    "name": "\"Puerto Rican\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/f-USmzcXJiLRUN7SUx1rBw/o.jpg",
+    "frequency": 3
+  },
+  {
+    "name": "\"Wraps\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/tVL5h1RTl39NHuUCnuwqzQ/l.jpg",
+    "frequency": 3
+  },
+  {
+    "name": "\"Argentine\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/4-dXuniVSpYwo0rv7KEH-w/l.jpg",
+    "frequency": 2
+  },
+  { "name": "\"Brasseries\"", "image": null, "frequency": 2 },
+  { "name": "\"Cafeteria\"", "image": null, "frequency": 2 },
+  { "name": "\"Coffee Roasteries\"", "image": null, "frequency": 2 },
+  {
+    "name": "\"Empanadas\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/OIBGrZ1k9Q1Eyn4f0yL5cA/l.jpg",
+    "frequency": 2
+  },
+  {
+    "name": "\"Eritrean\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/f_-srGHdq-U9OofpoyC17g/l.jpg",
+    "frequency": 2
+  },
+  {
+    "name": "\"Food Delivery Services\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/zJlvkDrDoNXeJubBqhV6Zg/o.jpg",
+    "frequency": 2
+  },
+  { "name": "\"Hookah Bars\"", "image": null, "frequency": 2 },
+  { "name": "\"Imported Food\"", "image": null, "frequency": 2 },
+  { "name": "\"Irish\"", "image": null, "frequency": 2 },
+  {
+    "name": "\"Lebanese\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/y3VuOvTfCv-PWZzQwrr2bA/l.jpg",
+    "frequency": 2
+  },
+  {
+    "name": "\"Pan Asian\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/nJ6oSj85YxEI4Hw_d1gm5w/l.jpg",
+    "frequency": 2
+  },
+  { "name": "\"Patisserie/Cake Shop\"", "image": null, "frequency": 2 },
+  {
+    "name": "\"Persian/Iranian\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/QTOAEoEfwQbqGymvDp6U1A/l.jpg",
+    "frequency": 2
+  },
+  {
+    "name": "\"Street Vendors\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/F58iIXxUMgjKpFDkxYemUA/l.jpg",
+    "frequency": 2
+  },
+  {
+    "name": "\"Venezuelan\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/X3rvRnLxgYI2_AayVhOlYw/l.jpg",
+    "frequency": 2
+  },
+  {
+    "name": "\"Whiskey Bars\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/hbl-L2p9erx4kcMiIxZjNA/l.jpg",
+    "frequency": 2
+  },
+  {
+    "name": "\"Wine Tasting Room\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/FeZ68m06SW0ZSWcb7XIZ9g/l.jpg",
+    "frequency": 2
+  },
+  {
+    "name": "\"Afghan\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/WV1q0lzb2SPltOC9PSD2IQ/l.jpg",
+    "frequency": 1
+  },
+  {
+    "name": "\"Arcades\"",
+    "image": "https://s3-media0.fl.yelpcdn.com/bphoto/HRGWzh55j1dJQA6_NRSoTg/l.jpg",
+    "frequency": 1
+  }
+]

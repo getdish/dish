@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
+import { Switch, Route } from 'react-router-dom'
 import { View, Button, Text } from 'react-native'
 import SlidingUpPanel, { Animated } from 'rn-sliding-up-panel'
 
 import { useOvermind } from '../../state/om'
 import Restaurant from './Restaurant'
+import TopDishes from './TopDishes'
+import TopRestaurants from './TopRestaurants'
 
 const styles = {
   container: {
@@ -33,7 +36,17 @@ export default function Bottom() {
           <View style={styles.close}>
             <Button title="Hide" onPress={() => state.map.panel.hide()} />
           </View>
-          <Restaurant />
+          <Switch>
+            <Route exact path="/">
+              <TopDishes />
+            </Route>
+            <Route path="/e/:slug">
+              <Restaurant />
+            </Route>
+            <Route path="/best/:dish">
+              <TopRestaurants />
+            </Route>
+          </Switch>
         </View>
       </SlidingUpPanel>
     </View>

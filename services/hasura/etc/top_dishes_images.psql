@@ -1,0 +1,29 @@
+\t on
+\pset format unaligned
+
+select json_agg(t) from
+(
+SELECT
+  DISTINCT cats :: text AS name, (select image from restaurant where categories @> (select DISTINCT cats :: text)::jsonb and rating > 4 limit 1),
+  count(cats) AS frequency
+FROM
+  (
+    SELECT
+      jsonb_array_elements(categories)
+    FROM
+      restaurant
+    WHERE
+      ST_DWithin(
+        location,
+        ST_SetSRID(ST_MakePoint(-122.42,37.76), 0),
+        0.1
+      )
+  ) AS dt(cats)
+GROUP BY
+  cats
+ORDER BY
+  frequency DESC
+limit
+  150
+) t;
+

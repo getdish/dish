@@ -1,8 +1,10 @@
 import React from 'react'
 import { Text, View } from 'react-native'
-import SearchableDropdpwn from './SearchableDropdown.js'
+import { useHistory } from 'react-router-dom'
 
 import { useOvermind } from '../../state/om'
+
+import SearchableDropdpwn from './SearchableDropdown.js'
 
 const styles = {
   container: {
@@ -16,6 +18,7 @@ const styles = {
 
 export default function SearchBar() {
   const { state, actions } = useOvermind()
+  let history = useHistory()
   return (
     <SearchableDropdpwn
       containerStyle={styles.container}
@@ -38,7 +41,7 @@ export default function SearchBar() {
         borderBottomWidth: 1,
       }}
       onItemSelect={item => {
-        actions.map.setSelected(item.id)
+        history.push('/e/' + item.id)
       }}
     />
   )
