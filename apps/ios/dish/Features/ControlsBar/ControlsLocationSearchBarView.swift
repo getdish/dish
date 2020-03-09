@@ -43,11 +43,11 @@ struct ControlsLocationSearchBarView: View {
             }
 
             if isEditing {
-              App.store.send(.home(.setSearchFocus(.location)))
+              self.store.send(.home(.setSearchFocus(.location)))
             } else {
               async {
                 if self.store.state.home.searchFocus == .location {
-                  App.store.send(.home(.setSearchFocus(.off)))
+                  self.store.send(.home(.setSearchFocus(.off)))
                 }
               }
             }
@@ -91,6 +91,10 @@ struct ControlsLocationSearchBarView: View {
               .frame(width: 12, height: 12)
               .foregroundColor(.white)
               .opacity(0.25)
+              .onTapGesture {
+                App.enterRepl = true
+            }
+            
             Spacer()
           }
             .padding(.leading, 12)

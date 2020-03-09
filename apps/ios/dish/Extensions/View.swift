@@ -109,10 +109,13 @@ extension View {
     )
   }
 
-  func embedInAppEnvironment(_ appState: Store<AppState, AppAction>? = nil) -> some View {
+  func embedInAppEnvironment(_ initialStore: AppStore? = nil) -> some View {
+    if let store = initialStore {
+      App.storeVal = store
+    }
     return
       self
-      .environmentObject(appState ?? App.store)
+      .environmentObject(initialStore ?? App.store)
       .environmentObject(App.keyboard)
       .environmentObject(homeViewState)
       .embedInScreen(App.screen)

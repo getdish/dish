@@ -88,7 +88,7 @@
 		AE872FF723CEA5CD00F84663 /* DishRestaurantCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE872FF623CEA5CD00F84663 /* DishRestaurantCard.swift */; };
 		AE8D7D2D23ADA93600BD1D68 /* ButtonBordered.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */; };
 		AE99091223CE637200F1763C /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99091123CE637200F1763C /* App.swift */; };
-		AE99091523CE646D00F1763C /* MapService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99091423CE646D00F1763C /* MapService.swift */; };
+		AE99091523CE646D00F1763C /* MapSideEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99091423CE646D00F1763C /* MapSideEffects.swift */; };
 		AEA09E6D23FEFF8A00E2EC28 /* MapViewLenseFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA09E6C23FEFF8A00E2EC28 /* MapViewLenseFilterBar.swift */; };
 		AEA331EF23A3371D00B36A23 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331EE23A3371D00B36A23 /* AccountView.swift */; };
 		AEA331F123A3373D00B36A23 /* AccountLoginSignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F023A3373D00B36A23 /* AccountLoginSignupView.swift */; };
@@ -223,7 +223,7 @@
 		AE872FF623CEA5CD00F84663 /* DishRestaurantCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishRestaurantCard.swift; sourceTree = "<group>"; };
 		AE8D7D2C23ADA93600BD1D68 /* ButtonBordered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonBordered.swift; sourceTree = "<group>"; };
 		AE99091123CE637200F1763C /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
-		AE99091423CE646D00F1763C /* MapService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapService.swift; sourceTree = "<group>"; };
+		AE99091423CE646D00F1763C /* MapSideEffects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSideEffects.swift; sourceTree = "<group>"; };
 		AEA09E6C23FEFF8A00E2EC28 /* MapViewLenseFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewLenseFilterBar.swift; sourceTree = "<group>"; };
 		AEA331EE23A3371D00B36A23 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		AEA331F023A3373D00B36A23 /* AccountLoginSignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountLoginSignupView.swift; sourceTree = "<group>"; };
@@ -592,7 +592,7 @@
 				AE872FF023CE76AE00F84663 /* HomeSideEffects.swift */,
 				AE6B104E23D0E4B900C33968 /* Camera.swift */,
 				AEAE67EB23B5A70A00B9D781 /* Map.swift */,
-				AE99091423CE646D00F1763C /* MapService.swift */,
+				AE99091423CE646D00F1763C /* MapSideEffects.swift */,
 				AEED843D23B5A8E000407266 /* Mocks.swift */,
 			);
 			path = Store;
@@ -778,7 +778,7 @@
 				AEE1992123F33FA200492B6B /* ApolloNetwork.swift in Sources */,
 				AE0743B2240E4CC300225741 /* InnerShadowView.swift in Sources */,
 				AE7563BC23A037870094022B /* Fixtures.swift in Sources */,
-				AE99091523CE646D00F1763C /* MapService.swift in Sources */,
+				AE99091523CE646D00F1763C /* MapSideEffects.swift in Sources */,
 				AEB4A7D5240B38250057343E /* ColorsRGBHSV.swift in Sources */,
 				AE057BF423EA559D001B8BFA /* async.swift in Sources */,
 				AE2B6BA423AC211F007BCD25 /* VerticalCardPager.swift in Sources */,

@@ -5,8 +5,8 @@ import SwiftUI
 class HomeSideEffects {
   private var cancels: Set<AnyCancellable> = []
 
-  func start() {
-    self.affectSearchResults()
+  func start(_ store: AppStore) {
+    self.affectSearchResults(store)
   }
 }
 
@@ -20,8 +20,8 @@ extension HomeSideEffects {
     let location: MapViewLocation
   }
   
-  func affectSearchResults() {
-    App.store.$state
+  func affectSearchResults(_ store: AppStore) {
+    store.$state
       .debounce(for: .milliseconds(200), scheduler: App.queueMain)
       .map { state in
         SearchQuery(

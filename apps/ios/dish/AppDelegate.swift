@@ -79,7 +79,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //        GMSServices.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")
     //        GMSPlacesClient.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")
 
-    App.start()
+    App.start(
+      Mocks.homeSearchedPho
+    )
 
     // Override point for customization after application launch.
     return true

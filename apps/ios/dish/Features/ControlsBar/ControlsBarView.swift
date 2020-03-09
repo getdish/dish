@@ -31,7 +31,7 @@ struct ControlsBar: View, Equatable {
 
   var accountButton: some View {
     DishButton(action: {
-      App.store.send(.setView(.me))
+      self.store.send(.setView(.me))
     }) {
       Image(systemName: "person.fill")
         .resizable()
@@ -43,7 +43,7 @@ struct ControlsBar: View, Equatable {
 
   var locationButton: some View {
     DishButton(action: {
-      App.store.send(.map(.moveToCurrentLocation))
+      self.store.send(.map(.moveToCurrentLocation))
     }) {
       VStack {
         Image(

@@ -1,7 +1,7 @@
 import Combine
 import MapKit
 
-class MapService {
+class MapSideEffects {
   //    let geocoder = GMSGeocoder()
   let currentLocationManager = CurrentLocationService()
 
@@ -11,10 +11,19 @@ class MapService {
     case noLocationResults
   }
 
-  func start() {
+  func start(_ store: AppStore) {
     currentLocationManager.start()
-    //        self.effectUpdateCurrentLocation()
-    self.effectMoveToCurrentLocationOnAuthorization()
+    self.effectMoveToCurrentLocationOnAuthorization(store)
+  }
+  
+  func effectMoveToCurrentLocationOnAuthorization(_ store: AppStore) {
+    currentLocationManager.$authorized
+      .sink { authorized in
+        if !store.state.map.hasChangedOnce {
+          store.send(.map(.moveToLocation(MapViewLocation(center: .current))))
+        }
+    }
+    .store(in: &cancels)
   }
 
   //    func setNameOfCurrentLocation(_ location: CLLocation) -> Effect<AppAction> {
@@ -37,16 +46,6 @@ class MapService {
   //            }
   //            .store(in: &cancels)
   //    }
-
-  func effectMoveToCurrentLocationOnAuthorization() {
-    currentLocationManager.$authorized
-      .sink { authorized in
-        if !App.store.state.map.hasChangedOnce {
-          App.store.send(.map(.moveToLocation(MapViewLocation(center: .current))))
-        }
-      }
-      .store(in: &cancels)
-  }
 
   //    func getReverseGeo(_ location: CLLocationCoordinate2D) -> AnyPublisher<GMSAddress, Error> {
   //        return Future<GMSAddress, Error> { promise in

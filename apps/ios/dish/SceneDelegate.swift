@@ -16,7 +16,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // Create the SwiftUI view that provides the window contents.
     let contentView = RootView()
       .embedInAppEnvironment(
-//        Mocks.homeSearchedPhoSelectedRestaurant
+        Mocks.homeSearchedPho //SelectedRestaurant
       )
 
     // Use a UIHostingController as window root view controller.
