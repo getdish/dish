@@ -76,10 +76,15 @@ struct HomeDrawerView: View, Equatable {
         
         VStack(spacing: 0) {
           VStack(spacing: 0) {
-            HomeDrawerSearchBar()
-              .background(
-                BlurView(style: .dark)
-              )
+            ZStack {
+              BlurView(style: .dark)
+              VStack(spacing: 0) {
+                HomeDrawerSearchBar()
+                DividerView()
+                    .opacity(0.5)
+              }
+            }
+            .frame(height: App.searchBarHeight)
             HomeDrawerFilterBar()
           }
           Spacer()

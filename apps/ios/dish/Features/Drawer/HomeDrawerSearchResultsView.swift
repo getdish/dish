@@ -40,20 +40,32 @@ struct DishRestaurantResult: View {
         HStack(spacing: 12) {
           VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 10) {
-              Text("\(self.rank).")
-                .font(.system(size: 18))
+              Color.clear
                 .frame(width: 36, height: 36)
                 .background(Color(.systemBackground))
                 .cornerRadius(32)
-                .rotationEffect(.degrees(-10))
-                .offset(x: -5, y: 0)
+                .overlay(
+                  Text("\(self.rank)")
+                    .font(.system(size: self.rank > 9 ? 16 : 20))
+                    .fontWeight(.bold)
+                    .offset(x: 1)
+                    .overlay(
+                      Text("#")
+                        .font(.system(size: 14))
+                        .fontWeight(.bold)
+                        .opacity(0.4)
+                        .offset(x: -11, y: -4)
+                    )
+                )
+                .rotationEffect(.degrees(-15))
               
               Text(self.restaurant.name)
                 .fontWeight(.bold)
                 .lineLimit(2)
-                .font(.system(size: 18))
+                .font(.system(size: 16))
                 .modifier(TextShadowStyle())
             }
+            .offset(x: -15, y: 0)
             
             HStack(spacing: 8) {
               Group {
