@@ -7,9 +7,7 @@ Basically:
 
 In three tabs, start build:
 
-```
-yarn build:watch
-```
+- `yarn build:watch`
 
 Start hasura:
 
@@ -21,9 +19,12 @@ yarn start
 
 Start web app (or ios, etc):
 
-```
-cd apps/web && yarn start
-```
+- `cd apps/web && yarn start`
+
+For logging into hasura admin:
+
+- `hasura console --endpoint http://localhost:8080 --admin-secret=password`
+- The password is the HASURA_GRAPHQL_ADMIN_SECRET in the .env.enc.production.yaml file
 
 ---
 

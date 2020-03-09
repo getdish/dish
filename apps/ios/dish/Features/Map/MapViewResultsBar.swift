@@ -94,7 +94,7 @@ struct DishMapResultItem: View, Equatable {
       displayContent: .fixed,
       getImage: { (index, size, isActive) in
         DishListItemRestaurantCard(
-          dish: self.dish,
+          restaurant: restaurants[0],
           index: index,
           isActive: isActive,
           size: size

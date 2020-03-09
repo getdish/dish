@@ -88,7 +88,7 @@ struct HomeViewFocusedItem: View {
       }
     }
     .invertColorScheme()
-    .id(self.focusedItem?.dish.id ?? 0)
+    .id(self.focusedItem?.restaurant.id ?? "")
     .opacity(self.focusedItem == nil ? 0 : 1)
     .offset(y: y)
     .animation(.spring())

@@ -11,7 +11,7 @@ struct MapViewContainer: View {
     return results.map { result in
       MapMarker(
         title: result.name,
-        coordinate: result.coordinate
+        coordinate: result.coordinate2D
       )
     }
   }

@@ -66,7 +66,7 @@ struct HomeDrawerSearchBar: View {
     let isOnHome = Selectors.home.isOnHome()
     let searchFocus = self.store.state.home.searchFocus
     let showSearchIcon = isOnHome || searchFocus == .search
-    var iconSize: CGFloat = 18
+    var iconSize: CGFloat = 16
     let icon: Image = {
       if Selectors.home.lastState().isLoading {
         return Image(systemName: "slowmo")
@@ -76,13 +76,12 @@ struct HomeDrawerSearchBar: View {
       } else if searchFocus == .location {
         return Image(systemName: "map")
       } else {
-        iconSize = 16
-        return Image(systemName: "chevron.left")
+//        iconSize = 16
+        return Image(systemName: "magnifyingglass") // chevron.left
       }
     }()
-    let lense = Selectors.home.activeLense()
 
-    //        let isOnSearch = self.store.state.home.showSearch == .search
+    let isOnSearch = Selectors.home.isOnSearchResults(self.store)
     return HStack(spacing: 0) {
         SearchInput(
           placeholder: "", //"\(lense.name) in \(store.state.map.locationLabel)...",
@@ -107,15 +106,27 @@ struct HomeDrawerSearchBar: View {
           Image(systemName: "line.horizontal.3.decrease.circle")
             .resizable()
             .scaledToFit()
-            .frame(width: 25, height: 25)
+            .frame(width: 23, height: 23)
             .padding(10)
             .opacity(0.35)
         }
 
         if self.store.state.home.searchFocus == .off {
           Group {
-            Spacer().frame(width: 12)
-            HomeCameraButton()
+            Spacer().frame(width: 6)
+            Button(action: {
+              App.store.send(.setView(.camera))
+            }) {
+              VStack {
+                Image(systemName: "camera.fill")
+                  .resizable()
+                  .scaledToFit()
+                  .frame(width: isOnSearch ? 16 : 22, height: isOnSearch ? 16 : 22)
+                  .padding(isOnSearch ? 12 : 14)
+                  .borderRounded(radius: 100, width: 1, color: Color(white: 0.5, opacity: 0.2))
+                  .foregroundColor(self.colorScheme == .light ? .black : .white)
+              }
+            }
           }
         }
       }
@@ -126,26 +137,6 @@ struct HomeDrawerSearchBar: View {
       : Color(white: 0, opacity: 0.00001)
     )
       .cornerRadius(App.searchBarHeight / 3)
-  }
-}
-
-struct HomeCameraButton: View {
-  @Environment(\.colorScheme) var colorScheme
-
-  var body: some View {
-    Button(action: {
-      App.store.send(.setView(.camera))
-    }) {
-      VStack {
-        Image(systemName: "camera.fill")
-          .resizable()
-          .scaledToFit()
-          .frame(width: 22, height: 22)
-          .padding(14)
-          .borderRounded(radius: 100, width: 1, color: Color(white: 0.5, opacity: 0.2))
-          .foregroundColor(self.colorScheme == .light ? .black : .white)
-      }
-    }
   }
 }
 

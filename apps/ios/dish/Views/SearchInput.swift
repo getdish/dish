@@ -96,12 +96,12 @@ struct SearchInput: View {
 
   var body: some View {
     let pad = 11 * scale
-    let fontSize = 16 * (scale - 1) / 2 + 16
-    let horizontalSpacing = 14 * scale
+    let fontSize = 16 * (scale - 1) / 2 + 17
+    let horizontalSpacing = 13 * scale
 
     return ZStack {
       HStack(spacing: 0) {
-        Spacer().frame(width: 56)
+        Spacer().frame(width: 54)
         
         Group {
           if showInput {
@@ -177,7 +177,7 @@ struct SearchInput: View {
                 Image(systemName: "xmark.circle.fill")
                   .resizable()
                   .scaledToFit()
-                  .frame(width: 18 + 2 * scale, height: 18 + 2 * scale)
+                  .frame(width: 16 + 2 * scale, height: 16 + 2 * scale)
               }
                 .transition(.opacity)
             }

@@ -10,6 +10,7 @@ query SearchRestaurants($radius: Float!, $geo: geometry!) {
         },
         limit: 30
     ) {
+        id
         name
         location
     }

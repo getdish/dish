@@ -18,17 +18,15 @@ struct DishListItem: View, Equatable {
   var body: some View {
     DishButton(
       action: {
-        App.store.send(
-          .home(.push(HomeStateItem(state: .search(search: self.dish.name))))
-        )
-    },
+        App.store.send(.home(.navigateToDishResults(self.dish)))
+      },
       scaleEffect: 1.0
     ) { 
         ListItemGallery(
           defaultImagesVisible: 1.5,
           getImage: { (index, size, isActive) in
             DishListItemRestaurantCard(
-              dish: self.dish,
+              restaurant: restaurants[0],
               index: index,
               isActive: isActive,
               size: size
@@ -62,13 +60,13 @@ struct DishListItem: View, Equatable {
 }
 
 struct DishListItemRestaurantCard: View {
-  var dish: DishItem
+  var restaurant: RestaurantItem
   var index: Int
   var isActive: Bool
   var size: CGFloat
   
   var body: some View {
-    self.dish.image
+    self.restaurant.image
       .resizable()
       .scaledToFill()
       .frame(width: size, height: size)
@@ -89,7 +87,7 @@ struct DishListItemRestaurantCard: View {
       .onGeometryFrameChange { frame in
         if self.isActive {
           let next = HomeFocusedItem(
-            dish: self.dish,
+            restaurant: self.restaurant,
             rank: self.index + 1,
             targetMinY: frame.minY
           )

@@ -1,11 +1,11 @@
 import SwiftUI
 
 struct DishRestaurantCard: View, Identifiable, Equatable {
-  static func == (lhs: DishRestaurantCard, rhs: DishRestaurantCard) -> Bool {
+  static func == (lhs: Self, rhs: Self) -> Bool {
     lhs.id == rhs.id
   }
 
-  @ObservedObject var restaurant: RestaurantItem
+  var restaurant: RestaurantItem
   var id: String { restaurant.id }
   var isMini: Bool = false
   var at: MagicItemPosition = .start

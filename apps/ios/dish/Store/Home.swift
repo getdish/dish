@@ -2,24 +2,20 @@ import Combine
 import MapKit
 import SwiftUI
 
+struct FetchedResults<Item>: Equatable where Item: Equatable {
+  enum FetchStatus { case idle, fetching, failed, completed }
+  var id = uid()
+  var status: FetchStatus = .fetching
+  var results: [Item] = []
+}
+
+typealias SearchResultRestaurant = FetchedResults<RestaurantItem>
+
 struct HomeStateItem: Identifiable, Equatable {
-  struct Item: Identifiable, Equatable {
-    var id: String
-    var name: String
-    var coordinate: CLLocationCoordinate2D
-  }
-  
-  struct SearchResults: Equatable {
-    enum FetchStatus { case idle, fetching, failed, completed }
-    var id = uid()
-    var status: FetchStatus = .fetching
-    var results: [Item] = []
-  }
-  
   enum State: Equatable {
     case home
-    case search(search: String, results: SearchResults = SearchResults())
-    case selection(items: [Item])
+    case search(search: String, results: SearchResultRestaurant = FetchedResults())
+    case selection(items: [RestaurantItem])
     case restaurantDetail(restaurant: RestaurantItem)
   }
   
@@ -49,7 +45,7 @@ struct HomeStateItem: Identifiable, Equatable {
     return nil
   }
   
-  var searchResults: HomeStateItem.SearchResults? {
+  var searchResults: SearchResultRestaurant? {
     if case .search(_, let val) = state {
       return val
     }
@@ -88,8 +84,8 @@ struct CuisineItem: Equatable, Identifiable {
 }
 
 fileprivate let initialLenses: [LenseItem] = [
-  LenseItem(id: "1", name: "Me", icon: "", rgb: [0.2, 0.65, 0.65], description: "My top"),
-  LenseItem(id: "0", name: "Top", icon: "🏆", rgb: [0.8, 0.1, 0.1], description: "Most popular"),
+//  LenseItem(id: "1", name: "Me", icon: "", rgb: [0.2, 0.65, 0.65], description: "My top"),
+  LenseItem(id: "0", name: "", icon: "⭐️", rgb: [0.8, 0.1, 0.1], description: "Most popular"),
   LenseItem(id: "2", name: "New", icon: "🔥", rgb: [0.5, 0.1, 0.1], description: "New"),
   LenseItem(id: "3", name: "Picks", icon: "👩‍🍳", rgb: [0.6, 0.1, 0.5], description: "Chef choice"),
   LenseItem(id: "4", name: "Date 🌃", icon: "", rgb: [0.35, 0.2, 0.65], description: "Date night"),
@@ -129,7 +125,7 @@ fileprivate let initialCuisines = [
 ]
 
 struct HomeFocusedItem: Equatable {
-  var dish: DishItem
+  var restaurant: RestaurantItem
   var rank: Int
   var targetMinY: CGFloat
 }
@@ -148,7 +144,7 @@ extension AppState {
     var filterTopLevel: HomeTopLevelFilter = .dish
     var cuisines: [CuisineItem] = initialCuisines
     var lenses: [LenseItem] = initialLenses
-    var lenseActive = 1
+    var lenseActive = 0
     var lenseToDishes = [String: [DishItem]]()
     var searchFocus: SearchFocusState = .off
     var drawerPosition: BottomDrawerPosition = .middle
@@ -160,11 +156,12 @@ extension AppState {
 }
 
 enum HomeAction {
+  case navigateToDishResults(_ val: DishItem)
   case navigateToRestaurant(_ val: RestaurantItem)
   case push(_ val: HomeStateItem)
   case pop
   case setSearch(_ val: String)
-  case setSearchResults(_ val: HomeStateItem.SearchResults)
+  case setSearchResults(_ val: SearchResultRestaurant)
   case setLenseActive(_ val: Int)
   case setLenseToDishes(id: String, dishes: [DishItem])
   case setSearchFocus(_ val: SearchFocusState)
@@ -195,6 +192,15 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
   // switch
   
   switch action {
+    case .navigateToDishResults(let dish):
+      let next = HomeStateItem(
+        state: .search(
+          search: dish.name,
+          // TODO this will pre-populate with results we prefetch on explore/home
+          results: .init(status: .completed, results: [restaurants[0]])
+        )
+      )
+      state.home.viewStates.append(next)
     case .toggleShowFilters:
       state.home.showFilters = !state.home.showFilters
     case .setFocusedItem(let dish):
@@ -297,7 +303,7 @@ struct HomeSelectors {
     store.state.home.viewStates.last!
   }
   
-  func latestResults(_ store: AppStore = App.store) -> HomeStateItem.SearchResults? {
+  func latestResults(_ store: AppStore = App.store) -> SearchResultRestaurant? {
     let last = self.lastState(store)
     if case .search(_, results: let results) = last.state {
       return results
@@ -305,7 +311,7 @@ struct HomeSelectors {
     return nil
   }
   
-  func latestResultsItems(_ store: AppStore = App.store) -> [HomeStateItem.Item] {
+  func latestResultsItems(_ store: AppStore = App.store) -> [RestaurantItem] {
     if let searchResults = self.latestResults(store) {
       return searchResults.results
     }

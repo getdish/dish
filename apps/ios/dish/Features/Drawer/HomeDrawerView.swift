@@ -296,21 +296,8 @@ struct HomeDrawerExploreView: View {
   }
 
   var body: some View {
-    let lense = Selectors.home.activeLense(store)
-    
-    return VStack {
-      HStack {
-        Image(systemName: "arrowtriangle.left.fill")
-          .resizable().scaledToFit().frame(width: 10).opacity(0.34)
-        Spacer()
-        Text("\(lense.description ?? "")".uppercased()).tracking(5).fontWeight(.light)
-          .opacity(0.5)
-        Spacer()
-        Image(systemName: "arrowtriangle.right.fill")
-          .resizable().scaledToFit().frame(width: 10).opacity(0.34)
-      }
-      .padding(.horizontal)
-      .offset(y: -10)
+    VStack {
+      HomeDrawerCurrentLenseTitle()
       
       ForEach(0..<self.total) { index in
         DishListItem(
@@ -323,6 +310,30 @@ struct HomeDrawerExploreView: View {
       }
       .id(self.store.state.appLoaded ? "0" : "1")
     }
+  }
+}
+
+struct HomeDrawerCurrentLenseTitle: View {
+  @EnvironmentObject var store: AppStore
+  
+  var body: some View {
+    let lense = Selectors.home.activeLense(store)
+
+    return HStack {
+      Image(systemName: "arrowtriangle.left.fill")
+        .resizable().scaledToFit().frame(width: 8).opacity(0.25)
+      Spacer()
+      Text("\(lense.description ?? "")".uppercased())
+        .tracking(3)
+        .fontWeight(.light)
+        .font(.system(size: 14))
+        .opacity(0.45)
+      Spacer()
+      Image(systemName: "arrowtriangle.right.fill")
+        .resizable().scaledToFit().frame(width: 8).opacity(0.25)
+    }
+    .padding(.horizontal, 20)
+    .offset(y: -10)
   }
 }
 

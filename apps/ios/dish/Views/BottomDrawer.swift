@@ -202,7 +202,7 @@ struct BottomDrawer<Content: View>: View {
         color: self.colorScheme == .dark
           ? Color(white: 0, opacity: 0.7)
           : Color(white: 0, opacity: 0.27),
-        radius: 10
+        radius: 8
       )
       .offset(y: self.draggedPositionY)
       .onGeometryFrameChange(self.onGeometryFrameChange)

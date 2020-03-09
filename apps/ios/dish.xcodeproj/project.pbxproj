@@ -97,7 +97,7 @@
 		AEA331F923A3385000B36A23 /* InlineAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331F823A3385000B36A23 /* InlineAlertView.swift */; };
 		AEA331FB23A338F400B36A23 /* KeyboardHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA331FA23A338F400B36A23 /* KeyboardHost.swift */; };
 		AEA87E4323B976EB009F07DB /* HomeDrawerFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA87E4223B976EB009F07DB /* HomeDrawerFilterBar.swift */; };
-		AEAAAA0E23F9DBA800ABED23 /* DishRestaurantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAAAA0D23F9DBA700ABED23 /* DishRestaurantView.swift */; };
+		AEAAAA0E23F9DBA800ABED23 /* RestaurantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAAAA0D23F9DBA700ABED23 /* RestaurantView.swift */; };
 		AEAAAA1023FA1FE300ABED23 /* DishRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAAAA0F23FA1FE300ABED23 /* DishRatingView.swift */; };
 		AEAAAA1223FA214900ABED23 /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAAAA1123FA214900ABED23 /* DividerView.swift */; };
 		AEAAAA1423FA215900ABED23 /* TextStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEAAAA1323FA215900ABED23 /* TextStyle.swift */; };
@@ -232,7 +232,7 @@
 		AEA331F823A3385000B36A23 /* InlineAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineAlertView.swift; sourceTree = "<group>"; };
 		AEA331FA23A338F400B36A23 /* KeyboardHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHost.swift; sourceTree = "<group>"; };
 		AEA87E4223B976EB009F07DB /* HomeDrawerFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDrawerFilterBar.swift; sourceTree = "<group>"; };
-		AEAAAA0D23F9DBA700ABED23 /* DishRestaurantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishRestaurantView.swift; sourceTree = "<group>"; };
+		AEAAAA0D23F9DBA700ABED23 /* RestaurantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantView.swift; sourceTree = "<group>"; };
 		AEAAAA0F23FA1FE300ABED23 /* DishRatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishRatingView.swift; sourceTree = "<group>"; };
 		AEAAAA1123FA214900ABED23 /* DividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
 		AEAAAA1323FA215900ABED23 /* TextStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextStyle.swift; sourceTree = "<group>"; };
@@ -347,6 +347,7 @@
 				AE79BCF0240CDF4700224842 /* Drawer */,
 				1CE3548423986DDD004B3A84 /* Home */,
 				AEB4A7D3240B35990057343E /* Map */,
+				AE74BBC22416FBEB00DA65B6 /* Restaurant */,
 				AE79BCED240CDDCF00224842 /* Review */,
 			);
 			path = Features;
@@ -478,6 +479,14 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		AE74BBC22416FBEB00DA65B6 /* Restaurant */ = {
+			isa = PBXGroup;
+			children = (
+				AEAAAA0D23F9DBA700ABED23 /* RestaurantView.swift */,
+			);
+			path = Restaurant;
+			sourceTree = "<group>";
+		};
 		AE79BCED240CDDCF00224842 /* Review */ = {
 			isa = PBXGroup;
 			children = (
@@ -542,7 +551,6 @@
 				AE5CEDD12404657A0046B944 /* DishListItem.swift */,
 				AEAAAA0F23FA1FE300ABED23 /* DishRatingView.swift */,
 				AE872FF623CEA5CD00F84663 /* DishRestaurantCard.swift */,
-				AEAAAA0D23F9DBA700ABED23 /* DishRestaurantView.swift */,
 			);
 			path = Dish;
 			sourceTree = "<group>";
@@ -787,7 +795,7 @@
 				AE65E9BB23E59F9E00702C30 /* Text.swift in Sources */,
 				AEA331FB23A338F400B36A23 /* KeyboardHost.swift in Sources */,
 				AE7563E523A038300094022B /* SearchInput.swift in Sources */,
-				AEAAAA0E23F9DBA800ABED23 /* DishRestaurantView.swift in Sources */,
+				AEAAAA0E23F9DBA800ABED23 /* RestaurantView.swift in Sources */,
 				AEC9AD4023D15AFD00BCC82E /* DishCardView.swift in Sources */,
 				1CE3546723986B1B004B3A84 /* SceneDelegate.swift in Sources */,
 				AE7563B823A036500094022B /* Screen.swift in Sources */,

@@ -215,7 +215,7 @@ struct ControlsButtonStyle: ViewModifier {
   
   var active: Bool = false
   var background: Color = .clear
-  var blurBackground: UIBlurEffect.Style? = .systemThinMaterialDark
+  var blurBackground: UIBlurEffect.Style? = .systemUltraThinMaterialLight
   var cornerRadius: CGFloat = 9
   var height: CGFloat = 34
   var hPad: CGFloat = 11

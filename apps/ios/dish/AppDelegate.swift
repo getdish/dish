@@ -17,6 +17,7 @@ let restaurants: [RestaurantItem] = loadJSON("restaurantData.json")
 // apollo
 // via https://github.com/apollographql/apollo-ios/issues/36
 public typealias geometry = [String: Any?]
+public typealias uuid = String
 public typealias SearchGeometry = geometry
 
 struct APIGeometry {

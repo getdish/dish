@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct DishRestaurantView: View {
+struct RestaurantView: View {
   @EnvironmentObject var store: AppStore
 
   var isRestaurantOpen: Binding<Bool> {
@@ -24,13 +24,13 @@ struct DishRestaurantView: View {
       ) {
         ScrollView(.vertical) {
           Spacer().frame(height: 40)
-          DishRestaurantViewContent()
+          RestaurantViewContent()
         }
       }
   }
 }
 
-struct DishRestaurantViewContent: View {
+struct RestaurantViewContent: View {
   @Environment(\.colorScheme) var colorScheme
   @State var mapZoom = 1.0
 
@@ -72,15 +72,7 @@ struct DishRestaurantViewContent: View {
             Spacer()
           }
         }
-
-        VStack {
-          self.restaurant.image
-            .resizable()
-            .scaledToFill()
-        }
-          .frame(maxWidth: .infinity, maxHeight: 390)
-          .clipped()
-
+        
         HStack(spacing: 0) {
           Group {
             Button(action: {}) {
@@ -89,7 +81,7 @@ struct DishRestaurantViewContent: View {
                   .resizable()
                   .scaledToFit()
                   .frame(width: 20, height: 20)
-
+                
                 VStack(alignment: .leading) {
                   Text("\(self.restaurant.address)")
                   Text("San Francisco, CA, 94131")
@@ -98,7 +90,7 @@ struct DishRestaurantViewContent: View {
                 }
                 Spacer()
               }
-                .padding(4)
+              .padding(4)
             }
             Button(action: {}) {
               Image(systemName: "phone")
@@ -108,13 +100,11 @@ struct DishRestaurantViewContent: View {
                 .padding(4)
             }
           }
-            .foregroundColor(self.colorScheme == .light ? .black : .white)
+          .foregroundColor(self.colorScheme == .light ? .black : .white)
         }
-          .padding(.horizontal, 10)
-          .padding(.vertical, 6)
-
-        DividerView()
-
+        .padding(.horizontal, 10)
+        .padding(.vertical, 6)
+        
         HStack {
           AppleMapView(
             markers: [],
@@ -122,7 +112,15 @@ struct DishRestaurantViewContent: View {
           )
           Color.gray
         }
-          .frame(height: 120)
+        .frame(height: 120)
+
+        VStack {
+          self.restaurant.image
+            .resizable()
+            .scaledToFill()
+        }
+          .frame(maxWidth: .infinity, maxHeight: 390)
+          .clipped()
 
         DividerView()
 
@@ -155,10 +153,10 @@ struct DishRestaurantViewContent: View {
 }
 
 #if DEBUG
-  struct DishRestaurantViewContent_Previews: PreviewProvider {
+  struct RestaurantViewContent_Previews: PreviewProvider {
     static var previews: some View {
       VStack {
-        DishRestaurantViewContent()
+        RestaurantViewContent()
           .embedInAppEnvironment(Mocks.homeSearchedPhoSelectedRestaurant)
       }
         .padding(.top, 20)

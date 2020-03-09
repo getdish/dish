@@ -44,19 +44,20 @@ struct MapLenseButton: View, Identifiable, Equatable {
     }) {
       HStack {
         Text("\(self.lense.icon)\(self.lense.name != "" ? " \(self.lense.name)" : "")")
-          .font(.system(size: 17))
+          .font(.system(size: 15))
+          .fontWeight(.semibold)
       }
-        .modifier(
-          ControlsButtonStyle(
-            active: active,
-            background: active ? lense.colorBright : .clear,
-//            blurBackground: .prominent,
-            height: 42
-          )
-        )
+        .padding(.horizontal, 13)
+        .frame(height: 42)
+        .background(BlurView(style: .extraLight))
+        .background(active ? lense.color : Color.white.opacity(0.2))
+        .innerGlow(color: Color.black.opacity(0.05), radius: 8)
+        .cornerRadiusSquircle(8)
         .scaleEffect(active ? 1.1 : 1)
-        .shadow(color: Color.black.opacity(0.45), radius: 1, y: 1)
+        .shadow(color: Color.black.opacity(0.35), radius: 3, y: 2)
         .animation(.spring(response: 0.35))
+        .environment(\.colorScheme, active ? .dark : .light)
+        .padding(.horizontal, 3)
     }
   }
 }

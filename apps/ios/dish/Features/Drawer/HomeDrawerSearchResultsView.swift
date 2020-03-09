@@ -4,22 +4,10 @@ struct HomeDrawerSearchResultsView: View {
   var state: HomeStateItem
 
   var body: some View {
-    let results: [HomeStateItem.Item] = state.searchResults?.results ?? []
-    print("results \(results)")
-    return VStack(spacing: 20) {
+    let results = state.searchResults?.results ?? []
+    return VStack(spacing: 20) {      
       ForEach(results) { item in
-        DishRestaurantResult(
-          restaurant:
-            RestaurantItem(
-              id: item.id,
-              name: item.name,
-              imageName: "turtlerock",
-              address: "",
-              phone: "",
-              tags: [],
-              stars: 3
-            )
-        )
+        DishRestaurantResult(restaurant: item, rank: (results.firstIndex(of: item) ?? 0) + 1)
       }
     }
   }
@@ -29,45 +17,63 @@ struct DishRestaurantResult: View {
   @EnvironmentObject var screen: ScreenModel
   @State var isScrolled = false
   var restaurant: RestaurantItem
+  var rank: Int
 
   var body: some View {
-    ListItemHScroll(isScrolled: self.$isScrolled) {
-      HStack {
-        DishButton(action: {
-          //                    App.store.send(
-          //                        .home(.push(HomeStateItem(search: self.dish.name)))
-          //                    )
-        }) { 
-          HStack(alignment: .top) {
-            VStack {
-              Text("\(self.restaurant.name)")
-                .fontWeight(.light)
-                .lineLimit(1)
-                .font(.system(size: 22))
-
-              HStack {
-                Text("\(self.restaurant.address)")
-                  .lineLimit(1)
-                  .font(.system(size: 15))
-
-                Text("\(self.restaurant.phone)")
-                  .lineLimit(1)
-                  .font(.system(size: 15))
-
-              }
-
-              Text("\(self.restaurant.tags.joined(separator: ", "))")
-                .lineLimit(1)
-                .font(.system(size: 15))
+    DishButton(action: {
+      App.store.send(.home(.navigateToRestaurant(self.restaurant)))
+    }) {
+      ListItemGallery(
+        defaultImagesVisible: 1.2,
+        displayContent: .fixed,
+        getImage: { (index, size, isActive) in
+          (restaurants.count > index ? restaurants[index] : restaurants[0])
+            .image
+            .resizable()
+            .scaledToFill()
+            .frame(width: size, height: size)
+            .cornerRadiusSquircle(16)
+      },
+        imageSize: 115,
+        total: 4
+      ) {
+        HStack(spacing: 12) {
+          VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 10) {
+              Text("\(self.rank).")
+                .font(.system(size: 18))
+                .frame(width: 36, height: 36)
+                .background(Color(.systemBackground))
+                .cornerRadius(32)
+                .rotationEffect(.degrees(-10))
+                .offset(x: -5, y: 0)
+              
+              Text(self.restaurant.name)
+                .fontWeight(.bold)
+                .lineLimit(2)
+                .font(.system(size: 18))
+                .modifier(TextShadowStyle())
             }
-
-            Spacer()
+            
+            HStack(spacing: 8) {
+              Group {
+                Text("Open")
+                  .font(.system(size: 14))
+                  .foregroundColor(.green).fontWeight(.semibold)
+                Text("9:00pm")
+                  .font(.system(size: 14))
+              }
+              .modifier(TextShadowStyle())
+            }
+            
+            HStack {
+              CardTagView("Cheap")
+              CardTagView("Vegan")
+            }
           }
-            .padding(.horizontal)
-            .frame(width: self.screen.width - 120 - 20)
+          
+          Spacer()
         }
-
-        DishRestaurantCard(restaurant: self.restaurant)
       }
     }
   }
@@ -83,13 +89,13 @@ struct CardTagView: View {
   var body: some View {
     VStack {
       Text(self.content)
-        .font(.system(size: 14))
+        .font(.system(size: 13))
         .foregroundColor(.black)
     }
-      .padding(.vertical, 2)
-      .padding(.horizontal, 8)
+      .padding(.vertical, 3)
+      .padding(.horizontal, 6)
       .background(Color.white)
-      .cornerRadius(12)
+      .cornerRadius(5)
       .shadow(color: Color.black.opacity(0.2), radius: 2, y: 2)
   }
 }

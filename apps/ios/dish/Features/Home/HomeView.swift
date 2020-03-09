@@ -114,7 +114,7 @@ struct HomeView: View {
       }
         .clipped()  // dont remove fixes bug cant click SearchBar
 
-      DishRestaurantView()
+      RestaurantView()
 
     }
       .environmentObject(self.state)

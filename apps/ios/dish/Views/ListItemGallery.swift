@@ -121,7 +121,6 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
                 getImage: self.getImage
               )
             }
-            .id(activeIndex)
             
             Spacer().frame(width: self.screen.width / 2.5)
           }
