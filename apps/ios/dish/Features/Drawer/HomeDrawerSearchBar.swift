@@ -84,7 +84,7 @@ struct HomeDrawerSearchBar: View {
     let isOnSearch = Selectors.home.isOnSearchResults(self.store)
     return HStack(spacing: 0) {
         SearchInput(
-          placeholder: "", //"\(lense.name) in \(store.state.map.locationLabel)...",
+          placeholder: "Search...", //"\(lense.name) in \(store.state.map.locationLabel)...",
           inputBackgroundColor: Color.clear,
           borderColor: Color.clear,  //Color.init(white: 0.5, opacity: 0.1),
           scale: 1.2,
