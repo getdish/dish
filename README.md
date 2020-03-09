@@ -6,8 +6,13 @@
 Basically:
 
 ```
-(cd services/hasura && yarn start)
-(cd apps/web && yarn start)
+cd services/hasura
+hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password
+yarn start
+```
+
+```
+cd apps/web && yarn start
 ```
 
 ---

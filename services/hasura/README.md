@@ -45,6 +45,10 @@ If this is your first install, or there's new migrations waiting to be run:
 
 `hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password`
 
+To remove data / reset dev env:
+
+`docker-compose rm -f`
+
 Then run the admin UI using:
 
 `hasura console --endpoint http://localhost:8080 --admin-secret=password`
