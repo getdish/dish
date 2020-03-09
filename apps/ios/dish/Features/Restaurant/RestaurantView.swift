@@ -34,7 +34,7 @@ struct RestaurantViewContent: View {
   @Environment(\.colorScheme) var colorScheme
   @State var mapZoom = 1.0
 
-  let dishes = features.chunked(into: 2)
+  let dishes = features
 
   var restaurant: RestaurantItem {
     return Selectors.home.lastState().restaurant ?? restaurants[0]
@@ -49,8 +49,9 @@ struct RestaurantViewContent: View {
       VStack(alignment: .leading, spacing: 0) {
         Text("\(self.restaurant.name)")
           .style(.h1)
-          .padding(.horizontal, 10)
-          .padding(.bottom, 10)
+          .lineLimit(2)
+          .padding(.horizontal, 16)
+          .padding(.bottom, 6)
 
         HStack {
           DividerView()
@@ -69,14 +70,16 @@ struct RestaurantViewContent: View {
         HStack(spacing: 0) {
           Group {
             Button(action: {}) {
-              HStack {
+              HStack(spacing: 20) {
                 Image(systemName: "map")
                   .resizable()
                   .scaledToFit()
-                  .frame(width: 20, height: 20)
+                  .frame(width: 18, height: 18)
                 
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 4) {
                   Text("\(self.restaurant.address)")
+                    .font(.system(size: 15))
+                  
                   Text("San Francisco, CA, 94131")
                     .font(.caption)
                     .opacity(0.5)
@@ -89,8 +92,8 @@ struct RestaurantViewContent: View {
               Image(systemName: "phone")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 26, height: 26)
-                .padding(4)
+                .frame(width: 24, height: 24)
+                .padding(6)
             }
           }
           .foregroundColor(self.colorScheme == .light ? .black : .white)
@@ -102,7 +105,28 @@ struct RestaurantViewContent: View {
           markers: [],
           mapZoom: self.$mapZoom
         )
-        .frame(height: 140)
+        .frame(height: 120)
+        
+        self.spacer
+        
+        VStack {
+          Text("Best Dishes".uppercased())
+            .tracking(3)
+            .fontWeight(.light)
+            .font(.system(size: 14))
+            .opacity(0.45)
+          
+          ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 20) {
+              ForEach(self.dishes) { dish in
+                DishButtonView(
+                  dish: dish
+                )
+              }
+            }
+            .padding()
+          }
+        }
         
         self.spacer
 
@@ -114,32 +138,8 @@ struct RestaurantViewContent: View {
           .frame(maxWidth: .infinity, maxHeight: 390)
           .clipped()
 
-        DividerView()
-
-        VStack {
-          Text("Top Dishes")
-            .font(.headline)
-            .padding(.bottom)
-
-          ForEach(0..<dishes.count) { index in
-            HStack {
-              ForEach(self.dishes[index], id: \.id) { dish in
-                DishCardView(
-                  at: .end,
-                  dish: dish,
-                  display: .small,
-                  height: 120
-                )
-                  .equatable()
-              }
-            }
-          }
-        }
-          .padding()
-
         Spacer()
       }
-      Spacer()
     }
   }
 }
@@ -151,7 +151,7 @@ struct RestaurantTagsRow: View {
     ScrollView(.horizontal, showsIndicators: false) {
       HStack {
         Spacer()
-        HStack(spacing: 20) {
+        HStack(spacing: 14) {
           ForEach(0..<self.restaurant.tags.count) { index in
             // self.restaurant.tags[index]
             return RestaurantLenseView(lense: App.store.state.home.lenses[index])
@@ -172,6 +172,7 @@ struct RestaurantLenseView: View {
     VStack {
       Text("\(self.lense.icon == "" ? "" : "\(self.lense.icon) ")\(self.lense.name)")
         .font(.system(size: 13))
+        .fontWeight(.semibold)
         .foregroundColor(.white)
     }
     .padding(.vertical, 4)
