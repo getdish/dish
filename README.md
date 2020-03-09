@@ -1,7 +1,14 @@
 # Getting started
 
 - See [services/hasura/README.md](services/hasura/README.md).
-- See [apps/lab/README.md](apps/lab/README.md).
+- See [apps/web/README.md](apps/web/README.md).
+
+Basically:
+
+```
+(cd services/hasura && yarn start)
+(cd apps/web && yarn start)
+```
 
 ---
 
