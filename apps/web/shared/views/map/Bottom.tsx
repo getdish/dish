@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Switch, Route } from 'react-router-dom'
-import { View, Button, Text } from 'react-native'
+import { View, Button, Text, StyleSheet } from 'react-native'
 import SlidingUpPanel, { Animated } from 'rn-sliding-up-panel'
 
 import { useOvermind } from '../../state/om'
@@ -8,7 +8,7 @@ import Restaurant from './Restaurant'
 import TopDishes from './TopDishes'
 import TopRestaurants from './TopRestaurants'
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
@@ -24,7 +24,7 @@ const styles = {
     alignSelf: 'flex-end',
     margin: 3,
   },
-}
+})
 
 export default function Bottom() {
   const { state, actions } = useOvermind()
