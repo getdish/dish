@@ -162,7 +162,6 @@ const styles = StyleSheet.create({
   },
   menu: {
     padding: '3em',
-    fontSize: 20,
   },
   button: {
     position: 'absolute',
