@@ -5,11 +5,21 @@
 
 Basically:
 
+In three tabs, start build:
+
+```
+yarn build:watch
+```
+
+Start hasura:
+
 ```
 cd services/hasura
 hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password
 yarn start
 ```
+
+Start web app (or ios, etc):
 
 ```
 cd apps/web && yarn start
