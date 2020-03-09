@@ -83,7 +83,7 @@ struct DishRestaurantCard: View, Identifiable, Equatable {
 
               ScrollView(.horizontal) {
                 HStack {
-                  CardTagView("Cheap")
+                  RestaurantLenseView(lense: LenseItem(name: "Cheap"))
                 }
               }
             }

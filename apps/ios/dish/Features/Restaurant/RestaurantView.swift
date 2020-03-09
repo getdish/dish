@@ -5,7 +5,7 @@ struct RestaurantView: View {
 
   var isRestaurantOpen: Binding<Bool> {
     Binding<Bool>(
-      get: { Selectors.home.isOnRestaurant() },
+      get: { Selectors.home.isOnRestaurant(self.store) },
       set: { next in
         if next == false {
           self.store.send(.home(.pop))
@@ -19,7 +19,7 @@ struct RestaurantView: View {
       .sheet(
         isPresented: self.isRestaurantOpen,
         onDismiss: {
-          //                
+          self.store.send(.home(.pop))
         }
       ) {
         ScrollView(.vertical) {
@@ -38,6 +38,10 @@ struct RestaurantViewContent: View {
 
   var restaurant: RestaurantItem {
     return Selectors.home.lastState().restaurant ?? restaurants[0]
+  }
+  
+  var spacer: some View {
+    Spacer().frame(height: 12)
   }
 
   var body: some View {
@@ -58,20 +62,9 @@ struct RestaurantViewContent: View {
           DividerView()
         }
 
-        ScrollView(.horizontal, showsIndicators: false) {
-          HStack {
-            Spacer()
-            HStack(spacing: 20) {
-              ForEach(0..<self.restaurant.tags.count) { index in
-                // self.restaurant.tags[index]
-                return Text("\(App.store.state.home.lenses[index].name)")
-              }
-            }
-              .padding(.horizontal)
-              .padding(.vertical, 12)
-            Spacer()
-          }
-        }
+        RestaurantTagsRow(
+          restaurant: self.restaurant
+        )
         
         HStack(spacing: 0) {
           Group {
@@ -105,14 +98,13 @@ struct RestaurantViewContent: View {
         .padding(.horizontal, 10)
         .padding(.vertical, 6)
         
-        HStack {
-          AppleMapView(
-            markers: [],
-            mapZoom: self.$mapZoom
-          )
-          Color.gray
-        }
-        .frame(height: 120)
+        AppleMapView(
+          markers: [],
+          mapZoom: self.$mapZoom
+        )
+        .frame(height: 140)
+        
+        self.spacer
 
         VStack {
           self.restaurant.image
@@ -149,6 +141,44 @@ struct RestaurantViewContent: View {
       }
       Spacer()
     }
+  }
+}
+
+struct RestaurantTagsRow: View {
+  var restaurant: RestaurantItem
+
+  var body: some View {
+    ScrollView(.horizontal, showsIndicators: false) {
+      HStack {
+        Spacer()
+        HStack(spacing: 20) {
+          ForEach(0..<self.restaurant.tags.count) { index in
+            // self.restaurant.tags[index]
+            return RestaurantLenseView(lense: App.store.state.home.lenses[index])
+          }
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 12)
+        Spacer()
+      }
+    }
+  }
+}
+
+struct RestaurantLenseView: View {
+  var lense: LenseItem
+  
+  var body: some View {
+    VStack {
+      Text("\(self.lense.icon == "" ? "" : "\(self.lense.icon) ")\(self.lense.name)")
+        .font(.system(size: 13))
+        .foregroundColor(.white)
+    }
+    .padding(.vertical, 4)
+    .padding(.horizontal, 4)
+    .background(self.lense.color)
+    .cornerRadius(5)
+    .shadow(color: Color.black.opacity(0.2), radius: 2, y: 2)
   }
 }
 

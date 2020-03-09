@@ -67,8 +67,8 @@ struct DishRestaurantResult: View {
             }
             
             HStack {
-              CardTagView("Cheap")
-              CardTagView("Vegan")
+              RestaurantLenseView(lense: LenseItem(name: "Cheap"))
+              RestaurantLenseView(lense: LenseItem(name: "Vegan"))
             }
           }
           
@@ -76,27 +76,6 @@ struct DishRestaurantResult: View {
         }
       }
     }
-  }
-}
-
-struct CardTagView: View {
-  let content: String
-
-  init(_ content: String) {
-    self.content = content
-  }
-
-  var body: some View {
-    VStack {
-      Text(self.content)
-        .font(.system(size: 13))
-        .foregroundColor(.black)
-    }
-      .padding(.vertical, 3)
-      .padding(.horizontal, 6)
-      .background(Color.white)
-      .cornerRadius(5)
-      .shadow(color: Color.black.opacity(0.2), radius: 2, y: 2)
   }
 }
 

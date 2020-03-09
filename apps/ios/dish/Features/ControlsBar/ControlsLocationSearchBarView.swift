@@ -81,7 +81,7 @@ struct ControlsLocationSearchBarView: View {
         .multilineTextAlignment(isFocused ? .leading : .center)
         .padding(.leading, 20)
         .padding(.trailing, 10)
-        .modifier(ControlsButtonStyle())
+        .controlButtonStyle()
         .animation(.spring())
         .overlay(
           HStack {

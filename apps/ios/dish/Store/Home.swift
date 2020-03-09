@@ -54,11 +54,11 @@ struct HomeStateItem: Identifiable, Equatable {
 }
 
 struct LenseItem: Equatable, Identifiable {
-  let id: String
-  let name: String
-  let icon: String
+  var id: String = "\(uid())"
+  var name: String
+  var icon: String = ""
   var rgb: [Double] = [0.65, 0.2, 0.65]
-  var description: String?
+  var description: String? = nil
   
   var color: Color {
     Color(red: self.rgb[0], green: self.rgb[1], blue: self.rgb[2])
