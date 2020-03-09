@@ -9,7 +9,7 @@ test.beforeEach(async () => {
   await Scrape.deleteAllBy('id_from_source', ID)
 })
 
-test('Gets and persists a restaurant', async t => {
+test.skip('Gets and persists a restaurant', async t => {
   let michelin = new Michelin()
   await michelin.allForRegion('pl')
   const scrape = new Scrape()
