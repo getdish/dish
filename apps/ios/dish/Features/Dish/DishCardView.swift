@@ -20,7 +20,7 @@ struct DishCardView: View, Identifiable, Equatable {
   var width: CGFloat? = nil
 
   var body: some View {
-    let radius: CGFloat = self.display == .small ? 18 : 22
+    let radius: CGFloat = self.display == .small ? 15 : 20
     // drawingGroup is removing our shadows... hacky version for now
     let shadow = Color.black.opacity(0.1).cornerRadius(radius)
 
@@ -50,7 +50,7 @@ struct DishCardView: View, Identifiable, Equatable {
             HStack {
               Text(self.dish.icon)
                 .font(.system(size: 32))
-                .shadow(color: Color.black.opacity(0.5), radius: 2, y: 1)
+                .shadow(color: Color.black.opacity(0.5), radius: 3, y: 1)
                 .position(x: 8, y: 8)
               Spacer()
             }
@@ -101,7 +101,6 @@ struct DishButtonView: View, Identifiable, Equatable {
   var action: (() -> Void)? = nil
 
   var body: some View {
-    //        MagicItem("dish-button-\(id)", at: at) {
     DishButton(
       action: self.action ?? {
         App.store.send(
@@ -114,9 +113,9 @@ struct DishButtonView: View, Identifiable, Equatable {
           Text(self.dish.name)
             .font(.system(size: 14))
             .fontWeight(.medium)
-            .foregroundColor(Color.white)
+            .lineLimit(2)
             .multilineTextAlignment(.center)
-            .lineLimit(1)
+            .foregroundColor(Color.white)
             .shadow(color: Color.black.opacity(0.25), radius: 0, x: 0, y: 1)
         }
           .padding(.vertical, 8)
@@ -127,6 +126,5 @@ struct DishButtonView: View, Identifiable, Equatable {
       }
         .padding(4)
     }
-    //        }
   }
 }

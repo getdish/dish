@@ -69,9 +69,10 @@ struct RootView: View {
           }
         }
       }
+      
       SplashView()
     }
-//    .invertColorScheme()
+    .environment(\.colorScheme, .dark)
   }
 }
 

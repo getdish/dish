@@ -7,6 +7,16 @@ class Mocks {
     ),
     reducer: appReducer
   )
+  
+  static let homeSearchedPhoOnMap = Store<AppState, AppAction>.init(
+    initialState: AppState(
+      home: AppState.HomeState(
+        viewStates: [HomeStateItem(), HomeStateItem(state: .search(search: "Pho"))],
+        drawerPosition: .bottom
+      )
+    ),
+    reducer: appReducer
+  )
 
   static let homeSearchedPhoSelectedRestaurant = Store<AppState, AppAction>.init(
     initialState: AppState(

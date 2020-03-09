@@ -88,12 +88,11 @@ struct CuisineItem: Equatable, Identifiable {
 }
 
 fileprivate let initialLenses: [LenseItem] = [
+  LenseItem(id: "1", name: "Me", icon: "", rgb: [0.2, 0.65, 0.65], description: "My top"),
   LenseItem(id: "0", name: "Top", icon: "🏆", rgb: [0.8, 0.1, 0.1], description: "Most popular"),
-  LenseItem(
-    id: "1", name: "My 👌", icon: "", rgb: [0.2, 0.65, 0.65], description: "Locals favorite"),
   LenseItem(id: "2", name: "New", icon: "🔥", rgb: [0.5, 0.1, 0.1], description: "New"),
   LenseItem(id: "3", name: "Picks", icon: "👩‍🍳", rgb: [0.6, 0.1, 0.5], description: "Chef choice"),
-  LenseItem(id: "4", name: "Date 💎", icon: "", rgb: [0.35, 0.2, 0.65], description: "Date night"),
+  LenseItem(id: "4", name: "Date 🌃", icon: "", rgb: [0.35, 0.2, 0.65], description: "Date night"),
   LenseItem(id: "6", name: "", icon: "Planty 🥬", rgb: [0.2, 0.7, 0.2], description: "Plant based"),
   LenseItem(id: "7", name: "", icon: "Fresh 🐟", rgb: [0.65, 0.2, 0.65], description: "Seafood"),
   LenseItem(id: "8", name: "Cheap", icon: "💸", rgb: [0.65, 0.2, 0.65], description: "Cheap"),
@@ -149,13 +148,14 @@ extension AppState {
     var filterTopLevel: HomeTopLevelFilter = .dish
     var cuisines: [CuisineItem] = initialCuisines
     var lenses: [LenseItem] = initialLenses
-    var lenseActive = 0
+    var lenseActive = 1
     var lenseToDishes = [String: [DishItem]]()
     var searchFocus: SearchFocusState = .off
     var drawerPosition: BottomDrawerPosition = .middle
     var drawerIsDragging = false
     var showCuisineFilter: Bool = false
-    var cuisineFilter: String = "🍽"
+    var cuisineFilter: String = "Cuisine"
+    var showFilters = false
   }
 }
 
@@ -176,6 +176,7 @@ enum HomeAction {
   case setDrawerIsDragging(_ val: Bool)
   case setSelectedMarkers(_ val: [MapMarker])
   case setFocusedItem(_ dish: HomeFocusedItem?)
+  case toggleShowFilters
 }
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
@@ -194,12 +195,12 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
   // switch
   
   switch action {
+    case .toggleShowFilters:
+      state.home.showFilters = !state.home.showFilters
     case .setFocusedItem(let dish):
       if state.home.drawerIsDragging == false {
-        if state.home.focusedItem != dish {
-          state.home.focusedItem = dish
-        }
-    }
+        state.home.focusedItem = dish
+      }
     case .setSelectedMarkers(let markers):
       let last = state.home.viewStates.last!
       if case .search(_, let results) = last.state {

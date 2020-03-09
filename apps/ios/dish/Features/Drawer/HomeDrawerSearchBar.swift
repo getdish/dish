@@ -1,12 +1,12 @@
 import SwiftUI
 
-// this can be expanded to handle types of filters
-enum SearchToTagColor {
-  static let dish = Color(red: 0.2, green: 0.4, blue: 0.7, opacity: 0.5)
-  static let filter = Color(red: 0.6, green: 0.2, blue: 0.4, opacity: 0.5)
-}
-
 struct HomeDrawerSearchBar: View {
+  // this can be expanded to handle types of filters
+  enum SearchToTagColor {
+    static let dish = Color(red: 0.2, green: 0.4, blue: 0.7, opacity: 0.5)
+    static let filter = Color(red: 0.6, green: 0.2, blue: 0.4, opacity: 0.5)
+  }
+  
   var showInput = true
 
   @State var searchText = ""
@@ -30,7 +30,6 @@ struct HomeDrawerSearchBar: View {
   }
 
   func focusKeyboard() {
-    logger.info()
     self.isFirstResponder = false
     async(2) {
       self.isFirstResponder = true
@@ -64,7 +63,6 @@ struct HomeDrawerSearchBar: View {
   }
 
   var body: some View {
-    let scale: CGFloat = 1
     let isOnHome = Selectors.home.isOnHome()
     let searchFocus = self.store.state.home.searchFocus
     let showSearchIcon = isOnHome || searchFocus == .search
@@ -82,28 +80,52 @@ struct HomeDrawerSearchBar: View {
         return Image(systemName: "chevron.left")
       }
     }()
+    let lense = Selectors.home.activeLense()
 
     //        let isOnSearch = self.store.state.home.showSearch == .search
-    return HStack {
-      SearchInput(
-        placeholder: "",
-        inputBackgroundColor: Color.init(white: 0.5, opacity: 0),
-        borderColor: Color.clear,  //Color.init(white: 0.5, opacity: 0.1),
-        scale: scale,
-        sizeRadius: 1.2,
-        icon: icon,
-        iconSize: iconSize,
-        showCancelInside: true,
-        onTapLeadingIcon: self.onTapLeadingIcon,
-        onEditingChanged: self.onEditingChanged,
-        onClear: self.onClear,
-        isFirstResponder: isFirstResponder,
-        searchText: self.homeSearch,
-        showInput: showInput
-      )
+    return HStack(spacing: 0) {
+        SearchInput(
+          placeholder: "", //"\(lense.name) in \(store.state.map.locationLabel)...",
+          inputBackgroundColor: Color.clear,
+          borderColor: Color.clear,  //Color.init(white: 0.5, opacity: 0.1),
+          scale: 1.2,
+          sizeRadius: 1.2,
+          icon: icon,
+          iconSize: iconSize,
+          showCancelInside: true,
+          onTapLeadingIcon: self.onTapLeadingIcon,
+          onEditingChanged: self.onEditingChanged,
+          onClear: self.onClear,
+          isFirstResponder: isFirstResponder,
+          searchText: self.homeSearch,
+          showInput: showInput
+        )
+        
+        DishButton(action: {
+          App.store.send(.home(.toggleShowFilters))
+        }) {
+          Image(systemName: "line.horizontal.3.decrease.circle")
+            .resizable()
+            .scaledToFit()
+            .frame(width: 25, height: 25)
+            .padding(10)
+            .opacity(0.35)
+        }
 
-      HomeCameraButton()
-    }
+        if self.store.state.home.searchFocus == .off {
+          Group {
+            Spacer().frame(width: 12)
+            HomeCameraButton()
+          }
+        }
+      }
+      .padding(10)
+    .background(self.colorScheme == .light
+      ? Color(white: 0.95, opacity: 0.9)
+        //
+      : Color(white: 0, opacity: 0.00001)
+    )
+      .cornerRadius(App.searchBarHeight / 3)
   }
 }
 
@@ -184,7 +206,7 @@ struct IndentedStyle: ButtonStyle {
 }
 
 #if DEBUG
-  struct HomeSearchBar_Previews: PreviewProvider {
+  struct HomeDrawerSearchBar_Previews: PreviewProvider {
     static var previews: some View {
       HomeDrawerSearchBar()
         .embedInAppEnvironment()

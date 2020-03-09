@@ -47,7 +47,7 @@ struct DishListItem: View, Equatable {
         ) {
           HStack(spacing: 12) {
             Text(self.dish.icon)
-              .font(.system(size: 32))
+              .font(.system(size: 30))
             
             Text(self.dish.name)
               .fontWeight(.bold)
@@ -57,7 +57,6 @@ struct DishListItem: View, Equatable {
             Spacer()
           }
       }
-      Spacer()
     }
   }
 }
@@ -73,7 +72,7 @@ struct DishListItemRestaurantCard: View {
       .resizable()
       .scaledToFill()
       .frame(width: size, height: size)
-      .cornerRadiusSquircle(18)
+      .cornerRadiusSquircle(16)
       .overlay(
         VStack {
           Spacer()
@@ -87,12 +86,12 @@ struct DishListItemRestaurantCard: View {
         }
       )
       .shadow(radius: 3)
-      .onGeometryFrameChange { geo in
+      .onGeometryFrameChange { frame in
         if self.isActive {
           let next = HomeFocusedItem(
             dish: self.dish,
             rank: self.index + 1,
-            targetMinY: geo.frame(in: .global).minY
+            targetMinY: frame.minY
           )
           if next != App.store.state.home.focusedItem {
             App.store.send(.home(.setFocusedItem(next)))

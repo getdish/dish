@@ -25,6 +25,7 @@ struct MapViewContainer: View {
             currentLocation: store.state.map.moveToLocation,
             markers: markers
           )
+            .opacity(store.state.home.drawerPosition == .top ? 0.6 : 1)
 
 //          // prevent touch on left/right sides for dragging between cards
 //          HStack {
@@ -102,6 +103,8 @@ struct MapView: View {
         },
         showsUserLocation: true
       )
+        .frame(height: App.screen.height * 2)
+//      .invertColorScheme()
     }
   }
 }

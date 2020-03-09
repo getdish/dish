@@ -1,12 +1,12 @@
 import Combine
 import SwiftUI
 
-fileprivate let topContentHeight = App.filterBarHeight
-
 struct HomeDrawerView: View, Equatable {
   static func == (lhs: Self, rhs: Self) -> Bool {
-    true
+    lhs.snapPoints.elementsEqual(rhs.snapPoints)
   }
+  
+  var snapPoints: [CGFloat]
 
   @EnvironmentObject var screen: ScreenModel
   @EnvironmentObject var store: AppStore
@@ -21,24 +21,33 @@ struct HomeDrawerView: View, Equatable {
         return self.store.state.home.drawerPosition
 
       },
-      set: { self.store.send(.home(.setDrawerPosition($0))) }
+      set: {
+        self.store.send(.home(.setDrawerPosition($0)))
+      }
     )
   }
+  
+  @State var lastPosition: BottomDrawerPosition? = nil
 
   var drawerBackgroundColor: Color {
     self.colorScheme == .dark
-      ? Color(white: 0.05).opacity(0.35)
-      : Color(white: 0.95).opacity(1)
+      ? Color(white: 0).opacity(0.55)
+      : Color(white: 0.8).opacity(1)
   }
 
   var body: some View {
     let isOnLocationSearch = self.store.state.home.searchFocus == .location
+    
     return BottomDrawer(
       background: self.drawerBackgroundColor,
       cornerRadius: 25,
       handle: nil,
-      onChangePosition: { (_, y) in
-        homeViewState.setY(y)
+      onChangePosition: { (pos, y) in
+        let didChangePos = pos != self.lastPosition
+        if didChangePos {
+          self.lastPosition = pos
+        }
+        homeViewState.setY(y, animate: didChangePos)
       },
       onDragState: { state in
         if App.store.state.home.focusedItem != nil {
@@ -49,18 +58,28 @@ struct HomeDrawerView: View, Equatable {
         }
       },
       position: self.drawerPosition,
-      snapPoints: App.drawerSnapPoints
+      preventDragAboveSnapPoint: .middle,
+      snapPoints: self.snapPoints
     ) {
       ZStack {
         Spacer()
+        
+        LinearGradient(
+          gradient: .init(
+            colors: [Color(white: 0, opacity: 0.5), Color.clear]
+          ),
+          startPoint: .top,
+          endPoint: .center
+        )
+        
         HomeMainDrawerContent()
         
         VStack(spacing: 0) {
           VStack(spacing: 0) {
             HomeDrawerSearchBar()
-              .padding(.horizontal, 10)
-              .padding(.top, 10)
-              .padding(.bottom, 5)
+              .background(
+                BlurView(style: .dark)
+              )
             HomeDrawerFilterBar()
           }
           Spacer()
@@ -83,9 +102,8 @@ struct HomeMainDrawerContent: View {
 
   var body: some View {
     let viewStates = self.store.state.home.viewStates
-    let occludeTopHeight = App.searchBarHeight + 13
+//    let occludeTopHeight = App.searchBarHeight
     return VStack(spacing: 0) {
-      Spacer().frame(height: occludeTopHeight)
       ZStack {
         ForEach(viewStates, id: \.id) { viewState in
           HomeScreen(
@@ -98,28 +116,98 @@ struct HomeMainDrawerContent: View {
             .equatable()
         }
       }
-        .mask(HomeMainDrawerContent.maskGradient.offset(y: occludeTopHeight - 15))
+//        .mask(
+//          HomeMainDrawerContent.maskGradient.offset(
+//            y: occludeTopHeight - (
+//              self.store.state.home.showFilters
+//                ? -20
+//                : -12
+//          ))
+//        )
     }
   }
   
   static let maskGradient = LinearGradient(
     gradient: Gradient(colors: [
       Color.black.opacity(0),
-      Color.black.opacity(1),
-      Color.black.opacity(1),
-      Color.black.opacity(1),
-      Color.black.opacity(1),
-      Color.black.opacity(1),
-      Color.black.opacity(1),
-      Color.black.opacity(1),
-      Color.black.opacity(1),
-      Color.black.opacity(1),
-      Color.black.opacity(1),
-      Color.black.opacity(1)
+      Color.black,
+      Color.black,
+      Color.black,
+      Color.black,
+      Color.black,
+      Color.black,
+      Color.black,
+      Color.black,
+      Color.black,
+      Color.black,
+      Color.black,
+      Color.black,
+      Color.black
     ]),
     startPoint: .top,
     endPoint: .center
   )
+}
+
+let mainContentScrollState = ScrollState()
+
+struct HomeContentScrollView<Content>: View where Content: View {
+  @EnvironmentObject var screen: ScreenModel
+  @EnvironmentObject var store: AppStore
+  @State var state: ScrollState = mainContentScrollState
+  @State var targetLock: ScrollState.ScrollTargetLock = .idle
+  var content: Content
+  
+  init(content: () -> Content) {
+    self.content = content()
+  }
+  
+  func start() {
+    self.state.$scrollTargetLock
+      .map { target in
+        // side effect
+        if target == .drawer {
+          self.state.scrollView?.panGestureRecognizer.isEnabled = false
+        } else {
+          self.state.scrollView?.panGestureRecognizer.isEnabled = true
+        }
+        return target
+    }
+    .assign(to: \.targetLock, on: self)
+    .store(in: &self.state.cancellables)
+  }
+  
+  var body: some View {
+    let isDisabled = self.store.state.home.drawerIsDragging
+    let topContentHeight = App.searchBarHeight + (self.store.state.home.showFilters
+      ? App.filterBarHeight : 0)
+    
+    return Group {
+      ZStack {
+        Color.clear.onAppear(perform: self.start)
+        ScrollView(.vertical, showsIndicators: false) {
+          Color.clear.introspectScrollView { x in
+            if self.state.scrollView == nil {
+              self.state.scrollView = x
+              self.state.start()
+            }
+          }
+          
+          Color.black
+          
+          VStack(spacing: 0) {
+            Spacer().frame(height: topContentHeight)
+            self.content
+            Spacer().frame(height: 5 + self.screen.edgeInsets.bottom + self.screen.height / 2)
+          }
+        }
+        .frame(width: self.screen.width, alignment: .leading)
+      }
+    }
+    .disabled(isDisabled)
+    .allowsHitTesting(!isDisabled)
+    .clipped()
+  }
 }
 
 struct HomeScreen: View, Identifiable, Equatable {
@@ -197,82 +285,33 @@ struct IdentifiableView<Content>: View, Identifiable where Content: View {
   }
 }
 
-let mainContentScrollState = ScrollState()
-
-struct HomeContentScrollView<Content>: View where Content: View {
-  @EnvironmentObject var screen: ScreenModel
-  @EnvironmentObject var store: AppStore
-  @State var state: ScrollState = mainContentScrollState
-  @State var targetLock: ScrollState.ScrollTargetLock = .idle
-  var content: Content
-  
-  init(content: () -> Content) {
-    self.content = content()
-  }
-  
-  func start() {
-    self.state.$scrollTargetLock
-      .map { target in
-        // side effect
-        if target == .drawer {
-          self.state.scrollView?.panGestureRecognizer.isEnabled = false
-        } else {
-          self.state.scrollView?.panGestureRecognizer.isEnabled = true
-        }
-        return target
-    }
-    .assign(to: \.targetLock, on: self)
-    .store(in: &self.state.cancellables)
-  }
-  
-  var body: some View {
-    let isDisabled = self.store.state.home.drawerIsDragging
-    return Group {
-      ZStack {
-        Color.clear.onAppear(perform: self.start)
-        
-        GeometryReader { geo in
-          ScrollView(.vertical, showsIndicators: false) {
-            Color.clear.introspectScrollView { x in
-              if self.state.scrollView == nil {
-                self.state.scrollView = x
-                self.state.start()
-              }
-            }
-            
-            VStack(spacing: 0) {
-              Spacer().frame(height: topContentHeight)
-              self.content
-              Spacer().frame(height: 5 + self.screen.edgeInsets.bottom + self.screen.height / 2)
-            }
-          }
-          .frame(width: self.screen.width, alignment: .leading)
-        }
-      }
-    }
-    .disabled(isDisabled)
-    .allowsHitTesting(!isDisabled)
-    .clipped()
-  }
-}
-
 struct HomeDrawerExploreView: View {
   @Environment(\.colorScheme) var colorScheme
   @EnvironmentObject var screen: ScreenModel
   @EnvironmentObject var store: AppStore
   let dishes = features
 
-  var lense: LenseItem {
-    Selectors.home.activeLense(self.store)
-  }
-
   var total: Int {
     self.store.state.appLoaded ? self.dishes.count : 5
   }
 
   var body: some View {
-    VStack {
-      self.titleView
+    let lense = Selectors.home.activeLense(store)
+    
+    return VStack {
+      HStack {
+        Image(systemName: "arrowtriangle.left.fill")
+          .resizable().scaledToFit().frame(width: 10).opacity(0.34)
+        Spacer()
+        Text("\(lense.description ?? "")".uppercased()).tracking(5).fontWeight(.light)
+          .opacity(0.5)
+        Spacer()
+        Image(systemName: "arrowtriangle.right.fill")
+          .resizable().scaledToFit().frame(width: 10).opacity(0.34)
+      }
+      .padding(.horizontal)
+      .offset(y: -10)
+      
       ForEach(0..<self.total) { index in
         DishListItem(
           dish: self.dishes[index],
@@ -285,24 +324,33 @@ struct HomeDrawerExploreView: View {
       .id(self.store.state.appLoaded ? "0" : "1")
     }
   }
+}
+
+struct DrawerTitleView: View {
+  @Environment(\.colorScheme) var colorScheme
+  @EnvironmentObject var screen: ScreenModel
+  @EnvironmentObject var store: AppStore
   
-  var titleView: some View {
-    Group {
+  var lense: LenseItem {
+    Selectors.home.activeLense(self.store)
+  }
+  
+  var body: some View {
+    let locationName = self.store.state.map.locationLabel
+    return Group {
       if self.store.state.home.searchFocus != .search {
         HStack(spacing: 6) {
-          Spacer()
-          
-          Text(lense.description ?? "")
-            .font(.system(size: 24))
-            .foregroundColor(colorScheme == .light ?
-              Color(white: 0, opacity: 0.5) : Color(white: 1, opacity: 0.5))
-          
-          Text(self.store.state.home.filterTopLevel == .dish ? "dishes 🍽" : "restaurants 🧂")
-            .fontWeight(.semibold)
-            .font(.system(size: 24))
-            .style(.smallCapsSmallTitle)
-            .foregroundColor(colorScheme == .light ? .black : .white)
-          
+          Group {
+            Text("\(lense.icon) \(lense.name)")
+            if locationName != "Map area" {
+              Text("in")
+              Text("\(locationName)")
+            }
+          }
+          .font(.system(size: 22))
+          .foregroundColor(colorScheme == .light ?
+            Color(white: 0, opacity: 0.5) : Color(white: 1, opacity: 0.5))
+
           Spacer()
         }
         .padding(.horizontal)
@@ -313,7 +361,6 @@ struct HomeDrawerExploreView: View {
       }
     }
   }
-  
 }
 
 class ScrollState: NSObject, ObservableObject, UIScrollViewDelegate, UIGestureRecognizerDelegate {

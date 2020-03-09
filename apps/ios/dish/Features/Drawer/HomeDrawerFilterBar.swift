@@ -30,40 +30,42 @@ struct HomeDrawerFilterBar: View, Equatable {
 
   var body: some View {
     ZStack {
-      ScrollView(.horizontal, showsIndicators: false) {
-        HStack(spacing: 0) {
-          DishButton(action: {
-            self.store.send(.home(.toggleShowCuisineFilter))
-          }) {
-            Text("\(self.store.state.home.cuisineFilter)")
-              .font(.system(size: 28))
-              .shadow(color: Color(white: 0, opacity: 0.25), radius: 2, y: 0)
-              .padding(10)
-          }
-          
-          Spacer().frame(width: 5)
-
-          ForEach(0..<self.filterGroups.count) { index in
-            Group {
-              // separator
-//              if self.filterGroups[index][0].stack == false
-//                && index != 0
-//              {
-//                self.separator
-//              }
-              FilterGroupView(
-                group: self.filterGroups[index]
+      if self.store.state.home.showFilters {
+        ScrollView(.horizontal, showsIndicators: false) {
+          HStack(spacing: 0) {
+            FilterButton(
+              action: {
+                self.store.send(.home(.toggleShowCuisineFilter))
+              },
+              filter: FilterItem(
+                name: self.store.state.home.cuisineFilter,
+                fontSize: 15
               )
+            )
+            
+            ForEach(0..<self.filterGroups.count) { index in
+              Group {
+                // separator
+                //              if self.filterGroups[index][0].stack == false
+                //                && index != 0
+                //              {
+                //                self.separator
+                //              }
+                FilterGroupView(
+                  group: self.filterGroups[index]
+                )
+              }
             }
           }
-        }
-          .padding(.horizontal, 24)
+          .padding(.horizontal, 20)
           // this heavily fixes map pan
           .drawingGroup()
+        }
+        .transition(AnyTransition.slide.combined(with: .opacity))
+        .animation(.spring(response: 0.8))
+        .frame(height: App.filterBarHeight)
       }
     }
-      .animation(.none)
-      .frame(height: App.filterBarHeight)
   }
 }
 
@@ -163,9 +165,9 @@ struct FilterButton: View {
   @Environment(\.colorScheme) var colorScheme
   @Environment(\.itemSegment) var itemSegment
 
+  var action: (() -> Void)? = nil
   var expandable: Bool = false
   var filter: FilterItem
-  var onTap: (() -> Void)? = nil
 
   var height: CGFloat {
     App.filterBarHeight - filterBarPad
@@ -174,7 +176,7 @@ struct FilterButton: View {
   var body: some View {
     DishButton(
       action: {
-        if let cb = self.onTap {
+        if let cb = self.action {
           cb()
         } else {
           if self.filter.type == .toggle {

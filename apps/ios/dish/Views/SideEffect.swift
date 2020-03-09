@@ -20,7 +20,6 @@ struct SideEffect: View {
   let condition: (() -> Bool)?
   let block: () -> Void
   let name: String
-  let runState = RunState()
 
   init(
     _ name: String, level: LogLevel = .info, debounce: Double = 0, throttle: Double = 0,
@@ -39,7 +38,7 @@ struct SideEffect: View {
       if self.condition?() == false {
         Color.clear
       } else {
-        Run(self.name, level: self.level, debounce: debounce, throttle: throttle, state: self.runState, block: self.block)
+        Run(self.name, level: self.level, debounce: debounce, throttle: throttle, block: self.block)
       }
     }
   }
@@ -55,7 +54,7 @@ class RunState: ObservableObject {
   func start(_ parent: Run) {
     if parent.debounce > 0 {
       self.$debounceRun
-        .debounce(for: .milliseconds(Int(parent.debounce)), scheduler: DispatchQueue.main)
+        .debounce(for: .milliseconds(Int(parent.debounce)), scheduler: App.queueMain)
         .sink { _ in
           parent.run()
       }
@@ -64,7 +63,7 @@ class RunState: ObservableObject {
     if parent.throttle > 0 {
       self.$throttleRun
         .throttle(
-          for: .milliseconds(Int(parent.throttle)), scheduler: DispatchQueue.main, latest: true
+          for: .milliseconds(Int(parent.throttle)), scheduler: App.queueMain, latest: true
       )
         .sink { _ in
           parent.run()
@@ -80,11 +79,10 @@ struct Run: View {
   let debounce: Double
   let throttle: Double
   let block: () -> Void
-  let state: RunState
+  @State var state: RunState = RunState()
 
   init(
     _ name: String, level: LogLevel = .info, debounce: Double = 0, throttle: Double = 0,
-    state: RunState = RunState(),
     block: @escaping () -> Void
   ) {
     self.name = name
@@ -92,7 +90,6 @@ struct Run: View {
     self.debounce = debounce
     self.throttle = throttle
     self.block = block
-    self.state = state
   }
 
   var body: some View {

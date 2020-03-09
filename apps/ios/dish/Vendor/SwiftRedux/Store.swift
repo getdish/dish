@@ -28,10 +28,11 @@ final class Store<State, Action>: ObservableObject where State: Equatable {
   }
 
   func send(_ action: Action) {
-    let prev = state
-    reducer(&state, action)
-    if state != prev {
+    var next = state
+    reducer(&next, action)
+    if state != next {
       print(" 🔀 (action) \(String(describing: action).truncated(limit: 250))")
+      self.state = next
     }
   }
 

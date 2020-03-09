@@ -41,16 +41,18 @@ struct AppleMapView: UIViewRepresentable {
     var lastMapLocation: MapViewLocation = .init(center: .none)
     var lastUserLocation: CLLocation = .init()
     var locationManager = CLLocationManager()
+    var original: AppleMapView
     var current: AppleMapView
     var zoomingIn = false
     var zoomingAnnotation: MKAnnotation? = nil
 
     init(_ parent: AppleMapView) {
+      self.original = parent
       self.current = parent
     }
     
     var mapView: MKMapView {
-      current.mapView
+      original.mapView
     }
     
     func updateProps(_ next: AppleMapView) {
@@ -59,13 +61,15 @@ struct AppleMapView: UIViewRepresentable {
 
       // map not loaded yet
       if self.mapView.bounds.width == 0 || self.mapView.bounds.height == 0 {
-        self.current = next
+        self.original = next
         return
       }
 
       // do updates before updating next
       self.updateMarkers(next.markers)
       self.updateCurrentLocation(next)
+      
+      self.current = next
     }
 
     func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
@@ -86,10 +90,8 @@ struct AppleMapView: UIViewRepresentable {
 
         // If you want the map to display the cluster members
         mapView.showAnnotations(cluster.memberAnnotations, animated: true)
-
       }
-
-      //            zoomToAnnotation(view.annotation!)
+      // zoomToAnnotation(view.annotation!)
     }
 
     // change region
@@ -106,7 +108,6 @@ struct AppleMapView: UIViewRepresentable {
           cb(location)
         }
       }
-      
       self.callbackOnChangeLocationName()
     }
     

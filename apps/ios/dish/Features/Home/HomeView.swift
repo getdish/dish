@@ -15,14 +15,15 @@ struct HomeView: View {
 
   @State var contentWrappingView: UIView? = nil
 
-  func start() {
-    async(500) {
-      self.state.setAnimationState(.idle)
-    }
-  }
-
   var mapFullHeight: CGFloat {
     self.screen.height * 1.5
+  }
+  
+  var snapPoints: [CGFloat] {
+    return store.state.home.drawerPosition == .bottom &&
+      store.state.home.showFilters == false
+      ? [App.drawerSnapPoints[0], App.drawerSnapPoints[1], App.drawerSnapPoints[2] + App.filterBarHeight]
+      : App.drawerSnapPoints
   }
 
   @State var lastSearchFocus: SearchFocusState = .off
@@ -31,9 +32,13 @@ struct HomeView: View {
     let state = self.state
     let showMapRow = self.store.state.home.drawerPosition == .bottom
       && !self.store.state.home.drawerIsDragging
+    let y: CGFloat = (self.screen.height - self.mapFullHeight) * 0.75
+      // move with drawer (but just a bit less than half because when fully open, we show a bottom results drawer)
+      + (state.y - self.snapPoints[1]) * 0.4
+      // adjust for any awkwardness
+      + 20
 
     return ZStack(alignment: .topLeading) {
-      RunOnce(name: "start") { self.start() }
       PrintGeometryView("HomeView")
 
       // below restaurant card
@@ -45,49 +50,25 @@ struct HomeView: View {
         ZStack {
           // Map
           if App.enableMap {
-            MapViewContainer()
-              .offset(
-                y:  // centered
-                (self.screen.height - self.mapFullHeight) * 0.75
-                  // move with drawer (but just a bit less than half because when fully open, we show a bottom results drawer)
-                  + (state.y - App.drawerSnapPoints[1]) * 0.4
-                  // adjust for any awkwardness
-                  + 20
-              )
-              .animation(.spring(response: 0.35))
+            ZStack {
+              MapViewContainer()
+                .offset(y: y)
+                .animation(.spring(response: 2))
+                .invertColorScheme()
+            }
+            .frameLimitedToScreen()
+            .clipped()
           }
 
           // map overlay fade to bottom
-          VStack {
-            Spacer()
-            ZStack {
-              self.colorScheme == .dark
-                ? LinearGradient(
-                  gradient: Gradient(colors: [.clear, .black]),
-                  startPoint: .top,
-                  endPoint: .bottom
-                  )
-                : LinearGradient(
-                  gradient: Gradient(colors: [
-                    Color.clear,
-                    Color(white: 1, opacity: 1)
-                  ]),
-                  startPoint: .top,
-                  endPoint: .bottom
-              )
-            }
-            .frame(height: self.screen.height / 2)
-            .drawingGroup()
-          }
-          .allowsHitTesting(false)
-          .disabled(true)
+          HomeViewMapOverlay()
 
           VStack(spacing: 0) {
             MapViewLenseFilterBar()
             Spacer()
           }
           // dont go up beyond mid-point
-            .offset(y: max(App.drawerSnapPoints[1] - 68 - 30, state.y - 68))
+            .offset(y: max(self.snapPoints[1] - 68 - 30, state.y - 68))
             .animation(.spring(response: 0.6))
 
           // map results bar
@@ -96,7 +77,7 @@ struct HomeView: View {
             Spacer()
           }
           .offset(
-            y: App.drawerSnapPoints[2] + (
+            y: self.snapPoints[2] + (
               showMapRow
                 ? -App.mapBarHeight - 68
                 : 0
@@ -109,7 +90,9 @@ struct HomeView: View {
           ControlsBar()
             .equatable()
 
-          HomeDrawerView()
+          HomeDrawerView(
+            snapPoints: self.snapPoints
+          )
             .equatable()
 
           HomeViewFocusedItem(

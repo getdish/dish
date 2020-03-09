@@ -1,3 +1,15 @@
+.theme-dark ::selection {
+  background: rgb(203, 211, 255);
+  color: #fff;
+  text-shadow: none;
+}
+
+.theme-dark *::selection {
+  background: rgb(203, 211, 255);
+  color: #fff;
+  text-shadow: none;
+}
+
 #app {
   width: 100%;
   height: 100%;
@@ -13,29 +25,14 @@
   all: initial;
 }
 
-.hide-scrollbars {
-  -webkit-overflow-scrolling: initial;
-  -ms-overflow-style: none;
-}
-
-.hide-scrollbars::-webkit-scrollbar {
-  height: 0 !important;
-  width: 0 !important;
-  background: transparent;
-  display: none;
-}
-
-.hide-scrollbars::-webkit-scrollbar-thumb {
-  background: transparent;
-}
-
 button,
 input {
   font-size: inherit;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
   margin: 0;
   padding: 0;
   color: #333;
@@ -79,7 +76,8 @@ input[type='radio'] {
 /* dont change select style it will reset it to flat looking */
 input,
 textarea {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
 body {
@@ -135,18 +133,6 @@ a {
 *::selection {
   background: rgb(203, 211, 255);
   color: #111;
-  text-shadow: none;
-}
-
-.theme-dark ::selection {
-  background: rgb(203, 211, 255);
-  color: #fff;
-  text-shadow: none;
-}
-
-.theme-dark *::selection {
-  background: rgb(203, 211, 255);
-  color: #fff;
   text-shadow: none;
 }
 

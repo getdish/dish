@@ -33,14 +33,14 @@ class HomeViewState: ObservableObject {
   //    private var lastKeyboardAdjustY: CGFloat = 0
 
   init() {
-    self.keyboard.$state.map { $0.height }
-      .removeDuplicates()
-      .sink { val in
-        // set animating while keyboard animates
-        // prevents filters jumping up/down while focusing input
-        self.setAnimationState(.controlled, 350)
-      }
-      .store(in: &cancels)
+//    self.keyboard.$state.map { $0.height }
+//      .removeDuplicates()
+//      .sink { val in
+//        // set animating while keyboard animates
+//        // prevents filters jumping up/down while focusing input
+//        self.setAnimationState(.controlled, 350)
+//      }
+//      .store(in: &cancels)
 
     self.keyboard.$state
       .map { $0.height }
@@ -48,24 +48,24 @@ class HomeViewState: ObservableObject {
       .assign(to: \.keyboardHeight, on: self)
       .store(in: &cancels)
 
-    let started = Date()
-    self.scrollState.$scrollY
-      .throttle(for: 0.125, scheduler: App.queueMain, latest: true)
-      .removeDuplicates()
-      .sink { y in
-        if Date().timeIntervalSince(started) < 3 {
-          return
-        }
-        let next: HomeViewState.HomeScrollState =
-          y > 60 ? .more : y > 30 ? .some : .none
-        if next == self.hasScrolled {
-          return
-        }
-        print(" ⏩ hasScrolled = \(next) (y = \(y))")
-        self.animate(state: .animate) {
-          self.hasScrolled = next
-        }
-      }.store(in: &cancels)
+//    let started = Date()
+//    self.scrollState.$scrollY
+//      .throttle(for: 0.125, scheduler: App.queueMain, latest: true)
+//      .removeDuplicates()
+//      .sink { y in
+//        if Date().timeIntervalSince(started) < 3 {
+//          return
+//        }
+//        let next: HomeViewState.HomeScrollState =
+//          y > 60 ? .more : y > 30 ? .some : .none
+//        if next == self.hasScrolled {
+//          return
+//        }
+//        print(" ⏩ hasScrolled = \(next) (y = \(y))")
+//        self.animate(state: .animate) {
+//          self.hasScrolled = next
+//        }
+//      }.store(in: &cancels)
   }
 
   var scrollRevealY: CGFloat {
@@ -80,50 +80,25 @@ class HomeViewState: ObservableObject {
     logger.info()
     self.dragState = next
   }
+  
+  var isAnimating = false
 
-  func setAnimationState(_ next: HomeAnimationState, _ duration: Double = 0) {
-    // cancel last controlled animation
-    if next != .idle,
-      let handle = self.cancelAnimation
-    {
-      handle.cancel()
+  func setY(_ dragY: CGFloat, animate: Bool = false) {
+    if isAnimating {
+      return
     }
-
-    // set state
-    self.animationState = next
-
-    // end set state
-    if duration > 0 {
-      // allows cancel
-      var cancel = false
-      self.cancelAnimation = AnyCancellable { cancel = true }
-      async(duration) {
-        if cancel { return }
-        self.setAnimationState(.idle)
-        self.cancelAnimation = nil
-      }
-    }
-  }
-
-  func animate(
-    _ animation: Animation? = Animation.spring().speed(App.animationSpeed),
-    state: HomeAnimationState = .controlled,
-    duration: Double = 400,
-    _ body: @escaping () -> Void
-  ) {
-    logger.info("\(state) duration: \(duration)")
-    self.setAnimationState(state, duration)
-
-    async(3) {  // delay so it updates animationState first in body
-      withAnimation(animation) {
-        body()
-      }
-    }
-  }
-
-  func setY(_ dragY: CGFloat) {
     if dragY != y {
-      self.y = dragY
+      if animate {
+        self.isAnimating = true
+        withAnimation(.spring()) {
+          self.y = dragY
+        }
+        async(300) {
+          self.isAnimating = false
+        }
+      } else {
+        self.y = dragY
+      }
     }
   }
 

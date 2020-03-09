@@ -12,8 +12,8 @@ struct BlurView: UIViewRepresentable {
 
   func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<BlurView>) {
     // remove old
-    uiView.subviews[0].removeFromSuperview()
-    self.addBlurView(uiView)
+//    uiView.subviews[0].removeFromSuperview()
+//    self.addBlurView(uiView)
   }
 
   func addBlurView(_ view: UIView) {
