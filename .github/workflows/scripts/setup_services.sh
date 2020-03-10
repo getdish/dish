@@ -13,15 +13,13 @@ wait_until_hasura_ready() {
 }
 export -f wait_until_hasura_ready
 
-# TODO: Use the Docker Compose file from services/hasura
-docker run \
-  --net=host \
-  -e HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:postgres@localhost/dish \
-  -e HASURA_GRAPHQL_ENABLE_CONSOLE=false \
-  -e HASURA_GRAPHQL_ADMIN_SECRET=password \
-  -e HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anon \
-  -e HASURA_GRAPHQL_JWT_SECRET='{"type":"HS256", "key": "12345678901234567890123456789012"}' \
-  hasura/graphql-engine:v1.1.0 > hasura.logs 2>&1 &
+pushd services/hasura
+mkdir -p $HOME/.dish/postgres/data
+docker-compose up -d
+sleep 10
+docker-compose down
+docker-compose up -d
+popd
 
 curl -L https://github.com/hasura/graphql-engine/raw/master/cli/get.sh | bash
 

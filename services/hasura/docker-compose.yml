@@ -10,6 +10,10 @@ services:
       POSTGRES_DB: dish
     ports:
       - 5432:5432
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
   hasura:
     image: hasura/graphql-engine:v1.1.0
     ports:
@@ -20,7 +24,8 @@ services:
       - HASURA_GRAPHQL_ENABLE_TELEMETRY=false
       - HASURA_GRAPHQL_ADMIN_SECRET=password
       - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anon
-      - HASURA_GRAPHQL_JWT_SECRET='{"type":"HS256", "key": "12345678901234567890123456789012"}'
+      - HASURA_GRAPHQL_JWT_SECRET={"type":"HS256", "key":"12345678901234567890123456789012"}
     depends_on:
       - "postgres"
+      - "redis"
 

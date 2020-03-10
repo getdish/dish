@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-echo "Outputting Docker logs..."
+echo "Outputting CI logs..."
+
+pushd services/hasura
+docker-compose logs
+popd
+
 cat *.logs
 
 
