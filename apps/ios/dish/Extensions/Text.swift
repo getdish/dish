@@ -9,7 +9,7 @@ extension Text {
   func style(_ style: Style) -> Text {
     switch style {
     case .h1:
-      return font(.system(size: 28))
+      return font(.system(size: 26))
         .fontWeight(.semibold)
     case .h2:
       return font(.system(size: 20))

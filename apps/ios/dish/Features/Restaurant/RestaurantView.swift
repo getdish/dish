@@ -41,7 +41,7 @@ struct RestaurantViewContent: View {
   }
   
   var spacer: some View {
-    Spacer().frame(height: 12)
+    Spacer().frame(height: 16)
   }
 
   var body: some View {
@@ -110,33 +110,34 @@ struct RestaurantViewContent: View {
         self.spacer
         
         VStack {
-          Text("Best Dishes".uppercased())
-            .tracking(3)
-            .fontWeight(.light)
-            .font(.system(size: 14))
-            .opacity(0.45)
-          
-          ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 20) {
-              ForEach(self.dishes) { dish in
-                DishButtonView(
-                  dish: dish
-                )
-              }
-            }
-            .padding()
+          HStack {
+            DividerView()
+            Text("Best Dishes".uppercased())
+              .tracking(3)
+              .fontWeight(.light)
+              .font(.system(size: 14))
+              .opacity(0.45)
+            DividerView()
           }
         }
         
         self.spacer
 
-        VStack {
-          self.restaurant.image
-            .resizable()
-            .scaledToFill()
-        }
+        self.restaurant.image
+          .resizable()
+          .scaledToFill()
           .frame(maxWidth: .infinity, maxHeight: 390)
-          .clipped()
+          .cornerRadiusSquircle(32)
+          .shadow(radius: 10)
+          .padding()
+          .overlay(
+            VStack {
+              Text("Pho")
+                .foregroundColor(.black)
+                .controlButtonStyle()
+              Spacer()
+            }
+          )
 
         Spacer()
       }
@@ -171,15 +172,16 @@ struct RestaurantLenseView: View {
   var body: some View {
     VStack {
       Text("\(self.lense.icon == "" ? "" : "\(self.lense.icon) ")\(self.lense.name)")
-        .font(.system(size: 13))
+        .font(.system(size: 14))
         .fontWeight(.semibold)
+        .lineLimit(1)
         .foregroundColor(.white)
     }
-    .padding(.vertical, 4)
-    .padding(.horizontal, 4)
-    .background(self.lense.color)
-    .cornerRadius(5)
-    .shadow(color: Color.black.opacity(0.2), radius: 2, y: 2)
+    .padding(.vertical, 6)
+    .padding(.horizontal, 7)
+    .background(Color.black)
+    .cornerRadius(8)
+    .shadow(color: Color.black.opacity(0.3), radius: 5, y: 1)
   }
 }
 

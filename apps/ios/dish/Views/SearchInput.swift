@@ -112,6 +112,7 @@ struct SearchInput: View {
               //                            isFirstResponder: self.isFirstResponder,
               //                            onEditingChanged: self.handleEditingChanged
             )
+              .font(.system(size: fontSize, weight: .semibold, design: .rounded))
           } else {
             // temp bugfix for above TODO problem...
             HStack {

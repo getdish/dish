@@ -40,7 +40,7 @@ struct HomeDrawerView: View, Equatable {
     
     return BottomDrawer(
       background: self.drawerBackgroundColor,
-      cornerRadius: 25,
+      cornerRadius: App.searchBarHeight * 0.35,
       handle: nil,
       onChangePosition: { (pos, y) in
         let didChangePos = pos != self.lastPosition
@@ -75,16 +75,18 @@ struct HomeDrawerView: View, Equatable {
         HomeMainDrawerContent()
         
         VStack(spacing: 0) {
-          VStack(spacing: 0) {
+          VStack(spacing: 5) {
             ZStack {
               BlurView(style: .dark)
               VStack(spacing: 0) {
                 HomeDrawerSearchBar()
                 DividerView()
                     .opacity(0.5)
+                  .offset(y: -3)
               }
             }
             .frame(height: App.searchBarHeight)
+
             HomeDrawerFilterBar()
           }
           Spacer()
@@ -184,7 +186,7 @@ struct HomeContentScrollView<Content>: View where Content: View {
   
   var body: some View {
     let isDisabled = self.store.state.home.drawerIsDragging
-    let topContentHeight = App.searchBarHeight + (self.store.state.home.showFilters
+    let topContentHeight = App.searchBarHeight + (Selectors.home.showFilterBar(self.store)
       ? App.filterBarHeight : 0)
     
     return Group {

@@ -21,7 +21,7 @@ struct HomeView: View {
   
   var snapPoints: [CGFloat] {
     return store.state.home.drawerPosition == .bottom &&
-      store.state.home.showFilters == false
+      Selectors.home.showFilterBar(self.store) == false
       ? [App.drawerSnapPoints[0], App.drawerSnapPoints[1], App.drawerSnapPoints[2] + App.filterBarHeight]
       : App.drawerSnapPoints
   }

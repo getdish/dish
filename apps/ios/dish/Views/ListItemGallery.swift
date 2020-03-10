@@ -107,8 +107,6 @@ struct ListItemGallery<ImageContent, Content>: View where Content: View, ImageCo
           }
           .frame(width: contentWidth)
           
-          Spacer()
-          
           Color.clear.frame(width: spaceSize)
           
           HStack(spacing: 0) {

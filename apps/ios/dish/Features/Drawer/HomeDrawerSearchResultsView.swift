@@ -5,7 +5,7 @@ struct HomeDrawerSearchResultsView: View {
 
   var body: some View {
     let results = state.searchResults?.results ?? []
-    return VStack(spacing: 20) {      
+    return VStack(spacing: 30) {
       ForEach(results) { item in
         DishRestaurantResult(restaurant: item, rank: (results.firstIndex(of: item) ?? 0) + 1)
       }
@@ -24,7 +24,7 @@ struct DishRestaurantResult: View {
       App.store.send(.home(.navigateToRestaurant(self.restaurant)))
     }) {
       ListItemGallery(
-        defaultImagesVisible: 1.2,
+        defaultImagesVisible: 1.3,
         displayContent: .fixed,
         getImage: { (index, size, isActive) in
           (restaurants.count > index ? restaurants[index] : restaurants[0])
@@ -34,45 +34,41 @@ struct DishRestaurantResult: View {
             .frame(width: size, height: size)
             .cornerRadiusSquircle(16)
       },
-        imageSize: 115,
+        imageSize: 120,
         total: 4
       ) {
-        HStack(spacing: 12) {
-          VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 10) {
-              Color.clear
-                .frame(width: 36, height: 36)
-                .background(Color(.systemBackground))
-                .cornerRadius(32)
-                .overlay(
-                  Text("\(self.rank)")
-                    .font(.system(size: self.rank > 9 ? 16 : 20))
-                    .fontWeight(.bold)
-                    .offset(x: 1)
-                    .overlay(
-                      Text("#")
-                        .font(.system(size: 14))
-                        .fontWeight(.bold)
-                        .opacity(0.4)
-                        .offset(x: -11, y: -4)
-                    )
-                )
-                .rotationEffect(.degrees(-15))
-              
+        HStack(alignment: .top, spacing: 12) {
+          RatingNumberView(number: self.rank)
+            .invertColorScheme()
+          
+          VStack(alignment: .leading, spacing: 8) {
+            HStack {
               Text(self.restaurant.name)
-                .fontWeight(.bold)
+                .fontWeight(.semibold)
                 .lineLimit(2)
-                .font(.system(size: 16))
+                .fixedSize(horizontal: false, vertical: true)
+                .font(.system(size: 18))
                 .modifier(TextShadowStyle())
             }
-            .offset(x: -15, y: 0)
             
             HStack(spacing: 8) {
+              Group {
+                Text("1,200 reviews")
+                  .font(.system(size: 14))
+                  .opacity(0.5)
+              }
+              .modifier(TextShadowStyle())
+              
+              Spacer()
+            }
+            
+            HStack {
               Group {
                 Text("Open")
                   .font(.system(size: 14))
                   .foregroundColor(.green).fontWeight(.semibold)
                 Text("9:00pm")
+                  .opacity(0.7)
                   .font(.system(size: 14))
               }
               .modifier(TextShadowStyle())
@@ -83,11 +79,49 @@ struct DishRestaurantResult: View {
               RestaurantLenseView(lense: LenseItem(name: "Vegan"))
             }
           }
-          
-          Spacer()
+          .offset(x: -30, y: 0)
         }
       }
     }
+  }
+}
+
+struct RatingNumberView: View {
+  var number: Int
+  
+  @Environment(\.colorScheme) var colorScheme
+  
+  var body: some View {
+    let bg: Color = colorScheme == .dark ? .black : .white
+    
+    return Color.clear
+      .frame(width: 36, height: 36)
+      .background(bg)
+      .overlay(
+        ZStack {
+          Text("\(self.number)")
+            .font(.system(size: self.number > 9 ? 20 : 28, design: .rounded))
+            .fontWeight(.bold)
+            .offset(x: 5, y: 4)
+            .background(
+              Text("#")
+                .font(.system(size: 16))
+                .fontWeight(.bold)
+                .opacity(0.34)
+                .offset(x: 2, y: -8)
+          )
+          
+//          LinearGradient(
+//            gradient: Gradient(colors: [bg.opacity(0), bg]),
+//            startPoint: .center,
+//            endPoint: .bottomTrailing
+//          )
+        }
+    )
+      .cornerRadius(32)
+      .rotationEffect(.degrees(-15))
+//      .scaleEffect(1.1)
+      .offset(x: -29, y: -8)
   }
 }
 
@@ -101,9 +135,11 @@ struct TextShadowStyle: ViewModifier {
   struct HomeSearchResults_Previews: PreviewProvider {
     static var previews: some View {
       HomeDrawerSearchResultsView(
-        state: HomeStateItem(state: .search(search: "Pho"))
+        state: HomeStateItem(state: .search(search: "Pho", results: .init(status: .completed, results: restaurants)))
       )
         .embedInAppEnvironment()
+        .background(Color.black)
+        .invertColorScheme()
     }
   }
 #endif

@@ -341,6 +341,13 @@ struct HomeSelectors {
     let d = drawerRGB(store, colorScheme: colorScheme)
     return Color(red: d[0], green: d[1], blue: d[2])
   }
+  
+  func showFilterBar(_ store: AppStore = App.store) -> Bool {
+    if Selectors.home.isOnSearchResults() {
+      return true
+    }
+    return store.state.home.showFilters
+  }
 }
 
 // structures for HomeStore
