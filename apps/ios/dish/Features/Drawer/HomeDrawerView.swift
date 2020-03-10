@@ -31,7 +31,7 @@ struct HomeDrawerView: View, Equatable {
 
   var drawerBackgroundColor: Color {
     self.colorScheme == .dark
-      ? Color(white: 0).opacity(0.55)
+      ? Color(white: 0).opacity(0.6)
       : Color(white: 0.8).opacity(1)
   }
 
@@ -82,7 +82,6 @@ struct HomeDrawerView: View, Equatable {
                 HomeDrawerSearchBar()
                 DividerView()
                     .opacity(0.5)
-                  .offset(y: -3)
               }
             }
             .frame(height: App.searchBarHeight)
@@ -106,31 +105,25 @@ struct HomeMainDrawerContent: View {
   func onSwipeBack() {
     self.store.send(.home(.pop))
   }
+  
+  var viewStates: [HomeStateItem] {
+    self.store.state.home.viewStates.filter { $0.restaurant == nil }
+  }
 
   var body: some View {
-    let viewStates = self.store.state.home.viewStates
-//    let occludeTopHeight = App.searchBarHeight
     return VStack(spacing: 0) {
       ZStack {
         ForEach(viewStates, id: \.id) { viewState in
           HomeScreen(
-            index: viewStates.firstIndex(of: viewState) ?? 0,
-            isActive: Selectors.home.lastState() == viewState,
-            isLast: viewStates.firstIndex(of: viewState) == viewStates.count - 1,
+            index: self.viewStates.firstIndex(of: viewState) ?? 0,
+            isActive: self.store.state.home.viewStates.last { $0.restaurant == nil } == viewState,
+            isLast: self.viewStates.firstIndex(of: viewState) == self.viewStates.count - 1,
             onSwipeBack: self.onSwipeBack,
             viewState: viewState
           )
             .equatable()
         }
       }
-//        .mask(
-//          HomeMainDrawerContent.maskGradient.offset(
-//            y: occludeTopHeight - (
-//              self.store.state.home.showFilters
-//                ? -20
-//                : -12
-//          ))
-//        )
     }
   }
   

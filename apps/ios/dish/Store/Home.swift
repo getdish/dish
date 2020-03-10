@@ -160,6 +160,7 @@ enum HomeAction {
   case navigateToRestaurant(_ val: RestaurantItem)
   case push(_ val: HomeStateItem)
   case pop
+  case popRestaurant
   case setSearch(_ val: String)
   case setSearchResults(_ val: SearchResultRestaurant)
   case setLenseActive(_ val: Int)
@@ -278,7 +279,11 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
     case .pop:
       if state.home.viewStates.count > 1 {
         state.home.viewStates = state.home.viewStates.dropLast()
-    }
+      }
+    case .popRestaurant:
+      if state.home.viewStates.last!.restaurant != nil {
+        state.home.viewStates = state.home.viewStates.dropLast()
+      }
   }
 }
 

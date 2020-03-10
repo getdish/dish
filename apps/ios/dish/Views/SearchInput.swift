@@ -101,7 +101,7 @@ struct SearchInput: View {
 
     return ZStack {
       HStack(spacing: 0) {
-        Spacer().frame(width: 54)
+        Spacer().frame(width: 48)
         
         Group {
           if showInput {
@@ -149,6 +149,7 @@ struct SearchInput: View {
                 (icon ?? Image(systemName: "magnifyingglass"))
                   .resizable()
                   .scaledToFit()
+                  .foregroundColor(.white)
               }
                 .frame(width: self.iconSize * scale, height: self.iconSize * scale)
             }

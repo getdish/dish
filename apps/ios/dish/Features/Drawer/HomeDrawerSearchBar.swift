@@ -66,7 +66,7 @@ struct HomeDrawerSearchBar: View {
     let isOnHome = Selectors.home.isOnHome()
     let searchFocus = self.store.state.home.searchFocus
     let showSearchIcon = isOnHome || searchFocus == .search
-    var iconSize: CGFloat = 16
+    var iconSize: CGFloat = 14
     let icon: Image = {
       if Selectors.home.lastState().isLoading {
         return Image(systemName: "slowmo")
