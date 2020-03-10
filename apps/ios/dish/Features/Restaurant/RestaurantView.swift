@@ -32,11 +32,11 @@ struct RestaurantView: View {
               Image(systemName: "xmark.circle.fill")
                 .resizable()
                 .scaledToFit()
-                .foregroundColor(Color.black.opacity(0.34))
-                .frame(width: 34, height: 34)
-                .padding(4)
+                .foregroundColor(Color.black.opacity(0.3))
+                .frame(width: 20, height: 20)
+                .padding(5)
             }
-            .padding(.trailing, 8)
+            .padding(.trailing, 3)
           }
           .frame(height: 40)
             
@@ -142,10 +142,9 @@ struct RestaurantViewContent: View {
               self.restaurant.image.resizable().scaledToFill()
               self.restaurant.image.resizable().scaledToFill()
             }
-            .frame(maxWidth: self.screen.width + 10, maxHeight: 390)
+            .frame(maxWidth: 400, maxHeight: 390)
               .cornerRadiusSquircle(32)
               .shadow(radius: 10)
-              .padding()
               .overlay(
                 VStack {
                   Text("Pho")
@@ -155,6 +154,7 @@ struct RestaurantViewContent: View {
                 }
             )
           }
+          .padding()
         }
         
         Group {
