@@ -85,12 +85,12 @@ struct CuisineItem: Equatable, Identifiable {
 
 fileprivate let initialLenses: [LenseItem] = [
 //  LenseItem(id: "1", name: "Me", icon: "", rgb: [0.2, 0.65, 0.65], description: "My top"),
-  LenseItem(id: "0", name: "", icon: "⭐️", rgb: [0.8, 0.1, 0.1], description: "Most popular"),
+  LenseItem(id: "0", name: "Overall", icon: "⭐️", rgb: [0.8, 0.1, 0.1], description: "Most popular"),
   LenseItem(id: "2", name: "New", icon: "🔥", rgb: [0.5, 0.1, 0.1], description: "New"),
   LenseItem(id: "3", name: "Picks", icon: "👩‍🍳", rgb: [0.6, 0.1, 0.5], description: "Chef choice"),
-  LenseItem(id: "4", name: "Date 🌃", icon: "", rgb: [0.35, 0.2, 0.65], description: "Date night"),
-  LenseItem(id: "6", name: "", icon: "Planty 🥬", rgb: [0.2, 0.7, 0.2], description: "Plant based"),
-  LenseItem(id: "7", name: "", icon: "Fresh 🐟", rgb: [0.65, 0.2, 0.65], description: "Seafood"),
+  LenseItem(id: "4", name: "Date Night", icon: "🌃", rgb: [0.35, 0.2, 0.65], description: "Date night"),
+  LenseItem(id: "6", name: "Planty", icon: "🥬", rgb: [0.2, 0.7, 0.2], description: "Plant based"),
+  LenseItem(id: "7", name: "Seafood", icon: "🐟", rgb: [0.65, 0.2, 0.65], description: "Seafood"),
   LenseItem(id: "8", name: "Cheap", icon: "💸", rgb: [0.65, 0.2, 0.65], description: "Cheap"),
 ]
 

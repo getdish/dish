@@ -75,8 +75,8 @@ struct DishRestaurantResult: View {
             }
             
             HStack {
-              RestaurantLenseView(lense: LenseItem(name: "Cheap"))
-              RestaurantLenseView(lense: LenseItem(name: "Vegan"))
+              RestaurantLenseView(lense: LenseItem(name: "Cheap"), hideRank: true)
+              RestaurantLenseView(lense: LenseItem(name: "Vegan"), hideRank: true)
             }
           }
           .offset(x: -30, y: 0)

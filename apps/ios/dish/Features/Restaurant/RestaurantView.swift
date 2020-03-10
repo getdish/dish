@@ -72,17 +72,31 @@ struct RestaurantViewContent: View {
 
         HStack {
           DividerView()
-          DishRatingView(
-            isMini: false,
-            restaurant: self.restaurant
-          )
-            .frame(width: 80, height: 32)
+          HStack(spacing: 0) {
+            Text("#1 in")
+              .font(.system(size: 16))
+              .fontWeight(.bold)
+              .lineLimit(1)
+              .foregroundColor(.black)
+              .padding(.vertical, 8)
+              .padding(.horizontal, 8)
+              .background(Color.white)
+              .frame(width: 53)
+            
+            Text("🇨🇳 Chinese")
+              .font(.system(size: 16))
+              .fontWeight(.semibold)
+              .lineLimit(1)
+              .frame(width: 96)
+              .foregroundColor(.white)
+              .padding(.vertical, 8)
+              .padding(.horizontal, 8)
+              .background(Color.black)
+          }
+          .cornerRadius(8)
+          .shadow(color: Color.black.opacity(0.3), radius: 5, y: 1)
           DividerView()
         }
-
-        RestaurantTagsRow(
-          restaurant: self.restaurant
-        )
         
         HStack(spacing: 0) {
           Group {
@@ -107,17 +121,27 @@ struct RestaurantViewContent: View {
               .padding(4)
             }
             
+            Color.clear
+              .frame(width: 66, height: 66)
+          }
+        .overlay(
+          HStack {
+           Spacer()
             AppleMapView(
               markers: [],
               mapZoom: self.$mapZoom
             )
-              .frame(width: 66, height: 66)
+              .frame(width: 90, height: 90)
               .cornerRadius(100)
-          }
+        })
           .foregroundColor(self.colorScheme == .light ? .black : .white)
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 0)
+        
+        RestaurantTagsRow(
+          restaurant: self.restaurant
+        )
 
         Group {
           self.spacer
@@ -203,22 +227,14 @@ struct RestaurantTagsRow: View {
 
 struct RestaurantLenseView: View {
   var lense: LenseItem
+  var hideRank: Bool = false
   
   var ranking: Int {
-    self.lense.rgb[0] > 0.5 ? 3 : 0
+    hideRank ? 0 : self.lense.rgb[0] > 0.5 ? 3 : 0
   }
   
   var body: some View {
     HStack(spacing: 0) {
-      Text("\(self.lense.icon == "" ? "" : "\(self.lense.icon) ")\(self.lense.name)")
-        .font(.system(size: 14))
-        .fontWeight(.semibold)
-        .lineLimit(1)
-        .foregroundColor(.white)
-        .padding(.vertical, 6)
-        .padding(.horizontal, 6)
-      .background(Color.black)
-      
       if ranking > 0 {
         Text("#1")
           .font(.system(size: 14))
@@ -228,8 +244,16 @@ struct RestaurantLenseView: View {
           .padding(.horizontal, 6)
           .background(Color.white)
       }
+      
+      Text("\(self.lense.icon == "" ? "" : "\(self.lense.icon) ")\(self.lense.name)")
+        .font(.system(size: 14))
+        .fontWeight(.semibold)
+        .lineLimit(1)
+        .foregroundColor(.white)
+        .padding(.vertical, 6)
+        .padding(.horizontal, 6)
+        .background(self.lense.color)
     }
-    
     .cornerRadius(8)
     .shadow(color: Color.black.opacity(0.3), radius: 5, y: 1)
   }
