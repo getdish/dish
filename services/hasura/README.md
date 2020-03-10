@@ -56,3 +56,10 @@ You might want to try the experimental migration squasher as the console tends
 to verbosely create a new migration for every single unit of change.
 
 `hasura migrate squash --from <timestamp of most recently committed migration> --endpoint http://localhost:8080 --admin-secret=password`
+
+## Misc
+
+Note that the `@dish/models` package is set up to use the live Hasura instance if the
+domain name contains 'hasura_live'. This was setup because the React Native framework, Expo,
+cannot easily get its config recognised by our internal packages. The domain can be achieved by setting your local machine's `/etc/hosts` file with an entry like 
+`127.0.0.1 d1sh_hasura_live.com`. You may want to avoid spelling 'dish' with a real 'i' as that is a keyword for triggering other production features.

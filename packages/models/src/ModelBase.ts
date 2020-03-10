@@ -29,7 +29,8 @@ export type Point = {
   coordinates: [number, number]
 }
 
-const LOCAL_HASURA = `http://localhost:8080`
+const LOCAL_HASURA = 'http://localhost:8080'
+const LIVE_HASURA = 'https://hasura.rio.dishapp.com'
 
 let DOMAIN: string
 
@@ -40,9 +41,13 @@ if (isNode) {
     LOCAL_HASURA
 } else {
   if (isBrowserProd) {
-    DOMAIN = 'https://hasura.rio.dishapp.com'
+    DOMAIN = LIVE_HASURA
   } else {
-    DOMAIN = process.env.REACT_APP_HASURA_ENDPOINT || LOCAL_HASURA
+    if (window.location.hostname.includes('hasura_live')) {
+      DOMAIN = LIVE_HASURA
+    } else {
+      DOMAIN = process.env.REACT_APP_HASURA_ENDPOINT || LOCAL_HASURA
+    }
   }
 }
 
