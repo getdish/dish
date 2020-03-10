@@ -57,8 +57,31 @@ to verbosely create a new migration for every single unit of change.
 
 `hasura migrate squash --from <timestamp of most recently committed migration> --endpoint http://localhost:8080 --admin-secret=password`
 
+## Seed data
+
+### Importing
+
+If you have a dump file named 'restaurants.dump' you can load it from the current working
+directory with the following command:
+
+`psql -d dish -c "TRUNCATE TABLE restaurant CASCADE" && psql -d dish -c "\copy restaurant FROM './restaurants.dump'"`
+
+### Exporting
+First make sure you have a port open to the live DB (see our Kubernetes docs for more info)
+```
+kubectl port-forward svc/postgres-postgresql 15432:5432 -n postgres
+```
+
+Then run the following (the password is in `.env.enc.production`):
+```
+PGPASSWORD=$DISH_PG_PASS psql -p15432 -h localhost -U postgres -d dish -c "\copy \
+(select * from restaurant WHERE ST_DWithin(location, ST_MakePoint(-122.42,37.76), 1)) \
+TO './restaurants.dump'"
+```
+
 ## Misc
 
+### Using the live DB from your local machine
 Note that the `@dish/models` package is set up to use the live Hasura instance if the
 domain name contains 'hasura_live'. This was setup because the React Native framework, Expo,
 cannot easily get its config recognised by our internal packages. The domain can be achieved by setting your local machine's `/etc/hosts` file with an entry like 
