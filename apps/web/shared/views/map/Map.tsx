@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import ReactMap, { Feature, Layer, LngLatBounds, Popup } from 'react-mapbox-gl'
+import MapboxGL, { Popup, LngLatBounds } from 'mapbox-gl'
+import ReactMap, { Feature, Layer } from 'react-mapbox-gl'
 import { useHistory } from 'react-router-dom'
 
 import { useOvermind } from '../../state/om'
@@ -38,7 +39,7 @@ const Map = () => {
     closeOnClick: false,
   })
 
-  const updateMap = (map: ReactMap.Map, _event: React.SyntheticEvent) => {
+  const updateMap = (map: MapboxGL.Map, _event: React.SyntheticEvent) => {
     if (
       mapState.bounds == ({} as LngLatBounds) ||
       isBoundsChanged(map.getBounds())
