@@ -43,9 +43,13 @@ struct MapLenseButton: View, Identifiable, Equatable {
       App.store.send(.home(.setLenseActive(self.index)))
     }) {
       HStack {
-        Text("\(self.lense.icon)\(self.lense.name != "" ? " \(self.lense.name)" : "")")
-          .font(.system(size: 16))
-          .fontWeight(.semibold)
+        if index == 0 {
+          Image("dish-neon")
+        } else {
+          Text("\(self.lense.icon)\(self.lense.name != "" ? " \(self.lense.name)" : "")")
+            .font(.system(size: 16))
+            .fontWeight(.semibold)
+        }
       }
         .padding(.horizontal, 13)
         .frame(height: 42)

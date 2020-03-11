@@ -2,22 +2,20 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "dish-neon-2.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "dish-neon-1.png",
       "scale" : "2x"
     },
     {
-      "idiom" : "universal",
       "filename" : "dish-neon.png",
+      "idiom" : "universal",
       "scale" : "3x"
     }
   ],
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "version" : 1
   }
 }
