@@ -193,7 +193,7 @@ struct BottomDrawer<Content: View>: View {
 
       self.content
     }
-      .frame(height: screenHeight, alignment: .top)
+    .frame(width: App.screen.width, height: screenHeight, alignment: .top)
       .background(
         self.background
       )

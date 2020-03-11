@@ -149,7 +149,7 @@ struct SearchInput: View {
                 (icon ?? Image(systemName: "magnifyingglass"))
                   .resizable()
                   .scaledToFit()
-                  .foregroundColor(.white)
+                  .foregroundColor(self.colorScheme == .dark ? .white : .black)
               }
                 .frame(width: self.iconSize * scale, height: self.iconSize * scale)
             }

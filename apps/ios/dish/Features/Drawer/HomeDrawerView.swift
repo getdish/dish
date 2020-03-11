@@ -32,7 +32,7 @@ struct HomeDrawerView: View, Equatable {
   var drawerBackgroundColor: Color {
     self.colorScheme == .dark
       ? Color(white: 0).opacity(0.6)
-      : Color(white: 0.8).opacity(1)
+      : Color(white: 1).opacity(1)
   }
 
   var body: some View {
@@ -62,11 +62,9 @@ struct HomeDrawerView: View, Equatable {
       snapPoints: self.snapPoints
     ) {
       ZStack {
-        Spacer()
-        
         LinearGradient(
           gradient: .init(
-            colors: [Color(white: 0, opacity: 0.5), Color.clear]
+            colors: [Color(white: self.colorScheme == .dark ? 0 : 1, opacity: 0.35), Color.clear]
           ),
           startPoint: .top,
           endPoint: .center
@@ -77,7 +75,7 @@ struct HomeDrawerView: View, Equatable {
         VStack(spacing: 0) {
           VStack(spacing: 5) {
             ZStack {
-              BlurView(style: .dark)
+              BlurView(style: self.colorScheme == .dark ? .dark : .extraLight)
               VStack(spacing: 0) {
                 HomeDrawerSearchBar()
                 DividerView()
@@ -320,8 +318,8 @@ struct HomeDrawerCurrentLenseTitle: View {
     let lense = Selectors.home.activeLense(store)
 
     return HStack {
-      Image(systemName: "arrowtriangle.left.fill")
-        .resizable().scaledToFit().frame(width: 8).opacity(0.25)
+//      Image(systemName: "arrowtriangle.left.fill")
+//        .resizable().scaledToFit().frame(width: 8).opacity(0.25)
       Spacer()
       Text("\(lense.description ?? "")".uppercased())
         .tracking(3)
@@ -329,8 +327,8 @@ struct HomeDrawerCurrentLenseTitle: View {
         .font(.system(size: 14))
         .opacity(0.45)
       Spacer()
-      Image(systemName: "arrowtriangle.right.fill")
-        .resizable().scaledToFit().frame(width: 8).opacity(0.25)
+//      Image(systemName: "arrowtriangle.right.fill")
+//        .resizable().scaledToFit().frame(width: 8).opacity(0.25)
     }
     .padding(.horizontal, 20)
     .offset(y: -10)
@@ -539,3 +537,15 @@ class ScrollState: NSObject, ObservableObject, UIScrollViewDelegate, UIGestureRe
 //    }
 //    .id(self.id)
 //}
+
+#if DEBUG
+struct HomeDrawerView_Previews: PreviewProvider {
+  static var previews: some View {
+    ZStack {
+      HomeDrawerView(snapPoints: App.drawerSnapPoints)
+    }
+    .embedInAppEnvironment()
+    .environment(\.colorScheme, .light)
+  }
+}
+#endif

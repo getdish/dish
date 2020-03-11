@@ -24,7 +24,7 @@ struct DishRestaurantResult: View {
       App.store.send(.home(.navigateToRestaurant(self.restaurant)))
     }) {
       ListItemGallery(
-        defaultImagesVisible: 1.3,
+        defaultImagesVisible: 1.15,
         displayContent: .fixed,
         getImage: { (index, size, isActive) in
           (restaurants.count > index ? restaurants[index] : restaurants[0])
@@ -34,14 +34,14 @@ struct DishRestaurantResult: View {
             .frame(width: size, height: size)
             .cornerRadiusSquircle(16)
       },
-        imageSize: 120,
+        imageSize: 140,
         total: 4
       ) {
         HStack(alignment: .top, spacing: 12) {
           RatingNumberView(number: self.rank)
             .invertColorScheme()
           
-          VStack(alignment: .leading, spacing: 8) {
+          VStack(alignment: .leading, spacing: 0) {
             HStack {
               Text(self.restaurant.name)
                 .fontWeight(.semibold)
@@ -51,32 +51,56 @@ struct DishRestaurantResult: View {
                 .modifier(TextShadowStyle())
             }
             
-            HStack(spacing: 8) {
+            Spacer().frame(height: 8)
+            
+            HStack {
               Group {
-                Text("1,200 reviews")
+                Text("★ 4.98 · 1,200 reviews")
                   .font(.system(size: 14))
                   .opacity(0.5)
               }
               .modifier(TextShadowStyle())
-              
               Spacer()
             }
             
-            HStack {
-              Group {
-                Text("Open")
-                  .font(.system(size: 14))
-                  .foregroundColor(.green).fontWeight(.semibold)
-                Text("9:00pm")
-                  .opacity(0.7)
-                  .font(.system(size: 14))
-              }
-              .modifier(TextShadowStyle())
-            }
+            Spacer().frame(height: 6)
             
             HStack {
-              RestaurantLenseView(lense: LenseItem(name: "Cheap"), hideRank: true)
-              RestaurantLenseView(lense: LenseItem(name: "Vegan"), hideRank: true)
+              VStack(alignment: .leading) {
+                Group {
+                  Text("Open")
+                    .font(.system(size: 14))
+                    .foregroundColor(.green).fontWeight(.semibold)
+                  Text("9:00pm")
+                    .opacity(0.7)
+                    .font(.system(size: 14))
+                }
+                .modifier(TextShadowStyle())
+              }
+              
+              DividerView(.vertical)
+              
+              VStack(alignment: .leading) {
+                Group {
+                  Text("Cheap")
+                    .font(.system(size: 14))
+                    .foregroundColor(.yellow).fontWeight(.semibold)
+                  Text("~$10-15")
+                    .opacity(0.7)
+                    .font(.system(size: 14))
+                }
+                .modifier(TextShadowStyle())
+              }
+            }
+            
+            Spacer().frame(height: 12)
+            
+            ScrollView(.horizontal) {
+              HStack {
+                RestaurantLenseView(lense: LenseItem(name: "🍜 Pho"))
+                RestaurantLenseView(lense: LenseItem(name: "Date 🌃"))
+                RestaurantLenseView(lense: LenseItem(name: "Vegan 🥬"), hideRank: true)
+              }
             }
           }
           .offset(x: -30, y: 0)
@@ -108,7 +132,7 @@ struct RatingNumberView: View {
                 .font(.system(size: 16))
                 .fontWeight(.bold)
                 .opacity(0.34)
-                .offset(x: 2, y: -8)
+                .offset(x: 4, y: -8)
           )
           
 //          LinearGradient(
@@ -126,8 +150,10 @@ struct RatingNumberView: View {
 }
 
 struct TextShadowStyle: ViewModifier {
+  @Environment(\.colorScheme) var colorScheme
+  
   func body(content: Content) -> some View {
-    content.shadow(color: Color.black.opacity(0.4), radius: 1, x: 0, y: 1)
+    content.shadow(color: Color(white: 0, opacity: colorScheme == .light ? 0 : 0.4), radius: 1, x: 0, y: 1)
   }
 }
 

@@ -107,7 +107,7 @@ struct HomeDrawerSearchBar: View {
             .resizable()
             .scaledToFit()
             .frame(width: 23, height: 23)
-            .padding(10)
+            .padding(12)
             .opacity(0.35)
         }
 
@@ -121,7 +121,7 @@ struct HomeDrawerSearchBar: View {
                 Image(systemName: "camera.fill")
                   .resizable()
                   .scaledToFit()
-                  .frame(width: isOnSearch ? 16 : 22, height: isOnSearch ? 16 : 22)
+                  .frame(width: isOnSearch ? 20 : 24, height: isOnSearch ? 20 : 24)
                   .padding(isOnSearch ? 12 : 14)
                   .borderRounded(radius: 100, width: 1, color: Color(white: 0.5, opacity: 0.2))
                   .foregroundColor(self.colorScheme == .light ? .black : .white)
@@ -131,12 +131,6 @@ struct HomeDrawerSearchBar: View {
         }
       }
       .padding(10)
-    .background(self.colorScheme == .light
-      ? Color(white: 0.95, opacity: 0.9)
-        //
-      : Color(white: 0, opacity: 0.00001)
-    )
-      .cornerRadius(App.searchBarHeight / 3)
   }
 }
 
@@ -199,7 +193,9 @@ struct IndentedStyle: ButtonStyle {
 #if DEBUG
   struct HomeDrawerSearchBar_Previews: PreviewProvider {
     static var previews: some View {
-      HomeDrawerSearchBar()
+      ZStack {
+        HomeDrawerSearchBar()
+      }
         .embedInAppEnvironment()
     }
   }

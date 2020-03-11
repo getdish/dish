@@ -239,23 +239,25 @@ struct RestaurantLenseView: View {
         Text("#1")
           .font(.system(size: 14))
           .fontWeight(.bold)
+          .fixedSize()
           .foregroundColor(.black)
-          .padding(.vertical, 6)
-          .padding(.horizontal, 6)
+          .padding(.vertical, 5)
+          .padding(.horizontal, 7)
           .background(Color.white)
       }
       
       Text("\(self.lense.icon == "" ? "" : "\(self.lense.icon) ")\(self.lense.name)")
         .font(.system(size: 14))
         .fontWeight(.semibold)
+        .fixedSize()
         .lineLimit(1)
         .foregroundColor(.white)
-        .padding(.vertical, 6)
-        .padding(.horizontal, 6)
+        .padding(.vertical, 5)
+        .padding(.horizontal, 7)
         .background(self.lense.color)
     }
     .cornerRadius(8)
-    .shadow(color: Color.black.opacity(0.3), radius: 5, y: 1)
+    .modifier(TextShadowStyle())
   }
 }
 

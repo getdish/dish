@@ -100,13 +100,10 @@ struct SignInView: View {
   var body: some View {
     KeyboardHost {
       VStack {
-        Group {
-          Image("dish-logo")
-            .resizable()
-            .frame(width: 75, height: 75)
-
-          Text("Dish").font(.title)
-        }
+        Image("dish-neon")
+          .resizable()
+          .scaledToFit()
+          .frame(height: 120)
 
         VStack(spacing: 12) {
           DishInput(text: $email, name: "Email")

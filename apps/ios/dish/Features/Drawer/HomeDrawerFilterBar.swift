@@ -1,6 +1,6 @@
 import SwiftUI
 
-fileprivate let filterBarPad: CGFloat = 7
+fileprivate let filterBarPad: CGFloat = 10
 
 struct HomeDrawerFilterBar: View, Equatable {
   static func == (lhs: Self, rhs: Self) -> Bool {
@@ -219,7 +219,7 @@ struct FilterButton: View {
         active: self.filter.active,
         pressed: false
       ))
-        .padding(isSegmenting ? 0 : filterBarPad)
+        .padding(isSegmenting ? 0 : filterBarPad / 2)
     }
   }
 }
@@ -234,8 +234,8 @@ struct FilterButtonStyle: ViewModifier {
 
   func body(content: Content) -> some View {
     let isLight = colorScheme == .light
-    var fg: Color = isLight ? Color(white: 0) : Color.white.opacity(0.4)
-    var bg = isLight ? Color(white: 0, opacity: 0.1) : Color.black.opacity(0.9)
+    var fg: Color = isLight ? Color(white: 1) : Color.white.opacity(0.8)
+    var bg = isLight ? Color(white: 0) : Color.black.opacity(0.9)
     if active {
       fg = isLight ? Color.white : Color.black
       bg = isLight ? Color.black : Color.white
@@ -252,15 +252,18 @@ struct FilterButtonStyle: ViewModifier {
         .padding(.horizontal, 9)
       .background(bg)
       .foregroundColor(fg)
-      .cornerRadius(20, corners: .init(corners))
+      .cornerRadius(9, corners: .init(corners))
   }
 }
 
 #if DEBUG
   struct HomeMainFilters_Previews: PreviewProvider {
     static var previews: some View {
-      HomeDrawerFilterBar()
-        .embedInAppEnvironment()
+      ZStack {
+        HomeDrawerFilterBar()
+      }
+      .embedInAppEnvironment()
+      .environment(\.colorScheme, .dark)
     }
   }
 #endif

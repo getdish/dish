@@ -5,10 +5,8 @@ struct AccountView: View {
 
   var body: some View {
     ZStack {
-      Color.black
       AccountLoginSignupView()
     }
       .allowsHitTesting(self.store.state.view == .me)
-      .environment(\.colorScheme, .dark)
   }
 }

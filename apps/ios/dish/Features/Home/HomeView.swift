@@ -38,9 +38,7 @@ struct HomeView: View {
       // adjust for any awkwardness
       + 20
 
-    return ZStack(alignment: .topLeading) {
-      PrintGeometryView("HomeView")
-
+    return ZStack {
       // below restaurant card
       ZStack {
         // matches LinearGradient below for covering map
@@ -54,7 +52,6 @@ struct HomeView: View {
               MapViewContainer()
                 .offset(y: y)
                 .animation(.spring(response: 2))
-                .invertColorScheme()
             }
             .frameLimitedToScreen()
             .clipped()
@@ -117,6 +114,8 @@ struct HomeView: View {
       RestaurantView()
 
     }
+      .cornerRadiusSquircle(42)
+      .shadow(radius: 60)
       .environmentObject(self.state)
   }
 }
