@@ -75,7 +75,8 @@ function MenuContents() {
 }
 
 function StatefulApp() {
-  const { state } = useOvermind()
+  const { state, actions } = useOvermind()
+  actions.auth.checkForExistingLogin()
   return (
     <ApolloProvider client={state.auth.apollo_client}>
       <Router>

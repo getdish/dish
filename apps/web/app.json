@@ -12,7 +12,7 @@
     "web": {
       "build": {
         "babel": {
-          "include": ["rn-sliding-up-panel"]
+          "include": ["rn-sliding-up-panel", "static-container"]
         }
       }
     }

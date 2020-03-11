@@ -37,7 +37,7 @@ class AuthController {
         },
       },
       config.jwtSecret,
-      { expiresIn: '1h' }
+      { expiresIn: '1w' }
     )
 
     delete user.password
