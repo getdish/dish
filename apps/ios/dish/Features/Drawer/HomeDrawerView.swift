@@ -31,8 +31,8 @@ struct HomeDrawerView: View, Equatable {
 
   var drawerBackgroundColor: Color {
     self.colorScheme == .dark
-      ? Color(white: 0).opacity(0.55)
-      : Color(white: 0.8).opacity(1)
+      ? Color(white: 0).opacity(0.6)
+      : Color(white: 1).opacity(1)
   }
 
   var body: some View {
@@ -40,7 +40,7 @@ struct HomeDrawerView: View, Equatable {
     
     return BottomDrawer(
       background: self.drawerBackgroundColor,
-      cornerRadius: 25,
+      cornerRadius: App.searchBarHeight * 0.35,
       handle: nil,
       onChangePosition: { (pos, y) in
         let didChangePos = pos != self.lastPosition
@@ -62,11 +62,9 @@ struct HomeDrawerView: View, Equatable {
       snapPoints: self.snapPoints
     ) {
       ZStack {
-        Spacer()
-        
         LinearGradient(
           gradient: .init(
-            colors: [Color(white: 0, opacity: 0.5), Color.clear]
+            colors: [Color(white: self.colorScheme == .dark ? 0 : 1, opacity: 0.35), Color.clear]
           ),
           startPoint: .top,
           endPoint: .center
@@ -75,11 +73,17 @@ struct HomeDrawerView: View, Equatable {
         HomeMainDrawerContent()
         
         VStack(spacing: 0) {
-          VStack(spacing: 0) {
-            HomeDrawerSearchBar()
-              .background(
-                BlurView(style: .dark)
-              )
+          VStack(spacing: 5) {
+            ZStack {
+              BlurView(style: self.colorScheme == .dark ? .dark : .extraLight)
+              VStack(spacing: 0) {
+                HomeDrawerSearchBar()
+                DividerView()
+                    .opacity(0.5)
+              }
+            }
+            .frame(height: App.searchBarHeight)
+
             HomeDrawerFilterBar()
           }
           Spacer()
@@ -99,31 +103,25 @@ struct HomeMainDrawerContent: View {
   func onSwipeBack() {
     self.store.send(.home(.pop))
   }
+  
+  var viewStates: [HomeStateItem] {
+    self.store.state.home.viewStates.filter { $0.restaurant == nil }
+  }
 
   var body: some View {
-    let viewStates = self.store.state.home.viewStates
-//    let occludeTopHeight = App.searchBarHeight
     return VStack(spacing: 0) {
       ZStack {
         ForEach(viewStates, id: \.id) { viewState in
           HomeScreen(
-            index: viewStates.firstIndex(of: viewState) ?? 0,
-            isActive: Selectors.home.lastState() == viewState,
-            isLast: viewStates.firstIndex(of: viewState) == viewStates.count - 1,
+            index: self.viewStates.firstIndex(of: viewState) ?? 0,
+            isActive: self.store.state.home.viewStates.last { $0.restaurant == nil } == viewState,
+            isLast: self.viewStates.firstIndex(of: viewState) == self.viewStates.count - 1,
             onSwipeBack: self.onSwipeBack,
             viewState: viewState
           )
             .equatable()
         }
       }
-//        .mask(
-//          HomeMainDrawerContent.maskGradient.offset(
-//            y: occludeTopHeight - (
-//              self.store.state.home.showFilters
-//                ? -20
-//                : -12
-//          ))
-//        )
     }
   }
   
@@ -179,7 +177,7 @@ struct HomeContentScrollView<Content>: View where Content: View {
   
   var body: some View {
     let isDisabled = self.store.state.home.drawerIsDragging
-    let topContentHeight = App.searchBarHeight + (self.store.state.home.showFilters
+    let topContentHeight = App.searchBarHeight + (Selectors.home.showFilterBar(self.store)
       ? App.filterBarHeight : 0)
     
     return Group {
@@ -296,21 +294,8 @@ struct HomeDrawerExploreView: View {
   }
 
   var body: some View {
-    let lense = Selectors.home.activeLense(store)
-    
-    return VStack {
-      HStack {
-        Image(systemName: "arrowtriangle.left.fill")
-          .resizable().scaledToFit().frame(width: 10).opacity(0.34)
-        Spacer()
-        Text("\(lense.description ?? "")".uppercased()).tracking(5).fontWeight(.light)
-          .opacity(0.5)
-        Spacer()
-        Image(systemName: "arrowtriangle.right.fill")
-          .resizable().scaledToFit().frame(width: 10).opacity(0.34)
-      }
-      .padding(.horizontal)
-      .offset(y: -10)
+    VStack {
+      HomeDrawerCurrentLenseTitle()
       
       ForEach(0..<self.total) { index in
         DishListItem(
@@ -323,6 +308,30 @@ struct HomeDrawerExploreView: View {
       }
       .id(self.store.state.appLoaded ? "0" : "1")
     }
+  }
+}
+
+struct HomeDrawerCurrentLenseTitle: View {
+  @EnvironmentObject var store: AppStore
+  
+  var body: some View {
+    let lense = Selectors.home.activeLense(store)
+
+    return HStack {
+//      Image(systemName: "arrowtriangle.left.fill")
+//        .resizable().scaledToFit().frame(width: 8).opacity(0.25)
+      Spacer()
+      Text("\(lense.description ?? "")".uppercased())
+        .tracking(3)
+        .fontWeight(.light)
+        .font(.system(size: 14))
+        .opacity(0.45)
+      Spacer()
+//      Image(systemName: "arrowtriangle.right.fill")
+//        .resizable().scaledToFit().frame(width: 8).opacity(0.25)
+    }
+    .padding(.horizontal, 20)
+    .offset(y: -10)
   }
 }
 
@@ -528,3 +537,15 @@ class ScrollState: NSObject, ObservableObject, UIScrollViewDelegate, UIGestureRe
 //    }
 //    .id(self.id)
 //}
+
+#if DEBUG
+struct HomeDrawerView_Previews: PreviewProvider {
+  static var previews: some View {
+    ZStack {
+      HomeDrawerView(snapPoints: App.drawerSnapPoints)
+    }
+    .embedInAppEnvironment()
+    .environment(\.colorScheme, .light)
+  }
+}
+#endif

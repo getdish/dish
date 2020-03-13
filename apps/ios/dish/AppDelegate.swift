@@ -17,6 +17,7 @@ let restaurants: [RestaurantItem] = loadJSON("restaurantData.json")
 // apollo
 // via https://github.com/apollographql/apollo-ios/issues/36
 public typealias geometry = [String: Any?]
+public typealias uuid = String
 public typealias SearchGeometry = geometry
 
 struct APIGeometry {
@@ -78,7 +79,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //        GMSServices.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")
     //        GMSPlacesClient.provideAPIKey("AIzaSyDhZI9uJRMpdDD96ITk38_AhRwyfCEEI9k")
 
-    App.start()
+    App.start(
+      Mocks.homeSearchedPho
+    )
 
     // Override point for customization after application launch.
     return true

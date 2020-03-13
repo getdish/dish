@@ -1,34 +1,30 @@
 # Getting started
 
-See [services/hasura/README.md](services/hasura/README.md).
-See [apps/lab/README.md](apps/lab/README.md).
+- See [services/hasura/README.md](services/hasura/README.md).
+- See [apps/web/README.md](apps/web/README.md).
 
----
+Basically:
 
-High level plan:
+In three tabs, start build:
 
-The general strategies that have worked for me in startups are:
+- `yarn build:watch`
 
-1. Make the product shine, especially with better tech and smart design
-2. If b2b, get early sales by "selling yourself/service"
-3. One person needs to take lead on user-research/talking/selling/refining the
-   idea
-4. Specialize (one person owns one thing)
-5. Setting a team goal for each month - important in the beginning
-6. Close-the-loop - get the full thing working early but roughly!
-7. Get it into hands - goes with close the loop, but basically have beta users
+Start hasura:
 
-For Dish specifically, high level:
+```
+cd services/hasura
+hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password
+yarn start
+```
 
-1. We should heavily use scraping/aggregation
-2. Get small subsets working:
-   1. Camera/reviews
-   2. Rankings for one or two dishes we can validate
-3. free form: lets just process as we go!
+Start web app (or ios, etc):
 
-Initial steps:
+- `cd apps/web && yarn start`
 
-1. We should have a sample search we start with and test against
+For logging into hasura admin:
+
+- `hasura console --endpoint http://localhost:8080 --admin-secret=password`
+- The password is the HASURA_GRAPHQL_ADMIN_SECRET in the .env.enc.production.yaml file
 
 ---
 

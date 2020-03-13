@@ -1,4 +1,5 @@
 import SwiftUI
+import MapKit
 
 // harcode for now
 let images = [
@@ -12,52 +13,48 @@ let images = [
   "icybay",
 ]
 
-class RestaurantItem: Codable, Identifiable, ObservableObject, Equatable {
-  static func == (lhs: RestaurantItem, rhs: RestaurantItem) -> Bool {
-    lhs.id == rhs.id
-  }
-
+struct RestaurantItem: Codable, Identifiable, Equatable {
   var id: String
   var name: String
-  var imageName: String
-  var address: String
-  var phone: String
-  var tags: [String]
-  var stars: Int
-
-  init(
-    id: String,
-    name: String,
-    imageName: String,
-    address: String,
-    phone: String,
-    tags: [String],
-    stars: Int
-  ) {
-    self.id = id
-    self.name = name
-    self.imageName = imageName
-    self.address = address
-    self.phone = phone
-    self.tags = tags
-    self.stars = stars
+  var imageName: String = ""
+  var address: String = ""
+  var phone: String = ""
+  var tags: [String] = []
+  var stars: Int = 0
+  var coordinate: [Double] = [0, 0]
+  
+  var image: Image {
+    ImageStore.shared.image(name: self.imageName)
+  }
+  
+  var coordinate2D: CLLocationCoordinate2D {
+    .init(latitude: self.coordinate[0], longitude: self.coordinate[1])
   }
 
   private enum CodingKeys: String, CodingKey {
     case id, name, imageName, address, phone, tags, stars
   }
+}
 
-  @Published var imageIndex = 0
-
-  var image: Image {
-    ImageStore.shared.image(name: imageIndex == 0 ? imageName : images[imageIndex])
+class RestaurantItemLive: ObservableObject {
+  var restaurant: RestaurantItem
+  
+  init(restaurant: RestaurantItem) {
+    self.restaurant = restaurant
   }
-
+  
+  @Published var imageIndex = 0
+  
+  var image: Image {
+    ImageStore.shared.image(name: imageIndex == 0 ? restaurant.imageName : images[imageIndex])
+  }
+  
   func next() {
     self.imageIndex = min(images.count - 1, self.imageIndex + 1)
   }
-
+  
   func prev() {
     self.imageIndex = max(0, self.imageIndex - 1)
   }
 }
+

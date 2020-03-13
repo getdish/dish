@@ -45,6 +45,10 @@ If this is your first install, or there's new migrations waiting to be run:
 
 `hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password`
 
+To remove data / reset dev env:
+
+`docker-compose rm -f`
+
 Then run the admin UI using:
 
 `hasura console --endpoint http://localhost:8080 --admin-secret=password`
@@ -67,12 +71,15 @@ directory with the following command:
 `psql -d dish -c "TRUNCATE TABLE restaurant CASCADE" && psql -d dish -c "\copy restaurant FROM './restaurants.dump'"`
 
 ### Exporting
+
 First make sure you have a port open to the live DB (see our Kubernetes docs for more info)
+
 ```
 kubectl port-forward svc/postgres-postgresql 15432:5432 -n postgres
 ```
 
 Then run the following (the password is in `.env.enc.production`):
+
 ```
 PGPASSWORD=$DISH_PG_PASS psql -p15432 -h localhost -U postgres -d dish -c "\copy \
 (select * from restaurant WHERE ST_DWithin(location, ST_MakePoint(-122.42,37.76), 1)) \
@@ -82,7 +89,8 @@ TO './restaurants.dump'"
 ## Misc
 
 ### Using the live DB from your local machine
+
 Note that the `@dish/models` package is set up to use the live Hasura instance if the
 domain name contains 'hasura_live'. This was setup because the React Native framework, Expo,
-cannot easily get its config recognised by our internal packages. The domain can be achieved by setting your local machine's `/etc/hosts` file with an entry like 
+cannot easily get its config recognised by our internal packages. The domain can be achieved by setting your local machine's `/etc/hosts` file with an entry like
 `127.0.0.1 d1sh_hasura_live.com`. You may want to avoid spelling 'dish' with a real 'i' as that is a keyword for triggering other production features.

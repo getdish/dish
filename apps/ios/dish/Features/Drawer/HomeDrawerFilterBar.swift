@@ -1,6 +1,6 @@
 import SwiftUI
 
-fileprivate let filterBarPad: CGFloat = 7
+fileprivate let filterBarPad: CGFloat = 10
 
 struct HomeDrawerFilterBar: View, Equatable {
   static func == (lhs: Self, rhs: Self) -> Bool {
@@ -30,7 +30,7 @@ struct HomeDrawerFilterBar: View, Equatable {
 
   var body: some View {
     ZStack {
-      if self.store.state.home.showFilters {
+      if Selectors.home.showFilterBar(self.store) {
         ScrollView(.horizontal, showsIndicators: false) {
           HStack(spacing: 0) {
             FilterButton(
@@ -57,7 +57,7 @@ struct HomeDrawerFilterBar: View, Equatable {
               }
             }
           }
-          .padding(.horizontal, 20)
+          .padding(.horizontal, 16)
           // this heavily fixes map pan
           .drawingGroup()
         }
@@ -123,8 +123,8 @@ struct FilterGroupView: View {
     let xBefore: CGFloat = self.widths[0..<index].reduce(0) { $0 + $1 + self.spacing }
     let xOffset: CGFloat = isExpanded ? xBefore : 0
     let total = self.widths.count
-    let stacks = filter.stack
-    let itemSegment = isExpanded && stacks
+    let isStacked = filter.stack
+    let itemSegment = isExpanded && isStacked
       ? SegmentedItem(
         isFirst: index == 0,
         isMiddle: index < total - 1 && index > 0,
@@ -136,7 +136,10 @@ struct FilterGroupView: View {
         isLast: true
       )
 
-    return FilterButton(expandable: index == 0 && !isExpanded, filter: filter)
+    return FilterButton(
+      expandable: index == 0 && !isExpanded,
+      filter: filter
+    )
       .frame(width: isExpanded ? self.widths[index] : nil)
       .onGeometrySizeChange { size in
         if !self.isExpanded {
@@ -171,6 +174,11 @@ struct FilterButton: View {
 
   var height: CGFloat {
     App.filterBarHeight - filterBarPad
+  }
+  
+  var isSegmenting: Bool {
+    guard let itemSegment = itemSegment else { return false }
+    return itemSegment.isFirst && itemSegment.isLast ? true : false
   }
 
   var body: some View {
@@ -211,7 +219,7 @@ struct FilterButton: View {
         active: self.filter.active,
         pressed: false
       ))
-        .padding(filterBarPad)
+        .padding(isSegmenting ? 0 : filterBarPad / 2)
     }
   }
 }
@@ -226,11 +234,11 @@ struct FilterButtonStyle: ViewModifier {
 
   func body(content: Content) -> some View {
     let isLight = colorScheme == .light
-    var fg: Color = isLight ? Color(white: 0) : Color.white.opacity(0.4)
-    var bg = isLight ? Color(white: 0, opacity: 0.1) : Color.black.opacity(0.5)
+    var fg: Color = isLight ? Color(white: 1) : Color.white.opacity(0.8)
+    var bg = isLight ? Color(white: 0) : Color.black.opacity(0.9)
     if active {
-      fg = isLight ? Color.white : Color.white
-      bg = isLight ? Color.black : Color(white: 0, opacity: 0.05)
+      fg = isLight ? Color.white : Color.black
+      bg = isLight ? Color.black : Color.white
     }
     let corners: [UIRectCorner] = itemSegment == nil
       || itemSegment?.isLast == true && itemSegment?.isFirst == true
@@ -239,29 +247,23 @@ struct FilterButtonStyle: ViewModifier {
       ? []
       : itemSegment?.isLast == true
       ? [.topRight, .bottomRight] : [.topLeft, .bottomLeft]
-    
-    let gradient: [Color] = [active ? bg : bg.opacity(0.05), .clear]
     return
       content
-      .padding(.horizontal, 9)
+        .padding(.horizontal, 9)
       .background(bg)
       .foregroundColor(fg)
-      .background(
-        LinearGradient(
-          gradient: Gradient(colors: pressed ? gradient.reversed() : gradient),
-          startPoint: .top,
-          endPoint: .trailing
-        )
-      )
-      .cornerRadius(20, corners: .init(corners))
+      .cornerRadius(9, corners: .init(corners))
   }
 }
 
 #if DEBUG
   struct HomeMainFilters_Previews: PreviewProvider {
     static var previews: some View {
-      HomeDrawerFilterBar()
-        .embedInAppEnvironment()
+      ZStack {
+        HomeDrawerFilterBar()
+      }
+      .embedInAppEnvironment()
+      .environment(\.colorScheme, .dark)
     }
   }
 #endif

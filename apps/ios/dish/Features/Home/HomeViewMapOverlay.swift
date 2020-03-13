@@ -20,7 +20,7 @@ struct HomeViewMapOverlay: View {
           : LinearGradient(
             gradient: Gradient(colors: [
               Color.clear,
-              Color(white: 1, opacity: 1)
+              Color(white: 1, opacity: 0.6)
             ]),
             startPoint: .top,
             endPoint: .bottom

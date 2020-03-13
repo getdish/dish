@@ -28,51 +28,53 @@ struct RootView: View {
     }
     
     return ZStack {
-      Color.black
       PrintGeometryView("RootView")
       Color.clear.onAppear(perform: self.start)
+      
+      // background
+      Color(white: 0.04)
+      
       VStack {
         if self.appGeometry != nil {
-          ZStack {
-            PagerView(
-              pageCount: homePageCount,
-              pagerStore: homePager,
-              disableDragging: store.state.view == .home
-            ) { isDragging in
-              //
-              // ⚠️ ⚠️ ⚠️
-              //    ADDING .clipped() to any of these causes perf issues!!!
-              //    animations below seem to be choppier
-              // ⚠️ ⚠️ ⚠️
-              // account page
-              AccountView()
-                .zIndex(0)
-              
-              // home page
-              HomeView()
-                .zIndex(2)
-              
-              // camera page
-              DishCameraView()
-                .zIndex(0)
-            }
-            .onChangeDrag { isDragging in
-              print("set isDragging \(isDragging)")
-              self.isDragging = isDragging
-            }
-            .onChangePage { index in
-              print("change page to index \(index)")
-              let view = rootViews[index]
-              self.disableDragging = view == .home
-              self.store.send(.setView(view))
-            }
+          PagerView(
+            pageCount: homePageCount,
+            pagerStore: homePager,
+            disableDragging: store.state.view == .home
+          ) { isDragging in
+            //
+            // ⚠️ ⚠️ ⚠️
+            //    ADDING .clipped() to any of these causes perf issues!!!
+            //    animations below seem to be choppier
+            // ⚠️ ⚠️ ⚠️
+            // account page
+            AccountView()
+              .environment(\.colorScheme, .dark)
+              .zIndex(0)
+            
+            // home page
+            HomeView()
+              .zIndex(2)
+            
+            // camera page
+            DishCameraView()
+              .environment(\.colorScheme, .dark)
+              .zIndex(0)
+          }
+          .onChangeDrag { isDragging in
+            print("set isDragging \(isDragging)")
+            self.isDragging = isDragging
+          }
+          .onChangePage { index in
+            print("change page to index \(index)")
+            let view = rootViews[index]
+            self.disableDragging = view == .home
+            self.store.send(.setView(view))
           }
         }
       }
       
       SplashView()
     }
-    .environment(\.colorScheme, .dark)
   }
 }
 

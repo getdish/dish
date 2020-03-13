@@ -10,6 +10,7 @@ public final class SearchRestaurantsQuery: GraphQLQuery {
     query SearchRestaurants($radius: Float!, $geo: geometry!) {
       restaurant(where: {location: {_st_d_within: {distance: $radius, from: $geo}}}, limit: 30) {
         __typename
+        id
         name
         location
       }
@@ -62,6 +63,7 @@ public final class SearchRestaurantsQuery: GraphQLQuery {
 
       public static let selections: [GraphQLSelection] = [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+        GraphQLField("id", type: .nonNull(.scalar(uuid.self))),
         GraphQLField("name", type: .nonNull(.scalar(String.self))),
         GraphQLField("location", type: .scalar(geometry.self)),
       ]
@@ -72,8 +74,8 @@ public final class SearchRestaurantsQuery: GraphQLQuery {
         self.resultMap = unsafeResultMap
       }
 
-      public init(name: String, location: geometry? = nil) {
-        self.init(unsafeResultMap: ["__typename": "restaurant", "name": name, "location": location])
+      public init(id: uuid, name: String, location: geometry? = nil) {
+        self.init(unsafeResultMap: ["__typename": "restaurant", "id": id, "name": name, "location": location])
       }
 
       public var __typename: String {
@@ -82,6 +84,15 @@ public final class SearchRestaurantsQuery: GraphQLQuery {
         }
         set {
           resultMap.updateValue(newValue, forKey: "__typename")
+        }
+      }
+
+      public var id: uuid {
+        get {
+          return resultMap["id"]! as! uuid
+        }
+        set {
+          resultMap.updateValue(newValue, forKey: "id")
         }
       }
 

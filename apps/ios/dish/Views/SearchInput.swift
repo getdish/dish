@@ -96,12 +96,12 @@ struct SearchInput: View {
 
   var body: some View {
     let pad = 11 * scale
-    let fontSize = 16 * (scale - 1) / 2 + 16
-    let horizontalSpacing = 14 * scale
+    let fontSize = 16 * (scale - 1) / 2 + 17
+    let horizontalSpacing = 13 * scale
 
     return ZStack {
       HStack(spacing: 0) {
-        Spacer().frame(width: 56)
+        Spacer().frame(width: 48)
         
         Group {
           if showInput {
@@ -112,6 +112,7 @@ struct SearchInput: View {
               //                            isFirstResponder: self.isFirstResponder,
               //                            onEditingChanged: self.handleEditingChanged
             )
+              .font(.system(size: fontSize, weight: .semibold, design: .rounded))
           } else {
             // temp bugfix for above TODO problem...
             HStack {
@@ -148,6 +149,7 @@ struct SearchInput: View {
                 (icon ?? Image(systemName: "magnifyingglass"))
                   .resizable()
                   .scaledToFit()
+                  .foregroundColor(self.colorScheme == .dark ? .white : .black)
               }
                 .frame(width: self.iconSize * scale, height: self.iconSize * scale)
             }
@@ -177,7 +179,7 @@ struct SearchInput: View {
                 Image(systemName: "xmark.circle.fill")
                   .resizable()
                   .scaledToFit()
-                  .frame(width: 18 + 2 * scale, height: 18 + 2 * scale)
+                  .frame(width: 16 + 2 * scale, height: 16 + 2 * scale)
               }
                 .transition(.opacity)
             }

@@ -7,16 +7,20 @@ import SwiftUI
 // https://vimeo.com/291588126
 
 class AppModel {
+  var storeVal: AppStore? = nil
   // to easily test entire app in a certain state, replace this line with a commented out line below
-  let store = Store<AppState, AppAction>.init(initialState: AppState(), reducer: appReducer)
+  var store: AppStore {
+    self.storeVal ?? AppStore(initialState: AppState(), reducer: appReducer)
+  }
 
-  //    let store = Mocks.homeSearchedPho
-  //    let store = Mocks.homeSearchedPhoSelectedRestaurant
-
-  // services
-  let mapService = MapService()
+  func start(_ initialState: AppStore) {
+    self.storeVal = store
+    mapSideEffects.start(self.store)
+    homeSideEffects.start(self.store)
+  }
 
   // side effects
+  let mapSideEffects = MapSideEffects()
   let homeSideEffects = HomeSideEffects()
 
   var apollo: ApolloClient {
@@ -51,13 +55,8 @@ class AppModel {
   var drawerSnapPoints: [CGFloat] {
     [
       App.screen.edgeInsets.top + 50,
-      App.screen.edgeInsets.top + 240,
+      App.screen.edgeInsets.top + 275,
       App.screen.height - 110 - App.screen.edgeInsets.bottom,
     ]
-  }
-
-  func start() {
-    mapService.start()
-    homeSideEffects.start()
   }
 }

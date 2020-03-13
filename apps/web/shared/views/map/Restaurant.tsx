@@ -1,5 +1,5 @@
-import React, { JSX, useEffect } from 'react'
-import { Image, Text, View } from 'react-native'
+import React, { useEffect } from 'react'
+import { Image, Text, View, StyleSheet } from 'react-native'
 import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 
@@ -8,12 +8,12 @@ import { useOvermind } from '../../state/om'
 import { Restaurant } from '@dish/models'
 import ReviewForm from './ReviewForm'
 
-const styles = {
+const styles = StyleSheet.create({
   container: {},
   header: {
     height: 150,
   },
-}
+})
 
 export default function RestaurantView() {
   const { state, actions } = useOvermind()

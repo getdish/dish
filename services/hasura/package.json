@@ -9,6 +9,7 @@
   "scripts": {
     "build": "true",
     "test": "ava test/main.ts --verbose",
-    "watch": "true"
+    "watch": "true",
+    "start": "docker-compose up"
   }
 }

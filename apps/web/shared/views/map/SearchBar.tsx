@@ -32,7 +32,7 @@ export default function SearchBar() {
           borderRadius: 5,
           backgroundColor: '#fff',
         },
-        onTextChange: text => actions.map.restaurantSearch(text),
+        onChangeText: text => actions.map.restaurantSearch(text),
       }}
       itemStyle={{
         padding: 10,

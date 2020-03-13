@@ -109,10 +109,13 @@ extension View {
     )
   }
 
-  func embedInAppEnvironment(_ appState: Store<AppState, AppAction>? = nil) -> some View {
+  func embedInAppEnvironment(_ initialStore: AppStore? = nil) -> some View {
+    if let store = initialStore {
+      App.storeVal = store
+    }
     return
       self
-      .environmentObject(appState ?? App.store)
+      .environmentObject(initialStore ?? App.store)
       .environmentObject(App.keyboard)
       .environmentObject(homeViewState)
       .embedInScreen(App.screen)
@@ -215,7 +218,7 @@ struct ControlsButtonStyle: ViewModifier {
   
   var active: Bool = false
   var background: Color = .clear
-  var blurBackground: UIBlurEffect.Style? = .systemThinMaterialDark
+  var blurBackground: UIBlurEffect.Style? = .systemUltraThinMaterialLight
   var cornerRadius: CGFloat = 9
   var height: CGFloat = 34
   var hPad: CGFloat = 11
@@ -235,14 +238,14 @@ struct ControlsButtonStyle: ViewModifier {
             .frame(height: self.height)
             .padding(.horizontal, self.hPad)
             .background(Color.white.opacity(active ? 0 : 0.2))
-            .foregroundColor(.white)
+            .foregroundColor(Color(white: 0, opacity: 0.5))
             .background(blurBackground != nil ? BlurView(style: blurBackground!) : nil)
         }
       }
       .background(self.background)
       .innerGlow(color: Color.white.opacity(0.025), radius: 30)
       .cornerRadiusSquircle(cornerRadius)
-      .shadow(color: Color.black.opacity(0.35), radius: 3, x: 0, y: 2)
+      .shadow(color: Color.black.opacity(0.35), radius: 1, x: 0, y: 1)
     }
     .padding(3)
   }

@@ -11,42 +11,34 @@ struct MapViewContainer: View {
     return results.map { result in
       MapMarker(
         title: result.name,
-        coordinate: result.coordinate
+        coordinate: result.coordinate2D
       )
     }
   }
 
   var body: some View {
-    ZStack(alignment: .topLeading) {
-      VStack {
-        ZStack(alignment: .topLeading) {
-          MapView(
-            animated: store.state.appLoaded,
-            currentLocation: store.state.map.moveToLocation,
-            markers: markers
-          )
-            .opacity(store.state.home.drawerPosition == .top ? 0.6 : 1)
+    VStack {
+      ZStack {
+        MapView(
+          animated: store.state.appLoaded,
+          currentLocation: store.state.map.moveToLocation,
+          markers: markers
+        )
+          .opacity(store.state.home.drawerPosition == .top ? 0.6 : 1)
 
-//          // prevent touch on left/right sides for dragging between cards
-//          HStack {
-//            Color.black.opacity(0.00001).frame(width: 24)
-//            Color.clear
-//            Color.black.opacity(0.00001).frame(width: 24)
-//          }
-
-          // keyboard dismiss (above map, below content)
-          if self.keyboard.state.height > 0 {
-            Color.black.opacity(0.2)
-              .transition(.opacity)
-              .onTapGesture {
-                self.keyboard.hide()
-              }
-          }
+        // keyboard dismiss (above map, below content)
+        if self.keyboard.state.height > 0 {
+          Color.black.opacity(0.2)
+            .transition(.opacity)
+            .onTapGesture {
+              self.keyboard.hide()
+            }
         }
-
-        Spacer()
       }
+
+      Spacer()
     }
+    .environment(\.colorScheme, .light)
   }
 }
 
@@ -75,10 +67,12 @@ struct MapView: View {
       }
       .store(in: &self.cancellables)
   }
+  
+  @Environment(\.colorScheme) var colorScheme
 
   var body: some View {
     
-    print("mapoom \(mapZoom)")
+    print("mapoom \(colorScheme) \(mapZoom)")
     
     return ZStack {
       Color.clear.onAppear(perform: self.start)
@@ -104,7 +98,6 @@ struct MapView: View {
         showsUserLocation: true
       )
         .frame(height: App.screen.height * 2)
-//      .invertColorScheme()
     }
   }
 }

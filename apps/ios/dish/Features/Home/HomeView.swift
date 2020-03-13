@@ -21,7 +21,7 @@ struct HomeView: View {
   
   var snapPoints: [CGFloat] {
     return store.state.home.drawerPosition == .bottom &&
-      store.state.home.showFilters == false
+      Selectors.home.showFilterBar(self.store) == false
       ? [App.drawerSnapPoints[0], App.drawerSnapPoints[1], App.drawerSnapPoints[2] + App.filterBarHeight]
       : App.drawerSnapPoints
   }
@@ -38,9 +38,7 @@ struct HomeView: View {
       // adjust for any awkwardness
       + 20
 
-    return ZStack(alignment: .topLeading) {
-      PrintGeometryView("HomeView")
-
+    return ZStack {
       // below restaurant card
       ZStack {
         // matches LinearGradient below for covering map
@@ -54,7 +52,6 @@ struct HomeView: View {
               MapViewContainer()
                 .offset(y: y)
                 .animation(.spring(response: 2))
-                .invertColorScheme()
             }
             .frameLimitedToScreen()
             .clipped()
@@ -114,9 +111,11 @@ struct HomeView: View {
       }
         .clipped()  // dont remove fixes bug cant click SearchBar
 
-      DishRestaurantView()
+      RestaurantView()
 
     }
+      .cornerRadiusSquircle(42)
+      .shadow(radius: 60)
       .environmentObject(self.state)
   }
 }

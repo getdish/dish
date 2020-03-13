@@ -5,8 +5,8 @@ import SwiftUI
 class HomeSideEffects {
   private var cancels: Set<AnyCancellable> = []
 
-  func start() {
-    self.affectSearchResults()
+  func start(_ store: AppStore) {
+    self.affectSearchResults(store)
   }
 }
 
@@ -20,8 +20,8 @@ extension HomeSideEffects {
     let location: MapViewLocation
   }
   
-  func affectSearchResults() {
-    App.store.$state
+  func affectSearchResults(_ store: AppStore) {
+    store.$state
       .debounce(for: .milliseconds(200), scheduler: App.queueMain)
       .map { state in
         SearchQuery(
@@ -46,8 +46,8 @@ extension HomeSideEffects {
     .eraseToEffect()
   }
   
-  func getSearchResults(_ search: SearchQuery) -> Future<HomeStateItem.SearchResults, Never> {
-    Future<HomeStateItem.SearchResults, Never> { promise in
+  func getSearchResults(_ search: SearchQuery) -> Future<SearchResultRestaurant, Never> {
+    Future<SearchResultRestaurant, Never> { promise in
       let query = SearchRestaurantsQuery(
         radius: search.location.radius / 100000,
         geo: [
@@ -70,20 +70,17 @@ extension HomeSideEffects {
               return
             }
             promise(
-              .success(
-                HomeStateItem.SearchResults(
-                  id: "0",
-                  status: .completed,
-                  results: data.restaurant.map { restaurant in
-                    let coords = restaurant.location?["coordinates"] as! [Double]
-                    return HomeStateItem.Item(
-                      id: restaurant.name,
-                      name: restaurant.name,
-                      coordinate: .init(latitude: coords[1], longitude: coords[0])
-                    )
-                  }
-                )
-              ))
+              .success(SearchResultRestaurant(
+                status: .completed,
+                results: data.restaurant.map { x in
+                  RestaurantItem(
+                    id: "\(uid())",// x.id,
+                    name: x.name,
+                    imageName: "",
+                    address: ""
+                  )
+                }
+            )))
           case .failure(let err):
             print("err \(err)")
         }
