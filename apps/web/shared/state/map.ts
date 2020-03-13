@@ -72,10 +72,6 @@ const getUserReviews: AsyncAction<string> = async (om, user_id: string) => {
   openPanel(om)
 }
 
-const setPanel: Action<SlidingUpPanel> = (om, panel: SlidingUpPanel) => {
-  om.state.map.panel = panel
-}
-
 const getTopDishes: AsyncAction = async om => {
   const query = {
     query: {
@@ -165,7 +161,6 @@ export const actions = {
   updateRestaurants: updateRestaurants,
   getCurrentRestaurant: getCurrentRestaurant,
   getTopRestaurantsByDish: getTopRestaurantsByDish,
-  setPanel: setPanel,
   getTopDishes: getTopDishes,
   restaurantSearch: restaurantSearch,
   setMapCentre: setMapCentre,

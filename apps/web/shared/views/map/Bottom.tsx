@@ -29,14 +29,19 @@ const styles = StyleSheet.create({
 })
 
 export default function Bottom() {
-  const { state, actions } = useOvermind()
+  const [panel, setPanel] = useState<SlidingUpPanel>(null)
 
   return (
     <View style={styles.container}>
-      <SlidingUpPanel ref={c => actions.map.setPanel(c)} friction={0.12}>
+      <SlidingUpPanel
+        draggableRange={{ top: 100 + 180 - 64, bottom: 180 }}
+        height={500}
+        ref={c => setPanel(c)}
+        friction={0.12}
+      >
         <View style={styles.content}>
           <View style={styles.close}>
-            <Button title="Hide" onPress={() => state.map.panel.hide()} />
+            <Button title="Hide" onPress={() => panel.hide()} />
           </View>
           <Switch>
             <Route exact path="/">
