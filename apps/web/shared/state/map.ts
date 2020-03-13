@@ -1,4 +1,4 @@
-import { ModelBase, Dish, Restaurant, Review, ScrapeData } from '@dish/models'
+import { ModelBase, Restaurant, Review } from '@dish/models'
 import { LngLat } from 'mapbox-gl'
 import { Action, AsyncAction } from 'overmind'
 import SlidingUpPanel from 'rn-sliding-up-panel'
@@ -13,12 +13,14 @@ type LabState = {
   restaurants: { [key: string]: Restaurant }
   panel: SlidingUpPanel
   centre: LngLat
-  search_results: Partial<Restaurant>[]
+  search_results: Restaurant[]
   top_dishes: TopDish[]
-  top_restaurants: Partial<Restaurant>[]
+  top_restaurants: Restaurant[]
   current_dish: string
-  current_restaurant: Partial<Restaurant>
-  current_review: Partial<Review>
+  current_restaurant: Restaurant
+  current_review: Review
+  restaurant_reviews: Review[]
+  user_reviews: Review[]
 }
 
 const RADIUS = 0.015
@@ -31,8 +33,10 @@ export const state: LabState = {
   top_dishes: [],
   top_restaurants: [],
   current_dish: '',
-  current_restaurant: {},
-  current_review: {},
+  current_restaurant: {} as Restaurant,
+  current_review: {} as Review,
+  restaurant_reviews: [],
+  user_reviews: [],
 }
 
 const openPanel = om => {
@@ -47,14 +51,24 @@ const updateRestaurants: AsyncAction<LngLat> = async (om, centre: LngLat) => {
   }
 }
 
-const getCurrentRestaurant: ActionAsync<string> = async (om, slug: string) => {
+const getCurrentRestaurant: AsyncAction<string> = async (om, slug: string) => {
   const restaurant = new Restaurant()
-  const response = await restaurant.findOne('id', slug)
+  await restaurant.findOne('id', slug)
   om.state.map.current_restaurant = restaurant
   om.state.map.centre = {
     lng: restaurant.location.coordinates[0],
     lat: restaurant.location.coordinates[1] - 0.0037,
   }
+  const reviews = new Review()
+  om.state.map.restaurant_reviews = await reviews.findAllForRestaurant(
+    restaurant.id
+  )
+  openPanel(om)
+}
+
+const getUserReviews: AsyncAction<string> = async (om, user_id: string) => {
+  const reviews = new Review()
+  om.state.map.user_reviews = await reviews.findAllForUser(user_id)
   openPanel(om)
 }
 
@@ -83,8 +97,6 @@ const getTopDishes: AsyncAction = async om => {
   openPanel(om)
 }
 
-const setFilters: Action<string[]> = (om, filters: string[]) => {}
-
 const getTopRestaurantsByDish: AsyncAction<string> = async (
   om,
   dish: string
@@ -101,7 +113,7 @@ const getTopRestaurantsByDish: AsyncAction<string> = async (
 }
 
 const restaurantSearch: AsyncAction<string> = async (om, query: string) => {
-  om.state.map.search_results = [{ name: 'searching...' }]
+  om.state.map.search_results = [{ name: 'searching...' } as Restaurant]
   om.state.map.search_results = await Restaurant.search(
     om.state.map.centre.lat,
     om.state.map.centre.lng,
@@ -159,4 +171,5 @@ export const actions = {
   setMapCentre: setMapCentre,
   getReview: getReview,
   submitReview: submitReview,
+  getUserReviews: getUserReviews,
 }

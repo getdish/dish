@@ -53,7 +53,15 @@ function MenuContents() {
         <Link to="/">Home</Link>
 
         {state.auth.is_logged_in ? (
-          <Link onClick={() => actions.auth.logout()}>Logout</Link>
+          <View style={{ borderTopWidth: 1, marginTop: '1em' }}>
+            <Text>
+              {'\n'}Account{'\n\n'}
+            </Text>
+            <Link to="/" onClick={() => actions.auth.logout()}>
+              Logout
+            </Link>
+            <Link to="/account/reviews">Reviews</Link>
+          </View>
         ) : (
           <>
             <Link to="/login">Login</Link>
@@ -61,7 +69,7 @@ function MenuContents() {
           </>
         )}
 
-        {state.auth.is_logged_in && (
+        {state.auth.is_logged_in && state.auth.user.role == 'admin' && (
           <View style={{ borderTopWidth: 1, marginTop: '1em' }}>
             <Text>
               {'\n'}Admin{'\n\n'}

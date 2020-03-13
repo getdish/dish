@@ -1,28 +1,29 @@
-import React, { useEffect } from 'react'
-import { Image, Text, View } from 'react-native'
+import React from 'react'
+import { StyleSheet, Image, Text, View } from 'react-native'
 import { useParams, Link } from 'react-router-dom'
 
 import { useOvermind } from '../../state/om'
-import { Restaurant } from '@dish/model'
 
-const styles = {
+const styles = StyleSheet.create({
   container: {},
   header: {
     height: 40,
   },
-}
+})
 
 export default function TopRestaurants() {
   const { state, actions } = useOvermind()
-  let restaurants: Restaurant[] = []
+  let restaurants: JSX.Element[] = []
   const { dish } = useParams()
   if (dish != state.map.current_dish) {
     actions.map.getTopRestaurantsByDish(dish)
   }
 
+  let key = 0
   for (const restaurant of state.map.top_restaurants) {
+    key++
     restaurants.push(
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+      <View key={key} style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
         <Image
           source={{ uri: restaurant.image }}
           style={{ width: 50, height: 50 }}

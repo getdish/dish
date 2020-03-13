@@ -1,8 +1,14 @@
+import { EnumType } from 'json-to-graphql-query'
+
 import { ModelBase } from './ModelBase'
+import { Restaurant } from './Restaurant'
+import { User } from './User'
 
 export class Review extends ModelBase<Review> {
   restaurant_id!: string
+  restaurant!: Restaurant
   user_id!: string
+  user!: User
   rating!: number
   text!: string
 
@@ -30,6 +36,8 @@ export class Review extends ModelBase<Review> {
             },
           },
           ...this.fieldsAsObject(),
+          restaurant: Restaurant.fieldsAsObject(),
+          user: User.fieldsAsObject(),
         },
       },
     }
@@ -44,5 +52,59 @@ export class Review extends ModelBase<Review> {
     } else {
       throw new Error(objects.length + ` reviews found by Review.findOne()`)
     }
+  }
+
+  async findAllForRestaurant(restaurant_id: string) {
+    const query = {
+      query: {
+        review: {
+          __args: {
+            where: {
+              restaurant_id: { _eq: restaurant_id },
+            },
+            order_by: {
+              updated_at: new EnumType('desc'),
+            },
+          },
+          ...this.fieldsAsObject(),
+          user: User.fieldsAsObject(),
+        },
+      },
+    }
+    const response = await ModelBase.hasura(query)
+    const objects = response.data.data.review
+    if (objects.length === 0) {
+      return []
+    }
+    return response.data.data.review.map(
+      (data: Partial<Review>) => new Review(data)
+    )
+  }
+
+  async findAllForUser(user_id: string) {
+    const query = {
+      query: {
+        review: {
+          __args: {
+            where: {
+              user_id: { _eq: user_id },
+            },
+            order_by: {
+              updated_at: new EnumType('desc'),
+            },
+          },
+          ...this.fieldsAsObject(),
+          restaurant: Restaurant.fieldsAsObject(),
+        },
+      },
+    }
+    const response = await ModelBase.hasura(query)
+    const objects = response.data.data.review
+    if (objects.length === 0) {
+      return []
+    }
+    return response.data.data.review.map(
+      (data: Partial<Review>) => new Review(data)
+    )
   }
 }

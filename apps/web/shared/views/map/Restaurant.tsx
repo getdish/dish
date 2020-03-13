@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react'
-import { Image, Text, View, StyleSheet } from 'react-native'
-import { Link } from 'react-router-dom'
-import { useParams } from 'react-router-dom'
+import React from 'react'
+import { StyleSheet, Image, Text, View } from 'react-native'
+import { useParams, Link } from 'react-router-dom'
 
 import { useOvermind } from '../../state/om'
 
@@ -20,7 +19,7 @@ export default function RestaurantView() {
   const { slug } = useParams()
   let restaurant = state.map.current_restaurant
   if (slug != state.map.current_restaurant.id) {
-    restaurant = {}
+    restaurant = {} as Restaurant
     actions.map.getCurrentRestaurant(slug)
   }
   if (typeof restaurant.name == 'undefined') {
@@ -28,9 +27,13 @@ export default function RestaurantView() {
   }
   const categories = restaurant.categories || []
   let images: JSX.Element[] = []
+  let reviewer_links: JSX.Element[] = []
+  let key = 0
   for (const uri of restaurant.photos) {
+    key++
     images.push(
       <Image
+        key={key}
         source={{ uri: uri }}
         style={{ height: 100 }}
         resizeMode="contain"
@@ -42,8 +45,20 @@ export default function RestaurantView() {
     const category = categories[i]
     const separator = i == categories.length - 1 ? '' : ', '
     categories_links.push(
-      <Text>
+      <Text key={i}>
         <Link to={'/best/' + category}>{category}</Link>
+        {separator}
+      </Text>
+    )
+  }
+  for (let i = 0; i < state.map.restaurant_reviews.length; i++) {
+    const review = state.map.restaurant_reviews[i]
+    const separator = i == state.map.restaurant_reviews.length - 1 ? '' : ', '
+    reviewer_links.push(
+      <Text key={i}>
+        <Link to={'/user/' + review.user.id + '/reviews'}>
+          {review.user.username}
+        </Link>
         {separator}
       </Text>
     )
@@ -65,8 +80,12 @@ export default function RestaurantView() {
           style={{ height: 200, width: 300 }}
           resizeMode="contain"
         />
-        <View style={{ width: '50%' }}>
+        <View style={{ width: '30%' }}>
           {state.auth.is_logged_in && <ReviewForm />}
+        </View>
+        <View>
+          <Text style={{ fontSize: 15 }}>Latest Reviewers</Text>
+          {reviewer_links}
         </View>
       </View>
       <View>

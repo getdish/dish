@@ -1,0 +1,45 @@
+- args:
+    is_enum: false
+    name: review
+    schema: public
+  type: track_table
+- args:
+    name: reviews
+    table:
+      name: restaurant
+      schema: public
+    using:
+      foreign_key_constraint_on:
+        column: restaurant_id
+        table:
+          name: review
+          schema: public
+  type: create_array_relationship
+- args:
+    name: user
+    table:
+      name: review
+      schema: public
+    using:
+      foreign_key_constraint_on: user_id
+  type: create_object_relationship
+- args:
+    name: restaurant
+    table:
+      name: review
+      schema: public
+    using:
+      foreign_key_constraint_on: restaurant_id
+  type: create_object_relationship
+- args:
+    name: reviews
+    table:
+      name: user
+      schema: public
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: review
+          schema: public
+  type: create_array_relationship

@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { Image, Text, View, TextInput, Button } from 'react-native'
-import { Link } from 'react-router-dom'
+import { StyleSheet, View, Text, TextInput, Button } from 'react-native'
 import { AirbnbRating } from 'react-native-ratings'
 
 import { useOvermind } from '../../state/om'
-import { Review } from '@dish/models'
 
-const styles = {
-  container: { flex: 1, width: 400 },
+const styles = StyleSheet.create({
+  container: { flex: 1 },
   text_input: {
     borderWidth: 1,
     borderRadius: 3,
     padding: '1em',
     marginBottom: '0.5em',
   },
-}
+})
 
 export default function ReviewForm() {
   const { state, actions } = useOvermind()
@@ -27,7 +25,7 @@ export default function ReviewForm() {
       await actions.map.getReview()
       if (state.map.current_review.id) {
         setReviewText(state.map.current_review.text)
-        setRating(state.map.current_review.rating.toString())
+        setRating(state.map.current_review.rating)
       }
     }
     init()
@@ -35,7 +33,7 @@ export default function ReviewForm() {
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 25 }}>Your review</Text>
+      <Text>Your review</Text>
       <AirbnbRating
         defaultRating={rating}
         showRating={false}
@@ -43,7 +41,6 @@ export default function ReviewForm() {
           setRating(rating)
           setButtonText('Submit')
         }}
-        style={{ paddingVertical: 10 }}
       />
       <TextInput
         style={styles.text_input}

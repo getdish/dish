@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Switch, Route } from 'react-router-dom'
-import { View, Button, Text, StyleSheet } from 'react-native'
-import SlidingUpPanel, { Animated } from 'rn-sliding-up-panel'
+
+import { StyleSheet, View, Button, Text } from 'react-native'
+import SlidingUpPanel from 'rn-sliding-up-panel'
 
 import { useOvermind } from '../../state/om'
 import Restaurant from './Restaurant'
 import TopDishes from './TopDishes'
 import TopRestaurants from './TopRestaurants'
+import UserReviews from './UserReviews'
 
 const styles = StyleSheet.create({
   container: {
@@ -39,6 +41,12 @@ export default function Bottom() {
           <Switch>
             <Route exact path="/">
               <TopDishes />
+            </Route>
+            <Route exact path="/account/reviews">
+              <UserReviews />
+            </Route>
+            <Route path="/user/:user">
+              <UserReviews />
             </Route>
             <Route path="/e/:slug">
               <Restaurant />
