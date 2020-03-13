@@ -1,13 +1,11 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
-import { User } from '@dish/models'
-
 const BROWSER_STORAGE_KEY = 'auth'
 const LOCAL_AUTH_SERVER = 'http://localhost:3000'
 let DOMAIN: string
 
 const isNode = typeof window == 'undefined'
-const isBrowserProd = window.location.hostname.includes('dish')
+const isBrowserProd = !isNode && window.location.hostname.includes('dish')
 
 if (isNode) {
   DOMAIN = process.env.AUTH_ENDPOINT || LOCAL_AUTH_SERVER
@@ -27,7 +25,7 @@ class Auth {
   public jwt = ''
   public is_logged_in = false
   public is_admin = false
-  public user: User = {} as User
+  public user = {}
   public has_been_logged_out = false
 
   constructor() {

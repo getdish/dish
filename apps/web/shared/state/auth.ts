@@ -57,7 +57,6 @@ const register: AsyncAction<
 }
 
 const checkForExistingLogin: Action = om => {
-  console.log('!')
   if (auth.has_been_logged_out) {
     Toast.show('Session expired: logged out')
   }

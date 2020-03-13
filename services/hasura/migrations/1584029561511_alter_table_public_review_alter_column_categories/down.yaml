@@ -1,0 +1,5 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."review" ALTER COLUMN "categories" SET NOT NULL;
+  type: run_sql

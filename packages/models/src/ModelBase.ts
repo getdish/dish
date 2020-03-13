@@ -205,14 +205,18 @@ export class ModelBase<T> {
     return res.data
   }
 
-  static async hasura(gql: {}) {
+  static async hasura(gql: {}, silence_not_found: boolean = false) {
     let conf = JSON.parse(JSON.stringify(AXIOS_CONF))
     gql = ModelBase.ensureKeySyntax(gql)
     conf.data.query = jsonToGraphQLQuery(gql, { pretty: true })
     conf.headers = auth.getHeaders()
     const response = await axios(conf)
     if (response.data.errors) {
-      throw new HasuraError(conf.data.query, response.data.errors)
+      if (silence_not_found && response.status == 404) {
+        return response
+      } else {
+        throw new HasuraError(conf.data.query, response.data.errors)
+      }
     }
     return response
   }
@@ -253,7 +257,6 @@ export class ModelBase<T> {
         },
       },
     }
-
     const response = await ModelBase.hasura(query)
     Object.assign(this, response.data.data[this._lower_name])
     return this.id

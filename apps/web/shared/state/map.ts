@@ -1,4 +1,4 @@
-import { ModelBase, Dish, Restaurant, ScrapeData } from '@dish/models'
+import { ModelBase, Dish, Restaurant, Review, ScrapeData } from '@dish/models'
 import { LngLat } from 'mapbox-gl'
 import { Action, AsyncAction } from 'overmind'
 import SlidingUpPanel from 'rn-sliding-up-panel'
@@ -18,6 +18,7 @@ type LabState = {
   top_restaurants: Partial<Restaurant>[]
   current_dish: string
   current_restaurant: Partial<Restaurant>
+  current_review: Partial<Review>
 }
 
 const RADIUS = 0.015
@@ -31,6 +32,7 @@ export const state: LabState = {
   top_restaurants: [],
   current_dish: '',
   current_restaurant: {},
+  current_review: {},
 }
 
 const openPanel = om => {
@@ -112,6 +114,41 @@ const setMapCentre: Action<LngLat> = (om, centre: LngLat) => {
   om.state.map.centre = centre
 }
 
+const getReview: AsyncAction = async om => {
+  let review = new Review()
+  await review.findOne(
+    om.state.map.current_restaurant.id,
+    om.state.auth.user.id
+  )
+  om.state.map.current_review = review
+}
+
+const submitReview: AsyncAction<[number, string]> = async (
+  om,
+  args: [number, string]
+) => {
+  const rating = args[0]
+  const text = args[1]
+  let review = new Review()
+  if (typeof om.state.map.current_review.id == 'undefined') {
+    Object.assign(review, {
+      restaurant_id: om.state.map.current_restaurant.id,
+      user_id: om.state.auth.user.id,
+      rating: rating,
+      text: text,
+    })
+    await review.insert()
+  } else {
+    Object.assign(review, om.state.map.current_review)
+    Object.assign(review, {
+      rating: rating,
+      text: text,
+    })
+    await review.update()
+  }
+  om.state.map.current_review = review
+}
+
 export const actions = {
   updateRestaurants: updateRestaurants,
   getCurrentRestaurant: getCurrentRestaurant,
@@ -120,4 +157,6 @@ export const actions = {
   getTopDishes: getTopDishes,
   restaurantSearch: restaurantSearch,
   setMapCentre: setMapCentre,
+  getReview: getReview,
+  submitReview: submitReview,
 }

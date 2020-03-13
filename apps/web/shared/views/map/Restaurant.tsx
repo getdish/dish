@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom'
 import { useOvermind } from '../../state/om'
 
 import { Restaurant } from '@dish/models'
+import ReviewForm from './ReviewForm'
 
 const styles = {
   container: {},
@@ -58,17 +59,22 @@ export default function RestaurantView() {
           Back to Top Dishes
         </Link>
       </View>
-      <View>
+      <View style={{ flexDirection: 'row' }}>
         <Image
           source={{ uri: restaurant.image }}
-          style={{ height: 200 }}
+          style={{ height: 200, width: 300 }}
           resizeMode="contain"
         />
+        <View style={{ width: '50%' }}>
+          {state.auth.is_logged_in && <ReviewForm />}
+        </View>
       </View>
-      {images}
-      <Text>{restaurant.address}</Text>
-      <Text>{restaurant.telephone}</Text>
-      <Text>{restaurant.website}</Text>
+      <View>
+        {images}
+        <Text>{restaurant.address}</Text>
+        <Text>{restaurant.telephone}</Text>
+        <Text>{restaurant.website}</Text>
+      </View>
     </View>
   )
 }
