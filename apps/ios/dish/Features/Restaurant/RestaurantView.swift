@@ -72,13 +72,14 @@ struct RestaurantViewContent: View {
 
         HStack {
           DividerView()
+
           HStack(spacing: 0) {
             Text("#1 in")
               .font(.system(size: 16))
               .fontWeight(.bold)
               .lineLimit(1)
               .fixedSize()
-              .foregroundColor(.black)
+              .foregroundColor(Color.black)
               .padding(.vertical, 6)
               .padding(.horizontal, 6)
               .background(Color.white)
@@ -89,13 +90,14 @@ struct RestaurantViewContent: View {
               .lineLimit(1)
               .fixedSize()
               .frame(width: 96)
-              .foregroundColor(.white)
+              .foregroundColor(Color.white)
               .padding(.vertical, 6)
               .padding(.horizontal, 6)
               .background(Color.black)
           }
           .cornerRadius(8)
           .shadow(color: Color.black.opacity(0.3), radius: 5, y: 1)
+
           DividerView()
         }
         
@@ -210,8 +212,6 @@ struct RestaurantViewContent: View {
           
           self.spacer
         }
-
-        Spacer()
       }
     }
   }
