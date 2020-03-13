@@ -15,6 +15,6 @@ export class User extends ModelBase<User> {
   }
 
   static fields() {
-    return ['username', 'password', 'role']
+    return ['username', 'role']
   }
 }

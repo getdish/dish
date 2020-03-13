@@ -20,22 +20,34 @@ test('Normal user cannot delete things', async t => {
   try {
     await Restaurant.deleteAllBy('id', 'example')
   } catch (e) {
-    t.is(e.errors[0].message, 'no mutations exist')
+    t.is(
+      e.errors[0].message,
+      'field "delete_restaurant" not found in type: \'mutation_root\''
+    )
   }
   try {
     await User.deleteAllBy('id', 'example')
   } catch (e) {
-    t.is(e.errors[0].message, 'no mutations exist')
+    t.is(
+      e.errors[0].message,
+      'field "delete_user" not found in type: \'mutation_root\''
+    )
   }
   try {
     await Dish.deleteAllBy('id', 'example')
   } catch (e) {
-    t.is(e.errors[0].message, 'no mutations exist')
+    t.is(
+      e.errors[0].message,
+      'field "delete_dish" not found in type: \'mutation_root\''
+    )
   }
   try {
     await Scrape.deleteAllBy('id', 'example')
   } catch (e) {
-    t.is(e.errors[0].message, 'no mutations exist')
+    t.is(
+      e.errors[0].message,
+      'field "delete_scrape" not found in type: \'mutation_root\''
+    )
   }
 })
 

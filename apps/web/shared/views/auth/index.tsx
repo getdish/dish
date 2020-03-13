@@ -53,7 +53,6 @@ export const LabAuth = () => {
           if (result) {
             setUsername('')
             setPassword('')
-            setIsLogin(true)
           }
         }
       }}
