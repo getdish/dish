@@ -68,7 +68,7 @@ struct RestaurantViewContent: View {
           .style(.h1)
           .lineLimit(2)
           .padding(.horizontal, 16)
-          .padding(.bottom, 6)
+          .padding(.bottom, 12)
 
         HStack {
           DividerView()
@@ -77,20 +77,21 @@ struct RestaurantViewContent: View {
               .font(.system(size: 16))
               .fontWeight(.bold)
               .lineLimit(1)
+              .fixedSize()
               .foregroundColor(.black)
-              .padding(.vertical, 8)
-              .padding(.horizontal, 8)
+              .padding(.vertical, 6)
+              .padding(.horizontal, 6)
               .background(Color.white)
-              .frame(width: 53)
             
             Text("🇨🇳 Chinese")
               .font(.system(size: 16))
               .fontWeight(.semibold)
               .lineLimit(1)
+              .fixedSize()
               .frame(width: 96)
               .foregroundColor(.white)
-              .padding(.vertical, 8)
-              .padding(.horizontal, 8)
+              .padding(.vertical, 6)
+              .padding(.horizontal, 6)
               .background(Color.black)
           }
           .cornerRadius(8)
@@ -98,15 +99,18 @@ struct RestaurantViewContent: View {
           DividerView()
         }
         
+        Spacer().frame(height: 10)
+        
         HStack(spacing: 0) {
           Group {
             Button(action: {}) {
-              HStack(spacing: 20) {
+              HStack(spacing: 6) {
                 Image(systemName: "phone.fill")
                   .resizable()
                   .scaledToFit()
                   .opacity(0.5)
                   .frame(width: 28, height: 28)
+                  .padding()
                 
                 VStack(alignment: .leading, spacing: 4) {
                   Text("\(self.restaurant.address)")
@@ -116,28 +120,36 @@ struct RestaurantViewContent: View {
                     .font(.caption)
                     .opacity(0.5)
                 }
+                
                 Spacer()
               }
               .padding(4)
             }
+            .foregroundColor(
+              self.colorScheme == .light ? .black : .white
+            )
             
             Color.clear
               .frame(width: 66, height: 66)
           }
-        .overlay(
-          HStack {
-           Spacer()
-            AppleMapView(
-              markers: [],
-              mapZoom: self.$mapZoom
-            )
-              .frame(width: 90, height: 90)
-              .cornerRadius(100)
-        })
-          .foregroundColor(self.colorScheme == .light ? .black : .white)
+          .overlay(
+            HStack {
+             Spacer()
+              AppleMapView(
+                markers: [],
+                mapZoom: self.$mapZoom
+              )
+                .frame(width: 100, height: 100)
+                .offset(y: -20)
+                .cornerRadius(100)
+            }
+          )
         }
         .padding(.horizontal, 10)
-        .padding(.vertical, 0)
+        
+        DividerView()
+        
+        self.spacer
         
         RestaurantTagsRow(
           restaurant: self.restaurant
@@ -176,6 +188,7 @@ struct RestaurantViewContent: View {
                     .controlButtonStyle()
                   Spacer()
                 }
+                .offset(y: -20)
             )
           }
           .padding()
@@ -215,6 +228,7 @@ struct RestaurantTagsRow: View {
           ForEach(0..<self.restaurant.tags.count) { index in
             // self.restaurant.tags[index]
             return RestaurantLenseView(lense: App.store.state.home.lenses[index])
+              .shadow(radius: 5)
           }
         }
         .padding(.horizontal)
