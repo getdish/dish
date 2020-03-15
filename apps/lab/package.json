@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@dish/auth": "*",
-    "@apollo/client": "3.0.0-beta.38",
+    "@apollo/client": "3.0.0-beta.41",
     "@apollo/link-ws": "2.0.0-beta.3",
     "@dish/models": "*",
     "overmind": "^21.0.0",

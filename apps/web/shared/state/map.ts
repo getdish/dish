@@ -3,6 +3,7 @@ import { LngLat } from 'mapbox-gl'
 import { Action, AsyncAction } from 'overmind'
 import SlidingUpPanel from 'rn-sliding-up-panel'
 import { Dimensions } from 'react-native'
+import Bottom, { bottomPanel } from '../views/map/Bottom'
 
 type TopDish = {
   category: string
@@ -41,7 +42,7 @@ export const state: LabState = {
 
 const openPanel = om => {
   const height = Dimensions.get('window').height
-  om.state.map.panel.show(height / 2)
+  bottomPanel.show(height / 2)
 }
 
 const updateRestaurants: AsyncAction<LngLat> = async (om, centre: LngLat) => {

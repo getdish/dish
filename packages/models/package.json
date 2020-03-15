@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "axios": "^0.19.1",
-    "@apollo/client": "3.0.0-beta.38",
+    "@apollo/client": "3.0.0-beta.41",
     "@apollo/link-ws": "2.0.0-beta.3",
     "subscriptions-transport-ws": "^0.9.16",
     "graphql": "^14.6.0",
