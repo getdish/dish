@@ -28,20 +28,20 @@ const styles = StyleSheet.create({
   },
 })
 
-export default function Bottom() {
-  const [panel, setPanel] = useState<SlidingUpPanel>(null)
+export let bottomPanel: SlidingUpPanel | null = null
 
+export default function Bottom() {
   return (
     <View style={styles.container}>
       <SlidingUpPanel
         draggableRange={{ top: 100 + 180 - 64, bottom: 180 }}
         height={500}
-        ref={c => setPanel(c)}
+        ref={c => (bottomPanel = c)}
         friction={0.12}
       >
         <View style={styles.content}>
           <View style={styles.close}>
-            <Button title="Hide" onPress={() => panel.hide()} />
+            <Button title="Hide" onPress={() => bottomPanel.hide()} />
           </View>
           <Switch>
             <Route exact path="/">

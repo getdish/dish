@@ -19,10 +19,10 @@
     "build:web": "expo build:web"
   },
   "dependencies": {
-    "@apollo/client": "3.0.0-beta.37",
+    "@apollo/client": "3.0.0-beta.41",
     "@dish/models": "*",
     "@expo/vector-icons ": "10.0.6",
-    "expo": "36.0.0",
+    "expo": "36.0.2",
     "mapbox-gl": "^1.8.1",
     "overmind": "21.0.0",
     "overmind-react": "22.0.0",
