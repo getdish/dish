@@ -50,10 +50,6 @@ const setSearchQuery: Action<string> = (om, next) => {
   om.state.home.searchQuery = next
 }
 
-const openPanel = om => {
-  const height = Dimensions.get('window').height
-}
-
 const updateRestaurants: AsyncAction<LngLat> = async (om, centre: LngLat) => {
   const restaurants = await Restaurant.findNear(centre.lat, centre.lng, RADIUS)
   for (const restaurant of restaurants) {
@@ -73,13 +69,11 @@ const getCurrentRestaurant: AsyncAction<string> = async (om, slug: string) => {
   om.state.map.restaurant_reviews = await reviews.findAllForRestaurant(
     restaurant.id
   )
-  openPanel(om)
 }
 
 const getUserReviews: AsyncAction<string> = async (om, user_id: string) => {
   const reviews = new Review()
   om.state.map.user_reviews = await reviews.findAllForUser(user_id)
-  openPanel(om)
 }
 
 const getTopDishes: AsyncAction = async om => {
@@ -100,13 +94,12 @@ const getTopDishes: AsyncAction = async om => {
   }
   const response = await ModelBase.hasura(query)
   om.state.home.top_dishes = response.data.data.top_dishes
-  openPanel(om)
 }
 
-const getTopRestaurantsByDish: AsyncAction<string> = async (
-  om,
-  dish: string
-) => {
+const navigateToSearch: AsyncAction<string> = async (om, dish: string) => {
+  if (om.state.home.current_dish == dish) {
+    return
+  }
   om.state.home.top_restaurants = []
   om.state.home.top_restaurants = await Restaurant.highestRatedByDish(
     om.state.home.centre.lat,
@@ -115,7 +108,7 @@ const getTopRestaurantsByDish: AsyncAction<string> = async (
     [dish]
   )
   om.state.home.current_dish = dish
-  openPanel(om)
+  om.state.home.searchQuery = dish
 }
 
 let searchVersion = 0
@@ -194,7 +187,7 @@ const submitReview: AsyncAction<[number, string]> = async (
 export const actions = {
   updateRestaurants,
   getCurrentRestaurant,
-  getTopRestaurantsByDish,
+  navigateToSearch,
   getTopDishes,
   restaurantSearch,
   clearRestaurantSearch,

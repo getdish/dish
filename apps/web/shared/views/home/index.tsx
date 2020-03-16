@@ -2,7 +2,7 @@ import React from 'react'
 
 import Map from './Map'
 import HomeMainPane from './HomeMainPane'
-import { ZStack } from '../ZStack'
+import { ZStack } from '../Stacks'
 
 export const LabHome = () => {
   return (

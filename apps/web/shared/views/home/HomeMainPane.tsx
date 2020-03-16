@@ -17,6 +17,7 @@ import TopDishes from './TopDishes'
 import TopRestaurants from './TopRestaurants'
 import SearchBar from './SearchBar'
 import { Spacer } from '../Spacer'
+import { VStack } from '../Stacks'
 
 const styles = StyleSheet.create({
   container: {
@@ -28,7 +29,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     shadowColor: 'rgba(0,0,0,0.2)',
     shadowRadius: 20,
-    padding: 18,
     backgroundColor: 'white',
     width: '50%',
     minWidth: 400,
@@ -51,39 +51,43 @@ export default function HomeMainPane() {
 
   return (
     <View style={styles.container}>
-      <View style={{ position: 'absolute', top: 22, left: 12 }}>
-        <TouchableOpacity
-          onPress={() => om.actions.setShowSidebar(om.state.showSidebar)}
-          style={styles.button}
+      <VStack padding={18}>
+        <View style={{ position: 'absolute', top: 22, left: 12 }}>
+          <TouchableOpacity
+            onPress={() => om.actions.setShowSidebar(om.state.showSidebar)}
+            style={styles.button}
+          >
+            <Image
+              source={require('../../assets/menu.png')}
+              style={{ width: 24, height: 24 }}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <View
+          style={{ flexDirection: 'row', width: '100%', paddingBottom: 10 }}
         >
-          <Image
-            source={require('../../assets/menu.png')}
-            style={{ width: 24, height: 24 }}
-          />
-        </TouchableOpacity>
-      </View>
+          <Spacer flex />
 
-      <View style={{ flexDirection: 'row', width: '100%', paddingBottom: 10 }}>
-        <Spacer flex />
+          <TouchableOpacity
+            onPress={() => {
+              om.actions.home.setSearchQuery('')
+              history.push(`/`)
+            }}
+          >
+            <Image
+              source={require('../../assets/logo.png')}
+              style={{ width: 1211 * 0.075, height: 605 * 0.075 }}
+            />
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => {
-            om.actions.home.setSearchQuery('')
-            history.push(`/`)
-          }}
-        >
-          <Image
-            source={require('../../assets/logo.png')}
-            style={{ width: 1211 * 0.075, height: 605 * 0.075 }}
-          />
-        </TouchableOpacity>
+          <Spacer flex />
+        </View>
 
-        <Spacer flex />
-      </View>
-
-      <View>
-        <SearchBar />
-      </View>
+        <View>
+          <SearchBar />
+        </View>
+      </VStack>
 
       <View style={styles.content}>
         {showSearchResults && <SearchResults />}

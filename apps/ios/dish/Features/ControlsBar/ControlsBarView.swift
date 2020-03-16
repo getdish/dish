@@ -47,7 +47,7 @@ struct ControlsBar: View, Equatable {
     }) {
       VStack {
         Image(
-          systemName: self.store.state.home.location.center == .current
+          systemName: self.store.state.map.location.center == .current
             ? "location" : "location.fill")
           .resizable()
           .scaledToFit()

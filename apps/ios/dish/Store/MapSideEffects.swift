@@ -19,7 +19,7 @@ class MapSideEffects {
   func effectMoveToCurrentLocationOnAuthorization(_ store: AppStore) {
     currentLocationManager.$authorized
       .sink { authorized in
-        if !store.state.home.hasChangedOnce {
+        if !store.state.map.hasChangedOnce {
           store.send(.map(.moveToLocation(MapViewLocation(center: .current))))
         }
     }
