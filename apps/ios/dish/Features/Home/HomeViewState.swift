@@ -33,7 +33,7 @@ class HomeViewState: ObservableObject {
   //    private var lastKeyboardAdjustY: CGFloat = 0
 
   init() {
-//    self.keyboard.$state.map { $0.height }
+//    self.keyboard.$state.home { $0.height }
 //      .removeDuplicates()
 //      .sink { val in
 //        // set animating while keyboard animates

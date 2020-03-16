@@ -345,7 +345,7 @@ struct DrawerTitleView: View {
   }
   
   var body: some View {
-    let locationName = self.store.state.map.locationLabel
+    let locationName = self.store.state.home.locationLabel
     return Group {
       if self.store.state.home.searchFocus != .search {
         HStack(spacing: 6) {

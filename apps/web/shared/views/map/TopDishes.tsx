@@ -32,10 +32,10 @@ export default function TopDishes() {
   const { state, actions } = useOvermind()
   let dishes: string[] = []
   useEffect(() => {
-    actions.map.getTopDishes()
+    actions.home.getTopDishes()
   }, [])
 
-  for (const dish of state.map.top_dishes) {
+  for (const dish of state.home.top_dishes) {
     const category = dish.category.replace(/"/g, '')
     dishes.push(
       <Text>

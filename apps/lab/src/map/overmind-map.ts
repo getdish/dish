@@ -38,28 +38,28 @@ export const state: LabState = {
 const updateRestaurants: AsyncAction<LngLat> = async (om, centre: LngLat) => {
   const restaurants = await Restaurant.findNear(centre.lat, centre.lng, 0.015)
   for (const restaurant of restaurants) {
-    om.state.map.restaurants[restaurant.id] = restaurant
+    om.state.home.restaurants[restaurant.id] = restaurant
   }
 }
 
 const setSelected: Action<string> = (om, id: string) => {
-  om.state.map.selected.id = id
+  om.state.home.selected.id = id
 }
 
 const getAllDataForRestaurant: AsyncAction = async om => {
   const restaurant = new Restaurant()
   await restaurant.findOne('id', state.selected.id)
-  om.state.map.selected.model = restaurant
-  om.state.map.selected.scrapes = {
+  om.state.home.selected.model = restaurant
+  om.state.home.selected.scrapes = {
     yelp: (await restaurant.getLatestScrape('yelp')).data,
     ubereats: (await restaurant.getLatestScrape('ubereats')).data,
   }
 }
 
 const getStats: AsyncAction = async om => {
-  om.state.map.stats.restaurant_count = await Restaurant.allCount()
-  om.state.map.stats.dish_count = await Dish.allCount()
-  om.state.map.stats.scrape_count = await Scrape.allCount()
+  om.state.home.stats.restaurant_count = await Restaurant.allCount()
+  om.state.home.stats.dish_count = await Dish.allCount()
+  om.state.home.stats.scrape_count = await Scrape.allCount()
 }
 
 export const actions = {

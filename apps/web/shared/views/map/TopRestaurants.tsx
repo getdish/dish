@@ -15,12 +15,12 @@ export default function TopRestaurants() {
   const { state, actions } = useOvermind()
   let restaurants: JSX.Element[] = []
   const { dish } = useParams()
-  if (dish != state.map.current_dish) {
-    actions.map.getTopRestaurantsByDish(dish)
+  if (dish != state.home.current_dish) {
+    actions.home.getTopRestaurantsByDish(dish)
   }
 
   let key = 0
-  for (const restaurant of state.map.top_restaurants) {
+  for (const restaurant of state.home.top_restaurants) {
     key++
     restaurants.push(
       <View key={key} style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
@@ -39,7 +39,7 @@ export default function TopRestaurants() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={{ fontSize: 30 }}>
-          Top {state.map.current_dish} Restaurants
+          Top {state.home.current_dish} Restaurants
         </Text>
       </View>
       {restaurants.length > 0 ? restaurants : <Text>Loading...</Text>}

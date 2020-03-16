@@ -26,7 +26,7 @@ extension HomeSideEffects {
       .map { state in
         SearchQuery(
           query: state.home.viewStates.last!.queryString,
-          location: state.map.location
+          location: state.home.location
         )
     }
     .removeDuplicates()
