@@ -16,6 +16,7 @@ import Restaurant from './Restaurant'
 import TopDishes from './TopDishes'
 import TopRestaurants from './TopRestaurants'
 import SearchBar from './SearchBar'
+import { Spacer } from '../Spacer'
 
 const styles = StyleSheet.create({
   container: {
@@ -36,11 +37,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 20,
   },
-  close: {
-    width: 100,
-    alignSelf: 'flex-end',
-    margin: 3,
-  },
   button: {
     padding: 10,
   },
@@ -55,19 +51,30 @@ export default function MainPane() {
 
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: 'row', width: '100%' }}>
+      <View style={{ position: 'absolute', top: 22, left: 12 }}>
         <TouchableOpacity
           onPress={() => om.actions.setShowSidebar(om.state.showSidebar)}
           style={styles.button}
         >
           <Image
             source={require('../../assets/menu.png')}
-            style={{ width: 28, height: 28 }}
+            style={{ width: 24, height: 24 }}
           />
         </TouchableOpacity>
+      </View>
 
-        <View style={{ width: 12 }} />
+      <View style={{ flexDirection: 'row', width: '100%', paddingBottom: 10 }}>
+        <Spacer flex />
 
+        <Image
+          source={require('../../assets/logo.png')}
+          style={{ width: 1211 * 0.075, height: 605 * 0.075 }}
+        />
+
+        <Spacer flex />
+      </View>
+
+      <View>
         <SearchBar />
       </View>
 
