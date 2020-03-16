@@ -66,7 +66,7 @@ const getCurrentRestaurant: AsyncAction<string> = async (om, slug: string) => {
     lat: restaurant.location.coordinates[1] - 0.0037,
   }
   const reviews = new Review()
-  om.state.map.restaurant_reviews = await reviews.findAllForRestaurant(
+  om.state.home.restaurant_reviews = await reviews.findAllForRestaurant(
     restaurant.id
   )
 }

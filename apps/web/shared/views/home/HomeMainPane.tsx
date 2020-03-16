@@ -1,15 +1,7 @@
-import React, { useState } from 'react'
-import { Switch, Route } from 'react-router-dom'
-import { useHistory } from 'react-router-dom'
-import {
-  View,
-  Button,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-} from 'react-native'
-import SlidingUpPanel, { Animated } from 'rn-sliding-up-panel'
+import React from 'react'
+import { Route } from 'react-router-dom'
+import { useHistory, Switch } from 'react-router-dom'
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import Restaurant from './Restaurant'
@@ -77,7 +69,7 @@ export default function HomeMainPane() {
           >
             <Image
               source={require('../../assets/logo.png')}
-              style={{ width: 1211 * 0.075, height: 605 * 0.075 }}
+              style={{ width: 1211 * 0.065, height: 605 * 0.065 }}
             />
           </TouchableOpacity>
 
