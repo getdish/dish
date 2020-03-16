@@ -1,7 +1,7 @@
 import { Restaurant } from '@dish/models'
 import { Self } from './Self'
 
-const name = 'Flour + Water, California'
+const name = 'Napa Valley Burger Company'
 
 async function one() {
   const restaurant = new Restaurant()

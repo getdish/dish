@@ -220,10 +220,10 @@ export class Self extends WorkerJob {
   }
 
   mergePhotos() {
-    let photos: string[] = []
-    photos = this._getYelpPhotos()
-    photos = photos.concat(this.tripadvisor.getData('photos', []))
-    this.restaurant.photos = photos
+    this.restaurant.photos = [
+      ...this._getYelpPhotos(),
+      ...this.tripadvisor.getData('photos', []),
+    ]
   }
 
   private _getYelpPhotos() {
@@ -238,7 +238,10 @@ export class Self extends WorkerJob {
       if (key in this.yelp.data) {
         photos = photos.concat(this.yelp.data[key].map(p => p.src))
       } else {
-        break
+        // Allow scrapers to start their pages on both 0 and 1
+        if (page > 0) {
+          break
+        }
       }
       if (photos.length > 50) {
         break
