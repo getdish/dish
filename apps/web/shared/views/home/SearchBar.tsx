@@ -54,7 +54,7 @@ export default function SearchBar() {
           }}
           onPress={() => {
             actions.home.setSearchQuery('')
-            history.back()
+            history.pop()
           }}
         >
           <Text style={{ fontSize: 22 }}>x</Text>

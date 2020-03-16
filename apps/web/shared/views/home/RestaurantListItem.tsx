@@ -15,7 +15,7 @@ export function RestaurantListItem({
 }) {
   return (
     <HStack alignItems="center" overflow="scroll">
-      <VStack padding={18} width="70%">
+      <VStack padding={18} width="70%" maxWidth={525}>
         <Link to={'/e/' + restaurant.id}>
           <Text
             style={{

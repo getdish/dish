@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
 export default function RestaurantView() {
   const { state, actions } = useOvermind()
   const { slug } = useParams()
+
   let restaurant = state.home.current_restaurant
   if (slug != state.home.current_restaurant.id) {
     restaurant = {} as Restaurant
@@ -26,9 +27,11 @@ export default function RestaurantView() {
   if (typeof restaurant.name == 'undefined') {
     return <Text>Loading...</Text>
   }
+
   const categories = restaurant.categories || []
   let images: JSX.Element[] = []
   let reviewer_links: JSX.Element[] = []
+
   let key = 0
   for (const uri of restaurant.photos) {
     key++
@@ -41,6 +44,7 @@ export default function RestaurantView() {
       />
     )
   }
+
   let categories_links: JSX.Element[] = []
   for (let i = 0; i < categories.length; i++) {
     const category = categories[i]
@@ -52,6 +56,7 @@ export default function RestaurantView() {
       </Text>
     )
   }
+
   for (let i = 0; i < state.home.restaurant_reviews.length; i++) {
     const review = state.home.restaurant_reviews[i]
     const separator = i == state.home.restaurant_reviews.length - 1 ? '' : ', '
@@ -64,10 +69,11 @@ export default function RestaurantView() {
       </Text>
     )
   }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Link to="/" style={{ alignSelf: 'flex-start' }}>
+        <Link to="/" style={{ alignSelf: 'flex-start', opacity: 0.5 }}>
           Back to Top Dishes
         </Link>
 
