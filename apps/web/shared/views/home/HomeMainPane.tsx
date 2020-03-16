@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
 
 export let bottomPanel: SlidingUpPanel | null = null
 
-export default function MainPane() {
+export default function HomeMainPane() {
   const om = useOvermind()
   const searchResults = om.state.home.search_results
   const showSearchResults = !!searchResults

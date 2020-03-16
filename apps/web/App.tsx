@@ -23,7 +23,7 @@ import SideMenu from 'react-native-side-menu'
 
 import { config, useOvermind } from './shared/state/om'
 import { LabAuth } from './shared/views/auth'
-import { LabMap } from './shared/views/map'
+import { LabHome } from './shared/views/home'
 import { LabDishes } from './shared/views/dishes'
 
 const overmind = createOvermind(config)
@@ -40,7 +40,7 @@ function MenuContents() {
   const { state, actions } = useOvermind()
   return (
     <ScrollView>
-      <View style={styles.menu}>
+      <View>
         {state.auth.is_logged_in ? (
           <Text>
             Logged in as {state.auth.user.username}
@@ -123,7 +123,7 @@ function Content() {
             <LabDishes />
           </PrivateRoute>
           <Route path="/">
-            <LabMap />
+            <LabHome />
           </Route>
         </Switch>
       </View>
