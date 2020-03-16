@@ -20,6 +20,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 10,
     alignItems: 'center',
+    shadowColor: 'rgba(0,0,0,0.09)',
+    shadowRadius: 4,
+    shadowOffset: { height: 1, width: 0 },
   },
   textInput: {
     padding: 12,

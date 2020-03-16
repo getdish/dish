@@ -4,7 +4,7 @@ import { useHistory, Switch } from 'react-router-dom'
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
 
 import { useOvermind } from '../../state/om'
-import Restaurant from './Restaurant'
+import Restaurant from './RestaurantView'
 import TopDishes from './TopDishes'
 import TopRestaurants from './TopRestaurants'
 import SearchBar from './SearchBar'
@@ -51,7 +51,7 @@ export default function HomeMainPane() {
           >
             <Image
               source={require('../../assets/menu.png')}
-              style={{ width: 24, height: 24 }}
+              style={{ width: 22, height: 22, opacity: 0.5 }}
             />
           </TouchableOpacity>
         </View>
