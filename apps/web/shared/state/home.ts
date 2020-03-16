@@ -3,7 +3,6 @@ import { LngLat } from 'mapbox-gl'
 import { Action, AsyncAction } from 'overmind'
 import SlidingUpPanel from 'rn-sliding-up-panel'
 import { Dimensions, AccessibilityEventName } from 'react-native'
-import { bottomPanel } from '../views/home/HomeMainPane'
 
 type TopDish = {
   category: string
@@ -47,7 +46,6 @@ export const state: HomeState = {
 
 const openPanel = om => {
   const height = Dimensions.get('window').height
-  bottomPanel.show(height / 2)
 }
 
 const updateRestaurants: AsyncAction<LngLat> = async (om, centre: LngLat) => {
