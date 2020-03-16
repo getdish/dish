@@ -60,7 +60,10 @@ export default function TopDishes() {
           width: '33%',
           marginBottom: 20,
         }}
-        onPress={() => history.push(`/best/${category}`)}
+        onPress={() => {
+          actions.home.setSearchQuery(dish.category.replace(/"/g, ''))
+          history.push(`/best/${category}`)
+        }}
       >
         {getImageForDish(category)}
         <Spacer />
