@@ -1,19 +1,27 @@
-import { IConfig, createOvermind } from 'overmind'
+import { IConfig, createOvermind, Action } from 'overmind'
 import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/config'
 
 import * as dishes from './dishes'
-import * as map from './map'
+import * as home from './home'
 import * as auth from './auth'
+
+const setShowSidebar: Action<boolean> = (om, val) => {
+  om.state.showSidebar = val
+}
 
 export const config = merge(
   {
-    // state,
-    // actions,
+    state: {
+      showSidebar: false,
+    },
+    actions: {
+      setShowSidebar,
+    },
     // effects,
   },
   namespaced({
-    map,
+    home,
     dishes,
     auth,
   })

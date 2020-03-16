@@ -95,21 +95,21 @@ function StatefulApp() {
 }
 
 function Content() {
-  const [isOpen, setIsOpen] = useState(false)
+  const om = useOvermind()
   const menu = <MenuContents />
   const default_side_width = Dimensions.get('window').width * 0.66
   const side_menu_width = default_side_width > 300 ? 300 : default_side_width
   const history = useHistory()
 
-  history.listen(() => setIsOpen(false))
+  history.listen(() => om.actions.setShowSidebar(false))
 
   return (
     <SideMenu
       menu={menu}
-      isOpen={isOpen}
-      onChange={isOpen => setIsOpen(isOpen)}
+      isOpen={om.state.showSidebar}
+      onChange={isOpen => om.actions.setShowSidebar(isOpen)}
       openMenuOffset={side_menu_width}
-      onPress={() => setIsOpen(false)}
+      onPress={() => om.actions.setShowSidebar(false)}
     >
       <View style={styles.container}>
         <Switch>
@@ -127,15 +127,6 @@ function Content() {
           </Route>
         </Switch>
       </View>
-      <TouchableOpacity
-        onPress={() => setIsOpen(!isOpen)}
-        style={styles.button}
-      >
-        <Image
-          source={require('./shared/assets/menu.png')}
-          style={{ width: 32, height: 32 }}
-        />
-      </TouchableOpacity>
     </SideMenu>
   )
 }
@@ -167,12 +158,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff',
-  },
-  menu: {
-    padding: '3em',
-  },
-  button: {
-    position: 'absolute',
-    padding: 10,
   },
 })

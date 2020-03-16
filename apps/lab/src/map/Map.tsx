@@ -44,7 +44,7 @@ const Map = () => {
     ) {
       mapState.bounds = map.getBounds()
       setMapState(mapState)
-      actions.map.updateRestaurants(map.getCenter())
+      actions.home.updateRestaurants(map.getCenter())
     }
   }
 
@@ -66,17 +66,17 @@ const Map = () => {
         // See: https://github.com/mapbox/mapbox-gl-styles/blob/master/README.md
         layout={{ 'icon-image': 'restaurant-15' }}
       >
-        {Object.keys(state.map.restaurants).map(key => (
+        {Object.keys(state.home.restaurants).map(key => (
           <Feature
-            key={state.map.restaurants[key].id}
+            key={state.home.restaurants[key].id}
             properties={{
-              uuid: state.map.restaurants[key].id,
-              name: state.map.restaurants[key].name,
-              image: state.map.restaurants[key].image,
+              uuid: state.home.restaurants[key].id,
+              name: state.home.restaurants[key].name,
+              image: state.home.restaurants[key].image,
             }}
             coordinates={[
-              state.map.restaurants[key].location.coordinates[0],
-              state.map.restaurants[key].location.coordinates[1],
+              state.home.restaurants[key].location.coordinates[0],
+              state.home.restaurants[key].location.coordinates[1],
             ]}
             onMouseEnter={(mapWithEvt: any) => {
               popup
@@ -94,8 +94,8 @@ const Map = () => {
             }}
             onClick={(mapWithEvt: any) => {
               const id = mapWithEvt.feature.properties.uuid
-              actions.map.setSelected(id)
-              actions.map.getAllDataForRestaurant()
+              actions.home.setSelected(id)
+              actions.home.getAllDataForRestaurant()
             }}
           />
         ))}

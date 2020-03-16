@@ -21,7 +21,7 @@ struct MapViewContainer: View {
       ZStack {
         MapView(
           animated: store.state.appLoaded,
-          currentLocation: store.state.map.moveToLocation,
+          currentLocation: store.state.home.moveToLocation,
           markers: markers
         )
           .opacity(store.state.home.drawerPosition == .top ? 0.6 : 1)

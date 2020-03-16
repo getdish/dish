@@ -17,10 +17,10 @@ const styles = StyleSheet.create({
 export default function RestaurantView() {
   const { state, actions } = useOvermind()
   const { slug } = useParams()
-  let restaurant = state.map.current_restaurant
-  if (slug != state.map.current_restaurant.id) {
+  let restaurant = state.home.current_restaurant
+  if (slug != state.home.current_restaurant.id) {
     restaurant = {} as Restaurant
-    actions.map.getCurrentRestaurant(slug)
+    actions.home.getCurrentRestaurant(slug)
   }
   if (typeof restaurant.name == 'undefined') {
     return <Text>Loading...</Text>
@@ -45,15 +45,15 @@ export default function RestaurantView() {
     const category = categories[i]
     const separator = i == categories.length - 1 ? '' : ', '
     categories_links.push(
-      <Text key={i}>
+      <Text key={category}>
         <Link to={'/best/' + category}>{category}</Link>
         {separator}
       </Text>
     )
   }
-  for (let i = 0; i < state.map.restaurant_reviews.length; i++) {
-    const review = state.map.restaurant_reviews[i]
-    const separator = i == state.map.restaurant_reviews.length - 1 ? '' : ', '
+  for (let i = 0; i < state.home.restaurant_reviews.length; i++) {
+    const review = state.home.restaurant_reviews[i]
+    const separator = i == state.home.restaurant_reviews.length - 1 ? '' : ', '
     reviewer_links.push(
       <Text key={i}>
         <Link to={'/user/' + review.user.id + '/reviews'}>

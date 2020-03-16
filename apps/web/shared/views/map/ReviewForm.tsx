@@ -22,10 +22,10 @@ export default function ReviewForm() {
 
   useEffect(() => {
     const init = async () => {
-      await actions.map.getReview()
-      if (state.map.current_review.id) {
-        setReviewText(state.map.current_review.text)
-        setRating(state.map.current_review.rating)
+      await actions.home.getReview()
+      if (state.home.current_review.id) {
+        setReviewText(state.home.current_review.text)
+        setRating(state.home.current_review.rating)
       }
     }
     init()
@@ -55,7 +55,7 @@ export default function ReviewForm() {
       <Button
         onPress={async () => {
           setButtonText('Submitting...')
-          await actions.map.submitReview([rating, review_text])
+          await actions.home.submitReview([rating, review_text])
           setButtonText('Saved')
         }}
         title={button_text}

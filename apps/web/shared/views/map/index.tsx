@@ -1,20 +1,15 @@
 import React from 'react'
 
-import SearchBar from './SearchBar'
 import Map from './Map'
-import Bottom from './Bottom'
+import MainPane from './MainPane'
 import { View } from 'react-native'
+import { ZStack } from '../ZStack'
 
 export const LabMap = () => {
   return (
     <ZStack>
       <Map />
-      <SearchBar />
-      <Bottom />
+      <MainPane />
     </ZStack>
   )
-}
-
-function ZStack(props: { children: any }) {
-  return <View style={{ position: 'absolute' }}>{props.children}</View>
 }

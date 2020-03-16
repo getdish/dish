@@ -16,13 +16,13 @@ const Sidebar = () => {
 
   const startWatchingStats = () => {
     setInterval(() => {
-      actions.map.getStats()
+      actions.home.getStats()
     }, 60 * 1000)
   }
 
   const renderRestaurant = () => {
-    const restaurant = state.map.selected.model
-    const scrapes = state.map.selected.scrapes
+    const restaurant = state.home.selected.model
+    const scrapes = state.home.selected.scrapes
     if (!restaurant.name) {
       return
     }
@@ -98,15 +98,15 @@ const Sidebar = () => {
       <h2>Labs</h2>
       <h3>Crawler Status</h3>
       <ul>
-        <li>Restaurants: {state.map.stats.restaurant_count}</li>
-        <li>Dishes: {state.map.stats.dish_count}</li>
-        <li>Scrapes: {state.map.stats.scrape_count}</li>
+        <li>Restaurants: {state.home.stats.restaurant_count}</li>
+        <li>Dishes: {state.home.stats.dish_count}</li>
+        <li>Scrapes: {state.home.stats.scrape_count}</li>
         <li>
           Restaurants currently rendered:{' '}
-          {Object.keys(state.map.restaurants).length.toString()}
+          {Object.keys(state.home.restaurants).length.toString()}
         </li>
       </ul>
-      {state.map.selected.id != ''
+      {state.home.selected.id != ''
         ? renderRestaurant()
         : 'Click restaurant to see details'}
     </div>
