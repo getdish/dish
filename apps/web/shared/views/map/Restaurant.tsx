@@ -6,6 +6,7 @@ import { useOvermind } from '../../state/om'
 
 import { Restaurant } from '@dish/models'
 import ReviewForm from './ReviewForm'
+import { Spacer } from '../Spacer'
 
 const styles = StyleSheet.create({
   container: {},
@@ -102,9 +103,4 @@ export default function RestaurantView() {
       </View>
     </View>
   )
-}
-
-function Spacer({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
-  const sizePx = size == 'sm' ? 8 : size == 'lg' ? 16 : 12
-  return <View style={{ width: sizePx, height: sizePx }} />
 }
