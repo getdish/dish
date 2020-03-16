@@ -13,6 +13,7 @@ import { useOvermind } from '../../state/om'
 import top_dish_images from '../../assets/topdishes.json'
 import { Spacer } from '../Spacer'
 import Tappable from '../Tappable'
+import { SmallTitle } from '../SmallTitle'
 
 const styles = StyleSheet.create({
   container: {
@@ -90,20 +91,5 @@ export default function TopDishes() {
         </View>
       </ScrollView>
     </View>
-  )
-}
-
-function SmallTitle(props: { children: string }) {
-  return (
-    <Text
-      style={{
-        textTransform: 'uppercase',
-        letterSpacing: 2,
-        opacity: 0.5,
-        fontSize: 16,
-      }}
-    >
-      {props.children}
-    </Text>
   )
 }
