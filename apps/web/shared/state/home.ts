@@ -3,7 +3,7 @@ import { LngLat } from 'mapbox-gl'
 import { Action, AsyncAction } from 'overmind'
 import SlidingUpPanel from 'rn-sliding-up-panel'
 import { Dimensions, AccessibilityEventName } from 'react-native'
-import Bottom, { bottomPanel } from '../views/map/MainPane'
+import { bottomPanel } from '../views/home/HomeMainPane'
 
 type TopDish = {
   category: string

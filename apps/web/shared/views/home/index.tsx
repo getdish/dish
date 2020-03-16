@@ -1,15 +1,14 @@
 import React from 'react'
 
 import Map from './Map'
-import MainPane from './MainPane'
-import { View } from 'react-native'
+import HomeMainPane from './HomeMainPane'
 import { ZStack } from '../ZStack'
 
-export const LabMap = () => {
+export const LabHome = () => {
   return (
     <ZStack>
       <Map />
-      <MainPane />
+      <HomeMainPane />
     </ZStack>
   )
 }
