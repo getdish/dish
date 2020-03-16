@@ -18,6 +18,7 @@ type HomeState = {
   restaurants: { [key: string]: Restaurant }
   panel: SlidingUpPanel
   centre: LngLat
+  searchQuery: string
   search_results: SearchResults | null
   top_dishes: TopDish[]
   top_restaurants: Restaurant[]
@@ -34,6 +35,7 @@ export const state: HomeState = {
   restaurants: {},
   panel: {} as SlidingUpPanel,
   centre: { lng: -122.421351, lat: 37.759251 } as LngLat,
+  searchQuery: '',
   search_results: null,
   top_dishes: [],
   top_restaurants: [],
@@ -42,6 +44,10 @@ export const state: HomeState = {
   current_review: {} as Review,
   restaurant_reviews: [],
   user_reviews: [],
+}
+
+const setSearchQuery: Action<string> = (om, next) => {
+  om.state.home.searchQuery = next
 }
 
 const openPanel = om => {
@@ -116,6 +122,8 @@ let searchVersion = 0
 
 const restaurantSearch: AsyncAction<string> = async (om, query: string) => {
   searchVersion = (searchVersion + 1) % Number.MAX_VALUE
+
+  om.actions.home.setSearchQuery(query)
 
   if (query == '') {
     om.state.home.search_results = null
@@ -194,4 +202,5 @@ export const actions = {
   getReview,
   submitReview,
   getUserReviews,
+  setSearchQuery,
 }

@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: '50%',
     minWidth: 400,
+    zIndex: 10,
   },
   content: {
     flex: 1,
@@ -43,6 +44,7 @@ const styles = StyleSheet.create({
 })
 
 export default function HomeMainPane() {
+  const history = useHistory()
   const om = useOvermind()
   const searchResults = om.state.home.search_results
   const showSearchResults = !!searchResults
@@ -64,10 +66,17 @@ export default function HomeMainPane() {
       <View style={{ flexDirection: 'row', width: '100%', paddingBottom: 10 }}>
         <Spacer flex />
 
-        <Image
-          source={require('../../assets/logo.png')}
-          style={{ width: 1211 * 0.075, height: 605 * 0.075 }}
-        />
+        <TouchableOpacity
+          onPress={() => {
+            om.actions.home.setSearchQuery('')
+            history.push(`/`)
+          }}
+        >
+          <Image
+            source={require('../../assets/logo.png')}
+            style={{ width: 1211 * 0.075, height: 605 * 0.075 }}
+          />
+        </TouchableOpacity>
 
         <Spacer flex />
       </View>
