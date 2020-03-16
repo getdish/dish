@@ -66,13 +66,19 @@ export default function RestaurantView() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+        <Link to="/" style={{ alignSelf: 'flex-start' }}>
+          Back to Top Dishes
+        </Link>
+
+        <Spacer />
+
         <Text style={{ fontSize: 30 }}>
           {restaurant.name} // {restaurant.rating}⭐
         </Text>
+
+        <Spacer />
+
         <Text style={{ fontSize: 15 }}>{categories_links}</Text>
-        <Link to="/" style={{ alignSelf: 'flex-end' }}>
-          Back to Top Dishes
-        </Link>
       </View>
       <View style={{ flexDirection: 'row' }}>
         <Image
@@ -96,4 +102,9 @@ export default function RestaurantView() {
       </View>
     </View>
   )
+}
+
+function Spacer({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
+  const sizePx = size == 'sm' ? 8 : size == 'lg' ? 16 : 12
+  return <View style={{ width: sizePx, height: sizePx }} />
 }

@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    paddingVertical: 20,
   },
   close: {
     width: 100,
@@ -71,10 +72,6 @@ export default function MainPane() {
       </View>
 
       <View style={styles.content}>
-        <View style={styles.close}>
-          <Button title="Hide" onPress={() => bottomPanel.hide()} />
-        </View>
-
         {showSearchResults && <SearchResults />}
 
         {!showSearchResults && (
