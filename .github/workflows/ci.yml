@@ -27,4 +27,6 @@ jobs:
       if: failure()
     - name: Deploy
       run: .github/workflows/scripts/deploy.sh
-      if: github.ref == 'refs/heads/master'
+      env:
+        GITCRYPT_KEY: ${{ secrets.GITCRYPT_KEY }}
+      if: github.ref == 'refs/heads/production'

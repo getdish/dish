@@ -58,17 +58,6 @@ services:
       - node
     args:
       - _/all.js
-  lab:
-    image: dish/lab
-    build:
-      dockerfile: ./apps/lab/Dockerfile
-      context: ./
-    ports:
-      - 5000/http
-    env:
-      - DISH_ENV=production
-      - COMMIT_HASH=${REVISION}
-      - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
   web:
     image: dish/web
     build:
