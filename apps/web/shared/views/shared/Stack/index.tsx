@@ -75,4 +75,4 @@ class Stack extends Component<{
     )
   }
 }
-export default withRouter(Stack)
+export default withRouter(Stack as any)

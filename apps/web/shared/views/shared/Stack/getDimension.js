@@ -5,21 +5,21 @@ import {
   FADE_VERTICAL,
   CUBE,
   NONE,
-} from './animationTypes';
+} from './animationTypes'
 
 export default function getDimension(animationType, width, height) {
   switch (animationType) {
     case SLIDE_HORIZONTAL:
     case FADE_HORIZONTAL:
     case CUBE:
-      return width;
+      return width
     case SLIDE_VERTICAL:
     case FADE_VERTICAL:
-      return height;
+      return height
     case NONE:
-      return 0;
+      return 0
     default:
-      console.error('UNKNOWN ANIMATION TYPE: ', animationType);
-      return 0;
+      console.error('UNKNOWN ANIMATION TYPE: ', animationType)
+      return 0
   }
 }

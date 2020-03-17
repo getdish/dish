@@ -2,7 +2,6 @@ import { ModelBase, Restaurant, Review } from '@dish/models'
 import { LngLat } from 'mapbox-gl'
 import { Action, AsyncAction } from 'overmind'
 import SlidingUpPanel from 'rn-sliding-up-panel'
-import { Dimensions, AccessibilityEventName } from 'react-native'
 
 type TopDish = {
   category: string
@@ -57,7 +56,7 @@ const updateRestaurants: AsyncAction<LngLat> = async (om, centre: LngLat) => {
   }
 }
 
-const getCurrentRestaurant: AsyncAction<string> = async (om, slug: string) => {
+const setCurrentRestaurant: AsyncAction<string> = async (om, slug: string) => {
   const restaurant = new Restaurant()
   await restaurant.findOne('id', slug)
   om.state.home.current_restaurant = restaurant
@@ -186,7 +185,7 @@ const submitReview: AsyncAction<[number, string]> = async (
 
 export const actions = {
   updateRestaurants,
-  getCurrentRestaurant,
+  setCurrentRestaurant,
   navigateToSearch,
   getTopDishes,
   restaurantSearch,

@@ -34,3 +34,5 @@ declare module 'overmind' {
 export const useOvermind = createHook<typeof config>()
 
 export const om = createOvermind(config)
+
+window['om'] = om

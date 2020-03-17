@@ -19,12 +19,14 @@ import {
   Redirect,
   useHistory,
 } from 'react-router-dom'
+import * as History from 'history'
 import SideMenu from 'react-native-side-menu'
 
 import { config, useOvermind } from './shared/state/om'
 import { LabAuth } from './shared/views/auth'
 import { LabHome } from './shared/views/home'
 import { LabDishes } from './shared/views/dishes'
+import history from './shared/history'
 
 const overmind = createOvermind(config)
 
@@ -94,12 +96,19 @@ function StatefulApp() {
   )
 }
 
+let browserHistory: History.History<{}> | null = null
+
+export function getHistory() {
+  return browserHistory
+}
+
 function Content() {
   const om = useOvermind()
   const menu = <MenuContents />
   const default_side_width = Dimensions.get('window').width * 0.66
   const side_menu_width = default_side_width > 300 ? 300 : default_side_width
   const history = useHistory()
+  browserHistory = history
 
   history.listen(() => om.actions.setShowSidebar(false))
 

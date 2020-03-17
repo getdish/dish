@@ -1,7 +1,7 @@
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native'
 
-const HEADER_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
-const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
+const HEADER_HEIGHT = Platform.OS === 'ios' ? 44 : 56
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0
 
 export default StyleSheet.create({
   stackContainer: {
@@ -22,7 +22,7 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     shadowColor: 'black',
     shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: { width: 0, height: 5 },
     shadowRadius: 5,
   },
   transitionContainer: {
@@ -62,4 +62,4 @@ export default StyleSheet.create({
     alignItems: 'flex-end',
     marginRight: 10,
   },
-});
+})
