@@ -4,8 +4,8 @@ import { useParams } from 'react-router-dom'
 
 import { useOvermind } from '../../state/om'
 import { RestaurantListItem } from './RestaurantListItem'
-import { SmallTitle } from '../SmallTitle'
-import { VStack } from '../Stacks'
+import { SmallTitle } from '../shared/SmallTitle'
+import { VStack } from '../shared/Stacks'
 
 const styles = StyleSheet.create({
   container: {},

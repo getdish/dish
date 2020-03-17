@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text } from 'react-native'
-import { HStack } from '../Stacks'
+import { HStack } from '../shared/Stacks'
 
 export function TagButton(props: { rank?: number; name: string }) {
   return (

@@ -8,8 +8,9 @@ import Restaurant from './RestaurantView'
 import TopDishes from './TopDishes'
 import TopRestaurants from './TopRestaurants'
 import SearchBar from './SearchBar'
-import { Spacer } from '../Spacer'
-import { VStack } from '../Stacks'
+import { Spacer } from '../shared/Spacer'
+import { VStack } from '../shared/Stacks'
+import { useWindowSize } from '../../hooks/useWindowSize'
 
 const styles = StyleSheet.create({
   container: {
@@ -22,8 +23,6 @@ const styles = StyleSheet.create({
     shadowColor: 'rgba(0,0,0,0.2)',
     shadowRadius: 20,
     backgroundColor: 'white',
-    width: '50%',
-    minWidth: 400,
     zIndex: 10,
   },
   content: {
@@ -35,14 +34,27 @@ const styles = StyleSheet.create({
   },
 })
 
+export function useHomeDrawerWidth(): number {
+  const [width] = useWindowSize({ throttle: 100 })
+  return Math.max(400, width * 0.5)
+}
+
 export default function HomeMainPane() {
   const history = useHistory()
   const om = useOvermind()
   const searchResults = om.state.home.search_results
   const showSearchResults = !!searchResults
+  const drawerWidth = useHomeDrawerWidth()
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          width: drawerWidth,
+        },
+      ]}
+    >
       <VStack padding={18}>
         <View style={{ position: 'absolute', top: 22, left: 12 }}>
           <TouchableOpacity
@@ -111,8 +123,16 @@ function SearchResults() {
   return (
     <View>
       {searchResults?.results.length == 0 &&
-        searchResults.status == 'complete' && <Text>Nothing found!</Text>}
-      {searchResults.status == 'loading' && <Text>Loading...</Text>}
+        searchResults.status == 'complete' && (
+          <ContentSection>
+            <Text>Nothing found!</Text>
+          </ContentSection>
+        )}
+      {searchResults.status == 'loading' && (
+        <ContentSection>
+          <Text>Loading...</Text>
+        </ContentSection>
+      )}
       {searchResults?.results.map((item, index) => (
         <TouchableOpacity
           onPress={() => {
@@ -139,5 +159,17 @@ function SearchResults() {
         </TouchableOpacity>
       ))}
     </View>
+  )
+}
+
+function ContentSection(props: { children: any }) {
+  return (
+    <VStack
+      padding={18}
+      alignItems="center"
+      justifyContent="center"
+      flex={1}
+      {...props}
+    />
   )
 }

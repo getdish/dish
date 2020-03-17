@@ -103,17 +103,10 @@
 
 # apps/ios
 
-- potential design moves:
-  - make filterbuttons just blur + overlay
 - make the dishlistitem tap => dish search results better transition
-  - design sprint on search results page
   - swipe back
 - show our sub-ratings inside restuarant view: michelin, infatuated, etc
 - tap image in DishListItem to go straight to gallery
-- peek card at bottom when tapping on individual restaurant
-  - pull it up to see full restaurant card
-  - lets you swipe between images easily
-  - tap brings up gallery view
 - fix map positioning
   - moving back to center bug again
   - dont always zoom into tapped pins
@@ -145,6 +138,10 @@
 - map
   - Ratings on map? important to figure out
   - Cuisines colored on map?
+- peek card at bottom when tapping on individual restaurant
+  - pull it up to see full restaurant card
+  - lets you swipe between images easily
+  - tap brings up gallery view
 
 Idea for really sexy things that will catch attention (later):
 
