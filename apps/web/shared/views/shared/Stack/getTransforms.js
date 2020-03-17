@@ -1,5 +1,10 @@
-import { PUSH, POP } from './transitionTypes';
-import { SLIDE_HORIZONTAL, SLIDE_VERTICAL, FADE_VERTICAL, CUBE } from './animationTypes';
+import { PUSH, POP } from './transitionTypes'
+import {
+  SLIDE_HORIZONTAL,
+  SLIDE_VERTICAL,
+  FADE_VERTICAL,
+  CUBE,
+} from './animationTypes'
 
 export default function getTransforms(
   width,
@@ -13,41 +18,41 @@ export default function getTransforms(
     const baseStyle = {
       elevation: 1,
       transform: [{ translateX: animation }],
-    };
+    }
 
     if (transitionType === PUSH && screenIndex === 1) {
       return {
         left: width,
         right: -width,
         ...baseStyle,
-      };
+      }
     } else if (transitionType === POP && screenIndex === 1) {
-      return baseStyle;
+      return baseStyle
     }
 
-    return null;
+    return null
   }
 
   if (animationType === SLIDE_VERTICAL) {
     const baseStyle = {
       elevation: 1,
       transform: [{ translateY: animation }],
-    };
+    }
     if (transitionType === PUSH && screenIndex === 1) {
       return {
         top: height,
         bottom: -height,
         ...baseStyle,
-      };
+      }
     } else if (transitionType === POP && screenIndex === 1) {
-      return baseStyle;
+      return baseStyle
     }
 
-    return null;
+    return null
   }
 
   if (animationType === FADE_VERTICAL) {
-    const inputRange = [-height, 0, height];
+    const inputRange = [-height, 0, height]
     const baseStyle = {
       transform: [
         {
@@ -57,7 +62,7 @@ export default function getTransforms(
           }),
         },
       ],
-    };
+    }
 
     if (transitionType === PUSH && screenIndex === 1) {
       return {
@@ -68,7 +73,7 @@ export default function getTransforms(
           outputRange: [1, 0, 1],
         }),
         ...baseStyle,
-      };
+      }
     } else if (transitionType === POP && screenIndex === 1) {
       return {
         opacity: animation.interpolate({
@@ -76,33 +81,41 @@ export default function getTransforms(
           outputRange: [0, 1, 0],
         }),
         ...baseStyle,
-      };
+      }
     }
 
-    return null;
+    return null
   }
 
   if (animationType === CUBE) {
-    const extraStyling = {};
-    let screenPosition = 0;
+    const extraStyling = {}
+    let screenPosition = 0
 
     if (transitionType === PUSH && screenIndex === 1) {
-      screenPosition = -width;
-      extraStyling.elevation = 1;
+      screenPosition = -width
+      extraStyling.elevation = 1
     } else if (transitionType === POP && screenIndex === 0) {
-      screenPosition = width;
-      extraStyling.elevation = 1;
+      screenPosition = width
+      extraStyling.elevation = 1
     }
 
     const translateX = animation.interpolate({
-      inputRange: [screenPosition - width, screenPosition, screenPosition + width],
+      inputRange: [
+        screenPosition - width,
+        screenPosition,
+        screenPosition + width,
+      ],
       outputRange: [-width / 2, 0, width / 2],
-    });
+    })
 
     const rotateY = animation.interpolate({
-      inputRange: [screenPosition - width, screenPosition, screenPosition + width],
+      inputRange: [
+        screenPosition - width,
+        screenPosition,
+        screenPosition + width,
+      ],
       outputRange: ['-60deg', '0deg', '60deg'],
-    });
+    })
 
     const translateXAfterRotate = animation.interpolate({
       inputRange: [
@@ -113,7 +126,7 @@ export default function getTransforms(
         screenPosition + width,
       ],
       outputRange: [-width, -width / 2.38, 0, width / 2.38, width],
-    });
+    })
 
     return {
       transform: [
@@ -123,8 +136,8 @@ export default function getTransforms(
         { translateX: translateXAfterRotate },
       ],
       ...extraStyling,
-    };
+    }
   }
 
-  return null;
+  return null
 }

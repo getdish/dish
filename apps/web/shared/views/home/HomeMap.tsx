@@ -1,17 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { MapkitProvider, Map, useMap as useMap_, Marker } from 'react-mapkit'
-
-import { useHistory } from 'react-router-dom'
+import { MapkitProvider, Map, useMap as useMap_ } from 'react-mapkit'
 
 const mapkitToken = `eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzQ1RLNTYzUlQifQ.eyJpYXQiOjE1ODQ0MDU5MzYuMjAxLCJpc3MiOiIzOTlXWThYOUhZIn0.wAw2qtwuJkcL6T6aI-nLZlVuwJZnlCNg2em6V1uopx9hkUgWZE1ISAWePMoRttzH_NPOem4mQfrpmSTRCkh2bg`
 
 import { useOvermind } from '../../state/om'
 import { VStack, ZStack } from '../shared/Stacks'
 import { RegionType } from 'react-mapkit/dist/utils'
-import { useWindowSize } from '../../hooks/useWindowSize'
 import { useHomeDrawerWidth } from './HomeMainPane'
-import { LabAuth } from '../auth'
 import { View, Text } from 'react-native'
+import _ from 'lodash'
 
 type UseMapProps = Pick<
   mapkit.MapConstructorOptions,
@@ -46,13 +43,7 @@ const useMap = (props: UseMapProps) => {
   return useMap_(props)
 }
 
-type MapState = {
-  zoom: [number]
-  bounds: any
-}
-
 export default function HomeMapContainer() {
-  let history = useHistory()
   return (
     <MapkitProvider tokenOrCallback={mapkitToken}>
       <HomeMap />
@@ -67,9 +58,9 @@ function HomeMap() {
     mapkit,
     map,
     mapProps,
-    setRotation,
-    setCenter,
-    setVisibleMapRect,
+    // setRotation,
+    // setCenter,
+    // setVisibleMapRect,
   } = useMap({
     center: [37.759251, -122.421351],
     showsZoomControl: false,
@@ -77,42 +68,64 @@ function HomeMap() {
     isZoomEnabled: true,
     isScrollEnabled: true,
     padding: {
-      left: drawerWidth * 0.5,
+      left: drawerWidth + 40,
+      top: 40,
+      bottom: 40,
+      right: 20,
     },
   })
-  if (map) map['_allowWheelToZoom'] = true
+
+  // wheel zoom
+  if (map && map['_allowWheelToZoom'] == false) {
+    map['_allowWheelToZoom'] = true
+  }
+
   const [state, setState] = useState({
     selected: '',
   })
-  const restaurants = om.state.home.top_restaurants
+
+  const curRestaurant = om.state.home.current_restaurant
+  const restaurants = _.uniqBy(
+    [...om.state.home.top_restaurants, curRestaurant].filter(
+      x => !!x?.location?.coordinates
+    ),
+    x => x.id
+  )
+
   const restaurantIds = restaurants.map(x => x.id).join('')
   const restaurantSelected = restaurants.find(x => x.id == state.selected)
   const coordinates = useMemo(
     () =>
-      restaurants.map(
-        restaurant =>
-          new mapkit.Coordinate(
-            restaurant.location.coordinates[1],
-            restaurant.location.coordinates[0]
-          )
-      ),
-    [restaurants]
+      mapkit
+        ? restaurants
+            .map(
+              restaurant =>
+                !!restaurant.location?.coordinates &&
+                new mapkit.Coordinate(
+                  restaurant.location.coordinates[1],
+                  restaurant.location.coordinates[0]
+                )
+            )
+            .filter(Boolean)
+        : [],
+    [restaurantIds]
   )
   const annotations = useMemo(
     () =>
-      restaurants.map(
-        (restaurant, index) =>
-          new mapkit.MarkerAnnotation(coordinates[index], {
-            glyphText: index <= 10 ? `${index + 1}` : ``,
-            data: {
-              id: restaurant.id,
-            },
-          })
-      ),
-    [restaurants]
+      mapkit
+        ? restaurants.map(
+            (restaurant, index) =>
+              new mapkit.MarkerAnnotation(coordinates[index], {
+                glyphText: index <= 10 ? `${index + 1}` : ``,
+                data: {
+                  id: restaurant.id,
+                },
+              })
+          )
+        : [],
+    [restaurantIds]
   )
 
-  const curRestaurant = om.state.home.current_restaurant
   useEffect(() => {
     if (!map || !mapkit || !curRestaurant || !curRestaurant.location) return
     const newCenter = new mapkit.Coordinate(

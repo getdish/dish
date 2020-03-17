@@ -1,6 +1,6 @@
 import React from 'react'
-import { StyleSheet, Image, Text, View, ScrollView } from 'react-native'
-import { useParams, Link } from 'react-router-dom'
+import { Image, Text, View, ScrollView, TouchableOpacity } from 'react-native'
+import { useParams, Link, useHistory } from 'react-router-dom'
 
 import { useOvermind } from '../../state/om'
 
@@ -12,27 +12,39 @@ import { HStack, VStack } from '../shared/Stacks'
 export default function RestaurantView() {
   const { state, actions } = useOvermind()
   const { slug } = useParams()
+  const history = useHistory()
 
   let restaurant = state.home.current_restaurant
   if (slug != state.home.current_restaurant.id) {
     restaurant = {} as Restaurant
-    actions.home.getCurrentRestaurant(slug)
+    actions.home.setCurrentRestaurant(slug)
   }
   if (typeof restaurant.name == 'undefined') {
     return <Text>Loading...</Text>
   }
 
   const categories = restaurant.categories || []
+  const canGoBack = history.length > 2
 
   return (
     <ScrollView style={{ padding: 18 }}>
       <VStack>
-        <Link
+        {/* <Link
           to="/"
           style={{ alignSelf: 'flex-start', opacity: 0.5, fontSize: 12 }}
+        > */}
+        <TouchableOpacity
+          onPress={e => {
+            if (canGoBack) {
+              e.preventDefault()
+              e.stopPropagation()
+              history.goBack()
+            }
+          }}
         >
-          ◀ Back to Top Dishes
-        </Link>
+          <Text>◀ Back to Top Dishes</Text>
+        </TouchableOpacity>
+        {/* </Link> */}
 
         <Spacer />
 

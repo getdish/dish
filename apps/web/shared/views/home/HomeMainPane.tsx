@@ -11,6 +11,7 @@ import SearchBar from './SearchBar'
 import { Spacer } from '../shared/Spacer'
 import { VStack } from '../shared/Stacks'
 import { useWindowSize } from '../../hooks/useWindowSize'
+import Stack from '../shared/Stack'
 
 const styles = StyleSheet.create({
   container: {
@@ -97,7 +98,7 @@ export default function HomeMainPane() {
         {showSearchResults && <SearchResults />}
 
         {!showSearchResults && (
-          <Switch>
+          <Stack animationType="slide-horizontal">
             <Route exact path="/">
               <TopDishes />
             </Route>
@@ -107,7 +108,7 @@ export default function HomeMainPane() {
             <Route path="/best/:dish">
               <TopRestaurants />
             </Route>
-          </Switch>
+          </Stack>
         )}
       </View>
     </View>
