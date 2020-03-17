@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { MapkitProvider, Map, useMap as useMap_, Marker } from 'react-mapkit'
 
 import { useHistory } from 'react-router-dom'
@@ -6,11 +6,12 @@ import { useHistory } from 'react-router-dom'
 const mapkitToken = `eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzQ1RLNTYzUlQifQ.eyJpYXQiOjE1ODQ0MDU5MzYuMjAxLCJpc3MiOiIzOTlXWThYOUhZIn0.wAw2qtwuJkcL6T6aI-nLZlVuwJZnlCNg2em6V1uopx9hkUgWZE1ISAWePMoRttzH_NPOem4mQfrpmSTRCkh2bg`
 
 import { useOvermind } from '../../state/om'
-import { VStack } from '../shared/Stacks'
+import { VStack, ZStack } from '../shared/Stacks'
 import { RegionType } from 'react-mapkit/dist/utils'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import { useHomeDrawerWidth } from './HomeMainPane'
 import { LabAuth } from '../auth'
+import { View, Text } from 'react-native'
 
 type UseMapProps = Pick<
   mapkit.MapConstructorOptions,
@@ -62,7 +63,14 @@ export default function HomeMapContainer() {
 function HomeMap() {
   const om = useOvermind()
   const drawerWidth = useHomeDrawerWidth()
-  const { map, mapProps, setRotation, setCenter, setVisibleMapRect } = useMap({
+  const {
+    mapkit,
+    map,
+    mapProps,
+    setRotation,
+    setCenter,
+    setVisibleMapRect,
+  } = useMap({
     center: [37.759251, -122.421351],
     showsZoomControl: false,
     showsMapTypeControl: false,
@@ -72,47 +80,96 @@ function HomeMap() {
       left: drawerWidth * 0.5,
     },
   })
-
-  useEffect(() => {
-    console.log('map', map, 'mapkit', window['mapkit'])
-    if (map) {
-      map['_allowWheelToZoom'] = true
-    }
-  }, [map])
-
+  if (map) map['_allowWheelToZoom'] = true
+  const [state, setState] = useState({
+    selected: '',
+  })
   const restaurants = om.state.home.top_restaurants
-
-  useEffect(() => {
-    if (!map) {
-      return
-    }
-    const annotations = restaurants.map(
-      restaurant =>
-        new mapkit.Annotation(
+  const restaurantIds = restaurants.map(x => x.id).join('')
+  const restaurantSelected = restaurants.find(x => x.id == state.selected)
+  const coordinates = useMemo(
+    () =>
+      restaurants.map(
+        restaurant =>
           new mapkit.Coordinate(
             restaurant.location.coordinates[1],
             restaurant.location.coordinates[0]
-          ),
-          x => document.createElement('div'),
-          {}
-        )
+          )
+      ),
+    [restaurants]
+  )
+  const annotations = useMemo(
+    () =>
+      restaurants.map(
+        (restaurant, index) =>
+          new mapkit.MarkerAnnotation(coordinates[index], {
+            glyphText: index <= 10 ? `${index + 1}` : ``,
+            data: {
+              id: restaurant.id,
+            },
+          })
+      ),
+    [restaurants]
+  )
+
+  const curRestaurant = om.state.home.current_restaurant
+  useEffect(() => {
+    if (!map || !mapkit || !curRestaurant || !curRestaurant.location) return
+    const newCenter = new mapkit.Coordinate(
+      curRestaurant.location.coordinates[1],
+      curRestaurant.location.coordinates[0]
     )
-    map.showItems(annotations)
-  }, [!!map, restaurants.map(x => x.id).join('')])
+    const span = new mapkit.CoordinateSpan(0.01, 0.01)
+    const region = new mapkit.CoordinateRegion(newCenter, span)
+    console.log('going to region', newCenter, span, region)
+    map.setRegionAnimated(region)
+  }, [!!map, mapkit, curRestaurant])
+
+  useEffect(() => {
+    if (!restaurantSelected) return
+
+    console.warn('SET CENTER')
+    map.setCenterAnimated(
+      coordinates[restaurants.findIndex(x => x.id === restaurantSelected.id)],
+      true
+    )
+
+    // setCenter(restaurantSelected.location.coordinates, true)
+  }, [restaurantSelected])
+
+  useEffect(() => {
+    if (!map) return
+    if (!restaurants.length) return
+
+    const cancels = new Set<Function>()
+
+    const cb = e => {
+      const selected = e.annotation.data.id || ''
+      setState({ selected })
+      console.log('selected', selected)
+    }
+    map.addEventListener('select', cb)
+    cancels.add(() => map.removeEventListener('select', cb))
+
+    console.log('SHOW ANNOTATIONS', annotations)
+    map.showItems(annotations, { animate: true })
+
+    return () => {
+      cancels.forEach(x => x())
+      map.removeAnnotations(annotations)
+    }
+  }, [!!map, restaurantIds])
 
   return (
-    <>
-      <Map {...mapProps}>
-        {restaurants.map((restaurant, key) => (
-          <Marker
-            key={key}
-            latitude={restaurant.location.coordinates[1]}
-            longitude={restaurant.location.coordinates[0]}
-            clusteringIdentifier="1"
-          />
-        ))}
-      </Map>
-    </>
+    <ZStack width="100%" height="100%">
+      <Map {...mapProps} />
+
+      <View style={{ position: 'absolute' }}>
+        <VStack>
+          <Text>{restaurantSelected?.id ?? 'none selected'}</Text>
+        </VStack>
+      </View>
+    </ZStack>
   )
 }
 

@@ -57,7 +57,9 @@ export default function SearchBar() {
           }}
           onPress={() => {
             actions.home.setSearchQuery('')
-            history.goBack()
+            if (history.length > 2) {
+              history.goBack()
+            }
           }}
         >
           <Text style={{ opacity: 0.5, fontSize: 22 }}>x</Text>
