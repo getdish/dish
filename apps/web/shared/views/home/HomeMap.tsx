@@ -126,6 +126,16 @@ function HomeMap() {
     [restaurantIds]
   )
 
+  const hoveredRestaurant = om.state.home.hoveredRestaurant
+  useEffect(() => {
+    if (hoveredRestaurant) {
+      const index = restaurantIds.indexOf(hoveredRestaurant.id)
+      if (map.annotations[index]) {
+        map.annotations[index].selected = true
+      }
+    }
+  }, [hoveredRestaurant])
+
   useEffect(() => {
     if (!map || !mapkit || !curRestaurant || !curRestaurant.location) return
     const newCenter = new mapkit.Coordinate(
@@ -134,7 +144,6 @@ function HomeMap() {
     )
     const span = new mapkit.CoordinateSpan(0.01, 0.01)
     const region = new mapkit.CoordinateRegion(newCenter, span)
-    console.log('going to region', newCenter, span, region)
     map.setRegionAnimated(region)
   }, [!!map, mapkit, curRestaurant])
 

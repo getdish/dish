@@ -14,9 +14,9 @@ const styles = StyleSheet.create({
   },
 })
 
-export default function TopRestaurants() {
+export default function HomeSearchResultsView() {
   const om = useOvermind()
-  const dish = `${om.state.router.curPage.params.dish}`
+  const dish = `${om.state.router.curPage.params.query}`
 
   useEffect(() => {
     if (dish != om.state.home.current_dish) {
@@ -38,6 +38,9 @@ export default function TopRestaurants() {
               key={index}
               restaurant={restaurant}
               rank={index + 1}
+              onHover={() => {
+                om.actions.home.setHoveredRestaurant({ ...restaurant } as any)
+              }}
             />
           )
         })

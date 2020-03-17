@@ -7,7 +7,7 @@ import SideMenu from 'react-native-side-menu'
 
 import { config, useOvermind } from './shared/state/om'
 import { LabAuth } from './shared/views/auth'
-import { LabHome } from './shared/views/home'
+import { HomeView } from './shared/views/home'
 import { LabDishes } from './shared/views/dishes'
 import { Route, PrivateRoute } from './shared/views/shared/Route'
 import { Link } from './shared/views/shared/Link'
@@ -103,7 +103,7 @@ function Content() {
           <LabDishes />
         </PrivateRoute>
         <Route name="home">
-          <LabHome />
+          <HomeView />
         </Route>
       </View>
     </SideMenu>

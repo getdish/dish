@@ -21,6 +21,7 @@ type SearchResults = {
 }
 
 type HomeState = {
+  hoveredRestaurant: Restaurant | null
   history: HomeStateItem[]
   restaurants: { [key: string]: Restaurant }
   panel: SlidingUpPanel
@@ -39,6 +40,7 @@ type HomeState = {
 const RADIUS = 0.015
 
 export const state: HomeState = {
+  hoveredRestaurant: null,
   history: [],
   restaurants: {},
   panel: {} as SlidingUpPanel,
@@ -202,7 +204,12 @@ const popHistory: Action = om => {
   om.state.home.history = next
 }
 
+const setHoveredRestaurant: Action<Restaurant | null> = (om, val) => {
+  om.state.home.hoveredRestaurant = val
+}
+
 export const actions = {
+  setHoveredRestaurant,
   pushHistory,
   popHistory,
   updateRestaurants,
