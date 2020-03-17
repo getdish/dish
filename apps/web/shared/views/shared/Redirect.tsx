@@ -8,9 +8,7 @@ export function Redirect(props: { to: string }) {
 
   useEffect(() => {
     if (next != cur) {
-      om.actions.router.navigate({
-        path: props.to,
-      })
+      om.actions.router.navigate(props.to)
     }
   }, [next, cur])
 

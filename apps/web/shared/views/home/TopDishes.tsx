@@ -61,7 +61,10 @@ export default function TopDishes() {
         }}
         onPress={() => {
           om.actions.home.setSearchQuery(dish.category.replace(/"/g, ''))
-          om.actions.router.navigate(`/best/${category}`)
+          om.actions.router.navigate({
+            name: 'search',
+            params: { query: category },
+          })
         }}
       >
         {getImageForDish(category)}

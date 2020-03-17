@@ -9,7 +9,7 @@ test.beforeEach(async () => {
   await Scrape.deleteAllBy('id_from_source', ID)
 })
 
-test('gets and persists a restaurant and its dishes', async t => {
+test.skip('gets and persists a restaurant and its dishes', async t => {
   const title = "Empanada Mama - Hell's Kitchen"
   const ue = new UberEats()
   await ue.getRestaurant(ID)

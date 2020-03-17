@@ -7,7 +7,7 @@ export function HomeBreadcrumbs() {
 
   return (
     <>
-      <Text>Home > "Search Term" > Something</Text>
+      <Text>{JSON.stringify(om.state.home.history)}</Text>
     </>
   )
 }

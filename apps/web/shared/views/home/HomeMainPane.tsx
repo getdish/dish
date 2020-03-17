@@ -2,9 +2,9 @@ import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
 
 import { useOvermind } from '../../state/om'
-import Restaurant from './RestaurantView'
+import Restaurant from './HomeRestaurantView'
 import TopDishes from './TopDishes'
-import TopRestaurants from './TopRestaurants'
+import HomeSearchResultsView from './HomeSearchResultsView'
 import SearchBar from './SearchBar'
 import { Spacer } from '../shared/Spacer'
 import { VStack } from '../shared/Stacks'
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 
 export function useHomeDrawerWidth(): number {
   const [width] = useWindowSize({ throttle: 100 })
-  return Math.max(400, width * 0.5)
+  return Math.min(Math.max(400, width * 0.5), 600)
 }
 
 export default function HomeMainPane() {
@@ -76,7 +76,7 @@ export default function HomeMainPane() {
           <TouchableOpacity
             onPress={() => {
               om.actions.home.setSearchQuery('')
-              om.actions.router.navigate(`/`)
+              om.actions.router.navigate({ name: 'home' })
             }}
           >
             <Image
@@ -99,14 +99,14 @@ export default function HomeMainPane() {
         {showSearchResults && <SearchResults />}
         {!showSearchResults && (
           <>
-            <Route name="home">
+            <Route exact name="home">
               <TopDishes />
             </Route>
             <Route name="restaurant">
               <Restaurant />
             </Route>
             <Route name="search">
-              <TopRestaurants />
+              <HomeSearchResultsView />
             </Route>
           </>
         )}

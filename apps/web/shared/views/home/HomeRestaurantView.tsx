@@ -9,21 +9,20 @@ import { Spacer } from '../shared/Spacer'
 import { HStack, VStack } from '../shared/Stacks'
 import { Link } from '../shared/Link'
 
-export default function RestaurantView() {
-  const { state, actions } = useOvermind()
-  const slug = state.router.curPage.params.slug
+export default function HomeRestaurantView() {
+  const om = useOvermind()
+  const slug = om.state.router.curPage.params.slug
 
-  let restaurant = state.home.current_restaurant
-  if (slug != state.home.current_restaurant.id) {
+  let restaurant = om.state.home.current_restaurant
+  if (slug != om.state.home.current_restaurant.id) {
     restaurant = {} as Restaurant
-    actions.home.setCurrentRestaurant(slug)
+    om.actions.home.setCurrentRestaurant(slug)
   }
   if (typeof restaurant.name == 'undefined') {
     return <Text>Loading...</Text>
   }
 
   const categories = restaurant.categories || []
-  const canGoBack = history.length > 2
 
   return (
     <ScrollView style={{ padding: 18 }}>
@@ -34,11 +33,9 @@ export default function RestaurantView() {
         > */}
         <TouchableOpacity
           onPress={e => {
-            if (canGoBack) {
-              e.preventDefault()
-              e.stopPropagation()
-              // history.goBack()
-            }
+            e.preventDefault()
+            e.stopPropagation()
+            om.actions.router.back()
           }}
         >
           <Text>◀ Back to Top Dishes</Text>
@@ -72,17 +69,17 @@ export default function RestaurantView() {
           resizeMode="cover"
         />
         <View style={{ width: '30%' }}>
-          {state.auth.is_logged_in && <ReviewForm />}
+          {om.state.auth.is_logged_in && <ReviewForm />}
         </View>
         <View>
           <Text style={{ fontSize: 15 }}>Latest Reviewers</Text>
-          {state.home.restaurant_reviews.map((review, i) => {
+          {om.state.home.restaurant_reviews.map((review, i) => {
             return (
               <Text key={i}>
                 <Link to={'/user/' + review.user.id + '/reviews'}>
                   {review.user.username}
                 </Link>
-                {i == state.home.restaurant_reviews.length - 1 ? '' : ', '}
+                {i == om.state.home.restaurant_reviews.length - 1 ? '' : ', '}
               </Text>
             )
           })}

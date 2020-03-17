@@ -1,3 +1,4 @@
+import { isEqual } from '@o/fast-compare'
 import {
   Action,
   AsyncAction,
@@ -10,32 +11,51 @@ import {
   map,
 } from 'overmind'
 import page from 'page'
-// import queryString from 'query-string'
+import queryString from 'query-string'
 
-export const urls = {
-  home: '/',
-  login: '/login',
-  register: '/register',
-  search: '/search/:query',
-  restaurant: '/restaurant/:slug',
+class Route<A extends Object | void = void> {
+  params: A
+  constructor(public path: string) {}
 }
 
-type RouteName = keyof typeof urls
-
-const routeNames = Object.keys(urls) as RouteName[]
-
-type Params = {
-  [key: string]: string | number | boolean | undefined
+export const routes = {
+  home: new Route('/'),
+  login: new Route('/login'),
+  register: new Route('/register'),
+  search: new Route<{ query: string }>('/search/:query'),
+  restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
 }
 
-type HistoryItem = {
-  name: RouteName
+export const routeNames = Object.keys(routes) as RouteName[]
+export const routePathToName: { [key in RouteName]: string } = Object.keys(
+  routes
+).reduce((acc, key) => {
+  acc[routes[key].path] = key
+  return acc
+}, {}) as any
+
+type RoutesTable = typeof routes
+type RouteName = keyof RoutesTable
+
+type NavigateItem<
+  A extends keyof RoutesTable = any,
+  B extends RoutesTable[A]['params'] = RoutesTable[A]['params']
+> = {
+  name: A
+  params?: B
+}
+
+type HistoryItem<A extends RouteName = any> = {
+  id: string
+  name: A
   path: string
-  params?: Params
+  search?: Object
+  params?: RoutesTable[A]
   replace?: boolean
 }
 
 export type RouterState = {
+  notFound: boolean
   historyIndex: number
   history: HistoryItem[]
   pageName: string
@@ -49,68 +69,73 @@ let ignoreNextRoute = false
 let goingBack = false
 
 const start: AsyncAction = async om => {
-  om.actions.router.routeListenNotFound()
-
   for (const name of routeNames) {
-    om.actions.router.routeListen({ url: urls[name], name })
+    om.actions.router.routeListen({ url: routes[name].path, name })
   }
+  om.actions.router.routeListenNotFound()
 
   const startingOnHome = window.location.pathname === '/'
   if (startingOnHome) {
     ignoreNextRoute = true
   }
-  om.effects.router.watchPage()
+
+  page.start()
+
   if (startingOnHome) {
-    om.actions.router.navigate('/')
+    om.actions.router.navigate({ name: 'home' })
   }
 }
 
 // state
 
+const defaultPage = {
+  id: '0',
+  name: 'home',
+  path: '/',
+  params: {},
+}
+
 export const state: RouterState = {
+  notFound: false,
   historyIndex: -1,
   history: [],
   pageName: 'home',
   ignoreNextPush: false,
   lastPage: state => state.history[state.history.length - 2],
-  curPage: state =>
-    state.history[state.history.length - 1] || {
-      name: 'home',
-      path: '/',
-      params: {},
-    },
-  urlString: state => (state.curPage ? `orbit:/${state.curPage.path}` : ''),
+  curPage: state => state.history[state.history.length - 1] || defaultPage,
 }
 
 class AlreadyOnPageError extends Error {}
 
-const navigate: Operator<string | HistoryItem> = pipe(
-  map((om, x) => {
-    let item: HistoryItem
+const uid = () => `${Math.random()}`
 
-    if (typeof x == 'string') {
-      item = {
-        // for now just dumb map it
-        name: x.split('/')[1] as any,
-        path: x,
-        // TODO MATCH
+const navigate: Operator<NavigateItem> = pipe(
+  map(
+    (_, item): HistoryItem => {
+      return {
+        id: uid(),
         params: {},
+        ...item,
+        path: getPathFromParams(item.name, item.params as any),
+        search: curSearch,
       }
-    } else {
-      item = x
     }
-    return item
-  }),
+  ),
   mutate((om, item) => {
-    const alreadyOnPage =
-      JSON.stringify(item) === JSON.stringify(om.state.router.curPage)
-    if (alreadyOnPage) {
-      throw new AlreadyOnPageError()
-    }
-    om.state.router.pageName = item.name
-    om.state.router.history = [...om.state.router.history, item]
-    if (!item.replace) {
-      om.state.router.historyIndex++
+    om.state.router.notFound = false
+
+    try {
+      const alreadyOnPage = isEqual(item, om.state.router.curPage)
+      if (alreadyOnPage) {
+        throw new AlreadyOnPageError()
+      }
+      om.state.router.pageName = item.name
+      om.state.router.history = [...om.state.router.history, item]
+      if (!item.replace) {
+        om.state.router.historyIndex++
+      }
+    } catch (err) {
+      console.error('ERROR in parsing item', err)
     }
   }),
   run((om, item) => {
@@ -155,11 +180,14 @@ const forward: Action = om => {
   }
 }
 
+let curSearch = {}
+
 const routeListen: Action<{
   url: string
   name: RouteName
 }> = (om, { name, url }) => {
   page(url, ({ params, querystring }) => {
+    curSearch = queryString.parse(querystring)
     if (ignoreNextRoute) {
       ignoreNextRoute = false
       return
@@ -168,25 +196,17 @@ const routeListen: Action<{
       goingBack = false
     }
     om.actions.router.ignoreNextPush()
-
-    // object to path
-    let path = urls[name]
-    for (const key in params) {
-      path = path.replace(`:${key}`, params[key])
-    }
-
     om.actions.router.navigate({
       name,
-      path: path,
       params: { ...params },
-      // search: queryString.parse(querystring)
     })
   })
 }
 
-const routeListenNotFound: Action = () => {
+const routeListenNotFound: Action = om => {
   page('*', ctx => {
     console.log('Not found!', ctx)
+    om.state.router.notFound = true
   })
 }
 
@@ -203,10 +223,6 @@ export const actions = {
 // effects
 
 export const effects = {
-  watchPage() {
-    page.start()
-  },
-
   open(url: string) {
     ignoreNextRoute = true
     page.show(url)
@@ -216,4 +232,14 @@ export const effects = {
     ignoreNextRoute = true
     page.replace(url)
   },
+}
+
+function getPathFromParams(name: string, params: Object | void) {
+  // object to path
+  let path = routes[name].path
+  if (!params) return path
+  for (const key in params) {
+    path = path.replace(`:${key}`, params[key])
+  }
+  return path
 }
