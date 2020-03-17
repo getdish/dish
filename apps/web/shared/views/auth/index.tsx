@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import { StyleSheet, View, Text, TextInput, Button, Image } from 'react-native'
-import { Link } from 'react-router-dom'
 import { useOvermind } from '../../state/om'
-import { useLocation, useHistory, Redirect } from 'react-router-dom'
+import { Link } from '../shared/Link'
+import { Redirect } from '../shared/Redirect'
 
 export const LabAuth = () => {
   const { state, actions } = useOvermind()
-  const location = useLocation()
+  const location = state.router.curPage
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const isLogin = location.pathname == '/login'
+  const isLogin = location.path == '/login'
 
   if (state.auth.is_logged_in) {
     return <Redirect to="/" />
@@ -77,14 +77,14 @@ export const LabAuth = () => {
         style={styles.text_input}
         placeholder="username"
         value={username}
-        onChange={event => setUsername(event.target.value)}
+        onChange={event => setUsername(event.target['value'])}
       />
       <TextInput
         style={styles.text_input}
         placeholder="password"
         value={password}
         secureTextEntry={true}
-        onChange={event => setPassword(event.target.value)}
+        onChange={event => setPassword(event.target['value'])}
       />
       {button}
       {or_swap}

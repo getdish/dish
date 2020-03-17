@@ -3,6 +3,13 @@ import { LngLat } from 'mapbox-gl'
 import { Action, AsyncAction } from 'overmind'
 import SlidingUpPanel from 'rn-sliding-up-panel'
 
+type HomeStateItem = {
+  hash: string
+  key: string
+  pathname: string
+  search: string
+}
+
 type TopDish = {
   category: string
   frequency: number
@@ -14,6 +21,7 @@ type SearchResults = {
 }
 
 type HomeState = {
+  history: HomeStateItem[]
   restaurants: { [key: string]: Restaurant }
   panel: SlidingUpPanel
   centre: LngLat
@@ -31,6 +39,7 @@ type HomeState = {
 const RADIUS = 0.015
 
 export const state: HomeState = {
+  history: [],
   restaurants: {},
   panel: {} as SlidingUpPanel,
   centre: { lng: -122.421351, lat: 37.759251 } as LngLat,
@@ -183,7 +192,19 @@ const submitReview: AsyncAction<[number, string]> = async (
   om.state.home.current_review = review
 }
 
+const pushHistory: Action<HomeStateItem> = (om, next) => {
+  om.state.home.history = [...om.state.home.history, next]
+}
+
+const popHistory: Action = om => {
+  let next = [...om.state.home.history]
+  next.pop()
+  om.state.home.history = next
+}
+
 export const actions = {
+  pushHistory,
+  popHistory,
   updateRestaurants,
   setCurrentRestaurant,
   navigateToSearch,

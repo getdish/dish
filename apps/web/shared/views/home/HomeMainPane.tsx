@@ -1,6 +1,4 @@
 import React from 'react'
-import { Route } from 'react-router-dom'
-import { useHistory, Switch } from 'react-router-dom'
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
 
 import { useOvermind } from '../../state/om'
@@ -12,6 +10,8 @@ import { Spacer } from '../shared/Spacer'
 import { VStack } from '../shared/Stacks'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import Stack from '../shared/Stack'
+import { HomeBreadcrumbs } from './HomeBreadcrumbs'
+import { Route } from '../shared/Route'
 
 const styles = StyleSheet.create({
   container: {
@@ -41,7 +41,6 @@ export function useHomeDrawerWidth(): number {
 }
 
 export default function HomeMainPane() {
-  const history = useHistory()
   const om = useOvermind()
   const searchResults = om.state.home.search_results
   const showSearchResults = !!searchResults
@@ -77,7 +76,7 @@ export default function HomeMainPane() {
           <TouchableOpacity
             onPress={() => {
               om.actions.home.setSearchQuery('')
-              history.push(`/`)
+              om.actions.router.navigate(`/`)
             }}
           >
             <Image
@@ -94,21 +93,22 @@ export default function HomeMainPane() {
         </View>
       </VStack>
 
+      <HomeBreadcrumbs />
+
       <View style={styles.content}>
         {showSearchResults && <SearchResults />}
-
         {!showSearchResults && (
-          <Stack animationType="slide-horizontal">
-            <Route exact path="/">
+          <>
+            <Route name="home">
               <TopDishes />
             </Route>
-            <Route path="/e/:slug">
+            <Route name="restaurant">
               <Restaurant />
             </Route>
-            <Route path="/best/:dish">
+            <Route name="search">
               <TopRestaurants />
             </Route>
-          </Stack>
+          </>
         )}
       </View>
     </View>
@@ -117,7 +117,6 @@ export default function HomeMainPane() {
 
 function SearchResults() {
   const om = useOvermind()
-  const history = useHistory()
   const searchResults = om.state.home.search_results
   console.log('searchResults', searchResults)
 
@@ -139,7 +138,7 @@ function SearchResults() {
           onPress={() => {
             setTimeout(() => {
               om.actions.home.clearRestaurantSearch()
-              history.push('/e/' + item.id)
+              om.actions.router.navigate('/restaurant/' + item.id)
             }, 0)
           }}
           style={{ flex: 1, flexDirection: 'row' }}
