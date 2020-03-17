@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native'
-import { useHistory } from 'react-router-dom'
 
 import { useOvermind } from '../../state/om'
 
@@ -32,13 +31,12 @@ const styles = StyleSheet.create({
 })
 
 export default function SearchBar() {
-  const { state, actions } = useOvermind()
-  let history = useHistory()
+  const om = useOvermind()
   return (
     <View style={styles.container}>
       <TextInput
-        value={state.home.searchQuery}
-        onChangeText={text => actions.home.restaurantSearch(text)}
+        value={om.state.home.searchQuery}
+        onChangeText={text => om.actions.home.restaurantSearch(text)}
         placeholder="Search all of San Francisco"
         style={styles.textInput}
       />
@@ -50,15 +48,15 @@ export default function SearchBar() {
         }}
       />
 
-      {state.home.searchQuery !== '' && (
+      {om.state.home.searchQuery !== '' && (
         <TouchableOpacity
           style={{
             padding: 10,
           }}
           onPress={() => {
-            actions.home.setSearchQuery('')
-            if (history.length > 2) {
-              history.goBack()
+            om.actions.home.setSearchQuery('')
+            if (om.state.router.history.length > 1) {
+              om.actions.router.back()
             }
           }}
         >
@@ -66,21 +64,5 @@ export default function SearchBar() {
         </TouchableOpacity>
       )}
     </View>
-    // <SearchableDropdpwn
-    //   containerStyle={styles.container}
-    //   items={}
-    //   textInputProps={{
-
-    //   }}
-    //   itemStyle={{
-    //     padding: 10,
-    //     backgroundColor: '#fff',
-    //     borderBottomColor: '#bbb',
-    //     borderBottomWidth: 1,
-    //   }}
-    //   onItemSelect={item => {
-    //     history.push('/e/' + item.id)
-    //   }}
-    // />
   )
 }

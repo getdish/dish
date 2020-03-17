@@ -1,10 +1,10 @@
 import React from 'react'
 import { Image, Text } from 'react-native'
-import { Link } from 'react-router-dom'
 import { Restaurant } from '@dish/models'
 import { HStack, VStack } from '../shared/Stacks'
 import { Spacer } from '../shared/Spacer'
 import { TagButton } from './TagButton'
+import { Link } from '../shared/Link'
 
 export function RestaurantListItem({
   restaurant,
@@ -16,7 +16,7 @@ export function RestaurantListItem({
   return (
     <HStack alignItems="center" overflow="scroll">
       <VStack padding={18} width="70%" maxWidth={525}>
-        <Link to={'/e/' + restaurant.id}>
+        <Link to={'/restaurant/' + restaurant.id}>
           <Text
             style={{
               fontSize: 26,

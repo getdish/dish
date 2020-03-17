@@ -5,6 +5,7 @@ import { matchPath } from 'react-router-dom'
 // for the reference implementation
 export default function findFirstMatch(children, location) {
   let match, child
+
   React.Children.forEach(children, element => {
     if (!React.isValidElement(element)) return
 

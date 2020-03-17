@@ -5,6 +5,7 @@ import { merge, namespaced } from 'overmind/config'
 import * as dishes from './dishes'
 import * as home from './home'
 import * as auth from './auth'
+import * as router from './router'
 
 const setShowSidebar: Action<boolean> = (om, val) => {
   om.state.showSidebar = val
@@ -18,12 +19,15 @@ export const config = merge(
     actions: {
       setShowSidebar,
     },
-    // effects,
+    async onInitialize({ actions }) {
+      await actions.router.start()
+    },
   },
   namespaced({
     home,
     dishes,
     auth,
+    router,
   })
 )
 

@@ -7,12 +7,12 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native'
-import { useHistory, Link } from 'react-router-dom'
 
 import { useOvermind } from '../../state/om'
 import top_dish_images from '../../assets/topdishes.json'
 import { Spacer } from '../shared/Spacer'
 import { SmallTitle } from '../shared/SmallTitle'
+import { Link } from '../shared/Link'
 
 const styles = StyleSheet.create({
   container: {
@@ -41,14 +41,13 @@ const getImageForDish = (dish: string) => {
 }
 
 export default function TopDishes() {
-  const history = useHistory()
-  const { state, actions } = useOvermind()
+  const om = useOvermind()
   let dishes: JSX.Element[] = []
   useEffect(() => {
-    actions.home.getTopDishes()
+    om.actions.home.getTopDishes()
   }, [])
 
-  for (const dish of state.home.top_dishes) {
+  for (const dish of om.state.home.top_dishes) {
     const category = dish.category.replace(/"/g, '')
     dishes.push(
       <TouchableOpacity
@@ -61,8 +60,8 @@ export default function TopDishes() {
           marginBottom: 20,
         }}
         onPress={() => {
-          actions.home.setSearchQuery(dish.category.replace(/"/g, ''))
-          history.push(`/best/${category}`)
+          om.actions.home.setSearchQuery(dish.category.replace(/"/g, ''))
+          om.actions.router.navigate(`/best/${category}`)
         }}
       >
         {getImageForDish(category)}

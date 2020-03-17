@@ -1,6 +1,5 @@
 import React from 'react'
 import { Image, Text, View, ScrollView, TouchableOpacity } from 'react-native'
-import { useParams, Link, useHistory } from 'react-router-dom'
 
 import { useOvermind } from '../../state/om'
 
@@ -8,11 +7,11 @@ import { Restaurant } from '@dish/models'
 import ReviewForm from './ReviewForm'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack } from '../shared/Stacks'
+import { Link } from '../shared/Link'
 
 export default function RestaurantView() {
   const { state, actions } = useOvermind()
-  const { slug } = useParams()
-  const history = useHistory()
+  const slug = state.router.curPage.params.slug
 
   let restaurant = state.home.current_restaurant
   if (slug != state.home.current_restaurant.id) {
@@ -38,7 +37,7 @@ export default function RestaurantView() {
             if (canGoBack) {
               e.preventDefault()
               e.stopPropagation()
-              history.goBack()
+              // history.goBack()
             }
           }}
         >

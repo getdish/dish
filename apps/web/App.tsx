@@ -1,32 +1,16 @@
-import React, { useState } from 'react'
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  Dimensions,
-} from 'react-native'
+import React from 'react'
+import { StyleSheet, View, Text, ScrollView, Dimensions } from 'react-native'
 import { ApolloProvider } from '@apollo/client'
 import { createOvermind } from 'overmind'
 import { Provider } from 'overmind-react'
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-  useHistory,
-} from 'react-router-dom'
-import * as History from 'history'
 import SideMenu from 'react-native-side-menu'
 
 import { config, useOvermind } from './shared/state/om'
 import { LabAuth } from './shared/views/auth'
 import { LabHome } from './shared/views/home'
 import { LabDishes } from './shared/views/dishes'
-import history from './shared/history'
+import { Route, PrivateRoute } from './shared/views/shared/Route'
+import { Link } from './shared/views/shared/Link'
 
 const overmind = createOvermind(config)
 
@@ -89,17 +73,9 @@ function StatefulApp() {
   actions.auth.checkForExistingLogin()
   return (
     <ApolloProvider client={state.auth.apollo_client}>
-      <Router>
-        <Content />
-      </Router>
+      <Content />
     </ApolloProvider>
   )
-}
-
-let browserHistory: History.History<{}> | null = null
-
-export function getHistory() {
-  return browserHistory
 }
 
 function Content() {
@@ -107,10 +83,6 @@ function Content() {
   const menu = <MenuContents />
   const default_side_width = Dimensions.get('window').width * 0.66
   const side_menu_width = default_side_width > 300 ? 300 : default_side_width
-  const history = useHistory()
-  browserHistory = history
-
-  history.listen(() => om.actions.setShowSidebar(false))
 
   return (
     <SideMenu
@@ -121,43 +93,20 @@ function Content() {
       onPress={() => om.actions.setShowSidebar(false)}
     >
       <View style={styles.container}>
-        <Switch>
-          <Route path="/login">
-            <LabAuth />
-          </Route>
-          <Route path="/register">
-            <LabAuth />
-          </Route>
-          <PrivateRoute path="/taxonomy">
-            <LabDishes />
-          </PrivateRoute>
-          <Route path="/">
-            <LabHome />
-          </Route>
-        </Switch>
+        <Route name="login">
+          <LabAuth />
+        </Route>
+        <Route name="register">
+          <LabAuth />
+        </Route>
+        <PrivateRoute name="taxonomy">
+          <LabDishes />
+        </PrivateRoute>
+        <Route name="home">
+          <LabHome />
+        </Route>
       </View>
     </SideMenu>
-  )
-}
-
-function PrivateRoute({ children, ...rest }) {
-  const { state } = useOvermind()
-  return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-        state.auth.is_logged_in ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/login',
-              state: { from: location },
-            }}
-          />
-        )
-      }
-    />
   )
 }
 

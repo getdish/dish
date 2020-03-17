@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { StyleSheet, Text, View, ScrollView } from 'react-native'
-import { useParams } from 'react-router-dom'
 
 import { useOvermind } from '../../state/om'
 import { RestaurantListItem } from './RestaurantListItem'
@@ -16,21 +15,21 @@ const styles = StyleSheet.create({
 })
 
 export default function TopRestaurants() {
-  const { state, actions } = useOvermind()
-  const { dish } = useParams()
+  const om = useOvermind()
+  const dish = `${om.state.router.curPage.params.dish}`
 
   useEffect(() => {
-    if (dish != state.home.current_dish) {
-      actions.home.navigateToSearch(dish)
+    if (dish != om.state.home.current_dish) {
+      om.actions.home.navigateToSearch(dish)
     }
   }, [dish])
 
-  const topRestaurants = state.home.top_restaurants
+  const topRestaurants = om.state.home.top_restaurants
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <SmallTitle>Top {state.home.current_dish} Restaurants</SmallTitle>
+        <SmallTitle>Top {om.state.home.current_dish} Restaurants</SmallTitle>
       </View>
       {topRestaurants.length > 0 ? (
         topRestaurants.map((restaurant, index) => {
