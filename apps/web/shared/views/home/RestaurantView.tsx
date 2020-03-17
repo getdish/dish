@@ -6,8 +6,8 @@ import { useOvermind } from '../../state/om'
 
 import { Restaurant } from '@dish/models'
 import ReviewForm from './ReviewForm'
-import { Spacer } from '../Spacer'
-import { HStack, VStack } from '../Stacks'
+import { Spacer } from '../shared/Spacer'
+import { HStack, VStack } from '../shared/Stacks'
 
 export default function RestaurantView() {
   const { state, actions } = useOvermind()

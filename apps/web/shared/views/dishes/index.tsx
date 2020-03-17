@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
-import Tappable from '..//Tappable'
+import Tappable from '../shared/Tappable'
 
 const CONTINENTS_SUBSCRIPTION = gql`
 subscription Taxonomy {
@@ -342,7 +342,9 @@ function MenuItems({
         placeholder="Search all MenuItems"
       />
       <Col size={1}>
-        {loading && <Text>Loading...</Text>}
+        {loading && (
+          <Text style={{ flex: 1, alignItems: 'center' }}>Loading...</Text>
+        )}
         {!loading &&
           data.dish.map((dish, index) => {
             const isActive = active[0] === 0 && index === active[1]

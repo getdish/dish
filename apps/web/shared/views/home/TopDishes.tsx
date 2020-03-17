@@ -11,9 +11,8 @@ import { useHistory, Link } from 'react-router-dom'
 
 import { useOvermind } from '../../state/om'
 import top_dish_images from '../../assets/topdishes.json'
-import { Spacer } from '../Spacer'
-import Tappable from '../Tappable'
-import { SmallTitle } from '../SmallTitle'
+import { Spacer } from '../shared/Spacer'
+import { SmallTitle } from '../shared/SmallTitle'
 
 const styles = StyleSheet.create({
   container: {

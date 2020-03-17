@@ -2,8 +2,8 @@ import React from 'react'
 import { Image, Text } from 'react-native'
 import { Link } from 'react-router-dom'
 import { Restaurant } from '@dish/models'
-import { HStack, VStack } from '../Stacks'
-import { Spacer } from '../Spacer'
+import { HStack, VStack } from '../shared/Stacks'
+import { Spacer } from '../shared/Spacer'
 import { TagButton } from './TagButton'
 
 export function RestaurantListItem({
@@ -60,7 +60,7 @@ export function RestaurantListItem({
       </VStack>
 
       <HStack>
-        {[...new Array(6)].map(i => {
+        {[...new Array(6)].map((_, i) => {
           return (
             <React.Fragment key={i}>
               <Image

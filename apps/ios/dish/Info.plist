@@ -20,8 +20,6 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>MGLMapboxAccessToken</key>
-	<string>pk.eyJ1IjoibndpZW5lcnQiLCJhIjoiY2s1bHM0cHNpMGF3ODNqcHZwNWtra3JvMCJ9.75t0KcHlIteyT9d42x_vUw</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Taking pictures of dishes to review</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

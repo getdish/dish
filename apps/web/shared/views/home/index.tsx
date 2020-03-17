@@ -1,13 +1,13 @@
 import React from 'react'
 
-import Map from './Map'
+import HomeMap from './HomeMap'
 import HomeMainPane from './HomeMainPane'
-import { ZStack } from '../Stacks'
+import { ZStack } from '../shared/Stacks'
 
 export const LabHome = () => {
   return (
-    <ZStack>
-      <Map />
+    <ZStack top={0} left={0} right={0} bottom={0}>
+      <HomeMap />
       <HomeMainPane />
     </ZStack>
   )

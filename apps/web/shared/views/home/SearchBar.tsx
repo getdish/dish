@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   textInput: {
     padding: 12,
     flex: 1,
-    fontSize: 18,
+    fontSize: 20,
   },
 })
 
@@ -57,10 +57,10 @@ export default function SearchBar() {
           }}
           onPress={() => {
             actions.home.setSearchQuery('')
-            history.pop()
+            history.goBack()
           }}
         >
-          <Text style={{ fontSize: 22 }}>x</Text>
+          <Text style={{ opacity: 0.5, fontSize: 22 }}>x</Text>
         </TouchableOpacity>
       )}
     </View>
