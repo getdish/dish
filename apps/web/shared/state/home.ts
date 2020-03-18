@@ -1,14 +1,9 @@
-import { ModelBase, Restaurant, Review } from '@dish/models'
-import { LngLat } from 'mapbox-gl'
-import { Action, AsyncAction } from 'overmind'
-import SlidingUpPanel from 'rn-sliding-up-panel'
+import { ModelBase, Restaurant, Review, Dish } from '@dish/models'
+import { Action, AsyncAction, Derive } from 'overmind'
+import _ from 'lodash'
+import { HistoryItem } from './router'
 
-type HomeStateItem = {
-  hash: string
-  key: string
-  pathname: string
-  search: string
-}
+type LngLat = { lng: number; lat: number }
 
 type TopDish = {
   category: string
@@ -25,88 +20,153 @@ export type SearchResults = {
   is_results: boolean
 }
 
+// TODO finish merge
+// search_results: {
+//   status: 'complete',
+//   results: {
+//     restaurants: [],
+//     dishes: [],
+//     locations: [],
+//   },
+//   is_results: false,
+// },
+
+type Base = {
+  searchQuery: string
+  centre: LngLat
+  historyId?: string
+}
+export type HomeStateItemHome = Base & {
+  type: 'home'
+  top_dishes?: TopDish[]
+  top_restaurants?: Restaurant[]
+}
+export type HomeStateItemSearch = Base & {
+  type: 'search'
+  results: SearchResults
+}
+export type HomeStateItemRestaurant = Base & {
+  type: 'restaurant'
+  restaurant: Restaurant | null
+  reviews: Review[]
+  review: Review | null
+}
+export type HomeStateItemDish = Base & { type: 'dish'; dish: string }
+export type HomeStateItem =
+  | HomeStateItemHome
+  | HomeStateItemSearch
+  | HomeStateItemRestaurant
+  | HomeStateItemDish
+
 type HomeState = {
   hoveredRestaurant: Restaurant | null
-  history: HomeStateItem[]
-  restaurants: { [key: string]: Restaurant }
-  panel: SlidingUpPanel
-  centre: LngLat
-  searchQuery: string
-  search_results: SearchResults
-  top_dishes: TopDish[]
-  top_restaurants: Restaurant[]
-  current_dish: string
-  current_restaurant: Restaurant
-  current_review: Review
-  restaurant_reviews: Review[]
-  user_reviews: Review[]
+  states: HomeStateItem[]
+  currentState: Derive<HomeState, HomeStateItem>
 }
 
 const RADIUS = 0.015
 
 export const state: HomeState = {
   hoveredRestaurant: null,
-  history: [],
-  restaurants: {},
-  panel: {} as SlidingUpPanel,
-  centre: { lng: -122.421351, lat: 37.759251 } as LngLat,
-  searchQuery: '',
-  search_results: {
-    status: 'complete',
-    results: {
-      restaurants: [],
-      dishes: [],
-      locations: [],
-    },
-    is_results: false,
-  },
-  top_dishes: [],
-  top_restaurants: [],
-  current_dish: '',
-  current_restaurant: {} as Restaurant,
-  current_review: {} as Review,
-  restaurant_reviews: [],
-  user_reviews: [],
+  states: [],
+  currentState: state => _.last(state.states),
+}
+
+const pushHomeState: Action<HistoryItem> = (om, item) => {
+  console.log('push home state', item)
+  const { currentState } = om.state.home
+  const currentBaseState = {
+    historyId: item.id,
+    searchQuery: currentState?.searchQuery ?? '',
+    centre: currentState?.centre ?? { lng: -122.421351, lat: 37.759251 },
+  }
+
+  switch (item.name) {
+    case 'home':
+      om.state.home.states.push({
+        type: 'home',
+        ...currentBaseState,
+      })
+      return
+    case 'search':
+      om.state.home.states.push({
+        type: 'search',
+        results: { status: 'loading', results: [] },
+        ...currentBaseState,
+      })
+      om.actions.home.runSearch(item.params.query)
+      return
+    case 'restaurant':
+      om.state.home.states.push({
+        type: 'restaurant',
+        restaurant: null,
+        review: null,
+        reviews: [],
+        ...currentBaseState,
+      })
+      om.actions.home.setCurrentRestaurant(item.params.slug)
+      return
+  }
+}
+
+const popHomeState: Action<HistoryItem> = (om, item) => {
+  if (om.state.home.states.length > 1) {
+    om.state.home.states = _.dropRight(om.state.home.states)
+  }
 }
 
 const setSearchQuery: Action<string> = (om, next) => {
-  om.state.home.searchQuery = next
+  om.state.home.currentState.searchQuery = next
 }
 
 const updateRestaurants: AsyncAction<LngLat> = async (om, centre: LngLat) => {
   const restaurants = await Restaurant.findNear(centre.lat, centre.lng, RADIUS)
-  for (const restaurant of restaurants) {
-    om.state.home.restaurants[restaurant.id] = restaurant
+  const state = [...om.state.home.states]
+    .reverse()
+    .find(x => x.type === 'search') as HomeStateItemSearch | null
+  if (state) {
+    state.results = restaurants
   }
 }
 
 const setCurrentRestaurant: AsyncAction<string> = async (om, slug: string) => {
   const restaurant = new Restaurant()
   await restaurant.findOne('slug', slug)
-  om.state.home.current_restaurant = restaurant
-  om.state.home.centre = {
-    lng: restaurant.location.coordinates[0],
-    lat: restaurant.location.coordinates[1] - 0.0037,
+  const state = [...om.state.home.states]
+    .reverse()
+    .find(x => x.type === 'restaurant') as HomeStateItemRestaurant | null
+
+  if (state) {
+    state.restaurant = restaurant
+    state.centre = {
+      lng: restaurant.location.coordinates[0],
+      lat: restaurant.location.coordinates[1] - 0.0037,
+    }
+    const reviews = new Review()
+    state.reviews = await reviews.findAllForRestaurant(restaurant.id)
   }
-  const reviews = new Review()
-  om.state.home.restaurant_reviews = await reviews.findAllForRestaurant(
-    restaurant.id
-  )
 }
 
 const getUserReviews: AsyncAction<string> = async (om, user_id: string) => {
   const reviews = new Review()
-  om.state.home.user_reviews = await reviews.findAllForUser(user_id)
+  const state = om.state.home.currentState
+  if (state.type == 'restaurant') {
+    state.reviews = await reviews.findAllForUser(user_id)
+  }
 }
 
 const getTopDishes: AsyncAction = async om => {
+  const state = om.state.home.currentState
+  if (state.type !== 'home') {
+    return
+  }
   const query = {
     query: {
       top_dishes: {
         __args: {
           args: {
-            lon: om.state.home.centre.lng,
-            lat: om.state.home.centre.lat,
+            lon: om.state.home.currentState.centre.lng,
+            lat: om.state.home.currentState.centre.lat,
             radius: RADIUS,
           },
         },
@@ -116,83 +176,70 @@ const getTopDishes: AsyncAction = async om => {
     },
   }
   const response = await ModelBase.hasura(query)
-  om.state.home.top_dishes = response.data.data.top_dishes
+  state.top_dishes = response.data.data.top_dishes
 }
 
-const navigateToSearch: AsyncAction<string> = async (om, dish: string) => {
-  if (om.state.home.current_dish == dish) {
-    return
-  }
-  om.state.home.top_restaurants = []
-  om.state.home.top_restaurants = await Restaurant.highestRatedByDish(
-    om.state.home.centre.lat,
-    om.state.home.centre.lng,
-    RADIUS * 10,
-    [dish]
-  )
-  om.state.home.current_dish = dish
-  om.state.home.searchQuery = dish
-}
-
-let searchVersion = 0
-
-const searchQueryUpdate: AsyncAction<string> = async (om, query: string) => {
-  om.actions.home.setSearchQuery(query)
-  om.actions.home.clearSearch()
-  if (query == '') {
-    om.state.home.search_results.is_results = false
-  } else {
-    await searchRestaurants(om, query)
-    await searchDishes(om, query)
+const runSearch: AsyncAction<string> = async (om, query: string) => {
+  const state = om.state.home.currentState
+  if (state.type == 'search') {
+    state.results = { status: 'loading', results: [] }
+    const results = await Restaurant.highestRatedByDish(
+      om.state.home.currentState.centre.lat,
+      om.state.home.currentState.centre.lng,
+      RADIUS * 10,
+      [query]
+    )
+    state.results = { status: 'complete', results }
   }
 }
 
-const searchDishes: AsyncAction<string> = async (om, query: string) => {
-  om.state.home.search_results.results.dishes = om.state.home.top_dishes
-    .filter(dish => dish.category.toLowerCase().includes(query))
-    .map(dish => dish.category.replace(/"/g, ''))
-}
+// let searchVersion = 0
+// const restaurantSearch: AsyncAction<string> = async (om, query: string) => {
+//   searchVersion = (searchVersion + 1) % Number.MAX_VALUE
+//   om.actions.home.setSearchQuery(query)
 
-const searchRestaurants: AsyncAction<string> = async (om, query: string) => {
-  searchVersion = (searchVersion + 1) % Number.MAX_VALUE
-  om.state.home.search_results.status = 'loading'
-  let myVersion = searchVersion
-  const next = await Restaurant.search(
-    om.state.home.centre.lat,
-    om.state.home.centre.lng,
-    RADIUS,
-    query
-  )
-  if (myVersion == searchVersion) {
-    om.state.home.search_results.is_results = next.length > 0
-    om.state.home.search_results.status = 'complete'
-    om.state.home.search_results.results.restaurants = next
-  }
-}
+//   if (query == '') {
+//     om.state.home.search_results = null
+//   } else {
+//     om.state.home.search_results = {
+//       status: 'loading',
+//       results: om.state.home.search_results?.results ?? [],
+//     }
+//     let myVersion = searchVersion
+//     const next = await Restaurant.search(
+//       om.state.home.currentState.centre.lat,
+//       om.state.home.currentState.centre.lng,
+//       RADIUS,
+//       query
+//     )
+//     if (myVersion == searchVersion) {
+//       om.state.home.search_results = {
+//         status: 'complete',
+//         results: next,
+//       }
+//     }
+//   }
+// }
 
 const clearSearch: Action = om => {
-  om.state.home.search_results = {
-    is_results: false,
-    status: 'complete',
-    results: {
-      restaurants: [],
-      dishes: [],
-      locations: [],
-    },
+  const state = om.state.home.currentState
+  if (state.type == 'search') {
+    om.actions.router.back()
   }
 }
 
 const setMapCentre: Action<LngLat> = (om, centre: LngLat) => {
-  om.state.home.centre = centre
+  om.state.home.currentState.centre = centre
 }
 
 const getReview: AsyncAction = async om => {
-  let review = new Review()
-  await review.findOne(
-    om.state.home.current_restaurant.id,
-    om.state.auth.user.id
-  )
-  om.state.home.current_review = review
+  const state = om.state.home.currentState
+
+  if (state.type == 'restaurant') {
+    let review = new Review()
+    await review.findOne(state.restaurant.id, om.state.auth.user.id)
+    state.review = review
+  }
 }
 
 const submitReview: AsyncAction<[number, string]> = async (
@@ -202,33 +249,26 @@ const submitReview: AsyncAction<[number, string]> = async (
   const rating = args[0]
   const text = args[1]
   let review = new Review()
-  if (typeof om.state.home.current_review.id == 'undefined') {
-    Object.assign(review, {
-      restaurant_id: om.state.home.current_restaurant.id,
-      user_id: om.state.auth.user.id,
-      rating: rating,
-      text: text,
-    })
-    await review.insert()
-  } else {
-    Object.assign(review, om.state.home.current_review)
-    Object.assign(review, {
-      rating: rating,
-      text: text,
-    })
-    await review.update()
+  const state = om.state.home.currentState
+  if (state.type == 'restaurant') {
+    if (typeof state.review.id == 'undefined') {
+      Object.assign(review, {
+        restaurant_id: state.restaurant.id,
+        user_id: om.state.auth.user.id,
+        rating: rating,
+        text: text,
+      })
+      await review.insert()
+    } else {
+      Object.assign(review, state.review)
+      Object.assign(review, {
+        rating: rating,
+        text: text,
+      })
+      await review.update()
+    }
+    state.review = review
   }
-  om.state.home.current_review = review
-}
-
-const pushHistory: Action<HomeStateItem> = (om, next) => {
-  om.state.home.history = [...om.state.home.history, next]
-}
-
-const popHistory: Action = om => {
-  let next = [...om.state.home.history]
-  next.pop()
-  om.state.home.history = next
 }
 
 const setHoveredRestaurant: Action<Restaurant | null> = (om, val) => {
@@ -236,15 +276,14 @@ const setHoveredRestaurant: Action<Restaurant | null> = (om, val) => {
 }
 
 export const actions = {
+  pushHomeState,
+  popHomeState,
   setHoveredRestaurant,
-  pushHistory,
-  popHistory,
   updateRestaurants,
   setCurrentRestaurant,
-  navigateToSearch,
+  runSearch,
   getTopDishes,
-  searchQueryUpdate,
-  searchRestaurants,
+  // restaurantSearch,
   clearSearch,
   setMapCentre,
   getReview,

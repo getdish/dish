@@ -35,8 +35,8 @@ export default function SearchBar() {
   return (
     <View style={styles.container}>
       <TextInput
-        value={om.state.home.searchQuery}
-        onChangeText={text => om.actions.home.searchQueryUpdate(text)}
+        value={om.state.home.currentState.searchQuery}
+        onChangeText={text => om.actions.home.runSearch(text)}
         placeholder="Search all of San Francisco"
         style={styles.textInput}
         onFocus={() => {
@@ -52,7 +52,7 @@ export default function SearchBar() {
         }}
       />
 
-      {om.state.home.searchQuery !== '' && (
+      {om.state.home.currentState.searchQuery !== '' && (
         <TouchableOpacity
           style={{
             padding: 10,

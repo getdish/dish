@@ -15,17 +15,19 @@ const styles = StyleSheet.create({
 })
 
 export default function ReviewForm() {
-  const { state, actions } = useOvermind()
+  const om = useOvermind()
+  const state = om.state.home.currentState
   const [rating, setRating] = useState(0)
   const [review_text, setReviewText] = useState('')
   const [button_text, setButtonText] = useState('Submit')
 
   useEffect(() => {
+    if (state.type !== 'restaurant') return
     const init = async () => {
-      await actions.home.getReview()
-      if (state.home.current_review.id) {
-        setReviewText(state.home.current_review.text)
-        setRating(state.home.current_review.rating)
+      await om.actions.home.getReview()
+      if (state.review.id) {
+        setReviewText(state.review.text)
+        setRating(state.review.rating)
       }
     }
     init()
@@ -49,13 +51,13 @@ export default function ReviewForm() {
         multiline={true}
         onFocus={() => setButtonText('Submit')}
         onChange={event => {
-          setReviewText(event.target.value)
+          setReviewText(event.target['value'])
         }}
       />
       <Button
         onPress={async () => {
           setButtonText('Submitting...')
-          await actions.home.submitReview([rating, review_text])
+          await om.actions.home.submitReview([rating, review_text])
           setButtonText('Saved')
         }}
         title={button_text}

@@ -12,6 +12,7 @@ import {
 } from 'overmind'
 import page from 'page'
 import queryString from 'query-string'
+import _ from 'lodash'
 
 class Route<A extends Object | void = void> {
   params: A
@@ -43,6 +44,7 @@ export type NavigateItem<
 > = {
   name: A
   params?: B
+  callback?: OnRouteChangeCb
 }
 
 export type HistoryItem<A extends RouteName = any> = {
@@ -58,32 +60,34 @@ export type RouterState = {
   notFound: boolean
   historyIndex: number
   history: HistoryItem[]
-  pageName: string
-  urlString: Derive<RouterState, string>
   lastPage: Derive<RouterState, HistoryItem | undefined>
   curPage: Derive<RouterState, HistoryItem>
   ignoreNextPush: boolean
 }
 
 let ignoreNextRoute = false
-let goingBack = false
 
-const start: AsyncAction = async om => {
+export type OnRouteChangeCb = (item: {
+  type: 'push' | 'pop'
+  name: RouteName
+  item: HistoryItem
+}) => any
+
+let onRouteChange: OnRouteChangeCb | null = null
+
+const start: AsyncAction<{
+  onRouteChange?: OnRouteChangeCb
+}> = async (om, opts) => {
+  onRouteChange = opts.onRouteChange
+
   for (const name of routeNames) {
-    om.actions.router.routeListen({ url: routes[name].path, name })
+    om.actions.router.routeListen({
+      name,
+      url: routes[name].path,
+    })
   }
   om.actions.router.routeListenNotFound()
-
-  const startingOnHome = window.location.pathname === '/'
-  if (startingOnHome) {
-    ignoreNextRoute = true
-  }
-
   page.start()
-
-  if (startingOnHome) {
-    om.actions.router.navigate({ name: 'home' })
-  }
 }
 
 // state
@@ -99,14 +103,12 @@ export const state: RouterState = {
   notFound: false,
   historyIndex: -1,
   history: [],
-  pageName: 'home',
   ignoreNextPush: false,
-  lastPage: state => state.history[state.history.length - 2],
-  curPage: state => state.history[state.history.length - 1] || defaultPage,
+  lastPage: state => state.history[state.historyIndex - 1],
+  curPage: state => state.history[state.historyIndex] || defaultPage,
 }
 
 class AlreadyOnPageError extends Error {}
-
 const uid = () => `${Math.random()}`
 
 const navigate: Operator<NavigateItem> = pipe(
@@ -124,22 +126,31 @@ const navigate: Operator<NavigateItem> = pipe(
   mutate((om, item) => {
     om.state.router.notFound = false
 
-    try {
-      const alreadyOnPage = isEqual(item, om.state.router.curPage)
-      if (alreadyOnPage) {
-        throw new AlreadyOnPageError()
-      }
-      om.state.router.pageName = item.name
-      om.state.router.history = [...om.state.router.history, item]
-      if (!item.replace) {
-        om.state.router.historyIndex++
-      }
-    } catch (err) {
-      console.error('ERROR in parsing item', err)
+    const alreadyOnPage = isEqual(
+      _.omit(item, 'id'),
+      _.omit(om.state.router.curPage, 'id')
+    )
+    if (alreadyOnPage) {
+      throw new AlreadyOnPageError()
+    }
+    om.state.router.history = [...om.state.router.history, item]
+    if (!item.replace) {
+      om.state.router.historyIndex++
     }
   }),
   run((om, item) => {
+    console.log(
+      'om.state.router.ignoreNextPush',
+      om.state.router.ignoreNextPush
+    )
     if (!om.state.router.ignoreNextPush) {
+      if (onRouteChange) {
+        onRouteChange({
+          type: 'push',
+          name: item.name,
+          item: _.last(om.state.router.history),
+        })
+      }
       if (item.replace) {
         om.effects.router.replace(item.path)
       } else {
@@ -150,7 +161,8 @@ const navigate: Operator<NavigateItem> = pipe(
   mutate(om => {
     om.state.router.ignoreNextPush = false
   }),
-  catchError<void>((_, error) => {
+  catchError<void>((om, error) => {
+    om.state.router.ignoreNextPush = false
     if (error instanceof AlreadyOnPageError) {
       // ok
     } else {
@@ -160,12 +172,12 @@ const navigate: Operator<NavigateItem> = pipe(
 )
 
 const ignoreNextPush: Action = om => {
+  console.trace('ignore next push')
   om.state.router.ignoreNextPush = true
 }
 
 const back: Action = om => {
   if (om.state.router.historyIndex > 0) {
-    goingBack = true
     // subtract two because back will add one!
     om.state.router.historyIndex -= 2
     window.history.back()
@@ -182,24 +194,57 @@ const forward: Action = om => {
 
 let curSearch = {}
 
+let pop: { path: string; at: number }
+window.addEventListener('popstate', event => {
+  pop = {
+    path: event.state.path,
+    at: Date.now(),
+  }
+})
+
+let isInitialRoute = true
+
 const routeListen: Action<{
   url: string
   name: RouteName
 }> = (om, { name, url }) => {
   page(url, ({ params, querystring }) => {
+    let isGoingBack = false
+    if (pop && Date.now() - pop.at < 30) {
+      if (pop.path == getPathFromParams(name, params)) {
+        const history = om.state.router.history
+        const lastPath = history[history.length - 2].path
+        const lastMatches = lastPath == pop.path
+        console.log('check it out', lastPath, pop.path)
+        isGoingBack = lastMatches
+      }
+    }
+
+    console.log('page', url, params, { ignoreNextRoute, isGoingBack })
     curSearch = queryString.parse(querystring)
-    if (ignoreNextRoute) {
-      ignoreNextRoute = false
-      return
+
+    if (isGoingBack) {
+      om.state.router.historyIndex -= 1
+      const last = _.last(om.state.router.history)
+      if (onRouteChange) {
+        onRouteChange({ type: 'pop', name, item: last })
+      }
+    } else {
+      if (ignoreNextRoute) {
+        ignoreNextRoute = false
+        return
+      }
+      if (isInitialRoute) {
+        isInitialRoute = false
+      } else {
+        om.actions.router.ignoreNextPush()
+      }
+      const paramsClean = { ...params }
+      om.actions.router.navigate({
+        name,
+        params: paramsClean,
+      })
     }
-    if (goingBack) {
-      goingBack = false
-    }
-    om.actions.router.ignoreNextPush()
-    om.actions.router.navigate({
-      name,
-      params: { ...params },
-    })
   })
 }
 
@@ -224,11 +269,13 @@ export const actions = {
 
 export const effects = {
   open(url: string) {
+    console.log('open()', url)
     ignoreNextRoute = true
     page.show(url)
   },
 
   replace(url: string) {
+    console.log('replace()', url)
     ignoreNextRoute = true
     page.replace(url)
   },

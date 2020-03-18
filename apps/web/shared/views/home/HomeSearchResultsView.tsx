@@ -5,6 +5,7 @@ import { useOvermind } from '../../state/om'
 import { RestaurantListItem } from './RestaurantListItem'
 import { SmallTitle } from '../shared/SmallTitle'
 import { VStack } from '../shared/Stacks'
+import { HomeStateItemSearch } from '../../state/home'
 
 const styles = StyleSheet.create({
   container: {},
@@ -16,35 +17,42 @@ const styles = StyleSheet.create({
 
 export default function HomeSearchResultsView() {
   const om = useOvermind()
-  const dish = `${om.state.router.curPage.params.query}`
+  const state = om.state.home.currentState as HomeStateItemSearch
+  if (state.type != 'search') {
+    return null
+  }
+  return <HomeSearchResultsViewContent state={state} />
+}
 
-  useEffect(() => {
-    if (dish != om.state.home.current_dish) {
-      om.actions.home.navigateToSearch(dish)
-    }
-  }, [dish])
-
-  const topRestaurants = om.state.home.top_restaurants
+function HomeSearchResultsViewContent({
+  state,
+}: {
+  state: HomeStateItemSearch
+}) {
+  const om = useOvermind()
+  const query = `${om.state.router.curPage.params.query}`
+  const { results } = state
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <SmallTitle>Top {om.state.home.current_dish} Restaurants</SmallTitle>
+        <SmallTitle>Top {query} Restaurants</SmallTitle>
       </View>
-      {topRestaurants.length > 0 ? (
-        topRestaurants.map((restaurant, index) => {
+      {results &&
+        results.status == 'complete' &&
+        results.results.map((restaurant, index) => {
           return (
             <RestaurantListItem
               key={index}
-              restaurant={restaurant}
+              restaurant={restaurant as any}
               rank={index + 1}
               onHover={() => {
                 om.actions.home.setHoveredRestaurant({ ...restaurant } as any)
               }}
             />
           )
-        })
-      ) : (
+        })}
+      {results?.status == 'loading' && (
         <VStack padding={18}>
           <Text>Loading...</Text>
         </VStack>

@@ -3,7 +3,7 @@ import { Platform, View, ViewPropTypes } from 'react-native'
 import StackTransitioner from './StackTransitioner'
 import { SLIDE_HORIZONTAL, FADE_VERTICAL } from './animationTypes'
 import styles from './styles'
-import { withRouter } from 'react-router-dom'
+// import { withRouter } from 'react-router-dom'
 
 class Stack extends Component<{
   children: any
@@ -75,4 +75,4 @@ class Stack extends Component<{
     )
   }
 }
-export default withRouter(Stack as any)
+// export default withRouter(Stack as any)
