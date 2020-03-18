@@ -19,9 +19,6 @@ export const config = merge(
     actions: {
       setShowSidebar,
     },
-    async onInitialize({ actions }) {
-      await actions.router.start()
-    },
   },
   namespaced({
     home,
@@ -38,5 +35,7 @@ declare module 'overmind' {
 export const useOvermind = createHook<typeof config>()
 
 export const om = createOvermind(config)
+
+export type Om = typeof om
 
 window['om'] = om

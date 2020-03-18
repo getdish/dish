@@ -16,7 +16,7 @@ export type StackBaseProps = { children: any } & ViewStyle &
 export function ZStack({ children, fullscreen, ...props }: StackBaseProps) {
   return (
     <View
-      style={{ ...props, position: 'absolute', ...(fullscreen && fsStyle) }}
+      style={{ position: 'absolute', ...(fullscreen && fsStyle), ...props }}
     >
       {children}
     </View>
@@ -26,7 +26,7 @@ export function ZStack({ children, fullscreen, ...props }: StackBaseProps) {
 export function HStack({ children, fullscreen, ...props }: StackBaseProps) {
   return (
     <View
-      style={{ ...props, flexDirection: 'row', ...(fullscreen && fsStyle) }}
+      style={{ flexDirection: 'row', ...(fullscreen && fsStyle), ...props }}
     >
       {children}
     </View>
@@ -36,7 +36,7 @@ export function HStack({ children, fullscreen, ...props }: StackBaseProps) {
 export function VStack({ children, fullscreen, ...props }: StackBaseProps) {
   return (
     <View
-      style={{ ...props, flexDirection: 'column', ...(fullscreen && fsStyle) }}
+      style={{ flexDirection: 'column', ...(fullscreen && fsStyle), ...props }}
     >
       {children}
     </View>

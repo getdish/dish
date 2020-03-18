@@ -40,41 +40,18 @@ const getImageForDish = (dish: string) => {
   )
 }
 
-export default function TopDishes() {
+export default function HomeViewTopDishes() {
   const om = useOvermind()
-  let dishes: JSX.Element[] = []
+  const state = om.state.home.currentState
+
   useEffect(() => {
     om.actions.home.getTopDishes()
   }, [])
 
-  for (const dish of om.state.home.top_dishes) {
-    const category = dish.category.replace(/"/g, '')
-    dishes.push(
-      <TouchableOpacity
-        key={category}
-        style={{
-          // flexDirection: 'row',
-          alignItems: 'center',
-          minWidth: 120,
-          width: '33%',
-          marginBottom: 20,
-        }}
-        onPress={() => {
-          om.actions.home.setSearchQuery(dish.category.replace(/"/g, ''))
-          om.actions.router.navigate({
-            name: 'search',
-            params: { query: category },
-          })
-        }}
-      >
-        {getImageForDish(category)}
-        <Spacer />
-        <Link to={`/search/${category}`}>
-          <Text style={{ textDecorationLine: 'none' }}>{category}</Text>
-        </Link>
-      </TouchableOpacity>
-    )
+  if (state.type !== 'home') {
+    return null
   }
+  const { top_dishes = [] } = state
 
   return (
     <View style={styles.container}>
@@ -88,7 +65,36 @@ export default function TopDishes() {
             flexWrap: 'wrap',
           }}
         >
-          {dishes.length != 0 ? dishes : <Text>Loading...</Text>}
+          {top_dishes.map(dish => {
+            const category = dish.category.replace(/"/g, '')
+            return (
+              <TouchableOpacity
+                key={category}
+                style={{
+                  // flexDirection: 'row',
+                  alignItems: 'center',
+                  minWidth: 120,
+                  width: '33%',
+                  marginBottom: 20,
+                }}
+                onPress={() => {
+                  om.actions.home.setSearchQuery(
+                    dish.category.replace(/"/g, '')
+                  )
+                  om.actions.router.navigate({
+                    name: 'search',
+                    params: { query: category },
+                  })
+                }}
+              >
+                {getImageForDish(category)}
+                <Spacer />
+                <Link to={`/best/${category}`}>
+                  <Text style={{ textDecorationLine: 'none' }}>{category}</Text>
+                </Link>
+              </TouchableOpacity>
+            )
+          })}
         </View>
       </ScrollView>
     </View>

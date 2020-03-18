@@ -26,7 +26,6 @@ export function Route(props: {
     .map(path => routePathToName[path])
 
   if (childRouteNames.some(x => x === curName)) {
-    console.log('match', curName, props.name, childRouteNames)
     return props.children
   }
 

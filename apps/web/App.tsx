@@ -1,16 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, View, Text, ScrollView, Dimensions } from 'react-native'
 import { ApolloProvider } from '@apollo/client'
-import { createOvermind } from 'overmind'
+import { createOvermind, Overmind, Config } from 'overmind'
 import { Provider } from 'overmind-react'
 import SideMenu from 'react-native-side-menu'
 
-import { config, useOvermind } from './shared/state/om'
+import { config, useOvermind, Om } from './shared/state/om'
 import { LabAuth } from './shared/views/auth'
-import { HomeView } from './shared/views/home'
+import { HomeView } from './shared/views/home/HomeView'
 import { LabDishes } from './shared/views/dishes'
 import { Route, PrivateRoute } from './shared/views/shared/Route'
 import { Link } from './shared/views/shared/Link'
+import { useOnMount } from './shared/hooks/useOnMount'
+import { ZStack } from './shared/views/shared/Stacks'
 
 const overmind = createOvermind(config)
 
@@ -19,6 +21,56 @@ export default function App() {
     <Provider value={overmind}>
       <StatefulApp />
     </Provider>
+  )
+}
+
+function StatefulApp() {
+  const [started, setIsStarted] = useState(false)
+  const om = useOvermind()
+
+  // start app!
+  useOnMount(async () => {
+    om.actions.auth.checkForExistingLogin()
+
+    await om.actions.router.start({
+      onRouteChange: ({ type, name, item }) => {
+        console.log('onRouteChange', type, name, item)
+        switch (name) {
+          case 'home':
+          case 'search':
+          case 'restaurant':
+            if (type === 'push') {
+              om.actions.home.pushHomeState(item)
+            } else {
+              om.actions.home.popHomeState(item)
+            }
+            return
+        }
+      },
+    })
+
+    setTimeout(() => {
+      console.log('now start')
+      setIsStarted(true)
+    }, 16)
+  })
+
+  if (!started) {
+    return <Splash />
+  }
+
+  return (
+    <ApolloProvider client={om.state.auth.apollo_client}>
+      <Content />
+    </ApolloProvider>
+  )
+}
+
+function Splash() {
+  return (
+    <ZStack fullscreen backgroundColor="red">
+      <Text>Loading</Text>
+    </ZStack>
   )
 }
 
@@ -65,16 +117,6 @@ function MenuContents() {
         )}
       </View>
     </ScrollView>
-  )
-}
-
-function StatefulApp() {
-  const { state, actions } = useOvermind()
-  actions.auth.checkForExistingLogin()
-  return (
-    <ApolloProvider client={state.auth.apollo_client}>
-      <Content />
-    </ApolloProvider>
   )
 }
 

@@ -13,9 +13,9 @@ const styles = {
 
 export default function UserReviews() {
   const om = useOvermind()
+  const state = om.state.home.currentState
   let user = `${om.state.router.curPage.params.user}`
 
-  let reviews: JSX.Element[] = []
   const is_for_logged_in_user = om.state.router.curPage.path.includes(
     'account/reviews'
   )
@@ -31,26 +31,30 @@ export default function UserReviews() {
     om.actions.home.getUserReviews(user)
   }, [])
 
-  let key = 0
-  for (const review of om.state.home.user_reviews) {
-    key++
-    reviews.push(
-      <Text key={key}>
-        <Link to={`/restaurant/${review.restaurant.id}`}>
-          {review.restaurant.name}
-        </Link>
-        <Text>{review.rating}⭐</Text>
-        <Text>{review.text}</Text>
-      </Text>
-    )
+  if (state.type !== 'restaurant') {
+    return null
   }
+
+  const { reviews } = state
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={{ fontSize: 30 }}>{title}</Text>
       </View>
-      {reviews.length != 0 ? reviews : <Text>No reviews yet...</Text>}
+      {reviews.length != 0 ? (
+        reviews.map(review => (
+          <Text key={review.id}>
+            <Link to={`/restaurant/${review.restaurant.id}`}>
+              {review.restaurant.name}
+            </Link>
+            <Text>{review.rating}⭐</Text>
+            <Text>{review.text}</Text>
+          </Text>
+        ))
+      ) : (
+        <Text>No reviews yet...</Text>
+      )}
     </View>
   )
 }

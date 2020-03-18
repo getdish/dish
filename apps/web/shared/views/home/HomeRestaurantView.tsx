@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Image, Text, View, ScrollView, TouchableOpacity } from 'react-native'
 
 import { useOvermind } from '../../state/om'
@@ -11,13 +11,16 @@ import { Link } from '../shared/Link'
 
 export default function HomeRestaurantView() {
   const om = useOvermind()
-  const slug = om.state.router.curPage.params.slug
+  const state = om.state.home.currentState
 
-  let restaurant = om.state.home.current_restaurant
-  if (slug != om.state.home.current_restaurant.slug) {
-    restaurant = {} as Restaurant
-    om.actions.home.setCurrentRestaurant(slug)
+  if (state.type !== 'restaurant') {
+    return null
   }
+  if (!state.restaurant) {
+    return null
+  }
+  const restaurant = state.restaurant
+
   if (typeof restaurant.name == 'undefined') {
     return <Text>Loading...</Text>
   }
@@ -27,23 +30,6 @@ export default function HomeRestaurantView() {
   return (
     <ScrollView style={{ padding: 18 }}>
       <VStack>
-        {/* <Link
-          to="/"
-          style={{ alignSelf: 'flex-start', opacity: 0.5, fontSize: 12 }}
-        > */}
-        <TouchableOpacity
-          onPress={e => {
-            e.preventDefault()
-            e.stopPropagation()
-            om.actions.router.back()
-          }}
-        >
-          <Text>◀ Back to Top Dishes</Text>
-        </TouchableOpacity>
-        {/* </Link> */}
-
-        <Spacer />
-
         <Text style={{ fontSize: 30 }}>{restaurant.name}</Text>
 
         <Text>{restaurant.rating}⭐</Text>
@@ -73,13 +59,13 @@ export default function HomeRestaurantView() {
         </View>
         <View>
           <Text style={{ fontSize: 15 }}>Latest Reviewers</Text>
-          {om.state.home.restaurant_reviews.map((review, i) => {
+          {state.reviews.map((review, i) => {
             return (
               <Text key={i}>
                 <Link to={'/user/' + review.user.id + '/reviews'}>
                   {review.user.username}
                 </Link>
-                {i == om.state.home.restaurant_reviews.length - 1 ? '' : ', '}
+                {i == state.reviews.length - 1 ? '' : ', '}
               </Text>
             )
           })}
