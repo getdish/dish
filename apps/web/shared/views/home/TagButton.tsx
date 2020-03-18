@@ -6,7 +6,10 @@ export function TagButton(props: { rank?: number; name: string }) {
   return (
     <HStack
       backgroundColor="purple"
-      borderRadius={12}
+      borderWidth={1}
+      borderColor={'#ddd'}
+      borderRadius={10}
+      overflow="hidden"
       alignItems="center"
       shadowColor="rgba(0,0,0,0.1)"
       shadowRadius={4}

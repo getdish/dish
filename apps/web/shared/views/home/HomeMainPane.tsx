@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
 
 import { useOvermind } from '../../state/om'
@@ -7,7 +7,7 @@ import TopDishes from './TopDishes'
 import HomeSearchResultsView from './HomeSearchResultsView'
 import SearchBar from './SearchBar'
 import { Spacer } from '../shared/Spacer'
-import { VStack } from '../shared/Stacks'
+import { VStack, ZStack, StackBaseProps } from '../shared/Stacks'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import { HomeBreadcrumbs } from './HomeBreadcrumbs'
 import { Route } from '../shared/Route'
@@ -116,6 +116,36 @@ export default function HomeMainPane() {
         )}
       </View>
     </View>
+  )
+}
+
+function StackView<A>(props: {
+  items: A[]
+  children: (a: A, isActive: boolean, index: number) => React.ReactNode
+}) {
+  const [state, setState] = useState<{ items: A[] }>({
+    items: [],
+  })
+
+  useEffect(() => {
+    const forward = props.items.length > state.items.length
+    setState({ items: props.items })
+  }, [props.items, state.items])
+
+  return (
+    <ZStack fullscreen>
+      {state.items.map((item, index) => (
+        <ZStack
+          backgroundColor="white"
+          fullscreen
+          key={index}
+          flex={1}
+          zIndex={index}
+        >
+          {props.children(item, index === state.items.length - 1, index)}
+        </ZStack>
+      ))}
+    </ZStack>
   )
 }
 

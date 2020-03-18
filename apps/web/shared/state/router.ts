@@ -45,7 +45,7 @@ export type NavigateItem<
   params?: B
 }
 
-type HistoryItem<A extends RouteName = any> = {
+export type HistoryItem<A extends RouteName = any> = {
   id: string
   name: A
   path: string
