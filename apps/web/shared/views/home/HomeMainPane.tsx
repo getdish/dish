@@ -96,7 +96,7 @@ export default function HomeMainPane() {
       <HomeBreadcrumbs />
 
       <View style={styles.content}>
-        <StackView items={om.state.home.states}>
+        <StackView items={om.state.home.breadcrumbStates}>
           {homeState => {
             const item = om.state.router.history.find(
               x => x.id == homeState.historyId

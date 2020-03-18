@@ -13,9 +13,15 @@ const fsStyle = {
 export type StackBaseProps = { children: any } & ViewStyle &
   ViewProps & { fullscreen?: boolean }
 
-export function ZStack({ children, fullscreen, ...props }: StackBaseProps) {
+export function ZStack({
+  children,
+  fullscreen,
+  pointerEvents,
+  ...props
+}: StackBaseProps) {
   return (
     <View
+      pointerEvents={pointerEvents}
       style={{ position: 'absolute', ...(fullscreen && fsStyle), ...props }}
     >
       {children}
@@ -23,9 +29,15 @@ export function ZStack({ children, fullscreen, ...props }: StackBaseProps) {
   )
 }
 
-export function HStack({ children, fullscreen, ...props }: StackBaseProps) {
+export function HStack({
+  children,
+  fullscreen,
+  pointerEvents,
+  ...props
+}: StackBaseProps) {
   return (
     <View
+      pointerEvents={pointerEvents}
       style={{ flexDirection: 'row', ...(fullscreen && fsStyle), ...props }}
     >
       {children}
@@ -33,9 +45,15 @@ export function HStack({ children, fullscreen, ...props }: StackBaseProps) {
   )
 }
 
-export function VStack({ children, fullscreen, ...props }: StackBaseProps) {
+export function VStack({
+  children,
+  fullscreen,
+  pointerEvents,
+  ...props
+}: StackBaseProps) {
   return (
     <View
+      pointerEvents={pointerEvents}
       style={{ flexDirection: 'column', ...(fullscreen && fsStyle), ...props }}
     >
       {children}

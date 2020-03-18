@@ -39,7 +39,9 @@ export default function HomeRestaurantView() {
         <Text style={{ fontSize: 15 }}>
           {categories.map((category, index) => (
             <Text key={category}>
-              <Link to={'/search/' + category}>{category}</Link>
+              <Link name="search" params={{ query: category }}>
+                {category}
+              </Link>
               {index == categories.length - 1 ? '' : ', '}
             </Text>
           ))}
@@ -62,7 +64,10 @@ export default function HomeRestaurantView() {
           {state.reviews.map((review, i) => {
             return (
               <Text key={i}>
-                <Link to={'/user/' + review.user.id + '/reviews'}>
+                <Link
+                  name="user"
+                  params={{ id: review.user.id, pane: 'reviews' }}
+                >
                   {review.user.username}
                 </Link>
                 {i == state.reviews.length - 1 ? '' : ', '}

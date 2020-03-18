@@ -89,7 +89,7 @@ export default function HomeViewTopDishes() {
               >
                 {getImageForDish(category)}
                 <Spacer />
-                <Link to={`/best/${category}`}>
+                <Link name="search" params={{ query: category }}>
                   <Text style={{ textDecorationLine: 'none' }}>{category}</Text>
                 </Link>
               </TouchableOpacity>

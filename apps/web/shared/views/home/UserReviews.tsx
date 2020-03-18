@@ -45,7 +45,7 @@ export default function UserReviews() {
       {reviews.length != 0 ? (
         reviews.map(review => (
           <Text key={review.id}>
-            <Link to={`/restaurant/${review.restaurant.id}`}>
+            <Link name="restaurant" params={{ slug: review.restaurant.slug }}>
               {review.restaurant.name}
             </Link>
             <Text>{review.rating}⭐</Text>
