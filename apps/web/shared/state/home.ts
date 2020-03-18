@@ -69,7 +69,7 @@ const updateRestaurants: AsyncAction<LngLat> = async (om, centre: LngLat) => {
 
 const setCurrentRestaurant: AsyncAction<string> = async (om, slug: string) => {
   const restaurant = new Restaurant()
-  await restaurant.findOne('id', slug)
+  await restaurant.findOne('slug', slug)
   om.state.home.current_restaurant = restaurant
   om.state.home.centre = {
     lng: restaurant.location.coordinates[0],

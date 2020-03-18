@@ -138,7 +138,7 @@ function SearchResults() {
           onPress={() => {
             setTimeout(() => {
               om.actions.home.clearRestaurantSearch()
-              om.actions.router.navigate('/restaurant/' + item.id)
+              om.actions.router.navigate('/restaurant/' + item.slug)
             }, 0)
           }}
           style={{ flex: 1, flexDirection: 'row' }}

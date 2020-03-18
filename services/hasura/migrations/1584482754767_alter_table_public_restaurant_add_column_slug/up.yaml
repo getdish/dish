@@ -1,0 +1,6 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."restaurant" ADD COLUMN "slug" text NOT NULL UNIQUE
+      DEFAULT gen_random_uuid();
+  type: run_sql

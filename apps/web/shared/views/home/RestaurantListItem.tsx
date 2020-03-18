@@ -33,7 +33,7 @@ export function RestaurantListItem({
         backgroundColor={isHovered ? '#B8E0F355' : 'transparent'}
       >
         <VStack padding={18} width="70%" maxWidth={525}>
-          <Link to={'/restaurant/' + restaurant.id}>
+          <Link to={'/restaurant/' + restaurant.slug}>
             <Text
               style={{
                 fontSize: 26,

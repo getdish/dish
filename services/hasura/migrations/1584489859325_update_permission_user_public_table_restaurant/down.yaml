@@ -1,0 +1,34 @@
+- args:
+    role: user
+    table:
+      name: restaurant
+      schema: public
+  type: drop_select_permission
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - id
+      - created_at
+      - updated_at
+      - name
+      - description
+      - address
+      - city
+      - state
+      - zip
+      - image
+      - location
+      - telephone
+      - website
+      - categories
+      - photos
+      - rating
+      computed_fields: []
+      filter: {}
+      limit: 100
+    role: user
+    table:
+      name: restaurant
+      schema: public
+  type: create_select_permission

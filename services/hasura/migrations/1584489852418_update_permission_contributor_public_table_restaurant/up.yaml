@@ -1,0 +1,34 @@
+- args:
+    role: contributor
+    table:
+      name: restaurant
+      schema: public
+  type: drop_select_permission
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - address
+      - categories
+      - city
+      - created_at
+      - description
+      - id
+      - image
+      - location
+      - name
+      - photos
+      - rating
+      - slug
+      - state
+      - telephone
+      - updated_at
+      - website
+      - zip
+      computed_fields: []
+      filter: {}
+    role: contributor
+    table:
+      name: restaurant
+      schema: public
+  type: create_select_permission

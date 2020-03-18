@@ -6,6 +6,7 @@ import { levenshteinDistance } from './utils'
 
 export class Restaurant extends ModelBase<Restaurant> {
   name!: string
+  slug!: string
   rating!: number
   address!: string
   location!: Point
@@ -27,6 +28,7 @@ export class Restaurant extends ModelBase<Restaurant> {
   static fields() {
     return [
       'name',
+      'slug',
       'rating',
       'address',
       'location',
@@ -124,6 +126,7 @@ export class Restaurant extends ModelBase<Restaurant> {
           },
           id: true,
           name: true,
+          slug: true,
         },
       },
     }

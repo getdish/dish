@@ -3,7 +3,8 @@
 ## Web frontend
  - [] Search: include; current results, in the region; restaurants, dishes and locations
  - [] SSR
- - [] Slugs
+ - [x] Slugs
+ - [] Do search on 404 page
  - [] Permalinks to source data
 
 # Backlog

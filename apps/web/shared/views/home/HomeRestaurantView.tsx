@@ -14,7 +14,7 @@ export default function HomeRestaurantView() {
   const slug = om.state.router.curPage.params.slug
 
   let restaurant = om.state.home.current_restaurant
-  if (slug != om.state.home.current_restaurant.id) {
+  if (slug != om.state.home.current_restaurant.slug) {
     restaurant = {} as Restaurant
     om.actions.home.setCurrentRestaurant(slug)
   }
