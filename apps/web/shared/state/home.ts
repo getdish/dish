@@ -10,26 +10,16 @@ type TopDish = {
   frequency: number
 }
 
-export type SearchResults = {
-  status: 'loading' | 'complete'
-  results: {
-    restaurants: Partial<Restaurant>[]
-    dishes: string[]
-    locations: string[]
-  }
-  is_results: boolean
-}
-
-// TODO finish merge
-// search_results: {
-//   status: 'complete',
-//   results: {
-//     restaurants: [],
-//     dishes: [],
-//     locations: [],
-//   },
-//   is_results: false,
-// },
+export type SearchResults =
+  | { status: 'loading' }
+  | {
+      status: 'complete'
+      results: {
+        restaurants: Partial<Restaurant>[]
+        dishes: string[]
+        locations: string[]
+      }
+    }
 
 type Base = {
   searchQuery: string
@@ -97,7 +87,9 @@ const pushHomeState: Action<HistoryItem> = (om, item) => {
     case 'search':
       om.state.home.states.push({
         type: 'search',
-        results: { status: 'loading', results: [] },
+        results: {
+          status: 'loading',
+        },
         ...currentBaseState,
       })
       om.actions.home.runSearch(item.params.query)
@@ -186,15 +178,42 @@ const getTopDishes: AsyncAction = async om => {
 }
 
 const runSearch: AsyncAction<string> = async (om, query: string) => {
-  const state = om.state.home.currentState
-  if (state.type == 'search') {
-    state.results = { status: 'loading', results: [] }
+  const isOnSearch = om.state.home.currentState.type == 'search'
+  console.log('runSearch', query)
+
+  if (query == '') {
+    const state = om.state.home.currentState
+    state.searchQuery = query
+    if (isOnSearch) {
+      om.actions.router.navigate({ name: 'home' })
+    }
+    return
+  }
+
+  if (!isOnSearch) {
+    om.actions.router.navigate({
+      name: 'search',
+      params: {
+        query,
+      },
+      replace: isOnSearch,
+    })
+  }
+  if (!isOnSearch || query !== om.state.home.currentState.searchQuery) {
+    const state = om.state.home.currentState
+    if (state.type != 'search') {
+      throw new Error('wut')
+    }
+    state.searchQuery = query
+    state.results = { status: 'loading' }
+    console.log('load')
     const results = await Restaurant.highestRatedByDish(
       om.state.home.currentState.centre.lat,
       om.state.home.currentState.centre.lng,
       RADIUS * 10,
       [query]
     )
+    console.log('results', results)
     state.results = { status: 'complete', results }
   }
 }
