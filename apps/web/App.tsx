@@ -88,22 +88,24 @@ function MenuContents() {
           <Text></Text>
         )}
 
-        <Link to="/">Home</Link>
+        <Link name="home">Home</Link>
 
         {state.auth.is_logged_in ? (
           <View style={{ borderTopWidth: 1, marginTop: '1em' }}>
             <Text>
               {'\n'}Account{'\n\n'}
             </Text>
-            <Link to="/" onClick={() => actions.auth.logout()}>
+            <Link name="home" onClick={() => actions.auth.logout()}>
               Logout
             </Link>
-            <Link to="/account/reviews">Reviews</Link>
+            <Link name="account" params={{ id: 'reviews' }}>
+              Reviews
+            </Link>
           </View>
         ) : (
           <>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
+            <Link name="login">Login</Link>
+            <Link name="register">Register</Link>
           </>
         )}
 
@@ -112,7 +114,7 @@ function MenuContents() {
             <Text>
               {'\n'}Admin{'\n\n'}
             </Text>
-            <Link to="/taxonomy">Taxonomy</Link>
+            <Link name="taxonomy">Taxonomy</Link>
           </View>
         )}
       </View>

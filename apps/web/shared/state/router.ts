@@ -23,8 +23,11 @@ export const routes = {
   home: new Route('/'),
   login: new Route('/login'),
   register: new Route('/register'),
+  taxonomy: new Route('/taxonomy'),
+  account: new Route<{ pane: string }>('/account/:pane'),
   search: new Route<{ query: string }>('/search/:query'),
   restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
+  user: new Route<{ id: string; pane: string }>('/user/:id/:pane'),
 }
 
 export const routeNames = Object.keys(routes) as RouteName[]
@@ -35,8 +38,8 @@ export const routePathToName: { [key in RouteName]: string } = Object.keys(
   return acc
 }, {}) as any
 
-type RoutesTable = typeof routes
-type RouteName = keyof RoutesTable
+export type RoutesTable = typeof routes
+export type RouteName = keyof RoutesTable
 
 export type NavigateItem<
   A extends keyof RoutesTable = any,
@@ -111,6 +114,35 @@ export const state: RouterState = {
 class AlreadyOnPageError extends Error {}
 const uid = () => `${Math.random()}`
 
+// const navigateToPath: Action<string> = (om, path) => {
+//   const name = path.split('/').find(x => x[0] !== '/')
+//   const route = routes[name]
+
+//   if (!route) throw new Error('wah')
+
+//   let params = {}
+//   const pathPrefixIndex = route.path.indexOf(':')
+
+//   if (pathPrefixIndex > 0) {
+//     const staticPart = route.path.slice(0, pathPrefixIndex)
+//     console.log('staticPart', staticPart)
+//     const pathParts = route.path.replace().split('/')
+//     const keys = route.path.split('/')
+//       .filter(x => x[0] === ':')
+//       .map(x => x.slice(1))
+
+//     params = keys.reduce((acc, cur) => {
+//       acc[cur] =
+//       return acc
+//     }, {})
+//   }
+
+//   om.actions.router.navigate({
+//     name,
+//     params
+//   })
+// }
+
 const navigate: Operator<NavigateItem> = pipe(
   map(
     (_, item): HistoryItem => {
@@ -118,7 +150,10 @@ const navigate: Operator<NavigateItem> = pipe(
         id: uid(),
         params: {},
         ...item,
-        path: getPathFromParams(item.name, item.params as any),
+        path: getPathFromParams({
+          name: item.name,
+          params: item.params as any,
+        }),
         search: curSearch,
       }
     }
@@ -172,7 +207,6 @@ const navigate: Operator<NavigateItem> = pipe(
 )
 
 const ignoreNextPush: Action = om => {
-  console.trace('ignore next push')
   om.state.router.ignoreNextPush = true
 }
 
@@ -281,9 +315,26 @@ export const effects = {
   },
 }
 
-function getPathFromParams(name: string, params: Object | void) {
+export function getPathFromParams({
+  name,
+  params,
+}: {
+  name: string
+  params: Object | void
+}) {
   // object to path
-  let path = routes[name].path
+  let route = routes[name]
+  if (!route) {
+    debugger
+    console.error(`no route`, name, routes)
+    return ``
+  }
+  if (!route.path) {
+    debugger
+    console.error(`no route path`, route, name, routes)
+    return ``
+  }
+  let path = route.path
   if (!params) return path
   for (const key in params) {
     path = path.replace(`:${key}`, params[key])

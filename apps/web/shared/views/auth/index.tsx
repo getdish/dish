@@ -18,7 +18,7 @@ export const LabAuth = () => {
   const or_swap = (
     <View style={styles.login_or}>
       <Text>or switch to</Text>
-      <Link to={isLogin ? '/register' : '/login'}>
+      <Link name={isLogin ? 'register' : 'login'}>
         {isLogin ? 'Register' : 'Login'}
       </Link>
     </View>

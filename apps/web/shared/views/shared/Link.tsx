@@ -1,20 +1,31 @@
 import React from 'react'
 import { useOvermind } from '../../state/om'
+import {
+  NavigateItem,
+  getPathFromParams,
+  routes,
+  RouteName,
+  RoutesTable,
+} from '../../state/router'
 
-export function Link({
-  to,
+export function Link<A extends RouteName, B extends RoutesTable[A]['params']>({
+  name: A,
+  params,
   ...props
-}: { to: string } & React.DetailedHTMLProps<
+}: React.DetailedHTMLProps<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
   HTMLAnchorElement
->) {
+> & {
+  name: RouteName
+  params?: B
+}) {
   const om = useOvermind()
   return (
     <a
-      href={to}
+      href={`/${name}/`} // todo
       onClick={e => {
         e.preventDefault()
-        om.actions.router.navigate(to)
+        om.actions.router.navigate({ name, params })
       }}
       {...props}
     />
