@@ -1,10 +1,15 @@
 import React, { useLayoutEffect } from 'react'
 import { useOvermind } from '../../state/om'
-import { routes, routePathToName } from '../../state/router'
+import { HistoryItem, routes, routePathToName } from '../../state/router'
 
-export function Route(props: { name: string; exact?: boolean; children: any }) {
+export function Route(props: {
+  name: string
+  exact?: boolean
+  children: any
+  forHistory?: HistoryItem
+}) {
   const om = useOvermind()
-  const curName = om.state.router.curPage.name
+  const curName = props.forHistory?.name ?? om.state.router.curPage.name
 
   if (props.exact) {
     if (curName === props.name) {
