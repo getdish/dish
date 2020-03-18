@@ -47,6 +47,8 @@ export type NavigateItem<
 > = {
   name: A
   params?: B
+  search?: Object
+  replace?: boolean
   callback?: OnRouteChangeCb
 }
 
@@ -245,7 +247,7 @@ const routeListen: Action<{
   page(url, ({ params, querystring }) => {
     let isGoingBack = false
     if (pop && Date.now() - pop.at < 30) {
-      if (pop.path == getPathFromParams(name, params)) {
+      if (pop.path == getPathFromParams({ name, params })) {
         const history = om.state.router.history
         const lastPath = history[history.length - 2].path
         const lastMatches = lastPath == pop.path

@@ -13,6 +13,7 @@ import top_dish_images from '../../assets/topdishes.json'
 import { Spacer } from '../shared/Spacer'
 import { SmallTitle } from '../shared/SmallTitle'
 import { Link } from '../shared/Link'
+import { HStack } from '../shared/Stacks'
 
 const styles = StyleSheet.create({
   container: {
@@ -34,7 +35,7 @@ const getImageForDish = (dish: string) => {
   return (
     <Image
       source={{ uri: image }}
-      style={{ width: 100, height: 100, borderRadius: 20 }}
+      style={{ width: '100%', height: 120, borderRadius: 20 }}
       resizeMode="cover"
     />
   )
@@ -59,12 +60,7 @@ export default function HomeViewTopDishes() {
         <SmallTitle>Top Dishes</SmallTitle>
       </View>
       <ScrollView style={{ flex: 1 }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-          }}
-        >
+        <HStack flexWrap="wrap" paddingHorizontal={10}>
           {top_dishes.map(dish => {
             const category = dish.category.replace(/"/g, '')
             return (
@@ -75,7 +71,8 @@ export default function HomeViewTopDishes() {
                   alignItems: 'center',
                   minWidth: 120,
                   width: '33%',
-                  marginBottom: 20,
+                  padding: 8,
+                  marginBottom: 5,
                 }}
                 onPress={() => {
                   om.actions.home.setSearchQuery(
@@ -90,12 +87,16 @@ export default function HomeViewTopDishes() {
                 {getImageForDish(category)}
                 <Spacer />
                 <Link name="search" params={{ query: category }}>
-                  <Text style={{ textDecorationLine: 'none' }}>{category}</Text>
+                  <Text
+                    style={{ textDecorationLine: 'none', fontWeight: 'bold' }}
+                  >
+                    {category}
+                  </Text>
                 </Link>
               </TouchableOpacity>
             )
           })}
-        </View>
+        </HStack>
       </ScrollView>
     </View>
   )

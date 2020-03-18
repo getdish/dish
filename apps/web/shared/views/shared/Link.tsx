@@ -1,12 +1,6 @@
 import React from 'react'
 import { useOvermind } from '../../state/om'
-import {
-  NavigateItem,
-  getPathFromParams,
-  routes,
-  RouteName,
-  RoutesTable,
-} from '../../state/router'
+import { RouteName, RoutesTable } from '../../state/router'
 
 export function Link<A extends RouteName, B extends RoutesTable[A]['params']>({
   name: A,
