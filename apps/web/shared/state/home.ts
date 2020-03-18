@@ -15,9 +15,14 @@ type TopDish = {
   frequency: number
 }
 
-type SearchResults = {
+export type SearchResults = {
   status: 'loading' | 'complete'
-  results: Partial<Restaurant>[]
+  results: {
+    restaurants: Partial<Restaurant>[]
+    dishes: string[]
+    locations: string[]
+  }
+  is_results: boolean
 }
 
 type HomeState = {
@@ -27,7 +32,7 @@ type HomeState = {
   panel: SlidingUpPanel
   centre: LngLat
   searchQuery: string
-  search_results: SearchResults | null
+  search_results: SearchResults
   top_dishes: TopDish[]
   top_restaurants: Restaurant[]
   current_dish: string
@@ -46,7 +51,15 @@ export const state: HomeState = {
   panel: {} as SlidingUpPanel,
   centre: { lng: -122.421351, lat: 37.759251 } as LngLat,
   searchQuery: '',
-  search_results: null,
+  search_results: {
+    status: 'complete',
+    results: {
+      restaurants: [],
+      dishes: [],
+      locations: [],
+    },
+    is_results: false,
+  },
   top_dishes: [],
   top_restaurants: [],
   current_dish: '',
@@ -83,7 +96,7 @@ const setCurrentRestaurant: AsyncAction<string> = async (om, slug: string) => {
 
 const getUserReviews: AsyncAction<string> = async (om, user_id: string) => {
   const reviews = new Review()
-  om.state.map.user_reviews = await reviews.findAllForUser(user_id)
+  om.state.home.user_reviews = await reviews.findAllForUser(user_id)
 }
 
 const getTopDishes: AsyncAction = async om => {
@@ -123,36 +136,50 @@ const navigateToSearch: AsyncAction<string> = async (om, dish: string) => {
 
 let searchVersion = 0
 
-const restaurantSearch: AsyncAction<string> = async (om, query: string) => {
-  searchVersion = (searchVersion + 1) % Number.MAX_VALUE
-
+const searchQueryUpdate: AsyncAction<string> = async (om, query: string) => {
   om.actions.home.setSearchQuery(query)
-
+  om.actions.home.clearSearch()
   if (query == '') {
-    om.state.home.search_results = null
+    om.state.home.search_results.is_results = false
   } else {
-    om.state.home.search_results = {
-      status: 'loading',
-      results: om.state.home.search_results?.results ?? [],
-    }
-    let myVersion = searchVersion
-    const next = await Restaurant.search(
-      om.state.home.centre.lat,
-      om.state.home.centre.lng,
-      RADIUS,
-      query
-    )
-    if (myVersion == searchVersion) {
-      om.state.home.search_results = {
-        status: 'complete',
-        results: next,
-      }
-    }
+    await searchRestaurants(om, query)
+    await searchDishes(om, query)
   }
 }
 
-const clearRestaurantSearch: Action = om => {
-  om.state.home.search_results = null
+const searchDishes: AsyncAction<string> = async (om, query: string) => {
+  om.state.home.search_results.results.dishes = om.state.home.top_dishes
+    .filter(dish => dish.category.toLowerCase().includes(query))
+    .map(dish => dish.category.replace(/"/g, ''))
+}
+
+const searchRestaurants: AsyncAction<string> = async (om, query: string) => {
+  searchVersion = (searchVersion + 1) % Number.MAX_VALUE
+  om.state.home.search_results.status = 'loading'
+  let myVersion = searchVersion
+  const next = await Restaurant.search(
+    om.state.home.centre.lat,
+    om.state.home.centre.lng,
+    RADIUS,
+    query
+  )
+  if (myVersion == searchVersion) {
+    om.state.home.search_results.is_results = next.length > 0
+    om.state.home.search_results.status = 'complete'
+    om.state.home.search_results.results.restaurants = next
+  }
+}
+
+const clearSearch: Action = om => {
+  om.state.home.search_results = {
+    is_results: false,
+    status: 'complete',
+    results: {
+      restaurants: [],
+      dishes: [],
+      locations: [],
+    },
+  }
 }
 
 const setMapCentre: Action<LngLat> = (om, centre: LngLat) => {
@@ -216,8 +243,9 @@ export const actions = {
   setCurrentRestaurant,
   navigateToSearch,
   getTopDishes,
-  restaurantSearch,
-  clearRestaurantSearch,
+  searchQueryUpdate,
+  searchRestaurants,
+  clearSearch,
   setMapCentre,
   getReview,
   submitReview,

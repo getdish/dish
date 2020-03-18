@@ -69,7 +69,7 @@ export default function TopDishes() {
       >
         {getImageForDish(category)}
         <Spacer />
-        <Link to={`/best/${category}`}>
+        <Link to={`/search/${category}`}>
           <Text style={{ textDecorationLine: 'none' }}>{category}</Text>
         </Link>
       </TouchableOpacity>

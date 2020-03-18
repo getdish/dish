@@ -36,9 +36,13 @@ export default function SearchBar() {
     <View style={styles.container}>
       <TextInput
         value={om.state.home.searchQuery}
-        onChangeText={text => om.actions.home.restaurantSearch(text)}
+        onChangeText={text => om.actions.home.searchQueryUpdate(text)}
         placeholder="Search all of San Francisco"
         style={styles.textInput}
+        onFocus={() => {
+          om.actions.home.clearSearch()
+          om.actions.home.getTopDishes()
+        }}
       />
 
       <style

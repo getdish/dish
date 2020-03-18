@@ -37,7 +37,7 @@ export const routePathToName: { [key in RouteName]: string } = Object.keys(
 type RoutesTable = typeof routes
 type RouteName = keyof RoutesTable
 
-type NavigateItem<
+export type NavigateItem<
   A extends keyof RoutesTable = any,
   B extends RoutesTable[A]['params'] = RoutesTable[A]['params']
 > = {

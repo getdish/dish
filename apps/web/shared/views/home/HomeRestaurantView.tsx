@@ -53,7 +53,7 @@ export default function HomeRestaurantView() {
         <Text style={{ fontSize: 15 }}>
           {categories.map((category, index) => (
             <Text key={category}>
-              <Link to={'/best/' + category}>{category}</Link>
+              <Link to={'/search/' + category}>{category}</Link>
               {index == categories.length - 1 ? '' : ', '}
             </Text>
           ))}

@@ -2,16 +2,18 @@ import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
 
 import { useOvermind } from '../../state/om'
-import Restaurant from './HomeRestaurantView'
+import HomeRestaurantView from './HomeRestaurantView'
 import TopDishes from './TopDishes'
 import HomeSearchResultsView from './HomeSearchResultsView'
 import SearchBar from './SearchBar'
 import { Spacer } from '../shared/Spacer'
 import { VStack } from '../shared/Stacks'
 import { useWindowSize } from '../../hooks/useWindowSize'
-import Stack from '../shared/Stack'
 import { HomeBreadcrumbs } from './HomeBreadcrumbs'
 import { Route } from '../shared/Route'
+import { Restaurant } from '@dish/models'
+import { NavigateItem } from '../../state/router'
+import { SmallTitle } from '../shared/SmallTitle'
 
 const styles = StyleSheet.create({
   container: {
@@ -43,7 +45,9 @@ export function useHomeDrawerWidth(): number {
 export default function HomeMainPane() {
   const om = useOvermind()
   const searchResults = om.state.home.search_results
-  const showSearchResults = !!searchResults
+  const showSearchResults =
+    searchResults.status == 'loading' || searchResults.is_results
+
   const drawerWidth = useHomeDrawerWidth()
 
   return (
@@ -103,7 +107,7 @@ export default function HomeMainPane() {
               <TopDishes />
             </Route>
             <Route name="restaurant">
-              <Restaurant />
+              <HomeRestaurantView />
             </Route>
             <Route name="search">
               <HomeSearchResultsView />
@@ -118,47 +122,108 @@ export default function HomeMainPane() {
 function SearchResults() {
   const om = useOvermind()
   const searchResults = om.state.home.search_results
-  console.log('searchResults', searchResults)
-
   return (
     <View>
-      {searchResults?.results.length == 0 &&
-        searchResults.status == 'complete' && (
-          <ContentSection>
-            <Text>Nothing found!</Text>
-          </ContentSection>
-        )}
+      {!searchResults?.is_results && searchResults.status == 'complete' && (
+        <ContentSection>
+          <Text>Nothing found!</Text>
+        </ContentSection>
+      )}
       {searchResults.status == 'loading' && (
         <ContentSection>
           <Text>Loading...</Text>
         </ContentSection>
       )}
-      {searchResults?.results.map((item, index) => (
-        <TouchableOpacity
-          onPress={() => {
-            setTimeout(() => {
-              om.actions.home.clearRestaurantSearch()
-              om.actions.router.navigate('/restaurant/' + item.slug)
-            }, 0)
-          }}
-          style={{ flex: 1, flexDirection: 'row' }}
-        >
-          <View
-            key={index}
-            style={{
-              justifyContent: 'flex-start',
-              flexDirection: 'row',
-              alignItems: 'center',
-              margin: 5,
-              padding: 8,
-              flex: 1,
-            }}
-          >
-            <Text style={{ color: '#555' }}>{item.name}</Text>
-          </View>
-        </TouchableOpacity>
-      ))}
+      {Object.keys(searchResults.results).map(key => {
+        const section = searchResults.results[key]
+        switch (key) {
+          case 'restaurants':
+            return RestaurantResults(section)
+          case 'dishes':
+            return DishResults(section)
+        }
+      })}
     </View>
+  )
+}
+
+function RestaurantResults(results: Partial<Restaurant>[]) {
+  if (results.length == 0) {
+    return
+  }
+  return (
+    <ContentSection key="restaurant_results">
+      <SmallTitle>Restaurants</SmallTitle>
+      {results.map((restaurant, index) => (
+        <Result
+          key={index}
+          destination={{
+            name: 'restaurant',
+            params: {
+              slug: restaurant.slug,
+            },
+          }}
+          title={restaurant.name}
+        />
+      ))}
+    </ContentSection>
+  )
+}
+
+function DishResults(results: string[]) {
+  if (results.length == 0) {
+    return
+  }
+  return (
+    <ContentSection key="dish_results">
+      <SmallTitle>Dishes</SmallTitle>
+      {results.map((dish, index) => (
+        <Result
+          key={index}
+          destination={{
+            name: 'search',
+            params: {
+              query: dish,
+            },
+          }}
+          title={dish}
+        />
+      ))}
+    </ContentSection>
+  )
+}
+
+function Result({
+  destination,
+  title,
+}: {
+  destination: NavigateItem<any, any>
+  title: string
+}) {
+  const om = useOvermind()
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        setTimeout(() => {
+          om.actions.home.clearSearch()
+          om.actions.router.navigate(destination)
+        }, 0)
+      }}
+      style={{ flex: 1, flexDirection: 'row' }}
+    >
+      <View
+        style={{
+          justifyContent: 'flex-start',
+          flexDirection: 'row',
+          alignItems: 'center',
+          margin: 5,
+          padding: 8,
+          flex: 1,
+        }}
+      >
+        <Text style={{ color: '#555' }}>{title}</Text>
+      </View>
+    </TouchableOpacity>
   )
 }
 
