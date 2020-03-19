@@ -8,6 +8,8 @@ import {
 } from 'react-native'
 
 import { useOvermind } from '../../state/om'
+import { ZStack, HStack, VStack } from '../shared/Stacks'
+import { Spacer } from '../shared/Spacer'
 
 const styles = StyleSheet.create({
   container: {
@@ -27,6 +29,7 @@ const styles = StyleSheet.create({
     padding: 12,
     flex: 1,
     fontSize: 20,
+    textAlign: 'center',
   },
 })
 
@@ -37,7 +40,7 @@ export default function SearchBar() {
       <TextInput
         value={om.state.home.currentState.searchQuery}
         onChangeText={text => om.actions.home.runSearch(text)}
-        placeholder="Search all of San Francisco"
+        placeholder="The food in San Francisco"
         style={styles.textInput}
         onFocus={() => {
           om.actions.home.clearSearch()
@@ -52,21 +55,27 @@ export default function SearchBar() {
         }}
       />
 
-      {om.state.home.currentState.searchQuery !== '' && (
-        <TouchableOpacity
-          style={{
-            padding: 10,
-          }}
-          onPress={() => {
-            om.actions.home.setSearchQuery('')
-            if (om.state.router.history.length > 1) {
-              om.actions.router.back()
-            }
-          }}
-        >
-          <Text style={{ opacity: 0.5, fontSize: 22 }}>x</Text>
-        </TouchableOpacity>
-      )}
+      <ZStack fullscreen pointerEvents="none">
+        <HStack flex={1}>
+          <Spacer flex={1} />
+          <VStack pointerEvents="auto">
+            <TouchableOpacity
+              style={{
+                padding: 10,
+                opacity: om.state.home.currentState.searchQuery === '' ? 0 : 1,
+              }}
+              onPress={() => {
+                om.actions.home.setSearchQuery('')
+                if (om.state.router.history.length > 1) {
+                  om.actions.router.back()
+                }
+              }}
+            >
+              <Text style={{ opacity: 0.5, fontSize: 12 }}>❌</Text>
+            </TouchableOpacity>
+          </VStack>
+        </HStack>
+      </ZStack>
     </View>
   )
 }

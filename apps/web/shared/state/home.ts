@@ -147,16 +147,6 @@ const setSearchQuery: Action<string> = (om, next) => {
   om.state.home.currentState.searchQuery = next
 }
 
-const updateRestaurants: AsyncAction<LngLat> = async (om, centre: LngLat) => {
-  const restaurants = await Restaurant.findNear(centre.lat, centre.lng, RADIUS)
-  const state = [...om.state.home.states]
-    .reverse()
-    .find(x => x.type === 'search') as HomeStateItemSearch | null
-  if (state) {
-    state.results = restaurants
-  }
-}
-
 const setCurrentRestaurant: AsyncAction<string> = async (om, slug: string) => {
   const restaurant = new Restaurant()
   await restaurant.findOne('slug', slug)
@@ -209,7 +199,6 @@ const getTopDishes: AsyncAction = async om => {
 
 const runSearch: AsyncAction<string> = async (om, query: string) => {
   const isOnSearch = om.state.home.currentState.type == 'search'
-  console.log('runSearch', query)
 
   if (query == '') {
     const state = om.state.home.currentState
@@ -217,7 +206,6 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
     if (isOnSearch) {
       om.actions.router.navigate({ name: 'home' })
     }
-    console.log('nope')
     return
   }
 
@@ -231,11 +219,9 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
     })
   }
 
-  const state = om.state.home.currentState
-  if (state.type != 'search') {
-    console.log('bye')
-    throw new Error('wut')
-  }
+  const state = [...om.state.home.states]
+    .reverse()
+    .find(x => x.type === 'search') as HomeStateItemSearch
   state.searchQuery = query
   state.results = { status: 'loading' }
 
@@ -322,7 +308,6 @@ export const actions = {
   _pushHomeState,
   _popHomeState,
   setHoveredRestaurant,
-  updateRestaurants,
   setCurrentRestaurant,
   runSearch,
   getTopDishes,

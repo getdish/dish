@@ -13,7 +13,7 @@ import top_dish_images from '../../assets/topdishes.json'
 import { Spacer } from '../shared/Spacer'
 import { SmallTitle } from '../shared/SmallTitle'
 import { Link } from '../shared/Link'
-import { HStack } from '../shared/Stacks'
+import { HStack, VStack } from '../shared/Stacks'
 
 const styles = StyleSheet.create({
   container: {
@@ -55,10 +55,7 @@ export default function HomeViewTopDishes() {
   const { top_dishes = [] } = state
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <SmallTitle>Top Dishes</SmallTitle>
-      </View>
+    <VStack flex={1} paddingVertical={16}>
       <ScrollView style={{ flex: 1 }}>
         <HStack flexWrap="wrap" paddingHorizontal={10}>
           {top_dishes.map(dish => {
@@ -98,6 +95,6 @@ export default function HomeViewTopDishes() {
           })}
         </HStack>
       </ScrollView>
-    </View>
+    </VStack>
   )
 }

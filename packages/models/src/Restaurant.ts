@@ -131,10 +131,10 @@ export class Restaurant extends ModelBase<Restaurant> {
             limit: 10,
           },
           id: true,
-          name: true,
-          slug: true,
-          photos: true,
-          image: true,
+          ...Restaurant.fields().reduce((acc, cur) => {
+            acc[cur] = true
+            return acc
+          }, {}),
         },
       },
     }
