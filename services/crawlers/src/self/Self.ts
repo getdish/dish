@@ -193,7 +193,6 @@ export class Self extends WorkerJob {
   }
 
   addHours() {
-    console.log(this.yelp.getData('data_from_html_embed.bizHoursProps'))
     this.restaurant.hours = this.yelp.getData(
       'data_from_html_embed.bizHoursProps.hoursInfoRows',
       []
@@ -227,7 +226,6 @@ export class Self extends WorkerJob {
     }
 
     path = this.michelin.getData('main.url')
-
     if (path != '') {
       this.restaurant.sources.michelin = 'https://guide.michelin.com' + path
     }

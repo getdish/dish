@@ -171,8 +171,8 @@ export class Restaurant extends ModelBase<Restaurant> {
   }
 
   static async saveCanonical(
-    lat: number,
     lon: number,
+    lat: number,
     name: string,
     street_address: string
   ) {
