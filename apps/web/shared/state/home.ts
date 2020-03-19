@@ -1,7 +1,8 @@
-import { ModelBase, Restaurant, Review, Dish } from '@dish/models'
+import { ModelBase, Restaurant, Review } from '@dish/models'
 import { Action, AsyncAction, Derive } from 'overmind'
 import _ from 'lodash'
 import { HistoryItem } from './router'
+import { isEqual } from '@o/fast-compare'
 
 type LngLat = { lng: number; lat: number }
 
@@ -26,22 +27,27 @@ type Base = {
   centre: LngLat
   historyId?: string
 }
+
 export type HomeStateItemHome = Base & {
   type: 'home'
   top_dishes?: TopDish[]
   top_restaurants?: Restaurant[]
 }
+
 export type HomeStateItemSearch = Base & {
   type: 'search'
   results: SearchResults
 }
+
 export type HomeStateItemRestaurant = Base & {
   type: 'restaurant'
   restaurant: Restaurant | null
   reviews: Review[]
   review: Review | null
 }
+
 export type HomeStateItemDish = Base & { type: 'dish'; dish: string }
+
 export type HomeStateItem =
   | HomeStateItemHome
   | HomeStateItemSearch
@@ -53,6 +59,7 @@ type HomeState = {
   states: HomeStateItem[]
   breadcrumbStates: Derive<HomeState, HomeStateItem[]>
   currentState: Derive<HomeState, HomeStateItem>
+  previousState: Derive<HomeState, HomeStateItem>
 }
 
 const RADIUS = 0.015
@@ -66,6 +73,7 @@ export const state: HomeState = {
     return state.states.slice(lastHomeIndex)
   },
   currentState: state => _.last(state.states),
+  previousState: state => state.states[state.states.length - 2],
 }
 
 const _pushHomeState: Action<HistoryItem> = (om, item) => {
@@ -76,33 +84,56 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
     centre: currentState?.centre ?? { lng: -122.421351, lat: 37.759251 },
   }
 
+  let nextState: HomeStateItem | null = null
+  let fetchData: Function | null = null
+
   switch (item.name) {
     case 'home':
-      om.state.home.states.push({
+      const lastHomeState = [...om.state.home.states]
+        .reverse()
+        .find(x => x.type === 'home')
+      nextState = {
         type: 'home',
         ...currentBaseState,
-      })
-      return
+        ...lastHomeState,
+      }
+      break
     case 'search':
-      om.state.home.states.push({
+      const lastMatchingSearchState = [...om.state.home.states]
+        .reverse()
+        .find(
+          x => x.type === 'search' && x.searchQuery == item.params.query
+        ) as HomeStateItemSearch
+
+      nextState = {
         type: 'search',
         results: {
           status: 'loading',
         },
+        ...lastMatchingSearchState,
         ...currentBaseState,
-      })
-      om.actions.home.runSearch(item.params.query)
-      return
+      }
+      fetchData = () => {
+        om.actions.home.runSearch(item.params.query)
+      }
+      break
     case 'restaurant':
-      om.state.home.states.push({
+      nextState = {
         type: 'restaurant',
         restaurant: null,
         review: null,
         reviews: [],
         ...currentBaseState,
-      })
-      om.actions.home.setCurrentRestaurant(item.params.slug)
-      return
+      }
+      fetchData = () => {
+        om.actions.home.setCurrentRestaurant(item.params.slug)
+      }
+      break
+  }
+
+  om.state.home.states.push(nextState)
+  if (fetchData) {
+    fetchData()
   }
 }
 
@@ -186,6 +217,7 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
     if (isOnSearch) {
       om.actions.router.navigate({ name: 'home' })
     }
+    console.log('nope')
     return
   }
 
@@ -198,50 +230,39 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
       replace: isOnSearch,
     })
   }
-  if (!isOnSearch || query !== om.state.home.currentState.searchQuery) {
-    const state = om.state.home.currentState
-    if (state.type != 'search') {
-      throw new Error('wut')
-    }
-    state.searchQuery = query
-    state.results = { status: 'loading' }
-    console.log('load')
-    const restaurants = await Restaurant.search(
+
+  const state = om.state.home.currentState
+  if (state.type != 'search') {
+    console.log('bye')
+    throw new Error('wut')
+  }
+  state.searchQuery = query
+  state.results = { status: 'loading' }
+
+  const [restaurants, topRestaurants] = await Promise.all([
+    Restaurant.search(
       om.state.home.currentState.centre.lat,
       om.state.home.currentState.centre.lng,
       RADIUS,
       query
-    )
-    console.log('results', restaurants)
-    state.results = {
-      status: 'complete',
-      results: { restaurants, dishes: [], locations: [] },
-    }
+    ),
+    Restaurant.highestRatedByDish(
+      om.state.home.currentState.centre.lat,
+      om.state.home.currentState.centre.lng,
+      RADIUS,
+      [query]
+    ),
+  ])
+
+  state.results = {
+    status: 'complete',
+    results: {
+      restaurants: [...topRestaurants, ...restaurants],
+      dishes: [],
+      locations: [],
+    },
   }
 }
-
-// let searchVersion = 0
-// const restaurantSearch: AsyncAction<string> = async (om, query: string) => {
-//   searchVersion = (searchVersion + 1) % Number.MAX_VALUE
-//   om.actions.home.setSearchQuery(query)
-
-//   if (query == '') {
-//     om.state.home.search_results = null
-//   } else {
-//     om.state.home.search_results = {
-//       status: 'loading',
-//       results: om.state.home.search_results?.results ?? [],
-//     }
-//     let myVersion = searchVersion
-
-//     if (myVersion == searchVersion) {
-//       om.state.home.search_results = {
-//         status: 'complete',
-//         results: next,
-//       }
-//     }
-//   }
-// }
 
 const clearSearch: Action = om => {
   const state = om.state.home.currentState

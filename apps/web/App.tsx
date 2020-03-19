@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useLayoutEffect } from 'react'
 import { StyleSheet, View, Text, ScrollView, Dimensions } from 'react-native'
 import { ApolloProvider } from '@apollo/client'
 import { createOvermind, Overmind, Config } from 'overmind'
@@ -29,31 +29,30 @@ function StatefulApp() {
   const om = useOvermind()
 
   // start app!
-  useOnMount(async () => {
-    om.actions.auth.checkForExistingLogin()
-
-    await om.actions.router.start({
-      onRouteChange: ({ type, name, item }) => {
-        console.log('onRouteChange', type, name, item)
-        switch (name) {
-          case 'home':
-          case 'search':
-          case 'restaurant':
-            if (type === 'push') {
-              om.actions.home._pushHomeState(item)
-            } else {
-              om.actions.home._popHomeState(item)
-            }
-            return
-        }
-      },
-    })
-
-    setTimeout(() => {
-      console.log('now start')
+  useLayoutEffect(() => {
+    async function start() {
+      om.actions.auth.checkForExistingLogin()
+      await om.actions.router.start({
+        onRouteChange: ({ type, name, item }) => {
+          console.log('onRouteChange', type, name, item)
+          switch (name) {
+            case 'home':
+            case 'search':
+            case 'restaurant':
+              if (type === 'push') {
+                om.actions.home._pushHomeState(item)
+              } else {
+                om.actions.home._popHomeState(item)
+              }
+              return
+          }
+        },
+      })
       setIsStarted(true)
-    }, 16)
-  })
+    }
+
+    start()
+  }, [])
 
   if (!started) {
     return <Splash />
@@ -92,9 +91,7 @@ function MenuContents() {
 
         {state.auth.is_logged_in ? (
           <View style={{ borderTopWidth: 1, marginTop: '1em' }}>
-            <Text>
-              {'\n'}Account{'\n\n'}
-            </Text>
+            <Text>Account</Text>
             <Link name="home" onClick={() => actions.auth.logout()}>
               Logout
             </Link>
@@ -111,9 +108,7 @@ function MenuContents() {
 
         {state.auth.is_logged_in && state.auth.user.role == 'admin' && (
           <View style={{ borderTopWidth: 1, marginTop: '1em' }}>
-            <Text>
-              {'\n'}Admin{'\n\n'}
-            </Text>
+            <Text>Admin</Text>
             <Link name="taxonomy">Taxonomy</Link>
           </View>
         )}

@@ -2,16 +2,19 @@ import React from 'react'
 import { useOvermind } from '../../state/om'
 import { RouteName, RoutesTable } from '../../state/router'
 
-export function Link<A extends RouteName, B extends RoutesTable[A]['params']>({
-  name: A,
+export function Link<
+  Name extends keyof RoutesTable = keyof RoutesTable,
+  Params = RoutesTable[Name]['params']
+>({
+  name,
   params,
   ...props
 }: React.DetailedHTMLProps<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
   HTMLAnchorElement
 > & {
-  name: RouteName
-  params?: B
+  name: Name
+  params: Params
 }) {
   const om = useOvermind()
   return (
@@ -19,7 +22,7 @@ export function Link<A extends RouteName, B extends RoutesTable[A]['params']>({
       href={`/${name}/`} // todo
       onClick={e => {
         e.preventDefault()
-        om.actions.router.navigate({ name, params })
+        om.actions.router.navigate({ name, params } as any)
       }}
       {...props}
     />
