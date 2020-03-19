@@ -11,9 +11,6 @@ import { VStack, ZStack, StackBaseProps } from '../shared/Stacks'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import { HomeBreadcrumbs } from './HomeBreadcrumbs'
 import { Route } from '../shared/Route'
-import { Restaurant } from '@dish/models'
-import { NavigateItem } from '../../state/router'
-import { SmallTitle } from '../shared/SmallTitle'
 
 const styles = StyleSheet.create({
   container: {
@@ -143,7 +140,7 @@ function StackView<A>(props: {
           key={index}
           flex={1}
           zIndex={index}
-          top={index * 10}
+          top={index * 20}
           shadowColor="rgba(0,0,0,0.2)"
           shadowRadius={10}
           borderRadius={20}

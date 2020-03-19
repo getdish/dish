@@ -115,7 +115,11 @@ function HomeMap() {
   const restaurants = _.uniqBy(
     [
       ...(state.type == 'home' ? state.top_restaurants ?? [] : []),
-      ...(state.type == 'search' ? state.results.results ?? [] : []),
+      ...(state.type == 'search'
+        ? state.results.status == 'complete'
+          ? state.results.results.restaurants
+          : []
+        : []),
       curRestaurant,
     ].filter(x => !!x?.location?.coordinates),
     x => x.id

@@ -5,7 +5,11 @@ import { HStack } from '../shared/Stacks'
 
 export function HomeBreadcrumbs() {
   const om = useOvermind()
-  const parents = om.state.home.states
+  let parents = om.state.home.breadcrumbStates
+
+  if (parents[0].type != 'home') {
+    parents = [{ type: 'home', searchQuery: '', centre: null }, ...parents]
+  }
 
   return (
     <HStack padding={10}>

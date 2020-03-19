@@ -40,7 +40,7 @@ function HomeSearchResultsViewContent({
       </View>
       {results &&
         results.status == 'complete' &&
-        results.results.map((restaurant, index) => {
+        results.results.restaurants?.map((restaurant, index) => {
           return (
             <RestaurantListItem
               key={index}

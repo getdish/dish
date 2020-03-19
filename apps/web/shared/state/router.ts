@@ -26,8 +26,8 @@ export const routes = {
   taxonomy: new Route('/taxonomy'),
   account: new Route<{ pane: string }>('/account/:pane'),
   search: new Route<{ query: string }>('/search/:query'),
-  restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
-  user: new Route<{ id: string; pane: string }>('/user/:id/:pane'),
+  restaurant: new Route<{ slug: string }>('/restaurant/:slug/:dish?'),
+  user: new Route<{ id: string; pane: string }>('/user/:id/:pane?'),
 }
 
 export const routeNames = Object.keys(routes) as RouteName[]
@@ -115,35 +115,6 @@ export const state: RouterState = {
 
 class AlreadyOnPageError extends Error {}
 const uid = () => `${Math.random()}`
-
-// const navigateToPath: Action<string> = (om, path) => {
-//   const name = path.split('/').find(x => x[0] !== '/')
-//   const route = routes[name]
-
-//   if (!route) throw new Error('wah')
-
-//   let params = {}
-//   const pathPrefixIndex = route.path.indexOf(':')
-
-//   if (pathPrefixIndex > 0) {
-//     const staticPart = route.path.slice(0, pathPrefixIndex)
-//     console.log('staticPart', staticPart)
-//     const pathParts = route.path.replace().split('/')
-//     const keys = route.path.split('/')
-//       .filter(x => x[0] === ':')
-//       .map(x => x.slice(1))
-
-//     params = keys.reduce((acc, cur) => {
-//       acc[cur] =
-//       return acc
-//     }, {})
-//   }
-
-//   om.actions.router.navigate({
-//     name,
-//     params
-//   })
-// }
 
 const navigate: Operator<NavigateItem> = pipe(
   map(
@@ -343,3 +314,32 @@ export function getPathFromParams({
   }
   return path
 }
+
+// const navigateToPath: Action<string> = (om, path) => {
+//   const name = path.split('/').find(x => x[0] !== '/')
+//   const route = routes[name]
+
+//   if (!route) throw new Error('wah')
+
+//   let params = {}
+//   const pathPrefixIndex = route.path.indexOf(':')
+
+//   if (pathPrefixIndex > 0) {
+//     const staticPart = route.path.slice(0, pathPrefixIndex)
+//     console.log('staticPart', staticPart)
+//     const pathParts = route.path.replace().split('/')
+//     const keys = route.path.split('/')
+//       .filter(x => x[0] === ':')
+//       .map(x => x.slice(1))
+
+//     params = keys.reduce((acc, cur) => {
+//       acc[cur] =
+//       return acc
+//     }, {})
+//   }
+
+//   om.actions.router.navigate({
+//     name,
+//     params
+//   })
+// }

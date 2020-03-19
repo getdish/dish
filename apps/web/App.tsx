@@ -40,9 +40,9 @@ function StatefulApp() {
           case 'search':
           case 'restaurant':
             if (type === 'push') {
-              om.actions.home.pushHomeState(item)
+              om.actions.home._pushHomeState(item)
             } else {
-              om.actions.home.popHomeState(item)
+              om.actions.home._popHomeState(item)
             }
             return
         }
