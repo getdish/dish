@@ -14,9 +14,9 @@ export class Restaurant extends ModelBase<Restaurant> {
   city!: string
   state!: string
   zip!: number
-  image!: string
+  image?: string
   categories!: string[]
-  photos!: string[]
+  photos?: string[]
   telephone!: string
   website!: string
   dishes!: Dish[]
@@ -105,7 +105,7 @@ export class Restaurant extends ModelBase<Restaurant> {
     lng: number,
     distance: number,
     search_query: string
-  ) {
+  ): Promise<Restaurant[]> {
     const query = {
       query: {
         restaurant: {
@@ -134,7 +134,7 @@ export class Restaurant extends ModelBase<Restaurant> {
     }
     const response = await ModelBase.hasura(query)
     return response.data.data.restaurant.map(
-      (data: Partial<Restaurant>) => data
+      (data: Partial<Restaurant>) => new Restaurant(data)
     )
   }
 
@@ -220,7 +220,7 @@ export class Restaurant extends ModelBase<Restaurant> {
     lng: number,
     distance: number,
     dishes: string[]
-  ) {
+  ): Promise<Restaurant[]> {
     const query = {
       query: {
         restaurant: {
@@ -246,11 +246,15 @@ export class Restaurant extends ModelBase<Restaurant> {
     }
     const response = await ModelBase.hasura(query)
     return response.data.data.restaurant.map(
-      (data: Partial<Restaurant>) => data
+      (data: Partial<Restaurant>) => new Restaurant(data)
     )
   }
 
   async delete() {
     await Restaurant.deleteAllBy('id', this.id)
+  }
+
+  get allPhotos() {
+    return [this.image, ...(this.photos ?? [])].filter(Boolean)
   }
 }

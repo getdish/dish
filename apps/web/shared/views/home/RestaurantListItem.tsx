@@ -89,20 +89,18 @@ export function RestaurantListItem({
           </VStack>
 
           <HStack>
-            {[restaurant.image, ...restaurant.photos]
-              .slice(0, 3)
-              .map((photo, i) => {
-                return (
-                  <React.Fragment key={i}>
-                    <Image
-                      source={{ uri: photo }}
-                      style={{ width: 130, height: 130, borderRadius: 20 }}
-                      resizeMode="cover"
-                    />
-                    <Spacer size="lg" />
-                  </React.Fragment>
-                )
-              })}
+            {restaurant.allPhotos.slice(0, 3).map((photo, i) => {
+              return (
+                <React.Fragment key={i}>
+                  <Image
+                    source={{ uri: photo }}
+                    style={{ width: 130, height: 130, borderRadius: 20 }}
+                    resizeMode="cover"
+                  />
+                  <Spacer size="lg" />
+                </React.Fragment>
+              )
+            })}
           </HStack>
         </HStack>
       </TouchableOpacity>

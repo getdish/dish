@@ -26,8 +26,10 @@ export const routes = {
   taxonomy: new Route('/taxonomy'),
   account: new Route<{ pane: string }>('/account/:pane'),
   search: new Route<{ query: string }>('/search/:query'),
-  restaurant: new Route<{ slug: string }>('/restaurant/:slug/:dish?'),
-  user: new Route<{ id: string; pane: string }>('/user/:id/:pane?'),
+  restaurant: new Route<{ slug: string; dish?: string }>(
+    '/restaurant/:slug/:dish?'
+  ),
+  user: new Route<{ id: string; pane?: string }>('/user/:id/:pane?'),
 }
 
 export const routeNames = Object.keys(routes) as RouteName[]
@@ -42,11 +44,13 @@ export type RoutesTable = typeof routes
 export type RouteName = keyof RoutesTable
 
 export type NavigateItem<
-  A extends keyof RoutesTable = any,
-  B extends RoutesTable[A]['params'] = RoutesTable[A]['params']
-> = {
-  name: A
-  params?: B
+  T = {
+    [K in keyof RoutesTable]: {
+      name: K
+      params?: RoutesTable[K]['params']
+    }
+  }
+> = T[keyof T] & {
   search?: Object
   replace?: boolean
   callback?: OnRouteChangeCb
@@ -56,6 +60,7 @@ export type HistoryItem<A extends RouteName = any> = {
   id: string
   name: A
   path: string
+  type?: 'push' | 'pop'
   search?: Object
   params?: RoutesTable[A]
   replace?: boolean
@@ -63,9 +68,8 @@ export type HistoryItem<A extends RouteName = any> = {
 
 export type RouterState = {
   notFound: boolean
-  historyIndex: number
   history: HistoryItem[]
-  lastPage: Derive<RouterState, HistoryItem | undefined>
+  prevPage: Derive<RouterState, HistoryItem | undefined>
   curPage: Derive<RouterState, HistoryItem>
   ignoreNextPush: boolean
 }
@@ -106,11 +110,10 @@ const defaultPage = {
 
 export const state: RouterState = {
   notFound: false,
-  historyIndex: -1,
   history: [],
   ignoreNextPush: false,
-  lastPage: state => state.history[state.historyIndex - 1],
-  curPage: state => state.history[state.historyIndex] || defaultPage,
+  prevPage: state => state.history[state.history.length - 2],
+  curPage: state => state.history[state.history.length - 1] || defaultPage,
 }
 
 class AlreadyOnPageError extends Error {}
@@ -141,16 +144,24 @@ const navigate: Operator<NavigateItem> = pipe(
     if (alreadyOnPage) {
       throw new AlreadyOnPageError()
     }
-    om.state.router.history = [...om.state.router.history, item]
-    if (!item.replace) {
-      om.state.router.historyIndex++
+
+    const isGoingBack = isEqual(
+      _.omit(om.state.router.prevPage, 'id'),
+      _.omit(item, 'id')
+    )
+    if (isGoingBack) {
+      om.actions.router.back()
+      throw new AlreadyOnPageError()
+    }
+
+    if (item.replace) {
+      const next = _.dropRight(om.state.router.history)
+      om.state.router.history = [...next, item]
+    } else {
+      om.state.router.history = [...om.state.router.history, item]
     }
   }),
   run((om, item) => {
-    console.log(
-      'om.state.router.ignoreNextPush',
-      om.state.router.ignoreNextPush
-    )
     if (!om.state.router.ignoreNextPush) {
       if (onRouteChange) {
         onRouteChange({
@@ -184,24 +195,16 @@ const ignoreNextPush: Action = om => {
 }
 
 const back: Action = om => {
-  if (om.state.router.historyIndex > 0) {
-    // subtract two because back will add one!
-    om.state.router.historyIndex -= 2
-    window.history.back()
-  }
+  window.history.back()
 }
 
 const forward: Action = om => {
-  if (om.state.router.historyIndex < om.state.router.history.length - 1) {
-    // subtract two because forward will add one!
-    om.state.router.historyIndex += 2
-    window.history.forward()
-  }
+  window.history.forward()
 }
 
 let curSearch = {}
 
-let pop: { path: string; at: number }
+let pop: { path: string; at: number } | null = null
 window.addEventListener('popstate', event => {
   pop = {
     path: event.state.path,
@@ -218,6 +221,12 @@ const routeListen: Action<{
   page(url, ({ params, querystring }) => {
     let isGoingBack = false
     if (pop && Date.now() - pop.at < 30) {
+      console.log(
+        'pop',
+        Date.now() - pop.at,
+        pop.path,
+        getPathFromParams({ name, params })
+      )
       if (pop.path == getPathFromParams({ name, params })) {
         const history = om.state.router.history
         const lastPath = history[history.length - 2].path
@@ -231,7 +240,6 @@ const routeListen: Action<{
     curSearch = queryString.parse(querystring)
 
     if (isGoingBack) {
-      om.state.router.historyIndex -= 1
       const last = _.last(om.state.router.history)
       if (onRouteChange) {
         onRouteChange({ type: 'pop', name, item: last })

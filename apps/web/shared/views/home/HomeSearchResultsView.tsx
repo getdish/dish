@@ -18,9 +18,11 @@ const styles = StyleSheet.create({
 export default function HomeSearchResultsView() {
   const om = useOvermind()
   const state = om.state.home.currentState as HomeStateItemSearch
+
   if (state.type != 'search') {
     return null
   }
+
   return <HomeSearchResultsViewContent state={state} />
 }
 
