@@ -68,8 +68,7 @@ export const state: HomeState = {
   currentState: state => _.last(state.states),
 }
 
-const pushHomeState: Action<HistoryItem> = (om, item) => {
-  console.log('push home state', item)
+const _pushHomeState: Action<HistoryItem> = (om, item) => {
   const { currentState } = om.state.home
   const currentBaseState = {
     historyId: item.id,
@@ -107,7 +106,7 @@ const pushHomeState: Action<HistoryItem> = (om, item) => {
   }
 }
 
-const popHomeState: Action<HistoryItem> = (om, item) => {
+const _popHomeState: Action<HistoryItem> = (om, item) => {
   if (om.state.home.states.length > 1) {
     om.state.home.states = _.dropRight(om.state.home.states)
   }
@@ -207,14 +206,17 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
     state.searchQuery = query
     state.results = { status: 'loading' }
     console.log('load')
-    const results = await Restaurant.highestRatedByDish(
+    const restaurants = await Restaurant.search(
       om.state.home.currentState.centre.lat,
       om.state.home.currentState.centre.lng,
-      RADIUS * 10,
-      [query]
+      RADIUS,
+      query
     )
-    console.log('results', results)
-    state.results = { status: 'complete', results }
+    console.log('results', restaurants)
+    state.results = {
+      status: 'complete',
+      results: { restaurants, dishes: [], locations: [] },
+    }
   }
 }
 
@@ -231,12 +233,7 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
 //       results: om.state.home.search_results?.results ?? [],
 //     }
 //     let myVersion = searchVersion
-//     const next = await Restaurant.search(
-//       om.state.home.currentState.centre.lat,
-//       om.state.home.currentState.centre.lng,
-//       RADIUS,
-//       query
-//     )
+
 //     if (myVersion == searchVersion) {
 //       om.state.home.search_results = {
 //         status: 'complete',
@@ -301,8 +298,8 @@ const setHoveredRestaurant: Action<Restaurant | null> = (om, val) => {
 }
 
 export const actions = {
-  pushHomeState,
-  popHomeState,
+  _pushHomeState,
+  _popHomeState,
   setHoveredRestaurant,
   updateRestaurants,
   setCurrentRestaurant,

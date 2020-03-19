@@ -127,6 +127,8 @@ export class Restaurant extends ModelBase<Restaurant> {
           id: true,
           name: true,
           slug: true,
+          photos: true,
+          image: true,
         },
       },
     }
