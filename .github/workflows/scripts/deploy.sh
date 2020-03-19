@@ -20,6 +20,14 @@ cat $KEY_PATH.base64 | base64 -d > $KEY_PATH
 git-crypt unlock $KEY_PATH
 
 echo "Deploying production branch to production..."
+pushd services/hasura
+HASURA_ADMIN=$(\
+  grep 'HASURA_GRAPHQL_ADMIN_SECRET:' env.enc.production.yaml \
+    | tail -n1 | cut -c 30- | tr -d '"'\
+)
+curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
+hasura migrate apply --endpoint https://hasura.rio.dishapp.com --admin-secret "$HASURA_ADMIN"
+popd
 mkdir -p $HOME/.kube
 cp -a k8s/etc/k8s_admin_creds.enc.config $HOME/.kube/config
 rio up --answers env.enc.production.yaml
@@ -33,7 +41,7 @@ link="https://github.com/getdish/dish/tree/$commit"
 message="
 Successful Deploy of $commit to production Kubernetes \n
 Code: https://github.com/getdish/dish/tree/$commit \n
-CI Run: https://github.com/getdish/dish/actions/runs/$GITHUB_RUN_ID
+CI Run: https://github.com/getdish/dish/actions/runs/$GITHUB_RUN_ID?check_suite_focus=true
 "
 curl -X POST $HOOK \
   -H 'Content-type: application/json' \
