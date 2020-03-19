@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
 
+import * as Animatable from 'react-native-animatable'
 import { useOvermind } from '../../state/om'
 import HomeRestaurantView from './HomeRestaurantView'
 import HomeViewTopDishes from './HomeViewTopDishes'
@@ -11,6 +12,11 @@ import { VStack, ZStack, StackBaseProps } from '../shared/Stacks'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import { HomeBreadcrumbs } from './HomeBreadcrumbs'
 import { Route } from '../shared/Route'
+import { SmallTitle } from '../shared/SmallTitle'
+import { HomeStateItem } from '../../state/home'
+import _ from 'lodash'
+
+export const drawerBorderRadius = 20
 
 const styles = StyleSheet.create({
   container: {
@@ -18,11 +24,10 @@ const styles = StyleSheet.create({
     top: 20,
     left: 20,
     bottom: 20,
-    borderRadius: 20,
-    overflow: 'hidden',
+    borderRadius: drawerBorderRadius,
     shadowColor: 'rgba(0,0,0,0.2)',
     shadowRadius: 20,
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(255,255,255,0.3)',
     zIndex: 10,
   },
   content: {
@@ -39,9 +44,23 @@ export function useHomeDrawerWidth(): number {
   return Math.min(Math.max(400, width * 0.5), 600)
 }
 
+function BlurView() {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        backdropFilter: 'blur(20px)',
+      }}
+    />
+  )
+}
+
 export default function HomeMainPane() {
   const om = useOvermind()
   const drawerWidth = useHomeDrawerWidth()
+  const { currentState } = om.state.home
 
   return (
     <View
@@ -52,8 +71,11 @@ export default function HomeMainPane() {
         },
       ]}
     >
-      <VStack padding={18}>
-        <View style={{ position: 'absolute', top: 22, left: 12 }}>
+      <ZStack fullscreen borderRadius={drawerBorderRadius} overflow="hidden">
+        <BlurView />
+      </ZStack>
+      <VStack padding={18} paddingBottom={6}>
+        <VStack position="absolute" top={22} left={12}>
           <TouchableOpacity
             onPress={() => om.actions.setShowSidebar(om.state.showSidebar)}
             style={styles.button}
@@ -63,7 +85,7 @@ export default function HomeMainPane() {
               style={{ width: 22, height: 22, opacity: 0.5 }}
             />
           </TouchableOpacity>
-        </View>
+        </VStack>
 
         <View
           style={{ flexDirection: 'row', width: '100%', paddingBottom: 10 }}
@@ -85,14 +107,22 @@ export default function HomeMainPane() {
           <Spacer flex />
         </View>
 
-        <View>
-          <SearchBar />
-        </View>
+        <SearchBar />
       </VStack>
 
       <HomeBreadcrumbs />
 
+      <Spacer />
+
       <View style={styles.content}>
+        <VStack height={40} alignItems="center">
+          <SmallTitle>
+            {currentState.type == 'home' && `Top Dishes`}
+            {currentState.type == 'search' &&
+              `Top ${currentState.searchQuery} Restaurants`}
+          </SmallTitle>
+        </VStack>
+
         <StackView items={om.state.home.breadcrumbStates}>
           {homeState => {
             const item = om.state.router.history.find(
@@ -122,32 +152,47 @@ function StackView<A>(props: {
   items: A[]
   children: (a: A, isActive: boolean, index: number) => React.ReactNode
 }) {
-  const [state, setState] = useState<{ items: A[] }>({
-    items: [],
-  })
+  const [items, setItems] = useState<A[]>([])
+  const isAdding = props.items.length > items.length
 
   useEffect(() => {
-    const forward = props.items.length > state.items.length
-    setState({ items: props.items })
-  }, [props.items, state.items])
+    setTimeout(() => {
+      setItems(props.items)
+    }, 16)
+  }, [props.items, items])
 
   return (
     <ZStack fullscreen>
-      {state.items.map((item, index) => (
-        <ZStack
-          backgroundColor="white"
-          fullscreen
-          key={index}
-          flex={1}
-          zIndex={index}
-          top={index * 20}
-          shadowColor="rgba(0,0,0,0.2)"
-          shadowRadius={10}
-          borderRadius={20}
-          overflow="hidden"
+      {items.map((item, index) => (
+        <Animatable.View
+          key={
+            JSON.stringify(
+              (_.omit((item as any) as HomeStateItem), 'historyId')
+            ) + index
+          }
+          animation="fadeInUp"
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+          }}
         >
-          {props.children(item, index === state.items.length - 1, index)}
-        </ZStack>
+          <ZStack
+            backgroundColor="white"
+            fullscreen
+            flex={1}
+            zIndex={index}
+            top={index * 20}
+            shadowColor="rgba(0,0,0,0.15)"
+            shadowRadius={7}
+            borderRadius={20}
+            overflow="hidden"
+          >
+            {props.children(item, index === items.length - 1, index)}
+          </ZStack>
+        </Animatable.View>
       ))}
     </ZStack>
   )
@@ -256,3 +301,14 @@ function StackView<A>(props: {
 //     />
 //   )
 // }
+
+export function Color(props: { of: string }) {
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: props.of,
+      }}
+    />
+  )
+}

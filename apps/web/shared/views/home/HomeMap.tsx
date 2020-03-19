@@ -112,6 +112,13 @@ function HomeMap() {
   const [selected, setSelected] = useState('')
 
   const curRestaurant = state.type == 'restaurant' ? state.restaurant : null
+  const prevResults =
+    (state.type == 'restaurant' &&
+      om.state.home.previousState?.type == 'search' &&
+      om.state.home.previousState?.results.status === 'complete' &&
+      om.state.home.previousState?.results.results.restaurants) ||
+    []
+
   const restaurants = _.uniqBy(
     [
       ...(state.type == 'home' ? state.top_restaurants ?? [] : []),
@@ -120,12 +127,14 @@ function HomeMap() {
           ? state.results.results.restaurants
           : []
         : []),
+      ...prevResults,
       curRestaurant,
     ].filter(x => !!x?.location?.coordinates),
     x => x.id
   )
 
-  const restaurantIds = restaurants.map(x => x.id).join('')
+  const restaurantIds = restaurants.map(x => x.id)
+  const restaurantsVersion = restaurantIds.join('')
   const restaurantSelected = restaurants.find(x => x.id == selected)
   const coordinates = useMemo(
     () =>
@@ -141,7 +150,7 @@ function HomeMap() {
             )
             .filter(Boolean)
         : [],
-    [restaurantIds]
+    [restaurantsVersion]
   )
   const annotations = useMemo(
     () =>
@@ -149,17 +158,17 @@ function HomeMap() {
         ? restaurants.map(
             (restaurant, index) =>
               new mapkit.MarkerAnnotation(coordinates[index], {
-                glyphText: index <= 10 ? `${index + 1}` : ``,
+                glyphText: index <= 12 ? `${index + 1}` : ``,
                 data: {
                   id: restaurant.id,
                 },
               })
           )
         : [],
-    [restaurantIds]
+    [restaurantsVersion]
   )
 
-  const hoveredRestaurant = om.state.home.hoveredRestaurant
+  const { hoveredRestaurant } = om.state.home
   useEffect(() => {
     if (hoveredRestaurant) {
       const index = restaurantIds.indexOf(hoveredRestaurant.id)
@@ -174,7 +183,7 @@ function HomeMap() {
     centerMapToRegion({
       map,
       location: curRestaurant.location.coordinates,
-      span: 0.1,
+      span: 0.0025,
     })
   }, [!!map, mapkit, curRestaurant])
 
@@ -207,7 +216,7 @@ function HomeMap() {
       cancels.forEach(x => x())
       map.removeAnnotations(annotations)
     }
-  }, [!!map, restaurantIds])
+  }, [!!map, restaurantsVersion])
 
   return (
     <ZStack width="100%" height="100%">

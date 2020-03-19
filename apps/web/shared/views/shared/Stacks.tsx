@@ -10,8 +10,15 @@ const fsStyle = {
   bottom: 0,
 }
 
-export type StackBaseProps = { children: any } & ViewStyle &
-  ViewProps & { fullscreen?: boolean }
+export type StackBaseProps = Omit<
+  ViewStyle &
+    ViewProps & {
+      fullscreen?: boolean
+      children?: any
+    },
+  // because who tf uses alignContent
+  'alignContent'
+>
 
 export function ZStack({
   children,

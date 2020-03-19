@@ -61,7 +61,7 @@ export default function HomeRestaurantView() {
         </View>
         <View>
           <Text style={{ fontSize: 15 }}>Latest Reviewers</Text>
-          {state.reviews.map((review, i) => {
+          {(state.reviews ?? []).map((review, i) => {
             return (
               <Text key={i}>
                 <Link
@@ -78,15 +78,14 @@ export default function HomeRestaurantView() {
       </View>
       <View>
         <HStack height={100}>
-          {restaurant.photos &&
-            restaurant.photos.map((photo, key) => (
-              <Image
-                key={key}
-                source={{ uri: photo }}
-                style={{ height: 100, width: 100 }}
-                resizeMode="cover"
-              />
-            ))}
+          {(restaurant.photos ?? []).map((photo, key) => (
+            <Image
+              key={key}
+              source={{ uri: photo }}
+              style={{ height: 100, width: 100 }}
+              resizeMode="cover"
+            />
+          ))}
         </HStack>
       </View>
     </ScrollView>

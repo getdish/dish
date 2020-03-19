@@ -13,13 +13,19 @@ export function HomeBreadcrumbs() {
     parents = [{ type: 'home', searchQuery: '', centre: null }, ...parents]
   }
 
+  if (parents.length == 1) {
+    parents = []
+  }
+
   return (
-    <HStack padding={10}>
+    <HStack padding={0} alignItems="center" justifyContent="center" height={25}>
       {parents.map((x, i) => (
-        <HStack key={i}>
+        <HStack alignItems="center" justifyContent="center" key={i}>
           <HomeBreadcrumb homeState={x} isLast={i === parents.length - 1} />
           {i < parents.length - 1 && (
-            <Text style={{ paddingHorizontal: 10 }}>➡</Text>
+            <Text style={{ paddingHorizontal: 10, opacity: 0.3, fontSize: 10 }}>
+              ▶
+            </Text>
           )}
         </HStack>
       ))}
@@ -63,12 +69,14 @@ function HomeBreadcrumb({
   }
 
   return (
-    <TouchableOpacity
-      onPress={() => {
-        om.actions.router.navigate(navTo)
-      }}
-    >
-      {titleElement}
-    </TouchableOpacity>
+    <View style={{ opacity: 0.5 }}>
+      <TouchableOpacity
+        onPress={() => {
+          om.actions.router.navigate(navTo)
+        }}
+      >
+        {titleElement}
+      </TouchableOpacity>
+    </View>
   )
 }
