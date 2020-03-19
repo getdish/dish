@@ -23,3 +23,22 @@ echo "Deploying production branch to production..."
 mkdir -p $HOME/.kube
 cp -a k8s/etc/k8s_admin_creds.enc.config $HOME/.kube/config
 rio up --answers env.enc.production.yaml
+
+HOOK=$(\
+  grep 'SLACK_MONITORING_HOOK:' env.enc.production.yaml \
+  | tail -n1 | cut -c 24- | tr -d '"'\
+)
+commit=$(git rev-parse HEAD)
+link="https://github.com/getdish/dish/tree/$commit"
+message="
+Successful Deploy of $commit to production Kubernetes \n
+Code: https://github.com/getdish/dish/tree/$commit \n
+CI Run: https://github.com/getdish/dish/actions/runs/$GITHUB_RUN_ID
+"
+curl -X POST $HOOK \
+  -H 'Content-type: application/json' \
+  --data @- <<EOF
+  {
+    "text": "$message",
+  }
+EOF
