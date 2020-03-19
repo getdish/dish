@@ -20,6 +20,9 @@ export class Restaurant extends ModelBase<Restaurant> {
   telephone!: string
   website!: string
   dishes!: Dish[]
+  sources!: { [key: string]: string }
+  hours!: { [key: string]: string }
+  price_range!: string
 
   static model_name() {
     return 'Restaurant'
@@ -41,6 +44,9 @@ export class Restaurant extends ModelBase<Restaurant> {
       'photos',
       'telephone',
       'website',
+      'sources',
+      'hours',
+      'price_range',
     ]
   }
 

@@ -1,6 +1,7 @@
 import '@dish/common'
 
 import _ from 'lodash'
+import { Base64 } from 'js-base64'
 
 import { QueueOptions, JobOptions } from 'bull'
 import { WorkerJob } from '@dish/worker'
@@ -76,8 +77,13 @@ export class Self extends WorkerJob {
     this.mergeImage()
     this.mergeCategories()
     this.mergePhotos()
+    this.addWebsite()
+    this.addSources()
+    this.addPriceRange()
+    this.addHours()
     await this.restaurant.update()
     await this.upsertUberDishes()
+    return this.restaurant
   }
 
   async getScrapeData() {
@@ -169,6 +175,67 @@ export class Self extends WorkerJob {
       this.michelin.getData('main.title'),
       this.tripadvisor.getData('overview.contact.address'),
     ])
+  }
+
+  addWebsite() {
+    let website = this.tripadvisor.getData('overview.contact.website')
+    website = Base64.decode(website)
+    const parts = website.split('_')
+    parts.shift()
+    parts.pop()
+    this.restaurant.website = parts.join('_')
+  }
+
+  addPriceRange() {
+    this.restaurant.price_range = this.tripadvisor.getData(
+      'overview.detailCard.numericalPrice'
+    )
+  }
+
+  addHours() {
+    console.log(this.yelp.getData('data_from_html_embed.bizHoursProps'))
+    this.restaurant.hours = this.yelp.getData(
+      'data_from_html_embed.bizHoursProps.hoursInfoRows',
+      []
+    )
+  }
+
+  addSources() {
+    let url: string
+    let path: string
+    let parts: string[]
+
+    this.restaurant.sources = {}
+
+    path = this.tripadvisor.getData('overview.links.warUrl')
+    if (path != '') {
+      parts = path.split('-')
+      parts.shift()
+      url = 'https://www.tripadvisor.com/' + parts.join('-')
+      this.restaurant.sources.tripadvisor = url
+    }
+
+    path = this.yelp.getData('data_from_map_search.businessUrl')
+    if (path != '') {
+      this.restaurant.sources.yelp = 'https://www.yelp.com' + path
+    }
+
+    path = this.infatuated.getData('data_from_map_search.post.review_link')
+    if (path != '') {
+      this.restaurant.sources.infatuation =
+        'https://www.theinfatuation.com' + path
+    }
+
+    path = this.michelin.getData('main.url')
+
+    if (path != '') {
+      this.restaurant.sources.michelin = 'https://guide.michelin.com' + path
+    }
+
+    const json = JSON.parse(this.ubereats.getData('main.metaJson', '"{}"'))
+    if (json['@id']) {
+      this.restaurant.sources.ubereats = json['@id']
+    }
   }
 
   mergeImage() {

@@ -1,0 +1,135 @@
+- args:
+    role: contributor
+    table:
+      name: restaurant
+      schema: public
+  type: drop_select_permission
+- args:
+    role: contributor
+    table:
+      name: restaurant
+      schema: public
+  type: drop_update_permission
+- args:
+    permission:
+      columns:
+      - address
+      - categories
+      - city
+      - created_at
+      - description
+      - image
+      - location
+      - name
+      - photos
+      - rating
+      - state
+      - telephone
+      - updated_at
+      - website
+      - zip
+      filter: {}
+      localPresets:
+      - key: ""
+        value: ""
+      set: {}
+    role: contributor
+    table:
+      name: restaurant
+      schema: public
+  type: create_update_permission
+- args:
+    role: user
+    table:
+      name: restaurant
+      schema: public
+  type: drop_select_permission
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - address
+      - categories
+      - city
+      - created_at
+      - description
+      - id
+      - image
+      - location
+      - name
+      - photos
+      - rating
+      - slug
+      - state
+      - telephone
+      - updated_at
+      - website
+      - zip
+      computed_fields: []
+      filter: {}
+      limit: 100
+    role: user
+    table:
+      name: restaurant
+      schema: public
+  type: create_select_permission
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - address
+      - categories
+      - city
+      - created_at
+      - description
+      - id
+      - image
+      - location
+      - name
+      - photos
+      - rating
+      - slug
+      - state
+      - telephone
+      - updated_at
+      - website
+      - zip
+      computed_fields: []
+      filter: {}
+    role: contributor
+    table:
+      name: restaurant
+      schema: public
+  type: create_select_permission
+- args:
+    role: anon
+    table:
+      name: restaurant
+      schema: public
+  type: drop_select_permission
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - address
+      - categories
+      - city
+      - description
+      - id
+      - image
+      - location
+      - name
+      - photos
+      - rating
+      - slug
+      - state
+      - telephone
+      - website
+      - zip
+      computed_fields: []
+      filter: {}
+    role: anon
+    table:
+      name: restaurant
+      schema: public
+  type: create_select_permission

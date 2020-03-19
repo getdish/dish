@@ -63,6 +63,21 @@ const ubereats: Partial<Scrape> = {
   },
 }
 
+const tripadvisor: Partial<Scrape> = {
+  source: 'tripadvisor',
+  id_from_source: 'test123xcv',
+  data: {
+    overview: {
+      contact: {
+        website:
+          'OFdCX2h0dHA6Ly93d3cuaW50ZXJjb250aW5lbnRhbHNhbmZyYW5jaXNjby5jb20vX1o3cQ==',
+      },
+    },
+    photosp0: [{ src: 'https://tripadvisor.com/image.jpg' }],
+    photosp1: [{ src: 'https://tripadvisor.com/image2.jpg' }],
+  },
+}
+
 test.beforeEach(async t => {
   let scrape: Scrape
   await Scrape.deleteAllFuzzyBy('id_from_source', 'test')
@@ -73,6 +88,8 @@ test.beforeEach(async t => {
   scrape = new Scrape({ restaurant_id: restaurant.id, ...yelp })
   await scrape.insert()
   scrape = new Scrape({ restaurant_id: restaurant.id, ...ubereats })
+  await scrape.insert()
+  scrape = new Scrape({ restaurant_id: restaurant.id, ...tripadvisor })
   await scrape.insert()
 })
 
@@ -88,4 +105,5 @@ test('Merging', async t => {
   t.is(updated.photos[0], 'https://yelp.com/image.jpg')
   t.is(updated.photos[1], 'https://yelp.com/image2.jpg')
   t.is(updated.rating, 4.2)
+  t.is(updated.website, 'http://www.intercontinentalsanfrancisco.com/')
 })

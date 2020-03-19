@@ -1,15 +1,14 @@
 import { Restaurant } from '@dish/models'
 import { Self } from './Self'
 
-const name = 'Napa Valley Burger Company'
+const name = 'Boulevard, California'
 
 async function one() {
   const restaurant = new Restaurant()
   await restaurant.findOne('name', name)
   const merger = new Self()
-  await merger.mergeAll(restaurant.id)
-  await restaurant.findOne('name', name)
-  console.log(restaurant)
+  const updated = await merger.mergeAll(restaurant.id)
+  console.log(updated)
 }
 
 async function all() {
