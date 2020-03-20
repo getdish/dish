@@ -18,12 +18,12 @@ export function HomeBreadcrumbs() {
   }
 
   return (
-    <HStack padding={0} alignItems="center" justifyContent="center" height={25}>
+    <HStack padding={0} alignItems="center" justifyContent="center" height={20}>
       {parents.map((x, i) => (
         <HStack alignItems="center" justifyContent="center" key={i}>
           <HomeBreadcrumb homeState={x} isLast={i === parents.length - 1} />
           {i < parents.length - 1 && (
-            <Text style={{ paddingHorizontal: 10, opacity: 0.3, fontSize: 10 }}>
+            <Text style={{ paddingHorizontal: 10, opacity: 0.3, fontSize: 9 }}>
               ▶
             </Text>
           )}
@@ -62,7 +62,7 @@ function HomeBreadcrumb({
       break
   }
 
-  let titleElement = <Text>{title}</Text>
+  let titleElement = <Text style={{ fontSize: 12 }}>{title}</Text>
 
   if (isLast) {
     return titleElement

@@ -21,15 +21,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 10,
     alignItems: 'center',
-    shadowColor: 'rgba(0,0,0,0.09)',
-    shadowRadius: 4,
+    shadowColor: 'rgba(0,0,0,0.1)',
+    shadowRadius: 8,
     shadowOffset: { height: 1, width: 0 },
   },
   textInput: {
     padding: 12,
     flex: 1,
-    fontSize: 20,
-    textAlign: 'center',
+    fontSize: 18,
   },
 })
 
@@ -40,7 +39,7 @@ export default function SearchBar() {
       <TextInput
         value={om.state.home.currentState.searchQuery}
         onChangeText={text => om.actions.home.runSearch(text)}
-        placeholder="The food in San Francisco"
+        placeholder="Find the best of San Francisco"
         style={styles.textInput}
         onFocus={() => {
           om.actions.home.clearSearch()
@@ -56,9 +55,13 @@ export default function SearchBar() {
       />
 
       <ZStack fullscreen pointerEvents="none">
-        <HStack flex={1}>
+        <HStack flex={1} alignItems="center" justifyContent="center">
           <Spacer flex={1} />
-          <VStack pointerEvents="auto">
+          <VStack
+            pointerEvents="auto"
+            alignItems="center"
+            justifyContent="center"
+          >
             <TouchableOpacity
               style={{
                 padding: 10,
