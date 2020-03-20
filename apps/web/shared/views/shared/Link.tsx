@@ -14,7 +14,7 @@ export function Link<
   HTMLAnchorElement
 > & {
   name: Name
-  params: Params
+  params?: Params
 }) {
   const om = useOvermind()
   return (

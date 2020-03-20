@@ -14,6 +14,7 @@ import { Spacer } from '../shared/Spacer'
 import { SmallTitle } from '../shared/SmallTitle'
 import { Link } from '../shared/Link'
 import { HStack, VStack } from '../shared/Stacks'
+import { Color } from './Color'
 
 const styles = StyleSheet.create({
   container: {
@@ -44,11 +45,6 @@ const getImageForDish = (dish: string) => {
 export default function HomeViewTopDishes() {
   const om = useOvermind()
   const state = om.state.home.currentState
-
-  useEffect(() => {
-    om.actions.home.getTopDishes()
-  }, [])
-
   if (state.type !== 'home') {
     return null
   }

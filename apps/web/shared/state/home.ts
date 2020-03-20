@@ -55,6 +55,7 @@ export type HomeStateItem =
   | HomeStateItemDish
 
 type HomeState = {
+  showMenu: boolean
   hoveredRestaurant: Restaurant | null
   states: HomeStateItem[]
   defaultHomeState: Derive<HomeState, HomeStateItemHome>
@@ -66,6 +67,7 @@ type HomeState = {
 const RADIUS = 0.015
 
 export const state: HomeState = {
+  showMenu: false,
   hoveredRestaurant: null,
   states: [],
   defaultHomeState: state => {
@@ -111,6 +113,9 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
         type: 'home',
         ...currentBaseState,
         ...lastHomeState,
+      }
+      fetchData = () => {
+        om.actions.home.getTopDishes()
       }
       break
     case 'search':
@@ -319,9 +324,14 @@ const setHoveredRestaurant: Action<Restaurant | null> = (om, val) => {
   om.state.home.hoveredRestaurant = val
 }
 
+const setShowMenu: Action<boolean> = (om, val) => {
+  om.state.home.showMenu = val
+}
+
 export const actions = {
   _pushHomeState,
   _popHomeState,
+  setShowMenu,
   setHoveredRestaurant,
   setCurrentRestaurant,
   runSearch,
