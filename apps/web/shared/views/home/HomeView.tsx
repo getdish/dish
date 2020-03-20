@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 
 import HomeMap from './HomeMap'
-import HomeMainPane, { drawerBorderRadius } from './HomeViewDrawer'
-import { ZStack, VStack, HStack } from '../shared/Stacks'
+import HomeViewHome, { drawerBorderRadius } from './HomeViewHome'
+import { ZStack, VStack, HStack, StackBaseProps } from '../shared/Stacks'
 import {
   StyleSheet,
   ScrollView,
@@ -10,10 +10,11 @@ import {
   Text,
   TouchableOpacity,
   Image,
+  TouchableOpacityProps,
 } from 'react-native'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import { useOvermind } from '../../state/om'
-import { Link } from '../shared/Link'
+import { Link, DishButton } from '../shared/Link'
 import { SimpleLineIcons } from '@expo/vector-icons'
 
 import CardFlip from 'react-native-card-flip'
@@ -62,7 +63,7 @@ export const HomeView = () => {
               <LabAuth />
             </Route>
             <Route name="home">
-              <HomeMainPane />
+              <HomeViewHome />
             </Route>
           </DrawerContainer>
           <DrawerContainer>
@@ -92,29 +93,37 @@ function HomeDrawerHeader() {
   const om = useOvermind()
 
   return (
-    <VStack padding={18} paddingBottom={0}>
+    <VStack
+      paddingVertical={12}
+      paddingHorizontal={18}
+      alignItems="center"
+      justifyContent="center"
+    >
       <HStack
         position="absolute"
-        top={12}
+        top={0}
         right={12}
         left={12}
+        bottom={0}
+        alignItems="center"
         zIndex={1000}
         pointerEvents="none"
+        justifyContent="center"
       >
-        <Button
+        <DishButton
           onPress={() => om.actions.home.setShowMenu(!om.state.home.showMenu)}
         >
-          <SimpleLineIcons name="menu" size={22} style={{ opacity: 0.5 }} />
-        </Button>
+          <SimpleLineIcons name="user" size={22} style={{ opacity: 0.5 }} />
+        </DishButton>
 
         <Spacer flex />
 
-        <Button>
+        {/* <Button>
           <SimpleLineIcons name="user" size={22} style={{ opacity: 0.5 }} />
-        </Button>
+        </Button> */}
       </HStack>
 
-      <View style={{ flexDirection: 'row', width: '100%', paddingBottom: 10 }}>
+      <HStack>
         <Spacer flex />
 
         <TouchableOpacity
@@ -130,20 +139,7 @@ function HomeDrawerHeader() {
         </TouchableOpacity>
 
         <Spacer flex />
-      </View>
-    </VStack>
-  )
-}
-
-function Button({
-  onPress,
-  ...props
-}: { onPress?: Readonly<TouchableOpacityProps>['onPress'] } & StackBaseProps) {
-  return (
-    <VStack pointerEvents="auto">
-      <TouchableOpacity onPress={onPress}>
-        <HStack {...props} />
-      </TouchableOpacity>
+      </HStack>
     </VStack>
   )
 }
