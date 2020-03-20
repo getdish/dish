@@ -2,7 +2,7 @@ import React from 'react'
 import { useOvermind } from '../../state/om'
 import { RoutesTable } from '../../state/router'
 import { TouchableOpacity, Text } from 'react-native'
-import { VStack } from './Stacks'
+import { VStack, StackBaseProps } from './Stacks'
 
 export function Link<
   Name extends keyof RoutesTable = keyof RoutesTable,
@@ -31,14 +31,11 @@ export function Link<
   )
 }
 
-export function DishButton<
+export function LinkButton<
   Name extends keyof RoutesTable = keyof RoutesTable,
   Params = RoutesTable[Name]['params']
 >(
-  props: React.DetailedHTMLProps<
-    React.AnchorHTMLAttributes<HTMLAnchorElement>,
-    HTMLAnchorElement
-  > &
+  props: StackBaseProps &
     (
       | {
           name: Name
@@ -49,11 +46,26 @@ export function DishButton<
         }
     )
 ) {
+  let restProps: StackBaseProps
+  let contents: React.ReactElement
+  if ('name' in props) {
+    const { name, params, children, ...rest } = props
+    restProps = rest
+    contents = (
+      <Link name={name} params={params}>
+        {children}
+      </Link>
+    )
+  } else {
+    const { children, ...rest } = props
+    restProps = rest
+    contents = <Text>{children}</Text>
+  }
+
   return (
     <VStack pointerEvents="auto">
       <TouchableOpacity onPress={props['onPress']}>
-        {'name' in props && <Link {...props} />}
-        {!('name' in props) && <Text>{props.children}</Text>}
+        <VStack {...restProps}>{contents}</VStack>
       </TouchableOpacity>
     </VStack>
   )

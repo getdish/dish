@@ -14,7 +14,7 @@ import { Route } from '../shared/Route'
 import { SmallTitle } from '../shared/SmallTitle'
 import { HomeStateItem, Taxonomy } from '../../state/home'
 import _ from 'lodash'
-import { DishButton } from '../shared/Link'
+import { DishButton, LinkButton } from '../shared/Link'
 
 export const drawerBorderRadius = 20
 
@@ -84,7 +84,7 @@ export default function HomeViewHome() {
 
 function LenseButton({ lense, active }: { lense: Taxonomy; active: boolean }) {
   return (
-    <DishButton>
+    <LinkButton>
       <HStack
         alignItems="center"
         justifyContent="center"
@@ -99,7 +99,7 @@ function LenseButton({ lense, active }: { lense: Taxonomy; active: boolean }) {
           {lense.icon} {lense.name}
         </Text>
       </HStack>
-    </DishButton>
+    </LinkButton>
   )
 }
 
