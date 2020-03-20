@@ -21,7 +21,8 @@ export class Restaurant extends ModelBase<Restaurant> {
   website!: string
   dishes!: Dish[]
   sources!: { [key: string]: string }
-  hours!: { [key: string]: string }
+  hours!: { [key: string]: any }[]
+  is_open_now!: boolean
   price_range!: string
 
   static model_name() {
@@ -46,8 +47,13 @@ export class Restaurant extends ModelBase<Restaurant> {
       'website',
       'sources',
       'hours',
+      'is_open_now',
       'price_range',
     ]
+  }
+
+  static read_only_fields() {
+    return ['is_open_now']
   }
 
   static upsert_constraint() {

@@ -7,6 +7,68 @@ import { TagButton } from './TagButton'
 import { Link } from '../shared/Link'
 import { useOvermind } from '../../state/om'
 
+function hours(restaurant: Restaurant) {
+  let text = 'Opening hours'
+  let color = 'grey'
+  let next_time = 'unknown'
+
+  if (restaurant.is_open_now != null) {
+    text = restaurant.is_open_now ? 'Open' : 'Closed'
+    color = restaurant.is_open_now ? 'green' : 'red'
+    const now = new Date()
+    let day = now.getDay() - 1
+    if (day == -1) {
+      day = 6
+    }
+    // TODO: Tomorrow isn't always when the next opening time is.
+    // Eg; when it's the morning and the restaurant opens in the evening.
+    let tomorrow = day + 1
+    if (tomorrow == 7) {
+      tomorrow = 0
+    }
+    const opens_at = restaurant.hours[tomorrow].hoursInfo.hours[0]
+      .replace(/"/g, '')
+      .split(' - ')[0]
+    const closes_at = restaurant.hours[day].hoursInfo.hours[0]
+      .replace(/"/g, '')
+      .split(' - ')[1]
+    next_time = restaurant.is_open_now ? closes_at : opens_at
+  }
+
+  return [text, color, next_time]
+}
+
+function price(restaurant: Restaurant) {
+  let label = 'Price Range'
+  let color = 'grey'
+  let price_range = 'unknown'
+
+  if (restaurant.price_range != null) {
+    const [low, high] = restaurant.price_range
+      .replace(/\$/g, '')
+      .split(' - ')
+      .map(i => parseInt(i))
+    const average = (low + high) / 2
+    price_range = '~' + restaurant.price_range
+    switch (true) {
+      case average <= 10:
+        label = 'Cheap'
+        color = 'green'
+        break
+      case average >= 30:
+        label = 'Average'
+        color = 'orange'
+        break
+      case average >= 60:
+        label = 'Expensive'
+        color = 'red'
+        break
+    }
+  }
+
+  return [label, color, price_range]
+}
+
 export function RestaurantListItem({
   restaurant,
   rank,
@@ -18,6 +80,9 @@ export function RestaurantListItem({
 }) {
   const om = useOvermind()
   const [isHovered, setIsHovered] = useState(false)
+
+  const [open_text, open_color, next_time] = hours(restaurant)
+  const [price_label, price_color, price_range] = price(restaurant)
 
   return (
     <div
@@ -65,15 +130,17 @@ export function RestaurantListItem({
 
             <HStack>
               <VStack paddingRight={10}>
-                <Text style={{ fontWeight: 'bold', color: 'green' }}>Open</Text>
-                <Text>9:00pm</Text>
+                <Text style={{ fontWeight: 'bold', color: open_color }}>
+                  {open_text}
+                </Text>
+                <Text>{next_time}</Text>
               </VStack>
 
               <VStack paddingHorizontal={10}>
-                <Text style={{ fontWeight: 'bold', color: 'orange' }}>
-                  Cheap
+                <Text style={{ fontWeight: 'bold', color: price_color }}>
+                  {price_label}
                 </Text>
-                <Text>~$10-15</Text>
+                <Text>{price_range}</Text>
               </VStack>
             </HStack>
 

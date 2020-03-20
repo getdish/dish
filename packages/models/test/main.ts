@@ -1,4 +1,6 @@
 import anyTest, { TestInterface } from 'ava'
+import axios from 'axios'
+import moment from 'moment'
 
 import { Restaurant } from '../src/Restaurant'
 import { Dish } from '../src/Dish'
@@ -21,6 +23,15 @@ const restaurant_fixture: Partial<Restaurant> = {
   state: 'Denial',
   zip: 123,
   image: 'https://imgur.com/123abc',
+  hours: [
+    { hoursInfo: { hours: ['11:00 am - 8:30 pm'] } },
+    { hoursInfo: { hours: ['11:00 am - 8:30 pm'] } },
+    { hoursInfo: { hours: ['11:00 am - 8:30 pm'] } },
+    { hoursInfo: { hours: ['11:00 am - 8:30 pm'] } },
+    { hoursInfo: { hours: ['11:00 am - 8:30 pm'] } },
+    { hoursInfo: { hours: ['11:00 am - 8:30 pm'] } },
+    { hoursInfo: { hours: ['11:00 am - 8:30 pm'] } },
+  ],
 }
 
 const dish_fixture: Partial<Dish> = {
@@ -105,4 +116,18 @@ test('Identifies a similar restaurant', async t => {
   const restaurant = new Restaurant()
   await restaurant.findOne('id', canonical.id)
   t.deepEqual(restaurant.id, t.context.restaurant.id)
+})
+
+test('Is open now', async t => {
+  const url = 'http://worldtimeapi.org/api/timezone/America/Los_Angeles'
+  const now_string = await axios.get(url)
+  const now = moment(now_string.data.datetime)
+  const tz_offset = now_string.data.utc_offset
+  const today = now.format('YYYY-MM-DD')
+  const open = moment(`${today}T11:00:00${tz_offset}`)
+  const close = moment(`${today}T20:30:00${tz_offset}`)
+  const is_open = now.isBetween(open, close)
+  const restaurant = new Restaurant()
+  await restaurant.findOne('name', 'Test Restaurant')
+  t.is(restaurant.is_open_now, is_open)
 })

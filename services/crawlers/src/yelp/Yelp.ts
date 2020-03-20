@@ -1,4 +1,4 @@
-import '@dish/common'
+import { sentryMessage } from '@dish/common'
 
 import url from 'url'
 import _ from 'lodash'
@@ -149,6 +149,13 @@ export class Yelp extends WorkerJob {
         break
       }
     }
+    if (!('mapBoxProps' in data)) {
+      const message = "YELP: Couldn't extract embedded data on " + yelp_path
+      sentryMessage(message)
+      console.log(message)
+      return
+    }
+
     const uri = url.parse(
       data.mapBoxProps.staticMapProps.src.replace('&amp;', '&'),
       true

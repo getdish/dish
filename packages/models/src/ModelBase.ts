@@ -170,6 +170,10 @@ export class ModelBase<T> {
     return this.default_fields().concat(this.fields())
   }
 
+  static read_only_fields() {
+    return [] as string[]
+  }
+
   private static _fieldsAsObject(fields: string[]) {
     let object = {}
     for (const key of fields) {
@@ -330,6 +334,7 @@ export class ModelBase<T> {
               constraint: new EnumType(this._klass.upsert_constraint()),
               update_columns: this._klass
                 .all_fields()
+                .filter(f => !this._klass.read_only_fields().includes(f))
                 .map(f => new EnumType(f)),
             },
           },
