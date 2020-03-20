@@ -20,12 +20,11 @@ cat $KEY_PATH.base64 | base64 -d > $KEY_PATH
 git-crypt unlock $KEY_PATH
 
 echo "Deploying production branch to production..."
-pushd services/hasura
 HASURA_ADMIN=$(\
   grep 'HASURA_GRAPHQL_ADMIN_SECRET:' env.enc.production.yaml \
     | tail -n1 | cut -c 30- | tr -d '"'\
 )
-curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
+pushd services/hasura
 hasura migrate apply --endpoint https://hasura.rio.dishapp.com --admin-secret "$HASURA_ADMIN"
 popd
 mkdir -p $HOME/.kube
