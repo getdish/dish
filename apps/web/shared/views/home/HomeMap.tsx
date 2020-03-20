@@ -6,10 +6,10 @@ const mapkitToken = `eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzQ1RLNTYzUlQ
 import { useOvermind } from '../../state/om'
 import { VStack, ZStack, HStack } from '../shared/Stacks'
 import { RegionType } from 'react-mapkit/dist/utils'
-import { useHomeDrawerWidth } from './HomeMainPane'
 import { View, Text, Button } from 'react-native'
 import _ from 'lodash'
 import { Spacer } from '../shared/Spacer'
+import { useHomeDrawerWidth } from './HomeView'
 
 type UseMapProps = Pick<
   mapkit.MapConstructorOptions,

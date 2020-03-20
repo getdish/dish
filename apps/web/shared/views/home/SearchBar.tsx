@@ -13,13 +13,12 @@ import { Spacer } from '../shared/Spacer'
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'row',
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 30,
     backgroundColor: '#fff',
-    paddingHorizontal: 10,
+    marginHorizontal: 20,
     alignItems: 'center',
     shadowColor: 'rgba(0,0,0,0.1)',
     shadowRadius: 8,
@@ -27,6 +26,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     padding: 12,
+    paddingHorizontal: 16,
     flex: 1,
     fontSize: 18,
   },
