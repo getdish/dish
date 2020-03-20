@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  TouchableOpacityProps,
-} from 'react-native'
+import { View, StyleSheet, Text, ScrollView } from 'react-native'
 
 import * as Animatable from 'react-native-animatable'
 import { useOvermind } from '../../state/om'
@@ -15,38 +9,16 @@ import HomeSearchResultsView from './HomeSearchResultsView'
 import SearchBar from './SearchBar'
 import { Spacer } from '../shared/Spacer'
 import { VStack, ZStack, StackBaseProps, HStack } from '../shared/Stacks'
-import { useWindowSize } from '../../hooks/useWindowSize'
 import { HomeBreadcrumbs } from './HomeBreadcrumbs'
 import { Route } from '../shared/Route'
 import { SmallTitle } from '../shared/SmallTitle'
-import { HomeStateItem } from '../../state/home'
+import { HomeStateItem, Taxonomy } from '../../state/home'
 import _ from 'lodash'
-import { BlurView } from './BlurView'
+import { DishButton, LinkButton } from '../shared/Link'
 
 export const drawerBorderRadius = 20
 
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
-    bottom: 20,
-    borderRadius: drawerBorderRadius,
-    shadowColor: 'rgba(0,0,0,0.2)',
-    shadowRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.3)',
-    zIndex: 10,
-  },
-  content: {
-    flex: 1,
-    paddingVertical: 20,
-  },
-  button: {
-    padding: 10,
-  },
-})
-
-export default function HomeMainPane() {
+export default function HomeViewHome() {
   const om = useOvermind()
   const { currentState } = om.state.home
 
@@ -58,7 +30,7 @@ export default function HomeMainPane() {
 
       <Spacer />
 
-      <VStack height={40} alignItems="center">
+      <VStack height={26} alignItems="center">
         <SmallTitle>
           {currentState.type == 'home' && `Top Dishes`}
           {currentState.type == 'search' &&
@@ -66,7 +38,25 @@ export default function HomeMainPane() {
         </SmallTitle>
       </VStack>
 
-      <View style={styles.content}>
+      {currentState.type == 'home' && (
+        <VStack height={60} paddingVertical={12}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <HStack paddingHorizontal={20}>
+              {currentState.lenses.map((lense, index) => (
+                <React.Fragment key={lense.id}>
+                  <LenseButton
+                    lense={lense}
+                    active={index == currentState.activeLense}
+                  />
+                  <Spacer />
+                </React.Fragment>
+              ))}
+            </HStack>
+          </ScrollView>
+        </VStack>
+      )}
+
+      <VStack flex={1} paddingVertical={20}>
         <StackView items={om.state.home.breadcrumbStates}>
           {homeState => {
             const item = om.state.router.history.find(
@@ -87,8 +77,29 @@ export default function HomeMainPane() {
             )
           }}
         </StackView>
-      </View>
+      </VStack>
     </>
+  )
+}
+
+function LenseButton({ lense, active }: { lense: Taxonomy; active: boolean }) {
+  return (
+    <LinkButton>
+      <HStack
+        alignItems="center"
+        justifyContent="center"
+        paddingHorizontal={8}
+        paddingVertical={5}
+        backgroundColor={active ? '#fff' : 'rgba(255,255,255,0.5)'}
+        borderRadius={8}
+        shadowColor="rgba(0,0,0,0.1)"
+        shadowOffset={{ height: 1, width: 0 }}
+      >
+        <Text style={{ color: active ? '#000' : '#444', fontSize: 16 }}>
+          {lense.icon} {lense.name}
+        </Text>
+      </HStack>
+    </LinkButton>
   )
 }
 

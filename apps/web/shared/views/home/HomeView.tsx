@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import HomeMap from './HomeMap'
-import HomeMainPane, { drawerBorderRadius } from './HomeViewDrawer'
+import HomeViewHome, { drawerBorderRadius } from './HomeViewHome'
 import { ZStack, VStack, HStack } from '../shared/Stacks'
 import {
   StyleSheet,
@@ -13,10 +13,10 @@ import {
 } from 'react-native'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import { useOvermind } from '../../state/om'
-import { Link } from '../shared/Link'
+import { Link, LinkButton } from '../shared/Link'
 import { SimpleLineIcons } from '@expo/vector-icons'
 
-import CardFlip from 'react-native-card-flip'
+import SideMenu from 'react-native-side-menu'
 import { Route } from '../shared/Route'
 import { LabAuth } from '../auth'
 import { BlurView } from './BlurView'
@@ -31,28 +31,19 @@ export const HomeView = () => {
   const om = useOvermind()
   const drawerWidth = useHomeDrawerWidth()
   const showMenu = om.state.home.showMenu
-  const [card, setCard] = useState(null)
-
-  useEffect(() => {
-    if (!card) return
-    card.flip()
-  }, [showMenu])
 
   return (
-    <ZStack top={0} left={0} right={0} bottom={0}>
-      <HomeMap />
+    <SideMenu openMenuOffset={200} isOpen={showMenu} menu={<HomeMenu />}>
+      <ZStack top={0} left={0} right={0} bottom={0}>
+        <HomeMap />
 
-      <View
-        style={[
-          styles.container,
-          {
-            width: drawerWidth,
-          },
-        ]}
-      >
-        <CardFlip
-          ref={x => setCard(x)}
-          style={{ width: drawerWidth, height: '100%' }}
+        <View
+          style={[
+            styles.container,
+            {
+              width: drawerWidth,
+            },
+          ]}
         >
           <DrawerContainer>
             <Route name="login">
@@ -62,15 +53,12 @@ export const HomeView = () => {
               <LabAuth />
             </Route>
             <Route name="home">
-              <HomeMainPane />
+              <HomeViewHome />
             </Route>
           </DrawerContainer>
-          <DrawerContainer>
-            <MenuContents />
-          </DrawerContainer>
-        </CardFlip>
-      </View>
-    </ZStack>
+        </View>
+      </ZStack>
+    </SideMenu>
   )
 }
 
@@ -92,29 +80,37 @@ function HomeDrawerHeader() {
   const om = useOvermind()
 
   return (
-    <VStack padding={18} paddingBottom={0}>
+    <VStack
+      paddingVertical={12}
+      paddingHorizontal={18}
+      alignItems="center"
+      justifyContent="center"
+    >
       <HStack
         position="absolute"
-        top={12}
-        right={12}
-        left={12}
+        top={0}
+        right={20}
+        left={20}
+        bottom={0}
+        alignItems="center"
         zIndex={1000}
         pointerEvents="none"
+        justifyContent="center"
       >
-        <Button
+        <LinkButton
           onPress={() => om.actions.home.setShowMenu(!om.state.home.showMenu)}
         >
-          <SimpleLineIcons name="menu" size={22} style={{ opacity: 0.5 }} />
-        </Button>
+          <SimpleLineIcons name="menu" size={16} style={{ opacity: 0.5 }} />
+        </LinkButton>
 
         <Spacer flex />
 
-        <Button>
+        {/* <Button>
           <SimpleLineIcons name="user" size={22} style={{ opacity: 0.5 }} />
-        </Button>
+        </Button> */}
       </HStack>
 
-      <View style={{ flexDirection: 'row', width: '100%', paddingBottom: 10 }}>
+      <HStack>
         <Spacer flex />
 
         <TouchableOpacity
@@ -130,20 +126,7 @@ function HomeDrawerHeader() {
         </TouchableOpacity>
 
         <Spacer flex />
-      </View>
-    </VStack>
-  )
-}
-
-function Button({
-  onPress,
-  ...props
-}: { onPress?: Readonly<TouchableOpacityProps>['onPress'] } & StackBaseProps) {
-  return (
-    <VStack pointerEvents="auto">
-      <TouchableOpacity onPress={onPress}>
-        <HStack {...props} />
-      </TouchableOpacity>
+      </HStack>
     </VStack>
   )
 }
@@ -165,8 +148,11 @@ const styles = StyleSheet.create({
   },
 })
 
-function MenuContents() {
+function HomeMenu() {
   const { state, actions } = useOvermind()
+
+  const HomeMenuButton = props => <LinkButton padding={10} {...props} />
+
   return (
     <ScrollView>
       <View>
@@ -179,29 +165,29 @@ function MenuContents() {
           <Text></Text>
         )}
 
-        <Link name="home">Home</Link>
+        <HomeMenuButton name="home">Home</HomeMenuButton>
 
         {state.auth.is_logged_in ? (
-          <View style={{ borderTopWidth: 1, marginTop: '1em' }}>
+          <View>
             <Text>Account</Text>
-            <Link name="home" onClick={() => actions.auth.logout()}>
+            <HomeMenuButton name="home" onPress={() => actions.auth.logout()}>
               Logout
-            </Link>
-            <Link name="account" params={{ id: 'reviews' }}>
+            </HomeMenuButton>
+            <HomeMenuButton name="account" params={{ id: 'reviews' }}>
               Reviews
-            </Link>
+            </HomeMenuButton>
           </View>
         ) : (
           <>
-            <Link name="login">Login</Link>
-            <Link name="register">Register</Link>
+            <HomeMenuButton name="login">Login</HomeMenuButton>
+            <HomeMenuButton name="register">Register</HomeMenuButton>
           </>
         )}
 
         {state.auth.is_logged_in && state.auth.user.role == 'admin' && (
-          <View style={{ borderTopWidth: 1, marginTop: '1em' }}>
+          <View>
             <Text>Admin</Text>
-            <Link name="taxonomy">Taxonomy</Link>
+            <HomeMenuButton name="taxonomy">Taxonomy</HomeMenuButton>
           </View>
         )}
       </View>
