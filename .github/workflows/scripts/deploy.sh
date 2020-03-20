@@ -17,6 +17,7 @@ echo "Decrypting Dish secrets..."
 sudo apt-get install -y git-crypt
 echo $GITCRYPT_KEY > $KEY_PATH.base64
 cat $KEY_PATH.base64 | base64 -d > $KEY_PATH
+git reset --hard
 git-crypt unlock $KEY_PATH
 
 echo "Deploying production branch to production..."
