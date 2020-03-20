@@ -1,6 +1,8 @@
 import React from 'react'
 import { useOvermind } from '../../state/om'
-import { RouteName, RoutesTable } from '../../state/router'
+import { RoutesTable } from '../../state/router'
+import { TouchableOpacity, Text } from 'react-native'
+import { VStack } from './Stacks'
 
 export function Link<
   Name extends keyof RoutesTable = keyof RoutesTable,
@@ -26,5 +28,33 @@ export function Link<
       }}
       {...props}
     />
+  )
+}
+
+export function DishButton<
+  Name extends keyof RoutesTable = keyof RoutesTable,
+  Params = RoutesTable[Name]['params']
+>(
+  props: React.DetailedHTMLProps<
+    React.AnchorHTMLAttributes<HTMLAnchorElement>,
+    HTMLAnchorElement
+  > &
+    (
+      | {
+          name: Name
+          params?: Params
+        }
+      | {
+          onPress?: any
+        }
+    )
+) {
+  return (
+    <VStack pointerEvents="auto">
+      <TouchableOpacity onPress={props['onPress']}>
+        {'name' in props && <Link {...props} />}
+        {!('name' in props) && <Text>{props.children}</Text>}
+      </TouchableOpacity>
+    </VStack>
   )
 }
