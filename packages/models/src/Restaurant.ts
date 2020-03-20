@@ -261,6 +261,6 @@ export class Restaurant extends ModelBase<Restaurant> {
   }
 
   get allPhotos() {
-    return [this.image, ...(this.photos ?? [])].filter(Boolean)
+    return [this.image, ...(this.photos ?? [])].filter(Boolean) ?? []
   }
 }
