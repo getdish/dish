@@ -34,7 +34,9 @@ declare module 'overmind' {
 
 export const useOvermind = createHook<typeof config>()
 
-export const om = createOvermind(config)
+export const om = createOvermind(config, {
+  devtools: false,
+})
 
 export type Om = typeof om
 

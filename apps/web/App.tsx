@@ -4,17 +4,15 @@ import { ApolloProvider } from '@apollo/client'
 import { createOvermind, Overmind, Config } from 'overmind'
 import { Provider } from 'overmind-react'
 
-import { config, useOvermind, Om } from './shared/state/om'
+import { config, useOvermind, Om, om } from './shared/state/om'
 import { HomeView } from './shared/views/home/HomeView'
 import { LabDishes } from './shared/views/dishes'
 import { Route, PrivateRoute } from './shared/views/shared/Route'
 import { ZStack, VStack } from './shared/views/shared/Stacks'
 
-const overmind = createOvermind(config)
-
 export default function App() {
   return (
-    <Provider value={overmind}>
+    <Provider value={om}>
       <StatefulApp />
     </Provider>
   )

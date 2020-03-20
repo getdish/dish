@@ -168,6 +168,7 @@ export const state: HomeState = {
 
 const _pushHomeState: Action<HistoryItem> = (om, item) => {
   const { currentState } = om.state.home
+
   const currentBaseState = {
     historyId: item.id,
     searchQuery: currentState?.searchQuery ?? '',
