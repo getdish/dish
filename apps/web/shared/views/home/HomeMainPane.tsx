@@ -114,15 +114,15 @@ export default function HomeMainPane() {
 
       <Spacer />
 
-      <View style={styles.content}>
-        <VStack height={40} alignItems="center">
-          <SmallTitle>
-            {currentState.type == 'home' && `Top Dishes`}
-            {currentState.type == 'search' &&
-              `Top ${currentState.searchQuery} Restaurants`}
-          </SmallTitle>
-        </VStack>
+      <VStack height={40} alignItems="center">
+        <SmallTitle>
+          {currentState.type == 'home' && `Top Dishes`}
+          {currentState.type == 'search' &&
+            `Top ${currentState.searchQuery} Restaurants`}
+        </SmallTitle>
+      </VStack>
 
+      <View style={styles.content}>
         <StackView items={om.state.home.breadcrumbStates}>
           {homeState => {
             const item = om.state.router.history.find(

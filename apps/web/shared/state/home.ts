@@ -57,6 +57,7 @@ export type HomeStateItem =
 type HomeState = {
   hoveredRestaurant: Restaurant | null
   states: HomeStateItem[]
+  defaultHomeState: Derive<HomeState, HomeStateItemHome>
   breadcrumbStates: Derive<HomeState, HomeStateItem[]>
   currentState: Derive<HomeState, HomeStateItem>
   previousState: Derive<HomeState, HomeStateItem>
@@ -67,10 +68,24 @@ const RADIUS = 0.015
 export const state: HomeState = {
   hoveredRestaurant: null,
   states: [],
+  defaultHomeState: state => {
+    return (
+      ([...state.states]
+        .reverse()
+        .find(x => x.type == 'home') as HomeStateItemHome) ?? {
+        type: 'home',
+        searchQuery: state.currentState?.searchQuery ?? '',
+        centre: state.currentState?.centre ?? {
+          lng: -122.421351,
+          lat: 37.759251,
+        },
+      }
+    )
+  },
   breadcrumbStates: state => {
-    const lastHome = [...state.states].reverse().find(x => x.type == 'home')
+    const lastHome = state.defaultHomeState
     const lastHomeIndex = state.states.findIndex(x => x === lastHome)
-    return state.states.slice(lastHomeIndex)
+    return state.states.slice(lastHomeIndex == -1 ? 0 : lastHomeIndex)
   },
   currentState: state => _.last(state.states),
   previousState: state => state.states[state.states.length - 2],
