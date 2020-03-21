@@ -1,48 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { MapkitProvider, Map, useMap as useMap_ } from 'react-mapkit'
-
-const mapkitToken = `eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzQ1RLNTYzUlQifQ.eyJpYXQiOjE1ODQ0MDU5MzYuMjAxLCJpc3MiOiIzOTlXWThYOUhZIn0.wAw2qtwuJkcL6T6aI-nLZlVuwJZnlCNg2em6V1uopx9hkUgWZE1ISAWePMoRttzH_NPOem4mQfrpmSTRCkh2bg`
 
 import { useOvermind } from '../../state/om'
 import { VStack, ZStack, HStack } from '../shared/Stacks'
-import { RegionType } from 'react-mapkit/dist/utils'
-import { View, Text, Button } from 'react-native'
+import { Text, Button } from 'react-native'
 import _ from 'lodash'
 import { Spacer } from '../shared/Spacer'
-import { useHomeDrawerWidth } from './HomeView'
-
-type UseMapProps = Pick<
-  mapkit.MapConstructorOptions,
-  | 'rotation'
-  | 'tintColor'
-  | 'colorScheme'
-  | 'mapType'
-  | 'showsMapTypeControl'
-  | 'isRotationEnabled'
-  | 'showsCompass'
-  | 'isZoomEnabled'
-  | 'showsZoomControl'
-  | 'isScrollEnabled'
-  | 'showsScale'
-  | 'annotationForCluster'
-  | 'annotations'
-  | 'selectedAnnotation'
-  | 'overlays'
-  | 'selectedOverlay'
-  | 'showsPointsOfInterest'
-  | 'showsUserLocation'
-  | 'tracksUserLocation'
-  | 'showsUserLocationControl'
-> & {
-  visibleMapRect?: [number, number, number, number] | undefined
-  region?: RegionType | undefined
-  center?: [number, number] | undefined
-  padding?: number | mapkit.PaddingConstructorOptions | undefined
-}
-
-const useMap = (props: UseMapProps) => {
-  return useMap_(props)
-}
+import { useHomeDrawerWidth } from './HomeViewDrawer'
+import { HomeLenseBar } from './HomeLenseBar'
+import { useMap, Map } from '../map'
+import { RegionType } from '../map/utils'
 
 function centerMapToRegion({
   map,
@@ -60,31 +26,27 @@ function centerMapToRegion({
 }
 
 export default function HomeMapContainer() {
-  return (
-    <MapkitProvider tokenOrCallback={mapkitToken}>
-      <HomeMap />
-    </MapkitProvider>
-  )
+  return <HomeMap />
 }
 
 function HomeMap() {
   const om = useOvermind()
   const drawerWidth = useHomeDrawerWidth()
   const state = om.state.home.currentState
-  const centre = state.centre
+  const { center, span } = state
   const {
-    mapkit,
     map,
     mapProps,
     // setRotation,
     // setCenter,
     // setVisibleMapRect,
   } = useMap({
-    center: [centre.lat, centre.lng],
+    center: [center.lat, center.lng],
     showsZoomControl: false,
     showsMapTypeControl: false,
     isZoomEnabled: true,
     isScrollEnabled: true,
+    showsCompass: mapkit.FeatureVisibility.Hidden,
     padding: {
       left: drawerWidth + 40,
       top: 40,
@@ -103,8 +65,8 @@ function HomeMap() {
     if (map) {
       centerMapToRegion({
         map,
-        location: [centre.lng, centre.lat],
-        span: 0.1,
+        location: [center.lng, center.lat],
+        span: span,
       })
     }
   }, [map])
@@ -222,9 +184,13 @@ function HomeMap() {
     <ZStack width="100%" height="100%">
       <Map {...mapProps} />
 
-      <ZStack fullscreen padding={20} pointerEvents="none">
+      <ZStack fullscreen padding={20} pointerEvents="none" left={drawerWidth}>
         <VStack flex={1}>
-          <HStack>
+          <HStack flex={1} overflow="hidden">
+            <VStack>
+              <HomeLenseBar />
+            </VStack>
+
             <Spacer flex />
 
             <HStack pointerEvents="auto">

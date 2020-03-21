@@ -50,17 +50,17 @@ export class Infatuated extends WorkerJob {
     const region_coords = _.shuffle(
       aroundCoords(coords[0], coords[1], MAPVIEW_SIZE, 5)
     )
-    for (const box_centre of region_coords) {
-      await this.runOnWorker('getRestaurants', [box_centre])
+    for (const box_center of region_coords) {
+      await this.runOnWorker('getRestaurants', [box_center])
     }
   }
 
-  async getRestaurants(centre: [number, number], start: number = 0) {
+  async getRestaurants(center: [number, number], start: number = 0) {
     const per_page = 40
     const limit = 40
     const path = '/api/v1/venues/search?'
     const city = 'city=Boston' // Doesn't seem to do anything, but is still required
-    const latlon = `lat=${centre[0]}&lng=${centre[1]}`
+    const latlon = `lat=${center[0]}&lng=${center[1]}`
     const distance = `view_distance=${this.longest_radius}`
     const pagination = `offset=${start}&limit=${limit}`
     const base = 'sort_order=Highest%20Rated&category%5B%5D=RESTAURANT'
@@ -72,7 +72,7 @@ export class Infatuated extends WorkerJob {
       await this.saveDataFromMapSearch(restaurant)
     }
     if (restaurants.length > 0) {
-      await this.runOnWorker('getRestaurants', [centre, start + per_page])
+      await this.runOnWorker('getRestaurants', [center, start + per_page])
     }
   }
 

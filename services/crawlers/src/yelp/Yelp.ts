@@ -8,7 +8,7 @@ import { QueueOptions, JobOptions } from 'bull'
 import { WorkerJob } from '@dish/worker'
 import { Restaurant, Scrape, ScrapeData } from '@dish/models'
 
-import { aroundCoords, boundingBoxFromCentre, geocode } from '../utils'
+import { aroundCoords, boundingBoxFromcenter, geocode } from '../utils'
 
 const YELP_DOMAIN = process.env.YELP_PROXY || 'https://www.yelp.com'
 const BB_SEARCH = '/search/snippet?cflt=restaurants&l='
@@ -65,10 +65,10 @@ export class Yelp extends WorkerJob {
       aroundCoords(coords[0], coords[1], MAPVIEW_SIZE, 5)
     )
     const longest_radius = (MAPVIEW_SIZE * Math.sqrt(2)) / 2
-    for (const box_centre of region_coords) {
-      const bounding_box = boundingBoxFromCentre(
-        box_centre[0],
-        box_centre[1],
+    for (const box_center of region_coords) {
+      const bounding_box = boundingBoxFromcenter(
+        box_center[0],
+        box_center[1],
         longest_radius
       )
       await this.runOnWorker('getRestaurants', [

@@ -38,7 +38,7 @@ export function aroundCoords(
   return coords
 }
 
-export function boundingBoxFromCentre(
+export function boundingBoxFromcenter(
   lat: number,
   lon: number,
   radius: number

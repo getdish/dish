@@ -48,6 +48,8 @@ export function LinkButton<
 ) {
   let restProps: StackBaseProps
   let contents: React.ReactElement
+  let onPress: any
+
   if ('name' in props) {
     const { name, params, children, ...rest } = props
     restProps = rest
@@ -57,14 +59,15 @@ export function LinkButton<
       </Link>
     )
   } else {
-    const { children, ...rest } = props
+    const { children, onPress: onPress_, ...rest } = props
+    onPress = onPress_
     restProps = rest
     contents = <Text>{children}</Text>
   }
 
   return (
     <VStack pointerEvents="auto">
-      <TouchableOpacity onPress={props['onPress']}>
+      <TouchableOpacity onPress={onPress}>
         <VStack {...restProps}>{contents}</VStack>
       </TouchableOpacity>
     </VStack>

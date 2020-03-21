@@ -8704,11 +8704,6 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
-little-loader@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/little-loader/-/little-loader-0.2.0.tgz#d572b842ab95ab6fab40571f79514ad49ab8d9bd"
-  integrity sha1-1XK4QquVq2+rQFcfeVFK1Jq42b0=
-
 load-bmfont@^1.3.1, load-bmfont@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/load-bmfont/-/load-bmfont-1.4.0.tgz#75f17070b14a8c785fe7f5bee2e6fd4f98093b6b"
@@ -11597,13 +11592,6 @@ react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
-
-react-mapkit@^0.6.3:
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/react-mapkit/-/react-mapkit-0.6.3.tgz#82595c39975cf44c89e857e168a0c0c9afef3332"
-  integrity sha512-50iFYXY9PP1by8wPVz5f7XKwd84UzHwBglZXNfx57FrE8Z1bmmEAo6RBuGw89SlxYSEDQ7E7185TVctnQJESXg==
-  dependencies:
-    little-loader "^0.2.0"
 
 react-native-animatable@^1.3.3:
   version "1.3.3"
