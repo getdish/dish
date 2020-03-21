@@ -4,7 +4,16 @@
 select json_agg(t) from
 (
 SELECT
-  DISTINCT cats :: text AS name, (select image from restaurant where categories @> (select DISTINCT cats :: text)::jsonb and rating > 4 limit 1),
+  DISTINCT cats :: text AS name,
+    (
+      SELECT image FROM restaurant
+        WHERE categories @> (
+         SELECT DISTINCT cats :: text
+        )::jsonb
+        AND TRIM(image) != ''
+        ORDER BY rating DESC
+        LIMIT 1
+    ),
   count(cats) AS frequency
 FROM
   (
@@ -15,8 +24,8 @@ FROM
     WHERE
       ST_DWithin(
         location,
-        ST_SetSRID(ST_MakePoint(-122.42,37.76), 0),
-        0.1
+        ST_SetSRID(ST_MakePoint(-122.42, 37.76), 0),
+        1
       )
   ) AS dt(cats)
 GROUP BY

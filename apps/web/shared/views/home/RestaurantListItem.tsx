@@ -13,7 +13,7 @@ function hours(restaurant: Restaurant) {
   let next_time = 'unknown'
 
   if (restaurant.is_open_now != null) {
-    text = restaurant.is_open_now ? 'Open' : 'Closed'
+    text = restaurant.is_open_now ? 'Open until' : 'Closed until'
     color = restaurant.is_open_now ? 'green' : 'red'
     const now = new Date()
     let day = now.getDay() - 1
@@ -55,11 +55,11 @@ function price(restaurant: Restaurant) {
         label = 'Cheap'
         color = 'green'
         break
-      case average >= 30:
+      case average > 10 && average <= 30:
         label = 'Average'
         color = 'orange'
         break
-      case average >= 60:
+      case average > 30:
         label = 'Expensive'
         color = 'red'
         break
@@ -67,6 +67,26 @@ function price(restaurant: Restaurant) {
   }
 
   return [label, color, price_range]
+}
+
+function sources(restaurant: Restaurant) {
+  const none = 'No sources yet'
+  if (restaurant.sources == null) {
+    return none
+  }
+  const count = Object.keys(restaurant.sources).length
+  let text: string
+  switch (count) {
+    case 0:
+      text = none
+      break
+    case 1:
+      text = `1 source (${Object.keys(restaurant.sources)[0]})`
+      break
+    default:
+      text = `${count} sources`
+  }
+  return text
 }
 
 export function RestaurantListItem({
@@ -123,7 +143,7 @@ export function RestaurantListItem({
             <Spacer />
 
             <Text style={{ opacity: 0.5 }}>
-              {restaurant.rating} ★ · 1,200 reviews
+              {restaurant.rating} ★ · {sources(restaurant)}
             </Text>
 
             <Spacer />

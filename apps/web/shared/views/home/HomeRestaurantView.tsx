@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react'
-import { Image, Text, View, ScrollView, TouchableOpacity } from 'react-native'
+import React from 'react'
+import { Image, Text, View, ScrollView, Linking, FlatList } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 
-import { Restaurant } from '@dish/models'
 import ReviewForm from './ReviewForm'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack } from '../shared/Stacks'
 import { Link } from '../shared/Link'
+import { SmallTitle } from '../shared/SmallTitle'
 
 export default function HomeRestaurantView() {
   const om = useOvermind()
@@ -87,6 +87,33 @@ export default function HomeRestaurantView() {
             />
           ))}
         </HStack>
+      </View>
+      <View>
+        {restaurant.website && (
+          <Text onPress={() => Linking.openURL(restaurant.website)}>
+            🔗 {restaurant.website}
+          </Text>
+        )}
+
+        {Object.keys(restaurant.sources).length > 0 && (
+          <SmallTitle>Sources</SmallTitle>
+        )}
+        <FlatList
+          data={Object.keys(restaurant.sources).map(i => {
+            return {
+              source: i,
+              url: restaurant.sources[i],
+            }
+          })}
+          renderItem={i => (
+            <Text
+              key={i.item.source}
+              onPress={() => Linking.openURL(i.item.url)}
+            >
+              🔗 {i.item.source}
+            </Text>
+          )}
+        ></FlatList>
       </View>
     </ScrollView>
   )

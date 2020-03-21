@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import {
   Image,
+  ImageSourcePropType,
   Text,
-  View,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -11,10 +11,8 @@ import {
 import { useOvermind } from '../../state/om'
 import top_dish_images from '../../assets/topdishes.json'
 import { Spacer } from '../shared/Spacer'
-import { SmallTitle } from '../shared/SmallTitle'
 import { Link } from '../shared/Link'
 import { HStack, VStack } from '../shared/Stacks'
-import { Color } from './Color'
 
 const styles = StyleSheet.create({
   container: {
@@ -30,7 +28,12 @@ const getImageForDish = (dish: string) => {
   let image: string
   for (const item of top_dish_images) {
     if (item.name == `"${dish}"`) {
-      image = item.image
+      if (item.image != null) {
+        image = item.image
+      } else {
+        image =
+          'data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=='
+      }
     }
   }
   return (
