@@ -1,14 +1,13 @@
 import React, { useState, useLayoutEffect } from 'react'
-import { StyleSheet, View, Text, ScrollView, Dimensions } from 'react-native'
+import { Dimensions } from 'react-native'
 import { ApolloProvider } from '@apollo/client'
-import { createOvermind, Overmind, Config } from 'overmind'
 import { Provider } from 'overmind-react'
 
-import { config, useOvermind, Om, om } from './shared/state/om'
+import { useOvermind, Om, om, startOm } from './shared/state/om'
 import { HomeView } from './shared/views/home/HomeView'
 import { LabDishes } from './shared/views/dishes'
 import { Route, PrivateRoute } from './shared/views/shared/Route'
-import { ZStack, VStack } from './shared/views/shared/Stacks'
+import { Splash } from './Splash'
 
 export default function App() {
   return (
@@ -25,26 +24,9 @@ function StatefulApp() {
   // start app!
   useLayoutEffect(() => {
     async function start() {
-      om.actions.auth.checkForExistingLogin()
-      await om.actions.router.start({
-        onRouteChange: ({ type, name, item }) => {
-          console.log('onRouteChange', type, name, item)
-          switch (name) {
-            case 'home':
-            case 'search':
-            case 'restaurant':
-              if (type === 'push') {
-                om.actions.home._pushHomeState(item)
-              } else {
-                om.actions.home._popHomeState(item)
-              }
-              return
-          }
-        },
-      })
+      await Promise.all([startOm(om as any), startMapKit()])
       setIsStarted(true)
     }
-
     start()
   }, [])
 
@@ -64,10 +46,12 @@ function StatefulApp() {
   )
 }
 
-function Splash() {
-  return (
-    <ZStack fullscreen backgroundColor="red">
-      <Text>Loading</Text>
-    </ZStack>
-  )
+async function startMapKit() {
+  const token = `eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzQ1RLNTYzUlQifQ.eyJpYXQiOjE1ODQ0MDU5MzYuMjAxLCJpc3MiOiIzOTlXWThYOUhZIn0.wAw2qtwuJkcL6T6aI-nLZlVuwJZnlCNg2em6V1uopx9hkUgWZE1ISAWePMoRttzH_NPOem4mQfrpmSTRCkh2bg`
+  // init mapkit
+  mapkit.init({
+    authorizationCallback: done => {
+      done(token)
+    },
+  })
 }

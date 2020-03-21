@@ -10,7 +10,7 @@ export function HomeBreadcrumbs() {
   let parents = om.state.home.breadcrumbStates
 
   if (parents[0].type != 'home') {
-    parents = [{ type: 'home', searchQuery: '', centre: null }, ...parents]
+    parents = [{ type: 'home', searchQuery: '', center: null }, ...parents]
   }
 
   if (parents.length == 1) {

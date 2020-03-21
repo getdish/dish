@@ -36,7 +36,7 @@ const getImageForDish = (dish: string) => {
   return (
     <Image
       source={{ uri: image }}
-      style={{ width: '100%', height: 120, borderRadius: 20 }}
+      style={{ width: '100%', height: 120, borderRadius: 28 }}
       resizeMode="cover"
     />
   )
@@ -51,9 +51,9 @@ export default function HomeViewTopDishes() {
   const { top_dishes = [] } = state
 
   return (
-    <VStack flex={1} paddingVertical={16}>
+    <VStack flex={1}>
       <ScrollView style={{ flex: 1 }}>
-        <HStack flexWrap="wrap" paddingHorizontal={10}>
+        <HStack flexWrap="wrap" paddingHorizontal={10} paddingVertical={16}>
           {top_dishes.map(dish => {
             const category = dish.category.replace(/"/g, '')
             return (
@@ -81,7 +81,11 @@ export default function HomeViewTopDishes() {
                 <Spacer />
                 <Link name="search" params={{ query: category }}>
                   <Text
-                    style={{ textDecorationLine: 'none', fontWeight: 'bold' }}
+                    style={{
+                      textDecorationLine: 'none',
+                      fontWeight: 'bold',
+                      fontSize: 18,
+                    }}
                   >
                     {category}
                   </Text>

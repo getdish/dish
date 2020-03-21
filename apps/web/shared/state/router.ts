@@ -251,6 +251,7 @@ const routeListen: Action<{
       }
       if (isInitialRoute) {
         isInitialRoute = false
+        return
       } else {
         om.actions.router.ignoreNextPush()
       }

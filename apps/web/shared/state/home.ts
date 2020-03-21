@@ -3,6 +3,7 @@ import { Action, AsyncAction, Derive } from 'overmind'
 import _ from 'lodash'
 import { HistoryItem } from './router'
 import { isEqual } from '@o/fast-compare'
+import { Taxonomy, taxonomyLenses } from './Taxonomy'
 
 type LngLat = { lng: number; lat: number }
 
@@ -22,102 +23,12 @@ export type SearchResults =
       }
     }
 
-export type Taxonomy = {
-  id: string
-  name: string
-  icon: string
-  rgb: [number, number, number]
-  description: string
-  type: 'lense' | 'simple' | 'dish' | 'country'
-}
-
-const lenses: Taxonomy[] = [
-  {
-    id: '0',
-    name: 'Overall',
-    icon: '⭐️',
-    rgb: [0.8, 0.1, 0.1],
-    description: 'Most popular',
-    type: 'lense',
-  },
-  {
-    id: '2',
-    name: 'New',
-    icon: '🔥',
-    rgb: [0.5, 0.1, 0.1],
-    description: 'New',
-    type: 'lense',
-  },
-  {
-    id: '3',
-    name: 'Picks',
-    icon: '👩‍🍳',
-    rgb: [0.6, 0.1, 0.5],
-    description: 'Chef choice',
-    type: 'lense',
-  },
-  {
-    id: '4',
-    name: 'Date Night',
-    icon: '🌃',
-    rgb: [0.35, 0.2, 0.65],
-    description: 'Date night',
-    type: 'lense',
-  },
-  {
-    id: '6',
-    name: 'Planty',
-    icon: '🥬',
-    rgb: [0.2, 0.7, 0.2],
-    description: 'Plant based',
-    type: 'lense',
-  },
-  {
-    id: '7',
-    name: 'Seafood',
-    icon: '🐟',
-    rgb: [0.65, 0.2, 0.65],
-    description: 'Seafood',
-    type: 'lense',
-  },
-  {
-    id: '8',
-    name: 'Cheap',
-    icon: '💸',
-    rgb: [0.65, 0.2, 0.65],
-    description: 'Cheap',
-    type: 'lense',
-  },
-]
-
-type Base = {
+type HomeStateItemBase = {
   searchQuery: string
-  centre: LngLat
+  center: LngLat
+  span: number
   historyId?: string
 }
-
-export type HomeStateItemHome = Base & {
-  type: 'home'
-  top_dishes?: TopDish[]
-  top_restaurants?: Restaurant[]
-  lenses: Taxonomy[]
-  activeLense: number
-}
-
-export type HomeStateItemSearch = Base & {
-  type: 'search'
-  results: SearchResults
-  filters: Taxonomy[]
-}
-
-export type HomeStateItemRestaurant = Base & {
-  type: 'restaurant'
-  restaurant: Restaurant | null
-  reviews: Review[]
-  review: Review | null
-}
-
-export type HomeStateItemDish = Base & { type: 'dish'; dish: string }
 
 export type HomeStateItem =
   | HomeStateItemHome
@@ -125,45 +36,72 @@ export type HomeStateItem =
   | HomeStateItemRestaurant
   | HomeStateItemDish
 
+export type HomeStateItemHome = HomeStateItemBase & {
+  type: 'home'
+  top_dishes?: TopDish[]
+  top_restaurants?: Restaurant[]
+  lenses: Taxonomy[]
+  activeLense: number
+}
+
+export type HomeStateItemSearch = HomeStateItemBase & {
+  type: 'search'
+  results: SearchResults
+  filters: Taxonomy[]
+}
+
+export type HomeStateItemRestaurant = HomeStateItemBase & {
+  type: 'restaurant'
+  restaurant: Restaurant | null
+  reviews: Review[]
+  review: Review | null
+}
+
+export type HomeStateItemDish = HomeStateItemBase & {
+  type: 'dish'
+  dish: string
+}
+
 type HomeState = {
   showMenu: boolean
   hoveredRestaurant: Restaurant | null
   states: HomeStateItem[]
-  defaultHomeState: Derive<HomeState, HomeStateItemHome>
   breadcrumbStates: Derive<HomeState, HomeStateItem[]>
   currentState: Derive<HomeState, HomeStateItem>
   previousState: Derive<HomeState, HomeStateItem>
+  lastHomeState: Derive<HomeState, HomeStateItemHome>
 }
 
 const RADIUS = 0.015
 
+// TODO location ask?
+export const initialHomeState: HomeStateItemHome = {
+  type: 'home',
+  lenses: taxonomyLenses,
+  activeLense: 0,
+  searchQuery: '',
+  center: {
+    lng: -122.421351,
+    lat: 37.759251,
+  },
+  span: 0.05,
+}
+
 export const state: HomeState = {
   showMenu: false,
   hoveredRestaurant: null,
-  states: [],
-  defaultHomeState: state => {
-    return (
-      ([...state.states]
-        .reverse()
-        .find(x => x.type == 'home') as HomeStateItemHome) ?? {
-        type: 'home',
-        lenses,
-        activeLense: 0,
-        searchQuery: state.currentState?.searchQuery ?? '',
-        centre: state.currentState?.centre ?? {
-          lng: -122.421351,
-          lat: 37.759251,
-        },
-      }
-    )
-  },
+  states: [initialHomeState],
   breadcrumbStates: state => {
-    const lastHome = state.defaultHomeState
+    const lastHome = state.lastHomeState
     const lastHomeIndex = state.states.findIndex(x => x === lastHome)
     return state.states.slice(lastHomeIndex == -1 ? 0 : lastHomeIndex)
   },
   currentState: state => _.last(state.states),
   previousState: state => state.states[state.states.length - 2],
+  lastHomeState: state =>
+    [...state.states]
+      .reverse()
+      .find(x => x.type === 'home') as HomeStateItemHome,
 }
 
 const _pushHomeState: Action<HistoryItem> = (om, item) => {
@@ -172,7 +110,7 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
   const currentBaseState = {
     historyId: item.id,
     searchQuery: currentState?.searchQuery ?? '',
-    centre: currentState?.centre ?? { lng: -122.421351, lat: 37.759251 },
+    center: currentState?.center ?? { lng: -122.421351, lat: 37.759251 },
   }
 
   let nextState: HomeStateItem | null = null
@@ -180,17 +118,10 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
 
   switch (item.name) {
     case 'home':
-      const lastHomeState = [...om.state.home.states]
-        .reverse()
-        .find(x => x.type === 'home')
       nextState = {
         type: 'home',
-        ...om.state.home.defaultHomeState,
+        ...om.state.home.lastHomeState,
         ...currentBaseState,
-        ...lastHomeState,
-      }
-      fetchData = () => {
-        om.actions.home.getTopDishes()
       }
       break
     case 'search':
@@ -252,7 +183,7 @@ const setCurrentRestaurant: AsyncAction<string> = async (om, slug: string) => {
 
   if (state) {
     state.restaurant = restaurant
-    state.centre = {
+    state.center = {
       lng: restaurant.location.coordinates[0],
       lat: restaurant.location.coordinates[1] - 0.0037,
     }
@@ -279,8 +210,8 @@ const getTopDishes: AsyncAction = async om => {
       top_dishes: {
         __args: {
           args: {
-            lon: om.state.home.currentState.centre.lng,
-            lat: om.state.home.currentState.centre.lat,
+            lon: om.state.home.currentState.center.lng,
+            lat: om.state.home.currentState.center.lat,
             radius: RADIUS,
           },
         },
@@ -323,14 +254,14 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
 
   const [restaurants, topRestaurants] = await Promise.all([
     Restaurant.search(
-      om.state.home.currentState.centre.lat,
-      om.state.home.currentState.centre.lng,
+      om.state.home.currentState.center.lat,
+      om.state.home.currentState.center.lng,
       RADIUS,
       query
     ),
     Restaurant.highestRatedByDish(
-      om.state.home.currentState.centre.lat,
-      om.state.home.currentState.centre.lng,
+      om.state.home.currentState.center.lat,
+      om.state.home.currentState.center.lng,
       RADIUS,
       [query]
     ),
@@ -353,8 +284,8 @@ const clearSearch: Action = om => {
   }
 }
 
-const setMapCentre: Action<LngLat> = (om, centre: LngLat) => {
-  om.state.home.currentState.centre = centre
+const setMapcenter: Action<LngLat> = (om, center: LngLat) => {
+  om.state.home.currentState.center = center
 }
 
 const getReview: AsyncAction = async om => {
@@ -414,7 +345,7 @@ export const actions = {
   getTopDishes,
   // restaurantSearch,
   clearSearch,
-  setMapCentre,
+  setMapcenter,
   getReview,
   submitReview,
   getUserReviews,
