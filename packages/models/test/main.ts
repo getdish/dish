@@ -118,7 +118,7 @@ test('Identifies a similar restaurant', async t => {
   t.deepEqual(restaurant.id, t.context.restaurant.id)
 })
 
-test('Is open now', async t => {
+test.skip('Is open now', async t => {
   const url = 'http://worldtimeapi.org/api/timezone/America/Los_Angeles'
   const now_string = await axios.get(url)
   const now = moment(now_string.data.datetime)
