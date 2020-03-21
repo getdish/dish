@@ -150,8 +150,8 @@ export class Yelp extends WorkerJob {
       }
     }
     if (!('mapBoxProps' in data)) {
-      const message = "YELP: Couldn't extract embedded data on " + yelp_path
-      sentryMessage(message)
+      const message = "YELP: Couldn't extract embedded data"
+      sentryMessage(message, { path: yelp_path })
       console.log(message)
       return
     }
