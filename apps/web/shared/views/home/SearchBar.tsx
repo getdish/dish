@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     padding: 12,
-    paddingHorizontal: 16,
+    paddingHorizontal: 24,
     flex: 1,
     fontSize: 18,
   },
