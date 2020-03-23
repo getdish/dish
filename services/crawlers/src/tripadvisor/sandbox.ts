@@ -1,3 +1,4 @@
+import { Restaurant } from '@dish/models'
 import { Tripadvisor } from './Tripadvisor'
 
 const FLOUR =
@@ -10,7 +11,10 @@ async function main() {
 
 async function one() {
   const t = new Tripadvisor()
+  const restaurant = new Restaurant()
   await t.runOnWorker('getRestaurant', [FLOUR])
+  await restaurant.findOne('name', 'Flour + Water')
+  console.log(restaurant)
 }
 
 one()

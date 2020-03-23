@@ -83,10 +83,13 @@ export class Tripadvisor extends WorkerJob {
     }
     const lon = overview.location.longitude
     const lat = overview.location.latitude
+    let restaurant_name_parts = overview.name.split(', ')
+    restaurant_name_parts.pop()
+    const restaurant_name = restaurant_name_parts.join(', ')
     const canonical = await Restaurant.saveCanonical(
       lon,
       lat,
-      overview.name,
+      restaurant_name,
       overview.contact.address
     )
     const scrape = new Scrape({
