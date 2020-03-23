@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text } from 'react-native'
+import { Text, TextProps } from 'react-native'
 import { HStack } from '../shared/Stacks'
 
 export function TagButton(props: { rank?: number; name: string }) {
@@ -18,22 +18,25 @@ export function TagButton(props: { rank?: number; name: string }) {
       {!!props.rank && (
         <Text
           style={{
+            fontSize: 12,
             fontWeight: 'bold',
-            paddingVertical: 2,
-            paddingHorizontal: 10,
+            paddingVertical: 1,
+            paddingHorizontal: 9,
             backgroundColor: '#fff',
             height: '100%',
             lineHeight: 23,
           }}
         >
-          #{props.rank}
+          <SuperScriptText>#</SuperScriptText>
+          {props.rank}
         </Text>
       )}
       <Text
         style={{
+          fontSize: 12,
           fontWeight: 'bold',
-          paddingVertical: 2,
-          paddingHorizontal: 10,
+          paddingVertical: 1,
+          paddingHorizontal: 9,
           color: '#fff',
           lineHeight: 23,
         }}
@@ -41,5 +44,17 @@ export function TagButton(props: { rank?: number; name: string }) {
         {props.name}
       </Text>
     </HStack>
+  )
+}
+
+export function SuperScriptText({
+  style,
+  ...rest
+}: TextProps & { children: any }) {
+  return (
+    <Text
+      style={[{ fontSize: 7, textAlignVertical: 'top' }, style]}
+      {...rest}
+    />
   )
 }
