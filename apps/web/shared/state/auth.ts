@@ -56,7 +56,7 @@ const register: AsyncAction<
   return result
 }
 
-const checkForExistingLogin: Action = om => {
+const checkForExistingLogin: Action = (om) => {
   if (auth.has_been_logged_out) {
     Toast.show('Session expired: logged out')
   }
@@ -92,7 +92,7 @@ const postLogin: Action<Partial<User>> = (om, user: Partial<User>) => {
   om.state.auth.user = user
 }
 
-const logout: AsyncAction = async om => {
+const logout: AsyncAction = async (om) => {
   auth.logout()
   om.state.auth.user = {} as User
   om.state.auth.is_logged_in = false

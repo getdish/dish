@@ -7,7 +7,7 @@ const { useState, useEffect, useLayoutEffect } = React
 type MediaQueryObject = { [key: string]: string | number | boolean }
 
 const camelToHyphen = (str: string) =>
-  str.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`).toLowerCase()
+  str.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`).toLowerCase()
 
 const objectToString = (query: string | MediaQueryObject) => {
   if (typeof query === 'string') return query
@@ -47,19 +47,19 @@ const createUseMedia = (effect: EitherEffect) =>
     const queries = allQueries.map(objectToString)
     const [state, setState] = useState(
       normalizeState(
-        queries.map(query => !!window.matchMedia(query).matches),
+        queries.map((query) => !!window.matchMedia(query).matches),
         rawQueries
       )
     )
 
     effect(() => {
       let mounted = true
-      const mqls = queries.map(query => window.matchMedia(query))
+      const mqls = queries.map((query) => window.matchMedia(query))
 
       let last
       const update = () => {
         const next = normalizeState(
-          mqls.map(x => !!x.matches),
+          mqls.map((x) => !!x.matches),
           rawQueries
         )
         if (!isEqual(next, last)) {
@@ -77,12 +77,12 @@ const createUseMedia = (effect: EitherEffect) =>
         update()
       })
 
-      mqls.forEach(mql => mql.addListener(onChange))
+      mqls.forEach((mql) => mql.addListener(onChange))
       update()
 
       return () => {
         mounted = false
-        mqls.forEach(x => x.removeListener(onChange))
+        mqls.forEach((x) => x.removeListener(onChange))
       }
     }, [JSON.stringify(rawQueries)])
 

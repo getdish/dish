@@ -7,7 +7,7 @@ type Size = [number, number]
 
 const windowSize = (): Size => [window.innerWidth, window.innerHeight]
 
-const idFn = _ => _
+const idFn = (_) => _
 
 export function useWindowSize({
   throttle = 0,

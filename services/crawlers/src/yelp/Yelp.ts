@@ -13,9 +13,7 @@ import { aroundCoords, boundingBoxFromcenter, geocode } from '../utils'
 const YELP_DOMAIN = process.env.YELP_PROXY || 'https://www.yelp.com'
 const BB_SEARCH = '/search/snippet?cflt=restaurants&l='
 
-const user_agent = Math.random()
-  .toString(36)
-  .substring(2, 15)
+const user_agent = Math.random().toString(36).substring(2, 15)
 
 const axios = axios_base.create({
   baseURL: YELP_DOMAIN,

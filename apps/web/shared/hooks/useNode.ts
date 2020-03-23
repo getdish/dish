@@ -5,7 +5,7 @@ export type UseNodeProps<A> = {
   map: (node: A) => HTMLElement | null
 }
 
-const idFn = _ => _
+const idFn = (_) => _
 
 export function useNode<A extends HTMLElement>(
   props: UseNodeProps<A> = { map: idFn }

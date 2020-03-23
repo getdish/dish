@@ -74,7 +74,7 @@ export function useNodeSize(
     {
       ref,
       disable,
-      onChange: entries => {
+      onChange: (entries) => {
         const { width, height } = entries[0].contentRect
         const next = { width, height }
         update(next)

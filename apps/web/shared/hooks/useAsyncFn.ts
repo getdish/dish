@@ -38,14 +38,14 @@ export function useAsyncFn<Result = any, Args extends any[] = any[]>(
     set({ loading: true })
 
     return fn(...args).then(
-      value => {
+      (value) => {
         if (mounted.current) {
           set({ value, loading: false })
         }
 
         return value
       },
-      error => {
+      (error) => {
         if (mounted.current) {
           set({ error, loading: false })
         }

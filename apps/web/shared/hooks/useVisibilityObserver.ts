@@ -9,7 +9,7 @@ export function useVisibilityObserver(
   useEffect(() => {
     const node = ref.current
     if (!node) return
-    const observer = new IntersectionObserver(entries => {
+    const observer = new IntersectionObserver((entries) => {
       if (entries && entries[0]) {
         if (entries[0].isIntersecting) {
           onVisible(true)
