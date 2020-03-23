@@ -12,15 +12,15 @@ export function TagButton(props: { rank?: number; name: string }) {
       overflow="hidden"
       alignItems="center"
       shadowColor="rgba(0,0,0,0.1)"
-      shadowRadius={4}
+      shadowRadius={6}
       shadowOffset={{ width: 0, height: 2 }}
     >
       {!!props.rank && (
         <Text
           style={{
             fontWeight: 'bold',
-            paddingVertical: 3,
-            paddingHorizontal: 6,
+            paddingVertical: 2,
+            paddingHorizontal: 10,
             backgroundColor: '#fff',
             height: '100%',
             lineHeight: 23,
@@ -32,7 +32,7 @@ export function TagButton(props: { rank?: number; name: string }) {
       <Text
         style={{
           fontWeight: 'bold',
-          paddingVertical: 3,
+          paddingVertical: 2,
           paddingHorizontal: 10,
           color: '#fff',
           lineHeight: 23,
