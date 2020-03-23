@@ -83,6 +83,14 @@ services:
       - COMMIT_HASH=${REVISION}
       - POSTGRES_HOST=postgres-postgresql.postgres
       - POSTGRES_PASSWORD=${TF_VAR_POSTGRES_PASSWORD}
+  postgres-backups:
+    image: dish/backups
+    build:
+      dockerfile: ./services/hasura/backups/Dockerfile
+      context: ./services/hasura/backups/
+    env:
+      - DO_SPACES_API_ID=${TF_VAR_DO_SPACES_ID}
+      - DO_SPACES_API_SECRET=${DO_SPACES_API_SECRET}
 {{- end}}
 
 template:
