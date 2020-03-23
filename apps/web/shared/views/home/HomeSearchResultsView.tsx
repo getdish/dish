@@ -5,7 +5,7 @@ import { useOvermind } from '../../state/om'
 import { RestaurantListItem } from './RestaurantListItem'
 import { SmallTitle } from '../shared/SmallTitle'
 import { VStack } from '../shared/Stacks'
-import { HomeStateItemSearch } from '../../state/home'
+import { HomeStateItemSearch, HomeStateItem } from '../../state/home'
 
 // function SearchResults() {
 //   const om = useOvermind()
@@ -107,15 +107,17 @@ import { HomeStateItemSearch } from '../../state/home'
 //   )
 // }
 
-export default function HomeSearchResultsView() {
-  const om = useOvermind()
-  const state = om.state.home.currentState as HomeStateItemSearch
-
-  if (state.type != 'search') {
-    return null
-  }
-
-  return <HomeSearchResultsViewContent state={state} />
+export default function HomeSearchResultsView({
+  state,
+}: {
+  state: HomeStateItem
+}) {
+  return (
+    <VStack flex={1} overflow="hidden">
+      <SmallTitle>Top {state.searchQuery} Restaurants</SmallTitle>
+      <HomeSearchResultsViewContent state={state} />
+    </VStack>
+  )
 }
 
 function HomeSearchResultsViewContent({

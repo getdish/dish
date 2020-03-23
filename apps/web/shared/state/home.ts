@@ -34,7 +34,7 @@ export type HomeStateItem =
   | HomeStateItemHome
   | HomeStateItemSearch
   | HomeStateItemRestaurant
-  | HomeStateItemDish
+// | HomeStateItemDish
 
 export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
@@ -58,10 +58,10 @@ export type HomeStateItemRestaurant = HomeStateItemBase & {
   review: Review | null
 }
 
-export type HomeStateItemDish = HomeStateItemBase & {
-  type: 'dish'
-  dish: string
-}
+// export type HomeStateItemDish = HomeStateItemBase & {
+//   type: 'dish'
+//   dish: string
+// }
 
 type HomeState = {
   showMenu: boolean
@@ -113,6 +113,7 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
     historyId: item.id,
     searchQuery: currentState?.searchQuery ?? '',
     center: currentState?.center ?? { lng: -122.421351, lat: 37.759251 },
+    span: currentState?.span ?? 0.05,
   }
 
   let nextState: HomeStateItem | null = null
@@ -164,6 +165,15 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
   if (fetchData) {
     fetchData()
   }
+}
+
+const popTo: Action<HomeStateItem> = (om, item) => {
+  om.actions.router.navigate({
+    name: item.type,
+    params:
+      [...om.state.router.history].reverse().find((x) => x.name == item.type)
+        ?.params ?? {},
+  })
 }
 
 const _popHomeState: Action<HistoryItem> = (om, item) => {
@@ -251,6 +261,11 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
   const state = [...om.state.home.states]
     .reverse()
     .find((x) => x.type === 'search') as HomeStateItemSearch
+
+  if (!state) {
+    return
+  }
+
   state.searchQuery = query
   state.results = { status: 'loading' }
 
@@ -344,6 +359,7 @@ const setActiveLense: Action<Taxonomy> = (om, val) => {
 }
 
 export const actions = {
+  popTo,
   _pushHomeState,
   _popHomeState,
   setActiveLense,

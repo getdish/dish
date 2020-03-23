@@ -15,6 +15,7 @@ import { Link } from '../shared/Link'
 import { HStack, VStack } from '../shared/Stacks'
 import { SmallTitle } from '../shared/SmallTitle'
 import { HomeLenseBar } from './HomeLenseBar'
+import { HomeStateItem } from '../../state/home'
 
 const styles = StyleSheet.create({
   container: {
@@ -47,21 +48,21 @@ const getImageForDish = (dish: string) => {
   )
 }
 
-export default function HomeViewTopDishes() {
+export default function HomeViewTopDishes({ state }: { state: HomeStateItem }) {
   const om = useOvermind()
-  const state = om.state.home.currentState
   if (state.type !== 'home') {
     return null
   }
   const { top_dishes = [] } = state
-
   return (
     <VStack flex={1}>
+      <SmallTitle>Top Dishes</SmallTitle>
+
       <HomeLenseBar />
 
       <ScrollView style={{ flex: 1 }}>
         <VStack paddingVertical={20}>
-          {[0, 1, 2, 3, 4, 5, 6, 7].map(x => (
+          {[0, 1, 2, 3, 4, 5, 6, 7].map((x) => (
             <VStack key={x} paddingBottom={20}>
               <HStack paddingHorizontal={20}>
                 <HStack flex={1}>
@@ -75,7 +76,7 @@ export default function HomeViewTopDishes() {
 
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <HStack height={170} padding={20} paddingHorizontal={10}>
-                  {top_dishes.map(dish => {
+                  {top_dishes.map((dish) => {
                     const category = dish.category.replace(/"/g, '')
                     return (
                       <TouchableOpacity

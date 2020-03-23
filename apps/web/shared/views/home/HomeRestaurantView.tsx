@@ -8,11 +8,14 @@ import { Spacer } from '../shared/Spacer'
 import { HStack, VStack } from '../shared/Stacks'
 import { Link } from '../shared/Link'
 import { SmallTitle } from '../shared/SmallTitle'
+import { HomeStateItem } from '../../state/home'
 
-export default function HomeRestaurantView() {
+export default function HomeRestaurantView({
+  state,
+}: {
+  state: HomeStateItem
+}) {
   const om = useOvermind()
-  const state = om.state.home.currentState
-
   if (state.type !== 'restaurant') {
     return null
   }
@@ -21,11 +24,14 @@ export default function HomeRestaurantView() {
   }
   const restaurant = state.restaurant
 
+  console.log('restaurant', restaurant)
+
   if (typeof restaurant.name == 'undefined') {
     return <Text>Loading...</Text>
   }
 
-  const categories = restaurant.categories || []
+  const categories = restaurant.categories ?? []
+  const sources = restaurant.sources ?? []
 
   return (
     <ScrollView style={{ padding: 18 }}>
@@ -89,23 +95,21 @@ export default function HomeRestaurantView() {
         </HStack>
       </View>
       <View>
-        {restaurant.website && (
+        {!!restaurant.website && (
           <Text onPress={() => Linking.openURL(restaurant.website)}>
             🔗 {restaurant.website}
           </Text>
         )}
 
-        {Object.keys(restaurant.sources).length > 0 && (
-          <SmallTitle>Sources</SmallTitle>
-        )}
+        {Object.keys(sources).length > 0 && <SmallTitle>Sources</SmallTitle>}
         <FlatList
-          data={Object.keys(restaurant.sources).map(i => {
+          data={Object.keys(sources).map((i) => {
             return {
               source: i,
-              url: restaurant.sources[i],
+              url: sources[i],
             }
           })}
-          renderItem={i => (
+          renderItem={(i) => (
             <Text
               key={i.item.source}
               onPress={() => Linking.openURL(i.item.url)}
