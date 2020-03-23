@@ -1,10 +1,11 @@
 export type Taxonomy = {
   id: string
   name: string
-  icon: string
-  rgb: [number, number, number]
-  description: string
-  type: 'lense' | 'simple' | 'dish' | 'country'
+  icon?: string
+  rgb?: [number, number, number]
+  description?: string
+  type: 'lense' | 'filter' | 'dish' | 'country'
+  isActive?: boolean
 }
 
 export const taxonomyLenses: Taxonomy[] = [
@@ -63,5 +64,43 @@ export const taxonomyLenses: Taxonomy[] = [
     rgb: [0.65, 0.2, 0.65],
     description: 'Cheap',
     type: 'lense',
+  },
+]
+
+export const taxonomyFilters: Taxonomy[] = [
+  {
+    id: '0',
+    name: '$',
+    type: 'filter',
+  },
+  {
+    id: '2',
+    name: '$$',
+    type: 'filter',
+  },
+  {
+    id: '3',
+    name: '$$$',
+    type: 'filter',
+  },
+  {
+    id: '4',
+    name: 'Open Now',
+    type: 'filter',
+  },
+  {
+    id: '6',
+    name: 'Delivers',
+    type: 'filter',
+  },
+  {
+    id: '7',
+    name: 'Healthy',
+    type: 'filter',
+  },
+  {
+    id: '8',
+    name: 'Quick',
+    type: 'filter',
   },
 ]

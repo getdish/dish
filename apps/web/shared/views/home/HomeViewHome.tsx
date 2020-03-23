@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { View, StyleSheet } from 'react-native'
 
 import * as Animatable from 'react-native-animatable'
 import { useOvermind } from '../../state/om'
@@ -8,13 +7,14 @@ import HomeViewTopDishes from './HomeViewTopDishes'
 import HomeSearchResultsView from './HomeSearchResultsView'
 import SearchBar from './SearchBar'
 import { Spacer } from '../shared/Spacer'
-import { VStack, ZStack, StackBaseProps } from '../shared/Stacks'
+import { VStack, ZStack, StackBaseProps, HStack } from '../shared/Stacks'
 import { HomeBreadcrumbs } from './HomeBreadcrumbs'
 import { Route } from '../shared/Route'
 import { SmallTitle } from '../shared/SmallTitle'
 import { HomeStateItem } from '../../state/home'
 import _ from 'lodash'
-import { DishButton } from '../shared/Link'
+import { HomeFilterBar } from './HomeFilterBar'
+import { LinearGradient } from 'expo-linear-gradient'
 
 export const drawerBorderRadius = 20
 
@@ -26,11 +26,9 @@ export default function HomeViewHome() {
     <>
       <SearchBar />
 
-      <HomeBreadcrumbs />
+      <HomeFilterBar />
 
-      <Spacer />
-
-      <VStack height={26} alignItems="center">
+      <VStack height={29} alignItems="center">
         <SmallTitle>
           {currentState.type == 'home' && `Top Dishes`}
           {currentState.type == 'search' &&
@@ -38,28 +36,68 @@ export default function HomeViewHome() {
         </SmallTitle>
       </VStack>
 
-      <VStack flex={1} paddingVertical={20}>
-        <StackView items={om.state.home.breadcrumbStates}>
-          {homeState => {
-            const item = om.state.router.history.find(
-              x => x.id == homeState.historyId
-            )
-            return (
-              <>
-                <Route exact name="home" forHistory={item}>
-                  <HomeViewTopDishes />
-                </Route>
-                <Route name="search" forHistory={item}>
-                  <HomeSearchResultsView />
-                </Route>
-                <Route name="restaurant" forHistory={item}>
-                  <HomeRestaurantView />
-                </Route>
-              </>
-            )
-          }}
-        </StackView>
-      </VStack>
+      <ZStack position="relative" flex={1}>
+        <VStack
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          flex={1}
+          paddingVertical={20}
+        >
+          <StackView items={om.state.home.breadcrumbStates}>
+            {(homeState) => {
+              const item = om.state.router.history.find(
+                (x) => x.id == homeState.historyId
+              )
+              return (
+                <>
+                  <Route exact name="home" forHistory={item}>
+                    <HomeViewTopDishes />
+                  </Route>
+                  <Route name="search" forHistory={item}>
+                    <HomeSearchResultsView />
+                  </Route>
+                  <Route name="restaurant" forHistory={item}>
+                    <HomeRestaurantView />
+                  </Route>
+                </>
+              )
+            }}
+          </StackView>
+        </VStack>
+
+        <ZStack fullscreen pointerEvents="none">
+          <VStack flex={1}>
+            <Spacer flex={1} />
+
+            <HStack
+              paddingVertical={20}
+              paddingHorizontal={20}
+              paddingTop={30}
+              borderRadius={drawerBorderRadius}
+              overflow="hidden"
+            >
+              <LinearGradient
+                colors={['transparent', '#fff', '#fff']}
+                style={{
+                  position: 'absolute',
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                  zIndex: -1,
+                }}
+              />
+
+              <VStack pointerEvents="auto">
+                <HomeBreadcrumbs />
+              </VStack>
+            </HStack>
+          </VStack>
+        </ZStack>
+      </ZStack>
     </>
   )
 }
@@ -87,6 +125,7 @@ function StackView<A>(props: {
             ) + index
           }
           animation="fadeInUp"
+          duration={300}
           style={{
             position: 'absolute',
             top: 0,

@@ -27,7 +27,7 @@
     "@expo/vector-icons ": "10.0.6",
     "@expo/webpack-config": "^0.11.8",
     "@o/fast-compare": "2.7.1",
-    "expo": "36.0.2",
+    "expo": "^36.0.2",
     "mapkit-typescript": "^5.18.1",
     "overmind": "23.0.1",
     "overmind-react": "24.0.1",
@@ -48,12 +48,10 @@
     "react-native-unimodules": "~0.7.0",
     "react-native-web": "0.11.7",
     "serve": "^11.3.0",
-    "use-expo": "1.0.1"
+    "use-expo": "1.0.1",
+    "expo-linear-gradient": "^8.0.0"
   },
   "devDependencies": {
-    "@babel/core": "7.6.0",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@expo/webpack-config": "^0.11.8",
     "@types/page": "1.8.0",
     "@types/react": "~16.9.0",
     "@types/react-native": "~0.60.23",
@@ -61,12 +59,13 @@
     "babel-preset-expo": "^8.0.0",
     "jest": "~24.9.0",
     "jest-expo": "~36.0.1",
-    "metro-react-native-babel-preset": "~0.56.0",
+    "metro-react-native-babel-preset": "^0.59.0",
     "moment": "^2.24.0",
     "overmind-devtools": "^24.0.1",
     "patch-package": "^6.2.1",
     "react-test-renderer": "~16.9.0",
-    "typescript": "~3.6.3"
+    "typescript": "^3.8.3",
+    "expo-cli": "^3.15.5"
   },
   "resolutions": {
     "react": "16.9.0",

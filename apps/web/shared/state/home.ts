@@ -3,7 +3,7 @@ import { Action, AsyncAction, Derive } from 'overmind'
 import _ from 'lodash'
 import { HistoryItem } from './router'
 import { isEqual } from '@o/fast-compare'
-import { Taxonomy, taxonomyLenses } from './Taxonomy'
+import { Taxonomy, taxonomyLenses, taxonomyFilters } from './Taxonomy'
 
 type LngLat = { lng: number; lat: number }
 
@@ -41,6 +41,7 @@ export type HomeStateItemHome = HomeStateItemBase & {
   top_dishes?: TopDish[]
   top_restaurants?: Restaurant[]
   lenses: Taxonomy[]
+  filters: Taxonomy[]
   activeLense: number
 }
 
@@ -78,6 +79,7 @@ const RADIUS = 0.015
 export const initialHomeState: HomeStateItemHome = {
   type: 'home',
   lenses: taxonomyLenses,
+  filters: taxonomyFilters,
   activeLense: 0,
   searchQuery: '',
   center: {
@@ -91,17 +93,17 @@ export const state: HomeState = {
   showMenu: false,
   hoveredRestaurant: null,
   states: [initialHomeState],
-  breadcrumbStates: state => {
+  breadcrumbStates: (state) => {
     const lastHome = state.lastHomeState
-    const lastHomeIndex = state.states.findIndex(x => x === lastHome)
+    const lastHomeIndex = state.states.findIndex((x) => x === lastHome)
     return state.states.slice(lastHomeIndex == -1 ? 0 : lastHomeIndex)
   },
-  currentState: state => _.last(state.states),
-  previousState: state => state.states[state.states.length - 2],
-  lastHomeState: state =>
+  currentState: (state) => _.last(state.states),
+  previousState: (state) => state.states[state.states.length - 2],
+  lastHomeState: (state) =>
     [...state.states]
       .reverse()
-      .find(x => x.type === 'home') as HomeStateItemHome,
+      .find((x) => x.type === 'home') as HomeStateItemHome,
 }
 
 const _pushHomeState: Action<HistoryItem> = (om, item) => {
@@ -128,7 +130,7 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
       const lastMatchingSearchState = [...om.state.home.states]
         .reverse()
         .find(
-          x => x.type === 'search' && x.searchQuery == item.params.query
+          (x) => x.type === 'search' && x.searchQuery == item.params.query
         ) as HomeStateItemSearch
 
       nextState = {
@@ -179,7 +181,7 @@ const setCurrentRestaurant: AsyncAction<string> = async (om, slug: string) => {
   await restaurant.findOne('slug', slug)
   const state = [...om.state.home.states]
     .reverse()
-    .find(x => x.type === 'restaurant') as HomeStateItemRestaurant | null
+    .find((x) => x.type === 'restaurant') as HomeStateItemRestaurant | null
 
   if (state) {
     state.restaurant = restaurant
@@ -200,7 +202,7 @@ const getUserReviews: AsyncAction<string> = async (om, user_id: string) => {
   }
 }
 
-const getTopDishes: AsyncAction = async om => {
+const getTopDishes: AsyncAction = async (om) => {
   const state = om.state.home.currentState
   if (state.type !== 'home') {
     return
@@ -248,7 +250,7 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
 
   const state = [...om.state.home.states]
     .reverse()
-    .find(x => x.type === 'search') as HomeStateItemSearch
+    .find((x) => x.type === 'search') as HomeStateItemSearch
   state.searchQuery = query
   state.results = { status: 'loading' }
 
@@ -277,7 +279,7 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
   }
 }
 
-const clearSearch: Action = om => {
+const clearSearch: Action = (om) => {
   const state = om.state.home.currentState
   if (state.type == 'search') {
     om.actions.router.back()
@@ -288,7 +290,7 @@ const setMapcenter: Action<LngLat> = (om, center: LngLat) => {
   om.state.home.currentState.center = center
 }
 
-const getReview: AsyncAction = async om => {
+const getReview: AsyncAction = async (om) => {
   const state = om.state.home.currentState
 
   if (state.type == 'restaurant') {
@@ -335,9 +337,16 @@ const setShowMenu: Action<boolean> = (om, val) => {
   om.state.home.showMenu = val
 }
 
+const setActiveLense: Action<Taxonomy> = (om, val) => {
+  om.state.home.lastHomeState.activeLense = om.state.home.lastHomeState.lenses.findIndex(
+    (x) => x.id == val.id
+  )
+}
+
 export const actions = {
   _pushHomeState,
   _popHomeState,
+  setActiveLense,
   setShowMenu,
   setHoveredRestaurant,
   setCurrentRestaurant,
