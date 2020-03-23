@@ -73,7 +73,7 @@ type HomeState = {
   lastHomeState: Derive<HomeState, HomeStateItemHome>
 }
 
-const RADIUS = 0.015
+const RADIUS = 0.15
 
 // TODO location ask?
 export const initialHomeState: HomeStateItemHome = {

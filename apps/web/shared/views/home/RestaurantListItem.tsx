@@ -76,7 +76,7 @@ export function RestaurantListItem({
 
                 <Text
                   style={{
-                    fontSize: 24,
+                    fontSize: 22,
                     fontWeight: 'bold',
                     textDecorationColor: 'transparent',
                   }}
@@ -122,43 +122,8 @@ export function RestaurantListItem({
           </VStack>
 
           <HStack>
-            <VStack position="absolute" top={-15} left={0} zIndex={100}>
-              <VStack
-                backgroundColor="#fff"
-                borderRadius={100}
-                shadowColor="rgba(0,0,0,0.2)"
-                shadowRadius={5}
-                shadowOffset={{ height: 1, width: 0 }}
-                width={54}
-                height={54}
-                alignItems="center"
-                justifyContent="center"
-                marginLeft={-26}
-                marginRight={10}
-                marginVertical={-5}
-                padding={2}
-              >
-                <VStack
-                  borderRadius={100}
-                  backgroundColor={rank < 3 ? 'green' : 'orange'}
-                  padding={3}
-                  width="100%"
-                  height="100%"
-                >
-                  <VStack
-                    width="100%"
-                    height="100%"
-                    borderRadius={100}
-                    backgroundColor="#fff"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-                      {100 - +rank * 2}
-                    </Text>
-                  </VStack>
-                </VStack>
-              </VStack>
+            <VStack position="absolute" top={-25} left={-20} zIndex={100}>
+              <RankingView rank={100 - +rank * 2} />
             </VStack>
 
             {restaurant.allPhotos.slice(0, 3).map((photo, i) => {
@@ -177,6 +142,68 @@ export function RestaurantListItem({
         </HStack>
       </TouchableOpacity>
     </div>
+  )
+}
+
+function RankingView({ rank }: { rank: number }) {
+  const color = rank > 84 ? 'green' : rank > 60 ? 'orange' : 'red'
+  return (
+    <VStack position="relative">
+      {rank > 89 && (
+        <VStack
+          position="absolute"
+          top={-5}
+          // bottom={0}
+          right={-5}
+          alignItems="center"
+          justifyContent="center"
+          zIndex={100}
+        >
+          <Text
+            style={{
+              fontSize: 20,
+              textShadowColor: 'rgba(0,0,0,0.5)',
+              textShadowRadius: 2,
+            }}
+          >
+            ⭐️
+          </Text>
+        </VStack>
+      )}
+      <VStack
+        backgroundColor="#fff"
+        borderRadius={100}
+        shadowColor="rgba(0,0,0,0.25)"
+        shadowRadius={8}
+        shadowOffset={{ height: 1, width: 0 }}
+        width={50}
+        height={50}
+        alignItems="center"
+        justifyContent="center"
+        padding={2}
+      >
+        <VStack
+          borderRadius={100}
+          backgroundColor={color}
+          padding={2}
+          width="100%"
+          height="100%"
+        >
+          <VStack
+            width="100%"
+            height="100%"
+            borderRadius={100}
+            backgroundColor="#fff"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Text style={{ fontSize: 20, fontWeight: '600', color }}>
+              {rank}
+            </Text>
+          </VStack>
+        </VStack>
+      </VStack>
+    </VStack>
   )
 }
 

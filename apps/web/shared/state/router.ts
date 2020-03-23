@@ -229,7 +229,8 @@ const routeListen: Action<{
       )
       if (pop.path == getPathFromParams({ name, params })) {
         const history = om.state.router.history
-        const lastPath = history[history.length - 2].path
+        const last = history[history.length - 2] ?? history[history.length - 1]
+        const lastPath = last.path
         const lastMatches = lastPath == pop.path
         console.log('check it out', lastPath, pop.path)
         isGoingBack = lastMatches
