@@ -134,13 +134,11 @@ export class Restaurant extends ModelBase<Restaurant> {
                 },
               },
             },
-            limit: 10,
+            limit: 25,
+            order_by: { rating: new EnumType('desc_nulls_last') },
           },
           id: true,
-          ...Restaurant.fields().reduce((acc, cur) => {
-            acc[cur] = true
-            return acc
-          }, {}),
+          ...Restaurant.fieldsAsObject(),
         },
       },
     }
