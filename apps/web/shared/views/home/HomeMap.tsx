@@ -5,10 +5,10 @@ import { VStack, ZStack, HStack } from '../shared/Stacks'
 import { Text, Button } from 'react-native'
 import _ from 'lodash'
 import { Spacer } from '../shared/Spacer'
-import { useHomeDrawerWidth } from './HomeViewDrawer'
 import { HomeLenseBar } from './HomeLenseBar'
 import { useMap, Map } from '../map'
 import { RegionType } from '../map/utils'
+import { useHomeDrawerWidth } from './HomeView'
 
 function centerMapToRegion({
   map,
@@ -91,19 +91,19 @@ function HomeMap() {
         : []),
       ...prevResults,
       curRestaurant,
-    ].filter(x => !!x?.location?.coordinates),
-    x => x.id
+    ].filter((x) => !!x?.location?.coordinates),
+    (x) => x.id
   )
 
-  const restaurantIds = restaurants.map(x => x.id)
+  const restaurantIds = restaurants.map((x) => x.id)
   const restaurantsVersion = restaurantIds.join('')
-  const restaurantSelected = restaurants.find(x => x.id == selected)
+  const restaurantSelected = restaurants.find((x) => x.id == selected)
   const coordinates = useMemo(
     () =>
       mapkit
         ? restaurants
             .map(
-              restaurant =>
+              (restaurant) =>
                 !!restaurant.location?.coordinates &&
                 new mapkit.Coordinate(
                   restaurant.location.coordinates[1],
@@ -145,14 +145,14 @@ function HomeMap() {
     centerMapToRegion({
       map,
       location: curRestaurant.location.coordinates,
-      span: 0.0025,
+      span: 0.09,
     })
   }, [!!map, mapkit, curRestaurant])
 
   useEffect(() => {
     if (!restaurantSelected) return
     map.setCenterAnimated(
-      coordinates[restaurants.findIndex(x => x.id === restaurantSelected.id)],
+      coordinates[restaurants.findIndex((x) => x.id === restaurantSelected.id)],
       true
     )
   }, [restaurantSelected])
@@ -163,7 +163,7 @@ function HomeMap() {
 
     const cancels = new Set<Function>()
 
-    const cb = e => {
+    const cb = (e) => {
       const selected = e.annotation.data.id || ''
       setSelected(selected)
       console.log('selected', selected)
@@ -175,7 +175,7 @@ function HomeMap() {
     map.showItems(annotations, { animate: true })
 
     return () => {
-      cancels.forEach(x => x())
+      cancels.forEach((x) => x())
       map.removeAnnotations(annotations)
     }
   }, [!!map, restaurantsVersion])

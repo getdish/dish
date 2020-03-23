@@ -292,6 +292,13 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
       locations: [],
     },
   }
+
+  om.state.home.states = om.state.home.states.map((x) => {
+    if (x.historyId == state.historyId) {
+      return state
+    }
+    return x
+  })
 }
 
 const clearSearch: Action = (om) => {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import {
   Text,
   View,
@@ -10,13 +10,14 @@ import {
 import { useOvermind } from '../../state/om'
 import { ZStack, HStack, VStack } from '../shared/Stacks'
 import { Spacer } from '../shared/Spacer'
+import { useDebounce } from '../../hooks/useDebounce'
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 30,
+    borderRadius: 10,
     backgroundColor: '#fff',
     marginHorizontal: 20,
     alignItems: 'center',
@@ -32,18 +33,24 @@ const styles = StyleSheet.create({
   },
 })
 
-export default function SearchBar() {
+export default memo(function HomeSearchBar() {
   const om = useOvermind()
+
+  const onChangeSearch = useDebounce(
+    (text) => om.actions.home.runSearch(text),
+    200
+  )
+
   return (
     <View style={styles.container}>
       <TextInput
         value={om.state.home.currentState.searchQuery}
-        onChangeText={text => om.actions.home.runSearch(text)}
+        onChangeText={onChangeSearch}
         placeholder="Find the best of San Francisco"
         style={styles.textInput}
         onFocus={() => {
-          om.actions.home.clearSearch()
-          om.actions.home.getTopDishes()
+          // om.actions.home.clearSearch()
+          // om.actions.home.getTopDishes()
         }}
       />
 
@@ -81,4 +88,4 @@ export default function SearchBar() {
       </ZStack>
     </View>
   )
-}
+})

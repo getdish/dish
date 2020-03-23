@@ -249,7 +249,7 @@ export class Restaurant extends ModelBase<Restaurant> {
                 },
               },
             },
-            limit: 50,
+            limit: 10,
             order_by: { rating: new EnumType('desc_nulls_last') },
           },
           ...Restaurant.fieldsAsObject(),

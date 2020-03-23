@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Image, Text, TouchableOpacity } from 'react-native'
 import { Restaurant } from '@dish/models'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
@@ -21,6 +21,17 @@ export function RestaurantListItem({
 
   const [open_text, open_color, next_time] = openingHours(restaurant)
   const [price_label, price_color, price_range] = priceRange(restaurant)
+  const [isMounted, setIsMounted] = useState(false)
+  const photos = restaurant.allPhotos.slice(0, isMounted ? 10 : 1)
+
+  useEffect(() => {
+    let tm = setTimeout(() => {
+      setIsMounted(true)
+    }, Math.min(rank * 100, 2000))
+    return () => {
+      clearTimeout(tm)
+    }
+  }, [])
 
   return (
     <div
@@ -137,7 +148,7 @@ export function RestaurantListItem({
               <RatingView restaurant={restaurant} />
             </VStack>
 
-            {restaurant.allPhotos.slice(0, 3).map((photo, i) => {
+            {photos.slice(0, 3).map((photo, i) => {
               return (
                 <React.Fragment key={i}>
                   <Image

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Text, ScrollView } from 'react-native'
 import { useOvermind } from '../../state/om'
 import { Spacer } from '../shared/Spacer'
@@ -6,7 +6,7 @@ import { VStack, HStack } from '../shared/Stacks'
 import { Taxonomy } from '../../state/Taxonomy'
 import { LinkButton } from '../shared/Link'
 
-export function HomeFilterBar() {
+export default memo(function HomeFilterBar() {
   const om = useOvermind()
   const { lastHomeState } = om.state.home
 
@@ -24,7 +24,7 @@ export function HomeFilterBar() {
       </ScrollView>
     </VStack>
   )
-}
+})
 
 function FilterButton({ filter }: { filter: Taxonomy }) {
   return (
