@@ -11,7 +11,7 @@ export function HomeLenseBar() {
   const { lastHomeState } = om.state.home
 
   return (
-    <VStack height={65} paddingVertical={12}>
+    <VStack height={75} paddingVertical={12}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <HStack paddingHorizontal={20} paddingVertical={2}>
           {lastHomeState.lenses.map((lense, index) => (
@@ -53,7 +53,7 @@ function LenseButton({ lense, active }: { lense: Taxonomy; active: boolean }) {
         <Text
           style={{
             color: active ? '#000' : '#777',
-            fontSize: 15,
+            fontSize: 18,
             fontWeight: active ? '700' : '500',
           }}
         >

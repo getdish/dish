@@ -92,7 +92,6 @@ export const drawerBorderRadius = 20
 export default function HomeViewContent() {
   const om = useOvermind()
   const { breadcrumbStates } = om.state.home
-  console.log('breadcrumbStates', breadcrumbStates)
   return (
     <>
       <HomeSearchBar />

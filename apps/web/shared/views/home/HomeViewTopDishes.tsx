@@ -53,10 +53,12 @@ export default function HomeViewTopDishes({ state }: { state: HomeStateItem }) {
   if (state.type !== 'home') {
     return null
   }
+  const activeLense =
+    om.state.home.lastHomeState.lenses[om.state.home.lastHomeState.activeLense]
   const { top_dishes = [] } = state
   return (
     <VStack flex={1}>
-      <SmallTitle>Top Dishes</SmallTitle>
+      <SmallTitle>{activeLense.description}</SmallTitle>
 
       <HomeLenseBar />
 

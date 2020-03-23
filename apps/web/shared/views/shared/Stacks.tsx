@@ -24,12 +24,20 @@ export function ZStack({
   children,
   fullscreen,
   pointerEvents,
+  style = null,
   ...props
 }: StackBaseProps) {
   return (
     <View
       pointerEvents={pointerEvents}
-      style={{ position: 'absolute', ...(fullscreen && fsStyle), ...props }}
+      style={[
+        {
+          position: 'absolute',
+          ...(fullscreen && fsStyle),
+          ...props,
+        },
+        style,
+      ]}
     >
       {children}
     </View>
@@ -40,12 +48,20 @@ export function HStack({
   children,
   fullscreen,
   pointerEvents,
+  style = null,
   ...props
 }: StackBaseProps) {
   return (
     <View
       pointerEvents={pointerEvents}
-      style={{ flexDirection: 'row', ...(fullscreen && fsStyle), ...props }}
+      style={[
+        {
+          flexDirection: 'row',
+          ...(fullscreen && fsStyle),
+          ...props,
+        },
+        style,
+      ]}
     >
       {children}
     </View>
@@ -56,12 +72,20 @@ export function VStack({
   children,
   fullscreen,
   pointerEvents,
+  style = null,
   ...props
 }: StackBaseProps) {
   return (
     <View
       pointerEvents={pointerEvents}
-      style={{ flexDirection: 'column', ...(fullscreen && fsStyle), ...props }}
+      style={[
+        {
+          flexDirection: 'column',
+          ...(fullscreen && fsStyle),
+          ...props,
+        },
+        style,
+      ]}
     >
       {children}
     </View>
