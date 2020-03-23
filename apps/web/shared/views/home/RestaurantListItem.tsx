@@ -19,8 +19,8 @@ export function RestaurantListItem({
   const om = useOvermind()
   const [isHovered, setIsHovered] = useState(false)
 
-  const [open_text, open_color, next_time] = hours(restaurant)
-  const [price_label, price_color, price_range] = price(restaurant)
+  const [open_text, open_color, next_time] = openingHours(restaurant)
+  const [price_label, price_color, price_range] = priceRange(restaurant)
 
   return (
     <div
@@ -88,8 +88,22 @@ export function RestaurantListItem({
 
             <Spacer />
 
+            <HStack>
+              <HStack>
+                <TagButton rank={1} name="🍜 Pho" />
+                <Spacer />
+                <TagButton rank={22} name="🌃 Date Spot" />
+                <Spacer />
+                <TagButton rank={30} name="🥬 Vegan" />
+                <Spacer />
+                <TagButton rank={120} name="🥢 Asian" />
+              </HStack>
+            </HStack>
+
+            <Spacer />
+
             <Text style={{ opacity: 0.5 }}>
-              {restaurant.rating} ★ · {sources(restaurant)}
+              3017 16th St · Menu · Quick bites, Mexican, Fast Food
             </Text>
 
             <Spacer />
@@ -108,22 +122,19 @@ export function RestaurantListItem({
                 </Text>
                 <Text>{price_range}</Text>
               </VStack>
+
+              <VStack paddingHorizontal={10}>
+                <Text style={{ fontWeight: 'bold', color: 'gray' }}>
+                  Delivers
+                </Text>
+                <Text>Uber, Postmates, Doordash</Text>
+              </VStack>
             </HStack>
-
-            <Spacer />
-
-            <HStack>
-              <TagButton rank={1} name="🍜 Pho" />
-              <Spacer />
-              <TagButton rank={22} name="🌃 Date Spot" />
-            </HStack>
-
-            <Spacer />
           </VStack>
 
           <HStack>
-            <VStack position="absolute" top={-25} left={-20} zIndex={100}>
-              <RankingView rank={100 - +rank * 2} />
+            <VStack position="absolute" top={-20} left={-30} zIndex={100}>
+              <RatingView restaurant={restaurant} />
             </VStack>
 
             {restaurant.allPhotos.slice(0, 3).map((photo, i) => {
@@ -145,7 +156,8 @@ export function RestaurantListItem({
   )
 }
 
-function RankingView({ rank }: { rank: number }) {
+function RatingView({ restaurant }: { restaurant: Restaurant }) {
+  const rank = Math.round(restaurant.rating * 20)
   const color = rank > 84 ? 'green' : rank > 60 ? 'orange' : 'red'
   return (
     <VStack position="relative">
@@ -197,7 +209,7 @@ function RankingView({ rank }: { rank: number }) {
             alignItems="center"
             justifyContent="center"
           >
-            <Text style={{ fontSize: 20, fontWeight: '600', color }}>
+            <Text style={{ fontSize: 18, fontWeight: '600', color }}>
               {rank}
             </Text>
           </VStack>
@@ -207,8 +219,8 @@ function RankingView({ rank }: { rank: number }) {
   )
 }
 
-function hours(restaurant: Restaurant) {
-  let text = 'Opening hours'
+function openingHours(restaurant: Restaurant) {
+  let text = 'Opens at'
   let color = 'grey'
   let next_time = 'unknown'
 
@@ -238,7 +250,7 @@ function hours(restaurant: Restaurant) {
   return [text, color, next_time]
 }
 
-function price(restaurant: Restaurant) {
+function priceRange(restaurant: Restaurant) {
   let label = 'Price Range'
   let color = 'grey'
   let price_range = 'unknown'

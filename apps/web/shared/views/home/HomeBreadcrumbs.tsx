@@ -41,6 +41,7 @@ function HomeBreadcrumb({
   isLast: boolean
 }) {
   const om = useOvermind()
+  // TODO we can redo this similar to HomeStackView and refacotr into an action
   let title = ''
   let navTo: NavigateItem
 
