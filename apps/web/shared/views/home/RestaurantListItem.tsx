@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { Image, Text, TouchableOpacity } from 'react-native'
 import { Restaurant } from '@dish/models'
-import { HStack, VStack } from '../shared/Stacks'
+import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { Spacer } from '../shared/Spacer'
-import { TagButton } from './TagButton'
+import { TagButton, SuperScriptText } from './TagButton'
 import { Link } from '../shared/Link'
 import { useOvermind } from '../../state/om'
 
@@ -24,6 +24,7 @@ export function RestaurantListItem({
 
   return (
     <div
+      style={{ position: 'relative' }}
       onMouseEnter={() => {
         onHover(restaurant)
         setIsHovered(true)
@@ -47,15 +48,42 @@ export function RestaurantListItem({
         >
           <VStack padding={18} width="70%" maxWidth={525}>
             <Link name="restaurant" params={{ slug: restaurant.slug }}>
-              <Text
-                style={{
-                  fontSize: 26,
-                  fontWeight: 'bold',
-                  textDecorationColor: 'transparent',
-                }}
-              >
-                {rank}. {restaurant.name}
-              </Text>
+              <HStack alignItems="center">
+                <VStack
+                  // backgroundColor="#000"
+                  borderRadius={100}
+                  borderColor="rgba(0,0,0,0.15)"
+                  borderWidth={1}
+                  width={38}
+                  height={38}
+                  alignItems="center"
+                  justifyContent="center"
+                  marginLeft={-28}
+                  marginRight={7}
+                  marginVertical={-5}
+                >
+                  <Text
+                    style={{
+                      /* color: '#fff', */
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    <SuperScriptText>#</SuperScriptText>
+                    {rank}
+                  </Text>
+                </VStack>
+
+                <Text
+                  style={{
+                    fontSize: 24,
+                    fontWeight: 'bold',
+                    textDecorationColor: 'transparent',
+                  }}
+                >
+                  {restaurant.name}
+                </Text>
+              </HStack>
             </Link>
 
             <Spacer />
@@ -94,6 +122,45 @@ export function RestaurantListItem({
           </VStack>
 
           <HStack>
+            <VStack position="absolute" top={-15} left={0} zIndex={100}>
+              <VStack
+                backgroundColor="#fff"
+                borderRadius={100}
+                shadowColor="rgba(0,0,0,0.2)"
+                shadowRadius={5}
+                shadowOffset={{ height: 1, width: 0 }}
+                width={54}
+                height={54}
+                alignItems="center"
+                justifyContent="center"
+                marginLeft={-26}
+                marginRight={10}
+                marginVertical={-5}
+                padding={2}
+              >
+                <VStack
+                  borderRadius={100}
+                  backgroundColor={rank < 3 ? 'green' : 'orange'}
+                  padding={3}
+                  width="100%"
+                  height="100%"
+                >
+                  <VStack
+                    width="100%"
+                    height="100%"
+                    borderRadius={100}
+                    backgroundColor="#fff"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+                      {100 - +rank * 2}
+                    </Text>
+                  </VStack>
+                </VStack>
+              </VStack>
+            </VStack>
+
             {restaurant.allPhotos.slice(0, 3).map((photo, i) => {
               return (
                 <React.Fragment key={i}>

@@ -143,7 +143,7 @@ function StackView<A>(props: {
             shadowColor="rgba(0,0,0,0.2)"
             shadowRadius={7}
             borderRadius={drawerBorderRadius}
-            overflow="hidden"
+            // overflow="hidden"
           >
             {props.children(item, index === items.length - 1, index)}
           </ZStack>

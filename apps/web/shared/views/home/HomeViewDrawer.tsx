@@ -15,7 +15,7 @@ export function HomeViewDrawer(props: { children: any }) {
         {
           position: 'absolute',
           top: 15,
-          left: 15,
+          left: 25,
           bottom: 15,
           zIndex: 10,
           width: drawerWidth,
