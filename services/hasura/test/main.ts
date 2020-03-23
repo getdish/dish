@@ -13,7 +13,7 @@ test.beforeEach(async () => {
   await Restaurant.deleteAllFuzzyBy('name', 'test')
 })
 
-test('Normal user cannot delete things', async t => {
+test('Normal user cannot delete things', async (t) => {
   await auth.register('tester', 'password')
   await auth.login('tester', 'password')
   auth.as('user')
@@ -51,7 +51,7 @@ test('Normal user cannot delete things', async t => {
   }
 })
 
-test('Normal user cannot get scrapes', async t => {
+test('Normal user cannot get scrapes', async (t) => {
   await auth.register('tester', 'password')
   await auth.login('tester', 'password')
   auth.as('user')
@@ -66,7 +66,7 @@ test('Normal user cannot get scrapes', async t => {
   }
 })
 
-test('Normal user can see restaurants', async t => {
+test('Normal user can see restaurants', async (t) => {
   const restaurant = new Restaurant({
     name: 'test',
     location: {
@@ -82,7 +82,7 @@ test('Normal user can see restaurants', async t => {
   t.is(restaurant.name, 'test')
 })
 
-test('Contributor can edit restaurants', async t => {
+test('Contributor can edit restaurants', async (t) => {
   await auth.register('tester-contributor', 'password')
   const user = new User()
   await user.findOne('username', 'tester-contributor')

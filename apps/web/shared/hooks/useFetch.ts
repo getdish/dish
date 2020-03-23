@@ -43,18 +43,18 @@ export function useFetch(input: RequestInfo, userOptions?: UseFetchOptions) {
     init: options.init,
     input,
     fetch: fetch(input, options.init)
-      .then(response => {
+      .then((response) => {
         const contentType = response.headers.get('Content-Type')
         if (contentType && contentType.indexOf('application/json') !== -1) {
           return response.json()
         }
         return response.text()
       })
-      .then(response => {
+      .then((response) => {
         // set response
         fetchCache.response = response
       })
-      .catch(e => {
+      .catch((e) => {
         // set error
         fetchCache.error = e
       })

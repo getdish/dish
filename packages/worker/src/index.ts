@@ -79,7 +79,7 @@ export class WorkerJob {
     config: JobOptions
   ) {
     const repeats = await queue.getRepeatableJobs()
-    const existing = repeats.find(job => job.id == config.jobId)
+    const existing = repeats.find((job) => job.id == config.jobId)
     if (!existing) {
       await this.addJob(queue, job, config, true)
     } else {
@@ -115,7 +115,7 @@ export async function getBullQueue(name: string, config: {} = {}) {
       console.warn('Trying to startup up Bull queue again...')
       if (++count == max_tries) throw e
       if (e.message.includes('ECONNREFUSED')) {
-        await new Promise(r => setTimeout(r, 2000))
+        await new Promise((r) => setTimeout(r, 2000))
       } else {
         throw e
       }

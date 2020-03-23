@@ -175,11 +175,7 @@ export class Tripadvisor extends WorkerJob {
         date: review.find('.ratingDate').attr('title'),
       })
     }
-    if (
-      !$('.ui_pagination > a.next')!
-        .attr('class')!
-        .includes('disabled')
-    ) {
+    if (!$('.ui_pagination > a.next')!.attr('class')!.includes('disabled')) {
       more = true
     }
     return { more: more, data: data }
@@ -187,10 +183,7 @@ export class Tripadvisor extends WorkerJob {
 
   private _getRatingFromClasses(review: Cheerio) {
     let rating: number | null = null
-    const classes = review
-      .find('.ui_bubble_rating')
-      .attr('class')!
-      .split(' ')
+    const classes = review.find('.ui_bubble_rating').attr('class')!.split(' ')
 
     for (let i = 0; i < classes.length; i++) {
       const classname = classes[i]

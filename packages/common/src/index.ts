@@ -19,7 +19,7 @@ export const sentryMessage = (
   tags?: { [key: string]: string }
 ) => {
   console.log('Sending message to Sentry: ' + message)
-  Sentry.withScope(scope => {
+  Sentry.withScope((scope) => {
     if (tags) {
       scope.setTags(tags)
     }
@@ -34,7 +34,7 @@ export const sentryException = (
   tags?: { [key: string]: string }
 ) => {
   console.log('Sending exception to Sentry: ' + error.message)
-  Sentry.withScope(scope => {
+  Sentry.withScope((scope) => {
     if (tags) {
       scope.setTags(tags)
     }

@@ -78,7 +78,7 @@ const tripadvisor: Partial<Scrape> = {
   },
 }
 
-test.beforeEach(async t => {
+test.beforeEach(async (t) => {
   let scrape: Scrape
   await Scrape.deleteAllFuzzyBy('id_from_source', 'test')
   await Restaurant.deleteAllFuzzyBy('name', 'Test')
@@ -93,7 +93,7 @@ test.beforeEach(async t => {
   await scrape.insert()
 })
 
-test('Merging', async t => {
+test('Merging', async (t) => {
   const dish = new Self()
   await dish.mergeAll(t.context.restaurant.id)
   const updated = new Restaurant()

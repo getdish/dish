@@ -334,8 +334,8 @@ export class ModelBase<T> {
               constraint: new EnumType(this._klass.upsert_constraint()),
               update_columns: this._klass
                 .all_fields()
-                .filter(f => !this._klass.read_only_fields().includes(f))
-                .map(f => new EnumType(f)),
+                .filter((f) => !this._klass.read_only_fields().includes(f))
+                .map((f) => new EnumType(f)),
             },
           },
           affected_rows: true,

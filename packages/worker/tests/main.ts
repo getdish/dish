@@ -5,7 +5,7 @@ import test from 'ava'
 import Queue, { Job } from 'bull'
 import { WorkerJob } from '../src/index'
 
-const sleep = (ms: number) => new Promise(res => setTimeout(res, ms))
+const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
 
 let CAPTURE = 'TODO'
 
@@ -24,7 +24,7 @@ test.before(async () => {
   })
 })
 
-test('Worker runs a job', async t => {
+test('Worker runs a job', async (t) => {
   const job = new WorkerTest()
   job.runOnWorker('capture', ['DONE'])
   await sleep(1500)

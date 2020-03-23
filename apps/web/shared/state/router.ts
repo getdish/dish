@@ -112,8 +112,8 @@ export const state: RouterState = {
   notFound: false,
   history: [],
   ignoreNextPush: false,
-  prevPage: state => state.history[state.history.length - 2],
-  curPage: state => state.history[state.history.length - 1] || defaultPage,
+  prevPage: (state) => state.history[state.history.length - 2],
+  curPage: (state) => state.history[state.history.length - 1] || defaultPage,
 }
 
 class AlreadyOnPageError extends Error {}
@@ -177,7 +177,7 @@ const navigate: Operator<NavigateItem> = pipe(
       }
     }
   }),
-  mutate(om => {
+  mutate((om) => {
     om.state.router.ignoreNextPush = false
   }),
   catchError<void>((om, error) => {
@@ -190,22 +190,22 @@ const navigate: Operator<NavigateItem> = pipe(
   })
 )
 
-const ignoreNextPush: Action = om => {
+const ignoreNextPush: Action = (om) => {
   om.state.router.ignoreNextPush = true
 }
 
-const back: Action = om => {
+const back: Action = (om) => {
   window.history.back()
 }
 
-const forward: Action = om => {
+const forward: Action = (om) => {
   window.history.forward()
 }
 
 let curSearch = {}
 
 let pop: { path: string; at: number } | null = null
-window.addEventListener('popstate', event => {
+window.addEventListener('popstate', (event) => {
   pop = {
     path: event.state.path,
     at: Date.now(),
@@ -264,8 +264,8 @@ const routeListen: Action<{
   })
 }
 
-const routeListenNotFound: Action = om => {
-  page('*', ctx => {
+const routeListenNotFound: Action = (om) => {
+  page('*', (ctx) => {
     console.log('Not found!', ctx)
     om.state.router.notFound = true
   })

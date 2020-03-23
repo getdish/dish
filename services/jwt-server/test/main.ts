@@ -22,12 +22,12 @@ test.before(async () => {
   server.listen(PORT)
 })
 
-test('Admin login', async t => {
+test('Admin login', async (t) => {
   const response = await login()
   t.is(response.status, 200)
 })
 
-test('Authed request failure', async t => {
+test('Authed request failure', async (t) => {
   const response = await axios.get(BASE + '/user', {
     headers: { Auth: 'bad' },
     validateStatus: () => {
@@ -38,7 +38,7 @@ test('Authed request failure', async t => {
   t.deepEqual(response.data, '')
 })
 
-test('Authed request success', async t => {
+test('Authed request success', async (t) => {
   const response = await login()
   const jwt = response.data.token
   const user = await axios.get(BASE + '/user/admin', {
