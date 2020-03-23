@@ -11,9 +11,9 @@ export function HomeLenseBar() {
   const { lastHomeState } = om.state.home
 
   return (
-    <VStack height={60} paddingVertical={12}>
+    <VStack height={65} paddingVertical={12}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <HStack paddingHorizontal={20}>
+        <HStack paddingHorizontal={20} paddingVertical={2}>
           {lastHomeState.lenses.map((lense, index) => (
             <React.Fragment key={lense.id}>
               <LenseButton
@@ -30,8 +30,13 @@ export function HomeLenseBar() {
 }
 
 function LenseButton({ lense, active }: { lense: Taxonomy; active: boolean }) {
+  const om = useOvermind()
   return (
-    <LinkButton>
+    <LinkButton
+      onPress={() => {
+        om.actions.home.setActiveLense(lense)
+      }}
+    >
       <HStack
         alignItems="center"
         justifyContent="center"
@@ -39,10 +44,19 @@ function LenseButton({ lense, active }: { lense: Taxonomy; active: boolean }) {
         paddingVertical={5}
         backgroundColor={active ? '#fff' : 'rgba(255,255,255,0.5)'}
         borderRadius={8}
+        shadowRadius={2}
         shadowColor="rgba(0,0,0,0.1)"
         shadowOffset={{ height: 1, width: 0 }}
+        borderWidth={1}
+        borderColor={`rgba(0,0,0,0.15)`}
       >
-        <Text style={{ color: active ? '#000' : '#444', fontSize: 16 }}>
+        <Text
+          style={{
+            color: active ? '#000' : '#777',
+            fontSize: 15,
+            fontWeight: active ? '700' : '500',
+          }}
+        >
           {lense.icon} {lense.name}
         </Text>
       </HStack>

@@ -186,10 +186,8 @@ function HomeMap() {
 
       <ZStack fullscreen padding={20} pointerEvents="none" left={drawerWidth}>
         <VStack flex={1}>
-          <HStack flex={1} overflow="hidden">
-            <VStack>
-              <HomeLenseBar />
-            </VStack>
+          <HStack overflow="hidden">
+            <VStack></VStack>
 
             <Spacer flex />
 

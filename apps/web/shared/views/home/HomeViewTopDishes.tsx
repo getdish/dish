@@ -14,6 +14,7 @@ import { Spacer } from '../shared/Spacer'
 import { Link } from '../shared/Link'
 import { HStack, VStack } from '../shared/Stacks'
 import { SmallTitle } from '../shared/SmallTitle'
+import { HomeLenseBar } from './HomeLenseBar'
 
 const styles = StyleSheet.create({
   container: {
@@ -56,18 +57,24 @@ export default function HomeViewTopDishes() {
 
   return (
     <VStack flex={1}>
+      <HomeLenseBar />
+
       <ScrollView style={{ flex: 1 }}>
         <VStack paddingVertical={20}>
           {[0, 1, 2, 3, 4, 5, 6, 7].map(x => (
             <VStack key={x} paddingBottom={20}>
               <HStack paddingHorizontal={20}>
-                <Text style={{ fontSize: 24 }}>#{x + 1}. Korean</Text>
+                <HStack flex={1}>
+                  <Text numberOfLines={1} style={{ fontSize: 24 }}>
+                    #{x + 1}. Korean
+                  </Text>
+                </HStack>
                 <Spacer flex />
                 <Text style={{ fontSize: 24 }}>🇰🇷</Text>
               </HStack>
 
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <HStack padding={20} height={140}>
+                <HStack height={170} padding={20} paddingHorizontal={10}>
                   {top_dishes.map(dish => {
                     const category = dish.category.replace(/"/g, '')
                     return (
@@ -76,8 +83,6 @@ export default function HomeViewTopDishes() {
                         style={{
                           // flexDirection: 'row',
                           alignItems: 'center',
-                          width: 90,
-                          height: 90,
                           padding: 8,
                         }}
                         onPress={() => {
@@ -90,11 +95,14 @@ export default function HomeViewTopDishes() {
                           })
                         }}
                       >
-                        {getImageForDish(category)}
+                        <VStack width={110} height={100} paddingHorizontal={5}>
+                          {getImageForDish(category)}
+                        </VStack>
                         <Spacer />
-                        <Link name="search" params={{ query: category }}>
+                        <VStack maxWidth="100%" overflow="hidden">
                           <Text
                             numberOfLines={1}
+                            ellipsizeMode="tail"
                             style={{
                               textDecorationLine: 'none',
                               fontWeight: '600',
@@ -104,7 +112,7 @@ export default function HomeViewTopDishes() {
                           >
                             {category}
                           </Text>
-                        </Link>
+                        </VStack>
                       </TouchableOpacity>
                     )
                   })}
