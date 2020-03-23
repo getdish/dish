@@ -3,7 +3,7 @@ import { Text } from 'react-native'
 import { HStack, VStack } from './Stacks'
 export function SmallTitle(props: { children: any }) {
   return (
-    <VStack width="100%" alignItems="center" paddingVertical={5}>
+    <VStack width="100%" alignItems="center" paddingVertical={8}>
       <Text
         style={{
           textTransform: 'uppercase',
