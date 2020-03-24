@@ -28,7 +28,7 @@ export const RestaurantListItem = ({
   const [open_text, open_color, next_time] = openingHours(restaurant)
   const [price_label, price_color, price_range] = priceRange(restaurant)
   const [isMounted, setIsMounted] = useState(false)
-  const photos = restaurant.allPhotos.slice(0, isMounted ? 10 : 1)
+  const photos = Restaurant.allPhotos(restaurant).slice(0, isMounted ? 10 : 1)
 
   useEffect(() => {
     let tm = setTimeout(() => {
@@ -130,8 +130,8 @@ export const RestaurantListItem = ({
 
             <Spacer />
 
-            <HStack paddingLeft={24}>
-              <VStack paddingRight="5%">
+            <HStack paddingLeft={22} paddingRight={20}>
+              <VStack width="30%" paddingRight="5%">
                 <Text
                   numberOfLines={1}
                   style={{
@@ -145,7 +145,7 @@ export const RestaurantListItem = ({
                 <Text numberOfLines={1}>{next_time}</Text>
               </VStack>
 
-              <VStack paddingHorizontal="5%">
+              <VStack width="33%" paddingHorizontal="5%">
                 <Text
                   numberOfLines={1}
                   style={{
@@ -159,7 +159,7 @@ export const RestaurantListItem = ({
                 <Text numberOfLines={1}>{price_range}</Text>
               </VStack>
 
-              <VStack paddingHorizontal="5%">
+              <VStack width="33%" paddingHorizontal="5%">
                 <Text
                   numberOfLines={1}
                   style={{ fontWeight: 'bold', color: 'gray', marginBottom: 3 }}

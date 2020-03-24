@@ -2,7 +2,6 @@ import { ModelBase, Restaurant, Review } from '@dish/models'
 import { Action, AsyncAction, Derive } from 'overmind'
 import _ from 'lodash'
 import { HistoryItem } from './router'
-import { isEqual } from '@o/fast-compare'
 import { Taxonomy, taxonomyLenses, taxonomyFilters } from './Taxonomy'
 import { sleep } from '../helpers/sleep'
 
@@ -134,15 +133,14 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
         type: 'home',
         ...om.state.home.lastHomeState,
         ...currentBaseState,
+        searchQuery: '',
       }
       break
     case 'search':
-      const lastMatchingSearchState = [...om.state.home.states]
-        .reverse()
-        .find(
-          (x) => x.type === 'search' && x.searchQuery == item.params.query
-        ) as HomeStateItemSearch
-
+      const lastMatchingSearchState = _.findLast(
+        om.state.home.states,
+        (x) => x.type === 'search' && x.searchQuery == item.params.query
+      ) as HomeStateItemSearch
       nextState = {
         type: 'search',
         filters: [],
@@ -153,7 +151,7 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
         ...currentBaseState,
       }
       fetchData = () => {
-        om.actions.home.runSearch(item.params.query)
+        om.actions.home.runSearch(item.params.query.replace(/-/g, ' '))
       }
       break
     case 'restaurant':
@@ -256,13 +254,16 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     }
   }
 
-  // debounce
-  lastRunAt = Date.now()
-  let id = lastRunAt
-  await sleep(DEBOUNCE_SEARCH)
-  if (id != lastRunAt) return
-
   const isOnSearch = state.type === 'search'
+
+  if (isOnSearch) {
+    // debounce
+    lastRunAt = Date.now()
+    let id = lastRunAt
+    await sleep(DEBOUNCE_SEARCH)
+    if (id != lastRunAt) return
+  }
+
   om.actions.router.navigate({
     name: 'search',
     params: {

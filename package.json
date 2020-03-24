@@ -29,5 +29,9 @@
     "tsconfig-paths": "^3.9.0",
     "typescript": "^3.8.2",
     "wsrun": "^5.2.0"
+  },
+  "dependencies": {
+    "patch-package": "^6.2.1",
+    "postinstall-postinstall": "^2.0.0"
   }
 }

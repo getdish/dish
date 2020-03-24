@@ -132,14 +132,14 @@ const HomeViewContent = memo(function HomeViewContent() {
             <Spacer flex={1} />
 
             <HStack
-              paddingVertical={20}
               paddingHorizontal={20}
-              paddingTop={30}
+              paddingTop={40}
+              paddingBottom={5}
               borderRadius={drawerBorderRadius}
               overflow="hidden"
             >
               <LinearGradient
-                colors={['transparent', '#fff', '#fff']}
+                colors={['transparent', '#fff']}
                 style={{
                   position: 'absolute',
                   left: 0,
