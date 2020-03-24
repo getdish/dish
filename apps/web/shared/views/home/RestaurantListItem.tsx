@@ -3,9 +3,11 @@ import { Image, Text, TouchableOpacity } from 'react-native'
 import { Restaurant } from '@dish/models'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { Spacer } from '../shared/Spacer'
-import { TagButton, SuperScriptText } from './TagButton'
+import { TagButton } from './TagButton'
 import { Link } from '../shared/Link'
 import { useOvermind } from '../../state/om'
+import { RatingView } from './RatingView'
+import { RankingView } from './RankingView'
 
 export function RestaurantListItem({
   restaurant,
@@ -60,30 +62,7 @@ export function RestaurantListItem({
           <VStack padding={18} width="70%" maxWidth={525}>
             <Link name="restaurant" params={{ slug: restaurant.slug }}>
               <HStack alignItems="center">
-                <VStack
-                  // backgroundColor="#000"
-                  borderRadius={100}
-                  borderColor="rgba(0,0,0,0.15)"
-                  borderWidth={1}
-                  width={38}
-                  height={38}
-                  alignItems="center"
-                  justifyContent="center"
-                  marginLeft={-28}
-                  marginRight={7}
-                  marginVertical={-5}
-                >
-                  <Text
-                    style={{
-                      /* color: '#fff', */
-                      fontSize: 18,
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    <SuperScriptText>#</SuperScriptText>
-                    {rank}
-                  </Text>
-                </VStack>
+                <RankingView rank={rank} />
 
                 <Text
                   style={{
@@ -164,69 +143,6 @@ export function RestaurantListItem({
         </HStack>
       </TouchableOpacity>
     </div>
-  )
-}
-
-function RatingView({ restaurant }: { restaurant: Restaurant }) {
-  const rank = Math.round(restaurant.rating * 20)
-  const color = rank > 84 ? 'green' : rank > 60 ? 'orange' : 'red'
-  return (
-    <VStack position="relative">
-      {rank > 89 && (
-        <VStack
-          position="absolute"
-          top={-5}
-          // bottom={0}
-          right={-5}
-          alignItems="center"
-          justifyContent="center"
-          zIndex={100}
-        >
-          <Text
-            style={{
-              fontSize: 20,
-              textShadowColor: 'rgba(0,0,0,0.5)',
-              textShadowRadius: 2,
-            }}
-          >
-            ⭐️
-          </Text>
-        </VStack>
-      )}
-      <VStack
-        backgroundColor="#fff"
-        borderRadius={100}
-        shadowColor="rgba(0,0,0,0.25)"
-        shadowRadius={8}
-        shadowOffset={{ height: 1, width: 0 }}
-        width={50}
-        height={50}
-        alignItems="center"
-        justifyContent="center"
-        padding={2}
-      >
-        <VStack
-          borderRadius={100}
-          backgroundColor={color}
-          padding={2}
-          width="100%"
-          height="100%"
-        >
-          <VStack
-            width="100%"
-            height="100%"
-            borderRadius={100}
-            backgroundColor="#fff"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Text style={{ fontSize: 18, fontWeight: '600', color }}>
-              {rank}
-            </Text>
-          </VStack>
-        </VStack>
-      </VStack>
-    </VStack>
   )
 }
 
