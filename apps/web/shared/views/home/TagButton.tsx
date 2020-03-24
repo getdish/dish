@@ -18,16 +18,16 @@ export function TagButton(props: { rank?: number; name: string }) {
       {!!props.rank && (
         <Text
           style={{
-            fontSize: 12,
+            fontSize: 13,
             fontWeight: 'bold',
             paddingVertical: 1,
-            paddingHorizontal: 9,
+            paddingHorizontal: 8,
             backgroundColor: '#fff',
             height: '100%',
             lineHeight: 23,
           }}
         >
-          <SuperScriptText>#</SuperScriptText>
+          <SuperScriptText style={{ opacity: 0.5 }}>#</SuperScriptText>
           {props.rank}
         </Text>
       )}
@@ -36,7 +36,7 @@ export function TagButton(props: { rank?: number; name: string }) {
           fontSize: 12,
           fontWeight: 'bold',
           paddingVertical: 1,
-          paddingHorizontal: 9,
+          paddingHorizontal: 8,
           color: '#fff',
           lineHeight: 23,
         }}

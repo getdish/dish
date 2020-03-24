@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { View, StyleSheet, ViewStyle, ViewProps } from 'react-native'
 
 // TODO spacing
@@ -20,74 +20,65 @@ export type StackBaseProps = Omit<
   'alignContent'
 >
 
-export function ZStack({
-  children,
-  fullscreen,
-  pointerEvents,
-  style = null,
-  ...props
-}: StackBaseProps) {
-  return (
-    <View
-      pointerEvents={pointerEvents}
-      style={[
-        {
-          position: 'absolute',
-          ...(fullscreen && fsStyle),
-          ...props,
-        },
-        style,
-      ]}
-    >
-      {children}
-    </View>
-  )
-}
+export const ZStack = forwardRef<View, StackBaseProps>(
+  ({ children, fullscreen, pointerEvents, style = null, ...props }, ref) => {
+    return (
+      <View
+        ref={ref}
+        pointerEvents={pointerEvents}
+        style={[
+          {
+            position: 'absolute',
+            ...(fullscreen && fsStyle),
+            ...props,
+          },
+          style,
+        ]}
+      >
+        {children}
+      </View>
+    )
+  }
+)
 
-export function HStack({
-  children,
-  fullscreen,
-  pointerEvents,
-  style = null,
-  ...props
-}: StackBaseProps) {
-  return (
-    <View
-      pointerEvents={pointerEvents}
-      style={[
-        {
-          flexDirection: 'row',
-          ...(fullscreen && fsStyle),
-          ...props,
-        },
-        style,
-      ]}
-    >
-      {children}
-    </View>
-  )
-}
+export const HStack = forwardRef<View, StackBaseProps>(
+  ({ children, fullscreen, pointerEvents, style = null, ...props }, ref) => {
+    return (
+      <View
+        ref={ref}
+        pointerEvents={pointerEvents}
+        style={[
+          {
+            flexDirection: 'row',
+            ...(fullscreen && fsStyle),
+            ...props,
+          },
+          style,
+        ]}
+      >
+        {children}
+      </View>
+    )
+  }
+)
 
-export function VStack({
-  children,
-  fullscreen,
-  pointerEvents,
-  style = null,
-  ...props
-}: StackBaseProps) {
-  return (
-    <View
-      pointerEvents={pointerEvents}
-      style={[
-        {
-          flexDirection: 'column',
-          ...(fullscreen && fsStyle),
-          ...props,
-        },
-        style,
-      ]}
-    >
-      {children}
-    </View>
-  )
-}
+export const VStack = forwardRef<View, StackBaseProps>(
+  ({ children, fullscreen, pointerEvents, style = null, ...props }, ref) => {
+    return (
+      <View
+        ref={ref}
+        pointerEvents={pointerEvents}
+        style={[
+          {
+            flexDirection: 'column',
+            ...(fullscreen && fsStyle),
+            ...props,
+          },
+          style,
+        ]}
+      >
+        {children}
+      </View>
+    )
+  }
+)

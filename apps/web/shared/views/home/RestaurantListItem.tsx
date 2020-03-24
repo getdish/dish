@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Image, Text, TouchableOpacity } from 'react-native'
+import React, { useState, useEffect, useRef } from 'react'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
 import { Restaurant } from '@dish/models'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { Spacer } from '../shared/Spacer'
@@ -8,8 +8,10 @@ import { Link } from '../shared/Link'
 import { useOvermind } from '../../state/om'
 import { RatingView } from './RatingView'
 import { RankingView } from './RankingView'
+import { LinearGradient } from 'expo-linear-gradient'
+import Popover from 'react-native-popover-view'
 
-export function RestaurantListItem({
+export const RestaurantListItem = ({
   restaurant,
   rank,
   onHover,
@@ -17,9 +19,10 @@ export function RestaurantListItem({
   restaurant: Restaurant
   rank: number
   onHover: (r: Restaurant) => void
-}) {
+}) => {
   const om = useOvermind()
   const [isHovered, setIsHovered] = useState(false)
+  const ref = useRef<View>(null)
 
   const [open_text, open_color, next_time] = openingHours(restaurant)
   const [price_label, price_color, price_range] = priceRange(restaurant)
@@ -57,7 +60,7 @@ export function RestaurantListItem({
         <HStack
           alignItems="center"
           overflow="scroll"
-          backgroundColor={isHovered ? '#B8E0F355' : 'transparent'}
+          backgroundColor={isHovered ? '#B8E0F322' : 'transparent'}
         >
           <VStack padding={18} width="70%" maxWidth={525}>
             <Link name="restaurant" params={{ slug: restaurant.slug }}>
@@ -66,7 +69,7 @@ export function RestaurantListItem({
 
                 <Text
                   style={{
-                    fontSize: 22,
+                    fontSize: 24,
                     fontWeight: 'bold',
                     textDecorationColor: 'transparent',
                   }}
@@ -79,63 +82,115 @@ export function RestaurantListItem({
             <Spacer />
 
             <HStack>
-              <HStack>
+              <HStack alignItems="center">
+                <TouchableOpacity onPress={() => {}}>
+                  <div
+                    style={{
+                      filter: 'grayscale(100%)',
+                      marginLeft: 20,
+                    }}
+                  >
+                    <Text style={{ fontSize: 24, opacity: 0.5 }}>⭐️</Text>
+                  </div>
+                </TouchableOpacity>
+                <Spacer />
                 <TagButton rank={1} name="🍜 Pho" />
                 <Spacer />
                 <TagButton rank={22} name="🌃 Date Spot" />
                 <Spacer />
-                <TagButton rank={30} name="🥬 Vegan" />
-                <Spacer />
-                <TagButton rank={120} name="🥢 Asian" />
+                <Text style={{ opacity: 0.5 }}>+ 5 more</Text>
               </HStack>
+
+              {/* <ZStack fullscreen>
+                <LinearGradient
+                  colors={['transparent', 'white']}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: '70%',
+                    right: 0,
+                    bottom: 0,
+                  }}
+                  start={{ x: 0, y: 0.5 }}
+                  end={{ x: 1, y: 0.5 }}
+                />
+              </ZStack> */}
             </HStack>
 
             <Spacer />
 
-            <Text style={{ opacity: 0.5 }}>
-              3017 16th St · Menu · Quick bites, Mexican, Fast Food
+            <Text style={{ opacity: 0.6, fontWeight: '500' }}>
+              📍 3017 16th St. &nbsp;&nbsp; · &nbsp;&nbsp;{' '}
+              <Link inline name="restaurant" params={{ slug: '' }}>
+                Menu
+              </Link>{' '}
+              &nbsp;&nbsp; · &nbsp;&nbsp; 📞 &nbsp;&nbsp;
             </Text>
 
             <Spacer />
 
-            <HStack>
-              <VStack paddingRight={10}>
-                <Text style={{ fontWeight: 'bold', color: open_color }}>
+            <HStack paddingLeft={24}>
+              <VStack paddingRight="5%">
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    color: open_color,
+                    marginBottom: 3,
+                  }}
+                >
                   {open_text}
                 </Text>
                 <Text>{next_time}</Text>
               </VStack>
 
-              <VStack paddingHorizontal={10}>
-                <Text style={{ fontWeight: 'bold', color: price_color }}>
+              <VStack paddingHorizontal="5%">
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    color: price_color,
+                    marginBottom: 3,
+                  }}
+                >
                   {price_label}
                 </Text>
                 <Text>{price_range}</Text>
               </VStack>
 
-              <VStack paddingHorizontal={10}>
-                <Text style={{ fontWeight: 'bold', color: 'gray' }}>
+              <VStack paddingHorizontal="5%">
+                <Text
+                  style={{ fontWeight: 'bold', color: 'gray', marginBottom: 3 }}
+                >
                   Delivers
                 </Text>
-                <Text>Uber, Postmates, Doordash</Text>
+                <Text>Uber, PM, DD</Text>
               </VStack>
             </HStack>
           </VStack>
 
+          <Spacer />
+
           <HStack>
             <VStack position="absolute" top={-20} left={-30} zIndex={100}>
-              <RatingView restaurant={restaurant} />
+              <RatingView ref={ref} restaurant={restaurant} />
             </VStack>
+
+            {!!ref.current && (
+              <Popover fromView={ref.current} isVisible>
+                <VStack width={200} height={100}>
+                  <Text>Test me out</Text>
+                </VStack>
+              </Popover>
+            )}
 
             {photos.slice(0, 3).map((photo, i) => {
               return (
                 <React.Fragment key={i}>
                   <Image
                     source={{ uri: photo }}
-                    style={{ width: 130, height: 130, borderRadius: 20 }}
+                    style={{ width: 140, height: 140, borderRadius: 20 }}
                     resizeMode="cover"
                   />
-                  <Spacer size="lg" />
+                  <Spacer />
                 </React.Fragment>
               )
             })}
@@ -178,7 +233,7 @@ function openingHours(restaurant: Restaurant) {
 }
 
 function priceRange(restaurant: Restaurant) {
-  let label = 'Price Range'
+  let label = 'Price'
   let color = 'grey'
   let price_range = 'unknown'
 

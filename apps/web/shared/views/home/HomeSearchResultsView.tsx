@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { StyleSheet, Text, View, ScrollView } from 'react-native'
 
 import { useOvermind } from '../../state/om'
@@ -130,29 +130,38 @@ function HomeSearchResultsViewContent({
 }) {
   const om = useOvermind()
   const { results } = state
+
+  const contents = useMemo(() => {
+    if (results && results.status == 'complete') {
+      return results.results.restaurants?.map((restaurant, index) => {
+        return (
+          <RestaurantListItem
+            key={index}
+            restaurant={restaurant as any}
+            rank={index + 1}
+            onHover={() => {
+              om.actions.home.setHoveredRestaurant({ ...restaurant } as any)
+            }}
+          />
+        )
+      })
+    }
+
+    if (results?.status == 'loading') {
+      return (
+        <VStack padding={18}>
+          <Text>Loading...</Text>
+        </VStack>
+      )
+    }
+  }, [
+    results?.status,
+    results?.['results']?.restaurants.map((x) => x.id).join(''),
+  ])
+
   return (
     <ScrollView>
-      <VStack paddingVertical={20}>
-        {results &&
-          results.status == 'complete' &&
-          results.results.restaurants?.map((restaurant, index) => {
-            return (
-              <RestaurantListItem
-                key={index}
-                restaurant={restaurant as any}
-                rank={index + 1}
-                onHover={() => {
-                  om.actions.home.setHoveredRestaurant({ ...restaurant } as any)
-                }}
-              />
-            )
-          })}
-        {results?.status == 'loading' && (
-          <VStack padding={18}>
-            <Text>Loading...</Text>
-          </VStack>
-        )}
-      </VStack>
+      <VStack paddingVertical={20}>{contents}</VStack>
     </ScrollView>
   )
 }

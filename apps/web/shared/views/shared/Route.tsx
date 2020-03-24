@@ -21,25 +21,29 @@ export function RouteSwitch(props: { children: any }) {
   const names = children.map((x) => x['props'].name)
   const activeIndex = names.findIndex((x) => val[x])
   const [_, update] = useState(0)
-  return children.map((child, index) => {
-    const cb = useCallback((name, next) => {
-      val[name] = next
-      setVal(val)
-      update(Math.random())
-    }, [])
-    return (
-      <RouteContext.Provider key={index} value={cb}>
-        <View
-          style={{
-            flex: 1,
-            display: index == -1 || activeIndex == index ? 'flex' : 'none',
-          }}
-        >
-          {child}
-        </View>
-      </RouteContext.Provider>
-    )
-  })
+  return (
+    <>
+      {children.map((child, index) => {
+        const cb = useCallback((name, next) => {
+          val[name] = next
+          setVal(val)
+          update(Math.random())
+        }, [])
+        return (
+          <RouteContext.Provider key={index} value={cb}>
+            <View
+              style={{
+                flex: 1,
+                display: index == -1 || activeIndex == index ? 'flex' : 'none',
+              }}
+            >
+              {child}
+            </View>
+          </RouteContext.Provider>
+        )
+      })}
+    </>
+  )
 }
 
 export function Route(props: {

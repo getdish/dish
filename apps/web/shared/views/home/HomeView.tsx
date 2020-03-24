@@ -8,7 +8,6 @@ import { Route, RouteSwitch } from '../shared/Route'
 import { LabAuth } from '../auth'
 import HomeMenu from './HomeMenu'
 
-import * as Animatable from 'react-native-animatable'
 import HomeRestaurantView from './HomeRestaurantView'
 import HomeViewTopDishes from './HomeViewTopDishes'
 import HomeSearchResultsView from './HomeSearchResultsView'
