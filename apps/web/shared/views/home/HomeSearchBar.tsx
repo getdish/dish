@@ -99,10 +99,7 @@ function SearchCancelButton() {
               opacity: om.state.home.currentState.searchQuery === '' ? 0 : 1,
             }}
             onPress={() => {
-              om.actions.home.setSearchQuery('')
-              if (om.state.router.history.length > 1) {
-                om.actions.router.back()
-              }
+              om.actions.home.popTo(om.state.home.lastHomeState)
             }}
           >
             <Text style={{ opacity: 0.5, fontSize: 12 }}>❌</Text>

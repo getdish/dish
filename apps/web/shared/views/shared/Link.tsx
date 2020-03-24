@@ -28,12 +28,9 @@ export function Link<
       {...props}
       href={getPathFromParams({ name, params })}
       onClick={useCallback((e) => {
+        e.stopPropagation()
         e.preventDefault()
         om.actions.router.navigate({ name, params } as any)
-        if (props.onClick) {
-          console.log('what is', props.onClick)
-          props.onClick(e)
-        }
       }, [])}
       className={inline ? '' : 'block-link'}
     />

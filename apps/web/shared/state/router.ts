@@ -70,7 +70,6 @@ export type RouterState = {
   history: HistoryItem[]
   prevPage: Derive<RouterState, HistoryItem | undefined>
   curPage: Derive<RouterState, HistoryItem>
-  ignoreNextPush: boolean
 }
 
 let ignoreNextRoute = false
@@ -110,7 +109,6 @@ const defaultPage = {
 export const state: RouterState = {
   notFound: false,
   history: [],
-  ignoreNextPush: false,
   prevPage: (state) => state.history[state.history.length - 2],
   curPage: (state) => state.history[state.history.length - 1] || defaultPage,
 }
@@ -121,7 +119,7 @@ const uid = () => `${Math.random()}`
 const navigate: Operator<NavigateItem> = pipe(
   map(
     (_, item): HistoryItem => {
-      // console.log('navigate', item)
+      console.log('navigate', item)
       return {
         id: uid(),
         params: {},
@@ -142,6 +140,7 @@ const navigate: Operator<NavigateItem> = pipe(
       _.omit(om.state.router.curPage, 'id', 'replace')
     )
     if (alreadyOnPage) {
+      console.log('AlreadyOnPageError', item, om.state.router.curPage)
       throw new AlreadyOnPageError()
     }
 
@@ -163,27 +162,23 @@ const navigate: Operator<NavigateItem> = pipe(
     }
   }),
   run((om, item) => {
-    console.warn('ignoreNextPush', om.state.router.ignoreNextPush)
-    if (!om.state.router.ignoreNextPush) {
-      if (onRouteChange) {
-        onRouteChange({
-          type: item.replace ? 'replace' : 'push',
-          name: item.name,
-          item: _.last(om.state.router.history),
-        })
-      }
-      if (item.replace) {
-        om.effects.router.replace(item.path)
-      } else {
-        om.effects.router.open(item.path)
-      }
+    if (onRouteChange) {
+      onRouteChange({
+        type: item.replace ? 'replace' : 'push',
+        name: item.name,
+        item: _.last(om.state.router.history),
+      })
+    }
+    if (item.replace) {
+      om.effects.router.replace(item.path)
+    } else {
+      om.effects.router.open(item.path)
     }
   }),
   mutate((om) => {
-    om.state.router.ignoreNextPush = false
+    //
   }),
   catchError<void>((om, error) => {
-    om.state.router.ignoreNextPush = false
     if (error instanceof AlreadyOnPageError) {
       // ok
     } else {
@@ -191,11 +186,6 @@ const navigate: Operator<NavigateItem> = pipe(
     }
   })
 )
-
-const ignoreNextPush: Action = (om) => {
-  console.trace('ignoreNextPush')
-  om.state.router.ignoreNextPush = true
-}
 
 const back: Action = (om) => {
   window.history.back()
@@ -214,8 +204,6 @@ window.addEventListener('popstate', (event) => {
     at: Date.now(),
   }
 })
-
-let isInitialRoute = true
 
 const routeListen: Action<{
   url: string
@@ -246,11 +234,6 @@ const routeListen: Action<{
         ignoreNextRoute = false
         return
       }
-      if (isInitialRoute) {
-        isInitialRoute = false
-      } else {
-        om.actions.router.ignoreNextPush()
-      }
       const paramsClean = { ...params }
       om.actions.router.navigate({
         name,
@@ -272,7 +255,6 @@ export const actions = {
   routeListenNotFound,
   routeListen,
   navigate,
-  ignoreNextPush,
   back,
   forward,
 }
@@ -324,32 +306,3 @@ export function getPathFromParams({
   }
   return path
 }
-
-// const navigateToPath: Action<string> = (om, path) => {
-//   const name = path.split('/').find(x => x[0] !== '/')
-//   const route = routes[name]
-
-//   if (!route) throw new Error('wah')
-
-//   let params = {}
-//   const pathPrefixIndex = route.path.indexOf(':')
-
-//   if (pathPrefixIndex > 0) {
-//     const staticPart = route.path.slice(0, pathPrefixIndex)
-//     console.log('staticPart', staticPart)
-//     const pathParts = route.path.replace().split('/')
-//     const keys = route.path.split('/')
-//       .filter(x => x[0] === ':')
-//       .map(x => x.slice(1))
-
-//     params = keys.reduce((acc, cur) => {
-//       acc[cur] =
-//       return acc
-//     }, {})
-//   }
-
-//   om.actions.router.navigate({
-//     name,
-//     params
-//   })
-// }
