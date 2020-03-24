@@ -11,7 +11,7 @@ import {
 import { useOvermind } from '../../state/om'
 import top_dish_images from '../../assets/topdishes.json'
 import { Spacer } from '../shared/Spacer'
-import { Link } from '../shared/Link'
+import { Link, LinkButton } from '../shared/Link'
 import { HStack, VStack } from '../shared/Stacks'
 import { SmallTitle } from '../shared/SmallTitle'
 import { HomeLenseBar } from './HomeLenseBar'
@@ -91,22 +91,24 @@ const HomeViewTopDishesContent = memo(({ dishes }: { dishes: any[] }) => {
                 {dishes.map((dish) => {
                   const category = dish.category.replace(/"/g, '')
                   return (
-                    <TouchableOpacity
+                    <LinkButton
                       key={category}
                       style={{
                         // flexDirection: 'row',
                         alignItems: 'center',
+                        justifyContent: 'center',
                         padding: 8,
                       }}
-                      onPress={() => {
-                        om.actions.home.setSearchQuery(
-                          dish.category.replace(/"/g, '')
-                        )
-                        om.actions.router.navigate({
-                          name: 'search',
-                          params: { query: category },
-                        })
+                      name="search"
+                      params={{
+                        query: category,
                       }}
+                      // onPress={() => {
+                      // om.actions.home.setSearchQuery(
+                      //   dish.category.replace(/"/g, '')
+                      // )
+
+                      // }}
                     >
                       <VStack width={110} height={100} paddingHorizontal={5}>
                         {getImageForDish(category)}
@@ -126,7 +128,7 @@ const HomeViewTopDishesContent = memo(({ dishes }: { dishes: any[] }) => {
                           {category}
                         </Text>
                       </VStack>
-                    </TouchableOpacity>
+                    </LinkButton>
                   )
                 })}
               </HStack>

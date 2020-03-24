@@ -147,15 +147,15 @@ const navigate: Operator<NavigateItem> = pipe(
       throw new AlreadyOnPageError()
     }
 
-    const isGoingBack = isEqual(
-      _.omit(om.state.router.prevPage, 'id', 'replace'),
-      _.omit(item, 'id', 'replace')
-    )
-    console.warn('isgoingback', isGoingBack, item, om.state.router.prevPage)
-    if (isGoingBack) {
-      om.actions.router.back()
-      throw new AlreadyOnPageError()
-    }
+    // const isGoingBack = isEqual(
+    //   _.omit(om.state.router.prevPage, 'id', 'replace'),
+    //   _.omit(item, 'id', 'replace')
+    // )
+    // console.warn('isgoingback', isGoingBack, item, om.state.router.prevPage)
+    // if (isGoingBack) {
+    //   om.actions.router.back()
+    //   throw new AlreadyOnPageError()
+    // }
 
     if (item.replace) {
       const next = _.dropRight(om.state.router.history)

@@ -4,7 +4,7 @@ import HomeMap from './HomeMap'
 import { useOvermind } from '../../state/om'
 
 import SideMenu from 'react-native-side-menu'
-import { Route } from '../shared/Route'
+import { Route, RouteSwitch } from '../shared/Route'
 import { LabAuth } from '../auth'
 import HomeMenu from './HomeMenu'
 
@@ -37,15 +37,17 @@ export const HomeView = () => {
         <HomeMap />
 
         <HomeViewDrawer>
-          <Route name="login">
-            <LabAuth />
-          </Route>
-          <Route name="register">
-            <LabAuth />
-          </Route>
-          <Route name="home">
-            <HomeViewContent />
-          </Route>
+          <RouteSwitch>
+            <Route name="login">
+              <LabAuth />
+            </Route>
+            <Route name="register">
+              <LabAuth />
+            </Route>
+            <Route name="home">
+              <HomeViewContent />
+            </Route>
+          </RouteSwitch>
         </HomeViewDrawer>
       </ZStack>
     </SideMenu>
