@@ -9,7 +9,8 @@ import { useOvermind } from '../../state/om'
 import { RatingView } from './RatingView'
 import { RankingView } from './RankingView'
 import { LinearGradient } from 'expo-linear-gradient'
-import Popover from 'react-native-popover-view'
+import { Popover } from '../shared/Popover'
+import { ArrowContainer } from 'react-tiny-popover'
 
 export const RestaurantListItem = ({
   restaurant,
@@ -22,7 +23,7 @@ export const RestaurantListItem = ({
 }) => {
   const om = useOvermind()
   const [isHovered, setIsHovered] = useState(false)
-  const ref = useRef<View>(null)
+  const [isHoveringRating, setIsHoveringRating] = useState(false)
 
   const [open_text, open_color, next_time] = openingHours(restaurant)
   const [price_label, price_color, price_range] = priceRange(restaurant)
@@ -62,7 +63,7 @@ export const RestaurantListItem = ({
           overflow="scroll"
           backgroundColor={isHovered ? '#B8E0F322' : 'transparent'}
         >
-          <VStack padding={18} width="70%" maxWidth={525}>
+          <VStack padding={18} width="76%" maxWidth={525}>
             <Link name="restaurant" params={{ slug: restaurant.slug }}>
               <HStack alignItems="center">
                 <RankingView rank={rank} />
@@ -132,6 +133,7 @@ export const RestaurantListItem = ({
             <HStack paddingLeft={24}>
               <VStack paddingRight="5%">
                 <Text
+                  numberOfLines={1}
                   style={{
                     fontWeight: 'bold',
                     color: open_color,
@@ -140,11 +142,12 @@ export const RestaurantListItem = ({
                 >
                   {open_text}
                 </Text>
-                <Text>{next_time}</Text>
+                <Text numberOfLines={1}>{next_time}</Text>
               </VStack>
 
               <VStack paddingHorizontal="5%">
                 <Text
+                  numberOfLines={1}
                   style={{
                     fontWeight: 'bold',
                     color: price_color,
@@ -153,16 +156,17 @@ export const RestaurantListItem = ({
                 >
                   {price_label}
                 </Text>
-                <Text>{price_range}</Text>
+                <Text numberOfLines={1}>{price_range}</Text>
               </VStack>
 
               <VStack paddingHorizontal="5%">
                 <Text
+                  numberOfLines={1}
                   style={{ fontWeight: 'bold', color: 'gray', marginBottom: 3 }}
                 >
                   Delivers
                 </Text>
-                <Text>Uber, PM, DD</Text>
+                <Text numberOfLines={1}>Uber, PM, DD</Text>
               </VStack>
             </HStack>
           </VStack>
@@ -171,16 +175,35 @@ export const RestaurantListItem = ({
 
           <HStack>
             <VStack position="absolute" top={-20} left={-30} zIndex={100}>
-              <RatingView ref={ref} restaurant={restaurant} />
-            </VStack>
-
-            {!!ref.current && (
-              <Popover fromView={ref.current} isVisible>
-                <VStack width={200} height={100}>
+              <Popover
+                isOpen={isHoveringRating}
+                position="right"
+                target={
+                  <div
+                    onMouseEnter={() => {
+                      setIsHoveringRating(true)
+                    }}
+                    onMouseLeave={() => {
+                      setIsHoveringRating(false)
+                    }}
+                  >
+                    <RatingView restaurant={restaurant} />
+                  </div>
+                }
+              >
+                <VStack
+                  backgroundColor="#fff"
+                  padding={10}
+                  width={300}
+                  height={150}
+                  borderRadius={10}
+                  shadowColor="rgba(0,0,0,0.1)"
+                  shadowRadius={10}
+                >
                   <Text>Test me out</Text>
                 </VStack>
               </Popover>
-            )}
+            </VStack>
 
             {photos.slice(0, 3).map((photo, i) => {
               return (
