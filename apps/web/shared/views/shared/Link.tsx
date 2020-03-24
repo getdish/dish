@@ -12,6 +12,7 @@ export function Link<
 >({
   name,
   params,
+  inline,
   ...props
 }: React.DetailedHTMLProps<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -19,6 +20,7 @@ export function Link<
 > & {
   name: Name
   params?: Params
+  inline?: boolean
 }) {
   const om = useOvermind()
   return (
@@ -33,7 +35,7 @@ export function Link<
           props.onClick(e)
         }
       }, [])}
-      className="block-link"
+      className={inline ? '' : 'block-link'}
     />
   )
 }
