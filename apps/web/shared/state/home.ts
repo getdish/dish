@@ -94,11 +94,6 @@ export const state: HomeState = {
   showMenu: false,
   hoveredRestaurant: null,
   states: [initialHomeState],
-  breadcrumbStates: (state) => {
-    const lastHome = state.lastHomeState
-    const lastHomeIndex = state.states.findIndex((x) => x === lastHome)
-    return state.states.slice(lastHomeIndex == -1 ? 0 : lastHomeIndex)
-  },
   currentState: (state) => _.last(state.states),
   previousState: (state) => state.states[state.states.length - 2],
   lastHomeState: (state) => {
@@ -107,6 +102,16 @@ export const state: HomeState = {
         return state.states[i] as HomeStateItemHome
       }
     }
+  },
+  breadcrumbStates: (state) => {
+    const lastType = _.last(state.states).type
+    const lastHome = state.lastHomeState
+    const lastSearch =
+      lastType != 'home' && _.findLast(state.states, (x) => x.type == 'search')
+    const lastRestaurant =
+      lastType == 'restaurant' &&
+      _.findLast(state.states, (x) => x.type == 'restaurant')
+    return [lastHome, lastSearch, lastRestaurant].filter(Boolean)
   },
 }
 
@@ -165,6 +170,7 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
       break
   }
 
+  console.log('pushHomeState', nextState)
   om.state.home.states.push(nextState)
   if (fetchData) {
     fetchData()
@@ -182,16 +188,8 @@ const popTo: Action<HomeStateItem> = (om, item) => {
 
 const _popHomeState: Action<HistoryItem> = (om, item) => {
   if (om.state.home.states.length > 1) {
-    while (true) {
-      om.state.home.states = _.dropRight(om.state.home.states)
-      if (_.last(om.state.home.states).type !== item.name) {
-        break
-      }
-      // safeguard
-      if (om.state.home.states.length <= 1) {
-        break
-      }
-    }
+    console.log('popHomeState', om.state.home.states)
+    om.state.home.states = _.dropRight(om.state.home.states)
   }
 }
 
