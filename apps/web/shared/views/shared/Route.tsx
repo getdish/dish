@@ -1,6 +1,48 @@
-import React, { useLayoutEffect } from 'react'
+import React, {
+  useLayoutEffect,
+  createContext,
+  useMemo,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from 'react'
 import { useOvermind } from '../../state/om'
 import { HistoryItem, routes, routePathToName } from '../../state/router'
+import { View } from 'react-native'
+
+const RouteContext = createContext<(name: string, showing: boolean) => void>(
+  null
+)
+
+export function RouteSwitch(props: { children: any }) {
+  const children = React.Children.toArray(props.children)
+  const [val, setVal] = useState({})
+  const names = children.map((x) => x['props'].name)
+  const activeIndex = names.findIndex((x) => val[x])
+  const [_, update] = useState(0)
+  console.log('children', val, children, activeIndex, names)
+  return children.map((child, index) => {
+    const cb = useCallback((name, next) => {
+      val[name] = next
+      console.log('setting to', name, next, val)
+      setVal(val)
+      update(Math.random())
+    }, [])
+    return (
+      <RouteContext.Provider key={index} value={cb}>
+        <View
+          style={{
+            flex: 1,
+            display: index == -1 || activeIndex == index ? 'flex' : 'none',
+          }}
+        >
+          {child}
+        </View>
+      </RouteContext.Provider>
+    )
+  })
+}
 
 export function Route(props: {
   name: string
@@ -9,23 +51,32 @@ export function Route(props: {
   forHistory?: HistoryItem
 }) {
   const om = useOvermind()
-  const curName = props.forHistory?.name ?? om.state.router.curPage.name
+  const activeName = props.forHistory?.name ?? om.state.router.curPage.name
+  const setRouteInfo = useContext(RouteContext)
+  const isExactMatching = props.exact && activeName === props.name
+  const routePath = routes[props.name].path
+  const routePaths: string[] = Object.keys(routes).map((x) => routes[x].path)
+  const childRouteNames = routePaths
+    .filter((p) => p.indexOf(routePath) === 0)
+    .map((path) => routePathToName[path])
+  const isParentMatching = childRouteNames.some((x) => x === activeName)
+
+  const match = !!(isParentMatching || isExactMatching)
+  useLayoutEffect(() => {
+    if (!setRouteInfo) return
+    console.log('route is', props.name, match)
+    setRouteInfo(props.name, match)
+  }, [props.name, match])
 
   if (props.exact) {
-    if (curName === props.name) {
+    if (isExactMatching) {
       return props.children
     }
     return null
   }
 
   // parent matching
-  const routePath = routes[props.name].path
-  const routePaths: string[] = Object.keys(routes).map(x => routes[x].path)
-  const childRouteNames = routePaths
-    .filter(p => p.indexOf(routePath) === 0)
-    .map(path => routePathToName[path])
-
-  if (childRouteNames.some(x => x === curName)) {
+  if (isParentMatching) {
     return props.children
   }
 

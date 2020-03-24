@@ -1,0 +1,7 @@
+.block-link {
+  display: flex;
+  flex-direction: inherit;
+  flex-grow: inherit;
+  align-items: inherit;
+  justify-content: inherit;
+}

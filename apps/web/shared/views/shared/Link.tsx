@@ -1,8 +1,10 @@
 import React from 'react'
 import { useOvermind } from '../../state/om'
-import { RoutesTable } from '../../state/router'
+import { RoutesTable, getPathFromParams } from '../../state/router'
 import { TouchableOpacity, Text } from 'react-native'
 import { VStack, StackBaseProps } from './Stacks'
+
+import './Link.css'
 
 export function Link<
   Name extends keyof RoutesTable = keyof RoutesTable,
@@ -21,11 +23,12 @@ export function Link<
   const om = useOvermind()
   return (
     <a
-      href={`/${name}/`} // todo
+      href={getPathFromParams({ name, params })}
       onClick={(e) => {
         e.preventDefault()
         om.actions.router.navigate({ name, params } as any)
       }}
+      className="block-link"
       {...props}
     />
   )
