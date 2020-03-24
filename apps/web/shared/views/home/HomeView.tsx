@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useState, useEffect, useMemo } from 'react'
 
 import HomeMap from './HomeMap'
 import { useOvermind } from '../../state/om'
@@ -6,7 +6,7 @@ import { useOvermind } from '../../state/om'
 import SideMenu from 'react-native-side-menu'
 import { Route } from '../shared/Route'
 import { LabAuth } from '../auth'
-import { HomeMenu } from './HomeMenu'
+import HomeMenu from './HomeMenu'
 
 import * as Animatable from 'react-native-animatable'
 import HomeRestaurantView from './HomeRestaurantView'
@@ -20,11 +20,12 @@ import { HomeStateItem } from '../../state/home'
 import _ from 'lodash'
 import HomeFilterBar from './HomeFilterBar'
 import { LinearGradient } from 'expo-linear-gradient'
-import { TouchableOpacity } from 'react-native'
+import { TouchableOpacity, Animated } from 'react-native'
 
 import { StyleSheet, View } from 'react-native'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import { HomeDrawerHeader } from './HomeDrawerHeader'
+import { useDebounceValue } from '../../hooks/useDebounce'
 
 export const HomeView = () => {
   const om = useOvermind()
@@ -167,56 +168,104 @@ function HomeStackView<A extends HomeStateItem>({
   children: (a: A, isActive: boolean, index: number) => React.ReactNode
 }) {
   const om = useOvermind()
+
+  const debounceItems = useDebounceValue(items, 200)
+
   return (
     <ZStack fullscreen>
-      {items.map((x, index) => {
-        const item = (x as any) as HomeStateItem
-        const key = `${index}`
-        const isTop = index === items.length - 1
-        const contents = children(
-          item as any,
-          index === items.length - 1,
-          index
-        )
-        return (
-          <Animatable.View
-            key={key}
-            animation="fadeInUp"
-            pointerEvents={isTop ? 'none' : 'auto'}
-            duration={300}
-            style={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-            }}
-          >
-            <TouchableOpacity
-              disabled={isTop}
-              style={{ flex: 1 }}
-              onPress={() => {
-                om.actions.home.popTo(x)
-              }}
-            >
-              <ZStack
-                backgroundColor="white"
-                fullscreen
-                flex={1}
-                zIndex={index}
-                top={index * 20}
-                shadowColor="rgba(0,0,0,0.2)"
-                shadowRadius={7}
-                borderRadius={drawerBorderRadius}
-                pointerEvents="auto"
-                // overflow="hidden"
-              >
-                {contents}
-              </ZStack>
-            </TouchableOpacity>
-          </Animatable.View>
-        )
-      })}
+      {debounceItems.map((item, index) => (
+        <HomeStackViewItem
+          key={`${index}`}
+          item={item}
+          index={index}
+          total={debounceItems.length}
+        >
+          {children(item as any, index === debounceItems.length - 1, index)}
+        </HomeStackViewItem>
+      ))}
     </ZStack>
+  )
+}
+
+function HomeStackViewItem({
+  children,
+  item,
+  index,
+  total,
+}: {
+  children: React.ReactNode
+  item: HomeStateItem
+  index: number
+  total: number
+}) {
+  const om = useOvermind()
+  const isTop = index === total - 1
+  const [isMounted, setIsMounted] = useState(false)
+  // const val = useMemo(() => new Animated.Value(0), [])
+
+  useEffect(() => {
+    let tm = setTimeout(() => {
+      setIsMounted(true)
+    }, 50)
+    return () => clearTimeout(tm)
+  }, [])
+
+  const onPress = useMemo(
+    () => () => {
+      om.actions.home.popTo(item)
+    },
+    []
+  )
+
+  return (
+    <div className={`animate-up ${isMounted ? 'active' : ''}`}>
+      <style>
+        {`
+.animate-up {
+  flex: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px);
+  transition: all ease-in-out 400ms;
+}
+.animate-up.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+        `}
+      </style>
+      <ZStack
+        // animation="fadeInUp"
+        // duration={300}
+        pointerEvents={isTop ? 'none' : 'auto'}
+        fullscreen
+      >
+        <TouchableOpacity
+          disabled={isTop}
+          style={{ flex: 1 }}
+          onPress={onPress}
+        >
+          <ZStack
+            backgroundColor="white"
+            fullscreen
+            flex={1}
+            zIndex={index}
+            top={index * 20}
+            shadowColor="rgba(0,0,0,0.2)"
+            shadowRadius={7}
+            borderRadius={drawerBorderRadius}
+            pointerEvents="auto"
+            // overflow="hidden"
+          >
+            {children}
+          </ZStack>
+        </TouchableOpacity>
+      </ZStack>
+    </div>
   )
 }

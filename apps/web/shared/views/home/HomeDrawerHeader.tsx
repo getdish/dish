@@ -40,7 +40,6 @@ export function HomeDrawerHeader() {
 
         <TouchableOpacity
           onPress={() => {
-            om.actions.home.setSearchQuery('')
             om.actions.router.navigate({ name: 'home' })
           }}
         >

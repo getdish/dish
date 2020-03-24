@@ -13,6 +13,7 @@ import {
 import page from 'page'
 import queryString from 'query-string'
 import _ from 'lodash'
+import { slugify } from '../helpers/slugify'
 
 class Route<A extends Object | void = void> {
   params: A
@@ -120,6 +121,7 @@ const uid = () => `${Math.random()}`
 const navigate: Operator<NavigateItem> = pipe(
   map(
     (_, item): HistoryItem => {
+      console.trace('navigate', item)
       return {
         id: uid(),
         params: {},
@@ -135,18 +137,21 @@ const navigate: Operator<NavigateItem> = pipe(
   mutate((om, item) => {
     om.state.router.notFound = false
 
+    console.log('naviate', item, om.state.router.curPage)
+
     const alreadyOnPage = isEqual(
-      _.omit(item, 'id'),
-      _.omit(om.state.router.curPage, 'id')
+      _.omit(item, 'id', 'replace'),
+      _.omit(om.state.router.curPage, 'id', 'replace')
     )
     if (alreadyOnPage) {
       throw new AlreadyOnPageError()
     }
 
     const isGoingBack = isEqual(
-      _.omit(om.state.router.prevPage, 'id'),
-      _.omit(item, 'id')
+      _.omit(om.state.router.prevPage, 'id', 'replace'),
+      _.omit(item, 'id', 'replace')
     )
+    console.warn('isgoingback', isGoingBack, item, om.state.router.prevPage)
     if (isGoingBack) {
       om.actions.router.back()
       throw new AlreadyOnPageError()
@@ -160,7 +165,7 @@ const navigate: Operator<NavigateItem> = pipe(
     }
   }),
   run((om, item) => {
-    console.log('got one', item)
+    console.warn('ignoreNextPush', om.state.router.ignoreNextPush)
     if (!om.state.router.ignoreNextPush) {
       if (onRouteChange) {
         onRouteChange({
@@ -231,7 +236,7 @@ const routeListen: Action<{
         const last = history[history.length - 2] ?? history[history.length - 1]
         const lastPath = last.path
         const lastMatches = lastPath == pop.path
-        console.log('check it out', lastPath, pop.path)
+        console.log('isGoingBack', lastMatches, lastPath, pop, last)
         isGoingBack = lastMatches
       }
     }
@@ -318,7 +323,7 @@ export function getPathFromParams({
   let path = route.path
   if (!params) return path
   for (const key in params) {
-    path = path.replace(`:${key}`, params[key])
+    path = path.replace(`:${key}`, slugify(params[key], '-'))
   }
   return path
 }

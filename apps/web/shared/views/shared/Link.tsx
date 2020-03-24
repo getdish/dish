@@ -22,7 +22,7 @@ export function Link<
   return (
     <a
       href={`/${name}/`} // todo
-      onClick={e => {
+      onClick={(e) => {
         e.preventDefault()
         om.actions.router.navigate({ name, params } as any)
       }}
@@ -40,6 +40,7 @@ export function LinkButton<
       | {
           name: Name
           params?: Params
+          onPress?: any
         }
       | {
           onPress?: any
@@ -51,10 +52,10 @@ export function LinkButton<
   let onPress: any
 
   if ('name' in props) {
-    const { name, params, children, ...rest } = props
+    const { name, params, children, onPress, ...rest } = props
     restProps = rest
     contents = (
-      <Link name={name} params={params}>
+      <Link name={name} params={params} onClick={onPress}>
         {children}
       </Link>
     )
