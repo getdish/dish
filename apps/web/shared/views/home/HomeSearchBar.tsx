@@ -10,7 +10,6 @@ import {
 import { useOvermind } from '../../state/om'
 import { ZStack, HStack, VStack } from '../shared/Stacks'
 import { Spacer } from '../shared/Spacer'
-import { useDebounce } from '../../hooks/useDebounce'
 
 const styles = StyleSheet.create({
   container: {

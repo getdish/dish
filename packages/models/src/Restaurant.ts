@@ -144,7 +144,7 @@ export class Restaurant extends ModelBase<Restaurant> {
     }
     const response = await ModelBase.hasura(query)
     return response.data.data.restaurant.map(
-      (data: Partial<Restaurant>) => new Restaurant(data)
+      (data: Partial<Restaurant>) => data
     )
   }
 
@@ -256,7 +256,7 @@ export class Restaurant extends ModelBase<Restaurant> {
     }
     const response = await ModelBase.hasura(query)
     return response.data.data.restaurant.map(
-      (data: Partial<Restaurant>) => new Restaurant(data)
+      (data: Partial<Restaurant>) => data
     )
   }
 
@@ -264,7 +264,9 @@ export class Restaurant extends ModelBase<Restaurant> {
     await Restaurant.deleteAllBy('id', this.id)
   }
 
-  get allPhotos() {
-    return [this.image, ...(this.photos ?? [])].filter(Boolean) ?? []
+  static allPhotos(restaurant: Restaurant) {
+    return (
+      [restaurant.image, ...(restaurant.photos ?? [])].filter(Boolean) ?? []
+    )
   }
 }

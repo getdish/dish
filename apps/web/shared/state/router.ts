@@ -121,7 +121,7 @@ const uid = () => `${Math.random()}`
 const navigate: Operator<NavigateItem> = pipe(
   map(
     (_, item): HistoryItem => {
-      console.log('navigate', item)
+      // console.log('navigate', item)
       return {
         id: uid(),
         params: {},
@@ -296,9 +296,11 @@ export const effects = {
 export function getPathFromParams({
   name,
   params,
+  convertToSlug,
 }: {
   name: string
   params: Object | void
+  convertToSlug?: boolean
 }) {
   // object to path
   let route = routes[name]
@@ -315,7 +317,10 @@ export function getPathFromParams({
   let path = route.path
   if (!params) return path
   for (const key in params) {
-    path = path.replace(`:${key}`, slugify(params[key], '-'))
+    path = path.replace(
+      `:${key}`,
+      convertToSlug ? slugify(params[key], '-') : params[key]
+    )
   }
   return path
 }
