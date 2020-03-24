@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios'
 
 const BROWSER_STORAGE_KEY = 'auth'
 const LOCAL_AUTH_SERVER = 'http://localhost:3000'
+const PROD_JWT_SERVER = 'https://auth.rio.dishapp.com'
 let DOMAIN: string
 
 const isNode = typeof window == 'undefined'
@@ -11,9 +12,13 @@ if (isNode) {
   DOMAIN = process.env.AUTH_ENDPOINT || LOCAL_AUTH_SERVER
 } else {
   if (isBrowserProd) {
-    DOMAIN = 'https://auth.rio.dishapp.com'
+    DOMAIN = PROD_JWT_SERVER
   } else {
-    DOMAIN = process.env.REACT_APP_AUTH_ENDPOINT || LOCAL_AUTH_SERVER
+    if (window.location.hostname.includes('hasura_live')) {
+      DOMAIN = PROD_JWT_SERVER
+    } else {
+      DOMAIN = process.env.REACT_APP_AUTH_ENDPOINT || LOCAL_AUTH_SERVER
+    }
   }
 }
 
