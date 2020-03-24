@@ -141,6 +141,10 @@ export class ModelBase<T> {
     return ['']
   }
 
+  static sub_fields(): { [key: string]: string[] } {
+    return {}
+  }
+
   static upper_name() {
     return this.model_name()
   }
@@ -174,25 +178,38 @@ export class ModelBase<T> {
     return [] as string[]
   }
 
-  private static _fieldsAsObject(fields: string[]) {
+  private static _fieldsAsObject(
+    fields: string[],
+    sub_fields: { [key: string]: string[] } = {}
+  ) {
     let object = {}
     for (const key of fields) {
-      object[key] = true
+      if (!(key in sub_fields)) {
+        object[key] = true
+      } else {
+        object[key] = this._fieldsAsObject(sub_fields[key])
+      }
     }
     return object
   }
 
   fieldsAsObject() {
-    return ModelBase._fieldsAsObject(this._klass.all_fields())
+    return ModelBase._fieldsAsObject(
+      this._klass.all_fields(),
+      this._klass.sub_fields()
+    )
   }
 
   static fieldsAsObject() {
-    return ModelBase._fieldsAsObject(this.all_fields())
+    return ModelBase._fieldsAsObject(this.all_fields(), this.sub_fields())
   }
 
   asObject() {
     let object = {}
     for (const field of this._klass.fields()) {
+      if (field in this._klass.sub_fields()) {
+        continue
+      }
       if (this[field]) {
         object[field] = this[field]
       }

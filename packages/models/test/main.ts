@@ -4,6 +4,7 @@ import moment from 'moment'
 
 import { Restaurant } from '../src/Restaurant'
 import { Dish } from '../src/Dish'
+import { Taxonomy } from '../src/Taxonomy'
 
 interface Context {
   restaurant: Restaurant
@@ -44,6 +45,7 @@ const dish_fixture: Partial<Dish> = {
 test.beforeEach(async (t) => {
   await Restaurant.deleteAllFuzzyBy('name', 'Test')
   await Dish.deleteAllFuzzyBy('name', 'Test')
+  await Taxonomy.deleteAllFuzzyBy('name', 'test')
   let restaurant = new Restaurant(restaurant_fixture)
   await restaurant.upsert()
   t.context.restaurant = restaurant
@@ -61,6 +63,20 @@ test('Upserting a restaurant', async (t) => {
   })
   await restaurant.upsert()
   t.is(restaurant.description, 'Upserted')
+})
+
+test('Tagging a restaurant', async (t) => {
+  const restaurant = new Restaurant({
+    ...restaurant_fixture,
+  })
+  await restaurant.upsert()
+  const existing_tag = new Taxonomy({ name: 'test_tag_existing' })
+  await existing_tag.insert()
+  const tag_ids = await restaurant.upsertTags(['test_tag', 'test_tag_existing'])
+  await restaurant.findOne('name', restaurant.name)
+  t.is(tag_ids.length, 2)
+  t.is(tag_ids.includes(existing_tag.id), true)
+  t.is(restaurant.tags[0].name, 'test_tag')
 })
 
 test('Upserting a dish', async (t) => {

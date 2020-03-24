@@ -40,7 +40,7 @@ export default function HomeRestaurantView({
     return <Text>Loading...</Text>
   }
 
-  const categories = restaurant.categories ?? []
+  const categories = restaurant.tags.map((i) => i.name) ?? []
   const sources = restaurant.sources ?? []
 
   return (

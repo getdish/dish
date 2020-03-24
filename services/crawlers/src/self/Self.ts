@@ -86,7 +86,7 @@ export class Self extends WorkerJob {
     this.mergeAddress()
     this.mergeRatings()
     this.mergeImage()
-    this.mergeCategories()
+    await this.mergeTags()
     this.mergePhotos()
     this.addWebsite()
     this.addSources()
@@ -295,14 +295,14 @@ export class Self extends WorkerJob {
     this.restaurant.image = hero
   }
 
-  mergeCategories() {
+  async mergeTags() {
     const yelps = this.yelp
       .getData('data_from_map_search.categories', [])
       .map((c) => c.title)
     const tripadvisors = this.tripadvisor
       .getData('overview.detailCard.tagTexts.cuisines.tags', [])
       .map((c) => c.tagValue)
-    this.restaurant.categories = _.uniq(yelps.concat(tripadvisors))
+    await this.restaurant.upsertTags(_.uniq([...yelps, ...tripadvisors]))
   }
 
   async upsertUberDishes() {

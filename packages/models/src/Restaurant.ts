@@ -1,6 +1,9 @@
+import _ from 'lodash'
+
 import { ModelBase, Point } from './ModelBase'
 import { Dish } from './Dish'
 import { Scrape } from './Scrape'
+import { Taxonomy } from './Taxonomy'
 import { EnumType } from 'json-to-graphql-query'
 import { levenshteinDistance } from './utils'
 
@@ -15,7 +18,8 @@ export class Restaurant extends ModelBase<Restaurant> {
   state!: string
   zip!: number
   image?: string
-  categories!: string[]
+  tag_ids: string[] = []
+  tags!: Taxonomy[]
   photos?: string[]
   telephone!: string
   website!: string
@@ -41,7 +45,7 @@ export class Restaurant extends ModelBase<Restaurant> {
       'state',
       'zip',
       'image',
-      'categories',
+      'tags',
       'photos',
       'telephone',
       'website',
@@ -52,8 +56,12 @@ export class Restaurant extends ModelBase<Restaurant> {
     ]
   }
 
+  static sub_fields() {
+    return { tags: ['name'] }
+  }
+
   static read_only_fields() {
-    return ['is_open_now']
+    return ['is_open_now', 'tags']
   }
 
   static upsert_constraint() {
@@ -258,6 +266,35 @@ export class Restaurant extends ModelBase<Restaurant> {
     return response.data.data.restaurant.map(
       (data: Partial<Restaurant>) => data
     )
+  }
+
+  async upsertTags(tags: string[]) {
+    const objects = tags.map((tag) => {
+      return {
+        name: tag,
+      }
+    })
+    const query = {
+      mutation: {
+        ['insert_taxonomy']: {
+          __args: {
+            objects: objects,
+            on_conflict: {
+              constraint: new EnumType(Taxonomy.upsert_constraint()),
+              update_columns: [new EnumType('name')],
+            },
+          },
+          returning: { id: true },
+        },
+      },
+    }
+    const response = await ModelBase.hasura(query)
+    const tag_ids = response.data.data['insert_taxonomy'].returning.map(
+      (i) => i.id
+    )
+    this.tag_ids = _.uniq([...this.tag_ids, ...tag_ids])
+    await this.update()
+    return this.tag_ids
   }
 
   async delete() {

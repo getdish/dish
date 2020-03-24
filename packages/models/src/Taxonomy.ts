@@ -2,8 +2,7 @@ import { DocumentNode, gql } from '@apollo/client'
 
 import { ModelBase } from './ModelBase'
 
-export type TaxonomyType = 'continent' | 'country' | 'dish'
-
+export type TaxonomyType = 'continent' | 'country' | 'dish' | 'orphan'
 export type TaxonomyRecord = Partial<Taxonomy> & Pick<Taxonomy, 'type'>
 
 export class Taxonomy extends ModelBase<Taxonomy> {
@@ -21,6 +20,10 @@ export class Taxonomy extends ModelBase<Taxonomy> {
 
   static model_name() {
     return 'Taxonomy'
+  }
+
+  static upsert_constraint() {
+    return 'taxonomy_name_key'
   }
 
   static fields() {
