@@ -9,7 +9,7 @@ import { Scrape, Restaurant, Dish } from '@dish/models'
 
 const PER_PAGE = 50
 
-const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
+const sleep = (ms: number) => new Promise(res => setTimeout(res, ms))
 
 const sanfran = {
   location: {
@@ -40,6 +40,17 @@ export class Self extends WorkerJob {
 
   static job_config: JobOptions = {
     attempts: 3,
+  }
+
+  // Note that there is no unit or reference point for these values. All that
+  // matters is simply the relative differences between them. For example therefore
+  // there is no need to ensure that the maximum value is 1.0 or 100%.
+  static WEIGHTS = {
+    yelp: 0.6,
+    tripadvisor: 0.6,
+    michelin: 1.0,
+    infatuated: 0.9,
+    ubereats: 0.2,
   }
 
   async main() {
@@ -135,33 +146,59 @@ export class Self extends WorkerJob {
   }
 
   mergeRatings() {
-    let ratings = [
-      this.yelp.getData('data_from_map_search.rating'),
-      this.ubereats.getData('main.ratingBadge[0].children[0].text'),
-      parseFloat(this.infatuated.getData('data_from_map_search.post.rating')) /
-        2,
-      this.tripadvisor.getData('overview.rating.primaryRating'),
-    ]
-    ratings = ratings.concat(this._getMichelinRating())
-    ratings = ratings.map((r) => parseFloat(r))
-    ratings = ratings.filter((r) => !Number.isNaN(r))
-    this.restaurant.rating = _.mean(ratings)
+    const ratings = {
+      yelp: parseFloat(this.yelp.getData('data_from_map_search.rating')),
+      ubereats: parseFloat(
+        this.ubereats.getData('main.ratingBadge[0].children[0].text')
+      ),
+      infatuated:
+        parseFloat(
+          this.infatuated.getData('data_from_map_search.post.rating')
+        ) / 2,
+      tripadvisor: parseFloat(
+        this.tripadvisor.getData('overview.rating.primaryRating')
+      ),
+      michelin: this._getMichelinRating(),
+    }
+    this.restaurant.rating = this.weightRatings(ratings, Self.WEIGHTS)
+  }
+
+  weightRatings(
+    ratings: { [source: string]: number },
+    master_weights: { [source: string]: number }
+  ) {
+    let weights: { [source: string]: number } = {}
+    let total_weight = 0
+    let final_rating = 0
+    Object.entries(ratings).forEach(([source, rating]) => {
+      if (Number.isNaN(rating)) {
+        delete ratings[source]
+      } else {
+        weights[source] = master_weights[source]
+        total_weight += master_weights[source]
+      }
+    })
+    Object.entries(ratings).forEach(([source, rating]) => {
+      const normalised_weight = weights[source] / total_weight
+      final_rating += rating * normalised_weight
+    })
+    return final_rating
   }
 
   private _getMichelinRating() {
     const rating = this.michelin.getData('main.michelin_award')
     if (rating == '') {
-      return []
+      return NaN
     }
     switch (rating) {
       case 'ONE_STAR':
-        return [5.0, 5.0]
+        return 4.8
       case 'TWO_STARS':
-        return [5.0, 5.0, 5.0]
+        return 4.9
       case 'THREE_STARS':
-        return [5.0, 5.0, 5.0, 5.0]
+        return 5.0
       default:
-        return [5.0]
+        return 4.7
     }
   }
 
@@ -261,10 +298,10 @@ export class Self extends WorkerJob {
   mergeCategories() {
     const yelps = this.yelp
       .getData('data_from_map_search.categories', [])
-      .map((c) => c.title)
+      .map(c => c.title)
     const tripadvisors = this.tripadvisor
       .getData('overview.detailCard.tagTexts.cuisines.tags', [])
-      .map((c) => c.tagValue)
+      .map(c => c.tagValue)
     this.restaurant.categories = _.uniq(yelps.concat(tripadvisors))
   }
 
@@ -301,7 +338,7 @@ export class Self extends WorkerJob {
     while (true) {
       key = 'photosp' + page
       if (key in this.yelp.data) {
-        photos = photos.concat(this.yelp.data[key].map((p) => p.src))
+        photos = photos.concat(this.yelp.data[key].map(p => p.src))
       } else {
         // Allow scrapers to start their pages on both 0 and 1
         if (page > 0) {
@@ -317,7 +354,7 @@ export class Self extends WorkerJob {
   }
 
   private static shortestString(arr: string[]) {
-    arr = arr.filter((el) => {
+    arr = arr.filter(el => {
       return el != null && el != ''
     })
     if (arr.length) {
@@ -328,7 +365,7 @@ export class Self extends WorkerJob {
   }
 
   private static allPairs(arr: string[]) {
-    return arr.map((v, i) => arr.slice(i + 1).map((w) => [v, w])).flat()
+    return arr.map((v, i) => arr.slice(i + 1).map(w => [v, w])).flat()
   }
 
   private static findOverlap(a: string, b: string) {

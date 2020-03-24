@@ -104,6 +104,35 @@ test('Merging', async (t) => {
   t.is(updated.dishes[0].name, 'Nice Dish')
   t.is(updated.photos?.[0], 'https://yelp.com/image.jpg')
   t.is(updated.photos?.[1], 'https://yelp.com/image2.jpg')
-  t.is(updated.rating, 4.2)
+  t.is(updated.rating, 4.1)
   t.is(updated.website, 'http://www.intercontinentalsanfrancisco.com/')
+})
+
+test('Weighted ratings when all sources are present', t => {
+  const self = new Self()
+  const ratings = {
+    a: 3,
+    b: 4,
+    c: 5,
+  }
+  const weights = {
+    a: 0.2,
+    b: 0.5,
+    c: 1,
+  }
+  t.is(self.weightRatings(ratings, weights), 4.470588235294118)
+})
+
+test('Weighted ratings when some sources are missing', t => {
+  const self = new Self()
+  const ratings = {
+    a: 3,
+    b: 4,
+  }
+  const weights = {
+    a: 0.2,
+    b: 0.5,
+    c: 1,
+  }
+  t.is(self.weightRatings(ratings, weights), 3.7142857142857144)
 })
