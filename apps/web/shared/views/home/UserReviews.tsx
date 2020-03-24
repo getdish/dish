@@ -43,7 +43,7 @@ export default function UserReviews() {
         <Text style={{ fontSize: 30 }}>{title}</Text>
       </View>
       {reviews.length != 0 ? (
-        reviews.map(review => (
+        reviews.map((review) => (
           <Text key={review.id}>
             <Link name="restaurant" params={{ slug: review.restaurant.slug }}>
               {review.restaurant.name}

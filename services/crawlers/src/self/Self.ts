@@ -9,7 +9,7 @@ import { Scrape, Restaurant, Dish } from '@dish/models'
 
 const PER_PAGE = 50
 
-const sleep = (ms: number) => new Promise(res => setTimeout(res, ms))
+const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
 
 const sanfran = {
   location: {
@@ -298,10 +298,10 @@ export class Self extends WorkerJob {
   mergeCategories() {
     const yelps = this.yelp
       .getData('data_from_map_search.categories', [])
-      .map(c => c.title)
+      .map((c) => c.title)
     const tripadvisors = this.tripadvisor
       .getData('overview.detailCard.tagTexts.cuisines.tags', [])
-      .map(c => c.tagValue)
+      .map((c) => c.tagValue)
     this.restaurant.categories = _.uniq(yelps.concat(tripadvisors))
   }
 
@@ -338,7 +338,7 @@ export class Self extends WorkerJob {
     while (true) {
       key = 'photosp' + page
       if (key in this.yelp.data) {
-        photos = photos.concat(this.yelp.data[key].map(p => p.src))
+        photos = photos.concat(this.yelp.data[key].map((p) => p.src))
       } else {
         // Allow scrapers to start their pages on both 0 and 1
         if (page > 0) {
@@ -354,7 +354,7 @@ export class Self extends WorkerJob {
   }
 
   private static shortestString(arr: string[]) {
-    arr = arr.filter(el => {
+    arr = arr.filter((el) => {
       return el != null && el != ''
     })
     if (arr.length) {
@@ -365,7 +365,7 @@ export class Self extends WorkerJob {
   }
 
   private static allPairs(arr: string[]) {
-    return arr.map((v, i) => arr.slice(i + 1).map(w => [v, w])).flat()
+    return arr.map((v, i) => arr.slice(i + 1).map((w) => [v, w])).flat()
   }
 
   private static findOverlap(a: string, b: string) {

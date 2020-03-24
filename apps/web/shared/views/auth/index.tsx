@@ -77,14 +77,14 @@ export const LabAuth = () => {
         style={styles.text_input}
         placeholder="username"
         value={username}
-        onChange={event => setUsername(event.target['value'])}
+        onChange={(event) => setUsername(event.target['value'])}
       />
       <TextInput
         style={styles.text_input}
         placeholder="password"
         value={password}
         secureTextEntry={true}
-        onChange={event => setPassword(event.target['value'])}
+        onChange={(event) => setPassword(event.target['value'])}
       />
       {button}
       {or_swap}

@@ -30,7 +30,7 @@ class Stack extends Component<{
     height: 0,
   }
 
-  onLayout = event => {
+  onLayout = (event) => {
     const { height, width } = event.nativeEvent.layout
     this.setState({ height, width })
   }

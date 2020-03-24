@@ -50,7 +50,7 @@ export default function ReviewForm() {
         value={review_text}
         multiline={true}
         onFocus={() => setButtonText('Submit')}
-        onChange={event => {
+        onChange={(event) => {
           setReviewText(event.target['value'])
         }}
       />

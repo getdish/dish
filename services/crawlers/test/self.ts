@@ -108,7 +108,7 @@ test('Merging', async (t) => {
   t.is(updated.website, 'http://www.intercontinentalsanfrancisco.com/')
 })
 
-test('Weighted ratings when all sources are present', t => {
+test('Weighted ratings when all sources are present', (t) => {
   const self = new Self()
   const ratings = {
     a: 3,
@@ -123,7 +123,7 @@ test('Weighted ratings when all sources are present', t => {
   t.is(self.weightRatings(ratings, weights), 4.470588235294118)
 })
 
-test('Weighted ratings when some sources are missing', t => {
+test('Weighted ratings when some sources are missing', (t) => {
   const self = new Self()
   const ratings = {
     a: 3,

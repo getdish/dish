@@ -190,24 +190,26 @@ export const LabDishes = () => {
         <Row>
           <Text>ID</Text>
           <TextInput
-            onChange={e => setDraft({ ...draft, id: e.target['value'] })}
+            onChange={(e) => setDraft({ ...draft, id: e.target['value'] })}
             defaultValue={draft.id}
             // onEnter={upsertDraft}
           />
           <Text>Name</Text>
           <TextInput
-            onChange={e => setDraft({ ...draft, name: e.target['value'] })}
+            onChange={(e) => setDraft({ ...draft, name: e.target['value'] })}
             defaultValue={draft.name}
             // onEnter={upsertDraft}
           />
           <Text>Icon</Text>
           <TextInput
-            onChange={e => setDraft({ ...draft, icon: e.target['value'] })}
+            onChange={(e) => setDraft({ ...draft, icon: e.target['value'] })}
             defaultValue={draft.icon}
             // onEnter={upsertDraft}
           />
           <select
-            onChange={e => setDraft({ ...draft, type: e.target.value as any })}
+            onChange={(e) =>
+              setDraft({ ...draft, type: e.target.value as any })
+            }
           >
             <option id="continent">Continent</option>
             <option id="country">Country</option>
@@ -296,7 +298,7 @@ const ListItem = ({
 
           {deletable && (
             <TouchableNativeFeedback
-              onPress={e => {
+              onPress={(e) => {
                 e.stopPropagation()
                 setHidden(true)
                 ModelBase.client.mutate({
@@ -338,7 +340,7 @@ function MenuItems({
   return (
     <>
       <TextInput
-        onChange={e => setSearch(e.target['value'])}
+        onChange={(e) => setSearch(e.target['value'])}
         placeholder="Search all MenuItems"
       />
       <Col size={1}>
