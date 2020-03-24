@@ -11,6 +11,7 @@ import { RankingView } from './RankingView'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Popover } from '../shared/Popover'
 import { ArrowContainer } from 'react-tiny-popover'
+import { Tooltip } from './Tooltip'
 
 export const RestaurantListItem = ({
   restaurant,
@@ -191,17 +192,9 @@ export const RestaurantListItem = ({
                   </div>
                 }
               >
-                <VStack
-                  backgroundColor="#fff"
-                  padding={10}
-                  width={300}
-                  height={150}
-                  borderRadius={10}
-                  shadowColor="rgba(0,0,0,0.1)"
-                  shadowRadius={10}
-                >
+                <Tooltip>
                   <Text>Test me out</Text>
-                </VStack>
+                </Tooltip>
               </Popover>
             </VStack>
 

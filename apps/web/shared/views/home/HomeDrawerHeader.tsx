@@ -26,13 +26,12 @@ export function HomeDrawerHeader() {
         pointerEvents="none"
         justifyContent="center"
       >
-        <LinkButton
+        <Spacer flex />
+        {/* <LinkButton
           onPress={() => om.actions.home.setShowMenu(!om.state.home.showMenu)}
         >
           <SimpleLineIcons name="menu" size={16} style={{ opacity: 0.5 }} />
-        </LinkButton>
-
-        <Spacer flex />
+        </LinkButton> */}
       </HStack>
 
       <HStack>
