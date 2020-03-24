@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 
 import HomeMap from './HomeMap'
 import { useOvermind } from '../../state/om'
@@ -89,7 +89,7 @@ export function useHomeDrawerWidth(): number {
 
 export const drawerBorderRadius = 20
 
-export default function HomeViewContent() {
+const HomeViewContent = memo(function HomeViewContent() {
   const om = useOvermind()
   const { breadcrumbStates } = om.state.home
   return (
@@ -157,7 +157,7 @@ export default function HomeViewContent() {
       </ZStack>
     </>
   )
-}
+})
 
 function HomeStackView<A extends HomeStateItem>({
   items,
@@ -167,15 +167,6 @@ function HomeStackView<A extends HomeStateItem>({
   children: (a: A, isActive: boolean, index: number) => React.ReactNode
 }) {
   const om = useOvermind()
-  // const [items, setItems] = useState<A[]>([])
-  // const isAdding = props.items.length > items.length
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setItems(props.items)
-  //   }, 16)
-  // }, [props.items, items])
-
   return (
     <ZStack fullscreen>
       {items.map((x, index) => {
@@ -187,7 +178,6 @@ function HomeStackView<A extends HomeStateItem>({
           index === items.length - 1,
           index
         )
-        console.log('keys are', key, contents)
         return (
           <Animatable.View
             key={key}

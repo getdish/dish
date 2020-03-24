@@ -40,6 +40,9 @@ export async function startOm(om: Om) {
         case 'home':
         case 'search':
         case 'restaurant':
+          if (type == 'replace') {
+            return
+          }
           if (type === 'push') {
             om.actions.home._pushHomeState(item)
           } else {
