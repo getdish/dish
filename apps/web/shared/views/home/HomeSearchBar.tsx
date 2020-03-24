@@ -1,4 +1,5 @@
 import React, { memo } from 'react'
+import { Feather } from '@expo/vector-icons'
 import {
   Text,
   View,
@@ -47,7 +48,7 @@ export default memo(function HomeSearchBar() {
             value={om.state.home.currentState.searchQuery}
             onChangeText={(text) => om.actions.home.setSearchQuery(text)}
             placeholder="Search dish, cuisine, craving"
-            style={styles.textInput}
+            style={[styles.textInput, { paddingRight: 42 }]}
             onFocus={() => {
               // om.actions.home.clearSearch()
               // om.actions.home.getTopDishes()
@@ -66,9 +67,9 @@ export default memo(function HomeSearchBar() {
             // value=""
             onChangeText={() => {}}
             placeholder="San Francisco"
-            style={styles.textInput}
+            style={[styles.textInput, { paddingRight: 32 }]}
           />
-          {/* <SearchCancelButton /> */}
+          <SearchLocationButton />
         </VStack>
       </HStack>
 
@@ -82,7 +83,7 @@ export default memo(function HomeSearchBar() {
   )
 })
 
-function SearchCancelButton() {
+const SearchCancelButton = memo(() => {
   const om = useOvermind()
   return (
     <ZStack fullscreen pointerEvents="none">
@@ -108,4 +109,36 @@ function SearchCancelButton() {
       </HStack>
     </ZStack>
   )
-}
+})
+
+const SearchLocationButton = memo(() => {
+  const om = useOvermind()
+  return (
+    <ZStack fullscreen pointerEvents="none">
+      <HStack flex={1} alignItems="center" justifyContent="center">
+        <Spacer flex={1} />
+        <VStack
+          pointerEvents="auto"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <TouchableOpacity
+            style={{
+              padding: 10,
+              opacity: om.state.home.currentState.searchQuery === '' ? 0 : 1,
+            }}
+            onPress={() => {
+              om.actions.home.popTo(om.state.home.lastHomeState)
+            }}
+          >
+            <Feather
+              size={18}
+              name="navigation"
+              style={{ color: 'blue', opacity: 0.2 }}
+            />
+          </TouchableOpacity>
+        </VStack>
+      </HStack>
+    </ZStack>
+  )
+})
