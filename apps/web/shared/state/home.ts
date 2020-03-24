@@ -236,7 +236,11 @@ const getTopDishes: AsyncAction = async (om) => {
   state.top_dishes = response.data.data.top_dishes
 }
 
+let lastRunId = 0
+
 const runSearch: AsyncAction<string> = async (om, query: string) => {
+  lastRunId = Math.random()
+  let curRunId = lastRunId
   const isOnSearch = om.state.home.currentState.type == 'search'
 
   if (query == '') {
@@ -284,21 +288,22 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
     ),
   ])
 
-  state.results = {
-    status: 'complete',
-    results: {
-      restaurants: [...topRestaurants, ...restaurants],
-      dishes: [],
-      locations: [],
-    },
-  }
-
-  om.state.home.states = om.state.home.states.map((x) => {
-    if (x.historyId == state.historyId) {
-      return state
+  if (lastRunId == curRunId) {
+    state.results = {
+      status: 'complete',
+      results: {
+        restaurants: [...topRestaurants, ...restaurants],
+        dishes: [],
+        locations: [],
+      },
     }
-    return x
-  })
+    om.state.home.states = om.state.home.states.map((x) => {
+      if (x.historyId == state.historyId) {
+        return state
+      }
+      return x
+    })
+  }
 }
 
 const clearSearch: Action = (om) => {
