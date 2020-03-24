@@ -5,9 +5,7 @@ import { VStack, ZStack, HStack } from '../shared/Stacks'
 import { Text, Button } from 'react-native'
 import _ from 'lodash'
 import { Spacer } from '../shared/Spacer'
-import { HomeLenseBar } from './HomeLenseBar'
 import { useMap, Map } from '../map'
-import { RegionType } from '../map/utils'
 import { useHomeDrawerWidth } from './HomeView'
 
 function centerMapToRegion({

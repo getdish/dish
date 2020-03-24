@@ -14,7 +14,7 @@ import { Spacer } from '../shared/Spacer'
 import { Link, LinkButton } from '../shared/Link'
 import { HStack, VStack } from '../shared/Stacks'
 import { SmallTitle } from '../shared/SmallTitle'
-import { HomeLenseBar } from './HomeLenseBar'
+import HomeLenseBar from './HomeLenseBar'
 import { HomeStateItem, HomeStateItemHome } from '../../state/home'
 import { RankingView } from './RankingView'
 
