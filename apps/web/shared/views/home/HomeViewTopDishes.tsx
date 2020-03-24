@@ -63,72 +63,77 @@ export default memo(function HomeViewTopDishes({
   return (
     <VStack flex={1}>
       <SmallTitle>{activeLense.description}</SmallTitle>
-
       <HomeLenseBar />
-
-      <ScrollView style={{ flex: 1 }}>
-        <VStack paddingVertical={20}>
-          {[0, 1, 2, 3, 4, 5, 6, 7].map((x) => (
-            <VStack key={x} paddingBottom={20}>
-              <HStack paddingHorizontal={20}>
-                <HStack flex={1}>
-                  <Text numberOfLines={1} style={{ fontSize: 24 }}>
-                    #{x + 1}. Korean
-                  </Text>
-                </HStack>
-                <Spacer flex />
-                <Text style={{ fontSize: 24 }}>🇰🇷</Text>
-              </HStack>
-
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <HStack height={170} padding={20} paddingHorizontal={10}>
-                  {top_dishes.map((dish) => {
-                    const category = dish.category.replace(/"/g, '')
-                    return (
-                      <TouchableOpacity
-                        key={category}
-                        style={{
-                          // flexDirection: 'row',
-                          alignItems: 'center',
-                          padding: 8,
-                        }}
-                        onPress={() => {
-                          om.actions.home.setSearchQuery(
-                            dish.category.replace(/"/g, '')
-                          )
-                          om.actions.router.navigate({
-                            name: 'search',
-                            params: { query: category },
-                          })
-                        }}
-                      >
-                        <VStack width={110} height={100} paddingHorizontal={5}>
-                          {getImageForDish(category)}
-                        </VStack>
-                        <Spacer />
-                        <VStack maxWidth="100%" overflow="hidden">
-                          <Text
-                            numberOfLines={1}
-                            ellipsizeMode="tail"
-                            style={{
-                              textDecorationLine: 'none',
-                              fontWeight: '600',
-                              fontSize: 14,
-                              opacity: 0.7,
-                            }}
-                          >
-                            {category}
-                          </Text>
-                        </VStack>
-                      </TouchableOpacity>
-                    )
-                  })}
-                </HStack>
-              </ScrollView>
-            </VStack>
-          ))}
-        </VStack>
-      </ScrollView>
+      <HomeViewTopDishesContent dishes={top_dishes} />
     </VStack>
+  )
+})
+
+const HomeViewTopDishesContent = memo(({ dishes }: { dishes: any[] }) => {
+  const om = useOvermind()
+  return (
+    <ScrollView style={{ flex: 1 }}>
+      <VStack paddingVertical={20}>
+        {[0, 1, 2, 3, 4, 5, 6, 7].map((x) => (
+          <VStack key={x} paddingBottom={20}>
+            <HStack paddingHorizontal={20}>
+              <HStack flex={1}>
+                <Text numberOfLines={1} style={{ fontSize: 24 }}>
+                  #{x + 1}. Korean
+                </Text>
+              </HStack>
+              <Spacer flex />
+              <Text style={{ fontSize: 24 }}>🇰🇷</Text>
+            </HStack>
+
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <HStack height={170} padding={20} paddingHorizontal={10}>
+                {dishes.map((dish) => {
+                  const category = dish.category.replace(/"/g, '')
+                  return (
+                    <TouchableOpacity
+                      key={category}
+                      style={{
+                        // flexDirection: 'row',
+                        alignItems: 'center',
+                        padding: 8,
+                      }}
+                      onPress={() => {
+                        om.actions.home.setSearchQuery(
+                          dish.category.replace(/"/g, '')
+                        )
+                        om.actions.router.navigate({
+                          name: 'search',
+                          params: { query: category },
+                        })
+                      }}
+                    >
+                      <VStack width={110} height={100} paddingHorizontal={5}>
+                        {getImageForDish(category)}
+                      </VStack>
+                      <Spacer />
+                      <VStack maxWidth="100%" overflow="hidden">
+                        <Text
+                          numberOfLines={1}
+                          ellipsizeMode="tail"
+                          style={{
+                            textDecorationLine: 'none',
+                            fontWeight: '600',
+                            fontSize: 14,
+                            opacity: 0.7,
+                          }}
+                        >
+                          {category}
+                        </Text>
+                      </VStack>
+                    </TouchableOpacity>
+                  )
+                })}
+              </HStack>
+            </ScrollView>
+          </VStack>
+        ))}
+      </VStack>
+    </ScrollView>
   )
 })

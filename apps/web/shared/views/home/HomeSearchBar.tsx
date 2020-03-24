@@ -35,12 +35,6 @@ const styles = StyleSheet.create({
 
 export default memo(function HomeSearchBar() {
   const om = useOvermind()
-
-  const onChangeSearch = useDebounce(
-    (text) => om.actions.home.runSearch(text),
-    200
-  )
-
   return (
     <View style={styles.container}>
       <HStack>
@@ -52,7 +46,7 @@ export default memo(function HomeSearchBar() {
         >
           <TextInput
             value={om.state.home.currentState.searchQuery}
-            onChangeText={onChangeSearch}
+            onChangeText={(text) => om.actions.home.setSearchQuery(text)}
             placeholder="Search dish, cuisine, craving"
             style={styles.textInput}
             onFocus={() => {
@@ -71,7 +65,7 @@ export default memo(function HomeSearchBar() {
         >
           <TextInput
             // value=""
-            onChangeText={onChangeSearch}
+            onChangeText={() => {}}
             placeholder="San Francisco"
             style={styles.textInput}
           />

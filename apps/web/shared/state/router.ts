@@ -75,7 +75,7 @@ export type RouterState = {
 let ignoreNextRoute = false
 
 export type OnRouteChangeCb = (item: {
-  type: 'push' | 'pop'
+  type: 'push' | 'pop' | 'replace'
   name: RouteName
   item: HistoryItem
 }) => any
@@ -160,10 +160,11 @@ const navigate: Operator<NavigateItem> = pipe(
     }
   }),
   run((om, item) => {
+    console.log('got one', item)
     if (!om.state.router.ignoreNextPush) {
       if (onRouteChange) {
         onRouteChange({
-          type: 'push',
+          type: item.replace ? 'replace' : 'push',
           name: item.name,
           item: _.last(om.state.router.history),
         })
