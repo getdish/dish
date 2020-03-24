@@ -170,7 +170,6 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
       break
   }
 
-  console.log('pushHomeState', nextState)
   om.state.home.states.push(nextState)
   if (fetchData) {
     fetchData()
@@ -220,10 +219,6 @@ const getUserReviews: AsyncAction<string> = async (om, user_id: string) => {
 }
 
 const getTopDishes: AsyncAction = async (om) => {
-  const state = om.state.home.currentState
-  if (state.type !== 'home') {
-    return
-  }
   const query = {
     query: {
       top_dishes: {
@@ -240,7 +235,7 @@ const getTopDishes: AsyncAction = async (om) => {
     },
   }
   const response = await ModelBase.hasura(query)
-  state.top_dishes = response.data.data.top_dishes
+  om.state.home.lastHomeState.top_dishes = response.data.data.top_dishes
 }
 
 const DEBOUNCE_SEARCH = 230

@@ -121,7 +121,7 @@ const uid = () => `${Math.random()}`
 const navigate: Operator<NavigateItem> = pipe(
   map(
     (_, item): HistoryItem => {
-      console.trace('navigate', item)
+      console.log('navigate', item)
       return {
         id: uid(),
         params: {},
@@ -136,8 +136,6 @@ const navigate: Operator<NavigateItem> = pipe(
   ),
   mutate((om, item) => {
     om.state.router.notFound = false
-
-    console.log('naviate', item, om.state.router.curPage)
 
     const alreadyOnPage = isEqual(
       _.omit(item, 'id', 'replace'),
@@ -195,6 +193,7 @@ const navigate: Operator<NavigateItem> = pipe(
 )
 
 const ignoreNextPush: Action = (om) => {
+  console.trace('ignoreNextPush')
   om.state.router.ignoreNextPush = true
 }
 
@@ -225,18 +224,11 @@ const routeListen: Action<{
   page(url, ({ params, querystring }) => {
     let isGoingBack = false
     if (pop && Date.now() - pop.at < 30) {
-      console.log(
-        'pop',
-        Date.now() - pop.at,
-        pop.path,
-        getPathFromParams({ name, params })
-      )
       if (pop.path == getPathFromParams({ name, params })) {
         const history = om.state.router.history
         const last = history[history.length - 2] ?? history[history.length - 1]
         const lastPath = last.path
         const lastMatches = lastPath == pop.path
-        console.log('isGoingBack', lastMatches, lastPath, pop, last)
         isGoingBack = lastMatches
       }
     }

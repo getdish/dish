@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { useOvermind } from '../../state/om'
 import { RoutesTable, getPathFromParams } from '../../state/router'
 import { TouchableOpacity, Text } from 'react-native'
@@ -23,13 +23,17 @@ export function Link<
   const om = useOvermind()
   return (
     <a
+      {...props}
       href={getPathFromParams({ name, params })}
-      onClick={(e) => {
+      onClick={useCallback((e) => {
         e.preventDefault()
         om.actions.router.navigate({ name, params } as any)
-      }}
+        if (props.onClick) {
+          console.log('what is', props.onClick)
+          props.onClick(e)
+        }
+      }, [])}
       className="block-link"
-      {...props}
     />
   )
 }

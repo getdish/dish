@@ -21,11 +21,9 @@ export function RouteSwitch(props: { children: any }) {
   const names = children.map((x) => x['props'].name)
   const activeIndex = names.findIndex((x) => val[x])
   const [_, update] = useState(0)
-  console.log('children', val, children, activeIndex, names)
   return children.map((child, index) => {
     const cb = useCallback((name, next) => {
       val[name] = next
-      console.log('setting to', name, next, val)
       setVal(val)
       update(Math.random())
     }, [])
@@ -64,7 +62,6 @@ export function Route(props: {
   const match = !!(isParentMatching || isExactMatching)
   useLayoutEffect(() => {
     if (!setRouteInfo) return
-    console.log('route is', props.name, match)
     setRouteInfo(props.name, match)
   }, [props.name, match])
 

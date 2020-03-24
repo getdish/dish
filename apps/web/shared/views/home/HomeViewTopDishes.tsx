@@ -15,7 +15,8 @@ import { Link, LinkButton } from '../shared/Link'
 import { HStack, VStack } from '../shared/Stacks'
 import { SmallTitle } from '../shared/SmallTitle'
 import { HomeLenseBar } from './HomeLenseBar'
-import { HomeStateItem } from '../../state/home'
+import { HomeStateItem, HomeStateItemHome } from '../../state/home'
+import { RankingView } from './RankingView'
 
 const styles = StyleSheet.create({
   container: {
@@ -54,88 +55,92 @@ export default memo(function HomeViewTopDishes({
   state: HomeStateItem
 }) {
   const om = useOvermind()
+
   if (state.type !== 'home') {
     return null
   }
   const activeLense =
     om.state.home.lastHomeState.lenses[om.state.home.lastHomeState.activeLense]
-  const { top_dishes = [] } = state
+
   return (
     <VStack flex={1}>
       <SmallTitle>{activeLense.description}</SmallTitle>
       <HomeLenseBar />
-      <HomeViewTopDishesContent dishes={top_dishes} />
+      <HomeViewTopDishesContent state={state} />
     </VStack>
   )
 })
 
-const HomeViewTopDishesContent = memo(({ dishes }: { dishes: any[] }) => {
-  const om = useOvermind()
-  return (
-    <ScrollView style={{ flex: 1 }}>
-      <VStack paddingVertical={20}>
-        {[0, 1, 2, 3, 4, 5, 6, 7].map((x) => (
-          <VStack key={x} paddingBottom={20}>
-            <HStack paddingHorizontal={20}>
-              <HStack flex={1}>
-                <Text numberOfLines={1} style={{ fontSize: 24 }}>
-                  #{x + 1}. Korean
-                </Text>
-              </HStack>
-              <Spacer flex />
-              <Text style={{ fontSize: 24 }}>🇰🇷</Text>
-            </HStack>
+const HomeViewTopDishesContent = memo(
+  ({ state }: { state: HomeStateItemHome }) => {
+    const om = useOvermind()
+    const { top_dishes = [] } = state
 
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <HStack height={170} padding={20} paddingHorizontal={10}>
-                {dishes.map((dish) => {
-                  const category = dish.category.replace(/"/g, '')
-                  return (
-                    <LinkButton
-                      key={category}
-                      style={{
-                        // flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: 8,
-                      }}
-                      name="search"
-                      params={{
-                        query: category,
-                      }}
-                      // onPress={() => {
-                      // om.actions.home.setSearchQuery(
-                      //   dish.category.replace(/"/g, '')
-                      // )
+    useEffect(() => {
+      om.actions.home.getTopDishes()
+    }, [])
 
-                      // }}
-                    >
-                      <VStack width={110} height={100} paddingHorizontal={5}>
-                        {getImageForDish(category)}
-                      </VStack>
-                      <Spacer />
-                      <VStack maxWidth="100%" overflow="hidden">
-                        <Text
-                          numberOfLines={1}
-                          ellipsizeMode="tail"
-                          style={{
-                            textDecorationLine: 'none',
-                            fontWeight: '600',
-                            fontSize: 14,
-                            opacity: 0.7,
-                          }}
-                        >
-                          {category}
-                        </Text>
-                      </VStack>
-                    </LinkButton>
-                  )
-                })}
+    return (
+      <ScrollView style={{ flex: 1 }}>
+        <VStack paddingVertical={20}>
+          {[0, 1, 2, 3, 4, 5, 6, 7].map((x) => (
+            <VStack key={x} paddingBottom={20}>
+              <HStack paddingHorizontal={20}>
+                <HStack flex={1}>
+                  <RankingView rank={x + 1} />
+                  <Text numberOfLines={1} style={{ fontSize: 24 }}>
+                    Korean
+                  </Text>
+                </HStack>
+                <Spacer flex />
+                <Text style={{ fontSize: 24 }}>🇰🇷</Text>
               </HStack>
-            </ScrollView>
-          </VStack>
-        ))}
-      </VStack>
-    </ScrollView>
-  )
-})
+
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <HStack height={170} padding={20} paddingHorizontal={10}>
+                  {top_dishes.slice(0, 5).map((dish) => {
+                    const category = dish.category.replace(/"/g, '')
+                    return (
+                      <LinkButton
+                        key={category}
+                        style={{
+                          // flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          padding: 8,
+                        }}
+                        name="search"
+                        params={{
+                          query: category,
+                        }}
+                      >
+                        <VStack width={110} height={100} paddingHorizontal={5}>
+                          {getImageForDish(category)}
+                        </VStack>
+                        <Spacer />
+                        <VStack maxWidth="100%" overflow="hidden">
+                          <Text
+                            numberOfLines={1}
+                            ellipsizeMode="tail"
+                            style={{
+                              textDecorationLine: 'none',
+                              fontWeight: '600',
+                              fontSize: 14,
+                              opacity: 0.7,
+                            }}
+                          >
+                            {category}
+                          </Text>
+                        </VStack>
+                      </LinkButton>
+                    )
+                  })}
+                </HStack>
+              </ScrollView>
+            </VStack>
+          ))}
+        </VStack>
+      </ScrollView>
+    )
+  }
+)
