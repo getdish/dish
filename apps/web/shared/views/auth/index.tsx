@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TextInput, Button, Image } from 'react-native'
 import { useOvermind } from '../../state/om'
 import { Link } from '../shared/Link'
 import { Redirect } from '../shared/Redirect'
+import { HStack } from '../shared/Stacks'
 
 export const LabAuth = () => {
   const { state, actions } = useOvermind()
@@ -14,15 +15,6 @@ export const LabAuth = () => {
   if (state.auth.is_logged_in) {
     return <Redirect to="/" />
   }
-
-  const or_swap = (
-    <View style={styles.login_or}>
-      <Text>or switch to</Text>
-      <Link name={isLogin ? 'register' : 'login'}>
-        {isLogin ? 'Register' : 'Login'}
-      </Link>
-    </View>
-  )
 
   const button_text = () => {
     if (state.auth.loading) {
@@ -40,26 +32,6 @@ export const LabAuth = () => {
     }
   }
 
-  const button = (
-    <Button
-      onPress={async () => {
-        if (isLogin) {
-          actions.auth.login({ username: username, password: password })
-        } else {
-          const result = await actions.auth.register({
-            username: username,
-            password: password,
-          })
-          if (result) {
-            setUsername('')
-            setPassword('')
-          }
-        }
-      }}
-      title={button_text()}
-    ></Button>
-  )
-
   const messages = () => {
     if (state.auth.messages.length > 0) {
       const message = state.auth.messages.join('\n')
@@ -69,10 +41,6 @@ export const LabAuth = () => {
 
   return (
     <View style={styles.login_box}>
-      <Image
-        style={{ width: '200px', height: '100px' }}
-        source={require('../../assets/dish-brandmark-200.png')}
-      />
       <TextInput
         style={styles.text_input}
         placeholder="username"
@@ -86,41 +54,51 @@ export const LabAuth = () => {
         secureTextEntry={true}
         onChange={(event) => setPassword(event.target['value'])}
       />
-      {button}
-      {or_swap}
+      <Button
+        onPress={async () => {
+          if (isLogin) {
+            actions.auth.login({ username: username, password: password })
+          } else {
+            const result = await actions.auth.register({
+              username: username,
+              password: password,
+            })
+            if (result) {
+              setUsername('')
+              setPassword('')
+            }
+          }
+        }}
+        title={button_text()}
+      ></Button>
+      <HStack>
+        <Text style={{ fontSize: 16 }}>
+          or switch to{' '}
+          <Link inline name={isLogin ? 'register' : 'login'}>
+            {isLogin ? 'register' : 'login'}
+          </Link>{' '}
+        </Text>
+      </HStack>
       {messages()}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  login_box: {
-    position: 'absolute',
-    left: '50%',
-    marginLeft: -100,
-    top: '50%',
-    marginTop: -150,
-    width: 200,
-    height: 200,
-  },
-
-  login_or: {},
+  login_box: {},
 
   login_messages: {
     paddingTop: '0.5em',
     marginTop: '0.5em',
   },
 
-  auth_menu: {
-    position: 'absolute',
-    right: 5,
-    top: 5,
-  },
-
   text_input: {
+    fontSize: 16,
     borderWidth: 1,
-    borderRadius: 3,
-    padding: '1em',
+    borderColor: '#888',
+    borderRadius: 5,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
     marginBottom: '0.5em',
   },
 })

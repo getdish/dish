@@ -7,6 +7,7 @@ import _ from 'lodash'
 import { Spacer } from '../shared/Spacer'
 import { useMap, Map } from '../map'
 import { useHomeDrawerWidth } from './HomeView'
+import { HomeUserMenu } from './HomeUserMenu'
 
 function centerMapToRegion({
   map,
@@ -184,13 +185,13 @@ function HomeMap() {
 
       <ZStack fullscreen padding={20} pointerEvents="none" left={drawerWidth}>
         <VStack flex={1}>
-          <HStack overflow="hidden">
+          <HStack>
             <VStack></VStack>
 
             <Spacer flex />
 
             <HStack pointerEvents="auto">
-              <Button title="🧭" onPress={() => {}} />
+              <HomeUserMenu />
             </HStack>
           </HStack>
           <Spacer flex />
