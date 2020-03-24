@@ -25,6 +25,7 @@ import { StyleSheet, View } from 'react-native'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import { HomeDrawerHeader } from './HomeDrawerHeader'
 import { useDebounceValue } from '../../hooks/useDebounce'
+import { ForceShowPopover } from '../shared/Popover'
 
 export const HomeView = () => {
   const om = useOvermind()
@@ -170,20 +171,27 @@ function HomeStackView<A extends HomeStateItem>({
 }) {
   const om = useOvermind()
 
-  const debounceItems = useDebounceValue(items, 200)
+  const debounceItems = useDebounceValue(items, 60)
 
   return (
     <ZStack fullscreen>
-      {debounceItems.map((item, index) => (
-        <HomeStackViewItem
-          key={`${index}`}
-          item={item}
-          index={index}
-          total={debounceItems.length}
-        >
-          {children(item as any, index === debounceItems.length - 1, index)}
-        </HomeStackViewItem>
-      ))}
+      {debounceItems.map((item, index) => {
+        const isActive = index === debounceItems.length - 1
+        return (
+          <ForceShowPopover.Provider
+            key={`${index}`}
+            value={isActive == true ? undefined : false}
+          >
+            <HomeStackViewItem
+              item={item}
+              index={index}
+              total={debounceItems.length}
+            >
+              {children(item as any, isActive, index)}
+            </HomeStackViewItem>
+          </ForceShowPopover.Provider>
+        )
+      })}
     </ZStack>
   )
 }
