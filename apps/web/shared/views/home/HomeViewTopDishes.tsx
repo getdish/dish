@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, memo } from 'react'
 import {
   Image,
   ImageSourcePropType,
@@ -48,7 +48,11 @@ const getImageForDish = (dish: string) => {
   )
 }
 
-export default function HomeViewTopDishes({ state }: { state: HomeStateItem }) {
+export default memo(function HomeViewTopDishes({
+  state,
+}: {
+  state: HomeStateItem
+}) {
   const om = useOvermind()
   if (state.type !== 'home') {
     return null
@@ -127,4 +131,4 @@ export default function HomeViewTopDishes({ state }: { state: HomeStateItem }) {
       </ScrollView>
     </VStack>
   )
-}
+})

@@ -26,10 +26,8 @@ export const routes = {
   taxonomy: new Route('/taxonomy'),
   account: new Route<{ pane: string }>('/account/:pane'),
   search: new Route<{ query: string }>('/search/:query'),
-  restaurant: new Route<{ slug: string; dish?: string }>(
-    '/restaurant/:slug/:dish?'
-  ),
-  user: new Route<{ id: string; pane?: string }>('/user/:id/:pane?'),
+  restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
+  user: new Route<{ id: string; pane: string }>('/user/:id/:pane'),
 }
 
 export const routeNames = Object.keys(routes) as RouteName[]

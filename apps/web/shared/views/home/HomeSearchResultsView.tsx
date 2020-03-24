@@ -6,6 +6,7 @@ import { RestaurantListItem } from './RestaurantListItem'
 import { SmallTitle } from '../shared/SmallTitle'
 import { VStack } from '../shared/Stacks'
 import { HomeStateItemSearch, HomeStateItem } from '../../state/home'
+import { memoizeWeak } from '../../helpers/memoizeWeak'
 
 // function SearchResults() {
 //   const om = useOvermind()
@@ -107,10 +108,12 @@ import { HomeStateItemSearch, HomeStateItem } from '../../state/home'
 //   )
 // }
 
+const weakKey = memoizeWeak(() => `${Math.random()}`)
+
 export default function HomeSearchResultsView({
   state,
 }: {
-  state: HomeStateItem
+  state: HomeStateItemSearch
 }) {
   return (
     <VStack flex={1} overflow="hidden">
@@ -126,9 +129,7 @@ function HomeSearchResultsViewContent({
   state: HomeStateItemSearch
 }) {
   const om = useOvermind()
-  const query = `${om.state.router.curPage.params.query}`
   const { results } = state
-
   return (
     <ScrollView>
       <VStack paddingVertical={20}>
