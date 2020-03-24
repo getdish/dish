@@ -13669,6 +13669,11 @@ react-timer-mixin@^0.13.4:
   resolved "https://registry.yarnpkg.com/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz#75a00c3c94c13abe29b43d63b4c65a88fc8264d3"
   integrity sha512-4+ow23tp/Tv7hBM5Az5/Be/eKKF7DIvJ09voz5LyHGQaqqz9WV8YMs31eFvcYQs7d451LSg7kDJV70XYN/Ug/Q==
 
+react-tiny-popover@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/react-tiny-popover/-/react-tiny-popover-4.0.0.tgz#648455bd8803434e0dcf04acc65ab6e3a4c42e75"
+  integrity sha512-9eTzEughY47VRZ7nNGfvvTLaBZfAIb+VGd+F/tmOCZE8Hi839fGC2P7UbCs+oz/e7xPfQzvB+Myq43C4Af80fQ==
+
 react@16.9.0, react@^16.12.0, react@~16.9.0:
   version "16.9.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.9.0.tgz#40ba2f9af13bc1a38d75dbf2f4359a5185c4f7aa"
