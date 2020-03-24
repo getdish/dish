@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo, useMemo } from 'react'
 import { Text, ScrollView } from 'react-native'
 import { useOvermind } from '../../state/om'
 import { Spacer } from '../shared/Spacer'
@@ -6,28 +6,34 @@ import { VStack, HStack } from '../shared/Stacks'
 import { Taxonomy } from '../../state/Taxonomy'
 import { LinkButton } from '../shared/Link'
 
-export function HomeLenseBar() {
+export default memo(function HomeLenseBar() {
   const om = useOvermind()
   const { lastHomeState } = om.state.home
+
+  const lenses = useMemo(
+    () =>
+      lastHomeState.lenses.map((lense, index) => (
+        <React.Fragment key={lense.id}>
+          <LenseButton
+            lense={lense}
+            active={index == lastHomeState.activeLense}
+          />
+          <Spacer />
+        </React.Fragment>
+      )),
+    [lastHomeState.activeLense, ...lastHomeState.lenses.map((x) => x.id)]
+  )
 
   return (
     <VStack height={75} paddingVertical={12}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <HStack paddingHorizontal={20} paddingVertical={2}>
-          {lastHomeState.lenses.map((lense, index) => (
-            <React.Fragment key={lense.id}>
-              <LenseButton
-                lense={lense}
-                active={index == lastHomeState.activeLense}
-              />
-              <Spacer />
-            </React.Fragment>
-          ))}
+          {lenses}
         </HStack>
       </ScrollView>
     </VStack>
   )
-}
+})
 
 function LenseButton({ lense, active }: { lense: Taxonomy; active: boolean }) {
   const om = useOvermind()
