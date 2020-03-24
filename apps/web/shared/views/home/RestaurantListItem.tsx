@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, memo } from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
 import { Restaurant } from '@dish/models'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
@@ -24,7 +24,6 @@ export const RestaurantListItem = ({
 }) => {
   const om = useOvermind()
   const [isHovered, setIsHovered] = useState(false)
-  const [isHoveringRating, setIsHoveringRating] = useState(false)
 
   const [open_text, open_color, next_time] = openingHours(restaurant)
   const [price_label, price_color, price_range] = priceRange(restaurant)
@@ -85,16 +84,7 @@ export const RestaurantListItem = ({
 
             <HStack>
               <HStack alignItems="center">
-                <TouchableOpacity onPress={() => {}}>
-                  <div
-                    style={{
-                      filter: 'grayscale(100%)',
-                      marginLeft: 20,
-                    }}
-                  >
-                    <Text style={{ fontSize: 24, opacity: 0.5 }}>⭐️</Text>
-                  </div>
-                </TouchableOpacity>
+                <RestaurantRate restaurant={restaurant} />
                 <Spacer />
                 <TagButton rank={1} name="🍜 Pho" />
                 <Spacer />
@@ -176,26 +166,7 @@ export const RestaurantListItem = ({
 
           <HStack>
             <VStack position="absolute" top={-20} left={-30} zIndex={100}>
-              <Popover
-                isOpen={isHoveringRating}
-                position="right"
-                target={
-                  <div
-                    onMouseEnter={() => {
-                      setIsHoveringRating(true)
-                    }}
-                    onMouseLeave={() => {
-                      setIsHoveringRating(false)
-                    }}
-                  >
-                    <RatingView restaurant={restaurant} />
-                  </div>
-                }
-              >
-                <Tooltip>
-                  <Text>Test me out</Text>
-                </Tooltip>
-              </Popover>
+              <RestaurantListItemRating restaurant={restaurant} />
             </VStack>
 
             {photos.slice(0, 3).map((photo, i) => {
@@ -216,6 +187,64 @@ export const RestaurantListItem = ({
     </div>
   )
 }
+
+const RestaurantRate = memo(({ restaurant }: { restaurant: Restaurant }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  return (
+    <Popover
+      isOpen={isOpen}
+      position="right"
+      target={
+        <TouchableOpacity
+          onPress={() => {
+            setIsOpen(!isOpen)
+          }}
+        >
+          <div
+            style={{
+              filter: isOpen ? '' : 'grayscale(100%)',
+              marginLeft: 20,
+            }}
+          >
+            <Text style={{ fontSize: 24, opacity: isOpen ? 1 : 0.5 }}>⭐️</Text>
+          </div>
+        </TouchableOpacity>
+      }
+    >
+      <Tooltip height={200}>
+        <Text>{restaurant.name}</Text>
+      </Tooltip>
+    </Popover>
+  )
+})
+
+const RestaurantListItemRating = memo(
+  ({ restaurant }: { restaurant: Restaurant }) => {
+    const [isHoveringRating, setIsHoveringRating] = useState(false)
+    return (
+      <Popover
+        isOpen={isHoveringRating}
+        position="right"
+        target={
+          <div
+            onMouseEnter={() => {
+              setIsHoveringRating(true)
+            }}
+            onMouseLeave={() => {
+              setIsHoveringRating(false)
+            }}
+          >
+            <RatingView restaurant={restaurant} />
+          </div>
+        }
+      >
+        <Tooltip height={200}>
+          <Text>Test me out</Text>
+        </Tooltip>
+      </Popover>
+    )
+  }
+)
 
 function openingHours(restaurant: Restaurant) {
   let text = 'Opens at'

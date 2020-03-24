@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { createContext, useContext } from 'react'
 import PopoverNative from 'react-native-popover-view'
 import PopoverWeb, { ArrowContainer } from 'react-tiny-popover'
 import { Platform } from 'react-native'
+
+export const ForceShowPopover = createContext(false)
 
 export const Popover = (props: {
   position?: 'top' | 'left' | 'right' | 'bottom'
@@ -9,11 +11,13 @@ export const Popover = (props: {
   target: React.ReactElement
   isOpen?: boolean
 }) => {
+  const forceShow = useContext(ForceShowPopover)
+
   if (Platform.OS == 'web') {
     return (
       <PopoverWeb
         position={props.position}
-        isOpen={props.isOpen}
+        isOpen={typeof forceShow == 'boolean' ? forceShow : props.isOpen}
         padding={20}
         containerStyle={{
           overflow: 'visible',
