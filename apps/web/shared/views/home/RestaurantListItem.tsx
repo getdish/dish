@@ -18,7 +18,7 @@ import { RankingView } from './RankingView'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Popover } from '../shared/Popover'
 import { ArrowContainer } from 'react-tiny-popover'
-import { Tooltip } from './Tooltip'
+import { Tooltip } from '../shared/Stack/Tooltip'
 import { Icon } from '../shared/Icon'
 
 export const RestaurantListItem = ({
@@ -274,6 +274,9 @@ const RestaurantRate = memo(
       <Popover
         isOpen={rating !== 0}
         position="right"
+        onClickOutside={() => {
+          setRating(0)
+        }}
         target={
           <div
             style={{

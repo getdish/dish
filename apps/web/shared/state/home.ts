@@ -174,11 +174,24 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
   }
 }
 
-const popTo: Action<HomeStateItem> = (om, item) => {
+const popTo: Action<HomeStateItem | number> = (om, item) => {
+  let homeItem: HomeStateItem
+
+  if (typeof item == 'number') {
+    const index = om.state.home.states.length - 1 + item
+    homeItem = om.state.home.states[index]
+    if (!homeItem) {
+      console.warn('no item at index', index)
+      return
+    }
+  } else {
+    homeItem = item
+  }
+
   om.actions.router.navigate({
-    name: item.type,
+    name: homeItem.type,
     params:
-      [...om.state.router.history].reverse().find((x) => x.name == item.type)
+      _.findLast(om.state.router.history, (x) => x.name == homeItem.type)
         ?.params ?? {},
   })
 }

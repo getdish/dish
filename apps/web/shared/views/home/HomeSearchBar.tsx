@@ -39,7 +39,7 @@ export default memo(function HomeSearchBar() {
     <View style={styles.container}>
       <HStack>
         <VStack
-          flex={2}
+          flex={1.7}
           borderTopLeftRadius={10}
           borderBottomLeftRadius={10}
           style={styles.searchArea}
@@ -125,7 +125,6 @@ const SearchLocationButton = memo(() => {
           <TouchableOpacity
             style={{
               padding: 10,
-              opacity: om.state.home.currentState.searchQuery === '' ? 0 : 1,
             }}
             onPress={() => {
               om.actions.home.popTo(om.state.home.lastHomeState)
