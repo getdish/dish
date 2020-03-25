@@ -1,5 +1,7 @@
-import React, { forwardRef } from 'react'
-import { View, StyleSheet, ViewStyle, ViewProps } from 'react-native'
+import React, { forwardRef, CSSProperties, useRef, useState } from 'react'
+import { View, StyleSheet, ViewStyle, ViewProps, Animated } from 'react-native'
+import Hoverable from './Hoverable'
+import './Stacks.css'
 
 // TODO spacing
 
@@ -15,70 +17,59 @@ export type StackBaseProps = Omit<
     ViewProps & {
       fullscreen?: boolean
       children?: any
+      hoverStyle?: ViewStyle
     },
   // because who tf uses alignContent
   'alignContent'
 >
 
-export const ZStack = forwardRef<View, StackBaseProps>(
-  ({ children, fullscreen, pointerEvents, style = null, ...props }, ref) => {
-    return (
-      <View
-        ref={ref}
-        pointerEvents={pointerEvents}
-        style={[
-          {
-            position: 'absolute',
-            ...(fullscreen && fsStyle),
-            ...props,
-          },
-          style,
-        ]}
-      >
-        {children}
-      </View>
-    )
-  }
-)
+const createStack = (defaultStyle?: ViewStyle) => {
+  return forwardRef<View, StackBaseProps>(
+    (
+      {
+        children,
+        fullscreen,
+        pointerEvents,
+        style = null,
+        hoverStyle = null,
+        ...props
+      },
+      ref
+    ) => {
+      const content = (extraStyle?: any) => (
+        <Animated.View
+          ref={ref}
+          pointerEvents={pointerEvents}
+          style={[
+            {
+              ...defaultStyle,
+              ...(fullscreen && fsStyle),
+              ...props,
+            },
+            style,
+            extraStyle,
+          ]}
+        >
+          {children}
+        </Animated.View>
+      )
 
-export const HStack = forwardRef<View, StackBaseProps>(
-  ({ children, fullscreen, pointerEvents, style = null, ...props }, ref) => {
-    return (
-      <View
-        ref={ref}
-        pointerEvents={pointerEvents}
-        style={[
-          {
-            flexDirection: 'row',
-            ...(fullscreen && fsStyle),
-            ...props,
-          },
-          style,
-        ]}
-      >
-        {children}
-      </View>
-    )
-  }
-)
+      if (hoverStyle) {
+        const [isHovered, set] = useState(false)
+        return (
+          <Hoverable onHoverIn={() => set(true)} onHoverOut={() => set(false)}>
+            <div className="see-through">
+              {content(isHovered ? hoverStyle : null)}
+            </div>
+          </Hoverable>
+        )
+      }
 
-export const VStack = forwardRef<View, StackBaseProps>(
-  ({ children, fullscreen, pointerEvents, style = null, ...props }, ref) => {
-    return (
-      <View
-        ref={ref}
-        pointerEvents={pointerEvents}
-        style={[
-          {
-            flexDirection: 'column',
-            ...(fullscreen && fsStyle),
-            ...props,
-          },
-          style,
-        ]}
-      >
-        {children}
-      </View>
-    )
-  }
-)
+      return content()
+    }
+  )
+}
+
+export const ZStack = createStack({ position: 'absolute' })
+export const HStack = createStack({ flexDirection: 'row' })
+export const VStack = createStack({ flexDirection: 'column' })
