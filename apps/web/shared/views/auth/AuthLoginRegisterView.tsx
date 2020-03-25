@@ -110,10 +110,12 @@ const styles = StyleSheet.create({
   text_input: {
     fontSize: 16,
     borderWidth: 1,
-    borderColor: '#888',
-    borderRadius: 5,
+    borderColor: '#ccc',
+    borderRadius: 8,
     paddingVertical: 8,
     paddingHorizontal: 12,
     marginBottom: '0.5em',
+    shadowColor: 'rgba(0,0,0,0.15)',
+    shadowRadius: 3,
   },
 })

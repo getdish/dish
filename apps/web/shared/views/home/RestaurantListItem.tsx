@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useRef, memo } from 'react'
-import {
-  Image,
-  Text,
-  TouchableOpacity,
-  View,
-  TextInput,
-  ScrollView,
-} from 'react-native'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
 import { Restaurant } from '@dish/models'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { Spacer } from '../shared/Spacer'
@@ -19,7 +12,8 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { Popover } from '../shared/Popover'
 import { ArrowContainer } from 'react-tiny-popover'
 import { Tooltip } from '../shared/Stack/Tooltip'
-import { Icon } from '../shared/Icon'
+import { RestaurantRatingPopover } from './RestaurantRatingPopover'
+import { Circle } from '../shared/Circle'
 
 export const RestaurantListItem = ({
   restaurant,
@@ -94,7 +88,7 @@ export const RestaurantListItem = ({
 
             <HStack>
               <HStack alignItems="center">
-                <RestaurantRate
+                <RestaurantRatingPopover
                   restaurant={restaurant}
                   onChangeOpen={(isOpen) => {
                     setDisablePress(isOpen)
@@ -203,141 +197,20 @@ export const RestaurantListItem = ({
   )
 }
 
-const RestaurantRate = memo(
-  ({
-    restaurant,
-    onChangeOpen,
-  }: {
-    restaurant: Restaurant
-    onChangeOpen: Function
-  }) => {
-    const om = useOvermind()
-    const [rating, set] = useState(0)
-    const setRating = (x) => {
-      set(x)
-      onChangeOpen(x !== 0)
-    }
-
-    let content = null
-
-    if (rating !== 0) {
-      content = (
-        <>
-          <HStack>
-            <EmojiButton onPress={() => setRating(-1)} active={rating === -1}>
-              👎
-            </EmojiButton>
-            <EmojiButton onPress={() => setRating(1)} active={rating === 1}>
-              👍
-            </EmojiButton>
-            <EmojiButton onPress={() => setRating(2)} active={rating === 2}>
-              🤤
-            </EmojiButton>
-          </HStack>
-          <Spacer />
-          <HStack alignItems="center">
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <HStack alignItems="center">
-                <Icon size={20} name="tag" />
-                <Spacer />
-                {om.state.home.lastHomeState.lenses
-                  .filter((x) => x.isVotable)
-                  .map((lense) => (
-                    <React.Fragment key={lense.id}>
-                      <TagButton name={`${lense.icon} ${lense.name}`} />
-                      <Spacer />
-                    </React.Fragment>
-                  ))}
-                <Spacer />
-              </HStack>
-            </ScrollView>
-          </HStack>
-          <Spacer />
-          <TextInput
-            multiline
-            placeholder="Notes"
-            style={{
-              width: '100%',
-              flex: 1,
-              height: 100,
-              borderWidth: 1,
-              borderColor: '#ccc',
-              borderRadius: 10,
-              padding: 10,
-            }}
-          />
-        </>
-      )
-    }
-
-    return (
-      <Popover
-        isOpen={rating !== 0}
-        position="right"
-        onClickOutside={() => {
-          setRating(0)
-        }}
-        target={
-          <div
-            style={{
-              filter: rating !== 0 ? '' : 'grayscale(100%)',
-              marginLeft: 20,
-            }}
-          >
-            {/* <Text style={{ fontSize: 24, opacity: isOpen ? 1 : 0.5 }}>⭐️</Text> */}
-            <VStack>
-              <TouchableOpacity
-                onPress={() => {
-                  if (rating == 1) return setRating(0)
-                  setRating(1)
-                }}
-              >
-                <Icon
-                  name="chevron-up"
-                  size={22}
-                  style={{
-                    color: rating === 1 ? 'green' : 'black',
-                    marginBottom: -5,
-                  }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  if (rating == -1) return setRating(0)
-                  setRating(-1)
-                }}
-              >
-                <Icon
-                  name="chevron-down"
-                  size={22}
-                  style={{ color: rating === -1 ? 'red' : 'black' }}
-                />
-              </TouchableOpacity>
-            </VStack>
-          </div>
-        }
-      >
-        <Tooltip height={200}>{content}</Tooltip>
-      </Popover>
-    )
-  }
-)
-
-const EmojiButton = ({ active, children, onPress, ...rest }: any) => {
+export const EmojiButton = ({ active, children, onPress, ...rest }: any) => {
   return (
     <TouchableOpacity style={{ flex: 1 }} onPress={onPress}>
-      <VStack
-        alignItems="center"
-        justifyContent="center"
-        padding={10}
-        borderRadius={10}
-        backgroundColor={active ? 'rgb(0,50,100)' : ''}
+      <Circle
+        size={88}
+        backgroundColor={active ? 'yellow' : ''}
+        borderColor={'#eee'}
+        borderWidth={1}
         hoverStyle={{
-          backgroundColor: active ? 'rgb(0,50,100)' : 'rgba(0,0,0,0.05)',
+          backgroundColor: active ? 'yellow' : 'rgba(0,0,0,0.05)',
         }}
       >
         <Text style={{ fontSize: 32 }}>{children}</Text>
-      </VStack>
+      </Circle>
     </TouchableOpacity>
   )
 }
