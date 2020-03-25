@@ -36,8 +36,8 @@ export default function Hoverable({ onHoverIn, onHoverOut, children }) {
     onResponderGrant: () => setShowHover(false),
     onResponderRelease: () => setShowHover(true),
     // if child is Touchable
-    onPressIn: handleGrant,
-    onPressOut: handleRelease,
+    // onPressIn: handleGrant,
+    // onPressOut: handleRelease,
   })
 }
 

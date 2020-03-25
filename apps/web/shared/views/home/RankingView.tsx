@@ -16,11 +16,13 @@ export function RankingView({ rank }: { rank: number }) {
       marginLeft={-25}
       marginRight={7}
       marginVertical={-6}
+      transform={[{ rotate: '-6deg' }]}
     >
       <Text
         style={{
-          fontSize: 24,
-          fontWeight: 'bold',
+          fontSize: 30,
+          lineHeight: 22,
+          fontWeight: '300',
         }}
       >
         <SuperScriptText style={{ opacity: 0.5 }}>#</SuperScriptText>

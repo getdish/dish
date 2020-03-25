@@ -1,5 +1,4 @@
 import React, { memo } from 'react'
-import { Feather } from '@expo/vector-icons'
 import {
   Text,
   View,
@@ -11,6 +10,7 @@ import {
 import { useOvermind } from '../../state/om'
 import { ZStack, HStack, VStack } from '../shared/Stacks'
 import { Spacer } from '../shared/Spacer'
+import { Icon } from '../shared/Icon'
 
 const styles = StyleSheet.create({
   container: {
@@ -131,7 +131,7 @@ const SearchLocationButton = memo(() => {
               om.actions.home.popTo(om.state.home.lastHomeState)
             }}
           >
-            <Feather
+            <Icon
               size={18}
               name="navigation"
               style={{ color: 'blue', opacity: 0.2 }}

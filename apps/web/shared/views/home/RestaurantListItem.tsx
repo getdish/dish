@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef, memo } from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import {
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+  TextInput,
+  ScrollView,
+} from 'react-native'
 import { Restaurant } from '@dish/models'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { Spacer } from '../shared/Spacer'
@@ -12,6 +19,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { Popover } from '../shared/Popover'
 import { ArrowContainer } from 'react-tiny-popover'
 import { Tooltip } from './Tooltip'
+import { Icon } from '../shared/Icon'
 
 export const RestaurantListItem = ({
   restaurant,
@@ -29,6 +37,7 @@ export const RestaurantListItem = ({
   const [price_label, price_color, price_range] = priceRange(restaurant)
   const [isMounted, setIsMounted] = useState(false)
   const photos = Restaurant.allPhotos(restaurant).slice(0, isMounted ? 10 : 1)
+  const [disablePress, setDisablePress] = useState(false)
 
   useEffect(() => {
     let tm = setTimeout(() => {
@@ -51,6 +60,7 @@ export const RestaurantListItem = ({
       }}
     >
       <TouchableOpacity
+        disabled={disablePress}
         onPress={() => {
           om.actions.router.navigate({
             name: 'restaurant',
@@ -84,7 +94,12 @@ export const RestaurantListItem = ({
 
             <HStack>
               <HStack alignItems="center">
-                <RestaurantRate restaurant={restaurant} />
+                <RestaurantRate
+                  restaurant={restaurant}
+                  onChangeOpen={(isOpen) => {
+                    setDisablePress(isOpen)
+                  }}
+                />
                 <Spacer />
                 <TagButton rank={1} name="🍜 Pho" />
                 <Spacer />
@@ -188,35 +203,138 @@ export const RestaurantListItem = ({
   )
 }
 
-const RestaurantRate = memo(({ restaurant }: { restaurant: Restaurant }) => {
-  const [isOpen, setIsOpen] = useState(false)
-  return (
-    <Popover
-      isOpen={isOpen}
-      position="right"
-      target={
-        <TouchableOpacity
-          onPress={() => {
-            setIsOpen(!isOpen)
-          }}
-        >
+const RestaurantRate = memo(
+  ({
+    restaurant,
+    onChangeOpen,
+  }: {
+    restaurant: Restaurant
+    onChangeOpen: Function
+  }) => {
+    const om = useOvermind()
+    const [rating, set] = useState(0)
+    const setRating = (x) => {
+      set(x)
+      onChangeOpen(x !== 0)
+    }
+
+    let content = null
+
+    if (rating !== 0) {
+      content = (
+        <>
+          <HStack>
+            <EmojiButton onPress={() => setRating(-1)} active={rating === -1}>
+              👎
+            </EmojiButton>
+            <EmojiButton onPress={() => setRating(1)} active={rating === 1}>
+              👍
+            </EmojiButton>
+            <EmojiButton onPress={() => setRating(2)} active={rating === 2}>
+              🤤
+            </EmojiButton>
+          </HStack>
+          <Spacer />
+          <HStack alignItems="center">
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <HStack alignItems="center">
+                <Icon size={20} name="tag" />
+                <Spacer />
+                {om.state.home.lastHomeState.lenses
+                  .filter((x) => x.isVotable)
+                  .map((lense) => (
+                    <React.Fragment key={lense.id}>
+                      <TagButton name={`${lense.icon} ${lense.name}`} />
+                      <Spacer />
+                    </React.Fragment>
+                  ))}
+                <Spacer />
+              </HStack>
+            </ScrollView>
+          </HStack>
+          <Spacer />
+          <TextInput
+            multiline
+            placeholder="Notes"
+            style={{
+              width: '100%',
+              flex: 1,
+              height: 100,
+              borderWidth: 1,
+              borderColor: '#ccc',
+              borderRadius: 10,
+              padding: 10,
+            }}
+          />
+        </>
+      )
+    }
+
+    return (
+      <Popover
+        isOpen={rating !== 0}
+        position="right"
+        target={
           <div
             style={{
-              filter: isOpen ? '' : 'grayscale(100%)',
+              filter: rating !== 0 ? '' : 'grayscale(100%)',
               marginLeft: 20,
             }}
           >
-            <Text style={{ fontSize: 24, opacity: isOpen ? 1 : 0.5 }}>⭐️</Text>
+            {/* <Text style={{ fontSize: 24, opacity: isOpen ? 1 : 0.5 }}>⭐️</Text> */}
+            <VStack>
+              <TouchableOpacity
+                onPress={() => {
+                  if (rating == 1) return setRating(0)
+                  setRating(1)
+                }}
+              >
+                <Icon
+                  name="chevron-up"
+                  size={22}
+                  style={{ color: rating === 1 ? 'green' : 'black' }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  if (rating == -1) return setRating(0)
+                  setRating(-1)
+                }}
+              >
+                <Icon
+                  name="chevron-down"
+                  size={22}
+                  style={{ color: rating === -1 ? 'red' : 'black' }}
+                />
+              </TouchableOpacity>
+            </VStack>
           </div>
-        </TouchableOpacity>
-      }
-    >
-      <Tooltip height={200}>
-        <Text>{restaurant.name}</Text>
-      </Tooltip>
-    </Popover>
+        }
+      >
+        <Tooltip height={200}>{content}</Tooltip>
+      </Popover>
+    )
+  }
+)
+
+const EmojiButton = ({ active, children, onPress, ...rest }: any) => {
+  return (
+    <TouchableOpacity style={{ flex: 1 }} onPress={onPress}>
+      <VStack
+        alignItems="center"
+        justifyContent="center"
+        padding={10}
+        borderRadius={10}
+        backgroundColor={active ? 'rgb(0,50,100)' : ''}
+        hoverStyle={{
+          backgroundColor: active ? 'rgb(0,50,100)' : 'rgba(0,0,0,0.05)',
+        }}
+      >
+        <Text style={{ fontSize: 32 }}>{children}</Text>
+      </VStack>
+    </TouchableOpacity>
   )
-})
+}
 
 const RestaurantListItemRating = memo(
   ({ restaurant }: { restaurant: Restaurant }) => {
