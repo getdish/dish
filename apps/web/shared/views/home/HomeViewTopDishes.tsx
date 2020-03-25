@@ -13,11 +13,12 @@ import { useOvermind } from '../../state/om'
 import top_dish_images from '../../assets/topdishes.json'
 import { Spacer } from '../shared/Spacer'
 import { Link, LinkButton } from '../shared/Link'
-import { HStack, VStack } from '../shared/Stacks'
+import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { SmallTitle } from '../shared/SmallTitle'
 import HomeLenseBar from './HomeLenseBar'
 import { HomeStateItem, HomeStateItemHome } from '../../state/home'
 import { RankingView } from './RankingView'
+import { LinearGradient } from 'expo-linear-gradient'
 
 const styles = StyleSheet.create({
   container: {
@@ -80,8 +81,16 @@ export default memo(function HomeViewTopDishes({
   return (
     <VStack flex={1}>
       <SmallTitle>{activeLense.description}</SmallTitle>
-      <HomeLenseBar />
-      <HomeViewTopDishesContent state={state} />
+      <VStack position="relative" flex={1}>
+        <ZStack zIndex={10} right={0} left={0} pointerEvents="none">
+          <HomeLenseBar />
+          <LinearGradient
+            colors={['#fff', '#fff', 'transparent']}
+            style={[StyleSheet.absoluteFill, { zIndex: -1, marginBottom: -50 }]}
+          />
+        </ZStack>
+        <HomeViewTopDishesContent state={state} />
+      </VStack>
     </VStack>
   )
 })
@@ -97,7 +106,7 @@ const HomeViewTopDishesContent = memo(
 
     return (
       <ScrollView style={{ flex: 1 }}>
-        <VStack paddingVertical={20}>
+        <VStack paddingVertical={20} paddingTop={20 + 60}>
           {[0, 1, 2, 3, 4, 5, 6, 7].map((x) => (
             <VStack key={x} paddingBottom={20}>
               <HStack paddingHorizontal={20}>
