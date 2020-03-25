@@ -91,7 +91,7 @@ export const taxonomyFilters: Taxonomy[] = [
   },
   {
     id: '4',
-    name: 'Open Now',
+    name: 'Open',
     type: 'filter',
   },
   {

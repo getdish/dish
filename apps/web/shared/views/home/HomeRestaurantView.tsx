@@ -46,19 +46,22 @@ export default function HomeRestaurantView({
       </ZStack>
       <ScrollView style={{ padding: 18 }}>
         <VStack>
-          <HStack marginBottom={-10}>
-            <Text style={{ fontSize: 30 }}>{restaurant.name}</Text>
-
-            <Spacer flex />
-
+          <HStack marginBottom={10}>
             <RestaurantRatingDetail restaurant={restaurant} />
+
+            <Spacer size={20} />
+
+            <VStack flex={1}>
+              <Text style={{ fontSize: 30, fontWeight: 'bold' }}>
+                {restaurant.name}
+              </Text>
+              <RestaurantMetaRow restaurant={restaurant} />
+            </VStack>
 
             <Spacer size={30} />
           </HStack>
 
-          <RestaurantRateRow restaurant={restaurant} />
-          <Spacer />
-          <RestaurantMetaRow restaurant={restaurant} />
+          <RestaurantRateRow showMore restaurant={restaurant} />
           <Spacer />
           <Divider />
           <Spacer />
