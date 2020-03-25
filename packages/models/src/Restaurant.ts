@@ -18,8 +18,7 @@ export class Restaurant extends ModelBase<Restaurant> {
   state!: string
   zip!: number
   image?: string
-  tag_ids: string[] = []
-  tags!: Taxonomy[]
+  tags!: { taxonomy: Taxonomy }[]
   photos?: string[]
   telephone!: string
   website!: string
@@ -57,7 +56,7 @@ export class Restaurant extends ModelBase<Restaurant> {
   }
 
   static sub_fields() {
-    return { tags: ['name'] }
+    return { tags: { taxonomy: { name: true } } }
   }
 
   static read_only_fields() {
@@ -131,7 +130,16 @@ export class Restaurant extends ModelBase<Restaurant> {
         restaurant: {
           __args: {
             where: {
-              name: { _ilike: '%' + search_query + '%' },
+              _or: [
+                { name: { _ilike: '%' + search_query + '%' } },
+                {
+                  tags: {
+                    taxonomy: {
+                      name: { _eq: search_query },
+                    },
+                  },
+                },
+              ],
               location: {
                 _st_d_within: {
                   distance: distance,
@@ -233,41 +241,6 @@ export class Restaurant extends ModelBase<Restaurant> {
     return restaurant
   }
 
-  static async highestRatedByDish(
-    lat: number,
-    lng: number,
-    distance: number,
-    dishes: string[]
-  ): Promise<Restaurant[]> {
-    const query = {
-      query: {
-        restaurant: {
-          __args: {
-            where: {
-              categories: { _contains: dishes },
-              location: {
-                _st_d_within: {
-                  distance: distance,
-                  from: {
-                    type: 'Point',
-                    coordinates: [lng, lat],
-                  },
-                },
-              },
-            },
-            limit: 10,
-            order_by: { rating: new EnumType('desc_nulls_last') },
-          },
-          ...Restaurant.fieldsAsObject(),
-        },
-      },
-    }
-    const response = await ModelBase.hasura(query)
-    return response.data.data.restaurant.map(
-      (data: Partial<Restaurant>) => data
-    )
-  }
-
   async upsertTags(tags: string[]) {
     const objects = tags.map((tag) => {
       return {
@@ -292,9 +265,35 @@ export class Restaurant extends ModelBase<Restaurant> {
     const tag_ids = response.data.data['insert_taxonomy'].returning.map(
       (i) => i.id
     )
-    this.tag_ids = _.uniq([...this.tag_ids, ...tag_ids])
-    await this.update()
-    return this.tag_ids
+    await this.upsertTagJunctions(tag_ids)
+    return tag_ids
+  }
+
+  async upsertTagJunctions(tag_ids: string[]) {
+    const objects = tag_ids.map((tag_id) => {
+      return {
+        restaurant_id: this.id,
+        taxonomy_id: tag_id,
+      }
+    })
+    const query = {
+      mutation: {
+        ['insert_restaurant_taxonomy']: {
+          __args: {
+            objects: objects,
+            on_conflict: {
+              constraint: new EnumType('restaurant_taxonomy_pkey'),
+              update_columns: [
+                new EnumType('restaurant_id'),
+                new EnumType('taxonomy_id'),
+              ],
+            },
+          },
+          returning: { taxonomy_id: true },
+        },
+      },
+    }
+    await ModelBase.hasura(query)
   }
 
   async delete() {

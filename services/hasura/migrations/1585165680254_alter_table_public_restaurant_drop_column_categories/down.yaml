@@ -1,0 +1,10 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."restaurant" ADD COLUMN "categories" jsonb;
+  type: run_sql
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."restaurant" ALTER COLUMN "categories" DROP NOT NULL;
+  type: run_sql

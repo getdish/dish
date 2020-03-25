@@ -1,6 +1,5 @@
 
 alter table "public"."taxonomy" add constraint "taxonomy_name_key" unique ("name");
-ALTER TABLE "public"."restaurant" DROP COLUMN "categories" CASCADE;
 ALTER TABLE "public"."restaurant" ADD COLUMN "tags" jsonb NULL;
 ALTER TABLE "public"."taxonomy" ALTER COLUMN "icon" DROP NOT NULL;
 alter table "public"."restaurant" rename column "tags" to "tag_ids";

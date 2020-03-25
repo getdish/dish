@@ -141,7 +141,7 @@ export class ModelBase<T> {
     return ['']
   }
 
-  static sub_fields(): { [key: string]: string[] } {
+  static sub_fields(): { [key: string]: any } {
     return {}
   }
 
@@ -187,7 +187,7 @@ export class ModelBase<T> {
       if (!(key in sub_fields)) {
         object[key] = true
       } else {
-        object[key] = this._fieldsAsObject(sub_fields[key])
+        object[key] = sub_fields[key]
       }
     }
     return object
@@ -208,6 +208,9 @@ export class ModelBase<T> {
     let object = {}
     for (const field of this._klass.fields()) {
       if (field in this._klass.sub_fields()) {
+        continue
+      }
+      if (this._klass.read_only_fields().includes(field)) {
         continue
       }
       if (this[field]) {

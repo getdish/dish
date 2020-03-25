@@ -119,11 +119,10 @@ const HomeViewTopDishesContent = memo(
 
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <HStack height={170} padding={20} paddingHorizontal={10}>
-                  {top_dishes.slice(0, 5).map((dish) => {
-                    const category = dish.category.replace(/"/g, '')
+                  {top_dishes.slice(0, 5).map((top_dish) => {
                     return (
                       <LinkButton
-                        key={category}
+                        key={top_dish.dish}
                         style={{
                           // flexDirection: 'row',
                           alignItems: 'center',
@@ -133,11 +132,11 @@ const HomeViewTopDishesContent = memo(
                         }}
                         name="search"
                         params={{
-                          query: category,
+                          query: top_dish.dish,
                         }}
                       >
                         <VStack width={110} height={100} paddingHorizontal={5}>
-                          {getImageForDish(category)}
+                          {getImageForDish(top_dish.dish)}
                         </VStack>
                         <Spacer />
                         <VStack maxWidth="100%" overflow="hidden">
@@ -151,7 +150,7 @@ const HomeViewTopDishesContent = memo(
                               opacity: 0.7,
                             }}
                           >
-                            {category}
+                            {top_dish.dish}
                           </Text>
                         </VStack>
                       </LinkButton>

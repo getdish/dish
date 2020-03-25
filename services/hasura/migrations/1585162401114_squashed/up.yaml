@@ -1,0 +1,80 @@
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - restaurant_id
+      - taxonomy_id
+      computed_fields: []
+      filter: {}
+      limit: null
+    role: anon
+    table:
+      name: restaurant_taxonomy
+      schema: public
+  type: create_select_permission
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - restaurant_id
+      - taxonomy_id
+      computed_fields: []
+      filter: {}
+      limit: null
+    role: contributor
+    table:
+      name: restaurant_taxonomy
+      schema: public
+  type: create_select_permission
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - restaurant_id
+      - taxonomy_id
+      computed_fields: []
+      filter: {}
+      limit: null
+    role: user
+    table:
+      name: restaurant_taxonomy
+      schema: public
+  type: create_select_permission
+- args:
+    permission:
+      check: {}
+      columns:
+      - restaurant_id
+      - taxonomy_id
+      localPresets:
+      - key: ""
+        value: ""
+      set: {}
+    role: contributor
+    table:
+      name: restaurant_taxonomy
+      schema: public
+  type: create_insert_permission
+- args:
+    permission:
+      columns:
+      - restaurant_id
+      - taxonomy_id
+      filter: {}
+      localPresets:
+      - key: ""
+        value: ""
+      set: {}
+    role: contributor
+    table:
+      name: restaurant_taxonomy
+      schema: public
+  type: create_update_permission
+- args:
+    permission:
+      filter: {}
+    role: contributor
+    table:
+      name: restaurant_taxonomy
+      schema: public
+  type: create_delete_permission

@@ -8,7 +8,7 @@ import { sleep } from '../helpers/sleep'
 type LngLat = { lng: number; lat: number }
 
 type TopDish = {
-  category: string
+  dish: string
   frequency: number
 }
 
@@ -240,7 +240,7 @@ const getTopDishes: AsyncAction = async (om) => {
             radius: RADIUS,
           },
         },
-        category: true,
+        dish: true,
         frequency: true,
       },
     },
@@ -308,20 +308,12 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
   if (state.type != 'search') return
   if (runSearchId != curId) return
 
-  const [restaurants, topRestaurants] = await Promise.all([
-    Restaurant.search(
-      om.state.home.currentState.center.lat,
-      om.state.home.currentState.center.lng,
-      RADIUS,
-      query
-    ),
-    Restaurant.highestRatedByDish(
-      om.state.home.currentState.center.lat,
-      om.state.home.currentState.center.lng,
-      RADIUS,
-      [query]
-    ),
-  ])
+  const restaurants = await Restaurant.search(
+    om.state.home.currentState.center.lat,
+    om.state.home.currentState.center.lng,
+    RADIUS,
+    query
+  )
 
   state = om.state.home.currentState
   if (state.type != 'search') return
@@ -330,7 +322,7 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
   state.results = {
     status: 'complete',
     results: {
-      restaurants: [...topRestaurants, ...restaurants],
+      restaurants: restaurants,
       dishes: [],
       locations: [],
     },

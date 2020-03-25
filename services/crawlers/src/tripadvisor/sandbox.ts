@@ -17,4 +17,4 @@ async function one() {
   console.log(restaurant)
 }
 
-one()
+main()

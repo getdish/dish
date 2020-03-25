@@ -1,0 +1,53 @@
+- args:
+    cascade: false
+    comment: ""
+    name: tags
+    table:
+      name: restaurant
+      schema: public
+  type: drop_computed_field
+- args:
+    is_enum: false
+    name: restaurant_taxonomy
+    schema: public
+  type: track_table
+- args:
+    name: restaurant
+    table:
+      name: restaurant_taxonomy
+      schema: public
+    using:
+      foreign_key_constraint_on: restaurant_id
+  type: create_object_relationship
+- args:
+    name: taxonomy
+    table:
+      name: restaurant_taxonomy
+      schema: public
+    using:
+      foreign_key_constraint_on: taxonomy_id
+  type: create_object_relationship
+- args:
+    name: restaurant_taxonomies
+    table:
+      name: restaurant
+      schema: public
+    using:
+      foreign_key_constraint_on:
+        column: restaurant_id
+        table:
+          name: restaurant_taxonomy
+          schema: public
+  type: create_array_relationship
+- args:
+    name: restaurant_taxonomies
+    table:
+      name: taxonomy
+      schema: public
+    using:
+      foreign_key_constraint_on:
+        column: taxonomy_id
+        table:
+          name: restaurant_taxonomy
+          schema: public
+  type: create_array_relationship

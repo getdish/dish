@@ -76,7 +76,29 @@ test('Tagging a restaurant', async (t) => {
   await restaurant.findOne('name', restaurant.name)
   t.is(tag_ids.length, 2)
   t.is(tag_ids.includes(existing_tag.id), true)
-  t.is(restaurant.tags[0].name, 'test_tag')
+  t.is(restaurant.tags[0].taxonomy.name, 'test_tag')
+})
+
+test('Searching for a restaurant by name', async (t) => {
+  const restaurant = new Restaurant({
+    ...restaurant_fixture,
+  })
+  await restaurant.upsert()
+
+  const results = await Restaurant.search(50.5, 0.5, 1, 'Test')
+  t.is(results[0].name, 'Test Restaurant')
+})
+
+test('Searching for a restaurant by tag', async (t) => {
+  const restaurant = new Restaurant({
+    ...restaurant_fixture,
+  })
+  await restaurant.upsert()
+  const tag = new Taxonomy({ name: 'test_tag' })
+  await tag.insert()
+  await restaurant.upsertTags(['test_tag'])
+  const results = await Restaurant.search(50.5, 0.5, 1, 'test_tag')
+  t.is(results[0].tags[0].taxonomy.name, 'test_tag')
 })
 
 test('Upserting a dish', async (t) => {

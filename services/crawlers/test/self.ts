@@ -101,7 +101,7 @@ test('Merging', async (t) => {
   t.is(updated.name, 'Test Name Yelp')
   t.is(updated.address, '123 Street, Big City')
   t.deepEqual(
-    updated.tags.map((i) => i.name),
+    updated.tags.map((i) => i.taxonomy.name),
     ['Mexican', 'Pizza']
   )
   t.is(updated.dishes[0].name, 'Nice Dish')

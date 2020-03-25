@@ -40,7 +40,7 @@ export default function HomeRestaurantView({
     return <Text>Loading...</Text>
   }
 
-  const categories = restaurant.tags.map((i) => i.name) ?? []
+  const tags = restaurant.tags.map((i) => i.taxonomy.name) ?? []
   const sources = restaurant.sources ?? []
 
   return (
@@ -65,12 +65,12 @@ export default function HomeRestaurantView({
           <Spacer />
 
           <Text style={{ fontSize: 15 }}>
-            {categories.map((category, index) => (
-              <Text key={category}>
-                <Link name="search" params={{ query: category }}>
-                  {category}
+            {tags.map((tag, index) => (
+              <Text key={tag}>
+                <Link name="search" params={{ query: tag }}>
+                  {tag}
                 </Link>
-                {index == categories.length - 1 ? '' : ', '}
+                {index == tags.length - 1 ? '' : ', '}
               </Text>
             ))}
           </Text>

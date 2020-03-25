@@ -1,0 +1,31 @@
+- args:
+    relationship: restaurant_taxonomies
+    table:
+      name: taxonomy
+      schema: public
+  type: drop_relationship
+- args:
+    relationship: restaurant_taxonomies
+    table:
+      name: restaurant
+      schema: public
+  type: drop_relationship
+- args:
+    relationship: taxonomy
+    table:
+      name: restaurant_taxonomy
+      schema: public
+  type: drop_relationship
+- args:
+    relationship: restaurant
+    table:
+      name: restaurant_taxonomy
+      schema: public
+  type: drop_relationship
+- args:
+    definition: {}
+    name: tags
+    table:
+      name: restaurant
+      schema: public
+  type: add_computed_field
