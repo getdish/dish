@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  View,
 } from 'react-native'
 
 import { useOvermind } from '../../state/om'
@@ -41,11 +42,25 @@ const getImageForDish = (dish: string) => {
     }
   }
   return (
-    <Image
-      source={{ uri: image }}
-      style={{ width: '100%', height: '100%', borderRadius: 22 }}
-      resizeMode="cover"
-    />
+    <VStack
+      shadowColor="rgba(0,0,0,0.25)"
+      shadowRadius={10}
+      width="100%"
+      height="100%"
+      borderRadius={40}
+      overflow="hidden"
+      hoverStyle={{
+        shadowRadius: 16,
+        shadowColor: 'rgba(0,0,0,0.4)',
+        zIndex: 10000,
+      }}
+    >
+      <Image
+        source={{ uri: image }}
+        style={{ width: '100%', height: '100%' }}
+        resizeMode="cover"
+      />
+    </VStack>
   )
 }
 

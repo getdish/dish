@@ -7,9 +7,10 @@ export function SmallTitle(props: { children: any }) {
       <Text
         style={{
           textTransform: 'uppercase',
-          letterSpacing: 2,
+          letterSpacing: 3,
           opacity: 0.5,
           fontSize: 16,
+          fontWeight: '300',
         }}
       >
         {props.children}
