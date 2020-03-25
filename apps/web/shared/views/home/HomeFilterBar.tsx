@@ -12,8 +12,15 @@ export default memo(function HomeFilterBar() {
 
   return (
     <VStack paddingVertical={12}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <HStack paddingHorizontal={20} paddingVertical={2}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <HStack paddingHorizontal={30} paddingVertical={2}>
           {lastHomeState.filters.map((filter, index) => (
             <React.Fragment key={filter.id}>
               <FilterButton filter={filter} />

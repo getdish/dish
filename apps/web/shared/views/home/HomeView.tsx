@@ -19,13 +19,15 @@ import { HomeStateItem } from '../../state/home'
 import _ from 'lodash'
 import HomeFilterBar from './HomeFilterBar'
 import { LinearGradient } from 'expo-linear-gradient'
-import { TouchableOpacity, Animated } from 'react-native'
+import { TouchableOpacity, Animated, Text } from 'react-native'
 
 import { StyleSheet, View } from 'react-native'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import { HomeDrawerHeader } from './HomeDrawerHeader'
 import { useDebounceValue } from '../../hooks/useDebounce'
 import { ForceShowPopover } from '../shared/Popover'
+import { LinkButton, Link } from '../shared/Link'
+import { HomeControlsOverlay } from './HomeControlsOverlay'
 
 export function useHomeDrawerWidth(): number {
   const [width] = useWindowSize({ throttle: 100 })
@@ -40,6 +42,8 @@ export const HomeView = () => {
     <SideMenu openMenuOffset={200} isOpen={showMenu} menu={<HomeMenu />}>
       <ZStack top={0} left={0} right={0} bottom={0}>
         <HomeMap />
+
+        <HomeControlsOverlay />
 
         <HomeViewDrawer>
           <RouteSwitch>
@@ -84,7 +88,6 @@ export function HomeViewDrawer(props: { children: any }) {
       {/* <ZStack fullscreen borderRadius={drawerBorderRadius} overflow="hidden">
         <BlurView />
       </ZStack> */}
-      <HomeDrawerHeader />
       {props.children}
     </View>
   )
@@ -97,7 +100,30 @@ const HomeViewContent = memo(function HomeViewContent() {
   const { breadcrumbStates } = om.state.home
   return (
     <>
+      <Spacer />
       <HomeSearchBar />
+      <HStack
+        paddingTop={10}
+        paddingHorizontal={20}
+        width="100%"
+        alignItems="center"
+        justifyContent="center"
+      >
+        {['Los Angeles', 'Portland', 'Seattle', 'Las Vegas', 'New York'].map(
+          (city) => (
+            <React.Fragment key={city}>
+              <LinkButton
+                key={city}
+                name="search"
+                params={{ query: city }}
+                paddingHorizontal={16}
+              >
+                <Text style={{ fontSize: 14 }}>{city}</Text>
+              </LinkButton>
+            </React.Fragment>
+          )
+        )}
+      </HStack>
       <HomeFilterBar />
       <ZStack position="relative" flex={1}>
         <VStack
