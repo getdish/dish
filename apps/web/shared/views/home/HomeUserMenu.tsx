@@ -1,7 +1,7 @@
 import React, { memo, useState } from 'react'
 import { LinkButton } from '../shared/Link'
 import { Popover } from '../shared/Popover'
-import { Tooltip } from './Tooltip'
+import { Tooltip } from '../shared/Stack/Tooltip'
 import { LabAuth } from '../auth'
 import { Icon } from '../shared/Icon'
 

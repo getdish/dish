@@ -7,6 +7,7 @@ import { SmallTitle } from '../shared/SmallTitle'
 import { VStack } from '../shared/Stacks'
 import { HomeStateItemSearch, HomeStateItem } from '../../state/home'
 import { memoizeWeak } from '../../helpers/memoizeWeak'
+import { closeAllPopovers, popoverCloseCbs } from '../shared/Popover'
 
 // function SearchResults() {
 //   const om = useOvermind()
@@ -160,7 +161,13 @@ function HomeSearchResultsViewContent({
   ])
 
   return (
-    <ScrollView>
+    <ScrollView
+      onScroll={() => {
+        if (popoverCloseCbs.size) {
+          closeAllPopovers()
+        }
+      }}
+    >
       <VStack paddingVertical={20}>{contents}</VStack>
     </ScrollView>
   )
