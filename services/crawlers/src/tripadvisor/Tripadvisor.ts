@@ -83,9 +83,7 @@ export class Tripadvisor extends WorkerJob {
     }
     const lon = overview.location.longitude
     const lat = overview.location.latitude
-    let restaurant_name_parts = overview.name.split(', ')
-    restaurant_name_parts.pop()
-    const restaurant_name = restaurant_name_parts.join(', ')
+    const restaurant_name = Tripadvisor.cleanName(overview.name)
     const canonical = await Restaurant.saveCanonical(
       lon,
       lat,
@@ -140,6 +138,12 @@ export class Tripadvisor extends WorkerJob {
       uris.push(uri)
     }
     await Scrape.mergeData(scrape_id, { photos: uris })
+  }
+
+  static cleanName(name: string) {
+    let restaurant_name_parts = name.split(', ')
+    restaurant_name_parts.pop()
+    return restaurant_name_parts.join(', ')
   }
 
   private async _persisteReviewData(

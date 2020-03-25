@@ -6,6 +6,7 @@ import { Base64 } from 'js-base64'
 import { QueueOptions, JobOptions } from 'bull'
 import { WorkerJob } from '@dish/worker'
 import { Scrape, Restaurant, Dish } from '@dish/models'
+import { Tripadvisor } from '../tripadvisor/Tripadvisor'
 
 const PER_PAGE = 50
 
@@ -127,12 +128,15 @@ export class Self extends WorkerJob {
   }
 
   mergeName() {
+    const tripadvisor_name = Tripadvisor.cleanName(
+      this.tripadvisor.getData('overview.name')
+    )
     this.restaurant.name = this.merge([
       this.yelp.getData('data_from_map_search.name'),
       this.ubereats.getData('main.title'),
       this.infatuated.getData('data_from_map_search.name'),
       this.michelin.getData('main.name'),
-      this.tripadvisor.getData('overview.name'),
+      tripadvisor_name,
     ])
   }
 
