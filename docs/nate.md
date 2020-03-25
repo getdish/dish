@@ -1,7 +1,24 @@
 next:
 
-- move map should filter current results down and re-number
-- map click item scroll to item
+- bugs
+  - moving between search/results fwd/back slow + bad animation
+- map
+  - move map should filter current results down and re-number
+  - map click item scroll to item
+- RestaurantDetail
+  - flesh out page with information
+  - top dishes
+- search
+  - RestaurantListItem
+    - upvote/downvote (improve buttons, hover)
+    - ratings window improve (easier to close on click away + x close button + saving spinner)
+    - click address, menu, phone
+    - hover "closed until" to show full hours
+    - delivery button/hover to see services/names
+    - horizontal scroll (load more on scroll, show one to start)
+    - click image to go right into gallery
+- keyboard navigation for everything
+- 404 better pages (click home carousel "Pancho Villa" it breaks)
 
 ---
 
@@ -56,6 +73,8 @@ Why I like rottentomatoes
 Rottentomatoes is even interesting because they split out experts from the audience.
 
 ---
+
+ios:
 
 - make the dishlistitem tap => dish search results better transition
   - swipe back
