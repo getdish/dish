@@ -3,7 +3,7 @@ import PopoverNative from 'react-native-popover-view'
 import PopoverWeb, { ArrowContainer } from 'react-tiny-popover'
 import { Platform } from 'react-native'
 
-export const ForceShowPopover = createContext(false)
+export const ForceShowPopover = createContext<boolean | undefined>(undefined)
 
 export const Popover = (props: {
   position?: 'top' | 'left' | 'right' | 'bottom'

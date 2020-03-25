@@ -44,7 +44,7 @@ export function HomeDrawerHeader() {
         >
           <Image
             source={require('../../assets/logo.png')}
-            style={{ width: 1211 * 0.065, height: 605 * 0.065 }}
+            style={{ width: 1211 * 0.05, height: 605 * 0.05 }}
           />
         </TouchableOpacity>
 

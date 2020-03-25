@@ -27,6 +27,11 @@ import { HomeDrawerHeader } from './HomeDrawerHeader'
 import { useDebounceValue } from '../../hooks/useDebounce'
 import { ForceShowPopover } from '../shared/Popover'
 
+export function useHomeDrawerWidth(): number {
+  const [width] = useWindowSize({ throttle: 100 })
+  return Math.min(Math.max(480, width * 0.5), 600)
+}
+
 export const HomeView = () => {
   const om = useOvermind()
   const showMenu = om.state.home.showMenu
@@ -83,11 +88,6 @@ export function HomeViewDrawer(props: { children: any }) {
       {props.children}
     </View>
   )
-}
-
-export function useHomeDrawerWidth(): number {
-  const [width] = useWindowSize({ throttle: 100 })
-  return Math.min(Math.max(400, width * 0.5), 600)
 }
 
 export const drawerBorderRadius = 20
