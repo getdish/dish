@@ -48,7 +48,7 @@ export default memo(function HomeSearchBar() {
             value={om.state.home.currentState.searchQuery}
             onChangeText={(text) => om.actions.home.setSearchQuery(text)}
             placeholder="Search dish, cuisine, craving"
-            style={[styles.textInput, { paddingRight: 42 }]}
+            style={[styles.textInput, { fontSize: 20, paddingRight: 42 }]}
             onFocus={() => {
               // om.actions.home.clearSearch()
               // om.actions.home.getTopDishes()

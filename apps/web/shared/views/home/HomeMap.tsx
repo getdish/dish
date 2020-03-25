@@ -2,12 +2,13 @@ import React, { useState, useEffect, useMemo } from 'react'
 
 import { useOvermind } from '../../state/om'
 import { VStack, ZStack, HStack } from '../shared/Stacks'
-import { Text, Button } from 'react-native'
+import { Text, Button, TouchableOpacity, Image } from 'react-native'
 import _ from 'lodash'
 import { Spacer } from '../shared/Spacer'
 import { useMap, Map } from '../map'
 import { useHomeDrawerWidth } from './HomeView'
 import { HomeUserMenu } from './HomeUserMenu'
+import { LinkButton } from '../shared/Link'
 
 function centerMapToRegion({
   map,
@@ -182,22 +183,6 @@ function HomeMap() {
   return (
     <ZStack width="100%" height="100%">
       <Map {...mapProps} />
-
-      <ZStack fullscreen padding={20} pointerEvents="none" left={drawerWidth}>
-        <VStack flex={1}>
-          <HStack>
-            <VStack></VStack>
-
-            <Spacer flex />
-
-            <HStack pointerEvents="auto">
-              <HomeUserMenu />
-            </HStack>
-          </HStack>
-          <Spacer flex />
-        </VStack>
-        <Text>{restaurantSelected?.id ?? 'none selected'}</Text>
-      </ZStack>
     </ZStack>
   )
 }
