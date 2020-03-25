@@ -25,7 +25,7 @@ export default memo(function HomeLenseBar() {
   )
 
   return (
-    <VStack height={75} paddingVertical={12}>
+    <VStack pointerEvents="auto">
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <HStack paddingHorizontal={20} paddingVertical={2}>
           {lenses}

@@ -169,8 +169,6 @@ function HomeStackView<A extends HomeStateItem>({
   items: A[]
   children: (a: A, isActive: boolean, index: number) => React.ReactNode
 }) {
-  const om = useOvermind()
-
   const debounceItems = useDebounceValue(items, 60)
 
   return (
@@ -266,7 +264,7 @@ function HomeStackViewItem({
             zIndex={index}
             top={index * 20}
             shadowColor="rgba(0,0,0,0.2)"
-            shadowRadius={7}
+            shadowRadius={4}
             borderRadius={drawerBorderRadius}
             pointerEvents="auto"
             // overflow="hidden"
