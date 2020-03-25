@@ -7,6 +7,8 @@ export const RatingView = forwardRef(
   ({ restaurant }: { restaurant: Restaurant }, ref) => {
     const rank = Math.round(restaurant.rating * 20)
     const color = rank > 84 ? 'green' : rank > 60 ? 'orange' : 'red'
+    const borderColor =
+      rank > 84 ? 'lightgreen' : rank > 60 ? 'sunset' : 'lightred'
     return (
       <VStack ref={ref as any} position="relative">
         {rank > 89 && (
@@ -44,8 +46,8 @@ export const RatingView = forwardRef(
         >
           <VStack
             borderRadius={100}
-            backgroundColor={color}
-            padding={1}
+            borderColor={borderColor}
+            borderWidth={1}
             width="100%"
             height="100%"
           >

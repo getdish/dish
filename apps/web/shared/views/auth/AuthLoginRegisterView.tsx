@@ -2,10 +2,9 @@ import React, { useState } from 'react'
 import { StyleSheet, View, Text, TextInput, Button, Image } from 'react-native'
 import { useOvermind } from '../../state/om'
 import { Link } from '../shared/Link'
-import { Redirect } from '../shared/Redirect'
-import { HStack } from '../shared/Stacks'
+import { HStack, VStack } from '../shared/Stacks'
 
-export const LabAuth = () => {
+export const AuthLoginRegisterView = () => {
   const { state, actions } = useOvermind()
   const location = state.router.curPage
   const [username, setUsername] = useState('')
@@ -13,7 +12,8 @@ export const LabAuth = () => {
   const isLogin = location.path == '/login'
 
   if (state.auth.is_logged_in) {
-    return <Redirect to="/" />
+    console.log('redirecting to home??')
+    return null
   }
 
   const button_text = () => {
@@ -41,44 +41,59 @@ export const LabAuth = () => {
 
   return (
     <View style={styles.login_box}>
+      {/* <Text style={{ fontSize: 16 }}>
+        // some pitch on features for login here
+      </Text> */}
       <TextInput
         style={styles.text_input}
-        placeholder="username"
+        placeholder="Login or register with email"
         value={username}
         onChange={(event) => setUsername(event.target['value'])}
       />
-      <TextInput
-        style={styles.text_input}
-        placeholder="password"
-        value={password}
-        secureTextEntry={true}
-        onChange={(event) => setPassword(event.target['value'])}
-      />
-      <Button
-        onPress={async () => {
-          if (isLogin) {
-            actions.auth.login({ username: username, password: password })
-          } else {
-            const result = await actions.auth.register({
-              username: username,
-              password: password,
-            })
-            if (result) {
-              setUsername('')
-              setPassword('')
-            }
-          }
-        }}
-        title={button_text()}
-      ></Button>
-      <HStack>
-        <Text style={{ fontSize: 16 }}>
-          or switch to{' '}
-          <Link inline name={isLogin ? 'register' : 'login'}>
-            {isLogin ? 'register' : 'login'}
-          </Link>{' '}
-        </Text>
-      </HStack>
+
+      {username.length > 3 && (
+        <TextInput
+          style={styles.text_input}
+          placeholder="Password"
+          value={password}
+          secureTextEntry={true}
+          onChange={(event) => setPassword(event.target['value'])}
+        />
+      )}
+
+      {username.length > 3 && (
+        <HStack width="100%">
+          <VStack flex={1} />
+          <Button
+            onPress={async () => {
+              if (isLogin) {
+                actions.auth.login({ username: username, password: password })
+              } else {
+                const result = await actions.auth.register({
+                  username: username,
+                  password: password,
+                })
+                if (result) {
+                  setUsername('')
+                  setPassword('')
+                }
+              }
+            }}
+            title={button_text()}
+          ></Button>
+        </HStack>
+      )}
+
+      {username.length > 3 && (
+        <HStack>
+          <Text style={{ fontSize: 16 }}>
+            <Link inline name="forgotPassword">
+              Forgot password?
+            </Link>{' '}
+          </Text>
+        </HStack>
+      )}
+
       {messages()}
     </View>
   )

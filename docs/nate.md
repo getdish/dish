@@ -1,3 +1,10 @@
+next:
+
+- move map should filter current results down and re-number
+- map click item scroll to item
+
+---
+
 Two things bring us to launch (once any app works):
 
 - Ratings improvements

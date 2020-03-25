@@ -2,9 +2,10 @@ import React, { memo, useMemo } from 'react'
 import { Text, ScrollView } from 'react-native'
 import { useOvermind } from '../../state/om'
 import { Spacer } from '../shared/Spacer'
-import { VStack, HStack } from '../shared/Stacks'
+import { VStack, HStack, ZStack } from '../shared/Stacks'
 import { Taxonomy } from '../../state/Taxonomy'
 import { LinkButton } from '../shared/Link'
+import { LinearGradient } from 'expo-linear-gradient'
 
 export default memo(function HomeLenseBar() {
   const om = useOvermind()
@@ -25,13 +26,19 @@ export default memo(function HomeLenseBar() {
   )
 
   return (
-    <VStack pointerEvents="auto">
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <HStack paddingHorizontal={20} paddingVertical={2}>
-          {lenses}
-        </HStack>
-      </ScrollView>
-    </VStack>
+    <ZStack zIndex={10} right={0} left={0} pointerEvents="none">
+      <VStack pointerEvents="auto">
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <HStack paddingHorizontal={20} paddingVertical={2}>
+            {lenses}
+          </HStack>
+        </ScrollView>
+      </VStack>
+      <LinearGradient
+        colors={['#fff', '#fff', 'transparent']}
+        style={[StyleSheet.absoluteFill, { zIndex: -1, marginBottom: -50 }]}
+      />
+    </ZStack>
   )
 })
 

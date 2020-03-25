@@ -82,13 +82,7 @@ export default memo(function HomeViewTopDishes({
     <VStack flex={1}>
       <SmallTitle>{activeLense.description}</SmallTitle>
       <VStack position="relative" flex={1}>
-        <ZStack zIndex={10} right={0} left={0} pointerEvents="none">
-          <HomeLenseBar />
-          <LinearGradient
-            colors={['#fff', '#fff', 'transparent']}
-            style={[StyleSheet.absoluteFill, { zIndex: -1, marginBottom: -50 }]}
-          />
-        </ZStack>
+        <HomeLenseBar />
         <HomeViewTopDishesContent state={state} />
       </VStack>
     </VStack>

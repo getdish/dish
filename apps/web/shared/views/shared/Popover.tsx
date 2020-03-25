@@ -15,7 +15,7 @@ export const Popover = (props: {
   children: React.ReactElement
   target: React.ReactElement
   isOpen?: boolean
-  onClickOutside: Function
+  onClickOutside?: Function
 }) => {
   const forceShow = useContext(ForceShowPopover)
 

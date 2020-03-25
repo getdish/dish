@@ -295,7 +295,10 @@ const RestaurantRate = memo(
                 <Icon
                   name="chevron-up"
                   size={22}
-                  style={{ color: rating === 1 ? 'green' : 'black' }}
+                  style={{
+                    color: rating === 1 ? 'green' : 'black',
+                    marginBottom: -5,
+                  }}
                 />
               </TouchableOpacity>
               <TouchableOpacity
