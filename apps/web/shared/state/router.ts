@@ -24,6 +24,7 @@ export const routes = {
   home: new Route('/'),
   login: new Route('/login'),
   register: new Route('/register'),
+  forgotPassword: new Route('/forgot-password'),
   taxonomy: new Route('/taxonomy'),
   account: new Route<{ pane: string }>('/account/:pane'),
   search: new Route<{ query: string }>('/search/:query'),

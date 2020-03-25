@@ -150,10 +150,10 @@ function HomeMap() {
 
   useEffect(() => {
     if (!restaurantSelected) return
-    map.setCenterAnimated(
-      coordinates[restaurants.findIndex((x) => x.id === restaurantSelected.id)],
-      true
-    )
+    // map.setCenterAnimated(
+    //   coordinates[restaurants.findIndex((x) => x.id === restaurantSelected.id)],
+    //   true
+    // )
   }, [restaurantSelected])
 
   useEffect(() => {

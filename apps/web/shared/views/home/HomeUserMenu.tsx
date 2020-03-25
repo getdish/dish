@@ -2,7 +2,7 @@ import React, { memo, useState } from 'react'
 import { LinkButton } from '../shared/Link'
 import { Popover } from '../shared/Popover'
 import { Tooltip } from '../shared/Stack/Tooltip'
-import { LabAuth } from '../auth'
+import { AuthLoginRegisterView } from '../auth/AuthLoginRegisterView'
 import { Icon } from '../shared/Icon'
 
 export const HomeUserMenu = memo(() => {
@@ -28,7 +28,7 @@ export const HomeUserMenu = memo(() => {
       }
     >
       <Tooltip padding={20}>
-        <LabAuth />
+        <AuthLoginRegisterView />
       </Tooltip>
     </Popover>
   )

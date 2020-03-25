@@ -8,6 +8,7 @@ import { VStack } from '../shared/Stacks'
 import { HomeStateItemSearch, HomeStateItem } from '../../state/home'
 import { memoizeWeak } from '../../helpers/memoizeWeak'
 import { closeAllPopovers, popoverCloseCbs } from '../shared/Popover'
+import HomeLenseBar from './HomeLenseBar'
 
 // function SearchResults() {
 //   const om = useOvermind()
@@ -117,9 +118,12 @@ export default function HomeSearchResultsView({
   state: HomeStateItemSearch
 }) {
   return (
-    <VStack flex={1} overflow="hidden">
+    <VStack flex={1}>
       <SmallTitle>Top {state.searchQuery} Restaurants</SmallTitle>
-      <HomeSearchResultsViewContent state={state} />
+      <VStack position="relative" flex={1}>
+        <HomeLenseBar />
+        <HomeSearchResultsViewContent state={state} />
+      </VStack>
     </VStack>
   )
 }
@@ -168,7 +172,9 @@ function HomeSearchResultsViewContent({
         }
       }}
     >
-      <VStack paddingVertical={20}>{contents}</VStack>
+      <VStack paddingVertical={20} paddingTop={20 + 40}>
+        {contents}
+      </VStack>
     </ScrollView>
   )
 }

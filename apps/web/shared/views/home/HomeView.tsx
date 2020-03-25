@@ -5,7 +5,7 @@ import { useOvermind } from '../../state/om'
 
 import SideMenu from 'react-native-side-menu'
 import { Route, RouteSwitch } from '../shared/Route'
-import { LabAuth } from '../auth'
+import { AuthLoginRegisterView } from '../auth/AuthLoginRegisterView'
 import HomeMenu from './HomeMenu'
 
 import HomeRestaurantView from './HomeRestaurantView'
@@ -44,10 +44,10 @@ export const HomeView = () => {
         <HomeViewDrawer>
           <RouteSwitch>
             <Route name="login">
-              <LabAuth />
+              <AuthLoginRegisterView />
             </Route>
             <Route name="register">
-              <LabAuth />
+              <AuthLoginRegisterView />
             </Route>
             <Route name="home">
               <HomeViewContent />
@@ -133,13 +133,13 @@ const HomeViewContent = memo(function HomeViewContent() {
             <Spacer flex={1} />
 
             <HStack
-              paddingHorizontal={20}
-              paddingTop={40}
-              paddingBottom={5}
+              marginLeft={20}
+              marginBottom={5}
               borderRadius={drawerBorderRadius}
               overflow="hidden"
+              backgroundColor="#fff"
             >
-              <LinearGradient
+              {/* <LinearGradient
                 colors={['transparent', '#fff']}
                 style={{
                   position: 'absolute',
@@ -149,8 +149,7 @@ const HomeViewContent = memo(function HomeViewContent() {
                   bottom: 0,
                   zIndex: -1,
                 }}
-              />
-
+              /> */}
               <VStack pointerEvents="auto">
                 <HomeBreadcrumbs />
               </VStack>
