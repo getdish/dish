@@ -6,6 +6,7 @@ export type Taxonomy = {
   description?: string
   type: 'lense' | 'filter' | 'dish' | 'country'
   isActive?: boolean
+  isVotable?: boolean
 }
 
 export const taxonomyLenses: Taxonomy[] = [
@@ -32,6 +33,7 @@ export const taxonomyLenses: Taxonomy[] = [
     rgb: [0.6, 0.1, 0.5],
     description: 'Chef choice',
     type: 'lense',
+    isVotable: true,
   },
   {
     id: '4',
@@ -40,6 +42,7 @@ export const taxonomyLenses: Taxonomy[] = [
     rgb: [0.35, 0.2, 0.65],
     description: 'Date night',
     type: 'lense',
+    isVotable: true,
   },
   {
     id: '6',
@@ -48,6 +51,7 @@ export const taxonomyLenses: Taxonomy[] = [
     rgb: [0.2, 0.7, 0.2],
     description: 'Plant based',
     type: 'lense',
+    isVotable: true,
   },
   {
     id: '7',
@@ -56,6 +60,7 @@ export const taxonomyLenses: Taxonomy[] = [
     rgb: [0.65, 0.2, 0.65],
     description: 'Seafood',
     type: 'lense',
+    isVotable: true,
   },
   {
     id: '8',
@@ -64,6 +69,7 @@ export const taxonomyLenses: Taxonomy[] = [
     rgb: [0.65, 0.2, 0.65],
     description: 'Cheap',
     type: 'lense',
+    isVotable: true,
   },
 ]
 

@@ -9,6 +9,9 @@ import { LabDishes } from './shared/views/dishes'
 import { Route, PrivateRoute } from './shared/views/shared/Route'
 import { Splash } from './Splash'
 
+// global styles
+import './App.css'
+
 export default function App() {
   return (
     <Provider value={om}>

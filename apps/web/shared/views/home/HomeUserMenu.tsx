@@ -1,9 +1,9 @@
-import { SimpleLineIcons } from '@expo/vector-icons'
 import React, { memo, useState } from 'react'
 import { LinkButton } from '../shared/Link'
 import { Popover } from '../shared/Popover'
 import { Tooltip } from './Tooltip'
 import { LabAuth } from '../auth'
+import { Icon } from '../shared/Icon'
 
 export const HomeUserMenu = memo(() => {
   const [isOpen, setIsOpen] = useState(true)
@@ -23,7 +23,7 @@ export const HomeUserMenu = memo(() => {
           shadowOffset={{ width: 0, height: 5 }}
           onPress={() => setIsOpen(!isOpen)}
         >
-          <SimpleLineIcons name="user" size={16} style={{ opacity: 0.5 }} />
+          <Icon name="user" size={16} style={{ opacity: 0.5 }} />
         </LinkButton>
       }
     >
