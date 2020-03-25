@@ -38,8 +38,6 @@ export const RestaurantListItem = ({
   const om = useOvermind()
   const [isHovered, setIsHovered] = useState(false)
 
-  const [open_text, open_color, next_time] = openingHours(restaurant)
-  const [price_label, price_color, price_range] = priceRange(restaurant)
   const [isMounted, setIsMounted] = useState(false)
   const photos = Restaurant.allPhotos(restaurant).slice(0, isMounted ? 10 : 1)
   const [disablePress, setDisablePress] = useState(false)
@@ -98,20 +96,13 @@ export const RestaurantListItem = ({
             <Spacer />
 
             <HStack>
-              <HStack alignItems="center">
-                <RestaurantRatingPopover
-                  restaurant={restaurant}
-                  onChangeOpen={(isOpen) => {
-                    setDisablePress(isOpen)
-                  }}
-                />
-                <Spacer />
-                <TagButton rank={1} name="🍜 Pho" />
-                <Spacer />
-                <TagButton rank={22} name="🌃 Date Spot" />
-                <Spacer />
-                <Text style={{ opacity: 0.5 }}>+ 5 more</Text>
-              </HStack>
+              <Spacer size={20} />
+              <RestaurantRateRow
+                restaurant={restaurant}
+                onChangeOpen={(isOpen) => {
+                  setDisablePress(isOpen)
+                }}
+              />
 
               {/* <ZStack fullscreen>
                 <LinearGradient
@@ -131,62 +122,18 @@ export const RestaurantListItem = ({
 
             <Spacer />
 
-            <Text style={{ opacity: 0.6, fontWeight: '500' }}>
-              📍 3017 16th St. &nbsp;&nbsp; · &nbsp;&nbsp;{' '}
-              <Link inline name="restaurant" params={{ slug: '' }}>
-                Menu
-              </Link>{' '}
-              &nbsp;&nbsp; · &nbsp;&nbsp; 📞 &nbsp;&nbsp;
-            </Text>
+            <RestaurantMetaRow restaurant={restaurant} />
 
             <Spacer />
 
-            <HStack paddingLeft={22} paddingRight={20}>
-              <VStack width="30%" paddingRight="5%">
-                <Text
-                  numberOfLines={1}
-                  style={{
-                    fontWeight: 'bold',
-                    color: open_color,
-                    marginBottom: 3,
-                  }}
-                >
-                  {open_text}
-                </Text>
-                <Text numberOfLines={1}>{next_time}</Text>
-              </VStack>
-
-              <VStack width="33%" paddingHorizontal="5%">
-                <Text
-                  numberOfLines={1}
-                  style={{
-                    fontWeight: 'bold',
-                    color: price_color,
-                    marginBottom: 3,
-                  }}
-                >
-                  {price_label}
-                </Text>
-                <Text numberOfLines={1}>{price_range}</Text>
-              </VStack>
-
-              <VStack width="33%" paddingHorizontal="5%">
-                <Text
-                  numberOfLines={1}
-                  style={{ fontWeight: 'bold', color: 'gray', marginBottom: 3 }}
-                >
-                  Delivers
-                </Text>
-                <Text numberOfLines={1}>Uber, PM, DD</Text>
-              </VStack>
-            </HStack>
+            <RestaurantDetailRow restaurant={restaurant} />
           </VStack>
 
           <Spacer />
 
           <HStack>
             <VStack position="absolute" top={-20} left={-30} zIndex={100}>
-              <RestaurantListItemRating restaurant={restaurant} />
+              <RestaurantRatingDetail restaurant={restaurant} />
             </VStack>
 
             {photos.slice(0, 3).map((photo, i) => {
@@ -208,6 +155,73 @@ export const RestaurantListItem = ({
   )
 }
 
+export const RestaurantDetailRow = ({
+  restaurant,
+}: {
+  restaurant: Restaurant
+}) => {
+  const [open_text, open_color, next_time] = openingHours(restaurant)
+  const [price_label, price_color, price_range] = priceRange(restaurant)
+
+  return (
+    <HStack paddingLeft={22} paddingRight={20}>
+      <VStack width="30%" paddingRight="5%">
+        <Text
+          numberOfLines={1}
+          style={{
+            fontWeight: 'bold',
+            color: open_color,
+            marginBottom: 3,
+          }}
+        >
+          {open_text}
+        </Text>
+        <Text numberOfLines={1}>{next_time}</Text>
+      </VStack>
+
+      <VStack width="33%" paddingHorizontal="5%">
+        <Text
+          numberOfLines={1}
+          style={{
+            fontWeight: 'bold',
+            color: price_color,
+            marginBottom: 3,
+          }}
+        >
+          {price_label}
+        </Text>
+        <Text numberOfLines={1}>{price_range}</Text>
+      </VStack>
+
+      <VStack width="33%" paddingHorizontal="5%">
+        <Text
+          numberOfLines={1}
+          style={{ fontWeight: 'bold', color: 'gray', marginBottom: 3 }}
+        >
+          Delivers
+        </Text>
+        <Text numberOfLines={1}>Uber, PM, DD</Text>
+      </VStack>
+    </HStack>
+  )
+}
+
+export const RestaurantMetaRow = ({
+  restaurant,
+}: {
+  restaurant: Restaurant
+}) => {
+  return (
+    <Text style={{ opacity: 0.6, fontWeight: '500' }}>
+      📍 3017 16th St. &nbsp;&nbsp; · &nbsp;&nbsp;{' '}
+      <Link inline name="restaurant" params={{ slug: '' }}>
+        Menu
+      </Link>{' '}
+      &nbsp;&nbsp; · &nbsp;&nbsp; 📞 &nbsp;&nbsp;
+    </Text>
+  )
+}
+
 export const EmojiButton = ({ active, children, onPress, ...rest }: any) => {
   return (
     <TouchableOpacity style={{ flex: 1 }} onPress={onPress}>
@@ -226,7 +240,29 @@ export const EmojiButton = ({ active, children, onPress, ...rest }: any) => {
   )
 }
 
-const RestaurantListItemRating = memo(
+const idFn = (_) => _
+
+export const RestaurantRateRow = (props: {
+  restaurant: Restaurant
+  onChangeOpen?: Function
+}) => {
+  return (
+    <HStack alignItems="center">
+      <RestaurantRatingPopover
+        restaurant={props.restaurant}
+        onChangeOpen={props.onChangeOpen ?? idFn}
+      />
+      <Spacer />
+      <TagButton rank={1} name="🍜 Pho" />
+      <Spacer />
+      <TagButton rank={22} name="🌃 Date Spot" />
+      <Spacer />
+      <Text style={{ opacity: 0.5 }}>+ 5 more</Text>
+    </HStack>
+  )
+}
+
+export const RestaurantRatingDetail = memo(
   ({ restaurant }: { restaurant: Restaurant }) => {
     const [isHoveringRating, setIsHoveringRating] = useState(false)
     return (
@@ -313,15 +349,6 @@ function TableCell({
     </VStack>
   )
 }
-
-const styles = StyleSheet.create({
-  tableCell: {
-    paddingVertical: 10,
-  },
-  tableCellText: {
-    fontSize: 16,
-  },
-})
 
 function openingHours(restaurant: Restaurant) {
   let text = 'Opens at'

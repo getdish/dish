@@ -12,9 +12,7 @@ import HomeRestaurantView from './HomeRestaurantView'
 import HomeViewTopDishes from './HomeViewTopDishes'
 import HomeSearchResultsView from './HomeSearchResultsView'
 import HomeSearchBar from './HomeSearchBar'
-import { Spacer } from '../shared/Spacer'
-import { VStack, ZStack, StackBaseProps, HStack } from '../shared/Stacks'
-import { HomeBreadcrumbs } from './HomeBreadcrumbs'
+import { VStack, ZStack } from '../shared/Stacks'
 import { HomeStateItem } from '../../state/home'
 import _ from 'lodash'
 import HomeFilterBar from './HomeFilterBar'
@@ -23,10 +21,8 @@ import { TouchableOpacity, Animated, Text } from 'react-native'
 
 import { StyleSheet, View } from 'react-native'
 import { useWindowSize } from '../../hooks/useWindowSize'
-import { HomeDrawerHeader } from './HomeDrawerHeader'
 import { useDebounceValue } from '../../hooks/useDebounce'
 import { ForceShowPopover } from '../shared/Popover'
-import { LinkButton, Link } from '../shared/Link'
 import { HomeControlsOverlay } from './HomeControlsOverlay'
 import { BlurView } from '../shared/BlurView'
 
@@ -72,7 +68,7 @@ export function HomeViewDrawer(props: { children: any }) {
         {
           position: 'absolute',
           top: 20,
-          left: 20,
+          left: 23,
           bottom: 15,
           zIndex: 10,
           width: drawerWidth,
