@@ -31,7 +31,7 @@ import { HomeControlsOverlay } from './HomeControlsOverlay'
 
 export function useHomeDrawerWidth(): number {
   const [width] = useWindowSize({ throttle: 100 })
-  return Math.min(Math.max(480, width * 0.5), 600)
+  return Math.min(Math.max(500, width * 0.5), 600)
 }
 
 export const HomeView = () => {
@@ -154,7 +154,7 @@ const HomeViewContent = memo(function HomeViewContent() {
           </HomeStackView>
         </VStack>
 
-        <ZStack fullscreen pointerEvents="none">
+        {/* <ZStack fullscreen pointerEvents="none">
           <VStack flex={1}>
             <Spacer flex={1} />
 
@@ -165,7 +165,7 @@ const HomeViewContent = memo(function HomeViewContent() {
               overflow="hidden"
               backgroundColor="#fff"
             >
-              {/* <LinearGradient
+              <LinearGradient
                 colors={['transparent', '#fff']}
                 style={{
                   position: 'absolute',
@@ -175,13 +175,13 @@ const HomeViewContent = memo(function HomeViewContent() {
                   bottom: 0,
                   zIndex: -1,
                 }}
-              /> */}
+              />
               <VStack pointerEvents="auto">
                 <HomeBreadcrumbs />
               </VStack>
             </HStack>
           </VStack>
-        </ZStack>
+        </ZStack> */}
       </ZStack>
     </>
   )

@@ -47,7 +47,7 @@ export default memo(function HomeSearchBar() {
           <TextInput
             value={om.state.home.currentState.searchQuery}
             onChangeText={(text) => om.actions.home.setSearchQuery(text)}
-            placeholder="Search dish, cuisine, craving"
+            placeholder="Search dish, cuisine"
             style={[styles.textInput, { fontSize: 20, paddingRight: 42 }]}
             onFocus={() => {
               // om.actions.home.clearSearch()
@@ -66,7 +66,7 @@ export default memo(function HomeSearchBar() {
           <TextInput
             // value=""
             onChangeText={() => {}}
-            placeholder="San Francisco"
+            placeholder="in San Francisco"
             style={[styles.textInput, { paddingRight: 32 }]}
           />
           <SearchLocationButton />

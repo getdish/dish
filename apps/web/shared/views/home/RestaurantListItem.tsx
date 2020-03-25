@@ -235,7 +235,7 @@ const RestaurantListItemRating = memo(
           </div>
         }
       >
-        <Tooltip height={200}>
+        <Tooltip height={300}>
           <Text>Test me out</Text>
         </Tooltip>
       </Popover>
