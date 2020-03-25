@@ -42,7 +42,13 @@ export default memo(function HomeLenseBar() {
   )
 })
 
-function LenseButton({ lense, active }: { lense: Taxonomy; active: boolean }) {
+export function LenseButton({
+  lense,
+  active,
+}: {
+  lense: Taxonomy
+  active: boolean
+}) {
   const om = useOvermind()
   return (
     <LinkButton
