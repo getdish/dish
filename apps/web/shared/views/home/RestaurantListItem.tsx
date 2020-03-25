@@ -78,12 +78,11 @@ export const RestaurantListItem = ({
         >
           <VStack padding={18} width="76%" maxWidth={525}>
             <Link name="restaurant" params={{ slug: restaurant.slug }}>
-              <HStack alignItems="center">
+              <HStack alignItems="center" marginVertical={-2}>
                 <RankingView rank={rank} />
-
                 <Text
                   style={{
-                    fontSize: 24,
+                    fontSize: 22,
                     fontWeight: 'bold',
                     textDecorationColor: 'transparent',
                   }}
@@ -92,9 +91,7 @@ export const RestaurantListItem = ({
                 </Text>
               </HStack>
             </Link>
-
             <Spacer />
-
             <HStack>
               <Spacer size={20} />
               <RestaurantRateRow
@@ -103,29 +100,10 @@ export const RestaurantListItem = ({
                   setDisablePress(isOpen)
                 }}
               />
-
-              {/* <ZStack fullscreen>
-                <LinearGradient
-                  colors={['transparent', 'white']}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: '70%',
-                    right: 0,
-                    bottom: 0,
-                  }}
-                  start={{ x: 0, y: 0.5 }}
-                  end={{ x: 1, y: 0.5 }}
-                />
-              </ZStack> */}
             </HStack>
-
             <Spacer />
-
             <RestaurantMetaRow restaurant={restaurant} />
-
             <Spacer />
-
             <RestaurantDetailRow restaurant={restaurant} />
           </VStack>
 
@@ -171,7 +149,7 @@ export const RestaurantDetailRow = ({
           style={{
             fontWeight: 'bold',
             color: open_color,
-            marginBottom: 3,
+            marginBottom: 2,
           }}
         >
           {open_text}
@@ -185,7 +163,7 @@ export const RestaurantDetailRow = ({
           style={{
             fontWeight: 'bold',
             color: price_color,
-            marginBottom: 3,
+            marginBottom: 2,
           }}
         >
           {price_label}
@@ -196,7 +174,7 @@ export const RestaurantDetailRow = ({
       <VStack width="33%" paddingHorizontal="5%">
         <Text
           numberOfLines={1}
-          style={{ fontWeight: 'bold', color: 'gray', marginBottom: 3 }}
+          style={{ fontWeight: 'bold', color: 'gray', marginBottom: 2 }}
         >
           Delivers
         </Text>
@@ -212,13 +190,16 @@ export const RestaurantMetaRow = ({
   restaurant: Restaurant
 }) => {
   return (
-    <Text style={{ opacity: 0.6, fontWeight: '500' }}>
-      📍 3017 16th St. &nbsp;&nbsp; · &nbsp;&nbsp;{' '}
-      <Link inline name="restaurant" params={{ slug: '' }}>
-        Menu
-      </Link>{' '}
-      &nbsp;&nbsp; · &nbsp;&nbsp; 📞 &nbsp;&nbsp;
-    </Text>
+    <HStack alignItems="center">
+      <Text style={{ opacity: 0.6, fontWeight: '500' }}>
+        📍 3017 16th St. &nbsp; · &nbsp;{' '}
+        <Link inline name="restaurant" params={{ slug: '' }}>
+          Menu
+        </Link>{' '}
+        &nbsp; · &nbsp; 📞 &nbsp;
+      </Text>
+      <Divider flex />
+    </HStack>
   )
 }
 
@@ -244,6 +225,7 @@ const idFn = (_) => _
 
 export const RestaurantRateRow = (props: {
   restaurant: Restaurant
+  showMore?: boolean
   onChangeOpen?: Function
 }) => {
   return (
@@ -256,6 +238,12 @@ export const RestaurantRateRow = (props: {
       <TagButton rank={1} name="🍜 Pho" />
       <Spacer />
       <TagButton rank={22} name="🌃 Date Spot" />
+      {props.showMore && (
+        <>
+          <Spacer />
+          <TagButton rank={22} name="🥬 Planty" />
+        </>
+      )}
       <Spacer />
       <Text style={{ opacity: 0.5 }}>+ 5 more</Text>
     </HStack>

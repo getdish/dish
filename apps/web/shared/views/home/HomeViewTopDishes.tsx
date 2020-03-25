@@ -47,7 +47,7 @@ const getImageForDish = (dish: string) => {
   return (
     <VStack
       shadowColor="rgba(0,0,0,0.2)"
-      shadowRadius={10}
+      shadowRadius={6}
       shadowOffset={{ width: 0, height: 2 }}
       width="100%"
       height="100%"

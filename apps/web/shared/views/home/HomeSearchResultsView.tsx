@@ -121,7 +121,7 @@ export default function HomeSearchResultsView({
     <VStack flex={1}>
       <SmallTitle>Top {state.searchQuery} Restaurants</SmallTitle>
       <VStack position="relative" flex={1}>
-        <HomeLenseBar />
+        <HomeLenseBar backgroundGradient />
         <HomeSearchResultsViewContent state={state} />
       </VStack>
     </VStack>

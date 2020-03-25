@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react'
-import { Text, ScrollView } from 'react-native'
+import { Text, ScrollView, StyleSheet } from 'react-native'
 import { useOvermind } from '../../state/om'
 import { Spacer } from '../shared/Spacer'
 import { VStack, HStack, ZStack } from '../shared/Stacks'
@@ -7,7 +7,9 @@ import { Taxonomy } from '../../state/Taxonomy'
 import { LinkButton } from '../shared/Link'
 import { LinearGradient } from 'expo-linear-gradient'
 
-export default memo(function HomeLenseBar() {
+export default memo(function HomeLenseBar(props: {
+  backgroundGradient?: boolean
+}) {
   const om = useOvermind()
   const { lastHomeState } = om.state.home
 
@@ -34,10 +36,12 @@ export default memo(function HomeLenseBar() {
           </HStack>
         </ScrollView>
       </VStack>
-      <LinearGradient
-        colors={['#fff', '#fff', 'transparent']}
-        style={[StyleSheet.absoluteFill, { zIndex: -1, marginBottom: -50 }]}
-      />
+      {props.backgroundGradient && (
+        <LinearGradient
+          colors={['#fff', '#fff', 'transparent']}
+          style={[StyleSheet.absoluteFill, { zIndex: -1, marginBottom: -50 }]}
+        />
+      )}
     </ZStack>
   )
 })
@@ -59,7 +63,7 @@ export function LenseButton({
       <HStack
         alignItems="center"
         justifyContent="center"
-        paddingHorizontal={8}
+        paddingHorizontal={10}
         paddingVertical={5}
         backgroundColor={active ? '#fff' : 'rgba(255,255,255,0.5)'}
         borderRadius={8}
@@ -72,7 +76,7 @@ export function LenseButton({
         <Text
           style={{
             color: active ? '#000' : '#777',
-            fontSize: 18,
+            fontSize: 16,
             fontWeight: active ? '700' : '500',
           }}
         >

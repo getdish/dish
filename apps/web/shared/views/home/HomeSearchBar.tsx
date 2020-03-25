@@ -16,19 +16,19 @@ import { CloseButton } from './CloseButton'
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 10,
+    borderRadius: 14,
     shadowColor: 'rgba(0,0,0,0.125)',
     shadowRadius: 10,
     shadowOffset: { height: 2, width: 0 },
     marginHorizontal: -15,
-    // marginTop: -10,
+    marginTop: 15,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#ccc',
   },
   searchArea: {
     borderLeftWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#eee',
     backgroundColor: '#fff',
   },
   textInput: {

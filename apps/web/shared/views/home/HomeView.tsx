@@ -60,30 +60,25 @@ export const HomeView = () => {
   )
 }
 
-export function HomeViewDrawer(props: { children: any }) {
+function HomeViewDrawer(props: { children: any }) {
   const drawerWidth = useHomeDrawerWidth()
   return (
-    <View
-      style={[
-        {
-          position: 'absolute',
-          top: 20,
-          left: 23,
-          bottom: 15,
-          zIndex: 10,
-          width: drawerWidth,
-          borderRadius: drawerBorderRadius,
-          shadowColor: 'rgba(0,0,0,0.25)',
-          shadowRadius: 24,
-          borderWidth: 1,
-          borderColor: '#fff',
-          flex: 1,
-        },
-      ]}
+    <VStack
+      position={'absolute'}
+      top={20}
+      left={23}
+      bottom={15}
+      zIndex={10}
+      width={drawerWidth}
+      borderRadius={drawerBorderRadius}
+      shadowColor="rgba(0,0,0,0.25)"
+      shadowRadius={24}
+      borderWidth={1}
+      borderColor="#fff"
+      flex={1}
     >
       <ZStack fullscreen borderRadius={drawerBorderRadius} overflow="hidden">
         <BlurView />
-
         <LinearGradient
           colors={[
             'rgba(255,255,255,0.5)',
@@ -94,7 +89,7 @@ export function HomeViewDrawer(props: { children: any }) {
         />
       </ZStack>
       {props.children}
-    </View>
+    </VStack>
   )
 }
 
@@ -128,8 +123,8 @@ const HomeViewContent = memo(function HomeViewContent() {
         )}
       </HStack>
       <Spacer /> */}
-      <HomeFilterBar />
       <HomeSearchBar />
+      <HomeFilterBar />
       <ZStack position="relative" flex={1}>
         <VStack
           position="absolute"
@@ -291,7 +286,7 @@ function HomeStackViewItem({
             fullscreen
             flex={1}
             zIndex={index}
-            top={index * 20}
+            top={index * 25}
             {...(index !== 0 && {
               shadowColor: 'rgba(0,0,0,0.2)',
               shadowRadius: 4,

@@ -11,24 +11,29 @@ export default memo(function HomeFilterBar() {
   const { lastHomeState } = om.state.home
 
   return (
-    <VStack paddingVertical={12} paddingBottom={10}>
-      <ScrollView
+    <VStack paddingVertical={12} paddingBottom={6}>
+      {/* <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{
           justifyContent: 'center',
           alignItems: 'center',
         }}
+      > */}
+      <HStack
+        paddingHorizontal={30}
+        paddingVertical={2}
+        alignItems="center"
+        justifyContent="center"
       >
-        <HStack paddingHorizontal={30} paddingVertical={2}>
-          {lastHomeState.filters.map((filter, index) => (
-            <React.Fragment key={filter.id}>
-              <FilterButton filter={filter} />
-              <Spacer size={7} />
-            </React.Fragment>
-          ))}
-        </HStack>
-      </ScrollView>
+        {lastHomeState.filters.map((filter, index) => (
+          <React.Fragment key={filter.id}>
+            <FilterButton filter={filter} />
+            <Spacer size={7} />
+          </React.Fragment>
+        ))}
+      </HStack>
+      {/* </ScrollView> */}
     </VStack>
   )
 })
@@ -45,6 +50,9 @@ function FilterButton({ filter }: { filter: Taxonomy }) {
         borderRadius={20}
         // borderWidth={1}
         // borderColor={`rgba(0,0,0,0.15)`}
+        hoverStyle={{
+          backgroundColor: 'rgba(80, 80, 80, 0.9)',
+        }}
       >
         <Text
           style={{
