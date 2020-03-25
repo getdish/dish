@@ -6,10 +6,18 @@ import { useOvermind } from '../../state/om'
 import ReviewForm from './ReviewForm'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
-import { Link } from '../shared/Link'
+import { Link, LinkButton } from '../shared/Link'
 import { SmallTitle } from '../shared/SmallTitle'
 import { HomeStateItem } from '../../state/home'
 import { CloseButton } from './CloseButton'
+import { RatingView } from './RatingView'
+import {
+  RestaurantRatingDetail,
+  RestaurantRateRow,
+  RestaurantMetaRow,
+  RestaurantDetailRow,
+} from './RestaurantListItem'
+import { Divider } from '../shared/Divider'
 
 export default function HomeRestaurantView({
   state,
@@ -33,16 +41,84 @@ export default function HomeRestaurantView({
 
   return (
     <VStack>
-      <ZStack right={20} top={20} pointerEvents="auto" zIndex={100}>
+      <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
         <CloseButton onPress={() => om.actions.home.popTo(-1)} />
       </ZStack>
       <ScrollView style={{ padding: 18 }}>
         <VStack>
-          <Text style={{ fontSize: 30 }}>{restaurant.name}</Text>
+          <HStack marginBottom={-10}>
+            <Text style={{ fontSize: 30 }}>{restaurant.name}</Text>
 
-          <Text>{restaurant.rating}⭐</Text>
+            <Spacer flex />
 
+            <RestaurantRatingDetail restaurant={restaurant} />
+
+            <Spacer size={30} />
+          </HStack>
+
+          <RestaurantRateRow restaurant={restaurant} />
           <Spacer />
+          <RestaurantMetaRow restaurant={restaurant} />
+          <Spacer />
+          <Divider />
+          <Spacer />
+          <RestaurantDetailRow restaurant={restaurant} />
+          <Spacer />
+
+          {!!restaurant.image && (
+            <VStack>
+              <SmallTitle>Best Dishes</SmallTitle>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={{ marginHorizontal: -18 }}
+              >
+                <HStack paddingHorizontal={20} paddingVertical={26}>
+                  {['Pho', 'Banh Mi', 'Banh Xeo', 'Bho Kho', 'Thit Kho'].map(
+                    (dish) => (
+                      <React.Fragment key={dish}>
+                        <VStack alignItems="center">
+                          <VStack
+                            marginVertical={-15}
+                            zIndex={100}
+                            backgroundColor="#eee"
+                            paddingVertical={8}
+                            paddingHorizontal={10}
+                            borderRadius={10}
+                            shadowColor="rgba(0,0,0,0.2)"
+                            shadowRadius={6}
+                          >
+                            <Text>{dish}</Text>
+                          </VStack>
+                          <Image
+                            source={{
+                              uri: restaurant.image,
+                              width: 200,
+                              height: 200,
+                            }}
+                            style={{
+                              borderRadius: 20,
+                              shadowColor: 'rgba(0,0,0,0.2)',
+                              shadowRadius: 6,
+                            }}
+                          />
+                        </VStack>
+                        <Spacer />
+                      </React.Fragment>
+                    )
+                  )}
+                </HStack>
+              </ScrollView>
+
+              <HStack justifyContent="center">
+                <LinkButton name="restaurant">🖼 Inside</LinkButton>
+                <Spacer />
+                <LinkButton name="restaurant">🖼 Outside</LinkButton>
+                <Spacer />
+                <LinkButton name="restaurant">🖼 Menu</LinkButton>
+              </HStack>
+            </VStack>
+          )}
 
           <Text style={{ fontSize: 15 }}>
             {tags.map((tag, index) => (

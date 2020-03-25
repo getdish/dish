@@ -102,7 +102,6 @@ export const RestaurantRatingPopover = memo(
           <div
             style={{
               filter: rating !== 0 ? '' : 'grayscale(100%)',
-              marginLeft: 20,
             }}
           >
             <VStack>
