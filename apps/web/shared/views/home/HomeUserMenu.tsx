@@ -23,7 +23,7 @@ export const HomeUserMenu = memo(() => {
           shadowOffset={{ width: 0, height: 5 }}
           onPress={() => setIsOpen(!isOpen)}
         >
-          <Icon name="user" size={16} style={{ opacity: 0.5 }} />
+          <Icon name="user" size={16} opacity={0.5} />
         </LinkButton>
       }
     >

@@ -11,7 +11,7 @@ export default memo(function HomeFilterBar() {
   const { lastHomeState } = om.state.home
 
   return (
-    <VStack paddingVertical={12}>
+    <VStack paddingVertical={12} paddingBottom={10}>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -24,7 +24,7 @@ export default memo(function HomeFilterBar() {
           {lastHomeState.filters.map((filter, index) => (
             <React.Fragment key={filter.id}>
               <FilterButton filter={filter} />
-              <Spacer />
+              <Spacer size={7} />
             </React.Fragment>
           ))}
         </HStack>

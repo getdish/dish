@@ -115,10 +115,8 @@ export const RestaurantRatingPopover = memo(
                 <Icon
                   name="chevron-up"
                   size={22}
-                  style={{
-                    color: rating === 1 ? 'green' : 'black',
-                    marginBottom: -5,
-                  }}
+                  color={rating === 1 ? 'green' : 'black'}
+                  marginBottom={-5}
                 />
               </TouchableOpacity>
               <TouchableOpacity
@@ -130,7 +128,7 @@ export const RestaurantRatingPopover = memo(
                 <Icon
                   name="chevron-down"
                   size={22}
-                  style={{ color: rating === -1 ? 'red' : 'black' }}
+                  color={rating === -1 ? 'red' : 'black'}
                 />
               </TouchableOpacity>
             </VStack>

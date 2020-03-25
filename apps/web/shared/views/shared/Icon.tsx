@@ -5,13 +5,15 @@ import { ViewStyle, TextStyle } from 'react-native'
 
 export const Icon = ({
   type = 'feather',
-  ...props
+  name,
+  size,
+  ...style
 }: {
   type?: 'feather' | 'simple'
   name: string
   size: number
-  style?: ViewStyle & TextStyle
-}) => {
+} & ViewStyle &
+  TextStyle) => {
   const Element = type == 'feather' ? Feather : SimpleLineIcons
-  return <Element {...props} />
+  return <Element name={name} size={size} style={style} />
 }

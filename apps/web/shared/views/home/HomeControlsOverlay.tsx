@@ -18,9 +18,7 @@ export const HomeControlsOverlay = memo(() => {
     >
       <VStack flex={1}>
         <HStack>
-          <VStack>
-            <DishLogoButton />
-          </VStack>
+          <VStack>{/* <DishLogoButton /> */}</VStack>
 
           <Spacer flex />
 
@@ -39,19 +37,22 @@ export const DishLogoButton = () => {
     <LinkButton
       name="home"
       paddingVertical={10}
-      paddingHorizontal={11}
+      paddingHorizontal={12}
       backgroundColor="#fff"
-      borderRadius={14}
-      borderColor="#ccc"
-      borderWidth={1}
-      shadowColor="rgba(0,0,0,0.1)"
-      shadowRadius={8}
-      shadowOffset={{ width: 0, height: 2 }}
+      // borderRadius={14}
+      // borderTopRightRadius={0}
+      // borderBottomRightRadius={0}
+      // borderColor="#ccc"
+      // borderWidth={1}
+      // borderRightWidth={0}
+      // shadowColor="rgba(0,0,0,0.1)"
+      // shadowRadius={8}
+      // shadowOffset={{ width: 0, height: 2 }}
       // marginLeft={-50}
     >
       <Image
         source={require('../../assets/logo.png')}
-        style={{ width: 1211 * 0.062, height: 605 * 0.062 }}
+        style={{ width: 1211 * 0.055, height: 605 * 0.055 }}
       />
     </LinkButton>
   )

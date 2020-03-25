@@ -15,7 +15,7 @@ export const taxonomyLenses: Taxonomy[] = [
     name: 'Overall',
     icon: '⭐️',
     rgb: [0.8, 0.1, 0.1],
-    description: 'Most popular',
+    description: 'Uniquely good here',
     type: 'lense',
   },
   {
