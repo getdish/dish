@@ -1,7 +1,16 @@
 import React, { useState, useEffect, useRef, memo } from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import {
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  TextProps,
+  TextProperties,
+  TextStyle,
+} from 'react-native'
 import { Restaurant } from '@dish/models'
-import { HStack, VStack, ZStack } from '../shared/Stacks'
+import { HStack, VStack, ZStack, StackBaseProps } from '../shared/Stacks'
 import { Spacer } from '../shared/Spacer'
 import { TagButton } from './TagButton'
 import { Link } from '../shared/Link'
@@ -14,6 +23,8 @@ import { ArrowContainer } from 'react-tiny-popover'
 import { Tooltip } from '../shared/Stack/Tooltip'
 import { RestaurantRatingPopover } from './RestaurantRatingPopover'
 import { Circle } from '../shared/Circle'
+import { SmallTitle } from '../shared/SmallTitle'
+import { Divider } from '../shared/Divider'
 
 export const RestaurantListItem = ({
   restaurant,
@@ -236,12 +247,81 @@ const RestaurantListItemRating = memo(
         }
       >
         <Tooltip height={300}>
-          <Text>Test me out</Text>
+          <VStack>
+            <SmallTitle>Rating Summary</SmallTitle>
+
+            <TableRow>
+              <TableCell color="#555" fontWeight="600" width="50%">
+                <Text>Source</Text>
+              </TableCell>
+              <TableCell color="#555" fontWeight="600" width="25%">
+                <Text>Rating</Text>
+              </TableCell>
+              <TableCell color="#555" fontWeight="600" flex={1}>
+                <Text>Weight</Text>
+              </TableCell>
+            </TableRow>
+
+            {[
+              { source: 'Yelp', rating: 4.5, weight: 0.5 },
+              { source: 'Infatuated', rating: 4.0, weight: 0.85 },
+              { source: 'TripAdvisor', rating: 4.8, weight: 0.35 },
+            ].map((item) => (
+              <TableRow key={item.source}>
+                <TableCell fontWeight="bold" width="50%">
+                  {item.source}
+                </TableCell>
+                <TableCell width="25%">{item.rating}</TableCell>
+                <TableCell flex={1}>{item.weight}</TableCell>
+              </TableRow>
+            ))}
+          </VStack>
         </Tooltip>
       </Popover>
     )
   }
 )
+
+function TableRow(props: StackBaseProps) {
+  return <HStack {...props} />
+}
+
+function TableCell({
+  color,
+  fontSize,
+  fontWeight,
+  fontStyle,
+  fontFamily,
+  fontVariant,
+  children,
+  ...props
+}: StackBaseProps & TextStyle) {
+  return (
+    <VStack paddingVertical={10} {...props}>
+      <Text
+        style={{
+          color,
+          fontSize,
+          fontWeight,
+          fontStyle,
+          fontFamily,
+          fontVariant,
+        }}
+      >
+        {children}
+      </Text>
+    </VStack>
+  )
+}
+
+const styles = StyleSheet.create({
+  tableCell: {
+    paddingVertical: 10,
+  },
+  tableCellText: {
+    fontSize: 16,
+  },
+})
 
 function openingHours(restaurant: Restaurant) {
   let text = 'Opens at'

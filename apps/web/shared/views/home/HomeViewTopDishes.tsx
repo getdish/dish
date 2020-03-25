@@ -19,6 +19,8 @@ import HomeLenseBar from './HomeLenseBar'
 import { HomeStateItem, HomeStateItemHome } from '../../state/home'
 import { RankingView } from './RankingView'
 import { LinearGradient } from 'expo-linear-gradient'
+import { slugify } from '../../helpers/slugify'
+import { SuperScriptText } from './TagButton'
 
 const styles = StyleSheet.create({
   container: {
@@ -44,15 +46,16 @@ const getImageForDish = (dish: string) => {
   }
   return (
     <VStack
-      shadowColor="rgba(0,0,0,0.25)"
+      shadowColor="rgba(0,0,0,0.2)"
       shadowRadius={10}
+      shadowOffset={{ width: 0, height: 2 }}
       width="100%"
       height="100%"
-      borderRadius={40}
+      borderRadius={35}
       overflow="hidden"
       hoverStyle={{
-        shadowRadius: 16,
-        shadowColor: 'rgba(0,0,0,0.4)',
+        shadowRadius: 14,
+        shadowColor: 'rgba(0,0,0,0.35)',
         zIndex: 10000,
       }}
     >
@@ -126,6 +129,7 @@ const HomeViewTopDishesContent = memo(
                           alignItems: 'center',
                           justifyContent: 'center',
                           padding: 8,
+                          marginRight: 10,
                         }}
                         name="search"
                         params={{
@@ -153,6 +157,36 @@ const HomeViewTopDishesContent = memo(
                       </LinkButton>
                     )
                   })}
+                </HStack>
+              </ScrollView>
+
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <HStack padding={10} paddingHorizontal={30}>
+                  {[
+                    'Pancho Villa Taqueria',
+                    'La Taqueria',
+                    'El Farolito',
+                    'Tacos el Patron',
+                  ].map((name, index) => (
+                    <LinkButton
+                      key={name}
+                      name="restaurant"
+                      params={{ slug: slugify(name) }}
+                      paddingVertical={5}
+                      paddingHorizontal={8}
+                      backgroundColor="rgba(220, 234, 255, 0.5)"
+                      hoverStyle={{
+                        backgroundColor: `rgba(220, 234, 255, 1)`,
+                      }}
+                      borderRadius={5}
+                      marginRight={18}
+                    >
+                      <Text style={{ fontSize: 14 }}>
+                        <SuperScriptText>#</SuperScriptText>
+                        {index + 1}. {name}
+                      </Text>
+                    </LinkButton>
+                  ))}
                 </HStack>
               </ScrollView>
             </VStack>
