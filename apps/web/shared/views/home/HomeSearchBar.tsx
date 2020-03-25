@@ -11,17 +11,23 @@ import { useOvermind } from '../../state/om'
 import { ZStack, HStack, VStack } from '../shared/Stacks'
 import { Spacer } from '../shared/Spacer'
 import { Icon } from '../shared/Icon'
+import { DishLogoButton } from './HomeControlsOverlay'
+import { CloseButton } from './CloseButton'
 
 const styles = StyleSheet.create({
   container: {
     borderRadius: 10,
-    shadowColor: 'rgba(0,0,0,0.1)',
-    shadowRadius: 8,
-    shadowOffset: { height: 1, width: 0 },
-    marginHorizontal: 15,
+    shadowColor: 'rgba(0,0,0,0.125)',
+    shadowRadius: 10,
+    shadowOffset: { height: 2, width: 0 },
+    marginHorizontal: -15,
+    // marginTop: -10,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
   searchArea: {
-    borderWidth: 1,
+    borderLeftWidth: 1,
     borderColor: '#ccc',
     backgroundColor: '#fff',
   },
@@ -38,12 +44,8 @@ export default memo(function HomeSearchBar() {
   return (
     <View style={styles.container}>
       <HStack>
-        <VStack
-          flex={1.7}
-          borderTopLeftRadius={10}
-          borderBottomLeftRadius={10}
-          style={styles.searchArea}
-        >
+        <DishLogoButton />
+        <VStack flex={1.7} style={styles.searchArea}>
           <TextInput
             value={om.state.home.currentState.searchQuery}
             onChangeText={(text) => om.actions.home.setSearchQuery(text)}
@@ -56,18 +58,12 @@ export default memo(function HomeSearchBar() {
           />
           <SearchCancelButton />
         </VStack>
-        <VStack
-          borderTopRightRadius={10}
-          borderBottomRightRadius={10}
-          borderLeftWidth={0}
-          flex={1}
-          style={styles.searchArea}
-        >
+        <VStack flex={1} style={styles.searchArea}>
           <TextInput
             // value=""
             onChangeText={() => {}}
             placeholder="in San Francisco"
-            style={[styles.textInput, { paddingRight: 32 }]}
+            style={[styles.textInput, { paddingRight: 32, fontSize: 16 }]}
           />
           <SearchLocationButton />
         </VStack>
@@ -93,18 +89,14 @@ const SearchCancelButton = memo(() => {
           pointerEvents="auto"
           alignItems="center"
           justifyContent="center"
+          paddingRight={10}
         >
-          <TouchableOpacity
-            style={{
-              padding: 10,
-              opacity: om.state.home.currentState.searchQuery === '' ? 0 : 1,
-            }}
-            onPress={() => {
-              om.actions.home.popTo(om.state.home.lastHomeState)
-            }}
-          >
-            <Text style={{ opacity: 0.5, fontSize: 12 }}>❌</Text>
-          </TouchableOpacity>
+          <CloseButton
+            opacity={om.state.home.currentState.searchQuery === '' ? 0 : 1}
+            disabled={om.state.home.currentState.searchQuery === ''}
+            onPress={() => om.actions.home.popTo(om.state.home.lastHomeState)}
+            size={12}
+          />
         </VStack>
       </HStack>
     </ZStack>
@@ -130,11 +122,7 @@ const SearchLocationButton = memo(() => {
               om.actions.home.popTo(om.state.home.lastHomeState)
             }}
           >
-            <Icon
-              size={18}
-              name="navigation"
-              style={{ color: 'blue', opacity: 0.2 }}
-            />
+            <Icon size={18} name="navigation" color="blue" opacity={0.5} />
           </TouchableOpacity>
         </VStack>
       </HStack>

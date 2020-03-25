@@ -1,13 +1,5 @@
 import React from 'react'
-import {
-  Image,
-  Text,
-  View,
-  ScrollView,
-  Linking,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native'
+import { Image, Text, View, ScrollView, Linking, FlatList } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 
@@ -17,8 +9,7 @@ import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { Link } from '../shared/Link'
 import { SmallTitle } from '../shared/SmallTitle'
 import { HomeStateItem } from '../../state/home'
-import { Icon } from '../shared/Icon'
-import { Circle } from '../shared/Circle'
+import { CloseButton } from './CloseButton'
 
 export default function HomeRestaurantView({
   state,
@@ -33,9 +24,6 @@ export default function HomeRestaurantView({
     return null
   }
   const restaurant = state.restaurant
-
-  console.log('restaurant', restaurant)
-
   if (typeof restaurant.name == 'undefined') {
     return <Text>Loading...</Text>
   }
@@ -46,15 +34,7 @@ export default function HomeRestaurantView({
   return (
     <VStack>
       <ZStack right={20} top={20} pointerEvents="auto" zIndex={100}>
-        <TouchableOpacity onPress={() => om.actions.home.popTo(-1)}>
-          <Circle
-            size={23}
-            backgroundColor="#ccc"
-            hoverStyle={{ backgroundColor: '#999' }}
-          >
-            <Icon name="x" size={16} color="white" />
-          </Circle>
-        </TouchableOpacity>
+        <CloseButton onPress={() => om.actions.home.popTo(-1)} />
       </ZStack>
       <ScrollView style={{ padding: 18 }}>
         <VStack>

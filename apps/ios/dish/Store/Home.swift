@@ -18,33 +18,33 @@ struct HomeStateItem: Identifiable, Equatable {
     case selection(items: [RestaurantItem])
     case restaurantDetail(restaurant: RestaurantItem)
   }
-  
+
   var id = uid()
   var state: State = .home
-  
+
   // computed value helpers
-  
+
   var queryString: String {
     if case .search(let query, _) = state {
       return query
     }
     return ""
   }
-  
+
   var isLoading: Bool {
     if case .search(_, let results) = state {
       return results.status == .fetching
     }
     return false
   }
-  
+
   var restaurant: RestaurantItem? {
     if case .restaurantDetail(let val) = state {
       return val
     }
     return nil
   }
-  
+
   var searchResults: SearchResultRestaurant? {
     if case .search(_, let val) = state {
       return val
@@ -59,11 +59,11 @@ struct LenseItem: Equatable, Identifiable {
   var icon: String = ""
   var rgb: [Double] = [0.65, 0.2, 0.65]
   var description: String? = nil
-  
+
   var color: Color {
     Color(red: self.rgb[0], green: self.rgb[1], blue: self.rgb[2])
   }
-  
+
   var colorBright: Color {
     let (r, g, b) = (rgb[0], rgb[1], rgb[2])
     var c0 = RGB(r: r, g: g, b: b).hsv
@@ -136,7 +136,7 @@ enum HomeTopLevelFilter {
 
 extension AppState {
   typealias SearchFocus = SearchFocusState
-  
+
   struct HomeState: Equatable {
     var viewStates: [HomeStateItem] = [HomeStateItem()]
     var focusedItem: HomeFocusedItem? = nil
@@ -178,9 +178,9 @@ enum HomeAction {
 }
 
 func homeReducer(_ state: inout AppState, action: HomeAction) {
-  
+
   // utils
-  
+
   // use this to ensure you update HomeStateItems correctly
   func updateItem(_ next: HomeStateItem) {
     if let index = state.home.viewStates.firstIndex(where: { $0.id == next.id }) {
@@ -189,9 +189,9 @@ func homeReducer(_ state: inout AppState, action: HomeAction) {
       state.home.viewStates[index] = insert
     }
   }
-  
+
   // switch
-  
+
   switch action {
     case .navigateToDishResults(let dish):
       let next = HomeStateItem(
@@ -291,23 +291,23 @@ struct HomeSelectors {
   func isOnHome(_ store: AppStore = App.store) -> Bool {
     store.state.home.viewStates.count == 1
   }
-  
+
   func isOnSearchResults(_ store: AppStore = App.store) -> Bool {
     store.state.home.viewStates.count > 1
   }
-  
+
   func isOnRestaurant(_ store: AppStore = App.store) -> Bool {
     self.restaurant(store) != nil
   }
-  
+
   func restaurant(_ store: AppStore = App.store) -> RestaurantItem? {
     lastState(store).restaurant
   }
-  
+
   func lastState(_ store: AppStore = App.store) -> HomeStateItem {
     store.state.home.viewStates.last!
   }
-  
+
   func latestResults(_ store: AppStore = App.store) -> SearchResultRestaurant? {
     let last = self.lastState(store)
     if case .search(_, results: let results) = last.state {
@@ -315,14 +315,14 @@ struct HomeSelectors {
     }
     return nil
   }
-  
+
   func latestResultsItems(_ store: AppStore = App.store) -> [RestaurantItem] {
     if let searchResults = self.latestResults(store) {
       return searchResults.results
     }
     return []
   }
-  
+
   func latestSearch(_ store: AppStore = App.store) -> String {
     let last = self.lastState(store)
     if case .search(let query, _) = last.state {
@@ -330,23 +330,23 @@ struct HomeSelectors {
     }
     return ""
   }
-  
+
   func activeLense(_ store: AppStore = App.store) -> LenseItem {
     store.state.home.lenses[store.state.home.lenseActive]
   }
-  
+
   func drawerRGB(_ store: AppStore = App.store, colorScheme: ColorScheme) -> [Double] {
     let c = activeLense(store).rgb
     return colorScheme == .dark
       ? [c[0] * 0.5, c[1] * 0.5, c[2] * 0.5]
       : [1, 1, 1]
   }
-  
+
   func drawerColor(_ store: AppStore = App.store, colorScheme: ColorScheme) -> Color {
     let d = drawerRGB(store, colorScheme: colorScheme)
     return Color(red: d[0], green: d[1], blue: d[2])
   }
-  
+
   func showFilterBar(_ store: AppStore = App.store) -> Bool {
     if Selectors.home.isOnSearchResults() {
       return true
@@ -365,9 +365,9 @@ struct FilterItem: Identifiable, Equatable {
   enum FilterType {
     case toggle, select
   }
-  
+
   var id: String { name }
-  
+
   var name: String
   var icon: String? = nil
   var type: FilterType = .toggle

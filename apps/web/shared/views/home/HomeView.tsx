@@ -28,6 +28,7 @@ import { useDebounceValue } from '../../hooks/useDebounce'
 import { ForceShowPopover } from '../shared/Popover'
 import { LinkButton, Link } from '../shared/Link'
 import { HomeControlsOverlay } from './HomeControlsOverlay'
+import { BlurView } from '../shared/BlurView'
 
 export function useHomeDrawerWidth(): number {
   const [width] = useWindowSize({ throttle: 100 })
@@ -70,39 +71,45 @@ export function HomeViewDrawer(props: { children: any }) {
       style={[
         {
           position: 'absolute',
-          top: 15,
-          left: 25,
+          top: 20,
+          left: 20,
           bottom: 15,
           zIndex: 10,
           width: drawerWidth,
           borderRadius: drawerBorderRadius,
           shadowColor: 'rgba(0,0,0,0.25)',
           shadowRadius: 24,
-          backgroundColor: 'rgba(250,250,250,0.8)',
           borderWidth: 1,
-          borderColor: 'rgba(255,255,255,0.5)',
+          borderColor: '#fff',
           flex: 1,
         },
       ]}
     >
-      {/* <ZStack fullscreen borderRadius={drawerBorderRadius} overflow="hidden">
+      <ZStack fullscreen borderRadius={drawerBorderRadius} overflow="hidden">
         <BlurView />
-      </ZStack> */}
+
+        <LinearGradient
+          colors={[
+            'rgba(255,255,255,0.5)',
+            'rgba(255,255,255,0.9)',
+            'rgba(255,255,255,1)',
+          ]}
+          style={[StyleSheet.absoluteFill]}
+        />
+      </ZStack>
       {props.children}
     </View>
   )
 }
 
-export const drawerBorderRadius = 20
+export const drawerBorderRadius = 18
 
 const HomeViewContent = memo(function HomeViewContent() {
   const om = useOvermind()
   const { breadcrumbStates } = om.state.home
   return (
     <>
-      <Spacer />
-      <HomeSearchBar />
-      <HStack
+      {/* <HStack
         paddingTop={10}
         paddingHorizontal={20}
         width="100%"
@@ -124,7 +131,9 @@ const HomeViewContent = memo(function HomeViewContent() {
           )
         )}
       </HStack>
+      <Spacer /> */}
       <HomeFilterBar />
+      <HomeSearchBar />
       <ZStack position="relative" flex={1}>
         <VStack
           position="absolute"
@@ -133,7 +142,6 @@ const HomeViewContent = memo(function HomeViewContent() {
           right={0}
           bottom={0}
           flex={1}
-          paddingVertical={20}
         >
           <HomeStackView items={breadcrumbStates}>
             {(homeState) => {
@@ -283,13 +291,15 @@ function HomeStackViewItem({
           onPress={onPress}
         >
           <ZStack
-            backgroundColor="white"
+            backgroundColor={index === 0 ? 'transparent' : 'white'}
             fullscreen
             flex={1}
             zIndex={index}
             top={index * 20}
-            shadowColor="rgba(0,0,0,0.2)"
-            shadowRadius={4}
+            {...(index !== 0 && {
+              shadowColor: 'rgba(0,0,0,0.2)',
+              shadowRadius: 4,
+            })}
             borderRadius={drawerBorderRadius}
             pointerEvents="auto"
             // overflow="hidden"

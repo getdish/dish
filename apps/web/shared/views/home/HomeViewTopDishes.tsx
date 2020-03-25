@@ -105,20 +105,23 @@ const HomeViewTopDishesContent = memo(
       <ScrollView style={{ flex: 1 }}>
         <VStack paddingVertical={20} paddingTop={20 + 60}>
           {[0, 1, 2, 3, 4, 5, 6, 7].map((x) => (
-            <VStack key={x} paddingBottom={20}>
-              <HStack paddingHorizontal={20}>
+            <VStack key={x} paddingBottom={30}>
+              <HStack paddingHorizontal={20} marginVertical={-6}>
                 <HStack flex={1}>
                   <RankingView rank={x + 1} />
-                  <Text numberOfLines={1} style={{ fontSize: 24 }}>
+                  <Text
+                    numberOfLines={1}
+                    style={{ fontSize: 24, fontWeight: '600' }}
+                  >
                     Korean
                   </Text>
                 </HStack>
                 <Spacer flex />
-                <Text style={{ fontSize: 24 }}>🇰🇷</Text>
+                <Text style={{ fontSize: 36, marginVertical: -10 }}>🇰🇷</Text>
               </HStack>
 
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <HStack height={170} padding={20} paddingHorizontal={10}>
+                <HStack height={170} padding={20} paddingHorizontal={18}>
                   {top_dishes.slice(0, 5).map((top_dish) => {
                     return (
                       <LinkButton
@@ -128,14 +131,14 @@ const HomeViewTopDishesContent = memo(
                           alignItems: 'center',
                           justifyContent: 'center',
                           padding: 8,
-                          marginRight: 10,
+                          marginRight: 6,
                         }}
                         name="search"
                         params={{
                           query: top_dish.dish,
                         }}
                       >
-                        <VStack width={110} height={100} paddingHorizontal={5}>
+                        <VStack width={100} height={100} paddingHorizontal={5}>
                           {getImageForDish(top_dish.dish)}
                         </VStack>
                         <Spacer />
