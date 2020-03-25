@@ -1,7 +1,9 @@
 import React from 'react'
-import { Text, View } from 'react-native'
-import { HStack, VStack } from './Stacks'
+import { Text } from 'react-native'
+import { VStack } from './Stacks'
 import { Spacer } from './Spacer'
+import { Divider } from './Divider'
+
 export function SmallTitle(props: { children: any }) {
   return (
     <VStack width="100%" alignItems="center" paddingTop={14} paddingBottom={6}>
@@ -19,17 +21,5 @@ export function SmallTitle(props: { children: any }) {
       <Spacer />
       <Divider />
     </VStack>
-  )
-}
-
-const Divider = () => {
-  return (
-    <HStack width="100%">
-      <Spacer flex />
-      <View
-        style={{ height: 1, flex: 10, backgroundColor: '#000', opacity: 0.05 }}
-      />
-      <Spacer flex />
-    </HStack>
   )
 }

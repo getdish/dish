@@ -1,4 +1,4 @@
-export function slugify(text, separator) {
+export function slugify(text: string, separator = '-') {
   text = text.toString().toLowerCase().trim()
 
   const sets = [
