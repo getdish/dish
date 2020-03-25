@@ -1,14 +1,20 @@
 next:
 
+web:
+
+- RestaurantDetail
+  - flesh out page with information
+  - top dishes
 - bugs
+  - going back from restaurant to search is re-running search
   - moving between search/results fwd/back slow + bad animation
 - map
   - move map should filter current results down and re-number
   - map click item scroll to item
-- RestaurantDetail
-  - flesh out page with information
-  - top dishes
+  - moving map in general as you go forward/backward isn't smooth/consistent
 - search
+  - current location / permissions access
+  - search locations
   - RestaurantListItem
     - upvote/downvote (improve buttons, hover)
     - ratings window improve (easier to close on click away + x close button + saving spinner)
@@ -17,13 +23,19 @@ next:
     - delivery button/hover to see services/names
     - horizontal scroll (load more on scroll, show one to start)
     - click image to go right into gallery
+    - working tag buttons that link to show that category
 - keyboard navigation for everything
+  - lots of input focus work: after clear search, rating view open, etc
 - 404 better pages (click home carousel "Pancho Villa" it breaks)
+- preloading would help in many interactions
+- a few performance runthroughs
 
 ---
 
-Two things bring us to launch (once any app works):
+Keys to launch:
 
+- Really focus on SHOWING "this is the best in SF" on initial load
+- Bring out dishes in UI and make sure ratings by dish work well
 - Ratings improvements
 - Search across all delivery services
 
