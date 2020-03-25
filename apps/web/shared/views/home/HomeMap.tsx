@@ -48,8 +48,8 @@ function HomeMap() {
     showsCompass: mapkit.FeatureVisibility.Hidden,
     padding: {
       left: drawerWidth + 40,
-      top: 40,
-      bottom: 40,
+      top: 15,
+      bottom: 15,
       right: 20,
     },
   })

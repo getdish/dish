@@ -56,6 +56,8 @@
     "use-expo": "1.0.1"
   },
   "devDependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.2.0",
+    "webpack-hot-middleware": "^2.25.0",
     "@types/page": "1.8.0",
     "@types/react": "~16.9.0",
     "@types/react-native": "~0.60.23",
@@ -68,6 +70,7 @@
     "moment": "^2.24.0",
     "overmind-devtools": "^24.0.1",
     "patch-package": "^6.2.1",
+    "react-refresh": "^0.8.1",
     "react-test-renderer": "~16.9.0",
     "typescript": "^3.8.3"
   },
