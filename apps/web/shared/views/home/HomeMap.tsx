@@ -7,8 +7,6 @@ import _ from 'lodash'
 import { Spacer } from '../shared/Spacer'
 import { useMap, Map } from '../map'
 import { useHomeDrawerWidth } from './HomeView'
-import { HomeUserMenu } from './HomeUserMenu'
-import { LinkButton } from '../shared/Link'
 import { useDebounceValue } from '../../hooks/useDebounce'
 
 function centerMapToRegion({
@@ -61,15 +59,38 @@ function HomeMap() {
     map['_allowWheelToZoom'] = true
   }
 
-  // set initial zoom level
   useEffect(() => {
-    if (map) {
-      centerMapToRegion({
-        map,
-        location: [center.lng, center.lat],
-        span: span,
-      })
-    }
+    if (!map) return
+    // set initial zoom level
+    centerMapToRegion({
+      map,
+      location: [center.lng, center.lat],
+      span: span,
+    })
+
+    map.addEventListener('select', (e) => {
+      console.log('select', e)
+    })
+
+    map.addEventListener('deselect', (e) => {
+      console.log('deselect', e)
+    })
+
+    map.addEventListener('region-change-end', (e) => {
+      console.log('region-change-end', e)
+    })
+
+    map.addEventListener('drag-start', (e) => {
+      console.log('drag-start', e)
+    })
+
+    map.addEventListener('drag-end', (e) => {
+      console.log('drag-end', e)
+    })
+
+    map.addEventListener('user-location-change', (e) => {
+      console.log('user-location-change', e)
+    })
   }, [map])
 
   const [selected, setSelected] = useState('')

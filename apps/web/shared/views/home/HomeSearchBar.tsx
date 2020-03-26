@@ -11,7 +11,7 @@ import { useOvermind } from '../../state/om'
 import { ZStack, HStack, VStack } from '../shared/Stacks'
 import { Spacer } from '../shared/Spacer'
 import { Icon } from '../shared/Icon'
-import { DishLogoButton } from './HomeControlsOverlay'
+import { DishLogoButton } from './DishLogoButton'
 import { CloseButton } from './CloseButton'
 
 const styles = StyleSheet.create({

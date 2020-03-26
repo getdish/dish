@@ -1,10 +1,15 @@
+import { useState } from 'react'
+import { LinkButton } from '../shared/Link'
+import { Popover } from '../shared/Popover'
+import { Tooltip } from '../shared/Stack/Tooltip'
+import { AuthLoginRegisterView } from '../auth/AuthLoginRegisterView'
+import { Icon } from '../shared/Icon'
 import React, { memo } from 'react'
 import { Spacer } from '../shared/Spacer'
 import { VStack, ZStack, HStack } from '../shared/Stacks'
-import { Image } from 'react-native'
-import { LinkButton } from '../shared/Link'
-import { HomeUserMenu } from './HomeUserMenu'
 import { useHomeDrawerWidth } from './HomeView'
+import { Text } from 'react-native'
+import { flatButtonStyle } from './HomeViewTopDishes'
 
 export const HomeControlsOverlay = memo(() => {
   const drawerWidth = useHomeDrawerWidth()
@@ -16,44 +21,95 @@ export const HomeControlsOverlay = memo(() => {
       left={drawerWidth + 20}
       zIndex={10000000}
     >
-      <VStack flex={1}>
-        <HStack>
-          <VStack>{/* <DishLogoButton /> */}</VStack>
-
-          <Spacer flex />
-
-          <HStack pointerEvents="auto">
-            <HomeUserMenu />
-          </HStack>
+      <VStack position="relative" flex={1}>
+        <HStack position="absolute" top={0} right={0} left={0}>
+          <VStack flex={1} />
+          <HomeUserMenu />
         </HStack>
-        <Spacer flex />
+
+        <HStack position="absolute" bottom={0} right={0} left={0}>
+          <Tooltip width="auto" alignItems="center" justifyContent="center">
+            <HStack spacing>
+              {[
+                'Los Angeles',
+                'Portland',
+                'Seattle',
+                'Las Vegas',
+                'New York',
+              ].map((city) => (
+                <LinkButton
+                  key={city}
+                  {...flatButtonStyle}
+                  name="search"
+                  params={{ query: city }}
+                >
+                  <Text style={{ fontSize: 12 }}>{city}</Text>
+                </LinkButton>
+              ))}
+            </HStack>
+          </Tooltip>
+          <VStack flex={1} />
+          <HomeExploreMenu />
+        </HStack>
       </VStack>
     </ZStack>
   )
 })
 
-export const DishLogoButton = () => {
+const HomeUserMenu = memo(() => {
+  const [isOpen, setIsOpen] = useState(true)
   return (
-    <LinkButton
-      name="home"
-      paddingVertical={10}
-      paddingHorizontal={12}
-      backgroundColor="#fff"
-      // borderRadius={14}
-      // borderTopRightRadius={0}
-      // borderBottomRightRadius={0}
-      // borderColor="#ccc"
-      // borderWidth={1}
-      // borderRightWidth={0}
-      // shadowColor="rgba(0,0,0,0.1)"
-      // shadowRadius={8}
-      // shadowOffset={{ width: 0, height: 2 }}
-      // marginLeft={-50}
+    <Popover
+      position="bottom"
+      isOpen={isOpen}
+      target={
+        <LinkButton
+          backgroundColor="#fff"
+          padding={15}
+          width={15 * 2 + 16}
+          height={15 * 2 + 16}
+          borderRadius={100}
+          shadowColor="rgba(0,0,0,0.2)"
+          shadowRadius={10}
+          shadowOffset={{ width: 0, height: 5 }}
+          onPress={() => setIsOpen(!isOpen)}
+        >
+          <Icon name="user" size={16} opacity={0.5} />
+        </LinkButton>
+      }
     >
-      <Image
-        source={require('../../assets/logo.png')}
-        style={{ width: 1211 * 0.053, height: 605 * 0.053 }}
-      />
-    </LinkButton>
+      <Tooltip padding={20} width="30vw" minWidth={250}>
+        <AuthLoginRegisterView setMenuOpen={setIsOpen} />
+      </Tooltip>
+    </Popover>
   )
-}
+})
+
+const HomeExploreMenu = memo(() => {
+  const [isOpen, setIsOpen] = useState(true)
+  return (
+    <Popover
+      position="bottom"
+      isOpen={isOpen}
+      target={
+        <LinkButton
+          backgroundColor="#fff"
+          padding={15}
+          width={15 * 2 + 16}
+          height={15 * 2 + 16}
+          borderRadius={100}
+          shadowColor="rgba(0,0,0,0.2)"
+          shadowRadius={10}
+          shadowOffset={{ width: 0, height: 5 }}
+          onPress={() => setIsOpen(!isOpen)}
+        >
+          <Icon name="globe" size={16} opacity={0.5} />
+        </LinkButton>
+      }
+    >
+      <Tooltip padding={20} width="auto">
+        <Text>something</Text>
+      </Tooltip>
+    </Popover>
+  )
+})
