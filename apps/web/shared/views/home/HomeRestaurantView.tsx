@@ -1,11 +1,19 @@
-import React from 'react'
-import { Image, Text, View, ScrollView, Linking, FlatList } from 'react-native'
+import React, { memo } from 'react'
+import {
+  Image,
+  Text,
+  View,
+  ScrollView,
+  Linking,
+  FlatList,
+  ViewStyle,
+} from 'react-native'
 
 import { useOvermind } from '../../state/om'
 
 import ReviewForm from './ReviewForm'
 import { Spacer } from '../shared/Spacer'
-import { HStack, VStack, ZStack } from '../shared/Stacks'
+import { HStack, VStack, ZStack, StackBaseProps } from '../shared/Stacks'
 import { Link, LinkButton } from '../shared/Link'
 import { SmallTitle } from '../shared/SmallTitle'
 import { HomeStateItem } from '../../state/home'
@@ -15,9 +23,12 @@ import {
   RestaurantRatingDetail,
   RestaurantRateRow,
   RestaurantMetaRow,
-  RestaurantDetailRow,
 } from './RestaurantListItem'
+import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { Divider } from '../shared/Divider'
+import { flatButtonStyle } from './HomeViewTopDishes'
+import { TableRow, TableCell } from './TableRow'
+import { Circle } from '../shared/Circle'
 
 export default function HomeRestaurantView({
   state,
@@ -36,15 +47,14 @@ export default function HomeRestaurantView({
     return <Text>Loading...</Text>
   }
 
-  const tags = restaurant.tags.map((i) => i.taxonomy.name) ?? []
   const sources = restaurant.sources ?? []
 
   return (
-    <VStack>
+    <VStack flex={1}>
       <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
         <CloseButton onPress={() => om.actions.home.popTo(-1)} />
       </ZStack>
-      <ScrollView style={{ padding: 18 }}>
+      <ScrollView style={{ padding: 18, flex: 1 }}>
         <VStack>
           <HStack marginBottom={10}>
             <RestaurantRatingDetail restaurant={restaurant} />
@@ -66,11 +76,41 @@ export default function HomeRestaurantView({
           <Divider />
           <Spacer />
           <RestaurantDetailRow restaurant={restaurant} />
-          <Spacer />
+          {/* const tags = restaurant.tags.map((i) => i.taxonomy.name) ?? [] */}
+          {/* <Text style={{ fontSize: 15 }}>
+            {tags.map((tag, index) => (
+              <Text key={tag}>
+                <Link name="search" params={{ query: tag }}>
+                  {tag}
+                </Link>
+                {index == tags.length - 1 ? '' : ', '}
+              </Text>
+            ))}
+          </Text> */}
+
+          <VStack>
+            <Spacer size="lg" />
+            <SmallTitle>Rating Breakdown</SmallTitle>
+
+            <HStack paddingHorizontal={30} spacing={20}>
+              <VStack flex={1} padding={10}>
+                <RatingBreakdownCircle emoji="🧑" name="Dishers" />
+              </VStack>
+
+              <VStack flex={1} padding={10}>
+                <RatingBreakdownCircle emoji="🧑‍🍳" name="Chefs" />
+              </VStack>
+
+              <VStack flex={1} padding={10}>
+                <RatingBreakdownCircle emoji="👩‍💻" name="Critics" />
+              </VStack>
+            </HStack>
+          </VStack>
 
           {!!restaurant.image && (
             <VStack>
-              <SmallTitle>Best Dishes</SmallTitle>
+              <Spacer size="lg" />
+              <SmallTitle>Top Rated Dishes</SmallTitle>
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
@@ -114,25 +154,37 @@ export default function HomeRestaurantView({
               </ScrollView>
 
               <HStack justifyContent="center">
-                <LinkButton name="restaurant">🖼 Inside</LinkButton>
+                <LinkButton {...flatButtonStyle} name="restaurant">
+                  🖼 Inside
+                </LinkButton>
                 <Spacer />
-                <LinkButton name="restaurant">🖼 Outside</LinkButton>
-                <Spacer />
-                <LinkButton name="restaurant">🖼 Menu</LinkButton>
+                <LinkButton {...flatButtonStyle} name="restaurant">
+                  🖼 Outside
+                </LinkButton>
               </HStack>
             </VStack>
           )}
+        </VStack>
 
-          <Text style={{ fontSize: 15 }}>
-            {tags.map((tag, index) => (
-              <Text key={tag}>
-                <Link name="search" params={{ query: tag }}>
-                  {tag}
-                </Link>
-                {index == tags.length - 1 ? '' : ', '}
-              </Text>
-            ))}
-          </Text>
+        <VStack>
+          <Spacer size="lg" />
+          <SmallTitle>Menu</SmallTitle>
+
+          <TableRow>
+            <TableCell width="33%">Test</TableCell>
+            <TableCell width="33%">Test</TableCell>
+            <TableCell width="33%">Test</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell width="33%">Test</TableCell>
+            <TableCell width="33%">Test</TableCell>
+            <TableCell width="33%">Test</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell width="33%">Test</TableCell>
+            <TableCell width="33%">Test</TableCell>
+            <TableCell width="33%">Test</TableCell>
+          </TableRow>
         </VStack>
 
         <Spacer size="lg" />
@@ -204,3 +256,27 @@ export default function HomeRestaurantView({
     </VStack>
   )
 }
+
+const RatingBreakdownCircle = memo(
+  ({ emoji, name }: { emoji: string; name: string }) => {
+    return (
+      <VStack
+        borderRadius={10000000000}
+        alignItems="center"
+        width="100%"
+        height="auto"
+        paddingTop="100%"
+        backgroundColor="white"
+        shadowColor="rgba(0,0,0,0.1)"
+        shadowRadius={5}
+      >
+        <ZStack fullscreen alignItems="center" justifyContent="center">
+          <Text style={{ fontSize: 28, marginBottom: 2 }}>{emoji}</Text>
+          <Text style={{ fontSize: 15, color: '#444', fontWeight: '500' }}>
+            {name}
+          </Text>
+        </ZStack>
+      </VStack>
+    )
+  }
+)

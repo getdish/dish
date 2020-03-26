@@ -71,18 +71,19 @@ function HomeViewDrawer(props: { children: any }) {
       zIndex={10}
       width={drawerWidth}
       borderRadius={drawerBorderRadius}
-      shadowColor="rgba(0,0,0,0.25)"
+      shadowColor="rgba(0,0,0,0.22)"
       shadowRadius={24}
       borderWidth={1}
       borderColor="#fff"
       flex={1}
     >
       <ZStack fullscreen borderRadius={drawerBorderRadius} overflow="hidden">
-        <BlurView />
+        {/* <BlurView /> */}
         <LinearGradient
           colors={[
-            'rgba(255,255,255,0.5)',
-            'rgba(255,255,255,0.9)',
+            'rgba(255,255,255,0.6)',
+            'rgba(255,255,255,1)',
+            'rgba(255,255,255,1)',
             'rgba(255,255,255,1)',
           ]}
           style={[StyleSheet.absoluteFill]}
@@ -293,7 +294,7 @@ function HomeStackViewItem({
             })}
             borderRadius={drawerBorderRadius}
             pointerEvents="auto"
-            // overflow="hidden"
+            overflow="hidden"
           >
             {children}
           </ZStack>

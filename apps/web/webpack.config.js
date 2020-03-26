@@ -5,8 +5,6 @@ module.exports = async function (env, argv) {
   const config = await createExpoWebpackConfigAsync(env, argv)
   // Customize the config before returning it.
 
-  console.log('env is', env)
-
   if (env.mode === 'development') {
     config.plugins.push(
       new ReactRefreshWebpackPlugin({
