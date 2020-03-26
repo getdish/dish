@@ -13,7 +13,7 @@ export function SmallTitle(props: { children: any }) {
           letterSpacing: 3,
           opacity: 0.5,
           fontSize: 16,
-          fontWeight: '300',
+          fontWeight: '400',
         }}
       >
         {props.children}

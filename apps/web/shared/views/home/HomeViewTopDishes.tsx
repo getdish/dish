@@ -13,7 +13,7 @@ import { useOvermind } from '../../state/om'
 import top_dish_images from '../../assets/topdishes.json'
 import { Spacer } from '../shared/Spacer'
 import { Link, LinkButton } from '../shared/Link'
-import { HStack, VStack, ZStack } from '../shared/Stacks'
+import { HStack, VStack, ZStack, StackBaseProps } from '../shared/Stacks'
 import { SmallTitle } from '../shared/SmallTitle'
 import HomeLenseBar from './HomeLenseBar'
 import { HomeStateItem, HomeStateItemHome } from '../../state/home'
@@ -109,12 +109,19 @@ const HomeViewTopDishesContent = memo(
               <HStack paddingHorizontal={20} marginVertical={-6}>
                 <HStack flex={1}>
                   <RankingView rank={x + 1} />
-                  <Text
-                    numberOfLines={1}
-                    style={{ fontSize: 24, fontWeight: '600' }}
+                  <LinkButton
+                    {...flatButtonStyle}
+                    marginVertical={-5}
+                    name="search"
+                    params={{ query: 'Korean' }}
                   >
-                    Korean
-                  </Text>
+                    <Text
+                      numberOfLines={1}
+                      style={{ fontSize: 24, fontWeight: '600' }}
+                    >
+                      Korean
+                    </Text>
+                  </LinkButton>
                 </HStack>
                 <Spacer flex />
                 <Text style={{ fontSize: 36, marginVertical: -10 }}>🇰🇷</Text>
@@ -174,13 +181,7 @@ const HomeViewTopDishesContent = memo(
                       key={name}
                       name="restaurant"
                       params={{ slug: slugify(name) }}
-                      paddingVertical={5}
-                      paddingHorizontal={8}
-                      backgroundColor="rgba(220, 234, 255, 0.5)"
-                      hoverStyle={{
-                        backgroundColor: `rgba(220, 234, 255, 1)`,
-                      }}
-                      borderRadius={5}
+                      {...flatButtonStyle}
                       marginRight={18}
                     >
                       <Text style={{ fontSize: 14 }}>
@@ -198,3 +199,13 @@ const HomeViewTopDishesContent = memo(
     )
   }
 )
+
+export const flatButtonStyle: StackBaseProps = {
+  paddingVertical: 5,
+  paddingHorizontal: 8,
+  backgroundColor: 'rgba(220, 234, 255, 0.5)',
+  hoverStyle: {
+    backgroundColor: `rgba(220, 234, 255, 1)`,
+  },
+  borderRadius: 5,
+}

@@ -2,6 +2,7 @@ import React, { forwardRef, CSSProperties, useRef, useState } from 'react'
 import { View, StyleSheet, ViewStyle, ViewProps, Animated } from 'react-native'
 import Hoverable from './Hoverable'
 import './Stacks.css'
+import { Spacer } from './Spacer'
 
 // TODO spacing
 
@@ -18,6 +19,7 @@ export type StackBaseProps = Omit<
       fullscreen?: boolean
       children?: any
       hoverStyle?: ViewStyle
+      spacing?: number
     },
   // because who tf uses alignContent
   'alignContent'
@@ -32,27 +34,41 @@ const createStack = (defaultStyle?: ViewStyle) => {
         pointerEvents,
         style = null,
         hoverStyle = null,
+        spacing,
         ...props
       },
       ref
     ) => {
-      const content = (extraStyle?: any) => (
-        <Animated.View
-          ref={ref}
-          pointerEvents={pointerEvents}
-          style={[
-            {
-              ...defaultStyle,
-              ...(fullscreen && fsStyle),
-              ...props,
-            },
-            style,
-            extraStyle,
-          ]}
-        >
-          {children}
-        </Animated.View>
-      )
+      const content = (extraStyle?: any) => {
+        let spacedChildren = children
+
+        if (spacing > 0) {
+          const childArr = React.Children.toArray(children)
+          spacedChildren = childArr
+            .map((x, i) =>
+              i === childArr.length - 1 ? x : [x, <Spacer size={spacing} />]
+            )
+            .flat()
+        }
+
+        return (
+          <Animated.View
+            ref={ref}
+            pointerEvents={pointerEvents}
+            style={[
+              {
+                ...defaultStyle,
+                ...(fullscreen && fsStyle),
+                ...props,
+              },
+              style,
+              extraStyle,
+            ]}
+          >
+            {spacedChildren}
+          </Animated.View>
+        )
+      }
 
       if (hoverStyle) {
         const [isHovered, set] = useState(false)

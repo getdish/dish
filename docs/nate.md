@@ -5,12 +5,14 @@ web:
 - RestaurantDetail
   - flesh out page with information
   - top dishes
+  - menu
+  - gallery
 - bugs
   - going back from restaurant to search is re-running search
   - moving between search/results fwd/back slow + bad animation
 - map
   - move map should filter current results down and re-number
-  - map click item scroll to item
+  - map click item scroll to item / view detail
   - moving map in general as you go forward/backward isn't smooth/consistent
 - search
   - current location / permissions access

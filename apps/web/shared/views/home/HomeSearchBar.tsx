@@ -17,8 +17,8 @@ import { CloseButton } from './CloseButton'
 const styles = StyleSheet.create({
   container: {
     borderRadius: 14,
-    shadowColor: 'rgba(0,0,0,0.125)',
-    shadowRadius: 10,
+    shadowColor: 'rgba(0,0,0,0.1)',
+    shadowRadius: 8,
     shadowOffset: { height: 2, width: 0 },
     marginHorizontal: -15,
     marginTop: 15,
