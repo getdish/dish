@@ -171,10 +171,16 @@ export class ModelBase<T> {
   }
 
   static all_fields() {
-    return this.default_fields().concat(this.fields())
+    return this.default_fields()
+      .concat(this.fields())
+      .filter((f) => !this.write_only_fields().includes(f))
   }
 
   static read_only_fields() {
+    return [] as string[]
+  }
+
+  static write_only_fields() {
     return [] as string[]
   }
 

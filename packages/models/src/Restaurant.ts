@@ -19,6 +19,7 @@ export class Restaurant extends ModelBase<Restaurant> {
   zip!: number
   image?: string
   tags!: { taxonomy: Taxonomy }[]
+  tag_names!: string[]
   photos?: string[]
   telephone!: string
   website!: string
@@ -45,6 +46,7 @@ export class Restaurant extends ModelBase<Restaurant> {
       'zip',
       'image',
       'tags',
+      'tag_names',
       'photos',
       'telephone',
       'website',
@@ -61,6 +63,10 @@ export class Restaurant extends ModelBase<Restaurant> {
 
   static read_only_fields() {
     return ['is_open_now', 'tags']
+  }
+
+  static write_only_fields() {
+    return ['tag_names']
   }
 
   static upsert_constraint() {
@@ -242,6 +248,11 @@ export class Restaurant extends ModelBase<Restaurant> {
   }
 
   async upsertTags(tags: string[]) {
+    this.tag_names = _.uniq([
+      ...(this.tag_names || []),
+      ...tags.map((t) => t.toLowerCase()),
+    ])
+    await this.update()
     const objects = tags.map((tag) => {
       return {
         name: tag,
@@ -263,7 +274,7 @@ export class Restaurant extends ModelBase<Restaurant> {
     }
     const response = await ModelBase.hasura(query)
     const tag_ids = response.data.data['insert_taxonomy'].returning.map(
-      (i) => i.id
+      (i: Taxonomy) => i.id
     )
     await this.upsertTagJunctions(tag_ids)
     return tag_ids

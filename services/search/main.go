@@ -1,0 +1,92 @@
+package main
+
+import (
+	"fmt"
+	"github.com/go-pg/pg/v9"
+	"log"
+	"net/http"
+	"os"
+)
+
+var db = pg.Connect(&pg.Options{
+	User:     "postgres",
+	Password: getEnv("POSTGRES_PASSWORD", "postgres"),
+	Addr:     getEnv("POSTGRES_HOST", "localhost") + ":5432",
+	Database: "dish",
+})
+
+var query = `
+	SELECT jsonb_agg(
+		json_build_object(
+			'name', data.name,
+			'slug', data.slug,
+			'rating', data.rating,
+			'address', data.address,
+			'location', ST_AsGeoJSON(data.location)::json,
+			'image', data.image,
+			'telephone', data.telephone,
+			'website', data.website,
+			'sources', data.sources,
+			'is_open_now', is_restaurant_open(data),
+			'price_range', data.price_range,
+			'tags', ARRAY(
+				SELECT json_build_object(
+					'name', name,
+					'icon', icon,
+					'type', type
+				) FROM taxonomy
+					WHERE id IN (
+						SELECT rt.taxonomy_id FROM restaurant_taxonomy rt
+						WHERE rt.restaurant_id = data.id
+					)
+				)
+			)
+	) FROM (
+		SELECT *
+		FROM restaurant
+		WHERE ST_DWithin(location, ST_MakePoint(?0, ?1), ?2)
+		AND (
+			name ILIKE '%' || ?3 || '%'
+			OR
+			tag_names \?| (select string_to_array(?4, ','))
+		)
+		ORDER BY rating DESC NULLS LAST
+		LIMIT ?5
+	) data
+	`
+
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
+}
+
+func search(w http.ResponseWriter, r *http.Request) {
+	var json string
+	var params = r.URL.Query()
+	_, err := db.Query(
+		pg.Scan(&json),
+		query,
+		params["lon"][0],
+		params["lat"][0],
+		params["distance"][0],
+		params["query"][0],
+		params["tags"][0],
+		params["limit"][0],
+	)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Fprintf(w, json)
+}
+
+func handleRequests() {
+	http.HandleFunc("/", search)
+	log.Fatal(http.ListenAndServe(":10000", nil))
+}
+
+func main() {
+	defer db.Close()
+	handleRequests()
+}

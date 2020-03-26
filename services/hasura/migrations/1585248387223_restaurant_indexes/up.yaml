@@ -1,0 +1,7 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: |-
+      create index restaurant_rating_index on restaurant (rating DESC NULLS LAST);
+      CREATE INDEX restaurant_tag_names_trgm_idx ON restaurant USING gin (tag_names);
+  type: run_sql

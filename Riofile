@@ -13,6 +13,16 @@ services:
       - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anon
       - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}
     command: ['graphql-engine', 'serve', '--jwt-secret', '{"type":"HS256", "key":"${JWT_KEY}"}']
+  search:
+    image: dish/search-server
+    build:
+      dockerfile: ./services/search/Dockerfile
+      context: ./
+    ports:
+      - 10000/http
+    env:
+      - POSTGRES_HOST=postgres-postgresql.postgres
+      - POSTGRES_PASSWORD=${TF_VAR_POSTGRES_PASSWORD}
   worker-ui:
     image: tombh/bull-board:latest
     env:
