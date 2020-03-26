@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useState, useEffect } from 'react'
 import {
   Text,
   View,
@@ -41,20 +41,29 @@ const styles = StyleSheet.create({
 
 export default memo(function HomeSearchBar() {
   const om = useOvermind()
+  const globalSearch = om.state.home.currentState.searchQuery
+
+  // use local for a little better perf
+  const [search, setSearch] = useState('')
+
+  useEffect(() => {
+    setSearch(globalSearch)
+  }, [globalSearch])
+
   return (
     <View style={styles.container}>
       <HStack>
         <DishLogoButton />
         <VStack flex={1.7} style={styles.searchArea}>
           <TextInput
-            value={om.state.home.currentState.searchQuery}
-            onChangeText={(text) => om.actions.home.setSearchQuery(text)}
+            // leave uncontrolled for perf?
+            value={search}
+            onChangeText={(text) => {
+              setSearch(text)
+              om.actions.home.setSearchQuery(text)
+            }}
             placeholder="Search dish, cuisine"
             style={[styles.textInput, { fontSize: 20, paddingRight: 42 }]}
-            onFocus={() => {
-              // om.actions.home.clearSearch()
-              // om.actions.home.getTopDishes()
-            }}
           />
           <SearchCancelButton />
         </VStack>

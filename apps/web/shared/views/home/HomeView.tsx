@@ -13,7 +13,11 @@ import HomeViewTopDishes from './HomeViewTopDishes'
 import HomeSearchResultsView from './HomeSearchResultsView'
 import HomeSearchBar from './HomeSearchBar'
 import { VStack, ZStack } from '../shared/Stacks'
-import { HomeStateItem } from '../../state/home'
+import {
+  HomeStateItemSimple,
+  HomeStateItemSearch,
+  HomeStateItemRestaurant,
+} from '../../state/home'
 import _ from 'lodash'
 import HomeFilterBar from './HomeFilterBar'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -27,8 +31,8 @@ import { HomeControlsOverlay } from './HomeControlsOverlay'
 import { BlurView } from '../shared/BlurView'
 
 export function useHomeDrawerWidth(): number {
-  const [width] = useWindowSize({ throttle: 100 })
-  return Math.min(Math.max(500, width * 0.5), 600)
+  const [width] = useWindowSize({ throttle: 200 })
+  return Math.min(Math.max(500, width * 0.55), 620)
 }
 
 export const HomeView = () => {
@@ -143,51 +147,26 @@ const HomeViewContent = memo(function HomeViewContent() {
                     <HomeViewTopDishes state={homeState} />
                   )}
                   {homeState.type == 'search' && (
-                    <HomeSearchResultsView state={homeState} />
+                    <HomeSearchResultsView
+                      state={homeState as HomeStateItemSearch}
+                    />
                   )}
                   {homeState.type == 'restaurant' && (
-                    <HomeRestaurantView state={homeState} />
+                    <HomeRestaurantView
+                      state={homeState as HomeStateItemRestaurant}
+                    />
                   )}
                 </>
               )
             }}
           </HomeStackView>
         </VStack>
-
-        {/* <ZStack fullscreen pointerEvents="none">
-          <VStack flex={1}>
-            <Spacer flex={1} />
-
-            <HStack
-              marginLeft={20}
-              marginBottom={5}
-              borderRadius={drawerBorderRadius}
-              overflow="hidden"
-              backgroundColor="#fff"
-            >
-              <LinearGradient
-                colors={['transparent', '#fff']}
-                style={{
-                  position: 'absolute',
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  zIndex: -1,
-                }}
-              />
-              <VStack pointerEvents="auto">
-                <HomeBreadcrumbs />
-              </VStack>
-            </HStack>
-          </VStack>
-        </ZStack> */}
       </ZStack>
     </>
   )
 })
 
-function HomeStackView<A extends HomeStateItem>({
+function HomeStackView<A extends HomeStateItemSimple>({
   items,
   children,
 }: {
@@ -226,14 +205,13 @@ function HomeStackViewItem({
   total,
 }: {
   children: React.ReactNode
-  item: HomeStateItem
+  item: HomeStateItemSimple
   index: number
   total: number
 }) {
   const om = useOvermind()
   const isTop = index === total - 1
   const [isMounted, setIsMounted] = useState(false)
-  // const val = useMemo(() => new Animated.Value(0), [])
 
   useEffect(() => {
     let tm = setTimeout(() => {
@@ -244,7 +222,7 @@ function HomeStackViewItem({
 
   const onPress = useMemo(
     () => () => {
-      om.actions.home.popTo(item)
+      om.actions.home.popTo(item as any)
     },
     []
   )
@@ -263,7 +241,7 @@ function HomeStackViewItem({
   opacity: 0;
   pointer-events: none;
   transform: translateY(20px);
-  transition: all ease-in-out 400ms;
+  transition: all ease-in-out 250ms;
 }
 .animate-up.active {
   opacity: 1;

@@ -9,6 +9,7 @@ import { HomeStateItemSearch, HomeStateItem } from '../../state/home'
 import { memoizeWeak } from '../../helpers/memoizeWeak'
 import { closeAllPopovers, popoverCloseCbs } from '../shared/Popover'
 import HomeLenseBar from './HomeLenseBar'
+import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 
 // function SearchResults() {
 //   const om = useOvermind()
@@ -110,13 +111,12 @@ import HomeLenseBar from './HomeLenseBar'
 //   )
 // }
 
-const weakKey = memoizeWeak(() => `${Math.random()}`)
-
-export default function HomeSearchResultsView({
+export default memoIsEqualDeep(function HomeSearchResultsView({
   state,
 }: {
   state: HomeStateItemSearch
 }) {
+  console.log('RENDER HOME_SEARCH_RESULTS')
   return (
     <VStack flex={1}>
       <SmallTitle>Top {state.searchQuery} Restaurants</SmallTitle>
@@ -126,7 +126,7 @@ export default function HomeSearchResultsView({
       </VStack>
     </VStack>
   )
-}
+})
 
 function HomeSearchResultsViewContent({
   state,

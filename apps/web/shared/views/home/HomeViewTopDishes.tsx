@@ -1,13 +1,5 @@
 import React, { useEffect, memo } from 'react'
-import {
-  Image,
-  ImageSourcePropType,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { Image, Text, ScrollView } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import top_dish_images from '../../assets/topdishes.json'
@@ -16,62 +8,21 @@ import { Link, LinkButton } from '../shared/Link'
 import { HStack, VStack, ZStack, StackBaseProps } from '../shared/Stacks'
 import { SmallTitle } from '../shared/SmallTitle'
 import HomeLenseBar from './HomeLenseBar'
-import { HomeStateItem, HomeStateItemHome } from '../../state/home'
+import {
+  HomeStateItem,
+  HomeStateItemHome,
+  HomeStateItemSimple,
+} from '../../state/home'
 import { RankingView } from './RankingView'
-import { LinearGradient } from 'expo-linear-gradient'
 import { slugify } from '../../helpers/slugify'
 import { SuperScriptText } from './TagButton'
+import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
+import _ from 'lodash'
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    height: 40,
-    alignItems: 'center',
-  },
-})
-
-const getImageForDish = (dish: string) => {
-  let image: string
-  for (const item of top_dish_images) {
-    if (item.name == `"${dish}"`) {
-      if (item.image != null) {
-        image = item.image
-      } else {
-        image =
-          'data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=='
-      }
-    }
-  }
-  return (
-    <VStack
-      shadowColor="rgba(0,0,0,0.2)"
-      shadowRadius={6}
-      shadowOffset={{ width: 0, height: 2 }}
-      width="100%"
-      height="100%"
-      borderRadius={35}
-      overflow="hidden"
-      hoverStyle={{
-        shadowRadius: 14,
-        shadowColor: 'rgba(0,0,0,0.35)',
-        zIndex: 10000,
-      }}
-    >
-      <Image
-        source={{ uri: image }}
-        style={{ width: '100%', height: '100%' }}
-        resizeMode="cover"
-      />
-    </VStack>
-  )
-}
-
-export default memo(function HomeViewTopDishes({
+export default memoIsEqualDeep(function HomeViewTopDishes({
   state,
 }: {
-  state: HomeStateItem
+  state: HomeStateItemSimple
 }) {
   const om = useOvermind()
 
@@ -86,16 +37,18 @@ export default memo(function HomeViewTopDishes({
       <SmallTitle>{activeLense.description}</SmallTitle>
       <VStack position="relative" flex={1}>
         <HomeLenseBar />
-        <HomeViewTopDishesContent state={state} />
+        <HomeViewTopDishesContent state={state as any} />
       </VStack>
     </VStack>
   )
 })
 
-const HomeViewTopDishesContent = memo(
+const HomeViewTopDishesContent = memoIsEqualDeep(
   ({ state }: { state: HomeStateItemHome }) => {
     const om = useOvermind()
     const { top_dishes = [] } = state
+
+    console.log('RENDER HOME_TOP_DISHES')
 
     useEffect(() => {
       om.actions.home.getTopDishes()
@@ -199,6 +152,42 @@ const HomeViewTopDishesContent = memo(
     )
   }
 )
+
+const getImageForDish = (dish: string) => {
+  let image: string
+  for (const item of top_dish_images) {
+    if (item.name == `"${dish}"`) {
+      if (item.image != null) {
+        image = item.image
+      } else {
+        image =
+          'data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=='
+      }
+    }
+  }
+  return (
+    <VStack
+      shadowColor="rgba(0,0,0,0.2)"
+      shadowRadius={6}
+      shadowOffset={{ width: 0, height: 2 }}
+      width="100%"
+      height="100%"
+      borderRadius={35}
+      overflow="hidden"
+      hoverStyle={{
+        shadowRadius: 14,
+        shadowColor: 'rgba(0,0,0,0.35)',
+        zIndex: 10000,
+      }}
+    >
+      <Image
+        source={{ uri: image }}
+        style={{ width: '100%', height: '100%' }}
+        resizeMode="cover"
+      />
+    </VStack>
+  )
+}
 
 export const flatButtonStyle: StackBaseProps = {
   paddingVertical: 5,

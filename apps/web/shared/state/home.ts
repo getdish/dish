@@ -63,11 +63,13 @@ export type HomeStateItemRestaurant = HomeStateItemBase & {
 //   dish: string
 // }
 
+export type HomeStateItemSimple = Omit<HomeStateItem, 'historyId'>
+
 type HomeState = {
   showMenu: boolean
   hoveredRestaurant: Restaurant | null
   states: HomeStateItem[]
-  breadcrumbStates: Derive<HomeState, HomeStateItem[]>
+  breadcrumbStates: Derive<HomeState, HomeStateItemSimple[]>
   currentState: Derive<HomeState, HomeStateItem>
   previousState: Derive<HomeState, HomeStateItem>
   lastHomeState: Derive<HomeState, HomeStateItemHome>
@@ -110,7 +112,9 @@ export const state: HomeState = {
     const lastRestaurant =
       lastType == 'restaurant' &&
       _.findLast(state.states, (x) => x.type == 'restaurant')
-    return [lastHome, lastSearch, lastRestaurant].filter(Boolean)
+    return [lastHome, lastSearch, lastRestaurant]
+      .filter(Boolean)
+      .map((x) => _.omit(x), 'historyId')
   },
 }
 
@@ -139,7 +143,7 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
     case 'search':
       const lastMatchingSearchState = _.findLast(
         om.state.home.states,
-        (x) => x.type === 'search' && x.searchQuery == item.params.query
+        (x) => x.type === 'search'
       ) as HomeStateItemSearch
       nextState = {
         type: 'search',
@@ -151,7 +155,10 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
         ...currentBaseState,
       }
       fetchData = () => {
-        om.actions.home.runSearch(item.params.query.replace(/-/g, ' '))
+        console.log('what is', lastMatchingSearchState)
+        if (lastMatchingSearchState?.searchQuery !== item.params.query) {
+          om.actions.home.runSearch(item.params.query)
+        }
       }
       break
     case 'restaurant':
@@ -246,6 +253,7 @@ const getTopDishes: AsyncAction = async (om) => {
     },
   }
   const response = await ModelBase.hasura(query)
+  console.log('set top dishes')
   om.state.home.lastHomeState.top_dishes = response.data.data.top_dishes
 }
 

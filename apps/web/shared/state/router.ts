@@ -120,7 +120,7 @@ const uid = () => `${Math.random()}`
 const navigate: Operator<NavigateItem> = pipe(
   map(
     (_, item): HistoryItem => {
-      console.log('navigate', item)
+      // console.log('navigate', item)
       return {
         id: uid(),
         params: {},
