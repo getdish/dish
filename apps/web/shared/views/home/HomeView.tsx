@@ -5,7 +5,6 @@ import { useOvermind } from '../../state/om'
 
 import SideMenu from 'react-native-side-menu'
 import { Route, RouteSwitch } from '../shared/Route'
-import { AuthLoginRegisterView } from '../auth/AuthLoginRegisterView'
 import HomeMenu from './HomeMenu'
 
 import HomeRestaurantView from './HomeRestaurantView'
@@ -43,17 +42,9 @@ export const HomeView = () => {
     <SideMenu openMenuOffset={200} isOpen={showMenu} menu={<HomeMenu />}>
       <ZStack top={0} left={0} right={0} bottom={0}>
         <HomeMap />
-
         <HomeControlsOverlay />
-
         <HomeViewDrawer>
           <RouteSwitch>
-            <Route name="login">
-              <AuthLoginRegisterView />
-            </Route>
-            <Route name="register">
-              <AuthLoginRegisterView />
-            </Route>
             <Route name="home">
               <HomeViewContent />
             </Route>
@@ -105,29 +96,6 @@ const HomeViewContent = memo(function HomeViewContent() {
   const { breadcrumbStates } = om.state.home
   return (
     <>
-      {/* <HStack
-        paddingTop={10}
-        paddingHorizontal={20}
-        width="100%"
-        alignItems="center"
-        justifyContent="center"
-      >
-        {['Los Angeles', 'Portland', 'Seattle', 'Las Vegas', 'New York'].map(
-          (city) => (
-            <React.Fragment key={city}>
-              <LinkButton
-                key={city}
-                name="search"
-                params={{ query: city }}
-                paddingHorizontal={16}
-              >
-                <Text style={{ fontSize: 14 }}>{city}</Text>
-              </LinkButton>
-            </React.Fragment>
-          )
-        )}
-      </HStack>
-      <Spacer /> */}
       <HomeSearchBar />
       <HomeFilterBar />
       <ZStack position="relative" flex={1}>

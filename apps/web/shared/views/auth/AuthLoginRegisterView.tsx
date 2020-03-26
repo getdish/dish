@@ -1,40 +1,55 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text, TextInput, Button, Image } from 'react-native'
 import { useOvermind } from '../../state/om'
 import { Link } from '../shared/Link'
 import { HStack, VStack } from '../shared/Stacks'
 
-export const AuthLoginRegisterView = () => {
-  const { state, actions } = useOvermind()
-  const location = state.router.curPage
+export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
+  const om = useOvermind()
+  const pageName = om.state.router.curPage.name
+  const location = om.state.router.curPage
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const isLogin = location.path == '/login'
+  const isRegister = location.path == '/register'
+  const isLoggedIn = om.state.auth.is_logged_in
 
-  if (state.auth.is_logged_in) {
-    console.log('redirecting to home??')
+  useEffect(() => {
+    // open menu on nav to login/register
+    if (pageName == 'login' || pageName == 'register') {
+      props.setMenuOpen(true)
+    }
+  }, [pageName])
+
+  useEffect(() => {
+    // close menu on login/logout
+    if (isLoggedIn) {
+      props.setMenuOpen(false)
+    }
+  }, [isLoggedIn])
+
+  if (isLoggedIn) {
     return null
   }
 
   const button_text = () => {
-    if (state.auth.loading) {
-      if (isLogin) {
-        return 'Logging in...'
-      } else {
+    if (om.state.auth.loading) {
+      if (isRegister) {
         return 'Registering...'
+      } else {
+        return 'Logging in...'
       }
     } else {
-      if (isLogin) {
-        return 'Login'
-      } else {
+      if (isRegister) {
         return 'Register'
+      } else {
+        return 'Login'
       }
     }
   }
 
   const messages = () => {
-    if (state.auth.messages.length > 0) {
-      const message = state.auth.messages.join('\n')
+    if (om.state.auth.messages.length > 0) {
+      const message = om.state.auth.messages.join('\n')
       return <div className="messages">{message}</div>
     }
   }
@@ -66,10 +81,8 @@ export const AuthLoginRegisterView = () => {
           <VStack flex={1} />
           <Button
             onPress={async () => {
-              if (isLogin) {
-                actions.auth.login({ username: username, password: password })
-              } else {
-                const result = await actions.auth.register({
+              if (isRegister) {
+                const result = await om.actions.auth.register({
                   username: username,
                   password: password,
                 })
@@ -77,6 +90,11 @@ export const AuthLoginRegisterView = () => {
                   setUsername('')
                   setPassword('')
                 }
+              } else {
+                om.actions.auth.login({
+                  username: username,
+                  password: password,
+                })
               }
             }}
             title={button_text()}

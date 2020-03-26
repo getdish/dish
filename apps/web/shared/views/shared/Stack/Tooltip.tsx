@@ -6,7 +6,6 @@ export function Tooltip(props: StackBaseProps) {
     <VStack
       backgroundColor="#fff"
       padding={10}
-      width={300}
       borderRadius={12}
       shadowColor="rgba(0,0,0,0.2)"
       shadowRadius={14}
