@@ -7,6 +7,8 @@ web:
   - top dishes
   - menu
   - gallery
+  - social media links
+  - hover tooltips for: address (gmaps/maps links)
 - bugs
   - going back from restaurant to search is re-running search
   - moving between search/results fwd/back slow + bad animation

@@ -9,11 +9,11 @@ export const Divider = (props: { flex?: boolean }) => {
       flex={props.flex === true ? 1 : 0}
       width={props.flex == true ? 'auto' : '100%'}
     >
-      <Spacer flex />
+      <View style={{ flex: 1 }} />
       <View
         style={{ height: 1, flex: 10, backgroundColor: '#000', opacity: 0.05 }}
       />
-      <Spacer flex />
+      <View style={{ flex: 1 }} />
     </HStack>
   )
 }
