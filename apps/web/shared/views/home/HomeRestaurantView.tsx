@@ -6,7 +6,6 @@ import {
   ScrollView,
   Linking,
   FlatList,
-  ViewStyle,
   TextProps,
 } from 'react-native'
 
@@ -29,9 +28,9 @@ import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { Divider } from '../shared/Divider'
 import { flatButtonStyle } from './HomeViewTopDishes'
 import { TableRow, TableCell } from './TableRow'
-import { Circle } from '../shared/Circle'
+import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 
-export default function HomeRestaurantView({
+export default memoIsEqualDeep(function HomeRestaurantView({
   state,
 }: {
   state: HomeStateItem
@@ -272,7 +271,7 @@ export default function HomeRestaurantView({
       </ScrollView>
     </VStack>
   )
-}
+})
 
 const RatingBreakdownCircle = memo(
   ({ emoji, name }: { emoji: string; name: string }) => {

@@ -9,6 +9,7 @@ import { useMap, Map } from '../map'
 import { useHomeDrawerWidth } from './HomeView'
 import { HomeUserMenu } from './HomeUserMenu'
 import { LinkButton } from '../shared/Link'
+import { useDebounceValue } from '../../hooks/useDebounce'
 
 function centerMapToRegion({
   map,
@@ -140,14 +141,15 @@ function HomeMap() {
     }
   }, [hoveredRestaurant])
 
+  const curRestaurantD = useDebounceValue(curRestaurant, 250)
   useEffect(() => {
-    if (!map || !mapkit || !curRestaurant || !curRestaurant.location) return
+    if (!map || !mapkit || !curRestaurantD || !curRestaurantD.location) return
     centerMapToRegion({
       map,
-      location: curRestaurant.location.coordinates,
+      location: curRestaurantD.location.coordinates,
       span: 0.09,
     })
-  }, [!!map, mapkit, curRestaurant])
+  }, [!!map, mapkit, curRestaurantD])
 
   useEffect(() => {
     if (!restaurantSelected) return

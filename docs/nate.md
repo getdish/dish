@@ -11,6 +11,7 @@ web:
   - going back from restaurant to search is re-running search
   - moving between search/results fwd/back slow + bad animation
 - map
+  - loading spinner on the map or on right of searchbar as you move (and for regular search)
   - move map should filter current results down and re-number
   - map click item scroll to item / view detail
   - moving map in general as you go forward/backward isn't smooth/consistent

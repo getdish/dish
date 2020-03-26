@@ -50,7 +50,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
         }
 
         return (
-          <Animated.View
+          <View
             ref={ref}
             pointerEvents={pointerEvents}
             style={[
@@ -64,7 +64,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
             ]}
           >
             {spacedChildren}
-          </Animated.View>
+          </View>
         )
       }
 
