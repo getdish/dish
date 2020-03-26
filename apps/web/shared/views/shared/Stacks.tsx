@@ -2,9 +2,7 @@ import React, { forwardRef, CSSProperties, useRef, useState } from 'react'
 import { View, StyleSheet, ViewStyle, ViewProps, Animated } from 'react-native'
 import Hoverable from './Hoverable'
 import './Stacks.css'
-import { Spacer } from './Spacer'
-
-// TODO spacing
+import { Spacer, Spacing } from './Spacer'
 
 const fsStyle = {
   top: 0,
@@ -19,7 +17,7 @@ export type StackBaseProps = Omit<
       fullscreen?: boolean
       children?: any
       hoverStyle?: ViewStyle
-      spacing?: number
+      spacing?: Spacing
     },
   // because who tf uses alignContent
   'alignContent'
@@ -42,7 +40,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
       const content = (extraStyle?: any) => {
         let spacedChildren = children
 
-        if (spacing > 0) {
+        if (typeof spacing !== 'undefined') {
           const childArr = React.Children.toArray(children)
           spacedChildren = childArr
             .map((x, i) =>

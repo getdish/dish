@@ -62,14 +62,14 @@ export function LinkButton<
     restProps = rest
     contents = (
       <Link name={name} params={params} onClick={onPress}>
-        {children}
+        {children ?? ''}
       </Link>
     )
   } else {
     const { children, onPress: onPress_, ...rest } = props
     onPress = onPress_
     restProps = rest
-    contents = <Text>{children}</Text>
+    contents = <Text>{children ?? ''}</Text>
   }
 
   return (

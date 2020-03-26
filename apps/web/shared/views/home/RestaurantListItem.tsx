@@ -95,12 +95,14 @@ export const RestaurantListItem = ({
             <Spacer />
             <HStack>
               <Spacer size={20} />
-              <RestaurantRateRow
-                restaurant={restaurant}
-                onChangeOpen={(isOpen) => {
-                  setDisablePress(isOpen)
-                }}
-              />
+              <HStack alignItems="center">
+                <RestaurantRatingPopover
+                  restaurant={restaurant}
+                  onChangeOpen={setDisablePress}
+                />
+                <Spacer />
+                <RestaurantTagsRow showMore restaurant={restaurant} />
+              </HStack>
             </HStack>
             <Spacer />
             <RestaurantMetaRow restaurant={restaurant} />
@@ -148,7 +150,7 @@ export const RestaurantMetaRow = ({
         </Link>{' '}
         &nbsp; · &nbsp; 📞 &nbsp;
       </Text>
-      <Divider flex />
+      {/* <Divider flex /> */}
     </HStack>
   )
 }
@@ -171,31 +173,20 @@ export const EmojiButton = ({ active, children, onPress, ...rest }: any) => {
   )
 }
 
-const idFn = (_) => _
-
-export const RestaurantRateRow = (props: {
+export const RestaurantTagsRow = ({
+  restaurant,
+  showMore,
+}: {
   restaurant: Restaurant
   showMore?: boolean
-  onChangeOpen?: Function
 }) => {
+  const tags = restaurant.tags.map((i) => i.taxonomy.name) ?? []
   return (
-    <HStack alignItems="center">
-      <RestaurantRatingPopover
-        restaurant={props.restaurant}
-        onChangeOpen={props.onChangeOpen ?? idFn}
-      />
-      <Spacer />
-      <TagButton rank={1} name="🍜 Pho" />
-      <Spacer />
-      <TagButton rank={22} name="🌃 Date Spot" />
-      {props.showMore && (
-        <>
-          <Spacer />
-          <TagButton rank={22} name="🥬 Planty" />
-        </>
-      )}
-      <Spacer />
-      <Text style={{ opacity: 0.5 }}>+ 5 more</Text>
+    <HStack alignItems="center" spacing>
+      {tags.slice(0, showMore ? 2 : 10).map((tag) => (
+        <TagButton key={tag} rank={1} name={`🍜 ${tag}`} />
+      ))}
+      {!!showMore && <Text style={{ opacity: 0.5 }}>+ 5 more</Text>}
     </HStack>
   )
 }
