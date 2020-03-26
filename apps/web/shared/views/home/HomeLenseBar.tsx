@@ -39,7 +39,7 @@ export default memo(function HomeLenseBar(props: {
       {props.backgroundGradient && (
         <LinearGradient
           colors={['#fff', '#fff', 'transparent']}
-          style={[StyleSheet.absoluteFill, { zIndex: -1, marginBottom: -50 }]}
+          style={[StyleSheet.absoluteFill, { zIndex: -1, marginBottom: -25 }]}
         />
       )}
     </ZStack>
