@@ -23,6 +23,7 @@ import {
   RestaurantRatingDetail,
   RestaurantMetaRow,
   RestaurantTagsRow,
+  EmojiButton,
 } from './RestaurantListItem'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { Divider } from '../shared/Divider'
@@ -54,28 +55,47 @@ export default memoIsEqualDeep(function HomeRestaurantView({
       <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
         <CloseButton onPress={() => om.actions.home.popTo(-1)} />
       </ZStack>
+
+      <VStack padding={18} paddingBottom={0} paddingRight={60}>
+        <HStack>
+          <RestaurantRatingDetail restaurant={restaurant} />
+          <Spacer size={20} />
+          <VStack flex={1}>
+            <Text style={{ fontSize: 30, fontWeight: 'bold' }}>
+              {restaurant.name}
+            </Text>
+            <RestaurantMetaRow restaurant={restaurant} />
+          </VStack>
+        </HStack>
+        <Spacer />
+        {/* <Divider /> */}
+      </VStack>
+
       <ScrollView style={{ padding: 18, flex: 1 }}>
         <VStack spacing="lg">
-          <HStack>
-            <RestaurantRatingDetail restaurant={restaurant} />
-            <Spacer size={20} />
-            <VStack flex={1}>
-              <Text style={{ fontSize: 30, fontWeight: 'bold' }}>
-                {restaurant.name}
-              </Text>
-              <RestaurantMetaRow restaurant={restaurant} />
-            </VStack>
+          <HStack alignItems="center" justifyContent="center">
+            <Divider flex />
+            <RestaurantTagsRow restaurant={restaurant} />
+            <Divider flex />
           </HStack>
 
           <VStack>
-            <Divider />
-            <RestaurantDetailRow restaurant={restaurant} />
-            <Spacer />
+            <HStack alignItems="center">
+              <RestaurantDetailRow restaurant={restaurant} flex={1} />
+              <HStack
+                borderColor="#ddd"
+                borderWidth={1}
+                borderRadius={100}
+                margin={5}
+                padding={5}
+                alignItems="stretch"
+              >
+                <EmojiButton size={60}>👎</EmojiButton>
+                <EmojiButton size={60}>👍</EmojiButton>
+                <EmojiButton size={60}>🤤</EmojiButton>
+              </HStack>
+            </HStack>
           </VStack>
-
-          <HStack alignItems="center">
-            <RestaurantTagsRow showMore restaurant={restaurant} />
-          </HStack>
 
           <VStack>
             <SmallTitle>Rating Breakdown</SmallTitle>

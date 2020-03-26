@@ -155,11 +155,17 @@ export const RestaurantMetaRow = ({
   )
 }
 
-export const EmojiButton = ({ active, children, onPress, ...rest }: any) => {
+export const EmojiButton = ({
+  active,
+  children,
+  onPress,
+  size = 88,
+  ...rest
+}: any) => {
   return (
     <TouchableOpacity style={{ flex: 1 }} onPress={onPress}>
       <Circle
-        size={88}
+        size={size}
         backgroundColor={active ? 'yellow' : ''}
         borderColor={'#eee'}
         borderWidth={1}
@@ -167,7 +173,7 @@ export const EmojiButton = ({ active, children, onPress, ...rest }: any) => {
           backgroundColor: active ? 'yellow' : 'rgba(0,0,0,0.05)',
         }}
       >
-        <Text style={{ fontSize: 32 }}>{children}</Text>
+        <Text style={{ fontSize: size * 0.36 }}>{children}</Text>
       </Circle>
     </TouchableOpacity>
   )

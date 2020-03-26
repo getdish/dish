@@ -1,17 +1,18 @@
 import React from 'react'
 import { Text } from 'react-native'
 import { Restaurant } from '@dish/models'
-import { HStack, VStack } from '../shared/Stacks'
+import { HStack, VStack, StackBaseProps } from '../shared/Stacks'
 
 export const RestaurantDetailRow = ({
   restaurant,
-}: {
+  ...rest
+}: StackBaseProps & {
   restaurant: Restaurant
 }) => {
   const [open_text, open_color, next_time] = openingHours(restaurant)
   const [price_label, price_color, price_range] = priceRange(restaurant)
   return (
-    <HStack paddingLeft={22} paddingRight={20}>
+    <HStack paddingLeft={22} paddingRight={20} {...rest}>
       <VStack width="30%" paddingRight="5%">
         <Text
           numberOfLines={1}
