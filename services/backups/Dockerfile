@@ -12,10 +12,9 @@ RUN S3CMD_CURRENT_VERSION=`curl -fs https://api.github.com/repos/s3tools/s3cmd/r
 
 RUN apk add --no-cache postgresql bash
 
-WORKDIR /root
-ADD backup.sh .
-ADD crontab.txt .
-ADD entry.sh .
+ADD services/backups/backup.sh /root/backup.sh
+ADD services/backups/crontab.txt /root/crontab.txt
+ADD services/backups/entry.sh /root/entry.sh
 RUN /usr/bin/crontab /root/crontab.txt
 
 CMD ["/root/entry.sh"]

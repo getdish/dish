@@ -86,8 +86,8 @@ services:
   postgres-backups:
     image: dish/backups
     build:
-      dockerfile: ./services/hasura/backups/Dockerfile
-      context: ./services/hasura/backups/
+      dockerfile: ./services/backups/Dockerfile
+      context: ./
     env:
       - DO_SPACES_API_ID=${TF_VAR_DO_SPACES_ID}
       - DO_SPACES_API_SECRET=${DO_SPACES_API_SECRET}
