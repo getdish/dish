@@ -26,6 +26,7 @@ import { SmallTitle } from '../shared/SmallTitle'
 import { Divider } from '../shared/Divider'
 import { TableRow, TableCell } from './TableRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
+import { RestaurantMetaRow } from './RestaurantMetaRow'
 
 export const RestaurantListItem = ({
   restaurant,
@@ -140,25 +141,6 @@ export const RestaurantListItem = ({
         </HStack>
       </TouchableOpacity>
     </div>
-  )
-}
-
-export const RestaurantMetaRow = ({
-  restaurant,
-}: {
-  restaurant: Restaurant
-}) => {
-  return (
-    <HStack alignItems="center">
-      <Text style={{ opacity: 0.6 }}>
-        3017 16th St. &nbsp; · &nbsp;{' '}
-        <Link inline name="restaurant" params={{ slug: '' }}>
-          Menu
-        </Link>{' '}
-        &nbsp; · &nbsp; 📞 &nbsp;
-      </Text>
-      {/* <Divider flex /> */}
-    </HStack>
   )
 }
 

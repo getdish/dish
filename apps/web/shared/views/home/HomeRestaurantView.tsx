@@ -23,10 +23,10 @@ import { CloseButton } from './CloseButton'
 import { RatingView } from './RatingView'
 import {
   RestaurantRatingDetail,
-  RestaurantMetaRow,
   RestaurantTagsRow,
   EmojiButton,
 } from './RestaurantListItem'
+import { RestaurantMetaRow } from './RestaurantMetaRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { Divider } from '../shared/Divider'
 import { flatButtonStyle, circularFlatButtonStyle } from './HomeViewTopDishes'
@@ -71,7 +71,7 @@ export default memoIsEqualDeep(function HomeRestaurantView({
               {restaurant.name}
             </Text>
             <Spacer size={6} />
-            <RestaurantMetaRow restaurant={restaurant} />
+            <RestaurantMetaRow size="lg" restaurant={restaurant} />
           </VStack>
         </HStack>
         <Spacer />
@@ -104,6 +104,27 @@ export default memoIsEqualDeep(function HomeRestaurantView({
                 <EmojiButton size={50}>👎</EmojiButton>
                 <EmojiButton size={50}>👍</EmojiButton>
                 <EmojiButton size={50}>🤤</EmojiButton>
+                {/* <View style={{ flexDirection: 'row' }}>
+                  <View style={{ width: '30%' }}>
+                    {om.state.auth.is_logged_in && <ReviewForm />}
+                  </View>
+                  <View>
+                    <Text style={{ fontSize: 15 }}>Latest Reviewers</Text>
+                    {(state.reviews ?? []).map((review, i) => {
+                      return (
+                        <Text key={i}>
+                          <Link
+                            name="user"
+                            params={{ id: review.user.id, pane: 'reviews' }}
+                          >
+                            {review.user.username}
+                          </Link>
+                          {i == state.reviews.length - 1 ? '' : ', '}
+                        </Text>
+                      )
+                    })}
+                  </View>
+                </View> */}
               </HStack>
             </HStack>
           </VStack>
@@ -126,6 +147,26 @@ export default memoIsEqualDeep(function HomeRestaurantView({
                 <VStack flex={1} minWidth={90} marginRight={-25}>
                   <RatingBreakdownCircle emoji="👩‍💻" name="Critics" />
                 </VStack>
+
+                {/* {Object.keys(sources).length > 0 && (
+              <SmallTitle>Sources</SmallTitle>
+            )}
+            <FlatList
+              data={Object.keys(sources).map((i) => {
+                return {
+                  source: i,
+                  url: sources[i],
+                }
+              })}
+              renderItem={(i) => (
+                <Text
+                  key={i.item.source}
+                  onPress={() => Linking.openURL(i.item.url)}
+                >
+                  🔗 {i.item.source}
+                </Text>
+              )}
+            ></FlatList> */}
 
                 <HStack paddingVertical={20}>
                   <VStack maxWidth={180} flex={1} paddingHorizontal={20}>
@@ -161,7 +202,7 @@ export default memoIsEqualDeep(function HomeRestaurantView({
                 <HStack
                   paddingHorizontal={20}
                   paddingVertical={26}
-                  spacing={20}
+                  spacing={13}
                 >
                   {['Pho', 'Banh Mi', 'Banh Xeo', 'Bho Kho', 'Thit Kho'].map(
                     (dish, index) => (
@@ -169,34 +210,41 @@ export default memoIsEqualDeep(function HomeRestaurantView({
                         <VStack
                           marginVertical={-15}
                           zIndex={100}
-                          backgroundColor="#eee"
-                          paddingVertical={8}
+                          backgroundColor="#fff"
+                          paddingVertical={7}
                           paddingHorizontal={10}
                           borderRadius={10}
                           shadowColor="rgba(0,0,0,0.2)"
                           shadowRadius={6}
                         >
-                          <Text>{dish}</Text>
+                          <Text style={{ fontWeight: '600' }}>{dish}</Text>
                         </VStack>
-                        <Image
-                          source={{
-                            uri: restaurant.photos[index] ?? restaurant.image,
-                            width: 160,
-                            height: 160,
-                          }}
+                        <View
                           style={{
-                            borderRadius: 20,
                             shadowColor: 'rgba(0,0,0,0.2)',
-                            shadowRadius: 6,
+                            shadowRadius: 10,
+                            borderRadius: 20,
                           }}
-                        />
+                        >
+                          <Image
+                            source={{
+                              uri: restaurant.photos[index] ?? restaurant.image,
+                              width: 200,
+                              height: 200,
+                            }}
+                            style={{
+                              borderRadius: 20,
+                            }}
+                          />
+                        </View>
                       </VStack>
                     )
                   )}
                 </HStack>
               </ScrollView>
 
-              <HStack justifyContent="center">
+              <HStack justifyContent="center" alignItems="center">
+                <Divider flex />
                 <LinkButton {...flatButtonStyle} name="restaurant">
                   🖼 Inside
                 </LinkButton>
@@ -204,98 +252,59 @@ export default memoIsEqualDeep(function HomeRestaurantView({
                 <LinkButton {...flatButtonStyle} name="restaurant">
                   🖼 Outside
                 </LinkButton>
+                <Divider flex />
               </HStack>
             </VStack>
           )}
 
           <VStack>
-            <Spacer size="lg" />
             <SmallTitle>Menu</SmallTitle>
-
-            <TableRow>
-              <TableCell width="33%">Test</TableCell>
-              <TableCell width="33%">Test</TableCell>
-              <TableCell width="33%">Test</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell width="33%">Test</TableCell>
-              <TableCell width="33%">Test</TableCell>
-              <TableCell width="33%">Test</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell width="33%">Test</TableCell>
-              <TableCell width="33%">Test</TableCell>
-              <TableCell width="33%">Test</TableCell>
-            </TableRow>
+            <ScrollView
+              style={{ marginHorizontal: -18 }}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            >
+              <HStack paddingHorizontal={18}>
+                <TableRow>
+                  <TableCell width={200}>Test</TableCell>
+                  <TableCell width={200}>Test</TableCell>
+                  <TableCell width={200}>Test</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell width={200}>1</TableCell>
+                  <TableCell width={200}>2</TableCell>
+                  <TableCell width={200}>3</TableCell>
+                </TableRow>
+              </HStack>
+            </ScrollView>
           </VStack>
 
-          <Spacer size="lg" />
-
-          <View style={{ flexDirection: 'row' }}>
-            <Image
-              source={{ uri: restaurant.image }}
-              style={{ height: 200, width: '100%' }}
-              resizeMode="cover"
-            />
-            <View style={{ width: '30%' }}>
-              {om.state.auth.is_logged_in && <ReviewForm />}
-            </View>
-            <View>
-              <Text style={{ fontSize: 15 }}>Latest Reviewers</Text>
-              {(state.reviews ?? []).map((review, i) => {
-                return (
-                  <Text key={i}>
-                    <Link
-                      name="user"
-                      params={{ id: review.user.id, pane: 'reviews' }}
-                    >
-                      {review.user.username}
-                    </Link>
-                    {i == state.reviews.length - 1 ? '' : ', '}
-                  </Text>
-                )
-              })}
-            </View>
-          </View>
-          <View>
-            <HStack height={100}>
+          <VStack>
+            <SmallTitle>Images</SmallTitle>
+            <HStack
+              flexWrap="wrap"
+              height={100}
+              marginLeft={-10}
+              marginRight={-20}
+              alignItems="center"
+              justifyContent="center"
+            >
               {(restaurant.photos ?? []).map((photo, key) => (
                 <Image
                   key={key}
                   source={{ uri: photo }}
-                  style={{ height: 100, width: 100 }}
+                  style={{
+                    height: 180,
+                    width: '31%',
+                    marginRight: 10,
+                    marginBottom: 10,
+                    borderRadius: 12,
+                  }}
                   resizeMode="cover"
                 />
               ))}
             </HStack>
-          </View>
-          <View>
-            {!!restaurant.website && (
-              <Text onPress={() => Linking.openURL(restaurant.website)}>
-                🔗 {restaurant.website}
-              </Text>
-            )}
-
-            {Object.keys(sources).length > 0 && (
-              <SmallTitle>Sources</SmallTitle>
-            )}
-            <FlatList
-              data={Object.keys(sources).map((i) => {
-                return {
-                  source: i,
-                  url: sources[i],
-                }
-              })}
-              renderItem={(i) => (
-                <Text
-                  key={i.item.source}
-                  onPress={() => Linking.openURL(i.item.url)}
-                >
-                  🔗 {i.item.source}
-                </Text>
-              )}
-            ></FlatList>
-          </View>
+          </VStack>
         </VStack>
       </ScrollView>
     </VStack>

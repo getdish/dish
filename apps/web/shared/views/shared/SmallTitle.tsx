@@ -6,25 +6,32 @@ import { Divider } from './Divider'
 
 export function Title(props: { children: any }) {
   return (
-    <VStack width="100%" alignItems="center" paddingTop={12} paddingBottom={6}>
-      <Text
-        style={{
-          opacity: 0.7,
-          fontSize: 18,
-          fontWeight: '500',
-        }}
+    <>
+      <VStack
+        width="100%"
+        alignItems="center"
+        paddingTop={12}
+        paddingBottom={8}
       >
-        {props.children}
-      </Text>
-      <Spacer />
-      <Divider />
-    </VStack>
+        <Text
+          style={{
+            opacity: 0.65,
+            fontSize: 17,
+            fontWeight: '500',
+            paddingBottom: 8,
+          }}
+        >
+          {props.children}
+        </Text>
+        <Divider />
+      </VStack>
+    </>
   )
 }
 
 export function SmallTitle(props: { children: any }) {
   return (
-    <VStack width="100%" alignItems="center" paddingVertical={8}>
+    <VStack width="100%" alignItems="center" paddingVertical={4}>
       <Text
         style={{
           textTransform: 'uppercase',
@@ -36,7 +43,7 @@ export function SmallTitle(props: { children: any }) {
       >
         {props.children}
       </Text>
-      <Spacer />
+      <Spacer size="sm" />
       <Divider />
     </VStack>
   )
