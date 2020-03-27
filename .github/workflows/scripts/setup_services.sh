@@ -13,13 +13,11 @@ wait_until_hasura_ready() {
 }
 export -f wait_until_hasura_ready
 
-pushd services/hasura
 mkdir -p $HOME/.dish/postgres/data
 docker-compose up -d
 sleep 10
 docker-compose down
 docker-compose up -d
-popd
 
 curl -L https://github.com/hasura/graphql-engine/raw/master/cli/get.sh | bash
 

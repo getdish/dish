@@ -47,7 +47,7 @@ var query = `
 		AND (
 			name ILIKE '%' || ?3 || '%'
 			OR
-			tag_names @> (select string_to_array(?4, ','))
+			tag_names @> to_json(string_to_array(?4, ','))::jsonb
 		)
 		ORDER BY rating DESC NULLS LAST
 		LIMIT ?5
@@ -85,10 +85,11 @@ func search(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleRequests() {
+	port := getEnv("PORT", "10000")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", search)
 	handler := cors.Default().Handler(mux)
-	log.Fatal(http.ListenAndServe(":10000", handler))
+	log.Fatal(http.ListenAndServe(":"+port, handler))
 }
 
 func main() {
