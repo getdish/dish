@@ -146,7 +146,7 @@ function HomeSearchResultsViewContent({
             restaurant={allRestaurants[id]}
             rank={index + 1}
             onHover={() => {
-              om.actions.home.setHoveredRestaurant(index)
+              om.actions.home.setHoveredRestaurant(allRestaurants[id])
             }}
           />
         )
@@ -160,12 +160,7 @@ function HomeSearchResultsViewContent({
         </VStack>
       )
     }
-  }, [
-    results?.status,
-    results.status == 'complete'
-      ? results.results?.restaurantIds?.join('')
-      : '',
-  ])
+  }, [JSON.stringify(results)])
 
   return (
     <ScrollView

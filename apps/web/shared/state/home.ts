@@ -47,7 +47,7 @@ export type HomeStateItemHome = HomeStateItemBase & {
 export type HomeStateItemSearch = HomeStateItemBase & {
   type: 'search'
   results: SearchResults
-  hoveredRestaurant: number
+  hoveredRestaurant: string
   filters: Taxonomy[]
 }
 
@@ -340,12 +340,10 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
     om.state.home.restaurants[restaurant.id] = restaurant
   }
 
-  console.log('restaurants', restaurants)
-
   state.results = {
     status: 'complete',
     results: {
-      restaurantsIds: restaurants.map((x) => x.id).filter(Boolean),
+      restaurantIds: restaurants.map((x) => x.id).filter(Boolean),
       dishes: [],
       locations: [],
     },
@@ -401,8 +399,10 @@ const submitReview: AsyncAction<Review> = async (om, inReview) => {
   }
 }
 
-const setHoveredRestaurant: Action<number> = (om, index) => {
-  om.state.home.lastSearchState.hoveredRestaurant = index
+const setHoveredRestaurant: Action<Restaurant> = (om, val) => {
+  if (om.state.home.lastSearchState) {
+    om.state.home.lastSearchState.hoveredRestaurant = val.id
+  }
 }
 
 const setShowMenu: Action<boolean> = (om, val) => {

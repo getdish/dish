@@ -26,6 +26,9 @@ export const RestaurantRatingPopover = memo(
       }, 500)
     }
     const setRating = (r: number) => {
+      if (r == 0) {
+        return
+      }
       om.actions.home.setReview({ rating: r })
       setIsOpen(true)
       persist()
@@ -119,7 +122,9 @@ export const RestaurantRatingPopover = memo(
         isOpen={isOpen}
         position="right"
         onClickOutside={() => {
-          setRating(0)
+          if (isOpen) {
+            setRating(0)
+          }
         }}
         target={
           <div
