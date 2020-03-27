@@ -12,7 +12,7 @@ export const RatingView = forwardRef(
     const color = rank > 84 ? 'green' : rank > 60 ? 'orange' : 'red'
     const borderColor =
       rank > 84 ? 'lightgreen' : rank > 60 ? 'sunset' : 'lightred'
-    const size = sizeIn == 'md' ? 58 : 72
+    const size = sizeIn == 'md' ? 54 : 72
     return (
       <VStack ref={ref as any} position="relative">
         {rank > 89 && (
