@@ -29,3 +29,14 @@ services:
     depends_on:
       - 'postgres'
       - 'redis'
+  search:
+    image: dish/search
+    build:
+      context: ./
+      dockerfile: ./services/search/Dockerfile
+    ports:
+      - 10000:10000
+    environment:
+      - POSTGRES_HOST=postgres
+    depends_on:
+      - 'postgres'

@@ -304,9 +304,7 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
   let curId = runSearchId
   let state = om.state.home.currentState
 
-  if (state.type != 'search') {
-    return
-  }
+  if (state.type != 'search') return
 
   state.searchQuery = query
   state.results = { status: 'loading' }
@@ -314,14 +312,17 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
   await sleep(350)
 
   state = om.state.home.currentState
-  if (state.type != 'search') return
   if (runSearchId != curId) return
+
+  if (state.type != 'search') return
+  const tags = _.uniq([...state.filters.map((f) => f.name)])
 
   const restaurants = await Restaurant.search(
     om.state.home.currentState.center.lat,
     om.state.home.currentState.center.lng,
     RADIUS,
-    query
+    query,
+    tags
   )
 
   state = om.state.home.currentState

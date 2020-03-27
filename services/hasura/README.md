@@ -3,7 +3,8 @@
 ### Quickstart
 
 If you don't want or have Postgres, Postgis and Hasura on your machine, the
-simplest way to install and run them is with `docker-compose up` in this folder.
+simplest way to install and run them is with `docker-compose up` in the root of
+the project.
 Here are the Docker Compose installation instructions:
 https://docs.docker.com/compose/install/
 

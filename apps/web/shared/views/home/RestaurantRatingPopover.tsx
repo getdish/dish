@@ -20,9 +20,9 @@ export const RestaurantRatingPopover = memo(
   }) => {
     const om = useOvermind()
     const state = om.state.home.currentState
-    if (state.type != 'restaurant') return
     const [feedback, setFeedback] = useState('')
     const [timer, setTimer] = useState(null)
+    if (state.type != 'restaurant') return
     const persist = async () => {
       await om.actions.home.submitReview()
       setFeedback('saved')

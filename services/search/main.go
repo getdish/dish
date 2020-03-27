@@ -3,17 +3,13 @@ package main
 import (
 	"fmt"
 	"github.com/go-pg/pg/v9"
+	"github.com/rs/cors"
 	"log"
 	"net/http"
 	"os"
 )
 
-var db = pg.Connect(&pg.Options{
-	User:     "postgres",
-	Password: getEnv("POSTGRES_PASSWORD", "postgres"),
-	Addr:     getEnv("POSTGRES_HOST", "localhost") + ":5432",
-	Database: "dish",
-})
+var db *pg.DB
 
 var query = `
 	SELECT jsonb_agg(
@@ -31,9 +27,11 @@ var query = `
 			'price_range', data.price_range,
 			'tags', ARRAY(
 				SELECT json_build_object(
-					'name', name,
-					'icon', icon,
-					'type', type
+					'taxonomy', json_build_object(
+						'name', name,
+						'icon', icon,
+						'type', type
+					)
 				) FROM taxonomy
 					WHERE id IN (
 						SELECT rt.taxonomy_id FROM restaurant_taxonomy rt
@@ -78,15 +76,27 @@ func search(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
+	w.Header().Set("Content-Type", "application/json")
+	if json == "" {
+		json = "[]"
+	}
 	fmt.Fprintf(w, json)
 }
 
 func handleRequests() {
-	http.HandleFunc("/", search)
-	log.Fatal(http.ListenAndServe(":10000", nil))
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", search)
+	handler := cors.Default().Handler(mux)
+	log.Fatal(http.ListenAndServe(":10000", handler))
 }
 
 func main() {
+	db = pg.Connect(&pg.Options{
+		User:     "postgres",
+		Password: getEnv("POSTGRES_PASSWORD", "postgres"),
+		Addr:     getEnv("POSTGRES_HOST", "localhost") + ":5432",
+		Database: "dish",
+	})
 	defer db.Close()
 	handleRequests()
 }

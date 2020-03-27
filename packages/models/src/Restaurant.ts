@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import axios from 'axios'
 
 import { ModelBase, Point } from './ModelBase'
 import { Dish } from './Dish'
@@ -6,6 +7,13 @@ import { Scrape } from './Scrape'
 import { Taxonomy } from './Taxonomy'
 import { EnumType } from 'json-to-graphql-query'
 import { levenshteinDistance } from './utils'
+
+let SEARCH_DOMAIN: string
+if (window.location.hostname.includes('hasura_live')) {
+  SEARCH_DOMAIN = 'https://search-b4dc375a-default.rio.dishapp.com'
+} else {
+  SEARCH_DOMAIN = 'http://localhost:10000'
+}
 
 export class Restaurant extends ModelBase<Restaurant> {
   name!: string
@@ -129,45 +137,19 @@ export class Restaurant extends ModelBase<Restaurant> {
     lat: number,
     lng: number,
     distance: number,
-    search_query: string
+    search_query: string,
+    tags: string[] = []
   ): Promise<Restaurant[]> {
-    const query = {
-      query: {
-        restaurant: {
-          __args: {
-            where: {
-              _or: [
-                { name: { _ilike: '%' + search_query + '%' } },
-                {
-                  tags: {
-                    taxonomy: {
-                      name: { _eq: search_query },
-                    },
-                  },
-                },
-              ],
-              location: {
-                _st_d_within: {
-                  distance: distance,
-                  from: {
-                    type: 'Point',
-                    coordinates: [lng, lat],
-                  },
-                },
-              },
-            },
-            limit: 25,
-            order_by: { rating: new EnumType('desc_nulls_last') },
-          },
-          id: true,
-          ...Restaurant.fieldsAsObject(),
-        },
-      },
-    }
-    const response = await ModelBase.hasura(query)
-    return response.data.data.restaurant.map(
-      (data: Partial<Restaurant>) => data
-    )
+    const params = [
+      'query=' + search_query,
+      'lon=' + lng,
+      'lat=' + lat,
+      'distance=' + distance,
+      'limit=25',
+      'tags=' + tags.map((t) => t.toLowerCase().trim()).join(','),
+    ]
+    const response = await axios.get(SEARCH_DOMAIN + '?' + params.join('&'))
+    return response.data.map((data: Partial<Restaurant>) => data)
   }
 
   async getLatestScrape(source: string) {
