@@ -7,7 +7,7 @@ import { Icon } from '../shared/Icon'
 import React, { memo } from 'react'
 import { Spacer } from '../shared/Spacer'
 import { VStack, ZStack, HStack } from '../shared/Stacks'
-import { useHomeDrawerWidth } from './HomeView'
+import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { Text } from 'react-native'
 import { flatButtonStyle } from './HomeViewTopDishes'
 
