@@ -310,7 +310,7 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
   state.searchQuery = query
   state.results = { status: 'loading' }
 
-  await sleep(50)
+  await sleep(350)
 
   state = om.state.home.currentState
   if (state.type != 'search') return

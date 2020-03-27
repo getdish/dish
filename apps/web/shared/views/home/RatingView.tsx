@@ -68,6 +68,7 @@ export const RatingView = forwardRef(
                   fontSize: 22 + (sizeIn == 'lg' ? 4 : 0),
                   fontWeight: '600',
                   color,
+                  letterSpacing: -2,
                 }}
               >
                 {rank}
