@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ScrollView } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { RestaurantListItem } from './RestaurantListItem'
-import { SmallTitle } from '../shared/SmallTitle'
+import { SmallTitle, Title } from '../shared/SmallTitle'
 import { VStack } from '../shared/Stacks'
 import { HomeStateItemSearch, HomeStateItem } from '../../state/home'
 import { memoizeWeak } from '../../helpers/memoizeWeak'
@@ -119,7 +119,7 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
   console.log('RENDER HOME_SEARCH_RESULTS')
   return (
     <VStack flex={1}>
-      <SmallTitle>Top {state.searchQuery} Restaurants</SmallTitle>
+      <Title>Top {state.searchQuery} Restaurants</Title>
       <VStack position="relative" flex={1}>
         <HomeLenseBar backgroundGradient />
         <HomeSearchResultsViewContent state={state} />

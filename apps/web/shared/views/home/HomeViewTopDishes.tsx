@@ -6,7 +6,7 @@ import top_dish_images from '../../assets/topdishes.json'
 import { Spacer } from '../shared/Spacer'
 import { Link, LinkButton } from '../shared/Link'
 import { HStack, VStack, ZStack, StackBaseProps } from '../shared/Stacks'
-import { SmallTitle } from '../shared/SmallTitle'
+import { SmallTitle, Title } from '../shared/SmallTitle'
 import HomeLenseBar from './HomeLenseBar'
 import {
   HomeStateItem,
@@ -35,7 +35,7 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
 
   return (
     <VStack flex={1}>
-      <SmallTitle>{activeLense.description}</SmallTitle>
+      <Title>{activeLense.description}</Title>
       <VStack position="relative" flex={1}>
         <HomeLenseBar />
         <HomeViewTopDishesContent state={state as any} />
@@ -198,4 +198,9 @@ export const flatButtonStyle: StackBaseProps = {
     backgroundColor: `rgba(220, 234, 255, 1)`,
   },
   borderRadius: 5,
+}
+
+export const circularFlatButtonStyle: StackBaseProps = {
+  ...flatButtonStyle,
+  borderRadius: 10000,
 }

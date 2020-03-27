@@ -232,7 +232,7 @@ export const RestaurantRatingDetail = memo(
           </div>
         }
       >
-        <Tooltip height={300}>
+        <Tooltip height={300} width={250}>
           <VStack>
             <SmallTitle>Rating Summary</SmallTitle>
 
