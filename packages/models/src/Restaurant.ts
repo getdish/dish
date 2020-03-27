@@ -40,7 +40,7 @@ export class Restaurant extends ModelBase<Restaurant> {
   telephone!: string
   website!: string
   dishes!: Dish[]
-  sources!: { [key: string]: string }
+  sources!: { [key: string]: { url: string; rating: number } }
   hours!: { [key: string]: any }[]
   is_open_now!: boolean
   price_range!: string
@@ -87,6 +87,17 @@ export class Restaurant extends ModelBase<Restaurant> {
 
   static upsert_constraint() {
     return 'restaurant_name_address_key'
+  }
+
+  // Note that there is no unit or reference point for these values. All that
+  // matters is simply the relative differences between them. For example therefore
+  // there is no need to ensure that the maximum value is 1.0 or 100%.
+  static WEIGHTS = {
+    yelp: 0.6,
+    tripadvisor: 0.6,
+    michelin: 1.0,
+    infatuated: 0.9,
+    ubereats: 0.2,
   }
 
   async findOne(key: string, value: string, extra_returning: {} = {}) {

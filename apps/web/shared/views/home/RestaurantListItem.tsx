@@ -206,7 +206,6 @@ export const RestaurantRatingDetail = memo(
         <Tooltip height={300} width={250}>
           <VStack>
             <SmallTitle>Rating Summary</SmallTitle>
-
             <TableRow>
               <TableCell color="#555" fontWeight="600" width="50%">
                 <Text>Source</Text>
@@ -218,20 +217,24 @@ export const RestaurantRatingDetail = memo(
                 <Text>Weight</Text>
               </TableCell>
             </TableRow>
-
-            {[
-              { source: 'Yelp', rating: 4.5, weight: 0.5 },
-              { source: 'Infatuated', rating: 4.0, weight: 0.85 },
-              { source: 'TripAdvisor', rating: 4.8, weight: 0.35 },
-            ].map((item) => (
-              <TableRow key={item.source}>
-                <TableCell fontWeight="bold" width="50%">
-                  {item.source}
-                </TableCell>
-                <TableCell width="25%">{item.rating}</TableCell>
-                <TableCell flex={1}>{item.weight}</TableCell>
-              </TableRow>
-            ))}
+            {Object.keys(restaurant.sources).map((source) => {
+              const item = restaurant.sources[source]
+              return (
+                <TableRow key={source}>
+                  <TableCell
+                    fontWeight="bold"
+                    width="50%"
+                    onPress={() => {
+                      item.url
+                    }}
+                  >
+                    {source}
+                  </TableCell>
+                  <TableCell width="25%">{item.rating}</TableCell>
+                  <TableCell flex={1}>{Restaurant.WEIGHTS[source]}</TableCell>
+                </TableRow>
+              )
+            })}
           </VStack>
         </Tooltip>
       </Popover>

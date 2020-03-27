@@ -31,6 +31,7 @@ export class Self extends WorkerJob {
   michelin!: Scrape
   tripadvisor!: Scrape
   restaurant!: Restaurant
+  ratings!: { [key: string]: number }
 
   static queue_config: QueueOptions = {
     limiter: {
@@ -41,17 +42,6 @@ export class Self extends WorkerJob {
 
   static job_config: JobOptions = {
     attempts: 3,
-  }
-
-  // Note that there is no unit or reference point for these values. All that
-  // matters is simply the relative differences between them. For example therefore
-  // there is no need to ensure that the maximum value is 1.0 or 100%.
-  static WEIGHTS = {
-    yelp: 0.6,
-    tripadvisor: 0.6,
-    michelin: 1.0,
-    infatuated: 0.9,
-    ubereats: 0.2,
   }
 
   async main() {
@@ -150,7 +140,7 @@ export class Self extends WorkerJob {
   }
 
   mergeRatings() {
-    const ratings = {
+    this.ratings = {
       yelp: parseFloat(this.yelp.getData('data_from_map_search.rating')),
       ubereats: parseFloat(
         this.ubereats.getData('main.ratingBadge[0].children[0].text')
@@ -164,7 +154,10 @@ export class Self extends WorkerJob {
       ),
       michelin: this._getMichelinRating(),
     }
-    this.restaurant.rating = this.weightRatings(ratings, Self.WEIGHTS)
+    this.restaurant.rating = this.weightRatings(
+      this.ratings,
+      Restaurant.WEIGHTS
+    )
   }
 
   weightRatings(
@@ -245,35 +238,51 @@ export class Self extends WorkerJob {
     let path: string
     let parts: string[]
 
-    this.restaurant.sources = {}
+    this.restaurant.sources = {} as {
+      [key: string]: { url: string; rating: number }
+    }
 
     path = this.tripadvisor.getData('overview.links.warUrl')
     if (path != '') {
       parts = path.split('-')
       parts.shift()
       url = 'https://www.tripadvisor.com/' + parts.join('-')
-      this.restaurant.sources.tripadvisor = url
+      this.restaurant.sources.tripadvisor = {
+        url: url,
+        rating: this.ratings?.tripadvisor,
+      }
     }
 
     path = this.yelp.getData('data_from_map_search.businessUrl')
     if (path != '') {
-      this.restaurant.sources.yelp = 'https://www.yelp.com' + path
+      this.restaurant.sources.yelp = {
+        url: 'https://www.yelp.com' + path,
+        rating: this.ratings?.yelp,
+      }
     }
 
     path = this.infatuated.getData('data_from_map_search.post.review_link')
     if (path != '') {
-      this.restaurant.sources.infatuation =
-        'https://www.theinfatuation.com' + path
+      this.restaurant.sources.infatuation = {
+        url: 'https://www.theinfatuation.com' + path,
+        rating: this.ratings?.infatuation,
+      }
     }
 
     path = this.michelin.getData('main.url')
     if (path != '') {
-      this.restaurant.sources.michelin = 'https://guide.michelin.com' + path
+      this.restaurant.sources.michelin = {
+        url: 'https://guide.michelin.com' + path,
+        rating: this.ratings?.michelin,
+      }
     }
 
     const json = JSON.parse(this.ubereats.getData('main.metaJson', '"{}"'))
     if (json['@id']) {
-      this.restaurant.sources.ubereats = json['@id']
+      this.restaurant.sources.ubereats = {
+        url: json['@id'],
+        rating: this.ratings?.ubereats,
+      }
     }
   }
 
