@@ -14,6 +14,7 @@ var db *pg.DB
 var query = `
 	SELECT jsonb_agg(
 		json_build_object(
+			'id', data.id,
 			'name', data.name,
 			'slug', data.slug,
 			'rating', data.rating,
