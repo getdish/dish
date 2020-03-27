@@ -7,6 +7,7 @@ import { QueueOptions, JobOptions } from 'bull'
 import { WorkerJob } from '@dish/worker'
 import { Scrape, Restaurant, Dish } from '@dish/models'
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
+import { db } from '../utils'
 
 const PER_PAGE = 50
 
@@ -45,6 +46,7 @@ export class Self extends WorkerJob {
   }
 
   async main() {
+    db.start()
     let previous_id = '00000000-0000-0000-0000-000000000000'
     while (true) {
       const results = await Restaurant.fetchBatch(
@@ -64,6 +66,7 @@ export class Self extends WorkerJob {
         }
       }
     }
+    await db.client.end()
   }
 
   async mergeAll(id: string) {
@@ -316,6 +319,7 @@ export class Self extends WorkerJob {
       .getData('overview.detailCard.tagTexts.cuisines.tags', [])
       .map((c) => c.tagValue)
     await this.restaurant.upsertTags(_.uniq([...yelps, ...tripadvisors]))
+    await this.updateTagRankings()
   }
 
   async upsertUberDishes() {
@@ -339,6 +343,31 @@ export class Self extends WorkerJob {
       ...this._getYelpPhotos(),
       ...this.tripadvisor.getData('photos', []),
     ]
+  }
+
+  async updateTagRankings() {
+    const tag_rankings = await Promise.all(
+      this.restaurant.tag_names.map(async (tag) => {
+        return [tag, await this.getRankForTag(tag)]
+      })
+    )
+    this.restaurant.tag_rankings = tag_rankings
+  }
+
+  async getRankForTag(tag: string) {
+    const RADIUS = 0.1
+    tag = tag.toLowerCase()
+    const result = await db.client.query(
+      `SELECT rank FROM (
+        SELECT id, DENSE_RANK() OVER(ORDER BY rating DESC NULLS LAST) AS rank
+        FROM restaurant WHERE
+          ST_DWithin(location, location, ${RADIUS})
+          AND
+          tag_names @> '"${tag}"'
+      ) league
+      WHERE id = '${this.restaurant.id}'`
+    )
+    return parseInt(result.rows[0].rank)
   }
 
   private _getYelpPhotos() {

@@ -37,6 +37,8 @@ services:
       - DISH_ENV=production
       - COMMIT_HASH=${REVISION}
       - REDIS_HOST=redis-master.redis
+      - PGHOST=postgres-postgresql.postgres
+      - PGPASSWORD=${TF_VAR_POSTGRES_PASSWORD}
       - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
       - HASURA_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}
       - UBEREATS_PROXY=${UBEREATS_PROXY}
@@ -57,6 +59,8 @@ services:
       - DISH_ENV=production
       - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
       - HASURA_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}
+      - PGHOST=postgres-postgresql.postgres
+      - PGPASSWORD=${TF_VAR_POSTGRES_PASSWORD}
       - COMMIT_HASH=${REVISION}
       - REDIS_HOST=redis-master.redis
       - UBEREATS_PROXY=${UBEREATS_PROXY}

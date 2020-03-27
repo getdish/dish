@@ -163,11 +163,20 @@ export const RestaurantTagsRow = ({
   showMore?: boolean
   size?: 'lg' | 'md'
 }) => {
-  const tags = restaurant.tags.map((i) => i.taxonomy.name) ?? []
+  const r = new Restaurant({
+    tags: restaurant.tags,
+    tag_rankings: restaurant.tag_rankings,
+  })
+  const tags = r.getTagsWithRankings() ?? []
   return (
     <HStack alignItems="center" spacing>
       {tags.slice(0, showMore ? 2 : 10).map((tag) => (
-        <TagButton key={tag} rank={1} name={`🍜 ${tag}`} size={size} />
+        <TagButton
+          key={tag.name}
+          rank={tag.rank}
+          name={`${tag.icon || ''} ${tag.name}`}
+          size={size}
+        />
       ))}
       {!!showMore && <Text style={{ opacity: 0.5 }}>+ 5 more</Text>}
     </HStack>

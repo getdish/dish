@@ -1,5 +1,6 @@
 import anyTest, { TestInterface } from 'ava'
 
+import { db } from '../src/utils'
 import { Self } from '../src/self/Self'
 import { Restaurant, Scrape } from '@dish/models'
 
@@ -12,6 +13,8 @@ const test = anyTest as TestInterface<Context>
 const restaurant_fixture: Partial<Restaurant> = {
   name: 'Test Name Original',
   location: { type: 'Point', coordinates: [0, 0] },
+  tag_names: ['rankable'],
+  rating: 3,
 }
 
 const yelp: Partial<Scrape> = {
@@ -78,6 +81,14 @@ const tripadvisor: Partial<Scrape> = {
   },
 }
 
+test.before(() => {
+  db.start()
+})
+
+test.after(() => {
+  db.client.end()
+})
+
 test.beforeEach(async (t) => {
   let scrape: Scrape
   await Scrape.deleteAllFuzzyBy('id_from_source', 'test')
@@ -138,4 +149,25 @@ test('Weighted ratings when some sources are missing', (t) => {
     c: 1,
   }
   t.is(self.weightRatings(ratings, weights), 3.7142857142857144)
+})
+
+test('Tag rankings', async (t) => {
+  const dish = new Self()
+  dish.restaurant = t.context.restaurant
+  const r1 = new Restaurant({
+    ...restaurant_fixture,
+    address: '1',
+    rating: 4,
+    tag_names: ['rankable'],
+  })
+  const r2 = new Restaurant({
+    ...restaurant_fixture,
+    address: '2',
+    rating: 5,
+    tag_names: ['rankable'],
+  })
+  await r1.insert()
+  await r2.insert()
+  await dish.updateTagRankings()
+  t.deepEqual(dish.restaurant.tag_rankings, [['rankable', 3]])
 })

@@ -27,6 +27,7 @@ var query = `
 			'is_open_now', is_restaurant_open(data),
 			'hours', data.hours,
 			'price_range', data.price_range,
+			'tag_rankings', data.tag_rankings,
 			'tags', ARRAY(
 				SELECT json_build_object(
 					'taxonomy', json_build_object(

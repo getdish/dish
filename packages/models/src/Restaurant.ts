@@ -36,6 +36,7 @@ export class Restaurant extends ModelBase<Restaurant> {
   image?: string
   tags!: { taxonomy: Taxonomy }[]
   tag_names!: string[]
+  tag_rankings!: (string | number)[][]
   photos?: string[]
   telephone!: string
   website!: string
@@ -63,6 +64,7 @@ export class Restaurant extends ModelBase<Restaurant> {
       'image',
       'tags',
       'tag_names',
+      'tag_rankings',
       'photos',
       'telephone',
       'website',
@@ -323,5 +325,17 @@ export class Restaurant extends ModelBase<Restaurant> {
     return (
       [restaurant.image, ...(restaurant.photos ?? [])].filter(Boolean) ?? []
     )
+  }
+
+  getTagsWithRankings() {
+    return this.tags.map((i) => {
+      let rank = -1
+      const lowered = i.taxonomy.name.toLowerCase()
+      const match = this.tag_rankings.find((i) => i[0] == lowered)
+      if (match) {
+        rank = match[1] as number
+      }
+      return { icon: i.taxonomy.icon, name: i.taxonomy.name, rank: rank }
+    })
   }
 }

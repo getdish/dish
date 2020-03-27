@@ -1,8 +1,24 @@
 import '@dish/common'
-
+import { Client } from 'pg'
 import axios from 'axios'
 
 const HEREMAPS_API_TOKEN = process.env.HEREMAPS_API_TOKEN
+
+process.env.PGUSER = 'postgres'
+process.env.PGDATABASE = 'dish'
+process.env.PGPASSWORD = process.env.PGPASSWORD || 'postgres'
+
+class DB {
+  client: Client
+  start() {
+    this.client = new Client()
+    ;(async () => {
+      await this.client.connect()
+    })()
+  }
+}
+
+export const db = new DB()
 
 export function shiftLatLonByMetres(
   lat: number,
