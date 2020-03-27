@@ -88,10 +88,7 @@ export const RestaurantListItem = ({
             <HStack marginVertical={-7}>
               <Spacer size={20} />
               <HStack alignItems="center">
-                <RestaurantRatingPopover
-                  restaurant={restaurant}
-                  onChangeOpen={setDisablePress}
-                />
+                <RestaurantRatingPopover restaurant={restaurant} />
                 <Spacer />
                 <RestaurantTagsRow showMore restaurant={restaurant} />
               </HStack>
@@ -224,9 +221,9 @@ export const RestaurantRatingDetail = memo(
                   <TableCell
                     fontWeight="bold"
                     width="50%"
-                    onPress={() => {
-                      item.url
-                    }}
+                    // onPress={() => {
+                    //   item.url
+                    // }}
                   >
                     {source}
                   </TableCell>

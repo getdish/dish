@@ -8,6 +8,7 @@ import { Spacer } from '../shared/Spacer'
 import { useMap, Map } from '../map'
 import { useHomeDrawerWidth } from './HomeView'
 import { useDebounceValue } from '../../hooks/useDebounce'
+import { useOnMount } from '../../hooks/useOnMount'
 
 function centerMapToRegion({
   map,
@@ -110,14 +111,12 @@ function HomeMap() {
         ? state.results.results.restaurantIds ?? []
         : []
       : []
-  console.log('searchResults', searchResults)
+
   const restaurantIds: string[] = _.uniq(
     [...searchResults, ...prevResults, curRestaurant?.id].filter(
       (id) => !!id && !!allRestaurants[id]?.location?.coordinates
     )
   )
-
-  console.log('restaurantIds', prevResults, restaurantIds, state)
 
   const restaurants = restaurantIds.map((id) => allRestaurants[id])
   const restaurantsVersion = restaurantIds.join('')
@@ -154,15 +153,26 @@ function HomeMap() {
     [restaurantsVersion]
   )
 
-  const { hoveredRestaurant } = om.state.home
   useEffect(() => {
-    if (hoveredRestaurant) {
-      const index = restaurantIds.indexOf(hoveredRestaurant.id)
-      if (map.annotations[index]) {
-        map.annotations[index].selected = true
+    // hovering restaurants
+    if (!map) return
+    return om.reaction(
+      (state) => state.home.hoveredRestaurant,
+      (hoveredRestaurant) => {
+        if (!hoveredRestaurant) return
+        const index = restaurantIds.indexOf(hoveredRestaurant.id)
+        console.log(
+          'covering',
+          index,
+          hoveredRestaurant,
+          map.annotations.length
+        )
+        if (map.annotations[index]) {
+          map.annotations[index].selected = true
+        }
       }
-    }
-  }, [hoveredRestaurant])
+    )
+  }, [map, restaurantIds])
 
   const curRestaurantD = useDebounceValue(curRestaurant, 250)
   useEffect(() => {
@@ -176,11 +186,12 @@ function HomeMap() {
 
   useEffect(() => {
     if (!restaurantSelected) return
-    // map.setCenterAnimated(
-    //   coordinates[restaurants.findIndex((x) => x.id === restaurantSelected.id)],
-    //   true
-    // )
-  }, [restaurantSelected])
+    if (!map) return
+    map.setCenterAnimated(
+      coordinates[restaurants.findIndex((x) => x.id === restaurantSelected.id)],
+      true
+    )
+  }, [map, restaurantSelected])
 
   useEffect(() => {
     if (!map) return
