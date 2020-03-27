@@ -159,10 +159,10 @@ export class ModelBase<T> {
   }
 
   constructor(init?: Partial<T>) {
+    Object.assign(this, init)
     this._klass = this.constructor as typeof ModelBase
     this._upper_name = this._klass.upper_name()
     this._lower_name = this._upper_name.toLowerCase()
-    Object.assign(this, init)
   }
 
   static model_name() {
@@ -219,7 +219,7 @@ export class ModelBase<T> {
       if (this._klass.read_only_fields().includes(field)) {
         continue
       }
-      if (this[field]) {
+      if (field in this) {
         object[field] = this[field]
       }
     }

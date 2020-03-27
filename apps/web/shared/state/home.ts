@@ -169,8 +169,11 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
         reviews: [],
         ...currentBaseState,
       }
-      fetchData = () => {
-        om.actions.home.setCurrentRestaurant(item.params.slug)
+      fetchData = async () => {
+        await om.actions.home.setCurrentRestaurant(item.params.slug)
+        if (om.state.auth.is_logged_in) {
+          await om.actions.home.getReview()
+        }
       }
       break
   }
@@ -223,16 +226,14 @@ const setCurrentRestaurant: AsyncAction<string> = async (om, slug: string) => {
       lng: restaurant.location.coordinates[0],
       lat: restaurant.location.coordinates[1] - 0.0037,
     }
-    const reviews = new Review()
-    state.reviews = await reviews.findAllForRestaurant(restaurant.id)
+    state.reviews = await Review.findAllForRestaurant(restaurant.id)
   }
 }
 
 const getUserReviews: AsyncAction<string> = async (om, user_id: string) => {
-  const reviews = new Review()
   const state = om.state.home.currentState
   if (state.type == 'restaurant') {
-    state.reviews = await reviews.findAllForUser(user_id)
+    state.reviews = await Review.findAllForUser(user_id)
   }
 }
 
@@ -355,41 +356,34 @@ const setMapcenter: Action<LngLat> = (om, center: LngLat) => {
 }
 
 const getReview: AsyncAction = async (om) => {
-  const state = om.state.home.currentState
-
-  if (state.type == 'restaurant') {
-    let review = new Review()
-    await review.findOne(state.restaurant.id, om.state.auth.user.id)
-    state.review = review
+  let state = om.state.home.currentState
+  if (state.type != 'restaurant') return
+  let review = new Review()
+  await review.findOne(state.restaurant.id, om.state.auth.user.id)
+  state.review = review
+  if (typeof state.review.id == 'undefined') {
+    Object.assign(state.review, {
+      restaurant_id: state.restaurant.id,
+      user_id: om.state.auth.user.id,
+    })
   }
 }
 
-const submitReview: AsyncAction<[number, string]> = async (
-  om,
-  args: [number, string]
-) => {
-  const rating = args[0]
-  const text = args[1]
-  let review = new Review()
+const setReview: Action<Partial<Review>> = (om, review: Partial<Review>) => {
   const state = om.state.home.currentState
-  if (state.type == 'restaurant') {
-    if (typeof state.review.id == 'undefined') {
-      Object.assign(review, {
-        restaurant_id: state.restaurant.id,
-        user_id: om.state.auth.user.id,
-        rating: rating,
-        text: text,
-      })
-      await review.insert()
-    } else {
-      Object.assign(review, state.review)
-      Object.assign(review, {
-        rating: rating,
-        text: text,
-      })
-      await review.update()
-    }
-    state.review = review
+  if (state.type != 'restaurant') return
+  Object.assign(state.review, review)
+}
+
+const submitReview: AsyncAction = async (om) => {
+  let state = om.state.home.currentState
+  if (state.type != 'restaurant') return
+  let review = new Review(state.review)
+  if (typeof review.id == 'undefined') {
+    await review.insert()
+    state.review.id = review.id
+  } else {
+    await review.update()
   }
 }
 
@@ -420,6 +414,7 @@ export const actions = {
   clearSearch,
   setMapcenter,
   getReview,
+  setReview,
   submitReview,
   getUserReviews,
   _pushHomeState,

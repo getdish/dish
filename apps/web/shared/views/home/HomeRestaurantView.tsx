@@ -4,23 +4,20 @@ import {
   Text,
   View,
   ScrollView,
-  Linking,
-  FlatList,
   TextProps,
   TextInput,
+  TouchableOpacity,
   StyleSheet,
 } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 
-import ReviewForm from './ReviewForm'
 import { Spacer } from '../shared/Spacer'
-import { HStack, VStack, ZStack, StackBaseProps } from '../shared/Stacks'
+import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { Link, LinkButton } from '../shared/Link'
 import { SmallTitle } from '../shared/SmallTitle'
 import { HomeStateItem } from '../../state/home'
 import { CloseButton } from './CloseButton'
-import { RatingView } from './RatingView'
 import {
   RestaurantRatingDetail,
   RestaurantTagsRow,
@@ -28,6 +25,7 @@ import {
 } from './RestaurantListItem'
 import { RestaurantMetaRow } from './RestaurantMetaRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
+import { RestaurantRatingPopover } from './RestaurantRatingPopover'
 import { Divider } from '../shared/Divider'
 import { flatButtonStyle, circularFlatButtonStyle } from './HomeViewTopDishes'
 import { TableRow, TableCell } from './TableRow'
@@ -43,6 +41,7 @@ export default memoIsEqualDeep(function HomeRestaurantView({
   state: HomeStateItem
 }) {
   const om = useOvermind()
+  const [isRating, setIsRating] = useState(false)
   if (state.type !== 'restaurant') {
     return null
   }
@@ -101,9 +100,36 @@ export default memoIsEqualDeep(function HomeRestaurantView({
                 padding={5}
                 alignItems="stretch"
               >
-                <EmojiButton size={50}>👎</EmojiButton>
-                <EmojiButton size={50}>👍</EmojiButton>
-                <EmojiButton size={50}>🤤</EmojiButton>
+                <EmojiButton
+                  onPress={() => {
+                    setIsRating(!isRating)
+                  }}
+                  size={50}
+                >
+                  👎
+                </EmojiButton>
+                <EmojiButton
+                  onPress={() => {
+                    setIsRating(!isRating)
+                  }}
+                  size={50}
+                >
+                  👍
+                </EmojiButton>
+                <EmojiButton
+                  onPress={() => {
+                    setIsRating(!isRating)
+                  }}
+                  size={50}
+                >
+                  🤤
+                </EmojiButton>
+                {isRating && (
+                  <RestaurantRatingPopover
+                    restaurant={restaurant}
+                    onChangeOpen={() => {}}
+                  />
+                )}
                 {/* <View style={{ flexDirection: 'row' }}>
                   <View style={{ width: '30%' }}>
                     {om.state.auth.is_logged_in && <ReviewForm />}

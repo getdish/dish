@@ -12,11 +12,6 @@ export class Review extends ModelBase<Review> {
   rating!: number
   text!: string
 
-  constructor(init?: Partial<Review>) {
-    super()
-    Object.assign(this, init)
-  }
-
   static model_name() {
     return 'Review'
   }
@@ -54,7 +49,7 @@ export class Review extends ModelBase<Review> {
     }
   }
 
-  async findAllForRestaurant(restaurant_id: string) {
+  static async findAllForRestaurant(restaurant_id: string) {
     const query = {
       query: {
         review: {
@@ -81,7 +76,7 @@ export class Review extends ModelBase<Review> {
     )
   }
 
-  async findAllForUser(user_id: string) {
+  static async findAllForUser(user_id: string) {
     const query = {
       query: {
         review: {
