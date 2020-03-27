@@ -78,7 +78,6 @@ export default memoIsEqualDeep(function HomeRestaurantView({
           </VStack>
         </HStack>
         <Spacer />
-        {/* <Divider /> */}
       </VStack>
 
       <ScrollView style={{ padding: 18, paddingTop: 6, flex: 1 }}>
@@ -96,6 +95,9 @@ export default memoIsEqualDeep(function HomeRestaurantView({
           <VStack>
             <HStack alignItems="center">
               <RestaurantDetailRow restaurant={restaurant} flex={1} />
+
+              <RestaurantRatingPopover restaurant={restaurant} />
+
               <HStack
                 borderColor="#ddd"
                 borderWidth={1}
@@ -128,12 +130,6 @@ export default memoIsEqualDeep(function HomeRestaurantView({
                 >
                   🤤
                 </EmojiButton>
-                {isRating && (
-                  <RestaurantRatingPopover
-                    restaurant={restaurant}
-                    onChangeOpen={() => {}}
-                  />
-                )}
                 {/* <View style={{ flexDirection: 'row' }}>
                   <View style={{ width: '30%' }}>
                     {om.state.auth.is_logged_in && <ReviewForm />}
@@ -407,7 +403,7 @@ const RestaurantTagButton = memo(() => {
           Top tags
         </Text>
         <HStack padding={10} flexWrap="wrap">
-          {om.state.home.lastHomeState.top_dishes.map((x) => (
+          {(om.state.home.lastHomeState.top_dishes ?? []).map((x) => (
             <TagButton key={x.dish} name={x.dish} />
           ))}
         </HStack>
