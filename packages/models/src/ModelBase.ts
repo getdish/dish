@@ -14,7 +14,8 @@ import { EnumType, jsonToGraphQLQuery } from 'json-to-graphql-query'
 import auth from '@dish/auth'
 
 const isNode = typeof window == 'undefined'
-const isBrowserProd = !isNode && window.location.hostname.includes('dish')
+export const isBrowserProd =
+  !isNode && window.location.hostname.includes('dish')
 let WebSocket: WebSocket
 
 if (isNode) {
@@ -219,7 +220,7 @@ export class ModelBase<T> {
       if (this._klass.read_only_fields().includes(field)) {
         continue
       }
-      if (field in this) {
+      if (field in this && this[field] != undefined) {
         object[field] = this[field]
       }
     }

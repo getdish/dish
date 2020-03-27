@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import axios from 'axios'
 
-import { ModelBase, Point } from './ModelBase'
+import { ModelBase, Point, isBrowserProd } from './ModelBase'
 import { Dish } from './Dish'
 import { Scrape } from './Scrape'
 import { Taxonomy } from './Taxonomy'
@@ -9,10 +9,18 @@ import { EnumType } from 'json-to-graphql-query'
 import { levenshteinDistance } from './utils'
 
 let SEARCH_DOMAIN: string
-if (window.location.hostname.includes('hasura_live')) {
-  SEARCH_DOMAIN = 'https://search-b4dc375a-default.rio.dishapp.com'
+const isNode = typeof window == 'undefined'
+const LIVE_SEARCH_DOMAIN = 'https://search-b4dc375a-default.rio.dishapp.com'
+const LOCAL_SEARCH_DOMAIN = 'http://localhost:10000'
+
+if (isNode) {
+  SEARCH_DOMAIN = LOCAL_SEARCH_DOMAIN
 } else {
-  SEARCH_DOMAIN = 'http://localhost:10000'
+  if (isBrowserProd || window.location.hostname.includes('hasura_live')) {
+    SEARCH_DOMAIN = LIVE_SEARCH_DOMAIN
+  } else {
+    SEARCH_DOMAIN = LOCAL_SEARCH_DOMAIN
+  }
 }
 
 export class Restaurant extends ModelBase<Restaurant> {

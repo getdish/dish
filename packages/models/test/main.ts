@@ -97,7 +97,7 @@ test('Searching for a restaurant by tag', async (t) => {
   const tag = new Taxonomy({ name: 'test_tag' })
   await tag.insert()
   await restaurant.upsertTags(['test_tag'])
-  const results = await Restaurant.search(50.5, 0.5, 1, 'test_tag')
+  const results = await Restaurant.search(50.5, 0.5, 1, '', ['test_tag'])
   t.is(results[0].tags[0].taxonomy.name, 'test_tag')
 })
 
