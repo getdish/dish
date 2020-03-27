@@ -24,6 +24,7 @@ var query = `
 			'website', data.website,
 			'sources', data.sources,
 			'is_open_now', is_restaurant_open(data),
+			'hours', data.hours,
 			'price_range', data.price_range,
 			'tags', ARRAY(
 				SELECT json_build_object(
@@ -46,7 +47,7 @@ var query = `
 		AND (
 			name ILIKE '%' || ?3 || '%'
 			OR
-			tag_names \?| (select string_to_array(?4, ','))
+			tag_names @> (select string_to_array(?4, ','))
 		)
 		ORDER BY rating DESC NULLS LAST
 		LIMIT ?5
