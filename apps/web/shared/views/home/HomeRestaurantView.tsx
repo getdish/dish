@@ -6,15 +6,16 @@ import {
   ScrollView,
   TextProps,
   TextInput,
-  TouchableOpacity,
+  Button,
   StyleSheet,
 } from 'react-native'
 
 import { useOvermind } from '../../state/om'
+import { Restaurant } from '@dish/models'
 
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
-import { Link, LinkButton } from '../shared/Link'
+import { LinkButton } from '../shared/Link'
 import { SmallTitle } from '../shared/SmallTitle'
 import { HomeStateItem } from '../../state/home'
 import { CloseButton } from './CloseButton'
@@ -53,7 +54,10 @@ export default memoIsEqualDeep(function HomeRestaurantView({
     return <Text>Loading...</Text>
   }
 
-  const sources = restaurant.sources ?? []
+  const isCanTag =
+    om.state.auth.is_logged_in &&
+    (om.state.auth.user.role == 'admin' ||
+      om.state.auth.user.role == 'contributor')
 
   return (
     <VStack flex={1}>
@@ -86,7 +90,7 @@ export default memoIsEqualDeep(function HomeRestaurantView({
             <RestaurantTagsRow size="lg" restaurant={restaurant} />
             <Divider flex />
             <Spacer />
-            <RestaurantTagButton />
+            {isCanTag && <RestaurantTagButton />}
           </HStack>
 
           <VStack>
@@ -338,7 +342,13 @@ export default memoIsEqualDeep(function HomeRestaurantView({
 })
 
 const RestaurantTagButton = memo(() => {
+  const om = useOvermind()
   const [isOpen, setIsOpen] = useState(false)
+  const [suggested_tags, setSuggestedTags] = useState('')
+  const state = om.state.home.currentState
+  if (state.type != 'restaurant') return
+  const restaurant = state.restaurant
+
   return (
     <Popover
       position="right"
@@ -364,11 +374,29 @@ const RestaurantTagButton = memo(() => {
         >
           Tag
         </Text>
-        <TextInput
-          placeholder="Suggest tag"
-          numberOfLines={1}
-          style={styles.secondaryInput}
-        />
+        <HStack>
+          <TextInput
+            placeholder="Suggest tag"
+            numberOfLines={1}
+            style={styles.secondaryInput}
+            onChangeText={(t: string) => {
+              setSuggestedTags(t)
+            }}
+          />
+          <Button
+            title="Add"
+            onPress={async () => {
+              if (om.state.home.currentState.type != 'restaurant') return
+              await om.actions.home.suggestTags(suggested_tags)
+            }}
+          ></Button>
+        </HStack>
+        <HStack padding={10} flexWrap="wrap">
+          {restaurant.tags.map((t) => {
+            const name = t.taxonomy.name
+            return <TagButton key={name} name={name} />
+          })}
+        </HStack>
         <Text
           style={{
             padding: 10,
@@ -379,8 +407,8 @@ const RestaurantTagButton = memo(() => {
           Top tags
         </Text>
         <HStack padding={10} flexWrap="wrap">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((x) => (
-            <TagButton key={x} name="Lorem" />
+          {om.state.home.lastHomeState.top_dishes.map((x) => (
+            <TagButton key={x.dish} name={x.dish} />
           ))}
         </HStack>
       </Tooltip>

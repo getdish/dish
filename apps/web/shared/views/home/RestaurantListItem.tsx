@@ -1,29 +1,18 @@
-import React, { useState, useEffect, useRef, memo } from 'react'
-import {
-  Image,
-  Text,
-  TouchableOpacity,
-  View,
-  StyleSheet,
-  TextProps,
-  TextProperties,
-} from 'react-native'
+import React, { useState, useEffect, memo } from 'react'
+import { Image, Text, TouchableOpacity } from 'react-native'
 import { Restaurant } from '@dish/models'
-import { HStack, VStack, ZStack } from '../shared/Stacks'
+import { HStack, VStack } from '../shared/Stacks'
 import { Spacer } from '../shared/Spacer'
 import { TagButton } from './TagButton'
 import { Link } from '../shared/Link'
 import { useOvermind } from '../../state/om'
 import { RatingView } from './RatingView'
 import { RankingView } from './RankingView'
-import { LinearGradient } from 'expo-linear-gradient'
 import { Popover } from '../shared/Popover'
-import { ArrowContainer } from 'react-tiny-popover'
 import { Tooltip } from '../shared/Stack/Tooltip'
 import { RestaurantRatingPopover } from './RestaurantRatingPopover'
 import { Circle } from '../shared/Circle'
 import { SmallTitle } from '../shared/SmallTitle'
-import { Divider } from '../shared/Divider'
 import { TableRow, TableCell } from './TableRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantMetaRow } from './RestaurantMetaRow'

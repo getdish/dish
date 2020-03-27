@@ -258,14 +258,19 @@ export class Restaurant extends ModelBase<Restaurant> {
               update_columns: [new EnumType('name')],
             },
           },
-          returning: { id: true },
+          returning: { id: true, name: true, icon: true },
         },
       },
     }
     const response = await ModelBase.hasura(query)
-    const tag_ids = response.data.data['insert_taxonomy'].returning.map(
-      (i: Taxonomy) => i.id
-    )
+    const taxonomies = response.data.data['insert_taxonomy'].returning
+    const tag_ids = taxonomies.map((i: Taxonomy) => i.id)
+    this.tags = _.uniq([
+      ...(this.tags || []),
+      ...taxonomies.map((i) => {
+        return { taxonomy: i }
+      }),
+    ])
     await this.upsertTagJunctions(tag_ids)
     return tag_ids
   }

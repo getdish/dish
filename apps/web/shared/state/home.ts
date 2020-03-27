@@ -402,6 +402,14 @@ const setActiveLense: Action<Taxonomy> = (om, val) => {
   )
 }
 
+const suggestTags: AsyncAction<string> = async (om, tags) => {
+  let state = om.state.home.currentState
+  if (state.type != 'restaurant') return
+  let restaurant = new Restaurant(state.restaurant)
+  await restaurant.upsertTags(tags.split(','))
+  state.restaurant = restaurant
+}
+
 export const actions = {
   setSearchQuery,
   popTo,
@@ -420,4 +428,5 @@ export const actions = {
   getUserReviews,
   _pushHomeState,
   _popHomeState,
+  suggestTags,
 }
