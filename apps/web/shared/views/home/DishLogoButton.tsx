@@ -7,12 +7,12 @@ export const DishLogoButton = () => {
     <LinkButton
       name="home"
       paddingVertical={10}
-      paddingHorizontal={12}
+      paddingHorizontal={15}
       backgroundColor="#fff"
     >
       <Image
         source={require('../../assets/logo.png')}
-        style={{ width: 1211 * 0.053, height: 605 * 0.053 }}
+        style={{ width: 1211 * 0.052, height: 605 * 0.052 }}
       />
     </LinkButton>
   )

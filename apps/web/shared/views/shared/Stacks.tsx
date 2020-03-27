@@ -44,7 +44,9 @@ const createStack = (defaultStyle?: ViewStyle) => {
           const childArr = React.Children.toArray(children)
           spacedChildren = childArr
             .map((x, i) =>
-              i === childArr.length - 1 ? x : [x, <Spacer size={spacing} />]
+              i === childArr.length - 1
+                ? x
+                : [x, <Spacer key={i} size={spacing} />]
             )
             .flat()
         }

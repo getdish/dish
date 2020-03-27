@@ -113,9 +113,9 @@ export const RestaurantRatingPopover = memo(
               >
                 <Icon
                   name="chevron-up"
-                  size={22}
+                  size={24}
                   color={rating === 1 ? 'green' : 'black'}
-                  marginBottom={-5}
+                  marginBottom={-12}
                 />
               </TouchableOpacity>
               <TouchableOpacity
@@ -126,7 +126,7 @@ export const RestaurantRatingPopover = memo(
               >
                 <Icon
                   name="chevron-down"
-                  size={22}
+                  size={24}
                   color={rating === -1 ? 'red' : 'black'}
                 />
               </TouchableOpacity>

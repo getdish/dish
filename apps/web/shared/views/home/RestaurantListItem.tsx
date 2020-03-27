@@ -83,7 +83,7 @@ export const RestaurantListItem = ({
                 <RankingView rank={rank} />
                 <Text
                   style={{
-                    fontSize: 24,
+                    fontSize: 22,
                     fontWeight: 'bold',
                     textDecorationColor: 'transparent',
                   }}
@@ -95,7 +95,7 @@ export const RestaurantListItem = ({
 
             <Spacer />
 
-            <HStack>
+            <HStack marginVertical={-7}>
               <Spacer size={20} />
               <HStack alignItems="center">
                 <RestaurantRatingPopover
@@ -106,19 +106,21 @@ export const RestaurantListItem = ({
                 <RestaurantTagsRow showMore restaurant={restaurant} />
               </HStack>
             </HStack>
+
             <Spacer />
+
             <HStack alignItems="center" paddingLeft={22}>
               <RestaurantMetaRow restaurant={restaurant} />
               {/* <Divider flex /> */}
             </HStack>
-            <Spacer />
-            <RestaurantDetailRow restaurant={restaurant} />
+            <Spacer size="sm" />
+            <RestaurantDetailRow size="sm" restaurant={restaurant} />
           </VStack>
 
-          <Spacer />
+          <Spacer size="lg" />
 
           <HStack>
-            <VStack position="absolute" top={-20} left={-30} zIndex={100}>
+            <VStack position="absolute" top={-14} left={-30} zIndex={100}>
               <RestaurantRatingDetail restaurant={restaurant} />
             </VStack>
 
@@ -148,8 +150,8 @@ export const RestaurantMetaRow = ({
 }) => {
   return (
     <HStack alignItems="center">
-      <Text style={{ opacity: 0.6, fontWeight: '500' }}>
-        3017 16th St. 📍 &nbsp; · &nbsp;{' '}
+      <Text style={{ opacity: 0.6 }}>
+        3017 16th St. &nbsp; · &nbsp;{' '}
         <Link inline name="restaurant" params={{ slug: '' }}>
           Menu
         </Link>{' '}
@@ -209,7 +211,7 @@ export const RestaurantRatingDetail = memo(
     size = 'md',
     restaurant,
   }: {
-    size: 'lg' | 'md'
+    size?: 'lg' | 'md'
     restaurant: Restaurant
   }) => {
     const [isHoveringRating, setIsHoveringRating] = useState(false)
@@ -265,23 +267,3 @@ export const RestaurantRatingDetail = memo(
     )
   }
 )
-
-function sources(restaurant: Restaurant) {
-  const none = 'No sources yet'
-  if (restaurant.sources == null) {
-    return none
-  }
-  const count = Object.keys(restaurant.sources).length
-  let text: string
-  switch (count) {
-    case 0:
-      text = none
-      break
-    case 1:
-      text = `1 source (${Object.keys(restaurant.sources)[0]})`
-      break
-    default:
-      text = `${count} sources`
-  }
-  return text
-}

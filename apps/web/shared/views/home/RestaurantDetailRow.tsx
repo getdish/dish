@@ -1,16 +1,19 @@
 import React from 'react'
-import { Text } from 'react-native'
+import { Text, StyleSheet } from 'react-native'
 import { Restaurant } from '@dish/models'
 import { HStack, VStack, StackBaseProps } from '../shared/Stacks'
 
 export const RestaurantDetailRow = ({
   restaurant,
+  size,
   ...rest
 }: StackBaseProps & {
+  size?: 'sm' | 'md'
   restaurant: Restaurant
 }) => {
   const [open_text, open_color, next_time] = openingHours(restaurant)
   const [price_label, price_color, price_range] = priceRange(restaurant)
+  const isSm = size === 'sm'
   return (
     <HStack paddingLeft={22} paddingRight={20} {...rest}>
       <VStack width="30%" paddingRight="5%">
@@ -24,7 +27,9 @@ export const RestaurantDetailRow = ({
         >
           {open_text}
         </Text>
-        <Text numberOfLines={1}>{next_time}</Text>
+        <Text numberOfLines={1} style={styles.subText}>
+          {next_time}
+        </Text>
       </VStack>
 
       <VStack width="33%" paddingHorizontal="5%">
@@ -38,7 +43,9 @@ export const RestaurantDetailRow = ({
         >
           {price_label}
         </Text>
-        <Text numberOfLines={1}>{price_range}</Text>
+        <Text numberOfLines={1} style={styles.subText}>
+          {price_range}
+        </Text>
       </VStack>
 
       <VStack width="33%" paddingHorizontal="5%">
@@ -48,11 +55,19 @@ export const RestaurantDetailRow = ({
         >
           Delivers
         </Text>
-        <Text numberOfLines={1}>Uber, PM, DD</Text>
+        <Text numberOfLines={1} style={styles.subText}>
+          Uber, PM, DD
+        </Text>
       </VStack>
     </HStack>
   )
 }
+
+const styles = StyleSheet.create({
+  subText: {
+    fontSize: 13,
+  },
+})
 
 function openingHours(restaurant: Restaurant) {
   let text = 'Opens at'

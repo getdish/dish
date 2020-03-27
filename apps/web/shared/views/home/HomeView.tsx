@@ -60,8 +60,8 @@ function HomeViewDrawer(props: { children: any }) {
   return (
     <VStack
       position={'absolute'}
-      top={20}
-      left={23}
+      top={15}
+      left={20}
       bottom={15}
       zIndex={10}
       width={drawerWidth}

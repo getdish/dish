@@ -172,7 +172,7 @@ function HomeSearchResultsViewContent({
         }
       }}
     >
-      <VStack paddingVertical={20} paddingTop={20 + 80}>
+      <VStack paddingVertical={20} paddingTop={20 + 70}>
         {contents}
       </VStack>
     </ScrollView>
