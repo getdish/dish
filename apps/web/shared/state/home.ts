@@ -17,7 +17,7 @@ export type SearchResults =
   | {
       status: 'complete'
       results: {
-        restaurants: Partial<Restaurant>[]
+        restaurantIds: string[]
         dishes: string[]
         locations: string[]
       }
@@ -39,7 +39,6 @@ export type HomeStateItem =
 export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
   top_dishes?: TopDish[]
-  top_restaurants?: Restaurant[]
   lenses: Taxonomy[]
   filters: Taxonomy[]
   activeLense: number
@@ -48,6 +47,7 @@ export type HomeStateItemHome = HomeStateItemBase & {
 export type HomeStateItemSearch = HomeStateItemBase & {
   type: 'search'
   results: SearchResults
+  hoveredRestaurant: number
   filters: Taxonomy[]
 }
 
@@ -66,8 +66,8 @@ export type HomeStateItemRestaurant = HomeStateItemBase & {
 export type HomeStateItemSimple = Omit<HomeStateItem, 'historyId'>
 
 type HomeState = {
+  restaurants: { [id: string]: Restaurant }
   showMenu: boolean
-  hoveredRestaurant: Restaurant | null
   states: HomeStateItem[]
   breadcrumbStates: Derive<HomeState, HomeStateItemSimple[]>
   currentState: Derive<HomeState, HomeStateItem>
@@ -75,11 +75,11 @@ type HomeState = {
   lastHomeState: Derive<HomeState, HomeStateItemHome>
   lastSearchState: Derive<HomeState, HomeStateItemSearch>
   lastRestaurantState: Derive<HomeState, HomeStateItemRestaurant>
+  hoveredRestaurant: Derive<HomeState, Restaurant | null>
 }
 
 const RADIUS = 0.15
 
-// TODO location ask?
 export const initialHomeState: HomeStateItemHome = {
   type: 'home',
   lenses: taxonomyLenses,
@@ -94,8 +94,8 @@ export const initialHomeState: HomeStateItemHome = {
 }
 
 export const state: HomeState = {
+  restaurants: {},
   showMenu: false,
-  hoveredRestaurant: null,
   states: [initialHomeState],
   currentState: (state) => _.last(state.states),
   previousState: (state) => state.states[state.states.length - 2],
@@ -122,6 +122,10 @@ export const state: HomeState = {
     return [lastHome, lastSearch, lastRestaurant]
       .filter(Boolean)
       .map((x) => _.omit(x), 'historyId')
+  },
+  hoveredRestaurant: (state) => {
+    const index = state.lastSearchState?.hoveredRestaurant
+    return state.restaurants[index] ?? null
   },
 }
 
@@ -331,14 +335,22 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
   if (state.type != 'search') return
   if (runSearchId != curId) return
 
+  // update denormalized dictionary
+  for (const restaurant of restaurants) {
+    om.state.home.restaurants[restaurant.id] = restaurant
+  }
+
+  console.log('restaurants', restaurants)
+
   state.results = {
     status: 'complete',
     results: {
-      restaurants: restaurants,
+      restaurantsIds: restaurants.map((x) => x.id).filter(Boolean),
       dishes: [],
       locations: [],
     },
   }
+
   om.state.home.states = om.state.home.states.map((x) => {
     if (x.historyId == state.historyId) {
       return state
@@ -389,8 +401,8 @@ const submitReview: AsyncAction<Review> = async (om, inReview) => {
   }
 }
 
-const setHoveredRestaurant: Action<Restaurant | null> = (om, val) => {
-  om.state.home.hoveredRestaurant = val
+const setHoveredRestaurant: Action<number> = (om, index) => {
+  om.state.home.lastSearchState.hoveredRestaurant = index
 }
 
 const setShowMenu: Action<boolean> = (om, val) => {

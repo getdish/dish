@@ -96,28 +96,30 @@ function HomeMap() {
   const [selected, setSelected] = useState('')
 
   const curRestaurant = state.type == 'restaurant' ? state.restaurant : null
-  const prevResults =
+  const prevResults: string[] =
     (state.type == 'restaurant' &&
       om.state.home.previousState?.type == 'search' &&
       om.state.home.previousState?.results.status === 'complete' &&
-      om.state.home.previousState?.results.results.restaurants) ||
+      om.state.home.previousState?.results.results.restaurantIds) ||
     []
 
-  const restaurants = _.uniqBy(
-    [
-      ...(state.type == 'home' ? state.top_restaurants ?? [] : []),
-      ...(state.type == 'search'
-        ? state.results.status == 'complete'
-          ? state.results.results.restaurants
-          : []
-        : []),
-      ...prevResults,
-      curRestaurant,
-    ].filter((x) => !!x?.location?.coordinates),
-    (x) => x.id
+  const allRestaurants = om.state.home.restaurants
+  const searchResults =
+    state.type == 'search'
+      ? state.results.status == 'complete'
+        ? state.results.results.restaurantIds ?? []
+        : []
+      : []
+  console.log('searchResults', searchResults)
+  const restaurantIds: string[] = _.uniq(
+    [...searchResults, ...prevResults, curRestaurant?.id].filter(
+      (id) => !!id && !!allRestaurants[id]?.location?.coordinates
+    )
   )
 
-  const restaurantIds = restaurants.map((x) => x.id)
+  console.log('restaurantIds', prevResults, restaurantIds, state)
+
+  const restaurants = restaurantIds.map((id) => allRestaurants[id])
   const restaurantsVersion = restaurantIds.join('')
   const restaurantSelected = restaurants.find((x) => x.id == selected)
   const coordinates = useMemo(

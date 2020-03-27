@@ -135,17 +135,18 @@ function HomeSearchResultsViewContent({
 }) {
   const om = useOvermind()
   const { results } = state
+  const allRestaurants = om.state.home.restaurants
 
   const contents = useMemo(() => {
     if (results && results.status == 'complete') {
-      return results.results.restaurants?.map((restaurant, index) => {
+      return results.results.restaurantIds?.map((id, index) => {
         return (
           <RestaurantListItem
             key={index}
-            restaurant={restaurant as any}
+            restaurant={allRestaurants[id]}
             rank={index + 1}
             onHover={() => {
-              om.actions.home.setHoveredRestaurant({ ...restaurant } as any)
+              om.actions.home.setHoveredRestaurant(index)
             }}
           />
         )
@@ -161,7 +162,9 @@ function HomeSearchResultsViewContent({
     }
   }, [
     results?.status,
-    results?.['results']?.restaurants.map((x) => x.id).join(''),
+    results.status == 'complete'
+      ? results.results?.restaurantIds?.join('')
+      : '',
   ])
 
   return (
