@@ -4,16 +4,16 @@ import { VStack } from './Stacks'
 import { Spacer } from './Spacer'
 import { Divider } from './Divider'
 
-export function SmallTitle(props: { children: any }) {
+export function SmallTitle(props: { children: any; bold?: boolean }) {
   return (
     <VStack width="100%" alignItems="center" paddingTop={14} paddingBottom={6}>
       <Text
         style={{
-          textTransform: 'uppercase',
-          letterSpacing: 3,
-          opacity: 0.5,
-          fontSize: 16,
-          fontWeight: '400',
+          // textTransform: 'uppercase',
+          // letterSpacing: 2,
+          opacity: 0.7,
+          fontSize: 19,
+          fontWeight: props.bold ? '800' : '500',
         }}
       >
         {props.children}

@@ -4,11 +4,15 @@ import { Restaurant } from '@dish/models'
 import { VStack } from '../shared/Stacks'
 
 export const RatingView = forwardRef(
-  ({ restaurant }: { restaurant: Restaurant }, ref) => {
+  (
+    { restaurant, size: sizeIn }: { size: 'lg' | 'md'; restaurant: Restaurant },
+    ref
+  ) => {
     const rank = Math.round(restaurant.rating * 20)
     const color = rank > 84 ? 'green' : rank > 60 ? 'orange' : 'red'
     const borderColor =
       rank > 84 ? 'lightgreen' : rank > 60 ? 'sunset' : 'lightred'
+    const size = sizeIn == 'md' ? 58 : 72
     return (
       <VStack ref={ref as any} position="relative">
         {rank > 89 && (
@@ -23,7 +27,7 @@ export const RatingView = forwardRef(
           >
             <Text
               style={{
-                fontSize: 20,
+                fontSize: 20 + (sizeIn == 'lg' ? 6 : 0),
                 textShadowColor: 'rgba(0,0,0,0.5)',
                 textShadowRadius: 2,
               }}
@@ -38,16 +42,16 @@ export const RatingView = forwardRef(
           shadowColor="rgba(0,0,0,0.25)"
           shadowRadius={8}
           shadowOffset={{ height: 1, width: 0 }}
-          width={58}
-          height={58}
+          width={size}
+          height={size}
           alignItems="center"
           justifyContent="center"
-          padding={3}
+          padding={3 + (sizeIn == 'lg' ? 1 : 0)}
         >
           <VStack
             borderRadius={100}
             borderColor={borderColor}
-            borderWidth={1}
+            borderWidth={1 + (sizeIn == 'lg' ? 1 : 0)}
             width="100%"
             height="100%"
           >
@@ -59,7 +63,13 @@ export const RatingView = forwardRef(
               alignItems="center"
               justifyContent="center"
             >
-              <Text style={{ fontSize: 22, fontWeight: '600', color }}>
+              <Text
+                style={{
+                  fontSize: 22 + (sizeIn == 'lg' ? 4 : 0),
+                  fontWeight: '600',
+                  color,
+                }}
+              >
                 {rank}
               </Text>
             </VStack>

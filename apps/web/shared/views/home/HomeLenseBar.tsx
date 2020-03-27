@@ -6,6 +6,7 @@ import { VStack, HStack, ZStack } from '../shared/Stacks'
 import { Taxonomy } from '../../state/Taxonomy'
 import { LinkButton } from '../shared/Link'
 import { LinearGradient } from 'expo-linear-gradient'
+import HomeFilterBar from './HomeFilterBar'
 
 export default memo(function HomeLenseBar(props: {
   backgroundGradient?: boolean
@@ -35,6 +36,7 @@ export default memo(function HomeLenseBar(props: {
             {lenses}
           </HStack>
         </ScrollView>
+        <HomeFilterBar />
       </VStack>
       {props.backgroundGradient && (
         <LinearGradient
