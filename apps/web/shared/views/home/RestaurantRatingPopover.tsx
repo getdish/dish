@@ -1,6 +1,6 @@
-import React, { useState, memo } from 'react'
+import React, { useState, memo, useRef } from 'react'
 import { TouchableOpacity, TextInput, ScrollView, Text } from 'react-native'
-import { Restaurant } from '@dish/models'
+import { Restaurant, Review } from '@dish/models'
 import { HStack, VStack } from '../shared/Stacks'
 import { Spacer } from '../shared/Spacer'
 import { useOvermind } from '../../state/om'
@@ -9,22 +9,17 @@ import { Tooltip } from '../shared/Stack/Tooltip'
 import { Icon } from '../shared/Icon'
 import { EmojiButton } from './RestaurantListItem'
 import { LenseButton } from './HomeLenseBar'
+import { HomeStateItemRestaurant } from '../../state/home'
 
 export const RestaurantRatingPopover = memo(
-  ({
-    restaurant,
-    onChangeOpen,
-  }: {
-    restaurant: Restaurant
-    onChangeOpen: Function
-  }) => {
+  ({ restaurant }: { restaurant: Restaurant }) => {
     const om = useOvermind()
-    const state = om.state.home.currentState
+    const [isOpen, setIsOpen] = useState(false)
     const [feedback, setFeedback] = useState('')
     const [timer, setTimer] = useState(null)
-    if (state.type != 'restaurant') return
+    const review = useRef<Review>(new Review())
     const persist = async () => {
-      await om.actions.home.submitReview()
+      await om.actions.home.submitReview(review.current)
       setFeedback('saved')
       setTimeout(() => {
         setFeedback('')
@@ -32,11 +27,11 @@ export const RestaurantRatingPopover = memo(
     }
     const setRating = (r: number) => {
       om.actions.home.setReview({ rating: r })
-      onChangeOpen(r !== 0)
+      setIsOpen(true)
       persist()
     }
     let content = null
-    if (state.review?.rating !== 0) {
+    if (review.current?.rating !== 0) {
       content = (
         <>
           <HStack>
@@ -50,19 +45,19 @@ export const RestaurantRatingPopover = memo(
             >
               <EmojiButton
                 onPress={() => setRating(-1)}
-                active={state.review?.rating === -1}
+                active={review.current?.rating === -1}
               >
                 👎
               </EmojiButton>
               <EmojiButton
                 onPress={() => setRating(1)}
-                active={state.review?.rating === 1}
+                active={review.current?.rating === 1}
               >
                 👍
               </EmojiButton>
               <EmojiButton
                 onPress={() => setRating(2)}
-                active={state.review?.rating === 2}
+                active={review.current?.rating === 2}
               >
                 🤤
               </EmojiButton>
@@ -72,7 +67,7 @@ export const RestaurantRatingPopover = memo(
               multiline
               numberOfLines={6}
               placeholder="Notes"
-              value={state.review?.text}
+              value={review.current?.text}
               onChangeText={async (t: string) => {
                 om.actions.home.setReview({ text: t })
               }}
@@ -121,7 +116,7 @@ export const RestaurantRatingPopover = memo(
     }
     return (
       <Popover
-        isOpen={state.review?.rating !== 0}
+        isOpen={isOpen}
         position="right"
         onClickOutside={() => {
           setRating(0)
@@ -129,33 +124,33 @@ export const RestaurantRatingPopover = memo(
         target={
           <div
             style={{
-              filter: state.review?.rating !== 0 ? '' : 'grayscale(100%)',
+              filter: review.current?.rating !== 0 ? '' : 'grayscale(100%)',
             }}
           >
             <VStack>
               <TouchableOpacity
                 onPress={() => {
-                  if (state.review?.rating == 1) return setRating(0)
+                  if (review.current?.rating == 1) return setRating(0)
                   setRating(1)
                 }}
               >
                 <Icon
                   name="chevron-up"
                   size={24}
-                  color={state.review?.rating === 1 ? 'green' : 'black'}
+                  color={review.current?.rating === 1 ? 'green' : 'black'}
                   marginBottom={-12}
                 />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  if (state.review?.rating == -1) return setRating(0)
+                  if (review.current?.rating == -1) return setRating(0)
                   setRating(-1)
                 }}
               >
                 <Icon
                   name="chevron-down"
                   size={24}
-                  color={state.review?.rating === -1 ? 'red' : 'black'}
+                  color={review.current?.rating === -1 ? 'red' : 'black'}
                 />
               </TouchableOpacity>
             </VStack>

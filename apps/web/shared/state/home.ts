@@ -73,6 +73,8 @@ type HomeState = {
   currentState: Derive<HomeState, HomeStateItem>
   previousState: Derive<HomeState, HomeStateItem>
   lastHomeState: Derive<HomeState, HomeStateItemHome>
+  lastSearchState: Derive<HomeState, HomeStateItemSearch>
+  lastRestaurantState: Derive<HomeState, HomeStateItemRestaurant>
 }
 
 const RADIUS = 0.15
@@ -97,21 +99,26 @@ export const state: HomeState = {
   states: [initialHomeState],
   currentState: (state) => _.last(state.states),
   previousState: (state) => state.states[state.states.length - 2],
-  lastHomeState: (state) => {
-    for (let i = state.states.length - 1; i >= 0; i--) {
-      if (state.states[i]?.type === 'home') {
-        return state.states[i] as HomeStateItemHome
-      }
-    }
-  },
+  lastHomeState: (state) =>
+    _.findLast(
+      state.states,
+      (x) => x.type === 'home'
+    ) as HomeStateItemHome | null,
+  lastSearchState: (state) =>
+    _.findLast(
+      state.states,
+      (x) => x.type === 'search'
+    ) as HomeStateItemSearch | null,
+  lastRestaurantState: (state) =>
+    _.findLast(
+      state.states,
+      (x) => x.type === 'restaurant'
+    ) as HomeStateItemRestaurant | null,
   breadcrumbStates: (state) => {
     const lastType = _.last(state.states).type
     const lastHome = state.lastHomeState
-    const lastSearch =
-      lastType != 'home' && _.findLast(state.states, (x) => x.type == 'search')
-    const lastRestaurant =
-      lastType == 'restaurant' &&
-      _.findLast(state.states, (x) => x.type == 'restaurant')
+    const lastSearch = lastType != 'home' && state.lastSearchState
+    const lastRestaurant = lastType == 'restaurant' && state.lastRestaurantState
     return [lastHome, lastSearch, lastRestaurant]
       .filter(Boolean)
       .map((x) => _.omit(x), 'historyId')
@@ -141,22 +148,19 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
       }
       break
     case 'search':
-      const lastMatchingSearchState = _.findLast(
-        om.state.home.states,
-        (x) => x.type === 'search'
-      ) as HomeStateItemSearch
+      const lastSearchState = om.state.home.lastSearchState
       nextState = {
         type: 'search',
         filters: [],
         results: {
           status: 'loading',
         },
-        ...lastMatchingSearchState,
+        ...lastSearchState,
         ...currentBaseState,
       }
       fetchData = () => {
-        console.log('what is', lastMatchingSearchState)
-        if (lastMatchingSearchState?.searchQuery !== item.params.query) {
+        console.log('what is', lastSearchState)
+        if (lastSearchState?.searchQuery !== item.params.query) {
           om.actions.home.runSearch(item.params.query)
         }
       }
@@ -171,9 +175,6 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
       }
       fetchData = async () => {
         await om.actions.home.setCurrentRestaurant(item.params.slug)
-        if (om.state.auth.is_logged_in) {
-          await om.actions.home.getReview()
-        }
       }
       break
   }
@@ -216,10 +217,7 @@ const _popHomeState: Action<HistoryItem> = (om, item) => {
 const setCurrentRestaurant: AsyncAction<string> = async (om, slug: string) => {
   const restaurant = new Restaurant()
   await restaurant.findOne('slug', slug)
-  const state = [...om.state.home.states]
-    .reverse()
-    .find((x) => x.type === 'restaurant') as HomeStateItemRestaurant | null
-
+  const state = om.state.home.lastRestaurantState
   if (state) {
     state.restaurant = restaurant
     state.center = {
@@ -227,6 +225,10 @@ const setCurrentRestaurant: AsyncAction<string> = async (om, slug: string) => {
       lat: restaurant.location.coordinates[1] - 0.0037,
     }
     state.reviews = await Review.findAllForRestaurant(restaurant.id)
+
+    if (om.state.auth.is_logged_in) {
+      await om.actions.home.getReview()
+    }
   }
 }
 
@@ -357,8 +359,9 @@ const setMapcenter: Action<LngLat> = (om, center: LngLat) => {
 }
 
 const getReview: AsyncAction = async (om) => {
-  let state = om.state.home.currentState
-  if (state.type != 'restaurant') return
+  let state = om.state.home.lastRestaurantState
+  if (!state) return
+  if (!om.state.auth.user) return
   let review = new Review()
   await review.findOne(state.restaurant.id, om.state.auth.user.id)
   state.review = review
@@ -371,18 +374,16 @@ const getReview: AsyncAction = async (om) => {
 }
 
 const setReview: Action<Partial<Review>> = (om, review: Partial<Review>) => {
-  const state = om.state.home.currentState
-  if (state.type != 'restaurant') return
+  const state = om.state.home.lastRestaurantState
+  if (!state) return
   Object.assign(state.review, review)
 }
 
-const submitReview: AsyncAction = async (om) => {
-  let state = om.state.home.currentState
-  if (state.type != 'restaurant') return
-  let review = new Review(state.review)
+const submitReview: AsyncAction<Review> = async (om, inReview) => {
+  let review = new Review(inReview)
   if (typeof review.id == 'undefined') {
     await review.insert()
-    state.review.id = review.id
+    review.id = review.id
   } else {
     await review.update()
   }
