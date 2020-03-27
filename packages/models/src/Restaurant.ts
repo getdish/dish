@@ -168,7 +168,9 @@ export class Restaurant extends ModelBase<Restaurant> {
       'tags=' + tags.map((t) => t.toLowerCase().trim()).join(','),
     ]
     const response = await axios.get(SEARCH_DOMAIN + '?' + params.join('&'))
-    return response.data.map((data: Partial<Restaurant>) => data)
+    return response.data.map(
+      (data: Partial<Restaurant>) => new Restaurant(data)
+    )
   }
 
   async getLatestScrape(source: string) {
