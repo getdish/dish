@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import {
   Image,
   Text,
@@ -7,6 +7,8 @@ import {
   Linking,
   FlatList,
   TextProps,
+  TextInput,
+  StyleSheet,
 } from 'react-native'
 
 import { useOvermind } from '../../state/om'
@@ -27,9 +29,13 @@ import {
 } from './RestaurantListItem'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { Divider } from '../shared/Divider'
-import { flatButtonStyle } from './HomeViewTopDishes'
+import { flatButtonStyle, circularFlatButtonStyle } from './HomeViewTopDishes'
 import { TableRow, TableCell } from './TableRow'
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
+import { Icon } from '../shared/Icon'
+import { Popover } from '../shared/Popover'
+import { Tooltip } from '../shared/Stack/Tooltip'
+import { TagButton } from './TagButton'
 
 export default memoIsEqualDeep(function HomeRestaurantView({
   state,
@@ -75,9 +81,13 @@ export default memoIsEqualDeep(function HomeRestaurantView({
       <ScrollView style={{ padding: 18, paddingTop: 6, flex: 1 }}>
         <VStack spacing="lg">
           <HStack alignItems="center" justifyContent="center">
+            <Spacer size={24} />
+            <Spacer />
             <Divider flex />
             <RestaurantTagsRow size="lg" restaurant={restaurant} />
             <Divider flex />
+            <Spacer />
+            <RestaurantTagButton />
           </HStack>
 
           <VStack>
@@ -290,6 +300,69 @@ export default memoIsEqualDeep(function HomeRestaurantView({
       </ScrollView>
     </VStack>
   )
+})
+
+const RestaurantTagButton = memo(() => {
+  const [isOpen, setIsOpen] = useState(false)
+  return (
+    <Popover
+      position="right"
+      target={
+        <LinkButton
+          {...circularFlatButtonStyle}
+          onPress={() => setIsOpen(true)}
+        >
+          <Icon size={24} name="tag" />
+        </LinkButton>
+      }
+      isOpen={isOpen}
+      onClickOutside={() => setIsOpen(false)}
+    >
+      <Tooltip maxWidth={300}>
+        <Text
+          style={{
+            padding: 10,
+            paddingTop: 0,
+            textAlign: 'center',
+            width: '100%',
+          }}
+        >
+          Tag
+        </Text>
+        <TextInput
+          placeholder="Suggest tag"
+          numberOfLines={1}
+          style={styles.secondaryInput}
+        />
+        <Text
+          style={{
+            padding: 10,
+            textAlign: 'center',
+            width: '100%',
+          }}
+        >
+          Top tags
+        </Text>
+        <HStack padding={10} flexWrap="wrap">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((x) => (
+            <TagButton key={x} name="Lorem" />
+          ))}
+        </HStack>
+      </Tooltip>
+    </Popover>
+  )
+})
+
+const styles = StyleSheet.create({
+  secondaryInput: {
+    backgroundColor: '#eee',
+    color: '#999',
+    minWidth: 200,
+    fontWeight: '500',
+    padding: 8,
+    borderRadius: 5,
+    fontSize: 14,
+  },
 })
 
 const RatingBreakdownCircle = memo(
