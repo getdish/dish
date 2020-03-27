@@ -18,6 +18,7 @@ import { slugify } from '../../helpers/slugify'
 import { SuperScriptText } from './TagButton'
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import _ from 'lodash'
+import HomeFilterBar from './HomeFilterBar'
 
 export default memoIsEqualDeep(function HomeViewTopDishes({
   state,
@@ -56,7 +57,7 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
 
     return (
       <ScrollView style={{ flex: 1 }}>
-        <VStack paddingVertical={20} paddingTop={20 + 60}>
+        <VStack paddingVertical={20} paddingTop={20 + 100}>
           {[0, 1, 2, 3, 4, 5, 6, 7].map((x) => (
             <VStack key={x} paddingBottom={30}>
               <HStack paddingHorizontal={20} marginVertical={-6}>

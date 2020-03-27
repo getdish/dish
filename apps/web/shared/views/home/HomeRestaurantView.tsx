@@ -58,12 +58,13 @@ export default memoIsEqualDeep(function HomeRestaurantView({
 
       <VStack padding={18} paddingBottom={0} paddingRight={60}>
         <HStack>
-          <RestaurantRatingDetail restaurant={restaurant} />
+          <RestaurantRatingDetail size="lg" restaurant={restaurant} />
           <Spacer size={20} />
           <VStack flex={1}>
             <Text style={{ fontSize: 30, fontWeight: 'bold' }}>
               {restaurant.name}
             </Text>
+            <Spacer size={6} />
             <RestaurantMetaRow restaurant={restaurant} />
           </VStack>
         </HStack>
@@ -71,11 +72,11 @@ export default memoIsEqualDeep(function HomeRestaurantView({
         {/* <Divider /> */}
       </VStack>
 
-      <ScrollView style={{ padding: 18, flex: 1 }}>
+      <ScrollView style={{ padding: 18, paddingTop: 6, flex: 1 }}>
         <VStack spacing="lg">
           <HStack alignItems="center" justifyContent="center">
             <Divider flex />
-            <RestaurantTagsRow restaurant={restaurant} />
+            <RestaurantTagsRow size="lg" restaurant={restaurant} />
             <Divider flex />
           </HStack>
 
@@ -90,31 +91,29 @@ export default memoIsEqualDeep(function HomeRestaurantView({
                 padding={5}
                 alignItems="stretch"
               >
-                <EmojiButton size={60}>👎</EmojiButton>
-                <EmojiButton size={60}>👍</EmojiButton>
-                <EmojiButton size={60}>🤤</EmojiButton>
+                <EmojiButton size={50}>👎</EmojiButton>
+                <EmojiButton size={50}>👍</EmojiButton>
+                <EmojiButton size={50}>🤤</EmojiButton>
               </HStack>
             </HStack>
           </VStack>
 
-          <VStack>
-            <SmallTitle>Rating Breakdown</SmallTitle>
+          <VStack marginHorizontal={-18}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <HStack
                 alignItems="center"
-                paddingHorizontal={10}
-                paddingVertical={5}
+                paddingHorizontal={10 + 18}
                 spacing={20}
               >
-                <VStack flex={1} minWidth={90}>
+                <VStack flex={1} minWidth={90} marginRight={-25}>
                   <RatingBreakdownCircle emoji="🧑" name="Dishers" />
                 </VStack>
 
-                <VStack flex={1} minWidth={90}>
+                <VStack flex={1} minWidth={90} marginRight={-25}>
                   <RatingBreakdownCircle emoji="🧑‍🍳" name="Chefs" />
                 </VStack>
 
-                <VStack flex={1} minWidth={90}>
+                <VStack flex={1} minWidth={90} marginRight={-25}>
                   <RatingBreakdownCircle emoji="👩‍💻" name="Critics" />
                 </VStack>
 
@@ -143,7 +142,7 @@ export default memoIsEqualDeep(function HomeRestaurantView({
 
           {!!restaurant.photos.length && (
             <VStack>
-              <SmallTitle>Top Rated Dishes</SmallTitle>
+              <SmallTitle>Top Dishes</SmallTitle>
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}

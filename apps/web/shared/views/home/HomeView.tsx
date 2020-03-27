@@ -97,7 +97,7 @@ const HomeViewContent = memo(function HomeViewContent() {
   return (
     <>
       <HomeSearchBar />
-      <HomeFilterBar />
+      {/* <HomeFilterBar /> */}
       <ZStack position="relative" flex={1}>
         <VStack
           position="absolute"

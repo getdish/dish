@@ -83,7 +83,7 @@ export const RestaurantListItem = ({
                 <RankingView rank={rank} />
                 <Text
                   style={{
-                    fontSize: 22,
+                    fontSize: 24,
                     fontWeight: 'bold',
                     textDecorationColor: 'transparent',
                   }}
@@ -92,7 +92,9 @@ export const RestaurantListItem = ({
                 </Text>
               </HStack>
             </Link>
+
             <Spacer />
+
             <HStack>
               <Spacer size={20} />
               <HStack alignItems="center">
@@ -105,7 +107,10 @@ export const RestaurantListItem = ({
               </HStack>
             </HStack>
             <Spacer />
-            <RestaurantMetaRow restaurant={restaurant} />
+            <HStack alignItems="center" paddingLeft={22}>
+              <RestaurantMetaRow restaurant={restaurant} />
+              {/* <Divider flex /> */}
+            </HStack>
             <Spacer />
             <RestaurantDetailRow restaurant={restaurant} />
           </VStack>
@@ -144,7 +149,7 @@ export const RestaurantMetaRow = ({
   return (
     <HStack alignItems="center">
       <Text style={{ opacity: 0.6, fontWeight: '500' }}>
-        📍 3017 16th St. &nbsp; · &nbsp;{' '}
+        3017 16th St. 📍 &nbsp; · &nbsp;{' '}
         <Link inline name="restaurant" params={{ slug: '' }}>
           Menu
         </Link>{' '}
@@ -173,7 +178,7 @@ export const EmojiButton = ({
           backgroundColor: active ? 'yellow' : 'rgba(0,0,0,0.05)',
         }}
       >
-        <Text style={{ fontSize: size * 0.36 }}>{children}</Text>
+        <Text style={{ fontSize: size * 0.45 }}>{children}</Text>
       </Circle>
     </TouchableOpacity>
   )
@@ -182,15 +187,17 @@ export const EmojiButton = ({
 export const RestaurantTagsRow = ({
   restaurant,
   showMore,
+  size = 'md',
 }: {
   restaurant: Restaurant
   showMore?: boolean
+  size?: 'lg' | 'md'
 }) => {
   const tags = restaurant.tags.map((i) => i.taxonomy.name) ?? []
   return (
     <HStack alignItems="center" spacing>
       {tags.slice(0, showMore ? 2 : 10).map((tag) => (
-        <TagButton key={tag} rank={1} name={`🍜 ${tag}`} />
+        <TagButton key={tag} rank={1} name={`🍜 ${tag}`} size={size} />
       ))}
       {!!showMore && <Text style={{ opacity: 0.5 }}>+ 5 more</Text>}
     </HStack>
@@ -198,7 +205,13 @@ export const RestaurantTagsRow = ({
 }
 
 export const RestaurantRatingDetail = memo(
-  ({ restaurant }: { restaurant: Restaurant }) => {
+  ({
+    size = 'md',
+    restaurant,
+  }: {
+    size: 'lg' | 'md'
+    restaurant: Restaurant
+  }) => {
     const [isHoveringRating, setIsHoveringRating] = useState(false)
     return (
       <Popover
@@ -213,7 +226,7 @@ export const RestaurantRatingDetail = memo(
               setIsHoveringRating(false)
             }}
           >
-            <RatingView restaurant={restaurant} />
+            <RatingView size={size} restaurant={restaurant} />
           </div>
         }
       >
