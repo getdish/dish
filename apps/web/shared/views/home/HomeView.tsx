@@ -3,7 +3,6 @@ import React, { memo, useState, useEffect, useMemo } from 'react'
 import HomeMap from './HomeMap'
 import { useOvermind } from '../../state/om'
 
-import SideMenu from 'react-native-side-menu'
 import { Route, RouteSwitch } from '../shared/Route'
 import HomeMenu from './HomeMenu'
 
@@ -39,19 +38,17 @@ export const HomeView = () => {
   const showMenu = om.state.home.showMenu
 
   return (
-    <SideMenu openMenuOffset={200} isOpen={showMenu} menu={<HomeMenu />}>
-      <ZStack top={0} left={0} right={0} bottom={0}>
-        <HomeMap />
-        <HomeControlsOverlay />
-        <HomeViewDrawer>
-          <RouteSwitch>
-            <Route name="home">
-              <HomeViewContent />
-            </Route>
-          </RouteSwitch>
-        </HomeViewDrawer>
-      </ZStack>
-    </SideMenu>
+    <ZStack top={0} left={0} right={0} bottom={0}>
+      <HomeMap />
+      <HomeControlsOverlay />
+      <HomeViewDrawer>
+        <RouteSwitch>
+          <Route name="home">
+            <HomeViewContent />
+          </Route>
+        </RouteSwitch>
+      </HomeViewDrawer>
+    </ZStack>
   )
 }
 
