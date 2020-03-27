@@ -18,17 +18,17 @@ export const RatingView = forwardRef(
         {rank > 89 && (
           <VStack
             position="absolute"
-            top={-5}
+            top={-6}
             // bottom={0}
-            right={-5}
+            right={-6}
             alignItems="center"
             justifyContent="center"
             zIndex={100}
           >
             <Text
               style={{
-                fontSize: 20 + (sizeIn == 'lg' ? 6 : 0),
-                textShadowColor: 'rgba(0,0,0,0.5)',
+                fontSize: 18 + (sizeIn == 'lg' ? 6 : 0),
+                textShadowColor: 'rgba(0,0,0,0.25)',
                 textShadowRadius: 2,
               }}
             >

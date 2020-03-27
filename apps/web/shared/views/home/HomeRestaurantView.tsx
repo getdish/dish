@@ -19,11 +19,8 @@ import { LinkButton } from '../shared/Link'
 import { SmallTitle } from '../shared/SmallTitle'
 import { HomeStateItem } from '../../state/home'
 import { CloseButton } from './CloseButton'
-import {
-  RestaurantRatingDetail,
-  RestaurantTagsRow,
-  EmojiButton,
-} from './RestaurantListItem'
+import { RestaurantRatingDetail, EmojiButton } from './RestaurantListItem'
+import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantMetaRow } from './RestaurantMetaRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantRatingPopover } from './RestaurantRatingPopover'
@@ -74,13 +71,16 @@ export default memoIsEqualDeep(function HomeRestaurantView({
               {restaurant.name}
             </Text>
             <Spacer size={6} />
-            <RestaurantMetaRow size="lg" restaurant={restaurant} />
+            <RestaurantMetaRow showMenu size="lg" restaurant={restaurant} />
+            <Spacer size={6} />
+            <Text style={{ color: '#777', fontSize: 13 }}>
+              3017 16th St., San Francisco
+            </Text>
           </VStack>
         </HStack>
-        <Spacer />
       </VStack>
 
-      <ScrollView style={{ padding: 18, paddingTop: 6, flex: 1 }}>
+      <ScrollView style={{ padding: 18, paddingTop: 16, flex: 1 }}>
         <VStack spacing="lg">
           <HStack alignItems="center" justifyContent="center">
             <Spacer size={24} />

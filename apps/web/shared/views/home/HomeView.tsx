@@ -22,16 +22,11 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { TouchableOpacity, Animated, Text } from 'react-native'
 
 import { StyleSheet, View } from 'react-native'
-import { useWindowSize } from '../../hooks/useWindowSize'
 import { useDebounceValue } from '../../hooks/useDebounce'
 import { ForceShowPopover } from '../shared/Popover'
 import { HomeControlsOverlay } from './HomeControlsOverlay'
 import { BlurView } from '../shared/BlurView'
-
-export function useHomeDrawerWidth(): number {
-  const [width] = useWindowSize({ throttle: 200 })
-  return Math.min(Math.max(500, width * 0.55), 620)
-}
+import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 export const HomeView = () => {
   const om = useOvermind()

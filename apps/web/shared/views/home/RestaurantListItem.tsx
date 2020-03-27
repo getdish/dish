@@ -3,7 +3,6 @@ import { Image, Text, TouchableOpacity } from 'react-native'
 import { Restaurant } from '@dish/models'
 import { HStack, VStack } from '../shared/Stacks'
 import { Spacer } from '../shared/Spacer'
-import { TagButton } from './TagButton'
 import { Link } from '../shared/Link'
 import { useOvermind } from '../../state/om'
 import { RatingView } from './RatingView'
@@ -16,6 +15,8 @@ import { SmallTitle } from '../shared/SmallTitle'
 import { TableRow, TableCell } from './TableRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantMetaRow } from './RestaurantMetaRow'
+import { Divider } from '../shared/Divider'
+import { RestaurantTagsRow } from './RestaurantTagsRow'
 
 export const RestaurantListItem = ({
   restaurant,
@@ -97,8 +98,7 @@ export const RestaurantListItem = ({
             <Spacer />
 
             <HStack alignItems="center" paddingLeft={22}>
-              <RestaurantMetaRow restaurant={restaurant} />
-              {/* <Divider flex /> */}
+              <RestaurantMetaRow showMenu showAddress restaurant={restaurant} />
             </HStack>
             <Spacer size="sm" />
             <RestaurantDetailRow size="sm" restaurant={restaurant} />
@@ -107,7 +107,7 @@ export const RestaurantListItem = ({
           <Spacer size="lg" />
 
           <HStack>
-            <VStack position="absolute" top={-14} left={-30} zIndex={100}>
+            <VStack position="absolute" top={-11} left={-25} zIndex={100}>
               <RestaurantRatingDetail restaurant={restaurant} />
             </VStack>
 
@@ -125,6 +125,7 @@ export const RestaurantListItem = ({
             })}
           </HStack>
         </HStack>
+        <Divider />
       </TouchableOpacity>
     </div>
   )
@@ -154,35 +155,6 @@ export const EmojiButton = ({
   )
 }
 
-export const RestaurantTagsRow = ({
-  restaurant,
-  showMore,
-  size = 'md',
-}: {
-  restaurant: Restaurant
-  showMore?: boolean
-  size?: 'lg' | 'md'
-}) => {
-  const r = new Restaurant({
-    tags: restaurant.tags,
-    tag_rankings: restaurant.tag_rankings,
-  })
-  const tags = r.getTagsWithRankings() ?? []
-  return (
-    <HStack alignItems="center" spacing>
-      {tags.slice(0, showMore ? 2 : 10).map((tag) => (
-        <TagButton
-          key={tag.name}
-          rank={tag.rank}
-          name={`${tag.icon || ''} ${tag.name}`}
-          size={size}
-        />
-      ))}
-      {!!showMore && <Text style={{ opacity: 0.5 }}>+ 5 more</Text>}
-    </HStack>
-  )
-}
-
 export const RestaurantRatingDetail = memo(
   ({
     size = 'md',
@@ -196,53 +168,53 @@ export const RestaurantRatingDetail = memo(
       <Popover
         isOpen={isHoveringRating}
         position="right"
-        target={
-          <div
-            onMouseEnter={() => {
-              setIsHoveringRating(true)
-            }}
-            onMouseLeave={() => {
-              setIsHoveringRating(false)
-            }}
-          >
-            <RatingView size={size} restaurant={restaurant} />
-          </div>
+        contents={
+          <Tooltip height={300} width={250}>
+            <VStack>
+              <SmallTitle>Rating Summary</SmallTitle>
+              <TableRow>
+                <TableCell color="#555" fontWeight="600" width="50%">
+                  <Text>Source</Text>
+                </TableCell>
+                <TableCell color="#555" fontWeight="600" width="25%">
+                  <Text>Rating</Text>
+                </TableCell>
+                <TableCell color="#555" fontWeight="600" flex={1}>
+                  <Text>Weight</Text>
+                </TableCell>
+              </TableRow>
+              {Object.keys(restaurant.sources).map((source) => {
+                const item = restaurant.sources[source]
+                return (
+                  <TableRow key={source}>
+                    <TableCell
+                      fontWeight="bold"
+                      width="50%"
+                      // onPress={() => {
+                      //   item.url
+                      // }}
+                    >
+                      {source}
+                    </TableCell>
+                    <TableCell width="25%">{item.rating}</TableCell>
+                    <TableCell flex={1}>{Restaurant.WEIGHTS[source]}</TableCell>
+                  </TableRow>
+                )
+              })}
+            </VStack>
+          </Tooltip>
         }
       >
-        <Tooltip height={300} width={250}>
-          <VStack>
-            <SmallTitle>Rating Summary</SmallTitle>
-            <TableRow>
-              <TableCell color="#555" fontWeight="600" width="50%">
-                <Text>Source</Text>
-              </TableCell>
-              <TableCell color="#555" fontWeight="600" width="25%">
-                <Text>Rating</Text>
-              </TableCell>
-              <TableCell color="#555" fontWeight="600" flex={1}>
-                <Text>Weight</Text>
-              </TableCell>
-            </TableRow>
-            {Object.keys(restaurant.sources || {}).map((source) => {
-              const item = restaurant.sources[source]
-              return (
-                <TableRow key={source}>
-                  <TableCell
-                    fontWeight="bold"
-                    width="50%"
-                    // onPress={() => {
-                    //   item.url
-                    // }}
-                  >
-                    {source}
-                  </TableCell>
-                  <TableCell width="25%">{item.rating}</TableCell>
-                  <TableCell flex={1}>{Restaurant.WEIGHTS[source]}</TableCell>
-                </TableRow>
-              )
-            })}
-          </VStack>
-        </Tooltip>
+        <div
+          onMouseEnter={() => {
+            setIsHoveringRating(true)
+          }}
+          onMouseLeave={() => {
+            setIsHoveringRating(false)
+          }}
+        >
+          <RatingView size={size} restaurant={restaurant} />
+        </div>
       </Popover>
     )
   }

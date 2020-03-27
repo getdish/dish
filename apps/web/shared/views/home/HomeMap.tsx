@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, memo } from 'react'
 
 import { useOvermind } from '../../state/om'
 import { VStack, ZStack, HStack } from '../shared/Stacks'
@@ -6,7 +6,7 @@ import { Text, Button, TouchableOpacity, Image } from 'react-native'
 import _ from 'lodash'
 import { Spacer } from '../shared/Spacer'
 import { useMap, Map } from '../map'
-import { useHomeDrawerWidth } from './HomeView'
+import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useDebounceValue } from '../../hooks/useDebounce'
 import { useOnMount } from '../../hooks/useOnMount'
 
@@ -29,7 +29,7 @@ export default function HomeMapContainer() {
   return <HomeMap />
 }
 
-function HomeMap() {
+const HomeMap = memo(() => {
   const om = useOvermind()
   const drawerWidth = useHomeDrawerWidth()
   const state = om.state.home.currentState
@@ -96,7 +96,7 @@ function HomeMap() {
 
   const [selected, setSelected] = useState('')
 
-  const curRestaurant = state.type == 'restaurant' ? state.restaurant : null
+  const restaurantDetail = state.type == 'restaurant' ? state.restaurant : null
   const prevResults: string[] =
     (state.type == 'restaurant' &&
       om.state.home.previousState?.type == 'search' &&
@@ -113,7 +113,7 @@ function HomeMap() {
       : []
 
   const restaurantIds: string[] = _.uniq(
-    [...searchResults, ...prevResults, curRestaurant?.id].filter(
+    [...searchResults, ...prevResults, restaurantDetail?.id].filter(
       (id) => !!id && !!allRestaurants[id]?.location?.coordinates
     )
   )
@@ -153,20 +153,14 @@ function HomeMap() {
     [restaurantsVersion]
   )
 
+  // Search - hover restaurant
   useEffect(() => {
-    // hovering restaurants
     if (!map) return
     return om.reaction(
       (state) => state.home.hoveredRestaurant,
       (hoveredRestaurant) => {
         if (!hoveredRestaurant) return
         const index = restaurantIds.indexOf(hoveredRestaurant.id)
-        console.log(
-          'covering',
-          index,
-          hoveredRestaurant,
-          map.annotations.length
-        )
         if (map.annotations[index]) {
           map.annotations[index].selected = true
         }
@@ -174,16 +168,18 @@ function HomeMap() {
     )
   }, [map, restaurantIds])
 
-  const curRestaurantD = useDebounceValue(curRestaurant, 250)
+  // Detail - center to restaurant
+  const restaurantDetailVal = useDebounceValue(restaurantDetail, 250)
   useEffect(() => {
-    if (!map || !mapkit || !curRestaurantD || !curRestaurantD.location) return
+    if (!map || !mapkit || !restaurantDetailVal?.location) return
     centerMapToRegion({
       map,
-      location: curRestaurantD.location.coordinates,
+      location: restaurantDetailVal.location.coordinates,
       span: 0.09,
     })
-  }, [!!map, mapkit, curRestaurantD])
+  }, [!!map, mapkit, restaurantDetailVal])
 
+  // selected on map
   useEffect(() => {
     if (!restaurantSelected) return
     if (!map) return
@@ -193,12 +189,11 @@ function HomeMap() {
     )
   }, [map, restaurantSelected])
 
+  // update annotations
   useEffect(() => {
     if (!map) return
     if (!restaurants.length) return
-
     const cancels = new Set<Function>()
-
     const cb = (e) => {
       const selected = e.annotation.data.id || ''
       setSelected(selected)
@@ -206,10 +201,7 @@ function HomeMap() {
     }
     map.addEventListener('select', cb)
     cancels.add(() => map.removeEventListener('select', cb))
-
-    console.log('SHOW ANNOTATIONS', annotations)
     map.showItems(annotations, { animate: true })
-
     return () => {
       cancels.forEach((x) => x())
       map.removeAnnotations(annotations)
@@ -221,4 +213,4 @@ function HomeMap() {
       <Map {...mapProps} />
     </ZStack>
   )
-}
+})
