@@ -15,7 +15,7 @@
     "start": "yarn start:web",
     "start:react-native": "react-native start",
     "test": "true",
-    "postinstall": "jetify && rm -r node_modules/@apollo/client/node_modules/react || true",
+    "postinstall": "jetify && rm -r node_modules/@apollo/client/node_modules/react || true && patch-package",
     "build": "true",
     "build:web": "expo build:web",
     "ios": "react-native run-ios",
@@ -70,7 +70,7 @@
     "patch-package": "^6.2.1",
     "react-refresh": "^0.8.1",
     "react-test-renderer": "~16.9.0",
-    "typescript": "^3.8.3",
+    "typescript": "^3.9.0-beta",
     "webpack-hot-middleware": "^2.25.0"
   },
   "resolutions": {

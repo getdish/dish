@@ -383,15 +383,13 @@ const getReview: AsyncAction = async (om) => {
   }
 }
 
-const setReview: Action<Partial<Review>> = (om, review: Partial<Review>) => {
-  const state = om.state.home.lastRestaurantState
-  if (!state) return
-  Object.assign(state.review, review)
-}
-
-const submitReview: AsyncAction<Review> = async (om, inReview) => {
-  let review = new Review(inReview)
+const submitReview: AsyncAction<Review> = async (om, review) => {
+  if (!om.state.auth.user) {
+    console.error('Not logged in')
+    return
+  }
   if (typeof review.id == 'undefined') {
+    review.user_id = om.state.auth.user.id
     await review.insert()
     review.id = review.id
   } else {
@@ -436,7 +434,6 @@ export const actions = {
   clearSearch,
   setMapcenter,
   getReview,
-  setReview,
   submitReview,
   getUserReviews,
   _pushHomeState,

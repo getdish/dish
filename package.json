@@ -19,7 +19,8 @@
     "build:watch": "tsc -b -w --preserveWatchOutput",
     "test": "ava",
     "clean": "bin/clean.sh",
-    "format": "swift-format --recursive --in-place ./apps/ios/dish"
+    "format": "swift-format --recursive --in-place ./apps/ios/dish",
+    "postinstall": "wsrun -c postinstall"
   },
   "devDependencies": {
     "@types/node": "^13.7.4",
@@ -27,7 +28,7 @@
     "prettier": "^2.0.1",
     "ts-node": "^8.5.4",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^3.8.2",
+    "typescript": "^3.9.0-beta",
     "wsrun": "^5.2.0"
   },
   "dependencies": {
