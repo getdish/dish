@@ -11,11 +11,12 @@ let waterfalls = []
 
 async function runWaterfalls() {
   while (true) {
-    await sleep(60)
+    await sleep(20)
     const amt = Math.max(1, Math.round(waterfalls.length * 0.1))
     const cur = waterfalls.slice(0, amt)
     waterfalls = waterfalls.slice(amt)
     cur.forEach((x) => x())
+    await sleep(20)
   }
 }
 
