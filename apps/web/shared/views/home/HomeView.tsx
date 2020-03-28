@@ -25,12 +25,10 @@ import { StyleSheet, View } from 'react-native'
 import { useDebounceValue } from '../../hooks/useDebounce'
 import { ForceShowPopover } from '../shared/Popover'
 import { HomeControlsOverlay } from './HomeControlsOverlay'
-import { BlurView } from '../shared/BlurView'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 export const HomeView = () => {
   const om = useOvermind()
-  const showMenu = om.state.home.showMenu
 
   return (
     <ZStack top={0} left={0} right={0} bottom={0}>
@@ -68,7 +66,16 @@ function HomeViewDrawer(props: { children: any }) {
         {/* <BlurView /> */}
         <LinearGradient
           colors={[
+            'rgba(255,255,255,0.4)',
             'rgba(255,255,255,0.6)',
+            'rgba(255,255,255,1)',
+            'rgba(255,255,255,1)',
+            'rgba(255,255,255,1)',
+            'rgba(255,255,255,1)',
+            'rgba(255,255,255,1)',
+            'rgba(255,255,255,1)',
+            'rgba(255,255,255,1)',
+            'rgba(255,255,255,1)',
             'rgba(255,255,255,1)',
             'rgba(255,255,255,1)',
             'rgba(255,255,255,1)',
@@ -81,7 +88,7 @@ function HomeViewDrawer(props: { children: any }) {
   )
 }
 
-export const drawerBorderRadius = 18
+export const drawerBorderRadius = 40
 
 const HomeViewContent = memo(function HomeViewContent() {
   const om = useOvermind()
@@ -126,19 +133,19 @@ const HomeViewContent = memo(function HomeViewContent() {
   )
 })
 
-function HomeStackView<A extends HomeStateItemSimple>({
-  items,
-  children,
-}: {
+const transitionDuration = 280
+
+function HomeStackView<A extends HomeStateItemSimple>(props: {
   items: A[]
   children: (a: A, isActive: boolean, index: number) => React.ReactNode
 }) {
-  const debounceItems = useDebounceValue(items, 60)
-
+  const debounceItems = useDebounceValue(props.items, transitionDuration)
+  const isRemoving = debounceItems.length > props.items.length
+  const items = isRemoving ? debounceItems : props.items
   return (
     <ZStack fullscreen>
-      {debounceItems.map((item, index) => {
-        const isActive = index === debounceItems.length - 1
+      {items.map((item, index) => {
+        const isActive = index === items.length - 1
         return (
           <ForceShowPopover.Provider
             key={`${index}`}
@@ -147,9 +154,10 @@ function HomeStackView<A extends HomeStateItemSimple>({
             <HomeStackViewItem
               item={item}
               index={index}
-              total={debounceItems.length}
+              isActive={isActive}
+              isRemoving={isActive && isRemoving}
             >
-              {children(item as any, isActive, index)}
+              {props.children(item as any, isActive, index)}
             </HomeStackViewItem>
           </ForceShowPopover.Provider>
         )
@@ -162,15 +170,16 @@ function HomeStackViewItem({
   children,
   item,
   index,
-  total,
+  isActive,
+  isRemoving,
 }: {
   children: React.ReactNode
   item: HomeStateItemSimple
   index: number
-  total: number
+  isActive: boolean
+  isRemoving: boolean
 }) {
   const om = useOvermind()
-  const isTop = index === total - 1
   const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
@@ -188,7 +197,7 @@ function HomeStackViewItem({
   )
 
   return (
-    <div className={`animate-up ${isMounted ? 'active' : ''}`}>
+    <div className={`animate-up ${isMounted && !isRemoving ? 'active' : ''}`}>
       <style>
         {`
 .animate-up {
@@ -201,7 +210,7 @@ function HomeStackViewItem({
   opacity: 0;
   pointer-events: none;
   transform: translateY(20px);
-  transition: all ease-in-out 250ms;
+  transition: all ease-in-out ${transitionDuration}ms;
 }
 .animate-up.active {
   opacity: 1;
@@ -212,11 +221,11 @@ function HomeStackViewItem({
       <ZStack
         // animation="fadeInUp"
         // duration={300}
-        pointerEvents={isTop ? 'none' : 'auto'}
+        pointerEvents={isActive ? 'none' : 'auto'}
         fullscreen
       >
         <TouchableOpacity
-          disabled={isTop}
+          disabled={isActive}
           style={{ flex: 1 }}
           onPress={onPress}
         >
@@ -230,7 +239,7 @@ function HomeStackViewItem({
               shadowColor: 'rgba(0,0,0,0.2)',
               shadowRadius: 4,
             })}
-            borderRadius={drawerBorderRadius}
+            borderRadius={drawerBorderRadius / 2}
             pointerEvents="auto"
             overflow="hidden"
           >

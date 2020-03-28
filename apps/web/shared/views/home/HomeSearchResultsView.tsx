@@ -1,5 +1,5 @@
-import React, { useMemo, useLayoutEffect } from 'react'
-import { Text, ScrollView, FlatList } from 'react-native'
+import React, { useMemo, useLayoutEffect, useState, useEffect } from 'react'
+import { Text, ScrollView, FlatList, View } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { RestaurantListItem } from './RestaurantListItem'
@@ -9,6 +9,8 @@ import { HomeStateItemSearch } from '../../state/home'
 import { closeAllPopovers, popoverCloseCbs } from '../shared/Popover'
 import HomeLenseBar from './HomeLenseBar'
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
+import { useWaterfall } from '../shared/useWaterfall'
+import { Spacer } from '../shared/Spacer'
 
 export default memoIsEqualDeep(function HomeSearchResultsView({
   state,
@@ -38,44 +40,29 @@ function HomeSearchResultsViewContent({
       state.results?.results?.restaurantIds) ||
       undefined) ??
     []
-  console.log('results', resultsIds)
   const results = resultsIds.map((id) => allRestaurants[id])
 
-  // const contents = useMemo(() => {
-  //   if (results && results.status == 'complete') {
-  //     return results.results.restaurantIds?.map((id, index) => {
-  //       return (
-  //         <RestaurantListItem
-  //           key={index}
-  //           restaurant={allRestaurants[id]}
-  //           rank={index + 1}
-  //           onHover={() => {
-  //             om.actions.home.setHoveredRestaurant(allRestaurants[id])
-  //           }}
-  //         />
-  //       )
-  //     })
-  //   }
-
-  //   if (state.results?.status == 'loading') {
-  //     return (
-  //       <VStack padding={18}>
-  //         <Text>Loading...</Text>
-  //       </VStack>
-  //     )
-  //   }
-  // }, [resultsKey])
+  if (state.results?.status == 'loading') {
+    return (
+      <VStack padding={18}>
+        <Text>Loading...</Text>
+      </VStack>
+    )
+  }
 
   return (
-    <FlatList
-      disableVirtualization={false}
-      data={results}
+    <List
+      data={[20 + 70, ...results, 20]}
+      estimatedHeight={182}
       renderItem={({ item, index }) => {
+        if (typeof item == 'number') {
+          return <Spacer size={item} />
+        }
         return (
           <RestaurantListItem
             key={item.id}
             restaurant={item}
-            rank={index + 1}
+            rank={index}
             onHover={() => {
               om.actions.home.setHoveredRestaurant(item)
             }}
@@ -84,20 +71,39 @@ function HomeSearchResultsViewContent({
       }}
     />
   )
+}
 
-  // return (
-  //   <ScrollView
-  //     onScroll={() => {
-  //       if (popoverCloseCbs.size) {
-  //         closeAllPopovers()
-  //       }
-  //     }}
-  //   >
-  //     <VStack paddingVertical={20} paddingTop={20 + 70}>
-  //       {contents}
-  //     </VStack>
-  //   </ScrollView>
-  // )
+function List(props: {
+  data: any[]
+  estimatedHeight?: number
+  renderItem: (arg: { item: any; index: number }) => React.ReactNode
+}) {
+  // TODO suspense or flatlist depending for now simple waterfall
+  return (
+    <ScrollView
+      onScroll={() => {
+        if (popoverCloseCbs.size) {
+          closeAllPopovers()
+        }
+      }}
+    >
+      {props.data.map((item, index) => (
+        <ListItem estimatedHeight={props.estimatedHeight} key={item.id}>
+          {props.renderItem({ item, index })}
+        </ListItem>
+      ))}
+    </ScrollView>
+  )
+}
+
+function ListItem(props) {
+  const [isMounted, setIsMounted] = useState(false)
+  useWaterfall(() => {
+    setIsMounted(true)
+  })
+  return isMounted
+    ? props.children
+    : props.loading ?? <View style={{ height: props.estimatedHeight }} />
 }
 
 // function SearchResults() {
