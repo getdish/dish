@@ -47,9 +47,13 @@ var query = `
 		FROM restaurant
 		WHERE ST_DWithin(location, ST_MakePoint(?0, ?1), ?2)
 		AND (
-			name ILIKE '%' || ?3 || '%'
+			(name ILIKE '%' || ?3 || '%' AND ?3 != '')
 			OR
-			tag_names @> to_json(string_to_array(?4, ','))::jsonb
+			(
+				tag_names @> to_json(string_to_array(?4, ','))::jsonb
+				AND
+				?4 != ''
+			)
 		)
 		ORDER BY rating DESC NULLS LAST
 		LIMIT ?5
