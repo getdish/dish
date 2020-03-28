@@ -62,25 +62,25 @@ const HomeUserMenu = memo(() => {
     <Popover
       position="bottom"
       isOpen={isOpen}
-      target={
-        <LinkButton
-          backgroundColor="#fff"
-          padding={15}
-          width={15 * 2 + 16}
-          height={15 * 2 + 16}
-          borderRadius={100}
-          shadowColor="rgba(0,0,0,0.2)"
-          shadowRadius={10}
-          shadowOffset={{ width: 0, height: 5 }}
-          onPress={() => setIsOpen(!isOpen)}
-        >
-          <Icon name="user" size={16} opacity={0.5} />
-        </LinkButton>
+      contents={
+        <Tooltip padding={20} width="30vw" minWidth={250}>
+          <AuthLoginRegisterView setMenuOpen={setIsOpen} />
+        </Tooltip>
       }
     >
-      <Tooltip padding={20} width="30vw" minWidth={250}>
-        <AuthLoginRegisterView setMenuOpen={setIsOpen} />
-      </Tooltip>
+      <LinkButton
+        backgroundColor="#fff"
+        padding={15}
+        width={15 * 2 + 16}
+        height={15 * 2 + 16}
+        borderRadius={100}
+        shadowColor="rgba(0,0,0,0.2)"
+        shadowRadius={10}
+        shadowOffset={{ width: 0, height: 5 }}
+        onPress={() => setIsOpen(!isOpen)}
+      >
+        <Icon name="user" size={16} opacity={0.5} />
+      </LinkButton>
     </Popover>
   )
 })
@@ -91,25 +91,25 @@ const HomeExploreMenu = memo(() => {
     <Popover
       position="bottom"
       isOpen={isOpen}
-      target={
-        <LinkButton
-          backgroundColor="#fff"
-          padding={15}
-          width={15 * 2 + 16}
-          height={15 * 2 + 16}
-          borderRadius={100}
-          shadowColor="rgba(0,0,0,0.2)"
-          shadowRadius={10}
-          shadowOffset={{ width: 0, height: 5 }}
-          onPress={() => setIsOpen(!isOpen)}
-        >
-          <Icon name="globe" size={16} opacity={0.5} />
-        </LinkButton>
+      contents={
+        <Tooltip padding={20} width="auto">
+          <Text>something</Text>
+        </Tooltip>
       }
     >
-      <Tooltip padding={20} width="auto">
-        <Text>something</Text>
-      </Tooltip>
+      <LinkButton
+        backgroundColor="#fff"
+        padding={15}
+        width={15 * 2 + 16}
+        height={15 * 2 + 16}
+        borderRadius={100}
+        shadowColor="rgba(0,0,0,0.2)"
+        shadowRadius={10}
+        shadowOffset={{ width: 0, height: 5 }}
+        onPress={() => setIsOpen(!isOpen)}
+      >
+        <Icon name="globe" size={16} opacity={0.5} />
+      </LinkButton>
     </Popover>
   )
 })

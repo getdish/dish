@@ -7,7 +7,7 @@ import { useOvermind } from '../../state/om'
 import { Popover } from '../shared/Popover'
 import { Tooltip } from '../shared/Stack/Tooltip'
 import { Icon } from '../shared/Icon'
-import { EmojiButton } from './RestaurantListItem'
+import { EmojiButton } from './EmojiButton'
 import { LenseButton } from './HomeLenseBar'
 import { HomeStateItemRestaurant } from '../../state/home'
 import Toast from 'react-native-root-toast'
@@ -126,43 +126,41 @@ export const RestaurantRatingPopover = memo(
             setRating(0)
           }
         }}
-        target={
-          <div
-            style={{
-              filter: review.current?.rating !== 0 ? '' : 'grayscale(100%)',
-            }}
-          >
-            <VStack>
-              <TouchableOpacity
-                onPress={() => {
-                  if (review.current?.rating == 1) return setRating(0)
-                  setRating(1)
-                }}
-              >
-                <Icon
-                  name="chevron-up"
-                  size={24}
-                  color={review.current?.rating === 1 ? 'green' : 'black'}
-                  marginBottom={-12}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  if (review.current?.rating == -1) return setRating(0)
-                  setRating(-1)
-                }}
-              >
-                <Icon
-                  name="chevron-down"
-                  size={24}
-                  color={review.current?.rating === -1 ? 'red' : 'black'}
-                />
-              </TouchableOpacity>
-            </VStack>
-          </div>
-        }
+        contents={<Tooltip width={620}>{content}</Tooltip>}
       >
-        <Tooltip width={620}>{content}</Tooltip>
+        <div
+          style={{
+            filter: review.current?.rating !== 0 ? '' : 'grayscale(100%)',
+          }}
+        >
+          <VStack>
+            <TouchableOpacity
+              onPress={() => {
+                if (review.current?.rating == 1) return setRating(0)
+                setRating(1)
+              }}
+            >
+              <Icon
+                name="chevron-up"
+                size={24}
+                color={review.current?.rating === 1 ? 'green' : 'black'}
+                marginBottom={-12}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                if (review.current?.rating == -1) return setRating(0)
+                setRating(-1)
+              }}
+            >
+              <Icon
+                name="chevron-down"
+                size={24}
+                color={review.current?.rating === -1 ? 'red' : 'black'}
+              />
+            </TouchableOpacity>
+          </VStack>
+        </div>
       </Popover>
     )
   }

@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useEffect } from 'react'
-import PopoverNative from 'react-native-popover-view'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import PopoverWeb, { ArrowContainer } from 'react-tiny-popover'
 import { Platform } from 'react-native'
+import { useWaterfall } from './useWaterfall'
 
 export const ForceShowPopover = createContext<boolean | undefined>(undefined)
 
@@ -13,11 +13,16 @@ export const closeAllPopovers = () => {
 export const Popover = (props: {
   position?: 'top' | 'left' | 'right' | 'bottom'
   children: React.ReactElement
-  target: React.ReactElement
+  contents: React.ReactElement
   isOpen?: boolean
   onClickOutside?: Function
 }) => {
   const forceShow = useContext(ForceShowPopover)
+  const [isMounted, setIsMounted] = useState(false)
+
+  useWaterfall(() => {
+    setIsMounted(true)
+  })
 
   useEffect(() => {
     if (props.onClickOutside) {
@@ -25,6 +30,10 @@ export const Popover = (props: {
       return () => popoverCloseCbs.delete(props.onClickOutside)
     }
   }, [])
+
+  if (!isMounted) {
+    return props.children
+  }
 
   if (Platform.OS == 'web') {
     return (
@@ -47,11 +56,11 @@ export const Popover = (props: {
               zIndex: 1000000000,
             }}
           >
-            {props.children}
+            {props.contents}
           </ArrowContainer>
         )}
       >
-        {props.target}
+        {props.children}
       </PopoverWeb>
     )
   }
