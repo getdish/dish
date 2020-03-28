@@ -331,7 +331,7 @@ export class Restaurant extends ModelBase<Restaurant> {
     return this.tags.map((i) => {
       let rank = -1
       const lowered = i.taxonomy.name.toLowerCase()
-      const match = this.tag_rankings.find((i) => i[0] == lowered)
+      const match = (this.tag_rankings || []).find((i) => i[0] == lowered)
       if (match) {
         rank = match[1] as number
       }
