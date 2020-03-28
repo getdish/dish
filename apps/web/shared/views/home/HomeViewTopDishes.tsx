@@ -52,7 +52,7 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
     console.log('RENDER HOME_TOP_DISHES')
 
     useEffect(() => {
-      om.actions.home.getTopDishes()
+      om.actions.home.loadHomeDishes()
     }, [])
 
     return (
