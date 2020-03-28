@@ -1,15 +1,104 @@
-import React, { useEffect, useMemo } from 'react'
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import React, { useMemo, useLayoutEffect } from 'react'
+import { Text, ScrollView, FlatList } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { RestaurantListItem } from './RestaurantListItem'
-import { SmallTitle, Title } from '../shared/SmallTitle'
+import { Title } from '../shared/SmallTitle'
 import { VStack } from '../shared/Stacks'
-import { HomeStateItemSearch, HomeStateItem } from '../../state/home'
-import { memoizeWeak } from '../../helpers/memoizeWeak'
+import { HomeStateItemSearch } from '../../state/home'
 import { closeAllPopovers, popoverCloseCbs } from '../shared/Popover'
 import HomeLenseBar from './HomeLenseBar'
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
+
+export default memoIsEqualDeep(function HomeSearchResultsView({
+  state,
+}: {
+  state: HomeStateItemSearch
+}) {
+  return (
+    <VStack flex={1}>
+      <Title>Top {state.searchQuery} Restaurants</Title>
+      <VStack position="relative" flex={1}>
+        <HomeLenseBar backgroundGradient />
+        <HomeSearchResultsViewContent state={state} />
+      </VStack>
+    </VStack>
+  )
+})
+
+function HomeSearchResultsViewContent({
+  state,
+}: {
+  state: HomeStateItemSearch
+}) {
+  const om = useOvermind()
+  const allRestaurants = om.state.home.restaurants
+  const resultsIds =
+    ((state.results?.status == 'complete' &&
+      state.results?.results?.restaurantIds) ||
+      undefined) ??
+    []
+  console.log('results', resultsIds)
+  const results = resultsIds.map((id) => allRestaurants[id])
+
+  // const contents = useMemo(() => {
+  //   if (results && results.status == 'complete') {
+  //     return results.results.restaurantIds?.map((id, index) => {
+  //       return (
+  //         <RestaurantListItem
+  //           key={index}
+  //           restaurant={allRestaurants[id]}
+  //           rank={index + 1}
+  //           onHover={() => {
+  //             om.actions.home.setHoveredRestaurant(allRestaurants[id])
+  //           }}
+  //         />
+  //       )
+  //     })
+  //   }
+
+  //   if (state.results?.status == 'loading') {
+  //     return (
+  //       <VStack padding={18}>
+  //         <Text>Loading...</Text>
+  //       </VStack>
+  //     )
+  //   }
+  // }, [resultsKey])
+
+  return (
+    <FlatList
+      disableVirtualization={false}
+      data={results}
+      renderItem={({ item, index }) => {
+        return (
+          <RestaurantListItem
+            key={item.id}
+            restaurant={item}
+            rank={index + 1}
+            onHover={() => {
+              om.actions.home.setHoveredRestaurant(item)
+            }}
+          />
+        )
+      }}
+    />
+  )
+
+  // return (
+  //   <ScrollView
+  //     onScroll={() => {
+  //       if (popoverCloseCbs.size) {
+  //         closeAllPopovers()
+  //       }
+  //     }}
+  //   >
+  //     <VStack paddingVertical={20} paddingTop={20 + 70}>
+  //       {contents}
+  //     </VStack>
+  //   </ScrollView>
+  // )
+}
 
 // function SearchResults() {
 //   const om = useOvermind()
@@ -110,69 +199,3 @@ import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 //     />
 //   )
 // }
-
-export default memoIsEqualDeep(function HomeSearchResultsView({
-  state,
-}: {
-  state: HomeStateItemSearch
-}) {
-  console.log('RENDER HOME_SEARCH_RESULTS')
-  return (
-    <VStack flex={1}>
-      <Title>Top {state.searchQuery} Restaurants</Title>
-      <VStack position="relative" flex={1}>
-        <HomeLenseBar backgroundGradient />
-        <HomeSearchResultsViewContent state={state} />
-      </VStack>
-    </VStack>
-  )
-})
-
-function HomeSearchResultsViewContent({
-  state,
-}: {
-  state: HomeStateItemSearch
-}) {
-  const om = useOvermind()
-  const { results } = state
-  const allRestaurants = om.state.home.restaurants
-
-  const contents = useMemo(() => {
-    if (results && results.status == 'complete') {
-      return results.results.restaurantIds?.map((id, index) => {
-        return (
-          <RestaurantListItem
-            key={index}
-            restaurant={allRestaurants[id]}
-            rank={index + 1}
-            onHover={() => {
-              om.actions.home.setHoveredRestaurant(allRestaurants[id])
-            }}
-          />
-        )
-      })
-    }
-
-    if (results?.status == 'loading') {
-      return (
-        <VStack padding={18}>
-          <Text>Loading...</Text>
-        </VStack>
-      )
-    }
-  }, [JSON.stringify(results)])
-
-  return (
-    <ScrollView
-      onScroll={() => {
-        if (popoverCloseCbs.size) {
-          closeAllPopovers()
-        }
-      }}
-    >
-      <VStack paddingVertical={20} paddingTop={20 + 70}>
-        {contents}
-      </VStack>
-    </ScrollView>
-  )
-}

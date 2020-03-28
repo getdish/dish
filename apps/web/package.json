@@ -2,7 +2,7 @@
   "name": "dish-web-app",
   "version": "0.0.0",
   "private": true,
-  "main": "index.js",
+  "main": "./index.js",
   "workspaces": {
     "nohoist": [
       "**"
@@ -28,7 +28,7 @@
     "@expo/webpack-config": "^0.11.8",
     "@o/fast-compare": "2.7.1",
     "expo": "^36.0.2",
-    "expo-linear-gradient": "^8.0.0",
+    "expo-linear-gradient": "^8.1.0",
     "mapkit-typescript": "^5.18.1",
     "overmind": "^23.0.1",
     "overmind-react": "^24.0.1",
@@ -61,7 +61,7 @@
     "@types/react-native": "~0.60.23",
     "babel-jest": "~24.9.0",
     "babel-preset-expo": "^8.0.0",
-    "expo-cli": "^3.15.5",
+    "expo-cli": "^3.16.1",
     "jest": "~24.9.0",
     "jest-expo": "~36.0.1",
     "metro-react-native-babel-preset": "^0.59.0",
