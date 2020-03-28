@@ -29,18 +29,12 @@ import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import HomeAutocomplete from './HomeAutocomplete'
 
 export const HomeView = () => {
-  const om = useOvermind()
-
   return (
     <ZStack top={0} left={0} right={0} bottom={0}>
       <HomeMap />
       <HomeControlsOverlay />
       <HomeViewDrawer>
-        <RouteSwitch>
-          <Route name="home">
-            <HomeViewContent />
-          </Route>
-        </RouteSwitch>
+        <HomeViewContent />
       </HomeViewDrawer>
     </ZStack>
   )
@@ -67,8 +61,8 @@ function HomeViewDrawer(props: { children: any }) {
         {/* <BlurView /> */}
         <LinearGradient
           colors={[
-            'rgba(255,255,255,0.4)',
-            'rgba(255,255,255,0.6)',
+            'rgba(255,255,255,0.7)',
+            'rgba(255,255,255,0.8)',
             'rgba(255,255,255,1)',
             'rgba(255,255,255,1)',
             'rgba(255,255,255,1)',
@@ -80,6 +74,8 @@ function HomeViewDrawer(props: { children: any }) {
             'rgba(255,255,255,1)',
             'rgba(255,255,255,1)',
             'rgba(255,255,255,1)',
+            'rgba(255,255,255,0.8)',
+            'rgba(255,255,255,0.7)',
           ]}
           style={[StyleSheet.absoluteFill]}
         />
