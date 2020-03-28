@@ -1,17 +1,19 @@
 import React, { useEffect } from 'react'
-import { Image, Text, ScrollView } from 'react-native'
+import { Helmet } from 'react-helmet'
+import { Image, ScrollView, Text } from 'react-native'
 
-import { useOvermind } from '../../state/om'
-import { Spacer } from '../shared/Spacer'
-import { LinkButton } from '../shared/Link'
-import { HStack, VStack, StackBaseProps } from '../shared/Stacks'
-import { Title } from '../shared/SmallTitle'
-import HomeLenseBar from './HomeLenseBar'
-import { HomeStateItemHome, HomeStateItemSimple } from '../../state/home'
-import { RankingView } from './RankingView'
-import { slugify } from '../../helpers/slugify'
-import { SuperScriptText } from './TagButton'
+import top_dish_images from '../../assets/topdishes.json'
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
+import { HomeStateItemHome, HomeStateItemSimple } from '../../state/home'
+import { useOvermind } from '../../state/om'
+import { LinkButton } from '../shared/Link'
+import { Title } from '../shared/SmallTitle'
+import { Spacer } from '../shared/Spacer'
+import { HStack, StackBaseProps, VStack } from '../shared/Stacks'
+import HomeLenseBar from './HomeLenseBar'
+
+import { RankingView } from './RankingView'
+import { SuperScriptText } from './TagButton'
 import _ from 'lodash'
 
 export default memoIsEqualDeep(function HomeViewTopDishes({
@@ -28,13 +30,16 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
     om.state.home.lastHomeState.lenses[om.state.home.lastHomeState.activeLense]
 
   return (
-    <VStack flex={1}>
+    <>
+      <Helmet>
+        <title>Dish - Uniquely Good Food</title>
+      </Helmet>
       <Title>{activeLense.description}</Title>
       <VStack position="relative" flex={1}>
         <HomeLenseBar />
         <HomeViewTopDishesContent state={state as any} />
       </VStack>
-    </VStack>
+    </>
   )
 })
 

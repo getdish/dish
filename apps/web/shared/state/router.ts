@@ -1,18 +1,10 @@
-import { isEqual } from '@o/fast-compare'
-import {
-  Action,
-  AsyncAction,
-  catchError,
-  Derive,
-  mutate,
-  Operator,
-  pipe,
-  run,
-  map,
-} from 'overmind'
+import _ from 'lodash'
+import { Action, AsyncAction, catchError, Derive, map, mutate, Operator, pipe, run } from 'overmind'
 import page from 'page'
 import queryString from 'query-string'
-import _ from 'lodash'
+
+import { isEqual } from '@o/fast-compare'
+
 import { slugify } from '../helpers/slugify'
 
 class Route<A extends Object | void = void> {
