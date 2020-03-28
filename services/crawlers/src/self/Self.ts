@@ -7,7 +7,7 @@ import { QueueOptions, JobOptions } from 'bull'
 import { WorkerJob } from '@dish/worker'
 import { Scrape, Restaurant, Dish } from '@dish/models'
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
-import { db } from '../utils'
+import { sql } from '../utils'
 
 const PER_PAGE = 50
 
@@ -46,7 +46,6 @@ export class Self extends WorkerJob {
   }
 
   async main() {
-    db.start()
     let previous_id = '00000000-0000-0000-0000-000000000000'
     while (true) {
       const results = await Restaurant.fetchBatch(
@@ -66,7 +65,6 @@ export class Self extends WorkerJob {
         }
       }
     }
-    await db.client.end()
   }
 
   async mergeAll(id: string) {
@@ -357,7 +355,7 @@ export class Self extends WorkerJob {
   async getRankForTag(tag: string) {
     const RADIUS = 0.1
     tag = tag.toLowerCase()
-    const result = await db.client.query(
+    const result = await sql(
       `SELECT rank FROM (
         SELECT id, DENSE_RANK() OVER(ORDER BY rating DESC NULLS LAST) AS rank
         FROM restaurant WHERE

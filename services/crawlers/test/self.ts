@@ -1,6 +1,5 @@
 import anyTest, { TestInterface } from 'ava'
 
-import { db } from '../src/utils'
 import { Self } from '../src/self/Self'
 import { Restaurant, Scrape } from '@dish/models'
 
@@ -80,14 +79,6 @@ const tripadvisor: Partial<Scrape> = {
     photosp1: [{ src: 'https://tripadvisor.com/image2.jpg' }],
   },
 }
-
-test.before(() => {
-  db.start()
-})
-
-test.after(() => {
-  db.client.end()
-})
 
 test.beforeEach(async (t) => {
   let scrape: Scrape

@@ -1,5 +1,5 @@
 import '@dish/common'
-import { Client } from 'pg'
+import { Client, Result } from 'pg'
 import axios from 'axios'
 
 const HEREMAPS_API_TOKEN = process.env.HEREMAPS_API_TOKEN
@@ -18,7 +18,19 @@ class DB {
   }
 }
 
-export const db = new DB()
+export async function sql(query: string) {
+  let result: Result
+  const db = new DB()
+  db.start()
+  try {
+    result = await db.client.query(query)
+  } catch (e) {
+    throw e
+  } finally {
+    db.client.end()
+  }
+  return result
+}
 
 export function shiftLatLonByMetres(
   lat: number,
