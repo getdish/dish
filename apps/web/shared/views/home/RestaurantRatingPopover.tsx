@@ -10,29 +10,29 @@ import { Icon } from '../shared/Icon'
 import { EmojiButton } from './RestaurantListItem'
 import { LenseButton } from './HomeLenseBar'
 import { HomeStateItemRestaurant } from '../../state/home'
+import Toast from 'react-native-root-toast'
 
 export const RestaurantRatingPopover = memo(
   ({ restaurant }: { restaurant: Restaurant }) => {
     const om = useOvermind()
     const [isOpen, setIsOpen] = useState(false)
-    const [feedback, setFeedback] = useState('')
     const [timer, setTimer] = useState(null)
     const review = useRef<Review>(new Review())
+
     const persist = async () => {
       await om.actions.home.submitReview(review.current)
-      setFeedback('saved')
-      setTimeout(() => {
-        setFeedback('')
-      }, 500)
+      Toast.show('Saved')
     }
+
     const setRating = (r: number) => {
       if (r == 0) {
         return
       }
-      om.actions.home.setReview({ rating: r })
-      setIsOpen(true)
+      review.current.rating = r
       persist()
+      setIsOpen(true)
     }
+
     let content = null
     if (review.current?.rating !== 0) {
       content = (
@@ -72,7 +72,8 @@ export const RestaurantRatingPopover = memo(
               placeholder="Notes"
               value={review.current?.text}
               onChangeText={async (t: string) => {
-                om.actions.home.setReview({ text: t })
+                review.current.text = t
+                persist()
               }}
               onKeyPress={() => {
                 clearTimeout(timer)
@@ -88,7 +89,6 @@ export const RestaurantRatingPopover = memo(
                 padding: 10,
               }}
             />
-            <Text>{feedback}</Text>
           </HStack>
           <Spacer />
           <HStack alignItems="center">
