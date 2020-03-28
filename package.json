@@ -20,7 +20,7 @@
     "test": "ava",
     "clean": "bin/clean.sh",
     "format": "swift-format --recursive --in-place ./apps/ios/dish",
-    "postinstall": "wsrun -c postinstall"
+    "postinstall": "wsrun -c postinstall || true"
   },
   "devDependencies": {
     "@types/node": "^13.7.4",

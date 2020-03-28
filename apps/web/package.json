@@ -9,6 +9,7 @@
     ]
   },
   "scripts": {
+    "generate": "gqless generate",
     "start:android": "react-native run-android",
     "start:ios": "react-native run-ios",
     "start:web": "expo start --web-only",
@@ -22,6 +23,7 @@
     "android": "react-native run-android"
   },
   "dependencies": {
+    "@dish/common-web": "*",
     "@apollo/client": "3.0.0-beta.41",
     "@dish/models": "*",
     "@expo/vector-icons ": "10.0.6",
@@ -29,6 +31,8 @@
     "@o/fast-compare": "2.7.1",
     "expo": "^36.0.2",
     "expo-linear-gradient": "^8.1.0",
+    "gqless": "^0.0.1-alpha.28",
+    "@gqless/react": "^0.0.1-alpha.28",
     "mapkit-typescript": "^5.18.1",
     "overmind": "^23.0.1",
     "overmind-react": "^24.0.1",
@@ -51,11 +55,12 @@
     "react-native-unimodules": "~0.7.0",
     "react-native-web": "0.11.7",
     "react-tiny-popover": "^4.0.0",
+    "react-window": "^1.8.5",
     "serve": "^11.3.0",
-    "use-expo": "1.0.1",
-    "react-window": "^1.8.5"
+    "use-expo": "1.0.1"
   },
   "devDependencies": {
+    "@gqless/cli": "^0.0.1-alpha.30",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.2.0",
     "@types/page": "1.8.0",
     "@types/react": "~16.9.0",

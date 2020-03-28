@@ -9,5 +9,6 @@
     "resolveJsonModule": true,
     "downlevelIteration": true,
     "typeRoots": ["node_modules/mapkit-typescript", "node_modules/@types"]
-  }
+  },
+  "references": [{ "path": "../../packages/common-web" }]
 }

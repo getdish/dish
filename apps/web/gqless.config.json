@@ -1,0 +1,4 @@
+{
+  "url": "https://hasura.rio.dishapp.com/v1/graphql",
+  "outputDir": "src/graphql"
+}

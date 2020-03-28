@@ -12,6 +12,7 @@ import { WebSocketLink } from '@apollo/link-ws'
 import axios, { AxiosRequestConfig } from 'axios'
 import { EnumType, jsonToGraphQLQuery } from 'json-to-graphql-query'
 import auth from '@dish/auth'
+import { getGraphEndpoint } from '@dish/common-web'
 
 const isNode = typeof window == 'undefined'
 export const isBrowserProd =
@@ -30,27 +31,7 @@ export type Point = {
   coordinates: [number, number]
 }
 
-const LOCAL_HASURA = 'http://localhost:8080'
-const LIVE_HASURA = 'https://hasura.rio.dishapp.com'
-
-let DOMAIN: string
-
-if (isNode) {
-  DOMAIN =
-    process.env.HASURA_ENDPOINT ||
-    process.env.REACT_APP_HASURA_ENDPOINT ||
-    LOCAL_HASURA
-} else {
-  if (isBrowserProd) {
-    DOMAIN = LIVE_HASURA
-  } else {
-    if (window.location.hostname.includes('hasura_live')) {
-      DOMAIN = LIVE_HASURA
-    } else {
-      DOMAIN = process.env.REACT_APP_HASURA_ENDPOINT || LOCAL_HASURA
-    }
-  }
-}
+const DOMAIN = getGraphEndpoint()
 
 let AXIOS_CONF = {
   url: DOMAIN + '/v1/graphql',
