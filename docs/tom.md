@@ -100,7 +100,7 @@ Previously
   - heres an example filter:
     - [Delivers: true, Cuisine: 🇺🇸, Lense: "Chef Picks"]
   - all we fetch from this is top dishes like so:
-    - { query GetTopDishesFor(filters: [], geoLocation: {}) { name, id, image } }
+    - { query loadHomeDishesFor(filters: [], geoLocation: {}) { name, id, image } }
 - restaurant info
   - geolocation, address, phone
   - dishes

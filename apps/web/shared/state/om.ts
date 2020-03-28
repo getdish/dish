@@ -30,6 +30,7 @@ export const config = merge(
 
 export async function startOm(om: Om) {
   om.actions.auth.checkForExistingLogin()
+  om.actions.home.getAllTopDishes()
 
   await om.actions.router.start({
     onRouteChange: ({ type, name, item }) => {

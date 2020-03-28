@@ -73,6 +73,7 @@ export type AutocompleteItem = {
 
 type HomeState = {
   autocompleteResults: AutocompleteItem[]
+  allTopDishes: string[]
   restaurants: { [id: string]: Restaurant }
   showMenu: boolean
   states: HomeStateItem[]
@@ -115,6 +116,7 @@ const lastSearchState = (state: HomeState) =>
 
 export const state: HomeState = {
   autocompleteResults: [],
+  allTopDishes: [],
   restaurants: {},
   showMenu: false,
   states: [initialHomeState],
@@ -253,7 +255,7 @@ const getUserReviews: AsyncAction<string> = async (om, user_id: string) => {
   }
 }
 
-const getTopDishes: AsyncAction = async (om) => {
+const loadHomeDishes: AsyncAction = async (om) => {
   const query = {
     query: {
       top_dishes: {
@@ -272,6 +274,26 @@ const getTopDishes: AsyncAction = async (om) => {
   const response = await ModelBase.hasura(query)
   console.log('set top dishes')
   om.state.home.lastHomeState.top_dishes = response.data.data.top_dishes
+}
+
+const getAllTopDishes: AsyncAction = async (om) => {
+  const query = {
+    query: {
+      top_dishes: {
+        __args: {
+          args: {
+            lon: om.state.home.currentState.center.lng,
+            lat: om.state.home.currentState.center.lat,
+            radius: RADIUS,
+          },
+        },
+        dish: true,
+        frequency: true,
+      },
+    },
+  }
+  const response = await ModelBase.hasura(query)
+  om.state.home.allTopDishes = response.data.data.top_dishes
 }
 
 const DEBOUNCE_SEARCH = 230
@@ -440,7 +462,7 @@ export const actions = {
   setHoveredRestaurant,
   setCurrentRestaurant,
   runSearch,
-  getTopDishes,
+  loadHomeDishes,
   // restaurantSearch,
   clearSearch,
   setMapcenter,
@@ -450,4 +472,5 @@ export const actions = {
   _pushHomeState,
   _popHomeState,
   suggestTags,
+  getAllTopDishes,
 }
