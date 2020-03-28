@@ -1,22 +1,17 @@
-import React, { useState, useEffect, memo } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Image, Text, TouchableOpacity } from 'react-native'
 import { Restaurant } from '@dish/models'
 import { HStack, VStack } from '../shared/Stacks'
 import { Spacer } from '../shared/Spacer'
 import { Link } from '../shared/Link'
 import { useOvermind } from '../../state/om'
-import { RatingView } from './RatingView'
 import { RankingView } from './RankingView'
-import { Popover } from '../shared/Popover'
-import { Tooltip } from '../shared/Stack/Tooltip'
 import { RestaurantRatingPopover } from './RestaurantRatingPopover'
-import { Circle } from '../shared/Circle'
-import { SmallTitle } from '../shared/SmallTitle'
-import { TableRow, TableCell } from './TableRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantMetaRow } from './RestaurantMetaRow'
 import { Divider } from '../shared/Divider'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
+import { RestaurantRatingDetail } from './RestaurantRatingDetail'
 
 export const RestaurantListItem = ({
   restaurant,
@@ -130,92 +125,3 @@ export const RestaurantListItem = ({
     </div>
   )
 }
-
-export const EmojiButton = ({
-  active,
-  children,
-  onPress,
-  size = 88,
-  ...rest
-}: any) => {
-  return (
-    <TouchableOpacity style={{ flex: 1 }} onPress={onPress}>
-      <Circle
-        size={size}
-        backgroundColor={active ? 'yellow' : ''}
-        borderColor={'#eee'}
-        borderWidth={1}
-        hoverStyle={{
-          backgroundColor: active ? 'yellow' : 'rgba(0,0,0,0.05)',
-        }}
-      >
-        <Text style={{ fontSize: size * 0.45 }}>{children}</Text>
-      </Circle>
-    </TouchableOpacity>
-  )
-}
-
-export const RestaurantRatingDetail = memo(
-  ({
-    size = 'md',
-    restaurant,
-  }: {
-    size?: 'lg' | 'md'
-    restaurant: Restaurant
-  }) => {
-    const [isHoveringRating, setIsHoveringRating] = useState(false)
-    return (
-      <Popover
-        isOpen={isHoveringRating}
-        position="right"
-        contents={
-          <Tooltip height={300} width={250}>
-            <VStack>
-              <SmallTitle>Rating Summary</SmallTitle>
-              <TableRow>
-                <TableCell color="#555" fontWeight="600" width="50%">
-                  <Text>Source</Text>
-                </TableCell>
-                <TableCell color="#555" fontWeight="600" width="25%">
-                  <Text>Rating</Text>
-                </TableCell>
-                <TableCell color="#555" fontWeight="600" flex={1}>
-                  <Text>Weight</Text>
-                </TableCell>
-              </TableRow>
-              {Object.keys(restaurant.sources).map((source) => {
-                const item = restaurant.sources[source]
-                return (
-                  <TableRow key={source}>
-                    <TableCell
-                      fontWeight="bold"
-                      width="50%"
-                      // onPress={() => {
-                      //   item.url
-                      // }}
-                    >
-                      {source}
-                    </TableCell>
-                    <TableCell width="25%">{item.rating}</TableCell>
-                    <TableCell flex={1}>{Restaurant.WEIGHTS[source]}</TableCell>
-                  </TableRow>
-                )
-              })}
-            </VStack>
-          </Tooltip>
-        }
-      >
-        <div
-          onMouseEnter={() => {
-            setIsHoveringRating(true)
-          }}
-          onMouseLeave={() => {
-            setIsHoveringRating(false)
-          }}
-        >
-          <RatingView size={size} restaurant={restaurant} />
-        </div>
-      </Popover>
-    )
-  }
-)

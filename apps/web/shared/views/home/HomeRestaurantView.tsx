@@ -19,7 +19,8 @@ import { LinkButton } from '../shared/Link'
 import { SmallTitle } from '../shared/SmallTitle'
 import { HomeStateItem } from '../../state/home'
 import { CloseButton } from './CloseButton'
-import { RestaurantRatingDetail, EmojiButton } from './RestaurantListItem'
+import { EmojiButton } from './EmojiButton'
+import { RestaurantRatingDetail } from './RestaurantRatingDetail'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantMetaRow } from './RestaurantMetaRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
@@ -349,65 +350,62 @@ const RestaurantTagButton = memo(() => {
     <Popover
       position="right"
       target={
-        <LinkButton
-          {...circularFlatButtonStyle}
-          onPress={() => setIsOpen(true)}
-        >
-          <Icon size={24} name="tag" />
-        </LinkButton>
+        <Tooltip maxWidth={300}>
+          <Text
+            style={{
+              padding: 10,
+              paddingTop: 0,
+              textAlign: 'center',
+              width: '100%',
+            }}
+          >
+            Tag
+          </Text>
+          <HStack>
+            <TextInput
+              placeholder="Suggest tag"
+              numberOfLines={1}
+              style={styles.secondaryInput}
+              onChangeText={(t: string) => {
+                setSuggestedTags(t)
+              }}
+            />
+            <Button
+              title="Add"
+              onPress={async () => {
+                if (om.state.home.currentState.type != 'restaurant') return
+                await om.actions.home.suggestTags(suggested_tags)
+              }}
+            ></Button>
+          </HStack>
+          <HStack padding={10} flexWrap="wrap">
+            {restaurant.tags.map((t) => {
+              const name = t.taxonomy.name
+              return <TagButton key={name} name={name} />
+            })}
+          </HStack>
+          <Text
+            style={{
+              padding: 10,
+              textAlign: 'center',
+              width: '100%',
+            }}
+          >
+            Top tags
+          </Text>
+          <HStack padding={10} flexWrap="wrap">
+            {(om.state.home.lastHomeState.top_dishes ?? []).map((x) => (
+              <TagButton key={x.dish} name={x.dish} />
+            ))}
+          </HStack>
+        </Tooltip>
       }
       isOpen={isOpen}
       onClickOutside={() => setIsOpen(false)}
     >
-      <Tooltip maxWidth={300}>
-        <Text
-          style={{
-            padding: 10,
-            paddingTop: 0,
-            textAlign: 'center',
-            width: '100%',
-          }}
-        >
-          Tag
-        </Text>
-        <HStack>
-          <TextInput
-            placeholder="Suggest tag"
-            numberOfLines={1}
-            style={styles.secondaryInput}
-            onChangeText={(t: string) => {
-              setSuggestedTags(t)
-            }}
-          />
-          <Button
-            title="Add"
-            onPress={async () => {
-              if (om.state.home.currentState.type != 'restaurant') return
-              await om.actions.home.suggestTags(suggested_tags)
-            }}
-          ></Button>
-        </HStack>
-        <HStack padding={10} flexWrap="wrap">
-          {restaurant.tags.map((t) => {
-            const name = t.taxonomy.name
-            return <TagButton key={name} name={name} />
-          })}
-        </HStack>
-        <Text
-          style={{
-            padding: 10,
-            textAlign: 'center',
-            width: '100%',
-          }}
-        >
-          Top tags
-        </Text>
-        <HStack padding={10} flexWrap="wrap">
-          {(om.state.home.lastHomeState.top_dishes ?? []).map((x) => (
-            <TagButton key={x.dish} name={x.dish} />
-          ))}
-        </HStack>
-      </Tooltip>
+      <LinkButton {...circularFlatButtonStyle} onPress={() => setIsOpen(true)}>
+        <Icon size={24} name="tag" />
+      </LinkButton>
     </Popover>
   )
 })
