@@ -1,16 +1,14 @@
 import { Action, AsyncAction } from 'overmind'
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import Toast from 'react-native-root-toast'
 
 import auth from '@dish/auth'
-import { User, createApolloClient } from '@dish/models'
+import { User } from '@dish/models'
 
 type AuthState = {
   user: Partial<User>
   loading: boolean
   messages: string[]
   is_logged_in: boolean
-  apollo_client: ApolloClient<NormalizedCacheObject>
 }
 
 export const state: AuthState = {
@@ -18,7 +16,6 @@ export const state: AuthState = {
   loading: false,
   messages: [],
   is_logged_in: false,
-  apollo_client: {} as ApolloClient<NormalizedCacheObject>,
 }
 
 const formatErrors = (torm_errors: any) => {
@@ -88,7 +85,6 @@ const login: AsyncAction<{ username: string; password: string }> = async (
 
 const postLogin: Action<Partial<User>> = (om, user: Partial<User>) => {
   om.state.auth.is_logged_in = true
-  om.state.auth.apollo_client = createApolloClient()
   om.state.auth.user = user
 }
 
@@ -100,8 +96,8 @@ const logout: AsyncAction = async (om) => {
 }
 
 export const actions = {
-  register: register,
-  login: login,
-  logout: logout,
-  checkForExistingLogin: checkForExistingLogin,
+  register,
+  login,
+  logout,
+  checkForExistingLogin,
 }

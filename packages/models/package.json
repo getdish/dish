@@ -26,7 +26,8 @@
     "json-to-graphql-query": "^2.0.0",
     "isomorphic-fetch": "2.2.1",
     "ws": "^7.2.1",
-    "@dish/auth": "*"
+    "@dish/auth": "*",
+    "@dish/common-web": "*"
   },
   "devDependencies": {}
 }

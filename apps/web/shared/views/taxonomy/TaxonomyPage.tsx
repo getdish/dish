@@ -1,5 +1,10 @@
-import { Col, Row, Grid } from 'react-native-easy-grid'
-import { FetchResult, gql, useQuery, useSubscription } from '@apollo/client'
+import {
+  FetchResult,
+  gql,
+  useQuery,
+  useSubscription,
+  useApolloClient,
+} from '@apollo/client'
 import { ModelBase, Taxonomy, TaxonomyRecord, TaxonomyType } from '@dish/models'
 import {
   View,
@@ -7,10 +12,13 @@ import {
   Button,
   TextInput,
   TouchableNativeFeedback,
+  StyleSheet,
 } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import Tappable from '../shared/Tappable'
+import { useOvermind } from '../../state/om'
+import { VStack, HStack } from '../shared/Stacks'
 
 const CONTINENTS_SUBSCRIPTION = gql`
 subscription Taxonomy {
@@ -56,13 +64,14 @@ const DISHES_SEARCH = gql`
 const BorderLeft = () => <View />
 
 const upsertTaxonomy = () => {
+  const apolloClient = useApolloClient()
   const [draft, setDraft] = useState<TaxonomyRecord>({ type: 'continent' })
   const [response, setResponse] = useState<FetchResult<TaxonomyRecord> | null>(
     null
   )
   const update = (x: TaxonomyRecord = draft) => {
     console.log('upsert', x)
-    ModelBase.client
+    apolloClient
       .mutate({
         mutation: Taxonomy.upsert(x),
       })
@@ -72,7 +81,7 @@ const upsertTaxonomy = () => {
   return [draft, setDraft, update, response] as const
 }
 
-export const LabDishes = () => {
+export const TaxonomyPage = () => {
   const [active, setActive] = useState<[number, number]>([0, 0])
   const [draft, setDraft, upsertDraft] = upsertTaxonomy()
 
@@ -125,13 +134,13 @@ export const LabDishes = () => {
     return (
       <>
         <Text>{type}</Text>
-        <Col>
+        <VStack>
           <Button
             title="Add new"
             onPress={() => {
               upsert({
                 type,
-                name: 'New',
+                name: `⭐️ new ${Math.random()}`,
                 icon: '',
                 parentId:
                   parentType === 'country'
@@ -157,54 +166,57 @@ export const LabDishes = () => {
               />
             )
           })}
-        </Col>
+        </VStack>
       </>
     )
   }
 
   return (
-    <Col size={1}>
-      <Row size={2}>
-        <Col size={1}>
+    <VStack flex={1}>
+      <HStack flex={2}>
+        <VStack flex={1}>
           <TaxonomyList row={0} type="continent" />
-        </Col>
+        </VStack>
 
-        <Col size={1}>
+        <VStack flex={1}>
           <BorderLeft />
           <TaxonomyList row={1} type="country" />
-        </Col>
+        </VStack>
 
-        <Col size={1}>
+        <VStack flex={1}>
           <BorderLeft />
           <TaxonomyList row={2} type="dish" />
-        </Col>
+        </VStack>
 
-        <Col size={1}>
+        <VStack flex={1}>
           <BorderLeft />
           <Text>Menu Items</Text>
           <MenuItems active={active} setActive={setActive} />
-        </Col>
-      </Row>
+        </VStack>
+      </HStack>
 
       <View>
-        <Row>
+        <HStack>
           <Text>ID</Text>
           <TextInput
+            style={styles.textInput}
             onChange={(e) => setDraft({ ...draft, id: e.target['value'] })}
             defaultValue={draft.id}
-            // onEnter={upsertDraft}
+            onBlur={() => upsertDraft()}
           />
           <Text>Name</Text>
           <TextInput
+            style={styles.textInput}
             onChange={(e) => setDraft({ ...draft, name: e.target['value'] })}
             defaultValue={draft.name}
-            // onEnter={upsertDraft}
+            onBlur={() => upsertDraft()}
           />
           <Text>Icon</Text>
           <TextInput
+            style={styles.textInput}
             onChange={(e) => setDraft({ ...draft, icon: e.target['value'] })}
             defaultValue={draft.icon}
-            // onEnter={upsertDraft}
+            onBlur={() => upsertDraft()}
           />
           <select
             onChange={(e) =>
@@ -222,9 +234,9 @@ export const LabDishes = () => {
             }}
           />
           <Button title="Create" onPress={() => upsertDraft()} />
-        </Row>
+        </HStack>
       </View>
-    </Col>
+    </VStack>
   )
 }
 const ListItem = ({
@@ -273,26 +285,27 @@ const ListItem = ({
         }
       }}
     >
-      <Row>
-        <Row size={1}>
+      <HStack padding={6}>
+        <HStack flex={1}>
           {isEditing && (
             <TextInput
-              // onEnter={e => {
-              //   setIsEditing(false)
-              //   const [icon, ...nameParts] = e.target['value'].split(' ')
-              //   const name = nameParts.join(' ')
-              //   const next: TaxonomyRecord = {
-              //     ...taxonomy,
-              //     icon,
-              //     name,
-              //   }
-              //   console.log('next is', next)
-              //   upsert(next)
-              // }}
+              style={styles.textInput}
               defaultValue={text as any}
+              onBlur={(e) => {
+                setIsEditing(false)
+                const [icon, ...nameParts] = e.target['value'].split(' ')
+                const name = nameParts.join(' ')
+                const next: TaxonomyRecord = {
+                  ...taxonomy,
+                  icon,
+                  name,
+                }
+                console.log('next is', next)
+                upsert(next)
+              }}
             />
           )}
-          {!isEditing && <Text>{text}</Text>}
+          {!isEditing && <Text style={styles.listItemText}>{text}</Text>}
 
           <div style={{ flex: 1 }} />
 
@@ -312,8 +325,8 @@ const ListItem = ({
               <Ionicons name="md-checkmark-circle" />
             </TouchableNativeFeedback>
           )}
-        </Row>
-      </Row>
+        </HStack>
+      </HStack>
     </Tappable>
     // </Theme>
   )
@@ -340,10 +353,11 @@ function MenuItems({
   return (
     <>
       <TextInput
+        style={styles.textInput}
         onChange={(e) => setSearch(e.target['value'])}
         placeholder="Search all MenuItems"
       />
-      <Col size={1}>
+      <VStack flex={1}>
         {loading && (
           <Text style={{ flex: 1, alignItems: 'center' }}>Loading...</Text>
         )}
@@ -351,7 +365,7 @@ function MenuItems({
           data.dish.map((dish, index) => {
             const isActive = active[0] === 0 && index === active[1]
             return (
-              <Col
+              <VStack
                 // name={isActive ? 'selected' : null}
                 key={dish.id}
                 onPress={() => {
@@ -363,10 +377,22 @@ function MenuItems({
                 }}
               >
                 <Text>{dish.name}</Text>
-              </Col>
+              </VStack>
             )
           })}
-      </Col>
+      </VStack>
     </>
   )
 }
+
+const styles = StyleSheet.create({
+  listItemText: {
+    fontSize: 16,
+  },
+  textInput: {
+    fontSize: 16,
+    padding: 6,
+    borderWidth: 1,
+    borderColor: '#eee',
+  },
+})

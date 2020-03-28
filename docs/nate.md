@@ -2,6 +2,17 @@ next:
 
 web:
 
+- images v2
+
+  - no more scrollable horizontal carousel on listitem
+  - no more scrollable vertical images on detail
+  - listitem - hover image and it replaces map side with image gallery/grid
+  - detail - bottom section shows top dishes in design + row of images below, BUT
+    - the entire section is just one hoverable area
+      - hover shows the same right-side image gallery
+    - dealbreaker
+      - map has to move to pip then i think until you close or else its too awkward
+
 - RestaurantDetail
   - flesh out page with information
   - top dishes

@@ -1,16 +1,17 @@
-import React, { useState, useLayoutEffect } from 'react'
+import React, { useState, useLayoutEffect, useEffect, useMemo } from 'react'
 import { Dimensions } from 'react-native'
 import { ApolloProvider } from '@apollo/client'
 import { Provider } from 'overmind-react'
 
 import { useOvermind, Om, om, startOm } from './shared/state/om'
 import { HomeView } from './shared/views/home/HomeView'
-import { LabDishes } from './shared/views/dishes'
-import { Route, PrivateRoute } from './shared/views/shared/Route'
+import { TaxonomyPage } from './shared/views/taxonomy/TaxonomyPage'
+import { Route, PrivateRoute, RouteSwitch } from './shared/views/shared/Route'
 import { Splash } from './Splash'
 
 // global styles
 import './App.css'
+import { createApolloClient } from '@dish/models'
 
 export default function App() {
   return (
@@ -23,6 +24,9 @@ export default function App() {
 function StatefulApp() {
   const [started, setIsStarted] = useState(false)
   const om = useOvermind()
+  const apolloClient = useMemo(() => {
+    return createApolloClient()
+  }, [])
 
   // start app!
   useLayoutEffect(() => {
@@ -38,13 +42,15 @@ function StatefulApp() {
   }
 
   return (
-    <ApolloProvider client={om.state.auth.apollo_client}>
-      <PrivateRoute name="taxonomy">
-        <LabDishes />
-      </PrivateRoute>
-      <Route name="home">
-        <HomeView />
-      </Route>
+    <ApolloProvider client={apolloClient}>
+      <RouteSwitch>
+        <PrivateRoute name="taxonomy">
+          <TaxonomyPage />
+        </PrivateRoute>
+        <Route name="home">
+          <HomeView />
+        </Route>
+      </RouteSwitch>
     </ApolloProvider>
   )
 }

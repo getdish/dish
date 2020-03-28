@@ -29,6 +29,12 @@ export function RouteSwitch(props: { children: any }) {
           setVal(val)
           update(Math.random())
         }, [])
+
+        // hide non-active routes
+        if (activeIndex != -1 && activeIndex != index) {
+          return null
+        }
+
         return (
           <RouteContext.Provider key={index} value={cb}>
             <View
@@ -100,5 +106,6 @@ export function PrivateRoute(props: { name: string; children: any }) {
   if (isLoggedIn) {
     return <Route {...props} />
   }
+
   return null
 }
