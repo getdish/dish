@@ -26,6 +26,7 @@ import { useDebounceValue } from '../../hooks/useDebounce'
 import { ForceShowPopover } from '../shared/Popover'
 import { HomeControlsOverlay } from './HomeControlsOverlay'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
+import HomeAutocomplete from './HomeAutocomplete'
 
 export const HomeView = () => {
   const om = useOvermind()
@@ -96,6 +97,7 @@ const HomeViewContent = memo(function HomeViewContent() {
   return (
     <>
       <HomeSearchBar />
+      {/* <HomeAutocomplete /> */}
       {/* <HomeFilterBar /> */}
       <ZStack position="relative" flex={1}>
         <VStack

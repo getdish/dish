@@ -4,6 +4,7 @@ import _ from 'lodash'
 import { HistoryItem } from './router'
 import { Taxonomy, taxonomyLenses, taxonomyFilters } from './Taxonomy'
 import { sleep } from '../helpers/sleep'
+import { query } from '../../src/graphql'
 
 type LngLat = { lng: number; lat: number }
 
@@ -65,16 +66,22 @@ export type HomeStateItemRestaurant = HomeStateItemBase & {
 
 export type HomeStateItemSimple = Omit<HomeStateItem, 'historyId'>
 
+export type AutocompleteItem = {
+  title: string
+  route: { name: string; params: Object }
+}
+
 type HomeState = {
+  autocompleteResults: AutocompleteItem[]
   restaurants: { [id: string]: Restaurant }
   showMenu: boolean
   states: HomeStateItem[]
-  breadcrumbStates: Derive<HomeState, HomeStateItemSimple[]>
-  currentState: Derive<HomeState, HomeStateItem>
-  previousState: Derive<HomeState, HomeStateItem>
   lastHomeState: Derive<HomeState, HomeStateItemHome>
   lastSearchState: Derive<HomeState, HomeStateItemSearch>
   lastRestaurantState: Derive<HomeState, HomeStateItemRestaurant>
+  breadcrumbStates: Derive<HomeState, HomeStateItemSimple[]>
+  currentState: Derive<HomeState, HomeStateItem>
+  previousState: Derive<HomeState, HomeStateItem>
   hoveredRestaurant: Derive<HomeState, Restaurant | null>
 }
 
@@ -93,38 +100,41 @@ export const initialHomeState: HomeStateItemHome = {
   span: 0.05,
 }
 
+const lastHomeState = (state: HomeState) =>
+  _.findLast(state.states, (x) => x.type === 'home') as HomeStateItemHome | null
+const lastRestaurantState = (state: HomeState) =>
+  _.findLast(
+    state.states,
+    (x) => x.type === 'restaurant'
+  ) as HomeStateItemRestaurant | null
+const lastSearchState = (state: HomeState) =>
+  _.findLast(
+    state.states,
+    (x) => x.type === 'search'
+  ) as HomeStateItemSearch | null
+
 export const state: HomeState = {
+  autocompleteResults: [],
   restaurants: {},
   showMenu: false,
   states: [initialHomeState],
   currentState: (state) => _.last(state.states),
   previousState: (state) => state.states[state.states.length - 2],
-  lastHomeState: (state) =>
-    _.findLast(
-      state.states,
-      (x) => x.type === 'home'
-    ) as HomeStateItemHome | null,
-  lastSearchState: (state) =>
-    _.findLast(
-      state.states,
-      (x) => x.type === 'search'
-    ) as HomeStateItemSearch | null,
-  lastRestaurantState: (state) =>
-    _.findLast(
-      state.states,
-      (x) => x.type === 'restaurant'
-    ) as HomeStateItemRestaurant | null,
+  lastHomeState,
+  lastSearchState,
+  lastRestaurantState,
   breadcrumbStates: (state) => {
     const lastType = _.last(state.states).type
-    const lastHome = state.lastHomeState
-    const lastSearch = lastType != 'home' && state.lastSearchState
-    const lastRestaurant = lastType == 'restaurant' && state.lastRestaurantState
+    const lastHome = lastHomeState(state)
+    const lastSearch = lastType != 'home' && lastSearchState(state)
+    const lastRestaurant =
+      lastType == 'restaurant' && lastRestaurantState(state)
     return [lastHome, lastSearch, lastRestaurant]
       .filter(Boolean)
       .map((x) => _.omit(x), 'historyId')
   },
   hoveredRestaurant: (state) => {
-    const index = state.lastSearchState?.hoveredRestaurant
+    const index = lastSearchState(state)?.hoveredRestaurant
     return state.restaurants[index] ?? null
   },
 }
@@ -282,8 +292,9 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     }
   }
 
-  const isOnSearch = state.type === 'search'
+  // TODO run autocomplete here
 
+  const isOnSearch = state.type === 'search'
   if (isOnSearch) {
     // debounce
     lastRunAt = Date.now()

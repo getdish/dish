@@ -1,0 +1,12 @@
+{
+  "name": "@dish/common-web",
+  "version": "0.0.1",
+  "main": "_/index.js",
+  "sideEffects": false,
+  "private": true,
+  "scripts": {
+    "build": "tsc -b || true",
+    "watch": "tsc -b --watch --preserveWatchOutput",
+    "test": "true"
+  }
+}
