@@ -1,0 +1,23 @@
+{
+  "files": {
+    "app.js": "/static/js/app.ssr.js",
+    "app.js.map": "/static/js/app.ssr.js.map",
+    "../web-build/index.web.tsx": "/../web-build/index.web.tsx",
+    "fonts/AntDesign.ttf": "/./fonts/AntDesign.ttf",
+    "fonts/Entypo.ttf": "/./fonts/Entypo.ttf",
+    "fonts/Feather.ttf": "/./fonts/Feather.ttf",
+    "fonts/FontAwesome.ttf": "/./fonts/FontAwesome.ttf",
+    "fonts/FontAwesome5_Brands.ttf": "/./fonts/FontAwesome5_Brands.ttf",
+    "fonts/FontAwesome5_Solid.ttf": "/./fonts/FontAwesome5_Solid.ttf",
+    "fonts/Foundation.ttf": "/./fonts/Foundation.ttf",
+    "fonts/Ionicons.ttf": "/./fonts/Ionicons.ttf",
+    "fonts/MaterialCommunityIcons.ttf": "/./fonts/MaterialCommunityIcons.ttf",
+    "fonts/MaterialIcons.ttf": "/./fonts/MaterialIcons.ttf",
+    "fonts/SimpleLineIcons.ttf": "/./fonts/SimpleLineIcons.ttf",
+    "static/media/instagram.png": "/static/media/instagram.c5855486.png",
+    "static/media/logo.png": "/static/media/logo.83bd59ed.png"
+  },
+  "entrypoints": [
+    "static/js/app.ssr.js"
+  ]
+}

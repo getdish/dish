@@ -1,30 +1,35 @@
-import React, { useMemo, useLayoutEffect, useState, useEffect } from 'react'
-import { Text, ScrollView, FlatList, View } from 'react-native'
+import React, { useState } from 'react'
+import { Helmet } from 'react-helmet'
+import { ScrollView, Text, View } from 'react-native'
 
-import { useOvermind } from '../../state/om'
-import { RestaurantListItem } from './RestaurantListItem'
-import { Title } from '../shared/SmallTitle'
-import { VStack } from '../shared/Stacks'
-import { HomeStateItemSearch } from '../../state/home'
-import { closeAllPopovers, popoverCloseCbs } from '../shared/Popover'
-import HomeLenseBar from './HomeLenseBar'
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
-import { useWaterfall } from '../shared/useWaterfall'
+import { HomeStateItemSearch } from '../../state/home'
+import { useOvermind } from '../../state/om'
+import { closeAllPopovers, popoverCloseCbs } from '../shared/Popover'
+import { Title } from '../shared/SmallTitle'
 import { Spacer } from '../shared/Spacer'
+import { VStack } from '../shared/Stacks'
+import { useWaterfall } from '../shared/useWaterfall'
+import HomeLenseBar from './HomeLenseBar'
+import { RestaurantListItem } from './RestaurantListItem'
 
 export default memoIsEqualDeep(function HomeSearchResultsView({
   state,
 }: {
   state: HomeStateItemSearch
 }) {
+  const title = `Top ${state.searchQuery} Restaurants`
   return (
-    <VStack flex={1}>
-      <Title>Top {state.searchQuery} Restaurants</Title>
+    <>
+      <Helmet>
+        <title>{title}</title>
+      </Helmet>
+      <Title>{title}</Title>
       <VStack position="relative" flex={1}>
         <HomeLenseBar backgroundGradient />
         <HomeSearchResultsViewContent state={state} />
       </VStack>
-    </VStack>
+    </>
   )
 })
 

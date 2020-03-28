@@ -1,14 +1,7 @@
-import { isEqual } from '@o/fast-compare'
-import {
-  RefObject,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { RefObject, useEffect, useMemo, useRef, useState } from 'react'
 
-import { useVisibility } from '../Visibility'
+import { isEqual } from '@o/fast-compare'
+
 import { useResizeObserver } from './useResizeObserver'
 import { useThrottledFn } from './useThrottleFn'
 
@@ -62,13 +55,6 @@ export function useNodeSize(
       }
     })
   }
-
-  useVisibility({
-    onChange(next) {
-      isVisible.current = next
-      next && updateSize()
-    },
-  })
 
   useResizeObserver(
     {

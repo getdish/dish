@@ -1,10 +1,12 @@
-import { Restaurant, Review, TopDish } from '@dish/models'
-import { Action, AsyncAction, Derive } from 'overmind'
 import _ from 'lodash'
-import { HistoryItem } from './router'
-import { Taxonomy, taxonomyLenses, taxonomyFilters } from './Taxonomy'
-import { sleep } from '../helpers/sleep'
+import { Action, AsyncAction, Derive } from 'overmind'
+
+import { Restaurant, Review, TopDish } from '@dish/models'
+
 import { query } from '../../src/graphql'
+import { sleep } from '../helpers/sleep'
+import { HistoryItem } from './router'
+import { Taxonomy, taxonomyFilters, taxonomyLenses } from './Taxonomy'
 
 type LngLat = { lng: number; lat: number }
 
@@ -66,7 +68,7 @@ export type AutocompleteItem = {
   route: { name: string; params: Object }
 }
 
-type HomeState = {
+export type HomeState = {
   autocompleteResults: AutocompleteItem[]
   allTopDishes: string[]
   restaurants: { [id: string]: Restaurant }
@@ -109,6 +111,22 @@ const lastSearchState = (state: HomeState) =>
     (x) => x.type === 'search'
   ) as HomeStateItemSearch | null
 
+const breadcrumbStates = (state: HomeState) => {
+  const lastType = _.last(state.states).type
+  const lastHome = lastHomeState(state)
+  const lastSearch = lastType != 'home' && lastSearchState(state)
+  const lastRestaurant = lastType == 'restaurant' && lastRestaurantState(state)
+  return [lastHome, lastSearch, lastRestaurant]
+    .filter(Boolean)
+    .map((x) => _.omit(x), 'historyId')
+}
+
+const hoveredRestaurant = (state: HomeState) => {
+  const index = lastSearchState(state)?.hoveredRestaurant
+  return state.restaurants[index] ?? null
+}
+
+// @ts-ignore
 export const state: HomeState = {
   autocompleteResults: [],
   allTopDishes: [],
@@ -120,20 +138,8 @@ export const state: HomeState = {
   lastHomeState,
   lastSearchState,
   lastRestaurantState,
-  breadcrumbStates: (state) => {
-    const lastType = _.last(state.states).type
-    const lastHome = lastHomeState(state)
-    const lastSearch = lastType != 'home' && lastSearchState(state)
-    const lastRestaurant =
-      lastType == 'restaurant' && lastRestaurantState(state)
-    return [lastHome, lastSearch, lastRestaurant]
-      .filter(Boolean)
-      .map((x) => _.omit(x), 'historyId')
-  },
-  hoveredRestaurant: (state) => {
-    const index = lastSearchState(state)?.hoveredRestaurant
-    return state.restaurants[index] ?? null
-  },
+  breadcrumbStates,
+  hoveredRestaurant,
 }
 
 const _pushHomeState: Action<HistoryItem> = (om, item) => {

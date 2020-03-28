@@ -1,37 +1,29 @@
 import React, { memo, useState } from 'react'
+import { Helmet } from 'react-helmet'
 import {
-  Image,
-  Text,
-  View,
-  ScrollView,
-  TextProps,
-  TextInput,
-  Button,
-  StyleSheet,
+    Button, Image, ScrollView, StyleSheet, Text, TextInput, TextProps, View
 } from 'react-native'
 
-import { useOvermind } from '../../state/om'
-import { Restaurant } from '@dish/models'
-
-import { Spacer } from '../shared/Spacer'
-import { HStack, VStack, ZStack } from '../shared/Stacks'
-import { LinkButton } from '../shared/Link'
-import { SmallTitle } from '../shared/SmallTitle'
+import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItem } from '../../state/home'
+import { useOvermind } from '../../state/om'
+import { Divider } from '../shared/Divider'
+import { Icon } from '../shared/Icon'
+import { LinkButton } from '../shared/Link'
+import { Popover } from '../shared/Popover'
+import { SmallTitle } from '../shared/SmallTitle'
+import { Spacer } from '../shared/Spacer'
+import { Tooltip } from '../shared/Stack/Tooltip'
+import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { CloseButton } from './CloseButton'
 import { EmojiButton } from './EmojiButton'
-import { RestaurantRatingDetail } from './RestaurantRatingDetail'
-import { RestaurantTagsRow } from './RestaurantTagsRow'
-import { RestaurantMetaRow } from './RestaurantMetaRow'
+import { circularFlatButtonStyle, flatButtonStyle } from './HomeViewTopDishes'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
+import { RestaurantMetaRow } from './RestaurantMetaRow'
+import { RestaurantRatingDetail } from './RestaurantRatingDetail'
 import { RestaurantRatingPopover } from './RestaurantRatingPopover'
-import { Divider } from '../shared/Divider'
-import { flatButtonStyle, circularFlatButtonStyle } from './HomeViewTopDishes'
-import { TableRow, TableCell } from './TableRow'
-import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
-import { Icon } from '../shared/Icon'
-import { Popover } from '../shared/Popover'
-import { Tooltip } from '../shared/Stack/Tooltip'
+import { RestaurantTagsRow } from './RestaurantTagsRow'
+import { TableCell, TableRow } from './TableRow'
 import { TagButton } from './TagButton'
 
 export default memoIsEqualDeep(function HomeRestaurantView({
@@ -58,7 +50,11 @@ export default memoIsEqualDeep(function HomeRestaurantView({
       om.state.auth.user.role == 'contributor')
 
   return (
-    <VStack flex={1}>
+    <>
+      <Helmet>
+        <title>Best plates at {restaurant.name}</title>
+      </Helmet>
+
       <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
         <CloseButton onPress={() => om.actions.home.popTo(-1)} />
       </ZStack>
@@ -334,7 +330,7 @@ export default memoIsEqualDeep(function HomeRestaurantView({
           </VStack>
         </VStack>
       </ScrollView>
-    </VStack>
+    </>
   )
 })
 
