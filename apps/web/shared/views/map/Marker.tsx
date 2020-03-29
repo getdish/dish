@@ -1,7 +1,11 @@
 import React from 'react'
 
 import { MapContext } from './Map'
-import { createCoordinate, MarkerOptions, propsToMarkerConstructionOptions } from './utils'
+import {
+  createCoordinate,
+  MarkerOptions,
+  propsToMarkerConstructionOptions,
+} from './utils'
 
 type MarkerProps = {
   latitude: number

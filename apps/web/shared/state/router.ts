@@ -1,5 +1,15 @@
 import _ from 'lodash'
-import { Action, AsyncAction, catchError, Derive, map, mutate, Operator, pipe, run } from 'overmind'
+import {
+  Action,
+  AsyncAction,
+  catchError,
+  Derive,
+  map,
+  mutate,
+  Operator,
+  pipe,
+  run,
+} from 'overmind'
 import page from 'page'
 import queryString from 'query-string'
 
@@ -85,6 +95,7 @@ const start: AsyncAction<{
       url: routes[name].path,
     })
   }
+
   om.actions.router.routeListenNotFound()
   page.start()
 }
@@ -105,79 +116,52 @@ export const state: RouterState = {
   curPage: (state) => state.history[state.history.length - 1] || defaultPage,
 }
 
-class AlreadyOnPageError extends Error {}
 const uid = () => `${Math.random()}`
 
-const navigate: Operator<NavigateItem> = pipe(
-  map(
-    (_, item): HistoryItem => {
-      // console.log('navigate', item)
-      return {
-        id: uid(),
-        params: {},
-        ...item,
-        path: getPathFromParams({
-          name: item.name,
-          params: item.params as any,
-        }),
-        search: curSearch,
-      }
-    }
-  ),
-  mutate((om, item) => {
-    om.state.router.notFound = false
+const navigate: Action<NavigateItem> = (om, navItem) => {
+  const item: HistoryItem = {
+    id: uid(),
+    params: {},
+    ...navItem,
+    path: getPathFromParams({
+      name: navItem.name,
+      params: navItem.params as any,
+    }),
+    search: curSearch,
+  }
 
-    const alreadyOnPage = isEqual(
-      _.omit(item, 'id', 'replace'),
-      _.omit(om.state.router.curPage, 'id', 'replace')
-    )
-    if (alreadyOnPage) {
-      console.log('AlreadyOnPageError', item, om.state.router.curPage)
-      throw new AlreadyOnPageError()
-    }
+  om.state.router.notFound = false
 
-    // const isGoingBack = isEqual(
-    //   _.omit(om.state.router.prevPage, 'id', 'replace'),
-    //   _.omit(item, 'id', 'replace')
-    // )
-    // console.warn('isgoingback', isGoingBack, item, om.state.router.prevPage)
-    // if (isGoingBack) {
-    //   om.actions.router.back()
-    //   throw new AlreadyOnPageError()
-    // }
+  const alreadyOnPage = isEqual(
+    _.omit(item, 'id', 'replace'),
+    _.omit(om.state.router.curPage, 'id', 'replace')
+  )
+  if (alreadyOnPage) {
+    console.log('AlreadyOnPageError', item, om.state.router.curPage)
+    return
+  }
 
-    if (item.replace) {
-      const next = _.dropRight(om.state.router.history)
-      om.state.router.history = [...next, item]
-    } else {
-      om.state.router.history = [...om.state.router.history, item]
-    }
-  }),
-  run((om, item) => {
-    if (onRouteChange) {
-      onRouteChange({
-        type: item.replace ? 'replace' : 'push',
-        name: item.name,
-        item: _.last(om.state.router.history)!,
-      })
-    }
-    if (item.replace) {
-      om.effects.router.replace(item.path)
-    } else {
-      om.effects.router.open(item.path)
-    }
-  }),
-  mutate((om) => {
-    //
-  }),
-  catchError<void>((om, error) => {
-    if (error instanceof AlreadyOnPageError) {
-      // ok
-    } else {
-      console.error(error)
-    }
-  })
-)
+  if (item.replace) {
+    const next = _.dropRight(om.state.router.history)
+    om.state.router.history = [...next, item]
+  } else {
+    om.state.router.history = [...om.state.router.history, item]
+  }
+
+  if (onRouteChange) {
+    onRouteChange({
+      type: item.replace ? 'replace' : 'push',
+      name: item.name,
+      item: _.last(om.state.router.history)!,
+    })
+  }
+
+  if (item.replace) {
+    om.effects.router.replace(item.path)
+  } else {
+    om.effects.router.open(item.path)
+  }
+}
 
 const back: Action = (om) => {
   window.history.back()

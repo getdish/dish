@@ -5,5 +5,6 @@ Dockerfile
 **/node_modules
 **/_
 **/tsconfig.tsbuildinfo
+**/web-build-ssr
 **/web-build
 **/.expo

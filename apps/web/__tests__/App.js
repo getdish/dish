@@ -1,6 +1,6 @@
 import 'react-native'
 import React from 'react'
-import App from '../App.tsx'
+import App from '../shared/views/App.tsx'
 
 // TODO BUG it wont run!
 // https://github.com/expo/expo/issues/5296

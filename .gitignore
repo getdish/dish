@@ -87,3 +87,4 @@ web-build
 
 services/search/m
 services/search/embedded.go
+web-build-ssr/*

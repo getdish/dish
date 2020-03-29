@@ -3,7 +3,11 @@ import React, { memo, useEffect, useMemo, useState } from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 
 import { useDebounceValue } from '../../hooks/useDebounce'
-import { HomeStateItemRestaurant, HomeStateItemSearch, HomeStateItemSimple } from '../../state/home'
+import {
+  HomeStateItemRestaurant,
+  HomeStateItemSearch,
+  HomeStateItemSimple,
+} from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { ForceShowPopover } from '../shared/Popover'
 import { VStack, ZStack } from '../shared/Stacks'

@@ -1,8 +1,9 @@
 import { Action, AsyncAction } from 'overmind'
-import Toast from 'react-native-root-toast'
 
 import auth from '@dish/auth'
 import { User } from '@dish/models'
+
+import { Toast } from '../views/shared/Toast'
 
 type AuthState = {
   user: Partial<User>
@@ -57,7 +58,6 @@ const checkForExistingLogin: Action = (om) => {
   if (auth.has_been_logged_out) {
     Toast.show('Session expired: logged out')
   }
-
   if (auth.is_logged_in) {
     postLogin(om, auth.user)
   }

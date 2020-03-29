@@ -1,9 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import {
-    Button, StyleSheet, Text, TextInput, TouchableNativeFeedback, TouchableOpacity, View
+  Button,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableNativeFeedback,
+  TouchableOpacity,
+  View,
 } from 'react-native'
 
-import { FetchResult, gql, useApolloClient, useQuery, useSubscription } from '@apollo/client'
+import {
+  FetchResult,
+  gql,
+  useApolloClient,
+  useQuery,
+  useSubscription,
+} from '@apollo/client'
 import { Taxonomy, TaxonomyRecord, TaxonomyType } from '@dish/models'
 import { Ionicons } from '@expo/vector-icons'
 
