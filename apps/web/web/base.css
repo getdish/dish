@@ -48,3 +48,8 @@ a {
 p a {
   text-decoration: underline;
 }
+
+input,
+textarea {
+  outline: 0;
+}

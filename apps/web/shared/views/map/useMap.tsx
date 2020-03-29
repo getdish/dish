@@ -1,3 +1,4 @@
+import { mapkit } from '../mapkit'
 import React from 'react'
 
 import { MapOptions, propsToMapConstructionOptions } from './utils'

@@ -2,12 +2,38 @@ import bodyParser from 'body-parser'
 import express from 'express'
 import { readFileSync } from 'fs'
 import { createOvermindSSR } from 'overmind'
-import { join } from 'path'
-import { renderToString } from 'react-dom/server'
-import Helmet from 'react-helmet'
+import Path from 'path'
+import { JSDOM } from 'jsdom'
+import 'isomorphic-fetch'
+import { Helmet } from 'react-helmet'
+import React from 'React'
 
-import { config, startOm } from '../shared/state/om'
-import App from '../shared/views/App'
+Error.stackTraceLimit = Infinity
+global['React'] = React
+global['__DEV__'] = false
+
+// fake a browser!
+const jsdom = new JSDOM(``, {
+  pretendToBeVisual: true,
+  url: 'http://d1sh_hasura_live.com:19006/',
+  referrer: 'http://d1sh_hasura_live.com:19006/',
+  contentType: 'text/html',
+})
+global['window'] = jsdom.window
+global['window']['IS_SSR_RENDERING'] = true
+global['MouseEvent'] = class MouseEvent {}
+Object.keys(jsdom.window).forEach((key) => {
+  if (typeof global[key] === 'undefined') {
+    global[key] = jsdom.window[key]
+  }
+})
+
+// import all app below ^^^
+const {
+  App,
+  config,
+  ReactDOMServer,
+} = require('../web-build-ssr/static/js/app.ssr.js')
 
 const server = express()
 server.set('port', 3000)
@@ -18,40 +44,52 @@ server.disable('etag')
 server.use(bodyParser.json({ limit: '2048mb' }))
 server.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
 server.get('/hello', (_, res) => res.send('hello world'))
-server.use('/assets', express.static(join('..', 'shared', 'assets')))
-// server.get('/config', (_, res) => {
-//   log.verbose(`Send config ${JSON.stringify(config, null, 2)}`)
-//   res.json(config)
-// })
 
-const template = readFileSync('../web/index.html', 'utf8')
+// static assets
+const clientBuildPath = Path.join(__dirname, '..', 'web-build')
+server.use('/static', express.static(Path.join(clientBuildPath, 'static')))
+
+const htmlPath = Path.join(__dirname, '..', 'web', 'index.html')
+const template = readFileSync(htmlPath, 'utf8')
 
 server.get('*', async (req, res) => {
   const overmind = createOvermindSSR(config)
-  await startOm(overmind)
-  const appHtml = renderToString(<App />)
+  const appHtml = ReactDOMServer.renderToString(<App overmind={overmind} />)
+  // need to fool helmet back into thinking were in the node
   const helmet = Helmet.renderStatic()
+
+  const clientHTML = readFileSync(
+    Path.join(clientBuildPath, 'index.html'),
+    'utf8'
+  )
+  const clientScripts = clientHTML.match(
+    /<script\b[^>]*>([\s\S]*?)<\/script>/gm
+  )
+
   res.send(
     template
       .replace('<!-- app -->', appHtml)
       .replace(
         '<!-- head -->',
         `
-${helmet.title.toString()}
-${helmet.meta.toString()}
-${helmet.link.toString()}
+      ${helmet.title.toString()}
+      ${helmet.meta.toString()}
+      ${helmet.link.toString()}
 `
       )
       .replace(
         '<!-- scripts -->',
         `
-<script>
-        window.__OVERMIND_MUTATIONS = ${JSON.stringify(overmind.hydrate())}
-      </script>
+        <script>
+          window.__OVERMIND_MUTATIONS = ${JSON.stringify(overmind.hydrate())}
+        </script>
+        ${clientScripts.join('\n')}
 `
       )
   )
 })
+
+server.listen(19006)
 
 function cors() {
   const HEADER_ALLOWED =

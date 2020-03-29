@@ -1,4 +1,10 @@
-import { IConfig, createOvermind, Action } from 'overmind'
+import {
+  IConfig,
+  createOvermind,
+  Action,
+  OnInitialize,
+  rehydrate,
+} from 'overmind'
 import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/config'
 
@@ -11,28 +17,16 @@ const setShowSidebar: Action<boolean> = (om, val) => {
   om.state.showSidebar = val
 }
 
-export const config = merge(
-  {
-    state: {
-      showSidebar: false,
-    },
-    actions: {
-      setShowSidebar,
-    },
-  },
-  namespaced({
-    home,
-    dishes,
-    auth,
-    router,
-  })
-)
+const onInitialize: OnInitialize = async ({ state, actions }) => {
+  if (window['__OVERMIND_MUTATIONS']) {
+    console.log('hydating from server...')
+    rehydrate(state, window['__OVERMIND_MUTATIONS'])
+  }
 
-export async function startOm(om: Om) {
-  om.actions.auth.checkForExistingLogin()
-  om.actions.home.loadHomeDishes()
+  actions.auth.checkForExistingLogin()
+  actions.home.loadHomeDishes()
 
-  await om.actions.router.start({
+  await actions.router.start({
     onRouteChange: ({ type, name, item }) => {
       console.log('onRouteChange', type, name, item)
       switch (name) {
@@ -43,15 +37,33 @@ export async function startOm(om: Om) {
             return
           }
           if (type === 'push') {
-            om.actions.home._pushHomeState(item)
+            actions.home._pushHomeState(item)
           } else {
-            om.actions.home._popHomeState(item)
+            actions.home._popHomeState(item)
           }
           return
       }
     },
   })
 }
+
+export const config = merge(
+  {
+    state: {
+      showSidebar: false,
+    },
+    actions: {
+      setShowSidebar,
+    },
+    onInitialize,
+  },
+  namespaced({
+    home,
+    dishes,
+    auth,
+    router,
+  })
+)
 
 declare module 'overmind' {
   interface Config extends IConfig<typeof config> {}

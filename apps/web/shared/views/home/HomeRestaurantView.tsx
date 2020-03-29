@@ -1,7 +1,14 @@
 import React, { memo, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import {
-    Button, Image, ScrollView, StyleSheet, Text, TextInput, TextProps, View
+  Button,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TextProps,
+  View,
 } from 'react-native'
 
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'

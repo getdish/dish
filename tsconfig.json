@@ -3,5 +3,9 @@
   "compilerOptions": {
     "incremental": true
   },
-  "references": [{ "path": "./services/crawlers" }]
+  "references": [
+    { "path": "./services/crawlers" },
+    { "path": "./services/worker" },
+    { "path": "./apps/web" }
+  ]
 }

@@ -1,16 +1,17 @@
-import React, { useState, memo, useRef } from 'react'
-import { TouchableOpacity, TextInput, ScrollView, Text } from 'react-native'
+import React, { memo, useRef, useState } from 'react'
+import { ScrollView, TextInput, TouchableOpacity } from 'react-native'
+
 import { Restaurant, Review } from '@dish/models'
-import { HStack, VStack } from '../shared/Stacks'
-import { Spacer } from '../shared/Spacer'
+
 import { useOvermind } from '../../state/om'
-import { Popover } from '../shared/Popover'
-import { Tooltip } from '../shared/Stack/Tooltip'
 import { Icon } from '../shared/Icon'
+import { Popover } from '../shared/Popover'
+import { Spacer } from '../shared/Spacer'
+import { Tooltip } from '../shared/Stack/Tooltip'
+import { HStack, VStack } from '../shared/Stacks'
+import { Toast } from '../shared/Toast'
 import { EmojiButton } from './EmojiButton'
 import { LenseButton } from './HomeLenseBar'
-import { HomeStateItemRestaurant } from '../../state/home'
-import Toast from 'react-native-root-toast'
 
 export const RestaurantRatingPopover = memo(
   ({ restaurant }: { restaurant: Restaurant }) => {

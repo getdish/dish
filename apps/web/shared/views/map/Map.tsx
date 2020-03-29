@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import { useMap } from './useMap'
 import { MapOptions } from './utils'
@@ -37,9 +37,8 @@ const CreateMap: React.FC<MapOptions> = ({ children, ...defaultOptions }) => {
   const {
     mapProps: { mapkit, map, mapRef },
   } = useMap(defaultOptions)
-
   return (
-    <MapProvider context={{ mapkit, map }}>
+    <MapProvider context={useMemo(() => ({ mapkit, map }), [mapkit, map])}>
       <MapContainer mapRef={mapRef} children={children} />
     </MapProvider>
   )

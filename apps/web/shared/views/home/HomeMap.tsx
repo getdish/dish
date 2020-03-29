@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useMemo, memo } from 'react'
 
+import { mapkit } from '../mapkit'
 import { useOvermind } from '../../state/om'
 import { VStack, ZStack, HStack } from '../shared/Stacks'
-import { Text, Button, TouchableOpacity, Image } from 'react-native'
 import _ from 'lodash'
-import { Spacer } from '../shared/Spacer'
 import { useMap, Map } from '../map'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useDebounceValue } from '../../hooks/useDebounce'
-import { useOnMount } from '../../hooks/useOnMount'
 
 function centerMapToRegion({
   map,
