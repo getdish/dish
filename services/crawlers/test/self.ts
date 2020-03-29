@@ -1,4 +1,4 @@
-import anyTest, { TestInterface } from 'ava'
+import anyTest, { TestInterface, ExecutionContext } from 'ava'
 
 import { Self } from '../src/self/Self'
 import { Restaurant, Scrape } from '@dish/models'
@@ -80,19 +80,34 @@ const tripadvisor: Partial<Scrape> = {
   },
 }
 
-test.beforeEach(async (t) => {
+async function reset(t: ExecutionContext<Context>) {
   let scrape: Scrape
   await Scrape.deleteAllFuzzyBy('id_from_source', 'test')
   await Restaurant.deleteAllFuzzyBy('name', 'Test')
   const restaurant = new Restaurant(restaurant_fixture)
   await restaurant.insert()
   t.context.restaurant = restaurant
-  scrape = new Scrape({ restaurant_id: restaurant.id, ...yelp })
+  scrape = new Scrape({
+    restaurant_id: restaurant.id,
+    ...yelp,
+  })
   await scrape.insert()
   scrape = new Scrape({ restaurant_id: restaurant.id, ...ubereats })
   await scrape.insert()
   scrape = new Scrape({ restaurant_id: restaurant.id, ...tripadvisor })
   await scrape.insert()
+}
+
+test.beforeEach(async (t) => {
+  try {
+    await reset(t)
+  } catch (e) {
+    // Hopefully this was only ever being caused by the tests being run in parallel
+    if (e.message.includes('violates foreign key constraint')) {
+      console.log('Retrying beforeEach due to scrape foreign key violation')
+      await reset(t)
+    }
+  }
 })
 
 test('Merging', async (t) => {

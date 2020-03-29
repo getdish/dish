@@ -9,7 +9,7 @@
     "watch": "tsc -b --watch --preserveWatchOutput",
     "worker": "node _/worker.js",
     "worker:watch": "nodemon _/worker.js",
-    "test": "RUN_WITHOUT_WORKER=true ava test/*"
+    "test": "RUN_WITHOUT_WORKER=true ava test/* --verbose"
   },
   "dependencies": {
     "@dish/common": "*",

@@ -76,7 +76,7 @@ test('Tagging a restaurant', async (t) => {
   await restaurant.findOne('name', restaurant.name)
   t.is(tag_ids.length, 2)
   t.is(tag_ids.includes(existing_tag.id), true)
-  t.is(restaurant.tags[0].taxonomy.name, 'test_tag')
+  t.is(restaurant.tags.map((t) => t.taxonomy.name).includes('test_tag'), true)
 })
 
 test('Searching for a restaurant by name', async (t) => {
