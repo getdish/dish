@@ -8,8 +8,7 @@ import { isEqual } from '@o/fast-compare'
 import { slugify } from '../helpers/slugify'
 
 class Route<A extends Object | void = void> {
-  params: A
-  constructor(public path: string) {}
+  constructor(public path: string, public params?: A) {}
 }
 
 export const routes = {
@@ -78,7 +77,7 @@ let onRouteChange: OnRouteChangeCb | null = null
 const start: AsyncAction<{
   onRouteChange?: OnRouteChangeCb
 }> = async (om, opts) => {
-  onRouteChange = opts.onRouteChange
+  onRouteChange = opts.onRouteChange ?? null
 
   for (const name of routeNames) {
     om.actions.router.routeListen({
@@ -159,7 +158,7 @@ const navigate: Operator<NavigateItem> = pipe(
       onRouteChange({
         type: item.replace ? 'replace' : 'push',
         name: item.name,
-        item: _.last(om.state.router.history),
+        item: _.last(om.state.router.history)!,
       })
     }
     if (item.replace) {
@@ -219,7 +218,7 @@ const routeListen: Action<{
 
     if (isGoingBack) {
       const last = _.last(om.state.router.history)
-      if (onRouteChange) {
+      if (last && onRouteChange) {
         onRouteChange({ type: 'pop', name, item: last })
       }
     } else {
@@ -231,7 +230,7 @@ const routeListen: Action<{
       om.actions.router.navigate({
         name,
         params: paramsClean,
-      })
+      } as any)
     }
   })
 }

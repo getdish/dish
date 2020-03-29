@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import PopoverWeb, { ArrowContainer } from 'react-tiny-popover'
 import { Platform } from 'react-native'
+import PopoverWeb, { ArrowContainer } from 'react-tiny-popover'
+
 import { useWaterfall } from './useWaterfall'
 
 export const ForceShowPopover = createContext<boolean | undefined>(undefined)
@@ -27,7 +28,9 @@ export const Popover = (props: {
   useEffect(() => {
     if (props.onClickOutside) {
       popoverCloseCbs.add(props.onClickOutside)
-      return () => popoverCloseCbs.delete(props.onClickOutside)
+      return () => {
+        popoverCloseCbs.delete(props.onClickOutside!)
+      }
     }
   }, [])
 
@@ -39,7 +42,7 @@ export const Popover = (props: {
     return (
       <PopoverWeb
         position={props.position}
-        isOpen={typeof forceShow == 'boolean' ? forceShow : props.isOpen}
+        isOpen={typeof forceShow == 'boolean' ? forceShow : !!props.isOpen}
         padding={20}
         containerStyle={{
           overflow: 'visible',

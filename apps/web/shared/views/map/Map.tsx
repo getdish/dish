@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { MapkitContext, MapkitProvider } from './MapkitProvider'
 import { useMap } from './useMap'
 import { MapOptions } from './utils'
 

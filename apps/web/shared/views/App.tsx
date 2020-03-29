@@ -1,17 +1,17 @@
-import React, { useState, useLayoutEffect, useEffect, useMemo } from 'react'
-import { Dimensions } from 'react-native'
-import { ApolloProvider } from '@apollo/client'
-import { Provider } from 'overmind-react'
-
-import { useOvermind, Om, om, startOm } from '../state/om'
-import { HomeView } from './home/HomeView'
-import { TaxonomyPage } from './taxonomy/TaxonomyPage'
-import { Route, PrivateRoute, RouteSwitch } from './shared/Route'
-import { Splash } from './Splash'
-
 // global styles
 import './App.css'
+
+import { Provider } from 'overmind-react'
+import React, { useLayoutEffect, useMemo, useState } from 'react'
+
+import { ApolloProvider } from '@apollo/client'
 import { createApolloClient } from '@dish/models'
+
+import { om, startOm, useOvermind } from '../state/om'
+import { HomePage } from './home/HomePage'
+import { PrivateRoute, Route, RouteSwitch } from './shared/Route'
+import { Splash } from './Splash'
+import { TaxonomyPage } from './taxonomy/TaxonomyPage'
 
 export default function App() {
   return (
@@ -48,7 +48,7 @@ function StatefulApp() {
           <TaxonomyPage />
         </PrivateRoute>
         <Route name="home">
-          <HomeView />
+          <HomePage />
         </Route>
       </RouteSwitch>
     </ApolloProvider>

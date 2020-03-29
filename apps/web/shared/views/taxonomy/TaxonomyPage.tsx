@@ -1,24 +1,14 @@
+import React, { useEffect, useState } from 'react'
 import {
-  FetchResult,
-  gql,
-  useQuery,
-  useSubscription,
-  useApolloClient,
-} from '@apollo/client'
-import { ModelBase, Taxonomy, TaxonomyRecord, TaxonomyType } from '@dish/models'
-import {
-  View,
-  Text,
-  Button,
-  TextInput,
-  TouchableNativeFeedback,
-  StyleSheet,
+    Button, StyleSheet, Text, TextInput, TouchableNativeFeedback, TouchableOpacity, View
 } from 'react-native'
-import React, { useEffect, useState, useContext } from 'react'
+
+import { FetchResult, gql, useApolloClient, useQuery, useSubscription } from '@apollo/client'
+import { Taxonomy, TaxonomyRecord, TaxonomyType } from '@dish/models'
 import { Ionicons } from '@expo/vector-icons'
+
+import { HStack, VStack } from '../shared/Stacks'
 import Tappable from '../shared/Tappable'
-import { useOvermind } from '../../state/om'
-import { VStack, HStack } from '../shared/Stacks'
 
 const CONTINENTS_SUBSCRIPTION = gql`
 subscription Taxonomy {
@@ -263,12 +253,9 @@ const ListItem = ({
   const text = `${taxonomy.icon} ${taxonomy.name}`
   const [isEditing, setIsEditing] = useState(false)
   const [hidden, setHidden] = useState(false)
+  const client = useApolloClient()
   if (hidden) return null
   return (
-    // <Theme
-    //   name={isActive ? 'selected' : null}
-    //   coat={isFormerlyActive ? 'selectedInactive' : null}
-    // >
     <Tappable
       onTap={() => {
         setTimeout(() => {
@@ -314,7 +301,7 @@ const ListItem = ({
               onPress={(e) => {
                 e.stopPropagation()
                 setHidden(true)
-                ModelBase.client.mutate({
+                client.mutate({
                   variables: {
                     id: taxonomy.id,
                   },
@@ -328,7 +315,6 @@ const ListItem = ({
         </HStack>
       </HStack>
     </Tappable>
-    // </Theme>
   )
 }
 
@@ -365,18 +351,18 @@ function MenuItems({
           data.dish.map((dish, index) => {
             const isActive = active[0] === 0 && index === active[1]
             return (
-              <VStack
-                // name={isActive ? 'selected' : null}
-                key={dish.id}
-                onPress={() => {
-                  setTimeout(() => {
-                    if (!isActive) {
-                      setActive([4, index])
-                    }
-                  })
-                }}
-              >
-                <Text>{dish.name}</Text>
+              <VStack key={dish.id}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setTimeout(() => {
+                      if (!isActive) {
+                        setActive([4, index])
+                      }
+                    })
+                  }}
+                >
+                  <Text>{dish.name}</Text>
+                </TouchableOpacity>
               </VStack>
             )
           })}
