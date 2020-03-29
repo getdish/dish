@@ -62,6 +62,7 @@
     "react-helmet": "^5.2.1"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.149",
     "express": "^4.17.1",
     "body-parser": "^1.19.0",
     "@gqless/cli": "^0.0.1-alpha.30",
@@ -80,7 +81,7 @@
     "patch-package": "^6.2.1",
     "react-refresh": "^0.8.1",
     "react-test-renderer": "~16.9.0",
-    "typescript": "^3.9.0-beta",
+    "typescript": "3.7.3",
     "webpack-hot-middleware": "^2.25.0"
   },
   "resolutions": {

@@ -1413,7 +1413,7 @@ export type __TypeKind = TypeData<t___TypeKind>
  * @name bigint
  * @type SCALAR
  */
-export type bigint = TypeData<t_bigint>
+//export type bigint = TypeData<t_bigint>
 
 /**
  * @name dish

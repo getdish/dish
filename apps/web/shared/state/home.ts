@@ -3,7 +3,6 @@ import { Action, AsyncAction, Derive } from 'overmind'
 
 import { Restaurant, Review, TopDish } from '@dish/models'
 
-import { query } from '../../src/graphql'
 import { sleep } from '../helpers/sleep'
 import { HistoryItem } from './router'
 import { Taxonomy, taxonomyFilters, taxonomyLenses } from './Taxonomy'
@@ -68,15 +67,17 @@ export type AutocompleteItem = {
   route: { name: string; params: Object }
 }
 
-export type HomeState = {
+type HomeStateBase = {
   autocompleteResults: AutocompleteItem[]
   allTopDishes: string[]
   restaurants: { [id: string]: Restaurant }
   showMenu: boolean
   states: HomeStateItem[]
+}
+export type HomeState = HomeStateBase & {
   lastHomeState: Derive<HomeState, HomeStateItemHome>
-  lastSearchState: Derive<HomeState, HomeStateItemSearch>
-  lastRestaurantState: Derive<HomeState, HomeStateItemRestaurant>
+  lastSearchState: Derive<HomeState, HomeStateItemSearch | null>
+  lastRestaurantState: Derive<HomeState, HomeStateItemRestaurant | null>
   breadcrumbStates: Derive<HomeState, HomeStateItemSimple[]>
   currentState: Derive<HomeState, HomeStateItem>
   previousState: Derive<HomeState, HomeStateItem>
@@ -98,42 +99,41 @@ export const initialHomeState: HomeStateItemHome = {
   span: 0.05,
 }
 
-const lastHomeState = (state: HomeState) =>
-  _.findLast(state.states, (x) => x.type === 'home') as HomeStateItemHome | null
-const lastRestaurantState = (state: HomeState) =>
+const lastHomeState = (state: HomeStateBase) =>
+  _.findLast(state.states, (x) => x.type === 'home') as HomeStateItemHome
+const lastRestaurantState = (state: HomeStateBase) =>
   _.findLast(
     state.states,
     (x) => x.type === 'restaurant'
   ) as HomeStateItemRestaurant | null
-const lastSearchState = (state: HomeState) =>
+const lastSearchState = (state: HomeStateBase) =>
   _.findLast(
     state.states,
     (x) => x.type === 'search'
   ) as HomeStateItemSearch | null
 
-const breadcrumbStates = (state: HomeState) => {
-  const lastType = _.last(state.states).type
+const breadcrumbStates = (state: HomeStateBase) => {
+  const lastType = _.last(state.states)!.type
   const lastHome = lastHomeState(state)
   const lastSearch = lastType != 'home' && lastSearchState(state)
   const lastRestaurant = lastType == 'restaurant' && lastRestaurantState(state)
   return [lastHome, lastSearch, lastRestaurant]
     .filter(Boolean)
-    .map((x) => _.omit(x), 'historyId')
+    .map((x) => _.omit(x as any, 'historyId'))
 }
 
-const hoveredRestaurant = (state: HomeState) => {
-  const index = lastSearchState(state)?.hoveredRestaurant
-  return state.restaurants[index] ?? null
+const hoveredRestaurant = (state: HomeStateBase) => {
+  const id = lastSearchState(state)?.hoveredRestaurant
+  return id ? state.restaurants[id] ?? null : null
 }
 
-// @ts-ignore
 export const state: HomeState = {
   autocompleteResults: [],
   allTopDishes: [],
   restaurants: {},
   showMenu: false,
   states: [initialHomeState],
-  currentState: (state) => _.last(state.states),
+  currentState: (state) => _.last(state.states)!,
   previousState: (state) => state.states[state.states.length - 2],
   lastHomeState,
   lastSearchState,
@@ -162,19 +162,20 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
         ...om.state.home.lastHomeState,
         ...currentBaseState,
         searchQuery: '',
-      }
+      } as HomeStateItemHome
       break
     case 'search':
       const lastSearchState = om.state.home.lastSearchState
       nextState = {
         type: 'search',
         filters: [],
+        hoveredRestaurant: '',
         results: {
           status: 'loading',
         },
         ...lastSearchState,
         ...currentBaseState,
-      }
+      } as HomeStateItemSearch
       fetchData = () => {
         console.log('what is', lastSearchState)
         if (lastSearchState?.searchQuery !== item.params.query) {
@@ -196,9 +197,11 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
       break
   }
 
-  om.state.home.states.push(nextState)
-  if (fetchData) {
-    fetchData()
+  if (nextState) {
+    om.state.home.states.push(nextState)
+    if (fetchData) {
+      fetchData()
+    }
   }
 }
 
@@ -216,12 +219,13 @@ const popTo: Action<HomeStateItem | number> = (om, item) => {
     homeItem = item
   }
 
+  const params =
+    _.findLast(om.state.router.history, (x) => x.name == homeItem.type)
+      ?.params ?? {}
   om.actions.router.navigate({
     name: homeItem.type,
-    params:
-      _.findLast(om.state.router.history, (x) => x.name == homeItem.type)
-        ?.params ?? {},
-  })
+    params,
+  } as any)
 }
 
 const _popHomeState: Action<HistoryItem> = (om, item) => {
@@ -365,10 +369,6 @@ const clearSearch: Action = (om) => {
   }
 }
 
-const setMapcenter: Action<LngLat> = (om, center: LngLat) => {
-  om.state.home.currentState.center = center
-}
-
 const getReview: AsyncAction = async (om) => {
   let state = om.state.home.lastRestaurantState
   if (!state) return
@@ -431,9 +431,7 @@ export const actions = {
   setCurrentRestaurant,
   runSearch,
   loadHomeDishes,
-  // restaurantSearch,
   clearSearch,
-  setMapcenter,
   getReview,
   submitReview,
   getUserReviews,

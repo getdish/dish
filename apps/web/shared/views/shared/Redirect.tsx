@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react'
-import { useOvermind } from '../../state/om'
+// import React, { useEffect } from 'react'
 
-export function Redirect(props: { to: string }) {
-  const om = useOvermind()
-  const cur = om.state.router.curPage.path
-  const next = props.to
+// import { useOvermind } from '../../state/om'
 
-  useEffect(() => {
-    if (next != cur) {
-      om.actions.router.navigate(props.to)
-    }
-  }, [next, cur])
+// export function Redirect(props: { name: string; params: any }) {
+//   const om = useOvermind()
+//   const cur = om.state.router.curPage.path
 
-  return null
-}
+//   useEffect(() => {
+//     if (next != cur) {
+//       om.actions.router.navigate(props as any)
+//     }
+//   }, [next, cur])
+
+//   return null
+// }

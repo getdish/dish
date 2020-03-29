@@ -2,10 +2,12 @@ import bodyParser from 'body-parser'
 import express from 'express'
 import { readFileSync } from 'fs'
 import { createOvermindSSR } from 'overmind'
+import { join } from 'path'
 import { renderToString } from 'react-dom/server'
 import Helmet from 'react-helmet'
 
 import { config, startOm } from '../shared/state/om'
+import App from '../shared/views/App'
 
 const server = express()
 server.set('port', 3000)
@@ -16,7 +18,7 @@ server.disable('etag')
 server.use(bodyParser.json({ limit: '2048mb' }))
 server.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
 server.get('/hello', (_, res) => res.send('hello world'))
-server.use('/assets', express.static(Path.join('..', 'shared', 'assets')))
+server.use('/assets', express.static(join('..', 'shared', 'assets')))
 // server.get('/config', (_, res) => {
 //   log.verbose(`Send config ${JSON.stringify(config, null, 2)}`)
 //   res.json(config)
@@ -27,7 +29,7 @@ const template = readFileSync('../web/index.html', 'utf8')
 server.get('*', async (req, res) => {
   const overmind = createOvermindSSR(config)
   await startOm(overmind)
-  const appHtml = renderToString(<></>)
+  const appHtml = renderToString(<App />)
   const helmet = Helmet.renderStatic()
   res.send(
     template

@@ -3,9 +3,25 @@
   "compilerOptions": {
     "jsx": "react-native",
     "outDir": "_",
-    // "noEmit": true,
+    "incremental": false,
     "typeRoots": ["node_modules/mapkit-typescript", "node_modules/@types"]
   },
-  "exclude": ["**/*.test.ts", "**/*.test.tsx", "_", "ios", "android", "shared"],
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "node_modules",
+    "node_modules/**/*",
+    "node_modules/*",
+    ".expo",
+    ".next",
+    "android",
+    "ios",
+    "patches",
+    "web-build",
+    "web",
+    "_",
+    "shared",
+    "src/graphql"
+  ],
   "references": [{ "path": "../../packages/common-web" }]
 }

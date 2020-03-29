@@ -1,10 +1,9 @@
-import { graphql } from '@gqless/react'
-import React, { memo, useMemo } from 'react'
-import { query } from '../../../src/graphql'
-import { useOvermind } from '../../state/om'
-import { HomeStateItem } from '../../state/home'
-import { Text } from 'react-native'
 import Fuse from 'fuse.js'
+import React, { memo, useMemo } from 'react'
+import { Text } from 'react-native'
+
+import { HomeStateItem } from '../../state/home'
+import { useOvermind } from '../../state/om'
 
 const RADIUS = 0.15
 let options = {
@@ -26,14 +25,13 @@ export default memo(function HomeAutoComplete() {
 
   const results = useMemo(() => {
     if (state.searchQuery) {
-      fuzzy.search()
+      // fuzzy.search()
     }
   }, [state.searchQuery])
-  fuzzy.search()
 
   return (
     <>
-      {autocompleteResults.map((x) => {
+      {[].map((x) => {
         return <Text key={x}>{x}</Text>
       })}
     </>

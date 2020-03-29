@@ -345,7 +345,7 @@ const RestaurantTagButton = memo(() => {
   return (
     <Popover
       position="right"
-      target={
+      contents={
         <Tooltip maxWidth={300}>
           <Text
             style={{

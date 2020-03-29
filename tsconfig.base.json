@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "strict": true,
     "skipLibCheck": true,
     "incremental": true,
@@ -17,7 +16,7 @@
     "noUnusedParameters": false,
     "noEmitOnError": false,
     "strictNullChecks": false,
-    "strictFunctionTypes": false,
+    // "strictFunctionTypes": false,
     "preserveConstEnums": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -26,7 +25,7 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "downlevelIteration": true,
-    "lib": ["es2017", "es2018", "dom", "esnext"]
+    "lib": ["dom", "esnext"]
   },
   "exclude": ["**/*.test.ts", "**/*.test.tsx", "_"],
   "typeAcquisition": {

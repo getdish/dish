@@ -1,9 +1,9 @@
-import React from 'react'
-import { useOvermind } from '../../state/om'
-import { Text, View, TouchableOpacity } from 'react-native'
-import { HStack } from '../shared/Stacks'
+import { Text, TouchableOpacity, View } from 'react-native'
+
 import { HomeStateItem } from '../../state/home'
+import { useOvermind } from '../../state/om'
 import { NavigateItem } from '../../state/router'
+import { HStack } from '../shared/Stacks'
 
 export function HomeBreadcrumbs() {
   const om = useOvermind()
@@ -17,7 +17,10 @@ export function HomeBreadcrumbs() {
     <HStack padding={0} alignItems="center" justifyContent="center" height={20}>
       {parents.map((x, i) => (
         <HStack alignItems="center" justifyContent="center" key={i}>
-          <HomeBreadcrumb homeState={x} isLast={i === parents.length - 1} />
+          <HomeBreadcrumb
+            homeState={x as any}
+            isLast={i === parents.length - 1}
+          />
           {i < parents.length - 1 && (
             <Text style={{ paddingHorizontal: 10, opacity: 0.3, fontSize: 9 }}>
               ▶
