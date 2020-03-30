@@ -2,8 +2,8 @@ import React from 'react'
 
 import { MapContext } from './Map'
 import {
-  createCoordinate,
   MarkerOptions,
+  createCoordinate,
   propsToMarkerConstructionOptions,
 } from './utils'
 

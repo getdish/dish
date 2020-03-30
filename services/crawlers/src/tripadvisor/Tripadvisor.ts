@@ -1,13 +1,12 @@
 import '@dish/common'
 
-import _ from 'lodash'
-import axios_base from 'axios'
-import { QueueOptions, JobOptions } from 'bull'
-import cheerio from 'cheerio'
-import * as acorn from 'acorn'
-
-import { WorkerJob } from '@dish/worker'
 import { Restaurant, Scrape, ScrapeData } from '@dish/models'
+import { WorkerJob } from '@dish/worker'
+import * as acorn from 'acorn'
+import axios_base from 'axios'
+import { JobOptions, QueueOptions } from 'bull'
+import cheerio from 'cheerio'
+import _ from 'lodash'
 
 import { aroundCoords, geocode } from '../utils'
 

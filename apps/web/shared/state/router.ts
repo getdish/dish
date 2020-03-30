@@ -1,19 +1,18 @@
+import { isEqual } from '@o/fast-compare'
 import _ from 'lodash'
 import {
   Action,
   AsyncAction,
-  catchError,
   Derive,
+  Operator,
+  catchError,
   map,
   mutate,
-  Operator,
   pipe,
   run,
 } from 'overmind'
 import page from 'page'
 import queryString from 'query-string'
-
-import { isEqual } from '@o/fast-compare'
 
 import { slugify } from '../helpers/slugify'
 

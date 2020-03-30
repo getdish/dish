@@ -1,10 +1,10 @@
+import { validate } from 'class-validator'
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { getRepository } from 'typeorm'
-import { validate } from 'class-validator'
 
-import { User } from '../models/User'
 import config from '../config/config'
+import { User } from '../models/User'
 
 class AuthController {
   static login = async (req: Request, res: Response) => {

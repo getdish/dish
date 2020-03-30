@@ -1,6 +1,6 @@
+import { Scrape } from '@dish/models'
 import test from 'ava'
 
-import { Scrape } from '@dish/models'
 import { Yelp } from '../src/yelp/Yelp'
 
 const ID = 'qs7FgJ-UXgpbAMass0Oojg'

@@ -1,15 +1,14 @@
-import { mapkit } from '../mapkit'
 import React from 'react'
 
+import { mapkit } from '../mapkit'
 import { MapOptions, propsToMapConstructionOptions } from './utils'
-
 import {
   NumberTuple,
   Rect,
   RegionType,
   createCoordinate,
-  createMapRect,
   createCoordinateRegionFromValues,
+  createMapRect,
 } from './utils'
 
 export const useMap = (defaultOptions: MapOptions = {}) => {

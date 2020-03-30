@@ -1,12 +1,14 @@
+import 'isomorphic-fetch'
+
+import { readFileSync } from 'fs'
+import Path from 'path'
+
 import bodyParser from 'body-parser'
 import express from 'express'
-import { readFileSync } from 'fs'
-import { createOvermindSSR } from 'overmind'
-import Path from 'path'
 import { JSDOM } from 'jsdom'
-import 'isomorphic-fetch'
-import { Helmet } from 'react-helmet'
+import { createOvermindSSR } from 'overmind'
 import React from 'React'
+import { Helmet } from 'react-helmet'
 
 Error.stackTraceLimit = Infinity
 global['React'] = React

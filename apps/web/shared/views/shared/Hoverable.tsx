@@ -1,6 +1,7 @@
-import { isHoverEnabled } from './HoverState'
 import { element, func, oneOfType } from 'prop-types'
 import React from 'react'
+
+import { isHoverEnabled } from './HoverState'
 
 export default function Hoverable({ onHoverIn, onHoverOut, children }) {
   const [isHovered, setHovered] = React.useState(false)

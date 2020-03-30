@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Platform, View, ViewPropTypes } from 'react-native'
+
+import { FADE_VERTICAL, SLIDE_HORIZONTAL } from './animationTypes'
 import StackTransitioner from './StackTransitioner'
-import { SLIDE_HORIZONTAL, FADE_VERTICAL } from './animationTypes'
 import styles from './styles'
 // import { withRouter } from 'react-router-dom'
 

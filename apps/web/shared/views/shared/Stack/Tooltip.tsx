@@ -1,5 +1,6 @@
 import React from 'react'
-import { VStack, StackBaseProps } from '../Stacks'
+
+import { StackBaseProps, VStack } from '../Stacks'
 
 export function Tooltip(props: StackBaseProps) {
   return (

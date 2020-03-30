@@ -1,6 +1,16 @@
-import { Job } from 'bull'
-
+// All code that the workers could possibly run needs to be passed to the
+// job processor.
+import {
+  CI,
+  Infatuated,
+  Michelin,
+  Self,
+  Tripadvisor,
+  UberEats,
+  Yelp,
+} from '@dish/crawlers'
 import { WorkerJob } from '@dish/worker'
+import { Job } from 'bull'
 
 // Processing jobs inside a module takes advantage of sandboxing, which gives
 // the following benefits:
@@ -9,17 +19,6 @@ import { WorkerJob } from '@dish/worker'
 //   * Much better utilization of multi-core CPUs.
 //   * Less connections to redis.
 
-// All code that the workers could possibly run needs to be passed to the
-// job processor.
-import {
-  CI,
-  UberEats,
-  Yelp,
-  Self,
-  Infatuated,
-  Michelin,
-  Tripadvisor,
-} from '@dish/crawlers'
 const all: typeof WorkerJob[] = [
   UberEats,
   Yelp,

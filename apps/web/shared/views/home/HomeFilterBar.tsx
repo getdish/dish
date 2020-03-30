@@ -1,10 +1,11 @@
 import React, { memo } from 'react'
-import { Text, ScrollView } from 'react-native'
+import { ScrollView, Text } from 'react-native'
+
 import { useOvermind } from '../../state/om'
-import { Spacer } from '../shared/Spacer'
-import { VStack, HStack } from '../shared/Stacks'
 import { Taxonomy } from '../../state/Taxonomy'
 import { LinkButton } from '../shared/Link'
+import { Spacer } from '../shared/Spacer'
+import { HStack, VStack } from '../shared/Stacks'
 
 export default memo(function HomeFilterBar() {
   const om = useOvermind()

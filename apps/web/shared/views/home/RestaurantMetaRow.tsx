@@ -1,10 +1,11 @@
-import React from 'react'
-import { Image, Text, Linking } from 'react-native'
 import { Restaurant } from '@dish/models'
-import { HStack } from '../shared/Stacks'
+import React from 'react'
+import { Image, Linking, Text } from 'react-native'
+
+import { Icon } from '../shared/Icon'
 import { Link } from '../shared/Link'
 import { Popover } from '../shared/Popover'
-import { Icon } from '../shared/Icon'
+import { HStack } from '../shared/Stacks'
 
 export const RestaurantMetaRow = ({
   restaurant,

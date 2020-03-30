@@ -1,6 +1,6 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
 
-import { useNodeSize, UseNodeSizeProps } from './useNodeSize'
+import { UseNodeSizeProps, useNodeSize } from './useNodeSize'
 
 export function useParentNodeSize(props?: UseNodeSizeProps) {
   const ref = useRef<HTMLElement>(null)

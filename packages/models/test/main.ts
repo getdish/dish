@@ -2,8 +2,8 @@ import anyTest, { TestInterface } from 'ava'
 import axios from 'axios'
 import moment from 'moment'
 
-import { Restaurant } from '../src/Restaurant'
 import { Dish } from '../src/Dish'
+import { Restaurant } from '../src/Restaurant'
 import { Taxonomy } from '../src/Taxonomy'
 
 interface Context {

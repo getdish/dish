@@ -1,7 +1,7 @@
-import { Provider } from 'overmind-react'
-import React from 'react'
 import { ApolloProvider } from '@apollo/client'
 import { createApolloClient } from '@dish/models'
+import { Provider } from 'overmind-react'
+import React from 'react'
 
 import { om } from '../state/om'
 import { HomePage } from './home/HomePage'

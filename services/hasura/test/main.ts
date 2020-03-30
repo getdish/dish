@@ -1,7 +1,6 @@
-import anyTest, { TestInterface } from 'ava'
-
 import auth from '@dish/auth'
-import { Restaurant, User, Dish, Scrape } from '@dish/models'
+import { Dish, Restaurant, Scrape, User } from '@dish/models'
+import anyTest, { TestInterface } from 'ava'
 
 interface Context {}
 

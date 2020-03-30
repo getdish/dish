@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, TextProps, StyleSheet } from 'react-native'
+import { StyleSheet, Text, TextProps } from 'react-native'
 
 export const SecondaryText = (props: TextProps & { children: any }) => {
   return <Text {...props} style={[styles.secondaryText, props.style]} />

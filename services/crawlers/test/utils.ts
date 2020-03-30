@@ -1,9 +1,9 @@
 import test from 'ava'
 
 import {
-  shiftLatLonByMetres,
   aroundCoords,
   boundingBoxFromcenter,
+  shiftLatLonByMetres,
 } from '../src/utils'
 
 test('Shifting lat/lon by metres (positive)', (t) => {

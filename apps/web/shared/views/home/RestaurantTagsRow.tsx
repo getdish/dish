@@ -1,9 +1,10 @@
+import { Restaurant } from '@dish/models'
 import React from 'react'
 import { Text } from 'react-native'
-import { Restaurant } from '@dish/models'
+
 import { HStack } from '../shared/Stacks'
-import { TagButton } from './TagButton'
 import { SecondaryText } from './SecondaryText'
+import { TagButton } from './TagButton'
 
 export const RestaurantTagsRow = ({
   restaurant,

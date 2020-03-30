@@ -1,7 +1,8 @@
 import React from 'react'
 import { View } from 'react-native'
-import { HStack } from './Stacks'
+
 import { Spacer } from './Spacer'
+import { HStack } from './Stacks'
 
 export const Divider = (props: { flex?: boolean }) => {
   return (

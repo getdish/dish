@@ -1,8 +1,9 @@
 import React from 'react'
 import { Text } from 'react-native'
-import { VStack } from './Stacks'
-import { Spacer } from './Spacer'
+
 import { Divider } from './Divider'
+import { Spacer } from './Spacer'
+import { VStack } from './Stacks'
 
 export function Title(props: { children: any }) {
   return (

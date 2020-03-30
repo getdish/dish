@@ -1,7 +1,8 @@
 import React from 'react'
 import { TouchableOpacity } from 'react-native'
-import { Icon } from '../shared/Icon'
+
 import { Circle } from '../shared/Circle'
+import { Icon } from '../shared/Icon'
 import { StackBaseProps } from '../shared/Stacks'
 
 export function CloseButton({

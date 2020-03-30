@@ -1,18 +1,19 @@
 import util from 'util'
+
 import {
   ApolloClient,
-  gql,
   HttpLink,
   InMemoryCache,
-  split,
   NormalizedCacheObject,
+  gql,
+  split,
 } from '@apollo/client'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { WebSocketLink } from '@apollo/link-ws'
-import axios, { AxiosRequestConfig } from 'axios'
-import { EnumType, jsonToGraphQLQuery } from 'json-to-graphql-query'
 import auth from '@dish/auth'
 import { getGraphEndpoint } from '@dish/common-web'
+import axios, { AxiosRequestConfig } from 'axios'
+import { EnumType, jsonToGraphQLQuery } from 'json-to-graphql-query'
 
 const isNode = typeof window == 'undefined'
 export const isBrowserProd =

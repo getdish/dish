@@ -1,11 +1,11 @@
 import '@dish/common'
 
-import _ from 'lodash'
-import { Base64 } from 'js-base64'
-
-import { QueueOptions, JobOptions } from 'bull'
+import { Dish, Restaurant, Scrape } from '@dish/models'
 import { WorkerJob } from '@dish/worker'
-import { Scrape, Restaurant, Dish } from '@dish/models'
+import { JobOptions, QueueOptions } from 'bull'
+import { Base64 } from 'js-base64'
+import _ from 'lodash'
+
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
 import { sql } from '../utils'
 

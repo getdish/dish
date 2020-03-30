@@ -1,10 +1,11 @@
-import React, { useMemo, useCallback } from 'react'
+import './Link.css'
+
+import React, { useCallback, useMemo } from 'react'
+import { Text, TouchableOpacity } from 'react-native'
+
 import { useOvermind } from '../../state/om'
 import { RoutesTable, getPathFromParams } from '../../state/router'
-import { TouchableOpacity, Text } from 'react-native'
-import { VStack, StackBaseProps } from './Stacks'
-
-import './Link.css'
+import { StackBaseProps, VStack } from './Stacks'
 
 export function Link<
   Name extends keyof RoutesTable = keyof RoutesTable,

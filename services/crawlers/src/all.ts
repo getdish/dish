@@ -1,9 +1,9 @@
-import { Self } from './self/Self'
-import { Yelp } from './yelp/Yelp'
-import { UberEats } from './ubereats/UberEats'
 import { Infatuated } from './infatuated/Infatuated'
 import { Michelin } from './michelin/Michelin'
+import { Self } from './self/Self'
 import { Tripadvisor } from './tripadvisor/Tripadvisor'
+import { UberEats } from './ubereats/UberEats'
+import { Yelp } from './yelp/Yelp'
 
 async function main() {
   const dish = new Self()

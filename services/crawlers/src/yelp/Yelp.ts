@@ -1,12 +1,11 @@
-import { sentryMessage } from '@dish/common'
-
 import url from 'url'
-import _ from 'lodash'
-import axios_base, { AxiosResponse, AxiosRequestConfig } from 'axios'
-import { QueueOptions, JobOptions } from 'bull'
 
-import { WorkerJob } from '@dish/worker'
+import { sentryMessage } from '@dish/common'
 import { Restaurant, Scrape, ScrapeData } from '@dish/models'
+import { WorkerJob } from '@dish/worker'
+import axios_base, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { JobOptions, QueueOptions } from 'bull'
+import _ from 'lodash'
 
 import { aroundCoords, boundingBoxFromcenter, geocode } from '../utils'
 

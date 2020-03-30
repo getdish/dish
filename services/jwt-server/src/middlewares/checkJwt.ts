@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import * as jwt from 'jsonwebtoken'
+
 import config from '../config/config'
 
 export const checkJwt = (req: Request, res: Response, next: NextFunction) => {

@@ -1,12 +1,14 @@
 import 'reflect-metadata'
-import { createConnection } from 'typeorm'
-import express from 'express'
+
 import bodyParser from 'body-parser'
-import helmet from 'helmet'
 import cors from 'cors'
-import routes from './routes'
+import express from 'express'
+import helmet from 'helmet'
+import { createConnection } from 'typeorm'
+
 import { typeOrmConfig } from './config/connection'
 import { User } from './models/User'
+import routes from './routes'
 
 export default async () => {
   await createConnection(typeOrmConfig)

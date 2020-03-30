@@ -1,7 +1,6 @@
-import React from 'react'
-
 import { Feather, SimpleLineIcons } from '@expo/vector-icons'
-import { ViewStyle, TextStyle } from 'react-native'
+import React from 'react'
+import { TextStyle, ViewStyle } from 'react-native'
 
 export const Icon = ({
   type = 'feather',
