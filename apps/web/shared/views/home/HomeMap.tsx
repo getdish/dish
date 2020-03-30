@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useMemo, memo } from 'react'
-
-import { mapkit } from '../mapkit'
-import { useOvermind } from '../../state/om'
-import { VStack, ZStack, HStack } from '../shared/Stacks'
 import _ from 'lodash'
-import { useMap, Map } from '../map'
-import { useHomeDrawerWidth } from './useHomeDrawerWidth'
+import React, { memo, useEffect, useMemo, useState } from 'react'
+
 import { useDebounceValue } from '../../hooks/useDebounce'
+import { useOvermind } from '../../state/om'
+import { Map, useMap } from '../map'
+import { mapkit } from '../mapkit'
+import { ZStack } from '../shared/Stacks'
+import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 function centerMapToRegion({
   map,
@@ -68,27 +68,36 @@ const HomeMap = memo(() => {
     })
 
     map.addEventListener('select', (e) => {
-      console.log('select', e)
+      console.log('select', e, map)
     })
 
     map.addEventListener('deselect', (e) => {
-      console.log('deselect', e)
+      console.log('deselect', e, map)
     })
 
     map.addEventListener('region-change-end', (e) => {
-      console.log('region-change-end', e)
+      console.log('region-change-end', e, map)
+      const radius = map.region.span.latitudeDelta * 10
+      console.log('radis', radius)
+      om.actions.home.setMapArea({
+        center: {
+          lng: map.center.longitude,
+          lat: map.center.latitude,
+        },
+        radius,
+      })
     })
 
     map.addEventListener('drag-start', (e) => {
-      console.log('drag-start', e)
+      console.log('drag-start', e, map)
     })
 
     map.addEventListener('drag-end', (e) => {
-      console.log('drag-end', e)
+      console.log('drag-end', e, map)
     })
 
     map.addEventListener('user-location-change', (e) => {
-      console.log('user-location-change', e)
+      console.log('user-location-change', e, map)
     })
   }, [map])
 
@@ -158,6 +167,7 @@ const HomeMap = memo(() => {
       (state) => state.home.hoveredRestaurant,
       (hoveredRestaurant) => {
         if (!hoveredRestaurant) return
+        console.log('hovered restaurant', hoveredRestaurant)
         const index = restaurantIds.indexOf(hoveredRestaurant.id)
         if (map.annotations[index]) {
           map.annotations[index].selected = true
@@ -167,20 +177,22 @@ const HomeMap = memo(() => {
   }, [map, restaurantIds])
 
   // Detail - center to restaurant
-  const restaurantDetailVal = useDebounceValue(restaurantDetail, 250)
+  const restaurantDelayed = useDebounceValue(restaurantDetail, 250)
   useEffect(() => {
-    if (!map || !mapkit || !restaurantDetailVal?.location) return
+    if (!map || !mapkit || !restaurantDelayed?.location) return
+    console.log('center map to', restaurantDelayed)
     centerMapToRegion({
       map,
-      location: restaurantDetailVal.location.coordinates,
-      span: 0.09,
+      location: restaurantDelayed.location.coordinates,
+      span: state.radius,
     })
-  }, [!!map, mapkit, restaurantDetailVal])
+  }, [!!map, mapkit, restaurantDelayed])
 
   // selected on map
   useEffect(() => {
     if (!restaurantSelected) return
     if (!map) return
+    console.log('center app to selected', restaurantSelected)
     map.setCenterAnimated(
       coordinates[restaurants.findIndex((x) => x.id === restaurantSelected.id)],
       true

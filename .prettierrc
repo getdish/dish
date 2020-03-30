@@ -3,4 +3,5 @@
   "semi": false,
   "singleQuote": true,
   "arrowParens": "always",
+  "plugins": ["import-sort"]
 }

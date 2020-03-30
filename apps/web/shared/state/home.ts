@@ -1,7 +1,6 @@
+import { Restaurant, Review, TopDish } from '@dish/models'
 import _ from 'lodash'
 import { Action, AsyncAction, Derive } from 'overmind'
-
-import { Restaurant, Review, TopDish } from '@dish/models'
 
 import { sleep } from '../helpers/sleep'
 import { HistoryItem } from './router'
@@ -23,7 +22,7 @@ export type SearchResults =
 type HomeStateItemBase = {
   searchQuery: string
   center: LngLat
-  span: number
+  radius: number
   historyId?: string
 }
 
@@ -31,7 +30,6 @@ export type HomeStateItem =
   | HomeStateItemHome
   | HomeStateItemSearch
   | HomeStateItemRestaurant
-// | HomeStateItemDish
 
 export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
@@ -54,11 +52,6 @@ export type HomeStateItemRestaurant = HomeStateItemBase & {
   reviews: Review[]
   review: Review | null
 }
-
-// export type HomeStateItemDish = HomeStateItemBase & {
-//   type: 'dish'
-//   dish: string
-// }
 
 export type HomeStateItemSimple = Omit<HomeStateItem, 'historyId'>
 
@@ -84,7 +77,7 @@ export type HomeState = HomeStateBase & {
   hoveredRestaurant: Derive<HomeState, Restaurant | null>
 }
 
-const RADIUS = 0.05
+const INITIAL_RADIUS = 0.05
 
 export const initialHomeState: HomeStateItemHome = {
   type: 'home',
@@ -96,7 +89,7 @@ export const initialHomeState: HomeStateItemHome = {
     lng: -122.421351,
     lat: 37.759251,
   },
-  span: 0.05,
+  radius: INITIAL_RADIUS,
 }
 
 const lastHomeState = (state: HomeStateBase) =>
@@ -149,7 +142,7 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
     historyId: item.id,
     searchQuery: currentState?.searchQuery ?? '',
     center: currentState?.center ?? { lng: -122.421351, lat: 37.759251 },
-    span: currentState?.span ?? 0.05,
+    radius: currentState?.radius ?? 0.05,
   }
 
   let nextState: HomeStateItem | null = null
@@ -264,7 +257,7 @@ const loadHomeDishes: AsyncAction = async (om) => {
   om.state.home.lastHomeState.top_dishes = await Restaurant.getHomeDishes(
     om.state.home.currentState.center.lat,
     om.state.home.currentState.center.lng,
-    RADIUS
+    om.state.home.currentState.radius
   )
 }
 
@@ -331,7 +324,7 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
   const restaurants = await Restaurant.search(
     om.state.home.currentState.center.lat,
     om.state.home.currentState.center.lng,
-    RADIUS,
+    om.state.home.currentState.radius,
     query,
     tags
   )
@@ -422,7 +415,13 @@ const suggestTags: AsyncAction<string> = async (om, tags) => {
   state.restaurant = restaurant
 }
 
+const setMapArea: Action<{ center: LngLat; radius: number }> = (om, val) => {
+  om.state.home.currentState.center = val.center
+  om.state.home.currentState.radius = val.radius
+}
+
 export const actions = {
+  setMapArea,
   setSearchQuery,
   popTo,
   setActiveLense,
