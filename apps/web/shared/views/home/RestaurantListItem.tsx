@@ -4,9 +4,10 @@ import { Image, Text, TouchableOpacity } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { Divider } from '../shared/Divider'
+import Hoverable from '../shared/Hoverable'
 import { Link } from '../shared/Link'
 import { Spacer } from '../shared/Spacer'
-import { HStack, VStack } from '../shared/Stacks'
+import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { RankingView } from './RankingView'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantMetaRow } from './RestaurantMetaRow'
@@ -63,7 +64,12 @@ export const RestaurantListItem = ({
           alignItems="center"
           overflow="scroll"
           backgroundColor={isHovered ? '#B8E0F322' : 'transparent'}
+          position="relative"
         >
+          <ZStack fullscreen justifyContent="center">
+            <RestaurantRatingPopover restaurant={restaurant} />
+          </ZStack>
+
           <VStack padding={18} width="76%" maxWidth={525}>
             <Link name="restaurant" params={{ slug: restaurant.slug }}>
               <HStack alignItems="center" marginVertical={-2}>
@@ -82,10 +88,9 @@ export const RestaurantListItem = ({
 
             <Spacer />
 
-            <HStack marginVertical={-7}>
-              <Spacer size={20} />
-              <HStack alignItems="center">
-                <RestaurantRatingPopover restaurant={restaurant} />
+            <HStack alignItems="center" marginVertical={-7}>
+              <HStack alignItems="center" paddingLeft={18}>
+                <FavoriteStar restaurant={restaurant} />
                 <Spacer />
                 <RestaurantTagsRow showMore restaurant={restaurant} />
               </HStack>
@@ -124,5 +129,21 @@ export const RestaurantListItem = ({
         <Divider />
       </TouchableOpacity>
     </div>
+  )
+}
+
+const FavoriteStar = (props: any) => {
+  const [isHovered, setIsHovered] = useState(false)
+  return (
+    <VStack opacity={isHovered ? 1 : 0.5}>
+      <Hoverable
+        onHoverIn={() => setIsHovered(true)}
+        onHoverOut={() => setIsHovered(false)}
+      >
+        <div style={{ filter: `grayscale(${isHovered ? 0 : 100}%)` }}>
+          <Text style={{ fontSize: 24 }}>⭐️</Text>
+        </div>
+      </Hoverable>
+    </VStack>
   )
 }

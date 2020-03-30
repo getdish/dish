@@ -6,7 +6,7 @@ import { sleep } from '../helpers/sleep'
 import { HistoryItem } from './router'
 import { Taxonomy, taxonomyFilters, taxonomyLenses } from './Taxonomy'
 
-type LngLat = { lng: number; lat: number }
+export type LngLat = { lng: number; lat: number }
 
 export type SearchResults =
   | { status: 'loading' }
@@ -22,7 +22,7 @@ export type SearchResults =
 type HomeStateItemBase = {
   searchQuery: string
   center: LngLat
-  radius: number
+  span: LngLat
   historyId?: string
 }
 
@@ -89,7 +89,7 @@ export const initialHomeState: HomeStateItemHome = {
     lng: -122.421351,
     lat: 37.759251,
   },
-  radius: INITIAL_RADIUS,
+  span: { lng: INITIAL_RADIUS, lat: INITIAL_RADIUS },
 }
 
 const lastHomeState = (state: HomeStateBase) =>
@@ -141,8 +141,8 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
   const currentBaseState = {
     historyId: item.id,
     searchQuery: currentState?.searchQuery ?? '',
-    center: currentState?.center ?? { lng: -122.421351, lat: 37.759251 },
-    radius: currentState?.radius ?? 0.05,
+    center: currentState?.center ?? initialHomeState.center,
+    span: currentState?.span ?? initialHomeState.span,
   }
 
   let nextState: HomeStateItem | null = null
@@ -256,7 +256,8 @@ const loadHomeDishes: AsyncAction = async (om) => {
   om.state.home.lastHomeState.top_dishes = await Restaurant.getHomeDishes(
     om.state.home.currentState.center.lat,
     om.state.home.currentState.center.lng,
-    om.state.home.currentState.radius
+    // TODO span
+    om.state.home.currentState.span.lat
   )
 }
 
@@ -312,9 +313,8 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
 
   const tags = _.uniq([...state.filters.map((f) => f.name)])
   const searchArgs: RestaurantSearchArgs = {
-    lat: state.center.lat,
-    lng: state.center.lng,
-    radius: state.radius,
+    center: state.center,
+    span: state.span,
     query,
     tags,
   }
@@ -421,9 +421,9 @@ const suggestTags: AsyncAction<string> = async (om, tags) => {
   state.restaurant = restaurant
 }
 
-const setMapArea: Action<{ center: LngLat; radius: number }> = (om, val) => {
+const setMapArea: Action<{ center: LngLat; span: LngLat }> = (om, val) => {
   om.state.home.currentState.center = val.center
-  om.state.home.currentState.radius = val.radius
+  om.state.home.currentState.span = val.span
   om.actions.home.runSearch(om.state.home.currentState.searchQuery)
 }
 

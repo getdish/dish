@@ -8,6 +8,7 @@ body,
   width: 100%;
   /* To smooth any scrolling behavior */
   -webkit-overflow-scrolling: touch;
+  overflow: hidden;
   margin: 0px;
   padding: 0px;
   /* Allows content to fill the viewport and go beyond the bottom */

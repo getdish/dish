@@ -6,6 +6,7 @@ import React from 'react'
 import { hydrate, render } from 'react-dom'
 import * as ReactDOMServerExport from 'react-dom/server'
 
+import { OVERMIND_MUTATIONS } from '../shared/constants'
 import { App } from '../shared/views/App'
 
 window['React'] = React
@@ -19,7 +20,7 @@ export const ReactDOMServer = ReactDOMServerExport
 async function start() {
   await startMapKit()
 
-  if (window['__OVERMIND_MUTATIONS']) {
+  if (OVERMIND_MUTATIONS) {
     hydrate(<App />, document.getElementById('root'))
   } else {
     render(<App />, document.getElementById('root'))
