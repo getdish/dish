@@ -77,7 +77,7 @@ export type HomeState = HomeStateBase & {
   hoveredRestaurant: Derive<HomeState, Restaurant | null>
 }
 
-const INITIAL_RADIUS = 0.05
+const INITIAL_RADIUS = 0.1
 
 export const initialHomeState: HomeStateItemHome = {
   type: 'home',
