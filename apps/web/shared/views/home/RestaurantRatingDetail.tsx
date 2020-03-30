@@ -37,7 +37,7 @@ export const RestaurantRatingDetail = memo(
                   <Text>Weight</Text>
                 </TableCell>
               </TableRow>
-              {Object.keys(restaurant.sources).map((source) => {
+              {Object.keys(restaurant.sources ?? {}).map((source) => {
                 const item = restaurant.sources[source]
                 return (
                   <TableRow key={source}>

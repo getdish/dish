@@ -218,7 +218,10 @@ export class ModelBase<T> {
     return res.data
   }
 
-  static async hasura(gql: {}, silence_not_found: boolean = false) {
+  static async hasura(
+    gql: {},
+    silence_not_found: boolean = false
+  ): Promise<any> {
     let conf = JSON.parse(JSON.stringify(AXIOS_CONF))
     gql = ModelBase.ensureKeySyntax(gql)
     conf.data.query = jsonToGraphQLQuery(gql, { pretty: true })

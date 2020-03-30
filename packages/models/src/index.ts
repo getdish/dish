@@ -1,4 +1,4 @@
-export { Restaurant, TopDish } from './Restaurant'
+export { Restaurant, TopDish, RestaurantSearchArgs } from './Restaurant'
 export { Taxonomy, TaxonomyRecord, TaxonomyType } from './Taxonomy'
 export { Dish } from './Dish'
 export { Scrape, ScrapeData } from './Scrape'
