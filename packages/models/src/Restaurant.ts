@@ -23,6 +23,8 @@ if (isNode) {
   }
 }
 
+export type LngLat = { lng: number; lat: number }
+
 export type TopDish = {
   country: string
   icon: string
@@ -36,11 +38,10 @@ export type TopDish = {
 }
 
 export type RestaurantSearchArgs = {
-  lat: number
-  lng: number
-  radius: number
+  center: LngLat
+  span: LngLat
   query: string
-  tags: string[]
+  tags?: string[]
 }
 
 export class Restaurant extends ModelBase<Restaurant> {
@@ -175,9 +176,8 @@ export class Restaurant extends ModelBase<Restaurant> {
   }
 
   static async search({
-    lat,
-    lng,
-    radius,
+    center: { lat, lng },
+    span,
     query,
     tags = [],
   }: RestaurantSearchArgs): Promise<Restaurant[]> {
@@ -185,7 +185,8 @@ export class Restaurant extends ModelBase<Restaurant> {
       'query=' + query,
       'lon=' + lng,
       'lat=' + lat,
-      'distance=' + radius,
+      // TODO span
+      'distance=' + span.lat,
       'limit=25',
       'tags=' + tags.map((t) => t.toLowerCase().trim()).join(','),
     ]

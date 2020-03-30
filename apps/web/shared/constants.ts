@@ -1,0 +1,1 @@
+export const OVERMIND_MUTATIONS = window['__OVERMIND_MUTATIONS']
