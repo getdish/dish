@@ -46,6 +46,7 @@ function HomeSearchResultsViewContent({
       undefined) ??
     []
   const results = resultsIds.map((id) => allRestaurants[id])
+  console.log('HomeSearchResults.results', results)
 
   if (state.results?.status == 'loading') {
     return (
@@ -93,7 +94,10 @@ function List(props: {
       }}
     >
       {props.data.map((item, index) => (
-        <ListItem estimatedHeight={props.estimatedHeight} key={item.id}>
+        <ListItem
+          estimatedHeight={props.estimatedHeight}
+          key={item.id ?? index}
+        >
           {props.renderItem({ item, index })}
         </ListItem>
       ))}

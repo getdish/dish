@@ -1,8 +1,8 @@
+import _ from 'lodash'
 import React, { useEffect } from 'react'
 import { Helmet } from 'react-helmet'
 import { Image, ScrollView, Text } from 'react-native'
 
-import top_dish_images from '../../assets/topdishes.json'
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItemHome, HomeStateItemSimple } from '../../state/home'
 import { useOvermind } from '../../state/om'
@@ -11,10 +11,8 @@ import { Title } from '../shared/SmallTitle'
 import { Spacer } from '../shared/Spacer'
 import { HStack, StackBaseProps, VStack } from '../shared/Stacks'
 import HomeLenseBar from './HomeLenseBar'
-
 import { RankingView } from './RankingView'
 import { SuperScriptText } from './TagButton'
-import _ from 'lodash'
 
 export default memoIsEqualDeep(function HomeViewTopDishes({
   state,
@@ -48,7 +46,7 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
     const om = useOvermind()
     const { top_dishes = [] } = state
 
-    console.log('RENDER HOME_TOP_DISHES')
+    console.log('RENDER HOME_TOP_DISHES', top_dishes)
 
     useEffect(() => {
       om.actions.home.loadHomeDishes()
@@ -84,10 +82,10 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
 
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <HStack height={170} padding={20} paddingHorizontal={18}>
-                  {(country.dishes || []).slice(0, 5).map((top_dish) => {
+                  {(country.dishes || []).slice(0, 5).map((top_dish, index) => {
                     return (
                       <LinkButton
-                        key={top_dish.name}
+                        key={`${top_dish.name}${index}`}
                         style={{
                           // flexDirection: 'row',
                           alignItems: 'center',
@@ -145,21 +143,23 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
 
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <HStack padding={10} paddingHorizontal={30}>
-                  {country.top_restaurants.map((restaurant, index) => (
-                    <LinkButton
-                      key={restaurant.name}
-                      name="restaurant"
-                      params={{ slug: restaurant.slug }}
-                      {...flatButtonStyle}
-                      marginRight={18}
-                    >
-                      <Text style={{ fontSize: 14 }}>
-                        <SuperScriptText>#</SuperScriptText>
-                        {index + 1}. {restaurant.name}{' '}
-                        {restaurant.rating.toFixed(1)}⭐
-                      </Text>
-                    </LinkButton>
-                  ))}
+                  {_.uniqBy(country.top_restaurants, (x) => x.name).map(
+                    (restaurant, index) => (
+                      <LinkButton
+                        key={restaurant.name}
+                        name="restaurant"
+                        params={{ slug: restaurant.slug }}
+                        {...flatButtonStyle}
+                        marginRight={18}
+                      >
+                        <Text style={{ fontSize: 14 }}>
+                          <SuperScriptText>#</SuperScriptText>
+                          {index + 1}. {restaurant.name}{' '}
+                          {restaurant.rating.toFixed(1)}⭐
+                        </Text>
+                      </LinkButton>
+                    )
+                  )}
                 </HStack>
               </ScrollView>
             </VStack>

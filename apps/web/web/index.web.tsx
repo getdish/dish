@@ -3,8 +3,9 @@ import './base.css'
 import './mapkit'
 
 import React from 'react'
-import { hydrate } from 'react-dom'
+import { hydrate, render } from 'react-dom'
 import * as ReactDOMServerExport from 'react-dom/server'
+
 import { App } from '../shared/views/App'
 
 window['React'] = React
@@ -17,7 +18,12 @@ export const ReactDOMServer = ReactDOMServerExport
 
 async function start() {
   await startMapKit()
-  hydrate(<App />, document.getElementById('root'))
+
+  if (window['__OVERMIND_MUTATIONS']) {
+    hydrate(<App />, document.getElementById('root'))
+  } else {
+    render(<App />, document.getElementById('root'))
+  }
 }
 
 if (!window['IS_SSR_RENDERING']) {
