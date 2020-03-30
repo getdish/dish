@@ -1,4 +1,5 @@
 import { EffectCallback, RefObject, useEffect, useRef } from 'react'
+
 import { useGet } from './useGet'
 
 export function useMutationObserver<T extends RefObject<HTMLElement>>(

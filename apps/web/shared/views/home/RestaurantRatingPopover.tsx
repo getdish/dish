@@ -1,7 +1,6 @@
+import { Restaurant, Review } from '@dish/models'
 import React, { memo, useRef, useState } from 'react'
 import { ScrollView, TextInput, TouchableOpacity } from 'react-native'
-
-import { Restaurant, Review } from '@dish/models'
 
 import { useOvermind } from '../../state/om'
 import { Icon } from '../shared/Icon'

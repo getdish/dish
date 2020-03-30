@@ -1,7 +1,7 @@
+import { Restaurant, Scrape } from '@dish/models'
 import test from 'ava'
 
 import { UberEats } from '../src/ubereats/UberEats'
-import { Restaurant, Scrape } from '@dish/models'
 
 const ID = '03b6b762-fc01-4547-a81f-87bb7af42c6a'
 

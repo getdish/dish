@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { getRepository } from 'typeorm'
 
 import { User } from '../models/User'

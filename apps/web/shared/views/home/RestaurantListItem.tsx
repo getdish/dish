@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react'
-import { Image, Text, TouchableOpacity } from 'react-native'
 import { Restaurant } from '@dish/models'
-import { HStack, VStack } from '../shared/Stacks'
-import { Spacer } from '../shared/Spacer'
-import { Link } from '../shared/Link'
+import React, { useEffect, useState } from 'react'
+import { Image, Text, TouchableOpacity } from 'react-native'
+
 import { useOvermind } from '../../state/om'
+import { Divider } from '../shared/Divider'
+import { Link } from '../shared/Link'
+import { Spacer } from '../shared/Spacer'
+import { HStack, VStack } from '../shared/Stacks'
 import { RankingView } from './RankingView'
-import { RestaurantRatingPopover } from './RestaurantRatingPopover'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantMetaRow } from './RestaurantMetaRow'
-import { Divider } from '../shared/Divider'
-import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantRatingDetail } from './RestaurantRatingDetail'
+import { RestaurantRatingPopover } from './RestaurantRatingPopover'
+import { RestaurantTagsRow } from './RestaurantTagsRow'
 
 export const RestaurantListItem = ({
   restaurant,

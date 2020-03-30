@@ -1,3 +1,12 @@
+import {
+  FetchResult,
+  gql,
+  useApolloClient,
+  useQuery,
+  useSubscription,
+} from '@apollo/client'
+import { Taxonomy, TaxonomyRecord, TaxonomyType } from '@dish/models'
+import { Ionicons } from '@expo/vector-icons'
 import React, { useEffect, useState } from 'react'
 import {
   Button,
@@ -8,16 +17,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-
-import {
-  FetchResult,
-  gql,
-  useApolloClient,
-  useQuery,
-  useSubscription,
-} from '@apollo/client'
-import { Taxonomy, TaxonomyRecord, TaxonomyType } from '@dish/models'
-import { Ionicons } from '@expo/vector-icons'
 
 import { HStack, VStack } from '../shared/Stacks'
 import Tappable from '../shared/Tappable'

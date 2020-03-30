@@ -1,11 +1,12 @@
-import * as extensions from '../extensions'
 import {
-  TypeData,
-  ScalarType,
-  FieldsType,
   EnumType,
+  FieldsType,
   FieldsTypeArg,
+  ScalarType,
+  TypeData,
 } from 'gqless'
+
+import * as extensions from '../extensions'
 
 type Extension<TName extends string> = TName extends keyof typeof extensions
   ? typeof extensions[TName]

@@ -1,7 +1,6 @@
-import { sentryException } from '@dish/common'
-
 import os from 'os'
 
+import { sentryException } from '@dish/common'
 import { getBullQueue } from '@dish/worker'
 
 import { klass_map } from './job_processor'

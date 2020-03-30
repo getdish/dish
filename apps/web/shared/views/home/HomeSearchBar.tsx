@@ -1,18 +1,18 @@
-import React, { memo, useState, useEffect } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import {
+  StyleSheet,
   Text,
-  View,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
+  View,
 } from 'react-native'
 
 import { useOvermind } from '../../state/om'
-import { ZStack, HStack, VStack } from '../shared/Stacks'
-import { Spacer } from '../shared/Spacer'
 import { Icon } from '../shared/Icon'
-import { DishLogoButton } from './DishLogoButton'
+import { Spacer } from '../shared/Spacer'
+import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { CloseButton } from './CloseButton'
+import { DishLogoButton } from './DishLogoButton'
 
 const styles = StyleSheet.create({
   container: {

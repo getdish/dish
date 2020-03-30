@@ -1,14 +1,14 @@
+import * as bcrypt from 'bcryptjs'
+import { IsNotEmpty, Length } from 'class-validator'
 import {
+  Column,
+  CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
-  Column,
   Unique,
-  CreateDateColumn,
   UpdateDateColumn,
   getRepository,
 } from 'typeorm'
-import { Length, IsNotEmpty } from 'class-validator'
-import * as bcrypt from 'bcryptjs'
 
 const DEFAULT_PASSWORD = 'password'
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || DEFAULT_PASSWORD

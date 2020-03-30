@@ -1,5 +1,6 @@
 import React from 'react'
 import { Image } from 'react-native'
+
 import { LinkButton } from '../shared/Link'
 
 export const DishLogoButton = () => {

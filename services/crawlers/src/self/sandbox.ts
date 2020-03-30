@@ -1,4 +1,5 @@
 import { Restaurant } from '@dish/models'
+
 import { Self } from './Self'
 
 const name = 'Boulevard, California'

@@ -1,7 +1,6 @@
-import { Action, AsyncAction } from 'overmind'
-
 import auth from '@dish/auth'
 import { User } from '@dish/models'
+import { Action, AsyncAction } from 'overmind'
 
 import { Toast } from '../views/shared/Toast'
 

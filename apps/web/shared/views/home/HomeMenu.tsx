@@ -1,5 +1,6 @@
 import React, { memo } from 'react'
-import { ScrollView, View, Text } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
+
 import { useOvermind } from '../../state/om'
 import { LinkButton } from '../shared/Link'
 

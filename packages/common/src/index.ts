@@ -2,10 +2,10 @@
 // Async prevents ENV being loaded *before* the rest of the code.
 import './load_env'
 
+import * as Sentry from '@sentry/node'
+
 // export common-web
 export * from '@dish/common-web'
-
-import * as Sentry from '@sentry/node'
 
 Sentry.init({
   dsn: 'https://2246891d480e4584a0d1fe1c1c09df7b@sentry.k8s.dishapp.com/2',

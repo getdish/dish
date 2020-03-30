@@ -1,12 +1,13 @@
-import React, { useState, memo } from 'react'
-import { Text } from 'react-native'
 import { Restaurant } from '@dish/models'
+import React, { memo, useState } from 'react'
+import { Text } from 'react-native'
+
+import { Popover } from '../shared/Popover'
+import { SmallTitle } from '../shared/SmallTitle'
+import { Tooltip } from '../shared/Stack/Tooltip'
 import { VStack } from '../shared/Stacks'
 import { RatingView } from './RatingView'
-import { Popover } from '../shared/Popover'
-import { Tooltip } from '../shared/Stack/Tooltip'
-import { SmallTitle } from '../shared/SmallTitle'
-import { TableRow, TableCell } from './TableRow'
+import { TableCell, TableRow } from './TableRow'
 
 export const RestaurantRatingDetail = memo(
   ({

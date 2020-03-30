@@ -1,6 +1,5 @@
-import { RefObject, useEffect, useMemo, useRef, useState } from 'react'
-
 import { isEqual } from '@o/fast-compare'
+import { RefObject, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useResizeObserver } from './useResizeObserver'
 import { useThrottledFn } from './useThrottleFn'

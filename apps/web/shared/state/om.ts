@@ -1,16 +1,16 @@
 import {
-  IConfig,
-  createOvermind,
   Action,
+  IConfig,
   OnInitialize,
+  createOvermind,
   rehydrate,
 } from 'overmind'
 import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/config'
 
+import * as auth from './auth'
 import * as dishes from './dishes'
 import * as home from './home'
-import * as auth from './auth'
 import * as router from './router'
 
 const setShowSidebar: Action<boolean> = (om, val) => {

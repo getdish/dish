@@ -1,11 +1,11 @@
-import _ from 'lodash'
 import axios from 'axios'
+import { EnumType } from 'json-to-graphql-query'
+import _ from 'lodash'
 
-import { ModelBase, Point, isBrowserProd } from './ModelBase'
 import { Dish } from './Dish'
+import { ModelBase, Point, isBrowserProd } from './ModelBase'
 import { Scrape } from './Scrape'
 import { Taxonomy } from './Taxonomy'
-import { EnumType } from 'json-to-graphql-query'
 import { levenshteinDistance } from './utils'
 
 let SEARCH_DOMAIN: string

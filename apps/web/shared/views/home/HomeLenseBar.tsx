@@ -1,11 +1,12 @@
+import { LinearGradient } from 'expo-linear-gradient'
 import React, { memo, useMemo } from 'react'
-import { Text, ScrollView, StyleSheet } from 'react-native'
+import { ScrollView, StyleSheet, Text } from 'react-native'
+
 import { useOvermind } from '../../state/om'
-import { Spacer } from '../shared/Spacer'
-import { VStack, HStack, ZStack } from '../shared/Stacks'
 import { Taxonomy } from '../../state/Taxonomy'
 import { LinkButton } from '../shared/Link'
-import { LinearGradient } from 'expo-linear-gradient'
+import { Spacer } from '../shared/Spacer'
+import { HStack, VStack, ZStack } from '../shared/Stacks'
 import HomeFilterBar from './HomeFilterBar'
 
 export default memo(function HomeLenseBar(props: {

@@ -1,15 +1,16 @@
 import { useState } from 'react'
-import { LinkButton } from '../shared/Link'
-import { Popover } from '../shared/Popover'
-import { Tooltip } from '../shared/Stack/Tooltip'
+import React, { memo } from 'react'
+import { Text } from 'react-native'
+
 import { AuthLoginRegisterView } from '../auth/AuthLoginRegisterView'
 import { Icon } from '../shared/Icon'
-import React, { memo } from 'react'
+import { LinkButton } from '../shared/Link'
+import { Popover } from '../shared/Popover'
 import { Spacer } from '../shared/Spacer'
-import { VStack, ZStack, HStack } from '../shared/Stacks'
-import { useHomeDrawerWidth } from './useHomeDrawerWidth'
-import { Text } from 'react-native'
+import { Tooltip } from '../shared/Stack/Tooltip'
+import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { flatButtonStyle } from './HomeViewTopDishes'
+import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 export const HomeControlsOverlay = memo(() => {
   const drawerWidth = useHomeDrawerWidth()

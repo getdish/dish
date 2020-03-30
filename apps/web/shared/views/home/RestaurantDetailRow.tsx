@@ -1,7 +1,8 @@
-import React from 'react'
-import { Text, StyleSheet } from 'react-native'
 import { Restaurant } from '@dish/models'
-import { HStack, VStack, StackBaseProps } from '../shared/Stacks'
+import React from 'react'
+import { StyleSheet, Text } from 'react-native'
+
+import { HStack, StackBaseProps, VStack } from '../shared/Stacks'
 
 export const RestaurantDetailRow = ({
   restaurant,

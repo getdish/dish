@@ -1,7 +1,7 @@
+import { User } from '@dish/models'
 import anyTest, { TestInterface } from 'ava'
 
 import auth from '../src/index'
-import { User } from '@dish/models'
 
 interface Context {}
 

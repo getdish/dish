@@ -1,6 +1,6 @@
+import { Scrape } from '@dish/models'
 import test from 'ava'
 
-import { Scrape } from '@dish/models'
 import { Infatuated } from '../src/infatuated/Infatuated'
 
 const ID = '438'

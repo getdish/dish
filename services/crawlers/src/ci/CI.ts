@@ -1,8 +1,7 @@
 import '@dish/common'
 
-import { QueueOptions, JobOptions } from 'bull'
-
 import { WorkerJob } from '@dish/worker'
+import { JobOptions, QueueOptions } from 'bull'
 
 export class CI extends WorkerJob {
   static queue_config: QueueOptions = {

@@ -1,5 +1,6 @@
 import { Client, QueryFetcher } from 'gqless'
-import { schema, query_root } from './generated'
+
+import { query_root, schema } from './generated'
 
 const endpoint = 'https://hasura.rio.dishapp.com/v1/graphql'
 

@@ -1,6 +1,7 @@
+import { Restaurant } from '@dish/models'
 import React, { forwardRef } from 'react'
 import { Text } from 'react-native'
-import { Restaurant } from '@dish/models'
+
 import { VStack } from '../shared/Stacks'
 
 export const RatingView = forwardRef(

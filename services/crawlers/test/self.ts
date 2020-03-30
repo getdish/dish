@@ -1,7 +1,7 @@
-import anyTest, { TestInterface, ExecutionContext } from 'ava'
+import { Restaurant, Scrape } from '@dish/models'
+import anyTest, { ExecutionContext, TestInterface } from 'ava'
 
 import { Self } from '../src/self/Self'
-import { Restaurant, Scrape } from '@dish/models'
 
 interface Context {
   restaurant: Restaurant

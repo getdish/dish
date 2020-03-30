@@ -1,15 +1,13 @@
 import '@dish/common'
 
-import _ from 'lodash'
-import axios_base, { AxiosResponse } from 'axios'
-import { QueueOptions, JobOptions } from 'bull'
-
+import { Restaurant, Scrape } from '@dish/models'
 import { WorkerJob } from '@dish/worker'
-import { Scrape, Restaurant } from '@dish/models'
-
-import categories from './categories.json'
+import axios_base, { AxiosResponse } from 'axios'
+import { JobOptions, QueueOptions } from 'bull'
+import _ from 'lodash'
 
 import { aroundCoords, geocode } from '../utils'
+import categories from './categories.json'
 
 const UBEREATS_DOMAIN =
   process.env.UBEREATS_PROXY || 'https://www.ubereats.com/'

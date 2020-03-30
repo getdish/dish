@@ -1,15 +1,16 @@
 import React, {
-  useLayoutEffect,
   createContext,
-  useMemo,
+  useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
+  useMemo,
   useState,
-  useCallback,
 } from 'react'
-import { useOvermind } from '../../state/om'
-import { HistoryItem, routes, routePathToName } from '../../state/router'
 import { View } from 'react-native'
+
+import { useOvermind } from '../../state/om'
+import { HistoryItem, routePathToName, routes } from '../../state/router'
 
 const RouteContext = createContext<(name: string, showing: boolean) => void>(
   null
