@@ -77,7 +77,7 @@ const HomeMap = memo(() => {
 
     map.addEventListener('region-change-end', (e) => {
       console.log('region-change-end', e, map)
-      const radius = map.region.span.latitudeDelta * 10
+      const radius = map.region.span.latitudeDelta * 100
       console.log('radis', radius)
       om.actions.home.setMapArea({
         center: {
