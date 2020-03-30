@@ -35,6 +35,14 @@ export type TopDish = {
   top_restaurants: Partial<Restaurant>[]
 }
 
+export type RestaurantSearchArgs = {
+  lat: number
+  lng: number
+  radius: number
+  query: string
+  tags: string[]
+}
+
 export class Restaurant extends ModelBase<Restaurant> {
   name!: string
   slug!: string
@@ -166,24 +174,24 @@ export class Restaurant extends ModelBase<Restaurant> {
     )
   }
 
-  static async search(
-    lat: number,
-    lng: number,
-    distance: number,
-    search_query: string,
-    tags: string[] = []
-  ): Promise<Restaurant[]> {
+  static async search({
+    lat,
+    lng,
+    radius,
+    query,
+    tags = [],
+  }: RestaurantSearchArgs): Promise<Restaurant[]> {
     const params = [
-      'query=' + search_query,
+      'query=' + query,
       'lon=' + lng,
       'lat=' + lat,
-      'distance=' + distance,
+      'distance=' + radius,
       'limit=25',
       'tags=' + tags.map((t) => t.toLowerCase().trim()).join(','),
     ]
-    const response = await axios.get(
-      SEARCH_DOMAIN + '/search?' + params.join('&')
-    )
+    const url = SEARCH_DOMAIN + '/search?' + params.join('&')
+    console.log('searching', url)
+    const response = await axios.get(url)
     return response.data.map(
       (data: Partial<Restaurant>) => new Restaurant(data)
     )

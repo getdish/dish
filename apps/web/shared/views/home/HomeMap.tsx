@@ -4,6 +4,7 @@ import React, { memo, useEffect, useMemo, useState } from 'react'
 import { useDebounceValue } from '../../hooks/useDebounce'
 import { useOvermind } from '../../state/om'
 import { Map, useMap } from '../map'
+import { createCoordinateSpan } from '../map/utils'
 import { mapkit } from '../mapkit'
 import { ZStack } from '../shared/Stacks'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
@@ -31,7 +32,7 @@ const HomeMap = memo(() => {
   const om = useOvermind()
   const drawerWidth = useHomeDrawerWidth()
   const state = om.state.home.currentState
-  const { center, span } = state
+  const { center, radius } = state
   const {
     map,
     mapProps,
@@ -39,7 +40,13 @@ const HomeMap = memo(() => {
     // setCenter,
     // setVisibleMapRect,
   } = useMap({
-    center: [center.lat, center.lng],
+    // center: [, center.lng],
+    region: {
+      latitude: center.lat,
+      longitude: center.lng,
+      latitudeSpan: radius,
+      longitudeSpan: radius,
+    },
     showsZoomControl: false,
     showsMapTypeControl: false,
     isZoomEnabled: true,
@@ -64,7 +71,7 @@ const HomeMap = memo(() => {
     centerMapToRegion({
       map,
       location: [center.lng, center.lat],
-      span: span,
+      span: radius,
     })
 
     map.addEventListener('select', (e) => {
@@ -77,8 +84,8 @@ const HomeMap = memo(() => {
 
     map.addEventListener('region-change-end', (e) => {
       console.log('region-change-end', e, map)
-      const radius = map.region.span.latitudeDelta * 100
-      console.log('radis', radius)
+      const radius = map.region.span.latitudeDelta
+      console.log('setting to', radius, om.state.home.currentState.radius)
       om.actions.home.setMapArea({
         center: {
           lng: map.center.longitude,
@@ -211,7 +218,18 @@ const HomeMap = memo(() => {
     }
     map.addEventListener('select', cb)
     cancels.add(() => map.removeEventListener('select', cb))
-    map.showItems(annotations, { animate: true })
+
+    // map.showAnnotations(annotations)
+    console.log('render annotations')
+    for (const annotation of annotations) {
+      map.addAnnotation(annotation)
+    }
+
+    // map.showItems(annotations, {
+    //   animate: false,
+    //   minimumSpan: createCoordinateSpan(radius, radius),
+    // })
+
     return () => {
       cancels.forEach((x) => x())
       map.removeAnnotations(annotations)

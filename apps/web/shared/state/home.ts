@@ -1,4 +1,4 @@
-import { Restaurant, Review, TopDish } from '@dish/models'
+import { Restaurant, RestaurantSearchArgs, Review, TopDish } from '@dish/models'
 import _ from 'lodash'
 import { Action, AsyncAction, Derive } from 'overmind'
 
@@ -170,7 +170,6 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
         ...currentBaseState,
       } as HomeStateItemSearch
       fetchData = () => {
-        console.log('what is', lastSearchState)
         if (lastSearchState?.searchQuery !== item.params.query) {
           om.actions.home.runSearch(item.params.query)
         }
@@ -303,12 +302,26 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
 }
 
 let runSearchId = 0
+let lastSearchKey = ''
 const runSearch: AsyncAction<string> = async (om, query: string) => {
   runSearchId = Math.random()
   let curId = runSearchId
   let state = om.state.home.currentState
 
   if (state.type != 'search') return
+
+  const tags = _.uniq([...state.filters.map((f) => f.name)])
+  const searchArgs: RestaurantSearchArgs = {
+    lat: state.center.lat,
+    lng: state.center.lng,
+    radius: state.radius,
+    query,
+    tags,
+  }
+  const searchKey = JSON.stringify(searchArgs)
+  // simple prevent duplicate searches
+  if (searchKey === lastSearchKey) return
+  lastSearchKey = searchKey
 
   state.searchQuery = query
   state.results = { status: 'loading' }
@@ -319,15 +332,8 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
   if (runSearchId != curId) return
 
   if (state.type != 'search') return
-  const tags = _.uniq([...state.filters.map((f) => f.name)])
 
-  const restaurants = await Restaurant.search(
-    om.state.home.currentState.center.lat,
-    om.state.home.currentState.center.lng,
-    om.state.home.currentState.radius,
-    query,
-    tags
-  )
+  const restaurants = await Restaurant.search(searchArgs)
 
   state = om.state.home.currentState
   if (state.type != 'search') return
@@ -418,6 +424,7 @@ const suggestTags: AsyncAction<string> = async (om, tags) => {
 const setMapArea: Action<{ center: LngLat; radius: number }> = (om, val) => {
   om.state.home.currentState.center = val.center
   om.state.home.currentState.radius = val.radius
+  om.actions.home.runSearch(om.state.home.currentState.searchQuery)
 }
 
 export const actions = {
