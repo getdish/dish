@@ -1,24 +1,18 @@
-import React, { useEffect, memo } from 'react'
+import React, { useEffect } from 'react'
 import { Image, Text, ScrollView } from 'react-native'
 
 import { useOvermind } from '../../state/om'
-import top_dish_images from '../../assets/topdishes.json'
 import { Spacer } from '../shared/Spacer'
-import { Link, LinkButton } from '../shared/Link'
-import { HStack, VStack, ZStack, StackBaseProps } from '../shared/Stacks'
-import { SmallTitle, Title } from '../shared/SmallTitle'
+import { LinkButton } from '../shared/Link'
+import { HStack, VStack, StackBaseProps } from '../shared/Stacks'
+import { Title } from '../shared/SmallTitle'
 import HomeLenseBar from './HomeLenseBar'
-import {
-  HomeStateItem,
-  HomeStateItemHome,
-  HomeStateItemSimple,
-} from '../../state/home'
+import { HomeStateItemHome, HomeStateItemSimple } from '../../state/home'
 import { RankingView } from './RankingView'
 import { slugify } from '../../helpers/slugify'
 import { SuperScriptText } from './TagButton'
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import _ from 'lodash'
-import HomeFilterBar from './HomeFilterBar'
 
 export default memoIsEqualDeep(function HomeViewTopDishes({
   state,
@@ -58,35 +52,37 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
     return (
       <ScrollView style={{ flex: 1 }}>
         <VStack paddingVertical={20} paddingTop={20 + 100}>
-          {[0, 1, 2, 3, 4, 5, 6, 7].map((x) => (
-            <VStack key={x} paddingBottom={30}>
+          {top_dishes.map((country, index) => (
+            <VStack key={country.country} paddingBottom={30}>
               <HStack paddingHorizontal={20} marginVertical={-6}>
                 <HStack flex={1}>
-                  <RankingView rank={x + 1} />
+                  <RankingView rank={index + 1} />
                   <LinkButton
                     {...flatButtonStyle}
                     marginVertical={-5}
                     name="search"
-                    params={{ query: 'Korean' }}
+                    params={{ query: country.country }}
                   >
                     <Text
                       numberOfLines={1}
                       style={{ fontSize: 24, fontWeight: '600' }}
                     >
-                      Korean
+                      {country.country}
                     </Text>
                   </LinkButton>
                 </HStack>
                 <Spacer flex />
-                <Text style={{ fontSize: 36, marginVertical: -10 }}>🇰🇷</Text>
+                <Text style={{ fontSize: 36, marginVertical: -10 }}>
+                  {country.icon}
+                </Text>
               </HStack>
 
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <HStack height={170} padding={20} paddingHorizontal={18}>
-                  {top_dishes.slice(0, 5).map((top_dish) => {
+                  {(country.dishes || []).slice(0, 5).map((top_dish) => {
                     return (
                       <LinkButton
-                        key={top_dish.dish}
+                        key={top_dish.name}
                         style={{
                           // flexDirection: 'row',
                           alignItems: 'center',
@@ -96,11 +92,30 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
                         }}
                         name="search"
                         params={{
-                          query: top_dish.dish,
+                          query: top_dish.name,
                         }}
                       >
                         <VStack width={100} height={100} paddingHorizontal={5}>
-                          {getImageForDish(top_dish.dish)}
+                          <VStack
+                            shadowColor="rgba(0,0,0,0.2)"
+                            shadowRadius={6}
+                            shadowOffset={{ width: 0, height: 2 }}
+                            width="100%"
+                            height="100%"
+                            borderRadius={35}
+                            overflow="hidden"
+                            hoverStyle={{
+                              shadowRadius: 14,
+                              shadowColor: 'rgba(0,0,0,0.35)',
+                              zIndex: 10000,
+                            }}
+                          >
+                            <Image
+                              source={{ uri: top_dish.image }}
+                              style={{ width: '100%', height: '100%' }}
+                              resizeMode="cover"
+                            />
+                          </VStack>
                         </VStack>
                         <Spacer />
                         <VStack maxWidth="100%" overflow="hidden">
@@ -114,7 +129,7 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
                               opacity: 0.7,
                             }}
                           >
-                            {top_dish.dish}
+                            {top_dish.name}
                           </Text>
                         </VStack>
                       </LinkButton>
@@ -125,22 +140,18 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
 
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <HStack padding={10} paddingHorizontal={30}>
-                  {[
-                    'Pancho Villa Taqueria',
-                    'La Taqueria',
-                    'El Farolito',
-                    'Tacos el Patron',
-                  ].map((name, index) => (
+                  {country.top_restaurants.map((restaurant, index) => (
                     <LinkButton
-                      key={name}
+                      key={restaurant.name}
                       name="restaurant"
-                      params={{ slug: slugify(name) }}
+                      params={{ slug: restaurant.slug }}
                       {...flatButtonStyle}
                       marginRight={18}
                     >
                       <Text style={{ fontSize: 14 }}>
                         <SuperScriptText>#</SuperScriptText>
-                        {index + 1}. {name}
+                        {index + 1}. {restaurant.name}{' '}
+                        {restaurant.rating.toFixed(1)}⭐
                       </Text>
                     </LinkButton>
                   ))}
@@ -153,42 +164,6 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
     )
   }
 )
-
-const getImageForDish = (dish: string) => {
-  let image: string
-  for (const item of top_dish_images) {
-    if (item.name == `"${dish}"`) {
-      if (item.image != null) {
-        image = item.image
-      } else {
-        image =
-          'data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=='
-      }
-    }
-  }
-  return (
-    <VStack
-      shadowColor="rgba(0,0,0,0.2)"
-      shadowRadius={6}
-      shadowOffset={{ width: 0, height: 2 }}
-      width="100%"
-      height="100%"
-      borderRadius={35}
-      overflow="hidden"
-      hoverStyle={{
-        shadowRadius: 14,
-        shadowColor: 'rgba(0,0,0,0.35)',
-        zIndex: 10000,
-      }}
-    >
-      <Image
-        source={{ uri: image }}
-        style={{ width: '100%', height: '100%' }}
-        resizeMode="cover"
-      />
-    </VStack>
-  )
-}
 
 export const flatButtonStyle: StackBaseProps = {
   paddingVertical: 5,

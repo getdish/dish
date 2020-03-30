@@ -23,6 +23,18 @@ if (isNode) {
   }
 }
 
+export type TopDish = {
+  country: string
+  icon: string
+  frequency: number
+  avg_rating: number
+  dishes: {
+    name: string
+    image: string
+  }[]
+  top_restaurants: Partial<Restaurant>[]
+}
+
 export class Restaurant extends ModelBase<Restaurant> {
   name!: string
   slug!: string
@@ -169,10 +181,24 @@ export class Restaurant extends ModelBase<Restaurant> {
       'limit=25',
       'tags=' + tags.map((t) => t.toLowerCase().trim()).join(','),
     ]
-    const response = await axios.get(SEARCH_DOMAIN + '?' + params.join('&'))
+    const response = await axios.get(
+      SEARCH_DOMAIN + '/search?' + params.join('&')
+    )
     return response.data.map(
       (data: Partial<Restaurant>) => new Restaurant(data)
     )
+  }
+
+  static async getHomeDishes(
+    lat: number,
+    lng: number,
+    distance: number
+  ): Promise<TopDish[]> {
+    const params = ['lon=' + lng, 'lat=' + lat, 'distance=' + distance]
+    const response = await axios.get(
+      SEARCH_DOMAIN + '/top_dishes?' + params.join('&')
+    )
+    return response.data
   }
 
   async getLatestScrape(source: string) {

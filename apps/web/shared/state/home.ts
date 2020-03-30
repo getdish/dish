@@ -1,4 +1,4 @@
-import { ModelBase, Restaurant, Review } from '@dish/models'
+import { Restaurant, Review, TopDish } from '@dish/models'
 import { Action, AsyncAction, Derive } from 'overmind'
 import _ from 'lodash'
 import { HistoryItem } from './router'
@@ -7,11 +7,6 @@ import { sleep } from '../helpers/sleep'
 import { query } from '../../src/graphql'
 
 type LngLat = { lng: number; lat: number }
-
-type TopDish = {
-  dish: string
-  frequency: number
-}
 
 export type SearchResults =
   | { status: 'loading' }
@@ -256,44 +251,11 @@ const getUserReviews: AsyncAction<string> = async (om, user_id: string) => {
 }
 
 const loadHomeDishes: AsyncAction = async (om) => {
-  const query = {
-    query: {
-      top_dishes: {
-        __args: {
-          args: {
-            lon: om.state.home.currentState.center.lng,
-            lat: om.state.home.currentState.center.lat,
-            radius: RADIUS,
-          },
-        },
-        dish: true,
-        frequency: true,
-      },
-    },
-  }
-  const response = await ModelBase.hasura(query)
-  console.log('set top dishes')
-  om.state.home.lastHomeState.top_dishes = response.data.data.top_dishes
-}
-
-const getAllTopDishes: AsyncAction = async (om) => {
-  const query = {
-    query: {
-      top_dishes: {
-        __args: {
-          args: {
-            lon: om.state.home.currentState.center.lng,
-            lat: om.state.home.currentState.center.lat,
-            radius: RADIUS,
-          },
-        },
-        dish: true,
-        frequency: true,
-      },
-    },
-  }
-  const response = await ModelBase.hasura(query)
-  om.state.home.allTopDishes = response.data.data.top_dishes
+  om.state.home.lastHomeState.top_dishes = await Restaurant.getHomeDishes(
+    om.state.home.currentState.center.lat,
+    om.state.home.currentState.center.lng,
+    RADIUS
+  )
 }
 
 const DEBOUNCE_SEARCH = 230
@@ -472,5 +434,4 @@ export const actions = {
   _pushHomeState,
   _popHomeState,
   suggestTags,
-  getAllTopDishes,
 }
