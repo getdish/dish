@@ -7,7 +7,7 @@ import { StackBaseProps } from '../shared/Stacks'
 
 export function CloseButton({
   onPress,
-  size = 16,
+  size = 14,
   disabled,
   ...rest
 }: {

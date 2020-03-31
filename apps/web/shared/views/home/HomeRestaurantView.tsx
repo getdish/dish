@@ -1,12 +1,10 @@
 import React, { memo, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import {
-  Button,
   Image,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TextProps,
   View,
 } from 'react-native'
@@ -15,25 +13,19 @@ import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItem } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Divider } from '../shared/Divider'
-import { Icon } from '../shared/Icon'
 import { LinkButton } from '../shared/Link'
-import { Popover } from '../shared/Popover'
 import { ProgressCircle } from '../shared/ProgressCircle'
 import { SmallTitle } from '../shared/SmallTitle'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
-import { Tooltip } from '../shared/Tooltip'
 import { CloseButton } from './CloseButton'
-import { EmojiButton } from './EmojiButton'
-import { circularFlatButtonStyle, flatButtonStyle } from './HomeViewTopDishes'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
-import { FavoriteStar } from './RestaurantListItem'
+import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantMetaRow } from './RestaurantMetaRow'
 import { RestaurantRatingDetail } from './RestaurantRatingDetail'
-import { RestaurantRatingPopover } from './RestaurantRatingPopover'
+import { RestaurantTagButton } from './RestaurantTagButton'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
-import { TableCell, TableRow } from './TableRow'
-import { TagButton } from './TagButton'
+import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 
 export default memoIsEqualDeep(function HomeRestaurantView({
   state,
@@ -41,14 +33,10 @@ export default memoIsEqualDeep(function HomeRestaurantView({
   state: HomeStateItem
 }) {
   const om = useOvermind()
-  const [isRating, setIsRating] = useState(false)
-  if (state.type !== 'restaurant') {
-    return null
-  }
-  if (!state.restaurant) {
-    return null
-  }
+  if (state.type !== 'restaurant') return null
+  if (!state.restaurant) return null
   const restaurant = state.restaurant
+
   if (typeof restaurant.name == 'undefined') {
     return <Text>Loading...</Text>
   }
@@ -61,7 +49,7 @@ export default memoIsEqualDeep(function HomeRestaurantView({
   return (
     <>
       <Helmet>
-        <title>Best plates at {restaurant.name}</title>
+        <title>Dish - {restaurant.name} has the best dishes.</title>
       </Helmet>
 
       <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
@@ -95,27 +83,26 @@ export default memoIsEqualDeep(function HomeRestaurantView({
       <ScrollView style={{ padding: 18, paddingTop: 16, flex: 1 }}>
         <VStack spacing="xl">
           <HStack alignItems="center" justifyContent="center">
-            {isCanTag ? <RestaurantTagButton /> : <Spacer size={24} />}
+            {isCanTag ? (
+              <RestaurantTagButton size="lg" restaurant={restaurant} />
+            ) : (
+              <Spacer size={24} />
+            )}
             <Spacer />
             <Divider flex />
             <RestaurantTagsRow size="lg" restaurant={restaurant} />
             <Divider flex />
             <Spacer />
-            <FavoriteStar restaurant={restaurant} size="lg" />
+            <RestaurantFavoriteStar restaurant={restaurant} size="lg" />
           </HStack>
 
           <VStack>
             <HStack alignItems="center">
               <RestaurantDetailRow centered restaurant={restaurant} flex={1} />
-
-              <RestaurantRatingPopover
-                isHovered={false}
-                restaurant={restaurant}
-              />
             </HStack>
           </VStack>
 
-          <VStack marginHorizontal={-18}>
+          <VStack marginTop={-8} marginHorizontal={-18}>
             <HStack
               alignItems="center"
               paddingHorizontal={10 + 18}
@@ -257,50 +244,12 @@ export default memoIsEqualDeep(function HomeRestaurantView({
                   'Bho Kho',
                   'Thit Kho',
                 ].map((dish, index) => (
-                  <VStack
-                    key={dish}
-                    alignItems="center"
-                    marginBottom={15 + 20}
-                    marginHorizontal={20 * 0.5}
-                  >
-                    <VStack
-                      marginVertical={-15}
-                      zIndex={100}
-                      backgroundColor="#fff"
-                      paddingVertical={7}
-                      paddingHorizontal={10}
-                      borderRadius={10}
-                      shadowColor="rgba(0,0,0,0.2)"
-                      shadowRadius={6}
-                    >
-                      <Text style={{ fontWeight: '600' }}>{dish}</Text>
-                    </VStack>
-                    <View
-                      style={{
-                        shadowColor: 'rgba(0,0,0,0.2)',
-                        shadowRadius: 10,
-                        borderRadius: 20,
-                        position: 'relative',
-                        overflow: 'hidden',
-                        width: index < 3 ? 170 : 90,
-                        height: index < 3 ? 170 : 90,
-                      }}
-                    >
-                      <Image
-                        source={{
-                          uri: restaurant.photos[index] ?? restaurant.image,
-                        }}
-                        style={{
-                          width: 170,
-                          height: 170,
-                          borderRadius: 20,
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                        }}
-                      />
-                    </View>
-                  </VStack>
+                  <DishCard
+                    key={index}
+                    name={dish}
+                    photo={restaurant.photos[index] ?? restaurant.image}
+                    size={index < 3 ? 'lg' : 'md'}
+                  />
                 ))}
               </HStack>
             </VStack>
@@ -338,79 +287,65 @@ export default memoIsEqualDeep(function HomeRestaurantView({
   )
 })
 
-const RestaurantTagButton = memo(() => {
-  const om = useOvermind()
-  const [isOpen, setIsOpen] = useState(false)
-  const [suggested_tags, setSuggestedTags] = useState('')
-  const state = om.state.home.currentState
-  if (state.type != 'restaurant') return
-  const restaurant = state.restaurant
-
+const DishCard = (props: {
+  name: string
+  photo: string
+  size: 'md' | 'lg'
+}) => {
+  const isLarge = props.size == 'lg'
+  const width = isLarge ? 175 : 100
+  const height = isLarge ? 160 : 80
+  const margin = isLarge ? 15 : 7
+  const borderRadius = isLarge ? 20 : 10
   return (
-    <Popover
-      position="right"
-      contents={
-        <Tooltip maxWidth={300}>
-          <Text
-            style={{
-              padding: 10,
-              paddingTop: 0,
-              textAlign: 'center',
-              width: '100%',
-            }}
-          >
-            Tag
-          </Text>
-          <HStack>
-            <TextInput
-              placeholder="Suggest tag"
-              numberOfLines={1}
-              style={styles.secondaryInput}
-              onChangeText={(t: string) => {
-                setSuggestedTags(t)
-              }}
-            />
-            <Button
-              title="Add"
-              onPress={async () => {
-                if (om.state.home.currentState.type != 'restaurant') return
-                await om.actions.home.suggestTags(suggested_tags)
-              }}
-            ></Button>
-          </HStack>
-          <HStack padding={10} flexWrap="wrap">
-            {restaurant.tags.map((t) => {
-              const name = t.taxonomy.name
-              return <TagButton key={name} name={name} />
-            })}
-          </HStack>
-          <Text
-            style={{
-              padding: 10,
-              textAlign: 'center',
-              width: '100%',
-            }}
-          >
-            Top tags
-          </Text>
-          <HStack padding={10} flexWrap="wrap">
-            {(om.state.home.lastHomeState.top_dishes ?? []).map((x) => (
-              <TagButton key={x.dish} name={x.dish} />
-            ))}
-          </HStack>
-        </Tooltip>
-      }
-      isOpen={isOpen}
-      onClickOutside={() => setIsOpen(false)}
+    <VStack
+      alignItems="center"
+      marginBottom={margin + 13}
+      marginHorizontal={margin * 0.5}
     >
-      <LinkButton onPress={() => setIsOpen(true)}>
-        <Icon size={26} name="tag" />
-      </LinkButton>
-    </Popover>
+      <VStack
+        marginVertical={-15}
+        zIndex={100}
+        backgroundColor="#fff"
+        paddingVertical={isLarge ? 7 : 5}
+        paddingHorizontal={isLarge ? 10 : 8}
+        borderRadius={10}
+        shadowColor="rgba(0,0,0,0.2)"
+        shadowRadius={isLarge ? 8 : 4}
+      >
+        <Text style={{ fontSize: isLarge ? 15 : 12, fontWeight: '600' }}>
+          {props.name}
+        </Text>
+      </VStack>
+      <View
+        style={{
+          shadowColor: 'rgba(0,0,0,0.2)',
+          shadowRadius: isLarge ? 8 : 5,
+          borderRadius,
+          position: 'relative',
+          overflow: 'hidden',
+          width,
+          height,
+        }}
+      >
+        <Image
+          source={{
+            uri: props.photo,
+          }}
+          style={{
+            width,
+            height,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+          }}
+        />
+      </View>
+    </VStack>
   )
-})
+}
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   secondaryInput: {
     backgroundColor: '#eee',
     color: '#999',

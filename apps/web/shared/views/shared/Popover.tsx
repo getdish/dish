@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react'
 import { Platform } from 'react-native'
 import PopoverWeb, { ArrowContainer } from 'react-tiny-popover'
 
@@ -16,10 +22,12 @@ export const Popover = (props: {
   children: React.ReactElement
   contents: React.ReactElement
   isOpen?: boolean
+  overlay?: boolean
   onClickOutside?: Function
 }) => {
   const forceShow = useContext(ForceShowPopover)
   const [isMounted, setIsMounted] = useState(false)
+  const isOpen = typeof forceShow == 'boolean' ? forceShow : !!props.isOpen
 
   useWaterfall(() => {
     setIsMounted(true)
@@ -34,6 +42,34 @@ export const Popover = (props: {
     }
   }, [])
 
+  if (Platform.OS == 'web') {
+    useLayoutEffect(() => {
+      if (props.overlay && isOpen) {
+        const node = document.querySelector('.react-tiny-popover-container')
+        if (node) {
+          const overlayDiv = document.createElement('div')
+          overlayDiv.style.background = 'rgba(0,0,0,0.1)'
+          overlayDiv.style.position = 'absolute'
+          overlayDiv.style.top = '0px'
+          overlayDiv.style.right = '0px'
+          overlayDiv.style.bottom = '0px'
+          overlayDiv.style.left = '0px'
+          overlayDiv.addEventListener('click', (e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            if (props.onClickOutside) {
+              props.onClickOutside()
+            }
+          })
+          node.parentNode.insertBefore(overlayDiv, node)
+          return () => {
+            node.parentNode.removeChild(overlayDiv)
+          }
+        }
+      }
+    }, [props.overlay, isOpen])
+  }
+
   if (!isMounted) {
     return props.children
   }
@@ -42,7 +78,7 @@ export const Popover = (props: {
     return (
       <PopoverWeb
         position={props.position}
-        isOpen={typeof forceShow == 'boolean' ? forceShow : !!props.isOpen}
+        isOpen={isOpen}
         padding={20}
         containerStyle={{
           overflow: 'visible',

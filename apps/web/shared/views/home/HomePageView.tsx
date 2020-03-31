@@ -19,6 +19,8 @@ import HomeSearchResultsView from './HomeSearchResultsView'
 import HomeViewTopDishes from './HomeViewTopDishes'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
+export const drawerBorderRadius = 55
+
 export const HomePage = () => {
   return (
     <ZStack top={0} left={0} right={0} bottom={0}>
@@ -52,7 +54,7 @@ function HomeViewDrawer(props: { children: any }) {
         {/* <BlurView /> */}
         <LinearGradient
           colors={[
-            'rgba(255,255,255,0.7)',
+            'rgba(255,255,255,0.6)',
             'rgba(255,255,255,0.8)',
             'rgba(255,255,255,1)',
             'rgba(255,255,255,1)',
@@ -66,7 +68,7 @@ function HomeViewDrawer(props: { children: any }) {
             'rgba(255,255,255,1)',
             'rgba(255,255,255,1)',
             'rgba(255,255,255,0.8)',
-            'rgba(255,255,255,0.7)',
+            'rgba(255,255,255,0.6)',
           ]}
           style={[StyleSheet.absoluteFill]}
         />
@@ -75,8 +77,6 @@ function HomeViewDrawer(props: { children: any }) {
     </VStack>
   )
 }
-
-export const drawerBorderRadius = 40
 
 const HomeViewContent = memo(function HomeViewContent() {
   const om = useOvermind()
@@ -228,7 +228,7 @@ function HomeStackViewItem({
               shadowColor: 'rgba(0,0,0,0.2)',
               shadowRadius: 4,
             })}
-            borderRadius={drawerBorderRadius / 2}
+            borderRadius={drawerBorderRadius / 3}
             pointerEvents="auto"
             overflow="hidden"
           >

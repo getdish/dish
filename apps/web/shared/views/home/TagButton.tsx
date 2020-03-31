@@ -12,7 +12,9 @@ export function TagButton({
   name: string
   size?: 'lg' | 'md'
 }) {
-  const scale = size == 'lg' ? 1.1 : 1
+  const scale = size == 'lg' ? 1.05 : 1
+  const paddingVertical = 1 * scale
+  const lineHeight = 22 * scale
   return (
     <HStack
       backgroundColor="purple"
@@ -30,11 +32,11 @@ export function TagButton({
           style={{
             fontSize: 13 * scale,
             fontWeight: 'bold',
-            paddingVertical: 1 * scale,
+            paddingVertical,
             paddingHorizontal: 8 * scale,
             backgroundColor: '#fff',
             height: '100%',
-            lineHeight: 23 * scale,
+            lineHeight,
           }}
         >
           <SuperScriptText style={{ opacity: 0.5 }}>#</SuperScriptText>
@@ -45,10 +47,10 @@ export function TagButton({
         style={{
           fontSize: 12 * scale,
           fontWeight: 'bold',
-          paddingVertical: 1 * scale,
+          paddingVertical,
           paddingHorizontal: 8 * scale,
           color: '#fff',
-          lineHeight: 23 * scale,
+          lineHeight,
         }}
       >
         {name}
