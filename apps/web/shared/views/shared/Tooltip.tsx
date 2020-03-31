@@ -11,6 +11,7 @@ export function Tooltip(props: StackBaseProps) {
       shadowColor="rgba(0,0,0,0.2)"
       shadowRadius={14}
       shadowOffset={{ width: 0, height: 2 }}
+      overflow="hidden"
       {...props}
     />
   )

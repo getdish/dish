@@ -4,7 +4,7 @@ import { Provider } from 'overmind-react'
 import React from 'react'
 
 import { om } from '../state/om'
-import { HomePage } from './home/HomePage'
+import { HomePage } from './home/HomePageView'
 import { PrivateRoute, Route, RouteSwitch } from './shared/Route'
 import { TaxonomyPage } from './taxonomy/TaxonomyPage'
 

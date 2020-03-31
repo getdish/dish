@@ -1,86 +1,88 @@
 import { Restaurant } from '@dish/models'
-import React from 'react'
+import React, { memo } from 'react'
 import { StyleSheet, Text } from 'react-native'
 
 import { HStack, StackBaseProps, VStack } from '../shared/Stacks'
 
-export const RestaurantDetailRow = ({
-  restaurant,
-  size,
-  centered,
-  ...rest
-}: StackBaseProps & {
-  size?: 'sm' | 'md'
-  restaurant: Restaurant
-  centered?: boolean
-}) => {
-  const [open_text, open_color, next_time] = openingHours(restaurant)
-  const [price_label, price_color, price_range] = priceRange(restaurant)
-  const isSm = size === 'sm'
-  return (
-    <HStack paddingLeft={22} paddingRight={20} {...rest}>
-      <VStack width="30%" paddingRight="5%">
-        <Text
-          numberOfLines={1}
-          style={{
-            textAlign: centered ? 'center' : 'left',
-            fontWeight: 'bold',
-            color: open_color,
-            marginBottom: 2,
-          }}
-        >
-          {open_text}
-        </Text>
-        <Text
-          numberOfLines={1}
-          style={[styles.subText, centered && { textAlign: 'center' }]}
-        >
-          {next_time}
-        </Text>
-      </VStack>
+export const RestaurantDetailRow = memo(
+  ({
+    restaurant,
+    size,
+    centered,
+    ...rest
+  }: StackBaseProps & {
+    size?: 'sm' | 'md'
+    restaurant: Restaurant
+    centered?: boolean
+  }) => {
+    const [open_text, open_color, next_time] = openingHours(restaurant)
+    const [price_label, price_color, price_range] = priceRange(restaurant)
+    const isSm = size === 'sm'
+    return (
+      <HStack paddingLeft={22} paddingRight={20} {...rest}>
+        <VStack width="30%" paddingRight="5%">
+          <Text
+            numberOfLines={1}
+            style={{
+              textAlign: centered ? 'center' : 'left',
+              fontWeight: 'bold',
+              color: open_color,
+              marginBottom: 2,
+            }}
+          >
+            {open_text}
+          </Text>
+          <Text
+            numberOfLines={1}
+            style={[styles.subText, centered && { textAlign: 'center' }]}
+          >
+            {next_time}
+          </Text>
+        </VStack>
 
-      <VStack width="33%" paddingHorizontal="5%">
-        <Text
-          numberOfLines={1}
-          style={{
-            textAlign: centered ? 'center' : 'left',
-            fontWeight: 'bold',
-            color: price_color,
-            marginBottom: 2,
-          }}
-        >
-          {price_label}
-        </Text>
-        <Text
-          numberOfLines={1}
-          style={[styles.subText, centered && { textAlign: 'center' }]}
-        >
-          {price_range}
-        </Text>
-      </VStack>
+        <VStack width="33%" paddingHorizontal="5%">
+          <Text
+            numberOfLines={1}
+            style={{
+              textAlign: centered ? 'center' : 'left',
+              fontWeight: 'bold',
+              color: price_color,
+              marginBottom: 2,
+            }}
+          >
+            {price_label}
+          </Text>
+          <Text
+            numberOfLines={1}
+            style={[styles.subText, centered && { textAlign: 'center' }]}
+          >
+            {price_range}
+          </Text>
+        </VStack>
 
-      <VStack width="33%" paddingHorizontal="5%">
-        <Text
-          numberOfLines={1}
-          style={{
-            textAlign: centered ? 'center' : 'left',
-            fontWeight: 'bold',
-            color: 'gray',
-            marginBottom: 2,
-          }}
-        >
-          Delivers
-        </Text>
-        <Text
-          numberOfLines={1}
-          style={[styles.subText, centered && { textAlign: 'center' }]}
-        >
-          Uber, PM, DD
-        </Text>
-      </VStack>
-    </HStack>
-  )
-}
+        <VStack width="33%" paddingHorizontal="5%">
+          <Text
+            numberOfLines={1}
+            style={{
+              textAlign: centered ? 'center' : 'left',
+              fontWeight: 'bold',
+              color: 'gray',
+              marginBottom: 2,
+            }}
+          >
+            Delivers
+          </Text>
+          <Text
+            numberOfLines={1}
+            style={[styles.subText, centered && { textAlign: 'center' }]}
+          >
+            Uber, PM, DD
+          </Text>
+        </VStack>
+      </HStack>
+    )
+  }
+)
 
 const styles = StyleSheet.create({
   subText: {

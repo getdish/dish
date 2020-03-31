@@ -34,7 +34,7 @@ export function Title(props: { children: any }) {
 
 export function SmallTitle(props: { children: any }) {
   return (
-    <VStack width="100%" alignItems="center" paddingVertical={4}>
+    <VStack width="100%" alignItems="center" paddingBottom={4}>
       <Text
         style={{
           textTransform: 'uppercase',

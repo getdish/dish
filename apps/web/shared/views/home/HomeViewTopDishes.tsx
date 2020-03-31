@@ -1,3 +1,4 @@
+import { TopDish } from '@dish/models'
 import _ from 'lodash'
 import React, { useEffect } from 'react'
 import { Helmet } from 'react-helmet'
@@ -17,34 +18,32 @@ import { SuperScriptText } from './TagButton'
 export default memoIsEqualDeep(function HomeViewTopDishes({
   state,
 }: {
-  state: HomeStateItemSimple
+  state: HomeStateItemHome
 }) {
   const om = useOvermind()
-
   if (state.type !== 'home') {
     return null
   }
-  const activeLense =
-    om.state.home.lastHomeState.lenses[om.state.home.lastHomeState.activeLense]
-
+  const activeLense = om.state.home.allLenses.find((x) =>
+    state.activeTaxonomyIds.some((y) => y == x.id)
+  )
   return (
     <>
       <Helmet>
         <title>Dish - Uniquely Good Food</title>
       </Helmet>
-      <Title>{activeLense.description}</Title>
+      <Title>{activeLense?.description ?? ''}</Title>
       <VStack position="relative" flex={1}>
-        <HomeLenseBar />
-        <HomeViewTopDishesContent state={state as any} />
+        <HomeLenseBar backgroundGradient />
+        <HomeViewTopDishesContent top_dishes={state.top_dishes} />
       </VStack>
     </>
   )
 })
 
 const HomeViewTopDishesContent = memoIsEqualDeep(
-  ({ state }: { state: HomeStateItemHome }) => {
+  ({ top_dishes = [] }: { top_dishes?: TopDish[] }) => {
     const om = useOvermind()
-    const { top_dishes = [] } = state
 
     console.log('RENDER HOME_TOP_DISHES', top_dishes)
 

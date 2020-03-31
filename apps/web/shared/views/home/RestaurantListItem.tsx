@@ -5,16 +5,16 @@ import { Image, Text, TouchableOpacity } from 'react-native'
 import { useOvermind } from '../../state/om'
 import { Divider } from '../shared/Divider'
 import Hoverable from '../shared/Hoverable'
-import { Icon } from '../shared/Icon'
 import { Link } from '../shared/Link'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { RankingView } from './RankingView'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
+import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantMetaRow } from './RestaurantMetaRow'
 import { RestaurantRatingDetail } from './RestaurantRatingDetail'
-import { RestaurantRatingPopover } from './RestaurantRatingPopover'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
+import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 
 export const RestaurantListItem = ({
   restaurant,
@@ -64,16 +64,20 @@ export const RestaurantListItem = ({
           backgroundColor={isHovered ? '#B8E0F322' : 'transparent'}
           position="relative"
         >
-          <ZStack fullscreen top={40} justifyContent="center">
-            <RestaurantRatingPopover
-              isHovered={isHovered}
-              restaurant={restaurant}
-            />
+          <ZStack
+            fullscreen
+            zIndex={100}
+            top={40}
+            justifyContent="center"
+            pointerEvents="none"
+            opacity={isHovered ? 1 : 0}
+          >
+            <RestaurantUpVoteDownVote restaurant={restaurant} />
           </ZStack>
 
           <VStack padding={18} paddingLeft={24} width="76%" maxWidth={525}>
             <Link name="restaurant" params={{ slug: restaurant.slug }}>
-              <HStack alignItems="center" marginVertical={-2}>
+              <HStack alignItems="center" marginVertical={-3}>
                 <RankingView rank={rank} />
                 <Text
                   style={{
@@ -89,15 +93,18 @@ export const RestaurantListItem = ({
 
             <Spacer />
 
-            <HStack alignItems="center" marginVertical={-10}>
+            <HStack alignItems="center" marginTop={-8}>
               <HStack alignItems="center" paddingLeft={18}>
-                <FavoriteStar isHovered={isHovered} restaurant={restaurant} />
+                <RestaurantFavoriteStar
+                  isHovered={isHovered}
+                  restaurant={restaurant}
+                />
                 <Spacer />
                 <RestaurantTagsRow showMore restaurant={restaurant} />
               </HStack>
             </HStack>
 
-            <Spacer />
+            <Spacer size="sm" />
 
             <HStack alignItems="center" paddingLeft={22}>
               <RestaurantMetaRow showMenu showAddress restaurant={restaurant} />
@@ -118,62 +125,37 @@ export const RestaurantListItem = ({
 
 export const RestaurantPeek = memo(
   ({ restaurant }: { restaurant: Restaurant }) => {
+    const spacing = 5
     const photos = Restaurant.allPhotos(restaurant).slice(0, 5)
     return (
-      <HStack flexWrap="wrap" maxWidth={120} spacing={10}>
+      <VStack
+        position="relative"
+        marginRight={-spacing}
+        marginBottom={-spacing}
+      >
         <VStack position="absolute" top={-11} left={-25} zIndex={100}>
           <RestaurantRatingDetail restaurant={restaurant} />
         </VStack>
-        {[...photos, photos[0], photos[0], photos[0]]
-          .slice(0, 4)
-          .map((photo, i) => {
-            return (
-              <Image
-                key={i}
-                source={{ uri: photo }}
-                style={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: 10,
-                  marginBottom: 10,
-                }}
-                resizeMode="cover"
-              />
-            )
-          })}
-      </HStack>
-    )
-  }
-)
-
-export const FavoriteStar = memo(
-  ({
-    size,
-    isHovered,
-    restaurant,
-  }: {
-    isHovered?: boolean
-    size?: 'lg' | 'sm'
-    restaurant: Restaurant
-  }) => {
-    const [isStarHovered, setIsHovered] = useState(false)
-    return (
-      <VStack opacity={isHovered ? 1 : 0.5}>
-        <Hoverable
-          onHoverIn={() => setIsHovered(true)}
-          onHoverOut={() => setIsHovered(false)}
-        >
-          <div style={{ filter: `grayscale(${isStarHovered ? 0 : 100}%)` }}>
-            <Icon
-              size={size == 'lg' ? 26 : 22}
-              name="thumbs-up"
-              color={isStarHovered ? 'goldenrod' : '#555'}
-            />
-          </div>
-        </Hoverable>
+        <HStack flexWrap="wrap" maxWidth={120} spacing={spacing}>
+          {[...photos, photos[0], photos[0], photos[0]]
+            .slice(0, 4)
+            .map((photo, i) => {
+              return (
+                <Image
+                  key={i}
+                  source={{ uri: photo }}
+                  style={{
+                    width: 55,
+                    height: 55,
+                    borderRadius: 10,
+                    marginBottom: spacing,
+                  }}
+                  resizeMode="cover"
+                />
+              )
+            })}
+        </HStack>
       </VStack>
     )
   }
 )
-
-// TODO hoverablebutton

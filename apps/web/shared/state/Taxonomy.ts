@@ -75,37 +75,37 @@ export const taxonomyLenses: Taxonomy[] = [
 
 export const taxonomyFilters: Taxonomy[] = [
   {
-    id: '0',
+    id: '01',
     name: '$',
     type: 'filter',
   },
   {
-    id: '2',
+    id: '21',
     name: '$$',
     type: 'filter',
   },
   {
-    id: '3',
+    id: '31',
     name: '$$$',
     type: 'filter',
   },
   {
-    id: '4',
+    id: '41',
     name: 'Open',
     type: 'filter',
   },
   {
-    id: '6',
+    id: '61',
     name: 'Delivers',
     type: 'filter',
   },
   {
-    id: '7',
+    id: '71',
     name: 'Healthy',
     type: 'filter',
   },
   {
-    id: '8',
+    id: '81',
     name: 'Quick',
     type: 'filter',
   },
