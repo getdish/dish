@@ -45,6 +45,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
         if (typeof spacing !== 'undefined') {
           const childArr = React.Children.toArray(children)
           spacedChildren = childArr
+            .filter((x) => !!x)
             .map((x, i) =>
               i === childArr.length - 1
                 ? x

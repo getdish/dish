@@ -116,50 +116,64 @@ export const RestaurantListItem = ({
   )
 }
 
-const RestaurantPeek = memo(({ restaurant }: { restaurant: Restaurant }) => {
-  const photos = Restaurant.allPhotos(restaurant).slice(0, 5)
-  return (
-    <HStack flexWrap="wrap" maxWidth={120} spacing={10}>
-      <VStack position="absolute" top={-11} left={-25} zIndex={100}>
-        <RestaurantRatingDetail restaurant={restaurant} />
-      </VStack>
-      {[...photos, photos[0], photos[0], photos[0]]
-        .slice(0, 4)
-        .map((photo, i) => {
-          return (
-            <Image
-              key={i}
-              source={{ uri: photo }}
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 10,
-                marginBottom: 10,
-              }}
-              resizeMode="cover"
-            />
-          )
-        })}
-    </HStack>
-  )
-})
+export const RestaurantPeek = memo(
+  ({ restaurant }: { restaurant: Restaurant }) => {
+    const photos = Restaurant.allPhotos(restaurant).slice(0, 5)
+    return (
+      <HStack flexWrap="wrap" maxWidth={120} spacing={10}>
+        <VStack position="absolute" top={-11} left={-25} zIndex={100}>
+          <RestaurantRatingDetail restaurant={restaurant} />
+        </VStack>
+        {[...photos, photos[0], photos[0], photos[0]]
+          .slice(0, 4)
+          .map((photo, i) => {
+            return (
+              <Image
+                key={i}
+                source={{ uri: photo }}
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 10,
+                  marginBottom: 10,
+                }}
+                resizeMode="cover"
+              />
+            )
+          })}
+      </HStack>
+    )
+  }
+)
 
-const FavoriteStar = memo((props: any) => {
-  const [isStarHovered, setIsHovered] = useState(false)
-  return (
-    <VStack opacity={props.isHovered ? 1 : 0.5}>
-      <Hoverable
-        onHoverIn={() => setIsHovered(true)}
-        onHoverOut={() => setIsHovered(false)}
-      >
-        <div style={{ filter: `grayscale(${isStarHovered ? 0 : 100}%)` }}>
-          <Icon
-            size={22}
-            name="star"
-            color={isStarHovered ? 'goldenrod' : '#555'}
-          />
-        </div>
-      </Hoverable>
-    </VStack>
-  )
-})
+export const FavoriteStar = memo(
+  ({
+    size,
+    isHovered,
+    restaurant,
+  }: {
+    isHovered?: boolean
+    size?: 'lg' | 'sm'
+    restaurant: Restaurant
+  }) => {
+    const [isStarHovered, setIsHovered] = useState(false)
+    return (
+      <VStack opacity={isHovered ? 1 : 0.5}>
+        <Hoverable
+          onHoverIn={() => setIsHovered(true)}
+          onHoverOut={() => setIsHovered(false)}
+        >
+          <div style={{ filter: `grayscale(${isStarHovered ? 0 : 100}%)` }}>
+            <Icon
+              size={size == 'lg' ? 26 : 22}
+              name="thumbs-up"
+              color={isStarHovered ? 'goldenrod' : '#555'}
+            />
+          </div>
+        </Hoverable>
+      </VStack>
+    )
+  }
+)
+
+// TODO hoverablebutton

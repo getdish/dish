@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 
-export type Spacing = 'sm' | 'md' | 'lg' | number | boolean
+export type Spacing = 'sm' | 'md' | 'lg' | 'xl' | number | boolean
 
 export function Spacer({
   size = 'md',
@@ -33,5 +33,7 @@ export const spaceToPx = (space: Spacing) => {
     ? 8
     : space == 'lg'
     ? 16
+    : space == 'xl'
+    ? 24
     : 12
 }
