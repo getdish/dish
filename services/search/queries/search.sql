@@ -31,7 +31,17 @@ SELECT jsonb_agg(
   ) FROM (
     SELECT *
     FROM restaurant
-    WHERE ST_DWithin(location, ST_MakePoint(?0, ?1), ?2)
+    WHERE (
+      (ST_DWithin(location, ST_MakePoint(?0, ?1), ?2) OR ?2 = '0')
+      AND
+      (
+        ST_Within(
+          location,
+          ST_MakeEnvelope(?6, ?7, ?8, ?9, 0)
+        )
+        OR ?10 = 'IGNORE BB'
+      )
+    )
     AND (
       (name ILIKE '%' || ?3 || '%' AND ?3 != '')
       OR
