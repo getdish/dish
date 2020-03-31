@@ -7,10 +7,12 @@ import { HStack, StackBaseProps, VStack } from '../shared/Stacks'
 export const RestaurantDetailRow = ({
   restaurant,
   size,
+  centered,
   ...rest
 }: StackBaseProps & {
   size?: 'sm' | 'md'
   restaurant: Restaurant
+  centered?: boolean
 }) => {
   const [open_text, open_color, next_time] = openingHours(restaurant)
   const [price_label, price_color, price_range] = priceRange(restaurant)
@@ -21,6 +23,7 @@ export const RestaurantDetailRow = ({
         <Text
           numberOfLines={1}
           style={{
+            textAlign: centered ? 'center' : 'left',
             fontWeight: 'bold',
             color: open_color,
             marginBottom: 2,
@@ -28,7 +31,10 @@ export const RestaurantDetailRow = ({
         >
           {open_text}
         </Text>
-        <Text numberOfLines={1} style={styles.subText}>
+        <Text
+          numberOfLines={1}
+          style={[styles.subText, centered && { textAlign: 'center' }]}
+        >
           {next_time}
         </Text>
       </VStack>
@@ -37,6 +43,7 @@ export const RestaurantDetailRow = ({
         <Text
           numberOfLines={1}
           style={{
+            textAlign: centered ? 'center' : 'left',
             fontWeight: 'bold',
             color: price_color,
             marginBottom: 2,
@@ -44,7 +51,10 @@ export const RestaurantDetailRow = ({
         >
           {price_label}
         </Text>
-        <Text numberOfLines={1} style={styles.subText}>
+        <Text
+          numberOfLines={1}
+          style={[styles.subText, centered && { textAlign: 'center' }]}
+        >
           {price_range}
         </Text>
       </VStack>
@@ -52,11 +62,19 @@ export const RestaurantDetailRow = ({
       <VStack width="33%" paddingHorizontal="5%">
         <Text
           numberOfLines={1}
-          style={{ fontWeight: 'bold', color: 'gray', marginBottom: 2 }}
+          style={{
+            textAlign: centered ? 'center' : 'left',
+            fontWeight: 'bold',
+            color: 'gray',
+            marginBottom: 2,
+          }}
         >
           Delivers
         </Text>
-        <Text numberOfLines={1} style={styles.subText}>
+        <Text
+          numberOfLines={1}
+          style={[styles.subText, centered && { textAlign: 'center' }]}
+        >
           Uber, PM, DD
         </Text>
       </VStack>
