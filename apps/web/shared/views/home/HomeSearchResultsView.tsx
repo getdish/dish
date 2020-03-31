@@ -8,8 +8,9 @@ import { useOvermind } from '../../state/om'
 import { closeAllPopovers, popoverCloseCbs } from '../shared/Popover'
 import { Title } from '../shared/SmallTitle'
 import { Spacer } from '../shared/Spacer'
-import { VStack } from '../shared/Stacks'
+import { VStack, ZStack } from '../shared/Stacks'
 import { useWaterfall } from '../shared/useWaterfall'
+import { CloseButton } from './CloseButton'
 import HomeLenseBar from './HomeLenseBar'
 import { RestaurantListItem } from './RestaurantListItem'
 
@@ -18,12 +19,18 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
 }: {
   state: HomeStateItemSearch
 }) {
+  const om = useOvermind()
   const title = `Top ${state.searchQuery} Restaurants`
   return (
     <>
       <Helmet>
         <title>{title}</title>
       </Helmet>
+      <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
+        <CloseButton
+          onPress={() => om.actions.home.popTo(om.state.home.lastHomeState)}
+        />
+      </ZStack>
       <Title>{title}</Title>
       <VStack position="relative" flex={1}>
         <HomeLenseBar backgroundGradient />

@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { Action, AsyncAction, Derive } from 'overmind'
 
 import { sleep } from '../helpers/sleep'
-import { HistoryItem } from './router'
+import { HistoryItem, RouteItem } from './router'
 import { Taxonomy, taxonomyFilters, taxonomyLenses } from './Taxonomy'
 
 export type LngLat = { lng: number; lat: number }
@@ -42,7 +42,6 @@ export type HomeStateItemHome = HomeStateItemBase & {
 export type HomeStateItemSearch = HomeStateItemBase & {
   type: 'search'
   results: SearchResults
-  hoveredRestaurant: string
   filters: Taxonomy[]
 }
 
@@ -66,6 +65,7 @@ type HomeStateBase = {
   restaurants: { [id: string]: Restaurant }
   showMenu: boolean
   states: HomeStateItem[]
+  hoveredRestaurant: Restaurant | null
 }
 export type HomeState = HomeStateBase & {
   lastHomeState: Derive<HomeState, HomeStateItemHome>
@@ -74,7 +74,6 @@ export type HomeState = HomeStateBase & {
   breadcrumbStates: Derive<HomeState, HomeStateItemSimple[]>
   currentState: Derive<HomeState, HomeStateItem>
   previousState: Derive<HomeState, HomeStateItem>
-  hoveredRestaurant: Derive<HomeState, Restaurant | null>
 }
 
 const INITIAL_RADIUS = 0.1
@@ -115,11 +114,6 @@ const breadcrumbStates = (state: HomeStateBase) => {
     .map((x) => _.omit(x as any, 'historyId'))
 }
 
-const hoveredRestaurant = (state: HomeStateBase) => {
-  const id = lastSearchState(state)?.hoveredRestaurant
-  return id ? state.restaurants[id] ?? null : null
-}
-
 export const state: HomeState = {
   autocompleteResults: [],
   allTopDishes: [],
@@ -128,11 +122,11 @@ export const state: HomeState = {
   states: [initialHomeState],
   currentState: (state) => _.last(state.states)!,
   previousState: (state) => state.states[state.states.length - 2],
+  hoveredRestaurant: null,
   lastHomeState,
   lastSearchState,
   lastRestaurantState,
   breadcrumbStates,
-  hoveredRestaurant,
 }
 
 const _pushHomeState: Action<HistoryItem> = (om, item) => {
@@ -162,7 +156,6 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
       nextState = {
         type: 'search',
         filters: [],
-        hoveredRestaurant: '',
         results: {
           status: 'loading',
         },
@@ -398,9 +391,7 @@ const submitReview: AsyncAction<Review> = async (om, review) => {
 }
 
 const setHoveredRestaurant: Action<Restaurant> = (om, val) => {
-  if (om.state.home.lastSearchState) {
-    om.state.home.lastSearchState.hoveredRestaurant = val.id
-  }
+  om.state.home.hoveredRestaurant = new Restaurant({ ...val })
 }
 
 const setShowMenu: Action<boolean> = (om, val) => {
@@ -427,7 +418,26 @@ const setMapArea: Action<{ center: LngLat; span: LngLat }> = (om, val) => {
   om.actions.home.runSearch(om.state.home.currentState.searchQuery)
 }
 
+const handleRouteChange: Action<RouteItem> = (om, { type, name, item }) => {
+  om.state.home.hoveredRestaurant = null
+  switch (name) {
+    case 'home':
+    case 'search':
+    case 'restaurant':
+      if (type == 'replace') {
+        return
+      }
+      if (type === 'push') {
+        om.actions.home._pushHomeState(item)
+      } else {
+        om.actions.home._popHomeState(item)
+      }
+      return
+  }
+}
+
 export const actions = {
+  handleRouteChange,
   setMapArea,
   setSearchQuery,
   popTo,

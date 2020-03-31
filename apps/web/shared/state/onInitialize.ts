@@ -12,22 +12,6 @@ export const onInitialize: OnInitialize = async ({ state, actions }) => {
   actions.home.loadHomeDishes()
 
   await actions.router.start({
-    onRouteChange: ({ type, name, item }) => {
-      console.log('onRouteChange', type, name, item)
-      switch (name) {
-        case 'home':
-        case 'search':
-        case 'restaurant':
-          if (type == 'replace') {
-            return
-          }
-          if (type === 'push') {
-            actions.home._pushHomeState(item)
-          } else {
-            actions.home._popHomeState(item)
-          }
-          return
-      }
-    },
+    onRouteChange: actions.home.handleRouteChange,
   })
 }
