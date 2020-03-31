@@ -82,12 +82,14 @@ export default memoIsEqualDeep(function HomeRestaurantView({
             <Text style={{ color: '#777', fontSize: 13 }}>
               3017 16th St., San Francisco
             </Text>
+            <Spacer size={12} />
           </VStack>
 
           {/* <ZStack bottom={15} right={15}>
 
           </ZStack> */}
         </HStack>
+        <Divider />
       </VStack>
 
       <ScrollView style={{ padding: 18, paddingTop: 16, flex: 1 }}>
@@ -162,93 +164,147 @@ export default memoIsEqualDeep(function HomeRestaurantView({
             </HStack>
           </VStack>
 
+          <HStack
+            width="100%"
+            spacing={20}
+            paddingHorizontal={10}
+            // borderColor="#eee"
+            // borderWidth={1}
+            // borderRadius={30}
+          >
+            <LinkButton flex={1} name="restaurant" alignItems="stretch">
+              <VStack
+                width="100%"
+                shadowColor="rgba(0,0,0,0.2)"
+                shadowRadius={5}
+                borderRadius={20}
+                overflow="hidden"
+                marginBottom={10}
+              >
+                <Image
+                  resizeMode="cover"
+                  source={{
+                    uri: restaurant.image,
+                    height: 60,
+                  }}
+                />
+              </VStack>
+              <Text style={{ textAlign: 'center', fontSize: 13, opacity: 0.8 }}>
+                Inside
+              </Text>
+            </LinkButton>
+            <LinkButton flex={1} name="restaurant" alignItems="stretch">
+              <VStack
+                width="100%"
+                shadowColor="rgba(0,0,0,0.2)"
+                shadowRadius={5}
+                borderRadius={20}
+                overflow="hidden"
+                marginBottom={10}
+              >
+                <Image
+                  resizeMode="cover"
+                  source={{
+                    uri: restaurant.image,
+                    height: 60,
+                  }}
+                />
+              </VStack>
+              <Text style={{ textAlign: 'center', fontSize: 13, opacity: 0.8 }}>
+                Menu
+              </Text>
+            </LinkButton>
+            <LinkButton flex={1} name="restaurant" alignItems="stretch">
+              <VStack
+                width="100%"
+                shadowColor="rgba(0,0,0,0.2)"
+                shadowRadius={5}
+                borderRadius={20}
+                overflow="hidden"
+                marginBottom={10}
+              >
+                <Image
+                  resizeMode="cover"
+                  source={{
+                    uri: restaurant.image,
+                    height: 60,
+                  }}
+                />
+              </VStack>
+              <Text style={{ textAlign: 'center', fontSize: 13, opacity: 0.8 }}>
+                Outside
+              </Text>
+            </LinkButton>
+          </HStack>
+
           {!!restaurant.photos.length && (
             <VStack>
               <SmallTitle>Top Dishes</SmallTitle>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                style={{ marginHorizontal: -18 }}
+              <HStack
+                paddingHorizontal={0}
+                paddingVertical={26}
+                flexWrap="wrap"
+                alignItems="center"
+                justifyContent="center"
               >
-                <HStack
-                  paddingHorizontal={20}
-                  paddingVertical={26}
-                  spacing={13}
-                >
-                  {['Pho', 'Banh Mi', 'Banh Xeo', 'Bho Kho', 'Thit Kho'].map(
-                    (dish, index) => (
-                      <VStack key={dish} alignItems="center">
-                        <VStack
-                          marginVertical={-15}
-                          zIndex={100}
-                          backgroundColor="#fff"
-                          paddingVertical={7}
-                          paddingHorizontal={10}
-                          borderRadius={10}
-                          shadowColor="rgba(0,0,0,0.2)"
-                          shadowRadius={6}
-                        >
-                          <Text style={{ fontWeight: '600' }}>{dish}</Text>
-                        </VStack>
-                        <View
-                          style={{
-                            shadowColor: 'rgba(0,0,0,0.2)',
-                            shadowRadius: 10,
-                            borderRadius: 20,
-                          }}
-                        >
-                          <Image
-                            source={{
-                              uri: restaurant.photos[index] ?? restaurant.image,
-                              width: 200,
-                              height: 200,
-                            }}
-                            style={{
-                              borderRadius: 20,
-                            }}
-                          />
-                        </View>
-                      </VStack>
-                    )
-                  )}
-                </HStack>
-              </ScrollView>
-
-              <HStack justifyContent="center" alignItems="center">
-                <Divider flex />
-                <LinkButton {...flatButtonStyle} name="restaurant">
-                  🖼 Inside
-                </LinkButton>
-                <Spacer />
-                <LinkButton {...flatButtonStyle} name="restaurant">
-                  🖼 Outside
-                </LinkButton>
-                <Divider flex />
+                {[
+                  'Pho',
+                  'Banh Mi',
+                  'Banh Xeo',
+                  'Bho Kho',
+                  'Thit Kho',
+                  'Banh Xeo',
+                  'Bho Kho',
+                  'Thit Kho',
+                ].map((dish, index) => (
+                  <VStack
+                    key={dish}
+                    alignItems="center"
+                    marginBottom={15 + 20}
+                    marginHorizontal={20 * 0.5}
+                  >
+                    <VStack
+                      marginVertical={-15}
+                      zIndex={100}
+                      backgroundColor="#fff"
+                      paddingVertical={7}
+                      paddingHorizontal={10}
+                      borderRadius={10}
+                      shadowColor="rgba(0,0,0,0.2)"
+                      shadowRadius={6}
+                    >
+                      <Text style={{ fontWeight: '600' }}>{dish}</Text>
+                    </VStack>
+                    <View
+                      style={{
+                        shadowColor: 'rgba(0,0,0,0.2)',
+                        shadowRadius: 10,
+                        borderRadius: 20,
+                        position: 'relative',
+                        overflow: 'hidden',
+                        width: index < 3 ? 170 : 90,
+                        height: index < 3 ? 170 : 90,
+                      }}
+                    >
+                      <Image
+                        source={{
+                          uri: restaurant.photos[index] ?? restaurant.image,
+                        }}
+                        style={{
+                          width: 170,
+                          height: 170,
+                          borderRadius: 20,
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                        }}
+                      />
+                    </View>
+                  </VStack>
+                ))}
               </HStack>
             </VStack>
           )}
-
-          <VStack>
-            <SmallTitle>Menu</SmallTitle>
-            <ScrollView
-              style={{ marginHorizontal: -18 }}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-            >
-              <HStack paddingHorizontal={18}>
-                <TableRow>
-                  <TableCell width={200}>Test</TableCell>
-                  <TableCell width={200}>Test</TableCell>
-                  <TableCell width={200}>Test</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell width={200}>1</TableCell>
-                  <TableCell width={200}>2</TableCell>
-                  <TableCell width={200}>3</TableCell>
-                </TableRow>
-              </HStack>
-            </ScrollView>
-          </VStack>
 
           <VStack>
             <SmallTitle>Images</SmallTitle>
