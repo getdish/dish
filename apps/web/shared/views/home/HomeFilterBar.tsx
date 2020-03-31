@@ -47,7 +47,7 @@ function FilterButton({ filter }: { filter: Taxonomy }) {
         justifyContent="center"
         paddingHorizontal={12}
         paddingVertical={4}
-        backgroundColor={`rgba(100, 100, 100, 0.75)`}
+        backgroundColor={`rgba(10, 10, 10, 0)`}
         borderRadius={20}
         // borderWidth={1}
         // borderColor={`rgba(0,0,0,0.15)`}

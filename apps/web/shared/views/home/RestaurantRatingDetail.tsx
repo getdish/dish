@@ -4,8 +4,8 @@ import { Text } from 'react-native'
 
 import { Popover } from '../shared/Popover'
 import { SmallTitle } from '../shared/SmallTitle'
-import { Tooltip } from '../shared/Stack/Tooltip'
 import { VStack } from '../shared/Stacks'
+import { Tooltip } from '../shared/Tooltip'
 import { RatingView } from './RatingView'
 import { TableCell, TableRow } from './TableRow'
 
