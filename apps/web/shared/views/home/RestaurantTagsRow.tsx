@@ -29,12 +29,12 @@ export const RestaurantTagsRow = memo(
         )}
         {tags
           .slice(0, showMore ? 2 : 10)
-          .map((tag) =>
+          .map((tag, index) =>
             size == 'md' ? (
               <SecondaryText key={tag.name}>🍜 {tag.name}</SecondaryText>
             ) : (
               <TagButton
-                key={tag.name}
+                key={`${index}${tag.name}`}
                 rank={tag.rank}
                 name={`🍜 ${tag.name}`}
                 size={size}

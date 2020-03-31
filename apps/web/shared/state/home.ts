@@ -58,31 +58,11 @@ export type AutocompleteItem = {
   route: { name: string; params: Object }
 }
 
-type HomeStateBase = {
-  allLenses: Taxonomy[]
-  allFilters: Taxonomy[]
-  autocompleteResults: AutocompleteItem[]
-  allTopDishes: string[]
-  restaurants: { [id: string]: Restaurant }
-  showMenu: boolean
-  states: HomeStateItem[]
-  hoveredRestaurant: Restaurant | null
-}
-export type HomeState = HomeStateBase & {
-  lastHomeState: Derive<HomeState, HomeStateItemHome>
-  lastSearchState: Derive<HomeState, HomeStateItemSearch | null>
-  lastRestaurantState: Derive<HomeState, HomeStateItemRestaurant | null>
-  breadcrumbStates: Derive<HomeState, HomeStateItemSimple[]>
-  currentState: Derive<HomeState, HomeStateItem>
-  previousState: Derive<HomeState, HomeStateItem>
-  currentActiveTaxonomyIds: Derive<HomeState, string[]>
-}
-
 const INITIAL_RADIUS = 0.1
 
 export const initialHomeState: HomeStateItemHome = {
   type: 'home',
-  activeTaxonomyIds: [0],
+  activeTaxonomyIds: ['0'],
   searchQuery: '',
   center: {
     lng: -122.421351,
@@ -122,12 +102,34 @@ const currentActiveTaxonomyIds = (state: HomeStateBase) => {
   return lastHomeOrSearch?.activeTaxonomyIds ?? []
 }
 
+type HomeStateBase = {
+  allLenses: Taxonomy[]
+  allFilters: Taxonomy[]
+  autocompleteResults: AutocompleteItem[]
+  allTopDishes: TopDish['dishes']
+  restaurants: { [id: string]: Restaurant }
+  showMenu: boolean
+  states: HomeStateItem[]
+  hoveredRestaurant: Restaurant | null
+  showAutocomplete: boolean
+}
+export type HomeState = HomeStateBase & {
+  lastHomeState: Derive<HomeState, HomeStateItemHome>
+  lastSearchState: Derive<HomeState, HomeStateItemSearch | null>
+  lastRestaurantState: Derive<HomeState, HomeStateItemRestaurant | null>
+  breadcrumbStates: Derive<HomeState, HomeStateItemSimple[]>
+  currentState: Derive<HomeState, HomeStateItem>
+  previousState: Derive<HomeState, HomeStateItem>
+  currentActiveTaxonomyIds: Derive<HomeState, string[]>
+}
+
 export const state: HomeState = {
   allLenses: taxonomyLenses,
   allFilters: taxonomyFilters,
   autocompleteResults: [],
   allTopDishes: [],
   restaurants: {},
+  showAutocomplete: false,
   showMenu: false,
   states: [initialHomeState],
   currentState: (state) => _.last(state.states)!,
@@ -264,6 +266,12 @@ const loadHomeDishes: AsyncAction = async (om) => {
     // TODO span
     om.state.home.currentState.span.lat
   )
+
+  const dishes = om.state.home.lastHomeState.top_dishes
+  om.state.home.allTopDishes = (dishes ?? [])
+    .map((x) => x.dishes)
+    .flat(Infinity)
+    .filter(Boolean)
 }
 
 const DEBOUNCE_SEARCH = 230
@@ -414,6 +422,10 @@ const setShowMenu: Action<boolean> = (om, val) => {
 }
 
 const toggleActiveTaxonomy: Action<Taxonomy> = (om, val) => {
+  if (!val) {
+    console.log('no taxonomy?', val)
+    return
+  }
   const state = om.state.home.currentState
   if (state.type != 'home' && state.type != 'search') {
     return
@@ -457,7 +469,12 @@ const handleRouteChange: Action<RouteItem> = (om, { type, name, item }) => {
   }
 }
 
+const setShowAutocomplete: Action<boolean> = (om, val) => {
+  om.state.home.showAutocomplete = val
+}
+
 export const actions = {
+  setShowAutocomplete,
   handleRouteChange,
   setMapArea,
   setSearchQuery,

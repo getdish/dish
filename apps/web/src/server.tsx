@@ -7,7 +7,7 @@ import bodyParser from 'body-parser'
 import express from 'express'
 import { JSDOM } from 'jsdom'
 import { createOvermindSSR } from 'overmind'
-import React from 'React'
+import React from 'react'
 import { Helmet } from 'react-helmet'
 
 Error.stackTraceLimit = Infinity

@@ -1,11 +1,16 @@
 import './Link.css'
 
 import React, { useCallback, useMemo } from 'react'
-import { Text, TouchableOpacity } from 'react-native'
+import { Text, TextProps, TextStyle, TouchableOpacity } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { RoutesTable, getPathFromParams } from '../../state/router'
 import { StackBaseProps, VStack } from './Stacks'
+
+type LinkSharedProps = {
+  fontSize?: TextStyle['fontSize']
+  ellipse?: boolean
+}
 
 export function Link<
   Name extends keyof RoutesTable = keyof RoutesTable,
@@ -14,15 +19,19 @@ export function Link<
   name,
   params,
   inline,
+  fontSize,
+  children,
+  ellipse,
   ...props
 }: React.DetailedHTMLProps<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
   HTMLAnchorElement
-> & {
-  name: Name
-  params?: Params
-  inline?: boolean
-}) {
+> &
+  LinkSharedProps & {
+    name: Name
+    params?: Params
+    inline?: boolean
+  }) {
   const om = useOvermind()
   return (
     <a
@@ -33,8 +42,16 @@ export function Link<
         e.preventDefault()
         om.actions.router.navigate({ name, params } as any)
       }, [])}
-      className={inline ? '' : 'block-link'}
-    />
+      className={`${inline ? '' : ' block-link'}`}
+      style={{ maxWidth: '100%' }}
+    >
+      <div
+        className={` ${ellipse ? ' ellipse' : ''}`}
+        style={fontSize ? { fontSize: `${fontSize}px` } : null}
+      >
+        {children}
+      </div>
+    </a>
   )
 }
 
@@ -43,6 +60,7 @@ export function LinkButton<
   Params = RoutesTable[Name]['params']
 >(
   props: StackBaseProps &
+    LinkSharedProps &
     (
       | {
           name: Name
@@ -56,27 +74,50 @@ export function LinkButton<
 ) {
   let restProps: StackBaseProps
   let contents: React.ReactElement
+  let pointerEvents: any
   let onPress: any
 
   if ('name' in props) {
-    const { name, params, children, onPress, ...rest } = props
+    const {
+      name,
+      params,
+      children,
+      onPress,
+      fontSize,
+      ellipse,
+      ...rest
+    } = props
+    pointerEvents = rest.pointerEvents
     restProps = rest
     contents = (
-      <Link name={name} params={params} onClick={onPress}>
+      <Link
+        name={name}
+        params={params}
+        onClick={onPress}
+        fontSize={fontSize}
+        ellipse={ellipse}
+      >
         {children ?? ''}
       </Link>
     )
   } else {
-    const { children, onPress: onPress_, ...rest } = props
+    const { children, onPress: onPress_, fontSize, ellipse, ...rest } = props
+    pointerEvents = rest.pointerEvents
     onPress = onPress_
     restProps = rest
-    contents = <Text>{children ?? ''}</Text>
+    contents = (
+      <Text numberOfLines={ellipse ? 1 : undefined} style={{ fontSize }}>
+        {children ?? ''}
+      </Text>
+    )
   }
 
   return (
-    <VStack pointerEvents="auto" flex={props.flex}>
+    <VStack flex={props.flex} pointerEvents={pointerEvents}>
       <TouchableOpacity onPress={onPress}>
-        <VStack {...restProps}>{contents}</VStack>
+        <VStack flex={1} {...restProps}>
+          {contents}
+        </VStack>
       </TouchableOpacity>
     </VStack>
   )

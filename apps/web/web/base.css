@@ -54,3 +54,10 @@ input,
 textarea {
   outline: 0;
 }
+
+.ellipse {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
