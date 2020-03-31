@@ -17,7 +17,7 @@
     "start:react-native": "react-native start",
     "test": "true",
     "postinstall": "jetify && rm -r node_modules/@apollo/client/node_modules/react || true && patch-package",
-    "build": "true",
+    "build": "tsc -b",
     "build:web": "(NODE_ENV=production TARGET=ssr webpack) & (NODE_ENV=production TARGET=client webpack)",
     "build:web:watch": "(NODE_ENV=production TARGET=ssr webpack --watch) & (NODE_ENV=production TARGET=client webpack --watch)",
     "ios": "react-native run-ios",
