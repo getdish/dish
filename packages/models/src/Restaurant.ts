@@ -185,13 +185,12 @@ export class Restaurant extends ModelBase<Restaurant> {
       'query=' + query,
       'lon=' + lng,
       'lat=' + lat,
-      // TODO span
-      'distance=' + span.lat,
+      'span_lon=' + span.lng / 2,
+      'span_lat=' + span.lat / 2,
       'limit=25',
       'tags=' + tags.map((t) => t.toLowerCase().trim()).join(','),
     ]
     const url = SEARCH_DOMAIN + '/search?' + params.join('&')
-    console.log('searching', url)
     const response = await axios.get(url)
     return response.data.map(
       (data: Partial<Restaurant>) => new Restaurant(data)
