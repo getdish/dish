@@ -33,7 +33,7 @@ export const Popover = (props: {
     setIsMounted(true)
   })
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (props.onClickOutside) {
       popoverCloseCbs.add(props.onClickOutside)
       return () => {

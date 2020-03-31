@@ -32,6 +32,7 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
       <Helmet>
         <title>Dish - Uniquely Good Food</title>
       </Helmet>
+      <Spacer size={10} />
       <Title>{activeLense?.description ?? ''}</Title>
       <VStack position="relative" flex={1}>
         <HomeLenseBar backgroundGradient />
@@ -43,14 +44,6 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
 
 const HomeViewTopDishesContent = memoIsEqualDeep(
   ({ top_dishes = [] }: { top_dishes?: TopDish[] }) => {
-    const om = useOvermind()
-
-    console.log('RENDER HOME_TOP_DISHES', top_dishes)
-
-    useEffect(() => {
-      om.actions.home.loadHomeDishes()
-    }, [])
-
     return (
       <ScrollView style={{ flex: 1 }}>
         <VStack paddingVertical={20} paddingTop={20 + 100}>

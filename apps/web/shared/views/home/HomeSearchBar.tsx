@@ -13,35 +13,15 @@ import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { CloseButton } from './CloseButton'
 import { DishLogoButton } from './DishLogoButton'
+import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
-const styles = StyleSheet.create({
-  container: {
-    borderRadius: 14,
-    shadowColor: 'rgba(0,0,0,0.1)',
-    shadowRadius: 8,
-    shadowOffset: { height: 2, width: 0 },
-    marginHorizontal: -15,
-    marginTop: 15,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#ccc',
-  },
-  searchArea: {
-    borderLeftWidth: 1,
-    borderColor: '#eee',
-    backgroundColor: '#fff',
-  },
-  textInput: {
-    padding: 11,
-    paddingHorizontal: 16,
-    flex: 1,
-    fontSize: 18,
-  },
-})
+export const searchBarTopOffset = 25
+export const searchBarHeight = 53
 
 export default memo(function HomeSearchBar() {
   const om = useOvermind()
   const globalSearch = om.state.home.currentState.searchQuery
+  const width = useHomeDrawerWidth()
 
   // use local for a little better perf
   const [search, setSearch] = useState('')
@@ -51,13 +31,21 @@ export default memo(function HomeSearchBar() {
   }, [globalSearch])
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { width: width + 30, height: searchBarHeight }]}
+    >
       <HStack>
         <DishLogoButton />
         <VStack flex={1.7} style={styles.searchArea}>
           <TextInput
             // leave uncontrolled for perf?
             value={search}
+            onFocus={() => {
+              om.actions.home.setShowAutocomplete(true)
+            }}
+            onBlur={() => {
+              om.actions.home.setShowAutocomplete(false)
+            }}
             onChangeText={(text) => {
               setSearch(text)
               om.actions.home.setSearchQuery(text)
@@ -137,4 +125,31 @@ const SearchLocationButton = memo(() => {
       </HStack>
     </ZStack>
   )
+})
+
+const styles = StyleSheet.create({
+  container: {
+    zIndex: 22,
+    borderRadius: 14,
+    shadowColor: 'rgba(0,0,0,0.1)',
+    shadowRadius: 8,
+    shadowOffset: { height: 2, width: 0 },
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    position: 'absolute',
+    marginTop: searchBarTopOffset,
+    left: 5,
+  },
+  searchArea: {
+    borderLeftWidth: 1,
+    borderColor: '#eee',
+    backgroundColor: '#fff',
+  },
+  textInput: {
+    padding: 11,
+    paddingHorizontal: 16,
+    flex: 1,
+    fontSize: 18,
+  },
 })

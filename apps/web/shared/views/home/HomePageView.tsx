@@ -4,6 +4,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native'
 
 import { useDebounceValue } from '../../hooks/useDebounce'
 import {
+  HomeStateItemHome,
   HomeStateItemRestaurant,
   HomeStateItemSearch,
   HomeStateItemSimple,
@@ -11,10 +12,11 @@ import {
 import { useOvermind } from '../../state/om'
 import { ForceShowPopover } from '../shared/Popover'
 import { VStack, ZStack } from '../shared/Stacks'
+import HomeAutocomplete, { HomeAutocompleteOverlay } from './HomeAutocomplete'
 import { HomeControlsOverlay } from './HomeControlsOverlay'
 import HomeMap from './HomeMap'
 import HomeRestaurantView from './HomeRestaurantView'
-import HomeSearchBar from './HomeSearchBar'
+import HomeSearchBar, { searchBarHeight } from './HomeSearchBar'
 import HomeSearchResultsView from './HomeSearchResultsView'
 import HomeViewTopDishes from './HomeViewTopDishes'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
@@ -26,6 +28,8 @@ export const HomePage = () => {
     <ZStack top={0} left={0} right={0} bottom={0}>
       <HomeMap />
       <HomeControlsOverlay />
+      <HomeAutocomplete />
+      <HomeSearchBar />
       <HomeViewDrawer>
         <HomeViewContent />
       </HomeViewDrawer>
@@ -83,13 +87,10 @@ const HomeViewContent = memo(function HomeViewContent() {
   const { breadcrumbStates } = om.state.home
   return (
     <>
-      <HomeSearchBar />
-      {/* <HomeAutocomplete /> */}
-      {/* <HomeFilterBar /> */}
       <ZStack position="relative" flex={1}>
         <VStack
           position="absolute"
-          top={0}
+          top={searchBarHeight}
           left={0}
           right={0}
           bottom={0}
@@ -100,7 +101,7 @@ const HomeViewContent = memo(function HomeViewContent() {
               return (
                 <>
                   {homeState.type == 'home' && (
-                    <HomeViewTopDishes state={homeState} />
+                    <HomeViewTopDishes state={homeState as HomeStateItemHome} />
                   )}
                   {homeState.type == 'search' && (
                     <HomeSearchResultsView
@@ -207,12 +208,7 @@ function HomeStackViewItem({
 }
         `}
       </style>
-      <ZStack
-        // animation="fadeInUp"
-        // duration={300}
-        pointerEvents={isActive ? 'none' : 'auto'}
-        fullscreen
-      >
+      <ZStack pointerEvents={isActive ? 'none' : 'auto'} fullscreen>
         <TouchableOpacity
           disabled={isActive}
           style={{ flex: 1 }}

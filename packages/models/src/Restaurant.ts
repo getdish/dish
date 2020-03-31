@@ -185,8 +185,8 @@ export class Restaurant extends ModelBase<Restaurant> {
       'query=' + query,
       'lon=' + lng,
       'lat=' + lat,
-      'span_lon=' + span.lng / 2,
-      'span_lat=' + span.lat / 2,
+      'span_lon=' + span.lng,
+      'span_lat=' + span.lat,
       'limit=25',
       'tags=' + tags.map((t) => t.toLowerCase().trim()).join(','),
     ]

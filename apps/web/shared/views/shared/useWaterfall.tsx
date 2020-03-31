@@ -5,6 +5,12 @@ import { sleep } from '../../helpers/sleep'
 export const useWaterfall = (cb: Function) => {
   useEffect(() => {
     waterfalls.push(cb)
+    return () => {
+      const index = waterfalls.indexOf(cb)
+      if (index > -1) {
+        waterfalls.splice(index, 1)
+      }
+    }
   }, [])
 }
 
