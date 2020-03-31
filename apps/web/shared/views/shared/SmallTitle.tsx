@@ -11,14 +11,16 @@ export function Title(props: { children: any }) {
       <VStack
         width="100%"
         alignItems="center"
-        paddingTop={12}
-        paddingBottom={8}
+        paddingTop={14}
+        paddingVertical={12}
       >
         <Text
           style={{
-            opacity: 0.65,
-            fontSize: 17,
-            fontWeight: '500',
+            // textTransform: 'uppercase',
+            // letterSpacing: 4,
+            // opacity: 0.6,
+            fontSize: 20,
+            fontWeight: '300',
             paddingBottom: 8,
           }}
         >

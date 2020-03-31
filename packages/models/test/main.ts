@@ -86,9 +86,14 @@ test('Searching for a restaurant by name', async (t) => {
   await restaurant.upsert()
 
   const results = await Restaurant.search({
-    lat: 50.5,
-    lng: 0.5,
-    radius: 1,
+    center: {
+      lat: 50.5,
+      lng: 0.5,
+    },
+    span: {
+      lat: 1,
+      lng: 1,
+    },
     query: 'Test',
   })
   t.is(results[0].name, 'Test Restaurant')
@@ -103,9 +108,14 @@ test('Searching for a restaurant by tag', async (t) => {
   await tag.insert()
   await restaurant.upsertTags(['test_tag'])
   const results = await Restaurant.search({
-    lat: 50.5,
-    lng: 0.5,
-    radius: 1,
+    center: {
+      lat: 50.5,
+      lng: 0.5,
+    },
+    span: {
+      lat: 1,
+      lng: 1,
+    },
     query: '',
     tags: ['test_tag'],
   })

@@ -75,11 +75,12 @@ export type RouterState = {
 
 let ignoreNextRoute = false
 
-export type OnRouteChangeCb = (item: {
+export type RouteItem = {
   type: 'push' | 'pop' | 'replace'
   name: RouteName
   item: HistoryItem
-}) => any
+}
+export type OnRouteChangeCb = (item: RouteItem) => any
 
 let onRouteChange: OnRouteChangeCb | null = null
 
