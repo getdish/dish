@@ -1,4 +1,5 @@
 import { Restaurant } from '@dish/models'
+import _ from 'lodash'
 import React, { memo, useState } from 'react'
 import { Button, Text, TextInput } from 'react-native'
 
@@ -52,9 +53,9 @@ export const RestaurantTagButton = memo(
               ></Button>
             </HStack>
             <HStack padding={10} flexWrap="wrap">
-              {restaurant.tags.map((t) => {
+              {restaurant.tags.map((t, index) => {
                 const name = t.taxonomy.name
-                return <TagButton key={name} name={name} />
+                return <TagButton key={`${name}${index}`} name={name} />
               })}
             </HStack>
             <Text
@@ -67,9 +68,15 @@ export const RestaurantTagButton = memo(
               Top tags
             </Text>
             <HStack padding={10} flexWrap="wrap">
-              {(om.state.home.lastHomeState.top_dishes ?? []).map((x) => (
-                <TagButton key={x.dish} name={x.dish} />
-              ))}
+              {_.flatten(
+                (om.state.home.lastHomeState.top_dishes ?? []).map(
+                  (x) => x.dishes
+                )
+              )
+                .filter(Boolean)
+                .map((x, index) => (
+                  <TagButton key={x.name} name={x.name} />
+                ))}
             </HStack>
           </Tooltip>
         }

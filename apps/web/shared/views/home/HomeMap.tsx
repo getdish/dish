@@ -166,6 +166,47 @@ const HomeMap = memo(() => {
     [restaurantsVersion]
   )
 
+  // hover on map annotation
+  const annotationsContainer = document.querySelector(
+    '.mk-annotation-container'
+  )
+
+  useEffect(() => {
+    if (!annotationsContainer) return
+    const annotationsRoot: HTMLElement = annotationsContainer.shadowRoot.querySelector(
+      '.mk-annotations'
+    )
+    if (!annotationsRoot) return
+
+    let annotationElements: ChildNode[] = []
+    let dispose = () => {}
+
+    const onMouseEnter = (e: MouseEvent) => {
+      const index = annotationElements.indexOf(e.target as any)
+      om.actions.home.setHoveredRestaurant(restaurants[index])
+    }
+    const observer = new MutationObserver(() => {
+      dispose()
+      annotationElements = Array.from(annotationsRoot.childNodes)
+      for (const el of annotationElements) {
+        el.addEventListener('mouseenter', onMouseEnter)
+      }
+      dispose = () => {
+        for (const el of annotationElements) {
+          el.removeEventListener('mouseenter', onMouseEnter)
+        }
+      }
+    })
+    observer.observe(annotationsRoot, {
+      childList: true,
+    })
+
+    return () => {
+      dispose()
+      observer.disconnect()
+    }
+  }, [annotationsContainer, restaurantsVersion])
+
   // Navigate - return to previous map position
   useEffect(() => {
     if (!map) return
@@ -183,7 +224,6 @@ const HomeMap = memo(() => {
       (state) => state.home.hoveredRestaurant,
       (hoveredRestaurant) => {
         if (!hoveredRestaurant) return
-        console.log('hovered restaurant', hoveredRestaurant)
         const index = restaurantIds.indexOf(hoveredRestaurant.id)
         if (map.annotations[index]) {
           map.annotations[index].selected = true

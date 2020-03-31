@@ -52,7 +52,6 @@ export default memo(function HomeAutoComplete() {
         paddingBottom={30}
         paddingHorizontal={30}
         marginLeft={-30}
-        data-transition="fadeinOut"
         opacity={isShowing ? 1 : 0}
         pointerEvents={isShowing ? 'auto' : 'none'}
       >
