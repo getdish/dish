@@ -50,11 +50,14 @@ server.get('/hello', (_, res) => res.send('hello world'))
 // static assets
 const clientBuildPath = Path.join(__dirname, '..', 'web-build')
 server.use('/static', express.static(Path.join(clientBuildPath, 'static')))
-
-const htmlPath = Path.join(__dirname, '..', 'web', 'index.html')
-const template = readFileSync(htmlPath, 'utf8')
+server.use(
+  '/static',
+  express.static(Path.join(__dirname, '..', 'shared', 'assets'))
+)
 
 server.get('*', async (req, res) => {
+  const htmlPath = Path.join(__dirname, '..', 'web', 'index.html')
+  const template = readFileSync(htmlPath, 'utf8')
   const overmind = createOvermindSSR(config)
   const appHtml = ReactDOMServer.renderToString(<App overmind={overmind} />)
   // need to fool helmet back into thinking were in the node
@@ -68,27 +71,29 @@ server.get('*', async (req, res) => {
     /<script\b[^>]*>([\s\S]*?)<\/script>/gm
   )
 
-  res.send(
-    template
-      .replace('<!-- app -->', appHtml)
-      .replace(
-        '<!-- head -->',
-        `
+  let out = ''
+  for (const line of template.split('\n')) {
+    if (line.indexOf('<!-- app -->') >= 0) {
+      out += appHtml
+    } else if (line.indexOf('<!-- head -->') >= 0) {
+      out += `
       ${helmet.title.toString()}
       ${helmet.meta.toString()}
       ${helmet.link.toString()}
 `
-      )
-      .replace(
-        '<!-- scripts -->',
-        `
-        <script>
-          window.__OVERMIND_MUTATIONS = ${JSON.stringify(overmind.hydrate())}
-        </script>
-        ${clientScripts.join('\n')}
+    } else if (line.indexOf('<!-- scripts -->') >= 0) {
+      out += `
+      <script>
+        window.__OVERMIND_MUTATIONS = ${JSON.stringify(overmind.hydrate())}
+      </script>
+      ${clientScripts.join('\n')}
 `
-      )
-  )
+    } else {
+      out += line
+    }
+  }
+
+  res.send(out)
 })
 
 server.listen(19006)
