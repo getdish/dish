@@ -2,6 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import React, { memo, useEffect, useMemo, useState } from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 
+import { isWorker } from '../../constants'
 import { useDebounceValue } from '../../hooks/useDebounce'
 import {
   HomeStateItemHome,
@@ -12,9 +13,9 @@ import {
 import { useOvermind } from '../../state/om'
 import { ForceShowPopover } from '../shared/Popover'
 import { VStack, ZStack } from '../shared/Stacks'
-import HomeAutocomplete, { HomeAutocompleteOverlay } from './HomeAutocomplete'
+import HomeAutocomplete from './HomeAutocomplete'
 import { HomeControlsOverlay } from './HomeControlsOverlay'
-import HomeMap from './HomeMap'
+import { HomeMap } from './HomeMap'
 import HomeRestaurantView from './HomeRestaurantView'
 import HomeSearchBar, { searchBarHeight } from './HomeSearchBar'
 import HomeSearchResultsView from './HomeSearchResultsView'
@@ -26,7 +27,7 @@ export const drawerBorderRadius = 25
 export const HomePage = () => {
   return (
     <ZStack top={0} left={0} right={0} bottom={0}>
-      <HomeMap />
+      {!isWorker && <HomeMap />}
       <HomeControlsOverlay />
       <HomeAutocomplete />
       <HomeSearchBar />

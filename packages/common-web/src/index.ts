@@ -6,6 +6,8 @@ export function getGraphEndpoint() {
   const LOCAL_HASURA = 'http://localhost:8080'
   const LIVE_HASURA = 'https://hasura.rio.dishapp.com'
 
+  return LIVE_HASURA
+
   let domain: string
 
   if (isNode) {

@@ -1,0 +1,102 @@
+{
+  "name": "@dish/web-serve",
+  "private": true,
+  "main": "dist/main",
+  "version": "0.0.0",
+  "files": [
+    "dist"
+  ],
+  "syntax": {
+    "esmodules": "dist/main.mjs"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "scripts": {
+    "start": "node -r esm demo/server.js",
+    "tsc:worker": "tsc -p src/worker-thread/tsconfig.json",
+    "tsc:main": "tsc -p src/main-thread/tsconfig.json",
+    "tsc:tests": "tsc -p src/test/tsconfig.json",
+    "tsc:tests-main": "tsc -p src/test/main-thread/tsconfig.json",
+    "clean": "rimraf output dist",
+    "pretest": "npm-run-all --parallel tsc:*",
+    "test": "ava -v",
+    "pre~rollup": "npm-run-all --parallel tsc:worker tsc:main",
+    "~rollup": "rollup --config config/rollup.config.js",
+    "lint:worker": "tslint -c config/tslint.json -p src/worker-thread/",
+    "lint:main": "tslint -c config/tslint.json -p src/main-thread/",
+    "lint": "npm-run-all --parallel lint:*",
+    "build": "cross-env MINIFY_BUNDLE=true npm-run-all ~rollup",
+    "presize": "npm-run-all build",
+    "size": "filesize",
+    "release": "np",
+    "prepublishOnly": "npm-run-all clean build"
+  },
+  "dependencies": {
+    "@dish/web": "*"
+  },
+  "devDependencies": {
+    "@ampproject/filesize": "3.0.2",
+    "@ampproject/rollup-plugin-closure-compiler": "0.22.2",
+    "@babel/compat-data": "~7.8.0",
+    "@babel/cli": "7.8.4",
+    "@babel/core": "7.9.0",
+    "@babel/plugin-proposal-numeric-separator": "7.8.3",
+    "@babel/plugin-proposal-class-properties": "7.8.3",
+    "@babel/plugin-proposal-object-rest-spread": "7.8.3",
+    "@babel/preset-env": "7.9.0",
+    "@rollup/plugin-replace": "2.3.1",
+    "@types/node": "13.7.4",
+    "@types/sinon": "7.5.1",
+    "acorn": "7.1.0",
+    "acorn-walk": "7.1.1",
+    "ava": "^3.5.2",
+    "babel-plugin-minify-replace": "^0.5.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "cross-env": "^7.0.2",
+    "cross-var": "1.1.0",
+    "esm": "3.2.25",
+    "jsdom": "^16.2.2",
+    "lint-staged": "10.0.7",
+    "magic-string": "0.25.6",
+    "np": "6.1.0",
+    "npm-run-all": "4.1.5",
+    "polka": "0.5.2",
+    "rimraf": "3.0.2",
+    "rollup": "2.3.2",
+    "rollup-plugin-babel": "4.4.0",
+    "rollup-plugin-copy": "3.3.0",
+    "rollup-plugin-terser": "5.3.0",
+    "sinon": "9.0.0",
+    "sirv": "0.4.2",
+    "tslint": "5.20.1"
+  },
+  "filesize": {
+    "track": [
+      "./dist/**/*.js",
+      "./dist/**/*.mjs"
+    ],
+    "./dist/worker/worker.mjs": {
+      "brotli": "11.4 kB"
+    },
+    "./dist/worker/worker.js": {
+      "brotli": "12.6 kB"
+    },
+    "./dist/main.mjs": {
+      "brotli": "3.5 kB"
+    },
+    "./dist/main.js": {
+      "brotli": "4.1 kB"
+    }
+  },
+  "esm": {
+    "cjs": true
+  },
+  "ava": {
+    "require": [
+      "esm"
+    ],
+    "files": [
+      "output/test/**/*.test.js"
+    ]
+  }
+}

@@ -55,6 +55,9 @@ server.use(
   express.static(Path.join(__dirname, '..', 'shared', 'assets'))
 )
 
+// TODO amp
+// setHeaders: res => res.setHeader('AMP-Access-Control-Allow-Source-Origin', `http://localhost:${PORT}`),
+
 server.get('*', async (req, res) => {
   const htmlPath = Path.join(__dirname, '..', 'web', 'index.html')
   const template = readFileSync(htmlPath, 'utf8')

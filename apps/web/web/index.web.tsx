@@ -1,29 +1,42 @@
 // global styles
 import './base.css'
-import './mapkit'
 
 import React from 'react'
 import { hydrate, render } from 'react-dom'
 import * as ReactDOMServerExport from 'react-dom/server'
 
-import { OVERMIND_MUTATIONS } from '../shared/constants'
-import { App } from '../shared/views/App'
+window['location']
+
+const { OVERMIND_MUTATIONS, isWorker } = require('../shared/constants')
+const { App } = require('../shared/views/App')
+// import './mapkit'
 
 window['React'] = React
 
 // exports
-export { Helmet } from 'react-helmet'
+// export { Helmet } from 'react-helmet'
 export { App } from '../shared/views/App'
 export { config } from '../shared/state/om'
 export const ReactDOMServer = ReactDOMServerExport
 
+let rootEl = document.getElementById('root')
+
 async function start() {
-  await startMapKit()
+  if (!isWorker) {
+    require('./mapkit')
+    await startMapKit()
+    console.log('started mapkit')
+  }
 
   if (OVERMIND_MUTATIONS) {
     hydrate(<App />, document.getElementById('root'))
   } else {
-    render(<App />, document.getElementById('root'))
+    // for worker
+    if (isWorker) {
+      rootEl = document.createElement('div')
+      document.body.appendChild(rootEl)
+    }
+    render(<App />, rootEl)
   }
 }
 

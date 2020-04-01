@@ -5,7 +5,7 @@ import { useDebounceValue } from '../../hooks/useDebounce'
 import { LngLat } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Map, useMap } from '../map'
-import { mapkit } from '../mapkit'
+// import { mapkit } from '../mapkit'
 import { ZStack } from '../shared/Stacks'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
@@ -20,11 +20,7 @@ function centerMapToRegion(p: {
   p.map.setRegionAnimated(region)
 }
 
-export default function HomeMapContainer() {
-  return <HomeMap />
-}
-
-const HomeMap = memo(() => {
+export const HomeMap = memo(() => {
   const om = useOvermind()
   const drawerWidth = useHomeDrawerWidth()
   const state = om.state.home.currentState
