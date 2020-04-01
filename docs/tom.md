@@ -4,8 +4,6 @@
 
 - [ ] Top Dishes - Since the web has more room, I think we can do a new interface here where we show a vertical list of horizontal sub-lists. the vertical list will be "most popular by-country cuisines (Korean, Mexican, etc), and each of those lists shows "most popular dishes within the cuisine (for Korean -> KBBQ, Bulgogi, Galbi, etc)". Should have a big effect on explorability. From there we can do a few fun things too with the map (hover each listitem to see a preview of the results)
 - [ ] Search: include; current results, in the region; restaurants, dishes and locations
-- [ ] SSR
-- [x] Slugs
 - [ ] Do search on 404 page
 - [ ] Permalinks to source data
 

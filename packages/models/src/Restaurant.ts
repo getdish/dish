@@ -42,6 +42,7 @@ export type RestaurantSearchArgs = {
   span: LngLat
   query: string
   tags?: string[]
+  limit?: number
 }
 
 export class Restaurant extends ModelBase<Restaurant> {
@@ -180,6 +181,7 @@ export class Restaurant extends ModelBase<Restaurant> {
     span,
     query,
     tags = [],
+    limit = 25,
   }: RestaurantSearchArgs): Promise<Restaurant[]> {
     const params = [
       'query=' + query,
@@ -187,7 +189,7 @@ export class Restaurant extends ModelBase<Restaurant> {
       'lat=' + lat,
       'span_lon=' + span.lng,
       'span_lat=' + span.lat,
-      'limit=25',
+      `limit=${limit}`,
       'tags=' + tags.map((t) => t.toLowerCase().trim()).join(','),
     ]
     const url = SEARCH_DOMAIN + '/search?' + params.join('&')

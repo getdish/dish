@@ -16,7 +16,7 @@ export const RatingView = forwardRef(
     const color = percent > 84 ? 'green' : percent > 60 ? 'orange' : 'red'
     const borderColor =
       percent > 84 ? 'lightgreen' : percent > 60 ? 'sunset' : 'lightred'
-    const size = sizeIn == 'sm' ? 34 : sizeIn == 'md' ? 54 : 72
+    const size = sizeIn == 'sm' ? 34 : sizeIn == 'md' ? 48 : 72
     return (
       <VStack
         ref={ref as any}

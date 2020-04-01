@@ -10,6 +10,7 @@ import { StackBaseProps, VStack } from './Stacks'
 type LinkSharedProps = {
   fontSize?: TextStyle['fontSize']
   ellipse?: boolean
+  fastClick?: boolean
 }
 
 export function Link<
@@ -22,6 +23,7 @@ export function Link<
   fontSize,
   children,
   ellipse,
+  fastClick,
   ...props
 }: React.DetailedHTMLProps<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -33,15 +35,19 @@ export function Link<
     inline?: boolean
   }) {
   const om = useOvermind()
+  const handler = useCallback((e) => {
+    e.stopPropagation()
+    e.preventDefault()
+    console.log('clicking', name, params)
+    om.actions.router.navigate({ name, params } as any)
+  }, [])
   return (
     <a
       {...props}
       href={getPathFromParams({ name, params })}
-      onClick={useCallback((e) => {
-        e.stopPropagation()
-        e.preventDefault()
-        om.actions.router.navigate({ name, params } as any)
-      }, [])}
+      {...{
+        [fastClick ? 'onMouseDown' : 'onClick']: handler,
+      }}
       className={`${inline ? 'inline-link' : ' block-link'}`}
       style={{ maxWidth: '100%' }}
     >
@@ -85,6 +91,7 @@ export function LinkButton<
       onPress,
       fontSize,
       ellipse,
+      fastClick,
       ...rest
     } = props
     pointerEvents = rest.pointerEvents
@@ -96,6 +103,7 @@ export function LinkButton<
         onClick={onPress}
         fontSize={fontSize}
         ellipse={ellipse}
+        fastClick={fastClick}
       >
         {children ?? ''}
       </Link>

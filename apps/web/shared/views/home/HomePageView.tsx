@@ -22,6 +22,7 @@ import HomeSearchResultsView from './HomeSearchResultsView'
 import HomeViewTopDishes from './HomeViewTopDishes'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
+export const drawerPad = 8
 export const drawerBorderRadius = 10
 
 export const HomePage = () => {
@@ -29,7 +30,6 @@ export const HomePage = () => {
     <ZStack top={0} left={0} right={0} bottom={0}>
       {!isWorker && <HomeMap />}
       <HomeControlsOverlay />
-      <HomeAutocomplete />
       <HomeSearchBar />
       <HomeViewDrawer>
         <HomeViewContent />
@@ -43,9 +43,9 @@ function HomeViewDrawer(props: { children: any }) {
   return (
     <VStack
       position={'absolute'}
-      top={8}
-      left={8}
-      bottom={8}
+      top={drawerPad}
+      left={drawerPad}
+      bottom={drawerPad}
       zIndex={10}
       width={drawerWidth}
       borderRadius={drawerBorderRadius}

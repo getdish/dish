@@ -14,7 +14,7 @@ export default memo(function HomeFilterBar() {
         paddingHorizontal={30}
         paddingVertical={2}
         alignItems="center"
-        spacing={6}
+        spacing={3}
         justifyContent="center"
       >
         {om.state.home.allFilters.map((filter) => (
@@ -42,7 +42,7 @@ const FilterButton = memo(({ filter }: { filter: Taxonomy }) => {
         paddingHorizontal={12}
         paddingVertical={4}
         backgroundColor={
-          isActive ? `rgba(10, 10, 10, 1)` : `rgba(10, 10, 10, 0.7)`
+          isActive ? `rgba(10, 10, 10, 1)` : `rgba(10, 10, 10, 0.55)`
         }
         borderRadius={20}
         borderWidth={2}
@@ -57,9 +57,9 @@ const FilterButton = memo(({ filter }: { filter: Taxonomy }) => {
       >
         <Text
           style={{
-            color: isActive ? '#fff' : '#ddd',
+            color: isActive ? '#fff' : '#eee',
             fontSize: 14,
-            fontWeight: '600',
+            fontWeight: '500',
           }}
         >
           {filter.name}

@@ -36,7 +36,7 @@
     "@o/fast-compare": "2.7.1",
     "expo": "^36.0.2",
     "expo-linear-gradient": "^8.1.0",
-    "fuse.js": "^5.0.10-beta",
+    "quick-score": "0.0.6",
     "gqless": "^0.0.1-alpha.28",
     "mapkit-typescript": "^5.18.1",
     "overmind": "^23.0.1",
