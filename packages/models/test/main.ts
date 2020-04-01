@@ -87,12 +87,12 @@ test('Searching for a restaurant by name', async (t) => {
 
   const results = await Restaurant.search({
     center: {
-      lat: 50.1,
-      lng: 0.1,
+      lat: 50.09,
+      lng: 0.09,
     },
     span: {
-      lat: 0.2,
-      lng: 0.2,
+      lat: 0.4,
+      lng: 0.4,
     },
     query: 'Test',
   })
@@ -109,8 +109,8 @@ test('Searching for a restaurant by tag', async (t) => {
   await restaurant.upsertTags(['test_tag'])
   const results = await Restaurant.search({
     center: {
-      lat: 50.5,
-      lng: 0.5,
+      lat: 50.24,
+      lng: 0.24,
     },
     span: {
       lat: 1,
