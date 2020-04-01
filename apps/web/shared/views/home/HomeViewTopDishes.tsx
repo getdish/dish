@@ -185,6 +185,16 @@ export const flatButtonStyle: StackBaseProps = {
   borderRadius: 5,
 }
 
+export const flatButtonStyleInactive: StackBaseProps = {
+  paddingVertical: 5,
+  paddingHorizontal: 8,
+  backgroundColor: 'rgba(220, 220, 220, 0.5)',
+  hoverStyle: {
+    backgroundColor: `rgba(220, 220, 220, 1)`,
+  },
+  borderRadius: 5,
+}
+
 export const flatButtonStyleActive: StackBaseProps = {
   paddingVertical: 5,
   paddingHorizontal: 8,

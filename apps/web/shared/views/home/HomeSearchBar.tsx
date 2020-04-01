@@ -50,6 +50,10 @@ export default memo(function HomeSearchBar() {
   const width = useHomeDrawerWidth()
   const [active, setActive] = useState(0)
 
+  // todo - for hook
+  const curActive = useRef(0)
+  curActive.current = active
+
   // use local for a little better perf
   const [search, setSearch] = useState('')
 
@@ -74,12 +78,30 @@ export default memo(function HomeSearchBar() {
 
   useEffect(() => {
     if (!node) return
+    const prev = () => setActive((x) => Math.max(0, x - 1))
+    const next = () => {
+      const autocompleteResults = om.state.home.autocompleteResults
+      setActive((x) => Math.min(autocompleteResults.length - 1, x + 1))
+    }
     const handlePress = (e) => {
       // @ts-ignore
       const code = e.keyCode
-      // console.log('code', code)
+      console.log('code', code)
+      const isCaretAtEnd = node.value.length == node.selectionEnd
       switch (code) {
-        case 27:
+        case 39: // right
+          if (isCaretAtEnd) {
+            // at end
+            next()
+          }
+          return
+        case 37: // left
+          if (curActive.current > 0 && isCaretAtEnd) {
+            e.preventDefault()
+            prev()
+          }
+          return
+        case 27: // esc
           if (isTextSelected(node)) {
             clearTextSelection()
             return
@@ -90,12 +112,11 @@ export default memo(function HomeSearchBar() {
           return
         case 38: // up
           e.preventDefault()
-          setActive((x) => Math.max(0, x - 1))
+          prev()
           return
         case 40: // down
           e.preventDefault()
-          const autocompleteResults = om.state.home.autocompleteResults
-          setActive((x) => Math.min(autocompleteResults.length - 1, x + 1))
+          next()
           return
       }
     }

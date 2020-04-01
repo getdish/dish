@@ -6,7 +6,11 @@ import { useOvermind } from '../../state/om'
 import { LinkButton } from '../shared/Link'
 import { HStack, ZStack } from '../shared/Stacks'
 import { searchBarHeight, searchBarTopOffset } from './HomeSearchBar'
-import { flatButtonStyle, flatButtonStyleActive } from './HomeViewTopDishes'
+import {
+  flatButtonStyle,
+  flatButtonStyleActive,
+  flatButtonStyleInactive,
+} from './HomeViewTopDishes'
 
 export default memo(function HomeAutoComplete({ active }: { active: number }) {
   const om = useOvermind()
@@ -88,29 +92,32 @@ export default memo(function HomeAutoComplete({ active }: { active: number }) {
             overflow="scroll"
             spacing="sm"
           >
-            {autocompleteResults.length === 0 && <Text>No results..</Text>}
-            {autocompleteResults.map((x, index) => {
-              return (
-                <LinkButton
-                  name="search"
-                  params={{ query: x.name }}
-                  height={34}
-                  fastClick
-                  alignItems="center"
-                  justifyContent="center"
-                  {...(active === index
-                    ? flatButtonStyleActive
-                    : flatButtonStyle)}
-                  paddingHorizontal={10}
-                  fontSize={15}
-                  maxWidth={180}
-                  ellipse
-                  key={x.id}
-                >
-                  {x.name}
-                </LinkButton>
-              )
-            })}
+            {[{ name: 'Current Search', id: '-1' }, ...autocompleteResults].map(
+              (x, index) => {
+                return (
+                  <LinkButton
+                    name="search"
+                    params={{ query: x.name }}
+                    height={34}
+                    fastClick
+                    alignItems="center"
+                    justifyContent="center"
+                    {...(x.id === '-1'
+                      ? flatButtonStyleInactive
+                      : active === index
+                      ? flatButtonStyleActive
+                      : flatButtonStyle)}
+                    paddingHorizontal={10}
+                    fontSize={15}
+                    maxWidth={180}
+                    ellipse
+                    key={x.id}
+                  >
+                    {x.name}
+                  </LinkButton>
+                )
+              }
+            )}
           </HStack>
         </HStack>
       </ZStack>
