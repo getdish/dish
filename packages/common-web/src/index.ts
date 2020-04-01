@@ -2,8 +2,8 @@ export const isNode = typeof window == 'undefined'
 export const isBrowserProd =
   !isNode && window.location.hostname.includes('dish')
 
-const rootEl = document.getElementById('root')
-const isWorker = !rootEl
+const isWorker =
+  typeof document !== 'undefined' && !document.getElementById('root')
 
 export function getGraphEndpoint() {
   const LOCAL_HASURA = 'http://localhost:8080'

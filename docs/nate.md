@@ -14,15 +14,11 @@ web:
       - map has to move to pip then i think until you close or else its too awkward
 
 - RestaurantDetail
-  - flesh out page with information
-  - top dishes
-  - menu
   - gallery
   - social media links
   - hover tooltips for: address (gmaps/maps links)
 - bugs
   - going back from restaurant to search is re-running search
-  - moving between search/results fwd/back slow + bad animation
 - map
   - loading spinner on the map or on right of searchbar as you move (and for regular search)
   - move map should filter current results down and re-number
