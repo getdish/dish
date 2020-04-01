@@ -21,8 +21,10 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     argv
   )
 
-  config.optimization.splitChunks = false
-  config.optimization.runtimeChunk = false
+  if (config.optimization) {
+    config.optimization.splitChunks = false
+    config.optimization.runtimeChunk = false
+  }
 
   if (target === 'ssr') {
     config.target = 'node'
@@ -36,6 +38,11 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
       }
       return true
     })
+  } else {
+    config.output.filename = 'static/js/app.js'
+    if (config.optimization) {
+      config.optimization.minimize = false
+    }
   }
 
   if (!config.entry.app.some((x) => x.indexOf('index.web.tsx') > -1)) {

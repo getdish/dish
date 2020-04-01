@@ -1,7 +1,8 @@
 {
-  "name": "dish-web-app",
+  "name": "@dish/web",
   "version": "0.0.0",
   "private": true,
+  "main": "app.json",
   "workspaces": {
     "nohoist": [
       "**"
@@ -18,7 +19,9 @@
     "test": "true",
     "postinstall": "jetify && rm -r node_modules/@apollo/client/node_modules/react || true && patch-package",
     "build": "tsc -b",
-    "build:web": "(NODE_ENV=production TARGET=ssr webpack) & (NODE_ENV=production TARGET=client webpack)",
+    "build:web": "(yarn build:client) & (yarn build:server)",
+    "build:web:server": "NODE_ENV=production TARGET=ssr webpack",
+    "build:web:client": "NODE_ENV=production TARGET=client webpack",
     "build:web:watch": "(NODE_ENV=production TARGET=ssr webpack --watch) & (NODE_ENV=production TARGET=client webpack --watch)",
     "ios": "react-native run-ios",
     "android": "react-native run-android"

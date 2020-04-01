@@ -1,0 +1,50 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Helvetica, Arial, sans-serif;
+  background: #edf0f0;
+}
+body {
+  padding: 1em;
+}
+
+h1 {
+  background: #141d26;
+  margin: -0.5em -0.5em 0 -0.5em;
+  padding: 1em;
+  height: 1em;
+  color: #edf0f0;
+  font-weight: normal;
+  display: flex;
+  align-items: center;
+  align-content: center;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0 0 0 1em;
+}
+li {
+  line-height: 2;
+}
+
+code {
+  white-space: pre-wrap;
+}
+
+canvas {
+  background: #fff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+#myCanvas {
+  float: left;
+  margin-right: 5px;
+}
+
+#canvasButtonsDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

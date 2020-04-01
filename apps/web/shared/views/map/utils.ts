@@ -1,4 +1,4 @@
-import { mapkit } from '../mapkit'
+// import { mapkit } from '../mapkit'
 
 // Typescript Helpers
 type Merge<M, N> = Omit<M, Extract<keyof M, keyof N>> & N

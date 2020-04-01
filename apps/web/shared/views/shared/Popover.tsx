@@ -29,9 +29,9 @@ export const Popover = (props: {
   const [isMounted, setIsMounted] = useState(false)
   const isOpen = typeof forceShow == 'boolean' ? forceShow : !!props.isOpen
 
-  useWaterfall(() => {
-    setIsMounted(true)
-  })
+  // useWaterfall(() => {
+  //   setIsMounted(true)
+  // })
 
   useLayoutEffect(() => {
     if (props.onClickOutside) {

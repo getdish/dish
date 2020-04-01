@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { mapkit } from '../mapkit'
+// import { mapkit } from '../mapkit'
 import { MapOptions, propsToMapConstructionOptions } from './utils'
 import {
   NumberTuple,

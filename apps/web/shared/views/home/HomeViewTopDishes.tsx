@@ -1,7 +1,7 @@
 import { TopDish } from '@dish/models'
 import _ from 'lodash'
 import React, { useEffect } from 'react'
-import { Helmet } from 'react-helmet'
+// import { Helmet } from 'react-helmet'
 import { Image, ScrollView, Text } from 'react-native'
 
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
@@ -30,9 +30,9 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
   )
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title>Dish - Uniquely Good Food</title>
-      </Helmet>
+      </Helmet> */}
       <Spacer size={10} />
       <Title>{activeLense?.description ?? ''}</Title>
       <VStack position="relative" flex={1}>
