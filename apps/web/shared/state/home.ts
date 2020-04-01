@@ -318,6 +318,7 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     let id = lastRunAt
     await sleep(DEBOUNCE_AUTOCOMPLETE)
     if (id != lastRunAt) return
+    om.actions.home.setShowAutocomplete(true)
     om.actions.home.runAutocomplete(query)
     await sleep(DEBOUNCE_SEARCH - DEBOUNCE_AUTOCOMPLETE)
     if (id != lastRunAt) return
@@ -335,16 +336,39 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   }
 }
 
-const runAutocomplete: Action<string> = (om, query) => {
+const runAutocomplete: AsyncAction<string> = async (om, query) => {
+  const state = om.state.home.currentState
+  const restaurantsPromise = await Restaurant.search({
+    center: state.center,
+    span: state.span,
+    query,
+    limit: 5,
+  })
+
   const allDishes = om.state.home.allTopDishes
-  let found = fuzzy.search(query, { limit: 10 }).map((x) => x.item)
+  let found: { name: string }[] = fuzzy
+    .search(query, { limit: 10 })
+    .map((x) => x.item)
   if (found.length < 10) {
     found = [...found, ...allDishes.slice(0, 10 - found.length)]
   }
-  const results = found.map((x) => ({
+  const dishResults = _.uniqBy(found, (x) => x.name).map((x) => ({
     name: x.name,
-    id: `${Math.random()}`,
+    id: `${x.name}`,
   }))
+
+  const unsortedResults = [
+    ...dishResults,
+    ...(await restaurantsPromise).map((restaurant) => ({
+      name: restaurant.name,
+      id: restaurant.id,
+    })),
+  ]
+
+  // final fuzzy...
+  const searcher = new Fuse(unsortedResults, fuzzyOpts)
+  const results = searcher.search(query, { limit: 10 }).map((x) => x.item)
+
   console.log('got results', query, results)
   om.state.home.autocompleteResults = results
 }

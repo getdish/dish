@@ -179,6 +179,16 @@ export const flatButtonStyle: StackBaseProps = {
   borderRadius: 5,
 }
 
+export const flatButtonStyleActive: StackBaseProps = {
+  paddingVertical: 5,
+  paddingHorizontal: 8,
+  backgroundColor: 'rgba(200, 214, 255, 0.8)',
+  hoverStyle: {
+    backgroundColor: 'rgba(200, 214, 235, 1)',
+  },
+  borderRadius: 5,
+}
+
 export const circularFlatButtonStyle: StackBaseProps = {
   ...flatButtonStyle,
   borderRadius: 10000,

@@ -1,25 +1,20 @@
 import { LinearGradient } from 'expo-linear-gradient'
-import Fuse from 'fuse.js'
-import React, { memo, useEffect, useMemo } from 'react'
-import { StyleSheet } from 'react-native'
+import React, { memo, useEffect, useState } from 'react'
+import { StyleSheet, Text } from 'react-native'
 
-import { sleep } from '../../helpers/sleep'
 import { useOvermind } from '../../state/om'
 import { LinkButton } from '../shared/Link'
 import { HStack, ZStack } from '../shared/Stacks'
-import {
-  homeSearchBarEl,
-  searchBarHeight,
-  searchBarTopOffset,
-} from './HomeSearchBar'
-import { flatButtonStyle } from './HomeViewTopDishes'
+import { searchBarHeight, searchBarTopOffset } from './HomeSearchBar'
+import { flatButtonStyle, flatButtonStyleActive } from './HomeViewTopDishes'
 
-export default memo(function HomeAutoComplete() {
+export default memo(function HomeAutoComplete({ active }: { active: number }) {
   const om = useOvermind()
   const state = om.state.home.currentState
   const autocompleteResults = om.state.home.autocompleteResults
   const query = state.searchQuery
-  const isShowing = query === 'taco' || om.state.home.showAutocomplete
+  const isShowing =
+    query.length !== 0 && (query === 'taco' || om.state.home.showAutocomplete)
 
   // hide when moused away, show when moved back!
   useEffect(() => {
@@ -52,10 +47,6 @@ export default memo(function HomeAutoComplete() {
         fullscreen
         zIndex={20}
       >
-        {/* <LinearGradient
-          colors={['rgba(255,255,255,0.95)', 'transparent']}
-          style={[StyleSheet.absoluteFill, { height: 140 }]}
-        /> */}
         <LinearGradient
           colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.1)', 'transparent']}
           style={[StyleSheet.absoluteFill, { height: 160 }]}
@@ -66,7 +57,8 @@ export default memo(function HomeAutoComplete() {
         position="absolute"
         top={searchBarTopOffset + searchBarHeight}
         left={70}
-        width="calc(100vw - 200px)"
+        width="calc(100vw - 15%)"
+        maxWidth={850}
         zIndex={1000}
         overflow="hidden"
         paddingBottom={30}
@@ -88,14 +80,6 @@ export default memo(function HomeAutoComplete() {
           spacing
           position="relative"
         >
-          {/* <ZStack
-          fullscreen
-          borderRadius={10}
-          // borderTopLeftRadius={0}
-          overflow="hidden"
-        >
-          <BlurView />
-        </ZStack> */}
           <HStack
             height="100%"
             flex={1}
@@ -104,18 +88,22 @@ export default memo(function HomeAutoComplete() {
             overflow="scroll"
             spacing="sm"
           >
-            {autocompleteResults.map((x) => {
+            {autocompleteResults.length === 0 && <Text>No results..</Text>}
+            {autocompleteResults.map((x, index) => {
               return (
                 <LinkButton
                   name="search"
-                  params={{ query: `${query} ${x.name}` }}
-                  height={35}
+                  params={{ query: x.name }}
+                  height={34}
+                  fastClick
                   alignItems="center"
                   justifyContent="center"
-                  {...flatButtonStyle}
-                  paddingHorizontal={12}
-                  fontSize={16}
-                  maxWidth={130}
+                  {...(active === index
+                    ? flatButtonStyleActive
+                    : flatButtonStyle)}
+                  paddingHorizontal={10}
+                  fontSize={15}
+                  maxWidth={180}
                   ellipse
                   key={x.id}
                 >
