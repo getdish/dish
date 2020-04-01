@@ -12,7 +12,7 @@ export type Taxonomy = {
 export const taxonomyLenses: Taxonomy[] = [
   {
     id: '0',
-    name: 'Overall',
+    name: 'Uniquely Good Here',
     icon: '⭐️',
     rgb: [0.8, 0.1, 0.1],
     description: 'Uniquely good here',

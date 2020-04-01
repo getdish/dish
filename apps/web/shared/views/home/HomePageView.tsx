@@ -22,7 +22,7 @@ import HomeSearchResultsView from './HomeSearchResultsView'
 import HomeViewTopDishes from './HomeViewTopDishes'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
-export const drawerBorderRadius = 25
+export const drawerBorderRadius = 10
 
 export const HomePage = () => {
   return (
@@ -43,23 +43,23 @@ function HomeViewDrawer(props: { children: any }) {
   return (
     <VStack
       position={'absolute'}
-      top={15}
-      left={20}
-      bottom={15}
+      top={8}
+      left={8}
+      bottom={8}
       zIndex={10}
       width={drawerWidth}
       borderRadius={drawerBorderRadius}
       shadowColor="rgba(0,0,0,0.22)"
       shadowRadius={24}
       borderWidth={1}
-      borderColor="#fff"
+      borderColor="rgba(255,255,255,0.6)"
       flex={1}
     >
       <ZStack fullscreen borderRadius={drawerBorderRadius} overflow="hidden">
         {/* <BlurView /> */}
         <LinearGradient
           colors={[
-            'rgba(255,255,255,0.6)',
+            'rgba(255,255,255,0.3)',
             'rgba(255,255,255,1)',
             'rgba(255,255,255,1)',
             'rgba(255,255,255,1)',
@@ -71,8 +71,8 @@ function HomeViewDrawer(props: { children: any }) {
             'rgba(255,255,255,1)',
             'rgba(255,255,255,1)',
             'rgba(255,255,255,1)',
-            'rgba(255,255,255,0.8)',
-            'rgba(255,255,255,0.6)',
+            // 'rgba(255,255,255,0.8)',
+            // 'rgba(255,255,255,0.6)',
           ]}
           style={[StyleSheet.absoluteFill]}
         />
@@ -219,10 +219,10 @@ function HomeStackViewItem({
             fullscreen
             flex={1}
             zIndex={index}
-            top={index * 25}
+            top={index * 20}
             {...(index !== 0 && {
-              shadowColor: 'rgba(0,0,0,0.2)',
-              shadowRadius: 6,
+              shadowColor: 'rgba(0,0,0,0.15)',
+              shadowRadius: 14,
               shadowOffset: { width: 0, height: 2 },
             })}
             borderRadius={22}

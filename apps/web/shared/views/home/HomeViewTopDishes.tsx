@@ -1,7 +1,7 @@
 import { TopDish } from '@dish/models'
 import _ from 'lodash'
-import React, { useEffect } from 'react'
-// import { Helmet } from 'react-helmet'
+import React from 'react'
+import { Helmet } from 'react-helmet'
 import { Image, ScrollView, Text } from 'react-native'
 
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
@@ -21,20 +21,20 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
 }: {
   state: HomeStateItemHome
 }) {
-  const om = useOvermind()
+  // const om = useOvermind()
   if (state.type !== 'home') {
     return null
   }
-  const activeLense = om.state.home.allLenses.find((x) =>
-    state.activeTaxonomyIds.some((y) => y == x.id)
-  )
+  // const activeLense = om.state.home.allLenses.find((x) =>
+  //   state.activeTaxonomyIds.some((y) => y == x.id)
+  // )
   return (
     <>
-      {/* <Helmet>
+      <Helmet>
         <title>Dish - Uniquely Good Food</title>
-      </Helmet> */}
-      <Spacer size={10} />
-      <Title>{activeLense?.description ?? ''}</Title>
+      </Helmet>
+      <Spacer size={20} />
+      {/* <Title>{activeLense?.description ?? ''}</Title> */}
       <VStack position="relative" flex={1}>
         <HomeLenseBar backgroundGradient />
         <HomeViewTopDishesContent top_dishes={state.top_dishes} />

@@ -9,7 +9,7 @@ import { HStack, VStack } from '../shared/Stacks'
 export default memo(function HomeFilterBar() {
   const om = useOvermind()
   return (
-    <VStack paddingVertical={12} paddingBottom={6}>
+    <VStack paddingVertical={8} paddingBottom={6}>
       <HStack
         paddingHorizontal={30}
         paddingVertical={2}
