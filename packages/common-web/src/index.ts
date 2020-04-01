@@ -1,8 +1,9 @@
-import { isWorker } from 'cluster'
-
 export const isNode = typeof window == 'undefined'
 export const isBrowserProd =
   !isNode && window.location.hostname.includes('dish')
+
+const rootEl = document.getElementById('root')
+const isWorker = !rootEl
 
 export function getGraphEndpoint() {
   const LOCAL_HASURA = 'http://localhost:8080'
