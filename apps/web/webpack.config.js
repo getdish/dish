@@ -21,14 +21,15 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     argv
   )
 
+  config.optimization.splitChunks = false
+  config.optimization.runtimeChunk = false
+
   if (target === 'ssr') {
     config.target = 'node'
     config.output.path = path.join(__dirname, 'web-build-ssr')
     config.output.libraryTarget = 'commonjs'
     config.output.filename = `static/js/app.${target}.js`
     config.optimization.minimize = false
-    config.optimization.splitChunks = false
-    config.optimization.runtimeChunk = false
     config.plugins = config.plugins.filter((plugin) => {
       if (plugin.constructor.name === 'WebpackPWAManifest') {
         return false
