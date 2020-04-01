@@ -6,15 +6,12 @@ import { Image, ScrollView, Text } from 'react-native'
 
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItemHome, HomeStateItemSimple } from '../../state/home'
-import { useOvermind } from '../../state/om'
 import { LinkButton } from '../shared/Link'
-import { Title } from '../shared/SmallTitle'
 import { Spacer } from '../shared/Spacer'
 import { HStack, StackBaseProps, VStack } from '../shared/Stacks'
 import HomeLenseBar from './HomeLenseBar'
 import { RankingView } from './RankingView'
 import { RatingView } from './RatingView'
-import { SuperScriptText } from './TagButton'
 
 export default memoIsEqualDeep(function HomeViewTopDishes({
   state,
@@ -50,7 +47,7 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
         <VStack paddingVertical={20} paddingTop={20 + 100}>
           {top_dishes.map((country, index) => (
             <VStack key={country.country} paddingBottom={30}>
-              <HStack paddingHorizontal={20} marginVertical={-6}>
+              <HStack paddingHorizontal={20}>
                 <HStack flex={1}>
                   <RankingView rank={index + 1} marginTop={-13} />
                   <LinkButton
@@ -74,7 +71,14 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
               </HStack>
 
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <HStack height={170} padding={20} paddingHorizontal={18}>
+                <HStack
+                  height={160}
+                  alignItems="center"
+                  padding={20}
+                  paddingBottom={10}
+                  paddingHorizontal={32}
+                  spacing={22}
+                >
                   {(country.dishes || []).slice(0, 5).map((top_dish, index) => {
                     return (
                       <LinkButton
@@ -83,22 +87,21 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
                           // flexDirection: 'row',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          padding: 8,
-                          marginRight: 6,
+                          marginRight: 3,
                         }}
                         name="search"
                         params={{
                           query: top_dish.name,
                         }}
                       >
-                        <VStack width={100} height={100} paddingHorizontal={5}>
+                        <VStack width={90} height={90}>
                           <VStack
-                            shadowColor="rgba(0,0,0,0.2)"
-                            shadowRadius={6}
-                            shadowOffset={{ width: 0, height: 2 }}
+                            shadowColor="rgba(0,0,0,0.17)"
+                            shadowRadius={15}
+                            shadowOffset={{ width: 0, height: 3 }}
                             width="100%"
                             height="100%"
-                            borderRadius={35}
+                            borderRadius={33}
                             overflow="hidden"
                             hoverStyle={{
                               shadowRadius: 14,
@@ -113,16 +116,20 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
                             />
                           </VStack>
                         </VStack>
-                        <Spacer />
-                        <VStack maxWidth="100%" overflow="hidden">
+                        <VStack
+                          marginTop={5}
+                          alignItems="center"
+                          justifyContent="center"
+                          overflow="hidden"
+                        >
                           <Text
                             numberOfLines={1}
-                            ellipsizeMode="tail"
                             style={{
-                              textDecorationLine: 'none',
                               fontWeight: '600',
                               fontSize: 14,
-                              opacity: 0.7,
+                              lineHeight: 22,
+                              opacity: 0.75,
+                              textAlign: 'center',
                             }}
                           >
                             {top_dish.name}
@@ -135,7 +142,7 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
               </ScrollView>
 
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <HStack padding={10} paddingHorizontal={30}>
+                <HStack padding={10} paddingHorizontal={30} spacing={26}>
                   {_.uniqBy(country.top_restaurants, (x) => x.name).map(
                     (restaurant, index) => (
                       <LinkButton
@@ -143,10 +150,9 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
                         name="restaurant"
                         params={{ slug: restaurant.slug }}
                         {...flatButtonStyle}
-                        marginRight={18}
                         paddingRight={28}
                       >
-                        <Text style={{ fontSize: 15, fontWeight: '400' }}>
+                        <Text style={{ fontSize: 14, fontWeight: '400' }}>
                           {restaurant.name}
                         </Text>
                         <RatingView

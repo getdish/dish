@@ -8,6 +8,11 @@ export default function Hoverable({
   onHoverOut,
   onHoverMove,
   children,
+}: {
+  children?: any
+  onHoverIn?: Function
+  onHoverOut?: Function
+  onHoverMove?: Function
 }) {
   const [isHovered, setHovered] = React.useState(false)
   const [showHover, setShowHover] = React.useState(true)

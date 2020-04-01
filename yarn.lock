@@ -9551,6 +9551,11 @@ function-bind@^1.1.1:
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
 
+fuse.js@5.0.10-beta:
+  version "5.0.10-beta"
+  resolved "https://registry.npmjs.org/fuse.js/-/fuse.js-5.0.10-beta.tgz#1bb70763f71b469f6f51237e45a13be04196bf5b"
+  integrity sha512-/tZI6BiF4zToF1neZxOIa5YmSw6j5+3yJW/agoYUZBiaxHJk/ANBxafYDS/60Tvo3JQM2u/ceRvOgBmRYkv70A==
+
 gauge@~2.7.3:
   version "2.7.4"
   resolved "https://registry.npmjs.org/gauge/-/gauge-2.7.4.tgz#2c03405c7538c39d7eb37b317022e325fb018bf7"
@@ -16148,11 +16153,6 @@ quick-lru@^4.0.1:
   version "4.0.1"
   resolved "https://registry.npmjs.org/quick-lru/-/quick-lru-4.0.1.tgz#5b8878f113a58217848c6482026c73e1ba57727f"
   integrity sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==
-
-quick-score@0.0.6:
-  version "0.0.6"
-  resolved "https://registry.npmjs.org/quick-score/-/quick-score-0.0.6.tgz#8ede1b7b622b3c5b6a05c5bc1d71607c08c91c65"
-  integrity sha512-z96Q5KVc2gWqRqVIgPXgqovjHJSWBrUVsDIAjaExaSVHYzE8seLEcowpCEbweSp0HWUeiX9HZMQOWj4MTyKqrw==
 
 randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5:
   version "2.1.0"

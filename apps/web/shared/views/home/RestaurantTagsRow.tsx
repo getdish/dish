@@ -2,6 +2,7 @@ import { Restaurant } from '@dish/models'
 import React, { memo } from 'react'
 import { Text } from 'react-native'
 
+import { Spacer } from '../shared/Spacer'
 import { HStack } from '../shared/Stacks'
 import { RestaurantTagButton } from './RestaurantTagButton'
 import { SecondaryText } from './SecondaryText'
@@ -24,9 +25,6 @@ export const RestaurantTagsRow = memo(
     const tags = r.getTagsWithRankings() ?? []
     return (
       <HStack alignItems="center" spacing={size == 'lg' ? 8 : 4}>
-        {showMore && (
-          <RestaurantTagButton size={size} restaurant={restaurant} />
-        )}
         {tags
           .slice(0, showMore ? 2 : 10)
           .map((tag, index) =>
@@ -41,7 +39,13 @@ export const RestaurantTagsRow = memo(
               />
             )
           )}
-        {!!showMore && <Text style={{ opacity: 0.5 }}>+ 5 more</Text>}
+        {!!showMore && <Text style={{ opacity: 0.5 }}>+5</Text>}
+        {showMore && (
+          <>
+            <Spacer />
+            <RestaurantTagButton size={size} restaurant={restaurant} />
+          </>
+        )}
       </HStack>
     )
   }
