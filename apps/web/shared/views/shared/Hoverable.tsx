@@ -3,7 +3,12 @@ import React from 'react'
 
 import { isHoverEnabled } from './HoverState'
 
-export default function Hoverable({ onHoverIn, onHoverOut, children }) {
+export default function Hoverable({
+  onHoverIn,
+  onHoverOut,
+  onHoverMove,
+  children,
+}) {
   const [isHovered, setHovered] = React.useState(false)
   const [showHover, setShowHover] = React.useState(true)
 
@@ -33,6 +38,7 @@ export default function Hoverable({ onHoverIn, onHoverOut, children }) {
   return React.cloneElement(React.Children.only(child), {
     onMouseEnter: handleMouseEnter,
     onMouseLeave: handleMouseLeave,
+    onMouseMove: onHoverMove,
     // prevent hover showing while responder
     onResponderGrant: () => setShowHover(false),
     onResponderRelease: () => setShowHover(true),

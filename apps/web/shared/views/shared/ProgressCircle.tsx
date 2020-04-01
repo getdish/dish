@@ -1,15 +1,16 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 
 export function ProgressCircle({
   percent,
   color,
-  bgColor = '#e3e3e3',
+  bgColor = 'transparent',
   innerColor = '#fff',
   radius,
   borderWidth = 2,
   textStyle = null,
   children,
+  style,
 }: {
   color: string
   bgColor?: string
@@ -19,6 +20,7 @@ export function ProgressCircle({
   borderWidth?: number
   textStyle?: any
   children?: any
+  style?: ViewStyle
 }) {
   let leftTransformerDegree = '0deg'
   let rightTransformerDegree = '0deg'
@@ -31,11 +33,11 @@ export function ProgressCircle({
   }
 
   const state = {
-    percent: percent,
     borderWidth: borderWidth < 2 || !borderWidth ? 2 : borderWidth,
     leftTransformerDegree: leftTransformerDegree,
     rightTransformerDegree: rightTransformerDegree,
     textStyle: textStyle ? textStyle : null,
+    rotate: (100 - percent) * (radius / 23.8),
   }
 
   return (
@@ -47,7 +49,9 @@ export function ProgressCircle({
           height: radius * 2,
           borderRadius: radius,
           backgroundColor: bgColor,
+          transform: [{ rotate: `${state.rotate}deg` }],
         },
+        style,
       ]}
     >
       <View
@@ -116,6 +120,7 @@ export function ProgressCircle({
             height: (radius - state.borderWidth) * 2,
             borderRadius: radius - state.borderWidth,
             backgroundColor: innerColor,
+            transform: [{ rotate: `-${state.rotate}deg` }],
           },
         ]}
       >

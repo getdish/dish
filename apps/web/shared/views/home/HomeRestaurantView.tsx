@@ -61,12 +61,12 @@ export default memoIsEqualDeep(function HomeRestaurantView({
           <RestaurantRatingDetail size="lg" restaurant={restaurant} />
           <Spacer size={20} />
           <VStack flex={1}>
-            <Text style={{ fontSize: 30, fontWeight: 'bold' }}>
+            <Text style={{ fontSize: 28, fontWeight: 'bold' }}>
               {restaurant.name}
             </Text>
-            <Spacer size={6} />
+            <Spacer size={4} />
             <RestaurantMetaRow showMenu size="lg" restaurant={restaurant} />
-            <Spacer size={6} />
+            <Spacer size={8} />
             <Text style={{ color: '#777', fontSize: 13 }}>
               3017 16th St., San Francisco
             </Text>
@@ -374,34 +374,32 @@ const RatingBreakdownCircle = memo(
         width="100%"
         height="auto"
         paddingTop="100%"
-        backgroundColor="#eee"
+        backgroundColor="#fff"
         shadowColor="rgba(0,0,0,0.2)"
         shadowRadius={8}
       >
         <ZStack
-          top={1}
-          left={1}
-          right={1}
-          bottom={1}
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
           position="absolute"
           borderRadius={100}
           backgroundColor="white"
           overflow="hidden"
           alignItems="center"
           justifyContent="center"
-          transform={[{ rotate: `-${50 - 90}%` }]}
         >
           <ProgressCircle
-            percent={90}
-            radius={44}
+            percent={50}
+            radius={43}
             borderWidth={2}
-            color="green"
-            bgColor="#fff"
+            color="#ccc"
           />
         </ZStack>
         <ZStack fullscreen alignItems="center" justifyContent="center">
           <Text style={{ fontSize: 28, marginBottom: 0 }}>{emoji}</Text>
-          <Text style={{ fontSize: 13, color: '#555', fontWeight: '600' }}>
+          <Text style={{ fontSize: 12, color: '#555', fontWeight: '700' }}>
             {name}
           </Text>
         </ZStack>

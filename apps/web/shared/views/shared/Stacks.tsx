@@ -1,8 +1,15 @@
 import './Stacks.css'
 
-import React, { CSSProperties, forwardRef, useRef, useState } from 'react'
-import { Animated, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
+import React, {
+  forwardRef,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
+import { View, ViewProps, ViewStyle } from 'react-native'
 
+import { combineRefs } from '../../helpers/combineRefs'
 import Hoverable from './Hoverable'
 import { Spacer, Spacing } from './Spacer'
 
@@ -20,6 +27,8 @@ export type StackBaseProps = Omit<
       children?: any
       hoverStyle?: ViewStyle
       spacing?: Spacing
+      className?: string
+      disabled?: boolean // stronger pointer-events: none;
     },
   // because who tf uses alignContent
   'alignContent'
@@ -35,13 +44,28 @@ const createStack = (defaultStyle?: ViewStyle) => {
         style = null,
         hoverStyle = null,
         spacing,
+        className,
+        disabled,
         ...props
       },
       ref
     ) => {
-      const content = (extraStyle?: any) => {
-        let spacedChildren = children
+      const innerRef = useRef<any>()
 
+      useLayoutEffect(() => {
+        if (!className) return
+        if (hoverStyle) return
+        if (!innerRef.current) return
+        const node = innerRef.current?.['_reactInternalFiber']?.child.stateNode
+        if (!node) return
+        const names = className.split(' ')
+        if (disabled) names.push('force-disable')
+        names.forEach((x) => node.classList.add(x))
+        return () => names.forEach((x) => node.classList.remove(x))
+      })
+
+      const getContent = (extraStyle?: any) => {
+        let spacedChildren = children
         if (typeof spacing !== 'undefined') {
           const childArr = React.Children.toArray(children)
           spacedChildren = childArr
@@ -53,10 +77,9 @@ const createStack = (defaultStyle?: ViewStyle) => {
             )
             .flat()
         }
-
         return (
           <View
-            ref={ref}
+            ref={combineRefs(innerRef, ref)}
             pointerEvents={pointerEvents}
             style={[
               {
@@ -77,14 +100,18 @@ const createStack = (defaultStyle?: ViewStyle) => {
         const [isHovered, set] = useState(false)
         return (
           <Hoverable onHoverIn={() => set(true)} onHoverOut={() => set(false)}>
-            <div className="see-through">
-              {content(isHovered ? hoverStyle : null)}
+            <div
+              className={`see-through ${className} ${
+                disabled ? 'force-disable' : ''
+              }`}
+            >
+              {getContent(isHovered ? hoverStyle : null)}
             </div>
           </Hoverable>
         )
       }
 
-      return content()
+      return getContent()
     }
   )
 }

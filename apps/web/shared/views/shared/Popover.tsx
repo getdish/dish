@@ -93,9 +93,15 @@ export const Popover = (props: {
             arrowStyle={{
               // boxShadow: 'rgba(0,0,0,0.1) 10px 0',
               zIndex: 1000000000,
+              pointerEvents: 'none',
             }}
           >
-            {props.contents}
+            <div
+              style={{ pointerEvents: isOpen ? 'auto' : 'none' }}
+              className="see-through"
+            >
+              {props.contents}
+            </div>
           </ArrowContainer>
         )}
       >

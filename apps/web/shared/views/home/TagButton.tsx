@@ -65,7 +65,7 @@ export function SuperScriptText({
 }: TextProps & { children: any }) {
   return (
     <Text
-      style={[{ fontSize: 9, textAlignVertical: 'top' }, style]}
+      style={[{ fontSize: 12, textAlignVertical: 'top', opacity: 0.5 }, style]}
       {...rest}
     />
   )

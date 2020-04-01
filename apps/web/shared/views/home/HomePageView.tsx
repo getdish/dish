@@ -21,7 +21,7 @@ import HomeSearchResultsView from './HomeSearchResultsView'
 import HomeViewTopDishes from './HomeViewTopDishes'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
-export const drawerBorderRadius = 55
+export const drawerBorderRadius = 25
 
 export const HomePage = () => {
   return (
@@ -59,7 +59,6 @@ function HomeViewDrawer(props: { children: any }) {
         <LinearGradient
           colors={[
             'rgba(255,255,255,0.6)',
-            'rgba(255,255,255,0.8)',
             'rgba(255,255,255,1)',
             'rgba(255,255,255,1)',
             'rgba(255,255,255,1)',
@@ -222,9 +221,10 @@ function HomeStackViewItem({
             top={index * 25}
             {...(index !== 0 && {
               shadowColor: 'rgba(0,0,0,0.2)',
-              shadowRadius: 4,
+              shadowRadius: 6,
+              shadowOffset: { width: 0, height: 2 },
             })}
-            borderRadius={drawerBorderRadius / 3}
+            borderRadius={22}
             pointerEvents="auto"
             overflow="hidden"
           >

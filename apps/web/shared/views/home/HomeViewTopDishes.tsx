@@ -13,6 +13,7 @@ import { Spacer } from '../shared/Spacer'
 import { HStack, StackBaseProps, VStack } from '../shared/Stacks'
 import HomeLenseBar from './HomeLenseBar'
 import { RankingView } from './RankingView'
+import { RatingView } from './RatingView'
 import { SuperScriptText } from './TagButton'
 
 export default memoIsEqualDeep(function HomeViewTopDishes({
@@ -45,13 +46,13 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
 const HomeViewTopDishesContent = memoIsEqualDeep(
   ({ top_dishes = [] }: { top_dishes?: TopDish[] }) => {
     return (
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1, overflow: 'hidden' }}>
         <VStack paddingVertical={20} paddingTop={20 + 100}>
           {top_dishes.map((country, index) => (
             <VStack key={country.country} paddingBottom={30}>
               <HStack paddingHorizontal={20} marginVertical={-6}>
                 <HStack flex={1}>
-                  <RankingView rank={index + 1} />
+                  <RankingView rank={index + 1} marginTop={-13} />
                   <LinkButton
                     {...flatButtonStyle}
                     marginVertical={-5}
@@ -60,7 +61,7 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
                   >
                     <Text
                       numberOfLines={1}
-                      style={{ fontSize: 24, fontWeight: '600' }}
+                      style={{ fontSize: 22, fontWeight: '600' }}
                     >
                       {country.country}
                     </Text>
@@ -143,12 +144,18 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
                         params={{ slug: restaurant.slug }}
                         {...flatButtonStyle}
                         marginRight={18}
+                        paddingRight={28}
                       >
-                        <Text style={{ fontSize: 14 }}>
-                          <SuperScriptText>#</SuperScriptText>
-                          {index + 1}. {restaurant.name}{' '}
-                          {restaurant.rating.toFixed(1)}⭐
+                        <Text style={{ fontSize: 15, fontWeight: '400' }}>
+                          {restaurant.name}
                         </Text>
+                        <RatingView
+                          size="sm"
+                          restaurant={restaurant}
+                          position="absolute"
+                          top={-4}
+                          right={-12}
+                        />
                       </LinkButton>
                     )
                   )}

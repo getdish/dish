@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { memo, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { ScrollView, Text, View } from 'react-native'
 
@@ -21,6 +21,9 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
 }) {
   const om = useOvermind()
   const title = `Top ${state.searchQuery} Restaurants`
+  const prevState = om.state.home.states[om.state.home.states.length - 2]
+  const showCloseButton = prevState?.type === 'restaurant'
+  const closeButtonOpacity = showCloseButton ? 1 : 0
   return (
     <>
       <Helmet>
@@ -29,6 +32,7 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
       <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
         <CloseButton
           onPress={() => om.actions.home.popTo(om.state.home.lastHomeState)}
+          opacity={closeButtonOpacity}
         />
       </ZStack>
       <Title>{title}</Title>
@@ -40,51 +44,49 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
   )
 })
 
-function HomeSearchResultsViewContent({
-  state,
-}: {
-  state: HomeStateItemSearch
-}) {
-  const om = useOvermind()
-  const allRestaurants = om.state.home.restaurants
-  const resultsIds =
-    ((state.results?.status == 'complete' &&
-      state.results?.results?.restaurantIds) ||
-      undefined) ??
-    []
-  const results = resultsIds.map((id) => allRestaurants[id])
-  console.log('HomeSearchResults.results', results)
+const HomeSearchResultsViewContent = memo(
+  ({ state }: { state: HomeStateItemSearch }) => {
+    const om = useOvermind()
+    const allRestaurants = om.state.home.restaurants
+    const resultsIds =
+      ((state.results?.status == 'complete' &&
+        state.results?.results?.restaurantIds) ||
+        undefined) ??
+      []
+    const results = resultsIds.map((id) => allRestaurants[id])
+    console.log('HomeSearchResults.results', results)
 
-  if (state.results?.status == 'loading') {
+    if (state.results?.status == 'loading') {
+      return (
+        <VStack padding={18}>
+          <Text>Loading...</Text>
+        </VStack>
+      )
+    }
+
     return (
-      <VStack padding={18}>
-        <Text>Loading...</Text>
-      </VStack>
+      <List
+        data={[20 + 70, ...results, 20]}
+        estimatedHeight={182}
+        renderItem={({ item, index }) => {
+          if (typeof item == 'number') {
+            return <Spacer size={item} />
+          }
+          return (
+            <RestaurantListItem
+              key={item.id}
+              restaurant={item}
+              rank={index}
+              onHover={() => {
+                om.actions.home.setHoveredRestaurant(item)
+              }}
+            />
+          )
+        }}
+      />
     )
   }
-
-  return (
-    <List
-      data={[20 + 70, ...results, 20]}
-      estimatedHeight={182}
-      renderItem={({ item, index }) => {
-        if (typeof item == 'number') {
-          return <Spacer size={item} />
-        }
-        return (
-          <RestaurantListItem
-            key={item.id}
-            restaurant={item}
-            rank={index}
-            onHover={() => {
-              om.actions.home.setHoveredRestaurant(item)
-            }}
-          />
-        )
-      }}
-    />
-  )
-}
+)
 
 function List(props: {
   data: any[]

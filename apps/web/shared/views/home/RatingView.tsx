@@ -2,33 +2,41 @@ import { Restaurant } from '@dish/models'
 import React, { forwardRef } from 'react'
 import { Text } from 'react-native'
 
-import { VStack } from '../shared/Stacks'
+import { ProgressCircle } from '../shared/ProgressCircle'
+import { StackBaseProps, VStack } from '../shared/Stacks'
+
+export type RatingViewProps = StackBaseProps & {
+  size: 'lg' | 'md' | 'sm'
+  restaurant: Partial<Restaurant>
+}
 
 export const RatingView = forwardRef(
-  (
-    { restaurant, size: sizeIn }: { size: 'lg' | 'md'; restaurant: Restaurant },
-    ref
-  ) => {
-    const rank = Math.round(restaurant.rating * 20)
-    const color = rank > 84 ? 'green' : rank > 60 ? 'orange' : 'red'
+  ({ restaurant, size: sizeIn, ...rest }: RatingViewProps, ref) => {
+    const percent = Math.round(restaurant.rating * 20)
+    const color = percent > 84 ? 'green' : percent > 60 ? 'orange' : 'red'
     const borderColor =
-      rank > 84 ? 'lightgreen' : rank > 60 ? 'sunset' : 'lightred'
-    const size = sizeIn == 'md' ? 54 : 72
+      percent > 84 ? 'lightgreen' : percent > 60 ? 'sunset' : 'lightred'
+    const size = sizeIn == 'sm' ? 34 : sizeIn == 'md' ? 54 : 72
     return (
-      <VStack ref={ref as any} position="relative">
-        {rank > 89 && (
+      <VStack
+        ref={ref as any}
+        position="relative"
+        width={size}
+        height={size}
+        {...rest}
+      >
+        {percent > 89 && (
           <VStack
             position="absolute"
-            top={-6}
-            // bottom={0}
-            right={-6}
+            top={-size * 0.15}
+            right={-size * 0.15}
             alignItems="center"
             justifyContent="center"
             zIndex={100}
           >
             <Text
               style={{
-                fontSize: 18 + (sizeIn == 'lg' ? 6 : 0),
+                fontSize: size * 0.35,
                 textShadowColor: 'rgba(0,0,0,0.25)',
                 textShadowRadius: 2,
               }}
@@ -40,21 +48,20 @@ export const RatingView = forwardRef(
         <VStack
           backgroundColor="#fff"
           borderRadius={100}
-          shadowColor="rgba(0,0,0,0.25)"
-          shadowRadius={8}
+          shadowColor={`rgba(0,0,0,${sizeIn == 'lg' ? 0.15 : 0.2})`}
+          shadowRadius={size / 10}
           shadowOffset={{ height: 1, width: 0 }}
           width={size}
           height={size}
           alignItems="center"
           justifyContent="center"
-          padding={3 + (sizeIn == 'lg' ? 1 : 0)}
+          // padding={3 + (sizeIn == 'lg' ? 1 : 0)}
         >
-          <VStack
-            borderRadius={100}
-            borderColor={borderColor}
-            borderWidth={1 + (sizeIn == 'lg' ? 1 : 0)}
-            width="100%"
-            height="100%"
+          <ProgressCircle
+            percent={percent}
+            radius={size * 0.4522}
+            borderWidth={size * 0.09}
+            color={borderColor}
           >
             <VStack
               width="100%"
@@ -66,16 +73,24 @@ export const RatingView = forwardRef(
             >
               <Text
                 style={{
-                  fontSize: 22 + (sizeIn == 'lg' ? 4 : 0),
+                  fontSize: size / 2.25,
                   fontWeight: '600',
                   color,
-                  letterSpacing: -2,
+                  letterSpacing: -(size / 25),
                 }}
               >
-                {rank}
+                {percent}
               </Text>
             </VStack>
-          </VStack>
+          </ProgressCircle>
+          <VStack
+            borderRadius={100}
+            borderColor={borderColor}
+            borderWidth={1 + (sizeIn == 'lg' ? 1 : 0)}
+            width="100%"
+            height="100%"
+            position="absolute"
+          ></VStack>
         </VStack>
       </VStack>
     )
