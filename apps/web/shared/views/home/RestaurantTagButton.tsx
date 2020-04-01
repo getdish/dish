@@ -18,10 +18,11 @@ export const RestaurantTagButton = memo(
     const [isOpen, setIsOpen] = useState(false)
     const [suggested_tags, setSuggestedTags] = useState('')
     const isLarge = size == 'lg'
-
     return (
       <Popover
         overlay
+        isOpen={isOpen}
+        onClickOutside={() => setIsOpen(false)}
         position="right"
         contents={
           <Tooltip maxWidth={300}>
@@ -80,11 +81,25 @@ export const RestaurantTagButton = memo(
             </HStack>
           </Tooltip>
         }
-        isOpen={isOpen}
-        onClickOutside={() => setIsOpen(false)}
       >
-        <HoverableButton onPress={() => setIsOpen(true)} marginBottom={-4}>
-          <Icon size={isLarge ? 26 : 16} name="tag" color="blue" />
+        <HoverableButton
+          spacing={4}
+          paddingHorizontal={5}
+          paddingVertical={2}
+          onPress={() => setIsOpen(true)}
+          margin={-4}
+          borderRadius={10}
+          hoverStyle={{
+            backgroundColor: '#eee',
+          }}
+        >
+          Add
+          <Icon
+            size={isLarge ? 26 : 14}
+            marginBottom={-1}
+            name="tag"
+            color="blue"
+          />
         </HoverableButton>
       </Popover>
     )

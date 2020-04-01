@@ -1,13 +1,13 @@
 import React, {
   createContext,
   useContext,
-  useEffect,
   useLayoutEffect,
   useState,
 } from 'react'
 import { Platform } from 'react-native'
 import PopoverWeb, { ArrowContainer } from 'react-tiny-popover'
 
+import { isWorker } from '../../constants'
 import { useWaterfall } from './useWaterfall'
 
 export const ForceShowPopover = createContext<boolean | undefined>(undefined)
@@ -29,9 +29,11 @@ export const Popover = (props: {
   const [isMounted, setIsMounted] = useState(false)
   const isOpen = typeof forceShow == 'boolean' ? forceShow : !!props.isOpen
 
-  // useWaterfall(() => {
-  //   setIsMounted(true)
-  // })
+  if (!isWorker) {
+    useWaterfall(() => {
+      setIsMounted(true)
+    })
+  }
 
   useLayoutEffect(() => {
     if (props.onClickOutside) {

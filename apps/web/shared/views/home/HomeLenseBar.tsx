@@ -19,7 +19,7 @@ export default memo(function HomeLenseBar(props: {
           showsHorizontalScrollIndicator={false}
           style={{ marginVertical: -4 }}
         >
-          <HStack paddingHorizontal={20} paddingVertical={4} spacing>
+          <HStack paddingHorizontal={20} paddingVertical={4} spacing="sm">
             {om.state.home.allLenses.map((lense) => (
               <LenseButton key={lense.id} lense={lense} />
             ))}
