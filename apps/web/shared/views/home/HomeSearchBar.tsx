@@ -16,8 +16,8 @@ import { CloseButton } from './CloseButton'
 import { DishLogoButton } from './DishLogoButton'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
-export const searchBarTopOffset = 25
-export const searchBarHeight = 53
+export const searchBarTopOffset = 16
+export const searchBarHeight = 54
 export let homeSearchBarEl = {
   current: null as HTMLInputElement | null,
 }
@@ -178,16 +178,16 @@ const SearchLocationButton = memo(() => {
 const styles = StyleSheet.create({
   container: {
     zIndex: 22,
-    borderRadius: 14,
-    shadowColor: 'rgba(0,0,0,0.1)',
-    shadowRadius: 8,
-    shadowOffset: { height: 2, width: 0 },
+    borderRadius: 16,
+    shadowColor: 'rgba(0,0,0,0.15)',
+    shadowRadius: 10,
+    shadowOffset: { height: 3, width: 0 },
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#ccc',
     position: 'absolute',
     marginTop: searchBarTopOffset,
-    left: 5,
+    left: 15,
   },
   searchArea: {
     borderLeftWidth: 1,

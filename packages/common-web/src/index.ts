@@ -1,3 +1,5 @@
+import { isWorker } from 'cluster'
+
 export const isNode = typeof window == 'undefined'
 export const isBrowserProd =
   !isNode && window.location.hostname.includes('dish')
@@ -6,7 +8,9 @@ export function getGraphEndpoint() {
   const LOCAL_HASURA = 'http://localhost:8080'
   const LIVE_HASURA = 'https://hasura.rio.dishapp.com'
 
-  return LIVE_HASURA
+  if (isWorker) {
+    return LIVE_HASURA
+  }
 
   let domain: string
 

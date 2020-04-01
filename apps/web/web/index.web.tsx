@@ -9,12 +9,11 @@ window['location']
 
 const { OVERMIND_MUTATIONS, isWorker } = require('../shared/constants')
 const { App } = require('../shared/views/App')
-// import './mapkit'
 
 window['React'] = React
 
 // exports
-// export { Helmet } from 'react-helmet'
+export { Helmet } from 'react-helmet'
 export { App } from '../shared/views/App'
 export { config } from '../shared/state/om'
 export const ReactDOMServer = ReactDOMServerExport

@@ -42,6 +42,7 @@ export const LenseButton = memo(({ lense }: { lense: Taxonomy }) => {
             color: active ? '#000' : '#777',
             fontSize: 15,
             fontWeight: active ? '700' : '500',
+            letterSpacing: active ? -0.2 : 0,
           }}
         >
           {lense.icon} {lense.name}
