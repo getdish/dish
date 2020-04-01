@@ -1,48 +1,68 @@
+import { LinearGradient } from 'expo-linear-gradient'
 import Fuse from 'fuse.js'
-import React, { memo, useMemo } from 'react'
+import React, { memo, useEffect, useMemo } from 'react'
+import { StyleSheet } from 'react-native'
 
+import { sleep } from '../../helpers/sleep'
 import { useOvermind } from '../../state/om'
 import { LinkButton } from '../shared/Link'
 import { HStack, ZStack } from '../shared/Stacks'
-import { searchBarHeight, searchBarTopOffset } from './HomeSearchBar'
+import {
+  homeSearchBarEl,
+  searchBarHeight,
+  searchBarTopOffset,
+} from './HomeSearchBar'
 import { flatButtonStyle } from './HomeViewTopDishes'
-
-const options = {
-  shouldSort: true,
-  threshold: 0.6,
-  location: 0,
-  distance: 100,
-  minMatchCharLength: 1,
-  keys: ['title', 'author.firstName'],
-}
 
 export default memo(function HomeAutoComplete() {
   const om = useOvermind()
   const state = om.state.home.currentState
-  const allDishes = om.state.home.allTopDishes
+  const autocompleteResults = om.state.home.autocompleteResults
   const query = state.searchQuery
-  const isShowing = query === 'test' || om.state.home.showAutocomplete
+  const isShowing = query === 'taco' || om.state.home.showAutocomplete
 
-  const fuzzy = useMemo(() => new Fuse(allDishes, options), [allDishes])
-
-  const results = useMemo(() => {
-    let found = fuzzy.search(query, { limit: 10 }).map((x) => x.item)
-    if (found.length < 10) {
-      found = [...found, ...allDishes.slice(0, 10 - found.length)]
+  // hide when moused away, show when moved back!
+  useEffect(() => {
+    let tmOff
+    const handleMove = (e) => {
+      const y = e.pageY
+      const showAutocomplete = om.state.home.showAutocomplete
+      if (showAutocomplete) {
+        if (y > 190) {
+          tmOff = setTimeout(() => {
+            om.actions.home.setShowAutocomplete(false)
+          }, 150)
+        }
+      } else {
+        if (y < 190) {
+          clearTimeout(tmOff)
+        }
+      }
     }
-    return found
-  }, [query])
+    window.addEventListener('mousemove', handleMove)
+    return () => window.removeEventListener('mousemove', handleMove)
+  }, [isShowing])
 
   return (
     <>
       <ZStack
+        className="ease-in-out-fast"
         opacity={isShowing ? 1 : 0}
-        pointerEvents={isShowing ? 'auto' : 'none'}
+        disabled={!isShowing}
         fullscreen
         zIndex={20}
-        backgroundColor="rgba(0,0,0,0.1)"
-      />
+      >
+        {/* <LinearGradient
+          colors={['rgba(255,255,255,0.95)', 'transparent']}
+          style={[StyleSheet.absoluteFill, { height: 140 }]}
+        /> */}
+        <LinearGradient
+          colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.1)', 'transparent']}
+          style={[StyleSheet.absoluteFill, { height: 160 }]}
+        />
+      </ZStack>
       <ZStack
+        className="ease-in-out-fast"
         position="absolute"
         top={searchBarTopOffset + searchBarHeight}
         left={70}
@@ -53,16 +73,17 @@ export default memo(function HomeAutoComplete() {
         paddingHorizontal={30}
         marginLeft={-30}
         opacity={isShowing ? 1 : 0}
-        pointerEvents={isShowing ? 'auto' : 'none'}
+        transform={isShowing ? null : [{ translateY: 5 }]}
+        disabled={!isShowing}
       >
         <HStack
           backgroundColor="rgba(255,255,255,1)"
-          shadowColor="rgba(0,0,0,0.2)"
           borderRadius={10}
           borderTopLeftRadius={0}
           height={50}
           paddingBottom={1} // looks better 1px up
-          shadowRadius={30}
+          shadowColor="rgba(0,0,0,0.1)"
+          shadowRadius={20}
           shadowOffset={{ width: 0, height: 3 }}
           spacing
           position="relative"
@@ -83,7 +104,7 @@ export default memo(function HomeAutoComplete() {
             overflow="scroll"
             spacing="sm"
           >
-            {results.map((x) => {
+            {autocompleteResults.map((x) => {
               return (
                 <LinkButton
                   name="search"
@@ -96,7 +117,7 @@ export default memo(function HomeAutoComplete() {
                   fontSize={16}
                   maxWidth={130}
                   ellipse
-                  key={x.name}
+                  key={x.id}
                 >
                   {x.name}
                 </LinkButton>

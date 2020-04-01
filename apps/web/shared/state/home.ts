@@ -1,4 +1,5 @@
 import { Restaurant, RestaurantSearchArgs, Review, TopDish } from '@dish/models'
+import Fuse from 'fuse.js'
 import _ from 'lodash'
 import { Action, AsyncAction, Derive } from 'overmind'
 
@@ -54,8 +55,8 @@ export type HomeStateItemRestaurant = HomeStateItemBase & {
 export type HomeStateItemSimple = Omit<HomeStateItem, 'historyId'>
 
 export type AutocompleteItem = {
-  title: string
-  route: { name: string; params: Object }
+  name: string
+  id: string
 }
 
 const INITIAL_RADIUS = 0.1
@@ -272,19 +273,35 @@ const loadHomeDishes: AsyncAction = async (om) => {
     .map((x) => x.dishes)
     .flat(Infinity)
     .filter(Boolean)
+
+  // weird side effect
+  fuzzy = new Fuse(om.state.home.allTopDishes, fuzzyOpts)
 }
 
-const DEBOUNCE_SEARCH = 230
+const fuzzyOpts = {
+  shouldSort: true,
+  threshold: 0.6,
+  location: 0,
+  distance: 100,
+  minMatchCharLength: 1,
+  keys: ['name'],
+}
+
+let fuzzy = new Fuse([], fuzzyOpts)
+
+const DEBOUNCE_AUTOCOMPLETE = 60
+const DEBOUNCE_SEARCH = 600
 let lastRunAt = Date.now()
 const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   const state = om.state.home.currentState
+  const willSearch = state.type === 'home' && !!query
+
+  if (willSearch || state.type === 'search') {
+    state.searchQuery = query
+  }
 
   if (state.type === 'search') {
-    state.searchQuery = query
-
     if (query == '') {
-      const state = om.state.home.currentState
-      state.searchQuery = query
       if (om.state.home.currentState.type === 'search') {
         om.actions.router.navigate({ name: 'home' })
       }
@@ -292,14 +309,17 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     }
   }
 
-  // TODO run autocomplete here
-
+  // AUTOCOMPLETE
+  // very slight debounce
   const isOnSearch = state.type === 'search'
-  if (isOnSearch) {
+  if (isOnSearch || willSearch) {
     // debounce
     lastRunAt = Date.now()
     let id = lastRunAt
-    await sleep(DEBOUNCE_SEARCH)
+    await sleep(DEBOUNCE_AUTOCOMPLETE)
+    if (id != lastRunAt) return
+    om.actions.home.runAutocomplete(query)
+    await sleep(DEBOUNCE_SEARCH - DEBOUNCE_AUTOCOMPLETE)
     if (id != lastRunAt) return
   }
 
@@ -313,6 +333,20 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   if (isOnSearch) {
     om.actions.home.runSearch(query)
   }
+}
+
+const runAutocomplete: Action<string> = (om, query) => {
+  const allDishes = om.state.home.allTopDishes
+  let found = fuzzy.search(query, { limit: 10 }).map((x) => x.item)
+  if (found.length < 10) {
+    found = [...found, ...allDishes.slice(0, 10 - found.length)]
+  }
+  const results = found.map((x) => ({
+    name: x.name,
+    id: `${Math.random()}`,
+  }))
+  console.log('got results', query, results)
+  om.state.home.autocompleteResults = results
 }
 
 let runSearchId = 0
@@ -474,6 +508,7 @@ const setShowAutocomplete: Action<boolean> = (om, val) => {
 }
 
 export const actions = {
+  runAutocomplete,
   setShowAutocomplete,
   handleRouteChange,
   setMapArea,

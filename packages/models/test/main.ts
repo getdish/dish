@@ -87,12 +87,12 @@ test('Searching for a restaurant by name', async (t) => {
 
   const results = await Restaurant.search({
     center: {
-      lat: 50.5,
-      lng: 0.5,
+      lat: 50.1,
+      lng: 0.1,
     },
     span: {
-      lat: 1,
-      lng: 1,
+      lat: 0.2,
+      lng: 0.2,
     },
     query: 'Test',
   })

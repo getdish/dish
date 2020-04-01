@@ -153,3 +153,11 @@ Idea for really sexy things that will catch attention (later):
 - sexy splash page for home
 - signup for beta
 - spreadsheet view into all data next to a simple map
+
+---
+
+triage:
+
+- embed stack of search results > detail fully into url so it retains search in shared link even
+
+---

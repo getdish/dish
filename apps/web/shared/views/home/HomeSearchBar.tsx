@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useReducer, useRef, useState } from 'react'
 import {
   StyleSheet,
   Text,
@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 
 import { useOvermind } from '../../state/om'
+import Hoverable from '../shared/Hoverable'
 import { Icon } from '../shared/Icon'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
@@ -17,9 +18,13 @@ import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 export const searchBarTopOffset = 25
 export const searchBarHeight = 53
+export let homeSearchBarEl = {
+  current: null as HTMLInputElement | null,
+}
 
 export default memo(function HomeSearchBar() {
   const om = useOvermind()
+  const inputRef = useRef()
   const globalSearch = om.state.home.currentState.searchQuery
   const width = useHomeDrawerWidth()
 
@@ -30,6 +35,23 @@ export default memo(function HomeSearchBar() {
     setSearch(globalSearch)
   }, [globalSearch])
 
+  // ONE way sync this state so we can control it programatically (but blurring gets annoying)
+  const { showAutocomplete } = om.state.home
+  // @ts-ignore
+  const node: HTMLInputElement | null = inputRef.current?.['_node'] ?? null
+  useEffect(() => {
+    homeSearchBarEl.current = node
+    const isFocused = document.activeElement === node
+    if (isFocused) return // ONE way sync
+    if (showAutocomplete !== isFocused) {
+      if (showAutocomplete) node.focus()
+      else node.blur()
+    }
+  }, [node, showAutocomplete])
+
+  const tm = useRef(0)
+  const tm2 = useRef(0)
+
   return (
     <View
       style={[styles.container, { width: width + 30, height: searchBarHeight }]}
@@ -37,22 +59,48 @@ export default memo(function HomeSearchBar() {
       <HStack>
         <DishLogoButton />
         <VStack flex={1.7} style={styles.searchArea}>
-          <TextInput
-            // leave uncontrolled for perf?
-            value={search}
-            onFocus={() => {
-              om.actions.home.setShowAutocomplete(true)
+          <Hoverable
+            // show even if moving after some time
+            onHoverIn={() => {
+              tm2.current = setTimeout(() => {
+                if (document.activeElement == node) {
+                  om.actions.home.setShowAutocomplete(true)
+                }
+              }, 300)
             }}
-            onBlur={() => {
-              om.actions.home.setShowAutocomplete(false)
+            onHoverOut={() => {
+              clearTimeout(tm.current)
+              clearTimeout(tm2.current)
             }}
-            onChangeText={(text) => {
-              setSearch(text)
-              om.actions.home.setSearchQuery(text)
+            onHoverMove={() => {
+              clearTimeout(tm.current)
+              if (om.state.home.currentState.searchQuery) {
+                tm.current = setTimeout(() => {
+                  if (document.activeElement == node) {
+                    om.actions.home.setShowAutocomplete(true)
+                  }
+                }, 150)
+              }
             }}
-            placeholder="Search dish, cuisine"
-            style={[styles.textInput, { fontSize: 20, paddingRight: 42 }]}
-          />
+          >
+            <TextInput
+              ref={inputRef}
+              // leave uncontrolled for perf?
+              value={search}
+              onFocus={() => {
+                om.actions.home.setShowAutocomplete(true)
+              }}
+              onBlur={() => {
+                om.actions.home.setShowAutocomplete(false)
+              }}
+              onChangeText={(text) => {
+                setSearch(text)
+                om.actions.home.setSearchQuery(text)
+              }}
+              placeholder="Search dish, cuisine"
+              style={[styles.textInput, { fontSize: 20, paddingRight: 42 }]}
+            />
+          </Hoverable>
           <SearchCancelButton />
         </VStack>
         <VStack flex={1} style={styles.searchArea}>

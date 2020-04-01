@@ -61,3 +61,27 @@ textarea {
   text-overflow: ellipsis;
   max-width: 100%;
 }
+
+.ease-in-out-fast {
+  transition: all ease-in-out 150ms;
+}
+.ease-in-out-med {
+  transition: all ease-in-out 250ms;
+}
+.ease-in-out-slow {
+  transition: all ease-in-out 350ms;
+}
+
+.force-disable,
+.force-disable * {
+  pointer-events: none !important;
+}
+
+/* fix pointer events bug */
+.react-tiny-popover-container {
+  pointer-events: none;
+}
+
+.inline-link {
+  display: inline-flex;
+}

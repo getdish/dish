@@ -42,7 +42,7 @@ export function Link<
         e.preventDefault()
         om.actions.router.navigate({ name, params } as any)
       }, [])}
-      className={`${inline ? '' : ' block-link'}`}
+      className={`${inline ? 'inline-link' : ' block-link'}`}
       style={{ maxWidth: '100%' }}
     >
       <div
@@ -113,7 +113,7 @@ export function LinkButton<
   }
 
   return (
-    <VStack flex={props.flex} pointerEvents={pointerEvents}>
+    <VStack flex={props.flex} pointerEvents={pointerEvents ?? 'auto'}>
       <TouchableOpacity onPress={onPress}>
         <VStack flex={1} {...restProps}>
           {contents}
