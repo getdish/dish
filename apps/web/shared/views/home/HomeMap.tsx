@@ -105,7 +105,10 @@ export const HomeMap = memo(() => {
 
   const [focused, setFocused] = useState('')
 
-  const restaurantDetail = state.type == 'restaurant' ? state.restaurant : null
+  const restaurantDetail =
+    state.type == 'restaurant'
+      ? om.state.home.allRestaurants[state.restaurantId]
+      : null
   const prevResults: string[] =
     (state.type == 'restaurant' &&
       om.state.home.previousState?.type == 'search' &&
@@ -113,7 +116,7 @@ export const HomeMap = memo(() => {
       om.state.home.previousState?.results.results.restaurantIds) ||
     []
 
-  const allRestaurants = om.state.home.restaurants
+  const allRestaurants = om.state.home.allRestaurants
   const searchResults =
     state.type == 'search'
       ? state.results.status == 'complete'
@@ -161,6 +164,8 @@ export const HomeMap = memo(() => {
         : [],
     [restaurantsVersion]
   )
+
+  console.log('HomeMap', { mapkit, restaurantDetail, restaurantIds })
 
   // hover on map annotation
   const annotationsContainer = document.querySelector(
@@ -231,8 +236,12 @@ export const HomeMap = memo(() => {
   // Detail - center to restaurant
   const restaurantDelayed = useDebounceValue(restaurantDetail, 250)
   useEffect(() => {
-    if (!map || !mapkit || !restaurantDelayed?.location) return
+    if (!map || !restaurantDelayed?.location) return
     console.log('center map to', restaurantDelayed)
+    const index = restaurantIds.indexOf(restaurantDelayed.id)
+    if (index > -1) {
+      map.annotations[index].selected = true
+    }
     centerMapToRegion({
       map,
       center: {
@@ -241,7 +250,7 @@ export const HomeMap = memo(() => {
       },
       span: state.span,
     })
-  }, [!!map, mapkit, restaurantDelayed])
+  }, [!!map, restaurantDelayed])
 
   // selected on map
   useEffect(() => {

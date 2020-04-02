@@ -46,7 +46,7 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
 const HomeSearchResultsViewContent = memo(
   ({ state }: { state: HomeStateItemSearch }) => {
     const om = useOvermind()
-    const allRestaurants = om.state.home.restaurants
+    const allRestaurants = om.state.home.allRestaurants
     const resultsIds =
       ((state.results?.status == 'complete' &&
         state.results?.results?.restaurantIds) ||
