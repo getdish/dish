@@ -193,7 +193,6 @@ export class Restaurant extends ModelBase<Restaurant> {
       'tags=' + tags.map((t) => t.toLowerCase().trim()).join(','),
     ]
     const url = SEARCH_DOMAIN + '/search?' + params.join('&')
-    console.log(url)
     const response = await axios.get(url)
     return response.data.map(
       (data: Partial<Restaurant>) => new Restaurant(data)

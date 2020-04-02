@@ -25,7 +25,8 @@
     "presize": "npm-run-all build",
     "size": "filesize",
     "release": "np",
-    "prepublishOnly": "npm-run-all clean build"
+    "prepublishOnly": "npm-run-all clean build",
+    "test": "true"
   },
   "dependencies": {
     "@dish/web": "*"

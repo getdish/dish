@@ -2,6 +2,7 @@ import { EnumType } from 'json-to-graphql-query'
 
 import { ModelBase } from './ModelBase'
 import { Restaurant } from './Restaurant'
+import { Taxonomy } from './Taxonomy'
 import { User } from './User'
 
 export class Review extends ModelBase<Review> {
@@ -9,6 +10,8 @@ export class Review extends ModelBase<Review> {
   restaurant!: Restaurant
   user_id!: string
   user!: User
+  taxonomy_id!: string
+  taxonomy!: Taxonomy
   rating!: number
   text!: string
 
@@ -17,10 +20,22 @@ export class Review extends ModelBase<Review> {
   }
 
   static fields() {
-    return ['restaurant_id', 'user_id', 'rating', 'text']
+    return ['restaurant_id', 'user_id', 'taxonomy_id', 'rating', 'text']
   }
 
-  async findOne(restaurant_id: string, user_id: string) {
+  async findOne(restaurant_id: string, user_id: string, taxonomy_id = '') {
+    let tax_where = {
+      taxonomy_id: {},
+    }
+    let tax_return = {}
+    if (taxonomy_id != '') {
+      tax_return = {
+        taxonomy: Taxonomy.fieldsAsObject(),
+      }
+      tax_where = {
+        taxonomy_id: { _eq: taxonomy_id },
+      }
+    }
     const query = {
       query: {
         review: {
@@ -28,9 +43,11 @@ export class Review extends ModelBase<Review> {
             where: {
               restaurant_id: { _eq: restaurant_id },
               user_id: { _eq: user_id },
+              ...tax_where,
             },
           },
           ...this.fieldsAsObject(),
+          ...tax_return,
           restaurant: Restaurant.fieldsAsObject(),
           user: User.fieldsAsObject(),
         },

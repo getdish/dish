@@ -1,13 +1,19 @@
+import auth from '@dish/auth'
 import anyTest, { TestInterface } from 'ava'
 import axios from 'axios'
 import moment from 'moment'
 
 import { Dish } from '../src/Dish'
 import { Restaurant } from '../src/Restaurant'
+import { Review } from '../src/Review'
 import { Taxonomy } from '../src/Taxonomy'
+import { User } from '../src/User'
+import { flushTestData } from '../src/utils'
 
 interface Context {
   restaurant: Restaurant
+  existing_tag: Taxonomy
+  user: User
 }
 
 const test = anyTest as TestInterface<Context>
@@ -43,12 +49,17 @@ const dish_fixture: Partial<Dish> = {
 }
 
 test.beforeEach(async (t) => {
-  await Restaurant.deleteAllFuzzyBy('name', 'Test')
-  await Dish.deleteAllFuzzyBy('name', 'Test')
-  await Taxonomy.deleteAllFuzzyBy('name', 'test')
+  await flushTestData()
   let restaurant = new Restaurant(restaurant_fixture)
   await restaurant.upsert()
   t.context.restaurant = restaurant
+  const existing_tag = new Taxonomy({ name: 'test_tag_existing' })
+  await existing_tag.insert()
+  t.context.existing_tag = existing_tag
+  await auth.register('test', 'password')
+  const user = new User()
+  await user.findOne('username', 'test')
+  t.context.user = user
 })
 
 test('Inserting a restaurant', async (t) => {
@@ -70,12 +81,10 @@ test('Tagging a restaurant', async (t) => {
     ...restaurant_fixture,
   })
   await restaurant.upsert()
-  const existing_tag = new Taxonomy({ name: 'test_tag_existing' })
-  await existing_tag.insert()
   const tag_ids = await restaurant.upsertTags(['test_tag', 'test_tag_existing'])
   await restaurant.findOne('name', restaurant.name)
   t.is(tag_ids.length, 2)
-  t.is(tag_ids.includes(existing_tag.id), true)
+  t.is(tag_ids.includes(t.context.existing_tag.id), true)
   t.is(restaurant.tags.map((t) => t.taxonomy.name).includes('test_tag'), true)
 })
 
@@ -189,4 +198,29 @@ test.skip('Is open now', async (t) => {
   const restaurant = new Restaurant()
   await restaurant.findOne('name', 'Test Restaurant')
   t.is(restaurant.is_open_now, is_open)
+})
+
+test('Add a review for the whole restaurant itself', async (t) => {
+  const review = new Review({
+    restaurant_id: t.context.restaurant.id,
+    user_id: t.context.user.id,
+    rating: 5,
+    text: 'test',
+  })
+  await review.insert()
+  const results = await Review.findAllForRestaurant(t.context.restaurant.id)
+  t.deepEqual(review.id, results[0].id)
+})
+
+test('Add a review for restaurant by tag', async (t) => {
+  const review = new Review({
+    restaurant_id: t.context.restaurant.id,
+    user_id: t.context.user.id,
+    taxonomy_id: t.context.existing_tag.id,
+    rating: 5,
+    text: 'test',
+  })
+  await review.insert()
+  const results = await Review.findAllForRestaurant(t.context.restaurant.id)
+  t.deepEqual(review.id, results[0].id)
 })

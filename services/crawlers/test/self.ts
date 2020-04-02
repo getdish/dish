@@ -1,4 +1,4 @@
-import { Restaurant, Scrape } from '@dish/models'
+import { Restaurant, Scrape, flushTestData } from '@dish/models'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 
 import { Self } from '../src/self/Self'
@@ -82,8 +82,7 @@ const tripadvisor: Partial<Scrape> = {
 
 async function reset(t: ExecutionContext<Context>) {
   let scrape: Scrape
-  await Scrape.deleteAllFuzzyBy('id_from_source', 'test')
-  await Restaurant.deleteAllFuzzyBy('name', 'Test')
+  await flushTestData()
   const restaurant = new Restaurant(restaurant_fixture)
   await restaurant.insert()
   t.context.restaurant = restaurant

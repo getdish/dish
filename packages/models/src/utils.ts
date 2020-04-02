@@ -1,3 +1,10 @@
+import { Dish } from './Dish'
+import { Restaurant } from './Restaurant'
+import { Review } from './Review'
+import { Scrape } from './Scrape'
+import { Taxonomy } from './Taxonomy'
+import { User } from './User'
+
 // Taken from: https://github.com/trekhleb/javascript-algorithms
 export function levenshteinDistance(a: string, b: string) {
   // Create empty edit distance matrix for all possible modifications of
@@ -32,4 +39,13 @@ export function levenshteinDistance(a: string, b: string) {
   }
 
   return distanceMatrix[b.length][a.length]
+}
+
+export async function flushTestData() {
+  await Scrape.deleteAllFuzzyBy('id_from_source', 'test')
+  await Review.deleteAllFuzzyBy('text', 'test')
+  await Taxonomy.deleteAllFuzzyBy('name', 'test')
+  await User.deleteAllFuzzyBy('username', 'test')
+  await Dish.deleteAllFuzzyBy('name', 'Test')
+  await Restaurant.deleteAllFuzzyBy('name', 'Test')
 }

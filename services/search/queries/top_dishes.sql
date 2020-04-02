@@ -2,6 +2,7 @@ WITH by_country AS (
   SELECT
     (SELECT DISTINCT t.name) AS country,
     (SELECT icon FROM taxonomy WHERE name = (SELECT DISTINCT t.name)) AS icon,
+    (SELECT id FROM taxonomy WHERE name = (SELECT DISTINCT t.name)) AS taxonomy_id,
     COUNT(restaurant.id) AS frequency,
     AVG(restaurant.rating) AS avg_rating,
     (

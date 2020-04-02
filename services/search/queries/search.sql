@@ -17,6 +17,7 @@ SELECT jsonb_agg(
       'tags', ARRAY(
         SELECT json_build_object(
           'taxonomy', json_build_object(
+            'id', id,
             'name', name,
             'icon', icon,
             'type', type

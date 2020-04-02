@@ -1,0 +1,30 @@
+- args:
+    role: user
+    table:
+      name: review
+      schema: public
+  type: drop_update_permission
+- args:
+    permission:
+      columns:
+      - categories
+      - created_at
+      - id
+      - rating
+      - restaurant_id
+      - taxonomy_id
+      - text
+      - updated_at
+      - user_id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      localPresets:
+      - key: ""
+        value: ""
+      set: {}
+    role: user
+    table:
+      name: review
+      schema: public
+  type: create_update_permission
