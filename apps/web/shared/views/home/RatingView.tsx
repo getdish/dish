@@ -15,7 +15,7 @@ export const RatingView = forwardRef(
     const percent = Math.round(restaurant.rating * 20)
     const color = percent > 84 ? 'green' : percent > 60 ? 'orange' : 'red'
     const borderColor =
-      percent > 84 ? 'lightgreen' : percent > 60 ? 'sunset' : 'lightred'
+      percent > 84 ? 'lightgreen' : percent > 60 ? 'gold' : 'lightred'
     const size = sizeIn == 'sm' ? 34 : sizeIn == 'md' ? 48 : 72
     return (
       <VStack
@@ -25,11 +25,11 @@ export const RatingView = forwardRef(
         height={size}
         {...rest}
       >
-        {percent > 89 && (
+        {percent >= 80 && (
           <VStack
             position="absolute"
-            top={-size * 0.15}
-            right={-size * 0.15}
+            top={-size * 0.11}
+            right={-size * 0.11}
             alignItems="center"
             justifyContent="center"
             zIndex={100}
@@ -41,7 +41,7 @@ export const RatingView = forwardRef(
                 textShadowRadius: 2,
               }}
             >
-              ⭐️
+              {percent >= 90 ? '🏆' : '⭐️'}
             </Text>
           </VStack>
         )}
@@ -60,7 +60,7 @@ export const RatingView = forwardRef(
           <ProgressCircle
             percent={percent}
             radius={size * 0.4522}
-            borderWidth={size * 0.09}
+            borderWidth={size * 0.07}
             color={borderColor}
           >
             <VStack

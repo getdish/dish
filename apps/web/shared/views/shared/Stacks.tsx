@@ -73,7 +73,18 @@ const createStack = (defaultStyle?: ViewStyle) => {
             .map((x, i) =>
               i === childArr.length - 1
                 ? x
-                : [x, <Spacer key={i} size={spacing} />]
+                : [
+                    x,
+                    <Spacer
+                      key={i}
+                      size={spacing}
+                      direction={
+                        defaultStyle?.flexDirection === 'row'
+                          ? 'horizontal'
+                          : 'vertical'
+                      }
+                    />,
+                  ]
             )
             .flat()
         }
