@@ -73,10 +73,10 @@ export const RatingView = forwardRef(
             >
               <Text
                 style={{
-                  fontSize: size / 2.25,
+                  fontSize: size * 0.38,
                   fontWeight: '600',
                   color,
-                  letterSpacing: -(size / 25),
+                  letterSpacing: -(size / 35),
                 }}
               >
                 {percent}

@@ -20,6 +20,8 @@ function centerMapToRegion(p: {
   p.map.setRegionAnimated(region)
 }
 
+export let mapView: any
+
 export const HomeMap = memo(() => {
   const om = useOvermind()
   const drawerWidth = useHomeDrawerWidth()
@@ -51,6 +53,7 @@ export const HomeMap = memo(() => {
       right: 20,
     },
   })
+  mapView = map
 
   // wheel zoom
   if (map && map['_allowWheelToZoom'] == false) {

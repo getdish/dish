@@ -5,6 +5,7 @@ import { Action, AsyncAction, Derive } from 'overmind'
 
 import { isWorker } from '../constants'
 import { sleep } from '../helpers/sleep'
+import { mapView } from '../views/home/HomeMap'
 import { HistoryItem, RouteItem } from './router'
 import { Taxonomy, taxonomyFilters, taxonomyLenses } from './Taxonomy'
 
@@ -58,6 +59,7 @@ export type HomeStateItemSimple = Omit<HomeStateItem, 'historyId'>
 
 export type AutocompleteItem = {
   name: string
+  type: 'dish' | 'restaurant' | 'location'
   id: string
 }
 
@@ -372,7 +374,18 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
 
 const runAutocomplete: AsyncAction<string> = async (om, query) => {
   const state = om.state.home.currentState
-  const restaurantsPromise = await Restaurant.search({
+
+  const locationSearch = new mapkit.Search({ region: mapView.region })
+  const locationPromise = new Promise<
+    { name: string; formattedAddress: string; coordinate: any }[]
+  >((res, rej) => {
+    locationSearch.search(state.searchQuery, (err, data) => {
+      if (err) return rej(err)
+      res(data.places)
+    })
+  })
+
+  const restaurantsPromise = Restaurant.search({
     center: state.center,
     span: state.span,
     query,
@@ -386,16 +399,30 @@ const runAutocomplete: AsyncAction<string> = async (om, query) => {
   if (found.length < 10) {
     found = [...found, ...allDishes.slice(0, 10 - found.length)]
   }
-  const dishResults = _.uniqBy(found, (x) => x.name).map((x) => ({
-    name: x.name,
-    id: `${x.name}`,
-  }))
+  const dishResults: AutocompleteItem[] = _.uniqBy(found, (x) => x.name).map(
+    (x) => ({
+      name: x.name,
+      type: 'dish',
+      id: `${x.name}`,
+    })
+  )
 
-  const unsortedResults = [
+  const [restaurantsResults, locationResults] = await Promise.all([
+    restaurantsPromise,
+    locationPromise,
+  ])
+
+  const unsortedResults: AutocompleteItem[] = [
     ...dishResults,
-    ...(await restaurantsPromise).map((restaurant) => ({
+    ...restaurantsResults.map((restaurant) => ({
       name: restaurant.name,
+      type: 'restaurant' as const,
       id: restaurant.id,
+    })),
+    ...locationResults.map((location) => ({
+      name: location.name,
+      type: 'location' as const,
+      id: location.name,
     })),
   ]
 
