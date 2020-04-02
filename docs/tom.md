@@ -2,10 +2,13 @@
 
 ## Web frontend
 
-- [ ] Top Dishes - Since the web has more room, I think we can do a new interface here where we show a vertical list of horizontal sub-lists. the vertical list will be "most popular by-country cuisines (Korean, Mexican, etc), and each of those lists shows "most popular dishes within the cuisine (for Korean -> KBBQ, Bulgogi, Galbi, etc)". Should have a big effect on explorability. From there we can do a few fun things too with the map (hover each listitem to see a preview of the results)
-- [ ] Search: include; current results, in the region; restaurants, dishes and locations
+- [ ] Home/Data - Get home page generally working with dishes showing for most cuisines
+- [ ] Indexing: a lot of duplicate restaurants
+- [ ] Indexing: see why infatuated is not indexing
+- [ ] Home/Search - make the filters/lenses work with taxonomy queries, you should be able to do this in the frontend and re-run actions.home.runSearch
 - [ ] Do search on 404 page
 - [ ] Permalinks to source data
+- [ ] (low priority) Autocomplete: a quick endpoint for searching dishes + restaurants
 
 # Backlog
 
@@ -16,14 +19,9 @@
 - [ ] be able to pass in Taxonomy as filters
 - [ ] returns Restaurant, Dish, Taxonomy.searchable, we can just do multiple requests/grouped to start
 
-## Ratings Crawler
+## Indexing
 
-- [ ] Small admin UI to control how we weigh review sources to make ratings. A way to see ~5 examples of Top "X" dish would be helpful so you can adjust ratings weights and see which looks best. Later we can make this smarter, just first step.
-- [ ] Step two - in admin let us control the weighting of our internal super-user reviewers weights
-
-## Crawlers
-
-- [ ] Getting all the delivery services is big
+- [ ] Getting all the delivery services is big (i'm happy to help a bit here too)
 - [ ] Postmates
 - [ ] GrubHub
 - [ ] DoorDash
@@ -39,8 +37,6 @@
 - [ ] Taxonomy.searchable should be something we can control
 - [ ] Taxonomy types: "lense", "filter", "cuisine", "continent" - See the harcoded values in Home.swift, we need adapt all these into Taxonomy DB and then we can replace the hardcoded parts in the swift app with real queries
 - [ ] Automating and finishing filling out a lot of Taxonomy stuff - Admin UI needs some work to be nicer laid out and easy to edit/add
-- [ ] We need a Taxonomy.fuzzyFilter (and Admin UI) so we can do some matching, ie: Taxonomy("Pho").fuzzyFilter("^pho*, ^Phở*")
-- [ ] Rankings within each taxonomical category (#1 in Pho [type=dish], but also #22 in Date Spot [type=lense], but also #9 in Mexican [type=cuisine])
 
 ## Users
 
@@ -75,24 +71,6 @@
 
 Previously
 
-- filters API
-  - types: lense, cuisine, simple
-    - lense: uses emojis, can be voted on or controlled by us
-    - simple: combines with lense: price, open now, delivers, etc
-  - { query GetFilters(type: "lense") { name, icon, type, id } }
-    - icon is a String / emoji
-  - cuisine ("country")
-    - one type of filter we'll have is cuisines, on the home screen:
-      - grouped by continent! right now i'm doing something like:
-        - "North American": "🇺🇸 American", "🇲🇽 Mexican"
-        - so perhaps we want something like groupID on filters, and then i can just hardcode which ids map to which continents for simplicity like so:
-          - 1001 = Americas
-          - 1002 = Africa
-          - ...
-    - i'll fetch all the filters on startup essentially
-- search
-  - can pass it filters
-  - { query SearchRequest(filters: [{ id: "0", value: true }], geoLocation: {} { restaurants } }
 - home
   - shows the top dishes based on your current filters
   - heres an example filter:
