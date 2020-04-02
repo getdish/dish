@@ -3,10 +3,11 @@ import React, { memo, useEffect, useState } from 'react'
 import { StyleSheet, Text } from 'react-native'
 
 import { useOvermind } from '../../state/om'
-import { LinkButton } from '../shared/Link'
+import { Link, LinkButton } from '../shared/Link'
 import { HStack, ZStack } from '../shared/Stacks'
 import { searchBarHeight, searchBarTopOffset } from './HomeSearchBar'
 import {
+  circularFlatButtonStyle,
   flatButtonStyle,
   flatButtonStyleActive,
   flatButtonStyleInactive,
@@ -92,32 +93,49 @@ export default memo(function HomeAutoComplete({ active }: { active: number }) {
             overflow="scroll"
             spacing="sm"
           >
-            {[{ name: 'Current Search', id: '-1' }, ...autocompleteResults].map(
-              (x, index) => {
-                return (
-                  <LinkButton
-                    name="search"
-                    params={{ query: x.name }}
-                    height={34}
-                    fastClick
-                    alignItems="center"
-                    justifyContent="center"
-                    {...(x.id === '-1'
-                      ? flatButtonStyleInactive
-                      : active === index
-                      ? flatButtonStyleActive
-                      : flatButtonStyle)}
-                    paddingHorizontal={10}
-                    fontSize={15}
-                    maxWidth={180}
-                    ellipse
-                    key={x.id}
-                  >
-                    {x.name}
-                  </LinkButton>
-                )
-              }
-            )}
+            {[
+              { name: state.searchQuery, id: '-1', type: 'none' },
+              ...autocompleteResults,
+            ].map((x, index) => {
+              return (
+                <LinkButton
+                  name="search"
+                  flexDirection="row"
+                  params={{ query: x.name }}
+                  height={34}
+                  fastClick
+                  alignItems="center"
+                  justifyContent="center"
+                  {...(x.id === '-1'
+                    ? flatButtonStyleInactive
+                    : active === index
+                    ? flatButtonStyleActive
+                    : flatButtonStyle)}
+                  paddingHorizontal={10}
+                  fontSize={15}
+                  maxWidth={180}
+                  ellipse
+                  key={x.id}
+                >
+                  {x.name}{' '}
+                  {x.type === 'dish' &&
+                  index !== 0 &&
+                  om.state.home.currentState.type === 'search' &&
+                  om.state.auth.is_logged_in ? (
+                    <LinkButton
+                      {...circularFlatButtonStyle}
+                      marginVertical={-4}
+                      onPress={(e) => {
+                        console.log('e', e)
+                        alert('add to current search results')
+                      }}
+                    >
+                      +
+                    </LinkButton>
+                  ) : null}
+                </LinkButton>
+              )
+            })}
           </HStack>
         </HStack>
       </ZStack>
