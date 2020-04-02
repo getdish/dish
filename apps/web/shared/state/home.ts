@@ -48,7 +48,7 @@ export type HomeStateItemSearch = HomeStateItemBase & {
 
 export type HomeStateItemRestaurant = HomeStateItemBase & {
   type: 'restaurant'
-  restaurant: Restaurant | null
+  restaurantId: string | null
   reviews: Review[]
   review: Review | null
 }
@@ -109,7 +109,7 @@ type HomeStateBase = {
   allFilters: Taxonomy[]
   autocompleteResults: AutocompleteItem[]
   allTopDishes: TopDish['dishes']
-  restaurants: { [id: string]: Restaurant }
+  allRestaurants: { [id: string]: Restaurant }
   showMenu: boolean
   states: HomeStateItem[]
   hoveredRestaurant: Restaurant | null
@@ -130,7 +130,7 @@ export const state: HomeState = {
   allFilters: taxonomyFilters,
   autocompleteResults: [],
   allTopDishes: [],
-  restaurants: {},
+  allRestaurants: {},
   showAutocomplete: false,
   showMenu: false,
   states: [initialHomeState],
@@ -191,13 +191,16 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
     case 'restaurant':
       nextState = {
         type: 'restaurant',
-        restaurant: null,
+        restaurantId: null,
         review: null,
         reviews: [],
         ...currentBaseState,
       }
       fetchData = async () => {
-        await om.actions.home.setCurrentRestaurant(item.params.slug)
+        await om.actions.home._loadRestaurantDetail({
+          slug: item.params.slug,
+          currentState,
+        })
       }
       break
   }
@@ -240,18 +243,26 @@ const _popHomeState: Action<HistoryItem> = (om, item) => {
   }
 }
 
-const setCurrentRestaurant: AsyncAction<string> = async (om, slug: string) => {
+const _loadRestaurantDetail: AsyncAction<{
+  slug: string
+  currentState: HomeStateItem
+}> = async (om, { slug, currentState }) => {
   const restaurant = new Restaurant()
   await restaurant.findOne('slug', slug)
+  om.state.home.allRestaurants[restaurant.id] = restaurant
   const state = om.state.home.lastRestaurantState
   if (state) {
-    state.restaurant = restaurant
+    state.restaurantId = restaurant.id
     state.center = {
       lng: restaurant.location.coordinates[0],
       lat: restaurant.location.coordinates[1] - 0.0037,
     }
+    // zoom in a bit
+    state.span = {
+      lng: currentState.span.lng * 0.66,
+      lat: currentState.span.lat * 0.66,
+    }
     state.reviews = await Review.findAllForRestaurant(restaurant.id)
-
     if (om.state.auth.is_logged_in) {
       await om.actions.home.getReview()
     }
@@ -387,7 +398,6 @@ const runAutocomplete: AsyncAction<string> = async (om, query) => {
   const searcher = new Fuse(unsortedResults, fuzzyOpts)
   const results = searcher.search(query, { limit: 10 }).map((x) => x.item)
 
-  console.log('got results', query, results)
   om.state.home.autocompleteResults = results
 }
 
@@ -433,7 +443,7 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
 
   // update denormalized dictionary
   for (const restaurant of restaurants) {
-    om.state.home.restaurants[restaurant.id] = restaurant
+    om.state.home.allRestaurants[restaurant.id] = restaurant
   }
 
   state.results = {
@@ -465,11 +475,11 @@ const getReview: AsyncAction = async (om) => {
   if (!state) return
   if (!om.state.auth.user) return
   let review = new Review()
-  await review.findOne(state.restaurant.id, om.state.auth.user.id)
+  await review.findOne(state.restaurantId, om.state.auth.user.id)
   state.review = review
   if (typeof state.review.id == 'undefined') {
     Object.assign(state.review, {
-      restaurant_id: state.restaurant.id,
+      restaurant_id: state.restaurantId,
       user_id: om.state.auth.user.id,
     })
   }
@@ -563,7 +573,7 @@ export const actions = {
   toggleActiveTaxonomy,
   setShowMenu,
   setHoveredRestaurant,
-  setCurrentRestaurant,
+  _loadRestaurantDetail,
   runSearch,
   _loadHomeDishes,
   clearSearch,

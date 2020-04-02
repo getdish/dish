@@ -35,8 +35,8 @@ export default memoIsEqualDeep(function HomeRestaurantView({
 }) {
   const om = useOvermind()
   if (state.type !== 'restaurant') return null
-  if (!state.restaurant) return null
-  const restaurant = state.restaurant
+  if (!state.restaurantId) return null
+  const restaurant = om.state.home.allRestaurants[state.restaurantId]
 
   if (typeof restaurant.name == 'undefined') {
     return <Text>Loading...</Text>
