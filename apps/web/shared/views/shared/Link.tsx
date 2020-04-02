@@ -9,6 +9,7 @@ import { StackBaseProps, VStack } from './Stacks'
 
 type LinkSharedProps = {
   fontSize?: TextStyle['fontSize']
+  lineHeight?: TextStyle['lineHeight']
   ellipse?: boolean
   fastClick?: boolean
 }
@@ -23,6 +24,7 @@ export function Link<
   fontSize,
   children,
   ellipse,
+  lineHeight,
   fastClick,
   ...props
 }: React.DetailedHTMLProps<
@@ -53,7 +55,18 @@ export function Link<
     >
       <div
         className={` ${ellipse ? ' ellipse' : ''}`}
-        style={fontSize ? { fontSize: `${fontSize}px` } : null}
+        style={
+          fontSize || lineHeight
+            ? {
+                fontSize:
+                  typeof fontSize == 'number' ? `${fontSize}px` : fontSize,
+                lineHeight:
+                  typeof lineHeight == 'number'
+                    ? `${lineHeight}px`
+                    : lineHeight,
+              }
+            : null
+        }
       >
         {children}
       </div>
@@ -92,6 +105,7 @@ export function LinkButton<
       fontSize,
       ellipse,
       fastClick,
+      lineHeight,
       ...rest
     } = props
     pointerEvents = rest.pointerEvents
@@ -101,6 +115,7 @@ export function LinkButton<
         name={name}
         params={params}
         onClick={onPress}
+        lineHeight={lineHeight}
         fontSize={fontSize}
         ellipse={ellipse}
         fastClick={fastClick}
@@ -109,12 +124,22 @@ export function LinkButton<
       </Link>
     )
   } else {
-    const { children, onPress: onPress_, fontSize, ellipse, ...rest } = props
+    const {
+      children,
+      onPress: onPress_,
+      fontSize,
+      lineHeight,
+      ellipse,
+      ...rest
+    } = props
     pointerEvents = rest.pointerEvents
     onPress = onPress_
     restProps = rest
     contents = (
-      <Text numberOfLines={ellipse ? 1 : undefined} style={{ fontSize }}>
+      <Text
+        numberOfLines={ellipse ? 1 : undefined}
+        style={{ fontSize, lineHeight }}
+      >
         {children ?? ''}
       </Text>
     )

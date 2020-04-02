@@ -58,6 +58,7 @@ export type HomeStateItemRestaurant = HomeStateItemBase & {
 export type HomeStateItemSimple = Omit<HomeStateItem, 'historyId'>
 
 export type AutocompleteItem = {
+  icon?: string
   name: string
   type: 'dish' | 'restaurant' | 'location'
   id: string
@@ -380,7 +381,10 @@ const runAutocomplete: AsyncAction<string> = async (om, query) => {
     { name: string; formattedAddress: string; coordinate: any }[]
   >((res, rej) => {
     locationSearch.search(state.searchQuery, (err, data) => {
-      if (err) return rej(err)
+      if (err) {
+        console.log('network failure')
+        return res([])
+      }
       res(data.places)
     })
   })
@@ -403,7 +407,8 @@ const runAutocomplete: AsyncAction<string> = async (om, query) => {
     (x) => ({
       name: x.name,
       type: 'dish',
-      id: `${x.name}`,
+      icon: `🍛`,
+      id: `dish-${x.name}`,
     })
   )
 
@@ -412,23 +417,29 @@ const runAutocomplete: AsyncAction<string> = async (om, query) => {
     locationPromise,
   ])
 
-  const unsortedResults: AutocompleteItem[] = [
-    ...dishResults,
-    ...restaurantsResults.map((restaurant) => ({
-      name: restaurant.name,
-      type: 'restaurant' as const,
-      id: restaurant.id,
-    })),
-    ...locationResults.map((location) => ({
-      name: location.name,
-      type: 'location' as const,
-      id: location.name,
-    })),
-  ]
+  const unsortedResults: AutocompleteItem[] = _.uniqBy(
+    [
+      ...dishResults,
+      ...restaurantsResults.map((restaurant) => ({
+        name: restaurant.name,
+        // TODO tom - can we get the cuisine taxonomy icon here? we can load common ones somewhere
+        icon: '🏘',
+        type: 'restaurant' as const,
+        id: restaurant.id,
+      })),
+      ...locationResults.map((location) => ({
+        name: location.name,
+        type: 'location' as const,
+        icon: '📍',
+        id: `loc-${location.name}`,
+      })),
+    ],
+    (x) => `${x.name}${x.type}`
+  )
 
   // final fuzzy...
   const searcher = new Fuse(unsortedResults, fuzzyOpts)
-  const results = searcher.search(query, { limit: 10 }).map((x) => x.item)
+  const results = searcher.search(query, { limit: 8 }).map((x) => x.item)
 
   om.state.home.autocompleteResults = results
 }
