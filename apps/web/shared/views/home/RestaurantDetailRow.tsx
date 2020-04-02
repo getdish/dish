@@ -2,6 +2,7 @@ import { Restaurant } from '@dish/models'
 import React, { memo } from 'react'
 import { StyleSheet, Text } from 'react-native'
 
+import { Divider } from '../shared/Divider'
 import { HStack, StackBaseProps, VStack } from '../shared/Stacks'
 
 export const RestaurantDetailRow = memo(
@@ -19,8 +20,14 @@ export const RestaurantDetailRow = memo(
     const [price_label, price_color, price_range] = priceRange(restaurant)
     const isSm = size === 'sm'
     return (
-      <HStack paddingLeft={22} paddingRight={20} {...rest}>
-        <VStack width="30%" paddingRight="5%">
+      <HStack
+        paddingLeft={22}
+        paddingRight={20}
+        alignItems="center"
+        spacing="7%"
+        {...rest}
+      >
+        <VStack>
           <Text
             numberOfLines={1}
             style={{
@@ -40,7 +47,9 @@ export const RestaurantDetailRow = memo(
           </Text>
         </VStack>
 
-        <VStack width="33%" paddingHorizontal="5%">
+        <Divider vertical height={25} />
+
+        <VStack>
           <Text
             numberOfLines={1}
             style={{
@@ -60,7 +69,9 @@ export const RestaurantDetailRow = memo(
           </Text>
         </VStack>
 
-        <VStack width="33%" paddingHorizontal="5%">
+        <Divider vertical height={25} />
+
+        <VStack>
           <Text
             numberOfLines={1}
             style={{

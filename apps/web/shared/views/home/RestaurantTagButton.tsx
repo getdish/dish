@@ -93,7 +93,7 @@ export const RestaurantTagButton = memo(
             backgroundColor: '#eee',
           }}
         >
-          Add
+          {isLarge ? '' : 'Add'}
           <Icon
             size={isLarge ? 26 : 14}
             marginBottom={-1}

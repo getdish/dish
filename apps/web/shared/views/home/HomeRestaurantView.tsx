@@ -88,18 +88,21 @@ export default memoIsEqualDeep(function HomeRestaurantView({
               <Spacer size={24} />
             )}
             <Spacer />
-            <Divider flex />
+            <View style={{ flex: 1 }} />
             <RestaurantTagsRow size="lg" restaurant={restaurant} />
-            <Divider flex />
+            <View style={{ flex: 1 }} />
             <Spacer />
             <RestaurantFavoriteStar restaurant={restaurant} size="lg" />
           </HStack>
 
-          <VStack>
-            <HStack alignItems="center">
-              <RestaurantDetailRow centered restaurant={restaurant} flex={1} />
-            </HStack>
-          </VStack>
+          <HStack paddingVertical={10}>
+            <RestaurantDetailRow
+              centered
+              justifyContent="center"
+              restaurant={restaurant}
+              flex={1}
+            />
+          </HStack>
 
           <VStack marginTop={-8} marginHorizontal={-18}>
             <HStack
@@ -158,7 +161,7 @@ export default memoIsEqualDeep(function HomeRestaurantView({
             // borderWidth={1}
             // borderRadius={30}
           >
-            <LinkButton flex={1} name="restaurant" alignItems="stretch">
+            <LinkButton flex={1} name="restaurant">
               <VStack
                 width="100%"
                 shadowColor="rgba(0,0,0,0.2)"
@@ -175,11 +178,19 @@ export default memoIsEqualDeep(function HomeRestaurantView({
                   }}
                 />
               </VStack>
-              <Text style={{ textAlign: 'center', fontSize: 13, opacity: 0.8 }}>
+              <Text
+                style={{
+                  alignSelf: 'center',
+                  textAlign: 'center',
+                  margin: 'auto',
+                  fontSize: 13,
+                  opacity: 0.8,
+                }}
+              >
                 Inside
               </Text>
             </LinkButton>
-            <LinkButton flex={1} name="restaurant" alignItems="stretch">
+            <LinkButton flex={1} name="restaurant">
               <VStack
                 width="100%"
                 shadowColor="rgba(0,0,0,0.2)"
@@ -196,11 +207,17 @@ export default memoIsEqualDeep(function HomeRestaurantView({
                   }}
                 />
               </VStack>
-              <Text style={{ textAlign: 'center', fontSize: 13, opacity: 0.8 }}>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  fontSize: 13,
+                  opacity: 0.8,
+                }}
+              >
                 Menu
               </Text>
             </LinkButton>
-            <LinkButton flex={1} name="restaurant" alignItems="stretch">
+            <LinkButton flex={1} name="restaurant">
               <VStack
                 width="100%"
                 shadowColor="rgba(0,0,0,0.2)"
@@ -217,7 +234,13 @@ export default memoIsEqualDeep(function HomeRestaurantView({
                   }}
                 />
               </VStack>
-              <Text style={{ textAlign: 'center', fontSize: 13, opacity: 0.8 }}>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  fontSize: 13,
+                  opacity: 0.8,
+                }}
+              >
                 Outside
               </Text>
             </LinkButton>

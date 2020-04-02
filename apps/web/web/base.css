@@ -85,3 +85,10 @@ textarea {
 .inline-link {
   display: inline-flex;
 }
+
+div {
+  display: flex;
+  flex-direction: inherit;
+  flex-wrap: inherit;
+  flex-grow: inherit;
+}
