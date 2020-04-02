@@ -1,3 +1,21 @@
+friday
+
+- fix some of routing, map-pin issues
+- fix RatingView style issus on <90
+- make TagPopover work
+- Popovers respond to esc key
+- Popovers prevent clicking above content bug
+- Double esc to go back from Restaurant
+- Autocomplete - go straight to restaurant if restaurant
+- add in location search to autocomplete
+- add in location search to location textinput
+- fix bug going back to search re-runs search (again)
+- search loading state indicator
+- move map should re-run search but show an option to update it
+  hovering a restaurant in searchresults should show a bottomarea preview - a nice quote with information on that restaurant (summary - that peach can fill in) - moving the hover to the dish images should then switch it over to showing - the dishes
+- basic keyboard for searchresults movement
+- test enabling Suspense for much faster rendering
+
 next:
 
 web:

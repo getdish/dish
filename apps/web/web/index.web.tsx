@@ -1,11 +1,42 @@
 // global styles
-import './base.css'
+require('./base.css')
+const React = require('react')
+const { hydrate, render } = require('react-dom')
 
-import React from 'react'
-import { hydrate, render } from 'react-dom'
-import * as ReactDOMServerExport from 'react-dom/server'
+if (process.env.TARGET == 'worker') {
+  window['isWorker'] = true
+  // @ts-ignore
+  document.head = {
+    appendChild() {},
+    insertBefore() {},
+  }
+  // @ts-ignore
+  document.cookie = ''
+  // @ts-ignore
+  window.history = window.history || {
+    pathname: '/',
+    location: null,
+    replaceState() {},
+    pushState() {},
+  }
+}
 
-window['location']
+if (process.env.TARGET == 'preact') {
+  require('preact/debug')
+  React['__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED'] = {
+    ReactCurrentOwner: {
+      get current() {
+        return {
+          elementType: {
+            componentId: '',
+          },
+        }
+      },
+    },
+  }
+} else {
+  exports.ReactDOMServer = require('react-dom/server')
+}
 
 const { OVERMIND_MUTATIONS, isWorker } = require('../shared/constants')
 const { App } = require('../shared/views/App')
@@ -13,10 +44,11 @@ const { App } = require('../shared/views/App')
 window['React'] = React
 
 // exports
-export { Helmet } from 'react-helmet'
-export { App } from '../shared/views/App'
-export { config } from '../shared/state/om'
-export const ReactDOMServer = ReactDOMServerExport
+exports.Helmet = require('react-helmet')
+exports.App = require('../shared/views/App')
+exports.config = require('../shared/state/om')
+
+// export const
 
 let rootEl = document.getElementById('root')
 

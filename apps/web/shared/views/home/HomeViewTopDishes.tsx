@@ -7,6 +7,7 @@ import { Image, ScrollView, Text } from 'react-native'
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItemHome, HomeStateItemSimple } from '../../state/home'
 import { LinkButton } from '../shared/Link'
+import { PageTitle } from '../shared/PageTitle'
 import { Spacer } from '../shared/Spacer'
 import { HStack, StackBaseProps, VStack } from '../shared/Stacks'
 import HomeLenseBar from './HomeLenseBar'
@@ -27,25 +28,23 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
   // )
   return (
     <>
-      <Helmet>
-        <title>Dish - Uniquely Good Food</title>
-      </Helmet>
+      <PageTitle>Dish - Uniquely Good Food</PageTitle>
       <Spacer size={20} />
       {/* <Title>{activeLense?.description ?? ''}</Title> */}
       <VStack position="relative" flex={1}>
         <HomeLenseBar backgroundGradient />
-        <HomeViewTopDishesContent top_dishes={state.top_dishes} />
+        <HomeViewTopDishesContent topDishes={state.topDishes} />
       </VStack>
     </>
   )
 })
 
 const HomeViewTopDishesContent = memoIsEqualDeep(
-  ({ top_dishes = [] }: { top_dishes?: TopDish[] }) => {
+  ({ topDishes = [] }: { topDishes?: TopDish[] }) => {
     return (
       <ScrollView style={{ flex: 1, overflow: 'hidden' }}>
         <VStack paddingVertical={20} paddingTop={20 + 100}>
-          {top_dishes.map((country, index) => (
+          {topDishes.map((country, index) => (
             <VStack key={country.country} paddingBottom={30}>
               <HStack paddingHorizontal={20}>
                 <HStack flex={1}>

@@ -1,16 +1,6 @@
 import { isEqual } from '@o/fast-compare'
 import _ from 'lodash'
-import {
-  Action,
-  AsyncAction,
-  Derive,
-  Operator,
-  catchError,
-  map,
-  mutate,
-  pipe,
-  run,
-} from 'overmind'
+import { Action, AsyncAction, Derive } from 'overmind'
 import page from 'page'
 import queryString from 'query-string'
 
@@ -83,6 +73,10 @@ export type RouteItem = {
 export type OnRouteChangeCb = (item: RouteItem) => any
 
 let onRouteChange: OnRouteChangeCb | null = null
+let finishStart: Function
+let onFinishStart = new Promise((res) => {
+  finishStart = res
+})
 
 const start: AsyncAction<{
   onRouteChange?: OnRouteChangeCb
@@ -98,6 +92,7 @@ const start: AsyncAction<{
 
   om.actions.router.routeListenNotFound()
   page.start()
+  await onFinishStart
 }
 
 // state
@@ -223,6 +218,7 @@ const routeListenNotFound: Action = (om) => {
   page('*', (ctx) => {
     console.log('Not found!', ctx)
     om.state.router.notFound = true
+    om.actions.router.navigate({ name: 'home' })
   })
 }
 

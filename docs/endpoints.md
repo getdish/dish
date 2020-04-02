@@ -16,6 +16,7 @@ For queries that use distance in degrees, a good rule of thumb is that 0.01 degr
 about 1.1132km.
 
 ## Getting all restaurants within a bounding box
+
 ```
 curl -H "Content-Type: application/json" \
   --data '{ "query": "query { \n
@@ -40,9 +41,11 @@ curl -H "Content-Type: application/json" \
 ```
 
 ## Autocomplete (restricted by radius)
+
 `distance` is in degrees.
 
 Eg; user has typed 'tart', note how the `%`s represent wildcards for any amount of text:
+
 ```
 curl -H "Content-Type: application/json" \
   --data '{ "query": "query { \n
@@ -65,6 +68,7 @@ curl -H "Content-Type: application/json" \
 ```
 
 ## Getting a single restaurant with dishes
+
 ```
 curl -H "Content-Type: application/json" \
   --data '{ "query": "query { \n
@@ -86,6 +90,7 @@ curl -H "Content-Type: application/json" \
 ## Filter by categories (restricted by radius)
 
 `distance` is in degrees.
+
 ```
 curl -H "Content-Type: application/json" \
   --data '{ "query": "query { \n

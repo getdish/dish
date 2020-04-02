@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/go-pg/pg/v9"
-	"github.com/rs/cors"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
+
+	"github.com/go-pg/pg/v9"
+	"github.com/rs/cors"
 )
 
 //go:generate go run queries/embed_query_files.go

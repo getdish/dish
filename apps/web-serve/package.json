@@ -13,6 +13,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "node -r esm demo/server.js",
+    "test": "true",
     "tsc:worker": "tsc -p src/worker-thread/tsconfig.json",
     "tsc:main": "tsc -p src/main-thread/tsconfig.json",
     "clean": "rimraf output dist",

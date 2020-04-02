@@ -70,7 +70,7 @@ export const RestaurantTagButton = memo(
             </Text>
             <HStack padding={10} flexWrap="wrap">
               {_.flatten(
-                (om.state.home.lastHomeState.top_dishes ?? []).map(
+                (om.state.home.lastHomeState.topDishes ?? []).map(
                   (x) => x.dishes
                 )
               )

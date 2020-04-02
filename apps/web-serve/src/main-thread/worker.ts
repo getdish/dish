@@ -93,7 +93,10 @@ export class WorkerContext {
       ${authorScript}
       //# sourceURL=${encodeURI(config.authorURL)}`
     this[TransferrableKeys.worker] = new Worker(
-      URL.createObjectURL(new Blob([code]))
+      URL.createObjectURL(new Blob([code])),
+      {
+        name: 'app-worker',
+      }
     )
     if (WORKER_DOM_DEBUG) {
       console.info(

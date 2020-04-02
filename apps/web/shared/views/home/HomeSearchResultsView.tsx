@@ -5,6 +5,7 @@ import { ScrollView, Text, View } from 'react-native'
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItemSearch } from '../../state/home'
 import { useOvermind } from '../../state/om'
+import { PageTitle } from '../shared/PageTitle'
 import { closeAllPopovers, popoverCloseCbs } from '../shared/Popover'
 import { Title } from '../shared/SmallTitle'
 import { Spacer } from '../shared/Spacer'
@@ -26,9 +27,7 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
   const closeButtonOpacity = showCloseButton ? 1 : 0
   return (
     <>
-      <Helmet>
-        <title>{title}</title>
-      </Helmet>
+      <PageTitle>{title}</PageTitle>
       <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
         <CloseButton
           onPress={() => om.actions.home.popTo(om.state.home.lastHomeState)}
