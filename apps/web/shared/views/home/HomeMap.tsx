@@ -118,11 +118,7 @@ export const HomeMap = memo(() => {
 
   const allRestaurants = om.state.home.allRestaurants
   const searchResults =
-    state.type == 'search'
-      ? state.results.status == 'complete'
-        ? state.results.results.restaurantIds ?? []
-        : []
-      : []
+    state.type == 'search' ? state.results?.results?.restaurantIds ?? [] : []
 
   const restaurantIds: string[] = _.uniq(
     [...searchResults, ...prevResults, restaurantDetail?.id].filter(
@@ -262,6 +258,8 @@ export const HomeMap = memo(() => {
     //   true
     // )
   }, [map, focusedRestaurant])
+
+  console.log('restaurantsVersion', restaurantsVersion)
 
   // update annotations
   useEffect(() => {

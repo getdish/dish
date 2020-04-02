@@ -47,15 +47,10 @@ const HomeSearchResultsViewContent = memo(
   ({ state }: { state: HomeStateItemSearch }) => {
     const om = useOvermind()
     const allRestaurants = om.state.home.allRestaurants
-    const resultsIds =
-      ((state.results?.status == 'complete' &&
-        state.results?.results?.restaurantIds) ||
-        undefined) ??
-      []
+    const resultsIds = state.results?.results?.restaurantIds ?? []
     const results = resultsIds.map((id) => allRestaurants[id])
-    console.log('HomeSearchResults.results', results)
 
-    if (state.results?.status == 'loading') {
+    if (!state.results?.results) {
       return (
         <VStack padding={18}>
           <Text>Loading...</Text>

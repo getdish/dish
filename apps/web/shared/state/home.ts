@@ -8,15 +8,17 @@ import { sleep } from '../helpers/sleep'
 import { HistoryItem, RouteItem } from './router'
 import { Taxonomy, taxonomyFilters, taxonomyLenses } from './Taxonomy'
 
+type SearchResultsResults = {
+  restaurantIds: string[]
+  dishes: string[]
+  locations: string[]
+}
+
 export type SearchResults =
-  | { status: 'loading' }
+  | { status: 'loading'; results?: SearchResultsResults }
   | {
       status: 'complete'
-      results: {
-        restaurantIds: string[]
-        dishes: string[]
-        locations: string[]
-      }
+      results: SearchResultsResults
     }
 
 export type LngLat = { lng: number; lat: number }
@@ -175,9 +177,7 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
       const searchState: HomeStateItemSearch = {
         type: 'search',
         activeTaxonomyIds: [],
-        results: {
-          status: 'loading',
-        },
+        results: { status: 'loading' },
         ...lastSearchState,
         ...currentBaseState,
       }
@@ -403,6 +403,7 @@ const runAutocomplete: AsyncAction<string> = async (om, query) => {
 
 let runSearchId = 0
 let lastSearchKey = ''
+let lastSearchAt = Date.now()
 const runSearch: AsyncAction<string> = async (om, query: string) => {
   runSearchId = Math.random()
   let curId = runSearchId
@@ -426,9 +427,18 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
   lastSearchKey = searchKey
 
   state.searchQuery = query
-  state.results = { status: 'loading' }
+  state.results = {
+    // preserve last results
+    results: state.results.results,
+    status: 'loading',
+  }
 
-  await sleep(350)
+  // delay logic
+  const timeSince = Date.now() - lastSearchAt
+  lastSearchAt = Date.now()
+  if (timeSince < 350) {
+    await sleep(timeSince - 350)
+  }
 
   state = om.state.home.currentState
   if (runSearchId != curId) return
