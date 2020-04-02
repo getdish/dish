@@ -28,17 +28,17 @@ export const RatingView = forwardRef(
         {percent >= 80 && (
           <VStack
             position="absolute"
-            top={-size * 0.11}
-            right={-size * 0.11}
+            top={-2 + (sizeIn == 'lg' ? 0 : -5)}
+            right={-2 + (sizeIn == 'lg' ? 0 : -5)}
             alignItems="center"
             justifyContent="center"
             zIndex={100}
           >
             <Text
               style={{
-                fontSize: size * 0.35,
+                fontSize: Math.max(14, size * 0.3),
                 textShadowColor: 'rgba(0,0,0,0.25)',
-                textShadowRadius: 2,
+                textShadowRadius: size * 0.05,
               }}
             >
               {percent >= 90 ? '🏆' : '⭐️'}

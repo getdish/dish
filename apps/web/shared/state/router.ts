@@ -235,13 +235,11 @@ export const actions = {
 
 export const effects = {
   open(url: string) {
-    console.log('open()', url)
     ignoreNextRoute = true
     page.show(url)
   },
 
   replace(url: string) {
-    console.log('replace()', url)
     ignoreNextRoute = true
     page.replace(url)
   },

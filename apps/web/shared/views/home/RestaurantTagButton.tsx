@@ -69,11 +69,7 @@ export const RestaurantTagButton = memo(
               Top tags
             </Text>
             <HStack padding={10} flexWrap="wrap">
-              {_.flatten(
-                (om.state.home.lastHomeState.topDishes ?? []).map(
-                  (x) => x.dishes
-                )
-              )
+              {_.flatten((om.state.home.topDishes ?? []).map((x) => x.dishes))
                 .filter(Boolean)
                 .map((x, index) => (
                   <TagButton key={x.name} name={x.name} />

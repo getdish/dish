@@ -67,17 +67,16 @@ export const HomeMap = memo(() => {
     })
 
     map.addEventListener('select', (e) => {
-      console.log('select', e, map)
+      // console.log('select', e, map)
     })
 
     map.addEventListener('deselect', (e) => {
-      console.log('deselect', e, map)
+      // console.log('deselect', e, map)
     })
 
     map.addEventListener('region-change-end', (e) => {
-      console.log('region-change-end', e)
+      // console.log('region-change-end', e)
       const span = map.region.span
-      console.log('span', span)
       om.actions.home.setMapArea({
         center: {
           lng: map.center.longitude,
@@ -128,7 +127,7 @@ export const HomeMap = memo(() => {
 
   const restaurants = restaurantIds.map((id) => allRestaurants[id])
   const restaurantsVersion = restaurantIds.join('')
-  const focusedRestaurant = restaurants.find((x) => x.id == focused)
+  // const focusedRestaurant = restaurants.find((x) => x.id == focused)
   const coordinates = useMemo(
     () =>
       mapkit
@@ -233,7 +232,6 @@ export const HomeMap = memo(() => {
   const restaurantDelayed = useDebounceValue(restaurantDetail, 250)
   useEffect(() => {
     if (!map || !restaurantDelayed?.location) return
-    console.log('center map to', restaurantDelayed)
     const index = restaurantIds.indexOf(restaurantDelayed.id)
     if (index > -1) {
       map.annotations[index].selected = true
@@ -246,20 +244,17 @@ export const HomeMap = memo(() => {
       },
       span: state.span,
     })
-  }, [!!map, restaurantDelayed])
+  }, [map, restaurantDelayed])
 
   // selected on map
-  useEffect(() => {
-    if (!focusedRestaurant) return
-    if (!map) return
-    console.log('center app to selected', focusedRestaurant)
-    // map.setCenterAnimated(
-    //   coordinates[restaurants.findIndex((x) => x.id === focusedRestaurant.id)],
-    //   true
-    // )
-  }, [map, focusedRestaurant])
-
-  console.log('restaurantsVersion', restaurantsVersion)
+  // useEffect(() => {
+  //   if (!focusedRestaurant) return
+  //   if (!map) return
+  //   map.setCenterAnimated(
+  //     coordinates[restaurants.findIndex((x) => x.id === focusedRestaurant.id)],
+  //     true
+  //   )
+  // }, [map, focusedRestaurant])
 
   // update annotations
   useEffect(() => {
@@ -269,17 +264,16 @@ export const HomeMap = memo(() => {
     const cb = (e) => {
       const selected = e.annotation.data.id || ''
       setFocused(selected)
-      console.log('selected', selected)
     }
     map.addEventListener('select', cb)
     cancels.add(() => map.removeEventListener('select', cb))
 
     // map.showAnnotations(annotations)
-    console.log('render annotations')
     for (const annotation of annotations) {
       map.addAnnotation(annotation)
     }
 
+    // animate to them
     // map.showItems(annotations, {
     //   animate: false,
     //   minimumSpan: createCoordinateSpan(radius, radius),

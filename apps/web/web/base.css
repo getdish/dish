@@ -90,5 +90,5 @@ div {
   display: flex;
   flex-direction: inherit;
   flex-wrap: inherit;
-  flex-grow: inherit;
+  /* flex-grow: inherit; */
 }

@@ -6,6 +6,7 @@ import { Image, ScrollView, Text } from 'react-native'
 
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItemHome, HomeStateItemSimple } from '../../state/home'
+import { useOvermind } from '../../state/om'
 import { LinkButton } from '../shared/Link'
 import { PageTitle } from '../shared/PageTitle'
 import { Spacer } from '../shared/Spacer'
@@ -19,13 +20,7 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
 }: {
   state: HomeStateItemHome
 }) {
-  // const om = useOvermind()
-  if (state.type !== 'home') {
-    return null
-  }
-  // const activeLense = om.state.home.allLenses.find((x) =>
-  //   state.activeTaxonomyIds.some((y) => y == x.id)
-  // )
+  const om = useOvermind()
   return (
     <>
       <PageTitle>Dish - Uniquely Good Food</PageTitle>
@@ -33,7 +28,7 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
       {/* <Title>{activeLense?.description ?? ''}</Title> */}
       <VStack position="relative" flex={1}>
         <HomeLenseBar backgroundGradient />
-        <HomeViewTopDishesContent topDishes={state.topDishes} />
+        <HomeViewTopDishesContent topDishes={om.state.home.topDishes} />
       </VStack>
     </>
   )
