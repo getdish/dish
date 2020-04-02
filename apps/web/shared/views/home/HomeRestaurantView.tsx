@@ -14,6 +14,7 @@ import { HomeStateItem } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Divider } from '../shared/Divider'
 import { LinkButton } from '../shared/Link'
+import { PageTitle } from '../shared/PageTitle'
 import { ProgressCircle } from '../shared/ProgressCircle'
 import { SmallTitle } from '../shared/SmallTitle'
 import { Spacer } from '../shared/Spacer'
@@ -48,9 +49,7 @@ export default memoIsEqualDeep(function HomeRestaurantView({
 
   return (
     <>
-      <Helmet>
-        <title>Dish - {restaurant.name} has the best dishes.</title>
-      </Helmet>
+      <PageTitle>Dish - {restaurant.name} has the best dishes.</PageTitle>
 
       <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
         <CloseButton onPress={() => om.actions.home.popTo(-1)} />

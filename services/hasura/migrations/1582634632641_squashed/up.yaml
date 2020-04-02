@@ -2,8 +2,8 @@
     permission:
       allow_aggregations: false
       columns:
-      - category
-      - frequency
+        - category
+        - frequency
       computed_fields: []
       filter: {}
       limit: 100
@@ -16,20 +16,20 @@
     permission:
       allow_aggregations: false
       columns:
-      - address
-      - categories
-      - city
-      - description
-      - id
-      - image
-      - location
-      - name
-      - photos
-      - rating
-      - state
-      - telephone
-      - website
-      - zip
+        - address
+        - categories
+        - city
+        - description
+        - id
+        - image
+        - location
+        - name
+        - photos
+        - rating
+        - state
+        - telephone
+        - website
+        - zip
       computed_fields: []
       filter: {}
       limit: null
@@ -42,12 +42,12 @@
     permission:
       allow_aggregations: false
       columns:
-      - description
-      - id
-      - image
-      - name
-      - price
-      - restaurant_id
+        - description
+        - id
+        - image
+        - name
+        - price
+        - restaurant_id
       computed_fields: []
       filter: {}
       limit: null
@@ -60,22 +60,22 @@
     permission:
       allow_aggregations: false
       columns:
-      - id
-      - created_at
-      - updated_at
-      - name
-      - description
-      - address
-      - city
-      - state
-      - zip
-      - image
-      - location
-      - telephone
-      - website
-      - categories
-      - photos
-      - rating
+        - id
+        - created_at
+        - updated_at
+        - name
+        - description
+        - address
+        - city
+        - state
+        - zip
+        - image
+        - location
+        - telephone
+        - website
+        - categories
+        - photos
+        - rating
       computed_fields: []
       filter: {}
       limit: null
@@ -87,25 +87,25 @@
 - args:
     permission:
       columns:
-      - address
-      - categories
-      - city
-      - created_at
-      - description
-      - image
-      - location
-      - name
-      - photos
-      - rating
-      - state
-      - telephone
-      - updated_at
-      - website
-      - zip
+        - address
+        - categories
+        - city
+        - created_at
+        - description
+        - image
+        - location
+        - name
+        - photos
+        - rating
+        - state
+        - telephone
+        - updated_at
+        - website
+        - zip
       filter: {}
       localPresets:
-      - key: ""
-        value: ""
+        - key: ''
+          value: ''
       set: {}
     role: contributor
     table:
@@ -125,14 +125,14 @@
       allow_upsert: true
       check: {}
       columns:
-      - description
-      - image
-      - name
-      - price
-      - restaurant_id
+        - description
+        - image
+        - name
+        - price
+        - restaurant_id
       localPresets:
-      - key: ""
-        value: ""
+        - key: ''
+          value: ''
       set: {}
     role: contributor
     table:
@@ -143,14 +143,14 @@
     permission:
       allow_aggregations: false
       columns:
-      - price
-      - description
-      - image
-      - name
-      - created_at
-      - updated_at
-      - id
-      - restaurant_id
+        - price
+        - description
+        - image
+        - name
+        - created_at
+        - updated_at
+        - id
+        - restaurant_id
       computed_fields: []
       filter: {}
       limit: null
@@ -162,15 +162,15 @@
 - args:
     permission:
       columns:
-      - description
-      - image
-      - name
-      - price
-      - restaurant_id
+        - description
+        - image
+        - name
+        - price
+        - restaurant_id
       filter: {}
       localPresets:
-      - key: ""
-        value: ""
+        - key: ''
+          value: ''
       set: {}
     role: contributor
     table:
@@ -189,22 +189,22 @@
     permission:
       allow_aggregations: false
       columns:
-      - id
-      - created_at
-      - updated_at
-      - name
-      - description
-      - address
-      - city
-      - state
-      - zip
-      - image
-      - location
-      - telephone
-      - website
-      - categories
-      - photos
-      - rating
+        - id
+        - created_at
+        - updated_at
+        - name
+        - description
+        - address
+        - city
+        - state
+        - zip
+        - image
+        - location
+        - telephone
+        - website
+        - categories
+        - photos
+        - rating
       computed_fields: []
       filter: {}
       limit: 100
@@ -217,14 +217,14 @@
     permission:
       allow_aggregations: false
       columns:
-      - name
-      - created_at
-      - updated_at
-      - id
-      - restaurant_id
-      - image
-      - price
-      - description
+        - name
+        - created_at
+        - updated_at
+        - id
+        - restaurant_id
+        - image
+        - price
+        - description
       computed_fields: []
       filter: {}
       limit: 500
@@ -237,8 +237,8 @@
     permission:
       allow_aggregations: false
       columns:
-      - category
-      - frequency
+        - category
+        - frequency
       computed_fields: []
       filter: {}
       limit: 500

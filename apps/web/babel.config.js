@@ -1,8 +1,11 @@
 module.exports = function (api) {
-  // api.cache(true)
-  const plugins = [!api.env('production') && 'react-refresh/babel'].filter(
-    Boolean
-  )
+  const isWorker = process.env.TARGET === 'worker'
+  if (isWorker) {
+    api.cache(true)
+  }
+  const plugins = [
+    !isWorker && !api.env('production') && 'react-refresh/babel',
+  ].filter(Boolean)
   return {
     plugins,
     presets: [

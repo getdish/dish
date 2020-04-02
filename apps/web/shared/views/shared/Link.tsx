@@ -1,7 +1,7 @@
 import './Link.css'
 
 import React, { useCallback, useMemo } from 'react'
-import { Text, TextProps, TextStyle, TouchableOpacity } from 'react-native'
+import { Text, TextStyle, TouchableOpacity } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { RoutesTable, getPathFromParams } from '../../state/router'

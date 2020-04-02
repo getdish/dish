@@ -3,6 +3,7 @@ import Fuse from 'fuse.js'
 import _ from 'lodash'
 import { Action, AsyncAction, Derive } from 'overmind'
 
+import { isWorker } from '../constants'
 import { sleep } from '../helpers/sleep'
 import { HistoryItem, RouteItem } from './router'
 import { Taxonomy, taxonomyFilters, taxonomyLenses } from './Taxonomy'
@@ -35,7 +36,7 @@ export type HomeStateItem =
 export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
   activeTaxonomyIds: string[]
-  top_dishes?: TopDish[]
+  topDishes?: TopDish[]
 }
 
 export type HomeStateItemSearch = HomeStateItemBase & {
@@ -143,7 +144,11 @@ export const state: HomeState = {
   currentActiveTaxonomyIds,
 }
 
-const _pushHomeState: Action<HistoryItem> = (om, item) => {
+const start: AsyncAction<void> = async (om) => {
+  await om.actions.home._loadHomeDishes()
+}
+
+const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   const { currentState } = om.state.home
 
   const currentBaseState = {
@@ -154,7 +159,7 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
   }
 
   let nextState: HomeStateItem | null = null
-  let fetchData: Function | null = null
+  let fetchData: () => Promise<void> | null = null
 
   switch (item.name) {
     case 'home':
@@ -177,9 +182,9 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
         ...currentBaseState,
       }
       nextState = searchState
-      fetchData = () => {
+      fetchData = async () => {
         if (lastSearchState?.searchQuery !== item.params.query) {
-          om.actions.home.runSearch(item.params.query)
+          await om.actions.home.runSearch(item.params.query)
         }
       }
       break
@@ -200,7 +205,7 @@ const _pushHomeState: Action<HistoryItem> = (om, item) => {
   if (nextState) {
     om.state.home.states.push(nextState)
     if (fetchData) {
-      fetchData()
+      await fetchData()
     }
   }
 }
@@ -260,15 +265,28 @@ const getUserReviews: AsyncAction<string> = async (om, user_id: string) => {
   }
 }
 
-const loadHomeDishes: AsyncAction = async (om) => {
-  om.state.home.lastHomeState.top_dishes = await Restaurant.getHomeDishes(
+const _loadHomeDishes: AsyncAction = async (om) => {
+  const all = await Restaurant.getHomeDishes(
     om.state.home.currentState.center.lat,
     om.state.home.currentState.center.lng,
     // TODO span
     om.state.home.currentState.span.lat
   )
 
-  const dishes = om.state.home.lastHomeState.top_dishes
+  const chunks = _.chunk(all, 4)
+
+  if (isWorker) {
+    let now = []
+    for (const chunk of chunks) {
+      await sleep(300)
+      now = [...now, ...chunk]
+      om.state.home.lastHomeState.topDishes = now
+    }
+  } else {
+    om.state.home.lastHomeState.topDishes = all
+  }
+
+  const dishes = om.state.home.lastHomeState.topDishes
   om.state.home.allTopDishes = (dishes ?? [])
     .map((x) => x.dishes)
     .flat(Infinity)
@@ -509,7 +527,10 @@ const setMapArea: Action<{ center: LngLat; span: LngLat }> = (om, val) => {
   om.actions.home.runSearch(om.state.home.currentState.searchQuery)
 }
 
-const handleRouteChange: Action<RouteItem> = (om, { type, name, item }) => {
+const handleRouteChange: AsyncAction<RouteItem> = async (
+  om,
+  { type, name, item }
+) => {
   om.state.home.hoveredRestaurant = null
   switch (name) {
     case 'home':
@@ -519,9 +540,9 @@ const handleRouteChange: Action<RouteItem> = (om, { type, name, item }) => {
         return
       }
       if (type === 'push') {
-        om.actions.home._pushHomeState(item)
+        await om.actions.home._pushHomeState(item)
       } else {
-        om.actions.home._popHomeState(item)
+        await om.actions.home._popHomeState(item)
       }
       return
   }
@@ -532,6 +553,7 @@ const setShowAutocomplete: Action<boolean> = (om, val) => {
 }
 
 export const actions = {
+  start,
   runAutocomplete,
   setShowAutocomplete,
   handleRouteChange,
@@ -543,7 +565,7 @@ export const actions = {
   setHoveredRestaurant,
   setCurrentRestaurant,
   runSearch,
-  loadHomeDishes,
+  _loadHomeDishes,
   clearSearch,
   getReview,
   submitReview,

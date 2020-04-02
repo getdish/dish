@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "main": "app.json",
+  "sideEffects": false,
   "workspaces": {
     "nohoist": [
       "**"
@@ -19,10 +20,11 @@
     "test": "true",
     "postinstall": "jetify && rm -r node_modules/@apollo/client/node_modules/react || true && patch-package",
     "build": "tsc -b",
-    "build:web": "(yarn build:client) & (yarn build:server)",
-    "build:web:server": "NODE_ENV=production TARGET=ssr webpack",
-    "build:web:client": "NODE_ENV=production TARGET=client webpack",
-    "build:web:watch": "(NODE_ENV=production TARGET=ssr webpack --watch) & (NODE_ENV=production TARGET=client webpack --watch)",
+    "build:web": "(NODE_ENV=production yarn build:web:client) & (NODE_ENV=production yarn build:web:server)",
+    "build:web:server": "TARGET=ssr webpack",
+    "build:web:client": "TARGET=client webpack",
+    "build:web:worker": "TARGET=worker webpack",
+    "build:web:watch": "(TARGET=ssr webpack --watch) & (TARGET=client webpack --watch)",
     "ios": "react-native run-ios",
     "android": "react-native run-android"
   },
@@ -67,6 +69,9 @@
     "webpack": "^4.42.1"
   },
   "devDependencies": {
+    "webpack-bundle-analyzer": "3.6.1",
+    "preact": "^10.3.4",
+    "preact-responder-event-plugin": "^1.0.16",
     "@gqless/cli": "^0.0.1-alpha.30",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.2.0",
     "@types/jsdom": "^16.2.0",
