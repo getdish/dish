@@ -6,6 +6,7 @@ import { Button, Text, TextInput } from 'react-native'
 import { useOvermind } from '../../state/om'
 import { Icon } from '../shared/Icon'
 import { Popover } from '../shared/Popover'
+import { SmallTitle } from '../shared/SmallTitle'
 import { HStack } from '../shared/Stacks'
 import { Tooltip } from '../shared/Tooltip'
 import { styles } from './HomeRestaurantView'
@@ -26,16 +27,7 @@ export const RestaurantTagButton = memo(
         position="right"
         contents={
           <Tooltip maxWidth={300}>
-            <Text
-              style={{
-                padding: 10,
-                paddingTop: 0,
-                textAlign: 'center',
-                width: '100%',
-              }}
-            >
-              Tag
-            </Text>
+            <SmallTitle>Tag</SmallTitle>
             <HStack>
               <TextInput
                 placeholder="Suggest tag"
@@ -85,6 +77,7 @@ export const RestaurantTagButton = memo(
           onPress={() => setIsOpen(true)}
           margin={-4}
           borderRadius={10}
+          // TODO make hoverable with onHoverIn
           hoverStyle={{
             backgroundColor: '#eee',
           }}

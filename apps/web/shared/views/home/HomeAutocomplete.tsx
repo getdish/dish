@@ -7,6 +7,7 @@ import { Link, LinkButton } from '../shared/Link'
 import { HStack, ZStack } from '../shared/Stacks'
 import { searchBarHeight, searchBarTopOffset } from './HomeSearchBar'
 import {
+  baseButtonStyle,
   circularFlatButtonStyle,
   flatButtonStyle,
   flatButtonStyleActive,
@@ -103,20 +104,21 @@ export default memo(function HomeAutoComplete({ active }: { active: number }) {
                   flexDirection="row"
                   params={{ query: x.name }}
                   height={34}
+                  lineHeight={24}
                   fastClick
                   alignItems="center"
-                  justifyContent="center"
                   {...(x.id === '-1'
                     ? flatButtonStyleInactive
                     : active === index
                     ? flatButtonStyleActive
                     : flatButtonStyle)}
                   paddingHorizontal={10}
-                  fontSize={15}
+                  fontSize={16}
                   maxWidth={180}
                   ellipse
                   key={x.id}
                 >
+                  {x.icon ?? null}
                   {x.name}{' '}
                   {x.type === 'dish' &&
                   index !== 0 &&
@@ -124,7 +126,7 @@ export default memo(function HomeAutoComplete({ active }: { active: number }) {
                   om.state.auth.is_logged_in ? (
                     <LinkButton
                       {...circularFlatButtonStyle}
-                      marginVertical={-4}
+                      marginVertical={-2}
                       onPress={(e) => {
                         console.log('e', e)
                         alert('add to current search results')

@@ -51,6 +51,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
       ref
     ) => {
       const innerRef = useRef<any>()
+      const [isHovered, set] = useState(false)
 
       useLayoutEffect(() => {
         if (!className) return
@@ -108,7 +109,6 @@ const createStack = (defaultStyle?: ViewStyle) => {
       }
 
       if (hoverStyle) {
-        const [isHovered, set] = useState(false)
         return (
           <Hoverable onHoverIn={() => set(true)} onHoverOut={() => set(false)}>
             <div

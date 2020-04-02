@@ -13,14 +13,22 @@ export const HoverableButton = ({
 }: StackBaseProps & {
   onPress: any
   isHovered?: boolean
+  onHoverIn?: Function
+  onHoverOut?: Function
 }) => {
   const [isHoveredInt, setIsHovered] = useState(false)
   const isHoveredFinal = isHovered || isHoveredInt
   return (
     <TouchableOpacity onPress={onPress}>
       <Hoverable
-        onHoverIn={() => setIsHovered(true)}
-        onHoverOut={() => setIsHovered(false)}
+        onHoverIn={() => {
+          setIsHovered(true)
+          props.onHoverIn?.()
+        }}
+        onHoverOut={() => {
+          setIsHovered(false)
+          props.onHoverOut?.()
+        }}
       >
         <div
           className="see-through"
