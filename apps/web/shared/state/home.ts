@@ -38,7 +38,6 @@ export type HomeStateItem =
 export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
   activeTaxonomyIds: string[]
-  topDishes?: TopDish[]
 }
 
 export type HomeStateItemSearch = HomeStateItemBase & {
@@ -110,6 +109,7 @@ type HomeStateBase = {
   allLenses: Taxonomy[]
   allFilters: Taxonomy[]
   autocompleteResults: AutocompleteItem[]
+  topDishes: TopDish[]
   allTopDishes: TopDish['dishes']
   allRestaurants: { [id: string]: Restaurant }
   showMenu: boolean
@@ -131,6 +131,7 @@ export const state: HomeState = {
   allLenses: taxonomyLenses,
   allFilters: taxonomyFilters,
   autocompleteResults: [],
+  topDishes: [],
   allTopDishes: [],
   allRestaurants: {},
   showAutocomplete: false,
@@ -153,11 +154,13 @@ const start: AsyncAction<void> = async (om) => {
 const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   const { currentState } = om.state.home
 
-  const currentBaseState = {
-    historyId: item.id,
-    searchQuery: currentState?.searchQuery ?? '',
+  const fallbackState = {
     center: currentState?.center ?? initialHomeState.center,
     span: currentState?.span ?? initialHomeState.span,
+  }
+  const newState = {
+    historyId: item.id,
+    searchQuery: currentState?.searchQuery ?? '',
   }
 
   let nextState: HomeStateItem | null = null
@@ -166,20 +169,21 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   switch (item.name) {
     case 'home':
       nextState = {
+        ...fallbackState,
         type: 'home',
         ...om.state.home.lastHomeState,
-        ...currentBaseState,
-        searchQuery: '',
+        ...newState,
       } as HomeStateItemHome
       break
     case 'search':
       const lastSearchState = om.state.home.lastSearchState
       const searchState: HomeStateItemSearch = {
+        ...fallbackState,
         type: 'search',
         activeTaxonomyIds: [],
         results: { status: 'loading' },
         ...lastSearchState,
-        ...currentBaseState,
+        ...newState,
       }
       nextState = searchState
       fetchData = async () => {
@@ -190,11 +194,12 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
       break
     case 'restaurant':
       nextState = {
+        ...fallbackState,
         type: 'restaurant',
         restaurantId: null,
         review: null,
         reviews: [],
-        ...currentBaseState,
+        ...newState,
       }
       fetchData = async () => {
         await om.actions.home._loadRestaurantDetail({
@@ -291,13 +296,13 @@ const _loadHomeDishes: AsyncAction = async (om) => {
     for (const chunk of chunks) {
       await sleep(300)
       now = [...now, ...chunk]
-      om.state.home.lastHomeState.topDishes = now
+      om.state.home.topDishes = now
     }
   } else {
-    om.state.home.lastHomeState.topDishes = all
+    om.state.home.topDishes = all
   }
 
-  const dishes = om.state.home.lastHomeState.topDishes
+  const dishes = om.state.home.topDishes
   om.state.home.allTopDishes = (dishes ?? [])
     .map((x) => x.dishes)
     .flat(Infinity)
