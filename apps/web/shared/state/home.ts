@@ -9,6 +9,32 @@ import { mapView } from '../views/home/HomeMap'
 import { HistoryItem, RouteItem } from './router'
 import { Taxonomy, taxonomyFilters, taxonomyLenses } from './Taxonomy'
 
+type ShowAutocomplete = 'search' | 'location' | false
+
+type HomeStateBase = {
+  locationSearchQuery: string
+  allLenses: Taxonomy[]
+  allFilters: Taxonomy[]
+  autocompleteResults: AutocompleteItem[]
+  locationAutocompleteResults: AutocompleteItem[]
+  topDishes: TopDish[]
+  allTopDishes: TopDish['dishes']
+  allRestaurants: { [id: string]: Restaurant }
+  showMenu: boolean
+  states: HomeStateItem[]
+  hoveredRestaurant: Restaurant | null
+  showAutocomplete: ShowAutocomplete
+}
+export type HomeState = HomeStateBase & {
+  lastHomeState: Derive<HomeState, HomeStateItemHome>
+  lastSearchState: Derive<HomeState, HomeStateItemSearch | null>
+  lastRestaurantState: Derive<HomeState, HomeStateItemRestaurant | null>
+  breadcrumbStates: Derive<HomeState, HomeStateItemSimple[]>
+  currentState: Derive<HomeState, HomeStateItem>
+  previousState: Derive<HomeState, HomeStateItem>
+  currentActiveTaxonomyIds: Derive<HomeState, string[]>
+}
+
 type SearchResultsResults = {
   restaurantIds: string[]
   dishes: string[]
@@ -108,32 +134,23 @@ const currentActiveTaxonomyIds = (state: HomeStateBase) => {
   return lastHomeOrSearch?.activeTaxonomyIds ?? []
 }
 
-type HomeStateBase = {
-  allLenses: Taxonomy[]
-  allFilters: Taxonomy[]
-  autocompleteResults: AutocompleteItem[]
-  topDishes: TopDish[]
-  allTopDishes: TopDish['dishes']
-  allRestaurants: { [id: string]: Restaurant }
-  showMenu: boolean
-  states: HomeStateItem[]
-  hoveredRestaurant: Restaurant | null
-  showAutocomplete: boolean
-}
-export type HomeState = HomeStateBase & {
-  lastHomeState: Derive<HomeState, HomeStateItemHome>
-  lastSearchState: Derive<HomeState, HomeStateItemSearch | null>
-  lastRestaurantState: Derive<HomeState, HomeStateItemRestaurant | null>
-  breadcrumbStates: Derive<HomeState, HomeStateItemSimple[]>
-  currentState: Derive<HomeState, HomeStateItem>
-  previousState: Derive<HomeState, HomeStateItem>
-  currentActiveTaxonomyIds: Derive<HomeState, string[]>
-}
+/*
+ *  HomeState!
+ */
 
 export const state: HomeState = {
+  locationSearchQuery: '',
   allLenses: taxonomyLenses,
   allFilters: taxonomyFilters,
   autocompleteResults: [],
+  locationAutocompleteResults: [
+    { name: 'New York', icon: '📍', type: 'location', id: '0' },
+    { name: 'Los Angeles', icon: '📍', type: 'location', id: '1' },
+    { name: 'Las Vegas', icon: '📍', type: 'location', id: '2' },
+    { name: 'Miami', icon: '📍', type: 'location', id: '3' },
+    { name: 'Chicago', icon: '📍', type: 'location', id: '4' },
+    { name: 'New Orleans', icon: '📍', type: 'location', id: '5' },
+  ],
   topDishes: [],
   allTopDishes: [],
   allRestaurants: {},
@@ -355,8 +372,8 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     let id = lastRunAt
     await sleep(DEBOUNCE_AUTOCOMPLETE)
     if (id != lastRunAt) return
-    om.actions.home.setShowAutocomplete(true)
-    om.actions.home.runAutocomplete(query)
+    om.actions.home.setShowAutocomplete('search')
+    om.actions.home._runAutocomplete(query)
     await sleep(DEBOUNCE_SEARCH - DEBOUNCE_AUTOCOMPLETE)
     if (id != lastRunAt) return
   }
@@ -373,22 +390,10 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   }
 }
 
-const runAutocomplete: AsyncAction<string> = async (om, query) => {
+const _runAutocomplete: AsyncAction<string> = async (om, query) => {
   const state = om.state.home.currentState
 
-  const locationSearch = new mapkit.Search({ region: mapView.region })
-  const locationPromise = new Promise<
-    { name: string; formattedAddress: string; coordinate: any }[]
-  >((res, rej) => {
-    locationSearch.search(state.searchQuery, (err, data) => {
-      if (err) {
-        console.log('network failure')
-        return res([])
-      }
-      res(data.places)
-    })
-  })
-
+  const locationPromise = searchLocations(state.searchQuery)
   const restaurantsPromise = Restaurant.search({
     center: state.center,
     span: state.span,
@@ -427,12 +432,7 @@ const runAutocomplete: AsyncAction<string> = async (om, query) => {
         type: 'restaurant' as const,
         id: restaurant.id,
       })),
-      ...locationResults.map((location) => ({
-        name: location.name,
-        type: 'location' as const,
-        icon: '📍',
-        id: `loc-${location.name}`,
-      })),
+      ...locationResults.map(locationToAutocomplete),
     ],
     (x) => `${x.name}${x.type}`
   )
@@ -442,6 +442,15 @@ const runAutocomplete: AsyncAction<string> = async (om, query) => {
   const results = searcher.search(query, { limit: 8 }).map((x) => x.item)
 
   om.state.home.autocompleteResults = results
+}
+
+const locationToAutocomplete = (location: { name: string }) => {
+  return {
+    name: location.name,
+    type: 'location' as const,
+    icon: '📍',
+    id: `loc-${location.name}`,
+  }
 }
 
 let runSearchId = 0
@@ -611,15 +620,44 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
   }
 }
 
-const setShowAutocomplete: Action<boolean> = (om, val) => {
+const setShowAutocomplete: Action<ShowAutocomplete> = (om, val) => {
   om.state.home.showAutocomplete = val
+}
+
+let locationSearchId = 0
+const setLocationSearchQuery: AsyncAction<string> = async (om, val) => {
+  om.state.home.locationSearchQuery = val
+  locationSearchId = Math.random()
+  let curId = locationSearchId
+  await sleep(70)
+  if (curId !== locationSearchId) return
+  const results = (await searchLocations(val)).map(locationToAutocomplete)
+  const searcher = new Fuse(results, fuzzyOpts)
+  const orderedResults = searcher.search(val, { limit: 8 }).map((x) => x.item)
+  om.state.home.locationAutocompleteResults = orderedResults
+}
+
+function searchLocations(query: string) {
+  const locationSearch = new mapkit.Search({ region: mapView.region })
+  return new Promise<
+    { name: string; formattedAddress: string; coordinate: any }[]
+  >((res, rej) => {
+    locationSearch.search(query, (err, data) => {
+      if (err) {
+        console.log('network failure')
+        return res([])
+      }
+      res(data.places)
+    })
+  })
 }
 
 export const actions = {
   start,
-  runAutocomplete,
+  _runAutocomplete,
   setShowAutocomplete,
   handleRouteChange,
+  setLocationSearchQuery,
   setMapArea,
   setSearchQuery,
   popTo,

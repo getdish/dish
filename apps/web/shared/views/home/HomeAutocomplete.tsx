@@ -17,10 +17,12 @@ import {
 export default memo(function HomeAutoComplete({ active }: { active: number }) {
   const om = useOvermind()
   const state = om.state.home.currentState
-  const autocompleteResults = om.state.home.autocompleteResults
+  const { autocompleteResults, showAutocomplete } = om.state.home
   const query = state.searchQuery
-  const isShowing =
-    query.length !== 0 && (query === 'taco' || om.state.home.showAutocomplete)
+
+  const showLocation = showAutocomplete == 'location'
+  const showSearch = showAutocomplete == 'search' && query.length !== 0
+  const isShowing = showSearch || showLocation || query === 'taco'
 
   // hide when moused away, show when moved back!
   useEffect(() => {
@@ -95,8 +97,16 @@ export default memo(function HomeAutoComplete({ active }: { active: number }) {
             spacing="sm"
           >
             {[
-              { name: state.searchQuery, id: '-1', type: 'none' },
-              ...autocompleteResults,
+              {
+                name: showLocation
+                  ? om.state.home.locationSearchQuery
+                  : state.searchQuery,
+                id: '-1',
+                type: 'none',
+              },
+              ...(showLocation
+                ? om.state.home.locationAutocompleteResults
+                : autocompleteResults),
             ].map((x, index) => {
               return (
                 <LinkButton

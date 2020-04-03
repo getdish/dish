@@ -2,14 +2,14 @@ import { useState } from 'react'
 import React, { memo } from 'react'
 import { Text } from 'react-native'
 
-import { useOvermind } from '../../state/om'
-import { AuthLoginRegisterView } from '../auth/AuthLoginRegisterView'
-import { Divider } from '../shared/Divider'
 import { Icon } from '../shared/Icon'
 import { LinkButton } from '../shared/Link'
 import { Popover } from '../shared/Popover'
+import { SmallTitle } from '../shared/SmallTitle'
+import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { Tooltip } from '../shared/Tooltip'
+import { HomeUserMenu } from './HomeUserMenu'
 import { flatButtonStyle } from './HomeViewTopDishes'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
@@ -29,26 +29,29 @@ export const HomeControlsOverlay = memo(() => {
           <HomeUserMenu />
         </HStack>
 
-        <HStack position="absolute" bottom={0} right={0} left={0}>
-          <Tooltip width="auto" alignItems="center" justifyContent="center">
-            <HStack spacing>
-              {[
-                'Los Angeles',
-                'Portland',
-                'Seattle',
-                'Las Vegas',
-                'New York',
-              ].map((city) => (
-                <LinkButton
-                  key={city}
-                  {...flatButtonStyle}
-                  name="search"
-                  params={{ query: city }}
-                >
-                  <Text style={{ fontSize: 12 }}>{city}</Text>
+        <HStack
+          position="absolute"
+          bottom={0}
+          right={0}
+          left={0}
+          alignItems="flex-end"
+        >
+          <Tooltip width="auto" justifyContent="center" maxWidth={250}>
+            <SmallTitle>Welcome to Dish</SmallTitle>
+            <VStack spacing={16}>
+              <Text>
+                We wanted reliable ratings for authentic food, with fast search
+                (across delivery apps, too). Enjoy!
+              </Text>
+
+              <HStack>
+                <LinkButton {...flatButtonStyle}>
+                  How we break it down
                 </LinkButton>
-              ))}
-            </HStack>
+                <Spacer flex />
+                <LinkButton {...flatButtonStyle}>Ok!</LinkButton>
+              </HStack>
+            </VStack>
           </Tooltip>
           <VStack flex={1} />
           <HomeExploreMenu />
@@ -58,56 +61,8 @@ export const HomeControlsOverlay = memo(() => {
   )
 })
 
-const HomeUserMenu = memo(() => {
-  const [isOpen, setIsOpen] = useState(true)
-  const om = useOvermind()
-  return (
-    <Popover
-      position="bottom"
-      isOpen={isOpen}
-      contents={
-        <Tooltip padding={20} width="30vw" minWidth={250}>
-          {!om.state.auth.is_logged_in && (
-            <AuthLoginRegisterView setMenuOpen={setIsOpen} />
-          )}
-
-          {om.state.auth.is_logged_in && (
-            <VStack spacing>
-              <LinkButton
-                {...flatButtonStyle}
-                name="account"
-                params={{ id: 'reviews', pane: 'list' }}
-              >
-                Reviews
-              </LinkButton>
-              <Divider />
-              <LinkButton name="home" onPress={() => om.actions.auth.logout()}>
-                Logout
-              </LinkButton>
-            </VStack>
-          )}
-        </Tooltip>
-      }
-    >
-      <LinkButton
-        backgroundColor="#fff"
-        padding={15}
-        width={15 * 2 + 16}
-        height={15 * 2 + 16}
-        borderRadius={100}
-        shadowColor="rgba(0,0,0,0.2)"
-        shadowRadius={10}
-        shadowOffset={{ width: 0, height: 5 }}
-        onPress={() => setIsOpen(!isOpen)}
-      >
-        <Icon name="user" size={16} opacity={0.5} />
-      </LinkButton>
-    </Popover>
-  )
-})
-
 const HomeExploreMenu = memo(() => {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
   return (
     <Popover
       position="bottom"
