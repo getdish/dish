@@ -129,3 +129,7 @@ div {
     transition-property: left, top, opacity;
   }
 }
+
+.react-tiny-popover-container {
+  z-index: 2;
+}
