@@ -24,6 +24,13 @@ const isTextSelected = (node?: any) => {
   return !selection?.empty
 }
 
+const selectActiveInput = () => {
+  const input = document.activeElement
+  if (input instanceof HTMLInputElement) {
+    input.select()
+  }
+}
+
 const clearTextSelection = () => {
   if (window.getSelection) {
     if (window.getSelection().empty) {
@@ -77,17 +84,25 @@ export default memo(function HomeSearchBar() {
   }, [input, locationInput, showAutocomplete])
 
   useEffect(() => {
-    if (!input) return
+    if (!input || !locationInput) return
+
     const prev = () => setActive((x) => Math.max(0, x - 1))
     const next = () => {
       const autocompleteResults = om.state.home.autocompleteResults
       setActive((x) => Math.min(autocompleteResults.length - 1, x + 1))
     }
-    const handlePress = (e) => {
+
+    const handleKeyPress = (e) => {
       // @ts-ignore
       const code = e.keyCode
       console.log('code', code)
-      const isCaretAtEnd = input.value.length == input.selectionEnd
+      const focusedInput = document.activeElement
+      if (!(focusedInput instanceof HTMLInputElement)) {
+        console.warn('not a valid input')
+        return
+      }
+      const isCaretAtEnd =
+        focusedInput.value.length == focusedInput.selectionEnd
       switch (code) {
         case 39: // right
           if (isCaretAtEnd) {
@@ -102,12 +117,14 @@ export default memo(function HomeSearchBar() {
           }
           return
         case 27: // esc
-          if (isTextSelected(input)) {
+          if (isTextSelected(focusedInput)) {
             clearTextSelection()
             return
           }
           if (om.state.home.showAutocomplete) {
             om.actions.home.setShowAutocomplete(false)
+          } else {
+            focusedInput.blur()
           }
           return
         case 38: // up
@@ -120,9 +137,28 @@ export default memo(function HomeSearchBar() {
           return
       }
     }
-    input.addEventListener('keydown', handlePress)
-    return () => input.removeEventListener('keydown', handlePress)
-  }, [input])
+
+    const handleClick = () => {
+      const focusedInput = document.activeElement
+      if (!om.state.home.showAutocomplete) {
+        om.actions.home.setShowAutocomplete(
+          focusedInput === locationInput ? 'location' : 'search'
+        )
+      }
+    }
+
+    input.addEventListener('keydown', handleKeyPress)
+    locationInput.addEventListener('keydown', handleKeyPress)
+    input.addEventListener('click', handleClick)
+    locationInput.addEventListener('click', handleClick)
+
+    return () => {
+      input.removeEventListener('keydown', handleKeyPress)
+      locationInput.removeEventListener('keydown', handleKeyPress)
+      input.removeEventListener('click', handleClick)
+      locationInput.removeEventListener('click', handleClick)
+    }
+  }, [input, locationInput])
 
   const tm = useRef(0)
   const tm2 = useRef(0)
@@ -171,6 +207,9 @@ export default memo(function HomeSearchBar() {
                 onFocus={() => {
                   clearTimeout(tmInputBlur.current)
                   om.actions.home.setShowAutocomplete('search')
+                  if (search.length > 0) {
+                    selectActiveInput()
+                  }
                 }}
                 onBlur={() => {
                   tmInputBlur.current = setTimeout(() => {
@@ -196,6 +235,9 @@ export default memo(function HomeSearchBar() {
               onFocus={() => {
                 clearTimeout(tmInputBlur.current)
                 om.actions.home.setShowAutocomplete('location')
+                if (locationSearch.length > 0) {
+                  selectActiveInput()
+                }
               }}
               onBlur={() => {
                 tmInputBlur.current = setTimeout(() => {
