@@ -12,6 +12,7 @@ import { Taxonomy, taxonomyFilters, taxonomyLenses } from './Taxonomy'
 type ShowAutocomplete = 'search' | 'location' | false
 
 type HomeStateBase = {
+  showUserMenu: boolean
   locationSearchQuery: string
   allLenses: Taxonomy[]
   allFilters: Taxonomy[]
@@ -20,7 +21,6 @@ type HomeStateBase = {
   topDishes: TopDish[]
   allTopDishes: TopDish['dishes']
   allRestaurants: { [id: string]: Restaurant }
-  showMenu: boolean
   states: HomeStateItem[]
   hoveredRestaurant: Restaurant | null
   showAutocomplete: ShowAutocomplete
@@ -155,7 +155,7 @@ export const state: HomeState = {
   allTopDishes: [],
   allRestaurants: {},
   showAutocomplete: false,
-  showMenu: false,
+  showUserMenu: false,
   states: [initialHomeState],
   currentState: (state) => _.last(state.states)!,
   previousState: (state) => state.states[state.states.length - 2],
@@ -565,8 +565,8 @@ const setHoveredRestaurant: Action<Restaurant> = (om, val) => {
   om.state.home.hoveredRestaurant = new Restaurant({ ...val })
 }
 
-const setShowMenu: Action<boolean> = (om, val) => {
-  om.state.home.showMenu = val
+const setShowUserMenu: Action<boolean> = (om, val) => {
+  om.state.home.showUserMenu = val
 }
 
 const toggleActiveTaxonomy: Action<Taxonomy> = (om, val) => {
@@ -662,7 +662,7 @@ export const actions = {
   setSearchQuery,
   popTo,
   toggleActiveTaxonomy,
-  setShowMenu,
+  setShowUserMenu,
   setHoveredRestaurant,
   _loadRestaurantDetail,
   runSearch,

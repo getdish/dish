@@ -1,8 +1,8 @@
-import auth from '@dish/auth'
+import DishAuth from '@dish/auth'
 import { User } from '@dish/models'
 import { Action, AsyncAction } from 'overmind'
 
-import { Toast } from '../views/shared/Toast'
+import { Toast } from '../views/App'
 
 type AuthState = {
   user: Partial<User>
@@ -34,7 +34,7 @@ const register: AsyncAction<
 > = async (om, { username, password }) => {
   let result = false
   om.state.auth.loading = true
-  const [status, data] = await auth.register(username, password)
+  const [status, data] = await DishAuth.register(username, password)
   switch (status) {
     case 201:
       om.state.auth.messages = ['Registered. You can now login.']
@@ -54,11 +54,11 @@ const register: AsyncAction<
 }
 
 const checkForExistingLogin: Action = (om) => {
-  if (auth.has_been_logged_out) {
+  if (DishAuth.has_been_logged_out) {
     Toast.show('Session expired: logged out')
   }
-  if (auth.is_logged_in) {
-    postLogin(om, auth.user)
+  if (DishAuth.is_logged_in) {
+    postLogin(om, DishAuth.user)
   }
 }
 
@@ -67,7 +67,7 @@ const login: AsyncAction<{ username: string; password: string }> = async (
   { username, password }
 ) => {
   om.state.auth.loading = true
-  const [status, data] = await auth.login(username, password)
+  const [status, data] = await DishAuth.login(username, password)
   if (status >= 400) {
     om.state.auth.is_logged_in = false
     if (status == 400 || status == 401) {
@@ -88,10 +88,19 @@ const postLogin: Action<Partial<User>> = (om, user: Partial<User>) => {
 }
 
 const logout: AsyncAction = async (om) => {
-  auth.logout()
+  DishAuth.logout()
   om.state.auth.user = {} as User
   om.state.auth.is_logged_in = false
   Toast.show('Logged out')
+}
+
+const ensureLoggedIn: Action<void, boolean> = (om) => {
+  if (om.state.auth.is_logged_in) {
+    return true
+  }
+  Toast.show('Login to do this!')
+  om.actions.home.setShowUserMenu(true)
+  return false
 }
 
 export const actions = {
@@ -99,4 +108,5 @@ export const actions = {
   login,
   logout,
   checkForExistingLogin,
+  ensureLoggedIn,
 }

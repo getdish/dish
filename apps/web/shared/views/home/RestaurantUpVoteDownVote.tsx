@@ -3,10 +3,10 @@ import React, { memo, useEffect, useRef, useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
 import { useOvermind } from '../../state/om'
+import { Toast } from '../App'
 import Hoverable from '../shared/Hoverable'
 import { Icon } from '../shared/Icon'
 import { VStack } from '../shared/Stacks'
-import { Toast } from '../shared/Toast'
 
 export const RestaurantUpVoteDownVote = memo(
   ({ restaurant }: { restaurant: Restaurant }) => {

@@ -1,5 +1,5 @@
 import { Restaurant } from '@dish/models'
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import { Image, Text, TouchableOpacity } from 'react-native'
 
 import { useOvermind } from '../../state/om'
@@ -40,13 +40,16 @@ export const RestaurantListItem = ({
     }
   }, [])
 
+  const hoverTm = useRef(0)
+
   return (
     <Hoverable
       onHoverIn={() => {
-        onHover(restaurant)
         setIsHovered(true)
+        hoverTm.current = setTimeout(() => onHover(restaurant), 100)
       }}
       onHoverOut={() => {
+        clearTimeout(hoverTm.current)
         setIsHovered(false)
       }}
     >

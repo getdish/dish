@@ -13,7 +13,6 @@ import {
 import { useOvermind } from '../../state/om'
 import { ForceShowPopover } from '../shared/Popover'
 import { VStack, ZStack } from '../shared/Stacks'
-import HomeAutocomplete from './HomeAutocomplete'
 import { HomeControlsOverlay } from './HomeControlsOverlay'
 import { HomeMap } from './HomeMap'
 import HomeRestaurantView from './HomeRestaurantView'
@@ -25,7 +24,7 @@ import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 export const drawerPad = 8
 export const drawerBorderRadius = 10
 
-export const HomePage = () => {
+export default () => {
   return (
     <ZStack top={0} left={0} right={0} bottom={0}>
       {!isWorker && <HomeMap />}
