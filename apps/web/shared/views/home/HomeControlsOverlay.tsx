@@ -14,6 +14,7 @@ import { flatButtonStyle } from './HomeViewTopDishes'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 export const HomeControlsOverlay = memo(() => {
+  const [show, setShow] = useState(true)
   const drawerWidth = useHomeDrawerWidth()
   return (
     <ZStack
@@ -25,18 +26,12 @@ export const HomeControlsOverlay = memo(() => {
     >
       <VStack position="relative" flex={1}>
         <HStack position="absolute" top={0} right={0} left={0}>
-          <VStack flex={1} />
-          <HomeUserMenu />
-        </HStack>
-
-        <HStack
-          position="absolute"
-          bottom={0}
-          right={0}
-          left={0}
-          alignItems="flex-end"
-        >
-          <Tooltip width="auto" justifyContent="center" maxWidth={250}>
+          <Tooltip
+            opacity={show ? 1 : 0}
+            width="auto"
+            justifyContent="center"
+            maxWidth={250}
+          >
             <SmallTitle>Welcome to Dish</SmallTitle>
             <VStack spacing={16}>
               <Text>
@@ -49,10 +44,23 @@ export const HomeControlsOverlay = memo(() => {
                   How we break it down
                 </LinkButton>
                 <Spacer flex />
-                <LinkButton {...flatButtonStyle}>Ok!</LinkButton>
+                <LinkButton onPress={() => setShow(false)} {...flatButtonStyle}>
+                  Ok!
+                </LinkButton>
               </HStack>
             </VStack>
           </Tooltip>
+          <VStack flex={1} />
+          <HomeUserMenu />
+        </HStack>
+
+        <HStack
+          position="absolute"
+          bottom={0}
+          right={0}
+          left={0}
+          alignItems="flex-end"
+        >
           <VStack flex={1} />
           <HomeExploreMenu />
         </HStack>
