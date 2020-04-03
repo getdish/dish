@@ -1,13 +1,12 @@
 import { LinearGradient } from 'expo-linear-gradient'
-import React, { memo, useEffect, useState } from 'react'
-import { StyleSheet, Text } from 'react-native'
+import React, { memo, useEffect } from 'react'
+import { StyleSheet } from 'react-native'
 
+import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { useOvermind } from '../../state/om'
-import { Link, LinkButton } from '../shared/Link'
+import { LinkButton } from '../shared/Link'
 import { HStack, ZStack } from '../shared/Stacks'
-import { searchBarHeight, searchBarTopOffset } from './HomeSearchBar'
 import {
-  baseButtonStyle,
   circularFlatButtonStyle,
   flatButtonStyle,
   flatButtonStyleActive,

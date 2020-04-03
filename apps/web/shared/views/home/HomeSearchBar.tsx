@@ -1,12 +1,11 @@
-import React, { memo, useEffect, useReducer, useRef, useState } from 'react'
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import React, { memo, useEffect, useRef, useState } from 'react'
+import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 
+import {
+  drawerPadLeft,
+  searchBarHeight,
+  searchBarTopOffset,
+} from '../../constants'
 import { useOvermind } from '../../state/om'
 import Hoverable from '../shared/Hoverable'
 import { Icon } from '../shared/Icon'
@@ -15,15 +14,9 @@ import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { CloseButton } from './CloseButton'
 import { DishLogoButton } from './DishLogoButton'
 import HomeAutocomplete from './HomeAutocomplete'
-import { drawerPad } from './HomePageView'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
-const extraWidth = 16
-export const searchBarTopOffset = 16
-export const searchBarHeight = 54
-export let homeSearchBarEl = {
-  current: null as HTMLInputElement | null,
-}
+const extraWidth = 22
 
 const isTextSelected = (node?: any) => {
   const selection = window.getSelection()
@@ -74,7 +67,6 @@ export default memo(function HomeSearchBar() {
 
   useEffect(() => {
     if (!input) return
-    homeSearchBarEl.current = input
     const isFocused = document.activeElement === input
     if (isFocused) return // ONE way sync
     if (showAutocomplete !== isFocused) {
@@ -291,7 +283,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     position: 'absolute',
     marginTop: searchBarTopOffset,
-    left: -extraWidth / 2 + drawerPad,
+    left: drawerPadLeft - extraWidth / 2,
   },
   searchArea: {
     borderLeftWidth: 1,
