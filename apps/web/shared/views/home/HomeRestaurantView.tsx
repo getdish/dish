@@ -20,6 +20,7 @@ import { SmallTitle } from '../shared/SmallTitle'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { CloseButton } from './CloseButton'
+import { LoadingItem } from './LoadingItems'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantMetaRow } from './RestaurantMetaRow'
@@ -39,7 +40,7 @@ export default memoIsEqualDeep(function HomeRestaurantView({
   const restaurant = om.state.home.allRestaurants[state.restaurantId]
 
   if (typeof restaurant.name == 'undefined') {
-    return <Text>Loading...</Text>
+    return <LoadingItem />
   }
 
   const isCanTag =
