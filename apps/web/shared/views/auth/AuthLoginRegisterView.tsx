@@ -127,14 +127,14 @@ const styles = StyleSheet.create({
   },
 
   text_input: {
-    fontSize: 16,
+    fontSize: 18,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
-    paddingVertical: 8,
+    paddingVertical: 12,
     paddingHorizontal: 12,
     marginBottom: '0.5em',
-    shadowColor: 'rgba(0,0,0,0.15)',
-    shadowRadius: 3,
+    shadowColor: 'rgba(0,0,0,0.12)',
+    shadowRadius: 8,
   },
 })

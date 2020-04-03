@@ -153,7 +153,7 @@ export default memo(function HomeSearchBar() {
               onHoverIn={() => {
                 tm2.current = setTimeout(() => {
                   if (document.activeElement == input) {
-                    om.actions.home.setShowAutocomplete(true)
+                    om.actions.home.setShowAutocomplete('search')
                   }
                 }, 300)
               }}
@@ -166,7 +166,7 @@ export default memo(function HomeSearchBar() {
                 if (om.state.home.currentState.searchQuery) {
                   tm.current = setTimeout(() => {
                     if (document.activeElement == input) {
-                      om.actions.home.setShowAutocomplete(true)
+                      om.actions.home.setShowAutocomplete('search')
                     }
                   }, 150)
                 }
@@ -178,7 +178,7 @@ export default memo(function HomeSearchBar() {
                 value={search}
                 onFocus={() => {
                   clearTimeout(tmInputBlur.current)
-                  om.actions.home.setShowAutocomplete(true)
+                  om.actions.home.setShowAutocomplete('search')
                 }}
                 onBlur={() => {
                   tmInputBlur.current = setTimeout(() => {
@@ -238,7 +238,12 @@ const SearchCancelButton = memo(() => {
           <CloseButton
             opacity={om.state.home.currentState.searchQuery === '' ? 0 : 1}
             disabled={om.state.home.currentState.searchQuery === ''}
-            onPress={() => om.actions.home.popTo(om.state.home.lastHomeState)}
+            onPress={() => {
+              om.actions.home.setSearchQuery('')
+              if (om.state.home.currentState.type === 'search') {
+                om.actions.home.popTo(om.state.home.lastHomeState)
+              }
+            }}
             size={12}
           />
         </VStack>

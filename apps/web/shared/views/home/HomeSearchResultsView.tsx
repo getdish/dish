@@ -13,6 +13,7 @@ import { VStack, ZStack } from '../shared/Stacks'
 import { useWaterfall } from '../shared/useWaterfall'
 import { CloseButton } from './CloseButton'
 import HomeLenseBar from './HomeLenseBar'
+import { LoadingItems } from './LoadingItems'
 import { RestaurantListItem } from './RestaurantListItem'
 
 export default memoIsEqualDeep(function HomeSearchResultsView({
@@ -25,6 +26,7 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
   const prevState = om.state.home.states[om.state.home.states.length - 2]
   const showCloseButton = prevState?.type === 'restaurant'
   const closeButtonOpacity = showCloseButton ? 1 : 0
+
   return (
     <>
       <PageTitle>{title}</PageTitle>
@@ -51,11 +53,7 @@ const HomeSearchResultsViewContent = memo(
     const results = resultsIds.map((id) => allRestaurants[id])
 
     if (!state.results?.results) {
-      return (
-        <VStack padding={18}>
-          <Text>Loading...</Text>
-        </VStack>
-      )
+      return <LoadingItems />
     }
 
     return (
