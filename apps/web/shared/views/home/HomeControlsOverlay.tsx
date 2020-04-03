@@ -2,7 +2,9 @@ import { useState } from 'react'
 import React, { memo } from 'react'
 import { Text } from 'react-native'
 
+import { useOvermind } from '../../state/om'
 import { AuthLoginRegisterView } from '../auth/AuthLoginRegisterView'
+import { Divider } from '../shared/Divider'
 import { Icon } from '../shared/Icon'
 import { LinkButton } from '../shared/Link'
 import { Popover } from '../shared/Popover'
@@ -58,13 +60,32 @@ export const HomeControlsOverlay = memo(() => {
 
 const HomeUserMenu = memo(() => {
   const [isOpen, setIsOpen] = useState(true)
+  const om = useOvermind()
   return (
     <Popover
       position="bottom"
       isOpen={isOpen}
       contents={
         <Tooltip padding={20} width="30vw" minWidth={250}>
-          <AuthLoginRegisterView setMenuOpen={setIsOpen} />
+          {!om.state.auth.is_logged_in && (
+            <AuthLoginRegisterView setMenuOpen={setIsOpen} />
+          )}
+
+          {om.state.auth.is_logged_in && (
+            <VStack spacing>
+              <LinkButton
+                {...flatButtonStyle}
+                name="account"
+                params={{ id: 'reviews', pane: 'list' }}
+              >
+                Reviews
+              </LinkButton>
+              <Divider />
+              <LinkButton name="home" onPress={() => om.actions.auth.logout()}>
+                Logout
+              </LinkButton>
+            </VStack>
+          )}
         </Tooltip>
       }
     >
