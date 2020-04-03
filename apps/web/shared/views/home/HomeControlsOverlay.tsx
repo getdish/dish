@@ -34,9 +34,9 @@ export const HomeControlsOverlay = memo(() => {
           >
             <SmallTitle>Welcome to Dish</SmallTitle>
             <VStack spacing={16}>
-              <Text>
-                We wanted reliable ratings for authentic food, with fast search
-                (across delivery apps, too). Enjoy!
+              <Text style={{ fontSize: 16, lineHeight: 24, padding: 5 }}>
+                Reliable ratings down to the dish. Authentic international
+                cuisine rankings. Fast search, across delivery service. Enjoy!
               </Text>
 
               <HStack>
