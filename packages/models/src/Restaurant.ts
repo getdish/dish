@@ -377,4 +377,8 @@ export class Restaurant extends ModelBase<Restaurant> {
       return { icon: i.taxonomy.icon, name: i.taxonomy.name, rank: rank }
     })
   }
+
+  async allPossibleDishes() {
+    return await Taxonomy.allChildren(this.tags.map((i) => i.taxonomy.id))
+  }
 }

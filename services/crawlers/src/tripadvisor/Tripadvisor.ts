@@ -152,8 +152,8 @@ export class Tripadvisor extends WorkerJob {
   ) {
     const { more, data: review_data } = this._extractReviews(html)
     let scrape_data: ScrapeData = {}
-    scrape_data['reviewp' + page] = review_data
-    const scrape = await Scrape.mergeData(scrape_id, scrape_data)
+    scrape_data['reviewsp' + page] = review_data
+    await Scrape.mergeData(scrape_id, scrape_data)
     return more
   }
 

@@ -85,4 +85,25 @@ export class Taxonomy extends ModelBase<Taxonomy> {
       }
     `
   }
+
+  static async allChildren(parents: string[]) {
+    const query = {
+      query: {
+        taxonomy: {
+          __args: {
+            where: {
+              parentId: {
+                _in: parents,
+              },
+            },
+          },
+          ...Taxonomy.fieldsAsObject(),
+        },
+      },
+    }
+    const response = await ModelBase.hasura(query)
+    return response.data.data.taxonomy.map(
+      (data: Partial<Taxonomy>) => new Taxonomy(data)
+    )
+  }
 }

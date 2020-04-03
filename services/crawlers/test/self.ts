@@ -1,4 +1,4 @@
-import { Restaurant, Scrape, flushTestData } from '@dish/models'
+import { Restaurant, Scrape, Taxonomy, flushTestData } from '@dish/models'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 
 import { Self } from '../src/self/Self'
@@ -34,6 +34,29 @@ const yelp: Partial<Scrape> = {
     },
     photosp0: [{ src: 'https://yelp.com/image.jpg' }],
     photosp1: [{ src: 'https://yelp.com/image2.jpg' }],
+    reviewsp0: [
+      {
+        id: 'abc123',
+        tags: [],
+        user: {
+          src: '',
+        },
+        photos: [{ src: '' }],
+        rating: 5,
+        comment: {
+          text: 'This restaurant had test_tag_existing dishes!',
+          language: 'en',
+        },
+        lightboxMediaItems: [
+          {
+            url: '',
+            type: 'photo',
+            user: {},
+            caption: 'A photo of tag_tag_existing2',
+          },
+        ],
+      },
+    ],
   },
 }
 
@@ -77,6 +100,13 @@ const tripadvisor: Partial<Scrape> = {
     },
     photosp0: [{ src: 'https://tripadvisor.com/image.jpg' }],
     photosp1: [{ src: 'https://tripadvisor.com/image2.jpg' }],
+    reviewsp0: [
+      {
+        text: 'test_tag_existing3',
+        rating: 5,
+        username: 'tauser',
+      },
+    ],
   },
 }
 
@@ -175,4 +205,42 @@ test('Tag rankings', async (t) => {
   await r2.insert()
   await dish.updateTagRankings()
   t.deepEqual(dish.restaurant.tag_rankings, [['rankable', 3]])
+})
+
+test('Finding dishes in reviews', async (t) => {
+  const dish = new Self()
+  const tag_parent = new Taxonomy({ name: 'test_country' })
+  await tag_parent.insert()
+  const existing_tag1 = new Taxonomy({
+    name: 'test_tag_existing',
+    parentId: tag_parent.id,
+  })
+  const existing_tag2 = new Taxonomy({
+    name: 'test_tag_existing2',
+    parentId: tag_parent.id,
+  })
+  const existing_tag3 = new Taxonomy({
+    name: 'test_tag_existing3',
+    parentId: tag_parent.id,
+  })
+  await t.context.restaurant.upsertTags(['test_country'])
+  dish.restaurant = t.context.restaurant
+  await dish.getScrapeData()
+  await existing_tag1.insert()
+  await existing_tag2.insert()
+  await dish.scanReviews()
+  const updated = new Restaurant()
+  await updated.findOne('id', t.context.restaurant.id)
+  t.assert(
+    updated.tags.map((i) => i.taxonomy.id),
+    existing_tag1.id
+  )
+  t.assert(
+    updated.tags.map((i) => i.taxonomy.id),
+    existing_tag2.id
+  )
+  t.assert(
+    updated.tags.map((i) => i.taxonomy.id),
+    existing_tag3.id
+  )
 })

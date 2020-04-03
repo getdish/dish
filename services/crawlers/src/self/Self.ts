@@ -1,6 +1,6 @@
 import '@dish/common'
 
-import { Dish, Restaurant, Scrape } from '@dish/models'
+import { Dish, Restaurant, Scrape, ScrapeData } from '@dish/models'
 import { WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
@@ -79,6 +79,7 @@ export class Self extends WorkerJob {
     this.mergeRatings()
     this.mergeImage()
     await this.mergeTags()
+    await this.scanReviews()
     this.mergePhotos()
     this.addWebsite()
     this.addSources()
@@ -338,7 +339,7 @@ export class Self extends WorkerJob {
 
   mergePhotos() {
     this.restaurant.photos = [
-      ...this._getYelpPhotos(),
+      ...this.getPaginatedData(this.yelp.data, 'photos'),
       ...this.tripadvisor.getData('photos', []),
     ]
   }
@@ -368,29 +369,74 @@ export class Self extends WorkerJob {
     return parseInt(result.rows[0].rank)
   }
 
-  private _getYelpPhotos() {
-    let photos: string[] = []
+  async scanReviews() {
+    await this._scanYelpReviewsForTags()
+    await this._scanTripadvisorReviewsForTags()
+  }
+
+  getPaginatedData(data: ScrapeData, type: 'photos' | 'reviews') {
+    let items: any[] = []
     let page = 0
-    let key: string
-    if (!this.yelp.data) {
+    let key: string | undefined
+    if (!data) {
       return []
     }
     while (true) {
-      key = 'photosp' + page
-      if (key in this.yelp.data) {
-        photos = photos.concat(this.yelp.data[key].map((p) => p.src))
+      const base = type + 'p' + page
+      const variations = [base, base.replace('reviews', 'review')]
+      key = variations.find((i) => data.hasOwnProperty(i))
+      if (key) {
+        items = items.concat(
+          data[key].map((i) => {
+            if (type == 'photos') {
+              return i.src
+            } else {
+              return i
+            }
+          })
+        )
       } else {
         // Allow scrapers to start their pages on both 0 and 1
         if (page > 0) {
           break
         }
       }
-      if (photos.length > 50) {
+      if (type == 'photos' && items.length > 50) {
         break
       }
       page++
     }
-    return photos
+    return items
+  }
+
+  async findDishesInText(text: string) {
+    const dishes = await this.restaurant.allPossibleDishes()
+    for (const dish of dishes) {
+      const tag = dish.name
+      const regex = new RegExp(`\\b${tag}\\b`)
+      if (regex.test(text)) {
+        this.restaurant.upsertTags([tag])
+      }
+    }
+  }
+
+  async _scanYelpReviewsForTags() {
+    const reviews = this.getPaginatedData(this.yelp.data, 'reviews')
+    for (const review of reviews) {
+      const all_text = [
+        review.comment?.text,
+        review.lightboxMediaItems?.map((i) => i.caption).join(' '),
+      ].join(' ')
+      await this.findDishesInText(all_text)
+    }
+  }
+
+  async _scanTripadvisorReviewsForTags() {
+    const reviews = this.getPaginatedData(this.tripadvisor.data, 'reviews')
+    for (const review of reviews) {
+      const all_text = [review.text].join(' ')
+      await this.findDishesInText(all_text)
+    }
   }
 
   private static shortestString(arr: string[]) {
