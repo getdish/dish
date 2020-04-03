@@ -1,13 +1,13 @@
 import { Restaurant } from '@dish/models'
 import _ from 'lodash'
 import React, { memo, useState } from 'react'
-import { Button, Text, TextInput } from 'react-native'
+import { Button, Text, TextInput, View } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { Icon } from '../shared/Icon'
 import { Popover } from '../shared/Popover'
-import { SmallTitle } from '../shared/SmallTitle'
-import { HStack } from '../shared/Stacks'
+import { SmallTitle, SmallerTitle } from '../shared/SmallTitle'
+import { HStack, VStack } from '../shared/Stacks'
 import { Tooltip } from '../shared/Tooltip'
 import { styles } from './HomeRestaurantView'
 import { HoverableButton } from './HoverableButton'
@@ -26,8 +26,34 @@ export const RestaurantTagButton = memo(
         onClickOutside={() => setIsOpen(false)}
         position="right"
         contents={
-          <Tooltip maxWidth={300}>
-            <SmallTitle>Tag</SmallTitle>
+          <Tooltip spacing maxWidth={300}>
+            <SmallTitle>Tags</SmallTitle>
+            <VStack padding={10} spacing="sm">
+              {restaurant.tags.map((t, index) => {
+                const name = t.taxonomy.name
+                return (
+                  <TagButton
+                    key={`${name}${index}`}
+                    size="lg"
+                    rank={10}
+                    name={name}
+                    votable
+                  />
+                )
+              })}
+            </VStack>
+            <SmallerTitle>Add tag</SmallerTitle>
+            <HStack padding={10} flexWrap="wrap">
+              {_.flatten((om.state.home.topDishes ?? []).map((x) => x.dishes))
+                .filter(Boolean)
+                .map((x, index) => (
+                  <React.Fragment key={index}>
+                    <View style={{ marginBottom: 6, marginRight: 6 }}>
+                      <TagButton key={x.name} name={x.name} />
+                    </View>
+                  </React.Fragment>
+                ))}
+            </HStack>
             <HStack>
               <TextInput
                 placeholder="Suggest tag"
@@ -43,29 +69,7 @@ export const RestaurantTagButton = memo(
                   if (om.state.home.currentState.type != 'restaurant') return
                   await om.actions.home.suggestTags(suggested_tags)
                 }}
-              ></Button>
-            </HStack>
-            <HStack padding={10} flexWrap="wrap">
-              {restaurant.tags.map((t, index) => {
-                const name = t.taxonomy.name
-                return <TagButton key={`${name}${index}`} name={name} />
-              })}
-            </HStack>
-            <Text
-              style={{
-                padding: 10,
-                textAlign: 'center',
-                width: '100%',
-              }}
-            >
-              Top tags
-            </Text>
-            <HStack padding={10} flexWrap="wrap">
-              {_.flatten((om.state.home.topDishes ?? []).map((x) => x.dishes))
-                .filter(Boolean)
-                .map((x, index) => (
-                  <TagButton key={x.name} name={x.name} />
-                ))}
+              />
             </HStack>
           </Tooltip>
         }
