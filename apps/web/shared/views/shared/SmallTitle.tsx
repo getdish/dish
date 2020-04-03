@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Text } from 'react-native'
 
 import { Divider } from './Divider'
 import { Spacer } from './Spacer'
-import { VStack } from './Stacks'
+import { HStack, VStack } from './Stacks'
 
-export function Title(props: { children: any }) {
+export const Title = memo((props: { children: any }) => {
   return (
     <>
       <VStack
@@ -30,9 +30,9 @@ export function Title(props: { children: any }) {
       </VStack>
     </>
   )
-}
+})
 
-export function SmallTitle(props: { children: any }) {
+export const SmallTitle = memo((props: { children: any }) => {
   return (
     <VStack width="100%" alignItems="center" paddingBottom={4}>
       <Text
@@ -50,4 +50,22 @@ export function SmallTitle(props: { children: any }) {
       <Divider />
     </VStack>
   )
-}
+})
+
+export const SmallerTitle = memo((props: { children: any }) => {
+  return (
+    <HStack alignItems="center" spacing>
+      <Divider flex />
+      <Text
+        style={{
+          opacity: 0.5,
+          fontSize: 14,
+          fontWeight: '400',
+        }}
+      >
+        {props.children}
+      </Text>
+      <Divider flex />
+    </HStack>
+  )
+})
