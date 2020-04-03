@@ -95,6 +95,7 @@ export function LinkButton<
   let contents: React.ReactElement
   let pointerEvents: any
   let onPress: any
+  let fastClick: boolean
 
   if ('name' in props) {
     const {
@@ -130,8 +131,10 @@ export function LinkButton<
       fontSize,
       lineHeight,
       ellipse,
+      fastClick: fastClick_,
       ...rest
     } = props
+    fastClick = fastClick_
     pointerEvents = rest.pointerEvents
     onPress = onPress_
     restProps = rest
@@ -147,7 +150,10 @@ export function LinkButton<
 
   return (
     <VStack flex={props.flex} pointerEvents={pointerEvents ?? 'auto'}>
-      <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
+      <TouchableOpacity
+        activeOpacity={0.7}
+        {...{ [fastClick ? 'onPressIn' : 'onPress']: onPress }}
+      >
         <VStack flex={1} {...restProps}>
           {contents}
         </VStack>

@@ -109,9 +109,19 @@ export default memo(function HomeAutoComplete({ active }: { active: number }) {
             ].map((x, index) => {
               return (
                 <LinkButton
-                  name="search"
+                  onPress={() => {
+                    if (showLocation) {
+                      om.actions.home.setLocationSearchQuery(x.name)
+                    } else {
+                      om.actions.router.navigate({
+                        name: 'search',
+                        params: {
+                          query: x.name,
+                        },
+                      })
+                    }
+                  }}
                   flexDirection="row"
-                  params={{ query: x.name }}
                   height={34}
                   lineHeight={24}
                   fastClick
