@@ -46,6 +46,7 @@ const clearTextSelection = () => {
 export default memo(function HomeSearchBar() {
   const om = useOvermind()
   const inputRef = useRef()
+  const locationInputRef = useRef()
   const globalSearch = om.state.home.currentState.searchQuery
   const width = useHomeDrawerWidth()
   const [active, setActive] = useState(0)
@@ -56,6 +57,7 @@ export default memo(function HomeSearchBar() {
 
   // use local for a little better perf
   const [search, setSearch] = useState('')
+  const [locationSearch, setLocationSearch] = useState('')
 
   useEffect(() => {
     setSearch(globalSearch)
@@ -63,21 +65,27 @@ export default memo(function HomeSearchBar() {
 
   // ONE way sync this state so we can control it programatically (but blurring gets annoying)
   const { showAutocomplete } = om.state.home
+
   // @ts-ignore
-  const node: HTMLInputElement | null = inputRef.current?.['_node'] ?? null
-  useEffect(() => {
-    if (!node) return
-    homeSearchBarEl.current = node
-    const isFocused = document.activeElement === node
-    if (isFocused) return // ONE way sync
-    if (showAutocomplete !== isFocused) {
-      if (showAutocomplete) node.focus()
-      else node.blur()
-    }
-  }, [node, showAutocomplete])
+  const input: HTMLInputElement | null = inputRef.current?.['_node'] ?? null
+  const locationInput: HTMLInputElement | null =
+    // @ts-ignore
+    locationInputRef.current?.['_node'] ?? null
 
   useEffect(() => {
-    if (!node) return
+    if (!input) return
+    homeSearchBarEl.current = input
+    const isFocused = document.activeElement === input
+    if (isFocused) return // ONE way sync
+    if (showAutocomplete !== isFocused) {
+      const target = showAutocomplete == 'location' ? locationInput : input
+      if (showAutocomplete) target.focus()
+      else target.blur()
+    }
+  }, [input, locationInput, showAutocomplete])
+
+  useEffect(() => {
+    if (!input) return
     const prev = () => setActive((x) => Math.max(0, x - 1))
     const next = () => {
       const autocompleteResults = om.state.home.autocompleteResults
@@ -87,7 +95,7 @@ export default memo(function HomeSearchBar() {
       // @ts-ignore
       const code = e.keyCode
       console.log('code', code)
-      const isCaretAtEnd = node.value.length == node.selectionEnd
+      const isCaretAtEnd = input.value.length == input.selectionEnd
       switch (code) {
         case 39: // right
           if (isCaretAtEnd) {
@@ -102,7 +110,7 @@ export default memo(function HomeSearchBar() {
           }
           return
         case 27: // esc
-          if (isTextSelected(node)) {
+          if (isTextSelected(input)) {
             clearTextSelection()
             return
           }
@@ -120,12 +128,13 @@ export default memo(function HomeSearchBar() {
           return
       }
     }
-    node.addEventListener('keydown', handlePress)
-    return () => node.removeEventListener('keydown', handlePress)
-  }, [node])
+    input.addEventListener('keydown', handlePress)
+    return () => input.removeEventListener('keydown', handlePress)
+  }, [input])
 
   const tm = useRef(0)
   const tm2 = useRef(0)
+  const tmInputBlur = useRef(0)
 
   return (
     <>
@@ -143,7 +152,7 @@ export default memo(function HomeSearchBar() {
               // show even if moving after some time
               onHoverIn={() => {
                 tm2.current = setTimeout(() => {
-                  if (document.activeElement == node) {
+                  if (document.activeElement == input) {
                     om.actions.home.setShowAutocomplete(true)
                   }
                 }, 300)
@@ -156,7 +165,7 @@ export default memo(function HomeSearchBar() {
                 clearTimeout(tm.current)
                 if (om.state.home.currentState.searchQuery) {
                   tm.current = setTimeout(() => {
-                    if (document.activeElement == node) {
+                    if (document.activeElement == input) {
                       om.actions.home.setShowAutocomplete(true)
                     }
                   }, 150)
@@ -168,10 +177,11 @@ export default memo(function HomeSearchBar() {
                 // leave uncontrolled for perf?
                 value={search}
                 onFocus={() => {
+                  clearTimeout(tmInputBlur.current)
                   om.actions.home.setShowAutocomplete(true)
                 }}
                 onBlur={() => {
-                  setTimeout(() => {
+                  tmInputBlur.current = setTimeout(() => {
                     om.actions.home.setShowAutocomplete(false)
                   }, 150)
                 }}
@@ -187,10 +197,23 @@ export default memo(function HomeSearchBar() {
           </VStack>
           <VStack flex={1} style={styles.searchArea}>
             <TextInput
-              // value=""
-              onChangeText={() => {}}
+              ref={locationInputRef}
+              value={locationSearch}
               placeholder="in San Francisco"
               style={[styles.textInput, { paddingRight: 32, fontSize: 16 }]}
+              onFocus={() => {
+                clearTimeout(tmInputBlur.current)
+                om.actions.home.setShowAutocomplete('location')
+              }}
+              onBlur={() => {
+                tmInputBlur.current = setTimeout(() => {
+                  om.actions.home.setShowAutocomplete(false)
+                }, 150)
+              }}
+              onChangeText={(text) => {
+                setLocationSearch(text)
+                om.actions.home.setLocationSearchQuery(text)
+              }}
             />
             <SearchLocationButton />
           </VStack>

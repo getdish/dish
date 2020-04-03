@@ -246,7 +246,7 @@ export default memoIsEqualDeep(function HomeRestaurantView({
             </LinkButton>
           </HStack>
 
-          {!!restaurant.photos.length && (
+          {!!restaurant.photos?.length && (
             <VStack>
               <SmallTitle>Top Dishes</SmallTitle>
               <HStack
