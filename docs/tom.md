@@ -25,6 +25,7 @@
 - [ ] Postmates
 - [ ] GrubHub
 - [ ] DoorDash
+- [ ] Finally, Foursquare actually has the best quality rankings I think. Their apps are old and they dont search delivery, otherwise they would just be obviously the best choice. In fact, I think a lot of people are clutching onto foursquare because they are the best, but if we had similar rankings but just delivered nice apps with delivery search and a sort of message of "were doing this!" we are good. That said, crawling foursquare may be more important than google or other sources i think.
 - [ ] Use Dish account for AWS proxies
 - [ ] Use Dish account for HereMaps/Geolocator API
 - [ ] Fix all the minor Sentry exceptions
