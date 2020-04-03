@@ -15,8 +15,8 @@ export const RatingView = forwardRef(
     const percent = Math.round(restaurant.rating * 20)
     const color = percent > 84 ? 'green' : percent > 60 ? 'orange' : 'red'
     const borderColor =
-      percent > 84 ? 'lightgreen' : percent > 60 ? 'gold' : 'lightred'
-    const size = sizeIn == 'sm' ? 34 : sizeIn == 'md' ? 48 : 72
+      percent > 84 ? 'lightgreen' : percent > 60 ? 'gold' : 'red'
+    const size = sizeIn == 'sm' ? 38 : sizeIn == 'md' ? 48 : 72
     return (
       <VStack
         ref={ref as any}
@@ -28,8 +28,8 @@ export const RatingView = forwardRef(
         {percent >= 80 && (
           <VStack
             position="absolute"
-            top={-2 + (sizeIn == 'lg' ? 0 : -5)}
-            right={-2 + (sizeIn == 'lg' ? 0 : -5)}
+            top={-2 + (sizeIn == 'lg' ? 0 : -4)}
+            right={-2 + (sizeIn == 'lg' ? 0 : -4)}
             alignItems="center"
             justifyContent="center"
             zIndex={100}

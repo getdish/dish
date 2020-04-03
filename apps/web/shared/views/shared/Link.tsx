@@ -8,6 +8,7 @@ import { RoutesTable, getPathFromParams } from '../../state/router'
 import { StackBaseProps, VStack } from './Stacks'
 
 type LinkSharedProps = {
+  fontWeight?: TextStyle['fontWeight']
   fontSize?: TextStyle['fontSize']
   lineHeight?: TextStyle['lineHeight']
   ellipse?: boolean
@@ -22,6 +23,7 @@ export function Link<
   params,
   inline,
   fontSize,
+  fontWeight,
   children,
   ellipse,
   lineHeight,
@@ -40,7 +42,6 @@ export function Link<
   const handler = useCallback((e) => {
     e.stopPropagation()
     e.preventDefault()
-    console.log('clicking', name, params)
     om.actions.router.navigate({ name, params } as any)
   }, [])
   return (
@@ -50,26 +51,15 @@ export function Link<
       {...{
         [fastClick ? 'onMouseDown' : 'onClick']: handler,
       }}
-      className={`${inline ? 'inline-link' : ' block-link'}`}
+      className={`${inline ? 'inline-link' : ' flex'}`}
       style={{ maxWidth: '100%' }}
     >
-      <div
-        className={` ${ellipse ? ' ellipse' : ''}`}
-        style={
-          fontSize || lineHeight
-            ? {
-                fontSize:
-                  typeof fontSize == 'number' ? `${fontSize}px` : fontSize,
-                lineHeight:
-                  typeof lineHeight == 'number'
-                    ? `${lineHeight}px`
-                    : lineHeight,
-              }
-            : null
-        }
+      <Text
+        numberOfLines={ellipse ? 1 : undefined}
+        style={{ fontSize, lineHeight, fontWeight, display: 'inherit' } as any}
       >
         {children}
-      </div>
+      </Text>
     </a>
   )
 }
@@ -107,6 +97,7 @@ export function LinkButton<
       ellipse,
       fastClick,
       lineHeight,
+      fontWeight,
       ...rest
     } = props
     pointerEvents = rest.pointerEvents
@@ -118,6 +109,7 @@ export function LinkButton<
         onClick={onPress}
         lineHeight={lineHeight}
         fontSize={fontSize}
+        fontWeight={fontWeight}
         ellipse={ellipse}
         fastClick={fastClick}
       >
@@ -130,6 +122,7 @@ export function LinkButton<
       onPress: onPress_,
       fontSize,
       lineHeight,
+      fontWeight,
       ellipse,
       fastClick: fastClick_,
       ...rest
@@ -141,7 +134,7 @@ export function LinkButton<
     contents = (
       <Text
         numberOfLines={ellipse ? 1 : undefined}
-        style={{ fontSize, lineHeight }}
+        style={{ fontSize, lineHeight, fontWeight }}
       >
         {children ?? ''}
       </Text>

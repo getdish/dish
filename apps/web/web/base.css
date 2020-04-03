@@ -65,7 +65,7 @@ textarea {
 .ease-in-out-fast {
   transition: all ease-in-out 150ms;
 }
-.ease-in-out-med {
+.ease-in-out {
   transition: all ease-in-out 250ms;
 }
 .ease-in-out-slow {
@@ -86,7 +86,8 @@ textarea {
   display: inline-flex;
 }
 
-div {
+div,
+.flex {
   display: flex;
   flex-direction: inherit;
   flex-wrap: inherit;
