@@ -47,7 +47,7 @@ export const Popover = (props: {
   if (Platform.OS == 'web') {
     useLayoutEffect(() => {
       if (props.overlay && isOpen) {
-        const node = document.querySelector('.react-tiny-popover-container')
+        const node = document.querySelector('#root')
         if (node) {
           const overlayDiv = document.createElement('div')
           overlayDiv.style.background = 'rgba(0,0,0,0.1)'
@@ -56,6 +56,7 @@ export const Popover = (props: {
           overlayDiv.style.right = '0px'
           overlayDiv.style.bottom = '0px'
           overlayDiv.style.left = '0px'
+          overlayDiv.style.zIndex = '1'
           overlayDiv.addEventListener('click', (e) => {
             e.preventDefault()
             e.stopPropagation()
