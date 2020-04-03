@@ -74,7 +74,11 @@ export const RestaurantTagButton = memo(
           spacing={4}
           paddingHorizontal={5}
           paddingVertical={2}
-          onPress={() => setIsOpen(true)}
+          onPress={async () => {
+            if (await om.actions.auth.ensureLoggedIn()) {
+              setIsOpen(true)
+            }
+          }}
           margin={-4}
           borderRadius={10}
           // TODO make hoverable with onHoverIn

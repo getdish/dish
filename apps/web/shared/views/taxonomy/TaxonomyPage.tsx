@@ -82,7 +82,7 @@ const upsertTaxonomy = () => {
   return [draft, setDraft, update, response] as const
 }
 
-export const TaxonomyPage = () => {
+export default function TaxnonomyPage() {
   const [active, setActive] = useState<[number, number]>([0, 0])
   const [draft, setDraft, upsertDraft] = upsertTaxonomy()
 

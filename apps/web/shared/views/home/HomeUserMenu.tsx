@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import React, { memo } from 'react'
 
 import { useOvermind } from '../../state/om'
@@ -13,15 +12,17 @@ import { flatButtonStyle } from './HomeViewTopDishes'
 
 export const HomeUserMenu = memo(() => {
   const om = useOvermind()
-  const [isOpen, setIsOpen] = useState(!om.state.auth.is_logged_in)
+
   return (
     <Popover
       position="bottom"
-      isOpen={isOpen}
+      isOpen={om.state.home.showUserMenu}
       contents={
         <Tooltip padding={20} width="30vw" minWidth={250}>
           {!om.state.auth.is_logged_in && (
-            <AuthLoginRegisterView setMenuOpen={setIsOpen} />
+            <AuthLoginRegisterView
+              setMenuOpen={(x) => om.actions.home.setShowUserMenu(x)}
+            />
           )}
 
           {om.state.auth.is_logged_in && (
@@ -51,7 +52,9 @@ export const HomeUserMenu = memo(() => {
         shadowColor="rgba(0,0,0,0.2)"
         shadowRadius={10}
         shadowOffset={{ width: 0, height: 5 }}
-        onPress={() => setIsOpen(!isOpen)}
+        onPress={() =>
+          om.actions.home.setShowUserMenu(!om.state.home.showUserMenu)
+        }
       >
         <Icon name="user" size={16} opacity={0.5} />
       </LinkButton>

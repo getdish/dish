@@ -2,9 +2,7 @@ import React, {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useLayoutEffect,
-  useMemo,
   useState,
 } from 'react'
 import { View } from 'react-native'

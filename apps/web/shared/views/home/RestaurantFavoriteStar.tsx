@@ -4,11 +4,11 @@ import { ScrollView, Text, TextInput } from 'react-native'
 
 import { useForceUpdate } from '../../hooks/useForceUpdate'
 import { useOvermind } from '../../state/om'
+import { Toast } from '../App'
 import { Icon } from '../shared/Icon'
 import { Popover } from '../shared/Popover'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack } from '../shared/Stacks'
-import { Toast } from '../shared/Toast'
 import { Tooltip } from '../shared/Tooltip'
 import { HoverableButton } from './HoverableButton'
 import { LenseButton } from './LenseButton'
@@ -36,6 +36,9 @@ export const RestaurantFavoriteStar = memo(
       Toast.show('Saved')
     }
     const setRating = (r: number) => {
+      if (!om.actions.auth.ensureLoggedIn()) {
+        return
+      }
       review.current.rating = r
       setIsOpen(r == 1)
       review.current.restaurant_id = restaurant.id
