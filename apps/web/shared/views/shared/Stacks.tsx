@@ -26,6 +26,8 @@ export type StackBaseProps = Omit<
       fullscreen?: boolean
       children?: any
       hoverStyle?: ViewStyle
+      onHoverIn?: Function
+      onHoverOut?: Function
       spacing?: Spacing
       className?: string
       disabled?: boolean // stronger pointer-events: none;
@@ -43,6 +45,8 @@ const createStack = (defaultStyle?: ViewStyle) => {
         pointerEvents,
         style = null,
         hoverStyle = null,
+        onHoverIn,
+        onHoverOut,
         spacing,
         className,
         disabled,
@@ -108,9 +112,18 @@ const createStack = (defaultStyle?: ViewStyle) => {
         )
       }
 
-      if (hoverStyle) {
+      if (hoverStyle || onHoverIn || onHoverOut) {
         return (
-          <Hoverable onHoverIn={() => set(true)} onHoverOut={() => set(false)}>
+          <Hoverable
+            onHoverIn={() => {
+              set(true)
+              onHoverIn?.()
+            }}
+            onHoverOut={() => {
+              set(false)
+              onHoverOut?.()
+            }}
+          >
             <div
               className={`see-through ${className} ${
                 disabled ? 'force-disable' : ''

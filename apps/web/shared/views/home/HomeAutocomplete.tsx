@@ -11,7 +11,7 @@ import {
   flatButtonStyle,
   flatButtonStyleActive,
   flatButtonStyleInactive,
-} from './HomeViewTopDishes'
+} from './baseButtonStyle'
 
 export default memo(function HomeAutoComplete({ active }: { active: number }) {
   const om = useOvermind()

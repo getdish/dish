@@ -16,8 +16,8 @@ export const RankingView = memo(
         alignItems="center"
         justifyContent="center"
         marginLeft={-32}
-        marginRight={8}
-        marginVertical={-6}
+        marginRight={4}
+        marginVertical={-10}
         transform={[{ rotate: '-12deg' }]}
         {...props}
       >

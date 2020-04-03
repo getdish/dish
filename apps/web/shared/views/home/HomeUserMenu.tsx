@@ -8,7 +8,7 @@ import { LinkButton } from '../shared/Link'
 import { Popover } from '../shared/Popover'
 import { VStack } from '../shared/Stacks'
 import { Tooltip } from '../shared/Tooltip'
-import { flatButtonStyle } from './HomeViewTopDishes'
+import { flatButtonStyle } from './baseButtonStyle'
 
 export const HomeUserMenu = memo(() => {
   const om = useOvermind()

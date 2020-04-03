@@ -9,8 +9,8 @@ import { SmallTitle } from '../shared/SmallTitle'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { Tooltip } from '../shared/Tooltip'
+import { flatButtonStyle } from './baseButtonStyle'
 import { HomeUserMenu } from './HomeUserMenu'
-import { flatButtonStyle } from './HomeViewTopDishes'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 export const HomeControlsOverlay = memo(() => {
