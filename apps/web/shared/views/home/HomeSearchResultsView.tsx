@@ -7,11 +7,11 @@ import { HomeStateItemSearch } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { PageTitle } from '../shared/PageTitle'
 import { closeAllPopovers, popoverCloseCbs } from '../shared/Popover'
-import { Title } from '../shared/SmallTitle'
+import { SmallTitle, Title } from '../shared/SmallTitle'
 import { Spacer } from '../shared/Spacer'
 import { VStack, ZStack } from '../shared/Stacks'
 import { useWaterfall } from '../shared/useWaterfall'
-import { CloseButton } from './CloseButton'
+import { BackButton, CloseButton } from './CloseButton'
 import HomeLenseBar from './HomeLenseBar'
 import { LoadingItems } from './LoadingItems'
 import { RestaurantListItem } from './RestaurantListItem'
@@ -23,17 +23,13 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
 }) {
   const om = useOvermind()
   const title = `Top ${state.searchQuery} Restaurants`
-  const prevState = om.state.home.states[om.state.home.states.length - 2]
-  const showCloseButton = prevState?.type === 'restaurant'
-  const closeButtonOpacity = showCloseButton ? 1 : 0
 
   return (
     <>
       <PageTitle>{title}</PageTitle>
-      <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
-        <CloseButton
+      <ZStack left={10} top={10} pointerEvents="auto" zIndex={100}>
+        <BackButton
           onPress={() => om.actions.home.popTo(om.state.home.lastHomeState)}
-          opacity={closeButtonOpacity}
         />
       </ZStack>
       <Title>{title}</Title>
@@ -49,11 +45,20 @@ const HomeSearchResultsViewContent = memo(
   ({ state }: { state: HomeStateItemSearch }) => {
     const om = useOvermind()
     const allRestaurants = om.state.home.allRestaurants
-    const resultsIds = state.results?.results?.restaurantIds ?? []
+
+    if (!state.results?.results || state.results.status === 'loading') {
+      return <LoadingItems />
+    }
+
+    const resultsIds = state.results?.results?.restaurantIds
     const results = resultsIds.map((id) => allRestaurants[id])
 
-    if (!state.results?.results) {
-      return <LoadingItems />
+    if (!results.length) {
+      return (
+        <VStack height="100vh" alignItems="center" justifyContent="center">
+          <Title>No results 😞</Title>
+        </VStack>
+      )
     }
 
     return (

@@ -32,7 +32,7 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
       <Spacer size={20} />
       {/* <Title>{activeLense?.description ?? ''}</Title> */}
       <VStack position="relative" flex={1}>
-        <HomeLenseBar backgroundGradient />
+        <HomeLenseBar />
         <HomeViewTopDishesContent topDishes={om.state.home.topDishes} />
       </VStack>
     </>
@@ -43,7 +43,7 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
   ({ topDishes = [] }: { topDishes?: TopDish[] }) => {
     return (
       <ScrollView style={{ flex: 1, overflow: 'hidden' }}>
-        <VStack paddingVertical={20} paddingTop={20 + 100}>
+        <VStack paddingVertical={20} paddingTop={90}>
           {topDishes.map((country, index) => (
             <CountryTopDishesAndRestaurants
               key={country.country}
@@ -75,7 +75,7 @@ const CountryTopDishesAndRestaurants = memo(
       >
         <HStack paddingHorizontal={20}>
           <HStack flex={1}>
-            <RankingView rank={rank} marginLeft={-36} />
+            {/* <RankingView rank={rank} marginLeft={-36} /> */}
             <LinkButton
               {...flatButtonStyle}
               marginVertical={-5}
@@ -91,7 +91,7 @@ const CountryTopDishesAndRestaurants = memo(
             </LinkButton>
           </HStack>
           <Spacer flex />
-          <Text style={{ fontSize: 36, marginVertical: -10 }}>
+          <Text style={{ fontSize: 26, marginVertical: -10 }}>
             {country.icon}
           </Text>
         </HStack>
@@ -191,7 +191,7 @@ const DishView = memo(({ dish }: { dish: { name: string; image: string } }) => {
       }}
       position="relative"
     >
-      {/* <ZStack fullscreen>
+      <ZStack fullscreen zIndex={10}>
         <RatingView
           size="sm"
           restaurant={{ rating: 4 }}
@@ -199,8 +199,8 @@ const DishView = memo(({ dish }: { dish: { name: string; image: string } }) => {
           top={-4}
           right={-12}
         />
-      </ZStack> */}
-      <VStack width={90} height={90}>
+      </ZStack>
+      <VStack width={100} height={100}>
         <VStack
           className="ease-in-out"
           shadowColor="rgba(0,0,0,0.17)"
@@ -224,7 +224,7 @@ const DishView = memo(({ dish }: { dish: { name: string; image: string } }) => {
         </VStack>
       </VStack>
       <VStack
-        marginTop={5}
+        marginTop={3}
         alignItems="center"
         justifyContent="center"
         overflow="hidden"
@@ -233,7 +233,7 @@ const DishView = memo(({ dish }: { dish: { name: string; image: string } }) => {
           numberOfLines={1}
           style={{
             fontWeight: '600',
-            fontSize: 14,
+            fontSize: 13,
             lineHeight: 22,
             opacity: 0.75,
             textAlign: 'center',

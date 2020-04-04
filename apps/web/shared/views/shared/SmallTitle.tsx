@@ -5,7 +5,7 @@ import { Divider } from './Divider'
 import { Spacer } from './Spacer'
 import { HStack, VStack } from './Stacks'
 
-export const Title = memo((props: { children: any }) => {
+export const Title = memo((props: { children?: any }) => {
   return (
     <>
       <VStack
@@ -32,7 +32,7 @@ export const Title = memo((props: { children: any }) => {
   )
 })
 
-export const SmallTitle = memo((props: { children: any }) => {
+export const SmallTitle = memo((props: { children?: any }) => {
   return (
     <VStack width="100%" alignItems="center" paddingBottom={4}>
       <Text

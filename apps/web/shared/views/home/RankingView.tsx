@@ -9,10 +9,10 @@ export const RankingView = memo(
     return (
       <VStack
         borderRadius={100}
-        borderColor="rgba(0,0,0,0.05)"
-        borderWidth={1}
+        // borderColor="rgba(0,0,0,0.05)"
+        // borderWidth={1}
         width={47}
-        height={47}
+        // height={47}
         alignItems="center"
         justifyContent="center"
         marginLeft={-32}
@@ -27,10 +27,10 @@ export const RankingView = memo(
             lineHeight: 22,
             letterSpacing: -3,
             fontWeight: '500',
-            color: rank == 1 ? 'darkgreen' : 'black',
+            color: '#888',
           }}
         >
-          <SuperScriptText style={{ opacity: 0.5, letterSpacing: 0 }}>
+          <SuperScriptText style={{ opacity: 0.35, letterSpacing: 0 }}>
             #
           </SuperScriptText>
           {rank}

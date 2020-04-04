@@ -1,30 +1,43 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { TouchableOpacity } from 'react-native'
 
 import { Circle } from '../shared/Circle'
 import { Icon } from '../shared/Icon'
 import { StackBaseProps } from '../shared/Stacks'
 
-export function CloseButton({
-  onPress,
-  size = 14,
-  disabled,
-  ...rest
-}: {
+type CircleButtonProps = {
   onPress: any
   size?: number
   disabled?: boolean
-} & StackBaseProps) {
+} & StackBaseProps
+
+export const CloseButton = memo((props: CircleButtonProps) => {
   return (
-    <TouchableOpacity onPress={onPress} disabled={disabled}>
-      <Circle
-        size={size * 1.45}
-        backgroundColor="#ccc"
-        {...rest}
-        hoverStyle={{ backgroundColor: '#999', ...rest.hoverStyle }}
-      >
-        <Icon name="x" size={size} color="white" />
-      </Circle>
-    </TouchableOpacity>
+    <SmallCircleButton {...props}>
+      <Icon name="x" size={props.size} color="white" />
+    </SmallCircleButton>
   )
-}
+})
+
+export const BackButton = memo((props: CircleButtonProps) => {
+  return (
+    <SmallCircleButton {...props}>
+      <Icon name="corner-left-up" size={props.size} color="white" />
+    </SmallCircleButton>
+  )
+})
+
+export const SmallCircleButton = memo(
+  ({ onPress, size = 14, disabled, ...rest }: CircleButtonProps) => {
+    return (
+      <TouchableOpacity onPress={onPress} disabled={disabled}>
+        <Circle
+          size={size * 1.45}
+          backgroundColor="#ccc"
+          {...rest}
+          hoverStyle={{ backgroundColor: '#999', ...rest.hoverStyle }}
+        />
+      </TouchableOpacity>
+    )
+  }
+)

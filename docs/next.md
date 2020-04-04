@@ -2,45 +2,48 @@
 
 GOAL
 
-"THE LAST MONTH OF TRUE SHLEPPING"
+Lets have fun with it! 😌
 
-Ok so the truth is this - we need to do a variety of less fun things until we really get to the fun parts.
+Our overarching goal is: fun, fast, accurate.
 
-The good new is: we're really damn close to being done with all the shlep. So lets look at this month as "paying it forward". We'll really focus on fundamentals, so that next month we can move into lots of fun things.
+"LAST MONTH OF TRUE SHLEPPING"
 
-We need to really get it into peoples hands. We missed our deadline basically for Peach and superusers. Why?
+Ok so really, need to do a variety of less fun things until we really get to the fun parts, but, we're so close to the fun parts its fun just getting the less fun parts done quick!
 
-We ended up making everything much nicer and making the web app actually work. That was "out of order" but i think the right decision - instead of building a whole separate admin interface, we just built the website. Pretty cool.
+We missed our peach goal because we made the web app instead of just an admin panel. That was "out of order" but i think the right decision - instead of building a whole separate interface, we just built the website and almost did it within our deadline - with a lot of polish.
 
-But.
+I've also updated my beliefs after some thought.
 
-That said, we still need to hit goals:
+We definitely want to get people on board ASAP and especially get feedback, but there's some value to us really iterating a bit on a "sorta-working" version of the app ourselves, and just trying to figure out _WHAT_ it is we can do thats interest, cool, faster for them.
 
-1. Onboard super users SO THEY CAN INPUT RATINGS/THOUGHTS EASILY
-2. Launch beta website end of month
+I think they would input a ton more and even just start using it more seriously, and if they felt good about it, they would give us a ton more info.
 
-Broken down by what each of us needs to do:
+The social side of the app is interesting.
 
-TOM:
+Chef picks and chef comments could be done really well.
 
-- Data sources! We really need delivery services + one more good source of ratings, and in general to improve various information and correlation of restaurants
-- Ratings quality and disaggregation of sub-ratings (pulling out "service" etc raings from crawler reviwers)
+Chef lists could be very interesting and not far from working.
+
+A few small touches in the interface to make tag/tagrating really smooth
+
+Some touches for letting people "move around the world" quickly and see various places.
+
+Etc.
+
+I am going to chat with peach more as we go too and still aim to get him on board early, next week sometime.
+
+The biggest things to make the app come alive though will be to get the data more in place and curated.
+
+So, for Tom:
+
+- Data sources!
+  - We really need delivery services + one more good source of ratings, and in general to improve various information and correlation of restaurants
+- Disaggregation of sub-ratings!
+  - (pulling out "service" etc raings from crawler reviwers)
   - We really need to be able to start pulling out dish/service/ambiance focused sub-parts and splitting out those ratings from the data we crawl, this is our "bread and butter".
-  - Pretty fun once you can get into the flow here!
+- Lense filling
 
-Tom, there are about 100 things I want to add to this list. I'd love love love to have you working on the website at some capacity, helping integrate various pieces into it, theres just a mountain of frontend work to do. I'm sure there will be a lot of random queries and things I'll need, but in general, I'll really try and get most of that done myself.
-
-So while I do think having you really product focused would help us hit this months goals more easily...
-
-I do think having you totally focused on what you're good at, and me the same, is just more efficient. The trade-off is we may deliver a bigger, badder thing a bit later on rather than a more taped-together thing earlier.
-
-That's fine with me.
-
-Let's really let you dive into ratings and data. I understand crawling and all this stuff is going to wear you out eventually, but I really think one more big month of progress here will pay back huge - even in terms of morale.
-
-Imagining a world where we have tons of data in place, were separating out some of the sub-factors, and we have peach and a bunch of people on board starting to input stuff in a really fluid and fast way, I can see things starting to get super cool.
-
-It may take you a good chunk of the month, but if I can stay full on frontend for this month and just push the site as far as possible it will be nice.
+I do think having you totally focused on what you're good at for longer is what we should do, and me the same. The trade-off is we may deliver a bigger, badder thing a bit later on rather than a more taped-together thing earlier.
 
 ---
 

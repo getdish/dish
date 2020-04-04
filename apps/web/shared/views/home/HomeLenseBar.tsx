@@ -27,6 +27,12 @@ export default memo(function HomeLenseBar(props: {
         </ScrollView>
         <HomeFilterBar />
       </VStack>
+      {props.backgroundGradient && (
+        <LinearGradient
+          colors={['#fff', '#fff', 'transparent']}
+          style={[StyleSheet.absoluteFill, { zIndex: -1 }]}
+        />
+      )}
     </ZStack>
   )
 })
