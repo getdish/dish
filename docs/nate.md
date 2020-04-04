@@ -3,12 +3,17 @@ next
 SEARCH + TAGS
 
 - may need to redo how router/navigate work?
+  - NO
+    - instead we just have things push into the lensebar
+      - on the front with a "x" button on right side
+      - doesnt affect searchbar
   - instead of using router directly
     - `.home.addTag(Tag)` `home.removeTag(Tag)`
 - tag-urls `/:tag1/:slug1/:tag2/:slug2/:tag3/:slug3` or similar
 - send tags in search
 - show tag icons if available on search results page title
 - lense bar should then just push the url
+- lensebar should be additive
 
 cool touches:
 
