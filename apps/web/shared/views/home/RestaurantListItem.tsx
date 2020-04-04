@@ -8,6 +8,7 @@ import Hoverable from '../shared/Hoverable'
 import { Link } from '../shared/Link'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
+import { lightLightBg } from './baseButtonStyle'
 import { RankingView } from './RankingView'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
@@ -64,7 +65,7 @@ export const RestaurantListItem = ({
       >
         <HStack
           alignItems="center"
-          backgroundColor={isHovered ? '#B8E0F322' : 'transparent'}
+          backgroundColor={isHovered ? lightLightBg : 'transparent'}
           position="relative"
         >
           <ZStack

@@ -11,7 +11,11 @@ import { LinkButton } from '../shared/Link'
 import { PageTitle } from '../shared/PageTitle'
 import { Spacer } from '../shared/Spacer'
 import { HStack, StackBaseProps, VStack, ZStack } from '../shared/Stacks'
-import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
+import {
+  flatButtonStyle,
+  flatButtonStyleSelected,
+  lightLightBg,
+} from './baseButtonStyle'
 import HomeLenseBar from './HomeLenseBar'
 import { RankingView } from './RankingView'
 import { RatingView } from './RatingView'
@@ -41,7 +45,7 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
       <ScrollView style={{ flex: 1, overflow: 'hidden' }}>
         <VStack paddingVertical={20} paddingTop={20 + 100}>
           {topDishes.map((country, index) => (
-            <CuisineDishRow
+            <CountryTopDishesAndRestaurants
               key={country.country}
               country={country}
               rank={index + 1}
@@ -53,18 +57,25 @@ const HomeViewTopDishesContent = memoIsEqualDeep(
   }
 )
 
-const CuisineDishRow = memo(
+const CountryTopDishesAndRestaurants = memo(
   ({ country, rank }: { country: TopDish; rank: number }) => {
-    const [hovered, setHovered] = useState<Restaurant>(null)
+    const [hovered, setHovered] = useState(false)
+    const [hoveredRestaurant, setHoveredRestaurant] = useState<Restaurant>(null)
     const onHoverRestaurant = useCallback((restaurant: Restaurant) => {
-      setHovered(restaurant)
+      setHoveredRestaurant(restaurant)
     }, [])
 
     return (
-      <VStack paddingBottom={30}>
+      <VStack
+        paddingVertical={10}
+        paddingTop={20}
+        backgroundColor={hovered ? lightLightBg : null}
+        onHoverIn={() => setHovered(true)}
+        onHoverOut={() => setHovered(false)}
+      >
         <HStack paddingHorizontal={20}>
           <HStack flex={1}>
-            <RankingView rank={rank} marginTop={-13} marginLeft={-36} />
+            <RankingView rank={rank} marginLeft={-36} />
             <LinkButton
               {...flatButtonStyle}
               marginVertical={-5}
@@ -73,7 +84,7 @@ const CuisineDishRow = memo(
             >
               <Text
                 numberOfLines={1}
-                style={{ fontSize: 22, fontWeight: '600' }}
+                style={{ fontSize: 20, fontWeight: '400' }}
               >
                 {country.country}
               </Text>
@@ -108,7 +119,10 @@ const CuisineDishRow = memo(
                   key={restaurant.name}
                   restaurant={restaurant}
                   onHoverIn={onHoverRestaurant}
-                  active={(!hovered && index === 0) || restaurant === hovered}
+                  active={
+                    (!hoveredRestaurant && index === 0) ||
+                    restaurant === hoveredRestaurant
+                  }
                 />
               )
             )}
