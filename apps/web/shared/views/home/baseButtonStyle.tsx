@@ -5,11 +5,18 @@ export const baseButtonStyle: StackBaseProps = {
   borderRadius: 5,
   paddingHorizontal: 8,
 }
+
+export const lightLightBg = '#B8E0F322'
+export const lightBg = 'rgba(220, 234, 255, 0.5)'
+export const lightBgHover = `rgba(220, 234, 255, 1)`
+export const bg = 'rgba(0, 34, 60, 0.8)'
+export const bgHover = `rgba(0, 34, 60, 1)`
+
 export const flatButtonStyle: StackBaseProps = {
   ...baseButtonStyle,
-  backgroundColor: 'rgba(220, 234, 255, 0.5)',
+  backgroundColor: lightBg,
   hoverStyle: {
-    backgroundColor: `rgba(220, 234, 255, 1)`,
+    backgroundColor: lightBgHover,
   },
 }
 
