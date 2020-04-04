@@ -1,4 +1,20 @@
-friday
+next
+
+SEARCH + TAGS
+
+- may need to redo how router/navigate work?
+  - instead of using router directly
+    - `.home.addTag(Tag)` `home.removeTag(Tag)`
+- tag-urls `/:tag1/:slug1/:tag2/:slug2/:tag3/:slug3` or similar
+- send tags in search
+- show tag icons if available on search results page title
+- lense bar should then just push the url
+
+cool touches:
+
+- left/right on autocomplete slides between results
+
+---
 
 - fix some of routing, map-pin issues
 - fix RatingView style issus on <90

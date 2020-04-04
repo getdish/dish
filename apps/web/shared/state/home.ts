@@ -25,6 +25,7 @@ type HomeStateBase = {
   hoveredRestaurant: Restaurant | null
   showAutocomplete: ShowAutocomplete
 }
+
 export type HomeState = HomeStateBase & {
   lastHomeState: Derive<HomeState, HomeStateItemHome>
   lastSearchState: Derive<HomeState, HomeStateItemSearch | null>
