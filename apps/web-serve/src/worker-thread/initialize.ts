@@ -33,6 +33,16 @@ export function initialize(
   localStorageData: { [key: string]: string },
   sessionStorageData: { [key: string]: string }
 ): void {
+  console.timeLog('initialize', {
+    document,
+    strings,
+    hydrateableNode,
+    cssKeys,
+    globalEventHandlerKeys,
+    innerWidth,
+    localStorageData,
+    sessionStorageData,
+  })
   addCssKeys(cssKeys)
   appendGlobalEventProperties(globalEventHandlerKeys)
   strings.forEach(storeString)

@@ -125,8 +125,10 @@ export const workerDOM = (function (
   globalScope.OffscreenCanvas = (self as any)['OffscreenCanvas']
   globalScope.ImageBitmap = (self as any)['ImageBitmap']
 
+  document.cookie = ''
   document.isConnected = true
   document.appendChild((document.body = document.createElement('body')))
+  document.appendChild((document.head = document.createElement('head')))
 
   return document.defaultView
 })(

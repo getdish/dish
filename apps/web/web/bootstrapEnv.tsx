@@ -3,12 +3,7 @@ const React = require('react')
 if (process.env.TARGET == 'worker') {
   window['isWorker'] = true
   // @ts-ignore
-  document.head = {
-    appendChild() {},
-    insertBefore() {},
-  }
-  // @ts-ignore
-  document.cookie = ''
+  document.cookie = document.cookie || ''
   // @ts-ignore
   window.history = window.history || {
     pathname: '/',

@@ -38,6 +38,8 @@ export function storeOverride(node: Node, override: number): number {
   return override
 }
 
+// console.log(123123123, mapping)
+
 /**
  * Stores a node in mapping, and makes the index available on the Node directly.
  * @param node Node to store and modify with index

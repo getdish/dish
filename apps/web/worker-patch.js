@@ -4,13 +4,6 @@ const file = fs.readFileSync('./web-build/static/js/app.js', 'utf8')
 let out = ``
 
 for (const line of file.split('\n')) {
-  if (
-    line ===
-    `		throw new Error("Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.");`
-  ) {
-    out += `return null\n`
-    continue
-  }
   if (line == `        urlParsingNode.setAttribute('href', href);`) {
     out += `${line}\n`
     out += `urlParsingNode.pathname = '/'\n`
@@ -31,10 +24,10 @@ for (const line of file.split('\n')) {
   if (line == `      this._createImageLoader();`) {
     continue
   }
-  if (line == `  load: function load(uri, onLoad, onError) {`) {
-    out += `  load: function load(uri, onLoad, onError) {return\n`
-    continue
-  }
+  // if (line == `  load: function load(uri, onLoad, onError) {`) {
+  //   out += `  load: function load(uri, onLoad, onError) {return\n`
+  //   continue
+  // }
   if (line == `      this._createImageLoader();`) {
     continue
   }

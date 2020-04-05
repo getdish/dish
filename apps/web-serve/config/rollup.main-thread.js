@@ -41,7 +41,7 @@ const ESModules = [
       }),
       babelPlugin({
         transpileToES5: false,
-        allowConsole: false,
+        allowConsole: true,
       }),
       compiler(),
       terser(),
@@ -116,7 +116,7 @@ const IIFEModules = [
       }),
       babelPlugin({
         transpileToES5: true,
-        allowConsole: false,
+        allowConsole: true,
       }),
       compiler(),
       terser(),

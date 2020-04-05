@@ -73,6 +73,8 @@ export class Document extends Element {
   public defaultView: WorkerDOMGlobalScope
   public documentElement: Document
   public body: Element
+  public head: Element
+  public cookie: string
 
   // Internal variables.
   public postMessage: PostMessage
