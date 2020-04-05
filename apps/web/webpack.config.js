@@ -52,6 +52,9 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
   }
 
   config.output.filename = 'static/js/app.js'
+  config.entry.app = config.entry.app.filter((x) => {
+    return x !== 'app.json'
+  })
 
   if (!isProduction && config.optimization) {
     config.optimization.minimize = false
@@ -78,12 +81,28 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
   }
 
   if (target === 'worker') {
-    if (!isProduction) config.entry.app = config.entry.app.slice(1) // remove hot
+    if (!isProduction) {
+      config.entry.app = config.entry.app.slice(1) // remove hot
+    }
+    if (config.devServer) {
+      config.devServer.hot = false
+    }
     config.output.globalObject = 'this'
-    if (config.devServer) config.devServer.hot = false
     config.plugins = config.plugins.filter((plugin) => {
-      console.log('plugin', plugin.constructor)
       return plugin.constructor.name !== 'HotModuleReplacementPlugin'
+    })
+
+    // exec patch
+    const exec = require('child_process').exec
+    config.plugins.push({
+      apply: (compiler) => {
+        compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
+          exec('node ./worker-patch.js', (err, stdout, stderr) => {
+            if (stdout) process.stdout.write(stdout)
+            if (stderr) process.stderr.write(stderr)
+          })
+        })
+      },
     })
   }
 

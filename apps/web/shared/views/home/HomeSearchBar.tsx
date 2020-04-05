@@ -3,6 +3,7 @@ import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 
 import {
   drawerPadLeft,
+  isWorker,
   searchBarHeight,
   searchBarTopOffset,
 } from '../../constants'
@@ -78,8 +79,10 @@ export default memo(function HomeSearchBar() {
     if (isFocused) return // ONE way sync
     if (showAutocomplete !== isFocused) {
       const target = showAutocomplete == 'location' ? locationInput : input
-      if (showAutocomplete) target.focus()
-      else target.blur()
+      if (!isWorker) {
+        if (showAutocomplete) target.focus()
+        else target.blur()
+      }
     }
   }, [input, locationInput, showAutocomplete])
 

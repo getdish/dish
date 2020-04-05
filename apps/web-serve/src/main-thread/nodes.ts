@@ -51,6 +51,7 @@ export class NodeContext {
 
     // The nodes map is populated with two default values pointing to baseElement.
     // These are [document, document.body] from the worker.
+    console.log('init population', baseElement)
     this.nodes = new Map([
       [BASE_ELEMENT_INDEX, baseElement],
       [2, baseElement],
@@ -61,7 +62,11 @@ export class NodeContext {
     baseElement._index_ = 2
     // Lastly, it's important while initializing the document that we store
     // the default nodes present in the server rendered document.
-    nodeListEach(baseElement.childNodes, (n: ChildNode) => this.storeNodes(n))
+    console.log('do it')
+    ;[
+      document.head,
+      ...Array.from(baseElement.childNodes),
+    ].forEach((n: ChildNode) => this.storeNodes(n))
   }
 
   public createNodes = (buffer: ArrayBuffer, sanitizer?: Sanitizer): void => {

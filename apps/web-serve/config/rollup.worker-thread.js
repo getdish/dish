@@ -55,7 +55,7 @@ const ESModules = [
       }),
       babelPlugin({
         transpileToES5: false,
-        allowConsole: false,
+        allowConsole: true,
       }),
       ...compilePlugins,
     ],
@@ -152,7 +152,7 @@ const IIFEModules = [
       }),
       babelPlugin({
         transpileToES5: true,
-        allowConsole: false,
+        allowConsole: true,
       }),
       ...compilePlugins,
     ],

@@ -19,6 +19,7 @@ import path from 'path'
 
 import MagicString from 'magic-string'
 import babel from 'rollup-plugin-babel'
+
 const walk = require('acorn-walk')
 
 /**
