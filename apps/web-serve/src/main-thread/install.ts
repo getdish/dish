@@ -84,6 +84,7 @@ export function install(
       )
       workerContext.worker.onmessage = (message: MessageFromWorker) => {
         const { data } = message
+        console.log('main thread got', data)
 
         if (!ALLOWABLE_MESSAGE_TYPES.includes(data[TransferrableKeys.type])) {
           return

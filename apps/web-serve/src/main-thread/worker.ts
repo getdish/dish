@@ -71,6 +71,13 @@ export class WorkerContext {
       }
     }
 
+    console.log('worker.WorkerContext.constructor', {
+      strings,
+      skeleton,
+      cssKeys,
+      workerDOMScript,
+    })
+
     const code = `
       'use strict';
       (function(){
@@ -92,6 +99,7 @@ export class WorkerContext {
       }).call(self);
       ${authorScript}
       //# sourceURL=${encodeURI(config.authorURL)}`
+
     this[TransferrableKeys.worker] = new Worker(
       URL.createObjectURL(new Blob([code])),
       {

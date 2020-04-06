@@ -43,8 +43,8 @@ const ESModules = [
         transpileToES5: false,
         allowConsole: true,
       }),
-      compiler(),
-      terser(),
+      // compiler(),
+      // terser(),
     ],
   },
   {
@@ -118,8 +118,8 @@ const IIFEModules = [
         transpileToES5: true,
         allowConsole: true,
       }),
-      compiler(),
-      terser(),
+      // compiler(),
+      // terser(),
     ],
   },
   {
@@ -139,8 +139,8 @@ const IIFEModules = [
         transpileToES5: true,
         allowConsole: true,
       }),
-      compiler(),
-      terser(),
+      // compiler(),
+      // terser(),
     ],
   },
 ]

@@ -106,6 +106,8 @@ const globalScope: GlobalScope = {
 
 const noop = () => void 0
 
+console.log('hi from worker')
+
 // WorkerDOM.Document.defaultView ends up being the window object.
 // React requires the classes to exist off the window object for instanceof checks.
 export const workerDOM = (function (

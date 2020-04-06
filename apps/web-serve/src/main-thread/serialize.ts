@@ -97,6 +97,8 @@ export function createHydrateableRootNode(
   config: WorkerDOMConfiguration,
   workerContext: WorkerContext
 ): { skeleton: HydrateableNode; strings: Array<string> } {
+  console.log('createHydrateableRootNode', { element, config })
+
   const hydrateFilter: HydrationFilterPredicate =
     config.hydrateFilter || (() => true)
   const strings: Array<string> = []

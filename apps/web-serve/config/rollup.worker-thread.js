@@ -23,10 +23,10 @@ import { babelPlugin } from './rollup.plugins.js'
 
 // Compile plugins should always be added at the end of the plugin list.
 const compilePlugins = [
-  compiler({
-    env: 'CUSTOM',
-  }),
-  terser(),
+  // compiler({
+  //   env: 'CUSTOM',
+  // }),
+  // terser(),
 ]
 
 // Workers do not natively support ES Modules containing `import` or `export` statments.

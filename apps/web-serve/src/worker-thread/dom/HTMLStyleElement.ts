@@ -24,7 +24,10 @@ registerSubclass('style', HTMLStyleElement)
 // Reflected Properties
 // HTMLStyleElement.media => string, reflected attribute
 // HTMLStyleElement.type => string, reflected attribute
-reflectProperties([{ media: [''] }, { type: [''] }], HTMLStyleElement)
+reflectProperties(
+  [{ media: [''] }, { type: [''], sheet: [''] }],
+  HTMLStyleElement
+)
 
 // Unimplemented Properties
 // HTMLStyleElement.disabled => boolean
