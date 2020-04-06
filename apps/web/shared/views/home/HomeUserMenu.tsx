@@ -6,9 +6,10 @@ import { Divider } from '../shared/Divider'
 import { Icon } from '../shared/Icon'
 import { LinkButton } from '../shared/Link'
 import { Popover } from '../shared/Popover'
-import { VStack } from '../shared/Stacks'
+import { VStack, HStack } from '../shared/Stacks'
 import { Tooltip } from '../shared/Tooltip'
 import { flatButtonStyle } from './baseButtonStyle'
+import { Text } from 'react-native'
 
 export const HomeUserMenu = memo(() => {
   const om = useOvermind()
@@ -44,9 +45,11 @@ export const HomeUserMenu = memo(() => {
       }
     >
       <LinkButton
+        flexDirection="row"
+        pointerEvents="auto"
         backgroundColor="#fff"
         padding={15}
-        width={15 * 2 + 16}
+        // width={15 * 2 + 16}
         height={15 * 2 + 16}
         borderRadius={100}
         shadowColor="rgba(0,0,0,0.2)"
@@ -56,7 +59,12 @@ export const HomeUserMenu = memo(() => {
           om.actions.home.setShowUserMenu(!om.state.home.showUserMenu)
         }
       >
-        <Icon name="user" size={16} opacity={0.5} />
+        <HStack spacing>
+          <Icon name="user" size={16} opacity={0.5} />
+          {om.state.auth.is_logged_in ? (
+            <Text>{om.state.auth.user.username}</Text>
+          ) : null}
+        </HStack>
       </LinkButton>
     </Popover>
   )

@@ -32,7 +32,7 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
       <Spacer size={20} />
       {/* <Title>{activeLense?.description ?? ''}</Title> */}
       <VStack position="relative" flex={1}>
-        <HomeLenseBar />
+        <HomeLenseBar backgroundGradient />
         <HomeViewTopDishesContent topDishes={om.state.home.topDishes} />
       </VStack>
     </>
@@ -112,7 +112,7 @@ const CountryTopDishesAndRestaurants = memo(
         </ScrollView>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <HStack padding={10} paddingHorizontal={30} spacing={26}>
+          <HStack padding={10} paddingHorizontal={30} spacing={32}>
             {_.uniqBy(country.top_restaurants, (x) => x.name).map(
               (restaurant, index) => (
                 <RestaurantButton
@@ -151,8 +151,8 @@ const RestaurantButton = memo(
         {...(active ? flatButtonStyleSelected : flatButtonStyle)}
         borderWidth={1}
         borderColor="transparent"
-        fontWeight="500"
-        fontSize={16}
+        fontWeight="400"
+        fontSize={14}
         {...(active && {
           borderColor: '#eee',
           shadowColor: 'rgba(0,0,0,0.1)',

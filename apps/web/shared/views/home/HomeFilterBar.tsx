@@ -67,7 +67,7 @@ const FilterButton = memo(({ filter }: { filter: Taxonomy }) => {
           style={{
             color: isActive ? '#000' : bg,
             fontSize: 14,
-            fontWeight: '500',
+            fontWeight: '600',
           }}
         >
           {filter.name}

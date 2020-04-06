@@ -26,7 +26,21 @@ export const HomeControlsOverlay = memo(() => {
     >
       <VStack position="relative" flex={1}>
         <HStack position="absolute" top={0} right={0} left={0}>
+          {/* top left */}
+          <VStack flex={1} />
+          <HomeUserMenu />
+        </HStack>
+
+        <HStack
+          position="absolute"
+          bottom={0}
+          right={0}
+          left={0}
+          alignItems="flex-end"
+        >
+          <VStack flex={1} />
           <Tooltip
+            pointerEvents="auto"
             opacity={show ? 1 : 0}
             width="auto"
             justifyContent="center"
@@ -50,19 +64,8 @@ export const HomeControlsOverlay = memo(() => {
               </HStack>
             </VStack>
           </Tooltip>
-          <VStack flex={1} />
-          <HomeUserMenu />
-        </HStack>
 
-        <HStack
-          position="absolute"
-          bottom={0}
-          right={0}
-          left={0}
-          alignItems="flex-end"
-        >
-          <VStack flex={1} />
-          <HomeExploreMenu />
+          {/* <HomeExploreMenu /> */}
         </HStack>
       </VStack>
     </ZStack>
