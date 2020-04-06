@@ -201,6 +201,7 @@ export class Document extends Element {
    * @return Element with matching id attribute.
    */
   public getElementById(id: string): Element | null {
+    console.log('matching', id)
     return matchChildElement(this.body, (element) => element.id === id)
   }
 }

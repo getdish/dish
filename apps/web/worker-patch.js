@@ -9,6 +9,10 @@ for (const line of file.split('\n')) {
     out += `urlParsingNode.pathname = '/'\n`
     continue
   }
+  if (line === `		throw new Error("Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.");`) {
+    out += `console.error('nohead');return null\n`
+    continue
+  }
   if (line == `  Dimensions._update = function _update() {`) {
     out += `win.screen = {}\n`
     out += `${line}\n`
@@ -24,10 +28,6 @@ for (const line of file.split('\n')) {
   if (line == `      this._createImageLoader();`) {
     continue
   }
-  // if (line == `  load: function load(uri, onLoad, onError) {`) {
-  //   out += `  load: function load(uri, onLoad, onError) {return\n`
-  //   continue
-  // }
   if (line == `      this._createImageLoader();`) {
     continue
   }

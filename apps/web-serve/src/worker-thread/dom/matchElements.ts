@@ -70,7 +70,7 @@ export const matchChildElement = (
     }
     return false
   })
-
+  // console.log('matchChildElement() returns', returnValue, 'element', element)
   return returnValue
 }
 
