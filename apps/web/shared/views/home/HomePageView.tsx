@@ -5,8 +5,8 @@ import { ZStack } from '../shared/Stacks'
 import { HomeControlsOverlay } from './HomeControlsOverlay'
 import { HomeMap } from './HomeMap'
 import HomeSearchBar from './HomeSearchBar'
-import { HomeViewDrawer } from './HomeViewDrawer'
 import { HomeViewContent } from './HomeViewContent'
+import { HomeViewDrawer } from './HomeViewDrawer'
 
 export default () => {
   return (

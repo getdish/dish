@@ -26,7 +26,6 @@ export class ProxiedRequests {
     while (true) {
       try {
         const response = await axios.get(base + uri, config)
-        console.log(response.headers['content-length'])
         return response
       } catch (e) {
         // TODO: detect other blocking signatures

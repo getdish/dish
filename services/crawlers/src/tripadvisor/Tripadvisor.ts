@@ -22,10 +22,11 @@ const axios = axios_base.create({
   },
 })
 
-const MAPVIEW_SIZE = 1000
-
 export class Tripadvisor extends WorkerJob {
   public scrape_id!: string
+  public MAPVIEW_SIZE = 1000
+  public SEARCH_RADIUS_MULTIPLIER = 5
+  public _TESTS__LIMIT_GEO_SEARCH = false
 
   static queue_config: QueueOptions = {
     limiter: {
@@ -44,7 +45,12 @@ export class Tripadvisor extends WorkerJob {
     )
     const coords = await geocode(city_name)
     const region_coords = _.shuffle(
-      aroundCoords(coords[0], coords[1], MAPVIEW_SIZE, 5)
+      aroundCoords(
+        coords[0],
+        coords[1],
+        this.MAPVIEW_SIZE,
+        this.SEARCH_RADIUS_MULTIPLIER
+      )
     )
     for (const coords of region_coords) {
       await this.runOnWorker('getRestaurants', [coords[0], coords[1], 0])
@@ -56,13 +62,14 @@ export class Tripadvisor extends WorkerJob {
       '/GMapsLocationController?' +
       'Action=update&from=Restaurants&g=1&mapProviderFeature=ta-maps-gmaps3&validDates=false' +
       '&pinSel=v2&finalRequest=false&includeMeta=false&trackPageView=false'
-    const dimensions = `&mz=17&mw=${MAPVIEW_SIZE}&mh=${MAPVIEW_SIZE}`
+    const dimensions = `&mz=17&mw=${this.MAPVIEW_SIZE}&mh=${this.MAPVIEW_SIZE}`
     const coords = `&mc=${lat},${lon}`
     const uri = TRIPADVISOR_DOMAIN + base + dimensions + coords
     const response = await axios.get(uri)
 
     for (const data of response.data.restaurants) {
       await this.runOnWorker('getRestaurant', [data.url])
+      if (this._TESTS__LIMIT_GEO_SEARCH) break
     }
   }
 
@@ -120,7 +127,7 @@ export class Tripadvisor extends WorkerJob {
     if (more) {
       page++
       path = path.replace('-Reviews-', `-Reviews-or${page * 10}-`)
-      this.runOnWorker('saveReviews', [path, scrape_id, page])
+      await this.runOnWorker('saveReviews', [path, scrape_id, page])
     }
   }
 
@@ -150,6 +157,7 @@ export class Tripadvisor extends WorkerJob {
     scrape_id: string,
     page: number
   ) {
+    if (process.env.DISH_ENV != 'production' && page > 2) return false
     const { more, data: review_data } = this._extractReviews(html)
     let scrape_data: ScrapeData = {}
     scrape_data['reviewsp' + page] = review_data

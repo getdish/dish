@@ -123,4 +123,3 @@ export async function getBullQueue(name: string, config: {} = {}) {
   }
   return queue
 }
-

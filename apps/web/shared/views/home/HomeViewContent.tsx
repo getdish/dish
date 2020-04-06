@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useMemo, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
+
 import { searchBarHeight } from '../../constants'
 import { useDebounceValue } from '../../hooks/useDebounce'
 import {

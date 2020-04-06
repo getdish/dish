@@ -4,7 +4,7 @@ import {
   aroundCoords,
   boundingBoxFromcenter,
   shiftLatLonByMetres,
-} from '../src/utils'
+} from '../../src/utils'
 
 test('Shifting lat/lon by metres (positive)', (t) => {
   const result = shiftLatLonByMetres(51, 0, 100, 100)

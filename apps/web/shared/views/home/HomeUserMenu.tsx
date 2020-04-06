@@ -1,4 +1,5 @@
 import React, { memo } from 'react'
+import { Text } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { AuthLoginRegisterView } from '../auth/AuthLoginRegisterView'
@@ -6,10 +7,9 @@ import { Divider } from '../shared/Divider'
 import { Icon } from '../shared/Icon'
 import { LinkButton } from '../shared/Link'
 import { Popover } from '../shared/Popover'
-import { VStack, HStack } from '../shared/Stacks'
+import { HStack, VStack } from '../shared/Stacks'
 import { Tooltip } from '../shared/Tooltip'
 import { flatButtonStyle } from './baseButtonStyle'
-import { Text } from 'react-native'
 
 export const HomeUserMenu = memo(() => {
   const om = useOvermind()

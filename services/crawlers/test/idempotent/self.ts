@@ -1,7 +1,7 @@
 import { Restaurant, Scrape, Taxonomy, flushTestData } from '@dish/models'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 
-import { Self } from '../src/self/Self'
+import { Self } from '../../src/self/Self'
 
 interface Context {
   restaurant: Restaurant
@@ -116,10 +116,7 @@ async function reset(t: ExecutionContext<Context>) {
   const restaurant = new Restaurant(restaurant_fixture)
   await restaurant.insert()
   t.context.restaurant = restaurant
-  scrape = new Scrape({
-    restaurant_id: restaurant.id,
-    ...yelp,
-  })
+  scrape = new Scrape({ restaurant_id: restaurant.id, ...yelp })
   await scrape.insert()
   scrape = new Scrape({ restaurant_id: restaurant.id, ...ubereats })
   await scrape.insert()

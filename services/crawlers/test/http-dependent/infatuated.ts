@@ -1,7 +1,7 @@
 import { Scrape } from '@dish/models'
 import test from 'ava'
 
-import { Infatuated } from '../src/infatuated/Infatuated'
+import { Infatuated } from '../../src/infatuated/Infatuated'
 
 const ID = '438'
 
@@ -9,7 +9,7 @@ test.beforeEach(async () => {
   await Scrape.deleteAllBy('id_from_source', ID)
 })
 
-test.skip('Gets and persists a restaurant', async (t) => {
+test('Gets and persists a restaurant', async (t) => {
   let infatuated = new Infatuated()
   infatuated.longest_radius = 10
   await infatuated.getRestaurants([37.758866, -122.412447])
