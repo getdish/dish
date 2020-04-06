@@ -12,6 +12,10 @@ import { Taxonomy, taxonomyFilters, taxonomyLenses } from './Taxonomy'
 type ShowAutocomplete = 'search' | 'location' | false
 
 type HomeStateBase = {
+  // index for vertical (in page), -1 = autocomplete
+  activeIndex: number
+  // index for horizontal row (autocomplete)
+  autocompleteIndex: number
   showUserMenu: boolean
   locationSearchQuery: string
   allLenses: Taxonomy[]
@@ -34,6 +38,7 @@ export type HomeState = HomeStateBase & {
   currentState: Derive<HomeState, HomeStateItem>
   previousState: Derive<HomeState, HomeStateItem>
   currentActiveTaxonomyIds: Derive<HomeState, string[]>
+  isAutocompleteActive: Derive<HomeState, boolean>
 }
 
 type SearchResultsResults = {
@@ -140,6 +145,8 @@ const currentActiveTaxonomyIds = (state: HomeStateBase) => {
  */
 
 export const state: HomeState = {
+  activeIndex: -1,
+  autocompleteIndex: 0,
   locationSearchQuery: '',
   allLenses: taxonomyLenses,
   allFilters: taxonomyFilters,
@@ -166,6 +173,7 @@ export const state: HomeState = {
   lastRestaurantState,
   breadcrumbStates,
   currentActiveTaxonomyIds,
+  isAutocompleteActive: (state) => state.activeIndex === -1,
 }
 
 const start: AsyncAction<void> = async (om) => {
@@ -653,9 +661,29 @@ function searchLocations(query: string) {
   })
 }
 
+const moveAutocompleteIndex: Action<number> = (om, val) => {
+  const cur = om.state.home.autocompleteIndex
+  om.state.home.autocompleteIndex = Math.min(Math.max(-1, cur + val), 1000) // TODO
+}
+
+const setActiveIndex: Action<number> = (om, val) => {
+  om.state.home.activeIndex = Math.min(Math.max(-1, val), 1000) // TODO
+}
+
+const moveActiveDown: Action = (om) => {
+  om.actions.home.setActiveIndex(om.state.home.activeIndex + 1)
+}
+
+const moveActiveUp: Action = (om) => {
+  om.actions.home.setActiveIndex(om.state.home.activeIndex - 1)
+}
+
 export const actions = {
   start,
-  _runAutocomplete,
+  moveAutocompleteIndex,
+  setActiveIndex,
+  moveActiveDown,
+  moveActiveUp,
   setShowAutocomplete,
   handleRouteChange,
   setLocationSearchQuery,
@@ -665,14 +693,15 @@ export const actions = {
   toggleActiveTaxonomy,
   setShowUserMenu,
   setHoveredRestaurant,
-  _loadRestaurantDetail,
   runSearch,
-  _loadHomeDishes,
   clearSearch,
   getReview,
   submitReview,
   getUserReviews,
+  suggestTags,
+  _runAutocomplete,
+  _loadRestaurantDetail,
+  _loadHomeDishes,
   _pushHomeState,
   _popHomeState,
-  suggestTags,
 }

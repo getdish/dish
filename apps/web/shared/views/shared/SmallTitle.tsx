@@ -19,8 +19,8 @@ export const Title = memo((props: { children?: any }) => {
             // textTransform: 'uppercase',
             // letterSpacing: 4,
             // opacity: 0.6,
-            fontSize: 17,
-            fontWeight: '400',
+            fontSize: 16,
+            fontWeight: '600',
             paddingBottom: 8,
           }}
         >

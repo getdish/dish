@@ -28,20 +28,17 @@ export const RestaurantListItem = ({
 }) => {
   const om = useOvermind()
   const [isHovered, setIsHovered] = useState(false)
-
-  const [isMounted, setIsMounted] = useState(false)
   const [disablePress, setDisablePress] = useState(false)
+  const hoverTm = useRef<any>(0)
 
   useEffect(() => {
-    let tm = setTimeout(() => {
-      setIsMounted(true)
-    }, Math.min(rank * 100, 2000))
-    return () => {
-      clearTimeout(tm)
-    }
+    return om.reaction(
+      (state) => state.home.activeIndex,
+      (activeIndex) => {
+        setIsHovered(rank == activeIndex + 1)
+      }
+    )
   }, [])
-
-  const hoverTm = useRef(0)
 
   return (
     <Hoverable

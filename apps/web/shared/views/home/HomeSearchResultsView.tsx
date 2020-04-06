@@ -21,17 +21,15 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
 }: {
   state: HomeStateItemSearch
 }) {
-  const om = useOvermind()
   const title = `Top ${state.searchQuery} Restaurants`
-
   return (
     <>
       <PageTitle>{title}</PageTitle>
-      <ZStack left={10} top={10} pointerEvents="auto" zIndex={100}>
+      {/* <ZStack left={10} top={10} pointerEvents="auto" zIndex={100}>
         <BackButton
           onPress={() => om.actions.home.popTo(om.state.home.lastHomeState)}
         />
-      </ZStack>
+      </ZStack> */}
       <Title>{title}</Title>
       <VStack position="relative" flex={1}>
         <HomeLenseBar backgroundGradient />
