@@ -20,7 +20,7 @@ const colors = [
   'rgba(255,255,255,1)',
   'rgba(255,255,255,1)',
   'rgba(255,255,255,1)',
-  'rgba(255,255,255,0.5)',
+  // 'rgba(255,255,255,0.5)',
 ]
 
 export function HomeViewDrawer(props: { children: any }) {

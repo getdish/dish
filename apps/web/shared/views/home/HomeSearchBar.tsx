@@ -6,6 +6,7 @@ import {
   isWorker,
   searchBarHeight,
   searchBarTopOffset,
+  drawerBorderRadius,
 } from '../../constants'
 import { useOvermind } from '../../state/om'
 import Hoverable from '../shared/Hoverable'
@@ -16,6 +17,10 @@ import { CloseButton } from './CloseButton'
 import { DishLogoButton } from './DishLogoButton'
 import HomeAutocomplete from './HomeAutocomplete'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
+import { HomeUserMenu } from './HomeUserMenu'
+import { Divider } from '../shared/Divider'
+import { LinkButton } from '../shared/Link'
+import { BlurView } from '../shared/BlurView'
 
 const extraWidth = 36
 
@@ -163,22 +168,42 @@ export default memo(function HomeSearchBar() {
     }
   }, [input, locationInput])
 
-  const tm = useRef(0)
-  const tm2 = useRef(0)
-  const tmInputBlur = useRef(0)
+  const tm = useRef<any>(0)
+  const tm2 = useRef<any>(0)
+  const tmInputBlur = useRef<any>(0)
 
   return (
     <>
       <HomeAutocomplete active={active} />
-      <View
-        style={[
-          styles.container,
-          { width: width + extraWidth, height: searchBarHeight },
-        ]}
-      >
-        <HStack>
+      <View style={[styles.container, { height: searchBarHeight }]}>
+        <View style={styles.containerInner}>
+          {/* <ZStack fullscreen>
+            <BlurView />
+          </ZStack> */}
           <DishLogoButton />
-          <VStack flex={1.7} style={styles.searchArea}>
+
+          <Divider vertical />
+
+          <LinkButton
+            flexDirection="row"
+            pointerEvents="auto"
+            padding={15}
+            opacity={0.2}
+            onPress={() =>
+              om.actions.home.setShowUserMenu(!om.state.home.showUserMenu)
+            }
+          >
+            <VStack spacing={2} alignItems="center">
+              <Icon name="home" size={26} opacity={0.5} />
+            </VStack>
+          </LinkButton>
+
+          <Divider vertical />
+
+          <VStack flex={0.5} />
+
+          <HStack flex={20} maxWidth={450} alignItems="center">
+            <Icon name="search" size={18} opacity={0.5} />
             <Hoverable
               // show even if moving after some time
               onHoverIn={() => {
@@ -224,12 +249,15 @@ export default memo(function HomeSearchBar() {
                   om.actions.home.setSearchQuery(text)
                 }}
                 placeholder="Search dish, cuisine"
-                style={[styles.textInput, { fontSize: 18, paddingRight: 42 }]}
+                style={[styles.textInput, { fontSize: 19, paddingRight: 42 }]}
               />
             </Hoverable>
             <SearchCancelButton />
-          </VStack>
-          <VStack flex={1} style={styles.searchArea}>
+          </HStack>
+
+          <Divider vertical />
+
+          <VStack flex={10} maxWidth={320}>
             <TextInput
               ref={locationInputRef}
               value={locationSearch}
@@ -254,7 +282,14 @@ export default memo(function HomeSearchBar() {
             />
             <SearchLocationButton />
           </VStack>
-        </HStack>
+          <Divider vertical />
+
+          <VStack flex={1} />
+
+          {/* <Divider vertical /> */}
+
+          <HomeUserMenu />
+        </View>
       </View>
     </>
   )
@@ -319,26 +354,33 @@ const SearchLocationButton = memo(() => {
 const styles = StyleSheet.create({
   container: {
     zIndex: 22,
-    borderRadius: 16,
-    shadowColor: 'rgba(0,0,0,0.12)',
-    shadowRadius: 7,
-    shadowOffset: { height: 2, width: 0 },
+    position: 'absolute',
+    marginTop: searchBarTopOffset,
+    left: searchBarTopOffset,
+    right: searchBarTopOffset,
+    alignItems: 'center',
+  },
+  containerInner: {
+    flex: 1,
+    maxWidth: 1100,
+    width: '100%',
+    backgroundColor: 'rgba(255,255,255,1)',
+    height: '100%',
+    flexDirection: 'row',
+    borderRadius: drawerBorderRadius,
+    shadowColor: 'rgba(0,0,0,0.135)',
+    shadowRadius: 12,
+    shadowOffset: { height: 4, width: 0 },
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#ccc',
-    position: 'absolute',
-    marginTop: searchBarTopOffset,
-    left: drawerPadLeft,
-  },
-  searchArea: {
-    borderLeftWidth: 1,
-    borderColor: '#eee',
-    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   textInput: {
     padding: 11,
     paddingHorizontal: 16,
     flex: 1,
-    fontSize: 18,
+    fontSize: 22,
   },
 })

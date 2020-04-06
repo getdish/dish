@@ -52,10 +52,10 @@ export default memo(function HomeAutoComplete({ active }: { active: number }) {
         opacity={isShowing ? 1 : 0}
         disabled={!isShowing}
         fullscreen
-        zIndex={20}
+        zIndex={11}
       >
         <LinearGradient
-          colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.1)', 'transparent']}
+          colors={['rgba(0,0,0,0.1)', 'transparent']}
           style={[StyleSheet.absoluteFill, { height: 160 }]}
         />
       </ZStack>
@@ -63,7 +63,7 @@ export default memo(function HomeAutoComplete({ active }: { active: number }) {
         className="ease-in-out-fast"
         position="absolute"
         top={searchBarTopOffset + searchBarHeight}
-        left={70}
+        left="25%"
         width="calc(100vw - 15%)"
         maxWidth={850}
         zIndex={1000}
