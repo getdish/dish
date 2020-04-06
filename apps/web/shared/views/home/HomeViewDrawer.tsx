@@ -8,7 +8,7 @@ import { VStack, ZStack } from '../shared/Stacks'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 const colors = [
-  'rgba(255,255,255,0.3)',
+  'rgba(255,255,255,0.23)',
   'rgba(255,255,255,1)',
   'rgba(255,255,255,1)',
   'rgba(255,255,255,1)',
@@ -20,6 +20,7 @@ const colors = [
   'rgba(255,255,255,1)',
   'rgba(255,255,255,1)',
   'rgba(255,255,255,1)',
+  'rgba(255,255,255,0.5)',
 ]
 
 export function HomeViewDrawer(props: { children: any }) {
@@ -27,22 +28,24 @@ export function HomeViewDrawer(props: { children: any }) {
   return (
     <VStack
       position="absolute"
-      top={50}
-      left={drawerPadLeft}
-      bottom={drawerPad}
+      top={0}
+      left={0}
+      paddingLeft={drawerPad}
+      paddingBottom={drawerPad}
+      bottom={0}
       zIndex={10}
-      width={drawerWidth}
-      borderRadius={drawerBorderRadius}
-      shadowColor="rgba(0,0,0,0.22)"
-      shadowRadius={24}
+      width={drawerWidth + drawerPadLeft}
+      // borderRadius={drawerBorderRadius}
+      shadowColor="rgba(0,0,0,0.2)"
+      shadowRadius={44}
       borderWidth={1}
       borderColor="rgba(255,255,255,0.6)"
       flex={1}
     >
-      <ZStack fullscreen borderRadius={drawerBorderRadius} overflow="hidden">
+      <ZStack fullscreen overflow="hidden">
         <LinearGradient colors={colors} style={[StyleSheet.absoluteFill]} />
       </ZStack>
-      <VStack flex={1} marginTop={-50 + drawerPad}>
+      <VStack flex={1} marginTop={drawerPad}>
         {props.children}
       </VStack>
     </VStack>

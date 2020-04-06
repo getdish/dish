@@ -137,7 +137,7 @@ export const RestaurantPeek = memo(
         marginRight={-spacing}
         marginBottom={-spacing}
       >
-        <VStack position="absolute" top={-11} left={-45} zIndex={100}>
+        <VStack position="absolute" top={-11} left={-38} zIndex={100}>
           <RestaurantRatingDetail restaurant={restaurant} />
         </VStack>
         <HStack flexWrap="wrap" maxWidth={120} spacing={spacing}>

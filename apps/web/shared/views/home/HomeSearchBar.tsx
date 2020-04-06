@@ -17,7 +17,7 @@ import { DishLogoButton } from './DishLogoButton'
 import HomeAutocomplete from './HomeAutocomplete'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
-const extraWidth = 22
+const extraWidth = 36
 
 const isTextSelected = (node?: any) => {
   const selection = window.getSelection()
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     position: 'absolute',
     marginTop: searchBarTopOffset,
-    left: drawerPadLeft - extraWidth / 2,
+    left: drawerPadLeft,
   },
   searchArea: {
     borderLeftWidth: 1,

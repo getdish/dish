@@ -25,14 +25,18 @@ export const LenseButton = memo(({ lense }: { lense: Taxonomy }) => {
         justifyContent="center"
         paddingHorizontal={10}
         paddingVertical={5}
-        backgroundColor={active ? '#fff' : 'rgba(255,255,255,0.5)'}
+        backgroundColor={'rgba(255,255,255,0.5)'}
         borderRadius={12}
         shadowRadius={2}
         shadowColor="rgba(0,0,0,0.1)"
         shadowOffset={{ height: 1, width: 0 }}
         borderWidth={1}
         borderColor={`rgba(0,0,0,0.15)`}
-        opacity={active ? 1 : 0.8}
+        opacity={0.8}
+        {...(active && {
+          opacity: 1,
+          backgroundColor: '#fff',
+        })}
         hoverStyle={{
           opacity: 1,
         }}
@@ -40,9 +44,9 @@ export const LenseButton = memo(({ lense }: { lense: Taxonomy }) => {
         <Text
           style={{
             color: active ? '#000' : '#777',
-            fontSize: 15,
-            fontWeight: active ? '700' : '500',
-            letterSpacing: active ? -0.2 : 0,
+            fontSize: 14,
+            fontWeight: '500',
+            // letterSpacing: active ? -0.2 : 0,
           }}
         >
           {lense.icon} {lense.name}

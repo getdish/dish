@@ -142,7 +142,7 @@ export function LinkButton<
   }
 
   return (
-    <VStack flex={props.flex} pointerEvents={pointerEvents ?? 'auto'}>
+    <VStack flex={props.flex} pointerEvents={pointerEvents ?? null}>
       <TouchableOpacity
         activeOpacity={0.7}
         {...{ [fastClick ? 'onPressIn' : 'onPress']: onPress }}
