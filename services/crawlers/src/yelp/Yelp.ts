@@ -2,29 +2,31 @@ import url from 'url'
 
 import { sentryMessage } from '@dish/common'
 import { Restaurant, Scrape, ScrapeData } from '@dish/models'
-import { WorkerJob } from '@dish/worker'
-import axios_base, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { ProxiedRequests, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
 
 import { aroundCoords, boundingBoxFromcenter, geocode } from '../utils'
 
-const YELP_DOMAIN = process.env.YELP_PROXY || 'https://www.yelp.com'
 const BB_SEARCH = '/search/snippet?cflt=restaurants&l='
 
-const user_agent = Math.random().toString(36).substring(2, 15)
+const YELP_DOMAIN = 'https://www.yelp.com'
 
-const axios = axios_base.create({
-  baseURL: YELP_DOMAIN,
-  headers: {
-    common: {
-      'X-My-X-Forwarded-For': 'www.yelp.com',
-      'User-Agent': user_agent,
+const yelpAPI = new ProxiedRequests(
+  YELP_DOMAIN,
+  process.env.YELP_AWS_PROXY || YELP_DOMAIN,
+  {
+    headers: {
+      common: {
+        'X-My-X-Forwarded-For': 'www.yelp.com',
+      },
     },
-  },
-})
+  }
+)
 
 export class Yelp extends WorkerJob {
+  current?: string
+
   static queue_config: QueueOptions = {
     limiter: {
       max: 1,
@@ -36,26 +38,10 @@ export class Yelp extends WorkerJob {
     attempts: 3,
   }
 
-  async yelpAPI(uri: string, config: AxiosRequestConfig = {}) {
-    let tries = 0
-    while (true) {
-      try {
-        return await axios.get(uri, config)
-      } catch (e) {
-        if (e.response.status != 503) {
-          throw e
-        }
-        tries++
-        if (tries > 10) {
-          throw new Error('Too many 503 errors for: ' + uri)
-        }
-        console.warn(`503 response, so retrying (${tries}): ` + uri)
-      }
-    }
-  }
-
   async allForCity(city_name: string) {
-    console.log('Starting Yelp crawler. Using domain: ' + YELP_DOMAIN)
+    console.log(
+      'Starting Yelp crawler. Using AWS proxy: ' + process.env.YELP_AWS_PROXY
+    )
     const MAPVIEW_SIZE = 5000
     const coords = await geocode(city_name)
     const region_coords = _.shuffle(
@@ -89,11 +75,15 @@ export class Yelp extends WorkerJob {
       bottom_left[0],
     ].join(',')
     const bb = encodeURIComponent('g:' + coords)
-    const uri = YELP_DOMAIN + BB_SEARCH + bb + '&start=' + start
-    const response = await this.yelpAPI(uri)
+    const uri = BB_SEARCH + bb + '&start=' + start
+    const response = await yelpAPI.get(uri)
     const search_results = response?.data.searchPageProps.searchResultsProps
     const objects = search_results.searchResults
     const pagination = search_results.paginationInfo
+
+    console.log(
+      `YELP: geo search: ${coords}, page ${start}, ${objects.length} results`
+    )
 
     for (const data of objects) {
       await this.getRestaurant(data)
@@ -112,13 +102,14 @@ export class Yelp extends WorkerJob {
     if (data.searchResultBusiness) {
       let biz_page: string
       const id = await this.saveDataFromMapSearch(data)
-      const uri = url.parse(data.searchResultBusiness.businessUrl, true)
-      if (uri.query.redirect_url) {
-        biz_page = decodeURI(uri.query.redirect_url as string)
+      const full_uri = url.parse(data.searchResultBusiness.businessUrl, true)
+      if (full_uri.query.redirect_url) {
+        biz_page = decodeURI(full_uri.query.redirect_url as string)
       } else {
         biz_page = data.searchResultBusiness.businessUrl
       }
-      await this.runOnWorker('getEmbeddedJSONData', [id, biz_page])
+      const biz_page_uri = url.parse(biz_page, true)
+      await this.runOnWorker('getEmbeddedJSONData', [id, biz_page_uri.path])
     }
   }
 
@@ -138,7 +129,9 @@ export class Yelp extends WorkerJob {
     let data: { [keys: string]: any } = {}
     const SIG1 = '<script type="application/json" data-hypernova-key'
     const SIG2 = 'mapBoxProps'
-    const response = await this.yelpAPI(yelp_path)
+    this.current = yelp_path
+    console.log(`YELP: getting embedded JSON for: ${yelp_path}`)
+    const response = await yelpAPI.get(yelp_path)
 
     for (const line of response.data.split('\n')) {
       if (line.includes(SIG1) && line.includes(SIG2)) {
@@ -178,12 +171,14 @@ export class Yelp extends WorkerJob {
   }
 
   async getNextScrapes(id: string, data: ScrapeData) {
-    let photo_total = data.photoHeaderProps.mediaTotal
-    if (process.env.DISH_ENV != 'production') {
+    let photo_total = data.photoHeaderProps?.mediaTotal
+    if (photo_total > 31 && process.env.DISH_ENV != 'production') {
       photo_total = 31
     }
     const bizId = data.bizContactInfoProps.businessId
-    await this.runOnWorker('getPhotos', [id, bizId, photo_total])
+    if (photo_total > 0) {
+      await this.runOnWorker('getPhotos', [id, bizId, photo_total])
+    }
     await this.runOnWorker('getReviews', [id, bizId])
   }
 
@@ -203,7 +198,8 @@ export class Yelp extends WorkerJob {
         data[key] = json[key]
       }
     }
-    delete data.photoHeaderProps.photoFlagReasons
+    if (data?.photoHeaderProps?.photoFlagReasons)
+      delete data.photoHeaderProps.photoFlagReasons
     data = this.numericKeysFix(data)
     return data
   }
@@ -224,64 +220,61 @@ export class Yelp extends WorkerJob {
         id,
         bizId,
         start,
-        start / PER_PAGE,
+        start / PER_PAGE - 1,
       ])
     }
   }
 
   async getPhotoPage(id: string, bizId: string, start: number, page: number) {
-    console.log('Getting photo page: ' + page)
-
     const url =
-      YELP_DOMAIN +
-      '/biz_photos/get_media_slice/' +
-      bizId +
-      '?start=' +
-      start +
-      '&dir=b'
+      '/biz_photos/get_media_slice/' + bizId + '?start=' + start + '&dir=b'
 
-    const response = await this.yelpAPI(url, {
+    const response = await yelpAPI.get(url, {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
       },
     })
 
-    for (let photo of response.data.media) {
+    const media = response.data.media
+
+    for (let photo of media) {
       delete photo.media_nav_html
       delete photo.selected_media_html
     }
 
     let photos: { [keys: string]: any } = {}
-    photos['photosp' + page] = response.data.media
+    photos['photosp' + page] = media
     await Scrape.mergeData(id, photos)
+    console.log(
+      `YELP: ${this.current}, got photo page ${page} with ${media.length} photos`
+    )
   }
 
   async getReviews(id: string, bizId: string, start: number = 0) {
     const PER_PAGE = 20
     const page = start / PER_PAGE
-    console.log('Getting review page: ' + page)
 
     const url =
-      YELP_DOMAIN +
       '/biz/' +
       bizId +
       '/review_feed?rl=en&sort_by=relevance_desc&q=&start=' +
       start
 
-    const response = await this.yelpAPI(url, {
+    const response = await yelpAPI.get(url, {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
         'X-Requested-By-React': true,
       },
     })
 
-    let reviews: ScrapeData = {}
-    reviews['reviewsp' + page] = response.data.reviews
-    await Scrape.mergeData(id, reviews)
+    const data = response.data.reviews
 
-    for (let review of response.data.reviews) {
-      delete review.lightboxMediaItems
-    }
+    let reviews: ScrapeData = {}
+    reviews['reviewsp' + page] = data
+    await Scrape.mergeData(id, reviews)
+    console.log(
+      `YELP: ${this.current}, got review page ${page} with ${data.length} reviews`
+    )
 
     if (process.env.DISH_ENV != 'production') {
       return
