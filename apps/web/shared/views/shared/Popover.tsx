@@ -9,6 +9,7 @@ import PopoverWeb, { ArrowContainer } from 'react-tiny-popover'
 
 import { isWorker } from '../../constants'
 import { useWaterfall } from './useWaterfall'
+import { useOverlay } from './useOverlay'
 
 export const ForceShowPopover = createContext<boolean | undefined>(undefined)
 
@@ -45,32 +46,7 @@ export const Popover = (props: {
   }, [])
 
   if (Platform.OS == 'web') {
-    useLayoutEffect(() => {
-      if (props.overlay && isOpen) {
-        const node = document.querySelector('#root')
-        if (node) {
-          const overlayDiv = document.createElement('div')
-          overlayDiv.style.background = 'rgba(0,0,0,0.1)'
-          overlayDiv.style.position = 'absolute'
-          overlayDiv.style.top = '0px'
-          overlayDiv.style.right = '0px'
-          overlayDiv.style.bottom = '0px'
-          overlayDiv.style.left = '0px'
-          overlayDiv.style.zIndex = '1'
-          overlayDiv.addEventListener('click', (e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            if (props.onClickOutside) {
-              props.onClickOutside()
-            }
-          })
-          node.parentNode.insertBefore(overlayDiv, node)
-          return () => {
-            node.parentNode.removeChild(overlayDiv)
-          }
-        }
-      }
-    }, [props.overlay, isOpen])
+    useOverlay({ isOpen, onClick: props.onClickOutside })
   }
 
   if (!isMounted) {
