@@ -10,17 +10,21 @@ import {
   circularFlatButtonStyle,
   flatButtonStyle,
   flatButtonStyleActive,
-  flatButtonStyleInactive,
 } from './baseButtonStyle'
 
-export default memo(function HomeAutoComplete({ active }: { active: number }) {
+export default memo(function HomeAutoComplete() {
   const om = useOvermind()
+  const { autocompleteIndex } = om.state.home
   const state = om.state.home.currentState
-  const { autocompleteResults, showAutocomplete } = om.state.home
+  const {
+    isAutocompleteActive,
+    autocompleteResults,
+    showAutocomplete,
+  } = om.state.home
   const query = state.searchQuery
 
   const showLocation = showAutocomplete == 'location'
-  const showSearch = showAutocomplete == 'search' && query.length !== 0
+  const showSearch = showAutocomplete == 'search'
   const isShowing = showSearch || showLocation || query === 'taco'
 
   // hide when moused away, show when moved back!
@@ -63,7 +67,7 @@ export default memo(function HomeAutoComplete({ active }: { active: number }) {
         className="ease-in-out-fast"
         position="absolute"
         top={searchBarTopOffset + searchBarHeight}
-        left="25%"
+        left="15%"
         width="calc(100vw - 15%)"
         maxWidth={850}
         zIndex={1000}
@@ -96,13 +100,13 @@ export default memo(function HomeAutoComplete({ active }: { active: number }) {
             spacing="sm"
           >
             {[
-              {
-                name: showLocation
-                  ? om.state.home.locationSearchQuery
-                  : state.searchQuery,
-                id: '-1',
-                type: 'none',
-              },
+              // {
+              //   name: showLocation
+              //     ? om.state.home.locationSearchQuery
+              //     : state.searchQuery,
+              //   id: '-1',
+              //   type: 'none',
+              // },
               ...(showLocation
                 ? om.state.home.locationAutocompleteResults
                 : autocompleteResults),
@@ -126,9 +130,7 @@ export default memo(function HomeAutoComplete({ active }: { active: number }) {
                   lineHeight={24}
                   fastClick
                   alignItems="center"
-                  {...(x.id === '-1'
-                    ? flatButtonStyleInactive
-                    : active === index
+                  {...(isAutocompleteActive && autocompleteIndex === index
                     ? flatButtonStyleActive
                     : flatButtonStyle)}
                   paddingHorizontal={10}

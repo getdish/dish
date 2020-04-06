@@ -54,12 +54,6 @@ export default memo(function HomeSearchBar() {
   const inputRef = useRef()
   const locationInputRef = useRef()
   const globalSearch = om.state.home.currentState.searchQuery
-  const width = useHomeDrawerWidth()
-  const [active, setActive] = useState(0)
-
-  // todo - for hook
-  const curActive = useRef(0)
-  curActive.current = active
 
   // use local for a little better perf
   const [search, setSearch] = useState('')
@@ -93,13 +87,12 @@ export default memo(function HomeSearchBar() {
 
   useEffect(() => {
     if (!input || !locationInput) return
-
-    const prev = () => setActive((x) => Math.max(0, x - 1))
-    const next = () => {
-      const autocompleteResults = om.state.home.autocompleteResults
-      setActive((x) => Math.min(autocompleteResults.length - 1, x + 1))
+    const prev = () => {
+      om.actions.home.moveAutocompleteIndex(-1)
     }
-
+    const next = () => {
+      om.actions.home.moveAutocompleteIndex(1)
+    }
     const handleKeyPress = (e) => {
       // @ts-ignore
       const code = e.keyCode
@@ -109,17 +102,22 @@ export default memo(function HomeSearchBar() {
         console.warn('not a valid input')
         return
       }
+      const isAutocompleteActive = om.state.home.isAutocompleteActive
       const isCaretAtEnd =
         focusedInput.value.length == focusedInput.selectionEnd
       switch (code) {
         case 39: // right
-          if (isCaretAtEnd) {
+          if (isAutocompleteActive && isCaretAtEnd) {
             // at end
             next()
           }
           return
         case 37: // left
-          if (curActive.current > 0 && isCaretAtEnd) {
+          if (
+            isAutocompleteActive &&
+            om.state.home.autocompleteIndex > 0 &&
+            isCaretAtEnd
+          ) {
             e.preventDefault()
             prev()
           }
@@ -137,15 +135,14 @@ export default memo(function HomeSearchBar() {
           return
         case 38: // up
           e.preventDefault()
-          prev()
+          om.actions.home.moveActiveUp()
           return
         case 40: // down
           e.preventDefault()
-          next()
+          om.actions.home.moveActiveDown()
           return
       }
     }
-
     const handleClick = () => {
       const focusedInput = document.activeElement
       if (!om.state.home.showAutocomplete) {
@@ -154,12 +151,10 @@ export default memo(function HomeSearchBar() {
         )
       }
     }
-
     input.addEventListener('keydown', handleKeyPress)
     locationInput.addEventListener('keydown', handleKeyPress)
     input.addEventListener('click', handleClick)
     locationInput.addEventListener('click', handleClick)
-
     return () => {
       input.removeEventListener('keydown', handleKeyPress)
       locationInput.removeEventListener('keydown', handleKeyPress)
@@ -174,7 +169,7 @@ export default memo(function HomeSearchBar() {
 
   return (
     <>
-      <HomeAutocomplete active={active} />
+      <HomeAutocomplete />
       <View style={[styles.container, { height: searchBarHeight }]}>
         <View style={styles.containerInner}>
           {/* <ZStack fullscreen>
