@@ -4,14 +4,13 @@ import { Image } from 'react-native'
 import { LinkButton } from '../shared/Link'
 
 export const DishLogoButton = () => {
-  const scale = 0.06
+  const scale = 0.055
   return (
     <LinkButton
       name="home"
       paddingVertical={10}
-      paddingHorizontal={16}
+      paddingHorizontal={26}
       marginVertical={-2}
-      backgroundColor="#fff"
     >
       <Image
         source={require('../../assets/logo.png')}

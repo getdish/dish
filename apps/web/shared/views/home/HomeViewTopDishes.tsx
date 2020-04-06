@@ -84,7 +84,7 @@ const CountryTopDishesAndRestaurants = memo(
             >
               <Text
                 numberOfLines={1}
-                style={{ fontSize: 20, fontWeight: '400' }}
+                style={{ fontSize: 20, fontWeight: '600' }}
               >
                 {country.country}
               </Text>

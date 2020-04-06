@@ -28,7 +28,7 @@ export const HomeControlsOverlay = memo(() => {
         <HStack position="absolute" top={0} right={0} left={0}>
           {/* top left */}
           <VStack flex={1} />
-          <HomeUserMenu />
+          {/* <HomeUserMenu /> */}
         </HStack>
 
         <HStack

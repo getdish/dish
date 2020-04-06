@@ -15,57 +15,63 @@ export const HomeUserMenu = memo(() => {
   const om = useOvermind()
 
   return (
-    <Popover
-      position="bottom"
-      isOpen={om.state.home.showUserMenu}
-      contents={
-        <Tooltip padding={20} width="30vw" minWidth={250}>
-          {!om.state.auth.is_logged_in && (
-            <AuthLoginRegisterView
-              setMenuOpen={(x) => om.actions.home.setShowUserMenu(x)}
-            />
-          )}
+    <>
+      <Popover
+        position="bottom"
+        isOpen={om.state.home.showUserMenu}
+        onClickOutside={() => {
+          om.actions.home.setShowUserMenu(false)
+        }}
+        contents={
+          <Tooltip padding={20} width="30vw" minWidth={250}>
+            {!om.state.auth.is_logged_in && (
+              <AuthLoginRegisterView
+                setMenuOpen={(x) => om.actions.home.setShowUserMenu(x)}
+              />
+            )}
 
-          {om.state.auth.is_logged_in && (
-            <VStack spacing>
-              <LinkButton
-                {...flatButtonStyle}
-                name="account"
-                params={{ id: 'reviews', pane: 'list' }}
-              >
-                Reviews
-              </LinkButton>
-              <Divider />
-              <LinkButton name="home" onPress={() => om.actions.auth.logout()}>
-                Logout
-              </LinkButton>
-            </VStack>
-          )}
-        </Tooltip>
-      }
-    >
-      <LinkButton
-        flexDirection="row"
-        pointerEvents="auto"
-        backgroundColor="#fff"
-        padding={15}
-        // width={15 * 2 + 16}
-        height={15 * 2 + 16}
-        borderRadius={100}
-        shadowColor="rgba(0,0,0,0.2)"
-        shadowRadius={10}
-        shadowOffset={{ width: 0, height: 5 }}
-        onPress={() =>
-          om.actions.home.setShowUserMenu(!om.state.home.showUserMenu)
+            {om.state.auth.is_logged_in && (
+              <VStack spacing>
+                <LinkButton
+                  {...flatButtonStyle}
+                  name="account"
+                  params={{ id: 'reviews', pane: 'list' }}
+                >
+                  Reviews
+                </LinkButton>
+                <Divider />
+                <LinkButton
+                  name="home"
+                  onPress={() => om.actions.auth.logout()}
+                >
+                  Logout
+                </LinkButton>
+              </VStack>
+            )}
+          </Tooltip>
         }
       >
-        <HStack spacing>
-          <Icon name="user" size={16} opacity={0.5} />
-          {om.state.auth.is_logged_in ? (
-            <Text>{om.state.auth.user.username}</Text>
-          ) : null}
-        </HStack>
-      </LinkButton>
-    </Popover>
+        <LinkButton
+          flexDirection="row"
+          pointerEvents="auto"
+          padding={15}
+          onPress={() =>
+            om.actions.home.setShowUserMenu(!om.state.home.showUserMenu)
+          }
+        >
+          <HStack spacing alignItems="center" justifyContent="center">
+            <Icon name="user" size={26} opacity={0.5} />
+            {om.state.auth.is_logged_in ? (
+              <Text
+                numberOfLines={1}
+                style={{ fontSize: 12, opacity: 0.5, maxWidth: 50 }}
+              >
+                {om.state.auth.user.username}
+              </Text>
+            ) : null}
+          </HStack>
+        </LinkButton>
+      </Popover>
+    </>
   )
 })
