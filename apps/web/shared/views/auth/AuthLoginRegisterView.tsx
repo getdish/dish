@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Image, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Button, Image, Text, TextInput, View } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { Link } from '../shared/Link'
 import { HStack, VStack } from '../shared/Stacks'
+import { textStyles } from './textStyles'
 
 export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
   const om = useOvermind()
@@ -56,12 +57,12 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
   }
 
   return (
-    <View style={styles.login_box}>
+    <View style={textStyles.login_box}>
       {/* <Text style={{ fontSize: 16 }}>
         // some pitch on features for login here
       </Text> */}
       <TextInput
-        style={styles.text_input}
+        style={textStyles.textField}
         placeholder="Login or register with email"
         value={username}
         onChange={(event) => setUsername(event.target['value'])}
@@ -69,7 +70,7 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
 
       {username.length > 3 && (
         <TextInput
-          style={styles.text_input}
+          style={textStyles.textField}
           placeholder="Password"
           value={password}
           secureTextEntry={true}
@@ -117,24 +118,3 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  login_box: {},
-
-  login_messages: {
-    paddingTop: '0.5em',
-    marginTop: '0.5em',
-  },
-
-  text_input: {
-    fontSize: 18,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    marginBottom: '0.5em',
-    shadowColor: 'rgba(0,0,0,0.12)',
-    shadowRadius: 8,
-  },
-})

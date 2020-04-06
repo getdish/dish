@@ -8,6 +8,7 @@ import HomePage from './home/HomePageView'
 import { PrivateRoute, Route, RouteSwitch } from './shared/Route'
 import { ToastRoot } from './shared/ToastRoot'
 import TaxonomyPage from './taxonomy/TaxonomyPage'
+import { WelcomeModal } from './WelcomeModal'
 
 const apolloClient = createApolloClient()
 // const HomePageLazy = React.lazy(() => import('./home/HomePageView'))
@@ -35,6 +36,8 @@ export function App({ overmind }: { overmind?: any }) {
                 <HomePage />
               </Route>
             </RouteSwitch>
+
+            <WelcomeModal />
           </Suspense>
         </ApolloProvider>
       </Provider>

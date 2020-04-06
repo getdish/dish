@@ -39,31 +39,6 @@ export const HomeControlsOverlay = memo(() => {
           alignItems="flex-end"
         >
           <VStack flex={1} />
-          <Tooltip
-            pointerEvents="auto"
-            opacity={show ? 1 : 0}
-            width="auto"
-            justifyContent="center"
-            maxWidth={250}
-          >
-            <SmallTitle>Welcome to Dish</SmallTitle>
-            <VStack spacing={16}>
-              <Text style={{ fontSize: 16, lineHeight: 24, padding: 5 }}>
-                Reliable ratings down to the dish. Authentic international
-                cuisine rankings. Fast search, across delivery service. Enjoy!
-              </Text>
-
-              <HStack>
-                <LinkButton {...flatButtonStyle}>
-                  How we break it down
-                </LinkButton>
-                <Spacer flex />
-                <LinkButton onPress={() => setShow(false)} {...flatButtonStyle}>
-                  Ok!
-                </LinkButton>
-              </HStack>
-            </VStack>
-          </Tooltip>
 
           {/* <HomeExploreMenu /> */}
         </HStack>
