@@ -22,7 +22,7 @@ export const RestaurantFavoriteStar = memo(
     size?: 'lg' | 'md'
     restaurant: Restaurant
   }) => {
-    const sizePx = size == 'lg' ? 26 : 24
+    const sizePx = size == 'lg' ? 26 : 20
     const om = useOvermind()
     const [isOpen, setIsOpen] = useState(false)
     const [timer, setTimer] = useState(null)
@@ -112,7 +112,7 @@ export const RestaurantFavoriteStar = memo(
           isHovered={isStarred}
           onPress={() => setRating(isStarred ? 0 : 1)}
         >
-          <VStack width={sizePx} height={sizePx}>
+          <VStack marginTop={2} width={sizePx} height={sizePx}>
             {isStarred && (
               <Text
                 style={{

@@ -16,6 +16,7 @@ import { RestaurantMetaRow } from './RestaurantMetaRow'
 import { RestaurantRatingDetail } from './RestaurantRatingDetail'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
+import { Quote } from './HomeRestaurantView'
 
 export const RestaurantListItem = ({
   restaurant,
@@ -77,13 +78,19 @@ export const RestaurantListItem = ({
             <RestaurantUpVoteDownVote restaurant={restaurant} />
           </ZStack>
 
-          <VStack padding={18} paddingLeft={24} width="76%" maxWidth={525}>
+          <VStack
+            padding={18}
+            paddingLeft={24}
+            paddingVertical={28}
+            width="76%"
+            maxWidth={525}
+          >
             <Link name="restaurant" params={{ slug: restaurant.slug }}>
               <HStack alignItems="center" marginVertical={-3}>
                 <RankingView rank={rank} />
                 <Text
                   style={{
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: 'bold',
                     textDecorationColor: 'transparent',
                   }}
@@ -113,6 +120,10 @@ export const RestaurantListItem = ({
             </HStack>
             <Spacer size="sm" />
             <RestaurantDetailRow size="sm" restaurant={restaurant} />
+
+            {!!om.state.auth.is_logged_in && (
+              <AddCommentLine restaurant={restaurant} />
+            )}
           </VStack>
 
           <Spacer size="lg" />
@@ -122,6 +133,14 @@ export const RestaurantListItem = ({
         <Divider />
       </TouchableOpacity>
     </Hoverable>
+  )
+}
+
+const AddCommentLine = ({ restaurant }: { restaurant: Restaurant }) => {
+  return (
+    <VStack marginTop={20} marginBottom={-20}>
+      <Quote>Write your comment...</Quote>
+    </VStack>
   )
 }
 
@@ -143,17 +162,24 @@ export const RestaurantPeek = memo(
             .slice(0, 4)
             .map((photo, i) => {
               return (
-                <Image
+                <VStack
                   key={i}
-                  source={{ uri: photo }}
-                  style={{
-                    width: 55,
-                    height: 55,
-                    borderRadius: 10,
-                    marginBottom: spacing,
-                  }}
-                  resizeMode="cover"
-                />
+                  borderRadius={10}
+                  shadowColor="rgba(0,0,0,0.2)"
+                  shadowRadius={4}
+                  shadowOffset={{ height: 2, width: 0 }}
+                  marginBottom={spacing}
+                  overflow="hidden"
+                >
+                  <Image
+                    source={{ uri: photo }}
+                    style={{
+                      width: 50,
+                      height: 50,
+                    }}
+                    resizeMode="cover"
+                  />
+                </VStack>
               )
             })}
         </HStack>
