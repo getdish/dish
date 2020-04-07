@@ -5,7 +5,7 @@ export const isBrowserProd =
 const isWorker =
   typeof document !== 'undefined' && !document.getElementById('root')
 
-export function getGraphEndpoint() {
+export function getGraphEndpointDomain() {
   const LOCAL_HASURA = 'http://localhost:8080'
   const LIVE_HASURA = 'https://hasura.rio.dishapp.com'
 
@@ -14,7 +14,6 @@ export function getGraphEndpoint() {
   }
 
   let domain: string
-
   if (isNode) {
     domain =
       process.env.HASURA_ENDPOINT ||
@@ -33,4 +32,8 @@ export function getGraphEndpoint() {
   }
 
   return domain
+}
+
+export function getGraphEndpoint() {
+  return `${getGraphEndpointDomain()}/v1/graphql`
 }

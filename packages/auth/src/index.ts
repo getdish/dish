@@ -28,14 +28,14 @@ axios.defaults.validateStatus = () => {
 
 class Auth {
   public jwt = ''
-  public is_logged_in = false
+  public isLoggedIn = false
   public is_admin = false
   public user = {}
   public has_been_logged_out = false
 
   constructor() {
     if (isNode) {
-      this.is_logged_in = true
+      this.isLoggedIn = true
       this.is_admin = true
     } else {
       this.checkForExistingLogin()
@@ -48,7 +48,7 @@ class Auth {
       const auth = JSON.parse(json)
       this.jwt = auth.token
       this.user = auth.user
-      this.is_logged_in = true
+      this.isLoggedIn = true
     }
   }
 
@@ -62,7 +62,7 @@ class Auth {
 
   getHeaders() {
     let auth_headers = {}
-    if (this.is_logged_in) {
+    if (this.isLoggedIn) {
       if (this.is_admin) {
         auth_headers = {
           'X-Hasura-Admin-Secret':
@@ -114,7 +114,7 @@ class Auth {
       password: password,
     })
     if (response.status == 200) {
-      this.is_logged_in = true
+      this.isLoggedIn = true
       this.jwt = response.data.token
       this.user = response.data.user
       if (!isNode) {
@@ -132,7 +132,7 @@ class Auth {
   }
 
   async logout() {
-    this.is_logged_in = false
+    this.isLoggedIn = false
     delete this.jwt
     delete this.user
     localStorage.removeItem(BROWSER_STORAGE_KEY)

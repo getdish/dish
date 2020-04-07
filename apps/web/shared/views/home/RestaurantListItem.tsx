@@ -31,6 +31,7 @@ export const RestaurantListItem = ({
   const [isHovered, setIsHovered] = useState(false)
   const [disablePress, setDisablePress] = useState(false)
   const hoverTm = useRef<any>(0)
+  const userReview = om.state.user.allReviews[restaurant.id]
 
   useEffect(() => {
     return om.reaction(
@@ -121,7 +122,7 @@ export const RestaurantListItem = ({
             <Spacer size="sm" />
             <RestaurantDetailRow size="sm" restaurant={restaurant} />
 
-            {!!om.state.auth.is_logged_in && (
+            {!!om.state.user.isLoggedIn && (
               <AddCommentLine restaurant={restaurant} />
             )}
           </VStack>

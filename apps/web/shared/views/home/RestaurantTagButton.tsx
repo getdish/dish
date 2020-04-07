@@ -79,7 +79,7 @@ export const RestaurantTagButton = memo(
           paddingHorizontal={5}
           paddingVertical={2}
           onPress={async () => {
-            if (await om.actions.auth.ensureLoggedIn()) {
+            if (await om.actions.user.ensureLoggedIn()) {
               setIsOpen(true)
             }
           }}

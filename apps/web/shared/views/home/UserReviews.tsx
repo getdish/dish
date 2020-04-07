@@ -26,7 +26,7 @@ export default function UserReviews() {
 
   useEffect(() => {
     if (is_for_logged_in_user) {
-      user = om.state.auth.user.id
+      user = om.state.user.user.id
     }
     om.actions.home.getUserReviews(user)
   }, [])
