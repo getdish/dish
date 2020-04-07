@@ -443,7 +443,7 @@ export const Quote = memo(
         >
           “
         </Text>
-        <VStack spacing={6}>
+        <VStack spacing={6} flex={1}>
           <Text style={[{ fontSize: 16, color: '#999' }, style]} {...props} />
           {!!by && (
             <Text

@@ -20,7 +20,7 @@
     "@dish/auth": "*",
     "@dish/common-web": "*",
     "axios": "^0.19.1",
-    "@apollo/client": "^3.0.0-beta.43",
+    "@apollo/client": "^3.0.0-beta.23",
     "@apollo/link-ws": "^2.0.0-beta.3",
     "graphql": "^15.0.0",
     "isomorphic-fetch": "2.2.1",

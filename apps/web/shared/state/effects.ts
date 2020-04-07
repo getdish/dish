@@ -5,6 +5,6 @@ import * as subscriptions from './subscriptions'
 
 export const gql = graphql({
   queries,
-  // mutations,
+  mutations,
   // subscriptions,
 })
