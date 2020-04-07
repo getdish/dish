@@ -1,11 +1,24 @@
 import { Restaurant } from '@dish/models'
-import React, { memo, useEffect, useRef, useState } from 'react'
-import { Image, Text, TouchableOpacity } from 'react-native'
+import React, {
+  memo,
+  useEffect,
+  useRef,
+  useState,
+  useLayoutEffect,
+} from 'react'
+import {
+  Image,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  TouchableWithoutFeedback,
+  Button,
+} from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { Divider } from '../shared/Divider'
 import Hoverable from '../shared/Hoverable'
-import { Link } from '../shared/Link'
+import { Link, LinkButton } from '../shared/Link'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { lightLightBg } from './colors'
