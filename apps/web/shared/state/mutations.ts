@@ -4,7 +4,10 @@ export const upsertUserReview = gql`
   mutation UpsertReview($reviews: [review_insert_input!]!) {
     insert_review(
       objects: $reviews
-      on_conflict: { constraint: review_pkey, update_columns: [text, rating] }
+      on_conflict: {
+        constraint: review_user_id_restaurant_id_taxonomy_id_key
+        update_columns: [text, rating]
+      }
     ) {
       returning {
         id
