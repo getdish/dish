@@ -36,7 +36,7 @@ async function main() {
   })
 
   await ue.runOnWorker('world', undefined, {
-    repeat: { every: week },
+    repeat: { every: 4 * week },
     jobId: 'UBEREATS WORLD CRAWLER',
   })
 
