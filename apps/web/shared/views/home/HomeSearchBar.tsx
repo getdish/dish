@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState, useCallback } from 'react'
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 
 import {
@@ -82,6 +82,12 @@ export default memo(function HomeSearchBar() {
   const locationInput: HTMLInputElement | null =
     // @ts-ignore
     locationInputRef.current?.['_node'] ?? null
+
+  const handleCancel = useCallback(() => {
+    setTimeout(() => {
+      input.focus()
+    }, 100)
+  }, [input])
 
   useEffect(() => {
     if (!input) return
@@ -256,7 +262,7 @@ export default memo(function HomeSearchBar() {
                 style={[styles.textInput, { fontSize: 19, paddingRight: 42 }]}
               />
             </Hoverable>
-            <SearchCancelButton />
+            <SearchCancelButton onCancel={handleCancel} />
           </HStack>
 
           <Divider vertical />
@@ -299,7 +305,7 @@ export default memo(function HomeSearchBar() {
   )
 })
 
-const SearchCancelButton = memo(() => {
+const SearchCancelButton = memo(({ onCancel }: { onCancel: Function }) => {
   const om = useOvermind()
   return (
     <ZStack fullscreen pointerEvents="none">
@@ -316,9 +322,10 @@ const SearchCancelButton = memo(() => {
             disabled={om.state.home.currentStateSearchQuery === ''}
             onPress={() => {
               om.actions.home.setSearchQuery('')
-              if (om.state.home.currentState.type === 'search') {
-                om.actions.home.popTo(om.state.home.lastHomeState)
-              }
+              onCancel()
+              // if (om.state.home.currentState.type === 'search') {
+              //   om.actions.home.popTo(om.state.home.lastHomeState)
+              // }
             }}
             size={12}
           />
