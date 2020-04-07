@@ -21,6 +21,7 @@ type HomeStateBase = {
   allLenses: Taxonomy[]
   allFilters: Taxonomy[]
   autocompleteResults: AutocompleteItem[]
+  location: AutocompleteItem | null // for now just autocomplete item
   locationAutocompleteResults: AutocompleteItem[]
   topDishes: TopDish[]
   allTopDishes: TopDish['dishes']
@@ -94,6 +95,7 @@ export type AutocompleteItem = {
   name: string
   type: 'dish' | 'restaurant' | 'location'
   id: string
+  center?: LngLat
 }
 
 const INITIAL_RADIUS = 0.1
@@ -147,6 +149,7 @@ const currentActiveTaxonomyIds = (state: HomeStateBase) => {
 export const state: HomeState = {
   activeIndex: -1,
   autocompleteIndex: 0,
+  location: null,
   locationSearchQuery: '',
   allLenses: taxonomyLenses,
   allFilters: taxonomyFilters,
@@ -431,6 +434,8 @@ const _runAutocomplete: AsyncAction<string> = async (om, query) => {
     locationPromise,
   ])
 
+  console.log('got', locationResults)
+
   const unsortedResults: AutocompleteItem[] = _.uniqBy(
     [
       ...dishResults,
@@ -453,12 +458,19 @@ const _runAutocomplete: AsyncAction<string> = async (om, query) => {
   om.state.home.autocompleteResults = results
 }
 
-const locationToAutocomplete = (location: { name: string }) => {
+const locationToAutocomplete = (location: {
+  name: string
+  coordinate: { latitude: number; longitude: number }
+}) => {
   return {
     name: location.name,
     type: 'location' as const,
     icon: '📍',
     id: `loc-${location.name}`,
+    center: {
+      lat: location.coordinate.latitude,
+      lng: location.coordinate.longitude,
+    },
   }
 }
 
@@ -597,9 +609,11 @@ const toggleActiveTaxonomy: Action<Taxonomy> = (om, val) => {
 const suggestTags: AsyncAction<string> = async (om, tags) => {
   let state = om.state.home.currentState
   if (state.type != 'restaurant') return
-  let restaurant = new Restaurant(state.restaurant)
+  let restaurant = new Restaurant(
+    om.state.home.allRestaurants[state.restaurantId]
+  )
   await restaurant.upsertTags(tags.split(','))
-  state.restaurant = restaurant
+  om.state.home.allRestaurants[state.restaurantId] = restaurant
 }
 
 const setMapArea: Action<{ center: LngLat; span: LngLat }> = (om, val) => {
@@ -633,6 +647,17 @@ const setShowAutocomplete: Action<ShowAutocomplete> = (om, val) => {
   om.state.home.showAutocomplete = val
 }
 
+// TODO this sort of duplicates HomeStateItem.center... we should move it there
+const setLocation: AsyncAction<string> = async (om, val) => {
+  const current = om.state.home.locationAutocompleteResults
+  om.actions.home.setLocationSearchQuery(val)
+  const exact = current.find((x) => x.name === val)
+  if (exact?.center) {
+    om.state.home.location = { ...exact }
+    om.state.home.currentState.center = { ...exact.center }
+  }
+}
+
 let locationSearchId = 0
 const setLocationSearchQuery: AsyncAction<string> = async (om, val) => {
   om.state.home.locationSearchQuery = val
@@ -643,7 +668,10 @@ const setLocationSearchQuery: AsyncAction<string> = async (om, val) => {
   const results = (await searchLocations(val)).map(locationToAutocomplete)
   const searcher = new Fuse(results, fuzzyOpts)
   const orderedResults = searcher.search(val, { limit: 8 }).map((x) => x.item)
-  om.state.home.locationAutocompleteResults = orderedResults
+  om.state.home.locationAutocompleteResults = _.uniqBy(
+    orderedResults,
+    (x) => x.id
+  )
 }
 
 function searchLocations(query: string) {
@@ -687,6 +715,7 @@ export const actions = {
   setShowAutocomplete,
   handleRouteChange,
   setLocationSearchQuery,
+  setLocation,
   setMapArea,
   setSearchQuery,
   popTo,

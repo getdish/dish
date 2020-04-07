@@ -115,7 +115,7 @@ export default memo(function HomeAutoComplete() {
                 <LinkButton
                   onPress={() => {
                     if (showLocation) {
-                      om.actions.home.setLocationSearchQuery(x.name)
+                      om.actions.home.setLocation(x.name)
                     } else {
                       om.actions.router.navigate({
                         name: 'search',
