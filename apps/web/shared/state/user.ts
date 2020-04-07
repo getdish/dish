@@ -90,7 +90,7 @@ const postLogin: Action<Partial<User>> = (om, user: Partial<User>) => {
 }
 
 const logout: AsyncAction = async (om) => {
-  DishAuth.logout()
+  await DishAuth.logout()
   om.state.user.user = {} as User
   om.state.user.isLoggedIn = false
   Toast.show('Logged out')

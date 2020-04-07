@@ -16,7 +16,7 @@ export const LoadingItem = () => {
       <HStack
         width="60%"
         height={40}
-        backgroundColor="#ccc"
+        backgroundColor="#ddd"
         className="shine"
       />
       <VStack spacing={10}>
@@ -25,7 +25,7 @@ export const LoadingItem = () => {
             key={index}
             width={60 - (2 - index > 0 ? index : -index) * 10}
             height={20}
-            backgroundColor="#ccc"
+            backgroundColor="#ddd"
             className="shine"
           />
         ))}

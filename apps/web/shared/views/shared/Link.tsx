@@ -44,6 +44,7 @@ export function Link<
     e.preventDefault()
     om.actions.router.navigate({ name, params } as any)
   }, [])
+
   return (
     <a
       {...props}

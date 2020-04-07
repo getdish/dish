@@ -567,7 +567,7 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
     ).review
     // TODO how do we do nice GC of allReviews?
     for (const review of reviews) {
-      om.state.user.allReviews[review.id] = review
+      om.state.user.allReviews[review.restaurant_id] = review
     }
   }
 

@@ -1,5 +1,6 @@
 import { OnInitialize, rehydrate } from 'overmind'
 import { getGraphEndpoint } from '@dish/common-web'
+import DishAuth from '@dish/auth'
 
 import { OVERMIND_MUTATIONS } from '../constants'
 
@@ -17,6 +18,12 @@ export const onInitialize: OnInitialize = async ({
     {
       // query and mutation options
       endpoint: getGraphEndpoint(),
+      headers: () => DishAuth.getHeaders(),
+      // The options are the options passed to GRAPHQL-REQUEST
+      options: {
+        credentials: 'include',
+        mode: 'cors',
+      },
     }
     // {
     //   // subscription options
