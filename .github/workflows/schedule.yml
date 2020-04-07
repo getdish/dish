@@ -1,7 +1,7 @@
 name: Scheduled recurring tests
 on:
   schedule:
-    - cron:  '0 * * * *'
+    - cron:  '0 0 * * *'
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -11,6 +11,6 @@ jobs:
     - uses: actions/checkout@master
     - name: Install dev dependencies
       run: .github/workflows/scripts/install_dev_deps.sh
-    - name: Prettier linting
-      run: .github/workflows/scripts/prettier.sh
+    - name: HTTP-dependent crawler tasks
+      run: .github/workflows/scripts/recurring.sh
 
