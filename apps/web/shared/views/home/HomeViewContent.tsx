@@ -141,7 +141,7 @@ function HomeStackViewItem({
             {...(index !== 0 && {
               shadowColor: 'rgba(0,0,0,0.15)',
               shadowRadius: 10,
-              shadowOffset: { width: 0, height: 4 },
+              shadowOffset: { width: 0, height: 3 },
             })}
             borderRadius={22}
             pointerEvents="auto"

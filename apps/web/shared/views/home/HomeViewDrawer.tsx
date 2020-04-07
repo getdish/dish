@@ -38,13 +38,24 @@ export function HomeViewDrawer(props: { children: any }) {
       // borderRadius={drawerBorderRadius}
       // shadowColor="rgba(0,0,0,0.2)"
       // shadowRadius={44}
-      borderWidth={1}
+      borderRightWidth={1}
       borderColor="#ddd"
       flex={1}
       justifyContent="flex-end"
     >
-      <ZStack fullscreen overflow="hidden">
-        <LinearGradient colors={colors} style={[StyleSheet.absoluteFill]} />
+      <ZStack fullscreen>
+        <ZStack fullscreen>
+          <LinearGradient colors={colors} style={[StyleSheet.absoluteFill]} />
+
+          <ZStack fullscreen right={550}>
+            <LinearGradient
+              colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
+              style={[StyleSheet.absoluteFill]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 100, y: 0 }}
+            />
+          </ZStack>
+        </ZStack>
       </ZStack>
       <VStack flex={1} marginTop={drawerPad} maxWidth={650} marginLeft="auto">
         {props.children}

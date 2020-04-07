@@ -5,8 +5,8 @@ import { useOvermind } from '../../state/om'
 import { Taxonomy } from '../../state/Taxonomy'
 import { LinkButton } from '../shared/Link'
 import { HStack, VStack } from '../shared/Stacks'
-import { flatButtonStyle } from './baseButtonStyle'
-import { bg, bgHover, lightBg, lightBgHover } from './colors'
+import { bg, bgHover } from './colors'
+import { SmallButton } from './SmallButton'
 
 export default memo(function HomeFilterBar() {
   const om = useOvermind()
@@ -38,26 +38,7 @@ const FilterButton = memo(({ filter }: { filter: Taxonomy }) => {
         om.actions.home.toggleActiveTaxonomy(filter)
       }}
     >
-      <HStack
-        alignItems="center"
-        justifyContent="center"
-        {...flatButtonStyle}
-        paddingHorizontal={12}
-        paddingVertical={4}
-        backgroundColor={isActive ? 'transparent' : lightBg}
-        borderRadius={20}
-        borderWidth={2}
-        borderColor={isActive ? `#000` : 'white'}
-        hoverStyle={
-          isActive
-            ? {
-                // backgroundColor: bgHover,
-              }
-            : {
-                backgroundColor: lightBgHover,
-              }
-        }
-      >
+      <SmallButton isActive={isActive}>
         <Text
           style={{
             color: isActive ? '#000' : bg,
@@ -67,7 +48,7 @@ const FilterButton = memo(({ filter }: { filter: Taxonomy }) => {
         >
           {filter.name}
         </Text>
-      </HStack>
+      </SmallButton>
     </LinkButton>
   )
 })

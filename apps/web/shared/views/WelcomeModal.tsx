@@ -27,8 +27,8 @@ export const WelcomeModal = () => {
             </li>
             <li>Let you search across every delivery service.</li>
             <li>Provide reliable rankings, even for hole-in-the-walls!</li>
-            <li>Defend a real community of chefs, foodies, and explorers.</li>
-            <li>Focus on a high quality experience on all platforms.</li>
+            <li>Nearby popups and events for the weekend.</li>
+            <li>A community of chefs, foodies, and explorers.</li>
           </ul>
           Join us! We need help!
         </Text>

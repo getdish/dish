@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { View } from 'react-native'
 
-import { HStack } from './Stacks'
+import { HStack, StackBaseProps } from './Stacks'
 
 export const Divider = memo(
   ({
@@ -9,11 +9,12 @@ export const Divider = memo(
     vertical,
     height,
     width,
-  }: {
+    flexLine = 10,
+    ...rest
+  }: Omit<StackBaseProps, 'flex'> & {
+    flexLine?: number
     flex?: boolean
     vertical?: boolean
-    height?: number
-    width?: number
   }) => {
     return (
       <HStack
@@ -21,14 +22,15 @@ export const Divider = memo(
         flex={flex === true ? 1 : 0}
         width={width ?? (vertical ? 1 : flex == true ? 'auto' : '100%')}
         height={height ?? (!vertical ? 1 : flex == true ? 'auto' : '100%')}
+        {...rest}
       >
         <View style={{ flex: 1 }} />
         <View
           style={{
             [vertical ? 'width' : 'height']: 1,
-            flex: 10,
+            flex: flexLine,
             backgroundColor: '#000',
-            opacity: 0.0666,
+            opacity: 0.045,
           }}
         />
         <View style={{ flex: 1 }} />

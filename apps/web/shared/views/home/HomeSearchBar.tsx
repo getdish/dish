@@ -184,6 +184,8 @@ export default memo(function HomeSearchBar() {
   const tm2 = useRef<any>(0)
   const tmInputBlur = useRef<any>(0)
 
+  const divider = <Divider vertical flexLine={1} />
+
   return (
     <>
       <HomeAutocomplete />
@@ -194,7 +196,7 @@ export default memo(function HomeSearchBar() {
           </ZStack> */}
           <DishLogoButton />
 
-          <Divider vertical />
+          {divider}
 
           <LinkButton
             flexDirection="row"
@@ -208,7 +210,7 @@ export default memo(function HomeSearchBar() {
             </VStack>
           </LinkButton>
 
-          <Divider vertical />
+          {divider}
 
           <VStack flex={0.5} />
 
@@ -265,7 +267,7 @@ export default memo(function HomeSearchBar() {
             <SearchCancelButton onCancel={handleCancel} />
           </HStack>
 
-          <Divider vertical />
+          {divider}
 
           <VStack flex={10} maxWidth={320}>
             <TextInput
@@ -292,7 +294,7 @@ export default memo(function HomeSearchBar() {
             />
             <SearchLocationButton />
           </VStack>
-          <Divider vertical />
+          {divider}
 
           <VStack flex={1} />
 
