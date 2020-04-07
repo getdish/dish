@@ -1,5 +1,11 @@
 next
 
+REVIEWS
+
+- "Tips" - horizontal carousel on restaurant page
+  - lets you enter a tip easily from there
+  - actually a full review card could show at bottom of map when restaurant opened all the way
+
 SEARCH + TAGS
 
 - may need to redo how router/navigate work?
