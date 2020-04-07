@@ -307,7 +307,7 @@ const _loadRestaurantDetail: AsyncAction<{
       lat: currentState.span.lat * 0.66,
     }
     state.reviews = await Review.findAllForRestaurant(restaurant.id)
-    if (om.state.auth.is_logged_in) {
+    if (om.state.user.isLoggedIn) {
       await om.actions.home.getReview()
     }
   }
@@ -551,11 +551,25 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
 
   if (state.type != 'search') return
 
-  const restaurants = await Restaurant.search(searchArgs)
+  let restaurants = await Restaurant.search(searchArgs)
 
   state = om.state.home.currentState
   if (state.type != 'search') return
   if (runSearchId != curId) return
+
+  // fetch reviews before render
+  if (om.state.user.isLoggedIn) {
+    const reviews = (
+      await om.effects.gql.queries.userRestaurantReviews({
+        user_id: om.state.user.user.id,
+        restaurant_ids: restaurants.map((x) => x.id),
+      })
+    ).review
+    // TODO how do we do nice GC of allReviews?
+    for (const review of reviews) {
+      om.state.user.allReviews[review.id] = review
+    }
+  }
 
   // update denormalized dictionary
   for (const restaurant of restaurants) {
@@ -589,25 +603,25 @@ const clearSearch: Action = (om) => {
 const getReview: AsyncAction = async (om) => {
   let state = om.state.home.lastRestaurantState
   if (!state) return
-  if (!om.state.auth.user) return
+  if (!om.state.user.user) return
   let review = new Review()
-  await review.findOne(state.restaurantId, om.state.auth.user.id)
+  await review.findOne(state.restaurantId, om.state.user.user.id)
   state.review = review
   if (typeof state.review.id == 'undefined') {
     Object.assign(state.review, {
       restaurant_id: state.restaurantId,
-      user_id: om.state.auth.user.id,
+      user_id: om.state.user.user.id,
     })
   }
 }
 
 const submitReview: AsyncAction<Review> = async (om, review) => {
-  if (!om.state.auth.user) {
+  if (!om.state.user.user) {
     console.error('Not logged in')
     return
   }
   if (typeof review.id == 'undefined') {
-    review.user_id = om.state.auth.user.id
+    review.user_id = om.state.user.user.id
     await review.insert()
     review.id = review.id
   } else {

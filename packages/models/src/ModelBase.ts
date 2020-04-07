@@ -11,7 +11,7 @@ import {
 import { getMainDefinition } from '@apollo/client/utilities'
 import { WebSocketLink } from '@apollo/link-ws'
 import auth from '@dish/auth'
-import { getGraphEndpoint } from '@dish/common-web'
+import { getGraphEndpointDomain } from '@dish/common-web'
 import axios, { AxiosRequestConfig } from 'axios'
 import { EnumType, jsonToGraphQLQuery } from 'json-to-graphql-query'
 
@@ -32,7 +32,7 @@ export type Point = {
   coordinates: [number, number]
 }
 
-const DOMAIN = getGraphEndpoint()
+const DOMAIN = getGraphEndpointDomain()
 
 let AXIOS_CONF = {
   url: DOMAIN + '/v1/graphql',

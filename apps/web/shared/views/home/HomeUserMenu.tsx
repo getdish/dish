@@ -24,13 +24,13 @@ export const HomeUserMenu = memo(() => {
         }}
         contents={
           <Tooltip padding={20} width="30vw" minWidth={250}>
-            {!om.state.auth.is_logged_in && (
+            {!om.state.user.isLoggedIn && (
               <AuthLoginRegisterView
                 setMenuOpen={(x) => om.actions.home.setShowUserMenu(x)}
               />
             )}
 
-            {om.state.auth.is_logged_in && (
+            {om.state.user.isLoggedIn && (
               <VStack spacing>
                 <LinkButton
                   {...flatButtonStyle}
@@ -42,7 +42,7 @@ export const HomeUserMenu = memo(() => {
                 <Divider />
                 <LinkButton
                   name="home"
-                  onPress={() => om.actions.auth.logout()}
+                  onPress={() => om.actions.user.logout()}
                 >
                   Logout
                 </LinkButton>
@@ -61,12 +61,12 @@ export const HomeUserMenu = memo(() => {
         >
           <HStack spacing alignItems="center" justifyContent="center">
             <Icon name="user" size={26} opacity={0.5} />
-            {om.state.auth.is_logged_in ? (
+            {om.state.user.isLoggedIn ? (
               <Text
                 numberOfLines={1}
                 style={{ fontSize: 12, opacity: 0.5, maxWidth: 50 }}
               >
-                {om.state.auth.user.username}
+                {om.state.user.user.username}
               </Text>
             ) : null}
           </HStack>

@@ -44,9 +44,9 @@ export default memoIsEqualDeep(function HomeRestaurantView({
   }
 
   const isCanTag =
-    om.state.auth.is_logged_in &&
-    (om.state.auth.user.role == 'admin' ||
-      om.state.auth.user.role == 'contributor')
+    om.state.user.isLoggedIn &&
+    (om.state.user.user.role == 'admin' ||
+      om.state.user.user.role == 'contributor')
 
   return (
     <>

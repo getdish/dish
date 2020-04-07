@@ -36,7 +36,7 @@ export const RestaurantFavoriteStar = memo(
       Toast.show('Saved')
     }
     const setRating = (r: number) => {
-      if (!om.actions.auth.ensureLoggedIn()) {
+      if (!om.actions.user.ensureLoggedIn()) {
         return
       }
       review.current.rating = r

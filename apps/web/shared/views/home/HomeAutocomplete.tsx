@@ -140,7 +140,7 @@ export default memo(function HomeAutoComplete() {
                   {x.type === 'dish' &&
                   index !== 0 &&
                   om.state.home.currentState.type === 'search' &&
-                  om.state.auth.is_logged_in ? (
+                  om.state.user.isLoggedIn ? (
                     <LinkButton
                       {...circularFlatButtonStyle}
                       marginVertical={-2}

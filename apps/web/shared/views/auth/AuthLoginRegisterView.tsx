@@ -13,7 +13,7 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const isRegister = location.path == '/register'
-  const isLoggedIn = om.state.auth.is_logged_in
+  const isLoggedIn = om.state.user.isLoggedIn
 
   useEffect(() => {
     // open menu on nav to login/register
@@ -34,7 +34,7 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
   }
 
   const button_text = () => {
-    if (om.state.auth.loading) {
+    if (om.state.user.loading) {
       if (isRegister) {
         return 'Registering...'
       } else {
@@ -50,8 +50,8 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
   }
 
   const messages = () => {
-    if (om.state.auth.messages.length > 0) {
-      const message = om.state.auth.messages.join('\n')
+    if (om.state.user.messages.length > 0) {
+      const message = om.state.user.messages.join('\n')
       return <div className="messages">{message}</div>
     }
   }
@@ -84,7 +84,7 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
           <Button
             onPress={async () => {
               if (isRegister) {
-                const result = await om.actions.auth.register({
+                const result = await om.actions.user.register({
                   username: username,
                   password: password,
                 })
@@ -93,7 +93,7 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
                   setPassword('')
                 }
               } else {
-                om.actions.auth.login({
+                om.actions.user.login({
                   username: username,
                   password: password,
                 })

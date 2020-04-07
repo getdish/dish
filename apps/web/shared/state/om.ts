@@ -2,11 +2,12 @@ import { Action, IConfig, createOvermind } from 'overmind'
 import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/config'
 
-import * as auth from './auth'
+import * as user from './user'
 import * as dishes from './dishes'
 import * as home from './home'
 import { onInitialize } from './onInitialize'
 import * as router from './router'
+import { gql } from './effects'
 
 const setShowSidebar: Action<boolean> = (om, val) => {
   om.state.showSidebar = val
@@ -20,12 +21,15 @@ export const config = merge(
     actions: {
       setShowSidebar,
     },
+    effects: {
+      gql,
+    },
     onInitialize,
   },
   namespaced({
     home,
     dishes,
-    auth,
+    user,
     router,
   })
 )

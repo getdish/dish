@@ -1,5 +1,4 @@
 import React, { memo, useState } from 'react'
-import { Helmet } from 'react-helmet'
 import { ScrollView, Text, View } from 'react-native'
 
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
@@ -7,7 +6,7 @@ import { HomeStateItemSearch } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { PageTitle } from '../shared/PageTitle'
 import { closeAllPopovers, popoverCloseCbs } from '../shared/Popover'
-import { SmallTitle, Title } from '../shared/SmallTitle'
+import { Title } from '../shared/SmallTitle'
 import { Spacer } from '../shared/Spacer'
 import { VStack, ZStack, HStack } from '../shared/Stacks'
 import { useWaterfall } from '../shared/useWaterfall'
@@ -15,8 +14,6 @@ import { BackButton, CloseButton } from './CloseButton'
 import HomeLenseBar from './HomeLenseBar'
 import { LoadingItems } from './LoadingItems'
 import { RestaurantListItem } from './RestaurantListItem'
-import { SmallButton } from './SmallButton'
-import { Icon } from '../shared/Icon'
 
 export default memoIsEqualDeep(function HomeSearchResultsView({
   state,
