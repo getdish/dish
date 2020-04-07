@@ -184,16 +184,13 @@ export default memo(function HomeSearchBar() {
   const tm2 = useRef<any>(0)
   const tmInputBlur = useRef<any>(0)
 
-  const divider = <Divider vertical flexLine={1} />
+  const divider = <Divider vertical flexLine={1} marginHorizontal={4} />
 
   return (
     <>
       <HomeAutocomplete />
       <View style={[styles.container, { height: searchBarHeight }]}>
         <View style={styles.containerInner}>
-          {/* <ZStack fullscreen>
-            <BlurView />
-          </ZStack> */}
           <DishLogoButton />
 
           {divider}
@@ -214,57 +211,68 @@ export default memo(function HomeSearchBar() {
 
           <VStack flex={0.5} />
 
-          <HStack flex={20} maxWidth={450} alignItems="center">
-            <Icon name="search" size={18} opacity={0.5} />
-            <Hoverable
-              // show even if moving after some time
-              onHoverIn={() => {
-                tm2.current = setTimeout(() => {
-                  if (document.activeElement == input) {
-                    om.actions.home.setShowAutocomplete('search')
-                  }
-                }, 300)
-              }}
-              onHoverOut={() => {
-                clearTimeout(tm.current)
-                clearTimeout(tm2.current)
-              }}
-              onHoverMove={() => {
-                clearTimeout(tm.current)
-                if (om.state.home.currentState.searchQuery) {
-                  tm.current = setTimeout(() => {
+          <HStack flex={20} maxWidth={450} alignItems="center" spacing>
+            <>
+              {om.state.home.isLoading ? (
+                <VStack className="rotating" opacity={0.5}>
+                  <Icon name="loader" size={18} />
+                </VStack>
+              ) : (
+                <Icon name="search" size={18} opacity={0.5} />
+              )}
+              <Hoverable
+                // show even if moving after some time
+                onHoverIn={() => {
+                  tm2.current = setTimeout(() => {
                     if (document.activeElement == input) {
                       om.actions.home.setShowAutocomplete('search')
                     }
-                  }, 150)
-                }
-              }}
-            >
-              <TextInput
-                ref={inputRef}
-                // leave uncontrolled for perf?
-                value={search}
-                onFocus={() => {
-                  clearTimeout(tmInputBlur.current)
-                  om.actions.home.setShowAutocomplete('search')
-                  if (search.length > 0) {
-                    selectActiveInput()
+                  }, 300)
+                }}
+                onHoverOut={() => {
+                  clearTimeout(tm.current)
+                  clearTimeout(tm2.current)
+                }}
+                onHoverMove={() => {
+                  clearTimeout(tm.current)
+                  if (om.state.home.currentState.searchQuery) {
+                    tm.current = setTimeout(() => {
+                      if (document.activeElement == input) {
+                        om.actions.home.setShowAutocomplete('search')
+                      }
+                    }, 150)
                   }
                 }}
-                onBlur={() => {
-                  tmInputBlur.current = setTimeout(() => {
-                    om.actions.home.setShowAutocomplete(false)
-                  }, 150)
-                }}
-                onChangeText={(text) => {
-                  setSearch(text)
-                  om.actions.home.setSearchQuery(text)
-                }}
-                placeholder="Search dish, cuisine"
-                style={[styles.textInput, { fontSize: 19, paddingRight: 42 }]}
-              />
-            </Hoverable>
+              >
+                <TextInput
+                  ref={inputRef}
+                  // leave uncontrolled for perf?
+                  value={search}
+                  onFocus={() => {
+                    clearTimeout(tmInputBlur.current)
+                    om.actions.home.setShowAutocomplete('search')
+                    if (search.length > 0) {
+                      selectActiveInput()
+                    }
+                  }}
+                  onBlur={() => {
+                    tmInputBlur.current = setTimeout(() => {
+                      om.actions.home.setShowAutocomplete(false)
+                    }, 150)
+                  }}
+                  onChangeText={(text) => {
+                    setSearch(text)
+                    om.actions.home.setSearchQuery(text)
+                  }}
+                  placeholder="Search dish, cuisine"
+                  style={[styles.textInput, { fontSize: 19, paddingRight: 42 }]}
+                />
+              </Hoverable>
+            </>
+
             <SearchCancelButton onCancel={handleCancel} />
+
+            <Spacer size={1} />
           </HStack>
 
           {divider}
@@ -279,6 +287,9 @@ export default memo(function HomeSearchBar() {
                 clearTimeout(tmInputBlur.current)
                 om.actions.home.setShowAutocomplete('location')
                 if (locationSearch.length > 0) {
+                  ;<VStack className="rotating" opacity={0.5}>
+                    <Icon name="loader" size={16} />
+                  </VStack>
                   selectActiveInput()
                 }
               }}
@@ -310,30 +321,18 @@ export default memo(function HomeSearchBar() {
 const SearchCancelButton = memo(({ onCancel }: { onCancel: Function }) => {
   const om = useOvermind()
   return (
-    <ZStack fullscreen pointerEvents="none">
-      <HStack flex={1} alignItems="center" justifyContent="center">
-        <Spacer flex={1} />
-        <VStack
-          pointerEvents="auto"
-          alignItems="center"
-          justifyContent="center"
-          paddingRight={10}
-        >
-          <CloseButton
-            opacity={om.state.home.currentStateSearchQuery === '' ? 0 : 1}
-            disabled={om.state.home.currentStateSearchQuery === ''}
-            onPress={() => {
-              om.actions.home.setSearchQuery('')
-              onCancel()
-              // if (om.state.home.currentState.type === 'search') {
-              //   om.actions.home.popTo(om.state.home.lastHomeState)
-              // }
-            }}
-            size={12}
-          />
-        </VStack>
-      </HStack>
-    </ZStack>
+    <CloseButton
+      opacity={om.state.home.currentStateSearchQuery === '' ? 0 : 1}
+      disabled={om.state.home.currentStateSearchQuery === ''}
+      onPress={() => {
+        om.actions.home.setSearchQuery('')
+        onCancel()
+        // if (om.state.home.currentState.type === 'search') {
+        //   om.actions.home.popTo(om.state.home.lastHomeState)
+        // }
+      }}
+      size={12}
+    />
   )
 })
 

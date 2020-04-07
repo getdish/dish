@@ -15,9 +15,8 @@ import {
 export default memo(function HomeAutoComplete() {
   const om = useOvermind()
   const { autocompleteIndex } = om.state.home
-  const state = om.state.home.currentState
+  const query = om.state.home.currentStateSearchQuery
   const { showAutocomplete } = om.state.home
-  const query = state.searchQuery
 
   const showLocation = showAutocomplete == 'location'
   const showSearch = showAutocomplete == 'search'
@@ -95,17 +94,7 @@ export default memo(function HomeAutoComplete() {
             overflow="scroll"
             spacing="sm"
           >
-            {[
-              {
-                name: 'Home',
-                icon: '',
-                id: '-1',
-                type: 'none',
-              },
-              ...(showLocation
-                ? om.state.home.locationAutocompleteResults
-                : om.state.home.autocompleteResults),
-            ].map((x, index) => {
+            {om.state.home.activeAutocompleteResults.map((x, index) => {
               return (
                 <LinkButton
                   onPress={() => {
@@ -139,7 +128,7 @@ export default memo(function HomeAutoComplete() {
                   {x.name}{' '}
                   {x.type === 'dish' &&
                   index !== 0 &&
-                  om.state.home.currentState.type === 'search' &&
+                  om.state.home.currentStateType === 'search' &&
                   om.state.user.isLoggedIn ? (
                     <LinkButton
                       {...circularFlatButtonStyle}

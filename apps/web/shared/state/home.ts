@@ -8,6 +8,7 @@ import { sleep } from '../helpers/sleep'
 import { mapView } from '../views/home/HomeMap'
 import { HistoryItem, RouteItem } from './router'
 import { Taxonomy, taxonomyFilters, taxonomyLenses } from './Taxonomy'
+import { fuzzy } from '../helpers/fuzzy'
 
 type ShowAutocomplete = 'search' | 'location' | false
 
@@ -27,6 +28,7 @@ type HomeStateBase = {
   showUserMenu: boolean
   states: HomeStateItem[]
   topDishes: TopDish[]
+  topDishesFilteredIndices: number[]
 }
 
 export type HomeState = HomeStateBase & {
@@ -41,6 +43,8 @@ export type HomeState = HomeStateBase & {
   previousState: Derive<HomeState, HomeStateItem>
   currentActiveTaxonomyIds: Derive<HomeState, string[]>
   isAutocompleteActive: Derive<HomeState, boolean>
+  activeAutocompleteResults: Derive<HomeState, AutocompleteItem[]>
+  isLoading: Derive<HomeState, boolean>
 }
 
 type SearchResultsResults = {
@@ -94,7 +98,7 @@ export type HomeStateItemSimple = Omit<HomeStateItem, 'historyId'>
 export type AutocompleteItem = {
   icon?: string
   name: string
-  type: 'dish' | 'restaurant' | 'location' | 'country'
+  type: 'dish' | 'restaurant' | 'location' | 'country' | 'search'
   id: string
   center?: LngLat
 }
@@ -158,30 +162,62 @@ const defaultLocationAutocompleteResults: AutocompleteItem[] = [
 
 export const state: HomeState = {
   activeIndex: -1,
-  autocompleteIndex: 0,
-  location: null,
-  locationSearchQuery: '',
-  allLenses: taxonomyLenses,
-  autocompleteDishes: [],
   allFilters: taxonomyFilters,
-  autocompleteResults: [],
-  locationAutocompleteResults: defaultLocationAutocompleteResults,
-  topDishes: [],
+  allLenses: taxonomyLenses,
   allRestaurants: {},
+  autocompleteDishes: [],
+  autocompleteIndex: 0,
+  autocompleteResults: [],
+  breadcrumbStates,
+  currentActiveTaxonomyIds,
+  currentState: (state) => _.last(state.states)!,
+  currentStateSearchQuery: (state) => state.currentState.searchQuery,
+  currentStateType: (state) => state.currentState.type,
+  hoveredRestaurant: null,
+  isAutocompleteActive: (state) => state.activeIndex === -1,
+  lastHomeState,
+  lastRestaurantState,
+  lastSearchState,
+  location: null,
+  locationAutocompleteResults: defaultLocationAutocompleteResults,
+  locationSearchQuery: '',
+  previousState: (state) => state.states[state.states.length - 2],
   showAutocomplete: false,
   showUserMenu: false,
   states: [initialHomeState],
-  currentState: (state) => _.last(state.states)!,
-  currentStateType: (state) => state.currentState.type,
-  currentStateSearchQuery: (state) => state.currentState.searchQuery,
-  previousState: (state) => state.states[state.states.length - 2],
-  hoveredRestaurant: null,
-  lastHomeState,
-  lastSearchState,
-  lastRestaurantState,
-  breadcrumbStates,
-  currentActiveTaxonomyIds,
-  isAutocompleteActive: (state) => state.activeIndex === -1,
+  topDishes: [],
+  topDishesFilteredIndices: [],
+  activeAutocompleteResults: (state) => {
+    const prefix: AutocompleteItem[] = [
+      {
+        name: 'Home',
+        icon: '🔍',
+        id: '-2',
+        type: 'search' as const,
+      },
+    ]
+    if (state.currentStateSearchQuery) {
+      prefix.push({
+        name: state.currentStateSearchQuery, // `"${}"`,
+        icon: '🔍',
+        id: '-1',
+        type: 'search' as const,
+      })
+    }
+    return [
+      ...prefix,
+      ...(state.showAutocomplete === 'location'
+        ? state.locationAutocompleteResults
+        : state.autocompleteResults),
+    ]
+  },
+  isLoading: (state) => {
+    const cur = state.currentState
+    if (cur.type === 'search') {
+      return cur.results.status === 'loading'
+    }
+    return false
+  },
 }
 
 const start: AsyncAction<void> = async (om) => {
@@ -345,7 +381,10 @@ const _loadHomeDishes: AsyncAction = async (om) => {
     .filter(Boolean)
 
   // weird side effect
-  fuzzy = new Fuse(om.state.home.autocompleteDishes, fuzzyOpts)
+  autocompleteDishesFuzzy = new Fuse(
+    om.state.home.autocompleteDishes,
+    fuzzyOpts
+  )
 
   if (!isWorker) {
     om.state.home.autocompleteDishes = dishes ?? []
@@ -362,7 +401,7 @@ const fuzzyOpts = {
   keys: ['name'],
 }
 
-let fuzzy = new Fuse([], fuzzyOpts)
+let autocompleteDishesFuzzy = new Fuse([], fuzzyOpts)
 
 const DEBOUNCE_AUTOCOMPLETE = 60
 const DEBOUNCE_SEARCH = 600
@@ -370,18 +409,20 @@ let lastRunAt = Date.now()
 const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   const state = om.state.home.currentState
   const isHomeSearch = state.type === 'home' && !!query
+  lastRunAt = Date.now()
+  let id = lastRunAt
 
-  if (isHomeSearch || state.type === 'search') {
+  if (state.type === 'home' || state.type === 'search') {
     state.searchQuery = query
   }
 
-  if (state.type === 'search') {
-    if (query == '') {
-      if (om.state.home.currentState.type === 'search') {
-        om.actions.router.navigate({ name: 'home' })
-      }
-      return
+  if (query == '') {
+    if (state.type === 'search') {
+      om.state.home.lastHomeState.searchQuery = ''
+      om.actions.router.navigate({ name: 'home' })
     }
+    om.state.home.topDishesFilteredIndices = []
+    return
   }
 
   // AUTOCOMPLETE
@@ -389,9 +430,6 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   const isOnSearch = state.type === 'search'
 
   if (isOnSearch || isHomeSearch) {
-    // debounce
-    lastRunAt = Date.now()
-    let id = lastRunAt
     await sleep(DEBOUNCE_AUTOCOMPLETE)
     if (id != lastRunAt) return
 
@@ -449,7 +487,7 @@ const _runAutocomplete: AsyncAction<string> = async (om, query) => {
   })
 
   const autocompleteDishes = om.state.home.autocompleteDishes
-  let found: { name: string }[] = fuzzy
+  let found: { name: string }[] = autocompleteDishesFuzzy
     .search(query, { limit: 10 })
     .map((x) => x.item)
   if (found.length < 10) {
@@ -722,6 +760,9 @@ const setLocationSearchQuery: AsyncAction<string> = async (om, val) => {
 }
 
 function searchLocations(query: string) {
+  if (!query) {
+    return Promise.resolve([])
+  }
   const locationSearch = new mapkit.Search({ region: mapView.region })
   return new Promise<
     { name: string; formattedAddress: string; coordinate: any }[]
@@ -753,7 +794,10 @@ const moveActiveUp: Action = (om) => {
   om.actions.home.setActiveIndex(om.state.home.activeIndex - 1)
 }
 
-const _runHomeSearch: Action<string> = (om, query) => {}
+const _runHomeSearch: AsyncAction<string> = async (om, query) => {
+  const res = await fuzzy(query, om.state.home.topDishes, ['country'])
+  om.state.home.topDishesFilteredIndices = res
+}
 
 export const actions = {
   start,

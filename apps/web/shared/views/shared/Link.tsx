@@ -65,23 +65,23 @@ export function Link<
   )
 }
 
+export type LinkButtonProps<Name, Params> = StackBaseProps &
+  LinkSharedProps &
+  (
+    | {
+        name: Name
+        params?: Params
+        onPress?: any
+      }
+    | {
+        onPress?: any
+      }
+  )
+
 export function LinkButton<
   Name extends keyof RoutesTable = keyof RoutesTable,
   Params = RoutesTable[Name]['params']
->(
-  props: StackBaseProps &
-    LinkSharedProps &
-    (
-      | {
-          name: Name
-          params?: Params
-          onPress?: any
-        }
-      | {
-          onPress?: any
-        }
-    )
-) {
+>(props: LinkButtonProps<Name, Params>) {
   let restProps: StackBaseProps
   let contents: React.ReactElement
   let pointerEvents: any
