@@ -151,3 +151,16 @@ div,
   -o-animation: rotating 2s linear infinite;
   animation: rotating 2s linear infinite;
 }
+
+.dot-annotation {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: linear-gradient(-45deg, #888, #333);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  z-index: -1;
+}
+
+.mk-annotation-container {
+  z-index: -1;
+}
