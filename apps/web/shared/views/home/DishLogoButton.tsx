@@ -14,7 +14,7 @@ export const DishLogoButton = () => {
     >
       <Image
         source={require('../../assets/logo.png')}
-        style={{ width: 1211 * scale, height: 605 * scale }}
+        style={{ width: 1251 * scale, height: 614 * scale }}
       />
     </LinkButton>
   )
