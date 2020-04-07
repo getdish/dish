@@ -207,6 +207,7 @@ export const HomeMap = memo(() => {
   }, [annotationsContainer, restaurantsVersion])
 
   // Navigate - return to previous map position
+  // why not just useEffect for center/span? because not always wanted
   useEffect(() => {
     if (!map) return
     centerMapToRegion({
@@ -214,6 +215,18 @@ export const HomeMap = memo(() => {
       center: state.center,
       span: state.span,
     })
+
+    // react to changed center specifically
+    return om.reaction(
+      (state) => state.home.currentState.center,
+      (center) => {
+        centerMapToRegion({
+          map,
+          center,
+          span: state.span,
+        })
+      }
+    )
   }, [map, om.state.home.states.length])
 
   // Search - hover restaurant

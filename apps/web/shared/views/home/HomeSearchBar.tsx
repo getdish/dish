@@ -53,15 +53,26 @@ export default memo(function HomeSearchBar() {
   const om = useOvermind()
   const inputRef = useRef()
   const locationInputRef = useRef()
-  const globalSearch = om.state.home.currentState.searchQuery
 
   // use local for a little better perf
   const [search, setSearch] = useState('')
   const [locationSearch, setLocationSearch] = useState('')
 
+  // one way sync down for more perf
   useEffect(() => {
-    setSearch(globalSearch)
-  }, [globalSearch])
+    const offSearch = om.reaction(
+      (state) => state.home.currentState.searchQuery,
+      (val) => setSearch(val)
+    )
+    const offLoc = om.reaction(
+      (state) => state.home.locationSearchQuery,
+      (val) => setLocationSearch(val)
+    )
+    return () => {
+      offSearch()
+      offLoc()
+    }
+  })
 
   // ONE way sync this state so we can control it programatically (but blurring gets annoying)
   const { showAutocomplete } = om.state.home
