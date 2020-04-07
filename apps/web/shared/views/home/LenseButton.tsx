@@ -48,7 +48,7 @@ export const LenseButton = memo(({ lense }: { lense: Taxonomy }) => {
         <Text
           style={{
             color: active ? '#fff' : '#777',
-            fontSize: 14,
+            fontSize: 15,
             fontWeight: '600',
             // letterSpacing: active ? -0.2 : 0,
           }}

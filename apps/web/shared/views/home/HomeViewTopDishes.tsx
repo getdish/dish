@@ -22,7 +22,6 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
 }: {
   state: HomeStateItemHome
 }) {
-  const om = useOvermind()
   return (
     <>
       <PageTitle>Dish - Uniquely Good Food</PageTitle>
@@ -30,29 +29,29 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
       {/* <Title>{activeLense?.description ?? ''}</Title> */}
       <VStack position="relative" flex={1}>
         <HomeLenseBar backgroundGradient />
-        <HomeViewTopDishesContent topDishes={om.state.home.topDishes} />
+        <HomeViewTopDishesContent />
       </VStack>
     </>
   )
 })
 
-const HomeViewTopDishesContent = memoIsEqualDeep(
-  ({ topDishes = [] }: { topDishes?: TopDish[] }) => {
-    return (
-      <ScrollView style={{ flex: 1, overflow: 'hidden' }}>
-        <VStack paddingVertical={20} paddingTop={90}>
-          {topDishes.map((country, index) => (
-            <CountryTopDishesAndRestaurants
-              key={country.country}
-              country={country}
-              rank={index + 1}
-            />
-          ))}
-        </VStack>
-      </ScrollView>
-    )
-  }
-)
+const HomeViewTopDishesContent = memo(() => {
+  const om = useOvermind()
+  const topDishes = om.state.home.topDishes
+  return (
+    <ScrollView style={{ flex: 1, overflow: 'hidden' }}>
+      <VStack paddingVertical={20} paddingTop={90}>
+        {topDishes.map((country, index) => (
+          <CountryTopDishesAndRestaurants
+            key={country.country}
+            country={country}
+            rank={index + 1}
+          />
+        ))}
+      </VStack>
+    </ScrollView>
+  )
+})
 
 const CountryTopDishesAndRestaurants = memo(
   ({ country, rank }: { country: TopDish; rank: number }) => {
@@ -64,7 +63,7 @@ const CountryTopDishesAndRestaurants = memo(
 
     return (
       <VStack
-        paddingVertical={10}
+        paddingVertical={5}
         paddingTop={20}
         backgroundColor={hovered ? lightLightBg : null}
         onHoverIn={() => setHovered(true)}

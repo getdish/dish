@@ -12,23 +12,21 @@ import { Taxonomy, taxonomyFilters, taxonomyLenses } from './Taxonomy'
 type ShowAutocomplete = 'search' | 'location' | false
 
 type HomeStateBase = {
-  // index for vertical (in page), -1 = autocomplete
-  activeIndex: number
-  // index for horizontal row (autocomplete)
-  autocompleteIndex: number
-  showUserMenu: boolean
-  locationSearchQuery: string
-  allLenses: Taxonomy[]
+  activeIndex: number // index for vertical (in page), -1 = autocomplete
   allFilters: Taxonomy[]
+  allLenses: Taxonomy[]
+  allRestaurants: { [id: string]: Restaurant }
+  autocompleteDishes: TopDish['dishes']
+  autocompleteIndex: number // index for horizontal row (autocomplete)
   autocompleteResults: AutocompleteItem[]
+  hoveredRestaurant: Restaurant | null
   location: AutocompleteItem | null // for now just autocomplete item
   locationAutocompleteResults: AutocompleteItem[]
-  topDishes: TopDish[]
-  allTopDishes: TopDish['dishes']
-  allRestaurants: { [id: string]: Restaurant }
-  states: HomeStateItem[]
-  hoveredRestaurant: Restaurant | null
+  locationSearchQuery: string
   showAutocomplete: ShowAutocomplete
+  showUserMenu: boolean
+  states: HomeStateItem[]
+  topDishes: TopDish[]
 }
 
 export type HomeState = HomeStateBase & {
@@ -164,11 +162,11 @@ export const state: HomeState = {
   location: null,
   locationSearchQuery: '',
   allLenses: taxonomyLenses,
+  autocompleteDishes: [],
   allFilters: taxonomyFilters,
   autocompleteResults: [],
   locationAutocompleteResults: defaultLocationAutocompleteResults,
   topDishes: [],
-  allTopDishes: [],
   allRestaurants: {},
   showAutocomplete: false,
   showUserMenu: false,
@@ -339,18 +337,20 @@ const _loadHomeDishes: AsyncAction = async (om) => {
       now = [...now, ...chunk]
       om.state.home.topDishes = now
     }
-  } else {
-    om.state.home.topDishes = all
   }
 
   const dishes = om.state.home.topDishes
-  om.state.home.allTopDishes = (dishes ?? [])
     .map((x) => x.dishes)
-    .flat(Infinity)
+    .flat()
     .filter(Boolean)
 
   // weird side effect
-  fuzzy = new Fuse(om.state.home.allTopDishes, fuzzyOpts)
+  fuzzy = new Fuse(om.state.home.autocompleteDishes, fuzzyOpts)
+
+  if (!isWorker) {
+    om.state.home.autocompleteDishes = dishes ?? []
+    om.state.home.topDishes = all
+  }
 }
 
 const fuzzyOpts = {
@@ -369,9 +369,9 @@ const DEBOUNCE_SEARCH = 600
 let lastRunAt = Date.now()
 const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   const state = om.state.home.currentState
-  const willSearch = state.type === 'home' && !!query
+  const isHomeSearch = state.type === 'home' && !!query
 
-  if (willSearch || state.type === 'search') {
+  if (isHomeSearch || state.type === 'search') {
     state.searchQuery = query
   }
 
@@ -387,16 +387,26 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   // AUTOCOMPLETE
   // very slight debounce
   const isOnSearch = state.type === 'search'
-  if (isOnSearch || willSearch) {
+
+  if (isOnSearch || isHomeSearch) {
     // debounce
     lastRunAt = Date.now()
     let id = lastRunAt
     await sleep(DEBOUNCE_AUTOCOMPLETE)
     if (id != lastRunAt) return
+
+    // fast actions
     om.actions.home.setShowAutocomplete('search')
     om.actions.home._runAutocomplete(query)
+
+    // slow actions below here
     await sleep(DEBOUNCE_SEARCH - DEBOUNCE_AUTOCOMPLETE)
     if (id != lastRunAt) return
+  }
+
+  if (isHomeSearch) {
+    om.actions.home._runHomeSearch(query)
+    return
   }
 
   om.actions.router.navigate({
@@ -438,12 +448,12 @@ const _runAutocomplete: AsyncAction<string> = async (om, query) => {
     limit: 5,
   })
 
-  const allDishes = om.state.home.allTopDishes
+  const autocompleteDishes = om.state.home.autocompleteDishes
   let found: { name: string }[] = fuzzy
     .search(query, { limit: 10 })
     .map((x) => x.item)
   if (found.length < 10) {
-    found = [...found, ...allDishes.slice(0, 10 - found.length)]
+    found = [...found, ...autocompleteDishes.slice(0, 10 - found.length)]
   }
   const dishResults: AutocompleteItem[] = _.uniqBy(found, (x) => x.name).map(
     (x) => ({
@@ -729,6 +739,8 @@ const moveActiveUp: Action = (om) => {
   om.actions.home.setActiveIndex(om.state.home.activeIndex - 1)
 }
 
+const _runHomeSearch: Action<string> = (om, query) => {}
+
 export const actions = {
   start,
   moveAutocompleteIndex,
@@ -756,4 +768,5 @@ export const actions = {
   _loadHomeDishes,
   _pushHomeState,
   _popHomeState,
+  _runHomeSearch,
 }

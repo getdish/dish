@@ -25,7 +25,7 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "downlevelIteration": true,
-    "lib": ["dom", "esnext"]
+    "lib": ["dom", "esnext", "es2019"]
   },
   "exclude": ["**/*.test.ts", "**/*.test.tsx", "_"],
   "typeAcquisition": {

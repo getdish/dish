@@ -96,13 +96,12 @@ export default memo(function HomeAutoComplete() {
             spacing="sm"
           >
             {[
-              // {
-              //   name: showLocation
-              //     ? om.state.home.locationSearchQuery
-              //     : state.searchQuery,
-              //   id: '-1',
-              //   type: 'none',
-              // },
+              {
+                name: 'Home',
+                icon: '',
+                id: '-1',
+                type: 'none',
+              },
               ...(showLocation
                 ? om.state.home.locationAutocompleteResults
                 : om.state.home.autocompleteResults),

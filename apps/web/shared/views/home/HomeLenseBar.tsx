@@ -17,7 +17,7 @@ export default memo(function HomeLenseBar(props: {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          style={{ marginVertical: -4 }}
+          style={{ marginBottom: -2 }}
         >
           <HStack paddingHorizontal={20} paddingVertical={4} spacing="sm">
             {om.state.home.allLenses.map((lense) => (
