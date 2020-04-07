@@ -37,6 +37,9 @@ export type HomeState = HomeStateBase & {
   lastRestaurantState: Derive<HomeState, HomeStateItemRestaurant | null>
   breadcrumbStates: Derive<HomeState, HomeStateItemSimple[]>
   currentState: Derive<HomeState, HomeStateItem>
+  // my hypothesis is these more granular derives prevent updates on same value in views, need to test that
+  currentStateType: Derive<HomeState, HomeStateItem['type']>
+  currentStateSearchQuery: Derive<HomeState, HomeStateItem['searchQuery']>
   previousState: Derive<HomeState, HomeStateItem>
   currentActiveTaxonomyIds: Derive<HomeState, string[]>
   isAutocompleteActive: Derive<HomeState, boolean>
@@ -169,6 +172,8 @@ export const state: HomeState = {
   showUserMenu: false,
   states: [initialHomeState],
   currentState: (state) => _.last(state.states)!,
+  currentStateType: (state) => state.currentState.type,
+  currentStateSearchQuery: (state) => state.currentState.searchQuery,
   previousState: (state) => state.states[state.states.length - 2],
   hoveredRestaurant: null,
   lastHomeState,

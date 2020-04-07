@@ -194,10 +194,8 @@ export default memo(function HomeSearchBar() {
             flexDirection="row"
             pointerEvents="auto"
             padding={15}
-            opacity={0.2}
-            onPress={() =>
-              om.actions.home.setShowUserMenu(!om.state.home.showUserMenu)
-            }
+            opacity={om.state.home.currentStateType === 'home' ? 0.2 : 1}
+            onPress={() => om.actions.home.popTo(om.state.home.lastHomeState)}
           >
             <VStack spacing={2} alignItems="center">
               <Icon name="home" size={26} opacity={0.5} />
@@ -314,8 +312,8 @@ const SearchCancelButton = memo(() => {
           paddingRight={10}
         >
           <CloseButton
-            opacity={om.state.home.currentState.searchQuery === '' ? 0 : 1}
-            disabled={om.state.home.currentState.searchQuery === ''}
+            opacity={om.state.home.currentStateSearchQuery === '' ? 0 : 1}
+            disabled={om.state.home.currentStateSearchQuery === ''}
             onPress={() => {
               om.actions.home.setSearchQuery('')
               if (om.state.home.currentState.type === 'search') {
