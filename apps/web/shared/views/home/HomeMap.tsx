@@ -9,6 +9,7 @@ import { Map, useMap } from '../map'
 import { ZStack } from '../shared/Stacks'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { searchBarHeight } from '../../constants'
+import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 
 function centerMapToRegion(p: {
   map: mapkit.Map
@@ -171,97 +172,113 @@ export const HomeMap = memo(() => {
     '.mk-annotation-container'
   )
 
-  useEffect(() => {
-    if (!annotationsContainer) return
-    const annotationsRoot: HTMLElement = annotationsContainer.shadowRoot.querySelector(
-      '.mk-annotations'
-    )
-    if (!annotationsRoot) return
+  useDebounceEffect(
+    () => {
+      if (!annotationsContainer) return
+      const annotationsRoot: HTMLElement = annotationsContainer.shadowRoot.querySelector(
+        '.mk-annotations'
+      )
+      if (!annotationsRoot) return
 
-    let annotationElements: ChildNode[] = []
-    let dispose = () => {}
+      let annotationElements: ChildNode[] = []
+      let dispose = () => {}
 
-    const onMouseEnter = (e: MouseEvent) => {
-      const index = annotationElements.indexOf(e.target as any)
-      om.actions.home.setHoveredRestaurant(restaurants[index])
-    }
-    const observer = new MutationObserver(() => {
-      dispose()
-      annotationElements = Array.from(annotationsRoot.childNodes)
-      for (const el of annotationElements) {
-        el.addEventListener('mouseenter', onMouseEnter)
+      const onMouseEnter = (e: MouseEvent) => {
+        const index = annotationElements.indexOf(e.target as any)
+        om.actions.home.setHoveredRestaurant(restaurants[index])
       }
-      dispose = () => {
+      const observer = new MutationObserver(() => {
+        dispose()
+        annotationElements = Array.from(annotationsRoot.childNodes)
         for (const el of annotationElements) {
-          el.removeEventListener('mouseenter', onMouseEnter)
+          el.addEventListener('mouseenter', onMouseEnter)
         }
-      }
-    })
-    observer.observe(annotationsRoot, {
-      childList: true,
-    })
+        dispose = () => {
+          for (const el of annotationElements) {
+            el.removeEventListener('mouseenter', onMouseEnter)
+          }
+        }
+      })
+      observer.observe(annotationsRoot, {
+        childList: true,
+      })
 
-    return () => {
-      dispose()
-      observer.disconnect()
-    }
-  }, [annotationsContainer, restaurantsVersion])
+      return () => {
+        dispose()
+        observer.disconnect()
+      }
+    },
+    100,
+    [annotationsContainer, restaurantsVersion]
+  )
 
   // Navigate - return to previous map position
   // why not just useEffect for center/span? because not always wanted
-  useEffect(() => {
-    if (!map) return
-    centerMapToRegion({
-      map,
-      center: state.center,
-      span: state.span,
-    })
+  useDebounceEffect(
+    () => {
+      if (!map) return
+      centerMapToRegion({
+        map,
+        center: state.center,
+        span: state.span,
+      })
 
-    // react to changed center specifically
-    return om.reaction(
-      (state) => state.home.currentState.center,
-      (center) => {
-        centerMapToRegion({
-          map,
-          center,
-          span: state.span,
-        })
-      }
-    )
-  }, [map, om.state.home.states.length])
+      // react to changed center specifically
+      return om.reaction(
+        (state) => state.home.currentState.center,
+        (center) => {
+          centerMapToRegion({
+            map,
+            center,
+            span: state.span,
+          })
+        }
+      )
+    },
+    100,
+    [map, om.state.home.states.length]
+  )
 
   // Search - hover restaurant
-  useEffect(() => {
-    if (!map) return
-    return om.reaction(
-      (state) => state.home.hoveredRestaurant,
-      (hoveredRestaurant) => {
-        if (!hoveredRestaurant) return
-        const index = restaurantIds.indexOf(hoveredRestaurant.id)
-        if (map.annotations[index]) {
-          map.annotations[index].selected = true
+  useDebounceEffect(
+    () => {
+      if (!map) return
+      return om.reaction(
+        (state) => state.home.hoveredRestaurant,
+        (hoveredRestaurant) => {
+          if (!hoveredRestaurant) return
+          const index = restaurantIds.indexOf(hoveredRestaurant.id)
+          if (map.annotations[index]) {
+            map.annotations[index].selected = true
+          }
         }
-      }
-    )
-  }, [map, restaurantIds])
+      )
+    },
+    250,
+    [map, restaurantIds]
+  )
 
   // Detail - center to restaurant
   const restaurantDelayed = useDebounceValue(restaurantDetail, 250)
-  useEffect(() => {
-    if (!map || !restaurantDelayed?.location) return
-    const index = restaurantIds.indexOf(restaurantDelayed.id)
-    if (index > -1) {
-      map.annotations[index].selected = true
-    }
-    centerMapToRegion({
-      map,
-      center: {
-        lat: restaurantDelayed.location.coordinates[1],
-        lng: restaurantDelayed.location.coordinates[0],
-      },
-      span: state.span,
-    })
-  }, [map, restaurantDelayed])
+  useDebounceEffect(
+    () => {
+      if (!map || !restaurantDelayed?.location) return
+      const index = restaurantIds.indexOf(restaurantDelayed.id)
+      if (index > -1) {
+        map.annotations[index].selected = true
+      }
+      centerMapToRegion({
+        map,
+        center: {
+          lat: restaurantDelayed.location.coordinates[1],
+          lng: restaurantDelayed.location.coordinates[0],
+        },
+        span: state.span,
+      })
+    },
+    250,
+    [map, restaurantDelayed]
+  )
 
   // selected on map
   // useEffect(() => {
@@ -274,13 +291,13 @@ export const HomeMap = memo(() => {
   // }, [map, focusedRestaurant])
 
   // update annotations
-  useEffect(() => {
-    if (!map) return
-    if (!restaurants.length) return
+  useDebounceEffect(
+    () => {
+      if (!map) return
+      if (!restaurants.length) return
 
-    // debounce
-    const cancels = new Set<Function>()
-    const tm = setTimeout(() => {
+      // debounce
+      const cancels = new Set<Function>()
       const cb = (e) => {
         const selected = e.annotation.data.id || ''
         setFocused(selected)
@@ -298,14 +315,15 @@ export const HomeMap = memo(() => {
       //   animate: false,
       //   minimumSpan: createCoordinateSpan(radius, radius),
       // })
-    }, 100)
 
-    return () => {
-      cancels.forEach((x) => x())
-      map.removeAnnotations(annotations)
-      clearTimeout(tm)
-    }
-  }, [!!map, restaurantsVersion])
+      return () => {
+        cancels.forEach((x) => x())
+        map.removeAnnotations(annotations)
+      }
+    },
+    200,
+    [!!map, restaurantsVersion]
+  )
 
   return (
     <ZStack width="100%" height="100%">
