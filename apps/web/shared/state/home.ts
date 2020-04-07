@@ -44,6 +44,7 @@ export type HomeState = HomeStateBase & {
   currentActiveTaxonomyIds: Derive<HomeState, string[]>
   isAutocompleteActive: Derive<HomeState, boolean>
   activeAutocompleteResults: Derive<HomeState, AutocompleteItem[]>
+  isLoading: Derive<HomeState, boolean>
 }
 
 type SearchResultsResults = {
@@ -209,6 +210,13 @@ export const state: HomeState = {
         ? state.locationAutocompleteResults
         : state.autocompleteResults),
     ]
+  },
+  isLoading: (state) => {
+    const cur = state.currentState
+    if (cur.type === 'search') {
+      return cur.results.status === 'loading'
+    }
+    return false
   },
 }
 
@@ -404,12 +412,13 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   lastRunAt = Date.now()
   let id = lastRunAt
 
-  if (isHomeSearch || state.type === 'search') {
+  if (state.type === 'home' || state.type === 'search') {
     state.searchQuery = query
   }
 
   if (query == '') {
     if (state.type === 'search') {
+      om.state.home.lastHomeState.searchQuery = ''
       om.actions.router.navigate({ name: 'home' })
     }
     om.state.home.topDishesFilteredIndices = []

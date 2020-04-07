@@ -94,26 +94,7 @@ export default memo(function HomeAutoComplete() {
             overflow="scroll"
             spacing="sm"
           >
-            {[
-              {
-                name: 'Home',
-                icon: '',
-                id: '-2',
-                type: 'none',
-              },
-              !!om.state.home.currentStateSearchQuery && {
-                name: om.state.home.currentStateSearchQuery, // `"${}"`,
-                icon: '',
-                id: '-1',
-                type: 'none',
-              },
-              ...(showLocation
-                ? om.state.home.locationAutocompleteResults
-                : om.state.home.autocompleteResults),
-            ].map((x, index) => {
-              if (!x) {
-                return null
-              }
+            {om.state.home.activeAutocompleteResults.map((x, index) => {
               return (
                 <LinkButton
                   onPress={() => {

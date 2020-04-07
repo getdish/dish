@@ -29,22 +29,25 @@ export function HomeViewDrawer(props: { children: any }) {
     <HStack
       position="absolute"
       top={0}
-      left={0}
-      // paddingLeft={drawerPad}
-      paddingBottom={drawerPad}
-      bottom={0}
+      paddingTop={drawerPad}
+      left={-drawerPad}
+      bottom={drawerPad}
       zIndex={10}
       width={drawerWidth + drawerPadLeft}
-      // borderRadius={drawerBorderRadius}
-      // shadowColor="rgba(0,0,0,0.2)"
-      // shadowRadius={44}
+      shadowColor="rgba(0,0,0,0.2)"
+      shadowRadius={44}
       borderRightWidth={1}
+      borderBottomRightRadius={drawerBorderRadius}
       borderColor="#ddd"
       flex={1}
       justifyContent="flex-end"
     >
       <ZStack fullscreen>
-        <ZStack fullscreen>
+        <ZStack
+          fullscreen
+          borderBottomRightRadius={drawerBorderRadius}
+          overflow="hidden"
+        >
           <LinearGradient colors={colors} style={[StyleSheet.absoluteFill]} />
 
           <ZStack fullscreen right={550}>
@@ -57,7 +60,7 @@ export function HomeViewDrawer(props: { children: any }) {
           </ZStack>
         </ZStack>
       </ZStack>
-      <VStack flex={1} marginTop={drawerPad} maxWidth={650} marginLeft="auto">
+      <VStack flex={1} paddingLeft={drawerPad} maxWidth={650} marginLeft="auto">
         {props.children}
       </VStack>
     </HStack>

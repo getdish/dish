@@ -1,21 +1,22 @@
 import { Dish, Restaurant, TopDish } from '@dish/models'
 import _ from 'lodash'
 import React, { memo, useCallback, useState } from 'react'
-import { Helmet } from 'react-helmet'
 import { Image, ScrollView, Text } from 'react-native'
 
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItemHome, HomeStateItemSimple } from '../../state/home'
 import { useOvermind } from '../../state/om'
-import { LinkButton } from '../shared/Link'
+import { LinkButton, LinkButtonProps } from '../shared/Link'
 import { PageTitle } from '../shared/PageTitle'
 import { Spacer } from '../shared/Spacer'
 import { HStack, StackBaseProps, VStack, ZStack } from '../shared/Stacks'
 import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
 import { lightLightBg } from './colors'
 import HomeLenseBar from './HomeLenseBar'
-import { RankingView } from './RankingView'
 import { RatingView } from './RatingView'
+import { SmallerTitle, SmallTitle } from '../shared/SmallTitle'
+import { Icon } from '../shared/Icon'
+import { RoutesTable } from '../../state/router'
 
 export default memoIsEqualDeep(function HomeViewTopDishes({
   state,
@@ -26,7 +27,6 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
     <>
       <PageTitle>Dish - Uniquely Good Food</PageTitle>
       <Spacer size={20} />
-      {/* <Title>{activeLense?.description ?? ''}</Title> */}
       <VStack position="relative" flex={1}>
         <HomeLenseBar backgroundGradient />
         <HomeViewTopDishesContent />
@@ -34,6 +34,63 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
     </>
   )
 })
+
+const HomeViewTopDishesTrending = memo(() => {
+  const om = useOvermind()
+  const allRestaurants = om.state.home.topDishes[0]?.top_restaurants ?? []
+  const items = allRestaurants.slice(0, 8).map((restaurant, index) => {
+    return (
+      <TrendingButton
+        key={restaurant.id}
+        name="restaurant"
+        params={{
+          slug: restaurant.slug,
+        }}
+        rank={index + 1}
+      >
+        🍔 {restaurant.name}
+      </TrendingButton>
+    )
+  })
+  return (
+    <VStack>
+      <SmallTitle>Trending</SmallTitle>
+      <HStack paddingHorizontal={15}>
+        <VStack width="50%">{items.slice(0, 4)}</VStack>
+        <VStack width="50%">{items.slice(4, 8)}</VStack>
+      </HStack>
+    </VStack>
+  )
+})
+
+const TrendingButton = <
+  Name extends keyof RoutesTable = keyof RoutesTable,
+  Params = RoutesTable[Name]['params']
+>({
+  rank,
+  children,
+  ...rest
+}: LinkButtonProps<Name, Params> & { rank: number }) => {
+  return (
+    <LinkButton
+      {...flatButtonStyle}
+      margin={3}
+      flexDirection="row"
+      alignItems="center"
+      {...rest}
+    >
+      {rank}.{' '}
+      <Icon
+        marginTop={2}
+        marginHorizontal={4}
+        name="chevron-down"
+        size={14}
+        color="red"
+      />{' '}
+      <Text style={{ fontWeight: '600', lineHeight: 17 }}>{children}</Text>
+    </LinkButton>
+  )
+}
 
 const HomeViewTopDishesContent = memo(() => {
   const om = useOvermind()
@@ -46,14 +103,19 @@ const HomeViewTopDishesContent = memo(() => {
   }
   return (
     <ScrollView style={{ flex: 1, overflow: 'hidden' }}>
-      <VStack paddingVertical={20} paddingTop={90}>
-        {results.map((country, index) => (
-          <CountryTopDishesAndRestaurants
-            key={country.country}
-            country={country}
-            rank={index + 1}
-          />
-        ))}
+      <VStack paddingVertical={20} paddingTop={110} spacing="lg">
+        <HomeViewTopDishesTrending />
+
+        <>
+          <SmallTitle>Cuisine</SmallTitle>
+          {results.map((country, index) => (
+            <CountryTopDishesAndRestaurants
+              key={country.country}
+              country={country}
+              rank={index + 1}
+            />
+          ))}
+        </>
       </VStack>
     </ScrollView>
   )
