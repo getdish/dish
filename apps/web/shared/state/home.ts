@@ -29,6 +29,7 @@ type HomeStateBase = {
   states: HomeStateItem[]
   topDishes: TopDish[]
   topDishesFilteredIndices: number[]
+  skipNextPageFetchData: boolean
 }
 
 export type HomeState = HomeStateBase & {
@@ -161,6 +162,7 @@ const defaultLocationAutocompleteResults: AutocompleteItem[] = [
 ]
 
 export const state: HomeState = {
+  skipNextPageFetchData: false,
   activeIndex: -1,
   allFilters: taxonomyFilters,
   allLenses: taxonomyLenses,
@@ -287,7 +289,9 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
 
   if (nextState) {
     om.state.home.states.push(nextState)
-    if (fetchData) {
+    const skip = om.state.home.skipNextPageFetchData
+    om.state.home.skipNextPageFetchData = false
+    if (!skip && fetchData) {
       await fetchData()
     }
   }
@@ -405,10 +409,12 @@ let autocompleteDishesFuzzy = new Fuse([], fuzzyOpts)
 
 const DEBOUNCE_AUTOCOMPLETE = 60
 const DEBOUNCE_SEARCH = 600
+
 let lastRunAt = Date.now()
 const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   const state = om.state.home.currentState
-  const isHomeSearch = state.type === 'home' && !!query
+  const isOnHome = state.type === 'home'
+  const isOnSearch = state.type === 'search'
   lastRunAt = Date.now()
   let id = lastRunAt
 
@@ -425,11 +431,25 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     return
   }
 
+  const updateRoute = () => {
+    om.actions.router.navigate({
+      name: 'search',
+      params: {
+        query,
+      },
+      replace: isOnSearch,
+    })
+  }
+
+  if (isOnHome) {
+    // we will load the search results with more debounce in next lines
+    om.state.home.skipNextPageFetchData = true
+    updateRoute()
+  }
+
   // AUTOCOMPLETE
   // very slight debounce
-  const isOnSearch = state.type === 'search'
-
-  if (isOnSearch || isHomeSearch) {
+  if (isOnSearch || isOnHome) {
     await sleep(DEBOUNCE_AUTOCOMPLETE)
     if (id != lastRunAt) return
 
@@ -442,21 +462,11 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     if (id != lastRunAt) return
   }
 
-  if (isHomeSearch) {
-    om.actions.home._runHomeSearch(query)
-    return
+  if (!isOnHome) {
+    updateRoute()
   }
 
-  om.actions.router.navigate({
-    name: 'search',
-    params: {
-      query,
-    },
-    replace: isOnSearch,
-  })
-  if (isOnSearch) {
-    om.actions.home.runSearch(query)
-  }
+  om.actions.home.runSearch(query)
 }
 
 let defaultAutocompleteResults: AutocompleteItem[] | null = null
