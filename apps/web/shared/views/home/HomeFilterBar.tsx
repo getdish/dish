@@ -5,13 +5,8 @@ import { useOvermind } from '../../state/om'
 import { Taxonomy } from '../../state/Taxonomy'
 import { LinkButton } from '../shared/Link'
 import { HStack, VStack } from '../shared/Stacks'
-import {
-  bg,
-  bgHover,
-  flatButtonStyle,
-  lightBg,
-  lightBgHover,
-} from './baseButtonStyle'
+import { flatButtonStyle } from './baseButtonStyle'
+import { bg, bgHover, lightBg, lightBgHover } from './colors'
 
 export default memo(function HomeFilterBar() {
   const om = useOvermind()

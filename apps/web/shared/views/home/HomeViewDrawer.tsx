@@ -8,7 +8,7 @@ import { VStack, ZStack, HStack } from '../shared/Stacks'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 const colors = [
-  // 'rgba(255,255,255,0.23)',
+  'rgba(255,255,255,0.23)',
   'rgba(255,255,255,1)',
   'rgba(255,255,255,1)',
   'rgba(255,255,255,1)',
@@ -30,7 +30,7 @@ export function HomeViewDrawer(props: { children: any }) {
       position="absolute"
       top={0}
       left={0}
-      paddingLeft={drawerPad}
+      // paddingLeft={drawerPad}
       paddingBottom={drawerPad}
       bottom={0}
       zIndex={10}

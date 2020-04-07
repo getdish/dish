@@ -55,7 +55,7 @@ const HomeSearchResultsViewContent = memo(
     if (!results.length) {
       return (
         <VStack height="100vh" alignItems="center" justifyContent="center">
-          <Title>No results 😞</Title>
+          <Text style={{ fontSize: 28 }}>No results 😞</Text>
         </VStack>
       )
     }

@@ -70,16 +70,16 @@ export const HomeMap = memo(() => {
       span,
     })
 
-    map.addEventListener('select', (e) => {
-      // console.log('select', e, map)
-    })
+    // map.addEventListener('select', (e) => {
+    // console.log('select', e, map)
+    // })
 
-    map.addEventListener('deselect', (e) => {
-      // console.log('deselect', e, map)
-    })
+    // map.addEventListener('deselect', (e) => {
+    // console.log('deselect', e, map)
+    // })
 
     map.addEventListener('region-change-end', (e) => {
-      // console.log('region-change-end', e)
+      console.log('region-change-end', e)
       const span = map.region.span
       om.actions.home.setMapArea({
         center: {
@@ -93,17 +93,17 @@ export const HomeMap = memo(() => {
       })
     })
 
-    map.addEventListener('drag-start', (e) => {
-      console.log('drag-start', e, map)
-    })
+    // map.addEventListener('drag-start', (e) => {
+    //   console.log('drag-start', e, map)
+    // })
 
-    map.addEventListener('drag-end', (e) => {
-      console.log('drag-end', e, map)
-    })
+    // map.addEventListener('drag-end', (e) => {
+    //   console.log('drag-end', e, map)
+    // })
 
-    map.addEventListener('user-location-change', (e) => {
-      console.log('user-location-change', e, map)
-    })
+    // map.addEventListener('user-location-change', (e) => {
+    //   console.log('user-location-change', e, map)
+    // })
   }, [map])
 
   const [focused, setFocused] = useState('')
@@ -277,28 +277,33 @@ export const HomeMap = memo(() => {
   useEffect(() => {
     if (!map) return
     if (!restaurants.length) return
+
+    // debounce
     const cancels = new Set<Function>()
-    const cb = (e) => {
-      const selected = e.annotation.data.id || ''
-      setFocused(selected)
-    }
-    map.addEventListener('select', cb)
-    cancels.add(() => map.removeEventListener('select', cb))
+    const tm = setTimeout(() => {
+      const cb = (e) => {
+        const selected = e.annotation.data.id || ''
+        setFocused(selected)
+      }
+      map.addEventListener('select', cb)
+      cancels.add(() => map.removeEventListener('select', cb))
 
-    // map.showAnnotations(annotations)
-    for (const annotation of annotations) {
-      map.addAnnotation(annotation)
-    }
+      // map.showAnnotations(annotations)
+      for (const annotation of annotations) {
+        map.addAnnotation(annotation)
+      }
 
-    // animate to them
-    // map.showItems(annotations, {
-    //   animate: false,
-    //   minimumSpan: createCoordinateSpan(radius, radius),
-    // })
+      // animate to them
+      // map.showItems(annotations, {
+      //   animate: false,
+      //   minimumSpan: createCoordinateSpan(radius, radius),
+      // })
+    }, 100)
 
     return () => {
       cancels.forEach((x) => x())
       map.removeAnnotations(annotations)
+      clearTimeout(tm)
     }
   }, [!!map, restaurantsVersion])
 

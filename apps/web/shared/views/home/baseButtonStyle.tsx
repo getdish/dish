@@ -1,16 +1,11 @@
 import { StackBaseProps } from '../shared/Stacks'
+import { lightBg, lightBgHover } from './colors'
 
 export const baseButtonStyle: StackBaseProps = {
   paddingVertical: 5,
   borderRadius: 5,
   paddingHorizontal: 8,
 }
-
-export const lightLightBg = '#B8E0F322'
-export const lightBg = 'rgba(220, 234, 255, 0.5)'
-export const lightBgHover = `rgba(220, 234, 255, 1)`
-export const bg = 'rgba(0, 34, 60, 0.8)'
-export const bgHover = `rgba(0, 34, 60, 1)`
 
 export const flatButtonStyle: StackBaseProps = {
   ...baseButtonStyle,
