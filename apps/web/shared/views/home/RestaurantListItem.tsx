@@ -16,7 +16,7 @@ import { RestaurantMetaRow } from './RestaurantMetaRow'
 import { RestaurantRatingDetail } from './RestaurantRatingDetail'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
-import { Quote } from './HomeRestaurantView'
+import { RestaurantAddComment } from './RestaurantAddComment'
 
 export const RestaurantListItem = ({
   restaurant,
@@ -123,7 +123,7 @@ export const RestaurantListItem = ({
             <RestaurantDetailRow size="sm" restaurant={restaurant} />
 
             {!!om.state.user.isLoggedIn && (
-              <AddCommentLine restaurant={restaurant} />
+              <RestaurantAddComment restaurant={restaurant} />
             )}
           </VStack>
 
@@ -134,14 +134,6 @@ export const RestaurantListItem = ({
         <Divider />
       </TouchableOpacity>
     </Hoverable>
-  )
-}
-
-const AddCommentLine = ({ restaurant }: { restaurant: Restaurant }) => {
-  return (
-    <VStack marginTop={20} marginBottom={-20}>
-      <Quote>Write your comment...</Quote>
-    </VStack>
   )
 }
 

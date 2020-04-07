@@ -41,8 +41,10 @@ export const HomeUserMenu = memo(() => {
                 </LinkButton>
                 <Divider />
                 <LinkButton
-                  name="home"
-                  onPress={() => om.actions.user.logout()}
+                  onPress={() => {
+                    om.actions.user.logout()
+                    om.actions.home.setShowUserMenu(false)
+                  }}
                 >
                   Logout
                 </LinkButton>
