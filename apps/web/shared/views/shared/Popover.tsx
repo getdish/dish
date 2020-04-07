@@ -8,8 +8,8 @@ import { Platform } from 'react-native'
 import PopoverWeb, { ArrowContainer } from 'react-tiny-popover'
 
 import { isWorker } from '../../constants'
-import { useWaterfall } from './useWaterfall'
 import { useOverlay } from './useOverlay'
+import { useWaterfall } from './useWaterfall'
 
 export const ForceShowPopover = createContext<boolean | undefined>(undefined)
 

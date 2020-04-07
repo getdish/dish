@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native'
 
 import { drawerBorderRadius, drawerPad, drawerPadLeft } from '../../constants'
 import { Spacer } from '../shared/Spacer'
-import { VStack, ZStack, HStack } from '../shared/Stacks'
+import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 const colors = [

@@ -1,15 +1,15 @@
 import _ from 'lodash'
 import React, { memo, useEffect, useMemo, useState } from 'react'
 
+import { searchBarHeight } from '../../constants'
 import { useDebounceValue } from '../../hooks/useDebounce'
+import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { LngLat } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Map, useMap } from '../map'
 // import { mapkit } from '../mapkit'
 import { ZStack } from '../shared/Stacks'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
-import { searchBarHeight } from '../../constants'
-import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 
 function centerMapToRegion(p: {
   map: mapkit.Map

@@ -5,7 +5,7 @@ import { useOvermind } from '../../state/om'
 import { Taxonomy } from '../../state/Taxonomy'
 import { LinkButton } from '../shared/Link'
 import { HStack } from '../shared/Stacks'
-import { colors, bg, bgHover } from './colors'
+import { bg, bgHover, colors } from './colors'
 
 export const LenseButton = memo(({ lense }: { lense: Taxonomy }) => {
   const om = useOvermind()

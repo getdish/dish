@@ -1,12 +1,13 @@
-import { useStorageState } from 'react-storage-hooks'
-import { SmallTitle, SmallerTitle } from './shared/SmallTitle'
-import { VStack, HStack } from './shared/Stacks'
 import { Text, TextInput } from 'react-native'
-import { LinkButton } from './shared/Link'
-import { Spacer } from './shared/Spacer'
-import { flatButtonStyle } from './home/baseButtonStyle'
+import { useStorageState } from 'react-storage-hooks'
+
 import { textStyles } from './auth/textStyles'
+import { flatButtonStyle } from './home/baseButtonStyle'
 import { Modal } from './Modal'
+import { LinkButton } from './shared/Link'
+import { SmallTitle, SmallerTitle } from './shared/SmallTitle'
+import { Spacer } from './shared/Spacer'
+import { HStack, VStack } from './shared/Stacks'
 
 export const WelcomeModal = () => {
   const [show, setShow] = useStorageState(localStorage, 'welcome-modal2', true)

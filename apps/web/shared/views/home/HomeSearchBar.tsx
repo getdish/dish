@@ -1,26 +1,26 @@
-import React, { memo, useEffect, useRef, useState, useCallback } from 'react'
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 
 import {
+  drawerBorderRadius,
   drawerPadLeft,
   isWorker,
   searchBarHeight,
   searchBarTopOffset,
-  drawerBorderRadius,
 } from '../../constants'
 import { useOvermind } from '../../state/om'
+import { BlurView } from '../shared/BlurView'
+import { Divider } from '../shared/Divider'
 import Hoverable from '../shared/Hoverable'
 import { Icon } from '../shared/Icon'
+import { LinkButton } from '../shared/Link'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { CloseButton } from './CloseButton'
 import { DishLogoButton } from './DishLogoButton'
 import HomeAutocomplete from './HomeAutocomplete'
-import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { HomeUserMenu } from './HomeUserMenu'
-import { Divider } from '../shared/Divider'
-import { LinkButton } from '../shared/Link'
-import { BlurView } from '../shared/BlurView'
+import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 const extraWidth = 36
 

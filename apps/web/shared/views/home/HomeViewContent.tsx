@@ -1,3 +1,5 @@
+import './HomeViewContent.css'
+
 import React, { memo, useEffect, useMemo, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 
@@ -15,7 +17,6 @@ import { VStack, ZStack } from '../shared/Stacks'
 import HomeRestaurantView from './HomeRestaurantView'
 import HomeSearchResultsView from './HomeSearchResultsView'
 import HomeViewTopDishes from './HomeViewTopDishes'
-import './HomeViewContent.css'
 
 export const HomeViewContent = memo(function HomeViewContent() {
   const om = useOvermind()

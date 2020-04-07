@@ -1,8 +1,9 @@
-import { Tooltip } from './shared/Tooltip'
-import { ZStack, StackBaseProps } from './shared/Stacks'
-import { useOverlay } from './shared/useOverlay'
+import { useLayoutEffect, useMemo } from 'react'
 import { createPortal } from 'react-dom'
-import { useMemo, useLayoutEffect } from 'react'
+
+import { StackBaseProps, ZStack } from './shared/Stacks'
+import { Tooltip } from './shared/Tooltip'
+import { useOverlay } from './shared/useOverlay'
 
 export const Modal = ({
   isOpen,
