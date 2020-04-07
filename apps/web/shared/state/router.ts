@@ -125,6 +125,10 @@ const navigate: Action<NavigateItem> = (om, navItem) => {
     search: curSearch,
   }
 
+  if (navItem.name === 'search' && navItem.params.query === '') {
+    debugger // bad
+  }
+
   om.state.router.notFound = false
 
   const alreadyOnPage = isEqual(

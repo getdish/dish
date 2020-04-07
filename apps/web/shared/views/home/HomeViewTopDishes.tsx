@@ -37,11 +37,17 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
 
 const HomeViewTopDishesContent = memo(() => {
   const om = useOvermind()
-  const topDishes = om.state.home.topDishes
+  const { topDishes, topDishesFilteredIndices } = om.state.home
+  let results = topDishes
+  if (topDishesFilteredIndices.length) {
+    results = results.filter(
+      (_, index) => topDishesFilteredIndices.indexOf(index) > -1
+    )
+  }
   return (
     <ScrollView style={{ flex: 1, overflow: 'hidden' }}>
       <VStack paddingVertical={20} paddingTop={90}>
-        {topDishes.map((country, index) => (
+        {results.map((country, index) => (
           <CountryTopDishesAndRestaurants
             key={country.country}
             country={country}
