@@ -205,6 +205,10 @@ const routeListen: Action<{
         ignoreNextRoute = false
         return
       }
+      if (finishStart) {
+        finishStart()
+        finishStart = null
+      }
       const paramsClean = { ...params }
       om.actions.router.navigate({
         name,

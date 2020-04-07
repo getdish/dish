@@ -96,7 +96,7 @@ export type HomeStateItemSimple = Omit<HomeStateItem, 'historyId'>
 export type AutocompleteItem = {
   icon?: string
   name: string
-  type: 'dish' | 'restaurant' | 'location'
+  type: 'dish' | 'restaurant' | 'location' | 'country'
   id: string
   center?: LngLat
 }
@@ -149,6 +149,15 @@ const currentActiveTaxonomyIds = (state: HomeStateBase) => {
  *  HomeState!
  */
 
+const defaultLocationAutocompleteResults: AutocompleteItem[] = [
+  { name: 'New York', icon: '📍', type: 'location', id: '0' },
+  { name: 'Los Angeles', icon: '📍', type: 'location', id: '1' },
+  { name: 'Las Vegas', icon: '📍', type: 'location', id: '2' },
+  { name: 'Miami', icon: '📍', type: 'location', id: '3' },
+  { name: 'Chicago', icon: '📍', type: 'location', id: '4' },
+  { name: 'New Orleans', icon: '📍', type: 'location', id: '5' },
+]
+
 export const state: HomeState = {
   activeIndex: -1,
   autocompleteIndex: 0,
@@ -157,14 +166,7 @@ export const state: HomeState = {
   allLenses: taxonomyLenses,
   allFilters: taxonomyFilters,
   autocompleteResults: [],
-  locationAutocompleteResults: [
-    { name: 'New York', icon: '📍', type: 'location', id: '0' },
-    { name: 'Los Angeles', icon: '📍', type: 'location', id: '1' },
-    { name: 'Las Vegas', icon: '📍', type: 'location', id: '2' },
-    { name: 'Miami', icon: '📍', type: 'location', id: '3' },
-    { name: 'Chicago', icon: '📍', type: 'location', id: '4' },
-    { name: 'New Orleans', icon: '📍', type: 'location', id: '5' },
-  ],
+  locationAutocompleteResults: defaultLocationAutocompleteResults,
   topDishes: [],
   allTopDishes: [],
   allRestaurants: {},
@@ -185,7 +187,9 @@ export const state: HomeState = {
 }
 
 const start: AsyncAction<void> = async (om) => {
+  //
   await om.actions.home._loadHomeDishes()
+  await om.actions.home._runAutocomplete(om.state.home.currentState.searchQuery)
 }
 
 const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
@@ -407,8 +411,24 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   }
 }
 
+let defaultAutocompleteResults: AutocompleteItem[] | null = null
+
 const _runAutocomplete: AsyncAction<string> = async (om, query) => {
   const state = om.state.home.currentState
+
+  if (query === '') {
+    if (!defaultAutocompleteResults) {
+      defaultAutocompleteResults = om.state.home.topDishes.map((x) => ({
+        id: x.country,
+        type: 'country',
+        name: x.country,
+        icon: x.icon,
+      }))
+    }
+    om.state.home.autocompleteResults = defaultAutocompleteResults
+    om.state.home.locationAutocompleteResults = defaultLocationAutocompleteResults
+    return
+  }
 
   const locationPromise = searchLocations(state.searchQuery)
   const restaurantsPromise = Restaurant.search({
@@ -438,8 +458,6 @@ const _runAutocomplete: AsyncAction<string> = async (om, query) => {
     restaurantsPromise,
     locationPromise,
   ])
-
-  console.log('got', locationResults)
 
   const unsortedResults: AutocompleteItem[] = _.uniqBy(
     [

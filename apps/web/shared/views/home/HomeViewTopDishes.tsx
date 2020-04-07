@@ -78,7 +78,7 @@ const CountryTopDishesAndRestaurants = memo(
             {/* <RankingView rank={rank} marginLeft={-36} /> */}
             <LinkButton
               {...flatButtonStyle}
-              marginVertical={-5}
+              marginVertical={-8}
               name="search"
               params={{ query: country.country }}
             >
@@ -86,14 +86,11 @@ const CountryTopDishesAndRestaurants = memo(
                 numberOfLines={1}
                 style={{ fontSize: 20, fontWeight: '600' }}
               >
-                {country.country}
+                {country.country} {country.icon}
               </Text>
             </LinkButton>
           </HStack>
           <Spacer flex />
-          <Text style={{ fontSize: 26, marginVertical: -10 }}>
-            {country.icon}
-          </Text>
         </HStack>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>

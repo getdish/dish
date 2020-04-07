@@ -16,11 +16,7 @@ export default memo(function HomeAutoComplete() {
   const om = useOvermind()
   const { autocompleteIndex } = om.state.home
   const state = om.state.home.currentState
-  const {
-    isAutocompleteActive,
-    autocompleteResults,
-    showAutocomplete,
-  } = om.state.home
+  const { showAutocomplete } = om.state.home
   const query = state.searchQuery
 
   const showLocation = showAutocomplete == 'location'
@@ -109,7 +105,7 @@ export default memo(function HomeAutoComplete() {
               // },
               ...(showLocation
                 ? om.state.home.locationAutocompleteResults
-                : autocompleteResults),
+                : om.state.home.autocompleteResults),
             ].map((x, index) => {
               return (
                 <LinkButton
@@ -130,7 +126,8 @@ export default memo(function HomeAutoComplete() {
                   lineHeight={24}
                   fastClick
                   alignItems="center"
-                  {...(isAutocompleteActive && autocompleteIndex === index
+                  {...(om.state.home.isAutocompleteActive &&
+                  autocompleteIndex === index
                     ? flatButtonStyleActive
                     : flatButtonStyle)}
                   paddingHorizontal={10}

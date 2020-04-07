@@ -8,6 +8,7 @@ import { Map, useMap } from '../map'
 // import { mapkit } from '../mapkit'
 import { ZStack } from '../shared/Stacks'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
+import { searchBarHeight } from '../../constants'
 
 function centerMapToRegion(p: {
   map: mapkit.Map
@@ -47,10 +48,10 @@ export const HomeMap = memo(() => {
     isScrollEnabled: true,
     showsCompass: mapkit.FeatureVisibility.Hidden,
     padding: {
-      left: drawerWidth + 40,
-      top: 15,
+      left: drawerWidth + 15,
+      top: searchBarHeight + 15 + 15,
       bottom: 15,
-      right: 20,
+      right: 15,
     },
   })
   mapView = map

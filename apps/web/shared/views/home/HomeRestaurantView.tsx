@@ -61,7 +61,9 @@ export default memoIsEqualDeep(function HomeRestaurantView({
           <RestaurantRatingDetail size="lg" restaurant={restaurant} />
           <Spacer size={20} />
           <VStack flex={1}>
-            <Text style={{ fontSize: 28, fontWeight: 'bold' }}>
+            <Text
+              style={{ fontSize: 28, fontWeight: 'bold', paddingRight: 30 }}
+            >
               {restaurant.name}
             </Text>
             <Spacer size={4} />
@@ -72,10 +74,6 @@ export default memoIsEqualDeep(function HomeRestaurantView({
             </Text>
             <Spacer size={12} />
           </VStack>
-
-          {/* <ZStack bottom={15} right={15}>
-
-          </ZStack> */}
         </HStack>
         <Divider />
       </VStack>
