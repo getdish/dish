@@ -8,7 +8,7 @@ import Hoverable from '../shared/Hoverable'
 import { Link } from '../shared/Link'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
-import { lightLightBg } from './baseButtonStyle'
+import { lightLightBg } from './colors'
 import { RankingView } from './RankingView'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
@@ -53,6 +53,7 @@ export const RestaurantListItem = ({
     >
       <TouchableOpacity
         disabled={disablePress}
+        activeOpacity={0.8}
         onPress={() => {
           om.actions.router.navigate({
             name: 'restaurant',

@@ -11,11 +11,8 @@ import { LinkButton } from '../shared/Link'
 import { PageTitle } from '../shared/PageTitle'
 import { Spacer } from '../shared/Spacer'
 import { HStack, StackBaseProps, VStack, ZStack } from '../shared/Stacks'
-import {
-  flatButtonStyle,
-  flatButtonStyleSelected,
-  lightLightBg,
-} from './baseButtonStyle'
+import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
+import { lightLightBg } from './colors'
 import HomeLenseBar from './HomeLenseBar'
 import { RankingView } from './RankingView'
 import { RatingView } from './RatingView'

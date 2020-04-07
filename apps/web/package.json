@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "main": "app.json",
-  "sideEffects": false,
   "workspaces": {
     "nohoist": [
       "**"

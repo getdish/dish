@@ -14,6 +14,7 @@ import { VStack, ZStack } from '../shared/Stacks'
 import HomeRestaurantView from './HomeRestaurantView'
 import HomeSearchResultsView from './HomeSearchResultsView'
 import HomeViewTopDishes from './HomeViewTopDishes'
+import './HomeViewContent.css'
 
 export const HomeViewContent = memo(function HomeViewContent() {
   const om = useOvermind()
@@ -120,29 +121,10 @@ function HomeStackViewItem({
 
   return (
     <div className={`animate-up ${isMounted && !isRemoving ? 'active' : ''}`}>
-      <style>
-        {`
-.animate-up {
-  flex: 1;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(20px);
-  transition: all ease-in-out ${transitionDuration}ms;
-}
-.animate-up.active {
-  opacity: 1;
-  transform: translateY(0);
-}
-        `}
-      </style>
       <ZStack pointerEvents={isActive ? 'none' : 'auto'} fullscreen>
         <TouchableOpacity
           disabled={isActive}
+          activeOpacity={1}
           style={{ flex: 1 }}
           onPress={onPress}
         >
@@ -156,8 +138,8 @@ function HomeStackViewItem({
             width="100%"
             {...(index !== 0 && {
               shadowColor: 'rgba(0,0,0,0.15)',
-              shadowRadius: 14,
-              shadowOffset: { width: 0, height: 2 },
+              shadowRadius: 10,
+              shadowOffset: { width: 0, height: 4 },
             })}
             borderRadius={22}
             pointerEvents="auto"

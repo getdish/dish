@@ -1,0 +1,16 @@
+.animate-up {
+  flex: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px);
+  transition: all ease-in-out 280ms;
+}
+.animate-up.active {
+  opacity: 1;
+  transform: translateY(0);
+}
