@@ -14,6 +14,8 @@ import { BackButton, CloseButton } from './CloseButton'
 import HomeLenseBar from './HomeLenseBar'
 import { LoadingItems } from './LoadingItems'
 import { RestaurantListItem } from './RestaurantListItem'
+import { TagButton } from './TagButton'
+import { getTagId } from '../../state/Tag'
 
 export default memoIsEqualDeep(function HomeSearchResultsView({
   state,
@@ -21,7 +23,15 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
   state: HomeStateItemSearch
 }) {
   const om = useOvermind()
-  const title = `Top ${state.searchQuery} Restaurants`
+  const tags = Object.keys(state.activeTagIds).map(
+    (k) => om.state.home.allTags[k]
+  )
+  const titleTags = tags.filter(
+    (tag) => tag.type === 'dish' || tag.type === 'country'
+  )
+  const title = `Top ${titleTags
+    .map((x) => x.name)
+    .join(', ')} ${state.searchQuery ?? ''} Restaurants`
   return (
     <>
       <PageTitle>{title}</PageTitle>
@@ -42,7 +52,13 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
           />
         </HStack>
       </ZStack>
-      <Title>{title}</Title>
+      <Title height={45}>
+        Top{' '}
+        {titleTags.map((tag) => (
+          <TagButton key={getTagId(tag)} tag={tag} />
+        ))}{' '}
+        Restaurants
+      </Title>
       <VStack position="relative" flex={1}>
         <HomeLenseBar activeTagIds={state.activeTagIds} backgroundGradient />
         <HomeSearchResultsViewContent state={state} />

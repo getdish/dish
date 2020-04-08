@@ -23,6 +23,7 @@ export function RouteSwitch(props: { children: any }) {
   return (
     <>
       {children.map((child, index) => {
+        // todo not in loop
         const cb = useCallback((name, next) => {
           val[name] = next
           setVal(val)

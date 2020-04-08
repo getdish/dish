@@ -3,9 +3,9 @@ import { Text } from 'react-native'
 
 import { Divider } from './Divider'
 import { Spacer } from './Spacer'
-import { HStack, VStack } from './Stacks'
+import { HStack, VStack, StackBaseProps } from './Stacks'
 
-export const Title = memo((props: { children?: any }) => {
+export const Title = memo(({ children, ...rest }: StackBaseProps) => {
   return (
     <>
       <VStack
@@ -13,6 +13,7 @@ export const Title = memo((props: { children?: any }) => {
         alignItems="center"
         paddingTop={10}
         paddingVertical={12}
+        {...rest}
       >
         <Text
           style={{
@@ -24,7 +25,7 @@ export const Title = memo((props: { children?: any }) => {
             paddingBottom: 8,
           }}
         >
-          {props.children}
+          {children}
         </Text>
         <Divider />
       </VStack>
@@ -32,9 +33,9 @@ export const Title = memo((props: { children?: any }) => {
   )
 })
 
-export const SmallTitle = memo((props: { children?: any }) => {
+export const SmallTitle = memo(({ children, ...rest }: StackBaseProps) => {
   return (
-    <VStack width="100%" alignItems="center" paddingBottom={4}>
+    <VStack width="100%" alignItems="center" paddingBottom={4} {...rest}>
       <Text
         style={{
           textTransform: 'uppercase',
@@ -44,7 +45,7 @@ export const SmallTitle = memo((props: { children?: any }) => {
           fontWeight: '400',
         }}
       >
-        {props.children}
+        {children}
       </Text>
       <Spacer size="sm" />
       <Divider />
@@ -52,9 +53,9 @@ export const SmallTitle = memo((props: { children?: any }) => {
   )
 })
 
-export const SmallerTitle = memo((props: { children: any }) => {
+export const SmallerTitle = memo(({ children, ...rest }: StackBaseProps) => {
   return (
-    <HStack alignItems="center" spacing>
+    <HStack alignItems="center" spacing {...rest}>
       <Divider flex />
       <Text
         style={{
@@ -63,7 +64,7 @@ export const SmallerTitle = memo((props: { children: any }) => {
           fontWeight: '400',
         }}
       >
-        {props.children}
+        {children}
       </Text>
       <Divider flex />
     </HStack>

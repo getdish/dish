@@ -12,7 +12,6 @@ class Route<A extends Object | void = void> {
 
 export const routes = {
   home: new Route('/'),
-  search: new Route<{ [key: string]: string }>('/top/*'),
   restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
   user: new Route<{ id: string; pane: string }>('/user/:id/:pane'),
   login: new Route('/login'),
@@ -20,6 +19,8 @@ export const routes = {
   forgotPassword: new Route('/forgot-password'),
   tag: new Route('/tag'),
   account: new Route<{ pane: string }>('/account/:pane'),
+  search: new Route<{ [key: string]: string }>('/:lense/:location/:filter?'),
+  notFound: new Route('*'),
 }
 
 export const routeNames = Object.keys(routes) as RouteName[]
@@ -90,7 +91,6 @@ const start: AsyncAction<{
     })
   }
 
-  om.actions.router.routeListenNotFound()
   page.start()
   await onFinishStart
 }
@@ -123,10 +123,6 @@ const navigate: Action<NavigateItem> = (om, navItem) => {
       params: navItem.params as any,
     }),
     search: curSearch,
-  }
-
-  if (navItem.name === 'search' && navItem.params.query === '') {
-    debugger // bad
   }
 
   om.state.router.notFound = false
@@ -196,7 +192,13 @@ const routeListen: Action<{
       }
     }
 
-    console.log('page', url, params, { ignoreNextRoute, isGoingBack })
+    console.log('page.js routeListen', {
+      url,
+      params,
+      ignoreNextRoute,
+      isGoingBack,
+    })
+
     curSearch = queryString.parse(querystring)
 
     if (isGoingBack) {
@@ -209,11 +211,13 @@ const routeListen: Action<{
         ignoreNextRoute = false
         return
       }
-      if (finishStart) {
-        finishStart()
-        finishStart = null
-      }
-      const paramsClean = { ...params }
+      finishStart()
+      const paramsClean = Object.keys(params).reduce((acc, cur) => {
+        if (params[cur]) {
+          acc[cur] = params[cur]
+        }
+        return acc
+      }, {})
       om.actions.router.navigate({
         name,
         params: paramsClean,
@@ -222,17 +226,8 @@ const routeListen: Action<{
   })
 }
 
-const routeListenNotFound: Action = (om) => {
-  page('*', (ctx) => {
-    console.log('Not found!', ctx)
-    om.state.router.notFound = true
-    om.actions.router.navigate({ name: 'home' })
-  })
-}
-
 export const actions = {
   start,
-  routeListenNotFound,
   routeListen,
   navigate,
   back,
@@ -291,5 +286,10 @@ export function getPathFromParams({
       replaceSplatParams.map((key) => `${key}/${params[key]}`).join('/')
     )
   }
+
+  // remove extra stuffs
+  path = path.replace(/\?/g, '')
+  path = path.replace(/(\/\:[^\/]+)/g, '')
+
   return path
 }
