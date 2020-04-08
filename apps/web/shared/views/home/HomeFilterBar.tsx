@@ -8,7 +8,11 @@ import { HStack, VStack } from '../shared/Stacks'
 import { bg, bgHover } from './colors'
 import { SmallButton } from './SmallButton'
 
-export default memo(function HomeFilterBar() {
+export default memo(function HomeFilterBar({
+  activeTagIds,
+}: {
+  activeTagIds: { [id: string]: boolean }
+}) {
   const om = useOvermind()
   return (
     <VStack paddingVertical={8} paddingBottom={6}>
@@ -19,36 +23,39 @@ export default memo(function HomeFilterBar() {
         spacing={3}
         justifyContent="center"
       >
-        {om.state.home.allFilters.map((filter) => (
-          <FilterButton key={filter.id} filter={filter} />
+        {om.state.home.allFilterTags.map((tag) => (
+          <FilterButton
+            key={tag.id}
+            filter={tag}
+            isActive={activeTagIds[tag.id]}
+          />
         ))}
       </HStack>
     </VStack>
   )
 })
 
-const FilterButton = memo(({ filter }: { filter: Tag }) => {
-  const om = useOvermind()
-  const isActive = om.state.home.currentActiveTagIds.some(
-    (x) => filter.id === x
-  )
-  return (
-    <LinkButton
-      onPress={() => {
-        om.actions.home.toggleActiveTag(filter)
-      }}
-    >
-      <SmallButton isActive={isActive}>
-        <Text
-          style={{
-            color: isActive ? '#000' : bg,
-            fontSize: 15,
-            fontWeight: '600',
-          }}
-        >
-          {filter.name}
-        </Text>
-      </SmallButton>
-    </LinkButton>
-  )
-})
+const FilterButton = memo(
+  ({ filter, isActive }: { filter: Tag; isActive: boolean }) => {
+    const om = useOvermind()
+    return (
+      <LinkButton
+        onPress={() => {
+          om.actions.home.toggleSearchTag(filter)
+        }}
+      >
+        <SmallButton isActive={isActive}>
+          <Text
+            style={{
+              color: isActive ? '#000' : bg,
+              fontSize: 15,
+              fontWeight: '600',
+            }}
+          >
+            {filter.name}
+          </Text>
+        </SmallButton>
+      </LinkButton>
+    )
+  }
+)

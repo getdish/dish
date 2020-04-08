@@ -180,8 +180,6 @@ export const HomeMap = memo(() => {
       .reverse()
   }, [restaurantsVersion])
 
-  console.log('HomeMap', { mapkit, restaurantDetail, restaurantIds })
-
   // hover on map annotation
   const annotationsContainer = document.querySelector(
     '.mk-annotation-container'

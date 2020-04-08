@@ -28,7 +28,7 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
       <PageTitle>Dish - Uniquely Good Food</PageTitle>
       <Spacer size={20} />
       <VStack position="relative" flex={1}>
-        <HomeLenseBar backgroundGradient />
+        <HomeLenseBar activeTagIds={state.activeTagIds} backgroundGradient />
         <HomeViewTopDishesContent />
       </VStack>
     </>
@@ -56,8 +56,8 @@ const HomeViewTopDishesTrending = memo(() => {
     <VStack>
       <SmallTitle>Trending</SmallTitle>
       <HStack paddingHorizontal={15}>
-        <VStack width="50%">{items.slice(0, 4)}</VStack>
-        <VStack width="50%">{items.slice(4, 8)}</VStack>
+        <VStack width="50%">{items.slice(0, 3)}</VStack>
+        <VStack width="50%">{items.slice(3, 6)}</VStack>
       </HStack>
     </VStack>
   )

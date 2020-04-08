@@ -12,14 +12,14 @@ class Route<A extends Object | void = void> {
 
 export const routes = {
   home: new Route('/'),
+  search: new Route<{ [key: string]: string }>('/top/*'),
+  restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
+  user: new Route<{ id: string; pane: string }>('/user/:id/:pane'),
   login: new Route('/login'),
   register: new Route('/register'),
   forgotPassword: new Route('/forgot-password'),
   tag: new Route('/tag'),
   account: new Route<{ pane: string }>('/account/:pane'),
-  search: new Route<{ query: string }>('/search/:query'),
-  restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
-  user: new Route<{ id: string; pane: string }>('/user/:id/:pane'),
 }
 
 export const routeNames = Object.keys(routes) as RouteName[]
@@ -265,21 +265,30 @@ export function getPathFromParams({
   // object to path
   let route = routes[name]
   if (!route) {
-    debugger
     console.error(`no route`, name, routes)
     return ``
   }
   if (!route.path) {
-    debugger
     console.error(`no route path`, route, name, routes)
     return ``
   }
   let path = route.path
   if (!params) return path
+  let replaceSplatParams = []
   for (const key in params) {
+    if (path.indexOf(':') > -1) {
+      path = path.replace(
+        `:${key}`,
+        convertToSlug ? slugify(params[key], '-') : params[key]
+      )
+    } else if (path.indexOf('*') > -1) {
+      replaceSplatParams.push(key)
+    }
+  }
+  if (replaceSplatParams.length) {
     path = path.replace(
-      `:${key}`,
-      convertToSlug ? slugify(params[key], '-') : params[key]
+      '*',
+      replaceSplatParams.map((key) => `${key}/${params[key]}`).join('/')
     )
   }
   return path

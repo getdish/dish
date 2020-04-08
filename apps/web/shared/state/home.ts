@@ -1,7 +1,7 @@
 import { Restaurant, RestaurantSearchArgs, Review, TopDish } from '@dish/models'
 import Fuse from 'fuse.js'
 import _ from 'lodash'
-import { Action, AsyncAction, Derive } from 'overmind'
+import { Action, AsyncAction, Derive, IContext, Config } from 'overmind'
 
 import { isWorker } from '../constants'
 import { fuzzy } from '../helpers/fuzzy'
@@ -15,6 +15,7 @@ type HomeStateBase = {
   activeIndex: number // index for vertical (in page), -1 = autocomplete
   allFilters: Tag[]
   allLenses: Tag[]
+  allTags: { [id: string]: Tag }
   allRestaurants: { [id: string]: Restaurant }
   autocompleteDishes: TopDish['dishes']
   autocompleteIndex: number // index for horizontal row (autocomplete)
@@ -32,6 +33,8 @@ type HomeStateBase = {
 }
 
 export type HomeState = HomeStateBase & {
+  allLenseTags: Derive<HomeState, Tag[]>
+  allFilterTags: Derive<HomeState, Tag[]>
   lastHomeState: Derive<HomeState, HomeStateItemHome>
   lastSearchState: Derive<HomeState, HomeStateItemSearch | null>
   lastRestaurantState: Derive<HomeState, HomeStateItemRestaurant | null>
@@ -41,7 +44,6 @@ export type HomeState = HomeStateBase & {
   currentStateType: Derive<HomeState, HomeStateItem['type']>
   currentStateSearchQuery: Derive<HomeState, HomeStateItem['searchQuery']>
   previousState: Derive<HomeState, HomeStateItem>
-  currentActiveTagIds: Derive<HomeState, string[]>
   isAutocompleteActive: Derive<HomeState, boolean>
   activeAutocompleteResults: Derive<HomeState, AutocompleteItem[]>
   isLoading: Derive<HomeState, boolean>
@@ -76,12 +78,12 @@ export type HomeStateItem =
 
 export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
-  activeTagIds: string[]
+  activeTagIds: { [id: string]: boolean }
 }
 
 export type HomeStateItemSearch = HomeStateItemBase & {
   type: 'search'
-  activeTagIds: string[]
+  activeTagIds: { [id: string]: boolean }
   results: SearchResults
   filters: Tag[]
 }
@@ -107,7 +109,9 @@ const INITIAL_RADIUS = 0.1
 
 export const initialHomeState: HomeStateItemHome = {
   type: 'home',
-  activeTagIds: ['0'],
+  activeTagIds: {
+    [tagLenses[0].id]: true,
+  },
   searchQuery: '',
   center: {
     lng: -122.421351,
@@ -139,14 +143,6 @@ const breadcrumbStates = (state: HomeStateBase) => {
     .map((x) => _.omit(x as any, 'historyId'))
 }
 
-const currentActiveTagIds = (state: HomeStateBase) => {
-  const lastHomeOrSearch = _.findLast(
-    state.states,
-    (x) => x.type == 'search' || x.type == 'home'
-  ) as HomeStateItemHome | HomeStateItemSearch | null
-  return lastHomeOrSearch?.activeTagIds ?? []
-}
-
 /*
  *  HomeState!
  */
@@ -163,14 +159,25 @@ const defaultLocationAutocompleteResults: AutocompleteItem[] = [
 export const state: HomeState = {
   skipNextPageFetchData: false,
   activeIndex: -1,
-  allFilters: tagFilters,
-  allLenses: tagLenses,
+  allTags: [...tagFilters, ...tagLenses].reduce((acc, cur) => {
+    acc[cur.id] = cur
+    return acc
+  }, {}),
+  allLenseTags: (state) => {
+    return Object.keys(state.allTags)
+      .filter((k) => state.allTags[k].type === 'lense')
+      .map((k) => state.allTags[k])
+  },
+  allFilterTags: (state) => {
+    return Object.keys(state.allTags)
+      .filter((k) => state.allTags[k].type === 'filter')
+      .map((k) => state.allTags[k])
+  },
   allRestaurants: {},
   autocompleteDishes: [],
   autocompleteIndex: 0,
   autocompleteResults: [],
   breadcrumbStates,
-  currentActiveTagIds,
   currentState: (state) => _.last(state.states)!,
   currentStateSearchQuery: (state) => state.currentState.searchQuery,
   currentStateType: (state) => state.currentState.type,
@@ -191,20 +198,12 @@ export const state: HomeState = {
   activeAutocompleteResults: (state) => {
     const prefix: AutocompleteItem[] = [
       {
-        name: 'Home',
+        name: 'Search',
         icon: '🔍',
         id: '-2',
         type: 'search' as const,
       },
     ]
-    if (state.currentStateSearchQuery) {
-      prefix.push({
-        name: state.currentStateSearchQuery, // `"${}"`,
-        icon: '🔍',
-        id: '-1',
-        type: 'search' as const,
-      })
-    }
     return [
       ...prefix,
       ...(state.showAutocomplete === 'location'
@@ -262,7 +261,7 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
       const searchState: HomeStateItemSearch = {
         ...fallbackState,
         type: 'search',
-        activeTagIds: [],
+        activeTagIds: {},
         results: { status: 'loading' },
         ...lastSearchState,
         ...newState,
@@ -570,15 +569,11 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
 
   if (state.type != 'search') return
 
-  const allTags = [...om.state.home.allFilters, ...om.state.home.allLenses]
-  const tags = state.activeTagIds.map(
-    (id) => allTags.find((x) => x.id === id).name
-  )
   const searchArgs: RestaurantSearchArgs = {
     center: state.center,
     span: state.span,
     query,
-    tags,
+    tags: Object.keys(state.activeTagIds),
   }
   const searchKey = JSON.stringify(searchArgs)
   // simple prevent duplicate searches
@@ -690,22 +685,6 @@ const setShowUserMenu: Action<boolean> = (om, val) => {
   om.state.home.showUserMenu = val
 }
 
-const toggleActiveTag: Action<Tag> = (om, val) => {
-  if (!val) {
-    console.log('no tag?', val)
-    return
-  }
-  const state = om.state.home.currentState
-  if (state.type != 'home' && state.type != 'search') {
-    return
-  }
-  if (state.activeTagIds.some((x) => x == val.id)) {
-    state.activeTagIds = state.activeTagIds.filter((x) => x != val.id)
-  } else {
-    state.activeTagIds = [...state.activeTagIds, val.id]
-  }
-}
-
 const suggestTags: AsyncAction<string> = async (om, tags) => {
   let state = om.state.home.currentState
   if (state.type != 'restaurant') return
@@ -814,8 +793,60 @@ const _runHomeSearch: AsyncAction<string> = async (om, query) => {
   om.state.home.topDishesFilteredIndices = res
 }
 
+const setTagInactive: Action<Tag> = (om, val) => {
+  const state = om.state.home.currentState
+  if (state.type != 'home' && state.type != 'search') return
+  delete state.activeTagIds[val.id]
+  om.actions.home._handleTagChange()
+}
+
+const setTagActive: Action<Tag> = (om, val) => {
+  const state = om.state.home.currentState
+  if (state.type != 'home' && state.type != 'search') return
+  state.activeTagIds[val.id] = true
+  om.actions.home._handleTagChange()
+}
+
+const toggleSearchTag: Action<Tag> = (om, val) => {
+  if (!val) return
+  const state = om.state.home.currentState
+  if (state.type != 'home' && state.type != 'search') return
+  if (state.activeTagIds[val.id]) {
+    om.actions.home.setTagInactive(val)
+  } else {
+    om.actions.home.setTagActive(val)
+  }
+}
+
+const replaceActiveTagOfType: Action<Tag> = (om, val) => {
+  const state = om.state.home.currentState
+  if (state.type != 'home' && state.type != 'search') return
+  const existing = Object.keys(state.activeTagIds)
+    .map((id) => om.state.home.allTags[id])
+    .find((x) => x.type === val.type)
+  if (existing) {
+    delete state.activeTagIds[existing.id]
+  }
+  state.activeTagIds[val.id] = true
+}
+
+const _handleTagChange: Action = (om, val) => {
+  console.log('TODO')
+  // om.actions.router.navigate({
+  //   name: 'search',
+  //   params: state.activeTagIds.reduce((acc, cur) => {
+  //     const tag = om.state.home.allLenses
+  //     acc[]
+  //     return acc
+  //   }, {})
+  // })
+}
+
 export const actions = {
   start,
+  setTagInactive,
+  setTagActive,
+  replaceActiveTagOfType,
   moveAutocompleteIndex,
   setActiveIndex,
   moveActiveDown,
@@ -827,7 +858,7 @@ export const actions = {
   setMapArea,
   setSearchQuery,
   popTo,
-  toggleActiveTag,
+  toggleSearchTag,
   setShowUserMenu,
   setHoveredRestaurant,
   runSearch,
@@ -836,6 +867,7 @@ export const actions = {
   submitReview,
   getUserReviews,
   suggestTags,
+  _handleTagChange,
   _runAutocomplete,
   _loadRestaurantDetail,
   _loadHomeDishes,
