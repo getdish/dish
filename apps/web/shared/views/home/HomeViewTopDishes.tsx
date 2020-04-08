@@ -41,7 +41,7 @@ const HomeViewTopDishesTrending = memo(() => {
   const items = allRestaurants.slice(0, 8).map((restaurant, index) => {
     return (
       <TrendingButton
-        key={restaurant.id}
+        key={`${index}${restaurant.id}`}
         name="restaurant"
         params={{
           slug: restaurant.slug,

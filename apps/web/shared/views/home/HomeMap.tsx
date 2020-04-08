@@ -4,7 +4,7 @@ import React, { memo, useEffect, useMemo, useState } from 'react'
 import { searchBarHeight } from '../../constants'
 import { useDebounceValue } from '../../hooks/useDebounce'
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
-import { LngLat } from '../../state/home'
+import { LngLat, setMapView } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Map, useMap } from '../map'
 // import { mapkit } from '../mapkit'
@@ -23,14 +23,13 @@ function centerMapToRegion(p: {
   p.map.setRegionAnimated(region)
 }
 
-const dotFactory = (coordinate, options) => {
-  const div = document.createElement('div')
-  // div.textContent = 'HI'
-  div.className = 'dot-annotation'
-  return div
-}
-
-export let mapView: any
+// appears *above* all markers and cant go below...
+// const dotFactory = (coordinate, options) => {
+//   const div = document.createElement('div')
+//   // div.textContent = 'HI'
+//   div.className = 'dot-annotation'
+//   return div
+// }
 
 export const HomeMap = memo(() => {
   const om = useOvermind()
@@ -63,7 +62,8 @@ export const HomeMap = memo(() => {
       right: 15,
     },
   })
-  mapView = map
+
+  setMapView(map)
 
   // wheel zoom
   if (map && map['_allowWheelToZoom'] == false) {
@@ -79,15 +79,7 @@ export const HomeMap = memo(() => {
       span,
     })
 
-    // map.addEventListener('select', (e) => {
-    // console.log('select', e, map)
-    // })
-
-    // map.addEventListener('deselect', (e) => {
-    // console.log('deselect', e, map)
-    // })
-
-    map.addEventListener('region-change-end', (e) => {
+    const handleRegionChangeEnd = (e) => {
       console.log('region-change-end', e)
       const span = map.region.span
       om.actions.home.setMapArea({
@@ -100,19 +92,13 @@ export const HomeMap = memo(() => {
           lng: span.longitudeDelta,
         },
       })
-    })
+    }
 
-    // map.addEventListener('drag-start', (e) => {
-    //   console.log('drag-start', e, map)
-    // })
+    map.addEventListener('region-change-end', handleRegionChangeEnd)
 
-    // map.addEventListener('drag-end', (e) => {
-    //   console.log('drag-end', e, map)
-    // })
-
-    // map.addEventListener('user-location-change', (e) => {
-    //   console.log('user-location-change', e, map)
-    // })
+    return () => {
+      map.removeEventListener('region-change-end', handleRegionChangeEnd)
+    }
   }, [map])
 
   const [focused, setFocused] = useState('')
@@ -360,3 +346,23 @@ export const HomeMap = memo(() => {
     </ZStack>
   )
 })
+
+// map.addEventListener('select', (e) => {
+// console.log('select', e, map)
+// })
+
+// map.addEventListener('deselect', (e) => {
+// console.log('deselect', e, map)
+// })
+
+// map.addEventListener('drag-start', (e) => {
+//   console.log('drag-start', e, map)
+// })
+
+// map.addEventListener('drag-end', (e) => {
+//   console.log('drag-end', e, map)
+// })
+
+// map.addEventListener('user-location-change', (e) => {
+//   console.log('user-location-change', e, map)
+// })

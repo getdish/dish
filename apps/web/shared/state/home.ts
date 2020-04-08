@@ -5,7 +5,6 @@ import { Action, AsyncAction, Derive } from 'overmind'
 
 import { isWorker } from '../constants'
 import { sleep } from '../helpers/sleep'
-import { mapView } from '../views/home/HomeMap'
 import { HistoryItem, RouteItem } from './router'
 import { Taxonomy, taxonomyFilters, taxonomyLenses } from './Taxonomy'
 import { fuzzy } from '../helpers/fuzzy'
@@ -220,6 +219,12 @@ export const state: HomeState = {
     }
     return false
   },
+}
+
+// TODO type
+let mapView
+export function setMapView(x) {
+  mapView = x
 }
 
 const start: AsyncAction<void> = async (om) => {
