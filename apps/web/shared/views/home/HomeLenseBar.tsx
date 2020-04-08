@@ -8,6 +8,7 @@ import HomeFilterBar from './HomeFilterBar'
 import { LenseButton } from './LenseButton'
 
 export default memo(function HomeLenseBar(props: {
+  activeTagIds: { [id: string]: boolean }
   backgroundGradient?: boolean
 }) {
   const om = useOvermind()
@@ -20,12 +21,16 @@ export default memo(function HomeLenseBar(props: {
           style={{ marginBottom: -2 }}
         >
           <HStack paddingHorizontal={20} paddingVertical={4} spacing="sm">
-            {om.state.home.allLenses.map((lense) => (
-              <LenseButton key={lense.id} lense={lense} />
+            {om.state.home.allLenseTags.map((lense) => (
+              <LenseButton
+                key={lense.id}
+                lense={lense}
+                isActive={props.activeTagIds[lense.id]}
+              />
             ))}
           </HStack>
         </ScrollView>
-        <HomeFilterBar />
+        <HomeFilterBar activeTagIds={props.activeTagIds} />
       </VStack>
       {props.backgroundGradient && (
         <LinearGradient

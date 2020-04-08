@@ -44,8 +44,6 @@ const om = createOvermind(config, {
 })
 
 async function start() {
-  console.log('Starting app...')
-
   if (!isWorker) {
     require('./mapkit')
     await startMapKit()

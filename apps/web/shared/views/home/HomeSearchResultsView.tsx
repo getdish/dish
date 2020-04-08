@@ -44,7 +44,7 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
       </ZStack>
       <Title>{title}</Title>
       <VStack position="relative" flex={1}>
-        <HomeLenseBar backgroundGradient />
+        <HomeLenseBar activeTagIds={state.activeTagIds} backgroundGradient />
         <HomeSearchResultsViewContent state={state} />
       </VStack>
     </>
