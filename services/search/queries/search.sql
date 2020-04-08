@@ -16,15 +16,15 @@ SELECT jsonb_agg(
       'tag_rankings', data.tag_rankings,
       'tags', ARRAY(
         SELECT json_build_object(
-          'taxonomy', json_build_object(
+          'tag', json_build_object(
             'id', id,
             'name', name,
             'icon', icon,
             'type', type
           )
-        ) FROM taxonomy
+        ) FROM tag
           WHERE id IN (
-            SELECT rt.taxonomy_id FROM restaurant_taxonomy rt
+            SELECT rt.tag_id FROM restaurant_tag rt
             WHERE rt.restaurant_id = data.id
           )
         )

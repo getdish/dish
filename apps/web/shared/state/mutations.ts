@@ -5,7 +5,7 @@ export const upsertUserReview = gql`
     insert_review(
       objects: $reviews
       on_conflict: {
-        constraint: review_user_id_restaurant_id_taxonomy_id_key
+        constraint: review_user_id_restaurant_id_tag_id_key
         update_columns: [text, rating]
       }
     ) {

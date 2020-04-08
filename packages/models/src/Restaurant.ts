@@ -5,7 +5,7 @@ import _ from 'lodash'
 import { Dish } from './Dish'
 import { ModelBase, Point, isBrowserProd } from './ModelBase'
 import { Scrape } from './Scrape'
-import { Taxonomy } from './Taxonomy'
+import { Tag } from './Tag'
 import { levenshteinDistance } from './utils'
 
 let SEARCH_DOMAIN: string
@@ -59,7 +59,7 @@ export class Restaurant extends ModelBase<Restaurant> {
   state!: string
   zip!: number
   image?: string
-  tags!: { taxonomy: Taxonomy }[]
+  tags!: { tag: Tag }[]
   tag_names!: string[]
   tag_rankings!: (string | number)[][]
   photos?: string[]
@@ -101,7 +101,7 @@ export class Restaurant extends ModelBase<Restaurant> {
   }
 
   static sub_fields() {
-    return { tags: { taxonomy: { name: true } } }
+    return { tags: { tag: { name: true } } }
   }
 
   static read_only_fields() {
@@ -291,24 +291,24 @@ export class Restaurant extends ModelBase<Restaurant> {
     return restaurant
   }
 
-  async upsertTags(tags: string[]) {
+  async upsertTags(tag_strings: string[]) {
     this.tag_names = _.uniq([
       ...(this.tag_names || []),
-      ...tags.map((t) => t.toLowerCase()),
+      ...tag_strings.map((t) => t.toLowerCase()),
     ])
     await this.update()
-    const objects = tags.map((tag) => {
+    const objects = tag_strings.map((tag) => {
       return {
         name: tag,
       }
     })
     const query = {
       mutation: {
-        ['insert_taxonomy']: {
+        ['insert_tag']: {
           __args: {
             objects: objects,
             on_conflict: {
-              constraint: new EnumType(Taxonomy.upsert_constraint()),
+              constraint: new EnumType(Tag.upsert_constraint()),
               update_columns: [new EnumType('name')],
             },
           },
@@ -317,12 +317,12 @@ export class Restaurant extends ModelBase<Restaurant> {
       },
     }
     const response = await ModelBase.hasura(query)
-    const taxonomies = response.data.data['insert_taxonomy'].returning
-    const tag_ids = taxonomies.map((i: Taxonomy) => i.id)
+    const tags = response.data.data['insert_tag'].returning
+    const tag_ids = tags.map((i: Tag) => i.id)
     this.tags = _.uniq([
       ...(this.tags || []),
-      ...taxonomies.map((i) => {
-        return { taxonomy: i }
+      ...tags.map((i) => {
+        return { tag: i }
       }),
     ])
     await this.upsertTagJunctions(tag_ids)
@@ -333,23 +333,23 @@ export class Restaurant extends ModelBase<Restaurant> {
     const objects = tag_ids.map((tag_id) => {
       return {
         restaurant_id: this.id,
-        taxonomy_id: tag_id,
+        tag_id: tag_id,
       }
     })
     const query = {
       mutation: {
-        ['insert_restaurant_taxonomy']: {
+        ['insert_restaurant_tag']: {
           __args: {
             objects: objects,
             on_conflict: {
-              constraint: new EnumType('restaurant_taxonomy_pkey'),
+              constraint: new EnumType('restaurant_tag_pkey'),
               update_columns: [
                 new EnumType('restaurant_id'),
-                new EnumType('taxonomy_id'),
+                new EnumType('tag_id'),
               ],
             },
           },
-          returning: { taxonomy_id: true },
+          returning: { tag_id: true },
         },
       },
     }
@@ -369,16 +369,16 @@ export class Restaurant extends ModelBase<Restaurant> {
   getTagsWithRankings() {
     return this.tags.map((i) => {
       let rank = -1
-      const lowered = i.taxonomy.name.toLowerCase()
+      const lowered = i.tag.name.toLowerCase()
       const match = (this.tag_rankings || []).find((i) => i[0] == lowered)
       if (match) {
         rank = match[1] as number
       }
-      return { icon: i.taxonomy.icon, name: i.taxonomy.name, rank: rank }
+      return { icon: i.tag.icon, name: i.tag.name, rank: rank }
     })
   }
 
   async allPossibleDishes() {
-    return await Taxonomy.allChildren(this.tags.map((i) => i.taxonomy.id))
+    return await Tag.allChildren(this.tags.map((i) => i.tag.id))
   }
 }

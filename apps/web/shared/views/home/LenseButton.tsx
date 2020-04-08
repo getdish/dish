@@ -2,14 +2,14 @@ import React, { memo } from 'react'
 import { Text } from 'react-native'
 
 import { useOvermind } from '../../state/om'
-import { Taxonomy } from '../../state/Taxonomy'
+import { Tag } from '../../state/Tag'
 import { LinkButton } from '../shared/Link'
 import { HStack } from '../shared/Stacks'
 import { bg } from './colors'
 
-export const LenseButton = memo(({ lense }: { lense: Taxonomy }) => {
+export const LenseButton = memo(({ lense }: { lense: Tag }) => {
   const om = useOvermind()
-  const activeIds = om.state.home.currentActiveTaxonomyIds
+  const activeIds = om.state.home.currentActiveTagIds
   const active = activeIds?.some((x) => x == lense.id)
   return (
     <LinkButton
@@ -17,8 +17,8 @@ export const LenseButton = memo(({ lense }: { lense: Taxonomy }) => {
         const lastLense = om.state.home.allLenses.find((x) =>
           activeIds.some((y) => y === x.id)
         )
-        om.actions.home.toggleActiveTaxonomy(lastLense)
-        om.actions.home.toggleActiveTaxonomy(lense)
+        om.actions.home.toggleActiveTag(lastLense)
+        om.actions.home.toggleActiveTag(lense)
       }}
     >
       <HStack

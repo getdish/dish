@@ -1,4 +1,4 @@
-import { Restaurant, Scrape, Taxonomy, flushTestData } from '@dish/models'
+import { Restaurant, Scrape, Tag, flushTestData } from '@dish/models'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 
 import { Self } from '../../src/self/Self'
@@ -144,7 +144,7 @@ test('Merging', async (t) => {
   t.is(updated.name, 'Test Name Yelp')
   t.is(updated.address, '123 Street, Big City')
   t.deepEqual(
-    updated.tags.map((i) => i.taxonomy.name),
+    updated.tags.map((i) => i.tag.name),
     ['Mexican', 'Pizza']
   )
   t.is(updated.dishes[0].name, 'Nice Dish')
@@ -206,17 +206,17 @@ test('Tag rankings', async (t) => {
 
 test('Finding dishes in reviews', async (t) => {
   const dish = new Self()
-  const tag_parent = new Taxonomy({ name: 'test_country' })
+  const tag_parent = new Tag({ name: 'test_country' })
   await tag_parent.insert()
-  const existing_tag1 = new Taxonomy({
+  const existing_tag1 = new Tag({
     name: 'test_tag_existing',
     parentId: tag_parent.id,
   })
-  const existing_tag2 = new Taxonomy({
+  const existing_tag2 = new Tag({
     name: 'test_tag_existing2',
     parentId: tag_parent.id,
   })
-  const existing_tag3 = new Taxonomy({
+  const existing_tag3 = new Tag({
     name: 'test_tag_existing3',
     parentId: tag_parent.id,
   })
@@ -229,15 +229,15 @@ test('Finding dishes in reviews', async (t) => {
   const updated = new Restaurant()
   await updated.findOne('id', t.context.restaurant.id)
   t.assert(
-    updated.tags.map((i) => i.taxonomy.id),
+    updated.tags.map((i) => i.tag.id),
     existing_tag1.id
   )
   t.assert(
-    updated.tags.map((i) => i.taxonomy.id),
+    updated.tags.map((i) => i.tag.id),
     existing_tag2.id
   )
   t.assert(
-    updated.tags.map((i) => i.taxonomy.id),
+    updated.tags.map((i) => i.tag.id),
     existing_tag3.id
   )
 })

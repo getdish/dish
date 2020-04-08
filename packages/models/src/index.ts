@@ -1,5 +1,5 @@
 export { Restaurant, TopDish, RestaurantSearchArgs } from './Restaurant'
-export { Taxonomy, TaxonomyRecord, TaxonomyType } from './Taxonomy'
+export { Tag, TagRecord, TagType } from './Tag'
 export { Dish } from './Dish'
 export { Scrape, ScrapeData } from './Scrape'
 export { ModelBase, createApolloClient } from './ModelBase'

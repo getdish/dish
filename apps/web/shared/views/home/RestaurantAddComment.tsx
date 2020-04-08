@@ -68,7 +68,7 @@ export const RestaurantAddComment = memo(
                         {
                           text: reviewText,
                           restaurant_id: restaurant.id,
-                          taxonomy_id: null,
+                          tag_id: null,
                           user_id: om.state.user.user.id,
                           rating: 0,
                         },

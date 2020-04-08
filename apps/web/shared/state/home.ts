@@ -7,14 +7,14 @@ import { isWorker } from '../constants'
 import { fuzzy } from '../helpers/fuzzy'
 import { sleep } from '../helpers/sleep'
 import { HistoryItem, RouteItem } from './router'
-import { Taxonomy, taxonomyFilters, taxonomyLenses } from './Taxonomy'
+import { Tag, tagFilters, tagLenses } from './Tag'
 
 type ShowAutocomplete = 'search' | 'location' | false
 
 type HomeStateBase = {
   activeIndex: number // index for vertical (in page), -1 = autocomplete
-  allFilters: Taxonomy[]
-  allLenses: Taxonomy[]
+  allFilters: Tag[]
+  allLenses: Tag[]
   allRestaurants: { [id: string]: Restaurant }
   autocompleteDishes: TopDish['dishes']
   autocompleteIndex: number // index for horizontal row (autocomplete)
@@ -41,7 +41,7 @@ export type HomeState = HomeStateBase & {
   currentStateType: Derive<HomeState, HomeStateItem['type']>
   currentStateSearchQuery: Derive<HomeState, HomeStateItem['searchQuery']>
   previousState: Derive<HomeState, HomeStateItem>
-  currentActiveTaxonomyIds: Derive<HomeState, string[]>
+  currentActiveTagIds: Derive<HomeState, string[]>
   isAutocompleteActive: Derive<HomeState, boolean>
   activeAutocompleteResults: Derive<HomeState, AutocompleteItem[]>
   isLoading: Derive<HomeState, boolean>
@@ -76,14 +76,14 @@ export type HomeStateItem =
 
 export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
-  activeTaxonomyIds: string[]
+  activeTagIds: string[]
 }
 
 export type HomeStateItemSearch = HomeStateItemBase & {
   type: 'search'
-  activeTaxonomyIds: string[]
+  activeTagIds: string[]
   results: SearchResults
-  filters: Taxonomy[]
+  filters: Tag[]
 }
 
 export type HomeStateItemRestaurant = HomeStateItemBase & {
@@ -107,7 +107,7 @@ const INITIAL_RADIUS = 0.1
 
 export const initialHomeState: HomeStateItemHome = {
   type: 'home',
-  activeTaxonomyIds: ['0'],
+  activeTagIds: ['0'],
   searchQuery: '',
   center: {
     lng: -122.421351,
@@ -139,12 +139,12 @@ const breadcrumbStates = (state: HomeStateBase) => {
     .map((x) => _.omit(x as any, 'historyId'))
 }
 
-const currentActiveTaxonomyIds = (state: HomeStateBase) => {
+const currentActiveTagIds = (state: HomeStateBase) => {
   const lastHomeOrSearch = _.findLast(
     state.states,
     (x) => x.type == 'search' || x.type == 'home'
   ) as HomeStateItemHome | HomeStateItemSearch | null
-  return lastHomeOrSearch?.activeTaxonomyIds ?? []
+  return lastHomeOrSearch?.activeTagIds ?? []
 }
 
 /*
@@ -163,14 +163,14 @@ const defaultLocationAutocompleteResults: AutocompleteItem[] = [
 export const state: HomeState = {
   skipNextPageFetchData: false,
   activeIndex: -1,
-  allFilters: taxonomyFilters,
-  allLenses: taxonomyLenses,
+  allFilters: tagFilters,
+  allLenses: tagLenses,
   allRestaurants: {},
   autocompleteDishes: [],
   autocompleteIndex: 0,
   autocompleteResults: [],
   breadcrumbStates,
-  currentActiveTaxonomyIds,
+  currentActiveTagIds,
   currentState: (state) => _.last(state.states)!,
   currentStateSearchQuery: (state) => state.currentState.searchQuery,
   currentStateType: (state) => state.currentState.type,
@@ -262,7 +262,7 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
       const searchState: HomeStateItemSearch = {
         ...fallbackState,
         type: 'search',
-        activeTaxonomyIds: [],
+        activeTagIds: [],
         results: { status: 'loading' },
         ...lastSearchState,
         ...newState,
@@ -527,7 +527,7 @@ const _runAutocomplete: AsyncAction<string> = async (om, query) => {
       ...dishResults,
       ...restaurantsResults.map((restaurant) => ({
         name: restaurant.name,
-        // TODO tom - can we get the cuisine taxonomy icon here? we can load common ones somewhere
+        // TODO tom - can we get the cuisine tag icon here? we can load common ones somewhere
         icon: '🏘',
         type: 'restaurant' as const,
         id: restaurant.id,
@@ -571,7 +571,7 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
   if (state.type != 'search') return
 
   const allTags = [...om.state.home.allFilters, ...om.state.home.allLenses]
-  const tags = state.activeTaxonomyIds.map(
+  const tags = state.activeTagIds.map(
     (id) => allTags.find((x) => x.id === id).name
   )
   const searchArgs: RestaurantSearchArgs = {
@@ -690,19 +690,19 @@ const setShowUserMenu: Action<boolean> = (om, val) => {
   om.state.home.showUserMenu = val
 }
 
-const toggleActiveTaxonomy: Action<Taxonomy> = (om, val) => {
+const toggleActiveTag: Action<Tag> = (om, val) => {
   if (!val) {
-    console.log('no taxonomy?', val)
+    console.log('no tag?', val)
     return
   }
   const state = om.state.home.currentState
   if (state.type != 'home' && state.type != 'search') {
     return
   }
-  if (state.activeTaxonomyIds.some((x) => x == val.id)) {
-    state.activeTaxonomyIds = state.activeTaxonomyIds.filter((x) => x != val.id)
+  if (state.activeTagIds.some((x) => x == val.id)) {
+    state.activeTagIds = state.activeTagIds.filter((x) => x != val.id)
   } else {
-    state.activeTaxonomyIds = [...state.activeTaxonomyIds, val.id]
+    state.activeTagIds = [...state.activeTagIds, val.id]
   }
 }
 
@@ -827,7 +827,7 @@ export const actions = {
   setMapArea,
   setSearchQuery,
   popTo,
-  toggleActiveTaxonomy,
+  toggleActiveTag,
   setShowUserMenu,
   setHoveredRestaurant,
   runSearch,

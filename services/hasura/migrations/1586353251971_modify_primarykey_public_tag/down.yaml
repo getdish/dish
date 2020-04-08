@@ -1,0 +1,6 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: "alter table \"public\".\"tag\"\n    add constraint \"taxonomy_pkey\" \n
+      \   primary key ( \"id\" );"
+  type: run_sql

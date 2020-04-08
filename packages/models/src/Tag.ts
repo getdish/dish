@@ -2,28 +2,28 @@ import { DocumentNode, gql } from '@apollo/client'
 
 import { ModelBase } from './ModelBase'
 
-export type TaxonomyType = 'continent' | 'country' | 'dish' | 'orphan'
-export type TaxonomyRecord = Partial<Taxonomy> & Pick<Taxonomy, 'type'>
+export type TagType = 'continent' | 'country' | 'dish' | 'orphan'
+export type TagRecord = Partial<Tag> & Pick<Tag, 'type'>
 
-export class Taxonomy extends ModelBase<Taxonomy> {
-  type!: TaxonomyType
+export class Tag extends ModelBase<Tag> {
+  type!: TagType
   name!: string
   icon!: string
   alternates!: string[]
   parentId!: string
-  parentType!: TaxonomyType
+  parentType!: TagType
 
-  constructor(init?: Partial<Taxonomy>) {
+  constructor(init?: Partial<Tag>) {
     super()
     Object.assign(this, init)
   }
 
   static model_name() {
-    return 'Taxonomy'
+    return 'Tag'
   }
 
   static upsert_constraint() {
-    return 'taxonomy_name_key'
+    return 'tag_name_key'
   }
 
   static fields() {
@@ -31,22 +31,22 @@ export class Taxonomy extends ModelBase<Taxonomy> {
   }
 
   static get fieldsQuery(): string {
-    return Taxonomy.fields().join(' ')
+    return Tag.fields().join(' ')
   }
 
   static async findContinents() {
     const res = await ModelBase.query(`{
-      taxonomy(where: { type: { _eq: "continent" } }) {
+      tag(where: { type: { _eq: "continent" } }) {
         ${this.fields().join(' ')}
       }
     }`)
-    return res.taxonomy.map((data: Partial<Taxonomy>) => new Taxonomy(data))
+    return res.tag.map((data: Partial<Tag>) => new Tag(data))
   }
 
-  static create(next: TaxonomyRecord): DocumentNode {
+  static create(next: TagRecord): DocumentNode {
     return gql`
-      mutation AddTaxonomy {
-        insert_taxonomy(objects: {
+      mutation AddTag {
+        insert_tag(objects: {
           name: "${next.name ?? ''}",
           icon: "${next.icon ?? ''}",
           type: "${next.type ?? 'continent'}",
@@ -61,10 +61,10 @@ export class Taxonomy extends ModelBase<Taxonomy> {
     `
   }
 
-  static upsert(next: TaxonomyRecord): DocumentNode {
+  static upsert(next: TagRecord): DocumentNode {
     return gql`
-      mutation AddTaxonomy {
-        insert_taxonomy(
+      mutation AddTag {
+        insert_tag(
           objects: {
             ${next.id ? `id: "${next.id}",` : ''}
             name: "${next.name ?? ''}",
@@ -74,7 +74,7 @@ export class Taxonomy extends ModelBase<Taxonomy> {
             parentType: "${next.parentType ?? ''}"
           },
           on_conflict: {
-            constraint: taxonomy_pkey,
+            constraint: tag_pkey,
             update_columns: [name, icon, type, parentId, parentType]
           }
         ) {
@@ -89,7 +89,7 @@ export class Taxonomy extends ModelBase<Taxonomy> {
   static async allChildren(parents: string[]) {
     const query = {
       query: {
-        taxonomy: {
+        tag: {
           __args: {
             where: {
               parentId: {
@@ -97,13 +97,11 @@ export class Taxonomy extends ModelBase<Taxonomy> {
               },
             },
           },
-          ...Taxonomy.fieldsAsObject(),
+          ...Tag.fieldsAsObject(),
         },
       },
     }
     const response = await ModelBase.hasura(query)
-    return response.data.data.taxonomy.map(
-      (data: Partial<Taxonomy>) => new Taxonomy(data)
-    )
+    return response.data.data.tag.map((data: Partial<Tag>) => new Tag(data))
   }
 }

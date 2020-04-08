@@ -7,7 +7,7 @@ import { config } from '../state/om'
 import HomePage from './home/HomePageView'
 import { PrivateRoute, Route, RouteSwitch } from './shared/Route'
 import { ToastRoot } from './shared/ToastRoot'
-import TaxonomyPage from './taxonomy/TaxonomyPage'
+import TagPage from './tag/TagPage'
 import { setToastHandle } from './Toast'
 import { WelcomeModal } from './WelcomeModal'
 
@@ -21,8 +21,8 @@ export function App({ overmind }: { overmind?: any }) {
         <ApolloProvider client={apolloClient}>
           <Suspense fallback={'ok'}>
             <RouteSwitch>
-              <PrivateRoute name="taxonomy">
-                <TaxonomyPage />
+              <PrivateRoute name="tag">
+                <TagPage />
               </PrivateRoute>
               <Route name="home">
                 <HomePage />
@@ -38,4 +38,4 @@ export function App({ overmind }: { overmind?: any }) {
 }
 
 // const HomePageLazy = React.lazy(() => import('./home/HomePageView'))
-// const TaxonomyPageLazy = React.lazy(() => import('./taxonomy/TaxonomyPage'))
+// const TagPageLazy = React.lazy(() => import('./tag/TagPage'))

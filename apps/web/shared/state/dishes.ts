@@ -1,16 +1,16 @@
-import { Taxonomy } from '@dish/models'
+import { Tag } from '@dish/models'
 import { Action } from 'overmind'
 
 type LabDishesState = {
-  taxonomy: Taxonomy[]
+  tag: Tag[]
 }
 
 export const state: LabDishesState = {
-  taxonomy: [],
+  tag: [],
 }
 
-const setTaxonomies: Action<Taxonomy[]> = (om, next) => {
-  om.state.dishes.taxonomy = next
+const setTaxonomies: Action<Tag[]> = (om, next) => {
+  om.state.dishes.tag = next
 }
 
 export const actions = {

@@ -12,11 +12,11 @@ type Section = {
   points: string[]
 }
 
-export class DishTaxonomy {
+export class DishTag {
   crawled_countries: string[] = []
 
   static async start() {
-    const crawler = new DishTaxonomy()
+    const crawler = new DishTag()
     await crawler.getEthnicCuisines()
     const pages = [
       'List of African cuisines',

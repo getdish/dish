@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 import { ScrollView, Text } from 'react-native'
 
 import { useOvermind } from '../../state/om'
-import { Taxonomy } from '../../state/Taxonomy'
+import { Tag } from '../../state/Tag'
 import { LinkButton } from '../shared/Link'
 import { HStack, VStack } from '../shared/Stacks'
 import { bg, bgHover } from './colors'
@@ -27,15 +27,15 @@ export default memo(function HomeFilterBar() {
   )
 })
 
-const FilterButton = memo(({ filter }: { filter: Taxonomy }) => {
+const FilterButton = memo(({ filter }: { filter: Tag }) => {
   const om = useOvermind()
-  const isActive = om.state.home.currentActiveTaxonomyIds.some(
+  const isActive = om.state.home.currentActiveTagIds.some(
     (x) => filter.id === x
   )
   return (
     <LinkButton
       onPress={() => {
-        om.actions.home.toggleActiveTaxonomy(filter)
+        om.actions.home.toggleActiveTag(filter)
       }}
     >
       <SmallButton isActive={isActive}>

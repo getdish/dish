@@ -15,7 +15,7 @@ export const routes = {
   login: new Route('/login'),
   register: new Route('/register'),
   forgotPassword: new Route('/forgot-password'),
-  taxonomy: new Route('/taxonomy'),
+  tag: new Route('/tag'),
   account: new Route<{ pane: string }>('/account/:pane'),
   search: new Route<{ query: string }>('/search/:query'),
   restaurant: new Route<{ slug: string }>('/restaurant/:slug'),

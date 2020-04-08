@@ -5,7 +5,7 @@ import {
   useQuery,
   useSubscription,
 } from '@apollo/client'
-import { Taxonomy, TaxonomyRecord, TaxonomyType } from '@dish/models'
+import { Tag, TagRecord, TagType } from '@dish/models'
 import { Ionicons } from '@expo/vector-icons'
 import React, { useEffect, useState } from 'react'
 import {
@@ -22,32 +22,32 @@ import { HStack, VStack } from '../shared/Stacks'
 import Tappable from '../shared/Tappable'
 
 const CONTINENTS_SUBSCRIPTION = gql`
-subscription Taxonomy {
-  taxonomy(where: { type: { _eq: "continent" } }, order_by: {order: asc}) {
-    id ${Taxonomy.fieldsQuery}
+subscription Tag {
+  tag(where: { type: { _eq: "continent" } }, order_by: {order: asc}) {
+    id ${Tag.fieldsQuery}
   }
 }
 `
 
 const COUNTRIES_SUBSCRIPTION = gql`
-subscription Taxonomy($parentId: uuid!) {
-  taxonomy(where: { type: { _eq: "country" }, parentId: { _eq: $parentId }, parentType: { _eq: "continent" } }, order_by: {order: asc}) {
-    id ${Taxonomy.fieldsQuery}
+subscription Tag($parentId: uuid!) {
+  tag(where: { type: { _eq: "country" }, parentId: { _eq: $parentId }, parentType: { _eq: "continent" } }, order_by: {order: asc}) {
+    id ${Tag.fieldsQuery}
   }
 }
 `
 
 const DISHES_SUBSCRIPTION = gql`
-subscription Taxonomy($parentId: uuid!) {
-  taxonomy(where: { type: { _eq: "dish" }, parentId: { _eq: $parentId }, parentType: { _eq: "country" } }, order_by: {order: asc}) {
-    id ${Taxonomy.fieldsQuery}
+subscription Tag($parentId: uuid!) {
+  tag(where: { type: { _eq: "dish" }, parentId: { _eq: $parentId }, parentType: { _eq: "country" } }, order_by: {order: asc}) {
+    id ${Tag.fieldsQuery}
   }
 }
 `
 
 const TAXONOMY_DELETE = gql`
   mutation Delete($id: uuid!) {
-    delete_taxonomy(where: { id: { _eq: $id } }) {
+    delete_tag(where: { id: { _eq: $id } }) {
       affected_rows
     }
   }
@@ -64,17 +64,15 @@ const DISHES_SEARCH = gql`
 
 const BorderLeft = () => <View />
 
-const upsertTaxonomy = () => {
+const upsertTag = () => {
   const apolloClient = useApolloClient()
-  const [draft, setDraft] = useState<TaxonomyRecord>({ type: 'continent' })
-  const [response, setResponse] = useState<FetchResult<TaxonomyRecord> | null>(
-    null
-  )
-  const update = (x: TaxonomyRecord = draft) => {
+  const [draft, setDraft] = useState<TagRecord>({ type: 'continent' })
+  const [response, setResponse] = useState<FetchResult<TagRecord> | null>(null)
+  const update = (x: TagRecord = draft) => {
     console.log('upsert', x)
     apolloClient
       .mutate({
-        mutation: Taxonomy.upsert(x),
+        mutation: Tag.upsert(x),
       })
       .then(setResponse)
     setDraft(x)
@@ -84,7 +82,7 @@ const upsertTaxonomy = () => {
 
 export default function TaxnonomyPage() {
   const [active, setActive] = useState<[number, number]>([0, 0])
-  const [draft, setDraft, upsertDraft] = upsertTaxonomy()
+  const [draft, setDraft, upsertDraft] = upsertTag()
 
   const [activeByRow, setActiveByRow] = useState<[number, number, number]>([
     0,
@@ -97,24 +95,24 @@ export default function TaxnonomyPage() {
   }, [...active])
 
   const continentQuery = useSubscription(CONTINENTS_SUBSCRIPTION, {})
-  const continent = (continentQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
+  const continent = (continentQuery.data?.tag ?? []) as TagRecord[]
   const selectedContinentId = continent[activeByRow[0]]?.id ?? ''
   const countryQuery = useSubscription(COUNTRIES_SUBSCRIPTION, {
     variables: { parentId: selectedContinentId },
   })
-  const country = (countryQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
+  const country = (countryQuery.data?.tag ?? []) as TagRecord[]
   const selectedCountryId = country[activeByRow[1]]?.id ?? ''
   const dishQuery = useSubscription(DISHES_SUBSCRIPTION, {
     variables: { parentId: selectedCountryId },
   })
-  const dish = (dishQuery.data?.taxonomy ?? []) as TaxonomyRecord[]
+  const dish = (dishQuery.data?.tag ?? []) as TagRecord[]
   const selectedDishId = country[activeByRow[2]]?.id ?? ''
   const selectedIds = {
     continent: selectedContinentId,
     country: selectedCountryId,
     dish: selectedDishId,
   }
-  const taxonomies = { continent, dish, country }
+  const tags = { continent, dish, country }
 
   useEffect(() => {
     const [row, col] = active
@@ -124,9 +122,9 @@ export default function TaxnonomyPage() {
     }
   }, [active])
 
-  const TaxonomyList = ({ type, row }: { type: TaxonomyType; row: number }) => {
-    const [_, _2, upsert] = upsertTaxonomy()
-    const parentType: TaxonomyType =
+  const TagList = ({ type, row }: { type: TagType; row: number }) => {
+    const [_, _2, upsert] = upsertTag()
+    const parentType: TagType =
       type === 'continent'
         ? 'continent'
         : type === 'country'
@@ -153,15 +151,15 @@ export default function TaxnonomyPage() {
               })
             }}
           />
-          {taxonomies[type].map((taxonomy, index) => {
+          {tags[type].map((tag, index) => {
             return (
               <ListItem
-                key={`${taxonomy.id}${taxonomy.updated_at}`}
+                key={`${tag.id}${tag.updated_at}`}
                 row={row}
                 col={index}
                 isActive={active[0] == row && active[1] == index}
-                isFormerlyActive={taxonomy.id === selectedIds[type]}
-                taxonomy={taxonomy}
+                isFormerlyActive={tag.id === selectedIds[type]}
+                tag={tag}
                 setActive={setActive}
                 upsert={upsert}
               />
@@ -176,17 +174,17 @@ export default function TaxnonomyPage() {
     <VStack flex={1}>
       <HStack flex={2}>
         <VStack flex={1}>
-          <TaxonomyList row={0} type="continent" />
+          <TagList row={0} type="continent" />
         </VStack>
 
         <VStack flex={1}>
           <BorderLeft />
-          <TaxonomyList row={1} type="country" />
+          <TagList row={1} type="country" />
         </VStack>
 
         <VStack flex={1}>
           <BorderLeft />
-          <TaxonomyList row={2} type="dish" />
+          <TagList row={2} type="dish" />
         </VStack>
 
         <VStack flex={1}>
@@ -243,7 +241,7 @@ export default function TaxnonomyPage() {
 const ListItem = ({
   row,
   col,
-  taxonomy,
+  tag,
   isActive,
   isFormerlyActive,
   setActive,
@@ -255,13 +253,13 @@ const ListItem = ({
   deletable?: boolean
   row?: number
   col?: number
-  taxonomy: TaxonomyRecord
+  tag: TagRecord
   isActive?: boolean
   setActive?: Function
   isFormerlyActive?: boolean
   upsert?: Function
 }) => {
-  const text = `${taxonomy.icon} ${taxonomy.name}`
+  const text = `${tag.icon} ${tag.name}`
   const [isEditing, setIsEditing] = useState(false)
   const [hidden, setHidden] = useState(false)
   const client = useApolloClient()
@@ -293,8 +291,8 @@ const ListItem = ({
                 setIsEditing(false)
                 const [icon, ...nameParts] = e.target['value'].split(' ')
                 const name = nameParts.join(' ')
-                const next: TaxonomyRecord = {
-                  ...taxonomy,
+                const next: TagRecord = {
+                  ...tag,
                   icon,
                   name,
                 }
@@ -314,7 +312,7 @@ const ListItem = ({
                 setHidden(true)
                 client.mutate({
                   variables: {
-                    id: taxonomy.id,
+                    id: tag.id,
                   },
                   mutation: TAXONOMY_DELETE,
                 })

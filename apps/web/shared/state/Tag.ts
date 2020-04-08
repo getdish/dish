@@ -1,4 +1,4 @@
-export type Taxonomy = {
+export type Tag = {
   id: string
   name: string
   icon?: string
@@ -9,7 +9,7 @@ export type Taxonomy = {
   isVotable?: boolean
 }
 
-export const taxonomyLenses: Taxonomy[] = [
+export const tagLenses: Tag[] = [
   {
     id: '0',
     name: 'Uniquely Good Here',
@@ -73,7 +73,7 @@ export const taxonomyLenses: Taxonomy[] = [
   },
 ]
 
-export const taxonomyFilters: Taxonomy[] = [
+export const tagFilters: Tag[] = [
   {
     id: '01',
     name: '$',

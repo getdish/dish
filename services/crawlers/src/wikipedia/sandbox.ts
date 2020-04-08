@@ -1,3 +1,3 @@
-import { DishTaxonomy } from './DishTaxonomy'
+import { DishTag } from './DishTag'
 
-DishTaxonomy.start()
+DishTag.start()

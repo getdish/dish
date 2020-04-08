@@ -6,13 +6,13 @@ import moment from 'moment'
 import { Dish } from '../src/Dish'
 import { Restaurant } from '../src/Restaurant'
 import { Review } from '../src/Review'
-import { Taxonomy } from '../src/Taxonomy'
+import { Tag } from '../src/Tag'
 import { User } from '../src/User'
 import { flushTestData } from '../src/utils'
 
 interface Context {
   restaurant: Restaurant
-  existing_tag: Taxonomy
+  existing_tag: Tag
   user: User
 }
 
@@ -53,7 +53,7 @@ test.beforeEach(async (t) => {
   let restaurant = new Restaurant(restaurant_fixture)
   await restaurant.upsert()
   t.context.restaurant = restaurant
-  const existing_tag = new Taxonomy({ name: 'test_tag_existing' })
+  const existing_tag = new Tag({ name: 'test_tag_existing' })
   await existing_tag.insert()
   t.context.existing_tag = existing_tag
   await auth.register('test', 'password')
@@ -85,7 +85,7 @@ test('Tagging a restaurant', async (t) => {
   await restaurant.findOne('name', restaurant.name)
   t.is(tag_ids.length, 2)
   t.is(tag_ids.includes(t.context.existing_tag.id), true)
-  t.is(restaurant.tags.map((t) => t.taxonomy.name).includes('test_tag'), true)
+  t.is(restaurant.tags.map((t) => t.tag.name).includes('test_tag'), true)
 })
 
 test('Searching for a restaurant by name', async (t) => {
@@ -113,7 +113,7 @@ test('Searching for a restaurant by tag', async (t) => {
     ...restaurant_fixture,
   })
   await restaurant.upsert()
-  const tag = new Taxonomy({ name: 'test_tag' })
+  const tag = new Tag({ name: 'test_tag' })
   await tag.insert()
   await restaurant.upsertTags(['test_tag'])
   const results = await Restaurant.search({
@@ -128,7 +128,7 @@ test('Searching for a restaurant by tag', async (t) => {
     query: '',
     tags: ['test_tag'],
   })
-  t.is(results[0].tags[0].taxonomy.name, 'test_tag')
+  t.is(results[0].tags[0].tag.name, 'test_tag')
 })
 
 test('Upserting a dish', async (t) => {
@@ -216,7 +216,7 @@ test('Add a review for restaurant by tag', async (t) => {
   const review = new Review({
     restaurant_id: t.context.restaurant.id,
     user_id: t.context.user.id,
-    taxonomy_id: t.context.existing_tag.id,
+    tag_id: t.context.existing_tag.id,
     rating: 5,
     text: 'test',
   })

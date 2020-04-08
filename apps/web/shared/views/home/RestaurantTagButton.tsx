@@ -30,7 +30,7 @@ export const RestaurantTagButton = memo(
             <SmallTitle>Tags</SmallTitle>
             <VStack padding={10} spacing="sm">
               {restaurant.tags.map((t, index) => {
-                const name = t.taxonomy.name
+                const name = t.tag.name
                 return (
                   <TagButton
                     key={`${name}${index}`}
