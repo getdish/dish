@@ -25,4 +25,4 @@ FROM mhart/alpine-node:slim-12
 COPY --from=0 /app /app
 WORKDIR /app/apps/web
 
-CMD ["node", "_/server.js"]
+CMD ["yarn", "start:web:prod"]

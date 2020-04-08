@@ -124,7 +124,10 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     }
   }
 
-  console.log('Config:\n', prettifyWebpackConfig(config))
+  // prettyjson is choking on a possibly self-referencing recursion when building
+  // with Docker.
+  // console.log('Config:\n', prettifyWebpackConfig(config))
+  console.log('Config:\n', config)
 
   return config
 }
