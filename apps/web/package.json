@@ -89,6 +89,7 @@
     "prettyjson": "^1.2.1",
     "react-refresh": "^0.8.1",
     "react-test-renderer": "~16.9.0",
+    "testcafe": "^1.8.4",
     "typescript": "3.7.3",
     "use-expo": "1.0.1",
     "webpack": "^4.42.1",
