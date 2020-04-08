@@ -29,7 +29,7 @@
     "android": "react-native run-android"
   },
   "dependencies": {
-    "@apollo/client": "*",
+    "@apollo/client": "3.0.0-beta.43",
     "@dish/common-web": "*",
     "@dish/models": "*",
     "@expo/vector-icons ": "10.0.6",
