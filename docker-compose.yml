@@ -29,6 +29,17 @@ services:
     depends_on:
       - 'postgres'
       - 'redis'
+  jwt-server:
+    image: dish/jwt-server
+    build:
+      context: ./
+      dockerfile: ./services/jwt-server/Dockerfile
+    ports:
+      - 3000:3000
+    environment:
+      - POSTGRES_HOST=postgres
+    depends_on:
+      - 'postgres'
   search:
     image: dish/search
     build:
