@@ -1,7 +1,7 @@
 import { Restaurant, RestaurantSearchArgs, Review, TopDish } from '@dish/models'
 import Fuse from 'fuse.js'
 import _ from 'lodash'
-import { Action, AsyncAction, Derive, IContext, Config } from 'overmind'
+import { Action, AsyncAction, Derive, IContext, Config, filter } from 'overmind'
 
 import { isWorker } from '../constants'
 import { fuzzy } from '../helpers/fuzzy'
@@ -9,6 +9,9 @@ import { sleep } from '../helpers/sleep'
 import { HistoryItem, RouteItem } from './router'
 import { Tag, tagFilters, tagLenses, getTagId, NavigableTag } from './Tag'
 import { slugify } from '../helpers/slugify'
+
+const SPLIT_TAG = '_'
+const SPLIT_TAG_TYPE = '~'
 
 type ShowAutocomplete = 'search' | 'location' | false
 
@@ -235,8 +238,11 @@ export function setMapView(x) {
   mapView = x
 }
 
-const start: AsyncAction<void> = async (om) => {
+const startBeforeRouting: AsyncAction = async (om) => {
   await om.actions.home._loadHomeDishes()
+}
+
+const start: AsyncAction = async (om) => {
   // depends on topDishes
   await om.actions.home._runAutocomplete(om.state.home.currentState.searchQuery)
   om.state.home.started = true
@@ -281,28 +287,7 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
       }
       nextState = searchState
       afterPush = () => {
-        // automatically map path segments to tags
-        const allTags = om.state.home.allTags
-        console.log('mapping to tags', item.params, allTags)
-
-        const setTag = (name: string, type: any) => {
-          const tag = allTags[getTagId({ name, type })]
-          if (tag) {
-            om.actions.home.setTagActive(tag)
-          }
-        }
-
-        for (const type of Object.keys(item.params)) {
-          const name = item.params[type]
-          if (type === 'filter') {
-            // handle them different
-            for (const filterName of name.split('_')) {
-              setTag(filterName, type)
-            }
-          } else {
-            setTag(name, type)
-          }
-        }
+        om.actions.home._syncUrlToTags(item.params)
       }
       fetchData = async () => {
         if (lastSearchState?.searchQuery !== item.params.query) {
@@ -754,10 +739,33 @@ const suggestTags: AsyncAction<string> = async (om, tags) => {
   om.state.home.allRestaurants[state.restaurantId] = restaurant
 }
 
-const setMapArea: Action<{ center: LngLat; span: LngLat }> = (om, val) => {
-  om.state.home.currentState.center = val.center
-  om.state.home.currentState.span = val.span
+function reverseGeocode(center: LngLat) {
+  const mapGeocoder = new mapkit.Geocoder({
+    language: 'en-GB',
+    getsUserLocation: true,
+  })
+  return new Promise((res, rej) => {
+    mapGeocoder.reverseLookup(
+      new mapkit.Coordinate(center.lat, center.lng),
+      (err, data) => {
+        if (err) return rej(err)
+        res(data.results)
+      }
+    )
+  })
+}
+
+const setMapArea: AsyncAction<{ center: LngLat; span: LngLat }> = async (
+  om,
+  { center, span }
+) => {
+  om.state.home.currentState.center = center
+  om.state.home.currentState.span = span
   om.actions.home.runSearch(om.state.home.currentState.searchQuery)
+
+  // reverse geocode location
+  const res = await reverseGeocode(center)
+  console.log('reverse geocode says', res)
 }
 
 const handleRouteChange: AsyncAction<RouteItem> = async (
@@ -852,18 +860,16 @@ const _runHomeSearch: AsyncAction<string> = async (om, query) => {
   om.state.home.topDishesFilteredIndices = res
 }
 
-const setTagInactive: Action<NavigableTag> = (om, val) => {
+const _setTagInactive: Action<NavigableTag> = (om, val) => {
   const state = om.state.home.currentState
   if (state.type != 'home' && state.type != 'search') return
   delete state.activeTagIds[getTagId(val)]
-  om.actions.home._handleTagChange()
 }
 
-const setTagActive: Action<NavigableTag> = (om, val) => {
+const _setTagActive: Action<NavigableTag> = (om, val) => {
   const state = om.state.home.currentState
   if (state.type != 'home' && state.type != 'search') return
   state.activeTagIds[getTagId(val)] = true
-  om.actions.home._handleTagChange()
 }
 
 const toggleTag: Action<NavigableTag> = (om, val) => {
@@ -871,10 +877,11 @@ const toggleTag: Action<NavigableTag> = (om, val) => {
   const state = om.state.home.currentState
   if (state.type != 'home' && state.type != 'search') return
   if (state.activeTagIds[getTagId(val)]) {
-    om.actions.home.setTagInactive(val)
+    om.actions.home._setTagInactive(val)
   } else {
-    om.actions.home.setTagActive(val)
+    om.actions.home._setTagActive(val)
   }
+  om.actions.home._handleTagChange()
 }
 
 const replaceActiveTagOfType: Action<NavigableTag> = (om, val) => {
@@ -884,9 +891,41 @@ const replaceActiveTagOfType: Action<NavigableTag> = (om, val) => {
     .map((id) => om.state.home.allTags[id])
     .find((x) => x.type === val.type)
   if (existing) {
-    om.actions.home.setTagInactive(existing)
+    om.actions.home._setTagInactive(existing)
   }
-  om.actions.home.setTagActive(val)
+  om.actions.home._setTagActive(val)
+  om.actions.home._handleTagChange()
+}
+
+const _syncUrlToTags: Action<Object> = (om, params) => {
+  // automatically map path segments to tags
+  const allTags = om.state.home.allTags
+
+  const setTag = (name: string, type: any) => {
+    const tag = allTags[getTagId({ name, type })]
+    if (tag) {
+      om.actions.home._setTagActive(tag)
+    }
+  }
+
+  for (const type of Object.keys(params)) {
+    const name = params[type]
+    if (type === 'tags') {
+      // handle them different
+      for (const tag of name.split(SPLIT_TAG)) {
+        if (tag.indexOf(SPLIT_TAG_TYPE) > -1) {
+          const [type, name] = tag.split(SPLIT_TAG_TYPE)
+          setTag(name, type)
+        } else {
+          setTag(tag, 'filter')
+        }
+      }
+    } else {
+      setTag(name, type)
+    }
+  }
+
+  om.actions.home._handleTagChange()
 }
 
 const _handleTagChange: Action = (om) => {
@@ -896,21 +935,32 @@ const _handleTagChange: Action = (om) => {
   const state = om.state.home.currentState
   if (state.type != 'home' && state.type != 'search') return
 
-  const params = {}
   const allActiveTags = Object.keys(state.activeTagIds).map(
     (id) => om.state.home.allTags[id]
   )
+
+  // build our final path segment
   const filterTags = allActiveTags.filter((x) => x.type === 'filter')
-  const otherTags = allActiveTags.filter((x) => x.type !== 'filter')
-
-  for (const tag of otherTags) {
-    params[tag.type] = slugify(tag.name)
+  const otherTags = allActiveTags.filter(
+    (x) => x.type !== 'lense' && x.type !== 'filter'
+  )
+  let tags = `${filterTags.map((x) => slugify(x.name)).join(SPLIT_TAG)}`
+  if (otherTags.length) {
+    if (tags.length) {
+      tags += SPLIT_TAG
+    }
+    tags += `${otherTags
+      .map((t) => `${t.type}${SPLIT_TAG_TYPE}${slugify(t.name)}`)
+      .join(SPLIT_TAG)}`
   }
-  if (filterTags.length) {
-    params['filter'] = filterTags.map((x) => slugify(x.name)).join('-')
-  }
 
-  console.log('whats goin on', params)
+  const params = {
+    lense: slugify(allActiveTags.find((x) => x.type === 'lense').name),
+    location: 'here',
+  }
+  if (tags.length) {
+    params['tags'] = tags
+  }
 
   om.actions.router.navigate({
     name: 'search',
@@ -919,10 +969,15 @@ const _handleTagChange: Action = (om) => {
   })
 }
 
+const requestLocation: Action = (om) => {}
+
 export const actions = {
   start,
-  setTagInactive,
-  setTagActive,
+  startBeforeRouting,
+  _syncUrlToTags,
+  _setTagInactive,
+  _setTagActive,
+  requestLocation,
   replaceActiveTagOfType,
   moveAutocompleteIndex,
   setActiveIndex,

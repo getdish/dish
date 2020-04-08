@@ -8,8 +8,10 @@ import { LinkButton } from './shared/Link'
 import { SmallTitle, SmallerTitle } from './shared/SmallTitle'
 import { Spacer } from './shared/Spacer'
 import { HStack, VStack } from './shared/Stacks'
+import { useOvermind } from '../state/om'
 
 export const WelcomeModal = () => {
+  const om = useOvermind()
   const [show, setShow] = useStorageState(localStorage, 'welcome-modal2', true)
 
   return (
@@ -28,8 +30,12 @@ export const WelcomeModal = () => {
             <li>
               Search <em>fast</em> across every delivery service.
             </li>
-            <li>Be a fun community with chefs, pop-ups, and exploration.</li>
+            <li>
+              Build a community of foodies and chefs, show popups and
+              interesting news.
+            </li>
           </ul>
+          We take privacy seriously! How do we even prove that!
         </Text>
 
         <SmallerTitle>Join the dish community</SmallerTitle>
@@ -38,7 +44,13 @@ export const WelcomeModal = () => {
         <HStack>
           <LinkButton {...flatButtonStyle}>How we break it down</LinkButton>
           <Spacer flex />
-          <LinkButton onPress={() => setShow(false)} {...flatButtonStyle}>
+          <LinkButton
+            onPress={() => {
+              setShow(false)
+              om.actions.home.requestLocation()
+            }}
+            {...flatButtonStyle}
+          >
             Ok!
           </LinkButton>
         </HStack>

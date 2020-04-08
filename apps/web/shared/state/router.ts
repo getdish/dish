@@ -19,7 +19,7 @@ export const routes = {
   forgotPassword: new Route('/forgot-password'),
   tag: new Route('/tag'),
   account: new Route<{ pane: string }>('/account/:pane'),
-  search: new Route<{ [key: string]: string }>('/:lense/:location/:filter?'),
+  search: new Route<{ [key: string]: string }>('/:lense/:location/:tags?'),
   notFound: new Route('*'),
 }
 
