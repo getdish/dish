@@ -2,12 +2,12 @@ import { Action, IConfig, createOvermind } from 'overmind'
 import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/config'
 
-import * as user from './user'
 import * as dishes from './dishes'
+import { gql } from './effects'
 import * as home from './home'
 import { onInitialize } from './onInitialize'
 import * as router from './router'
-import { gql } from './effects'
+import * as user from './user'
 
 const setShowSidebar: Action<boolean> = (om, val) => {
   om.state.showSidebar = val

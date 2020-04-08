@@ -1,13 +1,13 @@
 import { Restaurant } from '@dish/models'
-import React, { useState, useLayoutEffect, memo } from 'react'
-import { TouchableOpacity, TextInput } from 'react-native'
+import React, { memo, useLayoutEffect, useState } from 'react'
+import { TextInput, TouchableOpacity } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { Link, LinkButton } from '../shared/Link'
 import { HStack, VStack } from '../shared/Stacks'
-import { Quote } from './HomeRestaurantView'
-import { flatButtonStyle } from './baseButtonStyle'
 import { Toast } from '../Toast'
+import { flatButtonStyle } from './baseButtonStyle'
+import { Quote } from './HomeRestaurantView'
 
 export const RestaurantAddComment = memo(
   ({ restaurant }: { restaurant: Restaurant }) => {

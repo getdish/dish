@@ -1,5 +1,5 @@
 import DishAuth from '@dish/auth'
-import { User, Review } from '@dish/models'
+import { Review, User } from '@dish/models'
 import { Action, AsyncAction } from 'overmind'
 
 import { Toast } from '../views/Toast'

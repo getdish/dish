@@ -1,6 +1,6 @@
-import { OnInitialize, rehydrate } from 'overmind'
-import { getGraphEndpoint } from '@dish/common-web'
 import DishAuth from '@dish/auth'
+import { getGraphEndpoint } from '@dish/common-web'
+import { OnInitialize, rehydrate } from 'overmind'
 
 import { OVERMIND_MUTATIONS } from '../constants'
 

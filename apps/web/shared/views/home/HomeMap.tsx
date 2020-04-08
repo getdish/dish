@@ -9,8 +9,8 @@ import { useOvermind } from '../../state/om'
 import { Map, useMap } from '../map'
 // import { mapkit } from '../mapkit'
 import { ZStack } from '../shared/Stacks'
+import { getRankingColor, getRestaurantRating } from './RatingView'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
-import { getRestaurantRating, getRankingColor } from './RatingView'
 
 function centerMapToRegion(p: {
   map: mapkit.Map

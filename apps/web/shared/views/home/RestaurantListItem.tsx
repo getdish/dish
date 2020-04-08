@@ -2,17 +2,17 @@ import { Restaurant } from '@dish/models'
 import React, {
   memo,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
-  useLayoutEffect,
 } from 'react'
 import {
+  Button,
   Image,
   Text,
-  TouchableOpacity,
   TextInput,
+  TouchableOpacity,
   TouchableWithoutFeedback,
-  Button,
 } from 'react-native'
 
 import { useOvermind } from '../../state/om'
@@ -23,13 +23,13 @@ import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { lightLightBg } from './colors'
 import { RankingView } from './RankingView'
+import { RestaurantAddComment } from './RestaurantAddComment'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantMetaRow } from './RestaurantMetaRow'
 import { RestaurantRatingDetail } from './RestaurantRatingDetail'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
-import { RestaurantAddComment } from './RestaurantAddComment'
 
 export const RestaurantListItem = ({
   restaurant,

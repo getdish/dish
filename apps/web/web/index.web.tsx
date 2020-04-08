@@ -2,8 +2,9 @@
 // NOTE: nothing should import this file! its the root!
 //
 
-import { AppRegistry } from 'react-native'
 import { createOvermind } from 'overmind'
+import { AppRegistry } from 'react-native'
+
 import { config } from '../shared/state/om'
 
 // global styles

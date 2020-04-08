@@ -4,12 +4,12 @@ import { ScrollView, Text, TextInput } from 'react-native'
 
 import { useForceUpdate } from '../../hooks/useForceUpdate'
 import { useOvermind } from '../../state/om'
-import { Toast } from '../Toast'
 import { Icon } from '../shared/Icon'
 import { Popover } from '../shared/Popover'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack } from '../shared/Stacks'
 import { Tooltip } from '../shared/Tooltip'
+import { Toast } from '../Toast'
 import { HoverableButton } from './HoverableButton'
 import { LenseButton } from './LenseButton'
 

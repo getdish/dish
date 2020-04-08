@@ -4,10 +4,10 @@ import _ from 'lodash'
 import { Action, AsyncAction, Derive } from 'overmind'
 
 import { isWorker } from '../constants'
+import { fuzzy } from '../helpers/fuzzy'
 import { sleep } from '../helpers/sleep'
 import { HistoryItem, RouteItem } from './router'
 import { Taxonomy, taxonomyFilters, taxonomyLenses } from './Taxonomy'
-import { fuzzy } from '../helpers/fuzzy'
 
 type ShowAutocomplete = 'search' | 'location' | false
 
