@@ -1,3 +1,5 @@
+import { slugify } from '../helpers/slugify'
+
 export type Tag = {
   id: string
   name: string
@@ -7,6 +9,12 @@ export type Tag = {
   type: 'lense' | 'filter' | 'dish' | 'country'
   isActive?: boolean
   isVotable?: boolean
+}
+
+export type NavigableTag = Partial<Tag> & Pick<Tag, 'name' | 'type'>
+
+export const getTagId = (tag: NavigableTag) => {
+  return `${slugify(tag.type)}${slugify(tag.name)}`
 }
 
 export const tagLenses: Tag[] = [

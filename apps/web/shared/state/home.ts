@@ -7,13 +7,17 @@ import { isWorker } from '../constants'
 import { fuzzy } from '../helpers/fuzzy'
 import { sleep } from '../helpers/sleep'
 import { HistoryItem, RouteItem } from './router'
-import { Tag, tagFilters, tagLenses } from './Tag'
+import { Tag, tagFilters, tagLenses, getTagId, NavigableTag } from './Tag'
+import { slugify } from '../helpers/slugify'
 
 type ShowAutocomplete = 'search' | 'location' | false
 
 type HomeStateBase = {
+  started: boolean
   activeIndex: number // index for vertical (in page), -1 = autocomplete
-  allTags: { [id: string]: Tag }
+  allTags: { [keyPath: string]: NavigableTag }
+  allLenseTags: Tag[]
+  allFilterTags: Tag[]
   allRestaurants: { [id: string]: Restaurant }
   autocompleteDishes: TopDish['dishes']
   autocompleteIndex: number // index for horizontal row (autocomplete)
@@ -31,8 +35,6 @@ type HomeStateBase = {
 }
 
 export type HomeState = HomeStateBase & {
-  allLenseTags: Derive<HomeState, Tag[]>
-  allFilterTags: Derive<HomeState, Tag[]>
   lastHomeState: Derive<HomeState, HomeStateItemHome>
   lastSearchState: Derive<HomeState, HomeStateItemSearch | null>
   lastRestaurantState: Derive<HomeState, HomeStateItemRestaurant | null>
@@ -108,7 +110,7 @@ const INITIAL_RADIUS = 0.1
 export const initialHomeState: HomeStateItemHome = {
   type: 'home',
   activeTagIds: {
-    [tagLenses[0].id]: true,
+    [getTagId(tagLenses[0])]: true,
   },
   searchQuery: '',
   center: {
@@ -171,22 +173,15 @@ const defaultLocationAutocompleteResults: AutocompleteItem[] = [
 ]
 
 export const state: HomeState = {
+  started: false,
   skipNextPageFetchData: false,
   activeIndex: -1,
   allTags: [...tagFilters, ...tagLenses].reduce((acc, cur) => {
-    acc[cur.id] = cur
+    acc[getTagId(cur)] = cur
     return acc
   }, {}),
-  allLenseTags: (state) => {
-    return Object.keys(state.allTags)
-      .filter((k) => state.allTags[k].type === 'lense')
-      .map((k) => state.allTags[k])
-  },
-  allFilterTags: (state) => {
-    return Object.keys(state.allTags)
-      .filter((k) => state.allTags[k].type === 'filter')
-      .map((k) => state.allTags[k])
-  },
+  allLenseTags: tagLenses,
+  allFilterTags: tagFilters,
   allRestaurants: {},
   autocompleteDishes: [],
   autocompleteIndex: 0,
@@ -241,9 +236,10 @@ export function setMapView(x) {
 }
 
 const start: AsyncAction<void> = async (om) => {
-  //
   await om.actions.home._loadHomeDishes()
+  // depends on topDishes
   await om.actions.home._runAutocomplete(om.state.home.currentState.searchQuery)
+  om.state.home.started = true
 }
 
 const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
@@ -260,6 +256,7 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
 
   let nextState: HomeStateItem | null = null
   let fetchData: () => Promise<void> | null = null
+  let afterPush: () => any | null = null
 
   switch (item.name) {
     case 'home':
@@ -275,12 +272,38 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
       const searchState: HomeStateItemSearch = {
         ...fallbackState,
         type: 'search',
-        activeTagIds: {},
+        activeTagIds: om.state.home.started
+          ? om.state.home.lastHomeState.activeTagIds
+          : {},
         results: { status: 'loading' },
         ...lastSearchState,
         ...newState,
       }
       nextState = searchState
+      afterPush = () => {
+        // automatically map path segments to tags
+        const allTags = om.state.home.allTags
+        console.log('mapping to tags', item.params, allTags)
+
+        const setTag = (name: string, type: any) => {
+          const tag = allTags[getTagId({ name, type })]
+          if (tag) {
+            om.actions.home.setTagActive(tag)
+          }
+        }
+
+        for (const type of Object.keys(item.params)) {
+          const name = item.params[type]
+          if (type === 'filter') {
+            // handle them different
+            for (const filterName of name.split('_')) {
+              setTag(filterName, type)
+            }
+          } else {
+            setTag(name, type)
+          }
+        }
+      }
       fetchData = async () => {
         if (lastSearchState?.searchQuery !== item.params.query) {
           await om.actions.home.runSearch(item.params.query)
@@ -307,6 +330,9 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
 
   if (nextState) {
     om.state.home.states.push(nextState)
+    if (afterPush) {
+      afterPush()
+    }
     const skip = om.state.home.skipNextPageFetchData
     om.state.home.skipNextPageFetchData = false
     if (!skip && fetchData) {
@@ -385,6 +411,25 @@ const _loadHomeDishes: AsyncAction = async (om) => {
     // TODO span
     om.state.home.currentState.span.lat
   )
+
+  // update tags
+  for (const topDishes of all) {
+    // country tag
+    const tag: NavigableTag = {
+      name: topDishes.country,
+      type: 'country',
+      icon: topDishes.icon,
+    }
+    om.state.home.allTags[getTagId(tag)] = tag
+    // dish tags
+    for (const dish of topDishes.dishes ?? []) {
+      const tag: NavigableTag = {
+        name: dish.name,
+        type: 'dish',
+      }
+      om.state.home.allTags[getTagId(tag)] = tag
+    }
+  }
 
   const chunks = _.chunk(all, 4)
 
@@ -807,53 +852,71 @@ const _runHomeSearch: AsyncAction<string> = async (om, query) => {
   om.state.home.topDishesFilteredIndices = res
 }
 
-const setTagInactive: Action<Tag> = (om, val) => {
+const setTagInactive: Action<NavigableTag> = (om, val) => {
   const state = om.state.home.currentState
   if (state.type != 'home' && state.type != 'search') return
-  delete state.activeTagIds[val.id]
+  delete state.activeTagIds[getTagId(val)]
   om.actions.home._handleTagChange()
 }
 
-const setTagActive: Action<Tag> = (om, val) => {
+const setTagActive: Action<NavigableTag> = (om, val) => {
   const state = om.state.home.currentState
   if (state.type != 'home' && state.type != 'search') return
-  state.activeTagIds[val.id] = true
+  state.activeTagIds[getTagId(val)] = true
   om.actions.home._handleTagChange()
 }
 
-const toggleSearchTag: Action<Tag> = (om, val) => {
+const toggleTag: Action<NavigableTag> = (om, val) => {
   if (!val) return
   const state = om.state.home.currentState
   if (state.type != 'home' && state.type != 'search') return
-  if (state.activeTagIds[val.id]) {
+  if (state.activeTagIds[getTagId(val)]) {
     om.actions.home.setTagInactive(val)
   } else {
     om.actions.home.setTagActive(val)
   }
 }
 
-const replaceActiveTagOfType: Action<Tag> = (om, val) => {
+const replaceActiveTagOfType: Action<NavigableTag> = (om, val) => {
   const state = om.state.home.currentState
   if (state.type != 'home' && state.type != 'search') return
   const existing = Object.keys(state.activeTagIds)
     .map((id) => om.state.home.allTags[id])
     .find((x) => x.type === val.type)
   if (existing) {
-    delete state.activeTagIds[existing.id]
+    om.actions.home.setTagInactive(existing)
   }
-  state.activeTagIds[val.id] = true
+  om.actions.home.setTagActive(val)
 }
 
-const _handleTagChange: Action = (om, val) => {
-  console.log('TODO')
-  // om.actions.router.navigate({
-  //   name: 'search',
-  //   params: state.activeTagIds.reduce((acc, cur) => {
-  //     const tag = om.state.home.allLenses
-  //     acc[]
-  //     return acc
-  //   }, {})
-  // })
+const _handleTagChange: Action = (om) => {
+  if (!om.state.home.started) {
+    return
+  }
+  const state = om.state.home.currentState
+  if (state.type != 'home' && state.type != 'search') return
+
+  const params = {}
+  const allActiveTags = Object.keys(state.activeTagIds).map(
+    (id) => om.state.home.allTags[id]
+  )
+  const filterTags = allActiveTags.filter((x) => x.type === 'filter')
+  const otherTags = allActiveTags.filter((x) => x.type !== 'filter')
+
+  for (const tag of otherTags) {
+    params[tag.type] = slugify(tag.name)
+  }
+  if (filterTags.length) {
+    params['filter'] = filterTags.map((x) => slugify(x.name)).join('-')
+  }
+
+  console.log('whats goin on', params)
+
+  om.actions.router.navigate({
+    name: 'search',
+    replace: true,
+    params,
+  })
 }
 
 export const actions = {
@@ -872,7 +935,7 @@ export const actions = {
   setMapArea,
   setSearchQuery,
   popTo,
-  toggleSearchTag,
+  toggleTag,
   setShowUserMenu,
   setHoveredRestaurant,
   runSearch,

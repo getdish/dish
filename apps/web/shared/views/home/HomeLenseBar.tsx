@@ -6,6 +6,7 @@ import { useOvermind } from '../../state/om'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import HomeFilterBar from './HomeFilterBar'
 import { LenseButton } from './LenseButton'
+import { getTagId } from '../../state/Tag'
 
 export default memo(function HomeLenseBar(props: {
   activeTagIds: { [id: string]: boolean }
@@ -25,7 +26,7 @@ export default memo(function HomeLenseBar(props: {
               <LenseButton
                 key={lense.id}
                 lense={lense}
-                isActive={props.activeTagIds[lense.id]}
+                isActive={props.activeTagIds[getTagId(lense)]}
               />
             ))}
           </HStack>

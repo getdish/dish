@@ -6,16 +6,17 @@ import { Spacer } from '../shared/Spacer'
 import { HStack } from '../shared/Stacks'
 import { HoverableButton } from './HoverableButton'
 import { SuperScriptText } from './SuperScriptText'
+import { Tag } from '@dish/models'
 
 export const TagButton = memo(
   ({
     rank,
-    name,
+    tag,
     size,
     votable,
   }: {
     rank?: number
-    name: string
+    tag: Partial<Tag> & Pick<Tag, 'name' | 'type'>
     size?: 'lg' | 'md'
     votable?: boolean
   }) => {
@@ -62,7 +63,7 @@ export const TagButton = memo(
             margin: 'auto',
           }}
         >
-          {name}
+          {tag.icon} {tag.name}
         </Text>
         {!!votable && (
           <>

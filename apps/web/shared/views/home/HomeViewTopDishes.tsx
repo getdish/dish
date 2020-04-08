@@ -144,7 +144,7 @@ const CountryTopDishesAndRestaurants = memo(
               {...flatButtonStyle}
               marginVertical={-8}
               name="search"
-              params={{ query: country.country }}
+              params={{ country: country.country }}
             >
               <Text
                 numberOfLines={1}
@@ -248,7 +248,7 @@ const DishView = memo(({ dish }: { dish: { name: string; image: string } }) => {
       }}
       name="search"
       params={{
-        query: dish.name,
+        dish: dish.name,
       }}
       position="relative"
     >

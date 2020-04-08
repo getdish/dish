@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 import { ScrollView, Text } from 'react-native'
 
 import { useOvermind } from '../../state/om'
-import { Tag } from '../../state/Tag'
+import { Tag, getTagId } from '../../state/Tag'
 import { LinkButton } from '../shared/Link'
 import { HStack, VStack } from '../shared/Stacks'
 import { bg, bgHover } from './colors'
@@ -27,7 +27,7 @@ export default memo(function HomeFilterBar({
           <FilterButton
             key={tag.id}
             filter={tag}
-            isActive={activeTagIds[tag.id]}
+            isActive={activeTagIds[getTagId(tag)]}
           />
         ))}
       </HStack>
@@ -41,7 +41,7 @@ const FilterButton = memo(
     return (
       <LinkButton
         onPress={() => {
-          om.actions.home.toggleSearchTag(filter)
+          om.actions.home.toggleTag(filter)
         }}
       >
         <SmallButton isActive={isActive}>

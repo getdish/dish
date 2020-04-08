@@ -49,7 +49,10 @@ export const RestaurantTagButton = memo(
                 .map((x, index) => (
                   <React.Fragment key={index}>
                     <View style={{ marginBottom: 6, marginRight: 6 }}>
-                      <TagButton key={x.name} name={x.name} />
+                      <TagButton
+                        key={x.name}
+                        tag={{ type: 'dish', name: x.name, icon: '' }}
+                      />
                     </View>
                   </React.Fragment>
                 ))}
