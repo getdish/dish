@@ -4,12 +4,13 @@ import React, { memo, useEffect, useMemo, useState } from 'react'
 import { searchBarHeight } from '../../constants'
 import { useDebounceValue } from '../../hooks/useDebounce'
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
-import { LngLat } from '../../state/home'
+import { LngLat, setMapView } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Map, useMap } from '../map'
 // import { mapkit } from '../mapkit'
 import { ZStack } from '../shared/Stacks'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
+import { getRestaurantRating, getRankingColor } from './RatingView'
 
 function centerMapToRegion(p: {
   map: mapkit.Map
@@ -22,7 +23,13 @@ function centerMapToRegion(p: {
   p.map.setRegionAnimated(region)
 }
 
-export let mapView: any
+// appears *above* all markers and cant go below...
+// const dotFactory = (coordinate, options) => {
+//   const div = document.createElement('div')
+//   // div.textContent = 'HI'
+//   div.className = 'dot-annotation'
+//   return div
+// }
 
 export const HomeMap = memo(() => {
   const om = useOvermind()
@@ -55,7 +62,8 @@ export const HomeMap = memo(() => {
       right: 15,
     },
   })
-  mapView = map
+
+  setMapView(map)
 
   // wheel zoom
   if (map && map['_allowWheelToZoom'] == false) {
@@ -71,15 +79,7 @@ export const HomeMap = memo(() => {
       span,
     })
 
-    // map.addEventListener('select', (e) => {
-    // console.log('select', e, map)
-    // })
-
-    // map.addEventListener('deselect', (e) => {
-    // console.log('deselect', e, map)
-    // })
-
-    map.addEventListener('region-change-end', (e) => {
+    const handleRegionChangeEnd = (e) => {
       console.log('region-change-end', e)
       const span = map.region.span
       om.actions.home.setMapArea({
@@ -92,19 +92,13 @@ export const HomeMap = memo(() => {
           lng: span.longitudeDelta,
         },
       })
-    })
+    }
 
-    // map.addEventListener('drag-start', (e) => {
-    //   console.log('drag-start', e, map)
-    // })
+    map.addEventListener('region-change-end', handleRegionChangeEnd)
 
-    // map.addEventListener('drag-end', (e) => {
-    //   console.log('drag-end', e, map)
-    // })
-
-    // map.addEventListener('user-location-change', (e) => {
-    //   console.log('user-location-change', e, map)
-    // })
+    return () => {
+      map.removeEventListener('region-change-end', handleRegionChangeEnd)
+    }
   }, [map])
 
   const [focused, setFocused] = useState('')
@@ -149,21 +143,42 @@ export const HomeMap = memo(() => {
         : [],
     [restaurantsVersion]
   )
-  const annotations = useMemo(
-    () =>
-      mapkit
-        ? restaurants.map(
-            (restaurant, index) =>
-              new mapkit.MarkerAnnotation(coordinates[index], {
-                glyphText: index <= 12 ? `${index + 1}` : ``,
-                data: {
-                  id: restaurant.id,
-                },
-              })
-          )
-        : [],
-    [restaurantsVersion]
-  )
+  const annotations = useMemo(() => {
+    return restaurants
+      .map((restaurant, index) => {
+        const percent = getRestaurantRating(restaurant)
+        const color = getRankingColor(percent)
+
+        // if (index >= 10) {
+        //   return new mapkit.Annotation(coordinates[index], dotFactory, {
+        //     data: {
+        //       id: restaurant.id,
+        //     },
+        //   })
+        // }
+
+        return new mapkit.MarkerAnnotation(coordinates[index], {
+          glyphText: index <= 12 ? `${index + 1}` : ``,
+          color: color,
+          title: index < 10 ? restaurant.name : '',
+          subtitle: index >= 10 ? restaurant.name : '',
+          collisionMode: mapkit.Annotation.CollisionMode.Circle,
+          displayPriority:
+            index <= 10
+              ? mapkit.Annotation.DisplayPriority.Required // change to High to hide overlaps
+              : mapkit.Annotation.DisplayPriority.Low,
+          data: {
+            id: restaurant.id,
+          },
+        })
+        // return new mapkit.PinAnnotation(coordinates[index], {
+        //   data: {
+        //     id: restaurant.id,
+        //   },
+        // })
+      })
+      .reverse()
+  }, [restaurantsVersion])
 
   console.log('HomeMap', { mapkit, restaurantDetail, restaurantIds })
 
@@ -331,3 +346,23 @@ export const HomeMap = memo(() => {
     </ZStack>
   )
 })
+
+// map.addEventListener('select', (e) => {
+// console.log('select', e, map)
+// })
+
+// map.addEventListener('deselect', (e) => {
+// console.log('deselect', e, map)
+// })
+
+// map.addEventListener('drag-start', (e) => {
+//   console.log('drag-start', e, map)
+// })
+
+// map.addEventListener('drag-end', (e) => {
+//   console.log('drag-end', e, map)
+// })
+
+// map.addEventListener('user-location-change', (e) => {
+//   console.log('user-location-change', e, map)
+// })

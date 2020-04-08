@@ -29,11 +29,14 @@ export const useMap = (defaultOptions: MapOptions = {}) => {
   // Clean up the map on unmount
   React.useEffect(() => {
     return () => {
-      if (map) {
+      if (!map) return
+      try {
         map.destroy()
+      } catch (err) {
+        console.log('err disposing map, hmr issue')
       }
     }
-  }, [])
+  }, [map])
 
   return {
     mapkit,

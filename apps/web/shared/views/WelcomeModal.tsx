@@ -21,16 +21,15 @@ export const WelcomeModal = () => {
           up where Foursquare left off and runs with it to the future. It
           should:
           <ul>
+            <li>Actually find the best Pho and Tacos!</li>
             <li>
-              Separate rating <strong>food</strong> from{' '}
-              <strong>service</strong>.
+              Let you review by <strong>dish</strong>.
             </li>
-            <li>Let you search across every delivery service.</li>
-            <li>Provide reliable rankings, even for hole-in-the-walls!</li>
-            <li>Nearby popups and events for the weekend.</li>
-            <li>A community of chefs, foodies, and explorers.</li>
+            <li>
+              Search <em>fast</em> across every delivery service.
+            </li>
+            <li>Be a fun community with chefs, pop-ups, and exploration.</li>
           </ul>
-          Join us! We need help!
         </Text>
 
         <SmallerTitle>Join the dish community</SmallerTitle>

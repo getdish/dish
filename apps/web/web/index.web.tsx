@@ -1,4 +1,10 @@
+//
+// NOTE: nothing should import this file! its the root!
+//
+
 import { AppRegistry } from 'react-native'
+import { createOvermind } from 'overmind'
+import { config } from '../shared/state/om'
 
 // global styles
 require('./base.css')
@@ -16,8 +22,10 @@ AppRegistry.registerComponent('dish', () => App)
 window['React'] = React
 
 // exports
-exports.App = require('../shared/views/App')
-exports.config = require('../shared/state/om')
+if (process.env.TARGET === 'ssr') {
+  exports.App = require('../shared/views/App')
+  exports.config = require('../shared/state/om')
+}
 if (process.env.TARGET !== 'worker') {
   exports.Helmet = require('react-helmet')
 }
@@ -27,7 +35,16 @@ if (process.env.TARGET !== 'preact') {
 
 let rootEl = document.getElementById('root')
 
+// needs to be above App next to render()
+const om = createOvermind(config, {
+  devtools: 'localhost:3031',
+  logProxies: true,
+  hotReloading: true,
+})
+
 async function start() {
+  console.log('Starting app...')
+
   if (!isWorker) {
     require('./mapkit')
     await startMapKit()
@@ -35,18 +52,19 @@ async function start() {
   }
 
   if (OVERMIND_MUTATIONS) {
-    hydrate(<App />, document.getElementById('root'))
+    hydrate(<App overmind={om} />, document.getElementById('root'))
   } else {
     // for worker
     if (isWorker) {
       rootEl = document.createElement('div')
       document.body.appendChild(rootEl)
     }
-    render(<App />, rootEl)
+    render(<App overmind={om} />, rootEl)
   }
 }
 
-if (!window['IS_SSR_RENDERING']) {
+if (!window['IS_SSR_RENDERING'] && !window['STARTED']) {
+  window['STARTED'] = true
   start()
 }
 
@@ -58,5 +76,11 @@ async function startMapKit() {
     authorizationCallback: (done) => {
       done(token)
     },
+  })
+}
+
+if (module['hot']) {
+  module['hot'].accept('../shared/state/om', () => {
+    console.log('hmr state')
   })
 }

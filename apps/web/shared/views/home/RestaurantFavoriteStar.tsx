@@ -4,7 +4,7 @@ import { ScrollView, Text, TextInput } from 'react-native'
 
 import { useForceUpdate } from '../../hooks/useForceUpdate'
 import { useOvermind } from '../../state/om'
-import { Toast } from '../App'
+import { Toast } from '../Toast'
 import { Icon } from '../shared/Icon'
 import { Popover } from '../shared/Popover'
 import { Spacer } from '../shared/Spacer'

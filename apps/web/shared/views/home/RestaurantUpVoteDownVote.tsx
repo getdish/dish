@@ -1,9 +1,9 @@
 import { Restaurant, Review } from '@dish/models'
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useRef, useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
 import { useOvermind } from '../../state/om'
-import { Toast } from '../App'
+import { Toast } from '../Toast'
 import Hoverable from '../shared/Hoverable'
 import { Icon } from '../shared/Icon'
 import { VStack } from '../shared/Stacks'

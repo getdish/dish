@@ -4,10 +4,10 @@ import { TouchableOpacity, TextInput } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { Link, LinkButton } from '../shared/Link'
-import { HStack, VStack, ZStack } from '../shared/Stacks'
+import { HStack, VStack } from '../shared/Stacks'
 import { Quote } from './HomeRestaurantView'
 import { flatButtonStyle } from './baseButtonStyle'
-import { Toast } from '../App'
+import { Toast } from '../Toast'
 
 export const RestaurantAddComment = memo(
   ({ restaurant }: { restaurant: Restaurant }) => {

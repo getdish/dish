@@ -10,10 +10,16 @@ export type RatingViewProps = StackBaseProps & {
   restaurant: Partial<Restaurant>
 }
 
+export const getRestaurantRating = (restaurant: Partial<Restaurant>) =>
+  Math.round(restaurant.rating * 20)
+
+export const getRankingColor = (percent: number) =>
+  percent > 84 ? 'green' : percent > 60 ? 'orange' : 'red'
+
 export const RatingView = forwardRef(
   ({ restaurant, size: sizeIn, ...rest }: RatingViewProps, ref) => {
-    const percent = Math.round(restaurant.rating * 20)
-    const color = percent > 84 ? 'green' : percent > 60 ? 'orange' : 'red'
+    const percent = getRestaurantRating(restaurant)
+    const color = getRankingColor(percent)
     const borderColor =
       percent > 84 ? 'lightgreen' : percent > 60 ? 'gold' : 'red'
     const size = sizeIn == 'sm' ? 38 : sizeIn == 'md' ? 48 : 72

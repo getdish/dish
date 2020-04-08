@@ -55,9 +55,14 @@ const HomeSearchResultsViewContent = memo(
   ({ state }: { state: HomeStateItemSearch }) => {
     const om = useOvermind()
     const allRestaurants = om.state.home.allRestaurants
+    const topPad = 20 + 70
 
     if (!state.results?.results || state.results.status === 'loading') {
-      return <LoadingItems />
+      return (
+        <VStack paddingTop={topPad}>
+          <LoadingItems />
+        </VStack>
+      )
     }
 
     const resultsIds = state.results?.results?.restaurantIds
@@ -73,7 +78,7 @@ const HomeSearchResultsViewContent = memo(
 
     return (
       <List
-        data={[20 + 70, ...results, 20]}
+        data={[topPad, ...results, 20]}
         estimatedHeight={182}
         renderItem={({ item, index }) => {
           if (typeof item == 'number') {
