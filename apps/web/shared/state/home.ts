@@ -13,8 +13,6 @@ type ShowAutocomplete = 'search' | 'location' | false
 
 type HomeStateBase = {
   activeIndex: number // index for vertical (in page), -1 = autocomplete
-  allFilters: Tag[]
-  allLenses: Tag[]
   allTags: { [id: string]: Tag }
   allRestaurants: { [id: string]: Restaurant }
   autocompleteDishes: TopDish['dishes']
@@ -133,14 +131,30 @@ const lastSearchState = (state: HomeStateBase) =>
     (x) => x.type === 'search'
   ) as HomeStateItemSearch | null
 
+// not beautiful..
 const breadcrumbStates = (state: HomeStateBase) => {
-  const lastType = _.last(state.states)!.type
-  const lastHome = lastHomeState(state)
-  const lastSearch = lastType != 'home' && lastSearchState(state)
-  const lastRestaurant = lastType == 'restaurant' && lastRestaurantState(state)
-  return [lastHome, lastSearch, lastRestaurant]
-    .filter(Boolean)
-    .map((x) => _.omit(x as any, 'historyId'))
+  let crumbs: HomeStateItem[] = []
+  for (let i = state.states.length - 1; i >= 0; i--) {
+    const cur = state.states[i]
+    switch (cur.type) {
+      case 'home':
+        crumbs.unshift(cur)
+        return crumbs
+      case 'search':
+      case 'restaurant':
+        if (crumbs.some((x) => x.type === cur.type)) {
+          break
+        }
+        if (
+          cur.type === 'restaurant' &&
+          crumbs.some((x) => x.type === 'search')
+        ) {
+          break
+        }
+        crumbs.unshift(cur)
+        break
+    }
+  }
 }
 
 /*

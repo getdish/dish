@@ -42,6 +42,7 @@ const om = createOvermind(config, {
   logProxies: true,
   hotReloading: true,
 })
+window['om'] = om
 
 async function start() {
   if (!isWorker) {
