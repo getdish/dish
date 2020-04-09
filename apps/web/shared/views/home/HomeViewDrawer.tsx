@@ -19,7 +19,7 @@ const colors = [
   'rgba(255,255,255,1)',
   'rgba(255,255,255,1)',
   'rgba(255,255,255,1)',
-  'rgba(255,255,255,1)',
+  'rgba(255,255,255,1)'
   // 'rgba(255,255,255,0.5)',
 ]
 
@@ -60,7 +60,7 @@ export function HomeViewDrawer(props: { children: any }) {
           </ZStack>
         </ZStack>
       </ZStack>
-      <VStack flex={1} paddingLeft={drawerPad} maxWidth={650} marginLeft="auto">
+      <VStack flex={1} paddingLeft={drawerPad} maxWidth={580} marginLeft="auto">
         {props.children}
       </VStack>
     </HStack>
