@@ -182,9 +182,12 @@ export type HomeState = HomeStateBase & {
   currentStateSearchQuery: Derive<HomeState, HomeStateItem['searchQuery']>
   previousState: Derive<HomeState, HomeStateItem>
   isAutocompleteActive: Derive<HomeState, boolean>
-  activeAutocompleteResults: Derive<HomeState, AutocompleteItem[]>
   isLoading: Derive<HomeState, boolean>
+  autocompleteResultsActive: Derive<HomeState, AutocompleteItem[]>
   lastActiveTags: Derive<HomeState, Tag[]>
+  searchbarFocusedTag: Derive<HomeState, Tag>
+  autocompleteFocusedTag: Derive<HomeState, Tag>
+  searchBarTags: Derive<HomeState, Tag[]>
 }
 
 export const state: HomeState = {
@@ -219,7 +222,22 @@ export const state: HomeState = {
   states: [initialHomeState],
   topDishes: [],
   topDishesFilteredIndices: [],
-  activeAutocompleteResults: (state) => {
+  searchBarTags: (state) => {
+    return state.lastActiveTags.filter((x) => x.type === 'country')
+  },
+  autocompleteFocusedTag: (state) => {
+    const { autocompleteIndex } = state
+    if (autocompleteIndex < 0) return null
+    return (state.allTags[
+      state.autocompleteResults[autocompleteIndex - 1]?.tagId
+    ] ?? null) as Tag
+  },
+  searchbarFocusedTag: (state) => {
+    const { autocompleteIndex } = state
+    if (autocompleteIndex > -1) return null
+    return state.searchBarTags[-1 - autocompleteIndex]
+  },
+  autocompleteResultsActive: (state) => {
     const prefix: AutocompleteItem[] = [
       {
         name: 'Search',
@@ -471,6 +489,7 @@ const DEBOUNCE_SEARCH = 600
 let lastRunAt = Date.now()
 const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   const state = om.state.home.currentState
+  const isDeleting = query.length < state.searchQuery.length
   const isOnHome = state.type === 'home'
   const isOnSearch = state.type === 'search'
   lastRunAt = Date.now()
@@ -508,7 +527,8 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   // AUTOCOMPLETE
   // very slight debounce
   if (isOnSearch || isOnHome) {
-    await sleep(DEBOUNCE_AUTOCOMPLETE)
+    const delayByX = isDeleting ? 2 : 1
+    await sleep(DEBOUNCE_AUTOCOMPLETE * delayByX)
     if (id != lastRunAt) return
 
     // fast actions
@@ -516,7 +536,7 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     om.actions.home._runAutocomplete(query)
 
     // slow actions below here
-    await sleep(DEBOUNCE_SEARCH - DEBOUNCE_AUTOCOMPLETE)
+    await sleep(DEBOUNCE_SEARCH * delayByX - DEBOUNCE_AUTOCOMPLETE * delayByX)
     if (id != lastRunAt) return
   }
 
@@ -877,7 +897,9 @@ function searchLocations(query: string) {
 
 const moveAutocompleteIndex: Action<number> = (om, val) => {
   const cur = om.state.home.autocompleteIndex
-  om.state.home.autocompleteIndex = Math.min(Math.max(-1, cur + val), 1000) // TODO
+  const tags = om.state.home.lastActiveTags
+  const min = -1 - tags.length
+  om.state.home.autocompleteIndex = Math.min(Math.max(min, cur + val), 1000) // TODO
 }
 
 const setActiveIndex: Action<number> = (om, val) => {
@@ -921,7 +943,7 @@ const setTagActive: Action<NavigableTag> = (om, val) => {
   om.actions.home._handleTagChange()
 }
 
-const toggleTag: Action<NavigableTag> = (om, val) => {
+const toggleTagActive: Action<NavigableTag> = (om, val) => {
   if (!val) return
   const state = om.state.home.currentState
   if (state.type != 'home' && state.type != 'search') return
@@ -938,6 +960,7 @@ const replaceActiveTagOfType: Action<NavigableTag> = (om, val) => {
   if (state.type != 'home' && state.type != 'search') return
   const existing = Object.keys(state.activeTagIds)
     .map((id) => om.state.home.allTags[id])
+    .filter(Boolean)
     .find((x) => x.type === val.type)
   if (existing) {
     setTagInactiveFn(om, existing)
@@ -1039,7 +1062,7 @@ export const actions = {
   setMapArea,
   setSearchQuery,
   popTo,
-  toggleTag,
+  toggleTagActive,
   setShowUserMenu,
   setHoveredRestaurant,
   runSearch,
