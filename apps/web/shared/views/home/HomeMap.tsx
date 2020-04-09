@@ -12,7 +12,7 @@ import { ZStack } from '../shared/Stacks'
 import { getRankingColor, getRestaurantRating } from './RatingView'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
-function centerMapToRegion(p: {
+export function centerMapToRegion(p: {
   map: mapkit.Map
   center: LngLat
   span: LngLat
@@ -278,7 +278,11 @@ export const HomeMap = memo(() => {
       if (!map || !restaurantDelayed?.location) return
       const index = restaurantIds.indexOf(restaurantDelayed.id)
       if (index > -1) {
-        map.annotations[index].selected = true
+        if (map.annotations[index]) {
+          map.annotations[index].selected = true
+        } else {
+          console.warn('no annotations?', index, map.annotations)
+        }
       }
       centerMapToRegion({
         map,

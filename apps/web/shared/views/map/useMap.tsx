@@ -46,43 +46,16 @@ export const useMap = (defaultOptions: MapOptions = {}) => {
       map,
       mapRef,
     },
-    setRotation: React.useCallback(
-      (rotationValue: number, isAnimated: boolean = false) => {
-        if (map) {
-          map.setRotationAnimated(rotationValue, isAnimated)
-        }
-      },
-      [map]
-    ),
-    setCenter: React.useCallback(
-      (centerValue: NumberTuple, isAnimated: boolean = false) => {
-        if (map) {
-          map.setCenterAnimated(createCoordinate(...centerValue), isAnimated)
-        }
-      },
-      [map]
-    ),
-    setRegion: React.useCallback(
-      (region: RegionType, isAnimated: boolean = false) => {
-        if (map) {
-          map.setRegionAnimated(
-            createCoordinateRegionFromValues(region),
-            isAnimated
-          )
-        }
-      },
-      [map]
-    ),
-    setVisibleMapRect: React.useCallback(
-      (visibleMapRect: Rect, isAnimated: boolean = false) => {
-        if (map) {
-          map.setVisibleMapRectAnimated(
-            createMapRect(...visibleMapRect),
-            isAnimated
-          )
-        }
-      },
-      [map]
-    ),
+    // setVisibleMapRect: React.useCallback(
+    //   (visibleMapRect: Rect, isAnimated: boolean = false) => {
+    //     if (map) {
+    //       map.setVisibleMapRectAnimated(
+    //         createMapRect(...visibleMapRect),
+    //         isAnimated
+    //       )
+    //     }
+    //   },
+    //   [map]
+    // ),
   }
 }
