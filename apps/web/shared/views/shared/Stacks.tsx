@@ -47,6 +47,16 @@ const createStack = (defaultStyle?: ViewStyle) => {
         hoverStyle = null,
         onHoverIn,
         onHoverOut,
+        // @ts-ignore
+        onMouseEnter,
+        // @ts-ignore
+        onMouseLeave,
+        // @ts-ignore
+        onMouseMove,
+        // @ts-ignore
+        onResponderGrant,
+        // @ts-ignore
+        onResponderRelease,
         spacing,
         className,
         disabled,
@@ -54,6 +64,9 @@ const createStack = (defaultStyle?: ViewStyle) => {
       },
       ref
     ) => {
+      onHoverIn = onHoverIn || onMouseEnter
+      onHoverOut = onHoverOut || onMouseLeave
+
       const innerRef = useRef<any>()
       const [isHovered, set] = useState(false)
 

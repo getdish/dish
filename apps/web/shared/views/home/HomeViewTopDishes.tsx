@@ -1,7 +1,7 @@
 import { Dish, Restaurant, TopDish } from '@dish/models'
 import _ from 'lodash'
 import React, { memo, useCallback, useState } from 'react'
-import { Image, ScrollView, Text } from 'react-native'
+import { Image, ScrollView, Text, View } from 'react-native'
 
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItemHome, HomeStateItemSimple } from '../../state/home'
@@ -17,6 +17,9 @@ import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
 import { bgLightLight } from './colors'
 import HomeLenseBar from './HomeLenseBar'
 import { RatingView } from './RatingView'
+import { SmallButton } from './SmallButton'
+import { HoverablePopover } from '../shared/HoverablePopover'
+import { Box } from '../shared/Box'
 
 export default memoIsEqualDeep(function HomeViewTopDishes({
   state,
@@ -107,7 +110,36 @@ const HomeViewTopDishesContent = memo(() => {
         <HomeViewTopDishesTrending />
 
         <>
-          <SmallTitle>Cuisine</SmallTitle>
+          <SmallTitle
+            after={
+              <HoverablePopover
+                position="right"
+                contents={
+                  <Box>
+                    {[
+                      'All',
+                      'Asia',
+                      'Americas',
+                      'Europe',
+                      'Mid-East',
+                      'Africa',
+                    ].map((tag) => (
+                      <SmallButton isActive={tag === 'All'} key={tag}>
+                        {tag}
+                      </SmallButton>
+                    ))}
+                  </Box>
+                }
+              >
+                <VStack pointerEvents="auto">
+                  <Text>🌎</Text>
+                </VStack>
+              </HoverablePopover>
+            }
+          >
+            Cuisine
+          </SmallTitle>
+
           {results.map((country, index) => (
             <CountryTopDishesAndRestaurants
               key={country.country}
