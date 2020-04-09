@@ -6,6 +6,7 @@ import queryString from 'query-string'
 
 import { slugify } from '../helpers/slugify'
 import { sleep } from '../helpers/sleep'
+import { race } from '../helpers/race'
 
 class Route<A extends Object | void = void> {
   constructor(public path: string, public params?: A) {}
@@ -153,16 +154,18 @@ const navigate: AsyncAction<NavigateItem> = async (om, navItem) => {
   }
 
   if (onRouteChange) {
-    await Promise.race([
+    race(
       onRouteChange({
         type: item.replace ? 'replace' : 'push',
         name: item.name,
         item: _.last(om.state.router.history)!,
       }),
-      sleep(1000).then(() => {
-        console.error('timed out route changin!')
-      }),
-    ])
+      1000,
+      'router.onRouteChange',
+      {
+        warnOnly: true,
+      }
+    )
   }
 }
 
@@ -188,7 +191,7 @@ const routeListen: Action<{
   url: string
   name: RouteName
 }> = (om, { name, url }) => {
-  page(url, ({ params, querystring }) => {
+  page(url, async ({ params, querystring }) => {
     let isGoingBack = false
     if (pop && Date.now() - pop.at < 30) {
       if (pop.path == getPathFromParams({ name, params })) {
@@ -226,20 +229,17 @@ const routeListen: Action<{
         return acc
       }, {})
 
-      const tmErr = setTimeout(() => {
-        throw new Error(`Timed out navigating`)
-      }, 1000)
+      const args: NavigateItem = {
+        name,
+        params: paramsClean,
+      } as any
 
       // go go go
-      om.actions.router
-        .navigate({
-          name,
-          params: paramsClean,
-        } as any)
-        .then(() => {
-          clearTimeout(tmErr)
-          finishStart()
-        })
+      await race(om.actions.router.navigate(args), 1000, 'router.navigate', {
+        warnOnly: true,
+      })
+
+      finishStart()
     }
   })
 }
