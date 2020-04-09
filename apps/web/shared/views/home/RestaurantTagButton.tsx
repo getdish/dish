@@ -8,7 +8,7 @@ import { Icon } from '../shared/Icon'
 import { Popover } from '../shared/Popover'
 import { SmallTitle, SmallerTitle } from '../shared/SmallTitle'
 import { HStack, VStack } from '../shared/Stacks'
-import { Tooltip } from '../shared/Tooltip'
+import { Box } from '../shared/Box'
 import { styles } from './HomeRestaurantView'
 import { HoverableButton } from './HoverableButton'
 import { TagButton } from './TagButton'
@@ -26,7 +26,7 @@ export const RestaurantTagButton = memo(
         onClickOutside={() => setIsOpen(false)}
         position="right"
         contents={
-          <Tooltip spacing maxWidth={300}>
+          <Box spacing maxWidth={300}>
             <SmallTitle>Tags</SmallTitle>
             <VStack padding={10} spacing="sm">
               {restaurant.tags.map((t, index) => {
@@ -74,7 +74,7 @@ export const RestaurantTagButton = memo(
                 }}
               />
             </HStack>
-          </Tooltip>
+          </Box>
         }
       >
         <HoverableButton

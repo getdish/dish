@@ -8,7 +8,7 @@ import { Icon } from '../shared/Icon'
 import { Popover } from '../shared/Popover'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack } from '../shared/Stacks'
-import { Tooltip } from '../shared/Tooltip'
+import { Box } from '../shared/Box'
 import { Toast } from '../Toast'
 import { HoverableButton } from './HoverableButton'
 import { LenseButton } from './LenseButton'
@@ -55,7 +55,7 @@ export const RestaurantFavoriteStar = memo(
           setIsOpen(false)
         }}
         contents={
-          <Tooltip width={520}>
+          <Box width={520}>
             {showContent && (
               <>
                 <HStack>
@@ -105,7 +105,7 @@ export const RestaurantFavoriteStar = memo(
                 </HStack>
               </>
             )}
-          </Tooltip>
+          </Box>
         }
       >
         <HoverableButton

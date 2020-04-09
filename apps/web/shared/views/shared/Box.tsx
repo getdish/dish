@@ -2,7 +2,7 @@ import React from 'react'
 
 import { StackBaseProps, VStack } from './Stacks'
 
-export function Tooltip(props: StackBaseProps) {
+export function Box(props: StackBaseProps) {
   return (
     <VStack
       backgroundColor="#fff"

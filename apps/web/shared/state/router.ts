@@ -18,6 +18,8 @@ export const routes = {
   register: new Route('/register'),
   forgotPassword: new Route('/forgot-password'),
   tag: new Route('/tag'),
+  promise: new Route('/promise'),
+  pokedex: new Route('/pokedex'),
   account: new Route<{ pane: string }>('/account/:pane'),
   search: new Route<{ [key: string]: string }>('/:lense/:location/:tags?'),
   notFound: new Route('*'),
