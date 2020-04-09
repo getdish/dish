@@ -9,6 +9,7 @@ import { sleep } from '../helpers/sleep'
 import { slugify } from '../helpers/slugify'
 import { HistoryItem, RouteItem } from './router'
 import { NavigableTag, Tag, getTagId, tagFilters, tagLenses } from './Tag'
+import { race } from '../helpers/race'
 
 type Om = IContext<Config>
 
@@ -364,10 +365,9 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
     const shouldSkip = om.state.home.skipNextPageFetchData
     om.state.home.skipNextPageFetchData = false
     if (!shouldSkip && fetchData) {
-      await Promise.race([
-        fetchData(),
-        sleep(1000).then(() => console.error('timed out fetching data!')),
-      ])
+      race(fetchData(), 1000, 'fetchData', {
+        warnOnly: true,
+      })
     }
   }
 }
@@ -818,6 +818,7 @@ const setMapArea: AsyncAction<{ center: LngLat; span: LngLat }> = async (
   om,
   { center, span }
 ) => {
+  console.warn('set map area')
   om.state.home.currentState.center = center
   om.state.home.currentState.span = span
   om.actions.home.runSearch({

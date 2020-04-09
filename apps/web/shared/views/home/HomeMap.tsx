@@ -230,12 +230,6 @@ export const HomeMap = memo(() => {
   useDebounceEffect(
     () => {
       if (!map) return
-      centerMapToRegion({
-        map,
-        center: state.center,
-        span: state.span,
-      })
-
       // react to changed center specifically
       return om.reaction(
         (state) => state.home.currentState.center,
@@ -243,13 +237,13 @@ export const HomeMap = memo(() => {
           centerMapToRegion({
             map,
             center,
-            span: state.span,
+            span: om.state.home.currentState.span,
           })
         }
       )
     },
     100,
-    [map, om.state.home.states.length]
+    [map]
   )
 
   // Search - hover restaurant
