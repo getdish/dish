@@ -5,6 +5,7 @@ import page from 'page'
 import queryString from 'query-string'
 
 import { slugify } from '../helpers/slugify'
+import { sleep } from '../helpers/sleep'
 
 class Route<A extends Object | void = void> {
   constructor(public path: string, public params?: A) {}
@@ -152,11 +153,16 @@ const navigate: AsyncAction<NavigateItem> = async (om, navItem) => {
   }
 
   if (onRouteChange) {
-    await onRouteChange({
-      type: item.replace ? 'replace' : 'push',
-      name: item.name,
-      item: _.last(om.state.router.history)!,
-    })
+    await Promise.race([
+      onRouteChange({
+        type: item.replace ? 'replace' : 'push',
+        name: item.name,
+        item: _.last(om.state.router.history)!,
+      }),
+      sleep(1000).then(() => {
+        console.error('timed out route changin!')
+      }),
+    ])
   }
 }
 
