@@ -1,5 +1,5 @@
 # Stage 1: copy/install
-FROM mhart/alpine-node:12.16
+FROM mhart/alpine-node:12.16.1
 WORKDIR /app
 
 COPY package.json .

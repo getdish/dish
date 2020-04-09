@@ -1,5 +1,5 @@
 # Stage 1: copy/install
-FROM mhart/alpine-node:12
+FROM mhart/alpine-node:12.16.1
 WORKDIR /app
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 
