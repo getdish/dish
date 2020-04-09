@@ -10,6 +10,8 @@ import { HistoryItem, RouteItem } from './router'
 import { Tag, tagFilters, tagLenses, getTagId, NavigableTag } from './Tag'
 import { slugify } from '../helpers/slugify'
 
+type Om = IContext<Config>
+
 const SPLIT_TAG = '_'
 const SPLIT_TAG_TYPE = '~'
 
@@ -860,16 +862,26 @@ const _runHomeSearch: AsyncAction<string> = async (om, query) => {
   om.state.home.topDishesFilteredIndices = res
 }
 
-const _setTagInactive: Action<NavigableTag> = (om, val) => {
+const setTagInactiveFn = (om: Om, val: NavigableTag) => {
   const state = om.state.home.currentState
   if (state.type != 'home' && state.type != 'search') return
   delete state.activeTagIds[getTagId(val)]
 }
 
-const _setTagActive: Action<NavigableTag> = (om, val) => {
+const setTagActiveFn = (om: Om, val: NavigableTag) => {
   const state = om.state.home.currentState
   if (state.type != 'home' && state.type != 'search') return
   state.activeTagIds[getTagId(val)] = true
+}
+
+const setTagInactive: Action<NavigableTag> = (om, val) => {
+  setTagInactiveFn(om, val)
+  om.actions.home._handleTagChange()
+}
+
+const setTagActive: Action<NavigableTag> = (om, val) => {
+  setTagActiveFn(om, val)
+  om.actions.home._handleTagChange()
 }
 
 const toggleTag: Action<NavigableTag> = (om, val) => {
@@ -877,9 +889,9 @@ const toggleTag: Action<NavigableTag> = (om, val) => {
   const state = om.state.home.currentState
   if (state.type != 'home' && state.type != 'search') return
   if (state.activeTagIds[getTagId(val)]) {
-    om.actions.home._setTagInactive(val)
+    setTagInactiveFn(om, val)
   } else {
-    om.actions.home._setTagActive(val)
+    setTagActiveFn(om, val)
   }
   om.actions.home._handleTagChange()
 }
@@ -891,9 +903,9 @@ const replaceActiveTagOfType: Action<NavigableTag> = (om, val) => {
     .map((id) => om.state.home.allTags[id])
     .find((x) => x.type === val.type)
   if (existing) {
-    om.actions.home._setTagInactive(existing)
+    setTagInactiveFn(om, existing)
   }
-  om.actions.home._setTagActive(val)
+  setTagActiveFn(om, val)
   om.actions.home._handleTagChange()
 }
 
@@ -904,7 +916,7 @@ const _syncUrlToTags: Action<Object> = (om, params) => {
   const setTag = (name: string, type: any) => {
     const tag = allTags[getTagId({ name, type })]
     if (tag) {
-      om.actions.home._setTagActive(tag)
+      setTagActiveFn(om, tag)
     }
   }
 
@@ -975,8 +987,8 @@ export const actions = {
   start,
   startBeforeRouting,
   _syncUrlToTags,
-  _setTagInactive,
-  _setTagActive,
+  setTagInactive,
+  setTagActive,
   requestLocation,
   replaceActiveTagOfType,
   moveAutocompleteIndex,

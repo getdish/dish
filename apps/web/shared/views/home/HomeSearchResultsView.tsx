@@ -4,9 +4,9 @@ import { ScrollView, Text, View } from 'react-native'
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItemSearch } from '../../state/home'
 import { useOvermind } from '../../state/om'
-import { PageTitle } from '../shared/PageTitle'
+import { PageTitleTag } from '../shared/PageTitleTag'
 import { closeAllPopovers, popoverCloseCbs } from '../shared/Popover'
-import { Title } from '../shared/SmallTitle'
+import { PageTitle } from '../shared/SmallTitle'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { useWaterfall } from '../shared/useWaterfall'
@@ -27,14 +27,15 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
     (k) => om.state.home.allTags[k]
   )
   const titleTags = tags.filter(
-    (tag) => tag.type === 'dish' || tag.type === 'country'
+    (tag) =>
+      tag.type === 'dish' || tag.type === 'country' || tag.name === 'Delivers'
   )
   const title = `Top ${titleTags
     .map((x) => x.name)
     .join(', ')} ${state.searchQuery ?? ''} Restaurants`
   return (
     <>
-      <PageTitle>{title}</PageTitle>
+      <PageTitleTag>{title}</PageTitleTag>
       <ZStack
         right={10}
         top={0}
@@ -52,13 +53,28 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
           />
         </HStack>
       </ZStack>
-      <Title height={45}>
-        Top{' '}
+      <PageTitle height={45}>
+        Top{titleTags.length ? ' ' : ''}
         {titleTags.map((tag) => (
-          <TagButton key={getTagId(tag)} tag={tag} />
+          <TagButton
+            key={getTagId(tag)}
+            tag={
+              tag.name === 'Delivers'
+                ? { ...tag, displayName: 'Delivery' }
+                : tag
+            }
+            subtle
+            closable
+            onClose={() => {
+              om.actions.home.setTagInactive(tag)
+              // if (titleTags.length === 1) {
+              //   om.actions.home.popTo(om.state.home.lastHomeState)
+              // }
+            }}
+          />
         ))}{' '}
-        Restaurants
-      </Title>
+        Restaurants in San Francisco
+      </PageTitle>
       <VStack position="relative" flex={1}>
         <HomeLenseBar activeTagIds={state.activeTagIds} backgroundGradient />
         <HomeSearchResultsViewContent state={state} />

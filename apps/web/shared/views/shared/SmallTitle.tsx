@@ -5,7 +5,7 @@ import { Divider } from './Divider'
 import { Spacer } from './Spacer'
 import { HStack, VStack, StackBaseProps } from './Stacks'
 
-export const Title = memo(({ children, ...rest }: StackBaseProps) => {
+export const PageTitle = memo(({ children, ...rest }: StackBaseProps) => {
   return (
     <>
       <VStack

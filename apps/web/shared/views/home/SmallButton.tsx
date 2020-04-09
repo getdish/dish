@@ -3,7 +3,7 @@ import { Text, TextStyle } from 'react-native'
 
 import { HStack, StackBaseProps } from '../shared/Stacks'
 import { flatButtonStyle } from './baseButtonStyle'
-import { bg, lightBg, lightBgHover } from './colors'
+import { bg, bgLight, bgLightHover } from './colors'
 
 export const SmallButton = ({
   isActive,
@@ -21,17 +21,17 @@ export const SmallButton = ({
       {...flatButtonStyle}
       paddingHorizontal={12}
       paddingVertical={4}
-      backgroundColor={isActive ? 'transparent' : lightBg}
+      backgroundColor={isActive ? 'transparent' : bgLight}
       borderRadius={20}
-      borderWidth={2}
-      borderColor={isActive ? `#000` : 'white'}
+      borderWidth={1}
+      borderColor={isActive ? `#aaa` : 'white'}
       hoverStyle={
         isActive
           ? {
               // backgroundColor: bgHover,
             }
           : {
-              backgroundColor: lightBgHover,
+              backgroundColor: bgLightHover,
             }
       }
       {...rest}
