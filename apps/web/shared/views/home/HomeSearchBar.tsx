@@ -4,14 +4,14 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native'
 
 import {
   drawerBorderRadius,
   isWorker,
   searchBarHeight,
-  searchBarTopOffset,
+  searchBarTopOffset
 } from '../../constants'
 import { useOvermind } from '../../state/om'
 import { Divider } from '../shared/Divider'
@@ -25,6 +25,7 @@ import { DishLogoButton } from './DishLogoButton'
 import HomeAutocomplete from './HomeAutocomplete'
 import { HomeUserMenu } from './HomeUserMenu'
 import { TagButton } from './TagButton'
+import { Circle } from '../shared/Circle'
 
 const extraWidth = 36
 
@@ -215,7 +216,7 @@ export default memo(function HomeSearchBar() {
 
           <VStack flex={0.5} />
 
-          <HStack flex={20} maxWidth={450} alignItems="center" spacing>
+          <HStack flex={15} maxWidth={450} alignItems="center" spacing>
             <>
               {om.state.home.isLoading ? (
                 <VStack className="rotating" opacity={0.5}>
@@ -297,7 +298,7 @@ export default memo(function HomeSearchBar() {
                       placeholder="Search dish, cuisine"
                       style={[
                         styles.textInput,
-                        { fontSize: 19, paddingRight: 42 },
+                        { fontSize: 19, paddingRight: 42 }
                       ]}
                     />
                   </HStack>
@@ -317,13 +318,13 @@ export default memo(function HomeSearchBar() {
             width={40}
           >
             <Divider flex opacity={0.1} />
-            <VStack paddingVertical={1} paddingHorizontal={4} borderRadius={4}>
+            <Circle size={36} borderColor="#eee" borderWidth={1}>
               <Text style={{ color: '#444', fontSize: 16 }}>in</Text>
-            </VStack>
+            </Circle>
             <Divider flex opacity={0.1} />
           </HStack>
 
-          <VStack flex={10} maxWidth={320}>
+          <VStack flex={12} maxWidth={320}>
             <TextInput
               ref={locationInputRef}
               value={locationSearch}
@@ -395,7 +396,7 @@ const SearchLocationButton = memo(() => {
         >
           <TouchableOpacity
             style={{
-              padding: 10,
+              padding: 10
             }}
             onPress={() => {
               om.actions.home.popTo(om.state.home.lastHomeState)
@@ -416,7 +417,7 @@ const styles = StyleSheet.create({
     marginTop: searchBarTopOffset,
     left: searchBarTopOffset,
     right: searchBarTopOffset,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   containerInner: {
     flex: 1,
@@ -433,12 +434,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   textInput: {
     padding: 11,
     paddingHorizontal: 16,
     flex: 1,
-    fontSize: 22,
-  },
+    fontSize: 22
+  }
 })
