@@ -4,9 +4,9 @@ import { Action, AsyncAction, Derive } from 'overmind'
 import page from 'page'
 import queryString from 'query-string'
 
-import { slugify } from '../helpers/slugify'
-import { sleep } from '../helpers/sleep'
 import { race } from '../helpers/race'
+import { sleep } from '../helpers/sleep'
+import { slugify } from '../helpers/slugify'
 
 class Route<A extends Object | void = void> {
   constructor(public path: string, public params?: A) {}
