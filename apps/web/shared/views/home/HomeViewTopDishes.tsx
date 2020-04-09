@@ -7,6 +7,8 @@ import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItemHome, HomeStateItemSimple } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { RoutesTable } from '../../state/router'
+import { Box } from '../shared/Box'
+import { HoverablePopover } from '../shared/HoverablePopover'
 import { Icon } from '../shared/Icon'
 import { LinkButton, LinkButtonProps } from '../shared/Link'
 import { PageTitleTag } from '../shared/PageTitleTag'
@@ -18,8 +20,6 @@ import { bgLightLight } from './colors'
 import HomeLenseBar from './HomeLenseBar'
 import { RatingView } from './RatingView'
 import { SmallButton } from './SmallButton'
-import { HoverablePopover } from '../shared/HoverablePopover'
-import { Box } from '../shared/Box'
 
 export default memoIsEqualDeep(function HomeViewTopDishes({
   state,

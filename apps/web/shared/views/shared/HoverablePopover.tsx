@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
+
 import Hoverable from './Hoverable'
-import { PopoverProps, Popover } from './Popover'
+import { Popover, PopoverProps } from './Popover'
 
 export const HoverablePopover = ({ children, ...props }: PopoverProps) => {
   const [isHovering, setIsHovering] = useState(false)

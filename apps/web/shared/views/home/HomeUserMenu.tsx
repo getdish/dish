@@ -1,16 +1,16 @@
 import React, { memo } from 'react'
 import { Text } from 'react-native'
+import { useStorageState } from 'react-storage-hooks'
 
 import { useOvermind } from '../../state/om'
 import { AuthLoginRegisterView } from '../auth/AuthLoginRegisterView'
+import { Box } from '../shared/Box'
 import { Divider } from '../shared/Divider'
 import { Icon } from '../shared/Icon'
 import { LinkButton } from '../shared/Link'
 import { Popover } from '../shared/Popover'
 import { HStack, VStack } from '../shared/Stacks'
-import { Box } from '../shared/Box'
 import { flatButtonStyle } from './baseButtonStyle'
-import { useStorageState } from 'react-storage-hooks'
 
 export const HomeUserMenu = memo(() => {
   const om = useOvermind()

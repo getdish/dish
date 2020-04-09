@@ -20,7 +20,8 @@
     "test": "ava",
     "clean": "bin/clean.sh",
     "format": "swift-format --recursive --in-place ./apps/ios/dish",
-    "postinstall": "wsrun -c postinstall || true"
+    "postinstall": "wsrun -c postinstall || true",
+    "prettier": "wsrun -c prettier --write \"**/*.ts*\" || true"
   },
   "devDependencies": {
     "import-sort-style-module": "^6.0.0",

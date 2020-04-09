@@ -1,12 +1,12 @@
+import { Tag } from '@dish/models'
 import React, { memo } from 'react'
-import { Text, View, TextStyle } from 'react-native'
+import { Text, TextStyle, View } from 'react-native'
 
 import { Icon } from '../shared/Icon'
 import { Spacer } from '../shared/Spacer'
 import { HStack, StackBaseProps } from '../shared/Stacks'
 import { HoverableButton } from './HoverableButton'
 import { SuperScriptText } from './SuperScriptText'
-import { Tag } from '@dish/models'
 
 export const TagButton = memo(
   ({
