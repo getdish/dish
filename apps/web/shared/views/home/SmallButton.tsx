@@ -23,7 +23,7 @@ export const SmallButton = ({
       paddingVertical={4}
       backgroundColor={isActive ? 'transparent' : bgLight}
       borderRadius={20}
-      borderWidth={1}
+      borderWidth={2}
       borderColor={isActive ? `#aaa` : 'white'}
       hoverStyle={
         isActive

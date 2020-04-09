@@ -73,14 +73,14 @@ export const HomeUserMenu = memo(() => {
       >
         <HStack spacing alignItems="center" justifyContent="center">
           <Icon name="user" size={26} opacity={0.5} />
-          {om.state.user.isLoggedIn ? (
+          {/* {om.state.user.isLoggedIn ? (
             <Text
               numberOfLines={1}
               style={{ fontSize: 12, opacity: 0.5, maxWidth: 50 }}
             >
               {om.state.user.user.username}
             </Text>
-          ) : null}
+          ) : null} */}
         </HStack>
       </LinkButton>
     </Popover>

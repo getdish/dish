@@ -101,12 +101,7 @@ export default memo(function HomeAutoComplete() {
                     if (showLocation) {
                       om.actions.home.setLocation(x.name)
                     } else {
-                      om.actions.router.navigate({
-                        name: 'search',
-                        params: {
-                          query: x.name,
-                        },
-                      })
+                      om.actions.home.replaceActiveTagOfType(x)
                     }
                   }}
                   flexDirection="row"
@@ -122,7 +117,7 @@ export default memo(function HomeAutoComplete() {
                   fontSize={16}
                   maxWidth={180}
                   ellipse
-                  key={x.id}
+                  key={x.tagId}
                 >
                   {x.icon ?? null}
                   {x.name}{' '}

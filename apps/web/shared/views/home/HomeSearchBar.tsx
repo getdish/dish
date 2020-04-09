@@ -9,13 +9,11 @@ import {
 
 import {
   drawerBorderRadius,
-  drawerPadLeft,
   isWorker,
   searchBarHeight,
   searchBarTopOffset,
 } from '../../constants'
 import { useOvermind } from '../../state/om'
-import { BlurView } from '../shared/BlurView'
 import { Divider } from '../shared/Divider'
 import Hoverable from '../shared/Hoverable'
 import { Icon } from '../shared/Icon'
@@ -26,7 +24,7 @@ import { CloseButton } from './CloseButton'
 import { DishLogoButton } from './DishLogoButton'
 import HomeAutocomplete from './HomeAutocomplete'
 import { HomeUserMenu } from './HomeUserMenu'
-import { useHomeDrawerWidth } from './useHomeDrawerWidth'
+import { TagButton } from './TagButton'
 
 const extraWidth = 36
 
@@ -250,29 +248,60 @@ export default memo(function HomeSearchBar() {
                   }
                 }}
               >
-                <TextInput
-                  ref={inputRef}
-                  // leave uncontrolled for perf?
-                  value={search}
-                  onFocus={() => {
-                    clearTimeout(tmInputBlur.current)
-                    om.actions.home.setShowAutocomplete('search')
-                    if (search.length > 0) {
-                      selectActiveInput()
-                    }
-                  }}
-                  onBlur={() => {
-                    tmInputBlur.current = setTimeout(() => {
-                      om.actions.home.setShowAutocomplete(false)
-                    }, 150)
-                  }}
-                  onChangeText={(text) => {
-                    setSearch(text)
-                    om.actions.home.setSearchQuery(text ?? '')
-                  }}
-                  placeholder="Search dish, cuisine"
-                  style={[styles.textInput, { fontSize: 19, paddingRight: 42 }]}
-                />
+                <Text style={{ fontSize: 19, marginLeft: 10, marginTop: -1 }}>
+                  <HStack spacing={6} alignItems="center">
+                    {om.state.home.lastActiveTags
+                      .filter((x) => x.type === 'country')
+                      .map((tag) => (
+                        <TagButton
+                          key={tag.id}
+                          subtleIcon
+                          backgroundColor="#eee"
+                          color="#444"
+                          size="lg"
+                          fontSize={18}
+                          tag={tag}
+                          closable
+                          onClose={() => {
+                            om.actions.home.setTagInactive(tag)
+                            if (
+                              om.state.home.lastActiveTags.filter(
+                                (x) => x.type !== 'lense'
+                              ).length === 0
+                            ) {
+                              om.actions.home.popTo(om.state.home.lastHomeState)
+                            }
+                          }}
+                        />
+                      ))}
+                    <TextInput
+                      ref={inputRef}
+                      // leave uncontrolled for perf?
+                      value={search}
+                      onFocus={() => {
+                        clearTimeout(tmInputBlur.current)
+                        om.actions.home.setShowAutocomplete('search')
+                        if (search.length > 0) {
+                          selectActiveInput()
+                        }
+                      }}
+                      onBlur={() => {
+                        tmInputBlur.current = setTimeout(() => {
+                          om.actions.home.setShowAutocomplete(false)
+                        }, 150)
+                      }}
+                      onChangeText={(text) => {
+                        setSearch(text)
+                        om.actions.home.setSearchQuery(text ?? '')
+                      }}
+                      placeholder="Search dish, cuisine"
+                      style={[
+                        styles.textInput,
+                        { fontSize: 19, paddingRight: 42 },
+                      ]}
+                    />
+                  </HStack>
+                </Text>
               </Hoverable>
             </>
 
@@ -285,7 +314,7 @@ export default memo(function HomeSearchBar() {
             alignItems="center"
             justifyContent="center"
             spacing={3}
-            width={45}
+            width={40}
           >
             <Divider flex opacity={0.1} />
             <VStack paddingVertical={1} paddingHorizontal={4} borderRadius={4}>
@@ -397,7 +426,7 @@ const styles = StyleSheet.create({
     height: '100%',
     flexDirection: 'row',
     borderRadius: drawerBorderRadius,
-    shadowColor: 'rgba(0,0,0,0.135)',
+    shadowColor: 'rgba(0,0,0,0.1)',
     shadowRadius: 12,
     shadowOffset: { height: 4, width: 0 },
     overflow: 'hidden',

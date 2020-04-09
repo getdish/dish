@@ -17,43 +17,6 @@ const SPLIT_TAG_TYPE = '~'
 
 type ShowAutocomplete = 'search' | 'location' | false
 
-type HomeStateBase = {
-  started: boolean
-  activeIndex: number // index for vertical (in page), -1 = autocomplete
-  allTags: { [keyPath: string]: NavigableTag }
-  allLenseTags: Tag[]
-  allFilterTags: Tag[]
-  allRestaurants: { [id: string]: Restaurant }
-  autocompleteDishes: TopDish['dishes']
-  autocompleteIndex: number // index for horizontal row (autocomplete)
-  autocompleteResults: AutocompleteItem[]
-  hoveredRestaurant: Restaurant | null
-  location: AutocompleteItem | null // for now just autocomplete item
-  locationAutocompleteResults: AutocompleteItem[]
-  locationSearchQuery: string
-  showAutocomplete: ShowAutocomplete
-  showUserMenu: boolean
-  states: HomeStateItem[]
-  topDishes: TopDish[]
-  topDishesFilteredIndices: number[]
-  skipNextPageFetchData: boolean
-}
-
-export type HomeState = HomeStateBase & {
-  lastHomeState: Derive<HomeState, HomeStateItemHome>
-  lastSearchState: Derive<HomeState, HomeStateItemSearch | null>
-  lastRestaurantState: Derive<HomeState, HomeStateItemRestaurant | null>
-  breadcrumbStates: Derive<HomeState, HomeStateItemSimple[]>
-  currentState: Derive<HomeState, HomeStateItem>
-  // my hypothesis is these more granular derives prevent updates on same value in views, need to test that
-  currentStateType: Derive<HomeState, HomeStateItem['type']>
-  currentStateSearchQuery: Derive<HomeState, HomeStateItem['searchQuery']>
-  previousState: Derive<HomeState, HomeStateItem>
-  isAutocompleteActive: Derive<HomeState, boolean>
-  activeAutocompleteResults: Derive<HomeState, AutocompleteItem[]>
-  isLoading: Derive<HomeState, boolean>
-}
-
 type SearchResultsResults = {
   restaurantIds: string[]
   dishes: string[]
@@ -105,8 +68,8 @@ export type HomeStateItemSimple = Omit<HomeStateItem, 'historyId'>
 export type AutocompleteItem = {
   icon?: string
   name: string
-  type: 'dish' | 'restaurant' | 'location' | 'country' | 'search'
-  id: string
+  tagId: string
+  type: Tag['type']
   center?: LngLat
 }
 
@@ -168,14 +131,61 @@ const breadcrumbStates = (state: HomeStateBase) => {
  *  HomeState!
  */
 
+const createAutocomplete = (x: Partial<AutocompleteItem>): AutocompleteItem => {
+  return {
+    name: x.name,
+    type: x.type,
+    ...x,
+    tagId: getTagId({ name: x.name, type: x.type }),
+  }
+}
+
 const defaultLocationAutocompleteResults: AutocompleteItem[] = [
-  { name: 'New York', icon: '📍', type: 'location', id: '0' },
-  { name: 'Los Angeles', icon: '📍', type: 'location', id: '1' },
-  { name: 'Las Vegas', icon: '📍', type: 'location', id: '2' },
-  { name: 'Miami', icon: '📍', type: 'location', id: '3' },
-  { name: 'Chicago', icon: '📍', type: 'location', id: '4' },
-  { name: 'New Orleans', icon: '📍', type: 'location', id: '5' },
+  createAutocomplete({ name: 'New York', icon: '📍', type: 'country' }),
+  createAutocomplete({ name: 'Los Angeles', icon: '📍', type: 'country' }),
+  createAutocomplete({ name: 'Las Vegas', icon: '📍', type: 'country' }),
+  createAutocomplete({ name: 'Miami', icon: '📍', type: 'country' }),
+  createAutocomplete({ name: 'Chicago', icon: '📍', type: 'country' }),
+  createAutocomplete({ name: 'New Orleans', icon: '📍', type: 'country' }),
 ]
+
+type HomeStateBase = {
+  started: boolean
+  activeIndex: number // index for vertical (in page), -1 = autocomplete
+  allTags: { [keyPath: string]: NavigableTag }
+  allLenseTags: Tag[]
+  allFilterTags: Tag[]
+  allRestaurants: { [id: string]: Restaurant }
+  autocompleteDishes: TopDish['dishes']
+  autocompleteIndex: number // index for horizontal row (autocomplete)
+  autocompleteResults: AutocompleteItem[]
+  hoveredRestaurant: Restaurant | null
+  location: AutocompleteItem | null // for now just autocomplete item
+  locationAutocompleteResults: AutocompleteItem[]
+  locationSearchQuery: string
+  showAutocomplete: ShowAutocomplete
+  showUserMenu: boolean
+  states: HomeStateItem[]
+  topDishes: TopDish[]
+  topDishesFilteredIndices: number[]
+  skipNextPageFetchData: boolean
+}
+
+export type HomeState = HomeStateBase & {
+  lastHomeState: Derive<HomeState, HomeStateItemHome>
+  lastSearchState: Derive<HomeState, HomeStateItemSearch | null>
+  lastRestaurantState: Derive<HomeState, HomeStateItemRestaurant | null>
+  breadcrumbStates: Derive<HomeState, HomeStateItemSimple[]>
+  currentState: Derive<HomeState, HomeStateItem>
+  // my hypothesis is these more granular derives prevent updates on same value in views, need to test that
+  currentStateType: Derive<HomeState, HomeStateItem['type']>
+  currentStateSearchQuery: Derive<HomeState, HomeStateItem['searchQuery']>
+  previousState: Derive<HomeState, HomeStateItem>
+  isAutocompleteActive: Derive<HomeState, boolean>
+  activeAutocompleteResults: Derive<HomeState, AutocompleteItem[]>
+  isLoading: Derive<HomeState, boolean>
+  lastActiveTags: Derive<HomeState, Tag[]>
+}
 
 export const state: HomeState = {
   started: false,
@@ -214,8 +224,8 @@ export const state: HomeState = {
       {
         name: 'Search',
         icon: '🔍',
-        id: '-2',
-        type: 'search' as const,
+        tagId: '',
+        type: 'orphan' as const,
       },
     ]
     return [
@@ -231,6 +241,15 @@ export const state: HomeState = {
       return cur.results.status === 'loading'
     }
     return false
+  },
+  lastActiveTags: (state) => {
+    const lastTaggable = _.findLast(
+      state.states,
+      (x) => x.type === 'home' || x.type === 'search'
+    ) as HomeStateItemSearch | HomeStateItemHome
+    return Object.keys(lastTaggable.activeTagIds).map(
+      (id) => state.allTags[id]
+    ) as Tag[]
   },
 }
 
@@ -294,7 +313,7 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         om.actions.home._syncUrlToTags(item.params)
       }
       fetchData = async () => {
-        await om.actions.home.runSearch()
+        await om.actions.home.runSearch({})
       }
       break
     case 'restaurant':
@@ -505,7 +524,7 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     updateRoute()
   }
 
-  om.actions.home.runSearch()
+  om.actions.home.runSearch({})
 }
 
 let defaultAutocompleteResults: AutocompleteItem[] | null = null
@@ -519,6 +538,7 @@ const _runAutocomplete: AsyncAction<string> = async (om, query) => {
       type: 'country',
       name: x.country,
       icon: x.icon,
+      tagId: getTagId({ type: 'country', name: x.country }),
     }))
     om.state.home.autocompleteResults = defaultAutocompleteResults
   }
@@ -545,12 +565,12 @@ const _runAutocomplete: AsyncAction<string> = async (om, query) => {
     found = [...found, ...autocompleteDishes.slice(0, 10 - found.length)]
   }
   const dishResults: AutocompleteItem[] = _.uniqBy(found, (x) => x.name).map(
-    (x) => ({
-      name: x.name,
-      type: 'dish',
-      icon: `🍛`,
-      id: `dish-${x.name}`,
-    })
+    (x) =>
+      createAutocomplete({
+        name: x.name,
+        type: 'dish',
+        icon: `🍛`,
+      })
   )
 
   const [restaurantsResults, locationResults] = await Promise.all([
@@ -561,13 +581,14 @@ const _runAutocomplete: AsyncAction<string> = async (om, query) => {
   const unsortedResults: AutocompleteItem[] = _.uniqBy(
     [
       ...dishResults,
-      ...restaurantsResults.map((restaurant) => ({
-        name: restaurant.name,
-        // TODO tom - can we get the cuisine tag icon here? we can load common ones somewhere
-        icon: '🏘',
-        type: 'restaurant' as const,
-        id: restaurant.id,
-      })),
+      ...restaurantsResults.map((restaurant) =>
+        createAutocomplete({
+          name: restaurant.name,
+          // TODO tom - can we get the cuisine tag icon here? we can load common ones somewhere
+          icon: '🏘',
+          type: 'restaurant',
+        })
+      ),
       ...locationResults.map(locationToAutocomplete),
     ],
     (x) => `${x.name}${x.type}`
@@ -584,16 +605,15 @@ const locationToAutocomplete = (location: {
   name: string
   coordinate: { latitude: number; longitude: number }
 }) => {
-  return {
+  return createAutocomplete({
     name: location.name,
-    type: 'location' as const,
+    type: 'country',
     icon: '📍',
-    id: `loc-${location.name}`,
     center: {
       lat: location.coordinate.latitude,
       lng: location.coordinate.longitude,
     },
-  }
+  })
 }
 
 let runSearchId = 0
@@ -789,6 +809,7 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
   { type, name, item }
 ) => {
   om.state.home.hoveredRestaurant = null
+  console.log('handleRouteChange', { type, name, item })
   switch (name) {
     case 'home':
     case 'search':

@@ -1,9 +1,9 @@
 import React, { memo } from 'react'
-import { Text, View } from 'react-native'
+import { Text, View, TextStyle } from 'react-native'
 
 import { Icon } from '../shared/Icon'
 import { Spacer } from '../shared/Spacer'
-import { HStack } from '../shared/Stacks'
+import { HStack, StackBaseProps } from '../shared/Stacks'
 import { HoverableButton } from './HoverableButton'
 import { SuperScriptText } from './SuperScriptText'
 import { Tag } from '@dish/models'
@@ -17,7 +17,13 @@ export const TagButton = memo(
     closable,
     onClose,
     votable,
-  }: {
+    fontSize,
+    color,
+    backgroundColor,
+    subtleIcon,
+    hideIcon,
+    ...rest
+  }: StackBaseProps & {
     rank?: number
     tag: Partial<Tag> & Pick<Tag, 'name' | 'type'>
     size?: 'lg' | 'md'
@@ -25,13 +31,17 @@ export const TagButton = memo(
     votable?: boolean
     closable?: boolean
     onClose?: Function
+    color?: any
+    hideIcon?: boolean
+    subtleIcon?: boolean
+    fontSize?: TextStyle['fontSize']
   }) => {
     const scale = size == 'lg' ? 1.05 : 1
-    const paddingVertical = 1 * scale
+    const paddingVertical = 1.33 * scale
     const lineHeight = 22 * scale
-    const color = 'purple'
-    const bg = subtle ? 'transparent' : color
-    const fg = subtle ? color : 'white'
+    const defaultColor = 'purple'
+    const bg = backgroundColor ?? (subtle ? 'transparent' : defaultColor)
+    const fg = color ?? (subtle ? defaultColor : 'white')
     return (
       <HStack
         backgroundColor={bg}
@@ -40,11 +50,12 @@ export const TagButton = memo(
         borderRadius={10 * scale}
         // overflow="hidden"
         alignItems="center"
-        shadowColor={subtle ? 'transparent' : 'rgba(0,0,0,0.1)'}
-        shadowRadius={6 * scale}
+        shadowColor={subtle ? 'transparent' : 'rgba(0,0,0,0.05)'}
+        shadowRadius={4 * scale}
         shadowOffset={{ width: 0, height: 2 * scale }}
         spacing="sm"
         position="relative"
+        {...rest}
       >
         {!!rank && (
           <Text
@@ -64,23 +75,42 @@ export const TagButton = memo(
           </Text>
         )}
         <Text
+          numberOfLines={1}
           style={{
-            fontSize: subtle ? 'inherit' : 13 * scale,
-            fontWeight: subtle ? 'inherit' : 'bold',
+            fontSize: fontSize ?? (subtle ? 'inherit' : 13 * scale),
+            fontWeight: 'inherit',
+            lineHeight: 'inherit',
             paddingVertical,
-            // paddingHorizontal: 6 * scale,
+            paddingHorizontal: subtle ? 0 : 8 * scale,
             color: fg,
-            lineHeight,
             margin: 'auto',
+            overflow: 'hidden',
+            // @ts-ignore
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
           }}
         >
-          <span style={{ marginRight: -4, marginLeft: 4 }}>{tag.icon}</span>
+          {!hideIcon && (
+            <span
+              style={{
+                ...(subtle && { marginRight: -4, marginLeft: 4 }),
+                ...(subtleIcon && {
+                  fontSize: '90%',
+                  marginTop: '-2px',
+                  marginBottom: '-2px',
+                }),
+              }}
+            >
+              {tag.icon}
+            </span>
+          )}
           {tag['displayName'] ?? tag.name}
         </Text>
         {!!votable && (
           <View
             style={{
               paddingVertical,
+              marginLeft: -8 * scale,
               paddingHorizontal: 8 * scale,
               backgroundColor: subtle ? 'transparent' : '#fff',
               height: '100%',
@@ -97,14 +127,30 @@ export const TagButton = memo(
         {!!closable && (
           <HoverableButton
             paddingVertical={paddingVertical}
-            backgroundColor={subtle ? 'transparent' : '#fff'}
+            backgroundColor={subtle ? 'transparent' : '#000'}
+            borderRadius={10}
             height="100%"
             onPress={onClose}
-            position="absolute"
-            top={-9}
-            right={-2}
+            top={-1}
+            {...(!subtle && {
+              marginLeft: -9,
+              marginRight: 6,
+            })}
+            {...(subtle && {
+              position: 'absolute',
+              top: -9,
+              right: -2,
+            })}
+            width={16}
+            height={16}
+            alignItems="center"
+            justifyContent="center"
           >
-            <Icon size={10} name="x" />
+            <Icon
+              size={subtle ? 10 : 12}
+              name="x"
+              color={subtle ? 'inherit' : '#fff'}
+            />
           </HoverableButton>
         )}
       </HStack>

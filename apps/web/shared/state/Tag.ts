@@ -1,4 +1,5 @@
 import { slugify } from '../helpers/slugify'
+import { TagType } from '@dish/models'
 
 export type Tag = {
   id: string
@@ -6,7 +7,7 @@ export type Tag = {
   icon?: string
   rgb?: [number, number, number]
   description?: string
-  type: 'lense' | 'filter' | 'dish' | 'country'
+  type: TagType
   isActive?: boolean
   isVotable?: boolean
 }

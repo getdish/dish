@@ -19,8 +19,8 @@ export const LenseButton = memo(
         <HStack
           alignItems="center"
           justifyContent="center"
-          paddingHorizontal={10}
-          paddingVertical={5}
+          paddingHorizontal={9}
+          paddingVertical={4}
           backgroundColor={'rgba(255,255,255,0.5)'}
           borderRadius={12}
           shadowRadius={2}
@@ -34,7 +34,10 @@ export const LenseButton = memo(
           }}
           {...(isActive && {
             opacity: 1,
-            backgroundColor: bg,
+            backgroundColor: lense.rgb
+              ? `rgb(${lense.rgb[0] * 255}, ${lense.rgb[1] * 255}, ${lense
+                  .rgb[2] * 255})`
+              : bg,
             // hoverStyle: {
             //   backgroundColor: bgHover,
             // },
