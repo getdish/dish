@@ -73,7 +73,7 @@ export type RouteItem = {
   name: RouteName
   item: HistoryItem
 }
-export type OnRouteChangeCb = (item: RouteItem) => any
+export type OnRouteChangeCb = (item: RouteItem) => Promise<void>
 
 let onRouteChange: OnRouteChangeCb | null = null
 let finishStart: Function
@@ -115,7 +115,7 @@ export const state: RouterState = {
 
 const uid = () => `${Math.random()}`
 
-const navigate: Action<NavigateItem> = (om, navItem) => {
+const navigate: AsyncAction<NavigateItem> = async (om, navItem) => {
   const item: HistoryItem = {
     id: uid(),
     params: {},
@@ -146,7 +146,7 @@ const navigate: Action<NavigateItem> = (om, navItem) => {
   }
 
   if (onRouteChange) {
-    onRouteChange({
+    await onRouteChange({
       type: item.replace ? 'replace' : 'push',
       name: item.name,
       item: _.last(om.state.router.history)!,
@@ -213,17 +213,22 @@ const routeListen: Action<{
         ignoreNextRoute = false
         return
       }
-      finishStart()
       const paramsClean = Object.keys(params).reduce((acc, cur) => {
         if (params[cur]) {
           acc[cur] = params[cur]
         }
         return acc
       }, {})
-      om.actions.router.navigate({
-        name,
-        params: paramsClean,
-      } as any)
+
+      // go go go
+      om.actions.router
+        .navigate({
+          name,
+          params: paramsClean,
+        } as any)
+        .then(() => {
+          finishStart()
+        })
     }
   })
 }
