@@ -64,7 +64,6 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
                 : tag
             }
             subtle
-            fontWeight={'bold'}
             // closable
             onClose={() => {
               om.actions.home.setTagInactive(tag)

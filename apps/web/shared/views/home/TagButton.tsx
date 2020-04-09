@@ -129,7 +129,6 @@ export const TagButton = memo(
             paddingVertical={paddingVertical}
             backgroundColor={subtle ? 'transparent' : '#000'}
             borderRadius={10}
-            height="100%"
             onPress={onClose}
             top={-1}
             {...(!subtle && {

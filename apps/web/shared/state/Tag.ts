@@ -5,6 +5,7 @@ import { slugify } from '../helpers/slugify'
 export type Tag = {
   id: string
   name: string
+  displayName?: string
   icon?: string
   rgb?: [number, number, number]
   description?: string
@@ -86,17 +87,20 @@ export const tagLenses: Tag[] = [
 export const tagFilters: Tag[] = [
   {
     id: '01',
-    name: '$',
+    name: 'cheap',
+    displayName: '$',
     type: 'filter',
   },
   {
     id: '21',
-    name: '$$',
+    name: 'midrange',
+    displayName: '$$',
     type: 'filter',
   },
   {
     id: '31',
-    name: '$$$',
+    name: 'expensive',
+    displayName: '$$$',
     type: 'filter',
   },
   {

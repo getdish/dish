@@ -165,3 +165,7 @@ div,
 .mk-annotation-container {
   z-index: -1;
 }
+
+::placeholder {
+  text-overflow: ellipsis;
+}

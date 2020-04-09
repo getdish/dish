@@ -52,7 +52,7 @@ export const LenseButton = memo(
               // letterSpacing: isActive ? -0.2 : 0,
             }}
           >
-            {lense.icon} {lense.name}
+            {lense.icon} {lense.displayName ?? lense.name}
           </Text>
         </HStack>
       </LinkButton>

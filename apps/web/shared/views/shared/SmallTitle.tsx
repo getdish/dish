@@ -57,20 +57,26 @@ export const SmallTitle = memo(
   }
 )
 
-export const SmallerTitle = memo(({ children, ...rest }: StackBaseProps) => {
-  return (
-    <HStack alignItems="center" spacing {...rest}>
-      <Divider flex />
-      <Text
-        style={{
-          opacity: 0.5,
-          fontSize: 14,
-          fontWeight: '400',
-        }}
-      >
-        {children}
-      </Text>
-      <Divider flex />
-    </HStack>
-  )
-})
+export const SmallerTitle = memo(
+  ({
+    children,
+    hideDivider,
+    ...rest
+  }: StackBaseProps & { hideDivider?: boolean }) => {
+    return (
+      <HStack alignItems="center" justifyContent="center" spacing {...rest}>
+        {!hideDivider && <Divider flex />}
+        <Text
+          style={{
+            opacity: 0.5,
+            fontSize: 14,
+            fontWeight: '400',
+          }}
+        >
+          {children}
+        </Text>
+        {!hideDivider && <Divider flex />}
+      </HStack>
+    )
+  }
+)
