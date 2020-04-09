@@ -145,18 +145,18 @@ const navigate: AsyncAction<NavigateItem> = async (om, navItem) => {
     om.state.router.history = [...om.state.router.history, item]
   }
 
+  if (item.replace) {
+    om.effects.router.replace(item.path)
+  } else {
+    om.effects.router.open(item.path)
+  }
+
   if (onRouteChange) {
     await onRouteChange({
       type: item.replace ? 'replace' : 'push',
       name: item.name,
       item: _.last(om.state.router.history)!,
     })
-  }
-
-  if (item.replace) {
-    om.effects.router.replace(item.path)
-  } else {
-    om.effects.router.open(item.path)
   }
 }
 
@@ -220,6 +220,10 @@ const routeListen: Action<{
         return acc
       }, {})
 
+      const tmErr = setTimeout(() => {
+        throw new Error(`Timed out navigating`)
+      }, 1000)
+
       // go go go
       om.actions.router
         .navigate({
@@ -227,6 +231,7 @@ const routeListen: Action<{
           params: paramsClean,
         } as any)
         .then(() => {
+          clearTimeout(tmErr)
           finishStart()
         })
     }
