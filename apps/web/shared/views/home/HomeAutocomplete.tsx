@@ -94,7 +94,7 @@ export default memo(function HomeAutoComplete() {
             overflow="scroll"
             spacing="sm"
           >
-            {om.state.home.activeAutocompleteResults.map((x, index) => {
+            {om.state.home.autocompleteResultsActive.map((x, index) => {
               return (
                 <LinkButton
                   onPress={() => {

@@ -41,7 +41,7 @@ const FilterButton = memo(
     return (
       <LinkButton
         onPress={() => {
-          om.actions.home.toggleTag(filter)
+          om.actions.home.toggleTagActive(filter)
         }}
       >
         <SmallButton isActive={isActive}>

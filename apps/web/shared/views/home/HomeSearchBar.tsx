@@ -125,10 +125,26 @@ export default memo(function HomeSearchBar() {
         console.warn('not a valid input')
         return
       }
-      const isAutocompleteActive = om.state.home.isAutocompleteActive
+      const { isAutocompleteActive, autocompleteIndex } = om.state.home
       const isCaretAtEnd =
         focusedInput.value.length == focusedInput.selectionEnd
+      const isCaretAtStart = focusedInput.selectionEnd == 0
+
+      console.log({ isCaretAtStart, isAutocompleteActive, autocompleteIndex })
+
       switch (code) {
+        case 13: // enter
+          om.actions.home.replaceActiveTagOfType(
+            om.state.home.autocompleteFocusedTag
+          )
+          return
+        case 8: // delete
+          // if selected onto a tag, we can send remove command
+          if (isAutocompleteActive && autocompleteIndex < 0) {
+            om.actions.home.setTagInactive(om.state.home.searchbarFocusedTag)
+            next()
+          }
+          return
         case 39: // right
           if (isAutocompleteActive && isCaretAtEnd) {
             // at end
@@ -136,11 +152,14 @@ export default memo(function HomeSearchBar() {
           }
           return
         case 37: // left
-          if (
-            isAutocompleteActive &&
-            om.state.home.autocompleteIndex > 0 &&
-            isCaretAtEnd
-          ) {
+          if (isCaretAtStart) {
+            // at start, go into selecting searchbar tags if we have em
+            if (isAutocompleteActive && autocompleteIndex === 0) {
+              prev()
+              return
+            }
+          }
+          if (isAutocompleteActive && autocompleteIndex > 0 && isCaretAtEnd) {
             e.preventDefault()
             prev()
           }
@@ -272,14 +291,16 @@ export default memo(function HomeSearchBar() {
                     flex={1}
                     overflow="hidden"
                   >
-                    {om.state.home.lastActiveTags
-                      .filter((x) => x.type === 'country')
-                      .map((tag) => (
+                    {om.state.home.searchBarTags.map((tag) => {
+                      const isActive = om.state.home.searchbarFocusedTag === tag
+                      return (
                         <TagButton
                           key={getTagId(tag)}
                           subtleIcon
-                          backgroundColor="#eee"
-                          color="#444"
+                          {...(!isActive && {
+                            backgroundColor: '#eee',
+                            color: '#444',
+                          })}
                           size="lg"
                           fontSize={18}
                           tag={tag}
@@ -295,7 +316,8 @@ export default memo(function HomeSearchBar() {
                             }
                           }}
                         />
-                      ))}
+                      )
+                    })}
                     <TextInput
                       ref={inputRef}
                       // leave uncontrolled for perf?
@@ -309,7 +331,7 @@ export default memo(function HomeSearchBar() {
                       }}
                       onBlur={() => {
                         tmInputBlur.current = setTimeout(() => {
-                          om.actions.home.setShowAutocomplete(false)
+                          // om.actions.home.setShowAutocomplete(false)
                         }, 150)
                       }}
                       onChangeText={(text) => {
@@ -339,7 +361,7 @@ export default memo(function HomeSearchBar() {
             width={40}
           >
             <Divider flex opacity={0.1} />
-            <Circle size={36} borderColor="#eee" borderWidth={1}>
+            <Circle size={32} borderColor="#eee" borderWidth={1}>
               <Text style={{ color: '#444', fontSize: 16 }}>in</Text>
             </Circle>
             <Divider flex opacity={0.1} />
@@ -363,7 +385,7 @@ export default memo(function HomeSearchBar() {
               }}
               onBlur={() => {
                 tmInputBlur.current = setTimeout(() => {
-                  om.actions.home.setShowAutocomplete(false)
+                  // om.actions.home.setShowAutocomplete(false)
                 }, 150)
               }}
               onChangeText={(text) => {
