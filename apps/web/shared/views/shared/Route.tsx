@@ -92,6 +92,7 @@ export function Route(props: {
 
 export function PrivateRoute(props: { name: string; children: any }) {
   const om = useOvermind()
+  console.log('om.state', om.state)
   const isLoggedIn = om.state.user.isLoggedIn
   const curPageName = om.state.router.curPage.name
 

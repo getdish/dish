@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom'
 import { StackBaseProps, ZStack } from './shared/Stacks'
 import { Box } from './shared/Box'
 import { useOverlay } from './shared/useOverlay'
+import { isSSR } from '../constants'
 
 export const Modal = ({
   isOpen,
@@ -24,6 +25,11 @@ export const Modal = ({
   }, [])
 
   useOverlay({ isOpen, onClick: onClickOutside, zIndex })
+
+  if (isSSR) {
+    // for now at least
+    return null
+  }
 
   return createPortal(
     <ZStack
