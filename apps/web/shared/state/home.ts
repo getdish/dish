@@ -282,11 +282,11 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
       const searchState: HomeStateItemSearch = {
         ...fallbackState,
         type: 'search',
+        results: { status: 'loading' },
+        ...lastSearchState,
         activeTagIds: om.state.home.started
           ? om.state.home.lastHomeState.activeTagIds
           : {},
-        results: { status: 'loading' },
-        ...lastSearchState,
         ...newState,
       }
       nextState = searchState
@@ -294,7 +294,7 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         om.actions.home._syncUrlToTags(item.params)
       }
       fetchData = async () => {
-        await om.actions.home.runSearch(item.params.query)
+        await om.actions.home.runSearch()
       }
       break
     case 'restaurant':
@@ -324,9 +324,9 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
     if (afterPush) {
       afterPush()
     }
-    const skip = om.state.home.skipNextPageFetchData
+    const shouldSkip = om.state.home.skipNextPageFetchData
     om.state.home.skipNextPageFetchData = false
-    if (!skip && fetchData) {
+    if (!shouldSkip && fetchData) {
       await fetchData()
     }
   }
@@ -505,7 +505,7 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     updateRoute()
   }
 
-  om.actions.home.runSearch(query)
+  om.actions.home.runSearch()
 }
 
 let defaultAutocompleteResults: AutocompleteItem[] | null = null
@@ -599,29 +599,51 @@ const locationToAutocomplete = (location: {
 let runSearchId = 0
 let lastSearchKey = ''
 let lastSearchAt = Date.now()
-const runSearch: AsyncAction<string> = async (om, query: string) => {
+const runSearch: AsyncAction<{ quiet?: boolean }> = async (om, opts) => {
   runSearchId = Math.random()
   let curId = runSearchId
-  let state = om.state.home.currentState
-
+  let state = om.state.home.currentState as HomeStateItemSearch
   if (state.type != 'search') return
+
+  // we can remove one we have search service
+  const ogQuery = om.state.home.currentState.searchQuery ?? ''
+
+  let query = ogQuery ?? ''
+  const tags = Object.keys(state.activeTagIds).map(
+    (id) => om.state.home.allTags[id]
+  )
+
+  if (true) {
+    console.log(
+      'TODO one search service accepts tags, send in tags',
+      state.activeTagIds
+    )
+    if (Object.keys(state.activeTagIds).length) {
+      query = `${query} ${_.uniq(
+        tags.filter((tag) => tag.type !== 'lense').map((tag) => tag.name)
+      ).join(' ')}`
+    }
+  }
 
   const searchArgs: RestaurantSearchArgs = {
     center: state.center,
     span: state.span,
     query,
-    tags: Object.keys(state.activeTagIds),
+    tags: tags.map((tag) => getTagId(tag)),
   }
   const searchKey = JSON.stringify(searchArgs)
+  console.log('searchin', tags, query, searchArgs)
   // simple prevent duplicate searches
   if (searchKey === lastSearchKey) return
   lastSearchKey = searchKey
 
-  state.searchQuery = query ?? ''
-  state.results = {
-    // preserve last results
-    results: state.results.results,
-    status: 'loading',
+  state.searchQuery = ogQuery
+  if (!opts?.quiet) {
+    state.results = {
+      // preserve last results
+      results: state.results.results,
+      status: 'loading',
+    }
   }
 
   // delay logic
@@ -631,25 +653,23 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
     await sleep(timeSince - 350)
   }
 
-  state = om.state.home.currentState
   if (runSearchId != curId) return
-
-  if (state.type != 'search') return
-
   let restaurants = await Restaurant.search(searchArgs)
+  console.log('found', restaurants)
 
-  state = om.state.home.currentState
-  if (state.type != 'search') return
+  state = om.state.home.lastSearchState
   if (runSearchId != curId) return
 
   // fetch reviews before render
   if (om.state.user.isLoggedIn) {
+    console.log('fetch')
     const reviews = (
       await om.effects.gql.queries.userRestaurantReviews({
         user_id: om.state.user.user.id,
         restaurant_ids: restaurants.map((x) => x.id),
       })
     ).review
+    console.log('donefetch')
     // TODO how do we do nice GC of allReviews?
     for (const review of reviews) {
       om.state.user.allReviews[review.restaurant_id] = review
@@ -661,6 +681,7 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
     om.state.home.allRestaurants[restaurant.id] = restaurant
   }
 
+  console.log('done')
   state.results = {
     status: 'complete',
     results: {
@@ -670,12 +691,12 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
     },
   }
 
-  om.state.home.states = om.state.home.states.map((x) => {
-    if (x.historyId == state.historyId) {
-      return state
-    }
-    return x
-  })
+  // om.state.home.states = om.state.home.states.map((x) => {
+  //   if (x.historyId == state.historyId) {
+  //     return state
+  //   }
+  //   return x
+  // })
 }
 
 const clearSearch: Action = (om) => {
@@ -754,7 +775,9 @@ const setMapArea: AsyncAction<{ center: LngLat; span: LngLat }> = async (
 ) => {
   om.state.home.currentState.center = center
   om.state.home.currentState.span = span
-  om.actions.home.runSearch(om.state.home.currentState.searchQuery)
+  om.actions.home.runSearch({
+    quiet: true,
+  })
 
   // reverse geocode location
   const res = await reverseGeocode(center)
