@@ -2,7 +2,7 @@
   "name": "dish-monorepo",
   "private": true,
   "engines": {
-    "node": "12.16.2"
+    "node": "12.16.1"
   },
   "workspaces": {
     "packages": [
