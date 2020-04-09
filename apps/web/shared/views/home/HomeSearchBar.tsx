@@ -139,10 +139,14 @@ export default memo(function HomeSearchBar() {
           )
           return
         case 8: // delete
+          if (!isAutocompleteActive) return
           // if selected onto a tag, we can send remove command
-          if (isAutocompleteActive && autocompleteIndex < 0) {
+          if (autocompleteIndex < 0) {
             om.actions.home.setTagInactive(om.state.home.searchbarFocusedTag)
             next()
+          }
+          if (autocompleteIndex === 0) {
+            prev()
           }
           return
         case 39: // right

@@ -1,19 +1,3 @@
-// LICENSE
-//
-//   This software is dual-licensed to the public domain and under the following
-//   license: you are granted a perpetual, irrevocable license to copy, modify,
-//   publish, and distribute this file as you see fit.
-//
-// VERSION
-//   0.1.0  (2016-03-28)  Initial release
-//
-// AUTHOR
-//   Forrest Smith
-//
-// CONTRIBUTORS
-//   J�rgen Tjern� - async helper
-//   Anurag Awasthi - updated to 0.2.0
-
 const SEQUENTIAL_BONUS = 15 // bonus for adjacent matches
 const SEPARATOR_BONUS = 30 // bonus if match occurs after a separator
 const CAMEL_BONUS = 30 // bonus if match is uppercase and prev is lower
@@ -216,16 +200,6 @@ function fuzzyMatchRecursive(
 /**
  * Strictly optional utility to help make using fts_fuzzy_match easier for large data sets
  * Uses setTimeout to process matches before a maximum amount of time before sleeping
- *
- * To use:
- *  const asyncMatcher = new fuzzyMatchAsync(fuzzyMatch, "fts", "ForrestTheWoods",
- *                                              function(results) { console.log(results); });
- *  asyncMatcher.start();
- *
- * @param {*} matchFn   function      Matching function - fuzzyMatchSimple or fuzzyMatch.
- * @param {*} pattern   string        Pattern to search for.
- * @param {*} dataSet   array         Array of string in which pattern is searched.
- * @param {*} onComplete function     Callback function which is called after search is complete.
  */
 function fuzzyMatchAsync(
   matchFn: Function,
@@ -275,17 +249,6 @@ function fuzzyMatchAsync(
   }
 
   step()
-
-  // // Abort current process
-  // this.cancel = function() {
-  //   if (resumeTimeout !== null) clearTimeout(resumeTimeout)
-  // }
-
-  // // Process full list. Blocks script execution until complete
-  // this.flush = function() {
-  //   max_ms_per_frame = Infinity
-  //   step()
-  // }
 }
 
 export function fuzzyFindIndices<A extends any[]>(

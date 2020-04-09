@@ -370,6 +370,10 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
 }
 
 const popTo: Action<HomeStateItem | number> = (om, item) => {
+  if (om.state.home.currentState === om.state.home.lastHomeState) {
+    return
+  }
+
   let homeItem: HomeStateItem
 
   if (typeof item == 'number') {
@@ -394,7 +398,6 @@ const popTo: Action<HomeStateItem | number> = (om, item) => {
 
 const _popHomeState: Action<HistoryItem> = (om, item) => {
   if (om.state.home.states.length > 1) {
-    console.log('popHomeState', om.state.home.states)
     om.state.home.states = _.dropRight(om.state.home.states)
   }
 }
@@ -508,20 +511,10 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     return
   }
 
-  const updateRoute = () => {
-    om.actions.router.navigate({
-      name: 'search',
-      params: {
-        query,
-      },
-      replace: isOnSearch,
-    })
-  }
-
   if (isOnHome) {
     // we will load the search results with more debounce in next lines
     om.state.home.skipNextPageFetchData = true
-    updateRoute()
+    om.actions.home._updateRoute()
   }
 
   // AUTOCOMPLETE
@@ -541,7 +534,7 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   }
 
   if (!isOnHome) {
-    updateRoute()
+    om.actions.home._updateRoute()
   }
 
   om.actions.home.runSearch({})
@@ -672,7 +665,6 @@ const runSearch: AsyncAction<{ quiet?: boolean }> = async (om, opts) => {
     tags: tags.map((tag) => getTagId(tag)),
   }
   const searchKey = JSON.stringify(searchArgs)
-  console.log('searchin', tags, query, searchArgs)
   // simple prevent duplicate searches
   if (searchKey === lastSearchKey) return
   lastSearchKey = searchKey
@@ -695,21 +687,18 @@ const runSearch: AsyncAction<{ quiet?: boolean }> = async (om, opts) => {
 
   if (runSearchId != curId) return
   let restaurants = await Restaurant.search(searchArgs)
-  console.log('found', restaurants)
 
   state = om.state.home.lastSearchState
   if (runSearchId != curId) return
 
   // fetch reviews before render
   if (om.state.user.isLoggedIn) {
-    console.log('fetch')
     const reviews = (
       await om.effects.gql.queries.userRestaurantReviews({
         user_id: om.state.user.user.id,
         restaurant_ids: restaurants.map((x) => x.id),
       })
     ).review
-    console.log('donefetch')
     // TODO how do we do nice GC of allReviews?
     for (const review of reviews) {
       om.state.user.allReviews[review.restaurant_id] = review
@@ -721,7 +710,6 @@ const runSearch: AsyncAction<{ quiet?: boolean }> = async (om, opts) => {
     om.state.home.allRestaurants[restaurant.id] = restaurant
   }
 
-  console.log('done')
   state.results = {
     status: 'complete',
     results: {
@@ -869,11 +857,11 @@ const setLocationSearchQuery: AsyncAction<string> = async (om, val) => {
   await sleep(70)
   if (curId !== locationSearchId) return
   const results = (await searchLocations(val)).map(locationToAutocomplete)
-  const searcher = new Fuse(results, fuzzyOpts)
-  const orderedResults = searcher.search(val, { limit: 8 }).map((x) => x.item)
+  const orderedResults = await fuzzyFind(val, results)
+  if (curId !== locationSearchId) return
   om.state.home.locationAutocompleteResults = _.uniqBy(
     orderedResults,
-    (x) => x.id
+    (x) => x.tagId
   )
 }
 
@@ -928,8 +916,14 @@ const setTagInactiveFn = (om: Om, val: NavigableTag) => {
 }
 
 const setTagActiveFn = (om: Om, val: NavigableTag) => {
-  const state = om.state.home.currentState
-  if (state.type != 'home' && state.type != 'search') return
+  let state = om.state.home.currentState
+
+  if (state.type === 'home' && val.type === 'lense') {
+    // navigate to search
+    om.actions.home._updateRoute()
+  }
+
+  if (state.type != 'search' && state.type != 'home') return
   state.activeTagIds[getTagId(val)] = true
 }
 
@@ -1000,17 +994,14 @@ const _syncUrlToTags: Action<Object> = (om, params) => {
   om.actions.home._handleTagChange()
 }
 
-const _handleTagChange: Action = (om) => {
-  if (!om.state.home.started) {
-    return
-  }
+function getTagRouteParams(om: IContext<Config>): { [key: string]: string } {
   const state = om.state.home.currentState
-  if (state.type != 'home' && state.type != 'search') return
-
+  if (state.type != 'home' && state.type != 'search') {
+    return null
+  }
   const allActiveTags = Object.keys(state.activeTagIds).map(
     (id) => om.state.home.allTags[id]
   )
-
   // build our final path segment
   const filterTags = allActiveTags.filter((x) => x.type === 'filter')
   const otherTags = allActiveTags.filter(
@@ -1025,7 +1016,6 @@ const _handleTagChange: Action = (om) => {
       .map((t) => `${t.type}${SPLIT_TAG_TYPE}${slugify(t.name)}`)
       .join(SPLIT_TAG)}`
   }
-
   const params = {
     lense: slugify(allActiveTags.find((x) => x.type === 'lense').name),
     location: 'here',
@@ -1033,20 +1023,40 @@ const _handleTagChange: Action = (om) => {
   if (tags.length) {
     params['tags'] = tags
   }
+  return params
+}
 
-  om.actions.router.navigate({
-    name: 'search',
-    replace: true,
-    params,
-  })
+const _handleTagChange: Action = (om) => {
+  if (!om.state.home.started) return
+  om.actions.home.runSearch({})
+  om.actions.home._updateRoute()
 }
 
 const requestLocation: Action = (om) => {}
+
+const _updateRoute: Action = (om) => {
+  const state = om.state.home.currentState
+  const isOnSearch = state.type === 'search'
+  const params = getTagRouteParams(om)
+  if (!!om.state.home.currentStateSearchQuery) {
+    params.query = om.state.home.currentStateSearchQuery
+  }
+  if (om.state.home.searchBarTags.length === 0) {
+    om.actions.home.popTo(om.state.home.lastHomeState)
+    return
+  }
+  om.actions.router.navigate({
+    name: 'search',
+    params,
+    replace: isOnSearch,
+  })
+}
 
 export const actions = {
   start,
   startBeforeRouting,
   _syncUrlToTags,
+  _updateRoute,
   setTagInactive,
   setTagActive,
   requestLocation,

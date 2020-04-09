@@ -102,6 +102,7 @@ export default memo(function HomeAutoComplete() {
                       om.actions.home.setLocation(x.name)
                     } else {
                       om.actions.home.replaceActiveTagOfType(x)
+                      om.actions.home.setShowAutocomplete(false)
                     }
                   }}
                   flexDirection="row"
