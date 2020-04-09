@@ -364,7 +364,10 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
     const shouldSkip = om.state.home.skipNextPageFetchData
     om.state.home.skipNextPageFetchData = false
     if (!shouldSkip && fetchData) {
-      await fetchData()
+      await Promise.race([
+        fetchData(),
+        sleep(1000).then(() => console.error('timed out fetching data!')),
+      ])
     }
   }
 }
@@ -399,6 +402,15 @@ const popTo: Action<HomeStateItem | number> = (om, item) => {
 const _popHomeState: Action<HistoryItem> = (om, item) => {
   if (om.state.home.states.length > 1) {
     om.state.home.states = _.dropRight(om.state.home.states)
+  }
+
+  console.log('popped to', om.state.home.currentState)
+  if (om.state.home.currentState.type === 'home') {
+    if (om.state.home.searchBarTags.length) {
+      for (const tag of om.state.home.searchBarTags) {
+        setTagInactiveFn(om, tag)
+      }
+    }
   }
 }
 
@@ -658,12 +670,15 @@ const runSearch: AsyncAction<{ quiet?: boolean }> = async (om, opts) => {
     }
   }
 
+  query = query.trim()
+
   const searchArgs: RestaurantSearchArgs = {
     center: state.center,
     span: state.span,
     query,
     tags: tags.map((tag) => getTagId(tag)),
   }
+  console.log('searchArgs', searchArgs, opts)
   const searchKey = JSON.stringify(searchArgs)
   // simple prevent duplicate searches
   if (searchKey === lastSearchKey) return
@@ -682,13 +697,14 @@ const runSearch: AsyncAction<{ quiet?: boolean }> = async (om, opts) => {
   const timeSince = Date.now() - lastSearchAt
   lastSearchAt = Date.now()
   if (timeSince < 350) {
-    await sleep(timeSince - 350)
+    await sleep(Math.min(350, timeSince - 350))
   }
 
   if (runSearchId != curId) return
   let restaurants = await Restaurant.search(searchArgs)
 
   state = om.state.home.lastSearchState
+  console.log('restaurants', restaurants, runSearchId, curId)
   if (runSearchId != curId) return
 
   // fetch reviews before render
@@ -710,6 +726,7 @@ const runSearch: AsyncAction<{ quiet?: boolean }> = async (om, opts) => {
     om.state.home.allRestaurants[restaurant.id] = restaurant
   }
 
+  console.log('we done here', state)
   state.results = {
     status: 'complete',
     results: {
@@ -1016,20 +1033,23 @@ function getTagRouteParams(om: IContext<Config>): { [key: string]: string } {
       .map((t) => `${t.type}${SPLIT_TAG_TYPE}${slugify(t.name)}`)
       .join(SPLIT_TAG)}`
   }
-  const params = {
-    lense: slugify(allActiveTags.find((x) => x.type === 'lense').name),
+  const params: any = {
     location: 'here',
   }
+  const lense = slugify(allActiveTags.find((x) => x.type === 'lense')?.name)
+  if (lense) {
+    params.lense = lense
+  }
   if (tags.length) {
-    params['tags'] = tags
+    params.tags = tags
   }
   return params
 }
 
 const _handleTagChange: Action = (om) => {
   if (!om.state.home.started) return
-  om.actions.home.runSearch({})
   om.actions.home._updateRoute()
+  om.actions.home.runSearch({})
 }
 
 const requestLocation: Action = (om) => {}

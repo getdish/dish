@@ -1,9 +1,9 @@
 export function slugify(text: string, separator = '-') {
-  text = text.toString().toLowerCase().trim()
+  text = `${text ?? ''}`.trim()
 
-  sets.forEach((set) => {
-    text = text.replace(new RegExp(set.from, 'gi'), set.to)
-  })
+  for (const set of sets) {
+    text = text.replace(set.from, set.to)
+  }
 
   text = text
     .toString()
@@ -52,4 +52,4 @@ const sets = [
   { to: 'y', from: '[ÝŶŸỲỴỶỸ]' },
   { to: 'z', from: '[ŹŻŽ]' },
   { to: '-', from: "[·/_,:;']" },
-]
+].map((x) => ({ ...x, from: new RegExp(x.from, 'gi') }))
