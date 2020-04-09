@@ -4,6 +4,7 @@ import { ScrollView, Text, View } from 'react-native'
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItemSearch } from '../../state/home'
 import { useOvermind } from '../../state/om'
+import { getTagId } from '../../state/Tag'
 import { PageTitleTag } from '../shared/PageTitleTag'
 import { closeAllPopovers, popoverCloseCbs } from '../shared/Popover'
 import { PageTitle } from '../shared/SmallTitle'
@@ -15,7 +16,6 @@ import HomeLenseBar from './HomeLenseBar'
 import { LoadingItems } from './LoadingItems'
 import { RestaurantListItem } from './RestaurantListItem'
 import { TagButton } from './TagButton'
-import { getTagId } from '../../state/Tag'
 
 export default memoIsEqualDeep(function HomeSearchResultsView({
   state,
@@ -30,9 +30,9 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
     (tag) =>
       tag.type === 'dish' || tag.type === 'country' || tag.name === 'Delivers'
   )
-  const title = `Top ${titleTags
-    .map((x) => x.name)
-    .join(', ')} ${state.searchQuery ?? ''} Restaurants`
+  const title = `Top ${titleTags.map((x) => x.name).join(', ')} ${
+    state.searchQuery ?? ''
+  } Restaurants`
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>

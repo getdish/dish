@@ -3,7 +3,7 @@ import { Text } from 'react-native'
 
 import { Divider } from './Divider'
 import { Spacer } from './Spacer'
-import { HStack, VStack, StackBaseProps } from './Stacks'
+import { HStack, StackBaseProps, VStack } from './Stacks'
 
 export const PageTitle = memo(({ children, ...rest }: StackBaseProps) => {
   return (

@@ -1,6 +1,7 @@
 import React from 'react'
-import { VStack } from './shared/Stacks'
 import { Text } from 'react-native'
+
+import { VStack } from './shared/Stacks'
 
 export function NotFoundPage() {
   return (

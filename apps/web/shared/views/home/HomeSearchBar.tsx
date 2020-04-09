@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import {
-  Text,
   StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
   View,

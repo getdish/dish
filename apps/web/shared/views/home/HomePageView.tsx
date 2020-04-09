@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 
 import { isWorker } from '../../constants'
+import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { ZStack } from '../shared/Stacks'
 import { HomeControlsOverlay } from './HomeControlsOverlay'
 import { HomeMap } from './HomeMap'
+import { HomeMapPIP } from './HomeMapPIP'
 import HomeSearchBar from './HomeSearchBar'
 import { HomeViewContent } from './HomeViewContent'
 import { HomeViewDrawer } from './HomeViewDrawer'
-import { HomeMapPIP } from './HomeMapPIP'
-import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 
 export default () => {
   const [showPip, setShowPip] = useState(false)

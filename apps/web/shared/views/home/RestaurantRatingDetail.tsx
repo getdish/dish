@@ -2,10 +2,10 @@ import { Restaurant } from '@dish/models'
 import React, { memo } from 'react'
 import { Text } from 'react-native'
 
+import { Box } from '../shared/Box'
 import { HoverablePopover } from '../shared/HoverablePopover'
 import { SmallTitle } from '../shared/SmallTitle'
 import { VStack } from '../shared/Stacks'
-import { Box } from '../shared/Box'
 import { RatingView } from './RatingView'
 import { TableCell, TableRow } from './TableRow'
 

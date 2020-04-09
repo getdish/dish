@@ -9,9 +9,9 @@ import { useOvermind } from '../../state/om'
 import { Map, useMap } from '../map'
 // import { mapkit } from '../mapkit'
 import { ZStack } from '../shared/Stacks'
+import { centerMapToRegion } from './HomeMap'
 import { getRankingColor, getRestaurantRating } from './RatingView'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
-import { centerMapToRegion } from './HomeMap'
 
 export const HomeMapPIP = memo(() => {
   const om = useOvermind()

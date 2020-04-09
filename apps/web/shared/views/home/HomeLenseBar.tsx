@@ -3,10 +3,10 @@ import React, { memo } from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
 
 import { useOvermind } from '../../state/om'
+import { getTagId } from '../../state/Tag'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import HomeFilterBar from './HomeFilterBar'
 import { LenseButton } from './LenseButton'
-import { getTagId } from '../../state/Tag'
 
 export default memo(function HomeLenseBar(props: {
   activeTagIds: { [id: string]: boolean }

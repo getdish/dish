@@ -1,18 +1,18 @@
 import { Text, TextInput } from 'react-native'
 import { useStorageState } from 'react-storage-hooks'
 
+import { useOvermind } from '../state/om'
 import { textStyles } from './auth/textStyles'
 import { flatButtonStyle } from './home/baseButtonStyle'
 import { Modal } from './Modal'
-import { LinkButton, Link } from './shared/Link'
+import { Box } from './shared/Box'
+import { HoverablePopover } from './shared/HoverablePopover'
+import { Icon } from './shared/Icon'
+import { Link, LinkButton } from './shared/Link'
+import { Popover } from './shared/Popover'
 import { SmallTitle, SmallerTitle } from './shared/SmallTitle'
 import { Spacer } from './shared/Spacer'
 import { HStack, VStack } from './shared/Stacks'
-import { useOvermind } from '../state/om'
-import { Popover } from './shared/Popover'
-import { HoverablePopover } from './shared/HoverablePopover'
-import { Box } from './shared/Box'
-import { Icon } from './shared/Icon'
 
 export const WelcomeModal = () => {
   const om = useOvermind()
