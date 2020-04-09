@@ -12,15 +12,16 @@ const target = process.env.TARGET || 'client'
 console.log('TARGET', target)
 const appEntry = path.resolve(path.join(__dirname, 'web', 'index.web.tsx'))
 
-module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
+module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
+  // @ts-ignore
   const config = await createExpoWebpackConfigAsync(
     {
       projectRoot: '.',
       platform: 'web',
-      production: isProduction,
+      mode: isProduction ? 'production' : 'development',
       pwa: false,
       offline: false,
-      removeUnusedImportExports: true,
+      removeUnusedImportExports: isProduction,
     },
     argv
   )
@@ -30,6 +31,8 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
       'process.env.TARGET': JSON.stringify(process.env.TARGET || null),
     })
   )
+
+  config.optimization = config.optimization || {}
 
   if (config.optimization) {
     config.optimization.splitChunks = false
@@ -56,11 +59,14 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     return x !== 'app.json'
   })
 
-  if (!isProduction && config.optimization) {
+  if (!isProduction) {
     config.optimization.minimize = false
   }
 
   if (target === 'ssr') {
+    config.entry.app = config.entry.app.filter((x) => {
+      return x.indexOf('webpackHotDevClient') < 0
+    })
     config.target = 'node'
     config.output.path = path.join(__dirname, 'web-build-ssr')
     config.output.libraryTarget = 'commonjs'
@@ -115,19 +121,24 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     )
   }
 
-  if (config.optimization) {
-    if (process.env.NO_MINIFY) {
-      config.optimization.minimize = false
-    }
-    if (config.optimization.minimize == false) {
-      delete config.optimization.minifier
-    }
+  if (process.env.NO_MINIFY) {
+    config.optimization.minimize = false
+  }
+
+  if (config.optimization.minimize == false) {
+    delete config.optimization.minifier
   }
 
   // prettyjson is choking on a possibly self-referencing recursion when building
   // with Docker.
   // console.log('Config:\n', prettifyWebpackConfig(config))
-  console.log('Config:\n', config)
+  if (process.env.VERBOSE) {
+    console.log('Config:\n', prettifyWebpackConfig(config))
+  } else {
+    console.log(
+      `Start building ${process.env.TARGET}... entry ${config.entry.app}`
+    )
+  }
 
   return config
 }

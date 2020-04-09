@@ -31,11 +31,13 @@ Object.keys(jsdom.window).forEach((key) => {
 })
 
 // import all app below ^^^
-const {
-  App,
-  config,
-  ReactDOMServer,
-} = require('../web-build-ssr/static/js/app.ssr.js')
+const app = require('../web-build-ssr/static/js/app.ssr.js')
+const { App, config, ReactDOMServer } = app
+
+if (!App || !config || !ReactDOMServer) {
+  console.error(`Bad exported bundle`)
+  process.exit()
+}
 
 const server = express()
 server.set('port', 3000)
@@ -59,9 +61,11 @@ server.use(
 // setHeaders: res => res.setHeader('AMP-Access-Control-Allow-Source-Origin', `http://localhost:${PORT}`),
 
 server.get('*', async (req, res) => {
+  console.log('config', config)
   const htmlPath = Path.join(__dirname, '..', 'web', 'index.html')
   const template = readFileSync(htmlPath, 'utf8')
   const overmind = createOvermindSSR(config)
+  await overmind.initialized
   const appHtml = ReactDOMServer.renderToString(<App overmind={overmind} />)
   // need to fool helmet back into thinking were in the node
   const helmet = Helmet.renderStatic()

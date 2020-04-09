@@ -1,10 +1,11 @@
-module.exports = function (api) {
+module.exports = function(api) {
   const isWorker = process.env.TARGET === 'worker'
-  if (isWorker) {
+  const isSSR = process.env.TARGET === 'ssr'
+  if (isWorker || isSSR) {
     api.cache(true)
   }
   const plugins = [
-    !isWorker && !api.env('production') && 'react-refresh/babel',
+    !isWorker && !isSSR && !api.env('production') && 'react-refresh/babel',
   ].filter(Boolean)
   return {
     plugins,

@@ -24,8 +24,8 @@ window['React'] = React
 
 // exports
 if (process.env.TARGET === 'ssr') {
-  exports.App = require('../shared/views/App')
-  exports.config = require('../shared/state/om')
+  exports.App = require('../shared/views/App').App
+  exports.config = config
 }
 if (process.env.TARGET !== 'worker') {
   exports.Helmet = require('react-helmet')
@@ -36,20 +36,24 @@ if (process.env.TARGET !== 'preact') {
 
 let rootEl = document.getElementById('root')
 
-// needs to be above App next to render()
-const om = createOvermind(config, {
-  devtools: 'localhost:3031',
-  logProxies: true,
-  hotReloading: true,
-})
-window['om'] = om
-
 async function start() {
   if (!isWorker) {
     require('./mapkit')
     await startMapKit()
     console.log('started mapkit')
   }
+
+  const om = createOvermind(config, {
+    devtools: 'localhost:3031',
+    logProxies: true,
+    hotReloading: true,
+  })
+
+  // can render splash here
+
+  await om.initialized
+
+  window['om'] = om
 
   if (OVERMIND_MUTATIONS) {
     hydrate(<App overmind={om} />, document.getElementById('root'))
@@ -65,6 +69,7 @@ async function start() {
 
 if (!window['IS_SSR_RENDERING'] && !window['STARTED']) {
   window['STARTED'] = true
+  console.log('Starting from index')
   start()
 }
 
