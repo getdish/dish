@@ -9,12 +9,12 @@ import { useOvermind } from '../../state/om'
 import { RoutesTable } from '../../state/router'
 import { Icon } from '../shared/Icon'
 import { LinkButton, LinkButtonProps } from '../shared/Link'
-import { PageTitle } from '../shared/PageTitle'
+import { PageTitleTag } from '../shared/PageTitleTag'
 import { SmallTitle, SmallerTitle } from '../shared/SmallTitle'
 import { Spacer } from '../shared/Spacer'
 import { HStack, StackBaseProps, VStack, ZStack } from '../shared/Stacks'
 import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
-import { lightLightBg } from './colors'
+import { bgLightLight } from './colors'
 import HomeLenseBar from './HomeLenseBar'
 import { RatingView } from './RatingView'
 
@@ -25,7 +25,7 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
 }) {
   return (
     <>
-      <PageTitle>Dish - Uniquely Good Food</PageTitle>
+      <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
       <Spacer size={20} />
       <VStack position="relative" flex={1}>
         <HomeLenseBar activeTagIds={state.activeTagIds} backgroundGradient />
@@ -133,7 +133,7 @@ const CountryTopDishesAndRestaurants = memo(
       <VStack
         paddingVertical={5}
         paddingTop={20}
-        backgroundColor={hovered ? lightLightBg : null}
+        backgroundColor={hovered ? bgLightLight : null}
         onHoverIn={() => setHovered(true)}
         onHoverOut={() => setHovered(false)}
       >

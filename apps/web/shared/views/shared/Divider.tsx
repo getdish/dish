@@ -9,6 +9,7 @@ export const Divider = memo(
     vertical,
     height,
     width,
+    opacity,
     flexLine = 10,
     ...rest
   }: Omit<StackBaseProps, 'flex'> & {
@@ -30,7 +31,7 @@ export const Divider = memo(
             [vertical ? 'width' : 'height']: 1,
             flex: flexLine,
             backgroundColor: '#000',
-            opacity: 0.045,
+            opacity: opacity ?? 0.055,
           }}
         />
         <View style={{ flex: 1 }} />

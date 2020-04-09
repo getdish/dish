@@ -13,37 +13,48 @@ export const TagButton = memo(
     rank,
     tag,
     size,
+    subtle,
+    closable,
+    onClose,
     votable,
   }: {
     rank?: number
     tag: Partial<Tag> & Pick<Tag, 'name' | 'type'>
     size?: 'lg' | 'md'
+    subtle?: boolean
     votable?: boolean
+    closable?: boolean
+    onClose?: Function
   }) => {
     const scale = size == 'lg' ? 1.05 : 1
     const paddingVertical = 1 * scale
     const lineHeight = 22 * scale
+    const color = 'purple'
+    const bg = subtle ? 'transparent' : color
+    const fg = subtle ? color : 'white'
     return (
       <HStack
-        backgroundColor="purple"
+        backgroundColor={bg}
         borderWidth={1}
-        borderColor={'#ddd'}
+        borderColor={subtle ? 'transparent' : '#ddd'}
         borderRadius={10 * scale}
-        overflow="hidden"
+        // overflow="hidden"
         alignItems="center"
-        shadowColor="rgba(0,0,0,0.1)"
+        shadowColor={subtle ? 'transparent' : 'rgba(0,0,0,0.1)'}
         shadowRadius={6 * scale}
         shadowOffset={{ width: 0, height: 2 * scale }}
+        spacing="sm"
+        position="relative"
       >
         {!!rank && (
           <Text
             style={{
-              fontSize: 13 * scale,
+              fontSize: subtle ? 'inherit' : 13 * scale,
               fontWeight: 'bold',
               paddingVertical: '5%',
               marginVertical: '-2.5%',
-              paddingHorizontal: 8 * scale,
-              backgroundColor: '#fff',
+              paddingHorizontal: 6 * scale,
+              backgroundColor: subtle ? 'transparent' : '#fff',
               lineHeight,
               alignSelf: 'stretch',
             }}
@@ -54,36 +65,47 @@ export const TagButton = memo(
         )}
         <Text
           style={{
-            fontSize: 13 * scale,
-            fontWeight: 'bold',
+            fontSize: subtle ? 'inherit' : 13 * scale,
+            fontWeight: subtle ? 'inherit' : 'bold',
             paddingVertical,
-            paddingHorizontal: 8 * scale,
-            color: '#fff',
+            // paddingHorizontal: 6 * scale,
+            color: fg,
             lineHeight,
             margin: 'auto',
           }}
         >
-          {tag.icon} {tag.name}
+          <span style={{ marginRight: -4, marginLeft: 4 }}>{tag.icon}</span>
+          {tag['displayName'] ?? tag.name}
         </Text>
         {!!votable && (
-          <>
-            <Spacer flex />
-            <View
-              style={{
-                paddingVertical,
-                paddingHorizontal: 8 * scale,
-                backgroundColor: '#fff',
-                height: '100%',
-              }}
-            >
-              <HoverableButton onPress={() => {}}>
-                <Icon marginBottom={-1} size={12} name="chevron-up" />
-              </HoverableButton>
-              <HoverableButton onPress={() => {}}>
-                <Icon size={12} name="chevron-down" />
-              </HoverableButton>
-            </View>
-          </>
+          <View
+            style={{
+              paddingVertical,
+              paddingHorizontal: 8 * scale,
+              backgroundColor: subtle ? 'transparent' : '#fff',
+              height: '100%',
+            }}
+          >
+            <HoverableButton onPress={() => {}}>
+              <Icon marginBottom={-1} size={12} name="chevron-up" />
+            </HoverableButton>
+            <HoverableButton onPress={() => {}}>
+              <Icon size={12} name="chevron-down" />
+            </HoverableButton>
+          </View>
+        )}
+        {!!closable && (
+          <HoverableButton
+            paddingVertical={paddingVertical}
+            backgroundColor={subtle ? 'transparent' : '#fff'}
+            height="100%"
+            onPress={onClose}
+            position="absolute"
+            top={-9}
+            right={-2}
+          >
+            <Icon size={10} name="x" />
+          </HoverableButton>
         )}
       </HStack>
     )

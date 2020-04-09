@@ -1,5 +1,5 @@
 import { StackBaseProps } from '../shared/Stacks'
-import { lightBg, lightBgHover } from './colors'
+import { bgLight, bgLightHover } from './colors'
 
 export const baseButtonStyle: StackBaseProps = {
   paddingVertical: 5,
@@ -9,9 +9,9 @@ export const baseButtonStyle: StackBaseProps = {
 
 export const flatButtonStyle: StackBaseProps = {
   ...baseButtonStyle,
-  backgroundColor: lightBg,
+  backgroundColor: bgLight,
   hoverStyle: {
-    backgroundColor: lightBgHover,
+    backgroundColor: bgLightHover,
   },
 }
 

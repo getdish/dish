@@ -1,5 +1,11 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
-import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
+import {
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 
 import {
   drawerBorderRadius,
@@ -275,13 +281,24 @@ export default memo(function HomeSearchBar() {
             <Spacer size={1} />
           </HStack>
 
-          {divider}
+          <HStack
+            alignItems="center"
+            justifyContent="center"
+            spacing={3}
+            width={45}
+          >
+            <Divider flex opacity={0.1} />
+            <VStack paddingVertical={1} paddingHorizontal={4} borderRadius={4}>
+              <Text style={{ color: '#444', fontSize: 16 }}>in</Text>
+            </VStack>
+            <Divider flex opacity={0.1} />
+          </HStack>
 
           <VStack flex={10} maxWidth={320}>
             <TextInput
               ref={locationInputRef}
               value={locationSearch}
-              placeholder="in San Francisco"
+              placeholder="San Francisco"
               style={[styles.textInput, { paddingRight: 32, fontSize: 16 }]}
               onFocus={() => {
                 clearTimeout(tmInputBlur.current)

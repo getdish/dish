@@ -1,6 +1,6 @@
 import { isWorker } from '../../constants'
 
-export const PageTitle = (props: { children: any }) => {
+export const PageTitleTag = (props: { children: any }) => {
   if (isWorker) {
     return null
   }

@@ -2,7 +2,13 @@ import { DocumentNode, gql } from '@apollo/client'
 
 import { ModelBase } from './ModelBase'
 
-export type TagType = 'continent' | 'country' | 'dish' | 'orphan'
+export type TagType =
+  | 'lense'
+  | 'filter'
+  | 'continent'
+  | 'country'
+  | 'dish'
+  | 'orphan'
 export type TagRecord = Partial<Tag> & Pick<Tag, 'type'>
 
 export class Tag extends ModelBase<Tag> {
