@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { Action, AsyncAction, Derive, IContext, Config, filter } from 'overmind'
 
 import { isWorker } from '../constants'
-import { fuzzy } from '../helpers/fuzzy'
+import { fuzzyFindIndices, fuzzyFind } from '../helpers/fuzzy'
 import { sleep } from '../helpers/sleep'
 import { HistoryItem, RouteItem } from './router'
 import { Tag, tagFilters, tagLenses, getTagId, NavigableTag } from './Tag'
@@ -246,8 +246,10 @@ const startBeforeRouting: AsyncAction = async (om) => {
 
 const start: AsyncAction = async (om) => {
   // depends on topDishes
-  await om.actions.home._runAutocomplete(om.state.home.currentState.searchQuery)
   om.state.home.started = true
+  // stuff that can run after rendering
+  await new Promise((res) => (window['requestIdleCallback'] ?? setTimeout)(res))
+  await om.actions.home._runAutocomplete(om.state.home.currentState.searchQuery)
 }
 
 const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
@@ -292,9 +294,7 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         om.actions.home._syncUrlToTags(item.params)
       }
       fetchData = async () => {
-        if (lastSearchState?.searchQuery !== item.params.query) {
-          await om.actions.home.runSearch(item.params.query)
-        }
+        await om.actions.home.runSearch(item.params.query)
       }
       break
     case 'restaurant':
@@ -316,7 +316,11 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   }
 
   if (nextState) {
-    om.state.home.states.push(nextState)
+    if (item.replace && om.state.home.currentStateType === nextState.type) {
+      om.state.home.states[om.state.home.states.length - 1] = nextState
+    } else {
+      om.state.home.states.push(nextState)
+    }
     if (afterPush) {
       afterPush()
     }
@@ -429,33 +433,18 @@ const _loadHomeDishes: AsyncAction = async (om) => {
     }
   }
 
-  const dishes = om.state.home.topDishes
+  const dishes = all
     .map((x) => x.dishes)
     .flat()
     .filter(Boolean)
 
-  // weird side effect
-  autocompleteDishesFuzzy = new Fuse(
-    om.state.home.autocompleteDishes,
-    fuzzyOpts
-  )
-
   if (!isWorker) {
-    om.state.home.autocompleteDishes = dishes ?? []
+    if (dishes) {
+      om.state.home.autocompleteDishes = dishes
+    }
     om.state.home.topDishes = all
   }
 }
-
-const fuzzyOpts = {
-  shouldSort: true,
-  threshold: 0.6,
-  location: 0,
-  distance: 100,
-  minMatchCharLength: 1,
-  keys: ['name'],
-}
-
-let autocompleteDishesFuzzy = new Fuse([], fuzzyOpts)
 
 const DEBOUNCE_AUTOCOMPLETE = 60
 const DEBOUNCE_SEARCH = 600
@@ -524,15 +513,17 @@ let defaultAutocompleteResults: AutocompleteItem[] | null = null
 const _runAutocomplete: AsyncAction<string> = async (om, query) => {
   const state = om.state.home.currentState
 
+  if (!defaultAutocompleteResults) {
+    defaultAutocompleteResults = om.state.home.topDishes.map((x) => ({
+      id: x.country,
+      type: 'country',
+      name: x.country,
+      icon: x.icon,
+    }))
+    om.state.home.autocompleteResults = defaultAutocompleteResults
+  }
+
   if (query === '') {
-    if (!defaultAutocompleteResults) {
-      defaultAutocompleteResults = om.state.home.topDishes.map((x) => ({
-        id: x.country,
-        type: 'country',
-        name: x.country,
-        icon: x.icon,
-      }))
-    }
     om.state.home.autocompleteResults = defaultAutocompleteResults
     om.state.home.locationAutocompleteResults = defaultLocationAutocompleteResults
     return
@@ -547,9 +538,9 @@ const _runAutocomplete: AsyncAction<string> = async (om, query) => {
   })
 
   const autocompleteDishes = om.state.home.autocompleteDishes
-  let found: { name: string }[] = autocompleteDishesFuzzy
-    .search(query, { limit: 10 })
-    .map((x) => x.item)
+  let found = await fuzzyFind(query, autocompleteDishes)
+  // .search(query, { limit: 10 })
+  // .map((x) => x.item)
   if (found.length < 10) {
     found = [...found, ...autocompleteDishes.slice(0, 10 - found.length)]
   }
@@ -583,9 +574,9 @@ const _runAutocomplete: AsyncAction<string> = async (om, query) => {
   )
 
   // final fuzzy...
-  const searcher = new Fuse(unsortedResults, fuzzyOpts)
-  const results = searcher.search(query, { limit: 8 }).map((x) => x.item)
-
+  const results = query
+    ? await fuzzyFind(query, unsortedResults)
+    : unsortedResults
   om.state.home.autocompleteResults = results
 }
 
@@ -626,7 +617,7 @@ const runSearch: AsyncAction<string> = async (om, query: string) => {
   if (searchKey === lastSearchKey) return
   lastSearchKey = searchKey
 
-  state.searchQuery = query
+  state.searchQuery = query ?? ''
   state.results = {
     // preserve last results
     results: state.results.results,
@@ -858,7 +849,9 @@ const moveActiveUp: Action = (om) => {
 }
 
 const _runHomeSearch: AsyncAction<string> = async (om, query) => {
-  const res = await fuzzy(query, om.state.home.topDishes, ['country'])
+  const res = await fuzzyFindIndices(query, om.state.home.topDishes, [
+    'country',
+  ])
   om.state.home.topDishesFilteredIndices = res
 }
 

@@ -10,70 +10,79 @@ import { Popover } from '../shared/Popover'
 import { HStack, VStack } from '../shared/Stacks'
 import { Box } from '../shared/Box'
 import { flatButtonStyle } from './baseButtonStyle'
+import { useStorageState } from 'react-storage-hooks'
 
 export const HomeUserMenu = memo(() => {
   const om = useOvermind()
+  const [firstTime, setFirstTime] = useStorageState(
+    localStorage,
+    'firstTime',
+    true
+  )
+
+  const close = () => {
+    setFirstTime(false)
+    om.actions.home.setShowUserMenu(false)
+  }
 
   return (
-    <>
-      <Popover
-        position="bottom"
-        isOpen={om.state.home.showUserMenu}
-        onClickOutside={() => {
-          om.actions.home.setShowUserMenu(false)
-        }}
-        contents={
-          <Box padding={20} width="30vw" minWidth={250}>
-            {!om.state.user.isLoggedIn && (
-              <AuthLoginRegisterView
-                setMenuOpen={(x) => om.actions.home.setShowUserMenu(x)}
-              />
-            )}
+    <Popover
+      position="bottom"
+      isOpen={firstTime || om.state.home.showUserMenu}
+      onClickOutside={() => {
+        close()
+      }}
+      contents={
+        <Box padding={20} width="30vw" minWidth={250}>
+          {!om.state.user.isLoggedIn && (
+            <AuthLoginRegisterView
+              setMenuOpen={(x) => om.actions.home.setShowUserMenu(x)}
+            />
+          )}
 
-            {om.state.user.isLoggedIn && (
-              <VStack spacing>
-                <LinkButton
-                  {...flatButtonStyle}
-                  name="account"
-                  params={{ id: 'reviews', pane: 'list' }}
-                >
-                  Reviews
-                </LinkButton>
-                <Divider />
-                <LinkButton
-                  onPress={() => {
-                    om.actions.user.logout()
-                    om.actions.home.setShowUserMenu(false)
-                  }}
-                >
-                  Logout
-                </LinkButton>
-              </VStack>
-            )}
-          </Box>
+          {om.state.user.isLoggedIn && (
+            <VStack spacing>
+              <LinkButton
+                {...flatButtonStyle}
+                name="account"
+                params={{ id: 'reviews', pane: 'list' }}
+              >
+                Reviews
+              </LinkButton>
+              <Divider />
+              <LinkButton
+                onPress={() => {
+                  om.actions.user.logout()
+                  close()
+                }}
+              >
+                Logout
+              </LinkButton>
+            </VStack>
+          )}
+        </Box>
+      }
+    >
+      <LinkButton
+        flexDirection="row"
+        pointerEvents="auto"
+        padding={15}
+        onPress={() =>
+          om.actions.home.setShowUserMenu(!om.state.home.showUserMenu)
         }
       >
-        <LinkButton
-          flexDirection="row"
-          pointerEvents="auto"
-          padding={15}
-          onPress={() =>
-            om.actions.home.setShowUserMenu(!om.state.home.showUserMenu)
-          }
-        >
-          <HStack spacing alignItems="center" justifyContent="center">
-            <Icon name="user" size={26} opacity={0.5} />
-            {om.state.user.isLoggedIn ? (
-              <Text
-                numberOfLines={1}
-                style={{ fontSize: 12, opacity: 0.5, maxWidth: 50 }}
-              >
-                {om.state.user.user.username}
-              </Text>
-            ) : null}
-          </HStack>
-        </LinkButton>
-      </Popover>
-    </>
+        <HStack spacing alignItems="center" justifyContent="center">
+          <Icon name="user" size={26} opacity={0.5} />
+          {om.state.user.isLoggedIn ? (
+            <Text
+              numberOfLines={1}
+              style={{ fontSize: 12, opacity: 0.5, maxWidth: 50 }}
+            >
+              {om.state.user.user.username}
+            </Text>
+          ) : null}
+        </HStack>
+      </LinkButton>
+    </Popover>
   )
 })

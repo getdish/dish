@@ -246,7 +246,6 @@ function fuzzyMatchAsync(
     resumeTimeout = null
     const stopTime = performance.now() + max_ms_per_frame
 
-    console.log('what is', dataSet)
     for (; dataIndex < dataSet.length; ++dataIndex) {
       if (dataIndex % ITEMS_PER_CHECK == 0) {
         if (performance.now() > stopTime) {
@@ -289,7 +288,7 @@ function fuzzyMatchAsync(
   // }
 }
 
-export async function fuzzy<A extends any[]>(
+export function fuzzyFindIndices<A extends any[]>(
   needle: string,
   haystack: A,
   keys: string[] = ['name']
@@ -301,4 +300,13 @@ export async function fuzzy<A extends any[]>(
       rej(err)
     }
   })
+}
+
+export async function fuzzyFind<A extends any>(
+  needle: string,
+  haystack: A[],
+  keys: string[] = ['name']
+): Promise<A[]> {
+  const indices = await fuzzyFindIndices(needle, haystack, keys)
+  return indices.map((i) => haystack[i])
 }

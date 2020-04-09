@@ -268,7 +268,7 @@ export default memo(function HomeSearchBar() {
                   }}
                   onChangeText={(text) => {
                     setSearch(text)
-                    om.actions.home.setSearchQuery(text)
+                    om.actions.home.setSearchQuery(text ?? '')
                   }}
                   placeholder="Search dish, cuisine"
                   style={[styles.textInput, { fontSize: 19, paddingRight: 42 }]}
