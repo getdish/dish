@@ -1,7 +1,15 @@
 import React, { memo } from 'react'
 import { View } from 'react-native'
 
-export type Spacing = 'sm' | 'md' | 'lg' | 'xl' | number | boolean | string
+export type Spacing =
+  | 'xs'
+  | 'sm'
+  | 'md'
+  | 'lg'
+  | 'xl'
+  | number
+  | boolean
+  | string
 
 export const Spacer = memo(
   ({
@@ -34,6 +42,7 @@ export const Spacer = memo(
 export const spaceToPx = (space: Spacing) => {
   if (space === 'md' || space === true) return 12
   if (space == 'sm') return 8
+  if (space == 'xs') return 4
   if (space == 'lg') return 16
   if (space == 'xl') return 24
   if (typeof space === 'number') return space

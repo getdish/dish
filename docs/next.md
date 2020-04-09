@@ -1,3 +1,5 @@
+- seeing dish details (learn names of dishes, ingredients, pairing, etc), making you smarter just by using it
+
 # April
 
 GOAL

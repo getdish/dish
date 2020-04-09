@@ -4,16 +4,18 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native'
 
 import {
   drawerBorderRadius,
   isWorker,
   searchBarHeight,
-  searchBarTopOffset
+  searchBarTopOffset,
 } from '../../constants'
 import { useOvermind } from '../../state/om'
+import { getTagId } from '../../state/Tag'
+import { Circle } from '../shared/Circle'
 import { Divider } from '../shared/Divider'
 import Hoverable from '../shared/Hoverable'
 import { Icon } from '../shared/Icon'
@@ -25,7 +27,6 @@ import { DishLogoButton } from './DishLogoButton'
 import HomeAutocomplete from './HomeAutocomplete'
 import { HomeUserMenu } from './HomeUserMenu'
 import { TagButton } from './TagButton'
-import { Circle } from '../shared/Circle'
 
 const extraWidth = 36
 
@@ -216,7 +217,13 @@ export default memo(function HomeSearchBar() {
 
           <VStack flex={0.5} />
 
-          <HStack flex={15} maxWidth={450} alignItems="center" spacing>
+          <HStack
+            flex={15}
+            maxWidth={450}
+            alignItems="center"
+            spacing
+            overflow="hidden"
+          >
             <>
               {om.state.home.isLoading ? (
                 <VStack className="rotating" opacity={0.5}>
@@ -249,13 +256,27 @@ export default memo(function HomeSearchBar() {
                   }
                 }}
               >
-                <Text style={{ fontSize: 19, marginLeft: 10, marginTop: -1 }}>
-                  <HStack spacing={6} alignItems="center">
+                <Text
+                  style={{
+                    fontSize: 19,
+                    marginLeft: 10,
+                    marginTop: -1,
+                    display: 'flex',
+                    flex: 1,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <HStack
+                    spacing={6}
+                    alignItems="center"
+                    flex={1}
+                    overflow="hidden"
+                  >
                     {om.state.home.lastActiveTags
                       .filter((x) => x.type === 'country')
                       .map((tag) => (
                         <TagButton
-                          key={tag.id}
+                          key={getTagId(tag)}
                           subtleIcon
                           backgroundColor="#eee"
                           color="#444"
@@ -298,7 +319,7 @@ export default memo(function HomeSearchBar() {
                       placeholder="Search dish, cuisine"
                       style={[
                         styles.textInput,
-                        { fontSize: 19, paddingRight: 42 }
+                        { flex: 1, fontSize: 19, paddingRight: 0 },
                       ]}
                     />
                   </HStack>
@@ -396,7 +417,7 @@ const SearchLocationButton = memo(() => {
         >
           <TouchableOpacity
             style={{
-              padding: 10
+              padding: 10,
             }}
             onPress={() => {
               om.actions.home.popTo(om.state.home.lastHomeState)
@@ -417,7 +438,7 @@ const styles = StyleSheet.create({
     marginTop: searchBarTopOffset,
     left: searchBarTopOffset,
     right: searchBarTopOffset,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   containerInner: {
     flex: 1,
@@ -434,12 +455,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   textInput: {
     padding: 11,
     paddingHorizontal: 16,
     flex: 1,
-    fontSize: 22
-  }
+    fontSize: 22,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
 })

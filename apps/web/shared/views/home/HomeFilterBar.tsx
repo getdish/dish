@@ -52,7 +52,7 @@ const FilterButton = memo(
               fontWeight: '600',
             }}
           >
-            {filter.name}
+            {filter.displayName ?? filter.name}
           </Text>
         </SmallButton>
       </LinkButton>

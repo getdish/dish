@@ -41,7 +41,7 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
 const HomeViewTopDishesTrending = memo(() => {
   const om = useOvermind()
   const allRestaurants = om.state.home.topDishes[0]?.top_restaurants ?? []
-  const items = allRestaurants.slice(0, 8).map((restaurant, index) => {
+  const getTrending = (restaurant: Restaurant, index: number) => {
     return (
       <TrendingButton
         key={`${index}${restaurant.id}`}
@@ -49,18 +49,28 @@ const HomeViewTopDishesTrending = memo(() => {
         params={{
           slug: restaurant.slug,
         }}
-        rank={index + 1}
+        // rank={index + 1}
       >
         🍔 {restaurant.name}
       </TrendingButton>
     )
-  })
+  }
   return (
-    <VStack>
+    <VStack spacing="xs">
       <SmallTitle>Trending</SmallTitle>
       <HStack paddingHorizontal={15}>
-        <VStack width="50%">{items.slice(0, 3)}</VStack>
-        <VStack width="50%">{items.slice(3, 6)}</VStack>
+        <VStack width="33.333%" spacing="xs">
+          <SmallerTitle hideDivider>Restaurants</SmallerTitle>
+          <>{allRestaurants.slice(0, 4).map(getTrending)}</>
+        </VStack>
+        <VStack width="33.333%" spacing="xs">
+          <SmallerTitle hideDivider>Dishes</SmallerTitle>
+          <>{allRestaurants.slice(4, 8).map(getTrending)}</>
+        </VStack>
+        <VStack width="33.333%" spacing="xs">
+          <SmallerTitle hideDivider>Tags</SmallerTitle>
+          <>{allRestaurants.slice(6, 10).map(getTrending)}</>
+        </VStack>
       </HStack>
     </VStack>
   )
@@ -73,19 +83,20 @@ const TrendingButton = <
   rank,
   children,
   ...rest
-}: LinkButtonProps<Name, Params> & { rank: number }) => {
+}: LinkButtonProps<Name, Params> & { rank?: number }) => {
   return (
     <LinkButton
       {...flatButtonStyle}
       margin={3}
       flexDirection="row"
       alignItems="center"
+      ellipse
       {...rest}
     >
-      {rank}.{' '}
+      {rank ? `${rank}. ` : ''}
       <Icon
         marginTop={2}
-        marginHorizontal={4}
+        marginRight={4}
         name="chevron-down"
         size={14}
         color="red"

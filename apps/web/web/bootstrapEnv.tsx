@@ -1,6 +1,13 @@
+import { isPreact, isSSR, isWorker } from '../shared/constants'
+
 const React = require('react')
 
-if (process.env.TARGET == 'worker') {
+if (isSSR) {
+  console.log('Patching useLayoutEffect to avoid many warnings in server mode')
+  React.useLayoutEffect = React.useEffect
+}
+
+if (isWorker) {
   window['isWorker'] = true
   // @ts-ignore
   document.cookie = document.cookie || ''
@@ -13,7 +20,7 @@ if (process.env.TARGET == 'worker') {
   }
 }
 
-if (process.env.TARGET == 'preact') {
+if (isPreact) {
   require('preact/debug')
   React['__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED'] = {
     ReactCurrentOwner: {

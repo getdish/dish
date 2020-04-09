@@ -6,6 +6,9 @@ import { createOvermind } from 'overmind'
 import { AppRegistry } from 'react-native'
 
 import { config } from '../shared/state/om'
+import { MediaQuery } from '../shared/views/shared/MediaQuery'
+
+MediaQuery
 
 // global styles
 require('./base.css')
@@ -14,7 +17,12 @@ const { hydrate, render } = require('react-dom')
 
 require('./bootstrapEnv')
 
-const { OVERMIND_MUTATIONS, isWorker } = require('../shared/constants')
+const {
+  OVERMIND_MUTATIONS,
+  isWorker,
+  isSSR,
+  isPreact,
+} = require('../shared/constants')
 const { App } = require('../shared/views/App')
 
 // register root component
@@ -23,14 +31,14 @@ AppRegistry.registerComponent('dish', () => App)
 window['React'] = React
 
 // exports
-if (process.env.TARGET === 'ssr') {
+if (isSSR) {
   exports.App = require('../shared/views/App').App
   exports.config = config
 }
-if (process.env.TARGET !== 'worker') {
+if (!isWorker) {
   exports.Helmet = require('react-helmet')
 }
-if (process.env.TARGET !== 'preact') {
+if (!isPreact && !isWorker) {
   exports.ReactDOMServer = require('react-dom/server')
 }
 
