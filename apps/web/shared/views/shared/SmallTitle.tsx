@@ -8,21 +8,15 @@ import { HStack, VStack, StackBaseProps } from './Stacks'
 export const PageTitle = memo(({ children, ...rest }: StackBaseProps) => {
   return (
     <>
-      <VStack
-        width="100%"
-        alignItems="center"
-        paddingTop={10}
-        paddingVertical={12}
-        {...rest}
-      >
+      <VStack width="100%" alignItems="center" paddingVertical={12} {...rest}>
         <Text
           style={{
             // textTransform: 'uppercase',
             // letterSpacing: 4,
-            // opacity: 0.6,
-            fontSize: 16,
-            fontWeight: '600',
-            paddingBottom: 8,
+            opacity: 0.7,
+            fontSize: 15,
+            fontWeight: '400',
+            paddingBottom: 10,
           }}
         >
           {children}

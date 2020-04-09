@@ -20,7 +20,7 @@ export default memo(function HomeFilterBar({
         paddingHorizontal={30}
         paddingVertical={2}
         alignItems="center"
-        spacing={3}
+        spacing={4}
         justifyContent="center"
       >
         {om.state.home.allFilterTags.map((tag) => (

@@ -36,7 +36,7 @@ export const RestaurantTagButton = memo(
                     key={`${name}${index}`}
                     size="lg"
                     rank={10}
-                    name={name}
+                    tag={t.tag}
                     votable
                   />
                 )

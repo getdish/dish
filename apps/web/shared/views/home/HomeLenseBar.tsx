@@ -16,11 +16,7 @@ export default memo(function HomeLenseBar(props: {
   return (
     <ZStack zIndex={10} right={0} left={0} pointerEvents="none">
       <VStack pointerEvents="auto">
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={{ marginBottom: -2 }}
-        >
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <HStack paddingHorizontal={20} paddingVertical={4} spacing="sm">
             {om.state.home.allLenseTags.map((lense) => (
               <LenseButton

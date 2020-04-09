@@ -8,6 +8,7 @@ export type TagType =
   | 'continent'
   | 'country'
   | 'dish'
+  | 'restaurant'
   | 'orphan'
 export type TagRecord = Partial<Tag> & Pick<Tag, 'type'>
 

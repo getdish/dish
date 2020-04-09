@@ -53,7 +53,7 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
           />
         </HStack>
       </ZStack>
-      <PageTitle height={45}>
+      <PageTitle height={57}>
         Top{titleTags.length ? ' ' : ''}
         {titleTags.map((tag) => (
           <TagButton
@@ -64,7 +64,8 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
                 : tag
             }
             subtle
-            closable
+            fontWeight={'bold'}
+            // closable
             onClose={() => {
               om.actions.home.setTagInactive(tag)
               // if (titleTags.length === 1) {
