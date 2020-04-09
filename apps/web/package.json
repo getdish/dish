@@ -20,11 +20,11 @@
     "test": "true",
     "postinstall": "jetify && rm -r node_modules/@apollo/client/node_modules/react || true && patch-package",
     "build": "tsc -b",
-    "build:web": "(NODE_ENV=production yarn build:web:client) & (NODE_ENV=production yarn build:web:server)",
+    "build:web": "(NODE_ENV=production yarn build:web:client) & (NODE_ENV=production yarn build:web:server) & wait",
     "build:web:server": "TARGET=ssr webpack",
     "build:web:client": "TARGET=client webpack",
     "build:web:worker": "TARGET=worker webpack",
-    "build:web:watch": "(TARGET=ssr webpack --watch) & (TARGET=client webpack --watch)",
+    "build:web:watch": "(TARGET=ssr webpack --watch) & (TARGET=client webpack --watch) & wait",
     "ios": "react-native run-ios",
     "android": "react-native run-android"
   },
