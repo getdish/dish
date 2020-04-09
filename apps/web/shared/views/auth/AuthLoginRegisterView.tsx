@@ -62,6 +62,7 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
         // some pitch on features for login here
       </Text> */}
       <TextInput
+        name="email"
         style={textStyles.textField}
         placeholder="Login or register with email"
         value={username}
@@ -70,6 +71,7 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
 
       {username.length > 3 && (
         <TextInput
+          name="password"
           style={textStyles.textField}
           placeholder="Password"
           value={password}

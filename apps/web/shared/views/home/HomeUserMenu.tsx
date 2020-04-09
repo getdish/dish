@@ -8,7 +8,7 @@ import { Icon } from '../shared/Icon'
 import { LinkButton } from '../shared/Link'
 import { Popover } from '../shared/Popover'
 import { HStack, VStack } from '../shared/Stacks'
-import { Tooltip } from '../shared/Tooltip'
+import { Box } from '../shared/Box'
 import { flatButtonStyle } from './baseButtonStyle'
 
 export const HomeUserMenu = memo(() => {
@@ -23,7 +23,7 @@ export const HomeUserMenu = memo(() => {
           om.actions.home.setShowUserMenu(false)
         }}
         contents={
-          <Tooltip padding={20} width="30vw" minWidth={250}>
+          <Box padding={20} width="30vw" minWidth={250}>
             {!om.state.user.isLoggedIn && (
               <AuthLoginRegisterView
                 setMenuOpen={(x) => om.actions.home.setShowUserMenu(x)}
@@ -50,7 +50,7 @@ export const HomeUserMenu = memo(() => {
                 </LinkButton>
               </VStack>
             )}
-          </Tooltip>
+          </Box>
         }
       >
         <LinkButton

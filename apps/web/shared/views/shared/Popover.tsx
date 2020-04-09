@@ -18,14 +18,16 @@ export const closeAllPopovers = () => {
   popoverCloseCbs.forEach((cb) => cb())
 }
 
-export const Popover = (props: {
+export type PopoverProps = {
   position?: 'top' | 'left' | 'right' | 'bottom'
   children: React.ReactElement
   contents: React.ReactElement
   isOpen?: boolean
   overlay?: boolean
   onClickOutside?: Function
-}) => {
+}
+
+export const Popover = (props: PopoverProps) => {
   const forceShow = useContext(ForceShowPopover)
   const [isMounted, setIsMounted] = useState(false)
   const isOpen = typeof forceShow == 'boolean' ? forceShow : !!props.isOpen
@@ -46,7 +48,10 @@ export const Popover = (props: {
   }, [])
 
   if (Platform.OS == 'web') {
-    useOverlay({ isOpen, onClick: props.onClickOutside })
+    useOverlay({
+      isOpen: isOpen && props.overlay !== false,
+      onClick: props.onClickOutside,
+    })
   }
 
   if (!isMounted) {
@@ -58,17 +63,22 @@ export const Popover = (props: {
       <PopoverWeb
         position={props.position}
         isOpen={isOpen}
-        padding={20}
+        padding={15}
         containerStyle={{
           overflow: 'visible',
+          position: 'absolute',
+          zIndex: 10000000,
         }}
         content={({ position, targetRect, popoverRect }) => (
           <ArrowContainer
             position={position}
             targetRect={targetRect}
             popoverRect={popoverRect}
+            style={{
+              zIndex: 100000000,
+            }}
             arrowColor={'white'}
-            arrowSize={20}
+            arrowSize={15}
             arrowStyle={{
               // boxShadow: 'rgba(0,0,0,0.1) 10px 0',
               zIndex: 1000000000,

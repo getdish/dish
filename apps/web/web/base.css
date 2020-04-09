@@ -72,6 +72,7 @@ textarea {
 /* fix pointer events bug */
 .react-tiny-popover-container {
   pointer-events: none;
+  z-index: 10000;
 }
 
 .inline-link {

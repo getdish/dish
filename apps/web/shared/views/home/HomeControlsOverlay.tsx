@@ -8,7 +8,7 @@ import { Popover } from '../shared/Popover'
 import { SmallTitle } from '../shared/SmallTitle'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
-import { Tooltip } from '../shared/Tooltip'
+import { Box } from '../shared/Box'
 import { flatButtonStyle } from './baseButtonStyle'
 import { HomeUserMenu } from './HomeUserMenu'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
@@ -39,39 +39,8 @@ export const HomeControlsOverlay = memo(() => {
           alignItems="flex-end"
         >
           <VStack flex={1} />
-
-          {/* <HomeExploreMenu /> */}
         </HStack>
       </VStack>
     </ZStack>
-  )
-})
-
-const HomeExploreMenu = memo(() => {
-  const [isOpen, setIsOpen] = useState(false)
-  return (
-    <Popover
-      position="bottom"
-      isOpen={isOpen}
-      contents={
-        <Tooltip padding={20} width="auto">
-          <Text>something</Text>
-        </Tooltip>
-      }
-    >
-      <LinkButton
-        backgroundColor="#fff"
-        padding={15}
-        width={15 * 2 + 16}
-        height={15 * 2 + 16}
-        borderRadius={100}
-        shadowColor="rgba(0,0,0,0.2)"
-        shadowRadius={10}
-        shadowOffset={{ width: 0, height: 5 }}
-        onPress={() => setIsOpen(!isOpen)}
-      >
-        <Icon name="globe" size={16} opacity={0.5} />
-      </LinkButton>
-    </Popover>
   )
 })

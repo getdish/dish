@@ -1,11 +1,11 @@
 import { Restaurant } from '@dish/models'
-import React, { memo, useState } from 'react'
+import React, { memo } from 'react'
 import { Text } from 'react-native'
 
-import { Popover } from '../shared/Popover'
+import { HoverablePopover } from '../shared/HoverablePopover'
 import { SmallTitle } from '../shared/SmallTitle'
 import { VStack } from '../shared/Stacks'
-import { Tooltip } from '../shared/Tooltip'
+import { Box } from '../shared/Box'
 import { RatingView } from './RatingView'
 import { TableCell, TableRow } from './TableRow'
 
@@ -17,13 +17,11 @@ export const RestaurantRatingDetail = memo(
     size?: 'lg' | 'md'
     restaurant: Restaurant
   }) => {
-    const [isHoveringRating, setIsHoveringRating] = useState(false)
     return (
-      <Popover
-        isOpen={isHoveringRating}
+      <HoverablePopover
         position="right"
         contents={
-          <Tooltip height={300} width={250}>
+          <Box height={300} width={250}>
             <VStack>
               <SmallTitle>Rating Summary</SmallTitle>
               <TableRow>
@@ -50,20 +48,11 @@ export const RestaurantRatingDetail = memo(
                 )
               })}
             </VStack>
-          </Tooltip>
+          </Box>
         }
       >
-        <div
-          onMouseEnter={() => {
-            setIsHoveringRating(true)
-          }}
-          onMouseLeave={() => {
-            setIsHoveringRating(false)
-          }}
-        >
-          <RatingView size={size} restaurant={restaurant} />
-        </div>
-      </Popover>
+        <RatingView size={size} restaurant={restaurant} />
+      </HoverablePopover>
     )
   }
 )

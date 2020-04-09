@@ -2,7 +2,7 @@ import { useLayoutEffect, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 
 import { StackBaseProps, ZStack } from './shared/Stacks'
-import { Tooltip } from './shared/Tooltip'
+import { Box } from './shared/Box'
 import { useOverlay } from './shared/useOverlay'
 
 export const Modal = ({
@@ -33,14 +33,14 @@ export const Modal = ({
       justifyContent="center"
       pointerEvents="none"
     >
-      <Tooltip
+      <Box
         pointerEvents={isOpen ? 'auto' : 'none'}
         opacity={isOpen ? 1 : 0}
         justifyContent="center"
         maxWidth="50%"
         maxHeight="90%"
         {...rest}
-      ></Tooltip>
+      ></Box>
     </ZStack>,
     container
   )
