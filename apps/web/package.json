@@ -20,7 +20,7 @@
     "test": "true",
     "postinstall": "jetify && rm -r node_modules/@apollo/client/node_modules/react || true && patch-package",
     "build": "tsc -b tsconfig.build.json",
-    "build:web": "(NODE_ENV=production yarn build:web:client) & (NODE_ENV=production yarn build:web:server) & wait",
+    "build:web": "yarn build && (NODE_ENV=production yarn build:web:client) & (NODE_ENV=production yarn build:web:server) & wait",
     "build:web:server": "TARGET=ssr webpack",
     "build:web:client": "TARGET=client webpack",
     "build:web:worker": "TARGET=worker webpack",

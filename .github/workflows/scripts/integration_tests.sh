@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
+echo "Testing crawler-worker interaction..."
 docker run \
   -e CI=true \
   --net host \
@@ -16,3 +17,11 @@ docker run \
 sleep 15
 
 grep 'CI worker job ran with message: It is done' worker.logs
+
+echo "Running Test Cafe end-to-end browser-based tests..."
+
+pushd apps/web
+docker run -d --net=host dish/web
+sleep 5
+./test/testcafe.sh
+popd
