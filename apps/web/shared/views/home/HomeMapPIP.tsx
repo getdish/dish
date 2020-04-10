@@ -64,7 +64,11 @@ export const HomeMapPIP = memo(() => {
     if (!map || !annotation) return
     map.addAnnotation(annotation)
     return () => {
-      map.removeAnnotation(annotation)
+      try {
+        map.removeAnnotation(annotation)
+      } catch (err) {
+        console.error(err)
+      }
     }
   }, [map, annotation])
 

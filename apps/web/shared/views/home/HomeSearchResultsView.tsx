@@ -30,9 +30,9 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
     (tag) =>
       tag.type === 'dish' || tag.type === 'country' || tag.name === 'Delivers'
   )
-  const title = `Top ${titleTags.map((x) => x.name).join(', ')} ${
-    state.searchQuery ?? ''
-  } Restaurants`
+  const title = `Top ${titleTags
+    .map((x) => x.name)
+    .join(', ')} ${state.searchQuery ?? ''} Restaurants`
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>
@@ -75,7 +75,7 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
         ))}{' '}
         Restaurants in San Francisco
       </PageTitle>
-      <VStack position="relative" flex={1}>
+      <VStack position="relative" flex={1} overflow="hidden">
         <HomeLenseBar activeTagIds={state.activeTagIds} backgroundGradient />
         <HomeSearchResultsViewContent state={state} />
       </VStack>

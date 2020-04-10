@@ -63,12 +63,12 @@ export default memo(function HomeAutoComplete() {
         position="absolute"
         top={searchBarTopOffset + searchBarHeight}
         left="15%"
-        width="calc(100vw - 15%)"
-        maxWidth={850}
+        width="calc(100vw - 10%)"
+        maxWidth={1050}
         zIndex={1000}
         overflow="hidden"
         paddingBottom={30}
-        paddingHorizontal={30}
+        paddingHorizontal={15}
         marginLeft={-30}
         opacity={isShowing ? 1 : 0}
         transform={isShowing ? null : [{ translateY: 5 }]}
@@ -76,8 +76,8 @@ export default memo(function HomeAutoComplete() {
       >
         <HStack
           backgroundColor="rgba(255,255,255,1)"
-          borderRadius={10}
-          borderTopLeftRadius={0}
+          borderBottomRightRadius={10}
+          borderBottomLeftRadius={10}
           height={50}
           paddingBottom={1} // looks better 1px up
           shadowColor="rgba(0,0,0,0.1)"
@@ -90,7 +90,7 @@ export default memo(function HomeAutoComplete() {
             height="100%"
             flex={1}
             alignItems="center"
-            paddingHorizontal={20}
+            paddingHorizontal={10}
             overflow="scroll"
             spacing="sm"
           >
@@ -102,8 +102,8 @@ export default memo(function HomeAutoComplete() {
                       om.actions.home.setLocation(x.name)
                     } else {
                       om.actions.home.replaceActiveTagOfType(x)
-                      om.actions.home.setShowAutocomplete(false)
                     }
+                    om.actions.home.setShowAutocomplete(false)
                   }}
                   flexDirection="row"
                   height={34}
@@ -116,7 +116,7 @@ export default memo(function HomeAutoComplete() {
                     : flatButtonStyle)}
                   paddingHorizontal={10}
                   fontSize={16}
-                  maxWidth={180}
+                  maxWidth="15vw"
                   ellipse
                   key={x.tagId}
                 >

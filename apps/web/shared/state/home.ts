@@ -399,6 +399,8 @@ const popTo: Action<HomeStateItem | number> = (om, item) => {
   const params =
     _.findLast(om.state.router.history, (x) => x.name == homeItem.type)
       ?.params ?? {}
+
+  // navigate
   om.actions.router.navigate({
     name: homeItem.type,
     params,
@@ -525,7 +527,7 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   if (isOnHome) {
     // we will load the search results with more debounce in next lines
     om.state.home.skipNextPageFetchData = true
-    await om.actions.home._updateRoute()
+    await om.actions.home._updateRoute(query)
   }
 
   // AUTOCOMPLETE
@@ -834,8 +836,12 @@ const setMapArea: AsyncAction<{ center: LngLat; span: LngLat }> = async (
   })
 
   // reverse geocode location
-  const res = await reverseGeocode(center)
-  console.log('reverse geocode says', res)
+  try {
+    const res = await reverseGeocode(center)
+    console.log('reverse geocode says', res)
+  } catch (err) {
+    return
+  }
 }
 
 const handleRouteChange: AsyncAction<RouteItem> = async (
@@ -1010,7 +1016,7 @@ const _syncUrlToTags: AsyncAction<Object> = async (om, params) => {
     }
   }
 
-  for (const type of Object.keys(params)) {
+  for (const type of Object.keys(params ?? {})) {
     const name = params[type]
     if (type === 'tags') {
       // handle them different
@@ -1065,22 +1071,29 @@ function getTagRouteParams(om: IContext<Config>): { [key: string]: string } {
   return params
 }
 
+let _htgId = 0
 const _handleTagChange: AsyncAction = async (om) => {
   if (!om.state.home.started) return
+  _htgId = (_htgId + 1) % Number.MAX_VALUE
+  let cur = _htgId
+  await sleep(100)
+  if (cur != _htgId) return
   await om.actions.home._updateRoute()
+  if (cur != _htgId) return
   om.actions.home.runSearch({})
 }
 
 const requestLocation: Action = (om) => {}
 
-const _updateRoute: AsyncAction = async (om) => {
+const _updateRoute: AsyncAction<string | void> = async (om, nextQuery = '') => {
   const state = om.state.home.currentState
 
   if (state.type === 'home') {
     const tags = Object.keys(state.activeTagIds).map(
       (x) => om.state.home.allTags[x]
     )
-    if (tags.every((x) => !isSearchBarTag(x))) {
+    if (nextQuery === '' && tags.every((tag) => !isSearchBarTag(tag))) {
+      console.log('avoid route update on home')
       // no need to nav off home unless we add a lense
       return
     }
