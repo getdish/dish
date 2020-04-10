@@ -143,10 +143,9 @@ test('Merging', async (t) => {
   await updated.findOne('id', t.context.restaurant.id)
   t.is(updated.name, 'Test Name Yelp')
   t.is(updated.address, '123 Street, Big City')
-  t.deepEqual(
-    updated.tags.map((i) => i.tag.name),
-    ['Mexican', 'Pizza']
-  )
+  t.is(updated.tags.length, 2)
+  t.is(updated.tags.map((i) => i.tag.name).includes('Mexican'), true)
+  t.is(updated.tags.map((i) => i.tag.name).includes('Pizza'), true)
   t.is(updated.dishes[0].name, 'Nice Dish')
   t.is(updated.photos?.[0], 'https://yelp.com/image.jpg')
   t.is(updated.photos?.[1], 'https://yelp.com/image2.jpg')

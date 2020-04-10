@@ -87,16 +87,21 @@ export class Tag extends ModelBase<Tag> {
     return this.parentId == '00000000-0000-0000-0000-000000000000'
   }
 
+  slug() {
+    return slugify(this.name)
+  }
+
+  slugDisambiguated() {
+    return `${slugify(this.parent.name)}__${this.slug()}`
+  }
+
   slugs() {
     let parentage: string[] = []
     if (!this.isOrphan()) {
-      parentage = [
-        slugify(this.parent.name),
-        `${slugify(this.parent.name)}__${slugify(this.name)}`,
-      ]
+      parentage = [slugify(this.parent.name), this.slugDisambiguated()]
     }
     const category_names = this.categories.map((i) => slugify(i.category.name))
-    const all = [slugify(this.name), ...parentage, ...category_names].flat()
+    const all = [this.slug(), ...parentage, ...category_names].flat()
     return _.uniq(all)
   }
 
