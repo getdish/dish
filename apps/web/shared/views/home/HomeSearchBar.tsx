@@ -135,15 +135,21 @@ export default memo(function HomeSearchBar() {
 
       switch (code) {
         case 13: // enter
-          om.actions.home.replaceActiveTagOfType(
-            om.state.home.autocompleteFocusedTag
-          )
+          if (om.state.home.autocompleteFocusedTag) {
+            om.actions.home.replaceActiveTagOfType(
+              om.state.home.autocompleteFocusedTag
+            )
+          } else {
+            om.actions.home.runSearch({})
+          }
           return
         case 8: // delete
           if (!isAutocompleteActive) return
           // if selected onto a tag, we can send remove command
           if (autocompleteIndex < 0) {
-            om.actions.home.setTagInactive(om.state.home.searchbarFocusedTag)
+            if (om.state.home.searchbarFocusedTag) {
+              om.actions.home.setTagInactive(om.state.home.searchbarFocusedTag)
+            }
             next()
           }
           if (autocompleteIndex === 0) {
@@ -233,7 +239,15 @@ export default memo(function HomeSearchBar() {
               onPress={() => om.actions.home.popTo(om.state.home.lastHomeState)}
             >
               <VStack spacing={2} alignItems="center">
-                <Icon name="home" size={26} opacity={0.5} />
+                <Icon
+                  name={
+                    om.state.home.breadcrumbStates.length <= 2
+                      ? 'home'
+                      : 'chevron-left'
+                  }
+                  size={26}
+                  opacity={0.5}
+                />
               </VStack>
             </LinkButton>
           </MediaQuery>
@@ -367,7 +381,7 @@ export default memo(function HomeSearchBar() {
             width={40}
           >
             <Divider flex opacity={0.1} />
-            <Circle size={32} borderColor="#eee" borderWidth={1}>
+            <Circle size={28} borderColor="#eee" borderWidth={1}>
               <Text style={{ color: '#444', fontSize: 16 }}>in</Text>
             </Circle>
             <Divider flex opacity={0.1} />
@@ -477,7 +491,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: drawerBorderRadius,
     shadowColor: 'rgba(0,0,0,0.1)',
-    shadowRadius: 12,
+    shadowRadius: 14,
     shadowOffset: { height: 4, width: 0 },
     overflow: 'hidden',
     borderWidth: 1,

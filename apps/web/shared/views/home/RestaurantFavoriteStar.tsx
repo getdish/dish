@@ -93,10 +93,14 @@ export const RestaurantFavoriteStar = memo(
                     >
                       <HStack alignItems="center" spacing={size}>
                         <Icon size={20} name="tag" />
-                        {om.state.home.allLenses
+                        {om.state.home.allLenseTags
                           .filter((x) => x.isVotable)
                           .map((lense) => (
-                            <LenseButton key={lense.id} lense={lense} />
+                            <LenseButton
+                              key={lense.id}
+                              lense={lense}
+                              isActive={false}
+                            />
                           ))}
                         <Spacer />
                       </HStack>

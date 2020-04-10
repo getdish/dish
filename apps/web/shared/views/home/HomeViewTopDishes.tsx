@@ -20,6 +20,7 @@ import { bgLightLight } from './colors'
 import HomeLenseBar from './HomeLenseBar'
 import { RatingView } from './RatingView'
 import { SmallButton } from './SmallButton'
+import { RankingView } from './RankingView'
 
 export default memoIsEqualDeep(function HomeViewTopDishes({
   state,
@@ -87,7 +88,7 @@ const TrendingButton = <
   return (
     <LinkButton
       {...flatButtonStyle}
-      margin={3}
+      margin={2}
       flexDirection="row"
       alignItems="center"
       ellipse
@@ -143,12 +144,13 @@ const HomeViewTopDishesContent = memo(() => {
                 }
               >
                 <VStack pointerEvents="auto">
-                  <Text>🌎</Text>
+                  <Text>·</Text>
                 </VStack>
               </HoverablePopover>
             }
           >
-            Cuisine
+            {om.state.home.lastActiveTags.find((x) => x.type === 'lense')
+              ?.description ?? ''}
           </SmallTitle>
 
           {results.map((country, index) => (
@@ -191,7 +193,7 @@ const CountryTopDishesAndRestaurants = memo(
             >
               <Text
                 numberOfLines={1}
-                style={{ fontSize: 20, fontWeight: '600' }}
+                style={{ fontSize: 18, fontWeight: '600' }}
               >
                 {country.country} {country.icon}
               </Text>
