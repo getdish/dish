@@ -36,6 +36,7 @@ const { App, config, ReactDOMServer } = app
 
 if (!App || !config || !ReactDOMServer) {
   console.error(`Bad exported bundle`)
+  console.log({ App, config, ReactDOMServer })
   process.exit()
 }
 
