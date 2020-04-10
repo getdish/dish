@@ -169,3 +169,7 @@ div,
 ::placeholder {
   text-overflow: ellipsis;
 }
+
+.display-contents {
+  display: contents;
+}

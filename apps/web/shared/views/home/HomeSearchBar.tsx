@@ -20,6 +20,7 @@ import { Divider } from '../shared/Divider'
 import Hoverable from '../shared/Hoverable'
 import { Icon } from '../shared/Icon'
 import { LinkButton } from '../shared/Link'
+import { MediaQuery, mediaQueries } from '../shared/MediaQuery'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { CloseButton } from './CloseButton'
@@ -222,19 +223,20 @@ export default memo(function HomeSearchBar() {
         <View style={styles.containerInner}>
           <DishLogoButton />
 
-          {divider}
-
-          <LinkButton
-            flexDirection="row"
-            pointerEvents="auto"
-            padding={15}
-            opacity={om.state.home.currentStateType === 'home' ? 0.2 : 1}
-            onPress={() => om.actions.home.popTo(om.state.home.lastHomeState)}
-          >
-            <VStack spacing={2} alignItems="center">
-              <Icon name="home" size={26} opacity={0.5} />
-            </VStack>
-          </LinkButton>
+          <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
+            {divider}
+            <LinkButton
+              flexDirection="row"
+              pointerEvents="auto"
+              padding={15}
+              opacity={om.state.home.currentStateType === 'home' ? 0.2 : 1}
+              onPress={() => om.actions.home.popTo(om.state.home.lastHomeState)}
+            >
+              <VStack spacing={2} alignItems="center">
+                <Icon name="home" size={26} opacity={0.5} />
+              </VStack>
+            </LinkButton>
+          </MediaQuery>
 
           {divider}
 

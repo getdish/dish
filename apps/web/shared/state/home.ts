@@ -153,7 +153,7 @@ const defaultLocationAutocompleteResults: AutocompleteItem[] = [
 type HomeStateBase = {
   started: boolean
   activeIndex: number // index for vertical (in page), -1 = autocomplete
-  allTags: { [keyPath: string]: NavigableTag }
+  allTags: { [keyPath: string]: Tag }
   allLenseTags: Tag[]
   allFilterTags: Tag[]
   allRestaurants: { [id: string]: Restaurant }
@@ -191,6 +191,8 @@ export type HomeState = HomeStateBase & {
   searchBarTags: Derive<HomeState, Tag[]>
 }
 
+const isSearchBarTag = (tag: Pick<Tag, 'type'>) => tag.type === 'country'
+
 export const state: HomeState = {
   started: false,
   skipNextPageFetchData: false,
@@ -223,9 +225,7 @@ export const state: HomeState = {
   states: [initialHomeState],
   topDishes: [],
   topDishesFilteredIndices: [],
-  searchBarTags: (state) => {
-    return state.lastActiveTags.filter((x) => x.type === 'country')
-  },
+  searchBarTags: (state) => state.lastActiveTags.filter(isSearchBarTag),
   autocompleteFocusedTag: (state) => {
     const { autocompleteIndex } = state
     if (autocompleteIndex < 0) return null
@@ -450,7 +450,8 @@ const _loadHomeDishes: AsyncAction = async (om) => {
   // update tags
   for (const topDishes of all) {
     // country tag
-    const tag: NavigableTag = {
+    const tag: Tag = {
+      id: `${topDishes.country}`,
       name: topDishes.country,
       type: 'country',
       icon: topDishes.icon,
@@ -458,7 +459,8 @@ const _loadHomeDishes: AsyncAction = async (om) => {
     om.state.home.allTags[getTagId(tag)] = tag
     // dish tags
     for (const dish of topDishes.dishes ?? []) {
-      const tag: NavigableTag = {
+      const tag: Tag = {
+        id: `${dish.name}`,
         name: dish.name,
         type: 'dish',
       }
@@ -936,16 +938,18 @@ const setTagInactiveFn = async (om: Om, val: NavigableTag) => {
 
 const setTagActiveFn = async (om: Om, val: NavigableTag) => {
   let state = om.state.home.currentState
-  if (state.type === 'home' && val.type === 'lense') {
+  if (state.type === 'home' && isSearchBarTag(val)) {
     // navigate to search
     await om.actions.home._updateRoute()
   }
   state = om.state.home.currentState
-  if (state.type != 'search') return
-  state.activeTagIds[getTagId(val)] = true
+  if (state.type == 'search' || state.type === 'home') {
+    state.activeTagIds[getTagId(val)] = true
+  }
 }
 
 const setTagInactive: AsyncAction<NavigableTag> = async (om, val) => {
+  if (!val) throw new Error(`No val ${val}`)
   setTagInactiveFn(om, val)
   await om.actions.home._handleTagChange()
 }
@@ -973,6 +977,10 @@ const toggleTagActive: AsyncAction<NavigableTag> = async (om, val) => {
 }
 
 const replaceActiveTagOfType: AsyncAction<NavigableTag> = async (om, val) => {
+  if (!val) {
+    console.trace('no tag')
+    return
+  }
   const state = om.state.home.currentState
   if (state.type != 'home' && state.type != 'search') return
   const existing = Object.keys(state.activeTagIds)
@@ -1062,6 +1070,17 @@ const requestLocation: Action = (om) => {}
 
 const _updateRoute: AsyncAction = async (om) => {
   const state = om.state.home.currentState
+
+  if (state.type === 'home') {
+    const tags = Object.keys(state.activeTagIds).map(
+      (x) => om.state.home.allTags[x]
+    )
+    if (tags.every((x) => !isSearchBarTag(x))) {
+      // no need to nav off home unless we add a lense
+      return
+    }
+  }
+
   const isOnSearch = state.type === 'search'
   const params = getTagRouteParams(om)
   if (!!om.state.home.currentStateSearchQuery) {

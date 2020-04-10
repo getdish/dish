@@ -143,18 +143,14 @@ const navigate: AsyncAction<NavigateItem> = async (om, navItem) => {
   if (item.replace) {
     const next = _.dropRight(om.state.router.history)
     om.state.router.history = [...next, item]
-  } else {
-    om.state.router.history = [...om.state.router.history, item]
-  }
-
-  if (item.replace) {
     om.effects.router.replace(item.path)
   } else {
+    om.state.router.history = [...om.state.router.history, item]
     om.effects.router.open(item.path)
   }
 
   if (onRouteChange) {
-    race(
+    await race(
       onRouteChange({
         type: item.replace ? 'replace' : 'push',
         name: item.name,

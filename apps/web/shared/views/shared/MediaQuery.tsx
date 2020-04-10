@@ -13,15 +13,6 @@ const getCSS = (selector: string, styles: ViewStyle): string => {
   return rulesStr.replace(`.${key}`, selector)
 }
 
-console.log(
-  'testing',
-  getCSS('.my-class', {
-    backgroundColor: 'red',
-    shadowColor: 'red',
-    shadowRadius: 2,
-  })
-)
-
 export const mediaQueries = {
   sm: '@media screen and (max-width: 640px)',
   md: '@media screen and (max-width: 860px)',
@@ -46,12 +37,14 @@ export function MediaQuery({
   useLayoutEffect(() => {
     if (!style) return
     const tag = document.createElement('style')
-    tag.innerHTML = getCSS(className.current, style)
+    tag.innerHTML = `${query} { ${getCSS(`.${className.current}`, style)} }`
     document.body.append(tag)
     return () => {
       document.body.removeChild(tag)
     }
-  }, [JSON.stringify(style)])
+  }, [JSON.stringify(style ?? null)])
 
-  return <div className={className.current}>{children}</div>
+  return (
+    <div className={`display-contents ${className.current}`}>{children}</div>
+  )
 }
