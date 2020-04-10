@@ -34,7 +34,7 @@ export const RestaurantTagsRow = memo(
               <TagButton
                 key={`${index}${tag.name}`}
                 rank={tag.rank}
-                tag={tag}
+                tag={{ ...tag, type: 'dish' }}
                 size={size}
               />
             )

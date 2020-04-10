@@ -3,7 +3,6 @@ import React, { memo } from 'react'
 import { Text, TextStyle, View } from 'react-native'
 
 import { Icon } from '../shared/Icon'
-import { Spacer } from '../shared/Spacer'
 import { HStack, StackBaseProps } from '../shared/Stacks'
 import { HoverableButton } from './HoverableButton'
 import { SuperScriptText } from './SuperScriptText'
@@ -68,7 +67,7 @@ export const TagButton = memo(
               backgroundColor: subtle ? 'transparent' : '#fff',
               lineHeight,
               alignSelf: 'stretch',
-            }}
+            } as any}
           >
             <SuperScriptText style={{ opacity: 0.5 }}>#</SuperScriptText>
             {rank}
@@ -77,7 +76,7 @@ export const TagButton = memo(
         <Text
           numberOfLines={1}
           style={{
-            fontSize: fontSize ?? (subtle ? 'inherit' : 13 * scale),
+            fontSize: (fontSize ?? (subtle ? 'inherit' : 13 * scale)),
             fontWeight: 'inherit',
             lineHeight: 'inherit',
             paddingVertical,
@@ -85,10 +84,9 @@ export const TagButton = memo(
             color: fg,
             margin: 'auto',
             overflow: 'hidden',
-            // @ts-ignore
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
-          }}
+          } as any}
         >
           {!hideIcon && (
             <span

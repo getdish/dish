@@ -6,7 +6,6 @@ import page from 'page'
 import queryString from 'query-string'
 
 import { race } from '../helpers/race'
-import { sleep } from '../helpers/sleep'
 
 class Route<A extends Object | void = void> {
   constructor(public path: string, public params?: A) {}

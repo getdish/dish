@@ -6,9 +6,6 @@ import { createOvermind } from 'overmind'
 import { AppRegistry } from 'react-native'
 
 import { config } from '../shared/state/om'
-import { MediaQuery } from '../shared/views/shared/MediaQuery'
-
-MediaQuery
 
 // global styles
 require('./base.css')
@@ -34,12 +31,10 @@ window['React'] = React
 if (isSSR) {
   exports.App = require('../shared/views/App').App
   exports.config = config
+  exports.ReactDOMServer = require('react-dom/server')
 }
 if (!isWorker) {
   exports.Helmet = require('react-helmet')
-}
-if (!isPreact && !isWorker) {
-  exports.ReactDOMServer = require('react-dom/server')
 }
 
 let rootEl = document.getElementById('root')

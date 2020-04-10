@@ -3,10 +3,10 @@
   "compilerOptions": {
     "jsx": "react",
     "outDir": "_",
-    "rootDir": ".",
+    "rootDir": "src",
     "typeRoots": ["node_modules/mapkit-typescript", "node_modules/@types"]
   },
-  "include": ["src/**/*", "web/**/*", "shared/**/*"],
-  "exclude": ["**/*.test.ts", "**/*.test.tsx", "src/graphql"],
+  "include": ["src/**/*"],
+  "exclude": ["src/graphql"],
   "references": [{ "path": "../../packages/common-web" }]
 }

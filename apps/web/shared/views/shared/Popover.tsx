@@ -67,6 +67,7 @@ export const Popover = (props: PopoverProps) => {
         containerStyle={{
           overflow: 'visible',
           position: 'absolute',
+          // @ts-ignore
           zIndex: 10000000,
         }}
         content={({ position, targetRect, popoverRect }) => (

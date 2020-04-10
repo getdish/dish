@@ -7,7 +7,6 @@ import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { LngLat, setMapView } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Map, useMap } from '../map'
-// import { mapkit } from '../mapkit'
 import { ZStack } from '../shared/Stacks'
 import { getRankingColor, getRestaurantRating } from './RatingView'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
@@ -196,7 +195,7 @@ export const HomeMap = memo(() => {
       let annotationElements: ChildNode[] = []
       let dispose = () => {}
 
-      const onMouseEnter = (e: MouseEvent) => {
+      const onMouseEnter = (e: MouseEvent | any) => {
         const index = annotationElements.indexOf(e.target as any)
         om.actions.home.setHoveredRestaurant(restaurants[index])
       }
