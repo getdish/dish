@@ -58,16 +58,18 @@ export const TagButton = memo(
       >
         {!!rank && (
           <Text
-            style={{
-              fontSize: subtle ? 'inherit' : 13 * scale,
-              fontWeight: 'bold',
-              paddingVertical: '5%',
-              marginVertical: '-2.5%',
-              paddingHorizontal: 6 * scale,
-              backgroundColor: subtle ? 'transparent' : '#fff',
-              lineHeight,
-              alignSelf: 'stretch',
-            } as any}
+            style={
+              {
+                fontSize: subtle ? 'inherit' : 13 * scale,
+                fontWeight: 'bold',
+                paddingVertical: '5%',
+                marginVertical: '-2.5%',
+                paddingHorizontal: 6 * scale,
+                backgroundColor: subtle ? 'transparent' : '#fff',
+                lineHeight,
+                alignSelf: 'stretch',
+              } as any
+            }
           >
             <SuperScriptText style={{ opacity: 0.5 }}>#</SuperScriptText>
             {rank}
@@ -75,18 +77,20 @@ export const TagButton = memo(
         )}
         <Text
           numberOfLines={1}
-          style={{
-            fontSize: (fontSize ?? (subtle ? 'inherit' : 13 * scale)),
-            fontWeight: 'inherit',
-            lineHeight: 'inherit',
-            paddingVertical,
-            paddingHorizontal: subtle ? 0 : 8 * scale,
-            color: fg,
-            margin: 'auto',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          } as any}
+          style={
+            {
+              fontSize: fontSize ?? (subtle ? 'inherit' : 13 * scale),
+              fontWeight: 'inherit',
+              lineHeight: 'inherit',
+              paddingVertical,
+              paddingHorizontal: subtle ? 0 : 8 * scale,
+              color: fg,
+              margin: 'auto',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            } as any
+          }
         >
           {!hideIcon && (
             <span

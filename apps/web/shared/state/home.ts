@@ -803,7 +803,7 @@ const suggestTags: AsyncAction<string> = async (om, tags) => {
   let restaurant = new Restaurant(
     om.state.home.allRestaurants[state.restaurantId]
   )
-  await restaurant.upsertTags(tags.split(',').map(name => ({ name })))
+  await restaurant.upsertTags(tags.split(',').map((name) => ({ name })))
   om.state.home.allRestaurants[state.restaurantId] = restaurant
 }
 

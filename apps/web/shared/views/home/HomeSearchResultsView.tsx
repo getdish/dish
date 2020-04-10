@@ -30,9 +30,9 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
     (tag) =>
       tag.type === 'dish' || tag.type === 'country' || tag.name === 'Delivers'
   )
-  const title = `Top ${titleTags
-    .map((x) => x.name)
-    .join(', ')} ${state.searchQuery ?? ''} Restaurants`
+  const title = `Top ${titleTags.map((x) => x.name).join(', ')} ${
+    state.searchQuery ?? ''
+  } Restaurants`
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>

@@ -18,9 +18,9 @@ import { HStack, StackBaseProps, VStack, ZStack } from '../shared/Stacks'
 import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
 import { bgLightLight } from './colors'
 import HomeLenseBar from './HomeLenseBar'
+import { RankingView } from './RankingView'
 import { RatingView } from './RatingView'
 import { SmallButton } from './SmallButton'
-import { RankingView } from './RankingView'
 
 export default memoIsEqualDeep(function HomeViewTopDishes({
   state,
