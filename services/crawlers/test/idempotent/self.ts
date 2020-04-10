@@ -44,7 +44,7 @@ const yelp: Partial<Scrape> = {
         photos: [{ src: '' }],
         rating: 5,
         comment: {
-          text: 'This restaurant had test_tag_existing dishes!',
+          text: 'This restaurant had Test tag existing 1 dishes!',
           language: 'en',
         },
         lightboxMediaItems: [
@@ -52,7 +52,7 @@ const yelp: Partial<Scrape> = {
             url: '',
             type: 'photo',
             user: {},
-            caption: 'A photo of tag_tag_existing2',
+            caption: 'A photo of Test tag existing 2',
           },
         ],
       },
@@ -102,7 +102,7 @@ const tripadvisor: Partial<Scrape> = {
     photosp1: [{ src: 'https://tripadvisor.com/image2.jpg' }],
     reviewsp0: [
       {
-        text: 'test_tag_existing3',
+        text: 'Test tag existing 3',
         rating: 5,
         username: 'tauser',
       },
@@ -206,25 +206,28 @@ test('Tag rankings', async (t) => {
 
 test('Finding dishes in reviews', async (t) => {
   const dish = new Self()
-  const tag_parent = new Tag({ name: 'test_country' })
+  const tag = { name: 'Test country' }
+  const tag_parent = new Tag(tag)
   await tag_parent.insert()
   const existing_tag1 = new Tag({
-    name: 'test_tag_existing',
+    name: 'Test tag existing 1',
     parentId: tag_parent.id,
   })
   const existing_tag2 = new Tag({
-    name: 'test_tag_existing2',
+    name: 'Test tag existing 2',
     parentId: tag_parent.id,
   })
   const existing_tag3 = new Tag({
-    name: 'test_tag_existing3',
+    name: 'Test tag existing 3',
     parentId: tag_parent.id,
   })
-  await t.context.restaurant.upsertTags(['test_country'])
+  await t.context.restaurant.upsertTags([tag])
+  await t.context.restaurant.findOne('id', t.context.restaurant.id)
   dish.restaurant = t.context.restaurant
   await dish.getScrapeData()
   await existing_tag1.insert()
   await existing_tag2.insert()
+  await existing_tag3.insert()
   await dish.scanReviews()
   const updated = new Restaurant()
   await updated.findOne('id', t.context.restaurant.id)

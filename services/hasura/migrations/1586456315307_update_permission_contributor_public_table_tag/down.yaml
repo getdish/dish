@@ -1,0 +1,27 @@
+- args:
+    role: contributor
+    table:
+      name: tag
+      schema: public
+  type: drop_select_permission
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - order
+      - alternates
+      - icon
+      - name
+      - parentType
+      - type
+      - created_at
+      - updated_at
+      - id
+      - parentId
+      computed_fields: []
+      filter: {}
+    role: contributor
+    table:
+      name: tag
+      schema: public
+  type: create_select_permission

@@ -1,0 +1,6 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: alter table "public"."tag" add constraint "tag_parentId_name_key" unique
+      ("parentId", "name");
+  type: run_sql

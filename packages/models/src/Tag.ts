@@ -1,6 +1,9 @@
 import { DocumentNode, gql } from '@apollo/client'
+import { EnumType } from 'json-to-graphql-query'
+import _ from 'lodash'
 
 import { ModelBase } from './ModelBase'
+import { slugify } from './utils'
 
 export type TagType =
   | 'lense'
@@ -15,10 +18,14 @@ export type TagRecord = Partial<Tag> & Pick<Tag, 'type'>
 export class Tag extends ModelBase<Tag> {
   type!: TagType
   name!: string
+  displayName!: string
   icon!: string
+  rgb?: [number, number, number]
   alternates!: string[]
   parentId!: string
-  parentType!: TagType
+  parent!: Tag
+  categories!: { category: Tag }[]
+  is_ambiguous!: boolean
 
   constructor(init?: Partial<Tag>) {
     super()
@@ -30,15 +37,67 @@ export class Tag extends ModelBase<Tag> {
   }
 
   static upsert_constraint() {
-    return 'tag_name_key'
+    return 'tag_parentId_name_key'
   }
 
   static fields() {
-    return ['type', 'name', 'icon', 'alternates', 'parentId', 'parentType']
+    return [
+      'type',
+      'name',
+      'displayName',
+      'icon',
+      'rgb',
+      'alternates',
+      'parentId',
+      'parent',
+      'categories',
+      'is_ambiguous',
+    ]
+  }
+
+  static essentialFields() {
+    return {
+      name: true,
+      displayName: true,
+      icon: true,
+      rgb: true,
+      id: true,
+      is_ambiguous: true,
+    }
+  }
+
+  static sub_fields() {
+    return {
+      parent: this.essentialFields(),
+      categories: {
+        category: this.essentialFields(),
+      },
+    }
   }
 
   static get fieldsQuery(): string {
     return Tag.fields().join(' ')
+  }
+
+  static read_only_fields() {
+    return ['id', 'parent', 'categories', 'is_ambiguous']
+  }
+
+  isOrphan() {
+    return this.parentId == '00000000-0000-0000-0000-000000000000'
+  }
+
+  slugs() {
+    let parentage: string[] = []
+    if (!this.isOrphan()) {
+      parentage = [
+        slugify(this.parent.name),
+        `${slugify(this.parent.name)}__${slugify(this.name)}`,
+      ]
+    }
+    const category_names = this.categories.map((i) => slugify(i.category.name))
+    const all = [slugify(this.name), ...parentage, ...category_names].flat()
+    return _.uniq(all)
   }
 
   static async findContinents() {
@@ -58,7 +117,7 @@ export class Tag extends ModelBase<Tag> {
           icon: "${next.icon ?? ''}",
           type: "${next.type ?? 'continent'}",
           parentId: ${next.parentId ? next.parentId : null},
-          parentType: "${next.parentType ?? ''}"
+          parentType: "${next.parent?.type ?? ''}"
         }) {
           returning {
             id
@@ -78,7 +137,7 @@ export class Tag extends ModelBase<Tag> {
             icon: "${next.icon ?? ''}",
             type: "${next.type ?? 'continent'}",
             parentId: ${next.parentId ? `"${next.parentId}"` : null},
-            parentType: "${next.parentType ?? ''}"
+            parentType: "${next.parent?.type ?? ''}"
           },
           on_conflict: {
             constraint: tag_pkey,
@@ -110,5 +169,53 @@ export class Tag extends ModelBase<Tag> {
     }
     const response = await ModelBase.hasura(query)
     return response.data.data.tag.map((data: Partial<Tag>) => new Tag(data))
+  }
+
+  static async upsertMany(tags: Partial<Tag>[]) {
+    const query = {
+      mutation: {
+        insert_tag: {
+          __args: {
+            objects: tags,
+            on_conflict: {
+              constraint: new EnumType(Tag.upsert_constraint()),
+              update_columns: this.updatableColumns(),
+            },
+          },
+          returning: Tag.fieldsAsObject(),
+        },
+      },
+    }
+    const response = await ModelBase.hasura(query)
+    return response.data.data.insert_tag.returning.map(
+      (data: Tag) => new Tag(data)
+    )
+  }
+
+  async upsertCategorizations(tag_ids: string[]) {
+    const objects = tag_ids.map((tag_id) => {
+      return {
+        category_tag_id: tag_id,
+        tag_id: this.id,
+      }
+    })
+    const query = {
+      mutation: {
+        insert_tag_tag: {
+          __args: {
+            objects: objects,
+            on_conflict: {
+              constraint: new EnumType('tag_tag_pkey'),
+              update_columns: [
+                new EnumType('category_tag_id'),
+                new EnumType('tag_id'),
+              ],
+            },
+          },
+          returning: { tag_id: true },
+        },
+      },
+    }
+    await ModelBase.hasura(query)
   }
 }

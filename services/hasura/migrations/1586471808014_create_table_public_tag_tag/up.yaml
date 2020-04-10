@@ -1,0 +1,13 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: CREATE TABLE "public"."tag_tag"("tag_id" uuid NOT NULL, "category_tag_id"
+      uuid NOT NULL, PRIMARY KEY ("tag_id","category_tag_id") , FOREIGN KEY ("tag_id")
+      REFERENCES "public"."tag"("id") ON UPDATE restrict ON DELETE restrict, FOREIGN
+      KEY ("category_tag_id") REFERENCES "public"."tag"("id") ON UPDATE restrict ON
+      DELETE restrict);
+  type: run_sql
+- args:
+    name: tag_tag
+    schema: public
+  type: add_existing_table_or_view

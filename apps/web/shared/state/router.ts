@@ -1,3 +1,4 @@
+import { slugify } from '@dish/models'
 import { isEqual } from '@o/fast-compare'
 import _ from 'lodash'
 import { Action, AsyncAction, Derive } from 'overmind'
@@ -6,7 +7,6 @@ import queryString from 'query-string'
 
 import { race } from '../helpers/race'
 import { sleep } from '../helpers/sleep'
-import { slugify } from '../helpers/slugify'
 
 class Route<A extends Object | void = void> {
   constructor(public path: string, public params?: A) {}

@@ -1,0 +1,10 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."tag" ADD COLUMN "parentType" text;
+  type: run_sql
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."tag" ALTER COLUMN "parentType" DROP NOT NULL;
+  type: run_sql

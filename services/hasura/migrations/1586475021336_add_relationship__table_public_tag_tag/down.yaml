@@ -1,0 +1,6 @@
+- args:
+    relationship: main
+    table:
+      name: tag_tag
+      schema: public
+  type: drop_relationship

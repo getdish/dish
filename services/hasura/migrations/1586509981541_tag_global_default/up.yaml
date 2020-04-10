@@ -1,0 +1,8 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: |-
+      INSERT INTO tag (id, name, "parentId") values('00000000-0000-0000-0000-000000000000', 'Global', '00000000-0000-0000-0000-000000000000');
+      UPDATE tag SET "parentId" = '00000000-0000-0000-0000-000000000000' WHERE "parentId" IS NULL;
+      ALTER TABLE ONLY tag ALTER COLUMN "parentId" SET DEFAULT '00000000-0000-0000-0000-000000000000';
+  type: run_sql

@@ -313,11 +313,19 @@ export class Self extends WorkerJob {
   async mergeTags() {
     const yelps = this.yelp
       .getData('data_from_map_search.categories', [])
-      .map((c) => c.title)
+      .map((c) => {
+        return {
+          name: c.title,
+        }
+      })
     const tripadvisors = this.tripadvisor
       .getData('overview.detailCard.tagTexts.cuisines.tags', [])
-      .map((c) => c.tagValue)
-    await this.restaurant.upsertTags(_.uniq([...yelps, ...tripadvisors]))
+      .map((c) => {
+        return {
+          name: c.tagValue,
+        }
+      })
+    await this.restaurant.upsertTags([...yelps, ...tripadvisors])
     await this.updateTagRankings()
   }
 
@@ -412,10 +420,10 @@ export class Self extends WorkerJob {
   async findDishesInText(text: string) {
     const dishes = await this.restaurant.allPossibleDishes()
     for (const dish of dishes) {
-      const tag = dish.name
-      const regex = new RegExp(`\\b${tag}\\b`)
+      const tag_name = dish.name
+      const regex = new RegExp(`\\b${tag_name}\\b`)
       if (regex.test(text)) {
-        this.restaurant.upsertTags([tag])
+        this.restaurant.upsertTags([{ name: tag_name }])
       }
     }
   }

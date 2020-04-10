@@ -167,6 +167,12 @@ export class ModelBase<T> {
     return [] as string[]
   }
 
+  static updatableColumns() {
+    return this.all_fields()
+      .filter((f) => !this.read_only_fields().includes(f))
+      .map((f) => new EnumType(f))
+  }
+
   private static _fieldsAsObject(
     fields: string[],
     sub_fields: { [key: string]: string[] } = {}
@@ -189,8 +195,10 @@ export class ModelBase<T> {
     )
   }
 
-  static fieldsAsObject() {
-    return ModelBase._fieldsAsObject(this.all_fields(), this.sub_fields())
+  static fieldsAsObject(prevent_recursion: boolean = false) {
+    let sub_fields = {} as { [key: string]: string[] }
+    if (!prevent_recursion) sub_fields = this.sub_fields()
+    return ModelBase._fieldsAsObject(this.all_fields(), sub_fields)
   }
 
   asObject() {

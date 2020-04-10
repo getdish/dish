@@ -1,4 +1,10 @@
-import { Restaurant, RestaurantSearchArgs, Review, TopDish } from '@dish/models'
+import {
+  Restaurant,
+  RestaurantSearchArgs,
+  Review,
+  TopDish,
+  slugify,
+} from '@dish/models'
 import Fuse from 'fuse.js'
 import _ from 'lodash'
 import { Action, AsyncAction, Config, Derive, IContext, filter } from 'overmind'
@@ -7,7 +13,6 @@ import { isWorker } from '../constants'
 import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
 import { race } from '../helpers/race'
 import { sleep } from '../helpers/sleep'
-import { slugify } from '../helpers/slugify'
 import { HistoryItem, RouteItem } from './router'
 import { NavigableTag, Tag, getTagId, tagFilters, tagLenses } from './Tag'
 

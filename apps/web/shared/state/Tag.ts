@@ -1,6 +1,4 @@
-import { TagType } from '@dish/models'
-
-import { slugify } from '../helpers/slugify'
+import { TagType, slugify } from '@dish/models'
 
 export type Tag = {
   id: string

@@ -101,7 +101,9 @@ export class Restaurant extends ModelBase<Restaurant> {
   }
 
   static sub_fields() {
-    return { tags: { tag: { name: true } } }
+    return {
+      tags: { tag: Tag.essentialFields() },
+    }
   }
 
   static read_only_fields() {
@@ -291,45 +293,20 @@ export class Restaurant extends ModelBase<Restaurant> {
     return restaurant
   }
 
-  async upsertTags(tag_strings: string[]) {
-    this.tag_names = _.uniq([
-      ...(this.tag_names || []),
-      ...tag_strings.map((t) => t.toLowerCase()),
-    ])
-    await this.update()
-    const objects = tag_strings.map((tag) => {
-      return {
-        name: tag,
-      }
-    })
-    const query = {
-      mutation: {
-        ['insert_tag']: {
-          __args: {
-            objects: objects,
-            on_conflict: {
-              constraint: new EnumType(Tag.upsert_constraint()),
-              update_columns: [new EnumType('name')],
-            },
-          },
-          returning: { id: true, name: true, icon: true },
-        },
-      },
-    }
-    const response = await ModelBase.hasura(query)
-    const tags = response.data.data['insert_tag'].returning
-    const tag_ids = tags.map((i: Tag) => i.id)
-    this.tags = _.uniq([
-      ...(this.tags || []),
-      ...tags.map((i) => {
-        return { tag: i }
-      }),
-    ])
-    await this.upsertTagJunctions(tag_ids)
-    return tag_ids
+  async upsertTags(_tags: Partial<Tag>[]) {
+    const tags = await Tag.upsertMany(_tags)
+    const tag_ids = tags.map((i: Tag) => i.id) as string[]
+    await this._upsertTagJunctions(tag_ids)
+    await this._updateTagNames(tags)
   }
 
-  async upsertTagJunctions(tag_ids: string[]) {
+  async _updateTagNames(tags: Tag[]) {
+    const tag_names = tags.map((tag: Tag) => tag.slugs()).flat()
+    this.tag_names = _.uniq([...(this.tag_names || []), ...tag_names])
+    await this.update()
+  }
+
+  async _upsertTagJunctions(tag_ids: string[]) {
     const objects = tag_ids.map((tag_id) => {
       return {
         restaurant_id: this.id,
