@@ -42,7 +42,7 @@ export default memoIsEqualDeep(function HomeViewTopDishes({
 const HomeViewTopDishesTrending = memo(() => {
   const om = useOvermind()
   const allRestaurants = om.state.home.topDishes[0]?.top_restaurants ?? []
-  const getTrending = (restaurant: Restaurant, index: number) => {
+  const getTrending = (restaurant: Partial<Restaurant>, index: number) => {
     return (
       <TrendingButton
         key={`${index}${restaurant.id}`}
@@ -60,17 +60,13 @@ const HomeViewTopDishesTrending = memo(() => {
     <VStack spacing="xs">
       <SmallTitle>Trending</SmallTitle>
       <HStack paddingHorizontal={15}>
-        <VStack width="33.333%" spacing="xs">
+        <VStack width="50%" spacing="xs">
           <SmallerTitle hideDivider>Restaurants</SmallerTitle>
           <>{allRestaurants.slice(0, 4).map(getTrending)}</>
         </VStack>
-        <VStack width="33.333%" spacing="xs">
+        <VStack width="50%" spacing="xs">
           <SmallerTitle hideDivider>Dishes</SmallerTitle>
           <>{allRestaurants.slice(4, 8).map(getTrending)}</>
-        </VStack>
-        <VStack width="33.333%" spacing="xs">
-          <SmallerTitle hideDivider>Tags</SmallerTitle>
-          <>{allRestaurants.slice(6, 10).map(getTrending)}</>
         </VStack>
       </HStack>
     </VStack>
@@ -88,6 +84,7 @@ const TrendingButton = <
   return (
     <LinkButton
       {...flatButtonStyle}
+      backgroundColor="transparent"
       margin={2}
       flexDirection="row"
       alignItems="center"
@@ -187,6 +184,7 @@ const CountryTopDishesAndRestaurants = memo(
             {/* <RankingView rank={rank} marginLeft={-36} /> */}
             <LinkButton
               {...flatButtonStyle}
+              backgroundColor="tranparent"
               marginVertical={-8}
               name="search"
               params={{ country: country.country }}

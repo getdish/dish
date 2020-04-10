@@ -18,7 +18,7 @@ export function App({ overmind }: { overmind?: any }) {
     <>
       <ToastRoot ref={setToastHandle} />
       <Provider value={overmind}>
-        <ApolloProvider client={apolloClient}>
+        <ApolloProvider client={apolloClient as any}>
           <Suspense fallback={'ok'}>
             <RouteSwitch>
               <PrivateRoute name="tag">

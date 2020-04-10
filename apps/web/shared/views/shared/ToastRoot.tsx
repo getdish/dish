@@ -73,6 +73,7 @@ export class ToastRoot extends Component<{
     this.animation = Animated.timing(this.state.opacityValue, {
       toValue: this.props.opacity,
       duration: this.props.fadeInDuration,
+      useNativeDriver: true
     })
     this.animation.start(() => {
       this.isShow = true
@@ -91,6 +92,7 @@ export class ToastRoot extends Component<{
       this.animation = Animated.timing(this.state.opacityValue, {
         toValue: 0.0,
         duration: this.props.fadeOutDuration,
+        useNativeDriver: true
       })
       this.animation.start(() => {
         this.setState({

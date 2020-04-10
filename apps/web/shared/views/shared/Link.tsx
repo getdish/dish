@@ -144,6 +144,7 @@ export function LinkButton<
 
   return (
     <VStack
+      // @ts-ignore
       display="inherit"
       flex={props.flex}
       pointerEvents={pointerEvents ?? null}

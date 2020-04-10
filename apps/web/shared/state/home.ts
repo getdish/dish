@@ -7,7 +7,7 @@ import {
 } from '@dish/models'
 import Fuse from 'fuse.js'
 import _ from 'lodash'
-import { Action, AsyncAction, Config, Derive, IContext, filter } from 'overmind'
+import { Action, AsyncAction, Config, Derive, IContext } from 'overmind'
 
 import { isWorker } from '../constants'
 import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
@@ -59,7 +59,6 @@ export type HomeStateItemSearch = HomeStateItemBase & {
   type: 'search'
   activeTagIds: { [id: string]: boolean }
   results: SearchResults
-  filters: Tag[]
 }
 
 export type HomeStateItemRestaurant = HomeStateItemBase & {
@@ -804,7 +803,7 @@ const suggestTags: AsyncAction<string> = async (om, tags) => {
   let restaurant = new Restaurant(
     om.state.home.allRestaurants[state.restaurantId]
   )
-  await restaurant.upsertTags(tags.split(','))
+  await restaurant.upsertTags(tags.split(',').map(name => ({ name })))
   om.state.home.allRestaurants[state.restaurantId] = restaurant
 }
 

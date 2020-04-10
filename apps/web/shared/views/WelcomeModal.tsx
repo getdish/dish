@@ -1,3 +1,4 @@
+import React from 'react'
 import { Text, TextInput } from 'react-native'
 import { useStorageState } from 'react-storage-hooks'
 
@@ -97,6 +98,7 @@ export const WelcomeModal = () => {
 
         <SmallerTitle>early access, no spam:</SmallerTitle>
         <TextInput
+          // @ts-ignore
           name="email"
           placeholder="name@email.com"
           style={textStyles.textField}

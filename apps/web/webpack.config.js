@@ -32,6 +32,8 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
     })
   )
 
+  config.devtool = env.mode === 'production' ? 'source-map' : 'cheap-module-eval-source-map'
+
   config.optimization = config.optimization || {}
 
   if (config.optimization) {
