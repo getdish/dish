@@ -96,6 +96,8 @@
     "webpack-bundle-analyzer": "3.6.1",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3",
+    "import-sort-style-module": "^6.0.0",
+    "prettier-plugin-import-sort": "^0.0.4",
     "webpack-hot-middleware": "^2.25.0"
   },
   "resolutions": {

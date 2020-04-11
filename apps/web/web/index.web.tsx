@@ -91,4 +91,5 @@ if (module['hot']) {
   module['hot'].accept('../shared/state/om', () => {
     console.log('hmr state')
   })
+  module['hot'].accept(() => {})
 }

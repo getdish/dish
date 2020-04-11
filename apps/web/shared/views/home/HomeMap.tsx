@@ -265,11 +265,10 @@ export const HomeMap = memo(() => {
   )
 
   // Detail - center to restaurant
-  const restaurantDelayed = useDebounceValue(restaurantDetail, 250)
   useDebounceEffect(
     () => {
-      if (!map || !restaurantDelayed?.location) return
-      const index = restaurantIds.indexOf(restaurantDelayed.id)
+      if (!map || !restaurantDetail?.location) return
+      const index = restaurantIds.indexOf(restaurantDetail.id)
       if (index > -1) {
         if (map.annotations[index]) {
           map.annotations[index].selected = true
@@ -277,17 +276,17 @@ export const HomeMap = memo(() => {
           console.warn('no annotations?', index, map.annotations)
         }
       }
-      centerMapToRegion({
-        map,
-        center: {
-          lat: restaurantDelayed.location.coordinates[1],
-          lng: restaurantDelayed.location.coordinates[0],
-        },
-        span: state.span,
-      })
+      // centerMapToRegion({
+      //   map,
+      //   center: {
+      //     lat: restaurantDetail.location.coordinates[1],
+      //     lng: restaurantDetail.location.coordinates[0],
+      //   },
+      //   span: state.span,
+      // })
     },
-    250,
-    [map, restaurantDelayed]
+    350,
+    [map, restaurantDetail]
   )
 
   // selected on map
@@ -328,7 +327,11 @@ export const HomeMap = memo(() => {
 
       return () => {
         cancels.forEach((x) => x())
-        map.removeAnnotations(annotations)
+        try {
+          map.removeAnnotations(annotations)
+        } catch (err) {
+          console.error('Error removing annotations', err)
+        }
       }
     },
     200,

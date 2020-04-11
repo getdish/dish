@@ -131,8 +131,6 @@ export default memo(function HomeSearchBar() {
         focusedInput.value.length == focusedInput.selectionEnd
       const isCaretAtStart = focusedInput.selectionEnd == 0
 
-      console.log({ isCaretAtStart, isAutocompleteActive, autocompleteIndex })
-
       switch (code) {
         case 13: // enter
           if (om.state.home.autocompleteFocusedTag) {
@@ -141,6 +139,8 @@ export default memo(function HomeSearchBar() {
             )
           } else {
             om.actions.home.runSearch({})
+            om.actions.home.setShowAutocomplete(false)
+            focusedInput.blur()
           }
           return
         case 8: // delete

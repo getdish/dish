@@ -54,8 +54,8 @@ export const HomeMapPIP = memo(() => {
       map,
       center,
       span: {
-        lat: Math.max(span.lat + 0.02, 0.035),
-        lng: Math.max(span.lng + 0.02, 0.035),
+        lat: Math.max(span.lat * 2.5, 0.035),
+        lng: Math.max(span.lng * 2.5, 0.035),
       },
     })
   }, [map, center, span])

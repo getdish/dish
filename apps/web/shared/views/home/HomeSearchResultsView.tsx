@@ -5,9 +5,9 @@ import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItemSearch } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { getTagId } from '../../state/Tag'
+import { PageTitle } from '../shared/PageTitle'
 import { PageTitleTag } from '../shared/PageTitleTag'
 import { closeAllPopovers, popoverCloseCbs } from '../shared/Popover'
-import { PageTitle } from '../shared/SmallTitle'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { useWaterfall } from '../shared/useWaterfall'
@@ -30,9 +30,9 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
     (tag) =>
       tag.type === 'dish' || tag.type === 'country' || tag.name === 'Delivers'
   )
-  const title = `Top ${titleTags.map((x) => x.name).join(', ')} ${
-    state.searchQuery ?? ''
-  } Restaurants`
+  const title = `Top ${titleTags
+    .map((x) => x.name)
+    .join(', ')} ${state.searchQuery ?? ''} Restaurants`
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>
@@ -54,13 +54,13 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
         </HStack>
       </ZStack>
       <PageTitle height={57}>
-        Top{titleTags.length ? ' ' : ''}
+        The best
         {titleTags.map((tag) => (
           <TagButton
             key={getTagId(tag)}
             tag={
               tag.name === 'Delivers'
-                ? { ...tag, displayName: 'Delivery' }
+                ? { ...tag, displayName: 'delivery' }
                 : tag
             }
             subtle
@@ -72,8 +72,8 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
               // }
             }}
           />
-        ))}{' '}
-        Restaurants in San Francisco
+        ))}
+        {om.state.home.currentStateSearchQuery} in San Francisco
       </PageTitle>
       <VStack position="relative" flex={1} overflow="hidden">
         <HomeLenseBar activeTagIds={state.activeTagIds} backgroundGradient />

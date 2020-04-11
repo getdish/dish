@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 import { isWorker } from '../../constants'
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
+import { ErrorBoundary } from '../ErrorBoundary'
 import { ZStack } from '../shared/Stacks'
 import { HomeControlsOverlay } from './HomeControlsOverlay'
 import { HomeMap } from './HomeMap'
@@ -24,10 +25,10 @@ export default () => {
   return (
     <ZStack top={0} left={0} right={0} bottom={0}>
       {!isWorker && (
-        <>
+        <ErrorBoundary name="maps">
           <HomeMap />
           {showPip && <HomeMapPIP />}
-        </>
+        </ErrorBoundary>
       )}
       <HomeControlsOverlay />
       <HomeSearchBar />

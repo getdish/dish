@@ -52,7 +52,7 @@ export const TagButton = memo(
         shadowColor={subtle ? 'transparent' : 'rgba(0,0,0,0.05)'}
         shadowRadius={4 * scale}
         shadowOffset={{ width: 0, height: 2 * scale }}
-        spacing="sm"
+        // spacing="sm"
         position="relative"
         {...rest}
       >
@@ -82,7 +82,7 @@ export const TagButton = memo(
               fontSize: fontSize ?? (subtle ? 'inherit' : 13 * scale),
               fontWeight: 'inherit',
               lineHeight: 'inherit',
-              paddingVertical,
+              paddingVertical: subtle ? 0 : paddingVertical,
               paddingHorizontal: subtle ? 0 : 8 * scale,
               color: fg,
               margin: 'auto',
@@ -95,7 +95,7 @@ export const TagButton = memo(
           {!hideIcon && (
             <span
               style={{
-                ...(subtle && { marginRight: -4, marginLeft: 4 }),
+                ...(subtle && { marginLeft: 4 }),
                 ...(subtleIcon && {
                   fontSize: '90%',
                   marginTop: '-2px',

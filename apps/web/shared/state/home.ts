@@ -428,8 +428,8 @@ const _loadRestaurantDetail: AsyncAction<{
     }
     // zoom in a bit
     state.span = {
-      lng: currentState.span.lng * 0.66,
-      lat: currentState.span.lat * 0.66,
+      lng: currentState.span.lng * 0.5,
+      lat: currentState.span.lat * 0.5,
     }
     state.reviews = await Review.findAllForRestaurant(restaurant.id)
     if (om.state.user.isLoggedIn) {
@@ -1084,7 +1084,10 @@ const _handleTagChange: AsyncAction = async (om) => {
 
 const requestLocation: Action = (om) => {}
 
-const _updateRoute: AsyncAction<string | void> = async (om, nextQuery = '') => {
+const _updateRoute: AsyncAction<string | void> = async (
+  om,
+  nextQuery = om.state.home.currentStateSearchQuery
+) => {
   const state = om.state.home.currentState
 
   if (state.type === 'home') {
@@ -1103,10 +1106,17 @@ const _updateRoute: AsyncAction<string | void> = async (om, nextQuery = '') => {
   if (!!om.state.home.currentStateSearchQuery) {
     params.query = om.state.home.currentStateSearchQuery
   }
-  if (isOnSearch && om.state.home.searchBarTags.length === 0) {
+
+  if (
+    isOnSearch &&
+    nextQuery === '' &&
+    om.state.home.searchBarTags.length === 0
+  ) {
+    console.log(`back to home then, nextQuery: ${nextQuery}`)
     om.actions.home.popTo(om.state.home.lastHomeState)
     return
   }
+
   om.actions.router.navigate({
     name: 'search',
     params,
