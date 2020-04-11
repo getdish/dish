@@ -221,6 +221,9 @@ export default memo(function HomeSearchBar() {
   const tmInputBlur = useRef<any>(0)
 
   const divider = <Divider vertical flexLine={1} marginHorizontal={4} />
+  const isSearchingCuisine = !!om.state.home.searchBarTags.length
+
+  useEffect(() => {})
 
   return (
     <>
@@ -229,7 +232,7 @@ export default memo(function HomeSearchBar() {
         <View style={styles.containerInner}>
           <DishLogoButton />
 
-          <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
+          <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
             {divider}
             <LinkButton
               flexDirection="row"
@@ -306,7 +309,7 @@ export default memo(function HomeSearchBar() {
                   }}
                 >
                   <HStack
-                    spacing={6}
+                    spacing={0}
                     alignItems="center"
                     flex={1}
                     overflow="hidden"
@@ -319,6 +322,7 @@ export default memo(function HomeSearchBar() {
                           subtleIcon
                           {...(!isActive && {
                             backgroundColor: '#eee',
+                            borderColor: '#eee',
                             color: '#444',
                           })}
                           size="lg"
@@ -358,7 +362,11 @@ export default memo(function HomeSearchBar() {
                         setSearch(text)
                         om.actions.home.setSearchQuery(text ?? '')
                       }}
-                      placeholder="Search dish, cuisine"
+                      placeholder={
+                        isSearchingCuisine
+                          ? 'bratwurst...'
+                          : 'Search dish, cuisine'
+                      }
                       style={[
                         styles.textInput,
                         { flex: 1, fontSize: 19, paddingRight: 0 },
@@ -374,6 +382,7 @@ export default memo(function HomeSearchBar() {
             <Spacer size={1} />
           </HStack>
 
+          {/* IN */}
           <HStack
             alignItems="center"
             justifyContent="center"
@@ -381,8 +390,10 @@ export default memo(function HomeSearchBar() {
             width={40}
           >
             <Divider flex opacity={0.1} />
-            <Circle size={28} borderColor="#eee" borderWidth={1}>
-              <Text style={{ color: '#444', fontSize: 16 }}>in</Text>
+            <Circle size={26} backgroundColor="#ccc">
+              <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>
+                in
+              </Text>
             </Circle>
             <Divider flex opacity={0.1} />
           </HStack>
@@ -417,9 +428,9 @@ export default memo(function HomeSearchBar() {
           </VStack>
           {divider}
 
-          <VStack flex={1} />
-
-          {/* <Divider vertical /> */}
+          <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
+            <VStack flex={1} />
+          </MediaQuery>
 
           <HomeUserMenu />
         </View>

@@ -129,9 +129,10 @@ export const TagButton = memo(
         {!!closable && (
           <HoverableButton
             paddingVertical={paddingVertical}
-            backgroundColor={subtle ? 'transparent' : '#000'}
+            backgroundColor={subtle ? 'transparent' : '#555'}
             borderRadius={10}
             onPress={onClose}
+            opacity={0.3}
             top={-1}
             {...(!subtle && {
               marginLeft: -9,

@@ -15,9 +15,10 @@ const getCSS = (selector: string, styles: ViewStyle): string => {
 }
 
 export const mediaQueries = {
-  sm: '@media screen and (max-width: 640px)',
-  md: '@media screen and (max-width: 860px)',
-  lg: '@media screen and (max-width: 1060px)',
+  xs: '@media screen and (max-width: 640px)',
+  sm: '@media screen and (max-width: 800px)',
+  md: '@media screen and (max-width: 980px)',
+  lg: '@media screen and (max-width: 1160px)',
 }
 
 export function MediaQuery({

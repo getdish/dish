@@ -9,6 +9,7 @@ export const HoverableButton = ({
   isHovered,
   spacing,
   children,
+  opacity = 1,
   ...props
 }: StackBaseProps & {
   onPress: any
@@ -39,7 +40,7 @@ export const HoverableButton = ({
           <Text>
             <HStack
               alignItems="center"
-              opacity={isHoveredFinal ? 1 : 0.5}
+              opacity={isHoveredFinal ? 1 : opacity}
               spacing={spacing ?? 'sm'}
               {...props}
             >
