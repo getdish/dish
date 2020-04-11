@@ -147,7 +147,6 @@ export default function TaxnonomyPage() {
                     : parentType == 'continent'
                     ? selectedContinentId
                     : '',
-                parentType,
               })
             }}
           />

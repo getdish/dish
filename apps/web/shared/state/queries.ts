@@ -1,6 +1,6 @@
-import { gql } from 'overmind-graphql'
+import { DocumentNode, gql } from '@apollo/client'
 
-export const userRestaurantReviews = gql`
+export const userRestaurantReviews: DocumentNode = gql`
   query Reviews($user_id: uuid!, $restaurant_ids: [uuid!]!) {
     review(
       where: {

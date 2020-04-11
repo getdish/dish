@@ -1,6 +1,6 @@
-import { gql } from 'overmind-graphql'
+import { DocumentNode, gql } from '@apollo/client'
 
-export const upsertUserReview = gql`
+export const upsertUserReview: DocumentNode = gql`
   mutation UpsertReview($reviews: [review_insert_input!]!) {
     insert_review(
       objects: $reviews
