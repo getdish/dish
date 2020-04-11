@@ -1,8 +1,8 @@
 import { slugify } from '@dish/models'
+import { isEqual } from '@o/fast-compare'
 import _ from 'lodash'
 import { Action, AsyncAction, Derive } from 'overmind'
 import page from 'page'
-import { isEqual } from '@o/fast-compare'
 import queryString from 'query-string'
 
 import { race } from '../helpers/race'
