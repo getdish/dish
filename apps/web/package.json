@@ -14,7 +14,7 @@
     "start:ios": "react-native run-ios",
     "start:web": "webpack-dev-server --port 19006",
     "start:web:worker": "cd ../web-serve && yarn start",
-    "start:web:prod": "node _/server.js",
+    "start:web:prod": "node --version && node _/server.js",
     "start": "yarn start:web",
     "start:react-native": "react-native start",
     "test": "true",

@@ -21,8 +21,11 @@ RUN cd apps/web && yarn install
 RUN cd apps/web && yarn build:web
 
 ## Stage 2: run
-FROM mhart/alpine-node:slim-12
+FROM mhart/alpine-node:slim-12.16.1
 COPY --from=0 /app /app
 WORKDIR /app/apps/web
+RUN apk add pixman cairo pango libjpeg giflib curl bash
+RUN touch $HOME/.bashrc
+RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 
-CMD ["yarn", "start:web:prod"]
+CMD ["/root/.yarn/bin/yarn", "start:web:prod"]
