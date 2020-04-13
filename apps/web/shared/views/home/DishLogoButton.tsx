@@ -9,7 +9,7 @@ export const DishLogoButton = () => {
     <LinkButton
       name="home"
       paddingVertical={10}
-      paddingHorizontal={26}
+      paddingHorizontal={18}
       marginVertical={-2}
     >
       <Image
