@@ -85,6 +85,7 @@ export class Self extends WorkerJob {
     this.addSources()
     this.addPriceRange()
     this.addHours()
+    this.getRatingFactors()
     await this.restaurant.update()
     await this.upsertUberDishes()
     return this.restaurant
@@ -425,6 +426,16 @@ export class Self extends WorkerJob {
       if (regex.test(text)) {
         this.restaurant.upsertTags([{ name: tag_name }])
       }
+    }
+  }
+
+  getRatingFactors() {
+    const factors = this.tripadvisor.getData('overview.rating.ratingQuestions')
+    this.restaurant.rating_factors = {
+      food: factors.find((i) => i.name == 'Food')?.rating / 10,
+      service: factors.find((i) => i.name == 'Service')?.rating / 10,
+      value: factors.find((i) => i.name == 'Value')?.rating / 10,
+      ambience: factors.find((i) => i.name == 'Atmosphere')?.rating / 10,
     }
   }
 

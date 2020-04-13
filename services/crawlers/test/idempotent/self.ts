@@ -97,6 +97,26 @@ const tripadvisor: Partial<Scrape> = {
         website:
           'OFdCX2h0dHA6Ly93d3cuaW50ZXJjb250aW5lbnRhbHNhbmZyYW5jaXNjby5jb20vX1o3cQ==',
       },
+      rating: {
+        ratingQuestions: [
+          {
+            name: 'Food',
+            rating: 50,
+          },
+          {
+            name: 'Service',
+            rating: 45,
+          },
+          {
+            name: 'Value',
+            rating: 30,
+          },
+          {
+            name: 'Atmosphere',
+            rating: 20,
+          },
+        ],
+      },
     },
     photosp0: [{ src: 'https://tripadvisor.com/image.jpg' }],
     photosp1: [{ src: 'https://tripadvisor.com/image2.jpg' }],
@@ -150,6 +170,12 @@ test('Merging', async (t) => {
   t.is(updated.photos?.[0], 'https://yelp.com/image.jpg')
   t.is(updated.photos?.[1], 'https://yelp.com/image2.jpg')
   t.is(updated.rating, 4.1)
+  t.deepEqual(updated.rating_factors, {
+    food: 5,
+    service: 4.5,
+    value: 3,
+    ambience: 2,
+  })
   t.is(updated.website, 'http://www.intercontinentalsanfrancisco.com/')
 })
 

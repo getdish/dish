@@ -113,16 +113,24 @@ export default memoIsEqualDeep(function HomeRestaurantView({
               paddingVertical={12}
             >
               <VStack zIndex={10} flex={1} minWidth={90} marginRight={-25}>
-                <RatingBreakdownCircle percent={90} emoji="🧑‍🍳" name="Food" />
+                <RatingBreakdownCircle
+                  percent={restaurant.rating_factors.food}
+                  emoji="🧑‍🍳"
+                  name="Food"
+                />
               </VStack>
 
               <VStack zIndex={9} flex={1} minWidth={90} marginRight={-25}>
-                <RatingBreakdownCircle percent={85} emoji="💁‍♂️" name="Service" />
+                <RatingBreakdownCircle
+                  percent={restaurant.rating_factors.service}
+                  emoji="💁‍♂️"
+                  name="Service"
+                />
               </VStack>
 
               <VStack zIndex={8} flex={1} minWidth={90} marginRight={-25}>
                 <RatingBreakdownCircle
-                  percent={60}
+                  percent={restaurant.rating_factors.ambience}
                   emoji="✨"
                   name="Ambiance"
                 />

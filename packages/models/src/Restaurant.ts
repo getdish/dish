@@ -48,10 +48,18 @@ export type RestaurantSearchArgs = {
   limit?: number
 }
 
+export type RatingFactors = {
+  food: number
+  service: number
+  value: number
+  ambience: number
+}
+
 export class Restaurant extends ModelBase<Restaurant> {
   name!: string
   slug!: string
   rating!: number
+  rating_factors!: RatingFactors
   address!: string
   location!: Point
   description!: string
@@ -80,6 +88,7 @@ export class Restaurant extends ModelBase<Restaurant> {
       'name',
       'slug',
       'rating',
+      'rating_factors',
       'address',
       'location',
       'description',
