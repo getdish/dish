@@ -9,8 +9,8 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const isProduction = process.env.NODE_ENV === 'production'
 
 // 'ssr' | 'worker' | 'preact' | 'client'
-const target = process.env.TARGET || 'client'
-console.log('TARGET', target)
+const TARGET = process.env.TARGET || 'client'
+console.log('TARGET', TARGET)
 const appEntry = path.resolve(path.join(__dirname, 'web', 'index.web.tsx'))
 
 module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
@@ -29,7 +29,7 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
 
   config.plugins.push(
     new Webpack.DefinePlugin({
-      'process.env.TARGET': JSON.stringify(process.env.TARGET || null),
+      'process.env.TARGET': JSON.stringify(TARGET || null),
     })
   )
 
@@ -39,7 +39,7 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
   config.optimization = config.optimization || {}
 
   if (config.optimization) {
-    config.optimization.splitChunks = false
+    config.optimization.splitChunks = isProduction
     config.optimization.runtimeChunk = false
     if (isProduction) {
       config.optimization.usedExports = true
@@ -63,6 +63,10 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
     return x !== 'app.json'
   })
 
+  config.externals = {
+    './web/mapkit.js': 'mapkit',
+  }
+
   if (!isProduction) {
     config.optimization.minimize = false
   } else {
@@ -74,21 +78,21 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
     ]
   }
 
-  if (target === 'ssr') {
+  if (TARGET === 'ssr') {
     config.entry.app = config.entry.app.filter((x) => {
       return x.indexOf('webpackHotDevClient') < 0
     })
     config.target = 'node'
     config.output.path = path.join(__dirname, 'web-build-ssr')
     config.output.libraryTarget = 'commonjs'
-    config.output.filename = `static/js/app.${target}.js`
+    config.output.filename = `static/js/app.${TARGET}.js`
     config.optimization.minimize = false
     config.plugins = config.plugins.filter(
       (plugin) => plugin.constructor.name !== 'WebpackPWAManifest'
     )
   }
 
-  if (target === 'preact') {
+  if (TARGET === 'preact') {
     config.resolve.alias = {
       react$: 'preact/compat',
       'react-dom$': 'preact/compat',
@@ -97,7 +101,7 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
     console.log('config.resolve.alias', config.resolve.alias)
   }
 
-  if (target === 'worker') {
+  if (TARGET === 'worker') {
     if (!isProduction) {
       config.entry.app = config.entry.app.slice(1) // remove hot
     }
@@ -123,7 +127,7 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
     })
   }
 
-  if (env.mode === 'development' && target !== 'worker') {
+  if (env.mode === 'development' && TARGET !== 'worker') {
     config.plugins.push(
       new ReactRefreshWebpackPlugin({
         disableRefreshCheck: true,
@@ -146,9 +150,7 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
   if (process.env.VERBOSE) {
     console.log('Config:\n', prettifyWebpackConfig(config))
   } else {
-    console.log(
-      `Start building ${process.env.TARGET}... entry ${config.entry.app}`
-    )
+    console.log(`Start building ${TARGET}... entry ${config.entry.app}`)
   }
 
   return config

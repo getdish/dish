@@ -3,16 +3,27 @@ import { Text } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { Tag } from '../../state/Tag'
+import { Box } from '../shared/Box'
+import { HoverablePopover } from '../shared/HoverablePopover'
 import { LinkButton } from '../shared/Link'
 import { HStack } from '../shared/Stacks'
 import { bg } from './colors'
 
 export const LenseButton = memo(
-  ({ lense, isActive }: { lense: Tag; isActive: boolean }) => {
+  ({
+    lense,
+    isActive,
+    minimal,
+  }: {
+    lense: Tag
+    isActive?: boolean
+    minimal?: boolean
+  }) => {
     const om = useOvermind()
-    const lenseColor = `rgb(${lense.rgb[0] * 255}, ${lense.rgb[1] *
-      255}, ${lense.rgb[2] * 255})`
-    return (
+    const lenseColor = `rgb(${lense.rgb[0] * 255}, ${lense.rgb[1] * 255}, ${
+      lense.rgb[2] * 255
+    })`
+    const buttonContent = (
       <LinkButton
         onPress={() => {
           om.actions.home.replaceActiveTagOfType(lense)
@@ -21,8 +32,8 @@ export const LenseButton = memo(
         <HStack
           alignItems="center"
           justifyContent="center"
-          paddingHorizontal={10}
-          paddingVertical={4}
+          paddingHorizontal={14}
+          paddingVertical={8}
           // backgroundColor={'rgba(255,255,255,0.5)'}
           // borderRadius={10}
           // shadowRadius={2}
@@ -46,15 +57,34 @@ export const LenseButton = memo(
           <Text
             style={{
               color: isActive ? lenseColor : '#454545',
-              fontSize: 16,
+              fontSize: 18,
               fontWeight: '400',
               // letterSpacing: isActive ? -0.2 : 0,
             }}
           >
-            {lense.icon} {lense.displayName ?? lense.name}
+            {lense.icon}
+            {!minimal ? ` ${lense.displayName ?? lense.name}` : null}
           </Text>
         </HStack>
       </LinkButton>
+    )
+
+    if (!minimal) {
+      return buttonContent
+    }
+
+    return (
+      <HoverablePopover
+        noArrow
+        position="bottom"
+        contents={
+          <Box>
+            <Text>{lense.displayName ?? lense.name}</Text>
+          </Box>
+        }
+      >
+        {buttonContent}
+      </HoverablePopover>
     )
   }
 )

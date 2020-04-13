@@ -23,7 +23,9 @@ export type PopoverProps = {
   children: React.ReactElement
   contents: React.ReactElement
   isOpen?: boolean
+  noArrow?: boolean
   overlay?: boolean
+  overlayPointerEvents?: boolean
   onClickOutside?: Function
 }
 
@@ -51,6 +53,7 @@ export const Popover = (props: PopoverProps) => {
     useOverlay({
       isOpen: isOpen && props.overlay !== false,
       onClick: props.onClickOutside,
+      pointerEvents: props.overlayPointerEvents,
     })
   }
 
@@ -59,6 +62,15 @@ export const Popover = (props: PopoverProps) => {
   }
 
   if (Platform.OS == 'web') {
+    const content = (
+      <div
+        style={{ pointerEvents: isOpen ? 'auto' : 'none' }}
+        className="see-through"
+      >
+        {props.contents}
+      </div>
+    )
+
     return (
       <PopoverWeb
         position={props.position}
@@ -70,30 +82,28 @@ export const Popover = (props: PopoverProps) => {
           // @ts-ignore
           zIndex: 10000000,
         }}
-        content={({ position, targetRect, popoverRect }) => (
-          <ArrowContainer
-            position={position}
-            targetRect={targetRect}
-            popoverRect={popoverRect}
-            style={{
-              zIndex: 100000000,
-            }}
-            arrowColor={'white'}
-            arrowSize={15}
-            arrowStyle={{
-              // boxShadow: 'rgba(0,0,0,0.1) 10px 0',
-              zIndex: 1000000000,
-              pointerEvents: 'none',
-            }}
-          >
-            <div
-              style={{ pointerEvents: isOpen ? 'auto' : 'none' }}
-              className="see-through"
+        content={({ position, targetRect, popoverRect }) =>
+          props.noArrow ? (
+            content
+          ) : (
+            <ArrowContainer
+              position={position}
+              targetRect={targetRect}
+              popoverRect={popoverRect}
+              style={{
+                zIndex: 100000000,
+              }}
+              arrowColor={'white'}
+              arrowSize={10}
+              arrowStyle={{
+                zIndex: 1000000000,
+                pointerEvents: 'none',
+              }}
             >
-              {props.contents}
-            </div>
-          </ArrowContainer>
-        )}
+              {content}
+            </ArrowContainer>
+          )
+        }
       >
         {props.children}
       </PopoverWeb>

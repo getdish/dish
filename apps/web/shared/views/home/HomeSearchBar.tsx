@@ -90,6 +90,12 @@ export default memo(function HomeSearchBar() {
     // @ts-ignore
     locationInputRef.current?.['_node'] ?? null
 
+  const onFocusAnyInput = () => {
+    if (om.state.home.searchbarFocusedTag) {
+      om.actions.home.setSearchBarFocusedTag(null)
+    }
+  }
+
   const handleCancel = useCallback(() => {
     setTimeout(() => {
       input.focus()
@@ -233,11 +239,11 @@ export default memo(function HomeSearchBar() {
           <DishLogoButton />
 
           <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
-            {divider}
             <LinkButton
               flexDirection="row"
               pointerEvents="auto"
               padding={13}
+              marginLeft={-8} //undo spacing
               opacity={om.state.home.currentStateType === 'home' ? 0.2 : 1}
               onPress={() => om.actions.home.popTo(om.state.home.lastHomeState)}
             >
@@ -248,7 +254,7 @@ export default memo(function HomeSearchBar() {
                       ? 'home'
                       : 'chevron-left'
                   }
-                  size={26}
+                  size={22}
                   opacity={0.5}
                 />
               </VStack>
@@ -316,29 +322,41 @@ export default memo(function HomeSearchBar() {
                     {om.state.home.searchBarTags.map((tag) => {
                       const isActive = om.state.home.searchbarFocusedTag === tag
                       return (
-                        <TagButton
+                        <TouchableOpacity
+                          activeOpacity={0.9}
                           key={getTagId(tag)}
-                          subtleIcon
-                          {...(!isActive && {
-                            backgroundColor: '#eee',
-                            borderColor: '#eee',
-                            color: '#444',
-                          })}
-                          size="lg"
-                          fontSize={18}
-                          tag={tag}
-                          closable
-                          onClose={() => {
-                            om.actions.home.setTagInactive(tag)
-                            if (
-                              om.state.home.lastActiveTags.filter(
-                                (x) => x.type !== 'lense'
-                              ).length === 0
-                            ) {
-                              om.actions.home.popTo(om.state.home.lastHomeState)
-                            }
+                          onPress={() => {
+                            om.actions.home.setSearchBarFocusedTag(tag)
                           }}
-                        />
+                        >
+                          <TagButton
+                            subtleIcon
+                            {...(!isActive && {
+                              backgroundColor: '#eee',
+                              borderColor: '#eee',
+                              color: '#444',
+                            })}
+                            size="lg"
+                            fontSize={18}
+                            tag={tag}
+                            closable
+                            onClose={() => {
+                              om.actions.home.setTagInactive(tag)
+                              setTimeout(() => {
+                                input.focus()
+                              })
+                              if (
+                                om.state.home.lastActiveTags.filter(
+                                  (x) => x.type !== 'lense'
+                                ).length === 0
+                              ) {
+                                om.actions.home.popTo(
+                                  om.state.home.lastHomeState
+                                )
+                              }
+                            }}
+                          />
+                        </TouchableOpacity>
                       )
                     })}
                     <TextInput
@@ -346,6 +364,7 @@ export default memo(function HomeSearchBar() {
                       // leave uncontrolled for perf?
                       value={search}
                       onFocus={() => {
+                        onFocusAnyInput()
                         clearTimeout(tmInputBlur.current)
                         om.actions.home.setShowAutocomplete('search')
                         if (search.length > 0) {
@@ -404,6 +423,7 @@ export default memo(function HomeSearchBar() {
               placeholder="San Francisco"
               style={[styles.textInput, { paddingRight: 32, fontSize: 16 }]}
               onFocus={() => {
+                onFocusAnyInput()
                 clearTimeout(tmInputBlur.current)
                 om.actions.home.setShowAutocomplete('location')
                 if (locationSearch.length > 0) {
