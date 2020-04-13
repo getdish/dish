@@ -79,6 +79,7 @@ export const tagFilters: Tag[] = [
     name: 'cheap',
     displayName: '$',
     type: 'filter',
+    // @ts-ignore
     groupId: 'price',
     stack: true,
   },
@@ -87,6 +88,7 @@ export const tagFilters: Tag[] = [
     name: 'midrange',
     displayName: '$$',
     type: 'filter',
+    // @ts-ignore
     groupId: 'price',
   },
   {
@@ -94,6 +96,7 @@ export const tagFilters: Tag[] = [
     name: 'expensive',
     displayName: '$$$',
     type: 'filter',
+    // @ts-ignore
     groupId: 'price',
   },
   {
