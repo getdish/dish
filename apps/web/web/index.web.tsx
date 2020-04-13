@@ -1,18 +1,20 @@
 //
+// NOTE: import order is important here DONT USE `import`
+//       add require to the part that says "import here"
 // NOTE: nothing should import this file! its the root!
 //
 
-import { createOvermind } from 'overmind'
-import { AppRegistry } from 'react-native'
-
-import { config } from '../shared/state/om'
-
-// global styles
+// preload imports
+require('./bootstrapEnv')
 require('./base.css')
+
+// import here
 const React = require('react')
 const { hydrate, render } = require('react-dom')
 
-require('./bootstrapEnv')
+import { createOvermind } from 'overmind'
+import { AppRegistry } from 'react-native'
+const { config } = require('../shared/state/om')
 
 const {
   OVERMIND_MUTATIONS,

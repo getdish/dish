@@ -498,8 +498,8 @@ const _loadHomeDishes: AsyncAction = async (om) => {
   }
 }
 
-const DEBOUNCE_AUTOCOMPLETE = 60
-const DEBOUNCE_SEARCH = 600
+const DEBOUNCE_AUTOCOMPLETE = 120
+const DEBOUNCE_SEARCH = 1000
 
 let lastRunAt = Date.now()
 const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
@@ -509,6 +509,9 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   const isOnSearch = state.type === 'search'
   lastRunAt = Date.now()
   let id = lastRunAt
+
+  await sleep(40)
+  if (id != lastRunAt) return
 
   if (state.type === 'home' || state.type === 'search') {
     state.searchQuery = query

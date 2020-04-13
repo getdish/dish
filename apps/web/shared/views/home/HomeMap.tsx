@@ -34,7 +34,7 @@ export const HomeMap = memo(() => {
   const om = useOvermind()
   const drawerWidth = useHomeDrawerWidth()
   const state = om.state.home.currentState
-  const { center, span } = state
+  const { searchQuery, center, span } = state
   const {
     map,
     mapProps,
@@ -129,23 +129,19 @@ export const HomeMap = memo(() => {
   const restaurants = restaurantIds.map((id) => allRestaurants[id])
   const restaurantsVersion = restaurantIds.join('')
   // const focusedRestaurant = restaurants.find((x) => x.id == focused)
-  const coordinates = useMemo(
-    () =>
-      mapkit
-        ? restaurants
-            .map(
-              (restaurant) =>
-                !!restaurant.location?.coordinates &&
-                new mapkit.Coordinate(
-                  restaurant.location.coordinates[1],
-                  restaurant.location.coordinates[0]
-                )
-            )
-            .filter(Boolean)
-        : [],
-    [restaurantsVersion]
-  )
+
   const annotations = useMemo(() => {
+    const coordinates = restaurants
+      .map(
+        (restaurant) =>
+          !!restaurant.location?.coordinates &&
+          new mapkit.Coordinate(
+            restaurant.location.coordinates[1],
+            restaurant.location.coordinates[0]
+          )
+      )
+      .filter(Boolean)
+
     return restaurants
       .map((restaurant, index) => {
         const percent = getRestaurantRating(restaurant)

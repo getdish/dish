@@ -3,6 +3,7 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const path = require('path')
 const _ = require('lodash')
 const Webpack = require('webpack')
+const ClosurePlugin = require('closure-webpack-plugin')
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const isProduction = process.env.NODE_ENV === 'production'
@@ -32,7 +33,8 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
     })
   )
 
-  config.devtool = env.mode === 'production' ? 'source-map' : 'cheap-module-eval-source-map'
+  config.devtool =
+    env.mode === 'production' ? 'source-map' : 'cheap-module-eval-source-map'
 
   config.optimization = config.optimization || {}
 
@@ -63,6 +65,13 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
 
   if (!isProduction) {
     config.optimization.minimize = false
+  } else {
+    // test closure compiler, could be more performant if it extracts functions from render better
+    config.optimization.minimizer = [
+      new ClosurePlugin({
+        mode: 'STANDARD', // 'AGGRESSIVE_BUNDLE' seems to fail on mjs files in webpack
+      }),
+    ]
   }
 
   if (target === 'ssr') {
