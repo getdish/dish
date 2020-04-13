@@ -7,17 +7,26 @@ import { getTagId } from '../../state/Tag'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import HomeFilterBar from './HomeFilterBar'
 import { LenseButton } from './LenseButton'
+import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 export default memo(function HomeLenseBar(props: {
   activeTagIds: { [id: string]: boolean }
   backgroundGradient?: boolean
 }) {
+  const drawerWidth = useHomeDrawerWidth()
   const om = useOvermind()
   return (
     <ZStack zIndex={10} right={0} left={0} pointerEvents="none">
       <VStack pointerEvents="auto">
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <HStack paddingHorizontal={20} paddingVertical={4} spacing="sm">
+          <HStack
+            paddingHorizontal={20}
+            paddingVertical={4}
+            spacing="sm"
+            minWidth={drawerWidth - 113}
+            alignItems="center"
+            justifyContent="center"
+          >
             {om.state.home.allLenseTags.map((lense) => (
               <LenseButton
                 key={lense.id}

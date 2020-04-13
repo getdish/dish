@@ -10,6 +10,8 @@ import { bg } from './colors'
 export const LenseButton = memo(
   ({ lense, isActive }: { lense: Tag; isActive: boolean }) => {
     const om = useOvermind()
+    const lenseColor = `rgb(${lense.rgb[0] * 255}, ${lense.rgb[1] *
+      255}, ${lense.rgb[2] * 255})`
     return (
       <LinkButton
         onPress={() => {
@@ -21,24 +23,21 @@ export const LenseButton = memo(
           justifyContent="center"
           paddingHorizontal={10}
           paddingVertical={4}
-          backgroundColor={'rgba(255,255,255,0.5)'}
-          borderRadius={10}
-          shadowRadius={2}
-          shadowColor={isActive ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.05)'}
-          shadowOffset={{ height: 1, width: 0 }}
-          borderWidth={1}
-          borderColor={`rgba(0,0,0,0.1)`}
+          // backgroundColor={'rgba(255,255,255,0.5)'}
+          // borderRadius={10}
+          // shadowRadius={2}
+          // shadowColor={isActive ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.05)'}
+          // shadowOffset={{ height: 1, width: 0 }}
+          borderBottomWidth={1}
+          borderColor={`#fff`}
           opacity={0.8}
           hoverStyle={{
+            borderColor: lenseColor,
             opacity: 1,
           }}
           {...(isActive && {
             opacity: 1,
-            backgroundColor: lense.rgb
-              ? `rgb(${lense.rgb[0] * 255}, ${lense.rgb[1] * 255}, ${
-                  lense.rgb[2] * 255
-                })`
-              : bg,
+            borderColor: lense.rgb ? lenseColor : bg,
             // hoverStyle: {
             //   backgroundColor: bgHover,
             // },
@@ -46,9 +45,9 @@ export const LenseButton = memo(
         >
           <Text
             style={{
-              color: isActive ? '#fff' : '#454545',
-              fontSize: 15,
-              fontWeight: '500',
+              color: isActive ? lenseColor : '#454545',
+              fontSize: 16,
+              fontWeight: '400',
               // letterSpacing: isActive ? -0.2 : 0,
             }}
           >

@@ -58,7 +58,6 @@ const HomeViewTopDishesTrending = memo(() => {
   }
   return (
     <VStack spacing="xs">
-      <SmallTitle>Trending</SmallTitle>
       <HStack paddingHorizontal={15}>
         <VStack width="50%" spacing="xs">
           <SmallerTitle hideDivider>Restaurants</SmallerTitle>
@@ -82,25 +81,27 @@ const TrendingButton = <
   ...rest
 }: LinkButtonProps<Name, Params> & { rank?: number }) => {
   return (
-    <LinkButton
-      {...flatButtonStyle}
-      backgroundColor="transparent"
-      margin={2}
-      flexDirection="row"
-      alignItems="center"
-      ellipse
-      {...rest}
-    >
-      {rank ? `${rank}. ` : ''}
+    <HStack alignItems="center">
+      {rank ? <Text>`${rank}. `</Text> : null}
       <Icon
         marginTop={2}
         marginRight={4}
         name="chevron-down"
         size={14}
         color="red"
-      />{' '}
-      <Text style={{ fontWeight: '600', lineHeight: 17 }}>{children}</Text>
-    </LinkButton>
+      />
+      <LinkButton
+        {...flatButtonStyle}
+        // backgroundColor="transparent"
+        margin={2}
+        flexDirection="row"
+        alignItems="center"
+        ellipse
+        {...rest}
+      >
+        <Text style={{ fontWeight: '600', lineHeight: 17 }}>{children}</Text>
+      </LinkButton>
+    </HStack>
   )
 }
 
@@ -115,41 +116,44 @@ const HomeViewTopDishesContent = memo(() => {
   }
   return (
     <ScrollView style={{ flex: 1, overflow: 'hidden' }}>
-      <VStack paddingVertical={20} paddingTop={110} spacing="lg">
+      <VStack paddingVertical={20} paddingTop={110} spacing>
+        <SmallTitle
+          after={
+            <HoverablePopover
+              position="right"
+              contents={
+                <Box>
+                  {[
+                    'All',
+                    'Asia',
+                    'Americas',
+                    'Europe',
+                    'Mid-East',
+                    'Africa',
+                  ].map((tag) => (
+                    <SmallButton isActive={tag === 'All'} key={tag}>
+                      {tag}
+                    </SmallButton>
+                  ))}
+                </Box>
+              }
+            >
+              <VStack pointerEvents="auto">
+                <Text></Text>
+              </VStack>
+            </HoverablePopover>
+          }
+        >
+          {om.state.home.lastActiveTags.find((x) => x.type === 'lense')
+            ?.description ?? ''}{' '}
+          in {om.state.home.location?.name ?? 'San Francisco'}
+        </SmallTitle>
+
         <HomeViewTopDishesTrending />
 
-        <>
-          <SmallTitle
-            after={
-              <HoverablePopover
-                position="right"
-                contents={
-                  <Box>
-                    {[
-                      'All',
-                      'Asia',
-                      'Americas',
-                      'Europe',
-                      'Mid-East',
-                      'Africa',
-                    ].map((tag) => (
-                      <SmallButton isActive={tag === 'All'} key={tag}>
-                        {tag}
-                      </SmallButton>
-                    ))}
-                  </Box>
-                }
-              >
-                <VStack pointerEvents="auto">
-                  <Text>·</Text>
-                </VStack>
-              </HoverablePopover>
-            }
-          >
-            {om.state.home.lastActiveTags.find((x) => x.type === 'lense')
-              ?.description ?? ''}
-          </SmallTitle>
+        <Spacer />
 
+        <>
           {results.map((country, index) => (
             <CountryTopDishesAndRestaurants
               key={country.country}
@@ -184,7 +188,7 @@ const CountryTopDishesAndRestaurants = memo(
             {/* <RankingView rank={rank} marginLeft={-36} /> */}
             <LinkButton
               {...flatButtonStyle}
-              backgroundColor="tranparent"
+              // backgroundColor="transparent"
               marginVertical={-8}
               name="search"
               params={{ country: country.country }}
