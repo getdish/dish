@@ -27,11 +27,12 @@ export default memo(function HomeLenseBar(props: {
             alignItems="center"
             justifyContent="center"
           >
-            {om.state.home.allLenseTags.map((lense) => (
+            {om.state.home.allLenseTags.map((lense, index) => (
               <LenseButton
-                key={lense.id}
+                key={lense.id + index}
                 lense={lense}
                 isActive={props.activeTagIds[getTagId(lense)]}
+                minimal={index > 1}
               />
             ))}
           </HStack>

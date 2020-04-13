@@ -7,10 +7,12 @@ export function Box(props: StackBaseProps) {
     <VStack
       backgroundColor="#fff"
       padding={10}
-      borderRadius={12}
-      shadowColor="rgba(0,0,0,0.2)"
-      shadowRadius={14}
-      shadowOffset={{ width: 0, height: 2 }}
+      borderRadius={9}
+      shadowColor="rgba(0,0,0,0.175)"
+      shadowRadius={13}
+      shadowOffset={{ width: 0, height: 3 }}
+      // borderWidth={1}
+      // borderColor="#ddd"
       overflow="hidden"
       {...props}
     />

@@ -129,13 +129,13 @@ export const TagButton = memo(
         {!!closable && (
           <HoverableButton
             paddingVertical={paddingVertical}
-            backgroundColor={subtle ? 'transparent' : '#555'}
+            backgroundColor={subtle ? 'transparent' : 'transparent'}
             borderRadius={10}
             onPress={onClose}
             opacity={0.3}
             top={-1}
             {...(!subtle && {
-              marginLeft: -9,
+              marginLeft: -4,
               marginRight: 6,
             })}
             {...(subtle && {
@@ -151,7 +151,7 @@ export const TagButton = memo(
             <Icon
               size={subtle ? 10 : 12}
               name="x"
-              color={subtle ? 'inherit' : '#fff'}
+              color={subtle ? 'inherit' : '#000'}
             />
           </HoverableButton>
         )}

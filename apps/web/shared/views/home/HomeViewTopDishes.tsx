@@ -116,7 +116,7 @@ const HomeViewTopDishesContent = memo(() => {
   }
   return (
     <ScrollView style={{ flex: 1, overflow: 'hidden' }}>
-      <VStack paddingVertical={20} paddingTop={110} spacing>
+      <VStack paddingVertical={20} paddingTop={115} spacing>
         <SmallTitle
           after={
             <HoverablePopover

@@ -13,6 +13,7 @@ import { isWorker } from '../constants'
 import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
 import { race } from '../helpers/race'
 import { sleep } from '../helpers/sleep'
+import { Toast } from '../views/Toast'
 import { HistoryItem, RouteItem } from './router'
 import { NavigableTag, Tag, getTagId, tagFilters, tagLenses } from './Tag'
 
@@ -294,7 +295,7 @@ const start: AsyncAction = async (om) => {
   await om.actions.home._runAutocomplete(om.state.home.currentState.searchQuery)
 }
 
-const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
+const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   const { currentState } = om.state.home
 
   const fallbackState = {
@@ -318,8 +319,8 @@ const _pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         ...om.state.home.lastHomeState,
         ...newState,
       } as HomeStateItemHome
-      console.log('nextState', nextState)
       break
+    case 'userSearch':
     case 'search':
       const lastSearchState = om.state.home.lastSearchState
       const searchState: HomeStateItemSearch = {
@@ -406,8 +407,9 @@ const popTo: Action<HomeStateItem | number> = (om, item) => {
   } as any)
 }
 
-const _popHomeState: Action<HistoryItem> = (om, item) => {
+const popHomeState: Action<HistoryItem> = (om, item) => {
   if (om.state.home.states.length > 1) {
+    om.actions.home.setShowAutocomplete(false)
     om.state.home.states = _.dropRight(om.state.home.states)
   }
 }
@@ -855,14 +857,15 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
   switch (name) {
     case 'home':
     case 'search':
+    case 'userSearch':
     case 'restaurant':
       if (type == 'replace') {
         return
       }
       if (type === 'push') {
-        await om.actions.home._pushHomeState(item)
+        await pushHomeState(om, item)
       } else {
-        await om.actions.home._popHomeState(item)
+        await popHomeState(om, item)
       }
       return
   }
@@ -1127,9 +1130,42 @@ const _updateRoute: AsyncAction<string | void> = async (
   })
 }
 
+const setSearchBarFocusedTag: Action<Tag | null> = (om, val) => {
+  if (!val) {
+    om.state.home.autocompleteIndex = 0
+    return
+  }
+  om.state.home.autocompleteIndex = -om.state.home.lastActiveTags.findIndex(
+    (x) => x.id === val.id
+  )
+}
+
+const forkCurrentList: Action = (om) => {
+  const user = om.state.user.user
+  if (!user) {
+    Toast.show(`Login please`)
+    return
+  }
+  const { curPage } = om.state.router
+  if (curPage.name !== 'search') {
+    Toast.show(`Can't fork a non-search page`)
+    return
+  }
+  om.actions.router.navigate({
+    ...curPage,
+    name: 'userSearch',
+    params: {
+      ...curPage.params,
+      username: user.username,
+    },
+  })
+}
+
 export const actions = {
   start,
   startBeforeRouting,
+  setSearchBarFocusedTag,
+  forkCurrentList,
   _syncUrlToTags,
   _updateRoute,
   setTagInactive,
@@ -1160,7 +1196,5 @@ export const actions = {
   _runAutocomplete,
   _loadRestaurantDetail,
   _loadHomeDishes,
-  _pushHomeState,
-  _popHomeState,
   _runHomeSearch,
 }

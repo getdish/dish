@@ -23,6 +23,9 @@ export const routes = {
   pokedex: new Route('/pokedex'),
   account: new Route<{ pane: string }>('/account/:pane'),
   search: new Route<{ [key: string]: string }>('/:lense/:location/:tags?'),
+  userSearch: new Route<{ [key: string]: string }>(
+    '/u/:username/:lense/:location/:tags?'
+  ),
   notFound: new Route('*'),
 }
 

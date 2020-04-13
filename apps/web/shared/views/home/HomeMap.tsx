@@ -55,10 +55,10 @@ export const HomeMap = memo(() => {
     isScrollEnabled: true,
     showsCompass: mapkit.FeatureVisibility.Hidden,
     padding: {
-      left: drawerWidth + 15,
+      left: drawerWidth,
       top: searchBarHeight + 15 + 15,
-      bottom: 15,
-      right: 15,
+      bottom: 0,
+      right: 0,
     },
   })
 

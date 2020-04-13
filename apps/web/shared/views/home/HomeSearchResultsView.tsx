@@ -5,13 +5,14 @@ import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItemSearch } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { getTagId } from '../../state/Tag'
+import { Icon } from '../shared/Icon'
 import { PageTitle } from '../shared/PageTitle'
 import { PageTitleTag } from '../shared/PageTitleTag'
 import { closeAllPopovers, popoverCloseCbs } from '../shared/Popover'
 import { Spacer } from '../shared/Spacer'
 import { HStack, VStack, ZStack } from '../shared/Stacks'
 import { useWaterfall } from '../shared/useWaterfall'
-import { BackButton, CloseButton } from './CloseButton'
+import { BackButton, CloseButton, SmallCircleButton } from './CloseButton'
 import HomeLenseBar from './HomeLenseBar'
 import { LoadingItems } from './LoadingItems'
 import { RestaurantListItem } from './RestaurantListItem'
@@ -37,20 +38,33 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
     <>
       <PageTitleTag>{title}</PageTitleTag>
       <ZStack
-        right={10}
-        top={0}
-        height={40}
+        left={10}
+        top={10}
         justifyContent="center"
         pointerEvents="auto"
         zIndex={100}
       >
         <HStack spacing="sm" alignItems="center">
-          {/* <SmallButton>
-            <Icon name="plus" size={12} />
-          </SmallButton> */}
           <BackButton
             onPress={() => om.actions.home.popTo(om.state.home.lastHomeState)}
           />
+        </HStack>
+      </ZStack>
+      <ZStack
+        right={10}
+        top={10}
+        justifyContent="center"
+        pointerEvents="auto"
+        zIndex={100}
+      >
+        <HStack spacing="sm" alignItems="center">
+          <SmallCircleButton
+            onPress={() => {
+              om.actions.home.forkCurrentList()
+            }}
+          >
+            <Icon name="edit-2" size={12} color="white" />
+          </SmallCircleButton>
         </HStack>
       </ZStack>
       <PageTitle height={57}>

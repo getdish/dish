@@ -4,10 +4,12 @@ export const useOverlay = ({
   zIndex = 1,
   isOpen,
   onClick,
+  pointerEvents,
 }: {
   isOpen: boolean
   onClick?: Function
   zIndex?: number
+  pointerEvents?: boolean
 }) => {
   useLayoutEffect(() => {
     if (!isOpen) return
@@ -20,6 +22,9 @@ export const useOverlay = ({
       overlayDiv.style.right = '0px'
       overlayDiv.style.bottom = '0px'
       overlayDiv.style.left = '0px'
+      if (pointerEvents === false) {
+        overlayDiv.style.pointerEvents = 'none'
+      }
       overlayDiv.style.zIndex = `${zIndex}`
       overlayDiv.addEventListener('click', (e) => {
         e.preventDefault()

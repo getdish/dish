@@ -37,16 +37,17 @@ export const WelcomeModal = () => {
         </Text> */}
         <Text
           style={{
-            fontSize: 15,
+            fontSize: 18,
             lineHeight: 25,
             paddingHorizontal: 5,
             color: '#000',
           }}
         >
-          We just want to find the best pho, tacos, wings, xiao long bao, you
-          name it, easily, reliably, in every city.
+          The definitive best pho, tacos, wings, xiao long bao & what you crave
+          with ultrafast search across all delivery services.
         </Text>
-        <Text
+
+        {/* <Text
           style={{
             fontSize: 15,
             lineHeight: 25,
@@ -58,7 +59,7 @@ export const WelcomeModal = () => {
             <li>Search all delivery 🚗</li>
             <li>What's unique in each city 🌉</li>
             <li>
-              Your{' '}
+              A{' '}
               <Link
                 inline
                 name="pokedex"
@@ -66,20 +67,21 @@ export const WelcomeModal = () => {
               >
                 pokedex
               </Link>{' '}
-              for posterity 📸
+              for us all 📸
             </li>
           </ul>
-        </Text>
+        </Text> */}
 
         <Text
           style={{
-            fontSize: 15,
-            lineHeight: 25,
+            fontSize: 13,
+            lineHeight: 22,
             paddingHorizontal: 5,
             color: '#000',
           }}
         >
-          We miss the community of FourSquare want
+          We're building a collaborative best-of list of food that combines the
+          best of an online community and ratings-aggregator that{' '}
           <HoverablePopover
             overlay={false}
             position="left"
@@ -90,19 +92,19 @@ export const WelcomeModal = () => {
             }
           >
             <Link inline name="promise">
-              opt-out by default, with a plan
+              doesn't sell us out
             </Link>
           </HoverablePopover>
           .
         </Text>
 
-        <SmallerTitle>early access, no spam:</SmallerTitle>
+        {/* <SmallerTitle>Become a mod</SmallerTitle>
         <TextInput
           // @ts-ignore
           name="email"
           placeholder="name@email.com"
           style={textStyles.textField}
-        />
+        /> */}
 
         <HStack>
           <LinkButton {...flatButtonStyle}>
