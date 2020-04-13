@@ -11,6 +11,8 @@ jobs:
     - uses: actions/checkout@master
     - name: Install dev dependencies
       run: .github/workflows/scripts/install_dev_deps.sh
+    - name: Setup services
+      run: .github/workflows/scripts/setup_services.sh
     - name: HTTP-dependent crawler tasks
       run: .github/workflows/scripts/recurring.sh
 
