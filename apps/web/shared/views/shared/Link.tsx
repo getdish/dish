@@ -28,6 +28,7 @@ export function Link<
   ellipse,
   lineHeight,
   fastClick,
+  padding,
   ...props
 }: React.DetailedHTMLProps<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -37,6 +38,7 @@ export function Link<
     name: Name
     params?: Params
     inline?: boolean
+    padding?: StackBaseProps['padding']
   }) {
   const om = useOvermind()
   const handler = useCallback((e) => {
@@ -53,7 +55,7 @@ export function Link<
         [fastClick ? 'onMouseDown' : 'onClick']: handler,
       }}
       className={`${inline ? 'inline-link' : ' flex'}`}
-      style={{ maxWidth: '100%' }}
+      style={{ maxWidth: '100%', flex: 1, padding }}
     >
       <Text
         numberOfLines={ellipse ? 1 : undefined}
@@ -99,6 +101,7 @@ export function LinkButton<
       fastClick,
       lineHeight,
       fontWeight,
+      padding,
       ...rest
     } = props
     pointerEvents = rest.pointerEvents
@@ -113,6 +116,7 @@ export function LinkButton<
         fontWeight={fontWeight}
         ellipse={ellipse}
         fastClick={fastClick}
+        padding={padding}
       >
         {children ?? ''}
       </Link>

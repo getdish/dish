@@ -49,7 +49,7 @@ const FilterButton = memo(
             style={{
               color: isActive ? '#000' : bg,
               fontSize: 15,
-              fontWeight: '600',
+              fontWeight: '400',
             }}
           >
             {filter.displayName ?? filter.name}

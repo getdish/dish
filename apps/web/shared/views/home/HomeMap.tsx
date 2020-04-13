@@ -72,10 +72,12 @@ export const HomeMap = memo(() => {
   useEffect(() => {
     if (!map) return
     // set initial zoom level
-    centerMapToRegion({
-      map,
-      center,
-      span,
+    const tm = requestIdleCallback(() => {
+      centerMapToRegion({
+        map,
+        center,
+        span,
+      })
     })
 
     const handleRegionChangeEnd = (e) => {
@@ -96,6 +98,7 @@ export const HomeMap = memo(() => {
     map.addEventListener('region-change-end', handleRegionChangeEnd)
 
     return () => {
+      clearTimeout(tm)
       map.removeEventListener('region-change-end', handleRegionChangeEnd)
     }
   }, [map])
@@ -229,17 +232,25 @@ export const HomeMap = memo(() => {
   useDebounceEffect(
     () => {
       if (!map) return
+      let tm
       // react to changed center specifically
-      return om.reaction(
+      const dispose = om.reaction(
         (state) => state.home.currentState.center,
         (center) => {
-          centerMapToRegion({
-            map,
-            center,
-            span: om.state.home.currentState.span,
+          clearTimeout(tm)
+          tm = requestIdleCallback(() => {
+            centerMapToRegion({
+              map,
+              center,
+              span: om.state.home.currentState.span,
+            })
           })
         }
       )
+      return () => {
+        clearTimeout(tm)
+        dispose()
+      }
     },
     100,
     [map]

@@ -237,7 +237,7 @@ export default memo(function HomeSearchBar() {
             <LinkButton
               flexDirection="row"
               pointerEvents="auto"
-              padding={15}
+              padding={13}
               opacity={om.state.home.currentStateType === 'home' ? 0.2 : 1}
               onPress={() => om.actions.home.popTo(om.state.home.lastHomeState)}
             >
@@ -253,9 +253,8 @@ export default memo(function HomeSearchBar() {
                 />
               </VStack>
             </LinkButton>
+            {divider}
           </MediaQuery>
-
-          {divider}
 
           <VStack flex={0.5} />
 

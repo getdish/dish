@@ -4,7 +4,7 @@
     "jsx": "react",
     "outDir": "_",
     "rootDir": ".",
-    "typeRoots": ["node_modules/mapkit-typescript", "node_modules/@types"]
+    "typeRoots": ["./node_modules/mapkit-typescript", "./node_modules/@types"]
   },
   "include": ["src/**/*", "web/**/*", "shared/**/*"],
   "exclude": ["**/*.test.ts", "**/*.test.tsx", "src/graphql"],
