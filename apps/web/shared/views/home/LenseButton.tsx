@@ -35,8 +35,9 @@ export const LenseButton = memo(
           {...(isActive && {
             opacity: 1,
             backgroundColor: lense.rgb
-              ? `rgb(${lense.rgb[0] * 255}, ${lense.rgb[1] * 255}, ${lense
-                  .rgb[2] * 255})`
+              ? `rgb(${lense.rgb[0] * 255}, ${lense.rgb[1] * 255}, ${
+                  lense.rgb[2] * 255
+                })`
               : bg,
             // hoverStyle: {
             //   backgroundColor: bgHover,

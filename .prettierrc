@@ -3,5 +3,6 @@
   "semi": false,
   "singleQuote": true,
   "arrowParens": "always",
-  "plugins": ["import-sort"]
+  "plugins": ["import-sort"],
+  "printWidth": 80
 }
