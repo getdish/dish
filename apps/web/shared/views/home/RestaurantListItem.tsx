@@ -1,24 +1,11 @@
 import { Restaurant } from '@dish/models'
-import React, {
-  memo,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react'
-import {
-  Button,
-  Image,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from 'react-native'
+import React, { memo, useEffect, useRef, useState } from 'react'
+import { Image, Text, TouchableOpacity } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { Divider } from '../ui/Divider'
 import Hoverable from '../ui/Hoverable'
-import { Link, LinkButton } from '../ui/Link'
+import { Link } from '../ui/Link'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { bgLightLight } from './colors'
@@ -116,7 +103,7 @@ export const RestaurantListItem = ({
 
             <Spacer />
 
-            <HStack alignItems="center" marginTop={-8}>
+            <HStack alignItems="center" marginTop={-5}>
               <HStack alignItems="center" paddingLeft={18}>
                 <RestaurantFavoriteStar
                   isHovered={isHovered}
@@ -130,7 +117,7 @@ export const RestaurantListItem = ({
             <Spacer size="sm" />
 
             <HStack alignItems="center" paddingLeft={22}>
-              <RestaurantMetaRow showMenu showAddress restaurant={restaurant} />
+              <RestaurantMetaRow showAddress restaurant={restaurant} />
             </HStack>
             <Spacer size="sm" />
             <RestaurantDetailRow size="sm" restaurant={restaurant} />

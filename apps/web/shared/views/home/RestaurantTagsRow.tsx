@@ -1,12 +1,13 @@
 import { Restaurant } from '@dish/models'
 import React, { memo } from 'react'
-import { Text } from 'react-native'
+import { ScrollView, Text } from 'react-native'
 
 import { Spacer } from '../ui/Spacer'
 import { HStack } from '../ui/Stacks'
 import { RestaurantTagButton } from './RestaurantTagButton'
 import { SecondaryText } from './SecondaryText'
 import { TagButton } from './TagButton'
+import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 export const RestaurantTagsRow = memo(
   ({
@@ -23,30 +24,42 @@ export const RestaurantTagsRow = memo(
       tag_rankings: restaurant.tag_rankings,
     })
     const tags = r.getTagsWithRankings() ?? []
+    const drawerWidth = useHomeDrawerWidth()
     return (
-      <HStack alignItems="center" spacing={size == 'lg' ? 8 : 4}>
-        {tags
-          .slice(0, showMore ? 2 : 10)
-          .map((tag, index) =>
-            size == 'md' ? (
-              <SecondaryText key={tag.name}>🍜 {tag.name}</SecondaryText>
-            ) : (
-              <TagButton
-                key={`${index}${tag.name}`}
-                rank={tag.rank}
-                tag={{ ...tag, type: 'dish' }}
-                size={size}
-              />
-            )
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{ padding: 8 }}
+      >
+        <HStack
+          alignItems="center"
+          minWidth={drawerWidth}
+          justifyContent="center"
+          spacing={size == 'lg' ? 8 : 4}
+        >
+          {tags
+            .slice(0, showMore ? 2 : 10)
+            .map((tag, index) =>
+              size == 'md' ? (
+                <SecondaryText key={tag.name}>🍜 {tag.name}</SecondaryText>
+              ) : (
+                <TagButton
+                  key={`${index}${tag.name}`}
+                  rank={tag.rank}
+                  tag={{ ...tag, type: 'dish' }}
+                  size={size}
+                />
+              )
+            )}
+          {!!showMore && <Text style={{ opacity: 0.5 }}>+5</Text>}
+          {showMore && (
+            <>
+              <Spacer />
+              <RestaurantTagButton size={size} restaurant={restaurant} />
+            </>
           )}
-        {!!showMore && <Text style={{ opacity: 0.5 }}>+5</Text>}
-        {showMore && (
-          <>
-            <Spacer />
-            <RestaurantTagButton size={size} restaurant={restaurant} />
-          </>
-        )}
-      </HStack>
+        </HStack>
+      </ScrollView>
     )
   }
 )

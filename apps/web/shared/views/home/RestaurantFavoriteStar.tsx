@@ -135,12 +135,17 @@ export const RestaurantFavoriteStar = memo(
           isHovered={isStarred}
           onPress={() => setRating(isStarred ? 0 : 1)}
         >
-          <VStack marginTop={2} width={sizePx} height={sizePx}>
+          <VStack
+            marginTop={2}
+            width={sizePx}
+            height={sizePx}
+            overflow="hidden"
+          >
             {isStarred && (
               <Text
                 style={{
-                  fontSize: sizePx * 0.9,
-                  lineHeight: sizePx * 0.9,
+                  fontSize: sizePx * 0.88,
+                  lineHeight: sizePx * 0.88,
                   marginTop: 3,
                   marginLeft: 2,
                 }}

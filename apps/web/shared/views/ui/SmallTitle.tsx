@@ -6,15 +6,21 @@ import { Spacer } from './Spacer'
 import { HStack, StackBaseProps, VStack } from './Stacks'
 
 export const SmallTitle = memo(
-  ({ children, after, ...rest }: StackBaseProps & { after?: any }) => {
+  ({
+    children,
+    isActive,
+    after,
+    ...rest
+  }: StackBaseProps & { after?: any; isActive?: boolean }) => {
     return (
-      <VStack width="100%" alignItems="center" paddingBottom={4} {...rest}>
+      <VStack alignItems="center" paddingBottom={4} {...rest}>
         <HStack alignItems="center">
           <Text
             style={{
+              paddingHorizontal: 30,
               textTransform: 'uppercase',
               letterSpacing: 2,
-              opacity: 0.5,
+              opacity: isActive ? 1 : 0.5,
               fontSize: 15,
               fontWeight: '400',
             }}

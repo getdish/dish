@@ -33,9 +33,9 @@ export const RestaurantDetailRow = memo(
             style={{
               textAlign: centered ? 'center' : 'left',
               fontWeight: '600',
-              fontSize: 12,
+              fontSize: 14,
               color: open_color,
-              marginBottom: 2,
+              marginBottom: 3,
             }}
           >
             {open_text}
@@ -56,9 +56,9 @@ export const RestaurantDetailRow = memo(
             style={{
               textAlign: centered ? 'center' : 'left',
               fontWeight: '600',
-              fontSize: 12,
+              fontSize: 14,
               color: price_color,
-              marginBottom: 2,
+              marginBottom: 3,
             }}
           >
             {price_label}
@@ -79,9 +79,9 @@ export const RestaurantDetailRow = memo(
             style={{
               textAlign: centered ? 'center' : 'left',
               fontWeight: '600',
-              fontSize: 12,
+              fontSize: 14,
               color: 'gray',
-              marginBottom: 2,
+              marginBottom: 3,
             }}
           >
             Delivers

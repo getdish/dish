@@ -26,7 +26,7 @@ export const RestaurantTagButton = memo(
         onChangeOpen={setIsOpen}
         position="right"
         contents={
-          <Box spacing maxWidth={300}>
+          <Box spacing maxWidth={300} maxHeight="90vh">
             <SmallTitle>Tags</SmallTitle>
             <VStack padding={10} spacing="sm">
               {restaurant.tags.map((t, index) => {
@@ -96,9 +96,9 @@ export const RestaurantTagButton = memo(
           {isLarge ? '' : 'Add'}
           <Icon
             size={isLarge ? 26 : 14}
+            opacity={0.4}
             marginBottom={-1}
             name="tag"
-            color="blue"
           />
         </HoverableButton>
       </Popover>
