@@ -1,7 +1,8 @@
 import { Restaurant, Review } from '@dish/models'
-import React, { memo, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import { ScrollView, Text, TextInput } from 'react-native'
 
+import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { useForceUpdate } from '../../hooks/useForceUpdate'
 import { useOvermind } from '../../state/om'
 import { Toast } from '../Toast'
@@ -10,6 +11,7 @@ import { Icon } from '../ui/Icon'
 import { Popover } from '../ui/Popover'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack } from '../ui/Stacks'
+import { getInputNode } from './HomeSearchBar'
 import { HoverableButton } from './HoverableButton'
 import { LenseButton } from './LenseButton'
 
@@ -46,20 +48,37 @@ export const RestaurantFavoriteStar = memo(
       forceUpdate()
     }
 
+    const [input, setInput] = useState<any>(null)
+    const node = getInputNode(input)
+    useDebounceEffect(
+      () => {
+        console.log(showContent, node)
+        if (showContent && node) {
+          const tm = requestIdleCallback(() => {
+            node.focus()
+          })
+          return () => {
+            clearTimeout(tm)
+          }
+        }
+      },
+      16,
+      [node, showContent]
+    )
+
     return (
       <Popover
         isOpen={isOpen}
+        onChangeOpen={setIsOpen}
         overlay
         position="right"
-        onClickOutside={() => {
-          setIsOpen(false)
-        }}
         contents={
           <Box width={520}>
             {showContent && (
               <>
                 <HStack>
                   <TextInput
+                    ref={setInput}
                     multiline
                     numberOfLines={6}
                     placeholder="Your Review"

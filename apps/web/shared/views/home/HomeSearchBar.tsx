@@ -56,6 +56,10 @@ const clearTextSelection = () => {
   }
 }
 
+export const getInputNode = (instance: any): HTMLInputElement | null => {
+  return instance?.['_node'] ?? null
+}
+
 export default memo(function HomeSearchBar() {
   const om = useOvermind()
   const inputRef = useRef()
@@ -83,12 +87,8 @@ export default memo(function HomeSearchBar() {
 
   // ONE way sync this state so we can control it programatically (but blurring gets annoying)
   const { showAutocomplete } = om.state.home
-
-  // @ts-ignore
-  const input: HTMLInputElement | null = inputRef.current?.['_node'] ?? null
-  const locationInput: HTMLInputElement | null =
-    // @ts-ignore
-    locationInputRef.current?.['_node'] ?? null
+  const input = getInputNode(inputRef.current)
+  const locationInput = getInputNode(locationInputRef.current)
 
   const onFocusAnyInput = () => {
     if (om.state.home.searchbarFocusedTag) {

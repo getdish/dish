@@ -566,7 +566,7 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   if (isOnHome) {
     // we will load the search results with more debounce in next lines
     om.state.home.skipNextPageFetchData = true
-    await om.actions.home._updateRoute(query)
+    await om.actions.home._syncStateToRoute(query)
   }
 
   // AUTOCOMPLETE
@@ -586,7 +586,7 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   }
 
   if (!isOnHome) {
-    await om.actions.home._updateRoute()
+    await om.actions.home._syncStateToRoute()
   }
 
   om.actions.home.runSearch({})
@@ -992,7 +992,7 @@ const setTagActiveFn = async (om: Om, val: NavigableTag) => {
   let state = om.state.home.currentState
   if (state.type === 'home' && isSearchBarTag(val)) {
     // navigate to search
-    await om.actions.home._updateRoute()
+    await om.actions.home._syncStateToRoute()
   }
   state = om.state.home.currentState
   if (state.type === 'home') {
@@ -1122,14 +1122,14 @@ const _handleTagChange: AsyncAction = async (om) => {
   let cur = _htgId
   await sleep(100)
   if (cur != _htgId) return
-  await om.actions.home._updateRoute()
+  await om.actions.home._syncStateToRoute()
   if (cur != _htgId) return
   om.actions.home.runSearch({})
 }
 
 const requestLocation: Action = (om) => {}
 
-const _updateRoute: AsyncAction<string | void> = async (
+const _syncStateToRoute: AsyncAction<string | void> = async (
   om,
   nextQuery = om.state.home.currentStateSearchQuery
 ) => {
@@ -1208,7 +1208,7 @@ export const actions = {
   _runAutocomplete,
   _runHomeSearch,
   _syncUrlToTags,
-  _updateRoute,
+  _syncStateToRoute,
   clearSearch,
   forkCurrentList,
   getReview,

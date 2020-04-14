@@ -30,9 +30,7 @@ export const HomeUserMenu = memo(() => {
     <Popover
       position="bottom"
       isOpen={firstTime || om.state.home.showUserMenu}
-      onClickOutside={() => {
-        close()
-      }}
+      onChangeOpen={(val) => val === false && close()}
       contents={
         <Box padding={20} width="30vw" minWidth={250}>
           {!om.state.user.isLoggedIn && (

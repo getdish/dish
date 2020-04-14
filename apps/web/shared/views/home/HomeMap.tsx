@@ -183,6 +183,12 @@ export const HomeMap = memo(() => {
     '.mk-annotation-container'
   )
 
+  // stop map animation when moving away from page (see if this fixes some animation glitching/tearing)
+  useEffect(() => {
+    // equivalent to map.pauseAnimation() i think?
+    map?.setRegionAnimated(map?.region, false)
+  }, [map, restaurantsVersion])
+
   useDebounceEffect(
     () => {
       if (!annotationsContainer) return

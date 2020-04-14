@@ -1,5 +1,6 @@
 import React, {
   createContext,
+  useCallback,
   useContext,
   useLayoutEffect,
   useState,
@@ -26,7 +27,7 @@ export type PopoverProps = {
   noArrow?: boolean
   overlay?: boolean
   overlayPointerEvents?: boolean
-  onClickOutside?: Function
+  onChangeOpen?: (next: boolean) => any
 }
 
 export const Popover = (props: PopoverProps) => {
@@ -40,19 +41,21 @@ export const Popover = (props: PopoverProps) => {
     })
   }
 
+  const close = useCallback(props.onChangeOpen, [props.onChangeOpen])
+
   useLayoutEffect(() => {
-    if (props.onClickOutside) {
-      popoverCloseCbs.add(props.onClickOutside)
+    if (close) {
+      popoverCloseCbs.add(close)
       return () => {
-        popoverCloseCbs.delete(props.onClickOutside!)
+        popoverCloseCbs.delete(close!)
       }
     }
-  }, [])
+  }, [close])
 
   if (Platform.OS == 'web') {
     useOverlay({
       isOpen: isOpen && props.overlay !== false,
-      onClick: props.onClickOutside,
+      onClick: close,
       pointerEvents: props.overlayPointerEvents,
     })
   }
