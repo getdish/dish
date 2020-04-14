@@ -113,7 +113,7 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
                     marginHorizontal={-12}
                   >
                     <RatingBreakdownCircle
-                      percent={restaurant.rating_factors.food}
+                      percent={restaurant?.rating_factors?.food}
                       emoji="🧑‍🍳"
                       name="Food"
                     />
@@ -127,7 +127,7 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
                     marginHorizontal={-12}
                   >
                     <RatingBreakdownCircle
-                      percent={restaurant.rating_factors.service}
+                      percent={restaurant?.rating_factors?.service}
                       emoji="💁‍♂️"
                       name="Service"
                     />
@@ -141,7 +141,7 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
                     marginHorizontal={-12}
                   >
                     <RatingBreakdownCircle
-                      percent={restaurant.rating_factors.ambience}
+                      percent={restaurant?.rating_factors?.ambience}
                       emoji="✨"
                       name="Ambiance"
                     />
