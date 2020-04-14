@@ -1,7 +1,6 @@
 import React, { memo } from 'react'
 import { Text } from 'react-native'
 
-import { Divider } from './Divider'
 import { StackBaseProps, VStack } from './Stacks'
 
 export const PageTitle = memo(
@@ -21,8 +20,8 @@ export const PageTitle = memo(
             maxWidth: '80%',
             textAlign: 'center',
             opacity: 1,
-            fontSize: 20,
-            lineHeight: 26,
+            fontSize: 24,
+            lineHeight: 32,
             fontWeight: '500',
           }}
         >
@@ -35,7 +34,7 @@ export const PageTitle = memo(
                 textAlign: 'center',
                 width: '100%',
                 color: '#666',
-                fontSize: 16,
+                fontSize: 18,
                 fontWeight: '300',
               }}
             >

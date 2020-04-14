@@ -8,6 +8,10 @@ import {
   HomeStateItemRestaurant,
   HomeStateItemSearch,
   HomeStateItemUser,
+  isHomeState,
+  isRestaurantState,
+  isSearchState,
+  isUserState,
 } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { ErrorBoundary } from '../ErrorBoundary'
@@ -69,21 +73,15 @@ const HomeViewContent = memo(() => {
             {(homeState) => {
               return (
                 <>
-                  {homeState.type == 'home' && (
-                    <HomePageTopDishes state={homeState as HomeStateItemHome} />
+                  {isHomeState(homeState) && (
+                    <HomePageTopDishes state={homeState} />
                   )}
-                  {homeState.type == 'user' && (
-                    <HomePageUser state={homeState as HomeStateItemUser} />
+                  {isUserState(homeState) && <HomePageUser state={homeState} />}
+                  {isSearchState(homeState) && (
+                    <HomePageSearchResults state={homeState} />
                   )}
-                  {homeState.type == 'search' && (
-                    <HomePageSearchResults
-                      state={homeState as HomeStateItemSearch}
-                    />
-                  )}
-                  {homeState.type == 'restaurant' && (
-                    <HomePageRestaurant
-                      state={homeState as HomeStateItemRestaurant}
-                    />
+                  {isRestaurantState(homeState) && (
+                    <HomePageRestaurant state={homeState} />
                   )}
                 </>
               )

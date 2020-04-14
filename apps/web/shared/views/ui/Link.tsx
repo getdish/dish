@@ -29,6 +29,7 @@ export function Link<
   lineHeight,
   fastClick,
   padding,
+  color,
   onClick,
   ...props
 }: React.DetailedHTMLProps<
@@ -53,21 +54,27 @@ export function Link<
     <a
       {...props}
       href={getPathFromParams({ name, params })}
+      onMouseDown={prevent}
+      onClick={prevent}
       {...{
         [fastClick ? 'onMouseDown' : 'onClick']: handler,
       }}
-      className={`${inline ? 'inline-link' : ' flex'}`}
+      className={`${inline ? 'inline-flex' : ' flex'}`}
       style={{ maxWidth: '100%', flex: 1, padding }}
     >
       <Text
         numberOfLines={ellipse ? 1 : undefined}
-        style={{ fontSize, lineHeight, fontWeight, display: 'inherit' } as any}
+        style={
+          { fontSize, lineHeight, fontWeight, display: 'inherit', color } as any
+        }
       >
         {children}
       </Text>
     </a>
   )
 }
+
+const prevent = (e) => [e.preventDefault(), e.stopPropagation()]
 
 export type LinkButtonProps<Name, Params> = StackBaseProps &
   LinkSharedProps &

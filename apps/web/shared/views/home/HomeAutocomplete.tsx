@@ -1,6 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient'
 import React, { memo, useEffect } from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { useOvermind } from '../../state/om'
@@ -41,7 +41,9 @@ export default memo(function HomeAutoComplete() {
       }
     }
     window.addEventListener('mousemove', handleMove)
-    return () => window.removeEventListener('mousemove', handleMove)
+    return () => {
+      window.removeEventListener('mousemove', handleMove)
+    }
   }, [isShowing])
 
   return (
@@ -53,10 +55,17 @@ export default memo(function HomeAutoComplete() {
         fullscreen
         zIndex={11}
       >
-        <LinearGradient
-          colors={['rgba(0,0,0,0.1)', 'transparent']}
-          style={[StyleSheet.absoluteFill, { height: 160 }]}
-        />
+        <TouchableOpacity
+          style={[StyleSheet.absoluteFill]}
+          onPress={() => {
+            om.actions.home.setShowAutocomplete(false)
+          }}
+        >
+          <LinearGradient
+            colors={['rgba(0,0,0,0.1)', 'transparent']}
+            style={[StyleSheet.absoluteFill, { height: 160 }]}
+          />
+        </TouchableOpacity>
       </ZStack>
       <ZStack
         className="ease-in-out-fast"

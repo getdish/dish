@@ -1,7 +1,8 @@
-import { Restaurant } from '@dish/models'
+import { Restaurant, slugify } from '@dish/models'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { Image, Text, TouchableOpacity } from 'react-native'
 
+import { isEditingUserPage } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Divider } from '../ui/Divider'
 import Hoverable from '../ui/Hoverable'
@@ -91,7 +92,7 @@ export const RestaurantListItem = ({
                 <RankingView rank={rank} />
                 <Text
                   style={{
-                    fontSize: 18,
+                    fontSize: 22,
                     fontWeight: 'bold',
                     textDecorationColor: 'transparent',
                   }}
@@ -100,6 +101,13 @@ export const RestaurantListItem = ({
                 </Text>
               </HStack>
             </Link>
+
+            {isEditingUserPage(om.state) && (
+              <>
+                <RestaurantAddComment restaurant={restaurant} />
+                <Spacer />
+              </>
+            )}
 
             <Spacer />
 
@@ -121,10 +129,6 @@ export const RestaurantListItem = ({
             </HStack>
             <Spacer size="sm" />
             <RestaurantDetailRow size="sm" restaurant={restaurant} />
-
-            {om.state.router.curPage.name === 'userSearch' && (
-              <RestaurantAddComment restaurant={restaurant} />
-            )}
           </VStack>
 
           <Spacer size="lg" />
