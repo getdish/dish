@@ -83,7 +83,7 @@ export default memo(function HomeSearchBar() {
       offSearch()
       offLoc()
     }
-  })
+  }, [])
 
   // ONE way sync this state so we can control it programatically (but blurring gets annoying)
   const { showAutocomplete } = om.state.home
@@ -526,7 +526,7 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 4, width: 0 },
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#cacaca',
     alignItems: 'center',
     justifyContent: 'center',
   },

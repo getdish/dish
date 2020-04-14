@@ -28,9 +28,9 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
     (tag) =>
       tag.type === 'dish' || tag.type === 'country' || tag.name === 'Delivers'
   )
-  const title = `Top ${titleTags
-    .map((x) => x.name)
-    .join(', ')} ${state.searchQuery ?? ''} Restaurants`
+  const title = `Top ${titleTags.map((x) => x.name).join(', ')} ${
+    state.searchQuery ?? ''
+  } Restaurants`
 
   const isOnUserList = om.state.router.curPage.name === 'userSearch'
 
