@@ -30,9 +30,9 @@ export const tagLenses: Tag[] = [
   {
     id: '3',
     name: 'Talk',
-    icon: '👩‍🍳',
+    icon: '🗣',
     rgb: [0.6, 0.1, 0.5],
-    description: 'Top voted',
+    description: 'Most talked about',
     type: 'lense',
     isVotable: true,
   },

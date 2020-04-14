@@ -28,9 +28,12 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
     (tag) =>
       tag.type === 'dish' || tag.type === 'country' || tag.name === 'Delivers'
   )
-  const title = `Top ${titleTags.map((x) => x.name).join(', ')} ${
-    state.searchQuery ?? ''
-  } Restaurants`
+  const title = `Top ${titleTags
+    .map((x) => x.name)
+    .join(', ')} ${state.searchQuery ?? ''} Restaurants`
+
+  const isOnUserList = om.state.router.curPage.name === 'userSearch'
+
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>
@@ -47,6 +50,7 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
           />
         </HStack>
       </ZStack>
+
       <ZStack
         right={10}
         top={10}
@@ -55,17 +59,40 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
         zIndex={100}
       >
         <HStack spacing="sm" alignItems="center">
-          <SmallCircleButton
-            onPress={() => {
-              om.actions.home.forkCurrentList()
-            }}
-          >
-            <Icon name="edit-2" size={12} color="white" />
-          </SmallCircleButton>
+          {isOnUserList && (
+            <SmallCircleButton
+              onPress={() => {
+                om.actions.home.forkCurrentList()
+              }}
+            >
+              <Icon name="x" size={12} color="white" />
+            </SmallCircleButton>
+          )}
+          {isOnUserList && (
+            <SmallCircleButton
+              onPress={() => {
+                om.actions.home.forkCurrentList()
+              }}
+              paddingHorizontal={12}
+            >
+              <Text>Save</Text>
+            </SmallCircleButton>
+          )}
+          {!isOnUserList && (
+            <SmallCircleButton
+              onPress={() => {
+                om.actions.home.forkCurrentList()
+              }}
+            >
+              <Icon name="edit-2" size={12} color="white" />
+            </SmallCircleButton>
+          )}
         </HStack>
       </ZStack>
-      <PageTitle height={57}>
+
+      <PageTitle subTitle="in San Francisco">
         {lense?.description ?? lense?.name}
+        {titleTags.length ? '' : ' '}
         {titleTags.map((tag) => (
           <TagButton
             key={getTagId(tag)}
@@ -75,19 +102,14 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
                 : tag
             }
             subtle
-            // closable
-            onClose={() => {
-              om.actions.home.setTagInactive(tag)
-              // if (titleTags.length === 1) {
-              //   om.actions.home.popTo(om.state.home.lastHomeState)
-              // }
-            }}
+            noColor
+            hideIcon
           />
         ))}
-        {om.state.home.currentStateSearchQuery} in San Francisco
+        {om.state.home.currentStateSearchQuery}
       </PageTitle>
       <VStack position="relative" flex={1} overflow="hidden">
-        <HomeLenseBar activeTagIds={state.activeTagIds} backgroundGradient />
+        <HomeLenseBar activeTagIds={state.activeTagIds} />
         <HomeSearchResultsViewContent state={state} />
       </VStack>
     </>

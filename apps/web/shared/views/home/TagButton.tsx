@@ -13,6 +13,7 @@ export const TagButton = memo(
     tag,
     size,
     subtle,
+    noColor,
     closable,
     onClose,
     votable,
@@ -34,11 +35,12 @@ export const TagButton = memo(
     hideIcon?: boolean
     subtleIcon?: boolean
     fontSize?: TextStyle['fontSize']
+    noColor?: boolean
   }) => {
     const scale = size == 'lg' ? 1.05 : 1
     const paddingVertical = 1.33 * scale
     const lineHeight = 22 * scale
-    const defaultColor = 'purple'
+    const defaultColor = noColor ? 'inherit' : '#777'
     const bg = backgroundColor ?? (subtle ? 'transparent' : defaultColor)
     const fg = color ?? (subtle ? defaultColor : 'white')
     return (
@@ -92,7 +94,9 @@ export const TagButton = memo(
             } as any
           }
         >
-          {!hideIcon && (
+          {hideIcon ? (
+            <>&nbsp;</>
+          ) : (
             <span
               style={{
                 ...(subtle && { marginLeft: 4 }),
