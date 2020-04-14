@@ -99,7 +99,7 @@ export const initialHomeState: HomeStateItemHome = {
     lng: -122.421351,
     lat: 37.759251,
   },
-  span: { lng: INITIAL_RADIUS, lat: INITIAL_RADIUS },
+  span: { lng: INITIAL_RADIUS / 2, lat: INITIAL_RADIUS },
 }
 
 const lastHomeState = (state: HomeStateBase) =>
@@ -350,7 +350,7 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         await om.actions.home._syncUrlToTags(item.params)
       }
       fetchData = async () => {
-        await om.actions.home.runSearch({})
+        await om.actions.home.runSearch()
       }
       break
 
@@ -603,7 +603,7 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     await om.actions.home._syncStateToRoute()
   }
 
-  om.actions.home.runSearch({})
+  om.actions.home.runSearch()
 }
 
 let defaultAutocompleteResults: AutocompleteItem[] | null = null
@@ -631,7 +631,7 @@ const _runAutocomplete: AsyncAction<string> = async (om, query) => {
   const locationPromise = searchLocations(state.searchQuery)
   const restaurantsPromise = Restaurant.search({
     center: state.center,
-    span: state.span,
+    span: padSpan(state.span),
     query,
     limit: 5,
   })
@@ -697,7 +697,9 @@ const locationToAutocomplete = (location: {
 
 let lastSearchKey = ''
 let lastSearchAt = Date.now()
-const runSearch: AsyncAction<{ quiet?: boolean }> = async (om, opts) => {
+const runSearch: AsyncAction<{ quiet?: boolean } | void> = async (om, opts) => {
+  opts = opts || { quiet: false }
+
   let state = om.state.home.currentState as HomeStateItemSearch
   if (state.type != 'search') return
 
@@ -733,7 +735,7 @@ const runSearch: AsyncAction<{ quiet?: boolean }> = async (om, opts) => {
 
   const searchArgs: RestaurantSearchArgs = {
     center: state.center,
-    span: state.span,
+    span: padSpan(state.span),
     query,
     tags: tags.map((tag) => getTagId(tag)),
   }
@@ -1136,7 +1138,7 @@ const _handleTagChange: AsyncAction = async (om) => {
   if (cur != _htgId) return
   await om.actions.home._syncStateToRoute()
   if (cur != _htgId) return
-  om.actions.home.runSearch({})
+  om.actions.home.runSearch()
 }
 
 const requestLocation: Action = (om) => {}
@@ -1210,6 +1212,14 @@ const forkCurrentList: Action = (om) => {
       username: user.username,
     },
   })
+}
+
+// padding for map visual frame
+function padSpan(val: LngLat): LngLat {
+  return {
+    lng: val.lng * 0.95,
+    lat: val.lat * 0.95,
+  }
 }
 
 export const actions = {

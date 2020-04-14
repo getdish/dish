@@ -162,7 +162,7 @@ export const HomeMap = memo(() => {
         return new mapkit.MarkerAnnotation(coordinates[index], {
           glyphText: index <= 12 ? `${index + 1}` : ``,
           color: color,
-          title: index < 10 ? restaurant.name : '',
+          title: index <= 3 ? restaurant.name : '',
           subtitle: index >= 10 ? restaurant.name : '',
           collisionMode: mapkit.Annotation.CollisionMode.Circle,
           displayPriority:
@@ -336,8 +336,12 @@ export const HomeMap = memo(() => {
       cancels.add(() => map.removeEventListener('select', cb))
 
       // map.showAnnotations(annotations)
-      for (const annotation of annotations) {
-        map.addAnnotation(annotation)
+      try {
+        for (const annotation of annotations) {
+          map.addAnnotation(annotation)
+        }
+      } catch (err) {
+        console.error(err)
       }
 
       // animate to them
