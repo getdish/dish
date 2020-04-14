@@ -74,6 +74,7 @@ export type HomeStateItemUser = HomeStateItemBase & {
   type: 'user'
   username: string
   user: User
+  reviews: Review[]
 }
 
 export type HomeStateItemSimple = Omit<HomeStateItem, 'historyId'>
@@ -375,6 +376,7 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
       nextState = {
         ...fallbackState,
         type: 'user',
+        reviews: [],
         user: null,
         username: item.params.username,
         ...newState,
@@ -450,6 +452,7 @@ const _loadUserDetail: AsyncAction<{
   const state = om.state.home.currentState
   if (state.type === 'user') {
     state.user = user
+    state.reviews = await Review.findAllForUser(user.id)
   }
 }
 
@@ -476,13 +479,6 @@ const _loadRestaurantDetail: AsyncAction<{
     if (om.state.user.isLoggedIn) {
       await om.actions.home.getReview()
     }
-  }
-}
-
-const getUserReviews: AsyncAction<string> = async (om, user_id: string) => {
-  const state = om.state.home.currentState
-  if (state.type == 'restaurant') {
-    state.reviews = await Review.findAllForUser(user_id)
   }
 }
 
@@ -1213,7 +1209,6 @@ export const actions = {
   clearSearch,
   forkCurrentList,
   getReview,
-  getUserReviews,
   handleRouteChange,
   moveActiveDown,
   moveActiveUp,

@@ -29,6 +29,7 @@ export function Link<
   lineHeight,
   fastClick,
   padding,
+  onClick,
   ...props
 }: React.DetailedHTMLProps<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -45,6 +46,7 @@ export function Link<
     e.stopPropagation()
     e.preventDefault()
     om.actions.router.navigate({ name, params } as any)
+    onClick?.(e)
   }, [])
 
   return (

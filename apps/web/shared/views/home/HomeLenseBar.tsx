@@ -12,31 +12,36 @@ import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 export default memo(function HomeLenseBar(props: {
   activeTagIds: { [id: string]: boolean }
   backgroundGradient?: boolean
+  hideLenses?: boolean
 }) {
   const drawerWidth = useHomeDrawerWidth()
   const om = useOvermind()
   return (
     <ZStack zIndex={10} right={0} left={0} pointerEvents="none">
       <VStack pointerEvents="auto">
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <HStack
-            paddingHorizontal={20}
-            paddingVertical={4}
-            spacing="sm"
-            minWidth={drawerWidth - 113}
-            alignItems="center"
-            justifyContent="center"
-          >
-            {om.state.home.allLenseTags.map((lense, index) => (
-              <LenseButton
-                key={lense.id + index}
-                lense={lense}
-                isActive={props.activeTagIds[getTagId(lense)]}
-                minimal={index > 1}
-              />
-            ))}
-          </HStack>
-        </ScrollView>
+        {!props.hideLenses && (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <HStack
+              paddingHorizontal={20}
+              spacing="sm"
+              minWidth={drawerWidth}
+              alignItems="center"
+              justifyContent="center"
+              // borderRadius={100}
+              // borderWidth={1}
+              // borderColor="#ddd"
+            >
+              {om.state.home.allLenseTags.map((lense, index) => (
+                <LenseButton
+                  key={lense.id + index}
+                  lense={lense}
+                  isActive={props.activeTagIds[getTagId(lense)]}
+                  minimal={index > 1}
+                />
+              ))}
+            </HStack>
+          </ScrollView>
+        )}
         <HomeFilterBar activeTagIds={props.activeTagIds} />
       </VStack>
       {props.backgroundGradient && (
