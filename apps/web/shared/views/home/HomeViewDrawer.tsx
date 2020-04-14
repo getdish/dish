@@ -2,14 +2,19 @@ import { LinearGradient } from 'expo-linear-gradient'
 import React from 'react'
 import { StyleSheet } from 'react-native'
 
-import { drawerBorderRadius, drawerPad, drawerPadLeft } from '../../constants'
+import {
+  drawerBorderRadius,
+  drawerPad,
+  drawerPadLeft,
+  drawerWidthMax,
+} from '../../constants'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 const colors = [
   'rgba(255,255,255,0.23)',
-  'rgba(255,255,255,0.23)', //rgba(255,255,255,0.9)',
+  'rgba(255,255,255,0.8)', //rgba(255,255,255,0.9)',
   'rgba(255,255,255,1)', //'rgba(255,255,255,0.95)',
   'rgba(255,255,255,1)', //'rgba(255,255,255,0.99)',
   'rgba(255,255,255,1)', //'rgba(255,255,255,0.95)',
@@ -34,6 +39,7 @@ export function HomeViewDrawer(props: { children: any }) {
       bottom={0}
       zIndex={10}
       width={drawerWidth + drawerPadLeft}
+      // minWidth="50%"
       shadowColor="rgba(0,0,0,0.2)"
       shadowRadius={44}
       // borderRightWidth={1}
@@ -60,7 +66,12 @@ export function HomeViewDrawer(props: { children: any }) {
           </ZStack>
         </ZStack>
       </ZStack>
-      <VStack flex={1} paddingLeft={drawerPad} maxWidth={580} marginLeft="auto">
+      <VStack
+        flex={1}
+        paddingLeft={drawerPad}
+        maxWidth={drawerWidthMax}
+        marginLeft="auto"
+      >
         {props.children}
       </VStack>
     </HStack>

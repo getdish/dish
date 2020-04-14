@@ -10,6 +10,7 @@ import {
 import {
   drawerBorderRadius,
   isWorker,
+  pageWidthMax,
   searchBarHeight,
   searchBarTopOffset,
 } from '../../constants'
@@ -515,7 +516,7 @@ const styles = StyleSheet.create({
   },
   containerInner: {
     flex: 1,
-    maxWidth: 1100,
+    maxWidth: pageWidthMax,
     width: '100%',
     backgroundColor: 'rgba(255,255,255,1)',
     height: '100%',

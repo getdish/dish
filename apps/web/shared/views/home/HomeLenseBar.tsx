@@ -7,7 +7,10 @@ import { getTagId } from '../../state/Tag'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import HomeFilterBar from './HomeFilterBar'
 import { LenseButton } from './LenseButton'
-import { useHomeDrawerWidth } from './useHomeDrawerWidth'
+import {
+  useHomeDrawerWidth,
+  useHomeDrawerWidthInner,
+} from './useHomeDrawerWidth'
 
 export default memo(function HomeLenseBar(props: {
   activeTagIds: { [id: string]: boolean }
@@ -49,7 +52,7 @@ export function HomeContentTopBar(props: { children: any }) {
 export function HomeLenseBarOnly(props: {
   activeTagIds: { [id: string]: boolean }
 }) {
-  const drawerWidth = useHomeDrawerWidth()
+  const drawerWidth = useHomeDrawerWidthInner()
   const om = useOvermind()
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -68,7 +71,7 @@ export function HomeLenseBarOnly(props: {
             key={lense.id + index}
             lense={lense}
             isActive={props.activeTagIds[getTagId(lense)]}
-            minimal={index > 1}
+            minimal //={index > 0}
           />
         ))}
       </HStack>

@@ -7,7 +7,7 @@ import { HStack } from '../ui/Stacks'
 import { RestaurantTagButton } from './RestaurantTagButton'
 import { SecondaryText } from './SecondaryText'
 import { TagButton } from './TagButton'
-import { useHomeDrawerWidth } from './useHomeDrawerWidth'
+import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 
 export const RestaurantTagsRow = memo(
   ({
@@ -24,7 +24,7 @@ export const RestaurantTagsRow = memo(
       tag_rankings: restaurant.tag_rankings,
     })
     const tags = r.getTagsWithRankings() ?? []
-    const drawerWidth = useHomeDrawerWidth()
+    const drawerWidth = useHomeDrawerWidthInner()
     return (
       <ScrollView
         horizontal
@@ -33,7 +33,7 @@ export const RestaurantTagsRow = memo(
       >
         <HStack
           alignItems="center"
-          minWidth={drawerWidth}
+          minWidth={size === 'lg' ? drawerWidth : 0}
           justifyContent="center"
           spacing={size == 'lg' ? 8 : 4}
         >

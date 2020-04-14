@@ -1,22 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
-// import { mapkit } from '../mapkit'
-import { MapOptions, propsToMapConstructionOptions } from './utils'
 import {
-  NumberTuple,
-  Rect,
-  RegionType,
-  createCoordinate,
-  createCoordinateRegionFromValues,
-  createMapRect,
+  MapOptions,
+  createPadding,
+  propsToMapConstructionOptions,
 } from './utils'
 
-export const useMap = (defaultOptions: MapOptions = {}) => {
-  const [defaultMapOptions] = React.useState(defaultOptions)
+export const useMap = (opts: MapOptions = {}) => {
+  const [defaultMapOptions] = React.useState(opts)
   let mapRef = React.useRef<HTMLDivElement>(null)
   let [map, setMap] = React.useState<mapkit.Map>()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (mapkit && mapRef.current) {
       const newMap = new mapkit.Map(
         mapRef.current,
@@ -26,8 +21,18 @@ export const useMap = (defaultOptions: MapOptions = {}) => {
     }
   }, [mapRef, mapkit])
 
+  useEffect(() => {
+    if (map && opts.padding) {
+      try {
+        map.padding = createPadding(opts.padding)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+  }, [map, JSON.stringify(opts.padding ?? null)])
+
   // Clean up the map on unmount
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       if (!map) return
       try {
@@ -46,16 +51,5 @@ export const useMap = (defaultOptions: MapOptions = {}) => {
       map,
       mapRef,
     },
-    // setVisibleMapRect: React.useCallback(
-    //   (visibleMapRect: Rect, isAnimated: boolean = false) => {
-    //     if (map) {
-    //       map.setVisibleMapRectAnimated(
-    //         createMapRect(...visibleMapRect),
-    //         isAnimated
-    //       )
-    //     }
-    //   },
-    //   [map]
-    // ),
   }
 }

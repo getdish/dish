@@ -19,7 +19,11 @@ export function centerMapToRegion(p: {
   const newCenter = new mapkit.Coordinate(p.center.lat, p.center.lng)
   const coordspan = new mapkit.CoordinateSpan(p.span.lat, p.span.lng)
   const region = new mapkit.CoordinateRegion(newCenter, coordspan)
-  p.map.setRegionAnimated(region)
+  try {
+    p.map?.setRegionAnimated(region)
+  } catch(err) {
+    console.error(err)
+  }
 }
 
 // appears *above* all markers and cant go below...
@@ -186,7 +190,11 @@ export const HomeMap = memo(() => {
   // stop map animation when moving away from page (see if this fixes some animation glitching/tearing)
   useEffect(() => {
     // equivalent to map.pauseAnimation() i think?
-    map?.setRegionAnimated(map?.region, false)
+    try {
+      map?.setRegionAnimated(map?.region, false)
+    } catch(err) {
+      console.error(err)
+    }
   }, [map, restaurantsVersion])
 
   useDebounceEffect(

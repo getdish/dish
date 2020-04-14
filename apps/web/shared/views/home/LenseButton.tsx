@@ -20,12 +20,10 @@ export const LenseButton = memo(
     minimal?: boolean
   }) => {
     const om = useOvermind()
-    const lenseColor = `rgb(${lense.rgb[0] * 255}, ${lense.rgb[1] * 255}, ${
-      lense.rgb[2] * 255
-    })`
-    const lenseColorLight = `rgba(${lense.rgb[0] * 255}, ${
-      lense.rgb[1] * 255
-    }, ${lense.rgb[2] * 255}, 0.5)`
+    const lenseColor = `rgb(${lense.rgb[0] * 255}, ${lense.rgb[1] *
+      255}, ${lense.rgb[2] * 255})`
+    const lenseColorLight = `rgba(${lense.rgb[0] * 255}, ${lense.rgb[1] *
+      255}, ${lense.rgb[2] * 255}, 0.5)`
     const buttonContent = (
       <LinkButton
         // marginVertical={-1}
@@ -63,10 +61,10 @@ export const LenseButton = memo(
           <Text
             style={{
               color: isActive ? lenseColor : '#454545',
-              fontSize: 16,
-              fontWeight: '500',
+              fontSize: 18,
+              fontWeight: '400',
               textAlign: 'center',
-              marginLeft: 4,
+              marginLeft: 8,
               // letterSpacing: isActive ? -0.2 : 0,
             }}
           >
