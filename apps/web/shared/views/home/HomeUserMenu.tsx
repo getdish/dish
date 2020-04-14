@@ -1,10 +1,10 @@
 import { slugify } from '@dish/models'
 import React, { memo } from 'react'
-import { Text } from 'react-native'
 import { useStorageState } from 'react-storage-hooks'
 
 import { useOvermind } from '../../state/om'
 import { AuthLoginRegisterView } from '../auth/AuthLoginRegisterView'
+import { Toast } from '../Toast'
 import { Box } from '../ui/Box'
 import { Divider } from '../ui/Divider'
 import { Icon } from '../ui/Icon'
@@ -47,14 +47,18 @@ export const HomeUserMenu = memo(() => {
                 {...flatButtonStyle}
                 name="user"
                 params={{ username: slugify(om.state.user.user.username) }}
+                onPress={() => close()}
               >
                 Profile
               </LinkButton>
               <Divider />
               <LinkButton
                 onPress={() => {
-                  om.actions.user.logout()
-                  close()
+                  Toast.show(`Logging out...`)
+                  setTimeout(() => {
+                    om.actions.user.logout()
+                    close()
+                  }, 1000)
                 }}
               >
                 Logout

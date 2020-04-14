@@ -5,6 +5,7 @@ import { HomeStateItemUser } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Circle } from '../ui/Circle'
 import { Divider } from '../ui/Divider'
+import { Link } from '../ui/Link'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
@@ -12,6 +13,7 @@ import { CloseButton } from './CloseButton'
 
 export default memo(({ state }: { state: HomeStateItemUser }) => {
   const om = useOvermind()
+  const reviews = state.reviews ?? []
 
   return (
     <>
@@ -34,7 +36,7 @@ export default memo(({ state }: { state: HomeStateItemUser }) => {
               Username
             </Text>
             <Spacer size={4} />
-            asdsada
+            <div />
             <Spacer size={8} />
             <Text style={{ color: '#777', fontSize: 13 }}>
               3017 16th St., San Francisco
@@ -46,7 +48,24 @@ export default memo(({ state }: { state: HomeStateItemUser }) => {
       </VStack>
 
       <ScrollView style={{ padding: 18, paddingTop: 16, flex: 1 }}>
-        <VStack spacing="xl"></VStack>
+        <VStack spacing="xl">
+          <VStack>
+            {!reviews.length && <Text>No reviews yet...</Text>}
+            {!!reviews.length &&
+              reviews.map((review) => (
+                <Text key={review.id}>
+                  <Link
+                    name="restaurant"
+                    params={{ slug: review.restaurant.slug }}
+                  >
+                    {review.restaurant.name}
+                  </Link>
+                  <Text>{review.rating}⭐</Text>
+                  <Text>{review.text}</Text>
+                </Text>
+              ))}
+          </VStack>
+        </VStack>
       </ScrollView>
     </>
   )

@@ -18,11 +18,7 @@ import { LoadingItems } from './LoadingItems'
 import { RestaurantListItem } from './RestaurantListItem'
 import { TagButton } from './TagButton'
 
-export default memo(function HomePageSearchResults({
-  state,
-}: {
-  state: HomeStateItemSearch
-}) {
+export default memo(({ state }: { state: HomeStateItemSearch }) => {
   const om = useOvermind()
   const tags = Object.keys(state.activeTagIds).map(
     (k) => om.state.home.allTags[k]
@@ -32,9 +28,9 @@ export default memo(function HomePageSearchResults({
     (tag) =>
       tag.type === 'dish' || tag.type === 'country' || tag.name === 'Delivers'
   )
-  const title = `Top ${titleTags
-    .map((x) => x.name)
-    .join(', ')} ${state.searchQuery ?? ''} Restaurants`
+  const title = `Top ${titleTags.map((x) => x.name).join(', ')} ${
+    state.searchQuery ?? ''
+  } Restaurants`
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>

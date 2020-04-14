@@ -20,10 +20,12 @@ export const LenseButton = memo(
     minimal?: boolean
   }) => {
     const om = useOvermind()
-    const lenseColor = `rgb(${lense.rgb[0] * 255}, ${lense.rgb[1] *
-      255}, ${lense.rgb[2] * 255})`
+    const lenseColor = `rgb(${lense.rgb[0] * 255}, ${lense.rgb[1] * 255}, ${
+      lense.rgb[2] * 255
+    })`
     const buttonContent = (
       <LinkButton
+        // marginVertical={-1}
         onPress={() => {
           om.actions.home.replaceActiveTagOfType(lense)
         }}
@@ -39,7 +41,7 @@ export const LenseButton = memo(
           // shadowColor={isActive ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.05)'}
           // shadowOffset={{ height: 1, width: 0 }}
           borderBottomWidth={1}
-          borderColor={`#fff`}
+          borderColor="transparent"
           opacity={0.8}
           hoverStyle={{
             borderColor: lenseColor,
@@ -56,8 +58,8 @@ export const LenseButton = memo(
           <Text
             style={{
               color: isActive ? lenseColor : '#454545',
-              fontSize: 18,
-              fontWeight: '400',
+              fontSize: 16,
+              fontWeight: '500',
               // letterSpacing: isActive ? -0.2 : 0,
             }}
           >
