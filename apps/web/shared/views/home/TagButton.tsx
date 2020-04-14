@@ -46,16 +46,17 @@ export const TagButton = memo(
     return (
       <HStack
         backgroundColor={bg}
-        borderWidth={1}
-        borderColor={subtle ? 'transparent' : '#ddd'}
+        // borderWidth={1}
+        // borderColor={subtle ? 'transparent' : '#ddd'}
         borderRadius={10 * scale}
-        // overflow="hidden"
+        overflow="hidden"
         alignItems="center"
-        shadowColor={subtle ? 'transparent' : 'rgba(0,0,0,0.05)'}
-        shadowRadius={4 * scale}
+        shadowColor={subtle ? 'transparent' : 'rgba(0,0,0,0.15)'}
+        shadowRadius={6 * scale}
         shadowOffset={{ width: 0, height: 2 * scale }}
         // spacing="sm"
         position="relative"
+        minHeight={lineHeight}
         {...rest}
       >
         {!!rank && (
@@ -64,9 +65,9 @@ export const TagButton = memo(
               {
                 fontSize: subtle ? 'inherit' : 13 * scale,
                 fontWeight: 'bold',
-                paddingVertical: '5%',
+                paddingVertical: '4%',
                 marginVertical: '-2.5%',
-                paddingHorizontal: 6 * scale,
+                paddingHorizontal: 7 * scale,
                 backgroundColor: subtle ? 'transparent' : '#fff',
                 lineHeight,
                 alignSelf: 'stretch',

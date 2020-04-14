@@ -25,6 +25,7 @@ import { RestaurantMetaRow } from './RestaurantMetaRow'
 import { RestaurantRatingDetail } from './RestaurantRatingDetail'
 import { RestaurantTagButton } from './RestaurantTagButton'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
+import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
   const om = useOvermind()
@@ -75,24 +76,18 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
             <HStack width="100%" alignItems="center">
               <Divider flex />
               <RestaurantFavoriteStar restaurant={restaurant} size="lg" />
+              {isCanTag && (
+                <ZStack top={3} right={-5}>
+                  <RestaurantTagButton size="lg" restaurant={restaurant} />
+                </ZStack>
+              )}
               <Divider flex />
             </HStack>
           </VStack>
 
           <ScrollView style={{ padding: 18, paddingTop: 16, flex: 1 }}>
-            <VStack spacing="xl">
-              <HStack alignItems="center" justifyContent="center">
-                {isCanTag ? (
-                  <RestaurantTagButton size="lg" restaurant={restaurant} />
-                ) : (
-                  <Spacer size={24} />
-                )}
-                <Spacer />
-                <View style={{ flex: 1 }} />
-                <RestaurantTagsRow size="lg" restaurant={restaurant} />
-                <View style={{ flex: 1 }} />
-                <Spacer />
-              </HStack>
+            <VStack spacing="lg">
+              <RestaurantTagsRow size="lg" restaurant={restaurant} />
 
               <HStack paddingVertical={10}>
                 <RestaurantDetailRow
@@ -103,14 +98,20 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
                 />
               </HStack>
 
-              <VStack marginTop={-8} marginHorizontal={-18}>
+              <VStack marginTop={-8} marginHorizontal={-18} alignItems="center">
                 <HStack
                   alignItems="center"
                   paddingHorizontal={10 + 18}
                   spacing={20}
                   paddingVertical={12}
                 >
-                  <VStack zIndex={10} flex={1} minWidth={90} marginRight={-25}>
+                  <VStack
+                    zIndex={10}
+                    flex={1}
+                    minWidth={90}
+                    maxWidth={120}
+                    marginHorizontal={-12}
+                  >
                     <RatingBreakdownCircle
                       percent={restaurant.rating_factors.food}
                       emoji="🧑‍🍳"
@@ -118,7 +119,13 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
                     />
                   </VStack>
 
-                  <VStack zIndex={9} flex={1} minWidth={90} marginRight={-25}>
+                  <VStack
+                    zIndex={9}
+                    flex={1}
+                    minWidth={90}
+                    maxWidth={120}
+                    marginHorizontal={-12}
+                  >
                     <RatingBreakdownCircle
                       percent={restaurant.rating_factors.service}
                       emoji="💁‍♂️"
@@ -126,142 +133,37 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
                     />
                   </VStack>
 
-                  <VStack zIndex={8} flex={1} minWidth={90} marginRight={-25}>
+                  <VStack
+                    zIndex={8}
+                    flex={1}
+                    minWidth={90}
+                    maxWidth={120}
+                    marginHorizontal={-12}
+                  >
                     <RatingBreakdownCircle
                       percent={restaurant.rating_factors.ambience}
                       emoji="✨"
                       name="Ambiance"
                     />
                   </VStack>
-
-                  <VStack
-                    width={1}
-                    height={100}
-                    backgroundColor="#ccc"
-                    marginLeft={25 + 10}
-                  />
-
-                  <VStack
-                    flex={3}
-                    paddingVertical={10}
-                    justifyContent="center"
-                    marginBottom={-20}
-                  >
-                    <Quote>
-                      Super <strong>fast service</strong>...
-                    </Quote>
-                    <Quote>
-                      Really <strong>delicious food</strong>...
-                    </Quote>
-                    <Quote>
-                      Quite <strong>lovely vibe</strong>...
-                    </Quote>
-                  </VStack>
                 </HStack>
               </VStack>
 
-              <HStack
-                width="100%"
-                spacing={20}
-                paddingHorizontal={10}
-                // borderColor="#eee"
-                // borderWidth={1}
-                // borderRadius={30}
-              >
-                <LinkButton flex={1} name="restaurant">
-                  <VStack
-                    width="100%"
-                    shadowColor="rgba(0,0,0,0.2)"
-                    shadowRadius={5}
-                    borderRadius={20}
-                    overflow="hidden"
-                    marginBottom={10}
-                  >
-                    <Image
-                      resizeMode="cover"
-                      source={{
-                        uri: restaurant.image,
-                        height: 60,
-                      }}
-                    />
-                  </VStack>
-                  <Text
-                    style={{
-                      alignSelf: 'center',
-                      textAlign: 'center',
-                      margin: 'auto',
-                      fontSize: 13,
-                      opacity: 0.8,
-                    }}
-                  >
-                    Inside
-                  </Text>
-                </LinkButton>
-                <LinkButton flex={1} name="restaurant">
-                  <VStack
-                    width="100%"
-                    shadowColor="rgba(0,0,0,0.2)"
-                    shadowRadius={5}
-                    borderRadius={20}
-                    overflow="hidden"
-                    marginBottom={10}
-                  >
-                    <Image
-                      resizeMode="cover"
-                      source={{
-                        uri: restaurant.image,
-                        height: 60,
-                      }}
-                    />
-                  </VStack>
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      fontSize: 13,
-                      opacity: 0.8,
-                    }}
-                  >
-                    Menu
-                  </Text>
-                </LinkButton>
-                <LinkButton flex={1} name="restaurant">
-                  <VStack
-                    width="100%"
-                    shadowColor="rgba(0,0,0,0.2)"
-                    shadowRadius={5}
-                    borderRadius={20}
-                    overflow="hidden"
-                    marginBottom={10}
-                  >
-                    <Image
-                      resizeMode="cover"
-                      source={{
-                        uri: restaurant.image,
-                        height: 60,
-                      }}
-                    />
-                  </VStack>
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      fontSize: 13,
-                      opacity: 0.8,
-                    }}
-                  >
-                    Outside
-                  </Text>
-                </LinkButton>
-              </HStack>
-
               {!!restaurant.photos?.length && (
-                <VStack>
-                  <SmallTitle>Top Dishes</SmallTitle>
+                <VStack spacing="xl">
+                  <HStack>
+                    <SmallTitle isActive>Top Dishes</SmallTitle>
+                    <SmallTitle>Menu</SmallTitle>
+                    <SmallTitle>Inside</SmallTitle>
+                    <SmallTitle>Outside</SmallTitle>
+                  </HStack>
+
                   <HStack
-                    paddingHorizontal={0}
-                    paddingVertical={26}
                     flexWrap="wrap"
+                    marginTop={10}
                     alignItems="center"
                     justifyContent="center"
+                    spacing="xl"
                   >
                     {[
                       'Pho',
@@ -277,14 +179,14 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
                         key={index}
                         name={dish}
                         photo={restaurant.photos[index] ?? restaurant.image}
-                        size={index < 3 ? 'lg' : 'md'}
+                        size="lg"
                       />
                     ))}
                   </HStack>
                 </VStack>
               )}
 
-              <VStack>
+              {/* <VStack>
                 <SmallTitle>Images</SmallTitle>
                 <HStack
                   flexWrap="wrap"
@@ -309,7 +211,7 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
                     />
                   ))}
                 </HStack>
-              </VStack>
+              </VStack> */}
             </VStack>
           </ScrollView>
         </>
@@ -331,8 +233,8 @@ const DishCard = (props: {
   return (
     <VStack
       alignItems="center"
-      marginBottom={margin + 13}
-      marginHorizontal={margin * 0.5}
+      marginBottom={margin + 20}
+      // marginHorizontal={margin * 0.5}
     >
       <VStack
         marginVertical={-15}
