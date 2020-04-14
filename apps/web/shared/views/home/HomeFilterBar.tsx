@@ -47,6 +47,7 @@ export default memo(function HomeFilterBar({
               {...(hasPrev && { marginLeft: -4, borderLeftWidth: 0 })}
               {...(hasNext && { borderRightWidth: 0 })}
               {...extraProps}
+              height={32}
             />
           )
         })}

@@ -389,22 +389,34 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
       break
   }
 
-  if (nextState) {
-    if (item.replace && om.state.home.currentStateType === nextState.type) {
-      om.state.home.states[om.state.home.states.length - 1] = nextState
-    } else {
-      om.state.home.states.push(nextState)
+  if (!nextState) {
+    return
+  }
+
+  console.log('PUSHING HOME', nextState, item)
+
+  if (item.replace && om.state.home.currentStateType === nextState.type) {
+    // try granular update
+    const lastState = om.state.home.states[om.state.home.states.length - 1]
+    for (const key in nextState) {
+      if (nextState[key] !== lastState[key]) {
+        lastState[key] = nextState[key]
+      }
     }
-    if (afterPush) {
-      await afterPush()
-    }
-    const shouldSkip = om.state.home.skipNextPageFetchData
-    om.state.home.skipNextPageFetchData = false
-    if (!shouldSkip && fetchData) {
-      race(fetchData(), 1000, 'fetchData', {
-        warnOnly: true,
-      })
-    }
+  } else {
+    om.state.home.states.push(nextState)
+  }
+
+  if (afterPush) {
+    await afterPush()
+  }
+
+  const shouldSkip = om.state.home.skipNextPageFetchData
+  om.state.home.skipNextPageFetchData = false
+  if (!shouldSkip && fetchData) {
+    race(fetchData(), 2000, 'fetchData', {
+      warnOnly: true,
+    })
   }
 }
 
@@ -540,6 +552,8 @@ const DEBOUNCE_SEARCH = 1000
 
 let lastRunAt = Date.now()
 const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
+  // also reset runSearch! hacky!
+  lastSearchAt = Date.now()
   const state = om.state.home.currentState
   const isDeleting = query.length < state.searchQuery.length
   const isOnHome = state.type === 'home'
@@ -681,14 +695,14 @@ const locationToAutocomplete = (location: {
   })
 }
 
-let runSearchId = 0
 let lastSearchKey = ''
 let lastSearchAt = Date.now()
 const runSearch: AsyncAction<{ quiet?: boolean }> = async (om, opts) => {
-  runSearchId = Math.random()
-  let curId = runSearchId
   let state = om.state.home.currentState as HomeStateItemSearch
   if (state.type != 'search') return
+
+  lastSearchAt = Date.now()
+  let curId = lastSearchAt
 
   // we can remove one we have search service
   const ogQuery = om.state.home.currentState.searchQuery ?? ''
@@ -698,7 +712,7 @@ const runSearch: AsyncAction<{ quiet?: boolean }> = async (om, opts) => {
   )
 
   const shouldCancel = () => {
-    const answer = runSearchId != curId
+    const answer = lastSearchAt != curId
     if (answer) console.log('cancelling search')
     return answer
   }
@@ -740,12 +754,11 @@ const runSearch: AsyncAction<{ quiet?: boolean }> = async (om, opts) => {
   }
 
   // debounce
-  const timeSince = Date.now() - lastSearchAt
-  lastSearchAt = Date.now()
-  if (timeSince < 350) {
-    await sleep(Math.min(350, timeSince - 350))
-  }
-  if (shouldCancel()) return
+  // const timeSince = Date.now() - lastSearchAt
+  // if (timeSince < 350) {
+  //   await sleep(Math.min(350, timeSince - 350))
+  // }
+  // if (shouldCancel()) return
 
   // fetch
   let restaurants = await Restaurant.search(searchArgs)
@@ -773,7 +786,6 @@ const runSearch: AsyncAction<{ quiet?: boolean }> = async (om, opts) => {
     om.state.home.allRestaurants[restaurant.id] = restaurant
   }
 
-  console.log('we done here', state)
   // only update searchkey once finished
   lastSearchKey = searchKey
   state.results = {
@@ -784,13 +796,6 @@ const runSearch: AsyncAction<{ quiet?: boolean }> = async (om, opts) => {
       locations: [],
     },
   }
-
-  // om.state.home.states = om.state.home.states.map((x) => {
-  //   if (x.historyId == state.historyId) {
-  //     return state
-  //   }
-  //   return x
-  // })
 }
 
 const clearSearch: Action = (om) => {
@@ -990,20 +995,25 @@ const setTagInactiveFn = (om: Om, val: NavigableTag) => {
 
 const setTagActiveFn = async (om: Om, val: NavigableTag) => {
   let state = om.state.home.currentState
+  const willSearch = isSearchBarTag(val)
+
   // push to search on adding lense
-  if (state.type === 'home' && isSearchBarTag(val)) {
+  if (state.type === 'home' && willSearch) {
+    // if adding a searchable tag while existing search query, replace it
+    if (state.searchQuery) {
+      state.searchQuery = ''
+    }
+
     // don't set it active!
     await om.actions.home._syncStateToRoute({
       ...state,
-      activeTagIds: { ...state.activeTagIds, [val.id]: true },
+      activeTagIds: { ...state.activeTagIds, [getTagId(val)]: true },
     })
     state = om.state.home.currentState
     console.log('on search now?', state)
   }
-  if (
-    state.type == 'search' ||
-    (state.type === 'home' && !isSearchBarTag(val))
-  ) {
+
+  if (state.type == 'search' || (state.type === 'home' && !willSearch)) {
     state.activeTagIds[getTagId(val)] = true
   }
 }
@@ -1017,7 +1027,7 @@ const setTagInactive: AsyncAction<NavigableTag> = async (om, val) => {
 const setTagActive: AsyncAction<NavigableTag> = async (om, val) => {
   if (val.type === 'lense') {
     // ensure only ever one lense
-    om.actions.home.replaceActiveTagOfType(val)
+    await om.actions.home.replaceActiveTagOfType(val)
   } else {
     await setTagActiveFn(om, val)
     await om.actions.home._handleTagChange()
@@ -1122,7 +1132,7 @@ const _handleTagChange: AsyncAction = async (om) => {
   if (!om.state.home.started) return
   _htgId = (_htgId + 1) % Number.MAX_VALUE
   let cur = _htgId
-  await sleep(100)
+  await sleep(50)
   if (cur != _htgId) return
   await om.actions.home._syncStateToRoute()
   if (cur != _htgId) return

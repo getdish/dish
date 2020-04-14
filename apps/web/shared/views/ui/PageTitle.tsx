@@ -23,7 +23,7 @@ export const PageTitle = memo(
             opacity: 1,
             fontSize: 20,
             lineHeight: 26,
-            fontWeight: '400',
+            fontWeight: '500',
           }}
         >
           {children}

@@ -473,7 +473,6 @@ const SearchCancelButton = memo(({ onCancel }: { onCancel?: Function }) => {
         //   om.actions.home.popTo(om.state.home.lastHomeState)
         // }
       }}
-      size={12}
     />
   )
 })

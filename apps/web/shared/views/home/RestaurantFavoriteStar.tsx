@@ -52,7 +52,6 @@ export const RestaurantFavoriteStar = memo(
     const node = getInputNode(input)
     useDebounceEffect(
       () => {
-        console.log(showContent, node)
         if (showContent && node) {
           const tm = requestIdleCallback(() => {
             node.focus()
