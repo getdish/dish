@@ -995,7 +995,10 @@ const setTagActiveFn = async (om: Om, val: NavigableTag) => {
     await om.actions.home._updateRoute()
   }
   state = om.state.home.currentState
-  if (state.type == 'search' || state.type === 'home') {
+  if (state.type === 'home') {
+    // don't set it active!
+    console.warn('setting home tag?')
+  } else if (state.type == 'search') {
     state.activeTagIds[getTagId(val)] = true
   }
 }
