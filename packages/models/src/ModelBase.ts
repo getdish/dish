@@ -287,11 +287,23 @@ export class ModelBase<T> {
   }
 
   async findOne(key: string, value: string, extra_returning: {} = {}) {
+    return await this.findOneByHash({ [key]: value }, extra_returning)
+  }
+
+  async findOneByHash(
+    hash: { [key: string]: string },
+    extra_returning: {} = {}
+  ) {
+    const where = Object.keys(hash).map((key) => {
+      return { [key]: { _eq: hash[key] } }
+    })
     const query = {
       query: {
         [this._lower_name]: {
           __args: {
-            where: { [key]: { _eq: value } },
+            where: {
+              _and: where,
+            },
           },
           ...this.fieldsAsObject(),
           ...extra_returning,
@@ -304,9 +316,10 @@ export class ModelBase<T> {
       Object.assign(this, objects[0])
       return this.id
     } else {
-      throw new Error(
-        objects.length + ` ${this._lower_name}s found by findOne()`
-      )
+      const message =
+        `${objects.length} ${this._lower_name}s found by findOne(). ` +
+        `Using: ${JSON.stringify(hash)}`
+      throw new Error(message)
     }
   }
 

@@ -12,6 +12,7 @@ export type TagType =
   | 'country'
   | 'dish'
   | 'restaurant'
+  | 'category'
   | 'orphan'
 export type TagRecord = Partial<Tag> & Pick<Tag, 'type'>
 
@@ -181,7 +182,13 @@ export class Tag extends ModelBase<Tag> {
       mutation: {
         insert_tag: {
           __args: {
-            objects: tags,
+            objects: tags.map((i) => {
+              if (typeof i.asObject != 'undefined') {
+                return i.asObject()
+              } else {
+                return i
+              }
+            }),
             on_conflict: {
               constraint: new EnumType(Tag.upsert_constraint()),
               update_columns: this.updatableColumns(),
@@ -195,6 +202,11 @@ export class Tag extends ModelBase<Tag> {
     return response.data.data.insert_tag.returning.map(
       (data: Tag) => new Tag(data)
     )
+  }
+
+  static async upsertOne(tag: Partial<Tag>) {
+    const tags = await Tag.upsertMany([tag])
+    return tags[0]
   }
 
   async upsertCategorizations(tag_ids: string[]) {
@@ -222,5 +234,13 @@ export class Tag extends ModelBase<Tag> {
       },
     }
     await ModelBase.hasura(query)
+  }
+
+  async addAlternate(alternate: string) {
+    if (alternate != this.name) {
+      this.alternates = this.alternates || []
+      this.alternates?.push(alternate)
+      this.alternates = _.uniq(this.alternates)
+    }
   }
 }
