@@ -1,8 +1,8 @@
 WITH by_country AS (
   SELECT
     (SELECT DISTINCT t.name) AS country,
-    (SELECT icon FROM tag WHERE name = (SELECT DISTINCT t.name)) AS icon,
-    (SELECT id FROM tag WHERE name = (SELECT DISTINCT t.name)) AS tag_id,
+    (SELECT icon FROM tag WHERE name = (SELECT DISTINCT t.name) LIMIT 1) AS icon,
+    (SELECT id FROM tag WHERE name = (SELECT DISTINCT t.name) LIMIT 1) AS tag_id,
     COUNT(restaurant.id) AS frequency,
     AVG(restaurant.rating) AS avg_rating,
     (
