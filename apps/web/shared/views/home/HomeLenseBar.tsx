@@ -29,7 +29,9 @@ export default memo(function HomeLenseBar(props: {
 export function HomeContentTopBar(props: { children: any }) {
   return (
     <ZStack zIndex={10} right={0} left={0} pointerEvents="none">
-      <VStack pointerEvents="auto">{props.children}</VStack>
+      <VStack pointerEvents="auto" spacing="sm">
+        {props.children}
+      </VStack>
       <LinearGradient
         colors={[
           'rgba(255,255,255,0.4)',
@@ -71,7 +73,7 @@ export function HomeLenseBarOnly(props: {
             key={lense.id + index}
             lense={lense}
             isActive={props.activeTagIds[getTagId(lense)]}
-            minimal //={index > 0}
+            // minimal //={index > 0}
           />
         ))}
       </HStack>

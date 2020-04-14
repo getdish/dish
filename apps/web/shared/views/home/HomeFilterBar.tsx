@@ -15,7 +15,7 @@ export default memo(function HomeFilterBar({
 }) {
   const om = useOvermind()
   return (
-    <VStack paddingVertical={4} paddingBottom={6}>
+    <VStack paddingBottom={6}>
       <HStack
         paddingHorizontal={30}
         paddingVertical={2}

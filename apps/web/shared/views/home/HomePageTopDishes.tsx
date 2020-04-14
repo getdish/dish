@@ -29,7 +29,7 @@ export default memoIsEqualDeep(function HomePageTopDIshes({
   return (
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
-      <Spacer size={20} />
+      <Spacer size={18} />
       <VStack position="relative" flex={1}>
         <HomeLenseBar activeTagIds={state.activeTagIds} />
         <HomeViewTopDishesContent />
@@ -56,18 +56,16 @@ const HomeViewTopDishesTrending = memo(() => {
     )
   }
   return (
-    <VStack spacing="xs">
-      <HStack paddingHorizontal={15}>
-        <VStack width="50%" spacing="xs">
-          <SmallerTitle hideDivider>Restaurants</SmallerTitle>
-          <>{allRestaurants.slice(0, 4).map(getTrending)}</>
-        </VStack>
-        <VStack width="50%" spacing="xs">
-          <SmallerTitle hideDivider>Dishes</SmallerTitle>
-          <>{allRestaurants.slice(4, 8).map(getTrending)}</>
-        </VStack>
-      </HStack>
-    </VStack>
+    <HStack paddingHorizontal={25}>
+      <VStack width="50%" spacing="sm">
+        <SmallerTitle hideDivider>Restaurants</SmallerTitle>
+        <>{allRestaurants.slice(0, 4).map(getTrending)}</>
+      </VStack>
+      <VStack width="50%" spacing="sm">
+        <SmallerTitle hideDivider>Dishes</SmallerTitle>
+        <>{allRestaurants.slice(4, 8).map(getTrending)}</>
+      </VStack>
+    </HStack>
   )
 })
 
@@ -115,7 +113,7 @@ const HomeViewTopDishesContent = memo(() => {
   }
   return (
     <ScrollView style={{ flex: 1, overflow: 'hidden' }}>
-      <VStack paddingVertical={20} paddingTop={115} spacing>
+      <VStack paddingVertical={20} paddingTop={95} spacing>
         <SmallTitle
           after={
             <HoverablePopover
@@ -149,8 +147,6 @@ const HomeViewTopDishesContent = memo(() => {
         </SmallTitle>
 
         <HomeViewTopDishesTrending />
-
-        <Spacer />
 
         <>
           {[...results]
