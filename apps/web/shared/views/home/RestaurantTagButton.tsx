@@ -23,7 +23,7 @@ export const RestaurantTagButton = memo(
       <Popover
         overlay
         isOpen={isOpen}
-        onClickOutside={() => setIsOpen(false)}
+        onChangeOpen={setIsOpen}
         position="right"
         contents={
           <Box spacing maxWidth={300}>

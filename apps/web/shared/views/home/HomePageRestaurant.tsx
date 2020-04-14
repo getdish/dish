@@ -26,11 +26,7 @@ import { RestaurantRatingDetail } from './RestaurantRatingDetail'
 import { RestaurantTagButton } from './RestaurantTagButton'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 
-export default memo(function HomePageRestaurant({
-  state,
-}: {
-  state: HomeStateItemRestaurant
-}) {
+export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
   const om = useOvermind()
   if (!state?.restaurantId) {
     return null
@@ -75,7 +71,12 @@ export default memo(function HomePageRestaurant({
                 <Spacer size={12} />
               </VStack>
             </HStack>
-            <Divider />
+
+            <HStack width="100%" alignItems="center">
+              <Divider flex />
+              <RestaurantFavoriteStar restaurant={restaurant} size="lg" />
+              <Divider flex />
+            </HStack>
           </VStack>
 
           <ScrollView style={{ padding: 18, paddingTop: 16, flex: 1 }}>
@@ -91,7 +92,6 @@ export default memo(function HomePageRestaurant({
                 <RestaurantTagsRow size="lg" restaurant={restaurant} />
                 <View style={{ flex: 1 }} />
                 <Spacer />
-                <RestaurantFavoriteStar restaurant={restaurant} size="lg" />
               </HStack>
 
               <HStack paddingVertical={10}>
