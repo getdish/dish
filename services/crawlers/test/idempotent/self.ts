@@ -1,4 +1,4 @@
-import { Restaurant, Scrape, Tag, flushTestData } from '@dish/models'
+import { Restaurant, Scrape, Tag, TagRating, flushTestData } from '@dish/models'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 
 import { Self } from '../../src/self/Self'
@@ -44,7 +44,7 @@ const yelp: Partial<Scrape> = {
         photos: [{ src: '' }],
         rating: 5,
         comment: {
-          text: 'This restaurant had Test tag existing 1 dishes!',
+          text: 'This restaurant had terrible Test tag existing 1 dishes!',
           language: 'en',
         },
         lightboxMediaItems: [
@@ -52,7 +52,7 @@ const yelp: Partial<Scrape> = {
             url: '',
             type: 'photo',
             user: {},
-            caption: 'A photo of Test tag existing 2',
+            caption: 'An amazing photo of Test tag existing 2!',
           },
         ],
       },
@@ -122,7 +122,7 @@ const tripadvisor: Partial<Scrape> = {
     photosp1: [{ src: 'https://tripadvisor.com/image2.jpg' }],
     reviewsp0: [
       {
-        text: 'Test tag existing 3',
+        text: 'Test tag existing 3 was ok',
         rating: 5,
         username: 'tauser',
       },
@@ -268,4 +268,45 @@ test('Finding dishes in reviews', async (t) => {
     updated.tags.map((i) => i.tag.id),
     existing_tag3.id
   )
+})
+
+test('Dish sentiment analysis from reviews', async (t) => {
+  const dish = new Self()
+  const tag = { name: 'Test country' }
+  const tag_parent = new Tag(tag)
+  await tag_parent.insert()
+  const existing_tag1 = new Tag({
+    name: 'Test tag existing 1',
+    parentId: tag_parent.id,
+  })
+  const existing_tag2 = new Tag({
+    name: 'Test tag existing 2',
+    parentId: tag_parent.id,
+  })
+  const existing_tag3 = new Tag({
+    name: 'Test tag existing 3',
+    parentId: tag_parent.id,
+  })
+  await t.context.restaurant.upsertTags([tag])
+  await t.context.restaurant.findOne('id', t.context.restaurant.id)
+  dish.restaurant = t.context.restaurant
+  await dish.getScrapeData()
+  await existing_tag1.insert()
+  await existing_tag2.insert()
+  await existing_tag3.insert()
+  await dish.scanReviews()
+  const updated = new Restaurant()
+  await updated.findOne('id', t.context.restaurant.id)
+  const tag1 =
+    updated.tag_ratings.find((i) => i.id == existing_tag1.id) ||
+    ({} as TagRating)
+  const tag2 =
+    updated.tag_ratings.find((i) => i.id == existing_tag2.id) ||
+    ({} as TagRating)
+  const tag3 =
+    updated.tag_ratings.find((i) => i.id == existing_tag3.id) ||
+    ({} as TagRating)
+  t.is(tag1.rating, -3)
+  t.is(tag2.rating, 4)
+  t.is(tag3.rating, 0)
 })

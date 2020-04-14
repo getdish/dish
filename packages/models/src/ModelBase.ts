@@ -245,6 +245,10 @@ export class ModelBase<T> {
     return response
   }
 
+  async refresh() {
+    await this.findOneByHash({ id: this.id })
+  }
+
   async insert() {
     const query = {
       mutation: {

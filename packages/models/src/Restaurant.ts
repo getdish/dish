@@ -55,6 +55,13 @@ export type RatingFactors = {
   ambience: number
 }
 
+export type TagRating = {
+  id: string
+  rating: number
+  slug: string
+  name: string
+}
+
 export class Restaurant extends ModelBase<Restaurant> {
   name!: string
   slug!: string
@@ -70,6 +77,7 @@ export class Restaurant extends ModelBase<Restaurant> {
   tags!: { tag: Tag }[]
   tag_names!: string[]
   tag_rankings!: (string | number)[][]
+  tag_ratings!: TagRating[]
   photos?: string[]
   telephone!: string
   website!: string
@@ -99,6 +107,7 @@ export class Restaurant extends ModelBase<Restaurant> {
       'tags',
       'tag_names',
       'tag_rankings',
+      'tag_ratings',
       'photos',
       'telephone',
       'website',
@@ -342,6 +351,37 @@ export class Restaurant extends ModelBase<Restaurant> {
     await ModelBase.hasura(query)
   }
 
+  async _upsertTagRatings(tag_ratings: TagRating[]) {
+    const objects = tag_ratings.map((tag) => {
+      return {
+        restaurant_id: this.id,
+        tag_id: tag.id,
+        rating: tag.rating,
+      }
+    })
+    const query = {
+      mutation: {
+        ['insert_restaurant_tag']: {
+          __args: {
+            objects: objects,
+            on_conflict: {
+              constraint: new EnumType('restaurant_tag_pkey'),
+              update_columns: [
+                new EnumType('restaurant_id'),
+                new EnumType('tag_id'),
+                new EnumType('rating'),
+              ],
+            },
+          },
+          returning: { tag_id: true, rating: true },
+        },
+      },
+    }
+    await ModelBase.hasura(query)
+    this.tag_ratings = tag_ratings
+    await this.update()
+  }
+
   async delete() {
     await Restaurant.deleteAllBy('id', this.id)
   }
@@ -364,7 +404,7 @@ export class Restaurant extends ModelBase<Restaurant> {
     })
   }
 
-  async allPossibleDishes() {
+  async allPossibleTags() {
     return await Tag.allChildren(this.tags.map((i) => i.tag.id))
   }
 }

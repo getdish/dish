@@ -1,0 +1,22 @@
+- args:
+    role: contributor
+    table:
+      name: restaurant_tag
+      schema: public
+  type: drop_update_permission
+- args:
+    permission:
+      columns:
+      - rating
+      - restaurant_id
+      - tag_id
+      filter: {}
+      localPresets:
+      - key: ""
+        value: ""
+      set: {}
+    role: contributor
+    table:
+      name: restaurant_tag
+      schema: public
+  type: create_update_permission

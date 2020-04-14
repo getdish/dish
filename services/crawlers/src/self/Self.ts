@@ -1,10 +1,18 @@
 import '@dish/common'
 
-import { Dish, Restaurant, Scrape, ScrapeData } from '@dish/models'
+import {
+  Dish,
+  Restaurant,
+  Scrape,
+  ScrapeData,
+  Tag,
+  TagRating,
+} from '@dish/models'
 import { WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
 import _ from 'lodash'
+import Sentiment from 'sentiment'
 
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
 import { sql } from '../utils'
@@ -33,6 +41,9 @@ export class Self extends WorkerJob {
   tripadvisor!: Scrape
   restaurant!: Restaurant
   ratings!: { [key: string]: number }
+  restaurant_tag_ratings!: {
+    [key: string]: { slug: string; name: string; ratings: number[] }
+  }
 
   static queue_config: QueueOptions = {
     limiter: {
@@ -379,8 +390,10 @@ export class Self extends WorkerJob {
   }
 
   async scanReviews() {
+    this.restaurant_tag_ratings = {}
     await this._scanYelpReviewsForTags()
     await this._scanTripadvisorReviewsForTags()
+    await this._averageAndPersistTagRatings()
   }
 
   getPaginatedData(data: ScrapeData, type: 'photos' | 'reviews') {
@@ -419,14 +432,47 @@ export class Self extends WorkerJob {
   }
 
   async findDishesInText(text: string) {
-    const dishes = await this.restaurant.allPossibleDishes()
-    for (const dish of dishes) {
-      const tag_name = dish.name
-      const regex = new RegExp(`\\b${tag_name}\\b`)
-      if (regex.test(text)) {
-        this.restaurant.upsertTags([{ name: tag_name }])
-      }
+    const tags = await this.restaurant.allPossibleTags()
+    for (const tag of tags) {
+      if (!this._doesStringContainTag(text, tag.name)) continue
+      this.restaurant.upsertTags([tag])
+      this.measureSentiment(text, tag)
     }
+  }
+
+  _doesStringContainTag(text: string, tag_name: string) {
+    const regex = new RegExp(`\\b${tag_name}\\b`)
+    return regex.test(text)
+  }
+
+  measureSentiment(text: string, tag: Tag) {
+    const sentiment = new Sentiment()
+    const sentences = text.match(/[^\.!\?]+[\.!\?]+/g) || [text]
+    for (const sentence of sentences) {
+      if (!this._doesStringContainTag(sentence, tag.name)) continue
+      const rating = sentiment.analyze(sentence).score
+      this.restaurant_tag_ratings[tag.id] =
+        this.restaurant_tag_ratings[tag.id] || {}
+      this.restaurant_tag_ratings[tag.id] = {
+        name: tag.name,
+        slug: tag.slug(),
+        ratings: this.restaurant_tag_ratings[tag.id].ratings || [],
+      }
+      this.restaurant_tag_ratings[tag.id].ratings.push(rating)
+    }
+  }
+
+  async _averageAndPersistTagRatings() {
+    let tag_ratings_averaged: TagRating[] = []
+    for (const tag_id of Object.keys(this.restaurant_tag_ratings)) {
+      tag_ratings_averaged.push({
+        id: tag_id,
+        name: this.restaurant_tag_ratings[tag_id].name,
+        rating: _.mean(this.restaurant_tag_ratings[tag_id].ratings),
+        slug: this.restaurant_tag_ratings[tag_id].slug,
+      })
+    }
+    await this.restaurant._upsertTagRatings(tag_ratings_averaged)
   }
 
   getRatingFactors() {

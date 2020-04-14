@@ -1,0 +1,19 @@
+- args:
+    role: contributor
+    table:
+      name: restaurant_tag
+      schema: public
+  type: drop_select_permission
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - restaurant_id
+      - tag_id
+      computed_fields: []
+      filter: {}
+    role: contributor
+    table:
+      name: restaurant_tag
+      schema: public
+  type: create_select_permission
