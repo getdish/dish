@@ -982,7 +982,7 @@ const _runHomeSearch: AsyncAction<string> = async (om, query) => {
   om.state.home.topDishesFilteredIndices = res
 }
 
-const setTagInactiveFn = async (om: Om, val: NavigableTag) => {
+const setTagInactiveFn = (om: Om, val: NavigableTag) => {
   const state = om.state.home.currentState
   if (state.type != 'home' && state.type != 'search') return
   delete state.activeTagIds[getTagId(val)]
@@ -990,12 +990,6 @@ const setTagInactiveFn = async (om: Om, val: NavigableTag) => {
 
 const setTagActiveFn = async (om: Om, val: NavigableTag) => {
   let state = om.state.home.currentState
-  if (state.type === 'home' && isSearchBarTag(val)) {
-    // navigate to search
-    await om.actions.home._syncStateToRoute()
-  }
-  state = om.state.home.currentState
-
   // push to search on adding lense
   if (state.type === 'home' && isSearchBarTag(val)) {
     // don't set it active!
@@ -1006,8 +1000,10 @@ const setTagActiveFn = async (om: Om, val: NavigableTag) => {
     state = om.state.home.currentState
     console.log('on search now?', state)
   }
-
-  if (state.type == 'search') {
+  if (
+    state.type == 'search' ||
+    (state.type === 'home' && !isSearchBarTag(val))
+  ) {
     state.activeTagIds[getTagId(val)] = true
   }
 }
@@ -1033,7 +1029,7 @@ const toggleTagActive: AsyncAction<NavigableTag> = async (om, val) => {
   const state = om.state.home.currentState
   if (state.type != 'home' && state.type != 'search') return
   if (state.activeTagIds[getTagId(val)]) {
-    await setTagInactiveFn(om, val)
+    setTagInactiveFn(om, val)
   } else {
     await setTagActiveFn(om, val)
   }
@@ -1041,10 +1037,7 @@ const toggleTagActive: AsyncAction<NavigableTag> = async (om, val) => {
 }
 
 const replaceActiveTagOfType: AsyncAction<NavigableTag> = async (om, val) => {
-  if (!val) {
-    console.trace('no tag')
-    return
-  }
+  if (!val) return
   const state = om.state.home.currentState
   if (state.type != 'home' && state.type != 'search') return
   const existing = Object.keys(state.activeTagIds)
@@ -1052,7 +1045,7 @@ const replaceActiveTagOfType: AsyncAction<NavigableTag> = async (om, val) => {
     .filter(Boolean)
     .find((x) => x.type === val.type)
   if (existing) {
-    await setTagInactiveFn(om, existing)
+    setTagInactiveFn(om, existing)
   }
   await setTagActiveFn(om, val)
   await om.actions.home._handleTagChange()
