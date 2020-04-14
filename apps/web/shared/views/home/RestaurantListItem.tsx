@@ -122,7 +122,7 @@ export const RestaurantListItem = ({
             <Spacer size="sm" />
             <RestaurantDetailRow size="sm" restaurant={restaurant} />
 
-            {!!om.state.user.isLoggedIn && (
+            {om.state.router.curPage.name === 'userSearch' && (
               <RestaurantAddComment restaurant={restaurant} />
             )}
           </VStack>
