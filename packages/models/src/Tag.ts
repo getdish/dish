@@ -14,6 +14,7 @@ export type TagType =
   | 'restaurant'
   | 'category'
   | 'orphan'
+
 export type TagRecord = Partial<Tag> & Pick<Tag, 'type'>
 
 export class Tag extends ModelBase<Tag> {

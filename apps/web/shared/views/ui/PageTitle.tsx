@@ -4,31 +4,46 @@ import { Text } from 'react-native'
 import { Divider } from './Divider'
 import { StackBaseProps, VStack } from './Stacks'
 
-export const PageTitle = memo(({ children, ...rest }: StackBaseProps) => {
-  return (
-    <>
+export const PageTitle = memo(
+  ({ children, subTitle, ...rest }: StackBaseProps & { subTitle?: any }) => {
+    return (
       <VStack
         width="100%"
+        minHeight={68}
+        paddingVertical={12}
         alignItems="center"
-        paddingVertical={10}
-        paddingTop={7}
+        justifyContent="center"
         {...rest}
       >
         <Text
+          numberOfLines={1}
           style={{
-            // textTransform: 'uppercase',
-            // letterSpacing: 4,
+            maxWidth: '80%',
+            textAlign: 'center',
             opacity: 1,
-            fontSize: 17,
-            fontWeight: '500',
-            // letterSpacing: -0.111,
-            paddingBottom: 10,
+            fontSize: 22,
+            lineHeight: 25,
+            fontWeight: '300',
           }}
         >
           {children}
+          {!!subTitle && (
+            <Text
+              numberOfLines={1}
+              style={{
+                display: 'block',
+                textAlign: 'center',
+                width: '100%',
+                color: '#666',
+                fontSize: 18,
+              }}
+            >
+              {subTitle}
+            </Text>
+          )}
         </Text>
-        <Divider />
+        {/* <Divider alignSelf="flex-end" /> */}
       </VStack>
-    </>
-  )
-})
+    )
+  }
+)

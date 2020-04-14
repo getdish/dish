@@ -31,7 +31,7 @@ export default memoIsEqualDeep(function HomePageTopDIshes({
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
       <Spacer size={20} />
       <VStack position="relative" flex={1}>
-        <HomeLenseBar activeTagIds={state.activeTagIds} backgroundGradient />
+        <HomeLenseBar activeTagIds={state.activeTagIds} />
         <HomeViewTopDishesContent />
       </VStack>
     </>

@@ -97,9 +97,10 @@ export default memo(function HomeSearchBar() {
   }
 
   const handleCancel = useCallback(() => {
-    setTimeout(() => {
-      input.focus()
-    }, 100)
+    om.actions.home.setShowAutocomplete(false)
+    // setTimeout(() => {
+    //   input.focus()
+    // }, 100)
   }, [input])
 
   useEffect(() => {
@@ -458,7 +459,7 @@ export default memo(function HomeSearchBar() {
   )
 })
 
-const SearchCancelButton = memo(({ onCancel }: { onCancel: Function }) => {
+const SearchCancelButton = memo(({ onCancel }: { onCancel?: Function }) => {
   const om = useOvermind()
   return (
     <CloseButton
@@ -466,7 +467,7 @@ const SearchCancelButton = memo(({ onCancel }: { onCancel: Function }) => {
       disabled={om.state.home.currentStateSearchQuery === ''}
       onPress={() => {
         om.actions.home.setSearchQuery('')
-        onCancel()
+        onCancel?.()
         // if (om.state.home.currentState.type === 'search') {
         //   om.actions.home.popTo(om.state.home.lastHomeState)
         // }

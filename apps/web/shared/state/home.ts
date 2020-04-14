@@ -205,7 +205,7 @@ export type HomeState = HomeStateBase & {
   searchBarTags: Derive<HomeState, Tag[]>
 }
 
-const isSearchBarTag = (tag: Pick<Tag, 'type'>) => tag.type === 'country'
+const isSearchBarTag = (tag: Pick<Tag, 'type'>) => tag?.type === 'country'
 
 export const state: HomeState = {
   started: false,
@@ -280,9 +280,9 @@ export const state: HomeState = {
       state.states,
       (x) => x.type === 'home' || x.type === 'search'
     ) as HomeStateItemSearch | HomeStateItemHome
-    return Object.keys(lastTaggable.activeTagIds).map(
-      (id) => state.allTags[id]
-    ) as Tag[]
+    return Object.keys(lastTaggable.activeTagIds)
+      .map((id) => state.allTags[id])
+      .filter(Boolean) as Tag[]
   },
 }
 
@@ -566,7 +566,7 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   if (isOnHome) {
     // we will load the search results with more debounce in next lines
     om.state.home.skipNextPageFetchData = true
-    await om.actions.home._syncStateToRoute(query)
+    await om.actions.home._syncStateToRoute({ ...state, searchQuery: query })
   }
 
   // AUTOCOMPLETE
@@ -995,10 +995,19 @@ const setTagActiveFn = async (om: Om, val: NavigableTag) => {
     await om.actions.home._syncStateToRoute()
   }
   state = om.state.home.currentState
-  if (state.type === 'home') {
+
+  // push to search on adding lense
+  if (state.type === 'home' && isSearchBarTag(val)) {
     // don't set it active!
-    console.warn('setting home tag?')
-  } else if (state.type == 'search') {
+    await om.actions.home._syncStateToRoute({
+      ...state,
+      activeTagIds: { ...state.activeTagIds, [val.id]: true },
+    })
+    state = om.state.home.currentState
+    console.log('on search now?', state)
+  }
+
+  if (state.type == 'search') {
     state.activeTagIds[getTagId(val)] = true
   }
 }
@@ -1105,9 +1114,9 @@ function getTagRouteParams(om: IContext<Config>): { [key: string]: string } {
   const params: any = {
     location: 'here',
   }
-  const lense = slugify(allActiveTags.find((x) => x.type === 'lense')?.name)
-  if (lense) {
-    params.lense = lense
+  const lenseTag = allActiveTags.find((x) => x.type === 'lense')?.name ?? ''
+  if (lenseTag) {
+    params.lense = slugify(lenseTag)
   }
   if (tags.length) {
     params.tags = tags
@@ -1129,17 +1138,17 @@ const _handleTagChange: AsyncAction = async (om) => {
 
 const requestLocation: Action = (om) => {}
 
-const _syncStateToRoute: AsyncAction<string | void> = async (
+const _syncStateToRoute: AsyncAction<HomeStateItem | void> = async (
   om,
-  nextQuery = om.state.home.currentStateSearchQuery
+  state
 ) => {
-  const state = om.state.home.currentState
+  state = state || om.state.home.currentState
 
   if (state.type === 'home') {
     const tags = Object.keys(state.activeTagIds).map(
       (x) => om.state.home.allTags[x]
     )
-    if (nextQuery === '' && tags.every((tag) => !isSearchBarTag(tag))) {
+    if (state.searchQuery === '' && tags.every((tag) => !isSearchBarTag(tag))) {
       console.log('avoid route update on home')
       // no need to nav off home unless we add a lense
       return
@@ -1154,10 +1163,10 @@ const _syncStateToRoute: AsyncAction<string | void> = async (
 
   if (
     isOnSearch &&
-    nextQuery === '' &&
+    state.searchQuery === '' &&
     om.state.home.searchBarTags.length === 0
   ) {
-    console.log(`back to home then, nextQuery: ${nextQuery}`)
+    console.log(`back to home then, nextQuery: ${state.searchQuery}`)
     om.actions.home.popTo(om.state.home.lastHomeState)
     return
   }

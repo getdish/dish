@@ -1,9 +1,9 @@
 import React, { memo } from 'react'
-import { TouchableOpacity } from 'react-native'
+import { GestureResponderEvent, TouchableOpacity } from 'react-native'
 
 import { Circle } from '../ui/Circle'
 import { Icon } from '../ui/Icon'
-import { StackBaseProps } from '../ui/Stacks'
+import { HStack, StackBaseProps } from '../ui/Stacks'
 
 type CircleButtonProps = {
   onPress: any
@@ -28,12 +28,17 @@ export const BackButton = memo((props: CircleButtonProps) => {
 })
 
 export const SmallCircleButton = memo(
-  ({ onPress, size = 14, disabled, ...rest }: CircleButtonProps) => {
+  ({
+    onPress,
+    disabled,
+    ...rest
+  }: StackBaseProps & { onPress?: (event: GestureResponderEvent) => void }) => {
     return (
       <TouchableOpacity onPress={onPress} disabled={disabled}>
-        <Circle
-          size={size * 1.45}
+        <HStack
+          borderRadius={1000}
           backgroundColor="#ccc"
+          padding={5}
           {...rest}
           hoverStyle={{ backgroundColor: '#999', ...rest.hoverStyle }}
         />
