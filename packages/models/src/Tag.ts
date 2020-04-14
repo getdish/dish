@@ -27,6 +27,7 @@ export class Tag extends ModelBase<Tag> {
   parent!: Tag
   categories!: { category: Tag }[]
   is_ambiguous!: boolean
+  misc!: { [key: string]: any }
 
   constructor(init?: Partial<Tag>) {
     super()
@@ -53,6 +54,7 @@ export class Tag extends ModelBase<Tag> {
       'parent',
       'categories',
       'is_ambiguous',
+      'misc',
     ]
   }
 
@@ -64,6 +66,7 @@ export class Tag extends ModelBase<Tag> {
       rgb: true,
       id: true,
       is_ambiguous: true,
+      misc: true,
     }
   }
 
