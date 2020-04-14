@@ -1,10 +1,10 @@
 import React, { memo, useState } from 'react'
 import { ScrollView, Text, View } from 'react-native'
 
-import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItemSearch } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { getTagId } from '../../state/Tag'
+import { Toast } from '../Toast'
 import { Icon } from '../ui/Icon'
 import { PageTitle } from '../ui/PageTitle'
 import { PageTitleTag } from '../ui/PageTitleTag'
@@ -28,29 +28,15 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
     (tag) =>
       tag.type === 'dish' || tag.type === 'country' || tag.name === 'Delivers'
   )
-  const title = `Top ${titleTags.map((x) => x.name).join(', ')} ${
-    state.searchQuery ?? ''
-  } Restaurants`
+  const title = `Top ${titleTags
+    .map((x) => x.name)
+    .join(', ')} ${state.searchQuery ?? ''} Restaurants`
 
   const isOnUserList = om.state.router.curPage.name === 'userSearch'
 
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>
-      <ZStack
-        left={10}
-        top={10}
-        justifyContent="center"
-        pointerEvents="auto"
-        zIndex={100}
-      >
-        <HStack spacing="sm" alignItems="center">
-          <BackButton
-            onPress={() => om.actions.home.popTo(om.state.home.lastHomeState)}
-          />
-        </HStack>
-      </ZStack>
-
       <ZStack
         right={10}
         top={10}
@@ -59,23 +45,28 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
         zIndex={100}
       >
         <HStack spacing="sm" alignItems="center">
+          <CloseButton
+            onPress={() => om.actions.home.popTo(om.state.home.lastHomeState)}
+          />
+        </HStack>
+      </ZStack>
+
+      <ZStack
+        left={10}
+        top={10}
+        justifyContent="center"
+        pointerEvents="auto"
+        zIndex={100}
+      >
+        <HStack spacing="sm" alignItems="center">
           {isOnUserList && (
             <SmallCircleButton
               onPress={() => {
-                om.actions.home.forkCurrentList()
-              }}
-            >
-              <Icon name="x" size={12} color="white" />
-            </SmallCircleButton>
-          )}
-          {isOnUserList && (
-            <SmallCircleButton
-              onPress={() => {
-                om.actions.home.forkCurrentList()
+                Toast.show('Saved')
               }}
               paddingHorizontal={12}
             >
-              <Text>Save</Text>
+              <Text style={{ color: 'white' }}>Save</Text>
             </SmallCircleButton>
           )}
           {!isOnUserList && (

@@ -21,9 +21,9 @@ export const PageTitle = memo(
             maxWidth: '80%',
             textAlign: 'center',
             opacity: 1,
-            fontSize: 22,
-            lineHeight: 25,
-            fontWeight: '300',
+            fontSize: 20,
+            lineHeight: 26,
+            fontWeight: '400',
           }}
         >
           {children}
@@ -35,7 +35,8 @@ export const PageTitle = memo(
                 textAlign: 'center',
                 width: '100%',
                 color: '#666',
-                fontSize: 18,
+                fontSize: 16,
+                fontWeight: '300',
               }}
             >
               {subTitle}
