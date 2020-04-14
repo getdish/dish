@@ -1,8 +1,8 @@
 import React, { Children, useState } from 'react'
 import { Text, TouchableOpacity } from 'react-native'
 
-import Hoverable from '../shared/Hoverable'
-import { HStack, StackBaseProps, VStack } from '../shared/Stacks'
+import Hoverable from '../ui/Hoverable'
+import { HStack, StackBaseProps, VStack } from '../ui/Stacks'
 
 export const HoverableButton = ({
   onPress,

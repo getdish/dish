@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, TextStyle } from 'react-native'
 
-import { HStack, StackBaseProps, VStack } from '../shared/Stacks'
+import { HStack, StackBaseProps, VStack } from '../ui/Stacks'
 
 export function TableRow(props: StackBaseProps) {
   return <HStack {...props} />

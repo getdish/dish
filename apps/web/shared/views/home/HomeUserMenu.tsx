@@ -1,15 +1,16 @@
+import { slugify } from '@dish/models'
 import React, { memo } from 'react'
 import { Text } from 'react-native'
 import { useStorageState } from 'react-storage-hooks'
 
 import { useOvermind } from '../../state/om'
 import { AuthLoginRegisterView } from '../auth/AuthLoginRegisterView'
-import { Box } from '../shared/Box'
-import { Divider } from '../shared/Divider'
-import { Icon } from '../shared/Icon'
-import { LinkButton } from '../shared/Link'
-import { Popover } from '../shared/Popover'
-import { HStack, VStack } from '../shared/Stacks'
+import { Box } from '../ui/Box'
+import { Divider } from '../ui/Divider'
+import { Icon } from '../ui/Icon'
+import { LinkButton } from '../ui/Link'
+import { Popover } from '../ui/Popover'
+import { HStack, VStack } from '../ui/Stacks'
 import { flatButtonStyle } from './baseButtonStyle'
 
 export const HomeUserMenu = memo(() => {
@@ -44,10 +45,10 @@ export const HomeUserMenu = memo(() => {
             <VStack spacing>
               <LinkButton
                 {...flatButtonStyle}
-                name="account"
-                params={{ id: 'reviews', pane: 'list' }}
+                name="user"
+                params={{ username: slugify(om.state.user.user.username) }}
               >
-                Reviews
+                Profile
               </LinkButton>
               <Divider />
               <LinkButton

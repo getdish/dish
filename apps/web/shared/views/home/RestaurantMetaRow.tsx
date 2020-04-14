@@ -2,8 +2,8 @@ import { Restaurant } from '@dish/models'
 import React, { memo } from 'react'
 import { Image, Linking, Text } from 'react-native'
 
-import { Link } from '../shared/Link'
-import { HStack } from '../shared/Stacks'
+import { Link } from '../ui/Link'
+import { HStack } from '../ui/Stacks'
 
 export const RestaurantMetaRow = memo(
   ({

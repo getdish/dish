@@ -3,10 +3,10 @@ import { Text } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { Tag } from '../../state/Tag'
-import { Box } from '../shared/Box'
-import { HoverablePopover } from '../shared/HoverablePopover'
-import { LinkButton } from '../shared/Link'
-import { HStack } from '../shared/Stacks'
+import { Box } from '../ui/Box'
+import { HoverablePopover } from '../ui/HoverablePopover'
+import { LinkButton } from '../ui/Link'
+import { HStack } from '../ui/Stacks'
 import { bg } from './colors'
 
 export const LenseButton = memo(
@@ -20,9 +20,8 @@ export const LenseButton = memo(
     minimal?: boolean
   }) => {
     const om = useOvermind()
-    const lenseColor = `rgb(${lense.rgb[0] * 255}, ${lense.rgb[1] * 255}, ${
-      lense.rgb[2] * 255
-    })`
+    const lenseColor = `rgb(${lense.rgb[0] * 255}, ${lense.rgb[1] *
+      255}, ${lense.rgb[2] * 255})`
     const buttonContent = (
       <LinkButton
         onPress={() => {

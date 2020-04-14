@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Button } from 'react-native'
 
-import { ZStack } from './shared/Stacks'
 import { Toast } from './Toast'
+import { ZStack } from './ui/Stacks'
 
 export class ErrorBoundary extends Component<{
   name: string

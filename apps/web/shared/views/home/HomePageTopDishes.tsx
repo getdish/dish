@@ -1,28 +1,27 @@
 import { Dish, Restaurant, TopDish } from '@dish/models'
 import _ from 'lodash'
 import React, { memo, useCallback, useState } from 'react'
-import { Image, ScrollView, Text, View } from 'react-native'
+import { Image, ScrollView, Text } from 'react-native'
 
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
-import { HomeStateItemHome, HomeStateItemSimple } from '../../state/home'
+import { HomeStateItemHome } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { RoutesTable } from '../../state/router'
-import { Box } from '../shared/Box'
-import { HoverablePopover } from '../shared/HoverablePopover'
-import { Icon } from '../shared/Icon'
-import { LinkButton, LinkButtonProps } from '../shared/Link'
-import { PageTitleTag } from '../shared/PageTitleTag'
-import { SmallTitle, SmallerTitle } from '../shared/SmallTitle'
-import { Spacer } from '../shared/Spacer'
-import { HStack, StackBaseProps, VStack, ZStack } from '../shared/Stacks'
+import { Box } from '../ui/Box'
+import { HoverablePopover } from '../ui/HoverablePopover'
+import { Icon } from '../ui/Icon'
+import { LinkButton, LinkButtonProps } from '../ui/Link'
+import { PageTitleTag } from '../ui/PageTitleTag'
+import { SmallTitle, SmallerTitle } from '../ui/SmallTitle'
+import { Spacer } from '../ui/Spacer'
+import { HStack, StackBaseProps, VStack, ZStack } from '../ui/Stacks'
 import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
 import { bgLightLight } from './colors'
 import HomeLenseBar from './HomeLenseBar'
-import { RankingView } from './RankingView'
 import { RatingView } from './RatingView'
 import { SmallButton } from './SmallButton'
 
-export default memoIsEqualDeep(function HomeViewTopDishes({
+export default memoIsEqualDeep(function HomePageTopDIshes({
   state,
 }: {
   state: HomeStateItemHome

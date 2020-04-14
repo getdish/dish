@@ -7,14 +7,25 @@ import queryString from 'query-string'
 
 import { race } from '../helpers/race'
 
-class Route<A extends Object | void = void> {
-  constructor(public path: string, public params?: A) {}
+// we could enable functionality like this
+export type LoadableView = React.SFC & {
+  fetchData: (params: HistoryItem) => Promise<any>
+}
+
+export type PageRouteView = LoadableView | Promise<LoadableView>
+
+export class Route<A extends Object | void = void> {
+  constructor(
+    public path: string,
+    public page?: PageRouteView,
+    public params?: A
+  ) {}
 }
 
 export const routes = {
   home: new Route('/'),
   restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
-  user: new Route<{ id: string; pane: string }>('/user/:id/:pane'),
+  user: new Route<{ username: string; pane?: string }>('/u/:username/:pane?'),
   login: new Route('/login'),
   register: new Route('/register'),
   forgotPassword: new Route('/forgot-password'),

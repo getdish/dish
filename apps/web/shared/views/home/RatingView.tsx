@@ -2,8 +2,8 @@ import { Restaurant } from '@dish/models'
 import React, { forwardRef } from 'react'
 import { Text } from 'react-native'
 
-import { ProgressCircle } from '../shared/ProgressCircle'
-import { StackBaseProps, VStack } from '../shared/Stacks'
+import { ProgressCircle } from '../ui/ProgressCircle'
+import { StackBaseProps, VStack } from '../ui/Stacks'
 
 export type RatingViewProps = StackBaseProps & {
   size: 'lg' | 'md' | 'sm'

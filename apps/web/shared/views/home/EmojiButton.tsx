@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, TouchableOpacity } from 'react-native'
 
-import { Circle } from '../shared/Circle'
+import { Circle } from '../ui/Circle'
 
 export const EmojiButton = ({
   active,

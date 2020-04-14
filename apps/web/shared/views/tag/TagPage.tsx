@@ -18,8 +18,8 @@ import {
   View,
 } from 'react-native'
 
-import { HStack, VStack } from '../shared/Stacks'
-import Tappable from '../shared/Tappable'
+import { HStack, VStack } from '../ui/Stacks'
+import Tappable from '../ui/Tappable'
 
 const CONTINENTS_SUBSCRIPTION = gql`
 subscription Tag {

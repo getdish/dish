@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Button, Image, Text, TextInput, View } from 'react-native'
 
 import { useOvermind } from '../../state/om'
-import { Link } from '../shared/Link'
-import { HStack, VStack } from '../shared/Stacks'
+import { Link } from '../ui/Link'
+import { HStack, VStack } from '../ui/Stacks'
 import { textStyles } from './textStyles'
 
 export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {

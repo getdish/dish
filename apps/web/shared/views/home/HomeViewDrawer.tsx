@@ -3,8 +3,8 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 
 import { drawerBorderRadius, drawerPad, drawerPadLeft } from '../../constants'
-import { Spacer } from '../shared/Spacer'
-import { HStack, VStack, ZStack } from '../shared/Stacks'
+import { Spacer } from '../ui/Spacer'
+import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 const colors = [

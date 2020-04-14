@@ -21,7 +21,7 @@ export const getTagId = (tag: NavigableTag) => {
 export const tagLenses: Tag[] = [
   {
     id: '0',
-    name: 'Unique Here',
+    name: 'Unique',
     icon: '⭐️',
     rgb: [0.8, 0.1, 0.1],
     description: 'Uniquely good',
@@ -32,7 +32,7 @@ export const tagLenses: Tag[] = [
     name: 'Talk',
     icon: '👩‍🍳',
     rgb: [0.6, 0.1, 0.5],
-    description: 'Peoples Favorites',
+    description: 'Top voted',
     type: 'lense',
     isVotable: true,
   },

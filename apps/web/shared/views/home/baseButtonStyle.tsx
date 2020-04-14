@@ -1,4 +1,4 @@
-import { StackBaseProps } from '../shared/Stacks'
+import { StackBaseProps } from '../ui/Stacks'
 import { bgLight, bgLightHover } from './colors'
 
 export const baseButtonStyle: StackBaseProps = {

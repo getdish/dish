@@ -3,8 +3,8 @@ import { ScrollView, Text } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { Tag, getTagId } from '../../state/Tag'
-import { LinkButton } from '../shared/Link'
-import { HStack, StackBaseProps, VStack } from '../shared/Stacks'
+import { LinkButton } from '../ui/Link'
+import { HStack, StackBaseProps, VStack } from '../ui/Stacks'
 import { bg, bgHover } from './colors'
 import { SmallButton } from './SmallButton'
 
