@@ -153,13 +153,16 @@ const HomeViewTopDishesContent = memo(() => {
         <Spacer />
 
         <>
-          {results.map((country, index) => (
-            <CountryTopDishesAndRestaurants
-              key={country.country}
-              country={country}
-              rank={index + 1}
-            />
-          ))}
+          {[...results]
+            // for now force japanese at top because its most filled out
+            .sort((x) => (x.country === 'Japanese' ? -1 : 1))
+            .map((country, index) => (
+              <CountryTopDishesAndRestaurants
+                key={country.country}
+                country={country}
+                rank={index + 1}
+              />
+            ))}
         </>
       </VStack>
     </ScrollView>

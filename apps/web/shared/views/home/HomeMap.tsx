@@ -21,7 +21,7 @@ export function centerMapToRegion(p: {
   const region = new mapkit.CoordinateRegion(newCenter, coordspan)
   try {
     p.map?.setRegionAnimated(region)
-  } catch(err) {
+  } catch (err) {
     console.error(err)
   }
 }
@@ -192,7 +192,7 @@ export const HomeMap = memo(() => {
     // equivalent to map.pauseAnimation() i think?
     try {
       map?.setRegionAnimated(map?.region, false)
-    } catch(err) {
+    } catch (err) {
       console.error(err)
     }
   }, [map, restaurantsVersion])
