@@ -4,8 +4,8 @@ import { StyleSheet } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { useOvermind } from '../../state/om'
-import { LinkButton } from '../shared/Link'
-import { HStack, ZStack } from '../shared/Stacks'
+import { LinkButton } from '../ui/Link'
+import { HStack, ZStack } from '../ui/Stacks'
 import {
   circularFlatButtonStyle,
   flatButtonStyle,

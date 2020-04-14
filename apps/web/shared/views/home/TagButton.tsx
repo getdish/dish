@@ -2,8 +2,8 @@ import { Tag } from '@dish/models'
 import React, { memo } from 'react'
 import { Text, TextStyle, View } from 'react-native'
 
-import { Icon } from '../shared/Icon'
-import { HStack, StackBaseProps } from '../shared/Stacks'
+import { Icon } from '../ui/Icon'
+import { HStack, StackBaseProps } from '../ui/Stacks'
 import { HoverableButton } from './HoverableButton'
 import { SuperScriptText } from './SuperScriptText'
 

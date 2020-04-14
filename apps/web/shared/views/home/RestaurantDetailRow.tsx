@@ -2,8 +2,8 @@ import { Restaurant } from '@dish/models'
 import React, { memo } from 'react'
 import { StyleSheet, Text } from 'react-native'
 
-import { Divider } from '../shared/Divider'
-import { HStack, StackBaseProps, VStack } from '../shared/Stacks'
+import { Divider } from '../ui/Divider'
+import { HStack, StackBaseProps, VStack } from '../ui/Stacks'
 
 export const RestaurantDetailRow = memo(
   ({

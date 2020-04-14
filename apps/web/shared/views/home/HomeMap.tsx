@@ -7,7 +7,7 @@ import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { LngLat, setMapView } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Map, useMap } from '../map'
-import { ZStack } from '../shared/Stacks'
+import { ZStack } from '../ui/Stacks'
 import { getRankingColor, getRestaurantRating } from './RatingView'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 

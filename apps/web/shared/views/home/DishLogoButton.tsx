@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image } from 'react-native'
 
-import { LinkButton } from '../shared/Link'
+import { LinkButton } from '../ui/Link'
 
 export const DishLogoButton = () => {
   const scale = 0.055

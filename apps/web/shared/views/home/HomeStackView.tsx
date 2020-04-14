@@ -5,8 +5,8 @@ import { drawerBorderRadius } from '../../constants'
 import { useDebounceValue } from '../../hooks/useDebounce'
 import { HomeStateItemSimple } from '../../state/home'
 import { useOvermind } from '../../state/om'
-import { ForceShowPopover } from '../shared/Popover'
-import { ZStack } from '../shared/Stacks'
+import { ForceShowPopover } from '../ui/Popover'
+import { ZStack } from '../ui/Stacks'
 
 export function HomeStackView<A extends HomeStateItemSimple>(props: {
   items: A[]

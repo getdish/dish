@@ -5,20 +5,20 @@ import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItemSearch } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { getTagId } from '../../state/Tag'
-import { Icon } from '../shared/Icon'
-import { PageTitle } from '../shared/PageTitle'
-import { PageTitleTag } from '../shared/PageTitleTag'
-import { closeAllPopovers, popoverCloseCbs } from '../shared/Popover'
-import { Spacer } from '../shared/Spacer'
-import { HStack, VStack, ZStack } from '../shared/Stacks'
-import { useWaterfall } from '../shared/useWaterfall'
+import { Icon } from '../ui/Icon'
+import { PageTitle } from '../ui/PageTitle'
+import { PageTitleTag } from '../ui/PageTitleTag'
+import { closeAllPopovers, popoverCloseCbs } from '../ui/Popover'
+import { Spacer } from '../ui/Spacer'
+import { HStack, VStack, ZStack } from '../ui/Stacks'
+import { useWaterfall } from '../ui/useWaterfall'
 import { BackButton, CloseButton, SmallCircleButton } from './CloseButton'
 import HomeLenseBar from './HomeLenseBar'
 import { LoadingItems } from './LoadingItems'
 import { RestaurantListItem } from './RestaurantListItem'
 import { TagButton } from './TagButton'
 
-export default memoIsEqualDeep(function HomeSearchResultsView({
+export default memo(function HomePageSearchResults({
   state,
 }: {
   state: HomeStateItemSearch
@@ -27,13 +27,14 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
   const tags = Object.keys(state.activeTagIds).map(
     (k) => om.state.home.allTags[k]
   )
+  const lense = tags.find((x) => x.type === 'lense')
   const titleTags = tags.filter(
     (tag) =>
       tag.type === 'dish' || tag.type === 'country' || tag.name === 'Delivers'
   )
-  const title = `Top ${titleTags.map((x) => x.name).join(', ')} ${
-    state.searchQuery ?? ''
-  } Restaurants`
+  const title = `Top ${titleTags
+    .map((x) => x.name)
+    .join(', ')} ${state.searchQuery ?? ''} Restaurants`
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>
@@ -68,7 +69,7 @@ export default memoIsEqualDeep(function HomeSearchResultsView({
         </HStack>
       </ZStack>
       <PageTitle height={57}>
-        The best
+        {lense?.description ?? lense?.name}
         {titleTags.map((tag) => (
           <TagButton
             key={getTagId(tag)}

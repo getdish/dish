@@ -1,16 +1,7 @@
 import { useState } from 'react'
 import React, { memo } from 'react'
-import { Text } from 'react-native'
 
-import { Box } from '../shared/Box'
-import { Icon } from '../shared/Icon'
-import { LinkButton } from '../shared/Link'
-import { Popover } from '../shared/Popover'
-import { SmallTitle } from '../shared/SmallTitle'
-import { Spacer } from '../shared/Spacer'
-import { HStack, VStack, ZStack } from '../shared/Stacks'
-import { flatButtonStyle } from './baseButtonStyle'
-import { HomeUserMenu } from './HomeUserMenu'
+import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 export const HomeControlsOverlay = memo(() => {

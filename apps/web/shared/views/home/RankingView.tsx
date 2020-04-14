@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { Text } from 'react-native'
 
-import { StackBaseProps, VStack } from '../shared/Stacks'
+import { StackBaseProps, VStack } from '../ui/Stacks'
 import { SuperScriptText } from './SuperScriptText'
 
 export const RankingView = memo(

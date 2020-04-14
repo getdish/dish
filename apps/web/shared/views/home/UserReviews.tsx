@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Text, View } from 'react-native'
 
 import { useOvermind } from '../../state/om'
-import { Link } from '../shared/Link'
+import { Link } from '../ui/Link'
 
 const styles = {
   container: {},

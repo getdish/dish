@@ -4,7 +4,7 @@ import { ScrollView, StyleSheet } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { getTagId } from '../../state/Tag'
-import { HStack, VStack, ZStack } from '../shared/Stacks'
+import { HStack, VStack, ZStack } from '../ui/Stacks'
 import HomeFilterBar from './HomeFilterBar'
 import { LenseButton } from './LenseButton'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'

@@ -3,11 +3,11 @@ import React, { memo, useLayoutEffect, useState } from 'react'
 import { TextInput, TouchableOpacity } from 'react-native'
 
 import { useOvermind } from '../../state/om'
-import { Link, LinkButton } from '../shared/Link'
-import { HStack, VStack } from '../shared/Stacks'
 import { Toast } from '../Toast'
+import { Link, LinkButton } from '../ui/Link'
+import { HStack, VStack } from '../ui/Stacks'
 import { flatButtonStyle } from './baseButtonStyle'
-import { Quote } from './HomeRestaurantView'
+import { Quote } from './HomePageRestaurant'
 
 export const RestaurantAddComment = memo(
   ({ restaurant }: { restaurant: Restaurant }) => {

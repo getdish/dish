@@ -3,9 +3,9 @@ import { useLayoutEffect, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 
 import { isSSR } from '../constants'
-import { Box } from './shared/Box'
-import { StackBaseProps, ZStack } from './shared/Stacks'
-import { useOverlay } from './shared/useOverlay'
+import { Box } from './ui/Box'
+import { StackBaseProps, ZStack } from './ui/Stacks'
+import { useOverlay } from './ui/useOverlay'
 
 export const Modal = ({
   isOpen,

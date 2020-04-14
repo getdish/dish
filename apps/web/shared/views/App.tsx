@@ -3,12 +3,12 @@ import { createApolloClient } from '@dish/models'
 import { Provider } from 'overmind-react'
 import React, { Suspense } from 'react'
 
-import HomePage from './home/HomePageView'
+import HomePage from './home/HomePage'
 import { NotFoundPage } from './NotFoundPage'
-import { PrivateRoute, Route, RouteSwitch } from './shared/Route'
-import { ToastRoot } from './shared/ToastRoot'
 import TagPage from './tag/TagPage'
 import { setToastHandle } from './Toast'
+import { PrivateRoute, Route, RouteSwitch } from './ui/Route'
+import { ToastRoot } from './ui/ToastRoot'
 import { WelcomeModal } from './WelcomeModal'
 
 const apolloClient = createApolloClient()

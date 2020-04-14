@@ -1,9 +1,9 @@
 import React, { memo } from 'react'
 import { TouchableOpacity } from 'react-native'
 
-import { Circle } from '../shared/Circle'
-import { Icon } from '../shared/Icon'
-import { StackBaseProps } from '../shared/Stacks'
+import { Circle } from '../ui/Circle'
+import { Icon } from '../ui/Icon'
+import { StackBaseProps } from '../ui/Stacks'
 
 type CircleButtonProps = {
   onPress: any

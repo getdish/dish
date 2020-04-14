@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text } from 'react-native'
 
-import { ZStack } from './shared/Stacks'
+import { ZStack } from './ui/Stacks'
 
 export function Splash() {
   return (

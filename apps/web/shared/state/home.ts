@@ -3,9 +3,9 @@ import {
   RestaurantSearchArgs,
   Review,
   TopDish,
+  User,
   slugify,
 } from '@dish/models'
-import Fuse from 'fuse.js'
 import _ from 'lodash'
 import { Action, AsyncAction, Config, Derive, IContext } from 'overmind'
 
@@ -50,6 +50,7 @@ export type HomeStateItem =
   | HomeStateItemHome
   | HomeStateItemSearch
   | HomeStateItemRestaurant
+  | HomeStateItemUser
 
 export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
@@ -67,6 +68,12 @@ export type HomeStateItemRestaurant = HomeStateItemBase & {
   restaurantId: string | null
   reviews: Review[]
   review: Review | null
+}
+
+export type HomeStateItemUser = HomeStateItemBase & {
+  type: 'user'
+  username: string
+  user: User
 }
 
 export type HomeStateItemSimple = Omit<HomeStateItem, 'historyId'>
@@ -117,6 +124,7 @@ const breadcrumbStates = (state: HomeStateBase) => {
         crumbs.unshift(cur)
         return crumbs
       case 'search':
+      case 'user':
       case 'restaurant':
         if (crumbs.some((x) => x.type === cur.type)) {
           break
@@ -312,6 +320,7 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   let afterPush: () => Promise<any> | null = null
 
   switch (item.name) {
+    // home
     case 'home':
       nextState = {
         ...fallbackState,
@@ -320,6 +329,8 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         ...newState,
       } as HomeStateItemHome
       break
+
+    // search or userSearch
     case 'userSearch':
     case 'search':
       const lastSearchState = om.state.home.lastSearchState
@@ -341,6 +352,8 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         await om.actions.home.runSearch({})
       }
       break
+
+    // restaurant
     case 'restaurant':
       nextState = {
         ...fallbackState,
@@ -354,6 +367,21 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         await om.actions.home._loadRestaurantDetail({
           slug: item.params.slug,
           currentState,
+        })
+      }
+      break
+
+    case 'user':
+      nextState = {
+        ...fallbackState,
+        type: 'user',
+        user: null,
+        username: item.params.username,
+        ...newState,
+      }
+      fetchData = async () => {
+        await om.actions.home._loadUserDetail({
+          username: item.params.username,
         })
       }
       break
@@ -411,6 +439,17 @@ const popHomeState: Action<HistoryItem> = (om, item) => {
   if (om.state.home.states.length > 1) {
     om.actions.home.setShowAutocomplete(false)
     om.state.home.states = _.dropRight(om.state.home.states)
+  }
+}
+
+const _loadUserDetail: AsyncAction<{
+  username: string
+}> = async (om, { username }) => {
+  const user = new User()
+  await user.findOne('username', username)
+  const state = om.state.home.currentState
+  if (state.type === 'user') {
+    state.user = user
   }
 }
 
@@ -857,6 +896,7 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
   switch (name) {
     case 'home':
     case 'search':
+    case 'user':
     case 'userSearch':
     case 'restaurant':
       if (type == 'replace') {
@@ -1162,39 +1202,40 @@ const forkCurrentList: Action = (om) => {
 }
 
 export const actions = {
-  start,
-  startBeforeRouting,
-  setSearchBarFocusedTag,
-  forkCurrentList,
+  _handleTagChange,
+  _loadHomeDishes,
+  _loadRestaurantDetail,
+  _loadUserDetail,
+  _runAutocomplete,
+  _runHomeSearch,
   _syncUrlToTags,
   _updateRoute,
-  setTagInactive,
-  setTagActive,
-  requestLocation,
-  replaceActiveTagOfType,
-  moveAutocompleteIndex,
-  setActiveIndex,
+  clearSearch,
+  forkCurrentList,
+  getReview,
+  getUserReviews,
+  handleRouteChange,
   moveActiveDown,
   moveActiveUp,
-  setShowAutocomplete,
-  handleRouteChange,
-  setLocationSearchQuery,
-  setLocation,
-  setMapArea,
-  setSearchQuery,
+  moveAutocompleteIndex,
   popTo,
-  toggleTagActive,
-  setShowUserMenu,
-  setHoveredRestaurant,
+  replaceActiveTagOfType,
+  requestLocation,
   runSearch,
-  clearSearch,
-  getReview,
+  setActiveIndex,
+  setHoveredRestaurant,
+  setLocation,
+  setLocationSearchQuery,
+  setMapArea,
+  setSearchBarFocusedTag,
+  setSearchQuery,
+  setShowAutocomplete,
+  setShowUserMenu,
+  setTagActive,
+  setTagInactive,
+  start,
+  startBeforeRouting,
   submitReview,
-  getUserReviews,
   suggestTags,
-  _handleTagChange,
-  _runAutocomplete,
-  _loadRestaurantDetail,
-  _loadHomeDishes,
-  _runHomeSearch,
+  toggleTagActive,
 }
