@@ -75,18 +75,6 @@ textarea {
   z-index: 10000;
 }
 
-.inline-link {
-  display: inline-flex;
-}
-
-div,
-.flex {
-  display: flex;
-  flex-direction: inherit;
-  flex-wrap: inherit;
-  /* flex-grow: inherit; */
-}
-
 .shine:after {
   animation: shine 1.25s ease-in-out infinite;
   animation-fill-mode: forwards;
@@ -184,10 +172,36 @@ div,
   bottom: 0;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(20px);
-  transition: all ease-in-out 280ms;
+  transform: translateY(8px);
+  transition: all ease-in-out 200ms;
 }
 .animate-up.active {
   opacity: 1;
   transform: translateY(0);
+}
+
+.see-through {
+  display: flex;
+  flex-direction: inherit;
+  flex-grow: inherit;
+  align-items: inherit;
+  justify-content: inherit;
+  width: inherit;
+  height: inherit;
+}
+
+.see-through > * {
+  transition: all ease-in-out 120ms;
+}
+
+.inline-flex {
+  display: inline-flex;
+}
+
+div,
+.flex {
+  display: flex;
+  flex-direction: inherit;
+  flex-wrap: inherit;
+  /* flex-grow: inherit; */
 }

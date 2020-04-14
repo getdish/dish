@@ -4,14 +4,21 @@ import { OnInitialize, rehydrate } from 'overmind'
 
 import { OVERMIND_MUTATIONS } from '../constants'
 
-export const onInitialize: OnInitialize = async ({
-  state,
-  actions,
-  effects,
-}) => {
+const LOG_OVERMIND = window.location.search === '?verbose'
+
+export const onInitialize: OnInitialize = async (
+  { state, actions, effects },
+  overmind
+) => {
   if (OVERMIND_MUTATIONS) {
     console.log('hydating from server...')
     rehydrate(state, OVERMIND_MUTATIONS)
+  }
+
+  if (LOG_OVERMIND) {
+    overmind.addFlushListener((items) => {
+      console.log(JSON.stringify(items, null, 2))
+    })
   }
 
   await effects.gql.initialize(

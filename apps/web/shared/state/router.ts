@@ -24,8 +24,13 @@ export class Route<A extends Object | void = void> {
 
 export const routes = {
   home: new Route('/'),
-  restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
   user: new Route<{ username: string; pane?: string }>('/u/:username/:pane?'),
+  userSearch: new Route<{ [key: string]: string }>(
+    '/u/:username/:lense/:location/:tags?'
+  ),
+  // search after userSearch
+  search: new Route<{ [key: string]: string }>('/:lense/:location/:tags?'),
+  restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
   login: new Route('/login'),
   register: new Route('/register'),
   forgotPassword: new Route('/forgot-password'),
@@ -33,10 +38,6 @@ export const routes = {
   promise: new Route('/promise'),
   pokedex: new Route('/pokedex'),
   account: new Route<{ pane: string }>('/account/:pane'),
-  search: new Route<{ [key: string]: string }>('/:lense/:location/:tags?'),
-  userSearch: new Route<{ [key: string]: string }>(
-    '/u/:username/:lense/:location/:tags?'
-  ),
   notFound: new Route('*'),
 }
 
@@ -108,7 +109,10 @@ const start: AsyncAction<{
     })
   }
 
-  page.start()
+  page.start({
+    click: false,
+  })
+
   await onFinishStart
 }
 
@@ -142,7 +146,11 @@ const navigate: AsyncAction<NavigateItem> = async (om, navItem) => {
     search: curSearch,
   }
 
-  om.state.router.notFound = false
+  console.log('navigate', navItem, item)
+
+  if (om.state.router.notFound) {
+    om.state.router.notFound = false
+  }
 
   const alreadyOnPage = isEqual(
     _.omit(item, 'id', 'replace'),
@@ -212,12 +220,13 @@ const routeListen: Action<{
       }
     }
 
-    console.log('page.js routeListen', {
-      url,
-      params,
-      ignoreNextRoute,
-      isGoingBack,
-    })
+    if (!ignoreNextRoute) {
+      console.log('page.js routing', {
+        url,
+        params,
+        isGoingBack,
+      })
+    }
 
     curSearch = queryString.parse(querystring)
 

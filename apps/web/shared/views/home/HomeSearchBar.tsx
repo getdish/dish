@@ -469,9 +469,6 @@ const SearchCancelButton = memo(({ onCancel }: { onCancel?: Function }) => {
       onPress={() => {
         om.actions.home.setSearchQuery('')
         onCancel?.()
-        // if (om.state.home.currentState.type === 'search') {
-        //   om.actions.home.popTo(om.state.home.lastHomeState)
-        // }
       }}
     />
   )

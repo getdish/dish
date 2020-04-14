@@ -1,17 +1,23 @@
 import { Restaurant } from '@dish/models'
 import React, { memo, useLayoutEffect, useState } from 'react'
-import { TextInput, TouchableOpacity } from 'react-native'
+import { Image, Text, TextInput, TouchableOpacity } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { Toast } from '../Toast'
+import { Box } from '../ui/Box'
+import { Circle } from '../ui/Circle'
+import { HoverablePopover } from '../ui/HoverablePopover'
 import { Link, LinkButton } from '../ui/Link'
 import { HStack, VStack } from '../ui/Stacks'
 import { flatButtonStyle } from './baseButtonStyle'
 import { Quote } from './HomePageRestaurant'
 
+const avatar = require('../../assets/peach.png')
+
 export const RestaurantAddComment = memo(
   ({ restaurant }: { restaurant: Restaurant }) => {
     const om = useOvermind()
+    const user = om.state.user.user
     const review = om.state.user.allReviews[restaurant.id]
     const [isFocused, setIsFocused] = useState(false)
     const [reviewText, setReviewText] = useState('')
@@ -31,58 +37,100 @@ export const RestaurantAddComment = memo(
 
     return (
       <TouchableOpacity activeOpacity={0.8} onPress={() => {}}>
-        <VStack marginTop={20} marginBottom={-20}>
-          <Quote>
-            <HStack width="100%">
-              <TextInput
-                value={reviewText}
-                onChange={(e) => {
-                  // @ts-ignore
-                  const height = e.nativeEvent.srcElement.scrollHeight
-                  setHeight(height)
+        <VStack marginTop={20} marginBottom={-20} spacing="xs">
+          <HStack alignItems="center" spacing="sm">
+            <Circle size={26} marginVertical={-4}>
+              <Image source={avatar} style={{ width: 26, height: 26 }} />
+            </Circle>
+            <Text style={{ color: '#999' }}>
+              <Link
+                inline
+                name="user"
+                params={{ username: user.username }}
+                color="blue"
+              >
+                {user.username}
+              </Link>
+              &nbsp;&nbsp;
+              <HoverablePopover
+                contents={
+                  <Box>
+                    <Text style={{ opacity: 0.65 }}>
+                      <ul>
+                        <li>👨‍🍳 Chef ✔️</li>
+                        <li>🇯🇵 Japanese Exprt ✔️</li>
+                      </ul>
+                    </Text>
+                  </Box>
+                }
+              >
+                <div className="see-through inline-flex">
+                  {['👨‍🍳', '🇯🇵'].map((x) => (
+                    <Text key={x} style={{ opacity: 0.65 }}>
+                      {x}
+                    </Text>
+                  ))}
+                </div>
+              </HoverablePopover>{' '}
+              says...
+            </Text>
+          </HStack>
+
+          <HStack
+            {...flatButtonStyle}
+            borderRadius={10}
+            flex={0}
+            marginLeft={20}
+            maxWidth="80%"
+          >
+            <TextInput
+              value={reviewText}
+              onChange={(e) => {
+                // @ts-ignore
+                const height = e.nativeEvent.srcElement.scrollHeight
+                setHeight(height)
+              }}
+              onChangeText={(text) => {
+                if (isSaved) {
+                  setIsSaved(false)
+                }
+                updateReview(text)
+              }}
+              multiline
+              placeholder="Be sure to..."
+              style={{
+                minHeight: height,
+                lineHeight: 22,
+                flex: 1,
+              }}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+            />
+            {!!(isFocused || !isSaved) && (
+              <LinkButton
+                {...flatButtonStyle}
+                marginVertical={-4}
+                onPress={async () => {
+                  Toast.show('Saving...')
+                  await om.effects.gql.mutations.upsertUserReview({
+                    reviews: [
+                      {
+                        text: reviewText,
+                        restaurant_id: restaurant.id,
+                        tag_id: null,
+                        user_id: om.state.user.user.id,
+                        rating: 0,
+                      },
+                    ],
+                  })
+                  Toast.show('Saved!')
+                  setIsSaved(true)
                 }}
-                onChangeText={(text) => {
-                  if (isSaved) {
-                    setIsSaved(false)
-                  }
-                  updateReview(text)
-                }}
-                multiline
-                placeholder="Write your comment..."
-                style={{
-                  width: '100%',
-                  minHeight: height,
-                  lineHeight: 22,
-                }}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-              />
-              {!!(isFocused || !isSaved) && (
-                <LinkButton
-                  {...flatButtonStyle}
-                  marginVertical={-4}
-                  onPress={async () => {
-                    Toast.show('Saving...')
-                    await om.effects.gql.mutations.upsertUserReview({
-                      reviews: [
-                        {
-                          text: reviewText,
-                          restaurant_id: restaurant.id,
-                          tag_id: null,
-                          user_id: om.state.user.user.id,
-                          rating: 0,
-                        },
-                      ],
-                    })
-                    Toast.show('Saved!')
-                    setIsSaved(true)
-                  }}
-                >
-                  Save
-                </LinkButton>
-              )}
-            </HStack>
-          </Quote>
+              >
+                Save
+              </LinkButton>
+            )}
+          </HStack>
         </VStack>
       </TouchableOpacity>
     )

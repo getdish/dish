@@ -1,5 +1,3 @@
-import './Stacks.css'
-
 import React, {
   forwardRef,
   useEffect,

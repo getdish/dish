@@ -13,6 +13,7 @@ export const Circle = ({
       alignItems="center"
       justifyContent="center"
       borderRadius={100000000000}
+      overflow="hidden"
       width={size}
       height={size}
       {...props}

@@ -4,7 +4,7 @@ import React, { memo, useEffect, useMemo, useState } from 'react'
 import { searchBarHeight } from '../../constants'
 import { useDebounceValue } from '../../hooks/useDebounce'
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
-import { LngLat, setMapView } from '../../state/home'
+import { LngLat, isSearchState, setMapView } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Map, useMap } from '../map'
 import { ZStack } from '../ui/Stacks'
@@ -113,16 +113,18 @@ export const HomeMap = memo(() => {
     state.type == 'restaurant'
       ? om.state.home.allRestaurants[state.restaurantId]
       : null
+  const prevState = om.state.home.previousState
   const prevResults: string[] =
     (state.type == 'restaurant' &&
-      om.state.home.previousState?.type == 'search' &&
-      om.state.home.previousState?.results.status === 'complete' &&
-      om.state.home.previousState?.results.results.restaurantIds) ||
+      isSearchState(prevState) &&
+      prevState.results.status === 'complete' &&
+      prevState.results.results.restaurantIds) ||
     []
 
   const allRestaurants = om.state.home.allRestaurants
-  const searchResults =
-    state.type == 'search' ? state.results?.results?.restaurantIds ?? [] : []
+  const searchResults = isSearchState(state)
+    ? state.results?.results?.restaurantIds ?? []
+    : []
 
   const restaurantIds: string[] = _.uniq(
     [...searchResults, ...prevResults, restaurantDetail?.id].filter(

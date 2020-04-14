@@ -12,8 +12,8 @@ require('./base.css')
 const React = require('react')
 const { hydrate, render } = require('react-dom')
 
-import { createOvermind } from 'overmind'
-import { AppRegistry } from 'react-native'
+const { createOvermind } = require('overmind')
+const { AppRegistry } = require('react-native')
 const { config } = require('../shared/state/om')
 
 const {
@@ -49,7 +49,7 @@ async function start() {
   }
 
   const om = createOvermind(config, {
-    devtools: 'localhost:3031',
+    devtools: `localhost:3032`,
     logProxies: true,
     hotReloading: true,
   })
