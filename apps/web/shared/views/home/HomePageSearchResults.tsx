@@ -81,9 +81,7 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
         zIndex={100}
       >
         <HStack spacing="sm" alignItems="center">
-          <CloseButton
-            onPress={() => om.actions.home.popTo(om.state.home.lastHomeState)}
-          />
+          <CloseButton onPress={() => om.actions.home.up()} />
         </HStack>
       </ZStack>
 

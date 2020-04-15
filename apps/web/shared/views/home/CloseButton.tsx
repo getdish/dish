@@ -38,7 +38,7 @@ export const SmallCircleButton = memo(
         <HStack
           borderRadius={1000}
           backgroundColor="#ccc"
-          padding={5}
+          padding={3}
           {...rest}
           hoverStyle={{ backgroundColor: '#999', ...rest.hoverStyle }}
         />

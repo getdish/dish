@@ -23,7 +23,7 @@ export function useDebounce<A extends (...args: any) => any>(
  * Returns a value once it stops changing after "amt" time.
  * Note: you may need to memo or this will keep re-rendering
  */
-export function useDebounceValue(val: any, amt = 0) {
+export function useDebounceValue<A>(val: A, amt = 0): A {
   const [state, setState] = useState(val)
 
   useEffect(() => {

@@ -46,7 +46,7 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
       </PageTitleTag>
 
       <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
-        <CloseButton onPress={() => om.actions.home.popTo(-1)} />
+        <CloseButton onPress={() => om.actions.home.up()} />
       </ZStack>
 
       {isLoading && <LoadingItems />}

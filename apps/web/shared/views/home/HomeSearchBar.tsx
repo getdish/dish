@@ -247,7 +247,7 @@ export default memo(function HomeSearchBar() {
               padding={13}
               marginLeft={-8} //undo spacing
               opacity={om.state.home.currentStateType === 'home' ? 0.2 : 1}
-              onPress={() => om.actions.home.popTo(om.state.home.lastHomeState)}
+              onPress={() => om.actions.home.popTo('home')}
             >
               <VStack spacing={2} alignItems="center">
                 <Icon
@@ -352,9 +352,7 @@ export default memo(function HomeSearchBar() {
                                   (x) => x.type !== 'lense'
                                 ).length === 0
                               ) {
-                                om.actions.home.popTo(
-                                  om.state.home.lastHomeState
-                                )
+                                om.actions.home.popTo('home')
                               }
                             }}
                           />
@@ -490,7 +488,7 @@ const SearchLocationButton = memo(() => {
               padding: 10,
             }}
             onPress={() => {
-              om.actions.home.popTo(om.state.home.lastHomeState)
+              om.actions.home.popTo('home')
             }}
           >
             <Icon size={18} name="navigation" color="blue" opacity={0.5} />

@@ -69,6 +69,10 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
 
   if (!isProduction) {
     config.optimization.minimize = false
+    config.devServer = {
+      ...config.devServer,
+      overlay: false,
+    }
   } else {
     // test closure compiler, could be more performant if it extracts functions from render better
     config.optimization.minimizer = [
@@ -130,8 +134,11 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
   if (env.mode === 'development' && TARGET !== 'worker') {
     config.plugins.push(
       new ReactRefreshWebpackPlugin({
-        disableRefreshCheck: true,
-        forceEnable: true,
+        overlay: false,
+        // {
+        //   entry: path.join(__dirname, 'web', 'errors.web.tsx'),
+        //   module: path.join(__dirname, 'web', 'errors.web.tsx'),
+        // },
       })
     )
   }
