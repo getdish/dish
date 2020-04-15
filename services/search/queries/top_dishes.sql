@@ -39,9 +39,24 @@ WITH by_country AS (
 )
 
 SELECT json_agg(t) FROM (
+  SELECT
+    country,
+    icon,
+    tag_id,
+    frequency,
+    100 as avg_rating,
+    dishes,
+    top_restaurants
+  FROM by_country
+    WHERE country = 'Vietnamese'
+
+  UNION ALL
+
   SELECT * FROM by_country
     WHERE frequency > 10
-    ORDER BY avg_rating DESC
-    LIMIT 15
+    AND country != 'Vietnamese' 
+
+  ORDER BY avg_rating DESC
+  LIMIT 15
 ) t
 
