@@ -28,6 +28,8 @@ import { HomeStackView } from './HomeStackView'
 import { HomeViewDrawer } from './HomeViewDrawer'
 
 export default function HomePage() {
+  const om = useOvermind()
+  const { breadcrumbStates } = om.state.home
   const [showPip, setShowPip] = useState(false)
 
   useDebounceEffect(
@@ -39,7 +41,7 @@ export default function HomePage() {
   )
 
   return (
-    <ZStack top={0} left={0} right={0} bottom={0}>
+    <ZStack fullscreen>
       {!isWorker && (
         <ErrorBoundary name="maps">
           <HomeMap />
@@ -49,46 +51,38 @@ export default function HomePage() {
       <HomeMapControlsOverlay />
       <HomeSearchBar />
       <HomeViewDrawer>
-        <HomeViewContent />
+        <ZStack position="relative" flex={1}>
+          <VStack
+            position="absolute"
+            top={searchBarHeight}
+            left={0}
+            right={0}
+            bottom={0}
+            flex={1}
+          >
+            <HomeStackView items={breadcrumbStates}>
+              {(homeState) => {
+                return (
+                  <>
+                    {isHomeState(homeState) && (
+                      <HomePageTopDishes state={homeState} />
+                    )}
+                    {isUserState(homeState) && (
+                      <HomePageUser state={homeState} />
+                    )}
+                    {isSearchState(homeState) && (
+                      <HomePageSearchResults state={homeState} />
+                    )}
+                    {isRestaurantState(homeState) && (
+                      <HomePageRestaurant state={homeState} />
+                    )}
+                  </>
+                )
+              }}
+            </HomeStackView>
+          </VStack>
+        </ZStack>
       </HomeViewDrawer>
     </ZStack>
   )
 }
-
-const HomeViewContent = memo(() => {
-  const om = useOvermind()
-  const { breadcrumbStates } = om.state.home
-  return (
-    <>
-      <ZStack position="relative" flex={1}>
-        <VStack
-          position="absolute"
-          top={searchBarHeight}
-          left={0}
-          right={0}
-          bottom={0}
-          flex={1}
-        >
-          <HomeStackView items={breadcrumbStates}>
-            {(homeState) => {
-              return (
-                <>
-                  {isHomeState(homeState) && (
-                    <HomePageTopDishes state={homeState} />
-                  )}
-                  {isUserState(homeState) && <HomePageUser state={homeState} />}
-                  {isSearchState(homeState) && (
-                    <HomePageSearchResults state={homeState} />
-                  )}
-                  {isRestaurantState(homeState) && (
-                    <HomePageRestaurant state={homeState} />
-                  )}
-                </>
-              )
-            }}
-          </HomeStackView>
-        </VStack>
-      </ZStack>
-    </>
-  )
-})

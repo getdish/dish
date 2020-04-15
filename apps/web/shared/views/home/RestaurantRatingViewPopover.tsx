@@ -9,7 +9,7 @@ import { VStack } from '../ui/Stacks'
 import { RestaurantRatingView } from './RestaurantRatingView'
 import { TableCell, TableRow } from './TableRow'
 
-export const RestaurantRatingDetail = memo(
+export const RestaurantRatingViewPopover = memo(
   ({
     size = 'md',
     restaurant,

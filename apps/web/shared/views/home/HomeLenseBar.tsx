@@ -41,6 +41,9 @@ export function HomeContentTopBar(props: { children: any }) {
           'transparent',
           'transparent',
           'transparent',
+          'transparent',
+          'transparent',
+          'transparent',
         ]}
         style={[
           StyleSheet.absoluteFill,

@@ -16,7 +16,7 @@ import { RestaurantAddComment } from './RestaurantAddComment'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
-import { RestaurantRatingDetail } from './RestaurantRatingDetail'
+import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 
@@ -144,7 +144,7 @@ export const RestaurantListItem = ({
 
               {/* <Spacer size="sm" /> */}
               <HStack paddingHorizontal={20}>
-                <RestaurantRatingDetail restaurant={restaurant} />
+                <RestaurantRatingViewPopover restaurant={restaurant} />
                 <Spacer size="lg" />
                 <Divider vertical />
                 <RestaurantDetailRow size="sm" restaurant={restaurant} />
@@ -173,7 +173,7 @@ export const RestaurantPeek = memo(
     size?: 'lg' | 'md'
     restaurant: Restaurant
   }) => {
-    const spacing = 9
+    const spacing = size == 'lg' ? 12 : 18
     const photos = Restaurant.allPhotos(restaurant).slice(0, 5)
     return (
       <VStack

@@ -2,6 +2,7 @@ import { Restaurant } from '@dish/models'
 import React, { memo } from 'react'
 import { ScrollView, Text } from 'react-native'
 
+import { Divider } from '../ui/Divider'
 import { Spacer } from '../ui/Spacer'
 import { HStack } from '../ui/Stacks'
 import { RestaurantTagButton } from './RestaurantTagButton'
@@ -33,22 +34,23 @@ export const RestaurantTagsRow = memo(
           justifyContent="center"
           spacing={size == 'lg' ? 8 : 8}
         >
-          {tags
-            .slice(0, showMore ? 2 : 10)
-            .map((tag, index) =>
-              size == 'md' ? (
-                <SecondaryText key={`${index}${tag.name}`}>
-                  🍜 {tag.name}
-                </SecondaryText>
-              ) : (
+          {tags.slice(0, showMore ? 2 : 10).map((tag, index) =>
+            size == 'md' ? (
+              <SecondaryText key={`${index}${tag.name}`}>
+                🍜 {tag.name}
+              </SecondaryText>
+            ) : (
+              <React.Fragment key={`${index}${tag.name}`}>
+                {index !== 0 && <Divider vertical marginHorizontal={10} />}
                 <TagButton
-                  key={`${index}${tag.name}`}
                   rank={tag.rank}
                   tag={{ ...tag, type: 'dish' }}
                   size={size}
+                  subtle
                 />
-              )
-            )}
+              </React.Fragment>
+            )
+          )}
           {/* {!!showMore && <Text style={{ opacity: 0.5 }}>+5</Text>} */}
         </HStack>
       </ScrollView>
