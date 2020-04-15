@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DISH_ENV: "test"
+      HASURA_ENDPOINT: "http://localhost:8080"
     steps:
     - uses: actions/checkout@master
     - name: Install dev dependencies
