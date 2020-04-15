@@ -83,9 +83,9 @@ export const RestaurantListItem = ({
 
             <VStack
               padding={18}
-              paddingLeft={24}
               paddingVertical={22}
-              width="80%"
+              paddingRight={118}
+              width="75%"
               maxWidth={525}
               spacing={5}
             >
@@ -129,7 +129,7 @@ export const RestaurantListItem = ({
               {/* <Spacer size="sm" /> */}
             </VStack>
 
-            <VStack width={500} marginLeft={-110}>
+            <VStack width={500} marginLeft={-60}>
               <RestaurantPeek restaurant={restaurant} />
             </VStack>
           </HStack>
@@ -142,11 +142,10 @@ export const RestaurantListItem = ({
 
 export const RestaurantPeek = memo(
   ({ restaurant }: { restaurant: Restaurant }) => {
-    const spacing = 5
+    const spacing = 9
     const photos = Restaurant.allPhotos(restaurant).slice(0, 5)
     return (
       <VStack
-        marginTop={-44}
         position="relative"
         marginRight={-spacing}
         marginBottom={-spacing}
@@ -154,7 +153,7 @@ export const RestaurantPeek = memo(
         <VStack position="absolute" top={-11} left={-38} zIndex={100}>
           <RestaurantRatingDetail restaurant={restaurant} />
         </VStack>
-        <HStack maxWidth={120} spacing={spacing}>
+        <HStack spacing={spacing}>
           {[...photos, photos[0], photos[0], photos[0]]
             .slice(0, 4)
             .map((photo, i) => {
@@ -171,8 +170,8 @@ export const RestaurantPeek = memo(
                   <Image
                     source={{ uri: photo }}
                     style={{
-                      width: 120,
-                      height: 120,
+                      width: 100,
+                      height: 100,
                     }}
                     resizeMode="cover"
                   />

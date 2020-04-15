@@ -20,12 +20,10 @@ export const LenseButton = memo(
     minimal?: boolean
   }) => {
     const om = useOvermind()
-    const lenseColor = `rgb(${lense.rgb[0] * 255}, ${lense.rgb[1] * 255}, ${
-      lense.rgb[2] * 255
-    })`
-    const lenseColorLight = `rgba(${lense.rgb[0] * 255}, ${
-      lense.rgb[1] * 255
-    }, ${lense.rgb[2] * 255}, 0.5)`
+    const [r, g, b] = lense.rgb
+    const rgbInner = `${r * 255}, ${g * 255}, ${b * 255}`
+    const lenseColor = `rgb(${rgbInner})`
+    const lenseColorLight = `rgba(${rgbInner}, 0.35)`
     const buttonContent = (
       <LinkButton
         // marginVertical={-1}
@@ -45,7 +43,7 @@ export const LenseButton = memo(
           // shadowRadius={2}
           // shadowColor={isActive ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.05)'}
           // shadowOffset={{ height: 1, width: 0 }}
-          borderWidth={1}
+          borderWidth={2}
           borderColor="transparent"
           opacity={0.8}
           hoverStyle={{
@@ -54,8 +52,8 @@ export const LenseButton = memo(
           }}
           {...(isActive && {
             opacity: 1,
-            backgroundColor: lenseColor,
-            borderColor: lense.rgb ? lenseColorLight : bg,
+            // backgroundColor: lenseColor,
+            borderColor: lenseColor,
             // hoverStyle: {
             //   backgroundColor: bgHover,
             // },
