@@ -20,7 +20,7 @@ export default memo(({ state }: { state: HomeStateItemUser }) => {
       <PageTitleTag>Dish - User profile</PageTitleTag>
 
       <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
-        <CloseButton onPress={() => om.actions.home.popTo(-1)} />
+        <CloseButton onPress={() => om.actions.home.up()} />
       </ZStack>
 
       <VStack padding={18} paddingBottom={0} paddingRight={16}>

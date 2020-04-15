@@ -25,12 +25,13 @@ export class Route<A extends Object | void = void> {
 export const routes = {
   home: new Route('/'),
   user: new Route<{ username: string; pane?: string }>('/u/:username/:pane?'),
+  restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
+  // after user/restaurant
   userSearch: new Route<{ [key: string]: string }>(
     '/u/:username/:lense/:location/:tags?'
   ),
   // search after userSearch
   search: new Route<{ [key: string]: string }>('/:lense/:location/:tags?'),
-  restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
   login: new Route('/login'),
   register: new Route('/register'),
   forgotPassword: new Route('/forgot-password'),
@@ -146,8 +147,6 @@ const navigate: AsyncAction<NavigateItem> = async (om, navItem) => {
     search: curSearch,
   }
 
-  console.log('navigate', navItem, item)
-
   if (om.state.router.notFound) {
     om.state.router.notFound = false
   }
@@ -157,9 +156,10 @@ const navigate: AsyncAction<NavigateItem> = async (om, navItem) => {
     _.omit(om.state.router.curPage, 'id', 'replace')
   )
   if (alreadyOnPage) {
-    console.log('AlreadyOnPageError', item, om.state.router.curPage)
     return
   }
+
+  console.log('navigate', navItem, item)
 
   if (item.replace) {
     const next = _.dropRight(om.state.router.history)

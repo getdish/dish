@@ -85,7 +85,6 @@ export const HomeMap = memo(() => {
     })
 
     const handleRegionChangeEnd = (e) => {
-      console.log('region-change-end', e)
       const span = map.region.span
       om.actions.home.setMapArea({
         center: {

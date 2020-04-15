@@ -5,6 +5,7 @@ import { drawerBorderRadius } from '../../constants'
 import { useDebounceValue } from '../../hooks/useDebounce'
 import { HomeStateItemSimple } from '../../state/home'
 import { useOvermind } from '../../state/om'
+import { ErrorBoundary } from '../ErrorBoundary'
 import { ForceShowPopover } from '../ui/Popover'
 import { ZStack } from '../ui/Stacks'
 
@@ -30,7 +31,9 @@ export function HomeStackView<A extends HomeStateItemSimple>(props: {
               isActive={isActive}
               isRemoving={isActive && isRemoving}
             >
-              {props.children(item as any, isActive, index)}
+              <ErrorBoundary name={`${item.type}`}>
+                {props.children(item as any, isActive, index)}
+              </ErrorBoundary>
             </HomeStackViewItem>
           </ForceShowPopover.Provider>
         )
@@ -65,7 +68,7 @@ function HomeStackViewItem({
   }, [])
   const onPress = useMemo(
     () => () => {
-      om.actions.home.popTo(item as any)
+      om.actions.home.popTo(item.type)
     },
     []
   )

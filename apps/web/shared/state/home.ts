@@ -431,7 +431,17 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
       }
     }
   } else {
-    om.state.home.states.push(nextState)
+    const next = []
+    const added = new Set()
+    const states = om.state.home.states
+    // garbage collect duplicate states
+    for (const state of states) {
+      if (!added.has(state.type)) {
+        added.add(state.type)
+        next.push(state)
+      }
+    }
+    om.state.home.states = [...next, nextState]
   }
 
   if (!om.state.home.started) {
@@ -447,40 +457,40 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   }
 }
 
-const popTo: Action<HomeStateItem | number> = (om, item) => {
-  const isOnLastHomeState =
-    om.state.home.currentState === om.state.home.lastHomeState
-  console.log('home.popTo', !isOnLastHomeState, item)
-  if (isOnLastHomeState) {
+const popTo: Action<HomeStateItem['type'] | number> = (om, item) => {
+  if (om.state.home.currentState === om.state.home.lastHomeState) {
     return
   }
 
-  let homeItem: HomeStateItem
-
+  let type: HomeStateItem['type']
   if (typeof item == 'number') {
     const index = om.state.home.states.length - 1 + item
-    homeItem = om.state.home.states[index]
-    if (!homeItem) {
+    type = om.state.home.states[index]?.type
+    if (!type) {
       console.warn('no item at index', index)
       return
     }
   } else {
-    homeItem = item
+    type = item
   }
 
-  const params =
-    _.findLast(om.state.router.history, (x) => x.name == homeItem.type)
-      ?.params ?? {}
+  const stateItem = _.findLast(om.state.router.history, (x) => x.name == type)
 
-  // navigate
-  om.actions.router.navigate({
-    name: homeItem.type,
-    params,
-  } as any)
+  if (
+    stateItem === om.state.router.history[om.state.router.history.length - 1]
+  ) {
+    om.actions.router.back()
+  } else {
+    om.actions.router.navigate({
+      name: type,
+      params: stateItem?.params ?? {},
+    })
+  }
 }
 
 const popHomeState: Action<HistoryItem> = (om, item) => {
   if (om.state.home.states.length > 1) {
+    console.log('popHomeState', item)
     om.actions.home.setShowAutocomplete(false)
     om.state.home.states = _.dropRight(om.state.home.states)
   }
@@ -766,7 +776,7 @@ const runSearch: AsyncAction<{ quiet?: boolean } | void> = async (om, opts) => {
     query,
     tags: tags.map((tag) => getTagId(tag)),
   }
-  console.log('searchArgs', searchArgs, opts)
+  // console.log('searchArgs', searchArgs, opts)
 
   // prevent duplicate searches
   const searchKey = JSON.stringify(searchArgs)
@@ -839,14 +849,18 @@ const getReview: AsyncAction = async (om) => {
   let state = om.state.home.lastRestaurantState
   if (!state) return
   if (!om.state.user.user) return
-  let review = new Review()
-  await review.findOne(state.restaurantId, om.state.user.user.id)
-  state.review = review
-  if (typeof state.review.id == 'undefined') {
-    Object.assign(state.review, {
-      restaurant_id: state.restaurantId,
-      user_id: om.state.user.user.id,
-    })
+  try {
+    let review = new Review()
+    await review.findOne(state.restaurantId, om.state.user.user.id)
+    state.review = review
+    if (typeof state.review.id == 'undefined') {
+      Object.assign(state.review, {
+        restaurant_id: state.restaurantId,
+        user_id: om.state.user.user.id,
+      })
+    }
+  } catch (err) {
+    console.error(`Error getting review ${err.message}`)
   }
 }
 
@@ -1207,8 +1221,8 @@ const _syncRouteToState: AsyncAction<Object, boolean> = async (om, params) => {
   }
 
   if (didSet) {
-    console.log('_syncRouteToState, did update tags', params)
-    // await om.actions.home._syncStateToRoute()
+    console.log('_syncRouteToState')
+    await om.actions.home._syncStateToRoute()
   }
 
   return didSet
@@ -1242,7 +1256,7 @@ const _syncStateToRoute: AsyncAction<HomeStateItem | void> = async (
 
   if (shouldBeSearch && shouldBeHome) {
     console.log(`_syncStateTORoute back to home!`)
-    om.actions.home.popTo(om.state.home.lastHomeState)
+    om.actions.home.popTo('home')
     return
   }
 
@@ -1259,9 +1273,6 @@ const _syncStateToRoute: AsyncAction<HomeStateItem | void> = async (
       name,
       params,
       replace,
-    }
-    if (params.lense === 'unique') {
-      debugger
     }
     console.log('_syncStateToRoute', {
       navItem,
@@ -1312,6 +1323,13 @@ function padSpan(val: LngLat): LngLat {
   }
 }
 
+const up: Action = (om) => {
+  const { breadcrumbStates } = om.state.home
+  if (breadcrumbStates.length == 1) return
+  const prev = breadcrumbStates[breadcrumbStates.length - 2]
+  om.actions.home.popTo(prev?.type ?? 'home')
+}
+
 export const actions = {
   _afterTagChange,
   _loadHomeDishes,
@@ -1327,6 +1345,7 @@ export const actions = {
   handleRouteChange,
   moveActiveDown,
   moveActiveUp,
+  up,
   moveAutocompleteIndex,
   popTo,
   replaceActiveTagOfType,
