@@ -296,9 +296,7 @@ export const state: HomeState = {
       state.states,
       (x) => isHomeState(x) || isSearchState(x)
     ) as HomeStateItemSearch | HomeStateItemHome
-    return Object.keys(lastTaggable.activeTagIds)
-      .map((id) => state.allTags[id])
-      .filter(Boolean) as Tag[]
+    return getActiveTags(state, lastTaggable)
   },
 }
 
@@ -308,9 +306,7 @@ export function setMapView(x) {
   mapView = x
 }
 
-const startBeforeRouting: AsyncAction = async (om) => {
-  await om.actions.home._loadHomeDishes()
-}
+const startBeforeRouting: AsyncAction = async (om) => {}
 
 export const isOnOwnProfile = (state: Om['state']) => {
   return (
@@ -323,9 +319,45 @@ export const isEditingUserPage = (state: Om['state']) => {
 }
 
 const start: AsyncAction = async (om) => {
+  await om.actions.home._loadHomeDishes()
+  await Promise.all([om.actions.home.startAutocomplete()])
+
   // stuff that can run after rendering
   await new Promise((res) => (window['requestIdleCallback'] ?? setTimeout)(res))
   await om.actions.home._runAutocomplete(om.state.home.currentState.searchQuery)
+}
+
+let defaultAutocompleteResults: AutocompleteItem[] | null = null
+
+const startAutocomplete: AsyncAction = async (om) => {
+  const dishes = om.state.home.topDishes
+    .map((x) => x.dishes)
+    .flat()
+    .filter(Boolean)
+    .slice(0, 20)
+    .map((d) => ({
+      id: d.name,
+      name: d.name,
+      type: 'dish',
+      icon: d.image,
+      tagId: getTagId({ type: 'dish', name: d.name }),
+    }))
+  const countries = om.state.home.topDishes.map((x) => ({
+    id: x.country,
+    type: 'country',
+    name: x.country,
+    icon: x.icon,
+    tagId: getTagId({ type: 'country', name: x.country }),
+  }))
+
+  const results = [
+    ...dishes.slice(0, 3),
+    ..._.zip(countries, dishes.slice(3)).flat(),
+  ]
+    .filter(Boolean)
+    .slice(0, 20) as AutocompleteItem[]
+  defaultAutocompleteResults = results
+  om.state.home.autocompleteResults = results
 }
 
 const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
@@ -367,7 +399,9 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         results: { status: 'loading' },
         ...om.state.home.lastSearchState,
         ...newState,
-        type,
+        type: 'search',
+        username:
+          type == 'userSearch' ? om.state.router.curPage.params.username : '',
         activeTagIds,
       }
       nextState = searchState
@@ -582,15 +616,7 @@ const _loadHomeDishes: AsyncAction = async (om) => {
     }
   }
 
-  const dishes = all
-    .map((x) => x.dishes)
-    .flat()
-    .filter(Boolean)
-
   if (!isWorker) {
-    if (dishes) {
-      om.state.home.autocompleteDishes = dishes
-    }
     om.state.home.topDishes = all
   }
 }
@@ -652,21 +678,8 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   await om.actions.home._syncStateToRoute()
 }
 
-let defaultAutocompleteResults: AutocompleteItem[] | null = null
-
 const _runAutocomplete: AsyncAction<string> = async (om, query) => {
   const state = om.state.home.currentState
-
-  if (!defaultAutocompleteResults) {
-    defaultAutocompleteResults = om.state.home.topDishes.map((x) => ({
-      id: x.country,
-      type: 'country',
-      name: x.country,
-      icon: x.icon,
-      tagId: getTagId({ type: 'country', name: x.country }),
-    }))
-    om.state.home.autocompleteResults = defaultAutocompleteResults
-  }
 
   if (query === '') {
     om.state.home.autocompleteResults = defaultAutocompleteResults
@@ -1333,6 +1346,7 @@ const up: Action = (om) => {
 }
 
 export const actions = {
+  startAutocomplete,
   _afterTagChange,
   _loadHomeDishes,
   _loadRestaurantDetail,

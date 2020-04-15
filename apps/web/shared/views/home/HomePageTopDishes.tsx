@@ -51,13 +51,15 @@ const HomeViewTopDishesTrending = memo(() => {
         }}
         // rank={index + 1}
       >
-        {['🍔', '🌮', '🥗', '🍲', '🥩'][index % 4]} {restaurant.name}
+        {['🍔', '🌮', '🥗', '🍲', '🥩'][(index % 4) + 1]} {restaurant.name}
       </TrendingButton>
     )
   }
   return (
     <VStack spacing="lg">
-      <SmallTitle centerDivider>Trending</SmallTitle>
+      <SmallTitle centerDivider>
+        Trending in {om.state.home.location?.name ?? 'San Francisco'}
+      </SmallTitle>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <VStack paddingHorizontal={25} spacing="sm">
           <HStack flex={1} spacing={5} overflow="hidden">
@@ -89,7 +91,7 @@ const HomeViewTopDishesTrending = memo(() => {
               justifyContent="flex-end"
               hideDivider
             >
-              Lists
+              Topics
             </SmallerTitle>
             {allRestaurants.slice(2).map(getTrending)}
           </HStack>
@@ -111,13 +113,16 @@ const HomeViewTopDishesContent = memo(() => {
   return (
     <ScrollView style={{ flex: 1, overflow: 'hidden' }}>
       <VStack paddingVertical={20} spacing="xl">
+        {/* <Text style={{ fontWeight: '700', fontSize: 22, textAlign: 'center' }}>
+          San Francisco
+        </Text> */}
+
         <HomeViewTopDishesTrending />
 
         <VStack spacing="lg">
           <SmallTitle centerDivider>
             {om.state.home.lastActiveTags.find((x) => x.type === 'lense')
               ?.description ?? ''}{' '}
-            in {om.state.home.location?.name ?? 'San Francisco'}
           </SmallTitle>
 
           <VStack spacing>

@@ -1,3 +1,4 @@
+import { Restaurant } from '@dish/models'
 import React, { memo, useState } from 'react'
 import {
   Image,
@@ -10,7 +11,10 @@ import {
 
 import { HomeStateItem, HomeStateItemRestaurant } from '../../state/home'
 import { useOvermind } from '../../state/om'
+import { Box } from '../ui/Box'
+import { Circle } from '../ui/Circle'
 import { Divider } from '../ui/Divider'
+import { HoverablePopover } from '../ui/HoverablePopover'
 import { LinkButton } from '../ui/Link'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { ProgressCircle } from '../ui/ProgressCircle'
@@ -18,14 +22,18 @@ import { SmallTitle } from '../ui/SmallTitle'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { CloseButton } from './CloseButton'
+import { DishView } from './DishView'
 import { LoadingItems } from './LoadingItems'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
-import { RestaurantRatingDetail } from './RestaurantRatingDetail'
+import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { RestaurantTagButton } from './RestaurantTagButton'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
-import { useHomeDrawerWidth } from './useHomeDrawerWidth'
+import {
+  useHomeDrawerWidth,
+  useHomeDrawerWidthInner,
+} from './useHomeDrawerWidth'
 
 export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
   const om = useOvermind()
@@ -55,7 +63,7 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
         <>
           <VStack padding={18} paddingBottom={0} paddingRight={16}>
             <HStack position="relative">
-              <RestaurantRatingDetail size="lg" restaurant={restaurant} />
+              <RestaurantRatingViewPopover size="lg" restaurant={restaurant} />
               <Spacer size={20} />
               <VStack flex={1}>
                 <Text
@@ -80,20 +88,13 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
             <HStack width="100%" alignItems="center">
               <Divider flex />
               <RestaurantFavoriteStar restaurant={restaurant} size="lg" />
-              {isCanTag && (
-                <ZStack top={3} right={-5}>
-                  <RestaurantTagButton size="lg" restaurant={restaurant} />
-                </ZStack>
-              )}
               <Divider flex />
             </HStack>
           </VStack>
 
           <ScrollView style={{ padding: 18, paddingTop: 16, flex: 1 }}>
             <VStack spacing="lg">
-              <RestaurantTagsRow size="lg" restaurant={restaurant} />
-
-              <HStack paddingVertical={10}>
+              <HStack paddingVertical={0}>
                 <RestaurantDetailRow
                   centered
                   justifyContent="center"
@@ -102,93 +103,18 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
                 />
               </HStack>
 
-              <VStack marginTop={-8} marginHorizontal={-18} alignItems="center">
-                <HStack
-                  alignItems="center"
-                  paddingHorizontal={10 + 18}
-                  spacing={20}
-                  paddingVertical={12}
-                >
-                  <VStack
-                    zIndex={10}
-                    flex={1}
-                    minWidth={90}
-                    maxWidth={120}
-                    marginHorizontal={-12}
-                  >
-                    <RatingBreakdownCircle
-                      percent={restaurant.rating_factors?.food}
-                      emoji="🧑‍🍳"
-                      name="Food"
-                    />
-                  </VStack>
+              <HStack>
+                {isCanTag && (
+                  <ZStack top={3} right={-5}>
+                    <RestaurantTagButton size="lg" restaurant={restaurant} />
+                  </ZStack>
+                )}
+                <RestaurantTagsRow size="lg" restaurant={restaurant} />
+              </HStack>
 
-                  <VStack
-                    zIndex={9}
-                    flex={1}
-                    minWidth={90}
-                    maxWidth={120}
-                    marginHorizontal={-12}
-                  >
-                    <RatingBreakdownCircle
-                      percent={restaurant.rating_factors?.service}
-                      emoji="💁‍♂️"
-                      name="Service"
-                    />
-                  </VStack>
+              <Divider />
 
-                  <VStack
-                    zIndex={8}
-                    flex={1}
-                    minWidth={90}
-                    maxWidth={120}
-                    marginHorizontal={-12}
-                  >
-                    <RatingBreakdownCircle
-                      percent={restaurant.rating_factors?.ambience}
-                      emoji="✨"
-                      name="Ambiance"
-                    />
-                  </VStack>
-                </HStack>
-              </VStack>
-
-              {!!restaurant.photos?.length && (
-                <VStack spacing="xl">
-                  <HStack>
-                    <SmallTitle isActive>Top Dishes</SmallTitle>
-                    <SmallTitle>Menu</SmallTitle>
-                    <SmallTitle>Inside</SmallTitle>
-                    <SmallTitle>Outside</SmallTitle>
-                  </HStack>
-
-                  <HStack
-                    flexWrap="wrap"
-                    marginTop={10}
-                    alignItems="center"
-                    justifyContent="center"
-                    spacing="xl"
-                  >
-                    {[
-                      'Pho',
-                      'Banh Mi',
-                      'Banh Xeo',
-                      'Bho Kho',
-                      'Thit Kho',
-                      'Banh Xeo',
-                      'Bho Kho',
-                      'Thit Kho',
-                    ].map((dish, index) => (
-                      <DishCard
-                        key={index}
-                        name={dish}
-                        photo={restaurant.photos[index] ?? restaurant.image}
-                        size="lg"
-                      />
-                    ))}
-                  </HStack>
-                </VStack>
-              )}
+              <RestaurantPhotos restaurant={restaurant} />
 
               {/* <VStack>
                 <SmallTitle>Images</SmallTitle>
@@ -224,6 +150,56 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
   )
 })
 
+const RestaurantPhotos = ({ restaurant }: { restaurant: Restaurant }) => {
+  const drawerWidth = useHomeDrawerWidthInner()
+  const spacing = 10
+  return (
+    <>
+      {!!restaurant.photos?.length && (
+        <VStack spacing="xl">
+          <HStack justifyContent="center">
+            <SmallTitle isActive>Top Dishes</SmallTitle>
+            <SmallTitle>Menu</SmallTitle>
+            <SmallTitle>Inside</SmallTitle>
+            <SmallTitle>Outside</SmallTitle>
+          </HStack>
+
+          <HStack
+            flexWrap="wrap"
+            marginTop={10}
+            alignItems="center"
+            justifyContent="center"
+            spacing={spacing}
+          >
+            {[
+              'Pho',
+              'Banh Mi',
+              'Banh Xeo',
+              'Bho Kho',
+              'Thit Kho',
+              'Banh Xeo',
+              'Bho Kho',
+              'Thit Kho',
+            ].map((dish, index) => (
+              <DishView
+                key={index}
+                size={(drawerWidth - 3 * spacing) / 3 - 15}
+                dish={
+                  {
+                    name: dish,
+                    image: restaurant.photos[index] ?? restaurant.image,
+                    price: 1000,
+                  } as any
+                }
+              />
+            ))}
+          </HStack>
+        </VStack>
+      )}
+    </>
+  )
+}
+
 const DishCard = (props: {
   name: string
   photo: string
@@ -249,6 +225,7 @@ const DishCard = (props: {
         borderRadius={10}
         shadowColor="rgba(0,0,0,0.2)"
         shadowRadius={isLarge ? 8 : 4}
+        shadowOffset={{ height: 4, width: 0 }}
       >
         <Text style={{ fontSize: isLarge ? 15 : 12, fontWeight: '600' }}>
           {props.name}
@@ -293,57 +270,6 @@ export const styles = StyleSheet.create({
     fontSize: 14,
   },
 })
-
-const RatingBreakdownCircle = memo(
-  ({
-    emoji,
-    name,
-    percent,
-  }: {
-    emoji: string
-    name: string
-    percent: number
-  }) => {
-    return (
-      <VStack
-        borderRadius={100}
-        alignItems="center"
-        width="100%"
-        height="auto"
-        paddingTop="100%"
-        backgroundColor="#fff"
-        shadowColor="rgba(0,0,0,0.2)"
-        shadowRadius={8}
-      >
-        <ZStack
-          top={0}
-          left={0}
-          right={0}
-          bottom={0}
-          position="absolute"
-          borderRadius={100}
-          backgroundColor="white"
-          overflow="hidden"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <ProgressCircle
-            percent={50}
-            radius={43}
-            borderWidth={2}
-            color="#ccc"
-          />
-        </ZStack>
-        <ZStack fullscreen alignItems="center" justifyContent="center">
-          <Text style={{ fontSize: 28, marginBottom: 0 }}>{emoji}</Text>
-          <Text style={{ fontSize: 12, color: '#555', fontWeight: '700' }}>
-            {name}
-          </Text>
-        </ZStack>
-      </VStack>
-    )
-  }
-)
 
 export const Quote = memo(
   ({ style, by, ...props }: TextProps & { by?: string; children: any }) => {

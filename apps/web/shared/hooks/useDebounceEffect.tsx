@@ -6,8 +6,10 @@ export const useDebounceEffect = (
   args: any[]
 ) => {
   useEffect(() => {
-    const dispose = effect()
-    const tm = setTimeout(() => {}, amount)
+    let dispose
+    const tm = setTimeout(() => {
+      dispose = effect()
+    }, amount)
     return () => {
       clearTimeout(tm)
       dispose?.()

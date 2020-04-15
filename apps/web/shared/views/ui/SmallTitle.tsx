@@ -28,7 +28,7 @@ export const SmallTitle = memo(
               letterSpacing: 1,
               opacity: isActive ? 1 : 0.5,
               fontSize: 15,
-              fontWeight: '400',
+              fontWeight: '500',
               marginVertical: 3,
             }}
           >

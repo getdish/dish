@@ -23,9 +23,12 @@ export const RatingView = forwardRef(
     { color, percent, size: sizeIn, hideEmoji, ...rest }: RatingViewProps,
     ref
   ) => {
+    if (isNaN(percent)) {
+      percent = 0
+    }
     const borderColor =
       percent > 84 ? 'lightgreen' : percent > 60 ? 'gold' : 'red'
-    const size = sizeIn == 'sm' ? 38 : sizeIn == 'md' ? 48 : 72
+    const size = sizeIn == 'sm' ? 32 : sizeIn == 'md' ? 48 : 72
     return (
       <VStack
         ref={ref as any}
@@ -57,19 +60,18 @@ export const RatingView = forwardRef(
         <VStack
           backgroundColor="#fff"
           borderRadius={100}
-          shadowColor={`rgba(0,0,0,${sizeIn == 'lg' ? 0.15 : 0.2})`}
+          shadowColor={`rgba(0,0,0,${sizeIn == 'lg' ? 0.05 : 0.1})`}
           shadowRadius={size / 10}
-          shadowOffset={{ height: 1, width: 0 }}
+          shadowOffset={{ height: 3, width: 0 }}
           width={size}
           height={size}
           alignItems="center"
-          justifyContent="center"
-          // padding={3 + (sizeIn == 'lg' ? 1 : 0)}
+          // justifyContent="center"
         >
           <ProgressCircle
             percent={percent}
-            radius={size * 0.4522}
-            borderWidth={size * 0.06}
+            radius={size * 0.5}
+            borderWidth={size * 0.07}
             color={borderColor}
           >
             <VStack
@@ -85,7 +87,7 @@ export const RatingView = forwardRef(
                   fontSize: size * 0.38,
                   fontWeight: '600',
                   color,
-                  letterSpacing: -(size / 35),
+                  letterSpacing: -(size / 90),
                 }}
               >
                 {percent}

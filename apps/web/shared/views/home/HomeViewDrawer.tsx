@@ -13,8 +13,9 @@ import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 const colors = [
-  'rgba(255,255,255,0.23)',
+  'rgba(255,255,255,0.15)',
   'rgba(255,255,255,0.8)', //rgba(255,255,255,0.9)',
+  'rgba(255,255,255,1)', //'rgba(255,255,255,0.95)',
   'rgba(255,255,255,1)', //'rgba(255,255,255,0.95)',
   'rgba(255,255,255,1)', //'rgba(255,255,255,0.99)',
   'rgba(255,255,255,1)', //'rgba(255,255,255,0.95)',
@@ -40,7 +41,7 @@ export function HomeViewDrawer(props: { children: any }) {
       zIndex={10}
       width={drawerWidth + drawerPadLeft}
       // minWidth="50%"
-      shadowColor="rgba(0,0,0,0.2)"
+      shadowColor="rgba(0,0,0,0.1)"
       shadowRadius={44}
       // borderRightWidth={1}
       // borderBottomRightRadius={drawerBorderRadius}
@@ -56,7 +57,7 @@ export function HomeViewDrawer(props: { children: any }) {
         >
           <LinearGradient colors={colors} style={[StyleSheet.absoluteFill]} />
 
-          <ZStack fullscreen right={550}>
+          <ZStack fullscreen right={850}>
             <LinearGradient
               colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
               style={[StyleSheet.absoluteFill]}
