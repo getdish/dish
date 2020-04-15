@@ -1,4 +1,4 @@
-import { TagType, slugify } from '@dish/models'
+import { Tag as TagModel, TagType } from '@dish/models'
 
 export type Tag = {
   id: string
@@ -15,7 +15,8 @@ export type Tag = {
 export type NavigableTag = Partial<Tag> & Pick<Tag, 'name' | 'type'>
 
 export const getTagId = (tag: NavigableTag) => {
-  return `${slugify(tag.type)}${slugify(tag.name)}`
+  const tag_model = new TagModel(tag)
+  return tag_model.slug()
 }
 
 export const tagLenses: Tag[] = [

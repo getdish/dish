@@ -48,6 +48,12 @@ SELECT jsonb_agg(
       OR
       (
         tag_names @> to_json(string_to_array(?4, ','))::jsonb
+        AND (
+          -- TODO: do some actual "this restaurant is unique" query
+          rating > 4
+          OR
+          ?11 != 'FILTER BY UNIQUE'
+        )
         AND
         ?4 != ''
       )

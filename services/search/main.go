@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/go-pg/pg/v9"
 	"github.com/rs/cors"
@@ -60,7 +61,9 @@ func getBoundingBox(r *http.Request) (string, string, string, string) {
 
 func search(w http.ResponseWriter, r *http.Request) {
 	var json string
+	tags := getParam("tags", r)
 	ignore_bounding_box := ""
+	filter_by_unique := ""
 	distance := "0"
 	x1, y1, x2, y2 := getBoundingBox(r)
 	missing_bb_values := hasEmpty([]string{
@@ -75,6 +78,10 @@ func search(w http.ResponseWriter, r *http.Request) {
 	if getParam("distance", r) != "" {
 		distance = getParam("distance", r)
 	}
+	if tagsHas("unique", r) {
+		filter_by_unique = "FILTER BY UNIQUE"
+		tags = removeTag(tags, "unique")
+	}
 	_, err := db.Query(
 		pg.Scan(&json),
 		search_query,
@@ -82,10 +89,11 @@ func search(w http.ResponseWriter, r *http.Request) {
 		getParam("lat", r),
 		distance,
 		getParam("query", r),
-		getParam("tags", r),
+		tags,
 		getParam("limit", r),
 		x1, y1, x2, y2,
 		ignore_bounding_box,
+		filter_by_unique,
 	)
 	if err != nil {
 		fmt.Println(err)
@@ -115,6 +123,29 @@ func top_dishes(w http.ResponseWriter, r *http.Request) {
 		json = "[]"
 	}
 	fmt.Fprintf(w, json)
+}
+
+func tagsHas(target_tag string, r *http.Request) bool {
+	tags := strings.Split(getParam("tags", r), ",")
+	for _, tag := range tags {
+		tag = strings.TrimSpace(tag)
+		tag = strings.ToLower(tag)
+		if tag == target_tag {
+			return true
+		}
+	}
+	return false
+}
+
+func removeTag(tags_param string, tag_to_remove string) string {
+	tags := strings.Split(tags_param, ",")
+	for i, tag := range tags {
+		if tag == tag_to_remove {
+			tags = append(tags[:i], tags[i+1:]...)
+			break
+		}
+	}
+	return strings.Join(tags, ",")
 }
 
 func handleRequests() {
