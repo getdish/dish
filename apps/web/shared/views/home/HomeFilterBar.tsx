@@ -44,10 +44,10 @@ export default memo(function HomeFilterBar({
               key={tag.id}
               filter={tag}
               isActive={activeTagIds[getTagId(tag)]}
-              {...(hasPrev && { marginLeft: -4, borderLeftWidth: 0 })}
-              {...(hasNext && { borderRightWidth: 0 })}
+              {...(hasPrev && { marginLeft: -4 })}
+              {...(hasNext && { marginRight: -1, zIndex: 10 - index })}
               {...extraProps}
-              height={32}
+              height={30}
             />
           )
         })}
@@ -72,7 +72,6 @@ const FilterButton = memo(
         <SmallButton isActive={isActive} {...rest}>
           <Text
             style={{
-              color: isActive ? '#000' : bg,
               fontSize: 15,
               fontWeight: '400',
             }}
