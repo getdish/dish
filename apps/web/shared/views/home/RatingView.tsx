@@ -7,7 +7,9 @@ import { StackBaseProps, VStack } from '../ui/Stacks'
 
 export type RatingViewProps = StackBaseProps & {
   size: 'lg' | 'md' | 'sm'
-  restaurant: Partial<Restaurant>
+  percent: number
+  color: string
+  hideEmoji?: boolean
 }
 
 export const getRestaurantRating = (restaurant: Partial<Restaurant>) =>
@@ -17,9 +19,10 @@ export const getRankingColor = (percent: number) =>
   percent > 84 ? 'green' : percent > 60 ? 'orange' : 'red'
 
 export const RatingView = forwardRef(
-  ({ restaurant, size: sizeIn, ...rest }: RatingViewProps, ref) => {
-    const percent = getRestaurantRating(restaurant)
-    const color = getRankingColor(percent)
+  (
+    { color, percent, size: sizeIn, hideEmoji, ...rest }: RatingViewProps,
+    ref
+  ) => {
     const borderColor =
       percent > 84 ? 'lightgreen' : percent > 60 ? 'gold' : 'red'
     const size = sizeIn == 'sm' ? 38 : sizeIn == 'md' ? 48 : 72
@@ -31,7 +34,7 @@ export const RatingView = forwardRef(
         height={size}
         {...rest}
       >
-        {percent >= 80 && (
+        {!hideEmoji && percent >= 80 && (
           <VStack
             position="absolute"
             top={-2 + (sizeIn == 'lg' ? 0 : -4)}
@@ -44,7 +47,7 @@ export const RatingView = forwardRef(
               style={{
                 fontSize: Math.max(14, size * 0.3),
                 textShadowColor: 'rgba(0,0,0,0.25)',
-                textShadowRadius: size * 0.05,
+                textShadowRadius: size * 0.015,
               }}
             >
               {percent >= 90 ? '🏆' : '⭐️'}
@@ -66,7 +69,7 @@ export const RatingView = forwardRef(
           <ProgressCircle
             percent={percent}
             radius={size * 0.4522}
-            borderWidth={size * 0.07}
+            borderWidth={size * 0.06}
             color={borderColor}
           >
             <VStack

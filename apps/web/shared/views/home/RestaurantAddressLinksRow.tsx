@@ -74,10 +74,6 @@ export const RestaurantAddressLinksRow = memo(
                   />
                 </Text>
               )}
-
-              <Divider flex width={20} />
-
-              <RestaurantTagsRow showMore restaurant={restaurant} />
             </HStack>
           </HoverablePopover>
         </HStack>

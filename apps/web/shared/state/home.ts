@@ -61,8 +61,12 @@ export type HomeStateItemSearch = HomeStateItemBase & {
   type: 'search' | 'userSearch'
   activeTagIds: { [id: string]: boolean }
   results: SearchResults
+  // for not forcing map to be always synced
+  searchedCenter?: LngLat
+  searchedSpan?: LngLat
   user?: User
   username?: string
+  hasMovedMap: boolean
 }
 
 export type HomeStateItemRestaurant = HomeStateItemBase & {
@@ -359,6 +363,7 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         : {}
       const searchState: HomeStateItemSearch = {
         ...fallbackState,
+        hasMovedMap: false,
         results: { status: 'loading' },
         ...om.state.home.lastSearchState,
         ...newState,
@@ -751,24 +756,11 @@ const runSearch: AsyncAction<{ quiet?: boolean } | void> = async (om, opts) => {
   const ogQuery = om.state.home.currentState.searchQuery ?? ''
   let query = ogQuery ?? ''
   const tags = getActiveTags(om.state.home)
-  console.log('search: run', query, tags)
 
   const shouldCancel = () => {
     const answer = !state || lastSearchAt != curId
     if (answer) console.log('search: cancel')
     return answer
-  }
-
-  if (true) {
-    console.log(
-      'TODO one search service accepts tags, send in tags',
-      state.activeTagIds
-    )
-    if (Object.keys(state.activeTagIds).length) {
-      query = `${query} ${_.uniq(
-        tags.filter((tag) => tag.type !== 'lense').map((tag) => tag.name)
-      ).join(' ')}`
-    }
   }
 
   query = query.trim()
@@ -929,11 +921,14 @@ const setMapArea: AsyncAction<{ center: LngLat; span: LngLat }> = async (
   om,
   { center, span }
 ) => {
+  const state = om.state.home.currentState
+
+  if (isSearchState(state)) {
+    state.hasMovedMap = true
+  }
+
   om.state.home.currentState.center = center
   om.state.home.currentState.span = span
-  om.actions.home.runSearch({
-    quiet: true,
-  })
 
   // reverse geocode location
   try {

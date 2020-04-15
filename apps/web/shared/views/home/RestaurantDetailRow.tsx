@@ -57,12 +57,7 @@ export const RestaurantDetailRow = memo(
     )
 
     return (
-      <HStack
-        paddingHorizontal={20}
-        alignItems="center"
-        spacing={spaceSize}
-        {...rest}
-      >
+      <HStack alignItems="center" spacing={spaceSize} {...rest}>
         {rows.map((row, index) => (
           <React.Fragment key={row.title}>
             <VStack>
@@ -77,8 +72,6 @@ export const RestaurantDetailRow = memo(
             )}
           </React.Fragment>
         ))}
-
-        <RestaurantFavoriteStar restaurant={restaurant} />
       </HStack>
     )
   }

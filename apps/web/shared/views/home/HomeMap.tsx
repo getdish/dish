@@ -8,7 +8,7 @@ import { LngLat, isSearchState, setMapView } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Map, useMap } from '../map'
 import { ZStack } from '../ui/Stacks'
-import { getRankingColor, getRestaurantRating } from './RatingView'
+import { getRankingColor, getRestaurantRating } from './RestaurantRatingView'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 export function centerMapToRegion(p: {
@@ -276,6 +276,7 @@ export const HomeMap = memo(() => {
         (hoveredRestaurant) => {
           if (!hoveredRestaurant) return
           const index = restaurantIds.indexOf(hoveredRestaurant.id)
+          console.log('hovering', hoveredRestaurant, restaurantIds, index)
           if (map.annotations[index]) {
             map.annotations[index].selected = true
           }
@@ -360,7 +361,7 @@ export const HomeMap = memo(() => {
         }
       }
     },
-    200,
+    40,
     [!!map, restaurantsVersion]
   )
 
