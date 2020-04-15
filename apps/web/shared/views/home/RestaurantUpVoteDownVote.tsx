@@ -27,7 +27,7 @@ export const RestaurantUpVoteDownVote = memo(
           filter: rating !== 0 ? '' : 'grayscale(100%)',
         }}
       >
-        <VStack pointerEvents="auto" width={26}>
+        <VStack pointerEvents="auto" width={22}>
           <VoteButton
             style={styles.topButton}
             active={rating == 1}
@@ -89,8 +89,8 @@ const VoteButton = (props: any) => {
 const styles = StyleSheet.create({
   button: {
     height: 35,
-    width: 20,
-    marginLeft: 8,
+    width: 18,
+    marginLeft: 6,
     borderWidth: 1,
     borderColor: '#ddd',
     alignItems: 'center',

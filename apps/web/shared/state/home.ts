@@ -141,6 +141,9 @@ const breadcrumbStates = (state: HomeStateBase) => {
         if (cur.type === 'restaurant' && crumbs.some(isSearchState)) {
           break
         }
+        if (isSearchState(cur) && crumbs.some(isSearchState)) {
+          break
+        }
         // we could prevent stacking userSearch
         // if (cur.type === 'search' && crumbs.some(x => x.type === 'userSearch'))
         crumbs.unshift(cur)
@@ -464,7 +467,8 @@ const popTo: Action<HomeStateItem['type'] | number> = (om, item) => {
 
   let type: HomeStateItem['type']
   if (typeof item == 'number') {
-    const index = om.state.home.states.length - 1 + item
+    const lastIndex = om.state.home.states.length - 1
+    const index = lastIndex + item
     type = om.state.home.states[index]?.type
     if (!type) {
       console.warn('no item at index', index)
@@ -475,7 +479,6 @@ const popTo: Action<HomeStateItem['type'] | number> = (om, item) => {
   }
 
   const stateItem = _.findLast(om.state.router.history, (x) => x.name == type)
-
   if (
     stateItem === om.state.router.history[om.state.router.history.length - 1]
   ) {
@@ -1169,7 +1172,10 @@ const requestLocation: Action = (om) => {}
 
 type HomeStateDerived = Om['state']['home']
 
-export const getActiveTags = (home: HomeStateDerived, state: HomeStateItem) => {
+export const getActiveTags = (
+  home: HomeStateDerived,
+  state: HomeStateItem = home.currentState
+) => {
   const lastState = home.states[home.states.length - 1]
   const curState = state ?? lastState
   const activeTagIds = curState?.['activeTagIds'] ?? {}

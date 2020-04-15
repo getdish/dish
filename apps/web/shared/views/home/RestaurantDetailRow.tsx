@@ -32,14 +32,14 @@ export const RestaurantDetailRow = memo(
 
     const spaceSize = '6%'
 
-    const titleEl = (title: string) => (
+    const titleEl = ({ title, color }: { title: string; color: string }) => (
       <Text
         numberOfLines={1}
         style={{
           textAlign: centered ? 'center' : 'left',
           fontWeight: '600',
           fontSize: 14,
-          color: open_color,
+          color,
           marginBottom: 3,
         }}
       >
@@ -66,7 +66,7 @@ export const RestaurantDetailRow = memo(
         {rows.map((row, index) => (
           <React.Fragment key={row.title}>
             <VStack>
-              {titleEl(row.title)}
+              {titleEl(row)}
               {contentEl(row.content)}
             </VStack>
             {index !== rows.length - 1 && (
@@ -79,7 +79,6 @@ export const RestaurantDetailRow = memo(
         ))}
 
         <RestaurantFavoriteStar restaurant={restaurant} />
-        <RestaurantTagsRow showMore restaurant={restaurant} />
       </HStack>
     )
   }

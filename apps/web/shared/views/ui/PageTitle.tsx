@@ -10,6 +10,7 @@ export const PageTitle = memo(
         width="100%"
         minHeight={68}
         paddingVertical={12}
+        paddingBottom={18}
         alignItems="center"
         justifyContent="center"
         {...rest}
@@ -20,9 +21,9 @@ export const PageTitle = memo(
             maxWidth: '80%',
             textAlign: 'center',
             opacity: 1,
-            fontSize: 26,
-            lineHeight: 32,
-            fontWeight: '400',
+            fontSize: 22,
+            lineHeight: 28,
+            fontWeight: '300',
           }}
         >
           {children}
@@ -33,7 +34,7 @@ export const PageTitle = memo(
                 display: 'block',
                 textAlign: 'center',
                 width: '100%',
-                color: '#555',
+                color: '#666',
                 fontSize: 18,
                 fontWeight: '40',
               }}
