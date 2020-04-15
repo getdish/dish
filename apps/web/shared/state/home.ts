@@ -431,17 +431,17 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
       }
     }
   } else {
-    const next = []
-    const added = new Set()
-    const states = om.state.home.states
-    // garbage collect duplicate states
-    for (const state of states) {
-      if (!added.has(state.type)) {
-        added.add(state.type)
-        next.push(state)
-      }
-    }
-    om.state.home.states = [...next, nextState]
+    // const prev = []
+    // const added = new Set()
+    // const states = [...om.state.home.states].reverse()
+    // // garbage collect duplicate states, only one of each type allowed
+    // for (const state of states) {
+    //   if (!added.has(state.type)) {
+    //     added.add(state.type)
+    //     prev.push(state)
+    //   }
+    // }
+    om.state.home.states = [...om.state.home.states, nextState]
   }
 
   if (!om.state.home.started) {

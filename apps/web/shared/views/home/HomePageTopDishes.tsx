@@ -113,38 +113,31 @@ const HomeViewTopDishesContent = memo(() => {
   }
   return (
     <ScrollView style={{ flex: 1, overflow: 'hidden' }}>
-      <VStack paddingVertical={20} paddingTop={95} spacing>
-        <SmallTitle
-          after={
-            <HoverablePopover
-              position="right"
-              contents={
-                <Box>
-                  {[
-                    'All',
-                    'Asia',
-                    'Americas',
-                    'Europe',
-                    'Mid-East',
-                    'Africa',
-                  ].map((tag) => (
-                    <SmallButton isActive={tag === 'All'} key={tag}>
-                      {tag}
-                    </SmallButton>
-                  ))}
-                </Box>
-              }
-            >
-              <VStack pointerEvents="auto">
-                <Text></Text>
-              </VStack>
-            </HoverablePopover>
-          }
-        >
+      <VStack paddingVertical={20} paddingTop={95} spacing="xl">
+        <SmallTitle centerDivider>
           {om.state.home.lastActiveTags.find((x) => x.type === 'lense')
             ?.description ?? ''}{' '}
           in {om.state.home.location?.name ?? 'San Francisco'}
         </SmallTitle>
+
+        {/* <HoverablePopover
+          position="right"
+          contents={
+            <Box>
+              {['All', 'Asia', 'Americas', 'Europe', 'Mid-East', 'Africa'].map(
+                (tag) => (
+                  <SmallButton isActive={tag === 'All'} key={tag}>
+                    {tag}
+                  </SmallButton>
+                )
+              )}
+            </Box>
+          }
+        >
+          <VStack pointerEvents="auto">
+            <Text>123</Text>
+          </VStack>
+        </HoverablePopover> */}
 
         <HomeViewTopDishesTrending />
 

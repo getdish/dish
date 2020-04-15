@@ -9,24 +9,33 @@ export const SmallTitle = memo(
   ({
     children,
     isActive,
+    centerDivider,
     after,
     ...rest
-  }: StackBaseProps & { after?: any; isActive?: boolean }) => {
+  }: StackBaseProps & {
+    after?: any
+    isActive?: boolean
+    centerDivider?: boolean
+  }) => {
     return (
-      <VStack alignItems="center" paddingBottom={4} {...rest}>
-        <HStack alignItems="center">
+      <VStack alignItems="center" {...rest}>
+        <HStack width="100%" alignItems="center" justifyContent="center">
+          {centerDivider && <Divider flex />}
           <Text
             style={{
               paddingHorizontal: 30,
               textTransform: 'uppercase',
-              letterSpacing: 2,
+              letterSpacing: 1,
               opacity: isActive ? 1 : 0.5,
               fontSize: 15,
-              fontWeight: '400',
+              fontWeight: '300',
+              // display: 'flex',
+              // flex: 20,
             }}
           >
             {children}
           </Text>
+          {centerDivider && <Divider flex />}
           {after && (
             <>
               <Spacer size="xs" />
@@ -34,8 +43,12 @@ export const SmallTitle = memo(
             </>
           )}
         </HStack>
-        <Spacer size="sm" />
-        <Divider />
+        {!centerDivider && (
+          <>
+            <Spacer size="sm" />
+            <Divider />
+          </>
+        )}
       </VStack>
     )
   }

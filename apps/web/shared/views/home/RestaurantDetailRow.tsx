@@ -3,7 +3,10 @@ import React, { memo } from 'react'
 import { StyleSheet, Text } from 'react-native'
 
 import { Divider } from '../ui/Divider'
+import { Spacer } from '../ui/Spacer'
 import { HStack, StackBaseProps, VStack } from '../ui/Stacks'
+import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
+import { RestaurantTagsRow } from './RestaurantTagsRow'
 
 export const RestaurantDetailRow = memo(
   ({
@@ -16,83 +19,67 @@ export const RestaurantDetailRow = memo(
     restaurant: Restaurant
     centered?: boolean
   }) => {
+    const isSm = size === 'sm'
+
     const [open_text, open_color, next_time] = openingHours(restaurant)
     const [price_label, price_color, price_range] = priceRange(restaurant)
-    const isSm = size === 'sm'
+
+    const rows = [
+      { title: open_text, content: next_time, color: open_color },
+      { title: price_label, content: price_range, color: price_color },
+      { title: 'Delivers', content: 'Uber, PostMates', color: 'gray' },
+    ]
+
+    const spaceSize = '6%'
+
+    const titleEl = (title: string) => (
+      <Text
+        numberOfLines={1}
+        style={{
+          textAlign: centered ? 'center' : 'left',
+          fontWeight: '600',
+          fontSize: 14,
+          color: open_color,
+          marginBottom: 3,
+        }}
+      >
+        {title}
+      </Text>
+    )
+
+    const contentEl = (content: string) => (
+      <Text
+        numberOfLines={1}
+        style={[styles.subText, centered && { textAlign: 'center' }]}
+      >
+        {content}
+      </Text>
+    )
+
     return (
       <HStack
-        paddingLeft={22}
-        paddingRight={20}
+        paddingHorizontal={20}
         alignItems="center"
-        spacing="7%"
+        spacing={spaceSize}
         {...rest}
       >
-        <VStack>
-          <Text
-            numberOfLines={1}
-            style={{
-              textAlign: centered ? 'center' : 'left',
-              fontWeight: '600',
-              fontSize: 14,
-              color: open_color,
-              marginBottom: 3,
-            }}
-          >
-            {open_text}
-          </Text>
-          <Text
-            numberOfLines={1}
-            style={[styles.subText, centered && { textAlign: 'center' }]}
-          >
-            {next_time}
-          </Text>
-        </VStack>
+        {rows.map((row, index) => (
+          <React.Fragment key={row.title}>
+            <VStack>
+              {titleEl(row.title)}
+              {contentEl(row.content)}
+            </VStack>
+            {index !== rows.length - 1 && (
+              <>
+                <Spacer size={spaceSize} />
+                <Divider vertical height={25} />
+              </>
+            )}
+          </React.Fragment>
+        ))}
 
-        <Divider vertical height={25} />
-
-        <VStack>
-          <Text
-            numberOfLines={1}
-            style={{
-              textAlign: centered ? 'center' : 'left',
-              fontWeight: '600',
-              fontSize: 14,
-              color: price_color,
-              marginBottom: 3,
-            }}
-          >
-            {price_label}
-          </Text>
-          <Text
-            numberOfLines={1}
-            style={[styles.subText, centered && { textAlign: 'center' }]}
-          >
-            {price_range}
-          </Text>
-        </VStack>
-
-        <Divider vertical height={25} />
-
-        <VStack>
-          <Text
-            numberOfLines={1}
-            style={{
-              textAlign: centered ? 'center' : 'left',
-              fontWeight: '600',
-              fontSize: 14,
-              color: 'gray',
-              marginBottom: 3,
-            }}
-          >
-            Delivers
-          </Text>
-          <Text
-            numberOfLines={1}
-            style={[styles.subText, centered && { textAlign: 'center' }]}
-          >
-            Uber, PM, DD
-          </Text>
-        </VStack>
+        <RestaurantFavoriteStar restaurant={restaurant} />
+        <RestaurantTagsRow showMore restaurant={restaurant} />
       </HStack>
     )
   }
