@@ -39,7 +39,7 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
   config.optimization = config.optimization || {}
 
   if (config.optimization) {
-    config.optimization.splitChunks = isProduction
+    config.optimization.splitChunks = isProduction ? {} : false
     config.optimization.runtimeChunk = false
     if (isProduction) {
       config.optimization.usedExports = true

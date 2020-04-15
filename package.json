@@ -15,8 +15,7 @@
   },
   "scripts": {
     "start": "",
-    "build": "tsc -b",
-    "build:watch": "tsc -b -w --preserveWatchOutput",
+    "build:watch": "yarn wsrun watch",
     "test": "ava",
     "clean": "bin/clean.sh",
     "format": "swift-format --recursive --in-place ./apps/ios/dish",
