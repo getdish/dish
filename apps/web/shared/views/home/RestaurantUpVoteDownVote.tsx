@@ -89,15 +89,17 @@ const VoteButton = (props: any) => {
 const styles = StyleSheet.create({
   button: {
     height: 35,
-    width: 18,
+    width: 22,
+    paddingLeft: 4,
     marginLeft: 6,
     borderWidth: 1,
     borderColor: '#ddd',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff',
-    shadowColor: 'rgba(0,0,0,0.1)',
+    shadowColor: 'rgba(0,0,0,0.09)',
     shadowRadius: 3,
+    shadowOffset: { height: 1, width: 0 },
   },
   hovered: {
     backgroundColor: '#eee',

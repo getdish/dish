@@ -6,7 +6,7 @@ import { Box } from '../ui/Box'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { SmallTitle } from '../ui/SmallTitle'
 import { VStack } from '../ui/Stacks'
-import { RatingView } from './RatingView'
+import { RestaurantRatingView } from './RestaurantRatingView'
 import { TableCell, TableRow } from './TableRow'
 
 export const RestaurantRatingDetail = memo(
@@ -51,7 +51,7 @@ export const RestaurantRatingDetail = memo(
           </Box>
         }
       >
-        <RatingView size={size} restaurant={restaurant} />
+        <RestaurantRatingView size={size} restaurant={restaurant} />
       </HoverablePopover>
     )
   }

@@ -381,9 +381,7 @@ export default memo(function HomeSearchBar() {
                         om.actions.home.setSearchQuery(text ?? '')
                       }}
                       placeholder={
-                        isSearchingCuisine
-                          ? 'bratwurst...'
-                          : 'Search dish, cuisine'
+                        isSearchingCuisine ? '...' : 'Search dish, cuisine'
                       }
                       style={[
                         styles.textInput,
@@ -510,12 +508,12 @@ const styles = StyleSheet.create({
   },
   containerInner: {
     flex: 1,
-    maxWidth: pageWidthMax,
+    maxWidth: pageWidthMax + 60,
     width: '100%',
     backgroundColor: 'rgba(255,255,255,1)',
     height: '100%',
     flexDirection: 'row',
-    borderRadius: drawerBorderRadius,
+    borderRadius: 14,
     shadowColor: 'rgba(0,0,0,0.1)',
     shadowRadius: 14,
     shadowOffset: { height: 4, width: 0 },

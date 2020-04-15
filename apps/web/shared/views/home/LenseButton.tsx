@@ -52,7 +52,7 @@ export const LenseButton = memo(
           }}
           {...(isActive && {
             opacity: 1,
-            // backgroundColor: lenseColor,
+            backgroundColor: lenseColor,
             borderColor: lenseColor,
             // hoverStyle: {
             //   backgroundColor: bgHover,

@@ -173,3 +173,22 @@ export function LinkButton<
     </VStack>
   )
 }
+
+export function OverlayLinkButton<
+  Name extends keyof RoutesTable = keyof RoutesTable,
+  Params = RoutesTable[Name]['params']
+>(props: LinkButtonProps<Name, Params>) {
+  return (
+    <LinkButton
+      backgroundColor="#fff"
+      paddingVertical={10}
+      paddingHorizontal={16}
+      borderRadius={90}
+      shadowColor="rgba(0,0,0,0.175)"
+      shadowRadius={13}
+      shadowOffset={{ width: 0, height: 3 }}
+      overflow="hidden"
+      {...props}
+    />
+  )
+}

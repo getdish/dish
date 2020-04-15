@@ -16,8 +16,8 @@ import {
 import { useOvermind } from '../../state/om'
 import { ErrorBoundary } from '../ErrorBoundary'
 import { VStack, ZStack } from '../ui/Stacks'
-import { HomeControlsOverlay } from './HomeControlsOverlay'
 import { HomeMap } from './HomeMap'
+import { HomeMapControlsOverlay } from './HomeMapControlsOverlay'
 import { HomeMapPIP } from './HomeMapPIP'
 import HomePageRestaurant from './HomePageRestaurant'
 import HomePageSearchResults from './HomePageSearchResults'
@@ -46,7 +46,7 @@ export default function HomePage() {
           {showPip && <HomeMapPIP />}
         </ErrorBoundary>
       )}
-      <HomeControlsOverlay />
+      <HomeMapControlsOverlay />
       <HomeSearchBar />
       <HomeViewDrawer>
         <HomeViewContent />

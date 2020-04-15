@@ -74,7 +74,10 @@ const createStack = (defaultStyle?: ViewStyle) => {
         if (!innerRef.current) return
         const node = innerRef.current?.['_reactInternalFiber']?.child.stateNode
         if (!node) return
-        const names = className.split(' ')
+        const names = className
+          .trim()
+          .split(' ')
+          .filter(Boolean)
         if (disabled) names.push('force-disable')
         names.forEach((x) => node.classList.add(x))
         return () => names.forEach((x) => node.classList.remove(x))

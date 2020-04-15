@@ -10,6 +10,7 @@ import { Link } from '../ui/Link'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { bgLightLight } from './colors'
+import { DishView } from './DishView'
 import { RankingView } from './RankingView'
 import { RestaurantAddComment } from './RestaurantAddComment'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
@@ -34,6 +35,8 @@ export const RestaurantListItem = ({
   const hoverTm = useRef<any>(0)
   const userReview = om.state.user.allReviews[restaurant.id]
 
+  console.log('userReview', userReview)
+
   useEffect(() => {
     return om.reaction(
       (state) => state.home.activeIndex,
@@ -42,6 +45,11 @@ export const RestaurantListItem = ({
       }
     )
   }, [])
+
+  const pad = 18
+  const padLeft = 20
+
+  const isShowingComment = isEditingUserPage(om.state)
 
   return (
     <Hoverable
@@ -73,7 +81,9 @@ export const RestaurantListItem = ({
             <ZStack
               fullscreen
               zIndex={100}
-              top={40}
+              top={20}
+              bottom={0}
+              left={-13}
               justifyContent="center"
               pointerEvents="none"
               opacity={isHovered ? 1 : 0}
@@ -82,7 +92,7 @@ export const RestaurantListItem = ({
             </ZStack>
 
             <VStack
-              padding={18}
+              padding={pad}
               paddingVertical={22}
               paddingRight={118}
               width="75%"
@@ -104,11 +114,18 @@ export const RestaurantListItem = ({
                 </HStack>
               </Link>
 
-              <HStack alignItems="center" paddingLeft={22} paddingTop={4}>
+              <HStack
+                alignItems="center"
+                paddingLeft={padLeft}
+                paddingTop={4}
+                spacing
+                overflow="hidden"
+              >
                 <RestaurantAddressLinksRow
                   showAddress
                   restaurant={restaurant}
                 />
+                <RestaurantTagsRow showMore restaurant={restaurant} />
               </HStack>
 
               {isEditingUserPage(om.state) && (
@@ -122,15 +139,23 @@ export const RestaurantListItem = ({
               <Spacer />
 
               <HStack alignItems="center" marginTop={-5}>
-                <HStack alignItems="center" paddingLeft={18}></HStack>
+                <HStack alignItems="center" paddingLeft={padLeft}></HStack>
               </HStack>
 
-              <RestaurantDetailRow size="sm" restaurant={restaurant} />
               {/* <Spacer size="sm" /> */}
+              <HStack paddingHorizontal={20}>
+                <RestaurantRatingDetail restaurant={restaurant} />
+                <Spacer size="lg" />
+                <Divider vertical />
+                <RestaurantDetailRow size="sm" restaurant={restaurant} />
+              </HStack>
             </VStack>
 
             <VStack width={500} marginLeft={-60}>
-              <RestaurantPeek restaurant={restaurant} />
+              <RestaurantPeek
+                size={isShowingComment ? 'lg' : 'md'}
+                restaurant={restaurant}
+              />
             </VStack>
           </HStack>
         </ScrollView>
@@ -141,7 +166,13 @@ export const RestaurantListItem = ({
 }
 
 export const RestaurantPeek = memo(
-  ({ restaurant }: { restaurant: Restaurant }) => {
+  ({
+    restaurant,
+    size = 'md',
+  }: {
+    size?: 'lg' | 'md'
+    restaurant: Restaurant
+  }) => {
     const spacing = 9
     const photos = Restaurant.allPhotos(restaurant).slice(0, 5)
     return (
@@ -150,32 +181,21 @@ export const RestaurantPeek = memo(
         marginRight={-spacing}
         marginBottom={-spacing}
       >
-        <VStack position="absolute" top={-11} left={-38} zIndex={100}>
-          <RestaurantRatingDetail restaurant={restaurant} />
-        </VStack>
         <HStack spacing={spacing}>
           {[...photos, photos[0], photos[0], photos[0]]
             .slice(0, 4)
             .map((photo, i) => {
               return (
-                <VStack
-                  key={i}
-                  borderRadius={10}
-                  shadowColor="rgba(0,0,0,0.2)"
-                  shadowRadius={4}
-                  shadowOffset={{ height: 2, width: 0 }}
-                  marginBottom={spacing}
-                  overflow="hidden"
-                >
-                  <Image
-                    source={{ uri: photo }}
-                    style={{
-                      width: 100,
-                      height: 100,
-                    }}
-                    resizeMode="cover"
-                  />
-                </VStack>
+                <DishView
+                  size={size === 'lg' ? 140 : 100}
+                  dish={
+                    {
+                      name: 'Bun bo hue',
+                      image: photo,
+                      price: (20 - i) * 30 + 200,
+                    } as any
+                  }
+                />
               )
             })}
         </HStack>
@@ -183,3 +203,22 @@ export const RestaurantPeek = memo(
     )
   }
 )
+
+/// <VStack
+///                   key={i}
+///                   borderRadius={10}
+///                   shadowColor="rgba(0,0,0,0.2)"
+///                   shadowRadius={4}
+///                   shadowOffset={{ height: 2, width: 0 }}
+///                   marginBottom={spacing}
+///                   overflow="hidden"
+///                 >
+///                   <Image
+///                     source={{ uri: photo }}
+///                     style={{
+///                       width: 100,
+///                       height: 100,
+///                     }}
+///                     resizeMode="cover"
+///                   />
+///                 </VStack>

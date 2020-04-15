@@ -37,7 +37,7 @@ export const RestaurantAddComment = memo(
 
     return (
       <TouchableOpacity activeOpacity={0.8} onPress={() => {}}>
-        <VStack marginBottom={-20} spacing="xs">
+        <VStack marginBottom={-25} marginTop={-6} spacing="xs">
           <HStack alignItems="center" spacing="sm">
             <Circle size={22} marginVertical={-5}>
               <Image source={avatar} style={{ width: 22, height: 22 }} />
@@ -78,10 +78,9 @@ export const RestaurantAddComment = memo(
 
           <HStack
             {...flatButtonStyle}
-            borderRadius={10}
+            borderRadius={13}
             flex={0}
             marginLeft={20}
-            maxWidth="70%"
           >
             <TextInput
               value={reviewText}

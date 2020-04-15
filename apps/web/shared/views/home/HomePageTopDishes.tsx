@@ -1,25 +1,27 @@
 import { Dish, Restaurant, TopDish } from '@dish/models'
 import _ from 'lodash'
 import React, { memo, useCallback, useState } from 'react'
-import { Image, ScrollView, Text } from 'react-native'
+import { ScrollView, Text } from 'react-native'
 
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItemHome } from '../../state/home'
 import { useOvermind } from '../../state/om'
-import { RoutesTable } from '../../state/router'
 import { Box } from '../ui/Box'
 import { HoverablePopover } from '../ui/HoverablePopover'
-import { Icon } from '../ui/Icon'
-import { LinkButton, LinkButtonProps } from '../ui/Link'
+import { LinkButton } from '../ui/Link'
+import { MediaQuery, mediaQueries } from '../ui/MediaQuery'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { SmallTitle, SmallerTitle } from '../ui/SmallTitle'
 import { Spacer } from '../ui/Spacer'
-import { HStack, StackBaseProps, VStack, ZStack } from '../ui/Stacks'
-import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
+import { HStack, VStack } from '../ui/Stacks'
+import { flatButtonStyle } from './baseButtonStyle'
 import { bgLightLight } from './colors'
-import HomeLenseBar from './HomeLenseBar'
-import { RatingView } from './RatingView'
+import { DishView } from './DishView'
+import HomeFilterBar from './HomeFilterBar'
+import HomeLenseBar, { HomeLenseBarOnly } from './HomeLenseBar'
+import { RestaurantButton } from './RestaurantButton'
 import { SmallButton } from './SmallButton'
+import { TrendingButton } from './TrendingButton'
 
 export default memoIsEqualDeep(function HomePageTopDIshes({
   state,
@@ -29,9 +31,7 @@ export default memoIsEqualDeep(function HomePageTopDIshes({
   return (
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
-      <Spacer size={18} />
       <VStack position="relative" flex={1}>
-        <HomeLenseBar activeTagIds={state.activeTagIds} />
         <HomeViewTopDishesContent />
       </VStack>
     </>
@@ -51,56 +51,53 @@ const HomeViewTopDishesTrending = memo(() => {
         }}
         // rank={index + 1}
       >
-        🍔 {restaurant.name}
+        {['🍔', '🌮', '🥗', '🍲', '🥩'][index % 4]} {restaurant.name}
       </TrendingButton>
     )
   }
   return (
-    <HStack paddingHorizontal={25}>
-      <VStack width="50%" spacing="sm">
-        <SmallerTitle hideDivider>Restaurants</SmallerTitle>
-        <>{allRestaurants.slice(0, 4).map(getTrending)}</>
-      </VStack>
-      <VStack width="50%" spacing="sm">
-        <SmallerTitle hideDivider>Dishes</SmallerTitle>
-        <>{allRestaurants.slice(4, 8).map(getTrending)}</>
-      </VStack>
-    </HStack>
+    <VStack spacing="lg">
+      <SmallTitle centerDivider>Trending</SmallTitle>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <VStack paddingHorizontal={25} spacing="sm">
+          <HStack flex={1} spacing={5} overflow="hidden">
+            <SmallerTitle
+              width={120}
+              paddingRight={10}
+              justifyContent="flex-end"
+              hideDivider
+            >
+              Restaurants
+            </SmallerTitle>
+            {allRestaurants.slice(0, 8).map(getTrending)}
+          </HStack>
+          <HStack flex={1} spacing={3} overflow="hidden">
+            <SmallerTitle
+              width={120}
+              paddingRight={10}
+              justifyContent="flex-end"
+              hideDivider
+            >
+              Dishes
+            </SmallerTitle>
+            {allRestaurants.slice(4).map(getTrending)}
+          </HStack>
+          <HStack flex={1} spacing={3} overflow="hidden">
+            <SmallerTitle
+              width={120}
+              paddingRight={10}
+              justifyContent="flex-end"
+              hideDivider
+            >
+              Lists
+            </SmallerTitle>
+            {allRestaurants.slice(2).map(getTrending)}
+          </HStack>
+        </VStack>
+      </ScrollView>
+    </VStack>
   )
 })
-
-const TrendingButton = <
-  Name extends keyof RoutesTable = keyof RoutesTable,
-  Params = RoutesTable[Name]['params']
->({
-  rank,
-  children,
-  ...rest
-}: LinkButtonProps<Name, Params> & { rank?: number }) => {
-  return (
-    <HStack alignItems="center">
-      {rank ? <Text>`${rank}. `</Text> : null}
-      <Icon
-        marginTop={2}
-        marginRight={4}
-        name="chevron-down"
-        size={14}
-        color="red"
-      />
-      <LinkButton
-        {...flatButtonStyle}
-        // backgroundColor="transparent"
-        margin={2}
-        flexDirection="row"
-        alignItems="center"
-        ellipse
-        {...rest}
-      >
-        <Text style={{ fontWeight: '600', lineHeight: 17 }}>{children}</Text>
-      </LinkButton>
-    </HStack>
-  )
-}
 
 const HomeViewTopDishesContent = memo(() => {
   const om = useOvermind()
@@ -113,35 +110,25 @@ const HomeViewTopDishesContent = memo(() => {
   }
   return (
     <ScrollView style={{ flex: 1, overflow: 'hidden' }}>
-      <VStack paddingVertical={20} paddingTop={95} spacing="xl">
-        <SmallTitle centerDivider>
-          {om.state.home.lastActiveTags.find((x) => x.type === 'lense')
-            ?.description ?? ''}{' '}
-          in {om.state.home.location?.name ?? 'San Francisco'}
-        </SmallTitle>
-
-        {/* <HoverablePopover
-          position="right"
-          contents={
-            <Box>
-              {['All', 'Asia', 'Americas', 'Europe', 'Mid-East', 'Africa'].map(
-                (tag) => (
-                  <SmallButton isActive={tag === 'All'} key={tag}>
-                    {tag}
-                  </SmallButton>
-                )
-              )}
-            </Box>
-          }
-        >
-          <VStack pointerEvents="auto">
-            <Text>123</Text>
-          </VStack>
-        </HoverablePopover> */}
-
+      <VStack paddingVertical={20} spacing="xl">
         <HomeViewTopDishesTrending />
 
-        <>
+        <VStack spacing="lg">
+          <SmallTitle centerDivider>
+            {om.state.home.lastActiveTags.find((x) => x.type === 'lense')
+              ?.description ?? ''}{' '}
+            in {om.state.home.location?.name ?? 'San Francisco'}
+          </SmallTitle>
+
+          <VStack spacing>
+            <HomeLenseBarOnly
+              activeTagIds={om.state.home.lastHomeState.activeTagIds}
+            />
+            <HomeFilterBar
+              activeTagIds={om.state.home.lastHomeState.activeTagIds}
+            />
+          </VStack>
+
           {[...results]
             // for now force japanese at top because its most filled out
             .sort((x) => (x.country === 'Japanese' ? -1 : 1))
@@ -152,7 +139,7 @@ const HomeViewTopDishesContent = memo(() => {
                 rank={index + 1}
               />
             ))}
-        </>
+        </VStack>
       </VStack>
     </ScrollView>
   )
@@ -232,115 +219,21 @@ const CountryTopDishesAndRestaurants = memo(
   }
 )
 
-const RestaurantButton = memo(
-  ({
-    restaurant,
-    active,
-    onHoverIn,
-    ...props
-  }: {
-    active?: boolean
-    restaurant: Partial<Restaurant>
-  } & StackBaseProps) => {
-    return (
-      <LinkButton
-        key={restaurant.name}
-        name="restaurant"
-        params={{ slug: restaurant.slug }}
-        {...(active ? flatButtonStyleSelected : flatButtonStyle)}
-        borderWidth={1}
-        borderColor="transparent"
-        fontWeight="400"
-        fontSize={14}
-        {...(active && {
-          borderColor: '#eee',
-          shadowColor: 'rgba(0,0,0,0.1)',
-          shadowRadius: 5,
-        })}
-        paddingRight={28}
-        {...props}
-        onHoverIn={() => {
-          onHoverIn(restaurant)
-        }}
-      >
-        {restaurant.name}
-        <RatingView
-          size="sm"
-          restaurant={restaurant}
-          position="absolute"
-          top={-6}
-          right={-16}
-        />
-      </LinkButton>
-    )
-  }
-)
-
-const DishView = memo(({ dish }: { dish: { name: string; image: string } }) => {
-  return (
-    <LinkButton
-      style={{
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginRight: 3,
-      }}
-      name="search"
-      params={{
-        dish: dish.name,
-      }}
-      position="relative"
-    >
-      <ZStack fullscreen zIndex={10}>
-        <RatingView
-          size="sm"
-          restaurant={{ rating: 4 }}
-          position="absolute"
-          top={-4}
-          right={-12}
-        />
-      </ZStack>
-      <VStack width={100} height={100}>
-        <VStack
-          className="ease-in-out"
-          shadowColor="rgba(0,0,0,0.17)"
-          shadowRadius={25}
-          shadowOffset={{ width: 0, height: 3 }}
-          width="100%"
-          height="100%"
-          borderRadius={28}
-          overflow="hidden"
-          hoverStyle={{
-            shadowRadius: 35,
-            shadowColor: 'rgba(0,0,0,0.35)',
-            zIndex: 10000,
-          }}
-        >
-          <Image
-            source={{ uri: dish.image }}
-            style={{ width: '100%', height: '100%' }}
-            resizeMode="cover"
-          />
-        </VStack>
-      </VStack>
-      <VStack
-        marginTop={3}
-        alignItems="center"
-        justifyContent="center"
-        overflow="hidden"
-      >
-        <Text
-          numberOfLines={1}
-          style={{
-            fontWeight: '600',
-            fontSize: 13,
-            lineHeight: 22,
-            opacity: 0.75,
-            textAlign: 'center',
-          }}
-        >
-          {dish.name}
-        </Text>
-      </VStack>
-    </LinkButton>
-  )
-})
+// {/* <HoverablePopover
+//           position="right"
+//           contents={
+//             <Box>
+//               {['All', 'Asia', 'Americas', 'Europe', 'Mid-East', 'Africa'].map(
+//                 (tag) => (
+//                   <SmallButton isActive={tag === 'All'} key={tag}>
+//                     {tag}
+//                   </SmallButton>
+//                 )
+//               )}
+//             </Box>
+//           }
+//         >
+//           <VStack pointerEvents="auto">
+//             <Text>123</Text>
+//           </VStack>
+//         </HoverablePopover> */}
