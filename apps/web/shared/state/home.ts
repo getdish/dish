@@ -1125,7 +1125,7 @@ function getTagRouteParams(
   if (!isHomeState(state) && !isSearchState(state)) {
     return null
   }
-  const allActiveTags = getActiveTags(om.state.home)
+  const allActiveTags = getActiveTags(om.state.home, state)
   // build our final path segment
   const filterTags = allActiveTags.filter((x) => x.type === 'filter')
   const otherTags = allActiveTags.filter(
@@ -1169,12 +1169,13 @@ const requestLocation: Action = (om) => {}
 
 type HomeStateDerived = Om['state']['home']
 
-export const getActiveTags = (
-  home: HomeStateDerived,
-  state: HomeStateItem = home.states[home.states.length - 1]
-) => {
-  return Object.keys(state?.['activeTagIds'] ?? {})
-    .map((x) => !!x && home.allTags[x])
+export const getActiveTags = (home: HomeStateDerived, state: HomeStateItem) => {
+  const lastState = home.states[home.states.length - 1]
+  const curState = state ?? lastState
+  const activeTagIds = curState?.['activeTagIds'] ?? {}
+  return Object.keys(activeTagIds)
+    .filter((x) => activeTagIds[x])
+    .map((x) => home.allTags[x])
     .filter(Boolean)
 }
 

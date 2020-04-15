@@ -20,11 +20,11 @@ export const SmallButton = ({
       justifyContent="center"
       {...flatButtonStyle}
       paddingHorizontal={12}
-      paddingVertical={4}
+      paddingVertical={3}
       backgroundColor={isActive ? 'transparent' : bgLight}
       borderRadius={20}
-      borderWidth={2}
-      borderColor={isActive ? `#aaa` : 'white'}
+      borderWidth={1}
+      borderColor={isActive ? `#aaa` : bgLight}
       hoverStyle={
         isActive
           ? {
