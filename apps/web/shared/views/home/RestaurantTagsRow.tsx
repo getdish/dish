@@ -26,16 +26,12 @@ export const RestaurantTagsRow = memo(
     const tags = r.getTagsWithRankings() ?? []
     const drawerWidth = useHomeDrawerWidthInner()
     return (
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={{ padding: 8 }}
-      >
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <HStack
           alignItems="center"
           minWidth={size === 'lg' ? drawerWidth : 0}
           justifyContent="center"
-          spacing={size == 'lg' ? 8 : 4}
+          spacing={size == 'lg' ? 8 : 8}
         >
           {tags
             .slice(0, showMore ? 2 : 10)
@@ -53,13 +49,7 @@ export const RestaurantTagsRow = memo(
                 />
               )
             )}
-          {!!showMore && <Text style={{ opacity: 0.5 }}>+5</Text>}
-          {showMore && (
-            <>
-              <Spacer />
-              <RestaurantTagButton size={size} restaurant={restaurant} />
-            </>
-          )}
+          {/* {!!showMore && <Text style={{ opacity: 0.5 }}>+5</Text>} */}
         </HStack>
       </ScrollView>
     )

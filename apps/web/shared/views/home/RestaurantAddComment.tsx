@@ -37,10 +37,10 @@ export const RestaurantAddComment = memo(
 
     return (
       <TouchableOpacity activeOpacity={0.8} onPress={() => {}}>
-        <VStack marginTop={20} marginBottom={-20} spacing="xs">
+        <VStack marginBottom={-20} spacing="xs">
           <HStack alignItems="center" spacing="sm">
-            <Circle size={26} marginVertical={-4}>
-              <Image source={avatar} style={{ width: 26, height: 26 }} />
+            <Circle size={22} marginVertical={-5}>
+              <Image source={avatar} style={{ width: 22, height: 22 }} />
             </Circle>
             <Text style={{ color: '#999' }}>
               <Link
@@ -65,8 +65,8 @@ export const RestaurantAddComment = memo(
                 }
               >
                 <div className="see-through inline-flex">
-                  {['👨‍🍳', '🇯🇵'].map((x) => (
-                    <Text key={x} style={{ opacity: 0.65 }}>
+                  {['👨‍🍳'].map((x) => (
+                    <Text key={x} style={{ opacity: 1 }}>
                       {x}
                     </Text>
                   ))}
@@ -81,7 +81,7 @@ export const RestaurantAddComment = memo(
             borderRadius={10}
             flex={0}
             marginLeft={20}
-            maxWidth="80%"
+            maxWidth="70%"
           >
             <TextInput
               value={reviewText}

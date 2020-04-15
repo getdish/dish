@@ -73,7 +73,7 @@ export function HomeLenseBarOnly(props: {
             key={lense.id + index}
             lense={lense}
             isActive={props.activeTagIds[getTagId(lense)]}
-            // minimal //={index > 0}
+            minimal={index > -1}
           />
         ))}
       </HStack>

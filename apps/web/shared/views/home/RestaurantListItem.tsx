@@ -1,6 +1,6 @@
 import { Restaurant, slugify } from '@dish/models'
 import React, { memo, useEffect, useRef, useState } from 'react'
-import { Image, Text, TouchableOpacity } from 'react-native'
+import { Image, ScrollView, Text, TouchableOpacity } from 'react-native'
 
 import { isEditingUserPage } from '../../state/home'
 import { useOvermind } from '../../state/om'
@@ -12,9 +12,9 @@ import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { bgLightLight } from './colors'
 import { RankingView } from './RankingView'
 import { RestaurantAddComment } from './RestaurantAddComment'
+import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
-import { RestaurantMetaRow } from './RestaurantMetaRow'
 import { RestaurantRatingDetail } from './RestaurantRatingDetail'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
@@ -64,77 +64,76 @@ export const RestaurantListItem = ({
           })
         }}
       >
-        <HStack
-          alignItems="center"
-          backgroundColor={isHovered ? bgLightLight : 'transparent'}
-          position="relative"
-        >
-          <ZStack
-            fullscreen
-            zIndex={100}
-            top={40}
-            justifyContent="center"
-            pointerEvents="none"
-            opacity={isHovered ? 1 : 0}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <HStack
+            alignItems="center"
+            backgroundColor={isHovered ? bgLightLight : 'transparent'}
+            position="relative"
           >
-            <RestaurantUpVoteDownVote restaurant={restaurant} />
-          </ZStack>
+            <ZStack
+              fullscreen
+              zIndex={100}
+              top={40}
+              justifyContent="center"
+              pointerEvents="none"
+              opacity={isHovered ? 1 : 0}
+            >
+              <RestaurantUpVoteDownVote restaurant={restaurant} />
+            </ZStack>
 
-          <VStack
-            padding={18}
-            paddingLeft={24}
-            paddingVertical={28}
-            width="76%"
-            maxWidth={525}
-          >
-            <Link name="restaurant" params={{ slug: restaurant.slug }}>
-              <HStack alignItems="center" marginVertical={-3}>
-                <RankingView rank={rank} />
-                <Text
-                  style={{
-                    fontSize: 22,
-                    fontWeight: 'bold',
-                    textDecorationColor: 'transparent',
-                  }}
-                >
-                  {restaurant.name}
-                </Text>
-              </HStack>
-            </Link>
+            <VStack
+              padding={18}
+              paddingLeft={24}
+              paddingVertical={22}
+              width="80%"
+              maxWidth={525}
+              spacing={5}
+            >
+              <Link name="restaurant" params={{ slug: restaurant.slug }}>
+                <HStack alignItems="center" marginVertical={-3}>
+                  <RankingView rank={rank} />
+                  <Text
+                    style={{
+                      fontSize: 22,
+                      fontWeight: 'bold',
+                      textDecorationColor: 'transparent',
+                    }}
+                  >
+                    {restaurant.name}
+                  </Text>
+                </HStack>
+              </Link>
 
-            {isEditingUserPage(om.state) && (
-              <>
-                <RestaurantAddComment restaurant={restaurant} />
-                <Spacer />
-              </>
-            )}
-
-            <Spacer />
-
-            <HStack alignItems="center" marginTop={-5}>
-              <HStack alignItems="center" paddingLeft={18}>
-                <RestaurantFavoriteStar
-                  isHovered={isHovered}
+              <HStack alignItems="center" paddingLeft={22} paddingTop={4}>
+                <RestaurantAddressLinksRow
+                  showAddress
                   restaurant={restaurant}
                 />
-                <Spacer />
-                <RestaurantTagsRow showMore restaurant={restaurant} />
               </HStack>
-            </HStack>
 
-            <Spacer size="sm" />
+              {isEditingUserPage(om.state) && (
+                <>
+                  <Spacer />
+                  <RestaurantAddComment restaurant={restaurant} />
+                  <Spacer size="xl" />
+                </>
+              )}
 
-            <HStack alignItems="center" paddingLeft={22}>
-              <RestaurantMetaRow showAddress restaurant={restaurant} />
-            </HStack>
-            <Spacer size="sm" />
-            <RestaurantDetailRow size="sm" restaurant={restaurant} />
-          </VStack>
+              <Spacer />
 
-          <Spacer size="lg" />
+              <HStack alignItems="center" marginTop={-5}>
+                <HStack alignItems="center" paddingLeft={18}></HStack>
+              </HStack>
 
-          <RestaurantPeek restaurant={restaurant} />
-        </HStack>
+              <RestaurantDetailRow size="sm" restaurant={restaurant} />
+              {/* <Spacer size="sm" /> */}
+            </VStack>
+
+            <VStack width={500} marginLeft={-110}>
+              <RestaurantPeek restaurant={restaurant} />
+            </VStack>
+          </HStack>
+        </ScrollView>
         <Divider />
       </TouchableOpacity>
     </Hoverable>
@@ -147,6 +146,7 @@ export const RestaurantPeek = memo(
     const photos = Restaurant.allPhotos(restaurant).slice(0, 5)
     return (
       <VStack
+        marginTop={-44}
         position="relative"
         marginRight={-spacing}
         marginBottom={-spacing}
@@ -154,7 +154,7 @@ export const RestaurantPeek = memo(
         <VStack position="absolute" top={-11} left={-38} zIndex={100}>
           <RestaurantRatingDetail restaurant={restaurant} />
         </VStack>
-        <HStack flexWrap="wrap" maxWidth={120} spacing={spacing}>
+        <HStack maxWidth={120} spacing={spacing}>
           {[...photos, photos[0], photos[0], photos[0]]
             .slice(0, 4)
             .map((photo, i) => {
@@ -171,8 +171,8 @@ export const RestaurantPeek = memo(
                   <Image
                     source={{ uri: photo }}
                     style={{
-                      width: 50,
-                      height: 50,
+                      width: 120,
+                      height: 120,
                     }}
                     resizeMode="cover"
                   />

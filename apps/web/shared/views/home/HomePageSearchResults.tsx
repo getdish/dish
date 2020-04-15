@@ -119,7 +119,7 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
         <PageTitle subTitle={subTitle}>{pageTitleElements}</PageTitle>
       </HStack>
 
-      <VStack position="relative" flex={1} overflow="hidden">
+      <VStack marginTop={-6} position="relative" flex={1} overflow="hidden">
         <HomeLenseBar activeTagIds={state.activeTagIds} />
         <HomeSearchResultsViewContent state={state} />
       </VStack>

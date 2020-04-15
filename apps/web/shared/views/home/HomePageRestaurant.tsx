@@ -19,9 +19,9 @@ import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { CloseButton } from './CloseButton'
 import { LoadingItems } from './LoadingItems'
+import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
-import { RestaurantMetaRow } from './RestaurantMetaRow'
 import { RestaurantRatingDetail } from './RestaurantRatingDetail'
 import { RestaurantTagButton } from './RestaurantTagButton'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
@@ -64,7 +64,11 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
                   {restaurant.name}
                 </Text>
                 <Spacer size={4} />
-                <RestaurantMetaRow showMenu size="lg" restaurant={restaurant} />
+                <RestaurantAddressLinksRow
+                  showMenu
+                  size="lg"
+                  restaurant={restaurant}
+                />
                 <Spacer size={8} />
                 <Text style={{ color: '#777', fontSize: 13 }}>
                   3017 16th St., San Francisco
