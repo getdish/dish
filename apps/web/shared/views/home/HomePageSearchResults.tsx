@@ -44,7 +44,11 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
   }
   const titleSpace = titleTags.length ? '' : ' '
   const searchName = state.searchQuery ?? ''
-  const subTitle = `${countryTag} restaurants in ${locationName}`.trim()
+  const subTitle = (
+    <>
+      <strong>{countryTag}</strong> restaurants in the {locationName}
+    </>
+  )
 
   const title = `${userPrefix} ${lenseName}${titleSpace}${titleTags
     .map((x) => x.name)

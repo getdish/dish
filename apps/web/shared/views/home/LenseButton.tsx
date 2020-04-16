@@ -7,7 +7,6 @@ import { Box } from '../ui/Box'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { LinkButton } from '../ui/Link'
 import { HStack } from '../ui/Stacks'
-import { bg } from './colors'
 
 export const LenseButton = memo(
   ({
@@ -26,10 +25,11 @@ export const LenseButton = memo(
     const lenseColorLight = `rgba(${rgbInner}, 0.35)`
     const buttonContent = (
       <LinkButton
-        // marginVertical={-1}
         onPress={() => {
+          // on home it doesnt change url so we have duplication here...
           om.actions.home.replaceActiveTagOfType(lense)
         }}
+        {...om.actions.home.getReplaceTagNavigateItem(lense)}
       >
         <HStack
           alignItems="center"

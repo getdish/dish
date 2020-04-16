@@ -152,6 +152,7 @@ const HomeViewTopDishesContent = memo(() => {
 
 const CountryTopDishesAndRestaurants = memo(
   ({ country, rank }: { country: TopDish; rank: number }) => {
+    const om = useOvermind()
     const [hovered, setHovered] = useState(false)
     const [hoveredRestaurant, setHoveredRestaurant] = useState<Restaurant>(null)
     const onHoverRestaurant = useCallback((restaurant: Restaurant) => {
@@ -173,8 +174,10 @@ const CountryTopDishesAndRestaurants = memo(
               {...flatButtonStyle}
               // backgroundColor="transparent"
               marginVertical={-8}
-              name="search"
-              params={{ country: country.country }}
+              {...om.actions.home.getReplaceTagNavigateItem({
+                type: 'country',
+                name: country.country,
+              })}
             >
               <Text
                 numberOfLines={1}

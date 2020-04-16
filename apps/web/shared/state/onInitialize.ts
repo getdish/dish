@@ -15,9 +15,15 @@ export const onInitialize: OnInitialize = async (
     rehydrate(state, OVERMIND_MUTATIONS)
   }
 
-  if (LOG_OVERMIND) {
-    overmind.addFlushListener((items) => {
-      console.log(JSON.stringify(items, null, 2))
+  if (process.env.NODE_ENV == 'development') {
+    overmind.eventHub.on('action:start' as any, (execution) => {
+      const name = execution.actionName
+      const logType = name.indexOf('.get') > 0 ? 'debug' : 'warn'
+      if (typeof execution.value !== 'undefined') {
+        console[logType](name, execution.value)
+      } else {
+        console[logType](name)
+      }
     })
   }
 
@@ -38,7 +44,7 @@ export const onInitialize: OnInitialize = async (
     // }
   )
 
-  await actions.home.startBeforeRouting()
+  await actions.home.start()
 
   await Promise.all([
     actions.user.checkForExistingLogin(),
@@ -47,7 +53,4 @@ export const onInitialize: OnInitialize = async (
       onRouteChange: actions.home.handleRouteChange,
     }),
   ])
-
-  // start all pages (after router starts)
-  await actions.home.start()
 }

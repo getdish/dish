@@ -135,31 +135,38 @@ export const state: RouterState = {
 
 const uid = () => `${Math.random()}`
 
-const navigate: AsyncAction<NavigateItem> = async (om, navItem) => {
-  const item: HistoryItem = {
+const navItemToHistoryItem = (navItem: NavigateItem): HistoryItem => {
+  return {
     id: uid(),
-    params: {},
     ...navItem,
+    params: navItem.params ?? {},
     path: getPathFromParams({
       name: navItem.name,
       params: navItem.params as any,
     }),
     search: curSearch,
   }
+}
+
+const shouldNavigate: Action<NavigateItem, boolean> = (om, navItem) => {
+  const historyItem = navItemToHistoryItem(navItem)
+  return !isEqual(
+    _.omit(historyItem, 'id', 'replace'),
+    _.omit(om.state.router.curPage, 'id', 'replace')
+  )
+}
+
+const navigate: AsyncAction<NavigateItem> = async (om, navItem) => {
+  const item = navItemToHistoryItem(navItem)
 
   if (om.state.router.notFound) {
     om.state.router.notFound = false
   }
 
-  const alreadyOnPage = isEqual(
-    _.omit(item, 'id', 'replace'),
-    _.omit(om.state.router.curPage, 'id', 'replace')
-  )
-  if (alreadyOnPage) {
+  if (!shouldNavigate(om, navItem)) {
+    console.log('already on page')
     return
   }
-
-  console.log('navigate', navItem, item)
 
   if (item.replace) {
     const next = _.dropRight(om.state.router.history)
@@ -268,6 +275,7 @@ export const actions = {
   navigate,
   back,
   forward,
+  shouldNavigate,
 }
 
 // effects
