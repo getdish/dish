@@ -148,7 +148,7 @@ const navItemToHistoryItem = (navItem: NavigateItem): HistoryItem => {
   }
 }
 
-const shouldNavigate: Action<NavigateItem, boolean> = (om, navItem) => {
+const getShouldNavigate: Action<NavigateItem, boolean> = (om, navItem) => {
   const historyItem = navItemToHistoryItem(navItem)
   return !isEqual(
     _.omit(historyItem, 'id', 'replace'),
@@ -163,7 +163,7 @@ const navigate: AsyncAction<NavigateItem> = async (om, navItem) => {
     om.state.router.notFound = false
   }
 
-  if (!shouldNavigate(om, navItem)) {
+  if (!getShouldNavigate(om, navItem)) {
     console.log('already on page')
     return
   }
@@ -275,7 +275,7 @@ export const actions = {
   navigate,
   back,
   forward,
-  shouldNavigate,
+  getShouldNavigate,
 }
 
 // effects

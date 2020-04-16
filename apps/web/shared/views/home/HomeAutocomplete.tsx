@@ -110,7 +110,7 @@ export default memo(function HomeAutoComplete() {
                     if (showLocation) {
                       om.actions.home.setLocation(x.name)
                     } else {
-                      om.actions.home.replaceActiveTagOfType(x)
+                      om.actions.home.navigateToTag(x)
                     }
                     om.actions.home.setShowAutocomplete(false)
                   }}

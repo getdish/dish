@@ -142,9 +142,7 @@ export default memo(function HomeSearchBar() {
       switch (code) {
         case 13: // enter
           if (om.state.home.autocompleteFocusedTag) {
-            om.actions.home.replaceActiveTagOfType(
-              om.state.home.autocompleteFocusedTag
-            )
+            om.actions.home.navigateToTag(om.state.home.autocompleteFocusedTag)
           } else {
             om.actions.home.runSearch({})
             om.actions.home.setShowAutocomplete(false)
@@ -156,7 +154,7 @@ export default memo(function HomeSearchBar() {
           // if selected onto a tag, we can send remove command
           if (autocompleteIndex < 0) {
             if (om.state.home.searchbarFocusedTag) {
-              om.actions.home.setTagInactive(om.state.home.searchbarFocusedTag)
+              om.actions.home.navigateToTag(om.state.home.searchbarFocusedTag)
             }
             next()
           }
@@ -345,7 +343,7 @@ export default memo(function HomeSearchBar() {
                                 tag={tag}
                                 closable
                                 onClose={() => {
-                                  om.actions.home.setTagInactive(tag)
+                                  om.actions.home.navigateToTag(tag)
                                   setTimeout(() => {
                                     input.focus()
                                   })

@@ -14,15 +14,21 @@ import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
 import { race } from '../helpers/race'
 import { sleep } from '../helpers/sleep'
 import { Toast } from '../views/Toast'
+import {
+  _toggleTagOnHomeState,
+  getNavigateToTag,
+  navigateToTag,
+} from './navigateToTag'
+import { getNavigateItemForState } from './navigateToTag'
 import { HistoryItem, NavigateItem, RouteItem } from './router'
-import { NavigableTag, Tag, getTagId, tagFilters, tagLenses } from './Tag'
+import { Tag, getTagId, tagFilters, tagLenses } from './Tag'
 
-type Om = IContext<Config>
-type OmState = Om['state']
-type OmStateHome = OmState['home']
+export type Om = IContext<Config>
+export type OmState = Om['state']
+export type OmStateHome = OmState['home']
 
-const SPLIT_TAG = '_'
-const SPLIT_TAG_TYPE = '~'
+export const SPLIT_TAG = '_'
+export const SPLIT_TAG_TYPE = '~'
 
 type ShowAutocomplete = 'search' | 'location' | false
 
@@ -223,7 +229,8 @@ export type HomeState = HomeStateBase & {
   searchBarTags: Derive<HomeState, Tag[]>
 }
 
-const isSearchBarTag = (tag: Pick<Tag, 'type'>) => tag?.type === 'country'
+export const isSearchBarTag = (tag: Pick<Tag, 'type'>) =>
+  tag?.type === 'country'
 
 export const state: HomeState = {
   started: false,
@@ -306,8 +313,8 @@ export const state: HomeState = {
 }
 
 // TODO type
-let mapView
-export function setMapView(x) {
+let mapView: mapkit.Map | null = null
+export function setMapView(x: mapkit.Map) {
   mapView = x
 }
 
@@ -409,7 +416,6 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
       }
       nextState = searchState
       fetchData = async () => {
-        await om.actions.home._syncRouteToState(item.params)
         await om.actions.home.runSearch()
         // userpage load user
         if (item.name === 'userSearch') {
@@ -463,7 +469,7 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   }
 
   const replace =
-    item.replace || om.state.home.currentStateType === nextState.typ
+    item.replace || om.state.home.currentStateType === nextState.type
 
   if (replace) {
     // try granular update
@@ -486,6 +492,8 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
     // }
     om.state.home.states = [...om.state.home.states, nextState]
   }
+
+  await om.actions.home._syncRouteToState(item.params)
 
   if (!om.state.home.started) {
     om.state.home.started = true
@@ -1056,110 +1064,6 @@ const _runHomeSearch: AsyncAction<string> = async (om, query) => {
   om.state.home.topDishesFilteredIndices = res
 }
 
-const setTagInactiveFn = (om: Om, val: NavigableTag) => {
-  const state = om.state.home.currentState
-  if (isHomeState(state) || isSearchState(state)) {
-    state.activeTagIds[getTagId(val)] = false
-  }
-}
-
-const setTagActiveFn = async (om: Om, val: NavigableTag) => {
-  let state = om.state.home.currentState
-  const willSearch = isSearchBarTag(val)
-
-  // push to search on adding lense
-  if (isHomeState(state) && willSearch) {
-    // if adding a searchable tag while existing search query, replace it
-    if (state.searchQuery) {
-      state.searchQuery = ''
-    }
-
-    // go to new route first
-    await om.actions.home._syncStateToRoute({
-      ...state,
-      activeTagIds: { ...state.activeTagIds, [getTagId(val)]: true },
-    })
-    state = om.state.home.currentState
-    console.log('on search now?', state)
-  }
-
-  if (isSearchState(state) || (isHomeState(state) && !willSearch)) {
-    state.activeTagIds[getTagId(val)] = true
-  }
-}
-
-const setTagInactive: AsyncAction<NavigableTag> = async (om, val) => {
-  if (!val) throw new Error(`No val ${val}`)
-  setTagInactiveFn(om, val)
-  await om.actions.home._afterTagChange()
-}
-
-const setTagActive: AsyncAction<NavigableTag> = async (om, val) => {
-  if (val.type === 'lense') {
-    // ensure only ever one lense
-    await om.actions.home.replaceActiveTagOfType(val)
-  } else {
-    await setTagActiveFn(om, val)
-    await om.actions.home._afterTagChange()
-  }
-}
-
-const toggleTagActive: AsyncAction<NavigableTag> = async (om, val) => {
-  if (!val) return
-  const state = om.state.home.currentState
-  if (!isHomeState(state) && !isSearchState(state)) return
-  if (state.activeTagIds[getTagId(val)]) {
-    setTagInactiveFn(om, val)
-  } else {
-    await setTagActiveFn(om, val)
-  }
-  await om.actions.home._afterTagChange()
-}
-
-const getStateReplaceActiveTag: Action<
-  { state: HomeStateItem; tag: NavigableTag },
-  HomeStateItem
-> = (om, { state, tag }) => {
-  if (!isHomeState(state) && !isSearchState(state)) {
-    return null
-  }
-  const tags = [
-    ...getActiveTags(om.state.home, state).filter((x) => x.type !== tag.type),
-    tag,
-  ]
-  const nextState = { ...state }
-  nextState.activeTagIds = tags.reduce((acc, cur) => {
-    acc[getTagId(cur)] = true
-    return acc
-  }, {})
-  return nextState
-}
-
-const getReplaceTagNavigateItem: Action<NavigableTag, NavigateItem> = (
-  om,
-  tag
-) => {
-  const nextState = getStateReplaceActiveTag(om, {
-    tag,
-    state: om.state.home.currentState,
-  })
-  return getNavigateItemForState(om.state, nextState)
-}
-
-const replaceActiveTagOfType: AsyncAction<NavigableTag> = async (om, next) => {
-  const state = om.state.home.currentState
-  if (!next || (!isHomeState(state) && !isSearchState(state))) return
-  const tags = getActiveTags(om.state.home)
-  // remove old
-  for (const tag of tags) {
-    if (tag.type === next.type) {
-      state.activeTagIds[getTagId(tag)] = false
-    }
-  }
-  await setTagActiveFn(om, next)
-  await om.actions.home._afterTagChange()
-}
-
 let _htgId = 0
 const _afterTagChange: AsyncAction = async (om) => {
   if (!om.state.home.started) return
@@ -1177,7 +1081,7 @@ const requestLocation: Action = (om) => {}
 const _syncRouteToState: AsyncAction<Object, boolean> = async (om, params) => {
   const state = om.state.home.currentState
   if (!isSearchState(state)) {
-    throw new Error(`Should never sync outside search page`)
+    return
   }
 
   let didSet = false
@@ -1225,7 +1129,7 @@ const _syncStateToRoute: AsyncAction<HomeStateItem | void> = async (
 ) => {
   const homeState = ogState || om.state.home.currentState
   const next = getNavigateItemForState(om.state, homeState)
-  if (om.actions.router.shouldNavigate(next)) {
+  if (om.actions.router.getShouldNavigate(next)) {
     om.actions.router.navigate(next)
   }
 }
@@ -1276,87 +1180,6 @@ const up: Action = (om) => {
   om.actions.home.popTo(prev?.type ?? 'home')
 }
 
-export const getNavigateItemForState = (
-  omState: OmState,
-  ogState: HomeStateItem
-): NavigateItem => {
-  const { home, router } = omState
-  const state = ogState || home.currentState
-  const isHome = isHomeState(state)
-
-  // we only handle "special" states here (home/search)
-  if (!isHome && !isSearchState(state)) {
-    return {
-      name: state.type,
-      params: router.curPage.params,
-    }
-  }
-
-  const shouldBeHome = shouldBeOnHome(home, state)
-  if (shouldBeHome) {
-    return { name: 'home' }
-  }
-
-  const params = getTagRouteParams(omState, state)
-  if (state.searchQuery) {
-    params.query = state.searchQuery
-  }
-  const isOnUserSearch =
-    state.type === 'userSearch' || router.curPage.name === 'userSearch'
-  if (isOnUserSearch) {
-    params.username = router.curPage.params.username
-  }
-
-  let name = isOnUserSearch ? 'userSearch' : (state.type as any)
-  if (name === 'home' && !shouldBeHome) {
-    name = 'search'
-  }
-  const isChangingType = ogState
-    ? ogState.type === home.currentState.type
-    : true
-  const replace = !isChangingType
-  return {
-    name,
-    params,
-    replace,
-  }
-}
-
-function getTagRouteParams(
-  { home }: OmState,
-  state = home.currentState
-): { [key: string]: string } {
-  if (!isHomeState(state) && !isSearchState(state)) {
-    return null
-  }
-  const allActiveTags = getActiveTags(home, state)
-  // build our final path segment
-  const filterTags = allActiveTags.filter((x) => x.type === 'filter')
-  const otherTags = allActiveTags.filter(
-    (x) => x.type !== 'lense' && x.type !== 'filter'
-  )
-  let tags = `${filterTags.map((x) => slugify(x.name)).join(SPLIT_TAG)}`
-  if (otherTags.length) {
-    if (tags.length) {
-      tags += SPLIT_TAG
-    }
-    tags += `${otherTags
-      .map((t) => `${t.type}${SPLIT_TAG_TYPE}${slugify(t.name)}`)
-      .join(SPLIT_TAG)}`
-  }
-  const params: any = {
-    location: 'here',
-  }
-  const lenseTag = allActiveTags.find((x) => x.type === 'lense')?.name ?? ''
-  if (lenseTag) {
-    params.lense = slugify(lenseTag)
-  }
-  if (tags.length) {
-    params.tags = tags
-  }
-  return params
-}
-
 export const getActiveTags = (
   home: OmStateHome,
   state: HomeStateItem = home.currentState
@@ -1378,7 +1201,7 @@ export const getActiveTags = (
   return tags.filter(Boolean)
 }
 
-const shouldBeOnHome = (
+export const shouldBeOnHome = (
   home: OmStateHome,
   state: HomeStateItem = home.states[home.states.length - 1]
 ) => {
@@ -1389,8 +1212,10 @@ const shouldBeOnHome = (
 }
 
 export const actions = {
+  navigateToTag,
+  getNavigateToTag,
+  _toggleTagOnHomeState,
   startAutocomplete,
-  getReplaceTagNavigateItem,
   _afterTagChange,
   _loadHomeDishes,
   _loadRestaurantDetail,
@@ -1408,7 +1233,6 @@ export const actions = {
   up,
   moveAutocompleteIndex,
   popTo,
-  replaceActiveTagOfType,
   requestLocation,
   runSearch,
   setActiveIndex,
@@ -1420,10 +1244,7 @@ export const actions = {
   setSearchQuery,
   setShowAutocomplete,
   setShowUserMenu,
-  setTagActive,
-  setTagInactive,
   start,
   submitReview,
   suggestTags,
-  toggleTagActive,
 }

@@ -78,7 +78,7 @@ export function Link<
 
 const prevent = (e) => [e.preventDefault(), e.stopPropagation()]
 
-export type LinkButtonProps<Name, Params> = StackBaseProps &
+export type LinkButtonProps<Name = any, Params = any> = StackBaseProps &
   LinkSharedProps &
   (
     | {
