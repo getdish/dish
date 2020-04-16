@@ -13,6 +13,7 @@ type LinkSharedProps = {
   lineHeight?: TextStyle['lineHeight']
   ellipse?: boolean
   fastClick?: boolean
+  replace?: boolean
 }
 
 export function Link<
@@ -31,6 +32,7 @@ export function Link<
   padding,
   color,
   onClick,
+  replace,
   ...props
 }: React.DetailedHTMLProps<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -46,7 +48,7 @@ export function Link<
   const handler = useCallback((e) => {
     e.stopPropagation()
     e.preventDefault()
-    om.actions.router.navigate({ name, params } as any)
+    om.actions.router.navigate({ name, params, replace } as any)
     onClick?.(e)
   }, [])
 
@@ -111,6 +113,7 @@ export function LinkButton<
       lineHeight,
       fontWeight,
       padding,
+      replace,
       ...rest
     } = props
     pointerEvents = rest.pointerEvents
@@ -119,6 +122,7 @@ export function LinkButton<
       <Link
         name={name}
         params={params}
+        replace={replace}
         onClick={onPress}
         lineHeight={lineHeight}
         fontSize={fontSize}

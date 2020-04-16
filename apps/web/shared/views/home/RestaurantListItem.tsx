@@ -35,8 +35,6 @@ export const RestaurantListItem = ({
   const hoverTm = useRef<any>(0)
   const userReview = om.state.user.allReviews[restaurant.id]
 
-  console.log('userReview', userReview)
-
   useEffect(() => {
     return om.reaction(
       (state) => state.home.activeIndex,

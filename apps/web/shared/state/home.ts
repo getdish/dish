@@ -18,6 +18,8 @@ import { HistoryItem, NavigateItem, RouteItem } from './router'
 import { NavigableTag, Tag, getTagId, tagFilters, tagLenses } from './Tag'
 
 type Om = IContext<Config>
+type OmState = Om['state']
+type OmStateHome = OmState['home']
 
 const SPLIT_TAG = '_'
 const SPLIT_TAG_TYPE = '~'
@@ -206,6 +208,7 @@ export type HomeState = HomeStateBase & {
   lastSearchState: Derive<HomeState, HomeStateItemSearch | null>
   lastRestaurantState: Derive<HomeState, HomeStateItemRestaurant | null>
   breadcrumbStates: Derive<HomeState, HomeStateItemSimple[]>
+  currentNavItem: Derive<HomeState, NavigateItem>
   currentState: Derive<HomeState, HomeStateItem>
   // my hypothesis is these more granular derives prevent updates on same value in views, need to test that
   currentStateType: Derive<HomeState, HomeStateItem['type']>
@@ -239,6 +242,8 @@ export const state: HomeState = {
   autocompleteResults: [],
   breadcrumbStates,
   currentState: (state) => _.last(state.states)!,
+  currentNavItem: (state, om) =>
+    getNavigateItemForState(om, _.last(state.states)!),
   currentStateSearchQuery: (state) => state.currentState.searchQuery,
   currentStateType: (state) => state.currentState.type,
   hoveredRestaurant: null,
@@ -306,15 +311,13 @@ export function setMapView(x) {
   mapView = x
 }
 
-const startBeforeRouting: AsyncAction = async (om) => {}
-
-export const isOnOwnProfile = (state: Om['state']) => {
+export const isOnOwnProfile = (state: OmState) => {
   return (
     slugify(state.user.user?.username) === state.router.curPage.params.username
   )
 }
 
-export const isEditingUserPage = (state: Om['state']) => {
+export const isEditingUserPage = (state: OmState) => {
   return state.home.currentStateType === 'userSearch' && isOnOwnProfile(state)
 }
 
@@ -460,9 +463,7 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   }
 
   const replace =
-    item.replace || om.state.home.currentStateType === nextState.type
-
-  console.log('pushHomeState', { item, replace, nextState })
+    item.replace || om.state.home.currentStateType === nextState.typ
 
   if (replace) {
     // try granular update
@@ -772,7 +773,7 @@ const runSearch: AsyncAction<{ quiet?: boolean } | void> = async (om, opts) => {
 
   const shouldCancel = () => {
     const answer = !state || lastSearchAt != curId
-    if (answer) console.log('search: cancel')
+    // if (answer) console.log('search: cancel')
     return answer
   }
 
@@ -1115,6 +1116,36 @@ const toggleTagActive: AsyncAction<NavigableTag> = async (om, val) => {
   await om.actions.home._afterTagChange()
 }
 
+const getStateReplaceActiveTag: Action<
+  { state: HomeStateItem; tag: NavigableTag },
+  HomeStateItem
+> = (om, { state, tag }) => {
+  if (!isHomeState(state) && !isSearchState(state)) {
+    return null
+  }
+  const tags = [
+    ...getActiveTags(om.state.home, state).filter((x) => x.type !== tag.type),
+    tag,
+  ]
+  const nextState = { ...state }
+  nextState.activeTagIds = tags.reduce((acc, cur) => {
+    acc[getTagId(cur)] = true
+    return acc
+  }, {})
+  return nextState
+}
+
+const getReplaceTagNavigateItem: Action<NavigableTag, NavigateItem> = (
+  om,
+  tag
+) => {
+  const nextState = getStateReplaceActiveTag(om, {
+    tag,
+    state: om.state.home.currentState,
+  })
+  return getNavigateItemForState(om.state, nextState)
+}
+
 const replaceActiveTagOfType: AsyncAction<NavigableTag> = async (om, next) => {
   const state = om.state.home.currentState
   if (!next || (!isHomeState(state) && !isSearchState(state))) return
@@ -1127,41 +1158,6 @@ const replaceActiveTagOfType: AsyncAction<NavigableTag> = async (om, next) => {
   }
   await setTagActiveFn(om, next)
   await om.actions.home._afterTagChange()
-}
-
-function getTagRouteParams(
-  om: IContext<Config>,
-  state = om.state.home.currentState
-): { [key: string]: string } {
-  if (!isHomeState(state) && !isSearchState(state)) {
-    return null
-  }
-  const allActiveTags = getActiveTags(om.state.home, state)
-  // build our final path segment
-  const filterTags = allActiveTags.filter((x) => x.type === 'filter')
-  const otherTags = allActiveTags.filter(
-    (x) => x.type !== 'lense' && x.type !== 'filter'
-  )
-  let tags = `${filterTags.map((x) => slugify(x.name)).join(SPLIT_TAG)}`
-  if (otherTags.length) {
-    if (tags.length) {
-      tags += SPLIT_TAG
-    }
-    tags += `${otherTags
-      .map((t) => `${t.type}${SPLIT_TAG_TYPE}${slugify(t.name)}`)
-      .join(SPLIT_TAG)}`
-  }
-  const params: any = {
-    location: 'here',
-  }
-  const lenseTag = allActiveTags.find((x) => x.type === 'lense')?.name ?? ''
-  if (lenseTag) {
-    params.lense = slugify(lenseTag)
-  }
-  if (tags.length) {
-    params.tags = tags
-  }
-  return params
 }
 
 let _htgId = 0
@@ -1178,31 +1174,6 @@ const _afterTagChange: AsyncAction = async (om) => {
 
 const requestLocation: Action = (om) => {}
 
-type HomeStateDerived = Om['state']['home']
-
-export const getActiveTags = (
-  home: HomeStateDerived,
-  state: HomeStateItem = home.currentState
-) => {
-  const lastState = home.states[home.states.length - 1]
-  const curState = state ?? lastState
-  const activeTagIds = curState?.['activeTagIds'] ?? {}
-  return Object.keys(activeTagIds)
-    .filter((x) => activeTagIds[x])
-    .map((x) => home.allTags[x])
-    .filter(Boolean)
-}
-
-const shouldBeOnHome = (
-  home: HomeStateDerived,
-  state: HomeStateItem = home.states[home.states.length - 1]
-) => {
-  return (
-    state.searchQuery === '' &&
-    getActiveTags(home, state).every((tag) => !isSearchBarTag(tag))
-  )
-}
-
 const _syncRouteToState: AsyncAction<Object, boolean> = async (om, params) => {
   const state = om.state.home.currentState
   if (!isSearchState(state)) {
@@ -1218,7 +1189,13 @@ const _syncRouteToState: AsyncAction<Object, boolean> = async (om, params) => {
     }
   }
 
-  for (const type of Object.keys(params ?? {})) {
+  const validTagParams = { ...(params ?? {}) }
+  // UGH
+  delete validTagParams['username']
+  delete validTagParams['location']
+  const validTagKeys = Object.keys(validTagParams)
+
+  for (const type of validTagKeys) {
     const name = params[type]
     if (type === 'tags') {
       // handle them different
@@ -1236,7 +1213,6 @@ const _syncRouteToState: AsyncAction<Object, boolean> = async (om, params) => {
   }
 
   if (didSet) {
-    console.log('_syncRouteToState')
     await om.actions.home._syncStateToRoute()
   }
 
@@ -1247,55 +1223,10 @@ const _syncStateToRoute: AsyncAction<HomeStateItem | void> = async (
   om,
   ogState
 ) => {
-  const state = ogState || om.state.home.currentState
-  const shouldBeHome = shouldBeOnHome(om.state.home, state)
-  const shouldBeSearch = !shouldBeHome
-  const isHome = isHomeState(state)
-
-  if (isHome) {
-    if (shouldBeHome) {
-      console.log('maybe dont go here')
-      // no need to nav off home unless we add a lense
-      // om.actions.router.navigate({ name: 'home' })
-      return
-    }
-  }
-
-  const params = getTagRouteParams(om, state)
-  if (state.searchQuery) {
-    params.query = state.searchQuery
-  }
-  if (state.type === 'userSearch') {
-    params.username = om.state.router.curPage.params.username
-  }
-
-  if (shouldBeSearch && shouldBeHome) {
-    console.log(`_syncStateTORoute back to home!`)
-    om.actions.home.popTo('home')
-    return
-  }
-
-  if (isHome || shouldBeSearch) {
-    let name = state.type as any
-    if (name === 'home' && !shouldBeHome) {
-      name = 'search'
-    }
-    const isChangingType = ogState
-      ? ogState.type === om.state.home.currentState.type
-      : true
-    const replace = !isChangingType
-    const navItem: NavigateItem = {
-      name,
-      params,
-      replace,
-    }
-    console.log('_syncStateToRoute', {
-      navItem,
-      params,
-      ogState,
-      isChangingType,
-    })
-    om.actions.router.navigate(navItem)
+  const homeState = ogState || om.state.home.currentState
+  const next = getNavigateItemForState(om.state, homeState)
+  if (om.actions.router.shouldNavigate(next)) {
+    om.actions.router.navigate(next)
   }
 }
 
@@ -1345,8 +1276,121 @@ const up: Action = (om) => {
   om.actions.home.popTo(prev?.type ?? 'home')
 }
 
+export const getNavigateItemForState = (
+  omState: OmState,
+  ogState: HomeStateItem
+): NavigateItem => {
+  const { home, router } = omState
+  const state = ogState || home.currentState
+  const isHome = isHomeState(state)
+
+  // we only handle "special" states here (home/search)
+  if (!isHome && !isSearchState(state)) {
+    return {
+      name: state.type,
+      params: router.curPage.params,
+    }
+  }
+
+  const shouldBeHome = shouldBeOnHome(home, state)
+  if (shouldBeHome) {
+    return { name: 'home' }
+  }
+
+  const params = getTagRouteParams(omState, state)
+  if (state.searchQuery) {
+    params.query = state.searchQuery
+  }
+  const isOnUserSearch =
+    state.type === 'userSearch' || router.curPage.name === 'userSearch'
+  if (isOnUserSearch) {
+    params.username = router.curPage.params.username
+  }
+
+  let name = isOnUserSearch ? 'userSearch' : (state.type as any)
+  if (name === 'home' && !shouldBeHome) {
+    name = 'search'
+  }
+  const isChangingType = ogState
+    ? ogState.type === home.currentState.type
+    : true
+  const replace = !isChangingType
+  return {
+    name,
+    params,
+    replace,
+  }
+}
+
+function getTagRouteParams(
+  { home }: OmState,
+  state = home.currentState
+): { [key: string]: string } {
+  if (!isHomeState(state) && !isSearchState(state)) {
+    return null
+  }
+  const allActiveTags = getActiveTags(home, state)
+  // build our final path segment
+  const filterTags = allActiveTags.filter((x) => x.type === 'filter')
+  const otherTags = allActiveTags.filter(
+    (x) => x.type !== 'lense' && x.type !== 'filter'
+  )
+  let tags = `${filterTags.map((x) => slugify(x.name)).join(SPLIT_TAG)}`
+  if (otherTags.length) {
+    if (tags.length) {
+      tags += SPLIT_TAG
+    }
+    tags += `${otherTags
+      .map((t) => `${t.type}${SPLIT_TAG_TYPE}${slugify(t.name)}`)
+      .join(SPLIT_TAG)}`
+  }
+  const params: any = {
+    location: 'here',
+  }
+  const lenseTag = allActiveTags.find((x) => x.type === 'lense')?.name ?? ''
+  if (lenseTag) {
+    params.lense = slugify(lenseTag)
+  }
+  if (tags.length) {
+    params.tags = tags
+  }
+  return params
+}
+
+export const getActiveTags = (
+  home: OmStateHome,
+  state: HomeStateItem = home.currentState
+) => {
+  const lastState = home.states[home.states.length - 1]
+  const curState = state ?? lastState
+  const activeTagIds = curState?.['activeTagIds'] ?? {}
+  const tags = Object.keys(activeTagIds)
+    .filter((x) => activeTagIds[x])
+    .map((x) => home.allTags[x])
+  if (tags.some((x) => !x)) {
+    console.error(
+      'MISSING INFO FOR SOME TAG!',
+      tags,
+      activeTagIds,
+      home.allTags
+    )
+  }
+  return tags.filter(Boolean)
+}
+
+const shouldBeOnHome = (
+  home: OmStateHome,
+  state: HomeStateItem = home.states[home.states.length - 1]
+) => {
+  return (
+    state.searchQuery === '' &&
+    getActiveTags(home, state).every((tag) => !isSearchBarTag(tag))
+  )
+}
+
 export const actions = {
   startAutocomplete,
+  getReplaceTagNavigateItem,
   _afterTagChange,
   _loadHomeDishes,
   _loadRestaurantDetail,
@@ -1379,7 +1423,6 @@ export const actions = {
   setTagActive,
   setTagInactive,
   start,
-  startBeforeRouting,
   submitReview,
   suggestTags,
   toggleTagActive,

@@ -7,8 +7,6 @@ import { Divider } from '../ui/Divider'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { Link } from '../ui/Link'
 import { HStack } from '../ui/Stacks'
-import { HoverableButton } from './HoverableButton'
-import { RestaurantTagsRow } from './RestaurantTagsRow'
 
 export const RestaurantAddressLinksRow = memo(
   ({

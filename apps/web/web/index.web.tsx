@@ -53,12 +53,11 @@ async function start() {
     logProxies: true,
     hotReloading: true,
   })
+  window['om'] = om
 
   // can render splash here
 
   await om.initialized
-
-  window['om'] = om
 
   if (OVERMIND_MUTATIONS) {
     hydrate(<App overmind={om} />, document.getElementById('root'))

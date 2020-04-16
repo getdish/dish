@@ -275,10 +275,10 @@ export const HomeMap = memo(() => {
         (state) => state.home.hoveredRestaurant,
         (hoveredRestaurant) => {
           if (!hoveredRestaurant) return
-          const index = restaurantIds.indexOf(hoveredRestaurant.id)
-          console.log('hovering', hoveredRestaurant, restaurantIds, index)
-          if (map.annotations[index]) {
-            map.annotations[index].selected = true
+          for (const annotation of map.annotations) {
+            if (annotation.data?.id === hoveredRestaurant.id) {
+              annotation.selected = true
+            }
           }
         }
       )
