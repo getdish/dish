@@ -1,6 +1,7 @@
 import '@dish/common'
 
 import axios from 'axios'
+import _ from 'lodash'
 import { Client, Result } from 'pg'
 
 const HEREMAPS_API_TOKEN = process.env.HEREMAPS_API_TOKEN
@@ -18,6 +19,8 @@ class DB {
     })()
   }
 }
+
+type Coord = [number, number]
 
 export async function sql(query: string) {
   let result: Result
@@ -43,24 +46,24 @@ export function shiftLatLonByMetres(
   const diff_lat = diff_north / RADIUS
   const diff_lon = diff_east / (RADIUS * Math.cos((Math.PI * lat) / 180))
 
-  const latO = lat + (diff_lat * 180) / Math.PI
-  const lonO = lon + (diff_lon * 180) / Math.PI
+  const latO = lat + diff_lat * (180 / Math.PI)
+  const lonO = lon + diff_lon * (180 / Math.PI)
   return [latO, lonO]
 }
 
 // Returns an array of coords that fill an area. Think of it as a way
 // to fill a space with a number of equally spaced boxes. The number of
-// boxes is size*size
+// boxes is (chunk_factor + 1)^2
 export function aroundCoords(
   lat: number,
   lon: number,
-  radius: number,
-  size: number
+  chunk_size: number,
+  chunk_factor: number
 ) {
-  let coords: [number, number][] = []
-  const edge = radius * (size / 2)
-  for (let y = edge; y >= -edge; y = y - radius) {
-    for (let x = -edge; x <= edge; x = x + radius) {
+  let coords: Coord[] = []
+  const edge = chunk_size * chunk_factor
+  for (let y = edge; y >= -edge; y = y - chunk_size) {
+    for (let x = -edge; x <= edge; x = x + chunk_size) {
       coords.push(shiftLatLonByMetres(lat, lon, y, x))
     }
   }
@@ -71,7 +74,7 @@ export function boundingBoxFromcenter(
   lat: number,
   lon: number,
   radius: number
-): [[number, number], [number, number]] {
+): [Coord, Coord] {
   const top_right = shiftLatLonByMetres(lat, lon, radius, radius)
   const bottom_left = shiftLatLonByMetres(lat, lon, -radius, -radius)
   return [top_right, bottom_left]
@@ -85,4 +88,42 @@ export async function geocode(address: string) {
   const result = response.data.Response.View[0].Result[0]
   const coords = result.Location.DisplayPosition
   return [coords.Latitude, coords.Longitude]
+}
+
+function geoJSONPolygon(corners: Coord[]) {
+  return {
+    type: 'Feature',
+    properties: { prop0: 'value0' },
+    geometry: {
+      type: 'Polygon',
+      coordinates: [corners],
+    },
+  }
+}
+
+export function aroundCoordsGeoJSON(
+  lat: number,
+  lon: number,
+  radius: number,
+  size: number
+) {
+  const coords = aroundCoords(lat, lon, radius, size)
+  let boxes: any[] = []
+  const offset = radius / 2
+  for (const centre of coords) {
+    const yc = centre[0]
+    const xc = centre[1]
+    const corners: Coord[] = []
+    const joined = _.reverse(shiftLatLonByMetres(yc, xc, -offset, -offset))
+    corners.push(joined)
+    corners.push(_.reverse(shiftLatLonByMetres(yc, xc, -offset, offset)))
+    corners.push(_.reverse(shiftLatLonByMetres(yc, xc, offset, offset)))
+    corners.push(_.reverse(shiftLatLonByMetres(yc, xc, offset, -offset)))
+    corners.push(joined)
+    boxes.push(geoJSONPolygon(corners))
+  }
+  return JSON.stringify({
+    type: 'FeatureCollection',
+    features: boxes,
+  })
 }

@@ -25,7 +25,7 @@ const axios = axios_base.create({
 export class Tripadvisor extends WorkerJob {
   public scrape_id!: string
   public MAPVIEW_SIZE = 1000
-  public SEARCH_RADIUS_MULTIPLIER = 5
+  public SEARCH_RADIUS_MULTIPLIER = 10
   public _TESTS__LIMIT_GEO_SEARCH = false
 
   static queue_config: QueueOptions = {
