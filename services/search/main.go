@@ -125,6 +125,25 @@ func top_dishes(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, json)
 }
 
+func tags(w http.ResponseWriter, r *http.Request) {
+	var json string
+	_, err := db.Query(
+		pg.Scan(&json),
+		tags_query,
+		getParam("query", r),
+		getParam("parent", r),
+		getParam("limit", r),
+	)
+	if err != nil {
+		fmt.Println(err)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	if json == "" {
+		json = "[]"
+	}
+	fmt.Fprintf(w, json)
+}
+
 func tagsHas(target_tag string, r *http.Request) bool {
 	tags := strings.Split(getParam("tags", r), ",")
 	for _, tag := range tags {
@@ -153,6 +172,7 @@ func handleRequests() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/search", search)
 	mux.HandleFunc("/top_dishes", top_dishes)
+	mux.HandleFunc("/tags", tags)
 	handler := cors.Default().Handler(mux)
 	log.Fatal(http.ListenAndServe(":"+port, handler))
 }

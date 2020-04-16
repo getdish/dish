@@ -54,7 +54,7 @@ SELECT json_agg(t) FROM (
 
   SELECT * FROM by_country
     WHERE frequency > 10
-    AND country != 'Vietnamese' 
+    AND country != 'Vietnamese'
 
   ORDER BY avg_rating DESC
   LIMIT 15
