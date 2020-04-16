@@ -24,13 +24,7 @@ export const LenseButton = memo(
     const lenseColor = `rgb(${rgbInner})`
     const lenseColorLight = `rgba(${rgbInner}, 0.35)`
     const buttonContent = (
-      <LinkButton
-        onPress={() => {
-          // on home it doesnt change url so we have duplication here...
-          om.actions.home.replaceActiveTagOfType(lense)
-        }}
-        {...om.actions.home.getReplaceTagNavigateItem(lense)}
-      >
+      <LinkButton {...om.actions.home.getNavigateToTag(lense)}>
         <HStack
           alignItems="center"
           justifyContent="center"

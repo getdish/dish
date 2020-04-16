@@ -64,11 +64,7 @@ const FilterButton = memo(
   }: StackBaseProps & { filter: Tag; isActive: boolean }) => {
     const om = useOvermind()
     return (
-      <LinkButton
-        onPress={() => {
-          om.actions.home.toggleTagActive(filter)
-        }}
-      >
+      <LinkButton {...om.actions.home.getNavigateToTag(filter)}>
         <SmallButton isActive={isActive} {...rest}>
           <Text
             style={{

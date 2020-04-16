@@ -174,7 +174,7 @@ const CountryTopDishesAndRestaurants = memo(
               {...flatButtonStyle}
               // backgroundColor="transparent"
               marginVertical={-8}
-              {...om.actions.home.getReplaceTagNavigateItem({
+              {...om.actions.home.getNavigateToTag({
                 type: 'country',
                 name: country.country,
               })}

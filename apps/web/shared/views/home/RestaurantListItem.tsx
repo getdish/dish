@@ -185,6 +185,7 @@ export const RestaurantPeek = memo(
             .map((photo, i) => {
               return (
                 <DishView
+                  key={i}
                   size={size === 'lg' ? 140 : 100}
                   dish={
                     {
