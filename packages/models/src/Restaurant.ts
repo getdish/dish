@@ -62,6 +62,8 @@ export type TagRating = {
   name: string
 }
 
+export type Sources = { [key: string]: { url: string; rating: number } }
+
 export class Restaurant extends ModelBase<Restaurant> {
   name!: string
   slug!: string
@@ -82,7 +84,7 @@ export class Restaurant extends ModelBase<Restaurant> {
   telephone!: string
   website!: string
   dishes!: Dish[]
-  sources!: { [key: string]: { url: string; rating: number } }
+  sources!: Sources
   hours!: { [key: string]: any }[]
   is_open_now!: boolean
   price_range!: string

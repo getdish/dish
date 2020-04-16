@@ -44,20 +44,37 @@ SELECT jsonb_agg(
       )
     )
     AND (
-      (name ILIKE '%' || ?3 || '%' AND ?3 != '')
-      OR
+
       (
-        tag_names @> to_json(string_to_array(?4, ','))::jsonb
-        AND (
-          -- TODO: do some actual "this restaurant is unique" query
-          rating > 2
-          OR
-          ?11 != 'FILTER BY UNIQUE'
-        )
+        ?3 != ''
         AND
+        name ILIKE '%' || ?3 || '%'
+      )
+
+      OR (
         ?4 != ''
+        AND
+        tag_names @> to_json(string_to_array(?4, ','))::jsonb
+      )
+
+      AND (
+        -- TODO: do some actual "this restaurant is unique" query
+        ?11 != 'FILTER BY UNIQUE'
+        OR
+        rating > 2
+      )
+
+      AND (
+        ?12 != 'FILTER BY DELIVERS'
+        OR
+        sources->>'ubereats' IS NOT NULL
+        OR
+        sources->>'grubhub' IS NOT NULL
+        OR
+        sources->>'doordash' IS NOT NULL
       )
     )
+
     ORDER BY rating DESC NULLS LAST
     LIMIT ?5
   ) data

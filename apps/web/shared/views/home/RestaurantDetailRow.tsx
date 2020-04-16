@@ -1,6 +1,6 @@
-import { Restaurant } from '@dish/models'
+import { Restaurant, Sources } from '@dish/models'
 import React, { memo } from 'react'
-import { StyleSheet, Text } from 'react-native'
+import { Linking, StyleSheet, Text } from 'react-native'
 
 import { Divider } from '../ui/Divider'
 import { Spacer } from '../ui/Spacer'
@@ -27,7 +27,11 @@ export const RestaurantDetailRow = memo(
     const rows = [
       { title: open_text, content: next_time, color: open_color },
       { title: price_label, content: price_range, color: price_color },
-      { title: 'Delivers', content: 'Uber, PostMates', color: 'gray' },
+      {
+        title: 'Delivers',
+        content: deliveryLinks(restaurant.sources),
+        color: 'gray',
+      },
     ]
 
     const spaceSize = '6%'
@@ -47,7 +51,7 @@ export const RestaurantDetailRow = memo(
       </Text>
     )
 
-    const contentEl = (content: string) => (
+    const contentEl = (content: string | JSX.Element[]) => (
       <Text
         numberOfLines={1}
         style={[styles.subText, centered && { textAlign: 'center' }]}
@@ -139,4 +143,32 @@ function priceRange(restaurant: Restaurant) {
     }
   }
   return [label, color, price_range]
+}
+
+function deliveryLinks(sources: Sources) {
+  const empty = [<Text>~</Text>]
+  if (!sources) return empty
+  const delivery_sources = ['ubereats']
+  let count = 0
+  const delivers = Object.keys(sources)
+    .map((source) => {
+      if (!delivery_sources.includes(source)) return
+      count++
+      const name = source.charAt(0).toUpperCase() + source.slice(1)
+      return (
+        <Text>
+          <Text
+            style={{
+              color: 'blue',
+            }}
+            onPress={() => Linking.openURL(sources[source].url)}
+          >
+            🔗 {name}
+          </Text>
+          {count > 1 && <Text>, </Text>}
+        </Text>
+      )
+    })
+    .filter((i) => i != null)
+  return delivers.length > 0 ? delivers : empty
 }

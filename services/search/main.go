@@ -64,6 +64,7 @@ func search(w http.ResponseWriter, r *http.Request) {
 	tags := getParam("tags", r)
 	ignore_bounding_box := ""
 	filter_by_unique := ""
+	filter_by_delivers := ""
 	distance := "0"
 	x1, y1, x2, y2 := getBoundingBox(r)
 	missing_bb_values := hasEmpty([]string{
@@ -82,6 +83,10 @@ func search(w http.ResponseWriter, r *http.Request) {
 		filter_by_unique = "FILTER BY UNIQUE"
 		tags = removeTag(tags, "unique")
 	}
+	if tagsHas("delivers", r) {
+		filter_by_delivers = "FILTER BY DELIVERS"
+		tags = removeTag(tags, "delivers")
+	}
 	_, err := db.Query(
 		pg.Scan(&json),
 		search_query,
@@ -94,6 +99,7 @@ func search(w http.ResponseWriter, r *http.Request) {
 		x1, y1, x2, y2,
 		ignore_bounding_box,
 		filter_by_unique,
+		filter_by_delivers,
 	)
 	if err != nil {
 		fmt.Println(err)
