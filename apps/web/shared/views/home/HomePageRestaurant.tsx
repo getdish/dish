@@ -71,7 +71,7 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
                 />
                 <Spacer size={8} />
                 <Text style={{ color: '#777', fontSize: 13 }}>
-                  3017 16th St., San Francisco
+                  {restaurant.address}
                 </Text>
                 <Spacer size={12} />
               </VStack>

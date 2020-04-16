@@ -28,7 +28,9 @@ export const RestaurantAddressLinksRow = memo(
     return (
       <Text style={{ color: '#999', fontSize }}>
         <HStack alignItems="center" spacing="xs">
-          {showAddress && <Text style={{ fontSize: 14 }}>3017 16th St.</Text>}
+          {showAddress && (
+            <Text style={{ fontSize: 14 }}>{restaurant.address}</Text>
+          )}
 
           <HoverablePopover
             position="right"
