@@ -1,3 +1,5 @@
+import util from 'util'
+
 import {
   ApolloClient,
   HttpLink,
@@ -459,7 +461,22 @@ export class ModelBase<T> {
 }
 
 class HasuraError extends Error {
-  constructor(public query: string, public errors: {} = {}) {
-    super(JSON.stringify(errors, null, 2))
+  errors: {}
+  constructor(query: string, errors: {} = {}) {
+    super()
+    // Maintains proper stack trace for where our error was thrown (only available on V8)
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, HasuraError)
+    }
+    this.errors = errors
+    this.message =
+      errors[0]?.extensions?.internal?.error?.message || errors[0]?.message
+    if (isBrowserProd) {
+      this.name = 'Dish API Error'
+    } else {
+      console.error(util.inspect(errors, { depth: null }))
+      console.debug('For query: ', query)
+      this.name = 'HasuraError'
+    }
   }
 }
