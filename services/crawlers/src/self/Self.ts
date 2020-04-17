@@ -350,7 +350,9 @@ export class Self extends WorkerJob {
         price: data.price,
         image: data.imageUrl,
       })
-      await dish.upsert()
+      if (dish.name) {
+        await dish.upsert()
+      }
     }
   }
 
