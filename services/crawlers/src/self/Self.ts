@@ -327,19 +327,14 @@ export class Self extends WorkerJob {
   async mergeTags() {
     const yelps = this.yelp
       .getData('data_from_map_search.categories', [])
-      .map((c) => {
-        return {
-          name: c.title,
-        }
-      })
+      .map((c) => c.title)
     const tripadvisors = this.tripadvisor
       .getData('overview.detailCard.tagTexts.cuisines.tags', [])
-      .map((c) => {
-        return {
-          name: c.tagValue,
-        }
-      })
-    await this.restaurant.upsertTags([...yelps, ...tripadvisors])
+      .map((c) => c.tagValue)
+    const tags = _.uniq([...yelps, ...tripadvisors]).map((i) => {
+      return { name: i }
+    })
+    await this.restaurant.upsertTags(tags)
     await this.updateTagRankings()
   }
 
