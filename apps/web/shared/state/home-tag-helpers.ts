@@ -14,12 +14,16 @@ import {
 import { HistoryItem, NavigateItem, SearchRouteParams } from './router'
 import { NavigableTag, Tag, getTagId } from './Tag'
 
-const ensureUniqueTagOfType = new Set(['lense', 'country'])
+const ensureUniqueTagOfType = new Set(['lense', 'country', 'dish'])
 
 type HomeStateNav = { tag: NavigableTag; state?: HomeStateItem }
 
 export const navigateToTag: Action<HomeStateNav> = (om, nav) => {
   getNavigateToTag(om, nav)?.onPress?.()
+}
+
+export const navigateToTagId: Action<string> = (om, tagId) => {
+  navigateToTag(om, { tag: om.state.home.allTags[tagId] })
 }
 
 type LinkButtonProps = NavigateItem & {

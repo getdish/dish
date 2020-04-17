@@ -19,6 +19,7 @@ import {
   getNavigateToTag,
   getTagsFromRoute,
   navigateToTag,
+  navigateToTagId,
 } from './home-tag-helpers'
 import { getNavigateItemForState } from './home-tag-helpers'
 import { HistoryItem, NavigateItem, RouteItem } from './router'
@@ -235,7 +236,7 @@ export type HomeState = HomeStateBase & {
 }
 
 export const isSearchBarTag = (tag: Pick<Tag, 'type'>) =>
-  tag?.type === 'country'
+  tag?.type === 'country' || tag?.type === 'dish'
 
 export const state: HomeState = {
   started: false,
@@ -390,26 +391,42 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
 
   let nextState: HomeStateItem | null = null
   let fetchData: () => Promise<void> | null = null
+  let activeTagIds: HomeActiveTagIds
 
   const type = item.name
 
   switch (type) {
     // home
     case 'home':
+      activeTagIds = om.state.home.lastHomeState.activeTagIds
+
+      // be sure to remove all searchbar tags
+      activeTagIds = Object.keys(activeTagIds).reduce((acc, id) => {
+        if (!isSearchBarTag(om.state.home.allTags[id])) {
+          acc[id] = true
+        }
+        return acc
+      }, {})
+
       nextState = {
         ...fallbackState,
         type,
         ...om.state.home.lastHomeState,
         ...newState,
+        activeTagIds,
       } as HomeStateItemHome
       break
 
     // search or userSearch
     case 'userSearch':
     case 'search':
-      let activeTagIds: HomeActiveTagIds = {
-        ...om.state.home.lastHomeState.activeTagIds,
-      }
+      const lastHomeOrSearch = _.findLast(
+        om.state.home.states,
+        (x) => isHomeState(x) || isSearchState(x)
+      ) as HomeStateItemHome | HomeStateItemSearch
+
+      // use last home or search to get most up to date
+      activeTagIds = lastHomeOrSearch.activeTagIds
 
       if (!started) {
         const tags = getTagsFromRoute(om.state.router.curPage)
@@ -797,15 +814,20 @@ const runSearch: AsyncAction<{ quiet?: boolean } | void> = async (om, opts) => {
   query = query.trim()
 
   const searchArgs: RestaurantSearchArgs = {
-    center: state.center,
-    span: padSpan(state.span),
+    center: roundLngLat(state.center),
+    span: roundLngLat(padSpan(state.span)),
     query,
     tags: tags.map((tag) => getTagId(tag)),
+  }
+
+  if (searchArgs.span.lng === 0.0475) {
+    debugger
   }
   // console.log('searchArgs', searchArgs, opts)
 
   // prevent duplicate searches
   const searchKey = JSON.stringify(searchArgs)
+  console.log(searchKey === lastSearchKey, searchKey, lastSearchKey)
   if (searchKey === lastSearchKey) return
 
   // update state
@@ -1183,8 +1205,18 @@ export const shouldBeOnHome = (
   )
 }
 
+// used to help prevent duplicate searches on slight diff in map move
+const roundLngLat = (val: LngLat): LngLat => {
+  // 4 decimal precision is good to a few meters
+  return {
+    lng: Math.round(val.lng * 10000) / 10000,
+    lat: Math.round(val.lat * 10000) / 10000,
+  }
+}
+
 export const actions = {
   navigateToTag,
+  navigateToTagId,
   getNavigateToTag,
   _toggleTagOnHomeState,
   startAutocomplete,

@@ -7,6 +7,7 @@ import React, {
 } from 'react'
 import { ToggleLayer, Transition, anchor } from 'react-laag'
 import { Platform, TouchableOpacity } from 'react-native'
+import ResizeObserver from 'resize-observer-polyfill'
 
 import { VStack, ZStack } from './Stacks'
 import { useOverlay } from './useOverlay'
@@ -55,7 +56,7 @@ export const Popover = (props: PopoverProps) => {
   if (Platform.OS == 'web') {
     return (
       <ToggleLayer
-        ResizeObserver={window['ResizeObserver']}
+        ResizeObserver={ResizeObserver}
         {...(typeof isOpen !== 'undefined' && { isOpen })}
         container={document.body}
         fixed
@@ -63,7 +64,6 @@ export const Popover = (props: PopoverProps) => {
           if (!props.isOpen) {
             return null
           }
-          console.log('render this layer', props.isOpen, layerProps, arrowStyle)
           return (
             <div
               ref={layerProps.ref}

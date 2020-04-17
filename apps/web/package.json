@@ -36,7 +36,6 @@
     "@o/fast-compare": "2.7.1",
     "expo": "^36.0.2",
     "expo-linear-gradient": "^8.1.0",
-    "fuse.js": "5.0.10-beta",
     "gqless": "^0.0.1-alpha.28",
     "mapkit-typescript": "^5.18.1",
     "overmind": "^23.0.1",
@@ -58,7 +57,8 @@
     "react-native-unimodules": "~0.7.0",
     "react-native-web": "0.11.7",
     "react-storage-hooks": "^4.0.0",
-    "react-laag": "1.7.3"
+    "react-laag": "1.7.3",
+    "resize-observer-polyfill": "1.5.1"
   },
   "devDependencies": {
     "@expo/webpack-config": "^0.11.8",

@@ -146,17 +146,17 @@ function priceRange(restaurant: Restaurant) {
 }
 
 function deliveryLinks(sources: Sources) {
-  const empty = [<Text>~</Text>]
+  const empty = <Text>~</Text>
   if (!sources) return empty
   const delivery_sources = ['ubereats']
   let count = 0
   const delivers = Object.keys(sources)
-    .map((source) => {
+    .map((source, index) => {
       if (!delivery_sources.includes(source)) return
       count++
       const name = source.charAt(0).toUpperCase() + source.slice(1)
       return (
-        <Text>
+        <Text key={index}>
           <Text
             style={{
               color: 'blue',
