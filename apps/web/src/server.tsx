@@ -67,6 +67,7 @@ server.get('*', async (req, res) => {
   const template = readFileSync(htmlPath, 'utf8')
   const overmind = createOvermindSSR(config)
   await overmind.initialized
+  global['window']['om'] = overmind
   const appHtml = ReactDOMServer.renderToString(<App overmind={overmind} />)
   // need to fool helmet back into thinking were in the node
   const helmet = Helmet.renderStatic()

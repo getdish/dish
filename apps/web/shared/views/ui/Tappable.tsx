@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { Component } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { PressEvent } from 'react-native/Libraries/Types/CoreEventTypes'
 
@@ -11,7 +11,7 @@ type Props = {
 const MAX_DOUBLE_TOUCH_DISTANCE = 20
 const MAX_DOUBLE_TOUCH_DELAY_TIME = 250
 
-export default class Tappable extends React.Component<Props> {
+export default class Tappable extends Component<Props> {
   timer: any
   previousPress: PressEvent
 

@@ -27,30 +27,35 @@ export default memo(function HomeLenseBar(props: {
   )
 })
 
+const gradient = (
+  // @ts-ignore
+  <LinearGradient
+    colors={[
+      'rgba(255,255,255,0.4)',
+      '#fff',
+      '#fff',
+      '#fff',
+      'transparent',
+      'transparent',
+      'transparent',
+      'transparent',
+      'transparent',
+      'transparent',
+    ]}
+    style={[
+      StyleSheet.absoluteFill,
+      { zIndex: -1, marginBottom: -80, marginTop: -30 },
+    ]}
+  />
+)
+
 export function HomeContentTopBar(props: { children: any }) {
   return (
     <ZStack zIndex={10} right={0} left={0} pointerEvents="none">
       <VStack pointerEvents="auto" spacing="sm">
         {props.children}
       </VStack>
-      <LinearGradient
-        colors={[
-          'rgba(255,255,255,0.4)',
-          '#fff',
-          '#fff',
-          '#fff',
-          'transparent',
-          'transparent',
-          'transparent',
-          'transparent',
-          'transparent',
-          'transparent',
-        ]}
-        style={[
-          StyleSheet.absoluteFill,
-          { zIndex: -1, marginBottom: -80, marginTop: -30 },
-        ]}
-      />
+      {gradient}
     </ZStack>
   )
 }

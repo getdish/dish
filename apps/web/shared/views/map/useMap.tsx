@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import {
   MapOptions,
@@ -8,8 +8,8 @@ import {
 
 export const useMap = (opts: MapOptions = {}) => {
   const [defaultMapOptions] = React.useState(opts)
-  let mapRef = React.useRef<HTMLDivElement>(null)
-  let [map, setMap] = React.useState<mapkit.Map>()
+  let mapRef = useRef<HTMLDivElement>(null)
+  let [map, setMap] = useState<mapkit.Map>()
 
   useEffect(() => {
     if (mapkit && mapRef.current) {

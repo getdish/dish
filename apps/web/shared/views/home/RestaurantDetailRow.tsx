@@ -51,7 +51,7 @@ export const RestaurantDetailRow = memo(
       </Text>
     )
 
-    const contentEl = (content: string | JSX.Element[]) => (
+    const contentEl = (content: any) => (
       <Text
         numberOfLines={1}
         style={[styles.subText, centered && { textAlign: 'center' }]}

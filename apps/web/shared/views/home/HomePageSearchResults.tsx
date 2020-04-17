@@ -23,7 +23,7 @@ import { LoadingItems } from './LoadingItems'
 import { RestaurantListItem } from './RestaurantListItem'
 import { TagButton } from './TagButton'
 
-const avatar = require('../../assets/peach.png')
+export const avatar = require('../../assets/peach.png')
 
 export default memo(({ state }: { state: HomeStateItemSearch }) => {
   const om = useOvermind()

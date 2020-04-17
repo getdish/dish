@@ -13,6 +13,58 @@ const TARGET = process.env.TARGET || 'client'
 console.log('TARGET', TARGET)
 const appEntry = path.resolve(path.join(__dirname, 'web', 'index.web.tsx'))
 
+// tsickle
+// module.exports = {
+//   context: __dirname,
+//   entry: './web/index.web.tsx',
+//   output: {
+//     path: path.resolve(__dirname),
+//     filename: 'bundle.js',
+//   },
+//   resolve: {
+//     extensions: ['.ts', '.tsx', '.js'],
+//   },
+//   module: {
+//     rules: [
+//       {
+//         test: /\.tsx?$/,
+//         use: {
+//           loader: '@dish/tsickle-loader',
+//           options: {
+//             // the tsconfig file to use during compilation
+//             tsconfig: 'tsconfig.json',
+//             // this is the directory where externs will be saved. You
+//             // will probably want to delete these between builds
+//             externDir: './tmp/externs',
+//           },
+//         },
+//       },
+//     ],
+//   },
+//   plugins: [new Webpack.optimize.ModuleConcatenationPlugin()],
+//   optimization: {
+//     minimize: true,
+//     minimizer: [
+//       new ClosurePlugin(
+//         {
+//           mode: 'STANDARD', // a little misleading -- the actual compilation level is below
+//           childCompilations: true,
+//         },
+//         {
+//           externs: [path.resolve(__dirname, 'dist', 'externs.js')],
+//           languageOut: 'ECMASCRIPT5',
+//           compilation_level: 'ADVANCED',
+//         }
+//       ),
+//     ],
+//     usedExports: true,
+//     splitChunks: {
+//       minSize: 0,
+//     },
+//     concatenateModules: true,
+//   },
+// }
+
 module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
   // @ts-ignore
   const config = await createExpoWebpackConfigAsync(
@@ -170,3 +222,29 @@ function prettifyWebpackConfig(config) {
   })
   return require('prettyjson').render(prettyConfig)
 }
+
+// tsickle experiment
+// module.exports = {
+//   entry: {
+//     app: path.resolve('./web/index.web.tsx'),
+//   },
+//   module: {
+//     rules: [
+//       {
+//         // you use tsickle-loader in place of typescript-loader;
+//         // it will compile for you using typescript
+//         test: /\.tsx?$/,
+//         use: {
+//           loader: '@dish/tsickle-loader',
+//           options: {
+//             // the tsconfig file to use during compilation
+//             tsconfig: path.resolve(__dirname, 'tsconfig.json'),
+//             // this is the directory where externs will be saved. You
+//             // will probably want to delete these between builds
+//             externDir: './tmp/externs',
+//           },
+//         },
+//       },
+//     ],
+//   },
+// }

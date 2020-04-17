@@ -30,14 +30,16 @@ export const PageTitle = memo(
           {!!subTitle && (
             <Text
               numberOfLines={1}
-              style={{
-                display: 'block',
-                textAlign: 'center',
-                width: '100%',
-                color: '#666',
-                fontSize: 18,
-                fontWeight: '40',
-              }}
+              style={
+                {
+                  display: 'block',
+                  textAlign: 'center',
+                  width: '100%',
+                  color: '#666',
+                  fontSize: 18,
+                  fontWeight: '40',
+                } as any
+              }
             >
               {subTitle}
             </Text>

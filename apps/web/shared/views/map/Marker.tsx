@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 
 import { MapContext } from './Map'
 import {
@@ -17,10 +17,10 @@ export const Marker: React.FC<MarkerProps> = ({
   longitude,
   ...options
 }) => {
-  const { mapkit, map } = React.useContext(MapContext)
-  const marker = React.useRef<mapkit.MarkerAnnotation>()
+  const { mapkit, map } = useContext(MapContext)
+  const marker = useRef<mapkit.MarkerAnnotation>()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (mapkit && map) {
       marker.current = new mapkit.MarkerAnnotation(
         createCoordinate(latitude, longitude),
