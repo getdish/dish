@@ -3,14 +3,13 @@ import React, {
   useCallback,
   useContext,
   useLayoutEffect,
-  useState,
+  useMemo,
 } from 'react'
-import { Platform } from 'react-native'
-import PopoverWeb, { ArrowContainer } from 'react-tiny-popover'
+import { ToggleLayer, Transition, anchor } from 'react-laag'
+import { Platform, TouchableOpacity } from 'react-native'
 
-import { isWorker } from '../../constants'
+import { VStack, ZStack } from './Stacks'
 import { useOverlay } from './useOverlay'
-import { useWaterfall } from './useWaterfall'
 
 export const ForceShowPopover = createContext<boolean | undefined>(undefined)
 
@@ -32,14 +31,7 @@ export type PopoverProps = {
 
 export const Popover = (props: PopoverProps) => {
   const forceShow = useContext(ForceShowPopover)
-  const [isMounted, setIsMounted] = useState(false)
   const isOpen = typeof forceShow == 'boolean' ? forceShow : !!props.isOpen
-
-  if (!isWorker) {
-    useWaterfall(() => {
-      setIsMounted(true)
-    })
-  }
 
   const close = useCallback(props.onChangeOpen, [props.onChangeOpen])
 
@@ -60,60 +52,97 @@ export const Popover = (props: PopoverProps) => {
     })
   }
 
-  if (!isMounted) {
-    return props.children
-  }
-
   if (Platform.OS == 'web') {
-    const content = (
-      <div
-        style={{ pointerEvents: isOpen ? 'auto' : 'none' }}
-        className="see-through"
-      >
-        {props.contents}
-      </div>
-    )
-
     return (
-      <PopoverWeb
-        position={props.position}
-        isOpen={isOpen}
-        padding={15}
-        containerStyle={{
-          overflow: 'visible',
-          position: 'absolute',
-          // @ts-ignore
-          zIndex: 10000000,
-        }}
-        content={({ position, targetRect, popoverRect }) =>
-          props.noArrow ? (
-            content
-          ) : (
-            <ArrowContainer
-              position={position}
-              targetRect={targetRect}
-              popoverRect={popoverRect}
+      <ToggleLayer
+        ResizeObserver={window['ResizeObserver']}
+        {...(typeof isOpen !== 'undefined' && { isOpen })}
+        container={document.body}
+        fixed
+        renderLayer={({ layerProps, close, arrowStyle }) => {
+          if (!props.isOpen) {
+            return null
+          }
+          console.log('render this layer', props.isOpen, layerProps, arrowStyle)
+          return (
+            <div
+              ref={layerProps.ref}
               style={{
-                zIndex: 100000000,
-              }}
-              arrowColor={'white'}
-              arrowSize={10}
-              arrowStyle={{
-                zIndex: 1000000000,
-                pointerEvents: 'none',
+                ...layerProps.style,
               }}
             >
-              {content}
-            </ArrowContainer>
+              <div
+                style={{ pointerEvents: isOpen ? 'auto' : 'none' }}
+                className="popover-content see-through"
+                onClick={close}
+              >
+                {props.contents}
+              </div>
+              {!props.noArrow && (
+                <Arrow
+                  style={{
+                    position: 'absolute',
+                    transformOrigin: 'center',
+                    transform: getArrowTranslate(props.position),
+                    ...arrowStyle,
+                  }}
+                />
+              )}
+            </div>
           )
-        }
+        }}
+        closeOnOutsideClick
+        closeOnDisappear="partial"
+        placement={{
+          anchor: anchor.BOTTOM_CENTER,
+          autoAdjust: true,
+          snapToAnchor: false,
+          triggerOffset: 12,
+          scrollOffset: 16,
+          // preferX: 'RIGHT',
+        }}
       >
-        {props.children}
-      </PopoverWeb>
+        {({ isOpen, triggerRef, toggle }) => (
+          <div ref={triggerRef} className="see-through">
+            {props.children}
+          </div>
+        )}
+      </ToggleLayer>
     )
   }
-  // return (
-  // <PopoverNative isVisible={props.isOpen}>{props.children}</PopoverNative>
-  // )
+
+  // native: todo
   return null
 }
+
+function getArrowTranslate(position) {
+  let x = '-50%'
+  let y = '0px'
+  const OFFSET = 3.5
+  if (position === 'left') {
+    x = -OFFSET + 'px'
+    y = '-50%'
+  } else if (position === 'right') {
+    x = OFFSET + 'px'
+    y = '-50%'
+  }
+  const rotation = {
+    top: 180,
+    right: -90,
+    left: 90,
+    bottom: 0,
+  }
+  return `translate(${x}, ${y}) rotate(${rotation[position]}deg)`
+}
+
+const Arrow = (props: any) => (
+  <svg width={14} height={7} {...props}>
+    <g fill="none" fillRule="evenodd">
+      <path
+        fill="#CDCFD0"
+        d="M7 .07v1.428l-5.55 5.5L0 6.982zM7 .07v1.428l5.55 5.5L14 6.982z"
+      />
+      <path fill="#FFF" d="M1.45 7L7 1.498 12.55 7z" />
+    </g>
+  </svg>
+)

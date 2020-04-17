@@ -58,7 +58,7 @@
     "react-native-unimodules": "~0.7.0",
     "react-native-web": "0.11.7",
     "react-storage-hooks": "^4.0.0",
-    "react-tiny-popover": "^4.0.0"
+    "react-laag": "1.7.3"
   },
   "devDependencies": {
     "@expo/webpack-config": "^0.11.8",

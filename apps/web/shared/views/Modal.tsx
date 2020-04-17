@@ -15,9 +15,9 @@ export const Modal = ({
   isOpen: boolean
   onClickOutside?: Function
 }) => {
-  const container = useMemo(() => document.createElement('div'), [])
   const zIndex = 10
 
+  const container = useMemo(() => document.createElement('div'), [])
   useLayoutEffect(() => {
     document.getElementById('modals').appendChild(container)
     return () => {
