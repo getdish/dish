@@ -22,10 +22,10 @@ export const getTagId = (tag: NavigableTag) => {
 export const tagLenses: Tag[] = [
   {
     id: '3',
-    name: 'Unique',
+    name: 'Gems',
     icon: ' 💎',
     rgb: [0.6, 0.1, 0.5],
-    description: 'Local gems',
+    description: 'The best',
     type: 'lense',
     isVotable: true,
   },

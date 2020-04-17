@@ -1,4 +1,5 @@
 import { Tag } from '@dish/models'
+import _ from 'lodash'
 import React, { memo } from 'react'
 import { Text, TextStyle, View } from 'react-native'
 
@@ -111,7 +112,7 @@ export const TagButton = memo(
               {tag.icon}
             </span>
           )}
-          {tag['displayName'] ?? tag.name}
+          {tag['displayName'] ?? _.capitalize(tag.name)}
         </Text>
         {!!votable && (
           <View

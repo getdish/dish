@@ -1,5 +1,12 @@
 import _ from 'lodash'
-import React, { memo, useEffect, useMemo, useState } from 'react'
+import React, {
+  memo,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react'
 
 import { searchBarHeight } from '../../constants'
 import { useDebounceValue } from '../../hooks/useDebounce'
@@ -42,6 +49,9 @@ export const HomeMap = memo(() => {
   const state = om.state.home.currentState
   const { center, span } = state
 
+  // start paused, first map update we ignore because its slightly off
+  const pauseMapUpdates = useRef(true)
+
   const padding = isSmall
     ? {
         left: 0,
@@ -56,14 +66,7 @@ export const HomeMap = memo(() => {
         right: 0,
       }
 
-  const {
-    map,
-    mapProps,
-    // setRotation,
-    // setCenter,
-    // setVisibleMapRect,
-  } = useMap({
-    // center: [, center.lng],
+  const { map, mapProps } = useMap({
     region: {
       latitude: center.lat,
       longitude: center.lng,
@@ -97,6 +100,11 @@ export const HomeMap = memo(() => {
     })
 
     const handleRegionChangeEnd = (e) => {
+      console.log('pause update??', pauseMapUpdates.current)
+      if (pauseMapUpdates.current) {
+        // dont update while were transitioning to new state!
+        return
+      }
       const span = map.region.span
       om.actions.home.setMapArea({
         center: {
@@ -117,8 +125,6 @@ export const HomeMap = memo(() => {
       map.removeEventListener('region-change-end', handleRegionChangeEnd)
     }
   }, [map])
-
-  const [focused, setFocused] = useState('')
 
   const restaurantDetail =
     state.type == 'restaurant'
@@ -252,32 +258,42 @@ export const HomeMap = memo(() => {
 
   // Navigate - return to previous map position
   // why not just useEffect for center/span? because not always wanted
-  useDebounceEffect(
-    () => {
-      if (!map) return
-      let tm
-      // react to changed center specifically
-      const dispose = om.reaction(
-        (state) => state.home.currentState.center,
-        (center) => {
-          clearTimeout(tm)
-          tm = requestIdleCallback(() => {
-            centerMapToRegion({
-              map,
-              center,
-              span: om.state.home.currentState.span,
-            })
-          })
-        }
-      )
-      return () => {
+  useEffect(() => {
+    if (!map) return
+    let tm
+    let tm2
+    // react to changed center specifically
+    const dispose = om.reaction(
+      (state) =>
+        JSON.stringify([
+          state.home.currentState.center,
+          state.home.currentState.span,
+        ]),
+      () => {
         clearTimeout(tm)
-        dispose()
+        console.log('reacting to center/span updates')
+        pauseMapUpdates.current = true
+        tm = requestIdleCallback(() => {
+          centerMapToRegion({
+            map,
+            center: om.state.home.currentState.center,
+            span: om.state.home.currentState.span,
+          })
+          tm2 = setTimeout(() => {
+            console.log('unpause')
+            pauseMapUpdates.current = false
+          }, 300)
+        })
       }
-    },
-    100,
-    [map]
-  )
+    )
+    return () => {
+      console.log('unpause')
+      pauseMapUpdates.current = false
+      clearTimeout(tm)
+      clearTimeout(tm2)
+      dispose()
+    }
+  }, [map])
 
   // Search - hover restaurant
   useDebounceEffect(
@@ -344,7 +360,7 @@ export const HomeMap = memo(() => {
       const cancels = new Set<Function>()
       const cb = (e) => {
         const selected = e.annotation.data.id || ''
-        setFocused(selected)
+        console.log('selected is', selected)
       }
       map.addEventListener('select', cb)
       cancels.add(() => map.removeEventListener('select', cb))

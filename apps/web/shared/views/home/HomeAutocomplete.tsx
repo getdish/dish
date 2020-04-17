@@ -29,13 +29,13 @@ export default memo(function HomeAutoComplete() {
       const y = e.pageY
       const showAutocomplete = om.state.home.showAutocomplete
       if (showAutocomplete) {
-        if (y > 190) {
+        if (y > 140) {
           tmOff = setTimeout(() => {
             om.actions.home.setShowAutocomplete(false)
-          }, 150)
+          }, 80)
         }
       } else {
-        if (y < 190) {
+        if (y < 140) {
           clearTimeout(tmOff)
         }
       }
@@ -110,7 +110,7 @@ export default memo(function HomeAutoComplete() {
                     if (showLocation) {
                       om.actions.home.setLocation(x.name)
                     } else {
-                      om.actions.home.navigateToTag(x)
+                      om.actions.home.navigateToTagId(x.tagId)
                     }
                     om.actions.home.setShowAutocomplete(false)
                   }}

@@ -36,6 +36,7 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
   )
   const isEditingUserList = isEditingUserPage(om.state)
   const countryTag = tags.find((x) => x.type === 'country')?.name ?? ''
+  const dishTag = tags.find((x) => x.type === 'dish')?.name ?? ''
   const hasUser = !!state.user
   const userPrefix = hasUser ? `${state.user.username}'s ` : ''
   let lenseName = lense?.description ?? lense?.name ?? ''
@@ -44,15 +45,20 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
   }
   const titleSpace = titleTags.length ? '' : ' '
   const searchName = state.searchQuery ?? ''
+
+  const subTitleParts = countryTag
+    ? [countryTag, `restaurants in ${locationName}`]
+    : [dishTag, `dishes in ${locationName}`]
+
   const subTitle = (
     <>
-      <strong>{countryTag}</strong> restaurants in the {locationName}
+      <strong>{subTitleParts[0]}</strong> {subTitleParts[1]}
     </>
   )
 
   const title = `${userPrefix} ${lenseName}${titleSpace}${titleTags
-    .map((x) => x.name)
-    .join(', ')} ${searchName} ${subTitle}`
+    .map((x) => `${x.name ?? ''}`)
+    .join(', ')} ${searchName} ${subTitleParts.join(' ')}`
 
   const pageTitleElements = (
     <>
@@ -60,15 +66,7 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
       {lenseName}
       {titleSpace}
       {titleTags.map((tag) => (
-        <TagButton
-          key={getTagId(tag)}
-          tag={
-            tag.name === 'Delivers' ? { ...tag, displayName: 'delivery' } : tag
-          }
-          subtle
-          noColor
-          hideIcon
-        />
+        <TagButton key={getTagId(tag)} tag={tag} subtle noColor hideIcon />
       ))}
       {searchName}
     </>
