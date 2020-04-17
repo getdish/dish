@@ -2,7 +2,7 @@ import { Restaurant } from '@dish/models'
 
 import { Self } from './Self'
 
-const name = 'Lovejoy’s Tea Room'
+const name = 'Babylon'
 
 async function one() {
   const restaurant = new Restaurant()

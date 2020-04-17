@@ -498,7 +498,10 @@ export class Self extends WorkerJob {
   }
 
   getRatingFactors() {
-    const factors = this.tripadvisor.getData('overview.rating.ratingQuestions')
+    const factors = this.tripadvisor.getData(
+      'overview.rating.ratingQuestions',
+      []
+    )
     this.restaurant.rating_factors = {
       food: factors.find((i) => i.name == 'Food')?.rating / 10,
       service: factors.find((i) => i.name == 'Service')?.rating / 10,
