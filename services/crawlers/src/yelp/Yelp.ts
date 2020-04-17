@@ -65,7 +65,8 @@ export class Yelp extends WorkerJob {
   async getRestaurants(
     top_right: [number, number],
     bottom_left: [number, number],
-    start: number = 0
+    start = 0,
+    only = ''
   ) {
     const PER_PAGE = 30
     const coords = [
@@ -86,6 +87,18 @@ export class Yelp extends WorkerJob {
     )
 
     for (const data of objects) {
+      if (data?.props?.text?.includes('Sponsored Results')) {
+        console.log('YELP: Skipping sponsored result')
+        continue
+      }
+      if (data?.searchResultLayoutType == 'separator') {
+        continue
+      }
+      const name = data.searchResultBusiness.name
+      if (only != '' && name != only) {
+        console.log('YELP SANDBOX: Skipping ' + name)
+        continue
+      }
       await this.getRestaurant(data)
     }
     const next_page = start + PER_PAGE
@@ -277,6 +290,7 @@ export class Yelp extends WorkerJob {
     )
 
     if (process.env.DISH_ENV != 'production') {
+      console.log('YELP: Exiting review loop, not in production')
       return
     }
 
