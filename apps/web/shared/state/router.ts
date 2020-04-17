@@ -26,12 +26,17 @@ export const routes = {
   home: new Route('/'),
   user: new Route<{ username: string; pane?: string }>('/u/:username/:pane?'),
   restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
+  // NOTE keep userSearch and search in sync
   // after user/restaurant
+  // see HACK in home.ts if you change these names
   userSearch: new Route<{ [key: string]: string }>(
-    '/u/:username/:lense/:location/:tags?'
+    '/u/:username/:lense/:location/:tags?/:search?'
   ),
   // search after userSearch
-  search: new Route<{ [key: string]: string }>('/:lense/:location/:tags?'),
+  // see HACK in home.ts if you change these names
+  search: new Route<{ [key: string]: string }>(
+    '/:lense/:location/:tags?/:search?'
+  ),
   login: new Route('/login'),
   register: new Route('/register'),
   forgotPassword: new Route('/forgot-password'),
@@ -184,7 +189,7 @@ const navigate: AsyncAction<NavigateItem> = async (om, navItem) => {
         name: item.name,
         item: _.last(om.state.router.history)!,
       }),
-      1000,
+      2000,
       'router.onRouteChange',
       {
         warnOnly: true,
@@ -260,7 +265,7 @@ const routeListen: Action<{
       } as any
 
       // go go go
-      await race(om.actions.router.navigate(args), 1000, 'router.navigate', {
+      await race(om.actions.router.navigate(args), 2000, 'router.navigate', {
         warnOnly: true,
       })
 

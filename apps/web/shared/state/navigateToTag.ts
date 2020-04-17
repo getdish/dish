@@ -128,15 +128,15 @@ export const getNavigateItemForState = (
   const { home, router } = omState
   const state = ogState || home.currentState
   const isHome = isHomeState(state)
-
+  const isSearch = isSearchState(state)
   // we only handle "special" states here (home/search)
-  if (!isHome && !isSearchState(state)) {
+  if (!isHome && !isSearch) {
     return {
       name: state.type,
       params: router.curPage.params,
     }
   }
-
+  // if going home, just go there
   const shouldBeHome = shouldBeOnHome(home, state)
   if (shouldBeHome) {
     return { name: 'home' }
@@ -144,7 +144,7 @@ export const getNavigateItemForState = (
 
   const params = getTagRouteParams(omState, state)
   if (state.searchQuery) {
-    params.query = state.searchQuery
+    params.search = state.searchQuery
   }
   const isOnUserSearch =
     state.type === 'userSearch' || router.curPage.name === 'userSearch'

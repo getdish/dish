@@ -21,7 +21,7 @@ export const TrendingButton = <
     <HStack alignItems="center">
       <LinkButton
         {...flatButtonStyle}
-        // backgroundColor="transparent"
+        backgroundColor="transparent"
         margin={2}
         flexDirection="row"
         alignItems="center"

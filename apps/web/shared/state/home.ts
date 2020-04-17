@@ -375,12 +375,13 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   const { started, currentState } = om.state.home
 
   const fallbackState = {
+    id: `${Math.random()}`,
     center: currentState?.center ?? initialHomeState.center,
     span: currentState?.span ?? initialHomeState.span,
+    searchQuery: currentState?.searchQuery ?? '',
   }
   const newState = {
     historyId: item.id,
-    searchQuery: currentState?.searchQuery ?? '',
   }
 
   let nextState: HomeStateItem | null = null
@@ -410,10 +411,11 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         results: { status: 'loading' },
         ...om.state.home.lastSearchState,
         ...newState,
-        type: 'search',
+        type,
         username:
           type == 'userSearch' ? om.state.router.curPage.params.username : '',
         activeTagIds,
+        searchQuery: item.params.search ?? fallbackState.searchQuery,
       }
       nextState = searchState
       fetchData = async () => {
@@ -472,6 +474,8 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   const replace =
     item.replace || om.state.home.currentStateType === nextState.type
 
+  console.log('pushHomeState', { nextState, item, replace })
+
   if (replace) {
     // try granular update
     const lastState = om.state.home.states[om.state.home.states.length - 1]
@@ -481,13 +485,11 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
       }
     }
   } else {
-    nextState.id = `${Math.random()}`
     om.state.home.states = [...om.state.home.states, nextState]
   }
 
-  await om.actions.home._syncRouteToState(item.params)
-
   if (!om.state.home.started) {
+    await om.actions.home._syncRouteToState(item.params)
     om.state.home.started = true
   }
 
@@ -831,8 +833,12 @@ const runSearch: AsyncAction<{ quiet?: boolean } | void> = async (om, opts) => {
   }
 
   // update denormalized dictionary
+  const { allRestaurants } = om.state.home
   for (const restaurant of restaurants) {
-    om.state.home.allRestaurants[restaurant.id] = restaurant
+    const existing = allRestaurants[restaurant.id]
+    if (!existing || existing.updated_at !== restaurant.updated_at) {
+      allRestaurants[restaurant.id] = restaurant
+    }
   }
 
   // only update searchkey once finished
@@ -979,7 +985,11 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
       }
       return
   }
+
+  currentStates = om.state.home.states
 }
+
+export let currentStates: HomeStateItem[] = []
 
 const setShowAutocomplete: Action<ShowAutocomplete> = (om, val) => {
   om.state.home.showAutocomplete = val
@@ -1070,25 +1080,26 @@ const _afterTagChange: AsyncAction = async (om) => {
 
 const requestLocation: Action = (om) => {}
 
-const _syncRouteToState: AsyncAction<Object, boolean> = async (om, params) => {
+const _syncRouteToState: AsyncAction<Object> = async (om, params) => {
   const state = om.state.home.currentState
   if (!isSearchState(state)) {
     return
   }
 
-  let didSet = false
   const setTag = (name: string, type: any) => {
     const tagId = getTagId({ name, type })
     if (!state.activeTagIds[tagId]) {
       state.activeTagIds[tagId] = true
-      didSet = true
     }
   }
 
   const validTagParams = { ...(params ?? {}) }
-  // UGH
+
+  // HACK - for now remove non-tag params manually
   delete validTagParams['username']
   delete validTagParams['location']
+  delete validTagParams['search']
+
   const validTagKeys = Object.keys(validTagParams)
 
   for (const type of validTagKeys) {
@@ -1107,12 +1118,6 @@ const _syncRouteToState: AsyncAction<Object, boolean> = async (om, params) => {
       setTag(name, type)
     }
   }
-
-  if (didSet) {
-    await om.actions.home._syncStateToRoute()
-  }
-
-  return didSet
 }
 
 const _syncStateToRoute: AsyncAction<HomeStateItem | void> = async (
