@@ -38,7 +38,7 @@ export const TagButton = memo(
     noColor?: boolean
   }) => {
     const scale = size == 'lg' ? 1.05 : 1
-    const paddingVertical = 1.33 * scale
+    const paddingVertical = (subtle ? 0 : 8) * scale
     const lineHeight = 22 * scale
     const defaultColor = noColor ? 'inherit' : '#777'
     const bg = backgroundColor ?? (subtle ? 'transparent' : defaultColor)
@@ -85,7 +85,7 @@ export const TagButton = memo(
               fontSize: fontSize ?? (subtle ? 'inherit' : 13 * scale),
               fontWeight: 'inherit',
               lineHeight: 'inherit',
-              paddingVertical: subtle ? 0 : paddingVertical,
+              paddingVertical: paddingVertical,
               paddingHorizontal: subtle ? 0 : 8 * scale,
               color: fg,
               margin: 'auto',
