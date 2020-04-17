@@ -36,12 +36,10 @@ export const routes = {
   restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
   // NOTE keep userSearch and search in sync
   // after user/restaurant
-  // see HACK in home.ts if you change these names
   userSearch: new Route<SearchRouteParams>(
     '/u/:username/:lense/:location/:tags?/:search?'
   ),
   // search after userSearch
-  // see HACK in home.ts if you change these names
   search: new Route<SearchRouteParams>('/:lense/:location/:tags?/:search?'),
   login: new Route('/login'),
   register: new Route('/register'),
