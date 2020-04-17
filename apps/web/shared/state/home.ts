@@ -51,6 +51,7 @@ type HomeStateItemBase = {
   searchQuery: string
   center: LngLat
   span: LngLat
+  id: string
   historyId?: string
 }
 
@@ -142,7 +143,7 @@ const breadcrumbStates = (state: HomeStateBase) => {
     switch (cur.type) {
       case 'home':
         crumbs.unshift(cur)
-        return crumbs
+        return crumbs.map((x) => _.omit(x, 'historyId'))
       case 'search':
       case 'userSearch':
       case 'user':
@@ -480,16 +481,7 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
       }
     }
   } else {
-    // const prev = []
-    // const added = new Set()
-    // const states = [...om.state.home.states].reverse()
-    // // garbage collect duplicate states, only one of each type allowed
-    // for (const state of states) {
-    //   if (!added.has(state.type)) {
-    //     added.add(state.type)
-    //     prev.push(state)
-    //   }
-    // }
+    nextState.id = `${Math.random()}`
     om.state.home.states = [...om.state.home.states, nextState]
   }
 

@@ -42,8 +42,8 @@ export const RestaurantButton = memo(
           size="sm"
           restaurant={restaurant}
           position="absolute"
-          top={-6}
-          right={-16}
+          top={-26}
+          right={-43}
         />
       </LinkButton>
     )

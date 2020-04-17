@@ -18,13 +18,12 @@ export const LenseButton = memo(
     isActive?: boolean
     minimal?: boolean
   }) => {
-    const om = useOvermind()
     const [r, g, b] = lense.rgb
     const rgbInner = `${r * 255}, ${g * 255}, ${b * 255}`
     const lenseColor = `rgb(${rgbInner})`
     const lenseColorLight = `rgba(${rgbInner}, 0.35)`
     const buttonContent = (
-      <LinkButton {...om.actions.home.getNavigateToTag(lense)}>
+      <LinkButton tag={lense}>
         <HStack
           alignItems="center"
           justifyContent="center"

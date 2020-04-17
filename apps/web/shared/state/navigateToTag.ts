@@ -2,7 +2,6 @@ import { slugify } from '@dish/models'
 import { isEqual } from '@o/fast-compare'
 import { Action, AsyncAction } from 'overmind'
 
-import { LinkButtonProps } from '../views/ui/Link'
 import {
   HomeStateItem,
   OmState,
@@ -18,44 +17,43 @@ import { NavigableTag, getTagId } from './Tag'
 
 const ensureUniqueTagOfType = new Set(['lense', 'country'])
 
-export const navigateToTag: Action<NavigableTag> = (om, tag) => {
-  getNavigateToTag(om, tag)?.onPress?.()
+type HomeStateNav = { tag: NavigableTag; state?: HomeStateItem }
+
+export const navigateToTag: Action<HomeStateNav> = (om, nav) => {
+  getNavigateToTag(om, nav)?.onPress?.()
+}
+
+type LinkButtonProps = NavigateItem & {
+  onPress?: Function
 }
 
 // for easy use with Link / LinkButton
-export const getNavigateToTag: Action<NavigableTag, LinkButtonProps> = (
+export const getNavigateToTag: Action<HomeStateNav, LinkButtonProps> = (
   om,
-  tag
+  { state = om.state.home.currentState, tag }
 ) => {
   const nextState = getNextHomeStateWithTag(om, {
     tag,
-    state: om.state.home.currentState,
+    state,
   })
   const navigateItem = getNavigateItemForState(om.state, nextState)
-
-  // no need for onPress action if it changes url
-  // TODO is this backwards, should we do state first entirely once running?
-  if (!isEqual(om.state.home.currentNavItem, navigateItem)) {
-    return navigateItem
-  }
-
   return {
     ...navigateItem,
+    // but dont want to be causing tons of re-renders
+    // if isEqual(om.state.home.currentNavItem, navigateItem) dont!?
     onPress: () => om.actions.home._toggleTagOnHomeState(tag),
   }
 }
 
-const getNextHomeStateWithTag: Action<
-  {
-    state: HomeStateItem
-    tag: NavigableTag
-  },
-  HomeStateItem
-> = (om, { state, tag }) => {
+const getNextHomeStateWithTag: Action<HomeStateNav, HomeStateItem> = (
+  om,
+  { state, tag }
+) => {
   if (!isHomeState(state) && !isSearchState(state)) {
     return null
   }
 
+  if (!tag) throw new Error(`No tag`)
   const key = getTagId(tag)
   const ensureUnique = ensureUniqueTagOfType.has(tag.type)
 
@@ -102,6 +100,7 @@ export const _toggleTagOnHomeState: AsyncAction<NavigableTag> = async (
     }
   }
 
+  if (!next) throw new Error(`No tag`)
   const key = getTagId(next)
   state.activeTagIds[key] = !state.activeTagIds[key]
   await om.actions.home._afterTagChange()
