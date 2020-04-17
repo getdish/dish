@@ -43,6 +43,14 @@ const createUseMedia = (effect: EitherEffect) =>
     rawQueries: A,
     options?: UseMediaOptions<A>
   ): A extends any[] ? boolean[] : boolean {
+    // ssr ignore
+    if (
+      typeof window == 'undefined' ||
+      typeof window.matchMedia === 'undefined'
+    ) {
+      return null
+    }
+
     const allQueries = [].concat(rawQueries)
     const queries = allQueries.map(objectToString)
     const [state, setState] = useState(
