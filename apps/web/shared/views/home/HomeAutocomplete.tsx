@@ -46,6 +46,14 @@ export default memo(function HomeAutoComplete() {
     }
   }, [isShowing])
 
+  const gradient = (
+    // @ts-ignore
+    <LinearGradient
+      colors={['rgba(0,0,0,0.1)', 'transparent']}
+      style={[StyleSheet.absoluteFill, { height: 160 }]}
+    />
+  )
+
   return (
     <>
       <ZStack
@@ -61,10 +69,7 @@ export default memo(function HomeAutoComplete() {
             om.actions.home.setShowAutocomplete(false)
           }}
         >
-          <LinearGradient
-            colors={['rgba(0,0,0,0.1)', 'transparent']}
-            style={[StyleSheet.absoluteFill, { height: 160 }]}
-          />
+          {gradient}
         </TouchableOpacity>
       </ZStack>
       <ZStack

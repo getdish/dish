@@ -192,7 +192,7 @@ const CountryTopDishesAndRestaurants = memo(
             spacing={22}
           >
             {(country.dishes || []).slice(0, 5).map((top_dish, index) => {
-              return <DishView key={index} dish={top_dish} />
+              return <DishView key={index} dish={top_dish as any} />
             })}
           </HStack>
         </ScrollView>

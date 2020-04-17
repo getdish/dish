@@ -50,8 +50,8 @@ export function HomeViewDrawer(props: { children: any }) {
 
   const topOffset = isSmall ? 0 : searchBarHeight
 
-  // @ts-ignore
   const leftGradient = (
+    // @ts-ignore
     <LinearGradient
       colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
       style={[StyleSheet.absoluteFill]}

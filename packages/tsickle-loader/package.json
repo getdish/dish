@@ -1,0 +1,22 @@
+{
+  "name": "@dish/tsickle-loader",
+  "version": "0.0.1",
+  "main": "_/index.js",
+  "sideEffects": false,
+  "private": true,
+  "scripts": {
+    "start": "true",
+    "build": "tsc -b",
+    "watch": "tsc -b --watch --preserveWatchOutput"
+  },
+  "dependencies": {
+    "tsickle": "^0.38.1",
+    "loader-utils": "*",
+    "schema-utils": "*"
+  },
+  "peerDependencies": {
+    "webpack": "*",
+    "typescript": "*"
+  },
+  "devDependencies": {}
+}

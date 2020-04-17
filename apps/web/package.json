@@ -29,6 +29,7 @@
     "android": "react-native run-android"
   },
   "dependencies": {
+    "@dish/tsickle-loader": "*",
     "@apollo/client": "3.0.0-beta.43",
     "@dish/common-web": "*",
     "@dish/models": "*",

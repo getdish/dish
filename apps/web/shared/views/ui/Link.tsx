@@ -3,7 +3,7 @@ import './Link.css'
 import React, { useCallback, useContext, useMemo } from 'react'
 import { Text, TextStyle, TouchableOpacity } from 'react-native'
 
-import { currentStates, omStatic } from '../../state/home'
+import { currentStates } from '../../state/home'
 import { getNavigateToTag } from '../../state/home-tag-helpers'
 import { useOvermind } from '../../state/om'
 import { RoutesTable, getPathFromParams } from '../../state/router'

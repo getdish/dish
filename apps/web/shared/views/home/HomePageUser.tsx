@@ -10,6 +10,7 @@ import { PageTitleTag } from '../ui/PageTitleTag'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { CloseButton } from './CloseButton'
+import { avatar } from './HomePageSearchResults'
 
 export default memo(({ state }: { state: HomeStateItemUser }) => {
   const om = useOvermind()
@@ -26,7 +27,7 @@ export default memo(({ state }: { state: HomeStateItemUser }) => {
       <VStack padding={18} paddingBottom={0} paddingRight={16}>
         <HStack position="relative">
           <Circle size={64}>
-            <Image source={'blank'} />
+            <Image source={avatar} />
           </Circle>
           <Spacer size={20} />
           <VStack flex={1}>

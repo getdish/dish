@@ -10,10 +10,10 @@ type MapContextType = {
   mapkit?: typeof mapkit
 }
 
-export const MapContext = React.createContext<MapContextType>({
+export const MapContext = React.createContext({
   map: undefined,
   mapkit: undefined,
-})
+} as MapContextType)
 
 const MapProvider: React.FC<{ context: MapContextType }> = ({
   children,
@@ -44,17 +44,15 @@ const CreateMap: React.FC<MapOptions> = ({ children, ...defaultOptions }) => {
   )
 }
 
-export const Map: React.FC<
-  {
-    // ⚠️ Pick between callbackUrl or token.
-    // https://developer.apple.com/documentation/mapkitjs/mapkit/2974045-init
-    // not needed if within a `MapProvider`
-    tokenOrCallback?: string
-    mapRef?: MapRef
-    mapkit?: typeof mapkit
-    map?: mapkit.Map
-  } & MapOptions
-> = ({ tokenOrCallback, mapkit, map, mapRef, ...props }) => {
+export const Map: React.FC<{
+  // ⚠️ Pick between callbackUrl or token.
+  // https://developer.apple.com/documentation/mapkitjs/mapkit/2974045-init
+  // not needed if within a `MapProvider`
+  tokenOrCallback?: string
+  mapRef?: MapRef
+  mapkit?: typeof mapkit
+  map?: mapkit.Map
+} & MapOptions> = ({ tokenOrCallback, mapkit, map, mapRef, ...props }) => {
   // map has already been created, we just need to setup the provider
   if (mapRef) {
     return (
