@@ -4,7 +4,7 @@ import React, { memo, useCallback, useState } from 'react'
 import { ScrollView, Text } from 'react-native'
 
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
-import { HomeStateItemHome } from '../../state/home'
+import { HomeStateItem, HomeStateItemHome } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Box } from '../ui/Box'
 import { HoverablePopover } from '../ui/HoverablePopover'
@@ -32,7 +32,7 @@ export default memoIsEqualDeep(function HomePageTopDIshes({
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
       <VStack position="relative" flex={1}>
-        <HomeViewTopDishesContent />
+        <HomeViewTopDishesContent state={state} />
       </VStack>
     </>
   )
@@ -101,7 +101,7 @@ const HomeViewTopDishesTrending = memo(() => {
   )
 })
 
-const HomeViewTopDishesContent = memo(() => {
+const HomeViewTopDishesContent = memo(({ state }: { state: HomeStateItem }) => {
   const om = useOvermind()
   const { topDishes, topDishesFilteredIndices } = om.state.home
   let results = topDishes
@@ -139,6 +139,7 @@ const HomeViewTopDishesContent = memo(() => {
             .sort((x) => (x.country === 'Japanese' ? -1 : 1))
             .map((country, index) => (
               <CountryTopDishesAndRestaurants
+                state={state}
                 key={country.country}
                 country={country}
                 rank={index + 1}
@@ -151,7 +152,15 @@ const HomeViewTopDishesContent = memo(() => {
 })
 
 const CountryTopDishesAndRestaurants = memo(
-  ({ country, rank }: { country: TopDish; rank: number }) => {
+  ({
+    state,
+    country,
+    rank,
+  }: {
+    country: TopDish
+    rank: number
+    state: HomeStateItem
+  }) => {
     const om = useOvermind()
     const [hovered, setHovered] = useState(false)
     const [hoveredRestaurant, setHoveredRestaurant] = useState<Restaurant>(null)
@@ -174,10 +183,10 @@ const CountryTopDishesAndRestaurants = memo(
               {...flatButtonStyle}
               // backgroundColor="transparent"
               marginVertical={-8}
-              {...om.actions.home.getNavigateToTag({
+              tag={{
                 type: 'country',
                 name: country.country,
-              })}
+              }}
             >
               <Text
                 numberOfLines={1}

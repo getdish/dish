@@ -1,9 +1,10 @@
-import React, { memo, useState } from 'react'
+import React, { createContext, memo, useState } from 'react'
 
 import { isWorker } from '../../constants'
 import { searchBarHeight } from '../../constants'
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import {
+  HomeStateItem,
   HomeStateItemHome,
   HomeStateItemRestaurant,
   HomeStateItemSearch,
@@ -63,7 +64,7 @@ export default function HomePage() {
             <HomeStackView items={breadcrumbStates}>
               {(homeState) => {
                 return (
-                  <>
+                  <CurrentStateID.Provider value={homeState.id}>
                     {isHomeState(homeState) && (
                       <HomePageTopDishes state={homeState} />
                     )}
@@ -76,7 +77,7 @@ export default function HomePage() {
                     {isRestaurantState(homeState) && (
                       <HomePageRestaurant state={homeState} />
                     )}
-                  </>
+                  </CurrentStateID.Provider>
                 )
               }}
             </HomeStackView>
@@ -86,3 +87,5 @@ export default function HomePage() {
     </ZStack>
   )
 }
+
+export const CurrentStateID = createContext<string>(null)

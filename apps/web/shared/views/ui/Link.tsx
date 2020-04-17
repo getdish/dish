@@ -1,10 +1,12 @@
 import './Link.css'
 
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useContext, useMemo } from 'react'
 import { Text, TextStyle, TouchableOpacity } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { RoutesTable, getPathFromParams } from '../../state/router'
+import { NavigableTag } from '../../state/Tag'
+import { CurrentStateID } from '../home/HomePage'
 import { StackBaseProps, VStack } from './Stacks'
 
 type LinkSharedProps = {
@@ -89,17 +91,35 @@ export type LinkButtonProps<Name = any, Params = any> = StackBaseProps &
     | {
         onPress?: any
       }
+    | {
+        tag: NavigableTag
+      }
   )
 
 export function LinkButton<
   Name extends keyof RoutesTable = keyof RoutesTable,
   Params = RoutesTable[Name]['params']
->(props: LinkButtonProps<Name, Params>) {
+>(allProps: LinkButtonProps<Name, Params>) {
+  const om = useOvermind()
+  const currentStateID = useContext(CurrentStateID)
   let restProps: StackBaseProps
   let contents: React.ReactElement
   let pointerEvents: any
   let onPress: any
   let fastClick: boolean
+  let props = { ...allProps }
+
+  if ('tag' in props) {
+    const state = window['om'].state.home.states.find(
+      (x) => x.id === currentStateID
+    )
+    const tagProps = om.actions.home.getNavigateToTag({
+      state,
+      tag: props.tag,
+    })
+    delete props['tag']
+    props = { ...props, ...tagProps }
+  }
 
   if ('name' in props) {
     const {
@@ -137,6 +157,7 @@ export function LinkButton<
   } else {
     const {
       children,
+      // @ts-ignore
       onPress: onPress_,
       fontSize,
       lineHeight,
