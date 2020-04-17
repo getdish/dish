@@ -186,8 +186,6 @@ textarea {
   flex-grow: inherit;
   align-items: inherit;
   justify-content: inherit;
-  width: inherit;
-  height: inherit;
 }
 
 .see-through > * {

@@ -132,9 +132,9 @@ export const tagFilters: Tag[] = [
   },
   {
     id: '91',
-    name: '🥬',
+    name: 'Planty',
     type: 'filter',
     // @ts-ignore
-    // groupId: 'preferences',
+    groupId: 'preferences',
   },
 ]
