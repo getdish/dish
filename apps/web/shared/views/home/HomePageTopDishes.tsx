@@ -60,43 +60,26 @@ const HomeViewTopDishesTrending = memo(() => {
       <SmallTitle centerDivider>
         Trending in {om.state.home.location?.name ?? 'San Francisco'}
       </SmallTitle>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <VStack paddingHorizontal={25} spacing="sm">
-          <HStack flex={1} spacing={5} overflow="hidden">
-            <SmallerTitle
-              width={120}
-              paddingRight={10}
-              justifyContent="flex-end"
-              hideDivider
-            >
-              Restaurants
-            </SmallerTitle>
-            {allRestaurants.slice(0, 8).map(getTrending)}
-          </HStack>
-          <HStack flex={1} spacing={3} overflow="hidden">
-            <SmallerTitle
-              width={120}
-              paddingRight={10}
-              justifyContent="flex-end"
-              hideDivider
-            >
-              Dishes
-            </SmallerTitle>
-            {allRestaurants.slice(4).map(getTrending)}
-          </HStack>
-          <HStack flex={1} spacing={3} overflow="hidden">
-            <SmallerTitle
-              width={120}
-              paddingRight={10}
-              justifyContent="flex-end"
-              hideDivider
-            >
-              Topics
-            </SmallerTitle>
-            {allRestaurants.slice(2).map(getTrending)}
-          </HStack>
+      <HStack spacing="sm" paddingHorizontal={10}>
+        <VStack flex={1} spacing={6}>
+          <SmallerTitle>Restaurants</SmallerTitle>
+          <VStack spacing={0} overflow="hidden">
+            {allRestaurants.slice(0, 7).map(getTrending)}
+          </VStack>
         </VStack>
-      </ScrollView>
+        <VStack flex={1} spacing={6}>
+          <SmallerTitle>Dishes</SmallerTitle>
+          <VStack spacing={0} overflow="hidden">
+            {allRestaurants.slice(3).map(getTrending)}
+          </VStack>
+        </VStack>
+        <VStack flex={1} spacing={6}>
+          <SmallerTitle>Topics</SmallerTitle>
+          <VStack spacing={0} overflow="hidden">
+            {allRestaurants.slice(3).map(getTrending)}
+          </VStack>
+        </VStack>
+      </HStack>
     </VStack>
   )
 })

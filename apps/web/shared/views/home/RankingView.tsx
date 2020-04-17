@@ -1,11 +1,11 @@
 import React, { memo } from 'react'
 import { Text } from 'react-native'
 
-import { StackBaseProps, VStack } from '../ui/Stacks'
+import { StackProps, VStack } from '../ui/Stacks'
 import { SuperScriptText } from './SuperScriptText'
 
 export const RankingView = memo(
-  ({ rank, ...props }: { rank: number } & StackBaseProps) => {
+  ({ rank, ...props }: { rank: number } & StackProps) => {
     return (
       <VStack
         borderRadius={100}

@@ -4,7 +4,7 @@ import { Linking, StyleSheet, Text } from 'react-native'
 
 import { Divider } from '../ui/Divider'
 import { Spacer } from '../ui/Spacer'
-import { HStack, StackBaseProps, VStack } from '../ui/Stacks'
+import { HStack, StackProps, VStack } from '../ui/Stacks'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 
@@ -14,7 +14,7 @@ export const RestaurantDetailRow = memo(
     size,
     centered,
     ...rest
-  }: StackBaseProps & {
+  }: StackProps & {
     size?: 'sm' | 'md'
     restaurant: Restaurant
     centered?: boolean
@@ -63,7 +63,7 @@ export const RestaurantDetailRow = memo(
     return (
       <HStack alignItems="center" spacing={spaceSize} {...rest}>
         {rows.map((row, index) => (
-          <React.Fragment key={row.title}>
+          <React.Fragment key={`${index}${row.title}`}>
             <VStack>
               {titleEl(row)}
               {contentEl(row.content)}

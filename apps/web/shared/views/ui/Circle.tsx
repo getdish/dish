@@ -1,11 +1,11 @@
 import React from 'react'
 
-import { StackBaseProps, VStack } from './Stacks'
+import { StackProps, VStack } from './Stacks'
 
 export const Circle = ({
   size,
   ...props
-}: StackBaseProps & {
+}: StackProps & {
   size: number
 }) => {
   return (

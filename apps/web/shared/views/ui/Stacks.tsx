@@ -18,7 +18,7 @@ const fsStyle = {
   bottom: 0,
 }
 
-export type StackBaseProps = Omit<
+export type StackProps = Omit<
   ViewStyle &
     ViewProps & {
       fullscreen?: boolean
@@ -35,7 +35,7 @@ export type StackBaseProps = Omit<
 >
 
 const createStack = (defaultStyle?: ViewStyle) => {
-  return forwardRef<View, StackBaseProps>(
+  return forwardRef<View, StackProps>(
     (
       {
         children,
@@ -74,7 +74,10 @@ const createStack = (defaultStyle?: ViewStyle) => {
         if (!innerRef.current) return
         const node = innerRef.current?.['_reactInternalFiber']?.child.stateNode
         if (!node) return
-        const names = className.trim().split(' ').filter(Boolean)
+        const names = className
+          .trim()
+          .split(' ')
+          .filter(Boolean)
         if (disabled) names.push('force-disable')
         names.forEach((x) => node.classList.add(x))
         return () => names.forEach((x) => node.classList.remove(x))

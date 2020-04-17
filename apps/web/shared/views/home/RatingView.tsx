@@ -3,9 +3,9 @@ import React, { forwardRef } from 'react'
 import { Text } from 'react-native'
 
 import { ProgressCircle } from '../ui/ProgressCircle'
-import { StackBaseProps, VStack } from '../ui/Stacks'
+import { StackProps, VStack } from '../ui/Stacks'
 
-export type RatingViewProps = StackBaseProps & {
+export type RatingViewProps = StackProps & {
   size: 'lg' | 'md' | 'sm'
   percent: number
   color: string

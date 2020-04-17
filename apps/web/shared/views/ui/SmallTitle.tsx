@@ -3,7 +3,7 @@ import { Text } from 'react-native'
 
 import { Divider } from './Divider'
 import { Spacer } from './Spacer'
-import { HStack, StackBaseProps, VStack } from './Stacks'
+import { HStack, StackProps, VStack } from './Stacks'
 
 export const SmallTitle = memo(
   ({
@@ -12,7 +12,7 @@ export const SmallTitle = memo(
     centerDivider,
     after,
     ...rest
-  }: StackBaseProps & {
+  }: StackProps & {
     after?: any
     isActive?: boolean
     centerDivider?: boolean
@@ -58,7 +58,7 @@ export const SmallerTitle = memo(
     children,
     hideDivider,
     ...rest
-  }: StackBaseProps & { hideDivider?: boolean }) => {
+  }: StackProps & { hideDivider?: boolean }) => {
     return (
       <HStack alignItems="center" justifyContent="center" spacing {...rest}>
         {!hideDivider && <Divider flex />}

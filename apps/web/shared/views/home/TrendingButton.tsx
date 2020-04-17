@@ -38,7 +38,7 @@ export const TrendingButton = <
           size={14}
           color="red"
         />
-        <Text style={{ fontWeight: '600', lineHeight: 17 }}>{children}</Text>
+        <Text style={{ fontWeight: '500', lineHeight: 17 }}>{children}</Text>
       </LinkButton>
     </HStack>
   )

@@ -1,18 +1,15 @@
 import React, { memo } from 'react'
 import { ScrollView, Text } from 'react-native'
 
+import { HomeActiveTagIds } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Tag, getTagId } from '../../state/Tag'
 import { LinkButton } from '../ui/Link'
-import { HStack, StackBaseProps, VStack } from '../ui/Stacks'
+import { HStack, StackProps, VStack } from '../ui/Stacks'
 import { bg, bgHover } from './colors'
 import { SmallButton } from './SmallButton'
 
-export default memo(function HomeFilterBar({
-  activeTagIds,
-}: {
-  activeTagIds: { [id: string]: boolean }
-}) {
+export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
   const om = useOvermind()
   return (
     <VStack paddingBottom={6}>
@@ -24,7 +21,7 @@ export default memo(function HomeFilterBar({
         justifyContent="center"
       >
         {om.state.home.allFilterTags.map((tag, index) => {
-          const extraProps: StackBaseProps = {}
+          const extraProps: StackProps = {}
           let hasPrev = false
           let hasNext = false
           if (tag['groupId']) {
@@ -61,7 +58,7 @@ const FilterButton = memo(
     filter,
     isActive,
     ...rest
-  }: StackBaseProps & { filter: Tag; isActive: boolean }) => {
+  }: StackProps & { filter: Tag; isActive: boolean }) => {
     return (
       <LinkButton tag={filter}>
         <SmallButton isActive={isActive} {...rest}>

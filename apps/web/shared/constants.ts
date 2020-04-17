@@ -10,5 +10,5 @@ export const drawerPadLeft = 12
 export const drawerBorderRadius = 25
 export const searchBarTopOffset = 12
 export const searchBarHeight = 54
-export const pageWidthMax = 1100
+export const pageWidthMax = 1180
 export const drawerWidthMax = 780

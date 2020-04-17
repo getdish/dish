@@ -1,10 +1,10 @@
 import React, { memo } from 'react'
 import { Text } from 'react-native'
 
-import { StackBaseProps, VStack } from './Stacks'
+import { StackProps, VStack } from './Stacks'
 
 export const PageTitle = memo(
-  ({ children, subTitle, ...rest }: StackBaseProps & { subTitle?: any }) => {
+  ({ children, subTitle, ...rest }: StackProps & { subTitle?: any }) => {
     return (
       <VStack
         width="100%"

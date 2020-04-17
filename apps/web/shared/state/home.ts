@@ -17,9 +17,10 @@ import { Toast } from '../views/Toast'
 import {
   _toggleTagOnHomeState,
   getNavigateToTag,
+  getTagsFromRoute,
   navigateToTag,
-} from './navigateToTag'
-import { getNavigateItemForState } from './navigateToTag'
+} from './home-tag-helpers'
+import { getNavigateItemForState } from './home-tag-helpers'
 import { HistoryItem, NavigateItem, RouteItem } from './router'
 import { Tag, getTagId, tagFilters, tagLenses } from './Tag'
 
@@ -61,14 +62,16 @@ export type HomeStateItem =
   | HomeStateItemRestaurant
   | HomeStateItemUser
 
+export type HomeActiveTagIds = { [id: string]: boolean }
+
 export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
-  activeTagIds: { [id: string]: boolean }
+  activeTagIds: HomeActiveTagIds
 }
 
 export type HomeStateItemSearch = HomeStateItemBase & {
   type: 'search' | 'userSearch'
-  activeTagIds: { [id: string]: boolean }
+  activeTagIds: HomeActiveTagIds
   results: SearchResults
   // for not forcing map to be always synced
   searchedCenter?: LngLat
@@ -105,6 +108,7 @@ export type AutocompleteItem = {
 const INITIAL_RADIUS = 0.1
 
 export const initialHomeState: HomeStateItemHome = {
+  id: '0',
   type: 'home',
   activeTagIds: {
     [getTagId(tagLenses[0])]: true,
@@ -388,6 +392,7 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   let fetchData: () => Promise<void> | null = null
 
   const type = item.name
+
   switch (type) {
     // home
     case 'home':
@@ -402,9 +407,20 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
     // search or userSearch
     case 'userSearch':
     case 'search':
-      const activeTagIds = started
-        ? { ...om.state.home.lastHomeState.activeTagIds }
-        : {}
+      let activeTagIds: HomeActiveTagIds = {
+        ...om.state.home.lastHomeState.activeTagIds,
+      }
+
+      if (!started) {
+        const tags = getTagsFromRoute(om.state.router.curPage)
+        activeTagIds = tags.reduce((acc, tag) => {
+          const id = getTagId(tag)
+          om.state.home.allTags[id] = tag as Tag // ?
+          acc[id] = true
+          return acc
+        }, {})
+      }
+
       const searchState: HomeStateItemSearch = {
         ...fallbackState,
         hasMovedMap: false,
@@ -489,7 +505,6 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   }
 
   if (!om.state.home.started) {
-    await om.actions.home._syncRouteToState(item.params)
     om.state.home.started = true
   }
 
@@ -1080,46 +1095,6 @@ const _afterTagChange: AsyncAction = async (om) => {
 
 const requestLocation: Action = (om) => {}
 
-const _syncRouteToState: AsyncAction<Object> = async (om, params) => {
-  const state = om.state.home.currentState
-  if (!isSearchState(state)) {
-    return
-  }
-
-  const setTag = (name: string, type: any) => {
-    const tagId = getTagId({ name, type })
-    if (!state.activeTagIds[tagId]) {
-      state.activeTagIds[tagId] = true
-    }
-  }
-
-  const validTagParams = { ...(params ?? {}) }
-
-  // HACK - for now remove non-tag params manually
-  delete validTagParams['username']
-  delete validTagParams['location']
-  delete validTagParams['search']
-
-  const validTagKeys = Object.keys(validTagParams)
-
-  for (const type of validTagKeys) {
-    const name = params[type]
-    if (type === 'tags') {
-      // handle them different
-      for (const tag of name.split(SPLIT_TAG)) {
-        if (tag.indexOf(SPLIT_TAG_TYPE) > -1) {
-          const [type, name] = tag.split(SPLIT_TAG_TYPE)
-          setTag(name, type)
-        } else {
-          setTag(tag, 'filter')
-        }
-      }
-    } else {
-      setTag(name, type)
-    }
-  }
-}
-
 const _syncStateToRoute: AsyncAction<HomeStateItem | void> = async (
   om,
   ogState
@@ -1219,7 +1194,6 @@ export const actions = {
   _loadUserDetail,
   _runAutocomplete,
   _runHomeSearch,
-  _syncRouteToState,
   _syncStateToRoute,
   clearSearch,
   forkCurrentList,

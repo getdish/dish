@@ -22,6 +22,14 @@ export class Route<A extends Object | void = void> {
   ) {}
 }
 
+export type SearchRouteParams = {
+  username?: string
+  location: string
+  lense: string
+  search?: string
+  tags?: string
+}
+
 export const routes = {
   home: new Route('/'),
   user: new Route<{ username: string; pane?: string }>('/u/:username/:pane?'),
@@ -29,14 +37,12 @@ export const routes = {
   // NOTE keep userSearch and search in sync
   // after user/restaurant
   // see HACK in home.ts if you change these names
-  userSearch: new Route<{ [key: string]: string }>(
+  userSearch: new Route<SearchRouteParams>(
     '/u/:username/:lense/:location/:tags?/:search?'
   ),
   // search after userSearch
   // see HACK in home.ts if you change these names
-  search: new Route<{ [key: string]: string }>(
-    '/:lense/:location/:tags?/:search?'
-  ),
+  search: new Route<SearchRouteParams>('/:lense/:location/:tags?/:search?'),
   login: new Route('/login'),
   register: new Route('/register'),
   forgotPassword: new Route('/forgot-password'),
@@ -77,7 +83,7 @@ export type HistoryItem<A extends RouteName = any> = {
   path: string
   type?: 'push' | 'pop'
   search?: Object
-  params?: RoutesTable[A]
+  params?: RoutesTable[A]['params']
   replace?: boolean
 }
 
