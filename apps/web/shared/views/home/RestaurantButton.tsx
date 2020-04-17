@@ -2,7 +2,7 @@ import { Restaurant } from '@dish/models'
 import React, { memo } from 'react'
 
 import { LinkButton } from '../ui/Link'
-import { StackBaseProps } from '../ui/Stacks'
+import { StackProps } from '../ui/Stacks'
 import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
 import { RestaurantRatingView } from './RestaurantRatingView'
 
@@ -15,7 +15,7 @@ export const RestaurantButton = memo(
   }: {
     active?: boolean
     restaurant: Partial<Restaurant>
-  } & StackBaseProps) => {
+  } & StackProps) => {
     return (
       <LinkButton
         key={restaurant.name}

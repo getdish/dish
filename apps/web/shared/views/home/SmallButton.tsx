@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, TextStyle } from 'react-native'
 
-import { HStack, StackBaseProps } from '../ui/Stacks'
+import { HStack, StackProps } from '../ui/Stacks'
 import { flatButtonStyle } from './baseButtonStyle'
 import { bg, bgLight, bgLightHover } from './colors'
 
@@ -10,7 +10,7 @@ export const SmallButton = ({
   children,
   textStyle,
   ...rest
-}: StackBaseProps & {
+}: StackProps & {
   isActive?: boolean
   textStyle?: TextStyle
 }) => {

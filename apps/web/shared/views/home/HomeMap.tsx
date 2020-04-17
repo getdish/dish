@@ -8,6 +8,7 @@ import { LngLat, isSearchState, setMapView } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Map, useMap } from '../map'
 import { ZStack } from '../ui/Stacks'
+import { useIsSmall } from './HomeViewDrawer'
 import { getRankingColor, getRestaurantRating } from './RestaurantRatingView'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
@@ -37,8 +38,24 @@ export function centerMapToRegion(p: {
 export const HomeMap = memo(() => {
   const om = useOvermind()
   const drawerWidth = useHomeDrawerWidth()
+  const isSmall = useIsSmall()
   const state = om.state.home.currentState
-  const { searchQuery, center, span } = state
+  const { center, span } = state
+
+  const padding = isSmall
+    ? {
+        left: 0,
+        top: searchBarHeight + 15 + 15,
+        bottom: window.innerHeight * 0.6,
+        right: 0,
+      }
+    : {
+        left: drawerWidth,
+        top: searchBarHeight + 15 + 15,
+        bottom: 0,
+        right: 0,
+      }
+
   const {
     map,
     mapProps,
@@ -58,12 +75,7 @@ export const HomeMap = memo(() => {
     isZoomEnabled: true,
     isScrollEnabled: true,
     showsCompass: mapkit.FeatureVisibility.Hidden,
-    padding: {
-      left: drawerWidth,
-      top: searchBarHeight + 15 + 15,
-      bottom: 0,
-      right: 0,
-    },
+    padding,
   })
 
   setMapView(map)

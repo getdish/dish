@@ -1,5 +1,4 @@
 import { slugify } from '@dish/models'
-import { isEqual } from '@o/fast-compare'
 import { Action, AsyncAction } from 'overmind'
 
 import {
@@ -12,8 +11,8 @@ import {
   isSearchState,
   shouldBeOnHome,
 } from './home'
-import { NavigateItem } from './router'
-import { NavigableTag, getTagId } from './Tag'
+import { HistoryItem, NavigateItem, SearchRouteParams } from './router'
+import { NavigableTag, Tag, getTagId } from './Tag'
 
 const ensureUniqueTagOfType = new Set(['lense', 'country'])
 
@@ -53,7 +52,9 @@ const getNextHomeStateWithTag: Action<HomeStateNav, HomeStateItem> = (
     return null
   }
 
-  if (!tag) throw new Error(`No tag`)
+  if (!tag) {
+    debugger
+  }
   const key = getTagId(tag)
   const ensureUnique = ensureUniqueTagOfType.has(tag.type)
 
@@ -100,7 +101,9 @@ export const _toggleTagOnHomeState: AsyncAction<NavigableTag> = async (
     }
   }
 
-  if (!next) throw new Error(`No tag`)
+  if (!next) {
+    debugger
+  }
   const key = getTagId(next)
   state.activeTagIds[key] = !state.activeTagIds[key]
   await om.actions.home._afterTagChange()
@@ -129,11 +132,13 @@ export const getNavigateItemForState = (
   const state = ogState || home.currentState
   const isHome = isHomeState(state)
   const isSearch = isSearchState(state)
+  const curParams = router.curPage.params
+
   // we only handle "special" states here (home/search)
   if (!isHome && !isSearch) {
     return {
       name: state.type,
-      params: router.curPage.params,
+      params: curParams,
     }
   }
   // if going home, just go there
@@ -142,17 +147,16 @@ export const getNavigateItemForState = (
     return { name: 'home' }
   }
 
-  const params = getTagRouteParams(omState, state)
+  // build params
+  const params = getRouteFromTags(omState, state)
   if (state.searchQuery) {
     params.search = state.searchQuery
   }
-  const isOnUserSearch =
-    state.type === 'userSearch' || router.curPage.name === 'userSearch'
-  if (isOnUserSearch) {
-    params.username = router.curPage.params.username
+  if (state.type === 'userSearch') {
+    params.username = curParams.username
   }
 
-  let name = isOnUserSearch ? 'userSearch' : (state.type as any)
+  let name = state.type as any
   if (name === 'home' && !shouldBeHome) {
     name = 'search'
   }
@@ -169,10 +173,25 @@ export const getNavigateItemForState = (
   }
 }
 
-const getTagRouteParams = (
+export const getTagsFromRoute = (
+  item: HistoryItem<'userSearch'>
+): NavigableTag[] => {
+  const tags: NavigableTag[] = []
+  for (const tag of item.params.tags.split(SPLIT_TAG)) {
+    if (tag.indexOf(SPLIT_TAG_TYPE) > -1) {
+      const [type, name] = tag.split(SPLIT_TAG_TYPE) as any[]
+      tags.push({ name, type })
+    } else {
+      tags.push({ name, type: 'filter' })
+    }
+  }
+  return tags
+}
+
+const getRouteFromTags = (
   { home }: OmState,
   state = home.currentState
-): { [key: string]: string } => {
+): SearchRouteParams => {
   if (!isHomeState(state) && !isSearchState(state)) {
     return null
   }

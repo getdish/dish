@@ -2,6 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import React, { memo } from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
 
+import { HomeActiveTagIds } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { getTagId } from '../../state/Tag'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
@@ -13,7 +14,7 @@ import {
 } from './useHomeDrawerWidth'
 
 export default memo(function HomeLenseBar(props: {
-  activeTagIds: { [id: string]: boolean }
+  activeTagIds: HomeActiveTagIds
   hideLenses?: boolean
 }) {
   return (
@@ -54,9 +55,7 @@ export function HomeContentTopBar(props: { children: any }) {
   )
 }
 
-export function HomeLenseBarOnly(props: {
-  activeTagIds: { [id: string]: boolean }
-}) {
+export function HomeLenseBarOnly(props: { activeTagIds: HomeActiveTagIds }) {
   const drawerWidth = useHomeDrawerWidthInner()
   const om = useOvermind()
   return (

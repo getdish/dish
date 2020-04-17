@@ -3,13 +3,13 @@ import { GestureResponderEvent, TouchableOpacity } from 'react-native'
 
 import { Circle } from '../ui/Circle'
 import { Icon } from '../ui/Icon'
-import { HStack, StackBaseProps } from '../ui/Stacks'
+import { HStack, StackProps } from '../ui/Stacks'
 
 type CircleButtonProps = {
   onPress: any
   size?: number
   disabled?: boolean
-} & StackBaseProps
+} & StackProps
 
 export const CloseButton = memo((props: CircleButtonProps) => {
   return (
@@ -32,7 +32,7 @@ export const SmallCircleButton = memo(
     onPress,
     disabled,
     ...rest
-  }: StackBaseProps & { onPress?: (event: GestureResponderEvent) => void }) => {
+  }: StackProps & { onPress?: (event: GestureResponderEvent) => void }) => {
     return (
       <TouchableOpacity onPress={onPress} disabled={disabled}>
         <HStack

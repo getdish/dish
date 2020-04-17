@@ -1,13 +1,13 @@
-import { StackBaseProps } from '../ui/Stacks'
+import { StackProps } from '../ui/Stacks'
 import { bgLight, bgLightHover } from './colors'
 
-export const baseButtonStyle: StackBaseProps = {
+export const baseButtonStyle: StackProps = {
   paddingVertical: 5,
   borderRadius: 5,
   paddingHorizontal: 8,
 }
 
-export const flatButtonStyle: StackBaseProps = {
+export const flatButtonStyle: StackProps = {
   ...baseButtonStyle,
   backgroundColor: bgLight,
   hoverStyle: {
@@ -15,7 +15,7 @@ export const flatButtonStyle: StackBaseProps = {
   },
 }
 
-export const flatButtonStyleInactive: StackBaseProps = {
+export const flatButtonStyleInactive: StackProps = {
   ...baseButtonStyle,
   backgroundColor: 'rgba(220, 220, 220, 0.5)',
   hoverStyle: {
@@ -23,7 +23,7 @@ export const flatButtonStyleInactive: StackBaseProps = {
   },
 }
 
-export const flatButtonStyleActive: StackBaseProps = {
+export const flatButtonStyleActive: StackProps = {
   ...baseButtonStyle,
   backgroundColor: 'rgba(200, 214, 255, 0.8)',
   hoverStyle: {
@@ -31,7 +31,7 @@ export const flatButtonStyleActive: StackBaseProps = {
   },
 }
 
-export const flatButtonStyleSelected: StackBaseProps = {
+export const flatButtonStyleSelected: StackProps = {
   ...baseButtonStyle,
   backgroundColor: 'rgba(255,255,255, 1)',
   // hoverStyle: {
@@ -39,7 +39,7 @@ export const flatButtonStyleSelected: StackBaseProps = {
   // },
 }
 
-export const circularFlatButtonStyle: StackBaseProps = {
+export const circularFlatButtonStyle: StackProps = {
   ...flatButtonStyle,
   borderRadius: 10000,
 }

@@ -4,14 +4,14 @@ import { createPortal } from 'react-dom'
 
 import { isSSR } from '../constants'
 import { Box } from './ui/Box'
-import { StackBaseProps, ZStack } from './ui/Stacks'
+import { StackProps, ZStack } from './ui/Stacks'
 import { useOverlay } from './ui/useOverlay'
 
 export const Modal = ({
   isOpen,
   onClickOutside,
   ...rest
-}: StackBaseProps & {
+}: StackProps & {
   isOpen: boolean
   onClickOutside?: Function
 }) => {

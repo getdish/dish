@@ -1,9 +1,9 @@
 import React from 'react'
 import { Text, TextStyle } from 'react-native'
 
-import { HStack, StackBaseProps, VStack } from '../ui/Stacks'
+import { HStack, StackProps, VStack } from '../ui/Stacks'
 
-export function TableRow(props: StackBaseProps) {
+export function TableRow(props: StackProps) {
   return <HStack {...props} />
 }
 
@@ -16,7 +16,7 @@ export function TableCell({
   fontVariant,
   children,
   ...props
-}: StackBaseProps & TextStyle) {
+}: StackProps & TextStyle) {
   return (
     <VStack paddingVertical={10} {...props}>
       <Text

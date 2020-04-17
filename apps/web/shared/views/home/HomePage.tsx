@@ -1,7 +1,6 @@
 import React, { createContext, memo, useState } from 'react'
 
 import { isWorker } from '../../constants'
-import { searchBarHeight } from '../../constants'
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import {
   HomeStateItem,
@@ -52,37 +51,24 @@ export default function HomePage() {
       <HomeMapControlsOverlay />
       <HomeSearchBar />
       <HomeViewDrawer>
-        <ZStack position="relative" flex={1}>
-          <VStack
-            position="absolute"
-            top={searchBarHeight}
-            left={0}
-            right={0}
-            bottom={0}
-            flex={1}
-          >
-            <HomeStackView items={breadcrumbStates}>
-              {(homeState) => {
-                return (
-                  <CurrentStateID.Provider value={homeState.id}>
-                    {isHomeState(homeState) && (
-                      <HomePageTopDishes state={homeState} />
-                    )}
-                    {isUserState(homeState) && (
-                      <HomePageUser state={homeState} />
-                    )}
-                    {isSearchState(homeState) && (
-                      <HomePageSearchResults state={homeState} />
-                    )}
-                    {isRestaurantState(homeState) && (
-                      <HomePageRestaurant state={homeState} />
-                    )}
-                  </CurrentStateID.Provider>
-                )
-              }}
-            </HomeStackView>
-          </VStack>
-        </ZStack>
+        <HomeStackView items={breadcrumbStates}>
+          {(homeState) => {
+            return (
+              <CurrentStateID.Provider value={homeState.id}>
+                {isHomeState(homeState) && (
+                  <HomePageTopDishes state={homeState} />
+                )}
+                {isUserState(homeState) && <HomePageUser state={homeState} />}
+                {isSearchState(homeState) && (
+                  <HomePageSearchResults state={homeState} />
+                )}
+                {isRestaurantState(homeState) && (
+                  <HomePageRestaurant state={homeState} />
+                )}
+              </CurrentStateID.Provider>
+            )
+          }}
+        </HomeStackView>
       </HomeViewDrawer>
     </ZStack>
   )

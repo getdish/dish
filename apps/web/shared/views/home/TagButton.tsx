@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 import { Text, TextStyle, View } from 'react-native'
 
 import { Icon } from '../ui/Icon'
-import { HStack, StackBaseProps } from '../ui/Stacks'
+import { HStack, StackProps } from '../ui/Stacks'
 import { HoverableButton } from './HoverableButton'
 import { SuperScriptText } from './SuperScriptText'
 
@@ -23,7 +23,7 @@ export const TagButton = memo(
     subtleIcon,
     hideIcon,
     ...rest
-  }: StackBaseProps & {
+  }: StackProps & {
     rank?: number
     tag: Partial<Tag> & Pick<Tag, 'name' | 'type'>
     size?: 'lg' | 'md'

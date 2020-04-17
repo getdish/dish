@@ -2,19 +2,22 @@ import { LinearGradient } from 'expo-linear-gradient'
 import React from 'react'
 import { StyleSheet } from 'react-native'
 
+import { searchBarHeight } from '../../constants'
 import {
   drawerBorderRadius,
   drawerPad,
   drawerPadLeft,
   drawerWidthMax,
 } from '../../constants'
+import { useMedia } from '../../hooks/useMedia'
+import { mediaQueries } from '../ui/MediaQuery'
 import { Spacer } from '../ui/Spacer'
-import { HStack, VStack, ZStack } from '../ui/Stacks'
+import { HStack, StackProps, VStack, ZStack } from '../ui/Stacks'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 const colors = [
   'rgba(255,255,255,0.15)',
-  'rgba(255,255,255,0.8)', //rgba(255,255,255,0.9)',
+  'rgba(255,255,255,0.9)', //rgba(255,255,255,0.9)',
   'rgba(255,255,255,1)', //'rgba(255,255,255,0.95)',
   'rgba(255,255,255,1)', //'rgba(255,255,255,0.95)',
   'rgba(255,255,255,1)', //'rgba(255,255,255,0.99)',
@@ -26,11 +29,49 @@ const colors = [
   'rgba(255,255,255,1)', //'rgba(255,255,255,0.777)',
   'rgba(255,255,255,1)', //'rgba(255,255,255,0.666)',
   'rgba(255,255,255,1)', //'rgba(255,255,255,0.666)',
-  'rgba(255,255,255,1)', //'rgba(255,255,255,0.666)',
+  'rgba(255,255,255,0.5)', //'rgba(255,255,255,0.666)',
 ]
 
+const colorsSmall = colors.slice(2)
+
+export const useIsSmall = () => useMedia({ maxWidth: 700 })
+
 export function HomeViewDrawer(props: { children: any }) {
+  const isSmall = useIsSmall()
   const drawerWidth = useHomeDrawerWidth()
+
+  const positionSmall: StackProps = {
+    top: '28%',
+    left: 0,
+    right: 0,
+    width: '100%',
+    paddingTop: 0,
+  }
+
+  const topOffset = isSmall ? 0 : searchBarHeight
+
+  // @ts-ignore
+  const leftGradient = (
+    <LinearGradient
+      colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
+      style={[StyleSheet.absoluteFill]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 100, y: 0 }}
+    />
+  )
+
+  const gradients = [
+    // @ts-ignore
+    <LinearGradient
+      key={0}
+      colors={isSmall ? colorsSmall : colors}
+      style={[StyleSheet.absoluteFill]}
+    />,
+    <ZStack key={1} fullscreen right={850}>
+      {leftGradient}
+    </ZStack>,
+  ]
+
   return (
     <HStack
       position="absolute"
@@ -48,6 +89,7 @@ export function HomeViewDrawer(props: { children: any }) {
       borderColor="#ddd"
       flex={1}
       justifyContent="flex-end"
+      {...(isSmall && positionSmall)}
     >
       <ZStack fullscreen>
         <ZStack
@@ -55,16 +97,7 @@ export function HomeViewDrawer(props: { children: any }) {
           // borderBottomRightRadius={drawerBorderRadius}
           overflow="hidden"
         >
-          <LinearGradient colors={colors} style={[StyleSheet.absoluteFill]} />
-
-          <ZStack fullscreen right={850}>
-            <LinearGradient
-              colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
-              style={[StyleSheet.absoluteFill]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 100, y: 0 }}
-            />
-          </ZStack>
+          {gradients}
         </ZStack>
       </ZStack>
       <VStack
@@ -73,7 +106,18 @@ export function HomeViewDrawer(props: { children: any }) {
         maxWidth={drawerWidthMax}
         marginLeft="auto"
       >
-        {props.children}
+        <ZStack position="relative" flex={1}>
+          <VStack
+            position="absolute"
+            top={topOffset}
+            left={0}
+            right={0}
+            bottom={0}
+            flex={1}
+          >
+            {props.children}
+          </VStack>
+        </ZStack>
       </VStack>
     </HStack>
   )

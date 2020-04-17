@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { StackBaseProps, VStack } from './Stacks'
+import { StackProps, VStack } from './Stacks'
 
-export function Box(props: StackBaseProps) {
+export function Box(props: StackProps) {
   return (
     <VStack
       backgroundColor="#fff"

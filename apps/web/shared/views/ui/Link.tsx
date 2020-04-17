@@ -4,12 +4,12 @@ import React, { useCallback, useContext, useMemo } from 'react'
 import { Text, TextStyle, TouchableOpacity } from 'react-native'
 
 import { currentStates, omStatic } from '../../state/home'
-import { getNavigateToTag } from '../../state/navigateToTag'
+import { getNavigateToTag } from '../../state/home-tag-helpers'
 import { useOvermind } from '../../state/om'
 import { RoutesTable, getPathFromParams } from '../../state/router'
 import { NavigableTag } from '../../state/Tag'
 import { CurrentStateID } from '../home/HomePage'
-import { StackBaseProps, VStack } from './Stacks'
+import { StackProps, VStack } from './Stacks'
 
 type LinkSharedProps = {
   fontWeight?: TextStyle['fontWeight']
@@ -46,7 +46,7 @@ export function Link<
     name: Name
     params?: Params
     inline?: boolean
-    padding?: StackBaseProps['padding']
+    padding?: StackProps['padding']
   }) {
   const om = useOvermind()
   const handler = useCallback((e) => {
@@ -82,7 +82,7 @@ export function Link<
 
 const prevent = (e) => [e.preventDefault(), e.stopPropagation()]
 
-export type LinkButtonProps<Name = any, Params = any> = StackBaseProps &
+export type LinkButtonProps<Name = any, Params = any> = StackProps &
   LinkSharedProps &
   (
     | {
@@ -104,7 +104,7 @@ export function LinkButton<
 >(allProps: LinkButtonProps<Name, Params>) {
   const om = useOvermind()
   const currentStateID = useContext(CurrentStateID)
-  let restProps: StackBaseProps
+  let restProps: StackProps
   let contents: React.ReactElement
   let pointerEvents: any
   let onPress: any

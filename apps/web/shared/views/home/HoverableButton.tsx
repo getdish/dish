@@ -2,7 +2,7 @@ import React, { Children, useState } from 'react'
 import { Text, TouchableOpacity } from 'react-native'
 
 import Hoverable from '../ui/Hoverable'
-import { HStack, StackBaseProps, VStack } from '../ui/Stacks'
+import { HStack, StackProps, VStack } from '../ui/Stacks'
 
 export const HoverableButton = ({
   onPress,
@@ -11,7 +11,7 @@ export const HoverableButton = ({
   children,
   opacity = 1,
   ...props
-}: StackBaseProps & {
+}: StackProps & {
   onPress: any
   isHovered?: boolean
   onHoverIn?: Function
