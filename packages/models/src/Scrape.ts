@@ -48,6 +48,9 @@ export class Scrape extends ModelBase<Scrape> {
       }
       if (key in obj) {
         obj = obj[key]
+        if (obj === null) {
+          return default_value
+        }
         if (index >= 0) {
           obj = obj[index]
         }
