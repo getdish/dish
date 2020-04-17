@@ -55,9 +55,10 @@ export const LenseButton = memo(
           <Text
             style={{
               color: isActive ? '#fff' : '#454545',
-              fontSize: 24,
-              width: 30,
-              height: 30,
+              fontSize: 28,
+              lineHeight: 42,
+              width: 42,
+              height: 42,
               fontWeight: '400',
               textAlign: 'center',
               // marginLeft: 8,
@@ -80,7 +81,7 @@ export const LenseButton = memo(
     return (
       <HoverablePopover
         noArrow
-        position="bottom"
+        position="top"
         contents={
           <Box>
             <Text>{lense.displayName ?? lense.name}</Text>

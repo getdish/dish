@@ -16,6 +16,9 @@ export const onInitialize: OnInitialize = async (
   }
 
   if (process.env.NODE_ENV == 'development') {
+    // overmind.eventHub.on('component:update' as any, ({ name, paths, componentId }) => {
+    //   console.log('update component', { name, paths, componentId })
+    // })
     overmind.eventHub.on('action:start' as any, (execution) => {
       const name = execution.actionName
       const logType = name.indexOf('.get') > 0 ? 'debug' : 'warn'

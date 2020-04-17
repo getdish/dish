@@ -3,6 +3,8 @@ import './Link.css'
 import React, { useCallback, useContext, useMemo } from 'react'
 import { Text, TextStyle, TouchableOpacity } from 'react-native'
 
+import { currentStates, omStatic } from '../../state/home'
+import { getNavigateToTag } from '../../state/navigateToTag'
 import { useOvermind } from '../../state/om'
 import { RoutesTable, getPathFromParams } from '../../state/router'
 import { NavigableTag } from '../../state/Tag'
@@ -110,10 +112,8 @@ export function LinkButton<
   let props = { ...allProps }
 
   if ('tag' in props) {
-    const state = window['om'].state.home.states.find(
-      (x) => x.id === currentStateID
-    )
-    const tagProps = om.actions.home.getNavigateToTag({
+    const state = currentStates.find((x) => x.id === currentStateID)
+    const tagProps = getNavigateToTag(window['om'], {
       state,
       tag: props.tag,
     })

@@ -97,16 +97,23 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
             </Circle>
 
             <HStack spacing="sm" alignItems="center">
-              {/* {isEditingUserList && (
-              <SmallCircleButton
-                onPress={() => {
-                  Toast.show('Saved')
-                }}
-                paddingHorizontal={12}
-              >
-                <Text style={{ color: 'white' }}>Save</Text>
-              </SmallCircleButton>
-            )} */}
+              {isEditingUserList && (
+                <SmallCircleButton
+                  onPress={() => {
+                    Toast.show('Saved')
+                    om.actions.router.navigate({
+                      name: 'search',
+                      params: {
+                        ...om.state.router.curPage.params,
+                        username: '',
+                      },
+                    })
+                  }}
+                  paddingHorizontal={12}
+                >
+                  <Text style={{ color: 'white' }}>Done</Text>
+                </SmallCircleButton>
+              )}
               {!isEditingUserList && (
                 <SmallCircleButton
                   onPress={() => {
