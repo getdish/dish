@@ -67,7 +67,7 @@ export const LenseButton = memo(
           >
             {(lense.icon ?? '').trim()}
             {!minimal
-              ? ` ${lense.displayName ?? lense.name ?? ''}`.trimEnd()
+              ? ` ${`${lense.displayName ?? lense.name ?? ''}`.trim()}`
               : null}
           </Text>
         </HStack>

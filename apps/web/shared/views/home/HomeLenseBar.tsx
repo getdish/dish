@@ -1,10 +1,10 @@
-import { LinearGradient } from 'expo-linear-gradient'
 import React, { memo } from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
 
 import { HomeActiveTagIds } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { getTagId } from '../../state/Tag'
+import { LinearGradient } from '../ui/LinearGradient'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import HomeFilterBar from './HomeFilterBar'
 import { LenseButton } from './LenseButton'
@@ -28,7 +28,6 @@ export default memo(function HomeLenseBar(props: {
 })
 
 const gradient = (
-  // @ts-ignore
   <LinearGradient
     colors={[
       'rgba(255,255,255,0.4)',

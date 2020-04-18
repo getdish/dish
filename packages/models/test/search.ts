@@ -1,8 +1,8 @@
 import test, { TestInterface } from 'ava'
 
+import { flushTestData } from '../src/flushTestData'
 import { Restaurant } from '../src/Restaurant'
 import { Tag } from '../src/Tag'
-import { flushTestData } from '../src/utils'
 import { restaurant_fixture } from './etc/fixtures'
 
 test.beforeEach(async (t) => {

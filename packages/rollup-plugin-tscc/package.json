@@ -1,0 +1,41 @@
+{
+  "name": "@dish/rollup-plugin-tscc",
+  "author": "theseanl",
+  "description": "A rollup plugin to use tscc module specification",
+  "keywords": [
+    "typescript",
+    "closure-compiler",
+    "tree-shaking",
+    "minify-javascript"
+  ],
+  "version": "0.4.7",
+  "license": "MIT",
+  "homepage": "https://github.com/theseanl/tscc",
+  "repository": {
+    "type": "url",
+    "url": "https://github.com/theseanl/tscc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/theseanl/tscc"
+  },
+  "main": "./_/index.js",
+  "scripts": {
+    "clean": "rm -rf _",
+    "start": "true",
+    "build": "tsc -b",
+    "watch": "tsc -b --watch --preserveWatchOutput"
+  },
+  "devDependencies": {
+    "rollup-plugin-virtual": "^1.0.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "cb605b055c7947989d64daeb3d95c123c27c70c0",
+  "dependencies": {
+    "@dish/tscc-spec": "^0.4.7"
+  },
+  "peerDependencies": {
+    "rollup": "^2.6.1"
+  }
+}

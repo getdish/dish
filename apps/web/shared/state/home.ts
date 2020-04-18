@@ -146,13 +146,14 @@ const breadcrumbStates = (state: HomeStateBase) => {
   for (let i = state.states.length - 1; i >= 0; i--) {
     const cur = state.states[i]
     switch (cur.type) {
-      case 'home':
+      case 'home': {
         crumbs.unshift(cur)
         return crumbs.map((x) => _.omit(x, 'historyId'))
+      }
       case 'search':
       case 'userSearch':
       case 'user':
-      case 'restaurant':
+      case 'restaurant': {
         if (crumbs.some((x) => x.type === cur.type)) {
           break
         }
@@ -166,6 +167,7 @@ const breadcrumbStates = (state: HomeStateBase) => {
         // if (cur.type === 'search' && crumbs.some(x => x.type === 'userSearch'))
         crumbs.unshift(cur)
         break
+      }
     }
   }
 }
@@ -346,9 +348,7 @@ const start: AsyncAction = async (om) => {
 let defaultAutocompleteResults: AutocompleteItem[] | null = null
 
 const startAutocomplete: AsyncAction = async (om) => {
-  const dishes = om.state.home.topDishes
-    .map((x) => x.dishes)
-    .flat()
+  const dishes = _.flatMap(om.state.home.topDishes.map((x) => x.dishes))
     .filter(Boolean)
     .slice(0, 20)
     .map((d) => ({
@@ -368,7 +368,7 @@ const startAutocomplete: AsyncAction = async (om) => {
 
   const results = [
     ...dishes.slice(0, 3),
-    ..._.zip(countries, dishes.slice(3)).flat(),
+    ..._.flatMap(_.zip(countries, dishes.slice(3))),
   ]
     .filter(Boolean)
     .slice(0, 20) as AutocompleteItem[]
@@ -397,7 +397,7 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
 
   switch (type) {
     // home
-    case 'home':
+    case 'home': {
       activeTagIds = om.state.home.lastHomeState.activeTagIds
 
       // be sure to remove all searchbar tags
@@ -416,10 +416,11 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         activeTagIds,
       } as HomeStateItemHome
       break
+    }
 
     // search or userSearch
     case 'userSearch':
-    case 'search':
+    case 'search': {
       const lastHomeOrSearch = _.findLast(
         om.state.home.states,
         (x) => isHomeState(x) || isSearchState(x)
@@ -463,9 +464,10 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         }
       }
       break
+    }
 
     // restaurant
-    case 'restaurant':
+    case 'restaurant': {
       nextState = {
         ...fallbackState,
         type,
@@ -481,8 +483,9 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         })
       }
       break
+    }
 
-    case 'user':
+    case 'user': {
       nextState = {
         ...fallbackState,
         type: 'user',
@@ -497,6 +500,7 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         })
       }
       break
+    }
   }
 
   if (!nextState) {
@@ -959,13 +963,13 @@ type Place = mapkit.Place & {
 }
 
 function reverseGeocode(center: LngLat): Promise<Place[]> {
-  const mapGeocoder = new mapkit.Geocoder({
+  const mapGeocoder = new window.mapkit.Geocoder({
     language: 'en-GB',
     getsUserLocation: true,
   })
   return new Promise((res, rej) => {
     mapGeocoder.reverseLookup(
-      new mapkit.Coordinate(center.lat, center.lng),
+      new window.mapkit.Coordinate(center.lat, center.lng),
       (err, data) => {
         if (err) return rej(err)
         res((data.results as any) as Place[])
@@ -1063,7 +1067,7 @@ function searchLocations(query: string) {
   if (!query) {
     return Promise.resolve([])
   }
-  const locationSearch = new mapkit.Search({ region: mapView.region })
+  const locationSearch = new window.mapkit.Search({ region: mapView.region })
   return new Promise<
     { name: string; formattedAddress: string; coordinate: any }[]
   >((res, rej) => {

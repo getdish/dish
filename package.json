@@ -15,6 +15,7 @@
   },
   "scripts": {
     "start": "",
+    "build": "yarn wsrun build",
     "build:watch": "yarn wsrun watch",
     "test": "ava",
     "clean": "bin/clean.sh",

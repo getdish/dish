@@ -1,11 +1,11 @@
 import auth from '@dish/auth'
 import anyTest, { TestInterface } from 'ava'
 
+import { flushTestData } from '../src/flushTestData'
 import { Restaurant } from '../src/Restaurant'
 import { Review } from '../src/Review'
 import { Tag } from '../src/Tag'
 import { User } from '../src/User'
-import { flushTestData } from '../src/utils'
 import { restaurant_fixture } from './etc/fixtures'
 
 interface Context {

@@ -1,4 +1,3 @@
-import { LinearGradient } from 'expo-linear-gradient'
 import React from 'react'
 import { StyleSheet } from 'react-native'
 
@@ -10,6 +9,7 @@ import {
   drawerWidthMax,
 } from '../../constants'
 import { useMedia } from '../../hooks/useMedia'
+import { LinearGradient } from '../ui/LinearGradient'
 import { mediaQueries } from '../ui/MediaQuery'
 import { Spacer } from '../ui/Spacer'
 import { HStack, StackProps, VStack, ZStack } from '../ui/Stacks'
@@ -51,17 +51,15 @@ export function HomeViewDrawer(props: { children: any }) {
   const topOffset = isSmall ? 0 : searchBarHeight
 
   const leftGradient = (
-    // @ts-ignore
     <LinearGradient
       colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
       style={[StyleSheet.absoluteFill]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 100, y: 0 }}
+      startPoint={[0, 0]}
+      endPoint={[100, 0]}
     />
   )
 
   const gradients = [
-    // @ts-ignore
     <LinearGradient
       key={0}
       colors={isSmall ? colorsSmall : colors}

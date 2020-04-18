@@ -1,9 +1,9 @@
-import { LinearGradient } from 'expo-linear-gradient'
 import React, { memo, useEffect } from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { useOvermind } from '../../state/om'
+import { LinearGradient } from '../ui/LinearGradient'
 import { LinkButton } from '../ui/Link'
 import { HStack, ZStack } from '../ui/Stacks'
 import {
@@ -47,7 +47,6 @@ export default memo(function HomeAutoComplete() {
   }, [isShowing])
 
   const gradient = (
-    // @ts-ignore
     <LinearGradient
       colors={['rgba(0,0,0,0.1)', 'transparent']}
       style={[StyleSheet.absoluteFill, { height: 160 }]}
