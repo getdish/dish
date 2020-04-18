@@ -1,5 +1,5 @@
-import { Feather, SimpleLineIcons } from '@expo/vector-icons'
 import React from 'react'
+import * as Icons from 'react-feather'
 import { TextStyle, ViewStyle } from 'react-native'
 
 export const Icon = ({
@@ -13,6 +13,9 @@ export const Icon = ({
   size: number
 } & ViewStyle &
   TextStyle) => {
-  const Element = type == 'feather' ? Feather : SimpleLineIcons
-  return <Element name={name} size={size} style={style} />
+  const Element = Icons[name]
+  if (!Element) {
+    return null
+  }
+  return <Element size={size} style={style} />
 }

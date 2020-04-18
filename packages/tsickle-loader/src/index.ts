@@ -4,11 +4,13 @@ import * as path from 'path'
 import fs from 'fs-extra'
 // @ts-ignore
 import { OptionObject, getOptions } from 'loader-utils'
+import validateOptions from 'schema-utils'
+import { JSONSchema7 } from 'schema-utils/declarations/validate'
+import { RawSourceMap } from 'source-map'
 import ts from 'typescript'
 
-// @ts-ignore
-import validateOptions = require('schema-utils')
-// @ts-ignore
+import { fixCode, fixExtern } from './fix-output'
+
 import tsickle = require('tsickle')
 // @ts-ignore
 import webpack = require('webpack')
@@ -18,7 +20,7 @@ const DEFAULT_EXTERN_DIR = 'dist/externs'
 const EXTERNS_FILE_NAME = 'externs.js'
 const DEFAULT_CONFIG_FILE = 'tsconfig.json'
 
-const optionsSchema = {
+const optionsSchema: JSONSchema7 = {
   type: 'object',
   properties: {
     tsconfig: {
@@ -46,7 +48,7 @@ interface RealOptions extends OptionObject {
 
 const setup = (loaderCTX: webpack.loader.LoaderContext): RealOptions => {
   const options = getOptions(loaderCTX)
-  validateOptions(optionsSchema, options, LOADER_NAME as any)
+  validateOptions(optionsSchema, options, { name: LOADER_NAME })
 
   const externDir =
     options.externDir != null ? options.externDir : DEFAULT_EXTERN_DIR
@@ -65,10 +67,12 @@ const setup = (loaderCTX: webpack.loader.LoaderContext): RealOptions => {
     }
   )
 
+  console.log('compilerConfigFile', compilerConfigFile)
+
   const compilerConfig = ts.parseJsonConfigFileContent(
     compilerConfigFile.config,
     ts.sys,
-    '.',
+    path.dirname(tsconfig || ''),
     {},
     tsconfig
   )
@@ -113,7 +117,6 @@ const tsickleLoader: webpack.loader.Loader = function (
   // normalize the path to unix-style
   const sourceFileName = this.resourcePath.replace(/\\/g, '/')
   const compilerHost = ts.createCompilerHost(options)
-  console.log('what is', options)
   const program = ts.createProgram([sourceFileName], options, compilerHost)
   const diagnostics = ts.getPreEmitDiagnostics(program)
 
@@ -124,8 +127,10 @@ const tsickleLoader: webpack.loader.Loader = function (
   }
 
   if (diagnostics.length > 0) {
-    handleDiagnostics(this, diagnostics, diagnosticsHost, 'error')
-    return
+    console.log('errors---', diagnostics.length)
+    // console.log(diagnostics)
+    // handleDiagnostics(this, diagnostics, diagnosticsHost, 'error')
+    // return ''
   }
 
   const tsickleHost: tsickle.TsickleHost = {
@@ -141,96 +146,63 @@ const tsickleLoader: webpack.loader.Loader = function (
     transformTypesToClosure: true,
     typeBlackListPaths: new Set(),
     untyped: false,
-    logWarning: (warning) =>
-      handleDiagnostics(this, [warning], diagnosticsHost, 'warning'),
+    logWarning: (warning) => {
+      handleDiagnostics(this, [warning], diagnosticsHost, 'warning')
+    },
   }
 
-  const jsFiles = new Map<string, string>()
+  let transpiledSources: string[] = []
+  let transpiledSourceMaps: string[] = []
 
-  console.log('emit now', program, tsickleHost, options)
-  const output = tsickle.emitWithTsickle(
+  const output = tsickle.emit(
     program,
     tsickleHost,
-    compilerHost,
-    options,
-    undefined,
-    (path: string, contents: string) => jsFiles.set(path, contents)
+    (
+      jsFileName: string,
+      contents: string,
+      _writeByteOrderMark: boolean,
+      _onError,
+      tsSourceFiles
+    ) => {
+      for (const source of tsSourceFiles ?? []) {
+        if (source.fileName === sourceFileName) {
+          if (jsFileName.endsWith('.map')) {
+            transpiledSourceMaps.push(contents)
+          } else {
+            transpiledSources.push(contents)
+          }
+        }
+      }
+    },
+    program.getSourceFile(sourceFileName)
   )
 
-  const sourceFileAsJs = tsToJS(sourceFileName)
-  for (const [path, source] of jsFiles) {
-    if (sourceFileAsJs.indexOf(path) === -1) {
-      continue
-    }
-
-    const tsPathName = jsToTS(path)
-    const extern = output.externs[tsPathName]
-    if (extern != null) {
-      fs.appendFileSync(externFile, fixExtern(extern))
-    }
-
-    return fixCode(source)
+  if (transpiledSources.length !== 1) {
+    this.emitError(
+      Error(`missing compiled result for source file: ${sourceFileName}`)
+    )
+    return
+  }
+  if (this.sourceMap && transpiledSourceMaps.length !== 1) {
+    this.emitError(
+      Error(
+        `tsconfig must specify sourceMap: "true" when sourcemaps are enabled!`
+      )
+    )
+    return
   }
 
-  this.emitError(
-    Error(`missing compiled result for source file: ${sourceFileName}`)
-  )
+  const extern = output.externs[sourceFileName]
+  if (extern != null) {
+    fs.appendFileSync(externFile, fixExtern(extern))
+  }
+
+  let sourceMap: RawSourceMap | undefined = undefined
+  if (this.sourceMap) {
+    sourceMap = JSON.parse(transpiledSourceMaps[0])
+  }
+
+  this.callback(null, fixCode(transpiledSources[0]), sourceMap)
 }
 
 export default tsickleLoader
-
-/**
- * Fix some common issues with the tsickle output
- * @param code {string} the transformed typescript code
- * @return {string} transformed code
- */
-const fixCode = (code: string): string => {
-  return code
-    .replace(
-      /(?:const|var)\s*.*tsickle_forward_declare_.*\s*=\s*goog\.forwardDeclare.*/g,
-      ''
-    )
-    .replace(/goog\.require.*/g, '')
-    .replace(/tsickle_forward_declare_\d\./g, '')
-}
-
-/**
- * Fix some issues with the tsickle extern file definition specific
- * to typescript-in-webpack
- * @param extern {string} the extern definition file content
- * @return {string} transformed code
- */
-const fixExtern = (extern: string | null): string => {
-  if (extern == null) {
-    return ''
-  }
-
-  const fixed = extern
-    .replace(/var\s*=\s*{};\s*$/gm, '')
-    .replace(/^\.(\w+\s+=\s+function.+$)/gm, 'var $1')
-    .replace(/^\./gm, '')
-
-  return fixed.replace(/([<{])!\.(\w)/gm, '$1!$2')
-}
-
-const JS_RXP = /\.js$/
-const TS_RXP = /\.ts$/
-
-const jsToTS = (path: string | null) =>
-  path != null ? path.replace(JS_RXP, '.ts') : ''
-
-const tsToJS = (path: string | null) =>
-  path != null ? path.replace(TS_RXP, '.js') : ''
-
-// declare module 'schema-utils' {
-//   import { OptionObject } from 'loader-utils'
-
-//   // this just throws
-//   function validateOptions(
-//     schema: Record<string, any>,
-//     options: OptionObject,
-//     moduleName: string
-//   ): void
-
-//   export = validateOptions
-// }

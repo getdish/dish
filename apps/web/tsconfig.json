@@ -6,7 +6,7 @@
     "rootDir": ".",
     "typeRoots": ["./node_modules/mapkit-typescript", "./node_modules/@types"]
   },
-  "include": ["src/**/*", "web/**/*", "shared/**/*"],
+  "include": ["src/**/*", "web/**/*", "shared/**/*", "index.web.tsx"],
   "exclude": ["**/*.test.ts", "**/*.test.tsx", "src/graphql"],
   "references": [{ "path": "../../packages/common-web" }]
 }

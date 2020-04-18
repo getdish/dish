@@ -13,7 +13,7 @@ export const useMap = (opts: MapOptions = {}) => {
 
   useEffect(() => {
     if (mapkit && mapRef.current) {
-      const newMap = new mapkit.Map(
+      const newMap = new window.mapkit.Map(
         mapRef.current,
         propsToMapConstructionOptions(defaultMapOptions)
       )

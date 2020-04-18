@@ -3,9 +3,9 @@ import axios from 'axios'
 import moment from 'moment'
 
 import { Dish } from '../src/Dish'
+import { flushTestData } from '../src/flushTestData'
 import { Restaurant } from '../src/Restaurant'
 import { Tag } from '../src/Tag'
-import { flushTestData } from '../src/utils'
 import { dish_fixture, restaurant_fixture } from './etc/fixtures'
 
 interface Context {

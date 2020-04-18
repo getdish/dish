@@ -1,0 +1,17 @@
+{
+  "name": "@dish/tscc-spec",
+  "author": "theseanl",
+  "version": "0.4.7",
+  "main": "_/index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "true",
+    "build": "tsc -b",
+    "watch": "tsc -b --watch --preserveWatchOutput",
+    "clean": "rm -rf _"
+  },
+  "dependencies": {
+    "fast-glob": "^3.1.0",
+    "fs-extra": "^8.0.1"
+  }
+}

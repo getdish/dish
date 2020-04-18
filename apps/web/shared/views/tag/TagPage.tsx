@@ -6,7 +6,6 @@ import {
   useSubscription,
 } from '@apollo/client'
 import { Tag, TagRecord, TagType } from '@dish/models'
-import { Ionicons } from '@expo/vector-icons'
 import React, { useEffect, useState } from 'react'
 import {
   Button,
@@ -317,7 +316,8 @@ const ListItem = ({
                 })
               }}
             >
-              <Ionicons name="md-checkmark-circle" />
+              <Text>✅</Text>
+              {/* <CheckMark name="md-checkmark-circle" /> */}
             </TouchableNativeFeedback>
           )}
         </HStack>

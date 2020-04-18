@@ -24,9 +24,9 @@ export function centerMapToRegion(p: {
   center: LngLat
   span: LngLat
 }) {
-  const newCenter = new mapkit.Coordinate(p.center.lat, p.center.lng)
-  const coordspan = new mapkit.CoordinateSpan(p.span.lat, p.span.lng)
-  const region = new mapkit.CoordinateRegion(newCenter, coordspan)
+  const newCenter = new window.mapkit.Coordinate(p.center.lat, p.center.lng)
+  const coordspan = new window.mapkit.CoordinateSpan(p.span.lat, p.span.lng)
+  const region = new window.mapkit.CoordinateRegion(newCenter, coordspan)
   try {
     p.map?.setRegionAnimated(region)
   } catch (err) {
@@ -158,7 +158,7 @@ export const HomeMap = memo(() => {
       .map(
         (restaurant) =>
           !!restaurant.location?.coordinates &&
-          new mapkit.Coordinate(
+          new window.mapkit.Coordinate(
             restaurant.location.coordinates[1],
             restaurant.location.coordinates[0]
           )
@@ -171,14 +171,14 @@ export const HomeMap = memo(() => {
         const color = getRankingColor(percent)
 
         // if (index >= 10) {
-        //   return new mapkit.Annotation(coordinates[index], dotFactory, {
+        //   return new window.mapkit.Annotation(coordinates[index], dotFactory, {
         //     data: {
         //       id: restaurant.id,
         //     },
         //   })
         // }
 
-        return new mapkit.MarkerAnnotation(coordinates[index], {
+        return new window.mapkit.MarkerAnnotation(coordinates[index], {
           glyphText: index <= 12 ? `${index + 1}` : ``,
           color: color,
           title: index <= 3 ? restaurant.name : '',
@@ -192,7 +192,7 @@ export const HomeMap = memo(() => {
             id: restaurant.id,
           },
         })
-        // return new mapkit.PinAnnotation(coordinates[index], {
+        // return new window.mapkit.PinAnnotation(coordinates[index], {
         //   data: {
         //     id: restaurant.id,
         //   },

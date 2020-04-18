@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, {
   forwardRef,
   useEffect,
@@ -84,25 +85,26 @@ const createStack = (defaultStyle?: ViewStyle) => {
         let spacedChildren = children
         if (typeof spacing !== 'undefined') {
           const childArr = React.Children.toArray(children)
-          spacedChildren = childArr
-            .filter((x) => !!x)
-            .map((x, i) =>
-              i === childArr.length - 1
-                ? x
-                : [
-                    x,
-                    <Spacer
-                      key={i}
-                      size={spacing}
-                      direction={
-                        defaultStyle?.flexDirection === 'row'
-                          ? 'horizontal'
-                          : 'vertical'
-                      }
-                    />,
-                  ]
-            )
-            .flat()
+          spacedChildren = _.flatMap(
+            childArr
+              .filter((x) => !!x)
+              .map((x, i) =>
+                i === childArr.length - 1
+                  ? x
+                  : [
+                      x,
+                      <Spacer
+                        key={i}
+                        size={spacing}
+                        direction={
+                          defaultStyle?.flexDirection === 'row'
+                            ? 'horizontal'
+                            : 'vertical'
+                        }
+                      />,
+                    ]
+              )
+          )
         }
         return (
           <View
