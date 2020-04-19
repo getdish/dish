@@ -1,3 +1,4 @@
+import auth from '@dish/auth'
 import axios from 'axios'
 import { EnumType } from 'json-to-graphql-query'
 import _ from 'lodash'
@@ -140,7 +141,11 @@ export class Restaurant extends ModelBase<Restaurant> {
   }
 
   static write_only_fields() {
-    return ['tag_names']
+    if (auth.is_admin) {
+      return []
+    } else {
+      return ['tag_names']
+    }
   }
 
   static upsert_constraint() {

@@ -15,7 +15,7 @@ import { getGraphEndpointDomain } from '@dish/common-web'
 import axios, { AxiosRequestConfig } from 'axios'
 import { EnumType, jsonToGraphQLQuery } from 'json-to-graphql-query'
 
-const isNode = typeof window == 'undefined'
+export const isNode = typeof window == 'undefined'
 export const isBrowserProd =
   !isNode && window.location.hostname.includes('dish')
 let WebSocket: WebSocket
