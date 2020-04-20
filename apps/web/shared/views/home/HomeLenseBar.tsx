@@ -4,6 +4,7 @@ import { ScrollView, StyleSheet } from 'react-native'
 import { HomeActiveTagIds } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { getTagId } from '../../state/Tag'
+import { Divider } from '../ui/Divider'
 import { LinearGradient } from '../ui/LinearGradient'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import HomeFilterBar from './HomeFilterBar'
@@ -60,10 +61,9 @@ export function HomeLenseBarOnly(props: { activeTagIds: HomeActiveTagIds }) {
   const drawerWidth = useHomeDrawerWidthInner()
   const om = useOvermind()
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+    // <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+    <>
       <HStack
-        paddingHorizontal={20}
-        spacing="sm"
         minWidth={drawerWidth}
         alignItems="center"
         justifyContent="center"
@@ -71,15 +71,28 @@ export function HomeLenseBarOnly(props: { activeTagIds: HomeActiveTagIds }) {
         // borderWidth={1}
         // borderColor="#ddd"
       >
-        {om.state.home.allLenseTags.map((lense, index) => (
-          <LenseButton
-            key={lense.id + index}
-            lense={lense}
-            isActive={props.activeTagIds[getTagId(lense)]}
-            minimal={index > -1}
-          />
-        ))}
+        <Divider backgroundColor="#eee" flex />
+        <HStack
+          borderRadius={100}
+          borderColor="#eee"
+          borderWidth={2}
+          padding={10}
+          alignItems="center"
+          justifyContent="center"
+          spacing={3}
+        >
+          {om.state.home.allLenseTags.map((lense, index) => (
+            <LenseButton
+              key={lense.id + index}
+              lense={lense}
+              isActive={props.activeTagIds[getTagId(lense)]}
+              minimal={index > -1}
+            />
+          ))}
+        </HStack>
+        <Divider backgroundColor="#eee" flex />
       </HStack>
-    </ScrollView>
+    </>
+    // </ScrollView>
   )
 }

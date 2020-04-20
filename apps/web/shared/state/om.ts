@@ -1,4 +1,4 @@
-import { Action, IConfig } from 'overmind'
+import { Action, IConfig, Overmind } from 'overmind'
 import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/config'
 
@@ -34,8 +34,11 @@ export const config = merge(
   })
 )
 
+type OmState = IConfig<typeof config>
+
 declare module 'overmind' {
-  interface Config extends IConfig<typeof config> {}
+  interface Config extends OmState {}
 }
 
 export const useOvermind = createHook<typeof config>()
+export const useOvermindStatic = () => window['om'] as Overmind<typeof config>

@@ -15,10 +15,10 @@ export const onInitialize: OnInitialize = async (
     rehydrate(state, OVERMIND_MUTATIONS)
   }
 
-  if (process.env.NODE_ENV == 'development') {
-    // overmind.eventHub.on('component:update' as any, ({ name, paths, componentId }) => {
-    //   console.log('update component', { name, paths, componentId })
-    // })
+  if (LOG_OVERMIND) {
+    overmind.eventHub.on('component:update' as any, (all) => {
+      console.log('update component', all)
+    })
     overmind.eventHub.on('action:start' as any, (execution) => {
       const name = execution.actionName
       const logType = name.indexOf('.get') > 0 ? 'debug' : 'warn'

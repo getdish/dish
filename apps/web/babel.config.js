@@ -6,6 +6,8 @@ module.exports = function(api) {
   }
   const plugins = [
     !isWorker && !isSSR && !api.env('production') && 'react-refresh/babel',
+    // add fn name for dev
+    !api.env('production') && '@babel/plugin-transform-function-name',
   ].filter(Boolean)
   return {
     plugins,

@@ -5,15 +5,10 @@ import './base.css'
 import { createOvermind } from 'overmind'
 // // import here
 import React from 'react'
-import { hydrate, render } from 'react-dom'
+import { createRoot, hydrate, render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
-import {
-  OVERMIND_MUTATIONS,
-  isPreact,
-  isSSR,
-  isWorker,
-} from '../shared/constants'
+import { OVERMIND_MUTATIONS, isSSR, isWorker } from '../shared/constants'
 import { config } from '../shared/state/om'
 import { App } from '../shared/views/App'
 import { importable } from './xy'
@@ -44,6 +39,7 @@ if (!isWorker) {
 }
 
 let rootEl = document.getElementById('root')
+const search = window.location.search
 
 async function start() {
   if (!isWorker) {
@@ -71,7 +67,13 @@ async function start() {
       rootEl = document.createElement('div')
       document.body.appendChild(rootEl)
     }
-    render(<App overmind={om} />, rootEl)
+
+    if (search.indexOf(`concurrent`) > -1) {
+      console.warn('👟 Concurrent Mode Running')
+      createRoot(rootEl).render(<App overmind={om} />)
+    } else {
+      render(<App overmind={om} />, rootEl)
+    }
   }
 }
 
