@@ -19,7 +19,8 @@ export const LoadingItem = () => {
         height={30}
         backgroundColor="#ddd"
         borderRadius={7}
-        className="shine"
+        // casued bug with filters, if we contain maybe wont
+        // className="shine"
       />
       <VStack spacing={10}>
         {[1, 2, 3, 4].map((index) => (
