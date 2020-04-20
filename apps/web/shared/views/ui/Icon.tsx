@@ -1,13 +1,17 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import * as Icons from 'react-feather'
-import { TextStyle, ViewStyle, findNodeHandle } from 'react-native'
+import { TextStyle, ViewStyle } from 'react-native'
 
-import { fuzzyFind, fuzzyFindSync, fuzzyMatchSimple } from '../../helpers/fuzzy'
-import { useForceUpdate } from '../../hooks/useForceUpdate'
+import { fuzzyFindSync } from '../../helpers/fuzzy'
 
 const names = Object.keys(Icons)
-console.log('Icons', Icons, names)
 const found = {}
+
+const findIcon = (name: string) => {
+  const res = fuzzyFindSync(name, names, null)
+  found[name] = res[0]
+  return res[0]
+}
 
 export const Icon = ({
   type = 'feather',
@@ -20,7 +24,7 @@ export const Icon = ({
   size: number
 } & ViewStyle &
   TextStyle) => {
-  const foundName = found[name] || fuzzyFindSync(name, names, null)
+  const foundName = found[name] || findIcon(name)
   const Element = Icons[foundName]
 
   if (!Element) {

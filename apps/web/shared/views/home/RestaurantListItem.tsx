@@ -92,8 +92,8 @@ export const RestaurantListItem = ({
             <VStack
               padding={pad}
               paddingVertical={22}
-              paddingRight={118}
-              width="75%"
+              paddingRight={90}
+              width="78%"
               maxWidth={525}
               spacing={5}
             >
@@ -115,14 +115,16 @@ export const RestaurantListItem = ({
               <HStack
                 alignItems="center"
                 paddingLeft={padLeft}
-                paddingTop={4}
                 spacing
                 overflow="hidden"
               >
                 <RestaurantAddressLinksRow
-                  showAddress
+                  showAddress="short"
                   restaurant={restaurant}
                 />
+              </HStack>
+
+              <HStack paddingTop={6} paddingLeft={padLeft}>
                 <RestaurantTagsRow showMore restaurant={restaurant} />
               </HStack>
 
@@ -141,10 +143,16 @@ export const RestaurantListItem = ({
               </HStack>
 
               {/* <Spacer size="sm" /> */}
-              <HStack paddingHorizontal={20}>
+              <HStack
+                paddingLeft={padLeft - 3}
+                alignItems="center"
+                // justifyContent="center"
+              >
                 <RestaurantRatingViewPopover restaurant={restaurant} />
                 <Spacer size="lg" />
                 <Divider vertical />
+                <RestaurantFavoriteStar restaurant={restaurant} />
+                <Spacer size="xl" />
                 <RestaurantDetailRow size="sm" restaurant={restaurant} />
               </HStack>
             </VStack>

@@ -2,11 +2,40 @@ import { Restaurant } from '@dish/models'
 import React, { memo } from 'react'
 import { Image, Linking, Text } from 'react-native'
 
+import { GeocodePlace } from '../../state/home'
+import { useOvermind } from '../../state/om'
 import { Box } from '../ui/Box'
 import { Divider } from '../ui/Divider'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { Link } from '../ui/Link'
 import { HStack } from '../ui/Stacks'
+
+const removeZip = (str: string) =>
+  str.replace(/,(\s[A-Z]{2})?[\s]+([0-9\-]+$)/g, '')
+
+function formatAddress(
+  currentLocation: GeocodePlace | null,
+  address: string,
+  format: 'short' | 'long' | 'longer'
+): string {
+  if (format === 'longer') {
+    return address
+  }
+  if (format === 'long' || !currentLocation) {
+    return removeZip(address)
+  }
+  if (currentLocation?.locality) {
+    const replaceAfter = `, ${currentLocation.locality ?? ''}`
+    const replaceIndex = address.indexOf(replaceAfter)
+    if (replaceIndex > 0) {
+      return address.slice(0, replaceIndex)
+    }
+  }
+  return address
+    .split(',')
+    .slice(0, 1)
+    .join(', ')
+}
 
 export const RestaurantAddressLinksRow = memo(
   ({
@@ -17,17 +46,24 @@ export const RestaurantAddressLinksRow = memo(
   }: {
     restaurant: Restaurant
     size?: 'lg' | 'md'
-    showAddress?: boolean
+    showAddress?: boolean | 'short'
     showMenu?: boolean
   }) => {
+    const om = useOvermind()
     const fontSize = size == 'lg' ? 16 : 13
     const sep = ' '
 
     return (
       <Text style={{ color: '#999', fontSize }}>
-        <HStack alignItems="center" spacing="xs">
+        <HStack alignItems="center" spacing>
           {showAddress && (
-            <Text style={{ fontSize: 14 }}>{restaurant.address}</Text>
+            <Text style={{ fontSize: 14 }}>
+              {formatAddress(
+                om.state.home.currentLocationInfo,
+                restaurant.address,
+                showAddress === 'short' ? 'short' : 'long'
+              )}
+            </Text>
           )}
 
           <HoverablePopover
