@@ -26,7 +26,8 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "devDependencies": {
-    "rollup-plugin-virtual": "^1.0.1"
+    "rollup-plugin-virtual": "^1.0.1",
+    "rollup": "^2.6.1"
   },
   "publishConfig": {
     "access": "public"
@@ -34,8 +35,5 @@
   "gitHead": "cb605b055c7947989d64daeb3d95c123c27c70c0",
   "dependencies": {
     "@dish/tscc-spec": "^0.4.7"
-  },
-  "peerDependencies": {
-    "rollup": "^2.6.1"
   }
 }
