@@ -9,10 +9,8 @@ const UNMATCHED_LETTER_PENALTY = -1
 
 /**
  * Returns true if each character in pattern is found sequentially within str
- * @param {*} pattern string
- * @param {*} str string
  */
-function fuzzyMatchSimple(pattern, str) {
+export function fuzzyMatchSimple(pattern: string, str: string) {
   let patternIdx = 0
   let strIdx = 0
   const patternLength = pattern.length
@@ -32,12 +30,8 @@ function fuzzyMatchSimple(pattern, str) {
 
 /**
  * Does a fuzzy search to find pattern inside a string.
- * @param {*} pattern string        pattern to search for
- * @param {*} str     string        string which is being searched
- * @returns [boolean, number]       a boolean which tells if pattern was
- *                                  found or not and a search score
  */
-function fuzzyMatch(pattern, str) {
+function fuzzyMatch(pattern: string, str: string): [boolean, number] {
   const recursionCount = 0
   const recursionLimit = 10
   const matches = []
@@ -46,9 +40,9 @@ function fuzzyMatch(pattern, str) {
   return fuzzyMatchRecursive(
     pattern,
     str,
-    0 /* patternCurIndex */,
-    0 /* strCurrIndex */,
-    null /* srcMatces */,
+    0,
+    0,
+    null,
     matches,
     maxMatches,
     0 /* nextMatch */,
@@ -58,17 +52,17 @@ function fuzzyMatch(pattern, str) {
 }
 
 function fuzzyMatchRecursive(
-  pattern,
-  str,
-  patternCurIndex,
-  strCurrIndex,
-  srcMatces,
+  pattern: string,
+  str: string,
+  patternCurIndex: number,
+  strCurrIndex: number,
+  srcMatches,
   matches,
   maxMatches,
   nextMatch,
   recursionCount,
   recursionLimit
-) {
+): [boolean, number] {
   let outScore = 0
 
   // Return if recursion limit is reached.
@@ -98,8 +92,8 @@ function fuzzyMatchRecursive(
         return [false, outScore]
       }
 
-      if (firstMatch && srcMatces) {
-        matches = [...srcMatces]
+      if (firstMatch && srcMatches) {
+        matches = [...srcMatches]
         firstMatch = false
       }
 
@@ -272,4 +266,26 @@ export async function fuzzyFind<A extends any>(
 ): Promise<A[]> {
   const indices = await fuzzyFindIndices(needle, haystack, keys)
   return indices.map((i) => haystack[i])
+}
+
+export function fuzzyFindSync<A extends any>(
+  needle: string,
+  haystack: A[],
+  keys: string[] | null = ['name']
+): A[] {
+  const found = []
+  for (const item of haystack) {
+    if (!keys) {
+      if (fuzzyMatch(item as any, needle)[0] === true) {
+        found.push(item)
+      }
+    } else {
+      for (const key of keys) {
+        if (fuzzyMatch(item[key], needle)[0] === true) {
+          found.push(item)
+        }
+      }
+    }
+  }
+  return found
 }

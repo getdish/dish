@@ -2,6 +2,7 @@
   "name": "@dish/tscc",
   "author": "theseanl",
   "description": "A typescript transpiler and bundler that wires up tsickle and closure compiler seamlessly",
+  "private": true,
   "workspaces": {
     "nohoist": [
       "**"
