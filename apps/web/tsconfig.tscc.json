@@ -9,12 +9,13 @@
     "isolatedModules": false,
     "sourceMap": true,
     "jsx": "react",
-    "lib": ["dom"],
+    "lib": ["ES2015", "dom"],
     "module": "ES2015",
     "moduleResolution": "node",
     "noImplicitAny": false,
     "noLib": false,
     "preserveConstEnums": true,
+    "skipLibCheck": true,
     "removeComments": true,
     "rootDir": ".",
     "suppressImplicitAnyIndexErrors": true,
@@ -23,8 +24,8 @@
     "strict": false,
     "noUnusedLocals": false,
     "typeRoots": ["./node_modules/mapkit-typescript"],
-    "types": ["mapkit", "@types/requestidlecallback"]
+    "types": ["node", "mapkit", "@types/requestidlecallback"]
   },
   "include": ["src/**/*", "web/**/*", "shared/**/*"],
-  "exclude": ["**/*.test.ts", "**/*.test.tsx", "src/graphql", "@types/**"]
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "src/graphql"]
 }

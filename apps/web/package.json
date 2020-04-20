@@ -25,6 +25,7 @@
     "build:web:client": "NODE_ENV=production TARGET=client webpack",
     "build:web:worker": "TARGET=worker webpack",
     "build:web:watch": "(TARGET=ssr webpack --watch) & (TARGET=client webpack --watch) & wait",
+    "build:web:webpack-tsickle": "node --max-old-space-size=12000 tscc.js",
     "ios": "react-native run-ios",
     "android": "react-native run-android"
   },
