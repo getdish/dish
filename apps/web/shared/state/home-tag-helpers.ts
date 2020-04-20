@@ -1,9 +1,12 @@
-import { slugify } from '@dish/models'
+import { TagType, slugify } from '@dish/models'
 import { Action, AsyncAction } from 'overmind'
 
 import {
+  HomeActiveTagIds,
+  HomeState,
   HomeStateItem,
   OmState,
+  OmStateHome,
   SPLIT_TAG,
   SPLIT_TAG_TYPE,
   getActiveTags,
@@ -14,7 +17,8 @@ import {
 import { HistoryItem, NavigateItem, SearchRouteParams } from './router'
 import { NavigableTag, Tag, getTagId } from './Tag'
 
-const ensureUniqueTagOfType = new Set(['lense', 'country', 'dish'])
+const ensureUniqueTagOfType = new Set(['lense'])
+const ensureUniqueTag = new Set(['country', 'dish'])
 
 type HomeStateNav = { tag: NavigableTag; state?: HomeStateItem }
 
@@ -59,32 +63,22 @@ const getNextHomeStateWithTag: Action<HomeStateNav, HomeStateItem> = (
   if (!tag) {
     debugger
   }
-  const key = getTagId(tag)
-  const ensureUnique = ensureUniqueTagOfType.has(tag.type)
 
   // clone it to avoid confusing overmind
-  const nextActiveTagIds = {}
+  let nextActiveTagIds: HomeActiveTagIds = {}
   for (const key in state.activeTagIds) {
     if (state.activeTagIds[key]) {
       nextActiveTagIds[key] = true
     }
   }
 
-  // TODO some duplicate logic with _toggleTagOnHomeState we can fix
-  if (ensureUnique) {
-    if (nextActiveTagIds[key] === true) {
-      nextActiveTagIds[key] = false
-    } else {
-      nextActiveTagIds[key] = true
-      for (const key in nextActiveTagIds) {
-        // TODO we could allow dish + country, but do we need to?
-        if (ensureUniqueTagOfType.has(om.state.home.allTags[key]?.type)) {
-          delete nextActiveTagIds[key]
-        }
-      }
-    }
+  const key = getTagId(tag)
+  if (nextActiveTagIds[key] === true) {
+    nextActiveTagIds[key] = false
   } else {
-    nextActiveTagIds[key] = !nextActiveTagIds[key]
+    nextActiveTagIds[key] = true
+    // disable others
+    ensureUniqueActiveTagIds(nextActiveTagIds, om.state.home, tag)
   }
 
   return {
@@ -93,45 +87,42 @@ const getNextHomeStateWithTag: Action<HomeStateNav, HomeStateItem> = (
   }
 }
 
+// mutating
+function ensureUniqueActiveTagIds(
+  activeTagIds: HomeActiveTagIds,
+  home: OmStateHome,
+  nextActiveTag: NavigableTag
+) {
+  for (const key in activeTagIds) {
+    if (key === getTagId(nextActiveTag)) {
+      continue
+    }
+    const type = home.allTags[key]?.type
+    if (ensureUniqueTagOfType.has(type) && type === nextActiveTag.type) {
+      delete activeTagIds[key]
+    }
+    if (ensureUniqueTag.has(nextActiveTag.type) && ensureUniqueTag.has(type)) {
+      delete activeTagIds[key]
+    }
+  }
+}
+
 export const _toggleTagOnHomeState: AsyncAction<NavigableTag> = async (
   om,
   next
 ) => {
   const state = om.state.home.currentState
-  if (!next || (!isHomeState(state) && !isSearchState(state))) return
-
-  if (ensureUniqueTagOfType.has(next.type)) {
-    // remove old
-    for (const key in state.activeTagIds) {
-      const tag = om.state.home.allTags[key]
-      if (tag?.type === next.type) {
-        state.activeTagIds[key] = false
-      }
-    }
+  if (!next || (!isHomeState(state) && !isSearchState(state))) {
+    return
   }
-
   if (!next) {
     debugger
   }
   const key = getTagId(next)
   state.activeTagIds[key] = !state.activeTagIds[key]
+  ensureUniqueActiveTagIds(state.activeTagIds, om.state.home, next)
   await om.actions.home._afterTagChange()
 }
-
-// push to search on adding lense
-// if (isHomeState(state) && willSearch) {
-//   // if adding a searchable tag while existing search query, replace it
-//   if (state.searchQuery) {
-//     state.searchQuery = ''
-//   }
-//   // go to new route first
-//   await om.actions.home._syncStateToRoute({
-//     ...state,
-//     activeTagIds: { ...state.activeTagIds, [getTagId(val)]: true },
-//   })
-//   state = om.state.home.currentState
-//   console.log('on search now?', state)
-// }
 
 export const getNavigateItemForState = (
   omState: OmState,
@@ -182,24 +173,26 @@ export const getNavigateItemForState = (
   }
 }
 
+const getUrlTagInfo = (part: string, defaultType: any = ''): NavigableTag => {
+  if (part.indexOf(SPLIT_TAG_TYPE) > -1) {
+    const [type, name] = part.split(SPLIT_TAG_TYPE)
+    return { type: type as any, name }
+  }
+  return { type: defaultType, name: part }
+}
+
 export const getTagsFromRoute = (
   item: HistoryItem<'userSearch'>
 ): NavigableTag[] => {
   const tags: NavigableTag[] = []
-
   if (item.params.lense) {
-    tags.push({ type: 'lense', name: item.params.lense })
+    tags.push(getUrlTagInfo(item.params.lense, 'lense'))
   }
-
-  for (const tag of item.params.tags.split(SPLIT_TAG)) {
-    if (tag.indexOf(SPLIT_TAG_TYPE) > -1) {
-      const [type, name] = tag.split(SPLIT_TAG_TYPE) as any[]
-      tags.push({ name, type })
-    } else {
-      tags.push({ name, type: 'filter' })
+  if (item.params.tags) {
+    for (const tag of item.params.tags.split(SPLIT_TAG)) {
+      tags.push(getUrlTagInfo(tag, 'filter'))
     }
   }
-
   return tags
 }
 

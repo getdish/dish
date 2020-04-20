@@ -348,8 +348,8 @@ export default memo(function HomeSearchBar() {
                                 closable
                                 onClose={() => {
                                   om.actions.home.navigateToTag({ tag })
-                                  setTimeout(() => {
-                                    input.focus()
+                                  requestIdleCallback(() => {
+                                    getInputNode(inputRef.current)?.focus()
                                   })
                                   if (
                                     om.state.home.lastActiveTags.filter(
