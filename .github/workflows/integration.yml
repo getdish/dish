@@ -12,6 +12,9 @@ jobs:
       HASURA_ENDPOINT: "http://localhost:8080"
     steps:
     - uses: actions/checkout@master
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.16.1'
     - name: Install dev dependencies
       run: .github/workflows/scripts/install_dev_deps.sh
     - name: Setup services

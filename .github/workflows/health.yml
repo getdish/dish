@@ -11,6 +11,9 @@ jobs:
       DISH_ENV: "test"
     steps:
     - uses: actions/checkout@master
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.16.1'
     - name: Install dev dependencies
       run: .github/workflows/scripts/install_dev_deps.sh
     - name: Prettier linting
