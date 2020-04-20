@@ -27,7 +27,10 @@ export function isEqualDebug(a: Object, b: Object, options?: IsEqualOptions) {
     const bVal = b[key]
     if (_.isPlainObject(aVal) && _.isPlainObject(bVal)) {
       // recurse
-      return isEqualDebug(aVal, bVal, options)
+      if (!isEqualDebug(aVal, bVal, options)) {
+        console.warn('key', key, 'not equal', aVal, bVal)
+        return false
+      }
     }
     const next = isEqual(aVal, bVal, options)
     if (next === false) {
@@ -35,5 +38,6 @@ export function isEqualDebug(a: Object, b: Object, options?: IsEqualOptions) {
       return false
     }
   }
+  console.log('is equal', a, b)
   return true
 }

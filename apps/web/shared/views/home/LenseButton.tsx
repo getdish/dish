@@ -1,17 +1,14 @@
 import React, { memo } from 'react'
 import { Text } from 'react-native'
 
-import {
-  memoIsEqualDeep,
-  memoIsEqualDeepDebug,
-} from '../../helpers/memoIsEqualDeep'
+import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { Tag } from '../../state/Tag'
 import { Box } from '../ui/Box'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { LinkButton } from '../ui/Link'
 import { HStack } from '../ui/Stacks'
 
-export const LenseButton = memoIsEqualDeepDebug(
+export const LenseButton = memoIsEqualDeep(
   ({
     lense,
     isActive,

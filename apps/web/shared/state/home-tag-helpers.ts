@@ -46,9 +46,11 @@ export const getNavigateToTag: Action<HomeStateNav, LinkButtonProps> = (
   const navigateItem = getNavigateItemForState(om.state, nextState)
   return {
     ...navigateItem,
-    // but dont want to be causing tons of re-renders
-    // if isEqual(om.state.home.currentNavItem, navigateItem) dont!?
-    onPress: () => om.actions.home._toggleTagOnHomeState(tag),
+    onPress: (e) => {
+      e?.preventDefault()
+      e?.stopPropagation()
+      om.actions.home._toggleTagOnHomeState(tag)
+    },
   }
 }
 
