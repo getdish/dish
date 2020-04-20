@@ -1,5 +1,12 @@
 # Current
 
+- [ ] show top rated dishes tags in search results "vietnamese"
+  - [ ] RestaurantTagRow would show stuff like "Beef Pho (87), Banh Mi (77)"
+    - [ ] if you search is "pho" we could enforce always showing the Pho tag for each result, too
+- [ ] show dishes (with their ratings) on the restaurant detail page
+  - [ ] theres a bottom area that shows all dish photos
+- [ ] dish photos showing the real dish photos on restaurant detail page / search results page
+
 ## Web frontend
 
 - [ ] Home/Data - Get home page generally working with dishes showing for most cuisines
