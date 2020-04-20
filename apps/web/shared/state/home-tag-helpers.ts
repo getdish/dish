@@ -72,12 +72,17 @@ const getNextHomeStateWithTag: Action<HomeStateNav, HomeStateItem> = (
 
   // TODO some duplicate logic with _toggleTagOnHomeState we can fix
   if (ensureUnique) {
-    for (const key in nextActiveTagIds) {
-      if (om.state.home.allTags[key]?.type === tag.type) {
-        delete nextActiveTagIds[key]
+    if (nextActiveTagIds[key] === true) {
+      nextActiveTagIds[key] = false
+    } else {
+      nextActiveTagIds[key] = true
+      for (const key in nextActiveTagIds) {
+        // TODO we could allow dish + country, but do we need to?
+        if (ensureUniqueTagOfType.has(om.state.home.allTags[key]?.type)) {
+          delete nextActiveTagIds[key]
+        }
       }
     }
-    nextActiveTagIds[key] = true
   } else {
     nextActiveTagIds[key] = !nextActiveTagIds[key]
   }
