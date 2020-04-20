@@ -31,10 +31,7 @@ function formatAddress(
       return address.slice(0, replaceIndex)
     }
   }
-  return address
-    .split(',')
-    .slice(0, 1)
-    .join(', ')
+  return address.split(',').slice(0, 1).join(', ')
 }
 
 export const RestaurantAddressLinksRow = memo(

@@ -445,10 +445,21 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
       activeTagIds = lastHomeOrSearch.activeTagIds
 
       if (!started) {
-        let tags = getTagsFromRoute(om.state.router.curPage)
+        let fakeTags = getTagsFromRoute(om.state.router.curPage)
+        let tags: Tag[] = []
 
         // fetch real tag info from server
-        tags = tags
+        await Promise.all(
+          fakeTags.map(async (tag) => {
+            const res = await fetch(
+              `https://search-b4dc375a-default.rio.dishapp.com/tags?query=${tag.name}&type=${tag.type}&limit=1`
+            ).then((res) => res.json())
+            console.log('got', res)
+            if (res?.[0]) {
+              tags.push(res[0])
+            }
+          })
+        )
 
         activeTagIds = tags.reduce((acc, tag) => {
           const id = getTagId(tag)
