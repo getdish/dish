@@ -110,6 +110,7 @@ export default memo(function HomeAutoComplete() {
             {om.state.home.autocompleteResultsActive.map((x, index) => {
               return (
                 <LinkButton
+                  key={`${x.tagId}${index}`}
                   onPress={() => {
                     if (showLocation) {
                       om.actions.home.setLocation(x.name)
@@ -131,7 +132,6 @@ export default memo(function HomeAutoComplete() {
                   fontSize={16}
                   maxWidth="15vw"
                   ellipse
-                  key={x.tagId}
                 >
                   {x.icon ?? null}
                   {x.name}{' '}

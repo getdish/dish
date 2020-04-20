@@ -2,26 +2,17 @@
   "name": "@dish/tscc",
   "author": "theseanl",
   "description": "A typescript transpiler and bundler that wires up tsickle and closure compiler seamlessly",
-  "keywords": [
-    "typescript",
-    "closure-compiler",
-    "tree-shaking",
-    "minify-javascript"
-  ],
+  "workspaces": {
+    "nohoist": [
+      "**"
+    ]
+  },
   "version": "0.4.8",
   "main": "./_/tscc.js",
   "bin": {
     "tscc": "./_/main.js"
   },
   "license": "MIT",
-  "homepage": "https://github.com/theseanl/tscc",
-  "repository": {
-    "type": "url",
-    "url": "https://github.com/theseanl/tscc"
-  },
-  "bugs": {
-    "url": "https://github.com/theseanl/tscc"
-  },
   "scripts": {
     "start": "true",
     "build": "tsc -b",
@@ -29,11 +20,6 @@
     "clean": "rm -rf _"
   },
   "devDependencies": {
-    "@types/fs-extra": "^8.0.1",
-    "@types/stream-json": "^1.0.0",
-    "@types/vinyl": "^2.0.4",
-    "@types/vinyl-fs": "^2.4.11",
-    "@types/yargs": "^13.0.3",
     "magic-string": "^0.25.4"
   },
   "optionalDependencies": {
@@ -44,7 +30,7 @@
   "dependencies": {
     "@dish/tscc-spec": "^0.4.7",
     "chalk": "^3.0.0",
-    "fs-extra": "^8.0.1",
+    "fs-extra": "^9.0.0",
     "google-closure-compiler-java": "^20191111.0.0",
     "ora": "^4.0.3",
     "resolve-from": "^5.0.0",

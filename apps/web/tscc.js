@@ -31,7 +31,7 @@ run()
     console.log('finished!', res)
   })
   .catch((err) => {
-    console.log('err', err)
+    console.log('begin:errors', err)
   })
 
 // const { readFileSync } = require('fs')
