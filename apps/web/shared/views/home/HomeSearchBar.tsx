@@ -31,6 +31,7 @@ import { HomeUserMenu } from './HomeUserMenu'
 import { TagButton } from './TagButton'
 
 const extraWidth = 36
+const divider = <Divider vertical flexLine={1} marginHorizontal={4} />
 
 const isTextSelected = (node?: any) => {
   const selection = window.getSelection()
@@ -230,10 +231,7 @@ export default memo(function HomeSearchBar() {
   const tm2 = useRef<any>(0)
   const tmInputBlur = useRef<any>(0)
 
-  const divider = <Divider vertical flexLine={1} marginHorizontal={4} />
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
-
-  useEffect(() => {})
 
   return (
     <>
@@ -241,32 +239,7 @@ export default memo(function HomeSearchBar() {
       <View style={[styles.container, { height: searchBarHeight }]}>
         <View style={styles.containerInner}>
           <DishLogoButton />
-
-          <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
-            <LinkButton
-              flexDirection="row"
-              pointerEvents="auto"
-              padding={13}
-              marginLeft={-8} //undo spacing
-              opacity={om.state.home.currentStateType === 'home' ? 0.2 : 1}
-              onPress={() => om.actions.home.popTo('home')}
-            >
-              <VStack spacing={2} alignItems="center">
-                <Icon
-                  name={
-                    om.state.home.breadcrumbStates.length <= 2
-                      ? 'home'
-                      : 'chevron-left'
-                  }
-                  size={22}
-                  opacity={0.5}
-                />
-              </VStack>
-            </LinkButton>
-            {divider}
-            <VStack flex={0.5} />
-          </MediaQuery>
-
+          <HomeSearchBarHomeButton />
           <HStack
             flex={15}
             maxWidth={450}
@@ -322,49 +295,7 @@ export default memo(function HomeSearchBar() {
                     flex={1}
                     overflow="hidden"
                   >
-                    {!!om.state.home.searchBarTags.length && (
-                      <HStack marginLeft={10} marginTop={-1}>
-                        {om.state.home.searchBarTags.map((tag) => {
-                          const isActive =
-                            om.state.home.searchbarFocusedTag === tag
-                          return (
-                            <TouchableOpacity
-                              activeOpacity={0.9}
-                              key={getTagId(tag)}
-                              onPress={() => {
-                                om.actions.home.setSearchBarFocusedTag(tag)
-                              }}
-                            >
-                              <TagButton
-                                subtleIcon
-                                {...(!isActive && {
-                                  backgroundColor: '#eee',
-                                  borderColor: '#eee',
-                                  color: '#444',
-                                })}
-                                size="lg"
-                                fontSize={18}
-                                tag={tag}
-                                closable
-                                onClose={() => {
-                                  om.actions.home.navigateToTag({ tag })
-                                  requestIdleCallback(() => {
-                                    getInputNode(inputRef.current)?.focus()
-                                  })
-                                  if (
-                                    om.state.home.lastActiveTags.filter(
-                                      (x) => x.type !== 'lense'
-                                    ).length === 0
-                                  ) {
-                                    om.actions.home.popTo('home')
-                                  }
-                                }}
-                              />
-                            </TouchableOpacity>
-                          )
-                        })}
-                      </HStack>
-                    )}
+                    <HomeSearchBarTags input={input} />
                     <TextInput
                       ref={inputRef}
                       // leave uncontrolled for perf?
@@ -408,25 +339,7 @@ export default memo(function HomeSearchBar() {
           </HStack>
 
           {/* IN */}
-          <HStack
-            alignItems="center"
-            justifyContent="center"
-            spacing={3}
-            width={40}
-          >
-            <Divider flex opacity={0.1} />
-            <Circle
-              size={26}
-              backgroundColor="##fff"
-              borderColor="#eee"
-              borderWidth={1}
-            >
-              <Text style={{ color: '#000', fontSize: 15, fontWeight: '600' }}>
-                in
-              </Text>
-            </Circle>
-            <Divider flex opacity={0.1} />
-          </HStack>
+          <HomeSearchBarSeparator />
 
           <VStack flex={12} maxWidth={320}>
             <TextInput
@@ -439,9 +352,6 @@ export default memo(function HomeSearchBar() {
                 clearTimeout(tmInputBlur.current)
                 om.actions.home.setShowAutocomplete('location')
                 if (locationSearch.length > 0) {
-                  ;<VStack className="rotating" opacity={0.5}>
-                    <Icon name="loader" size={16} />
-                  </VStack>
                   selectActiveInput()
                 }
               }}
@@ -468,6 +378,55 @@ export default memo(function HomeSearchBar() {
         </View>
       </View>
     </>
+  )
+})
+
+const HomeSearchBarHomeButton = memo(() => {
+  const om = useOvermind()
+  return (
+    <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
+      <LinkButton
+        flexDirection="row"
+        pointerEvents="auto"
+        padding={13}
+        marginLeft={-8} //undo spacing
+        opacity={om.state.home.currentStateType === 'home' ? 0.2 : 1}
+        onPress={() => om.actions.home.popTo('home')}
+      >
+        <VStack spacing={2} alignItems="center">
+          <Icon
+            name={
+              om.state.home.breadcrumbStates.length <= 2
+                ? 'home'
+                : 'chevron-left'
+            }
+            size={22}
+            opacity={0.5}
+          />
+        </VStack>
+      </LinkButton>
+      {divider}
+      <VStack flex={0.5} />
+    </MediaQuery>
+  )
+})
+
+const HomeSearchBarSeparator = memo(() => {
+  return (
+    <HStack alignItems="center" justifyContent="center" spacing={3} width={40}>
+      <Divider flex opacity={0.1} />
+      <Circle
+        size={26}
+        backgroundColor="##fff"
+        borderColor="#eee"
+        borderWidth={1}
+      >
+        <Text style={{ color: '#000', fontSize: 15, fontWeight: '600' }}>
+          in
+        </Text>
+      </Circle>
+      <Divider flex opacity={0.1} />
+    </HStack>
   )
 })
 
@@ -511,6 +470,59 @@ const SearchLocationButton = memo(() => {
     </ZStack>
   )
 })
+
+const HomeSearchBarTags = memo(
+  ({ input }: { input: HTMLInputElement | null }) => {
+    const om = useOvermind()
+
+    return (
+      <>
+        {!!om.state.home.searchBarTags.length && (
+          <HStack marginLeft={10} marginTop={-1}>
+            {om.state.home.searchBarTags.map((tag) => {
+              const isActive = om.state.home.searchbarFocusedTag === tag
+              return (
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  key={getTagId(tag)}
+                  onPress={() => {
+                    om.actions.home.setSearchBarFocusedTag(tag)
+                  }}
+                >
+                  <TagButton
+                    subtleIcon
+                    {...(!isActive && {
+                      backgroundColor: '#eee',
+                      borderColor: '#eee',
+                      color: '#444',
+                    })}
+                    size="lg"
+                    fontSize={18}
+                    tag={tag}
+                    closable
+                    onClose={() => {
+                      om.actions.home.navigateToTag({ tag })
+                      requestIdleCallback(() => {
+                        input?.focus()
+                      })
+                      if (
+                        om.state.home.lastActiveTags.filter(
+                          (x) => x.type !== 'lense'
+                        ).length === 0
+                      ) {
+                        om.actions.home.popTo('home')
+                      }
+                    }}
+                  />
+                </TouchableOpacity>
+              )
+            })}
+          </HStack>
+        )}
+      </>
+    )
+  }
+)
 
 const styles = StyleSheet.create({
   container: {

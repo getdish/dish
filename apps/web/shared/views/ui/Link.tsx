@@ -102,7 +102,6 @@ export function LinkButton<
   Name extends keyof RoutesTable = keyof RoutesTable,
   Params = RoutesTable[Name]['params']
 >(allProps: LinkButtonProps<Name, Params>) {
-  const om = useOvermind()
   const currentStateID = useContext(CurrentStateID)
   let restProps: StackProps
   let contents: React.ReactElement
