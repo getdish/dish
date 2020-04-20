@@ -109,7 +109,6 @@
     "rollup-plugin-css-only": "2.0.0",
     "rollup-plugin-typescript2": "0.27.0",
     "testcafe": "^1.8.4",
-    "tsickle": "^0.34.3",
     "typescript": "3.8.3",
     "use-expo": "1.0.1",
     "webpack": "4.29.1",

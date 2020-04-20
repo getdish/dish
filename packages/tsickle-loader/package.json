@@ -4,6 +4,11 @@
   "main": "_/index.js",
   "sideEffects": false,
   "private": true,
+  "workspaces": {
+    "nohoist": [
+      "**"
+    ]
+  },
   "scripts": {
     "start": "true",
     "build": "tsc -b",
