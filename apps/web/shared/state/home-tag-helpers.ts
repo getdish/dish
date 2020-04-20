@@ -181,6 +181,11 @@ export const getTagsFromRoute = (
   item: HistoryItem<'userSearch'>
 ): NavigableTag[] => {
   const tags: NavigableTag[] = []
+
+  if (item.params.lense) {
+    tags.push({ type: 'lense', name: item.params.lense })
+  }
+
   for (const tag of item.params.tags.split(SPLIT_TAG)) {
     if (tag.indexOf(SPLIT_TAG_TYPE) > -1) {
       const [type, name] = tag.split(SPLIT_TAG_TYPE) as any[]
@@ -189,6 +194,7 @@ export const getTagsFromRoute = (
       tags.push({ name, type: 'filter' })
     }
   }
+
   return tags
 }
 

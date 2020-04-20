@@ -61,20 +61,21 @@ export const RestaurantDetailRow = memo(
     )
 
     return (
-      <HStack alignItems="center" spacing={spaceSize} {...rest}>
+      <HStack flex={1} alignItems="center" spacing={spaceSize} {...rest}>
         {rows.map((row, index) => (
-          <React.Fragment key={`${index}${row.title}`}>
-            <VStack>
+          <HStack width="32%" key={`${index}${row.title}`}>
+            <VStack flex={10}>
               {titleEl(row)}
               {contentEl(row.content)}
             </VStack>
             {index !== rows.length - 1 && (
               <>
-                <Spacer size={spaceSize} />
+                <Spacer flex={0.5} />
                 <Divider vertical height={25} />
+                <Spacer flex={0.5} />
               </>
             )}
-          </React.Fragment>
+          </HStack>
         ))}
       </HStack>
     )
@@ -92,7 +93,7 @@ function openingHours(restaurant: Restaurant) {
   let color = 'grey'
   let next_time = 'unknown'
   if (restaurant.is_open_now != null) {
-    text = restaurant.is_open_now ? 'Open until' : 'Closed until'
+    text = restaurant.is_open_now ? 'Opens at' : 'Closed until'
     color = restaurant.is_open_now ? 'green' : 'red'
     const now = new Date()
     let day = now.getDay() - 1

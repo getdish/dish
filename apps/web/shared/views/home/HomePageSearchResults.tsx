@@ -27,7 +27,7 @@ export const avatar = require('../../assets/peach.png')
 
 export default memo(({ state }: { state: HomeStateItemSearch }) => {
   const om = useOvermind()
-  const { locationName } = om.state.home
+  const { currentLocationName: locationName } = om.state.home
 
   const tags = getActiveTags(om.state.home)
   const lense = tags.find((x) => x.type === 'lense')

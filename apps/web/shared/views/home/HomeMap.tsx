@@ -100,8 +100,8 @@ export const HomeMap = memo(() => {
     })
 
     const handleRegionChangeEnd = (e) => {
-      console.log('pause update??', pauseMapUpdates.current)
       if (pauseMapUpdates.current) {
+        console.log('pausing update region change')
         // dont update while were transitioning to new state!
         return
       }

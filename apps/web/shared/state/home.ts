@@ -32,6 +32,16 @@ export type OmStateHome = OmState['home']
 export const SPLIT_TAG = '_'
 export const SPLIT_TAG_TYPE = '~'
 
+export type GeocodePlace = mapkit.Place & {
+  locality: string
+  administrativeArea: string
+  countryCode: string
+  country: string
+  timezone: string
+  dependentLocalities: string[]
+  subLocality: string
+}
+
 type ShowAutocomplete = 'search' | 'location' | false
 
 type SearchResultsResults = {
@@ -214,7 +224,8 @@ type HomeStateBase = {
   topDishes: TopDish[]
   topDishesFilteredIndices: number[]
   skipNextPageFetchData: boolean
-  locationName: string
+  currentLocationName: string
+  currentLocationInfo: GeocodePlace | null
 }
 
 export type HomeState = HomeStateBase & {
@@ -242,7 +253,8 @@ export const isSearchBarTag = (tag: Pick<Tag, 'type'>) =>
 
 export const state: HomeState = {
   started: false,
-  locationName: 'San Fransisco',
+  currentLocationInfo: null,
+  currentLocationName: 'San Fransisco',
   skipNextPageFetchData: false,
   activeIndex: -1,
   allTags: [...tagFilters, ...tagLenses].reduce((acc, cur) => {
@@ -338,7 +350,10 @@ export const isEditingUserPage = (state: OmState) => {
 
 const start: AsyncAction = async (om) => {
   await om.actions.home._loadHomeDishes()
-  await Promise.all([om.actions.home.startAutocomplete()])
+  await Promise.all([
+    om.actions.home.startAutocomplete(),
+    om.actions.home.updateCurrentMapAreaInformation(),
+  ])
 
   // stuff that can run after rendering
   await new Promise((res) => (window['requestIdleCallback'] ?? setTimeout)(res))
@@ -430,7 +445,11 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
       activeTagIds = lastHomeOrSearch.activeTagIds
 
       if (!started) {
-        const tags = getTagsFromRoute(om.state.router.curPage)
+        let tags = getTagsFromRoute(om.state.router.curPage)
+
+        // fetch real tag info from server
+        tags = tags
+
         activeTagIds = tags.reduce((acc, tag) => {
           const id = getTagId(tag)
           om.state.home.allTags[id] = tag as Tag // ?
@@ -824,14 +843,10 @@ const runSearch: AsyncAction<{ quiet?: boolean } | void> = async (om, opts) => {
     tags: tags.map((tag) => getTagId(tag)),
   }
 
-  if (searchArgs.span.lng === 0.0475) {
-    debugger
-  }
-  // console.log('searchArgs', searchArgs, opts)
-
   // prevent duplicate searches
   const searchKey = JSON.stringify(searchArgs)
-  console.log(searchKey === lastSearchKey, searchKey, lastSearchKey)
+  console.log('searchArgs', searchArgs, opts)
+  console.log('same?', searchKey === lastSearchKey, searchKey, lastSearchKey)
   if (searchKey === lastSearchKey) return
 
   // update state
@@ -952,17 +967,7 @@ const suggestTags: AsyncAction<string> = async (om, tags) => {
   om.state.home.allRestaurants[state.restaurantId] = restaurant
 }
 
-type Place = mapkit.Place & {
-  locality: string
-  administrativeArea: string
-  countryCode: string
-  country: string
-  timezone: string
-  dependentLocalities: string[]
-  subLocality: string
-}
-
-function reverseGeocode(center: LngLat): Promise<Place[]> {
+function reverseGeocode(center: LngLat): Promise<GeocodePlace[]> {
   const mapGeocoder = new window.mapkit.Geocoder({
     language: 'en-GB',
     getsUserLocation: true,
@@ -972,7 +977,7 @@ function reverseGeocode(center: LngLat): Promise<Place[]> {
       new window.mapkit.Coordinate(center.lat, center.lng),
       (err, data) => {
         if (err) return rej(err)
-        res((data.results as any) as Place[])
+        res((data.results as any) as GeocodePlace[])
       }
     )
   })
@@ -983,7 +988,6 @@ const setMapArea: AsyncAction<{ center: LngLat; span: LngLat }> = async (
   { center, span }
 ) => {
   const state = om.state.home.currentState
-
   if (isSearchState(state)) {
     state.hasMovedMap = true
   }
@@ -992,11 +996,17 @@ const setMapArea: AsyncAction<{ center: LngLat; span: LngLat }> = async (
   om.state.home.currentState.span = span
 
   // reverse geocode location
+  await om.actions.home.updateCurrentMapAreaInformation()
+}
+
+const updateCurrentMapAreaInformation: AsyncAction = async (om) => {
+  const center = om.state.home.currentState.center
   try {
     const [firstResult] = (await reverseGeocode(center)) ?? []
     const placeName = firstResult.subLocality ?? firstResult.locality
     if (placeName) {
-      om.state.home.locationName = placeName
+      om.state.home.currentLocationInfo = firstResult
+      om.state.home.currentLocationName = placeName
     }
   } catch (err) {
     return
@@ -1230,6 +1240,7 @@ export const actions = {
   _loadUserDetail,
   _runAutocomplete,
   _runHomeSearch,
+  updateCurrentMapAreaInformation,
   _syncStateToRoute,
   clearSearch,
   forkCurrentList,
