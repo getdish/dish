@@ -458,6 +458,9 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         }, {})
       }
 
+      const username =
+        type == 'userSearch' ? om.state.router.curPage.params.username : ''
+      const searchQuery = item.params.search ?? fallbackState.searchQuery
       const searchState: HomeStateItemSearch = {
         ...fallbackState,
         hasMovedMap: false,
@@ -465,21 +468,27 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         ...om.state.home.lastSearchState,
         ...newState,
         type,
-        username:
-          type == 'userSearch' ? om.state.router.curPage.params.username : '',
+        username,
         activeTagIds,
-        searchQuery: item.params.search ?? fallbackState.searchQuery,
+        searchQuery,
       }
       nextState = searchState
       fetchData = async () => {
-        await om.actions.home.runSearch()
-        // userpage load user
-        if (item.name === 'userSearch') {
-          const user = new User()
-          await user.findOne('username', item.params.username)
-          const state = om.state.home.currentState
-          if (!user || state.type !== 'userSearch') return
-          state.user = user
+        await Promise.all([
+          /// search
+          om.actions.home.runSearch(),
+          getUserInfo(),
+        ])
+
+        async function getUserInfo() {
+          // userpage load user
+          if (item.name === 'userSearch') {
+            const user = new User()
+            await user.findOne('username', item.params.username)
+            const state = om.state.home.currentState
+            if (!user || state.type !== 'userSearch') return
+            state.user = user
+          }
         }
       }
       break

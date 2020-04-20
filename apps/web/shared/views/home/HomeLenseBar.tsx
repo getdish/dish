@@ -8,10 +8,7 @@ import { LinearGradient } from '../ui/LinearGradient'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import HomeFilterBar from './HomeFilterBar'
 import { LenseButton } from './LenseButton'
-import {
-  useHomeDrawerWidth,
-  useHomeDrawerWidthInner,
-} from './useHomeDrawerWidth'
+import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 
 export default memo(function HomeLenseBar(props: {
   activeTagIds: HomeActiveTagIds

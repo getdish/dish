@@ -43,7 +43,7 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
   if (hasUser) {
     lenseName = lenseName.toLowerCase()
   }
-  const titleSpace = titleTags.length ? '' : ' '
+  const titleSpace = titleTags.length ? ' ' : ''
   const searchName = state.searchQuery ?? ''
 
   const subTitleParts = countryTag
