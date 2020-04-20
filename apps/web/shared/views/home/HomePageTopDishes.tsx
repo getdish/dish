@@ -57,26 +57,26 @@ const HomeViewTopDishesTrending = memo(() => {
   }
   return (
     <VStack spacing="lg">
-      <SmallTitle centerDivider>
+      <SmallTitle divider="off">
         Trending in {om.state.home.location?.name ?? 'San Francisco'}
       </SmallTitle>
       <HStack spacing="sm" paddingHorizontal={10}>
         <VStack flex={1} spacing={6}>
           <SmallerTitle>Restaurants</SmallerTitle>
           <VStack spacing={0} overflow="hidden">
-            {allRestaurants.slice(0, 7).map(getTrending)}
+            {allRestaurants.slice(0, 5).map(getTrending)}
           </VStack>
         </VStack>
         <VStack flex={1} spacing={6}>
           <SmallerTitle>Dishes</SmallerTitle>
           <VStack spacing={0} overflow="hidden">
-            {allRestaurants.slice(3).map(getTrending)}
+            {allRestaurants.slice(5).map(getTrending)}
           </VStack>
         </VStack>
         <VStack flex={1} spacing={6}>
           <SmallerTitle>Topics</SmallerTitle>
           <VStack spacing={0} overflow="hidden">
-            {allRestaurants.slice(3).map(getTrending)}
+            {allRestaurants.slice(5).map(getTrending)}
           </VStack>
         </VStack>
       </HStack>
@@ -103,7 +103,7 @@ const HomeViewTopDishesContent = memo(({ state }: { state: HomeStateItem }) => {
         <HomeViewTopDishesTrending />
 
         <VStack spacing="lg">
-          <SmallTitle centerDivider>
+          <SmallTitle divider="off">
             {om.state.home.lastActiveTags.find((x) => x.type === 'lense')
               ?.description ?? ''}{' '}
           </SmallTitle>

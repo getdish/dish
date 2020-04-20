@@ -5,7 +5,7 @@ import { Text, TextStyle, TouchableOpacity } from 'react-native'
 
 import { currentStates } from '../../state/home'
 import { getNavigateToTag } from '../../state/home-tag-helpers'
-import { useOvermind } from '../../state/om'
+import { useOvermind, useOvermindStatic } from '../../state/om'
 import { RoutesTable, getPathFromParams } from '../../state/router'
 import { NavigableTag } from '../../state/Tag'
 import { CurrentStateID } from '../home/HomePage'
@@ -48,7 +48,7 @@ export function Link<
     inline?: boolean
     padding?: StackProps['padding']
   }) {
-  const om = useOvermind()
+  const om = useOvermindStatic()
   const handler = useCallback((e) => {
     e.stopPropagation()
     e.preventDefault()

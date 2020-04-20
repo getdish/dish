@@ -391,6 +391,8 @@ const startAutocomplete: AsyncAction = async (om) => {
   om.state.home.autocompleteResults = results
 }
 
+type PageAction = (om: Om) => Promise<void>
+
 const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   const { started, currentState } = om.state.home
 
@@ -405,7 +407,7 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   }
 
   let nextState: HomeStateItem | null = null
-  let fetchData: () => Promise<void> | null = null
+  let fetchData: PageAction | null = null
   let activeTagIds: HomeActiveTagIds
 
   const type = item.name
@@ -484,7 +486,7 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         searchQuery,
       }
       nextState = searchState
-      fetchData = async () => {
+      fetchData = async (om) => {
         await Promise.all([
           /// search
           om.actions.home.runSearch(),
@@ -533,7 +535,7 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
         username: item.params.username,
         ...newState,
       }
-      fetchData = async () => {
+      fetchData = async (om) => {
         await om.actions.home._loadUserDetail({
           username: item.params.username,
         })
@@ -571,10 +573,12 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   const shouldSkip = om.state.home.skipNextPageFetchData
   om.state.home.skipNextPageFetchData = false
   if (!shouldSkip && fetchData) {
-    await race(fetchData(), 2000, 'fetchData', {
-      warnOnly: true,
-    })
+    om.actions.home.runAction(fetchData)
   }
+}
+
+const runAction: AsyncAction<PageAction> = async (om, fn) => {
+  await fn(om)
 }
 
 const popTo: Action<HomeStateItem['type'] | number> = (om, item) => {
@@ -1285,4 +1289,5 @@ export const actions = {
   start,
   submitReview,
   suggestTags,
+  runAction,
 }
