@@ -28,9 +28,6 @@
     "watch": "tsc -b --watch --preserveWatchOutput",
     "clean": "rm -rf _"
   },
-  "engines": {
-    "node": ">=10.3.0"
-  },
   "devDependencies": {
     "@types/fs-extra": "^8.0.1",
     "@types/stream-json": "^1.0.0",

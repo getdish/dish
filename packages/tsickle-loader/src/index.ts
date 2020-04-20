@@ -67,8 +67,6 @@ const setup = (loaderCTX: webpack.loader.LoaderContext): RealOptions => {
     }
   )
 
-  console.log('compilerConfigFile', compilerConfigFile)
-
   const compilerConfig = ts.parseJsonConfigFileContent(
     compilerConfigFile.config,
     ts.sys,
@@ -127,10 +125,13 @@ const tsickleLoader: webpack.loader.Loader = function (
   }
 
   if (diagnostics.length > 0) {
-    console.log('errors---', diagnostics.length)
-    // console.log(diagnostics)
-    // handleDiagnostics(this, diagnostics, diagnosticsHost, 'error')
-    // return ''
+    console.log(
+      'errors---',
+      options,
+      diagnostics.map((x) => `${x.file?.fileName}: ${x.messageText}`)
+    )
+    handleDiagnostics(this, diagnostics, diagnosticsHost, 'error')
+    return ''
   }
 
   const tsickleHost: tsickle.TsickleHost = {
@@ -193,7 +194,8 @@ const tsickleLoader: webpack.loader.Loader = function (
   }
 
   const extern = output.externs[sourceFileName]
-  if (extern != null) {
+  console.log('ouput is', output, extern)
+  if (extern) {
     fs.appendFileSync(externFile, fixExtern(extern))
   }
 

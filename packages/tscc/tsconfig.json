@@ -7,5 +7,6 @@
     "rootDir": "src",
     "noEmitOnError": false
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "references": [{ "path": "../tscc-spec" }]
 }

@@ -1,3 +1,39 @@
+const path = require('path')
+const webpack = require('webpack')
+const Memoryfs = require('memory-fs')
+
+// TODO big memory leak happening
+// maybe debug with https://hacks.mozilla.org/2012/11/tracking-down-memory-leaks-in-node-js-a-node-js-holiday-season/
+
+function run() {
+  const config = require('./webpack.config.tsickle')
+  const compiler = webpack(config)
+  const mfs = new Memoryfs()
+  // @ts-ignore
+  compiler.outputFileSystem = mfs
+  const getCode = (stats) => stats.toJson().modules[0].source
+  return new Promise((resolve, reject) => {
+    compiler.run((err, stats) => {
+      if (err || stats.hasErrors()) {
+        reject(err != null ? err : stats.compilation.errors)
+        return
+      }
+      const result = mfs
+        .readFileSync(path.resolve(__dirname, 'bundle.js'))
+        .toString()
+      resolve([result, stats, getCode(stats)])
+    })
+  })
+}
+
+run()
+  .then((res) => {
+    console.log('finished!', res)
+  })
+  .catch((err) => {
+    console.log('err', err)
+  })
+
 // const { readFileSync } = require('fs')
 
 // // webpack

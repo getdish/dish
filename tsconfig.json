@@ -6,6 +6,8 @@
   "references": [
     { "path": "./services/crawlers" },
     { "path": "./services/worker" },
-    { "path": "./apps/web" }
+    { "path": "./apps/web" },
+    { "path": "./packages/tscc" },
+    { "path": "./packages/rollup-plugin-tscc" }
   ]
 }

@@ -6,8 +6,6 @@
   },
   "workspaces": {
     "packages": [
-      "packages/auth",
-      "packages/models",
       "packages/*",
       "apps/*",
       "services/*"
