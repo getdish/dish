@@ -14,11 +14,23 @@ import {
 
 export default memo(function HomeAutoComplete() {
   const om = useOvermind()
-  const { showAutocomplete, autocompleteIndex } = om.state.home
-  const query = '' //om.state.home.currentStateSearchQuery
+  const {
+    showAutocomplete,
+    autocompleteIndex,
+    autocompleteResultsActive,
+    currentStateType,
+    isAutocompleteActive,
+  } = om.state.home
+  console.log({
+    showAutocomplete,
+    autocompleteIndex,
+    autocompleteResultsActive,
+    currentStateType,
+    isAutocompleteActive,
+  })
   const showLocation = showAutocomplete == 'location'
   const showSearch = showAutocomplete == 'search'
-  const isShowing = showSearch || showLocation // || query === 'taco'
+  const isShowing = showSearch || showLocation
 
   // hide when moused away, show when moved back!
   useEffect(() => {
@@ -105,7 +117,7 @@ export default memo(function HomeAutoComplete() {
             overflow="scroll"
             spacing="sm"
           >
-            {om.state.home.autocompleteResultsActive.map((x, index) => {
+            {autocompleteResultsActive.map((x, index) => {
               return (
                 <LinkButton
                   key={`${x.tagId}${index}`}
@@ -122,8 +134,7 @@ export default memo(function HomeAutoComplete() {
                   lineHeight={24}
                   fastClick
                   alignItems="center"
-                  {...(om.state.home.isAutocompleteActive &&
-                  autocompleteIndex === index
+                  {...(isAutocompleteActive && autocompleteIndex === index
                     ? flatButtonStyleActive
                     : flatButtonStyle)}
                   paddingHorizontal={10}
@@ -135,7 +146,7 @@ export default memo(function HomeAutoComplete() {
                   {x.name}{' '}
                   {x.type === 'dish' &&
                   index !== 0 &&
-                  om.state.home.currentStateType === 'search' &&
+                  currentStateType === 'search' &&
                   om.state.user.isLoggedIn ? (
                     <LinkButton
                       {...circularFlatButtonStyle}
