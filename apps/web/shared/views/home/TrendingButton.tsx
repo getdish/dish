@@ -34,7 +34,7 @@ export const TrendingButton = <
           marginTop={2}
           marginRight={4}
           marginLeft={-2}
-          name="chevron-down"
+          name="ChevronDown"
           size={14}
           color="red"
         />

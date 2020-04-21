@@ -251,10 +251,10 @@ export default memo(() => {
               <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
                 {om.state.home.isLoading ? (
                   <VStack className="rotating" opacity={0.5}>
-                    <Icon name="loader" size={18} />
+                    <Icon name="Loader" size={18} />
                   </VStack>
                 ) : (
-                  <Icon name="search" size={18} opacity={0.5} />
+                  <Icon name="Search" size={18} opacity={0.5} />
                 )}
               </MediaQuery>
               <Hoverable
@@ -397,8 +397,8 @@ const HomeSearchBarHomeButton = memo(() => {
           <Icon
             name={
               om.state.home.breadcrumbStates.length <= 2
-                ? 'home'
-                : 'chevron-left'
+                ? 'Home'
+                : 'ChevronLeft'
             }
             size={22}
             opacity={0.5}
@@ -463,7 +463,7 @@ const SearchLocationButton = memo(() => {
               om.actions.home.popTo('home')
             }}
           >
-            <Icon size={18} name="navigation" color="blue" opacity={0.5} />
+            <Icon size={18} name="Navigation" color="blue" opacity={0.5} />
           </TouchableOpacity>
         </VStack>
       </HStack>

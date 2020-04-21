@@ -137,7 +137,7 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
                     om.actions.home.forkCurrentList()
                   }}
                 >
-                  <Icon name="edit-2" size={12} color="white" />
+                  <Icon name="Edit2" size={12} color="white" />
                 </SmallCircleButton>
               )}
             </HStack>

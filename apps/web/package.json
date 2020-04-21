@@ -16,6 +16,7 @@
     "start:web:worker": "cd ../web-serve && yarn start",
     "start:web:prod": "node --version && node _/server.js",
     "start": "yarn start:web",
+    "start:prod": "yarn start:web:prod",
     "start:react-native": "react-native start",
     "test": "true",
     "postinstall": "./etc/postinstall.sh",
