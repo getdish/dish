@@ -73,6 +73,7 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
                 </Text>
                 <Spacer size={4} />
                 <RestaurantAddressLinksRow
+                  currentLocationInfo={state.currentLocationInfo}
                   showMenu
                   size="lg"
                   restaurant={restaurant}

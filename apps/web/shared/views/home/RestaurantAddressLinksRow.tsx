@@ -2,16 +2,11 @@ import { Restaurant } from '@dish/models'
 import React, { memo } from 'react'
 import { Image, Linking, Text } from 'react-native'
 
-import { GeocodePlace } from '../../state/home'
-import { useOvermind } from '../../state/om'
+import { GeocodePlace, HomeStateItem } from '../../state/home'
 import { Box } from '../ui/Box'
-import { Divider } from '../ui/Divider'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { Link } from '../ui/Link'
 import { HStack } from '../ui/Stacks'
-
-const removeZip = (str: string) =>
-  str.replace(/,(\s[A-Z]{2})?[\s]+([0-9\-]+$)/g, '')
 
 function formatAddress(
   currentLocation: GeocodePlace | null,
@@ -31,22 +26,29 @@ function formatAddress(
       return address.slice(0, replaceIndex)
     }
   }
-  return address.split(',').slice(0, 1).join(', ')
+  return address
+    .split(',')
+    .slice(0, 1)
+    .join(', ')
 }
+
+const removeZip = (str: string) =>
+  str.replace(/,(\s[A-Z]{2})?[\s]+([0-9\-]+$)/g, '')
 
 export const RestaurantAddressLinksRow = memo(
   ({
+    currentLocationInfo,
     restaurant,
     size,
     showAddress,
     showMenu,
   }: {
+    currentLocationInfo: GeocodePlace
     restaurant: Restaurant
     size?: 'lg' | 'md'
     showAddress?: boolean | 'short'
     showMenu?: boolean
   }) => {
-    const om = useOvermind()
     const fontSize = size == 'lg' ? 16 : 13
     const sep = ' '
 
@@ -56,7 +58,7 @@ export const RestaurantAddressLinksRow = memo(
           {showAddress && (
             <Text style={{ fontSize: 14 }}>
               {formatAddress(
-                om.state.home.currentLocationInfo,
+                currentLocationInfo,
                 restaurant.address,
                 showAddress === 'short' ? 'short' : 'long'
               )}
