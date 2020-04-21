@@ -108,7 +108,7 @@ export const WelcomeModal = () => {
 
         <HStack>
           <LinkButton {...flatButtonStyle}>
-            Tell me more <Icon name="external-link" size={10} />
+            Tell me more <Icon name="ExternalLink" size={10} />
           </LinkButton>
           <Spacer flex />
           <LinkButton

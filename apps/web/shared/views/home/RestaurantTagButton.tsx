@@ -98,7 +98,7 @@ export const RestaurantTagButton = memo(
             size={isLarge ? 26 : 14}
             opacity={0.4}
             marginBottom={-1}
-            name="tag"
+            name="Tag"
           />
         </HoverableButton>
       </Popover>

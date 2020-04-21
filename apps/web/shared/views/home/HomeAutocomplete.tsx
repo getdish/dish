@@ -14,13 +14,11 @@ import {
 
 export default memo(function HomeAutoComplete() {
   const om = useOvermind()
-  const { autocompleteIndex } = om.state.home
-  const query = om.state.home.currentStateSearchQuery
-  const { showAutocomplete } = om.state.home
-
+  const { showAutocomplete, autocompleteIndex } = om.state.home
+  const query = '' //om.state.home.currentStateSearchQuery
   const showLocation = showAutocomplete == 'location'
   const showSearch = showAutocomplete == 'search'
-  const isShowing = showSearch || showLocation || query === 'taco'
+  const isShowing = showSearch || showLocation // || query === 'taco'
 
   // hide when moused away, show when moved back!
   useEffect(() => {

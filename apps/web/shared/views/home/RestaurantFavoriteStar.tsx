@@ -110,7 +110,7 @@ export const RestaurantFavoriteStar = memo(
                       showsHorizontalScrollIndicator={false}
                     >
                       <HStack alignItems="center" spacing={size}>
-                        <Icon size={20} name="tag" />
+                        <Icon size={20} name="Tag" />
                         {om.state.home.allLenseTags
                           .filter((x) => x.isVotable)
                           .map((lense) => (
@@ -153,7 +153,7 @@ export const RestaurantFavoriteStar = memo(
               </Text>
             )}
             {!isStarred && (
-              <Icon size={sizePx} name="star" color={'goldenrod'} />
+              <Icon size={sizePx} name="Star" color={'goldenrod'} />
             )}
           </VStack>
         </HoverableButton>

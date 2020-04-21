@@ -125,10 +125,10 @@ export const TagButton = memo(
             }}
           >
             <HoverableButton onPress={() => {}}>
-              <Icon marginBottom={-1} size={12} name="chevron-up" />
+              <Icon marginBottom={-1} size={12} name="ChevronUp" />
             </HoverableButton>
             <HoverableButton onPress={() => {}}>
-              <Icon size={12} name="chevron-down" />
+              <Icon size={12} name="ChevronDown" />
             </HoverableButton>
           </View>
         )}
@@ -156,7 +156,7 @@ export const TagButton = memo(
           >
             <Icon
               size={subtle ? 10 : 12}
-              name="x"
+              name="X"
               color={subtle ? 'inherit' : '#000'}
             />
           </HoverableButton>

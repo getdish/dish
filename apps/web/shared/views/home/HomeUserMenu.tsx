@@ -75,7 +75,7 @@ export const HomeUserMenu = memo(() => {
         }
       >
         <HStack spacing alignItems="center" justifyContent="center">
-          <Icon name="user" size={22} opacity={0.5} />
+          <Icon name="User" size={22} opacity={0.5} />
           {/* {om.state.user.isLoggedIn ? (
             <Text
               numberOfLines={1}

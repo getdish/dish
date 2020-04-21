@@ -37,7 +37,7 @@ export const RestaurantUpVoteDownVote = memo(
             }}
           >
             <Icon
-              name="chevron-up"
+              name="ChevronUp"
               size={15}
               color={rating === 1 ? 'green' : 'black'}
               marginBottom={-12}
@@ -52,7 +52,7 @@ export const RestaurantUpVoteDownVote = memo(
             }}
           >
             <Icon
-              name="chevron-down"
+              name="ChevronDown"
               size={15}
               color={rating === -1 ? 'red' : 'black'}
             />
