@@ -20,7 +20,7 @@ export const Icon = ({
   ...style
 }: {
   type?: 'feather' | 'simple'
-  name: string
+  name: keyof typeof Icons
   size: number
 } & ViewStyle &
   TextStyle) => {

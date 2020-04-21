@@ -12,6 +12,7 @@ export const HomeMapControlsOverlay = memo(() => {
   const om = useOvermind()
   const hasMovedMap = om.state.home.currentState?.['hasMovedMap']
   const drawerWidth = useHomeDrawerWidth()
+  console.log('hasMovedMap', hasMovedMap)
   return (
     <ZStack
       fullscreen
@@ -33,7 +34,9 @@ export const HomeMapControlsOverlay = memo(() => {
           <OverlayLinkButton
             className={`animate-up ${hasMovedMap ? 'active' : ''}`}
             pointerEvents="auto"
-            onPress={() => {}}
+            onPress={() => {
+              om.actions.home.refresh()
+            }}
           >
             <Text>Redo search in this area</Text>
           </OverlayLinkButton>

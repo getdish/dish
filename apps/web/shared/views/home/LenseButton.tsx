@@ -27,9 +27,10 @@ export const LenseButton = memoIsEqualDeep(
         <HStack
           alignItems="center"
           justifyContent="center"
-          paddingHorizontal={10}
+          marginVertical={-10}
+          width={60}
           // paddingLeft={6}
-          height={34}
+          height={60}
           paddingVertical={3}
           // backgroundColor={'rgba(255,255,255,0.5)'}
           borderRadius={100}
@@ -38,18 +39,18 @@ export const LenseButton = memoIsEqualDeep(
           // shadowOffset={{ height: 1, width: 0 }}
           borderWidth={2}
           borderColor="transparent"
-          opacity={0.8}
+          // opacity={0.8}
           hoverStyle={{
-            borderColor: lenseColorLight,
+            backgroundColor: lenseColorLight,
             opacity: 1,
           }}
           {...(isActive && {
             opacity: 1,
             backgroundColor: lenseColor,
             borderColor: lenseColor,
-            // hoverStyle: {
-            //   backgroundColor: bgHover,
-            // },
+            hoverStyle: {
+              backgroundColor: lenseColor,
+            },
           })}
         >
           <Text

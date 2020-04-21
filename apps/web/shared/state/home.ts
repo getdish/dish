@@ -23,7 +23,7 @@ import {
 } from './home-tag-helpers'
 import { getNavigateItemForState } from './home-tag-helpers'
 import { HistoryItem, NavigateItem, RouteItem } from './router'
-import { Tag, getTagId, tagFilters, tagLenses } from './Tag'
+import { NavigableTag, Tag, getTagId, tagFilters, tagLenses } from './Tag'
 
 export type Om = IContext<Config>
 export type OmState = Om['state']
@@ -248,6 +248,22 @@ export type HomeState = HomeStateBase & {
   searchBarTags: Derive<HomeState, Tag[]>
 }
 
+const allTagsList = [...tagFilters, ...tagLenses]
+const allTags = allTagsList.reduce((acc, cur) => {
+  acc[getTagId(cur)] = cur
+  return acc
+}, {})
+
+const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
+  return await Promise.all(
+    tags.map(async (tag) => {
+      return (
+        allTags[getTagId(tag)] ?? (await searchFullTag(tag)) ?? (tag as Tag)
+      )
+    })
+  )
+}
+
 export const isSearchBarTag = (tag: Pick<Tag, 'type'>) =>
   tag?.type === 'country' || tag?.type === 'dish'
 
@@ -257,10 +273,7 @@ export const state: HomeState = {
   currentLocationName: 'San Fransisco',
   skipNextPageFetchData: false,
   activeIndex: -1,
-  allTags: [...tagFilters, ...tagLenses].reduce((acc, cur) => {
-    acc[getTagId(cur)] = cur
-    return acc
-  }, {}),
+  allTags,
   allLenseTags: tagLenses,
   allFilterTags: tagFilters,
   allRestaurants: {},
@@ -393,6 +406,13 @@ const startAutocomplete: AsyncAction = async (om) => {
 
 type PageAction = (om: Om) => Promise<void>
 
+const searchFullTag = (tag: NavigableTag): Promise<Tag | null> =>
+  fetch(
+    `https://search-b4dc375a-default.rio.dishapp.com/tags?query=${tag.name}&type=${tag.type}&limit=1`
+  )
+    .then((res) => res.json())
+    .then((tags) => tags?.[0] ?? null)
+
 const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   const { started, currentState } = om.state.home
 
@@ -448,20 +468,7 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
 
       if (!started) {
         let fakeTags = getTagsFromRoute(om.state.router.curPage)
-        let tags: Tag[] = []
-
-        // fetch real tag info from server
-        await Promise.all(
-          fakeTags.map(async (tag) => {
-            const res = await fetch(
-              `https://search-b4dc375a-default.rio.dishapp.com/tags?query=${tag.name}&type=${tag.type}&limit=1`
-            ).then((res) => res.json())
-            console.log('got', res)
-            if (res?.[0]) {
-              tags.push(res[0])
-            }
-          })
-        )
+        const tags = await getFullTags(fakeTags)
 
         activeTagIds = tags.reduce((acc, tag) => {
           const id = getTagId(tag)
@@ -573,11 +580,19 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   const shouldSkip = om.state.home.skipNextPageFetchData
   om.state.home.skipNextPageFetchData = false
   if (!shouldSkip && fetchData) {
-    om.actions.home.runAction(fetchData)
+    om.actions.home.startAction(fetchData)
   }
 }
 
-const runAction: AsyncAction<PageAction> = async (om, fn) => {
+let currentAction: PageAction
+
+const refresh: AsyncAction = async (om) => {
+  if (!currentAction) return
+  currentAction(om)
+}
+
+const startAction: AsyncAction<PageAction> = async (om, fn) => {
+  currentAction = fn
   await fn(om)
 }
 
@@ -1252,8 +1267,16 @@ const roundLngLat = (val: LngLat): LngLat => {
   }
 }
 
+const setMapMoved: Action = (om) => {
+  const { lastSearchState } = om.state.home
+  if (lastSearchState?.hasMovedMap === false) {
+    lastSearchState.hasMovedMap = true
+  }
+}
+
 export const actions = {
   navigateToTag,
+  setMapMoved,
   navigateToTagId,
   getNavigateToTag,
   _toggleTagOnHomeState,
@@ -1287,7 +1310,8 @@ export const actions = {
   setShowAutocomplete,
   setShowUserMenu,
   start,
+  refresh,
   submitReview,
   suggestTags,
-  runAction,
+  startAction,
 }
