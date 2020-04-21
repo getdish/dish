@@ -4,7 +4,7 @@ import { TouchableOpacity } from 'react-native'
 import { drawerBorderRadius } from '../../constants'
 import { useDebounceValue } from '../../hooks/useDebounce'
 import { HomeStateItemSimple } from '../../state/home'
-import { useOvermind } from '../../state/om'
+import { useOvermindStatic } from '../../state/om'
 import { ErrorBoundary } from '../ErrorBoundary'
 import { ForceShowPopover } from '../ui/Popover'
 import { ZStack } from '../ui/Stacks'
@@ -57,7 +57,7 @@ function HomeStackViewItem({
   isActive: boolean
   isRemoving: boolean
 }) {
-  const om = useOvermind()
+  const om = useOvermindStatic()
   const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {

@@ -10,7 +10,7 @@ import { HoverablePopover } from '../ui/HoverablePopover'
 import { Link, LinkButton } from '../ui/Link'
 import { HStack, VStack } from '../ui/Stacks'
 import { flatButtonStyle } from './baseButtonStyle'
-import { Quote } from './HomePageRestaurant'
+import { Quote } from './Quote'
 
 const avatar = require('../../assets/peach.png')
 

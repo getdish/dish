@@ -105,7 +105,7 @@ const HomeViewTopDishesContent = memo(({ state }: { state: HomeStateItem }) => {
         <VStack spacing="lg">
           <SmallTitle divider="off">
             {om.state.home.lastActiveTags.find((x) => x.type === 'lense')
-              ?.description ?? ''}{' '}
+              ?.descriptions?.plain ?? ''}
           </SmallTitle>
 
           <VStack spacing>

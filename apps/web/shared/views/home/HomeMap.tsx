@@ -261,18 +261,22 @@ export const HomeMap = memo(() => {
   // why not just useEffect for center/span? because not always wanted
   useEffect(() => {
     if (!map) return
-    let tm
-    let tm2
+    let tm: any
+    let tm2: any
+
+    const dispose1 = () => {
+      clearTimeout(tm)
+      clearTimeout(tm2)
+    }
+
     // react to changed center specifically
-    const dispose = om.reaction(
+    const dispose2 = om.reaction(
       (state) =>
         JSON.stringify([
           state.home.currentState.center,
           state.home.currentState.span,
         ]),
-      (state) => {
-        clearTimeout(tm)
-        console.log('reacting to center/span updates, key:', state)
+      () => {
         pauseMapUpdates.current = true
         tm = requestIdleCallback(() => {
           centerMapToRegion({
@@ -281,18 +285,15 @@ export const HomeMap = memo(() => {
             span: om.state.home.currentState.span,
           })
           tm2 = setTimeout(() => {
-            console.log('unpause')
             pauseMapUpdates.current = false
           }, 200)
         })
       }
     )
     return () => {
-      console.log('unpause')
       pauseMapUpdates.current = false
-      clearTimeout(tm)
-      clearTimeout(tm2)
-      dispose()
+      dispose1()
+      dispose2()
     }
   }, [map])
 
