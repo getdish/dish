@@ -7,9 +7,14 @@ SELECT jsonb_agg(t) FROM (
   INNER JOIN tag parent ON parent.id = tag."parentId"
     WHERE tag.name ILIKE '' || REPLACE(?0, '*', '%') || ''
     AND (
-      parent.name ILIKE '' || ?1 || ''
+      parent.name = '' || ?1 || ''
       OR
       ?1 = ''
     )
-  LIMIT ?2
+    AND (
+      tag.type = '' || ?2 || ''
+      OR
+      ?2 = ''
+    )
+  LIMIT ?3
 ) t

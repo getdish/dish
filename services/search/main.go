@@ -165,6 +165,7 @@ func tags(w http.ResponseWriter, r *http.Request) {
 		tags_query,
 		getParam("query", r),
 		getParam("parent", r),
+		getParam("type", r),
 		limit,
 	)
 	if err != nil {
