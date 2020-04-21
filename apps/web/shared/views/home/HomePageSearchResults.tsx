@@ -11,6 +11,7 @@ import { getTagId } from '../../state/Tag'
 import { Toast } from '../Toast'
 import { Circle } from '../ui/Circle'
 import { Icon } from '../ui/Icon'
+import { LinkButton } from '../ui/Link'
 import { PageTitle } from '../ui/PageTitle'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { closeAllPopovers, popoverCloseCbs } from '../ui/Popover'
@@ -39,9 +40,9 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
   const dishTag = tags.find((x) => x.type === 'dish')?.name ?? ''
   const hasUser = !!state.user
   const userPrefix = hasUser ? `${state.user.username}'s ` : ''
-  let lenseName = lense?.description ?? lense?.name ?? ''
+  let lensePlaceholder = lense?.description ?? lense?.name ?? ''
   if (hasUser) {
-    lenseName = lenseName.toLowerCase()
+    lensePlaceholder = lensePlaceholder.toLowerCase()
   }
   const titleSpace = titleTags.length ? ' ' : ''
   const searchName = state.searchQuery ?? ''
@@ -56,18 +57,36 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
     </>
   )
 
-  const title = `${userPrefix} ${lenseName}${titleSpace}${titleTags
-    .map((x) => `${x.name ?? ''}`)
-    .join(', ')} ${searchName} ${subTitleParts.join(' ')}`
+  const titleTagsString = titleTags.map((x) => `${x.name ?? ''}`).join(', ')
+
+  const titleSubject = lensePlaceholder.replace('🍔', titleTagsString)
+  const title = `${userPrefix} ${titleSubject} ${searchName} ${subTitleParts.join(
+    ' '
+  )}`
 
   const pageTitleElements = (
     <>
       {userPrefix}
-      {lenseName}
+      {titleSubject.split('🍔').map((x) => {
+        if (x === '🍔') {
+          return (
+            <>
+              {titleTags.map((tag) => (
+                <TagButton
+                  key={getTagId(tag)}
+                  tag={tag}
+                  subtle
+                  noColor
+                  hideIcon
+                />
+              ))}
+            </>
+          )
+        }
+        return x
+      })}
       {titleSpace}
-      {titleTags.map((tag) => (
-        <TagButton key={getTagId(tag)} tag={tag} subtle noColor hideIcon />
-      ))}
+      {}
       {searchName}
     </>
   )
@@ -128,7 +147,13 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
         <PageTitle subTitle={subTitle}>{pageTitleElements}</PageTitle>
       </HStack>
 
-      <VStack marginTop={-6} position="relative" flex={1} overflow="hidden">
+      <VStack
+        marginTop={-18}
+        position="relative"
+        flex={1}
+        paddingTop={6}
+        overflow="hidden"
+      >
         <HomeLenseBar activeTagIds={state.activeTagIds} />
         <HomeSearchResultsViewContent state={state} />
       </VStack>
@@ -155,8 +180,14 @@ const HomeSearchResultsViewContent = memo(
 
     if (!results.length) {
       return (
-        <VStack height="100vh" alignItems="center" justifyContent="center">
-          <Text style={{ fontSize: 28 }}>No results 😞</Text>
+        <VStack
+          height="100vh"
+          alignItems="center"
+          justifyContent="center"
+          spacing
+        >
+          <Text style={{ fontSize: 22 }}>No results 😞</Text>
+          <LinkButton name="contact">Send us the address</LinkButton>
         </VStack>
       )
     }

@@ -14,7 +14,7 @@ type CircleButtonProps = {
 export const CloseButton = memo((props: CircleButtonProps) => {
   return (
     <SmallCircleButton {...props}>
-      <Icon name="x" size={props.size} color="white" />
+      <Icon name="X" size={props.size ?? 14} color="white" />
     </SmallCircleButton>
   )
 })
@@ -22,7 +22,7 @@ export const CloseButton = memo((props: CircleButtonProps) => {
 export const BackButton = memo((props: CircleButtonProps) => {
   return (
     <SmallCircleButton {...props}>
-      <Icon name="corner-left-up" size={props.size} color="white" />
+      <Icon name="CornerLeftUp" size={props.size} color="white" />
     </SmallCircleButton>
   )
 })

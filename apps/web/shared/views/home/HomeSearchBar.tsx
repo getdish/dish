@@ -62,7 +62,7 @@ export const getInputNode = (instance: any): HTMLInputElement | null => {
   return instance?.['_node'] ?? null
 }
 
-export default memo(function HomeSearchBar() {
+export default memo(() => {
   const om = useOvermind()
   const inputRef = useRef()
   const locationInputRef = useRef()

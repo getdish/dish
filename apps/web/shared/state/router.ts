@@ -48,6 +48,8 @@ export const routes = {
   promise: new Route('/promise'),
   pokedex: new Route('/pokedex'),
   account: new Route<{ pane: string }>('/account/:pane'),
+  contact: new Route<{ pane: string }>('/contact'),
+  privacy: new Route<{ pane: string }>('/privacy'),
   notFound: new Route('*'),
 }
 

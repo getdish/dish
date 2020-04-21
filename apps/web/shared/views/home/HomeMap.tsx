@@ -100,6 +100,7 @@ export const HomeMap = memo(() => {
     })
 
     const handleRegionChangeEnd = (e) => {
+      om.actions.home.setMapMoved()
       if (pauseMapUpdates.current) {
         console.log('pausing update region change')
         // dont update while were transitioning to new state!
