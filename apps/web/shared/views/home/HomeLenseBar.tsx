@@ -65,7 +65,12 @@ export function HomeLenseBarOnly(props: { activeTagIds: HomeActiveTagIds }) {
   const drawerWidth = useHomeDrawerWidthInner()
   const om = useOvermind()
   return (
-    <HStack minWidth={drawerWidth} alignItems="center" justifyContent="center">
+    <HStack
+      minWidth={drawerWidth}
+      alignItems="center"
+      justifyContent="center"
+      spacing
+    >
       <Divider backgroundColor="#eee" flex />
       <HStack
         borderRadius={100}

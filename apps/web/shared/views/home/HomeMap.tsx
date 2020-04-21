@@ -100,12 +100,12 @@ export const HomeMap = memo(() => {
     })
 
     const handleRegionChangeEnd = (e) => {
-      om.actions.home.setMapMoved()
       if (pauseMapUpdates.current) {
         console.log('pausing update region change')
         // dont update while were transitioning to new state!
         return
       }
+      om.actions.home.setMapMoved()
       const span = map.region.span
       om.actions.home.setMapArea({
         center: {
@@ -270,9 +270,9 @@ export const HomeMap = memo(() => {
           state.home.currentState.center,
           state.home.currentState.span,
         ]),
-      () => {
+      (state) => {
         clearTimeout(tm)
-        console.log('reacting to center/span updates')
+        console.log('reacting to center/span updates, key:', state)
         pauseMapUpdates.current = true
         tm = requestIdleCallback(() => {
           centerMapToRegion({
@@ -283,7 +283,7 @@ export const HomeMap = memo(() => {
           tm2 = setTimeout(() => {
             console.log('unpause')
             pauseMapUpdates.current = false
-          }, 300)
+          }, 200)
         })
       }
     )
