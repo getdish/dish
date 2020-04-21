@@ -1,14 +1,8 @@
 import React, { memo, useState } from 'react'
 import { Image, ScrollView, Text, View } from 'react-native'
 
-import {
-  HomeStateItemSearch,
-  getActiveTags,
-  isEditingUserPage,
-} from '../../state/home'
+import { HomeStateItemSearch, isEditingUserPage } from '../../state/home'
 import { useOvermind } from '../../state/om'
-import { getTagId } from '../../state/Tag'
-import { Toast } from '../Toast'
 import { Circle } from '../ui/Circle'
 import { Icon } from '../ui/Icon'
 import { LinkButton } from '../ui/Link'
@@ -18,83 +12,20 @@ import { closeAllPopovers, popoverCloseCbs } from '../ui/Popover'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { useWaterfall } from '../ui/useWaterfall'
-import { BackButton, CloseButton, SmallCircleButton } from './CloseButton'
+import { CloseButton, SmallCircleButton } from './CloseButton'
+import { getTitleForState } from './getTitleForState'
 import HomeLenseBar from './HomeLenseBar'
 import { LoadingItems } from './LoadingItems'
 import { RestaurantListItem } from './RestaurantListItem'
-import { TagButton } from './TagButton'
 
 export const avatar = require('../../assets/peach.png')
 
 export default memo(({ state }: { state: HomeStateItemSearch }) => {
   const om = useOvermind()
-  const { currentLocationName: locationName } = om.state.home
-
-  const tags = getActiveTags(om.state.home)
-  const lense = tags.find((x) => x.type === 'lense')
-  const titleTags = tags.filter(
-    (tag) => tag.type === 'dish' || tag.name === 'Delivers'
-  )
   const isEditingUserList = isEditingUserPage(om.state)
-  const countryTag = tags.find((x) => x.type === 'country')?.name ?? ''
-  const dishTag = tags.find((x) => x.type === 'dish')?.name ?? ''
-  const hasUser = !!state.user
-  const userPrefix = hasUser ? `${state.user.username}'s ` : ''
-  let lensePlaceholder = lense?.name ?? ''
-  const descriptions = lense?.descriptions
-  if (descriptions) {
-    if (dishTag) lensePlaceholder = descriptions.dish
-    else if (countryTag) lensePlaceholder = descriptions.cuisine
-    else lensePlaceholder = descriptions.plain
-  }
-  if (hasUser) {
-    lensePlaceholder = lensePlaceholder.toLowerCase()
-  }
-  const titleSpace = titleTags.length ? ' ' : ''
-  const searchName = state.searchQuery ?? ''
-
-  const subTitleParts = countryTag
-    ? [countryTag, `restaurants in ${locationName}`]
-    : [dishTag, `dishes in ${locationName}`]
-
-  const subTitle = (
-    <>
-      <strong>{subTitleParts[0]}</strong> {subTitleParts[1]}
-    </>
-  )
-
-  const titleTagsString = titleTags.map((x) => `${x.name ?? ''}`).join(', ')
-
-  const titleSubject = lensePlaceholder.replace('🍔', titleTagsString)
-  const title = `${userPrefix} ${titleSubject} ${searchName} ${subTitleParts.join(
-    ' '
-  )}`
-
-  const pageTitleElements = (
-    <>
-      {userPrefix}
-      {titleSubject.split('🍔').map((x) => {
-        if (x === '🍔') {
-          return (
-            <>
-              {titleTags.map((tag) => (
-                <TagButton
-                  key={getTagId(tag)}
-                  tag={tag}
-                  subtle
-                  noColor
-                  hideIcon
-                />
-              ))}
-            </>
-          )
-        }
-        return x
-      })}
-      {titleSpace}
-      {}
-      {searchName}
-    </>
+  const { title, subTitleElements, pageTitleElements } = getTitleForState(
+    om.state,
+    state
   )
 
   return (
@@ -150,7 +81,7 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
           </HStack>
         )}
 
-        <PageTitle subTitle={subTitle}>{pageTitleElements}</PageTitle>
+        <PageTitle subTitle={subTitleElements}>{pageTitleElements}</PageTitle>
       </HStack>
 
       <VStack
@@ -207,7 +138,12 @@ const HomeSearchResultsViewContent = memo(
             return <Spacer size={item} />
           }
           return (
-            <RestaurantListItem key={item.id} restaurant={item} rank={index} />
+            <RestaurantListItem
+              currentLocationInfo={state.currentLocationInfo}
+              key={item.id}
+              restaurant={item}
+              rank={index}
+            />
           )
         }}
       />

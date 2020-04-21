@@ -27,7 +27,7 @@ export const RatingView = forwardRef(
       percent = 0
     }
     const borderColor =
-      percent > 84 ? 'lightgreen' : percent > 60 ? 'gold' : 'red'
+      percent > 84 ? 'rgba(190, 250, 200, 0.5)' : percent > 60 ? 'gold' : 'red'
     const size = sizeIn == 'sm' ? 32 : sizeIn == 'md' ? 48 : 72
     return (
       <VStack

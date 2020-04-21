@@ -65,6 +65,8 @@ type HomeStateItemBase = {
   span: LngLat
   id: string
   historyId?: string
+  currentLocationName?: string
+  currentLocationInfo?: GeocodePlace | null
 }
 
 export type HomeStateItem =
@@ -224,8 +226,6 @@ type HomeStateBase = {
   topDishes: TopDish[]
   topDishesFilteredIndices: number[]
   skipNextPageFetchData: boolean
-  currentLocationName: string
-  currentLocationInfo: GeocodePlace | null
 }
 
 export type HomeState = HomeStateBase & {
@@ -269,8 +269,6 @@ export const isSearchBarTag = (tag: Pick<Tag, 'type'>) =>
 
 export const state: HomeState = {
   started: false,
-  currentLocationInfo: null,
-  currentLocationName: 'San Fransisco',
   skipNextPageFetchData: false,
   activeIndex: -1,
   allTags,
@@ -1060,13 +1058,14 @@ const setMapArea: AsyncAction<{ center: LngLat; span: LngLat }> = async (
 }
 
 const updateCurrentMapAreaInformation: AsyncAction = async (om) => {
-  const center = om.state.home.currentState.center
+  const currentState = om.state.home.currentState
+  const center = currentState.center
   try {
     const [firstResult] = (await reverseGeocode(center)) ?? []
     const placeName = firstResult.subLocality ?? firstResult.locality
     if (placeName) {
-      om.state.home.currentLocationInfo = firstResult
-      om.state.home.currentLocationName = placeName
+      currentState.currentLocationInfo = firstResult
+      currentState.currentLocationName = placeName
     }
   } catch (err) {
     return

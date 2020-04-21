@@ -2,16 +2,11 @@ import { Restaurant } from '@dish/models'
 import React, { memo } from 'react'
 import { Image, Linking, Text } from 'react-native'
 
-import { GeocodePlace } from '../../state/home'
-import { useOvermind } from '../../state/om'
+import { GeocodePlace, HomeStateItem } from '../../state/home'
 import { Box } from '../ui/Box'
-import { Divider } from '../ui/Divider'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { Link } from '../ui/Link'
 import { HStack } from '../ui/Stacks'
-
-const removeZip = (str: string) =>
-  str.replace(/,(\s[A-Z]{2})?[\s]+([0-9\-]+$)/g, '')
 
 function formatAddress(
   currentLocation: GeocodePlace | null,
@@ -19,10 +14,10 @@ function formatAddress(
   format: 'short' | 'long' | 'longer'
 ): string {
   if (format === 'longer') {
-    return address
+    return removeLongZip(address)
   }
   if (format === 'long' || !currentLocation) {
-    return removeZip(address)
+    return removeZip(removeLongZip(address))
   }
   if (currentLocation?.locality) {
     const replaceAfter = `, ${currentLocation.locality ?? ''}`
@@ -31,22 +26,31 @@ function formatAddress(
       return address.slice(0, replaceIndex)
     }
   }
-  return address.split(',').slice(0, 1).join(', ')
+  return removeLongZip(address)
+    .split(',')
+    .slice(0, 1)
+    .join(', ')
 }
+
+const removeLongZip = (str: string) => str.replace()
+
+const removeZip = (str: string) =>
+  str.replace(/,(\s[A-Z]{2})?[\s]+([0-9\-]+$)/g, '')
 
 export const RestaurantAddressLinksRow = memo(
   ({
+    currentLocationInfo,
     restaurant,
     size,
     showAddress,
     showMenu,
   }: {
+    currentLocationInfo: GeocodePlace
     restaurant: Restaurant
     size?: 'lg' | 'md'
     showAddress?: boolean | 'short'
     showMenu?: boolean
   }) => {
-    const om = useOvermind()
     const fontSize = size == 'lg' ? 16 : 13
     const sep = ' '
 
@@ -54,9 +58,9 @@ export const RestaurantAddressLinksRow = memo(
       <Text style={{ color: '#999', fontSize }}>
         <HStack alignItems="center" spacing>
           {showAddress && (
-            <Text style={{ fontSize: 14 }}>
+            <Text selectable style={{ fontSize: 14 }}>
               {formatAddress(
-                om.state.home.currentLocationInfo,
+                currentLocationInfo,
                 restaurant.address,
                 showAddress === 'short' ? 'short' : 'long'
               )}
@@ -77,7 +81,7 @@ export const RestaurantAddressLinksRow = memo(
           >
             <HStack alignItems="center" spacing="xs">
               {showMenu && (
-                <Text>
+                <Text selectable>
                   Text {showAddress ? <>&nbsp; {sep} &nbsp;</> : null}
                   <Link inline name="restaurant" params={{ slug: '' }}>
                     Menu

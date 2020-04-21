@@ -10408,6 +10408,11 @@ google-closure-compiler-java@^20200204.0.0:
   resolved "https://registry.npmjs.org/google-closure-compiler-java/-/google-closure-compiler-java-20200204.0.0.tgz#0d757a5c3c93398ab4fdcabe7c6b94c9fa350d1f"
   integrity sha512-JFm7HDkYPSCLFXGuXKPyahxcRGfFdprG+En3AQtRus2py03Ba9K0HuXk7A+YLdT5f1ldw3Mv1/TTqb8u/53rgQ==
 
+google-closure-compiler-js@^20191111.0.0:
+  version "20191111.0.0"
+  resolved "https://registry.npmjs.org/google-closure-compiler-js/-/google-closure-compiler-js-20191111.0.0.tgz#94112796826d50d0b3717c80ab633a60d2617ff7"
+  integrity sha512-W3Oy5NF5CMgUv31CMbgLN7zhdCTVMTnNI//iEPYMotzXfX8viyOnTMipDDwJNeMnY7lfXbQrYOo+QkWP6WzZtg==
+
 google-closure-compiler-js@^20200204.0.0:
   version "20200204.0.0"
   resolved "https://registry.npmjs.org/google-closure-compiler-js/-/google-closure-compiler-js-20200204.0.0.tgz#19215f251c9e57c9aa6f90a2001d15a4c28fdc56"
@@ -10442,6 +10447,22 @@ google-closure-compiler-windows@^20200204.0.0:
   version "20200204.0.0"
   resolved "https://registry.npmjs.org/google-closure-compiler-windows/-/google-closure-compiler-windows-20200204.0.0.tgz#aa5ad1064f32392119449a81cf3f5202b5d88928"
   integrity sha512-RAIiJK0Ch1s69ykcgITlTW6Vdp9lE6zhfKBJQf7P9emIMeAji3nIC5oxbK48DP3wUti5lFMLkq3U1m6HbPxyEw==
+
+google-closure-compiler@20191111.0.0:
+  version "20191111.0.0"
+  resolved "https://registry.npmjs.org/google-closure-compiler/-/google-closure-compiler-20191111.0.0.tgz#c2584b87d855cc4e23d5805e8f7269eb9a9166f2"
+  integrity sha512-Ji+FaqYKXNbJ78N5Do6hu61mPrB9D+8xSnmRO59u2CrIbmNCtoFnqkCAAL4Ye8LR8foRqtkDdiKJSblpe+5ttg==
+  dependencies:
+    chalk "2.x"
+    google-closure-compiler-java "^20191111.0.0"
+    google-closure-compiler-js "^20191111.0.0"
+    minimist "1.x"
+    vinyl "2.x"
+    vinyl-sourcemaps-apply "^0.2.0"
+  optionalDependencies:
+    google-closure-compiler-linux "^20191111.0.0"
+    google-closure-compiler-osx "^20191111.0.0"
+    google-closure-compiler-windows "^20191111.0.0"
 
 google-closure-compiler@20200204.0.0:
   version "20200204.0.0"

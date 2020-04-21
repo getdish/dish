@@ -1,8 +1,8 @@
-import { Restaurant, slugify } from '@dish/models'
+import { Restaurant } from '@dish/models'
 import React, { memo, useEffect, useRef, useState } from 'react'
-import { Image, ScrollView, Text, TouchableOpacity } from 'react-native'
+import { ScrollView, Text, TouchableOpacity } from 'react-native'
 
-import { isEditingUserPage } from '../../state/home'
+import { GeocodePlace, isEditingUserPage } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Divider } from '../ui/Divider'
 import Hoverable from '../ui/Hoverable'
@@ -21,7 +21,15 @@ import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 
 export const RestaurantListItem = memo(
-  ({ restaurant, rank }: { restaurant: Restaurant; rank: number }) => {
+  ({
+    currentLocationInfo,
+    restaurant,
+    rank,
+  }: {
+    currentLocationInfo: GeocodePlace
+    restaurant: Restaurant
+    rank: number
+  }) => {
     const om = useOvermind()
     const [isHovered, setIsHovered] = useState(false)
     const [disablePress, setDisablePress] = useState(false)
@@ -114,6 +122,7 @@ export const RestaurantListItem = memo(
                   overflow="hidden"
                 >
                   <RestaurantAddressLinksRow
+                    currentLocationInfo={currentLocationInfo}
                     showAddress="short"
                     restaurant={restaurant}
                   />
@@ -206,22 +215,3 @@ export const RestaurantPeek = memo(
     )
   }
 )
-
-/// <VStack
-///                   key={i}
-///                   borderRadius={10}
-///                   shadowColor="rgba(0,0,0,0.2)"
-///                   shadowRadius={4}
-///                   shadowOffset={{ height: 2, width: 0 }}
-///                   marginBottom={spacing}
-///                   overflow="hidden"
-///                 >
-///                   <Image
-///                     source={{ uri: photo }}
-///                     style={{
-///                       width: 100,
-///                       height: 100,
-///                     }}
-///                     resizeMode="cover"
-///                   />
-///                 </VStack>

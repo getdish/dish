@@ -1,7 +1,7 @@
 import { Restaurant } from '@dish/models'
 import _ from 'lodash'
 import React, { memo, useState } from 'react'
-import { Button, Text, TextInput, View } from 'react-native'
+import { Button, StyleSheet, Text, TextInput, View } from 'react-native'
 
 import { useOvermind } from '../../state/om'
 import { Box } from '../ui/Box'
@@ -9,7 +9,6 @@ import { Icon } from '../ui/Icon'
 import { Popover } from '../ui/Popover'
 import { SmallTitle, SmallerTitle } from '../ui/SmallTitle'
 import { HStack, VStack } from '../ui/Stacks'
-import { styles } from './HomePageRestaurant'
 import { HoverableButton } from './HoverableButton'
 import { TagButton } from './TagButton'
 
@@ -105,3 +104,15 @@ export const RestaurantTagButton = memo(
     )
   }
 )
+
+const styles = StyleSheet.create({
+  secondaryInput: {
+    backgroundColor: '#eee',
+    color: '#999',
+    minWidth: 200,
+    fontWeight: '500',
+    padding: 8,
+    borderRadius: 5,
+    fontSize: 14,
+  },
+})

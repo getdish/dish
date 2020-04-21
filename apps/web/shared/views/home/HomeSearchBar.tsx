@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 
 import {
-  drawerBorderRadius,
   isWorker,
   pageWidthMax,
   searchBarHeight,
@@ -367,7 +366,6 @@ export default memo(() => {
             />
             <SearchLocationButton />
           </VStack>
-
           {divider}
 
           <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
@@ -541,8 +539,8 @@ const styles = StyleSheet.create({
     height: '100%',
     flexDirection: 'row',
     borderRadius: 14,
-    shadowColor: 'rgba(0,0,0,0.08)',
-    shadowRadius: 12,
+    shadowColor: 'rgba(0,0,0,0.1)',
+    shadowRadius: 10,
     shadowOffset: { height: 4, width: 0 },
     overflow: 'hidden',
     borderWidth: 1,
