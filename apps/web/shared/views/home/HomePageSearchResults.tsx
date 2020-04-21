@@ -40,7 +40,13 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
   const dishTag = tags.find((x) => x.type === 'dish')?.name ?? ''
   const hasUser = !!state.user
   const userPrefix = hasUser ? `${state.user.username}'s ` : ''
-  let lensePlaceholder = lense?.description ?? lense?.name ?? ''
+  let lensePlaceholder = lense?.name ?? ''
+  const descriptions = lense?.descriptions
+  if (descriptions) {
+    if (dishTag) lensePlaceholder = descriptions.dish
+    else if (countryTag) lensePlaceholder = descriptions.cuisine
+    else lensePlaceholder = descriptions.plain
+  }
   if (hasUser) {
     lensePlaceholder = lensePlaceholder.toLowerCase()
   }
@@ -201,14 +207,7 @@ const HomeSearchResultsViewContent = memo(
             return <Spacer size={item} />
           }
           return (
-            <RestaurantListItem
-              key={item.id}
-              restaurant={item}
-              rank={index}
-              onHover={() => {
-                om.actions.home.setHoveredRestaurant(item)
-              }}
-            />
+            <RestaurantListItem key={item.id} restaurant={item} rank={index} />
           )
         }}
       />

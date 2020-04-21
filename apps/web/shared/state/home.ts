@@ -635,16 +635,32 @@ const popHomeState: Action<HistoryItem> = (om, item) => {
   }
 }
 
+const attemptAuthenticatedAction = async (om: Om, cb: Function) => {
+  try {
+    return await cb()
+  } catch (err) {
+    if (`${err.message}`.includes('JWTExpired')) {
+      // logout
+      Toast.show(`Login has expired`)
+      await om.actions.user.logout()
+    } else {
+      throw err
+    }
+  }
+}
+
 const _loadUserDetail: AsyncAction<{
   username: string
 }> = async (om, { username }) => {
-  const user = new User()
-  await user.findOne('username', username)
-  const state = om.state.home.currentState
-  if (state.type === 'user') {
-    state.user = user
-    state.reviews = await Review.findAllForUser(user.id)
-  }
+  await attemptAuthenticatedAction(om, async () => {
+    const user = new User()
+    await user.findOne('username', username)
+    const state = om.state.home.currentState
+    if (state.type === 'user') {
+      state.user = user
+      state.reviews = await Review.findAllForUser(user.id)
+    }
+  })
 }
 
 const _loadRestaurantDetail: AsyncAction<{
@@ -779,6 +795,7 @@ const _runAutocomplete: AsyncAction<string> = async (om, query) => {
   const state = om.state.home.currentState
 
   if (query === '') {
+    console.log('no query')
     om.state.home.autocompleteResults = defaultAutocompleteResults
     om.state.home.locationAutocompleteResults = defaultLocationAutocompleteResults
     return
@@ -833,6 +850,7 @@ const _runAutocomplete: AsyncAction<string> = async (om, query) => {
   const results = query
     ? await fuzzyFind(query, unsortedResults)
     : unsortedResults
+  console.log('set autocomplete results')
   om.state.home.autocompleteResults = results
 }
 
@@ -914,17 +932,20 @@ const runSearch: AsyncAction<{ quiet?: boolean } | void> = async (om, opts) => {
 
   // fetch reviews before render
   if (om.state.user.isLoggedIn) {
-    const reviews = (
-      await om.effects.gql.queries.userRestaurantReviews({
-        user_id: om.state.user.user.id,
-        restaurant_ids: restaurants.map((x) => x.id),
-      })
-    ).review
+    await attemptAuthenticatedAction(om, async () => {
+      const reviews = (
+        await om.effects.gql.queries.userRestaurantReviews({
+          user_id: om.state.user.user.id,
+          restaurant_ids: restaurants.map((x) => x.id),
+        })
+      ).review
+      if (shouldCancel()) return
+      // TODO how do we do nice GC of allReviews?
+      for (const review of reviews) {
+        om.state.user.allReviews[review.restaurant_id] = review
+      }
+    })
     if (shouldCancel()) return
-    // TODO how do we do nice GC of allReviews?
-    for (const review of reviews) {
-      om.state.user.allReviews[review.restaurant_id] = review
-    }
   }
 
   // update denormalized dictionary

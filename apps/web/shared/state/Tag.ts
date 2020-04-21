@@ -1,12 +1,14 @@
 import { Tag as TagModel, TagType } from '@dish/models'
 
+type TagDescriptionKey = 'dish' | 'cuisine' | 'plain'
+
 export type Tag = {
   id: string
   name: string
   displayName?: string
   icon?: string
   rgb?: [number, number, number]
-  description?: string
+  descriptions?: { [type in TagDescriptionKey]: string }
   type: TagType
   isActive?: boolean
   isVotable?: boolean
@@ -25,7 +27,11 @@ export const tagLenses: Tag[] = [
     name: 'Gems',
     icon: ' 💎',
     rgb: [0.6, 0.1, 0.5],
-    description: 'The best 🍔',
+    descriptions: {
+      dish: 'The best 🍔',
+      cuisine: 'The best 🍔',
+      plain: 'The best',
+    },
     type: 'lense',
     isVotable: true,
   },
@@ -34,7 +40,11 @@ export const tagLenses: Tag[] = [
     name: 'Date',
     icon: '🌃',
     rgb: [0.35, 0.2, 0.65],
-    description: 'A nice place for 🍔',
+    descriptions: {
+      dish: 'A nice place for 🍔',
+      cuisine: '🍔 date spots',
+      plain: 'Date night',
+    },
     type: 'lense',
     isVotable: true,
   },
@@ -43,16 +53,24 @@ export const tagLenses: Tag[] = [
     name: 'Coffee',
     icon: '☕',
     rgb: [0.35, 0.2, 0.65],
-    description: '🍔 & coffee',
+    descriptions: {
+      dish: '🍔 & coffee',
+      cuisine: '🍔 & coffee',
+      plain: 'Coffee shops',
+    },
     type: 'lense',
     isVotable: true,
   },
   {
     id: '5',
-    name: 'Wine',
+    name: 'Drink',
     icon: '🍷',
     rgb: [0.35, 0.2, 0.65],
-    description: '🍔 & drinks',
+    descriptions: {
+      dish: '🍔 & drinks',
+      cuisine: '🍔 with a bar',
+      plain: 'Drinks',
+    },
     type: 'lense',
     isVotable: true,
   },
@@ -61,7 +79,11 @@ export const tagLenses: Tag[] = [
     name: 'Vegetarian',
     icon: '🥬',
     rgb: [0.05, 0.8, 0.15],
-    description: 'Vegetarian 🍔',
+    descriptions: {
+      dish: 'Vegetarian 🍔',
+      cuisine: 'Vegetarian 🍔',
+      plain: 'Vegetarian',
+    },
     type: 'lense',
     isVotable: true,
   },
@@ -70,7 +92,11 @@ export const tagLenses: Tag[] = [
     name: 'Quiet',
     icon: '👨‍💻',
     rgb: [0.35, 0.2, 0.65],
-    description: 'Low-key 🍔',
+    descriptions: {
+      dish: 'Low-key 🍔',
+      cuisine: 'Quiet 🍔',
+      plain: 'Quiet, work-friendly',
+    },
     type: 'lense',
     isVotable: true,
   },

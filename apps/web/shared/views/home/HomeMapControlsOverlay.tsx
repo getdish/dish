@@ -12,7 +12,6 @@ export const HomeMapControlsOverlay = memo(() => {
   const om = useOvermind()
   const hasMovedMap = om.state.home.currentState?.['hasMovedMap']
   const drawerWidth = useHomeDrawerWidth()
-  console.log('hasMovedMap', hasMovedMap)
   return (
     <ZStack
       fullscreen
