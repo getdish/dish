@@ -3,6 +3,7 @@
   "compilerOptions": {
     "composite": true,
     "strictNullChecks": true,
+    "module": "CommonJS",
     "outDir": "_",
     "rootDir": "src"
   },

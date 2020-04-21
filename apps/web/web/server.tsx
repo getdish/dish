@@ -10,6 +10,8 @@ import { createOvermindSSR } from 'overmind'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 
+const rootDir = Path.join(__dirname, '..', '..')
+
 Error.stackTraceLimit = Infinity
 global['React'] = React
 global['__DEV__'] = false
@@ -31,12 +33,11 @@ Object.keys(jsdom.window).forEach((key) => {
 })
 
 // import all app below ^^^
-const app = require('../web-build-ssr/static/js/app.ssr.js')
+const app = require(Path.join(rootDir, 'web-build-ssr/static/js/app.ssr.js'))
 const { App, config, ReactDOMServer } = app
 
 if (!App || !config || !ReactDOMServer) {
-  console.error(`Bad exported bundle`)
-  console.log({ App, config, ReactDOMServer })
+  console.log(`Bad exported bundle`, { App, config, ReactDOMServer })
   process.exit()
 }
 
@@ -51,19 +52,15 @@ server.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
 server.get('/hello', (_, res) => res.send('hello world'))
 
 // static assets
-const clientBuildPath = Path.join(__dirname, '..', 'web-build')
+const clientBuildPath = Path.join(rootDir, 'web-build')
 server.use('/static', express.static(Path.join(clientBuildPath, 'static')))
-server.use(
-  '/static',
-  express.static(Path.join(__dirname, '..', 'shared', 'assets'))
-)
 
 // TODO amp
 // setHeaders: res => res.setHeader('AMP-Access-Control-Allow-Source-Origin', `http://localhost:${PORT}`),
 
 server.get('*', async (req, res) => {
-  console.log('config', config)
-  const htmlPath = Path.join(__dirname, '..', 'web', 'index.html')
+  // console.log('config', config)
+  const htmlPath = Path.join(rootDir, 'web', 'index.html')
   const template = readFileSync(htmlPath, 'utf8')
   const overmind = createOvermindSSR(config)
   await overmind.initialized

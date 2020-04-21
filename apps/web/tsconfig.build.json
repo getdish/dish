@@ -3,10 +3,12 @@
   "compilerOptions": {
     "jsx": "react",
     "outDir": "_",
-    "rootDir": "src",
+    "target": "ES2017",
+    "module": "CommonJS",
+    "rootDir": ".",
     "typeRoots": ["node_modules/mapkit-typescript", "node_modules/@types"]
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "web/**/*"],
   "exclude": ["src/graphql"],
   "references": [{ "path": "../../packages/common-web" }]
 }

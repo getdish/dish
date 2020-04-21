@@ -82,20 +82,6 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
     ]
   }
 
-  if (TARGET === 'ssr') {
-    config.entry.app = config.entry.app.filter((x) => {
-      return x.indexOf('webpackHotDevClient') < 0
-    })
-    config.target = 'node'
-    config.output.path = path.join(__dirname, 'web-build-ssr')
-    config.output.libraryTarget = 'commonjs'
-    config.output.filename = `static/js/app.${TARGET}.js`
-    config.optimization.minimize = false
-    config.plugins = config.plugins.filter(
-      (plugin) => plugin.constructor.name !== 'WebpackPWAManifest'
-    )
-  }
-
   if (TARGET === 'preact') {
     config.resolve.alias = {
       react$: 'preact/compat',
@@ -140,6 +126,20 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
         //   module: path.join(__dirname, 'web', 'errors.web.tsx'),
         // },
       })
+    )
+  }
+
+  if (TARGET === 'ssr') {
+    config.entry.app = config.entry.app.filter((x) => {
+      return x.indexOf('webpackHotDevClient') < 0
+    })
+    config.target = 'node'
+    config.output.path = path.join(__dirname, 'web-build-ssr')
+    config.output.libraryTarget = 'commonjs'
+    config.output.filename = `static/js/app.${TARGET}.js`
+    config.optimization.minimize = false
+    config.plugins = config.plugins.filter(
+      (plugin) => plugin.constructor.name !== 'WebpackPWAManifest'
     )
   }
 

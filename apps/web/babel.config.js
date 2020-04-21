@@ -1,7 +1,7 @@
 module.exports = function(api) {
   const isWorker = process.env.TARGET === 'worker'
   const isSSR = process.env.TARGET === 'ssr'
-  if (isWorker || isSSR) {
+  if (isWorker) {
     api.cache(true)
   }
   const plugins = [
