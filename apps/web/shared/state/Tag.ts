@@ -18,6 +18,9 @@ export type NavigableTag = Partial<Tag> & Pick<Tag, 'name' | 'type'>
 
 export const getTagId = (tag: NavigableTag) => {
   const tag_model = new TagModel(tag)
+  if (!tag_model) {
+    debugger
+  }
   return tag_model.slug()
 }
 
@@ -29,8 +32,8 @@ export const tagLenses: Tag[] = [
     rgb: [0.6, 0.1, 0.5],
     descriptions: {
       dish: 'The best 🍔',
-      cuisine: 'The best 🍔',
-      plain: 'The best',
+      cuisine: 'The Best 🍔 Restaurants',
+      plain: 'Uniquely Good Here',
     },
     type: 'lense',
     isVotable: true,
@@ -42,8 +45,8 @@ export const tagLenses: Tag[] = [
     rgb: [0.35, 0.2, 0.65],
     descriptions: {
       dish: 'A nice place for 🍔',
-      cuisine: '🍔 date spots',
-      plain: 'Date night',
+      cuisine: 'Nice 🍔 for a Date',
+      plain: 'Best Date Night Spots',
     },
     type: 'lense',
     isVotable: true,
@@ -55,8 +58,8 @@ export const tagLenses: Tag[] = [
     rgb: [0.35, 0.2, 0.65],
     descriptions: {
       dish: '🍔 & coffee',
-      cuisine: '🍔 & coffee',
-      plain: 'Coffee shops',
+      cuisine: '🍔 Food & Coffee',
+      plain: 'Top Coffee Shops',
     },
     type: 'lense',
     isVotable: true,
@@ -68,8 +71,8 @@ export const tagLenses: Tag[] = [
     rgb: [0.35, 0.2, 0.65],
     descriptions: {
       dish: '🍔 & drinks',
-      cuisine: '🍔 with a bar',
-      plain: 'Drinks',
+      cuisine: '🍔 with a Bar',
+      plain: 'Uniquely Good Drinks',
     },
     type: 'lense',
     isVotable: true,
@@ -81,8 +84,8 @@ export const tagLenses: Tag[] = [
     rgb: [0.05, 0.8, 0.15],
     descriptions: {
       dish: 'Vegetarian 🍔',
-      cuisine: 'Vegetarian 🍔',
-      plain: 'Vegetarian',
+      cuisine: 'Vegetarian 🍔 Restaurants',
+      plain: 'Uniquely Good Vegetarian',
     },
     type: 'lense',
     isVotable: true,
@@ -94,8 +97,8 @@ export const tagLenses: Tag[] = [
     rgb: [0.35, 0.2, 0.65],
     descriptions: {
       dish: 'Low-key 🍔',
-      cuisine: 'Quiet 🍔',
-      plain: 'Quiet, work-friendly',
+      cuisine: 'Quiet 🍔 Restaurants',
+      plain: 'Quiet, Work-friendly Spots',
     },
     type: 'lense',
     isVotable: true,

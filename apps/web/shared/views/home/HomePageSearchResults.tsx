@@ -104,7 +104,7 @@ const HomeSearchResultsViewContent = memo(
   ({ state }: { state: HomeStateItemSearch }) => {
     const om = useOvermind()
     const allRestaurants = om.state.home.allRestaurants
-    const topPad = 20 + 70
+    const topPad = 20 + 80
 
     if (!state.results?.results || state.results.status === 'loading') {
       return (

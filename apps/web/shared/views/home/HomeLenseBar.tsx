@@ -1,6 +1,7 @@
 import React, { memo } from 'react'
 import { StyleSheet, Text } from 'react-native'
 
+import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeActiveTagIds, HomeStateItemSearch } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { getTagId } from '../../state/Tag'

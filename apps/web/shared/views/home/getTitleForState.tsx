@@ -8,9 +8,6 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
   const { currentLocationName = 'San Francisco' } = state
   const tags = getActiveTags(omState.home, state)
   const lense = tags.find((x) => x.type === 'lense')
-  const titleTags = tags.filter(
-    (tag) => tag.type === 'dish' || tag.name === 'Delivers'
-  )
   const countryTag = tags.find((x) => x.type === 'country')?.name ?? ''
   const dishTag = tags.find((x) => x.type === 'dish')?.name ?? ''
   const hasUser = state.type === 'userSearch'
@@ -22,9 +19,19 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
     else if (countryTag) lensePlaceholder = descriptions.cuisine
     else lensePlaceholder = descriptions.plain
   }
+  const titleTags = tags.filter(
+    (tag) =>
+      (dishTag
+        ? tag.type === 'dish'
+        : countryTag
+        ? tag.type === 'country'
+        : tag.type === 'dish') || tag.name === 'Delivers'
+  )
+
   if (hasUser) {
     lensePlaceholder = lensePlaceholder.toLowerCase()
   }
+
   const titleSpace = titleTags.length ? ' ' : ''
   const searchName = state.searchQuery ?? ''
 
@@ -39,7 +46,12 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
     </>
   )
 
-  const titleTagsString = titleTags.map((x) => `${x.name ?? ''}`).join(', ')
+  let titleTagsString = titleTags.map((x) => `${x.name ?? ''}`).join(', ')
+
+  // lowercase when not at front
+  if (!countryTag && lensePlaceholder.indexOf('🍔') > 0) {
+    titleTagsString = titleTagsString.toLowerCase()
+  }
 
   const titleSubject = lensePlaceholder.replace('🍔', titleTagsString)
   const title = `${userPrefix} ${titleSubject} ${searchName} ${subTitleParts.join(

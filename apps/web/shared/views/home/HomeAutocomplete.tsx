@@ -1,5 +1,5 @@
 import React, { memo, useEffect } from 'react'
-import { Image, StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { useOvermind } from '../../state/om'
@@ -21,6 +21,13 @@ export default memo(function HomeAutoComplete() {
     currentStateType,
     isAutocompleteActive,
   } = om.state.home
+  console.log({
+    showAutocomplete,
+    autocompleteIndex,
+    autocompleteResultsActive,
+    currentStateType,
+    isAutocompleteActive,
+  })
   const showLocation = showAutocomplete == 'location'
   const showSearch = showAutocomplete == 'search'
   const isShowing = showSearch || showLocation
@@ -79,8 +86,7 @@ export default memo(function HomeAutoComplete() {
         position="absolute"
         top={searchBarTopOffset + searchBarHeight}
         left="15%"
-        width="calc(100vw - 10%)"
-        maxWidth={1050}
+        width="calc(100vw - 15%)"
         zIndex={1000}
         overflow="hidden"
         paddingBottom={30}
