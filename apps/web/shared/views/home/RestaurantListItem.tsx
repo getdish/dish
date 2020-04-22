@@ -123,7 +123,7 @@ export const RestaurantListItem = memo(
                 >
                   <RestaurantAddressLinksRow
                     currentLocationInfo={currentLocationInfo}
-                    showAddress="short"
+                    showAddress="sm"
                     restaurant={restaurant}
                   />
                 </HStack>
