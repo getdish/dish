@@ -862,7 +862,7 @@ const _runAutocomplete: AsyncAction<string> = async (om, query) => {
   const results = query
     ? await fuzzyFind(query, unsortedResults)
     : unsortedResults
-  console.log('set autocomplete results')
+  console.log('set autocomplete results', results)
   om.state.home.autocompleteResults = results
 }
 

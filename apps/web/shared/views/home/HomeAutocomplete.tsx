@@ -1,5 +1,5 @@
 import React, { memo, useEffect } from 'react'
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { Image, StyleSheet, TouchableOpacity } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { useOvermind } from '../../state/om'
@@ -21,13 +21,6 @@ export default memo(function HomeAutoComplete() {
     currentStateType,
     isAutocompleteActive,
   } = om.state.home
-  console.log({
-    showAutocomplete,
-    autocompleteIndex,
-    autocompleteResultsActive,
-    currentStateType,
-    isAutocompleteActive,
-  })
   const showLocation = showAutocomplete == 'location'
   const showSearch = showAutocomplete == 'search'
   const isShowing = showSearch || showLocation
@@ -142,7 +135,21 @@ export default memo(function HomeAutoComplete() {
                   maxWidth="15vw"
                   ellipse
                 >
-                  {x.icon ?? null}
+                  {x.icon?.indexOf('http') === 0 ? (
+                    <img
+                      src={x.icon}
+                      style={{
+                        width: 16,
+                        height: 16,
+                        borderRadius: 100,
+                        marginRight: 10,
+                        marginTop: -2,
+                        marginBottom: -2,
+                      }}
+                    />
+                  ) : (
+                    x.icon ?? null
+                  )}
                   {x.name}{' '}
                   {x.type === 'dish' &&
                   index !== 0 &&
