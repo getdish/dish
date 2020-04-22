@@ -73,6 +73,42 @@ SELECT jsonb_agg(
         OR
         sources->>'doordash' IS NOT NULL
       )
+
+      AND (
+        ?13 != 'FILTER BY GEMS'
+        OR
+        rating > 4
+      )
+
+      AND (
+        ?14 != 'FILTER BY DATE'
+        OR
+        (rating_factors->>'ambience')::numeric > 4
+      )
+
+      AND (
+        ?15 != 'FILTER BY COFFEE'
+        OR
+        TRUE
+      )
+
+      AND (
+        ?16 != 'FILTER BY WINE'
+        OR
+        TRUE
+      )
+
+      AND (
+        ?14 != 'FILTER BY VEGETARIAN'
+        OR
+        TRUE
+      )
+
+      AND (
+        ?14 != 'FILTER BY QUIET'
+        OR
+        TRUE
+      )
     )
 
     ORDER BY rating DESC NULLS LAST

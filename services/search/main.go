@@ -61,10 +61,9 @@ func getBoundingBox(r *http.Request) (string, string, string, string) {
 
 func search(w http.ResponseWriter, r *http.Request) {
 	var json string
+	filter_by := make(map[string]string)
 	tags := getParam("tags", r)
 	ignore_bounding_box := ""
-	filter_by_unique := ""
-	filter_by_delivers := ""
 	distance := "0"
 	x1, y1, x2, y2 := getBoundingBox(r)
 	missing_bb_values := hasEmpty([]string{
@@ -79,14 +78,7 @@ func search(w http.ResponseWriter, r *http.Request) {
 	if getParam("distance", r) != "" {
 		distance = getParam("distance", r)
 	}
-	if tagsHas("unique", r) {
-		filter_by_unique = "FILTER BY UNIQUE"
-		tags = removeTag(tags, "unique")
-	}
-	if tagsHas("delivers", r) {
-		filter_by_delivers = "FILTER BY DELIVERS"
-		tags = removeTag(tags, "delivers")
-	}
+	filter_by, tags = handleSpecialTags(tags, r)
 	_, err := db.Query(
 		pg.Scan(&json),
 		search_query,
@@ -98,8 +90,14 @@ func search(w http.ResponseWriter, r *http.Request) {
 		getParam("limit", r),
 		x1, y1, x2, y2,
 		ignore_bounding_box,
-		filter_by_unique,
-		filter_by_delivers,
+		filter_by["unique"],
+		filter_by["delivers"],
+		filter_by["gems"],
+		filter_by["date"],
+		filter_by["coffee"],
+		filter_by["wine"],
+		filter_by["vegetarian"],
+		filter_by["quiet"],
 	)
 	if err != nil {
 		fmt.Println(err)
@@ -109,6 +107,31 @@ func search(w http.ResponseWriter, r *http.Request) {
 		json = "[]"
 	}
 	fmt.Fprintf(w, json)
+}
+
+func handleSpecialTags(tags string, r *http.Request) (map[string]string, string) {
+	filter_by := make(map[string]string)
+	special_tags := [...]string{
+		"unique",
+		"delivers",
+		"gems",
+		"date",
+		"coffee",
+		"wine",
+		"vegetarian",
+		"quiet",
+	}
+
+	for _, tag := range special_tags {
+		if tagsHas(tag, r) {
+			filter_by[tag] = "FILTER BY " + strings.ToUpper(tag)
+			tags = removeTag(tags, tag)
+		} else {
+			filter_by[tag] = ""
+		}
+
+	}
+	return filter_by, tags
 }
 
 func top_dishes(w http.ResponseWriter, r *http.Request) {
