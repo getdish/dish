@@ -571,7 +571,7 @@ const pushHomeState: AsyncAction<
     const lastState = om.state.home.states[om.state.home.states.length - 1]
     for (const key in nextState) {
       if (!isEqual(nextState[key], lastState[key])) {
-        console.log('update value', key, lastState[key], 'to', nextState[key])
+        // console.log('update value', key, lastState[key], 'to', nextState[key])
         lastState[key] = _.isPlainObject(nextState[key])
           ? { ...nextState[key] }
           : nextState[key]
@@ -1114,7 +1114,10 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
     }
   }
 
-  om.actions.home.updateBreadcrumbs()
+  if (type !== 'replace') {
+    om.actions.home.updateBreadcrumbs()
+  }
+
   currentStates = om.state.home.states
   await Promise.all([...promises])
 }
