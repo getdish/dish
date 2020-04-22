@@ -7,6 +7,7 @@ import { Box } from '../ui/Box'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { Link } from '../ui/Link'
 import { HStack } from '../ui/Stacks'
+import { SelectableText } from '../ui/Text'
 
 type AddressSize = 'lg' | 'md' | 'sm'
 
@@ -28,7 +29,10 @@ function formatAddress(
       return address.slice(0, replaceIndex)
     }
   }
-  return removeLongZip(address).split(',').slice(0, 1).join(', ')
+  return removeLongZip(address)
+    .split(',')
+    .slice(0, 1)
+    .join(', ')
 }
 
 const removeLongZip = (str: string) => {
@@ -66,9 +70,9 @@ export const RestaurantAddressLinksRow = memo(
       <Text style={{ color: '#999', fontSize }}>
         <HStack alignItems="center" spacing>
           {showAddress && (
-            <Text selectable style={{ fontSize: 14 }}>
+            <SelectableText style={{ fontSize: 14 }}>
               {formatAddress(currentLocationInfo, restaurant.address, size)}
-            </Text>
+            </SelectableText>
           )}
 
           <HoverablePopover
@@ -83,14 +87,14 @@ export const RestaurantAddressLinksRow = memo(
               </Box>
             }
           >
-            <HStack alignItems="center" spacing="xs">
+            <HStack alignItems="center" spacing={size}>
               {showMenu && (
-                <Text selectable>
-                  Text {showAddress ? <>&nbsp; {sep} &nbsp;</> : null}
+                <SelectableText>
+                  {showAddress ? <>&nbsp; {sep} &nbsp;</> : null}
                   <Link inline name="restaurant" params={{ slug: '' }}>
                     Menu
                   </Link>
-                </Text>
+                </SelectableText>
               )}
               {!!restaurant.website && (
                 <Text onPress={() => {}}> 📞{size == 'lg' ? `Call` : ''}</Text>

@@ -75,18 +75,18 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
                     >
                       {restaurant.name}
                     </Text>
-                    <Spacer size={4} />
+                    <Spacer size={6} />
                     <RestaurantAddressLinksRow
                       currentLocationInfo={state.currentLocationInfo}
                       showMenu
                       size="lg"
                       restaurant={restaurant}
                     />
-                    <Spacer size={8} />
+                    <Spacer size={10} />
                     <Text style={{ color: '#777', fontSize: 14 }}>
                       {restaurant.address}
                     </Text>
-                    <Spacer size={12} />
+                    <Spacer size={6} />
                   </VStack>
 
                   <RestaurantFavoriteStar restaurant={restaurant} size="lg" />
@@ -96,29 +96,19 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
 
             <Spacer />
 
-            <HStack>
-              <RestaurantTagsRow size="lg" restaurant={restaurant} />
-            </HStack>
+            <RestaurantTagsRow size="lg" restaurant={restaurant} />
             <Spacer />
             <Divider />
             <Spacer />
 
-            <VStack spacing="md">
-              <HStack paddingVertical={0}>
+            <VStack spacing="md" alignItems="center">
+              <HStack paddingVertical={8} minWidth={400}>
                 <RestaurantDetailRow
                   centered
                   justifyContent="center"
                   restaurant={restaurant}
                   flex={1}
                 />
-              </HStack>
-
-              <HStack>
-                {isCanTag && (
-                  <ZStack top={3} right={-5}>
-                    <RestaurantTagButton size="lg" restaurant={restaurant} />
-                  </ZStack>
-                )}
               </HStack>
 
               <Divider />
