@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
-import { ScrollView, StyleSheet, Text } from 'react-native'
+import { StyleSheet, Text } from 'react-native'
 
-import { HomeActiveTagIds } from '../../state/home'
+import { HomeActiveTagIds, HomeStateItemSearch } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { getTagId } from '../../state/Tag'
 import { Box } from '../ui/Box'
@@ -11,20 +11,23 @@ import { Icon } from '../ui/Icon'
 import { LinearGradient } from '../ui/LinearGradient'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import HomeFilterBar from './HomeFilterBar'
-import { HoverableButton } from './HoverableButton'
 import { LenseButton } from './LenseButton'
 import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 
 export default memo(function HomeLenseBar(props: {
-  activeTagIds: HomeActiveTagIds
+  stateIndex: number
   hideLenses?: boolean
 }) {
+  const om = useOvermind()
+  const state = om.state.home.states[props.stateIndex] as HomeStateItemSearch
+  const activeTagIds =
+    state?.activeTagIds ?? om.state.home.lastHomeState.activeTagIds
+
+  console.log('activeTagIds', activeTagIds)
   return (
     <HomeContentTopBar>
-      {!props.hideLenses && (
-        <HomeLenseBarOnly activeTagIds={props.activeTagIds} />
-      )}
-      <HomeFilterBar activeTagIds={props.activeTagIds} />
+      {!props.hideLenses && <HomeLenseBarOnly activeTagIds={activeTagIds} />}
+      <HomeFilterBar activeTagIds={activeTagIds} />
     </HomeContentTopBar>
   )
 })

@@ -18,21 +18,22 @@ export function HomeStackView<A extends HomeStateItemSimple>(props: {
   const items = isRemoving ? debounceItems : props.items
   return (
     <ZStack fullscreen>
-      {items.map((item, index) => {
-        const isActive = index === items.length - 1
+      {items.map((item, i) => {
+        const isActive = i === items.length - 1
+        const stackItemIndex = props.items.findIndex((x) => x.id === item.id)
         return (
           <ForceShowPopover.Provider
-            key={`${index}`}
+            key={`${i}`}
             value={isActive == true ? undefined : false}
           >
             <HomeStackViewItem
               item={item}
-              index={index}
+              index={i}
               isActive={isActive}
               isRemoving={isActive && isRemoving}
             >
               <ErrorBoundary name={`${item.type}`}>
-                {props.children(item as any, isActive, index)}
+                {props.children(item as any, isActive, stackItemIndex)}
               </ErrorBoundary>
             </HomeStackViewItem>
           </ForceShowPopover.Provider>
@@ -86,7 +87,7 @@ function HomeStackViewItem({
             backgroundColor={index === 0 ? 'transparent' : 'white'}
             flex={1}
             zIndex={index}
-            top={index * 15}
+            top={(index - 1) * 10 + 6}
             left={index * 10}
             bottom={-(index * 5)}
             width="100%"

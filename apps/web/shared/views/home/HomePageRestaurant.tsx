@@ -4,6 +4,7 @@ import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 
 import { HomeStateItemRestaurant } from '../../state/home'
 import { useOvermind } from '../../state/om'
+import { NotFoundPage } from '../NotFoundPage'
 import { Divider } from '../ui/Divider'
 import { LinkButton } from '../ui/Link'
 import { PageTitleTag } from '../ui/PageTitleTag'
@@ -22,11 +23,11 @@ import { RestaurantTagButton } from './RestaurantTagButton'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 
-export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
+export default memo(({ stateIndex }: { stateIndex: number }) => {
   const om = useOvermind()
-  if (!state?.restaurantId) {
-    return null
-  }
+  const state = om.state.home.states[stateIndex] as HomeStateItemRestaurant
+  if (!state) return <NotFoundPage />
+  if (!state?.restaurantId) return <NotFoundPage />
   const restaurant = om.state.home.allRestaurants[state.restaurantId]
   const isLoading = (restaurant?.name ?? '') === ''
   const isCanTag =
@@ -48,40 +49,61 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
 
       {!isLoading && (
         <>
-          <VStack padding={18} paddingBottom={0} paddingRight={16}>
-            <HStack position="relative">
-              <RestaurantRatingViewPopover size="lg" restaurant={restaurant} />
-              <Spacer size={20} />
-              <VStack flex={1}>
-                <Text
-                  style={{ fontSize: 30, fontWeight: 'bold', paddingRight: 30 }}
-                >
-                  {restaurant.name}
-                </Text>
-                <Spacer size={4} />
-                <RestaurantAddressLinksRow
-                  currentLocationInfo={state.currentLocationInfo}
-                  showMenu
+          <ScrollView style={{ flex: 1 }}>
+            <VStack
+              width="100%"
+              padding={18}
+              paddingBottom={0}
+              paddingRight={16}
+            >
+              <HStack position="relative">
+                <RestaurantRatingViewPopover
                   size="lg"
                   restaurant={restaurant}
                 />
-                <Spacer size={8} />
-                <Text style={{ color: '#777', fontSize: 14 }}>
-                  {restaurant.address}
-                </Text>
-                <Spacer size={12} />
-              </VStack>
-            </HStack>
 
-            <HStack width="100%" alignItems="center">
-              <Divider flex />
-              <RestaurantFavoriteStar restaurant={restaurant} size="lg" />
-              <Divider flex />
-            </HStack>
-          </VStack>
+                <Spacer size={20} />
 
-          <ScrollView style={{ padding: 18, paddingTop: 16, flex: 1 }}>
-            <VStack spacing="lg">
+                <HStack width="80%">
+                  <VStack flex={1}>
+                    <Text
+                      style={{
+                        fontSize: 30,
+                        fontWeight: 'bold',
+                        paddingRight: 30,
+                      }}
+                    >
+                      {restaurant.name}
+                    </Text>
+                    <Spacer size={4} />
+                    <RestaurantAddressLinksRow
+                      currentLocationInfo={state.currentLocationInfo}
+                      showMenu
+                      size="lg"
+                      restaurant={restaurant}
+                    />
+                    <Spacer size={8} />
+                    <Text style={{ color: '#777', fontSize: 14 }}>
+                      {restaurant.address}
+                    </Text>
+                    <Spacer size={12} />
+                  </VStack>
+
+                  <RestaurantFavoriteStar restaurant={restaurant} size="lg" />
+                </HStack>
+              </HStack>
+            </VStack>
+
+            <Spacer />
+
+            <HStack>
+              <RestaurantTagsRow size="lg" restaurant={restaurant} />
+            </HStack>
+            <Spacer />
+            <Divider />
+            <Spacer />
+
+            <VStack spacing="md">
               <HStack paddingVertical={0}>
                 <RestaurantDetailRow
                   centered
@@ -97,7 +119,6 @@ export default memo(({ state }: { state: HomeStateItemRestaurant }) => {
                     <RestaurantTagButton size="lg" restaurant={restaurant} />
                   </ZStack>
                 )}
-                <RestaurantTagsRow size="lg" restaurant={restaurant} />
               </HStack>
 
               <Divider />

@@ -4,6 +4,7 @@ import React, {
   useContext,
   useLayoutEffect,
   useMemo,
+  useRef,
 } from 'react'
 import { ToggleLayer, Transition, anchor } from 'react-laag'
 import { Platform, TouchableOpacity } from 'react-native'
@@ -32,23 +33,29 @@ export type PopoverProps = {
 
 export const Popover = (props: PopoverProps) => {
   const forceShow = useContext(ForceShowPopover)
-  const isOpen = typeof forceShow == 'boolean' ? forceShow : !!props.isOpen
-
-  const close = useCallback(props.onChangeOpen, [props.onChangeOpen])
+  const isOpen = typeof forceShow == 'boolean' ? forceShow : props.isOpen
+  const onChangeOpenCb = useCallback(props.onChangeOpen, [props.onChangeOpen])
+  const closeCb = useRef<Function | null>(null)
+  const isControlled = typeof isOpen !== 'undefined'
 
   useLayoutEffect(() => {
-    if (close) {
-      popoverCloseCbs.add(close)
+    if (onChangeOpenCb) {
+      popoverCloseCbs.add(onChangeOpenCb)
       return () => {
-        popoverCloseCbs.delete(close!)
+        popoverCloseCbs.delete(onChangeOpenCb!)
       }
     }
-  }, [close])
+  }, [onChangeOpenCb])
 
   if (Platform.OS == 'web') {
     useOverlay({
       isOpen: isOpen && props.overlay !== false,
-      onClick: close,
+      onClick: () => {
+        if (!isControlled) {
+          closeCb.current?.()
+        }
+        onChangeOpenCb?.(false)
+      },
       pointerEvents: props.overlayPointerEvents,
     })
   }
@@ -57,24 +64,25 @@ export const Popover = (props: PopoverProps) => {
     return (
       <ToggleLayer
         ResizeObserver={ResizeObserver}
-        {...(typeof isOpen !== 'undefined' && { isOpen })}
+        {...(isControlled && { isOpen })}
         container={document.body}
         fixed
         renderLayer={({ layerProps, close, arrowStyle }) => {
           if (!props.isOpen) {
             return null
           }
+          closeCb.current = close
           return (
             <div
               ref={layerProps.ref}
               style={{
                 ...layerProps.style,
+                zIndex: 100000,
               }}
             >
               <div
                 style={{ pointerEvents: isOpen ? 'auto' : 'none' }}
                 className="popover-content see-through"
-                onClick={close}
               >
                 {props.contents}
               </div>

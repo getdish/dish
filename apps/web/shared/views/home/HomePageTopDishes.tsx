@@ -6,6 +6,7 @@ import { ScrollView, Text } from 'react-native'
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItem, HomeStateItemHome } from '../../state/home'
 import { useOvermind } from '../../state/om'
+import { NotFoundPage } from '../NotFoundPage'
 import { Box } from '../ui/Box'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { LinkButton } from '../ui/Link'
@@ -23,16 +24,62 @@ import { RestaurantButton } from './RestaurantButton'
 import { SmallButton } from './SmallButton'
 import { TrendingButton } from './TrendingButton'
 
-export default memoIsEqualDeep(function HomePageTopDIshes({
-  state,
+export default memoIsEqualDeep(function HomePageTopDishes({
+  stateIndex,
 }: {
-  state: HomeStateItemHome
+  stateIndex: number
 }) {
+  const om = useOvermind()
+  const state = om.state.home.states[stateIndex] as HomeStateItemHome
+  if (!state) return <NotFoundPage />
+  const { topDishes, topDishesFilteredIndices } = om.state.home
+  let results = topDishes
+  if (topDishesFilteredIndices.length) {
+    results = results.filter(
+      (_, index) => topDishesFilteredIndices.indexOf(index) > -1
+    )
+  }
   return (
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
       <VStack position="relative" flex={1}>
-        <HomeViewTopDishesContent state={state} />
+        <ScrollView style={{ flex: 1, overflow: 'hidden' }}>
+          <VStack paddingVertical={20} spacing="xl">
+            {/* <Text style={{ fontWeight: '700', fontSize: 22, textAlign: 'center' }}>
+          San Francisco
+        </Text> */}
+
+            <HomeViewTopDishesTrending />
+
+            <VStack spacing="lg">
+              <SmallTitle divider="off">
+                {om.state.home.lastActiveTags.find((x) => x.type === 'lense')
+                  ?.descriptions?.plain ?? ''}
+              </SmallTitle>
+
+              <VStack spacing>
+                <HomeLenseBarOnly
+                  activeTagIds={om.state.home.lastHomeState.activeTagIds}
+                />
+                <HomeFilterBar
+                  activeTagIds={om.state.home.lastHomeState.activeTagIds}
+                />
+              </VStack>
+
+              {[...results]
+                // for now force japanese at top because its most filled out
+                .sort((x) => (x.country === 'Japanese' ? -1 : 1))
+                .map((country, index) => (
+                  <CountryTopDishesAndRestaurants
+                    state={state}
+                    key={country.country}
+                    country={country}
+                    rank={index + 1}
+                  />
+                ))}
+            </VStack>
+          </VStack>
+        </ScrollView>
       </VStack>
     </>
   )
@@ -81,56 +128,6 @@ const HomeViewTopDishesTrending = memo(() => {
         </VStack>
       </HStack>
     </VStack>
-  )
-})
-
-const HomeViewTopDishesContent = memo(({ state }: { state: HomeStateItem }) => {
-  const om = useOvermind()
-  const { topDishes, topDishesFilteredIndices } = om.state.home
-  let results = topDishes
-  if (topDishesFilteredIndices.length) {
-    results = results.filter(
-      (_, index) => topDishesFilteredIndices.indexOf(index) > -1
-    )
-  }
-  return (
-    <ScrollView style={{ flex: 1, overflow: 'hidden' }}>
-      <VStack paddingVertical={20} spacing="xl">
-        {/* <Text style={{ fontWeight: '700', fontSize: 22, textAlign: 'center' }}>
-          San Francisco
-        </Text> */}
-
-        <HomeViewTopDishesTrending />
-
-        <VStack spacing="lg">
-          <SmallTitle divider="off">
-            {om.state.home.lastActiveTags.find((x) => x.type === 'lense')
-              ?.descriptions?.plain ?? ''}
-          </SmallTitle>
-
-          <VStack spacing>
-            <HomeLenseBarOnly
-              activeTagIds={om.state.home.lastHomeState.activeTagIds}
-            />
-            <HomeFilterBar
-              activeTagIds={om.state.home.lastHomeState.activeTagIds}
-            />
-          </VStack>
-
-          {[...results]
-            // for now force japanese at top because its most filled out
-            .sort((x) => (x.country === 'Japanese' ? -1 : 1))
-            .map((country, index) => (
-              <CountryTopDishesAndRestaurants
-                state={state}
-                key={country.country}
-                country={country}
-                rank={index + 1}
-              />
-            ))}
-        </VStack>
-      </VStack>
-    </ScrollView>
   )
 })
 
