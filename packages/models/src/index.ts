@@ -1,6 +1,6 @@
 export {
   Restaurant,
-  TopCuisine as TopDish,
+  TopCuisine,
   RestaurantSearchArgs,
   TagRating,
   Sources,

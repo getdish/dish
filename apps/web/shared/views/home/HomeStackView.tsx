@@ -13,6 +13,8 @@ export function HomeStackView<A extends HomeStateItemSimple>(props: {
   items: A[]
   children: (a: A, isActive: boolean, index: number) => React.ReactNode
 }) {
+  const om = useOvermindStatic()
+  const allStates = om.state.home.states
   const debounceItems = useDebounceValue(props.items, transitionDuration)
   const isRemoving = debounceItems.length > props.items.length
   const items = isRemoving ? debounceItems : props.items
@@ -20,7 +22,7 @@ export function HomeStackView<A extends HomeStateItemSimple>(props: {
     <ZStack fullscreen>
       {items.map((item, i) => {
         const isActive = i === items.length - 1
-        const stackItemIndex = props.items.findIndex((x) => x.id === item.id)
+        const stackItemIndex = allStates.findIndex((x) => x.id === item.id)
         return (
           <ForceShowPopover.Provider
             key={`${i}`}

@@ -2,7 +2,7 @@ import {
   Restaurant,
   RestaurantSearchArgs,
   Review,
-  TopDish,
+  TopCuisine,
   User,
   slugify,
 } from '@dish/models'
@@ -182,7 +182,6 @@ const createBreadcrumbs = (state: HomeStateBase) => {
       }
     }
   }
-  console.log('get em', crumbs)
   return crumbs.map((x) => _.pick(x, 'id', 'type'))
 }
 
@@ -215,7 +214,7 @@ type HomeStateBase = {
   allLenseTags: Tag[]
   allFilterTags: Tag[]
   allRestaurants: { [id: string]: Restaurant }
-  autocompleteDishes: TopDish['dishes']
+  autocompleteDishes: TopCuisine['dishes']
   autocompleteIndex: number // index for horizontal row (autocomplete)
   autocompleteResults: AutocompleteItem[]
   hoveredRestaurant: Restaurant | null
@@ -225,7 +224,7 @@ type HomeStateBase = {
   showAutocomplete: ShowAutocomplete
   showUserMenu: boolean
   states: HomeStateItem[]
-  topDishes: TopDish[]
+  topDishes: TopCuisine[]
   topDishesFilteredIndices: number[]
   skipNextPageFetchData: boolean
   breadcrumbStates: HomeStateItemSimple[]
@@ -414,7 +413,12 @@ const searchFullTag = (tag: NavigableTag): Promise<Tag | null> =>
     .then((res) => res.json())
     .then((tags) => tags?.[0] ?? null)
 
-const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
+const pushHomeState: AsyncAction<
+  HistoryItem,
+  {
+    fetchDataPromise: Promise<void>
+  }
+> = async (om, item) => {
   const { started, currentState } = om.state.home
 
   const fallbackState = {
@@ -583,8 +587,13 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
 
   const shouldSkip = om.state.home.skipNextPageFetchData
   om.state.home.skipNextPageFetchData = false
+
+  let fetchDataPromise: Promise<any> | null
   if (!shouldSkip && fetchData) {
-    om.actions.home.startAction(fetchData)
+    fetchDataPromise = om.actions.home.startAction(fetchData)
+  }
+  return {
+    fetchDataPromise,
   }
 }
 
@@ -633,7 +642,6 @@ const popTo: Action<HomeStateItem['type'] | number> = (om, item) => {
 
 const popHomeState: Action<HistoryItem> = (om, item) => {
   if (om.state.home.states.length > 1) {
-    console.log('popHomeState', item)
     om.actions.home.setShowAutocomplete(false)
     om.state.home.states = _.dropRight(om.state.home.states)
   }
@@ -799,7 +807,7 @@ const _runAutocomplete: AsyncAction<string> = async (om, query) => {
   const state = om.state.home.currentState
 
   if (query === '') {
-    console.log('no query')
+    console.log('no query', defaultAutocompleteResults)
     om.state.home.autocompleteResults = defaultAutocompleteResults
     om.state.home.locationAutocompleteResults = defaultLocationAutocompleteResults
     return
@@ -906,8 +914,7 @@ const runSearch: AsyncAction<{ quiet?: boolean } | void> = async (om, opts) => {
 
   // prevent duplicate searches
   const searchKey = JSON.stringify(searchArgs)
-  console.log('searchArgs', searchArgs, opts)
-  console.log('same?', searchKey === lastSearchKey, searchKey, lastSearchKey)
+  console.log('searchArgs', searchArgs, opts, searchKey === lastSearchKey)
   if (searchKey === lastSearchKey) return
 
   // update state
@@ -929,6 +936,7 @@ const runSearch: AsyncAction<{ quiet?: boolean } | void> = async (om, opts) => {
 
   // fetch
   let restaurants = await Restaurant.search(searchArgs)
+  console.log('searched', searchArgs, restaurants)
   if (shouldCancel()) return
 
   state = om.state.home.lastSearchState
@@ -1095,20 +1103,19 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
     case 'search':
     case 'user':
     case 'userSearch':
-    case 'restaurant':
+    case 'restaurant': {
       if (type === 'push' || type === 'replace') {
-        promises.add(pushHomeState(om, item))
+        const { fetchDataPromise } = await pushHomeState(om, item)
+        promises.add(fetchDataPromise)
       } else {
         popHomeState(om, item)
       }
+      break
+    }
   }
 
-  if (type !== 'replace') {
-    om.actions.home.updateBreadcrumbs()
-  }
-
+  om.actions.home.updateBreadcrumbs()
   currentStates = om.state.home.states
-
   await Promise.all([...promises])
 }
 
@@ -1308,7 +1315,10 @@ const setMapMoved: Action = (om) => {
 }
 
 const updateBreadcrumbs: Action = (om) => {
-  om.state.home.breadcrumbStates = createBreadcrumbs(om.state.home)
+  const next = createBreadcrumbs(om.state.home)
+  if (!isEqual(next, om.state.home.breadcrumbStates)) {
+    om.state.home.breadcrumbStates = next
+  }
 }
 
 export const actions = {
