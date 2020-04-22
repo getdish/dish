@@ -82,7 +82,7 @@ export const HomeLenseBarOnly = memo(
           padding={6}
           alignItems="center"
           justifyContent="center"
-          spacing={3}
+          spacing={6}
         >
           {om.state.home.allLenseTags.map((lense, index) => (
             <LenseButton
@@ -101,7 +101,7 @@ export const HomeLenseBarOnly = memo(
               </Box>
             }
           >
-            <Icon name="ChevronDown" size={25} />
+            <Icon name="ChevronDown" color="#999" size={20} />
           </HoverablePopover>
         </HStack>
         <Divider backgroundColor="#eee" flex />

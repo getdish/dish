@@ -77,7 +77,9 @@ function HomeStackViewItem({
   )
 
   return (
-    <div className={`animate-up ${isMounted && !isRemoving ? 'active' : ''}`}>
+    <div
+      className={`animate-right ${isMounted && !isRemoving ? 'active' : ''}`}
+    >
       <ZStack pointerEvents={isActive ? 'none' : 'auto'} fullscreen>
         <TouchableOpacity
           disabled={isActive}

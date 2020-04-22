@@ -30,7 +30,7 @@ class Auth {
   public jwt = ''
   public isLoggedIn = false
   public is_admin = false
-  public user = {}
+  public user: any = {}
   public has_been_logged_out = false
 
   constructor() {

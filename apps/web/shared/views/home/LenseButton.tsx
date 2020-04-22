@@ -28,9 +28,9 @@ export const LenseButton = memoIsEqualDeep(
           alignItems="center"
           justifyContent="center"
           marginVertical={-10}
-          width={60}
+          width={54}
           // paddingLeft={6}
-          height={60}
+          height={54}
           paddingVertical={3}
           // backgroundColor={'rgba(255,255,255,0.5)'}
           borderRadius={100}
@@ -56,7 +56,7 @@ export const LenseButton = memoIsEqualDeep(
           <Text
             style={{
               color: isActive ? '#fff' : '#454545',
-              fontSize: 28,
+              fontSize: 30,
               lineHeight: 42,
               width: 42,
               height: 42,
