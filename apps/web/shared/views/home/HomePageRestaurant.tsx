@@ -50,46 +50,60 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
       {!isLoading && (
         <>
           <ScrollView style={{ flex: 1 }}>
-            <VStack padding={18} paddingBottom={0} paddingRight={16}>
+            <VStack
+              width="100%"
+              padding={18}
+              paddingBottom={0}
+              paddingRight={16}
+            >
               <HStack position="relative">
                 <RestaurantRatingViewPopover
                   size="lg"
                   restaurant={restaurant}
                 />
-                <Spacer size={20} />
-                <VStack flex={1}>
-                  <Text
-                    style={{
-                      fontSize: 30,
-                      fontWeight: 'bold',
-                      paddingRight: 30,
-                    }}
-                  >
-                    {restaurant.name}
-                  </Text>
-                  <Spacer size={4} />
-                  <RestaurantAddressLinksRow
-                    currentLocationInfo={state.currentLocationInfo}
-                    showMenu
-                    size="lg"
-                    restaurant={restaurant}
-                  />
-                  <Spacer size={8} />
-                  <Text style={{ color: '#777', fontSize: 14 }}>
-                    {restaurant.address}
-                  </Text>
-                  <Spacer size={12} />
-                </VStack>
-              </HStack>
 
-              <HStack width="100%" alignItems="center">
-                <Divider flex />
-                <RestaurantFavoriteStar restaurant={restaurant} size="lg" />
-                <Divider flex />
+                <Spacer size={20} />
+
+                <HStack width="80%">
+                  <VStack flex={1}>
+                    <Text
+                      style={{
+                        fontSize: 30,
+                        fontWeight: 'bold',
+                        paddingRight: 30,
+                      }}
+                    >
+                      {restaurant.name}
+                    </Text>
+                    <Spacer size={4} />
+                    <RestaurantAddressLinksRow
+                      currentLocationInfo={state.currentLocationInfo}
+                      showMenu
+                      size="lg"
+                      restaurant={restaurant}
+                    />
+                    <Spacer size={8} />
+                    <Text style={{ color: '#777', fontSize: 14 }}>
+                      {restaurant.address}
+                    </Text>
+                    <Spacer size={12} />
+                  </VStack>
+
+                  <RestaurantFavoriteStar restaurant={restaurant} size="lg" />
+                </HStack>
               </HStack>
             </VStack>
 
-            <VStack spacing="lg">
+            <Spacer />
+
+            <HStack>
+              <RestaurantTagsRow size="lg" restaurant={restaurant} />
+            </HStack>
+            <Spacer />
+            <Divider />
+            <Spacer />
+
+            <VStack spacing="md">
               <HStack paddingVertical={0}>
                 <RestaurantDetailRow
                   centered
