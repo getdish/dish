@@ -352,7 +352,8 @@ export function setMapView(x: mapkit.Map) {
 
 export const isOnOwnProfile = (state: OmState) => {
   return (
-    slugify(state.user.user?.username) === state.router.curPage.params.username
+    slugify(state.user?.user?.username) ===
+    state.router.curPage.params?.username
   )
 }
 
@@ -1235,8 +1236,8 @@ const setSearchBarFocusedTag: Action<Tag | null> = (om, val) => {
 }
 
 const forkCurrentList: Action = (om) => {
-  const user = om.state.user.user
-  if (!user) {
+  const username = om.state.user.user?.username
+  if (!username) {
     Toast.show(`Login please`)
     return
   }
@@ -1250,7 +1251,7 @@ const forkCurrentList: Action = (om) => {
     name: 'userSearch',
     params: {
       ...curPage.params,
-      username: user.username,
+      username,
     },
   })
 }

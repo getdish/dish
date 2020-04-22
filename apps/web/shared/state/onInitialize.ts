@@ -47,10 +47,10 @@ export const onInitialize: OnInitialize = async (
     // }
   )
 
+  await actions.user.checkForExistingLogin()
   await actions.home.start()
 
   await Promise.all([
-    actions.user.checkForExistingLogin(),
     // start router
     actions.router.start({
       onRouteChange: actions.home.handleRouteChange,

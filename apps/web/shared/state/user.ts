@@ -86,7 +86,6 @@ const login: AsyncAction<{ username: string; password: string }> = async (
 
 const postLogin: Action<Partial<User>> = (om, user: Partial<User>) => {
   om.state.user.isLoggedIn = true
-  // @ts-ignore
   om.state.user.user = user
 }
 
