@@ -52,18 +52,18 @@ export default function HomePage() {
       <HomeSearchBar />
       <HomeViewDrawer>
         <HomeStackView items={breadcrumbStates}>
-          {(homeState) => {
+          {(homeState, isActive, index) => {
             return (
               <CurrentStateID.Provider value={homeState.id}>
                 {isHomeState(homeState) && (
-                  <HomePageTopDishes state={homeState} />
+                  <HomePageTopDishes stateIndex={index} />
                 )}
-                {isUserState(homeState) && <HomePageUser state={homeState} />}
+                {isUserState(homeState) && <HomePageUser stateIndex={index} />}
                 {isSearchState(homeState) && (
-                  <HomePageSearchResults state={homeState} />
+                  <HomePageSearchResults stateIndex={index} />
                 )}
                 {isRestaurantState(homeState) && (
-                  <HomePageRestaurant state={homeState} />
+                  <HomePageRestaurant stateIndex={index} />
                 )}
               </CurrentStateID.Provider>
             )
