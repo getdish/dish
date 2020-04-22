@@ -132,6 +132,8 @@ export function LinkButton<
       lineHeight,
       fontWeight,
       padding,
+      paddingVertical,
+      paddingHorizontal,
       replace,
       ...rest
     } = props
@@ -148,7 +150,11 @@ export function LinkButton<
         fontWeight={fontWeight}
         ellipse={ellipse}
         fastClick={fastClick}
-        padding={padding}
+        padding={getStylePadding({
+          padding,
+          paddingVertical,
+          paddingHorizontal,
+        })}
       >
         {children ?? ''}
       </Link>
@@ -215,4 +221,21 @@ export function OverlayLinkButton<
       {...props}
     />
   )
+}
+
+const getStylePadding = ({
+  padding,
+  paddingHorizontal,
+  paddingVertical,
+}: {
+  padding: any
+  paddingVertical: any
+  paddingHorizontal: any
+}) => {
+  if (paddingHorizontal || paddingVertical) {
+    return [paddingVertical ?? padding ?? 0, paddingHorizontal ?? padding ?? 0]
+      .map((x) => (typeof x === 'number' ? `${x}px` : x))
+      .join(' ')
+  }
+  return padding
 }
