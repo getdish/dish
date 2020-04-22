@@ -3,6 +3,8 @@ import { Image, ScrollView, Text, View } from 'react-native'
 
 import { HomeStateItemSearch, isEditingUserPage } from '../../state/home'
 import { useOvermind } from '../../state/om'
+import { NotFoundPage } from '../NotFoundPage'
+import { Toast } from '../Toast'
 import { Circle } from '../ui/Circle'
 import { Icon } from '../ui/Icon'
 import { LinkButton } from '../ui/Link'
@@ -20,8 +22,10 @@ import { RestaurantListItem } from './RestaurantListItem'
 
 export const avatar = require('../../assets/peach.png')
 
-export default memo(({ state }: { state: HomeStateItemSearch }) => {
+export default memo(({ stateIndex }: { stateIndex: number }) => {
   const om = useOvermind()
+  const state = om.state.home.states[stateIndex] as HomeStateItemSearch
+  if (!state) return <NotFoundPage />
   const isEditingUserList = isEditingUserPage(om.state)
   const { title, subTitleElements, pageTitleElements } = getTitleForState(
     om.state,
@@ -44,42 +48,40 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
       </ZStack>
 
       <HStack paddingHorizontal={om.state.user.isLoggedIn ? 60 : 0}>
-        {om.state.user.isLoggedIn && (
-          <HStack zIndex={100} position="absolute" top={10} left={10} spacing>
-            <Circle size={34}>
-              <Image source={avatar} style={{ width: 34, height: 34 }} />
-            </Circle>
+        <HStack zIndex={100} position="absolute" top={10} left={10} spacing>
+          <Circle size={34}>
+            <Image source={avatar} style={{ width: 34, height: 34 }} />
+          </Circle>
 
-            <HStack spacing="sm" alignItems="center">
-              {isEditingUserList && (
-                <SmallCircleButton
-                  onPress={() => {
-                    Toast.show('Saved')
-                    om.actions.router.navigate({
-                      name: 'search',
-                      params: {
-                        ...om.state.router.curPage.params,
-                        username: '',
-                      },
-                    })
-                  }}
-                  paddingHorizontal={12}
-                >
-                  <Text style={{ color: 'white' }}>Done</Text>
-                </SmallCircleButton>
-              )}
-              {!isEditingUserList && (
-                <SmallCircleButton
-                  onPress={() => {
-                    om.actions.home.forkCurrentList()
-                  }}
-                >
-                  <Icon name="Edit2" size={12} color="white" />
-                </SmallCircleButton>
-              )}
-            </HStack>
+          <HStack spacing="sm" alignItems="center">
+            {isEditingUserList && (
+              <SmallCircleButton
+                onPress={() => {
+                  Toast.show('Saved')
+                  om.actions.router.navigate({
+                    name: 'search',
+                    params: {
+                      ...om.state.router.curPage.params,
+                      username: '',
+                    },
+                  })
+                }}
+                paddingHorizontal={12}
+              >
+                <Text style={{ color: 'white' }}>Done</Text>
+              </SmallCircleButton>
+            )}
+            {!isEditingUserList && (
+              <SmallCircleButton
+                onPress={() => {
+                  om.actions.home.forkCurrentList()
+                }}
+              >
+                <Icon name="Edit2" size={12} color="white" />
+              </SmallCircleButton>
+            )}
           </HStack>
-        )}
+        </HStack>
 
         <PageTitle subTitle={subTitleElements}>{pageTitleElements}</PageTitle>
       </HStack>
@@ -91,7 +93,7 @@ export default memo(({ state }: { state: HomeStateItemSearch }) => {
         paddingTop={6}
         overflow="hidden"
       >
-        <HomeLenseBar activeTagIds={state.activeTagIds} />
+        <HomeLenseBar stateIndex={stateIndex} />
         <HomeSearchResultsViewContent state={state} />
       </VStack>
     </>

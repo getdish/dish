@@ -3,6 +3,7 @@ import { Image, ScrollView, Text } from 'react-native'
 
 import { HomeStateItemUser } from '../../state/home'
 import { useOvermind } from '../../state/om'
+import { NotFoundPage } from '../NotFoundPage'
 import { Circle } from '../ui/Circle'
 import { Divider } from '../ui/Divider'
 import { Link } from '../ui/Link'
@@ -12,8 +13,10 @@ import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { CloseButton } from './CloseButton'
 import { avatar } from './HomePageSearchResults'
 
-export default memo(({ state }: { state: HomeStateItemUser }) => {
+export default memo(({ stateIndex }: { stateIndex: number }) => {
   const om = useOvermind()
+  const state = om.state.home.states[stateIndex] as HomeStateItemUser
+  if (!state) return <NotFoundPage />
   const reviews = state.reviews ?? []
 
   return (

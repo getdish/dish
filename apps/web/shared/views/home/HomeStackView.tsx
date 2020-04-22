@@ -86,7 +86,7 @@ function HomeStackViewItem({
             backgroundColor={index === 0 ? 'transparent' : 'white'}
             flex={1}
             zIndex={index}
-            top={index * 15}
+            top={(index - 1) * 10 + 6}
             left={index * 10}
             bottom={-(index * 5)}
             width="100%"

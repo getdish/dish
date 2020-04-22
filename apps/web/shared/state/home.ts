@@ -6,6 +6,7 @@ import {
   User,
   slugify,
 } from '@dish/models'
+import { isEqual } from '@o/fast-compare'
 import _ from 'lodash'
 import { Action, AsyncAction, Config, Derive, IContext } from 'overmind'
 
@@ -108,7 +109,7 @@ export type HomeStateItemUser = HomeStateItemBase & {
   reviews: Review[]
 }
 
-export type HomeStateItemSimple = Omit<HomeStateItem, 'historyId'>
+export type HomeStateItemSimple = Pick<HomeStateItem, 'id' | 'type'>
 
 export type AutocompleteItem = {
   icon?: string
@@ -152,15 +153,14 @@ export const lastRestaurantState = (state: HomeStateBase) =>
 export const lastSearchState = (state: HomeStateBase) =>
   _.findLast(state.states, isSearchState)
 
-// not beautiful..
-const breadcrumbStates = (state: HomeStateBase) => {
-  let crumbs: HomeStateItem[] = []
-  for (let i = state.states.length - 1; i >= 0; i--) {
+const createBreadcrumbs = (state: HomeStateBase) => {
+  let crumbs: HomeStateItemSimple[] = []
+  stateLoop: for (let i = state.states.length - 1; i >= 0; i--) {
     const cur = state.states[i]
     switch (cur.type) {
       case 'home': {
         crumbs.unshift(cur)
-        return crumbs.map((x) => _.omit(x, 'historyId'))
+        break stateLoop
       }
       case 'search':
       case 'userSearch':
@@ -182,6 +182,8 @@ const breadcrumbStates = (state: HomeStateBase) => {
       }
     }
   }
+  console.log('get em', crumbs)
+  return crumbs.map((x) => _.pick(x, 'id', 'type'))
 }
 
 /*
@@ -226,13 +228,13 @@ type HomeStateBase = {
   topDishes: TopDish[]
   topDishesFilteredIndices: number[]
   skipNextPageFetchData: boolean
+  breadcrumbStates: HomeStateItemSimple[]
 }
 
 export type HomeState = HomeStateBase & {
   lastHomeState: Derive<HomeState, HomeStateItemHome>
   lastSearchState: Derive<HomeState, HomeStateItemSearch | null>
   lastRestaurantState: Derive<HomeState, HomeStateItemRestaurant | null>
-  breadcrumbStates: Derive<HomeState, HomeStateItemSimple[]>
   currentNavItem: Derive<HomeState, NavigateItem>
   currentState: Derive<HomeState, HomeStateItem>
   // my hypothesis is these more granular derives prevent updates on same value in views, need to test that
@@ -278,7 +280,7 @@ export const state: HomeState = {
   autocompleteDishes: [],
   autocompleteIndex: 0,
   autocompleteResults: [],
-  breadcrumbStates,
+  breadcrumbStates: [],
   currentState: (state) => _.last(state.states)!,
   currentNavItem: (state, om) =>
     getNavigateItemForState(om, _.last(state.states)!),
@@ -360,6 +362,7 @@ export const isEditingUserPage = (state: OmState) => {
 }
 
 const start: AsyncAction = async (om) => {
+  om.actions.home.updateBreadcrumbs()
   await om.actions.home._loadHomeDishes()
   await Promise.all([
     om.actions.home.startAutocomplete(),
@@ -415,7 +418,7 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
   const { started, currentState } = om.state.home
 
   const fallbackState = {
-    id: `${Math.random()}`,
+    id: item.replace ? currentState.id : `${Math.random()}`,
     center: currentState?.center ?? initialHomeState.center,
     span: currentState?.span ?? initialHomeState.span,
     searchQuery: currentState?.searchQuery ?? '',
@@ -563,8 +566,11 @@ const pushHomeState: AsyncAction<HistoryItem> = async (om, item) => {
     // try granular update
     const lastState = om.state.home.states[om.state.home.states.length - 1]
     for (const key in nextState) {
-      if (nextState[key] !== lastState[key]) {
-        lastState[key] = nextState[key]
+      if (!isEqual(nextState[key], lastState[key])) {
+        console.log('update value', key, lastState[key], 'to', nextState[key])
+        lastState[key] = _.isPlainObject(nextState[key])
+          ? { ...nextState[key] }
+          : nextState[key]
       }
     }
   } else {
@@ -1081,6 +1087,8 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
     om.state.home.hoveredRestaurant = null
   }
 
+  const promises = new Set<Promise<any>>()
+
   // actions per-route
   switch (name) {
     case 'home':
@@ -1089,14 +1097,19 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
     case 'userSearch':
     case 'restaurant':
       if (type === 'push' || type === 'replace') {
-        await pushHomeState(om, item)
+        promises.add(pushHomeState(om, item))
       } else {
         popHomeState(om, item)
       }
-      return
+  }
+
+  if (type !== 'replace') {
+    om.actions.home.updateBreadcrumbs()
   }
 
   currentStates = om.state.home.states
+
+  await Promise.all([...promises])
 }
 
 export let currentStates: HomeStateItem[] = []
@@ -1294,6 +1307,10 @@ const setMapMoved: Action = (om) => {
   }
 }
 
+const updateBreadcrumbs: Action = (om) => {
+  om.state.home.breadcrumbStates = createBreadcrumbs(om.state.home)
+}
+
 export const actions = {
   navigateToTag,
   setMapMoved,
@@ -1334,4 +1351,5 @@ export const actions = {
   submitReview,
   suggestTags,
   startAction,
+  updateBreadcrumbs,
 }

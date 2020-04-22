@@ -8,15 +8,17 @@ import { HoverablePopover } from '../ui/HoverablePopover'
 import { Link } from '../ui/Link'
 import { HStack } from '../ui/Stacks'
 
+type AddressSize = 'lg' | 'md' | 'sm'
+
 function formatAddress(
   currentLocation: GeocodePlace | null,
   address: string,
-  format: 'short' | 'long' | 'longer'
+  format: AddressSize
 ): string {
-  if (format === 'longer') {
+  if (format === 'lg') {
     return removeLongZip(address)
   }
-  if (format === 'long' || !currentLocation) {
+  if (format === 'md' || !currentLocation) {
     return removeZip(removeLongZip(address))
   }
   if (currentLocation?.locality) {
@@ -26,13 +28,19 @@ function formatAddress(
       return address.slice(0, replaceIndex)
     }
   }
-  return removeLongZip(address)
-    .split(',')
-    .slice(0, 1)
-    .join(', ')
+  return removeLongZip(address).split(',').slice(0, 1).join(', ')
 }
 
-const removeLongZip = (str: string) => str.replace()
+const removeLongZip = (str: string) => {
+  const lastDashIndex = str.lastIndexOf('-')
+  const lastDashDistanceToEnd = str.length - lastDashIndex
+  if (lastDashDistanceToEnd > 7) return str
+  const specificZip = str.slice(lastDashIndex)
+  if (/[-0-9]+/.test(specificZip)) {
+    return str.slice(0, lastDashIndex)
+  }
+  return str
+}
 
 const removeZip = (str: string) =>
   str.replace(/,(\s[A-Z]{2})?[\s]+([0-9\-]+$)/g, '')
@@ -47,8 +55,8 @@ export const RestaurantAddressLinksRow = memo(
   }: {
     currentLocationInfo: GeocodePlace
     restaurant: Restaurant
-    size?: 'lg' | 'md'
-    showAddress?: boolean | 'short'
+    size?: AddressSize
+    showAddress?: AddressSize
     showMenu?: boolean
   }) => {
     const fontSize = size == 'lg' ? 16 : 13
@@ -59,11 +67,7 @@ export const RestaurantAddressLinksRow = memo(
         <HStack alignItems="center" spacing>
           {showAddress && (
             <Text selectable style={{ fontSize: 14 }}>
-              {formatAddress(
-                currentLocationInfo,
-                restaurant.address,
-                showAddress === 'short' ? 'short' : 'long'
-              )}
+              {formatAddress(currentLocationInfo, restaurant.address, size)}
             </Text>
           )}
 
