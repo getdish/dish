@@ -18,7 +18,7 @@ export const TagButton = memo(
     closable,
     onClose,
     votable,
-    fontSize,
+    fontSize: fontSizeProp,
     color,
     backgroundColor,
     subtleIcon,
@@ -44,18 +44,18 @@ export const TagButton = memo(
     const defaultColor = noColor ? 'inherit' : '#777'
     const bg = backgroundColor ?? (subtle ? 'transparent' : defaultColor)
     const fg = color ?? (subtle ? defaultColor : 'white')
+    const fontSize = fontSizeProp ?? (subtle ? 'inherit' : 13 * scale)
+    const rankFontSize =
+      typeof fontSize === 'number' ? fontSize * 0.9 : fontSize
     return (
       <HStack
         backgroundColor={bg}
-        // borderWidth={1}
-        // borderColor={subtle ? 'transparent' : '#ddd'}
         borderRadius={8 * scale}
         overflow="hidden"
         alignItems="center"
         shadowColor={subtle ? 'transparent' : 'rgba(0,0,0,0.15)'}
         shadowRadius={3 * scale}
         shadowOffset={{ width: 0, height: 1 * scale }}
-        // spacing="sm"
         position="relative"
         minHeight={lineHeight}
         {...rest}
@@ -64,7 +64,7 @@ export const TagButton = memo(
           <Text
             style={
               {
-                fontSize: subtle ? 'inherit' : 13 * scale,
+                fontSize: rankFontSize,
                 fontWeight: 'bold',
                 paddingVertical: '4%',
                 marginVertical: '-2.5%',
@@ -83,7 +83,7 @@ export const TagButton = memo(
           numberOfLines={1}
           style={
             {
-              fontSize: fontSize ?? (subtle ? 'inherit' : 13 * scale),
+              fontSize,
               fontWeight: 'inherit',
               lineHeight: 'inherit',
               paddingVertical: paddingVertical,

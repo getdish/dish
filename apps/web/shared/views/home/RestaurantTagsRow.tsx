@@ -27,33 +27,35 @@ export const RestaurantTagsRow = memo(
     const tags = r.getTagsWithRankings() ?? []
     const drawerWidth = useHomeDrawerWidthInner()
     return (
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <HStack
-          alignItems="center"
-          minWidth={size === 'lg' ? drawerWidth : 0}
-          justifyContent="center"
-          spacing={size == 'lg' ? 8 : 8}
-        >
-          {tags.slice(0, showMore ? 2 : 10).map((tag, index) =>
-            size == 'md' ? (
-              <SecondaryText key={`${index}${tag.name}`}>
-                🍜 {tag.name}
-              </SecondaryText>
-            ) : (
-              <React.Fragment key={`${index}${tag.name}`}>
-                {index !== 0 && <Divider vertical marginHorizontal={10} />}
-                <TagButton
-                  rank={tag.rank}
-                  tag={{ ...tag, type: 'dish' }}
-                  size={size}
-                  subtle
-                />
-              </React.Fragment>
-            )
-          )}
-          {/* {!!showMore && <Text style={{ opacity: 0.5 }}>+5</Text>} */}
-        </HStack>
-      </ScrollView>
+      <HStack
+        alignItems="center"
+        minWidth={size === 'lg' ? drawerWidth : 0}
+        justifyContent="center"
+        flexWrap="wrap"
+        spacing={size == 'lg' ? 8 : 8}
+        {...{
+          fontSize: 14,
+        }}
+      >
+        {tags.slice(0, showMore ? 2 : 10).map((tag, index) =>
+          size == 'md' ? (
+            <SecondaryText key={`${index}${tag.name}`}>
+              🍜 {tag.name}
+            </SecondaryText>
+          ) : (
+            <React.Fragment key={`${index}${tag.name}`}>
+              {index !== 0 && <Divider vertical marginHorizontal={10} />}
+              <TagButton
+                rank={tag.rank}
+                tag={{ ...tag, type: 'dish' }}
+                size={size}
+                subtle
+              />
+            </React.Fragment>
+          )
+        )}
+        {/* {!!showMore && <Text style={{ opacity: 0.5 }}>+5</Text>} */}
+      </HStack>
     )
   }
 )
