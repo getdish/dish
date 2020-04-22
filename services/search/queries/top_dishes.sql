@@ -11,16 +11,35 @@ WITH by_country AS (
           'name', name,
           'image', (
             SELECT image FROM restaurant
-              WHERE tag_names @> to_jsonb(LOWER((SELECT DISTINCT t.name)))
-                AND image IS NOT NULL
+              WHERE tag_names @> to_jsonb(hot_tags.slug)
+              AND image IS NOT NULL
               ORDER BY rating DESC NULLS LAST
               LIMIT 1
-          )
+          ),
+          'rating', (
+            SELECT AVG(rating) FROM restaurant
+              WHERE tag_names @> to_jsonb(hot_tags.slug)
+              AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
+              AND rating IS NOT NULL
+          ),
+          'count', count
         )
-      ) FROM tag
-      WHERE "parentId" IN (
-        SELECT id FROM tag WHERE name = (SELECT DISTINCT t.name)
-      )
+      ) FROM (
+        SELECT *, (
+          SELECT COUNT(*) FROM restaurant
+            WHERE tag_names @> to_jsonb(
+              REPLACE(LOWER(tag.name), ' ', '-')
+            )
+            AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
+          ) AS count,
+          REPLACE(LOWER(name), ' ', '-') AS slug
+        FROM tag
+        WHERE "parentId" IN (
+          SELECT id FROM tag WHERE name = (SELECT DISTINCT t.name)
+        )
+        ORDER by count DESC
+        LIMIT 10
+      ) as hot_tags
     ) as dishes,
     (
       SELECT json_agg(t) FROM (
@@ -39,24 +58,27 @@ WITH by_country AS (
 )
 
 SELECT json_agg(t) FROM (
-  SELECT
-    country,
-    icon,
-    tag_id,
-    frequency,
-    100 as avg_rating,
-    dishes,
-    top_restaurants
-  FROM by_country
-    WHERE country = 'Vietnamese'
+  SELECT * FROM (
+    SELECT
+      country,
+      icon,
+      tag_id,
+      frequency,
+      100 as avg_rating,
+      dishes,
+      top_restaurants
+    FROM by_country
+      WHERE country = 'Vietnamese'
 
-  UNION ALL
+    UNION ALL
 
-  SELECT * FROM by_country
-    WHERE frequency > 10
-    AND country != 'Vietnamese'
+    SELECT * FROM by_country
+      WHERE frequency > 10
+      AND country != 'Vietnamese'
 
-  ORDER BY avg_rating DESC
-  LIMIT 15
+    ORDER BY avg_rating DESC
+    LIMIT 5
+  ) AS ready_to_be_reversed_but_delete_later_please
+  ORDER BY avg_rating ASC
 ) t
 

@@ -188,7 +188,7 @@ const CountryTopDishesAndRestaurants = memo(
             paddingHorizontal={32}
             spacing={22}
           >
-            {(country.dishes || []).slice(0, 5).map((top_dish, index) => {
+            {(country.dishes || []).slice(0, 10).map((top_dish, index) => {
               return <DishView key={index} dish={top_dish as any} />
             })}
           </HStack>

@@ -1,14 +1,14 @@
-import { Dish } from '@dish/models'
+import { TopCuisineDish } from '@dish/models'
 import React, { forwardRef } from 'react'
 
 import { RatingView, RatingViewProps } from './RatingView'
 
 export type DishRatingViewProps = Omit<RatingViewProps, 'percent' | 'color'> & {
-  dish: Partial<Dish>
+  dish: TopCuisineDish
 }
 
-export const getDishRating = (dish: Partial<Dish>) =>
-  Math.round(dish.price / 10)
+export const getDishRating = (dish: TopCuisineDish) =>
+  Math.round((dish.rating / 5) * 100)
 
 export const getRankingColor = (percent: number) =>
   percent > 84 ? 'green' : percent > 60 ? 'orange' : 'red'

@@ -2,7 +2,7 @@ import axios from 'axios'
 import { EnumType } from 'json-to-graphql-query'
 import _ from 'lodash'
 
-import { Dish } from './Dish'
+import { Dish, TopCuisineDish } from './Dish'
 import { ModelBase, Point, isBrowserProd } from './ModelBase'
 import { Scrape } from './Scrape'
 import { Tag } from './Tag'
@@ -28,15 +28,13 @@ if (isWorker) {
 
 export type LngLat = { lng: number; lat: number }
 
+// TODO: rename to `TopCuisine`?
 export type TopDish = {
   country: string
   icon: string
   frequency: number
   avg_rating: number
-  dishes: {
-    name: string
-    image: string
-  }[]
+  dishes: TopCuisineDish[]
   top_restaurants: Partial<Restaurant>[]
 }
 

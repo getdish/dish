@@ -1,4 +1,4 @@
-import { Dish } from '@dish/models'
+import { TopCuisineDish } from '@dish/models'
 import React, { memo } from 'react'
 import { Image, Text } from 'react-native'
 
@@ -11,7 +11,7 @@ export const DishView = memo(
     dish,
     size = 100,
     ...rest
-  }: { dish: Dish; size?: number } & StackProps) => {
+  }: { dish: TopCuisineDish; size?: number } & StackProps) => {
     return (
       <LinkButton
         alignItems="center"
@@ -62,17 +62,20 @@ export const DishView = memo(
           overflow="hidden"
         >
           <Text
-            numberOfLines={1}
+            numberOfLines={2}
             style={{
               fontSize: 16,
               fontWeight: '700',
               lineHeight: 22,
               // opacity: 0.75,
-              paddingVertical: 10,
+              paddingVertical: 1,
               textAlign: 'center',
             }}
           >
-            {dish.name}
+            <Text>{dish.name}</Text>
+            <Text style={{ fontSize: 12 }}>
+              {'\n'} {dish.count} restaurants
+            </Text>
           </Text>
         </VStack>
       </LinkButton>

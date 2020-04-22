@@ -1,5 +1,11 @@
 import { ModelBase } from './ModelBase'
 
+export type TopCuisineDish = Partial<Dish> & {
+  rating: number
+  count: number
+  image: string
+}
+
 export class Dish extends ModelBase<Dish> {
   restaurant_id!: string
   name!: string

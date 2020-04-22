@@ -6,7 +6,7 @@ export {
   Sources,
 } from './Restaurant'
 export { Tag, TagRecord, TagType } from './Tag'
-export { Dish } from './Dish'
+export { Dish, TopCuisineDish } from './Dish'
 export { Scrape, ScrapeData } from './Scrape'
 export { ModelBase, createApolloClient } from './ModelBase'
 export { User } from './User'
