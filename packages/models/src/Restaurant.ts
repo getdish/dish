@@ -29,7 +29,7 @@ if (isWorker) {
 export type LngLat = { lng: number; lat: number }
 
 // TODO: rename to `TopCuisine`?
-export type TopDish = {
+export type TopCuisine = {
   country: string
   icon: string
   frequency: number
@@ -226,7 +226,7 @@ export class Restaurant extends ModelBase<Restaurant> {
     lat: number,
     lng: number,
     distance: number
-  ): Promise<TopDish[]> {
+  ): Promise<TopCuisine[]> {
     const params = ['lon=' + lng, 'lat=' + lat, 'distance=' + distance]
     const response = await axios.get(
       SEARCH_DOMAIN + '/top_dishes?' + params.join('&')

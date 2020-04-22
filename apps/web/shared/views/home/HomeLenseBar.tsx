@@ -22,8 +22,6 @@ export default memo(function HomeLenseBar(props: {
   const state = om.state.home.states[props.stateIndex] as HomeStateItemSearch
   const activeTagIds =
     state?.activeTagIds ?? om.state.home.lastHomeState.activeTagIds
-
-  console.log('activeTagIds', activeTagIds)
   return (
     <HomeContentTopBar>
       {!props.hideLenses && <HomeLenseBarOnly activeTagIds={activeTagIds} />}
@@ -64,47 +62,49 @@ export function HomeContentTopBar(props: { children: any }) {
   )
 }
 
-export function HomeLenseBarOnly(props: { activeTagIds: HomeActiveTagIds }) {
-  const drawerWidth = useHomeDrawerWidthInner()
-  const om = useOvermind()
-  return (
-    <HStack
-      minWidth={drawerWidth}
-      alignItems="center"
-      justifyContent="center"
-      spacing
-    >
-      <Divider backgroundColor="#eee" flex />
+export const HomeLenseBarOnly = memo(
+  (props: { activeTagIds: HomeActiveTagIds }) => {
+    const drawerWidth = useHomeDrawerWidthInner()
+    const om = useOvermind()
+    return (
       <HStack
-        borderRadius={100}
-        // borderColor="#eee"
-        // borderWidth={1}
-        padding={6}
+        minWidth={drawerWidth}
         alignItems="center"
         justifyContent="center"
-        spacing={3}
+        spacing
       >
-        {om.state.home.allLenseTags.map((lense, index) => (
-          <LenseButton
-            key={lense.id + index}
-            lense={lense}
-            isActive={props.activeTagIds[getTagId(lense)]}
-            minimal={index > -1}
-          />
-        ))}
-
-        <HoverablePopover
-          position="right"
-          contents={
-            <Box>
-              <Text>12312321</Text>
-            </Box>
-          }
+        <Divider backgroundColor="#eee" flex />
+        <HStack
+          borderRadius={100}
+          // borderColor="#eee"
+          // borderWidth={1}
+          padding={6}
+          alignItems="center"
+          justifyContent="center"
+          spacing={3}
         >
-          <Icon name="ChevronDown" size={25} />
-        </HoverablePopover>
+          {om.state.home.allLenseTags.map((lense, index) => (
+            <LenseButton
+              key={lense.id + index}
+              lense={lense}
+              isActive={props.activeTagIds[getTagId(lense)]}
+              minimal={index > -1}
+            />
+          ))}
+
+          <HoverablePopover
+            position="right"
+            contents={
+              <Box>
+                <Text>12312321</Text>
+              </Box>
+            }
+          >
+            <Icon name="ChevronDown" size={25} />
+          </HoverablePopover>
+        </HStack>
+        <Divider backgroundColor="#eee" flex />
       </HStack>
-      <Divider backgroundColor="#eee" flex />
-    </HStack>
-  )
-}
+    )
+  }
+)

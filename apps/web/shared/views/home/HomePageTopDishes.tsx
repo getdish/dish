@@ -1,16 +1,12 @@
-import { Dish, Restaurant, TopDish } from '@dish/models'
+import { Restaurant, TopCuisine } from '@dish/models'
 import _ from 'lodash'
 import React, { memo, useCallback, useState } from 'react'
 import { ScrollView, Text } from 'react-native'
 
-import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeStateItem, HomeStateItemHome } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { NotFoundPage } from '../NotFoundPage'
-import { Box } from '../ui/Box'
-import { HoverablePopover } from '../ui/HoverablePopover'
 import { LinkButton } from '../ui/Link'
-import { MediaQuery, mediaQueries } from '../ui/MediaQuery'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { SmallTitle, SmallerTitle } from '../ui/SmallTitle'
 import { Spacer } from '../ui/Spacer'
@@ -21,10 +17,9 @@ import { DishView } from './DishView'
 import HomeFilterBar from './HomeFilterBar'
 import HomeLenseBar, { HomeLenseBarOnly } from './HomeLenseBar'
 import { RestaurantButton } from './RestaurantButton'
-import { SmallButton } from './SmallButton'
 import { TrendingButton } from './TrendingButton'
 
-export default memoIsEqualDeep(function HomePageTopDishes({
+export default memo(function HomePageTopDishes({
   stateIndex,
 }: {
   stateIndex: number
@@ -32,6 +27,7 @@ export default memoIsEqualDeep(function HomePageTopDishes({
   const om = useOvermind()
   const state = om.state.home.states[stateIndex] as HomeStateItemHome
   if (!state) return <NotFoundPage />
+
   const { topDishes, topDishesFilteredIndices } = om.state.home
   let results = topDishes
   if (topDishesFilteredIndices.length) {
@@ -39,6 +35,7 @@ export default memoIsEqualDeep(function HomePageTopDishes({
       (_, index) => topDishesFilteredIndices.indexOf(index) > -1
     )
   }
+
   return (
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
@@ -137,7 +134,7 @@ const CountryTopDishesAndRestaurants = memo(
     country,
     rank,
   }: {
-    country: TopDish
+    country: TopCuisine
     rank: number
     state: HomeStateItem
   }) => {
