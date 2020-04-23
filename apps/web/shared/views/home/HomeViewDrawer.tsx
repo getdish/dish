@@ -50,26 +50,6 @@ export function HomeViewDrawer(props: { children: any }) {
 
   const topOffset = isSmall ? 0 : searchBarHeight
 
-  const leftGradient = (
-    <LinearGradient
-      colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
-      style={[StyleSheet.absoluteFill]}
-      startPoint={[0, 0]}
-      endPoint={[100, 0]}
-    />
-  )
-
-  const gradients = [
-    <LinearGradient
-      key={0}
-      colors={isSmall ? colorsSmall : colors}
-      style={[StyleSheet.absoluteFill]}
-    />,
-    <ZStack key={1} fullscreen right={850}>
-      {leftGradient}
-    </ZStack>,
-  ]
-
   return (
     <HStack
       position="absolute"
@@ -95,7 +75,19 @@ export function HomeViewDrawer(props: { children: any }) {
           // borderBottomRightRadius={drawerBorderRadius}
           overflow="hidden"
         >
-          {gradients}
+          <LinearGradient
+            key={0}
+            colors={isSmall ? colorsSmall : colors}
+            style={[StyleSheet.absoluteFill]}
+          />
+          <ZStack key={1} fullscreen right={850}>
+            <LinearGradient
+              colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
+              style={[StyleSheet.absoluteFill]}
+              startPoint={[0, 0]}
+              endPoint={[100, 0]}
+            />
+          </ZStack>
         </ZStack>
       </ZStack>
       <VStack

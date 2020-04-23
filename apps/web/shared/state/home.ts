@@ -531,10 +531,27 @@ const pushHomeState: AsyncAction<
         ...newState,
       }
       fetchData = async () => {
-        await om.actions.home._loadRestaurantDetail({
-          slug: item.params.slug,
-          currentState,
-        })
+        const slug = item.params.slug
+        const restaurant = new Restaurant()
+        await restaurant.findOne('slug', slug)
+        om.state.home.allRestaurants[restaurant.id] = restaurant
+        const state = om.state.home.lastRestaurantState
+        if (state) {
+          state.restaurantId = restaurant.id
+          state.center = {
+            lng: restaurant.location.coordinates[0],
+            lat: restaurant.location.coordinates[1] - 0.0037,
+          }
+          // zoom in a bit
+          state.span = {
+            lng: 0.008, // Math.max(0.010675285275539181, currentState.span.lng * 0.5),
+            lat: 0.003, // Math.max(0.004697178346440012, currentState.span.lat * 0.5),
+          }
+          state.reviews = await Review.findAllForRestaurant(restaurant.id)
+          if (om.state.user.isLoggedIn) {
+            await om.actions.home.getReview()
+          }
+        }
       }
       break
     }
@@ -674,32 +691,6 @@ const _loadUserDetail: AsyncAction<{
       state.reviews = await Review.findAllForUser(user.id)
     }
   })
-}
-
-const _loadRestaurantDetail: AsyncAction<{
-  slug: string
-  currentState: HomeStateItem
-}> = async (om, { slug, currentState }) => {
-  const restaurant = new Restaurant()
-  await restaurant.findOne('slug', slug)
-  om.state.home.allRestaurants[restaurant.id] = restaurant
-  const state = om.state.home.lastRestaurantState
-  if (state) {
-    state.restaurantId = restaurant.id
-    state.center = {
-      lng: restaurant.location.coordinates[0],
-      lat: restaurant.location.coordinates[1] - 0.0037,
-    }
-    // zoom in a bit
-    state.span = {
-      lng: currentState.span.lng * 0.5,
-      lat: currentState.span.lat * 0.5,
-    }
-    state.reviews = await Review.findAllForRestaurant(restaurant.id)
-    if (om.state.user.isLoggedIn) {
-      await om.actions.home.getReview()
-    }
-  }
 }
 
 const _loadHomeDishes: AsyncAction = async (om) => {
@@ -1331,7 +1322,6 @@ export const actions = {
   startAutocomplete,
   _afterTagChange,
   _loadHomeDishes,
-  _loadRestaurantDetail,
   _loadUserDetail,
   _runAutocomplete,
   _runHomeSearch,

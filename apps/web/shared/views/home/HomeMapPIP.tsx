@@ -25,7 +25,8 @@ export const HomeMapPIP = memo(() => {
     showsCompass: mapkit.FeatureVisibility.Hidden,
   })
 
-  const enabled = state.type === 'restaurant' && state.span.lat < 0.02
+  const enabled = state.type === 'restaurant' && span.lat < 0.02
+  console.log('span', span.lat)
   const restaurant =
     state.type === 'restaurant'
       ? om.state.home.allRestaurants[state.restaurantId]
@@ -81,7 +82,7 @@ export const HomeMapPIP = memo(() => {
       width="20%"
       height="20%"
       maxWidth={175}
-      maxHeight={100}
+      maxHeight={150}
       borderRadius={20}
       overflow="hidden"
       shadowColor="rgba(0,0,0,0.25)"
