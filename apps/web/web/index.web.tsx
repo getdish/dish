@@ -42,7 +42,7 @@ let rootEl = document.getElementById('root')
 const search = window.location.search
 
 async function start() {
-  if (!isWorker) {
+  if (!window['STARTED'] && !isWorker) {
     require('./mapkit')
     await startMapKit()
     console.log('started mapkit')
@@ -77,11 +77,14 @@ async function start() {
   }
 }
 
-if (!window['IS_SSR_RENDERING'] && !window['STARTED']) {
-  window['STARTED'] = true
-  console.log('Starting from index')
-  start()
-}
+// can remove this started check once overmind works better for hmr
+// if (!window['STARTED']) {
+  if (!window['IS_SSR_RENDERING']) {
+    console.log('Starting from index')
+    start()
+    window['STARTED'] = true
+  }
+// }
 
 async function startMapKit() {
   const token = `eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzQ1RLNTYzUlQifQ.eyJpYXQiOjE1ODQ0MDU5MzYuMjAxLCJpc3MiOiIzOTlXWThYOUhZIn0.wAw2qtwuJkcL6T6aI-nLZlVuwJZnlCNg2em6V1uopx9hkUgWZE1ISAWePMoRttzH_NPOem4mQfrpmSTRCkh2bg`
@@ -94,8 +97,5 @@ async function startMapKit() {
   })
 }
 
-if (module['hot']) {
-  module['hot'].accept(() => {
-    console.log('hmr root')
-  })
-}
+// @ts-ignore
+module?.hot?.accept()
