@@ -3,6 +3,7 @@ export {
   TopCuisine,
   RestaurantSearchArgs,
   TagRating,
+  TagRestaurantData,
   Sources,
 } from './Restaurant'
 export { Tag, TagRecord, TagType } from './Tag'

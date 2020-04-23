@@ -7,6 +7,7 @@ import {
   ScrapeData,
   Tag,
   TagRating,
+  TagRestaurantData,
 } from '@dish/models'
 import { WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
@@ -92,6 +93,7 @@ export class Self extends WorkerJob {
     await this.mergeTags()
     await this.scanReviews()
     this.mergePhotos()
+    await this.findPhotosForTags()
     this.addWebsite()
     this.addSources()
     this.addPriceRange()
@@ -359,7 +361,7 @@ export class Self extends WorkerJob {
 
   mergePhotos() {
     this.restaurant.photos = [
-      ...this.getPaginatedData(this.yelp.data, 'photos'),
+      ...this.getPaginatedData(this.yelp.data, 'photos').map((i) => i.src),
       ...this.tripadvisor.getData('photos', []),
     ]
   }
@@ -396,6 +398,42 @@ export class Self extends WorkerJob {
     await this._averageAndPersistTagRatings()
   }
 
+  async findPhotosForTags() {
+    const tags = await this.restaurant.allPossibleTags()
+    const photos = this.getPaginatedData(this.yelp.data, 'photos')
+    for (const photo of photos) {
+      for (const tag of tags) {
+        if (photo.media_data?.caption?.includes(tag.name)) {
+          if (!this.restaurant.tag_restaurant_data) {
+            this.restaurant.tag_restaurant_data = []
+          }
+          let default_data: TagRestaurantData = {
+            id: tag.id,
+            name: tag.name,
+            slug: tag.slug(),
+            photos: [] as string[],
+          }
+          let tag_restaurant_data =
+            this.restaurant.tag_restaurant_data.find((i) => i.id == tag.id) ||
+            default_data
+
+          if (!tag_restaurant_data.photos.includes(photo.src)) {
+            tag_restaurant_data.photos.push(photo.src)
+          }
+
+          const index = this.restaurant.tag_restaurant_data.findIndex(
+            (i) => i.id == tag.id
+          )
+          if (index != -1) {
+            this.restaurant.tag_restaurant_data[index] = tag_restaurant_data
+          } else {
+            this.restaurant.tag_restaurant_data.push(tag_restaurant_data)
+          }
+        }
+      }
+    }
+  }
+
   getPaginatedData(data: ScrapeData, type: 'photos' | 'reviews') {
     let items: any[] = []
     let page = 0
@@ -408,23 +446,12 @@ export class Self extends WorkerJob {
       const variations = [base, base.replace('reviews', 'review')]
       key = variations.find((i) => data.hasOwnProperty(i))
       if (key) {
-        items = items.concat(
-          data[key].map((i) => {
-            if (type == 'photos') {
-              return i.src
-            } else {
-              return i
-            }
-          })
-        )
+        items = items.concat(data[key])
       } else {
         // Allow scrapers to start their pages on both 0 and 1
         if (page > 0) {
           break
         }
-      }
-      if (type == 'photos' && items.length > 50) {
-        break
       }
       page++
     }
@@ -435,7 +462,7 @@ export class Self extends WorkerJob {
     const tags = await this.restaurant.allPossibleTags()
     for (const tag of tags) {
       if (!this._doesStringContainTag(text, tag.name)) continue
-      this.restaurant.upsertTags([tag])
+      await this.restaurant.upsertTags([tag])
       this.measureSentiment(text, tag)
     }
   }

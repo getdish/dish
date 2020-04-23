@@ -53,11 +53,17 @@ export type RatingFactors = {
   ambience: number
 }
 
+// TODO Merge into TagRestaurantData
 export type TagRating = {
   id: string
-  rating: number
+  rating?: number
   slug: string
   name: string
+}
+
+// TODO: Merge tag_rankings and tag_ratings into this
+export type TagRestaurantData = TagRating & {
+  photos: string[]
 }
 
 export type Sources = { [key: string]: { url: string; rating: number } }
@@ -76,8 +82,12 @@ export class Restaurant extends ModelBase<Restaurant> {
   image?: string
   tags!: { tag: Tag }[]
   tag_names!: string[]
+
+  // TODO merge all into tag_restaurant_data
   tag_rankings!: (string | number)[][]
   tag_ratings!: TagRating[]
+  tag_restaurant_data!: TagRestaurantData[]
+
   photos?: string[]
   telephone!: string
   website!: string
@@ -108,6 +118,7 @@ export class Restaurant extends ModelBase<Restaurant> {
       'tag_names',
       'tag_rankings',
       'tag_ratings',
+      'tag_restaurant_data',
       'photos',
       'telephone',
       'website',

@@ -1,4 +1,11 @@
-import { Restaurant, Scrape, Tag, TagRating, flushTestData } from '@dish/models'
+import {
+  Restaurant,
+  Scrape,
+  Tag,
+  TagRating,
+  TagRestaurantData,
+  flushTestData,
+} from '@dish/models'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 
 import { Self } from '../../src/self/Self'
@@ -32,8 +39,22 @@ const yelp: Partial<Scrape> = {
         },
       },
     },
-    photosp0: [{ src: 'https://yelp.com/image.jpg' }],
-    photosp1: [{ src: 'https://yelp.com/image2.jpg' }],
+    photosp0: [
+      {
+        src: 'https://yelp.com/image.jpg',
+        media_data: {
+          caption: 'Test tag existing 1',
+        },
+      },
+    ],
+    photosp1: [
+      {
+        src: 'https://yelp.com/image2.jpg',
+        media_data: {
+          caption: 'Test tag existing 2',
+        },
+      },
+    ],
     reviewsp0: [
       {
         id: 'abc123',
@@ -309,4 +330,40 @@ test('Dish sentiment analysis from reviews', async (t) => {
   t.is(tag1.rating, -3)
   t.is(tag2.rating, 4)
   t.is(tag3.rating, 0)
+})
+
+test('Find photos of dishes', async (t) => {
+  const dish = new Self()
+  const tag = { name: 'Test country' }
+  const tag_parent = new Tag(tag)
+  await tag_parent.insert()
+  const existing_tag1 = new Tag({
+    name: 'Test tag existing 1',
+    parentId: tag_parent.id,
+  })
+  const existing_tag2 = new Tag({
+    name: 'Test tag existing 2',
+    parentId: tag_parent.id,
+  })
+  await existing_tag1.insert()
+  await existing_tag2.insert()
+  await t.context.restaurant.upsertTags([tag])
+  await t.context.restaurant.findOne('id', t.context.restaurant.id)
+  dish.restaurant = t.context.restaurant
+  await dish.getScrapeData()
+  await dish.findPhotosForTags()
+  await dish.restaurant.update()
+  const updated = new Restaurant()
+  await updated.findOne('id', t.context.restaurant.id)
+  const tag1 =
+    updated.tag_restaurant_data.find((i) => i.name == existing_tag1.name) ||
+    ({} as TagRestaurantData)
+  const tag2 =
+    updated.tag_restaurant_data.find((i) => i.name == existing_tag2.name) ||
+    ({} as TagRestaurantData)
+  t.is(updated.tag_restaurant_data.length, 2)
+  t.is(tag1.name, existing_tag1.name)
+  t.deepEqual(tag1.photos, ['https://yelp.com/image.jpg'])
+  t.is(tag2.name, existing_tag2.name)
+  t.deepEqual(tag2.photos, ['https://yelp.com/image2.jpg'])
 })

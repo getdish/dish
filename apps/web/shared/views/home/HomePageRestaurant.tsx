@@ -180,29 +180,26 @@ const RestaurantPhotos = ({ restaurant }: { restaurant: Restaurant }) => {
             justifyContent="center"
             spacing={spacing}
           >
-            {[
-              'Pho',
-              'Banh Mi',
-              'Banh Xeo',
-              'Bho Kho',
-              'Thit Kho',
-              'Banh Xeo',
-              'Bho Kho',
-              'Thit Kho',
-            ].map((dish, index) => (
-              <DishView
-                key={index}
-                size={(drawerWidth - 3 * spacing) / 3 - 15}
-                marginBottom={10}
-                dish={
-                  {
-                    name: dish,
-                    image: restaurant.photos[index] ?? restaurant.image,
-                    price: 1000,
-                  } as any
-                }
-              />
-            ))}
+            {restaurant.tag_restaurant_data.map((tag, index) => {
+              // TODO tag_ratings should be merged into tag_restaurant_data
+              const tag_rating = restaurant.tag_ratings.find(
+                (i) => i.name == tag.name
+              )
+              return (
+                <DishView
+                  key={index}
+                  size={(drawerWidth - 3 * spacing) / 3 - 15}
+                  marginBottom={10}
+                  dish={
+                    {
+                      name: tag.name,
+                      image: tag.photos[0],
+                      rating: tag_rating?.rating || 0,
+                    } as any
+                  }
+                />
+              )
+            })}
           </HStack>
         </VStack>
       )}
