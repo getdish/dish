@@ -161,8 +161,8 @@ const CountryTopDishesAndRestaurants = memo(
             {/* <RankingView rank={rank} marginLeft={-36} /> */}
             <LinkButton
               {...flatButtonStyle}
-              // backgroundColor="transparent"
-              marginVertical={-8}
+              paddingVertical={4}
+              marginVertical={-6}
               tag={{
                 type: 'country',
                 name: country.country,
