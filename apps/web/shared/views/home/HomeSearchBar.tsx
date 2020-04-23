@@ -74,7 +74,9 @@ export default memo(() => {
   useEffect(() => {
     const offSearch = om.reaction(
       (state) => state.home.currentState.searchQuery,
-      (val) => setSearch(val)
+      (val) => {
+        setSearch(val)
+      }
     )
     const offLoc = om.reaction(
       (state) => state.home.locationSearchQuery,
