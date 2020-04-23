@@ -3,11 +3,13 @@ import { TouchableOpacity } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
 import { useDebounceValue } from '../../hooks/useDebounce'
+import { useMedia } from '../../hooks/useMedia'
 import { HomeStateItemSimple } from '../../state/home'
 import { useOvermindStatic } from '../../state/om'
 import { ErrorBoundary } from '../ErrorBoundary'
 import { ForceShowPopover } from '../ui/Popover'
 import { ZStack } from '../ui/Stacks'
+import { useMediaQueryIsSmall } from './HomeViewDrawer'
 
 export function HomeStackView<A extends HomeStateItemSimple>(props: {
   items: A[]
@@ -62,6 +64,7 @@ function HomeStackViewItem({
 }) {
   const om = useOvermindStatic()
   const [isMounted, setIsMounted] = useState(false)
+  const isSmall = useMediaQueryIsSmall()
 
   useEffect(() => {
     let tm = setTimeout(() => {
@@ -75,6 +78,9 @@ function HomeStackViewItem({
     },
     []
   )
+
+  const top = isSmall ? 0 : (index - 1) * 10 + 6
+  const left = isSmall ? -3 : index * 10
 
   return (
     <div
@@ -91,8 +97,8 @@ function HomeStackViewItem({
             backgroundColor={index === 0 ? 'transparent' : 'white'}
             flex={1}
             zIndex={index}
-            top={(index - 1) * 10 + 6}
-            left={index * 10}
+            top={top}
+            left={left}
             bottom={-(index * 5)}
             width="100%"
             {...(index !== 0 && {

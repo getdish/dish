@@ -19,6 +19,7 @@ export const HomeMapControlsOverlay = memo(() => {
       pointerEvents="none"
       top={searchBarHeight + 10}
       left={drawerWidth + 20}
+      maxWidth={500}
       zIndex={100}
     >
       <VStack position="relative" flex={1}>

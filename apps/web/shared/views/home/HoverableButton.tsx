@@ -1,4 +1,4 @@
-import React, { Children, useState } from 'react'
+import React, { useState } from 'react'
 import { Text, TouchableOpacity } from 'react-native'
 
 import Hoverable from '../ui/Hoverable'
@@ -31,29 +31,22 @@ export const HoverableButton = ({
           props.onHoverOut?.()
         }}
       >
-        <div
-          className="see-through"
-          style={{
-            filter: `grayscale(${isHoveredFinal ? 0 : 100}%)`,
-          }}
-        >
-          <Text>
-            <HStack
-              alignItems="center"
-              opacity={isHoveredFinal ? 1 : opacity}
-              spacing={spacing ?? 'sm'}
-              {...props}
-            >
-              {React.Children.toArray(children).map((child, index) =>
-                typeof child == 'string' ? (
-                  <Text key={index}>{child}</Text>
-                ) : (
-                  <React.Fragment key={index}>{child}</React.Fragment>
-                )
-              )}
-            </HStack>
-          </Text>
-        </div>
+        <Text>
+          <HStack
+            alignItems="center"
+            opacity={isHoveredFinal ? 1 : opacity}
+            spacing={spacing ?? 'sm'}
+            {...props}
+          >
+            {React.Children.toArray(children).map((child, index) =>
+              typeof child == 'string' ? (
+                <Text key={index}>{child}</Text>
+              ) : (
+                <React.Fragment key={index}>{child}</React.Fragment>
+              )
+            )}
+          </HStack>
+        </Text>
       </Hoverable>
     </TouchableOpacity>
   )
