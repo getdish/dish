@@ -5,9 +5,11 @@ import { Image, Linking, Text } from 'react-native'
 import { GeocodePlace, HomeStateItem } from '../../state/home'
 import { Box } from '../ui/Box'
 import { HoverablePopover } from '../ui/HoverablePopover'
+import { Icon } from '../ui/Icon'
 import { Link } from '../ui/Link'
 import { HStack } from '../ui/Stacks'
 import { SelectableText } from '../ui/Text'
+import { SmallCircleButton } from './CloseButton'
 
 type AddressSize = 'lg' | 'md' | 'sm'
 
@@ -60,8 +62,40 @@ export const RestaurantAddressLinksRow = memo(
     showAddress?: AddressSize
     showMenu?: boolean
   }) => {
-    const fontSize = size == 'lg' ? 16 : 13
+    const fontSize = size == 'lg' ? 15 : 13
     const sep = ' '
+
+    const linkElements = (
+      <HStack alignItems="center" spacing={size}>
+        {showMenu && (
+          <SelectableText>
+            {showAddress ? <>&nbsp; {sep} &nbsp;</> : null}
+            <Link inline name="restaurant" params={{ slug: '' }}>
+              Menu
+            </Link>
+          </SelectableText>
+        )}
+        {!!restaurant.website && <Text onPress={() => {}}>Call</Text>}
+        {!!restaurant.website && (
+          <Text onPress={() => Linking.openURL(restaurant.website)}>
+            Website
+          </Text>
+        )}
+        {!!restaurant.website && (
+          <Text onPress={() => Linking.openURL(restaurant.website)}>
+            <Image
+              source={require('../../assets/instagram.png')}
+              style={{
+                width: fontSize * 1.25,
+                height: fontSize * 1.25,
+                marginVertical: -fontSize * 0.26,
+                marginLeft: 4,
+              }}
+            />
+          </Text>
+        )}
+      </HStack>
+    )
 
     return (
       <Text style={{ color: '#999', fontSize }}>
@@ -72,50 +106,18 @@ export const RestaurantAddressLinksRow = memo(
             </SelectableText>
           )}
 
-          <HoverablePopover
-            position="right"
-            contents={
-              <Box>
-                <Text>
-                  <ul>
-                    <li>123</li>
-                  </ul>
-                </Text>
-              </Box>
-            }
-          >
-            <HStack alignItems="center" spacing={size}>
-              {showMenu && (
-                <SelectableText>
-                  {showAddress ? <>&nbsp; {sep} &nbsp;</> : null}
-                  <Link inline name="restaurant" params={{ slug: '' }}>
-                    Menu
-                  </Link>
-                </SelectableText>
-              )}
-              {!!restaurant.website && (
-                <Text onPress={() => {}}> 📞{size == 'lg' ? `Call` : ''}</Text>
-              )}
-              {!!restaurant.website && (
-                <Text onPress={() => Linking.openURL(restaurant.website)}>
-                  🔗{size == 'lg' ? `Website` : ''}
-                </Text>
-              )}
-              {!!restaurant.website && (
-                <Text onPress={() => Linking.openURL(restaurant.website)}>
-                  <Image
-                    source={require('../../assets/instagram.png')}
-                    style={{
-                      width: fontSize * 1.25,
-                      height: fontSize * 1.25,
-                      marginVertical: -fontSize * 0.26,
-                      marginLeft: 4,
-                    }}
-                  />
-                </Text>
-              )}
-            </HStack>
-          </HoverablePopover>
+          {size === 'sm' && (
+            <HoverablePopover
+              position="right"
+              contents={<Box>{linkElements}</Box>}
+            >
+              <SmallCircleButton>
+                <Icon name="ExternalLink" size={10} color="#fff" />
+              </SmallCircleButton>
+            </HoverablePopover>
+          )}
+
+          {size !== 'sm' && linkElements}
         </HStack>
       </Text>
     )

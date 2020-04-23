@@ -87,7 +87,7 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
       </HStack>
 
       <VStack
-        marginTop={-18}
+        marginTop={-23}
         position="relative"
         flex={1}
         paddingTop={6}
@@ -104,7 +104,7 @@ const HomeSearchResultsViewContent = memo(
   ({ state }: { state: HomeStateItemSearch }) => {
     const om = useOvermind()
     const allRestaurants = om.state.home.allRestaurants
-    const topPad = 20 + 80
+    const topPad = 20 + 70
 
     if (!state.results?.results || state.results.status === 'loading') {
       return (

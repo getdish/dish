@@ -15,7 +15,7 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
     <VStack paddingBottom={6}>
       <HStack
         paddingHorizontal={30}
-        paddingVertical={2}
+        paddingVertical={1}
         alignItems="center"
         spacing={4}
         justifyContent="center"
@@ -44,7 +44,7 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
               {...(hasPrev && { marginLeft: -4 })}
               {...(hasNext && { marginRight: -1, zIndex: 10 - index })}
               {...extraProps}
-              height={30}
+              height={28}
             />
           )
         })}
@@ -64,7 +64,7 @@ const FilterButton = memo(
         <SmallButton isActive={isActive} {...rest}>
           <Text
             style={{
-              fontSize: 15,
+              fontSize: 14,
               fontWeight: '400',
             }}
           >

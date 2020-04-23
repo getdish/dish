@@ -79,11 +79,11 @@ async function start() {
 
 // can remove this started check once overmind works better for hmr
 // if (!window['STARTED']) {
-  if (!window['IS_SSR_RENDERING']) {
-    console.log('Starting from index')
-    start()
-    window['STARTED'] = true
-  }
+if (!window['IS_SSR_RENDERING']) {
+  console.log('Starting from index')
+  start()
+  window['STARTED'] = true
+}
 // }
 
 async function startMapKit() {

@@ -82,7 +82,7 @@ export const HomeLenseBarOnly = memo(
           padding={6}
           alignItems="center"
           justifyContent="center"
-          spacing={6}
+          spacing={4}
         >
           {om.state.home.allLenseTags.map((lense, index) => (
             <LenseButton
