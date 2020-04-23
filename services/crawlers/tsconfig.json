@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
+    "module": "commonjs",
     "composite": true,
     "strictNullChecks": true,
     "outDir": "_",
