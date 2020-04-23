@@ -23,11 +23,11 @@ export const RankingView = memo(
       >
         <Text
           style={{
-            fontSize: 26,
+            fontSize: 20,
             lineHeight: 22,
             letterSpacing: -3,
             fontWeight: '500',
-            color: '#888',
+            color: '#000',
           }}
         >
           <SuperScriptText style={{ opacity: 0.35, letterSpacing: 0 }}>

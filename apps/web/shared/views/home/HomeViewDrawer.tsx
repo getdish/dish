@@ -34,10 +34,10 @@ const colors = [
 
 const colorsSmall = colors.slice(2)
 
-export const useIsSmall = () => useMedia({ maxWidth: 700 })
+export const useMediaQueryIsSmall = () => useMedia({ maxWidth: 700 })
 
 export function HomeViewDrawer(props: { children: any }) {
-  const isSmall = useIsSmall()
+  const isSmall = useMediaQueryIsSmall()
   const drawerWidth = useHomeDrawerWidth()
 
   const positionSmall: StackProps = {

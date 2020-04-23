@@ -11,6 +11,7 @@ export const Divider = memo(
     width,
     opacity,
     flexLine = 10,
+    backgroundColor,
     ...rest
   }: Omit<StackProps, 'flex'> & {
     flexLine?: number
@@ -30,7 +31,7 @@ export const Divider = memo(
           style={{
             [vertical ? 'width' : 'height']: 1,
             flex: flexLine,
-            backgroundColor: '#000',
+            backgroundColor: backgroundColor ?? '#000',
             opacity: opacity ?? 0.055,
           }}
         />

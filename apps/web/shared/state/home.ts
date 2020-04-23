@@ -1115,10 +1115,7 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
     }
   }
 
-  if (type !== 'replace') {
-    om.actions.home.updateBreadcrumbs()
-  }
-
+  om.actions.home.updateBreadcrumbs()
   currentStates = om.state.home.states
   await Promise.all([...promises])
 }

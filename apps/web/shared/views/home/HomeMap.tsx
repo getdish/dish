@@ -15,7 +15,7 @@ import { LngLat, isSearchState, setMapView } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Map, useMap } from '../map'
 import { ZStack } from '../ui/Stacks'
-import { useIsSmall } from './HomeViewDrawer'
+import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { getRankingColor, getRestaurantRating } from './RestaurantRatingView'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
@@ -45,7 +45,7 @@ export function centerMapToRegion(p: {
 export const HomeMap = memo(() => {
   const om = useOvermind()
   const drawerWidth = useHomeDrawerWidth()
-  const isSmall = useIsSmall()
+  const isSmall = useMediaQueryIsSmall()
   const state = om.state.home.currentState
   const { center, span } = state
 

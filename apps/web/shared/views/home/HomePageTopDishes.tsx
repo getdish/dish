@@ -7,6 +7,7 @@ import { HomeStateItem, HomeStateItemHome } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { NotFoundPage } from '../NotFoundPage'
 import { LinkButton } from '../ui/Link'
+import { MediaQuery, mediaQueries } from '../ui/MediaQuery'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { SmallTitle, SmallerTitle } from '../ui/SmallTitle'
 import { Spacer } from '../ui/Spacer'
@@ -117,12 +118,14 @@ const HomeViewTopDishesTrending = memo(() => {
             {allRestaurants.slice(5).map(getTrending)}
           </VStack>
         </VStack>
-        <VStack flex={1} spacing={6}>
-          <SmallerTitle>Topics</SmallerTitle>
-          <VStack spacing={0} overflow="hidden">
-            {allRestaurants.slice(5).map(getTrending)}
+        <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
+          <VStack flex={1} spacing={6}>
+            <SmallerTitle>Topics</SmallerTitle>
+            <VStack spacing={0} overflow="hidden">
+              {allRestaurants.slice(5).map(getTrending)}
+            </VStack>
           </VStack>
-        </VStack>
+        </MediaQuery>
       </HStack>
     </VStack>
   )

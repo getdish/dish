@@ -140,7 +140,8 @@ export default memo(() => {
       const isCaretAtStart = focusedInput.selectionEnd == 0
 
       switch (code) {
-        case 13: // enter
+        case 13: {
+          // enter
           if (om.state.home.autocompleteFocusedTag) {
             om.actions.home.navigateToTag({
               tag: om.state.home.autocompleteFocusedTag,
@@ -151,7 +152,9 @@ export default memo(() => {
             focusedInput.blur()
           }
           return
-        case 8: // delete
+        }
+        case 8: {
+          // delete
           if (!isAutocompleteActive) return
           // if selected onto a tag, we can send remove command
           if (autocompleteIndex < 0) {
@@ -166,13 +169,17 @@ export default memo(() => {
             prev()
           }
           return
-        case 39: // right
+        }
+        case 39: {
+          // right
           if (isAutocompleteActive && isCaretAtEnd) {
             // at end
             next()
           }
           return
-        case 37: // left
+        }
+        case 37: {
+          // left
           if (isCaretAtStart) {
             // at start, go into selecting searchbar tags if we have em
             if (isAutocompleteActive && autocompleteIndex === 0) {
@@ -185,7 +192,9 @@ export default memo(() => {
             prev()
           }
           return
-        case 27: // esc
+        }
+        case 27: {
+          // esc
           if (isTextSelected(focusedInput)) {
             clearTextSelection()
             return
@@ -196,14 +205,19 @@ export default memo(() => {
             focusedInput.blur()
           }
           return
-        case 38: // up
+        }
+        case 38: {
+          // up
           e.preventDefault()
           om.actions.home.moveActiveUp()
           return
-        case 40: // down
+        }
+        case 40: {
+          // down
           e.preventDefault()
           om.actions.home.moveActiveDown()
           return
+        }
       }
     }
     const handleClick = () => {

@@ -7,6 +7,7 @@ import { useOvermind } from '../../state/om'
 import { NotFoundPage } from '../NotFoundPage'
 import { Divider } from '../ui/Divider'
 import { LinkButton } from '../ui/Link'
+import { MediaQuery, mediaQueries } from '../ui/MediaQuery'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { SmallTitle } from '../ui/SmallTitle'
 import { Spacer } from '../ui/Spacer'
@@ -41,9 +42,11 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
         Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
       </PageTitleTag>
 
-      <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
-        <CloseButton onPress={() => om.actions.home.up()} />
-      </ZStack>
+      <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
+        <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
+          <CloseButton onPress={() => om.actions.home.up()} />
+        </ZStack>
+      </MediaQuery>
 
       {isLoading && <LoadingItems />}
 

@@ -29,10 +29,7 @@ function formatAddress(
       return address.slice(0, replaceIndex)
     }
   }
-  return removeLongZip(address)
-    .split(',')
-    .slice(0, 1)
-    .join(', ')
+  return removeLongZip(address).split(',').slice(0, 1).join(', ')
 }
 
 const removeLongZip = (str: string) => {

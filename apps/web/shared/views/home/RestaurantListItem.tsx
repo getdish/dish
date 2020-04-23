@@ -46,7 +46,7 @@ export const RestaurantListItem = memo(
     }, [])
 
     const pad = 18
-    const padLeft = 20
+    const padLeft = 18
 
     const isShowingComment = isEditingUserPage(om.state)
 
@@ -100,36 +100,41 @@ export const RestaurantListItem = memo(
                 maxWidth={525}
                 spacing={5}
               >
-                <Link name="restaurant" params={{ slug: restaurant.slug }}>
-                  <HStack alignItems="center" marginVertical={-3}>
-                    <RankingView rank={rank} />
-                    <Text
-                      style={{
-                        fontSize: 22,
-                        fontWeight: 'bold',
-                        textDecorationColor: 'transparent',
-                      }}
-                    >
-                      {restaurant.name}
-                    </Text>
-                  </HStack>
-                </Link>
-
-                <HStack
-                  alignItems="center"
-                  paddingLeft={padLeft}
-                  spacing
-                  overflow="hidden"
-                >
-                  <RestaurantAddressLinksRow
-                    currentLocationInfo={currentLocationInfo}
-                    showAddress="sm"
-                    restaurant={restaurant}
+                <HStack alignItems="flex-start">
+                  <RankingView
+                    marginLeft={-32}
+                    marginRight={-4}
+                    marginTop={14}
+                    rank={rank}
                   />
-                </HStack>
+                  <RestaurantRatingViewPopover restaurant={restaurant} />
+                  <Spacer />
+                  <VStack spacing="sm">
+                    <Link name="restaurant" params={{ slug: restaurant.slug }}>
+                      <HStack alignItems="center" marginVertical={-3}>
+                        <Text
+                          style={{
+                            marginLeft: -1,
+                            fontSize: 22,
+                            fontWeight: 'bold',
+                            textDecorationColor: 'transparent',
+                          }}
+                        >
+                          {restaurant.name}
+                        </Text>
+                      </HStack>
+                    </Link>
 
-                <HStack paddingTop={6} paddingLeft={padLeft}>
-                  <RestaurantTagsRow showMore restaurant={restaurant} />
+                    <HStack alignItems="center" spacing overflow="hidden">
+                      <RestaurantAddressLinksRow
+                        currentLocationInfo={currentLocationInfo}
+                        showAddress="sm"
+                        restaurant={restaurant}
+                      />
+                    </HStack>
+
+                    <RestaurantTagsRow showMore restaurant={restaurant} />
+                  </VStack>
                 </HStack>
 
                 {isEditingUserPage(om.state) && (
@@ -152,7 +157,6 @@ export const RestaurantListItem = memo(
                   alignItems="center"
                   // justifyContent="center"
                 >
-                  <RestaurantRatingViewPopover restaurant={restaurant} />
                   <Spacer size="lg" />
                   <Divider vertical />
                   <RestaurantFavoriteStar restaurant={restaurant} />

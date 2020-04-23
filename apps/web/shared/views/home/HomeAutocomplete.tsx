@@ -1,5 +1,5 @@
 import React, { memo, useEffect } from 'react'
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { useOvermind } from '../../state/om'
@@ -21,13 +21,6 @@ export default memo(function HomeAutoComplete() {
     currentStateType,
     isAutocompleteActive,
   } = om.state.home
-  console.log({
-    showAutocomplete,
-    autocompleteIndex,
-    autocompleteResultsActive,
-    currentStateType,
-    isAutocompleteActive,
-  })
   const showLocation = showAutocomplete == 'location'
   const showSearch = showAutocomplete == 'search'
   const isShowing = showSearch || showLocation
@@ -98,84 +91,89 @@ export default memo(function HomeAutoComplete() {
       >
         <HStack
           backgroundColor="rgba(255,255,255,1)"
-          borderBottomRightRadius={10}
-          borderBottomLeftRadius={10}
-          height={50}
+          borderBottomRightRadius={12}
+          borderBottomLeftRadius={12}
+          height={49}
           paddingBottom={1} // looks better 1px up
-          shadowColor="rgba(0,0,0,0.1)"
-          shadowRadius={20}
+          shadowColor="rgba(0,0,0,0.4)"
+          shadowRadius={15}
           shadowOffset={{ width: 0, height: 3 }}
           spacing
           position="relative"
         >
-          <HStack
-            height="100%"
-            flex={1}
-            alignItems="center"
-            paddingHorizontal={10}
-            overflow="scroll"
-            spacing="sm"
-          >
-            {autocompleteResultsActive.map((x, index) => {
-              return (
-                <LinkButton
-                  key={`${x.tagId}${index}`}
-                  onPress={() => {
-                    if (showLocation) {
-                      om.actions.home.setLocation(x.name)
-                    } else {
-                      om.actions.home.navigateToTagId(x.tagId)
-                    }
-                    om.actions.home.setShowAutocomplete(false)
-                  }}
-                  flexDirection="row"
-                  height={34}
-                  lineHeight={24}
-                  fastClick
-                  alignItems="center"
-                  {...(isAutocompleteActive && autocompleteIndex === index
-                    ? flatButtonStyleActive
-                    : flatButtonStyle)}
-                  paddingHorizontal={10}
-                  fontSize={16}
-                  maxWidth="15vw"
-                  ellipse
-                >
-                  {x.icon?.indexOf('http') === 0 ? (
-                    <img
-                      src={x.icon}
-                      style={{
-                        width: 16,
-                        height: 16,
-                        borderRadius: 100,
-                        marginRight: 10,
-                        marginTop: -2,
-                        marginBottom: -2,
-                      }}
-                    />
-                  ) : (
-                    x.icon ?? null
-                  )}
-                  {x.name}{' '}
-                  {x.type === 'dish' &&
-                  index !== 0 &&
-                  currentStateType === 'search' &&
-                  om.state.user.isLoggedIn ? (
-                    <LinkButton
-                      {...circularFlatButtonStyle}
-                      marginVertical={-2}
-                      onPress={(e) => {
-                        console.log('e', e)
-                        alert('add to current search results')
-                      }}
-                    >
-                      +
-                    </LinkButton>
-                  ) : null}
-                </LinkButton>
-              )
-            })}
-          </HStack>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <HStack
+              height="100%"
+              flex={1}
+              alignItems="center"
+              paddingHorizontal={10}
+              spacing={6}
+            >
+              {autocompleteResultsActive.map((x, index) => {
+                return (
+                  <LinkButton
+                    key={`${x.tagId}${index}`}
+                    onPress={() => {
+                      if (showLocation) {
+                        om.actions.home.setLocation(x.name)
+                      } else {
+                        om.actions.home.navigateToTagId(x.tagId)
+                      }
+                      om.actions.home.setShowAutocomplete(false)
+                    }}
+                    {...(!showLocation && {
+                      tag: x,
+                    })}
+                    flexDirection="row"
+                    height={34}
+                    lineHeight={24}
+                    fastClick
+                    alignItems="center"
+                    {...(isAutocompleteActive && autocompleteIndex === index
+                      ? flatButtonStyleActive
+                      : flatButtonStyle)}
+                    borderRadius={100}
+                    paddingHorizontal={10}
+                    fontSize={16}
+                    maxWidth="17vw"
+                    ellipse
+                  >
+                    {x.icon?.indexOf('http') === 0 ? (
+                      <img
+                        src={x.icon}
+                        style={{
+                          width: 16,
+                          height: 16,
+                          borderRadius: 100,
+                          marginRight: 10,
+                          marginTop: 'auto',
+                          marginBottom: 'auto',
+                        }}
+                      />
+                    ) : (
+                      x.icon ?? null
+                    )}
+                    {x.name}{' '}
+                    {x.type === 'dish' &&
+                    index !== 0 &&
+                    currentStateType === 'search' &&
+                    om.state.user.isLoggedIn ? (
+                      <LinkButton
+                        {...circularFlatButtonStyle}
+                        marginVertical={-2}
+                        onPress={(e) => {
+                          console.log('e', e)
+                          alert('add to current search results')
+                        }}
+                      >
+                        +
+                      </LinkButton>
+                    ) : null}
+                  </LinkButton>
+                )
+              })}
+            </HStack>
+          </ScrollView>
         </HStack>
       </ZStack>
     </>

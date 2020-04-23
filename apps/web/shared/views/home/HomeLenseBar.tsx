@@ -74,7 +74,7 @@ export const HomeLenseBarOnly = memo(
         justifyContent="center"
         spacing
       >
-        <Divider backgroundColor="#eee" flex />
+        <Divider backgroundColor="#000" flex />
         <HStack
           borderRadius={100}
           // borderColor="#eee"
@@ -104,7 +104,7 @@ export const HomeLenseBarOnly = memo(
             <Icon name="ChevronDown" color="#999" size={20} />
           </HoverablePopover>
         </HStack>
-        <Divider backgroundColor="#eee" flex />
+        <Divider backgroundColor="#000" flex />
       </HStack>
     )
   }
