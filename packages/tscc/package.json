@@ -18,7 +18,8 @@
     "start": "true",
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput",
-    "clean": "rm -rf _"
+    "clean": "rm -rf _",
+    "test": "true"
   },
   "devDependencies": {
     "magic-string": "^0.25.4"

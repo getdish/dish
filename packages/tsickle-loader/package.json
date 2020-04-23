@@ -12,7 +12,8 @@
   "scripts": {
     "start": "true",
     "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput"
+    "watch": "tsc -b --watch --preserveWatchOutput",
+    "test": "true" 
   },
   "dependencies": {
     "tsickle": "^0.38.1",

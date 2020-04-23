@@ -23,7 +23,8 @@
     "clean": "rm -rf _",
     "start": "true",
     "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput"
+    "watch": "tsc -b --watch --preserveWatchOutput",
+    "test": "true"
   },
   "devDependencies": {
     "rollup-plugin-virtual": "^1.0.1",

@@ -14,7 +14,8 @@
     "start": "true",
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput",
-    "clean": "rm -rf _"
+    "clean": "rm -rf _",
+    "test": "true"
   },
   "dependencies": {
     "fast-glob": "^3.2.2",
