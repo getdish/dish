@@ -40,11 +40,11 @@ export const DishView = memo(
             shadowOffset={{ width: 0, height: 2 }}
             width="100%"
             height="100%"
-            borderRadius={0.2 * size}
+            borderRadius={0.15 * size}
             overflow="hidden"
             hoverStyle={{
-              shadowRadius: 35,
-              shadowColor: 'rgba(0,0,0,0.35)',
+              shadowRadius: 25,
+              shadowColor: 'rgba(0,0,0,0.25)',
               zIndex: 10000,
             }}
           >
@@ -64,18 +64,18 @@ export const DishView = memo(
           <Text
             numberOfLines={2}
             style={{
-              fontSize: 16,
-              fontWeight: '700',
+              fontSize: 13,
+              fontWeight: '500',
               lineHeight: 22,
               // opacity: 0.75,
-              paddingVertical: 1,
+              paddingVertical: 2,
               textAlign: 'center',
             }}
           >
             <Text>{dish.name}</Text>
-            <Text style={{ fontSize: 12 }}>
+            {/* <Text style={{ fontSize: 12 }}>
               {'\n'} {dish.count} restaurants
-            </Text>
+            </Text> */}
           </Text>
         </VStack>
       </LinkButton>

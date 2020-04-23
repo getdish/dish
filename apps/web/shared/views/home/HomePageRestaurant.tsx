@@ -71,7 +71,7 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
                   <VStack flex={1}>
                     <Text
                       style={{
-                        fontSize: 30,
+                        fontSize: 26,
                         fontWeight: 'bold',
                         paddingRight: 30,
                       }}

@@ -115,7 +115,7 @@ export const RestaurantListItem = memo(
                         <Text
                           style={{
                             marginLeft: -1,
-                            fontSize: 22,
+                            fontSize: 20,
                             fontWeight: 'bold',
                             textDecorationColor: 'transparent',
                           }}
@@ -128,6 +128,7 @@ export const RestaurantListItem = memo(
                     <HStack alignItems="center" spacing overflow="hidden">
                       <RestaurantAddressLinksRow
                         currentLocationInfo={currentLocationInfo}
+                        size="sm"
                         showAddress="sm"
                         restaurant={restaurant}
                       />
@@ -145,20 +146,8 @@ export const RestaurantListItem = memo(
                   </>
                 )}
 
-                <Spacer />
-
-                <HStack alignItems="center" marginTop={-5}>
-                  <HStack alignItems="center" paddingLeft={padLeft}></HStack>
-                </HStack>
-
-                {/* <Spacer size="sm" /> */}
-                <HStack
-                  paddingLeft={padLeft - 3}
-                  alignItems="center"
-                  // justifyContent="center"
-                >
-                  <Spacer size="lg" />
-                  <Divider vertical />
+                <Spacer size="xs" />
+                <HStack paddingLeft={padLeft + 9} alignItems="center">
                   <RestaurantFavoriteStar restaurant={restaurant} />
                   <Spacer size="xl" />
                   <RestaurantDetailRow size="sm" restaurant={restaurant} />

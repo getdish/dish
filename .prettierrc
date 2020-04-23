@@ -3,6 +3,6 @@
   "semi": false,
   "singleQuote": true,
   "arrowParens": "always",
-  "plugins": ["import-sort"],
+  "plugins": ["./node_modules/prettier-plugin-import-sort"],
   "printWidth": 80
 }
