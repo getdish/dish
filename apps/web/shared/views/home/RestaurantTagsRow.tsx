@@ -35,29 +35,28 @@ export const RestaurantTagsRow = memo(
         minWidth={size === 'lg' ? drawerWidth : 0}
         flexWrap="wrap"
         spacing={size == 'lg' ? 8 : 8}
-        {...{
-          fontSize: 14,
-        }}
       >
-        {tags.slice(0, showMore ? 2 : 6).map((tag, index) =>
-          size == 'md' ? (
-            <SecondaryText key={`${index}${tag.name}`}>
-              🍜 {tag.name}
-            </SecondaryText>
-          ) : (
-            <React.Fragment key={`${index}${tag.name}`}>
-              {index !== 0 && (
-                <Divider vertical marginHorizontal={10} maxHeight={14} />
-              )}
-              <TagButton
-                rank={tag.rank}
-                tag={{ ...tag, type: 'dish' }}
-                size={size}
-                subtle
-              />
-            </React.Fragment>
-          )
-        )}
+        <Text>
+          {tags.slice(0, showMore ? 2 : 6).map((tag, index) =>
+            size == 'md' ? (
+              <SecondaryText key={`${index}${tag.name}`}>
+                🍜 {tag.name}
+              </SecondaryText>
+            ) : (
+              <React.Fragment key={`${index}${tag.name}`}>
+                {index !== 0 && (
+                  <Divider vertical marginHorizontal={10} maxHeight={14} />
+                )}
+                <TagButton
+                  rank={tag.rank}
+                  tag={{ ...tag, type: 'dish' }}
+                  size={size}
+                  subtle
+                />
+              </React.Fragment>
+            )
+          )}
+        </Text>
         {/* {!!showMore && <Text style={{ opacity: 0.5 }}>+5</Text>} */}
       </HStack>
     )

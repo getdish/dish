@@ -107,6 +107,7 @@ export const HomeMap = memo(() => {
       }
       om.actions.home.setMapMoved()
       const span = map.region.span
+      console.log('updating center/span')
       om.actions.home.setMapArea({
         center: {
           lng: map.center.longitude,
@@ -277,6 +278,7 @@ export const HomeMap = memo(() => {
           state.home.currentState.span,
         ]),
       () => {
+        console.log('new area')
         pauseMapUpdates.current = true
         tm = requestIdleCallback(() => {
           centerMapToRegion({
