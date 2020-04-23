@@ -173,7 +173,7 @@ const RestaurantPhotos = ({ restaurant }: { restaurant: Restaurant }) => {
             justifyContent="center"
             spacing={spacing}
           >
-            {restaurant.tag_restaurant_data.map((tag, index) => {
+            {restaurant.tag_restaurant_data?.map((tag, index) => {
               // TODO tag_ratings should be merged into tag_restaurant_data
               const tag_rating = restaurant.tag_ratings.find(
                 (i) => i.name == tag.name
