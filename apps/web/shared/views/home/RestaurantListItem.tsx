@@ -8,8 +8,10 @@ import { Divider } from '../ui/Divider'
 import { Link } from '../ui/Link'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
+import { SelectableText } from '../ui/Text'
 import { bgLightLight } from './colors'
 import { DishView } from './DishView'
+import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RankingView } from './RankingView'
 import { CommentBubble, RestaurantAddComment } from './RestaurantAddComment'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
@@ -48,7 +50,7 @@ export const RestaurantListItem = memo((props: RestaurantListItemProps) => {
     >
       <VStack
         position="absolute"
-        bottom={43}
+        bottom={15}
         left={40}
         right={isHovered ? 40 : '40%'}
         zIndex={100000000}
@@ -56,7 +58,9 @@ export const RestaurantListItem = memo((props: RestaurantListItemProps) => {
         maxWidth={isHovered ? '100%' : 380}
       >
         <CommentBubble user={{ username: 'Peach' }}>
-          <Text>Lorem ipsum dolor sit amet.</Text>
+          <SelectableText style={{ opacity: 0.8, margin: 'auto' }}>
+            Lorem ipsum dolor sit amet.
+          </SelectableText>
         </CommentBubble>
       </VStack>
       <TouchableOpacity
@@ -98,6 +102,7 @@ const RestaurantListItemContent = memo(
     const pad = 18
     const padLeft = 18
     const isShowingComment = isEditingUserPage(om.state)
+    const isSmall = useMediaQueryIsSmall()
     return (
       <>
         <VStack
@@ -106,7 +111,7 @@ const RestaurantListItemContent = memo(
           paddingBottom={60}
           paddingRight={90}
           width="78%"
-          maxWidth={635}
+          maxWidth={isSmall ? '85vw' : '56vw'}
           spacing={5}
         >
           <HStack alignItems="flex-start">
@@ -134,7 +139,13 @@ const RestaurantListItemContent = memo(
                 </HStack>
               </Link>
 
-              <HStack alignItems="center" spacing overflow="hidden">
+              <HStack
+                alignItems="center"
+                spacing
+                // flexWrap="wrap"
+                overflow="hidden"
+                maxWidth="80%"
+              >
                 <RestaurantAddressLinksRow
                   currentLocationInfo={currentLocationInfo}
                   size="sm"
@@ -163,7 +174,7 @@ const RestaurantListItemContent = memo(
           </HStack>
         </VStack>
 
-        <VStack width={500} marginLeft={-60}>
+        <VStack width={500}>
           <RestaurantPeek
             size={isShowingComment ? 'lg' : 'md'}
             restaurant={restaurant}
@@ -197,7 +208,7 @@ export const RestaurantPeek = memo(
               return (
                 <DishView
                   key={i}
-                  size={size === 'lg' ? 140 : 100}
+                  size={size === 'lg' ? 140 : 130}
                   dish={
                     {
                       name: 'Bun bo hue',

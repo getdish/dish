@@ -36,55 +36,57 @@ export const RestaurantAddComment = memo(
     }, [review])
 
     return (
-      <CommentBubble user={user}>
-        <TextInput
-          value={reviewText}
-          onChange={(e) => {
-            // @ts-ignore
-            const height = e.nativeEvent.srcElement.scrollHeight
-            setHeight(height)
-          }}
-          onChangeText={(text) => {
-            if (isSaved) {
-              setIsSaved(false)
-            }
-            updateReview(text)
-          }}
-          multiline
-          placeholder="Be sure to..."
-          style={{
-            minHeight: height,
-            lineHeight: 22,
-            flex: 1,
-          }}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-        />
-        {!!(isFocused || !isSaved) && (
-          <LinkButton
-            {...flatButtonStyle}
-            marginVertical={-4}
-            onPress={async () => {
-              Toast.show('Saving...')
-              await om.effects.gql.mutations.upsertUserReview({
-                reviews: [
-                  {
-                    text: reviewText,
-                    restaurant_id: restaurant.id,
-                    tag_id: null,
-                    user_id: om.state.user.user.id,
-                    rating: 0,
-                  },
-                ],
-              })
-              Toast.show('Saved!')
-              setIsSaved(true)
+      <TouchableOpacity activeOpacity={0.8} onPress={() => {}}>
+        <CommentBubble user={user}>
+          <TextInput
+            value={reviewText}
+            onChange={(e) => {
+              // @ts-ignore
+              const height = e.nativeEvent.srcElement.scrollHeight
+              setHeight(height)
             }}
-          >
-            Save
-          </LinkButton>
-        )}
-      </CommentBubble>
+            onChangeText={(text) => {
+              if (isSaved) {
+                setIsSaved(false)
+              }
+              updateReview(text)
+            }}
+            multiline
+            placeholder="Be sure to..."
+            style={{
+              minHeight: height,
+              lineHeight: 22,
+              flex: 1,
+            }}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+          />
+          {!!(isFocused || !isSaved) && (
+            <LinkButton
+              {...flatButtonStyle}
+              marginVertical={-4}
+              onPress={async () => {
+                Toast.show('Saving...')
+                await om.effects.gql.mutations.upsertUserReview({
+                  reviews: [
+                    {
+                      text: reviewText,
+                      restaurant_id: restaurant.id,
+                      tag_id: null,
+                      user_id: om.state.user.user.id,
+                      rating: 0,
+                    },
+                  ],
+                })
+                Toast.show('Saved!')
+                setIsSaved(true)
+              }}
+            >
+              Save
+            </LinkButton>
+          )}
+        </CommentBubble>
+      </TouchableOpacity>
     )
   }
 )
@@ -97,54 +99,52 @@ export const CommentBubble = ({
   children: any
 }) => {
   return (
-    <TouchableOpacity activeOpacity={0.8} onPress={() => {}}>
-      <VStack
-        marginBottom={-25}
-        marginTop={-6}
-        spacing="xs"
-        justifyContent="center"
-      >
-        <HStack {...flatButtonStyle} borderRadius={23} flex={0}>
-          <HStack alignItems="center" spacing="sm" flexWrap="nowrap">
-            <Circle size={22} marginVertical={-5}>
-              <Image source={avatar} style={{ width: 22, height: 22 }} />
-            </Circle>
-            <Text style={{ color: '#999' }}>
-              <Link
-                inline
-                name="user"
-                params={{ username: user.username }}
-                color="blue"
-              >
-                {user.username}
-              </Link>
-              &nbsp;&nbsp;
-              <HoverablePopover
-                inline
-                contents={
-                  <Box>
-                    <Text style={{ opacity: 0.65 }}>
-                      <ul>
-                        <li>👨‍🍳 Chef ✔️</li>
-                        <li>🇯🇵 Japanese Exprt ✔️</li>
-                      </ul>
-                    </Text>
-                  </Box>
-                }
-              >
-                <div className="inline-flex">
-                  {['👨‍🍳'].map((x) => (
-                    <Text key={x} style={{ opacity: 1 }}>
-                      {x}
-                    </Text>
-                  ))}
-                </div>
-              </HoverablePopover>{' '}
-            </Text>
-          </HStack>
-          {children}
+    <VStack spacing="xs" justifyContent="center">
+      <HStack {...flatButtonStyle} borderRadius={23} flex={0}>
+        <HStack
+          alignItems="center"
+          spacing="sm"
+          flexWrap="nowrap"
+          justifyContent="center"
+        >
+          <Circle size={22} marginVertical={-5}>
+            <Image source={avatar} style={{ width: 22, height: 22 }} />
+          </Circle>
+          <Text style={{ color: '#999' }}>
+            <Link
+              inline
+              name="user"
+              params={{ username: user.username }}
+              color="blue"
+            >
+              {user.username}
+            </Link>
+            &nbsp;&nbsp;
+            <HoverablePopover
+              inline
+              contents={
+                <Box>
+                  <Text style={{ opacity: 0.65 }}>
+                    <ul>
+                      <li>👨‍🍳 Chef ✔️</li>
+                      <li>🇯🇵 Japanese Exprt ✔️</li>
+                    </ul>
+                  </Text>
+                </Box>
+              }
+            >
+              <div className="inline-flex">
+                {['👨‍🍳'].map((x) => (
+                  <Text key={x} style={{ opacity: 1 }}>
+                    {x}
+                  </Text>
+                ))}
+              </div>
+            </HoverablePopover>{' '}
+          </Text>
         </HStack>
-      </VStack>
-    </TouchableOpacity>
+        {children}
+      </HStack>
+    </VStack>
   )
 }

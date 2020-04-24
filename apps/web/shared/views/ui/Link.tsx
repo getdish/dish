@@ -37,7 +37,7 @@ export function Link<
   color,
   onClick,
   replace,
-  ...props
+  ...allProps
 }: React.DetailedHTMLProps<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
   HTMLAnchorElement
@@ -47,18 +47,24 @@ export function Link<
     params?: Params
     inline?: boolean
     padding?: StackProps['padding']
+    tag?: NavigableTag
   }) {
+  const tagProps = useGetTagProps(allProps)
   const om = useOvermindStatic()
-  const handler = useCallback((e) => {
-    e.stopPropagation()
-    e.preventDefault()
-    om.actions.router.navigate({ name, params, replace } as any)
-    onClick?.(e)
-  }, [])
+  const handler = useCallback(
+    (e) => {
+      e.stopPropagation()
+      e.preventDefault()
+      om.actions.router.navigate({ name, params, replace } as any)
+      onClick?.(e)
+      tagProps?.['onPress']?.()
+    },
+    [tagProps, onClick]
+  )
 
   return (
     <a
-      {...props}
+      {...(tagProps as any)}
       href={getPathFromParams({ name, params })}
       onMouseDown={prevent}
       onClick={prevent}
@@ -82,6 +88,10 @@ export function Link<
 
 const prevent = (e) => [e.preventDefault(), e.stopPropagation()]
 
+type TagProp = {
+  tag: NavigableTag
+}
+
 export type LinkButtonProps<Name = any, Params = any> = StackProps &
   LinkSharedProps &
   (
@@ -93,36 +103,36 @@ export type LinkButtonProps<Name = any, Params = any> = StackProps &
     | {
         onPress?: any
       }
-    | {
-        tag: NavigableTag
-      }
+    | TagProp
   )
+
+const useGetTagProps = (inProps: any): LinkButtonProps => {
+  const currentStateID = useContext(CurrentStateID)
+  let props = { ...inProps }
+  if ('tag' in props && !!props.tag) {
+    if (props.tag.name !== 'Search') {
+      const state = currentStates.find((x) => x.id === currentStateID)
+      const tagProps = getNavigateToTag(window['om'], {
+        state,
+        tag: props.tag,
+      })
+      props = { ...props, ...tagProps }
+    }
+  }
+  delete props['tag']
+  return props
+}
 
 export function LinkButton<
   Name extends keyof RoutesTable = keyof RoutesTable,
   Params = RoutesTable[Name]['params']
 >(allProps: LinkButtonProps<Name, Params>) {
-  const currentStateID = useContext(CurrentStateID)
   let restProps: StackProps
   let contents: React.ReactElement
   let pointerEvents: any
   let onPress: any
   let fastClick: boolean
-  let props = { ...allProps }
-
-  if ('tag' in props) {
-    if (props.tag) {
-      if (props.tag.name !== 'Search') {
-        const state = currentStates.find((x) => x.id === currentStateID)
-        const tagProps = getNavigateToTag(window['om'], {
-          state,
-          tag: props.tag,
-        })
-        props = { ...props, ...tagProps }
-      }
-    }
-    delete props['tag']
-  }
+  let props = useGetTagProps(allProps)
 
   if ('name' in props) {
     const {
