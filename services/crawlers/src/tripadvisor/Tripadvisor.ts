@@ -126,7 +126,11 @@ export class Tripadvisor extends WorkerJob {
     const more = await this._persisteReviewData(html, scrape_id, page)
     if (more) {
       page++
-      path = path.replace('-Reviews-', `-Reviews-or${page * 10}-`)
+      if (page == 1) {
+        path = path.replace('-Reviews-', `-Reviews-or${page * 10}-`)
+      } else {
+        path = path.replace(/-Reviews-or[0-9]*0-/, `-Reviews-or${page * 10}-`)
+      }
       await this.runOnWorker('saveReviews', [path, scrape_id, page])
     }
   }
