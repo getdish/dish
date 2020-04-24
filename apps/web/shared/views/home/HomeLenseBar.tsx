@@ -21,6 +21,7 @@ export default memo(function HomeLenseBar(props: {
 }) {
   const om = useOvermind()
   const state = om.state.home.states[props.stateIndex] as HomeStateItemSearch
+  console.log('state', props.stateIndex, state)
   const activeTagIds =
     state?.activeTagIds ?? om.state.home.lastHomeState.activeTagIds
   return (

@@ -24,8 +24,6 @@ import { HomeStackView } from './HomeStackView'
 import { HomeViewDrawer } from './HomeViewDrawer'
 
 export default function HomePage() {
-  const om = useOvermind()
-  const { breadcrumbStates } = om.state.home
   const [showPip, setShowPip] = useState(false)
 
   useDebounceEffect(
@@ -47,7 +45,7 @@ export default function HomePage() {
       <HomeMapControlsOverlay />
       <HomeSearchBar />
       <HomeViewDrawer>
-        <HomeStackView items={breadcrumbStates}>
+        <HomeStackView>
           {(homeState, isActive, index) => {
             return (
               <CurrentStateID.Provider value={homeState.id}>

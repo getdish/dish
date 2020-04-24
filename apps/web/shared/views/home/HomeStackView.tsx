@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 
@@ -5,26 +6,28 @@ import { drawerBorderRadius } from '../../constants'
 import { useDebounceValue } from '../../hooks/useDebounce'
 import { useMedia } from '../../hooks/useMedia'
 import { HomeStateItemSimple } from '../../state/home'
-import { useOvermindStatic } from '../../state/om'
+import { useOvermind, useOvermindStatic } from '../../state/om'
 import { ErrorBoundary } from '../ErrorBoundary'
 import { ForceShowPopover } from '../ui/Popover'
 import { ZStack } from '../ui/Stacks'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 
 export function HomeStackView<A extends HomeStateItemSimple>(props: {
-  items: A[]
   children: (a: A, isActive: boolean, index: number) => React.ReactNode
 }) {
-  const om = useOvermindStatic()
-  const allStates = om.state.home.states
-  const debounceItems = useDebounceValue(props.items, transitionDuration)
-  const isRemoving = debounceItems.length > props.items.length
-  const items = isRemoving ? debounceItems : props.items
+  const om = useOvermind()
+  const breadcrumbs = om.state.home.breadcrumbStates
+  const debounceItems = useDebounceValue(breadcrumbs, transitionDuration)
+  const isRemoving = debounceItems.length > breadcrumbs.length
+  const items = isRemoving ? debounceItems : breadcrumbs
   return (
     <ZStack fullscreen>
       {items.map((item, i) => {
         const isActive = i === items.length - 1
-        const stackItemIndex = allStates.findIndex((x) => x.id === item.id)
+        const stackItemIndex = _.findLastIndex(
+          om.state.home.states,
+          (x) => x.id === item.id
+        )
         return (
           <ForceShowPopover.Provider
             key={`${i}`}
