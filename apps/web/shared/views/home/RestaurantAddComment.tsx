@@ -98,8 +98,13 @@ export const CommentBubble = ({
 }) => {
   return (
     <TouchableOpacity activeOpacity={0.8} onPress={() => {}}>
-      <VStack marginBottom={-25} marginTop={-6} spacing="xs">
-        <HStack {...flatButtonStyle} borderRadius={13} flex={0}>
+      <VStack
+        marginBottom={-25}
+        marginTop={-6}
+        spacing="xs"
+        justifyContent="center"
+      >
+        <HStack {...flatButtonStyle} borderRadius={23} flex={0}>
           <HStack alignItems="center" spacing="sm" flexWrap="nowrap">
             <Circle size={22} marginVertical={-5}>
               <Image source={avatar} style={{ width: 22, height: 22 }} />
@@ -115,6 +120,7 @@ export const CommentBubble = ({
               </Link>
               &nbsp;&nbsp;
               <HoverablePopover
+                inline
                 contents={
                   <Box>
                     <Text style={{ opacity: 0.65 }}>
@@ -126,7 +132,7 @@ export const CommentBubble = ({
                   </Box>
                 }
               >
-                <div className="see-through inline-flex">
+                <div className="inline-flex">
                   {['👨‍🍳'].map((x) => (
                     <Text key={x} style={{ opacity: 1 }}>
                       {x}
@@ -134,7 +140,6 @@ export const CommentBubble = ({
                   ))}
                 </div>
               </HoverablePopover>{' '}
-              says...
             </Text>
           </HStack>
           {children}

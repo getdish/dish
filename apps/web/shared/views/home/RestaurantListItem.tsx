@@ -46,6 +46,19 @@ export const RestaurantListItem = memo((props: RestaurantListItemProps) => {
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
     >
+      <VStack
+        position="absolute"
+        bottom={43}
+        left={40}
+        right={isHovered ? 40 : '40%'}
+        zIndex={100000000}
+        alignItems="flex-start"
+        maxWidth={isHovered ? '100%' : 380}
+      >
+        <CommentBubble user={{ username: 'Peach' }}>
+          <Text>Lorem ipsum dolor sit amet.</Text>
+        </CommentBubble>
+      </VStack>
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={() => {
@@ -75,12 +88,6 @@ export const RestaurantListItem = memo((props: RestaurantListItemProps) => {
         </ScrollView>
         <Divider />
       </TouchableOpacity>
-
-      <VStack position="absolute" bottom={0} left={0} right="20%">
-        <CommentBubble user={{ username: 'Peach' }}>
-          <Text>Lorem ipsum dolor sit amet.</Text>
-        </CommentBubble>
-      </VStack>
     </VStack>
   )
 })
@@ -95,10 +102,11 @@ const RestaurantListItemContent = memo(
       <>
         <VStack
           padding={pad}
-          paddingVertical={22}
+          paddingVertical={32}
+          paddingBottom={60}
           paddingRight={90}
           width="78%"
-          maxWidth={525}
+          maxWidth={635}
           spacing={5}
         >
           <HStack alignItems="flex-start">
@@ -130,12 +138,12 @@ const RestaurantListItemContent = memo(
                 <RestaurantAddressLinksRow
                   currentLocationInfo={currentLocationInfo}
                   size="sm"
-                  showAddress="sm"
+                  showAddress="xs"
                   restaurant={restaurant}
                 />
+                <Divider vertical />
+                <RestaurantTagsRow showMore restaurant={restaurant} />
               </HStack>
-
-              <RestaurantTagsRow showMore restaurant={restaurant} />
             </VStack>
           </HStack>
 

@@ -64,8 +64,8 @@ export const RestaurantDetailRow = memo(
       <HStack flex={1} alignItems="center" spacing={spaceSize} {...rest}>
         {rows.map((row, index) => (
           <HStack width="32%" key={`${index}${row.title}`}>
-            <VStack flex={10}>
-              {titleEl(row)}
+            <VStack {...(isSm && { flexDirection: 'row' })} flex={10}>
+              {!isSm && titleEl(row)}
               {contentEl(row.content)}
             </VStack>
             {index !== rows.length - 1 && (

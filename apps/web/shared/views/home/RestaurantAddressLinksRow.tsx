@@ -11,13 +11,16 @@ import { HStack } from '../ui/Stacks'
 import { SelectableText } from '../ui/Text'
 import { SmallCircleButton } from './CloseButton'
 
-type AddressSize = 'lg' | 'md' | 'sm'
+type AddressSize = 'lg' | 'md' | 'sm' | 'xs'
 
 function formatAddress(
   currentLocation: GeocodePlace | null,
   address: string,
   format: AddressSize
 ): string {
+  if (format === 'xs') {
+    return address.split(', ')[0]
+  }
   if (format === 'lg') {
     return removeLongZip(address)
   }
@@ -28,10 +31,10 @@ function formatAddress(
     const replaceAfter = `, ${currentLocation.locality ?? ''}`
     const replaceIndex = address.indexOf(replaceAfter)
     if (replaceIndex > 0) {
-      return address.slice(0, replaceIndex)
+      return address.slice(0, replaceIndex).split(',')[0]
     }
   }
-  return removeLongZip(address).split(',').slice(0, 1).join(', ')
+  return removeLongZip(address).split(',')[0]
 }
 
 const removeLongZip = (str: string) => {
@@ -102,7 +105,11 @@ export const RestaurantAddressLinksRow = memo(
         <HStack alignItems="center" spacing>
           {showAddress && (
             <SelectableText style={{ fontSize: 14 }}>
-              {formatAddress(currentLocationInfo, restaurant.address, size)}
+              {formatAddress(
+                currentLocationInfo,
+                restaurant.address,
+                typeof showAddress === 'string' ? showAddress : size
+              )}
             </SelectableText>
           )}
 

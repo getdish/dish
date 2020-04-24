@@ -21,6 +21,7 @@ export const closeAllPopovers = () => {
 }
 
 export type PopoverProps = {
+  inline?: boolean
   position?: 'top' | 'left' | 'right' | 'bottom'
   children: React.ReactElement
   contents: React.ReactElement
@@ -111,7 +112,10 @@ export const Popover = (props: PopoverProps) => {
         }}
       >
         {({ isOpen, triggerRef, toggle }) => (
-          <div ref={triggerRef} className="see-through">
+          <div
+            ref={triggerRef}
+            className={`see-through ${props.inline ? 'inline-flex' : ''}`}
+          >
             {props.children}
           </div>
         )}

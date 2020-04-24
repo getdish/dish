@@ -5,7 +5,7 @@ import { searchBarHeight } from '../../constants'
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { LngLat, setMapView } from '../../state/home'
 import { isSearchState } from '../../state/home-helpers'
-import { useOvermind } from '../../state/om'
+import { om, useOvermind } from '../../state/om'
 import { Map, useMap } from '../map'
 import { ZStack } from '../ui/Stacks'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
@@ -35,15 +35,40 @@ export function centerMapToRegion(p: {
 //   return div
 // }
 
+let mapView: mapkit.Map
+// start paused, first map update we ignore because its slightly off
+let pauseMapUpdates = true
+let pendingUpdates = false
+
+const handleRegionChangeEnd = () => {
+  if (pauseMapUpdates) {
+    pendingUpdates = true
+    console.log('pausing update region change')
+    // dont update while were transitioning to new state!
+    return
+  }
+  om.actions.home.setMapMoved()
+  const span = mapView.region.span
+  console.log('updating center/span')
+  pendingUpdates = false
+  om.actions.home.setMapArea({
+    center: {
+      lng: mapView.center.longitude,
+      lat: mapView.center.latitude,
+    },
+    span: {
+      lat: span.latitudeDelta,
+      lng: span.longitudeDelta,
+    },
+  })
+}
+
 export const HomeMap = memo(() => {
   const om = useOvermind()
   const drawerWidth = useHomeDrawerWidth()
   const isSmall = useMediaQueryIsSmall()
   const state = om.state.home.currentState
   const { center, span } = state
-
-  // start paused, first map update we ignore because its slightly off
-  const pauseMapUpdates = useRef(true)
 
   const padding = isSmall
     ? {
@@ -75,6 +100,7 @@ export const HomeMap = memo(() => {
   })
 
   setMapView(map)
+  mapView = map
 
   // wheel zoom
   if (map && map['_allowWheelToZoom'] == false) {
@@ -91,27 +117,6 @@ export const HomeMap = memo(() => {
         span,
       })
     })
-
-    const handleRegionChangeEnd = (e) => {
-      if (pauseMapUpdates.current) {
-        console.log('pausing update region change')
-        // dont update while were transitioning to new state!
-        return
-      }
-      om.actions.home.setMapMoved()
-      const span = map.region.span
-      console.log('updating center/span')
-      om.actions.home.setMapArea({
-        center: {
-          lng: map.center.longitude,
-          lat: map.center.latitude,
-        },
-        span: {
-          lat: span.latitudeDelta,
-          lng: span.longitudeDelta,
-        },
-      })
-    }
 
     map.addEventListener('region-change-end', handleRegionChangeEnd)
 
@@ -272,7 +277,7 @@ export const HomeMap = memo(() => {
         ]),
       () => {
         console.log('new area')
-        pauseMapUpdates.current = true
+        pauseMapUpdates = true
         tm = requestIdleCallback(() => {
           centerMapToRegion({
             map,
@@ -280,13 +285,17 @@ export const HomeMap = memo(() => {
             span: om.state.home.currentState.span,
           })
           tm2 = setTimeout(() => {
-            pauseMapUpdates.current = false
-          }, 200)
+            pauseMapUpdates = false
+            if (pendingUpdates) {
+              pendingUpdates = false
+              handleRegionChangeEnd()
+            }
+          }, 300)
         })
       }
     )
     return () => {
-      pauseMapUpdates.current = false
+      pauseMapUpdates = false
       dispose1()
       dispose2()
     }

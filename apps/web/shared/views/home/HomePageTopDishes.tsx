@@ -56,6 +56,7 @@ export default memo(function HomePageTopDishes({
                   textAlign: 'center',
                   fontSize: 26,
                   fontWeight: '300',
+                  marginBottom: 7,
                 }}
               >
                 {om.state.home.lastActiveTags
@@ -112,7 +113,7 @@ const HomeViewTopDishesTrending = memo(() => {
     )
   }
   return (
-    <VStack spacing="lg" height={240}>
+    <VStack spacing="lg" height={190}>
       {/* <SmallTitle divider="off">
          in {om.state.home.location?.name ?? 'San Francisco'}
       </SmallTitle> */}
@@ -143,7 +144,7 @@ const HomeViewTopDishesTrending = memo(() => {
           <SmallerTitle>Dishes</SmallerTitle>
           <VStack spacing={0} overflow="hidden">
             {!hasLoaded && <LoadingItem />}
-            {allRestaurants.slice(5).map(getTrending)}
+            {allRestaurants.slice(0, 5).map(getTrending)}
           </VStack>
         </VStack>
         <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
@@ -151,7 +152,7 @@ const HomeViewTopDishesTrending = memo(() => {
             <SmallerTitle>Topics</SmallerTitle>
             <VStack spacing={0} overflow="hidden">
               {!hasLoaded && <LoadingItem />}
-              {allRestaurants.slice(5).map(getTrending)}
+              {allRestaurants.slice(0, 5).map(getTrending)}
             </VStack>
           </VStack>
         </MediaQuery>
