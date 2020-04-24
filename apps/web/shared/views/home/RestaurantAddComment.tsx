@@ -10,7 +10,7 @@ import { Box } from '../ui/Box'
 import { Circle } from '../ui/Circle'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { Link, LinkButton } from '../ui/Link'
-import { HStack, VStack } from '../ui/Stacks'
+import { HStack, StackProps, VStack } from '../ui/Stacks'
 import { flatButtonStyle } from './baseButtonStyle'
 import { Quote } from './Quote'
 
@@ -94,57 +94,56 @@ export const RestaurantAddComment = memo(
 export const CommentBubble = ({
   user,
   children,
-}: {
+  ...rest
+}: StackProps & {
   user: Partial<User>
   children: any
 }) => {
   return (
-    <VStack spacing="xs" justifyContent="center">
-      <HStack {...flatButtonStyle} borderRadius={23} flex={0}>
-        <HStack
-          alignItems="center"
-          spacing="sm"
-          flexWrap="nowrap"
-          justifyContent="center"
-        >
-          <Circle size={22} marginVertical={-5}>
-            <Image source={avatar} style={{ width: 22, height: 22 }} />
-          </Circle>
-          <Text style={{ color: '#999' }}>
-            <Link
-              inline
-              name="user"
-              params={{ username: user.username }}
-              color="blue"
-            >
-              {user.username}
-            </Link>
-            &nbsp;&nbsp;
-            <HoverablePopover
-              inline
-              contents={
-                <Box>
-                  <Text style={{ opacity: 0.65 }}>
-                    <ul>
-                      <li>👨‍🍳 Chef ✔️</li>
-                      <li>🇯🇵 Japanese Exprt ✔️</li>
-                    </ul>
-                  </Text>
-                </Box>
-              }
-            >
-              <div className="inline-flex">
-                {['👨‍🍳'].map((x) => (
-                  <Text key={x} style={{ opacity: 1 }}>
-                    {x}
-                  </Text>
-                ))}
-              </div>
-            </HoverablePopover>{' '}
-          </Text>
-        </HStack>
-        {children}
+    <HStack {...flatButtonStyle} borderRadius={23} flex={0} {...rest}>
+      <HStack
+        alignItems="center"
+        spacing="sm"
+        flexWrap="nowrap"
+        justifyContent="center"
+      >
+        <Circle size={22} marginVertical={-5}>
+          <Image source={avatar} style={{ width: 22, height: 22 }} />
+        </Circle>
+        <Text style={{ color: '#999' }}>
+          <Link
+            inline
+            name="user"
+            params={{ username: user.username }}
+            color="blue"
+          >
+            {user.username}
+          </Link>
+          &nbsp;&nbsp;
+          <HoverablePopover
+            inline
+            contents={
+              <Box>
+                <Text style={{ opacity: 0.65 }}>
+                  <ul>
+                    <li>👨‍🍳 Chef ✔️</li>
+                    <li>🇯🇵 Japanese Exprt ✔️</li>
+                  </ul>
+                </Text>
+              </Box>
+            }
+          >
+            <div className="inline-flex">
+              {['👨‍🍳'].map((x) => (
+                <Text key={x} style={{ opacity: 1 }}>
+                  {x}
+                </Text>
+              ))}
+            </div>
+          </HoverablePopover>{' '}
+        </Text>
       </HStack>
-    </VStack>
+      {children}
+    </HStack>
   )
 }

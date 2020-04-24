@@ -2,6 +2,7 @@ import React, { memo } from 'react'
 import { Text } from 'react-native'
 
 import { StackProps, VStack } from './Stacks'
+import { SelectableText } from './Text'
 
 export const PageTitle = memo(
   ({ children, subTitle, ...rest }: StackProps & { subTitle?: any }) => {
@@ -15,7 +16,7 @@ export const PageTitle = memo(
         justifyContent="center"
         {...rest}
       >
-        <Text
+        <SelectableText
           numberOfLines={1}
           style={{
             maxWidth: '80%',
@@ -44,7 +45,7 @@ export const PageTitle = memo(
               {subTitle}
             </Text>
           )}
-        </Text>
+        </SelectableText>
         {/* <Divider alignSelf="flex-end" /> */}
       </VStack>
     )

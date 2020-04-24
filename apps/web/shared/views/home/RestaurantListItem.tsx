@@ -14,11 +14,14 @@ import { DishView } from './DishView'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RankingView } from './RankingView'
 import { CommentBubble, RestaurantAddComment } from './RestaurantAddComment'
-import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
+import {
+  RestaurantAddressLinksRow,
+  getAddressText,
+} from './RestaurantAddressLinksRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
-import { RestaurantTagsRow } from './RestaurantTagsRow'
+import { RestaurantTagsRow, getTagElements } from './RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 
 type RestaurantListItemProps = {
@@ -48,50 +51,40 @@ export const RestaurantListItem = memo((props: RestaurantListItemProps) => {
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
     >
-      <VStack
+      {/* <VStack
         position="absolute"
-        bottom={15}
-        left={40}
+        bottom={20}
+        left={36}
         right={isHovered ? 40 : '40%'}
         zIndex={100000000}
         alignItems="flex-start"
         maxWidth={isHovered ? '100%' : 380}
       >
-        <CommentBubble user={{ username: 'Peach' }}>
-          <SelectableText style={{ opacity: 0.8, margin: 'auto' }}>
-            Lorem ipsum dolor sit amet.
-          </SelectableText>
-        </CommentBubble>
-      </VStack>
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={() => {
-          om.actions.router.navigate({
-            name: 'restaurant',
-            params: { slug: props.restaurant.slug },
-          })
-        }}
-      >
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <HStack alignItems="center" position="relative">
-            <ZStack
-              fullscreen
-              zIndex={100}
-              top={20}
-              bottom={0}
-              left={10}
-              justifyContent="center"
-              pointerEvents="none"
-              opacity={isHovered ? 1 : 0}
-            >
-              <RestaurantUpVoteDownVote restaurant={props.restaurant} />
-            </ZStack>
 
-            <RestaurantListItemContent {...props} />
-          </HStack>
-        </ScrollView>
-        <Divider />
-      </TouchableOpacity>
+      </VStack> */}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <HStack
+          alignItems="center"
+          position="relative"
+          width="calc(100% + 200px)"
+        >
+          <ZStack
+            fullscreen
+            zIndex={100}
+            top={60}
+            bottom={0}
+            left={21}
+            justifyContent="center"
+            pointerEvents="none"
+            opacity={isHovered ? 1 : 0}
+          >
+            <RestaurantUpVoteDownVote restaurant={props.restaurant} />
+          </ZStack>
+
+          <RestaurantListItemContent {...props} />
+        </HStack>
+      </ScrollView>
+      <Divider />
     </VStack>
   )
 })
@@ -100,7 +93,7 @@ const RestaurantListItemContent = memo(
   ({ rank, restaurant, currentLocationInfo }: RestaurantListItemProps) => {
     const om = useOvermind()
     const pad = 18
-    const padLeft = 18
+    const padLeft = 0
     const isShowingComment = isEditingUserPage(om.state)
     const isSmall = useMediaQueryIsSmall()
     return (
@@ -108,24 +101,25 @@ const RestaurantListItemContent = memo(
         <VStack
           padding={pad}
           paddingVertical={32}
-          paddingBottom={60}
-          paddingRight={90}
-          width="78%"
-          maxWidth={isSmall ? '85vw' : '56vw'}
+          width="62%"
+          overflow="hidden"
+          maxWidth={isSmall ? '85vw' : '47vw'}
           spacing={5}
         >
-          <HStack alignItems="flex-start">
-            <RankingView
-              marginLeft={-32}
-              marginRight={-4}
-              marginTop={14}
-              rank={rank}
-            />
-            <RestaurantRatingViewPopover restaurant={restaurant} />
+          <HStack alignItems="flex-start" width="100%">
+            <VStack marginTop={-3} marginLeft={-10}>
+              <RestaurantRatingViewPopover restaurant={restaurant} />
+            </VStack>
             <Spacer />
             <VStack spacing="sm">
               <Link name="restaurant" params={{ slug: restaurant.slug }}>
                 <HStack alignItems="center" marginVertical={-3}>
+                  <RankingView
+                    marginLeft={-13}
+                    marginRight={-2}
+                    marginTop={-5}
+                    rank={rank}
+                  />
                   <Text
                     style={{
                       marginLeft: -1,
@@ -139,21 +133,36 @@ const RestaurantListItemContent = memo(
                 </HStack>
               </Link>
 
+              <Text style={{ color: '#888', marginLeft: 7 }}>
+                {getTagElements({
+                  showMore: true,
+                  restaurant,
+                  divider: <>,&nbsp;</>,
+                })}
+              </Text>
+
+              <CommentBubble user={{ username: 'Peach' }} marginLeft={-6}>
+                <SelectableText style={{ opacity: 0.8, margin: 'auto' }}>
+                  Lorem ipsum dolor sit amet.
+                </SelectableText>
+              </CommentBubble>
+
               <HStack
+                marginBottom={-10}
+                paddingLeft={padLeft + 9}
                 alignItems="center"
-                spacing
-                // flexWrap="wrap"
-                overflow="hidden"
-                maxWidth="80%"
               >
-                <RestaurantAddressLinksRow
-                  currentLocationInfo={currentLocationInfo}
-                  size="sm"
-                  showAddress="xs"
-                  restaurant={restaurant}
-                />
-                <Divider vertical />
-                <RestaurantTagsRow showMore restaurant={restaurant} />
+                <RestaurantFavoriteStar restaurant={restaurant} />
+                <Spacer size="xl" />
+                <RestaurantDetailRow size="sm" restaurant={restaurant} />
+                <Spacer size="xl" />
+                <Text style={{ color: '#888' }}>
+                  {getAddressText(
+                    currentLocationInfo,
+                    restaurant.address,
+                    'xs'
+                  )}
+                </Text>
               </HStack>
             </VStack>
           </HStack>
@@ -165,13 +174,6 @@ const RestaurantListItemContent = memo(
               <Spacer size="xl" />
             </>
           )}
-
-          <Spacer size="xs" />
-          <HStack paddingLeft={padLeft + 9} alignItems="center">
-            <RestaurantFavoriteStar restaurant={restaurant} />
-            <Spacer size="xl" />
-            <RestaurantDetailRow size="sm" restaurant={restaurant} />
-          </HStack>
         </VStack>
 
         <VStack width={500}>

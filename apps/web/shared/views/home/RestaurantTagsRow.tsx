@@ -3,6 +3,7 @@ import React, { memo } from 'react'
 import { ScrollView, Text } from 'react-native'
 
 import { Divider } from '../ui/Divider'
+import { Link } from '../ui/Link'
 import { Spacer } from '../ui/Spacer'
 import { HStack } from '../ui/Stacks'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
@@ -11,52 +12,66 @@ import { SecondaryText } from './SecondaryText'
 import { TagButton } from './TagButton'
 import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 
-export const RestaurantTagsRow = memo(
-  ({
-    restaurant,
-    showMore,
-    size = 'md',
-  }: {
-    restaurant: Restaurant
-    showMore?: boolean
-    size?: 'lg' | 'md'
-  }) => {
-    const r = new Restaurant({
-      tags: restaurant.tags,
-      tag_rankings: restaurant.tag_rankings,
-    })
-    const isSmall = useMediaQueryIsSmall()
-    const tags = r.getTagsWithRankings() ?? []
-    const drawerWidth = useHomeDrawerWidthInner()
+type TagRowProps = {
+  restaurant: Restaurant
+  showMore?: boolean
+  size?: 'lg' | 'md'
+  divider?: any
+}
+
+export const RestaurantTagsRow = memo((props: TagRowProps) => {
+  const { size = 'md' } = props
+  const isSmall = useMediaQueryIsSmall()
+  const drawerWidth = useHomeDrawerWidthInner()
+  return (
+    <HStack
+      justifyContent="center"
+      minWidth={size === 'lg' ? drawerWidth : 0}
+      spacing={size == 'lg' ? 10 : 10}
+    >
+      {getTagElements({ ...props, size })}
+      {/* {!!showMore && <Text style={{ opacity: 0.5 }}>+5</Text>} */}
+    </HStack>
+  )
+})
+
+export const getTagElements = ({
+  restaurant,
+  showMore,
+  size = 'md',
+  divider,
+}: TagRowProps) => {
+  const r = new Restaurant({
+    tags: restaurant.tags,
+    tag_rankings: restaurant.tag_rankings,
+  })
+  const tags = r.getTagsWithRankings() ?? []
+  return tags.slice(0, showMore ? 2 : 6).map((tag, index) => {
+    const dividerEl =
+      index !== 0
+        ? divider ?? <Divider vertical marginHorizontal={10} maxHeight={14} />
+        : null
     return (
-      <HStack
-        alignItems="center"
-        justifyContent={isSmall ? 'center' : 'flex-start'}
-        minWidth={size === 'lg' ? drawerWidth : 0}
-        flexWrap="wrap"
-        spacing={size == 'lg' ? 10 : 10}
-      >
-        {tags.slice(0, showMore ? 2 : 6).map((tag, index) =>
-          size == 'md' ? (
-            <SecondaryText key={`${index}${tag.name}`}>
-              🍜 {tag.name}
-            </SecondaryText>
-          ) : (
-            <React.Fragment key={`${index}${tag.name}`}>
-              {index !== 0 && (
-                <Divider vertical marginHorizontal={10} maxHeight={14} />
-              )}
-              <TagButton
-                rank={tag.rank}
-                tag={{ ...tag, type: 'dish' }}
-                size={size}
-                subtle
-              />
-            </React.Fragment>
-          )
+      <React.Fragment key={`${index}${tag.name}`}>
+        {dividerEl}
+        {size == 'md' && (
+          <Link
+            key={`${index}${tag.name}`}
+            inline
+            tag={{ type: 'dish', ...tag }}
+          >
+            🍜 {tag.name}
+          </Link>
         )}
-        {/* {!!showMore && <Text style={{ opacity: 0.5 }}>+5</Text>} */}
-      </HStack>
+        {size != 'md' && (
+          <TagButton
+            rank={tag.rank}
+            tag={{ ...tag, type: 'dish' }}
+            size={size}
+            subtle
+          />
+        )}
+      </React.Fragment>
     )
-  }
-)
+  })
+}
