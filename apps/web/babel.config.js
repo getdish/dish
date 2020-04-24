@@ -1,8 +1,7 @@
 module.exports = function(api) {
   const isWorker = process.env.TARGET === 'worker'
   const isSSR = process.env.TARGET === 'ssr'
-
-  if (!isSSR && api.cache) {
+  if (!isSSR && !api.env('production') && api.cache) {
     api.cache(true)
   }
   if (isWorker) {

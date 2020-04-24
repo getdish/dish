@@ -17,6 +17,7 @@ import { bgLightLight } from './colors'
 import { DishView } from './DishView'
 import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBarOnly } from './HomeLenseBar'
+import { LoadingItem, LoadingItems } from './LoadingItems'
 import { RestaurantButton } from './RestaurantButton'
 import { TrendingButton } from './TrendingButton'
 
@@ -36,6 +37,8 @@ export default memo(function HomePageTopDishes({
       (_, index) => topDishesFilteredIndices.indexOf(index) > -1
     )
   }
+  // for now force at top because its most filled out
+  results = [...results].sort((x) => (x.country === 'Vietnamese' ? -1 : 1))
 
   return (
     <>
@@ -51,7 +54,7 @@ export default memo(function HomePageTopDishes({
               <Text
                 style={{
                   textAlign: 'center',
-                  fontSize: 28,
+                  fontSize: 26,
                   fontWeight: '300',
                 }}
               >
@@ -72,17 +75,16 @@ export default memo(function HomePageTopDishes({
                 />
               </VStack>
 
-              {[...results]
-                // for now force japanese at top because its most filled out
-                .sort((x) => (x.country === 'Japanese' ? -1 : 1))
-                .map((country, index) => (
-                  <CountryTopDishesAndRestaurants
-                    state={state}
-                    key={country.country}
-                    country={country}
-                    rank={index + 1}
-                  />
-                ))}
+              {!results.length && <LoadingItems />}
+
+              {results.map((country, index) => (
+                <CountryTopDishesAndRestaurants
+                  state={state}
+                  key={country.country}
+                  country={country}
+                  rank={index + 1}
+                />
+              ))}
             </VStack>
           </VStack>
         </ScrollView>
@@ -94,6 +96,7 @@ export default memo(function HomePageTopDishes({
 const HomeViewTopDishesTrending = memo(() => {
   const om = useOvermind()
   const allRestaurants = om.state.home.topDishes[0]?.top_restaurants ?? []
+  const hasLoaded = allRestaurants.length > 0
   const getTrending = (restaurant: Partial<Restaurant>, index: number) => {
     return (
       <TrendingButton
@@ -109,7 +112,7 @@ const HomeViewTopDishesTrending = memo(() => {
     )
   }
   return (
-    <VStack spacing="lg">
+    <VStack spacing="lg" height={240}>
       {/* <SmallTitle divider="off">
          in {om.state.home.location?.name ?? 'San Francisco'}
       </SmallTitle> */}
@@ -118,7 +121,8 @@ const HomeViewTopDishesTrending = memo(() => {
           <ZStack position="absolute" top={-5} left={-8} zIndex={100}>
             <LinkButton
               paddingVertical={5}
-              paddingHorizontal={10}
+              paddingHorizontal={6}
+              fontSize={12}
               shadowColor={'rgba(0,0,0,0.1)'}
               shadowRadius={8}
               shadowOffset={{ height: 2, width: 0 }}
@@ -131,12 +135,14 @@ const HomeViewTopDishesTrending = memo(() => {
           </ZStack>
           <SmallerTitle>Restaurants</SmallerTitle>
           <VStack spacing={0} overflow="hidden">
+            {!hasLoaded && <LoadingItem />}
             {allRestaurants.slice(0, 5).map(getTrending)}
           </VStack>
         </VStack>
         <VStack flex={1} spacing={6}>
           <SmallerTitle>Dishes</SmallerTitle>
           <VStack spacing={0} overflow="hidden">
+            {!hasLoaded && <LoadingItem />}
             {allRestaurants.slice(5).map(getTrending)}
           </VStack>
         </VStack>
@@ -144,6 +150,7 @@ const HomeViewTopDishesTrending = memo(() => {
           <VStack flex={1} spacing={6}>
             <SmallerTitle>Topics</SmallerTitle>
             <VStack spacing={0} overflow="hidden">
+              {!hasLoaded && <LoadingItem />}
               {allRestaurants.slice(5).map(getTrending)}
             </VStack>
           </VStack>

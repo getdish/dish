@@ -5,7 +5,6 @@ import { ScrollView, Text, TouchableOpacity } from 'react-native'
 import { GeocodePlace, isEditingUserPage } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Divider } from '../ui/Divider'
-import Hoverable from '../ui/Hoverable'
 import { Link } from '../ui/Link'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
@@ -20,151 +19,143 @@ import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 
-export const RestaurantListItem = memo(
-  ({
-    currentLocationInfo,
-    restaurant,
-    rank,
-  }: {
-    currentLocationInfo: GeocodePlace
-    restaurant: Restaurant
-    rank: number
-  }) => {
-    const om = useOvermind()
-    const [isHovered, setIsHovered] = useState(false)
-    const [disablePress, setDisablePress] = useState(false)
-    const hoverTm = useRef<any>(0)
-    const userReview = om.state.user.allReviews[restaurant.id]
+type RestaurantListItemProps = {
+  currentLocationInfo: GeocodePlace
+  restaurant: Restaurant
+  rank: number
+}
 
-    useEffect(() => {
-      return om.reaction(
-        (state) => state.home.activeIndex,
-        (activeIndex) => {
-          setIsHovered(rank == activeIndex + 1)
-        }
-      )
-    }, [])
+export const RestaurantListItem = memo((props: RestaurantListItemProps) => {
+  const om = useOvermind()
+  const [isHovered, setIsHovered] = useState(false)
 
-    const pad = 18
-    const padLeft = 18
+  useEffect(() => {
+    return om.reaction(
+      (state) => state.home.activeIndex,
+      (activeIndex) => {
+        setIsHovered(props.rank == activeIndex + 1)
+      }
+    )
+  }, [props.rank])
 
-    const isShowingComment = isEditingUserPage(om.state)
-
-    return (
-      <Hoverable
-        onHoverIn={() => {
-          setIsHovered(true)
-          hoverTm.current = setTimeout(() => {
-            om.actions.home.setHoveredRestaurant(restaurant)
-          }, 100)
-        }}
-        onHoverOut={() => {
-          clearTimeout(hoverTm.current)
-          setIsHovered(false)
+  return (
+    <VStack
+      hoverStyle={{
+        backgroundColor: bgLightLight,
+      }}
+      onHoverIn={() => setIsHovered(true)}
+      onHoverOut={() => setIsHovered(false)}
+    >
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => {
+          om.actions.router.navigate({
+            name: 'restaurant',
+            params: { slug: props.restaurant.slug },
+          })
         }}
       >
-        <TouchableOpacity
-          disabled={disablePress}
-          activeOpacity={0.8}
-          onPress={() => {
-            om.actions.router.navigate({
-              name: 'restaurant',
-              params: { slug: restaurant.slug },
-            })
-          }}
-        >
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <HStack
-              alignItems="center"
-              backgroundColor={isHovered ? bgLightLight : 'transparent'}
-              position="relative"
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <HStack alignItems="center" position="relative">
+            <ZStack
+              fullscreen
+              zIndex={100}
+              top={20}
+              bottom={0}
+              left={10}
+              justifyContent="center"
+              pointerEvents="none"
+              opacity={isHovered ? 1 : 0}
             >
-              <ZStack
-                fullscreen
-                zIndex={100}
-                top={20}
-                bottom={0}
-                left={10}
-                justifyContent="center"
-                pointerEvents="none"
-                opacity={isHovered ? 1 : 0}
-              >
-                <RestaurantUpVoteDownVote restaurant={restaurant} />
-              </ZStack>
+              <RestaurantUpVoteDownVote restaurant={props.restaurant} />
+            </ZStack>
 
-              <VStack
-                padding={pad}
-                paddingVertical={22}
-                paddingRight={90}
-                width="78%"
-                maxWidth={525}
-                spacing={5}
-              >
-                <HStack alignItems="flex-start">
-                  <RankingView
-                    marginLeft={-32}
-                    marginRight={-4}
-                    marginTop={14}
-                    rank={rank}
-                  />
-                  <RestaurantRatingViewPopover restaurant={restaurant} />
-                  <Spacer />
-                  <VStack spacing="sm">
-                    <Link name="restaurant" params={{ slug: restaurant.slug }}>
-                      <HStack alignItems="center" marginVertical={-3}>
-                        <Text
-                          style={{
-                            marginLeft: -1,
-                            fontSize: 20,
-                            fontWeight: 'bold',
-                            textDecorationColor: 'transparent',
-                          }}
-                        >
-                          {restaurant.name}
-                        </Text>
-                      </HStack>
-                    </Link>
+            <RestaurantListItemContent {...props} />
+          </HStack>
+        </ScrollView>
+        <Divider />
+      </TouchableOpacity>
+    </VStack>
+  )
+})
 
-                    <HStack alignItems="center" spacing overflow="hidden">
-                      <RestaurantAddressLinksRow
-                        currentLocationInfo={currentLocationInfo}
-                        size="sm"
-                        showAddress="sm"
-                        restaurant={restaurant}
-                      />
-                    </HStack>
-
-                    <RestaurantTagsRow showMore restaurant={restaurant} />
-                  </VStack>
+const RestaurantListItemContent = memo(
+  ({ rank, restaurant, currentLocationInfo }: RestaurantListItemProps) => {
+    const om = useOvermind()
+    const pad = 18
+    const padLeft = 18
+    const isShowingComment = isEditingUserPage(om.state)
+    return (
+      <>
+        <VStack
+          padding={pad}
+          paddingVertical={22}
+          paddingRight={90}
+          width="78%"
+          maxWidth={525}
+          spacing={5}
+        >
+          <HStack alignItems="flex-start">
+            <RankingView
+              marginLeft={-32}
+              marginRight={-4}
+              marginTop={14}
+              rank={rank}
+            />
+            <RestaurantRatingViewPopover restaurant={restaurant} />
+            <Spacer />
+            <VStack spacing="sm">
+              <Link name="restaurant" params={{ slug: restaurant.slug }}>
+                <HStack alignItems="center" marginVertical={-3}>
+                  <Text
+                    style={{
+                      marginLeft: -1,
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      textDecorationColor: 'transparent',
+                    }}
+                  >
+                    {restaurant.name}
+                  </Text>
                 </HStack>
+              </Link>
 
-                {isEditingUserPage(om.state) && (
-                  <>
-                    <Spacer />
-                    <RestaurantAddComment restaurant={restaurant} />
-                    <Spacer size="xl" />
-                  </>
-                )}
-
-                <Spacer size="xs" />
-                <HStack paddingLeft={padLeft + 9} alignItems="center">
-                  <RestaurantFavoriteStar restaurant={restaurant} />
-                  <Spacer size="xl" />
-                  <RestaurantDetailRow size="sm" restaurant={restaurant} />
-                </HStack>
-              </VStack>
-
-              <VStack width={500} marginLeft={-60}>
-                <RestaurantPeek
-                  size={isShowingComment ? 'lg' : 'md'}
+              <HStack alignItems="center" spacing overflow="hidden">
+                <RestaurantAddressLinksRow
+                  currentLocationInfo={currentLocationInfo}
+                  size="sm"
+                  showAddress="sm"
                   restaurant={restaurant}
                 />
-              </VStack>
-            </HStack>
-          </ScrollView>
-          <Divider />
-        </TouchableOpacity>
-      </Hoverable>
+              </HStack>
+
+              <RestaurantTagsRow showMore restaurant={restaurant} />
+            </VStack>
+          </HStack>
+
+          {isEditingUserPage(om.state) && (
+            <>
+              <Spacer />
+              <RestaurantAddComment restaurant={restaurant} />
+              <Spacer size="xl" />
+            </>
+          )}
+
+          <Spacer size="xs" />
+          <HStack paddingLeft={padLeft + 9} alignItems="center">
+            <RestaurantFavoriteStar restaurant={restaurant} />
+            <Spacer size="xl" />
+            <RestaurantDetailRow size="sm" restaurant={restaurant} />
+          </HStack>
+        </VStack>
+
+        <VStack width={500} marginLeft={-60}>
+          <RestaurantPeek
+            size={isShowingComment ? 'lg' : 'md'}
+            restaurant={restaurant}
+          />
+        </VStack>
+      </>
     )
   }
 )

@@ -76,14 +76,14 @@ textarea {
 }
 
 .shine:after {
-  animation: shine 1.25s ease-in-out infinite;
+  animation: shine 1.25s linear infinite;
   animation-fill-mode: forwards;
-  content: '';
+  content: ' ';
   position: absolute;
-  top: -110%;
-  left: -210%;
-  width: 200%;
-  height: 200%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   opacity: 0;
   background: rgba(255, 255, 255, 0.3);
   background: linear-gradient(
@@ -101,7 +101,6 @@ textarea {
     top: -30%;
     left: -30%;
     transition-property: left, top, opacity;
-    transition-duration: 1s, 1s, 0.25s;
     transition-timing-function: ease;
   }
   100% {
