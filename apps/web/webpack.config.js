@@ -63,8 +63,10 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
     return x !== 'app.json'
   })
 
-  config.externals = {
-    './web/mapkit.js': 'mapkit',
+  if (TARGET !== 'ssr') {
+    config.externals = {
+      './web/mapkit.js': 'mapkit',
+    }
   }
 
   if (!isProduction) {
@@ -138,8 +140,22 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
     config.output.libraryTarget = 'commonjs'
     config.output.filename = `static/js/app.${TARGET}.js`
     config.optimization.minimize = false
+    config.optimization.minimizer = []
+    config.plugins.push(
+      new Webpack.ProvidePlugin({
+        mapkit: path.join(__dirname, 'web/mapkitExport.js'),
+      })
+    )
     config.plugins = config.plugins.filter(
-      (plugin) => plugin.constructor.name !== 'WebpackPWAManifest'
+      (plugin) =>
+        plugin.constructor.name !== 'WebpackPWAManifest' &&
+        plugin.constructor.name !== 'CopyPlugin' &&
+        plugin.constructor.name !== 'CleanWebpackPlugin' &&
+        plugin.constructor.name !== 'HtmlWebpackPlugin' &&
+        plugin.constructor.name !== 'InterpolateHtmlPlugin' &&
+        plugin.constructor.name !== 'MiniCssExtractPlugin' &&
+        plugin.constructor.name !== 'ManifestPlugin' &&
+        plugin.constructor.name !== 'CompressionPlugin'
     )
   }
 

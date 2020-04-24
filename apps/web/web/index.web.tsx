@@ -1,6 +1,7 @@
 // preload imports
 import './bootstrapEnv'
 import './base.css'
+import './mapkit'
 
 import { createOvermind } from 'overmind'
 // // import here
@@ -40,7 +41,6 @@ const search = window.location.search
 
 async function start() {
   if (!window['STARTED'] && !isWorker) {
-    require('./mapkit')
     await startMapKit()
     console.log('started mapkit')
   }
@@ -94,5 +94,7 @@ async function startMapKit() {
   })
 }
 
-// @ts-ignore
-module?.hot?.accept()
+if (process.env.NODE_ENV === 'development') {
+  // @ts-ignore
+  module?.hot?.accept()
+}

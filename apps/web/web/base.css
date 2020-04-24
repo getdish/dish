@@ -75,6 +75,10 @@ textarea {
   z-index: 10000;
 }
 
+.shine {
+  position: relative;
+}
+
 .shine:after {
   animation: shine 1.25s linear infinite;
   animation-fill-mode: forwards;
@@ -98,15 +102,15 @@ textarea {
 @keyframes shine {
   10% {
     opacity: 1;
-    top: -30%;
-    left: -30%;
+    top: 0;
+    left: 0;
     transition-property: left, top, opacity;
     transition-timing-function: ease;
   }
   100% {
     opacity: 0;
-    top: -30%;
-    left: -30%;
+    top: 0;
+    left: 0;
     transition-property: left, top, opacity;
   }
 }

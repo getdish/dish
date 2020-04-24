@@ -1,5 +1,5 @@
 import { Restaurant } from '@dish/models'
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { ScrollView, Text, TouchableOpacity } from 'react-native'
 
 import { GeocodePlace, isEditingUserPage } from '../../state/home'

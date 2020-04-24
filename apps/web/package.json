@@ -24,7 +24,7 @@
     "build": "tsc -b tsconfig.build.json",
     "watch": "tsc -b --watch --preserveWatchOutput tsconfig.build.json",
     "build:web": "./etc/build_web.sh",
-    "build:web:server": "TARGET=ssr webpack",
+    "build:web:server": "NODE_ENV=production TARGET=ssr webpack",
     "build:web:client": "NODE_ENV=production TARGET=client webpack",
     "build:web:rollup": "NODE_ENV=development yarn rollup -c rollup.config.ts",
     "build:web:worker": "TARGET=worker webpack",
