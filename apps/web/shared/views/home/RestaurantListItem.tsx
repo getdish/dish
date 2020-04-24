@@ -11,7 +11,7 @@ import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { bgLightLight } from './colors'
 import { DishView } from './DishView'
 import { RankingView } from './RankingView'
-import { RestaurantAddComment } from './RestaurantAddComment'
+import { CommentBubble, RestaurantAddComment } from './RestaurantAddComment'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
@@ -75,6 +75,12 @@ export const RestaurantListItem = memo((props: RestaurantListItemProps) => {
         </ScrollView>
         <Divider />
       </TouchableOpacity>
+
+      <VStack position="absolute" bottom={0} left={0} right="20%">
+        <CommentBubble user={{ username: 'Peach' }}>
+          <Text>Lorem ipsum dolor sit amet.</Text>
+        </CommentBubble>
+      </VStack>
     </VStack>
   )
 })

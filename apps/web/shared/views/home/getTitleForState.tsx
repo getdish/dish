@@ -27,7 +27,7 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
         ? tag.type === 'dish'
         : countryTag
         ? tag.type === 'country'
-        : tag.type === 'dish') || tag.name === 'Delivers'
+        : tag.type === 'dish') || tag.name === 'Delivery'
   )
 
   if (hasUser) {
@@ -50,7 +50,7 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
     </>
   )
 
-  let titleTagsString = titleTags.map((x) => `${x.name ?? ''}`).join(', ')
+  let titleTagsString = titleTags.map((x) => `${x.name ?? ''}`).join(' ')
 
   // lowercase when not at front
   if (!countryTag && lensePlaceholder.indexOf('🍔') > 0) {

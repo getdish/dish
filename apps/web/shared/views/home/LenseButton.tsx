@@ -21,7 +21,7 @@ export const LenseButton = memoIsEqualDeep(
     const [r, g, b] = lense.rgb
     const rgbInner = `${r * 255}, ${g * 255}, ${b * 255}`
     const lenseColor = `rgb(${rgbInner})`
-    const lenseColorLight = `rgba(${rgbInner}, 0.35)`
+    const lenseColorLight = `rgba(${rgbInner}, 0.2)`
     const buttonContent = (
       <LinkButton tag={lense}>
         <HStack
@@ -41,15 +41,15 @@ export const LenseButton = memoIsEqualDeep(
           borderColor="transparent"
           // opacity={0.8}
           hoverStyle={{
-            backgroundColor: lenseColorLight,
+            borderColor: lenseColorLight,
             opacity: 1,
           }}
           {...(isActive && {
             opacity: 1,
-            backgroundColor: lenseColor,
+            backgroundColor: lenseColorLight,
             borderColor: lenseColor,
             hoverStyle: {
-              backgroundColor: lenseColor,
+              backgroundColor: lenseColorLight,
             },
           })}
         >
@@ -85,7 +85,9 @@ export const LenseButton = memoIsEqualDeep(
         position="top"
         contents={
           <Box>
-            <Text>{lense.displayName ?? lense.name}</Text>
+            <Text style={{ fontSize: 16, fontWeight: '700' }}>
+              {lense.displayName ?? lense.name}
+            </Text>
           </Box>
         }
       >
