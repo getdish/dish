@@ -17,10 +17,7 @@ export const DishView = memo(
         alignItems="center"
         position="relative"
         justifyContent="center"
-        name="search"
-        params={{
-          dish: dish.name,
-        }}
+        tag={{ type: 'dish', name: dish.name }}
         {...rest}
       >
         <ZStack fullscreen zIndex={10}>
