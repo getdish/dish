@@ -12,6 +12,7 @@ WITH by_country AS (
           'image', (
             SELECT image FROM restaurant
               WHERE tag_names @> to_jsonb(hot_tags.slug)
+              AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
               AND image IS NOT NULL
               ORDER BY rating DESC NULLS LAST
               LIMIT 1
@@ -27,9 +28,7 @@ WITH by_country AS (
       ) FROM (
         SELECT *, (
           SELECT COUNT(*) FROM restaurant
-            WHERE tag_names @> to_jsonb(
-              REPLACE(LOWER(tag.name), ' ', '-')
-            )
+            WHERE tag_names @> to_jsonb(slug)
             AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
           ) AS count,
           REPLACE(LOWER(name), ' ', '-') AS slug
@@ -38,7 +37,7 @@ WITH by_country AS (
           SELECT id FROM tag WHERE name = (SELECT DISTINCT t.name)
         )
         ORDER by count DESC
-        LIMIT 10
+        LIMIT 5
       ) as hot_tags
     ) as dishes,
     (
@@ -46,7 +45,7 @@ WITH by_country AS (
         SELECT name, slug, rating FROM restaurant
         WHERE tag_names @> to_jsonb(LOWER((SELECT DISTINCT t.name)))
         ORDER BY rating DESC NULLS LAST
-        LIMIT 10
+        LIMIT 5
       ) t
     ) as top_restaurants
   FROM restaurant
