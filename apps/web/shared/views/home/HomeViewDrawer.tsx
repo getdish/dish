@@ -2,12 +2,7 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 
 import { searchBarHeight } from '../../constants'
-import {
-  drawerBorderRadius,
-  drawerPad,
-  drawerPadLeft,
-  drawerWidthMax,
-} from '../../constants'
+import { drawerPad, drawerPadLeft, drawerWidthMax } from '../../constants'
 import { useMedia } from '../../hooks/useMedia'
 import { LinearGradient } from '../ui/LinearGradient'
 import { mediaQueries } from '../ui/MediaQuery'
@@ -34,7 +29,7 @@ const colors = [
 
 const colorsSmall = colors.slice(2)
 
-export const useMediaQueryIsSmall = () => useMedia({ maxWidth: 700 })
+export const useMediaQueryIsSmall = () => useMedia({ maxWidth: 800 })
 
 export function HomeViewDrawer(props: { children: any }) {
   const isSmall = useMediaQueryIsSmall()

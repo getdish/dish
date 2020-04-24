@@ -4,7 +4,7 @@ import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { useOvermind } from '../../state/om'
 import { LinearGradient } from '../ui/LinearGradient'
-import { LinkButton } from '../ui/Link'
+import { LinkButton, LinkButtonProps } from '../ui/Link'
 import { HStack, ZStack } from '../ui/Stacks'
 import {
   circularFlatButtonStyle,
@@ -110,6 +110,17 @@ export default memo(function HomeAutoComplete() {
               spacing={6}
             >
               {autocompleteResultsActive.map((x, index) => {
+                const restaurantLinkProps: LinkButtonProps = x.type ==
+                  'restaurant' && {
+                  tag: null,
+                  name: 'restaurant',
+                  params: {
+                    slug: x.tagId,
+                  },
+                  onPress: () => {
+                    console.log('press')
+                  },
+                }
                 return (
                   <LinkButton
                     key={`${x.tagId}${index}`}
@@ -137,6 +148,7 @@ export default memo(function HomeAutoComplete() {
                     fontSize={16}
                     maxWidth="17vw"
                     ellipse
+                    {...restaurantLinkProps}
                   >
                     {x.icon?.indexOf('http') === 0 ? (
                       <img
