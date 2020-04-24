@@ -11,8 +11,8 @@ export function Box(props: StackProps) {
       shadowColor="rgba(0,0,0,0.175)"
       shadowRadius={13}
       shadowOffset={{ width: 0, height: 3 }}
-      // borderWidth={1}
-      // borderColor="#ddd"
+      borderWidth={1}
+      borderColor="#ddd"
       overflow="hidden"
       {...props}
     />

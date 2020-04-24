@@ -1,7 +1,9 @@
-import { Restaurant } from '@dish/models'
+import { Restaurant, User } from '@dish/models'
 import React, { memo, useLayoutEffect, useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity } from 'react-native'
 
+// @ts-ignore
+import avatar from '../../assets/peach.png'
 import { useOvermind } from '../../state/om'
 import { Toast } from '../Toast'
 import { Box } from '../ui/Box'
@@ -11,8 +13,6 @@ import { Link, LinkButton } from '../ui/Link'
 import { HStack, VStack } from '../ui/Stacks'
 import { flatButtonStyle } from './baseButtonStyle'
 import { Quote } from './Quote'
-
-const avatar = require('../../assets/peach.png')
 
 export const RestaurantAddComment = memo(
   ({ restaurant }: { restaurant: Restaurant }) => {
@@ -36,9 +36,71 @@ export const RestaurantAddComment = memo(
     }, [review])
 
     return (
-      <TouchableOpacity activeOpacity={0.8} onPress={() => {}}>
-        <VStack marginBottom={-25} marginTop={-6} spacing="xs">
-          <HStack alignItems="center" spacing="sm">
+      <CommentBubble user={user}>
+        <TextInput
+          value={reviewText}
+          onChange={(e) => {
+            // @ts-ignore
+            const height = e.nativeEvent.srcElement.scrollHeight
+            setHeight(height)
+          }}
+          onChangeText={(text) => {
+            if (isSaved) {
+              setIsSaved(false)
+            }
+            updateReview(text)
+          }}
+          multiline
+          placeholder="Be sure to..."
+          style={{
+            minHeight: height,
+            lineHeight: 22,
+            flex: 1,
+          }}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+        />
+        {!!(isFocused || !isSaved) && (
+          <LinkButton
+            {...flatButtonStyle}
+            marginVertical={-4}
+            onPress={async () => {
+              Toast.show('Saving...')
+              await om.effects.gql.mutations.upsertUserReview({
+                reviews: [
+                  {
+                    text: reviewText,
+                    restaurant_id: restaurant.id,
+                    tag_id: null,
+                    user_id: om.state.user.user.id,
+                    rating: 0,
+                  },
+                ],
+              })
+              Toast.show('Saved!')
+              setIsSaved(true)
+            }}
+          >
+            Save
+          </LinkButton>
+        )}
+      </CommentBubble>
+    )
+  }
+)
+
+export const CommentBubble = ({
+  user,
+  children,
+}: {
+  user: Partial<User>
+  children: any
+}) => {
+  return (
+    <TouchableOpacity activeOpacity={0.8} onPress={() => {}}>
+      <VStack marginBottom={-25} marginTop={-6} spacing="xs">
+        <HStack {...flatButtonStyle} borderRadius={13} flex={0}>
+          <HStack alignItems="center" spacing="sm" flexWrap="nowrap">
             <Circle size={22} marginVertical={-5}>
               <Image source={avatar} style={{ width: 22, height: 22 }} />
             </Circle>
@@ -75,63 +137,9 @@ export const RestaurantAddComment = memo(
               says...
             </Text>
           </HStack>
-
-          <HStack
-            {...flatButtonStyle}
-            borderRadius={13}
-            flex={0}
-            marginLeft={20}
-          >
-            <TextInput
-              value={reviewText}
-              onChange={(e) => {
-                // @ts-ignore
-                const height = e.nativeEvent.srcElement.scrollHeight
-                setHeight(height)
-              }}
-              onChangeText={(text) => {
-                if (isSaved) {
-                  setIsSaved(false)
-                }
-                updateReview(text)
-              }}
-              multiline
-              placeholder="Be sure to..."
-              style={{
-                minHeight: height,
-                lineHeight: 22,
-                flex: 1,
-              }}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-            />
-            {!!(isFocused || !isSaved) && (
-              <LinkButton
-                {...flatButtonStyle}
-                marginVertical={-4}
-                onPress={async () => {
-                  Toast.show('Saving...')
-                  await om.effects.gql.mutations.upsertUserReview({
-                    reviews: [
-                      {
-                        text: reviewText,
-                        restaurant_id: restaurant.id,
-                        tag_id: null,
-                        user_id: om.state.user.user.id,
-                        rating: 0,
-                      },
-                    ],
-                  })
-                  Toast.show('Saved!')
-                  setIsSaved(true)
-                }}
-              >
-                Save
-              </LinkButton>
-            )}
-          </HStack>
-        </VStack>
-      </TouchableOpacity>
-    )
-  }
-)
+          {children}
+        </HStack>
+      </VStack>
+    </TouchableOpacity>
+  )
+}

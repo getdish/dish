@@ -143,7 +143,7 @@ export const tagFilters: Tag[] = [
   },
   {
     id: '61',
-    name: 'Delivers',
+    name: 'Delivery',
     type: 'filter',
     // @ts-ignore
     groupId: 'basics',
