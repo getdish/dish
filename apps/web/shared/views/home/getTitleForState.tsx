@@ -39,7 +39,9 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
 
   const subTitleParts = countryTag
     ? [countryTag, `restaurants in ${currentLocationName}`]
-    : [dishTag, `dishes in ${currentLocationName}`]
+    : dishTag
+    ? [dishTag, `dishes in ${currentLocationName}`]
+    : [`"${state.searchQuery}"`, `in ${currentLocationName}`]
 
   const subTitle = `${subTitleParts[0]} ${subTitleParts[1]}`
   const subTitleElements = (

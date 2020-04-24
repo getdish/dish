@@ -119,6 +119,7 @@ export default memo(function HomeAutoComplete() {
                   },
                   onPress: () => {
                     console.log('press')
+                    om.actions.home.setShowAutocomplete(false)
                   },
                 }
                 return (

@@ -254,7 +254,7 @@ const getRouteFromTags = (
       .join(SPLIT_TAG)}`
   }
   const params: any = {
-    location: 'here',
+    location: slugify(state.currentLocationName ?? 'here'),
   }
   const lenseTag = allActiveTags.find((x) => x.type === 'lense')?.name ?? ''
   if (lenseTag) {
@@ -262,6 +262,8 @@ const getRouteFromTags = (
   }
   if (tags.length) {
     params.tags = tags
+  } else {
+    params.tags = '-'
   }
   return params
 }

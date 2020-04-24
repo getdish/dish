@@ -13,6 +13,7 @@ import {
   searchBarHeight,
   searchBarTopOffset,
 } from '../../constants'
+import { useOnMount } from '../../hooks/useOnMount'
 import { useOvermind } from '../../state/om'
 import { getTagId } from '../../state/Tag'
 import { Circle } from '../ui/Circle'
@@ -69,6 +70,10 @@ export default memo(() => {
   // use local for a little better perf
   const [search, setSearch] = useState('')
   const [locationSearch, setLocationSearch] = useState('')
+
+  useOnMount(() => {
+    setSearch(om.state.home.currentStateSearchQuery)
+  })
 
   // one way sync down for more perf
   useEffect(() => {

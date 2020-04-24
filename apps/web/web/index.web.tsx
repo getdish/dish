@@ -46,7 +46,7 @@ async function start() {
   }
 
   const om = createOvermind(config, {
-    devtools: `localhost:3032`,
+    devtools: `localhost:3031`,
     logProxies: true,
     hotReloading: true,
   })

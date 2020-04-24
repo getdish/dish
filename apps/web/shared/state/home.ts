@@ -231,7 +231,7 @@ const pushHomeState: AsyncAction<
     id: item.replace ? currentState.id : `${Math.random()}`,
     center: currentState?.center ?? initialHomeState.center,
     span: currentState?.span ?? initialHomeState.span,
-    searchQuery: currentState?.searchQuery ?? '',
+    searchQuery: item.params.query ?? currentState?.searchQuery ?? '',
   }
   const newState = {
     historyId: item.id,
@@ -280,7 +280,6 @@ const pushHomeState: AsyncAction<
       if (!started) {
         let fakeTags = getTagsFromRoute(om.state.router.curPage)
         const tags = await getFullTags(fakeTags)
-
         console.log('got tags', tags)
         activeTagIds = tags.reduce((acc, tag) => {
           const id = getTagId(tag)
@@ -827,7 +826,7 @@ const submitReview: AsyncAction<Review> = async (om, review) => {
     } else {
       await review.update()
     }
-  } catch(err) {
+  } catch (err) {
     console.error(err)
     Toast.show(`Error submitting review, may need to re-login`)
   }
@@ -1126,7 +1125,12 @@ const createBreadcrumbs = (state: HomeStateBase) => {
         if (crumbs.some((x) => x.type === cur.type)) {
           break
         }
-        if (cur.type === 'restaurant' && crumbs.some(isSearchState)) {
+        if (
+          (cur.type === 'restaurant' ||
+            cur.type === 'user' ||
+            cur.type == 'userSearch') &&
+          crumbs.some(isSearchState)
+        ) {
           break
         }
         if (isSearchState(cur) && crumbs.some(isSearchState)) {
