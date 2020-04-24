@@ -28,6 +28,12 @@ For logging into hasura admin:
 
 ---
 
+Boot the entire stack, from the project's root path:
+
+`docker-compose build && docker-compose up`
+
+---
+
 ## Repo encrypted credentials
 
 To access the secure credentials in this repo, you will need to decrypt them.
