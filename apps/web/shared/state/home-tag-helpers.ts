@@ -3,7 +3,12 @@ import { last } from 'lodash'
 import { Action, AsyncAction, Derive } from 'overmind'
 
 import { isHomeState, isSearchState, shouldBeOnHome } from './home-helpers'
-import { HomeActiveTagIds, HomeState, HomeStateItem } from './home-types'
+import {
+  HomeActiveTagIds,
+  HomeState,
+  HomeStateItem,
+  HomeStateItemSearch,
+} from './home-types'
 import { OmState, OmStateHome } from './home-types'
 import { HistoryItem, NavigateItem, SearchRouteParams } from './router'
 import { NavigableTag, Tag, getTagId, tagFilters, tagLenses } from './Tag'
@@ -50,18 +55,13 @@ export const getActiveTags = (
   state: HomeStateItem = home.currentState
 ) => {
   const lastState = home.states[home.states.length - 1]
-  const curState = state ?? lastState
-  const activeTagIds = curState?.['activeTagIds'] ?? {}
+  const curState = (state ?? lastState) as HomeStateItemSearch
+  const activeTagIds = curState?.activeTagIds ?? {}
   const tags = Object.keys(activeTagIds)
     .filter((x) => activeTagIds[x])
     .map((x) => home.allTags[x])
   if (tags.some((x) => !x)) {
-    console.error(
-      'MISSING INFO FOR SOME TAG!',
-      tags,
-      activeTagIds,
-      home.allTags
-    )
+    console.warn('MISSING INFO FOR SOME TAG!', activeTagIds, state)
   }
   return tags.filter(Boolean)
 }
@@ -75,7 +75,6 @@ export const getNavigateToTag: Action<HomeStateNav, LinkButtonProps> = (
   om,
   { state = om.state.home.currentState, tag }
 ) => {
-  console.log('get navigate to', tag)
   const nextState = getNextStateWithTag(om, {
     tag,
     state,
@@ -86,7 +85,7 @@ export const getNavigateToTag: Action<HomeStateNav, LinkButtonProps> = (
     onPress: (e) => {
       e?.preventDefault()
       e?.stopPropagation()
-      toggleTagOnHomeState(om, tag)
+      om.actions.home.toggleTagOnHomeState(tag)
     },
   }
 }
@@ -206,13 +205,17 @@ export const getTagsFromRoute = (
   return tags
 }
 
-const toggleTagOnHomeState: AsyncAction<NavigableTag> = async (om, next) => {
+export const toggleTagOnHomeState: AsyncAction<NavigableTag> = async (
+  om,
+  next
+) => {
   const state = om.state.home.currentState
   if (!next || (!isHomeState(state) && !isSearchState(state))) {
     return
   }
   if (!next) {
-    debugger
+    console.warn('no tag')
+    return
   }
   const key = getTagId(next)
   state.activeTagIds[key] = !state.activeTagIds[key]
