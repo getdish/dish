@@ -149,7 +149,7 @@ export default memo(() => {
               tag: om.state.home.autocompleteFocusedTag,
             })
           } else {
-            om.actions.home.runSearch({})
+            om.actions.home.runSearch({ force: true })
             om.actions.home.setShowAutocomplete(false)
             focusedInput.blur()
           }

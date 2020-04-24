@@ -12,6 +12,7 @@ import { Action, AsyncAction } from 'overmind'
 
 import { isWorker } from '../constants'
 import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
+import { requestIdle } from '../helpers/requestIdle'
 import { sleep } from '../helpers/sleep'
 import { Toast } from '../views/Toast'
 import {
@@ -115,6 +116,7 @@ export const state: HomeState = {
   autocompleteFocusedTag: (state) => {
     const { autocompleteIndex } = state
     if (autocompleteIndex < 0) return null
+    if (!state.autocompleteResults) return null
     return (
       state.allTags[state.autocompleteResults[autocompleteIndex - 1]?.tagId] ||
       null
@@ -549,37 +551,32 @@ let lastRunAt = Date.now()
 const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   // also reset runSearch! hacky!
   lastSearchAt = Date.now()
+  lastRunAt = Date.now()
+  let id = lastRunAt
+
   const state = om.state.home.currentState
   const isDeleting = query.length < state.searchQuery.length
   const isOnHome = isHomeState(state)
   const isOnSearch = isSearchState(state)
-  lastRunAt = Date.now()
-  let id = lastRunAt
-
-  // experiment
-  await new Promise((res) => requestIdleCallback(res))
-  if (id != lastRunAt) return
-
-  if (isOnHome || isOnSearch) {
-    state.searchQuery = query
-  }
 
   const nextState = { ...state, searchQuery: query }
   const isGoingHome = shouldBeOnHome(om.state.home, nextState)
 
   if (isOnSearch && isGoingHome) {
+    await requestIdle()
+    if (id != lastRunAt) return
     om.state.home.lastHomeState.searchQuery = ''
     om.state.home.topDishesFilteredIndices = []
     om.actions.router.navigate({ name: 'home' })
     return
   }
 
-  if (isOnHome) {
-    // we will load the search results with more debounce in next lines
-    om.state.home.skipNextPageFetchData = true
-    await om.actions.home._syncStateToRoute(nextState)
-    if (id != lastRunAt) return
-  }
+  // if (isOnHome) {
+  //   // we will load the search results with more debounce in next lines
+  //   om.state.home.skipNextPageFetchData = true
+  //   await om.actions.home._syncStateToRoute(nextState)
+  //   if (id != lastRunAt) return
+  // }
 
   // AUTOCOMPLETE
   // very slight debounce
@@ -595,6 +592,10 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     // slow actions below here
     await sleep(DEBOUNCE_SEARCH * delayByX - DEBOUNCE_AUTOCOMPLETE * delayByX)
     if (id != lastRunAt) return
+  }
+
+  if (isOnHome || isOnSearch) {
+    state.searchQuery = query
   }
 
   await om.actions.home._syncStateToRoute(nextState)
@@ -680,7 +681,10 @@ const locationToAutocomplete = (location: {
 
 let lastSearchKey = ''
 let lastSearchAt = Date.now()
-const runSearch: AsyncAction<{ quiet?: boolean } | void> = async (om, opts) => {
+const runSearch: AsyncAction<{
+  quiet?: boolean
+  force?: boolean
+} | void> = async (om, opts) => {
   opts = opts || { quiet: false }
 
   let state = om.state.home.currentState as HomeStateItemSearch
@@ -698,6 +702,12 @@ const runSearch: AsyncAction<{ quiet?: boolean } | void> = async (om, opts) => {
     const answer = !state || lastSearchAt != curId
     // if (answer) console.log('search: cancel')
     return answer
+  }
+
+  // dont be so eager if started
+  if (!opts.force && om.state.home.started) {
+    await Promise.all([sleep(100), requestIdle()])
+    if (shouldCancel()) return
   }
 
   query = query.trim()
