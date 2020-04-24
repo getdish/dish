@@ -1,6 +1,6 @@
-import { isPreact, isSSR, isWorker } from '../shared/constants'
+import React from 'react'
 
-const React = require('react')
+import { isPreact, isSSR, isWorker } from '../shared/constants'
 
 if (isSSR) {
   console.log('Patching useLayoutEffect to avoid many warnings in server mode')

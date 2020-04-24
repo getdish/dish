@@ -1,5 +1,3 @@
-import util from 'util'
-
 import {
   ApolloClient,
   HttpLink,
@@ -462,6 +460,6 @@ export class ModelBase<T> {
 
 class HasuraError extends Error {
   constructor(public query: string, public errors: {} = {}) {
-    super(isBrowserProd ? JSON.stringify(errors) : util.inspect(errors))
+    super(JSON.stringify(errors, null, 2))
   }
 }
