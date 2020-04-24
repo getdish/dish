@@ -29,18 +29,21 @@ const colors = [
 
 const colorsSmall = colors.slice(2)
 
-export const useMediaQueryIsSmall = () => useMedia({ maxWidth: 800 })
+export const useMediaQueryIsSmall = () => useMedia({ maxWidth: 860 })
 
 export function HomeViewDrawer(props: { children: any }) {
   const isSmall = useMediaQueryIsSmall()
   const drawerWidth = useHomeDrawerWidth()
 
   const positionSmall: StackProps = {
-    top: '28%',
+    top: '24%',
     left: 0,
     right: 0,
     width: '100%',
     paddingTop: 0,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+    overflow: 'hidden',
   }
 
   const topOffset = isSmall ? 0 : searchBarHeight

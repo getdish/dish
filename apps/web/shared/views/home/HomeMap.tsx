@@ -81,7 +81,7 @@ export const HomeMap = memo(() => {
         left: drawerWidth,
         top: searchBarHeight + 15 + 15,
         bottom: 0,
-        right: 0,
+        right: drawerWidth > 600 ? window.innerWidth * 0.4 - drawerWidth : 0,
       }
 
   const { map, mapProps } = useMap({
