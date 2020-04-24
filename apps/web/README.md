@@ -4,8 +4,8 @@
 
 ### Install dependencies
 
-  * `yarn install --global expo`
-  * `yarn install`
+- `yarn install --global expo`
+- `yarn install`
 
 ### Build (and auto rebuild on file changes)
 
@@ -14,6 +14,11 @@
 ### Run development server
 
 `yarn start`
+
+### Build then run production server (pointed at production endpoints)
+
+- `yarn build:web`
+- `yarn start:prod`
 
 ### Run end to end tests
 
@@ -43,4 +48,3 @@ If you want to run end to end tests:
 
     * Run the tests. from the `apps/web` path:
       `./test/testcafe.sh`
-

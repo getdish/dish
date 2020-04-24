@@ -20,6 +20,7 @@ export const getTagId = (tag: NavigableTag) => {
   if (!tag.name) {
     console.warn('no name tag', tag)
     debugger
+    throw new Error(`no slug for tag ${tag.name} ${JSON.stringify(tag)}`)
     return `no-slug`
   }
   const tag_model = new TagModel(tag)

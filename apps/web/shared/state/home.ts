@@ -578,6 +578,7 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     // we will load the search results with more debounce in next lines
     om.state.home.skipNextPageFetchData = true
     await om.actions.home._syncStateToRoute(nextState)
+    if (id != lastRunAt) return
   }
 
   // AUTOCOMPLETE
@@ -596,7 +597,7 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     if (id != lastRunAt) return
   }
 
-  await om.actions.home._syncStateToRoute()
+  await om.actions.home._syncStateToRoute(nextState)
 }
 
 const _runAutocomplete: AsyncAction<string> = async (om, query) => {
@@ -867,15 +868,23 @@ const setMapArea: AsyncAction<{ center: LngLat; span: LngLat }> = async (
   await om.actions.home.updateCurrentMapAreaInformation()
 }
 
+const spanToLocationName = (span: LngLat, place: GeocodePlace): string => {
+  if (span.lat < 0.3) {
+    return place.subLocality
+  }
+  return place.locality
+}
+
 const updateCurrentMapAreaInformation: AsyncAction = async (om) => {
   const currentState = om.state.home.currentState
   const center = currentState.center
+  const span = currentState.span
   try {
     const [firstResult] = (await reverseGeocode(center)) ?? []
     const placeName = firstResult.subLocality ?? firstResult.locality
     if (placeName) {
       currentState.currentLocationInfo = firstResult
-      currentState.currentLocationName = placeName
+      currentState.currentLocationName = spanToLocationName(span, firstResult)
     }
   } catch (err) {
     return

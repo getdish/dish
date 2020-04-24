@@ -1,4 +1,3 @@
-import { element, func, oneOfType } from 'prop-types'
 import React from 'react'
 
 import { isHoverEnabled } from './HoverState'
@@ -54,9 +53,3 @@ export default function Hoverable({
 }
 
 Hoverable.displayName = 'Hoverable'
-
-Hoverable.propTypes = {
-  children: oneOfType([func, element]),
-  onHoverIn: func,
-  onHoverOut: func,
-}

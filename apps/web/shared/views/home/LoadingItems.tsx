@@ -11,13 +11,13 @@ export const LoadingItems = () => (
 )
 
 export const LoadingItem = () => {
-  const seed = useRef(Math.max(2, Math.min(6, Math.round(Math.random() * 10))))
+  const seed = useRef(Math.max(3, Math.min(6, Math.round(Math.random() * 10))))
   return (
     <VStack padding={20} spacing={10}>
       <HStack
-        width={`${seed.current * 10}%`}
-        height={30}
-        backgroundColor="#ddd"
+        width={`${seed.current * 12}%`}
+        height={26}
+        backgroundColor="#dedede"
         borderRadius={7}
         // casued bug with filters, if we contain maybe wont
         // className="shine"
@@ -26,10 +26,12 @@ export const LoadingItem = () => {
         {[1, 2, 3, 4].map((index) => (
           <HStack
             key={index}
-            width={seed.current * (60 - (2 - index > -1 ? index : -index) * 5)}
+            width={`${seed.current *
+              (15 - (2 - index > -1 ? index : -index) * 4)}%`}
             height={14}
+            maxWidth="100%"
             backgroundColor="#eee"
-            borderRadius={3}
+            borderRadius={5}
             className="shine"
           />
         ))}

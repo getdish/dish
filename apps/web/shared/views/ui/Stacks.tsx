@@ -75,11 +75,13 @@ const createStack = (defaultStyle?: ViewStyle) => {
         if (!innerRef.current) return
         const node = innerRef.current?.['_reactInternalFiber']?.child.stateNode
         if (!node) return
-        const names = className.trim().split(' ').filter(Boolean)
-        if (disabled) names.push('force-disable')
+        const names = className
+          .trim()
+          .split(' ')
+          .filter(Boolean)
         names.forEach((x) => node.classList.add(x))
         return () => names.forEach((x) => node.classList.remove(x))
-      })
+      }, [className])
 
       const getContent = (extraStyle?: any) => {
         let spacedChildren = children
@@ -107,21 +109,27 @@ const createStack = (defaultStyle?: ViewStyle) => {
           )
         }
         return (
-          <View
-            ref={combineRefs(innerRef, ref)}
-            pointerEvents={pointerEvents}
-            style={[
-              {
-                ...defaultStyle,
-                ...(fullscreen && fsStyle),
-                ...props,
-              },
-              style,
-              extraStyle,
-            ]}
+          <div
+            className={`${className ? className : 'display-contents'} ${
+              disabled ? 'force-disable' : ''
+            }`}
           >
-            {spacedChildren}
-          </View>
+            <View
+              ref={combineRefs(innerRef, ref)}
+              pointerEvents={pointerEvents}
+              style={[
+                {
+                  ...defaultStyle,
+                  ...(fullscreen && fsStyle),
+                  ...props,
+                },
+                style,
+                extraStyle,
+              ]}
+            >
+              {spacedChildren}
+            </View>
+          </div>
         )
       }
 
@@ -137,13 +145,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
               onHoverOut?.()
             }}
           >
-            <div
-              className={`see-through ${className} ${
-                disabled ? 'force-disable' : ''
-              }`}
-            >
-              {getContent(isHovered ? hoverStyle : null)}
-            </div>
+            {getContent(isHovered ? hoverStyle : null)}
           </Hoverable>
         )
       }
