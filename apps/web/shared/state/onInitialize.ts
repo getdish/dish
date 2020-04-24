@@ -71,7 +71,9 @@ export const onInitialize: OnInitialize = async (
   tlog('router.start()')
 }
 
-// @ts-ignore
-module.hot.accept(() => {
-  debugger
-})
+if (process.env.NODE_ENV === 'development') {
+  // @ts-ignore
+  module.hot.accept(() => {
+    debugger
+  })
+}

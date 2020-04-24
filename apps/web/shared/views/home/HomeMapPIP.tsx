@@ -1,17 +1,11 @@
 import _ from 'lodash'
 import React, { memo, useEffect, useMemo, useState } from 'react'
 
-import { searchBarHeight } from '../../constants'
-import { useDebounceValue } from '../../hooks/useDebounce'
-import { useDebounceEffect } from '../../hooks/useDebounceEffect'
-import { LngLat, setMapView } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Map, useMap } from '../map'
-// import { mapkit } from '../mapkit'
 import { ZStack } from '../ui/Stacks'
 import { centerMapToRegion } from './HomeMap'
 import { getRankingColor, getRestaurantRating } from './RestaurantRatingView'
-import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 export const HomeMapPIP = memo(() => {
   const om = useOvermind()
