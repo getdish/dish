@@ -6,7 +6,8 @@ const Memoryfs = require('memory-fs')
 // maybe debug with https://hacks.mozilla.org/2012/11/tracking-down-memory-leaks-in-node-js-a-node-js-holiday-season/
 
 function run() {
-  const config = require('./webpack.config.tsickle') as any
+  const config = require('./webpack.config.tsickle')
+  // @ts-ignore
   const compiler = webpack(config)
   const mfs = new Memoryfs()
   // @ts-ignore
