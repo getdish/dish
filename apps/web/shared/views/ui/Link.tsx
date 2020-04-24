@@ -111,13 +111,15 @@ export function LinkButton<
   let props = { ...allProps }
 
   if ('tag' in props) {
-    const state = currentStates.find((x) => x.id === currentStateID)
-    const tagProps = getNavigateToTag(window['om'], {
-      state,
-      tag: props.tag,
-    })
+    if (props.tag.name !== 'Search') {
+      const state = currentStates.find((x) => x.id === currentStateID)
+      const tagProps = getNavigateToTag(window['om'], {
+        state,
+        tag: props.tag,
+      })
+      props = { ...props, ...tagProps }
+    }
     delete props['tag']
-    props = { ...props, ...tagProps }
   }
 
   if ('name' in props) {

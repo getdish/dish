@@ -17,10 +17,12 @@ export type Tag = {
 export type NavigableTag = Partial<Tag> & Pick<Tag, 'name' | 'type'>
 
 export const getTagId = (tag: NavigableTag) => {
-  const tag_model = new TagModel(tag)
-  if (!tag_model) {
+  if (!tag.name) {
+    console.warn('no name tag', tag)
     debugger
+    return `no-slug`
   }
+  const tag_model = new TagModel(tag)
   return tag_model.slug()
 }
 

@@ -33,6 +33,7 @@ import {
   isSearchBarTag,
   navigateToTag,
   navigateToTagId,
+  toggleTagOnHomeState,
 } from './home-tag-helpers'
 import { getNavigateItemForState } from './home-tag-helpers'
 import {
@@ -69,51 +70,6 @@ export const initialHomeState: HomeStateItemHome = {
     lat: 37.759251,
   },
   span: { lng: INITIAL_RADIUS / 2, lat: INITIAL_RADIUS },
-}
-
-const createBreadcrumbs = (state: HomeStateBase) => {
-  let crumbs: HomeStateItemSimple[] = []
-  stateLoop: for (let i = state.states.length - 1; i >= 0; i--) {
-    const cur = state.states[i]
-    switch (cur.type) {
-      case 'home': {
-        crumbs.unshift(cur)
-        break stateLoop
-      }
-      case 'search':
-      case 'userSearch':
-      case 'user':
-      case 'restaurant': {
-        if (crumbs.some((x) => x.type === cur.type)) {
-          break
-        }
-        if (cur.type === 'restaurant' && crumbs.some(isSearchState)) {
-          break
-        }
-        if (isSearchState(cur) && crumbs.some(isSearchState)) {
-          break
-        }
-        // we could prevent stacking userSearch
-        // if (cur.type === 'search' && crumbs.some(x => x.type === 'userSearch'))
-        crumbs.unshift(cur)
-        break
-      }
-    }
-  }
-  return crumbs.map((x) => _.pick(x, 'id', 'type'))
-}
-
-/*
- *  HomeState!
- */
-
-const createAutocomplete = (x: Partial<AutocompleteItem>): AutocompleteItem => {
-  return {
-    name: x.name,
-    type: x.type,
-    ...x,
-    tagId: getTagId({ name: x.name, type: x.type }),
-  }
 }
 
 const defaultLocationAutocompleteResults: AutocompleteItem[] = [
@@ -220,15 +176,11 @@ export const isEditingUserPage = (state: OmState) => {
 
 const start: AsyncAction = async (om) => {
   om.actions.home.updateBreadcrumbs()
-  await om.actions.home._loadHomeDishes()
-  await Promise.all([
-    om.actions.home.startAutocomplete(),
-    om.actions.home.updateCurrentMapAreaInformation(),
-  ])
-
-  // stuff that can run after rendering
-  await new Promise((res) => (window['requestIdleCallback'] ?? setTimeout)(res))
-  await om.actions.home._runAutocomplete(om.state.home.currentState.searchQuery)
+  om.actions.home.updateCurrentMapAreaInformation()
+  // promises are nice here, dont wait on anything top level unless necessary
+  om.actions.home._loadHomeDishes().then(async () => {
+    await om.actions.home.startAutocomplete()
+  })
 }
 
 let defaultAutocompleteResults: AutocompleteItem[] | null = null
@@ -260,6 +212,7 @@ const startAutocomplete: AsyncAction = async (om) => {
     .slice(0, 20) as AutocompleteItem[]
   defaultAutocompleteResults = results
   om.state.home.autocompleteResults = results
+  await om.actions.home._runAutocomplete(om.state.home.currentState.searchQuery)
 }
 
 type PageAction = (om: Om) => Promise<void>
@@ -326,6 +279,7 @@ const pushHomeState: AsyncAction<
         let fakeTags = getTagsFromRoute(om.state.router.curPage)
         const tags = await getFullTags(fakeTags)
 
+        console.log('got tags', tags)
         activeTagIds = tags.reduce((acc, tag) => {
           const id = getTagId(tag)
           om.state.home.allTags[id] = tag as Tag // ?
@@ -1031,7 +985,7 @@ const moveActiveUp: Action = (om) => {
   om.actions.home.setActiveIndex(om.state.home.activeIndex - 1)
 }
 
-const _runHomeSearch: AsyncAction<string> = async (om, query) => {
+const runHomeSearch: AsyncAction<string> = async (om, query) => {
   const res = await fuzzyFindIndices(query, om.state.home.topDishes, [
     'country',
   ])
@@ -1132,6 +1086,47 @@ const updateBreadcrumbs: Action = (om) => {
   }
 }
 
+const createBreadcrumbs = (state: HomeStateBase) => {
+  let crumbs: HomeStateItemSimple[] = []
+  stateLoop: for (let i = state.states.length - 1; i >= 0; i--) {
+    const cur = state.states[i]
+    switch (cur.type) {
+      case 'home': {
+        crumbs.unshift(cur)
+        break stateLoop
+      }
+      case 'search':
+      case 'userSearch':
+      case 'user':
+      case 'restaurant': {
+        if (crumbs.some((x) => x.type === cur.type)) {
+          break
+        }
+        if (cur.type === 'restaurant' && crumbs.some(isSearchState)) {
+          break
+        }
+        if (isSearchState(cur) && crumbs.some(isSearchState)) {
+          break
+        }
+        // we could prevent stacking userSearch
+        // if (cur.type === 'search' && crumbs.some(x => x.type === 'userSearch'))
+        crumbs.unshift(cur)
+        break
+      }
+    }
+  }
+  return crumbs.map((x) => _.pick(x, 'id', 'type'))
+}
+
+function createAutocomplete(x: Partial<AutocompleteItem>): AutocompleteItem {
+  return {
+    name: x.name,
+    type: x.type,
+    ...x,
+    tagId: getTagId({ name: x.name, type: x.type }),
+  }
+}
+
 export const actions = {
   navigateToTag,
   setMapMoved,
@@ -1142,7 +1137,7 @@ export const actions = {
   _loadHomeDishes,
   _loadUserDetail,
   _runAutocomplete,
-  _runHomeSearch,
+  runHomeSearch,
   updateCurrentMapAreaInformation,
   _syncStateToRoute,
   clearSearch,
@@ -1171,4 +1166,5 @@ export const actions = {
   suggestTags,
   startAction,
   updateBreadcrumbs,
+  toggleTagOnHomeState,
 }

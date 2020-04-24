@@ -3,12 +3,14 @@ import { useWindowSize } from '../../hooks/useWindowSize'
 
 export function useHomeDrawerWidth(): number {
   const [width] = useWindowSize({ throttle: 200 })
-  let pct = 0.55
+  let pct = 0.65
+
   if (width < 900) {
     const scale = Math.max(0, width - 800) / 100
-    const extraPct = scale * 0.1
+    const extraPct = scale * 0.3
     pct = pct + extraPct
   }
+
   return Math.min(Math.max(560, width * pct), Infinity)
 }
 

@@ -6,17 +6,17 @@ import { ScrollView, Text } from 'react-native'
 import { HomeStateItem, HomeStateItemHome } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { NotFoundPage } from '../NotFoundPage'
-import { LinkButton } from '../ui/Link'
+import { LinkButton, OverlayLinkButton } from '../ui/Link'
 import { MediaQuery, mediaQueries } from '../ui/MediaQuery'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { SmallTitle, SmallerTitle } from '../ui/SmallTitle'
 import { Spacer } from '../ui/Spacer'
-import { HStack, VStack } from '../ui/Stacks'
+import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { flatButtonStyle } from './baseButtonStyle'
 import { bgLightLight } from './colors'
 import { DishView } from './DishView'
 import HomeFilterBar from './HomeFilterBar'
-import HomeLenseBar, { HomeLenseBarOnly } from './HomeLenseBar'
+import { HomeLenseBarOnly } from './HomeLenseBar'
 import { RestaurantButton } from './RestaurantButton'
 import { TrendingButton } from './TrendingButton'
 
@@ -41,19 +41,27 @@ export default memo(function HomePageTopDishes({
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
       <VStack position="relative" flex={1}>
-        <ScrollView style={{ flex: 1, overflow: 'hidden' }}>
+        <ScrollView style={{ flex: 1 }}>
           <VStack paddingVertical={20} spacing="xl">
-            {/* <Text style={{ fontWeight: '700', fontSize: 22, textAlign: 'center' }}>
-          San Francisco
-        </Text> */}
-
+            {/* TRENDING */}
             <HomeViewTopDishesTrending />
 
+            {/* LENSES - UNIQUELY GOOD HERE */}
             <VStack spacing="lg">
-              <SmallTitle divider="off">
-                {om.state.home.lastActiveTags.find((x) => x.type === 'lense')
-                  ?.descriptions?.plain ?? ''}
-              </SmallTitle>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  fontSize: 28,
+                  fontWeight: '300',
+                }}
+              >
+                {om.state.home.lastActiveTags
+                  .find((x) => x.type === 'lense')
+                  ?.descriptions?.plain.replace(
+                    'Here',
+                    `in ${om.state.home.lastHomeState.currentLocationName}`
+                  ) ?? ''}
+              </Text>
 
               <VStack spacing>
                 <HomeLenseBarOnly
@@ -102,11 +110,25 @@ const HomeViewTopDishesTrending = memo(() => {
   }
   return (
     <VStack spacing="lg">
-      <SmallTitle divider="off">
-        Trending in {om.state.home.location?.name ?? 'San Francisco'}
-      </SmallTitle>
+      {/* <SmallTitle divider="off">
+         in {om.state.home.location?.name ?? 'San Francisco'}
+      </SmallTitle> */}
       <HStack spacing="sm" paddingHorizontal={10}>
         <VStack flex={1} spacing={6}>
+          <ZStack position="absolute" top={-5} left={-8} zIndex={100}>
+            <LinkButton
+              paddingVertical={5}
+              paddingHorizontal={10}
+              shadowColor={'rgba(0,0,0,0.1)'}
+              shadowRadius={8}
+              shadowOffset={{ height: 2, width: 0 }}
+              backgroundColor="#fff"
+              borderRadius={8}
+              transform={[{ rotate: '-2deg' }]}
+            >
+              Trending
+            </LinkButton>
+          </ZStack>
           <SmallerTitle>Restaurants</SmallerTitle>
           <VStack spacing={0} overflow="hidden">
             {allRestaurants.slice(0, 5).map(getTrending)}
@@ -141,20 +163,22 @@ const CountryTopDishesAndRestaurants = memo(
     rank: number
     state: HomeStateItem
   }) => {
-    const om = useOvermind()
     const [hovered, setHovered] = useState(false)
     const [hoveredRestaurant, setHoveredRestaurant] = useState<Restaurant>(null)
     const onHoverRestaurant = useCallback((restaurant: Restaurant) => {
       setHoveredRestaurant(restaurant)
     }, [])
 
+    const padding = 20
+    const dishHeight = 120
+    const spacing = 22
+
     return (
       <VStack
-        paddingVertical={5}
-        paddingTop={20}
+        paddingVertical={10}
         backgroundColor={hovered ? bgLightLight : null}
-        onHoverIn={() => setHovered(true)}
-        onHoverOut={() => setHovered(false)}
+        // onHoverIn={() => setHovered(true)}
+        // onHoverOut={() => setHovered(false)}
       >
         <HStack paddingHorizontal={20}>
           <HStack flex={1}>
@@ -163,6 +187,9 @@ const CountryTopDishesAndRestaurants = memo(
               {...flatButtonStyle}
               paddingVertical={4}
               marginVertical={-6}
+              style={{
+                transform: [{ rotate: '-2deg' }],
+              }}
               tag={{
                 type: 'country',
                 name: country.country,
@@ -170,7 +197,7 @@ const CountryTopDishesAndRestaurants = memo(
             >
               <Text
                 numberOfLines={1}
-                style={{ fontSize: 18, fontWeight: '600' }}
+                style={{ fontSize: 22, fontWeight: '600' }}
               >
                 {country.country} {country.icon}
               </Text>
@@ -181,15 +208,14 @@ const CountryTopDishesAndRestaurants = memo(
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <HStack
-            height={160}
+            height={dishHeight + padding * 2 + 40}
             alignItems="center"
-            padding={20}
-            paddingBottom={10}
+            padding={padding}
             paddingHorizontal={32}
-            spacing={22}
+            spacing={spacing}
           >
             {(country.dishes || []).slice(0, 10).map((top_dish, index) => {
-              return <DishView key={index} dish={top_dish as any} />
+              return <DishView size={120} key={index} dish={top_dish as any} />
             })}
           </HStack>
         </ScrollView>
