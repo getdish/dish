@@ -2,124 +2,60 @@ import {
   Restaurant,
   RestaurantSearchArgs,
   Review,
-  TopCuisine,
   User,
   slugify,
 } from '@dish/models'
+import { LngLat } from '@dish/models/_/Restaurant'
 import { isEqual } from '@o/fast-compare'
 import _ from 'lodash'
-import { Action, AsyncAction, Config, Derive, IContext } from 'overmind'
+import { Action, AsyncAction } from 'overmind'
 
 import { isWorker } from '../constants'
 import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
-import { race } from '../helpers/race'
 import { sleep } from '../helpers/sleep'
 import { Toast } from '../views/Toast'
 import {
-  _toggleTagOnHomeState,
+  isHomeState,
+  isRestaurantState,
+  isSearchState,
+  lastHomeState,
+  lastRestaurantState,
+  lastSearchState,
+  shouldBeOnHome,
+} from './home-helpers'
+import {
+  allTags,
+  currentNavItem,
+  getActiveTags,
+  getFullTags,
   getNavigateToTag,
   getTagsFromRoute,
+  isSearchBarTag,
   navigateToTag,
   navigateToTagId,
 } from './home-tag-helpers'
 import { getNavigateItemForState } from './home-tag-helpers'
+import {
+  AutocompleteItem,
+  GeocodePlace,
+  HomeActiveTagIds,
+  HomeState,
+  HomeStateBase,
+  HomeStateItem,
+  HomeStateItemHome,
+  HomeStateItemSearch,
+  HomeStateItemSimple,
+  Om,
+  OmState,
+  ShowAutocomplete,
+} from './home-types'
 import { HistoryItem, NavigateItem, RouteItem } from './router'
 import { NavigableTag, Tag, getTagId, tagFilters, tagLenses } from './Tag'
 
-export type Om = IContext<Config>
-export type OmState = Om['state']
-export type OmStateHome = OmState['home']
-
-export const SPLIT_TAG = '_'
-export const SPLIT_TAG_TYPE = '~'
-
-export type GeocodePlace = mapkit.Place & {
-  locality: string
-  administrativeArea: string
-  countryCode: string
-  country: string
-  timezone: string
-  dependentLocalities: string[]
-  subLocality: string
-}
-
-type ShowAutocomplete = 'search' | 'location' | false
-
-type SearchResultsResults = {
-  restaurantIds: string[]
-  dishes: string[]
-  locations: string[]
-}
-
-export type SearchResults =
-  | { status: 'loading'; results?: SearchResultsResults }
-  | {
-      status: 'complete'
-      results: SearchResultsResults
-    }
-
-export type LngLat = { lng: number; lat: number }
-
-type HomeStateItemBase = {
-  searchQuery: string
-  center: LngLat
-  span: LngLat
-  id: string
-  historyId?: string
-  currentLocationName?: string
-  currentLocationInfo?: GeocodePlace | null
-}
-
-export type HomeStateItem =
-  | HomeStateItemHome
-  | HomeStateItemSearch
-  | HomeStateItemRestaurant
-  | HomeStateItemUser
-
-export type HomeActiveTagIds = { [id: string]: boolean }
-
-export type HomeStateItemHome = HomeStateItemBase & {
-  type: 'home'
-  activeTagIds: HomeActiveTagIds
-}
-
-export type HomeStateItemSearch = HomeStateItemBase & {
-  type: 'search' | 'userSearch'
-  activeTagIds: HomeActiveTagIds
-  results: SearchResults
-  // for not forcing map to be always synced
-  searchedCenter?: LngLat
-  searchedSpan?: LngLat
-  user?: User
-  username?: string
-  hasMovedMap: boolean
-}
-
-export type HomeStateItemRestaurant = HomeStateItemBase & {
-  type: 'restaurant'
-  restaurantId: string | null
-  reviews: Review[]
-  review: Review | null
-}
-
-export type HomeStateItemUser = HomeStateItemBase & {
-  type: 'user'
-  username: string
-  user: User
-  reviews: Review[]
-}
-
-export type HomeStateItemSimple = Pick<HomeStateItem, 'id' | 'type'>
-
-export type AutocompleteItem = {
-  icon?: string
-  name: string
-  tagId: string
-  type: Tag['type']
-  center?: LngLat
-}
-
 const INITIAL_RADIUS = 0.1
+
+// backward compat
+export * from './home-types'
 
 export const initialHomeState: HomeStateItemHome = {
   id: '0',
@@ -134,24 +70,6 @@ export const initialHomeState: HomeStateItemHome = {
   },
   span: { lng: INITIAL_RADIUS / 2, lat: INITIAL_RADIUS },
 }
-
-type HSIJustType = Pick<HomeStateItem, 'type'>
-export const isUserState = (x?: HSIJustType): x is HomeStateItemUser =>
-  x?.type === 'user'
-export const isSearchState = (x?: HSIJustType): x is HomeStateItemSearch =>
-  x?.type === 'search' || x?.type === 'userSearch'
-export const isHomeState = (x?: HSIJustType): x is HomeStateItemHome =>
-  x?.type === 'home'
-export const isRestaurantState = (
-  x?: HSIJustType
-): x is HomeStateItemRestaurant => x?.type === 'restaurant'
-
-export const lastHomeState = (state: HomeStateBase) =>
-  _.findLast(state.states, isHomeState)
-export const lastRestaurantState = (state: HomeStateBase) =>
-  _.findLast(state.states, isRestaurantState)
-export const lastSearchState = (state: HomeStateBase) =>
-  _.findLast(state.states, isSearchState)
 
 const createBreadcrumbs = (state: HomeStateBase) => {
   let crumbs: HomeStateItemSimple[] = []
@@ -207,67 +125,6 @@ const defaultLocationAutocompleteResults: AutocompleteItem[] = [
   createAutocomplete({ name: 'New Orleans', icon: '📍', type: 'country' }),
 ]
 
-type HomeStateBase = {
-  started: boolean
-  activeIndex: number // index for vertical (in page), -1 = autocomplete
-  allTags: { [keyPath: string]: Tag }
-  allLenseTags: Tag[]
-  allFilterTags: Tag[]
-  allRestaurants: { [id: string]: Restaurant }
-  autocompleteDishes: TopCuisine['dishes']
-  autocompleteIndex: number // index for horizontal row (autocomplete)
-  autocompleteResults: AutocompleteItem[]
-  hoveredRestaurant: Restaurant | null
-  location: AutocompleteItem | null // for now just autocomplete item
-  locationAutocompleteResults: AutocompleteItem[]
-  locationSearchQuery: string
-  showAutocomplete: ShowAutocomplete
-  showUserMenu: boolean
-  states: HomeStateItem[]
-  topDishes: TopCuisine[]
-  topDishesFilteredIndices: number[]
-  skipNextPageFetchData: boolean
-  breadcrumbStates: HomeStateItemSimple[]
-}
-
-export type HomeState = HomeStateBase & {
-  lastHomeState: Derive<HomeState, HomeStateItemHome>
-  lastSearchState: Derive<HomeState, HomeStateItemSearch | null>
-  lastRestaurantState: Derive<HomeState, HomeStateItemRestaurant | null>
-  currentNavItem: Derive<HomeState, NavigateItem>
-  currentState: Derive<HomeState, HomeStateItem>
-  // my hypothesis is these more granular derives prevent updates on same value in views, need to test that
-  currentStateType: Derive<HomeState, HomeStateItem['type']>
-  currentStateSearchQuery: Derive<HomeState, HomeStateItem['searchQuery']>
-  previousState: Derive<HomeState, HomeStateItem>
-  isAutocompleteActive: Derive<HomeState, boolean>
-  isLoading: Derive<HomeState, boolean>
-  autocompleteResultsActive: Derive<HomeState, AutocompleteItem[]>
-  lastActiveTags: Derive<HomeState, Tag[]>
-  searchbarFocusedTag: Derive<HomeState, Tag>
-  autocompleteFocusedTag: Derive<HomeState, Tag>
-  searchBarTags: Derive<HomeState, Tag[]>
-}
-
-const allTagsList = [...tagFilters, ...tagLenses]
-const allTags = allTagsList.reduce((acc, cur) => {
-  acc[getTagId(cur)] = cur
-  return acc
-}, {})
-
-const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
-  return await Promise.all(
-    tags.map(async (tag) => {
-      return (
-        allTags[getTagId(tag)] ?? (await searchFullTag(tag)) ?? (tag as Tag)
-      )
-    })
-  )
-}
-
-export const isSearchBarTag = (tag: Pick<Tag, 'type'>) =>
-  tag?.type === 'country' || tag?.type === 'dish'
-
 export const state: HomeState = {
   started: false,
   skipNextPageFetchData: false,
@@ -281,8 +138,7 @@ export const state: HomeState = {
   autocompleteResults: [],
   breadcrumbStates: [],
   currentState: (state) => _.last(state.states)!,
-  currentNavItem: (state, om) =>
-    getNavigateItemForState(om, _.last(state.states)!),
+  currentNavItem,
   currentStateSearchQuery: (state) => state.currentState.searchQuery,
   currentStateType: (state) => state.currentState.type,
   hoveredRestaurant: null,
@@ -406,13 +262,6 @@ const startAutocomplete: AsyncAction = async (om) => {
 }
 
 type PageAction = (om: Om) => Promise<void>
-
-const searchFullTag = (tag: NavigableTag): Promise<Tag | null> =>
-  fetch(
-    `https://search-b4dc375a-default.rio.dishapp.com/tags?query=${tag.name}&type=${tag.type}&limit=1`
-  )
-    .then((res) => res.json())
-    .then((tags) => tags?.[0] ?? null)
 
 const pushHomeState: AsyncAction<
   HistoryItem,
@@ -1259,37 +1108,6 @@ const up: Action = (om) => {
   om.actions.home.popTo(prev?.type ?? 'home')
 }
 
-export const getActiveTags = (
-  home: OmStateHome,
-  state: HomeStateItem = home.currentState
-) => {
-  const lastState = home.states[home.states.length - 1]
-  const curState = state ?? lastState
-  const activeTagIds = curState?.['activeTagIds'] ?? {}
-  const tags = Object.keys(activeTagIds)
-    .filter((x) => activeTagIds[x])
-    .map((x) => home.allTags[x])
-  if (tags.some((x) => !x)) {
-    console.error(
-      'MISSING INFO FOR SOME TAG!',
-      tags,
-      activeTagIds,
-      home.allTags
-    )
-  }
-  return tags.filter(Boolean)
-}
-
-export const shouldBeOnHome = (
-  home: OmStateHome,
-  state: HomeStateItem = home.states[home.states.length - 1]
-) => {
-  return (
-    state.searchQuery === '' &&
-    getActiveTags(home, state).every((tag) => !isSearchBarTag(tag))
-  )
-}
-
 // used to help prevent duplicate searches on slight diff in map move
 const roundLngLat = (val: LngLat): LngLat => {
   // 4 decimal precision is good to a few meters
@@ -1318,7 +1136,6 @@ export const actions = {
   setMapMoved,
   navigateToTagId,
   getNavigateToTag,
-  _toggleTagOnHomeState,
   startAutocomplete,
   _afterTagChange,
   _loadHomeDishes,

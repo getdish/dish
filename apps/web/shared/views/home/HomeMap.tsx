@@ -1,17 +1,10 @@
 import _ from 'lodash'
-import React, {
-  memo,
-  useEffect,
-  useMemo,
-  useReducer,
-  useRef,
-  useState,
-} from 'react'
+import React, { memo, useEffect, useMemo, useRef } from 'react'
 
 import { searchBarHeight } from '../../constants'
-import { useDebounceValue } from '../../hooks/useDebounce'
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
-import { LngLat, isSearchState, setMapView } from '../../state/home'
+import { LngLat, setMapView } from '../../state/home'
+import { isSearchState } from '../../state/home-helpers'
 import { useOvermind } from '../../state/om'
 import { Map, useMap } from '../map'
 import { ZStack } from '../ui/Stacks'

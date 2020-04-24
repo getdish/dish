@@ -153,7 +153,7 @@ export default class TsccSpec implements ITsccSpec {
     let { tsccSpecJSON, tsccSpecJSONPath } = TsccSpec.loadSpecRaw(
       tsccSpecJSONOrItsPath
     )
-    console.log('now ew have', tsccSpecJSON)
+    console.log('tsspec received', tsccSpecJSON)
     return <InstanceType<T>>new this(tsccSpecJSON, tsccSpecJSONPath)
   }
   constructor(

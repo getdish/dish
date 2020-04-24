@@ -1,5 +1,10 @@
 next
 
+- if showing a cuisine search "Vietnamese"
+  - show the dishes!
+    - in autocomplete
+    - and above the search results!
+
 REVIEWS
 
 - "Tips" - horizontal carousel on restaurant page

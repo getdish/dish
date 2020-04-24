@@ -15,6 +15,7 @@
     "start:web": "webpack-dev-server --port 19006",
     "start:web:worker": "cd ../web-serve && yarn start",
     "start:web:prod": "node --version && node _/web/server.js",
+    "start:web:rollup": "NODE_ENV=development yarn nollup -c rollup.config.ts",
     "start": "yarn start:web",
     "start:prod": "yarn start:web:prod",
     "start:react-native": "react-native start",
@@ -25,6 +26,7 @@
     "build:web": "./etc/build_web.sh",
     "build:web:server": "TARGET=ssr webpack",
     "build:web:client": "NODE_ENV=production TARGET=client webpack",
+    "build:web:rollup": "NODE_ENV=development yarn rollup -c rollup.config.ts",
     "build:web:worker": "TARGET=worker webpack",
     "build:web:watch": "(TARGET=ssr webpack --watch) & (TARGET=client webpack --watch) & wait",
     "build:web:webpack-tsickle": "node --max-old-space-size=12000 tscc.js",
@@ -32,6 +34,7 @@
     "android": "react-native run-android"
   },
   "dependencies": {
+    "rollup-plugin-serve": "^1.0.1",
     "google-closure-compiler": "20191111.0.0",
     "@apollo/client": "3.0.0-beta.43",
     "@dish/common-web": "*",
@@ -65,6 +68,8 @@
     "resize-observer-polyfill": "1.5.1"
   },
   "devDependencies": {
+    "nollup": "^0.11.0",
+    "rollup-plugin-react-refresh": "^0.0.1",
     "@dish/rollup-plugin-tscc": "*",
     "@dish/tsickle-loader": "*",
     "@rollup/plugin-alias": "^3.1.0",
@@ -75,6 +80,7 @@
     "@gqless/cli": "^0.0.1-alpha.30",
     "@pmmmwh/react-refresh-webpack-plugin": "0.3.0-beta.3",
     "@rollup/plugin-commonjs": "https://gitpkg.now.sh/LarsDenBakker/plugins/packages/commonjs?feat/commonjs-synthetic-named-exports",
+    "rollup-plugin-commonjs-alternate": "^0.5.1",
     "@rollup/plugin-node-resolve": "^7.1.3",
     "@types/jsdom": "^16.2.0",
     "@types/lodash": "4.14.149",
@@ -84,7 +90,7 @@
     "@types/requestidlecallback": "0.3.1",
     "babel-jest": "~24.9.0",
     "babel-loader": "^8.0.5",
-    "babel-preset-expo": "^8.0.0",
+    "babel-preset-expo": "^8.1.0",
     "body-parser": "^1.19.0",
     "canvas": "^2.6.1",
     "closure-webpack-plugin": "^2.0.0-rc.17",
