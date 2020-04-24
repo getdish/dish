@@ -137,8 +137,8 @@ export const state: HomeState = {
     return [
       ...prefix,
       ...(state.showAutocomplete === 'location'
-        ? state.locationAutocompleteResults
-        : state.autocompleteResults),
+        ? state.locationAutocompleteResults ?? []
+        : state.autocompleteResults ?? []),
     ]
   },
   isLoading: (state) => {
