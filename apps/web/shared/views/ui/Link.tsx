@@ -8,7 +8,7 @@ import { getNavigateToTag } from '../../state/home-tag-helpers'
 import { useOvermind, useOvermindStatic } from '../../state/om'
 import { RoutesTable, getPathFromParams } from '../../state/router'
 import { NavigableTag } from '../../state/Tag'
-import { CurrentStateID } from '../home/HomePage'
+import { CurrentStateID } from '../home/CurrentStateID'
 import { StackProps, VStack } from './Stacks'
 
 type LinkSharedProps = {

@@ -1,6 +1,8 @@
 import React from 'react'
 
-import { HomeStateItem, Om, OmState, getActiveTags } from '../../state/home'
+import { HomeStateItem } from '../../state/home'
+import { getActiveTags } from '../../state/home-tag-helpers'
+import { Om, OmState } from '../../state/home-types'
 import { getTagId } from '../../state/Tag'
 import { TagButton } from './TagButton'
 

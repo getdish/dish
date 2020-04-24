@@ -42,3 +42,10 @@ declare module 'overmind' {
 
 export const useOvermind = createHook<typeof config>()
 export const useOvermindStatic = () => window['om'] as Overmind<typeof config>
+
+// @ts-ignore
+module?.hot.accept('*', () => {
+  console.warn('Reload, changed onInitialize')
+  window.location = window.location
+  debugger
+})

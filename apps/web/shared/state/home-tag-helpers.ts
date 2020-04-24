@@ -1,24 +1,23 @@
 import { TagType, slugify } from '@dish/models'
-import { Action, AsyncAction } from 'overmind'
+import { last } from 'lodash'
+import { Action, AsyncAction, Derive } from 'overmind'
 
-import {
-  HomeActiveTagIds,
-  HomeState,
-  HomeStateItem,
-  OmState,
-  OmStateHome,
-  SPLIT_TAG,
-  SPLIT_TAG_TYPE,
-  getActiveTags,
-  isHomeState,
-  isSearchState,
-  shouldBeOnHome,
-} from './home'
+import { isHomeState, isSearchState, shouldBeOnHome } from './home-helpers'
+import { HomeActiveTagIds, HomeState, HomeStateItem } from './home-types'
+import { OmState, OmStateHome } from './home-types'
 import { HistoryItem, NavigateItem, SearchRouteParams } from './router'
-import { NavigableTag, Tag, getTagId } from './Tag'
+import { NavigableTag, Tag, getTagId, tagFilters, tagLenses } from './Tag'
 
+const SPLIT_TAG = '_'
+const SPLIT_TAG_TYPE = '~'
 const ensureUniqueTagOfType = new Set(['lense'])
 const ensureUniqueTag = new Set(['country', 'dish'])
+
+export const allTagsList = [...tagFilters, ...tagLenses]
+export const allTags = allTagsList.reduce((acc, cur) => {
+  acc[getTagId(cur)] = cur
+  return acc
+}, {})
 
 type HomeStateNav = { tag: NavigableTag; state?: HomeStateItem }
 
@@ -30,6 +29,43 @@ export const navigateToTagId: Action<string> = (om, tagId) => {
   navigateToTag(om, { tag: om.state.home.allTags[tagId] })
 }
 
+export const currentNavItem: Derive<HomeState, NavigateItem> = (state, om) =>
+  getNavigateItemForState(om, last(state.states)!)
+
+export const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
+  return await Promise.all(
+    tags.map(async (tag) => {
+      return (
+        allTags[getTagId(tag)] ?? (await searchFullTag(tag)) ?? (tag as Tag)
+      )
+    })
+  )
+}
+
+export const isSearchBarTag = (tag: Pick<Tag, 'type'>) =>
+  tag?.type === 'country' || tag?.type === 'dish'
+
+export const getActiveTags = (
+  home: OmStateHome,
+  state: HomeStateItem = home.currentState
+) => {
+  const lastState = home.states[home.states.length - 1]
+  const curState = state ?? lastState
+  const activeTagIds = curState?.['activeTagIds'] ?? {}
+  const tags = Object.keys(activeTagIds)
+    .filter((x) => activeTagIds[x])
+    .map((x) => home.allTags[x])
+  if (tags.some((x) => !x)) {
+    console.error(
+      'MISSING INFO FOR SOME TAG!',
+      tags,
+      activeTagIds,
+      home.allTags
+    )
+  }
+  return tags.filter(Boolean)
+}
+
 type LinkButtonProps = NavigateItem & {
   onPress?: Function
 }
@@ -39,7 +75,8 @@ export const getNavigateToTag: Action<HomeStateNav, LinkButtonProps> = (
   om,
   { state = om.state.home.currentState, tag }
 ) => {
-  const nextState = getNextHomeStateWithTag(om, {
+  console.log('get navigate to', tag)
+  const nextState = getNextStateWithTag(om, {
     tag,
     state,
   })
@@ -49,21 +86,17 @@ export const getNavigateToTag: Action<HomeStateNav, LinkButtonProps> = (
     onPress: (e) => {
       e?.preventDefault()
       e?.stopPropagation()
-      om.actions.home._toggleTagOnHomeState(tag)
+      toggleTagOnHomeState(om, tag)
     },
   }
 }
 
-const getNextHomeStateWithTag: Action<HomeStateNav, HomeStateItem> = (
+const getNextStateWithTag: Action<HomeStateNav, HomeStateItem | null> = (
   om,
   { state, tag }
 ) => {
   if (!isHomeState(state) && !isSearchState(state)) {
     return null
-  }
-
-  if (!tag) {
-    debugger
   }
 
   // clone it to avoid confusing overmind
@@ -107,23 +140,6 @@ function ensureUniqueActiveTagIds(
       delete activeTagIds[key]
     }
   }
-}
-
-export const _toggleTagOnHomeState: AsyncAction<NavigableTag> = async (
-  om,
-  next
-) => {
-  const state = om.state.home.currentState
-  if (!next || (!isHomeState(state) && !isSearchState(state))) {
-    return
-  }
-  if (!next) {
-    debugger
-  }
-  const key = getTagId(next)
-  state.activeTagIds[key] = !state.activeTagIds[key]
-  ensureUniqueActiveTagIds(state.activeTagIds, om.state.home, next)
-  await om.actions.home._afterTagChange()
 }
 
 export const getNavigateItemForState = (
@@ -175,14 +191,6 @@ export const getNavigateItemForState = (
   }
 }
 
-const getUrlTagInfo = (part: string, defaultType: any = ''): NavigableTag => {
-  if (part.indexOf(SPLIT_TAG_TYPE) > -1) {
-    const [type, name] = part.split(SPLIT_TAG_TYPE)
-    return { type: type as any, name }
-  }
-  return { type: defaultType, name: part }
-}
-
 export const getTagsFromRoute = (
   item: HistoryItem<'userSearch'>
 ): NavigableTag[] => {
@@ -196,6 +204,28 @@ export const getTagsFromRoute = (
     }
   }
   return tags
+}
+
+const toggleTagOnHomeState: AsyncAction<NavigableTag> = async (om, next) => {
+  const state = om.state.home.currentState
+  if (!next || (!isHomeState(state) && !isSearchState(state))) {
+    return
+  }
+  if (!next) {
+    debugger
+  }
+  const key = getTagId(next)
+  state.activeTagIds[key] = !state.activeTagIds[key]
+  ensureUniqueActiveTagIds(state.activeTagIds, om.state.home, next)
+  await om.actions.home._afterTagChange()
+}
+
+const getUrlTagInfo = (part: string, defaultType: any = ''): NavigableTag => {
+  if (part.indexOf(SPLIT_TAG_TYPE) > -1) {
+    const [type, name] = part.split(SPLIT_TAG_TYPE)
+    return { type: type as any, name }
+  }
+  return { type: defaultType, name: part }
 }
 
 const getRouteFromTags = (
@@ -232,3 +262,10 @@ const getRouteFromTags = (
   }
   return params
 }
+
+const searchFullTag = (tag: NavigableTag): Promise<Tag | null> =>
+  fetch(
+    `https://search-b4dc375a-default.rio.dishapp.com/tags?query=${tag.name}&type=${tag.type}&limit=1`
+  )
+    .then((res) => res.json())
+    .then((tags) => tags?.[0] ?? null)
