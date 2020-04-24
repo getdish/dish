@@ -13,44 +13,6 @@ import { SmallCircleButton } from './CloseButton'
 
 type AddressSize = 'lg' | 'md' | 'sm' | 'xs'
 
-function formatAddress(
-  currentLocation: GeocodePlace | null,
-  address: string,
-  format: AddressSize
-): string {
-  if (format === 'xs') {
-    return address.split(', ')[0]
-  }
-  if (format === 'lg') {
-    return removeLongZip(address)
-  }
-  if (format === 'md' || !currentLocation) {
-    return removeZip(removeLongZip(address))
-  }
-  if (currentLocation?.locality) {
-    const replaceAfter = `, ${currentLocation.locality ?? ''}`
-    const replaceIndex = address.indexOf(replaceAfter)
-    if (replaceIndex > 0) {
-      return address.slice(0, replaceIndex).split(',')[0]
-    }
-  }
-  return removeLongZip(address).split(',')[0]
-}
-
-const removeLongZip = (str: string) => {
-  const lastDashIndex = str.lastIndexOf('-')
-  const lastDashDistanceToEnd = str.length - lastDashIndex
-  if (lastDashDistanceToEnd > 7) return str
-  const specificZip = str.slice(lastDashIndex)
-  if (/[-0-9]+/.test(specificZip)) {
-    return str.slice(0, lastDashIndex)
-  }
-  return str
-}
-
-const removeZip = (str: string) =>
-  str.replace(/,(\s[A-Z]{2})?[\s]+([0-9\-]+$)/g, '')
-
 export const RestaurantAddressLinksRow = memo(
   ({
     currentLocationInfo,
@@ -104,8 +66,13 @@ export const RestaurantAddressLinksRow = memo(
       <Text style={{ color: '#999', fontSize }}>
         <HStack alignItems="center" spacing>
           {showAddress && (
-            <SelectableText style={{ fontSize: 14 }}>
-              {formatAddress(
+            <SelectableText
+              numberOfLines={1}
+              style={
+                { fontSize: 14, whiteSpace: 'nowrap', maxWidth: 190 } as any
+              }
+            >
+              {getAddressText(
                 currentLocationInfo,
                 restaurant.address,
                 typeof showAddress === 'string' ? showAddress : size
@@ -130,3 +97,41 @@ export const RestaurantAddressLinksRow = memo(
     )
   }
 )
+
+export function getAddressText(
+  currentLocation: GeocodePlace | null,
+  address: string,
+  format: AddressSize
+): string {
+  if (format === 'xs') {
+    return address.split(', ')[0]
+  }
+  if (format === 'lg') {
+    return removeLongZip(address)
+  }
+  if (format === 'md' || !currentLocation) {
+    return removeZip(removeLongZip(address))
+  }
+  if (currentLocation?.locality) {
+    const replaceAfter = `, ${currentLocation.locality ?? ''}`
+    const replaceIndex = address.indexOf(replaceAfter)
+    if (replaceIndex > 0) {
+      return address.slice(0, replaceIndex).split(',')[0]
+    }
+  }
+  return removeLongZip(address).split(',')[0]
+}
+
+const removeLongZip = (str: string) => {
+  const lastDashIndex = str.lastIndexOf('-')
+  const lastDashDistanceToEnd = str.length - lastDashIndex
+  if (lastDashDistanceToEnd > 7) return str
+  const specificZip = str.slice(lastDashIndex)
+  if (/[-0-9]+/.test(specificZip)) {
+    return str.slice(0, lastDashIndex)
+  }
+  return str
+}
+
+const removeZip = (str: string) =>
+  str.replace(/,(\s[A-Z]{2})?[\s]+([0-9\-]+$)/g, '')

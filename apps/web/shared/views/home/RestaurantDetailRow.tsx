@@ -13,11 +13,13 @@ export const RestaurantDetailRow = memo(
     restaurant,
     size,
     centered,
+    after,
     ...rest
   }: StackProps & {
     size?: 'sm' | 'md'
     restaurant: Restaurant
     centered?: boolean
+    after?: any
   }) => {
     const isSm = size === 'sm'
 
@@ -64,10 +66,14 @@ export const RestaurantDetailRow = memo(
       <HStack flex={1} alignItems="center" spacing={spaceSize} {...rest}>
         {rows.map((row, index) => (
           <HStack {...(!isSm && { width: '32%' })} key={`${index}${row.title}`}>
-            <VStack {...(isSm && { flexDirection: 'row' })} flex={10}>
+            <VStack
+              {...(isSm && { flexDirection: 'row', alignItems: 'center' })}
+              flex={10}
+            >
               {!isSm && titleEl(row)}
               {contentEl(row.content)}
             </VStack>
+            {after}
             {isSm && index !== rows.length - 1 && (
               <>
                 <Spacer flex={0.5} />

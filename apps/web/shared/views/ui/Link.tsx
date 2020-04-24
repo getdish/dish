@@ -43,7 +43,7 @@ export function Link<
   HTMLAnchorElement
 > &
   LinkSharedProps & {
-    name: Name
+    name?: Name
     params?: Params
     inline?: boolean
     padding?: StackProps['padding']
