@@ -874,7 +874,6 @@ const setMapArea: AsyncAction<{ center: LngLat; span: LngLat }> = async (
   if (isSearchState(state)) {
     state.hasMovedMap = true
   }
-
   om.state.home.currentState.center = center
   om.state.home.currentState.span = span
 

@@ -214,7 +214,7 @@ textarea {
 }
 
 .inline-flex {
-  display: inline-flex;
+  display: inline-flex !important;
 }
 
 div,

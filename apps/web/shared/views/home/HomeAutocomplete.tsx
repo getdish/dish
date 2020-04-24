@@ -95,8 +95,8 @@ export default memo(function HomeAutoComplete() {
           borderBottomLeftRadius={12}
           height={49}
           paddingBottom={1} // looks better 1px up
-          shadowColor="rgba(0,0,0,0.4)"
-          shadowRadius={15}
+          shadowColor="rgba(0,0,0,0.28)"
+          shadowRadius={18}
           shadowOffset={{ width: 0, height: 3 }}
           spacing
           position="relative"
@@ -146,7 +146,7 @@ export default memo(function HomeAutoComplete() {
                       : flatButtonStyle)}
                     borderRadius={100}
                     paddingHorizontal={10}
-                    fontSize={16}
+                    fontSize={15}
                     maxWidth="17vw"
                     ellipse
                     {...restaurantLinkProps}

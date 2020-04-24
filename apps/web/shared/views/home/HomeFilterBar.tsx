@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { memo } from 'react'
 import { ScrollView, Text } from 'react-native'
 
@@ -11,8 +12,16 @@ import { SmallButton } from './SmallButton'
 
 export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
   const om = useOvermind()
+
+  let last = 0
+  const grouped = _.groupBy(
+    om.state.home.allFilterTags,
+    (x) => x?.['groupId'] ?? ++last
+  )
+  const groupedList = Object.keys(grouped).map((k) => grouped[k])
+
   return (
-    <VStack paddingBottom={6}>
+    <VStack paddingBottom={6} marginVertical={-2}>
       <HStack
         paddingHorizontal={30}
         paddingVertical={1}
@@ -20,32 +29,38 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
         spacing={4}
         justifyContent="center"
       >
-        {om.state.home.allFilterTags.map((tag, index) => {
-          const extraProps: StackProps = {}
-          let hasPrev = false
-          let hasNext = false
-          if (tag['groupId']) {
-            hasPrev =
-              om.state.home.allFilterTags[index - 1]?.['groupId'] ===
-              tag['groupId']
-            hasNext =
-              om.state.home.allFilterTags[index + 1]?.['groupId'] ===
-              tag['groupId']
-            extraProps.borderTopLeftRadius = hasPrev ? 0 : 30
-            extraProps.borderBottomLeftRadius = hasPrev ? 0 : 30
-            extraProps.borderTopRightRadius = hasNext ? 0 : 30
-            extraProps.borderBottomRightRadius = hasNext ? 0 : 30
-          }
+        {groupedList.map((group, index) => {
           return (
-            <FilterButton
-              key={tag.id}
-              filter={tag}
-              isActive={activeTagIds[getTagId(tag)]}
-              {...(hasPrev && { marginLeft: -4 })}
-              {...(hasNext && { marginRight: -1, zIndex: 10 - index })}
-              {...extraProps}
-              height={28}
-            />
+            <HStack
+              key={index}
+              borderRadius={100}
+              // borderWidth={1}
+              // borderColor={bgHover}
+              // shadowColor="rgba(0,0,0,0.2)"
+              // shadowRadius={4}
+              // shadowOffset={{ height: 2, width: 0 }}
+            >
+              {group.map((tag, groupIndex) => {
+                const hasPrev = !!group[groupIndex - 1]
+                const hasNext = !!group[groupIndex + 1]
+                const extraProps: StackProps = {}
+                extraProps.borderTopLeftRadius = hasPrev ? 0 : 30
+                extraProps.borderBottomLeftRadius = hasPrev ? 0 : 30
+                extraProps.borderTopRightRadius = hasNext ? 0 : 30
+                extraProps.borderBottomRightRadius = hasNext ? 0 : 30
+                return (
+                  <FilterButton
+                    key={tag.id}
+                    filter={tag}
+                    isActive={activeTagIds[getTagId(tag)]}
+                    {...(hasPrev && { marginLeft: -0.5 })}
+                    {...(hasNext && { marginRight: -0.5, zIndex: 10 - index })}
+                    {...extraProps}
+                    height={30}
+                  />
+                )
+              })}
+            </HStack>
           )
         })}
       </HStack>
@@ -65,7 +80,7 @@ const FilterButton = memo(
           <Text
             style={{
               fontSize: 14,
-              fontWeight: '400',
+              fontWeight: '500',
             }}
           >
             {filter.displayName ?? filter.name}

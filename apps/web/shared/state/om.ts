@@ -42,6 +42,14 @@ declare module 'overmind' {
 
 export const useOvermind = createHook<typeof config>()
 export const useOvermindStatic = () => window['om'] as Overmind<typeof config>
+export const om = new Proxy(
+  {},
+  {
+    get(target, key) {
+      return (window['om'] ?? config)[key]
+    },
+  }
+) as Overmind<typeof config>
 
 if (process.env.NODE_ENV === 'development') {
   // @ts-ignore

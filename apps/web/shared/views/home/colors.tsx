@@ -1,6 +1,7 @@
 export const bgLightLight = '#B8E0F322'
 
-export const bgLight = 'rgba(220, 234, 255, 0.5)'
+export const bgLight = 'rgb(230, 244, 255)'
+export const bgLightTranslucent = 'rgba(220, 234, 255, 0.5)'
 export const bgLightHover = `rgba(220, 234, 255, 1)`
 
 export const bg = '#7154AD'
