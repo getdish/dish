@@ -159,9 +159,10 @@ export const state: HomeState = {
   autocompleteFocusedTag: (state) => {
     const { autocompleteIndex } = state
     if (autocompleteIndex < 0) return null
-    return (state.allTags[
-      state.autocompleteResults[autocompleteIndex - 1]?.tagId
-    ] ?? null) as Tag
+    return (
+      state.allTags[state.autocompleteResults[autocompleteIndex - 1]?.tagId] ||
+      null
+    )
   },
   searchbarFocusedTag: (state) => {
     const { autocompleteIndex } = state

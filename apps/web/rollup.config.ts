@@ -9,6 +9,7 @@ import typescript from '@rollup/plugin-typescript'
 import babel from 'rollup-plugin-babel'
 import commonjsalt from 'rollup-plugin-commonjs-alternate'
 import css from 'rollup-plugin-css-only'
+import nodeGlobals from 'rollup-plugin-node-globals'
 import refresh from 'rollup-plugin-react-refresh'
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -19,121 +20,139 @@ const babelrc = babelConfig({
     return str == 'production' ? false : true
   },
 })
-console.log('babelrc', babelrc)
 
 const external = {
-  React: 'react',
-  ReactDOM: 'react-dom',
-  fastJsonStableStringify: 'fast-json-stable-stringify',
-  graphqlTag: 'graphql-tag',
-  subscriptionsTransportWs: 'subscriptions-transport-ws',
-  axios: 'axios',
-  jsonToGraphqlQuery: 'json-to-graphql-query',
-  'overmind/config': 'overmind/config',
-  zenObservable: 'zen-observable',
-  'graphql/language/printer': 'graphql/language/printer',
-  'graphql/language/visitor': 'graphql/language/visitor',
-  util: 'util',
-  queryString: 'query-string',
+  // React: 'react',
+  // ReactDOM: 'react-dom',
+  // fastJsonStableStringify: 'fast-json-stable-stringify',
+  // graphqlTag: 'graphql-tag',
+  // subscriptionsTransportWs: 'subscriptions-transport-ws',
+  // axios: 'axios',
+  // jsonToGraphqlQuery: 'json-to-graphql-query',
+  // 'overmind/config': 'overmind/es/config',
+  // zenObservable: 'zen-observable',
+  // 'graphql/language/printer': 'graphql/language/printer',
+  // 'graphql/language/visitor': 'graphql/language/visitor',
+  // util: 'util',
+  // queryString: 'query-string',
 }
+
+// useful debug
+const logPlugin = (uid, showCode = true) => {
+  return {
+    transform(code, id) {
+      console.log('---', uid, id)
+      if (showCode) {
+        console.log(code)
+      }
+      // not returning anything, so doesn't affect bundle
+    },
+  }
+}
+
+const commonjsplugin = commonjsalt({
+  // exclude: ['node_modules/react-native-web/**'],
+  namedExports: {
+    '/Users/nw/dish/apps/web/node_modules/react-native-web/dist/vendor/react-native/ListView/index.js': [
+      'ListView',
+    ],
+    'node_modules/phoenix/priv/static/phoenix.js': ['Socket'],
+  },
+})
 
 // : Rollup.RollupOptions
 const config = {
   input: './web/index.web.tsx',
   // preserveSymlinks: true,
   output: {
-    format: 'iife',
+    format: 'esm',
     sourcemap: true,
-    dir: '.',
+    entryFileNames: '[name].js',
+    assetFileNames: '[name].[extname]',
+    dir: 'dist',
   },
   external: isDev ? {} : Object.values(external),
   plugins: [
     alias({
-      entries: [{ find: 'react-native', replacement: 'react-native-web' }],
+      entries: [
+        { find: 'react-native', replacement: 'react-native-web' },
+        { find: 'overmind/config', replacement: 'overmind/es/config' },
+      ],
     }),
-    // // for react refresh only
-    isDev &&
-      commonjsalt({
-        exclude: ['node_modules/react-native-web/**'],
-        namedExports: {
-          'node_modules/phoenix/priv/static/phoenix.js': ['Socket'],
-        },
-      }),
-    // !isDev &&
-    // commonjs({
-    //   // include: ['node_modules/**'],
-    //   exclude: [
-    //     'shared/**/*',
-    //     '../../packages/**/*',
-    //     '**.ts',
-    //     '**.tsx',
-    //     'node_modules/symbol-observable/**',
-    //   ],
-    //   // @ts-ignore
-    //   syntheticNamedExports: true,
-    // }),
+
     json(),
+    css({ output: './dist/bundle.css' }),
+
+    isDev &&
+      babel({
+        extensions: ['.js', '.ts', '.tsx', '.json', '.mjs'],
+      }),
+    // logPlugin('babel', false),
     nodeResolve({
       // could try module esm exports
       mainFields: ['tsmain', 'module', 'browser', 'main'],
-      extensions: ['*.js', '*.ts', '*.tsx'],
+      extensions: ['.js', '.ts', '.tsx', '.json', '.mjs'],
     }),
-    !isDev &&
-      tscc({
-        specFile: './tscc.spec.json',
-        external: external,
-      }),
-    // babel({
-    //   babelrc: false,
-    //   plugins: ['react-refresh/babel', '@babel/plugin-syntax-typescript'],
-    // }),
-    typescript({
-      tsconfig: './tsconfig.tscc.json',
-      typescript: require('typescript'),
-      // tslib: require('some-fork'),
-    }),
-    // commonjsalt(),
-    css({ output: './dist/bundle.css' }),
+    // logPlugin('nodeResolve', false),
+    nodeGlobals(),
+    {
+      ...commonjsplugin,
+      transform(...args) {
+        const [_, id] = args
+        if (id.indexOf('core-js/modules/_add-to-unscopables.js') > -1) {
+          return
+        }
+        return commonjsplugin.transform.call(this, ...args)
+      },
+    },
+    logPlugin('commonjs', false),
     replace({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.TARGET': JSON.stringify('web'),
     }),
     process.env.NODE_ENV === 'development' && refresh(),
-    // serve({
-    //   // Launch in browser (default: false)
-    //   open: true,
-
-    //   // Page to navigate to when opening the browser.
-    //   // Will not do anything if open=false.
-    //   // Remember to start with a slash.
-    //   openPage: '/different/page',
-
-    //   // Show server address in console (default: true)
-    //   verbose: false,
-
-    //   // Folder to serve files from
-    //   contentBase: ['web-build'],
-
-    //   // Set to true to return index.html (200) instead of error page (404)
-    //   historyApiFallback: true,
-
-    //   // Options used in setting up server
-    //   host: 'd1sh_hasura_live',
-    //   port: 10001,
-
-    //   // By default server will be served over HTTP (https: false). It can optionally be served over HTTPS
-    //   https: {
-    //     key: fs.readFileSync('/path/to/server.key'),
-    //     cert: fs.readFileSync('/path/to/server.crt'),
-    //     ca: fs.readFileSync('/path/to/ca.pem'),
-    //   },
-
-    //   //set headers
-    //   headers: {
-    //     'Access-Control-Allow-Origin': '*',
-    //     foo: 'bar',
-    //   },
-    // }),
+    logPlugin('done', false),
   ],
 }
 
+console.log({ babelrc, external, config })
+
 export default config
+
+// prod
+// output: {
+//   format: 'iife',
+//   sourcemap: true,
+//   dir: 'dist',
+// },
+// !isDev &&
+// commonjs({
+//   // include: ['node_modules/**'],
+//   exclude: [
+//     'shared/**/*',
+//     '../../packages/**/*',
+//     '**.ts',
+//     '**.tsx',
+//     'node_modules/symbol-observable/**',
+//   ],
+//   // @ts-ignore
+//   syntheticNamedExports: true,
+// }),
+// !isDev &&
+//   tscc({
+//     specFile: './tscc.spec.json',
+//     external: external,
+//   }),
+// typescript({
+//   tsconfig: './tsconfig.tscc.json',
+//   typescript: require('typescript'),
+//   // tslib: require('some-fork'),
+// }),
+// for react refresh only
+// isDev &&
+//   commonjsalt({
+//     exclude: ['node_modules/react-native-web/**'],
+//     namedExports: {
+//       'node_modules/phoenix/priv/static/phoenix.js': ['Socket'],
+//     },
+//   }),

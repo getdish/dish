@@ -1,6 +1,6 @@
 import { Action, IConfig, Overmind } from 'overmind'
 import { createHook } from 'overmind-react'
-import { merge, namespaced } from 'overmind/config'
+import { merge, namespaced } from 'overmind/es/config'
 
 import * as dishes from './dishes'
 import { gql } from './effects'

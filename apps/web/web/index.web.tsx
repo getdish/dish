@@ -34,9 +34,6 @@ if (isSSR) {
   exports.config = config
   exports.ReactDOMServer = require('react-dom/server')
 }
-if (!isWorker) {
-  exports.Helmet = require('react-helmet')
-}
 
 let rootEl = document.getElementById('root')
 const search = window.location.search
