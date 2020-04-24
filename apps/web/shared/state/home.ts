@@ -819,12 +819,17 @@ const submitReview: AsyncAction<Review> = async (om, review) => {
     console.error('Not logged in')
     return
   }
-  if (typeof review.id == 'undefined') {
-    review.user_id = om.state.user.user.id
-    await review.insert()
-    review.id = review.id
-  } else {
-    await review.update()
+  try {
+    if (typeof review.id == 'undefined') {
+      review.user_id = om.state.user.user.id
+      await review.insert()
+      review.id = review.id
+    } else {
+      await review.update()
+    }
+  } catch(err) {
+    console.error(err)
+    Toast.show(`Error submitting review, may need to re-login`)
   }
 }
 
@@ -879,10 +884,10 @@ const setMapArea: AsyncAction<{ center: LngLat; span: LngLat }> = async (
 }
 
 const spanToLocationName = (span: LngLat, place: GeocodePlace): string => {
-  if (span.lat < 0.3) {
-    return place.subLocality
+  if (span.lat < 0.07) {
+    return place.subLocality // Mission Dolores
   }
-  return place.locality
+  return place.locality // San Francisco
 }
 
 const updateCurrentMapAreaInformation: AsyncAction = async (om) => {
