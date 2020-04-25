@@ -1,12 +1,13 @@
 import React, { memo } from 'react'
-import { Text } from 'react-native'
+import { StyleSheet, Text } from 'react-native'
 
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { Tag } from '../../state/Tag'
 import { Box } from '../ui/Box'
 import { HoverablePopover } from '../ui/HoverablePopover'
+import { LinearGradient } from '../ui/LinearGradient'
 import { LinkButton } from '../ui/Link'
-import { HStack } from '../ui/Stacks'
+import { HStack, ZStack } from '../ui/Stacks'
 
 export const LenseButton = memoIsEqualDeep(
   ({
@@ -24,6 +25,18 @@ export const LenseButton = memoIsEqualDeep(
     const lenseColorLight = `rgba(${rgbInner}, 0.2)`
     const buttonContent = (
       <LinkButton tag={lense}>
+        <ZStack fullscreen top={-9} bottom={-9}>
+          <LinearGradient
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                borderRadius: 1000,
+                opacity: 0.3,
+              },
+            ]}
+            colors={[lenseColorLight, 'white']}
+          />
+        </ZStack>
         <HStack
           alignItems="center"
           justifyContent="center"
@@ -46,10 +59,10 @@ export const LenseButton = memoIsEqualDeep(
           }}
           {...(isActive && {
             opacity: 1,
-            backgroundColor: lenseColorLight,
+            backgroundColor: 'white',
             borderColor: lenseColor,
             hoverStyle: {
-              backgroundColor: lenseColorLight,
+              backgroundColor: 'white',
             },
           })}
         >

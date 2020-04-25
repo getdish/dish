@@ -11,7 +11,7 @@ import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { SelectableText } from '../ui/Text'
 import { bgLightLight } from './colors'
 import { DishView } from './DishView'
-import { useMediaQueryIsSmall } from './HomeViewDrawer'
+import { useMediaQueryIsMedium, useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RankingView } from './RankingView'
 import { CommentBubble, RestaurantAddComment } from './RestaurantAddComment'
 import {
@@ -149,7 +149,8 @@ const RestaurantListItemContent = memo(
 
               <HStack
                 marginBottom={-10}
-                paddingLeft={padLeft + 9}
+                marginRight={-15}
+                marginLeft={-46}
                 alignItems="center"
               >
                 <RestaurantFavoriteStar restaurant={restaurant} />
@@ -197,6 +198,7 @@ export const RestaurantPeek = memo(
   }) => {
     const spacing = size == 'lg' ? 12 : 18
     const photos = Restaurant.allPhotos(restaurant).slice(0, 5)
+    const isMedium = useMediaQueryIsMedium()
     return (
       <VStack
         position="relative"
@@ -210,7 +212,7 @@ export const RestaurantPeek = memo(
               return (
                 <DishView
                   key={i}
-                  size={size === 'lg' ? 140 : 130}
+                  size={(size === 'lg' ? 140 : 130) * (isMedium ? 0.85 : 1)}
                   dish={
                     {
                       name: 'Bun bo hue',

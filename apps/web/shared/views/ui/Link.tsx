@@ -225,7 +225,7 @@ export function OverlayLinkButton<
   return (
     <LinkButton
       backgroundColor="#fff"
-      paddingVertical={10}
+      paddingVertical={12}
       paddingHorizontal={16}
       borderRadius={90}
       shadowColor="rgba(0,0,0,0.175)"

@@ -105,7 +105,7 @@ function HomeStackViewItem({
             bottom={-(index * 5)}
             width="100%"
             {...(index !== 0 && {
-              shadowColor: 'rgba(0,0,0,0.1)',
+              shadowColor: 'rgba(0,0,0,0.2)',
               shadowRadius: 10,
               shadowOffset: { width: 0, height: 3 },
             })}
