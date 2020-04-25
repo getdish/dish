@@ -56,7 +56,7 @@ export default memo(function HomePageTopDishes({
                   textAlign: 'center',
                   fontSize: 26,
                   fontWeight: '300',
-                  marginBottom: 7,
+                  marginBottom: 4,
                 }}
               >
                 {om.state.home.lastActiveTags

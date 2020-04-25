@@ -34,6 +34,7 @@ export const HomeMapControlsOverlay = memo(() => {
           <OverlayLinkButton
             className={`animate-up ${hasMovedMap ? 'active' : ''}`}
             pointerEvents="auto"
+            height={38}
             onPress={() => {
               om.actions.home.refresh()
             }}

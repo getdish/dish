@@ -30,6 +30,7 @@ const colors = [
 const colorsSmall = colors.slice(2)
 
 export const useMediaQueryIsSmall = () => useMedia({ maxWidth: 860 })
+export const useMediaQueryIsMedium = () => useMedia({ maxWidth: 960 })
 
 export function HomeViewDrawer(props: { children: any }) {
   const isSmall = useMediaQueryIsSmall()

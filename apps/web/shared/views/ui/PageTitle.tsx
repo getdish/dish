@@ -10,8 +10,8 @@ export const PageTitle = memo(
       <VStack
         width="100%"
         minHeight={68}
-        paddingVertical={12}
-        paddingBottom={24}
+        paddingVertical={14}
+        paddingBottom={28}
         alignItems="center"
         justifyContent="center"
         {...rest}
@@ -22,8 +22,8 @@ export const PageTitle = memo(
             maxWidth: '80%',
             textAlign: 'center',
             opacity: 1,
-            fontSize: 24,
-            lineHeight: 32,
+            fontSize: 22,
+            lineHeight: 28,
             fontWeight: '300',
           }}
         >

@@ -75,7 +75,10 @@ const createStack = (defaultStyle?: ViewStyle) => {
         if (!innerRef.current) return
         const node = innerRef.current?.['_reactInternalFiber']?.child.stateNode
         if (!node) return
-        const names = className.trim().split(' ').filter(Boolean)
+        const names = className
+          .trim()
+          .split(' ')
+          .filter(Boolean)
         names.forEach((x) => node.classList.add(x))
         return () => names.forEach((x) => node.classList.remove(x))
       }, [className])
@@ -105,29 +108,37 @@ const createStack = (defaultStyle?: ViewStyle) => {
               )
           )
         }
-        return (
-          <div
-            className={`${className ? className : 'display-contents'} ${
-              disabled ? 'force-disable' : ''
-            }`}
+        const content = (
+          <View
+            ref={combineRefs(innerRef, ref)}
+            pointerEvents={pointerEvents}
+            style={[
+              {
+                ...defaultStyle,
+                ...(fullscreen && fsStyle),
+                ...props,
+              },
+              style,
+              extraStyle,
+            ]}
           >
-            <View
-              ref={combineRefs(innerRef, ref)}
-              pointerEvents={pointerEvents}
-              style={[
-                {
-                  ...defaultStyle,
-                  ...(fullscreen && fsStyle),
-                  ...props,
-                },
-                style,
-                extraStyle,
-              ]}
-            >
-              {spacedChildren}
-            </View>
-          </div>
+            {spacedChildren}
+          </View>
         )
+
+        if (className || disabled) {
+          return (
+            <div
+              className={`${className ? className : 'display-contents'} ${
+                disabled ? 'force-disable' : ''
+              }`}
+            >
+              {content}
+            </div>
+          )
+        }
+
+        return content
       }
 
       if (hoverStyle || onHoverIn || onHoverOut) {
