@@ -7,14 +7,17 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/go-pg/pg/v9"
+	"github.com/patrickmn/go-cache"
 	"github.com/rs/cors"
 )
 
 //go:generate go run queries/embed_query_files.go
 
 var db *pg.DB
+var c = cache.New(360*time.Minute, 360*time.Minute)
 
 func getEnv(key, fallback string) string {
 	if value, ok := os.LookupEnv(key); ok {
@@ -137,20 +140,25 @@ func handleSpecialTags(tags string, r *http.Request) (map[string]string, string)
 func top_dishes(w http.ResponseWriter, r *http.Request) {
 	var json string
 	var params = r.URL.Query()
-	_, err := db.Query(
-		pg.Scan(&json),
-		top_dishes_query,
-		params["lon"][0],
-		params["lat"][0],
-		params["distance"][0],
-	)
-	if err != nil {
-		fmt.Println(err)
+	if _json, found := c.Get("top_dishes"); found {
+		json = _json.(string)
+	} else {
+		_, err := db.Query(
+			pg.Scan(&json),
+			top_dishes_query,
+			params["lon"][0],
+			params["lat"][0],
+			params["distance"][0],
+		)
+		if err != nil {
+			fmt.Println(err)
+		}
+		if json == "" {
+			json = "[]"
+		}
 	}
+	c.Set("top_dishes", json, cache.DefaultExpiration)
 	w.Header().Set("Content-Type", "application/json")
-	if json == "" {
-		json = "[]"
-	}
 	fmt.Fprintf(w, json)
 }
 
