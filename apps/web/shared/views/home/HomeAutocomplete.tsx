@@ -137,14 +137,13 @@ export default memo(function HomeAutoComplete() {
                       tag: x,
                     })}
                     flexDirection="row"
-                    height={34}
-                    lineHeight={24}
                     fastClick
                     alignItems="center"
                     {...(isAutocompleteActive && autocompleteIndex === index
                       ? flatButtonStyleActive
                       : flatButtonStyle)}
-                    borderRadius={100}
+                    height={32}
+                    lineHeight={24}
                     paddingHorizontal={10}
                     fontSize={15}
                     maxWidth="17vw"

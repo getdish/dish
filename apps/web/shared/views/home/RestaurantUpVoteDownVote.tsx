@@ -38,7 +38,7 @@ export const RestaurantUpVoteDownVote = memo(
           >
             <Icon
               name="ChevronUp"
-              size={15}
+              size={12}
               color={rating === 1 ? 'green' : 'black'}
               marginBottom={-12}
             />
@@ -53,7 +53,7 @@ export const RestaurantUpVoteDownVote = memo(
           >
             <Icon
               name="ChevronDown"
-              size={15}
+              size={12}
               color={rating === -1 ? 'red' : 'black'}
             />
           </VoteButton>
@@ -88,8 +88,8 @@ const VoteButton = (props: any) => {
 
 const styles = StyleSheet.create({
   button: {
-    height: 26,
-    width: 21,
+    height: 24,
+    width: 16,
     // paddingLeft: 4,
     // marginLeft: 6,
     borderWidth: 1,
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#fff',
     shadowColor: 'rgba(0,0,0,0.09)',
-    shadowRadius: 3,
+    shadowRadius: 10,
     shadowOffset: { height: 1, width: 0 },
   },
   hovered: {

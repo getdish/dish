@@ -6,7 +6,7 @@ import { ProgressCircle } from '../ui/ProgressCircle'
 import { StackProps, VStack } from '../ui/Stacks'
 
 export type RatingViewProps = StackProps & {
-  size: 'lg' | 'md' | 'sm'
+  size: 'lg' | 'md' | 'sm' | 'xs'
   percent: number
   color: string
   hideEmoji?: boolean
@@ -30,7 +30,8 @@ export const RatingView = forwardRef(
       percent > 84 ? 'rgba(190, 250, 200, 0.5)' : percent > 60 ? 'gold' : 'red'
 
     // size!
-    const size = sizeIn == 'sm' ? 32 : sizeIn == 'md' ? 48 : 72
+    const size =
+      sizeIn == 'xs' ? 32 : sizeIn === 'sm' ? 40 : sizeIn == 'md' ? 48 : 72
 
     return (
       <VStack
@@ -43,8 +44,8 @@ export const RatingView = forwardRef(
         {!hideEmoji && percent >= 80 && (
           <VStack
             position="absolute"
-            top={0 + (sizeIn == 'lg' ? 0 : -4)}
-            right={0 + (sizeIn == 'lg' ? 0 : -4)}
+            top={-4 + (sizeIn == 'lg' ? 0 : -4)}
+            right={-4 + (sizeIn == 'lg' ? 0 : -4)}
             alignItems="center"
             justifyContent="center"
             zIndex={100}

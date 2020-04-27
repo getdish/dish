@@ -100,15 +100,23 @@ export const CommentBubble = ({
   children: any
 }) => {
   return (
-    <HStack {...flatButtonStyle} borderRadius={23} flex={0} {...rest}>
+    <VStack
+      flex={1}
+      hoverStyle={null}
+      borderRadius={15}
+      padding={4}
+      alignItems="flex-start"
+      spacing={5}
+      {...rest}
+    >
       <HStack
-        alignItems="center"
+        alignItems="flex-start"
+        justifyContent="center"
         spacing="sm"
         flexWrap="nowrap"
-        justifyContent="center"
       >
-        <Circle size={22} marginVertical={-5}>
-          <Image source={avatar} style={{ width: 22, height: 22 }} />
+        <Circle size={20} marginBottom={-8}>
+          <Image source={avatar} style={{ width: 20, height: 20 }} />
         </Circle>
         <Text style={{ color: '#999' }}>
           <Link
@@ -144,6 +152,6 @@ export const CommentBubble = ({
         </Text>
       </HStack>
       {children}
-    </HStack>
+    </VStack>
   )
 }

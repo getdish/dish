@@ -6,6 +6,7 @@ import { Box } from '../ui/Box'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { SmallTitle } from '../ui/SmallTitle'
 import { VStack } from '../ui/Stacks'
+import { RatingViewProps } from './RatingView'
 import { RestaurantRatingView } from './RestaurantRatingView'
 import { TableCell, TableRow } from './TableRow'
 
@@ -13,10 +14,7 @@ export const RestaurantRatingViewPopover = memo(
   ({
     size = 'md',
     restaurant,
-  }: {
-    size?: 'lg' | 'md'
-    restaurant: Restaurant
-  }) => {
+  }: Partial<RatingViewProps> & { restaurant: Restaurant }) => {
     return (
       <HoverablePopover
         position="right"

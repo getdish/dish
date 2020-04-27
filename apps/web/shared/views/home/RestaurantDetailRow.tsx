@@ -114,10 +114,10 @@ function openingHours(restaurant: Restaurant) {
     }
     const opens_at = restaurant.hours[tomorrow].hoursInfo.hours[0]
       .replace(/"/g, '')
-      .split(' - ')[0]
+      .split('-')[0]
     const closes_at = restaurant.hours[day].hoursInfo.hours[0]
       .replace(/"/g, '')
-      .split(' - ')[1]
+      .split('-')[1]
     next_time = restaurant.is_open_now ? closes_at : opens_at
   }
   return [text, color, next_time]
@@ -130,7 +130,7 @@ function priceRange(restaurant: Restaurant) {
   if (restaurant.price_range != null) {
     const [low, high] = restaurant.price_range
       .replace(/\$/g, '')
-      .split(' - ')
+      .split('-')
       .map((i) => parseInt(i))
     const average = (low + high) / 2
     price_range = '~' + restaurant.price_range

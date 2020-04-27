@@ -22,7 +22,7 @@ export const DishView = memo(
       >
         <ZStack fullscreen zIndex={10}>
           <DishRatingView
-            size={size > 150 ? 'md' : 'sm'}
+            size={size > 150 ? 'sm' : 'xs'}
             dish={dish}
             position="absolute"
             top={-4}

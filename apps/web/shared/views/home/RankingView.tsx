@@ -23,10 +23,10 @@ export const RankingView = memo(
       >
         <Text
           style={{
-            fontSize: 20,
+            fontSize: 19,
             lineHeight: 22,
-            letterSpacing: -3,
-            fontWeight: '500',
+            letterSpacing: -2,
+            fontWeight: '800',
             color: '#000',
           }}
         >

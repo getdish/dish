@@ -5,10 +5,12 @@ import { ScrollView, Text, TouchableOpacity } from 'react-native'
 import { GeocodePlace, isEditingUserPage } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Divider } from '../ui/Divider'
+import { Icon } from '../ui/Icon'
 import { Link } from '../ui/Link'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { SelectableText } from '../ui/Text'
+import { SmallCircleButton } from './CloseButton'
 import { bgLightLight } from './colors'
 import { DishView } from './DishView'
 import { useMediaQueryIsMedium, useMediaQueryIsSmall } from './HomeViewDrawer'
@@ -18,7 +20,7 @@ import { getAddressText } from './RestaurantAddressLinksRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
-import { RestaurantTagsRow, getTagElements } from './RestaurantTagsRow'
+import { getTagElements } from './RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 
 type RestaurantListItemProps = {
@@ -48,17 +50,6 @@ export const RestaurantListItem = memo((props: RestaurantListItemProps) => {
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
     >
-      {/* <VStack
-        position="absolute"
-        bottom={20}
-        left={36}
-        right={isHovered ? 40 : '40%'}
-        zIndex={100000000}
-        alignItems="flex-start"
-        maxWidth={isHovered ? '100%' : 380}
-      >
-
-      </VStack> */}
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <HStack
           alignItems="center"
@@ -68,9 +59,9 @@ export const RestaurantListItem = memo((props: RestaurantListItemProps) => {
           <ZStack
             fullscreen
             zIndex={100}
-            top={60}
-            bottom={0}
-            left={21}
+            top={0}
+            height={120}
+            left={2}
             justifyContent="center"
             pointerEvents="none"
             opacity={isHovered ? 1 : 0}
@@ -90,34 +81,31 @@ const RestaurantListItemContent = memo(
   ({ rank, restaurant, currentLocationInfo }: RestaurantListItemProps) => {
     const om = useOvermind()
     const pad = 18
-    const padLeft = 0
     const isShowingComment = isEditingUserPage(om.state)
     const isSmall = useMediaQueryIsSmall()
     return (
       <>
         <VStack
           padding={pad}
+          paddingLeft={pad + 4}
           paddingVertical={32}
-          width="62%"
+          width={isSmall ? '50vw' : '62%'}
+          minWidth={isSmall ? '60%' : 500}
           overflow="hidden"
-          maxWidth={isSmall ? '85vw' : '47vw'}
+          maxWidth={isSmall ? '80vw' : '47vw'}
           spacing={5}
         >
           <HStack alignItems="flex-start" width="100%">
-            <VStack marginTop={-3} marginLeft={-10}>
-              <RestaurantRatingViewPopover restaurant={restaurant} />
-            </VStack>
-            <Spacer />
-            <VStack spacing="sm">
+            <VStack spacing="sm" maxWidth="100%" overflow="hidden">
               <Link name="restaurant" params={{ slug: restaurant.slug }}>
                 <HStack alignItems="center" marginVertical={-3}>
                   <RankingView
-                    marginLeft={-13}
+                    marginLeft={-15}
                     marginRight={-2}
                     marginTop={-5}
                     rank={rank}
                   />
-                  <Text
+                  <SelectableText
                     style={{
                       marginLeft: -1,
                       fontSize: 20,
@@ -126,34 +114,67 @@ const RestaurantListItemContent = memo(
                     }}
                   >
                     {restaurant.name}
-                  </Text>
+                  </SelectableText>
                 </HStack>
               </Link>
 
-              <Text style={{ color: '#888', marginLeft: 7 }}>
-                {getTagElements({
-                  showMore: true,
-                  restaurant,
-                  divider: <>,&nbsp;</>,
-                })}
-              </Text>
-
-              <CommentBubble user={{ username: 'Peach' }} marginLeft={-6}>
-                <SelectableText style={{ opacity: 0.8, margin: 'auto' }}>
-                  Lorem ipsum dolor sit amet.
-                </SelectableText>
-              </CommentBubble>
-
               <HStack
-                marginBottom={-10}
-                marginRight={-15}
-                marginLeft={-46}
+                marginTop={4}
+                marginLeft={7}
+                spacing={12}
                 alignItems="center"
               >
+                <RestaurantRatingViewPopover
+                  size="xs"
+                  restaurant={restaurant}
+                />
+                <Text style={{ color: '#888' }}>
+                  {getTagElements({
+                    showMore: true,
+                    restaurant,
+                    divider: <>,&nbsp;</>,
+                  })}
+                </Text>
+                <HStack>
+                  <Icon name="Plus" size={12} color="#555" />
+                </HStack>
+              </HStack>
+
+              <HStack maxWidth="90%" marginBottom={-12}>
+                <CommentBubble user={{ username: 'Peach' }}>
+                  <SelectableText
+                    style={{
+                      opacity: 0.8,
+                      lineHeight: 18,
+                      fontSize: 13,
+                      margin: 'auto',
+                      marginBottom: 12,
+                    }}
+                  >
+                    Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet.
+                  </SelectableText>
+                  <SelectableText
+                    style={{
+                      opacity: 0.8,
+                      lineHeight: 18,
+                      fontSize: 13,
+                      margin: 'auto',
+                      marginBottom: 12,
+                    }}
+                  >
+                    Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.
+                  </SelectableText>
+                </CommentBubble>
+              </HStack>
+
+              <HStack marginRight={-15} alignItems="center">
                 <RestaurantFavoriteStar restaurant={restaurant} />
-                <Spacer size="xl" />
+                <Spacer />
                 <RestaurantDetailRow size="sm" restaurant={restaurant} />
-                <Spacer size="xl" />
+                <Spacer />
                 <Text style={{ color: '#888' }}>
                   {getAddressText(
                     currentLocationInfo,
