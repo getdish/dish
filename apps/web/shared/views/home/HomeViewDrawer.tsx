@@ -92,8 +92,8 @@ export function HomeViewDrawer(props: { children: any }) {
       <VStack
         flex={1}
         paddingLeft={drawerPad}
-        maxWidth={drawerWidthMax}
-        marginLeft="auto"
+        maxWidth={isSmall ? '100%' : drawerWidthMax}
+        marginLeft={isSmall ? 0 : 'auto'}
       >
         <ZStack position="relative" flex={1}>
           <VStack

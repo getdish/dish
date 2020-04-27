@@ -1,7 +1,6 @@
 import React, { memo } from 'react'
 import { GestureResponderEvent, TouchableOpacity } from 'react-native'
 
-import { Circle } from '../ui/Circle'
 import { Icon } from '../ui/Icon'
 import { HStack, StackProps } from '../ui/Stacks'
 

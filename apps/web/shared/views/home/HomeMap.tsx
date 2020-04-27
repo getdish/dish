@@ -373,6 +373,7 @@ export const HomeMap = memo(() => {
 
       // map.showAnnotations(annotations)
       try {
+        console.warn('adding annotation at this point??')
         for (const annotation of annotations) {
           map.addAnnotation(annotation)
         }

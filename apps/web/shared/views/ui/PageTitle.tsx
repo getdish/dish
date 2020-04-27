@@ -29,7 +29,7 @@ export const PageTitle = memo(
         >
           {children}
           {!!subTitle && (
-            <Text
+            <SelectableText
               numberOfLines={1}
               style={
                 {
@@ -43,7 +43,7 @@ export const PageTitle = memo(
               }
             >
               {subTitle}
-            </Text>
+            </SelectableText>
           )}
         </SelectableText>
         {/* <Divider alignSelf="flex-end" /> */}

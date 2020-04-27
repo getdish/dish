@@ -24,7 +24,7 @@ export const RestaurantFavoriteStar = memo(
     size?: 'lg' | 'md'
     restaurant: Restaurant
   }) => {
-    const sizePx = size == 'lg' ? 26 : 20
+    const sizePx = size == 'lg' ? 26 : 16
     const om = useOvermind()
     const [isOpen, setIsOpen] = useState(false)
     const [timer, setTimer] = useState(null)

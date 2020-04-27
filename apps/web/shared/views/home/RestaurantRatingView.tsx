@@ -10,7 +10,7 @@ import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { RatingView, RatingViewProps } from './RatingView'
 
 export type RestaurantRatingViewProps = Omit<
-  RatingViewProps,
+  Pick<RatingViewProps, 'size'>,
   'percent' | 'color'
 > & {
   restaurant: Partial<Restaurant>
