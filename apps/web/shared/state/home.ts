@@ -726,7 +726,7 @@ const runSearch: AsyncAction<{
   // update state
   state.searchQuery = ogQuery
   if (!opts?.quiet) {
-    om.actions.home.setMapMoved(false)
+    state.hasMovedMap = false
     state.results = {
       // preserve last results
       results: state.results.results,
@@ -1095,10 +1095,11 @@ const roundLngLat = (val: LngLat): LngLat => {
   }
 }
 
-const setMapMoved: Action<boolean | undefined> = (om, val = true) => {
+const setHasMovedMap: Action<boolean | void> = (om, val = true) => {
+  const next = !!val
   const { lastSearchState } = om.state.home
-  if (lastSearchState && lastSearchState.hasMovedMap !== val) {
-    lastSearchState.hasMovedMap = val
+  if (lastSearchState && lastSearchState.hasMovedMap !== next) {
+    lastSearchState.hasMovedMap = next
   }
 }
 
@@ -1157,7 +1158,7 @@ function createAutocomplete(x: Partial<AutocompleteItem>): AutocompleteItem {
 
 export const actions = {
   navigateToTag,
-  setMapMoved,
+  setHasMovedMap,
   navigateToTagId,
   getNavigateToTag,
   startAutocomplete,

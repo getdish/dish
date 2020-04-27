@@ -41,6 +41,7 @@ export const RestaurantButton = memo(
         <RestaurantRatingView
           size="sm"
           restaurant={restaurant}
+          // @ts-ignore
           position="absolute"
           top={-26}
           right={-43}

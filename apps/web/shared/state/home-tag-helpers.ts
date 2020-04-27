@@ -40,9 +40,7 @@ export const currentNavItem: Derive<HomeState, NavigateItem> = (state, om) =>
 export const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
   return await Promise.all(
     tags.map(async (tag) => {
-      return (
-        allTags[getTagId(tag)] ?? (await searchFullTag(tag)) ?? (tag as Tag)
-      )
+      return allTags[getTagId(tag)] ?? (await getFullTag(tag)) ?? (tag as Tag)
     })
   )
 }
@@ -57,12 +55,8 @@ export const getActiveTags = (
   const lastState = home.states[home.states.length - 1]
   const curState = (state ?? lastState) as HomeStateItemSearch
   const activeTagIds = curState?.activeTagIds ?? {}
-  const tags = Object.keys(activeTagIds)
-    .filter((x) => activeTagIds[x])
-    .map((x) => home.allTags[x])
-  if (tags.some((x) => !x)) {
-    console.warn('MISSING INFO FOR SOME TAG!', activeTagIds, state)
-  }
+  const tagIds = Object.keys(activeTagIds).filter((x) => activeTagIds[x])
+  const tags = tagIds.map((x) => home.allTags[x] ?? { name: x })
   return tags.filter(Boolean)
 }
 
@@ -268,7 +262,7 @@ const getRouteFromTags = (
   return params
 }
 
-const searchFullTag = (tag: NavigableTag): Promise<Tag | null> =>
+const getFullTag = (tag: NavigableTag): Promise<Tag | null> =>
   fetch(
     `https://search-b4dc375a-default.rio.dishapp.com/tags?query=${tag.name}&type=${tag.type}&limit=1`
   )
