@@ -2,6 +2,7 @@ import { Restaurant } from '@dish/models'
 import React, { memo, useEffect, useState } from 'react'
 import { ScrollView, Text, TouchableOpacity } from 'react-native'
 
+import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { GeocodePlace, isEditingUserPage } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Divider } from '../ui/Divider'
@@ -29,9 +30,23 @@ type RestaurantListItemProps = {
   rank: number
 }
 
-export const RestaurantListItem = memo((props: RestaurantListItemProps) => {
+let lastHover: any
+
+export const RestaurantListItem = memo(function RestaurantListItem(
+  props: RestaurantListItemProps
+) {
   const om = useOvermind()
   const [isHovered, setIsHovered] = useState(false)
+
+  useDebounceEffect(
+    () => {
+      if (isHovered) {
+        om.actions.home.setHoveredRestaurant(props.restaurant)
+      }
+    },
+    100,
+    [props.restaurant, isHovered]
+  )
 
   useEffect(() => {
     return om.reaction(
@@ -140,41 +155,37 @@ const RestaurantListItemContent = memo(
                 </HStack>
               </HStack>
 
-              <HStack maxWidth="90%" marginBottom={-12}>
+              <HStack maxWidth="90%">
                 <CommentBubble user={{ username: 'Peach' }}>
                   <SelectableText
                     style={{
                       opacity: 0.8,
-                      lineHeight: 18,
+                      lineHeight: 17,
                       fontSize: 13,
-                      margin: 'auto',
-                      marginBottom: 12,
+                      marginBottom: 5,
                     }}
                   >
-                    Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
-                    Lorem ipsum dolor sit amet.
+                    Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet.
                   </SelectableText>
                   <SelectableText
                     style={{
                       opacity: 0.8,
-                      lineHeight: 18,
+                      lineHeight: 17,
                       fontSize: 13,
-                      margin: 'auto',
-                      marginBottom: 12,
+                      marginBottom: 5,
                     }}
                   >
-                    Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
-                    Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
-                    Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit ipsum sit amet. Lorem ipsum dolor sit
+                    amet sit amet. Lorem ipsum dolor sit amet.Lorem ipsum dolor
+                    sit amet.
                   </SelectableText>
                 </CommentBubble>
               </HStack>
 
-              <HStack marginRight={-15} alignItems="center">
+              <HStack marginRight={-15} alignItems="center" spacing>
                 <RestaurantFavoriteStar restaurant={restaurant} />
-                <Spacer />
+                <Icon name="MessageSquare" size={16} color="blue" />
                 <RestaurantDetailRow size="sm" restaurant={restaurant} />
-                <Spacer />
                 <Text style={{ color: '#888' }}>
                   {getAddressText(
                     currentLocationInfo,

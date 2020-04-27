@@ -308,7 +308,7 @@ const pushHomeState: AsyncAction<
       fetchData = async (om) => {
         await Promise.all([
           /// search
-          om.actions.home.runSearch(),
+          om.actions.home.runSearch({ force: true }),
           getUserInfo(),
         ])
 
@@ -571,13 +571,6 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     return
   }
 
-  // if (isOnHome) {
-  //   // we will load the search results with more debounce in next lines
-  //   om.state.home.skipNextPageFetchData = true
-  //   await om.actions.home._syncStateToRoute(nextState)
-  //   if (id != lastRunAt) return
-  // }
-
   // AUTOCOMPLETE
   // very slight debounce
   if (isOnSearch || isOnHome) {
@@ -687,7 +680,7 @@ const runSearch: AsyncAction<{
 } | void> = async (om, opts) => {
   opts = opts || { quiet: false }
 
-  let state = om.state.home.currentState as HomeStateItemSearch
+  const state = om.state.home.lastSearchState
   if (!isSearchState(state)) return
 
   lastSearchAt = Date.now()
@@ -722,7 +715,7 @@ const runSearch: AsyncAction<{
   // prevent duplicate searches
   const searchKey = JSON.stringify(searchArgs)
   console.log('searchArgs', searchArgs, opts, searchKey === lastSearchKey)
-  if (searchKey === lastSearchKey) return
+  if (!opts.force && searchKey === lastSearchKey) return
 
   // update state
   state.searchQuery = ogQuery
@@ -745,9 +738,6 @@ const runSearch: AsyncAction<{
   // fetch
   let restaurants = await Restaurant.search(searchArgs)
   console.log('searched', searchArgs, restaurants)
-  if (shouldCancel()) return
-
-  state = om.state.home.lastSearchState
   if (shouldCancel()) return
 
   // fetch reviews before render
@@ -1075,8 +1065,8 @@ const forkCurrentList: Action = (om) => {
 // padding for map visual frame
 function padSpan(val: LngLat): LngLat {
   return {
-    lng: val.lng * 0.95,
-    lat: val.lat * 0.95,
+    lng: val.lng * 0.92,
+    lat: val.lat * 0.92,
   }
 }
 

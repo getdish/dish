@@ -36,8 +36,8 @@ export const PageTitle = memo(
                   display: 'block',
                   textAlign: 'center',
                   width: '100%',
-                  color: '#777',
-                  fontSize: 15,
+                  color: '#666',
+                  fontSize: 16,
                   fontWeight: '400',
                 } as any
               }

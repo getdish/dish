@@ -1,4 +1,5 @@
 import React from 'react'
+import { Text } from 'react-native'
 
 import { HomeStateItem } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
@@ -38,7 +39,7 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
   const searchName = state.searchQuery ?? ''
 
   const subTitleParts = countryTag
-    ? [countryTag, `restaurants in ${currentLocationName}`]
+    ? [countryTag, ` @ ${currentLocationName}`]
     : dishTag
     ? [dishTag, `dishes in ${currentLocationName}`]
     : [`"${state.searchQuery}"`, `in ${currentLocationName}`]
@@ -46,7 +47,8 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
   const subTitle = `${subTitleParts[0]} ${subTitleParts[1]}`
   const subTitleElements = (
     <>
-      <strong>{subTitleParts[0]}</strong> {subTitleParts[1]}
+      <Text style={{ fontWeight: '500' }}>{subTitleParts[0]}</Text>{' '}
+      {subTitleParts[1]}
     </>
   )
 

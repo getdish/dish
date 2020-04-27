@@ -37,9 +37,25 @@ export function centerMapToRegion(p: {
 // }
 
 let mapView: mapkit.Map
+
+// pause/unpause, need to define better
 // start paused, first map update we ignore because its slightly off
 let pauseMapUpdates = true
 let pendingUpdates = false
+const pauseMap = () => {
+  console.log('pausing map')
+  pauseMapUpdates = true
+}
+const forceResumeMap = () => resumeMap(true)
+const resumeMap = (force: boolean = false) => {
+  console.log('resuming map')
+  pauseMapUpdates = false
+  if (force || pendingUpdates) {
+    pendingUpdates = false
+    console.log('pending update, run')
+    handleRegionChangeEnd()
+  }
+}
 
 const handleRegionChangeEnd = () => {
   if (pauseMapUpdates) {
@@ -64,7 +80,7 @@ const handleRegionChangeEnd = () => {
   })
 }
 
-export const HomeMap = memo(() => {
+export const HomeMap = memo(function HomeMap() {
   const om = useOvermind()
   const drawerWidth = useHomeDrawerWidth()
   const isSmall = useMediaQueryIsSmall()
@@ -109,10 +125,8 @@ export const HomeMap = memo(() => {
   }
 
   useOnMount(() => {
-    // fix: dont send initial map location update
-    const tm = setTimeout(() => {
-      pauseMapUpdates = false
-    }, 100)
+    // fix: dont send initial map location update, wait for ~fully loaded
+    const tm = setTimeout(resumeMap, 100)
     return () => {
       clearTimeout(tm)
     }
@@ -129,11 +143,13 @@ export const HomeMap = memo(() => {
       })
     })
 
-    map.addEventListener('region-change-end', handleRegionChangeEnd)
+    map.addEventListener('region-change-end', forceResumeMap)
+    map.addEventListener('region-change-start', pauseMap)
 
     return () => {
       clearTimeout(tm)
-      map.removeEventListener('region-change-end', handleRegionChangeEnd)
+      map.removeEventListener('region-change-end', forceResumeMap)
+      map.removeEventListener('region-change-start', pauseMap)
     }
   }, [map])
 
@@ -180,15 +196,6 @@ export const HomeMap = memo(() => {
       .map((restaurant, index) => {
         const percent = getRestaurantRating(restaurant)
         const color = getRankingColor(percent)
-
-        // if (index >= 10) {
-        //   return new window.mapkit.Annotation(coordinates[index], dotFactory, {
-        //     data: {
-        //       id: restaurant.id,
-        //     },
-        //   })
-        // }
-
         return new window.mapkit.MarkerAnnotation(coordinates[index], {
           glyphText: index <= 12 ? `${index + 1}` : ``,
           color: color,
@@ -203,11 +210,6 @@ export const HomeMap = memo(() => {
             id: restaurant.id,
           },
         })
-        // return new window.mapkit.PinAnnotation(coordinates[index], {
-        //   data: {
-        //     id: restaurant.id,
-        //   },
-        // })
       })
       .reverse()
   }, [restaurantsVersion])
@@ -227,45 +229,47 @@ export const HomeMap = memo(() => {
     }
   }, [map, restaurantsVersion])
 
-  useDebounceEffect(
-    () => {
-      if (!annotationsContainer) return
-      const annotationsRoot: HTMLElement = annotationsContainer.shadowRoot.querySelector(
-        '.mk-annotations'
-      )
-      if (!annotationsRoot) return
+  //  broke, mapkit stopped insertings the divs in the same order?
+  // useDebounceEffect(
+  //   () => {
+  //     if (!annotationsContainer) return
+  //     const annotationsRoot: HTMLElement = annotationsContainer.shadowRoot.querySelector(
+  //       '.mk-annotations'
+  //     )
+  //     if (!annotationsRoot) return
 
-      let annotationElements: ChildNode[] = []
-      let dispose = () => {}
+  //     let annotationElements: ChildNode[] = []
+  //     let dispose = () => {}
 
-      const onMouseEnter = (e: MouseEvent | any) => {
-        const index = annotationElements.indexOf(e.target as any)
-        om.actions.home.setHoveredRestaurant(restaurants[index])
-      }
-      const observer = new MutationObserver(() => {
-        dispose()
-        annotationElements = Array.from(annotationsRoot.childNodes)
-        for (const el of annotationElements) {
-          el.addEventListener('mouseenter', onMouseEnter)
-        }
-        dispose = () => {
-          for (const el of annotationElements) {
-            el.removeEventListener('mouseenter', onMouseEnter)
-          }
-        }
-      })
-      observer.observe(annotationsRoot, {
-        childList: true,
-      })
+  //     const onMouseEnter = (e: MouseEvent | any) => {
+  //       const index = annotationElements.indexOf(e.target as any)
+  //       console.log('index', index, restaurants[index], restaurants)
+  //       om.actions.home.setHoveredRestaurant(restaurants[index])
+  //     }
+  //     const observer = new MutationObserver(() => {
+  //       dispose()
+  //       annotationElements = Array.from(annotationsRoot.childNodes)
+  //       for (const el of annotationElements) {
+  //         el.addEventListener('mouseenter', onMouseEnter)
+  //       }
+  //       dispose = () => {
+  //         for (const el of annotationElements) {
+  //           el.removeEventListener('mouseenter', onMouseEnter)
+  //         }
+  //       }
+  //     })
+  //     observer.observe(annotationsRoot, {
+  //       childList: true,
+  //     })
 
-      return () => {
-        dispose()
-        observer.disconnect()
-      }
-    },
-    100,
-    [annotationsContainer, restaurantsVersion]
-  )
+  //     return () => {
+  //       dispose()
+  //       observer.disconnect()
+  //     }
+  //   },
+  //   100,
+  //   [annotationsContainer, restaurantsVersion]
+  // )
 
   // Navigate - return to previous map position
   // why not just useEffect for center/span? because not always wanted
@@ -288,20 +292,14 @@ export const HomeMap = memo(() => {
         ]),
       () => {
         console.log('new area')
-        pauseMapUpdates = true
+        pauseMap()
         tm = requestIdleCallback(() => {
           centerMapToRegion({
             map,
             center: om.state.home.currentState.center,
             span: om.state.home.currentState.span,
           })
-          tm2 = setTimeout(() => {
-            pauseMapUpdates = false
-            if (pendingUpdates) {
-              pendingUpdates = false
-              handleRegionChangeEnd()
-            }
-          }, 300)
+          tm2 = setTimeout(resumeMap, 300)
         })
       }
     )
@@ -320,6 +318,7 @@ export const HomeMap = memo(() => {
         (state) => state.home.hoveredRestaurant,
         (hoveredRestaurant) => {
           if (!hoveredRestaurant) return
+          console.log('hovered on', hoveredRestaurant)
           for (const annotation of map.annotations) {
             if (annotation.data?.id === hoveredRestaurant.id) {
               annotation.selected = true
@@ -354,7 +353,7 @@ export const HomeMap = memo(() => {
       // })
     },
     350,
-    [map, restaurantDetail]
+    [map, restaurantsVersion, restaurantDetail]
   )
 
   // selected on map
@@ -385,9 +384,7 @@ export const HomeMap = memo(() => {
       // map.showAnnotations(annotations)
       try {
         console.warn('adding annotations')
-        for (const annotation of annotations) {
-          map.addAnnotation(annotation)
-        }
+        map.addAnnotations(annotations)
       } catch (err) {
         console.error(err)
       }

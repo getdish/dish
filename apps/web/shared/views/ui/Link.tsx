@@ -278,8 +278,8 @@ export function OverlayLinkButton<
   return (
     <LinkButton
       backgroundColor="#fff"
-      paddingVertical={12}
-      paddingHorizontal={16}
+      paddingVertical={9}
+      paddingHorizontal={14}
       borderRadius={90}
       shadowColor="rgba(0,0,0,0.175)"
       shadowRadius={13}
