@@ -18,7 +18,7 @@ resource "helm_release" "sentry" {
   name      = "sentry"
   namespace = "sentry"
   chart     = "stable/sentry"
-  version = "4.0.0"
+  version = "4.2.1"
 
   set {
     name ="config.configYml"
