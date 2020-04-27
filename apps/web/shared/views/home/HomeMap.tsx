@@ -3,6 +3,7 @@ import React, { memo, useEffect, useMemo, useRef } from 'react'
 
 import { searchBarHeight } from '../../constants'
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
+import { useOnMount } from '../../hooks/useOnMount'
 import { LngLat, setMapView } from '../../state/home'
 import { isSearchState } from '../../state/home-helpers'
 import { om, useOvermind } from '../../state/om'
@@ -106,6 +107,16 @@ export const HomeMap = memo(() => {
   if (map && map['_allowWheelToZoom'] == false) {
     map['_allowWheelToZoom'] = true
   }
+
+  useOnMount(() => {
+    // fix: dont send initial map location update
+    const tm = setTimeout(() => {
+      pauseMapUpdates = false
+    }, 100)
+    return () => {
+      clearTimeout(tm)
+    }
+  })
 
   useEffect(() => {
     if (!map) return

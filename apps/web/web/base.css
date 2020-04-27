@@ -167,14 +167,6 @@ textarea {
 
 /* some small animation helpers */
 .animate-up {
-  flex: 1;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 0;
-  pointer-events: none;
   transform: translateY(8px);
   transition: all ease-in-out 200ms;
 }
