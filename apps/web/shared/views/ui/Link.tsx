@@ -1,12 +1,18 @@
 import './Link.css'
 
+import _ from 'lodash'
 import React, { useCallback, useContext, useMemo } from 'react'
 import { Text, TextStyle, TouchableOpacity } from 'react-native'
 
 import { currentStates } from '../../state/home'
 import { getNavigateToTag } from '../../state/home-tag-helpers'
-import { useOvermind, useOvermindStatic } from '../../state/om'
-import { RoutesTable, getPathFromParams } from '../../state/router'
+import { useOvermindStatic } from '../../state/om'
+import {
+  NavigateItem,
+  RouteName,
+  RoutesTable,
+  getPathFromParams,
+} from '../../state/router'
 import { NavigableTag } from '../../state/Tag'
 import { CurrentStateID } from '../home/CurrentStateID'
 import { StackProps, VStack } from './Stacks'
@@ -20,55 +26,75 @@ type LinkSharedProps = {
   replace?: boolean
 }
 
-export function Link<
-  Name extends keyof RoutesTable = keyof RoutesTable,
-  Params = RoutesTable[Name]['params']
->({
-  name,
-  params,
-  inline,
-  fontSize,
-  fontWeight,
-  children,
-  ellipse,
-  lineHeight,
-  fastClick,
-  padding,
-  color,
-  onClick,
-  replace,
-  ...allProps
-}: React.DetailedHTMLProps<
+type LinkProps<A, B> = React.DetailedHTMLProps<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
   HTMLAnchorElement
 > &
   LinkSharedProps & {
-    name?: Name
-    params?: Params
+    name?: A
+    params?: B
+    replace?: boolean
     inline?: boolean
     padding?: StackProps['padding']
     tag?: NavigableTag
-  }) {
-  if (allProps['onPress']) {
-    debugger
   }
-  const tagProps = useGetTagProps(allProps)
+
+export function Link<
+  Name extends keyof RoutesTable = keyof RoutesTable,
+  Params = RoutesTable[Name]['params']
+>(allProps: LinkProps<Name, Params>) {
+  const {
+    name,
+    params,
+    inline,
+    fontSize,
+    fontWeight,
+    children,
+    ellipse,
+    lineHeight,
+    fastClick,
+    padding,
+    color,
+    onClick,
+    replace,
+    ...restProps
+  } = allProps
+  const linkProps = useNormalizeLinkProps(allProps)
   const om = useOvermindStatic()
+  const navItem: NavigateItem = useMemo(
+    () => ({
+      name: name ?? linkProps?.['name'],
+      params: params ?? linkProps?.['params'],
+      replace: replace ?? linkProps?.['replace'],
+    }),
+    [
+      name,
+      params,
+      replace,
+      JSON.stringify(_.pick(linkProps as any, 'name', 'params', 'replace')),
+    ]
+  )
+
   const handler = useCallback(
     (e) => {
       e.stopPropagation()
       e.preventDefault()
-      om.actions.router.navigate({ name, params, replace } as any)
-      onClick?.(e)
-      tagProps?.['onPress']?.()
+      if (onClick) {
+        onClick?.(e)
+      }
+      if ('onPress' in linkProps) {
+        linkProps?.onPress?.()
+      } else {
+        om.actions.router.navigate(navItem)
+      }
     },
-    [tagProps, onClick]
+    [navItem, onClick]
   )
 
   return (
     <a
-      {...(tagProps as any)}
-      href={getPathFromParams({ name, params })}
+      href={getPathFromParams(navItem)}
+      {...restProps}
       onMouseDown={prevent}
       onClick={prevent}
       {...{
@@ -95,35 +121,58 @@ type TagProp = {
   tag: NavigableTag
 }
 
-export type LinkButtonProps<Name = any, Params = any> = StackProps &
+type LinkButtonNamedProps<A = any, B = any> = {
+  name: A
+  params?: B
+  replace?: boolean
+  onPress?: any
+}
+
+export type LinkButtonProps<
+  Name extends RouteName = any,
+  Params = any
+> = StackProps &
   LinkSharedProps &
   (
-    | {
-        name: Name
-        params?: Params
-        onPress?: any
-      }
+    | LinkButtonNamedProps<Name, Params>
     | {
         onPress?: any
       }
     | TagProp
   )
 
-const useGetTagProps = (inProps: any): LinkButtonProps => {
+const useNormalizeLinkProps = (
+  props: Partial<LinkButtonProps>
+): LinkButtonProps => {
+  const normalized = useNormalizedLink(props)
+  const next = { ...props, ...normalized }
+  if ('tag' in next) {
+    delete next['tag']
+  }
+  return next
+}
+
+const useNormalizedLink = (
+  props: Partial<LinkButtonProps>
+): LinkButtonNamedProps => {
   const currentStateID = useContext(CurrentStateID)
-  let props = { ...inProps }
   if ('tag' in props && !!props.tag) {
     if (props.tag.name !== 'Search') {
       const state = currentStates.find((x) => x.id === currentStateID)
-      const tagProps = getNavigateToTag(window['om'], {
+      return getNavigateToTag(window['om'], {
         state,
         tag: props.tag,
       })
-      props = { ...props, ...tagProps }
     }
   }
-  delete props['tag']
-  return props
+  if ('name' in props) {
+    return {
+      name: props.name,
+      params: props.params,
+      replace: props.replace,
+      onPress: props.onPress,
+    }
+  }
 }
 
 export function LinkButton<
@@ -135,7 +184,7 @@ export function LinkButton<
   let pointerEvents: any
   let onPress: any
   let fastClick: boolean
-  let props = useGetTagProps(allProps)
+  let props = useNormalizeLinkProps(allProps)
 
   if ('name' in props) {
     const {
