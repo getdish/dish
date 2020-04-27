@@ -1,0 +1,27 @@
+apiVersion: admin.rio.cattle.io/v1
+kind: PublicDomain
+metadata:
+  name: auth.rio.dishapp.com
+spec:
+  targetApp: jwt-server
+  targetNamespace: default
+---
+
+apiVersion: admin.rio.cattle.io/v1
+kind: PublicDomain
+metadata:
+  name: hasura.rio.dishapp.com
+spec:
+  targetApp: hasura
+  targetNamespace: default
+---
+
+apiVersion: admin.rio.cattle.io/v1
+kind: PublicDomain
+metadata:
+  name: worker-ui.rio.dishapp.com
+spec:
+  targetApp: worker-ui
+  targetNamespace: default
+---
+

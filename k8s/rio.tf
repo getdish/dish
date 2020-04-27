@@ -19,6 +19,10 @@ data "local_file" "rio-custom-domain" {
   filename = "${path.module}/yaml/rio-custom-domain.yaml"
 }
 
+data "local_file" "rio-app-domains" {
+  filename = "${path.module}/yaml/rio-app-domains.yaml"
+}
+
 resource "null_resource" "rio-setup" {
   depends_on = [helm_release.cert-manager]
 
@@ -51,6 +55,25 @@ echo "Applying Rio custom domain YAML..."
 kubectl apply -f ${data.local_file.rio-custom-domain.filename}
 
 echo "Rio custom domain YAML applied"
+EOC
+  }
+}
+
+
+resource "null_resource" "rio-app-domains" {
+  depends_on = [null_resource.rio-setup]
+
+  triggers = {
+    manifest_sha1 = sha1(data.local_file.rio-app-domains.content)
+  }
+
+  provisioner "local-exec" {
+    command = <<EOC
+echo "Applying Rio app domains YAML..."
+
+kubectl apply -f ${data.local_file.rio-app-domains.filename}
+
+echo "Rio app domains YAML applied"
 EOC
   }
 }
