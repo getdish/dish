@@ -19,40 +19,41 @@ export const HomeMapControlsOverlay = memo(() => {
       pointerEvents="none"
       top={searchBarHeight + 10}
       left={drawerWidth + 20}
-      maxWidth={500}
+      maxWidth={360}
       zIndex={100}
+      alignItems="center"
+      justifyContent="center"
     >
-      <VStack position="relative" flex={1}>
-        <HStack
-          position="absolute"
-          top={0}
-          right={0}
-          left={0}
+      <HStack
+        position="absolute"
+        top={10}
+        right={0}
+        left={0}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <OverlayLinkButton
+          className={`animate-up ${hasMovedMap ? 'active' : ''}`}
+          pointerEvents="auto"
           alignItems="center"
           justifyContent="center"
+          onPress={() => {
+            om.actions.home.refresh()
+          }}
         >
-          <OverlayLinkButton
-            className={`animate-up ${hasMovedMap ? 'active' : ''}`}
-            pointerEvents="auto"
-            height={38}
-            onPress={() => {
-              om.actions.home.refresh()
-            }}
-          >
-            <Text>Redo search in this area</Text>
-          </OverlayLinkButton>
-        </HStack>
+          <Text>Redo search in map area</Text>
+        </OverlayLinkButton>
+      </HStack>
 
-        <HStack
-          position="absolute"
-          bottom={0}
-          right={0}
-          left={0}
-          alignItems="flex-end"
-        >
-          <VStack flex={1} />
-        </HStack>
-      </VStack>
+      <HStack
+        position="absolute"
+        bottom={0}
+        right={0}
+        left={0}
+        alignItems="flex-end"
+      >
+        <VStack flex={1} />
+      </HStack>
     </ZStack>
   )
 })

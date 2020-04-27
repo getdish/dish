@@ -726,6 +726,7 @@ const runSearch: AsyncAction<{
   // update state
   state.searchQuery = ogQuery
   if (!opts?.quiet) {
+    om.actions.home.setMapMoved(false)
     state.results = {
       // preserve last results
       results: state.results.results,
@@ -1094,10 +1095,10 @@ const roundLngLat = (val: LngLat): LngLat => {
   }
 }
 
-const setMapMoved: Action = (om) => {
+const setMapMoved: Action<boolean | undefined> = (om, val = true) => {
   const { lastSearchState } = om.state.home
-  if (lastSearchState?.hasMovedMap === false) {
-    lastSearchState.hasMovedMap = true
+  if (lastSearchState && lastSearchState.hasMovedMap !== val) {
+    lastSearchState.hasMovedMap = val
   }
 }
 
