@@ -106,12 +106,13 @@ export const CommentBubble = ({
       borderRadius={15}
       padding={4}
       alignItems="flex-start"
+      justifyContent="flex-start"
       spacing={5}
       {...rest}
     >
       <HStack
         alignItems="flex-start"
-        justifyContent="center"
+        justifyContent="flex-start"
         spacing="sm"
         flexWrap="nowrap"
       >
@@ -124,6 +125,7 @@ export const CommentBubble = ({
             name="user"
             params={{ username: user.username }}
             color="blue"
+            fontWeight="600"
           >
             {user.username}
           </Link>
@@ -149,6 +151,7 @@ export const CommentBubble = ({
               ))}
             </div>
           </HoverablePopover>{' '}
+          wrote
         </Text>
       </HStack>
       {children}

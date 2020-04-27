@@ -19,7 +19,7 @@ export const RestaurantRatingViewPopover = memo(
       <HoverablePopover
         position="right"
         contents={
-          <Box height={300} width={250}>
+          <Box width={250}>
             <VStack>
               <SmallTitle>Rating Summary</SmallTitle>
               <TableRow>

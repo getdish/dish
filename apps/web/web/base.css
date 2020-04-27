@@ -167,6 +167,7 @@ textarea {
 
 /* some small animation helpers */
 .animate-up {
+  opacity: 0;
   transform: translateY(8px);
   transition: all ease-in-out 200ms;
 }

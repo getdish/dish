@@ -76,17 +76,14 @@ export const Popover = (props: PopoverProps) => {
           return (
             <div
               ref={layerProps.ref}
+              className="popover-content see-through"
               style={{
                 ...layerProps.style,
                 zIndex: 100000,
+                pointerEvents: isOpen ? 'auto' : 'none',
               }}
             >
-              <div
-                style={{ pointerEvents: isOpen ? 'auto' : 'none' }}
-                className="popover-content see-through"
-              >
-                {props.contents}
-              </div>
+              {props.contents}
               {!props.noArrow && (
                 <Arrow
                   style={{
@@ -103,7 +100,14 @@ export const Popover = (props: PopoverProps) => {
         closeOnOutsideClick
         closeOnDisappear="partial"
         placement={{
-          anchor: anchor.BOTTOM_CENTER,
+          anchor:
+            props.position === 'top'
+              ? anchor.TOP_CENTER
+              : props.position == 'left'
+              ? anchor.LEFT_CENTER
+              : props.position === 'right'
+              ? anchor.RIGHT_CENTER
+              : anchor.BOTTOM_CENTER,
           autoAdjust: true,
           snapToAnchor: false,
           triggerOffset: 12,

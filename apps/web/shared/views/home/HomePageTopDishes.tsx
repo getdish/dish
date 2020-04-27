@@ -54,7 +54,7 @@ export default memo(function HomePageTopDishes({
               <Text
                 style={{
                   textAlign: 'center',
-                  fontSize: 26,
+                  fontSize: 22,
                   fontWeight: '300',
                   marginBottom: 4,
                 }}

@@ -6,12 +6,14 @@ import { searchBarHeight } from '../../constants'
 import { useOvermind } from '../../state/om'
 import { LinkButton, OverlayLinkButton } from '../ui/Link'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
+import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 export const HomeMapControlsOverlay = memo(() => {
   const om = useOvermind()
   const hasMovedMap = om.state.home.currentState?.['hasMovedMap']
   const drawerWidth = useHomeDrawerWidth()
+  const isSmall = useMediaQueryIsSmall()
   return (
     <ZStack
       fullscreen
@@ -20,6 +22,12 @@ export const HomeMapControlsOverlay = memo(() => {
       top={searchBarHeight + 10}
       left={drawerWidth + 20}
       maxWidth={360}
+      {...(isSmall && {
+        maxWidth: '100%',
+        left: 0,
+        right: 0,
+        top: searchBarHeight,
+      })}
       zIndex={100}
       alignItems="center"
       justifyContent="center"
@@ -41,7 +49,9 @@ export const HomeMapControlsOverlay = memo(() => {
             om.actions.home.refresh()
           }}
         >
-          <Text>Redo search in map area</Text>
+          <Text style={{ fontSize: 13, fontWeight: '500' }}>
+            Redo search in map area
+          </Text>
         </OverlayLinkButton>
       </HStack>
 
