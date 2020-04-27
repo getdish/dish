@@ -84,9 +84,8 @@ export function Link<
       }
       if ('onPress' in linkProps) {
         linkProps?.onPress?.()
-      } else {
-        om.actions.router.navigate(navItem)
       }
+      om.actions.router.navigate(navItem)
     },
     [navItem, onClick]
   )

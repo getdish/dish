@@ -3,10 +3,10 @@ import React, {
   useCallback,
   useContext,
   useLayoutEffect,
-  useMemo,
   useRef,
 } from 'react'
-import { ToggleLayer, Transition, anchor } from 'react-laag'
+import { ToggleLayer, anchor } from 'react-laag'
+import { AnchorEnum } from 'react-laag/dist/ToggleLayer/types'
 import { Platform, TouchableOpacity } from 'react-native'
 import ResizeObserver from 'resize-observer-polyfill'
 
@@ -22,6 +22,7 @@ export const closeAllPopovers = () => {
 
 export type PopoverProps = {
   inline?: boolean
+  anchor?: AnchorEnum
   position?: 'top' | 'left' | 'right' | 'bottom'
   children: React.ReactElement
   contents: React.ReactElement
@@ -100,8 +101,16 @@ export const Popover = (props: PopoverProps) => {
         closeOnOutsideClick
         closeOnDisappear="partial"
         placement={{
+          // preferX:
+          //   props.position === 'left' || props.position === 'right'
+          //     ? (props.position.toUpperCase() as any)
+          //     : undefined,
+          // preferY:
+          //   props.position === 'top' || props.position === 'bottom'
+          //     ? (props.position.toUpperCase() as any)
+          //     : undefined,
           anchor:
-            props.position === 'top'
+            props.anchor ?? props.position === 'top'
               ? anchor.TOP_CENTER
               : props.position == 'left'
               ? anchor.LEFT_CENTER

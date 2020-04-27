@@ -1,4 +1,5 @@
 import React, { memo } from 'react'
+import { anchor } from 'react-laag'
 import { StyleSheet, Text } from 'react-native'
 
 import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
@@ -95,9 +96,10 @@ export const LenseButton = memoIsEqualDeep(
     return (
       <HoverablePopover
         noArrow
-        position="top"
+        position="right"
+        // anchor={anchor.RIGHT_CENTER}
         contents={
-          <Box>
+          <Box top={35} left={-35}>
             <Text style={{ fontSize: 16, fontWeight: '700' }}>
               {lense.displayName ?? lense.name}
             </Text>
