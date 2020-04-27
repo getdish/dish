@@ -11,7 +11,7 @@ WITH by_country AS (
           'name', name,
           'image', (
             SELECT image FROM restaurant
-              WHERE tag_names @> to_jsonb(hot_tags.slug)
+              WHERE tag_names @> to_jsonb(hot_tags.tag_slug)
               AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
               AND image IS NOT NULL
               ORDER BY rating DESC NULLS LAST
@@ -19,25 +19,31 @@ WITH by_country AS (
           ),
           'rating', (
             SELECT AVG(rating) FROM restaurant
-              WHERE tag_names @> to_jsonb(hot_tags.slug)
+              WHERE tag_names @> to_jsonb(hot_tags.tag_slug)
               AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
               AND rating IS NOT NULL
           ),
-          'count', count
+          'count', count,
+          'slug', tag_slug
         )
       ) FROM (
-        SELECT *, (
-          SELECT COUNT(*) FROM restaurant
-            WHERE tag_names @> to_jsonb(slug)
-            AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
-          ) AS count,
-          REPLACE(LOWER(name), ' ', '-') AS slug
-        FROM tag
-        WHERE "parentId" IN (
-          SELECT id FROM tag WHERE name = (SELECT DISTINCT t.name)
-        )
+        SELECT *,
+          (
+            SELECT COUNT(*) FROM restaurant
+              WHERE tag_names @> to_jsonb(tag_slug)
+              AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
+          ) AS count
+        FROM (
+          SELECT
+            *,
+            REPLACE(LOWER(tag.name), ' ', '-') AS tag_slug
+            FROM tag
+            WHERE "parentId" IN (
+              SELECT id FROM tag WHERE tag.name = (SELECT DISTINCT t.name)
+            )
+        ) as tags_by_cuisine
         ORDER by count DESC
-        LIMIT 5
+        LIMIT 10
       ) as hot_tags
     ) as dishes,
     (
