@@ -24,7 +24,7 @@ export const onInitialize: OnInitialize = async (
     })
     overmind.eventHub.on('action:start' as any, (execution) => {
       const name = execution.actionName
-      const logType = name.indexOf('.get') > 0 ? 'debug' : 'warn'
+      const logType = name.indexOf('.get') > 0 ? 'info' : 'warn'
       if (typeof execution.value !== 'undefined') {
         console[logType](name, execution.value)
       } else {

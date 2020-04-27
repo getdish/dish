@@ -120,6 +120,13 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
   }
 
   if (env.mode === 'development' && TARGET !== 'worker') {
+    config.devServer = {
+      ...config.devServer,
+      overlay: false,
+    }
+    config.plugins = config.plugins.filter(
+      (x) => x.constructor.name !== 'HotModuleReplacementPlugin'
+    )
     config.plugins.push(
       new ReactRefreshWebpackPlugin({
         overlay: false,
@@ -176,11 +183,16 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
     console.log(`Start building ${TARGET}... entry ${config.entry.app}`)
   }
 
+  console.log(
+    'config.plugins',
+    config.plugins.map((x) => [x.constructor.name, x.name, x.constructor])
+  )
+
   return config
 }
 
 function prettifyWebpackConfig(config) {
-  const prettyConfig = _.clone(config, true)
+  const prettyConfig = _.clone(config)
   prettyConfig.plugins = config.plugins.map((p) => {
     return { name: p.constructor.name, settings: p }
   })

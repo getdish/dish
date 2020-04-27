@@ -86,7 +86,7 @@
     "@babel/preset-react": "^7.9.4",
     "@expo/webpack-config": "^0.11.8",
     "@gqless/cli": "^0.0.1-alpha.30",
-    "@pmmmwh/react-refresh-webpack-plugin": "0.3.0-beta.3",
+    "@pmmmwh/react-refresh-webpack-plugin": "0.3.0-beta.5",
     "@rollup/plugin-commonjs": "https://gitpkg.now.sh/LarsDenBakker/plugins/packages/commonjs?feat/commonjs-synthetic-named-exports",
     "rollup-plugin-commonjs-alternate": "^0.5.1",
     "@rollup/plugin-node-resolve": "^7.1.3",

@@ -49,6 +49,9 @@ export function Link<
     padding?: StackProps['padding']
     tag?: NavigableTag
   }) {
+  if (allProps['onPress']) {
+    debugger
+  }
   const tagProps = useGetTagProps(allProps)
   const om = useOvermindStatic()
   const handler = useCallback(
@@ -182,6 +185,7 @@ export function LinkButton<
       lineHeight,
       fontWeight,
       ellipse,
+      replace,
       fastClick: fastClick_,
       ...rest
     } = props

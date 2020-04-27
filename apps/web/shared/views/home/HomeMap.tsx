@@ -48,7 +48,7 @@ const handleRegionChangeEnd = () => {
     // dont update while were transitioning to new state!
     return
   }
-  om.actions.home.setMapMoved()
+  om.actions.home.setHasMovedMap()
   const span = mapView.region.span
   console.log('updating center/span')
   pendingUpdates = false
@@ -384,7 +384,7 @@ export const HomeMap = memo(() => {
 
       // map.showAnnotations(annotations)
       try {
-        console.warn('adding annotation at this point??')
+        console.warn('adding annotations')
         for (const annotation of annotations) {
           map.addAnnotation(annotation)
         }
