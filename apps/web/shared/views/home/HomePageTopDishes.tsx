@@ -45,7 +45,7 @@ export default memo(function HomePageTopDishes({
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
       <VStack position="relative" flex={1}>
         <ScrollView style={{ flex: 1 }}>
-          <VStack paddingVertical={20} spacing="xl">
+          <VStack paddingVertical={24} spacing="xl">
             {/* TRENDING */}
             <HomeViewTopDishesTrending />
 
@@ -54,9 +54,9 @@ export default memo(function HomePageTopDishes({
               <Text
                 style={{
                   textAlign: 'center',
-                  fontSize: 22,
-                  fontWeight: '300',
-                  marginBottom: 4,
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                  marginBottom: 0,
                 }}
               >
                 {om.state.home.lastActiveTags
@@ -113,12 +113,9 @@ const HomeViewTopDishesTrending = memo(() => {
     )
   }
   return (
-    <VStack spacing="lg" height={190}>
-      {/* <SmallTitle divider="off">
-         in {om.state.home.location?.name ?? 'San Francisco'}
-      </SmallTitle> */}
-      <HStack spacing="sm" paddingHorizontal={10}>
-        <VStack flex={1} spacing={6}>
+    <VStack height={188}>
+      <HStack spacing="lg" paddingHorizontal={10}>
+        <VStack flex={1}>
           <ZStack position="absolute" top={-5} left={-8} zIndex={100}>
             <LinkButton
               paddingVertical={5}
@@ -129,15 +126,18 @@ const HomeViewTopDishesTrending = memo(() => {
               shadowOffset={{ height: 2, width: 0 }}
               backgroundColor="#fff"
               borderRadius={8}
+              fontWeight="700"
               transform={[{ rotate: '-2deg' }]}
             >
               Trending
             </LinkButton>
           </ZStack>
-          <SmallerTitle>Restaurants</SmallerTitle>
-          <VStack spacing={0} overflow="hidden">
-            {!hasLoaded && <LoadingItem />}
-            {allRestaurants.slice(0, 5).map(getTrending)}
+          <VStack spacing={6}>
+            <SmallerTitle>Restaurants</SmallerTitle>
+            <VStack spacing={0} overflow="hidden">
+              {!hasLoaded && <LoadingItem />}
+              {allRestaurants.slice(0, 5).map(getTrending)}
+            </VStack>
           </VStack>
         </VStack>
         <VStack flex={1} spacing={6}>

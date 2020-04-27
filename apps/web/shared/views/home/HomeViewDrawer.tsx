@@ -42,8 +42,8 @@ export function HomeViewDrawer(props: { children: any }) {
     right: 0,
     width: '100%',
     paddingTop: 0,
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
+    borderTopRightRadius: 0,
+    borderTopLeftRadius: 0,
     overflow: 'hidden',
   }
 
