@@ -56,7 +56,9 @@ export const getActiveTags = (
   const curState = (state ?? lastState) as HomeStateItemSearch
   const activeTagIds = curState?.activeTagIds ?? {}
   const tagIds = Object.keys(activeTagIds).filter((x) => activeTagIds[x])
-  const tags = tagIds.map((x) => home.allTags[x] ?? { name: x })
+  const tags: Tag[] = tagIds.map(
+    (x) => home.allTags[x] ?? { id: '-1', name: x, type: 'dish' }
+  )
   return tags.filter(Boolean)
 }
 
@@ -69,6 +71,9 @@ export const getNavigateToTag: Action<HomeStateNav, LinkButtonProps> = (
   om,
   { state = om.state.home.currentState, tag }
 ) => {
+  if (!tag.name) {
+    throw new Error(`No tag name`)
+  }
   const nextState = getNextStateWithTag(om, {
     tag,
     state,

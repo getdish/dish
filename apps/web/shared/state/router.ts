@@ -309,17 +309,17 @@ export function getPathFromParams({
   convertToSlug,
 }: {
   name: string
-  params: Object | void
+  params?: Object | void
   convertToSlug?: boolean
 }) {
   // object to path
   let route = routes[name]
   if (!route) {
-    console.error(`no route`, name, routes)
+    console.warn(`no route`, name, routes)
     return ``
   }
   if (!route.path) {
-    console.error(`no route path`, route, name, routes)
+    console.warn(`no route path`, route, name, routes)
     return ``
   }
   let path = route.path

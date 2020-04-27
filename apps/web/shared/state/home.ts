@@ -176,6 +176,7 @@ export const isEditingUserPage = (state: OmState) => {
   return state.home.currentStateType === 'userSearch' && isOnOwnProfile(state)
 }
 
+// only await things that are required on first render
 const start: AsyncAction = async (om) => {
   om.actions.home.updateBreadcrumbs()
   om.actions.home.updateCurrentMapAreaInformation()
