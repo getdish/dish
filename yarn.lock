@@ -5894,6 +5894,11 @@ betsy@1.0.2:
     "@types/node" "^10.5.1"
     tslib "^1.9.3"
 
+betsy@1.0.2-1587903251212:
+  version "1.0.2-1587903251212"
+  resolved "https://registry.npmjs.org/betsy/-/betsy-1.0.2-1587903251212.tgz#a2fd6f7af1dba01d4f0b8e2c0a574e1020567166"
+  integrity sha512-tzgQC8vrRmHlWM4+xBPNOiQ/dQciuctQ02DWNQ8X7cneleRUhKIcZZYI0eai1X4NOWtN57lK/Qxoubr9aGoA2g==
+
 bfj@^6.1.1:
   version "6.1.2"
   resolved "https://registry.yarnpkg.com/bfj/-/bfj-6.1.2.tgz#325c861a822bcb358a41c78a33b8e6e2086dde7f"
@@ -15519,12 +15524,19 @@ overmind-graphql@^3.0.1:
     overmind "23.0.1"
     phoenix "^1.4.13"
 
-overmind-react@24.0.1, overmind-react@^24.0.1:
+overmind-react@24.0.1:
   version "24.0.1"
   resolved "https://registry.npmjs.org/overmind-react/-/overmind-react-24.0.1.tgz#48d6d2868e61001b0778845078e19874b0884b92"
   integrity sha512-HLsX9nkV8869+XIkN4NCTp0tG3mr3gLeFKmufwLQ6qMF8HIvkJ6F/dXIKnq90ZZ1J7G1AiGwVjxeRQ0eiZO5VA==
   dependencies:
     overmind "23.0.1"
+
+overmind-react@24.1.0-1587903251212:
+  version "24.1.0-1587903251212"
+  resolved "https://registry.npmjs.org/overmind-react/-/overmind-react-24.1.0-1587903251212.tgz#3f977caa81119d5eb67ea374b958e795c5923db5"
+  integrity sha512-OJ2OI2sijttz5/WtzzA7lctMesaTYB+NbPoZFzB7/rb6jsrz8jCv5UicbFqljs5dcmx4RKx9Yy+aXthYWRXLHA==
+  dependencies:
+    overmind "23.1.0-1587903251212"
 
 overmind-themes@next:
   version "1.0.2-1582705151381"
@@ -15533,7 +15545,7 @@ overmind-themes@next:
   dependencies:
     color "^3.0.0"
 
-overmind@23.0.1, overmind@^23.0.1:
+overmind@23.0.1:
   version "23.0.1"
   resolved "https://registry.npmjs.org/overmind/-/overmind-23.0.1.tgz#78366dbe33cb443d6652b3409e7191ffc4ffdd0a"
   integrity sha512-fZUhOo6689TJ7FEiVJxPhU5nNLtieiDhNoEXdlrJlEU6Fu8UmcrhN5DnFcUicdXdlOdix3cIIyRWwJUB2fZCBA==
@@ -15541,6 +15553,16 @@ overmind@23.0.1, overmind@^23.0.1:
     betsy "1.0.2"
     is-plain-obj "^1.1.0"
     proxy-state-tree "5.0.0"
+    tslib "^1.10.0"
+
+overmind@23.1.0-1587903251212:
+  version "23.1.0-1587903251212"
+  resolved "https://registry.npmjs.org/overmind/-/overmind-23.1.0-1587903251212.tgz#9ed0402fee60fda458e190a615c1fe4bb4d352c3"
+  integrity sha512-8f78jVq2MiJTgpJoY0yRwWe6G26z5E556q4p4AWZT2zI5M6CtrZoV3wl/7lqkStn1O2WYMOfXv7U/kuzkiEOZA==
+  dependencies:
+    betsy "1.0.2-1587903251212"
+    is-plain-obj "^1.1.0"
+    proxy-state-tree "5.0.1-1587903251212"
     tslib "^1.10.0"
 
 ow@^0.15.0:
@@ -16961,6 +16983,13 @@ proxy-state-tree@5.0.0:
   version "5.0.0"
   resolved "https://registry.npmjs.org/proxy-state-tree/-/proxy-state-tree-5.0.0.tgz#0f43d10abc5130a4bd5b186585b33b5236d834a3"
   integrity sha512-7ikm/7p29pab3v6llQ9JR2+ZhNU7ho7JYD9vSR+0RXa9Te3p1KsfxlSuq+eS75x2+8Tx9FFHyV/x9Mrk8kWMHA==
+  dependencies:
+    is-plain-obj "^1.1.0"
+
+proxy-state-tree@5.0.1-1587903251212:
+  version "5.0.1-1587903251212"
+  resolved "https://registry.npmjs.org/proxy-state-tree/-/proxy-state-tree-5.0.1-1587903251212.tgz#bfd30a770b876ecb39b1758411f6759589eee9f0"
+  integrity sha512-e/Ug4Cl8XNv8EnGa3F5sC/lOg6TYDZDG4iBHiW9FfdOQ2tUb40zhmabisY1XfJdgkhENmsjVrfg0TCZI2yrjOw==
   dependencies:
     is-plain-obj "^1.1.0"
 

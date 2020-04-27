@@ -5,7 +5,6 @@ import {
   User,
   slugify,
 } from '@dish/models'
-import { LngLat } from '@dish/models/_/Restaurant'
 import { isEqual } from '@o/fast-compare'
 import _ from 'lodash'
 import { Action, AsyncAction } from 'overmind'
@@ -47,6 +46,7 @@ import {
   HomeStateItemHome,
   HomeStateItemSearch,
   HomeStateItemSimple,
+  LngLat,
   Om,
   OmState,
   ShowAutocomplete,
