@@ -562,7 +562,9 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   const nextState = { ...state, searchQuery: query }
   const isGoingHome = shouldBeOnHome(om.state.home, nextState)
 
-  if (isOnSearch && isGoingHome) {
+  const isEditing = isEditingUserPage(om.state)
+
+  if (!isEditing && isOnSearch && isGoingHome) {
     await requestIdle()
     if (id != lastRunAt) return
     om.state.home.lastHomeState.searchQuery = ''
@@ -581,6 +583,11 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     // fast actions
     om.actions.home.setShowAutocomplete('search')
     om.actions.home._runAutocomplete(query)
+
+    if (isEditing) {
+      console.warn('avoid search when editing user page')
+      return
+    }
 
     // slow actions below here
     await sleep(DEBOUNCE_SEARCH * delayByX - DEBOUNCE_AUTOCOMPLETE * delayByX)

@@ -97,6 +97,7 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
             )}
             {!isEditingUserList && (
               <LinkButton
+                pointerEvents="auto"
                 onPress={() => {
                   om.actions.home.forkCurrentList()
                 }}

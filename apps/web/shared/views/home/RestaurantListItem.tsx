@@ -157,20 +157,23 @@ const RestaurantListItemContent = memo(
             {/* ROW: COMMENT */}
             <Spacer size={2} />
             <VStack maxWidth="90%" marginLeft={-2}>
-              <CommentBubble user={{ username: 'Peach' }}>
-                <SelectableText
-                  style={{
-                    opacity: 0.8,
-                    lineHeight: 19,
-                    fontSize: 14,
-                    marginBottom: 5,
-                  }}
-                >
-                  Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet. Lorem
-                  ipsum dolor sit ipsum sit amet. Lorem ipsum dolor sit amet sit
-                  amet. Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.
-                </SelectableText>
-              </CommentBubble>
+              {!showAddEditComment && (
+                <CommentBubble user={{ username: 'Peach' }}>
+                  <SelectableText
+                    style={{
+                      opacity: 0.8,
+                      lineHeight: 19,
+                      fontSize: 14,
+                      marginBottom: 5,
+                    }}
+                  >
+                    Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet. Lorem
+                    ipsum dolor sit ipsum sit amet. Lorem ipsum dolor sit amet
+                    sit amet. Lorem ipsum dolor sit amet.Lorem ipsum dolor sit
+                    amet.
+                  </SelectableText>
+                </CommentBubble>
+              )}
               {showAddEditComment && (
                 <RestaurantAddComment restaurant={restaurant} />
               )}
