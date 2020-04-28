@@ -79,7 +79,12 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
     // test closure compiler, could be more performant if it extracts functions from render better
     config.optimization.minimizer = [
       new ClosurePlugin({
-        mode: 'STANDARD', // 'AGGRESSIVE_BUNDLE' seems to fail on mjs files in webpack
+        // 'AGGRESSIVE_BUNDLE' seems to fail on mjs files in webpack
+        mode: 'STANDARD',
+        // See: https://github.com/webpack-contrib/closure-webpack-plugin/issues/82
+        // Unfortunately, compared to the default 'java', this is really slow and prone
+        // to RAM exhaustion
+        platform: 'javascript'
       }),
     ]
   }
