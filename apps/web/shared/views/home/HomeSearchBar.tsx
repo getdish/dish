@@ -515,12 +515,12 @@ const HomeSearchBarTags = memo(
                   <TagButton
                     subtleIcon
                     {...(!isActive && {
-                      backgroundColor: '#eee',
+                      backgroundColor: '#fff',
                       borderColor: '#eee',
                       color: '#444',
                     })}
                     size="lg"
-                    fontSize={18}
+                    fontSize={16}
                     tag={tag}
                     closable
                     onClose={() => {

@@ -23,7 +23,7 @@ import { RestaurantAddTagButton } from './RestaurantAddTagButton'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
-import { getTagElements } from './RestaurantTagsRow'
+import { useGetTagElements } from './RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 
 type RestaurantListItemProps = {
@@ -103,6 +103,11 @@ const RestaurantListItemContent = memo(
     const [state, setState] = useState({
       showAddComment: false,
     })
+    const tagElements = useGetTagElements({
+      showMore: true,
+      restaurant,
+      divider: <>,&nbsp;</>,
+    })
     const showAddEditComment =
       state.showAddComment || isEditingUserPage(om.state)
 
@@ -143,14 +148,10 @@ const RestaurantListItemContent = memo(
             {/* ROW: Ranking + TAGS */}
             <HStack spacing={12} alignItems="center">
               <RestaurantRatingViewPopover size="xs" restaurant={restaurant} />
-              <Text style={{ color: '#888' }}>
-                {getTagElements({
-                  showMore: true,
-                  restaurant,
-                  divider: <>,&nbsp;</>,
-                })}
-              </Text>
-              <RestaurantAddTagButton restaurant={restaurant} />
+              <HStack spacing>
+                {tagElements}
+                <RestaurantAddTagButton restaurant={restaurant} />
+              </HStack>
             </HStack>
 
             {/* ROW: COMMENT */}

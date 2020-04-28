@@ -1063,10 +1063,10 @@ const forkCurrentList: Action = (om) => {
 }
 
 // padding for map visual frame
-function padSpan(val: LngLat): LngLat {
+function padSpan(val: LngLat, by = 0.9): LngLat {
   return {
-    lng: val.lng * 0.92,
-    lat: val.lat * 0.92,
+    lng: val.lng * by,
+    lat: val.lat * by,
   }
 }
 

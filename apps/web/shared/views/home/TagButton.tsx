@@ -27,7 +27,7 @@ export const TagButton = memo(
   }: StackProps & {
     rank?: number
     tag: Partial<Tag> & Pick<Tag, 'name' | 'type'>
-    size?: 'lg' | 'md'
+    size?: 'lg' | 'md' | 'sm'
     subtle?: boolean
     votable?: boolean
     closable?: boolean
@@ -38,17 +38,19 @@ export const TagButton = memo(
     fontSize?: TextStyle['fontSize']
     noColor?: boolean
   }) => {
-    const scale = size == 'lg' ? 1.05 : 1
+    const scale = size === 'sm' ? 0.8 : size == 'lg' ? 1.05 : 1
     const paddingVertical = (subtle ? 0 : 6) * scale
     const lineHeight = 22 * scale
-    const defaultColor = noColor ? 'inherit' : '#777'
-    const bg = backgroundColor ?? (subtle ? 'transparent' : defaultColor)
-    const fg = color ?? (subtle ? defaultColor : 'white')
+    const defaultColor = noColor ? 'inherit' : 'blue'
+    const bg = backgroundColor ?? (subtle ? defaultColor : 'white')
+    const fg = color ?? (subtle ? 'transparent' : defaultColor)
     const fontSize = fontSizeProp ?? (subtle ? 'inherit' : 13 * scale)
     const rankFontSize =
       typeof fontSize === 'number' ? fontSize * 0.9 : fontSize
+    const moveInPx = 3.5 * (1 / scale)
     return (
       <HStack
+        height={scale * 28}
         backgroundColor={bg}
         borderRadius={8 * scale}
         overflow="hidden"
@@ -66,12 +68,19 @@ export const TagButton = memo(
               {
                 fontSize: rankFontSize,
                 fontWeight: 'bold',
-                paddingVertical: '4%',
-                marginVertical: '-2.5%',
+                verticalAlign: 'center',
+                margin: 'auto',
+                marginVertical: '-2%',
                 paddingHorizontal: 7 * scale,
-                backgroundColor: subtle ? 'transparent' : '#fff',
+                backgroundColor: subtle
+                  ? 'transparent'
+                  : 'rgba(255,255,255,0.99)',
                 lineHeight,
                 alignSelf: 'stretch',
+                alignContent: 'center',
+                justifyContent: 'center',
+                alignItems: 'center',
+                display: 'flex',
               } as any
             }
           >
@@ -89,7 +98,7 @@ export const TagButton = memo(
               paddingVertical: paddingVertical,
               paddingHorizontal: subtle ? 0 : 8 * scale,
               color: fg,
-              margin: 'auto',
+              marginVertical: -7,
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
@@ -120,15 +129,25 @@ export const TagButton = memo(
               paddingVertical,
               marginLeft: -8 * scale,
               paddingHorizontal: 8 * scale,
+              marginTop: size === 'sm' ? -24 : 0,
               backgroundColor: subtle ? 'transparent' : '#fff',
               height: '100%',
             }}
           >
-            <HoverableButton onPress={() => {}}>
-              <Icon marginBottom={-1} size={12} name="ChevronUp" />
+            <HoverableButton
+              // marginBottom={-10 + (size === 'sm' ? -10 : 0)}
+              onPress={() => {}}
+              top={moveInPx}
+            >
+              <Icon size={9 * scale} name="ChevronUp" />
             </HoverableButton>
-            <HoverableButton onPress={() => {}}>
-              <Icon size={12} name="ChevronDown" />
+            <HoverableButton
+              bottom={moveInPx}
+              marginTop={-10}
+              height={2}
+              onPress={() => {}}
+            >
+              <Icon size={9 * scale} name="ChevronDown" />
             </HoverableButton>
           </View>
         )}
