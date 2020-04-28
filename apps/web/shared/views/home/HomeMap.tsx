@@ -318,12 +318,21 @@ export const HomeMap = memo(function HomeMap() {
         (state) => state.home.hoveredRestaurant,
         (hoveredRestaurant) => {
           if (!hoveredRestaurant) return
-          console.log('hovered on', hoveredRestaurant)
+          console.log('hovered on ?', hoveredRestaurant)
           for (const annotation of map.annotations) {
             if (annotation.data?.id === hoveredRestaurant.id) {
               annotation.selected = true
             }
           }
+          console.log('center to', hoveredRestaurant.location.coordinates[1])
+          centerMapToRegion({
+            map,
+            center: {
+              lat: hoveredRestaurant.location.coordinates[1],
+              lng: hoveredRestaurant.location.coordinates[0],
+            },
+            span: state.span,
+          })
         }
       )
     },
@@ -343,14 +352,15 @@ export const HomeMap = memo(function HomeMap() {
           console.warn('no annotations?', index, map.annotations)
         }
       }
-      // centerMapToRegion({
-      //   map,
-      //   center: {
-      //     lat: restaurantDetail.location.coordinates[1],
-      //     lng: restaurantDetail.location.coordinates[0],
-      //   },
-      //   span: state.span,
-      // })
+      console.log('now center to the detail')
+      centerMapToRegion({
+        map,
+        center: {
+          lat: restaurantDetail.location.coordinates[1],
+          lng: restaurantDetail.location.coordinates[0],
+        },
+        span: state.span,
+      })
     },
     350,
     [map, restaurantsVersion, restaurantDetail]
