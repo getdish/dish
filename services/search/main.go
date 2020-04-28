@@ -156,12 +156,16 @@ func top_dishes(w http.ResponseWriter, r *http.Request) {
 
 func tags(w http.ResponseWriter, r *http.Request) {
 	var json string
+	var limit = getParam("limit", r)
+	if limit == "" {
+		limit = "10"
+	}
 	_, err := db.Query(
 		pg.Scan(&json),
 		tags_query,
 		getParam("query", r),
 		getParam("parent", r),
-		getParam("limit", r),
+		limit,
 	)
 	if err != nil {
 		fmt.Println(err)

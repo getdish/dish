@@ -5,7 +5,7 @@ SELECT jsonb_agg(t) FROM (
     tag.type as type
   FROM tag
   INNER JOIN tag parent ON parent.id = tag."parentId"
-    WHERE tag.name ILIKE '%' || ?0 || '%'
+    WHERE tag.name ILIKE '' || REPLACE(?0, '*', '%') || ''
     AND (
       parent.name ILIKE '' || ?1 || ''
       OR
