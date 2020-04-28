@@ -78,7 +78,7 @@ services:
       dockerfile: ./apps/web/Dockerfile
       context: ./
     ports:
-      - 5000/http
+      - 19006/http
     env:
       - DISH_ENV=production
       - COMMIT_HASH=${REVISION}
