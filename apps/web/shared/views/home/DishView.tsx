@@ -20,7 +20,7 @@ export const DishView = memo(
         tag={{ type: 'dish', name: dish.name }}
         {...rest}
       >
-        <ZStack fullscreen zIndex={10}>
+        <ZStack pointerEvents="none" fullscreen zIndex={10}>
           <DishRatingView
             size={size > 150 ? 'sm' : 'xs'}
             dish={dish}
@@ -40,8 +40,8 @@ export const DishView = memo(
             borderRadius={0.15 * size}
             overflow="hidden"
             hoverStyle={{
-              shadowRadius: 25,
-              shadowColor: 'rgba(0,0,0,0.25)',
+              shadowRadius: 35,
+              shadowColor: 'rgba(0,0,0,0.2)',
               zIndex: 10000,
             }}
           >

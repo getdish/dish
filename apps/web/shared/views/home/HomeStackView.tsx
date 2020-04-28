@@ -83,11 +83,19 @@ function HomeStackViewItem({
   )
 
   const top = isSmall ? 0 : (index - 1) * 10 + 6
-  const left = isSmall ? -3 : index * 10
+  const left = isSmall ? -3 : index * 7
 
   return (
     <div
-      className={`animate-right ${isMounted && !isRemoving ? 'active' : ''}`}
+      className={`animate-up ${isMounted && !isRemoving ? 'active' : ''}`}
+      style={{
+        flex: 1,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      }}
     >
       <ZStack pointerEvents={isActive ? 'none' : 'auto'} fullscreen>
         <TouchableOpacity

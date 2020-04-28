@@ -43,12 +43,10 @@ let mapView: mapkit.Map
 let pauseMapUpdates = true
 let pendingUpdates = false
 const pauseMap = () => {
-  console.log('pausing map')
   pauseMapUpdates = true
 }
 const forceResumeMap = () => resumeMap(true)
 const resumeMap = (force: boolean = false) => {
-  console.log('resuming map')
   pauseMapUpdates = false
   if (force || pendingUpdates) {
     pendingUpdates = false
@@ -66,7 +64,6 @@ const handleRegionChangeEnd = () => {
   }
   om.actions.home.setHasMovedMap()
   const span = mapView.region.span
-  console.log('updating center/span')
   pendingUpdates = false
   om.actions.home.setMapArea({
     center: {
