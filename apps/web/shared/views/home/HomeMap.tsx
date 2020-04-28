@@ -123,7 +123,10 @@ export const HomeMap = memo(function HomeMap() {
 
   useOnMount(() => {
     // fix: dont send initial map location update, wait for ~fully loaded
-    const tm = setTimeout(resumeMap, 100)
+    const tm = setTimeout(() => {
+      pendingUpdates = false
+      resumeMap()
+    }, 100)
     return () => {
       clearTimeout(tm)
     }

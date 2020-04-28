@@ -40,8 +40,8 @@ export const DishView = memo(
             borderRadius={0.15 * size}
             overflow="hidden"
             hoverStyle={{
-              shadowRadius: 35,
-              shadowColor: 'rgba(0,0,0,0.2)',
+              shadowRadius: 11,
+              shadowColor: 'rgba(0,0,0,0.45)',
               zIndex: 10000,
             }}
           >
