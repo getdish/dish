@@ -78,10 +78,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
           innerRef.current?.['_reactInternalFiber']?.child.stateNode
         const node = getNode()
         if (!node) return
-        const names = cn
-          .trim()
-          .split(' ')
-          .filter(Boolean)
+        const names = cn.trim().split(' ').filter(Boolean)
         names.forEach((x) => node.classList.add(x))
 
         const observer = new MutationObserver((onChange) => {
