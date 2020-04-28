@@ -11,6 +11,7 @@ export type OmStateHome = OmState['home']
 export type HomeStateBase = {
   started: boolean
   activeIndex: number // index for vertical (in page), -1 = autocomplete
+  allUsers: { [id: string]: User }
   allTags: { [keyPath: string]: Tag }
   allLenseTags: Tag[]
   allFilterTags: Tag[]
@@ -107,7 +108,7 @@ export type HomeStateItemSearch = HomeStateItemBase & {
   // for not forcing map to be always synced
   searchedCenter?: LngLat
   searchedSpan?: LngLat
-  user?: User
+  userId?: string
   username?: string
   hasMovedMap: boolean
 }

@@ -51,8 +51,8 @@ import {
   OmState,
   ShowAutocomplete,
 } from './home-types'
-import { HistoryItem, NavigateItem, RouteItem } from './router'
-import { NavigableTag, Tag, getTagId, tagFilters, tagLenses } from './Tag'
+import { HistoryItem, RouteItem } from './router'
+import { Tag, getTagId, tagFilters, tagLenses } from './Tag'
 
 const INITIAL_RADIUS = 0.1
 
@@ -87,6 +87,7 @@ export const state: HomeState = {
   skipNextPageFetchData: false,
   activeIndex: -1,
   allTags,
+  allUsers: {},
   allLenseTags: tagLenses,
   allFilterTags: tagFilters,
   allRestaurants: {},
@@ -319,7 +320,8 @@ const pushHomeState: AsyncAction<
             await user.findOne('username', item.params.username)
             const state = om.state.home.currentState
             if (!user || state.type !== 'userSearch') return
-            state.user = user
+            om.state.home.allUsers[user.id] = user
+            state.userId = user.id
           }
         }
       }

@@ -13,8 +13,8 @@ import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 const colors = [
   'rgba(255,255,255,0.15)',
   'rgba(255,255,255,0.9)', //rgba(255,255,255,0.9)',
-  'rgba(255,255,255,1)', //'rgba(255,255,255,0.95)',
-  'rgba(255,255,255,1)', //'rgba(255,255,255,0.95)',
+  'rgba(255,255,255,0.95)', //'rgba(255,255,255,0.95)',
+  'rgba(255,255,255,0.95)', //'rgba(255,255,255,0.95)',
   'rgba(255,255,255,1)', //'rgba(255,255,255,0.99)',
   'rgba(255,255,255,1)', //'rgba(255,255,255,0.95)',
   'rgba(255,255,255,1)', //'rgba(255,255,255,0.9)',
@@ -60,7 +60,7 @@ export function HomeViewDrawer(props: { children: any }) {
       width={drawerWidth + drawerPadLeft}
       // minWidth="50%"
       shadowColor="rgba(0,0,0,0.1)"
-      shadowRadius={44}
+      shadowRadius={54}
       borderRightWidth={1}
       // borderBottomRightRadius={drawerBorderRadius}
       borderColor="#ddd"

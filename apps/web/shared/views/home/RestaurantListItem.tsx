@@ -6,6 +6,7 @@ import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { GeocodePlace, isEditingUserPage } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Divider } from '../ui/Divider'
+import { HoverablePopover } from '../ui/HoverablePopover'
 import { Icon } from '../ui/Icon'
 import { Link } from '../ui/Link'
 import { Spacer } from '../ui/Spacer'
@@ -76,7 +77,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
             zIndex={100}
             top={0}
             height={120}
-            left={2}
+            left={0}
             justifyContent="center"
             pointerEvents="none"
             opacity={isHovered ? 1 : 0}
@@ -98,33 +99,37 @@ const RestaurantListItemContent = memo(
     const pad = 18
     const isShowingComment = isEditingUserPage(om.state)
     const isSmall = useMediaQueryIsSmall()
+    const [state, setState] = useState({
+      showAddComment: false,
+    })
+    const showAddEditComment =
+      state.showAddComment || isEditingUserPage(om.state)
+
     return (
       <>
         <VStack
           padding={pad}
-          paddingLeft={pad + 4}
-          paddingVertical={32}
+          paddingLeft={pad + 8}
+          paddingVertical={30}
           width={isSmall ? '50vw' : '62%'}
           minWidth={isSmall ? '60%' : 500}
-          overflow="hidden"
           maxWidth={isSmall ? '80vw' : '47vw'}
           spacing={5}
         >
           <HStack alignItems="flex-start" width="100%">
-            <VStack spacing="sm" maxWidth="100%" overflow="hidden">
+            <VStack spacing="sm" maxWidth="100%">
               <Link name="restaurant" params={{ slug: restaurant.slug }}>
                 <HStack alignItems="center" marginVertical={-3}>
                   <RankingView
                     marginLeft={-15}
                     marginRight={-2}
-                    marginTop={-5}
+                    marginTop={-10}
                     rank={rank}
                   />
                   <SelectableText
                     style={{
                       marginLeft: -1,
-                      fontSize: 20,
-                      fontWeight: 'bold',
+                      fontSize: 22,
                       textDecorationColor: 'transparent',
                     }}
                   >
@@ -135,7 +140,7 @@ const RestaurantListItemContent = memo(
 
               <HStack
                 marginTop={4}
-                marginLeft={7}
+                marginLeft={-3}
                 spacing={12}
                 alignItems="center"
               >
@@ -155,55 +160,64 @@ const RestaurantListItemContent = memo(
                 </HStack>
               </HStack>
 
-              <HStack maxWidth="90%">
-                <CommentBubble user={{ username: 'Peach' }}>
-                  <SelectableText
-                    style={{
-                      opacity: 0.8,
-                      lineHeight: 17,
-                      fontSize: 13,
-                      marginBottom: 5,
-                    }}
-                  >
-                    Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet.
-                  </SelectableText>
-                  <SelectableText
-                    style={{
-                      opacity: 0.8,
-                      lineHeight: 17,
-                      fontSize: 13,
-                      marginBottom: 5,
-                    }}
-                  >
-                    Lorem ipsum dolor sit ipsum sit amet. Lorem ipsum dolor sit
-                    amet sit amet. Lorem ipsum dolor sit amet.Lorem ipsum dolor
-                    sit amet.
-                  </SelectableText>
-                </CommentBubble>
+              <HStack maxWidth="90%" marginTop={2} marginLeft={-2}>
+                {!showAddEditComment && (
+                  <CommentBubble user={{ username: 'Peach' }}>
+                    <SelectableText
+                      style={{
+                        opacity: 0.8,
+                        lineHeight: 20,
+                        fontSize: 14,
+                        marginBottom: 5,
+                      }}
+                    >
+                      Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet.
+                      Lorem ipsum dolor sit ipsum sit amet. Lorem ipsum dolor
+                      sit amet sit amet. Lorem ipsum dolor sit amet.Lorem ipsum
+                      dolor sit amet.
+                    </SelectableText>
+                  </CommentBubble>
+                )}
+                {showAddEditComment && (
+                  <RestaurantAddComment restaurant={restaurant} />
+                )}
               </HStack>
 
-              <HStack marginRight={-15} alignItems="center" spacing>
+              <HStack
+                marginRight={-15}
+                marginBottom={-10}
+                alignItems="center"
+                spacing
+              >
                 <RestaurantFavoriteStar restaurant={restaurant} />
-                <Icon name="MessageSquare" size={16} color="blue" />
+                <TouchableOpacity
+                  onPress={() =>
+                    setState((state) => ({
+                      ...state,
+                      showAddComment: !state.showAddComment,
+                    }))
+                  }
+                >
+                  <Icon name="MessageSquare" size={16} color="blue" />
+                </TouchableOpacity>
                 <RestaurantDetailRow size="sm" restaurant={restaurant} />
-                <Text style={{ color: '#888' }}>
-                  {getAddressText(
-                    currentLocationInfo,
-                    restaurant.address,
-                    'xs'
-                  )}
-                </Text>
+
+                <HoverablePopover
+                  contents={
+                    <SelectableText>{restaurant.address}</SelectableText>
+                  }
+                >
+                  <SelectableText style={{ color: '#888' }}>
+                    {getAddressText(
+                      currentLocationInfo,
+                      restaurant.address,
+                      'xs'
+                    )}
+                  </SelectableText>
+                </HoverablePopover>
               </HStack>
             </VStack>
           </HStack>
-
-          {isEditingUserPage(om.state) && (
-            <>
-              <Spacer />
-              <RestaurantAddComment restaurant={restaurant} />
-              <Spacer size="xl" />
-            </>
-          )}
         </VStack>
 
         <VStack width={500}>

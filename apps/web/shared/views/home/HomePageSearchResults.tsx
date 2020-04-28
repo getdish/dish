@@ -90,7 +90,7 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
         marginTop={-23}
         position="relative"
         flex={1}
-        paddingTop={6}
+        paddingTop={4}
         overflow="hidden"
       >
         <HomeLenseBar stateIndex={stateIndex} />
@@ -105,6 +105,8 @@ const HomeSearchResultsViewContent = memo(
     const om = useOvermind()
     const allRestaurants = om.state.home.allRestaurants
     const topPad = 20 + 70
+
+    console.warn('RENDERING SEARCH RESULTS')
 
     if (!state.results?.results || state.results.status === 'loading') {
       return (

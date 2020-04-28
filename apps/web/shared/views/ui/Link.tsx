@@ -100,12 +100,22 @@ export function Link<
         [fastClick ? 'onMouseDown' : 'onClick']: handler,
       }}
       className={`${inline ? 'inline-flex' : ' flex'}`}
-      style={{ maxWidth: '100%', flex: 1, padding }}
+      style={{
+        maxWidth: '100%',
+        flex: 1,
+        padding,
+      }}
     >
       <Text
         numberOfLines={ellipse ? 1 : undefined}
         style={
-          { fontSize, lineHeight, fontWeight, display: 'inherit', color } as any
+          {
+            fontSize,
+            lineHeight,
+            fontWeight,
+            display: 'inherit',
+            color,
+          } as any
         }
       >
         {children}

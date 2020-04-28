@@ -65,48 +65,44 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
         // @ts-ignore
         name="email"
         style={textStyles.textField}
-        placeholder="Login or register with email"
+        placeholder="Login/signup with email"
         value={username}
         onChange={(event) => setUsername(event.target['value'])}
       />
 
-      {username.length > 3 && (
-        <TextInput
-          // @ts-ignore
-          name="password"
-          style={textStyles.textField}
-          placeholder="Password"
-          value={password}
-          secureTextEntry={true}
-          onChange={(event) => setPassword(event.target['value'])}
-        />
-      )}
+      <TextInput
+        // @ts-ignore
+        name="password"
+        style={textStyles.textField}
+        placeholder="Password"
+        value={password}
+        secureTextEntry={true}
+        onChange={(event) => setPassword(event.target['value'])}
+      />
 
-      {username.length > 3 && (
-        <HStack width="100%">
-          <VStack flex={1} />
-          <Button
-            onPress={async () => {
-              if (isRegister) {
-                const result = await om.actions.user.register({
-                  username: username,
-                  password: password,
-                })
-                if (result) {
-                  setUsername('')
-                  setPassword('')
-                }
-              } else {
-                om.actions.user.login({
-                  username: username,
-                  password: password,
-                })
+      <HStack width="100%">
+        <VStack flex={1} />
+        <Button
+          onPress={async () => {
+            if (isRegister) {
+              const result = await om.actions.user.register({
+                username: username,
+                password: password,
+              })
+              if (result) {
+                setUsername('')
+                setPassword('')
               }
-            }}
-            title={button_text()}
-          ></Button>
-        </HStack>
-      )}
+            } else {
+              om.actions.user.login({
+                username: username,
+                password: password,
+              })
+            }
+          }}
+          title={button_text()}
+        ></Button>
+      </HStack>
 
       {username.length > 3 && (
         <HStack>

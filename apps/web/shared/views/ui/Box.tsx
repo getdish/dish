@@ -6,8 +6,7 @@ export function Box(props: StackProps) {
   return (
     <VStack
       backgroundColor="#fff"
-      paddingVertical={8}
-      padding={10}
+      padding={8}
       borderRadius={9}
       shadowColor="rgba(0,0,0,0.175)"
       shadowRadius={13}

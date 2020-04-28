@@ -60,7 +60,17 @@ export const getTagElements = ({
             inline
             tag={{ type: 'dish', ...tag }}
           >
-            🍜 {tag.name}
+            🍜 {tag.name}{' '}
+            <span
+              style={{
+                marginBottom: -3,
+                alignSelf: 'center',
+                opacity: 0.4,
+                fontSize: 10,
+              }}
+            >
+              99
+            </span>
           </Link>
         )}
         {size != 'md' && (
