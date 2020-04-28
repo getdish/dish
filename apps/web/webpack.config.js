@@ -27,6 +27,12 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
     argv
   )
 
+  config.stats = 'normal'
+
+  // global plugin changes
+  config.plugins = config.plugins.filter(
+    (x) => x.constructor.name !== 'ProgressPlugin'
+  )
   config.plugins.push(
     new Webpack.DefinePlugin({
       'process.env.TARGET': JSON.stringify(TARGET || null),
@@ -74,19 +80,31 @@ module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
     config.devServer = {
       ...config.devServer,
       overlay: false,
+      quiet: false,
+      stats: {
+        colors: true,
+        assets: true,
+        chunks: false,
+        modules: true,
+        reasons: false,
+        children: true,
+        errors: true,
+        errorDetails: true,
+        warnings: true,
+      },
     }
   } else {
     // test closure compiler, could be more performant if it extracts functions from render better
-    config.optimization.minimizer = [
-      new ClosurePlugin({
-        // 'AGGRESSIVE_BUNDLE' seems to fail on mjs files in webpack
-        mode: 'STANDARD',
-        // See: https://github.com/webpack-contrib/closure-webpack-plugin/issues/82
-        // Unfortunately, compared to the default 'java', this is really slow and prone
-        // to RAM exhaustion
-        platform: 'javascript'
-      }),
-    ]
+    // config.optimization.minimizer = [
+    //   new ClosurePlugin({
+    //     // 'AGGRESSIVE_BUNDLE' seems to fail on mjs files in webpack
+    //     mode: 'STANDARD',
+    //     // See: https://github.com/webpack-contrib/closure-webpack-plugin/issues/82
+    //     // Unfortunately, compared to the default 'java', this is really slow and prone
+    //     // to RAM exhaustion
+    //     platform: 'javascript',
+    //   }),
+    // ]
   }
 
   if (TARGET === 'preact') {

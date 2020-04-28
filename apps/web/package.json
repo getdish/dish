@@ -12,7 +12,7 @@
     "generate": "gqless generate",
     "start:android": "react-native run-android",
     "start:ios": "react-native run-ios",
-    "start:web": "webpack-dev-server --port 19006",
+    "start:web": "webpack-dev-server --port 19006 --progress",
     "start:web:worker": "cd ../web-serve && yarn start",
     "start:web:prod": "node --version && node _/web/server.js",
     "start:web:rollup": "cross-env NODE_ENV=development nollup --port 19006 --hot --content-base etc/rollup-public -c rollup.config.ts",
