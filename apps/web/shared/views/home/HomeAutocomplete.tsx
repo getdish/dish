@@ -151,6 +151,7 @@ export default memo(function HomeAutoComplete() {
                       } else {
                         om.actions.home.navigateToTagId(x.tagId)
                       }
+                      console.log('set false')
                       om.actions.home.setShowAutocomplete(false)
                     }}
                     {...(!showLocation && {

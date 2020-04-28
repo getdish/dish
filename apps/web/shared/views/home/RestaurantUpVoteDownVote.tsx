@@ -88,7 +88,7 @@ const VoteButton = (props: any) => {
 
 const styles = StyleSheet.create({
   button: {
-    height: 32,
+    height: 24,
     width: 16,
     // paddingLeft: 4,
     // marginLeft: 6,
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   },
   topButton: {
     // borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
+    borderTopRightRadius: 10,
     borderBottomWidth: 0,
     paddingBottom: 4,
   },
@@ -117,6 +117,6 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     borderTopWidth: 0,
     // borderBottomLeftRadius: 8,
-    borderBottomRightRadius: 8,
+    borderBottomRightRadius: 10,
   },
 })

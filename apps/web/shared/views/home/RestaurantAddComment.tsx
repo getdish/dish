@@ -107,29 +107,28 @@ export const CommentBubble = ({
       padding={4}
       alignItems="flex-start"
       justifyContent="flex-start"
-      spacing={5}
+      spacing={1}
       {...rest}
     >
       <HStack
         alignItems="flex-start"
         justifyContent="flex-start"
-        spacing="sm"
+        spacing={6}
         flexWrap="nowrap"
       >
-        <Circle size={20} marginBottom={-8}>
-          <Image source={avatar} style={{ width: 20, height: 20 }} />
+        <Circle size={18} marginBottom={-8} top={3}>
+          <Image source={avatar} style={{ width: 18, height: 18 }} />
         </Circle>
         <Text style={{ color: '#999' }}>
           <Link
             inline
             name="user"
             params={{ username: user.username }}
-            color="blue"
             fontWeight="600"
           >
             {user.username}
           </Link>
-          &nbsp;&nbsp;
+          &nbsp;
           <HoverablePopover
             inline
             contents={

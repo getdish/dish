@@ -30,7 +30,6 @@ import HomeAutocomplete from './HomeAutocomplete'
 import { HomeUserMenu } from './HomeUserMenu'
 import { TagButton } from './TagButton'
 
-const extraWidth = 36
 const divider = <Divider vertical flexLine={1} marginHorizontal={4} />
 
 const isTextSelected = (node?: any) => {
@@ -73,6 +72,11 @@ export default memo(() => {
 
   useOnMount(() => {
     setSearch(om.state.home.currentStateSearchQuery)
+
+    setTimeout(() => {
+      const input = getInputNode(inputRef.current)
+      input.focus()
+    }, 100)
   })
 
   // one way sync down for more perf
