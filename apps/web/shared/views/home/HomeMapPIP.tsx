@@ -20,7 +20,6 @@ export const HomeMapPIP = memo(() => {
   })
 
   const enabled = state.type === 'restaurant' && span.lat < 0.02
-  console.log('span', span.lat)
   const restaurant =
     state.type === 'restaurant'
       ? om.state.home.allRestaurants[state.restaurantId]

@@ -554,7 +554,7 @@ const styles = StyleSheet.create({
   },
   containerInner: {
     flex: 1,
-    maxWidth: pageWidthMax + 60,
+    maxWidth: pageWidthMax + 30,
     width: '100%',
     backgroundColor: 'rgba(255,255,255,1)',
     height: '100%',

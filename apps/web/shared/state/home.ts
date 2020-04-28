@@ -390,8 +390,6 @@ const pushHomeState: AsyncAction<
   const replace =
     item.replace || om.state.home.currentStateType === nextState.type
 
-  console.log('pushHomeState', { nextState, item, replace })
-
   if (replace) {
     // try granular update
     const lastState = om.state.home.states[om.state.home.states.length - 1]

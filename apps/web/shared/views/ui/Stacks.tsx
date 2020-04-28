@@ -31,8 +31,8 @@ export type StackProps = Omit<
       className?: string
       disabled?: boolean // stronger pointer-events: none;
     },
-  // because who tf uses alignContent
-  'alignContent'
+  // because who tf uses alignContent or backfaceVisibility
+  'alignContent' | 'backfaceVisibility'
 >
 
 const createStack = (defaultStyle?: ViewStyle) => {
@@ -69,77 +69,66 @@ const createStack = (defaultStyle?: ViewStyle) => {
       const innerRef = useRef<any>()
       const [isHovered, set] = useState(false)
 
+      const cn = `${className ?? ''} ${disabled ? 'force-disable' : ''}`.trim()
+
       useLayoutEffect(() => {
-        if (!className) return
-        if (hoverStyle) return
+        if (!cn) return
         if (!innerRef.current) return
         const node = innerRef.current?.['_reactInternalFiber']?.child.stateNode
         if (!node) return
-        const names = className.trim().split(' ').filter(Boolean)
+        const names = cn
+          .trim()
+          .split(' ')
+          .filter(Boolean)
         names.forEach((x) => node.classList.add(x))
         return () => names.forEach((x) => node.classList.remove(x))
-      }, [className])
+      }, [hoverStyle, cn, innerRef.current])
 
-      const getContent = (extraStyle?: any) => {
-        let spacedChildren = children
-        if (typeof spacing !== 'undefined') {
-          const childArr = React.Children.toArray(children)
-          spacedChildren = _.flatMap(
-            childArr
-              .filter((x) => !!x)
-              .map((x, i) =>
-                i === childArr.length - 1
-                  ? x
-                  : [
-                      x,
-                      <Spacer
-                        key={i}
-                        size={spacing}
-                        direction={
-                          defaultStyle?.flexDirection === 'row'
-                            ? 'horizontal'
-                            : 'vertical'
-                        }
-                      />,
-                    ]
-              )
-          )
-        }
-        const content = (
-          <View
-            ref={combineRefs(innerRef, ref)}
-            pointerEvents={pointerEvents}
-            style={[
-              {
-                ...defaultStyle,
-                ...(fullscreen && fsStyle),
-                ...props,
-              },
-              style,
-              extraStyle,
-            ]}
-          >
-            {spacedChildren}
-          </View>
+      let spacedChildren = children
+      if (typeof spacing !== 'undefined') {
+        const childArr = React.Children.toArray(children)
+        spacedChildren = _.flatMap(
+          childArr
+            .filter((x) => !!x)
+            .map((x, i) =>
+              i === childArr.length - 1
+                ? x
+                : [
+                    x,
+                    <Spacer
+                      key={i}
+                      size={spacing}
+                      direction={
+                        defaultStyle?.flexDirection === 'row'
+                          ? 'horizontal'
+                          : 'vertical'
+                      }
+                    />,
+                  ]
+            )
         )
-
-        if (className || disabled) {
-          return (
-            <div
-              className={`${className ? className : 'display-contents'} ${
-                disabled ? 'force-disable' : ''
-              }`}
-            >
-              {content}
-            </div>
-          )
-        }
-
-        return content
       }
 
+      let content = (
+        <View
+          ref={combineRefs(innerRef, ref)}
+          pointerEvents={pointerEvents}
+          style={[
+            {
+              ...defaultStyle,
+              ...(fullscreen && fsStyle),
+              ...props,
+            },
+            style,
+            isHovered ? hoverStyle : null,
+          ]}
+        >
+          {spacedChildren}
+        </View>
+      )
+
       if (hoverStyle || onHoverIn || onHoverOut) {
-        return (
+        content = (
           <Hoverable
             onHoverIn={() => {
               set(true)
@@ -150,12 +139,12 @@ const createStack = (defaultStyle?: ViewStyle) => {
               onHoverOut?.()
             }}
           >
-            {getContent(isHovered ? hoverStyle : null)}
+            {content}
           </Hoverable>
         )
       }
 
-      return getContent()
+      return content
     }
   )
 }
