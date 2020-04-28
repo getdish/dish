@@ -7,11 +7,19 @@ RIO_VERSION='0.7.0'
 RIO_BINARY=https://github.com/rancher/rio/releases/download/v$RIO_VERSION/rio-linux-amd64
 RIO_PATH=$HOME/bin/rio
 
-echo "Installing Rio v$RIO_VERSION..."
+DOCTL_VERSION='1.42.0'
+DOCTL_BINARY=https://github.com/digitalocean/doctl/releases/download/v$DOCTL_VERSION/doctl-$DOCTL_VERSION-linux-amd64.tar.gz
+DOCTL_PATH=$HOME/bin/
+
+echo "Installing \`rio\` binary v$RIO_VERSION..."
 mkdir -p $HOME/bin
 curl -sL $RIO_BINARY > $RIO_PATH
 chmod 755 $RIO_PATH
 rio --version
+
+echo "Installing \`doctl\` binary v$DOCTL_VERSION..."
+curl -sL $DOCTL_BINARY | tar -xzv -C $DOCTL_PATH
+doctl version
 
 echo "Decrypting Dish secrets..."
 sudo apt-get install -y git-crypt
@@ -26,11 +34,17 @@ HASURA_ADMIN=$(\
     | tail -n1 | cut -c 30- | tr -d '"'\
 )
 pushd services/hasura
+curl -L https://github.com/hasura/graphql-engine/raw/master/cli/get.sh | bash
 hasura migrate apply --endpoint https://hasura.rio.dishapp.com --admin-secret "$HASURA_ADMIN"
 popd
-mkdir -p $HOME/.kube
-cp -a k8s/etc/k8s_admin_creds.enc.config $HOME/.kube/config
-rio up --answers env.enc.production.yaml
+
+DO_KEY=$(\
+  grep 'TF_VAR_DO_DISH_KEY:' env.enc.production.yaml \
+    | tail -n1 | cut -c 21- | tr -d '"'\
+)
+doctl auth init -t $DO_KEY
+doctl kubernetes cluster kubeconfig save dish
+rio up --answers env.enc.production.yaml --parallel
 
 HOOK=$(\
   grep 'SLACK_MONITORING_HOOK:' env.enc.production.yaml \

@@ -3,7 +3,7 @@ on:
   schedule:
     - cron:  '0 0 * * *'
 jobs:
-  run:
+  daily:
     runs-on: ubuntu-latest
     env:
       DISH_ENV: "test"
