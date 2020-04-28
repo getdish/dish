@@ -11,7 +11,7 @@ import { levenshteinDistance } from './utils'
 let SEARCH_DOMAIN: string
 const isNode = typeof window == 'undefined'
 const isWorker = !isNode && !!window['isWorker']
-const LIVE_SEARCH_DOMAIN = 'https://search-b4dc375a-default.rio.dishapp.com'
+const LIVE_SEARCH_DOMAIN = 'https://search.rio.dishapp.com'
 const LOCAL_SEARCH_DOMAIN = 'http://localhost:10000'
 
 if (isWorker) {

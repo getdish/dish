@@ -2,6 +2,7 @@ import { TagType, slugify } from '@dish/models'
 import { last } from 'lodash'
 import { Action, AsyncAction, Derive } from 'overmind'
 
+import { LIVE_SEARCH_DOMAIN } from '../constants'
 import { isHomeState, isSearchState, shouldBeOnHome } from './home-helpers'
 import {
   HomeActiveTagIds,
@@ -268,8 +269,6 @@ const getRouteFromTags = (
 }
 
 const getFullTag = (tag: NavigableTag): Promise<Tag | null> =>
-  fetch(
-    `https://search-b4dc375a-default.rio.dishapp.com/tags?query=${tag.name}&type=${tag.type}&limit=1`
-  )
+  fetch(`${LIVE_SEARCH_DOMAIN}/tags?query=${tag.name}&type=${tag.type}&limit=1`)
     .then((res) => res.json())
     .then((tags) => tags?.[0] ?? null)
