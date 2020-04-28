@@ -55,7 +55,7 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
   const subTitle = `${subTitleParts[0]} ${subTitleParts[1]}`
   const subTitleElements = (
     <>
-      <Text style={{ fontWeight: '500' }}>{subTitleParts[0]}</Text>{' '}
+      <Text style={{ fontWeight: '500' }}>{subTitleParts[0]}</Text>&nbsp;
       {subTitleParts[1]}
     </>
   )

@@ -21,10 +21,9 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
   const groupedList = Object.keys(grouped).map((k) => grouped[k])
 
   return (
-    <VStack paddingBottom={6} marginVertical={-2}>
+    <VStack>
       <HStack
-        paddingHorizontal={30}
-        paddingVertical={1}
+        // paddingHorizontal={30}
         alignItems="center"
         spacing={4}
         justifyContent="center"

@@ -18,17 +18,24 @@ import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 export default memo(function HomeLenseBar(props: {
   stateIndex: number
   hideLenses?: boolean
+  relative?: boolean
+  spacer?: any
 }) {
   const om = useOvermind()
   const state = om.state.home.states[props.stateIndex] as HomeStateItemSearch
   const activeTagIds =
     state?.activeTagIds ?? om.state.home.lastHomeState.activeTagIds
-  return (
-    <HomeContentTopBar>
+  const content = (
+    <>
       {!props.hideLenses && <HomeLenseBarOnly activeTagIds={activeTagIds} />}
+      {props.spacer}
       <HomeFilterBar activeTagIds={activeTagIds} />
-    </HomeContentTopBar>
+    </>
   )
+  if (props.relative) {
+    return content
+  }
+  return <HomeContentTopBar>{content}</HomeContentTopBar>
 })
 
 export function HomeContentTopBar(props: { children: any }) {
@@ -65,12 +72,12 @@ export const HomeLenseBarOnly = memo(
     const om = useOvermind()
     return (
       <HStack
-        minWidth={drawerWidth}
-        alignItems="center"
-        justifyContent="center"
+        // minWidth={drawerWidth}
+        alignItems="flex-end"
+        justifyContent="flex-end"
         spacing
       >
-        <Divider backgroundColor="#000" flex />
+        {/* <Divider backgroundColor="#000" flex /> */}
         <HStack
           borderRadius={100}
           // borderColor="#eee"
@@ -100,7 +107,7 @@ export const HomeLenseBarOnly = memo(
             <Icon name="ChevronDown" color="#999" size={20} />
           </HoverablePopover>
         </HStack>
-        <Divider backgroundColor="#000" flex />
+        {/* <Divider backgroundColor="#000" flex /> */}
       </HStack>
     )
   }

@@ -67,7 +67,7 @@ export default memo(function HomePageTopDishes({
                   ) ?? ''}
               </Text>
 
-              <VStack spacing>
+              <VStack spacing alignItems="center">
                 <HomeLenseBarOnly
                   activeTagIds={om.state.home.lastHomeState.activeTagIds}
                 />
@@ -113,7 +113,7 @@ const HomeViewTopDishesTrending = memo(() => {
     )
   }
   return (
-    <VStack height={188}>
+    <VStack height={158}>
       <HStack spacing="lg" paddingHorizontal={10}>
         <VStack flex={1}>
           <ZStack position="absolute" top={-5} left={-8} zIndex={100}>

@@ -413,15 +413,16 @@ const HomeSearchBarHomeButton = memo(() => {
         pointerEvents="auto"
         padding={13}
         marginLeft={-8} //undo spacing
-        opacity={om.state.home.currentStateType === 'home' ? 0.2 : 1}
+        opacity={om.state.home.currentStateType === 'home' ? 0 : 1}
         onPress={() => om.actions.home.popTo('home')}
       >
         <VStack spacing={2} alignItems="center">
           <Icon
             name={
-              om.state.home.breadcrumbStates.length <= 2
-                ? 'Home'
-                : 'ChevronLeft'
+              'ChevronLeft'
+              // om.state.home.breadcrumbStates.length <= 1
+              //   ? 'Home'
+              //   : 'ChevronLeft'
             }
             size={22}
             opacity={0.5}

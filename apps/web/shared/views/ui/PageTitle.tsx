@@ -8,22 +8,22 @@ export const PageTitle = memo(
   ({ children, subTitle, ...rest }: StackProps & { subTitle?: any }) => {
     return (
       <VStack
-        width="100%"
+        maxWidth="100%"
         minHeight={68}
         paddingVertical={10}
-        paddingBottom={28}
-        alignItems="center"
-        justifyContent="center"
+        // paddingBottom={28}
+        // alignItems="center"
+        // justifyContent="center"
         {...rest}
       >
         <SelectableText
           numberOfLines={1}
           style={{
             maxWidth: '80%',
-            textAlign: 'center',
+            // textAlign: 'center',
             opacity: 1,
-            fontSize: 18,
-            lineHeight: 24,
+            fontSize: 26,
+            lineHeight: 29,
             fontWeight: '700',
           }}
         >
@@ -34,7 +34,7 @@ export const PageTitle = memo(
               style={
                 {
                   display: 'block',
-                  textAlign: 'center',
+                  // textAlign: 'center',
                   width: '100%',
                   color: '#666',
                   fontSize: 16,

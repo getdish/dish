@@ -148,25 +148,25 @@ export const tagFilters: Tag[] = [
     // @ts-ignore
     groupId: 'basics',
   },
-  {
-    id: '71',
-    name: 'Healthy',
-    type: 'filter',
-    // @ts-ignore
-    groupId: 'preferences',
-  },
-  {
-    id: '81',
-    name: 'Quick',
-    type: 'filter',
-    // @ts-ignore
-    groupId: 'preferences',
-  },
-  {
-    id: '91',
-    name: 'Planty',
-    type: 'filter',
-    // @ts-ignore
-    groupId: 'preferences',
-  },
+  // {
+  //   id: '71',
+  //   name: 'Healthy',
+  //   type: 'filter',
+  //   // @ts-ignore
+  //   groupId: 'preferences',
+  // },
+  // {
+  //   id: '81',
+  //   name: '',
+  //   type: 'filter',
+  //   // @ts-ignore
+  //   groupId: 'preferences',
+  // },
+  // {
+  //   id: '91',
+  //   name: 'Planty',
+  //   type: 'filter',
+  //   // @ts-ignore
+  //   groupId: 'preferences',
+  // },
 ]

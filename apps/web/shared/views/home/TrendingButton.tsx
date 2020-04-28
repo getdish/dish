@@ -22,7 +22,6 @@ export const TrendingButton = <
       <LinkButton
         {...flatButtonStyle}
         backgroundColor="transparent"
-        margin={2}
         flexDirection="row"
         alignItems="center"
         overflow="hidden"

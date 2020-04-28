@@ -6,6 +6,7 @@ import { useOvermind } from '../../state/om'
 import { NotFoundPage } from '../NotFoundPage'
 import { Toast } from '../Toast'
 import { Circle } from '../ui/Circle'
+import { Divider } from '../ui/Divider'
 import { Icon } from '../ui/Icon'
 import { LinkButton } from '../ui/Link'
 import { PageTitle } from '../ui/PageTitle'
@@ -14,6 +15,7 @@ import { closeAllPopovers, popoverCloseCbs } from '../ui/Popover'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { useWaterfall } from '../ui/useWaterfall'
+import { flatButtonStyle } from './baseButtonStyle'
 import { CloseButton, SmallCircleButton } from './CloseButton'
 import { getTitleForState } from './getTitleForState'
 import HomeLenseBar from './HomeLenseBar'
@@ -35,9 +37,9 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>
-      <ZStack
-        right={10}
-        top={10}
+      {/* <ZStack
+        right={6}
+        top={6}
         justifyContent="center"
         pointerEvents="auto"
         zIndex={100}
@@ -45,55 +47,77 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
         <HStack spacing="sm" alignItems="center">
           <CloseButton onPress={() => om.actions.home.up()} />
         </HStack>
-      </ZStack>
+      </ZStack> */}
 
-      <HStack paddingHorizontal={om.state.user.isLoggedIn ? 60 : 0}>
-        <HStack zIndex={100} position="absolute" top={10} left={10} spacing>
-          <Circle size={34}>
-            <Image source={avatar} style={{ width: 34, height: 34 }} />
-          </Circle>
+      {/*  */}
+      <VStack paddingTop={6} paddingHorizontal={20}>
+        <HStack width="100%">
+          <VStack flex={4}>
+            <PageTitle
+              flex={2}
+              subTitle={<HStack spacing={10}>{subTitleElements}</HStack>}
+            >
+              {pageTitleElements}
+            </PageTitle>
+          </VStack>
 
-          <HStack spacing="sm" alignItems="center">
+          <VStack alignItems="flex-end" justifyContent="center">
+            <HomeLenseBar
+              spacer={<Spacer size={9} />}
+              relative
+              stateIndex={stateIndex}
+            />
+          </VStack>
+        </HStack>
+        <Spacer size={4} />
+        <Divider flex />
+        <ZStack fullscreen pointerEvents="none" top="auto" bottom={-5}>
+          <HStack alignItems="center" spacing="sm">
+            <Circle size={26} marginVertical={-26 / 2}>
+              <Image source={avatar} style={{ width: 26, height: 26 }} />
+            </Circle>
             {isEditingUserList && (
-              <SmallCircleButton
-                onPress={() => {
-                  Toast.show('Saved')
-                  om.actions.router.navigate({
+              <>
+                <LinkButton
+                  {...flatButtonStyle}
+                  {...{
                     name: 'search',
                     params: {
                       ...om.state.router.curPage.params,
                       username: '',
                     },
-                  })
-                }}
-                paddingHorizontal={12}
-              >
-                <Text style={{ color: 'white' }}>Done</Text>
-              </SmallCircleButton>
+                  }}
+                  onPress={() => {
+                    Toast.show('Saved')
+                  }}
+                >
+                  <Text>Done</Text>
+                </LinkButton>
+              </>
             )}
             {!isEditingUserList && (
-              <SmallCircleButton
+              <LinkButton
                 onPress={() => {
                   om.actions.home.forkCurrentList()
                 }}
               >
-                <Icon name="Edit2" size={12} color="white" />
-              </SmallCircleButton>
+                <HStack alignItems="center" spacing={6}>
+                  <Icon name="Edit2" size={12} color="#777" />
+                  <Text style={{ color: 'blue' }}>My list</Text>
+                </HStack>
+              </LinkButton>
             )}
           </HStack>
-        </HStack>
-
-        <PageTitle subTitle={subTitleElements}>{pageTitleElements}</PageTitle>
-      </HStack>
+        </ZStack>
+      </VStack>
 
       <VStack
-        marginTop={-23}
+        // marginTop={-23}
         position="relative"
         flex={1}
         paddingTop={4}
         overflow="hidden"
       >
-        <HomeLenseBar stateIndex={stateIndex} />
         <HomeSearchResultsViewContent state={state} />
       </VStack>
     </>
@@ -104,7 +128,7 @@ const HomeSearchResultsViewContent = memo(
   ({ state }: { state: HomeStateItemSearch }) => {
     const om = useOvermind()
     const allRestaurants = om.state.home.allRestaurants
-    const topPad = 20 + 70
+    const topPad = 0
 
     console.warn('RENDERING SEARCH RESULTS')
 

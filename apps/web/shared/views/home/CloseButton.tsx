@@ -13,7 +13,7 @@ type CircleButtonProps = {
 export const CloseButton = memo((props: CircleButtonProps) => {
   return (
     <SmallCircleButton {...props}>
-      <Icon name="X" size={props.size ?? 14} color="white" />
+      <Icon name="X" size={props.size ?? 11} color="white" />
     </SmallCircleButton>
   )
 })
@@ -38,6 +38,8 @@ export const SmallCircleButton = memo(
           borderRadius={1000}
           backgroundColor="#ccc"
           padding={3}
+          alignItems="center"
+          spacing="xs"
           {...rest}
           hoverStyle={{ backgroundColor: '#999', ...rest.hoverStyle }}
         />
