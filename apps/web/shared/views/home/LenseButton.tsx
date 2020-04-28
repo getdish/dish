@@ -51,7 +51,7 @@ export const LenseButton = memoIsEqualDeep(
           // shadowRadius={2}
           // shadowColor={isActive ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.05)'}
           // shadowOffset={{ height: 1, width: 0 }}
-          borderWidth={2}
+          // borderWidth={2}
           borderColor="transparent"
           // opacity={0.8}
           hoverStyle={{
@@ -70,7 +70,7 @@ export const LenseButton = memoIsEqualDeep(
           <Text
             style={{
               color: isActive ? '#fff' : '#454545',
-              fontSize: 26,
+              fontSize: isActive ? 32 : 26,
               lineHeight: 40,
               width: 40,
               height: 40,

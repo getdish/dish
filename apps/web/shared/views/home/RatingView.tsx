@@ -52,7 +52,7 @@ export const RatingView = forwardRef(
           >
             <Text
               style={{
-                fontSize: Math.max(14, size * 0.3),
+                fontSize: Math.max(15, size * 0.3),
                 textShadowColor: 'rgba(0,0,0,0.25)',
                 textShadowRadius: size * 0.015,
               }}
@@ -88,8 +88,8 @@ export const RatingView = forwardRef(
             >
               <Text
                 style={{
-                  fontSize: size * 0.38,
-                  fontWeight: '600',
+                  fontSize: Math.max(15, size * 0.38),
+                  fontWeight: '700',
                   color,
                   letterSpacing: -(size / 90),
                 }}

@@ -37,9 +37,17 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
 
   const titleSpace = titleTags.length ? ' ' : ''
   const searchName = state.searchQuery ?? ''
+  let titleTagsString = titleTags.map((x) => `${x.name ?? ''}`).join(' ')
+
+  // lowercase when not at front
+  if (!countryTag && lensePlaceholder.indexOf('🍔') > 0) {
+    titleTagsString = titleTagsString.toLowerCase()
+  }
+
+  const titleSubject = lensePlaceholder.replace('🍔', titleTagsString)
 
   const subTitleParts = countryTag
-    ? [countryTag, ` @ ${currentLocationName}`]
+    ? ['', `in ${currentLocationName}`]
     : dishTag
     ? [dishTag, `dishes in ${currentLocationName}`]
     : [`"${state.searchQuery}"`, `in ${currentLocationName}`]
@@ -52,14 +60,6 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
     </>
   )
 
-  let titleTagsString = titleTags.map((x) => `${x.name ?? ''}`).join(' ')
-
-  // lowercase when not at front
-  if (!countryTag && lensePlaceholder.indexOf('🍔') > 0) {
-    titleTagsString = titleTagsString.toLowerCase()
-  }
-
-  const titleSubject = lensePlaceholder.replace('🍔', titleTagsString)
   const title = `${userPrefix} ${titleSubject} ${searchName} ${subTitleParts.join(
     ' '
   )}`

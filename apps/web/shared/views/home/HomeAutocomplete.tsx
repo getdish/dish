@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { useOvermind } from '../../state/om'
+import { Icon } from '../ui/Icon'
 import { LinearGradient } from '../ui/LinearGradient'
 import { LinkButton, LinkButtonProps } from '../ui/Link'
 import { HStack, ZStack } from '../ui/Stacks'
@@ -11,6 +12,7 @@ import {
   flatButtonStyle,
   flatButtonStyleActive,
 } from './baseButtonStyle'
+import { SmallCircleButton } from './CloseButton'
 
 export default memo(function HomeAutoComplete() {
   const om = useOvermind()
@@ -122,6 +124,24 @@ export default memo(function HomeAutoComplete() {
                     om.actions.home.setShowAutocomplete(false)
                   },
                 }
+
+                const plusButtonEl =
+                  x.type === 'dish' &&
+                  index !== 0 &&
+                  currentStateType === 'userSearch' &&
+                  om.state.user.isLoggedIn ? (
+                    <SmallCircleButton
+                      // {...circularFlatButtonStyle}
+                      // marginVertical={-5}
+                      onPress={(e) => {
+                        console.log('e', e)
+                        alert('add to current search results')
+                      }}
+                    >
+                      <Icon name="Plus" size={12} />
+                    </SmallCircleButton>
+                  ) : null
+
                 return (
                   <LinkButton
                     key={`${x.tagId}${index}`}
@@ -165,22 +185,7 @@ export default memo(function HomeAutoComplete() {
                     ) : (
                       x.icon ?? null
                     )}
-                    {x.name}{' '}
-                    {x.type === 'dish' &&
-                    index !== 0 &&
-                    currentStateType === 'search' &&
-                    om.state.user.isLoggedIn ? (
-                      <LinkButton
-                        {...circularFlatButtonStyle}
-                        marginVertical={-2}
-                        onPress={(e) => {
-                          console.log('e', e)
-                          alert('add to current search results')
-                        }}
-                      >
-                        +
-                      </LinkButton>
-                    ) : null}
+                    {x.name} {plusButtonEl}
                   </LinkButton>
                 )
               })}

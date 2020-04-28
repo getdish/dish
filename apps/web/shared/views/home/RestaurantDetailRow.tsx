@@ -38,7 +38,9 @@ export const RestaurantDetailRow = memo(
 
     const spaceSize = isSm ? 0 : '6%'
 
-    const titleEl = ({ title, color }: { title: string; color: string }) => (
+    type Item = typeof rows[0]
+
+    const titleEl = ({ title, color }: Item) => (
       <Text
         numberOfLines={1}
         style={{
@@ -53,10 +55,16 @@ export const RestaurantDetailRow = memo(
       </Text>
     )
 
-    const contentEl = (content: any) => (
+    const contentEl = ({ color, content }: Item) => (
       <Text
         numberOfLines={1}
-        style={[styles.subText, centered && { textAlign: 'center' }]}
+        style={[
+          styles.subText,
+          centered && { textAlign: 'center' },
+          isSm && {
+            color,
+          },
+        ]}
       >
         {content}
       </Text>
@@ -71,7 +79,7 @@ export const RestaurantDetailRow = memo(
               flex={10}
             >
               {!isSm && titleEl(row)}
-              {contentEl(row.content)}
+              {contentEl(row)}
             </VStack>
             {after}
             {isSm && index !== rows.length - 1 && (
