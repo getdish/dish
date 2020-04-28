@@ -74,14 +74,32 @@ const createStack = (defaultStyle?: ViewStyle) => {
       useLayoutEffect(() => {
         if (!cn) return
         if (!innerRef.current) return
-        const node = innerRef.current?.['_reactInternalFiber']?.child.stateNode
+        const getNode = () =>
+          innerRef.current?.['_reactInternalFiber']?.child.stateNode
+        const node = getNode()
         if (!node) return
         const names = cn
           .trim()
           .split(' ')
           .filter(Boolean)
         names.forEach((x) => node.classList.add(x))
-        return () => names.forEach((x) => node.classList.remove(x))
+
+        const observer = new MutationObserver((onChange) => {
+          const cl = new Set(node.classList)
+          for (const name of names) {
+            if (!cl.has(name)) {
+              node.classList.add(name)
+            }
+          }
+        })
+        observer.observe(node, {
+          attributes: true,
+        })
+
+        return () => {
+          observer.disconnect()
+          names.forEach((x) => node.classList.remove(x))
+        }
       }, [hoverStyle, cn, innerRef.current])
 
       let spacedChildren = children
