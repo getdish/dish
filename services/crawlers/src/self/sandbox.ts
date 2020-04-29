@@ -16,4 +16,4 @@ async function all() {
   await internal.main()
 }
 
-one()
+all()

@@ -73,7 +73,7 @@ export class Self extends WorkerJob {
         this.runOnWorker('mergeAll', [result.id])
         previous_id = result.id
         if (process.env.RUN_WITHOUT_WORKER == 'true') {
-          await sleep(100)
+          await sleep(300)
         }
       }
     }
@@ -107,7 +107,7 @@ export class Self extends WorkerJob {
   async getScrapeData() {
     this.yelp = await this.restaurant.getLatestScrape('yelp')
     this.ubereats = await this.restaurant.getLatestScrape('ubereats')
-    this.infatuated = await this.restaurant.getLatestScrape('infatuated')
+    this.infatuated = await this.restaurant.getLatestScrape('infatuation')
     this.michelin = await this.restaurant.getLatestScrape('michelin')
     this.tripadvisor = await this.restaurant.getLatestScrape('tripadvisor')
   }
