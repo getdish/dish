@@ -33,3 +33,12 @@ spec:
   targetApp: search
   targetNamespace: default
 ---
+
+apiVersion: admin.rio.cattle.io/v1
+kind: PublicDomain
+metadata:
+  name: web.rio.dishapp.com
+spec:
+  targetApp: web
+  targetNamespace: default
+---
