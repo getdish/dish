@@ -20,8 +20,6 @@ import { sql } from '../utils'
 
 const PER_PAGE = 50
 
-const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
-
 const sanfran = {
   location: {
     _st_d_within: {
@@ -45,6 +43,9 @@ export class Self extends WorkerJob {
   restaurant_tag_ratings!: {
     [key: string]: { slug: string; name: string; ratings: number[] }
   }
+  all_tags!: Tag[]
+  _found_tags!: Tag[]
+  _start_time!: [number, number]
 
   static queue_config: QueueOptions = {
     limiter: {
@@ -70,38 +71,61 @@ export class Self extends WorkerJob {
         break
       }
       for (const result of results) {
-        this.runOnWorker('mergeAll', [result.id])
+        await this.runOnWorker('mergeAll', [result.id])
         previous_id = result.id
-        if (process.env.RUN_WITHOUT_WORKER == 'true') {
-          await sleep(300)
-        }
       }
     }
   }
 
   async mergeAll(id: string) {
+    this._start_time = process.hrtime()
     let restaurant = new Restaurant()
     await restaurant.findOne('id', id)
     this.restaurant = restaurant
     console.log('Merging: ' + this.restaurant.name)
     await this.getScrapeData()
+    await this.mergeMainData()
+    await this.mergeTags()
+    await this.findPhotosForTags()
+    await this.scanReviews()
+    await this.upsertUberDishes()
+    console.log(`Merged: ${this.restaurant.name} in ${this.elapsedTime()}s`)
+    return this.restaurant
+  }
+
+  async mergeMainData() {
     this.mergeName()
     this.mergeTelephone()
     this.mergeAddress()
     this.mergeRatings()
     this.mergeImage()
-    await this.mergeTags()
-    await this.scanReviews()
     this.mergePhotos()
-    await this.findPhotosForTags()
     this.addWebsite()
     this.addSources()
     this.addPriceRange()
     this.addHours()
     this.getRatingFactors()
-    await this.restaurant.update()
-    await this.upsertUberDishes()
-    return this.restaurant
+    await this.persist()
+  }
+
+  async persist() {
+    try {
+      await this.restaurant.update()
+    } catch (e) {
+      if (
+        e.message.includes(
+          'duplicate key value violates unique constraint "restaurant_name_address_key"'
+        )
+      ) {
+        console.log(
+          'Restaurant unique key violation',
+          this.restaurant.id,
+          this.restaurant.name,
+          this.restaurant.address,
+          Object.keys(this.restaurant.sources)
+        )
+      }
+    }
   }
 
   async getScrapeData() {
@@ -389,9 +413,12 @@ export class Self extends WorkerJob {
   }
 
   async scanReviews() {
+    this._found_tags = [] as Tag[]
+    this.all_tags = await this.restaurant.allPossibleTags()
     this.restaurant_tag_ratings = {}
-    await this._scanYelpReviewsForTags()
-    await this._scanTripadvisorReviewsForTags()
+    this._scanYelpReviewsForTags()
+    this._scanTripadvisorReviewsForTags()
+    await this.restaurant.upsertTags(this._found_tags)
     await this._averageAndPersistTagRatings()
   }
 
@@ -455,13 +482,17 @@ export class Self extends WorkerJob {
     return items
   }
 
-  async findDishesInText(text: string) {
-    const tags = await this.restaurant.allPossibleTags()
-    for (const tag of tags) {
+  findDishesInText(text: string) {
+    for (const tag of this.all_tags) {
       if (!this._doesStringContainTag(text, tag.name)) continue
-      await this.restaurant.upsertTags([tag])
+      this.foundTag(tag)
       this.measureSentiment(text, tag)
     }
+  }
+
+  foundTag(tag: Tag) {
+    if (this._found_tags.find((t) => _.isEqual(t, tag))) return
+    this._found_tags.push(tag)
   }
 
   _doesStringContainTag(text: string, tag_name: string) {
@@ -512,22 +543,22 @@ export class Self extends WorkerJob {
     }
   }
 
-  async _scanYelpReviewsForTags() {
+  _scanYelpReviewsForTags() {
     const reviews = this.getPaginatedData(this.yelp.data, 'reviews')
     for (const review of reviews) {
       const all_text = [
         review.comment?.text,
         review.lightboxMediaItems?.map((i) => i.caption).join(' '),
       ].join(' ')
-      await this.findDishesInText(all_text)
+      this.findDishesInText(all_text)
     }
   }
 
-  async _scanTripadvisorReviewsForTags() {
+  _scanTripadvisorReviewsForTags() {
     const reviews = this.getPaginatedData(this.tripadvisor.data, 'reviews')
     for (const review of reviews) {
       const all_text = [review.text].join(' ')
-      await this.findDishesInText(all_text)
+      this.findDishesInText(all_text)
     }
   }
 
@@ -554,5 +585,11 @@ export class Self extends WorkerJob {
       return a
     }
     return null
+  }
+
+  elapsedTime() {
+    const elapsed = process.hrtime(this._start_time)[0]
+    this._start_time = process.hrtime()
+    return elapsed
   }
 }
