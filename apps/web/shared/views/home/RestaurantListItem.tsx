@@ -234,7 +234,6 @@ export const RestaurantPeek = memo(
     restaurant: Restaurant
   }) => {
     const spacing = size == 'lg' ? 12 : 18
-    const photos = Restaurant.allPhotos(restaurant).slice(0, 5)
     const isMedium = useMediaQueryIsMedium()
     return (
       <VStack
@@ -243,23 +242,21 @@ export const RestaurantPeek = memo(
         marginBottom={-spacing}
       >
         <HStack spacing={spacing}>
-          {[...photos, photos[0], photos[0], photos[0]]
-            .slice(0, 4)
-            .map((photo, i) => {
-              return (
-                <DishView
-                  key={i}
-                  size={(size === 'lg' ? 140 : 130) * (isMedium ? 0.85 : 1)}
-                  dish={
-                    {
-                      name: 'Bun bo hue',
-                      image: photo,
-                      price: (20 - i) * 30 + 200,
-                    } as any
-                  }
-                />
-              )
-            })}
+          {restaurant.photosForCarousel().map((photo, i) => {
+            return (
+              <DishView
+                key={i}
+                size={(size === 'lg' ? 140 : 130) * (isMedium ? 0.85 : 1)}
+                dish={
+                  {
+                    name: photo.name,
+                    image: photo.src,
+                    price: photo.rating,
+                  } as any
+                }
+              />
+            )
+          })}
         </HStack>
       </VStack>
     )

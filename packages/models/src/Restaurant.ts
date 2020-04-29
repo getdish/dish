@@ -29,7 +29,6 @@ if (isWorker) {
 
 export type LngLat = { lng: number; lat: number }
 
-// TODO: rename to `TopCuisine`?
 export type TopCuisine = {
   country: string
   icon: string
@@ -65,6 +64,12 @@ export type TagRating = {
 // TODO: Merge tag_rankings and tag_ratings into this
 export type TagRestaurantData = TagRating & {
   photos: string[]
+}
+
+export type CarouselPhoto = {
+  src: string
+  name?: string
+  rating?: number
 }
 
 export type Sources = { [key: string]: { url: string; rating: number } }
@@ -422,5 +427,24 @@ export class Restaurant extends ModelBase<Restaurant> {
 
   async allPossibleTags() {
     return await Tag.allChildren(this.tags.map((i) => i.tag.id))
+  }
+
+  photosForCarousel() {
+    let photos: CarouselPhoto[] = [] as CarouselPhoto[]
+    const max_photos = 5
+    photos = (this.tag_restaurant_data || [])
+      .slice(0, max_photos - 1)
+      .map((t) => {
+        return {
+          name: t.name || ' ',
+          src: t.photos[0],
+          rating: this.tag_ratings.find((t) => t.id == t.id)?.rating,
+        }
+      })
+    for (let i = 0; i < max_photos - photos.length; i++) {
+      if (this.photos && typeof this.photos[i] != 'undefined')
+        photos.push({ name: ' ', src: this.photos[i] })
+    }
+    return photos
   }
 }
