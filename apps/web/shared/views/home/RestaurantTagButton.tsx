@@ -6,10 +6,10 @@ import { Button, StyleSheet, Text, TextInput, View } from 'react-native'
 import { useOvermind } from '../../state/om'
 import { Box } from '../ui/Box'
 import { Icon } from '../ui/Icon'
+import { LinkButton } from '../ui/Link'
 import { Popover } from '../ui/Popover'
 import { SmallTitle, SmallerTitle } from '../ui/SmallTitle'
 import { HStack, VStack } from '../ui/Stacks'
-import { HoverableButton } from './HoverableButton'
 import { TagButton } from './TagButton'
 
 export const RestaurantTagButton = memo(
@@ -76,7 +76,7 @@ export const RestaurantTagButton = memo(
           </Box>
         }
       >
-        <HoverableButton
+        <LinkButton
           spacing={4}
           paddingHorizontal={5}
           paddingVertical={2}
@@ -99,7 +99,7 @@ export const RestaurantTagButton = memo(
             marginBottom={-1}
             name="Tag"
           />
-        </HoverableButton>
+        </LinkButton>
       </Popover>
     )
   }

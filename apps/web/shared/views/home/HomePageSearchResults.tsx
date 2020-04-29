@@ -5,6 +5,7 @@ import { HomeStateItemSearch, isEditingUserPage } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { NotFoundPage } from '../NotFoundPage'
 import { Toast } from '../Toast'
+import { Box } from '../ui/Box'
 import { Circle } from '../ui/Circle'
 import { Divider } from '../ui/Divider'
 import { Icon } from '../ui/Icon'
@@ -50,7 +51,12 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
       </ZStack> */}
 
       {/*  */}
-      <VStack paddingTop={6} paddingHorizontal={20}>
+      <VStack
+        paddingTop={6}
+        paddingHorizontal={20}
+        position="relative"
+        zIndex={100}
+      >
         <HStack width="100%">
           <VStack flex={4}>
             <PageTitle
@@ -71,7 +77,14 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
         </HStack>
         <Spacer size={4} />
         <Divider flex />
-        <ZStack fullscreen pointerEvents="none" top="auto" bottom={-5}>
+        <ZStack
+          fullscreen
+          pointerEvents="none"
+          top="auto"
+          bottom={-35}
+          zIndex={1000}
+          height={50}
+        >
           <HStack alignItems="center" spacing="sm">
             <Circle size={26} marginVertical={-26 / 2}>
               <Image source={avatar} style={{ width: 26, height: 26 }} />
@@ -102,10 +115,17 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
                   om.actions.home.forkCurrentList()
                 }}
               >
-                <HStack alignItems="center" spacing={6}>
-                  <Icon name="Edit2" size={12} color="#777" />
-                  <Text style={{ color: 'blue' }}>My list</Text>
-                </HStack>
+                <Box
+                  padding={3}
+                  paddingHorizontal={5}
+                  shadowRadius={0}
+                  backgroundColor="#fff"
+                >
+                  <HStack alignItems="center" spacing={6}>
+                    <Icon name="Edit2" size={12} color="#777" />
+                    <Text style={{ color: 'blue' }}>My list</Text>
+                  </HStack>
+                </Box>
               </LinkButton>
             )}
           </HStack>
@@ -116,7 +136,7 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
         // marginTop={-23}
         position="relative"
         flex={1}
-        paddingTop={4}
+        // paddingTop={4}
         overflow="hidden"
       >
         <HomeSearchResultsViewContent state={state} />
