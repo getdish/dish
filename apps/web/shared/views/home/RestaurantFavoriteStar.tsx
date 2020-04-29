@@ -8,11 +8,11 @@ import { useOvermind } from '../../state/om'
 import { Toast } from '../Toast'
 import { Box } from '../ui/Box'
 import { Icon } from '../ui/Icon'
+import { LinkButton } from '../ui/Link'
 import { Popover } from '../ui/Popover'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack } from '../ui/Stacks'
 import { getInputNode } from './HomeSearchBar'
-import { HoverableButton } from './HoverableButton'
 import { LenseButton } from './LenseButton'
 
 export const RestaurantFavoriteStar = memo(
@@ -130,10 +130,7 @@ export const RestaurantFavoriteStar = memo(
           </Box>
         }
       >
-        <HoverableButton
-          isHovered={isStarred}
-          onPress={() => setRating(isStarred ? 0 : 1)}
-        >
+        <LinkButton onPress={() => setRating(isStarred ? 0 : 1)}>
           <VStack
             marginTop={2}
             width={sizePx}
@@ -156,7 +153,7 @@ export const RestaurantFavoriteStar = memo(
               <Icon size={sizePx} name="Star" color={'goldenrod'} />
             )}
           </VStack>
-        </HoverableButton>
+        </LinkButton>
       </Popover>
     )
   }

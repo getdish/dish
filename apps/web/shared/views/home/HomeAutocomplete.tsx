@@ -95,6 +95,7 @@ export default memo(function HomeAutoComplete() {
           backgroundColor="rgba(255,255,255,1)"
           borderBottomRightRadius={12}
           borderBottomLeftRadius={12}
+          borderTopRightRadius={12}
           height={49}
           paddingBottom={1} // looks better 1px up
           shadowColor="rgba(0,0,0,0.28)"

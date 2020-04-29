@@ -4,8 +4,8 @@ import React, { memo } from 'react'
 import { Text, TextStyle, View } from 'react-native'
 
 import { Icon } from '../ui/Icon'
-import { HStack, StackProps } from '../ui/Stacks'
-import { HoverableButton } from './HoverableButton'
+import { LinkButton } from '../ui/Link'
+import { HStack, StackProps, VStack } from '../ui/Stacks'
 import { SuperScriptText } from './SuperScriptText'
 
 export const TagButton = memo(
@@ -44,10 +44,10 @@ export const TagButton = memo(
     const defaultColor = noColor ? 'inherit' : 'blue'
     const bg = backgroundColor ?? (subtle ? defaultColor : 'white')
     const fg = color ?? (subtle ? 'transparent' : defaultColor)
-    const fontSize = fontSizeProp ?? (subtle ? 'inherit' : 13 * scale)
+    const fontSize = fontSizeProp ?? (subtle ? 'inherit' : 14 * scale)
     const rankFontSize =
       typeof fontSize === 'number' ? fontSize * 0.9 : fontSize
-    const moveInPx = 3.5 * (1 / scale)
+    // const moveInPx = size === 'sm' ? 0 : 3.5 * (1 / scale)
     return (
       <HStack
         height={scale * 28}
@@ -57,7 +57,7 @@ export const TagButton = memo(
         alignItems="center"
         shadowColor={subtle ? 'transparent' : 'rgba(0,0,0,0.15)'}
         shadowRadius={3 * scale}
-        shadowOffset={{ width: 0, height: 1 * scale }}
+        shadowOffset={{ width: 0, height: 0 * scale }}
         position="relative"
         minHeight={lineHeight}
         {...rest}
@@ -124,35 +124,27 @@ export const TagButton = memo(
           {tag['displayName'] ?? _.capitalize(tag.name)}
         </Text>
         {!!votable && (
-          <View
-            style={{
-              paddingVertical,
-              marginLeft: -8 * scale,
-              paddingHorizontal: 8 * scale,
-              marginTop: size === 'sm' ? -24 : 0,
-              backgroundColor: subtle ? 'transparent' : '#fff',
-              height: '100%',
-            }}
+          <VStack
+            // paddingVertical={paddingVertical}
+            // marginLeft={-8 * scale}
+            paddingHorizontal={6 * scale}
+            // marginTop={size === 'sm' ? -24 : 0}
+            backgroundColor={subtle ? 'transparent' : '#fff'}
+            borderLeftColor="#eee"
+            borderLeftWidth={1}
+            height="100%"
           >
-            <HoverableButton
+            <LinkButton
               // marginBottom={-10 + (size === 'sm' ? -10 : 0)}
-              onPress={() => {}}
-              top={moveInPx}
+              hoverStyle={{}}
+              // top={moveInPx}
             >
               <Icon size={9 * scale} name="ChevronUp" />
-            </HoverableButton>
-            <HoverableButton
-              bottom={moveInPx}
-              marginTop={-10}
-              height={2}
-              onPress={() => {}}
-            >
-              <Icon size={9 * scale} name="ChevronDown" />
-            </HoverableButton>
-          </View>
+            </LinkButton>
+          </VStack>
         )}
         {!!closable && (
-          <HoverableButton
+          <LinkButton
             paddingVertical={paddingVertical}
             backgroundColor={subtle ? 'transparent' : 'transparent'}
             borderRadius={10}
@@ -178,7 +170,7 @@ export const TagButton = memo(
               name="X"
               color={subtle ? 'inherit' : '#000'}
             />
-          </HoverableButton>
+          </LinkButton>
         )}
       </HStack>
     )
