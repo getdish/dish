@@ -25,6 +25,8 @@ import { RestaurantListItem } from './RestaurantListItem'
 
 export const avatar = require('../../assets/peach.png')
 
+const verticalPad = 16
+
 export default memo(({ stateIndex }: { stateIndex: number }) => {
   const om = useOvermind()
   const state = om.state.home.states[stateIndex] as HomeStateItemSearch
@@ -52,8 +54,8 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
 
       {/*  */}
       <VStack
-        paddingTop={6}
-        paddingHorizontal={20}
+        paddingTop={verticalPad}
+        paddingHorizontal={22}
         position="relative"
         zIndex={100}
       >
@@ -75,7 +77,7 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
             />
           </VStack>
         </HStack>
-        <Spacer size={4} />
+        <Spacer size={verticalPad} />
         <Divider flex />
         <ZStack
           fullscreen
@@ -92,6 +94,7 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
             {isEditingUserList && (
               <>
                 <LinkButton
+                  pointerEvents="auto"
                   {...flatButtonStyle}
                   {...{
                     name: 'search',
@@ -149,7 +152,7 @@ const HomeSearchResultsViewContent = memo(
   ({ state }: { state: HomeStateItemSearch }) => {
     const om = useOvermind()
     const allRestaurants = om.state.home.allRestaurants
-    const topPad = 0
+    const topPad = 8
 
     console.warn('RENDERING SEARCH RESULTS')
 

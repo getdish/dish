@@ -72,6 +72,12 @@ const handleRegionChangeEnd = () => {
     // dont update while were transitioning to new state!
     return
   }
+
+  // were hovering avoid
+  if (om.state.home.hoveredRestaurant) {
+    return
+  }
+
   om.actions.home.setHasMovedMap()
   const span = mapView.region.span
   pendingUpdates = false

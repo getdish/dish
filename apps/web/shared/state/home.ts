@@ -221,14 +221,32 @@ const startAutocomplete: AsyncAction = async (om) => {
 
 type PageAction = (om: Om) => Promise<void>
 
+let isGoingBack = false
+
 const pushHomeState: AsyncAction<
   HistoryItem,
   {
     fetchDataPromise: Promise<void>
   }
 > = async (om, item) => {
-  const { started, currentState } = om.state.home
+  // is going back
+  // we are going back to a prev state!
+  // hacky for now
+  if (isGoingBack) {
+    isGoingBack = false
+    const prev = _.findLast(om.state.home.states, (x) => x.type === item.name)
+    if (prev) {
+      const prevIndex = om.state.home.states.indexOf(prev)
+      om.state.home.states.splice(prevIndex)
+      om.state.home.states.push({ ...prev })
+    } else {
+      throw new Error('unreachable')
+    }
+    return { fetchDataPromise: Promise.resolve(null) }
+  }
 
+  const { started, currentState } = om.state.home
+  const historyId = item.id
   const fallbackState = {
     id: item.replace ? currentState.id : `${Math.random()}`,
     center: currentState?.center ?? initialHomeState.center,
@@ -236,7 +254,7 @@ const pushHomeState: AsyncAction<
     searchQuery: item.params.query ?? currentState?.searchQuery ?? '',
   }
   const newState = {
-    historyId: item.id,
+    historyId,
   }
 
   let nextState: HomeStateItem | null = null
@@ -457,16 +475,11 @@ const popTo: Action<HomeStateItem['type'] | number> = (om, item) => {
   }
 
   const stateItem = _.findLast(om.state.router.history, (x) => x.name == type)
-  if (
-    stateItem === om.state.router.history[om.state.router.history.length - 1]
-  ) {
-    om.actions.router.back()
-  } else {
-    om.actions.router.navigate({
-      name: type,
-      params: stateItem?.params ?? {},
-    })
-  }
+  isGoingBack = true
+  om.actions.router.navigate({
+    name: type,
+    params: stateItem?.params ?? {},
+  })
 }
 
 const popHomeState: Action<HistoryItem> = (om, item) => {

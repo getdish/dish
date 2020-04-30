@@ -104,7 +104,7 @@ export const HomeLenseBarOnly = memo(
               </Box>
             }
           >
-            <Icon name="ChevronDown" color="#999" size={20} />
+            <Icon name="ChevronRight" color="#999" size={20} />
           </HoverablePopover>
         </HStack>
         {/* <Divider backgroundColor="#000" flex /> */}

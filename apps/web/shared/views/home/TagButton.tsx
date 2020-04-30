@@ -68,7 +68,6 @@ export const TagButton = memo(
               {
                 fontSize: rankFontSize,
                 fontWeight: 'bold',
-                verticalAlign: 'center',
                 margin: 'auto',
                 marginVertical: '-2%',
                 paddingHorizontal: 7 * scale,
