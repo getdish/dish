@@ -2,8 +2,7 @@ import {
   Restaurant,
   Scrape,
   Tag,
-  TagRating,
-  TagRestaurantData,
+  UnifiedTag,
   flushTestData,
 } from '@dish/models'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
@@ -230,24 +229,28 @@ test('Weighted ratings when some sources are missing', (t) => {
 })
 
 test('Tag rankings', async (t) => {
+  const tag_name = 'Test Rankable'
   const dish = new Self()
   dish.restaurant = t.context.restaurant
   const r1 = new Restaurant({
     ...restaurant_fixture,
     address: '1',
     rating: 4,
-    tag_names: ['rankable'],
   })
   const r2 = new Restaurant({
     ...restaurant_fixture,
     address: '2',
     rating: 5,
-    tag_names: ['rankable'],
   })
+  await dish.restaurant.upsertOrphanTags([tag_name])
   await r1.insert()
+  await r1.upsertOrphanTags([tag_name])
   await r2.insert()
+  await r2.upsertOrphanTags([tag_name])
   await dish.updateTagRankings()
-  t.deepEqual(dish.restaurant.tag_rankings, [['rankable', 3]])
+  await dish.restaurant.refresh()
+  t.is(dish.restaurant.tags[0].tag.name, tag_name)
+  t.is(dish.restaurant.tags[0].rank, 3)
 })
 
 test('Finding dishes in reviews', async (t) => {
@@ -267,7 +270,7 @@ test('Finding dishes in reviews', async (t) => {
     name: 'Test tag existing 3',
     parentId: tag_parent.id,
   })
-  await t.context.restaurant.upsertTags([tag])
+  await t.context.restaurant.upsertOrphanTags([tag.name])
   await t.context.restaurant.findOne('id', t.context.restaurant.id)
   dish.restaurant = t.context.restaurant
   await dish.getScrapeData()
@@ -308,7 +311,7 @@ test('Dish sentiment analysis from reviews', async (t) => {
     name: 'Test tag existing 3',
     parentId: tag_parent.id,
   })
-  await t.context.restaurant.upsertTags([tag])
+  await t.context.restaurant.upsertOrphanTags([tag.name])
   await t.context.restaurant.findOne('id', t.context.restaurant.id)
   dish.restaurant = t.context.restaurant
   await dish.getScrapeData()
@@ -319,14 +322,11 @@ test('Dish sentiment analysis from reviews', async (t) => {
   const updated = new Restaurant()
   await updated.findOne('id', t.context.restaurant.id)
   const tag1 =
-    updated.tag_ratings.find((i) => i.id == existing_tag1.id) ||
-    ({} as TagRating)
+    updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as UnifiedTag)
   const tag2 =
-    updated.tag_ratings.find((i) => i.id == existing_tag2.id) ||
-    ({} as TagRating)
+    updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as UnifiedTag)
   const tag3 =
-    updated.tag_ratings.find((i) => i.id == existing_tag3.id) ||
-    ({} as TagRating)
+    updated.tags.find((i) => i.tag.id == existing_tag3.id) || ({} as UnifiedTag)
   t.is(tag1.rating, -3)
   t.is(tag2.rating, 4)
   t.is(tag3.rating, 0)
@@ -347,7 +347,7 @@ test('Find photos of dishes', async (t) => {
   })
   await existing_tag1.insert()
   await existing_tag2.insert()
-  await t.context.restaurant.upsertTags([tag])
+  await t.context.restaurant.upsertOrphanTags([tag.name])
   await t.context.restaurant.findOne('id', t.context.restaurant.id)
   dish.restaurant = t.context.restaurant
   await dish.getScrapeData()
@@ -356,14 +356,12 @@ test('Find photos of dishes', async (t) => {
   const updated = new Restaurant()
   await updated.findOne('id', t.context.restaurant.id)
   const tag1 =
-    updated.tag_restaurant_data.find((i) => i.name == existing_tag1.name) ||
-    ({} as TagRestaurantData)
+    updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as UnifiedTag)
   const tag2 =
-    updated.tag_restaurant_data.find((i) => i.name == existing_tag2.name) ||
-    ({} as TagRestaurantData)
-  t.is(updated.tag_restaurant_data.length, 2)
-  t.is(tag1.name, existing_tag1.name)
+    updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as UnifiedTag)
+  t.is(updated.tags.length, 3)
+  t.is(tag1.tag.name, existing_tag1.name)
   t.deepEqual(tag1.photos, ['https://yelp.com/image.jpg'])
-  t.is(tag2.name, existing_tag2.name)
+  t.is(tag2.tag.name, existing_tag2.name)
   t.deepEqual(tag2.photos, ['https://yelp.com/image2.jpg'])
 })

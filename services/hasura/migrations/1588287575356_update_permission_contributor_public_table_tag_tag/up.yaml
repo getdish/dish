@@ -1,0 +1,16 @@
+- args:
+    permission:
+      allow_upsert: true
+      check: {}
+      columns:
+      - category_tag_id
+      - tag_id
+      localPresets:
+      - key: ""
+        value: ""
+      set: {}
+    role: contributor
+    table:
+      name: tag_tag
+      schema: public
+  type: create_insert_permission

@@ -277,7 +277,7 @@ export const RestaurantPeek = memo(
                   {
                     name: photo.name,
                     image: photo.src,
-                    price: photo.rating,
+                    rating: photo.rating,
                   } as any
                 }
               />

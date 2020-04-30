@@ -1,8 +1,7 @@
-import test, { TestInterface } from 'ava'
+import test from 'ava'
 
 import { flushTestData } from '../src/flushTestData'
 import { Restaurant } from '../src/Restaurant'
-import { Tag } from '../src/Tag'
 import { restaurant_fixture } from './etc/fixtures'
 
 test.beforeEach(async (t) => {
@@ -34,9 +33,7 @@ test('Searching for a restaurant by tag', async (t) => {
     ...restaurant_fixture,
   })
   await restaurant.upsert()
-  const tag = new Tag({ name: 'Test tag' })
-  await tag.insert()
-  await restaurant.upsertTags([{ name: 'Test tag' }])
+  await restaurant.upsertOrphanTags(['Test tag'])
   const results = await Restaurant.search({
     center: {
       lat: 50.24,

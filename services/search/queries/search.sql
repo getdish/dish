@@ -17,9 +17,6 @@ SELECT jsonb_agg(
       'is_open_now', is_restaurant_open(data),
       'hours', data.hours,
       'price_range', data.price_range,
-      'tag_rankings', data.tag_rankings,
-      'tag_ratings', data.tag_ratings,
-      'tag_restaurant_data', data.tag_restaurant_data,
       'tags', ARRAY(
         SELECT json_build_object(
           'tag', json_build_object(
@@ -27,12 +24,14 @@ SELECT jsonb_agg(
             'name', name,
             'icon', icon,
             'type', type
-          )
-        ) FROM tag
-          WHERE id IN (
-            SELECT rt.tag_id FROM restaurant_tag rt
-            WHERE rt.restaurant_id = data.id
-          )
+          ),
+          'rating', rt.rating,
+          'rank', rt.rank,
+          'photos', rt.photos
+        ) FROM restaurant_tag rt
+          JOIN tag t ON rt.tag_id = t.id
+          WHERE rt.restaurant_id = data.id
+          ORDER BY rating DESC NULLS LAST
         )
       )
   ) FROM (

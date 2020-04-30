@@ -1,0 +1,6 @@
+- args:
+    role: contributor
+    table:
+      name: tag_tag
+      schema: public
+  type: drop_insert_permission

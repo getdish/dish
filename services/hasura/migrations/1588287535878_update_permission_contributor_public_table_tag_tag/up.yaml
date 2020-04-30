@@ -1,0 +1,14 @@
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - category_tag_id
+      - tag_id
+      computed_fields: []
+      filter: {}
+      limit: null
+    role: contributor
+    table:
+      name: tag_tag
+      schema: public
+  type: create_select_permission

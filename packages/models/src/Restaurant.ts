@@ -5,6 +5,7 @@ import _ from 'lodash'
 
 import { Dish, TopCuisineDish } from './Dish'
 import { ModelBase, Point, isBrowserProd } from './ModelBase'
+import { RestaurantTag } from './RestaurantTag'
 import { Scrape } from './Scrape'
 import { Tag } from './Tag'
 import { levenshteinDistance } from './utils'
@@ -53,19 +54,6 @@ export type RatingFactors = {
   ambience: number
 }
 
-// TODO Merge into TagRestaurantData
-export type TagRating = {
-  id: string
-  rating?: number
-  slug: string
-  name: string
-}
-
-// TODO: Merge tag_rankings and tag_ratings into this
-export type TagRestaurantData = TagRating & {
-  photos: string[]
-}
-
 export type CarouselPhoto = {
   src: string
   name?: string
@@ -73,6 +61,10 @@ export type CarouselPhoto = {
 }
 
 export type Sources = { [key: string]: { url: string; rating: number } }
+
+export type UnifiedTag = {
+  tag: Tag
+} & RestaurantTag
 
 export class Restaurant extends ModelBase<Restaurant> {
   name!: string
@@ -86,14 +78,8 @@ export class Restaurant extends ModelBase<Restaurant> {
   state!: string
   zip!: number
   image?: string
-  tags!: { tag: Tag }[]
+  tags!: UnifiedTag[]
   tag_names!: string[]
-
-  // TODO merge all into tag_restaurant_data
-  tag_rankings!: (string | number)[][]
-  tag_ratings!: TagRating[]
-  tag_restaurant_data!: TagRestaurantData[]
-
   photos?: string[]
   telephone!: string
   website!: string
@@ -122,9 +108,6 @@ export class Restaurant extends ModelBase<Restaurant> {
       'image',
       'tags',
       'tag_names',
-      'tag_rankings',
-      'tag_ratings',
-      'tag_restaurant_data',
       'photos',
       'telephone',
       'website',
@@ -137,7 +120,10 @@ export class Restaurant extends ModelBase<Restaurant> {
 
   static sub_fields() {
     return {
-      tags: { tag: Tag.essentialFields() },
+      tags: {
+        tag: Tag.fieldsAsObject(),
+        ...RestaurantTag.essentialFields(),
+      },
     }
   }
 
@@ -332,74 +318,42 @@ export class Restaurant extends ModelBase<Restaurant> {
     return restaurant
   }
 
-  async upsertTags(_tags: Partial<Tag>[]) {
-    const tags = await Tag.upsertMany(_tags)
-    const tag_ids = tags.map((i: Tag) => i.id) as string[]
-    await this._upsertTagJunctions(tag_ids)
-    await this._updateTagNames(tags)
-  }
-
-  async _updateTagNames(tags: Tag[]) {
-    const tag_names = _.flatMap(tags.map((tag: Tag) => tag.slugs()))
-    this.tag_names = _.uniq([...(this.tag_names || []), ...tag_names])
-    await this.update()
-  }
-
-  async _upsertTagJunctions(tag_ids: string[]) {
-    const objects = tag_ids.map((tag_id) => {
-      return {
-        restaurant_id: this.id,
-        tag_id: tag_id,
-      }
-    })
-    const query = {
-      mutation: {
-        ['insert_restaurant_tag']: {
-          __args: {
-            objects: objects,
-            on_conflict: {
-              constraint: new EnumType('restaurant_tag_pkey'),
-              update_columns: [
-                new EnumType('restaurant_id'),
-                new EnumType('tag_id'),
-              ],
-            },
-          },
-          returning: { tag_id: true },
-        },
-      },
+  getRestaurantTagFromTag(tag: Tag) {
+    const existing = this.tags.find((i) => i.tag.id == tag.id)
+    let rt = {} as RestaurantTag
+    if (existing) {
+      const cloned = _.cloneDeep(existing)
+      delete cloned.tag
+      rt = cloned
     }
-    await ModelBase.hasura(query)
+    rt.tag_id = tag.id
+    return rt
   }
 
-  async _upsertTagRatings(tag_ratings: TagRating[]) {
-    const objects = tag_ratings.map((tag) => {
+  async upsertTagRestaurantData(restaurant_tags: Partial<RestaurantTag>[]) {
+    await RestaurantTag.upsertMany(this.id, restaurant_tags)
+    await this._updateTagNames()
+  }
+
+  async upsertOrphanTags(tag_strings: string[]) {
+    const tags = tag_strings.map((tag_name) => {
+      return new Tag({
+        name: tag_name,
+      })
+    })
+    const full_tags = await Tag.upsertMany(tags)
+    const restaurant_tags = full_tags.map((tag: Tag) => {
       return {
-        restaurant_id: this.id,
         tag_id: tag.id,
-        rating: tag.rating,
       }
     })
-    const query = {
-      mutation: {
-        ['insert_restaurant_tag']: {
-          __args: {
-            objects: objects,
-            on_conflict: {
-              constraint: new EnumType('restaurant_tag_pkey'),
-              update_columns: [
-                new EnumType('restaurant_id'),
-                new EnumType('tag_id'),
-                new EnumType('rating'),
-              ],
-            },
-          },
-          returning: { tag_id: true, rating: true },
-        },
-      },
-    }
-    await ModelBase.hasura(query)
-    this.tag_ratings = tag_ratings
+    await this.upsertTagRestaurantData(restaurant_tags)
+  }
+
+  async _updateTagNames() {
+    await this.refresh()
+    const tag_names = _.flatMap(this.tags.map((i) => new Tag(i.tag).slugs()))
+    this.tag_names = _.uniq([...(this.tag_names || []), ...tag_names])
     await this.update()
   }
 
@@ -413,37 +367,34 @@ export class Restaurant extends ModelBase<Restaurant> {
     )
   }
 
-  getTagsWithRankings() {
-    return this.tags.map((i) => {
-      let rank = -1
-      const lowered = i.tag.name.toLowerCase()
-      const match = (this.tag_rankings || []).find((i) => i[0] == lowered)
-      if (match) {
-        rank = match[1] as number
-      }
-      return { icon: i.tag.icon, name: i.tag.name, rank: rank }
-    })
-  }
-
   async allPossibleTags() {
-    return await Tag.allChildren(this.tags.map((i) => i.tag.id))
+    return await Tag.allChildren(
+      this.tags.map((i) => {
+        return i.tag.id
+      })
+    )
   }
 
   photosForCarousel() {
-    let photos: CarouselPhoto[] = [] as CarouselPhoto[]
-    const max_photos = 5
-    photos = (this.tag_restaurant_data || [])
-      .slice(0, max_photos - 1)
-      .map((t) => {
-        return {
-          name: t.name || ' ',
-          src: t.photos[0],
-          rating: this.tag_ratings.find((t) => t.id == t.id)?.rating,
-        }
+    let photos = [] as CarouselPhoto[]
+    const max_photos = 4
+    for (const t of this.tags || []) {
+      const photo = (t.photos || [])[0]
+      if (!photo) continue
+      let photo_name = t.tag.name || ' '
+      if (t.tag.icon) {
+        photo_name = t.tag.icon + photo_name
+      }
+      photos.push({
+        name: photo_name,
+        src: photo,
+        rating: t.rating,
       })
-    for (let i = 0; i < max_photos - photos.length; i++) {
-      if (this.photos && typeof this.photos[i] != 'undefined')
-        photos.push({ name: ' ', src: this.photos[i] })
+      if (photos.length >= max_photos) break
+    }
+    for (const photo of this.photos || []) {
+      photos.push({ name: ' ', src: photo })
+      if (photos.length >= max_photos) break
     }
     return photos
   }

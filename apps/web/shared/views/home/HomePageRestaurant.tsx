@@ -173,11 +173,9 @@ const RestaurantPhotos = ({ restaurant }: { restaurant: Restaurant }) => {
             justifyContent="center"
             spacing={spacing}
           >
-            {restaurant.tag_restaurant_data?.map((tag, index) => {
-              // TODO tag_ratings should be merged into tag_restaurant_data
-              const tag_rating = restaurant.tag_ratings.find(
-                (i) => i.name == tag.name
-              )
+            {restaurant.tags?.map((t, index) => {
+              let tag_name = t.tag.name
+              if (t.tag.icon) tag_name = t.tag.icon + tag_name
               return (
                 <DishView
                   key={index}
@@ -185,9 +183,9 @@ const RestaurantPhotos = ({ restaurant }: { restaurant: Restaurant }) => {
                   marginBottom={10}
                   dish={
                     {
-                      name: tag.name,
-                      image: tag.photos[0],
-                      rating: tag_rating?.rating || 0,
+                      name: tag_name,
+                      image: (t.photos && t.photos[0]) || '',
+                      rating: t.rating || 0,
                     } as any
                   }
                 />

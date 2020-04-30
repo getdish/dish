@@ -3,11 +3,10 @@ import '@dish/common'
 import {
   Dish,
   Restaurant,
+  RestaurantTag,
   Scrape,
   ScrapeData,
   Tag,
-  TagRating,
-  TagRestaurantData,
 } from '@dish/models'
 import { WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
@@ -41,10 +40,10 @@ export class Self extends WorkerJob {
   restaurant!: Restaurant
   ratings!: { [key: string]: number }
   restaurant_tag_ratings!: {
-    [key: string]: { slug: string; name: string; ratings: number[] }
+    [key: string]: number[]
   }
   all_tags!: Tag[]
-  _found_tags!: Tag[]
+  _found_tags!: { [key: string]: Partial<RestaurantTag> }
   _start_time!: [number, number]
 
   static queue_config: QueueOptions = {
@@ -355,10 +354,8 @@ export class Self extends WorkerJob {
     const tripadvisors = this.tripadvisor
       .getData('overview.detailCard.tagTexts.cuisines.tags', [])
       .map((c) => c.tagValue)
-    const tags = _.uniq([...yelps, ...tripadvisors]).map((i) => {
-      return { name: i }
-    })
-    await this.restaurant.upsertTags(tags)
+    const tags = _.uniq([...yelps, ...tripadvisors])
+    await this.restaurant.upsertOrphanTags(tags)
     await this.updateTagRankings()
   }
 
@@ -388,24 +385,28 @@ export class Self extends WorkerJob {
   }
 
   async updateTagRankings() {
-    const tag_rankings = await Promise.all(
-      this.restaurant.tag_names.map(async (tag) => {
-        return [tag, await this.getRankForTag(tag)]
+    let restaurant_tags = [] as RestaurantTag[]
+    await Promise.all(
+      (this.restaurant.tags || []).map(async (i) => {
+        i.rank = await this.getRankForTag(new Tag(i.tag))
+        i.tag_id = i.tag.id
+        delete i.tag
+        restaurant_tags.push(i)
       })
     )
-    this.restaurant.tag_rankings = tag_rankings
+    await this.restaurant.upsertTagRestaurantData(restaurant_tags)
   }
 
-  async getRankForTag(tag: string) {
+  async getRankForTag(tag: Tag) {
     const RADIUS = 0.1
-    tag = tag.toLowerCase()
+    const tag_name = tag.slug()
     const result = await sql(
       `SELECT rank FROM (
         SELECT id, DENSE_RANK() OVER(ORDER BY rating DESC NULLS LAST) AS rank
         FROM restaurant WHERE
           ST_DWithin(location, location, ${RADIUS})
           AND
-          tag_names @> '"${tag}"'
+          tag_names @> '"${tag_name}"'
       ) league
       WHERE id = '${this.restaurant.id}'`
     )
@@ -413,49 +414,32 @@ export class Self extends WorkerJob {
   }
 
   async scanReviews() {
-    this._found_tags = [] as Tag[]
+    this._found_tags = {}
     this.all_tags = await this.restaurant.allPossibleTags()
     this.restaurant_tag_ratings = {}
     this._scanYelpReviewsForTags()
     this._scanTripadvisorReviewsForTags()
-    await this.restaurant.upsertTags(this._found_tags)
     await this._averageAndPersistTagRatings()
   }
 
   async findPhotosForTags() {
-    const tags = await this.restaurant.allPossibleTags()
+    let restaurant_tags = [] as RestaurantTag[]
+    await this.restaurant.refresh()
+    const all_possible_tags = await this.restaurant.allPossibleTags()
     const photos = this.getPaginatedData(this.yelp.data, 'photos')
-    for (const photo of photos) {
-      for (const tag of tags) {
+    for (const tag of all_possible_tags) {
+      let restaurant_tag = this.restaurant.getRestaurantTagFromTag(tag)
+      restaurant_tag.photos = restaurant_tag?.photos || []
+      for (const photo of photos) {
         if (photo.media_data?.caption?.includes(tag.name)) {
-          if (!this.restaurant.tag_restaurant_data) {
-            this.restaurant.tag_restaurant_data = []
-          }
-          let default_data: TagRestaurantData = {
-            id: tag.id,
-            name: tag.name,
-            slug: tag.slug(),
-            photos: [] as string[],
-          }
-          let tag_restaurant_data =
-            this.restaurant.tag_restaurant_data.find((i) => i.id == tag.id) ||
-            default_data
-
-          if (!tag_restaurant_data.photos.includes(photo.src)) {
-            tag_restaurant_data.photos.push(photo.src)
-          }
-
-          const index = this.restaurant.tag_restaurant_data.findIndex(
-            (i) => i.id == tag.id
-          )
-          if (index != -1) {
-            this.restaurant.tag_restaurant_data[index] = tag_restaurant_data
-          } else {
-            this.restaurant.tag_restaurant_data.push(tag_restaurant_data)
-          }
+          restaurant_tag.photos.push(photo.src)
         }
       }
+      if (restaurant_tag.photos.length > 0) {
+        restaurant_tags.push(restaurant_tag)
+      }
     }
+    await RestaurantTag.upsertMany(this.restaurant.id, restaurant_tags)
   }
 
   getPaginatedData(data: ScrapeData, type: 'photos' | 'reviews') {
@@ -485,14 +469,10 @@ export class Self extends WorkerJob {
   findDishesInText(text: string) {
     for (const tag of this.all_tags) {
       if (!this._doesStringContainTag(text, tag.name)) continue
-      this.foundTag(tag)
+      let restaurant_tag = this.restaurant.getRestaurantTagFromTag(tag)
+      this._found_tags[tag.id] = restaurant_tag
       this.measureSentiment(text, tag)
     }
-  }
-
-  foundTag(tag: Tag) {
-    if (this._found_tags.find((t) => _.isEqual(t, tag))) return
-    this._found_tags.push(tag)
   }
 
   _doesStringContainTag(text: string, tag_name: string) {
@@ -503,31 +483,24 @@ export class Self extends WorkerJob {
   measureSentiment(text: string, tag: Tag) {
     const sentiment = new Sentiment()
     const sentences = text.match(/[^\.!\?]+[\.!\?]+/g) || [text]
+    this.restaurant_tag_ratings[tag.id] =
+      this.restaurant_tag_ratings[tag.id] || []
     for (const sentence of sentences) {
       if (!this._doesStringContainTag(sentence, tag.name)) continue
       const rating = sentiment.analyze(sentence).score
-      this.restaurant_tag_ratings[tag.id] =
-        this.restaurant_tag_ratings[tag.id] || {}
-      this.restaurant_tag_ratings[tag.id] = {
-        name: tag.name,
-        slug: tag.slug(),
-        ratings: this.restaurant_tag_ratings[tag.id].ratings || [],
-      }
-      this.restaurant_tag_ratings[tag.id].ratings.push(rating)
+      this.restaurant_tag_ratings[tag.id].push(rating)
     }
   }
 
   async _averageAndPersistTagRatings() {
-    let tag_ratings_averaged: TagRating[] = []
+    let restaurant_tags = [] as Partial<RestaurantTag>[]
     for (const tag_id of Object.keys(this.restaurant_tag_ratings)) {
-      tag_ratings_averaged.push({
-        id: tag_id,
-        name: this.restaurant_tag_ratings[tag_id].name,
-        rating: _.mean(this.restaurant_tag_ratings[tag_id].ratings),
-        slug: this.restaurant_tag_ratings[tag_id].slug,
-      })
+      let restaurant_tag = this._found_tags[tag_id]
+      const rating = _.mean(this.restaurant_tag_ratings[tag_id])
+      restaurant_tag.rating = rating
+      restaurant_tags.push(restaurant_tag)
     }
-    await this.restaurant._upsertTagRatings(tag_ratings_averaged)
+    await RestaurantTag.upsertMany(this.restaurant.id, restaurant_tags)
   }
 
   getRatingFactors() {

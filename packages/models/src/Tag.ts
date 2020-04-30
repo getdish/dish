@@ -89,7 +89,7 @@ export class Tag extends ModelBase<Tag> {
   }
 
   isOrphan() {
-    return this.parentId == '00000000-0000-0000-0000-000000000000'
+    return this.parent.id == '00000000-0000-0000-0000-000000000000'
   }
 
   slug() {
@@ -105,7 +105,9 @@ export class Tag extends ModelBase<Tag> {
     if (!this.isOrphan()) {
       parentage = [slugify(this.parent.name), this.slugDisambiguated()]
     }
-    const category_names = this.categories.map((i) => slugify(i.category.name))
+    const category_names = (this.categories || []).map((i) =>
+      slugify(i.category.name)
+    )
     const all = _.flatMap([this.slug(), ...parentage, ...category_names])
     return _.uniq(all)
   }
@@ -181,6 +183,8 @@ export class Tag extends ModelBase<Tag> {
     return response.data.data.tag.map((data: Partial<Tag>) => new Tag(data))
   }
 
+  // TODO: Refactor into ModelBase. Will still need function stub here to pass the
+  // model type.
   static async upsertMany(tags: Partial<Tag>[]) {
     const query = {
       mutation: {
@@ -208,6 +212,7 @@ export class Tag extends ModelBase<Tag> {
     )
   }
 
+  // TODO: Why can't you just the ModelBase version here?
   static async upsertOne(tag: Partial<Tag>) {
     const tags = await Tag.upsertMany([tag])
     return tags[0]

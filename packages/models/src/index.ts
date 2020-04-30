@@ -1,12 +1,12 @@
 export {
   Restaurant,
+  UnifiedTag,
   TopCuisine,
   RestaurantSearchArgs,
-  TagRating,
-  TagRestaurantData,
   Sources,
 } from './Restaurant'
 export { Tag, TagRecord, TagType } from './Tag'
+export { RestaurantTag } from './RestaurantTag'
 export { Dish, TopCuisineDish } from './Dish'
 export { Scrape, ScrapeData } from './Scrape'
 export { ModelBase, createApolloClient } from './ModelBase'
