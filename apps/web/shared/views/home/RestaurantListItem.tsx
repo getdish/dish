@@ -12,6 +12,7 @@ import { Link } from '../ui/Link'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { SelectableText } from '../ui/Text'
+import { useWaterfall } from '../ui/useWaterfall'
 import { bgLightLight } from './colors'
 import { DishView } from './DishView'
 import { useMediaQueryIsMedium, useMediaQueryIsSmall } from './HomeViewDrawer'
@@ -235,12 +236,14 @@ export const RestaurantPeek = memo(
   }) => {
     const spacing = size == 'lg' ? 12 : 18
     const isMedium = useMediaQueryIsMedium()
+    const [isMounted, setIsMounted] = useState(false)
+    const allPhotos = restaurant.photosForCarousel()
+    const photos = isMounted ? allPhotos : allPhotos.slice(0, 1)
 
     //  only show the first two at firt
-    // const [isMounted, setIsMounted] = useState(false)
-    // useWaterfall(() => {
-    //   setIsMounted(true)
-    // })
+    useWaterfall(() => {
+      setIsMounted(true)
+    })
 
     return (
       <VStack
@@ -249,7 +252,7 @@ export const RestaurantPeek = memo(
         marginBottom={-spacing}
       >
         <HStack spacing={spacing}>
-          {restaurant.photosForCarousel().map((photo, i) => {
+          {photos.map((photo, i) => {
             return (
               <DishView
                 key={i}
