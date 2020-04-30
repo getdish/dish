@@ -31,6 +31,10 @@ import { HomeUserMenu } from './HomeUserMenu'
 import { TagButton } from './TagButton'
 
 const divider = <Divider vertical flexLine={1} marginHorizontal={4} />
+let avoidNextShowautocompleteOnFocus = true
+export function setAvoidNextAutocompleteShowOnFocus() {
+  avoidNextShowautocompleteOnFocus = true
+}
 
 const isTextSelected = (node?: any) => {
   const selection = window.getSelection()
@@ -327,15 +331,17 @@ export default memo(() => {
                       onFocus={() => {
                         onFocusAnyInput()
                         clearTimeout(tmInputBlur.current)
-                        om.actions.home.setShowAutocomplete('search')
-                        if (search.length > 0) {
-                          selectActiveInput()
+                        if (avoidNextShowautocompleteOnFocus) {
+                          avoidNextShowautocompleteOnFocus = false
+                        } else {
+                          om.actions.home.setShowAutocomplete('search')
+                          if (search.length > 0) {
+                            selectActiveInput()
+                          }
                         }
                       }}
                       onBlur={() => {
-                        tmInputBlur.current = setTimeout(() => {
-                          // om.actions.home.setShowAutocomplete(false)
-                        }, 150)
+                        avoidNextShowautocompleteOnFocus = false
                       }}
                       onChangeText={(text) => {
                         if (text === '') {
