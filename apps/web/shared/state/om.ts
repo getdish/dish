@@ -41,8 +41,10 @@ declare module 'overmind' {
 }
 
 export const useOvermind = createHook<typeof config>()
+
 export const useOvermindStatic = () => window['om'] as Overmind<typeof config>
-export const om = new Proxy(
+
+export const omStatic = new Proxy(
   {},
   {
     get(target, key) {

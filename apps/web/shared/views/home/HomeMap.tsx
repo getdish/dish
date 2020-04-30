@@ -6,7 +6,7 @@ import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { useOnMount } from '../../hooks/useOnMount'
 import { LngLat, setMapView } from '../../state/home'
 import { isSearchState } from '../../state/home-helpers'
-import { om, useOvermind } from '../../state/om'
+import { omStatic, useOvermind } from '../../state/om'
 import { Map, useMap } from '../map'
 import { ZStack } from '../ui/Stacks'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
@@ -74,14 +74,14 @@ const handleRegionChangeEnd = () => {
   }
 
   // were hovering avoid
-  if (om.state.home.hoveredRestaurant) {
+  if (omStatic.state.home.hoveredRestaurant) {
     return
   }
 
-  om.actions.home.setHasMovedMap()
+  omStatic.actions.home.setHasMovedMap()
   const span = mapView.region.span
   pendingUpdates = false
-  om.actions.home.setMapArea({
+  omStatic.actions.home.setMapArea({
     center: {
       lng: mapView.center.longitude,
       lat: mapView.center.latitude,
