@@ -14,6 +14,7 @@ import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
 import { requestIdle } from '../helpers/requestIdle'
 import { sleep } from '../helpers/sleep'
 import { Toast } from '../views/Toast'
+import { attemptAuthenticatedAction } from './attemptAuthenticatedAction'
 import {
   isHomeState,
   isRestaurantState,
@@ -47,7 +48,6 @@ import {
   HomeStateItemSearch,
   HomeStateItemSimple,
   LngLat,
-  Om,
   OmState,
   ShowAutocomplete,
 } from './home-types'
@@ -507,20 +507,6 @@ const popHomeState: Action<HistoryItem> = (om, item) => {
   }
 }
 
-const attemptAuthenticatedAction = async (om: Om, cb: Function) => {
-  try {
-    return await cb()
-  } catch (err) {
-    if (`${err.message}`.includes('JWTExpired')) {
-      // logout
-      Toast.show(`Login has expired`)
-      await om.actions.user.logout()
-    } else {
-      throw err
-    }
-  }
-}
-
 const loadHomeDishes: AsyncAction = async (om) => {
   const all = await Restaurant.getHomeDishes(
     om.state.home.currentState.center.lat,
@@ -771,19 +757,7 @@ const runSearch: AsyncAction<{
 
   // fetch reviews before render
   if (om.state.user.isLoggedIn) {
-    await attemptAuthenticatedAction(om, async () => {
-      const reviews = (
-        await om.effects.gql.queries.userRestaurantReviews({
-          user_id: om.state.user.user.id,
-          restaurant_ids: restaurants.map((x) => x.id),
-        })
-      ).review
-      if (shouldCancel()) return
-      // TODO how do we do nice GC of allReviews?
-      for (const review of reviews) {
-        om.state.user.allReviews[review.restaurant_id] = review
-      }
-    })
+    await om.actions.user.loadReviews({ restaurants })
     if (shouldCancel()) return
   }
 
@@ -831,25 +805,6 @@ const getReview: AsyncAction = async (om) => {
     }
   } catch (err) {
     console.error(`Error getting review ${err.message}`)
-  }
-}
-
-const submitReview: AsyncAction<Review> = async (om, review) => {
-  if (!om.state.user.user) {
-    console.error('Not logged in')
-    return
-  }
-  try {
-    if (typeof review.id == 'undefined') {
-      review.user_id = om.state.user.user.id
-      await review.insert()
-      review.id = review.id
-    } else {
-      await review.update()
-    }
-  } catch (err) {
-    console.error(err)
-    Toast.show(`Error submitting review, may need to re-login`)
   }
 }
 
@@ -1209,7 +1164,6 @@ export const actions = {
   setShowUserMenu,
   start,
   refresh,
-  submitReview,
   suggestTags,
   updateBreadcrumbs,
   toggleTagOnHomeState,

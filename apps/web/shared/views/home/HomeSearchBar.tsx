@@ -433,10 +433,9 @@ const HomeSearchBarHomeButton = memo(() => {
         <VStack spacing={2} alignItems="center">
           <Icon
             name={
-              'ChevronLeft'
-              // om.state.home.breadcrumbStates.length <= 1
-              //   ? 'Home'
-              //   : 'ChevronLeft'
+              om.state.home.breadcrumbStates.length <= 1
+                ? 'Home'
+                : 'ChevronUp'
             }
             size={22}
             opacity={0.5}

@@ -1,60 +1,90 @@
 import { Restaurant, Review } from '@dish/models'
-import React, { memo, useRef, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
+import { unstable_createResource } from 'react-cache'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
-import { useOvermind } from '../../state/om'
+import { omStatic, useOvermind } from '../../state/om'
 import { Toast } from '../Toast'
 import Hoverable from '../ui/Hoverable'
 import { Icon } from '../ui/Icon'
 import { VStack } from '../ui/Stacks'
 
+export function usePromise<A extends () => Promise<any>>(
+  fn: A,
+  mountArgs: any[] = []
+): ReturnType<A> extends Promise<infer U> ? U : A {
+  const [val, setVal] = useState(null)
+
+  useEffect(() => {
+    let cancelled = false
+    fn().then((res) => {
+      if (!cancelled) {
+        console.log('got', res)
+        setVal(res)
+      }
+    })
+    return () => {
+      cancelled = true
+    }
+  }, mountArgs)
+
+  return val
+}
+
 export const RestaurantUpVoteDownVote = memo(
   ({ restaurant }: { restaurant: Restaurant }) => {
-    const [rating, setRating] = useState(0)
     const om = useOvermind()
-    const review = useRef<Review>(new Review())
-    const updateRating = async (r: number) => {
-      setRating(r)
-      review.current.rating = r
-      review.current.restaurant_id = restaurant.id
-      await om.actions.home.submitReview(review.current)
-      Toast.show('Saved')
+    const review = usePromise(() =>
+      omStatic.actions.user.loadVote({
+        restaurantId: restaurant.id,
+        activeTagIds: [],
+      })
+    )
+
+    if (!review) {
+      return null
     }
+
+    const vote = review.rating
 
     return (
       <div
         style={{
-          filter: rating !== 0 ? '' : 'grayscale(100%)',
+          filter: vote !== 0 ? '' : 'grayscale(100%)',
         }}
       >
         <VStack pointerEvents="auto" width={22}>
           <VoteButton
             style={styles.topButton}
-            active={rating == 1}
+            active={vote == 1}
             onPress={() => {
-              if (rating == 1) return updateRating(0)
-              updateRating(1)
+              om.actions.user.vote({
+                restaurant,
+                rating: vote === 1 ? 0 : 1,
+              })
             }}
           >
             <Icon
               name="ChevronUp"
               size={12}
-              color={rating === 1 ? 'green' : 'black'}
+              color={vote === 1 ? 'green' : 'black'}
               marginBottom={-12}
             />
           </VoteButton>
           <VoteButton
             style={styles.bottomButton}
-            active={rating == -1}
+            active={vote == -1}
             onPress={() => {
-              if (rating == -1) return updateRating(0)
-              updateRating(-1)
+              om.actions.user.vote({
+                restaurant,
+                rating: vote == -1 ? 0 : -1,
+              })
             }}
           >
             <Icon
               name="ChevronDown"
               size={12}
-              color={rating === -1 ? 'red' : 'black'}
+              color={vote === -1 ? 'red' : 'black'}
             />
           </VoteButton>
         </VStack>

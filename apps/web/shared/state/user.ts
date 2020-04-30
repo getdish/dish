@@ -1,8 +1,9 @@
 import DishAuth from '@dish/auth'
-import { Review, User } from '@dish/models'
+import { Restaurant, Review, User } from '@dish/models'
 import { Action, AsyncAction } from 'overmind'
 
 import { Toast } from '../views/Toast'
+import { attemptAuthenticatedAction } from './attemptAuthenticatedAction'
 
 type UserState = {
   user: Partial<User>
@@ -10,6 +11,7 @@ type UserState = {
   messages: string[]
   isLoggedIn: boolean
   allReviews: { [id: string]: Review }
+  allVotes: { [id: string]: Review }
 }
 
 export const state: UserState = {
@@ -18,6 +20,7 @@ export const state: UserState = {
   messages: [],
   isLoggedIn: false,
   allReviews: {},
+  allVotes: {},
 }
 
 const formatErrors = (torm_errors: any) => {
@@ -105,10 +108,74 @@ const ensureLoggedIn: Action<void, boolean> = (om) => {
   return false
 }
 
+const vote: Action<Partial<Review>> = (om, { restaurant, ...val }) => {
+  const review = new Review()
+  review.restaurant_id = restaurant.id
+  Object.assign(review, val)
+}
+
+const loadReviews: AsyncAction<{ restaurants: Restaurant[] }> = async (
+  om,
+  { restaurants }
+) => {
+  return await attemptAuthenticatedAction(om, async () => {
+    const reviews = (
+      await om.effects.gql.queries.getUserRestaurantReviews({
+        user_id: om.state.user.user.id,
+        restaurant_ids: restaurants.map((x) => x.id),
+      })
+    ).review
+    // TODO how do we do nice GC of allReviews?
+    for (const review of reviews) {
+      om.state.user.allReviews[review.restaurant_id] = review
+    }
+  })
+}
+
+const loadVote: AsyncAction<
+  { restaurantId: string; activeTagIds: any },
+  Review
+> = async (om, { restaurantId }) => {
+  return await attemptAuthenticatedAction(om, async () => {
+    let vote = om.state.user.allVotes[restaurantId]
+    if (!vote) {
+      const res = await om.effects.gql.queries.getUserReview({
+        user_id: om.state.user.user.id,
+        restaurant_id: restaurantId,
+      })
+      return res.review[0]
+    }
+    return vote
+  })
+}
+
+const submitReview: AsyncAction<Review> = async (om, review) => {
+  if (!om.state.user.user) {
+    console.error('Not logged in')
+    return
+  }
+  try {
+    if (typeof review.id == 'undefined') {
+      review.user_id = om.state.user.user.id
+      await review.insert()
+      review.id = review.id
+    } else {
+      await review.update()
+    }
+  } catch (err) {
+    console.error(err)
+    Toast.show(`Error submitting review, may need to re-login`)
+  }
+}
+
 export const actions = {
   register,
   login,
   logout,
   checkForExistingLogin,
   ensureLoggedIn,
+  loadVote,
+  loadReviews,
+  vote,
+  submitReview,
 }
