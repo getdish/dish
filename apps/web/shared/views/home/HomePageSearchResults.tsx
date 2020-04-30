@@ -182,24 +182,31 @@ const HomeSearchResultsViewContent = memo(
     }
 
     return (
-      <List
-        data={[topPad, ...results, 20]}
-        estimatedHeight={182}
-        renderItem={({ item, index }) => {
-          if (typeof item == 'number') {
-            return <Spacer size={item} />
-          }
-          return (
-            <RestaurantListItem
-              currentLocationInfo={state.currentLocationInfo}
-              key={item.id}
-              restaurant={item}
-              rank={index}
-            />
-          )
-        }}
-      />
+      <VStack paddingTop={topPad} paddingBottom={20}>
+        {results.map((item, index) => (
+          <RestaurantListItem
+            currentLocationInfo={state.currentLocationInfo}
+            key={item.id}
+            restaurant={item}
+            rank={index + 1}
+          />
+        ))}
+      </VStack>
     )
+    // return (
+    //   <List
+    //     data={[topPad, ...results, 20]}
+    //     estimatedHeight={182}
+    //     renderItem={({ item, index }) => {
+    //       if (typeof item == 'number') {
+    //         return <Spacer size={item} />
+    //       }
+    //       return (
+
+    //       )
+    //     }}
+    //   />
+    // )
   }
 )
 
