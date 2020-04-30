@@ -1,6 +1,6 @@
 import { Restaurant } from '@dish/models'
 import React, { memo, useEffect, useState } from 'react'
-import { ScrollView, Text, TouchableOpacity } from 'react-native'
+import { ScrollView, TouchableOpacity } from 'react-native'
 
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { GeocodePlace, isEditingUserPage } from '../../state/home'
@@ -12,7 +12,6 @@ import { Link } from '../ui/Link'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { SelectableText } from '../ui/Text'
-import { SmallCircleButton } from './CloseButton'
 import { bgLightLight } from './colors'
 import { DishView } from './DishView'
 import { useMediaQueryIsMedium, useMediaQueryIsSmall } from './HomeViewDrawer'
@@ -32,8 +31,6 @@ type RestaurantListItemProps = {
   rank: number
 }
 
-let lastHover: any
-
 export const RestaurantListItem = memo(function RestaurantListItem(
   props: RestaurantListItemProps
 ) {
@@ -46,7 +43,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
         om.actions.home.setHoveredRestaurant(props.restaurant)
       }
     },
-    100,
+    60,
     [props.restaurant, isHovered]
   )
 
@@ -238,6 +235,13 @@ export const RestaurantPeek = memo(
   }) => {
     const spacing = size == 'lg' ? 12 : 18
     const isMedium = useMediaQueryIsMedium()
+
+    //  only show the first two at firt
+    // const [isMounted, setIsMounted] = useState(false)
+    // useWaterfall(() => {
+    //   setIsMounted(true)
+    // })
+
     return (
       <VStack
         position="relative"

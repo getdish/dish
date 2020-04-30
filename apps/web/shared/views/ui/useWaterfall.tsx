@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 
 import { sleep } from '../../helpers/sleep'
 
-export const useWaterfall = (cb: Function) => {
+export const useWaterfall = (cb: Function, args: any[] = []) => {
   useEffect(() => {
     waterfalls.push(cb)
     start()
@@ -12,7 +12,7 @@ export const useWaterfall = (cb: Function) => {
         waterfalls.splice(index, 1)
       }
     }
-  }, [])
+  }, args)
 }
 
 let waterfalls = []
@@ -22,7 +22,7 @@ async function start() {
   if (running) return
   running = true
   while (waterfalls.length) {
-    await sleep(waterfalls.length ? 10 : 100)
+    await sleep(waterfalls.length ? 0 : 80)
     await new Promise((res) => requestIdleCallback(res))
     const amt = Math.max(1, Math.round(waterfalls.length * 0.1))
     const cur = waterfalls.slice(0, amt)

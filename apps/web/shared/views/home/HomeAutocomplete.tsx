@@ -28,6 +28,8 @@ export default memo(function HomeAutoComplete() {
   const showSearch = showAutocomplete == 'search'
   const isShowing = showSearch || showLocation
 
+  console.warn('autocomplete running')
+
   // hide when moused away, show when moved back!
   useEffect(() => {
     let tmOff

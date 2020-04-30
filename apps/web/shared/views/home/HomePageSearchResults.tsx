@@ -164,8 +164,14 @@ const HomeSearchResultsViewContent = memo(
       )
     }
 
+    const [fullyLoad, setFullyLoad] = useState(false)
     const resultsIds = state.results?.results?.restaurantIds
-    const results = resultsIds.map((id) => allRestaurants[id])
+    const resultsAll = resultsIds.map((id) => allRestaurants[id])
+    const results = fullyLoad ? resultsAll : resultsAll.slice(0, 4)
+
+    useWaterfall(() => {
+      setFullyLoad(true)
+    }, [state.results])
 
     if (!results.length) {
       return (
@@ -182,16 +188,18 @@ const HomeSearchResultsViewContent = memo(
     }
 
     return (
-      <VStack paddingTop={topPad} paddingBottom={20}>
-        {results.map((item, index) => (
-          <RestaurantListItem
-            currentLocationInfo={state.currentLocationInfo}
-            key={item.id}
-            restaurant={item}
-            rank={index + 1}
-          />
-        ))}
-      </VStack>
+      <ScrollView>
+        <VStack paddingTop={topPad} paddingBottom={20}>
+          {results.map((item, index) => (
+            <RestaurantListItem
+              currentLocationInfo={state.currentLocationInfo}
+              key={item.id}
+              restaurant={item}
+              rank={index + 1}
+            />
+          ))}
+        </VStack>
+      </ScrollView>
     )
     // return (
     //   <List

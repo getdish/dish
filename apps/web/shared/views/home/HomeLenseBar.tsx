@@ -68,7 +68,6 @@ export function HomeContentTopBar(props: { children: any }) {
 
 export const HomeLenseBarOnly = memo(
   (props: { activeTagIds: HomeActiveTagIds }) => {
-    const drawerWidth = useHomeDrawerWidthInner()
     const om = useOvermind()
     return (
       <HStack
