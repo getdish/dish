@@ -13,6 +13,7 @@ import {
   flatButtonStyleActive,
 } from './baseButtonStyle'
 import { SmallCircleButton } from './CloseButton'
+import { setAvoidNextAutocompleteShowOnFocus } from './HomeSearchBar'
 
 export default memo(function HomeAutoComplete() {
   const om = useOvermind()
@@ -147,10 +148,9 @@ export default memo(function HomeAutoComplete() {
                   <LinkButton
                     key={`${x.tagId}${index}`}
                     onPress={() => {
+                      setAvoidNextAutocompleteShowOnFocus()
                       if (showLocation) {
                         om.actions.home.setLocation(x.name)
-                      } else {
-                        om.actions.home.navigateToTagId(x.tagId)
                       }
                       console.log('set false')
                       om.actions.home.setShowAutocomplete(false)

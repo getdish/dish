@@ -128,6 +128,7 @@ const prevent = (e) => [e.preventDefault(), e.stopPropagation()]
 
 type TagProp = {
   tag: NavigableTag
+  onPress?: Function
 }
 
 type LinkButtonNamedProps<A = any, B = any> = {
@@ -168,10 +169,17 @@ const useNormalizedLink = (
   if ('tag' in props && !!props.tag) {
     if (props.tag.name !== 'Search') {
       const state = currentStates.find((x) => x.id === currentStateID)
-      return getNavigateToTag(window['om'], {
+      const tagProps = getNavigateToTag(window['om'], {
         state,
         tag: props.tag,
       })
+      return {
+        ...tagProps,
+        onPress: (e) => {
+          tagProps.onPress?.(e)
+          props.onPress?.(e)
+        },
+      }
     }
   }
   if ('name' in props) {
