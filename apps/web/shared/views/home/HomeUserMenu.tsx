@@ -31,6 +31,9 @@ export const HomeUserMenu = memo(() => {
       position="bottom"
       isOpen={firstTime || om.state.home.showUserMenu}
       onChangeOpen={(val) => val === false && close()}
+      style={{
+        flex: 0,
+      }}
       contents={
         <Box padding={20} width="30vw" minWidth={250}>
           {!om.state.user.isLoggedIn && (

@@ -8,7 +8,12 @@ import React, {
 } from 'react'
 import { ToggleLayer, anchor } from 'react-laag'
 import { AnchorEnum } from 'react-laag/dist/ToggleLayer/types'
-import { Platform, TouchableOpacity } from 'react-native'
+import {
+  Platform,
+  StyleProp,
+  TouchableOpacity,
+  ViewComponent,
+} from 'react-native'
 import ResizeObserver from 'resize-observer-polyfill'
 
 import { VStack, ZStack } from './Stacks'
@@ -48,6 +53,7 @@ export type PopoverProps = {
   overlay?: boolean
   overlayPointerEvents?: boolean
   onChangeOpen?: (next: boolean) => any
+  style?: React.HTMLAttributes<HTMLDivElement>['style']
 }
 
 export const Popover = (props: PopoverProps) => {
@@ -145,6 +151,7 @@ export const Popover = (props: PopoverProps) => {
           <div
             ref={triggerRef}
             className={`see-through ${props.inline ? 'inline-flex' : ''}`}
+            style={props.style}
           >
             {props.children}
           </div>

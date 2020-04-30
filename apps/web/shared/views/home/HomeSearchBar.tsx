@@ -268,6 +268,14 @@ export default memo(() => {
         <View style={styles.containerInner}>
           <DishLogoButton />
           <HomeSearchBarHomeButton />
+
+          <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
+            <>
+              {divider}
+              <Spacer />
+            </>
+          </MediaQuery>
+
           <HStack
             flex={15}
             maxWidth={450}
@@ -435,7 +443,7 @@ const HomeSearchBarHomeButton = memo(() => {
           />
         </VStack>
       </LinkButton>
-      {divider}
+
       <VStack flex={0.5} />
     </MediaQuery>
   )
