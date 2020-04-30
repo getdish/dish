@@ -54,7 +54,6 @@ export const om = new Proxy(
 if (process.env.NODE_ENV === 'development') {
   // @ts-ignore
   module?.hot.accept(() => {
-    console.warn('Reload, changed onInitialize')
-    debugger
+    console.warn('paused overmind for now')
   })
 }

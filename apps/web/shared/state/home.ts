@@ -219,7 +219,7 @@ const startAutocomplete: AsyncAction = async (om) => {
   await om.actions.home._runAutocomplete(om.state.home.currentState.searchQuery)
 }
 
-type PageAction = (om: Om) => Promise<void>
+type PageAction = () => Promise<void>
 
 let isGoingBack = false
 
@@ -229,22 +229,6 @@ const pushHomeState: AsyncAction<
     fetchDataPromise: Promise<void>
   }
 > = async (om, item) => {
-  // is going back
-  // we are going back to a prev state!
-  // hacky for now
-  if (isGoingBack) {
-    isGoingBack = false
-    const prev = _.findLast(om.state.home.states, (x) => x.type === item.name)
-    if (prev) {
-      const prevIndex = om.state.home.states.indexOf(prev)
-      om.state.home.states.splice(prevIndex)
-      om.state.home.states.push({ ...prev })
-    } else {
-      throw new Error('unreachable')
-    }
-    return { fetchDataPromise: Promise.resolve(null) }
-  }
-
   const { started, currentState } = om.state.home
   const historyId = item.id
   const fallbackState = {
@@ -324,25 +308,7 @@ const pushHomeState: AsyncAction<
         searchQuery,
       }
       nextState = searchState
-      fetchData = async (om) => {
-        await Promise.all([
-          /// search
-          om.actions.home.runSearch({ force: true }),
-          getUserInfo(),
-        ])
-
-        async function getUserInfo() {
-          // userpage load user
-          if (item.name === 'userSearch') {
-            const user = new User()
-            await user.findOne('username', item.params.username)
-            const state = om.state.home.currentState
-            if (!user || state.type !== 'userSearch') return
-            om.state.home.allUsers[user.id] = user
-            state.userId = user.id
-          }
-        }
-      }
+      fetchData = om.actions.home.loadPageSearch
       break
     }
 
@@ -353,32 +319,11 @@ const pushHomeState: AsyncAction<
         type,
         restaurantId: null,
         review: null,
+        restaurantSlug: item.params.slug,
         reviews: [],
         ...newState,
       }
-      fetchData = async () => {
-        const slug = item.params.slug
-        const restaurant = new Restaurant()
-        await restaurant.findOne('slug', slug)
-        om.state.home.allRestaurants[restaurant.id] = restaurant
-        const state = om.state.home.lastRestaurantState
-        if (state) {
-          state.restaurantId = restaurant.id
-          state.center = {
-            lng: restaurant.location.coordinates[0],
-            lat: restaurant.location.coordinates[1] - 0.0037,
-          }
-          // zoom in a bit
-          state.span = {
-            lng: 0.008, // Math.max(0.010675285275539181, currentState.span.lng * 0.5),
-            lat: 0.003, // Math.max(0.004697178346440012, currentState.span.lat * 0.5),
-          }
-          state.reviews = await Review.findAllForRestaurant(restaurant.id)
-          if (om.state.user.isLoggedIn) {
-            await om.actions.home.getReview()
-          }
-        }
-      }
+      fetchData = om.actions.home.loadPageRestaurant
       break
     }
 
@@ -391,13 +336,35 @@ const pushHomeState: AsyncAction<
         username: item.params.username,
         ...newState,
       }
-      fetchData = async (om) => {
-        await loadUserDetail(om, {
-          username: item.params.username,
-        })
-      }
+      fetchData = om.actions.home.loadPageUser
       break
     }
+  }
+
+  async function runFetchData() {
+    try {
+      await fetchData()
+    } catch (err) {
+      console.error(err)
+      Toast.show(`Error loading page`)
+    }
+  }
+
+  // is going back
+  // we are going back to a prev state!
+  // hacky for now
+  if (isGoingBack) {
+    isGoingBack = false
+    const prev = _.findLast(om.state.home.states, (x) => x.type === item.name)
+    if (prev) {
+      const prevIndex = om.state.home.states.indexOf(prev)
+      om.state.home.states.splice(prevIndex)
+      om.state.home.states.push({ ...prev })
+    } else {
+      throw new Error('unreachable')
+    }
+    currentAction = runFetchData
+    return { fetchDataPromise: Promise.resolve(null) }
   }
 
   if (!nextState) {
@@ -432,28 +399,78 @@ const pushHomeState: AsyncAction<
 
   let fetchDataPromise: Promise<any> | null
   if (!shouldSkip && fetchData) {
-    fetchDataPromise = om.actions.home.startAction(fetchData)
+    currentAction = runFetchData
+    // start
+    fetchDataPromise = runFetchData()
   }
+
   return {
     fetchDataPromise,
   }
+}
+
+const loadPageRestaurant: AsyncAction = async (om) => {
+  const state = om.state.home.currentState
+  console.log('loading restaurant page', state)
+  if (state.type !== 'restaurant') return
+  const slug = state.restaurantSlug
+  const restaurant = new Restaurant()
+  await restaurant.findOne('slug', slug)
+  om.state.home.allRestaurants[restaurant.id] = restaurant
+  if (state) {
+    state.restaurantId = restaurant.id
+    state.center = {
+      lng: restaurant.location.coordinates[0],
+      lat: restaurant.location.coordinates[1] - 0.0037,
+    }
+    // zoom in a bit
+    state.span = {
+      lng: 0.008, // Math.max(0.010675285275539181, currentState.span.lng * 0.5),
+      lat: 0.003, // Math.max(0.004697178346440012, currentState.span.lat * 0.5),
+    }
+    state.reviews = await Review.findAllForRestaurant(restaurant.id)
+    if (om.state.user.isLoggedIn) {
+      await om.actions.home.getReview()
+    }
+  }
+}
+
+const loadPageSearch: AsyncAction = async (om) => {
+  const state = om.state.home.currentState
+  if (state.type !== 'search' && state.type !== 'userSearch') return
+  await Promise.all([
+    /// search
+    om.actions.home.runSearch({ force: true }),
+    getUserInfo(),
+  ])
+  async function getUserInfo() {
+    // userpage load user
+    if (state.type === 'userSearch') {
+      const user = new User()
+      await user.findOne('username', state.username)
+      if (!user || state.type !== 'userSearch') return
+      om.state.home.allUsers[user.id] = user
+      state.userId = user.id
+    }
+  }
+}
+
+const loadPageUser: AsyncAction = async (om) => {
+  await attemptAuthenticatedAction(om, async () => {
+    const state = om.state.home.currentState
+    if (state.type !== 'user') return
+    const user = new User()
+    await user.findOne('username', state.username)
+    state.user = user
+    state.reviews = await Review.findAllForUser(user.id)
+  })
 }
 
 let currentAction: PageAction
 
 const refresh: AsyncAction = async (om) => {
   if (!currentAction) return
-  currentAction(om)
-}
-
-const startAction: AsyncAction<PageAction> = async (om, fn) => {
-  currentAction = fn
-  try {
-    await fn(om)
-  } catch (err) {
-    console.error(err)
-    Toast.show(`Error loading page`)
-  }
+  await currentAction()
 }
 
 const popTo: Action<HomeStateItem['type'] | number> = (om, item) => {
@@ -501,20 +518,6 @@ const attemptAuthenticatedAction = async (om: Om, cb: Function) => {
       throw err
     }
   }
-}
-
-const loadUserDetail: AsyncAction<{
-  username: string
-}> = async (om, { username }) => {
-  await attemptAuthenticatedAction(om, async () => {
-    const user = new User()
-    await user.findOne('username', username)
-    const state = om.state.home.currentState
-    if (state.type === 'user') {
-      state.user = user
-      state.reviews = await Review.findAllForUser(user.id)
-    }
-  })
 }
 
 const loadHomeDishes: AsyncAction = async (om) => {
@@ -1207,7 +1210,9 @@ export const actions = {
   refresh,
   submitReview,
   suggestTags,
-  startAction,
   updateBreadcrumbs,
   toggleTagOnHomeState,
+  loadPageSearch,
+  loadPageRestaurant,
+  loadPageUser,
 }
