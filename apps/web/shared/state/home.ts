@@ -182,7 +182,7 @@ const start: AsyncAction = async (om) => {
   om.actions.home.updateBreadcrumbs()
   om.actions.home.updateCurrentMapAreaInformation()
   // promises are nice here, dont wait on anything top level unless necessary
-  om.actions.home._loadHomeDishes().then(async () => {
+  loadHomeDishes(om).then(async () => {
     await om.actions.home.startAutocomplete()
   })
 }
@@ -374,7 +374,7 @@ const pushHomeState: AsyncAction<
         ...newState,
       }
       fetchData = async (om) => {
-        await om.actions.home._loadUserDetail({
+        await loadUserDetail(om, {
           username: item.params.username,
         })
       }
@@ -430,7 +430,12 @@ const refresh: AsyncAction = async (om) => {
 
 const startAction: AsyncAction<PageAction> = async (om, fn) => {
   currentAction = fn
-  await fn(om)
+  try {
+    await fn(om)
+  } catch (err) {
+    console.error(err)
+    Toast.show(`Error loading page`)
+  }
 }
 
 const popTo: Action<HomeStateItem['type'] | number> = (om, item) => {
@@ -485,7 +490,7 @@ const attemptAuthenticatedAction = async (om: Om, cb: Function) => {
   }
 }
 
-const _loadUserDetail: AsyncAction<{
+const loadUserDetail: AsyncAction<{
   username: string
 }> = async (om, { username }) => {
   await attemptAuthenticatedAction(om, async () => {
@@ -499,7 +504,7 @@ const _loadUserDetail: AsyncAction<{
   })
 }
 
-const _loadHomeDishes: AsyncAction = async (om) => {
+const loadHomeDishes: AsyncAction = async (om) => {
   const all = await Restaurant.getHomeDishes(
     om.state.home.currentState.center.lat,
     om.state.home.currentState.center.lng,
@@ -1161,8 +1166,6 @@ export const actions = {
   getNavigateToTag,
   startAutocomplete,
   _afterTagChange,
-  _loadHomeDishes,
-  _loadUserDetail,
   _runAutocomplete,
   runHomeSearch,
   updateCurrentMapAreaInformation,

@@ -42,11 +42,21 @@ let mapView: mapkit.Map
 // start paused, first map update we ignore because its slightly off
 let pauseMapUpdates = true
 let pendingUpdates = false
+let version = 0
 const pauseMap = () => {
+  version++
   pauseMapUpdates = true
 }
-const forceResumeMap = () => resumeMap(true)
+const forceResumeMap = () => {
+  const id = version
+  setTimeout(() => {
+    if (id === version) {
+      resumeMap(true)
+    }
+  }, 50)
+}
 const resumeMap = (force: boolean = false) => {
+  version++
   pauseMapUpdates = false
   if (force || pendingUpdates) {
     pendingUpdates = false
