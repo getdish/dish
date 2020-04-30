@@ -76,6 +76,7 @@ export const LenseButton = memoIsEqualDeep(
               height: 36,
               fontWeight: '400',
               textAlign: 'center',
+              marginTop: isActive ? -4 : 0,
               // marginLeft: 8,
               // letterSpacing: isActive ? -0.2 : 0,
             }}
