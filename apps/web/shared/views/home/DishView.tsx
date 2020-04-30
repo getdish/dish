@@ -2,6 +2,7 @@ import { TopCuisineDish } from '@dish/models'
 import React, { memo } from 'react'
 import { Image, Text } from 'react-native'
 
+import { Box } from '../ui/Box'
 import { LinkButton } from '../ui/Link'
 import { StackProps, VStack, ZStack } from '../ui/Stacks'
 import { DishRatingView } from './DishRatingView'
@@ -52,28 +53,25 @@ export const DishView = memo(
             />
           </VStack>
         </VStack>
-        <VStack
-          marginTop={3}
-          alignItems="center"
-          justifyContent="center"
-          overflow="hidden"
-        >
-          <Text
-            numberOfLines={2}
-            style={{
-              fontSize: 13,
-              fontWeight: '500',
-              lineHeight: 22,
-              // opacity: 0.75,
-              paddingVertical: 2,
-              textAlign: 'center',
-            }}
-          >
-            <Text>{dish.name}</Text>
-            {/* <Text style={{ fontSize: 12 }}>
+        <VStack marginTop={-16} alignItems="center" justifyContent="center">
+          <Box paddingVertical={2}>
+            <Text
+              numberOfLines={1}
+              style={{
+                fontSize: 13,
+                fontWeight: '500',
+                lineHeight: 22,
+                // opacity: 0.75,
+                paddingVertical: 2,
+                textAlign: 'center',
+              }}
+            >
+              <Text>{dish.name}</Text>
+              {/* <Text style={{ fontSize: 12 }}>
               {'\n'} {dish.count} restaurants
             </Text> */}
-          </Text>
+            </Text>
+          </Box>
         </VStack>
       </LinkButton>
     )

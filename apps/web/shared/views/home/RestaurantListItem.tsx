@@ -195,8 +195,11 @@ const RestaurantListItemContent = memo(
                   }))
                 }
               >
-                <Icon name="MessageSquare" size={16} color="blue" />
+                <Icon name="MessageSquare" size={16} color="#999" />
               </TouchableOpacity>
+
+              <Divider vertical />
+
               <RestaurantDetailRow size="sm" restaurant={restaurant} />
 
               <HoverablePopover
