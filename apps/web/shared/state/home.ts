@@ -231,8 +231,9 @@ const pushHomeState: AsyncAction<
 > = async (om, item) => {
   const { started, currentState } = om.state.home
   const historyId = item.id
+  const id = item.replace ? currentState.id : `${Math.random()}`
   const fallbackState = {
-    id: item.replace ? currentState.id : `${Math.random()}`,
+    id,
     center: currentState?.center ?? initialHomeState.center,
     span: currentState?.span ?? initialHomeState.span,
     searchQuery: item.params.query ?? currentState?.searchQuery ?? '',
@@ -359,7 +360,7 @@ const pushHomeState: AsyncAction<
     if (prev) {
       const prevIndex = om.state.home.states.indexOf(prev)
       om.state.home.states.splice(prevIndex)
-      om.state.home.states.push({ ...prev })
+      om.state.home.states.push({ ...prev, id })
     } else {
       throw new Error('unreachable')
     }
