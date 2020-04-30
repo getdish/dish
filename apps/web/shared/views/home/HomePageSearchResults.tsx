@@ -153,8 +153,11 @@ const HomeSearchResultsViewContent = memo(
     const om = useOvermind()
     const allRestaurants = om.state.home.allRestaurants
     const topPad = 8
+    const [fullyLoad, setFullyLoad] = useState(false)
 
-    console.warn('RENDERING SEARCH RESULTS')
+    useWaterfall(() => {
+      setFullyLoad(true)
+    }, [state.results])
 
     if (!state.results?.results || state.results.status === 'loading') {
       return (
@@ -164,14 +167,9 @@ const HomeSearchResultsViewContent = memo(
       )
     }
 
-    const [fullyLoad, setFullyLoad] = useState(false)
     const resultsIds = state.results?.results?.restaurantIds
     const resultsAll = resultsIds.map((id) => allRestaurants[id])
     const results = fullyLoad ? resultsAll : resultsAll.slice(0, 4)
-
-    useWaterfall(() => {
-      setFullyLoad(true)
-    }, [state.results])
 
     if (!results.length) {
       return (
