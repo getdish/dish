@@ -17211,11 +17211,6 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.2.7, rc@^1.2.8:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-cache@^2.0.0-alpha.1:
-  version "2.0.0-alpha.1"
-  resolved "https://registry.npmjs.org/react-cache/-/react-cache-2.0.0-alpha.1.tgz#4c119188248bc988a61268458bc18bd845f2ec19"
-  integrity sha512-dDJVVGvxAlZE/dMxDXaxU5ZfcE4fbaSmJVFrCTi6dYWXDp7YjCsnywkpEYG6IURVW+eJrCydAIDcW0FADw0/5w==
-
 react-dev-utils@9.0.3:
   version "9.0.3"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-9.0.3.tgz#7607455587abb84599451460eb37cef0b684131a"
@@ -17273,6 +17268,13 @@ react-dom@16.9.0:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.15.0"
+
+react-error-boundary@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npmjs.org/react-error-boundary/-/react-error-boundary-2.1.0.tgz#bc63084d19a5fff44b3b1b8882abb66a7071b23d"
+  integrity sha512-ILlrrdxIgZLbKmd4IReoZKZX6pb+MTE8+Xntp568xM7w4yx/C4SpjCkB5YnPTZT2uWpMosoAsJMjP8Ljc+eP4g==
+  dependencies:
+    "@babel/runtime" "^7.8.4"
 
 react-error-overlay@^6.0.1:
   version "6.0.6"
