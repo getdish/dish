@@ -1,7 +1,12 @@
+import util from 'util'
+
 import { EnumType } from 'json-to-graphql-query'
 import _ from 'lodash'
 
 import { ModelBase } from './ModelBase'
+
+export type RestaurantTagWithID = Partial<RestaurantTag> &
+  Pick<RestaurantTag, 'tag_id'>
 
 export class RestaurantTag extends ModelBase<RestaurantTag> {
   restaurant_id!: string
@@ -46,11 +51,9 @@ export class RestaurantTag extends ModelBase<RestaurantTag> {
     const objects = tags.map((i) => {
       if (typeof i.asObject != 'undefined') {
         i = i.asObject()
-        i.restaurant_id = restaurant_id
-      } else {
-        i.restaurant_id = restaurant_id
-        return i
       }
+      i.restaurant_id = restaurant_id
+      return i
     })
     const query = {
       mutation: {

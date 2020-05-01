@@ -4,6 +4,7 @@ import {
   Dish,
   Restaurant,
   RestaurantTag,
+  RestaurantTagWithID,
   Scrape,
   ScrapeData,
   Tag,
@@ -385,13 +386,13 @@ export class Self extends WorkerJob {
   }
 
   async updateTagRankings() {
-    let restaurant_tags = [] as RestaurantTag[]
+    let restaurant_tags = [] as RestaurantTagWithID[]
     await Promise.all(
       (this.restaurant.tags || []).map(async (i) => {
-        i.rank = await this.getRankForTag(new Tag(i.tag))
-        i.tag_id = i.tag.id
-        delete i.tag
-        restaurant_tags.push(i)
+        restaurant_tags.push({
+          tag_id: i.tag.id,
+          rank: await this.getRankForTag(new Tag(i.tag)),
+        })
       })
     )
     await this.restaurant.upsertTagRestaurantData(restaurant_tags)
@@ -423,23 +424,26 @@ export class Self extends WorkerJob {
   }
 
   async findPhotosForTags() {
-    let restaurant_tags = [] as RestaurantTag[]
+    let restaurant_tags = [] as RestaurantTagWithID[]
     await this.restaurant.refresh()
     const all_possible_tags = await this.restaurant.allPossibleTags()
     const photos = this.getPaginatedData(this.yelp.data, 'photos')
     for (const tag of all_possible_tags) {
-      let restaurant_tag = this.restaurant.getRestaurantTagFromTag(tag)
+      let restaurant_tag = {
+        tag_id: tag.id,
+      } as RestaurantTagWithID
       restaurant_tag.photos = restaurant_tag?.photos || []
       for (const photo of photos) {
-        if (photo.media_data?.caption?.includes(tag.name)) {
+        if (this._doesStringContainTag(photo.media_data?.caption, tag.name)) {
           restaurant_tag.photos.push(photo.src)
         }
       }
       if (restaurant_tag.photos.length > 0) {
+        restaurant_tag.photos = _.uniq(restaurant_tag.photos)
         restaurant_tags.push(restaurant_tag)
       }
     }
-    await RestaurantTag.upsertMany(this.restaurant.id, restaurant_tags)
+    await this.restaurant.upsertManyTags(restaurant_tags)
   }
 
   getPaginatedData(data: ScrapeData, type: 'photos' | 'reviews') {
@@ -469,14 +473,13 @@ export class Self extends WorkerJob {
   findDishesInText(text: string) {
     for (const tag of this.all_tags) {
       if (!this._doesStringContainTag(text, tag.name)) continue
-      let restaurant_tag = this.restaurant.getRestaurantTagFromTag(tag)
-      this._found_tags[tag.id] = restaurant_tag
+      this._found_tags[tag.id] = { tag_id: tag.id } as RestaurantTag
       this.measureSentiment(text, tag)
     }
   }
 
   _doesStringContainTag(text: string, tag_name: string) {
-    const regex = new RegExp(`\\b${tag_name}\\b`)
+    const regex = new RegExp(`\\b${tag_name}\\b`, 'i')
     return regex.test(text)
   }
 
@@ -493,14 +496,14 @@ export class Self extends WorkerJob {
   }
 
   async _averageAndPersistTagRatings() {
-    let restaurant_tags = [] as Partial<RestaurantTag>[]
+    let restaurant_tags = [] as RestaurantTagWithID[]
     for (const tag_id of Object.keys(this.restaurant_tag_ratings)) {
-      let restaurant_tag = this._found_tags[tag_id]
-      const rating = _.mean(this.restaurant_tag_ratings[tag_id])
-      restaurant_tag.rating = rating
-      restaurant_tags.push(restaurant_tag)
+      restaurant_tags.push({
+        tag_id: tag_id,
+        rating: _.mean(this.restaurant_tag_ratings[tag_id]),
+      })
     }
-    await RestaurantTag.upsertMany(this.restaurant.id, restaurant_tags)
+    await this.restaurant.upsertManyTags(restaurant_tags)
   }
 
   getRatingFactors() {

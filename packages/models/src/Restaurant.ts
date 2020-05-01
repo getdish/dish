@@ -5,7 +5,7 @@ import _ from 'lodash'
 
 import { Dish, TopCuisineDish } from './Dish'
 import { ModelBase, Point, isBrowserProd } from './ModelBase'
-import { RestaurantTag } from './RestaurantTag'
+import { RestaurantTag, RestaurantTagWithID } from './RestaurantTag'
 import { Scrape } from './Scrape'
 import { Tag } from './Tag'
 import { levenshteinDistance } from './utils'
@@ -318,20 +318,31 @@ export class Restaurant extends ModelBase<Restaurant> {
     return restaurant
   }
 
-  getRestaurantTagFromTag(tag: Tag) {
-    const existing = this.tags.find((i) => i.tag.id == tag.id)
+  getRestaurantTagFromTag(tag_id: string) {
+    const existing = (this.tags || []).find((i) => {
+      return i.tag.id == tag_id
+    })
     let rt = {} as RestaurantTag
     if (existing) {
       const cloned = _.cloneDeep(existing)
       delete cloned.tag
       rt = cloned
     }
-    rt.tag_id = tag.id
+    rt.tag_id = tag_id
     return rt
   }
 
-  async upsertTagRestaurantData(restaurant_tags: Partial<RestaurantTag>[]) {
-    await RestaurantTag.upsertMany(this.id, restaurant_tags)
+  async upsertManyTags(restaurant_tags: RestaurantTagWithID[]) {
+    const populated = restaurant_tags.map((rt) => {
+      const existing = this.getRestaurantTagFromTag(rt.tag_id)
+      return { ...existing, ...rt }
+    })
+    RestaurantTag.upsertMany(this.id, populated)
+    await this.refresh()
+  }
+
+  async upsertTagRestaurantData(restaurant_tags: RestaurantTagWithID[]) {
+    await this.upsertManyTags(restaurant_tags)
     await this._updateTagNames()
   }
 
