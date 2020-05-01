@@ -21,14 +21,11 @@ export default memo(function HomeAutoComplete() {
     showAutocomplete,
     autocompleteIndex,
     autocompleteResultsActive,
-    currentStateType,
     isAutocompleteActive,
   } = om.state.home
   const showLocation = showAutocomplete == 'location'
   const showSearch = showAutocomplete == 'search'
   const isShowing = showSearch || showLocation
-
-  console.warn('autocomplete running')
 
   // hide when moused away, show when moved back!
   useEffect(() => {
@@ -132,18 +129,8 @@ export default memo(function HomeAutoComplete() {
                 const plusButtonEl =
                   x.type === 'dish' &&
                   index !== 0 &&
-                  currentStateType === 'userSearch' &&
                   om.state.user.isLoggedIn ? (
-                    <SmallCircleButton
-                      // {...circularFlatButtonStyle}
-                      // marginVertical={-5}
-                      onPress={(e) => {
-                        console.log('e', e)
-                        alert('add to current search results')
-                      }}
-                    >
-                      <Icon name="Plus" size={12} />
-                    </SmallCircleButton>
+                    <AutocompleteAddButton />
                   ) : null
 
                 return (
@@ -200,3 +187,22 @@ export default memo(function HomeAutoComplete() {
     </>
   )
 })
+
+function AutocompleteAddButton() {
+  const om = useOvermind()
+  if (om.state.home.currentStateType !== 'userSearch') {
+    return null
+  }
+  return (
+    <SmallCircleButton
+      // {...circularFlatButtonStyle}
+      // marginVertical={-5}
+      onPress={(e) => {
+        console.log('e', e)
+        alert('add to current search results')
+      }}
+    >
+      <Icon name="Plus" size={12} />
+    </SmallCircleButton>
+  )
+}

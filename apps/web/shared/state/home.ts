@@ -13,6 +13,7 @@ import { isWorker } from '../constants'
 import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
 import { requestIdle } from '../helpers/requestIdle'
 import { sleep } from '../helpers/sleep'
+import { timer } from '../helpers/timer'
 import { Toast } from '../views/Toast'
 import { attemptAuthenticatedAction } from './attemptAuthenticatedAction'
 import {
@@ -58,6 +59,8 @@ const INITIAL_RADIUS = 0.1
 
 // backward compat
 export * from './home-types'
+
+export const homeTimer = timer('home')
 
 export const initialHomeState: HomeStateItemHome = {
   id: '0',
@@ -283,9 +286,8 @@ const pushHomeState: AsyncAction<
       activeTagIds = lastHomeOrSearch.activeTagIds
 
       if (!started) {
-        let fakeTags = getTagsFromRoute(om.state.router.curPage)
+        const fakeTags = getTagsFromRoute(om.state.router.curPage)
         const tags = await getFullTags(fakeTags)
-        console.log('got tags', tags)
         activeTagIds = tags.reduce((acc, tag) => {
           const id = getTagId(tag)
           om.state.home.allTags[id] = tag as Tag // ?
@@ -402,11 +404,15 @@ const pushHomeState: AsyncAction<
   if (!shouldSkip && fetchData) {
     currentAction = runFetchData
     // start
-    fetchDataPromise = new Promise((res, rej) => {
-      setTimeout(() => {
-        runFetchData().then(res, rej)
-      })
+    let res: any
+    let rej: any
+    fetchDataPromise = new Promise((res2, rej2) => {
+      res = res2
+      rej = rej2
     })
+    setTimeout(() => {
+      runFetchData().then(res, rej)
+    }, 16)
   }
 
   return {
@@ -895,6 +901,8 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
 
   const promises = new Set<Promise<any>>()
 
+  homeTimer('handleRouteChange')
+
   // actions per-route
   switch (name) {
     case 'home':
@@ -1083,6 +1091,7 @@ const setHasMovedMap: Action<boolean | void> = (om, val = true) => {
 }
 
 const updateBreadcrumbs: Action = (om) => {
+  homeTimer('updateBreadcrumbs')
   const next = createBreadcrumbs(om.state.home)
   if (!isEqual(next, om.state.home.breadcrumbStates)) {
     console.log('new breadcrumbs', next)
