@@ -11,7 +11,8 @@ import { Circle } from '../ui/Circle'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { Link, LinkButton } from '../ui/Link'
 import { HStack, StackProps, VStack } from '../ui/Stacks'
-import { flatButtonStyle } from './baseButtonStyle'
+import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
+import { bgLight } from './colors'
 import { Quote } from './Quote'
 
 export const RestaurantAddComment = memo(
@@ -36,8 +37,8 @@ export const RestaurantAddComment = memo(
     }, [review])
 
     return (
-      <TouchableOpacity activeOpacity={0.8} onPress={() => {}}>
-        <CommentBubble user={user}>
+      <CommentBubble backgroundColor={bgLight} user={user}>
+        <HStack position="relative" width="100%">
           <TextInput
             value={reviewText}
             onChange={(e) => {
@@ -57,14 +58,16 @@ export const RestaurantAddComment = memo(
               minHeight: height,
               lineHeight: 22,
               flex: 1,
+              padding: 10,
             }}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
           />
           {!!(isFocused || !isSaved) && (
             <LinkButton
-              {...flatButtonStyle}
-              marginVertical={-4}
+              {...flatButtonStyleSelected}
+              position="absolute"
+              right={0}
               onPress={async () => {
                 Toast.show('Saving...')
                 await om.effects.gql.mutations.upsertUserReview({
@@ -85,8 +88,8 @@ export const RestaurantAddComment = memo(
               Save
             </LinkButton>
           )}
-        </CommentBubble>
-      </TouchableOpacity>
+        </HStack>
+      </CommentBubble>
     )
   }
 )
@@ -103,7 +106,7 @@ export const CommentBubble = ({
     <VStack
       flex={1}
       hoverStyle={null}
-      borderRadius={15}
+      borderRadius={10}
       padding={4}
       alignItems="flex-start"
       justifyContent="flex-start"
@@ -150,7 +153,7 @@ export const CommentBubble = ({
               ))}
             </div>
           </HoverablePopover>{' '}
-          wrote
+          says
         </Text>
       </HStack>
       {children}

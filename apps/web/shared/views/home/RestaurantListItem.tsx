@@ -104,8 +104,7 @@ const RestaurantListItemContent = memo(
       restaurant,
       divider: <>,&nbsp;</>,
     })
-    const showAddEditComment =
-      state.showAddComment || isEditingUserPage(om.state)
+    const showAddComment = state.showAddComment || isEditingUserPage(om.state)
 
     const adjustRankingLeft = 38
     const verticalPad = 22
@@ -167,26 +166,20 @@ const RestaurantListItemContent = memo(
             {/* ROW: COMMENT */}
             <Spacer size={8} />
             <VStack maxWidth="90%" marginLeft={-2}>
-              {!showAddEditComment && (
-                <CommentBubble user={{ username: 'Peach' }}>
-                  <SelectableText
-                    style={{
-                      opacity: 0.8,
-                      lineHeight: 19,
-                      fontSize: 14,
-                      marginBottom: 5,
-                    }}
-                  >
-                    Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet. Lorem
-                    ipsum dolor sit ipsum sit amet. Lorem ipsum dolor sit amet
-                    sit amet. Lorem ipsum dolor sit amet.Lorem ipsum dolor sit
-                    amet.
-                  </SelectableText>
-                </CommentBubble>
-              )}
-              {showAddEditComment && (
-                <RestaurantAddComment restaurant={restaurant} />
-              )}
+              <CommentBubble user={{ username: 'Peach' }}>
+                <SelectableText
+                  style={{
+                    opacity: 0.8,
+                    lineHeight: 19,
+                    fontSize: 14,
+                    marginBottom: 5,
+                  }}
+                >
+                  Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet. Lorem
+                  ipsum dolor sit ipsum sit amet. Lorem ipsum dolor sit amet sit
+                  amet. Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.
+                </SelectableText>
+              </CommentBubble>
             </VStack>
 
             {/* ROW: BOTTOM INFO */}
@@ -205,7 +198,11 @@ const RestaurantListItemContent = memo(
                   }))
                 }
               >
-                <Icon name="MessageSquare" size={16} color="#999" />
+                <Icon
+                  name="MessageSquare"
+                  size={16}
+                  color={state.showAddComment ? 'blue' : '#999'}
+                />
               </TouchableOpacity>
 
               <Divider vertical />
@@ -225,6 +222,13 @@ const RestaurantListItemContent = memo(
               </HoverablePopover>
             </HStack>
           </VStack>
+
+          {showAddComment && (
+            <>
+              <Spacer size="lg" />
+              <RestaurantAddComment restaurant={restaurant} />
+            </>
+          )}
         </VStack>
 
         <VStack padding={10} paddingTop={30} width={600} overflow="hidden">
