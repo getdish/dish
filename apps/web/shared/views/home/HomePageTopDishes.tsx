@@ -112,8 +112,10 @@ const HomeViewTopDishesTrending = memo(() => {
       </TrendingButton>
     )
   }
+  const listSpace = 3
+  const total = 5
   return (
-    <VStack height={158}>
+    <VStack height={168 + listSpace * (total - 1)}>
       <HStack spacing="lg" paddingHorizontal={10}>
         <VStack flex={1}>
           <ZStack position="absolute" top={-5} left={-8} zIndex={100}>
@@ -133,26 +135,26 @@ const HomeViewTopDishesTrending = memo(() => {
             </LinkButton>
           </ZStack>
           <VStack spacing={6}>
-            <SmallerTitle>Restaurants</SmallerTitle>
-            <VStack spacing={0} overflow="hidden">
+            <SmallerTitle marginBottom={5}>Restaurants</SmallerTitle>
+            <VStack spacing={listSpace} overflow="hidden">
               {!hasLoaded && <LoadingItem />}
-              {allRestaurants.slice(0, 5).map(getTrending)}
+              {allRestaurants.slice(0, total).map(getTrending)}
             </VStack>
           </VStack>
         </VStack>
         <VStack flex={1} spacing={6}>
-          <SmallerTitle>Dishes</SmallerTitle>
-          <VStack spacing={0} overflow="hidden">
+          <SmallerTitle marginBottom={5}>Dishes</SmallerTitle>
+          <VStack spacing={listSpace} overflow="hidden">
             {!hasLoaded && <LoadingItem />}
-            {allRestaurants.slice(0, 5).map(getTrending)}
+            {allRestaurants.slice(0, total).map(getTrending)}
           </VStack>
         </VStack>
         <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
           <VStack flex={1} spacing={6}>
-            <SmallerTitle>Topics</SmallerTitle>
-            <VStack spacing={0} overflow="hidden">
+            <SmallerTitle marginBottom={5}>Topics</SmallerTitle>
+            <VStack spacing={listSpace} overflow="hidden">
               {!hasLoaded && <LoadingItem />}
-              {allRestaurants.slice(0, 5).map(getTrending)}
+              {allRestaurants.slice(0, total).map(getTrending)}
             </VStack>
           </VStack>
         </MediaQuery>

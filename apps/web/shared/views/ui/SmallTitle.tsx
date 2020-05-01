@@ -66,7 +66,7 @@ export const SmallerTitle = memo(
           style={{
             opacity: 0.5,
             fontSize: 14,
-            fontWeight: '400',
+            fontWeight: '500',
           }}
         >
           {children}
