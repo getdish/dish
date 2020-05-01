@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
+    "composite": true,
     "jsx": "react",
     "outDir": "_",
     "rootDir": ".",
@@ -9,5 +10,10 @@
   },
   "include": ["src/**/*", "web/**/*", "shared/**/*"],
   "exclude": ["**/*.test.ts", "**/*.test.tsx", "src/graphql"],
-  "references": [{ "path": "../../packages/common-web" }]
+  "references": [
+    { "path": "../../packages/common-web" },
+    { "path": "../../packages/models" },
+    { "path": "../../packages/rollup-plugin-tscc" },
+    { "path": "../../packages/tsickle-loader" }
+  ]
 }
