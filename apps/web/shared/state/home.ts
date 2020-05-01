@@ -402,7 +402,11 @@ const pushHomeState: AsyncAction<
   if (!shouldSkip && fetchData) {
     currentAction = runFetchData
     // start
-    fetchDataPromise = runFetchData()
+    fetchDataPromise = new Promise((res, rej) => {
+      setTimeout(() => {
+        runFetchData().then(res, rej)
+      })
+    })
   }
 
   return {
@@ -1081,6 +1085,7 @@ const setHasMovedMap: Action<boolean | void> = (om, val = true) => {
 const updateBreadcrumbs: Action = (om) => {
   const next = createBreadcrumbs(om.state.home)
   if (!isEqual(next, om.state.home.breadcrumbStates)) {
+    console.log('new breadcrumbs', next)
     om.state.home.breadcrumbStates = next
   }
 }
