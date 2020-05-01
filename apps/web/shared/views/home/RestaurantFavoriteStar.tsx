@@ -34,7 +34,7 @@ export const RestaurantFavoriteStar = memo(
     const isStarred = review.current.rating > 0
 
     const persist = async () => {
-      await om.actions.home.submitReview(review.current)
+      await om.actions.user.submitReview(review.current)
       Toast.show('Saved')
     }
     const setRating = (r: number) => {

@@ -1,10 +1,8 @@
-import { Restaurant, Review } from '@dish/models'
+import { Restaurant } from '@dish/models'
 import React, { memo, useEffect, useState } from 'react'
-import { unstable_createResource } from 'react-cache'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
 import { omStatic, useOvermind } from '../../state/om'
-import { Toast } from '../Toast'
 import Hoverable from '../ui/Hoverable'
 import { Icon } from '../ui/Icon'
 import { VStack } from '../ui/Stacks'

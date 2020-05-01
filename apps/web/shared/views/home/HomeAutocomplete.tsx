@@ -93,9 +93,10 @@ export default memo(function HomeAutoComplete() {
       >
         <HStack
           backgroundColor="rgba(255,255,255,0.8)"
-          borderBottomRightRadius={12}
-          borderBottomLeftRadius={12}
-          borderTopRightRadius={12}
+          // borderBottomRightRadius={12}
+          // borderBottomLeftRadius={12}
+          overflow="hidden"
+          borderRadius={10}
           height={49}
           paddingBottom={1} // looks better 1px up
           shadowColor="rgba(0,0,0,0.28)"
