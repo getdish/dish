@@ -8,12 +8,12 @@ import { useOvermind } from '../../state/om'
 import { Divider } from '../ui/Divider'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { Icon } from '../ui/Icon'
-import { Link } from '../ui/Link'
+import { Link, LinkButton } from '../ui/Link'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { SelectableText } from '../ui/Text'
 import { useWaterfall } from '../ui/useWaterfall'
-import { bgLightLight } from './colors'
+import { bgLightHover, bgLightLight } from './colors'
 import { DishView } from './DishView'
 import { useMediaQueryIsMedium, useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RankingView } from './RankingView'
@@ -59,9 +59,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
 
   return (
     <VStack
-      hoverStyle={{
-        backgroundColor: bgLightLight,
-      }}
+      backgroundColor={isHovered ? '#fff' : '#fff'}
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
     >
@@ -74,7 +72,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
           <ZStack
             fullscreen
             zIndex={100}
-            top={26}
+            top={20}
             height={120}
             left={0}
             justifyContent="center"
@@ -109,51 +107,65 @@ const RestaurantListItemContent = memo(
     const showAddEditComment =
       state.showAddComment || isEditingUserPage(om.state)
 
+    const adjustRankingLeft = 38
+    const verticalPad = 22
+
     return (
-      <>
+      <HStack>
         <VStack
-          padding={pad}
-          paddingLeft={pad + 6}
-          paddingVertical={22}
-          width={isSmall ? '50vw' : '62%'}
-          minWidth={isSmall ? '60%' : 500}
-          maxWidth={isSmall ? '80vw' : '47vw'}
+          paddingHorizontal={pad + 6}
+          paddingBottom={verticalPad}
+          width={isSmall ? '50vw' : '66%'}
+          minWidth={isSmall ? '50%' : 500}
+          maxWidth={isSmall ? '80vw' : '40vw'}
           spacing={5}
         >
           <VStack alignItems="flex-start" width="100%">
             {/* ROW: TITLE */}
-            <Link name="restaurant" params={{ slug: restaurant.slug }}>
-              <HStack alignItems="center" marginVertical={-3}>
-                <RankingView
-                  marginLeft={-38}
-                  marginRight={-4}
-                  marginTop={-10}
-                  rank={rank}
-                />
-                <SelectableText
-                  style={{
-                    fontSize: 22,
-                    textDecorationColor: 'transparent',
-                  }}
-                >
-                  {restaurant.name}
-                </SelectableText>
-              </HStack>
-            </Link>
+            <VStack
+              paddingTop={verticalPad}
+              backgroundColor={bgLightLight}
+              hoverStyle={{ backgroundColor: bgLightHover }}
+              marginLeft={-adjustRankingLeft}
+              width={900}
+              // marginRight="-100%"
+            >
+              <Link name="restaurant" params={{ slug: restaurant.slug }}>
+                <VStack>
+                  <HStack alignItems="center" marginVertical={-3}>
+                    <RankingView marginRight={-4} marginTop={-10} rank={rank} />
+                    <SelectableText
+                      style={{
+                        fontSize: 22,
+                        textDecorationColor: 'transparent',
+                      }}
+                    >
+                      {restaurant.name}
+                    </SelectableText>
+                  </HStack>
+                  <Spacer size={8} />
 
-            <Spacer size={8} />
-
-            {/* ROW: Ranking + TAGS */}
-            <HStack spacing={12} alignItems="center">
-              <RestaurantRatingViewPopover size="xs" restaurant={restaurant} />
-              <HStack spacing>
-                {tagElements}
-                <RestaurantAddTagButton restaurant={restaurant} />
-              </HStack>
-            </HStack>
+                  {/* ROW: Ranking + TAGS */}
+                  <HStack
+                    paddingLeft={adjustRankingLeft}
+                    spacing={12}
+                    alignItems="center"
+                  >
+                    <RestaurantRatingViewPopover
+                      size="xs"
+                      restaurant={restaurant}
+                    />
+                    <HStack spacing>
+                      {tagElements}
+                      <RestaurantAddTagButton restaurant={restaurant} />
+                    </HStack>
+                  </HStack>
+                </VStack>
+              </Link>
+            </VStack>
 
             {/* ROW: COMMENT */}
-            <Spacer size={2} />
+            <Spacer size={8} />
             <VStack maxWidth="90%" marginLeft={-2}>
               {!showAddEditComment && (
                 <CommentBubble user={{ username: 'Peach' }}>
@@ -215,13 +227,13 @@ const RestaurantListItemContent = memo(
           </VStack>
         </VStack>
 
-        <VStack width={500}>
+        <VStack padding={10} paddingTop={30} width={600} overflow="hidden">
           <RestaurantPeek
             size={isShowingComment ? 'lg' : 'md'}
             restaurant={restaurant}
           />
         </VStack>
-      </>
+      </HStack>
     )
   }
 )
