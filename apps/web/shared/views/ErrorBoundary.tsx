@@ -1,10 +1,17 @@
 import React from 'react'
-import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary'
+import {
+  FallbackProps,
+  ErrorBoundary as ReactErrorBoundary,
+} from 'react-error-boundary'
 import { Button } from 'react-native'
 
 import { ZStack } from './ui/Stacks'
 
-function ErrorFallback({ error, componentStack, resetErrorBoundary }) {
+function ErrorFallback({
+  error,
+  componentStack,
+  resetErrorBoundary,
+}: FallbackProps) {
   return (
     <ZStack
       fullscreen
