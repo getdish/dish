@@ -34,6 +34,7 @@
     "android": "react-native run-android"
   },
   "dependencies": {
+    "react-error-boundary": "^2.1.0",
     "rollup-plugin-serve": "^1.0.1",
     "google-closure-compiler": "20191111.0.0",
     "@apollo/client": "3.0.0-beta.43",
