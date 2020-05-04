@@ -155,9 +155,10 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
 const RestaurantPhotos = ({ restaurant }: { restaurant: Restaurant }) => {
   const drawerWidth = useHomeDrawerWidthInner()
   const spacing = 20
+  const photos = restaurant.bestTagPhotos()
   return (
     <>
-      {!!restaurant.photos?.length && (
+      {!!photos?.length && (
         <VStack spacing="xl">
           <HStack justifyContent="center" spacing>
             <LinkButton {...flatButtonStyleActive}>Top Dishes</LinkButton>
@@ -173,7 +174,7 @@ const RestaurantPhotos = ({ restaurant }: { restaurant: Restaurant }) => {
             justifyContent="center"
             spacing={spacing}
           >
-            {restaurant.tags?.map((t, index) => {
+            {restaurant.bestTagPhotos().map((t, index) => {
               let tag_name = t.tag.name
               if (t.tag.icon) tag_name = t.tag.icon + tag_name
               return (
@@ -185,7 +186,7 @@ const RestaurantPhotos = ({ restaurant }: { restaurant: Restaurant }) => {
                     {
                       name: tag_name,
                       image: (t.photos && t.photos[0]) || '',
-                      rating: t.rating || 0,
+                      rating: (t.rating || 0) * 2,
                     } as any
                   }
                 />
