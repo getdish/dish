@@ -2,7 +2,9 @@
   "name": "@dish/hasura",
   "version": "0.0.1",
   "description": "",
-  "devDependencies": {},
+  "devDependencies": {
+    "hasura-cli": "^1.2.0"
+  },
   "dependencies": {
     "@dish/auth": "*"
   },

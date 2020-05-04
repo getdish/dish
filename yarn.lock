@@ -4855,7 +4855,7 @@ axios@^0.17.1:
     follow-redirects "^1.2.5"
     is-buffer "^1.1.5"
 
-axios@^0.19.1, axios@^0.19.2:
+axios@^0.19.0, axios@^0.19.1, axios@^0.19.2:
   version "0.19.2"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.19.2.tgz#3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27"
   integrity sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==
@@ -10850,6 +10850,14 @@ hashids@1.1.4:
   version "1.1.4"
   resolved "https://registry.npmjs.org/hashids/-/hashids-1.1.4.tgz#e4ff92ad66b684a3bd6aace7c17d66618ee5fa21"
   integrity sha512-U/fnTE3edW0AV92ZI/BfEluMZuVcu3MDOopsN7jS+HqDYcarQo8rXQiWlsBlm0uX48/taYSdxRsfzh2HRg5Z6w==
+
+hasura-cli@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/hasura-cli/-/hasura-cli-1.2.0.tgz#a1ca61266cbc57141ce4b1d18b230b24b4b32106"
+  integrity sha512-WIpiELAP1rcOF7F5yIRUiWzfF3E6j6mRKxCgc97+OU/X6NiNqTdGYU6FwzEJQ45Iw0AddBPOiwgZFvynN8zUAA==
+  dependencies:
+    axios "^0.19.0"
+    chalk "^2.4.2"
 
 he@1.1.1:
   version "1.1.1"
