@@ -47,8 +47,6 @@ export function HomeViewDrawer(props: { children: any }) {
     overflow: 'hidden',
   }
 
-  const topOffset = isSmall ? 0 : searchBarHeight
-
   return (
     <HStack
       position="absolute"
@@ -96,14 +94,7 @@ export function HomeViewDrawer(props: { children: any }) {
         marginLeft={isSmall ? 0 : 'auto'}
       >
         <ZStack position="relative" flex={1}>
-          <VStack
-            position="absolute"
-            top={topOffset}
-            left={0}
-            right={0}
-            bottom={0}
-            flex={1}
-          >
+          <VStack fullscreen flex={1}>
             {props.children}
           </VStack>
         </ZStack>

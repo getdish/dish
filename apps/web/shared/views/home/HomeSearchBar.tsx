@@ -425,20 +425,19 @@ const HomeSearchBarHomeButton = memo(() => {
       <LinkButton
         flexDirection="row"
         pointerEvents="auto"
-        padding={13}
+        paddingVertical={13}
+        paddingHorizontal={4}
         marginLeft={-8} //undo spacing
         opacity={om.state.home.currentStateType === 'home' ? 0 : 1}
         onPress={() => om.actions.home.popTo('home')}
       >
-        <VStack spacing={2} alignItems="center">
-          <Icon
-            name={
-              om.state.home.breadcrumbStates.length <= 1 ? 'Home' : 'ChevronUp'
-            }
-            size={22}
-            opacity={0.5}
-          />
-        </VStack>
+        <Icon
+          name={
+            om.state.home.breadcrumbStates.length <= 1 ? 'Home' : 'ChevronUp'
+          }
+          size={22}
+          opacity={0.5}
+        />
       </LinkButton>
 
       <VStack flex={0.5} />
@@ -570,7 +569,7 @@ const styles = StyleSheet.create({
   },
   containerInner: {
     flex: 1,
-    maxWidth: pageWidthMax + 30,
+    maxWidth: pageWidthMax - 150,
     width: '100%',
     backgroundColor: 'rgba(255,255,255,1)',
     height: '100%',

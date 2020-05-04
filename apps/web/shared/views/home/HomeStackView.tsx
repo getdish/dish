@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 
-import { drawerBorderRadius } from '../../constants'
+import { drawerBorderRadius, searchBarHeight } from '../../constants'
 import { useDebounceValue } from '../../hooks/useDebounce'
 import { useMedia } from '../../hooks/useMedia'
 import { HomeStateItemSimple } from '../../state/home'
@@ -82,7 +82,9 @@ function HomeStackViewItem({
     []
   )
 
-  const top = isSmall ? 0 : (index - 1) * 10 + 6
+  const top = isSmall
+    ? 0
+    : (index - 1) * 10 + (index == 0 ? 0 : searchBarHeight + 10)
   const left = isSmall ? -3 : index * 7
 
   return (

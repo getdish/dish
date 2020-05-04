@@ -45,27 +45,20 @@ export default memo(function HomePageTopDishes({
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
       <VStack position="relative" flex={1}>
         <ScrollView style={{ flex: 1 }}>
-          <VStack paddingVertical={24} spacing="xl">
+          <VStack paddingVertical={34} paddingTop={100} spacing="xl">
             {/* TRENDING */}
             <HomeViewTopDishesTrending />
 
             {/* LENSES - UNIQUELY GOOD HERE */}
             <VStack spacing="lg">
-              <Text
-                style={{
-                  textAlign: 'center',
-                  fontSize: 18,
-                  fontWeight: 'bold',
-                  marginBottom: 0,
-                }}
-              >
+              <SmallTitle>
                 {om.state.home.lastActiveTags
                   .find((x) => x.type === 'lense')
                   ?.descriptions?.plain.replace(
                     'Here',
                     `in ${om.state.home.lastHomeState.currentLocationName}`
                   ) ?? ''}
-              </Text>
+              </SmallTitle>
 
               <VStack spacing alignItems="center">
                 <HomeLenseBarOnly
@@ -115,7 +108,7 @@ const HomeViewTopDishesTrending = memo(() => {
   const listSpace = 3
   const total = 5
   return (
-    <VStack height={168 + listSpace * (total - 1)}>
+    <VStack height={188 + listSpace * (total - 1)}>
       <HStack spacing="lg" paddingHorizontal={10}>
         <VStack flex={1}>
           <ZStack position="absolute" top={-5} left={-8} zIndex={100}>
@@ -180,12 +173,12 @@ const CountryTopDishesAndRestaurants = memo(
     }, [])
 
     const padding = 20
-    const dishHeight = 120
+    const dishHeight = 170
     const spacing = 22
 
     return (
       <VStack
-        paddingVertical={10}
+        paddingVertical={15}
         backgroundColor={hovered ? bgLightLight : null}
         // onHoverIn={() => setHovered(true)}
         // onHoverOut={() => setHovered(false)}
@@ -207,7 +200,7 @@ const CountryTopDishesAndRestaurants = memo(
             >
               <Text
                 numberOfLines={1}
-                style={{ fontSize: 22, fontWeight: '600' }}
+                style={{ fontSize: 20, fontWeight: '600' }}
               >
                 {country.country} {country.icon}
               </Text>
@@ -218,14 +211,21 @@ const CountryTopDishesAndRestaurants = memo(
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <HStack
-            height={dishHeight + padding * 2 + 40}
+            height={dishHeight + padding * 2 + 10}
             alignItems="center"
             padding={padding}
+            paddingTop={padding + 10}
             paddingHorizontal={32}
             spacing={spacing}
           >
             {(country.dishes || []).slice(0, 10).map((top_dish, index) => {
-              return <DishView size={120} key={index} dish={top_dish as any} />
+              return (
+                <DishView
+                  size={dishHeight}
+                  key={index}
+                  dish={top_dish as any}
+                />
+              )
             })}
           </HStack>
         </ScrollView>
