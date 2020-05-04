@@ -107,6 +107,7 @@ export class Yelp extends WorkerJob {
         top_right,
         bottom_left,
         next_page,
+        only,
       ])
     }
   }
@@ -228,12 +229,17 @@ export class Yelp extends WorkerJob {
 
   async getPhotos(id: string, bizId: string, photo_total: number) {
     const PER_PAGE = 30
-    for (let start = PER_PAGE; start <= photo_total; start += PER_PAGE) {
+    const YELPS_START_IS_THE_CEILING_OF_THE_PAGE = PER_PAGE
+    for (
+      let start = YELPS_START_IS_THE_CEILING_OF_THE_PAGE;
+      start <= photo_total + PER_PAGE;
+      start += PER_PAGE
+    ) {
       await this.runOnWorker('getPhotoPage', [
         id,
         bizId,
         start,
-        start / PER_PAGE - 1,
+        Math.floor(start / PER_PAGE) - 1,
       ])
     }
   }

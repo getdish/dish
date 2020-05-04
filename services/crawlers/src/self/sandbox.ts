@@ -2,7 +2,7 @@ import { Restaurant } from '@dish/models'
 
 import { Self } from './Self'
 
-const name = 'Bac Lieu Restaurant'
+const name = 'Crepe Box'
 
 async function one() {
   const restaurant = new Restaurant()
@@ -16,4 +16,4 @@ async function all() {
   await internal.main()
 }
 
-all()
+one()

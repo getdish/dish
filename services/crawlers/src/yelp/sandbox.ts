@@ -8,12 +8,13 @@ async function main() {
 }
 
 async function one() {
-  const name = 'Fresh Brew Coffee'
+  const name = 'Crepe Box'
+  const coords = [37.77089, -122.39293]
   const t = new Yelp()
   const restaurant = new Restaurant()
   await t.runOnWorker('getRestaurants', [
-    [37.79, -122.411],
-    [37.788, -122.413],
+    [coords[0] - 0.001, coords[1] + 0.001],
+    [coords[0] + 0.001, coords[1] - 0.001],
     0,
     name,
   ])
