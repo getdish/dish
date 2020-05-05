@@ -8,8 +8,8 @@ async function main() {
 }
 
 async function one() {
-  const name = 'Crepe Box'
-  const coords = [37.77089, -122.39293]
+  const name = 'Nopa'
+  const coords = [37.774834, -122.437469]
   const t = new Yelp()
   const restaurant = new Restaurant()
   await t.runOnWorker('getRestaurants', [
