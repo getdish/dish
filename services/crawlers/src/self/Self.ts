@@ -379,9 +379,9 @@ export class Self extends WorkerJob {
   }
 
   mergePhotos() {
+    // ...this.tripadvisor.getData('photos', []),
     this.restaurant.photos = [
       ...this.getPaginatedData(this.yelp.data, 'photos').map((i) => i.src),
-      ...this.tripadvisor.getData('photos', []),
     ]
   }
 
