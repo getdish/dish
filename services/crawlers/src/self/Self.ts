@@ -109,23 +109,7 @@ export class Self extends WorkerJob {
   }
 
   async persist() {
-    try {
-      await this.restaurant.update()
-    } catch (e) {
-      if (
-        e.message.includes(
-          'duplicate key value violates unique constraint "restaurant_name_address_key"'
-        )
-      ) {
-        console.log(
-          'Restaurant unique key violation',
-          this.restaurant.id,
-          this.restaurant.name,
-          this.restaurant.address,
-          Object.keys(this.restaurant.sources)
-        )
-      }
-    }
+    await this.restaurant.update()
   }
 
   async getScrapeData() {
