@@ -2,7 +2,7 @@ import { Restaurant } from '@dish/models'
 
 import { Self } from './Self'
 
-const slug = 'nopa'
+const slug = 'pushcart'
 
 async function one() {
   const restaurant = new Restaurant()

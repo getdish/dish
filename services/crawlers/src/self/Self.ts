@@ -169,10 +169,7 @@ export class Self extends WorkerJob {
       ubereats: parseFloat(
         this.ubereats.getData('main.ratingBadge[0].children[0].text')
       ),
-      infatuated:
-        parseFloat(
-          this.infatuated.getData('data_from_map_search.post.rating')
-        ) / 2,
+      infatuated: this._infatuatedRating(),
       tripadvisor: parseFloat(
         this.tripadvisor.getData('overview.rating.primaryRating')
       ),
@@ -182,6 +179,12 @@ export class Self extends WorkerJob {
       this.ratings,
       Restaurant.WEIGHTS
     )
+  }
+
+  _infatuatedRating() {
+    const rating = this.infatuated.getData('data_from_map_search.post.rating')
+    if (rating < 0) return NaN
+    return parseFloat(rating) / 2
   }
 
   weightRatings(
