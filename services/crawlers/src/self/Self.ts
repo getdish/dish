@@ -166,9 +166,7 @@ export class Self extends WorkerJob {
   mergeRatings() {
     this.ratings = {
       yelp: parseFloat(this.yelp.getData('data_from_map_search.rating')),
-      ubereats: parseFloat(
-        this.ubereats.getData('main.ratingBadge[0].children[0].text')
-      ),
+      ubereats: parseFloat(this.ubereats.getData('main.rating.ratingValue')),
       infatuated: this._infatuatedRating(),
       tripadvisor: parseFloat(
         this.tripadvisor.getData('overview.rating.primaryRating')

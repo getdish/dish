@@ -87,15 +87,9 @@ const ubereats: Partial<Scrape> = {
     main: {
       location: { address: '123 Street, Big City, America' },
       title: 'Test Name UberEats',
-      ratingBadge: [
-        {
-          children: [
-            {
-              text: '4.4 ',
-            },
-          ],
-        },
-      ],
+      rating: {
+        ratingValue: 4.4,
+      },
     },
     dishes: [
       {
