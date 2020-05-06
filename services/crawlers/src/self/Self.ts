@@ -303,9 +303,9 @@ export class Self extends WorkerJob {
 
     path = this.infatuated.getData('data_from_map_search.post.review_link')
     if (path != '') {
-      this.restaurant.sources.infatuation = {
+      this.restaurant.sources.infatuated = {
         url: 'https://www.theinfatuation.com' + path,
-        rating: this.ratings?.infatuation,
+        rating: this.ratings?.infatuated,
       }
     }
 
