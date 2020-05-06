@@ -288,14 +288,6 @@ export class Restaurant extends ModelBase<Restaurant> {
         found = candidate
         break
       }
-
-      if (
-        street_address.length > 2 &&
-        candidate.address.includes(street_address)
-      ) {
-        found = candidate
-        break
-      }
     }
     if (found) {
       if (process.env.RUN_WITHOUT_WORKER != 'true') {
