@@ -427,7 +427,6 @@ const loadPageRestaurant: AsyncAction = async (om) => {
   const slug = state.restaurantSlug
   const restaurant = new Restaurant()
   await restaurant.findOne('slug', slug)
-  restaurant.name = 'Test123'
   om.state.home.allRestaurants[restaurant.id] = restaurant
   if (state) {
     state.restaurantId = restaurant.id

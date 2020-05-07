@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
 
-import { searchBarHeight } from '../../constants'
+import { pageWidthMax, searchBarHeight } from '../../constants'
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { useOnMount } from '../../hooks/useOnMount'
 import { LngLat, setMapView } from '../../state/home'
@@ -100,6 +100,13 @@ export const HomeMap = memo(function HomeMap() {
   const state = om.state.home.currentState
   const { center, span } = state
 
+  // add a lil extra
+  const mapOverflowWidth = 100
+  const mapPadRight =
+    window.innerWidth < pageWidthMax
+      ? 0
+      : (window.innerWidth - pageWidthMax - mapOverflowWidth) / 2
+
   const padding = isSmall
     ? {
         left: 0,
@@ -111,7 +118,7 @@ export const HomeMap = memo(function HomeMap() {
         left: drawerWidth,
         top: searchBarHeight + 15 + 15,
         bottom: 0,
-        right: drawerWidth > 600 ? window.innerWidth * 0.4 - drawerWidth : 0,
+        right: drawerWidth > 600 ? mapPadRight : 0,
       }
 
   const { map, mapProps } = useMap({
