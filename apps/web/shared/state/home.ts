@@ -35,9 +35,9 @@ import {
   isSearchBarTag,
   navigateToTag,
   navigateToTagId,
+  syncStateToRoute,
   toggleTagOnHomeState,
 } from './home-tag-helpers'
-import { getNavigateItemForState } from './home-tag-helpers'
 import {
   AutocompleteItem,
   GeocodePlace,
@@ -219,7 +219,7 @@ const startAutocomplete: AsyncAction = async (om) => {
     .slice(0, 20) as AutocompleteItem[]
   defaultAutocompleteResults = results
   om.state.home.autocompleteResults = results
-  await om.actions.home._runAutocomplete(om.state.home.currentState.searchQuery)
+  await runAutocomplete(om, om.state.home.currentState.searchQuery)
 }
 
 type PageAction = () => Promise<void>
@@ -427,6 +427,7 @@ const loadPageRestaurant: AsyncAction = async (om) => {
   const slug = state.restaurantSlug
   const restaurant = new Restaurant()
   await restaurant.findOne('slug', slug)
+  restaurant.name = 'Test123'
   om.state.home.allRestaurants[restaurant.id] = restaurant
   if (state) {
     state.restaurantId = restaurant.id
@@ -600,7 +601,7 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
 
     // fast actions
     om.actions.home.setShowAutocomplete('search')
-    om.actions.home._runAutocomplete(query)
+    runAutocomplete(om, query)
 
     if (isEditing) {
       console.warn('avoid search when editing user page')
@@ -616,10 +617,10 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     state.searchQuery = query
   }
 
-  await om.actions.home._syncStateToRoute(nextState)
+  await syncStateToRoute(om, nextState)
 }
 
-const _runAutocomplete: AsyncAction<string> = async (om, query) => {
+const runAutocomplete: AsyncAction<string> = async (om, query) => {
   const state = om.state.home.currentState
 
   if (query === '') {
@@ -1002,30 +1003,7 @@ const runHomeSearch: AsyncAction<string> = async (om, query) => {
   om.state.home.topDishesFilteredIndices = res
 }
 
-let _htgId = 0
-const _afterTagChange: AsyncAction = async (om) => {
-  if (!om.state.home.started) return
-  _htgId = (_htgId + 1) % Number.MAX_VALUE
-  let cur = _htgId
-  await sleep(50)
-  if (cur != _htgId) return
-  await om.actions.home._syncStateToRoute()
-  if (cur != _htgId) return
-  om.actions.home.runSearch()
-}
-
 const requestLocation: Action = (om) => {}
-
-const _syncStateToRoute: AsyncAction<HomeStateItem | void> = async (
-  om,
-  ogState
-) => {
-  const homeState = ogState || om.state.home.currentState
-  const next = getNavigateItemForState(om.state, homeState)
-  if (om.actions.router.getShouldNavigate(next)) {
-    om.actions.router.navigate(next)
-  }
-}
 
 const setSearchBarFocusedTag: Action<Tag | null> = (om, val) => {
   if (!val) {
@@ -1151,11 +1129,8 @@ export const actions = {
   navigateToTagId,
   getNavigateToTag,
   startAutocomplete,
-  _afterTagChange,
-  _runAutocomplete,
   runHomeSearch,
   updateCurrentMapAreaInformation,
-  _syncStateToRoute,
   clearSearch,
   forkCurrentList,
   getReview,
