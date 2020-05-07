@@ -15,18 +15,17 @@ export const RankingView = memo(
         // height={47}
         alignItems="center"
         justifyContent="center"
-        marginRight={8}
         marginVertical={-13}
         transform={[{ rotate: '-12deg' }]}
         {...props}
       >
         <Text
           style={{
-            fontSize: rank > 9 ? 20 : 26,
+            fontSize: rank > 9 ? 20 : 28,
             lineHeight: 22,
             letterSpacing: -2,
             fontWeight: '400',
-            color: '#aaa',
+            color: '#555',
           }}
         >
           <SuperScriptText style={{ opacity: 0.35, letterSpacing: 0 }}>

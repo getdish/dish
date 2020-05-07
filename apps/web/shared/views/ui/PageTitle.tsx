@@ -23,10 +23,10 @@ export const PageTitle = memo(
             maxWidth: '80%',
             // textAlign: 'center',
             opacity: 1,
-            fontSize: 24,
+            fontSize: 19,
             // fontFamily: 'Helvetica',
             lineHeight: 29,
-            fontWeight: '900',
+            fontWeight: '800',
           }}
         >
           {children}
@@ -39,7 +39,7 @@ export const PageTitle = memo(
                   // textAlign: 'center',
                   width: '100%',
                   color: '#666',
-                  fontSize: 16,
+                  fontSize: 17,
                   fontWeight: '400',
                 } as any
               }

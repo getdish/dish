@@ -106,8 +106,9 @@ const RestaurantListItemContent = memo(
     })
     const showAddComment = state.showAddComment || isEditingUserPage(om.state)
 
-    const adjustRankingLeft = 38
+    const adjustRankingLeft = 36
     const verticalPad = 22
+    const leftPad = 6
 
     return (
       <HStack>
@@ -127,31 +128,38 @@ const RestaurantListItemContent = memo(
               hoverStyle={{ backgroundColor: bgLightHover }}
               marginLeft={-adjustRankingLeft}
               width={900}
-              // marginRight="-100%"
             >
               <Link name="restaurant" params={{ slug: restaurant.slug }}>
                 <VStack>
                   <HStack alignItems="center" marginVertical={-3}>
-                    <RankingView marginRight={-4} marginTop={-10} rank={rank} />
+                    <RankingView
+                      marginRight={-6 + leftPad}
+                      marginTop={-10}
+                      rank={rank}
+                    />
+
                     <SelectableText
                       style={{
                         fontSize: 22,
+                        fontWeight: '700',
                         textDecorationColor: 'transparent',
                       }}
                     >
                       {restaurant.name}
                     </SelectableText>
                   </HStack>
-                  <Spacer size={8} />
+
+                  <Spacer size={10} />
 
                   {/* ROW: Ranking + TAGS */}
                   <HStack
-                    paddingLeft={adjustRankingLeft}
+                    paddingLeft={adjustRankingLeft + leftPad}
                     spacing={12}
                     alignItems="center"
+                    marginBottom={-3}
                   >
                     <RestaurantRatingViewPopover
-                      size="xs"
+                      size="sm"
                       restaurant={restaurant}
                     />
                     <HStack spacing>
@@ -163,8 +171,9 @@ const RestaurantListItemContent = memo(
               </Link>
             </VStack>
 
+            <Spacer size={14} />
+
             {/* ROW: COMMENT */}
-            <Spacer size={8} />
             <VStack maxWidth="90%" marginLeft={-2}>
               <CommentBubble user={{ username: 'Peach' }}>
                 <SelectableText
@@ -172,7 +181,7 @@ const RestaurantListItemContent = memo(
                     opacity: 0.8,
                     lineHeight: 19,
                     fontSize: 14,
-                    marginBottom: 5,
+                    marginVertical: 5,
                   }}
                 >
                   Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet. Lorem
@@ -181,6 +190,8 @@ const RestaurantListItemContent = memo(
                 </SelectableText>
               </CommentBubble>
             </VStack>
+
+            <Spacer size={6} />
 
             {/* ROW: BOTTOM INFO */}
             <HStack

@@ -121,7 +121,7 @@ function HomeStackViewItem({
             })}
             borderRadius={drawerBorderRadius}
             pointerEvents="auto"
-            overflow="hidden"
+            // overflow="hidden"
           >
             {children}
           </ZStack>

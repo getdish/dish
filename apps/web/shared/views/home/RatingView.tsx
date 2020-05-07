@@ -44,15 +44,15 @@ export const RatingView = forwardRef(
         {!hideEmoji && percent >= 80 && (
           <VStack
             position="absolute"
-            top={-4 + (sizeIn == 'lg' ? 0 : -4)}
-            right={-4 + (sizeIn == 'lg' ? 0 : -4)}
+            top={-0.05 * size}
+            right={-0.05 * size}
             alignItems="center"
             justifyContent="center"
             zIndex={100}
           >
             <Text
               style={{
-                fontSize: Math.max(15, size * 0.3),
+                fontSize: Math.max(13, size * 0.25),
                 textShadowColor: 'rgba(0,0,0,0.25)',
                 textShadowRadius: size * 0.015,
               }}

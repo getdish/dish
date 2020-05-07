@@ -113,13 +113,8 @@ export const CommentBubble = ({
       spacing={1}
       {...rest}
     >
-      <HStack
-        alignItems="flex-start"
-        justifyContent="flex-start"
-        spacing={6}
-        flexWrap="nowrap"
-      >
-        <Circle size={18} marginBottom={-8} top={3}>
+      <HStack alignItems="center" spacing={6} flexWrap="nowrap">
+        <Circle size={18} marginBottom={-2}>
           <Image source={avatar} style={{ width: 18, height: 18 }} />
         </Circle>
         <Text style={{ color: '#999' }}>

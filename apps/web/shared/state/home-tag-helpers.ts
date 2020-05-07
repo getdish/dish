@@ -17,8 +17,6 @@ import { NavigableTag, Tag, getTagId, tagFilters, tagLenses } from './Tag'
 
 const SPLIT_TAG = '_'
 const SPLIT_TAG_TYPE = '~'
-const ensureUniqueTagOfType = new Set(['lense'])
-const ensureUniqueTag = new Set(['country', 'dish'])
 
 export const allTagsList = [...tagFilters, ...tagLenses]
 export const allTags = allTagsList.reduce((acc, cur) => {
@@ -26,14 +24,14 @@ export const allTags = allTagsList.reduce((acc, cur) => {
   return acc
 }, {})
 
-type HomeStateNav = { tag: NavigableTag; state?: HomeStateItem }
+type HomeStateNav = { tags: NavigableTag[]; state?: HomeStateItem }
 
 export const navigateToTag: Action<HomeStateNav> = (om, nav) => {
-  getNavigateToTag(om, nav)?.onPress?.()
+  getNavigateToTags(om, nav)?.onPress?.()
 }
 
 export const navigateToTagId: Action<string> = (om, tagId) => {
-  navigateToTag(om, { tag: om.state.home.allTags[tagId] })
+  navigateToTag(om, { tags: [om.state.home.allTags[tagId]] })
 }
 
 export const currentNavItem: Derive<HomeState, NavigateItem> = (state, om) =>
@@ -69,15 +67,17 @@ type LinkButtonProps = NavigateItem & {
 }
 
 // for easy use with Link / LinkButton
-export const getNavigateToTag: Action<HomeStateNav, LinkButtonProps> = (
+export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps> = (
   om,
-  { state = om.state.home.currentState, tag }
+  { state = om.state.home.currentState, tags }
 ) => {
-  if (!tag.name) {
-    throw new Error(`No tag name`)
+  // remove undefined
+  tags = tags.filter(Boolean)
+  if (!tags.length) {
+    return null
   }
-  const nextState = getNextStateWithTag(om, {
-    tag,
+  const nextState = getNextStateWithTags(om, {
+    tags,
     state,
   })
   const navigateItem = getNavigateItemForState(om.state, nextState)
@@ -86,14 +86,16 @@ export const getNavigateToTag: Action<HomeStateNav, LinkButtonProps> = (
     onPress: (e) => {
       e?.preventDefault()
       e?.stopPropagation()
-      om.actions.home.toggleTagOnHomeState(tag)
+      for (const tag of tags) {
+        om.actions.home.toggleTagOnHomeState(tag)
+      }
     },
   }
 }
 
-const getNextStateWithTag: Action<HomeStateNav, HomeStateItem | null> = (
+const getNextStateWithTags: Action<HomeStateNav, HomeStateItem | null> = (
   om,
-  { state, tag }
+  { state, tags }
 ) => {
   if (!isHomeState(state) && !isSearchState(state)) {
     return null
@@ -107,13 +109,15 @@ const getNextStateWithTag: Action<HomeStateNav, HomeStateItem | null> = (
     }
   }
 
-  const key = getTagId(tag)
-  if (nextActiveTagIds[key] === true) {
-    nextActiveTagIds[key] = false
-  } else {
-    nextActiveTagIds[key] = true
-    // disable others
-    ensureUniqueActiveTagIds(nextActiveTagIds, om.state.home, tag)
+  for (const tag of tags) {
+    const key = getTagId(tag)
+    if (nextActiveTagIds[key] === true) {
+      nextActiveTagIds[key] = false
+    } else {
+      nextActiveTagIds[key] = true
+      // disable others
+      ensureUniqueActiveTagIds(nextActiveTagIds, om.state.home, tag)
+    }
   }
 
   return {
@@ -123,6 +127,7 @@ const getNextStateWithTag: Action<HomeStateNav, HomeStateItem | null> = (
 }
 
 // mutating
+const ensureUniqueTagOfType = new Set(['lense', 'country', 'dish'])
 function ensureUniqueActiveTagIds(
   activeTagIds: HomeActiveTagIds,
   home: OmStateHome,
@@ -134,9 +139,6 @@ function ensureUniqueActiveTagIds(
     }
     const type = home.allTags[key]?.type
     if (ensureUniqueTagOfType.has(type) && type === nextActiveTag.type) {
-      delete activeTagIds[key]
-    }
-    if (ensureUniqueTag.has(nextActiveTag.type) && ensureUniqueTag.has(type)) {
       delete activeTagIds[key]
     }
   }
