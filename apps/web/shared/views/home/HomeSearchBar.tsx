@@ -512,7 +512,7 @@ const HomeSearchBarTags = memo(
     return (
       <>
         {!!om.state.home.searchBarTags.length && (
-          <HStack marginLeft={10} marginTop={-1}>
+          <HStack marginLeft={10} marginTop={-1} spacing>
             {om.state.home.searchBarTags.map((tag) => {
               const isActive = om.state.home.searchbarFocusedTag === tag
               return (

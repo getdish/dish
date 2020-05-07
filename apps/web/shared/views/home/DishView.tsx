@@ -2,6 +2,7 @@ import { TopCuisineDish } from '@dish/models'
 import React, { memo } from 'react'
 import { Image, Text } from 'react-native'
 
+import { Tag } from '../../state/Tag'
 import { Box } from '../ui/Box'
 import { LinkButton } from '../ui/Link'
 import { StackProps, VStack, ZStack } from '../ui/Stacks'
@@ -10,15 +11,16 @@ import { DishRatingView } from './DishRatingView'
 export const DishView = memo(
   ({
     dish,
+    cuisine,
     size = 100,
     ...rest
-  }: { dish: TopCuisineDish; size?: number } & StackProps) => {
+  }: { cuisine?: Tag; dish: TopCuisineDish; size?: number } & StackProps) => {
     return (
       <LinkButton
         alignItems="center"
         position="relative"
         justifyContent="center"
-        tag={{ type: 'dish', name: dish.name }}
+        tags={[cuisine, { type: 'dish', name: dish.name }]}
         {...rest}
       >
         <ZStack pointerEvents="none" fullscreen zIndex={10}>

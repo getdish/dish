@@ -4,15 +4,17 @@ import { Text } from 'react-native'
 import { HomeStateItem } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { Om, OmState } from '../../state/home-types'
-import { getTagId } from '../../state/Tag'
+import { NavigableTag, getTagId } from '../../state/Tag'
 import { TagButton } from './TagButton'
 
 export function getTitleForState(omState: OmState, state: HomeStateItem) {
   const { currentLocationName = 'San Francisco' } = state
   const tags = getActiveTags(omState.home, state)
   const lense = tags.find((x) => x.type === 'lense')
-  const countryTag = tags.find((x) => x.type === 'country')?.name ?? ''
-  const dishTag = tags.find((x) => x.type === 'dish')?.name ?? ''
+  const countryTag = tags.find((x) => x.type === 'country')
+  const countryTagName = countryTag?.name ?? ''
+  const dishTag = tags.find((x) => x.type === 'dish')
+  const dishTagName = dishTag?.name ?? ''
   const hasUser = state.type === 'userSearch'
   const userPrefix = state.type === 'userSearch' ? `${state.username}'s ` : ''
   let lensePlaceholder = lense?.name ?? ''
@@ -22,14 +24,14 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
     else if (countryTag) lensePlaceholder = descriptions.cuisine
     else lensePlaceholder = descriptions.plain
   }
-  const titleTags = tags.filter(
-    (tag) =>
-      (dishTag
-        ? tag.type === 'dish'
-        : countryTag
-        ? tag.type === 'country'
-        : tag.type === 'dish') || tag.name === 'Delivery'
-  )
+
+  let titleTags: NavigableTag[] = []
+  if (countryTag) {
+    titleTags.push(countryTag)
+  }
+  if (dishTag) {
+    titleTags.push(dishTag)
+  }
 
   if (hasUser) {
     lensePlaceholder = lensePlaceholder.toLowerCase()
@@ -37,7 +39,10 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
 
   const titleSpace = titleTags.length ? ' ' : ''
   const searchName = state.searchQuery ?? ''
-  let titleTagsString = titleTags.map((x) => `${x.name ?? ''}`).join(' ')
+  let titleTagsString = titleTags
+    .map((x) => `${x.name ?? ''}`)
+    .filter(Boolean)
+    .join(' ')
 
   // lowercase when not at front
   if (!countryTag && lensePlaceholder.indexOf('🍔') > 0) {
@@ -46,17 +51,24 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
 
   const titleSubject = lensePlaceholder.replace('🍔', titleTagsString)
 
-  const subTitleParts = countryTag
-    ? ['', `in ${currentLocationName}`]
-    : dishTag
-    ? [dishTag, `dishes in ${currentLocationName}`]
-    : [`"${state.searchQuery}"`, `in ${currentLocationName}`]
+  // build subtitle
+  let subTitleParts: string[] = []
+  if (countryTagName) {
+    subTitleParts.push(countryTagName)
+  }
+  if (dishTagName) {
+    subTitleParts.push(dishTagName)
+  }
+  if (state.searchQuery) {
+    subTitleParts.push(`"${state.searchQuery}"`)
+  }
+  subTitleParts.push(`in ${currentLocationName}`)
 
-  const subTitle = `${subTitleParts[0]} ${subTitleParts[1]}`
+  const subTitle = subTitleParts.join(' ')
   const subTitleElements = (
     <>
       <Text style={{ fontWeight: '500' }}>{subTitleParts[0]}</Text>&nbsp;
-      {subTitleParts[1]}
+      {subTitleParts.slice(1).join(' ')}
     </>
   )
 

@@ -5,7 +5,7 @@ import React, { useCallback, useContext, useMemo } from 'react'
 import { Text, TextStyle, TouchableOpacity } from 'react-native'
 
 import { currentStates } from '../../state/home'
-import { getNavigateToTag } from '../../state/home-tag-helpers'
+import { getNavigateToTags } from '../../state/home-tag-helpers'
 import { useOvermindStatic } from '../../state/om'
 import {
   NavigateItem,
@@ -126,11 +126,6 @@ export function Link<
 
 const prevent = (e) => [e.preventDefault(), e.stopPropagation()]
 
-type TagProp = {
-  tag: NavigableTag
-  onPress?: Function
-}
-
 type LinkButtonNamedProps<A = any, B = any> = {
   name: A
   params?: B
@@ -148,7 +143,14 @@ export type LinkButtonProps<
     | {
         onPress?: any
       }
-    | TagProp
+    | {
+        tag: NavigableTag
+        onPress?: Function
+      }
+    | {
+        tags: NavigableTag[]
+        onPress?: Function
+      }
   )
 
 const useNormalizeLinkProps = (
@@ -159,6 +161,9 @@ const useNormalizeLinkProps = (
   if ('tag' in next) {
     delete next['tag']
   }
+  if ('tags' in next) {
+    delete next['tags']
+  }
   return next
 }
 
@@ -166,22 +171,35 @@ const useNormalizedLink = (
   props: Partial<LinkButtonProps>
 ): LinkButtonNamedProps => {
   const currentStateID = useContext(CurrentStateID)
+  let tags: NavigableTag[] = []
+
   if ('tag' in props && !!props.tag) {
     if (props.tag.name !== 'Search') {
-      const state = currentStates.find((x) => x.id === currentStateID)
-      const tagProps = getNavigateToTag(window['om'], {
-        state,
-        tag: props.tag,
-      })
-      return {
-        ...tagProps,
-        onPress: (e) => {
-          tagProps.onPress?.(e)
-          props.onPress?.(e)
-        },
-      }
+      tags.push(props.tag)
     }
   }
+  if ('tags' in props && Array.isArray(props.tags)) {
+    tags = props.tags
+  }
+
+  if (tags.length) {
+    const state = currentStates.find((x) => x.id === currentStateID)
+    const tagProps = getNavigateToTags(window['om'], {
+      state,
+      tags,
+    })
+    if (tags.length > 1) {
+      console.log(tags, tagProps)
+    }
+    return {
+      ...tagProps,
+      onPress: (e) => {
+        tagProps.onPress?.(e)
+        props.onPress?.(e)
+      },
+    }
+  }
+
   if ('name' in props) {
     return {
       name: props.name,

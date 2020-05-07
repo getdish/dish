@@ -224,6 +224,11 @@ const CountryTopDishesAndRestaurants = memo(
                   size={dishHeight}
                   key={index}
                   dish={top_dish as any}
+                  cuisine={{
+                    id: country.country,
+                    name: country.country,
+                    type: 'country',
+                  }}
                 />
               )
             })}

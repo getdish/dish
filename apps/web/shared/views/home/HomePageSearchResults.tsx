@@ -17,7 +17,6 @@ import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { useWaterfall } from '../ui/useWaterfall'
 import { flatButtonStyle } from './baseButtonStyle'
-import { CloseButton, SmallCircleButton } from './CloseButton'
 import { getTitleForState } from './getTitleForState'
 import HomeLenseBar from './HomeLenseBar'
 import { LoadingItems } from './LoadingItems'
@@ -83,9 +82,11 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
           fullscreen
           pointerEvents="none"
           top="auto"
-          bottom={-35}
+          bottom={-30}
+          right={-98}
           zIndex={1000}
           height={50}
+          alignItems="flex-end"
         >
           <HStack alignItems="center" spacing="sm">
             <Circle size={26} marginVertical={-26 / 2}>
@@ -118,15 +119,14 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
                   om.actions.home.forkCurrentList()
                 }}
               >
-                <Box
-                  padding={3}
-                  paddingHorizontal={5}
-                  shadowRadius={0}
-                  backgroundColor="#fff"
-                >
+                <Box padding={5} paddingHorizontal={5} backgroundColor="#fff">
                   <HStack alignItems="center" spacing={6}>
                     <Icon name="Edit2" size={12} color="#777" />
-                    <Text style={{ color: 'blue' }}>My list</Text>
+                    <Text
+                      style={{ color: 'blue', fontSize: 16, fontWeight: '700' }}
+                    >
+                      My list
+                    </Text>
                   </HStack>
                 </Box>
               </LinkButton>
@@ -139,7 +139,6 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
         // marginTop={-23}
         position="relative"
         flex={1}
-        // paddingTop={4}
         overflow="hidden"
       >
         <HomeSearchResultsViewContent state={state} />
@@ -152,7 +151,7 @@ const HomeSearchResultsViewContent = memo(
   ({ state }: { state: HomeStateItemSearch }) => {
     const om = useOvermind()
     const allRestaurants = om.state.home.allRestaurants
-    const topPad = 8
+    const topPad = 0
     const [fullyLoad, setFullyLoad] = useState(false)
 
     useWaterfall(() => {
