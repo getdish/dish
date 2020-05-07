@@ -3,6 +3,7 @@ import { last } from 'lodash'
 import { Action, AsyncAction, Derive } from 'overmind'
 
 import { LIVE_SEARCH_DOMAIN } from '../constants'
+import { sleep } from '../helpers/sleep'
 import { isHomeState, isSearchState, shouldBeOnHome } from './home-helpers'
 import {
   HomeActiveTagIds,
@@ -220,7 +221,30 @@ export const toggleTagOnHomeState: AsyncAction<NavigableTag> = async (
   const key = getTagId(next)
   state.activeTagIds[key] = !state.activeTagIds[key]
   ensureUniqueActiveTagIds(state.activeTagIds, om.state.home, next)
-  await om.actions.home._afterTagChange()
+  await _afterTagChange(om)
+}
+
+let _htgId = 0
+const _afterTagChange: AsyncAction = async (om) => {
+  if (!om.state.home.started) return
+  _htgId = (_htgId + 1) % Number.MAX_VALUE
+  let cur = _htgId
+  await sleep(50)
+  if (cur != _htgId) return
+  await syncStateToRoute(om)
+  if (cur != _htgId) return
+  om.actions.home.runSearch()
+}
+
+export const syncStateToRoute: AsyncAction<HomeStateItem | void> = async (
+  om,
+  ogState
+) => {
+  const homeState = ogState || om.state.home.currentState
+  const next = getNavigateItemForState(om.state, homeState)
+  if (om.actions.router.getShouldNavigate(next)) {
+    om.actions.router.navigate(next)
+  }
 }
 
 const getUrlTagInfo = (part: string, defaultType: any = ''): NavigableTag => {
