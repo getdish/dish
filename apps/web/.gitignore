@@ -1,7 +1,3 @@
-# gqless
-
-src/graphql/generated
-
 # OSX
 #
 .DS_Store

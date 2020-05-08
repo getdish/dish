@@ -188,9 +188,6 @@ const useNormalizedLink = (
       state,
       tags,
     })
-    if (tags.length > 1) {
-      console.log(tags, tagProps)
-    }
     return {
       ...tagProps,
       onPress: (e) => {

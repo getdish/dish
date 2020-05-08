@@ -1,33 +1,12 @@
 import { Restaurant } from '@dish/models'
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
 import { omStatic, useOvermind } from '../../state/om'
 import Hoverable from '../ui/Hoverable'
 import { Icon } from '../ui/Icon'
 import { VStack } from '../ui/Stacks'
-
-export function usePromise<A extends () => Promise<any>>(
-  fn: A,
-  mountArgs: any[] = []
-): ReturnType<A> extends Promise<infer U> ? U : A {
-  const [val, setVal] = useState(null)
-
-  useEffect(() => {
-    let cancelled = false
-    fn().then((res) => {
-      if (!cancelled) {
-        console.log('got', res)
-        setVal(res)
-      }
-    })
-    return () => {
-      cancelled = true
-    }
-  }, mountArgs)
-
-  return val
-}
+import { usePromise } from './usePromise'
 
 export const RestaurantUpVoteDownVote = memo(
   ({ restaurant }: { restaurant: Restaurant }) => {
