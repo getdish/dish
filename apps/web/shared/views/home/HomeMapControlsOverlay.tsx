@@ -2,7 +2,7 @@ import { useState } from 'react'
 import React, { memo } from 'react'
 import { Text } from 'react-native'
 
-import { searchBarHeight } from '../../constants'
+import { pageWidthMax, searchBarHeight } from '../../constants'
 import { useOvermind } from '../../state/om'
 import { LinkButton, OverlayLinkButton } from '../ui/Link'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
@@ -21,7 +21,7 @@ export const HomeMapControlsOverlay = memo(() => {
       pointerEvents="none"
       top={searchBarHeight + 10}
       left={drawerWidth + 20}
-      maxWidth={360}
+      maxWidth={pageWidthMax * 0.4}
       {...(isSmall && {
         maxWidth: '100%',
         left: 0,

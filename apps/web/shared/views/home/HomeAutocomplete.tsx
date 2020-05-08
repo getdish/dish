@@ -1,7 +1,11 @@
 import React, { memo, useEffect } from 'react'
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 
-import { searchBarHeight, searchBarTopOffset } from '../../constants'
+import {
+  pageWidthMax,
+  searchBarHeight,
+  searchBarTopOffset,
+} from '../../constants'
 import { useOvermind } from '../../state/om'
 import { Icon } from '../ui/Icon'
 import { LinearGradient } from '../ui/LinearGradient'
@@ -80,13 +84,14 @@ export default memo(function HomeAutoComplete() {
         className="ease-in-out-fast"
         position="absolute"
         top={searchBarTopOffset + searchBarHeight}
-        left="15%"
-        width="calc(100vw - 15%)"
+        left="50%"
+        right="5%"
+        maxWidth={pageWidthMax * 0.7}
         zIndex={1000}
         overflow="hidden"
         paddingBottom={30}
         paddingHorizontal={15}
-        marginLeft={-30}
+        marginLeft={-500}
         opacity={isShowing ? 1 : 0}
         transform={isShowing ? null : [{ translateY: 5 }]}
         disabled={!isShowing}
