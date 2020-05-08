@@ -1,7 +1,9 @@
 import { Restaurant } from '@dish/models'
+import { graphql } from '@gqless/react'
 import React, { memo, useEffect, useState } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 
+import { query } from '../../../src/graphql'
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { GeocodePlace, isEditingUserPage } from '../../state/home'
 import { useOvermind } from '../../state/om'
@@ -104,10 +106,11 @@ const RestaurantListItemContent = memo(
       restaurant,
       divider: <>,&nbsp;</>,
     })
+
     const showAddComment = state.showAddComment || isEditingUserPage(om.state)
 
     const adjustRankingLeft = 36
-    const verticalPad = 22
+    const verticalPad = 24
     const leftPad = 6
 
     return (
@@ -117,15 +120,15 @@ const RestaurantListItemContent = memo(
           paddingBottom={verticalPad}
           width={isSmall ? '50vw' : '66%'}
           minWidth={isSmall ? '50%' : 500}
-          maxWidth={isSmall ? '80vw' : '40vw'}
+          maxWidth={isSmall ? '80vw' : '30%'}
           spacing={5}
         >
           <VStack alignItems="flex-start" width="100%">
             {/* ROW: TITLE */}
             <VStack
               paddingTop={verticalPad}
-              backgroundColor={bgLightLight}
-              hoverStyle={{ backgroundColor: bgLightHover }}
+              // backgroundColor={bgLightLight}
+              hoverStyle={{ backgroundColor: bgLightLight }}
               marginLeft={-adjustRankingLeft}
               width={900}
             >
@@ -175,20 +178,7 @@ const RestaurantListItemContent = memo(
 
             {/* ROW: COMMENT */}
             <VStack maxWidth="90%" marginLeft={-2}>
-              <CommentBubble user={{ username: 'Peach' }}>
-                <SelectableText
-                  style={{
-                    opacity: 0.8,
-                    lineHeight: 19,
-                    fontSize: 14,
-                    marginVertical: 5,
-                  }}
-                >
-                  Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet. Lorem
-                  ipsum dolor sit ipsum sit amet. Lorem ipsum dolor sit amet sit
-                  amet. Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.
-                </SelectableText>
-              </CommentBubble>
+              <RestaurantTopReview restaurant={restaurant} />
             </VStack>
 
             <Spacer size={6} />
@@ -242,13 +232,38 @@ const RestaurantListItemContent = memo(
           )}
         </VStack>
 
-        <VStack padding={10} paddingTop={30} width={600} overflow="hidden">
+        <VStack padding={10} paddingTop={45} width={600}>
           <RestaurantPeek
             size={isShowingComment ? 'lg' : 'md'}
             restaurant={restaurant}
           />
         </VStack>
       </HStack>
+    )
+  }
+)
+
+const RestaurantTopReview = graphql(
+  ({ restaurant }: { restaurant: Restaurant }) => {
+    const topReview = {
+      user: null,
+      text: ``,
+    }
+    // query.
+    return (
+      <CommentBubble user={topReview.user ?? { username: 'Peach' }}>
+        <SelectableText
+          style={{
+            opacity: 0.8,
+            lineHeight: 19,
+            fontSize: 14,
+            marginVertical: 5,
+          }}
+        >
+          {topReview.text ||
+            `Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit ipsum sit amet. Lorem ipsum dolor sit amet sit amet. Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.`}
+        </SelectableText>
+      </CommentBubble>
     )
   }
 )
@@ -283,7 +298,7 @@ export const RestaurantPeek = memo(
             return (
               <DishView
                 key={i}
-                size={(size === 'lg' ? 140 : 130) * (isMedium ? 0.85 : 1)}
+                size={(size === 'lg' ? 200 : 170) * (isMedium ? 0.85 : 1)}
                 dish={
                   {
                     name: photo.name,

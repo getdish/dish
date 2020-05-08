@@ -26,10 +26,18 @@ export const avatar = require('../../assets/peach.png')
 
 const verticalPad = 16
 
-export default memo(({ stateIndex }: { stateIndex: number }) => {
+export default memo(function HomePageSearchResults({
+  stateIndex,
+}: {
+  stateIndex: number
+}) {
   const om = useOvermind()
   const state = om.state.home.states[stateIndex] as HomeStateItemSearch
-  if (!state) return <NotFoundPage />
+
+  if (!state) {
+    return <NotFoundPage />
+  }
+
   const isEditingUserList = isEditingUserPage(om.state)
   const { title, subTitleElements, pageTitleElements } = getTitleForState(
     om.state,
@@ -77,7 +85,30 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
           </VStack>
         </HStack>
         <Spacer size={verticalPad} />
+
+        {!isEditingUserList && (
+          <LinkButton
+            pointerEvents="auto"
+            onPress={() => {
+              om.actions.home.forkCurrentList()
+            }}
+          >
+            <Box padding={5} paddingHorizontal={5} backgroundColor="#fff">
+              <HStack alignItems="center" spacing={6}>
+                <Icon name="Edit2" size={12} color="#777" />
+                <Text
+                  style={{ color: 'blue', fontSize: 16, fontWeight: '700' }}
+                >
+                  My list
+                </Text>
+              </HStack>
+            </Box>
+          </LinkButton>
+        )}
+
         <Divider flex />
+
+        {/* CONTENT */}
         <ZStack
           fullscreen
           pointerEvents="none"
@@ -111,25 +142,6 @@ export default memo(({ stateIndex }: { stateIndex: number }) => {
                   <Text>Done</Text>
                 </LinkButton>
               </>
-            )}
-            {!isEditingUserList && (
-              <LinkButton
-                pointerEvents="auto"
-                onPress={() => {
-                  om.actions.home.forkCurrentList()
-                }}
-              >
-                <Box padding={5} paddingHorizontal={5} backgroundColor="#fff">
-                  <HStack alignItems="center" spacing={6}>
-                    <Icon name="Edit2" size={12} color="#777" />
-                    <Text
-                      style={{ color: 'blue', fontSize: 16, fontWeight: '700' }}
-                    >
-                      My list
-                    </Text>
-                  </HStack>
-                </Box>
-              </LinkButton>
             )}
           </HStack>
         </ZStack>

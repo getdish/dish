@@ -65,7 +65,7 @@ export const getInputNode = (instance: any): HTMLInputElement | null => {
   return instance?.['_node'] ?? null
 }
 
-export default memo(() => {
+export default memo(function HomeSearchBar() {
   const om = useOvermind()
   const inputRef = useRef()
   const locationInputRef = useRef()
@@ -159,7 +159,7 @@ export default memo(() => {
           // enter
           if (om.state.home.autocompleteFocusedTag) {
             om.actions.home.navigateToTag({
-              tag: om.state.home.autocompleteFocusedTag,
+              tags: [om.state.home.autocompleteFocusedTag],
             })
           } else {
             om.actions.home.runSearch({ force: true })
@@ -175,7 +175,7 @@ export default memo(() => {
           if (autocompleteIndex < 0) {
             if (om.state.home.searchbarFocusedTag) {
               om.actions.home.navigateToTag({
-                tag: om.state.home.searchbarFocusedTag,
+                tags: [om.state.home.searchbarFocusedTag],
               })
             }
             next()
@@ -197,7 +197,7 @@ export default memo(() => {
           // left
           if (isCaretAtStart) {
             // at start, go into selecting searchbar tags if we have em
-            if (isAutocompleteActive && autocompleteIndex === 0) {
+            if (isAutocompleteActive) {
               prev()
               return
             }
@@ -267,17 +267,10 @@ export default memo(() => {
       <View style={[styles.container, { height: searchBarHeight }]}>
         <View style={styles.containerInner}>
           <DishLogoButton />
-          <HomeSearchBarHomeButton />
-
-          <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
-            <>
-              {divider}
-              <Spacer />
-            </>
-          </MediaQuery>
+          {/* <HomeSearchBarHomeButton /> */}
 
           <HStack
-            flex={15}
+            flex={125}
             maxWidth={450}
             alignItems="center"
             spacing
@@ -427,7 +420,7 @@ const HomeSearchBarHomeButton = memo(() => {
         pointerEvents="auto"
         paddingVertical={13}
         paddingHorizontal={4}
-        marginLeft={-8} //undo spacing
+        marginLeft={-14} //undo spacing
         opacity={om.state.home.currentStateType === 'home' ? 0 : 1}
         onPress={() => om.actions.home.popTo('home')}
       >
@@ -439,8 +432,6 @@ const HomeSearchBarHomeButton = memo(() => {
           opacity={0.5}
         />
       </LinkButton>
-
-      <VStack flex={0.5} />
     </MediaQuery>
   )
 })
@@ -535,7 +526,7 @@ const HomeSearchBarTags = memo(
                     tag={tag}
                     closable
                     onClose={() => {
-                      om.actions.home.navigateToTag({ tag })
+                      om.actions.home.navigateToTag({ tags: [tag] })
                       requestIdleCallback(() => {
                         input?.focus()
                       })
@@ -569,7 +560,7 @@ const styles = StyleSheet.create({
   },
   containerInner: {
     flex: 1,
-    maxWidth: pageWidthMax - 150,
+    maxWidth: pageWidthMax - 0,
     width: '100%',
     backgroundColor: 'rgba(255,255,255,1)',
     height: '100%',

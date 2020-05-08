@@ -3,10 +3,14 @@ import _ from 'lodash'
 import React, { memo } from 'react'
 import { Text, TextStyle, View } from 'react-native'
 
+import { NavigableTag } from '../../state/Tag'
 import { Icon } from '../ui/Icon'
 import { LinkButton } from '../ui/Link'
 import { HStack, StackProps, VStack } from '../ui/Stacks'
 import { SuperScriptText } from './SuperScriptText'
+
+export const getTagColor = (tag: NavigableTag): string =>
+  tag.rgb ? `rgb(${tag.rgb[0]}, ${tag.rgb[1]}, ${tag.rgb[2]})` : 'inherit'
 
 export const TagButton = memo(
   ({
@@ -26,7 +30,7 @@ export const TagButton = memo(
     ...rest
   }: StackProps & {
     rank?: number
-    tag: Partial<Tag> & Pick<Tag, 'name' | 'type'>
+    tag: NavigableTag
     size?: 'lg' | 'md' | 'sm'
     subtle?: boolean
     votable?: boolean
@@ -41,10 +45,10 @@ export const TagButton = memo(
     const scale = size === 'sm' ? 0.8 : size == 'lg' ? 1.05 : 1
     const paddingVertical = (subtle ? 0 : 6) * scale
     const lineHeight = 22 * scale
-    const defaultColor = noColor ? 'inherit' : 'blue'
+    const defaultColor = noColor ? 'inherit' : getTagColor(tag)
     const bg = backgroundColor ?? (subtle ? defaultColor : 'white')
     const fg = color ?? (subtle ? 'transparent' : defaultColor)
-    const fontSize = fontSizeProp ?? (subtle ? 'inherit' : 14 * scale)
+    const fontSize = fontSizeProp ?? (subtle ? 'inherit' : 16 * scale)
     const rankFontSize =
       typeof fontSize === 'number' ? fontSize * 0.9 : fontSize
     // const moveInPx = size === 'sm' ? 0 : 3.5 * (1 / scale)

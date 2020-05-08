@@ -84,7 +84,7 @@ function HomeStackViewItem({
 
   const top = isSmall
     ? 0
-    : (index - 1) * 10 + (index == 0 ? 0 : searchBarHeight + 10)
+    : (index - 1) * 10 + (index == 0 ? 0 : searchBarHeight + 5)
   const left = isSmall ? -3 : index * 7
 
   return (
@@ -115,8 +115,8 @@ function HomeStackViewItem({
             bottom={-(index * 5)}
             width="100%"
             {...(index !== 0 && {
-              shadowColor: 'rgba(0,0,0,0.2)',
-              shadowRadius: 10,
+              shadowColor: 'rgba(0,0,0,0.075)',
+              shadowRadius: 15,
               shadowOffset: { width: 0, height: 3 },
             })}
             borderRadius={drawerBorderRadius}

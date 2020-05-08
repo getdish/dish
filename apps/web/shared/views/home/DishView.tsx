@@ -37,9 +37,9 @@ export const DishView = memo(
         <VStack width={size} height={size}>
           <VStack
             className="ease-in-out"
-            shadowColor="rgba(0,0,0,0.25)"
-            shadowRadius={6}
-            shadowOffset={{ width: 0, height: 2 }}
+            shadowColor="rgba(0,0,0,0.12)"
+            shadowRadius={12}
+            shadowOffset={{ width: 0, height: 4 }}
             width="100%"
             height="100%"
             borderRadius={0.15 * size}

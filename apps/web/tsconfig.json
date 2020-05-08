@@ -9,7 +9,7 @@
     "typeRoots": ["./node_modules/mapkit-typescript", "./node_modules/@types"]
   },
   "include": ["src/**/*", "web/**/*", "shared/**/*"],
-  "exclude": ["**/*.test.ts", "**/*.test.tsx", "src/graphql"],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx"],
   "references": [
     { "path": "../../packages/common-web" },
     { "path": "../../packages/models" },
