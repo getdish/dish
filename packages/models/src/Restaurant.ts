@@ -329,7 +329,7 @@ export class Restaurant extends ModelBase<Restaurant> {
       const existing = this.getRestaurantTagFromTag(rt.tag_id)
       return { ...existing, ...rt }
     })
-    RestaurantTag.upsertMany(this.id, populated)
+    await RestaurantTag.upsertMany(this.id, populated)
     await this.refresh()
   }
 
