@@ -269,14 +269,19 @@ export default memo(function HomeSearchBar() {
           <DishLogoButton />
           {/* <HomeSearchBarHomeButton /> */}
 
+          <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
+            <Spacer flex={0.7} />
+          </MediaQuery>
+
           <HStack
             flex={125}
-            maxWidth={450}
+            maxWidth={550}
             alignItems="center"
             spacing
             overflow="hidden"
           >
             <>
+              {/* Loading / Search Icon */}
               <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
                 {om.state.home.isLoading ? (
                   <VStack className="rotating" opacity={0.5}>
@@ -286,6 +291,8 @@ export default memo(function HomeSearchBar() {
                   <Icon name="Search" size={18} opacity={0.5} />
                 )}
               </MediaQuery>
+
+              {/* Search Input Start */}
               <Hoverable
                 // show even if moving after some time
                 onHoverIn={() => {
@@ -372,7 +379,7 @@ export default memo(function HomeSearchBar() {
           {/* IN */}
           <HomeSearchBarSeparator />
 
-          <VStack flex={12} maxWidth={320}>
+          <VStack flex={35} maxWidth={320}>
             <TextInput
               ref={locationInputRef}
               value={locationSearch}
@@ -560,7 +567,7 @@ const styles = StyleSheet.create({
   },
   containerInner: {
     flex: 1,
-    maxWidth: pageWidthMax - 0,
+    maxWidth: pageWidthMax,
     width: '100%',
     backgroundColor: 'rgba(255,255,255,1)',
     height: '100%',

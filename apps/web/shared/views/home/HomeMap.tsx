@@ -101,7 +101,7 @@ export const HomeMap = memo(function HomeMap() {
   const { center, span } = state
 
   // add a lil extra
-  const mapOverflowWidth = 100
+  const mapOverflowWidth = 200
   const mapPadRight =
     window.innerWidth < pageWidthMax
       ? 0
