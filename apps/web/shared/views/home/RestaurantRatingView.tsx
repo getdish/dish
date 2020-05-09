@@ -15,7 +15,7 @@ export type RestaurantRatingViewProps = Omit<
   Pick<RatingViewProps, 'size'>,
   'percent' | 'color'
 > & {
-  restaurantId: string
+  restaurantSlug: string
 }
 
 export const getRestaurantRating = (rating: number) => Math.round(rating * 20)
@@ -23,110 +23,110 @@ export const getRestaurantRating = (rating: number) => Math.round(rating * 20)
 export const getRankingColor = (percent: number) =>
   percent > 84 ? 'green' : percent > 60 ? 'orange' : 'red'
 
-export const RestaurantRatingView = graphql(
-  forwardRef(({ restaurantId, ...rest }: RestaurantRatingViewProps, ref) => {
-    const [restaurant] = query.restaurant({
-      where: {
-        id: {
-          _eq: restaurantId,
-        },
-      } as any,
-    })
-    const percent = getRestaurantRating(restaurant.rating)
-    const color = getRankingColor(percent)
-    return (
-      <VStack>
-        <RatingView ref={ref} percent={percent} color={color} {...rest} />
-        {rest.size === 'lg' && (
-          <HoverablePopover
-            contents={
-              <Box>
-                <VStack
-                  marginTop={-8}
-                  marginHorizontal={-18}
-                  alignItems="center"
-                >
-                  <HStack
-                    alignItems="center"
-                    paddingHorizontal={10 + 18}
-                    spacing={20}
-                    paddingVertical={12}
-                  >
-                    <VStack
-                      zIndex={10}
-                      flex={1}
-                      minWidth={90}
-                      maxWidth={120}
-                      marginHorizontal={-12}
-                    >
-                      <RatingBreakdownCircle
-                        percent={restaurant.rating_factors?.food}
-                        emoji="🧑‍🍳"
-                        name="Food"
-                      />
-                    </VStack>
-
-                    <VStack
-                      zIndex={9}
-                      flex={1}
-                      minWidth={90}
-                      maxWidth={120}
-                      marginHorizontal={-12}
-                    >
-                      <RatingBreakdownCircle
-                        percent={restaurant.rating_factors?.service}
-                        emoji="💁‍♂️"
-                        name="Service"
-                      />
-                    </VStack>
-
-                    <VStack
-                      zIndex={8}
-                      flex={1}
-                      minWidth={90}
-                      maxWidth={120}
-                      marginHorizontal={-12}
-                    >
-                      <RatingBreakdownCircle
-                        percent={restaurant.rating_factors?.ambience}
-                        emoji="✨"
-                        name="Ambiance"
-                      />
-                    </VStack>
-                  </HStack>
-                </VStack>
-              </Box>
-            }
-          >
-            <HStack height="100%" alignItems="center" paddingRight={20}>
-              <Circle
-                marginHorizontal={-5}
-                size={30}
-                backgroundColor="rgba(0,205,100,1)"
-              >
-                <RatingBreakdownCircle
-                  percent={restaurant.rating_factors?.service}
-                  emoji="👩‍🍳"
-                  size={30}
-                />
-              </Circle>
-              <Circle
-                marginHorizontal={-5}
-                size={30}
-                backgroundColor="rgba(0,205,100,1)"
-              />
-              <Circle
-                marginHorizontal={-5}
-                size={30}
-                backgroundColor="rgba(0,205,100,1)"
-              />
-            </HStack>
-          </HoverablePopover>
-        )}
-      </VStack>
-    )
+export default graphql(function RestaurantRatingView({
+  restaurantSlug,
+  ...rest
+}: RestaurantRatingViewProps) {
+  console.log('restaurantSlug', restaurantSlug)
+  return null
+  const [restaurant] = query.restaurant({
+    where: {
+      slug: {
+        _eq: restaurantSlug,
+      },
+    },
   })
-)
+  // console.log('restaurant.rating_factors', restaurant.rating_factors)
+  const percent = getRestaurantRating(restaurant.rating)
+  const color = getRankingColor(percent)
+  return (
+    <VStack>
+      <RatingView percent={percent} color={color} {...rest} />
+      {rest.size === 'lg' && (
+        <HoverablePopover
+          contents={
+            <Box>
+              <VStack marginTop={-8} marginHorizontal={-18} alignItems="center">
+                <HStack
+                  alignItems="center"
+                  paddingHorizontal={10 + 18}
+                  spacing={20}
+                  paddingVertical={12}
+                >
+                  <VStack
+                    zIndex={10}
+                    flex={1}
+                    minWidth={90}
+                    maxWidth={120}
+                    marginHorizontal={-12}
+                  >
+                    <RatingBreakdownCircle
+                      percent={restaurant.rating_factors?.food}
+                      emoji="🧑‍🍳"
+                      name="Food"
+                    />
+                  </VStack>
+
+                  <VStack
+                    zIndex={9}
+                    flex={1}
+                    minWidth={90}
+                    maxWidth={120}
+                    marginHorizontal={-12}
+                  >
+                    <RatingBreakdownCircle
+                      percent={restaurant.rating_factors?.service}
+                      emoji="💁‍♂️"
+                      name="Service"
+                    />
+                  </VStack>
+
+                  <VStack
+                    zIndex={8}
+                    flex={1}
+                    minWidth={90}
+                    maxWidth={120}
+                    marginHorizontal={-12}
+                  >
+                    <RatingBreakdownCircle
+                      percent={restaurant.rating_factors?.ambience}
+                      emoji="✨"
+                      name="Ambiance"
+                    />
+                  </VStack>
+                </HStack>
+              </VStack>
+            </Box>
+          }
+        >
+          <HStack height="100%" alignItems="center" paddingRight={20}>
+            <Circle
+              marginHorizontal={-5}
+              size={30}
+              backgroundColor="rgba(0,205,100,1)"
+            >
+              <RatingBreakdownCircle
+                percent={restaurant.rating_factors?.service}
+                emoji="👩‍🍳"
+                size={30}
+              />
+            </Circle>
+            <Circle
+              marginHorizontal={-5}
+              size={30}
+              backgroundColor="rgba(0,205,100,1)"
+            />
+            <Circle
+              marginHorizontal={-5}
+              size={30}
+              backgroundColor="rgba(0,205,100,1)"
+            />
+          </HStack>
+        </HoverablePopover>
+      )}
+    </VStack>
+  )
+})
 
 const RatingBreakdownCircle = memo(
   ({

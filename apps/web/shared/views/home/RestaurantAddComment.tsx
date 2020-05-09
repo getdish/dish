@@ -15,10 +15,10 @@ import { flatButtonStyleSelected } from './baseButtonStyle'
 import { bgLight } from './colors'
 
 export const RestaurantAddComment = memo(
-  ({ restaurant }: { restaurant: Restaurant }) => {
+  ({ restaurantId }: { restaurantId: string }) => {
     const om = useOvermind()
     const user = om.state.user.user
-    const review = om.state.user.allReviews[restaurant.id]
+    const review = om.state.user.allReviews[restaurantId]
     const [isFocused, setIsFocused] = useState(false)
     const [reviewText, setReviewText] = useState('')
     const [isSaved, setIsSaved] = useState(true)
@@ -73,7 +73,7 @@ export const RestaurantAddComment = memo(
                   reviews: [
                     {
                       text: reviewText,
-                      restaurant_id: restaurant.id,
+                      restaurant_id: restaurantId,
                       tag_id: null,
                       user_id: om.state.user.user.id,
                       rating: 0,

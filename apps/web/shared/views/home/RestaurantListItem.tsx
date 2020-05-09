@@ -165,7 +165,7 @@ const RestaurantListItemContent = memo(
                   >
                     <RestaurantRatingViewPopover
                       size="sm"
-                      restaurant={restaurant}
+                      restaurantSlug={restaurant.slug}
                     />
                     <HStack spacing>
                       {tagElements}
@@ -194,7 +194,7 @@ const RestaurantListItemContent = memo(
               alignItems="center"
               spacing
             >
-              <RestaurantFavoriteStar restaurant={restaurant} />
+              <RestaurantFavoriteStar restaurantId={restaurant.id} />
               <TouchableOpacity
                 onPress={() =>
                   setState((state) => ({
@@ -212,7 +212,7 @@ const RestaurantListItemContent = memo(
 
               <Divider vertical />
 
-              <RestaurantDetailRow size="sm" restaurant={restaurant} />
+              <RestaurantDetailRow size="sm" restaurantSlug={restaurant.slug} />
 
               <HoverablePopover
                 contents={<SelectableText>{restaurant.address}</SelectableText>}
@@ -231,7 +231,7 @@ const RestaurantListItemContent = memo(
           {showAddComment && (
             <>
               <Spacer size="lg" />
-              <RestaurantAddComment restaurant={restaurant} />
+              <RestaurantAddComment restaurantId={restaurant.id} />
             </>
           )}
         </VStack>

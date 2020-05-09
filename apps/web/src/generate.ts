@@ -1,5 +1,5 @@
 import { exec } from 'child_process'
-import { readFileSync, writeFile } from 'fs'
+import { writeFile } from 'fs'
 import { join } from 'path'
 
 process.env.HASURA_ENDPOINT = 'https://hasura.rio.dishapp.com'
@@ -27,6 +27,14 @@ async function run() {
   await Promise.all(
     files.map(async (file) => {
       await new Promise((res, rej) => {
+        let contents = ''
+        for (let line of file.contents.split(`\n`)) {
+          // export! them
+          if (line.indexOf(`type `) === 0 && line.indexOf('FieldsType<') > 0) {
+            line = `export ${line}`
+          }
+          contents += `${line}\n`
+        }
         writeFile(join(graphqlPath, file.path), file.contents, (err) => {
           if (err) return rej(err)
           res()
@@ -35,7 +43,7 @@ async function run() {
     })
   )
 
-  await exec(`prettier --write "**/*.ts"`, {
+  exec(`prettier --write "**/*.ts"`, {
     cwd: graphqlPath,
   })
 }

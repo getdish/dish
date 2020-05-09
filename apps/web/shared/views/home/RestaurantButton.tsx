@@ -4,7 +4,7 @@ import React, { memo } from 'react'
 import { LinkButton } from '../ui/Link'
 import { StackProps } from '../ui/Stacks'
 import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
-import { RestaurantRatingView } from './RestaurantRatingView'
+import RestaurantRatingView from './RestaurantRatingView'
 
 export const RestaurantButton = memo(
   ({
