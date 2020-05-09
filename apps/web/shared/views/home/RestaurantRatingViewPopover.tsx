@@ -9,21 +9,21 @@ import { HoverablePopover } from '../ui/HoverablePopover'
 import { SmallTitle } from '../ui/SmallTitle'
 import { VStack } from '../ui/Stacks'
 import { RatingViewProps } from './RatingView'
-import { RestaurantRatingView } from './RestaurantRatingView'
+import RestaurantRatingView from './RestaurantRatingView'
 import { TableCell, TableRow } from './TableRow'
 
 export const RestaurantRatingViewPopover = memo(
   graphql(
     ({
       size = 'md',
-      restaurantId,
-    }: Partial<RatingViewProps> & { restaurantId: string }) => {
+      restaurantSlug,
+    }: Partial<RatingViewProps> & { restaurantSlug: string }) => {
       const [restaurant] = query.restaurant({
         where: {
-          id: {
-            _eq: restaurantId,
+          slug: {
+            _eq: restaurantSlug,
           },
-        } as any,
+        },
       })
       return (
         <HoverablePopover
@@ -61,7 +61,7 @@ export const RestaurantRatingViewPopover = memo(
             </Box>
           }
         >
-          <RestaurantRatingView size={size} restaurant={restaurant} />
+          <RestaurantRatingView size={size} restaurantSlug={restaurantSlug} />
         </HoverablePopover>
       )
     }

@@ -1752,6 +1752,14 @@
     "@gqless/utils" "^0.0.1-alpha.26"
     tslib "^1.11.1"
 
+"@gqless/schema@^0.0.1-alpha.31":
+  version "0.0.1-alpha.31"
+  resolved "https://registry.npmjs.org/@gqless/schema/-/schema-0.0.1-alpha.31.tgz#76903546ad9090363dcc21a69b672e398bcb5f3b"
+  integrity sha512-V794wq1nFpMIQk+I6VfJQaq5U//x23Vb0gApVX670z1cnEn2iUVTxpAF/b6ZOg2iL9JQdBClz9y62vU2p/sLow==
+  dependencies:
+    "@gqless/utils" "^0.0.1-alpha.26"
+    tslib "^1.11.1"
+
 "@gqless/utils@^0.0.1-alpha.26":
   version "0.0.1-alpha.27"
   resolved "https://registry.npmjs.org/@gqless/utils/-/utils-0.0.1-alpha.27.tgz#f7ca669541e80f2a0ede8347a044e5fc7be7cba3"

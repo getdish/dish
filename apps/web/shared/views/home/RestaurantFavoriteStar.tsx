@@ -18,11 +18,11 @@ import { LenseButton } from './LenseButton'
 export const RestaurantFavoriteStar = memo(
   ({
     size = 'md',
-    restaurant,
+    restaurantId,
   }: {
     isHovered?: boolean
     size?: 'lg' | 'md'
-    restaurant: Restaurant
+    restaurantId: string
   }) => {
     const sizePx = size == 'lg' ? 26 : 16
     const om = useOvermind()
@@ -43,7 +43,7 @@ export const RestaurantFavoriteStar = memo(
       }
       review.current.rating = r
       setIsOpen(r == 1)
-      review.current.restaurant_id = restaurant.id
+      review.current.restaurant_id = restaurantId
       persist()
       forceUpdate()
     }

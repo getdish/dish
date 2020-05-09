@@ -34,7 +34,7 @@ export const RestaurantAddressLinksRow = memo(
           id: {
             _eq: restaurantId,
           },
-        } as any,
+        },
       })
       const fontSize = size == 'lg' ? 15 : 13
       const sep = ' '

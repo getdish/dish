@@ -434,7 +434,7 @@ const loadPageRestaurant: AsyncAction = async (om) => {
     state.restaurantId = restaurant.id
     state.center = {
       lng: restaurant.location.coordinates[0],
-      lat: restaurant.location.coordinates[1] - 0.0037,
+      lat: restaurant.location.coordinates[1],
     }
     // zoom in a bit
     state.span = {

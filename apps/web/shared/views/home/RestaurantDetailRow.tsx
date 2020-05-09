@@ -1,99 +1,111 @@
-import { Restaurant, Sources } from '@dish/models'
+import { Sources } from '@dish/models'
+import { graphql } from '@gqless/react'
 import React, { memo } from 'react'
 import { Linking, StyleSheet, Text } from 'react-native'
 
+import { query } from '../../../src/graphql'
+import { Restaurant } from '../../types'
 import { Divider } from '../ui/Divider'
 import { Spacer } from '../ui/Spacer'
 import { HStack, StackProps, VStack } from '../ui/Stacks'
-import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
-import { RestaurantTagsRow } from './RestaurantTagsRow'
 
 export const RestaurantDetailRow = memo(
-  ({
-    restaurant,
-    size,
-    centered,
-    after,
-    ...rest
-  }: StackProps & {
-    size?: 'sm' | 'md'
-    restaurant: Restaurant
-    centered?: boolean
-    after?: any
-  }) => {
-    const isSm = size === 'sm'
-
-    const [open_text, open_color, next_time] = openingHours(restaurant)
-    const [price_label, price_color, price_range] = priceRange(restaurant)
-
-    const rows = [
-      { title: open_text, content: next_time, color: open_color },
-      { title: price_label, content: price_range, color: price_color },
-      {
-        title: 'Delivers',
-        content: deliveryLinks(restaurant.sources),
-        color: 'gray',
-      },
-    ]
-
-    const spaceSize = isSm ? 0 : '6%'
-
-    type Item = typeof rows[0]
-
-    const titleEl = ({ title, color }: Item) => (
-      <Text
-        numberOfLines={1}
-        style={{
-          textAlign: centered ? 'center' : 'left',
-          fontWeight: '600',
-          fontSize: 14,
-          color,
-          marginBottom: 3,
-        }}
-      >
-        {title}
-      </Text>
-    )
-
-    const contentEl = ({ color, content }: Item) => (
-      <Text
-        numberOfLines={1}
-        style={[
-          styles.subText,
-          centered && { textAlign: 'center' },
-          isSm && {
-            color,
+  graphql(
+    ({
+      restaurantSlug,
+      size,
+      centered,
+      after,
+      ...rest
+    }: StackProps & {
+      size?: 'sm' | 'md'
+      restaurantSlug: string
+      centered?: boolean
+      after?: any
+    }) => {
+      const isSm = size === 'sm'
+      const [restaurant] = query.restaurant({
+        where: {
+          slug: {
+            _eq: restaurantSlug,
           },
-        ]}
-      >
-        {content}
-      </Text>
-    )
+        },
+      })
+      const [open_text, open_color, next_time] = openingHours(restaurant)
+      const [price_label, price_color, price_range] = priceRange(restaurant)
 
-    return (
-      <HStack flex={1} alignItems="center" spacing={spaceSize} {...rest}>
-        {rows.map((row, index) => (
-          <HStack {...(!isSm && { width: '32%' })} key={`${index}${row.title}`}>
-            <VStack
-              {...(isSm && { flexDirection: 'row', alignItems: 'center' })}
-              flex={10}
+      const rows = [
+        { title: open_text, content: next_time, color: open_color },
+        { title: price_label, content: price_range, color: price_color },
+        {
+          title: 'Delivers',
+          content: deliveryLinks(restaurant.sources),
+          color: 'gray',
+        },
+      ]
+
+      const spaceSize = isSm ? 0 : '6%'
+
+      type Item = typeof rows[0]
+
+      const titleEl = ({ title, color }: Item) => (
+        <Text
+          numberOfLines={1}
+          style={{
+            textAlign: centered ? 'center' : 'left',
+            fontWeight: '600',
+            fontSize: 14,
+            color,
+            marginBottom: 3,
+          }}
+        >
+          {title}
+        </Text>
+      )
+
+      const contentEl = ({ color, content }: Item) => (
+        <Text
+          numberOfLines={1}
+          style={[
+            styles.subText,
+            centered && { textAlign: 'center' },
+            isSm && {
+              color,
+            },
+          ]}
+        >
+          {content}
+        </Text>
+      )
+
+      return (
+        <HStack flex={1} alignItems="center" spacing={spaceSize} {...rest}>
+          {rows.map((row, index) => (
+            <HStack
+              {...(!isSm && { width: '32%' })}
+              key={`${index}${row.title}`}
             >
-              {!isSm && titleEl(row)}
-              {contentEl(row)}
-            </VStack>
-            {after}
-            {isSm && index !== rows.length - 1 && (
-              <>
-                <Spacer flex={0.5} />
-                <Divider vertical height={25} />
-                <Spacer flex={0.5} />
-              </>
-            )}
-          </HStack>
-        ))}
-      </HStack>
-    )
-  }
+              <VStack
+                {...(isSm && { flexDirection: 'row', alignItems: 'center' })}
+                flex={10}
+              >
+                {!isSm && titleEl(row)}
+                {contentEl(row)}
+              </VStack>
+              {after}
+              {isSm && index !== rows.length - 1 && (
+                <>
+                  <Spacer flex={0.5} />
+                  <Divider vertical height={25} />
+                  <Spacer flex={0.5} />
+                </>
+              )}
+            </HStack>
+          ))}
+        </HStack>
+      )
+    }
+  )
 )
 
 const styles = StyleSheet.create({
@@ -136,7 +148,7 @@ function priceRange(restaurant: Restaurant) {
   let color = 'grey'
   let price_range = 'unknown'
   if (restaurant.price_range != null) {
-    const [low, high] = restaurant.price_range
+    const [low, high] = `${restaurant.price_range}`
       .replace(/\$/g, '')
       .split('-')
       .map((i) => parseInt(i))

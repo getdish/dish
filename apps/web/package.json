@@ -72,6 +72,7 @@
     "@gqless/react": "0.0.1-alpha.28"
   },
   "devDependencies": {
+    "@gqless/schema": "^0.0.1-alpha.31",
     "cross-env": "^7.0.2",
     "nollup": "^0.11.0",
     "rollup-plugin-react-refresh": "^0.0.1",

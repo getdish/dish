@@ -36,7 +36,7 @@ export default memo(
         slug: {
           _eq: slug,
         },
-      } as any,
+      },
     })
     console.log('restaurant', restaurant)
     const isLoading = !restaurant?.name
@@ -71,7 +71,7 @@ export default memo(
                 <HStack position="relative">
                   <RestaurantRatingViewPopover
                     size="lg"
-                    restaurantId={restaurant.id}
+                    restaurantSlug={restaurant.slug}
                   />
 
                   <Spacer size={20} />
@@ -92,7 +92,7 @@ export default memo(
                         currentLocationInfo={state.currentLocationInfo}
                         showMenu
                         size="lg"
-                        restaurantId={restaurant.id}
+                        restaurantSlug={restaurant.slug}
                       />
                       <Spacer size={10} />
                       <Text style={{ color: '#777', fontSize: 14 }}>
@@ -101,14 +101,17 @@ export default memo(
                       <Spacer size={6} />
                     </VStack>
 
-                    <RestaurantFavoriteStar restaurant={restaurant} size="lg" />
+                    <RestaurantFavoriteStar
+                      restaurantId={restaurant.id}
+                      size="lg"
+                    />
                   </HStack>
                 </HStack>
               </VStack>
 
               <Spacer />
 
-              <RestaurantTagsRow size="lg" restaurant={restaurant} />
+              <RestaurantTagsRow size="lg" restaurantSlug={restaurant.slug} />
               <Spacer />
               <Divider />
               <Spacer />
@@ -118,14 +121,14 @@ export default memo(
                   <RestaurantDetailRow
                     centered
                     justifyContent="center"
-                    restaurant={restaurant}
+                    restaurantSlug={restaurant.slug}
                     flex={1}
                   />
                 </HStack>
 
                 <Divider />
 
-                <RestaurantPhotos restaurant={restaurant} />
+                <RestaurantPhotos restaurantSlug={restaurant.slug} />
 
                 {/* <VStack>
                 <SmallTitle>Images</SmallTitle>
@@ -162,49 +165,77 @@ export default memo(
   })
 )
 
-const RestaurantPhotos = ({ restaurant }: { restaurant: Restaurant }) => {
-  const drawerWidth = useHomeDrawerWidthInner()
-  const spacing = 20
-  const photos = restaurant.bestTagPhotos()
-  return (
-    <>
-      {!!photos?.length && (
-        <VStack spacing="xl">
-          <HStack justifyContent="center" spacing>
-            <LinkButton {...flatButtonStyleActive}>Top Dishes</LinkButton>
-            <LinkButton {...flatButtonStyle}>Menu</LinkButton>
-            <LinkButton {...flatButtonStyle}>Inside</LinkButton>
-            <LinkButton {...flatButtonStyle}>Outside</LinkButton>
-          </HStack>
+// TODO @nate merge back
+// {restaurant.bestTagPhotos().map((t, index) => {
+//   let tag_name = t.tag.name
+//   if (t.tag.icon) tag_name = t.tag.icon + tag_name
+//   return (
+//     <DishView
+//       key={index}
+//       size={(drawerWidth - 3 * spacing) / 3 - 15}
+//       marginBottom={10}
+//       dish={
+//         {
+//           name: tag_name,
+//           image: (t.photos && t.photos[0]) || '',
+//           rating: (t.rating || 0) * 2,
+//         } as any
+//       }
+//     />
+//   )
+// })}
 
-          <HStack
-            flexWrap="wrap"
-            marginTop={10}
-            alignItems="center"
-            justifyContent="center"
-            spacing={spacing}
-          >
-            {restaurant.bestTagPhotos().map((t, index) => {
-              let tag_name = t.tag.name
-              if (t.tag.icon) tag_name = t.tag.icon + tag_name
-              return (
-                <DishView
-                  key={index}
-                  size={(drawerWidth - 3 * spacing) / 3 - 15}
-                  marginBottom={10}
-                  dish={
-                    {
-                      name: tag_name,
-                      image: (t.photos && t.photos[0]) || '',
-                      rating: (t.rating || 0) * 2,
-                    } as any
-                  }
-                />
-              )
-            })}
-          </HStack>
-        </VStack>
-      )}
-    </>
-  )
-}
+const RestaurantPhotos = graphql(
+  ({ restaurantSlug }: { restaurantSlug: string }) => {
+    const [restaurant] = query.restaurant({
+      where: {
+        slug: {
+          _eq: restaurantSlug,
+        },
+      },
+    })
+    const drawerWidth = useHomeDrawerWidthInner()
+    const spacing = 20
+    return (
+      <>
+        {!!restaurant.photos?.length && (
+          <VStack spacing="xl">
+            <HStack justifyContent="center" spacing>
+              <LinkButton {...flatButtonStyleActive}>Top Dishes</LinkButton>
+              <LinkButton {...flatButtonStyle}>Menu</LinkButton>
+              <LinkButton {...flatButtonStyle}>Inside</LinkButton>
+              <LinkButton {...flatButtonStyle}>Outside</LinkButton>
+            </HStack>
+
+            <HStack
+              flexWrap="wrap"
+              marginTop={10}
+              alignItems="center"
+              justifyContent="center"
+              spacing={spacing}
+            >
+              {restaurant.tags?.map((t, index) => {
+                let tag_name = t.tag.name
+                if (t.tag.icon) tag_name = t.tag.icon + tag_name
+                return (
+                  <DishView
+                    key={index}
+                    size={(drawerWidth - 3 * spacing) / 3 - 15}
+                    marginBottom={10}
+                    dish={
+                      {
+                        name: tag_name,
+                        image: (t.photos && t.photos[0]) || '',
+                        rating: t.rating || 0,
+                      } as any
+                    }
+                  />
+                )
+              })}
+            </HStack>
+          </VStack>
+        )}
+      </>
+    )
+  }
+)
