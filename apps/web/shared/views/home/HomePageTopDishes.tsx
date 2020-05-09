@@ -1,10 +1,11 @@
-import { Restaurant, TopCuisine } from '@dish/models'
+import { TopCuisine } from '@dish/models'
 import _ from 'lodash'
 import React, { memo, useCallback, useState } from 'react'
 import { ScrollView, Text } from 'react-native'
 
 import { HomeStateItem, HomeStateItemHome } from '../../state/home'
 import { useOvermind } from '../../state/om'
+import { Restaurant } from '../../types'
 import { NotFoundPage } from '../NotFoundPage'
 import { LinkButton, OverlayLinkButton } from '../ui/Link'
 import { MediaQuery, mediaQueries } from '../ui/MediaQuery'
@@ -91,7 +92,11 @@ const HomeViewTopDishesTrending = memo(() => {
   const om = useOvermind()
   const allRestaurants = om.state.home.topDishes[0]?.top_restaurants ?? []
   const hasLoaded = allRestaurants.length > 0
-  const getTrending = (restaurant: Partial<Restaurant>, index: number) => {
+
+  // @tom if you change Partial<any> to Partial<Restauarant>
+  // you can see below at `getTrending` they disagree on Restaurant
+  // if its >10m to fix we can leave it as any for now
+  const getTrending = (restaurant: Partial<any>, index: number) => {
     return (
       <TrendingButton
         key={`${index}${restaurant.id}`}

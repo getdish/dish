@@ -1,11 +1,10 @@
-import { Restaurant, User } from '@dish/models'
 import React, { memo, useLayoutEffect, useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity } from 'react-native'
 
-import { useMutation } from '../../../src/graphql'
 // @ts-ignore
 import avatar from '../../assets/peach.png'
 import { useOvermind } from '../../state/om'
+import { User } from '../../types'
 import { Toast } from '../Toast'
 import { Box } from '../ui/Box'
 import { Circle } from '../ui/Circle'

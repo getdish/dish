@@ -1,4 +1,3 @@
-import { Restaurant } from '@dish/models'
 import { graphql } from '@gqless/react'
 import React, { memo } from 'react'
 import { Image, ScrollView, Text, View } from 'react-native'
@@ -92,7 +91,7 @@ export default memo(
                         currentLocationInfo={state.currentLocationInfo}
                         showMenu
                         size="lg"
-                        restaurantSlug={restaurant.slug}
+                        restaurantId={restaurant.id}
                       />
                       <Spacer size={10} />
                       <Text style={{ color: '#777', fontSize: 14 }}>

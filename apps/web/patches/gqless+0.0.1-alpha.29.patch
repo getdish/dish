@@ -1,0 +1,29 @@
+diff --git a/node_modules/gqless/dist/Type.d.ts b/node_modules/gqless/dist/Type.d.ts
+index 27c8f79..076557d 100644
+--- a/node_modules/gqless/dist/Type.d.ts
++++ b/node_modules/gqless/dist/Type.d.ts
+@@ -8,19 +8,19 @@ declare type RequiredKeys<T> = {
+ }[keyof T];
+ declare type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
+ declare type IfAny<T, Y, N> = 0 extends 1 & T ? Y : N;
+-declare enum Kind {
++export declare enum Kind {
+     scalar = 0,
+     enum = 1,
+     fields = 2
+ }
+-declare type Type<TKind extends Kind = any, TData = any, TExtension = any> = {
++export declare type Type<TKind extends Kind = any, TData = any, TExtension = any> = {
+     kind: TKind;
+     data: TData;
+     extension: TExtension;
+ };
+-declare type ExtensionData<TExtension> = TExtension extends (...args: any[]) => infer U ? U : TExtension;
+-declare type TypeExtension<TType extends ValidType> = TType extends Type ? IfAny<TType['extension'], never, ExtensionData<TType['extension']>> : never;
+-declare type ValidType = ValidType[] | Type | undefined | null;
++export declare type ExtensionData<TExtension> = TExtension extends (...args: any[]) => infer U ? U : TExtension;
++export declare type TypeExtension<TType extends ValidType> = TType extends Type ? IfAny<TType['extension'], never, ExtensionData<TType['extension']>> : never;
++export declare type ValidType = ValidType[] | Type | undefined | null;
+ export declare type ScalarType<TData = any, TExtension = any> = Type<Kind.scalar, TData, TExtension>;
+ export declare type EnumType<TData = any, TExtension = any> = Type<Kind.enum, TData, TExtension>;
+ declare type FieldsRecord = Record<string, ValidType | FieldsTypeArg>;
