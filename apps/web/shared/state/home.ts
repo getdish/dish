@@ -426,7 +426,7 @@ const loadPageRestaurant: AsyncAction = async (om) => {
   const slug = state.restaurantSlug
   const restaurant = await resolved(() => {
     const [{ location, id }] = query.restaurant({
-      where: { slug: { _eq: slug } } as any,
+      where: { slug: { _eq: slug } },
     })
     return { location, id }
   })
