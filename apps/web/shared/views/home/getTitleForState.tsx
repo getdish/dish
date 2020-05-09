@@ -53,12 +53,12 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
 
   // build subtitle
   let subTitleParts: string[] = []
-  if (countryTagName) {
-    subTitleParts.push(countryTagName)
-  }
-  if (dishTagName) {
-    subTitleParts.push(dishTagName)
-  }
+  // if (countryTagName) {
+  //   subTitleParts.push(countryTagName)
+  // }
+  // if (dishTagName) {
+  //   subTitleParts.push(dishTagName)
+  // }
   if (state.searchQuery) {
     subTitleParts.push(`"${state.searchQuery}"`)
   }

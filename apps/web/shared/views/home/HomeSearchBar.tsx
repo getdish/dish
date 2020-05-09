@@ -267,10 +267,13 @@ export default memo(function HomeSearchBar() {
       <View style={[styles.container, { height: searchBarHeight }]}>
         <View style={styles.containerInner}>
           <DishLogoButton />
-          {/* <HomeSearchBarHomeButton /> */}
 
           <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
             <Spacer flex={0.7} />
+          </MediaQuery>
+
+          <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
+            <HomeSearchBarHomeButton />
           </MediaQuery>
 
           <HStack
@@ -427,17 +430,12 @@ const HomeSearchBarHomeButton = memo(() => {
         pointerEvents="auto"
         paddingVertical={13}
         paddingHorizontal={4}
-        marginLeft={-14} //undo spacing
+        marginRight={20}
+        // marginLeft={-14} //undo spacing
         opacity={om.state.home.currentStateType === 'home' ? 0 : 1}
         onPress={() => om.actions.home.popTo('home')}
       >
-        <Icon
-          name={
-            om.state.home.breadcrumbStates.length <= 1 ? 'Home' : 'ChevronUp'
-          }
-          size={22}
-          opacity={0.5}
-        />
+        <Icon name={'ChevronLeft'} size={22} opacity={0.5} />
       </LinkButton>
     </MediaQuery>
   )

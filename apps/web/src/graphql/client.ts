@@ -2,7 +2,7 @@ import { Client, QueryFetcher } from 'gqless'
 
 import { query_root, schema } from './generated'
 
-const endpoint = 'https://hasura.rio.dishapp.com/v1/graphql'
+const endpoint = ''
 
 const fetchQuery: QueryFetcher = async (query, variables) => {
   const response = await fetch(endpoint, {

@@ -1,6 +1,6 @@
 import { Restaurant } from '@dish/models'
 import { graphql } from '@gqless/react'
-import React, { memo, useEffect, useState } from 'react'
+import React, { Suspense, memo, useEffect, useState } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 
 import { query } from '../../../src/graphql'
@@ -81,7 +81,9 @@ export const RestaurantListItem = memo(function RestaurantListItem(
             pointerEvents="none"
             opacity={isHovered ? 1 : 0}
           >
-            <RestaurantUpVoteDownVote restaurant={props.restaurant} />
+            <Suspense fallback={null}>
+              <RestaurantUpVoteDownVote restaurant={props.restaurant} />
+            </Suspense>
           </ZStack>
 
           <RestaurantListItemContent {...props} />
@@ -178,7 +180,9 @@ const RestaurantListItemContent = memo(
 
             {/* ROW: COMMENT */}
             <VStack maxWidth="90%" marginLeft={-2}>
-              <RestaurantTopReview restaurant={restaurant} />
+              <Suspense fallback={null}>
+                <RestaurantTopReview restaurant={restaurant} />
+              </Suspense>
             </VStack>
 
             <Spacer size={6} />
@@ -245,18 +249,22 @@ const RestaurantListItemContent = memo(
 
 const RestaurantTopReview = graphql(
   ({ restaurant }: { restaurant: Restaurant }) => {
-    const topReview = {
-      user: null,
-      text: ``,
-    }
-    // query.
+    const [topReview] = query.review({
+      limit: 1,
+      where: {
+        restaurant_id: {
+          _eq: restaurant.id,
+        },
+      } as any,
+    })
+    console.log('got', restaurant.id, topReview.id, topReview.rating)
     return (
       <CommentBubble user={topReview.user ?? { username: 'Peach' }}>
         <SelectableText
           style={{
             opacity: 0.8,
-            lineHeight: 19,
-            fontSize: 14,
+            lineHeight: 20,
+            fontSize: 15,
             marginVertical: 5,
           }}
         >

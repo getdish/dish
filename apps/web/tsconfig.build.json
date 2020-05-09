@@ -5,10 +5,14 @@
     "outDir": "_",
     "target": "ES2017",
     "module": "CommonJS",
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
     "rootDir": ".",
     "typeRoots": ["node_modules/mapkit-typescript", "node_modules/@types"]
   },
-  "include": ["src/**/*", "web/**/*"],
-  "exclude": ["src/graphql"],
-  "references": [{ "path": "../../packages/common-web" }]
+  "include": ["src/generate.ts", "web/server.tsx"],
+  "references": [
+    { "path": "../../packages/common-web" },
+    { "path": "../../packages/models" }
+  ]
 }

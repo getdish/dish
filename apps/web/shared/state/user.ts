@@ -114,41 +114,6 @@ const vote: Action<Partial<Review>> = (om, { restaurant, ...val }) => {
   Object.assign(review, val)
 }
 
-const loadReviews: AsyncAction<{ restaurants: Restaurant[] }> = async (
-  om,
-  { restaurants }
-) => {
-  return await attemptAuthenticatedAction(om, async () => {
-    const reviews = (
-      await om.effects.gql.queries.getUserRestaurantReviews({
-        user_id: om.state.user.user.id,
-        restaurant_ids: restaurants.map((x) => x.id),
-      })
-    ).review
-    // TODO how do we do nice GC of allReviews?
-    for (const review of reviews) {
-      om.state.user.allReviews[review.restaurant_id] = review
-    }
-  })
-}
-
-const loadVote: AsyncAction<
-  { restaurantId: string; activeTagIds: any },
-  Review
-> = async (om, { restaurantId }) => {
-  return await attemptAuthenticatedAction(om, async () => {
-    let vote = om.state.user.allVotes[restaurantId]
-    if (!vote) {
-      const res = await om.effects.gql.queries.getUserReview({
-        user_id: om.state.user.user.id,
-        restaurant_id: restaurantId,
-      })
-      return res.review[0]
-    }
-    return vote
-  })
-}
-
 const submitReview: AsyncAction<Review> = async (om, review) => {
   if (!om.state.user.user) {
     console.error('Not logged in')
@@ -174,8 +139,6 @@ export const actions = {
   logout,
   checkForExistingLogin,
   ensureLoggedIn,
-  loadVote,
-  loadReviews,
   vote,
   submitReview,
 }
