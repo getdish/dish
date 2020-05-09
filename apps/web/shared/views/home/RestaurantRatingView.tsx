@@ -1,7 +1,9 @@
 import { Restaurant } from '@dish/models'
+import { graphql } from '@gqless/react'
 import React, { forwardRef, memo } from 'react'
 import { Text } from 'react-native'
 
+import { query } from '../../../src/graphql'
 import { Box } from '../ui/Box'
 import { Circle } from '../ui/Circle'
 import { HoverablePopover } from '../ui/HoverablePopover'
@@ -13,18 +15,24 @@ export type RestaurantRatingViewProps = Omit<
   Pick<RatingViewProps, 'size'>,
   'percent' | 'color'
 > & {
-  restaurant: Partial<Restaurant>
+  restaurantId: string
 }
 
-export const getRestaurantRating = (restaurant: Partial<Restaurant>) =>
-  Math.round(restaurant.rating * 20)
+export const getRestaurantRating = (rating: number) => Math.round(rating * 20)
 
 export const getRankingColor = (percent: number) =>
   percent > 84 ? 'green' : percent > 60 ? 'orange' : 'red'
 
-export const RestaurantRatingView = forwardRef(
-  ({ restaurant, ...rest }: RestaurantRatingViewProps, ref) => {
-    const percent = getRestaurantRating(restaurant)
+export const RestaurantRatingView = graphql(
+  forwardRef(({ restaurantId, ...rest }: RestaurantRatingViewProps, ref) => {
+    const [restaurant] = query.restaurant({
+      where: {
+        id: {
+          _eq: restaurantId,
+        },
+      } as any,
+    })
+    const percent = getRestaurantRating(restaurant.rating)
     const color = getRankingColor(percent)
     return (
       <VStack>
@@ -33,7 +41,60 @@ export const RestaurantRatingView = forwardRef(
           <HoverablePopover
             contents={
               <Box>
-                <RestaurantRatingBreakdown restaurant={restaurant as any} />
+                <VStack
+                  marginTop={-8}
+                  marginHorizontal={-18}
+                  alignItems="center"
+                >
+                  <HStack
+                    alignItems="center"
+                    paddingHorizontal={10 + 18}
+                    spacing={20}
+                    paddingVertical={12}
+                  >
+                    <VStack
+                      zIndex={10}
+                      flex={1}
+                      minWidth={90}
+                      maxWidth={120}
+                      marginHorizontal={-12}
+                    >
+                      <RatingBreakdownCircle
+                        percent={restaurant.rating_factors?.food}
+                        emoji="🧑‍🍳"
+                        name="Food"
+                      />
+                    </VStack>
+
+                    <VStack
+                      zIndex={9}
+                      flex={1}
+                      minWidth={90}
+                      maxWidth={120}
+                      marginHorizontal={-12}
+                    >
+                      <RatingBreakdownCircle
+                        percent={restaurant.rating_factors?.service}
+                        emoji="💁‍♂️"
+                        name="Service"
+                      />
+                    </VStack>
+
+                    <VStack
+                      zIndex={8}
+                      flex={1}
+                      minWidth={90}
+                      maxWidth={120}
+                      marginHorizontal={-12}
+                    >
+                      <RatingBreakdownCircle
+                        percent={restaurant.rating_factors?.ambience}
+                        emoji="✨"
+                        name="Ambiance"
+                      />
+                    </VStack>
+                  </HStack>
+                </VStack>
               </Box>
             }
           >
@@ -64,64 +125,7 @@ export const RestaurantRatingView = forwardRef(
         )}
       </VStack>
     )
-  }
-)
-
-const RestaurantRatingBreakdown = memo(
-  ({ restaurant }: { restaurant: Restaurant }) => {
-    return (
-      <VStack marginTop={-8} marginHorizontal={-18} alignItems="center">
-        <HStack
-          alignItems="center"
-          paddingHorizontal={10 + 18}
-          spacing={20}
-          paddingVertical={12}
-        >
-          <VStack
-            zIndex={10}
-            flex={1}
-            minWidth={90}
-            maxWidth={120}
-            marginHorizontal={-12}
-          >
-            <RatingBreakdownCircle
-              percent={restaurant.rating_factors?.food}
-              emoji="🧑‍🍳"
-              name="Food"
-            />
-          </VStack>
-
-          <VStack
-            zIndex={9}
-            flex={1}
-            minWidth={90}
-            maxWidth={120}
-            marginHorizontal={-12}
-          >
-            <RatingBreakdownCircle
-              percent={restaurant.rating_factors?.service}
-              emoji="💁‍♂️"
-              name="Service"
-            />
-          </VStack>
-
-          <VStack
-            zIndex={8}
-            flex={1}
-            minWidth={90}
-            maxWidth={120}
-            marginHorizontal={-12}
-          >
-            <RatingBreakdownCircle
-              percent={restaurant.rating_factors?.ambience}
-              emoji="✨"
-              name="Ambiance"
-            />
-          </VStack>
-        </HStack>
-      </VStack>
-    )
-  }
+  })
 )
 
 const RatingBreakdownCircle = memo(

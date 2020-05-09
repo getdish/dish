@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { Suspense, useState } from 'react'
 
 import { isWorker } from '../../constants'
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
@@ -8,9 +8,8 @@ import {
   isSearchState,
   isUserState,
 } from '../../state/home-helpers'
-import { useOvermind } from '../../state/om'
 import { ErrorBoundary } from '../ErrorBoundary'
-import { VStack, ZStack } from '../ui/Stacks'
+import { ZStack } from '../ui/Stacks'
 import { CurrentStateID } from './CurrentStateID'
 import { HomeMap } from './HomeMap'
 import { HomeMapControlsOverlay } from './HomeMapControlsOverlay'
@@ -49,16 +48,20 @@ export default function HomePage() {
           {(homeState, isActive, index) => {
             return (
               <CurrentStateID.Provider value={homeState.id}>
-                {isHomeState(homeState) && (
-                  <HomePageTopDishes stateIndex={index} />
-                )}
-                {isUserState(homeState) && <HomePageUser stateIndex={index} />}
-                {isSearchState(homeState) && (
-                  <HomePageSearchResults stateIndex={index} />
-                )}
-                {isRestaurantState(homeState) && (
-                  <HomePageRestaurant stateIndex={index} />
-                )}
+                <Suspense fallback={null}>
+                  {isHomeState(homeState) && (
+                    <HomePageTopDishes stateIndex={index} />
+                  )}
+                  {isUserState(homeState) && (
+                    <HomePageUser stateIndex={index} />
+                  )}
+                  {isSearchState(homeState) && (
+                    <HomePageSearchResults stateIndex={index} />
+                  )}
+                  {isRestaurantState(homeState) && (
+                    <HomePageRestaurant stateIndex={index} />
+                  )}
+                </Suspense>
               </CurrentStateID.Provider>
             )
           }}

@@ -1752,6 +1752,14 @@
     "@gqless/utils" "^0.0.1-alpha.26"
     tslib "^1.11.1"
 
+"@gqless/schema@^0.0.1-alpha.31":
+  version "0.0.1-alpha.31"
+  resolved "https://registry.npmjs.org/@gqless/schema/-/schema-0.0.1-alpha.31.tgz#76903546ad9090363dcc21a69b672e398bcb5f3b"
+  integrity sha512-V794wq1nFpMIQk+I6VfJQaq5U//x23Vb0gApVX670z1cnEn2iUVTxpAF/b6ZOg2iL9JQdBClz9y62vU2p/sLow==
+  dependencies:
+    "@gqless/utils" "^0.0.1-alpha.26"
+    tslib "^1.11.1"
+
 "@gqless/utils@^0.0.1-alpha.26":
   version "0.0.1-alpha.27"
   resolved "https://registry.npmjs.org/@gqless/utils/-/utils-0.0.1-alpha.27.tgz#f7ca669541e80f2a0ede8347a044e5fc7be7cba3"
@@ -10636,7 +10644,7 @@ graphql-request@^1.8.2:
   dependencies:
     cross-fetch "2.2.2"
 
-graphql-tag@^2.10.1, graphql-tag@^2.10.2:
+graphql-tag@2.10.3, graphql-tag@^2.10.1, graphql-tag@^2.10.2:
   version "2.10.3"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.3.tgz#ea1baba5eb8fc6339e4c4cf049dabe522b0edf03"
   integrity sha512-4FOv3ZKfA4WdOKJeHdz6B3F/vxBLSgmBcGeAFPf4n1F64ltJUvOOerNj0rsJxONQGdhUMynQIvd6LzB+1J5oKA==
@@ -20472,7 +20480,12 @@ typescript@3.7.3:
   resolved "https://registry.npmjs.org/typescript/-/typescript-3.7.3.tgz#b36840668a16458a7025b9eabfad11b66ab85c69"
   integrity sha512-Mcr/Qk7hXqFBXMN7p7Lusj1ktCBydylfQM/FZCk5glCNQJrCUKPkMHdo9R0MTFWsC/4kPFvDS0fDPvukfCkFsw==
 
-typescript@3.8.3, typescript@^3.2.4, typescript@^3.3.3:
+typescript@3.8.1-rc:
+  version "3.8.1-rc"
+  resolved "https://registry.npmjs.org/typescript/-/typescript-3.8.1-rc.tgz#f94333c14da70927ccd887be2e91be652a9a09f6"
+  integrity sha512-aOIe066DyZn2uYIiND6fXMUUJ70nxwu/lKhA92QuQzXyC86fr0ywo1qvO8l2m0EnDcfjprYPuFRgNgDj7U2GlQ==
+
+typescript@^3.2.4, typescript@^3.3.3:
   version "3.8.3"
   resolved "https://registry.npmjs.org/typescript/-/typescript-3.8.3.tgz#409eb8544ea0335711205869ec458ab109ee1061"
   integrity sha512-MYlEfn5VrLNsgudQTVJeNaQFUAI7DkhnOjdpAp4T+ku1TfQClewlbSuTVHiA+8skNBgaf02TL/kLOvig4y3G8w==

@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { Suspense, memo, useState } from 'react'
 import { Image, ScrollView, Text, View } from 'react-native'
 
 import { HomeStateItemSearch, isEditingUserPage } from '../../state/home'
@@ -86,29 +86,6 @@ export default memo(function HomePageSearchResults({
         </HStack>
         <Spacer size={verticalPad} />
 
-        {!isEditingUserList && (
-          <LinkButton
-            pointerEvents="auto"
-            onPress={() => {
-              om.actions.home.forkCurrentList()
-            }}
-          >
-            <Box padding={5} paddingHorizontal={5} backgroundColor="#fff">
-              <HStack alignItems="center" spacing={6}>
-                <Icon name="Edit2" size={12} color="#777" />
-                <Text
-                  style={{ color: 'blue', fontSize: 16, fontWeight: '700' }}
-                >
-                  My list
-                </Text>
-              </HStack>
-            </Box>
-          </LinkButton>
-        )}
-
-        <Divider flex />
-
-        {/* CONTENT */}
         <ZStack
           fullscreen
           pointerEvents="none"
@@ -143,10 +120,32 @@ export default memo(function HomePageSearchResults({
                 </LinkButton>
               </>
             )}
+            {!isEditingUserList && (
+              <LinkButton
+                pointerEvents="auto"
+                onPress={() => {
+                  om.actions.home.forkCurrentList()
+                }}
+              >
+                <Box padding={5} paddingHorizontal={5} backgroundColor="#fff">
+                  <HStack alignItems="center" spacing={6}>
+                    <Icon name="Edit2" size={12} color="#777" />
+                    <Text
+                      style={{ color: 'blue', fontSize: 16, fontWeight: '700' }}
+                    >
+                      My list
+                    </Text>
+                  </HStack>
+                </Box>
+              </LinkButton>
+            )}
           </HStack>
         </ZStack>
+
+        <Divider flex />
       </VStack>
 
+      {/* CONTENT */}
       <VStack
         // marginTop={-23}
         position="relative"
@@ -200,12 +199,13 @@ const HomeSearchResultsViewContent = memo(
       <ScrollView>
         <VStack paddingTop={topPad} paddingBottom={20}>
           {results.map((item, index) => (
-            <RestaurantListItem
-              currentLocationInfo={state.currentLocationInfo}
-              key={item.id}
-              restaurant={item}
-              rank={index + 1}
-            />
+            <Suspense key={item.id} fallback={null}>
+              <RestaurantListItem
+                currentLocationInfo={state.currentLocationInfo}
+                restaurant={item}
+                rank={index + 1}
+              />
+            </Suspense>
           ))}
         </VStack>
       </ScrollView>

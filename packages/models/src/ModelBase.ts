@@ -226,6 +226,14 @@ export class ModelBase<T> {
     return res.data
   }
 
+  static async graphqlGet(query: string, variables: string) {
+    let conf = JSON.parse(JSON.stringify(AXIOS_CONF))
+    conf.data.query = query
+    conf.data.variables = variables
+    conf.headers = auth.getHeaders()
+    return (await axios(conf)) as any
+  }
+
   static async hasura(
     gql: {},
     silence_not_found: boolean = false

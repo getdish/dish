@@ -29,7 +29,7 @@
     "prettier": "^2.0.4",
     "ts-node": "^8.5.4",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "3.8.3",
+    "typescript": "3.8.1-rc",
     "wsrun": "^5.2.0"
   },
   "dependencies": {

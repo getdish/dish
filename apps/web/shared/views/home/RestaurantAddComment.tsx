@@ -2,7 +2,6 @@ import { Restaurant, User } from '@dish/models'
 import React, { memo, useLayoutEffect, useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity } from 'react-native'
 
-import { useMutation } from '../../../src/graphql'
 // @ts-ignore
 import avatar from '../../assets/peach.png'
 import { useOvermind } from '../../state/om'
@@ -12,9 +11,8 @@ import { Circle } from '../ui/Circle'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { Link, LinkButton } from '../ui/Link'
 import { HStack, StackProps, VStack } from '../ui/Stacks'
-import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
+import { flatButtonStyleSelected } from './baseButtonStyle'
 import { bgLight } from './colors'
-import { Quote } from './Quote'
 
 export const RestaurantAddComment = memo(
   ({ restaurant }: { restaurant: Restaurant }) => {
@@ -26,9 +24,6 @@ export const RestaurantAddComment = memo(
     const [isSaved, setIsSaved] = useState(true)
     const lineHeight = 22
     const [height, setHeight] = useState(lineHeight)
-    const [addCommentMutation, addCommentData] = useMutation((schema) => {
-      console.log('schema is', schema)
-    })
 
     const updateReview = (text: string) => {
       setReviewText(text)
@@ -74,7 +69,7 @@ export const RestaurantAddComment = memo(
               right={0}
               onPress={async () => {
                 Toast.show('Saving...')
-                await om.effects.gql.mutations.upsertUserReview({
+                const review = {
                   reviews: [
                     {
                       text: reviewText,
@@ -84,7 +79,9 @@ export const RestaurantAddComment = memo(
                       rating: 0,
                     },
                   ],
-                })
+                }
+                console.log('inserting', review)
+                await om.effects.gql.mutations.upsertUserReview(review)
                 Toast.show('Saved!')
                 setIsSaved(true)
               }}

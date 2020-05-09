@@ -1,7 +1,9 @@
 import { Restaurant } from '@dish/models'
+import { graphql } from '@gqless/react'
 import React, { memo, useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
+import { query } from '../../../src/graphql'
 import { omStatic, useOvermind } from '../../state/om'
 import Hoverable from '../ui/Hoverable'
 import { Icon } from '../ui/Icon'
@@ -9,21 +11,17 @@ import { VStack } from '../ui/Stacks'
 import { usePromise } from './usePromise'
 
 export const RestaurantUpVoteDownVote = memo(
-  ({ restaurant }: { restaurant: Restaurant }) => {
+  graphql(({ restaurant }: { restaurant: Restaurant }) => {
     const om = useOvermind()
-    const review = usePromise(() =>
-      omStatic.actions.user.loadVote({
-        restaurantId: restaurant.id,
-        activeTagIds: [],
-      })
-    )
-
-    if (!review) {
-      return null
-    }
-
+    const [review] = query.review({
+      where: {
+        restaurant_id: {
+          _eq: restaurant.id,
+        },
+      } as any,
+    })
+    console.log('review', review)
     const vote = review.rating
-
     return (
       <div
         style={{
@@ -67,7 +65,7 @@ export const RestaurantUpVoteDownVote = memo(
         </VStack>
       </div>
     )
-  }
+  })
 )
 
 const VoteButton = (props: any) => {

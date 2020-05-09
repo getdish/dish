@@ -1,3 +1,8 @@
+small things to look at:
+
+- RestaurantRatingView - see typescript errors. gqless thinks we have wrong type here, is that not true?
+
+
 # Current
 
 - [ ] show top rated dishes tags in search results "vietnamese"

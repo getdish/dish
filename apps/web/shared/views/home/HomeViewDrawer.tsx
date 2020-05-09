@@ -52,7 +52,6 @@ export function HomeViewDrawer(props: { children: any }) {
       position="absolute"
       top={0}
       paddingTop={drawerPad}
-      left={-drawerPad}
       bottom={0}
       zIndex={10}
       width={drawerWidth + drawerPadLeft}

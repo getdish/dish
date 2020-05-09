@@ -117,8 +117,6 @@ export type HomeStateItemRestaurant = HomeStateItemBase & {
   type: 'restaurant'
   restaurantSlug: string
   restaurantId: string | null
-  reviews: Review[]
-  review: Review | null
 }
 
 export type HomeStateItemUser = HomeStateItemBase & {

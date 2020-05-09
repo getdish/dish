@@ -6,9 +6,11 @@ import {
   slugify,
 } from '@dish/models'
 import { isEqual } from '@o/fast-compare'
+import { resolved } from 'gqless'
 import _ from 'lodash'
 import { Action, AsyncAction } from 'overmind'
 
+import { query } from '../../src/graphql'
 import { isWorker } from '../constants'
 import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
 import { requestIdle } from '../helpers/requestIdle'
@@ -321,9 +323,7 @@ const pushHomeState: AsyncAction<
         ...fallbackState,
         type,
         restaurantId: null,
-        review: null,
         restaurantSlug: item.params.slug,
-        reviews: [],
         ...newState,
       }
       fetchData = om.actions.home.loadPageRestaurant
@@ -422,12 +422,14 @@ const pushHomeState: AsyncAction<
 
 const loadPageRestaurant: AsyncAction = async (om) => {
   const state = om.state.home.currentState
-  console.log('loading restaurant page', state)
   if (state.type !== 'restaurant') return
   const slug = state.restaurantSlug
-  const restaurant = new Restaurant()
-  await restaurant.findOne('slug', slug)
-  om.state.home.allRestaurants[restaurant.id] = restaurant
+  const restaurant = await resolved(() => {
+    const [{ location, id }] = query.restaurant({
+      where: { slug: { _eq: slug } } as any,
+    })
+    return { location, id }
+  })
   if (state) {
     state.restaurantId = restaurant.id
     state.center = {
@@ -438,10 +440,6 @@ const loadPageRestaurant: AsyncAction = async (om) => {
     state.span = {
       lng: 0.008, // Math.max(0.010675285275539181, currentState.span.lng * 0.5),
       lat: 0.003, // Math.max(0.004697178346440012, currentState.span.lat * 0.5),
-    }
-    state.reviews = await Review.findAllForRestaurant(restaurant.id)
-    if (om.state.user.isLoggedIn) {
-      await om.actions.home.getReview()
     }
   }
 }
@@ -765,12 +763,6 @@ const runSearch: AsyncAction<{
   console.log('searched', searchArgs, restaurants)
   if (shouldCancel()) return
 
-  // fetch reviews before render
-  if (om.state.user.isLoggedIn) {
-    await om.actions.user.loadReviews({ restaurants })
-    if (shouldCancel()) return
-  }
-
   // update denormalized dictionary
   const { allRestaurants } = om.state.home
   for (const restaurant of restaurants) {
@@ -796,25 +788,6 @@ const clearSearch: Action = (om) => {
   const state = om.state.home.currentState
   if (isSearchState(state)) {
     om.actions.router.back()
-  }
-}
-
-const getReview: AsyncAction = async (om) => {
-  let state = om.state.home.lastRestaurantState
-  if (!state) return
-  if (!om.state.user.user) return
-  try {
-    let review = new Review()
-    await review.findOne(state.restaurantId, om.state.user.user.id)
-    state.review = review
-    if (typeof state.review.id == 'undefined') {
-      Object.assign(state.review, {
-        restaurant_id: state.restaurantId,
-        user_id: om.state.user.user.id,
-      })
-    }
-  } catch (err) {
-    console.error(`Error getting review ${err.message}`)
   }
 }
 
@@ -1132,7 +1105,6 @@ export const actions = {
   updateCurrentMapAreaInformation,
   clearSearch,
   forkCurrentList,
-  getReview,
   handleRouteChange,
   moveActiveDown,
   moveActiveUp,
