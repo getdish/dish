@@ -424,12 +424,15 @@ const loadPageRestaurant: AsyncAction = async (om) => {
   const state = om.state.home.currentState
   if (state.type !== 'restaurant') return
   const slug = state.restaurantSlug
+  console.log('slug', slug)
   const restaurant = await resolved(() => {
     const [{ location, id }] = query.restaurant({
       where: { slug: { _eq: slug } },
     })
+    console.log('gettin', location, id)
     return { location, id }
   })
+  console.log('restaurant', restaurant)
   if (state) {
     state.restaurantId = restaurant.id
     state.center = {
