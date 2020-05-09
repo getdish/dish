@@ -111,7 +111,7 @@
     "expo-cli": "^3.16.1",
     "express": "^4.17.1",
     "file-loader": "^6.0.0",
-    "isomorphic-fetch": "2.2.1",
+    "isomorphic-unfetch": "^3.0.0",
     "jest": "~24.9.0",
     "jsdom": "^16.2.2",
     "metro-react-native-babel-preset": "^0.59.0",

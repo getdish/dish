@@ -3,30 +3,13 @@ import axios from 'axios'
 import { EnumType } from 'json-to-graphql-query'
 import _ from 'lodash'
 
+import { SEARCH_DOMAIN } from './constants'
 import { Dish, TopCuisineDish } from './Dish'
-import { ModelBase, Point, isBrowserProd } from './ModelBase'
+import { ModelBase, Point } from './ModelBase'
 import { RestaurantTag, RestaurantTagWithID } from './RestaurantTag'
 import { Scrape } from './Scrape'
 import { Tag } from './Tag'
 import { levenshteinDistance } from './utils'
-
-let SEARCH_DOMAIN: string
-const isNode = typeof window == 'undefined'
-const isWorker = !isNode && !!window['isWorker']
-const LIVE_SEARCH_DOMAIN = 'https://search.rio.dishapp.com'
-const LOCAL_SEARCH_DOMAIN = 'http://localhost:10000'
-
-if (isWorker) {
-  SEARCH_DOMAIN = LIVE_SEARCH_DOMAIN
-} else if (isNode) {
-  SEARCH_DOMAIN = LOCAL_SEARCH_DOMAIN
-} else {
-  if (isBrowserProd || window.location.hostname.includes('hasura_live')) {
-    SEARCH_DOMAIN = LIVE_SEARCH_DOMAIN
-  } else {
-    SEARCH_DOMAIN = LOCAL_SEARCH_DOMAIN
-  }
-}
 
 export type LngLat = { lng: number; lat: number }
 
@@ -52,12 +35,6 @@ export type RatingFactors = {
   service: number
   value: number
   ambience: number
-}
-
-export type CarouselPhoto = {
-  src: string
-  name?: string
-  rating?: number
 }
 
 export type Sources = { [key: string]: { url: string; rating: number } }
@@ -206,41 +183,6 @@ export class Restaurant extends ModelBase<Restaurant> {
     )
   }
 
-  static async search({
-    center: { lat: lat, lng: lng },
-    span,
-    query,
-    tags = [],
-    limit = 25,
-  }: RestaurantSearchArgs): Promise<Restaurant[]> {
-    const params = [
-      'query=' + query,
-      'lon=' + lng,
-      'lat=' + lat,
-      'span_lon=' + span.lng,
-      'span_lat=' + span.lat,
-      `limit=${limit}`,
-      'tags=' + tags.map((t) => t.toLowerCase().trim()).join(','),
-    ]
-    const url = SEARCH_DOMAIN + '/search?' + params.join('&')
-    const response = await axios.get(url)
-    return response.data.map(
-      (data: Partial<Restaurant>) => new Restaurant(data)
-    )
-  }
-
-  static async getHomeDishes(
-    lat: number,
-    lng: number,
-    distance: number
-  ): Promise<TopCuisine[]> {
-    const params = ['lon=' + lng, 'lat=' + lat, 'distance=' + distance]
-    const response = await axios.get(
-      SEARCH_DOMAIN + '/top_dishes?' + params.join('&')
-    )
-    return response.data
-  }
-
   async getLatestScrape(source: string) {
     const query = {
       query: {
@@ -386,30 +328,6 @@ export class Restaurant extends ModelBase<Restaurant> {
         return i.tag.id
       })
     )
-  }
-
-  photosForCarousel() {
-    let photos = [] as CarouselPhoto[]
-    const max_photos = 4
-    for (const t of this.tags || []) {
-      const photo = (t.photos || [])[0]
-      if (!photo) continue
-      let photo_name = t.tag.name || ' '
-      if (t.tag.icon) {
-        photo_name = t.tag.icon + photo_name
-      }
-      photos.push({
-        name: photo_name,
-        src: photo,
-        rating: t.rating,
-      })
-      if (photos.length >= max_photos) break
-    }
-    for (const photo of this.photos || []) {
-      photos.push({ name: ' ', src: photo })
-      if (photos.length >= max_photos) break
-    }
-    return photos
   }
 
   bestTagPhotos() {

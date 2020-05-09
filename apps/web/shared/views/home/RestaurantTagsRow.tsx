@@ -1,4 +1,4 @@
-import { Restaurant } from '@dish/models'
+import { TagType } from '@dish/models'
 import { graphql } from '@gqless/react'
 import React, { memo } from 'react'
 
@@ -45,14 +45,18 @@ export const useGetTagElements = ({
       },
     },
   })
-  return (restaurant.tags || []).slice(0, showMore ? 2 : 6).map((t, index) => {
+  const tags = restaurant.tags({
+    limit: 6,
+  })
+  console.log('tags', tags)
+  return tags.slice(0, showMore ? 2 : 6).map((tag, index) => {
     return (
       <TagButton
         size="sm"
         rank={index}
-        key={`${index}${t.tag.name}`}
-        name={t.name}
-        type={t.type}
+        key={`${index}${tag.tag.name}`}
+        name={tag.tag.name}
+        type={tag.tag.type as TagType}
         votable={!!om.state.user.user}
       />
     )

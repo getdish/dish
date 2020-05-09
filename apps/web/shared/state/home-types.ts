@@ -1,6 +1,7 @@
-import { Restaurant, Review, TopCuisine, User } from '@dish/models'
+import { Review, TopCuisine, User } from '@dish/models'
 import { Config, Derive, IContext } from 'overmind'
 
+import { Restaurant } from '../types'
 import { NavigateItem } from './router'
 import { Tag } from './Tag'
 
@@ -122,8 +123,6 @@ export type HomeStateItemRestaurant = HomeStateItemBase & {
 export type HomeStateItemUser = HomeStateItemBase & {
   type: 'user'
   username: string
-  user: User
-  reviews: Review[]
 }
 
 export type HomeStateItemSimple = Pick<HomeStateItem, 'id' | 'type'>

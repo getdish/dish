@@ -95,156 +95,163 @@ export const RestaurantListItem = memo(function RestaurantListItem(
 })
 
 const RestaurantListItemContent = memo(
-  ({ rank, restaurant, currentLocationInfo }: RestaurantListItemProps) => {
-    const om = useOvermind()
-    const pad = 18
-    const isShowingComment = isEditingUserPage(om.state)
-    const isSmall = useMediaQueryIsSmall()
-    const [state, setState] = useState({
-      showAddComment: false,
-    })
-    const tagElements = useGetTagElements({
-      showMore: true,
-      restaurantSlug: restaurant.slug,
-      divider: <>,&nbsp;</>,
-    })
+  graphql(
+    ({ rank, restaurant, currentLocationInfo }: RestaurantListItemProps) => {
+      const om = useOvermind()
+      const pad = 18
+      const isShowingComment = isEditingUserPage(om.state)
+      const isSmall = useMediaQueryIsSmall()
+      const [state, setState] = useState({
+        showAddComment: false,
+      })
+      const tagElements = useGetTagElements({
+        showMore: true,
+        restaurantSlug: restaurant.slug,
+        divider: <>,&nbsp;</>,
+      })
 
-    const showAddComment = state.showAddComment || isEditingUserPage(om.state)
+      const showAddComment = state.showAddComment || isEditingUserPage(om.state)
 
-    const adjustRankingLeft = 36
-    const verticalPad = 24
-    const leftPad = 6
+      const adjustRankingLeft = 36
+      const verticalPad = 24
+      const leftPad = 6
 
-    return (
-      <HStack>
-        <VStack
-          paddingHorizontal={pad + 6}
-          paddingBottom={verticalPad}
-          width={isSmall ? '50vw' : '66%'}
-          minWidth={isSmall ? '50%' : 500}
-          maxWidth={isSmall ? '80vw' : '30%'}
-          spacing={5}
-        >
-          <VStack alignItems="flex-start" width="100%">
-            {/* ROW: TITLE */}
-            <VStack
-              paddingTop={verticalPad}
-              // backgroundColor={bgLightLight}
-              hoverStyle={{ backgroundColor: bgLightLight }}
-              marginLeft={-adjustRankingLeft}
-              width={900}
-            >
-              <Link name="restaurant" params={{ slug: restaurant.slug }}>
-                <VStack>
-                  <HStack alignItems="center" marginVertical={-3}>
-                    <RankingView
-                      marginRight={-6 + leftPad}
-                      marginTop={-10}
-                      rank={rank}
-                    />
+      return (
+        <HStack>
+          <VStack
+            paddingHorizontal={pad + 6}
+            paddingBottom={verticalPad}
+            width={isSmall ? '50vw' : '66%'}
+            minWidth={isSmall ? '50%' : 500}
+            maxWidth={isSmall ? '80vw' : '30%'}
+            spacing={5}
+          >
+            <VStack alignItems="flex-start" width="100%">
+              {/* ROW: TITLE */}
+              <VStack
+                paddingTop={verticalPad}
+                // backgroundColor={bgLightLight}
+                hoverStyle={{ backgroundColor: bgLightLight }}
+                marginLeft={-adjustRankingLeft}
+                width={900}
+              >
+                <Link name="restaurant" params={{ slug: restaurant.slug }}>
+                  <VStack>
+                    <HStack alignItems="center" marginVertical={-3}>
+                      <RankingView
+                        marginRight={-6 + leftPad}
+                        marginTop={-10}
+                        rank={rank}
+                      />
 
-                    <SelectableText
-                      style={{
-                        fontSize: 22,
-                        fontWeight: '700',
-                        textDecorationColor: 'transparent',
-                      }}
-                    >
-                      {restaurant.name}
-                    </SelectableText>
-                  </HStack>
-
-                  <Spacer size={10} />
-
-                  {/* ROW: Ranking + TAGS */}
-                  <HStack
-                    paddingLeft={adjustRankingLeft + leftPad}
-                    spacing={12}
-                    alignItems="center"
-                    marginBottom={-3}
-                  >
-                    <RestaurantRatingViewPopover
-                      size="sm"
-                      restaurantSlug={restaurant.slug}
-                    />
-                    <HStack spacing>
-                      {tagElements}
-                      <RestaurantAddTagButton restaurant={restaurant} />
+                      <SelectableText
+                        style={{
+                          fontSize: 22,
+                          fontWeight: '700',
+                          textDecorationColor: 'transparent',
+                        }}
+                      >
+                        {restaurant.name}
+                      </SelectableText>
                     </HStack>
-                  </HStack>
-                </VStack>
-              </Link>
-            </VStack>
 
-            <Spacer size={14} />
+                    <Spacer size={10} />
 
-            {/* ROW: COMMENT */}
-            <VStack maxWidth="90%" marginLeft={-2}>
-              <Suspense fallback={null}>
-                <RestaurantTopReview restaurantId={restaurant.id} />
-              </Suspense>
-            </VStack>
+                    {/* ROW: Ranking + TAGS */}
+                    <HStack
+                      paddingLeft={adjustRankingLeft + leftPad}
+                      spacing={12}
+                      alignItems="center"
+                      marginBottom={-3}
+                    >
+                      <RestaurantRatingViewPopover
+                        size="sm"
+                        restaurantSlug={restaurant.slug}
+                      />
+                      <HStack spacing>
+                        {tagElements}
+                        <RestaurantAddTagButton restaurant={restaurant} />
+                      </HStack>
+                    </HStack>
+                  </VStack>
+                </Link>
+              </VStack>
 
-            <Spacer size={6} />
+              <Spacer size={14} />
 
-            {/* ROW: BOTTOM INFO */}
-            <HStack
-              marginRight={-15}
-              marginBottom={-10}
-              alignItems="center"
-              spacing
-            >
-              <RestaurantFavoriteStar restaurantId={restaurant.id} />
-              <TouchableOpacity
-                onPress={() =>
-                  setState((state) => ({
-                    ...state,
-                    showAddComment: !state.showAddComment,
-                  }))
-                }
+              {/* ROW: COMMENT */}
+              <VStack maxWidth="90%" marginLeft={-2}>
+                <Suspense fallback={null}>
+                  <RestaurantTopReview restaurantId={restaurant.id} />
+                </Suspense>
+              </VStack>
+
+              <Spacer size={6} />
+
+              {/* ROW: BOTTOM INFO */}
+              <HStack
+                marginRight={-15}
+                marginBottom={-10}
+                alignItems="center"
+                spacing
               >
-                <Icon
-                  name="MessageSquare"
-                  size={16}
-                  color={state.showAddComment ? 'blue' : '#999'}
+                <RestaurantFavoriteStar restaurantId={restaurant.id} />
+                <TouchableOpacity
+                  onPress={() =>
+                    setState((state) => ({
+                      ...state,
+                      showAddComment: !state.showAddComment,
+                    }))
+                  }
+                >
+                  <Icon
+                    name="MessageSquare"
+                    size={16}
+                    color={state.showAddComment ? 'blue' : '#999'}
+                  />
+                </TouchableOpacity>
+
+                <Divider vertical />
+
+                <RestaurantDetailRow
+                  size="sm"
+                  restaurantSlug={restaurant.slug}
                 />
-              </TouchableOpacity>
 
-              <Divider vertical />
+                <HoverablePopover
+                  contents={
+                    <SelectableText>{restaurant.address}</SelectableText>
+                  }
+                >
+                  <SelectableText style={{ color: '#888' }}>
+                    {getAddressText(
+                      currentLocationInfo,
+                      restaurant.address,
+                      'xs'
+                    )}
+                  </SelectableText>
+                </HoverablePopover>
+              </HStack>
+            </VStack>
 
-              <RestaurantDetailRow size="sm" restaurantSlug={restaurant.slug} />
-
-              <HoverablePopover
-                contents={<SelectableText>{restaurant.address}</SelectableText>}
-              >
-                <SelectableText style={{ color: '#888' }}>
-                  {getAddressText(
-                    currentLocationInfo,
-                    restaurant.address,
-                    'xs'
-                  )}
-                </SelectableText>
-              </HoverablePopover>
-            </HStack>
+            {showAddComment && (
+              <>
+                <Spacer size="lg" />
+                <RestaurantAddComment restaurantId={restaurant.id} />
+              </>
+            )}
           </VStack>
 
-          {showAddComment && (
-            <>
-              <Spacer size="lg" />
-              <RestaurantAddComment restaurantId={restaurant.id} />
-            </>
-          )}
-        </VStack>
-
-        <VStack padding={10} paddingTop={45} width={600}>
-          <RestaurantPeek
-            size={isShowingComment ? 'lg' : 'md'}
-            restaurant={restaurant}
-          />
-        </VStack>
-      </HStack>
-    )
-  }
+          <VStack padding={10} paddingTop={45} width={600}>
+            <RestaurantPeek
+              size={isShowingComment ? 'lg' : 'md'}
+              restaurant={restaurant}
+            />
+          </VStack>
+        </HStack>
+      )
+    }
+  )
 )
 
 const RestaurantTopReview = graphql(
@@ -275,6 +282,36 @@ const RestaurantTopReview = graphql(
   }
 )
 
+type CarouselPhoto = {
+  src: string
+  name?: string
+  rating?: number
+}
+
+function photosForCarousel(restaurant: Partial<Restaurant>) {
+  let photos = [] as CarouselPhoto[]
+  const max_photos = 4
+  for (const t of restaurant.tags || []) {
+    const photo = (t.photos || [])[0]
+    if (!photo) continue
+    let photo_name = t.tag.name || ' '
+    if (t.tag.icon) {
+      photo_name = t.tag.icon + photo_name
+    }
+    photos.push({
+      name: photo_name,
+      src: photo,
+      rating: t.rating,
+    })
+    if (photos.length >= max_photos) break
+  }
+  for (const photo of restaurant.photos || []) {
+    photos.push({ name: ' ', src: photo })
+    if (photos.length >= max_photos) break
+  }
+  return photos
+}
+
 export const RestaurantPeek = memo(
   ({
     restaurant,
@@ -286,7 +323,7 @@ export const RestaurantPeek = memo(
     const spacing = size == 'lg' ? 12 : 18
     const isMedium = useMediaQueryIsMedium()
     const [isMounted, setIsMounted] = useState(false)
-    const allPhotos = restaurant.photosForCarousel()
+    const allPhotos = photosForCarousel(restaurant)
     const photos = isMounted ? allPhotos : allPhotos.slice(0, 1)
 
     //  only show the first two at firt

@@ -1,8 +1,8 @@
 import {
-  Restaurant,
   RestaurantSearchArgs,
-  Review,
   User,
+  getHomeDishes,
+  search,
   slugify,
 } from '@dish/models'
 import { isEqual } from '@o/fast-compare'
@@ -16,6 +16,7 @@ import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
 import { requestIdle } from '../helpers/requestIdle'
 import { sleep } from '../helpers/sleep'
 import { timer } from '../helpers/timer'
+import { Restaurant } from '../types'
 import { Toast } from '../views/Toast'
 import { attemptAuthenticatedAction } from './attemptAuthenticatedAction'
 import {
@@ -170,6 +171,8 @@ let mapView: mapkit.Map | null = null
 export function setMapView(x: mapkit.Map) {
   mapView = x
 }
+
+export * from 'gqless'
 
 export const isOnOwnProfile = (state: OmState) => {
   return (
@@ -334,17 +337,19 @@ const pushHomeState: AsyncAction<
       nextState = {
         ...fallbackState,
         type: 'user',
-        reviews: [],
         user: null,
         username: item.params.username,
         ...newState,
       }
-      fetchData = om.actions.home.loadPageUser
+      fetchData = null
       break
     }
   }
 
   async function runFetchData() {
+    if (!fetchData) {
+      return
+    }
     try {
       await fetchData()
     } catch (err) {
@@ -450,32 +455,7 @@ const loadPageRestaurant: AsyncAction = async (om) => {
 const loadPageSearch: AsyncAction = async (om) => {
   const state = om.state.home.currentState
   if (state.type !== 'search' && state.type !== 'userSearch') return
-  await Promise.all([
-    /// search
-    om.actions.home.runSearch({ force: true }),
-    getUserInfo(),
-  ])
-  async function getUserInfo() {
-    // userpage load user
-    if (state.type === 'userSearch') {
-      const user = new User()
-      await user.findOne('username', state.username)
-      if (!user || state.type !== 'userSearch') return
-      om.state.home.allUsers[user.id] = user
-      state.userId = user.id
-    }
-  }
-}
-
-const loadPageUser: AsyncAction = async (om) => {
-  await attemptAuthenticatedAction(om, async () => {
-    const state = om.state.home.currentState
-    if (state.type !== 'user') return
-    const user = new User()
-    await user.findOne('username', state.username)
-    state.user = user
-    state.reviews = await Review.findAllForUser(user.id)
-  })
+  om.actions.home.runSearch({ force: true })
 }
 
 let currentAction: PageAction
@@ -519,12 +499,17 @@ const popHomeState: Action<HistoryItem> = (om, item) => {
 }
 
 const loadHomeDishes: AsyncAction = async (om) => {
-  const all = await Restaurant.getHomeDishes(
+  const all = await getHomeDishes(
     om.state.home.currentState.center.lat,
     om.state.home.currentState.center.lng,
     // TODO span
     om.state.home.currentState.span.lat
   )
+
+  if (!all) {
+    console.warn('none!!')
+    return
+  }
 
   // update tags
   for (const topDishes of all) {
@@ -631,7 +616,7 @@ const runAutocomplete: AsyncAction<string> = async (om, query) => {
   }
 
   const locationPromise = searchLocations(state.searchQuery)
-  const restaurantsPromise = Restaurant.search({
+  const restaurantsPromise = search({
     center: state.center,
     span: padSpan(state.span),
     query,
@@ -762,7 +747,7 @@ const runSearch: AsyncAction<{
   // if (shouldCancel()) return
 
   // fetch
-  let restaurants = await Restaurant.search(searchArgs)
+  let restaurants = await search(searchArgs)
   console.log('searched', searchArgs, restaurants)
   if (shouldCancel()) return
 
@@ -795,7 +780,7 @@ const clearSearch: Action = (om) => {
 }
 
 const setHoveredRestaurant: Action<Restaurant> = (om, val) => {
-  om.state.home.hoveredRestaurant = new Restaurant({ ...val })
+  om.state.home.hoveredRestaurant = { ...val }
 }
 
 const setShowUserMenu: Action<boolean> = (om, val) => {
@@ -805,11 +790,11 @@ const setShowUserMenu: Action<boolean> = (om, val) => {
 const suggestTags: AsyncAction<string> = async (om, tags) => {
   let state = om.state.home.currentState
   if (!isRestaurantState(state)) return
-  let restaurant = new Restaurant(
-    om.state.home.allRestaurants[state.restaurantId]
-  )
-  await restaurant.upsertOrphanTags(tags.split(','))
-  om.state.home.allRestaurants[state.restaurantId] = restaurant
+  // let restaurant = new Restaurant(
+  //   om.state.home.allRestaurants[state.restaurantId]
+  // )
+  // await restaurant.upsertOrphanTags(tags.split(','))
+  // om.state.home.allRestaurants[state.restaurantId] = restaurant
 }
 
 function reverseGeocode(center: LngLat): Promise<GeocodePlace[]> {
@@ -1132,5 +1117,4 @@ export const actions = {
   toggleTagOnHomeState,
   loadPageSearch,
   loadPageRestaurant,
-  loadPageUser,
 }
