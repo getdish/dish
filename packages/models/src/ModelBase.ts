@@ -21,7 +21,7 @@ export const isBrowserProd =
 let WebSocket: WebSocket
 
 if (isNode) {
-  require('isomorphic-fetch')
+  require('isomorphic-unfetch')
   WebSocket = require('ws')
 } else {
   WebSocket = window['WebSocket'] as any
