@@ -2,7 +2,6 @@ import { Action, IConfig, Overmind } from 'overmind'
 import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/es/config'
 
-import * as dishes from './dishes'
 import { gql } from './effects'
 import * as home from './home'
 import { onInitialize } from './onInitialize'
@@ -28,7 +27,6 @@ export const config = merge(
   },
   namespaced({
     home,
-    dishes,
     user,
     router,
   })

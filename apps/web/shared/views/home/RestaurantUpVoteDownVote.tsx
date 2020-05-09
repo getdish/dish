@@ -9,10 +9,10 @@ import Hoverable from '../ui/Hoverable'
 import { Icon } from '../ui/Icon'
 import { VStack } from '../ui/Stacks'
 import { usePromise } from './usePromise'
+import { useReviewMutation } from './useReviewMutation'
 
 export const RestaurantUpVoteDownVote = memo(
   graphql(({ restaurant }: { restaurant: Restaurant }) => {
-    const om = useOvermind()
     const [review] = query.review({
       where: {
         restaurant_id: {
@@ -20,7 +20,10 @@ export const RestaurantUpVoteDownVote = memo(
         },
       } as any,
     })
-    console.log('review', review)
+
+    const [insertReview, { data, fetchState, errors }] = useReviewMutation()
+
+    console.log('review', review, { data, fetchState, errors })
     const vote = review.rating
     return (
       <div
@@ -33,8 +36,8 @@ export const RestaurantUpVoteDownVote = memo(
             style={styles.topButton}
             active={vote == 1}
             onPress={() => {
-              om.actions.user.vote({
-                restaurant,
+              insertReview({
+                restaurant_id: restaurant.id,
                 rating: vote === 1 ? 0 : 1,
               })
             }}
@@ -50,8 +53,8 @@ export const RestaurantUpVoteDownVote = memo(
             style={styles.bottomButton}
             active={vote == -1}
             onPress={() => {
-              om.actions.user.vote({
-                restaurant,
+              insertReview({
+                restaurant_id: restaurant.id,
                 rating: vote == -1 ? 0 : -1,
               })
             }}
