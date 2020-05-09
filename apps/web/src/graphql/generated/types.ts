@@ -103,7 +103,7 @@ export type String_comparison_exp = {
  * @name __Directive
  * @type OBJECT
  */
-type t___Directive = FieldsType<
+export type t___Directive = FieldsType<
   {
     __typename: t_String<'__Directive'>
     args: t___InputValue[]
@@ -143,7 +143,7 @@ type t___DirectiveLocation = EnumType<
  * @name __EnumValue
  * @type OBJECT
  */
-type t___EnumValue = FieldsType<
+export type t___EnumValue = FieldsType<
   {
     __typename: t_String<'__EnumValue'>
     deprecationReason?: t_String | null
@@ -158,7 +158,7 @@ type t___EnumValue = FieldsType<
  * @name __Field
  * @type OBJECT
  */
-type t___Field = FieldsType<
+export type t___Field = FieldsType<
   {
     __typename: t_String<'__Field'>
     args: t___InputValue[]
@@ -175,7 +175,7 @@ type t___Field = FieldsType<
  * @name __InputValue
  * @type OBJECT
  */
-type t___InputValue = FieldsType<
+export type t___InputValue = FieldsType<
   {
     __typename: t_String<'__InputValue'>
     defaultValue?: t_String | null
@@ -190,7 +190,7 @@ type t___InputValue = FieldsType<
  * @name __Schema
  * @type OBJECT
  */
-type t___Schema = FieldsType<
+export type t___Schema = FieldsType<
   {
     __typename: t_String<'__Schema'>
     directives: t___Directive[]
@@ -206,7 +206,7 @@ type t___Schema = FieldsType<
  * @name __Type
  * @type OBJECT
  */
-type t___Type = FieldsType<
+export type t___Type = FieldsType<
   {
     __typename: t_String<'__Type'>
     description?: t_String | null
@@ -247,7 +247,7 @@ type t___TypeKind = EnumType<
  * @name dish
  * @type OBJECT
  */
-type t_dish = FieldsType<
+export type t_dish = FieldsType<
   {
     __typename: t_String<'dish'>
     created_at: t_timestamptz
@@ -287,7 +287,7 @@ type t_dish = FieldsType<
  * @name dish_aggregate
  * @type OBJECT
  */
-type t_dish_aggregate = FieldsType<
+export type t_dish_aggregate = FieldsType<
   {
     __typename: t_String<'dish_aggregate'>
     aggregate?: t_dish_aggregate_fields | null
@@ -300,7 +300,7 @@ type t_dish_aggregate = FieldsType<
  * @name dish_aggregate_fields
  * @type OBJECT
  */
-type t_dish_aggregate_fields = FieldsType<
+export type t_dish_aggregate_fields = FieldsType<
   {
     __typename: t_String<'dish_aggregate_fields'>
     avg?: t_dish_avg_fields | null
@@ -352,7 +352,7 @@ export type dish_arr_rel_insert_input = {
  * @name dish_avg_fields
  * @type OBJECT
  */
-type t_dish_avg_fields = FieldsType<
+export type t_dish_avg_fields = FieldsType<
   {
     __typename: t_String<'dish_avg_fields'>
     price?: t_Float | null
@@ -421,7 +421,7 @@ export type dish_insert_input = {
  * @name dish_max_fields
  * @type OBJECT
  */
-type t_dish_max_fields = FieldsType<
+export type t_dish_max_fields = FieldsType<
   {
     __typename: t_String<'dish_max_fields'>
     created_at?: t_timestamptz | null
@@ -451,7 +451,7 @@ export type dish_max_order_by = {
  * @name dish_min_fields
  * @type OBJECT
  */
-type t_dish_min_fields = FieldsType<
+export type t_dish_min_fields = FieldsType<
   {
     __typename: t_String<'dish_min_fields'>
     created_at?: t_timestamptz | null
@@ -481,7 +481,7 @@ export type dish_min_order_by = {
  * @name dish_mutation_response
  * @type OBJECT
  */
-type t_dish_mutation_response = FieldsType<
+export type t_dish_mutation_response = FieldsType<
   {
     __typename: t_String<'dish_mutation_response'>
     affected_rows: t_Int
@@ -560,7 +560,7 @@ export type dish_set_input = {
  * @name dish_stddev_fields
  * @type OBJECT
  */
-type t_dish_stddev_fields = FieldsType<
+export type t_dish_stddev_fields = FieldsType<
   {
     __typename: t_String<'dish_stddev_fields'>
     price?: t_Float | null
@@ -578,7 +578,7 @@ export type dish_stddev_order_by = { price?: order_by | null }
  * @name dish_stddev_pop_fields
  * @type OBJECT
  */
-type t_dish_stddev_pop_fields = FieldsType<
+export type t_dish_stddev_pop_fields = FieldsType<
   {
     __typename: t_String<'dish_stddev_pop_fields'>
     price?: t_Float | null
@@ -596,7 +596,7 @@ export type dish_stddev_pop_order_by = { price?: order_by | null }
  * @name dish_stddev_samp_fields
  * @type OBJECT
  */
-type t_dish_stddev_samp_fields = FieldsType<
+export type t_dish_stddev_samp_fields = FieldsType<
   {
     __typename: t_String<'dish_stddev_samp_fields'>
     price?: t_Float | null
@@ -614,7 +614,7 @@ export type dish_stddev_samp_order_by = { price?: order_by | null }
  * @name dish_sum_fields
  * @type OBJECT
  */
-type t_dish_sum_fields = FieldsType<
+export type t_dish_sum_fields = FieldsType<
   {
     __typename: t_String<'dish_sum_fields'>
     price?: t_Int | null
@@ -647,7 +647,7 @@ type t_dish_update_column = EnumType<
  * @name dish_var_pop_fields
  * @type OBJECT
  */
-type t_dish_var_pop_fields = FieldsType<
+export type t_dish_var_pop_fields = FieldsType<
   {
     __typename: t_String<'dish_var_pop_fields'>
     price?: t_Float | null
@@ -665,7 +665,7 @@ export type dish_var_pop_order_by = { price?: order_by | null }
  * @name dish_var_samp_fields
  * @type OBJECT
  */
-type t_dish_var_samp_fields = FieldsType<
+export type t_dish_var_samp_fields = FieldsType<
   {
     __typename: t_String<'dish_var_samp_fields'>
     price?: t_Float | null
@@ -683,7 +683,7 @@ export type dish_var_samp_order_by = { price?: order_by | null }
  * @name dish_variance_fields
  * @type OBJECT
  */
-type t_dish_variance_fields = FieldsType<
+export type t_dish_variance_fields = FieldsType<
   {
     __typename: t_String<'dish_variance_fields'>
     price?: t_Float | null
@@ -796,7 +796,7 @@ export type jsonb_comparison_exp = {
  * @name mutation_root
  * @type OBJECT
  */
-type t_mutation_root = FieldsType<
+export type t_mutation_root = FieldsType<
   {
     __typename: t_String<'mutation_root'>
     delete_dish?: FieldsTypeArg<
@@ -999,7 +999,7 @@ type t_order_by = EnumType<
  * @name query_root
  * @type OBJECT
  */
-type t_query_root = FieldsType<
+export type t_query_root = FieldsType<
   {
     __typename: t_String<'query_root'>
     dish: FieldsTypeArg<
@@ -1184,7 +1184,7 @@ type t_query_root = FieldsType<
  * @name restaurant
  * @type OBJECT
  */
-type t_restaurant = FieldsType<
+export type t_restaurant = FieldsType<
   {
     __typename: t_String<'restaurant'>
     address?: t_String | null
@@ -1297,7 +1297,7 @@ type t_restaurant = FieldsType<
  * @name restaurant_aggregate
  * @type OBJECT
  */
-type t_restaurant_aggregate = FieldsType<
+export type t_restaurant_aggregate = FieldsType<
   {
     __typename: t_String<'restaurant_aggregate'>
     aggregate?: t_restaurant_aggregate_fields | null
@@ -1310,7 +1310,7 @@ type t_restaurant_aggregate = FieldsType<
  * @name restaurant_aggregate_fields
  * @type OBJECT
  */
-type t_restaurant_aggregate_fields = FieldsType<
+export type t_restaurant_aggregate_fields = FieldsType<
   {
     __typename: t_String<'restaurant_aggregate_fields'>
     avg?: t_restaurant_avg_fields | null
@@ -1377,7 +1377,7 @@ export type restaurant_arr_rel_insert_input = {
  * @name restaurant_avg_fields
  * @type OBJECT
  */
-type t_restaurant_avg_fields = FieldsType<
+export type t_restaurant_avg_fields = FieldsType<
   {
     __typename: t_String<'restaurant_avg_fields'>
     rating?: t_Float | null
@@ -1510,7 +1510,7 @@ export type restaurant_insert_input = {
  * @name restaurant_max_fields
  * @type OBJECT
  */
-type t_restaurant_max_fields = FieldsType<
+export type t_restaurant_max_fields = FieldsType<
   {
     __typename: t_String<'restaurant_max_fields'>
     address?: t_String | null
@@ -1556,7 +1556,7 @@ export type restaurant_max_order_by = {
  * @name restaurant_min_fields
  * @type OBJECT
  */
-type t_restaurant_min_fields = FieldsType<
+export type t_restaurant_min_fields = FieldsType<
   {
     __typename: t_String<'restaurant_min_fields'>
     address?: t_String | null
@@ -1602,7 +1602,7 @@ export type restaurant_min_order_by = {
  * @name restaurant_mutation_response
  * @type OBJECT
  */
-type t_restaurant_mutation_response = FieldsType<
+export type t_restaurant_mutation_response = FieldsType<
   {
     __typename: t_String<'restaurant_mutation_response'>
     affected_rows: t_Int
@@ -1734,7 +1734,7 @@ export type restaurant_set_input = {
  * @name restaurant_stddev_fields
  * @type OBJECT
  */
-type t_restaurant_stddev_fields = FieldsType<
+export type t_restaurant_stddev_fields = FieldsType<
   {
     __typename: t_String<'restaurant_stddev_fields'>
     rating?: t_Float | null
@@ -1756,7 +1756,7 @@ export type restaurant_stddev_order_by = {
  * @name restaurant_stddev_pop_fields
  * @type OBJECT
  */
-type t_restaurant_stddev_pop_fields = FieldsType<
+export type t_restaurant_stddev_pop_fields = FieldsType<
   {
     __typename: t_String<'restaurant_stddev_pop_fields'>
     rating?: t_Float | null
@@ -1778,7 +1778,7 @@ export type restaurant_stddev_pop_order_by = {
  * @name restaurant_stddev_samp_fields
  * @type OBJECT
  */
-type t_restaurant_stddev_samp_fields = FieldsType<
+export type t_restaurant_stddev_samp_fields = FieldsType<
   {
     __typename: t_String<'restaurant_stddev_samp_fields'>
     rating?: t_Float | null
@@ -1800,7 +1800,7 @@ export type restaurant_stddev_samp_order_by = {
  * @name restaurant_sum_fields
  * @type OBJECT
  */
-type t_restaurant_sum_fields = FieldsType<
+export type t_restaurant_sum_fields = FieldsType<
   {
     __typename: t_String<'restaurant_sum_fields'>
     rating?: t_numeric | null
@@ -1822,7 +1822,7 @@ export type restaurant_sum_order_by = {
  * @name restaurant_tag
  * @type OBJECT
  */
-type t_restaurant_tag = FieldsType<
+export type t_restaurant_tag = FieldsType<
   {
     __typename: t_String<'restaurant_tag'>
     photos?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
@@ -1840,7 +1840,7 @@ type t_restaurant_tag = FieldsType<
  * @name restaurant_tag_aggregate
  * @type OBJECT
  */
-type t_restaurant_tag_aggregate = FieldsType<
+export type t_restaurant_tag_aggregate = FieldsType<
   {
     __typename: t_String<'restaurant_tag_aggregate'>
     aggregate?: t_restaurant_tag_aggregate_fields | null
@@ -1853,7 +1853,7 @@ type t_restaurant_tag_aggregate = FieldsType<
  * @name restaurant_tag_aggregate_fields
  * @type OBJECT
  */
-type t_restaurant_tag_aggregate_fields = FieldsType<
+export type t_restaurant_tag_aggregate_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_aggregate_fields'>
     avg?: t_restaurant_tag_avg_fields | null
@@ -1914,7 +1914,7 @@ export type restaurant_tag_arr_rel_insert_input = {
  * @name restaurant_tag_avg_fields
  * @type OBJECT
  */
-type t_restaurant_tag_avg_fields = FieldsType<
+export type t_restaurant_tag_avg_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_avg_fields'>
     rank?: t_Float | null
@@ -1999,7 +1999,7 @@ export type restaurant_tag_insert_input = {
  * @name restaurant_tag_max_fields
  * @type OBJECT
  */
-type t_restaurant_tag_max_fields = FieldsType<
+export type t_restaurant_tag_max_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_max_fields'>
     rank?: t_Int | null
@@ -2021,7 +2021,7 @@ export type restaurant_tag_max_order_by = {
  * @name restaurant_tag_min_fields
  * @type OBJECT
  */
-type t_restaurant_tag_min_fields = FieldsType<
+export type t_restaurant_tag_min_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_min_fields'>
     rank?: t_Int | null
@@ -2043,7 +2043,7 @@ export type restaurant_tag_min_order_by = {
  * @name restaurant_tag_mutation_response
  * @type OBJECT
  */
-type t_restaurant_tag_mutation_response = FieldsType<
+export type t_restaurant_tag_mutation_response = FieldsType<
   {
     __typename: t_String<'restaurant_tag_mutation_response'>
     affected_rows: t_Int
@@ -2115,7 +2115,7 @@ export type restaurant_tag_set_input = {
  * @name restaurant_tag_stddev_fields
  * @type OBJECT
  */
-type t_restaurant_tag_stddev_fields = FieldsType<
+export type t_restaurant_tag_stddev_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_stddev_fields'>
     rank?: t_Float | null
@@ -2137,7 +2137,7 @@ export type restaurant_tag_stddev_order_by = {
  * @name restaurant_tag_stddev_pop_fields
  * @type OBJECT
  */
-type t_restaurant_tag_stddev_pop_fields = FieldsType<
+export type t_restaurant_tag_stddev_pop_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_stddev_pop_fields'>
     rank?: t_Float | null
@@ -2159,7 +2159,7 @@ export type restaurant_tag_stddev_pop_order_by = {
  * @name restaurant_tag_stddev_samp_fields
  * @type OBJECT
  */
-type t_restaurant_tag_stddev_samp_fields = FieldsType<
+export type t_restaurant_tag_stddev_samp_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_stddev_samp_fields'>
     rank?: t_Float | null
@@ -2181,7 +2181,7 @@ export type restaurant_tag_stddev_samp_order_by = {
  * @name restaurant_tag_sum_fields
  * @type OBJECT
  */
-type t_restaurant_tag_sum_fields = FieldsType<
+export type t_restaurant_tag_sum_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_sum_fields'>
     rank?: t_Int | null
@@ -2211,7 +2211,7 @@ type t_restaurant_tag_update_column = EnumType<
  * @name restaurant_tag_var_pop_fields
  * @type OBJECT
  */
-type t_restaurant_tag_var_pop_fields = FieldsType<
+export type t_restaurant_tag_var_pop_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_var_pop_fields'>
     rank?: t_Float | null
@@ -2233,7 +2233,7 @@ export type restaurant_tag_var_pop_order_by = {
  * @name restaurant_tag_var_samp_fields
  * @type OBJECT
  */
-type t_restaurant_tag_var_samp_fields = FieldsType<
+export type t_restaurant_tag_var_samp_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_var_samp_fields'>
     rank?: t_Float | null
@@ -2255,7 +2255,7 @@ export type restaurant_tag_var_samp_order_by = {
  * @name restaurant_tag_variance_fields
  * @type OBJECT
  */
-type t_restaurant_tag_variance_fields = FieldsType<
+export type t_restaurant_tag_variance_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_variance_fields'>
     rank?: t_Float | null
@@ -2305,7 +2305,7 @@ type t_restaurant_update_column = EnumType<
  * @name restaurant_var_pop_fields
  * @type OBJECT
  */
-type t_restaurant_var_pop_fields = FieldsType<
+export type t_restaurant_var_pop_fields = FieldsType<
   {
     __typename: t_String<'restaurant_var_pop_fields'>
     rating?: t_Float | null
@@ -2327,7 +2327,7 @@ export type restaurant_var_pop_order_by = {
  * @name restaurant_var_samp_fields
  * @type OBJECT
  */
-type t_restaurant_var_samp_fields = FieldsType<
+export type t_restaurant_var_samp_fields = FieldsType<
   {
     __typename: t_String<'restaurant_var_samp_fields'>
     rating?: t_Float | null
@@ -2349,7 +2349,7 @@ export type restaurant_var_samp_order_by = {
  * @name restaurant_variance_fields
  * @type OBJECT
  */
-type t_restaurant_variance_fields = FieldsType<
+export type t_restaurant_variance_fields = FieldsType<
   {
     __typename: t_String<'restaurant_variance_fields'>
     rating?: t_Float | null
@@ -2371,7 +2371,7 @@ export type restaurant_variance_order_by = {
  * @name review
  * @type OBJECT
  */
-type t_review = FieldsType<
+export type t_review = FieldsType<
   {
     __typename: t_String<'review'>
     categories?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
@@ -2394,7 +2394,7 @@ type t_review = FieldsType<
  * @name review_aggregate
  * @type OBJECT
  */
-type t_review_aggregate = FieldsType<
+export type t_review_aggregate = FieldsType<
   {
     __typename: t_String<'review_aggregate'>
     aggregate?: t_review_aggregate_fields | null
@@ -2407,7 +2407,7 @@ type t_review_aggregate = FieldsType<
  * @name review_aggregate_fields
  * @type OBJECT
  */
-type t_review_aggregate_fields = FieldsType<
+export type t_review_aggregate_fields = FieldsType<
   {
     __typename: t_String<'review_aggregate_fields'>
     avg?: t_review_avg_fields | null
@@ -2465,7 +2465,7 @@ export type review_arr_rel_insert_input = {
  * @name review_avg_fields
  * @type OBJECT
  */
-type t_review_avg_fields = FieldsType<
+export type t_review_avg_fields = FieldsType<
   {
     __typename: t_String<'review_avg_fields'>
     rating?: t_Float | null
@@ -2552,7 +2552,7 @@ export type review_insert_input = {
  * @name review_max_fields
  * @type OBJECT
  */
-type t_review_max_fields = FieldsType<
+export type t_review_max_fields = FieldsType<
   {
     __typename: t_String<'review_max_fields'>
     created_at?: t_timestamptz | null
@@ -2578,7 +2578,7 @@ export type review_max_order_by = {
  * @name review_min_fields
  * @type OBJECT
  */
-type t_review_min_fields = FieldsType<
+export type t_review_min_fields = FieldsType<
   {
     __typename: t_String<'review_min_fields'>
     created_at?: t_timestamptz | null
@@ -2604,7 +2604,7 @@ export type review_min_order_by = {
  * @name review_mutation_response
  * @type OBJECT
  */
-type t_review_mutation_response = FieldsType<
+export type t_review_mutation_response = FieldsType<
   {
     __typename: t_String<'review_mutation_response'>
     affected_rows: t_Int
@@ -2693,7 +2693,7 @@ export type review_set_input = {
  * @name review_stddev_fields
  * @type OBJECT
  */
-type t_review_stddev_fields = FieldsType<
+export type t_review_stddev_fields = FieldsType<
   {
     __typename: t_String<'review_stddev_fields'>
     rating?: t_Float | null
@@ -2711,7 +2711,7 @@ export type review_stddev_order_by = { rating?: order_by | null }
  * @name review_stddev_pop_fields
  * @type OBJECT
  */
-type t_review_stddev_pop_fields = FieldsType<
+export type t_review_stddev_pop_fields = FieldsType<
   {
     __typename: t_String<'review_stddev_pop_fields'>
     rating?: t_Float | null
@@ -2729,7 +2729,7 @@ export type review_stddev_pop_order_by = { rating?: order_by | null }
  * @name review_stddev_samp_fields
  * @type OBJECT
  */
-type t_review_stddev_samp_fields = FieldsType<
+export type t_review_stddev_samp_fields = FieldsType<
   {
     __typename: t_String<'review_stddev_samp_fields'>
     rating?: t_Float | null
@@ -2747,7 +2747,7 @@ export type review_stddev_samp_order_by = { rating?: order_by | null }
  * @name review_sum_fields
  * @type OBJECT
  */
-type t_review_sum_fields = FieldsType<
+export type t_review_sum_fields = FieldsType<
   {
     __typename: t_String<'review_sum_fields'>
     rating?: t_numeric | null
@@ -2781,7 +2781,7 @@ type t_review_update_column = EnumType<
  * @name review_var_pop_fields
  * @type OBJECT
  */
-type t_review_var_pop_fields = FieldsType<
+export type t_review_var_pop_fields = FieldsType<
   {
     __typename: t_String<'review_var_pop_fields'>
     rating?: t_Float | null
@@ -2799,7 +2799,7 @@ export type review_var_pop_order_by = { rating?: order_by | null }
  * @name review_var_samp_fields
  * @type OBJECT
  */
-type t_review_var_samp_fields = FieldsType<
+export type t_review_var_samp_fields = FieldsType<
   {
     __typename: t_String<'review_var_samp_fields'>
     rating?: t_Float | null
@@ -2817,7 +2817,7 @@ export type review_var_samp_order_by = { rating?: order_by | null }
  * @name review_variance_fields
  * @type OBJECT
  */
-type t_review_variance_fields = FieldsType<
+export type t_review_variance_fields = FieldsType<
   {
     __typename: t_String<'review_variance_fields'>
     rating?: t_Float | null
@@ -2835,7 +2835,7 @@ export type review_variance_order_by = { rating?: order_by | null }
  * @name scrape
  * @type OBJECT
  */
-type t_scrape = FieldsType<
+export type t_scrape = FieldsType<
   {
     __typename: t_String<'scrape'>
     created_at: t_timestamptz
@@ -2855,7 +2855,7 @@ type t_scrape = FieldsType<
  * @name scrape_aggregate
  * @type OBJECT
  */
-type t_scrape_aggregate = FieldsType<
+export type t_scrape_aggregate = FieldsType<
   {
     __typename: t_String<'scrape_aggregate'>
     aggregate?: t_scrape_aggregate_fields | null
@@ -2868,7 +2868,7 @@ type t_scrape_aggregate = FieldsType<
  * @name scrape_aggregate_fields
  * @type OBJECT
  */
-type t_scrape_aggregate_fields = FieldsType<
+export type t_scrape_aggregate_fields = FieldsType<
   {
     __typename: t_String<'scrape_aggregate_fields'>
     count?: FieldsTypeArg<
@@ -2969,7 +2969,7 @@ export type scrape_insert_input = {
  * @name scrape_max_fields
  * @type OBJECT
  */
-type t_scrape_max_fields = FieldsType<
+export type t_scrape_max_fields = FieldsType<
   {
     __typename: t_String<'scrape_max_fields'>
     created_at?: t_timestamptz | null
@@ -2995,7 +2995,7 @@ export type scrape_max_order_by = {
  * @name scrape_min_fields
  * @type OBJECT
  */
-type t_scrape_min_fields = FieldsType<
+export type t_scrape_min_fields = FieldsType<
   {
     __typename: t_String<'scrape_min_fields'>
     created_at?: t_timestamptz | null
@@ -3021,7 +3021,7 @@ export type scrape_min_order_by = {
  * @name scrape_mutation_response
  * @type OBJECT
  */
-type t_scrape_mutation_response = FieldsType<
+export type t_scrape_mutation_response = FieldsType<
   {
     __typename: t_String<'scrape_mutation_response'>
     affected_rows: t_Int
@@ -3136,7 +3136,7 @@ export type st_d_within_input = { distance: number; from: any }
  * @name subscription_root
  * @type OBJECT
  */
-type t_subscription_root = FieldsType<
+export type t_subscription_root = FieldsType<
   {
     __typename: t_String<'subscription_root'>
     dish: FieldsTypeArg<
@@ -3321,7 +3321,7 @@ type t_subscription_root = FieldsType<
  * @name tag
  * @type OBJECT
  */
-type t_tag = FieldsType<
+export type t_tag = FieldsType<
   {
     __typename: t_String<'tag'>
     alternates?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
@@ -3386,7 +3386,7 @@ type t_tag = FieldsType<
  * @name tag_aggregate
  * @type OBJECT
  */
-type t_tag_aggregate = FieldsType<
+export type t_tag_aggregate = FieldsType<
   {
     __typename: t_String<'tag_aggregate'>
     aggregate?: t_tag_aggregate_fields | null
@@ -3399,7 +3399,7 @@ type t_tag_aggregate = FieldsType<
  * @name tag_aggregate_fields
  * @type OBJECT
  */
-type t_tag_aggregate_fields = FieldsType<
+export type t_tag_aggregate_fields = FieldsType<
   {
     __typename: t_String<'tag_aggregate_fields'>
     avg?: t_tag_avg_fields | null
@@ -3461,7 +3461,7 @@ export type tag_arr_rel_insert_input = {
  * @name tag_avg_fields
  * @type OBJECT
  */
-type t_tag_avg_fields = FieldsType<
+export type t_tag_avg_fields = FieldsType<
   {
     __typename: t_String<'tag_avg_fields'>
     order?: t_Float | null
@@ -3572,7 +3572,7 @@ export type tag_insert_input = {
  * @name tag_max_fields
  * @type OBJECT
  */
-type t_tag_max_fields = FieldsType<
+export type t_tag_max_fields = FieldsType<
   {
     __typename: t_String<'tag_max_fields'>
     created_at?: t_timestamptz | null
@@ -3604,7 +3604,7 @@ export type tag_max_order_by = {
  * @name tag_min_fields
  * @type OBJECT
  */
-type t_tag_min_fields = FieldsType<
+export type t_tag_min_fields = FieldsType<
   {
     __typename: t_String<'tag_min_fields'>
     created_at?: t_timestamptz | null
@@ -3636,7 +3636,7 @@ export type tag_min_order_by = {
  * @name tag_mutation_response
  * @type OBJECT
  */
-type t_tag_mutation_response = FieldsType<
+export type t_tag_mutation_response = FieldsType<
   {
     __typename: t_String<'tag_mutation_response'>
     affected_rows: t_Int
@@ -3741,7 +3741,7 @@ export type tag_set_input = {
  * @name tag_stddev_fields
  * @type OBJECT
  */
-type t_tag_stddev_fields = FieldsType<
+export type t_tag_stddev_fields = FieldsType<
   {
     __typename: t_String<'tag_stddev_fields'>
     order?: t_Float | null
@@ -3759,7 +3759,7 @@ export type tag_stddev_order_by = { order?: order_by | null }
  * @name tag_stddev_pop_fields
  * @type OBJECT
  */
-type t_tag_stddev_pop_fields = FieldsType<
+export type t_tag_stddev_pop_fields = FieldsType<
   {
     __typename: t_String<'tag_stddev_pop_fields'>
     order?: t_Float | null
@@ -3777,7 +3777,7 @@ export type tag_stddev_pop_order_by = { order?: order_by | null }
  * @name tag_stddev_samp_fields
  * @type OBJECT
  */
-type t_tag_stddev_samp_fields = FieldsType<
+export type t_tag_stddev_samp_fields = FieldsType<
   {
     __typename: t_String<'tag_stddev_samp_fields'>
     order?: t_Float | null
@@ -3795,7 +3795,7 @@ export type tag_stddev_samp_order_by = { order?: order_by | null }
  * @name tag_sum_fields
  * @type OBJECT
  */
-type t_tag_sum_fields = FieldsType<
+export type t_tag_sum_fields = FieldsType<
   {
     __typename: t_String<'tag_sum_fields'>
     order?: t_Int | null
@@ -3813,7 +3813,7 @@ export type tag_sum_order_by = { order?: order_by | null }
  * @name tag_tag
  * @type OBJECT
  */
-type t_tag_tag = FieldsType<
+export type t_tag_tag = FieldsType<
   {
     __typename: t_String<'tag_tag'>
     category: t_tag
@@ -3828,7 +3828,7 @@ type t_tag_tag = FieldsType<
  * @name tag_tag_aggregate
  * @type OBJECT
  */
-type t_tag_tag_aggregate = FieldsType<
+export type t_tag_tag_aggregate = FieldsType<
   {
     __typename: t_String<'tag_tag_aggregate'>
     aggregate?: t_tag_tag_aggregate_fields | null
@@ -3841,7 +3841,7 @@ type t_tag_tag_aggregate = FieldsType<
  * @name tag_tag_aggregate_fields
  * @type OBJECT
  */
-type t_tag_tag_aggregate_fields = FieldsType<
+export type t_tag_tag_aggregate_fields = FieldsType<
   {
     __typename: t_String<'tag_tag_aggregate_fields'>
     count?: FieldsTypeArg<
@@ -3902,7 +3902,7 @@ export type tag_tag_insert_input = {
  * @name tag_tag_mutation_response
  * @type OBJECT
  */
-type t_tag_tag_mutation_response = FieldsType<
+export type t_tag_tag_mutation_response = FieldsType<
   {
     __typename: t_String<'tag_tag_mutation_response'>
     affected_rows: t_Int
@@ -3986,7 +3986,7 @@ type t_tag_update_column = EnumType<
  * @name tag_var_pop_fields
  * @type OBJECT
  */
-type t_tag_var_pop_fields = FieldsType<
+export type t_tag_var_pop_fields = FieldsType<
   {
     __typename: t_String<'tag_var_pop_fields'>
     order?: t_Float | null
@@ -4004,7 +4004,7 @@ export type tag_var_pop_order_by = { order?: order_by | null }
  * @name tag_var_samp_fields
  * @type OBJECT
  */
-type t_tag_var_samp_fields = FieldsType<
+export type t_tag_var_samp_fields = FieldsType<
   {
     __typename: t_String<'tag_var_samp_fields'>
     order?: t_Float | null
@@ -4022,7 +4022,7 @@ export type tag_var_samp_order_by = { order?: order_by | null }
  * @name tag_variance_fields
  * @type OBJECT
  */
-type t_tag_variance_fields = FieldsType<
+export type t_tag_variance_fields = FieldsType<
   {
     __typename: t_String<'tag_variance_fields'>
     order?: t_Float | null
@@ -4065,7 +4065,7 @@ export type timestamptz_comparison_exp = {
  * @name user
  * @type OBJECT
  */
-type t_user = FieldsType<
+export type t_user = FieldsType<
   {
     __typename: t_String<'user'>
     created_at: t_timestamptz
@@ -4102,7 +4102,7 @@ type t_user = FieldsType<
  * @name user_aggregate
  * @type OBJECT
  */
-type t_user_aggregate = FieldsType<
+export type t_user_aggregate = FieldsType<
   {
     __typename: t_String<'user_aggregate'>
     aggregate?: t_user_aggregate_fields | null
@@ -4115,7 +4115,7 @@ type t_user_aggregate = FieldsType<
  * @name user_aggregate_fields
  * @type OBJECT
  */
-type t_user_aggregate_fields = FieldsType<
+export type t_user_aggregate_fields = FieldsType<
   {
     __typename: t_String<'user_aggregate_fields'>
     count?: FieldsTypeArg<
@@ -4188,7 +4188,7 @@ export type user_insert_input = {
  * @name user_max_fields
  * @type OBJECT
  */
-type t_user_max_fields = FieldsType<
+export type t_user_max_fields = FieldsType<
   {
     __typename: t_String<'user_max_fields'>
     created_at?: t_timestamptz | null
@@ -4216,7 +4216,7 @@ export type user_max_order_by = {
  * @name user_min_fields
  * @type OBJECT
  */
-type t_user_min_fields = FieldsType<
+export type t_user_min_fields = FieldsType<
   {
     __typename: t_String<'user_min_fields'>
     created_at?: t_timestamptz | null
@@ -4244,7 +4244,7 @@ export type user_min_order_by = {
  * @name user_mutation_response
  * @type OBJECT
  */
-type t_user_mutation_response = FieldsType<
+export type t_user_mutation_response = FieldsType<
   {
     __typename: t_String<'user_mutation_response'>
     affected_rows: t_Int

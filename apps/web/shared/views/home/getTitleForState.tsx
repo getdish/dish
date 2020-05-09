@@ -86,7 +86,8 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
               {titleTags.map((tag) => (
                 <TagButton
                   key={getTagId(tag)}
-                  tag={tag}
+                  name={tag.name}
+                  type={tag.type}
                   subtle
                   noColor
                   hideIcon

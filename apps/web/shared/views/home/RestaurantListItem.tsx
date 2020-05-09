@@ -105,7 +105,7 @@ const RestaurantListItemContent = memo(
     })
     const tagElements = useGetTagElements({
       showMore: true,
-      restaurant,
+      restaurantSlug: restaurant.slug,
       divider: <>,&nbsp;</>,
     })
 

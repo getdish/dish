@@ -1,14 +1,17 @@
+import DishAuth from '@dish/auth'
+import { getGraphEndpoint } from '@dish/common-web'
 import { Client, QueryFetcher } from 'gqless'
 
 import { query_root, schema } from './generated'
 
-const endpoint = ''
+const endpoint = getGraphEndpoint()
 
 const fetchQuery: QueryFetcher = async (query, variables) => {
   const response = await fetch(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...DishAuth.getHeaders(),
     },
     body: JSON.stringify({
       query,

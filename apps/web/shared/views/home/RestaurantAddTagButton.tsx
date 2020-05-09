@@ -8,7 +8,6 @@ import { LinkButton } from '../ui/Link'
 import { Popover } from '../ui/Popover'
 import { HStack } from '../ui/Stacks'
 import HomeLenseBar, { HomeLenseBarOnly } from './HomeLenseBar'
-import { useGetTagElements } from './RestaurantTagsRow'
 
 export const RestaurantAddTagButton = ({
   restaurant,

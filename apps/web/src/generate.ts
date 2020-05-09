@@ -20,28 +20,41 @@ async function run() {
     }
     return response.data
   }
+
+  console.log('Fetching schema...')
   const schemaDefs = await fetchSchema(fetchQuery)
   const codegen = new Codegen(schemaDefs, { typescript: true })
   const files = codegen.generate()
 
+  console.log('Saving...')
   await Promise.all(
-    files.map(async (file) => {
-      await new Promise((res, rej) => {
-        let contents = ''
-        for (let line of file.contents.split(`\n`)) {
-          // export! them
-          if (line.indexOf(`type `) === 0 && line.indexOf('FieldsType<') > 0) {
-            line = `export ${line}`
+    files.map(
+      (file) =>
+        new Promise((res, rej) => {
+          if (file.path === 'client.ts') {
+            // ignore client we control it
+            return res()
           }
-          contents += `${line}\n`
-        }
-        writeFile(join(graphqlPath, file.path), file.contents, (err) => {
-          if (err) return rej(err)
-          res()
+          let contents = ''
+          for (let line of file.contents.split(`\n`)) {
+            // export! them
+            if (
+              line.indexOf(`type `) === 0 &&
+              line.indexOf('FieldsType<') > 0
+            ) {
+              line = `export ${line}`
+            }
+            contents += `${line}\n`
+          }
+          writeFile(join(graphqlPath, file.path), contents, (err) => {
+            if (err) return rej(err)
+            res()
+          })
         })
-      })
-    })
+    )
   )
+
+  console.log('Prettier...')
 
   exec(`prettier --write "**/*.ts"`, {
     cwd: graphqlPath,

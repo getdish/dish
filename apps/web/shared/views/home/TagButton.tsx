@@ -15,7 +15,8 @@ export const getTagColor = (tag: NavigableTag): string =>
 export const TagButton = memo(
   ({
     rank,
-    tag,
+    name,
+    type,
     size,
     subtle,
     noColor,
@@ -28,20 +29,21 @@ export const TagButton = memo(
     subtleIcon,
     hideIcon,
     ...rest
-  }: StackProps & {
-    rank?: number
-    tag: NavigableTag
-    size?: 'lg' | 'md' | 'sm'
-    subtle?: boolean
-    votable?: boolean
-    closable?: boolean
-    onClose?: Function
-    color?: any
-    hideIcon?: boolean
-    subtleIcon?: boolean
-    fontSize?: TextStyle['fontSize']
-    noColor?: boolean
-  }) => {
+  }: StackProps &
+    NavigableTag & {
+      rank?: number
+      size?: 'lg' | 'md' | 'sm'
+      subtle?: boolean
+      votable?: boolean
+      closable?: boolean
+      onClose?: Function
+      color?: any
+      hideIcon?: boolean
+      subtleIcon?: boolean
+      fontSize?: TextStyle['fontSize']
+      noColor?: boolean
+    }) => {
+    const tag = { name, type }
     const scale = size === 'sm' ? 0.8 : size == 'lg' ? 1.05 : 1
     const paddingVertical = (subtle ? 0 : 6) * scale
     const lineHeight = 22 * scale
