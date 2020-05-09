@@ -14,6 +14,7 @@ import { Link, LinkButton } from '../ui/Link'
 import { HStack, StackProps, VStack } from '../ui/Stacks'
 import { flatButtonStyleSelected } from './baseButtonStyle'
 import { bgLight } from './colors'
+import { useReviewMutation } from './useReviewMutation'
 
 export const RestaurantAddComment = memo(
   ({ restaurantId }: { restaurantId: string }) => {
@@ -26,18 +27,7 @@ export const RestaurantAddComment = memo(
     const lineHeight = 22
     const [height, setHeight] = useState(lineHeight)
 
-    const [insertReview, { data, fetchState, errors }] = useMutation(
-      (schema, variables) => {
-        debugger
-        schema.data.insert_review({
-          objects: [
-            {
-              reviews: [variables.review],
-            },
-          ],
-        })
-      }
-    )
+    const [insertReview, { data, fetchState, errors }] = useReviewMutation()
     console.log('addcomment', data, fetchState, errors)
 
     const updateReview = (text: string) => {
