@@ -181,7 +181,7 @@ const RestaurantListItemContent = memo(
             {/* ROW: COMMENT */}
             <VStack maxWidth="90%" marginLeft={-2}>
               <Suspense fallback={null}>
-                <RestaurantTopReview restaurant={restaurant} />
+                <RestaurantTopReview restaurantId={restaurant.id} />
               </Suspense>
             </VStack>
 
@@ -248,16 +248,15 @@ const RestaurantListItemContent = memo(
 )
 
 const RestaurantTopReview = graphql(
-  ({ restaurant }: { restaurant: Restaurant }) => {
+  ({ restaurantId }: { restaurantId: string }) => {
     const [topReview] = query.review({
       limit: 1,
       where: {
         restaurant_id: {
-          _eq: restaurant.id,
+          _eq: restaurantId,
         },
-      } as any,
+      },
     })
-    console.log('got', restaurant.id, topReview.id, topReview.rating)
     return (
       <CommentBubble user={topReview.user ?? { username: 'Peach' }}>
         <SelectableText
