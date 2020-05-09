@@ -1,4 +1,4 @@
-import 'isomorphic-fetch'
+import 'isomorphic-unfetch'
 
 import { readFileSync } from 'fs'
 import Path from 'path'

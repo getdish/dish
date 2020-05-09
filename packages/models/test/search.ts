@@ -2,6 +2,7 @@ import test from 'ava'
 
 import { flushTestData } from '../src/flushTestData'
 import { Restaurant } from '../src/Restaurant'
+import { search } from '../src/search'
 import { restaurant_fixture } from './etc/fixtures'
 
 test.beforeEach(async (t) => {
@@ -14,7 +15,7 @@ test('Searching for a restaurant by name', async (t) => {
   })
   await restaurant.upsert()
 
-  const results = await Restaurant.search({
+  const results = await search({
     center: {
       lat: 50.09,
       lng: 0.09,
@@ -34,7 +35,7 @@ test('Searching for a restaurant by tag', async (t) => {
   })
   await restaurant.upsert()
   await restaurant.upsertOrphanTags(['Test tag'])
-  const results = await Restaurant.search({
+  const results = await search({
     center: {
       lat: 50.24,
       lng: 0.24,

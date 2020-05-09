@@ -2,6 +2,7 @@ import { Restaurant, User } from '@dish/models'
 import React, { memo, useLayoutEffect, useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity } from 'react-native'
 
+import { useMutation } from '../../../src/graphql'
 // @ts-ignore
 import avatar from '../../assets/peach.png'
 import { useOvermind } from '../../state/om'
@@ -24,6 +25,20 @@ export const RestaurantAddComment = memo(
     const [isSaved, setIsSaved] = useState(true)
     const lineHeight = 22
     const [height, setHeight] = useState(lineHeight)
+
+    const [insertReview, { data, fetchState, errors }] = useMutation(
+      (schema, variables) => {
+        debugger
+        schema.data.insert_review({
+          objects: [
+            {
+              reviews: [variables.review],
+            },
+          ],
+        })
+      }
+    )
+    console.log('addcomment', data, fetchState, errors)
 
     const updateReview = (text: string) => {
       setReviewText(text)
@@ -69,19 +84,16 @@ export const RestaurantAddComment = memo(
               right={0}
               onPress={async () => {
                 Toast.show('Saving...')
-                const review = {
-                  reviews: [
-                    {
-                      text: reviewText,
-                      restaurant_id: restaurantId,
-                      tag_id: null,
-                      user_id: om.state.user.user.id,
-                      rating: 0,
-                    },
-                  ],
-                }
                 console.log('inserting', review)
-                await om.effects.gql.mutations.upsertUserReview(review)
+                insertReview({
+                  review: {
+                    text: reviewText,
+                    restaurant_id: restaurantId,
+                    tag_id: null,
+                    user_id: om.state.user.user.id,
+                    rating: 0,
+                  },
+                })
                 Toast.show('Saved!')
                 setIsSaved(true)
               }}
