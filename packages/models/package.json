@@ -21,9 +21,6 @@
     "@dish/auth": "*",
     "@dish/graph": "*",
     "@dish/common-web": "*",
-    "axios": "^0.19.1",
-    "@apollo/client": "^3.0.0-beta.23",
-    "@apollo/link-ws": "^2.0.0-beta.3",
     "graphql": "^15.0.0",
     "isomorphic-unfetch": "^3.0.0",
     "json-to-graphql-query": "^2.0.0",
@@ -31,5 +28,7 @@
     "subscriptions-transport-ws": "^0.9.16",
     "ws": "^7.2.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "axios": "^0.19.1"
+  }
 }

@@ -2,8 +2,8 @@ import { getGraphEndpoint } from '@dish/common-web'
 import { Client } from 'gqless'
 import { createUseMutation } from 'gqless-hooks'
 
-import { createFetcher } from './createFetcher'
-import { schema, t_mutation_root } from './graphql/generated'
+import { createFetcher } from '../createFetcher'
+import { schema, t_mutation_root } from './generated'
 
 // / gqless-hooks
 

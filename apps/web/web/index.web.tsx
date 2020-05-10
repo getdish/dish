@@ -3,6 +3,7 @@ import './bootstrapEnv'
 import './base.css'
 import './mapkit'
 
+import { startLogging } from '@dish/graph'
 import { createOvermind } from 'overmind'
 // // import here
 import React from 'react'
@@ -23,6 +24,10 @@ console.log(importable(1 + 1))
 // NOTE: i undid the "no import" thing temporarily for tscc
 // NOTE: nothing should import this file! its the root!
 //
+
+if (process.env.NODE_ENV === 'development') {
+  startLogging()
+}
 
 // register root component
 AppRegistry.registerComponent('dish', () => App)

@@ -1,7 +1,8 @@
-small things to look at:
+new:
 
 - RestaurantRatingView - see typescript errors. gqless thinks we have wrong type here, is that not true?
-
+- We can generally move model helper functions into graph, see gqless docs and the graph/src/graphql/extensions/index.ts
+  - i think its worth us ripping the bandaid here so we have a nice setup
 
 # Current
 
