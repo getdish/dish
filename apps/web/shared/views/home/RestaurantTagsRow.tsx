@@ -1,8 +1,8 @@
+import { query } from '@dish/graph'
 import { TagType } from '@dish/models'
 import { graphql } from '@gqless/react'
 import React, { memo } from 'react'
 
-import { query } from '../../../src/graphql'
 import { useOvermind } from '../../state/om'
 import { HStack } from '../ui/Stacks'
 import { TagButton } from './TagButton'

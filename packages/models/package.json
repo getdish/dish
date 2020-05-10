@@ -12,13 +12,14 @@
   },
   "scripts": {
     "start": "node _/index.js",
-    "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput",
+    "build": "tsc",
+    "watch": "tsc --watch --preserveWatchOutput",
     "test": "ava test/* --verbose",
     "test:watch": "ava test/* --watch"
   },
   "dependencies": {
     "@dish/auth": "*",
+    "@dish/graph": "*",
     "@dish/common-web": "*",
     "axios": "^0.19.1",
     "@apollo/client": "^3.0.0-beta.23",

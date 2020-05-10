@@ -1,8 +1,8 @@
+import { query, useMutation } from '@dish/graph'
 import { graphql } from '@gqless/react'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { ScrollView, Text, TextInput } from 'react-native'
 
-import { query, useMutation } from '../../../src/graphql'
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { useForceUpdate } from '../../hooks/useForceUpdate'
 import { useOvermind } from '../../state/om'

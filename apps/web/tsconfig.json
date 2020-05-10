@@ -12,6 +12,7 @@
   "exclude": ["**/*.test.ts", "**/*.test.tsx"],
   "references": [
     { "path": "../../packages/common-web" },
+    { "path": "../../packages/graph" },
     { "path": "../../packages/models" },
     { "path": "../../packages/rollup-plugin-tscc" },
     { "path": "../../packages/tsickle-loader" }

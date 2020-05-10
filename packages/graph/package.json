@@ -1,0 +1,24 @@
+{
+  "name": "@dish/graph",
+  "version": "0.0.1",
+  "main": "_/index.js",
+  "tsmain": "src/index",
+  "sideEffects": false,
+  "private": true,
+  "scripts": {
+    "postinstall": "yarn generate",
+    "generate": "node generate.js",
+    "build": "tsc || true",
+    "watch": "tsc --watch --preserveWatchOutput",
+    "test": "true"
+  },
+  "dependencies": {
+    "@dish/common-web": "*",
+    "isomorphic-unfetch": "^3.0.0",
+    "gqless-hooks": "^1.1.1"
+  },
+  "devDependencies": {
+    "gqless": "^0.0.1-alpha.29",
+    "@gqless/schema": "^0.0.1-alpha.31"
+  }
+}

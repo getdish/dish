@@ -1,3 +1,5 @@
+import DishAuth from '@dish/auth'
+
 export const isNode = typeof window == 'undefined'
 export const isBrowserProd =
   !isNode && window.location.hostname.includes('dish')
@@ -36,4 +38,21 @@ export function getGraphEndpointDomain() {
 
 export function getGraphEndpoint() {
   return `${getGraphEndpointDomain()}/v1/graphql`
+}
+
+export async function graphqlGet(query: string = '', variables: Object = {}) {
+  const res = await fetch(getGraphEndpoint(), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      ...DishAuth.getHeaders(),
+    },
+    body: JSON.stringify({
+      query,
+      variables,
+    }),
+    mode: 'cors',
+  })
+  return await res.json()
 }

@@ -1,14 +1,12 @@
+import { query } from '@dish/graph'
 import { Restaurant } from '@dish/models'
 import { graphql } from '@gqless/react'
 import React, { memo, useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
-import { query } from '../../../src/graphql'
-import { omStatic, useOvermind } from '../../state/om'
 import Hoverable from '../ui/Hoverable'
 import { Icon } from '../ui/Icon'
 import { VStack } from '../ui/Stacks'
-import { usePromise } from './usePromise'
 import { useReviewMutation } from './useReviewMutation'
 
 export const RestaurantUpVoteDownVote = memo(

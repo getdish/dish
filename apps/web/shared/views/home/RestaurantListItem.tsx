@@ -1,9 +1,9 @@
+import { query } from '@dish/graph'
 import { Restaurant } from '@dish/models'
 import { graphql } from '@gqless/react'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 
-import { query } from '../../../src/graphql'
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { GeocodePlace, isEditingUserPage } from '../../state/home'
 import { useOvermind } from '../../state/om'

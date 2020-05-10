@@ -1,8 +1,8 @@
+import { query } from '@dish/graph'
 import { graphql } from '@gqless/react'
 import React, { memo } from 'react'
 import { Image, ScrollView, Text } from 'react-native'
 
-import { query } from '../../../src/graphql'
 import { HomeStateItemUser } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { NotFoundPage } from '../NotFoundPage'

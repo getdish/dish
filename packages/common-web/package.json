@@ -9,5 +9,8 @@
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "true"
+  },
+  "dependencies": {
+    "@dish/auth": "*"
   }
 }

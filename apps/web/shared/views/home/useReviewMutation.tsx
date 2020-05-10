@@ -1,5 +1,4 @@
-import { useMutation } from '../../../src/graphql'
-import { Review } from '../../types'
+import { Review, useMutation } from '@dish/graph'
 
 export const useReviewMutation = () => {
   return useMutation((schema, variables) => {

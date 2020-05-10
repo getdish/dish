@@ -15,10 +15,7 @@ import { getGraphEndpointDomain } from '@dish/common-web'
 import axios, { AxiosRequestConfig } from 'axios'
 import { EnumType, jsonToGraphQLQuery } from 'json-to-graphql-query'
 
-export const isNode = typeof window == 'undefined'
-export const isBrowserProd =
-  !isNode && window.location.hostname.includes('dish')
-let WebSocket: WebSocket
+import { isBrowserProd, isNode } from './constants'
 
 if (isNode) {
   require('isomorphic-unfetch')
@@ -224,14 +221,6 @@ export class ModelBase<T> {
       `,
     })
     return res.data
-  }
-
-  static async graphqlGet(query: string, variables: string) {
-    let conf = JSON.parse(JSON.stringify(AXIOS_CONF))
-    conf.data.query = query
-    conf.data.variables = variables
-    conf.headers = auth.getHeaders()
-    return (await axios(conf)) as any
   }
 
   static async hasura(

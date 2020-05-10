@@ -1,3 +1,4 @@
+import { Restaurant } from '@dish/graph'
 import { TopCuisine } from '@dish/models'
 import _ from 'lodash'
 import React, { memo, useCallback, useState } from 'react'
@@ -5,7 +6,6 @@ import { ScrollView, Text } from 'react-native'
 
 import { HomeStateItem, HomeStateItemHome } from '../../state/home'
 import { useOvermind } from '../../state/om'
-import { Restaurant } from '../../types'
 import { NotFoundPage } from '../NotFoundPage'
 import { LinkButton, OverlayLinkButton } from '../ui/Link'
 import { MediaQuery, mediaQueries } from '../ui/MediaQuery'

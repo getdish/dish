@@ -3,7 +3,8 @@ import { getGraphEndpoint } from '@dish/common-web'
 import { Client, QueryFetcher } from 'gqless'
 import { createUseMutation, createUseQuery } from 'gqless-hooks'
 
-import { query_root, schema, t_mutation_root } from './generated'
+import { schema } from './generated/schema'
+import { query_root, t_mutation_root } from './generated/types'
 
 const endpoint = getGraphEndpoint()
 
@@ -37,20 +38,19 @@ export const query = client.query
 
 /// gqless-hooks
 
-const fetchMutation = createFetcher('mutation')
-console.log('schema', schema)
-const mutateClient = new Client<t_mutation_root>(
-  schema.mutation_root,
-  fetchMutation
-)
-export const mutation = mutateClient.query
+// const fetchMutation = createFetcher('mutation')
+// const mutateClient = new Client<t_mutation_root>(
+//   schema.mutation_root,
+//   fetchMutation
+// )
+// export const mutation = mutateClient.query
 
-export const useMutation = createUseMutation<t_mutation_root>({
-  endpoint,
-  schema,
-})
+// export const useMutation = createUseMutation<t_mutation_root>({
+//   endpoint,
+//   schema,
+// })
 
-export const { useQuery, prepareQuery } = createUseQuery<query_root>({
-  endpoint,
-  schema,
-})
+// export const { useQuery, prepareQuery } = createUseQuery<query_root>({
+//   endpoint,
+//   schema,
+// })

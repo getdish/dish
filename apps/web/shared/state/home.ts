@@ -1,3 +1,4 @@
+import { Restaurant, query } from '@dish/graph'
 import {
   RestaurantSearchArgs,
   User,
@@ -10,13 +11,11 @@ import { resolved } from 'gqless'
 import _ from 'lodash'
 import { Action, AsyncAction } from 'overmind'
 
-import { query } from '../../src/graphql'
 import { isWorker } from '../constants'
 import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
 import { requestIdle } from '../helpers/requestIdle'
 import { sleep } from '../helpers/sleep'
 import { timer } from '../helpers/timer'
-import { Restaurant } from '../types'
 import { Toast } from '../views/Toast'
 import { attemptAuthenticatedAction } from './attemptAuthenticatedAction'
 import {

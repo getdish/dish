@@ -1,10 +1,9 @@
+import { Restaurant, query } from '@dish/graph'
 import { Sources } from '@dish/models'
 import { graphql } from '@gqless/react'
 import React, { memo } from 'react'
 import { Linking, StyleSheet, Text } from 'react-native'
 
-import { query } from '../../../src/graphql'
-import { Restaurant } from '../../types'
 import { Divider } from '../ui/Divider'
 import { Spacer } from '../ui/Spacer'
 import { HStack, StackProps, VStack } from '../ui/Stacks'
