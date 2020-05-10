@@ -1,6 +1,5 @@
 process.env.HASURA_ENDPOINT = 'https://hasura.rio.dishapp.com'
 process.env.AUTH_ENDPOINT = 'https://auth.rio.dishapp.com'
-process.env.HASURA_SECRET = '7Yk45yzZ$!xfkL'
 
 require('isomorphic-unfetch')
 
