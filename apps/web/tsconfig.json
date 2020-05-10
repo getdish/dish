@@ -13,6 +13,7 @@
   "references": [
     { "path": "../../packages/common-web" },
     { "path": "../../packages/models" },
+    { "path": "../../packages/graph" },
     { "path": "../../packages/rollup-plugin-tscc" },
     { "path": "../../packages/tsickle-loader" }
   ]

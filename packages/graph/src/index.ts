@@ -10,3 +10,4 @@ export type Review = t_review['data']
 // all other types
 
 export * from './graphql'
+export * from './mutation'
