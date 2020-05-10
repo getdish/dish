@@ -5,19 +5,22 @@
   "tsmain": "src/index",
   "sideEffects": false,
   "private": true,
+  "workspaces": {
+    "nohoist": [
+      "**"
+    ]
+  },
   "scripts": {
     "postinstall": "yarn generate",
-    "generate": "node generate.js",
-    "build": "tsc || true",
-    "watch": "tsc --watch --preserveWatchOutput",
+    "generate": "(cd ../common-web && yarn build) && node generate.js",
+    "build": "tsc -b || true",
+    "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "true"
   },
   "dependencies": {
     "@dish/common-web": "*",
     "isomorphic-unfetch": "^3.0.0",
-    "gqless-hooks": "^1.1.1"
-  },
-  "devDependencies": {
+    "gqless-hooks": "^1.1.1",
     "gqless": "^0.0.1-alpha.29",
     "@gqless/schema": "^0.0.1-alpha.31"
   }

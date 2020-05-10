@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "main": "_/index.js",
   "sideEffects": false,
+  "license": "none",
   "scripts": {
     "start": "node _/index.js",
     "build": "tsc -b || true",
@@ -22,6 +23,6 @@
     "@types/bull": "^3.12.0",
     "@zeit/ncc": "^0.20.5",
     "nodemon": "^2.0.2",
-    "typescript": "3.8.3"
+    "typescript": "*"
   }
 }

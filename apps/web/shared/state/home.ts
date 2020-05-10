@@ -336,7 +336,6 @@ const pushHomeState: AsyncAction<
       nextState = {
         ...fallbackState,
         type: 'user',
-        user: null,
         username: item.params.username,
         ...newState,
       }

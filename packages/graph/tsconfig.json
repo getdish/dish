@@ -1,13 +1,11 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
-    "module": "CommonJS",
+    "composite": true,
+    "module": "ESNext",
     "strictNullChecks": false,
-    "skipDefaultLibCheck": true,
-    "skipLibCheck": true,
     "outDir": "_",
-    "rootDir": "src",
-    "incremental": false
+    "rootDir": "src"
   },
   "include": ["src/**/*"]
 }
