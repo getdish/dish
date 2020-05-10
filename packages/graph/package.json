@@ -12,7 +12,7 @@
   },
   "scripts": {
     "postinstall": "yarn generate",
-    "generate": "(cd ../common-web && yarn build) && node generate.js",
+    "generate": "(cd ../common-web && yarn build) && ./generate.sh",
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "true"
