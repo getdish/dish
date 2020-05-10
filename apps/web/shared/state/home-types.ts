@@ -1,7 +1,7 @@
+import { Restaurant } from '@dish/graph'
 import { Review, TopCuisine, User } from '@dish/models'
 import { Config, Derive, IContext } from 'overmind'
 
-import { Restaurant } from '../types'
 import { NavigateItem } from './router'
 import { Tag } from './Tag'
 

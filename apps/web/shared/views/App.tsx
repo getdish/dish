@@ -1,11 +1,9 @@
-import { ApolloProvider } from '@apollo/client'
 import { Provider } from 'overmind-react'
 import React, { Suspense } from 'react'
 
 import HomePage from './home/HomePage'
 import { LoadingItems } from './home/LoadingItems'
 import { NotFoundPage } from './NotFoundPage'
-import TagPage from './tag/TagPage'
 import { setToastHandle } from './Toast'
 import { PrivateRoute, Route, RouteSwitch } from './ui/Route'
 import { ToastRoot } from './ui/ToastRoot'
@@ -18,9 +16,9 @@ export function App({ overmind }: { overmind?: any }) {
       <Provider value={overmind}>
         <Suspense fallback={<LoadingItems />}>
           <RouteSwitch>
-            <PrivateRoute name="tag">
+            {/* <PrivateRoute name="tag">
               <TagPage />
-            </PrivateRoute>
+            </PrivateRoute> */}
             <Route name="home">
               <HomePage />
             </Route>

@@ -10,7 +10,7 @@
     "experimentalDecorators": true,
     "incremental": true,
     "jsx": "react",
-    "module": "ES2020",
+    "module": "ESNext",
     "moduleResolution": "node",
     "noEmitOnError": false,
     "noImplicitAny": false,

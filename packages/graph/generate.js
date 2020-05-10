@@ -1,40 +1,44 @@
-import { exec } from 'child_process'
-import { writeFile } from 'fs'
-import { join } from 'path'
-
 process.env.HASURA_ENDPOINT = 'https://hasura.rio.dishapp.com'
 process.env.AUTH_ENDPOINT = 'https://auth.rio.dishapp.com'
 process.env.HASURA_SECRET = '7Yk45yzZ$!xfkL'
 
-const { ModelBase } = require('@dish/models')
+require('isomorphic-unfetch')
+
+const { exec } = require('child_process')
+const { writeFile } = require('fs')
+const { join } = require('path')
+
+const { graphqlGet } = require('@dish/common-web')
 const { Codegen, fetchSchema } = require('@gqless/schema')
 
-const rootPath = join(__dirname, '..', '..')
+const rootPath = join(__dirname)
 const graphqlPath = join(rootPath, 'src', 'graphql')
+
+console.log('rootPath', rootPath)
 
 async function run() {
   const fetchQuery = async (query, variables) => {
-    const response = await ModelBase.graphqlGet(query, variables)
+    const response = await graphqlGet(query, variables)
     if (response.data.errors) {
       process.exit(0)
     }
-    return response.data
+    return response
   }
 
   console.log('Fetching schema...')
   const schemaDefs = await fetchSchema(fetchQuery)
   const codegen = new Codegen(schemaDefs, { typescript: true })
-  const files = codegen.generate()
+  const files = codegen.generate().filter((x) => x.path !== 'client.ts')
 
-  console.log('Saving...')
+  console.log(
+    'Saving...',
+    files.map((x) => join(graphqlPath, x.path))
+  )
+
   await Promise.all(
     files.map(
       (file) =>
         new Promise((res, rej) => {
-          if (file.path === 'client.ts') {
-            // ignore client we control it
-            return res()
-          }
           let contents = ''
           for (let line of file.contents.split(`\n`)) {
             // export! them
@@ -46,6 +50,7 @@ async function run() {
             }
             contents += `${line}\n`
           }
+          console.log('write', file.path)
           writeFile(join(graphqlPath, file.path), contents, (err) => {
             if (err) return rej(err)
             res()

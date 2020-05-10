@@ -1,8 +1,8 @@
+import { query } from '@dish/graph'
 import { graphql } from '@gqless/react'
 import React, { memo } from 'react'
 import { Image, Linking, Text } from 'react-native'
 
-import { query } from '../../../src/graphql'
 import { GeocodePlace } from '../../state/home'
 import { Box } from '../ui/Box'
 import { HoverablePopover } from '../ui/HoverablePopover'

@@ -1,9 +1,9 @@
+import { query } from '@dish/graph'
 import { Restaurant } from '@dish/models'
 import { graphql } from '@gqless/react'
 import React, { memo } from 'react'
 import { Text } from 'react-native'
 
-import { query } from '../../../src/graphql'
 import { Box } from '../ui/Box'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { SmallTitle } from '../ui/SmallTitle'

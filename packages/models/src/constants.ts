@@ -1,8 +1,10 @@
-import { isBrowserProd } from './ModelBase'
+export const isNode = typeof window == 'undefined'
+export const isBrowserProd =
+  !isNode && window.location.hostname.includes('dish')
+export const isWorker = !isNode && !!window['isWorker']
 
+let WebSocket: WebSocket
 export let SEARCH_DOMAIN: string
-const isNode = typeof window == 'undefined'
-const isWorker = !isNode && !!window['isWorker']
 
 const LIVE_SEARCH_DOMAIN = 'https://search.rio.dishapp.com'
 const LOCAL_SEARCH_DOMAIN = 'http://localhost:10000'

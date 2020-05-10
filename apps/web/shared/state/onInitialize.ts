@@ -33,34 +33,13 @@ export const onInitialize: OnInitialize = async (
     })
   }
 
-  const initGraphql = async () => {
-    console.time('initGraphql')
-    await effects.gql.initialize(
-      {
-        // query and mutation options
-        endpoint: getGraphEndpoint(),
-        headers: () => DishAuth.getHeaders(),
-        // The options are the options passed to GRAPHQL-REQUEST
-        options: {
-          credentials: 'include',
-          mode: 'cors',
-        },
-      }
-      // {
-      //   // subscription options
-      //   endpoint: 'ws://some-endpoint.dev',
-      // }
-    )
-    console.timeEnd('initGraphql')
-  }
-
   const initAuth = async () => {
     console.time('initAuth')
     await actions.user.checkForExistingLogin()
     console.timeEnd('initAuth')
   }
 
-  await Promise.all([initGraphql(), initAuth()])
+  await Promise.all([initAuth()])
   tlog(`inits`)
 
   await actions.home.start()

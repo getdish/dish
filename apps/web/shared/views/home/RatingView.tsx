@@ -1,7 +1,7 @@
+import { Restaurant } from '@dish/graph'
 import React, { forwardRef } from 'react'
 import { Text } from 'react-native'
 
-import { Restaurant } from '../../types'
 import { ProgressCircle } from '../ui/ProgressCircle'
 import { StackProps, VStack } from '../ui/Stacks'
 

@@ -34,16 +34,14 @@
     "android": "react-native run-android"
   },
   "dependencies": {
-    "react-error-boundary": "^2.2.1",
-    "rollup-plugin-serve": "^1.0.1",
-    "google-closure-compiler": "20191111.0.0",
-    "@apollo/client": "3.0.0-beta.43",
+    "@dish/graph": "*",
     "@dish/common-web": "*",
     "@dish/models": "*",
+    "react-error-boundary": "^2.2.1",
+    "google-closure-compiler": "20191111.0.0",
     "@o/fast-compare": "2.7.6",
     "expo": "^36.0.2",
     "expo-linear-gradient": "^8.1.0",
-    "graphql-tag": "2.10.3",
     "gqless": "0.0.1-alpha.29",
     "gqless-hooks": "^1.1.1",
     "mapkit-typescript": "^5.18.1",
@@ -72,7 +70,6 @@
     "@gqless/react": "0.0.1-alpha.28"
   },
   "devDependencies": {
-    "@gqless/schema": "^0.0.1-alpha.31",
     "cross-env": "^7.0.2",
     "nollup": "^0.11.0",
     "rollup-plugin-react-refresh": "^0.0.1",
@@ -114,7 +111,6 @@
     "isomorphic-unfetch": "^3.0.0",
     "jest": "~24.9.0",
     "jsdom": "^16.2.2",
-    "metro-react-native-babel-preset": "^0.59.0",
     "moment": "^2.24.0",
     "overmind-devtools": "^24.0.1",
     "patch-package": "^6.2.1",
@@ -127,7 +123,6 @@
     "rollup": "^2.6.1",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-css-only": "2.0.0",
-    "rollup-plugin-typescript2": "0.27.0",
     "testcafe": "^1.8.4",
     "typescript": "3.8.3",
     "use-expo": "1.0.1",
