@@ -1,4 +1,3 @@
-import { DocumentNode, gql } from '@apollo/client'
 import { EnumType } from 'json-to-graphql-query'
 import _ from 'lodash'
 
@@ -112,56 +111,56 @@ export class Tag extends ModelBase<Tag> {
     return _.uniq(all)
   }
 
-  static async findContinents() {
-    const res = await ModelBase.query(`{
-      tag(where: { type: { _eq: "continent" } }) {
-        ${this.fields().join(' ')}
-      }
-    }`)
-    return res.tag.map((data: Partial<Tag>) => new Tag(data))
+  // static async findContinents() {
+  //   const res = await ModelBase.query(`{
+  //     tag(where: { type: { _eq: "continent" } }) {
+  //       ${this.fields().join(' ')}
+  //     }
+  //   }`)
+  //   return res.tag.map((data: Partial<Tag>) => new Tag(data))
+  // }
+
+  static create(next: TagRecord): any {
+    // return gql`
+    //   mutation AddTag {
+    //     insert_tag(objects: {
+    //       name: "${next.name ?? ''}",
+    //       icon: "${next.icon ?? ''}",
+    //       type: "${next.type ?? 'continent'}",
+    //       parentId: ${next.parentId ? next.parentId : null},
+    //       parentType: "${next.parent?.type ?? ''}"
+    //     }) {
+    //       returning {
+    //         id
+    //       }
+    //     }
+    //   }
+    // `
   }
 
-  static create(next: TagRecord): DocumentNode {
-    return gql`
-      mutation AddTag {
-        insert_tag(objects: {
-          name: "${next.name ?? ''}",
-          icon: "${next.icon ?? ''}",
-          type: "${next.type ?? 'continent'}",
-          parentId: ${next.parentId ? next.parentId : null},
-          parentType: "${next.parent?.type ?? ''}"
-        }) {
-          returning {
-            id
-          }
-        }
-      }
-    `
-  }
-
-  static upsert(next: TagRecord): DocumentNode {
-    return gql`
-      mutation AddTag {
-        insert_tag(
-          objects: {
-            ${next.id ? `id: "${next.id}",` : ''}
-            name: "${next.name ?? ''}",
-            icon: "${next.icon ?? ''}",
-            type: "${next.type ?? 'continent'}",
-            parentId: ${next.parentId ? `"${next.parentId}"` : null},
-            parentType: "${next.parent?.type ?? ''}"
-          },
-          on_conflict: {
-            constraint: tag_pkey,
-            update_columns: [name, icon, type, parentId, parentType]
-          }
-        ) {
-          returning {
-            id
-          }
-        }
-      }
-    `
+  static upsert(next: TagRecord): any {
+    // return gql`
+    //   mutation AddTag {
+    //     insert_tag(
+    //       objects: {
+    //         ${next.id ? `id: "${next.id}",` : ''}
+    //         name: "${next.name ?? ''}",
+    //         icon: "${next.icon ?? ''}",
+    //         type: "${next.type ?? 'continent'}",
+    //         parentId: ${next.parentId ? `"${next.parentId}"` : null},
+    //         parentType: "${next.parent?.type ?? ''}"
+    //       },
+    //       on_conflict: {
+    //         constraint: tag_pkey,
+    //         update_columns: [name, icon, type, parentId, parentType]
+    //       }
+    //     ) {
+    //       returning {
+    //         id
+    //       }
+    //     }
+    //   }
+    // `
   }
 
   static async allChildren(parents: string[]) {
