@@ -1,9 +1,9 @@
-import { Logger } from '@gqless/logger'
-
 import { createFetcher } from './createFetcher'
 import { client } from './graphql'
 
 export function startLogging(verbose = true) {
+  // dont import outside node, it accesses window
+  const { Logger } = require('@gqless/logger')
   new Logger(client, verbose)
 }
 
