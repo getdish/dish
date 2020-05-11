@@ -1,4 +1,4 @@
-import { Restaurant } from '@dish/models'
+import { Restaurant } from '@dish/graph'
 import React, { memo } from 'react'
 
 import { LinkButton } from '../ui/Link'

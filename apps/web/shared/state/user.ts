@@ -1,10 +1,8 @@
 import DishAuth from '@dish/auth'
-import { User } from '@dish/graph'
-import { Restaurant, Review } from '@dish/models'
+import { Review, User, mutation } from '@dish/graph'
 import { Action, AsyncAction } from 'overmind'
 
 import { Toast } from '../views/Toast'
-import { attemptAuthenticatedAction } from './attemptAuthenticatedAction'
 
 type UserState = {
   user: Partial<User>
@@ -110,28 +108,10 @@ const ensureLoggedIn: Action<void, boolean> = (om) => {
 }
 
 const vote: Action<Partial<Review>> = (om, { restaurant, ...val }) => {
-  const review = new Review()
-  review.restaurant_id = restaurant.id
-  Object.assign(review, val)
-}
-
-const submitReview: AsyncAction<Review> = async (om, review) => {
-  if (!om.state.user.user) {
-    console.error('Not logged in')
-    return
-  }
-  try {
-    if (typeof review.id == 'undefined') {
-      review.user_id = om.state.user.user.id
-      await review.insert()
-      review.id = review.id
-    } else {
-      await review.update()
-    }
-  } catch (err) {
-    console.error(err)
-    Toast.show(`Error submitting review, may need to re-login`)
-  }
+  console.warn('should vote with gqless', mutation)
+  // const review = new Review()
+  // review.restaurant_id = restaurant.id
+  // Object.assign(review, val)
 }
 
 export const actions = {
@@ -141,5 +121,4 @@ export const actions = {
   checkForExistingLogin,
   ensureLoggedIn,
   vote,
-  submitReview,
 }

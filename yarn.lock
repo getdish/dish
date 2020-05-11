@@ -45,29 +45,6 @@
     magic-string "0.25.6"
     uuid "3.4.0"
 
-"@apollo/client@^3.0.0-beta.23":
-  version "3.0.0-beta.41"
-  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.0.0-beta.41.tgz#37769f95d4829f2af884e76442401a31ac9d9238"
-  integrity sha512-3FtiBP0gKDjmCIbPUn8GkBshA8vXUB9Zi+BOSEOwo5HDIEF0NXg19ov+m8SqaZEG+jU6p7w+dmHyRGkUxj9b4g==
-  dependencies:
-    "@types/zen-observable" "^0.8.0"
-    "@wry/equality" "^0.1.9"
-    fast-json-stable-stringify "^2.0.0"
-    graphql-tag "^2.10.2"
-    optimism "^0.11.5"
-    symbol-observable "^1.2.0"
-    ts-invariant "^0.4.4"
-    tslib "^1.10.0"
-    zen-observable "^0.8.14"
-
-"@apollo/link-ws@^2.0.0-beta.3":
-  version "2.0.0-beta.3"
-  resolved "https://registry.npmjs.org/@apollo/link-ws/-/link-ws-2.0.0-beta.3.tgz#b0283c68516aa0caa82c4904f84eff639643b04b"
-  integrity sha512-CyQT8WOJXiA9/wOVDRdFWCRdiq38yM5dtuuQB6dkyK9yyFb8M213GHjrJoOwXxcbYsPboj14V5VMX+FT+Ghy7g==
-  dependencies:
-    "@apollo/client" "^3.0.0-beta.23"
-    tslib "^1.9.3"
-
 "@arr/every@^1.0.0":
   version "1.0.1"
   resolved "https://registry.npmjs.org/@arr/every/-/every-1.0.1.tgz#22fe1f8e6355beca6c7c7bde965eb15cf994387b"
@@ -3714,11 +3691,6 @@
   dependencies:
     "@types/yargs-parser" "*"
 
-"@types/zen-observable@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@types/zen-observable/-/zen-observable-0.8.0.tgz#8b63ab7f1aa5321248aad5ac890a485656dcea4d"
-  integrity sha512-te5lMAWii1uEJ4FwLjzdlbw3+n0FZNOvFXHxQDKeT0dilh7HOzdMzV2TrJVUzq8ep7J4Na8OUYPRLSQkJHAlrg==
-
 "@unimodules/core@~5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@unimodules/core/-/core-5.0.0.tgz#e1e3ca3f91f3d27dbc93c6eebc03a40c711da755"
@@ -4054,14 +4026,7 @@
     "@webassemblyjs/wast-parser" "1.8.5"
     "@xtuc/long" "4.2.2"
 
-"@wry/context@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@wry/context/-/context-0.5.0.tgz#5ff84d0d5726b62c07045af8465f890eb3823c8c"
-  integrity sha512-yW5XFrWbRvv2/f86+g0YAfko7671SQg7Epn8lYjux4MZmIvtPvK2ts+vG1QAPu2w6GuBioEJknRa7K2LFj2kQw==
-  dependencies:
-    tslib "^1.9.3"
-
-"@wry/equality@^0.1.2", "@wry/equality@^0.1.9":
+"@wry/equality@^0.1.2":
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/@wry/equality/-/equality-0.1.9.tgz#b13e18b7a8053c6858aa6c85b54911fb31e3a909"
   integrity sha512-mB6ceGjpMGz1ZTza8HYnrPGos2mC6So4NhS1PtZ8s4Qt0K7fBiIGhpSxUbQmhwcSWE3no+bYxmI2OL6KuXYmoQ==
@@ -10634,7 +10599,7 @@ graphql-request@^1.8.2:
   dependencies:
     cross-fetch "2.2.2"
 
-graphql-tag@^2.10.1, graphql-tag@^2.10.2:
+graphql-tag@^2.10.1:
   version "2.10.3"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.3.tgz#ea1baba5eb8fc6339e4c4cf049dabe522b0edf03"
   integrity sha512-4FOv3ZKfA4WdOKJeHdz6B3F/vxBLSgmBcGeAFPf4n1F64ltJUvOOerNj0rsJxONQGdhUMynQIvd6LzB+1J5oKA==
@@ -15282,13 +15247,6 @@ opn@^5.1.0, opn@^5.5.0:
   integrity sha512-PqHpggC9bLV0VeWcdKhkpxY+3JTzetLSqTCWL/z/tFIbI6G8JCjondXklT1JinczLz2Xib62sSp0T/gKT4KksA==
   dependencies:
     is-wsl "^1.1.0"
-
-optimism@^0.11.5:
-  version "0.11.5"
-  resolved "https://registry.yarnpkg.com/optimism/-/optimism-0.11.5.tgz#4c5d45fa0fa1cc9dcf092729b5d6d661b53ff5c9"
-  integrity sha512-twCHmBb64DYzEZ8A3O+TLCuF/RmZPBhXPQYv4agoiALRLlW9SidMzd7lwUP9mL0jOZhzhnBmb8ajqA00ECo/7g==
-  dependencies:
-    "@wry/context" "^0.5.0"
 
 optimize-css-assets-webpack-plugin@^5.0.1:
   version "5.0.3"
@@ -20157,7 +20115,7 @@ tryer@^1.0.1:
   resolved "https://registry.yarnpkg.com/tryer/-/tryer-1.0.1.tgz#f2c85406800b9b0f74c9f7465b81eaad241252f8"
   integrity sha512-c3zayb8/kWWpycWYg87P71E1S1ZL6b6IJxfb5fvsUgsf0S2MVGaDhDXXjDMpdCpfWXqptc+4mXwmiy1ypXqRAA==
 
-ts-invariant@^0.4.0, ts-invariant@^0.4.4:
+ts-invariant@^0.4.0:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/ts-invariant/-/ts-invariant-0.4.4.tgz#97a523518688f93aafad01b0e80eb803eb2abd86"
   integrity sha512-uEtWkFM/sdZvRNNDL3Ehu4WVpwaulhwQszV8mrtcdeE8nN00BV9mAmQ88RkrBhFgl9gMgvjJLAQcZbnPXI9mlA==
@@ -22038,7 +21996,7 @@ zen-observable@0.8.11:
   resolved "https://registry.npmjs.org/zen-observable/-/zen-observable-0.8.11.tgz#d3415885eeeb42ee5abb9821c95bb518fcd6d199"
   integrity sha512-N3xXQVr4L61rZvGMpWe8XoCGX8vhU35dPyQ4fm5CY/KDlG0F75un14hjbckPXTDuKUY6V0dqR2giT6xN8Y4GEQ==
 
-zen-observable@^0.8.0, zen-observable@^0.8.14:
+zen-observable@^0.8.0:
   version "0.8.15"
   resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.15.tgz#96415c512d8e3ffd920afd3889604e30b9eaac15"
   integrity sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==
