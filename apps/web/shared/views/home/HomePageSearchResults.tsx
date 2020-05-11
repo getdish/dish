@@ -1,6 +1,7 @@
 import React, { Suspense, memo, useState } from 'react'
 import { Image, ScrollView, Text, View } from 'react-native'
 
+import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemSearch, isEditingUserPage } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { NotFoundPage } from '../NotFoundPage'
@@ -45,7 +46,14 @@ export default memo(function HomePageSearchResults({
   )
 
   return (
-    <>
+    <VStack
+      zIndex={100}
+      backgroundColor="rgba(255,255,255,0.5)"
+      borderRadius={drawerBorderRadius}
+      overflow="hidden"
+      className="blur"
+      position="relative"
+    >
       <PageTitleTag>{title}</PageTitleTag>
       {/* <ZStack
         right={6}
@@ -60,12 +68,7 @@ export default memo(function HomePageSearchResults({
       </ZStack> */}
 
       {/*  */}
-      <VStack
-        paddingTop={verticalPad}
-        paddingHorizontal={22}
-        position="relative"
-        zIndex={100}
-      >
+      <VStack paddingTop={verticalPad} paddingHorizontal={22}>
         <HStack width="100%">
           <VStack flex={4}>
             <PageTitle
@@ -154,7 +157,7 @@ export default memo(function HomePageSearchResults({
       >
         <HomeSearchResultsViewContent state={state} />
       </VStack>
-    </>
+    </VStack>
   )
 })
 

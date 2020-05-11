@@ -5,7 +5,7 @@ import {
 } from 'react-error-boundary'
 import { Button } from 'react-native'
 
-import { ZStack } from './ui/Stacks'
+import { VStack, ZStack } from './ui/Stacks'
 
 function ErrorFallback({
   error,
@@ -18,11 +18,14 @@ function ErrorFallback({
       alignItems="center"
       justifyContent="center"
       backgroundColor="darkred"
+      padding={20}
+      overflow="hidden"
     >
-      <pre>{error.message}</pre>
-      <pre>{componentStack}</pre>
-      <hr />
-      <pre>{error.stack}</pre>
+      <VStack left={50} flex={1} overflow="hidden" color="#fff">
+        <pre>{error.message}</pre>
+        <pre>{componentStack}</pre>
+        <pre>{error.stack}</pre>
+      </VStack>
       <Button title="Try Again" onPress={resetErrorBoundary}></Button>
     </ZStack>
   )

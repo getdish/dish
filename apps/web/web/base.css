@@ -211,3 +211,7 @@ div,
   flex-wrap: inherit;
   /* flex-grow: inherit; */
 }
+
+.blur {
+  backdrop-filter: blur(30px);
+}

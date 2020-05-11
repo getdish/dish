@@ -107,7 +107,7 @@ function HomeStackViewItem({
           onPress={onPress}
         >
           <ZStack
-            backgroundColor={index === 0 ? 'transparent' : 'white'}
+            // backgroundColor={index === 0 ? 'transparent' : 'white'}
             flex={1}
             zIndex={index}
             top={top}
