@@ -17,11 +17,3 @@ export const Query = {}
 //     console.log('follow', user.id)
 //   }
 // })
-
-export const restaurant = (restaurant) => ({
-  bestTagPhotos() {
-    return restaurant.tags
-      ?.filter((t) => (t.photos?.length || 0) > 0 && t.rating)
-      .sort((t1, t2) => (t2.rating || 0) - (t1.rating || 0))
-  },
-})
