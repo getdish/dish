@@ -27,7 +27,11 @@ async function run() {
   console.log('Fetching schema...')
   const schemaDefs = await fetchSchema(fetchQuery)
   const codegen = new Codegen(schemaDefs, { typescript: true })
-  const files = codegen.generate().filter((x) => x.path !== 'client.ts')
+  const ignore = {
+    'client.ts': true,
+    'extensions/index.ts': true,
+  }
+  const files = codegen.generate().filter((x) => !ignore[x.path])
 
   console.log(
     'Saving...',

@@ -14,3 +14,6 @@ export const pageWidthMax = 1280
 export const drawerWidthMax = 840
 
 export const LIVE_SEARCH_DOMAIN = 'https://search.rio.dishapp.com'
+
+export const emptyObj = Object.freeze(Object.create(null))
+export const emptyArr = Object.freeze([])
