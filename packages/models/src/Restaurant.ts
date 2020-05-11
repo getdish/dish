@@ -1,5 +1,4 @@
 import auth from '@dish/auth'
-import axios from 'axios'
 import { EnumType } from 'json-to-graphql-query'
 import _ from 'lodash'
 
@@ -42,6 +41,17 @@ export type Sources = { [key: string]: { url: string; rating: number } }
 export type UnifiedTag = {
   tag: Tag
 } & RestaurantTag
+
+// Note that there is no unit or reference point for these values. All that
+// matters is simply the relative differences between them. For example therefore
+// there is no need to ensure that the maximum value is 1.0 or 100%.
+export const RESTAURANT_WEIGHTS = {
+  yelp: 0.6,
+  tripadvisor: 0.6,
+  michelin: 1.0,
+  infatuated: 0.9,
+  ubereats: 0.2,
+}
 
 export class Restaurant extends ModelBase<Restaurant> {
   name!: string
@@ -120,16 +130,7 @@ export class Restaurant extends ModelBase<Restaurant> {
     return 'restaurant_name_address_key'
   }
 
-  // Note that there is no unit or reference point for these values. All that
-  // matters is simply the relative differences between them. For example therefore
-  // there is no need to ensure that the maximum value is 1.0 or 100%.
-  static WEIGHTS = {
-    yelp: 0.6,
-    tripadvisor: 0.6,
-    michelin: 1.0,
-    infatuated: 0.9,
-    ubereats: 0.2,
-  }
+  static WEIGHTS = RESTAURANT_WEIGHTS
 
   async findOne(key: string, value: string, extra_returning: {} = {}) {
     extra_returning = {

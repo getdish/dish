@@ -1,4 +1,5 @@
-import { Restaurant, query } from '@dish/graph'
+import { query } from '@dish/graph'
+import { RESTAURANT_WEIGHTS } from '@dish/models'
 import { graphql } from '@gqless/react'
 import React, { memo } from 'react'
 import { Text } from 'react-native'
@@ -51,7 +52,7 @@ export const RestaurantRatingViewPopover = memo(
                       </TableCell>
                       <TableCell width="25%">{item.rating}</TableCell>
                       <TableCell flex={1}>
-                        {Restaurant.WEIGHTS[source]}
+                        {RESTAURANT_WEIGHTS[source]}
                       </TableCell>
                     </TableRow>
                   )

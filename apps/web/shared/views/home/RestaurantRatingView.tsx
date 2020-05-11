@@ -15,6 +15,7 @@ export type RestaurantRatingViewProps = Omit<
   'percent' | 'color'
 > & {
   restaurantSlug: string
+  rating: number
 }
 
 export const getRestaurantRating = (rating: number) => Math.round(rating * 20)
@@ -22,28 +23,44 @@ export const getRestaurantRating = (rating: number) => Math.round(rating * 20)
 export const getRankingColor = (percent: number) =>
   percent > 84 ? 'green' : percent > 60 ? 'orange' : 'red'
 
-export default graphql(function RestaurantRatingView({
-  restaurantSlug,
-  ...rest
-}: RestaurantRatingViewProps) {
-  console.log('restaurantSlug', restaurantSlug)
-  if (!restaurantSlug) {
-    return null
-  }
-  const [restaurant] = query.restaurant({
-    where: {
-      slug: {
-        _eq: restaurantSlug,
+export default graphql(function RestaurantRatingView(
+  props: RestaurantRatingViewProps
+) {
+  let { restaurantSlug, rating, ...rest } = props
+
+  // optionally fetch
+  if (typeof rating === 'undefined') {
+    const [restaurant] = query.restaurant({
+      where: {
+        slug: {
+          _eq: restaurantSlug,
+        },
       },
-    },
-  })
-  // console.log('restaurant.rating_factors', restaurant.rating_factors)
-  const percent = getRestaurantRating(restaurant.rating)
+    })
+    rating = restaurant.rating
+  }
+
+  const percent = getRestaurantRating(rating)
   const color = getRankingColor(percent)
   return (
     <VStack>
       <RatingView percent={percent} color={color} {...rest} />
-      {rest.size === 'lg' && (
+      {rest.size === 'lg' && <RestaurantRatingBreakdownView {...props} />}
+    </VStack>
+  )
+})
+
+const RestaurantRatingBreakdownView = graphql(
+  ({ restaurantSlug }: RestaurantRatingViewProps) => {
+    const [restaurant] = query.restaurant({
+      where: {
+        slug: {
+          _eq: restaurantSlug,
+        },
+      },
+    })
+    return (
+      <>
         <HoverablePopover
           contents={
             <Box>
@@ -124,10 +141,10 @@ export default graphql(function RestaurantRatingView({
             />
           </HStack>
         </HoverablePopover>
-      )}
-    </VStack>
-  )
-})
+      </>
+    )
+  }
+)
 
 const RatingBreakdownCircle = memo(
   ({

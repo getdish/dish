@@ -598,7 +598,6 @@ const runAutocomplete: AsyncAction<string> = async (om, query) => {
   const state = om.state.home.currentState
 
   if (query === '') {
-    console.log('no query', defaultAutocompleteResults)
     om.state.home.autocompleteResults = defaultAutocompleteResults
     om.state.home.locationAutocompleteResults = defaultLocationAutocompleteResults
     return

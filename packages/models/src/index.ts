@@ -1,17 +1,11 @@
-export {
-  Restaurant,
-  UnifiedTag,
-  TopCuisine,
-  RestaurantSearchArgs,
-  Sources,
-} from './Restaurant'
-export { Tag, TagRecord, TagType } from './Tag'
-export { RestaurantTag, RestaurantTagWithID } from './RestaurantTag'
-export { Dish, TopCuisineDish } from './Dish'
+export * from './Restaurant'
+export * from './Tag'
+export * from './RestaurantTag'
+export * from './Dish'
 export { Scrape, ScrapeData } from './Scrape'
 export * from './ModelBase'
-export { User } from './User'
-export { Review } from './Review'
+export * from './User'
+export * from './Review'
 export * from './utils'
 export { flushTestData } from './flushTestData'
 export * from './constants'

@@ -1,10 +1,10 @@
-import {
-  FetchResult,
-  gql,
-  useApolloClient,
-  useQuery,
-  useSubscription,
-} from '@apollo/client'
+// import {
+//   FetchResult,
+//   gql,
+//   useApolloClient,
+//   useQuery,
+//   useSubscription,
+// } from '@apollo/client'
 import { Tag, TagRecord, TagType } from '@dish/models'
 import React, { useEffect, useState } from 'react'
 import {
@@ -20,46 +20,46 @@ import {
 import { HStack, VStack } from '../ui/Stacks'
 import Tappable from '../ui/Tappable'
 
-const CONTINENTS_SUBSCRIPTION = gql`
-subscription Tag {
-  tag(where: { type: { _eq: "continent" } }, order_by: {order: asc}) {
-    id ${Tag.fieldsQuery}
-  }
-}
-`
+// const CONTINENTS_SUBSCRIPTION = gql`
+// subscription Tag {
+//   tag(where: { type: { _eq: "continent" } }, order_by: {order: asc}) {
+//     id ${Tag.fieldsQuery}
+//   }
+// }
+// `
 
-const COUNTRIES_SUBSCRIPTION = gql`
-subscription Tag($parentId: uuid!) {
-  tag(where: { type: { _eq: "country" }, parentId: { _eq: $parentId }, parentType: { _eq: "continent" } }, order_by: {order: asc}) {
-    id ${Tag.fieldsQuery}
-  }
-}
-`
+// const COUNTRIES_SUBSCRIPTION = gql`
+// subscription Tag($parentId: uuid!) {
+//   tag(where: { type: { _eq: "country" }, parentId: { _eq: $parentId }, parentType: { _eq: "continent" } }, order_by: {order: asc}) {
+//     id ${Tag.fieldsQuery}
+//   }
+// }
+// `
 
-const DISHES_SUBSCRIPTION = gql`
-subscription Tag($parentId: uuid!) {
-  tag(where: { type: { _eq: "dish" }, parentId: { _eq: $parentId }, parentType: { _eq: "country" } }, order_by: {order: asc}) {
-    id ${Tag.fieldsQuery}
-  }
-}
-`
+// const DISHES_SUBSCRIPTION = gql`
+// subscription Tag($parentId: uuid!) {
+//   tag(where: { type: { _eq: "dish" }, parentId: { _eq: $parentId }, parentType: { _eq: "country" } }, order_by: {order: asc}) {
+//     id ${Tag.fieldsQuery}
+//   }
+// }
+// `
 
-const TAXONOMY_DELETE = gql`
-  mutation Delete($id: uuid!) {
-    delete_tag(where: { id: { _eq: $id } }) {
-      affected_rows
-    }
-  }
-`
+// const TAXONOMY_DELETE = gql`
+//   mutation Delete($id: uuid!) {
+//     delete_tag(where: { id: { _eq: $id } }) {
+//       affected_rows
+//     }
+//   }
+// `
 
-const DISHES_SEARCH = gql`
-  query DishesSearch($limit: Int!, $search: String!) {
-    dish(limit: $limit, where: { name: { _ilike: $search } }) {
-      id
-      name
-    }
-  }
-`
+// const DISHES_SEARCH = gql`
+//   query DishesSearch($limit: Int!, $search: String!) {
+//     dish(limit: $limit, where: { name: { _ilike: $search } }) {
+//       id
+//       name
+//     }
+//   }
+// `
 
 const BorderLeft = () => <View />
 
