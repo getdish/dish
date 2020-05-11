@@ -280,8 +280,10 @@ export class Restaurant extends ModelBase<Restaurant> {
         candidate.location.coordinates[0] == lon &&
         candidate.location.coordinates[1] == lat
       ) {
-        found = candidate
-        break
+        if (candidate.name.includes(name) || name.includes(candidate)) {
+          found = candidate
+          break
+        }
       }
 
       if (levenshteinDistance(candidate.name, name) <= 3) {
