@@ -18,21 +18,21 @@ export const RestaurantAddressLinksRow = memo(
   graphql(
     ({
       currentLocationInfo,
-      restaurantId,
+      restaurantSlug,
       size,
       showAddress,
       showMenu,
     }: {
       currentLocationInfo: GeocodePlace
-      restaurantId: string
+      restaurantSlug: string
       size?: AddressSize
       showAddress?: AddressSize
       showMenu?: boolean
     }) => {
       const [restaurant] = query.restaurant({
         where: {
-          id: {
-            _eq: restaurantId,
+          slug: {
+            _eq: restaurantSlug,
           },
         },
       })
