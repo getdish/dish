@@ -16,21 +16,17 @@
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "true",
-    "postinstall": "patch-package"
+    "postinstall": "ls -la node_modules; patch-package"
   },
   "dependencies": {
     "patch-package": "^6.2.1",
+    "@dish/auth": "*",
     "@dish/common-web": "*",
     "isomorphic-unfetch": "^3.0.0",
     "@gqless/logger": "0.0.1-alpha.27",
     "gqless-hooks": "^1.1.1",
     "gqless": "^0.0.1-alpha.29",
-    "@gqless/schema": "^0.0.1-alpha.31"
-  },
-  "devDependencies": {
-    "@types/react": "^16.9.35"
-  },
-  "peerDependencies": {
+    "@gqless/schema": "^0.0.1-alpha.31",
     "react": "*"
   }
 }
