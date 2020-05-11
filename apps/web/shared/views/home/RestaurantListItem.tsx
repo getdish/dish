@@ -289,50 +289,44 @@ const RestaurantTopReview = graphql(
   }
 )
 
-export const RestaurantPeek = memo(
-  graphql(function RestaurantPeek({
-    restaurantSlug,
-    size = 'md',
-  }: {
-    size?: 'lg' | 'md'
-    restaurantSlug: string
-  }) {
-    const spacing = size == 'lg' ? 12 : 18
-    const isMedium = useMediaQueryIsMedium()
-    const [restaurant] = query.restaurant({
-      where: {
-        slug: {
-          _eq: restaurantSlug,
-        },
+export const RestaurantPeek = graphql(function RestaurantPeek({
+  restaurantSlug,
+  size = 'md',
+}: {
+  size?: 'lg' | 'md'
+  restaurantSlug: string
+}) {
+  const spacing = size == 'lg' ? 12 : 18
+  const isMedium = useMediaQueryIsMedium()
+  const [restaurant] = query.restaurant({
+    where: {
+      slug: {
+        _eq: restaurantSlug,
       },
-    })
-    const allPhotos = restaurant?.photosForCarousel()
-    const photos = allPhotos
-
-    return (
-      <VStack
-        position="relative"
-        marginRight={-spacing}
-        marginBottom={-spacing}
-      >
-        <HStack spacing={spacing}>
-          {photos.map((photo, i) => {
-            return (
-              <DishView
-                key={i}
-                size={(size === 'lg' ? 200 : 170) * (isMedium ? 0.85 : 1)}
-                dish={
-                  {
-                    name: photo.name,
-                    image: photo.src,
-                    rating: photo.rating,
-                  } as any
-                }
-              />
-            )
-          })}
-        </HStack>
-      </VStack>
-    )
+    },
   })
-)
+  const allPhotos = restaurant?.photosForCarousel()
+  const photos = allPhotos
+
+  return (
+    <VStack position="relative" marginRight={-spacing} marginBottom={-spacing}>
+      <HStack spacing={spacing}>
+        {photos.map((photo, i) => {
+          return (
+            <DishView
+              key={i}
+              size={(size === 'lg' ? 200 : 170) * (isMedium ? 0.85 : 1)}
+              dish={
+                {
+                  name: photo.name,
+                  image: photo.src,
+                  rating: photo.rating,
+                } as any
+              }
+            />
+          )
+        })}
+      </HStack>
+    </VStack>
+  )
+})
