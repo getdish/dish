@@ -23,6 +23,12 @@ export const RestaurantDetailRow = memo(
       after?: any
     }) => {
       const isSm = size === 'sm'
+
+      if (!restaurantSlug) {
+        console.warn('nono')
+        return null
+      }
+
       const [restaurant] = query.restaurant({
         where: {
           slug: {
