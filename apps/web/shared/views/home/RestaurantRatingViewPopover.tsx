@@ -25,6 +25,7 @@ export const RestaurantRatingViewPopover = memo(
           },
         },
       })
+      console.log('restaurant.rating', restaurant.rating)
       return (
         <HoverablePopover
           position="right"
@@ -61,7 +62,11 @@ export const RestaurantRatingViewPopover = memo(
             </Box>
           }
         >
-          <RestaurantRatingView size={size} restaurantSlug={restaurantSlug} />
+          <RestaurantRatingView
+            size={size}
+            rating={restaurant.rating}
+            restaurantSlug={restaurantSlug}
+          />
         </HoverablePopover>
       )
     }

@@ -38,30 +38,30 @@ export const restaurant = (restaurant) => {
       const max_photos = 4
       const tags = restaurant.tags({ limit: 6 }) ?? []
       for (const t of tags) {
-        console.log('get em', t.photos)
-        // const photos = t.photos({ limit: 1 }) ?? []
-        // const photo = photos[0]
-        // if (!photo) continue
-        // let photo_name = t.tag.name || ' '
-        // if (t.tag.icon) {
-        //   photo_name = t.tag.icon + photo_name
-        // }
-        // photos.push({
-        //   name: photo_name,
-        //   src: photo,
-        //   rating: t.rating,
-        // })
-        // if (photos.length >= max_photos) break
+        const [photo] = t.photos() ?? []
+        if (!photo) {
+          continue
+        }
+        let photo_name = t.tag.name || ' '
+        if (t.tag.icon) {
+          photo_name = t.tag.icon + photo_name
+        }
+        photos.push({
+          name: photo_name,
+          src: photo,
+          rating: t.rating,
+        })
+        if (photos.length >= max_photos) break
       }
-      // if (photos.length <= max_photos) {
-      //   console.log('restaurant.photos', restaurant.photos)
-      //   const restPhotos =
-      //     restaurant.photos({ limit: photos.length - max_photos }) ?? []
-      //   for (const photo of restPhotos) {
-      //     photos.push({ name: ' ', src: photo })
-      //     if (photos.length >= max_photos) break
-      //   }
-      // }
+      console.log('waht is', photos)
+      if (photos.length <= max_photos) {
+        const restPhotos = restaurant.photos() ?? []
+        console.log('restPhotos', restPhotos, restaurant.photos())
+        for (const photo of restPhotos) {
+          photos.push({ name: ' ', src: photo })
+          if (photos.length >= max_photos) break
+        }
+      }
       return photos
     },
   }

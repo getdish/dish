@@ -137,11 +137,13 @@ const RestaurantListItemContent = memo(
                 <Link name="restaurant" params={{ slug: restaurant.slug }}>
                   <VStack>
                     <HStack alignItems="center" marginVertical={-3}>
-                      <RankingView
-                        marginRight={-6 + leftPad}
-                        marginTop={-10}
-                        rank={rank}
-                      />
+                      <Suspense fallback={null}>
+                        <RankingView
+                          marginRight={-6 + leftPad}
+                          marginTop={-10}
+                          rank={rank}
+                        />
+                      </Suspense>
 
                       <SelectableText
                         style={{
@@ -163,10 +165,12 @@ const RestaurantListItemContent = memo(
                       alignItems="center"
                       marginBottom={-3}
                     >
-                      <RestaurantRatingViewPopover
-                        size="sm"
-                        restaurantSlug={restaurant.slug}
-                      />
+                      <Suspense fallback={null}>
+                        <RestaurantRatingViewPopover
+                          size="sm"
+                          restaurantSlug={restaurant.slug}
+                        />
+                      </Suspense>
                       <HStack spacing>
                         {tagElements}
                         <RestaurantAddTagButton restaurant={restaurant} />
@@ -194,7 +198,9 @@ const RestaurantListItemContent = memo(
                 alignItems="center"
                 spacing
               >
-                <RestaurantFavoriteStar restaurantId={restaurant.id} />
+                <Suspense fallback={null}>
+                  <RestaurantFavoriteStar restaurantId={restaurant.id} />
+                </Suspense>
                 <TouchableOpacity
                   onPress={() =>
                     setState((state) => ({
@@ -242,10 +248,12 @@ const RestaurantListItemContent = memo(
           </VStack>
 
           <VStack padding={10} paddingTop={45} width={600}>
-            <RestaurantPeek
-              size={isShowingComment ? 'lg' : 'md'}
-              restaurantSlug={restaurant.slug}
-            />
+            <Suspense fallback={null}>
+              <RestaurantPeek
+                size={isShowingComment ? 'lg' : 'md'}
+                restaurantSlug={restaurant.slug}
+              />
+            </Suspense>
           </VStack>
         </HStack>
       )
@@ -282,57 +290,49 @@ const RestaurantTopReview = graphql(
 )
 
 export const RestaurantPeek = memo(
-  graphql(
-    ({
-      restaurantSlug,
-      size = 'md',
-    }: {
-      size?: 'lg' | 'md'
-      restaurantSlug: string
-    }) => {
-      const spacing = size == 'lg' ? 12 : 18
-      const isMedium = useMediaQueryIsMedium()
-      const [isMounted, setIsMounted] = useState(false)
-      const [restaurant] = query.restaurant({
-        where: {
-          slug: {
-            _eq: restaurantSlug,
-          },
+  graphql(function RestaurantPeek({
+    restaurantSlug,
+    size = 'md',
+  }: {
+    size?: 'lg' | 'md'
+    restaurantSlug: string
+  }) {
+    const spacing = size == 'lg' ? 12 : 18
+    const isMedium = useMediaQueryIsMedium()
+    const [restaurant] = query.restaurant({
+      where: {
+        slug: {
+          _eq: restaurantSlug,
         },
-      })
-      const allPhotos = restaurant?.photosForCarousel()
-      const photos = isMounted ? allPhotos : allPhotos.slice(0, 1)
+      },
+    })
+    const allPhotos = restaurant?.photosForCarousel()
+    const photos = allPhotos
 
-      //  only show the first two at firt
-      useWaterfall(() => {
-        setIsMounted(true)
-      })
-
-      return (
-        <VStack
-          position="relative"
-          marginRight={-spacing}
-          marginBottom={-spacing}
-        >
-          <HStack spacing={spacing}>
-            {photos.map((photo, i) => {
-              return (
-                <DishView
-                  key={i}
-                  size={(size === 'lg' ? 200 : 170) * (isMedium ? 0.85 : 1)}
-                  dish={
-                    {
-                      name: photo.name,
-                      image: photo.src,
-                      rating: photo.rating,
-                    } as any
-                  }
-                />
-              )
-            })}
-          </HStack>
-        </VStack>
-      )
-    }
-  )
+    return (
+      <VStack
+        position="relative"
+        marginRight={-spacing}
+        marginBottom={-spacing}
+      >
+        <HStack spacing={spacing}>
+          {photos.map((photo, i) => {
+            return (
+              <DishView
+                key={i}
+                size={(size === 'lg' ? 200 : 170) * (isMedium ? 0.85 : 1)}
+                dish={
+                  {
+                    name: photo.name,
+                    image: photo.src,
+                    rating: photo.rating,
+                  } as any
+                }
+              />
+            )
+          })}
+        </HStack>
+      </VStack>
+    )
+  })
 )
