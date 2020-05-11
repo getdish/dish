@@ -714,7 +714,6 @@ const runSearch: AsyncAction<{
 
   // prevent duplicate searches
   const searchKey = JSON.stringify(searchArgs)
-  console.log('searchArgs', searchArgs, opts, searchKey === lastSearchKey)
   if (!opts.force && searchKey === lastSearchKey) return
 
   // update state
@@ -737,7 +736,7 @@ const runSearch: AsyncAction<{
 
   // fetch
   let restaurants = await search(searchArgs)
-  console.log('searched', searchArgs, restaurants)
+  // console.log('searched', searchArgs, restaurants)
   if (shouldCancel()) return
 
   // update denormalized dictionary
@@ -850,8 +849,6 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
   }
 
   const promises = new Set<Promise<any>>()
-
-  homeTimer('handleRouteChange')
 
   // actions per-route
   switch (name) {
@@ -1021,7 +1018,6 @@ const updateBreadcrumbs: Action = (om) => {
   homeTimer('updateBreadcrumbs')
   const next = createBreadcrumbs(om.state.home)
   if (!isEqual(next, om.state.home.breadcrumbStates)) {
-    console.log('new breadcrumbs', next)
     om.state.home.breadcrumbStates = next
   }
 }
