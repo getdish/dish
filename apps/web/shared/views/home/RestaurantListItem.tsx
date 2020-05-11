@@ -244,7 +244,7 @@ const RestaurantListItemContent = memo(
           <VStack padding={10} paddingTop={45} width={600}>
             <RestaurantPeek
               size={isShowingComment ? 'lg' : 'md'}
-              restaurant={restaurant}
+              restaurantSlug={restaurant.slug}
             />
           </VStack>
         </HStack>
@@ -281,79 +281,58 @@ const RestaurantTopReview = graphql(
   }
 )
 
-type CarouselPhoto = {
-  src: string
-  name?: string
-  rating?: number
-}
-
-function photosForCarousel(restaurant: Partial<Restaurant>) {
-  let photos = [] as CarouselPhoto[]
-  const max_photos = 4
-  for (const t of restaurant.tags || []) {
-    const photo = (t.photos || [])[0]
-    if (!photo) continue
-    let photo_name = t.tag.name || ' '
-    if (t.tag.icon) {
-      photo_name = t.tag.icon + photo_name
-    }
-    photos.push({
-      name: photo_name,
-      src: photo,
-      rating: t.rating,
-    })
-    if (photos.length >= max_photos) break
-  }
-  for (const photo of restaurant.photos || []) {
-    photos.push({ name: ' ', src: photo })
-    if (photos.length >= max_photos) break
-  }
-  return photos
-}
-
 export const RestaurantPeek = memo(
-  ({
-    restaurant,
-    size = 'md',
-  }: {
-    size?: 'lg' | 'md'
-    restaurant: Restaurant
-  }) => {
-    const spacing = size == 'lg' ? 12 : 18
-    const isMedium = useMediaQueryIsMedium()
-    const [isMounted, setIsMounted] = useState(false)
-    const allPhotos = photosForCarousel(restaurant)
-    const photos = isMounted ? allPhotos : allPhotos.slice(0, 1)
+  graphql(
+    ({
+      restaurantSlug,
+      size = 'md',
+    }: {
+      size?: 'lg' | 'md'
+      restaurantSlug: string
+    }) => {
+      const spacing = size == 'lg' ? 12 : 18
+      const isMedium = useMediaQueryIsMedium()
+      const [isMounted, setIsMounted] = useState(false)
+      const [restaurant] = query.restaurant({
+        where: {
+          slug: {
+            _eq: restaurantSlug,
+          },
+        },
+      })
+      const allPhotos = restaurant?.photosForCarousel()
+      const photos = isMounted ? allPhotos : allPhotos.slice(0, 1)
 
-    //  only show the first two at firt
-    useWaterfall(() => {
-      setIsMounted(true)
-    })
+      //  only show the first two at firt
+      useWaterfall(() => {
+        setIsMounted(true)
+      })
 
-    return (
-      <VStack
-        position="relative"
-        marginRight={-spacing}
-        marginBottom={-spacing}
-      >
-        <HStack spacing={spacing}>
-          {photos.map((photo, i) => {
-            return (
-              <DishView
-                key={i}
-                size={(size === 'lg' ? 200 : 170) * (isMedium ? 0.85 : 1)}
-                dish={
-                  {
-                    name: photo.name,
-                    image: photo.src,
-                    rating: photo.rating,
-                  } as any
-                }
-              />
-            )
-          })}
-        </HStack>
-      </VStack>
-    )
-  }
+      return (
+        <VStack
+          position="relative"
+          marginRight={-spacing}
+          marginBottom={-spacing}
+        >
+          <HStack spacing={spacing}>
+            {photos.map((photo, i) => {
+              return (
+                <DishView
+                  key={i}
+                  size={(size === 'lg' ? 200 : 170) * (isMedium ? 0.85 : 1)}
+                  dish={
+                    {
+                      name: photo.name,
+                      image: photo.src,
+                      rating: photo.rating,
+                    } as any
+                  }
+                />
+              )
+            })}
+          </HStack>
+        </VStack>
+      )
+    }
+  )
 )
