@@ -13,6 +13,7 @@ import { WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
 import _ from 'lodash'
+import moment from 'moment'
 import Sentiment from 'sentiment'
 
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
@@ -31,6 +32,10 @@ const sanfran = {
     },
   },
 }
+
+const UNIQUNESS_VIOLATION =
+  'Uniqueness violation. duplicate key value violates ' +
+  'unique constraint "restaurant_name_address_key"'
 
 export class Self extends WorkerJob {
   yelp!: Scrape
@@ -109,7 +114,44 @@ export class Self extends WorkerJob {
   }
 
   async persist() {
-    await this.restaurant.update()
+    try {
+      await this.restaurant.update()
+    } catch (e) {
+      if (e.message == UNIQUNESS_VIOLATION) {
+        this.handleRestaurantKeyConflict()
+      } else {
+        throw new Error(e)
+      }
+    }
+  }
+
+  async handleRestaurantKeyConflict() {
+    if (this.restaurant.address.length < 4 || this.restaurant.name.length < 2) {
+      console.error(
+        this.restaurant.id,
+        this.restaurant.name,
+        this.restaurant.address
+      )
+      throw new Error('Not enough data to resolve restaurant conflict')
+    }
+    let conflicter = new Restaurant()
+    await conflicter.findOneByHash({
+      name: this.restaurant.name,
+      address: this.restaurant.address,
+    })
+    const updated_at = moment(conflicter.updated_at)
+    if (updated_at.diff(moment.now(), 'days') < -30) {
+      console.log(
+        'Deleting conflicting restaurant: ' +
+          this.restaurant.name +
+          ', ' +
+          this.restaurant.id
+      )
+      await conflicter.delete()
+      await this.persist()
+    } else {
+      throw new Error('Conflicting restaurant updated too recently')
+    }
   }
 
   async getScrapeData() {
