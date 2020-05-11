@@ -1,161 +1,161 @@
-// https://github.com/dai-shi/gqless-hook
+// // https://github.com/dai-shi/gqless-hook
 
-import { Accessor, Client, accessorInterceptors, getAccessor } from 'gqless'
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useReducer,
-  useRef,
-} from 'react'
+// import { Accessor, Client, accessorInterceptors, getAccessor } from 'gqless'
+// import {
+//   useCallback,
+//   useEffect,
+//   useLayoutEffect,
+//   useReducer,
+//   useRef,
+// } from 'react'
 
-import { client } from './graphql'
+// import { client } from './graphql'
 
-const wrapperMap = new WeakMap<object, object>()
+// const wrapperMap = new WeakMap<object, object>()
 
-const isMutableObject = (x: unknown) => {
-  try {
-    return x !== null && typeof x === 'object' && !!getAccessor(x)
-  } catch (e) {
-    return false
-  }
-}
+// const isMutableObject = (x: unknown) => {
+//   try {
+//     return x !== null && typeof x === 'object' && !!getAccessor(x)
+//   } catch (e) {
+//     return false
+//   }
+// }
 
-const proxyHandler = {
-  get(target: object, property: string) {
-    const value = Reflect.get(target, property)
-    if (typeof value === 'function' && Array.isArray(target)) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const arrayFunc = Array.prototype[property as any]
-      // eslint-disable-next-line no-use-before-define, @typescript-eslint/no-use-before-define
-      return arrayFunc.bind(wrapMutableObject(target))
-    }
-    if (typeof value === 'function' || isMutableObject(value)) {
-      // eslint-disable-next-line no-use-before-define, @typescript-eslint/no-use-before-define
-      return wrapMutableObject(value)
-    }
-    return value
-  },
-  apply(target: Function, thisArg: unknown, argsList: unknown[]) {
-    const value = Reflect.apply(target, thisArg, argsList)
-    if (typeof value === 'function' || isMutableObject(value)) {
-      // eslint-disable-next-line no-use-before-define, @typescript-eslint/no-use-before-define
-      return wrapMutableObject(value)
-    }
-    return value
-  },
-}
+// const proxyHandler = {
+//   get(target: object, property: string) {
+//     const value = Reflect.get(target, property)
+//     if (typeof value === 'function' && Array.isArray(target)) {
+//       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//       const arrayFunc = Array.prototype[property as any]
+//       // eslint-disable-next-line no-use-before-define, @typescript-eslint/no-use-before-define
+//       return arrayFunc.bind(wrapMutableObject(target))
+//     }
+//     if (typeof value === 'function' || isMutableObject(value)) {
+//       // eslint-disable-next-line no-use-before-define, @typescript-eslint/no-use-before-define
+//       return wrapMutableObject(value)
+//     }
+//     return value
+//   },
+//   apply(target: Function, thisArg: unknown, argsList: unknown[]) {
+//     const value = Reflect.apply(target, thisArg, argsList)
+//     if (typeof value === 'function' || isMutableObject(value)) {
+//       // eslint-disable-next-line no-use-before-define, @typescript-eslint/no-use-before-define
+//       return wrapMutableObject(value)
+//     }
+//     return value
+//   },
+// }
 
-const wrapMutableObject = <T extends object>(obj: T): T => {
-  let wrapper = wrapperMap.get(obj)
-  if (!wrapper) {
-    wrapper = new Proxy(obj, proxyHandler)
-    wrapperMap.set(obj, wrapper)
-  }
-  return wrapper as T
-}
+// const wrapMutableObject = <T extends object>(obj: T): T => {
+//   let wrapper = wrapperMap.get(obj)
+//   if (!wrapper) {
+//     wrapper = new Proxy(obj, proxyHandler)
+//     wrapperMap.set(obj, wrapper)
+//   }
+//   return wrapper as T
+// }
 
-const notifyMutation = (accessor: Accessor) => {
-  if (accessor.data && typeof accessor.data === 'object') {
-    const newWrapper = new Proxy(accessor.data, proxyHandler)
-    wrapperMap.set(accessor.data, newWrapper)
-  }
-  if (accessor.parent) {
-    notifyMutation(accessor.parent)
-  }
-}
+// const notifyMutation = (accessor: Accessor) => {
+//   if (accessor.data && typeof accessor.data === 'object') {
+//     const newWrapper = new Proxy(accessor.data, proxyHandler)
+//     wrapperMap.set(accessor.data, newWrapper)
+//   }
+//   if (accessor.parent) {
+//     notifyMutation(accessor.parent)
+//   }
+// }
 
-const isSSR =
-  typeof window === 'undefined' ||
-  /ServerSideRendering/.test(window.navigator && window.navigator.userAgent)
+// const isSSR =
+//   typeof window === 'undefined' ||
+//   /ServerSideRendering/.test(window.navigator && window.navigator.userAgent)
 
-const useIsomorphicLayoutEffect = isSSR
-  ? (cb: () => void) => cb()
-  : useLayoutEffect
+// const useIsomorphicLayoutEffect = isSSR
+//   ? (cb: () => void) => cb()
+//   : useLayoutEffect
 
-// CM-safe timer-based cleanup hook
-const useCleanup = () => {
-  type Cleanup = {
-    timer: NodeJS.Timeout
-    func: () => void
-  }
-  const cleanups = useRef<Cleanup[]>([])
-  const addCleanup = useCallback((func: () => void) => {
-    const timer = setTimeout(func, 5 * 1000)
-    cleanups.current.push({ timer, func })
-  }, [])
-  useEffect(() => {
-    const cleanupsCurrent = cleanups.current
-    cleanupsCurrent.forEach(({ timer }) => clearTimeout(timer))
-    return () => {
-      cleanupsCurrent.forEach(({ func }) => func())
-    }
-  }, [])
-  return addCleanup
-}
+// // CM-safe timer-based cleanup hook
+// const useCleanup = () => {
+//   type Cleanup = {
+//     timer: NodeJS.Timeout
+//     func: () => void
+//   }
+//   const cleanups = useRef<Cleanup[]>([])
+//   const addCleanup = useCallback((func: () => void) => {
+//     const timer = setTimeout(func, 5 * 1000)
+//     cleanups.current.push({ timer, func })
+//   }, [])
+//   useEffect(() => {
+//     const cleanupsCurrent = cleanups.current
+//     cleanupsCurrent.forEach(({ timer }) => clearTimeout(timer))
+//     return () => {
+//       cleanupsCurrent.forEach(({ func }) => func())
+//     }
+//   }, [])
+//   return addCleanup
+// }
 
-/**
- * useQuery
- *
- * This hook returns query from gqless.
- *
- * @example
- * import { useQuery } from 'gqless-hook';
- * import { client } from '../graphql'; // generated by @gqless/cli
- *
- * const Component = () => {
- *   const query = useQuery(client);
- *   return (
- *     <div>{query.foo}</div>
- *   );
- * };
- */
-export const useQueryInner = (client: any) => {
-  const addCleanup = useCleanup()
+// /**
+//  * useQuery
+//  *
+//  * This hook returns query from gqless.
+//  *
+//  * @example
+//  * import { useQuery } from 'gqless-hook';
+//  * import { client } from '../graphql'; // generated by @gqless/cli
+//  *
+//  * const Component = () => {
+//  *   const query = useQuery(client);
+//  *   return (
+//  *     <div>{query.foo}</div>
+//  *   );
+//  * };
+//  */
+// export const useQueryInner = (client: any) => {
+//   const addCleanup = useCleanup()
 
-  const [, forceUpdate] = useReducer((c) => c + 1, 0)
-  const fetching = useRef(false)
-  if (fetching.current) {
-    throw new Promise((resolve) => {
-      client.scheduler.commit.onFetched.then(() => {
-        fetching.current = false
-        resolve()
-      })
-    })
-  }
-  useIsomorphicLayoutEffect(() => {
-    if (client.scheduler.commit.accessors.size > 0) {
-      fetching.current = true
-      forceUpdate()
-    }
-  })
+//   const [, forceUpdate] = useReducer((c) => c + 1, 0)
+//   const fetching = useRef(false)
+//   if (fetching.current) {
+//     throw new Promise((resolve) => {
+//       client.scheduler.commit.onFetched.then(() => {
+//         fetching.current = false
+//         resolve()
+//       })
+//     })
+//   }
+//   useIsomorphicLayoutEffect(() => {
+//     if (client.scheduler.commit.accessors.size > 0) {
+//       fetching.current = true
+//       forceUpdate()
+//     }
+//   })
 
-  type Callback = (prevData: unknown) => void
-  const dataChangeCallbacks = useRef(new Map<Accessor, Callback>())
-  const onAccessor = useCallback(
-    (accessor: Accessor) => {
-      let callback = dataChangeCallbacks.current.get(accessor)
-      if (!callback) {
-        callback = () => {
-          notifyMutation(accessor)
-          if (!fetching.current) {
-            forceUpdate()
-          }
-        }
-        dataChangeCallbacks.current.set(accessor, callback)
-      }
-      addCleanup(accessor.onDataChange(callback))
-    },
-    [addCleanup]
-  )
-  accessorInterceptors.add(onAccessor)
-  const deleteInterceptorTimer = setTimeout(() => {
-    accessorInterceptors.delete(onAccessor)
-  }, 5 * 1000)
-  useEffect(() => {
-    clearTimeout(deleteInterceptorTimer)
-    accessorInterceptors.delete(onAccessor)
-  })
+//   type Callback = (prevData: unknown) => void
+//   const dataChangeCallbacks = useRef(new Map<Accessor, Callback>())
+//   const onAccessor = useCallback(
+//     (accessor: Accessor) => {
+//       let callback = dataChangeCallbacks.current.get(accessor)
+//       if (!callback) {
+//         callback = () => {
+//           notifyMutation(accessor)
+//           if (!fetching.current) {
+//             forceUpdate()
+//           }
+//         }
+//         dataChangeCallbacks.current.set(accessor, callback)
+//       }
+//       addCleanup(accessor.onDataChange(callback))
+//     },
+//     [addCleanup]
+//   )
+//   accessorInterceptors.add(onAccessor)
+//   const deleteInterceptorTimer = setTimeout(() => {
+//     accessorInterceptors.delete(onAccessor)
+//   }, 5 * 1000)
+//   useEffect(() => {
+//     clearTimeout(deleteInterceptorTimer)
+//     accessorInterceptors.delete(onAccessor)
+//   })
 
-  return wrapMutableObject(client.query)
-}
+//   return wrapMutableObject(client.query)
+// }
