@@ -329,10 +329,4 @@ export class Restaurant extends ModelBase<Restaurant> {
       })
     )
   }
-
-  bestTagPhotos() {
-    return this.tags
-      ?.filter((t) => (t.photos?.length || 0) > 0 && t.rating)
-      .sort((t1, t2) => (t2.rating || 0) - (t1.rating || 0))
-  }
 }
