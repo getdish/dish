@@ -76,10 +76,7 @@ export default memo(
               paddingRight={16}
             >
               <HStack position="relative">
-                <RestaurantRatingViewPopover
-                  size="lg"
-                  restaurantSlug={restaurant.slug}
-                />
+                <RestaurantRatingViewPopover size="lg" restaurantSlug={slug} />
 
                 <Spacer size={20} />
 
@@ -99,7 +96,7 @@ export default memo(
                       currentLocationInfo={state.currentLocationInfo}
                       showMenu
                       size="lg"
-                      restaurantId={restaurant.id}
+                      restaurantSlug={slug}
                     />
                     <Spacer size={10} />
                     <Text style={{ color: '#777', fontSize: 14 }}>
@@ -118,7 +115,7 @@ export default memo(
 
             <Spacer />
 
-            <RestaurantTagsRow size="lg" restaurantSlug={restaurant.slug} />
+            <RestaurantTagsRow size="lg" restaurantSlug={slug} />
             <Spacer />
             <Divider />
             <Spacer />
@@ -128,14 +125,14 @@ export default memo(
                 <RestaurantDetailRow
                   centered
                   justifyContent="center"
-                  restaurantSlug={restaurant.slug}
+                  restaurantSlug={slug}
                   flex={1}
                 />
               </HStack>
 
               <Divider />
 
-              <RestaurantPhotos restaurantSlug={restaurant.slug} />
+              <RestaurantPhotos restaurantSlug={slug} />
 
               {/* <VStack>
                 <SmallTitle>Images</SmallTitle>
