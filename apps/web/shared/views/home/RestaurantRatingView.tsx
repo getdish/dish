@@ -27,7 +27,9 @@ export default graphql(function RestaurantRatingView({
   ...rest
 }: RestaurantRatingViewProps) {
   console.log('restaurantSlug', restaurantSlug)
-  return null
+  if (!restaurantSlug) {
+    return null
+  }
   const [restaurant] = query.restaurant({
     where: {
       slug: {
