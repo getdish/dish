@@ -1,4 +1,5 @@
-import { TagType, slugify } from '@dish/models'
+import { slugify } from '@dish/common-web'
+import { TagType } from '@dish/models'
 import { last } from 'lodash'
 import { Action, AsyncAction, Derive } from 'overmind'
 

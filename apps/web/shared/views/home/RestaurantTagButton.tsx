@@ -1,4 +1,4 @@
-import { Restaurant } from '@dish/models'
+import { Restaurant } from '@dish/graph'
 import _ from 'lodash'
 import React, { memo, useState } from 'react'
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native'
