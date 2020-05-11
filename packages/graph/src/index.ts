@@ -18,6 +18,7 @@ export type Review = t_review['data']
 
 export * from './graphql'
 export * from './graphql/mutation'
+export * from 'gqless'
 
 const graphQuery = createFetcher('query')
 export function fetchQuery(query: string, variables = {}) {

@@ -3,7 +3,7 @@ import './bootstrapEnv'
 import './base.css'
 import './mapkit'
 
-import { startLogging } from '@dish/graph'
+import { mutation, query, startLogging } from '@dish/graph'
 import { createOvermind } from 'overmind'
 // // import here
 import React from 'react'
@@ -33,6 +33,8 @@ if (process.env.NODE_ENV === 'development') {
 AppRegistry.registerComponent('dish', () => App)
 
 window['React'] = React
+window['query'] = query
+window['mutation'] = mutation
 
 // // exports
 if (isSSR) {
