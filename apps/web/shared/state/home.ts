@@ -1,8 +1,7 @@
 import { slugify } from '@dish/common-web'
-import { Restaurant, User, query } from '@dish/graph'
+import { Restaurant, User, query, resolved } from '@dish/graph'
 import { RestaurantSearchArgs, getHomeDishes, search } from '@dish/models'
 import { isEqual } from '@o/fast-compare'
-import { resolved } from 'gqless'
 import _ from 'lodash'
 import { Action, AsyncAction } from 'overmind'
 
@@ -165,8 +164,6 @@ let mapView: mapkit.Map | null = null
 export function setMapView(x: mapkit.Map) {
   mapView = x
 }
-
-export * from 'gqless'
 
 export const isOnOwnProfile = (state: OmState) => {
   return (
@@ -422,16 +419,15 @@ const loadPageRestaurant: AsyncAction = async (om) => {
   const state = om.state.home.currentState
   if (state.type !== 'restaurant') return
   const slug = state.restaurantSlug
-  console.log('slug', slug)
   const restaurant = await resolved(() => {
     const [{ location, id }] = query.restaurant({
       where: { slug: { _eq: slug } },
     })
-    console.log('gettin', location, id)
+    console.log('gettin', { location, id })
     return { location, id }
   })
-  console.log('restaurant', restaurant)
-  if (state) {
+  console.log('restaurant', { slug, restaurant })
+  if (state && restaurant) {
     state.restaurantId = restaurant.id
     state.center = {
       lng: restaurant.location.coordinates[0],
