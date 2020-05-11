@@ -264,7 +264,7 @@ const RestaurantTopReview = graphql(
       },
     })
     return (
-      <CommentBubble user={topReview.user ?? { username: 'Peach' }}>
+      <CommentBubble user={{ username: topReview?.user?.username ?? 'Peach' }}>
         <SelectableText
           style={{
             opacity: 0.8,
@@ -273,7 +273,7 @@ const RestaurantTopReview = graphql(
             marginVertical: 5,
           }}
         >
-          {topReview.text ||
+          {topReview?.text ||
             `Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit ipsum sit amet. Lorem ipsum dolor sit amet sit amet. Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.`}
         </SelectableText>
       </CommentBubble>
