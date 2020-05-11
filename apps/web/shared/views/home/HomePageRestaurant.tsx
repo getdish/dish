@@ -37,7 +37,7 @@ export default memo(
         },
       },
     })
-    console.log('restaurant', restaurant)
+    console.log('HomePageRestaurant', restaurant)
     const isLoading = !restaurant?.name
     const isCanTag =
       om.state.user.isLoggedIn &&

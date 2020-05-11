@@ -1,7 +1,7 @@
 import { Logger } from '@gqless/logger'
 
 import { createFetcher } from './createFetcher'
-import { client, t_restaurant, t_review, t_tag, t_user } from './graphql'
+import { client, restaurant, review, tag, user } from './graphql'
 
 export function startLogging(verbose = true) {
   new Logger(client, verbose)
@@ -9,10 +9,10 @@ export function startLogging(verbose = true) {
 
 // helper types for gqless
 
-export type Restaurant = t_restaurant['data']
-export type Tag = t_tag['data']
-export type User = t_user['data']
-export type Review = t_review['data']
+export type Restaurant = restaurant
+export type Tag = tag
+export type User = user
+export type Review = review
 
 // all other types
 
