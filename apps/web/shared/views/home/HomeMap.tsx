@@ -60,7 +60,6 @@ const resumeMap = (force: boolean = false) => {
   pauseMapUpdates = false
   if (force || pendingUpdates) {
     pendingUpdates = false
-    console.log('pending update, run')
     handleRegionChangeEnd()
   }
 }
@@ -314,7 +313,6 @@ export const HomeMap = memo(function HomeMap() {
           state.home.currentState.span,
         ]),
       () => {
-        console.log('new area')
         pauseMap()
         tm = requestIdleCallback(() => {
           centerMapToRegion({

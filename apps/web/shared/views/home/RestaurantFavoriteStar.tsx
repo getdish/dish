@@ -46,7 +46,7 @@ export const RestaurantFavoriteStar = memo(
       const isStarred = review.rating > 0
 
       const [writeReview, info] = useReviewMutation()
-      console.log('info', info)
+      console.log('writeReview', info)
 
       const persist = async () => {
         Toast.show('Saved')
