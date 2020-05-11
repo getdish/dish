@@ -6,6 +6,7 @@ import { Image, ScrollView, Text, View } from 'react-native'
 import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home'
 import { useOvermind } from '../../state/om'
+import { Color } from '../ui/Color'
 import { Divider } from '../ui/Divider'
 import { LinkButton } from '../ui/Link'
 import { MediaQuery, mediaQueries } from '../ui/MediaQuery'
@@ -49,17 +50,17 @@ export default graphql(function HomePageRestaurant({
 
   return (
     <VStack
-      className="blur"
-      backgroundColor="rgba(255,255,255,0.68)"
       flex={1}
+      backgroundColor="rgba(255,255,255,0.5)"
       borderRadius={drawerBorderRadius}
+      overflow="hidden"
     >
       <PageTitleTag>
         Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
       </PageTitleTag>
 
       <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
-        <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
+        <ZStack right={10} top={10} pointerEvents="auto" zIndex={1000}>
           <CloseButton onPress={() => om.actions.home.up()} />
         </ZStack>
       </MediaQuery>
@@ -76,48 +77,64 @@ export default graphql(function HomePageRestaurant({
       )}
 
       <>
-        <ScrollView style={{ flex: 1 }}>
-          <VStack width="100%" padding={18} paddingBottom={0} paddingRight={16}>
-            <HStack position="relative">
-              <RestaurantRatingViewPopover size="lg" restaurantSlug={slug} />
+        <VStack
+          className="blur"
+          backgroundColor="rgba(255,255,255,0.9)"
+          width="100%"
+          padding={18}
+          paddingBottom={0}
+          paddingRight={16}
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          zIndex={100}
+        >
+          <HStack position="relative">
+            <RestaurantRatingViewPopover size="lg" restaurantSlug={slug} />
 
-              <Spacer size={20} />
+            <Spacer size={20} />
 
-              <HStack width="80%">
-                <VStack flex={1}>
-                  <Text
-                    style={{
-                      fontSize: 26,
-                      fontWeight: 'bold',
-                      paddingRight: 30,
-                    }}
-                  >
-                    {restaurant.name}
-                  </Text>
-                  <Spacer size={6} />
-                  <RestaurantAddressLinksRow
-                    currentLocationInfo={state.currentLocationInfo}
-                    showMenu
-                    size="lg"
-                    restaurantSlug={slug}
-                  />
-                  <Spacer size={10} />
-                  <Text style={{ color: '#777', fontSize: 14 }}>
-                    {restaurant.address}
-                  </Text>
-                  <Spacer size={6} />
-                </VStack>
-
-                <RestaurantFavoriteStar
-                  restaurantId={restaurant.id}
+            <HStack width="80%">
+              <VStack flex={1}>
+                <Text
+                  style={{
+                    fontSize: 26,
+                    fontWeight: 'bold',
+                    paddingRight: 30,
+                  }}
+                >
+                  {restaurant.name}
+                </Text>
+                <Spacer size={6} />
+                <RestaurantAddressLinksRow
+                  currentLocationInfo={state.currentLocationInfo}
+                  showMenu
                   size="lg"
+                  restaurantSlug={slug}
                 />
-              </HStack>
+                <Spacer size={10} />
+                <Text style={{ color: '#777', fontSize: 14 }}>
+                  {restaurant.address}
+                </Text>
+                <Spacer size={6} />
+              </VStack>
+
+              <RestaurantFavoriteStar restaurantId={restaurant.id} size="lg" />
             </HStack>
-          </VStack>
+          </HStack>
+        </VStack>
 
-          <Spacer />
+        <VStack
+          backgroundColor="white"
+          position="absolute"
+          top={120}
+          left={0}
+          right={0}
+          bottom={0}
+        />
 
+        <ScrollView style={{ flex: 1, paddingTop: 120 + 20 }}>
           <RestaurantTagsRow size="lg" restaurantSlug={slug} />
           <Spacer />
           <Divider />

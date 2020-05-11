@@ -47,12 +47,11 @@ export default memo(function HomePageSearchResults({
 
   return (
     <VStack
+      flex={1}
       zIndex={100}
-      backgroundColor="rgba(255,255,255,0.5)"
       borderRadius={drawerBorderRadius}
-      overflow="hidden"
-      className="blur"
       position="relative"
+      backgroundColor="rgba(255,255,255,0.85)"
     >
       <PageTitleTag>{title}</PageTitleTag>
       {/* <ZStack
@@ -67,8 +66,8 @@ export default memo(function HomePageSearchResults({
         </HStack>
       </ZStack> */}
 
-      {/*  */}
-      <VStack paddingTop={verticalPad} paddingHorizontal={22}>
+      {/* Title */}
+      <VStack className="blur" paddingTop={verticalPad} paddingHorizontal={22}>
         <HStack width="100%">
           <VStack flex={4}>
             <PageTitle
@@ -152,6 +151,7 @@ export default memo(function HomePageSearchResults({
       <VStack
         // marginTop={-23}
         position="relative"
+        backgroundColor="rgba(255,255,255,1)"
         flex={1}
         overflow="hidden"
       >
