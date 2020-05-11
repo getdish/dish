@@ -1,4 +1,4 @@
-import { Restaurant, query } from '@dish/graph'
+import { Restaurant, query, useQuery } from '@dish/graph'
 import { graphql } from '@gqless/react'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
@@ -81,7 +81,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
             opacity={isHovered ? 1 : 0}
           >
             <Suspense fallback={null}>
-              <RestaurantUpVoteDownVote restaurant={props.restaurant} />
+              <RestaurantUpVoteDownVote restaurantId={props.restaurant.id} />
             </Suspense>
           </ZStack>
 
