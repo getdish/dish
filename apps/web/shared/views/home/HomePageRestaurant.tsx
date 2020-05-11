@@ -48,7 +48,12 @@ export default graphql(function HomePageRestaurant({
       om.state.user.user.role == 'contributor')
 
   return (
-    <>
+    <VStack
+      className="blur"
+      backgroundColor="rgba(255,255,255,0.68)"
+      flex={1}
+      borderRadius={drawerBorderRadius}
+    >
       <PageTitleTag>
         Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
       </PageTitleTag>
@@ -161,7 +166,7 @@ export default graphql(function HomePageRestaurant({
           </VStack>
         </ScrollView>
       </>
-    </>
+    </VStack>
   )
 })
 

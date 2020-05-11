@@ -1,11 +1,5 @@
 import _ from 'lodash'
-import React, {
-  forwardRef,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react'
+import React, { forwardRef, useLayoutEffect, useRef, useState } from 'react'
 import { View, ViewProps, ViewStyle } from 'react-native'
 
 import { combineRefs } from '../../helpers/combineRefs'
@@ -79,15 +73,20 @@ const createStack = (defaultStyle?: ViewStyle) => {
         const node = getNode()
         if (!node) return
         const names = cn.trim().split(' ').filter(Boolean)
-        names.forEach((x) => node.classList.add(x))
 
-        const observer = new MutationObserver((onChange) => {
+        function addClassNames() {
           const cl = new Set(node.classList)
           for (const name of names) {
             if (!cl.has(name)) {
               node.classList.add(name)
             }
           }
+        }
+
+        addClassNames()
+
+        const observer = new MutationObserver(() => {
+          addClassNames()
         })
         observer.observe(node, {
           attributes: true,
@@ -97,7 +96,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
           observer.disconnect()
           names.forEach((x) => node.classList.remove(x))
         }
-      }, [hoverStyle, cn, innerRef.current])
+      }, [JSON.stringify(hoverStyle), cn, innerRef.current])
 
       let spacedChildren = children
       if (typeof spacing !== 'undefined') {

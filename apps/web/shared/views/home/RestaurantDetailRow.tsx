@@ -137,10 +137,10 @@ function openingHours(restaurant: Restaurant) {
     if (tomorrow == 7) {
       tomorrow = 0
     }
-    const opens_at = restaurant.hours[tomorrow].hoursInfo.hours[0]
+    const opens_at = (restaurant.hours[tomorrow]?.hoursInfo.hours[0] ?? '')
       .replace(/"/g, '')
       .split('-')[0]
-    const closes_at = restaurant.hours[day].hoursInfo.hours[0]
+    const closes_at = (restaurant.hours[day]?.hoursInfo.hours[0] ?? '')
       .replace(/"/g, '')
       .split('-')[1]
     next_time = restaurant.is_open_now ? closes_at : opens_at

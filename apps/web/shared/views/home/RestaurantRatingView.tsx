@@ -40,6 +40,8 @@ export default graphql(function RestaurantRatingView(
     rating = restaurant.rating
   }
 
+  console.log('rating', rating)
+
   const percent = getRestaurantRating(rating)
   const color = getRankingColor(percent)
   return (
