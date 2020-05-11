@@ -1,6 +1,6 @@
 import { createFetcher } from './createFetcher'
 import { client, query_root } from './graphql'
-import * as Hooks from './hooks'
+// import * as Hooks from './hooks'
 
 export function startLogging(verbose = true) {
   // dont import outside node, it accesses window
@@ -15,10 +15,10 @@ export * from './types'
 
 // these hacky type defs here avoid huge slowdown in ts
 // otherwise could just return query_root thats it
-type Query = query_root | void
-export const useQuery = <A extends Query>(): A extends void ? never : A => {
-  return Hooks.useQueryInner(client) as any
-}
+// type Query = query_root | void
+// export const useQuery = <A extends Query>(): A extends void ? never : A => {
+//   return Hooks.useQueryInner(client) as any
+// }
 
 const graphQuery = createFetcher('query')
 export function fetchQuery(query: string, variables = {}) {
