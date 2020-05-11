@@ -382,7 +382,7 @@ export default memo(function HomeSearchBar() {
           {/* IN */}
           <HomeSearchBarSeparator />
 
-          <VStack flex={35} maxWidth={320}>
+          <VStack flex={35} maxWidth={350} minWidth={300}>
             <TextInput
               ref={locationInputRef}
               value={locationSearch}
