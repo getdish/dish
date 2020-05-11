@@ -13,7 +13,7 @@ const TARGET = process.env.TARGET || 'client'
 console.log('TARGET', TARGET)
 const appEntry = path.resolve(path.join(__dirname, 'web', 'index.web.tsx'))
 
-module.exports = async function(env = { mode: process.env.NODE_ENV }, argv) {
+module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
   // @ts-ignore
   const config = await createExpoWebpackConfigAsync(
     {

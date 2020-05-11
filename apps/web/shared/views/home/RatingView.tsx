@@ -13,7 +13,7 @@ export type RatingViewProps = StackProps & {
 }
 
 export const getRestaurantRating = (restaurant: Partial<Restaurant>) =>
-  Math.round(+restaurant.rating * 20)
+  Math.round(+restaurant?.rating * 20)
 
 export const getRankingColor = (percent: number) =>
   percent > 84 ? 'green' : percent > 60 ? 'orange' : 'red'
