@@ -27,3 +27,48 @@ index 27c8f79..076557d 100644
  export declare type ScalarType<TData = any, TExtension = any> = Type<Kind.scalar, TData, TExtension>;
  export declare type EnumType<TData = any, TExtension = any> = Type<Kind.enum, TData, TExtension>;
  declare type FieldsRecord = Record<string, ValidType | FieldsTypeArg>;
+diff --git a/node_modules/gqless/dist/gqless.cjs.development.js b/node_modules/gqless/dist/gqless.cjs.development.js
+index 12268bf..7ad7a9e 100644
+--- a/node_modules/gqless/dist/gqless.cjs.development.js
++++ b/node_modules/gqless/dist/gqless.cjs.development.js
+@@ -2,6 +2,8 @@
+ 
+ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+ 
++debugger
++
+ var mixClasses = require('mix-classes');
+ var tslib = require('tslib');
+ var utils = require('@gqless/utils');
+diff --git a/node_modules/gqless/dist/gqless.esm.js b/node_modules/gqless/dist/gqless.esm.js
+index cc6eb3f..d88aa6b 100644
+--- a/node_modules/gqless/dist/gqless.esm.js
++++ b/node_modules/gqless/dist/gqless.esm.js
+@@ -559,17 +559,16 @@ const memoized =
+ createMemo();
+ const getAlias = tree => {
+   if (!tree.parent) return;
+-  const fieldAliases = memoized(() => {
+-    const aliases = new Map();
+-    let id = 0;
+-    tree.parent.children.forEach(siblingTree => {
+-      if (!(siblingTree.selection instanceof FieldSelection)) return;
+-      if (tree.selection === siblingTree.selection || tree.selection.field !== siblingTree.selection.field) return;
+-      aliases.set(tree.selection, `${tree.selection.field.name}__${++id}`);
+-    });
+-    return aliases;
+-  }, [tree.parent, tree.selection.field]);
+-  return fieldAliases.get(tree.selection);
++  let id
++  for (const siblingTree of tree.parent.children) {
++    if (!(siblingTree.selection instanceof FieldSelection)) continue;
++    if (tree.selection === siblingTree.selection) continue
++    if (tree.selection.field.name !== siblingTree.selection.field.name) continue;
++    const thisIndex = tree.parent.children.indexOf(tree)
++    id = `${tree.selection.field.name}__${thisIndex}`
++    break
++  }
++  return id
+ };
+ 
+ /**
