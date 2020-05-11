@@ -3,6 +3,7 @@ import { graphql } from '@gqless/react'
 import React, { memo } from 'react'
 import { Image, ScrollView, Text, View } from 'react-native'
 
+import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home'
 import { useOvermind } from '../../state/om'
 import { Divider } from '../ui/Divider'
@@ -37,7 +38,6 @@ export default memo(
         },
       },
     })
-    console.log('HomePageRestaurant', restaurant)
     const isLoading = !restaurant?.name
     const isCanTag =
       om.state.user.isLoggedIn &&
@@ -56,80 +56,88 @@ export default memo(
           </ZStack>
         </MediaQuery>
 
-        {isLoading && <LoadingItems />}
+        {isLoading && (
+          <ZStack
+            fullscreen
+            backgroundColor="white"
+            zIndex={1000}
+            borderRadius={drawerBorderRadius}
+          >
+            <LoadingItems />
+          </ZStack>
+        )}
 
-        {!isLoading && (
-          <>
-            <ScrollView style={{ flex: 1 }}>
-              <VStack
-                width="100%"
-                padding={18}
-                paddingBottom={0}
-                paddingRight={16}
-              >
-                <HStack position="relative">
-                  <RestaurantRatingViewPopover
-                    size="lg"
-                    restaurantSlug={restaurant.slug}
-                  />
+        <>
+          <ScrollView style={{ flex: 1 }}>
+            <VStack
+              width="100%"
+              padding={18}
+              paddingBottom={0}
+              paddingRight={16}
+            >
+              <HStack position="relative">
+                <RestaurantRatingViewPopover
+                  size="lg"
+                  restaurantSlug={restaurant.slug}
+                />
 
-                  <Spacer size={20} />
+                <Spacer size={20} />
 
-                  <HStack width="80%">
-                    <VStack flex={1}>
-                      <Text
-                        style={{
-                          fontSize: 26,
-                          fontWeight: 'bold',
-                          paddingRight: 30,
-                        }}
-                      >
-                        {restaurant.name}
-                      </Text>
-                      <Spacer size={6} />
-                      <RestaurantAddressLinksRow
-                        currentLocationInfo={state.currentLocationInfo}
-                        showMenu
-                        size="lg"
-                        restaurantId={restaurant.id}
-                      />
-                      <Spacer size={10} />
-                      <Text style={{ color: '#777', fontSize: 14 }}>
-                        {restaurant.address}
-                      </Text>
-                      <Spacer size={6} />
-                    </VStack>
-
-                    <RestaurantFavoriteStar
-                      restaurantId={restaurant.id}
+                <HStack width="80%">
+                  <VStack flex={1}>
+                    <Text
+                      style={{
+                        fontSize: 26,
+                        fontWeight: 'bold',
+                        paddingRight: 30,
+                      }}
+                    >
+                      {restaurant.name}
+                    </Text>
+                    <Spacer size={6} />
+                    <RestaurantAddressLinksRow
+                      currentLocationInfo={state.currentLocationInfo}
+                      showMenu
                       size="lg"
+                      restaurantId={restaurant.id}
                     />
-                  </HStack>
-                </HStack>
-              </VStack>
+                    <Spacer size={10} />
+                    <Text style={{ color: '#777', fontSize: 14 }}>
+                      {restaurant.address}
+                    </Text>
+                    <Spacer size={6} />
+                  </VStack>
 
-              <Spacer />
-
-              <RestaurantTagsRow size="lg" restaurantSlug={restaurant.slug} />
-              <Spacer />
-              <Divider />
-              <Spacer />
-
-              <VStack spacing="md" alignItems="center">
-                <HStack paddingVertical={8} minWidth={400}>
-                  <RestaurantDetailRow
-                    centered
-                    justifyContent="center"
-                    restaurantSlug={restaurant.slug}
-                    flex={1}
+                  <RestaurantFavoriteStar
+                    restaurantId={restaurant.id}
+                    size="lg"
                   />
                 </HStack>
+              </HStack>
+            </VStack>
 
-                <Divider />
+            <Spacer />
 
-                <RestaurantPhotos restaurantSlug={restaurant.slug} />
+            <RestaurantTagsRow size="lg" restaurantSlug={restaurant.slug} />
+            <Spacer />
+            <Divider />
+            <Spacer />
 
-                {/* <VStack>
+            <VStack spacing="md" alignItems="center">
+              <HStack paddingVertical={8} minWidth={400}>
+                <RestaurantDetailRow
+                  centered
+                  justifyContent="center"
+                  restaurantSlug={restaurant.slug}
+                  flex={1}
+                />
+              </HStack>
+
+              <Divider />
+
+              <RestaurantPhotos restaurantSlug={restaurant.slug} />
+
+              {/* <VStack>
                 <SmallTitle>Images</SmallTitle>
                 <HStack
                   flexWrap="wrap"
@@ -155,10 +163,9 @@ export default memo(
                   ))}
                 </HStack>
               </VStack> */}
-              </VStack>
-            </ScrollView>
-          </>
-        )}
+            </VStack>
+          </ScrollView>
+        </>
       </>
     )
   })
@@ -173,10 +180,7 @@ const RestaurantPhotos = graphql(
         },
       },
     })
-
     const photos = restaurant.bestTagPhotos()
-    console.log('photos', photos)
-
     const drawerWidth = useHomeDrawerWidthInner()
     const spacing = 20
     return (
