@@ -164,26 +164,6 @@ export default memo(
   })
 )
 
-// TODO @nate merge back
-// {restaurant.bestTagPhotos().map((t, index) => {
-//   let tag_name = t.tag.name
-//   if (t.tag.icon) tag_name = t.tag.icon + tag_name
-//   return (
-//     <DishView
-//       key={index}
-//       size={(drawerWidth - 3 * spacing) / 3 - 15}
-//       marginBottom={10}
-//       dish={
-//         {
-//           name: tag_name,
-//           image: (t.photos && t.photos[0]) || '',
-//           rating: (t.rating || 0) * 2,
-//         } as any
-//       }
-//     />
-//   )
-// })}
-
 const RestaurantPhotos = graphql(
   ({ restaurantSlug }: { restaurantSlug: string }) => {
     const [restaurant] = query.restaurant({
@@ -193,11 +173,15 @@ const RestaurantPhotos = graphql(
         },
       },
     })
+
+    const photos = restaurant.bestTagPhotos()
+    console.log('photos', photos)
+
     const drawerWidth = useHomeDrawerWidthInner()
     const spacing = 20
     return (
       <>
-        {!!restaurant.photos?.length && (
+        {!!photos?.length && (
           <VStack spacing="xl">
             <HStack justifyContent="center" spacing>
               <LinkButton {...flatButtonStyleActive}>Top Dishes</LinkButton>
@@ -224,7 +208,7 @@ const RestaurantPhotos = graphql(
                     dish={
                       {
                         name: tag_name,
-                        image: (t.photos && t.photos[0]) || '',
+                        image: t.photos?.[0] ?? '',
                         rating: t.rating || 0,
                       } as any
                     }
