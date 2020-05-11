@@ -1,4 +1,4 @@
-import { Restaurant, query } from '@dish/graph'
+import { query } from '@dish/graph'
 import { graphql } from '@gqless/react'
 import React, { memo, useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
@@ -8,18 +8,19 @@ import { Icon } from '../ui/Icon'
 import { VStack } from '../ui/Stacks'
 import { useReviewMutation } from './useReviewMutation'
 
-export const RestaurantUpVoteDownVote = memo(
-  graphql(({ restaurant }: { restaurant: Restaurant }) => {
+export const RestaurantUpVoteDownVote = graphql(
+  ({ restaurantId }: { restaurantId: string }) => {
     const [review] = query.review({
       limit: 1,
       where: {
         restaurant_id: {
-          _eq: restaurant.id,
+          _eq: restaurantId,
         },
       },
     })
     const [insertReview, { data, fetchState, errors }] = useReviewMutation()
-    const vote = review.rating
+    const vote = review?.rating
+    console.log('vote', vote)
     return (
       <div
         style={{
@@ -32,7 +33,7 @@ export const RestaurantUpVoteDownVote = memo(
             active={vote == 1}
             onPress={() => {
               insertReview({
-                restaurant_id: restaurant.id,
+                restaurant_id: restaurantId,
                 rating: vote === 1 ? 0 : 1,
               })
             }}
@@ -49,7 +50,7 @@ export const RestaurantUpVoteDownVote = memo(
             active={vote == -1}
             onPress={() => {
               insertReview({
-                restaurant_id: restaurant.id,
+                restaurant_id: restaurantId,
                 rating: vote == -1 ? 0 : -1,
               })
             }}
@@ -63,7 +64,7 @@ export const RestaurantUpVoteDownVote = memo(
         </VStack>
       </div>
     )
-  })
+  }
 )
 
 const VoteButton = (props: any) => {

@@ -53,10 +53,8 @@ export const restaurant = (restaurant) => {
         })
         if (photos.length >= max_photos) break
       }
-      console.log('waht is', photos)
       if (photos.length <= max_photos) {
         const restPhotos = restaurant.photos() ?? []
-        console.log('restPhotos', restPhotos, restaurant.photos())
         for (const photo of restPhotos) {
           photos.push({ name: ' ', src: photo })
           if (photos.length >= max_photos) break
