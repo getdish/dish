@@ -34,6 +34,7 @@ export const RestaurantFavoriteStar = memo(
       const forceUpdate = useForceUpdate()
       const showContent = isOpen
       const [review] = query.review({
+        limit: 1,
         where: {
           restaurant_id: {
             _eq: restaurantId,
@@ -43,10 +44,8 @@ export const RestaurantFavoriteStar = memo(
           },
         },
       })
-      const isStarred = review.rating > 0
-
+      const isStarred = review?.rating > 0
       const [writeReview, info] = useReviewMutation()
-      console.log('writeReview', info)
 
       const persist = async () => {
         Toast.show('Saved')

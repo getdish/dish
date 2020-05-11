@@ -11,16 +11,14 @@ import { useReviewMutation } from './useReviewMutation'
 export const RestaurantUpVoteDownVote = memo(
   graphql(({ restaurant }: { restaurant: Restaurant }) => {
     const [review] = query.review({
+      limit: 1,
       where: {
         restaurant_id: {
           _eq: restaurant.id,
         },
-      } as any,
+      },
     })
-
     const [insertReview, { data, fetchState, errors }] = useReviewMutation()
-
-    console.log('review', review, { data, fetchState, errors })
     const vote = review.rating
     return (
       <div
