@@ -1,11 +1,6 @@
-import { Restaurant, query } from '@dish/graph'
-import {
-  RestaurantSearchArgs,
-  User,
-  getHomeDishes,
-  search,
-  slugify,
-} from '@dish/models'
+import { slugify } from '@dish/common-web'
+import { Restaurant, User, query } from '@dish/graph'
+import { RestaurantSearchArgs, getHomeDishes, search } from '@dish/models'
 import { isEqual } from '@o/fast-compare'
 import { resolved } from 'gqless'
 import _ from 'lodash'

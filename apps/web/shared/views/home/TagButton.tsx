@@ -1,4 +1,4 @@
-import { Tag } from '@dish/models'
+import { Tag } from '@dish/graph'
 import _ from 'lodash'
 import React, { memo } from 'react'
 import { Text, TextStyle, View } from 'react-native'

@@ -1,4 +1,4 @@
-import { slugify } from '@dish/models'
+import { slugify } from '@dish/common-web'
 import React, { memo } from 'react'
 import { useStorageState } from 'react-storage-hooks'
 

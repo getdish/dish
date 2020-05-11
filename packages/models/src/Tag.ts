@@ -1,8 +1,8 @@
+import { slugify } from '@dish/common-web'
 import { EnumType } from 'json-to-graphql-query'
 import _ from 'lodash'
 
 import { ModelBase } from './ModelBase'
-import { slugify } from './utils'
 
 export type TagType =
   | 'lense'

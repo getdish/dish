@@ -1,13 +1,11 @@
-import { Restaurant } from '@dish/models'
+import { Restaurant } from '@dish/graph'
 import React, { useState } from 'react'
-import { Text } from 'react-native'
 
 import { Box } from '../ui/Box'
 import { Icon } from '../ui/Icon'
 import { LinkButton } from '../ui/Link'
 import { Popover } from '../ui/Popover'
-import { HStack } from '../ui/Stacks'
-import HomeLenseBar, { HomeLenseBarOnly } from './HomeLenseBar'
+import { HomeLenseBarOnly } from './HomeLenseBar'
 
 export const RestaurantAddTagButton = ({
   restaurant,
