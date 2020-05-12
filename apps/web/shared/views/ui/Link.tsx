@@ -1,8 +1,14 @@
 import './Link.css'
 
 import _ from 'lodash'
-import React, { useCallback, useContext, useMemo } from 'react'
-import { Text, TextStyle, TouchableOpacity } from 'react-native'
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react'
+import { Platform, Text, TextStyle, TouchableOpacity } from 'react-native'
 
 import { currentStates } from '../../state/home'
 import { getNavigateToTags } from '../../state/home-tag-helpers'
@@ -15,7 +21,7 @@ import {
 } from '../../state/router'
 import { NavigableTag } from '../../state/Tag'
 import { CurrentStateID } from '../home/CurrentStateID'
-import { StackProps, VStack } from './Stacks'
+import { StackProps, VStack, getNode } from './Stacks'
 
 type LinkSharedProps = {
   fontWeight?: TextStyle['fontWeight']
@@ -24,6 +30,7 @@ type LinkSharedProps = {
   ellipse?: boolean
   fastClick?: boolean
   replace?: boolean
+  stopPropagation?: boolean
 }
 
 type LinkProps<A, B> = React.DetailedHTMLProps<
@@ -77,8 +84,7 @@ export function Link<
 
   const handler = useCallback(
     (e) => {
-      e.stopPropagation()
-      e.preventDefault()
+      prevent(e)
       if (onClick) {
         onClick?.(e)
       }
@@ -217,6 +223,18 @@ export function LinkButton<
   let onPress: any
   let fastClick: boolean
   let props = useNormalizeLinkProps(allProps)
+  const containerRef = useRef()
+  const stopProp = allProps.stopPropagation ?? true
+
+  useEffect(() => {
+    if (Platform.OS === 'web') {
+      if (stopProp) {
+        const div = getNode(containerRef.current)
+        div.addEventListener('click', prevent)
+        return () => div.removeEventListener('click', prevent)
+      }
+    }
+  }, [stopProp])
 
   if ('name' in props) {
     const {
@@ -290,10 +308,11 @@ export function LinkButton<
       display="inherit"
       flex={props.flex}
       pointerEvents={pointerEvents ?? null}
+      ref={containerRef}
     >
       <TouchableOpacity
         activeOpacity={0.7}
-        {...{ [fastClick ? 'onPressIn' : 'onPress']: onPress }}
+        {...{ [fastClick ? 'onPressIn' : 'onPress']: onPress ?? prevent }}
       >
         <VStack flex={1} {...restProps}>
           {contents}
