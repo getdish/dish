@@ -1,4 +1,3 @@
-import { Restaurant } from '@dish/graph'
 import React, { forwardRef } from 'react'
 import { Text } from 'react-native'
 
@@ -11,9 +10,6 @@ export type RatingViewProps = StackProps & {
   color: string
   hideEmoji?: boolean
 }
-
-export const getRestaurantRating = (restaurant: Partial<Restaurant>) =>
-  Math.round(+restaurant?.rating * 20)
 
 export const getRankingColor = (percent: number) =>
   percent > 84 ? 'green' : percent > 60 ? 'orange' : 'red'

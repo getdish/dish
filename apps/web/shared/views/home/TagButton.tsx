@@ -1,16 +1,15 @@
 import { Tag } from '@dish/graph'
 import _ from 'lodash'
 import React, { memo } from 'react'
-import { Text, TextStyle, View } from 'react-native'
+import { Text, TextStyle } from 'react-native'
 
-import { NavigableTag } from '../../state/Tag'
 import { Icon } from '../ui/Icon'
 import { LinkButton } from '../ui/Link'
 import { HStack, StackProps, VStack } from '../ui/Stacks'
 import { SuperScriptText } from './SuperScriptText'
 
-export const getTagColor = (tag: NavigableTag): string =>
-  tag.rgb ? `rgb(${tag.rgb[0]}, ${tag.rgb[1]}, ${tag.rgb[2]})` : 'inherit'
+export const getTagColor = (rgb?: [number, number, number]): string =>
+  rgb ? `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})` : 'inherit'
 
 export const TagButton = memo(
   ({
@@ -25,12 +24,15 @@ export const TagButton = memo(
     votable,
     fontSize: fontSizeProp,
     color,
+    icon,
+    rgb,
     backgroundColor,
     subtleIcon,
     hideIcon,
     ...rest
   }: StackProps &
-    NavigableTag & {
+    Pick<Tag, 'name' | 'type' | 'icon'> & {
+      rgb: [number, number, number]
       rank?: number
       size?: 'lg' | 'md' | 'sm'
       subtle?: boolean
@@ -43,11 +45,11 @@ export const TagButton = memo(
       fontSize?: TextStyle['fontSize']
       noColor?: boolean
     }) => {
-    const tag = { name, type }
+    const tag = { name, type, icon, rgb }
     const scale = size === 'sm' ? 0.85 : size == 'lg' ? 1.05 : 1
     const paddingVertical = (subtle ? 0 : 6) * scale
     const lineHeight = 22 * scale
-    const defaultColor = noColor ? 'inherit' : getTagColor(tag)
+    const defaultColor = noColor ? 'inherit' : getTagColor(rgb)
     const bg = backgroundColor ?? (subtle ? defaultColor : 'white')
     const fg = color ?? (subtle ? 'transparent' : defaultColor)
     const fontSize = fontSizeProp ?? (subtle ? 'inherit' : 16 * scale)

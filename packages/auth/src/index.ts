@@ -108,7 +108,7 @@ class Auth {
       username: username,
       password: password,
     })
-    return [response.status, response.statusText]
+    return [response.status, response.statusText] as const
   }
 
   async login(username: string, password: string) {
@@ -116,7 +116,9 @@ class Auth {
       username: username,
       password: password,
     })
-    if (response.status == 401) return [401]
+    if (response.status == 401) {
+      return [401]
+    }
     const data = await response.json()
     this.isLoggedIn = true
     this.jwt = data.token

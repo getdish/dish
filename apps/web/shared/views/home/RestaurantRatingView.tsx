@@ -58,6 +58,9 @@ const RestaurantRatingBreakdownView = graphql(
         },
       },
     })
+
+    const ratingFactors = restaurant.rating_factors()
+
     return (
       <>
         <HoverablePopover
@@ -78,7 +81,7 @@ const RestaurantRatingBreakdownView = graphql(
                     marginHorizontal={-12}
                   >
                     <RatingBreakdownCircle
-                      percent={restaurant.rating_factors?.food}
+                      percent={ratingFactors?.food}
                       emoji="🧑‍🍳"
                       name="Food"
                     />
@@ -92,7 +95,7 @@ const RestaurantRatingBreakdownView = graphql(
                     marginHorizontal={-12}
                   >
                     <RatingBreakdownCircle
-                      percent={restaurant.rating_factors?.service}
+                      percent={ratingFactors?.service}
                       emoji="💁‍♂️"
                       name="Service"
                     />
@@ -106,7 +109,7 @@ const RestaurantRatingBreakdownView = graphql(
                     marginHorizontal={-12}
                   >
                     <RatingBreakdownCircle
-                      percent={restaurant.rating_factors?.ambience}
+                      percent={ratingFactors?.ambience}
                       emoji="✨"
                       name="Ambiance"
                     />
@@ -123,7 +126,7 @@ const RestaurantRatingBreakdownView = graphql(
               backgroundColor="rgba(0,205,100,1)"
             >
               <RatingBreakdownCircle
-                percent={restaurant.rating_factors?.service}
+                percent={ratingFactors?.service}
                 emoji="👩‍🍳"
                 size={30}
               />

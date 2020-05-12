@@ -62,6 +62,8 @@ export const useGetTagElements = ({
         key={`${index}${tag.tag.name}`}
         name={tag.tag.name}
         type={tag.tag.type as TagType}
+        icon={tag.tag.icon}
+        rgb={tag.tag.rgb()}
         votable={!!om.state.user.user}
       />
     )

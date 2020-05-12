@@ -36,7 +36,10 @@ export const RestaurantTagButton = memo(
                     size="lg"
                     rank={10}
                     votable
-                    {...t.tag}
+                    name={t.tag.name}
+                    type={t.tag.type as any}
+                    icon={t.tag.icon}
+                    rgb={t.tag.rgb()}
                   />
                 )
               })}
@@ -48,7 +51,13 @@ export const RestaurantTagButton = memo(
                 .map((x, index) => (
                   <React.Fragment key={index}>
                     <View style={{ marginBottom: 6, marginRight: 6 }}>
-                      <TagButton key={x.name} type="dish" name={x.name} />
+                      <TagButton
+                        key={x.name}
+                        type="dish"
+                        name={x.name}
+                        icon=""
+                        rgb={[0, 0, 0]}
+                      />
                     </View>
                   </React.Fragment>
                 ))}
