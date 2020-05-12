@@ -6,7 +6,7 @@ const endpoint = getGraphEndpoint()
 
 export const createFetcher = (type: 'query' | 'mutation') => {
   const fetcher: QueryFetcher = async (query, variables) => {
-    const response = await fetch(endpoint, {
+    const request: RequestInit = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -18,7 +18,9 @@ export const createFetcher = (type: 'query' | 'mutation') => {
         variables,
       }),
       mode: 'cors',
-    })
+    }
+    console.log('request', request)
+    const response = await fetch(endpoint, request)
     if (!response.ok) {
       throw new Error(`Network error, received status code ${response.status}`)
     }

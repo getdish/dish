@@ -19,7 +19,7 @@
     "postinstall": "ls -la node_modules; patch-package"
   },
   "dependencies": {
-    "patch-package": "^6.2.1",
+    "patch-package": "^6.2.2",
     "@dish/auth": "*",
     "@dish/common-web": "*",
     "isomorphic-unfetch": "^3.0.0",

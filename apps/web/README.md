@@ -11,14 +11,15 @@
 
 `yarn build:watch`
 
-### Run development server
+### Run
 
-`yarn start`
+- `yarn start` development
+- `yarn start:prod` production
 
-### Build then run production server (pointed at production endpoints)
+### Build and run (pointed at production endpoints)
 
 - `yarn build:web`
-- `yarn start:prod`
+- `yarn start:prod:bundle`
 
 ### Run end to end tests
 

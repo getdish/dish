@@ -1,5 +1,4 @@
 import anyTest, { TestInterface } from 'ava'
-import axios from 'axios'
 import moment from 'moment'
 
 import { Dish } from '../src/Dish'
@@ -93,9 +92,9 @@ test('Identifies a similar restaurant', async (t) => {
 
 test.skip('Is open now', async (t) => {
   const url = 'http://worldtimeapi.org/api/timezone/America/Los_Angeles'
-  const now_string = await axios.get(url)
-  const now = moment(now_string.data.datetime)
-  const tz_offset = now_string.data.utc_offset
+  const now_string = await fetch(url).then((res) => res.json())
+  const now = moment(now_string.datetime)
+  const tz_offset = now_string.utc_offset
   const today = now.format('YYYY-MM-DD')
   const open = moment(`${today}T11:00:00${tz_offset}`)
   const close = moment(`${today}T20:30:00${tz_offset}`)

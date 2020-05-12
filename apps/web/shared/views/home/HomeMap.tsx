@@ -339,13 +339,11 @@ export const HomeMap = memo(function HomeMap() {
         (state) => state.home.hoveredRestaurant,
         (hoveredRestaurant) => {
           if (!hoveredRestaurant) return
-          console.log('hovered on ?', hoveredRestaurant)
           for (const annotation of map.annotations) {
             if (annotation.data?.id === hoveredRestaurant.id) {
               annotation.selected = true
             }
           }
-          console.log('center to', hoveredRestaurant.location.coordinates[1])
           centerMapToRegion({
             map,
             center: {

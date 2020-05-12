@@ -25,9 +25,8 @@ export const RestaurantAddComment = memo(
     const [isSaved, setIsSaved] = useState(true)
     const lineHeight = 22
     const [height, setHeight] = useState(lineHeight)
-
-    const [insertReview, { data, fetchState, errors }] = useReviewMutation()
-    console.log('addcomment', data, fetchState, errors)
+    // const [insertReview, { data, fetchState, errors }] = useReviewMutation()
+    // console.log('addcomment', data, fetchState, errors)
 
     const updateReview = (text: string) => {
       setReviewText(text)
@@ -74,15 +73,15 @@ export const RestaurantAddComment = memo(
               onPress={async () => {
                 Toast.show('Saving...')
                 console.log('inserting', review)
-                insertReview({
-                  review: {
-                    text: reviewText,
-                    restaurant_id: restaurantId,
-                    tag_id: null,
-                    user_id: om.state.user.user.id,
-                    rating: 0,
-                  },
-                })
+                // insertReview({
+                //   review: {
+                //     text: reviewText,
+                //     restaurant_id: restaurantId,
+                //     tag_id: null,
+                //     user_id: om.state.user.user.id,
+                //     rating: 0,
+                //   },
+                // })
                 Toast.show('Saved!')
                 setIsSaved(true)
               }}

@@ -1,4 +1,4 @@
-import { query, useMutation } from '@dish/graph'
+import { query } from '@dish/graph'
 import { graphql } from '@gqless/react'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { ScrollView, Text, TextInput } from 'react-native'
@@ -45,7 +45,7 @@ export const RestaurantFavoriteStar = memo(
         },
       })
       const isStarred = review?.rating > 0
-      const [writeReview, info] = useReviewMutation()
+      // const [writeReview, info] = useReviewMutation()
 
       const persist = async () => {
         Toast.show('Saved')

@@ -75,24 +75,27 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     }
   }
 
+  config.devServer = {
+    ...config.devServer,
+    historyApiFallback: true,
+    disableHostCheck: true,
+    overlay: false,
+    quiet: false,
+    stats: {
+      colors: true,
+      assets: true,
+      chunks: false,
+      modules: true,
+      reasons: false,
+      children: true,
+      errors: true,
+      errorDetails: true,
+      warnings: true,
+    },
+  }
+
   if (!isProduction) {
     config.optimization.minimize = false
-    config.devServer = {
-      ...config.devServer,
-      overlay: false,
-      quiet: false,
-      stats: {
-        colors: true,
-        assets: true,
-        chunks: false,
-        modules: true,
-        reasons: false,
-        children: true,
-        errors: true,
-        errorDetails: true,
-        warnings: true,
-      },
-    }
   } else {
     // test closure compiler, could be more performant if it extracts functions from render better
     // config.optimization.minimizer = [
