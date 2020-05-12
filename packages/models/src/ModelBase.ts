@@ -129,18 +129,7 @@ export class ModelBase<T> {
   ): Promise<any> {
     gql = ModelBase.ensureKeySyntax(gql)
     const query = jsonToGraphQLQuery(gql, { pretty: true })
-    const response = await fetchQuery(query)
-    if (!response.data) {
-      return null
-    }
-    if (response.data.errors) {
-      if (silence_not_found && response['status'] == 404) {
-        return response
-      } else {
-        throw new HasuraError(query, response.data.errors)
-      }
-    }
-    return response
+    return fetchQuery(query, {}, silence_not_found)
   }
 
   async refresh() {
@@ -160,10 +149,9 @@ export class ModelBase<T> {
       },
     }
     const response = await ModelBase.hasura(query)
-    console.log('response', response)
     Object.assign(
       this,
-      response.data.data['insert_' + this._lower_name].returning[0]
+      response.data['insert_' + this._lower_name].returning[0]
     )
     return this.id
   }
@@ -185,7 +173,7 @@ export class ModelBase<T> {
       },
     }
     const response = await ModelBase.hasura(query)
-    Object.assign(this, response.data.data[this._lower_name])
+    Object.assign(this, response.data[this._lower_name])
     return this.id
   }
 
@@ -214,7 +202,7 @@ export class ModelBase<T> {
       },
     }
     const response = await ModelBase.hasura(query)
-    const objects = response.data.data[this._lower_name]
+    const objects = response.data[this._lower_name]
     if (objects.length === 1) {
       Object.assign(this, objects[0])
       return this.id
@@ -250,7 +238,7 @@ export class ModelBase<T> {
       },
     }
     const response = await ModelBase.hasura(query)
-    const objects = response.data.data[this._lower_name]
+    const objects = response.data[this._lower_name]
     const batch: T[] = []
     for (let object of objects) {
       let instance = new type()
@@ -281,12 +269,10 @@ export class ModelBase<T> {
     }
     const response = await ModelBase.hasura(query)
     let data = {}
-    if (
-      typeof response.data.data['insert_' + this._lower_name] != 'undefined'
-    ) {
-      data = response.data.data['insert_' + this._lower_name].returning[0]
+    if (typeof response.data['insert_' + this._lower_name] != 'undefined') {
+      data = response.data['insert_' + this._lower_name].returning[0]
     } else {
-      data = response.data.data[this._lower_name][0]
+      data = response.data[this._lower_name][0]
     }
     Object.assign(this, data)
     return this.id
@@ -303,7 +289,7 @@ export class ModelBase<T> {
       },
     }
     const response = await ModelBase.hasura(query)
-    return response.data.data[this.lower_name() + '_aggregate'].aggregate.count
+    return response.data[this.lower_name() + '_aggregate'].aggregate.count
   }
 
   static async deleteAllBy(key: string, value: string) {
@@ -355,27 +341,6 @@ export class ModelBase<T> {
         ModelBase.traverse(o[i], fn)
       }
       fn.apply(this, [o, i, o[i]])
-    }
-  }
-}
-
-class HasuraError extends Error {
-  errors: {}
-  constructor(query: string, errors: {} = {}) {
-    super()
-    // Maintains proper stack trace for where our error was thrown (only available on V8)
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, HasuraError)
-    }
-    this.errors = errors
-    this.message =
-      errors[0]?.extensions?.internal?.error?.message || errors[0]?.message
-    if (isBrowserProd) {
-      this.name = 'Dish API Error'
-    } else {
-      console.error(util.inspect(errors, { depth: null }))
-      console.debug('For query: ', query)
-      this.name = 'HasuraError'
     }
   }
 }

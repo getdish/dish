@@ -54,7 +54,7 @@ export class Review extends ModelBase<Review> {
       },
     }
     const response = await ModelBase.hasura(query)
-    const objects = response.data.data.review
+    const objects = response.data.review
     if (objects.length === 0) {
       return ''
     }
@@ -84,13 +84,11 @@ export class Review extends ModelBase<Review> {
       },
     }
     const response = await ModelBase.hasura(query)
-    const objects = response.data.data.review
+    const objects = response.data.review
     if (objects.length === 0) {
       return []
     }
-    return response.data.data.review.map(
-      (data: Partial<Review>) => new Review(data)
-    )
+    return response.data.review.map((data: Partial<Review>) => new Review(data))
   }
 
   static async findAllForUser(user_id: string) {
@@ -111,12 +109,10 @@ export class Review extends ModelBase<Review> {
       },
     }
     const response = await ModelBase.hasura(query)
-    const objects = response.data.data.review
+    const objects = response.data.review
     if (objects.length === 0) {
       return []
     }
-    return response.data.data.review.map(
-      (data: Partial<Review>) => new Review(data)
-    )
+    return response.data.review.map((data: Partial<Review>) => new Review(data))
   }
 }

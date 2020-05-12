@@ -179,7 +179,7 @@ export class Restaurant extends ModelBase<Restaurant> {
       },
     }
     const response = await ModelBase.hasura(query)
-    return response.data.data.restaurant.map(
+    return response.data.restaurant.map(
       (data: Partial<Restaurant>) => new Restaurant(data)
     )
   }
@@ -207,7 +207,7 @@ export class Restaurant extends ModelBase<Restaurant> {
       },
     }
     const response = await ModelBase.hasura(query)
-    return new Scrape(response.data.data.scrape[0])
+    return new Scrape(response.data.scrape[0])
   }
 
   static async saveCanonical(
