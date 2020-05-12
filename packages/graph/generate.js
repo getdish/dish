@@ -18,7 +18,8 @@ console.log('rootPath', rootPath)
 async function run() {
   const fetchQuery = async (query, variables) => {
     const response = await graphqlGet(query, variables)
-    if (response.data.errors) {
+    console.log('response', response)
+    if (response && response.data && response.data.errors) {
       process.exit(0)
     }
     return response
