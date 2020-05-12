@@ -27,7 +27,6 @@ const external = {
   // fastJsonStableStringify: 'fast-json-stable-stringify',
   // graphqlTag: 'graphql-tag',
   // subscriptionsTransportWs: 'subscriptions-transport-ws',
-  // axios: 'axios',
   // jsonToGraphqlQuery: 'json-to-graphql-query',
   // 'overmind/config': 'overmind/es/config',
   // zenObservable: 'zen-observable',

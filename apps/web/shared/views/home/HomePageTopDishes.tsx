@@ -239,7 +239,7 @@ const CountryTopDishesAndRestaurants = memo(
                   onHoverIn={onHoverRestaurant}
                   active={
                     (!hoveredRestaurant && index === 0) ||
-                    restaurant.id === hoveredRestaurant.id
+                    restaurant?.id === hoveredRestaurant?.id
                   }
                 />
               )
