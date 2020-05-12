@@ -1,5 +1,6 @@
+import 'isomorphic-unfetch'
+
 import anyTest, { TestInterface } from 'ava'
-import axios from 'axios'
 
 import app from '../src/app'
 
@@ -11,10 +12,15 @@ const PORT = 31013
 const BASE = 'http://localhost:' + PORT
 
 const login = async () => {
-  return await axios.post(BASE + '/auth/login', {
-    username: 'admin',
-    password: 'password',
+  const response = await fetch(BASE + '/auth/login', {
+    method: 'post',
+    body: JSON.stringify({
+      username: 'admin',
+      password: 'password',
+    }),
   })
+  const data = await response.json()
+  return [response, data]
 }
 
 test.before(async () => {
@@ -23,26 +29,24 @@ test.before(async () => {
 })
 
 test('Admin login', async (t) => {
-  const response = await login()
-  t.is(response.status, 200)
+  const [{ status }] = await login()
+  t.is(status, 200)
 })
 
 test('Authed request failure', async (t) => {
-  const response = await axios.get(BASE + '/user', {
+  const response = await fetch(BASE + '/user', {
     headers: { Auth: 'bad' },
-    validateStatus: () => {
-      return true
-    },
   })
+  const data = await response.json()
   t.deepEqual(response.status, 401)
-  t.deepEqual(response.data, '')
+  t.deepEqual(data, '')
 })
 
 test('Authed request success', async (t) => {
-  const response = await login()
-  const jwt = response.data.token
-  const user = await axios.get(BASE + '/user/admin', {
+  const [response, data] = await login()
+  const jwt = data.token
+  const user = await fetch(BASE + '/user/admin', {
     headers: { Auth: jwt },
-  })
+  }).then((res) => res.json())
   t.deepEqual(user.data.username, 'admin')
 })

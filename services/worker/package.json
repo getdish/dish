@@ -16,7 +16,6 @@
     "@dish/common": "*",
     "@dish/crawlers": "*",
     "@dish/worker": "*",
-    "axios": "^0.19.1",
     "bull": "^3.12.1"
   },
   "devDependencies": {
