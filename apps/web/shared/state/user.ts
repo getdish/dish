@@ -47,6 +47,7 @@ const register: AsyncAction<
     case 409:
       om.state.user.messages = [data]
       break
+    // @ts-ignore
     case status >= 400:
       om.state.user.messages = formatErrors(data)
       break

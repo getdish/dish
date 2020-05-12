@@ -1,6 +1,6 @@
 import { query } from '@dish/graph'
 import { graphql } from '@gqless/react'
-import React, { memo } from 'react'
+import React from 'react'
 import { Image, ScrollView, Text } from 'react-native'
 
 import { HomeStateItemUser } from '../../state/home'
@@ -57,12 +57,12 @@ export default graphql(function HomePageUser({
             <Text
               style={{ fontSize: 28, fontWeight: 'bold', paddingRight: 30 }}
             >
-              {user.name ?? ''} {user.username ?? ''}
+              {user.username ?? ''}
             </Text>
             <Spacer size={4} />
             <div />
             <Spacer size={8} />
-            <Text style={{ color: '#777', fontSize: 13 }}>{user.address}</Text>
+            <Text style={{ color: '#777', fontSize: 13 }}>{user.username}</Text>
             <Spacer size={12} />
           </VStack>
         </HStack>

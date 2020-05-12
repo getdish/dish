@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, { memo, useEffect, useMemo, useRef } from 'react'
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 
 import { pageWidthMax, searchBarHeight } from '../../constants'
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
@@ -12,6 +12,18 @@ import { ZStack } from '../ui/Stacks'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { getRankingColor, getRestaurantRating } from './RestaurantRatingView'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
+
+async function startMapKit() {
+  const token = `eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzQ1RLNTYzUlQifQ.eyJpYXQiOjE1ODQ0MDU5MzYuMjAxLCJpc3MiOiIzOTlXWThYOUhZIn0.wAw2qtwuJkcL6T6aI-nLZlVuwJZnlCNg2em6V1uopx9hkUgWZE1ISAWePMoRttzH_NPOem4mQfrpmSTRCkh2bg`
+  // init mapkit
+  const mapkit = require('../../../web/mapkitExport')
+  // @ts-ignore
+  mapkit.init({
+    authorizationCallback: (done) => {
+      done(token)
+    },
+  })
+}
 
 export function centerMapToRegion(p: {
   map: mapkit.Map
@@ -92,7 +104,17 @@ const handleRegionChangeEnd = () => {
   })
 }
 
-export const HomeMap = memo(function HomeMap() {
+export function HomeMap() {
+  const [isLoaded, setIsLoaded] = useState(false)
+  useOnMount(() => {
+    startMapKit().then(() => {
+      setIsLoaded(true)
+    })
+  })
+  return isLoaded ? <HomeMapContent /> : null
+}
+
+const HomeMapContent = memo(function HomeMap() {
   const om = useOvermind()
   const drawerWidth = useHomeDrawerWidth()
   const isSmall = useMediaQueryIsSmall()
@@ -193,9 +215,11 @@ export const HomeMap = memo(function HomeMap() {
     : []
 
   const restaurantIds: string[] = _.uniq(
-    [...searchResults, ...prevResults, restaurantDetail?.id].filter(
-      (id) => !!id && !!allRestaurants[id]?.location?.coordinates
-    )
+    [
+      ...searchResults,
+      ...prevResults,
+      state.type == 'restaurant' && state.restaurantId,
+    ].filter((id) => !!id && !!allRestaurants[id]?.location?.coordinates)
   )
 
   const restaurants = restaurantIds.map((id) => allRestaurants[id])
@@ -216,7 +240,7 @@ export const HomeMap = memo(function HomeMap() {
 
     return restaurants
       .map((restaurant, index) => {
-        const percent = getRestaurantRating(restaurant)
+        const percent = getRestaurantRating(restaurant.rating)
         const color = getRankingColor(percent)
         return new window.mapkit.MarkerAnnotation(coordinates[index], {
           glyphText: index <= 12 ? `${index + 1}` : ``,

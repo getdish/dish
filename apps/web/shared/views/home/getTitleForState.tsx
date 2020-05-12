@@ -88,6 +88,8 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
                   key={getTagId(tag)}
                   name={tag.name}
                   type={tag.type}
+                  icon={tag.icon}
+                  rgb={tag.rgb}
                   subtle
                   noColor
                   hideIcon

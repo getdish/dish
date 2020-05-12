@@ -44,7 +44,7 @@ export const RestaurantDetailRow = memo(
         { title: price_label, content: price_range, color: price_color },
         {
           title: 'Delivers',
-          content: deliveryLinks(restaurant.sources),
+          content: deliveryLinks(restaurant.sources()),
           color: 'gray',
         },
       ]

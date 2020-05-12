@@ -1,14 +1,19 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
-    "composite": true,
-    "jsx": "react",
+    // "composite": true,
+    "module": "CommonJS",
+    "sourceMap": false,
+    "declaration": false,
+    "declarationMap": false,
+    "incremental": false,
+    "noEmit": true,
     "outDir": "_",
     "rootDir": ".",
     "noEmitOnError": false,
     "typeRoots": ["./node_modules/mapkit-typescript", "./node_modules/@types"]
   },
-  "include": ["src/**/*", "web/**/*", "shared/**/*"],
+  "include": ["web/**/*", "shared/**/*"],
   "exclude": ["**/*.test.ts", "**/*.test.tsx"],
   "references": [
     { "path": "../../packages/common-web" },

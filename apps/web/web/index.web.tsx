@@ -13,10 +13,10 @@ import { AppRegistry } from 'react-native'
 import { OVERMIND_MUTATIONS, isSSR, isWorker } from '../shared/constants'
 import { config } from '../shared/state/om'
 import { App } from '../shared/views/App'
-import { importable } from './xy'
 
 // non-invasive test for closure compiler + fixed rollup-tscc
-console.log(importable(1 + 1))
+// import { importable } from './xy'
+// console.log(importable(1 + 1))
 
 //
 // NOTE: import order is important here DONT USE `import`
@@ -47,11 +47,6 @@ let rootEl = document.getElementById('root')
 const search = window.location.search
 
 async function start() {
-  if (!window['STARTED'] && !isWorker) {
-    await startMapKit()
-    console.log('started mapkit')
-  }
-
   const om = createOvermind(config, {
     devtools: `localhost:3031`,
     logProxies: true,
@@ -89,18 +84,6 @@ if (!window['IS_SSR_RENDERING']) {
   window['STARTED'] = true
 }
 // }
-
-async function startMapKit() {
-  const token = `eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzQ1RLNTYzUlQifQ.eyJpYXQiOjE1ODQ0MDU5MzYuMjAxLCJpc3MiOiIzOTlXWThYOUhZIn0.wAw2qtwuJkcL6T6aI-nLZlVuwJZnlCNg2em6V1uopx9hkUgWZE1ISAWePMoRttzH_NPOem4mQfrpmSTRCkh2bg`
-  // init mapkit
-  const mapkit = require('./mapkitExport')
-  // @ts-ignore
-  mapkit.init({
-    authorizationCallback: (done) => {
-      done(token)
-    },
-  })
-}
 
 if (process.env.NODE_ENV === 'development') {
   // @ts-ignore

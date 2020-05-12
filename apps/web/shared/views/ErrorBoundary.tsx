@@ -21,7 +21,13 @@ function ErrorFallback({
       padding={20}
       overflow="hidden"
     >
-      <VStack left={50} flex={1} overflow="hidden" color="#fff">
+      <VStack
+        left={50}
+        flex={1}
+        overflow="hidden"
+        // @ts-ignore
+        color="#fff"
+      >
         <pre>{error.message}</pre>
         <pre>{componentStack}</pre>
         <pre>{error.stack}</pre>

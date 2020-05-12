@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
     "declaration": true,

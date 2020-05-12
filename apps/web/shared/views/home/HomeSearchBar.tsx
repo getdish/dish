@@ -530,6 +530,8 @@ const HomeSearchBarTags = memo(
                     fontSize={16}
                     name={tag.name}
                     type={tag.type}
+                    icon={tag.icon}
+                    rgb={tag.rgb}
                     closable
                     onClose={() => {
                       om.actions.home.navigateToTag({ tags: [tag] })

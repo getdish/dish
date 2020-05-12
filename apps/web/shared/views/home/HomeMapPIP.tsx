@@ -35,7 +35,7 @@ export const HomeMapPIP = memo(() => {
   )
   const annotation = useMemo(() => {
     if (!coordinate || !restaurant) return null
-    const percent = getRestaurantRating(restaurant)
+    const percent = getRestaurantRating(restaurant.rating)
     const color = getRankingColor(percent)
     return new window.mapkit.MarkerAnnotation(coordinate, {
       color,

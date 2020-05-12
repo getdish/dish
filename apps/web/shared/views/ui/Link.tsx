@@ -228,7 +228,7 @@ export function LinkButton<
 
   useEffect(() => {
     if (Platform.OS === 'web') {
-      if (stopProp) {
+      if (stopProp && containerRef.current) {
         const div = getNode(containerRef.current)
         div.addEventListener('click', prevent)
         return () => div.removeEventListener('click', prevent)
@@ -308,11 +308,12 @@ export function LinkButton<
       display="inherit"
       flex={props.flex}
       pointerEvents={pointerEvents ?? null}
-      ref={containerRef}
+      // only handle click events on non-a links (we handle them in Link separately)
+      ref={'name' in props ? null : containerRef}
     >
       <TouchableOpacity
         activeOpacity={0.7}
-        {...{ [fastClick ? 'onPressIn' : 'onPress']: onPress ?? prevent }}
+        {...(!!onPress && { [fastClick ? 'onPressIn' : 'onPress']: onPress })}
       >
         <VStack flex={1} {...restProps}>
           {contents}
