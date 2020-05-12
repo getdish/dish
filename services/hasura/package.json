@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "true",
-    "test": "ava test/main.ts --verbose",
+    "test": "DISH_ENV=test ava test/main.ts --verbose",
     "watch": "true",
     "start": "docker-compose up"
   }

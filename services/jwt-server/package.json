@@ -29,6 +29,6 @@
     "watch": "tsc -b --watch --preserveWatchOutput",
     "start": "set debug=* && ts-node --respawn --transpileOnly --no-notify ./src/index.ts",
     "run": "node ./_/app.js",
-    "test": "ava test/main.ts --verbose"
+    "test": "DISH_ENV=test ava test/main.ts --verbose"
   }
 }

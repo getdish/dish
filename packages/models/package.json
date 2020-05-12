@@ -14,8 +14,8 @@
     "start": "node _/index.js",
     "build": "tsc",
     "watch": "tsc --watch --preserveWatchOutput",
-    "test": "ava test/* --verbose",
-    "test:watch": "ava test/* --watch"
+    "test": "DISH_ENV=test ava test/* --verbose",
+    "test:watch": "DISH_ENV=test ava test/* --watch"
   },
   "dependencies": {
     "@dish/auth": "*",
