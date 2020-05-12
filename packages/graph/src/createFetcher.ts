@@ -1,11 +1,23 @@
 import DishAuth from '@dish/auth'
-import { getGraphEndpoint } from '@dish/common-web'
-import { QueryFetcher } from 'gqless'
+import { getGraphEndpoint, isBrowserProd } from '@dish/common-web'
+import { QueryResponse } from 'gqless'
+
+type QueryFetcherWithOptions = (
+  query: string,
+  variables?: Record<string, any>,
+  options?: {
+    silence_not_found?: boolean
+  }
+) => Promise<QueryResponse> | QueryResponse
 
 const endpoint = getGraphEndpoint()
 
 export const createFetcher = (type: 'query' | 'mutation') => {
-  const fetcher: QueryFetcher = async (query, variables) => {
+  const fetcher: QueryFetcherWithOptions = async (
+    query,
+    variables,
+    options
+  ) => {
     const request: RequestInit = {
       method: 'POST',
       headers: {
@@ -23,10 +35,37 @@ export const createFetcher = (type: 'query' | 'mutation') => {
       console.log('request', request)
     }
     const response = await fetch(endpoint, request)
-    if (!response.ok) {
-      throw new Error(`Network error, received status code ${response.status}`)
+    const data = await response.json()
+    if (data.errors || !response.ok) {
+      if (options.silence_not_found && response.status == 404) {
+        return data
+      } else {
+        throw new HasuraError(query, data.errors)
+      }
     }
-    return await response.json()
+    return data
   }
   return fetcher
+}
+
+class HasuraError extends Error {
+  errors: {}
+  constructor(query: string, errors: {} = {}) {
+    super()
+    // Maintains proper stack trace for where our error was thrown (only available on V8)
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, HasuraError)
+    }
+    this.errors = errors
+    this.message =
+      errors[0]?.extensions?.internal?.error?.message || errors[0]?.message
+    if (isBrowserProd) {
+      this.name = 'Dish API Error'
+    } else {
+      const util = require('util')
+      console.error(util.inspect(errors, { depth: null }))
+      console.debug('For query: ', query)
+      this.name = 'HasuraError'
+    }
+  }
 }

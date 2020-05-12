@@ -21,6 +21,6 @@ export * from './types'
 // }
 
 const graphQuery = createFetcher('query')
-export function fetchQuery(query: string, variables = {}) {
-  return graphQuery(query, variables)
+export function fetchQuery(query: string, variables = {}, options = {}) {
+  return graphQuery(query, variables, options)
 }

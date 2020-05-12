@@ -179,7 +179,7 @@ export class Tag extends ModelBase<Tag> {
       },
     }
     const response = await ModelBase.hasura(query)
-    return response.data.data.tag.map((data: Partial<Tag>) => new Tag(data))
+    return response.data.tag.map((data: Partial<Tag>) => new Tag(data))
   }
 
   // TODO: Refactor into ModelBase. Will still need function stub here to pass the
@@ -206,9 +206,7 @@ export class Tag extends ModelBase<Tag> {
       },
     }
     const response = await ModelBase.hasura(query)
-    return response.data.data.insert_tag.returning.map(
-      (data: Tag) => new Tag(data)
-    )
+    return response.data.insert_tag.returning.map((data: Tag) => new Tag(data))
   }
 
   // TODO: Why can't you just the ModelBase version here?

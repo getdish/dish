@@ -79,7 +79,7 @@ export class Scrape extends ModelBase<Scrape> {
       },
     }
     const response = await ModelBase.hasura(query)
-    Object.assign(this, response.data.data.update_scrape.returning[0])
+    Object.assign(this, response.data.update_scrape.returning[0])
     return this.id
   }
 }

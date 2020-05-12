@@ -70,7 +70,7 @@ export class RestaurantTag extends ModelBase<RestaurantTag> {
       },
     }
     const response = await ModelBase.hasura(query)
-    return response.data.data.insert_restaurant_tag.returning.map(
+    return response.data.insert_restaurant_tag.returning.map(
       (data: RestaurantTag) => new RestaurantTag(data)
     )
   }
