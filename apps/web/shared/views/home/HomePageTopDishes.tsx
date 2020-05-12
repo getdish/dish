@@ -72,12 +72,10 @@ export default memo(function HomePageTopDishes({
 
               {!results.length && <LoadingItems />}
 
-              {results.map((country, index) => (
+              {results.map((country) => (
                 <CountryTopDishesAndRestaurants
-                  state={state}
                   key={country.country}
                   country={country}
-                  rank={index + 1}
                 />
               ))}
             </VStack>
@@ -113,7 +111,7 @@ const HomeViewTopDishesTrending = memo(() => {
   const listSpace = 3
   const total = 5
   return (
-    <VStack height={188 + listSpace * (total - 1)}>
+    <VStack className="home-top-dish" height={188 + listSpace * (total - 1)}>
       <HStack spacing="lg" paddingHorizontal={10}>
         <VStack flex={1}>
           <ZStack position="absolute" top={-5} left={-12} zIndex={100}>
@@ -162,16 +160,7 @@ const HomeViewTopDishesTrending = memo(() => {
 })
 
 const CountryTopDishesAndRestaurants = memo(
-  ({
-    state,
-    country,
-    rank,
-  }: {
-    country: TopCuisine
-    rank: number
-    state: HomeStateItem
-  }) => {
-    const [hovered, setHovered] = useState(false)
+  ({ country }: { country: TopCuisine }) => {
     const [hoveredRestaurant, setHoveredRestaurant] = useState<Restaurant>(null)
     const onHoverRestaurant = useCallback((restaurant: Restaurant) => {
       setHoveredRestaurant(restaurant)
@@ -184,7 +173,6 @@ const CountryTopDishesAndRestaurants = memo(
     return (
       <VStack
         paddingVertical={15}
-        backgroundColor={hovered ? bgLightLight : null}
         // onHoverIn={() => setHovered(true)}
         // onHoverOut={() => setHovered(false)}
       >
