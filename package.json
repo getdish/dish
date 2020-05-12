@@ -41,5 +41,8 @@
       "style": "module",
       "parser": "typescript"
     }
+  },
+  "resolutions": {
+    "tslib": "1.11.2"
   }
 }
