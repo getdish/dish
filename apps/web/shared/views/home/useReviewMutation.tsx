@@ -1,8 +1,9 @@
 import { Review, useMutation } from '@dish/graph'
 
 export const useReviewMutation = () => {
+  console.trace('where')
   return useMutation((schema, variables) => {
-    debugger
+    console.log('something something', { schema, variables })
     schema.data.insert_review({
       objects: [
         {

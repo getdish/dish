@@ -38,12 +38,9 @@ export const useGetTagElements = ({
   showMore,
 }: TagRowProps) => {
   const om = useOvermind()
-
   if (!restaurantSlug) {
-    console.warn('restaurantSlug', restaurantSlug)
     return null
   }
-
   const [restaurant] = query.restaurant({
     where: {
       slug: {
@@ -51,10 +48,13 @@ export const useGetTagElements = ({
       },
     },
   })
-  const tags = restaurant.tags({
+  let tags = restaurant.tags({
     limit: 6,
   })
-  return tags.slice(0, showMore ? 2 : 6).map((tag, index) => {
+  if (showMore) {
+    tags = tags.slice(0, 2)
+  }
+  return tags.map((tag, index) => {
     return (
       <TagButton
         size="sm"

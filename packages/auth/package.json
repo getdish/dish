@@ -16,7 +16,7 @@
     "test": "ava test/* --verbose"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "isomorphic-unfetch": "^3.0.0",
     "graphql": "*"
   },
   "devDependencies": {}

@@ -426,16 +426,16 @@ const HomeSearchBarHomeButton = memo(() => {
   return (
     <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
       <LinkButton
-        flexDirection="row"
+        justifyContent="center"
+        alignItems="center"
         pointerEvents="auto"
-        paddingVertical={13}
         paddingHorizontal={4}
         marginRight={20}
         // marginLeft={-14} //undo spacing
         opacity={om.state.home.currentStateType === 'home' ? 0 : 1}
         onPress={() => om.actions.home.popTo('home')}
       >
-        <Icon name={'ChevronLeft'} size={22} opacity={0.5} />
+        <Icon name={'ChevronLeft'} size={22} opacity={0.6} marginTop={4} />
       </LinkButton>
     </MediaQuery>
   )

@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useLayoutEffect,
   useRef,
+  useState,
 } from 'react'
 import { ToggleLayer, anchor } from 'react-laag'
 import { AnchorEnum } from 'react-laag/dist/ToggleLayer/types'
@@ -18,6 +19,7 @@ import ResizeObserver from 'resize-observer-polyfill'
 
 import { VStack, ZStack } from './Stacks'
 import { useOverlay } from './useOverlay'
+import { useWaterfall } from './useWaterfall'
 
 export const ForceShowPopover = createContext<boolean | undefined>(undefined)
 
@@ -62,6 +64,12 @@ export const Popover = (props: PopoverProps) => {
   const onChangeOpenCb = useCallback(props.onChangeOpen, [props.onChangeOpen])
   const closeCb = useRef<Function | null>(null)
   const isControlled = typeof isOpen !== 'undefined'
+  const [isMounted, setIsMounted] = useState(false)
+
+  // THIS CALLS TO getClientBoundingRect ruining mount performance
+  useWaterfall(() => {
+    setIsMounted(true)
+  })
 
   useLayoutEffect(() => {
     if (onChangeOpenCb) {
@@ -83,6 +91,10 @@ export const Popover = (props: PopoverProps) => {
       },
       pointerEvents: props.overlayPointerEvents,
     })
+  }
+
+  if (!isMounted) {
+    return props.children
   }
 
   if (Platform.OS == 'web') {

@@ -1,30 +1,27 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import 'isomorphic-unfetch'
 
 const BROWSER_STORAGE_KEY = 'auth'
 const LOCAL_AUTH_SERVER = 'http://localhost:3000'
 const PROD_JWT_SERVER = 'https://auth.rio.dishapp.com'
-let DOMAIN: string
 
 const isNode = typeof window == 'undefined'
 const isBrowserProd = !isNode && window.location.hostname.includes('dish')
 
-if (isNode) {
-  DOMAIN = process.env.AUTH_ENDPOINT || LOCAL_AUTH_SERVER
-} else {
-  if (isBrowserProd) {
-    DOMAIN = PROD_JWT_SERVER
+const DOMAIN = (() => {
+  if (isNode) {
+    return process.env.AUTH_ENDPOINT || LOCAL_AUTH_SERVER
   } else {
-    if (window.location.hostname.includes('hasura_live')) {
-      DOMAIN = PROD_JWT_SERVER
+    if (isBrowserProd) {
+      return PROD_JWT_SERVER
     } else {
-      DOMAIN = process.env.REACT_APP_AUTH_ENDPOINT || LOCAL_AUTH_SERVER
+      if (window.location.hostname.includes('hasura_live')) {
+        return PROD_JWT_SERVER
+      } else {
+        return process.env.REACT_APP_AUTH_ENDPOINT || LOCAL_AUTH_SERVER
+      }
     }
   }
-}
-
-axios.defaults.validateStatus = () => {
-  return true
-}
+})()
 
 class Auth {
   public jwt = ''
@@ -79,20 +76,11 @@ class Auth {
     return auth_headers
   }
 
-  async api(
-    method: AxiosRequestConfig['method'],
-    path: string,
-    data: AxiosRequestConfig['data'] = {}
-  ) {
-    let config: AxiosRequestConfig = {
-      method: method,
-      url: DOMAIN + path,
-    }
-
-    if (data != {}) {
-      config.data = data
-    }
-    const response = await axios(config)
+  async api(method: string, path: string, data: any = {}) {
+    const response = await fetch(DOMAIN + path, {
+      method,
+      body: JSON.stringify(data),
+    }).then((res) => res.json())
     if (response.status == 401) {
       this.has_been_logged_out = true
       this.logout()
@@ -109,26 +97,31 @@ class Auth {
   }
 
   async login(username: string, password: string) {
-    const response = await axios.post(DOMAIN + '/auth/login', {
-      username: username,
-      password: password,
+    let status = 500
+    const response = await fetch(`${DOMAIN}/auth/login`, {
+      method: 'post',
+      body: JSON.stringify({
+        username: username,
+        password: password,
+      }),
+    }).then((res) => {
+      status = res.status
+      return res.json()
     })
-    if (response.status == 200) {
-      this.isLoggedIn = true
-      this.jwt = response.data.token
-      this.user = response.data.user
-      if (!isNode) {
-        localStorage.setItem(
-          BROWSER_STORAGE_KEY,
-          JSON.stringify({
-            token: this.jwt,
-            user: this.user,
-          })
-        )
-        this.has_been_logged_out = false
-      }
+    this.isLoggedIn = true
+    this.jwt = response.token
+    this.user = response.user
+    if (!isNode) {
+      localStorage.setItem(
+        BROWSER_STORAGE_KEY,
+        JSON.stringify({
+          token: this.jwt,
+          user: this.user,
+        })
+      )
+      this.has_been_logged_out = false
     }
-    return [response.status, response.data.user]
+    return [status, response.user]
   }
 
   async logout() {

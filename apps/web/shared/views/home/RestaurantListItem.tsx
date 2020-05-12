@@ -1,4 +1,4 @@
-import { Restaurant, query, useQuery } from '@dish/graph'
+import { Restaurant, query } from '@dish/graph'
 import { graphql } from '@gqless/react'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
@@ -147,7 +147,7 @@ const RestaurantListItemContent = memo(
 
                       <SelectableText
                         style={{
-                          fontSize: 22,
+                          fontSize: 26,
                           fontWeight: '700',
                           textDecorationColor: 'transparent',
                         }}

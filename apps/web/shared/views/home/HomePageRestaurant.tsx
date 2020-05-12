@@ -78,8 +78,8 @@ export default graphql(function HomePageRestaurant({
 
       <>
         <VStack
-          className="blur"
-          backgroundColor="rgba(255,255,255,0.9)"
+          // className="blur"
+          backgroundColor="rgba(255,255,255,0.98)"
           width="100%"
           padding={18}
           paddingBottom={0}

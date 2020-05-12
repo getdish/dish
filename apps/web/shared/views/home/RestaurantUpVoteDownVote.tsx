@@ -18,9 +18,9 @@ export const RestaurantUpVoteDownVote = graphql(
         },
       },
     })
-    const [insertReview, { data, fetchState, errors }] = useReviewMutation()
+    // const [insertReview, { data, fetchState, errors }] = useReviewMutation()
     const vote = review?.rating
-    console.log('vote', vote)
+    console.log('rating (upvotedownvote)', vote)
     return (
       <div
         style={{
@@ -32,10 +32,10 @@ export const RestaurantUpVoteDownVote = graphql(
             style={styles.topButton}
             active={vote == 1}
             onPress={() => {
-              insertReview({
-                restaurant_id: restaurantId,
-                rating: vote === 1 ? 0 : 1,
-              })
+              // insertReview({
+              //   restaurant_id: restaurantId,
+              //   rating: vote === 1 ? 0 : 1,
+              // })
             }}
           >
             <Icon
@@ -49,10 +49,10 @@ export const RestaurantUpVoteDownVote = graphql(
             style={styles.bottomButton}
             active={vote == -1}
             onPress={() => {
-              insertReview({
-                restaurant_id: restaurantId,
-                rating: vote == -1 ? 0 : -1,
-              })
+              // insertReview({
+              //   restaurant_id: restaurantId,
+              //   rating: vote == -1 ? 0 : -1,
+              // })
             }}
           >
             <Icon

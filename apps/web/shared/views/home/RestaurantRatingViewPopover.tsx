@@ -24,7 +24,7 @@ export const RestaurantRatingViewPopover = graphql(
         },
       },
     })
-    console.log('restaurant?.rating', restaurant?.rating)
+    console.log('RestaurantRatingViewPopover', restaurant?.rating)
     const sources = restaurant?.sources ?? {}
     return (
       <HoverablePopover

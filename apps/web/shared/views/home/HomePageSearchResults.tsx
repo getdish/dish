@@ -51,7 +51,7 @@ export default memo(function HomePageSearchResults({
       zIndex={100}
       borderRadius={drawerBorderRadius}
       position="relative"
-      backgroundColor="rgba(255,255,255,0.85)"
+      backgroundColor="#fff"
     >
       <PageTitleTag>{title}</PageTitleTag>
       {/* <ZStack
@@ -67,7 +67,7 @@ export default memo(function HomePageSearchResults({
       </ZStack> */}
 
       {/* Title */}
-      <VStack className="blur" paddingTop={verticalPad} paddingHorizontal={22}>
+      <VStack paddingTop={verticalPad} paddingHorizontal={22}>
         <HStack width="100%">
           <VStack flex={4}>
             <PageTitle
@@ -166,11 +166,11 @@ const HomeSearchResultsViewContent = memo(
     const om = useOvermind()
     const allRestaurants = om.state.home.allRestaurants
     const topPad = 0
-    const [fullyLoad, setFullyLoad] = useState(false)
+    // const [fullyLoad, setFullyLoad] = useState(false)
 
-    useWaterfall(() => {
-      setFullyLoad(true)
-    }, [state.results])
+    // useWaterfall(() => {
+    //   setFullyLoad(true)
+    // }, [state.results])
 
     if (!state.results?.results || state.results.status === 'loading') {
       return (
@@ -182,7 +182,7 @@ const HomeSearchResultsViewContent = memo(
 
     const resultsIds = state.results?.results?.restaurantIds
     const resultsAll = resultsIds.map((id) => allRestaurants[id])
-    const results = fullyLoad ? resultsAll : resultsAll.slice(0, 4)
+    const results = resultsAll.slice(0, 3)
 
     if (!results.length) {
       return (

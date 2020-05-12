@@ -5,13 +5,6 @@ import { EnumType, jsonToGraphQLQuery } from 'json-to-graphql-query'
 
 import { isBrowserProd, isNode } from './constants'
 
-if (isNode) {
-  require('isomorphic-unfetch')
-  WebSocket = require('ws')
-} else {
-  WebSocket = window['WebSocket'] as any
-}
-
 export type Point = {
   type: string
   coordinates: [number, number]
@@ -137,6 +130,9 @@ export class ModelBase<T> {
     gql = ModelBase.ensureKeySyntax(gql)
     const query = jsonToGraphQLQuery(gql, { pretty: true })
     const response = await fetchQuery(query)
+    if (!response.data) {
+      return null
+    }
     if (response.data.errors) {
       if (silence_not_found && response['status'] == 404) {
         return response
@@ -164,6 +160,7 @@ export class ModelBase<T> {
       },
     }
     const response = await ModelBase.hasura(query)
+    console.log('response', response)
     Object.assign(
       this,
       response.data.data['insert_' + this._lower_name].returning[0]
