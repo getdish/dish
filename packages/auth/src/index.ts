@@ -79,11 +79,26 @@ class Auth {
   async api(method: string, path: string, data: any = {}) {
     const response = await fetch(DOMAIN + path, {
       method,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
-    }).then((res) => res.json())
-    if (response.status == 401) {
-      this.has_been_logged_out = true
-      this.logout()
+    })
+    if (response.status >= 300) {
+      if (response.status == 401) {
+        this.has_been_logged_out = true
+        this.logout()
+        console.log('@dish/auth: Automatically logged user out')
+      } else {
+        const error = {
+          method: method,
+          domain: DOMAIN,
+          path: path,
+          data: data,
+          status: response.status,
+          statusText: response.statusText,
+        }
+        console.error(error)
+        throw new Error('Auth `fetch()` error')
+      }
     }
     return response
   }
@@ -93,24 +108,19 @@ class Auth {
       username: username,
       password: password,
     })
-    return [response.status, response.data]
+    return [response.status, response.statusText]
   }
 
   async login(username: string, password: string) {
-    let status = 500
-    const response = await fetch(`${DOMAIN}/auth/login`, {
-      method: 'post',
-      body: JSON.stringify({
-        username: username,
-        password: password,
-      }),
-    }).then((res) => {
-      status = res.status
-      return res.json()
+    const response = await this.api('post', '/auth/login', {
+      username: username,
+      password: password,
     })
+    if (response.status == 401) return [401]
+    const data = await response.json()
     this.isLoggedIn = true
-    this.jwt = response.token
-    this.user = response.user
+    this.jwt = data.token
+    this.user = data.user
     if (!isNode) {
       localStorage.setItem(
         BROWSER_STORAGE_KEY,
@@ -121,14 +131,16 @@ class Auth {
       )
       this.has_been_logged_out = false
     }
-    return [status, response.user]
+    return [response.status, data.user]
   }
 
   async logout() {
     this.isLoggedIn = false
     delete this.jwt
     delete this.user
-    localStorage.removeItem(BROWSER_STORAGE_KEY)
+    if (!isNode) {
+      localStorage.removeItem(BROWSER_STORAGE_KEY)
+    }
   }
 }
 
