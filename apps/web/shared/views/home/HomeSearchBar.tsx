@@ -26,7 +26,9 @@ import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { CloseButton } from './CloseButton'
 import { DishLogoButton } from './DishLogoButton'
-import HomeAutocomplete from './HomeAutocomplete'
+import HomeAutocomplete, {
+  HomeAutocompleteBackground,
+} from './HomeAutocomplete'
 import { HomeUserMenu } from './HomeUserMenu'
 import { TagButton } from './TagButton'
 
@@ -262,9 +264,9 @@ export default memo(function HomeSearchBar() {
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
 
   return (
-    <>
-      <HomeAutocomplete />
-      <View style={[styles.container, { height: searchBarHeight }]}>
+    <View style={[styles.container, { height: searchBarHeight }]}>
+      <HomeAutocompleteBackground />
+      <View style={styles.containerSize}>
         <View style={styles.containerInner}>
           <DishLogoButton />
 
@@ -298,13 +300,13 @@ export default memo(function HomeSearchBar() {
               {/* Search Input Start */}
               <Hoverable
                 // show even if moving after some time
-                onHoverIn={() => {
-                  tm2.current = setTimeout(() => {
-                    if (document.activeElement == input) {
-                      om.actions.home.setShowAutocomplete('search')
-                    }
-                  }, 300)
-                }}
+                // onHoverIn={() => {
+                //   tm2.current = setTimeout(() => {
+                //     if (document.activeElement == input) {
+                //       om.actions.home.setShowAutocomplete('search')
+                //     }
+                //   }, 300)
+                // }}
                 onHoverOut={() => {
                   clearTimeout(tm.current)
                   clearTimeout(tm2.current)
@@ -416,8 +418,9 @@ export default memo(function HomeSearchBar() {
 
           <HomeUserMenu />
         </View>
+        <HomeAutocomplete />
       </View>
-    </>
+    </View>
   )
 })
 
@@ -566,12 +569,18 @@ const styles = StyleSheet.create({
     right: searchBarTopOffset,
     alignItems: 'center',
   },
-  containerInner: {
-    flex: 1,
+  containerSize: {
     maxWidth: pageWidthMax,
+    zIndex: 12,
+    position: 'relative',
     width: '100%',
-    backgroundColor: 'rgba(255,255,255,1)',
     height: '100%',
+  },
+  containerInner: {
+    position: 'relative',
+    zIndex: 100,
+    flex: 1,
+    backgroundColor: 'rgba(255,255,255,1)',
     flexDirection: 'row',
     borderRadius: 14,
     shadowColor: 'rgba(0,0,0,0.07)',
