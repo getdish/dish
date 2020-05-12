@@ -19,6 +19,10 @@
     "reflect-metadata": "^0.1.10",
     "typeorm": "0.2.24"
   },
+  "resolutions": {
+    "tslib": "1.11.2",
+    "typeorm/tslib": "1.11.2"
+  },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/body-parser": "^1.17.0",
