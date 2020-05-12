@@ -42,10 +42,10 @@ export class Yelp extends WorkerJob {
     console.log(
       'Starting Yelp crawler. Using AWS proxy: ' + process.env.YELP_AWS_PROXY
     )
-    const MAPVIEW_SIZE = 5000
+    const MAPVIEW_SIZE = 4000
     const coords = await geocode(city_name)
     const region_coords = _.shuffle(
-      aroundCoords(coords[0], coords[1], MAPVIEW_SIZE, 5)
+      aroundCoords(coords[0], coords[1], MAPVIEW_SIZE, 6)
     )
     const longest_radius = (MAPVIEW_SIZE * Math.sqrt(2)) / 2
     for (const box_center of region_coords) {
@@ -82,6 +82,15 @@ export class Yelp extends WorkerJob {
     const objects = search_results.searchResults
     const pagination = search_results.paginationInfo
 
+    if (!search_results.searchResults) {
+      console.error(
+        'searchPageProps.searchResultsProps: ',
+        response?.data.searchPageProps.searchResultsProps
+      )
+      throw new Error(
+        'YELP: Nothing in `response?.data.searchPageProps.searchResultsProps.searchResults`'
+      )
+    }
     console.log(
       `YELP: geo search: ${coords}, page ${start}, ${objects.length} results`
     )
@@ -161,7 +170,7 @@ export class Yelp extends WorkerJob {
     }
 
     const uri = url.parse(
-      data.mapBoxProps.staticMapProps.src.replace('&amp;', '&'),
+      data.mapBoxProps.staticMapProps.src.replace(/&amp;/g, '&'),
       true
     )
 

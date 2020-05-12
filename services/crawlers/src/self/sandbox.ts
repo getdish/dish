@@ -19,4 +19,3 @@ if (process.env.SLUG) {
 } else {
   all()
 }
-

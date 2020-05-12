@@ -8,18 +8,18 @@ async function main() {
 }
 
 async function one() {
-  const name = 'Nopa'
-  const coords = [37.774834, -122.437469]
+  const range = 0.003
+  const name = 'La Folie01'
+  const coords = [37.798144, -122.4241967]
   const t = new Yelp()
   const restaurant = new Restaurant()
   await t.runOnWorker('getRestaurants', [
-    [coords[0] - 0.001, coords[1] + 0.001],
-    [coords[0] + 0.001, coords[1] - 0.001],
+    [coords[0] - range, coords[1] - range],
+    [coords[0] + range, coords[1] + range],
     0,
     name,
   ])
   await restaurant.findOne('name', name)
-  console.log(restaurant)
 }
 
 one()
