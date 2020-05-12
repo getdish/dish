@@ -269,7 +269,7 @@ export default memo(function HomeSearchBar() {
           <DishLogoButton />
 
           <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
-            <Spacer flex={0.7} />
+            <Spacer flex={0.1} />
           </MediaQuery>
 
           <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
