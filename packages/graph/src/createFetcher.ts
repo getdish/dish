@@ -19,7 +19,9 @@ export const createFetcher = (type: 'query' | 'mutation') => {
       }),
       mode: 'cors',
     }
-    console.log('request', request)
+    if (process.env.DISH_ENV != 'test') {
+      console.log('request', request)
+    }
     const response = await fetch(endpoint, request)
     if (!response.ok) {
       throw new Error(`Network error, received status code ${response.status}`)
