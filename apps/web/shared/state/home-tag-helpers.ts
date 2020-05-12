@@ -25,7 +25,11 @@ export const allTags = allTagsList.reduce((acc, cur) => {
   return acc
 }, {})
 
-type HomeStateNav = { tags: NavigableTag[]; state?: HomeStateItem }
+type HomeStateNav = {
+  tags: NavigableTag[]
+  state?: HomeStateItem
+  disabledIfActive?: boolean
+}
 
 export const navigateToTag: Action<HomeStateNav> = (om, nav) => {
   getNavigateToTags(om, nav)?.onPress?.()
@@ -70,7 +74,7 @@ type LinkButtonProps = NavigateItem & {
 // for easy use with Link / LinkButton
 export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps> = (
   om,
-  { state = om.state.home.currentState, tags }
+  { state = om.state.home.currentState, tags, disabledIfActive }
 ) => {
   // remove undefined
   tags = tags.filter(Boolean)
@@ -80,6 +84,7 @@ export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps> = (
   const nextState = getNextStateWithTags(om, {
     tags,
     state,
+    disabledIfActive,
   })
   const navigateItem = getNavigateItemForState(om.state, nextState)
   return {
@@ -96,7 +101,7 @@ export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps> = (
 
 const getNextStateWithTags: Action<HomeStateNav, HomeStateItem | null> = (
   om,
-  { state, tags }
+  { state, tags, disabledIfActive }
 ) => {
   if (!isHomeState(state) && !isSearchState(state)) {
     return null
@@ -112,7 +117,7 @@ const getNextStateWithTags: Action<HomeStateNav, HomeStateItem | null> = (
 
   for (const tag of tags) {
     const key = getTagId(tag)
-    if (nextActiveTagIds[key] === true) {
+    if (nextActiveTagIds[key] === true && !disabledIfActive) {
       nextActiveTagIds[key] = false
     } else {
       nextActiveTagIds[key] = true

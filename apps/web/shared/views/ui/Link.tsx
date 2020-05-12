@@ -31,6 +31,7 @@ type LinkSharedProps = {
   fastClick?: boolean
   replace?: boolean
   stopPropagation?: boolean
+  disabledIfActive?: boolean
 }
 
 type LinkProps<A, B> = React.DetailedHTMLProps<
@@ -193,6 +194,7 @@ const useNormalizedLink = (
     const tagProps = getNavigateToTags(window['om'], {
       state,
       tags,
+      disabledIfActive: props.disabledIfActive,
     })
     return {
       ...tagProps,
@@ -250,6 +252,7 @@ export function LinkButton<
       padding,
       paddingVertical,
       paddingHorizontal,
+      disabledIfActive,
       replace,
       ...rest
     } = props
@@ -286,6 +289,7 @@ export function LinkButton<
       ellipse,
       replace,
       fastClick: fastClick_,
+      disabledIfActive,
       ...rest
     } = props
     fastClick = fastClick_
