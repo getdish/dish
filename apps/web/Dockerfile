@@ -29,4 +29,4 @@ RUN apk add pixman cairo pango libjpeg giflib curl bash
 RUN touch $HOME/.bashrc
 RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 
-CMD ["/root/.yarn/bin/yarn", "start:web:prod"]
+CMD ["/root/.yarn/bin/yarn", "start:web:ssr"]
