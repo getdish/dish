@@ -92,7 +92,12 @@ export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps> = (
     onPress: (e) => {
       e?.preventDefault()
       e?.stopPropagation()
+      const activeTags = om.state.home.lastActiveTags
       for (const tag of tags) {
+        const tagId = getTagId(tag)
+        if (disabledIfActive && activeTags.some((x) => getTagId(x) === tagId)) {
+          continue
+        }
         om.actions.home.toggleTagOnHomeState(tag)
       }
     },
@@ -101,34 +106,35 @@ export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps> = (
 
 const getNextStateWithTags: Action<HomeStateNav, HomeStateItem | null> = (
   om,
-  { state, tags, disabledIfActive }
+  { state, tags, disabledIfActive = false }
 ) => {
   if (!isHomeState(state) && !isSearchState(state)) {
     return null
   }
 
+  let activeTagIds: HomeActiveTagIds = {}
+
   // clone it to avoid confusing overmind
-  let nextActiveTagIds: HomeActiveTagIds = {}
   for (const key in state.activeTagIds) {
     if (state.activeTagIds[key]) {
-      nextActiveTagIds[key] = true
+      activeTagIds[key] = true
     }
   }
 
   for (const tag of tags) {
     const key = getTagId(tag)
-    if (nextActiveTagIds[key] === true && !disabledIfActive) {
-      nextActiveTagIds[key] = false
+    if (activeTagIds[key] === true && !disabledIfActive) {
+      activeTagIds[key] = false
     } else {
-      nextActiveTagIds[key] = true
+      activeTagIds[key] = true
       // disable others
-      ensureUniqueActiveTagIds(nextActiveTagIds, om.state.home, tag)
+      ensureUniqueActiveTagIds(activeTagIds, om.state.home, tag)
     }
   }
 
   return {
     ...state,
-    activeTagIds: nextActiveTagIds,
+    activeTagIds,
   }
 }
 
