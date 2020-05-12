@@ -44,7 +44,7 @@ export const TagButton = memo(
       noColor?: boolean
     }) => {
     const tag = { name, type }
-    const scale = size === 'sm' ? 0.8 : size == 'lg' ? 1.05 : 1
+    const scale = size === 'sm' ? 0.85 : size == 'lg' ? 1.05 : 1
     const paddingVertical = (subtle ? 0 : 6) * scale
     const lineHeight = 22 * scale
     const defaultColor = noColor ? 'inherit' : getTagColor(tag)
@@ -132,7 +132,6 @@ export const TagButton = memo(
           <VStack
             // paddingVertical={paddingVertical}
             // marginLeft={-8 * scale}
-            paddingHorizontal={6 * scale}
             // marginTop={size === 'sm' ? -24 : 0}
             backgroundColor={subtle ? 'transparent' : '#fff'}
             borderLeftColor="#eee"
@@ -140,11 +139,23 @@ export const TagButton = memo(
             height="100%"
           >
             <LinkButton
-              // marginBottom={-10 + (size === 'sm' ? -10 : 0)}
-              hoverStyle={{}}
-              // top={moveInPx}
+              paddingHorizontal={6 * scale}
+              flex={1}
+              minHeight="150%"
+              hoverStyle={{
+                backgroundColor: '#eee',
+              }}
+              onPress={(e) => {
+                console.log('e', e)
+                e.stopPropagation()
+                e.preventDefault()
+              }}
             >
-              <Icon size={9 * scale} name="ChevronUp" />
+              <Icon
+                size={14 * scale}
+                name="ChevronUp"
+                marginBottom={-5 * scale}
+              />
             </LinkButton>
           </VStack>
         )}

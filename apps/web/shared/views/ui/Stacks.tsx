@@ -29,6 +29,9 @@ export type StackProps = Omit<
   'alignContent' | 'backfaceVisibility'
 >
 
+export const getNode = (refCurrent: any) =>
+  refCurrent?.['_reactInternalFiber']?.child.stateNode
+
 const createStack = (defaultStyle?: ViewStyle) => {
   return forwardRef<View, StackProps>(
     (
@@ -68,9 +71,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
       useLayoutEffect(() => {
         if (!cn) return
         if (!innerRef.current) return
-        const getNode = () =>
-          innerRef.current?.['_reactInternalFiber']?.child.stateNode
-        const node = getNode()
+        const node = getNode(innerRef.current)
         if (!node) return
         const names = cn.trim().split(' ').filter(Boolean)
 

@@ -65,28 +65,28 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       onHoverOut={() => setIsHovered(false)}
     >
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <HStack
-          alignItems="center"
-          position="relative"
-          width="calc(100% + 200px)"
-        >
-          <ZStack
-            fullscreen
-            zIndex={100}
-            top={20}
-            height={120}
-            left={0}
-            justifyContent="center"
-            pointerEvents="none"
-            opacity={isHovered ? 1 : 0}
+        <Suspense fallback={null}>
+          <HStack
+            alignItems="center"
+            position="relative"
+            width="calc(100% + 200px)"
           >
-            <Suspense fallback={null}>
+            <ZStack
+              fullscreen
+              zIndex={100}
+              top={20}
+              height={120}
+              left={0}
+              justifyContent="center"
+              pointerEvents="none"
+              opacity={isHovered ? 1 : 0}
+            >
               <RestaurantUpVoteDownVote restaurantId={props.restaurant.id} />
-            </Suspense>
-          </ZStack>
+            </ZStack>
 
-          <RestaurantListItemContent {...props} />
-        </HStack>
+            <RestaurantListItemContent {...props} />
+          </HStack>
+        </Suspense>
       </ScrollView>
       <Divider opacity={0.025} />
     </VStack>
@@ -137,13 +137,11 @@ const RestaurantListItemContent = memo(
                 <Link name="restaurant" params={{ slug: restaurant.slug }}>
                   <VStack>
                     <HStack alignItems="center" marginVertical={-3}>
-                      <Suspense fallback={null}>
-                        <RankingView
-                          marginRight={-6 + leftPad}
-                          marginTop={-10}
-                          rank={rank}
-                        />
-                      </Suspense>
+                      <RankingView
+                        marginRight={-6 + leftPad}
+                        marginTop={-10}
+                        rank={rank}
+                      />
 
                       <SelectableText
                         style={{
@@ -165,12 +163,10 @@ const RestaurantListItemContent = memo(
                       alignItems="center"
                       marginBottom={-3}
                     >
-                      <Suspense fallback={null}>
-                        <RestaurantRatingViewPopover
-                          size="sm"
-                          restaurantSlug={restaurant.slug}
-                        />
-                      </Suspense>
+                      <RestaurantRatingViewPopover
+                        size="sm"
+                        restaurantSlug={restaurant.slug}
+                      />
                       <HStack spacing>
                         {tagElements}
                         <RestaurantAddTagButton restaurant={restaurant} />
@@ -184,9 +180,7 @@ const RestaurantListItemContent = memo(
 
               {/* ROW: COMMENT */}
               <VStack maxWidth="90%" marginLeft={-2}>
-                <Suspense fallback={null}>
-                  <RestaurantTopReview restaurantId={restaurant.id} />
-                </Suspense>
+                <RestaurantTopReview restaurantId={restaurant.id} />
               </VStack>
 
               <Spacer size={6} />
@@ -198,9 +192,7 @@ const RestaurantListItemContent = memo(
                 alignItems="center"
                 spacing
               >
-                <Suspense fallback={null}>
-                  <RestaurantFavoriteStar restaurantId={restaurant.id} />
-                </Suspense>
+                <RestaurantFavoriteStar restaurantId={restaurant.id} />
                 <TouchableOpacity
                   onPress={() =>
                     setState((state) => ({
@@ -248,12 +240,10 @@ const RestaurantListItemContent = memo(
           </VStack>
 
           <VStack padding={10} paddingTop={45} width={600}>
-            <Suspense fallback={null}>
-              <RestaurantPeek
-                size={isShowingComment ? 'lg' : 'md'}
-                restaurantSlug={restaurant.slug}
-              />
-            </Suspense>
+            <RestaurantPeek
+              size={isShowingComment ? 'lg' : 'md'}
+              restaurantSlug={restaurant.slug}
+            />
           </VStack>
         </HStack>
       )
