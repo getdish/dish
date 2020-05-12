@@ -111,7 +111,7 @@ const HomeViewTopDishesTrending = memo(() => {
   const listSpace = 3
   const total = 5
   return (
-    <VStack className="home-top-dish" height={188 + listSpace * (total - 1)}>
+    <VStack height={188 + listSpace * (total - 1)}>
       <HStack spacing="lg" paddingHorizontal={10}>
         <VStack flex={1}>
           <ZStack position="absolute" top={-5} left={-12} zIndex={100}>
@@ -173,6 +173,7 @@ const CountryTopDishesAndRestaurants = memo(
     return (
       <VStack
         paddingVertical={15}
+        className="home-top-dish"
         // onHoverIn={() => setHovered(true)}
         // onHoverOut={() => setHovered(false)}
       >
@@ -234,11 +235,11 @@ const CountryTopDishesAndRestaurants = memo(
               (restaurant, index) => (
                 <RestaurantButton
                   key={restaurant.name}
-                  restaurant={restaurant}
+                  restaurant={restaurant as any}
                   onHoverIn={onHoverRestaurant}
                   active={
                     (!hoveredRestaurant && index === 0) ||
-                    restaurant === hoveredRestaurant
+                    restaurant.id === hoveredRestaurant.id
                   }
                 />
               )
