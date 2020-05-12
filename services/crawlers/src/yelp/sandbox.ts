@@ -8,9 +8,9 @@ async function main() {
 }
 
 async function one() {
-  const range = 0.003
-  const name = 'La Folie01'
-  const coords = [37.798144, -122.4241967]
+  const range = 0.001
+  const name = 'La Boulangerie de San Francisco'
+  const coords = [37.797519, -122.4314282]
   const t = new Yelp()
   const restaurant = new Restaurant()
   await t.runOnWorker('getRestaurants', [

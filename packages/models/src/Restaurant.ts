@@ -273,30 +273,8 @@ export class Restaurant extends ModelBase<Restaurant> {
     name: string,
     street_address: string
   ) {
-    const nears = await Restaurant.findNear(lat, lon, 0.0005)
-    let found: Restaurant | undefined = undefined
-    for (const candidate of nears) {
-      if (
-        candidate.location.coordinates[0] == lon &&
-        candidate.location.coordinates[1] == lat
-      ) {
-        if (candidate.name.includes(name) || name.includes(candidate)) {
-          found = candidate
-          break
-        }
-      }
-
-      if (levenshteinDistance(candidate.name, name) <= 3) {
-        found = candidate
-        break
-      }
-    }
-    if (found) {
-      if (process.env.RUN_WITHOUT_WORKER != 'true') {
-        console.log('Found existing canonical restaurant: ' + found.id)
-      }
-      return found
-    }
+    const found = await Restaurant._findExistingCanonical(lon, lat, name)
+    if (found) return found
     const restaurant = new Restaurant({
       name: name,
       address: street_address,
@@ -310,6 +288,36 @@ export class Restaurant extends ModelBase<Restaurant> {
       console.log('Created new canonical restaurant: ' + restaurant.id)
     }
     return restaurant
+  }
+
+  static async _findExistingCanonical(lon: number, lat: number, name: string) {
+    const nears = await Restaurant.findNear(lat, lon, 0.0005)
+    let found: Restaurant | undefined = undefined
+    let shortlist = [] as Restaurant[]
+    let highest_sources_count = 0
+    for (const candidate of nears) {
+      if (candidate.name.includes(name) || name.includes(candidate.name)) {
+        shortlist.push(candidate)
+      }
+
+      if (levenshteinDistance(candidate.name, name) <= 3) {
+        shortlist.push(candidate)
+      }
+    }
+    if (shortlist.length == 0) return
+
+    found = shortlist[0]
+    for (const final of shortlist) {
+      const sources_count = Object.keys(final.sources || {}).length
+      if (sources_count > highest_sources_count) {
+        highest_sources_count = sources_count
+        found = final
+      }
+    }
+    if (process.env.RUN_WITHOUT_WORKER != 'true') {
+      console.log('Found existing canonical restaurant: ' + found.id)
+    }
+    return found
   }
 
   getRestaurantTagFromTag(tag_id: string) {

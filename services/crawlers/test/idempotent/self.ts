@@ -20,6 +20,15 @@ const restaurant_fixture: Partial<Restaurant> = {
   location: { type: 'Point', coordinates: [0, 0] },
   tag_names: ['rankable'],
   rating: 3,
+  sources: {
+    yelp: { url: 'https://yelp.com', rating: 3.5 },
+    tripadvisor: { url: 'https://tripadvisor.com', rating: 2.5 },
+  },
+}
+
+const restaurant_fixture_nearly_matches: Partial<Restaurant> = {
+  name: 'Test Name Original Nearly Matches',
+  location: { type: 'Point', coordinates: [0, 0] },
 }
 
 const yelp: Partial<Scrape> = {
@@ -149,6 +158,8 @@ async function reset(t: ExecutionContext<Context>) {
   await flushTestData()
   const restaurant = new Restaurant(restaurant_fixture)
   await restaurant.insert()
+  const r2 = new Restaurant(restaurant_fixture_nearly_matches)
+  await r2.insert()
   t.context.restaurant = restaurant
   scrape = new Scrape({ restaurant_id: restaurant.id, ...yelp })
   await scrape.insert()
