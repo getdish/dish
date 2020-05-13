@@ -10,7 +10,6 @@
     "noEmit": true,
     "outDir": "_",
     "rootDir": ".",
-    "noEmitOnError": false,
     "typeRoots": ["./node_modules/mapkit-typescript", "./node_modules/@types"]
   },
   "include": ["web/**/*", "shared/**/*"],
