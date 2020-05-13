@@ -99,6 +99,7 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     }
   }
 
+  config.context = __dirname
   config.devServer = {
     ...config.devServer,
     historyApiFallback: true,
@@ -238,11 +239,6 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     console.log(`Start building ${TARGET}... entry ${config.entry.app}`)
   }
 
-  console.log(
-    'config.plugins',
-    config.plugins.map((x) => [x.constructor.name, x.name, x.constructor])
-  )
-
   return config
 }
 
@@ -251,5 +247,5 @@ function prettifyWebpackConfig(config) {
   prettyConfig.plugins = config.plugins.map((p) => {
     return { name: p.constructor.name, settings: p }
   })
-  return require('prettyjson').render(prettyConfig)
+  return prettyConfig
 }

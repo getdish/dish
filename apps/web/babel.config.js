@@ -1,12 +1,7 @@
-module.exports = function(api) {
+module.exports = function (api) {
   const isWorker = process.env.TARGET === 'worker'
   const isSSR = process.env.TARGET === 'ssr'
-  // if (!isSSR && !api.env('production') && api.cache) {
-  //   api.cache(true)
-  // }
-  if (isWorker) {
-    api.cache(true)
-  }
+  api.cache.using(() => process.env.NODE_ENV)
   return {
     plugins: [
       !api.env('production') && !isWorker && !isSSR && 'react-refresh/babel',
@@ -19,12 +14,4 @@ module.exports = function(api) {
     ].filter(Boolean),
     presets: ['@babel/preset-typescript', '@babel/preset-react'],
   }
-
-  // return {
-  //   presets: [
-  //     'babel-preset-expo',
-  //     'module:metro-react-native-babel-preset',
-  //     'module:react-native-dotenv',
-  //   ],
-  // }
 }

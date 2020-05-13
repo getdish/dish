@@ -14,6 +14,11 @@ import { getRankingColor, getRestaurantRating } from './RestaurantRatingView'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 async function startMapKit() {
+  // hmr resilient logic
+  if (window['MAPKIT_STARTED']) {
+    return
+  }
+  window['MAPKIT_STARTED'] = true
   const token = `eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzQ1RLNTYzUlQifQ.eyJpYXQiOjE1ODQ0MDU5MzYuMjAxLCJpc3MiOiIzOTlXWThYOUhZIn0.wAw2qtwuJkcL6T6aI-nLZlVuwJZnlCNg2em6V1uopx9hkUgWZE1ISAWePMoRttzH_NPOem4mQfrpmSTRCkh2bg`
   // init mapkit
   const mapkit = require('../../../web/mapkitExport')
@@ -106,11 +111,13 @@ const handleRegionChangeEnd = () => {
 
 export function HomeMap() {
   const [isLoaded, setIsLoaded] = useState(false)
+
   useOnMount(() => {
     startMapKit().then(() => {
       setIsLoaded(true)
     })
   })
+
   return isLoaded ? <HomeMapContent /> : null
 }
 
