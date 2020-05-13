@@ -9,7 +9,7 @@ import { useOvermind } from '../../state/useOvermind'
 import { Divider } from '../ui/Divider'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { Icon } from '../ui/Icon'
-import { Link, LinkButton } from '../ui/Link'
+import { Link } from '../ui/Link'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { SelectableText } from '../ui/Text'
@@ -23,6 +23,7 @@ import { getAddressText } from './RestaurantAddressLinksRow'
 import { RestaurantAddTagButton } from './RestaurantAddTagButton'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
+import { RestaurantLenseVote } from './RestaurantLenseVote'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { useGetTagElements } from './RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
@@ -177,10 +178,7 @@ const RestaurantListItemContent = memo(
                         size="sm"
                         restaurantSlug={restaurant.slug}
                       />
-                      <HStack spacing>
-                        {tagElements}
-                        <RestaurantAddTagButton restaurant={restaurant} />
-                      </HStack>
+                      <HStack spacing>{tagElements}</HStack>
                     </HStack>
                   </VStack>
                 </Link>
@@ -202,7 +200,9 @@ const RestaurantListItemContent = memo(
                 alignItems="center"
                 spacing
               >
+                <RestaurantLenseVote />
                 <RestaurantFavoriteStar restaurantId={restaurant.id} />
+
                 <TouchableOpacity
                   onPress={() =>
                     setState((state) => ({

@@ -1,5 +1,5 @@
 diff --git a/node_modules/gqless/dist/Type.d.ts b/node_modules/gqless/dist/Type.d.ts
-index 27c8f79..076557d 100644
+index 27c8f79..4c5db75 100644
 --- a/node_modules/gqless/dist/Type.d.ts
 +++ b/node_modules/gqless/dist/Type.d.ts
 @@ -8,19 +8,19 @@ declare type RequiredKeys<T> = {
@@ -27,8 +27,14 @@ index 27c8f79..076557d 100644
  export declare type ScalarType<TData = any, TExtension = any> = Type<Kind.scalar, TData, TExtension>;
  export declare type EnumType<TData = any, TExtension = any> = Type<Kind.enum, TData, TExtension>;
  declare type FieldsRecord = Record<string, ValidType | FieldsTypeArg>;
+@@ -51,4 +51,4 @@ declare type ArrayData<TArray extends ValidType[], TExtensions extends Tuple> =
+ declare type ScalarData<TScalar extends ScalarType | EnumType, TExtensions extends Tuple> = LastTupleValue<TExtensions> extends never ? TScalar['data'] : LastTupleValue<TExtensions>;
+ declare type UnshiftExtension<TExtensions, TType extends ValidType> = keyof TypeExtension<TType> extends never ? TExtensions : UnshiftTuple<TExtensions, TypeExtension<TType>>;
+ export declare type TypeData<TType extends ValidType, TExtensions extends Tuple = {}> = TType extends Array<any> ? ArrayData<TType, UnshiftExtension<TExtensions, TType>> : TType extends ScalarType | EnumType ? ScalarData<TType, UnshiftExtension<TExtensions, TType>> : TType extends FieldsType ? FieldsData<TType, UnshiftExtension<TExtensions, TType>> : null;
+-export {};
++
 diff --git a/node_modules/gqless/dist/gqless.cjs.development.js b/node_modules/gqless/dist/gqless.cjs.development.js
-index 12268bf..7ad7a9e 100644
+index 12268bf..3ab50b1 100644
 --- a/node_modules/gqless/dist/gqless.cjs.development.js
 +++ b/node_modules/gqless/dist/gqless.cjs.development.js
 @@ -2,6 +2,8 @@
@@ -41,7 +47,7 @@ index 12268bf..7ad7a9e 100644
  var tslib = require('tslib');
  var utils = require('@gqless/utils');
 diff --git a/node_modules/gqless/dist/gqless.esm.js b/node_modules/gqless/dist/gqless.esm.js
-index cc6eb3f..d88aa6b 100644
+index cc6eb3f..1d65880 100644
 --- a/node_modules/gqless/dist/gqless.esm.js
 +++ b/node_modules/gqless/dist/gqless.esm.js
 @@ -559,17 +559,16 @@ const memoized =

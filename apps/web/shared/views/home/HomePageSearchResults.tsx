@@ -1,3 +1,4 @@
+// @ts-ignore
 import React, { Suspense, SuspenseList, memo, useState } from 'react'
 import { Image, ScrollView, Text, View } from 'react-native'
 
