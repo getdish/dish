@@ -40,20 +40,22 @@ export const RatingView = forwardRef(
         {!hideEmoji && percent >= 80 && (
           <VStack
             position="absolute"
-            top={-0.05 * size}
-            right={-0.05 * size}
+            // 0.05
+            // 0.075 = xs
+            top={-0.075 * size}
+            right={-0.075 * size}
             alignItems="center"
             justifyContent="center"
             zIndex={100}
           >
             <Text
               style={{
-                fontSize: Math.max(13, size * 0.25),
+                fontSize: Math.max(12, size * 0.25),
                 textShadowColor: 'rgba(0,0,0,0.25)',
                 textShadowRadius: size * 0.015,
               }}
             >
-              {percent >= 90 ? '💎' : '⭐️'}
+              {percent >= 90 ? '🏆' : '⭐️'}
             </Text>
           </VStack>
         )}
@@ -84,7 +86,7 @@ export const RatingView = forwardRef(
             >
               <Text
                 style={{
-                  fontSize: Math.max(15, size * 0.38),
+                  fontSize: Math.max(14, size * 0.38),
                   fontWeight: '700',
                   color,
                   letterSpacing: -(size / 90),

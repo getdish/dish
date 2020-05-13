@@ -40,7 +40,7 @@ export default function HomePage() {
         width="100%"
         height="100%"
         maxWidth={1880}
-        borderRadius={11}
+        borderRadius={12}
         overflow="hidden"
         // marginHorizontal={-20}
         // paddingHorizontal={20}

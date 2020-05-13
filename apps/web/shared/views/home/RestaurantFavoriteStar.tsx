@@ -80,69 +80,69 @@ export const RestaurantFavoriteStar = memo(
       )
 
       return (
-        <Popover
-          isOpen={isOpen}
-          onChangeOpen={setIsOpen}
-          overlay
-          position="right"
-          contents={
-            <Box width={520}>
-              {showContent && (
-                <>
-                  <Spacer />
-                  <HStack flex={1} alignItems="center">
-                    <VStack>
-                      <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                      >
-                        <HStack alignItems="center" spacing={size}>
-                          <Icon size={20} name="Tag" />
-                          {om.state.home.allLenseTags
-                            .filter((x) => x.isVotable)
-                            .map((lense) => (
-                              <LenseButton
-                                key={lense.id}
-                                lense={lense}
-                                isActive={false}
-                              />
-                            ))}
-                          <Spacer />
-                        </HStack>
-                      </ScrollView>
-                    </VStack>
-                  </HStack>
-                </>
-              )}
-            </Box>
-          }
-        >
-          <LinkButton onPress={() => setRating(isStarred ? 0 : 1)}>
-            <VStack
-              marginTop={2}
-              width={sizePx}
-              height={sizePx}
-              overflow="hidden"
-            >
-              {isStarred && (
-                <Text
-                  style={{
-                    fontSize: sizePx * 0.88,
-                    lineHeight: sizePx * 0.88,
-                    marginTop: 3,
-                    marginLeft: 2,
-                  }}
-                >
-                  ⭐️
-                </Text>
-              )}
-              {!isStarred && (
-                <Icon size={sizePx} name="Star" color={'goldenrod'} />
-              )}
-            </VStack>
-          </LinkButton>
-        </Popover>
+        <LinkButton onPress={() => setRating(isStarred ? 0 : 1)}>
+          <VStack
+            marginTop={2}
+            width={sizePx}
+            height={sizePx}
+            overflow="hidden"
+          >
+            {isStarred && (
+              <Text
+                style={{
+                  fontSize: sizePx * 0.88,
+                  lineHeight: sizePx * 0.88,
+                  marginTop: 3,
+                  marginLeft: 2,
+                }}
+              >
+                ⭐️
+              </Text>
+            )}
+            {!isStarred && (
+              <Icon size={sizePx} name="Star" color={'goldenrod'} />
+            )}
+          </VStack>
+        </LinkButton>
       )
     }
   )
 )
+// <Popover
+//   isOpen={isOpen}
+//   onChangeOpen={setIsOpen}
+//   overlay
+//   position="right"
+//   contents={
+//     <Box width={520}>
+//       {showContent && (
+//         <>
+//           <Spacer />
+//           <HStack flex={1} alignItems="center">
+//             <VStack>
+//               <ScrollView
+//                 horizontal
+//                 showsHorizontalScrollIndicator={false}
+//               >
+//                 <HStack alignItems="center" spacing={size}>
+//                   <Icon size={20} name="Tag" />
+//                   {om.state.home.allLenseTags
+//                     .filter((x) => x.isVotable)
+//                     .map((lense) => (
+//                       <LenseButton
+//                         key={lense.id}
+//                         lense={lense}
+//                         isActive={false}
+//                       />
+//                     ))}
+//                   <Spacer />
+//                 </HStack>
+//               </ScrollView>
+//             </VStack>
+//           </HStack>
+//         </>
+//       )}
+//     </Box>
+//   }
+// >
+// </Popover>
