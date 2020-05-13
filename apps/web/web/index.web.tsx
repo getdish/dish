@@ -76,16 +76,18 @@ async function start() {
   }
 }
 
+if (process.env.NODE_ENV === 'development') {
+  // @ts-ignore
+  module?.hot?.accept()
+  // @ts-ignore
+  module?.hot?.accept('../shared/state/om')
+}
+
 // can remove this started check once overmind works better for hmr
 // if (!window['STARTED']) {
-if (!window['IS_SSR_RENDERING']) {
+if (!window['STARTED'] && !window['IS_SSR_RENDERING']) {
   console.log('Starting from index')
   start()
   window['STARTED'] = true
 }
 // }
-
-if (process.env.NODE_ENV === 'development') {
-  // @ts-ignore
-  module?.hot?.accept()
-}

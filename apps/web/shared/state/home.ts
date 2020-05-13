@@ -11,7 +11,6 @@ import { requestIdle } from '../helpers/requestIdle'
 import { sleep } from '../helpers/sleep'
 import { timer } from '../helpers/timer'
 import { Toast } from '../views/Toast'
-import { attemptAuthenticatedAction } from './attemptAuthenticatedAction'
 import {
   isHomeState,
   isRestaurantState,
@@ -926,7 +925,6 @@ const moveAutocompleteIndex: Action<number> = (om, val) => {
   const tags = om.state.home.lastActiveTags.filter((x) => isSearchBarTag(x))
   const min = 0 - tags.length
   const next = Math.min(Math.max(min, cur + val), 1000) // TODO
-  console.log('next', { next, min, tags, cur })
   om.state.home.autocompleteIndex = next
 }
 
