@@ -177,6 +177,15 @@ const useNormalizeLinkProps = (
   return next
 }
 
+const asyncLinkAction = (cb?: Function) => (e) => {
+  e.persist()
+  e?.preventDefault()
+  e?.stopPropagation()
+  setTimeout(() => {
+    cb?.(e)
+  })
+}
+
 const useNormalizedLink = (
   props: Partial<LinkButtonProps>
 ): LinkButtonNamedProps => {
@@ -201,10 +210,10 @@ const useNormalizedLink = (
     })
     return {
       ...tagProps,
-      onPress: (e) => {
+      onPress: asyncLinkAction((e) => {
         tagProps.onPress?.(e)
         props.onPress?.(e)
-      },
+      }),
     }
   }
 
@@ -309,6 +318,8 @@ export function LinkButton<
     )
   }
 
+  const onPressCb = useMemo(() => asyncLinkAction(onPress), [onPress])
+
   return (
     <VStack
       // @ts-ignore
@@ -320,7 +331,7 @@ export function LinkButton<
     >
       <TouchableOpacity
         activeOpacity={0.7}
-        {...(!!onPress && { [fastClick ? 'onPressIn' : 'onPress']: onPress })}
+        {...(!!onPress && { [fastClick ? 'onPressIn' : 'onPress']: onPressCb })}
       >
         <VStack flex={1} {...restProps}>
           {contents}

@@ -119,7 +119,13 @@ const RestaurantRatingBreakdownView = graphql(
             </Box>
           }
         >
-          <HStack height="100%" alignItems="center" marginHorizontal={-10}>
+          <HStack
+            position="relative"
+            height="100%"
+            alignItems="center"
+            marginHorizontal={-10}
+            zIndex={-1}
+          >
             <Circle zIndex={3} marginHorizontal={-3} size={18 + 20}>
               <RatingBreakdownCircle
                 percent={ratingFactors?.service}
@@ -130,14 +136,14 @@ const RestaurantRatingBreakdownView = graphql(
             <Circle zIndex={2} marginHorizontal={-3} size={18 + 20}>
               <RatingBreakdownCircle
                 percent={ratingFactors?.service}
-                emoji="👩‍🍳"
+                emoji="💁‍♂️"
                 size={18}
               />
             </Circle>
             <Circle zIndex={1} marginHorizontal={-3} size={18 + 20}>
               <RatingBreakdownCircle
                 percent={ratingFactors?.service}
-                emoji="👩‍🍳"
+                emoji="✨"
                 size={18}
               />
             </Circle>
@@ -191,10 +197,17 @@ const RatingBreakdownCircle = memo(
             color="#ccc"
           />
         </ZStack>
-        <ZStack fullscreen alignItems="center" justifyContent="center">
-          <Text style={{ fontSize: 20, marginBottom: 0 }}>{emoji}</Text>
+        <ZStack
+          fullscreen
+          alignItems="center"
+          justifyContent="center"
+          width={size * 2.4}
+        >
+          <Text style={{ fontSize: size * 0.9, marginBottom: 0 }}>{emoji}</Text>
           {!!name && (
-            <Text style={{ fontSize: 12, color: '#555', fontWeight: '700' }}>
+            <Text
+              style={{ fontSize: size * 0.5, color: '#555', fontWeight: '700' }}
+            >
               {name}
             </Text>
           )}

@@ -551,9 +551,7 @@ const loadHomeDishes: AsyncAction = async (om) => {
       now = [...now, ...chunk]
       om.state.home.topDishes = now
     }
-  }
-
-  if (!isWorker) {
+  } else {
     om.state.home.topDishes = all
   }
 }

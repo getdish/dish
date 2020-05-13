@@ -3,7 +3,7 @@ set -e
 
 export NODE_ENV=production
 
-yarn tsc -v
+yarn tsc -b tsconfig.build.json
 yarn build
 yarn build:web:client
 yarn build:web:server
