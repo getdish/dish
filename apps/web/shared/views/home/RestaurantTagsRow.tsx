@@ -3,7 +3,7 @@ import { TagType } from '@dish/models'
 import { graphql } from '@gqless/react'
 import React, { memo } from 'react'
 
-import { useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/useOvermind'
 import { HStack } from '../ui/Stacks'
 import { TagButton } from './TagButton'
 import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'

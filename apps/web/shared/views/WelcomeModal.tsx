@@ -2,7 +2,7 @@ import React from 'react'
 import { Text } from 'react-native'
 import { useStorageState } from 'react-storage-hooks'
 
-import { useOvermind } from '../state/om'
+import { useOvermind } from '../state/useOvermind'
 import { flatButtonStyle } from './home/baseButtonStyle'
 import { Modal } from './Modal'
 import { Box } from './ui/Box'

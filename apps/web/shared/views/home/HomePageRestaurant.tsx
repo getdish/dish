@@ -5,7 +5,7 @@ import { Image, ScrollView, Text, View } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home'
-import { useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/useOvermind'
 import { Color } from '../ui/Color'
 import { Divider } from '../ui/Divider'
 import { LinkButton } from '../ui/Link'

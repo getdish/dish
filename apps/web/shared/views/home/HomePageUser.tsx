@@ -4,7 +4,7 @@ import React from 'react'
 import { Image, ScrollView, Text } from 'react-native'
 
 import { HomeStateItemUser } from '../../state/home'
-import { useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../NotFoundPage'
 import { Circle } from '../ui/Circle'
 import { Divider } from '../ui/Divider'

@@ -3,7 +3,7 @@ import { Image, ScrollView, Text, View } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemSearch, isEditingUserPage } from '../../state/home'
-import { useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../NotFoundPage'
 import { Toast } from '../Toast'
 import { Box } from '../ui/Box'
