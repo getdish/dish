@@ -2,8 +2,8 @@ import { slugify } from '@dish/common-web'
 import { Restaurant, User, query, resolved } from '@dish/graph'
 import { RestaurantSearchArgs, getHomeDishes, search } from '@dish/models'
 import { isEqual } from '@o/fast-compare'
-import _ from 'lodash'
-import { Action, AsyncAction } from 'overmind'
+import _, { findLast, last } from 'lodash'
+import { Action, AsyncAction, derived } from 'overmind'
 
 import { isWorker } from '../constants'
 import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
@@ -15,16 +15,13 @@ import {
   isHomeState,
   isRestaurantState,
   isSearchState,
-  lastHomeState,
-  lastRestaurantState,
-  lastSearchState,
   shouldBeOnHome,
 } from './home-helpers'
 import {
   allTags,
-  currentNavItem,
   getActiveTags,
   getFullTags,
+  getNavigateItemForState,
   getNavigateToTags,
   getTagsFromRoute,
   isSearchBarTag,
@@ -38,16 +35,16 @@ import {
   GeocodePlace,
   HomeActiveTagIds,
   HomeState,
-  HomeStateBase,
   HomeStateItem,
   HomeStateItemHome,
+  HomeStateItemRestaurant,
   HomeStateItemSearch,
   HomeStateItemSimple,
   LngLat,
   OmState,
   ShowAutocomplete,
 } from './home-types'
-import { HistoryItem, RouteItem } from './router'
+import { HistoryItem, NavigateItem, RouteItem } from './router'
 import { Tag, getTagId, tagFilters, tagLenses } from './Tag'
 
 const INITIAL_RADIUS = 0.1
@@ -80,39 +77,39 @@ const defaultLocationAutocompleteResults: AutocompleteItem[] = [
   createAutocomplete({ name: 'New Orleans', icon: '📍', type: 'country' }),
 ]
 
-export const state: HomeState = {
-  started: false,
-  skipNextPageFetchData: false,
-  activeIndex: -1,
-  allTags,
-  allUsers: {},
-  allLenseTags: tagLenses,
-  allFilterTags: tagFilters,
-  allRestaurants: {},
-  autocompleteDishes: [],
-  autocompleteIndex: 0,
-  autocompleteResults: [],
-  breadcrumbStates: [],
-  currentState: (state) => _.last(state.states)!,
-  currentNavItem,
-  currentStateSearchQuery: (state) => state.currentState.searchQuery,
-  currentStateType: (state) => state.currentState.type,
-  hoveredRestaurant: null,
-  isAutocompleteActive: (state) => state.activeIndex === -1,
-  lastHomeState,
-  lastRestaurantState,
-  lastSearchState,
-  location: null,
-  locationAutocompleteResults: defaultLocationAutocompleteResults,
-  locationSearchQuery: '',
-  previousState: (state) => state.states[state.states.length - 2],
-  showAutocomplete: false,
-  showUserMenu: false,
-  states: [initialHomeState],
-  topDishes: [],
-  topDishesFilteredIndices: [],
-  searchBarTags: (state) => state.lastActiveTags.filter(isSearchBarTag),
-  autocompleteFocusedTag: (state) => {
+const derivations = {
+  currentNavItem: derived<HomeState, NavigateItem>((state, om) =>
+    getNavigateItemForState(om, last(state.states)!)
+  ),
+
+  lastHomeState: derived<HomeState, HomeStateItemHome>((state) =>
+    findLast(state.states, isHomeState)
+  ),
+  lastRestaurantState: derived<HomeState, HomeStateItemRestaurant>((state) =>
+    findLast(state.states, isRestaurantState)
+  ),
+  lastSearchState: derived<HomeState, HomeStateItemSearch>((state) =>
+    findLast(state.states, isSearchState)
+  ),
+  currentState: derived<HomeState, HomeStateItem>(
+    (state) => _.last(state.states)!
+  ),
+  currentStateSearchQuery: derived<HomeState, HomeStateItem['searchQuery']>(
+    (state) => state.currentState.searchQuery
+  ),
+  currentStateType: derived<HomeState, HomeStateItem['type']>(
+    (state) => state.currentState.type
+  ),
+  isAutocompleteActive: derived<HomeState, boolean>(
+    (state) => state.activeIndex === -1
+  ),
+  previousState: derived<HomeState, HomeStateItem>(
+    (state) => state.states[state.states.length - 2]
+  ),
+  searchBarTags: derived<HomeState, Tag[]>((state) =>
+    state.lastActiveTags.filter(isSearchBarTag)
+  ),
+  autocompleteFocusedTag: derived<HomeState, Tag>((state) => {
     const { autocompleteIndex } = state
     if (autocompleteIndex < 0) return null
     if (!state.autocompleteResults) return null
@@ -120,13 +117,13 @@ export const state: HomeState = {
       state.allTags[state.autocompleteResults[autocompleteIndex - 1]?.tagId] ||
       null
     )
-  },
-  searchbarFocusedTag: (state) => {
+  }),
+  searchbarFocusedTag: derived<HomeState, Tag>((state) => {
     const { autocompleteIndex } = state
     if (autocompleteIndex > -1) return null
     return state.searchBarTags[-1 - autocompleteIndex]
-  },
-  autocompleteResultsActive: (state) => {
+  }),
+  autocompleteResultsActive: derived<HomeState, AutocompleteItem[]>((state) => {
     const prefix: AutocompleteItem[] = [
       {
         name: 'Search',
@@ -141,21 +138,46 @@ export const state: HomeState = {
         ? state.locationAutocompleteResults ?? []
         : state.autocompleteResults ?? []),
     ]
-  },
-  isLoading: (state) => {
+  }),
+  isLoading: derived<HomeState, boolean>((state) => {
     const cur = state.currentState
     if (isSearchState(cur)) {
       return cur.results.status === 'loading'
     }
     return false
-  },
-  lastActiveTags: (state) => {
+  }),
+  lastActiveTags: derived<HomeState, Tag[]>((state) => {
     const lastTaggable = _.findLast(
       state.states,
       (x) => isHomeState(x) || isSearchState(x)
     ) as HomeStateItemSearch | HomeStateItemHome
     return getActiveTags(state, lastTaggable)
-  },
+  }),
+}
+
+export const state: HomeState = {
+  started: false,
+  skipNextPageFetchData: false,
+  activeIndex: -1,
+  allTags,
+  allUsers: {},
+  allLenseTags: tagLenses,
+  allFilterTags: tagFilters,
+  allRestaurants: {},
+  autocompleteDishes: [],
+  autocompleteIndex: 0,
+  autocompleteResults: [],
+  breadcrumbStates: [],
+  hoveredRestaurant: null,
+  location: null,
+  locationAutocompleteResults: defaultLocationAutocompleteResults,
+  locationSearchQuery: '',
+  showAutocomplete: false,
+  showUserMenu: false,
+  states: [initialHomeState],
+  topDishes: [],
+  topDishesFilteredIndices: [],
+  ...derivations,
 }
 
 // TODO type
@@ -1020,7 +1042,7 @@ const updateBreadcrumbs: Action = (om) => {
   }
 }
 
-const createBreadcrumbs = (state: HomeStateBase) => {
+const createBreadcrumbs = (state: HomeState) => {
   let crumbs: HomeStateItemSimple[] = []
   stateLoop: for (let i = state.states.length - 1; i >= 0; i--) {
     const cur = state.states[i]

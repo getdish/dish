@@ -1,6 +1,6 @@
 import { Restaurant, Review, User } from '@dish/graph'
 import { TopCuisine } from '@dish/models'
-import { Config, Derive, IContext } from 'overmind'
+import { Config, IContext, derived } from 'overmind'
 
 import { NavigateItem } from './router'
 import { Tag } from './Tag'
@@ -9,7 +9,7 @@ export type Om = IContext<Config>
 export type OmState = Om['state']
 export type OmStateHome = OmState['home']
 
-export type HomeStateBase = {
+export type HomeState = {
   started: boolean
   activeIndex: number // index for vertical (in page), -1 = autocomplete
   allUsers: { [id: string]: User }
@@ -31,25 +31,21 @@ export type HomeStateBase = {
   topDishesFilteredIndices: number[]
   skipNextPageFetchData: boolean
   breadcrumbStates: HomeStateItemSimple[]
-}
-
-export type HomeState = HomeStateBase & {
-  lastHomeState: Derive<HomeState, HomeStateItemHome>
-  lastSearchState: Derive<HomeState, HomeStateItemSearch | null>
-  lastRestaurantState: Derive<HomeState, HomeStateItemRestaurant | null>
-  currentNavItem: Derive<HomeState, NavigateItem>
-  currentState: Derive<HomeState, HomeStateItem>
-  // my hypothesis is these more granular derives prevent updates on same value in views, need to test that
-  currentStateType: Derive<HomeState, HomeStateItem['type']>
-  currentStateSearchQuery: Derive<HomeState, HomeStateItem['searchQuery']>
-  previousState: Derive<HomeState, HomeStateItem>
-  isAutocompleteActive: Derive<HomeState, boolean>
-  isLoading: Derive<HomeState, boolean>
-  autocompleteResultsActive: Derive<HomeState, AutocompleteItem[]>
-  lastActiveTags: Derive<HomeState, Tag[]>
-  searchbarFocusedTag: Derive<HomeState, Tag>
-  autocompleteFocusedTag: Derive<HomeState, Tag>
-  searchBarTags: Derive<HomeState, Tag[]>
+  lastHomeState: HomeStateItemHome
+  lastSearchState: HomeStateItemSearch | null
+  lastRestaurantState: HomeStateItemRestaurant | null
+  currentNavItem: NavigateItem
+  currentState: HomeStateItem
+  currentStateType: HomeStateItem['type']
+  currentStateSearchQuery: HomeStateItem['searchQuery']
+  previousState: HomeStateItem
+  isAutocompleteActive: boolean
+  isLoading: boolean
+  autocompleteResultsActive: AutocompleteItem[]
+  lastActiveTags: Tag[]
+  searchbarFocusedTag: Tag
+  autocompleteFocusedTag: Tag
+  searchBarTags: Tag[]
 }
 
 export type GeocodePlace = mapkit.Place & {

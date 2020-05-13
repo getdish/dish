@@ -1,7 +1,7 @@
 import { slugify } from '@dish/common-web'
 import { TagType } from '@dish/models'
 import { last } from 'lodash'
-import { Action, AsyncAction, Derive } from 'overmind'
+import { Action, AsyncAction, Derive, derived } from 'overmind'
 
 import { LIVE_SEARCH_DOMAIN } from '../constants'
 import { sleep } from '../helpers/sleep'
@@ -38,9 +38,6 @@ export const navigateToTag: Action<HomeStateNav> = (om, nav) => {
 export const navigateToTagId: Action<string> = (om, tagId) => {
   navigateToTag(om, { tags: [om.state.home.allTags[tagId]] })
 }
-
-export const currentNavItem: Derive<HomeState, NavigateItem> = (state, om) =>
-  getNavigateItemForState(om, last(state.states)!)
 
 export const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
   return await Promise.all(
