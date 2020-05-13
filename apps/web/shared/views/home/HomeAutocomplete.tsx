@@ -6,7 +6,7 @@ import {
   searchBarHeight,
   searchBarTopOffset,
 } from '../../constants'
-import { useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/useOvermind'
 import { Icon } from '../ui/Icon'
 import { LinearGradient } from '../ui/LinearGradient'
 import { LinkButton, LinkButtonProps } from '../ui/Link'

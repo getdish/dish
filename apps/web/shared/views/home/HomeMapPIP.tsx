@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import React, { memo, useEffect, useMemo, useState } from 'react'
 
-import { useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/useOvermind'
 import { Map, useMap } from '../map'
 import { ZStack } from '../ui/Stacks'
 import { centerMapToRegion } from './HomeMap'

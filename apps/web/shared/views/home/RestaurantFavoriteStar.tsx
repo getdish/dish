@@ -5,7 +5,7 @@ import { ScrollView, Text, TextInput } from 'react-native'
 
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { useForceUpdate } from '../../hooks/useForceUpdate'
-import { useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/useOvermind'
 import { Toast } from '../Toast'
 import { Box } from '../ui/Box'
 import { Icon } from '../ui/Icon'

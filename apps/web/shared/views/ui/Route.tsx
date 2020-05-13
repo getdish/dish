@@ -7,8 +7,8 @@ import React, {
 } from 'react'
 import { View } from 'react-native'
 
-import { useOvermind } from '../../state/om'
 import { HistoryItem, routePathToName, routes } from '../../state/router'
+import { useOvermind } from '../../state/useOvermind'
 
 const RouteContext = createContext<(name: string, showing: boolean) => void>(
   null

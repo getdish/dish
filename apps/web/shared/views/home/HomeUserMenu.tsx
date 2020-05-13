@@ -2,7 +2,7 @@ import { slugify } from '@dish/common-web'
 import React, { memo } from 'react'
 import { useStorageState } from 'react-storage-hooks'
 
-import { useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/useOvermind'
 import { AuthLoginRegisterView } from '../auth/AuthLoginRegisterView'
 import { Toast } from '../Toast'
 import { Box } from '../ui/Box'

@@ -12,7 +12,6 @@ import { Platform, Text, TextStyle, TouchableOpacity } from 'react-native'
 
 import { currentStates } from '../../state/home'
 import { getNavigateToTags } from '../../state/home-tag-helpers'
-import { useOvermindStatic } from '../../state/om'
 import {
   NavigateItem,
   RouteName,
@@ -20,6 +19,7 @@ import {
   getPathFromParams,
 } from '../../state/router'
 import { NavigableTag } from '../../state/Tag'
+import { useOvermindStatic } from '../../state/useOvermind'
 import { CurrentStateID } from '../home/CurrentStateID'
 import { StackProps, VStack, getNode } from './Stacks'
 

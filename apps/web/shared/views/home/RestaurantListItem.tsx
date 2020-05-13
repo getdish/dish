@@ -5,7 +5,7 @@ import { ScrollView, TouchableOpacity } from 'react-native'
 
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { GeocodePlace, isEditingUserPage } from '../../state/home'
-import { useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/useOvermind'
 import { Divider } from '../ui/Divider'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { Icon } from '../ui/Icon'

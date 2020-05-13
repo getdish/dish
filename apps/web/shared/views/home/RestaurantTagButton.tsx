@@ -3,7 +3,7 @@ import _ from 'lodash'
 import React, { memo, useState } from 'react'
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native'
 
-import { useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/useOvermind'
 import { Box } from '../ui/Box'
 import { Icon } from '../ui/Icon'
 import { LinkButton } from '../ui/Link'

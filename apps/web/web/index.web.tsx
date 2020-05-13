@@ -25,7 +25,7 @@ import { App } from '../shared/views/App'
 // NOTE: nothing should import this file! its the root!
 //
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development' && !window['STARTED']) {
   startLogging()
 }
 
@@ -47,6 +47,7 @@ let rootEl = document.getElementById('root')
 const search = window.location.search
 
 async function start() {
+  console.log('starting...')
   const om = createOvermind(config, {
     devtools: `localhost:3031`,
     logProxies: true,

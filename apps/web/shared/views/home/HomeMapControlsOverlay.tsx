@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 import { Text } from 'react-native'
 
 import { pageWidthMax, searchBarHeight } from '../../constants'
-import { useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/useOvermind'
 import { LinkButton, OverlayLinkButton } from '../ui/Link'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'

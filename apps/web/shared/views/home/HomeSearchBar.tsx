@@ -14,8 +14,8 @@ import {
   searchBarTopOffset,
 } from '../../constants'
 import { useOnMount } from '../../hooks/useOnMount'
-import { useOvermind } from '../../state/om'
 import { getTagId } from '../../state/Tag'
+import { useOvermind } from '../../state/useOvermind'
 import { Circle } from '../ui/Circle'
 import { Divider } from '../ui/Divider'
 import Hoverable from '../ui/Hoverable'

@@ -4,7 +4,7 @@ import { Image, Text, TextInput, TouchableOpacity } from 'react-native'
 
 // @ts-ignore
 import avatar from '../../assets/peach.png'
-import { useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/useOvermind'
 import { Toast } from '../Toast'
 import { Box } from '../ui/Box'
 import { Circle } from '../ui/Circle'

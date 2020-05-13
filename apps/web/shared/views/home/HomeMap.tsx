@@ -6,7 +6,7 @@ import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { useOnMount } from '../../hooks/useOnMount'
 import { LngLat, setMapView } from '../../state/home'
 import { isSearchState } from '../../state/home-helpers'
-import { omStatic, useOvermind } from '../../state/om'
+import { omStatic, useOvermind } from '../../state/useOvermind'
 import { Map, useMap } from '../map'
 import { ZStack } from '../ui/Stacks'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
@@ -41,7 +41,7 @@ export function centerMapToRegion(p: {
   try {
     p.map?.setRegionAnimated(region)
   } catch (err) {
-    console.error(err)
+    console.warn('map hmr err', err.message)
   }
 }
 
@@ -267,21 +267,20 @@ const HomeMapContent = memo(function HomeMap() {
       .reverse()
   }, [restaurantsVersion])
 
-  // hover on map annotation
-  const annotationsContainer = document.querySelector(
-    '.mk-annotation-container'
-  )
-
   // stop map animation when moving away from page (see if this fixes some animation glitching/tearing)
   useEffect(() => {
     // equivalent to map.pauseAnimation() i think?
     try {
       map?.setRegionAnimated(map?.region, false)
     } catch (err) {
-      console.error(err)
+      console.warn('map hmr err', err.message)
     }
   }, [map, restaurantsVersion])
 
+  // // hover on map annotation
+  // const annotationsContainer = document.querySelector(
+  //   '.mk-annotation-container'
+  // )
   //  broke, mapkit stopped insertings the divs in the same order?
   // useDebounceEffect(
   //   () => {

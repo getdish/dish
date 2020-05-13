@@ -5,7 +5,7 @@ import React, { memo, useCallback, useState } from 'react'
 import { ScrollView, Text } from 'react-native'
 
 import { HomeStateItem, HomeStateItemHome } from '../../state/home'
-import { useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../NotFoundPage'
 import { LinkButton, OverlayLinkButton } from '../ui/Link'
 import { MediaQuery, mediaQueries } from '../ui/MediaQuery'

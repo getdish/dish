@@ -1,5 +1,4 @@
-import { IConfig, Overmind } from 'overmind'
-import { createHook } from 'overmind-react'
+import { IConfig } from 'overmind'
 import { merge, namespaced } from 'overmind/es/config'
 
 import * as home from './home'
@@ -23,18 +22,6 @@ type OmState = IConfig<typeof config>
 declare module 'overmind' {
   interface Config extends OmState {}
 }
-
-export const useOvermind = createHook<typeof config>()
-export const useOvermindStatic = () => window['om'] as Overmind<typeof config>
-
-export const omStatic = new Proxy(
-  {},
-  {
-    get(_, key) {
-      return (window['om'] ?? config)[key]
-    },
-  }
-) as Overmind<typeof config>
 
 if (process.env.NODE_ENV === 'development') {
   if (window['STARTED']) {
