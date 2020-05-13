@@ -1,14 +1,11 @@
 import { slugify } from '@dish/common-web'
-import { TagType } from '@dish/models'
-import { last } from 'lodash'
-import { Action, AsyncAction, Derive, derived } from 'overmind'
+import { Action, AsyncAction } from 'overmind'
 
 import { LIVE_SEARCH_DOMAIN } from '../constants'
 import { sleep } from '../helpers/sleep'
 import { isHomeState, isSearchState, shouldBeOnHome } from './home-helpers'
 import {
   HomeActiveTagIds,
-  HomeState,
   HomeStateItem,
   HomeStateItemSearch,
 } from './home-types'
