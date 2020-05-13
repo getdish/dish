@@ -104,7 +104,6 @@ export default memo(function HomeAutoComplete() {
       <HStack
         backgroundColor="rgba(0,0,0,0.6)"
         className="blur"
-        paddingLeft={100}
         // borderBottomRightRadius={12}
         // borderBottomLeftRadius={12}
         overflow="hidden"
@@ -120,6 +119,7 @@ export default memo(function HomeAutoComplete() {
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <HStack
             height="100%"
+            paddingLeft={100}
             flex={1}
             alignItems="center"
             paddingHorizontal={10}

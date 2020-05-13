@@ -9,7 +9,7 @@ import {
   isUserState,
 } from '../../state/home-helpers'
 import { ErrorBoundary } from '../ErrorBoundary'
-import { ZStack } from '../ui/Stacks'
+import { VStack, ZStack } from '../ui/Stacks'
 import { CurrentStateID } from './CurrentStateID'
 import { HomeMap } from './HomeMap'
 import { HomeMapControlsOverlay } from './HomeMapControlsOverlay'
@@ -34,39 +34,49 @@ export default function HomePage() {
   )
 
   return (
-    <ZStack fullscreen>
-      {!isWorker && (
-        <ErrorBoundary name="maps">
-          <HomeMap />
-          {showPip && <HomeMapPIP />}
-        </ErrorBoundary>
-      )}
-      <HomeMapControlsOverlay />
-      <HomeSearchBar />
-      <HomeViewDrawer>
-        <HomeStackView>
-          {(homeState, isActive, index) => {
-            return (
-              <CurrentStateID.Provider value={homeState.id}>
-                <Suspense fallback={null}>
-                  {isHomeState(homeState) && (
-                    <HomePageTopDishes stateIndex={index} />
-                  )}
-                  {isUserState(homeState) && (
-                    <HomePageUser stateIndex={index} />
-                  )}
-                  {isSearchState(homeState) && (
-                    <HomePageSearchResults stateIndex={index} />
-                  )}
-                  {isRestaurantState(homeState) && (
-                    <HomePageRestaurant stateIndex={index} />
-                  )}
-                </Suspense>
-              </CurrentStateID.Provider>
-            )
-          }}
-        </HomeStackView>
-      </HomeViewDrawer>
-    </ZStack>
+    <VStack flex={1} backgroundColor="#000" alignItems="center">
+      <VStack
+        width="100%"
+        height="100%"
+        maxWidth={1990}
+        borderRadius={10}
+        overflow="hidden"
+        // marginHorizontal={-20}
+        // paddingHorizontal={20}
+      >
+        {!isWorker && (
+          <ErrorBoundary name="maps">
+            <HomeMap />
+            {showPip && <HomeMapPIP />}
+          </ErrorBoundary>
+        )}
+        <HomeMapControlsOverlay />
+        <HomeSearchBar />
+        <HomeViewDrawer>
+          <HomeStackView>
+            {(homeState, isActive, index) => {
+              return (
+                <CurrentStateID.Provider value={homeState.id}>
+                  <Suspense fallback={null}>
+                    {isHomeState(homeState) && (
+                      <HomePageTopDishes stateIndex={index} />
+                    )}
+                    {isUserState(homeState) && (
+                      <HomePageUser stateIndex={index} />
+                    )}
+                    {isSearchState(homeState) && (
+                      <HomePageSearchResults stateIndex={index} />
+                    )}
+                    {isRestaurantState(homeState) && (
+                      <HomePageRestaurant stateIndex={index} />
+                    )}
+                  </Suspense>
+                </CurrentStateID.Provider>
+              )
+            }}
+          </HomeStackView>
+        </HomeViewDrawer>
+      </VStack>
+    </VStack>
   )
 }

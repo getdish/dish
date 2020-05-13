@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
 
-import { searchBarHeight } from '../../constants'
+import { drawerBorderRadius, searchBarHeight } from '../../constants'
 import { drawerPad, drawerPadLeft, drawerWidthMax } from '../../constants'
 import { useMedia } from '../../hooks/useMedia'
 import { LinearGradient } from '../ui/LinearGradient'
@@ -59,7 +59,8 @@ export function HomeViewDrawer(props: { children: any }) {
       shadowColor="rgba(0,0,0,0.1)"
       shadowRadius={54}
       borderRightWidth={1}
-      // borderBottomRightRadius={drawerBorderRadius}
+      borderBottomRightRadius={drawerBorderRadius * 0.5}
+      borderTopRightRadius={drawerBorderRadius * 0.5}
       borderColor="#ddd"
       flex={1}
       justifyContent="flex-end"
@@ -68,7 +69,8 @@ export function HomeViewDrawer(props: { children: any }) {
       <ZStack fullscreen>
         <ZStack
           fullscreen
-          // borderBottomRightRadius={drawerBorderRadius}
+          borderBottomRightRadius={drawerBorderRadius * 0.5}
+          borderTopRightRadius={drawerBorderRadius * 0.5}
           overflow="hidden"
         >
           <LinearGradient

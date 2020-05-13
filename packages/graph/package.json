@@ -27,6 +27,10 @@
     "gqless-hooks": "^1.1.1",
     "gqless": "^0.0.1-alpha.29",
     "@gqless/schema": "^0.0.1-alpha.31",
-    "react": "*"
+    "react": "0.0.0-experimental-aae83a4b9"
+  },
+  "devDependencies": {
+    "@types/node": "*",
+    "@types/react": "*"
   }
 }

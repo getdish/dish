@@ -66,6 +66,7 @@
   "devDependencies": {
     "cross-env": "^7.0.2",
     "nollup": "^0.11.0",
+    "inspectpack": "4.4.0",
     "rollup-plugin-react-refresh": "^0.0.1",
     "@dish/rollup-plugin-tscc": "*",
     "@dish/tsickle-loader": "*",
