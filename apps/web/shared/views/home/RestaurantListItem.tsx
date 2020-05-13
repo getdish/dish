@@ -134,7 +134,11 @@ const RestaurantListItemContent = memo(
                 marginLeft={-adjustRankingLeft}
                 width={900}
               >
-                <Link name="restaurant" params={{ slug: restaurant.slug }}>
+                <Link
+                  tagName="div"
+                  name="restaurant"
+                  params={{ slug: restaurant.slug }}
+                >
                   <VStack>
                     <HStack alignItems="center" marginVertical={-3}>
                       <RankingView
@@ -143,15 +147,21 @@ const RestaurantListItemContent = memo(
                         rank={rank}
                       />
 
-                      <SelectableText
-                        style={{
-                          fontSize: 24,
-                          fontWeight: '700',
-                          textDecorationColor: 'transparent',
-                        }}
+                      <Link
+                        name="restaurant"
+                        params={{ slug: restaurant.slug }}
                       >
-                        {restaurant.name}
-                      </SelectableText>
+                        <SelectableText
+                          style={{
+                            color: '#000',
+                            fontSize: 24,
+                            fontWeight: '700',
+                            textDecorationColor: 'transparent',
+                          }}
+                        >
+                          {restaurant.name}
+                        </SelectableText>
+                      </Link>
                     </HStack>
 
                     <Spacer size={10} />
