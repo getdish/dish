@@ -63,7 +63,7 @@ export const TagButton = memo(
     return (
       <LinkButton tag={tag} disabledIfActive>
         <HStack
-          height={scale * 28}
+          height={scale * 31}
           backgroundColor={bg}
           borderRadius={8 * scale}
           overflow="hidden"

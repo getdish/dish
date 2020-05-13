@@ -558,11 +558,10 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   const isEditing = isEditingUserPage(om.state)
 
   if (!isEditing && isOnSearch && isGoingHome) {
-    await requestIdle()
-    if (id != lastRunAt) return
-    om.state.home.lastHomeState.searchQuery = ''
-    om.state.home.topDishesFilteredIndices = []
-    om.actions.router.navigate({ name: 'home' })
+    // to automatically go home on empty
+    // await requestIdle()
+    // if (id != lastRunAt) return
+    om.actions.home.clearSearch()
     return
   }
 
@@ -762,7 +761,7 @@ const runSearch: AsyncAction<{
 const clearSearch: Action = (om) => {
   const state = om.state.home.currentState
   if (isSearchState(state)) {
-    om.actions.router.back()
+    om.actions.home.popTo('home')
   }
 }
 

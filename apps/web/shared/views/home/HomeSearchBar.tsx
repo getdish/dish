@@ -25,6 +25,7 @@ import { MediaQuery, mediaQueries } from '../ui/MediaQuery'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { CloseButton } from './CloseButton'
+import { bgLight } from './colors'
 import { DishLogoButton } from './DishLogoButton'
 import HomeAutocomplete, {
   HomeAutocompleteBackground,
@@ -470,7 +471,7 @@ const SearchCancelButton = memo(({ onCancel }: { onCancel?: Function }) => {
       opacity={om.state.home.currentStateSearchQuery === '' ? 0 : 1}
       disabled={om.state.home.currentStateSearchQuery === ''}
       onPress={() => {
-        om.actions.home.setSearchQuery('')
+        om.actions.home.clearSearch()
         onCancel?.()
       }}
     />
@@ -525,12 +526,13 @@ const HomeSearchBarTags = memo(
                   <TagButton
                     subtleIcon
                     {...(!isActive && {
-                      backgroundColor: '#fff',
-                      borderColor: '#eee',
                       color: '#444',
                     })}
+                    {...(isActive && {
+                      backgroundColor: bgLight,
+                    })}
                     size="lg"
-                    fontSize={16}
+                    fontSize={18}
                     name={tag.name}
                     type={tag.type}
                     icon={tag.icon}

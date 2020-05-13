@@ -167,11 +167,13 @@ textarea {
 
 /* some small animation helpers */
 .animate-up {
+  pointer-events: none;
   opacity: 0;
   transform: translateY(8px);
   transition: all ease-in-out 200ms;
 }
 .animate-up.active {
+  pointer-events: unset;
   opacity: 1;
   transform: translateY(0);
 }

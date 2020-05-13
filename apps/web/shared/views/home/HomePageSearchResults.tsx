@@ -182,7 +182,7 @@ const HomeSearchResultsViewContent = memo(
 
     const resultsIds = state.results?.results?.restaurantIds
     const resultsAll = resultsIds.map((id) => allRestaurants[id])
-    const results = resultsAll.slice(0, 3)
+    const results = resultsAll
 
     if (!results.length) {
       return (
