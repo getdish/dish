@@ -76,7 +76,7 @@ const RestaurantRatingBreakdownView = graphql(
                   <VStack
                     zIndex={10}
                     flex={1}
-                    minWidth={90}
+                    minWidth={68}
                     maxWidth={120}
                     marginHorizontal={-12}
                   >
@@ -90,7 +90,7 @@ const RestaurantRatingBreakdownView = graphql(
                   <VStack
                     zIndex={9}
                     flex={1}
-                    minWidth={90}
+                    minWidth={68}
                     maxWidth={120}
                     marginHorizontal={-12}
                   >
@@ -104,14 +104,14 @@ const RestaurantRatingBreakdownView = graphql(
                   <VStack
                     zIndex={8}
                     flex={1}
-                    minWidth={90}
+                    minWidth={68}
                     maxWidth={120}
                     marginHorizontal={-12}
                   >
                     <RatingBreakdownCircle
                       percent={ratingFactors?.ambience}
                       emoji="✨"
-                      name="Ambiance"
+                      name="Decor"
                     />
                   </VStack>
                 </HStack>
@@ -119,28 +119,28 @@ const RestaurantRatingBreakdownView = graphql(
             </Box>
           }
         >
-          <HStack height="100%" alignItems="center" paddingRight={20}>
-            <Circle
-              marginHorizontal={-5}
-              size={30}
-              backgroundColor="rgba(0,205,100,1)"
-            >
+          <HStack height="100%" alignItems="center" marginHorizontal={-10}>
+            <Circle zIndex={3} marginHorizontal={-3} size={18 + 20}>
               <RatingBreakdownCircle
                 percent={ratingFactors?.service}
                 emoji="👩‍🍳"
-                size={30}
+                size={18}
               />
             </Circle>
-            <Circle
-              marginHorizontal={-5}
-              size={30}
-              backgroundColor="rgba(0,205,100,1)"
-            />
-            <Circle
-              marginHorizontal={-5}
-              size={30}
-              backgroundColor="rgba(0,205,100,1)"
-            />
+            <Circle zIndex={2} marginHorizontal={-3} size={18 + 20}>
+              <RatingBreakdownCircle
+                percent={ratingFactors?.service}
+                emoji="👩‍🍳"
+                size={18}
+              />
+            </Circle>
+            <Circle zIndex={1} marginHorizontal={-3} size={18 + 20}>
+              <RatingBreakdownCircle
+                percent={ratingFactors?.service}
+                emoji="👩‍🍳"
+                size={18}
+              />
+            </Circle>
           </HStack>
         </HoverablePopover>
       </>

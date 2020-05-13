@@ -33,7 +33,7 @@ export function ProgressCircle({
   }
 
   const state = {
-    borderWidth: borderWidth < 2 || !borderWidth ? 2 : borderWidth,
+    borderWidth: borderWidth < 1 || !borderWidth ? 1 : borderWidth,
     leftTransformerDegree: leftTransformerDegree,
     rightTransformerDegree: rightTransformerDegree,
     textStyle: textStyle ? textStyle : null,

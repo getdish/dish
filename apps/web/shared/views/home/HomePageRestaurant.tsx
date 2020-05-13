@@ -94,7 +94,7 @@ export default graphql(function HomePageRestaurant({
           <HStack position="relative">
             <RestaurantRatingViewPopover size="lg" restaurantSlug={slug} />
 
-            <Spacer size={20} />
+            <Spacer size={32} />
 
             <HStack width="80%">
               <VStack flex={1}>
