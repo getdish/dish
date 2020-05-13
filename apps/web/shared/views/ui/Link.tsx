@@ -67,7 +67,7 @@ export function Link<
     replace,
     ...restProps
   } = allProps
-  const linkProps = useNormalizeLinkProps(allProps)
+  const linkProps = useNormalizeLinkProps(allProps as any)
   const om = useOvermindStatic()
   const navItem: NavigateItem = useMemo(
     () => ({

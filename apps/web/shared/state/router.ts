@@ -1,7 +1,7 @@
 import { slugify } from '@dish/common-web'
 import { isEqual } from '@o/fast-compare'
 import _ from 'lodash'
-import { Action, AsyncAction, Derive } from 'overmind'
+import { Action, AsyncAction, Derive, derived } from 'overmind'
 import page from 'page'
 import queryString from 'query-string'
 
@@ -90,8 +90,8 @@ export type HistoryItem<A extends RouteName = any> = {
 export type RouterState = {
   notFound: boolean
   history: HistoryItem[]
-  prevPage: Derive<RouterState, HistoryItem | undefined>
-  curPage: Derive<RouterState, HistoryItem>
+  prevPage: HistoryItem | undefined
+  curPage: HistoryItem
 }
 
 let ignoreNextRoute = false
@@ -140,8 +140,12 @@ const defaultPage = {
 export const state: RouterState = {
   notFound: false,
   history: [],
-  prevPage: (state) => state.history[state.history.length - 2],
-  curPage: (state) => state.history[state.history.length - 1] || defaultPage,
+  prevPage: derived<RouterState, HistoryItem | undefined>(
+    (state) => state.history[state.history.length - 2]
+  ),
+  curPage: derived<RouterState, HistoryItem>(
+    (state) => state.history[state.history.length - 1] || defaultPage
+  ),
 }
 
 const uid = () => `${Math.random()}`

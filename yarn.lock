@@ -5509,10 +5509,10 @@ betsy@1.0.2:
     "@types/node" "^10.5.1"
     tslib "^1.9.3"
 
-betsy@1.0.2-1589222494370:
-  version "1.0.2-1589222494370"
-  resolved "https://registry.npmjs.org/betsy/-/betsy-1.0.2-1589222494370.tgz#26ed70b259adbd6f73807326ae8649689cc4876a"
-  integrity sha512-j6Wo/SSoq9Q5t5heBKwJ5+5Ismjte0UYD//dSTAxRJom+mTbhRtAwhV8YYwPFNCzQB3SIoshWuGUJOX+kciL+w==
+betsy@1.0.2-1589389364682:
+  version "1.0.2-1589389364682"
+  resolved "https://registry.npmjs.org/betsy/-/betsy-1.0.2-1589389364682.tgz#06ca01e16d97692068bd0ce66f236350d3f78f89"
+  integrity sha512-on7PF39eCFqZgF+AplwUVE9Qzrgyp+rU0SgBIWQCpQ1h//J4M7LZPEZhtEPaAMPKVg9YPWI3YMrhuzfCyoUXJQ==
 
 bfj@^6.1.1:
   version "6.1.2"
@@ -14779,12 +14779,12 @@ overmind-react@24.0.1:
   dependencies:
     overmind "23.0.1"
 
-overmind-react@24.1.0-1589222494370:
-  version "24.1.0-1589222494370"
-  resolved "https://registry.npmjs.org/overmind-react/-/overmind-react-24.1.0-1589222494370.tgz#f81814806e9b7fb74c1d43ccc79863779a897c1b"
-  integrity sha512-t6N+JDGLjBy5c6sn0EsknLcP5oGyMxE1CGZxvsVdoLBpWfZAeZfz+AMCCzbcVY8bhTOzP8N+bFhJip8wjQLT+Q==
+overmind-react@24.1.0-1589389364682:
+  version "24.1.0-1589389364682"
+  resolved "https://registry.npmjs.org/overmind-react/-/overmind-react-24.1.0-1589389364682.tgz#9b143d01301f13aca12ec588f64c72efcf1c1d9d"
+  integrity sha512-4r9fWGUe4GqNYx1VLhg9giBNkKUYta4nvRohrBqWEn52dKsX1wT1Z5w43mpsCPb+yPIByfD8yo/DPKfgl8DZFA==
   dependencies:
-    overmind "23.1.0-1589222494370"
+    overmind "23.1.0-1589389364682"
 
 overmind-themes@next:
   version "1.0.2-1582705151381"
@@ -14803,14 +14803,14 @@ overmind@23.0.1:
     proxy-state-tree "5.0.0"
     tslib "^1.10.0"
 
-overmind@23.1.0-1589222494370:
-  version "23.1.0-1589222494370"
-  resolved "https://registry.npmjs.org/overmind/-/overmind-23.1.0-1589222494370.tgz#c4d245d4a8c4634495247206e1ca6998eb1ecc4d"
-  integrity sha512-f6rMGLkxHfK4N9/Bqa8Huyd39VuwGEwRhhygmd497AzbyH80VemWQQmam8gzXI8ZLwMrjY2J0iRwWth2NIyyeQ==
+overmind@23.1.0-1589389364682:
+  version "23.1.0-1589389364682"
+  resolved "https://registry.npmjs.org/overmind/-/overmind-23.1.0-1589389364682.tgz#468c81794e844a51e114bbdc3986b662a9c149c0"
+  integrity sha512-TCFjsBryXkrHqWpI3EmSlGcVcWWrvruBdpTyY07MBS/go6KTvko7uuk2KZG9xcER+/iM9fWA6BD8hyp+B+EbVA==
   dependencies:
-    betsy "1.0.2-1589222494370"
+    betsy "1.0.2-1589389364682"
     is-plain-obj "^1.1.0"
-    proxy-state-tree "5.0.1-1589222494370"
+    proxy-state-tree "5.0.1-1589389364682"
     tslib "^1.10.0"
 
 ow@^0.15.0:
@@ -16184,10 +16184,10 @@ proxy-state-tree@5.0.0:
   dependencies:
     is-plain-obj "^1.1.0"
 
-proxy-state-tree@5.0.1-1589222494370:
-  version "5.0.1-1589222494370"
-  resolved "https://registry.npmjs.org/proxy-state-tree/-/proxy-state-tree-5.0.1-1589222494370.tgz#e2ca3ead9833cdd4f8da8f772e990f13acc6a93f"
-  integrity sha512-0XBo08wamdpfaTnwoB41vdhD1zS6N6gwrtxEjh9Id9QXEdr6jn3j7B4qHFRASjECAcSnFAgG3X2f3I8hAW2xyw==
+proxy-state-tree@5.0.1-1589389364682:
+  version "5.0.1-1589389364682"
+  resolved "https://registry.npmjs.org/proxy-state-tree/-/proxy-state-tree-5.0.1-1589389364682.tgz#00c2e2619372409c422d3e629c522612760c530b"
+  integrity sha512-mPx8rTa3Gm8c1dAdghZzrxqm0EeV8A8N8QoNLLZC4kc4FnJ/Mm9386xUbPVnqb6K4tqvX5+jmn0bdEMo2gfehQ==
   dependencies:
     is-plain-obj "^1.1.0"
 
@@ -19528,7 +19528,7 @@ typeorm@0.2.24:
     yargonaut "^1.1.2"
     yargs "^13.2.1"
 
-typescript@*, typescript@^3.2.4, typescript@^3.3.3:
+typescript@*, typescript@3.9.2, typescript@^3.2.4, typescript@^3.3.3:
   version "3.9.2"
   resolved "https://registry.npmjs.org/typescript/-/typescript-3.9.2.tgz#64e9c8e9be6ea583c54607677dd4680a1cf35db9"
   integrity sha512-q2ktq4n/uLuNNShyayit+DTobV2ApPEo/6so68JaD5ojvc/6GClBipedB9zNWYxRSAlZXAe405Rlijzl6qDiSw==
@@ -19537,11 +19537,6 @@ typescript@3.7.3:
   version "3.7.3"
   resolved "https://registry.npmjs.org/typescript/-/typescript-3.7.3.tgz#b36840668a16458a7025b9eabfad11b66ab85c69"
   integrity sha512-Mcr/Qk7hXqFBXMN7p7Lusj1ktCBydylfQM/FZCk5glCNQJrCUKPkMHdo9R0MTFWsC/4kPFvDS0fDPvukfCkFsw==
-
-typescript@3.8.3:
-  version "3.8.3"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-3.8.3.tgz#409eb8544ea0335711205869ec458ab109ee1061"
-  integrity sha512-MYlEfn5VrLNsgudQTVJeNaQFUAI7DkhnOjdpAp4T+ku1TfQClewlbSuTVHiA+8skNBgaf02TL/kLOvig4y3G8w==
 
 ua-parser-js@^0.7.18, ua-parser-js@^0.7.19:
   version "0.7.21"

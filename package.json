@@ -22,8 +22,7 @@
     "prettier": "wsrun -c prettier --write \"**/*.{ts,tsx}\" || true"
   },
   "resolutions": {
-    "tslib": "1.11.2",
-    "typeorm/tslib": "1.11.2"
+    "tslib": "1.11.2"
   },
   "devDependencies": {
     "import-sort-style-module": "^6.0.0",
@@ -33,7 +32,7 @@
     "prettier": "^2.0.4",
     "ts-node": "^8.10.1",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "3.8.3",
+    "typescript": "3.9.2",
     "wsrun": "^5.2.0"
   },
   "dependencies": {
@@ -45,8 +44,5 @@
       "style": "module",
       "parser": "typescript"
     }
-  },
-  "resolutions": {
-    "tslib": "1.11.2"
   }
 }
