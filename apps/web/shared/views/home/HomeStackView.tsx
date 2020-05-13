@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { Suspense, useEffect, useMemo, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 
 import { drawerBorderRadius, searchBarHeight } from '../../constants'
@@ -40,7 +40,9 @@ export function HomeStackView<A extends HomeStateItemSimple>(props: {
               isRemoving={isActive && isRemoving}
             >
               <ErrorBoundary name={`${item.type}`}>
-                {props.children(item as any, isActive, stackItemIndex)}
+                <Suspense fallback={null}>
+                  {props.children(item as any, isActive, stackItemIndex)}
+                </Suspense>
               </ErrorBoundary>
             </HomeStackViewItem>
           </ForceShowPopover.Provider>

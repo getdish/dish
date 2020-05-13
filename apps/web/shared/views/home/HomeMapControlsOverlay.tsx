@@ -28,7 +28,7 @@ export const HomeMapControlsOverlay = memo(() => {
         right: 0,
         top: searchBarHeight,
       })}
-      zIndex={100}
+      zIndex={20}
       alignItems="center"
       justifyContent="center"
     >

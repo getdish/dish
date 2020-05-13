@@ -923,9 +923,11 @@ function searchLocations(query: string) {
 
 const moveAutocompleteIndex: Action<number> = (om, val) => {
   const cur = om.state.home.autocompleteIndex
-  const tags = om.state.home.lastActiveTags
-  const min = -1 - tags.length
-  om.state.home.autocompleteIndex = Math.min(Math.max(min, cur + val), 1000) // TODO
+  const tags = om.state.home.lastActiveTags.filter((x) => isSearchBarTag(x))
+  const min = 0 - tags.length
+  const next = Math.min(Math.max(min, cur + val), 1000) // TODO
+  console.log('next', { next, min, tags, cur })
+  om.state.home.autocompleteIndex = next
 }
 
 const setActiveIndex: Action<number> = (om, val) => {

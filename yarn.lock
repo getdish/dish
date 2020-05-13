@@ -9624,6 +9624,11 @@ forwarded@~0.1.2:
   resolved "https://registry.npmjs.org/forwarded/-/forwarded-0.1.2.tgz#98c23dab1175657b8c0573e8ceccd91b0ff18c84"
   integrity sha1-mMI9qxF1ZXuMBXPozszZGw/xjIQ=
 
+fp-ts@^2.0.2, fp-ts@^2.3.1:
+  version "2.6.0"
+  resolved "https://registry.npmjs.org/fp-ts/-/fp-ts-2.6.0.tgz#55dc9e82612a44a7bfed3484b18c535514d63e51"
+  integrity sha512-4EKVa3EOP3NoDwXCLgSCT2t+E2wPCWDXCuj3wEcQ1ovkLfdCMxKxCuElpXptIPBmtA+KbjnUl5Ta/1U3jsCmkg==
+
 fragment-cache@^0.2.1:
   version "0.2.1"
   resolved "https://registry.npmjs.org/fragment-cache/-/fragment-cache-0.2.1.tgz#4290fad27f13e89be7f33799c6bc5a0abfff0d19"
@@ -11203,6 +11208,19 @@ inquirer@^7.0.0:
     strip-ansi "^6.0.0"
     through "^2.3.6"
 
+inspectpack@4.4.0:
+  version "4.4.0"
+  resolved "https://registry.npmjs.org/inspectpack/-/inspectpack-4.4.0.tgz#47c3a94b80ba8a4b72034b784f018ff58952eb03"
+  integrity sha512-V9vjuP5OqAk3jnCZ0M9TIhZlRNdd9v1fggwAHHOTYvxqFRkAtEbjj1dII6kpj6tN8+yHKBL5u9gf9Lp7GGOLHw==
+  dependencies:
+    chalk "^3.0.0"
+    fp-ts "^2.3.1"
+    io-ts "^2.0.3"
+    io-ts-reporters "^1.0.0"
+    pify "^4.0.1"
+    semver-compare "^1.0.0"
+    yargs "^15.1.0"
+
 internal-ip@4.3.0, internal-ip@^4.3.0:
   version "4.3.0"
   resolved "https://registry.npmjs.org/internal-ip/-/internal-ip-4.3.0.tgz#845452baad9d2ca3b69c635a137acb9a0dad0907"
@@ -11227,6 +11245,19 @@ invert-kv@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/invert-kv/-/invert-kv-2.0.0.tgz#7393f5afa59ec9ff5f67a27620d11c226e3eec02"
   integrity sha512-wPVv/y/QQ/Uiirj/vh3oP+1Ww+AWehmi1g5fFWGPF6IpCBCDVrhgHRMvrLfdYcwDh3QJbGXDW4JAuzxElLSqKA==
+
+io-ts-reporters@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/io-ts-reporters/-/io-ts-reporters-1.0.0.tgz#c5901d49d454956698bbca48b328698f8ca1c9c7"
+  integrity sha512-jjMvTnFYYxX3ue3cajmqCAf7sM4+lFvaaUuAL+otJv2DE+WDxYvQeCcUYveoq37rVSftJHZBEOrnvz3x0VdRXA==
+  dependencies:
+    fp-ts "^2.0.2"
+    io-ts "^2.0.0"
+
+io-ts@^2.0.0, io-ts@^2.0.3:
+  version "2.2.2"
+  resolved "https://registry.npmjs.org/io-ts/-/io-ts-2.2.2.tgz#82b9ef96d95a3fb27a1abf5f29f59b07cc9b8cca"
+  integrity sha512-cXXIL4CR5/sWfKw/Ssc/cbZJGG13J4pJv9/RN6SlWJyh+foAPEUE0I9sWTX1kG24dvhiCM9fpO4F+2AsP+WzaQ==
 
 ioredis@^4.14.1:
   version "4.16.3"
@@ -16863,15 +16894,6 @@ react-timer-mixin@^0.13.4:
   resolved "https://registry.npmjs.org/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz#75a00c3c94c13abe29b43d63b4c65a88fc8264d3"
   integrity sha512-4+ow23tp/Tv7hBM5Az5/Be/eKKF7DIvJ09voz5LyHGQaqqz9WV8YMs31eFvcYQs7d451LSg7kDJV70XYN/Ug/Q==
 
-react@*, react@^16.12.0:
-  version "16.13.1"
-  resolved "https://registry.npmjs.org/react/-/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"
-  integrity sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.2"
-
 react@0.0.0-experimental-aae83a4b9:
   version "0.0.0-experimental-aae83a4b9"
   resolved "https://registry.npmjs.org/react/-/react-0.0.0-experimental-aae83a4b9.tgz#9b2063ddb2dc9a3d347e7a0a4233462c78800ba0"
@@ -21386,7 +21408,7 @@ yargs@^14.2.0:
     y18n "^4.0.0"
     yargs-parser "^15.0.1"
 
-yargs@^15.0.0, yargs@^15.0.2, yargs@^15.3.1:
+yargs@^15.0.0, yargs@^15.0.2, yargs@^15.1.0, yargs@^15.3.1:
   version "15.3.1"
   resolved "https://registry.npmjs.org/yargs/-/yargs-15.3.1.tgz#9505b472763963e54afe60148ad27a330818e98b"
   integrity sha512-92O1HWEjw27sBfgmXiixJWT5hRBp2eobqXicLtPBIDBhYB+1HpwZlXmbW2luivBJHBzki+7VyCLRtAkScbTBQA==

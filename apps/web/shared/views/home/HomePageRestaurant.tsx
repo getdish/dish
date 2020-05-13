@@ -1,4 +1,4 @@
-import { query } from '@dish/graph'
+import { query, useQuery } from '@dish/graph'
 import { graphql } from '@gqless/react'
 import React, { memo } from 'react'
 import { Image, ScrollView, Text, View } from 'react-native'
@@ -35,6 +35,7 @@ export default graphql(function HomePageRestaurant({
     return null
   }
   const slug = state.restaurantSlug
+  // const query = useQuery()
   const [restaurant] = query.restaurant({
     where: {
       slug: {

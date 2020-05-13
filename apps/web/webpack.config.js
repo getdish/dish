@@ -1,3 +1,4 @@
+const { DuplicatesPlugin } = require('inspectpack/plugin')
 const createExpoWebpackConfigAsync = require('@expo/webpack-config')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const path = require('path')
@@ -29,9 +30,32 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
 
   config.stats = 'normal'
 
+  if (isProduction) {
+    config.plugins.push(
+      new DuplicatesPlugin({
+        // Emit compilation warning or error? (Default: `false`)
+        emitErrors: false,
+        // Handle all messages with handler function (`(report: string)`)
+        // Overrides `emitErrors` output.
+        emitHandler: undefined,
+        // List of packages that can be ignored. (Default: `[]`)
+        // - If a string, then a prefix match of `{$name}/` for each module.
+        // - If a regex, then `.test(pattern)` which means you should add slashes
+        //   where appropriate.
+        //
+        // **Note**: Uses posix paths for all matching (e.g., on windows `/` not `\`).
+        ignoredPackages: undefined,
+        // Display full duplicates information? (Default: `false`)
+        verbose: false,
+      })
+    )
+  }
+
   // global plugin changes
   config.plugins = config.plugins.filter(
-    (x) => x.constructor.name !== 'ProgressPlugin'
+    (x) =>
+      x.constructor.name !== 'ProgressPlugin' &&
+      x.constructor.name !== 'WebpackBar'
   )
   config.plugins.push(
     new Webpack.DefinePlugin({
@@ -117,6 +141,11 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
       'react-dom/unstable-native-dependencies': 'preact-responder-event-plugin',
     }
     console.log('config.resolve.alias', config.resolve.alias)
+  } else {
+    config.resolve.alias = {
+      react$: 'react',
+      'react-dom$': 'react-dom',
+    }
   }
 
   if (TARGET === 'worker') {
