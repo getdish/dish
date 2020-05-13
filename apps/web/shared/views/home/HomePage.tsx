@@ -36,6 +36,7 @@ export default function HomePage() {
   return (
     <VStack flex={1} backgroundColor="#000" alignItems="center">
       <VStack
+        backgroundColor="#fff"
         width="100%"
         height="100%"
         maxWidth={1990}
