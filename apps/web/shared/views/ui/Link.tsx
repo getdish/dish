@@ -32,6 +32,7 @@ type LinkSharedProps = {
   replace?: boolean
   stopPropagation?: boolean
   disabledIfActive?: boolean
+  tagName?: string
 }
 
 type LinkProps<A, B> = React.DetailedHTMLProps<
@@ -65,6 +66,7 @@ export function Link<
     color,
     onClick,
     replace,
+    tagName,
     ...restProps
   } = allProps
   const linkProps = useNormalizeLinkProps(allProps as any)
@@ -97,38 +99,39 @@ export function Link<
     [navItem, onClick]
   )
 
-  return (
-    <a
-      href={getPathFromParams(navItem)}
-      {...restProps}
-      onMouseDown={prevent}
-      onClick={prevent}
-      {...{
-        [fastClick ? 'onMouseDown' : 'onClick']: handler,
-      }}
-      className={`${inline ? 'inline-flex' : ' flex'}`}
-      style={{
-        maxWidth: '100%',
-        flex: 1,
-        padding,
-      }}
+  const elementName = tagName ?? 'a'
+  const props = {
+    href: getPathFromParams(navItem),
+    ...restProps,
+    onMouseDown: prevent,
+    onClick: prevent,
+    [fastClick ? 'onMouseDown' : 'onClick']: handler,
+    className: `${inline ? 'inline-flex' : ' flex'}`,
+    style: {
+      cursor: 'pointer',
+      maxWidth: '100%',
+      flex: 1,
+      padding,
+    },
+  }
+  const content = (
+    <Text
+      numberOfLines={ellipse ? 1 : undefined}
+      style={
+        {
+          fontSize,
+          lineHeight,
+          fontWeight,
+          display: 'inherit',
+          color,
+        } as any
+      }
     >
-      <Text
-        numberOfLines={ellipse ? 1 : undefined}
-        style={
-          {
-            fontSize,
-            lineHeight,
-            fontWeight,
-            display: 'inherit',
-            color,
-          } as any
-        }
-      >
-        {children}
-      </Text>
-    </a>
+      {children}
+    </Text>
   )
+
+  return React.createElement(elementName, props, content)
 }
 
 const prevent = (e) => [e.preventDefault(), e.stopPropagation()]
