@@ -14,6 +14,7 @@ const BASE = 'http://localhost:' + PORT
 const login = async () => {
   const response = await fetch(BASE + '/auth/login', {
     method: 'post',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       username: 'admin',
       password: 'password',
@@ -35,18 +36,17 @@ test('Admin login', async (t) => {
 
 test('Authed request failure', async (t) => {
   const response = await fetch(BASE + '/user', {
-    headers: { Auth: 'bad' },
+    headers: { 'Content-Type': 'application/json', Auth: 'bad' },
   })
-  const data = await response.json()
   t.deepEqual(response.status, 401)
-  t.deepEqual(data, '')
+  t.deepEqual(response.statusText, 'Unauthorized')
 })
 
 test('Authed request success', async (t) => {
   const [response, data] = await login()
   const jwt = data.token
   const user = await fetch(BASE + '/user/admin', {
-    headers: { Auth: jwt },
+    headers: { 'Content-Type': 'application/json', Auth: jwt },
   }).then((res) => res.json())
-  t.deepEqual(user.data.username, 'admin')
+  t.deepEqual(user.username, 'admin')
 })
