@@ -70,7 +70,7 @@ export const LenseButton = memoIsEqualDeep(
           <Text
             style={{
               color: isActive ? '#fff' : '#454545',
-              fontSize: isActive ? 32 : 22,
+              fontSize: isActive ? 40 : 24,
               lineHeight: 40,
               width: 36,
               height: 36,

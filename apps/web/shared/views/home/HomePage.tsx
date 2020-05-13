@@ -39,8 +39,8 @@ export default function HomePage() {
         backgroundColor="#fff"
         width="100%"
         height="100%"
-        maxWidth={1990}
-        borderRadius={10}
+        maxWidth={1880}
+        borderRadius={11}
         overflow="hidden"
         // marginHorizontal={-20}
         // paddingHorizontal={20}

@@ -540,9 +540,9 @@ const HomeSearchBarTags = memo(
                     closable
                     onClose={() => {
                       om.actions.home.navigateToTag({ tags: [tag] })
-                      requestIdleCallback(() => {
-                        input?.focus()
-                      })
+                      // requestIdleCallback(() => {
+                      //   input?.focus()
+                      // })
                       if (
                         om.state.home.lastActiveTags.filter(
                           (x) => x.type !== 'lense'
@@ -585,8 +585,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,1)',
     flexDirection: 'row',
     borderRadius: 14,
-    shadowColor: 'rgba(0,0,0,0.07)',
-    shadowRadius: 9,
+    shadowColor: 'rgba(0,0,0,0.05)',
+    shadowRadius: 4,
     shadowOffset: { height: 4, width: 0 },
     overflow: 'hidden',
     borderWidth: 1,

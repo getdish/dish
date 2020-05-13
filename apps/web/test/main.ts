@@ -7,7 +7,7 @@ test('Basic rendering check', async (t) => {
   await t.expect(divs.count).gte(100)
 })
 
-test('Renders home top dishes', async (t) => {
-  const topDishes = Selector('.home-top-dish')
-  await t.expect(topDishes.count).gte(4)
-})
+// test('Renders home top dishes', async (t) => {
+//   const topDishes = Selector('.home-top-dish')
+//   await t.expect(topDishes.count).gte(4)
+// })

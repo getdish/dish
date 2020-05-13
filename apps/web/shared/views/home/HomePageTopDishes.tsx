@@ -46,7 +46,7 @@ export default memo(function HomePageTopDishes({
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
       <VStack position="relative" flex={1}>
         <ScrollView style={{ flex: 1 }}>
-          <VStack paddingVertical={34} paddingTop={100} spacing="xl">
+          <VStack paddingVertical={34} paddingTop={94} spacing="xl">
             {/* TRENDING */}
             <HomeViewTopDishesTrending />
 
