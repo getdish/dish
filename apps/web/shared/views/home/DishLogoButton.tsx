@@ -13,7 +13,7 @@ export const DishLogoButton = memo(() => {
       marginVertical={-2}
     >
       <Image
-        source={require('../../assets/logo.png')}
+        source={require('../../assets/logo.png').default}
         style={{ width: 1251 * scale, height: 614 * scale }}
       />
     </LinkButton>

@@ -1,5 +1,4 @@
 const { DuplicatesPlugin } = require('inspectpack/plugin')
-const createExpoWebpackConfigAsync = require('@expo/webpack-config')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const path = require('path')
 const _ = require('lodash')
@@ -17,20 +16,119 @@ console.log('TARGET', TARGET)
 const appEntry = path.resolve(path.join(__dirname, 'web', 'index.web.tsx'))
 
 module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
-  // @ts-ignore
-  const config = await createExpoWebpackConfigAsync(
-    {
-      projectRoot: '.',
-      platform: 'web',
-      mode: isProduction ? 'production' : 'development',
-      pwa: false,
-      offline: false,
-      removeUnusedImportExports: isProduction,
+  const config = {
+    mode: env.mode,
+    context: __dirname,
+    stats: 'normal',
+    devtool:
+      env.mode === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
+    entry: {
+      app: [appEntry].filter(Boolean),
     },
-    argv
-  )
-
-  config.stats = 'normal'
+    output: {
+      path: path.resolve(__dirname),
+      filename: 'static/js/app.js',
+    },
+    resolve: {
+      extensions: ['.ts', '.tsx', '.js'],
+      mainFields: ['tsmain', 'browser', 'module', 'main'],
+    },
+    resolveLoader: {
+      modules: ['node_modules'],
+    },
+    optimization: {
+      minimize: isProduction,
+    },
+    externals: {
+      [path.join(__dirname, 'web/mapkit.js')]: 'mapkit',
+    },
+    module: {
+      rules: [
+        {
+          oneOf: [
+            {
+              test: /\.[jt]sx?$/,
+              include: babelInclude,
+              use: {
+                loader: 'babel-loader',
+              },
+            },
+            {
+              test: /\.css$/i,
+              use: ['style-loader', 'css-loader'],
+            },
+            {
+              test: /\.(png|svg|jpe?g|gif)$/,
+              use: {
+                loader: 'url-loader',
+                options: {
+                  limit: 1000,
+                  name: 'static/media/[name].[hash:8].[ext]',
+                },
+              },
+            },
+            // fallback loader helps webpack-dev-server serve assets
+            {
+              loader: 'file-loader',
+              // Exclude `js` files to keep "css" loader working as it injects
+              // its runtime that would otherwise be processed through "file" loader.
+              // Also exclude `html` and `json` extensions so they get processed by webpacks internal loaders.
+              exclude: [/\.(mjs|[jt]sx?)$/, /\.html$/, /\.json$/],
+              options: {
+                name: 'static/media/[name].[hash:8].[ext]',
+              },
+            },
+          ],
+        },
+      ],
+    },
+    plugins: [
+      // !isProduction && new Webpack.HotModuleReplacementPlugin(),
+      new LodashPlugin(),
+      new Webpack.DefinePlugin({
+        'process.env.TARGET': JSON.stringify(TARGET || null),
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      }),
+      new HTMLWebpackPlugin({
+        inject: true,
+        template: path.join(__dirname, 'web/index.html'),
+      }),
+    ].filter(Boolean),
+    devServer: {
+      host: '0.0.0.0',
+      compress: true,
+      watchContentBase: true,
+      // It will still show compile warnings and errors with this setting.
+      clientLogLevel: 'none',
+      contentBase: path.join(__dirname, 'web'),
+      publicPath: '/',
+      hot: !isProduction,
+      historyApiFallback: {
+        disableDotRule: true,
+      },
+      disableHostCheck: true,
+      overlay: false,
+      quiet: false,
+      stats: {
+        colors: true,
+        assets: true,
+        chunks: false,
+        modules: true,
+        reasons: false,
+        children: true,
+        errors: true,
+        errorDetails: true,
+        warnings: true,
+      },
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods':
+          'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+        'Access-Control-Allow-Headers':
+          'X-Requested-With, content-type, Authorization',
+      },
+    },
+  }
 
   if (!!process.env.INSPECT || isProduction) {
     config.plugins.push(
@@ -53,36 +151,7 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     )
   }
 
-  // global plugin changes
-  config.plugins = config.plugins.filter(
-    (x) =>
-      x.constructor.name !== 'ProgressPlugin' &&
-      x.constructor.name !== 'WebpackBar' &&
-      x.constructor.name !== 'HtmlWebpackPlugin' &&
-      x.constructor.name !== 'CleanWebpackPlugin'
-  )
-
   // PLUGINS
-
-  config.plugins.push(new LodashPlugin())
-
-  config.plugins.push(
-    new Webpack.DefinePlugin({
-      'process.env.TARGET': JSON.stringify(TARGET || null),
-    })
-  )
-
-  config.plugins.push(
-    new HTMLWebpackPlugin({
-      inject: true,
-      template: path.join(__dirname, 'web/index.html'),
-    })
-  )
-
-  config.devtool =
-    env.mode === 'production' ? 'source-map' : 'cheap-module-eval-source-map'
-
-  config.optimization = config.optimization || {}
 
   if (config.optimization) {
     config.optimization.splitChunks = isProduction ? {} : false
@@ -100,58 +169,7 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     )
   }
 
-  if (!config.entry.app.some((x) => x.indexOf('index.web.tsx') > -1)) {
-    config.entry.app.push(appEntry)
-  }
-
-  config.output.filename = 'static/js/app.js'
-  config.entry.app = config.entry.app.filter((x) => {
-    return (
-      x !== 'app.json' &&
-      !x.includes('resize-observer-polyfill/dist/ResizeObserver.global.js')
-    )
-  })
-
-  if (TARGET !== 'ssr' && process.env.NODE_ENV !== 'development') {
-    // in production just use <script /> tag...
-    // dev its nice to have it local so no internet required
-    config.externals = {
-      [path.join(__dirname, 'web/mapkit.js')]: 'mapkit',
-    }
-  }
-
-  // hackkk try to get tree shaking from ts
-  config.resolve.mainFields = ['tsmain', 'browser', 'module', 'main']
-  config.module.rules.push({
-    test: /\.tsx?$/,
-    use: {
-      loader: 'babel-loader',
-    },
-  })
-
-  config.context = __dirname
-  config.devServer = {
-    ...config.devServer,
-    historyApiFallback: true,
-    disableHostCheck: true,
-    overlay: false,
-    quiet: false,
-    stats: {
-      colors: true,
-      assets: true,
-      chunks: false,
-      modules: true,
-      reasons: false,
-      children: true,
-      errors: true,
-      errorDetails: true,
-      warnings: true,
-    },
-  }
-
-  if (!isProduction) {
-    config.optimization.minimize = false
-  } else {
+  if (isProduction) {
     // test closure compiler, could be more performant if it extracts functions from render better
     // config.optimization.minimizer = [
     //   new ClosurePlugin({
@@ -174,7 +192,6 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     console.log('config.resolve.alias', config.resolve.alias)
   } else {
     const graphRoot = path.join(require.resolve('@dish/graph'), '..', '..')
-    console.log('graphRoot', graphRoot)
     config.resolve.alias = {
       react: path.join(require.resolve('react'), '..'),
       'react-dom': path.join(require.resolve('react-dom'), '..'),
@@ -229,9 +246,6 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
   }
 
   if (TARGET === 'ssr') {
-    config.entry.app = config.entry.app.filter((x) => {
-      return x.indexOf('webpackHotDevClient') < 0
-    })
     config.target = 'node'
     config.output.path = path.join(__dirname, 'web-build-ssr')
     config.output.libraryTarget = 'commonjs'
@@ -243,25 +257,10 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
         mapkit: path.join(__dirname, 'web/mapkitExport.js'),
       })
     )
-    config.plugins = config.plugins.filter(
-      (plugin) =>
-        plugin.constructor.name !== 'WebpackPWAManifest' &&
-        plugin.constructor.name !== 'CopyPlugin' &&
-        plugin.constructor.name !== 'CleanWebpackPlugin' &&
-        plugin.constructor.name !== 'HtmlWebpackPlugin' &&
-        plugin.constructor.name !== 'InterpolateHtmlPlugin' &&
-        plugin.constructor.name !== 'MiniCssExtractPlugin' &&
-        plugin.constructor.name !== 'ManifestPlugin' &&
-        plugin.constructor.name !== 'CompressionPlugin'
-    )
   }
 
   if (process.env.NO_MINIFY) {
     config.optimization.minimize = false
-  }
-
-  if (config.optimization.minimize == false) {
-    delete config.optimization.minifier
   }
 
   function getConfig() {
@@ -321,4 +320,44 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
   }
 
   return finalConfig
+}
+
+const getModule = (name) => path.join('node_modules', name)
+
+const excludedRootPaths = [
+  '/node_modules',
+  '/bower_components',
+  '/.expo/',
+  // Prevent transpiling webpack generated files.
+  '(webpack)',
+]
+
+// Only compile files from the react ecosystem.
+const modules = [
+  getModule('react-native'),
+  getModule('expo'),
+  getModule('unimodules'),
+  getModule('@react'),
+  getModule('@unimodules'),
+  getModule('native-base'),
+  // include our packages
+  path.join(__dirname, '..', '..', 'packages'),
+]
+
+function babelInclude(inputPath) {
+  for (const possibleModule of modules) {
+    if (inputPath.includes(path.normalize(possibleModule))) {
+      return true
+    }
+  }
+  // Is inside the project and is not one of designated modules
+  if (inputPath.includes(__dirname)) {
+    for (const excluded of excludedRootPaths) {
+      if (inputPath.includes(path.normalize(excluded))) {
+        return false
+      }
+    }
+    return true
+  }
+  return false
 }

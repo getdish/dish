@@ -14,19 +14,29 @@ import { getRankingColor, getRestaurantRating } from './RestaurantRatingView'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 async function startMapKit() {
-  // hmr resilient logic
-  if (window['MAPKIT_STARTED']) {
-    return
-  }
-  window['MAPKIT_STARTED'] = true
-  const token = `eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzQ1RLNTYzUlQifQ.eyJpYXQiOjE1ODQ0MDU5MzYuMjAxLCJpc3MiOiIzOTlXWThYOUhZIn0.wAw2qtwuJkcL6T6aI-nLZlVuwJZnlCNg2em6V1uopx9hkUgWZE1ISAWePMoRttzH_NPOem4mQfrpmSTRCkh2bg`
-  // init mapkit
-  const mapkit = require('../../../web/mapkitExport')
-  // @ts-ignore
-  mapkit.init({
-    authorizationCallback: (done) => {
-      done(token)
-    },
+  return await new Promise((res) => {
+    function setup() {
+      // hmr resilient logic
+      if (window['MAPKIT_STARTED']) {
+        return
+      }
+      window['MAPKIT_STARTED'] = true
+      const token = `eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzQ1RLNTYzUlQifQ.eyJpYXQiOjE1ODQ0MDU5MzYuMjAxLCJpc3MiOiIzOTlXWThYOUhZIn0.wAw2qtwuJkcL6T6aI-nLZlVuwJZnlCNg2em6V1uopx9hkUgWZE1ISAWePMoRttzH_NPOem4mQfrpmSTRCkh2bg`
+      // init mapkit
+      const mapkit = require('../../../web/mapkitExport')
+      // @ts-ignore
+      mapkit.init({
+        authorizationCallback: (done) => {
+          done(token)
+        },
+      })
+      res()
+    }
+    if (document.readyState == 'complete') {
+      setup()
+    } else {
+      window.addEventListener('load', setup)
+    }
   })
 }
 
