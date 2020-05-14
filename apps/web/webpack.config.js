@@ -144,8 +144,8 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     console.log('config.resolve.alias', config.resolve.alias)
   } else {
     config.resolve.alias = {
-      react$: 'react',
-      'react-dom$': 'react-dom',
+      react: 'react',
+      'react-dom': 'react-dom',
     }
   }
 

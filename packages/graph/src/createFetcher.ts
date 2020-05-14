@@ -6,7 +6,7 @@ type QueryFetcherWithOptions = (
   query: string,
   variables?: Record<string, any>,
   options?: {
-    silence_not_found?: boolean
+    silenceNotFound?: boolean
   }
 ) => Promise<QueryResponse> | QueryResponse
 
@@ -37,7 +37,7 @@ export const createFetcher = (type: 'query' | 'mutation') => {
     const response = await fetch(endpoint, request)
     const data = await response.json()
     if (data.errors || !response.ok) {
-      if (options.silence_not_found && response.status == 404) {
+      if (options?.silenceNotFound && response.status == 404) {
         return data
       } else {
         throw new HasuraError(query, data.errors)
