@@ -308,7 +308,7 @@ export class Restaurant extends ModelBase<Restaurant> {
 
   async _updateTagNames() {
     await this.refresh()
-    const tag_names = _.flatMap(this.tags.map((i) => new Tag(i.tag).slugs()))
+    const tag_names = this.tags.map((i) => new Tag(i.tag).slugs()).flat()
     this.tag_names = _.uniq([...(this.tag_names || []), ...tag_names])
     await this.update()
   }

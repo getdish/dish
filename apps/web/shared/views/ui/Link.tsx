@@ -21,7 +21,8 @@ import {
 import { NavigableTag } from '../../state/Tag'
 import { useOvermindStatic } from '../../state/useOvermind'
 import { CurrentStateID } from '../home/CurrentStateID'
-import { StackProps, VStack, getNode } from './Stacks'
+import { getNode } from './getNode'
+import { StackProps, VStack } from './Stacks'
 
 type LinkSharedProps = {
   fontWeight?: TextStyle['fontWeight']
@@ -244,11 +245,13 @@ export function LinkButton<
     if (Platform.OS === 'web') {
       if (stopProp && containerRef.current) {
         const div = getNode(containerRef.current)
-        div.addEventListener('click', prevent)
-        return () => div.removeEventListener('click', prevent)
+        if (div) {
+          div.addEventListener('click', prevent)
+          return () => div.removeEventListener('click', prevent)
+        }
       }
     }
-  }, [stopProp])
+  }, [containerRef.current, stopProp])
 
   if ('name' in props) {
     const {

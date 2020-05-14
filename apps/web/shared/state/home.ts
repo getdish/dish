@@ -210,7 +210,9 @@ const start: AsyncAction = async (om) => {
 let defaultAutocompleteResults: AutocompleteItem[] | null = null
 
 const startAutocomplete: AsyncAction = async (om) => {
-  const dishes = _.flatMap(om.state.home.topDishes.map((x) => x.dishes))
+  const dishes = om.state.home.topDishes
+    .map((x) => x.dishes)
+    .flat()
     .filter(Boolean)
     .slice(0, 20)
     .map((d) => ({
@@ -230,7 +232,7 @@ const startAutocomplete: AsyncAction = async (om) => {
 
   const results = [
     ...dishes.slice(0, 3),
-    ..._.flatMap(_.zip(countries, dishes.slice(3))),
+    ..._.zip(countries, dishes.slice(3)).flat(),
   ]
     .filter(Boolean)
     .slice(0, 20) as AutocompleteItem[]

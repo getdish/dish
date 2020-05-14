@@ -1,5 +1,5 @@
 // @ts-ignore
-import React, { Suspense, SuspenseList, memo, useState } from 'react'
+import React, { Suspense, memo, useState } from 'react'
 import { Image, ScrollView, Text, View } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
@@ -201,17 +201,17 @@ const HomeSearchResultsViewContent = memo(
     return (
       <ScrollView>
         <VStack paddingTop={topPad} paddingBottom={20}>
-          <SuspenseList revealOrder="forwards">
-            {results.map((item, index) => (
-              <Suspense key={item.id} fallback={null}>
-                <RestaurantListItem
-                  currentLocationInfo={state.currentLocationInfo}
-                  restaurant={item}
-                  rank={index + 1}
-                />
-              </Suspense>
-            ))}
-          </SuspenseList>
+          {/* <SuspenseList revealOrder="forwards"> */}
+          {results.map((item, index) => (
+            <Suspense key={item.id} fallback={null}>
+              <RestaurantListItem
+                currentLocationInfo={state.currentLocationInfo}
+                restaurant={item}
+                rank={index + 1}
+              />
+            </Suspense>
+          ))}
+          {/* </SuspenseList> */}
         </VStack>
       </ScrollView>
     )
