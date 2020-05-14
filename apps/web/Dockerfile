@@ -12,7 +12,6 @@ COPY apps/web apps/web
 
 RUN yarn install
 RUN yarn workspaces run build
-RUN yarn global add expo-cli@3.18.0
 
 WORKDIR /app/apps/web
 RUN yarn build:web

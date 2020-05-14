@@ -156,16 +156,12 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     }
     console.log('config.resolve.alias', config.resolve.alias)
   } else {
+    const graphRoot = path.join(require.resolve('@dish/graph'), '..', '..')
     config.resolve.alias = {
       react: 'react',
       'react-dom': 'react-dom',
-      gqless: path.join(
-        require.resolve('@dish/graph'),
-        '..',
-        '..',
-        'node_modules',
-        'gqless'
-      ),
+      '@dish/graph': graphRoot,
+      gqless: path.join(graphRoot, 'node_modules', 'gqless'),
     }
   }
 
@@ -280,6 +276,10 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
           path: path.join(__dirname, 'web-build'),
         },
       }
+    }
+
+    if (process.env.ONLY_MODERN) {
+      return getModernConfig()
     }
 
     if (process.env.NODE_ENV === 'production') {
