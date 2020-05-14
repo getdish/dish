@@ -32,7 +32,6 @@
     "react": "*"
   },
   "devDependencies": {
-    "@types/node": "*",
-    "@types/react": "*"
+    "@types/node": "*"
   }
 }

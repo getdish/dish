@@ -3,7 +3,7 @@ import React, { memo, useLayoutEffect, useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity } from 'react-native'
 
 // @ts-ignore
-import avatar from '../../assets/peach.png'
+import avatar from '../../assets/peach.jpg'
 import { useOvermind } from '../../state/useOvermind'
 import { Toast } from '../Toast'
 import { Box } from '../ui/Box'

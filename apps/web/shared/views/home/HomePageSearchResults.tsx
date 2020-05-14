@@ -24,7 +24,7 @@ import HomeLenseBar from './HomeLenseBar'
 import { LoadingItems } from './LoadingItems'
 import { RestaurantListItem } from './RestaurantListItem'
 
-export const avatar = require('../../assets/peach.png')
+export const avatar = require('../../assets/peach.jpg')
 
 const verticalPad = 16
 
