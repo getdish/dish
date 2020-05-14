@@ -7,14 +7,13 @@ import { ScrollView, Text } from 'react-native'
 import { HomeStateItem, HomeStateItemHome } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../NotFoundPage'
-import { LinkButton, OverlayLinkButton } from '../ui/Link'
+import { LinkButton } from '../ui/Link'
 import { MediaQuery, mediaQueries } from '../ui/MediaQuery'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { SmallTitle, SmallerTitle } from '../ui/SmallTitle'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { flatButtonStyle } from './baseButtonStyle'
-import { bgLightLight } from './colors'
 import { DishView } from './DishView'
 import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBarOnly } from './HomeLenseBar'
@@ -233,7 +232,6 @@ const CountryTopDishesAndRestaurants = memo(
           <HStack padding={10} paddingHorizontal={30} spacing={32}>
             {_.uniqBy(country.top_restaurants, (x) => x.name).map(
               (restaurant, index) => {
-                console.log('restaurant', restaurant.name, index)
                 return (
                   <RestaurantButton
                     key={restaurant.name}
