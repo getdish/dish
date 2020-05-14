@@ -24,8 +24,10 @@
     "graphql": "^15.0.0",
     "isomorphic-unfetch": "^3.0.0",
     "json-to-graphql-query": "^2.0.0",
-    "react": "0.0.0-experimental-aae83a4b9",
     "subscriptions-transport-ws": "^0.9.16",
     "ws": "^7.2.1"
+  },
+  "peerDependencies": {
+    "react": "*"
   }
 }

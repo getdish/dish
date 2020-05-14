@@ -3,24 +3,34 @@ import { graphql } from '@gqless/react'
 import React, { memo, useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
+import { useOvermind } from '../../state/useOvermind'
 import Hoverable from '../ui/Hoverable'
 import { Icon } from '../ui/Icon'
 import { VStack } from '../ui/Stacks'
 import { useReviewMutation } from './useReviewMutation'
 
-export const RestaurantUpVoteDownVote = graphql(
-  ({ restaurantId }: { restaurantId: string }) => {
-    const [review] = query.review({
-      limit: 1,
-      where: {
-        restaurant_id: {
-          _eq: restaurantId,
+export const RestaurantUpVoteDownVote = memo(
+  graphql(({ restaurantId }: { restaurantId: string }) => {
+    const om = useOvermind()
+    let vote = 0
+
+    if (om.state.user.isLoggedIn) {
+      const [review] = query.review({
+        limit: 1,
+        where: {
+          restaurant_id: {
+            _eq: restaurantId,
+          },
+          user_id: {
+            _eq: om.state.user.user?.id,
+          },
         },
-      },
-    })
-    // const [insertReview, { data, fetchState, errors }] = useReviewMutation()
-    const vote = review?.rating
-    console.log('rating (upvotedownvote)', vote)
+      })
+      vote = review?.rating
+    }
+
+    const [insertReview, { data, fetchState, errors }] = useReviewMutation()
+
     return (
       <div
         style={{
@@ -32,10 +42,11 @@ export const RestaurantUpVoteDownVote = graphql(
             style={styles.topButton}
             active={vote == 1}
             onPress={() => {
-              // insertReview({
-              //   restaurant_id: restaurantId,
-              //   rating: vote === 1 ? 0 : 1,
-              // })
+              debugger
+              insertReview({
+                restaurant_id: restaurantId,
+                rating: vote === 1 ? 0 : 1,
+              })
             }}
           >
             <Icon
@@ -49,10 +60,10 @@ export const RestaurantUpVoteDownVote = graphql(
             style={styles.bottomButton}
             active={vote == -1}
             onPress={() => {
-              // insertReview({
-              //   restaurant_id: restaurantId,
-              //   rating: vote == -1 ? 0 : -1,
-              // })
+              insertReview({
+                restaurant_id: restaurantId,
+                rating: vote == -1 ? 0 : -1,
+              })
             }}
           >
             <Icon
@@ -64,7 +75,7 @@ export const RestaurantUpVoteDownVote = graphql(
         </VStack>
       </div>
     )
-  }
+  })
 )
 
 const VoteButton = (props: any) => {
