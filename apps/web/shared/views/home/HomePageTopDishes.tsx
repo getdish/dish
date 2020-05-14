@@ -166,9 +166,9 @@ const CountryTopDishesAndRestaurants = memo(
       setHoveredRestaurant(restaurant)
     }, [])
 
-    const padding = 20
-    const dishHeight = 170
-    const spacing = 22
+    const padding = 30
+    const dishHeight = 150
+    const spacing = 26
 
     return (
       <VStack
@@ -205,7 +205,7 @@ const CountryTopDishesAndRestaurants = memo(
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <HStack
-            height={dishHeight + padding * 2 + 10}
+            height={dishHeight + padding * 2}
             alignItems="center"
             padding={padding}
             paddingTop={padding + 10}
@@ -232,17 +232,21 @@ const CountryTopDishesAndRestaurants = memo(
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <HStack padding={10} paddingHorizontal={30} spacing={32}>
             {_.uniqBy(country.top_restaurants, (x) => x.name).map(
-              (restaurant, index) => (
-                <RestaurantButton
-                  key={restaurant.name}
-                  restaurant={restaurant as any}
-                  onHoverIn={onHoverRestaurant}
-                  active={
-                    (!hoveredRestaurant && index === 0) ||
-                    restaurant?.id === hoveredRestaurant?.id
-                  }
-                />
-              )
+              (restaurant, index) => {
+                console.log('restaurant', restaurant.name, index)
+                return (
+                  <RestaurantButton
+                    key={restaurant.name}
+                    restaurant={restaurant as any}
+                    onHoverIn={onHoverRestaurant}
+                    active={
+                      // (!hoveredRestaurant && index === 0) ||
+                      hoveredRestaurant &&
+                      restaurant?.name === hoveredRestaurant?.name
+                    }
+                  />
+                )
+              }
             )}
           </HStack>
         </ScrollView>
