@@ -2,6 +2,7 @@
   "name": "@dish/jwt-server",
   "version": "0.0.1",
   "description": "",
+  "private": true,
   "workspaces": {
     "nohoist": [
       "**"
