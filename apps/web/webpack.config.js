@@ -5,6 +5,7 @@ const path = require('path')
 const _ = require('lodash')
 const Webpack = require('webpack')
 const ClosurePlugin = require('closure-webpack-plugin')
+const HTMLWebpackPlugin = require('html-webpack-plugin')
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const isProduction = process.env.NODE_ENV === 'production'
@@ -55,11 +56,20 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
   config.plugins = config.plugins.filter(
     (x) =>
       x.constructor.name !== 'ProgressPlugin' &&
-      x.constructor.name !== 'WebpackBar'
+      x.constructor.name !== 'WebpackBar' &&
+      x.constructor.name !== 'HtmlWebpackPlugin' &&
+      x.constructor.name !== 'CleanWebpackPlugin'
   )
+
   config.plugins.push(
     new Webpack.DefinePlugin({
       'process.env.TARGET': JSON.stringify(TARGET || null),
+    })
+  )
+
+  config.plugins.push(
+    new HTMLWebpackPlugin({
+      template: path.join(__dirname, 'web/index.html'),
     })
   )
 
@@ -90,7 +100,10 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
 
   config.output.filename = 'static/js/app.js'
   config.entry.app = config.entry.app.filter((x) => {
-    return x !== 'app.json'
+    return (
+      x !== 'app.json' &&
+      !x.includes('resize-observer-polyfill/dist/ResizeObserver.global.js')
+    )
   })
 
   if (TARGET !== 'ssr') {
@@ -208,7 +221,7 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     config.target = 'node'
     config.output.path = path.join(__dirname, 'web-build-ssr')
     config.output.libraryTarget = 'commonjs'
-    config.output.filename = `static/js/app.${TARGET}.js`
+    config.output.filename = `static/js/app.ssr.js`
     config.optimization.minimize = false
     config.optimization.minimizer = []
     config.plugins.push(
@@ -237,22 +250,54 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     delete config.optimization.minifier
   }
 
-  // prettyjson is choking on a possibly self-referencing recursion when building
-  // with Docker.
-  // console.log('Config:\n', prettifyWebpackConfig(config))
-  if (process.env.VERBOSE) {
-    console.log('Config:\n', prettifyWebpackConfig(config))
-  } else {
-    console.log(`Start building ${TARGET}... entry ${config.entry.app}`)
+  function getConfig() {
+    if (TARGET === 'ssr' || TARGET === 'worker' || TARGET === 'preact') {
+      return config
+    }
+
+    function getLegacyConfig() {
+      return {
+        ...config,
+        output: {
+          ...config.output,
+          filename: 'static/js/app.legacy.js',
+          path: path.join(__dirname, 'web-build-legacy'),
+        },
+        entry: {
+          app: [
+            path.join(__dirname, 'web', 'polyfill.legacy.js'),
+            ...config.entry.app,
+          ],
+        },
+      }
+    }
+
+    function getModernConfig() {
+      return {
+        ...config,
+        output: {
+          ...config.output,
+          path: path.join(__dirname, 'web-build'),
+        },
+      }
+    }
+
+    if (process.env.NODE_ENV === 'production') {
+      // lets generate a legacy and modern build
+      return [getModernConfig(), getLegacyConfig()]
+    } else {
+      // just serve larger legacy bundle in development
+      return getLegacyConfig()
+    }
   }
 
-  return config
-}
+  const finalConfig = getConfig()
 
-function prettifyWebpackConfig(config) {
-  const prettyConfig = _.clone(config)
-  prettyConfig.plugins = config.plugins.map((p) => {
-    return { name: p.constructor.name, settings: p }
-  })
-  return prettyConfig
+  if (process.env.VERBOSE) {
+    console.log('Config:\n', finalConfig)
+  } else {
+    console.log(`Start building ${TARGET}...`)
+  }
+
+  return finalConfig
 }
