@@ -1,9 +1,8 @@
-import { Tag } from '@dish/graph'
+import { Tag, TagType } from '@dish/graph'
 import _ from 'lodash'
 import React, { memo } from 'react'
 import { Text, TextStyle } from 'react-native'
 
-import { TagType } from '../../../../../packages/models/src'
 import { Icon } from '../ui/Icon'
 import { LinkButton } from '../ui/Link'
 import { HStack, StackProps, VStack } from '../ui/Stacks'

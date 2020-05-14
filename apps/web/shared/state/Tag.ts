@@ -1,4 +1,5 @@
-import { Tag as TagModel, TagType } from '@dish/models'
+import { TagType } from '@dish/graph'
+import { tagSlug } from '@dish/models'
 
 type TagDescriptionKey = 'dish' | 'cuisine' | 'plain'
 
@@ -19,12 +20,9 @@ export type NavigableTag = Partial<Tag> & Pick<Tag, 'name' | 'type'>
 export const getTagId = (tag: NavigableTag) => {
   if (!tag.name) {
     console.warn('no name tag', tag)
-    debugger
-    throw new Error(`no slug for tag ${tag.name} ${JSON.stringify(tag)}`)
-    return `no-slug`
+    return 'no-slug'
   }
-  const tag_model = new TagModel(tag)
-  return tag_model.slug()
+  return tagSlug(tag)
 }
 
 export const tagLenses: Tag[] = [

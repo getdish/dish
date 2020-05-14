@@ -1,5 +1,4 @@
-import { Restaurant, Review, User } from '@dish/graph'
-import { TopCuisine } from '@dish/models'
+import { Restaurant, Review, TopCuisine, User } from '@dish/graph'
 import { Config, IContext, derived } from 'overmind'
 
 import { NavigateItem } from './router'

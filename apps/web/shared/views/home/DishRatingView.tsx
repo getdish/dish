@@ -1,4 +1,4 @@
-import { TopCuisineDish } from '@dish/models'
+import { TopCuisineDish } from '@dish/graph'
 import React, { forwardRef } from 'react'
 
 import { RatingView, RatingViewProps } from './RatingView'

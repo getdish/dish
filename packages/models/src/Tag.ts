@@ -1,20 +1,10 @@
 import { slugify } from '@dish/common-web'
+import { TagType } from '@dish/graph'
 import { EnumType } from 'json-to-graphql-query'
 import _ from 'lodash'
 
 import { ModelBase } from './ModelBase'
-
-export type TagType =
-  | 'lense'
-  | 'filter'
-  | 'continent'
-  | 'country'
-  | 'dish'
-  | 'restaurant'
-  | 'category'
-  | 'orphan'
-
-export type TagRecord = Partial<Tag> & Pick<Tag, 'type'>
+import { tagSlug } from './tag-helpers'
 
 export class Tag extends ModelBase<Tag> {
   type!: TagType
@@ -92,7 +82,7 @@ export class Tag extends ModelBase<Tag> {
   }
 
   slug() {
-    return slugify(this.name)
+    return tagSlug(this as any)
   }
 
   slugDisambiguated() {

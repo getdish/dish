@@ -6,6 +6,7 @@ const Webpack = require('webpack')
 const ClosurePlugin = require('closure-webpack-plugin')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const LodashPlugin = require('lodash-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const isProduction = process.env.NODE_ENV === 'production'
@@ -38,6 +39,29 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     },
     optimization: {
       minimize: isProduction,
+      minimizer: [
+        // new ClosurePlugin(),
+        new TerserPlugin({
+          sourceMap: true,
+          terserOptions: {
+            ecma: 7,
+            warnings: false,
+            parse: {},
+            compress: {},
+            mangle: true,
+            module: false,
+            output: null,
+            toplevel: false,
+            ie8: false,
+            keep_classnames: undefined,
+            keep_fnames: false,
+            safari10: false,
+          },
+        }),
+      ],
+      usedExports: isProduction,
+      splitChunks: false,
+      runtimeChunk: false,
     },
     externals: {
       [path.join(__dirname, 'web/mapkit.js')]: 'mapkit',
@@ -153,14 +177,6 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
 
   // PLUGINS
 
-  if (config.optimization) {
-    config.optimization.splitChunks = isProduction ? {} : false
-    config.optimization.runtimeChunk = false
-    if (isProduction) {
-      config.optimization.usedExports = true
-    }
-  }
-
   if (process.env.ANALYZE_BUNDLE) {
     config.plugins.push(
       new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)({
@@ -257,10 +273,6 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
         mapkit: path.join(__dirname, 'web/mapkitExport.js'),
       })
     )
-  }
-
-  if (process.env.NO_MINIFY) {
-    config.optimization.minimize = false
   }
 
   function getConfig() {

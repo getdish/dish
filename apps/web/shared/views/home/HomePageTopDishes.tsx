@@ -1,5 +1,4 @@
-import { Restaurant } from '@dish/graph'
-import { TopCuisine } from '@dish/models'
+import { Restaurant, TopCuisine } from '@dish/graph'
 import _ from 'lodash'
 import React, { memo, useCallback, useState } from 'react'
 import { ScrollView, Text } from 'react-native'

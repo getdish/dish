@@ -1,4 +1,4 @@
-import { TopCuisineDish } from '@dish/models'
+import { TopCuisineDish } from '@dish/graph'
 import React, { memo } from 'react'
 import { Image, Text } from 'react-native'
 

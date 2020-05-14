@@ -1,15 +1,10 @@
 // https://github.com/dai-shi/gqless-hook
 
-import { Accessor, Client, accessorInterceptors, getAccessor } from 'gqless'
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useReducer,
-  useRef,
-} from 'react'
+import { Accessor, accessorInterceptors, getAccessor } from 'gqless'
+// @ts-ignore
+import * as React from 'react'
 
-import { client } from './graphql'
+const { useCallback, useEffect, useLayoutEffect, useReducer, useRef } = React
 
 const wrapperMap = new WeakMap<object, object>()
 

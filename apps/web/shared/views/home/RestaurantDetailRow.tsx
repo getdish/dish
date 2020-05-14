@@ -1,5 +1,4 @@
-import { Restaurant, graphql, query } from '@dish/graph'
-import { Sources } from '@dish/models'
+import { Restaurant, Sources, graphql, query } from '@dish/graph'
 import React, { memo } from 'react'
 import { Linking, StyleSheet, Text } from 'react-native'
 

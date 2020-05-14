@@ -7,11 +7,25 @@ import React, {
   useState,
 } from 'react'
 import { ToggleLayer, anchor } from 'react-laag'
-import { AnchorEnum } from 'react-laag/dist/ToggleLayer/types'
 import { Platform } from 'react-native'
 
 import { useOverlay } from './useOverlay'
 import { useWaterfall } from './useWaterfall'
+
+type AnchorEnum =
+  | 'BOTTOM_LEFT'
+  | 'BOTTOM_RIGHT'
+  | 'BOTTOM_CENTER'
+  | 'TOP_LEFT'
+  | 'TOP_RIGHT'
+  | 'TOP_CENTER'
+  | 'LEFT_BOTTOM'
+  | 'LEFT_TOP'
+  | 'LEFT_CENTER'
+  | 'RIGHT_BOTTOM'
+  | 'RIGHT_TOP'
+  | 'RIGHT_CENTER'
+  | 'CENTER'
 
 export const ForceShowPopover = createContext<boolean | undefined>(undefined)
 

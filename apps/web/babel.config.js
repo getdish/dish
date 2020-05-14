@@ -13,6 +13,17 @@ module.exports = function (api) {
       'babel-plugin-react-native-web',
       '@babel/plugin-proposal-nullish-coalescing-operator',
     ].filter(Boolean),
-    presets: ['@babel/preset-typescript', '@babel/preset-react'],
+    presets: [
+      ['@babel/preset-typescript', { onlyRemoveTypeImports: true }],
+      [
+        '@babel/preset-react',
+        {
+          // auto adds react import if necessaty
+          // runtime: 'automatic',
+          useBuiltIns: true,
+          development: api.env('development'),
+        },
+      ],
+    ],
   }
 }
