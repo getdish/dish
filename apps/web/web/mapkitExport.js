@@ -5,7 +5,7 @@ module.exports = new Proxy(
       return window['mapkit'][key]
     },
     set(target, key, val) {
-      window['marpkit'][key] = val
+      window['mapkit'][key] = val
       return true
     },
   }

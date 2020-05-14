@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { isPreact, isSSR, isWorker } from '../shared/constants'
+import { isSSR, isWorker } from '../shared/constants'
 
 if (isSSR) {
   console.log('Patching useLayoutEffect to avoid many warnings in server mode')
@@ -20,7 +20,7 @@ if (isWorker) {
   }
 }
 
-if (isPreact) {
+if (process.env.TARGET === 'preact') {
   require('preact/debug')
   React['__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED'] = {
     ReactCurrentOwner: {

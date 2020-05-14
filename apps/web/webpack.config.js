@@ -6,6 +6,7 @@ const _ = require('lodash')
 const Webpack = require('webpack')
 const ClosurePlugin = require('closure-webpack-plugin')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
+const LodashPlugin = require('lodash-webpack-plugin')
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const isProduction = process.env.NODE_ENV === 'production'
@@ -61,6 +62,10 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
       x.constructor.name !== 'CleanWebpackPlugin'
   )
 
+  // PLUGINS
+
+  config.plugins.push(new LodashPlugin())
+
   config.plugins.push(
     new Webpack.DefinePlugin({
       'process.env.TARGET': JSON.stringify(TARGET || null),
@@ -69,6 +74,7 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
 
   config.plugins.push(
     new HTMLWebpackPlugin({
+      inject: true,
       template: path.join(__dirname, 'web/index.html'),
     })
   )
@@ -106,11 +112,22 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     )
   })
 
-  if (TARGET !== 'ssr') {
+  if (TARGET !== 'ssr' && process.env.NODE_ENV !== 'development') {
+    // in production just use <script /> tag...
+    // dev its nice to have it local so no internet required
     config.externals = {
-      './web/mapkit.js': 'mapkit',
+      [path.join(__dirname, 'web/mapkit.js')]: 'mapkit',
     }
   }
+
+  // hackkk try to get tree shaking from ts
+  config.resolve.mainFields = ['tsmain', 'browser', 'module', 'main']
+  config.module.rules.push({
+    test: /\.tsx?$/,
+    use: {
+      loader: 'babel-loader',
+    },
+  })
 
   config.context = __dirname
   config.devServer = {
@@ -157,10 +174,11 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     console.log('config.resolve.alias', config.resolve.alias)
   } else {
     const graphRoot = path.join(require.resolve('@dish/graph'), '..', '..')
+    console.log('graphRoot', graphRoot)
     config.resolve.alias = {
-      react: 'react',
-      'react-dom': 'react-dom',
-      '@dish/graph': graphRoot,
+      react: path.join(require.resolve('react'), '..'),
+      'react-dom': path.join(require.resolve('react-dom'), '..'),
+      '@dish/graph': require.resolve('@dish/graph'),
       gqless: path.join(graphRoot, 'node_modules', 'gqless'),
     }
   }
@@ -295,6 +313,9 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
 
   if (process.env.VERBOSE) {
     console.log('Config:\n', finalConfig)
+    if (!Array.isArray(finalConfig)) {
+      console.log('rules', JSON.stringify(finalConfig.module.rules, null, 2))
+    }
   } else {
     console.log(`Start building ${TARGET}...`)
   }

@@ -101,6 +101,7 @@ server.get('*', async (req, res) => {
 `
     } else if (line.indexOf('<!-- scripts -->') >= 0) {
       out += `
+      <script async src="https://cdn.apple-mapkit.com/mk/5.x.x/mapkit.js"></script>
       <script>
         window.__OVERMIND_MUTATIONS = ${JSON.stringify(overmind.hydrate())}
       </script>

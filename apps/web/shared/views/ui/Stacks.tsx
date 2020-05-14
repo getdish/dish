@@ -102,26 +102,24 @@ const createStack = (defaultStyle?: ViewStyle) => {
       let spacedChildren = children
       if (typeof spacing !== 'undefined') {
         const childArr = React.Children.toArray(children)
-        spacedChildren = _.flatMap(
-          childArr
-            .filter((x) => !!x)
-            .map((x, i) =>
-              i === childArr.length - 1
-                ? x
-                : [
-                    x,
-                    <Spacer
-                      key={i}
-                      size={spacing}
-                      direction={
-                        defaultStyle?.flexDirection === 'row'
-                          ? 'horizontal'
-                          : 'vertical'
-                      }
-                    />,
-                  ]
-            )
-        )
+        spacedChildren = childArr
+          .filter((x) => !!x)
+          .map((x, i) =>
+            i === childArr.length - 1
+              ? x
+              : [
+                  x,
+                  <Spacer
+                    key={i}
+                    size={spacing}
+                    direction={
+                      defaultStyle?.flexDirection === 'row'
+                        ? 'horizontal'
+                        : 'vertical'
+                    }
+                  />,
+                ]
+          )
       }
 
       let content = (

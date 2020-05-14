@@ -163,6 +163,7 @@ const HomeMapContent = memo(function HomeMap() {
     showsCompass: mapkit.FeatureVisibility.Hidden,
     padding,
   })
+  console.log('map', map)
 
   setMapView(map)
   mapView = map

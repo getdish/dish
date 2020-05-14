@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import {
   MapOptions,
@@ -32,7 +32,7 @@ export const useMap = (opts: MapOptions = {}) => {
   }, [map, JSON.stringify(opts.padding ?? null)])
 
   // Clean up the map on unmount
-  useEffect(() => {
+  useLayoutEffect(() => {
     return () => {
       if (!map) return
       try {
