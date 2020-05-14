@@ -4,6 +4,7 @@ import { readFileSync } from 'fs'
 import Path from 'path'
 
 import bodyParser from 'body-parser'
+import { matchesUA } from 'browserslist-useragent'
 import express from 'express'
 import { JSDOM } from 'jsdom'
 import { createOvermindSSR } from 'overmind'
@@ -53,13 +54,13 @@ server.get('/hello', (_, res) => res.send('hello world'))
 
 // static assets
 const clientBuildPath = Path.join(rootDir, 'web-build')
+const clientBuildLegacyPath = Path.join(rootDir, 'web-build-legacy')
 server.use('/static', express.static(Path.join(clientBuildPath, 'static')))
 
 // TODO amp
 // setHeaders: res => res.setHeader('AMP-Access-Control-Allow-Source-Origin', `http://localhost:${PORT}`),
 
 server.get('*', async (req, res) => {
-  // console.log('config', config)
   const htmlPath = Path.join(rootDir, 'web', 'index.html')
   const template = readFileSync(htmlPath, 'utf8')
   const overmind = createOvermindSSR(config)
@@ -69,8 +70,19 @@ server.get('*', async (req, res) => {
   // need to fool helmet back into thinking were in the node
   const helmet = Helmet.renderStatic()
 
+  const useragent = req.get('User-Agent')
+  const isModernUser = matchesUA(useragent, {
+    // safari doesnt have requestidlecallback
+    browsers: ['Chrome >= 61', 'Firefox >= 73'],
+    env: 'modern',
+    allowHigherVersions: true,
+  })
+
   const clientHTML = readFileSync(
-    Path.join(clientBuildPath, 'index.html'),
+    Path.join(
+      isModernUser ? clientBuildPath : clientBuildLegacyPath,
+      'index.html'
+    ),
     'utf8'
   )
   const clientScripts = clientHTML.match(

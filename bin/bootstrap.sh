@@ -12,6 +12,7 @@ ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubuserconten
 # install docker
 # start docker
 ensure-dep "multipass" -- brew cask install multipass
+ensure-dep "parallel" -- brew install parallel
 
 printf "\n\n"
 printf "  🎉🎉🎉 bootstrapped! 🎉🎉🎉"

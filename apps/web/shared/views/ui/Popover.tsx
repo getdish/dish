@@ -2,22 +2,14 @@ import React, {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useLayoutEffect,
   useRef,
   useState,
 } from 'react'
 import { ToggleLayer, anchor } from 'react-laag'
 import { AnchorEnum } from 'react-laag/dist/ToggleLayer/types'
-import {
-  Platform,
-  StyleProp,
-  TouchableOpacity,
-  ViewComponent,
-} from 'react-native'
-import ResizeObserver from 'resize-observer-polyfill'
+import { Platform } from 'react-native'
 
-import { VStack, ZStack } from './Stacks'
 import { useOverlay } from './useOverlay'
 import { useWaterfall } from './useWaterfall'
 
@@ -100,7 +92,7 @@ export const Popover = (props: PopoverProps) => {
   if (Platform.OS == 'web') {
     return (
       <ToggleLayer
-        ResizeObserver={ResizeObserver}
+        ResizeObserver={window['ResizeObserver']}
         {...(isControlled && { isOpen })}
         container={document.body}
         fixed
