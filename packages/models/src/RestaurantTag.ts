@@ -1,5 +1,3 @@
-import util from 'util'
-
 import { EnumType } from 'json-to-graphql-query'
 import _ from 'lodash'
 

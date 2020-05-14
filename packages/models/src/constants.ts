@@ -3,7 +3,6 @@ export const isBrowserProd =
   !isNode && window.location.hostname.includes('dish')
 export const isWorker = !isNode && !!window['isWorker']
 
-let WebSocket: WebSocket
 export let SEARCH_DOMAIN: string
 
 const LIVE_SEARCH_DOMAIN = 'https://search.rio.dishapp.com'

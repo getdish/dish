@@ -1,57 +1,20 @@
 import auth from '@dish/auth'
+import { Point, RatingFactors, Sources } from '@dish/graph'
 import { EnumType } from 'json-to-graphql-query'
 import _ from 'lodash'
 
 import { SEARCH_DOMAIN } from './constants'
-import { Dish, TopCuisineDish } from './Dish'
-import { ModelBase, Point } from './ModelBase'
+import { Dish } from './Dish'
+import { ModelBase } from './ModelBase'
+import { RESTAURANT_WEIGHTS } from './RESTAURANT_WEIGHTS'
 import { RestaurantTag, RestaurantTagWithID } from './RestaurantTag'
 import { Scrape } from './Scrape'
 import { Tag } from './Tag'
 import { levenshteinDistance } from './utils'
 
-export type LngLat = { lng: number; lat: number }
-
-export type TopCuisine = {
-  country: string
-  icon: string
-  frequency: number
-  avg_rating: number
-  dishes: TopCuisineDish[]
-  top_restaurants: Partial<Restaurant>[]
-}
-
-export type RestaurantSearchArgs = {
-  center: LngLat
-  span: LngLat
-  query: string
-  tags?: string[]
-  limit?: number
-}
-
-export type RatingFactors = {
-  food: number
-  service: number
-  value: number
-  ambience: number
-}
-
-export type Sources = { [key: string]: { url: string; rating: number } }
-
 export type UnifiedTag = {
   tag: Tag
 } & RestaurantTag
-
-// Note that there is no unit or reference point for these values. All that
-// matters is simply the relative differences between them. For example therefore
-// there is no need to ensure that the maximum value is 1.0 or 100%.
-export const RESTAURANT_WEIGHTS = {
-  yelp: 0.6,
-  tripadvisor: 0.6,
-  michelin: 1.0,
-  infatuated: 0.9,
-  ubereats: 0.2,
-}
 
 export class Restaurant extends ModelBase<Restaurant> {
   name!: string

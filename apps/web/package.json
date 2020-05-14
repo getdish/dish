@@ -116,6 +116,7 @@
     "rollup-plugin-css-only": "2.0.0",
     "rollup-plugin-node-globals": "^1.4.0",
     "rollup-plugin-react-refresh": "^0.0.1",
+    "terser-webpack-plugin": "^3.0.1",
     "testcafe": "^1.8.4",
     "type-fest": "0.13.1",
     "url-loader": "^4.1.0",

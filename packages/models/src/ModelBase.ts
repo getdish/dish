@@ -1,14 +1,7 @@
-import util from 'util'
-
 import { fetchQuery } from '@dish/graph'
 import { EnumType, jsonToGraphQLQuery } from 'json-to-graphql-query'
 
-import { isBrowserProd, isNode } from './constants'
-
-export type Point = {
-  type: string
-  coordinates: [number, number]
-}
+import { isNode } from './constants'
 
 export class ModelBase<T> {
   id!: string

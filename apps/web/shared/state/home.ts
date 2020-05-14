@@ -1,6 +1,12 @@
 import { slugify } from '@dish/common-web'
-import { Restaurant, User, query, resolved } from '@dish/graph'
-import { RestaurantSearchArgs, getHomeDishes, search } from '@dish/models'
+import {
+  Restaurant,
+  RestaurantSearchArgs,
+  User,
+  query,
+  resolved,
+} from '@dish/graph'
+import { getHomeDishes, search } from '@dish/models'
 import { isEqual } from '@o/fast-compare'
 import _, { findLast, last } from 'lodash'
 import { Action, AsyncAction, derived } from 'overmind'
