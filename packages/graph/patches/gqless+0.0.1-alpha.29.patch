@@ -47,10 +47,36 @@ index 12268bf..3ab50b1 100644
  var tslib = require('tslib');
  var utils = require('@gqless/utils');
 diff --git a/node_modules/gqless/dist/gqless.esm.js b/node_modules/gqless/dist/gqless.esm.js
-index cc6eb3f..1d65880 100644
+index cc6eb3f..9d8c5fa 100644
 --- a/node_modules/gqless/dist/gqless.esm.js
 +++ b/node_modules/gqless/dist/gqless.esm.js
-@@ -559,17 +559,16 @@ const memoized =
+@@ -451,6 +451,7 @@ const buildArguments = ({
+     }
+ 
+     if (Array.isArray(arg)) {
++      console.log('is array arg', arg)
+       let indexContext;
+ 
+       if (context) {
+@@ -478,10 +479,17 @@ const buildSelections = ({
+   formatter
+ }, tree, variables) => {
+   const innerNode = tree.selection.node instanceof NodeContainer ? tree.selection.node.innerNode : tree.selection.node;
++
+   if (innerNode instanceof ScalarNode || innerNode instanceof EnumNode) return '';
+   const includeTypename = // When no selections or not on ObjectNode
+   (!tree.children.length || !(innerNode instanceof ObjectNode)) && // fragments should never need __typename
+   !(tree.selection instanceof Fragment);
++
++  // super fucking weird patch fixes firefox...
++  if (innerNode) {
++    innerNode.constructor.name
++  }
++
+   const selections = [includeTypename && '__typename', ...tree.children.map(tree => buildSelectionTree(formatter, tree, variables))].filter(Boolean);
+   if (!selections.length) return '';
+   return selections.join(LINE_SEPARATOR);
+@@ -559,17 +567,16 @@ const memoized =
  createMemo();
  const getAlias = tree => {
    if (!tree.parent) return;
