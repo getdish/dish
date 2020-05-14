@@ -123,13 +123,10 @@ export class ModelBase<T> {
     return object
   }
 
-  static async hasura(
-    gql: {},
-    silence_not_found: boolean = false
-  ): Promise<any> {
+  static async hasura(gql: {}, silenceNotFound: boolean = false): Promise<any> {
     gql = ModelBase.ensureKeySyntax(gql)
     const query = jsonToGraphQLQuery(gql, { pretty: true })
-    return fetchQuery(query, {}, silence_not_found)
+    return fetchQuery(query, {}, { silenceNotFound })
   }
 
   async refresh() {

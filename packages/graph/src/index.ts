@@ -1,5 +1,5 @@
 import { createFetcher } from './createFetcher'
-import { client, query_root } from './graphql'
+import { client, mutation_root, query_root } from './graphql'
 import * as Hooks from './hooks'
 
 export function startLogging(verbose = true) {
@@ -16,9 +16,14 @@ export * from './types'
 // these hacky type defs here avoid huge slowdown in ts
 // otherwise could just return query_root thats it
 type Query = query_root | void
-export const useQuery = (): any => {
+export const useQuery = (): Query => {
   return Hooks.useQueryInner(client) as any
 }
+
+// type Mutation = mutation_root | void
+// export const useMutation = (): Mutation => {
+//   return Hooks.useQueryInner(mutationClient) as any
+// }
 
 const graphQuery = createFetcher('query')
 export function fetchQuery(query: string, variables = {}, options = {}) {

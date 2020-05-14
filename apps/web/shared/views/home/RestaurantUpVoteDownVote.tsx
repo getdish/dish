@@ -1,4 +1,4 @@
-import { query } from '@dish/graph'
+import { mutation, query, useMutation } from '@dish/graph'
 import { graphql } from '@gqless/react'
 import React, { memo, useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
@@ -12,6 +12,7 @@ import { useReviewMutation } from './useReviewMutation'
 export const RestaurantUpVoteDownVote = memo(
   graphql(({ restaurantId }: { restaurantId: string }) => {
     const om = useOvermind()
+    const userId = om.state.user.user?.id
     let vote = 0
 
     if (om.state.user.isLoggedIn) {
@@ -22,14 +23,12 @@ export const RestaurantUpVoteDownVote = memo(
             _eq: restaurantId,
           },
           user_id: {
-            _eq: om.state.user.user?.id,
+            _eq: userId,
           },
         },
       })
       vote = review?.rating
     }
-
-    const [insertReview, { data, fetchState, errors }] = useReviewMutation()
 
     return (
       <div
@@ -42,10 +41,14 @@ export const RestaurantUpVoteDownVote = memo(
             style={styles.topButton}
             active={vote == 1}
             onPress={() => {
-              debugger
-              insertReview({
-                restaurant_id: restaurantId,
-                rating: vote === 1 ? 0 : 1,
+              mutation.insert_review({
+                objects: [
+                  {
+                    restaurant_id: restaurantId,
+                    rating: vote === 1 ? 0 : 1,
+                    user_id: userId,
+                  },
+                ],
               })
             }}
           >
@@ -60,9 +63,14 @@ export const RestaurantUpVoteDownVote = memo(
             style={styles.bottomButton}
             active={vote == -1}
             onPress={() => {
-              insertReview({
-                restaurant_id: restaurantId,
-                rating: vote == -1 ? 0 : -1,
+              mutation.insert_review({
+                objects: [
+                  {
+                    restaurant_id: restaurantId,
+                    rating: vote == -1 ? 0 : -1,
+                    user_id: userId,
+                  },
+                ],
               })
             }}
           >
