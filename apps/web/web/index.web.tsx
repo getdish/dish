@@ -1,7 +1,6 @@
 // preload imports
 import './bootstrapEnv'
 import './base.css'
-import './mapkit'
 
 import { mutation, query, startLogging } from '@dish/graph'
 import { createOvermind } from 'overmind'
@@ -36,8 +35,8 @@ window['React'] = React
 window['query'] = query
 window['mutation'] = mutation
 
-// // exports
-if (isSSR) {
+// exports
+if (process.env.TARGET === 'ssr') {
   exports.App = require('../shared/views/App').App
   exports.config = config
   exports.ReactDOMServer = require('react-dom/server')
