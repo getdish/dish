@@ -16,7 +16,7 @@
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "true",
-    "postinstall": "ls -la node_modules; la -la node_modules/gqless; patch-package"
+    "postinstall": "patch --verbose -t -p1 -i patches/gqless+0.0.1-alpha.29.patch"
   },
   "dependencies": {
     "patch-package": "^6.2.2",

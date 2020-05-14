@@ -1,21 +1,17 @@
 # Stage 1: copy/install
 FROM mhart/alpine-node:12.16.1
 WORKDIR /app
+RUN apk add --no-cache patch
+ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 
 COPY package.json .
 COPY tsconfig.base.json .
 
-# copy monorepo dependencies
 COPY packages packages
+COPY services/jwt-server services/jwt-server
 
 RUN yarn install
 RUN yarn workspaces run build
-
-ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
-WORKDIR /app
-COPY services/jwt-server services/jwt-server
-RUN yarn install
-RUN cd services/jwt-server && yarn build
 
 ## Stage 2: run
 FROM mhart/alpine-node:slim-12

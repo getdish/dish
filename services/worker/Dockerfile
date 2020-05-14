@@ -1,6 +1,7 @@
 # Stage 1: copy/install
 FROM mhart/alpine-node:12.16.1
 WORKDIR /app
+RUN apk add --no-cache patch
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 
 COPY package.json .

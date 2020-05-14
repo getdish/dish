@@ -1,24 +1,20 @@
 # Stage 1: copy/install
 FROM mhart/alpine-node:12.16.1
 WORKDIR /app
+ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
+RUN apk add python bash parallel build-base alpine-sdk \
+      pixman-dev cairo-dev pango-dev libjpeg-turbo-dev giflib-dev patch
 
 COPY package.json .
 COPY tsconfig.base.json .
-
-# copy monorepo dependencies
 COPY packages packages
+COPY apps/web apps/web
 
-RUN apk add python bash parallel build-base alpine-sdk \
-      pixman-dev cairo-dev pango-dev libjpeg-turbo-dev giflib-dev
 RUN yarn install
 RUN yarn workspaces run build
-
-ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
-WORKDIR /app
 RUN yarn global add expo-cli@3.18.0
-COPY apps/web apps/web
+
 WORKDIR /app/apps/web
-RUN yarn install
 RUN yarn build:web
 
 ## Stage 2: run
