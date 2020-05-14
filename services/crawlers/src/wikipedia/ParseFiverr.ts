@@ -95,7 +95,7 @@ export class ParseFiverr {
   async addDish(line: string, original: string) {
     if (line.startsWith('#')) return
     if (line == '') return
-    line = line.replace(/ *\([^)]*\) */g, '')
+    line = line.replace(/ *\([^)]*\) */g, '').replace(/,$/, '')
     console.log(line)
     let tag = new Tag({
       name: line,
@@ -104,7 +104,9 @@ export class ParseFiverr {
     })
     tag.addAlternate(original)
     tag = await Tag.upsertOne(tag)
-    await tag.upsertCategorizations([this.category.id])
+    if (this.category) {
+      await tag.upsertCategorizations([this.category.id])
+    }
   }
 }
 
@@ -161,6 +163,42 @@ export class ParseAisha {
       comment: '//',
     })
     this.output.push(records[0][0])
+  }
+
+  writeTxtFile(destination: string) {
+    const filename = this.output[0]
+      .replace('#', '')
+      .replace(/\s/g, '')
+      .split(',')
+      .join('-')
+      .toLowerCase()
+    fs.writeFileSync(
+      destination + '/' + filename + '.txt',
+      this.output.join('\n')
+    )
+    this.output = [] as string[]
+  }
+}
+
+// Zeeshan supplied a huge, plain txt file. I cleaned it up a bit by hand first,
+// removing commas, separating "/"s onto separate lines, etc
+export class ParseZeeshan {
+  output = [] as string[]
+
+  static start(
+    source: string = process.argv[2],
+    destination: string = process.argv[3]
+  ) {
+    const zeeshan = new ParseZeeshan()
+    const text = fs.readFileSync(source, 'utf-8')
+    const lines = text.split('\n')
+    const single_hash_regex = new RegExp('^#(?!#)')
+    for (let line of lines) {
+      if (zeeshan.output.length != 0 && single_hash_regex.test(line)) {
+        zeeshan.writeTxtFile(destination)
+      }
+      zeeshan.output.push(line)
+    }
   }
 
   writeTxtFile(destination: string) {
