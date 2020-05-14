@@ -180,24 +180,24 @@ export class ParseAisha {
   }
 }
 
-// Zeeshan supplied a huge, plain txt file. I cleaned it up a bit by hand first,
-// removing commas, separating "/"s onto separate lines, etc
-export class ParseZeeshan {
+// Zeeshan and Amna each supplied a huge, single file. I cleaned them up a bit
+// by hand first, removing commas, separating "/"s onto separate lines, etc
+export class ParseOneBigFile {
   output = [] as string[]
 
   static start(
     source: string = process.argv[2],
     destination: string = process.argv[3]
   ) {
-    const zeeshan = new ParseZeeshan()
+    const one = new ParseOneBigFile()
     const text = fs.readFileSync(source, 'utf-8')
     const lines = text.split('\n')
     const single_hash_regex = new RegExp('^#(?!#)')
     for (let line of lines) {
-      if (zeeshan.output.length != 0 && single_hash_regex.test(line)) {
-        zeeshan.writeTxtFile(destination)
+      if (one.output.length != 0 && single_hash_regex.test(line)) {
+        one.writeTxtFile(destination)
       }
-      zeeshan.output.push(line)
+      one.output.push(line)
     }
   }
 

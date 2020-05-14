@@ -1,7 +1,7 @@
 import { DishTag } from './DishTag'
-import { ParseAisha, ParseFiverr, ParseZeeshan } from './ParseFiverr'
+import { ParseAisha, ParseFiverr, ParseOneBigFile } from './ParseFiverr'
 
 //DishTag.start()
 ParseFiverr.start(process.argv[2])
 //ParseAisha.start(process.argv[2])
-//ParseZeeshan.start()
+//ParseOneBigFile.start()
