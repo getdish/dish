@@ -22,7 +22,9 @@
     "prettier": "wsrun -c prettier --write \"**/*.{ts,tsx}\" || true"
   },
   "resolutions": {
-    "tslib": "1.11.2"
+    "tslib": "1.11.2",
+    "react": "0.0.0-experimental-aae83a4b9",
+    "react-dom": "0.0.0-experimental-aae83a4b9"
   },
   "devDependencies": {
     "import-sort-style-module": "^6.0.0",

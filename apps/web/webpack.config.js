@@ -30,7 +30,7 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
 
   config.stats = 'normal'
 
-  if (isProduction) {
+  if (!!process.env.INSPECT || isProduction) {
     config.plugins.push(
       new DuplicatesPlugin({
         // Emit compilation warning or error? (Default: `false`)

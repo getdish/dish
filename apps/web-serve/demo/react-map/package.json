@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "obj-str": "1.0.3",
-    "react": "0.0.0-experimental-aae83a4b9",
-    "react-dom": "0.0.0-experimental-aae83a4b9"
+    "react": "*",
+    "react-dom": "*"
   },
   "devDependencies": {
     "@babel/core": "7.8.4",
