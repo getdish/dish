@@ -11,6 +11,7 @@ import { ErrorBoundary } from '../ErrorBoundary'
 import { ForceShowPopover } from '../ui/Popover'
 import { ZStack } from '../ui/Stacks'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
+import { LoadingItems } from './LoadingItems'
 
 export function HomeStackView<A extends HomeStateItemSimple>(props: {
   children: (a: A, isActive: boolean, index: number) => React.ReactNode
@@ -40,7 +41,7 @@ export function HomeStackView<A extends HomeStateItemSimple>(props: {
               isRemoving={isActive && isRemoving}
             >
               <ErrorBoundary name={`${item.type}`}>
-                <Suspense fallback={null}>
+                <Suspense fallback={<LoadingItems />}>
                   {props.children(item as any, isActive, stackItemIndex)}
                 </Suspense>
               </ErrorBoundary>
