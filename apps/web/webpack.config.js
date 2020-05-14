@@ -146,6 +146,13 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     config.resolve.alias = {
       react: 'react',
       'react-dom': 'react-dom',
+      gqless: path.join(
+        require.resolve('@dish/graph'),
+        '..',
+        '..',
+        'node_modules',
+        'gqless'
+      ),
     }
   }
 
