@@ -3,6 +3,7 @@ import React, { forwardRef, useLayoutEffect, useRef, useState } from 'react'
 import { View, ViewProps, ViewStyle } from 'react-native'
 
 import { combineRefs } from '../../helpers/combineRefs'
+import { getNode } from './getNode'
 import Hoverable from './Hoverable'
 import { Spacer, Spacing } from './Spacer'
 
@@ -28,9 +29,6 @@ export type StackProps = Omit<
   // because who tf uses alignContent or backfaceVisibility
   'alignContent' | 'backfaceVisibility'
 >
-
-export const getNode = (refCurrent: any) =>
-  refCurrent?.['_reactInternalFiber']?.child.stateNode
 
 const createStack = (defaultStyle?: ViewStyle) => {
   return forwardRef<View, StackProps>(

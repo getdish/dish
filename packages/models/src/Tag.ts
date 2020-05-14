@@ -107,7 +107,7 @@ export class Tag extends ModelBase<Tag> {
     const category_names = (this.categories || []).map((i) =>
       slugify(i.category.name)
     )
-    const all = _.flatMap([this.slug(), ...parentage, ...category_names])
+    const all = [this.slug(), ...parentage, ...category_names].flat()
     return _.uniq(all)
   }
 
