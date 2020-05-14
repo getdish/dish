@@ -60,8 +60,7 @@
     "react-native-unimodules": "~0.7.0",
     "react-native-web": "0.11.7",
     "react-storage-hooks": "^4.0.0",
-    "resize-observer-polyfill": "1.5.1",
-    "@gqless/react": "0.0.1-alpha.28"
+    "resize-observer-polyfill": "1.5.1"
   },
   "devDependencies": {
     "canvas": "2.6.1",
