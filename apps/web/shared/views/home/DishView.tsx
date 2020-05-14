@@ -5,7 +5,8 @@ import { Image, Text } from 'react-native'
 import { Tag } from '../../state/Tag'
 import { Box } from '../ui/Box'
 import { LinkButton } from '../ui/Link'
-import { StackProps, VStack, ZStack } from '../ui/Stacks'
+import { HStack, StackProps, VStack, ZStack } from '../ui/Stacks'
+import { bg } from './colors'
 import { DishRatingView } from './DishRatingView'
 
 export const DishView = memo(
@@ -29,24 +30,27 @@ export const DishView = memo(
               size={size > 150 ? 'sm' : 'xs'}
               dish={dish}
               position="absolute"
-              top={-4}
-              right={-12}
+              top={2}
+              right={-6}
             />
           )}
         </ZStack>
         <VStack width={size} height={size}>
           <VStack
             className="ease-in-out"
-            shadowColor="rgba(0,0,0,0.15)"
-            shadowRadius={12}
+            shadowColor="rgba(0,0,0,0.12)"
+            shadowRadius={10}
             shadowOffset={{ width: 0, height: 4 }}
             width="100%"
             height="100%"
-            borderRadius={0.15 * size}
+            borderRadius={0.36 * size}
             overflow="hidden"
+            borderWidth={2}
+            borderColor="transparent"
             hoverStyle={{
-              shadowRadius: 11,
-              shadowColor: 'rgba(0,0,0,0.45)',
+              borderColor: bg,
+              shadowRadius: 14,
+              shadowColor: 'rgba(0,0,0,0.2)',
               zIndex: 10000,
             }}
           >
@@ -57,13 +61,24 @@ export const DishView = memo(
             />
           </VStack>
         </VStack>
-        <VStack marginTop={-16} alignItems="center" justifyContent="center">
-          <Box paddingVertical={2}>
+        <HStack
+          position="absolute"
+          bottom={-26}
+          left={0}
+          right={0}
+          alignItems="center"
+          justifyContent="center"
+          overflow="hidden"
+          padding={15}
+        >
+          <Box paddingVertical={2} maxWidth="100%" overflow="hidden">
             <Text
               numberOfLines={1}
               style={{
+                flex: 1,
+                overflow: 'hidden',
                 fontSize: 13,
-                fontWeight: '500',
+                fontWeight: '700',
                 lineHeight: 22,
                 // opacity: 0.75,
                 paddingVertical: 2,
@@ -76,7 +91,7 @@ export const DishView = memo(
             </Text> */}
             </Text>
           </Box>
-        </VStack>
+        </HStack>
       </LinkButton>
     )
   }

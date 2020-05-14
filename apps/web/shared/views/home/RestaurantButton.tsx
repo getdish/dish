@@ -39,7 +39,7 @@ export const RestaurantButton = memo(
       >
         {restaurant.name}
         <RestaurantRatingView
-          size="sm"
+          size="xs"
           restaurantSlug={restaurant.slug}
           rating={restaurant.rating}
           // @ts-ignore
