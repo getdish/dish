@@ -1,5 +1,4 @@
-import { mutation, query, useMutation } from '@dish/graph'
-import { graphql } from '@gqless/react'
+import { graphql, mutation, query } from '@dish/graph'
 import React, { memo, useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 

@@ -1,5 +1,4 @@
-import { query } from '@dish/graph'
-import { graphql } from '@gqless/react'
+import { graphql, query } from '@dish/graph'
 import React, { memo } from 'react'
 import { Image, Linking, Text } from 'react-native'
 

@@ -16,9 +16,11 @@
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "true",
-    "postinstall": "patch --verbose -t -p1 -i patches/gqless+0.0.1-alpha.29.patch"
+    "postinstall": "patch-package",
+    "postinstall-verbose": "patch --verbose -t -p1 -i patches/gqless+0.0.1-alpha.29.patch"
   },
   "dependencies": {
+    "@gqless/react": "0.0.1-alpha.28",
     "patch-package": "^6.2.2",
     "@dish/auth": "*",
     "@dish/common-web": "*",

@@ -12,8 +12,8 @@
   },
   "scripts": {
     "start": "node _/index.js",
-    "build": "tsc",
-    "watch": "tsc --watch --preserveWatchOutput",
+    "build": "tsc -b",
+    "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "DISH_ENV=test ava test/* --verbose",
     "test:watch": "DISH_ENV=test ava test/* --watch"
   },

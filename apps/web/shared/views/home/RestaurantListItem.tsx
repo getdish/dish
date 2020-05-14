@@ -1,5 +1,4 @@
-import { Restaurant, query } from '@dish/graph'
-import { graphql } from '@gqless/react'
+import { Restaurant, graphql, query } from '@dish/graph'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 

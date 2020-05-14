@@ -8,6 +8,7 @@ export function startLogging(verbose = true) {
   new Logger(client, verbose)
 }
 
+export { graphql } from '@gqless/react'
 export { query } from './graphql'
 export * from './graphql/mutation'
 export * from 'gqless'
