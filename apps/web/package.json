@@ -23,8 +23,10 @@
     "start:react-native": "react-native start",
     "test": "true",
     "postinstall": "./etc/postinstall.sh",
-    "build": "tsc & tsc -p tsconfig.build.json & wait",
-    "watch": "tsc --watch --preserveWatchOutput & tsc -p tsconfig.build.json --watch --preserveWatchOutput & wait",
+    "build": "npm-run-all --parallel build:types build:output",
+    "build:types": "tsc",
+    "build:output": "tsc -b tsconfig.build.json",
+    "watch": "tsc --watch --preserveWatchOutput & tsc -b tsconfig.build.json --watch --preserveWatchOutput & wait",
     "build:web": "./etc/build_web.sh",
     "build:web:ssr": "VERBOSE=1 NODE_ENV=production TARGET=ssr webpack",
     "build:web:client": "VERBOSE=1 NODE_ENV=production TARGET=client webpack",
@@ -61,6 +63,7 @@
     "resize-observer-polyfill": "1.5.1"
   },
   "devDependencies": {
+    "npm-run-all": "4.1.5",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-proposal-decorators": "^7.8.3",
     "@babel/plugin-proposal-nullish-coalescing-operator": "7.8.3",

@@ -13,14 +13,14 @@
   },
   "scripts": {
     "start": "",
-    "build": "yarn wsrun build",
-    "build:watch": "yarn wsrun watch",
+    "build": "wsrun build",
+    "build:ultra": "ultra -r --no-pretty build",
+    "build:watch": "ultra -r watch",
     "build:watch:broken": "yarn tsc -b -w",
     "test": "ava",
     "clean": "bin/clean.sh",
     "format": "swift-format --recursive --in-place ./apps/ios/dish",
-    "postinstall": "wsrun -c postinstall || true",
-    "prettier": "wsrun -c prettier --write \"**/*.{ts,tsx}\" || true"
+    "prettier": "ultra -r --no-pretty prettier --write \"**/*.{ts,tsx}\" || true"
   },
   "resolutions": {
     "tslib": "1.11.2",
@@ -36,11 +36,11 @@
     "ts-node": "^8.10.1",
     "tsconfig-paths": "^3.9.0",
     "typescript": "3.9.2",
-    "wsrun": "^5.2.0"
+    "ultra-runner": "3.3.0",
+    "wsrun": "5.2.0"
   },
   "dependencies": {
-    "patch-package": "^6.2.2",
-    "postinstall-postinstall": "^2.0.0"
+    "patch-package": "^6.2.2"
   },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {
