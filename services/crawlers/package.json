@@ -25,9 +25,11 @@
     "moment": "^2.25.3",
     "pg": "^7.18.2",
     "sentiment": "^5.0.2",
+    "bull": "^3.12.1",
     "transliteration": "^2.1.8"
   },
   "devDependencies": {
+    "ava": "^3.8.2",
     "@types/cheerio": "^0.22.16",
     "@types/lodash": "^4.14.149",
     "@zeit/ncc": "^0.20.5",
