@@ -11,7 +11,7 @@ COPY packages packages
 COPY apps/web apps/web
 
 RUN yarn install
-RUN yarn workspaces run build
+RUN yarn workspaces foreach --parallel run build
 
 WORKDIR /app/apps/web
 RUN yarn build:web

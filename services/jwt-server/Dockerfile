@@ -11,7 +11,7 @@ COPY packages packages
 COPY services/jwt-server services/jwt-server
 
 RUN yarn install
-RUN yarn workspaces run build
+RUN yarn workspaces foreach --parallel run build
 
 ## Stage 2: run
 FROM mhart/alpine-node:slim-12

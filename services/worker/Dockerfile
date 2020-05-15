@@ -11,7 +11,7 @@ COPY services/crawlers services/crawlers
 COPY services/worker services/worker
 
 RUN yarn install
-RUN yarn workspaces run build
+RUN yarn workspaces foreach --parallel run build
 
 ## Stage 2: run
 FROM mhart/alpine-node:slim-12

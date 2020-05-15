@@ -48,6 +48,7 @@ module.exports = async function (
       path: path.resolve(__dirname),
       filename: 'static/js/app.js',
       publicPath: '/',
+      globalObject: 'this',
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
@@ -71,20 +72,21 @@ module.exports = async function (
       modules: ['node_modules'],
     },
     optimization: {
-      minimize: isProduction,
+      minimize: isProduction && TARGET !== 'ssr',
       concatenateModules: isProduction && !process.env.ANALYZE_BUNDLE,
       usedExports: isProduction,
-      splitChunks: isProduction
-        ? {
-            chunks: 'async',
-            minSize: 30000,
-            maxSize: 0,
-            minChunks: 1,
-            maxAsyncRequests: 6,
-            maxInitialRequests: 4,
-            automaticNameDelimiter: '~',
-          }
-        : false,
+      splitChunks:
+        isProduction && TARGET !== 'ssr'
+          ? {
+              chunks: 'async',
+              minSize: 30000,
+              maxSize: 0,
+              minChunks: 1,
+              maxAsyncRequests: 6,
+              maxInitialRequests: 4,
+              automaticNameDelimiter: '~',
+            }
+          : false,
       runtimeChunk: false,
       minimizer: [
         // new ClosurePlugin(),
@@ -151,7 +153,6 @@ module.exports = async function (
       ],
     },
     plugins: [
-      // !isProduction && new Webpack.HotModuleReplacementPlugin(),
       new LodashPlugin(),
       new Webpack.DefinePlugin({
         'process.env.TARGET': JSON.stringify(TARGET || null),
@@ -161,6 +162,18 @@ module.exports = async function (
         inject: true,
         template: path.join(__dirname, 'web/index.html'),
       }),
+      env.mode === 'development' &&
+        TARGET !== 'worker' &&
+        new ReactRefreshWebpackPlugin({
+          overlay: false,
+        }),
+      !!process.env.INSPECT &&
+        new DuplicatesPlugin({
+          emitErrors: false,
+          emitHandler: undefined,
+          ignoredPackages: undefined,
+          verbose: false,
+        }),
     ].filter(Boolean),
 
     // @ts-ignore
@@ -200,27 +213,6 @@ module.exports = async function (
     },
   }
 
-  if (!!process.env.INSPECT) {
-    config.plugins.push(
-      new DuplicatesPlugin({
-        // Emit compilation warning or error? (Default: `false`)
-        emitErrors: false,
-        // Handle all messages with handler function (`(report: string)`)
-        // Overrides `emitErrors` output.
-        emitHandler: undefined,
-        // List of packages that can be ignored. (Default: `[]`)
-        // - If a string, then a prefix match of `{$name}/` for each module.
-        // - If a regex, then `.test(pattern)` which means you should add slashes
-        //   where appropriate.
-        //
-        // **Note**: Uses posix paths for all matching (e.g., on windows `/` not `\`).
-        ignoredPackages: undefined,
-        // Display full duplicates information? (Default: `false`)
-        verbose: false,
-      })
-    )
-  }
-
   // PLUGINS
 
   if (process.env.ANALYZE_BUNDLE) {
@@ -231,30 +223,9 @@ module.exports = async function (
     )
   }
 
-  // test closure compiler, could be more performant if it extracts functions from render better
-  // config.optimization.minimizer = [
-  //   new ClosurePlugin({
-  //     // 'AGGRESSIVE_BUNDLE' seems to fail on mjs files in webpack
-  //     mode: 'STANDARD',
-  //     // See: https://github.com/webpack-contrib/closure-webpack-plugin/issues/82
-  //     // Unfortunately, compared to the default 'java', this is really slow and prone
-  //     // to RAM exhaustion
-  //     platform: 'javascript',
-  //   }),
-  // ]
-
   if (TARGET === 'worker') {
-    if (!isProduction) {
-      config.entry.app = config.entry.app.slice(1) // remove hot
-    }
-    if (config.devServer) {
-      config.devServer.hot = false
-    }
-    config.output.globalObject = 'this'
-    config.plugins = config.plugins.filter((plugin) => {
-      return plugin.constructor.name !== 'HotModuleReplacementPlugin'
-    })
-
+    // @ts-ignore
+    config.devServer.hot = false
     // exec patch
     const exec = require('child_process').exec
     config.plugins.push({
@@ -269,32 +240,11 @@ module.exports = async function (
     })
   }
 
-  if (env.mode === 'development' && TARGET !== 'worker') {
-    config.devServer = {
-      ...config.devServer,
-      overlay: false,
-    }
-    config.plugins = config.plugins.filter(
-      (x) => x.constructor.name !== 'HotModuleReplacementPlugin'
-    )
-    config.plugins.push(
-      new ReactRefreshWebpackPlugin({
-        overlay: false,
-        // {
-        //   entry: path.join(__dirname, 'web', 'errors.web.tsx'),
-        //   module: path.join(__dirname, 'web', 'errors.web.tsx'),
-        // },
-      })
-    )
-  }
-
   if (TARGET === 'ssr') {
     config.target = 'node'
     config.output.path = path.join(__dirname, 'web-build-ssr')
     config.output.libraryTarget = 'commonjs'
     config.output.filename = `static/js/app.ssr.js`
-    config.optimization.minimize = false
-    config.optimization.minimizer = []
     config.plugins.push(
       new Webpack.ProvidePlugin({
         mapkit: path.join(__dirname, 'web/mapkitExport.js'),
@@ -318,6 +268,7 @@ module.exports = async function (
         entry: {
           app: [
             path.join(__dirname, 'web', 'polyfill.legacy.js'),
+            // @ts-ignore
             ...config.entry.app,
           ],
         },
@@ -401,3 +352,15 @@ function babelInclude(inputPath) {
   }
   return false
 }
+
+// test closure compiler, could be more performant if it extracts functions from render better
+// config.optimization.minimizer = [
+//   new ClosurePlugin({
+//     // 'AGGRESSIVE_BUNDLE' seems to fail on mjs files in webpack
+//     mode: 'STANDARD',
+//     // See: https://github.com/webpack-contrib/closure-webpack-plugin/issues/82
+//     // Unfortunately, compared to the default 'java', this is really slow and prone
+//     // to RAM exhaustion
+//     platform: 'javascript',
+//   }),
+// ]

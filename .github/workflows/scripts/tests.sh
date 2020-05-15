@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 set -e
 
-yarn workspaces run build
-yarn workspaces run test
+yarn workspaces foreach --parallel run build
+yarn workspaces foreach --parallel run test
