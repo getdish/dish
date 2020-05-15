@@ -101,9 +101,19 @@ export default memo(function HomePage() {
   )
 })
 
-const HomePageRestaurant = React.lazy(() => import('./HomePageRestaurant'))
-const HomePageSearchResults = React.lazy(() =>
-  import('./HomePageSearchResults')
-)
-const HomePageTopDishes = React.lazy(() => import('./HomePageTopDishes'))
-const HomePageUser = React.lazy(() => import('./HomePageUser'))
+const HomePageRestaurant =
+  process.env.TARGET === 'ssr'
+    ? require('./HomePageRestaurant').default
+    : React.lazy(() => import('./HomePageRestaurant'))
+const HomePageSearchResults =
+  process.env.TARGET === 'ssr'
+    ? require('./HomePageSearchResults').default
+    : React.lazy(() => import('./HomePageSearchResults'))
+const HomePageTopDishes =
+  process.env.TARGET === 'ssr'
+    ? require('./HomePageTopDishes').default
+    : React.lazy(() => import('./HomePageTopDishes'))
+const HomePageUser =
+  process.env.TARGET === 'ssr'
+    ? require('./HomePageUser').default
+    : React.lazy(() => import('./HomePageUser'))
