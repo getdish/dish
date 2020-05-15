@@ -5,7 +5,7 @@ import HomePage from './home/HomePage'
 import { LoadingItems } from './home/LoadingItems'
 import { NotFoundPage } from './NotFoundPage'
 import { setToastHandle } from './Toast'
-import { PrivateRoute, Route, RouteSwitch } from './ui/Route'
+import { Route, RouteSwitch } from './ui/Route'
 import { ToastRoot } from './ui/ToastRoot'
 import { WelcomeModal } from './WelcomeModal'
 

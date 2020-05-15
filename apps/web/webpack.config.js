@@ -3,10 +3,11 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const path = require('path')
 const _ = require('lodash')
 const Webpack = require('webpack')
-const ClosurePlugin = require('closure-webpack-plugin')
+// const ClosurePlugin = require('closure-webpack-plugin')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const LodashPlugin = require('lodash-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
+const webpack = require('webpack')
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const isProduction = process.env.NODE_ENV === 'production'
@@ -15,11 +16,20 @@ const isProduction = process.env.NODE_ENV === 'production'
 const TARGET = process.env.TARGET || 'client'
 console.log('TARGET', TARGET)
 const appEntry = path.resolve(path.join(__dirname, 'web', 'index.web.tsx'))
+const graphRoot = path.join(require.resolve('@dish/graph'), '..', '..')
 
-module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
+module.exports = async function (
+  env = {
+    /** @type {any} */
+    mode: process.env.NODE_ENV,
+  },
+  argv
+) {
+  /** @type {webpack.Configuration} */
   const config = {
     mode: env.mode,
     context: __dirname,
+    node: false,
     stats: 'normal',
     devtool:
       env.mode === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
@@ -33,12 +43,40 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
       mainFields: ['tsmain', 'browser', 'module', 'main'],
+      alias:
+        TARGET === 'preact'
+          ? {
+              react$: 'preact/compat',
+              'react-dom$': 'preact/compat',
+              'react-dom/unstable-native-dependencies':
+                'preact-responder-event-plugin',
+            }
+          : {
+              react: path.join(require.resolve('react'), '..'),
+              'react-dom': path.join(require.resolve('react-dom'), '..'),
+              '@dish/graph': require.resolve('@dish/graph'),
+              gqless: path.join(graphRoot, 'node_modules', 'gqless'),
+            },
     },
     resolveLoader: {
       modules: ['node_modules'],
     },
     optimization: {
       minimize: isProduction,
+      concatenateModules: isProduction && !process.env.ANALYZE_BUNDLE,
+      usedExports: isProduction,
+      splitChunks: isProduction
+        ? {
+            chunks: 'async',
+            minSize: 30000,
+            maxSize: 0,
+            minChunks: 1,
+            maxAsyncRequests: 6,
+            maxInitialRequests: 4,
+            automaticNameDelimiter: '~',
+          }
+        : false,
+      runtimeChunk: false,
       minimizer: [
         // new ClosurePlugin(),
         new TerserPlugin({
@@ -59,9 +97,6 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
           },
         }),
       ],
-      usedExports: isProduction,
-      splitChunks: false,
-      runtimeChunk: false,
     },
     externals: {
       [path.join(__dirname, 'web/mapkit.js')]: 'mapkit',
@@ -118,6 +153,8 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
         template: path.join(__dirname, 'web/index.html'),
       }),
     ].filter(Boolean),
+
+    // @ts-ignore
     devServer: {
       host: '0.0.0.0',
       compress: true,
@@ -185,36 +222,17 @@ module.exports = async function (env = { mode: process.env.NODE_ENV }, argv) {
     )
   }
 
-  if (isProduction) {
-    // test closure compiler, could be more performant if it extracts functions from render better
-    // config.optimization.minimizer = [
-    //   new ClosurePlugin({
-    //     // 'AGGRESSIVE_BUNDLE' seems to fail on mjs files in webpack
-    //     mode: 'STANDARD',
-    //     // See: https://github.com/webpack-contrib/closure-webpack-plugin/issues/82
-    //     // Unfortunately, compared to the default 'java', this is really slow and prone
-    //     // to RAM exhaustion
-    //     platform: 'javascript',
-    //   }),
-    // ]
-  }
-
-  if (TARGET === 'preact') {
-    config.resolve.alias = {
-      react$: 'preact/compat',
-      'react-dom$': 'preact/compat',
-      'react-dom/unstable-native-dependencies': 'preact-responder-event-plugin',
-    }
-    console.log('config.resolve.alias', config.resolve.alias)
-  } else {
-    const graphRoot = path.join(require.resolve('@dish/graph'), '..', '..')
-    config.resolve.alias = {
-      react: path.join(require.resolve('react'), '..'),
-      'react-dom': path.join(require.resolve('react-dom'), '..'),
-      '@dish/graph': require.resolve('@dish/graph'),
-      gqless: path.join(graphRoot, 'node_modules', 'gqless'),
-    }
-  }
+  // test closure compiler, could be more performant if it extracts functions from render better
+  // config.optimization.minimizer = [
+  //   new ClosurePlugin({
+  //     // 'AGGRESSIVE_BUNDLE' seems to fail on mjs files in webpack
+  //     mode: 'STANDARD',
+  //     // See: https://github.com/webpack-contrib/closure-webpack-plugin/issues/82
+  //     // Unfortunately, compared to the default 'java', this is really slow and prone
+  //     // to RAM exhaustion
+  //     platform: 'javascript',
+  //   }),
+  // ]
 
   if (TARGET === 'worker') {
     if (!isProduction) {

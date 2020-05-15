@@ -1,11 +1,11 @@
 import { graphql, query } from '@dish/graph'
 import React, { memo } from 'react'
+import { ExternalLink } from 'react-feather'
 import { Image, Linking, Text } from 'react-native'
 
 import { GeocodePlace } from '../../state/home'
 import { Box } from '../ui/Box'
 import { HoverablePopover } from '../ui/HoverablePopover'
-import { Icon } from '../ui/Icon'
 import { Link } from '../ui/Link'
 import { HStack } from '../ui/Stacks'
 import { SelectableText } from '../ui/Text'
@@ -94,7 +94,7 @@ export const RestaurantAddressLinksRow = memo(
                 contents={<Box>{linkElements}</Box>}
               >
                 <SmallCircleButton>
-                  <Icon name="ExternalLink" size={10} color="#fff" />
+                  <ExternalLink size={10} color="#fff" />
                 </SmallCircleButton>
               </HoverablePopover>
             )}

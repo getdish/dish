@@ -20,8 +20,6 @@
     "pre~rollup": "npm-run-all --parallel tsc:worker tsc:main",
     "~rollup": "rollup --config config/rollup.config.js",
     "~rollup-watch": "(yarn tsc:watch) & (rollup -w --config config/rollup.config.js)",
-    "lint:worker": "tslint -c config/tslint.json -p src/worker-thread/",
-    "lint:main": "tslint -c config/tslint.json -p src/main-thread/",
     "lint": "npm-run-all --parallel lint:*",
     "build": "echo no build",
     "build:app": "cross-env MINIFY_BUNDLE=true npm-run-all ~rollup",
@@ -57,7 +55,6 @@
     "cross-var": "1.1.0",
     "esm": "3.2.25",
     "jsdom": "^16.2.2",
-    "lint-staged": "10.0.7",
     "magic-string": "0.25.6",
     "np": "6.1.0",
     "npm-run-all": "4.1.5",
@@ -68,8 +65,7 @@
     "rollup-plugin-copy": "3.3.0",
     "rollup-plugin-terser": "5.3.0",
     "sinon": "9.0.0",
-    "sirv": "0.4.2",
-    "tslint": "5.20.1"
+    "sirv": "0.4.2"
   },
   "filesize": {
     "track": [

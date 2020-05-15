@@ -1,12 +1,11 @@
 import { graphql, mutation, query } from '@dish/graph'
 import React, { memo, useState } from 'react'
+import { ChevronDown, ChevronUp } from 'react-feather'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
 import { useOvermind } from '../../state/useOvermind'
 import Hoverable from '../ui/Hoverable'
-import { Icon } from '../ui/Icon'
 import { VStack } from '../ui/Stacks'
-import { useReviewMutation } from './useReviewMutation'
 
 export const RestaurantUpVoteDownVote = memo(
   graphql(({ restaurantId }: { restaurantId: string }) => {
@@ -51,8 +50,7 @@ export const RestaurantUpVoteDownVote = memo(
               })
             }}
           >
-            <Icon
-              name="ChevronUp"
+            <ChevronUp
               size={12}
               color={vote === 1 ? 'green' : 'black'}
               marginBottom={-12}
@@ -73,11 +71,7 @@ export const RestaurantUpVoteDownVote = memo(
               })
             }}
           >
-            <Icon
-              name="ChevronDown"
-              size={12}
-              color={vote === -1 ? 'red' : 'black'}
-            />
+            <ChevronDown size={12} color={vote === -1 ? 'red' : 'black'} />
           </VoteButton>
         </VStack>
       </div>

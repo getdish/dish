@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
+import { CornerLeftUp, X } from 'react-feather'
 import { GestureResponderEvent, TouchableOpacity } from 'react-native'
 
-import { Icon } from '../ui/Icon'
 import { HStack, StackProps } from '../ui/Stacks'
 
 type CircleButtonProps = {
@@ -13,7 +13,7 @@ type CircleButtonProps = {
 export const CloseButton = memo((props: CircleButtonProps) => {
   return (
     <SmallCircleButton {...props}>
-      <Icon name="X" size={props.size ?? 11} color="white" />
+      <X size={props.size ?? 11} color="white" />
     </SmallCircleButton>
   )
 })
@@ -21,7 +21,7 @@ export const CloseButton = memo((props: CircleButtonProps) => {
 export const BackButton = memo((props: CircleButtonProps) => {
   return (
     <SmallCircleButton {...props}>
-      <Icon name="CornerLeftUp" size={props.size} color="white" />
+      <CornerLeftUp size={props.size} color="white" />
     </SmallCircleButton>
   )
 })

@@ -12,7 +12,7 @@
     "rootDir": ".",
     "typeRoots": ["./node_modules/mapkit-typescript", "./node_modules/@types"]
   },
-  "include": ["web/**/*", "shared/**/*"],
+  "include": ["web/**/*"],
   "exclude": ["**/*.test.ts", "**/*.test.tsx"],
   "references": [
     { "path": "../../packages/common-web" },

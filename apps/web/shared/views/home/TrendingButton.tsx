@@ -1,8 +1,8 @@
 import React from 'react'
+import { ChevronDown } from 'react-feather'
 import { Text } from 'react-native'
 
 import { RoutesTable } from '../../state/router'
-import { Icon } from '../ui/Icon'
 import { LinkButton, LinkButtonProps } from '../ui/Link'
 import { HStack } from '../ui/Stacks'
 import { flatButtonStyle } from './baseButtonStyle'
@@ -29,11 +29,10 @@ export const TrendingButton = <
         {...rest}
       >
         {rank ? <Text>`${rank}. `</Text> : null}
-        <Icon
+        <ChevronDown
           marginTop={2}
           marginRight={4}
           marginLeft={-2}
-          name="ChevronDown"
           size={14}
           color="red"
         />

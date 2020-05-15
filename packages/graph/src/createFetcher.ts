@@ -62,8 +62,7 @@ class HasuraError extends Error {
     if (isBrowserProd) {
       this.name = 'Dish API Error'
     } else {
-      const util = require('util')
-      console.error(util.inspect(errors, { depth: null }))
+      console.error(errors)
       console.debug('For query: ', query)
       this.name = 'HasuraError'
     }

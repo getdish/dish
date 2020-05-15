@@ -1,17 +1,12 @@
 import React, { memo, useEffect } from 'react'
+import { Plus } from 'react-feather'
 import { ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native'
 
-import {
-  pageWidthMax,
-  searchBarHeight,
-  searchBarTopOffset,
-} from '../../constants'
+import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
-import { Icon } from '../ui/Icon'
 import { LinearGradient } from '../ui/LinearGradient'
 import { LinkButton, LinkButtonProps } from '../ui/Link'
 import { HStack, ZStack } from '../ui/Stacks'
-import { flatButtonStyle, flatButtonStyleActive } from './baseButtonStyle'
 import { SmallCircleButton } from './CloseButton'
 import { setAvoidNextAutocompleteShowOnFocus } from './HomeSearchBar'
 
@@ -221,7 +216,7 @@ function AutocompleteAddButton() {
         alert('add to current search results')
       }}
     >
-      <Icon name="Plus" size={12} />
+      <Plus size={12} />
     </SmallCircleButton>
   )
 }

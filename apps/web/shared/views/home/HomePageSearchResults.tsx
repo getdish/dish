@@ -1,5 +1,6 @@
 // @ts-ignore
 import React, { Suspense, memo, useState } from 'react'
+import { Edit2 } from 'react-feather'
 import { Image, ScrollView, Text, View } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
@@ -10,7 +11,6 @@ import { Toast } from '../Toast'
 import { Box } from '../ui/Box'
 import { Circle } from '../ui/Circle'
 import { Divider } from '../ui/Divider'
-import { Icon } from '../ui/Icon'
 import { LinkButton } from '../ui/Link'
 import { PageTitle } from '../ui/PageTitle'
 import { PageTitleTag } from '../ui/PageTitleTag'
@@ -132,7 +132,7 @@ export default memo(function HomePageSearchResults({
               >
                 <Box padding={5} paddingHorizontal={5} backgroundColor="#fff">
                   <HStack alignItems="center" spacing={6}>
-                    <Icon name="Edit2" size={12} color="#777" />
+                    <Edit2 size={12} color="#777" />
                     <Text
                       style={{ color: 'blue', fontSize: 16, fontWeight: '700' }}
                     >

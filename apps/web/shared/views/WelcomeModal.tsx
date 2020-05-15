@@ -1,4 +1,5 @@
 import React from 'react'
+import { ExternalLink } from 'react-feather'
 import { Text } from 'react-native'
 import { useStorageState } from 'react-storage-hooks'
 
@@ -7,9 +8,8 @@ import { flatButtonStyle } from './home/baseButtonStyle'
 import { Modal } from './Modal'
 import { Box } from './ui/Box'
 import { HoverablePopover } from './ui/HoverablePopover'
-import { Icon } from './ui/Icon'
 import { Link, LinkButton } from './ui/Link'
-import { SmallTitle, SmallerTitle } from './ui/SmallTitle'
+import { SmallTitle } from './ui/SmallTitle'
 import { Spacer } from './ui/Spacer'
 import { HStack, VStack } from './ui/Stacks'
 
@@ -106,7 +106,7 @@ export const WelcomeModal = () => {
 
         <HStack>
           <LinkButton {...flatButtonStyle}>
-            Tell me more <Icon name="ExternalLink" size={10} />
+            Tell me more <ExternalLink size={10} />
           </LinkButton>
           <Spacer flex />
           <LinkButton

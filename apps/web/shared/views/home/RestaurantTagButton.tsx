@@ -1,11 +1,11 @@
 import { Restaurant } from '@dish/graph'
 import _ from 'lodash'
 import React, { memo, useState } from 'react'
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Tag } from 'react-feather'
+import { Button, StyleSheet, TextInput, View } from 'react-native'
 
 import { useOvermind } from '../../state/useOvermind'
 import { Box } from '../ui/Box'
-import { Icon } from '../ui/Icon'
 import { LinkButton } from '../ui/Link'
 import { Popover } from '../ui/Popover'
 import { SmallTitle, SmallerTitle } from '../ui/SmallTitle'
@@ -99,12 +99,7 @@ export const RestaurantTagButton = memo(
           }}
         >
           {isLarge ? '' : 'Add'}
-          <Icon
-            size={isLarge ? 26 : 14}
-            opacity={0.4}
-            marginBottom={-1}
-            name="Tag"
-          />
+          <Tag size={isLarge ? 26 : 14} opacity={0.4} marginBottom={-1} />
         </LinkButton>
       </Popover>
     )

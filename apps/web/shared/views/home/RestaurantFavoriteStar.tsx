@@ -1,20 +1,15 @@
 import { graphql, query } from '@dish/graph'
-import React, { memo, useEffect, useRef, useState } from 'react'
-import { ScrollView, Text, TextInput } from 'react-native'
+import React, { memo, useState } from 'react'
+import { Star } from 'react-feather'
+import { Text } from 'react-native'
 
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { useForceUpdate } from '../../hooks/useForceUpdate'
 import { useOvermind } from '../../state/useOvermind'
 import { Toast } from '../Toast'
-import { Box } from '../ui/Box'
-import { Icon } from '../ui/Icon'
 import { LinkButton } from '../ui/Link'
-import { Popover } from '../ui/Popover'
-import { Spacer } from '../ui/Spacer'
-import { HStack, VStack } from '../ui/Stacks'
+import { VStack } from '../ui/Stacks'
 import { getInputNode } from './HomeSearchBar'
-import { LenseButton } from './LenseButton'
-import { useReviewMutation } from './useReviewMutation'
 
 export const RestaurantFavoriteStar = memo(
   graphql(
@@ -98,9 +93,7 @@ export const RestaurantFavoriteStar = memo(
                 ⭐️
               </Text>
             )}
-            {!isStarred && (
-              <Icon size={sizePx} name="Star" color={'goldenrod'} />
-            )}
+            {!isStarred && <Star size={sizePx} color={'goldenrod'} />}
           </VStack>
         </LinkButton>
       )
