@@ -372,6 +372,7 @@ const modules = [
   getModule('native-base'),
   // include our packages
   path.join(__dirname, '..', '..', 'packages'),
+  getModule('create-react-class'),
 ]
 
 function babelInclude(inputPath) {

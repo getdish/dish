@@ -4,15 +4,14 @@ import React, { Suspense } from 'react'
 import HomePage from './home/HomePage'
 import { LoadingItems } from './home/LoadingItems'
 import { NotFoundPage } from './NotFoundPage'
-import { setToastHandle } from './Toast'
+import { ToastRoot } from './Toast'
 import { Route, RouteSwitch } from './ui/Route'
-import { ToastRoot } from './ui/ToastRoot'
 import { WelcomeModal } from './WelcomeModal'
 
 export function App({ overmind }: { overmind?: any }) {
   return (
     <>
-      <ToastRoot ref={setToastHandle} />
+      <ToastRoot />
       <Provider value={overmind}>
         <Suspense fallback={<LoadingItems />}>
           <RouteSwitch>

@@ -8,7 +8,7 @@ import { useMedia } from '../../hooks/useMedia'
 import { HomeStateItemSimple } from '../../state/home'
 import { useOvermind, useOvermindStatic } from '../../state/useOvermind'
 import { ErrorBoundary } from '../ErrorBoundary'
-import { ForceShowPopover } from '../ui/Popover'
+import { PopoverShowContext } from '../ui/PopoverShowContext'
 import { ZStack } from '../ui/Stacks'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { LoadingItems } from './LoadingItems'
@@ -30,7 +30,7 @@ export function HomeStackView<A extends HomeStateItemSimple>(props: {
           (x) => x.id === item.id
         )
         return (
-          <ForceShowPopover.Provider
+          <PopoverShowContext.Provider
             key={`${i}`}
             value={isActive == true ? undefined : false}
           >
@@ -46,7 +46,7 @@ export function HomeStackView<A extends HomeStateItemSimple>(props: {
                 </Suspense>
               </ErrorBoundary>
             </HomeStackViewItem>
-          </ForceShowPopover.Provider>
+          </PopoverShowContext.Provider>
         )
       })}
     </ZStack>
