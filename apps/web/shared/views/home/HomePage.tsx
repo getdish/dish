@@ -1,4 +1,5 @@
-import React, { Suspense, useState } from 'react'
+import React, { Suspense, memo, useState } from 'react'
+import { StyleSheet } from 'react-native'
 
 import { isWorker } from '../../constants'
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
@@ -9,7 +10,8 @@ import {
   isUserState,
 } from '../../state/home-helpers'
 import { ErrorBoundary } from '../ErrorBoundary'
-import { VStack } from '../ui/Stacks'
+import { LinearGradient } from '../ui/LinearGradient'
+import { VStack, ZStack } from '../ui/Stacks'
 import { CurrentStateID } from './CurrentStateID'
 import { HomeMap } from './HomeMap'
 import { HomeMapControlsOverlay } from './HomeMapControlsOverlay'
@@ -18,7 +20,7 @@ import HomeSearchBar from './HomeSearchBar'
 import { HomeStackView } from './HomeStackView'
 import { HomeViewDrawer } from './HomeViewDrawer'
 
-export default function HomePage() {
+export default memo(function HomePage() {
   const [showPip, setShowPip] = useState(false)
 
   useDebounceEffect(
@@ -49,6 +51,21 @@ export default function HomePage() {
         )}
         <HomeMapControlsOverlay />
         <HomeSearchBar />
+
+        {/* overlay map subtle */}
+        <ZStack
+          fullscreen
+          bottom="auto"
+          height={100}
+          pointerEvents="none"
+          zIndex={2}
+        >
+          <LinearGradient
+            colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0)']}
+            style={StyleSheet.absoluteFill}
+          />
+        </ZStack>
+
         <HomeViewDrawer>
           <HomeStackView>
             {(homeState, isActive, index) => {
@@ -76,7 +93,7 @@ export default function HomePage() {
       </VStack>
     </VStack>
   )
-}
+})
 
 const HomePageRestaurant = React.lazy(() => import('./HomePageRestaurant'))
 const HomePageSearchResults = React.lazy(() =>

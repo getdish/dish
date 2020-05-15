@@ -3,20 +3,6 @@ SELECT jsonb_agg(
       'id', data.id,
       'name', data.name,
       'slug', data.slug,
-      'rating', data.rating,
-      'address', data.address,
-      'location', ST_AsGeoJSON(data.location)::json,
-      'image', data.image,
-      'photos', (
-        (ARRAY(
-          SELECT json_array_elements(data.photos::json))
-        ))[1:5],
-      'telephone', data.telephone,
-      'website', data.website,
-      'sources', data.sources,
-      'is_open_now', is_restaurant_open(data),
-      'hours', data.hours,
-      'price_range', data.price_range,
       'tags', ARRAY(
         SELECT json_build_object(
           'tag', json_build_object(

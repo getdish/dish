@@ -10,7 +10,7 @@ import { LinkButton } from '../ui/Link'
 import { Popover } from '../ui/Popover'
 import { SmallTitle, SmallerTitle } from '../ui/SmallTitle'
 import { HStack, VStack } from '../ui/Stacks'
-import { TagButton } from './TagButton'
+import { TagButton, getTagButtonProps } from './TagButton'
 
 export const RestaurantTagButton = memo(
   ({ restaurant, size }: { restaurant: Restaurant; size?: 'md' | 'lg' }) => {
@@ -36,10 +36,7 @@ export const RestaurantTagButton = memo(
                     size="lg"
                     rank={10}
                     votable
-                    name={t.tag.name}
-                    type={t.tag.type as any}
-                    icon={t.tag.icon}
-                    rgb={t.tag.rgb()}
+                    {...getTagButtonProps(t.tag)}
                   />
                 )
               })}

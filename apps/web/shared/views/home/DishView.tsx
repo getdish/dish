@@ -1,9 +1,10 @@
 import { TopCuisineDish } from '@dish/graph'
 import React, { memo } from 'react'
-import { Image, Text } from 'react-native'
+import { Image, StyleSheet, Text } from 'react-native'
 
 import { Tag } from '../../state/Tag'
 import { Box } from '../ui/Box'
+import { LinearGradient } from '../ui/LinearGradient'
 import { LinkButton } from '../ui/Link'
 import { HStack, StackProps, VStack, ZStack } from '../ui/Stacks'
 import { bg } from './colors'
@@ -48,12 +49,22 @@ export const DishView = memo(
             borderWidth={2}
             borderColor="transparent"
             hoverStyle={{
-              borderColor: bg,
+              borderColor: '#000',
               shadowRadius: 14,
               shadowColor: 'rgba(0,0,0,0.2)',
               zIndex: 10000,
             }}
           >
+            <ZStack fullscreen zIndex={2}>
+              <LinearGradient
+                colors={[
+                  'rgba(0,0,0,0)',
+                  'rgba(0,0,0,0.025)',
+                  'rgba(0,0,0,0.2)',
+                ]}
+                style={[StyleSheet.absoluteFill]}
+              />
+            </ZStack>
             <Image
               source={{ uri: dish.image }}
               style={{ width: size, height: size }}

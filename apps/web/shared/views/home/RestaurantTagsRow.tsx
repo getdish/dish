@@ -1,9 +1,9 @@
-import { TagType, graphql, query } from '@dish/graph'
+import { Tag, TagType, graphql, query } from '@dish/graph'
 import React, { memo } from 'react'
 
 import { useOvermind } from '../../state/useOvermind'
 import { HStack } from '../ui/Stacks'
-import { TagButton } from './TagButton'
+import { TagButton, getTagButtonProps } from './TagButton'
 import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 
 type TagRowProps = {
@@ -11,6 +11,7 @@ type TagRowProps = {
   showMore?: boolean
   size?: 'lg' | 'md'
   divider?: any
+  tags?: Tag[]
 }
 
 export const RestaurantTagsRow = memo(
@@ -31,37 +32,43 @@ export const RestaurantTagsRow = memo(
   })
 )
 
-export const useGetTagElements = ({
-  restaurantSlug,
-  showMore,
-}: TagRowProps) => {
+export const useGetTagElements = (props: TagRowProps) => {
+  const { restaurantSlug, showMore } = props
+
   const om = useOvermind()
+
   if (!restaurantSlug) {
     return null
   }
-  const [restaurant] = query.restaurant({
-    where: {
-      slug: {
-        _eq: restaurantSlug,
+
+  let tags: Tag[] = []
+
+  if (props.tags) {
+    tags = props.tags
+  } else {
+    const [restaurant] = query.restaurant({
+      where: {
+        slug: {
+          _eq: restaurantSlug,
+        },
       },
-    },
-  })
-  let tags = restaurant.tags({
-    limit: 6,
-  })
+    })
+    tags = restaurant.tags({
+      limit: 6,
+    })
+  }
+
   if (showMore) {
     tags = tags.slice(0, 2)
   }
+
   return tags.map((tag, index) => {
     return (
       <TagButton
         size="sm"
         rank={index}
         key={`${index}${tag.tag.name}`}
-        name={tag.tag.name}
-        type={tag.tag.type as TagType}
-        icon={tag.tag.icon}
-        rgb={tag.tag.rgb()}
+        {...getTagButtonProps(tag.tag)}
         votable={!!om.state.user.user}
       />
     )

@@ -37,7 +37,7 @@ module.exports = async function (
       setImmediate: false,
       global: false,
       __filename: false,
-      __dirname: false
+      __dirname: false,
     },
     stats: 'normal',
     devtool:
@@ -169,7 +169,7 @@ module.exports = async function (
       publicPath: '/',
       host: '0.0.0.0',
       compress: true,
-      watchContentBase: true,
+      // watchContentBase: true,
       // It will still show compile warnings and errors with this setting.
       clientLogLevel: 'none',
       contentBase: path.join(__dirname, 'web'),

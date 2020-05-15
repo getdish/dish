@@ -31,9 +31,6 @@ export const createFetcher = (type: 'query' | 'mutation') => {
       }),
       mode: 'cors',
     }
-    if (process.env.DISH_ENV != 'test') {
-      console.log('request', request)
-    }
     const response = await fetch(endpoint, request)
     const data = await response.json()
     if (data.errors || !response.ok) {
