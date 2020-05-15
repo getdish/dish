@@ -1,29 +1,41 @@
-new:
+# Home
 
-- RestaurantRatingView - see typescript errors. gqless thinks we have wrong type here, is that not true?
-- We can generally move model helper functions into graph, see gqless docs and the graph/src/graphql/extensions/index.ts
-  - i think its worth us ripping the bandaid here so we have a nice setup
+my ideal query for homepage:
 
-# Current
+```
+const cuisines = query.trending_cuisines({ in: { location... } })
 
-- [ ] show top rated dishes tags in search results "vietnamese"
-  - [ ] RestaurantTagRow would show stuff like "Beef Pho (87), Banh Mi (77)"
-    - [ ] if you search is "pho" we could enforce always showing the Pho tag for each result, too
-- [ ] show dishes (with their ratings) on the restaurant detail page
-  - [ ] theres a bottom area that shows all dish photos
-- [ ] dish photos showing the real dish photos on restaurant detail page / search results page
+cuisines.map(cuisine => {
+  query.trending_restaurants({ in..., dish_id? })
+  query.trending_dishes({ in..., restauarant_id? })
+})
+```
 
-## Web frontend
+That would let me basically mix and match and build up the query how we want, and i can build a really nice home. I'd say lower priority here than a lot of data stuff but if you want to take a stab its worth it whenever if its not too hard.
 
-- [ ] Home/Data - Get home page generally working with dishes showing for most cuisines
-- [ ] Indexing: a lot of duplicate restaurants
-- [ ] Indexing: see why infatuated is not indexing
-- [ ] Home/Search - make the filters/lenses work with taxonomy queries, you should be able to do this in the frontend and re-run actions.home.runSearch
-- [ ] Do search on 404 page
-- [ ] Permalinks to source data
-- [ ] (low priority) Autocomplete: a quick endpoint for searching dishes + restaurants
+# Search
 
-# Backlog
+we basically just need to improve the tags we show and the dishes we show:
+
+- [ ] match dishes to search query/tags as best as possible, sort by top
+- [ ] can you get me simple example of query of top tags that arent dishes for each restaurant? i guess the search api returns this now but can we make that materialized? i understand making tons of sql calls per-search is not great though so if that seems like it may be a problem lmk.
+
+# Data
+
+- [ ] Delivery services is really important: Uber Eats, Caviar, DoorDash, GrubHub, just getting basic info from all would be > getting detailed from a couple.
+- [ ] Images - google would be great here, but also, would be great to choose high quality images, would make a _huge_ difference in the UI. We could even then use callout images for headers that really make a big diff in visual.
+  - [ ] I would _love_ an instagram crawler that somehow found their instagram and pulled in images. You'd be surprised how many restaurants have this set up, and it'd make our imagery really next level. Plus would open us up to having really rich and nice Restaurant info: imagine we can show "latest updates" inline with images + text and link to their insta.
+- [ ] Beyond that, just the unsexy but huge amount of data massaging, I understand that will be a lot
+
+# Ratings
+
+I mostly want to wait and see how they look once data comes in, I think having a few experts combined is a big boost. My second strategies to improve would be various sentiment finding improvements, such as filtering out things that mention "bad service" etc really directly.
+
+Once community comes online we can weight their ratings a lot higher and see how it goes, and that may be good enough.
+
+## Autocomplete
+
+- [ ] Can you get me an example / materialized view / endpoint for then autocompleting ONLY dishes from a specific cuisine?
 
 ## Backend
 
@@ -34,10 +46,6 @@ new:
 
 ## Indexing
 
-- [ ] Getting all the delivery services is big (i'm happy to help a bit here too)
-- [ ] Postmates
-- [ ] GrubHub
-- [ ] DoorDash
 - [ ] Finally, Foursquare actually has the best quality rankings I think. Their apps are old and they dont search delivery, otherwise they would just be obviously the best choice. In fact, I think a lot of people are clutching onto foursquare because they are the best, but if we had similar rankings but just delivered nice apps with delivery search and a sort of message of "were doing this!" we are good. That said, crawling foursquare may be more important than google or other sources i think.
 - [ ] Use Dish account for AWS proxies
 - [ ] Use Dish account for HereMaps/Geolocator API
@@ -45,12 +53,6 @@ new:
 - [ ] Start crawling Berlin
 - [ ] Bull memory leak? Manually delete completed jobs?
 - [ ] Explore better overview UI, Bullboard isn't cutting it
-
-## Taxonomy
-
-- [ ] Taxonomy.searchable should be something we can control
-- [ ] Taxonomy types: "lense", "filter", "cuisine", "continent" - See the harcoded values in Home.swift, we need adapt all these into Taxonomy DB and then we can replace the hardcoded parts in the swift app with real queries
-- [ ] Automating and finishing filling out a lot of Taxonomy stuff - Admin UI needs some work to be nicer laid out and easy to edit/add
 
 ## Users
 
@@ -80,35 +82,3 @@ new:
 ## Low Priority
 
 - [] Crawlers - Closed restaurants. Lucca's Ravlioli closed a year ago, maybe we just need to scrape that info from yelp et al (http://d1sh_hasura_live.com:19006/restaurant/lucca-ravioli-co-california/:dish?)
-
----
-
-Previously
-
-- home
-  - shows the top dishes based on your current filters
-  - heres an example filter:
-    - [Delivers: true, Cuisine: 🇺🇸, Lense: "Chef Picks"]
-  - all we fetch from this is top dishes like so:
-    - { query loadHomeDishesFor(filters: [], geoLocation: {}) { name, id, image } }
-- restaurant info
-  - geolocation, address, phone
-  - dishes
-  - rating
-- ratings
-  - star or no star
-  - should be returned in all areas for both dish + restaurant
-  - restaurant is just generated as an aggregate of dish + yelp and other crawled info we use
-  - mutation for rating dish
-- lenses
-  - this is for the community / admin
-  - { mutation VoteRestaurantLense(userId: "", filterId: "", value: true) }
-
-# admin
-
-- spreadsheet view into data
-  - dishes/restaurants
-  - search
-  - voting
-- taxonomy view for managing categorization
-- city view for seeing the top unique best places per-city for the explore page

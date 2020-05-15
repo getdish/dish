@@ -1,129 +1,41 @@
-next
-
+- map click item scroll to item / view detail
+- current location / permissions access (only if they click location?)
+- RestaurantListItem click address, menu, phone
 - if showing a cuisine search "Vietnamese"
+
   - show the dishes!
     - in autocomplete
     - and above the search results!
 
-REVIEWS
-
 - "Tips" - horizontal carousel on restaurant page
+
   - lets you enter a tip easily from there
   - actually a full review card could show at bottom of map when restaurant opened all the way
 
-SEARCH + TAGS
-
-- may need to redo how router/navigate work?
-  - NO
-    - instead we just have things push into the lensebar
-      - on the front with a "x" button on right side
-      - doesnt affect searchbar
-  - instead of using router directly
-    - `.home.addTag(Tag)` `home.removeTag(Tag)`
-- tag-urls `/:tag1/:slug1/:tag2/:slug2/:tag3/:slug3` or similar
-- send tags in search
-- show tag icons if available on search results page title
-- lense bar should then just push the url
-- lensebar should be additive
-
-cool touches:
-
-- left/right on autocomplete slides between results
-
----
-
-- fix some of routing, map-pin issues
-- fix RatingView style issus on <90
-- make TagPopover work
-- Popovers respond to esc key
-- Popovers prevent clicking above content bug
-- Double esc to go back from Restaurant
 - Autocomplete - go straight to restaurant if restaurant
-- add in location search to autocomplete
-- add in location search to location textinput
-- fix bug going back to search re-runs search (again)
-- search loading state indicator
-- move map should re-run search but show an option to update it
-  hovering a restaurant in searchresults should show a bottomarea preview - a nice quote with information on that restaurant (summary - that peach can fill in) - moving the hover to the dish images should then switch it over to showing - the dishes
-- basic keyboard for searchresults movement
-- test enabling Suspense for much faster rendering
+- peek restaurant (show on map bottom or in popover?)
+- gallery first from listitem
 
-next:
+  - then from restaurantdetail
+  - rightsidegallery?
+    - listitem - hover image and it replaces map side with image gallery/grid
+    - detail - bottom section shows top dishes in design + row of images below, BUT
+      - the entire section is just one hoverable area
+        - hover shows the same right-side image gallery
+      - dealbreaker
+        - map has to move to pip then i think until you close or else its too awkward
 
-web:
+- RestaurantDetail social media links
 
-- images v2
-
-  - no more scrollable horizontal carousel on listitem
-  - no more scrollable vertical images on detail
-  - listitem - hover image and it replaces map side with image gallery/grid
-  - detail - bottom section shows top dishes in design + row of images below, BUT
-    - the entire section is just one hoverable area
-      - hover shows the same right-side image gallery
-    - dealbreaker
-      - map has to move to pip then i think until you close or else its too awkward
-
-- RestaurantDetail
-  - gallery
-  - social media links
-  - hover tooltips for: address (gmaps/maps links)
-- bugs
-  - going back from restaurant to search is re-running search
-- map
-  - loading spinner on the map or on right of searchbar as you move (and for regular search)
-  - move map should filter current results down and re-number
-  - map click item scroll to item / view detail
-  - moving map in general as you go forward/backward isn't smooth/consistent
 - search
-  - current location / permissions access
-  - search locations
-  - RestaurantListItem
-    - upvote/downvote (improve buttons, hover)
-    - ratings window improve (easier to close on click away + x close button + saving spinner)
-    - click address, menu, phone
-    - hover "closed until" to show full hours
-    - delivery button/hover to see services/names
-    - horizontal scroll (load more on scroll, show one to start)
-    - click image to go right into gallery
-    - working tag buttons that link to show that category
-- keyboard navigation for everything
-  - lots of input focus work: after clear search, rating view open, etc
-- 404 better pages (click home carousel "Pancho Villa" it breaks)
-- preloading would help in many interactions
-- a few performance runthroughs
+
+  - hover "closed until" to show full hours
+  - delivery button/hover to see services/names
+  - horizontal scroll (load more on scroll, show one to start)
+  - click image to go right into gallery
+  - working tag buttons that link to show that category
 
 ---
-
-Keys to launch:
-
-- Really focus on SHOWING "this is the best in SF" on initial load
-- Bring out dishes in UI and make sure ratings by dish work well
-- Ratings improvements
-- Search across all delivery services
-
----
-
-# Ratings Improvements
-
-- https://www.freecodecamp.org/news/whose-reviews-should-you-trust-imdb-rotten-tomatoes-metacritic-or-fandango-7d1010c6cf19/
-
-One thing to note first, there are technically two types of ratings (restaurant, dish).
-
-Assume our baseline reviews are just a bit better than Yelp/Google at 60%, ways I see we can improve:
-
-- Experts: get a cabal of experts to join and submit ratings
-
-  - (prior) +accuracy ~20%
-  - can we then use them to filter out "poor taste" from other review datasets?
-    - (prior) +accuracy 5-20%
-    - depending on how you do it could be very useful or not much
-
-- Prune-non-food: remove reviews that mention bad service, ambiance, waiters, etc etc
-
-  - (prior) +accuracy ~15%
-
-- Dish-level: extract dish-specific mentions for positive or negative sentiment from existing reviews
-  - (prior) +accuracy ~10% for restaurants, but a lot for dishes
 
 ## Thoughts behind
 
@@ -135,16 +47,7 @@ In other industries you see ratings aggregators that consistently are very accur
 
 - [https://develop.consumerium.org/wiki/Lists_of_review_aggregators_and_review_sites]
 
-Why I like rottentomatoes
-
-- mostly, they consistently match my expectations, and most importantly, their 90%+ movies are maybe 95% accurate (granted, i assist them a lot by not seeing any movie that i know doesnt appeal to my current mood, but in dish's case users would do the same thing - theyd know if theyre craving sushi already, whereas mood for movies is more complex)
-- 0-100 scale is more memorable and precise, I've thought on this for a while and I like it for restaurants i think (you'd also show #1, #2, #3...)
-  - to me, its nice to see 92 vs 95 vs 98, i actually sense big differences in that range. in the lower tiers i don't mind...
-  - only downside would be does it confuse the ratings too much or feel to foreign to people?
-- anything above a 85% or so is "gold", similar to the idea of having a "star" or no star show / crown etc
-  - nice for handing out for promo - we're a "\*" restaurant!
-
-Rottentomatoes is even interesting because they split out experts from the audience.
+Why I like rottentomatoes: mostly, they consistently match my expectations, and most importantly, their 90%+ movies are super high chance of being enjoyable (this is part because i filter as well on top of what they show: user score vs critic score has a lot if information you can use to discern pop-vs-serious etc and decide what you want, so its part good info display, part aggregation of critics, part user)
 
 ---
 
