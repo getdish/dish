@@ -32,9 +32,7 @@
     "build:web:rollup": "NODE_ENV=development yarn rollup -c rollup.config.ts",
     "build:web:worker": "TARGET=worker webpack",
     "build:web:watch": "(TARGET=ssr webpack --watch) & (TARGET=client webpack --watch) & wait",
-    "build:web:webpack-tsickle": "node --max-old-space-size=12000 tscc.js",
-    "ios": "react-native run-ios",
-    "android": "react-native run-android"
+    "build:web:webpack-tsickle": "node --max-old-space-size=12000 tscc.js"
   },
   "dependencies": {
     "@dish/common-web": "*",

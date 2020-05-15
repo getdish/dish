@@ -10,7 +10,7 @@ import { HoverablePopover } from '../ui/HoverablePopover'
 import { LinearGradient } from '../ui/LinearGradient'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import HomeFilterBar from './HomeFilterBar'
-import { LenseButton } from './LenseButton'
+import { LenseButton, LenseButtonSize } from './LenseButton'
 
 export default memo(function HomeLenseBar(props: {
   stateIndex: number
@@ -64,7 +64,7 @@ export function HomeContentTopBar(props: { children: any }) {
 }
 
 export const HomeLenseBarOnly = memo(
-  (props: { activeTagIds: HomeActiveTagIds }) => {
+  (props: { activeTagIds: HomeActiveTagIds; size?: LenseButtonSize }) => {
     const om = useOvermind()
     return (
       <HStack
@@ -89,6 +89,7 @@ export const HomeLenseBarOnly = memo(
               lense={lense}
               isActive={props.activeTagIds[getTagId(lense)]}
               minimal={index > -1}
+              size={props.size}
             />
           ))}
 

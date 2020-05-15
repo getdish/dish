@@ -10,20 +10,26 @@ import { LinearGradient } from '../ui/LinearGradient'
 import { LinkButton } from '../ui/Link'
 import { HStack, ZStack } from '../ui/Stacks'
 
+export type LenseButtonSize = 'md' | 'lg'
+
 export const LenseButton = memoIsEqualDeep(
   ({
     lense,
     isActive,
     minimal,
+    size = 'md',
   }: {
     lense: Tag
     isActive?: boolean
     minimal?: boolean
+    size?: LenseButtonSize
   }) => {
     const [r, g, b] = lense.rgb
     const rgbInner = `${r * 255}, ${g * 255}, ${b * 255}`
     const lenseColor = `rgb(${rgbInner})`
     const lenseColorLight = `rgba(${rgbInner}, 0.2)`
+    const scale = size == 'md' ? 1 : 1.35
+
     const buttonContent = (
       <LinkButton tag={lense}>
         <ZStack fullscreen top={-9} bottom={-9}>
@@ -41,11 +47,11 @@ export const LenseButton = memoIsEqualDeep(
         <HStack
           alignItems="center"
           justifyContent="center"
-          marginVertical={-10}
-          width={40}
+          marginVertical={-10 * scale}
+          width={40 * scale}
           // paddingLeft={6}
-          height={40}
-          paddingVertical={3}
+          height={40 * scale}
+          paddingVertical={3 * scale}
           // backgroundColor={'rgba(255,255,255,0.5)'}
           borderRadius={100}
           // shadowRadius={2}
@@ -70,13 +76,13 @@ export const LenseButton = memoIsEqualDeep(
           <Text
             style={{
               color: isActive ? '#fff' : '#454545',
-              fontSize: isActive ? 40 : 24,
-              lineHeight: 40,
-              width: 36,
-              height: 36,
+              fontSize: (isActive ? 40 : 24) * scale,
+              lineHeight: 40 * scale,
+              width: 36 * scale,
+              height: 36 * scale,
               fontWeight: '400',
               textAlign: 'center',
-              marginTop: isActive ? -4 : 0,
+              marginTop: (isActive ? -4 : 0) * scale,
               // marginLeft: 8,
               // letterSpacing: isActive ? -0.2 : 0,
             }}
