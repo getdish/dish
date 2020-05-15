@@ -157,7 +157,10 @@ export const TagButton = memo(
                   e.preventDefault()
                 }}
               >
-                <ChevronUp size={14 * scale} marginBottom={-5 * scale} />
+                <ChevronUp
+                  size={14 * scale}
+                  style={{ marginBottom: -5 * scale }}
+                />
               </LinkButton>
             </VStack>
           )}
@@ -183,7 +186,10 @@ export const TagButton = memo(
               alignItems="center"
               justifyContent="center"
             >
-              <X size={subtle ? 10 : 12} color={subtle ? 'inherit' : '#000'} />
+              <X
+                size={subtle ? 10 : 12}
+                style={{ color: subtle ? 'inherit' : '#000' }}
+              />
             </LinkButton>
           )}
         </HStack>

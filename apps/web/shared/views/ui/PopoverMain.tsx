@@ -9,29 +9,9 @@ import { ToggleLayer, anchor } from 'react-laag'
 import { Platform } from 'react-native'
 
 import { PopoverProps } from './PopoverProps'
-import { PopoverShowContext } from './PopoverShowContext'
+import { PopoverShowContext, popoverCloseCbs } from './PopoverShared'
 import { useOverlay } from './useOverlay'
 import { useWaterfall } from './useWaterfall'
-
-export const popoverCloseCbs = new Set<Function>()
-export const closeAllPopovers = () => {
-  popoverCloseCbs.forEach((cb) => cb())
-  popoverCloseCbs.clear()
-}
-
-const handleKeyDown = (e) => {
-  if (e.keyCode == 27) {
-    // esc
-    if (popoverCloseCbs.size) {
-      const [first] = [...popoverCloseCbs]
-      first?.(false)
-      popoverCloseCbs.delete(first)
-      e.preventDefault()
-    }
-  }
-}
-
-window.addEventListener('keydown', handleKeyDown)
 
 export default function PopoverMain(props: PopoverProps) {
   const forceShow = useContext(PopoverShowContext)

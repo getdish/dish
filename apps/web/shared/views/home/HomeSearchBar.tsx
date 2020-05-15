@@ -439,7 +439,7 @@ const HomeSearchBarHomeButton = memo(() => {
         opacity={om.state.home.currentStateType === 'home' ? 0 : 1}
         onPress={() => om.actions.home.popTo('home')}
       >
-        <ChevronLeft size={22} opacity={0.6} marginTop={4} />
+        <ChevronLeft size={22} opacity={0.6} style={{ marginTop: 4 }} />
       </LinkButton>
     </MediaQuery>
   )
