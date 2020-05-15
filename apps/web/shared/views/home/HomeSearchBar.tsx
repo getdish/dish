@@ -572,8 +572,8 @@ const styles = StyleSheet.create({
     zIndex: 22,
     position: 'absolute',
     marginTop: searchBarTopOffset,
-    left: searchBarTopOffset - 2,
-    right: searchBarTopOffset - 2,
+    left: searchBarTopOffset + 6,
+    right: searchBarTopOffset + 6,
     alignItems: 'center',
   },
   containerSize: {

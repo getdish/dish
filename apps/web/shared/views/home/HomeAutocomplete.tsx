@@ -8,6 +8,7 @@ import { LinearGradient } from '../ui/LinearGradient'
 import { LinkButton, LinkButtonProps } from '../ui/Link'
 import { HStack, ZStack } from '../ui/Stacks'
 import { SmallCircleButton } from './CloseButton'
+import { homePageBorderRadius } from './HomePage'
 import { setAvoidNextAutocompleteShowOnFocus } from './HomeSearchBar'
 
 const useShowAutocomplete = () => {
@@ -27,7 +28,9 @@ export const HomeAutocompleteBackground = memo(() => {
       opacity={show ? 1 : 0}
       disabled={!show}
       fullscreen
-      top={-10}
+      top={-homePageBorderRadius}
+      left={-homePageBorderRadius}
+      right={-homePageBorderRadius}
       zIndex={11}
     >
       <TouchableOpacity

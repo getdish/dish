@@ -78,12 +78,12 @@ export function HomeViewDrawer(props: { children: any }) {
             colors={isSmall ? colorsSmall : colors}
             style={[StyleSheet.absoluteFill]}
           />
-          <ZStack key={1} fullscreen right={850}>
+          <ZStack key={1} fullscreen right={200}>
             <LinearGradient
-              colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
+              colors={['white', 'white', 'rgba(255,255,255,0)']}
               style={[StyleSheet.absoluteFill]}
               startPoint={[0, 0]}
-              endPoint={[100, 0]}
+              endPoint={[1, 0]}
             />
           </ZStack>
         </ZStack>
