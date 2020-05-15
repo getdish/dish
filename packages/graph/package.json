@@ -12,7 +12,7 @@
   },
   "scripts": {
     "prebuild": "yarn generate",
-    "generate": "(cd ../common-web && yarn build) && ./generate.sh",
+    "generate": "./generate.sh",
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "true",
