@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-yarn workspaces run build
+yarn workspaces foreach --parallel run build
 pushd services/crawlers
 yarn test:scheduled
 test_status=$?

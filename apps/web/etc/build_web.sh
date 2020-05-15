@@ -8,5 +8,5 @@ yarn build
 
 parallel --halt now,fail=1 'bash -c {}' ::: \
   'yarn build:web:client' \
-  'yarn build:web:server'
+  'yarn build:web:ssr'
 
