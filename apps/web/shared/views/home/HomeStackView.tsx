@@ -21,7 +21,7 @@ export function HomeStackView<A extends HomeStateItemSimple>(props: {
   const isRemoving = debounceItems.length > breadcrumbs.length
   const items = isRemoving ? debounceItems : breadcrumbs
   return (
-    <ZStack className="overflow-y-hidden" fullscreen>
+    <ZStack fullscreen>
       {items.map((item, i) => {
         const isActive = i === items.length - 1
         const stackItemIndex = _.findLastIndex(

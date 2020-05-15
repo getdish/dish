@@ -40,3 +40,15 @@ export const Divider = memo(
     )
   }
 )
+
+export const HorizontalLine = () => {
+  return (
+    <View
+      style={{
+        height: 1,
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.06)',
+      }}
+    />
+  )
+}

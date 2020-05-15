@@ -37,7 +37,7 @@ export function ProgressCircle({
     leftTransformerDegree: leftTransformerDegree,
     rightTransformerDegree: rightTransformerDegree,
     textStyle: textStyle ? textStyle : null,
-    rotate: (100 - percent) * (radius / 23.8),
+    rotate: (100 - percent) * (radius / 10),
   }
 
   return (

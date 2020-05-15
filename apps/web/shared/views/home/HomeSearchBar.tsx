@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 
 import {
+  drawerBorderRadius,
   isWorker,
   pageWidthMax,
   searchBarHeight,
@@ -564,6 +565,8 @@ const HomeSearchBarTags = memo(
   }
 )
 
+const borderRadius = 16
+
 const styles = StyleSheet.create({
   container: {
     zIndex: 22,
@@ -579,6 +582,9 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: '100%',
     height: '100%',
+    borderRadius: borderRadius,
+    shadowColor: 'rgba(0,0,0,0.1)',
+    shadowRadius: 30,
   },
   containerInner: {
     position: 'relative',
@@ -586,7 +592,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(255,255,255,1)',
     flexDirection: 'row',
-    borderRadius: 14,
+    borderRadius: borderRadius,
     shadowColor: 'rgba(0,0,0,0.05)',
     shadowRadius: 4,
     shadowOffset: { height: 4, width: 0 },

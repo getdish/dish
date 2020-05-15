@@ -2,13 +2,14 @@ import React, { forwardRef } from 'react'
 import { Text } from 'react-native'
 
 import { ProgressCircle } from '../ui/ProgressCircle'
-import { StackProps, VStack } from '../ui/Stacks'
+import { HStack, StackProps, VStack } from '../ui/Stacks'
 
 export type RatingViewProps = StackProps & {
   size: 'lg' | 'md' | 'sm' | 'xs'
   percent: number
   color: string
   hideEmoji?: boolean
+  subtle?: boolean
 }
 
 export const getRankingColor = (percent: number) =>
@@ -16,7 +17,14 @@ export const getRankingColor = (percent: number) =>
 
 export const RatingView = forwardRef(
   (
-    { color, percent, size: sizeIn, hideEmoji, ...rest }: RatingViewProps,
+    {
+      color,
+      percent,
+      subtle,
+      size: sizeIn,
+      hideEmoji,
+      ...rest
+    }: RatingViewProps,
     ref
   ) => {
     if (isNaN(percent)) {
@@ -24,10 +32,10 @@ export const RatingView = forwardRef(
     }
     const borderColor =
       percent >= 8
-        ? 'rgba(190, 250, 200, 0.5)'
+        ? 'rgba(190, 250, 200, 0.85)'
         : percent >= 5
         ? 'gold'
-        : 'rgba(250, 100, 100, 0.5)'
+        : 'rgba(250, 100, 100, 0.85)'
 
     // size!
     const size =
@@ -35,6 +43,42 @@ export const RatingView = forwardRef(
 
     const badgeOffset =
       sizeIn === 'xs' || sizeIn === 'sm' ? Math.max(-size * 0.005) : 0
+
+    const bgColor = 'rgba(255,255,255,0.3)'
+
+    const emoji = (
+      <Text
+        style={{
+          fontSize: Math.max(12, size * 0.25),
+          textShadowColor: 'rgba(0,0,0,0.25)',
+          textShadowRadius: size * 0.015,
+        }}
+      >
+        {percent >= 9 ? '💎' : '⭐️'}
+      </Text>
+    )
+
+    const number = (
+      <Text
+        style={{
+          fontSize: Math.max(13, size * 0.5),
+          fontWeight: '600',
+          color,
+          letterSpacing: -(size / 90),
+        }}
+      >
+        {percent}
+      </Text>
+    )
+
+    if (subtle) {
+      return (
+        <HStack {...rest}>
+          {emoji}
+          {number}
+        </HStack>
+      )
+    }
 
     return (
       <VStack
@@ -53,21 +97,13 @@ export const RatingView = forwardRef(
             justifyContent="center"
             zIndex={100}
           >
-            <Text
-              style={{
-                fontSize: Math.max(12, size * 0.25),
-                textShadowColor: 'rgba(0,0,0,0.25)',
-                textShadowRadius: size * 0.015,
-              }}
-            >
-              {percent >= 9 ? '💎' : '⭐️'}
-            </Text>
+            {emoji}
           </VStack>
         )}
         <VStack
-          backgroundColor="#fff"
+          backgroundColor={bgColor}
           borderRadius={100}
-          shadowColor={`rgba(0,0,0,${sizeIn == 'lg' ? 0.05 : 0.1})`}
+          shadowColor={`rgba(0,0,0,${sizeIn == 'lg' ? 0.05 : 0.25})`}
           shadowRadius={size / 10}
           shadowOffset={{ height: 3, width: 0 }}
           width={size}
@@ -76,29 +112,22 @@ export const RatingView = forwardRef(
           // justifyContent="center"
         >
           <ProgressCircle
-            percent={percent}
+            percent={percent * 10}
             radius={size * 0.5}
             borderWidth={size * 0.07}
             color={borderColor}
+            // innerColor={bgColor}
+            // bgColor={bgColor}
           >
             <VStack
               width="100%"
               height="100%"
               borderRadius={100}
-              backgroundColor="#fff"
+              backgroundColor={bgColor}
               alignItems="center"
               justifyContent="center"
             >
-              <Text
-                style={{
-                  fontSize: Math.max(13, size * 0.48),
-                  fontWeight: '700',
-                  color,
-                  letterSpacing: -(size / 90),
-                }}
-              >
-                {percent}
-              </Text>
+              {number}
             </VStack>
           </ProgressCircle>
           <VStack
@@ -108,7 +137,7 @@ export const RatingView = forwardRef(
             width="100%"
             height="100%"
             position="absolute"
-          ></VStack>
+          />
         </VStack>
       </VStack>
     )

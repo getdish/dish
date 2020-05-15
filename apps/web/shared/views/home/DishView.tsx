@@ -28,7 +28,7 @@ export const DishView = memo(
         <ZStack pointerEvents="none" fullscreen zIndex={10}>
           {dish.rating && (
             <DishRatingView
-              size={size > 150 ? 'md' : 'sm'}
+              size={size > 170 ? 'md' : 'sm'}
               dish={dish}
               position="absolute"
               top={2}
@@ -39,17 +39,17 @@ export const DishView = memo(
         <VStack width={size} height={size}>
           <VStack
             className="ease-in-out"
-            shadowColor="rgba(0,0,0,0.12)"
-            shadowRadius={10}
+            shadowColor="rgba(0,0,0,0.112)"
+            shadowRadius={14}
             shadowOffset={{ width: 0, height: 4 }}
             width="100%"
             height="100%"
-            borderRadius={0.36 * size}
+            borderRadius={0.33 * size}
             overflow="hidden"
             borderWidth={2}
-            borderColor="transparent"
+            borderColor="rgba(0,0,0,0.1)"
             hoverStyle={{
-              borderColor: '#000',
+              borderColor: 'rgba(0,0,0,0.6)',
               shadowRadius: 14,
               shadowColor: 'rgba(0,0,0,0.2)',
               zIndex: 10000,
@@ -88,8 +88,8 @@ export const DishView = memo(
               style={{
                 flex: 1,
                 overflow: 'hidden',
-                fontSize: 13,
-                fontWeight: '700',
+                fontSize: 15,
+                fontWeight: '600',
                 lineHeight: 22,
                 // opacity: 0.75,
                 paddingVertical: 2,

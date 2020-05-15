@@ -41,10 +41,10 @@ export default graphql(function RestaurantRatingView(
   const percent = getRestaurantRating(rating)
   const color = getRankingColor(percent)
   return (
-    <VStack>
+    <>
       <RatingView percent={percent} color={color} {...rest} />
       {rest.size === 'lg' && <RestaurantRatingBreakdownView {...props} />}
-    </VStack>
+    </>
   )
 })
 
@@ -172,7 +172,7 @@ const RatingBreakdownCircle = memo(
         width="100%"
         height="auto"
         paddingTop="100%"
-        backgroundColor="#fff"
+        // backgroundColor="#fff"
         shadowColor="rgba(0,0,0,0.06)"
         shadowRadius={8}
         shadowOffset={{ height: 4, width: 0 }}
@@ -184,7 +184,7 @@ const RatingBreakdownCircle = memo(
           bottom={0}
           position="absolute"
           borderRadius={100}
-          backgroundColor="white"
+          // backgroundColor="white"
           overflow="hidden"
           alignItems="center"
           justifyContent="center"

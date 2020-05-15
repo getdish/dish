@@ -1,5 +1,5 @@
 import React from 'react'
-import { ChevronDown } from 'react-feather'
+import { ChevronDown, ChevronUp } from 'react-feather'
 import { Text } from 'react-native'
 
 import { RoutesTable } from '../../state/router'
@@ -29,17 +29,24 @@ export const TrendingButton = <
         {...rest}
       >
         {rank ? <Text>`${rank}. `</Text> : null}
-        <ChevronDown
-          size={14}
-          style={{
-            marginTop: 2,
-            marginRight: 4,
-            marginLeft: -2,
-            color: 'red',
-          }}
-        />
+        <TrendingIcon direction="up" />
         <Text style={{ fontWeight: '400', lineHeight: 17 }}>{children}</Text>
       </LinkButton>
     </HStack>
+  )
+}
+
+export function TrendingIcon(props: { direction: 'up' | 'down' }) {
+  const Element = props.direction === 'up' ? ChevronUp : ChevronDown
+  return (
+    <Element
+      size={14}
+      style={{
+        marginTop: 2,
+        marginRight: 4,
+        marginLeft: -2,
+        color: props.direction === 'up' ? 'green' : 'red',
+      }}
+    />
   )
 }
