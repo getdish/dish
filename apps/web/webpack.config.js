@@ -7,7 +7,6 @@ const Webpack = require('webpack')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const LodashPlugin = require('lodash-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
-const webpack = require('webpack')
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const isProduction = process.env.NODE_ENV === 'production'
@@ -25,7 +24,7 @@ module.exports = async function (
   },
   argv
 ) {
-  /** @type {webpack.Configuration} */
+  /** @type {Webpack.Configuration} */
   const config = {
     mode: env.mode,
     context: __dirname,
@@ -92,16 +91,16 @@ module.exports = async function (
         new TerserPlugin({
           sourceMap: true,
           terserOptions: {
-            ecma: 7,
+            ecma: 6,
             warnings: false,
             parse: {},
             compress: {},
             mangle: true,
             module: false,
-            output: null,
             toplevel: false,
             ie8: false,
-            keep_classnames: undefined,
+            // output: null,
+            // keep_classnames: undefined,
             keep_fnames: false,
             safari10: false,
           },
@@ -201,7 +200,7 @@ module.exports = async function (
     },
   }
 
-  if (!!process.env.INSPECT || isProduction) {
+  if (!!process.env.INSPECT) {
     config.plugins.push(
       new DuplicatesPlugin({
         // Emit compilation warning or error? (Default: `false`)

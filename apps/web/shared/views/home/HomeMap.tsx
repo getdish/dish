@@ -131,6 +131,8 @@ export function HomeMap() {
   return isLoaded ? <HomeMapContent /> : null
 }
 
+const mapMaxWidth = 1300
+
 const HomeMapContent = memo(function HomeMap() {
   const om = useOvermind()
   const drawerWidth = useHomeDrawerWidth()
@@ -140,10 +142,13 @@ const HomeMapContent = memo(function HomeMap() {
 
   // add a lil extra
   const mapOverflowWidth = 200
-  const mapPadRight =
-    window.innerWidth < pageWidthMax
-      ? 0
-      : (window.innerWidth - pageWidthMax - mapOverflowWidth) / 2
+
+  let mapPadRight = 10
+
+  let padLeft = drawerWidth
+  if (window.innerWidth > mapMaxWidth) {
+    padLeft = drawerWidth - Math.min(550, window.innerWidth - mapMaxWidth)
+  }
 
   const padding = isSmall
     ? {
@@ -153,7 +158,7 @@ const HomeMapContent = memo(function HomeMap() {
         right: 0,
       }
     : {
-        left: drawerWidth,
+        left: padLeft,
         top: searchBarHeight + 15 + 15,
         bottom: 0,
         right: drawerWidth > 600 ? mapPadRight : 0,
@@ -479,7 +484,14 @@ const HomeMapContent = memo(function HomeMap() {
   )
 
   return (
-    <ZStack width="100%" height="100%">
+    <ZStack
+      position="absolute"
+      top={0}
+      right={0}
+      bottom={0}
+      width="100%"
+      maxWidth={mapMaxWidth}
+    >
       <Map {...mapProps} />
     </ZStack>
   )

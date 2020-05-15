@@ -12,7 +12,7 @@ module.exports = function (api) {
       ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }],
       'babel-plugin-react-native-web',
       '@babel/plugin-proposal-nullish-coalescing-operator',
-      // require.resolve('./babel.strip-invariant.plugin.js'),
+      require.resolve('./babel.strip-invariant.plugin.js'),
     ].filter(Boolean),
     presets: [
       ['@babel/preset-typescript', { onlyRemoveTypeImports: true }],

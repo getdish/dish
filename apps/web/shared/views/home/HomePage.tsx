@@ -20,6 +20,8 @@ import HomeSearchBar from './HomeSearchBar'
 import { HomeStackView } from './HomeStackView'
 import { HomeViewDrawer } from './HomeViewDrawer'
 
+export const homePageBorderRadius = 12
+
 export default memo(function HomePage() {
   const [showPip, setShowPip] = useState(false)
 
@@ -32,13 +34,17 @@ export default memo(function HomePage() {
   )
 
   return (
-    <VStack flex={1} backgroundColor="#000" alignItems="center">
+    <VStack flex={1} backgroundColor="rgba(245,245,245,1)" alignItems="center">
       <VStack
         backgroundColor="#fff"
-        width="100%"
+        width={`calc(100% + ${homePageBorderRadius * 2}px)`}
         height="100%"
         maxWidth={1880}
-        borderRadius={6}
+        borderRadius={homePageBorderRadius}
+        // marginLeft={-homePageBorderRadius / 2}
+        marginVertical={-1}
+        shadowColor="rgba(0,0,0,0.13)"
+        shadowRadius={100}
         overflow="hidden"
         // marginHorizontal={-20}
         // paddingHorizontal={20}
