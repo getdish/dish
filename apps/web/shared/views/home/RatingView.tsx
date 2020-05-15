@@ -12,7 +12,7 @@ export type RatingViewProps = StackProps & {
 }
 
 export const getRankingColor = (percent: number) =>
-  percent > 84 ? 'green' : percent > 60 ? 'orange' : 'red'
+  percent >= 8 ? '#00BA00' : percent >= 5 ? 'rgba()' : 'red'
 
 export const RatingView = forwardRef(
   (
@@ -23,7 +23,11 @@ export const RatingView = forwardRef(
       percent = 0
     }
     const borderColor =
-      percent > 84 ? 'rgba(190, 250, 200, 0.5)' : percent > 60 ? 'gold' : 'red'
+      percent >= 8
+        ? 'rgba(190, 250, 200, 0.5)'
+        : percent >= 5
+        ? 'gold'
+        : 'rgba(250, 100, 100, 0.5)'
 
     // size!
     const size =
@@ -40,7 +44,7 @@ export const RatingView = forwardRef(
         height={size}
         {...rest}
       >
-        {!hideEmoji && percent >= 80 && (
+        {!hideEmoji && percent >= 7 && (
           <VStack
             position="absolute"
             top={badgeOffset * size}
@@ -51,12 +55,12 @@ export const RatingView = forwardRef(
           >
             <Text
               style={{
-                fontSize: Math.max(10, size * 0.25),
+                fontSize: Math.max(12, size * 0.25),
                 textShadowColor: 'rgba(0,0,0,0.25)',
                 textShadowRadius: size * 0.015,
               }}
             >
-              {percent >= 90 ? '🏆' : '⭐️'}
+              {percent >= 9 ? '💎' : '⭐️'}
             </Text>
           </VStack>
         )}
@@ -87,7 +91,7 @@ export const RatingView = forwardRef(
             >
               <Text
                 style={{
-                  fontSize: Math.max(13, size * 0.38),
+                  fontSize: Math.max(13, size * 0.48),
                   fontWeight: '700',
                   color,
                   letterSpacing: -(size / 90),

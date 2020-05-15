@@ -5,7 +5,7 @@ import { HomeStateItem } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { Om, OmState } from '../../state/home-types'
 import { NavigableTag, getTagId } from '../../state/Tag'
-import { TagButton } from './TagButton'
+import { TagButton, getTagButtonProps } from './TagButton'
 
 export function getTitleForState(omState: OmState, state: HomeStateItem) {
   const { currentLocationName = 'San Francisco' } = state
@@ -86,10 +86,7 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
               {titleTags.map((tag) => (
                 <TagButton
                   key={getTagId(tag)}
-                  name={tag.name}
-                  type={tag.type}
-                  icon={tag.icon}
-                  rgb={tag.rgb}
+                  {...getTagButtonProps(tag)}
                   subtle
                   noColor
                   hideIcon

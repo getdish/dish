@@ -8,8 +8,34 @@ import { LinkButton } from '../ui/Link'
 import { HStack, StackProps, VStack } from '../ui/Stacks'
 import { SuperScriptText } from './SuperScriptText'
 
+export const getTagButtonProps = (tag: Tag): TagButtonProps => {
+  console.log('tag', tag)
+  return {
+    name: tag.name,
+    type: tag.type as TagType,
+    icon: tag.icon,
+    rgb: Array.isArray(tag.rgb) ? tag.rgb : tag.rgb?.(),
+  }
+}
+
 export const getTagColor = (rgb?: [number, number, number]): string =>
   rgb ? `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})` : 'inherit'
+
+export type TagButtonProps = StackProps &
+  Pick<Tag, 'name' | 'type' | 'icon'> & {
+    rgb: [number, number, number]
+    rank?: number
+    size?: 'lg' | 'md' | 'sm'
+    subtle?: boolean
+    votable?: boolean
+    closable?: boolean
+    onClose?: Function
+    color?: any
+    hideIcon?: boolean
+    subtleIcon?: boolean
+    fontSize?: TextStyle['fontSize']
+    noColor?: boolean
+  }
 
 export const TagButton = memo(
   ({
@@ -30,21 +56,7 @@ export const TagButton = memo(
     subtleIcon,
     hideIcon,
     ...rest
-  }: StackProps &
-    Pick<Tag, 'name' | 'type' | 'icon'> & {
-      rgb: [number, number, number]
-      rank?: number
-      size?: 'lg' | 'md' | 'sm'
-      subtle?: boolean
-      votable?: boolean
-      closable?: boolean
-      onClose?: Function
-      color?: any
-      hideIcon?: boolean
-      subtleIcon?: boolean
-      fontSize?: TextStyle['fontSize']
-      noColor?: boolean
-    }) => {
+  }: TagButtonProps) => {
     if (name === null) {
       return null
     }

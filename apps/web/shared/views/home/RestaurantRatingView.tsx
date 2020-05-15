@@ -20,7 +20,7 @@ export type RestaurantRatingViewProps = Omit<
 export const getRestaurantRating = (rating: number) => Math.round(rating * 2)
 
 export const getRankingColor = (percent: number) =>
-  percent > 84 ? 'green' : percent > 60 ? 'orange' : 'red'
+  percent >= 8 ? 'green' : percent >= 5 ? 'orange' : 'red'
 
 export default graphql(function RestaurantRatingView(
   props: RestaurantRatingViewProps

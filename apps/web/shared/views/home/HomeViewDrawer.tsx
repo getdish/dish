@@ -51,7 +51,6 @@ export function HomeViewDrawer(props: { children: any }) {
     <HStack
       position="absolute"
       top={0}
-      paddingTop={drawerPad}
       bottom={0}
       zIndex={10}
       width={drawerWidth + drawerPadLeft}
@@ -97,6 +96,16 @@ export function HomeViewDrawer(props: { children: any }) {
       >
         <ZStack position="relative" flex={1}>
           <VStack fullscreen flex={1}>
+            <LinearGradient
+              colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
+              style={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                left: -800,
+                height: 80,
+              }}
+            />
             {props.children}
           </VStack>
         </ZStack>
