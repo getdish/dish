@@ -17,7 +17,7 @@ export type RestaurantRatingViewProps = Omit<
   rating: number
 }
 
-export const getRestaurantRating = (rating: number) => Math.round(rating * 20)
+export const getRestaurantRating = (rating: number) => Math.round(rating * 2)
 
 export const getRankingColor = (percent: number) =>
   percent > 84 ? 'green' : percent > 60 ? 'orange' : 'red'

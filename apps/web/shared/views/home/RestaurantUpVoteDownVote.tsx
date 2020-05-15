@@ -13,7 +13,7 @@ export const RestaurantUpVoteDownVote = memo(
     const userId = om.state.user.user?.id
     let vote = 0
 
-    if (om.state.user.isLoggedIn) {
+    if (userId != null) {
       const [review] = query.review({
         limit: 1,
         where: {
@@ -53,7 +53,9 @@ export const RestaurantUpVoteDownVote = memo(
             <ChevronUp
               size={12}
               color={vote === 1 ? 'green' : 'black'}
-              marginBottom={-12}
+              style={{
+                marginBottom: -12,
+              }}
             />
           </VoteButton>
           <VoteButton
@@ -71,7 +73,10 @@ export const RestaurantUpVoteDownVote = memo(
               })
             }}
           >
-            <ChevronDown size={12} color={vote === -1 ? 'red' : 'black'} />
+            <ChevronDown
+              size={12}
+              style={{ color: vote === -1 ? 'red' : 'black' }}
+            />
           </VoteButton>
         </VStack>
       </div>

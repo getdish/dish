@@ -29,7 +29,16 @@ module.exports = async function (
   const config = {
     mode: env.mode,
     context: __dirname,
-    node: false,
+    node: {
+      process: 'mock',
+      Buffer: false,
+      util: false,
+      console: false,
+      setImmediate: false,
+      global: false,
+      __filename: false,
+      __dirname: false
+    },
     stats: 'normal',
     devtool:
       env.mode === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
@@ -39,6 +48,7 @@ module.exports = async function (
     output: {
       path: path.resolve(__dirname),
       filename: 'static/js/app.js',
+      publicPath: '/',
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
@@ -156,13 +166,13 @@ module.exports = async function (
 
     // @ts-ignore
     devServer: {
+      publicPath: '/',
       host: '0.0.0.0',
       compress: true,
       watchContentBase: true,
       // It will still show compile warnings and errors with this setting.
       clientLogLevel: 'none',
       contentBase: path.join(__dirname, 'web'),
-      publicPath: '/',
       hot: !isProduction,
       historyApiFallback: {
         disableDotRule: true,

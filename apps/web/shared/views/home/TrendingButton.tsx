@@ -30,11 +30,13 @@ export const TrendingButton = <
       >
         {rank ? <Text>`${rank}. `</Text> : null}
         <ChevronDown
-          marginTop={2}
-          marginRight={4}
-          marginLeft={-2}
           size={14}
-          color="red"
+          style={{
+            marginTop: 2,
+            marginRight: 4,
+            marginLeft: -2,
+            color: 'red',
+          }}
         />
         <Text style={{ fontWeight: '400', lineHeight: 17 }}>{children}</Text>
       </LinkButton>
