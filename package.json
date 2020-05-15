@@ -15,6 +15,7 @@
     "start": "",
     "build": "yarn wsrun build",
     "build:watch": "yarn wsrun watch",
+    "build:watch:broken": "yarn tsc -b -w",
     "test": "ava",
     "clean": "bin/clean.sh",
     "format": "swift-format --recursive --in-place ./apps/ios/dish",

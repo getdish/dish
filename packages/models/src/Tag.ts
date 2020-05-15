@@ -1,5 +1,5 @@
 import { slugify } from '@dish/common-web'
-import { TagType } from '@dish/graph'
+import { TagRecord, TagType } from '@dish/graph'
 import { EnumType } from 'json-to-graphql-query'
 import _ from 'lodash'
 

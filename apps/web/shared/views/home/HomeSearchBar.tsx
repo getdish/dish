@@ -1,4 +1,5 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { ChevronLeft, Loader, Navigation, Search } from 'react-feather'
 import {
   StyleSheet,
   Text,
@@ -19,7 +20,6 @@ import { useOvermind } from '../../state/useOvermind'
 import { Circle } from '../ui/Circle'
 import { Divider } from '../ui/Divider'
 import Hoverable from '../ui/Hoverable'
-import { Icon } from '../ui/Icon'
 import { LinkButton } from '../ui/Link'
 import { MediaQuery, mediaQueries } from '../ui/MediaQuery'
 import { Spacer } from '../ui/Spacer'
@@ -291,10 +291,10 @@ export default memo(function HomeSearchBar() {
               <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
                 {om.state.home.isLoading ? (
                   <VStack className="rotating" opacity={0.5}>
-                    <Icon name="Loader" size={18} />
+                    <Loader size={18} />
                   </VStack>
                 ) : (
-                  <Icon name="Search" size={18} opacity={0.5} />
+                  <Search size={18} opacity={0.5} />
                 )}
               </MediaQuery>
 
@@ -439,7 +439,7 @@ const HomeSearchBarHomeButton = memo(() => {
         opacity={om.state.home.currentStateType === 'home' ? 0 : 1}
         onPress={() => om.actions.home.popTo('home')}
       >
-        <Icon name={'ChevronLeft'} size={22} opacity={0.6} marginTop={4} />
+        <ChevronLeft size={22} opacity={0.6} marginTop={4} />
       </LinkButton>
     </MediaQuery>
   )
@@ -490,14 +490,16 @@ const SearchLocationButton = memo(() => {
           justifyContent="center"
         >
           <TouchableOpacity
+            activeOpacity={0.4}
             style={{
               padding: 10,
+              opacity: 0.5,
             }}
             onPress={() => {
               om.actions.home.popTo('home')
             }}
           >
-            <Icon size={18} name="Navigation" color="blue" opacity={0.5} />
+            <Navigation size={18} color="blue" />
           </TouchableOpacity>
         </VStack>
       </HStack>

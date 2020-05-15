@@ -1,4 +1,4 @@
-import { graphql, query, useQuery } from '@dish/graph'
+import { graphql, query } from '@dish/graph'
 import React, { memo } from 'react'
 import { Image, ScrollView, Text, View } from 'react-native'
 

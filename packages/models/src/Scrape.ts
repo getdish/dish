@@ -1,4 +1,6 @@
-import { ModelBase, Point } from './ModelBase'
+import { Point } from '@dish/graph'
+
+import { ModelBase } from './ModelBase'
 
 export type ScrapeData = { [key: string]: any }
 

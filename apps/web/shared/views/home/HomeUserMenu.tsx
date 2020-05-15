@@ -1,5 +1,6 @@
 import { slugify } from '@dish/common-web'
 import React, { memo } from 'react'
+import { User } from 'react-feather'
 import { useStorageState } from 'react-storage-hooks'
 
 import { useOvermind } from '../../state/useOvermind'
@@ -7,7 +8,6 @@ import { AuthLoginRegisterView } from '../auth/AuthLoginRegisterView'
 import { Toast } from '../Toast'
 import { Box } from '../ui/Box'
 import { Divider } from '../ui/Divider'
-import { Icon } from '../ui/Icon'
 import { LinkButton } from '../ui/Link'
 import { Popover } from '../ui/Popover'
 import { HStack, VStack } from '../ui/Stacks'
@@ -78,7 +78,7 @@ export const HomeUserMenu = memo(() => {
         }
       >
         <HStack spacing alignItems="center" justifyContent="center">
-          <Icon name="User" size={22} opacity={0.5} />
+          <User size={22} opacity={0.5} />
           {/* {om.state.user.isLoggedIn ? (
             <Text
               numberOfLines={1}

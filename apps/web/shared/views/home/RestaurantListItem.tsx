@@ -1,5 +1,6 @@
 import { Restaurant, graphql, query } from '@dish/graph'
 import React, { Suspense, memo, useEffect, useState } from 'react'
+import { MessageSquare } from 'react-feather'
 import { ScrollView, TouchableOpacity } from 'react-native'
 
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
@@ -7,19 +8,16 @@ import { GeocodePlace, isEditingUserPage } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
 import { Divider } from '../ui/Divider'
 import { HoverablePopover } from '../ui/HoverablePopover'
-import { Icon } from '../ui/Icon'
 import { Link } from '../ui/Link'
 import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { SelectableText } from '../ui/Text'
-import { useWaterfall } from '../ui/useWaterfall'
-import { bgLightHover, bgLightLight } from './colors'
+import { bgLightLight } from './colors'
 import { DishView } from './DishView'
 import { useMediaQueryIsMedium, useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RankingView } from './RankingView'
 import { CommentBubble, RestaurantAddComment } from './RestaurantAddComment'
 import { getAddressText } from './RestaurantAddressLinksRow'
-import { RestaurantAddTagButton } from './RestaurantAddTagButton'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
@@ -210,8 +208,7 @@ const RestaurantListItemContent = memo(
                     }))
                   }
                 >
-                  <Icon
-                    name="MessageSquare"
+                  <MessageSquare
                     size={16}
                     color={state.showAddComment ? 'blue' : '#999'}
                   />

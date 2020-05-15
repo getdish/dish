@@ -1,9 +1,9 @@
 import { Tag, TagType } from '@dish/graph'
 import _ from 'lodash'
 import React, { memo } from 'react'
+import { ChevronUp, X } from 'react-feather'
 import { Text, TextStyle } from 'react-native'
 
-import { Icon } from '../ui/Icon'
 import { LinkButton } from '../ui/Link'
 import { HStack, StackProps, VStack } from '../ui/Stacks'
 import { SuperScriptText } from './SuperScriptText'
@@ -157,11 +157,7 @@ export const TagButton = memo(
                   e.preventDefault()
                 }}
               >
-                <Icon
-                  size={14 * scale}
-                  name="ChevronUp"
-                  marginBottom={-5 * scale}
-                />
+                <ChevronUp size={14 * scale} marginBottom={-5 * scale} />
               </LinkButton>
             </VStack>
           )}
@@ -187,11 +183,7 @@ export const TagButton = memo(
               alignItems="center"
               justifyContent="center"
             >
-              <Icon
-                size={subtle ? 10 : 12}
-                name="X"
-                color={subtle ? 'inherit' : '#000'}
-              />
+              <X size={subtle ? 10 : 12} color={subtle ? 'inherit' : '#000'} />
             </LinkButton>
           )}
         </HStack>

@@ -1,19 +1,16 @@
 import React, { memo } from 'react'
+import { ChevronRight } from 'react-feather'
 import { StyleSheet, Text } from 'react-native'
 
-import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { HomeActiveTagIds, HomeStateItemSearch } from '../../state/home'
 import { getTagId } from '../../state/Tag'
 import { useOvermind } from '../../state/useOvermind'
 import { Box } from '../ui/Box'
-import { Divider } from '../ui/Divider'
 import { HoverablePopover } from '../ui/HoverablePopover'
-import { Icon } from '../ui/Icon'
 import { LinearGradient } from '../ui/LinearGradient'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import HomeFilterBar from './HomeFilterBar'
 import { LenseButton } from './LenseButton'
-import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 
 export default memo(function HomeLenseBar(props: {
   stateIndex: number
@@ -103,7 +100,7 @@ export const HomeLenseBarOnly = memo(
               </Box>
             }
           >
-            <Icon name="ChevronRight" color="#999" size={20} />
+            <ChevronRight color="#999" size={20} />
           </HoverablePopover>
         </HStack>
         {/* <Divider backgroundColor="#000" flex /> */}

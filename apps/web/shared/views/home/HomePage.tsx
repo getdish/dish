@@ -9,15 +9,11 @@ import {
   isUserState,
 } from '../../state/home-helpers'
 import { ErrorBoundary } from '../ErrorBoundary'
-import { VStack, ZStack } from '../ui/Stacks'
+import { VStack } from '../ui/Stacks'
 import { CurrentStateID } from './CurrentStateID'
 import { HomeMap } from './HomeMap'
 import { HomeMapControlsOverlay } from './HomeMapControlsOverlay'
 import { HomeMapPIP } from './HomeMapPIP'
-import HomePageRestaurant from './HomePageRestaurant'
-import HomePageSearchResults from './HomePageSearchResults'
-import HomePageTopDishes from './HomePageTopDishes'
-import HomePageUser from './HomePageUser'
 import HomeSearchBar from './HomeSearchBar'
 import { HomeStackView } from './HomeStackView'
 import { HomeViewDrawer } from './HomeViewDrawer'
@@ -40,7 +36,7 @@ export default function HomePage() {
         width="100%"
         height="100%"
         maxWidth={1880}
-        borderRadius={12}
+        borderRadius={6}
         overflow="hidden"
         // marginHorizontal={-20}
         // paddingHorizontal={20}
@@ -81,3 +77,10 @@ export default function HomePage() {
     </VStack>
   )
 }
+
+const HomePageRestaurant = React.lazy(() => import('./HomePageRestaurant'))
+const HomePageSearchResults = React.lazy(() =>
+  import('./HomePageSearchResults')
+)
+const HomePageTopDishes = React.lazy(() => import('./HomePageTopDishes'))
+const HomePageUser = React.lazy(() => import('./HomePageUser'))
