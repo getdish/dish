@@ -1,5 +1,5 @@
 const { DuplicatesPlugin } = require('inspectpack/plugin')
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+// const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const path = require('path')
 const _ = require('lodash')
 const Webpack = require('webpack')
@@ -7,6 +7,7 @@ const Webpack = require('webpack')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const LodashPlugin = require('lodash-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
+const ReactRefreshPlugin = require('@webhotelier/webpack-fast-refresh')
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const isProduction = process.env.NODE_ENV === 'production'
@@ -17,36 +18,30 @@ console.log('TARGET', TARGET)
 const appEntry = path.resolve(path.join(__dirname, 'web', 'index.web.tsx'))
 const graphRoot = path.join(require.resolve('@dish/graph'), '..', '..')
 
-module.exports = async function (
+module.exports = function getWebpackConfig(
   env = {
     /** @type {any} */
     mode: process.env.NODE_ENV,
   },
   argv
 ) {
+  const isHot = !isProduction
+
   /** @type {Webpack.Configuration} */
   const config = {
-    mode: env.mode,
+    mode: env.mode || process.env.NODE_ENV,
     context: __dirname,
-    node: {
-      process: 'mock',
-      Buffer: false,
-      util: false,
-      console: false,
-      setImmediate: false,
-      global: false,
-      __filename: false,
-      __dirname: false,
-    },
     stats: 'normal',
     devtool:
-      env.mode === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
-    entry: {
-      app: [appEntry].filter(Boolean),
-    },
+      env.mode === 'production' ? 'source-map' : 'eval-cheap-module-source-map',
+    // @ts-ignore
+    entry: [
+      isHot && '@webhotelier/webpack-fast-refresh/runtime.js',
+      appEntry,
+    ].filter(Boolean),
     output: {
       path: path.resolve(__dirname),
-      filename: 'static/js/app.js',
+      filename: `static/js/app.[contenthash].js`,
       publicPath: '/',
       globalObject: 'this',
     },
@@ -78,13 +73,11 @@ module.exports = async function (
       splitChunks:
         isProduction && TARGET !== 'ssr'
           ? {
-              chunks: 'async',
-              minSize: 30000,
-              maxSize: 0,
-              minChunks: 1,
-              maxAsyncRequests: 6,
-              maxInitialRequests: 4,
-              automaticNameDelimiter: '~',
+              // http2
+              chunks: 'all',
+              maxInitialRequests: 30,
+              maxAsyncRequests: 30,
+              maxSize: 100000,
             }
           : false,
       runtimeChunk: false,
@@ -119,9 +112,15 @@ module.exports = async function (
             {
               test: /\.[jt]sx?$/,
               include: babelInclude,
-              use: {
-                loader: 'babel-loader',
-              },
+              use: [
+                {
+                  loader: 'babel-loader',
+                  options: { cacheDirectory: true },
+                },
+                isHot && {
+                  loader: '@webhotelier/webpack-fast-refresh/loader.js',
+                },
+              ].filter(Boolean),
             },
             {
               test: /\.css$/i,
@@ -133,7 +132,7 @@ module.exports = async function (
                 loader: 'url-loader',
                 options: {
                   limit: 1000,
-                  name: 'static/media/[name].[hash:8].[ext]',
+                  name: 'static/media/[name].[contenthash].[ext]',
                 },
               },
             },
@@ -145,7 +144,7 @@ module.exports = async function (
               // Also exclude `html` and `json` extensions so they get processed by webpacks internal loaders.
               exclude: [/\.(mjs|[jt]sx?)$/, /\.html$/, /\.json$/],
               options: {
-                name: 'static/media/[name].[hash:8].[ext]',
+                name: 'static/media/[name].[contenthash].[ext]',
               },
             },
           ],
@@ -153,8 +152,9 @@ module.exports = async function (
       ],
     },
     plugins: [
-      new LodashPlugin(),
+      // new LodashPlugin(),
       new Webpack.DefinePlugin({
+        process: JSON.stringify({}),
         'process.env.TARGET': JSON.stringify(TARGET || null),
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
       }),
@@ -164,9 +164,10 @@ module.exports = async function (
       }),
       env.mode === 'development' &&
         TARGET !== 'worker' &&
-        new ReactRefreshWebpackPlugin({
-          overlay: false,
-        }),
+        new ReactRefreshPlugin(),
+      // new ReactRefreshWebpackPlugin({
+      //   overlay: false,
+      // }),
       !!process.env.INSPECT &&
         new DuplicatesPlugin({
           emitErrors: false,
@@ -175,42 +176,6 @@ module.exports = async function (
           verbose: false,
         }),
     ].filter(Boolean),
-
-    // @ts-ignore
-    devServer: {
-      publicPath: '/',
-      host: '0.0.0.0',
-      compress: true,
-      // watchContentBase: true,
-      // It will still show compile warnings and errors with this setting.
-      clientLogLevel: 'none',
-      contentBase: path.join(__dirname, 'web'),
-      hot: !isProduction,
-      historyApiFallback: {
-        disableDotRule: true,
-      },
-      disableHostCheck: true,
-      overlay: false,
-      quiet: false,
-      stats: {
-        colors: true,
-        assets: true,
-        chunks: false,
-        modules: true,
-        reasons: false,
-        children: true,
-        errors: true,
-        errorDetails: true,
-        warnings: true,
-      },
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods':
-          'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-        'Access-Control-Allow-Headers':
-          'X-Requested-With, content-type, Authorization',
-      },
-    },
   }
 
   // PLUGINS
@@ -262,16 +227,14 @@ module.exports = async function (
         ...config,
         output: {
           ...config.output,
-          filename: 'static/js/app.legacy.js',
+          filename: 'static/js/app.legacy.[contenthash].js',
           path: path.join(__dirname, 'web-build-legacy'),
         },
-        entry: {
-          app: [
-            path.join(__dirname, 'web', 'polyfill.legacy.js'),
-            // @ts-ignore
-            ...config.entry.app,
-          ],
-        },
+        entry: [
+          // @ts-ignore
+          ...config.entry,
+          path.join(__dirname, 'web', 'polyfill.legacy.js'),
+        ],
       }
     }
 

@@ -6,4 +6,7 @@ export const Popover = (props: PopoverProps) => {
   return <PopoverMain {...props} />
 }
 
-const PopoverMain = React.lazy(() => import('./PopoverMain'))
+const PopoverMain =
+  process.env.TARGET === 'ssr'
+    ? require('./PopoverMain').default
+    : React.lazy(() => import('./PopoverMain'))

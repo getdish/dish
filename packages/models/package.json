@@ -29,6 +29,7 @@
     "ws": "^7.2.1"
   },
   "devDependencies": {
+    "moment": "*",
     "ava": "^3.8.2"
   },
   "peerDependencies": {

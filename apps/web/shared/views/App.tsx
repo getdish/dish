@@ -32,6 +32,3 @@ export function App({ overmind }: { overmind?: any }) {
     </>
   )
 }
-
-// const HomePageLazy = React.lazy(() => import('./home/HomePageView'))
-// const TagPageLazy = React.lazy(() => import('./tag/TagPage'))
