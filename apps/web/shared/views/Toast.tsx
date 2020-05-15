@@ -1,7 +1,8 @@
-import { useCallback, useState } from 'react'
+import { memo, useCallback, useRef, useState } from 'react'
 import React from 'react'
 import { Text } from 'react-native'
 
+import { useForceUpdate } from '../hooks/useForceUpdate'
 import { VStack, ZStack } from './ui/Stacks'
 
 let show: (text: string, duration: number) => void
@@ -11,50 +12,58 @@ export const Toast = {
   show: (...args) => show(...args),
 }
 
-export function ToastRoot({
-  textStyle,
-  style,
-}: {
-  style?: any
-  position?: 'top' | 'center' | 'bottom'
-  textStyle?: any
-  positionValue?: number
-  fadeInDuration?: number
-  defaultCloseDelay?: number
-  fadeOutDuration?: number
-  opacity?: number
-}) {
-  const [{ isShow, text }, setState] = useState({
-    isShow: false,
+export const ToastRoot = memo(function ToastRoot() {
+  const forceUpdate = useForceUpdate()
+  const stateRef = useRef({
+    show: false,
     text: '',
+    timeout: null,
   })
+  const setState = (x: any) => {
+    stateRef.current = x
+    forceUpdate()
+  }
 
-  show = useCallback((text: string, duration: number = 1000) => {
-    setState({
-      isShow: true,
-      text,
-    })
-  }, [])
+  show = useCallback(
+    (text: string, duration: number = 1000) => {
+      clearTimeout(stateRef.current.timeout)
+      const timeout = setTimeout(() => {
+        setState({
+          show: false,
+          text: '',
+          timeout: null,
+        })
+      }, duration)
+      setState({
+        show: true,
+        text,
+        timeout,
+      })
+    },
+    [stateRef]
+  )
 
   return (
     <ZStack fullscreen alignItems="flex-end" justifyContent="center">
-      <VStack
-        backgroundColor="rgba(0,0,0,0.95)"
-        shadowColor="rgba(0,0,0,0.4)"
-        shadowRadius={50}
-        borderRadius={9}
-        padding={10}
-      >
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 16,
-            ...textStyle,
-          }}
+      {stateRef.current.show && (
+        <VStack
+          backgroundColor="rgba(0,0,0,0.95)"
+          shadowColor="rgba(0,0,0,0.4)"
+          shadowRadius={50}
+          borderRadius={9}
+          padding={10}
         >
-          {text}
-        </Text>
-      </VStack>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 16,
+              ...textStyle,
+            }}
+          >
+            {text}
+          </Text>
+        </VStack>
+      )}
     </ZStack>
   )
-}
+})
