@@ -34,6 +34,8 @@
     "@dish/web": "*"
   },
   "devDependencies": {
+    "typescript": "*",
+    "tslib": "1.11.2",
     "@rollup/plugin-typescript": "^4.1.1",
     "@dish/rollup-plugin-tscc": "^0.4.7",
     "@ampproject/filesize": "3.0.2",

@@ -16,8 +16,13 @@
     "test": "DISH_ENV=test ava test/* --verbose"
   },
   "dependencies": {
+    "@dish/models": "*",
     "isomorphic-unfetch": "^3.0.0",
+    "ava": "^3.8.2",
     "graphql": "*"
+  },
+  "peerDependencies": {
+    "react": "*"
   },
   "devDependencies": {}
 }

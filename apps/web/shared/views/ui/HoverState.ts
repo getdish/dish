@@ -1,8 +1,6 @@
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment'
-
 let isEnabled = false
 
-if (canUseDOM) {
+if (typeof document !== 'undefined' && !!document.body) {
   /**
    * Web browsers emulate mouse events (and hover states) after touch events.
    * This code infers when the currently-in-use modality supports hover

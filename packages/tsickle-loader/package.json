@@ -13,12 +13,13 @@
     "start": "true",
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput",
-    "test": "true" 
+    "test": "true"
   },
   "dependencies": {
     "tsickle": "^0.38.1",
     "loader-utils": "*",
     "schema-utils": "*",
+    "sourcemap": "0.1.0",
     "fs-extra": "^9.0.0"
   },
   "peerDependencies": {
