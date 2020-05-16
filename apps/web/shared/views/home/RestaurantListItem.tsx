@@ -246,7 +246,7 @@ const RestaurantListItemContent = memo(
             )}
           </VStack>
 
-          <VStack padding={10} paddingTop={45} width={600}>
+          <VStack padding={10} paddingTop={45} width={0}>
             <RestaurantPeek
               size={isShowingComment ? 'lg' : 'md'}
               restaurantSlug={restaurant.slug}
@@ -312,7 +312,7 @@ export const RestaurantPeek = graphql(function RestaurantPeek({
           return (
             <DishView
               key={i}
-              size={(size === 'lg' ? 200 : 170) * (isMedium ? 0.85 : 1)}
+              size={(size === 'lg' ? 220 : 190) * (isMedium ? 0.85 : 1)}
               dish={
                 {
                   name: photo.name,

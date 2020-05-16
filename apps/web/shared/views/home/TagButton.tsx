@@ -35,6 +35,7 @@ export type TagButtonProps = StackProps &
     subtleIcon?: boolean
     fontSize?: TextStyle['fontSize']
     noColor?: boolean
+    replace?: boolean
   }
 
 export const TagButton = memo(
@@ -55,6 +56,7 @@ export const TagButton = memo(
     backgroundColor,
     subtleIcon,
     hideIcon,
+    replace,
     ...rest
   }: TagButtonProps) => {
     if (name === null) {
@@ -72,7 +74,7 @@ export const TagButton = memo(
       typeof fontSize === 'number' ? fontSize * 0.9 : fontSize
     // const moveInPx = size === 'sm' ? 0 : 3.5 * (1 / scale)
     return (
-      <LinkButton tag={tag} disabledIfActive>
+      <LinkButton tag={tag} disabledIfActive replace={replace}>
         <HStack
           height={scale * 31}
           backgroundColor={bg}
@@ -195,12 +197,16 @@ export const TagButton = memo(
               })}
               width={16}
               height={16}
+              maxHeight={16}
               alignItems="center"
               justifyContent="center"
+              alignSelf="center"
             >
               <X
                 size={subtle ? 10 : 12}
-                style={{ color: subtle ? 'inherit' : '#000' }}
+                style={{
+                  color: subtle ? 'inherit' : '#000',
+                }}
               />
             </LinkButton>
           )}

@@ -17,6 +17,7 @@ export const DishView = memo(
     size = 100,
     ...rest
   }: { cuisine?: Tag; dish: TopCuisineDish; size?: number } & StackProps) => {
+    const borderRadius = 0.3 * size
     return (
       <LinkButton
         alignItems="center"
@@ -36,7 +37,14 @@ export const DishView = memo(
             />
           )}
         </ZStack>
-        <VStack width={size} height={size}>
+        <VStack
+          width={size}
+          height={size}
+          shadowColor="rgba(0,0,0,0.1)"
+          shadowRadius={20}
+          shadowOffset={{ width: 0, height: 10 }}
+          borderRadius={borderRadius}
+        >
           <VStack
             className="ease-in-out"
             shadowColor="rgba(0,0,0,0.112)"
@@ -44,7 +52,7 @@ export const DishView = memo(
             shadowOffset={{ width: 0, height: 4 }}
             width="100%"
             height="100%"
-            borderRadius={0.33 * size}
+            borderRadius={borderRadius}
             overflow="hidden"
             borderWidth={2}
             borderColor="rgba(0,0,0,0.1)"

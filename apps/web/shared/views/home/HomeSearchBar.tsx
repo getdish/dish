@@ -28,9 +28,8 @@ import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { CloseButton } from './CloseButton'
 import { bgLight } from './colors'
 import { DishLogoButton } from './DishLogoButton'
-import HomeAutocomplete, {
-  HomeAutocompleteBackground,
-} from './HomeAutocomplete'
+import HomeAutocomplete from './HomeAutocomplete'
+import { HomeAutocompleteBackground } from './HomeAutocompleteBackground'
 import { HomeUserMenu } from './HomeUserMenu'
 import { TagButton } from './TagButton'
 
@@ -266,15 +265,15 @@ export default memo(function HomeSearchBar() {
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
 
   return (
-    <View style={[styles.container, { height: searchBarHeight }]}>
+    <View style={styles.container}>
       <HomeAutocompleteBackground />
       <View style={styles.containerSize}>
         <View style={styles.containerInner}>
           <DishLogoButton />
 
-          <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
-            <Spacer flex={0.1} />
-          </MediaQuery>
+          {/* <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
+            <Spacer flex={0.01} />
+          </MediaQuery> */}
 
           <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
             <HomeSearchBarHomeButton />
@@ -575,9 +574,14 @@ const styles = StyleSheet.create({
     left: searchBarTopOffset + 6,
     right: searchBarTopOffset + 6,
     alignItems: 'center',
+    height: searchBarHeight,
+    borderBottomColor: 'rgba(0,0,0,0.01)',
+    borderBottomWidth: 1,
+    borderBottomLeftRadius: borderRadius,
+    borderBottomRightRadius: borderRadius,
   },
   containerSize: {
-    maxWidth: pageWidthMax,
+    maxWidth: pageWidthMax - 20,
     zIndex: 12,
     position: 'relative',
     width: '100%',
