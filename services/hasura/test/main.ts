@@ -1,4 +1,4 @@
-import auth from '@dish/auth'
+import { Auth } from '@dish/graph'
 import { Dish, Restaurant, Scrape, User } from '@dish/models'
 import anyTest, { TestInterface } from 'ava'
 
@@ -7,15 +7,15 @@ interface Context {}
 const test = anyTest as TestInterface<Context>
 
 test.beforeEach(async () => {
-  auth.as('admin')
+  Auth.as('admin')
   await User.deleteAllFuzzyBy('username', 'test')
   await Restaurant.deleteAllFuzzyBy('name', 'test')
 })
 
 test('Normal user cannot delete things', async (t) => {
-  await auth.register('tester', 'password')
-  await auth.login('tester', 'password')
-  auth.as('user')
+  await Auth.register('tester', 'password')
+  await Auth.login('tester', 'password')
+  Auth.as('user')
   try {
     await Restaurant.deleteAllBy('id', 'example')
   } catch (e) {
@@ -74,15 +74,15 @@ test('Normal user can see restaurants', async (t) => {
     },
   })
   await restaurant.insert()
-  await auth.register('tester', 'password')
-  await auth.login('tester', 'password')
-  auth.as('user')
+  await Auth.register('tester', 'password')
+  await Auth.login('tester', 'password')
+  Auth.as('user')
   await restaurant.findOne('name', 'test')
   t.is(restaurant.name, 'test')
 })
 
 test('Contributor can edit restaurants', async (t) => {
-  await auth.register('tester-contributor', 'password')
+  await Auth.register('tester-contributor', 'password')
   const user = new User()
   await user.findOne('username', 'tester-contributor')
   user.role = 'contributor'
@@ -95,8 +95,8 @@ test('Contributor can edit restaurants', async (t) => {
     },
   })
   await restaurant.insert()
-  await auth.login('tester-contributor', 'password')
-  auth.as('user')
+  await Auth.login('tester-contributor', 'password')
+  Auth.as('user')
   restaurant.rating = 5
   await restaurant.update()
   await restaurant.findOne('name', 'test')

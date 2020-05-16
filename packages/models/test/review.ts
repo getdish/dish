@@ -1,4 +1,4 @@
-import auth from '@dish/auth'
+import { Auth } from '@dish/graph'
 import anyTest, { TestInterface } from 'ava'
 
 import { flushTestData } from '../src/flushTestData'
@@ -24,7 +24,7 @@ test.beforeEach(async (t) => {
   const existing_tag = new Tag({ name: 'Test tag existing' })
   await existing_tag.insert()
   t.context.existing_tag = existing_tag
-  await auth.register('test', 'password')
+  await Auth.register('test', 'password')
   const user = new User()
   await user.findOne('username', 'test')
   t.context.user = user

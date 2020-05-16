@@ -1,4 +1,4 @@
-import { slugify } from '@dish/common-web'
+import { slugify } from '@dish/graph'
 import { isEqual } from '@o/fast-compare'
 import _ from 'lodash'
 import { Action, AsyncAction, Derive, derived } from 'overmind'

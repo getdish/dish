@@ -13,4 +13,4 @@ export HASURA_SECRET=$(\
 )
 cd -
 
-node generate.js
+ts-node generate

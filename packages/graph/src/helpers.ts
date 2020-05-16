@@ -1,4 +1,4 @@
-import DishAuth from '@dish/auth'
+import { Auth } from './auth'
 
 export const isNode = typeof window == 'undefined'
 export const isBrowserProd =
@@ -46,7 +46,7 @@ export async function graphqlGet(query: string = '', variables: Object = {}) {
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      ...DishAuth.getHeaders(),
+      ...Auth.getHeaders(),
     },
     body: JSON.stringify({
       query,

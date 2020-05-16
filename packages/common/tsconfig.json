@@ -8,5 +8,5 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [{ "path": "../common-web" }]
+  // "references": [{ "path": "../common-web" }]
 }

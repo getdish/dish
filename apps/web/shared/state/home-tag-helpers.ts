@@ -1,4 +1,4 @@
-import { slugify } from '@dish/common-web'
+import { slugify } from '@dish/graph'
 import { Action, AsyncAction } from 'overmind'
 
 import { LIVE_SEARCH_DOMAIN } from '../constants'

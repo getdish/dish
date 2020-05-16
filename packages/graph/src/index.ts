@@ -1,6 +1,9 @@
+import 'isomorphic-unfetch'
+
 import { createFetcher } from './createFetcher'
-import { client, mutation_root, query_root } from './graphql'
-import * as Hooks from './hooks'
+import { client } from './graphql'
+
+// import * as Hooks from './hooks'
 
 export function startLogging(verbose = true) {
   // dont import outside node, it accesses window
@@ -16,6 +19,8 @@ export * from './graphql/mutation'
 export * from 'gqless'
 export * from './types'
 export * from './types-extra'
+export * from './auth'
+export * from './helpers'
 
 // these hacky type defs here avoid huge slowdown in ts
 // otherwise could just return query_root thats it

@@ -10,9 +10,5 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [
-    { "path": "../auth" },
-    { "path": "../graph" },
-    { "path": "../common-web" }
-  ]
+  "references": [{ "path": "../graph" }]
 }

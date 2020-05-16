@@ -1,5 +1,3 @@
-import 'isomorphic-unfetch'
-
 const BROWSER_STORAGE_KEY = 'auth'
 const LOCAL_AUTH_SERVER = 'http://localhost:3000'
 const PROD_JWT_SERVER = 'https://auth.rio.dishapp.com'
@@ -23,7 +21,7 @@ const DOMAIN = (() => {
   }
 })()
 
-class Auth {
+class AuthModel {
   public jwt = ''
   public isLoggedIn = false
   public is_admin = false
@@ -86,7 +84,7 @@ class Auth {
       if (response.status == 401) {
         this.has_been_logged_out = true
         this.logout()
-        console.log('@dish/auth: Automatically logged user out')
+        console.log('auth: Automatically logged user out')
       } else {
         const error = {
           method: method,
@@ -146,6 +144,4 @@ class Auth {
   }
 }
 
-export const DishAuth = new Auth()
-
-export default DishAuth
+export const Auth = new AuthModel()

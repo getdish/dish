@@ -11,7 +11,6 @@
     ]
   },
   "scripts": {
-    "prebuild": "yarn generate",
     "generate": "./generate.sh",
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
@@ -22,11 +21,10 @@
   "dependencies": {
     "@gqless/react": "0.0.1-alpha.28",
     "patch-package": "^6.2.2",
-    "@dish/auth": "*",
-    "@dish/common-web": "*",
     "isomorphic-unfetch": "^3.0.0",
     "@gqless/logger": "0.0.1-alpha.27",
     "gqless-hooks": "^1.1.1",
+    "ava": "^3.8.2",
     "gqless": "^0.0.1-alpha.29",
     "@gqless/schema": "^0.0.1-alpha.31"
   },
@@ -34,6 +32,7 @@
     "react": "*"
   },
   "devDependencies": {
-    "@types/node": "*"
+    "@types/node": "*",
+    "ts-node": "^8.10.1"
   }
 }

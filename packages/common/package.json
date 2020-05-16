@@ -17,6 +17,6 @@
     "@types/node": "^13.7.0",
     "dotenv": "^8.2.0",
     "find-up": "^4.1.0",
-    "@dish/common-web": "*"
+    "@dish/graph": "*"
   }
 }
