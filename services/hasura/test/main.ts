@@ -51,9 +51,9 @@ test('Normal user cannot delete things', async (t) => {
 })
 
 test('Normal user cannot get scrapes', async (t) => {
-  await auth.register('tester', 'password')
-  await auth.login('tester', 'password')
-  auth.as('user')
+  await Auth.register('tester', 'password')
+  await Auth.login('tester', 'password')
+  Auth.as('user')
   try {
     const scrape = new Scrape()
     await scrape.findOne('id', 'example')

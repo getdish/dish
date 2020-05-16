@@ -16,11 +16,12 @@
     "build": "wsrun build",
     "build:ultra": "ultra -r --no-pretty build",
     "build:watch": "ultra -r watch",
+    "build:monitor": "ultra --monitor",
     "build:watch:broken": "yarn tsc -b -w",
-    "test": "ava",
+    "test": "ultra -r --no-pretty test",
     "clean": "bin/clean.sh",
     "format": "swift-format --recursive --in-place ./apps/ios/dish",
-    "prettier": "ultra -r --no-pretty prettier --write \"**/*.{ts,tsx}\" || true"
+    "prettier": "prettier --write \"**/*.{ts,tsx}\" || true"
   },
   "resolutions": {
     "resolve": "1.17.0",
