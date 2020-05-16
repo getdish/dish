@@ -324,35 +324,19 @@ export function LinkButton<
   const onPressCb = useMemo(() => asyncLinkAction(onPress), [onPress])
 
   const {
-    flex,
-    alignSelf,
-    maxWidth,
-    maxHeight,
-    width,
-    height,
-    position,
     top,
     left,
-    bottom,
     right,
+    bottom,
+    position,
+    alignSelf,
+    margin,
     ...restRestProps
   } = restProps
 
   return (
+    // NOTE: display inherit, this is to allow turning off pointer events...
     <VStack
-      {...{
-        flex,
-        alignSelf,
-        maxWidth,
-        maxHeight,
-        width,
-        height,
-        position,
-        top,
-        left,
-        bottom,
-        right,
-      }}
       // @ts-ignore
       display="inherit"
       pointerEvents={pointerEvents ?? null}
@@ -362,8 +346,20 @@ export function LinkButton<
       <TouchableOpacity
         activeOpacity={0.7}
         {...(!!onPress && { [fastClick ? 'onPressIn' : 'onPress']: onPressCb })}
+        style={{
+          top,
+          left,
+          right,
+          bottom,
+          position,
+          alignSelf,
+          margin,
+        }}
       >
-        <VStack flex={flex ?? 1} {...restRestProps}>
+        <VStack
+          flex={typeof props.flex === 'undefined' ? 1 : props.flex}
+          {...restRestProps}
+        >
           {contents}
         </VStack>
       </TouchableOpacity>

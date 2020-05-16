@@ -45,7 +45,7 @@ export const tagLenses: Tag[] = [
     icon: '🌃',
     rgb: [0.35, 0.2, 0.65],
     descriptions: {
-      dish: 'A nice place for 🍔',
+      dish: 'Grab some 🍔',
       cuisine: 'Nice 🍔 for a Date',
       plain: 'Best Date Night Spots',
     },

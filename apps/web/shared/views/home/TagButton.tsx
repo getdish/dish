@@ -195,12 +195,17 @@ export const TagButton = memo(
               })}
               width={16}
               height={16}
+              maxHeight={16}
               alignItems="center"
               justifyContent="center"
+              alignSelf="center"
+              backgroundColor="red"
             >
               <X
                 size={subtle ? 10 : 12}
-                style={{ color: subtle ? 'inherit' : '#000' }}
+                style={{
+                  color: subtle ? 'inherit' : '#000',
+                }}
               />
             </LinkButton>
           )}

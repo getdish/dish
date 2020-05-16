@@ -99,50 +99,7 @@ export default memo(function HomePageSearchResults({
           height={50}
           alignItems="flex-end"
         >
-          <HStack alignItems="center" spacing="sm">
-            <Circle size={26} marginVertical={-26 / 2}>
-              <Image source={avatar} style={{ width: 26, height: 26 }} />
-            </Circle>
-            {isEditingUserList && (
-              <>
-                <LinkButton
-                  pointerEvents="auto"
-                  {...flatButtonStyle}
-                  {...{
-                    name: 'search',
-                    params: {
-                      ...om.state.router.curPage.params,
-                      username: '',
-                    },
-                  }}
-                  onPress={() => {
-                    Toast.show('Saved')
-                  }}
-                >
-                  <Text>Done</Text>
-                </LinkButton>
-              </>
-            )}
-            {!isEditingUserList && (
-              <LinkButton
-                pointerEvents="auto"
-                onPress={() => {
-                  om.actions.home.forkCurrentList()
-                }}
-              >
-                <Box padding={5} paddingHorizontal={5} backgroundColor="#fff">
-                  <HStack alignItems="center" spacing={6}>
-                    <Edit2 size={12} color="#777" />
-                    <Text
-                      style={{ color: 'blue', fontSize: 16, fontWeight: '700' }}
-                    >
-                      My list
-                    </Text>
-                  </HStack>
-                </Box>
-              </LinkButton>
-            )}
-          </HStack>
+          <MyListButton isEditingUserList={isEditingUserList} />
         </ZStack>
 
         <Divider flex />
@@ -161,6 +118,64 @@ export default memo(function HomePageSearchResults({
     </VStack>
   )
 })
+
+const MyListButton = ({
+  isEditingUserList,
+}: {
+  isEditingUserList: boolean
+}) => {
+  const om = useOvermind()
+  return (
+    <HStack alignItems="center" spacing="sm">
+      <Circle size={26} marginVertical={-26 / 2}>
+        <Image source={avatar} style={{ width: 26, height: 26 }} />
+      </Circle>
+      {isEditingUserList && (
+        <>
+          <LinkButton
+            pointerEvents="auto"
+            {...flatButtonStyle}
+            {...{
+              name: 'search',
+              params: {
+                ...om.state.router.curPage.params,
+                username: '',
+              },
+            }}
+            onPress={() => {
+              Toast.show('Saved')
+            }}
+          >
+            <Text>Done</Text>
+          </LinkButton>
+        </>
+      )}
+      {!isEditingUserList && (
+        <LinkButton
+          pointerEvents="auto"
+          onPress={() => {
+            om.actions.home.forkCurrentList()
+          }}
+        >
+          <Box padding={5} paddingHorizontal={5} backgroundColor="#fff">
+            <HStack alignItems="center" spacing={6}>
+              <Edit2 size={12} color="#777" />
+              <Text
+                style={{
+                  color: 'inherit',
+                  fontSize: 16,
+                  fontWeight: '700',
+                }}
+              >
+                My list
+              </Text>
+            </HStack>
+          </Box>
+        </LinkButton>
+      )}
+    </HStack>
+  )
+}
 
 const HomeSearchResultsViewContent = memo(
   ({ state }: { state: HomeStateItemSearch }) => {
