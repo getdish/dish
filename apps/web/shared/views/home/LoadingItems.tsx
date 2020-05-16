@@ -26,9 +26,8 @@ export const LoadingItem = () => {
         {[1, 2, 3, 4].map((index) => (
           <HStack
             key={index}
-            width={`${
-              seed.current * (15 - (2 - index > -1 ? index : -index) * 4)
-            }%`}
+            width={`${seed.current *
+              (15 - (2 - index > -1 ? index : -index) * 4)}%`}
             height={14}
             maxWidth="100%"
             backgroundColor="#eee"

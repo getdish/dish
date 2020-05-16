@@ -1,6 +1,7 @@
-import DishAuth from '@dish/auth'
-import { getGraphEndpoint, isBrowserProd } from '@dish/common-web'
 import { QueryResponse } from 'gqless'
+
+import { Auth } from './auth'
+import { getGraphEndpoint, isBrowserProd } from './helpers'
 
 type QueryFetcherWithOptions = (
   query: string,
@@ -23,7 +24,7 @@ export const createFetcher = (type: 'query' | 'mutation') => {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        ...DishAuth.getHeaders(),
+        ...Auth.getHeaders(),
       },
       body: JSON.stringify({
         query: type !== 'query' ? type + query : query,

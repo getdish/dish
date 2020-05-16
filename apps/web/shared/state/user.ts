@@ -1,5 +1,4 @@
-import DishAuth from '@dish/auth'
-import { Review, User, mutation } from '@dish/graph'
+import { Auth, Review, User, mutation } from '@dish/graph'
 import { Action, AsyncAction } from 'overmind'
 
 import { Toast } from '../views/Toast'
@@ -38,7 +37,7 @@ const register: AsyncAction<
 > = async (om, { username, password }) => {
   let result = false
   om.state.user.loading = true
-  const [status, data] = await DishAuth.register(username, password)
+  const [status, data] = await Auth.register(username, password)
   switch (status) {
     case 201:
       om.state.user.messages = ['Registered. You can now login.']
@@ -59,11 +58,11 @@ const register: AsyncAction<
 }
 
 const checkForExistingLogin: Action = (om) => {
-  if (DishAuth.has_been_logged_out) {
+  if (Auth.has_been_logged_out) {
     Toast.show('Session expired: logged out')
   }
-  if (DishAuth.isLoggedIn) {
-    postLogin(om, DishAuth.user)
+  if (Auth.isLoggedIn) {
+    postLogin(om, Auth.user)
   }
 }
 
@@ -72,7 +71,7 @@ const login: AsyncAction<{ username: string; password: string }> = async (
   { username, password }
 ) => {
   om.state.user.loading = true
-  const [status, data] = await DishAuth.login(username, password)
+  const [status, data] = await Auth.login(username, password)
   if (status >= 400) {
     om.state.user.isLoggedIn = false
     if (status == 400 || status == 401) {
@@ -93,7 +92,7 @@ const postLogin: Action<Partial<User>> = (om, user: Partial<User>) => {
 }
 
 const logout: AsyncAction = async (om) => {
-  await DishAuth.logout()
+  await Auth.logout()
   om.state.user.user = null
   om.state.user.isLoggedIn = false
   Toast.show('Logged out')

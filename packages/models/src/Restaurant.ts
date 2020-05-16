@@ -1,9 +1,7 @@
-import auth from '@dish/auth'
-import { Point, RatingFactors, Sources } from '@dish/graph'
+import { Auth, Point, RatingFactors, Sources } from '@dish/graph'
 import { EnumType } from 'json-to-graphql-query'
 import _ from 'lodash'
 
-import { SEARCH_DOMAIN } from './constants'
 import { Dish } from './Dish'
 import { ModelBase } from './ModelBase'
 import { RESTAURANT_WEIGHTS } from './RESTAURANT_WEIGHTS'
@@ -82,7 +80,7 @@ export class Restaurant extends ModelBase<Restaurant> {
   }
 
   static write_only_fields() {
-    if (auth.is_admin) {
+    if (Auth.is_admin) {
       return []
     } else {
       return ['tag_names']

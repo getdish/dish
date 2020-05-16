@@ -7,6 +7,5 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src/**/*"],
-  "references": [{ "path": "../auth" }, { "path": "../common-web" }]
+  "include": ["src/**/*"]
 }

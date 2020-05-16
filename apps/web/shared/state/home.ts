@@ -1,5 +1,10 @@
-import { slugify } from '@dish/common-web'
-import { Restaurant, RestaurantSearchArgs, query, resolved } from '@dish/graph'
+import {
+  Restaurant,
+  RestaurantSearchArgs,
+  query,
+  resolved,
+  slugify,
+} from '@dish/graph'
 import { getHomeDishes, search } from '@dish/models'
 import { isEqual } from '@o/fast-compare'
 import _, { findLast, last } from 'lodash'

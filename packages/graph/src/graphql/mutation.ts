@@ -1,4 +1,3 @@
-import { getGraphEndpoint } from '@dish/common-web'
 import { Client } from 'gqless'
 
 import { createFetcher } from '../createFetcher'

@@ -37,7 +37,6 @@
     "build:web:webpack-tsickle": "node --max-old-space-size=12000 tscc.js"
   },
   "dependencies": {
-    "@dish/common-web": "*",
     "@dish/graph": "*",
     "@dish/models": "*",
     "@o/fast-compare": "2.7.6",

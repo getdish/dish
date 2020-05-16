@@ -18,9 +18,7 @@
     "test:watch": "DISH_ENV=test ava test/* --watch"
   },
   "dependencies": {
-    "@dish/auth": "*",
     "@dish/graph": "*",
-    "@dish/common-web": "*",
     "graphql": "^15.0.0",
     "isomorphic-unfetch": "^3.0.0",
     "json-to-graphql-query": "^2.0.0",

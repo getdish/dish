@@ -57,10 +57,9 @@ export const ToastRoot = memo(function ToastRoot() {
             style={{
               color: 'white',
               fontSize: 16,
-              ...textStyle,
             }}
           >
-            {text}
+            {stateRef.current.text}
           </Text>
         </VStack>
       )}
