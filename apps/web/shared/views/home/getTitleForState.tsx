@@ -5,7 +5,14 @@ import { HomeStateItem } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { Om, OmState } from '../../state/home-types'
 import { NavigableTag, getTagId } from '../../state/Tag'
+import { omStatic } from '../../state/useOvermind'
 import { TagButton, getTagButtonProps } from './TagButton'
+
+const getTitleForQuery = (query: string) => {
+  // TODO we could keep a tag object..
+  // omStatic.state.home.allTags[]
+  return query
+}
 
 export function getTitleForState(omState: OmState, state: HomeStateItem) {
   const { currentLocationName = 'San Francisco' } = state
@@ -38,7 +45,7 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
   }
 
   const titleSpace = titleTags.length ? ' ' : ''
-  const searchName = state.searchQuery ?? ''
+  const searchName = getTitleForQuery(state.searchQuery ?? '')
   let titleTagsString = titleTags
     .map((x) => `${x.name ?? ''}`)
     .filter(Boolean)
@@ -59,8 +66,8 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
   // if (dishTagName) {
   //   subTitleParts.push(dishTagName)
   // }
-  if (state.searchQuery) {
-    subTitleParts.push(`"${state.searchQuery}"`)
+  if (searchName) {
+    subTitleParts.push(`${searchName[0].toUpperCase()}${searchName.slice(1)}`)
   }
   subTitleParts.push(`in ${currentLocationName}`)
 
@@ -72,9 +79,7 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
     </>
   )
 
-  const title = `${userPrefix} ${titleSubject} ${searchName} ${subTitleParts.join(
-    ' '
-  )}`
+  const title = `${userPrefix} ${titleSubject} ${subTitleParts.join(' ')}`
 
   const pageTitleElements = (
     <>
@@ -98,7 +103,6 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
         return x
       })}
       {titleSpace}
-      {searchName}
     </>
   )
 

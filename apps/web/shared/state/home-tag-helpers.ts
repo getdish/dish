@@ -26,6 +26,7 @@ type HomeStateNav = {
   tags: NavigableTag[]
   state?: HomeStateItem
   disabledIfActive?: boolean
+  replace?: boolean
 }
 
 export const navigateToTag: Action<HomeStateNav> = (om, nav) => {
@@ -68,7 +69,7 @@ type LinkButtonProps = NavigateItem & {
 // for easy use with Link / LinkButton
 export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps> = (
   om,
-  { state = om.state.home.currentState, tags, disabledIfActive }
+  { state = om.state.home.currentState, tags, ...rest }
 ) => {
   // remove undefined
   tags = tags.filter(Boolean)
@@ -78,7 +79,7 @@ export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps> = (
   const nextState = getNextStateWithTags(om, {
     tags,
     state,
-    disabledIfActive,
+    ...rest,
   })
   const navigateItem = getNavigateItemForState(om.state, nextState)
   return {
@@ -89,7 +90,10 @@ export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps> = (
       const activeTags = om.state.home.lastActiveTags
       for (const tag of tags) {
         const tagId = getTagId(tag)
-        if (disabledIfActive && activeTags.some((x) => getTagId(x) === tagId)) {
+        if (
+          rest.disabledIfActive &&
+          activeTags.some((x) => getTagId(x) === tagId)
+        ) {
           continue
         }
         om.actions.home.toggleTagOnHomeState(tag)
@@ -100,7 +104,7 @@ export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps> = (
 
 const getNextStateWithTags: Action<HomeStateNav, HomeStateItem | null> = (
   om,
-  { state, tags, disabledIfActive = false }
+  { state, tags, disabledIfActive = false, replace = false }
 ) => {
   if (!isHomeState(state) && !isSearchState(state)) {
     return null
@@ -109,9 +113,11 @@ const getNextStateWithTags: Action<HomeStateNav, HomeStateItem | null> = (
   let activeTagIds: HomeActiveTagIds = {}
 
   // clone it to avoid confusing overmind
-  for (const key in state.activeTagIds) {
-    if (state.activeTagIds[key]) {
-      activeTagIds[key] = true
+  if (!replace) {
+    for (const key in state.activeTagIds) {
+      if (state.activeTagIds[key]) {
+        activeTagIds[key] = true
+      }
     }
   }
 

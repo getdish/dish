@@ -36,6 +36,7 @@ export const RestaurantTagButton = memo(
                     size="lg"
                     rank={10}
                     votable
+                    replace
                     {...getTagButtonProps(t.tag)}
                   />
                 )

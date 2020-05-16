@@ -65,6 +65,7 @@ export const useGetTagElements = (props: TagRowProps) => {
   return tags.map((tag, index) => {
     return (
       <TagButton
+        replace
         size="sm"
         rank={index}
         key={`${index}${tag.tag.name}`}

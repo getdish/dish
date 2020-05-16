@@ -1,52 +1,21 @@
 import React, { memo, useEffect } from 'react'
 import { Plus } from 'react-feather'
-import { ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { ScrollView, Text } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
-import { LinearGradient } from '../ui/LinearGradient'
 import { LinkButton, LinkButtonProps } from '../ui/Link'
 import { HStack, ZStack } from '../ui/Stacks'
 import { SmallCircleButton } from './CloseButton'
-import { homePageBorderRadius } from './HomePage'
 import { setAvoidNextAutocompleteShowOnFocus } from './HomeSearchBar'
 
-const useShowAutocomplete = () => {
+export const useShowAutocomplete = () => {
   const om = useOvermind()
   const { showAutocomplete } = om.state.home
   const showLocation = showAutocomplete == 'location'
   const showSearch = showAutocomplete == 'search'
   return showSearch || showLocation
 }
-
-export const HomeAutocompleteBackground = memo(() => {
-  const om = useOvermind()
-  const show = useShowAutocomplete()
-  return (
-    <ZStack
-      className="ease-in-out-fast"
-      opacity={show ? 1 : 0}
-      disabled={!show}
-      fullscreen
-      top={-homePageBorderRadius}
-      left={-homePageBorderRadius}
-      right={-homePageBorderRadius}
-      zIndex={11}
-    >
-      <TouchableOpacity
-        style={[StyleSheet.absoluteFill]}
-        onPress={() => {
-          om.actions.home.setShowAutocomplete(false)
-        }}
-      >
-        <LinearGradient
-          colors={['rgba(0,0,0,0.1)', 'transparent']}
-          style={[StyleSheet.absoluteFill, { height: 160 }]}
-        />
-      </TouchableOpacity>
-    </ZStack>
-  )
-})
 
 export default memo(function HomeAutoComplete() {
   const om = useOvermind()
