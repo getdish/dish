@@ -1,4 +1,4 @@
-import { User } from '@dish/models'
+import { mutation, resolved } from '@dish/graph'
 import anyTest, { TestInterface } from 'ava'
 
 import auth from '../src/index'
@@ -8,7 +8,15 @@ interface Context {}
 const test = anyTest as TestInterface<Context>
 
 test.beforeEach(async () => {
-  await User.deleteAllFuzzyBy('username', 'tester')
+  await resolved(() => {
+    mutation.delete_user({
+      where: {
+        username: {
+          _ilike: 'tester',
+        },
+      },
+    })
+  })
 })
 
 test('Creating a user', async (t) => {
