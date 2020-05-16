@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
 set -e
 
-node_modules/.bin/prettier --check "**/*.ts"
-node_modules/.bin/prettier --check "**/*.tsx"
+node_modules/.bin/prettier --check "**/*.{ts,tsx}"

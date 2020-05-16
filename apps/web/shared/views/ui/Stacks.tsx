@@ -71,10 +71,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
         if (!innerRef.current) return
         const node = getNode(innerRef.current)
         if (!node) return
-        const names = cn
-          .trim()
-          .split(' ')
-          .filter(Boolean)
+        const names = cn.trim().split(' ').filter(Boolean)
 
         function addClassNames() {
           const cl = new Set(node.classList)
