@@ -1,3 +1,4 @@
+import { graphql, query } from '@dish/graph'
 // @ts-ignore
 import React, { Suspense, memo, useState } from 'react'
 import { Edit2 } from 'react-feather'
@@ -5,6 +6,7 @@ import { Image, ScrollView, Text, View } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemSearch, isEditingUserPage } from '../../state/home'
+import { getActiveTags } from '../../state/home-tag-helpers'
 import { useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../NotFoundPage'
 import { Toast } from '../Toast'
@@ -19,6 +21,7 @@ import { Spacer } from '../ui/Spacer'
 import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { useWaterfall } from '../ui/useWaterfall'
 import { flatButtonStyle } from './baseButtonStyle'
+import { DishView } from './DishView'
 import { getTitleForState } from './getTitleForState'
 import HomeLenseBar from './HomeLenseBar'
 import { LoadingItems } from './LoadingItems'
@@ -197,7 +200,13 @@ const HomeSearchResultsViewContent = memo(
 
     const resultsIds = state.results?.results?.restaurantIds
     const resultsAll = resultsIds.map((id) => allRestaurants[id])
-    const results = resultsAll
+
+    let results = resultsAll
+
+    // load a few at a time, only 5 to start
+    if (results[0].name === null) {
+      results = results.slice(0, 4)
+    }
 
     if (!results.length) {
       return (
@@ -215,6 +224,7 @@ const HomeSearchResultsViewContent = memo(
 
     return (
       <ScrollView>
+        <HomePageSearchResultsDishes state={state} />
         <VStack paddingTop={topPad} paddingBottom={20}>
           {/* <SuspenseList revealOrder="forwards"> */}
           {results.map((item, index) => (
@@ -245,6 +255,36 @@ const HomeSearchResultsViewContent = memo(
     //   />
     // )
   }
+)
+
+const HomePageSearchResultsDishes = memo(
+  graphql(({ state }: { state: HomeStateItemSearch }) => {
+    const om = useOvermind()
+    const activeTags = getActiveTags(om.state.home, state)
+
+    if (activeTags.some((tag) => tag.type !== 'country')) {
+      return null
+    }
+
+    // TODO use a real
+    const dishes = query.dish({
+      limit: 6,
+    })
+
+    console.log('got dishes', dishes)
+
+    return dishes.map((dish) => (
+      <DishView
+        key={dish.name}
+        dish={{
+          name: dish.name,
+          image: dish.image,
+          rating: 5,
+          count: 1,
+        }}
+      />
+    ))
+  })
 )
 
 function List(props: {

@@ -1,13 +1,30 @@
 import _ from 'lodash'
 import React, { memo, useEffect, useMemo, useState } from 'react'
 
+import { useOnMount } from '../../hooks/useOnMount'
 import { useOvermind } from '../../state/useOvermind'
 import { Map, useMap } from '../map'
 import { ZStack } from '../ui/Stacks'
-import { centerMapToRegion } from './HomeMap'
+import { centerMapToRegion, onMapLoadedCallback } from './HomeMap'
 import { getRankingColor, getRestaurantRating } from './RestaurantRatingView'
 
 export const HomeMapPIP = memo(() => {
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  useOnMount(() => {
+    onMapLoadedCallback(() => {
+      setIsLoaded(true)
+    })
+  })
+
+  if (!isLoaded) {
+    return null
+  }
+
+  return <HomeMapPIPContent />
+})
+
+function HomeMapPIPContent() {
   const om = useOvermind()
   const state = om.state.home.currentState
   const { center, span } = state
@@ -24,14 +41,13 @@ export const HomeMapPIP = memo(() => {
     state.type === 'restaurant'
       ? om.state.home.allRestaurants[state.restaurantId]
       : null
+
+  const coordinates = restaurant?.location?.coordinates
   const coordinate = useMemo(
     () =>
-      restaurant &&
-      new window.mapkit.Coordinate(
-        restaurant.location.coordinates[1],
-        restaurant.location.coordinates[0]
-      ),
-    [restaurant]
+      coordinates &&
+      new window.mapkit.Coordinate(coordinates[1], coordinates[0]),
+    coordinates
   )
   const annotation = useMemo(() => {
     if (!coordinate || !restaurant) return null
@@ -93,4 +109,4 @@ export const HomeMapPIP = memo(() => {
       </ZStack>
     </ZStack>
   )
-})
+}
