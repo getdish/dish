@@ -8,7 +8,13 @@ import React, {
   useMemo,
   useRef,
 } from 'react'
-import { Platform, Text, TextStyle, TouchableOpacity } from 'react-native'
+import {
+  Platform,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native'
 
 import { currentStates } from '../../state/home'
 import { getNavigateToTags } from '../../state/home-tag-helpers'
@@ -148,8 +154,9 @@ export type LinkButtonProps<
   Name extends RouteName = any,
   Params = any
 > = StackProps &
-  LinkSharedProps &
-  (
+  LinkSharedProps & {
+    containerStyle?: ViewStyle
+  } & (
     | LinkButtonNamedProps<Name, Params>
     | {
         onPress?: any
@@ -342,6 +349,7 @@ export function LinkButton<
       pointerEvents={pointerEvents ?? null}
       // only handle click events on non-a links (we handle them in Link separately)
       ref={'name' in props ? null : containerRef}
+      {...props.containerStyle}
     >
       <TouchableOpacity
         activeOpacity={0.7}

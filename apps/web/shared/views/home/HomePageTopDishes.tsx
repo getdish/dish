@@ -159,14 +159,7 @@ const CountryTopDishesAndRestaurants = memo(
           <Spacer flex />
         </HStack>
 
-        <ZStack
-          fullscreen
-          paddingTop={padding + 20}
-          pointerEvents="none"
-          right="auto"
-          width="25%"
-          zIndex={100}
-        >
+        <HomeTopDishesSide>
           <VStack flex={1} padding={10} spacing={10} alignItems="flex-start">
             {_.uniqBy(country.top_restaurants, (x) => x.name).map(
               (restaurant, index) => {
@@ -177,7 +170,11 @@ const CountryTopDishesAndRestaurants = memo(
                     key={restaurant.name}
                     restaurant={restaurant as any}
                     onHoverIn={onHoverRestaurant}
-                    maxWidth="100%"
+                    containerStyle={{
+                      display: 'flex',
+                      maxWidth: '100%',
+                      overflow: 'hidden',
+                    }}
                     active={
                       // (!hoveredRestaurant && index === 0) ||
                       hoveredRestaurant &&
@@ -188,7 +185,7 @@ const CountryTopDishesAndRestaurants = memo(
               }
             )}
           </VStack>
-        </ZStack>
+        </HomeTopDishesSide>
 
         {/* left shadow */}
         <LinearGradient
@@ -225,14 +222,31 @@ const CountryTopDishesAndRestaurants = memo(
         />
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <HomeTopDishPadDrawer>{dishElements}</HomeTopDishPadDrawer>
+          <HomeTopDishMain>{dishElements}</HomeTopDishMain>
         </ScrollView>
       </VStack>
     )
   }
 )
 
-const HomeTopDishPadDrawer = memo((props) => {
+// these two do optimized updates
+
+const HomeTopDishesSide = memo((props) => {
+  const drawerWidth = useHomeDrawerWidth()
+  return (
+    <ZStack
+      fullscreen
+      paddingTop={padding + 20}
+      pointerEvents="none"
+      right="auto"
+      maxWidth={drawerWidth * 0.25}
+      zIndex={100}
+      {...props}
+    />
+  )
+})
+
+const HomeTopDishMain = memo((props) => {
   const drawerWidth = useHomeDrawerWidth()
   return (
     <HStack

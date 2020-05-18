@@ -1,3 +1,8 @@
+- [ ] crawler for "header" images for dishes (Pho) (Instagram?)
+- [ ] start crawler to find restaurants instagrams
+
+  - [ ] crawler for instagrams themselves
+
 - map click item scroll to item / view detail
 - current location / permissions access (only if they click location?)
 - RestaurantListItem click address, menu, phone
