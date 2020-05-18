@@ -171,6 +171,27 @@ export class Tag extends ModelBase<Tag> {
     return response.data.tag.map((data: Partial<Tag>) => new Tag(data))
   }
 
+  static async findCountries(tags_strings: string[]) {
+    const query = {
+      query: {
+        tag: {
+          __args: {
+            where: {
+              _or: [
+                { name: { _in: tags_strings } },
+                { alternates: { _has_keys_any: tags_strings } },
+              ],
+              type: { _eq: 'country' },
+            },
+          },
+          ...Tag.fieldsAsObject(),
+        },
+      },
+    }
+    const response = await ModelBase.hasura(query)
+    return response.data.tag.map((data: Partial<Tag>) => new Tag(data))
+  }
+
   // TODO: Refactor into ModelBase. Will still need function stub here to pass the
   // model type.
   static async upsertMany(tags: Partial<Tag>[]) {

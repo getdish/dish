@@ -1,3 +1,5 @@
+import { notEqual } from 'assert'
+
 import {
   Restaurant,
   Scrape,
@@ -37,7 +39,11 @@ const yelp: Partial<Scrape> = {
   data: {
     data_from_map_search: {
       name: 'Test Name Yelp',
-      categories: [{ title: 'Mexican' }, { title: 'Pizza' }],
+      categories: [
+        { title: 'Test Mexican' },
+        { title: 'Test Pizza' },
+        { title: 'Test Spain' },
+      ],
       rating: 4.0,
     },
     data_from_html_embed: {
@@ -188,9 +194,9 @@ test('Merging', async (t) => {
   await updated.findOne('id', t.context.restaurant.id)
   t.is(updated.name, 'Test Name Yelp')
   t.is(updated.address, '123 Street, Big City')
-  t.is(updated.tags.length, 2)
-  t.is(updated.tags.map((i) => i.tag.name).includes('Mexican'), true)
-  t.is(updated.tags.map((i) => i.tag.name).includes('Pizza'), true)
+  t.is(updated.tags.length, 3)
+  t.is(updated.tags.map((i) => i.tag.name).includes('Test Mexican'), true)
+  t.is(updated.tags.map((i) => i.tag.name).includes('Test Pizza'), true)
   t.is(updated.dishes[0].name, 'Nice Dish')
   t.is(updated.photos?.[0], 'https://yelp.com/image.jpg')
   t.is(updated.photos?.[1], 'https://yelp.com/image2.jpg')
@@ -369,4 +375,33 @@ test('Find photos of dishes', async (t) => {
   t.deepEqual(tag1.photos, ['https://yelp.com/image.jpg'])
   t.is(tag2.tag.name, existing_tag2.name)
   t.deepEqual(tag2.photos, ['https://yelp.com/image2.jpg'])
+})
+
+test('Identifying country tags', async (t) => {
+  const existing_tag1 = new Tag({
+    name: 'Test Mexican',
+    type: 'country',
+  })
+  await existing_tag1.insert()
+  const existing_tag2 = new Tag({
+    name: 'Test Spanish',
+    type: 'country',
+    alternates: ['Test Spain', 'Test Spainland'],
+  })
+  await existing_tag2.insert()
+  const dish = new Self()
+  await dish.mergeAll(t.context.restaurant.id)
+  const updated = new Restaurant()
+  await updated.findOne('id', t.context.restaurant.id)
+  t.is(updated.tags.length, 3)
+  const tag1 =
+    updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as UnifiedTag)
+  const tag2 =
+    updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as UnifiedTag)
+  const tag3 =
+    updated.tags.find((i) => i.tag.name == 'Test Pizza') || ({} as UnifiedTag)
+  t.is(tag1.tag.name, 'Test Mexican')
+  t.is(tag2.tag.name, 'Test Spanish')
+  t.is(tag2.tag.type, 'country')
+  t.assert(tag3.tag.type != 'country')
 })

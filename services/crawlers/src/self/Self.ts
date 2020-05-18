@@ -383,8 +383,32 @@ export class Self extends WorkerJob {
       .getData('overview.detailCard.tagTexts.cuisines.tags', [])
       .map((c) => c.tagValue)
     const tags = _.uniq([...yelps, ...tripadvisors])
-    await this.restaurant.upsertOrphanTags(tags)
+    const orphan_tags = await this.upsertCountryTags(tags)
+    await this.restaurant.upsertOrphanTags(orphan_tags)
     await this.updateTagRankings()
+  }
+
+  async upsertCountryTags(tags: string[]) {
+    const country_tags = await Tag.findCountries(tags)
+    await this.restaurant.upsertManyTags(
+      country_tags.map((tag: Tag) => {
+        return {
+          tag_id: tag.id,
+        }
+      })
+    )
+    return this._extractOrphanTags(tags, country_tags)
+  }
+
+  _extractOrphanTags(tags: string[], country_tags: Tag[]) {
+    return tags.filter((tag) => {
+      const is_not_a_country_name = !country_tags.find((ct) => {
+        const is_common_name_match = ct.name == tag
+        const is_alternate_name_match = (ct.alternates || ['']).includes(tag)
+        return is_common_name_match || is_alternate_name_match
+      })
+      return is_not_a_country_name
+    })
   }
 
   async upsertUberDishes() {
