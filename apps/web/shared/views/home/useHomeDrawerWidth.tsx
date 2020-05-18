@@ -8,7 +8,7 @@ export function useHomeDrawerWidth(): number {
     scaleFactor = 0.63
   }
   if (width < 1350) {
-    scaleFactor = 0.68
+    scaleFactor = 0.72
   }
   if (width < 1150) {
     scaleFactor = 0.74

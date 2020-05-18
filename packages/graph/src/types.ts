@@ -1,7 +1,7 @@
-// import { dish, restaurant, review, tag, user } from './graphql'
+import { dish, restaurant, review, tag, user } from './graphql'
 
-export type Restaurant = any //restaurant
-export type Tag = any //tag
-export type User = any //user
-export type Review = any //review
-export type Dish = any //dish
+export type Restaurant = restaurant
+export type Tag = tag
+export type User = user
+export type Review = review
+export type Dish = dish

@@ -69,7 +69,7 @@ export default memo(function HomeAutoComplete() {
       disabled={!isShowing}
     >
       <HStack
-        backgroundColor="rgba(0,0,0,0.6)"
+        backgroundColor="rgba(15,15,15,0.85)"
         className="blur"
         // borderBottomRightRadius={12}
         // borderBottomLeftRadius={12}

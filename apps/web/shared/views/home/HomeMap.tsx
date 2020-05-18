@@ -13,6 +13,11 @@ import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { getRankingColor, getRestaurantRating } from './RestaurantRatingView'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
+const loadedCallbacks = new Set<Function>()
+export const onMapLoadedCallback = (cb: Function) => {
+  loadedCallbacks.add(cb)
+}
+
 async function startMapKit() {
   return await new Promise((res) => {
     function setup() {
@@ -30,6 +35,7 @@ async function startMapKit() {
           done(token)
         },
       })
+      loadedCallbacks.forEach((cb) => cb())
       res()
     }
     if (document.readyState == 'complete') {

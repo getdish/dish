@@ -9,7 +9,6 @@ import { HStack, StackProps, VStack } from '../ui/Stacks'
 import { SuperScriptText } from './SuperScriptText'
 
 export const getTagButtonProps = (tag: Tag): TagButtonProps => {
-  console.log('tag', tag)
   return {
     name: tag.name,
     type: tag.type as TagType,
