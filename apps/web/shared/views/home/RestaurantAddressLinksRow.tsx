@@ -112,6 +112,9 @@ export function getAddressText(
   address: string,
   format: AddressSize
 ): string {
+  if (typeof address !== 'string') {
+    return ''
+  }
   if (format === 'xs') {
     return address.split(', ')[0]
   }

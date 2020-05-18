@@ -97,9 +97,9 @@ export default memo(function HomePageTopDishes({
   )
 })
 
-const dishHeight = 155
+const dishHeight = 160
 const padding = 30
-const spacing = 15
+const spacing = 20
 
 const CountryTopDishesAndRestaurants = memo(
   ({ country }: { country: TopCuisine }) => {
@@ -192,6 +192,7 @@ const CountryTopDishesAndRestaurants = memo(
           colors={[
             'rgba(255,255,255,1)',
             'rgba(255,255,255,1)',
+            'rgba(255,255,255,1)',
             'rgba(255,255,255,0)',
           ]}
           startPoint={[0, 0]}
@@ -201,14 +202,14 @@ const CountryTopDishesAndRestaurants = memo(
             top: 0,
             left: 0,
             bottom: 0,
-            width: '25%',
+            width: '32%',
             zIndex: 1,
           }}
         />
 
         {/* right shadow */}
-        <LinearGradient
-          colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0.7)']}
+        {/* <LinearGradient
+          colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
           startPoint={[0, 0]}
           endPoint={[1, 0]}
           style={{
@@ -219,7 +220,7 @@ const CountryTopDishesAndRestaurants = memo(
             width: 60,
             zIndex: 100000,
           }}
-        />
+        /> */}
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <HomeTopDishMain>{dishElements}</HomeTopDishMain>
