@@ -2,7 +2,7 @@ import { Restaurant } from '@dish/graph'
 import React, { memo } from 'react'
 import { Text } from 'react-native'
 
-import { LinkButton } from '../ui/Link'
+import { LinkButton, LinkButtonProps } from '../ui/Link'
 import { StackProps } from '../ui/Stacks'
 import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
 import RestaurantRatingView from './RestaurantRatingView'
@@ -21,7 +21,7 @@ export const RestaurantButton = memo(
     rank?: number
     restaurant: Partial<Restaurant>
     subtle?: boolean
-  } & StackProps) => {
+  } & LinkButtonProps<any, any>) => {
     return (
       <LinkButton
         key={restaurant.name}
