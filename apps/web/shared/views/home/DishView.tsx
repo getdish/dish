@@ -90,15 +90,21 @@ export const DishView = memo(
           overflow="hidden"
           padding={15}
         >
-          <Box paddingVertical={2} maxWidth="100%" overflow="hidden">
+          <Box
+            backgroundColor="#000"
+            paddingVertical={2}
+            maxWidth="100%"
+            overflow="hidden"
+          >
             <Text
               numberOfLines={1}
               style={{
                 flex: 1,
                 overflow: 'hidden',
                 fontSize: 15,
-                fontWeight: '600',
+                fontWeight: '500',
                 lineHeight: 22,
+                color: '#fff',
                 // opacity: 0.75,
                 paddingVertical: 2,
                 textAlign: 'center',
