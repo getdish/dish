@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import Hoverable from './Hoverable'
-import { Popover } from './Popover'
+import { Popover } from './PopoverContainer'
 import { PopoverProps } from './PopoverProps'
 
 export const HoverablePopover = ({

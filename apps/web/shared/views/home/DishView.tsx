@@ -7,7 +7,6 @@ import { Box } from '../ui/Box'
 import { LinearGradient } from '../ui/LinearGradient'
 import { LinkButton } from '../ui/LinkButton'
 import { HStack, StackProps, VStack, ZStack } from '../ui/Stacks'
-import { bg } from './colors'
 import { DishRatingView } from './DishRatingView'
 
 export const DishView = memo(
@@ -27,7 +26,7 @@ export const DishView = memo(
         {...rest}
       >
         <ZStack pointerEvents="none" fullscreen zIndex={10}>
-          {dish.rating && (
+          {!!dish.rating && (
             <DishRatingView
               size={size > 170 ? 'md' : 'sm'}
               dish={dish}
@@ -111,9 +110,6 @@ export const DishView = memo(
               }}
             >
               <Text>{dish.name}</Text>
-              {/* <Text style={{ fontSize: 12 }}>
-              {'\n'} {dish.count} restaurants
-            </Text> */}
             </Text>
           </Box>
         </HStack>
