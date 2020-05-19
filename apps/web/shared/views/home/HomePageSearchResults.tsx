@@ -1,11 +1,9 @@
 import { graphql, query } from '@dish/graph'
-// @ts-ignore
 import React, { Suspense, memo, useState } from 'react'
 import { Edit2 } from 'react-feather'
 import { Image, ScrollView, Text, View } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
-import { useDebounce } from '../../hooks/useDebounce'
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { HomeStateItemSearch, isEditingUserPage } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
@@ -193,18 +191,21 @@ const HomeSearchResultsViewContent = memo(
     const [showAll, setShowAll] = useState(false)
     let results = showAll ? resultsAll : resultsAll.slice(0, 4)
 
+    console.log('HomeSearchResultsViewContent.render')
+
     // load a few at a time, less to start
     const isLoading = results[0]?.name == null
 
-    useDebounceEffect(
-      () => {
-        if (!isLoading) {
-          setShowAll(true)
-        }
-      },
-      500,
-      [isLoading]
-    )
+    // disable for a moment to test initail render
+    // useDebounceEffect(
+    //   () => {
+    //     if (!isLoading) {
+    //       setShowAll(true)
+    //     }
+    //   },
+    //   500,
+    //   [isLoading]
+    // )
 
     if (!state.results?.results || state.results.status === 'loading') {
       return (

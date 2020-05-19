@@ -26,7 +26,7 @@ type TopDishesProps = {
   stateIndex: number
 }
 
-export default memo(function HomePageTopDishes(props: TopDishesProps) {
+export default memo(function HomePageTopDishesContainer(props: TopDishesProps) {
   const om = useOvermind()
   const isOnHome = om.state.home.currentStateType === 'home'
   const [isLoaded, setIsLoaded] = useState(false)
@@ -38,13 +38,13 @@ export default memo(function HomePageTopDishes(props: TopDishesProps) {
   }, [isOnHome])
 
   if (isOnHome || isLoaded) {
-    return <HomePageTopDishesContent {...props} />
+    return <HomePageTopDishes {...props} />
   }
 
   return null
 })
 
-const HomePageTopDishesContent = ({ stateIndex }: TopDishesProps) => {
+const HomePageTopDishes = ({ stateIndex }: TopDishesProps) => {
   const om = useOvermind()
   const state = om.state.home.states[stateIndex] as HomeStateItemHome
   if (!state) return <NotFoundPage />
@@ -141,7 +141,35 @@ const CountryTopDishesAndRestaurants = memo(
           />
         )
       })
-    }, [])
+    }, [country])
+
+    const restaurantsList = useMemo(() => {
+      return (
+        <VStack flex={1} padding={10} spacing={10} alignItems="flex-start">
+          {_.uniqBy(country.top_restaurants, (x) => x.name).map(
+            (restaurant, index) => {
+              return (
+                <RestaurantButton
+                  rank={index + 1}
+                  subtle
+                  key={restaurant.name}
+                  restaurant={restaurant as any}
+                  onHoverIn={onHoverRestaurant}
+                  containerStyle={{
+                    maxWidth: '100%',
+                  }}
+                  active={
+                    // (!hoveredRestaurant && index === 0) ||
+                    hoveredRestaurant &&
+                    restaurant?.name === hoveredRestaurant?.name
+                  }
+                />
+              )
+            }
+          )}
+        </VStack>
+      )
+    }, [hoveredRestaurant, country.top_restaurants])
 
     return (
       <VStack
@@ -177,31 +205,7 @@ const CountryTopDishesAndRestaurants = memo(
           <Spacer flex />
         </HStack>
 
-        <HomeTopDishesSide>
-          <VStack flex={1} padding={10} spacing={10} alignItems="flex-start">
-            {_.uniqBy(country.top_restaurants, (x) => x.name).map(
-              (restaurant, index) => {
-                return (
-                  <RestaurantButton
-                    rank={index + 1}
-                    subtle
-                    key={restaurant.name}
-                    restaurant={restaurant as any}
-                    onHoverIn={onHoverRestaurant}
-                    containerStyle={{
-                      maxWidth: '100%',
-                    }}
-                    active={
-                      // (!hoveredRestaurant && index === 0) ||
-                      hoveredRestaurant &&
-                      restaurant?.name === hoveredRestaurant?.name
-                    }
-                  />
-                )
-              }
-            )}
-          </VStack>
-        </HomeTopDishesSide>
+        <HomeTopDishesSide>{restaurantsList}</HomeTopDishesSide>
 
         {/* left shadow */}
         <LinearGradient
@@ -222,21 +226,6 @@ const CountryTopDishesAndRestaurants = memo(
             zIndex: 1,
           }}
         />
-
-        {/* right shadow */}
-        {/* <LinearGradient
-          colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
-          startPoint={[0, 0]}
-          endPoint={[1, 0]}
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            bottom: 0,
-            width: 60,
-            zIndex: 100000,
-          }}
-        /> */}
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <HomeTopDishMain>{dishElements}</HomeTopDishMain>
