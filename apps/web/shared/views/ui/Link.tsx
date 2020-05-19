@@ -66,18 +66,14 @@ export function Link<
   } = allProps
   const linkProps = useNormalizeLinkProps(allProps as any)
   const om = useOvermindStatic()
+  const item = _.pick(linkProps as any, 'name', 'params', 'replace')
   const navItem: NavigateItem = useMemo(
     () => ({
-      name: name ?? linkProps?.['name'],
-      params: params ?? linkProps?.['params'],
-      replace: replace ?? linkProps?.['replace'],
+      name: name ?? item?.name,
+      params: params ?? item?.params,
+      replace: !!(replace ?? item?.replace),
     }),
-    [
-      name,
-      params,
-      replace,
-      JSON.stringify(_.pick(linkProps as any, 'name', 'params', 'replace')),
-    ]
+    [name, params, replace, JSON.stringify(item)]
   )
 
   const handler = useCallback(
@@ -89,6 +85,7 @@ export function Link<
       if ('onPress' in linkProps) {
         linkProps?.onPress?.()
       }
+      console.log('got a click, navigate', navItem)
       om.actions.router.navigate(navItem)
     },
     [navItem, onClick]

@@ -359,7 +359,16 @@ const pushHomeState: AsyncAction<
         username: item.params.username,
         ...newState,
       }
-      fetchData = null
+      break
+    }
+
+    case 'gallery': {
+      nextState = {
+        ...fallbackState,
+        type: 'gallery',
+        restaurantSlug: item.params.restaurantSlug,
+        dishId: item.params.dishId,
+      }
       break
     }
   }
@@ -879,6 +888,7 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
     case 'home':
     case 'search':
     case 'user':
+    case 'gallery':
     case 'userSearch':
     case 'restaurant': {
       if (type === 'push' || type === 'replace') {

@@ -5,7 +5,7 @@ import { Image, StyleSheet, Text } from 'react-native'
 import { Tag } from '../../state/Tag'
 import { Box } from '../ui/Box'
 import { LinearGradient } from '../ui/LinearGradient'
-import { LinkButton } from '../ui/LinkButton'
+import { LinkButton, LinkButtonProps } from '../ui/LinkButton'
 import { HStack, StackProps, VStack, ZStack } from '../ui/Stacks'
 import { DishRatingView } from './DishRatingView'
 
@@ -14,15 +14,34 @@ export const DishView = memo(
     dish,
     cuisine,
     size = 100,
+    restaurantSlug,
     ...rest
-  }: { cuisine?: Tag; dish: TopCuisineDish; size?: number } & StackProps) => {
+  }: {
+    cuisine?: Tag
+    dish: TopCuisineDish
+    size?: number
+    restaurantSlug?: string
+  } & StackProps) => {
     const borderRadius = 0.3 * size
+
+    const linkButtonProps: LinkButtonProps = restaurantSlug
+      ? {
+          name: 'gallery',
+          params: {
+            restaurantSlug,
+            dishId: dish.id,
+          },
+        }
+      : {
+          tags: [cuisine, { type: 'dish', name: dish.name }],
+        }
+
     return (
       <LinkButton
         alignItems="center"
         position="relative"
         justifyContent="center"
-        tags={[cuisine, { type: 'dish', name: dish.name }]}
+        {...linkButtonProps}
         {...rest}
       >
         <ZStack pointerEvents="none" fullscreen zIndex={10}>

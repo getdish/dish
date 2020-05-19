@@ -65,28 +65,28 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       onHoverOut={() => setIsHovered(false)}
     >
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <Suspense fallback={null}>
-          <HStack
-            alignItems="center"
-            position="relative"
-            width="calc(100% + 200px)"
+        {/* <Suspense fallback={null}> */}
+        <HStack
+          alignItems="center"
+          position="relative"
+          width="calc(100% + 200px)"
+        >
+          <ZStack
+            fullscreen
+            zIndex={100}
+            top={20}
+            height={120}
+            left={0}
+            justifyContent="center"
+            pointerEvents="none"
+            opacity={isHovered ? 1 : 0}
           >
-            <ZStack
-              fullscreen
-              zIndex={100}
-              top={20}
-              height={120}
-              left={0}
-              justifyContent="center"
-              pointerEvents="none"
-              opacity={isHovered ? 1 : 0}
-            >
-              <RestaurantUpVoteDownVote restaurantId={props.restaurant.id} />
-            </ZStack>
+            <RestaurantUpVoteDownVote restaurantId={props.restaurant.id} />
+          </ZStack>
 
-            <RestaurantListItemContent {...props} />
-          </HStack>
-        </Suspense>
+          <RestaurantListItemContent {...props} />
+        </HStack>
+        {/* </Suspense> */}
       </ScrollView>
       <Divider opacity={0.025} />
     </VStack>
@@ -168,20 +168,20 @@ const RestaurantListItemContent = memo(
                       alignItems="center"
                       marginBottom={-3}
                     >
-                      <Suspense fallback={null}>
-                        <RestaurantRatingViewPopover
-                          size="sm"
-                          restaurantSlug={restaurant.slug}
-                        />
-                      </Suspense>
-                      <Suspense fallback={null}>
-                        <RestaurantTagsRow
-                          tags={restaurant.tags.map((tag) => tag.tag)}
-                          showMore={true}
-                          restaurantSlug={restaurant.slug}
-                          divider={<>,&nbsp;</>}
-                        />
-                      </Suspense>
+                      {/* <Suspense fallback={null}> */}
+                      <RestaurantRatingViewPopover
+                        size="sm"
+                        restaurantSlug={restaurant.slug}
+                      />
+                      {/* </Suspense> */}
+                      {/* <Suspense fallback={null}> */}
+                      <RestaurantTagsRow
+                        tags={restaurant.tags.map((tag) => tag.tag)}
+                        showMore={true}
+                        restaurantSlug={restaurant.slug}
+                        divider={<>,&nbsp;</>}
+                      />
+                      {/* </Suspense> */}
                     </HStack>
                   </VStack>
                 </Link>
@@ -191,9 +191,9 @@ const RestaurantListItemContent = memo(
 
               {/* ROW: COMMENT */}
               <VStack maxWidth="90%" marginLeft={-2}>
-                <Suspense fallback={null}>
-                  <RestaurantTopReview restaurantId={restaurant.id} />
-                </Suspense>
+                {/* <Suspense fallback={null}> */}
+                <RestaurantTopReview restaurantId={restaurant.id} />
+                {/* </Suspense> */}
               </VStack>
 
               <Spacer size={6} />
@@ -206,9 +206,9 @@ const RestaurantListItemContent = memo(
                 spacing
               >
                 <RestaurantLenseVote />
-                <Suspense fallback={null}>
-                  <RestaurantFavoriteStar restaurantId={restaurant.id} />
-                </Suspense>
+                {/* <Suspense fallback={null}> */}
+                <RestaurantFavoriteStar restaurantId={restaurant.id} />
+                {/* </Suspense> */}
 
                 <TouchableOpacity
                   onPress={() =>
@@ -226,12 +226,12 @@ const RestaurantListItemContent = memo(
 
                 <Divider vertical />
 
-                <Suspense fallback={null}>
-                  <RestaurantDetailRow
-                    size="sm"
-                    restaurantSlug={restaurant.slug}
-                  />
-                </Suspense>
+                {/* <Suspense fallback={null}> */}
+                <RestaurantDetailRow
+                  size="sm"
+                  restaurantSlug={restaurant.slug}
+                />
+                {/* </Suspense> */}
 
                 <HoverablePopover
                   contents={
@@ -258,12 +258,12 @@ const RestaurantListItemContent = memo(
           </VStack>
 
           <VStack padding={10} paddingTop={45} width={0}>
-            <Suspense fallback={null}>
-              <RestaurantPeek
-                size={isShowingComment ? 'lg' : 'md'}
-                restaurantSlug={restaurant.slug}
-              />
-            </Suspense>
+            {/* <Suspense fallback={null}> */}
+            <RestaurantPeek
+              size={isShowingComment ? 'lg' : 'md'}
+              restaurantSlug={restaurant.slug}
+            />
+            {/* </Suspense> */}
           </VStack>
         </HStack>
       )
@@ -331,6 +331,7 @@ export const RestaurantPeek = memo(
               <DishView
                 key={i}
                 size={(size === 'lg' ? 220 : 190) * (isMedium ? 0.85 : 1)}
+                restaurantSlug={restaurantSlug}
                 dish={{
                   name: photo.name,
                   image: photo.src,
