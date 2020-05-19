@@ -5,7 +5,7 @@ import { Box } from '../ui/Box'
 import Hoverable from '../ui/Hoverable'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { LinkButton } from '../ui/LinkButton'
-import { Popover } from '../ui/Popover'
+import { Popover } from '../ui/PopoverContainer'
 import { HomeLenseBarOnly } from './HomeLenseBar'
 
 export const RestaurantLenseVote = () => {

@@ -9,7 +9,7 @@ import { Toast } from '../Toast'
 import { Box } from '../ui/Box'
 import { Divider } from '../ui/Divider'
 import { LinkButton } from '../ui/LinkButton'
-import { Popover } from '../ui/Popover'
+import { Popover } from '../ui/PopoverContainer'
 import { HStack, VStack } from '../ui/Stacks'
 import { flatButtonStyle } from './baseButtonStyle'
 

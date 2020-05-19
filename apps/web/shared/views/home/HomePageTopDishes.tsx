@@ -1,6 +1,6 @@
 import { Restaurant, TopCuisine } from '@dish/graph'
 import _ from 'lodash'
-import React, { memo, useCallback, useMemo, useState } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { Divide } from 'react-feather'
 import { ScrollView, Text } from 'react-native'
 
@@ -22,11 +22,29 @@ import { LoadingItems } from './LoadingItems'
 import { RestaurantButton } from './RestaurantButton'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
-export default memo(function HomePageTopDishes({
-  stateIndex,
-}: {
+type TopDishesProps = {
   stateIndex: number
-}) {
+}
+
+export default memo(function HomePageTopDishes(props: TopDishesProps) {
+  const om = useOvermind()
+  const isOnHome = om.state.home.currentStateType === 'home'
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  useEffect(() => {
+    if (isOnHome) {
+      setIsLoaded(true)
+    }
+  }, [isOnHome])
+
+  if (isOnHome || isLoaded) {
+    return <HomePageTopDishesContent {...props} />
+  }
+
+  return null
+})
+
+const HomePageTopDishesContent = ({ stateIndex }: TopDishesProps) => {
   const om = useOvermind()
   const state = om.state.home.states[stateIndex] as HomeStateItemHome
   if (!state) return <NotFoundPage />
@@ -95,7 +113,7 @@ export default memo(function HomePageTopDishes({
       </VStack>
     </>
   )
-})
+}
 
 const dishHeight = 160
 const padding = 30

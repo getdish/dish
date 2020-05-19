@@ -4,17 +4,20 @@ import React, { memo } from 'react'
 import { ChevronUp, X } from 'react-feather'
 import { Text, TextStyle } from 'react-native'
 
+import { NavigableTag } from '../../state/Tag'
 import { LinkButton } from '../ui/LinkButton'
 import { HStack, StackProps, VStack } from '../ui/Stacks'
 import { SuperScriptText } from './SuperScriptText'
 
-export type TagButtonTagProps = Pick<Tag, 'name' | 'type' | 'icon' | 'rgb'>
+export type TagButtonTagProps =
+  | NavigableTag
+  | Pick<Tag, 'name' | 'type' | 'icon' | 'rgb'>
 
 export const getTagButtonProps = (tag: TagButtonTagProps): TagButtonProps => {
   return {
     name: tag.name,
     type: tag.type as TagType,
-    icon: tag.icon,
+    icon: tag.icon ?? '',
     rgb: Array.isArray(tag.rgb) ? tag.rgb : tag.rgb?.(),
   }
 }
@@ -22,22 +25,21 @@ export const getTagButtonProps = (tag: TagButtonTagProps): TagButtonProps => {
 export const getTagColor = (rgb?: [number, number, number]): string =>
   rgb ? `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})` : 'inherit'
 
-export type TagButtonProps = StackProps &
-  TagButtonTagProps & {
-    rgb: [number, number, number]
-    rank?: number
-    size?: 'lg' | 'md' | 'sm'
-    subtle?: boolean
-    votable?: boolean
-    closable?: boolean
-    onClose?: Function
-    color?: any
-    hideIcon?: boolean
-    subtleIcon?: boolean
-    fontSize?: TextStyle['fontSize']
-    noColor?: boolean
-    replace?: boolean
-  }
+export type TagButtonProps = Omit<StackProps & TagButtonTagProps, 'rgb'> & {
+  rgb: [number, number, number]
+  rank?: number
+  size?: 'lg' | 'md' | 'sm'
+  subtle?: boolean
+  votable?: boolean
+  closable?: boolean
+  onClose?: Function
+  color?: any
+  hideIcon?: boolean
+  subtleIcon?: boolean
+  fontSize?: TextStyle['fontSize']
+  noColor?: boolean
+  replace?: boolean
+}
 
 export const TagButton = memo(
   ({

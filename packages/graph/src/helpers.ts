@@ -1,5 +1,7 @@
 import { Auth } from './auth'
 
+export * from './tag-helpers'
+
 export const isNode = typeof window == 'undefined'
 export const isBrowserProd =
   !isNode && window.location.hostname.includes('dish')

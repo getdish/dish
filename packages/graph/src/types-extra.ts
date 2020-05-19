@@ -16,7 +16,7 @@ export type LngLat = { lng: number; lat: number }
 
 export type TopCuisineDish = Partial<Dish> & {
   rating: number
-  count: number
+  count?: number
   image: string
 }
 
