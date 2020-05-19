@@ -19,6 +19,7 @@
     "start:web:rollup": "cross-env NODE_ENV=development nollup --port 19006 --hot --content-base etc/rollup-public -c rollup.config.ts",
     "start": "yarn start:web",
     "start:prod": "yarn start:web:prod",
+    "start:prod:no-min": "NO_MINIFY=1 yarn start:web:prod",
     "start:ssr": "yarn start:web:ssr",
     "start:react-native": "react-native start",
     "test": "true",

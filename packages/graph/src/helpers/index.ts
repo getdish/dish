@@ -1,3 +1,5 @@
+import { sep } from 'path'
+
 import { Auth } from '../auth'
 
 export * from './tag-helpers'
@@ -59,44 +61,53 @@ export async function graphqlGet(query: string = '', variables: Object = {}) {
   return await res.json()
 }
 
-export function slugify(text: string, separator = '-') {
-  text = text.toString().toLowerCase().trim()
+const slugCache = {}
+const sets = [
+  { to: 'a', from: '[ÀÁÂÃÄÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶ]' },
+  { to: 'c', from: '[ÇĆĈČ]' },
+  { to: 'd', from: '[ÐĎĐÞ]' },
+  { to: 'e', from: '[ÈÉÊËĒĔĖĘĚẸẺẼẾỀỂỄỆ]' },
+  { to: 'g', from: '[ĜĞĢǴ]' },
+  { to: 'h', from: '[ĤḦ]' },
+  { to: 'i', from: '[ÌÍÎÏĨĪĮİỈỊ]' },
+  { to: 'j', from: '[Ĵ]' },
+  { to: 'ij', from: '[Ĳ]' },
+  { to: 'k', from: '[Ķ]' },
+  { to: 'l', from: '[ĹĻĽŁ]' },
+  { to: 'm', from: '[Ḿ]' },
+  { to: 'n', from: '[ÑŃŅŇ]' },
+  { to: 'o', from: '[ÒÓÔÕÖØŌŎŐỌỎỐỒỔỖỘỚỜỞỠỢǪǬƠ]' },
+  { to: 'oe', from: '[Œ]' },
+  { to: 'p', from: '[ṕ]' },
+  { to: 'r', from: '[ŔŖŘ]' },
+  { to: 's', from: '[ßŚŜŞŠ]' },
+  { to: 't', from: '[ŢŤ]' },
+  { to: 'u', from: '[ÙÚÛÜŨŪŬŮŰŲỤỦỨỪỬỮỰƯ]' },
+  { to: 'w', from: '[ẂŴẀẄ]' },
+  { to: 'x', from: '[ẍ]' },
+  { to: 'y', from: '[ÝŶŸỲỴỶỸ]' },
+  { to: 'z', from: '[ŹŻŽ]' },
+  { to: '-', from: "[·/_,:;']" },
+].map((x) => ({
+  ...x,
+  from: new RegExp(x.from, 'gi'),
+}))
 
-  const sets = [
-    { to: 'a', from: '[ÀÁÂÃÄÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶ]' },
-    { to: 'c', from: '[ÇĆĈČ]' },
-    { to: 'd', from: '[ÐĎĐÞ]' },
-    { to: 'e', from: '[ÈÉÊËĒĔĖĘĚẸẺẼẾỀỂỄỆ]' },
-    { to: 'g', from: '[ĜĞĢǴ]' },
-    { to: 'h', from: '[ĤḦ]' },
-    { to: 'i', from: '[ÌÍÎÏĨĪĮİỈỊ]' },
-    { to: 'j', from: '[Ĵ]' },
-    { to: 'ij', from: '[Ĳ]' },
-    { to: 'k', from: '[Ķ]' },
-    { to: 'l', from: '[ĹĻĽŁ]' },
-    { to: 'm', from: '[Ḿ]' },
-    { to: 'n', from: '[ÑŃŅŇ]' },
-    { to: 'o', from: '[ÒÓÔÕÖØŌŎŐỌỎỐỒỔỖỘỚỜỞỠỢǪǬƠ]' },
-    { to: 'oe', from: '[Œ]' },
-    { to: 'p', from: '[ṕ]' },
-    { to: 'r', from: '[ŔŖŘ]' },
-    { to: 's', from: '[ßŚŜŞŠ]' },
-    { to: 't', from: '[ŢŤ]' },
-    { to: 'u', from: '[ÙÚÛÜŨŪŬŮŰŲỤỦỨỪỬỮỰƯ]' },
-    { to: 'w', from: '[ẂŴẀẄ]' },
-    { to: 'x', from: '[ẍ]' },
-    { to: 'y', from: '[ÝŶŸỲỴỶỸ]' },
-    { to: 'z', from: '[ŹŻŽ]' },
-    { to: '-', from: "[·/_,:;']" },
-  ]
+export const slugify = (text: string, separator = '-') => {
+  if (!slugCache[separator]) {
+    slugCache[separator] = {}
+  }
+  if (slugCache[separator][text]) {
+    return slugCache[separator][text]
+  }
 
-  sets.forEach((set) => {
-    text = text.replace(new RegExp(set.from, 'gi'), set.to)
-  })
+  let out = text.toString().toLowerCase().trim()
 
-  text = text
-    .toString()
-    .toLowerCase()
+  for (const set of sets) {
+    out = out.replace(set.from, set.to)
+  }
+
+  out = out
     .replace(/\s+/g, '-') // Replace spaces with -
     .replace(/&/g, '-and-') // Replace & with 'and'
     .replace(/[^\w\-]+/g, '') // Remove all non-word chars
@@ -105,12 +116,13 @@ export function slugify(text: string, separator = '-') {
     .replace(/-+$/, '') // Trim - from end of text
 
   if (typeof separator !== 'undefined' && separator !== '-') {
-    text = text.replace(/-/g, separator)
+    out = out.replace(/-/g, separator)
   }
 
-  if (text == '') {
+  if (out == '') {
     return `no-slug`
   }
 
-  return text
+  slugCache[separator][out] = out
+  return out
 }
