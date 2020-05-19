@@ -41,6 +41,7 @@ WITH by_country AS (
             WHERE "parentId" IN (
               SELECT id FROM tag WHERE tag.name = (SELECT DISTINCT t.name)
             )
+            AND tag.type != 'category'
         ) as tags_by_cuisine
         ORDER by count DESC
         LIMIT 10
