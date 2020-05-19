@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 services:
   postgres:
     image: bitnami/postgresql:12.1.0-debian-9-r53 # See k8s/yaml/postgres.yaml
@@ -30,10 +30,15 @@ services:
       - 'postgres'
       - 'redis'
   jwt-server:
-    image: dish/jwt-server
+    image: docker.k8s.dishapp.com/dish/jwt-server
     build:
       context: ./
       dockerfile: ./services/jwt-server/Dockerfile
+      cache_from:
+        - docker.k8s.dishapp.com/dish/jwt-server:latest
+        - docker.k8s.dishapp.com/dish/jwt-server:ci-green
+      args:
+        - BUILDKIT_INLINE_CACHE=1
     ports:
       - 3000:3000
     environment:
@@ -41,10 +46,15 @@ services:
     depends_on:
       - 'postgres'
   search:
-    image: dish/search
+    image: docker.k8s.dishapp.com/dish/search
     build:
       context: ./
       dockerfile: ./services/search/Dockerfile
+      cache_from:
+        - docker.k8s.dishapp.com/dish/search:latest
+        - docker.k8s.dishapp.com/dish/search:ci-green
+      args:
+        - BUILDKIT_INLINE_CACHE=1
     ports:
       - 10000:10000
     environment:

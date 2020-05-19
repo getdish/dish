@@ -14,10 +14,10 @@ services:
       - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}
     command: ['graphql-engine', 'serve', '--jwt-secret', '{"type":"HS256", "key":"${JWT_KEY}"}']
   search:
-    image: dish/search-server
-    build:
-      dockerfile: ./services/search/Dockerfile
-      context: ./
+    image: docker.k8s.dishapp.com/dish/search
+    imagePullSecrets:
+      - docker-config-json
+    imagePullPolicy: always
     ports:
       - 10000/http
     env:
@@ -29,10 +29,10 @@ services:
       - REDIS_HOST=redis-master.redis
     port: 3000/http
   worker:
-    image: dish/crawlers
-    build:
-      dockerfile: ./services/worker/Dockerfile
-      context: ./
+    image: docker.k8s.dishapp.com/dish/worker
+    imagePullSecrets:
+      - docker-config-json
+    imagePullPolicy: always
     env:
       - DISH_ENV=production
       - COMMIT_HASH=${REVISION}
@@ -51,10 +51,10 @@ services:
     args:
       - _/index.js
   crawlers:
-    image: dish/crawlers
-    build:
-      dockerfile: ./services/crawlers/Dockerfile
-      context: ./
+    image: docker.k8s.dishapp.com/dish/crawlers
+    imagePullSecrets:
+      - docker-config-json
+    imagePullPolicy: always
     env:
       - DISH_ENV=production
       - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
@@ -73,10 +73,10 @@ services:
     args:
       - _/all.js
   web:
-    image: dish/web
-    build:
-      dockerfile: ./apps/web/Dockerfile
-      context: ./
+    image: docker.k8s.dishapp.com/dish/web
+    imagePullSecrets:
+      - docker-config-json
+    imagePullPolicy: always
     ports:
       - 19006/http
     env:
@@ -84,10 +84,10 @@ services:
       - COMMIT_HASH=${REVISION}
       - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
   jwt-server:
-    image: dish/jwt-server
-    build:
-      dockerfile: ./services/jwt-server/Dockerfile
-      context: ./
+    image: docker.k8s.dishapp.com/dish/jwt-server
+    imagePullSecrets:
+      - docker-config-json
+    imagePullPolicy: always
     ports:
       - 3000/http
     env:
@@ -98,10 +98,10 @@ services:
       - POSTGRES_HOST=postgres-postgresql.postgres
       - POSTGRES_PASSWORD=${TF_VAR_POSTGRES_PASSWORD}
   postgres-backups:
-    image: dish/backups
-    build:
-      dockerfile: ./services/backups/Dockerfile
-      context: ./
+    image: docker.k8s.dishapp.com/dish/backups
+    imagePullSecrets:
+      - docker-config-json
+    imagePullPolicy: always
     env:
       - DO_SPACES_API_ID=${TF_VAR_DO_SPACES_ID}
       - DO_SPACES_API_SECRET=${TF_VAR_DO_SPACES_SECRET}

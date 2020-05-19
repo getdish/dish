@@ -21,4 +21,4 @@ function parse_yaml {
 
 PROJECT_ROOT=$(git rev-parse --show-toplevel)
 
-parse_yaml $PROJECT_ROOT/env.enc.production.yaml | xargs
+parse_yaml $PROJECT_ROOT/env.enc.production.yaml | sed 's/\$/\\$/g' | xargs -0

@@ -13,6 +13,8 @@ wait_until_hasura_ready() {
 }
 export -f wait_until_hasura_ready
 
+docker-compose --version
+
 mkdir -p $HOME/.dish/postgres/data
 docker-compose up -d
 sleep 10 # Postgres needs 2 starts to get everything set up

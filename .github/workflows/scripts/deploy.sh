@@ -2,7 +2,6 @@
 set -e
 
 PATH=$PATH:$HOME/bin
-KEY_PATH=$HOME/gitcrypt-key
 RIO_VERSION='0.7.0'
 RIO_BINARY=https://github.com/rancher/rio/releases/download/v$RIO_VERSION/rio-linux-amd64
 RIO_PATH=$HOME/bin/rio
@@ -21,13 +20,6 @@ echo "Installing \`doctl\` binary v$DOCTL_VERSION..."
 curl -sL $DOCTL_BINARY | tar -xzv -C $DOCTL_PATH
 doctl version
 
-echo "Decrypting Dish secrets..."
-sudo apt-get install -y git-crypt
-echo $GITCRYPT_KEY > $KEY_PATH.base64
-cat $KEY_PATH.base64 | base64 -d > $KEY_PATH
-git reset --hard
-git-crypt unlock $KEY_PATH
-
 echo "Deploying production branch to production..."
 HASURA_ADMIN=$(\
   grep 'HASURA_GRAPHQL_ADMIN_SECRET:' env.enc.production.yaml \
@@ -44,7 +36,8 @@ DO_KEY=$(\
 )
 doctl auth init -t $DO_KEY
 doctl kubernetes cluster kubeconfig save dish
-rio up --answers env.enc.production.yaml --parallel
+rio up --answers env.enc.production.yaml
+rio ps
 
 HOOK=$(\
   grep 'SLACK_MONITORING_HOOK:' env.enc.production.yaml \
