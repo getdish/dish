@@ -34,7 +34,6 @@ export const RestaurantTagsRow = memo(
 
 export const useGetTagElements = (props: TagRowProps) => {
   const { restaurantSlug, showMore } = props
-
   const om = useOvermind()
 
   if (!restaurantSlug) {

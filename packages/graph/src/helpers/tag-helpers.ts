@@ -1,4 +1,4 @@
-import { Tag } from './types'
+import { Tag } from '../types'
 
 export function getTagNameWithIcon(tag: Tag) {
   let name = tag.name

@@ -13,6 +13,14 @@ cuisines.map(cuisine => {
 
 That would let me basically mix and match and build up the query how we want, and i can build a really nice home. I'd say lower priority here than a lot of data stuff but if you want to take a stab its worth it whenever if its not too hard.
 
+But when I search "Vietnamese" I want to then sow the trending dishes still, so it would be useful to then have this on search results page when a country is selected:
+
+```
+query.trending_dishes({ in..., parent_tag: 'Vietnamese' })
+```
+
+The autocomplete would show this same query too! Because you want the searchbar to show (Vietnamese). And then I click it show the trending dishes as autocomplete options.
+
 # Search
 
 we basically just need to improve the tags we show and the dishes we show:
