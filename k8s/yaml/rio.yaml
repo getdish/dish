@@ -468,7 +468,7 @@ spec:
 ---
 apiVersion: v1
 data:
-  config: '{"features":{"letsencrypt":{"enabled":false},"rdns":{"enabled":false}},"letsEncrypt":{"email":"dish@tombh.co.uk"},"gateway":{}}'
+  config: '{"features":{"letsencrypt":{"enabled":false},"rdns":{"enabled":false},"build":{"enabled":false}},"gateway":{}}'
 kind: ConfigMap
 metadata:
   creationTimestamp: null

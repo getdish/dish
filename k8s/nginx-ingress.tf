@@ -5,7 +5,7 @@ resource "helm_release" "nginx-ingress" {
   namespace = "nginx-ingress"
   repository = data.helm_repository.stable.metadata.0.name
   chart     = "stable/nginx-ingress"
-  version = "v1.30.3"
+  version = "1.36.3"
 
   set {
     name = "controller.service.type"

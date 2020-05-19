@@ -3,7 +3,7 @@
 # ---
 
 variable "cert_manager_version" {
-  default = "0.12"
+  default = "0.15"
 }
 
 data "local_file" "cert_manager_setup" {
@@ -16,32 +16,15 @@ data "helm_repository" "jetstack" {
 }
 
 resource "helm_release" "cert-manager" {
-  depends_on = [null_resource.cert-manager-crd]
-
   name      = "cert-manager"
   namespace = "cert-manager"
   repository = data.helm_repository.jetstack.metadata.0.name
   chart     = "jetstack/cert-manager"
   version = "v${var.cert_manager_version}.0"
-}
 
-# Cert Manager uses Custom Resource Definitions (CRDs) which aren't yet supported natively
-# by Terraform, hence the following `local-exec` workarounds.
-# Follow: https://github.com/terraform-providers/terraform-provider-kubernetes/issues/215
-
-resource "null_resource" "cert-manager-crd" {
-  triggers = {
-    version = var.cert_manager_version
-  }
-
-  provisioner "local-exec" {
-    command = <<EOC
-echo "Applying CRDs for Cert Manager"
-
-kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-${var.cert_manager_version}/deploy/manifests/00-crds.yaml
-
-echo "CRDs applied"
-EOC
+  set {
+    name = "installCRDs"
+    value = true
   }
 }
 

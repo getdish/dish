@@ -8,7 +8,7 @@ resource "helm_release" "docker-registry" {
   name = "docker-registry"
   namespace = "docker-registry"
   chart = "stable/docker-registry"
-  version = "1.8.3"
+  version = "1.9.3"
 
   set {
     name = "persistence.enabled"
@@ -86,7 +86,7 @@ resource "kubernetes_ingress" "docker-registry-ingress" {
       service_port = 5000
     }
     rule {
-      host = "docker.${var.dish_domain}"
+      host = "docker.k8s.${var.dish_domain}"
       http {
         path {
           path = "/*"

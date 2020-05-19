@@ -2,6 +2,7 @@ resource "helm_release" "postgres" {
   name = "postgres"
   namespace = "postgres"
   chart = "stable/postgresql"
+  version = "8.6.4"
 
   values = [
     file("yaml/postgres.yaml")

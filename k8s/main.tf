@@ -3,6 +3,7 @@ variable "DO_SPACES_ID" {}
 variable "DO_SPACES_SECRET" {}
 variable "POSTGRES_PASSWORD" {}
 variable "DOCKER_REGISTRY_HTTP_AUTH" {}
+variable "DOCKER_CONFIG_JSON" {}
 variable "GRAFANA_PASSWORD" {}
 variable "CLOUDFLARE_DNS_API_TOKEN" {}
 variable "GMAIL_APP_PASSWORD" {}

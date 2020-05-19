@@ -11,7 +11,7 @@ provider "digitalocean" {
 resource "digitalocean_kubernetes_cluster" "dish" {
   name    = "dish"
   region  = "sfo2"
-  version = "1.16.2-do.3"
+  version = "1.16.8-do.0"
 
   # Node pools are just a way of grouping VMs
   node_pool {
