@@ -4,7 +4,7 @@ import { ScrollView, Text } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
-import { LinkButton, LinkButtonProps } from '../ui/Link'
+import { LinkButton, LinkButtonProps } from '../ui/LinkButton'
 import { HStack, ZStack } from '../ui/Stacks'
 import { SmallCircleButton } from './CloseButton'
 import { setAvoidNextAutocompleteShowOnFocus } from './HomeSearchBar'

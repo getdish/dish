@@ -9,7 +9,7 @@ import { useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../NotFoundPage'
 import { Divider, HorizontalLine } from '../ui/Divider'
 import { LinearGradient } from '../ui/LinearGradient'
-import { LinkButton } from '../ui/Link'
+import { LinkButton } from '../ui/LinkButton'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { SmallTitle } from '../ui/SmallTitle'
 import { Spacer } from '../ui/Spacer'
@@ -171,9 +171,7 @@ const CountryTopDishesAndRestaurants = memo(
                     restaurant={restaurant as any}
                     onHoverIn={onHoverRestaurant}
                     containerStyle={{
-                      display: 'flex',
                       maxWidth: '100%',
-                      overflow: 'hidden',
                     }}
                     active={
                       // (!hoveredRestaurant && index === 0) ||

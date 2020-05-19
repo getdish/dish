@@ -4,7 +4,7 @@ import { Text } from 'react-native'
 import { Box } from '../ui/Box'
 import Hoverable from '../ui/Hoverable'
 import { HoverablePopover } from '../ui/HoverablePopover'
-import { LinkButton } from '../ui/Link'
+import { LinkButton } from '../ui/LinkButton'
 import { Popover } from '../ui/Popover'
 import { HomeLenseBarOnly } from './HomeLenseBar'
 
