@@ -8,6 +8,7 @@ const HTMLWebpackPlugin = require('html-webpack-plugin')
 const LodashPlugin = require('lodash-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const ReactRefreshPlugin = require('@webhotelier/webpack-fast-refresh')
+const ReactNativeUIPlugin = require('@dish/react-native-ui-webpack')
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const isProduction = process.env.NODE_ENV === 'production'
@@ -31,6 +32,8 @@ module.exports = function getWebpackConfig(
   const config = {
     mode: env.mode || process.env.NODE_ENV,
     context: __dirname,
+    target:
+      TARGET === 'ssr' ? 'node' : TARGET === 'worker' ? 'webworker' : 'web',
     stats: 'normal',
     devtool:
       env.mode === 'production' ? 'source-map' : 'eval-cheap-module-source-map',
@@ -152,6 +155,7 @@ module.exports = function getWebpackConfig(
       ],
     },
     plugins: [
+      // new ReactNativeUIPlugin(),
       // new LodashPlugin(),
       new Webpack.DefinePlugin({
         process: JSON.stringify({}),
@@ -189,8 +193,6 @@ module.exports = function getWebpackConfig(
   }
 
   if (TARGET === 'worker') {
-    // @ts-ignore
-    config.devServer.hot = false
     // exec patch
     const exec = require('child_process').exec
     config.plugins.push({
@@ -206,7 +208,6 @@ module.exports = function getWebpackConfig(
   }
 
   if (TARGET === 'ssr') {
-    config.target = 'node'
     config.output.path = path.join(__dirname, 'web-build-ssr')
     config.output.libraryTarget = 'commonjs'
     config.output.filename = `static/js/app.ssr.js`
