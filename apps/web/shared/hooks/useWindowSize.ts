@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+import { useDebounce } from './useDebounce'
 import { useThrottledFn } from './useThrottleFn'
 
 /** [width, height] */
@@ -10,11 +11,11 @@ const windowSize = (): Size => [window.innerWidth, window.innerHeight]
 const idFn = (_) => _
 
 export function useWindowSize({
-  throttle = 0,
+  debounce = 0,
   adjust = idFn,
-}: { throttle?: number; adjust?: (x: Size) => Size } = {}): Size {
+}: { debounce?: number; adjust?: (x: Size) => Size } = {}): Size {
   const [size, setSize] = useState(adjust(windowSize()))
-  const setSizeThrottle = useThrottledFn(setSize, { amount: throttle })
+  const setSizeThrottle = useDebounce(setSize, debounce)
 
   useEffect(() => {
     const update = () => setSizeThrottle(adjust(windowSize()))

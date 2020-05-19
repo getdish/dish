@@ -51,7 +51,9 @@ export default memo(function HomePage() {
       >
         {!isWorker && (
           <ErrorBoundary name="maps">
-            <HomeMap />
+            <Suspense fallback={null}>
+              <HomeMap />
+            </Suspense>
             {showPip && <HomeMapPIP />}
           </ErrorBoundary>
         )}
