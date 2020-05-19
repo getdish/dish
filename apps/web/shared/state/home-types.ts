@@ -89,6 +89,7 @@ export type HomeStateItem =
   | HomeStateItemSearch
   | HomeStateItemRestaurant
   | HomeStateItemUser
+  | HomeStateItemGallery
 
 export type HomeActiveTagIds = { [id: string]: boolean }
 
@@ -118,6 +119,12 @@ export type HomeStateItemRestaurant = HomeStateItemBase & {
 export type HomeStateItemUser = HomeStateItemBase & {
   type: 'user'
   username: string
+}
+
+export type HomeStateItemGallery = HomeStateItemBase & {
+  type: 'gallery'
+  restaurantSlug: string
+  dishId?: string
 }
 
 export type HomeStateItemSimple = Pick<HomeStateItem, 'id' | 'type'>

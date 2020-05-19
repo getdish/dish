@@ -96,6 +96,8 @@ export default memo(function HomePage() {
             }}
           </HomeStackView>
         </HomeViewDrawer>
+
+        <HomePageGallery />
       </VStack>
     </VStack>
   )
@@ -105,15 +107,23 @@ const HomePageRestaurant =
   process.env.TARGET === 'ssr'
     ? require('./HomePageRestaurant').default
     : React.lazy(() => import('./HomePageRestaurant'))
+
 const HomePageSearchResults =
   process.env.TARGET === 'ssr'
     ? require('./HomePageSearchResults').default
     : React.lazy(() => import('./HomePageSearchResults'))
+
 const HomePageTopDishes =
   process.env.TARGET === 'ssr'
     ? require('./HomePageTopDishes').default
     : React.lazy(() => import('./HomePageTopDishes'))
+
 const HomePageUser =
   process.env.TARGET === 'ssr'
     ? require('./HomePageUser').default
     : React.lazy(() => import('./HomePageUser'))
+
+const HomePageGallery =
+  process.env.TARGET === 'ssr'
+    ? require('./HomePageGallery').default
+    : React.lazy(() => import('./HomePageGallery'))

@@ -33,14 +33,9 @@ export type SearchRouteParams = {
 export const routes = {
   home: new Route('/'),
   user: new Route<{ username: string; pane?: string }>('/u/:username/:pane?'),
-  restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
-  // NOTE keep userSearch and search in sync
-  // after user/restaurant
-  userSearch: new Route<SearchRouteParams>(
-    '/u/:username/:lense/:location/:tags?/:search?'
+  gallery: new Route<{ restaurantSlug: string; dishId?: string }>(
+    '/gallery/:restaurantSlug/:dishId?'
   ),
-  // search after userSearch
-  search: new Route<SearchRouteParams>('/:lense/:location/:tags?/:search?'),
   login: new Route('/login'),
   register: new Route('/register'),
   forgotPassword: new Route('/forgot-password'),
@@ -50,6 +45,14 @@ export const routes = {
   account: new Route<{ pane: string }>('/account/:pane'),
   contact: new Route<{ pane: string }>('/contact'),
   privacy: new Route<{ pane: string }>('/privacy'),
+  restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
+  // NOTE keep userSearch and search in sync
+  // after user/restaurant
+  userSearch: new Route<SearchRouteParams>(
+    '/u/:username/:lense/:location/:tags?/:search?'
+  ),
+  // search after userSearch
+  search: new Route<SearchRouteParams>('/:lense/:location/:tags?/:search?'),
   notFound: new Route('*'),
 }
 
@@ -151,13 +154,25 @@ export const state: RouterState = {
 const uid = () => `${Math.random()}`
 
 const navItemToHistoryItem = (navItem: NavigateItem): HistoryItem => {
+  const params = {}
+
+  // remove undefined params
+  if ('params' in navItem && !!navItem.params) {
+    for (const key in navItem.params) {
+      const value = navItem.params[key]
+      if (typeof value !== 'undefined') {
+        params[key] = value
+      }
+    }
+  }
+
   return {
     id: uid(),
     ...navItem,
-    params: navItem.params ?? {},
+    params,
     path: getPathFromParams({
       name: navItem.name,
-      params: navItem.params as any,
+      params,
     }),
     search: curSearch,
   }
@@ -329,7 +344,11 @@ export function getPathFromParams({
   let path = route.path
   if (!params) return path
   let replaceSplatParams = []
+
   for (const key in params) {
+    if (typeof params[key] === 'undefined') {
+      continue
+    }
     if (path.indexOf(':') > -1) {
       path = path.replace(
         `:${key}`,
@@ -339,6 +358,12 @@ export function getPathFromParams({
       replaceSplatParams.push(key)
     }
   }
+
+  // remove unused optionals optionals
+  if (path.indexOf('/:') > 0) {
+    path = path.replace(/\/:[a-zA-Z-_]+\??/gi, '')
+  }
+
   if (replaceSplatParams.length) {
     path = path.replace(
       '*',
