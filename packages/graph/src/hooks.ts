@@ -1,7 +1,6 @@
 // https://github.com/dai-shi/gqless-hook
 
 import { Accessor, accessorInterceptors, getAccessor } from 'gqless'
-// @ts-ignore
 import * as React from 'react'
 
 const { useCallback, useEffect, useLayoutEffect, useReducer, useRef } = React
@@ -74,11 +73,14 @@ const useCleanup = () => {
     timer: NodeJS.Timeout
     func: () => void
   }
+
   const cleanups = useRef<Cleanup[]>([])
   const addCleanup = useCallback((func: () => void) => {
+    console.log('adding cleanup', func, cleanups)
     const timer = setTimeout(func, 5 * 1000)
     cleanups.current.push({ timer, func })
   }, [])
+
   useEffect(() => {
     const cleanupsCurrent = cleanups.current
     cleanupsCurrent.forEach(({ timer }) => clearTimeout(timer))
@@ -86,6 +88,7 @@ const useCleanup = () => {
       cleanupsCurrent.forEach(({ func }) => func())
     }
   }, [])
+
   return addCleanup
 }
 
@@ -107,9 +110,11 @@ const useCleanup = () => {
  */
 export const useQueryInner = (client: any) => {
   const addCleanup = useCleanup()
+  console.log('hello')
 
   const [, forceUpdate] = useReducer((c) => c + 1, 0)
   const fetching = useRef(false)
+
   if (fetching.current) {
     throw new Promise((resolve) => {
       client.scheduler.commit.onFetched.then(() => {
@@ -118,6 +123,7 @@ export const useQueryInner = (client: any) => {
       })
     })
   }
+
   useIsomorphicLayoutEffect(() => {
     if (client.scheduler.commit.accessors.size > 0) {
       fetching.current = true

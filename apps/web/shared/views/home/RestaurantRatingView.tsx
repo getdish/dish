@@ -1,4 +1,4 @@
-import { Restaurant, graphql, query } from '@dish/graph'
+import { Restaurant, graphql, query, useQuery } from '@dish/graph'
 import React, { forwardRef, memo } from 'react'
 import { Text } from 'react-native'
 
@@ -22,34 +22,34 @@ export const getRestaurantRating = (rating: number) => Math.round(rating * 2)
 export const getRankingColor = (percent: number) =>
   percent >= 8 ? 'green' : percent >= 5 ? 'orange' : 'red'
 
-export default graphql(function RestaurantRatingView(
-  props: RestaurantRatingViewProps
-) {
-  let { restaurantSlug, rating, ...rest } = props
+export default memo(
+  graphql(function RestaurantRatingView(props: RestaurantRatingViewProps) {
+    let { restaurantSlug, rating, ...rest } = props
 
-  // optionally fetch
-  if (typeof rating === 'undefined') {
-    const [restaurant] = query.restaurant({
-      where: {
-        slug: {
-          _eq: restaurantSlug,
+    // optionally fetch
+    if (typeof rating === 'undefined') {
+      const [restaurant] = query.restaurant({
+        where: {
+          slug: {
+            _eq: restaurantSlug,
+          },
         },
-      },
-    })
-    rating = restaurant.rating
-  }
-  const percent = getRestaurantRating(rating)
-  const color = getRankingColor(percent)
-  return (
-    <>
-      <RatingView percent={percent} color={color} {...rest} />
-      {rest.size === 'lg' && <RestaurantRatingBreakdownView {...props} />}
-    </>
-  )
-})
+      })
+      rating = restaurant.rating
+    }
+    const percent = getRestaurantRating(rating)
+    const color = getRankingColor(percent)
+    return (
+      <>
+        <RatingView percent={percent} color={color} {...rest} />
+        {rest.size === 'lg' && <RestaurantRatingBreakdownView {...props} />}
+      </>
+    )
+  })
+)
 
-const RestaurantRatingBreakdownView = graphql(
-  ({ restaurantSlug }: RestaurantRatingViewProps) => {
+const RestaurantRatingBreakdownView = memo(
+  graphql(({ restaurantSlug }: RestaurantRatingViewProps) => {
     const [restaurant] = query.restaurant({
       where: {
         slug: {
@@ -150,7 +150,7 @@ const RestaurantRatingBreakdownView = graphql(
         </HoverablePopover>
       </>
     )
-  }
+  })
 )
 
 const RatingBreakdownCircle = memo(

@@ -31,7 +31,6 @@ export default memo(
       return null
     }
     const slug = state.restaurantSlug
-    // const query = useQuery()
     const [restaurant] = query.restaurant({
       where: {
         slug: {

@@ -3,7 +3,7 @@ import 'isomorphic-unfetch'
 import { createFetcher } from './createFetcher'
 import { client } from './graphql'
 
-// import * as Hooks from './hooks'
+// import { useQueryInner } from './hooks'
 
 export function startLogging(verbose = true) {
   // dont import outside node, it accesses window
@@ -26,7 +26,7 @@ export * from './helpers'
 // otherwise could just return query_root thats it
 // type Query = query_root | void
 // export const useQuery = <A extends Query>(): A extends void ? never : A => {
-//   return Hooks.useQueryInner(client) as any
+//   return useQueryInner(client) as any
 // }
 
 // type Mutation = mutation_root | void

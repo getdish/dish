@@ -1,4 +1,4 @@
-import { graphql, query } from '@dish/graph'
+import { graphql, query, useQuery } from '@dish/graph'
 import React, { Suspense, memo, useState } from 'react'
 import { Edit2 } from 'react-feather'
 import { Image, ScrollView, Text, View } from 'react-native'
@@ -280,17 +280,21 @@ const HomePageSearchResultsDishes = memo(
 
     console.log('got dishes', dishes)
 
-    return dishes.map((dish) => (
-      <DishView
-        key={dish.name}
-        dish={{
-          name: dish.name,
-          image: dish.image,
-          rating: 5,
-          count: 1,
-        }}
-      />
-    ))
+    return (
+      <>
+        {dishes.map((dish) => (
+          <DishView
+            key={dish.name}
+            dish={{
+              name: dish.name,
+              image: dish.image,
+              rating: 5,
+              count: 1,
+            }}
+          />
+        ))}
+      </>
+    )
   })
 )
 

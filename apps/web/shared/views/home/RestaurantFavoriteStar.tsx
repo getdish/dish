@@ -1,4 +1,4 @@
-import { graphql, query } from '@dish/graph'
+import { graphql, query, useQuery } from '@dish/graph'
 import React, { memo, useState } from 'react'
 import { Star } from 'react-feather'
 import { Text } from 'react-native'
@@ -100,6 +100,7 @@ export const RestaurantFavoriteStar = memo(
     }
   )
 )
+
 // <Popover
 //   isOpen={isOpen}
 //   onChangeOpen={setIsOpen}

@@ -1,4 +1,4 @@
-import { Restaurant, graphql, query } from '@dish/graph'
+import { Restaurant, graphql, query, useQuery } from '@dish/graph'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { MessageSquare } from 'react-feather'
 import { ScrollView, TouchableOpacity } from 'react-native'
@@ -22,7 +22,7 @@ import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
-import { useGetTagElements } from './RestaurantTagsRow'
+import { RestaurantTagsRow, useGetTagElements } from './RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 
 type RestaurantListItemProps = {
@@ -37,13 +37,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
   const om = useOvermind()
   const [isHovered, setIsHovered] = useState(false)
 
-  console.log(
-    `RestaurantListItem.render.${props.rank}.${JSON.stringify(
-      props.restaurant,
-      null,
-      2
-    )}`
-  )
+  console.log(`RestaurantListItem.render.${props.rank}.`)
 
   useDebounceEffect(
     () => {
@@ -108,12 +102,6 @@ const RestaurantListItemContent = memo(
       const isSmall = useMediaQueryIsSmall()
       const [state, setState] = useState({
         showAddComment: false,
-      })
-      const tagElements = useGetTagElements({
-        tags: restaurant.tags.map((tag) => tag.tag),
-        showMore: true,
-        restaurantSlug: restaurant.slug,
-        divider: <>,&nbsp;</>,
       })
 
       const showAddComment = state.showAddComment || isEditingUserPage(om.state)
@@ -180,11 +168,20 @@ const RestaurantListItemContent = memo(
                       alignItems="center"
                       marginBottom={-3}
                     >
-                      <RestaurantRatingViewPopover
-                        size="sm"
-                        restaurantSlug={restaurant.slug}
-                      />
-                      <HStack spacing>{tagElements}</HStack>
+                      <Suspense fallback={null}>
+                        <RestaurantRatingViewPopover
+                          size="sm"
+                          restaurantSlug={restaurant.slug}
+                        />
+                      </Suspense>
+                      <Suspense fallback={null}>
+                        <RestaurantTagsRow
+                          tags={restaurant.tags.map((tag) => tag.tag)}
+                          showMore={true}
+                          restaurantSlug={restaurant.slug}
+                          divider={<>,&nbsp;</>}
+                        />
+                      </Suspense>
                     </HStack>
                   </VStack>
                 </Link>
@@ -194,7 +191,9 @@ const RestaurantListItemContent = memo(
 
               {/* ROW: COMMENT */}
               <VStack maxWidth="90%" marginLeft={-2}>
-                <RestaurantTopReview restaurantId={restaurant.id} />
+                <Suspense fallback={null}>
+                  <RestaurantTopReview restaurantId={restaurant.id} />
+                </Suspense>
               </VStack>
 
               <Spacer size={6} />
@@ -207,7 +206,9 @@ const RestaurantListItemContent = memo(
                 spacing
               >
                 <RestaurantLenseVote />
-                <RestaurantFavoriteStar restaurantId={restaurant.id} />
+                <Suspense fallback={null}>
+                  <RestaurantFavoriteStar restaurantId={restaurant.id} />
+                </Suspense>
 
                 <TouchableOpacity
                   onPress={() =>
@@ -225,10 +226,12 @@ const RestaurantListItemContent = memo(
 
                 <Divider vertical />
 
-                <RestaurantDetailRow
-                  size="sm"
-                  restaurantSlug={restaurant.slug}
-                />
+                <Suspense fallback={null}>
+                  <RestaurantDetailRow
+                    size="sm"
+                    restaurantSlug={restaurant.slug}
+                  />
+                </Suspense>
 
                 <HoverablePopover
                   contents={
@@ -255,10 +258,12 @@ const RestaurantListItemContent = memo(
           </VStack>
 
           <VStack padding={10} paddingTop={45} width={0}>
-            <RestaurantPeek
-              size={isShowingComment ? 'lg' : 'md'}
-              restaurantSlug={restaurant.slug}
-            />
+            <Suspense fallback={null}>
+              <RestaurantPeek
+                size={isShowingComment ? 'lg' : 'md'}
+                restaurantSlug={restaurant.slug}
+              />
+            </Suspense>
           </VStack>
         </HStack>
       )
@@ -266,8 +271,8 @@ const RestaurantListItemContent = memo(
   )
 )
 
-const RestaurantTopReview = graphql(
-  ({ restaurantId }: { restaurantId: string }) => {
+const RestaurantTopReview = memo(
+  graphql(({ restaurantId }: { restaurantId: string }) => {
     const [topReview] = query.review({
       limit: 1,
       where: {
@@ -291,47 +296,53 @@ const RestaurantTopReview = graphql(
         </SelectableText>
       </CommentBubble>
     )
-  }
+  })
 )
 
-export const RestaurantPeek = graphql(function RestaurantPeek({
-  restaurantSlug,
-  size = 'md',
-}: {
-  size?: 'lg' | 'md'
-  restaurantSlug: string
-}) {
-  const spacing = size == 'lg' ? 12 : 18
-  const isMedium = useMediaQueryIsMedium()
-  const [restaurant] = query.restaurant({
-    where: {
-      slug: {
-        _eq: restaurantSlug,
+export const RestaurantPeek = memo(
+  graphql(function RestaurantPeek({
+    restaurantSlug,
+    size = 'md',
+  }: {
+    size?: 'lg' | 'md'
+    restaurantSlug: string
+  }) {
+    const spacing = size == 'lg' ? 12 : 18
+    const isMedium = useMediaQueryIsMedium()
+    const [restaurant] = query.restaurant({
+      where: {
+        slug: {
+          _eq: restaurantSlug,
+        },
       },
-    },
-  })
-  const allPhotos = restaurant?.photosForCarousel()
-  const photos = allPhotos
+    })
+    const allPhotos = restaurant?.photosForCarousel()
+    const photos = allPhotos
 
-  return (
-    <VStack position="relative" marginRight={-spacing} marginBottom={-spacing}>
-      <HStack spacing={spacing}>
-        {photos.map((photo, i) => {
-          return (
-            <DishView
-              key={i}
-              size={(size === 'lg' ? 220 : 190) * (isMedium ? 0.85 : 1)}
-              dish={
-                {
-                  name: photo.name,
-                  image: photo.src,
-                  rating: photo.rating,
-                } as any
-              }
-            />
-          )
-        })}
-      </HStack>
-    </VStack>
-  )
-})
+    return (
+      <VStack
+        position="relative"
+        marginRight={-spacing}
+        marginBottom={-spacing}
+      >
+        <HStack spacing={spacing}>
+          {photos.map((photo, i) => {
+            return (
+              <DishView
+                key={i}
+                size={(size === 'lg' ? 220 : 190) * (isMedium ? 0.85 : 1)}
+                dish={
+                  {
+                    name: photo.name,
+                    image: photo.src,
+                    rating: photo.rating,
+                  } as any
+                }
+              />
+            )
+          })}
+        </HStack>
+      </VStack>
+    )
+  })
+)
