@@ -25,7 +25,6 @@ export const RestaurantRatingViewPopover = memo(
         },
       })
       const sources = restaurant?.sources?.() ?? {}
-      console.log('rendering rating view popover, sources:', sources)
       return (
         <HoverablePopover
           position="right"

@@ -2,7 +2,7 @@ import { drawerWidthMax, pageWidthMax } from '../../constants'
 import { useWindowSize } from '../../hooks/useWindowSize'
 
 export function useHomeDrawerWidth(): number {
-  const [width] = useWindowSize({ throttle: 500 })
+  const [width] = useWindowSize({ debounce: 500 })
   let scaleFactor = 0.56
   if (width < 1550) {
     scaleFactor = 0.63
