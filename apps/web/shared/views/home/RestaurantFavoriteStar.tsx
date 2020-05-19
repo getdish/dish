@@ -7,7 +7,7 @@ import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { useForceUpdate } from '../../hooks/useForceUpdate'
 import { useOvermind } from '../../state/useOvermind'
 import { Toast } from '../Toast'
-import { LinkButton } from '../ui/Link'
+import { LinkButton } from '../ui/LinkButton'
 import { VStack } from '../ui/Stacks'
 import { getInputNode } from './HomeSearchBar'
 

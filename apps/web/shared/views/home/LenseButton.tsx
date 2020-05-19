@@ -7,7 +7,7 @@ import { Tag } from '../../state/Tag'
 import { Box } from '../ui/Box'
 import { HoverablePopover } from '../ui/HoverablePopover'
 import { LinearGradient } from '../ui/LinearGradient'
-import { LinkButton } from '../ui/Link'
+import { LinkButton } from '../ui/LinkButton'
 import { HStack, ZStack } from '../ui/Stacks'
 
 export type LenseButtonSize = 'md' | 'lg'

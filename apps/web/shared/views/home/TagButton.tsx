@@ -4,11 +4,13 @@ import React, { memo } from 'react'
 import { ChevronUp, X } from 'react-feather'
 import { Text, TextStyle } from 'react-native'
 
-import { LinkButton } from '../ui/Link'
+import { LinkButton } from '../ui/LinkButton'
 import { HStack, StackProps, VStack } from '../ui/Stacks'
 import { SuperScriptText } from './SuperScriptText'
 
-export const getTagButtonProps = (tag: Tag): TagButtonProps => {
+export type TagButtonTagProps = Pick<Tag, 'name' | 'type' | 'icon' | 'rgb'>
+
+export const getTagButtonProps = (tag: TagButtonTagProps): TagButtonProps => {
   return {
     name: tag.name,
     type: tag.type as TagType,
@@ -21,7 +23,7 @@ export const getTagColor = (rgb?: [number, number, number]): string =>
   rgb ? `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})` : 'inherit'
 
 export type TagButtonProps = StackProps &
-  Pick<Tag, 'name' | 'type' | 'icon'> & {
+  TagButtonTagProps & {
     rgb: [number, number, number]
     rank?: number
     size?: 'lg' | 'md' | 'sm'

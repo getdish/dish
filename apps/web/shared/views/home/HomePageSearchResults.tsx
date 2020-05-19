@@ -5,6 +5,8 @@ import { Edit2 } from 'react-feather'
 import { Image, ScrollView, Text, View } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
+import { useDebounce } from '../../hooks/useDebounce'
+import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { HomeStateItemSearch, isEditingUserPage } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { useOvermind } from '../../state/useOvermind'
@@ -13,7 +15,7 @@ import { Toast } from '../Toast'
 import { Box } from '../ui/Box'
 import { Circle } from '../ui/Circle'
 import { Divider } from '../ui/Divider'
-import { LinkButton } from '../ui/Link'
+import { LinkButton } from '../ui/LinkButton'
 import { PageTitle } from '../ui/PageTitle'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { closeAllPopovers, popoverCloseCbs } from '../ui/PopoverShared'
@@ -185,10 +187,24 @@ const HomeSearchResultsViewContent = memo(
     const om = useOvermind()
     const allRestaurants = om.state.home.allRestaurants
     const topPad = 0
-    // const [fullyLoad, setFullyLoad] = useState(false)
-    // useWaterfall(() => {
-    //   setFullyLoad(true)
-    // }, [state.results])
+
+    const resultsIds = state.results?.results?.restaurantIds ?? []
+    const resultsAll = resultsIds.map((id) => allRestaurants[id])
+    const [showAll, setShowAll] = useState(false)
+    let results = showAll ? resultsAll : resultsAll.slice(0, 4)
+
+    // load a few at a time, less to start
+    const isLoading = results[0]?.name == null
+
+    useDebounceEffect(
+      () => {
+        if (!isLoading) {
+          setShowAll(true)
+        }
+      },
+      500,
+      [isLoading]
+    )
 
     if (!state.results?.results || state.results.status === 'loading') {
       return (
@@ -196,16 +212,6 @@ const HomeSearchResultsViewContent = memo(
           <LoadingItems />
         </VStack>
       )
-    }
-
-    const resultsIds = state.results?.results?.restaurantIds
-    const resultsAll = resultsIds.map((id) => allRestaurants[id])
-
-    let results = resultsAll
-
-    // load a few at a time, only 5 to start
-    if (results[0].name === null) {
-      results = results.slice(0, 4)
     }
 
     if (!results.length) {

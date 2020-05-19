@@ -1,9 +1,9 @@
-import { Tag, TagType, graphql, query } from '@dish/graph'
+import { Tag, graphql, query } from '@dish/graph'
 import React, { memo } from 'react'
 
 import { useOvermind } from '../../state/useOvermind'
 import { HStack } from '../ui/Stacks'
-import { TagButton, getTagButtonProps } from './TagButton'
+import { TagButton, TagButtonTagProps, getTagButtonProps } from './TagButton'
 import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 
 type TagRowProps = {
@@ -41,7 +41,7 @@ export const useGetTagElements = (props: TagRowProps) => {
     return null
   }
 
-  let tags: Tag[] = []
+  let tags: TagButtonTagProps[] = []
 
   if (props.tags) {
     tags = props.tags
@@ -53,9 +53,10 @@ export const useGetTagElements = (props: TagRowProps) => {
         },
       },
     })
-    tags = restaurant.tags({
+    const restaurantTags = restaurant.tags({
       limit: 6,
     })
+    tags = restaurantTags.map((tag) => tag.tag)
   }
 
   if (showMore) {
@@ -68,8 +69,8 @@ export const useGetTagElements = (props: TagRowProps) => {
         replace
         size="sm"
         rank={index}
-        key={`${index}${tag.tag.name}`}
-        {...getTagButtonProps(tag.tag)}
+        key={`${index}${tag.name}`}
+        {...getTagButtonProps(tag)}
         votable={!!om.state.user.user}
       />
     )
