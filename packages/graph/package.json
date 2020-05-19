@@ -14,7 +14,7 @@
     "generate": "./generate.sh",
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
-    "test": "true",
+    "test": "ava",
     "postinstall": "patch-package || yarn postinstall-verbose",
     "postinstall-verbose": "patch --verbose -t -p1 -i patches/gqless+0.0.1-alpha.29.patch"
   },

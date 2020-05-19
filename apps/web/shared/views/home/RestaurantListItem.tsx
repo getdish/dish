@@ -331,13 +331,11 @@ export const RestaurantPeek = memo(
               <DishView
                 key={i}
                 size={(size === 'lg' ? 220 : 190) * (isMedium ? 0.85 : 1)}
-                dish={
-                  {
-                    name: photo.name,
-                    image: photo.src,
-                    rating: photo.rating,
-                  } as any
-                }
+                dish={{
+                  name: photo.name,
+                  image: photo.src,
+                  rating: photo.rating,
+                }}
               />
             )
           })}
