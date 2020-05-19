@@ -1,4 +1,4 @@
-import { Tag, graphql, query } from '@dish/graph'
+import { Tag, graphql, useQuery } from '@dish/graph'
 import React, { memo } from 'react'
 
 import { useOvermind } from '../../state/useOvermind'
@@ -15,7 +15,7 @@ type TagRowProps = {
 }
 
 export const RestaurantTagsRow = memo(
-  graphql((props: TagRowProps) => {
+  graphql(function RestaurantTagsRow(props: TagRowProps) {
     const { size = 'md' } = props
     const drawerWidth = useHomeDrawerWidthInner()
     const tagElements = useGetTagElements({ ...props, size })

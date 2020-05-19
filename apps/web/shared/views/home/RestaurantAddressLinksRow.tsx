@@ -1,4 +1,4 @@
-import { graphql, query } from '@dish/graph'
+import { graphql, query, useQuery } from '@dish/graph'
 import React, { memo } from 'react'
 import { ExternalLink } from 'react-feather'
 import { Image, Linking, Text } from 'react-native'
