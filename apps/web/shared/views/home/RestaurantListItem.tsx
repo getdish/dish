@@ -102,7 +102,7 @@ const RestaurantListItemContent = memo(
         showAddComment: false,
       })
       const tagElements = useGetTagElements({
-        tags: restaurant.tags,
+        tags: restaurant.tags.map((tag) => tag.tag),
         showMore: true,
         restaurantSlug: restaurant.slug,
         divider: <>,&nbsp;</>,
