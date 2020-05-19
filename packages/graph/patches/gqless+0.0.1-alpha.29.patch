@@ -33,32 +33,11 @@ index 27c8f79..4c5db75 100644
  export declare type TypeData<TType extends ValidType, TExtensions extends Tuple = {}> = TType extends Array<any> ? ArrayData<TType, UnshiftExtension<TExtensions, TType>> : TType extends ScalarType | EnumType ? ScalarData<TType, UnshiftExtension<TExtensions, TType>> : TType extends FieldsType ? FieldsData<TType, UnshiftExtension<TExtensions, TType>> : null;
 -export {};
 +
-diff --git a/node_modules/gqless/dist/gqless.cjs.development.js b/node_modules/gqless/dist/gqless.cjs.development.js
-index 12268bf..3ab50b1 100644
---- a/node_modules/gqless/dist/gqless.cjs.development.js
-+++ b/node_modules/gqless/dist/gqless.cjs.development.js
-@@ -2,6 +2,8 @@
- 
- function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
- 
-+debugger
-+
- var mixClasses = require('mix-classes');
- var tslib = require('tslib');
- var utils = require('@gqless/utils');
 diff --git a/node_modules/gqless/dist/gqless.esm.js b/node_modules/gqless/dist/gqless.esm.js
-index cc6eb3f..9d8c5fa 100644
+index cc6eb3f..f54081e 100644
 --- a/node_modules/gqless/dist/gqless.esm.js
 +++ b/node_modules/gqless/dist/gqless.esm.js
-@@ -451,6 +451,7 @@ const buildArguments = ({
-     }
- 
-     if (Array.isArray(arg)) {
-+      console.log('is array arg', arg)
-       let indexContext;
- 
-       if (context) {
-@@ -478,10 +479,17 @@ const buildSelections = ({
+@@ -478,10 +478,17 @@ const buildSelections = ({
    formatter
  }, tree, variables) => {
    const innerNode = tree.selection.node instanceof NodeContainer ? tree.selection.node.innerNode : tree.selection.node;
@@ -76,7 +55,7 @@ index cc6eb3f..9d8c5fa 100644
    const selections = [includeTypename && '__typename', ...tree.children.map(tree => buildSelectionTree(formatter, tree, variables))].filter(Boolean);
    if (!selections.length) return '';
    return selections.join(LINE_SEPARATOR);
-@@ -559,17 +567,16 @@ const memoized =
+@@ -559,17 +566,16 @@ const memoized =
  createMemo();
  const getAlias = tree => {
    if (!tree.parent) return;
