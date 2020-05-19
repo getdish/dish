@@ -67,7 +67,7 @@ module.exports = function getWebpackConfig(
       modules: ['node_modules'],
     },
     optimization: {
-      minimize: isProduction && TARGET !== 'ssr',
+      minimize: !process.env.NO_MINIFY && isProduction && TARGET !== 'ssr',
       concatenateModules: isProduction && !process.env.ANALYZE_BUNDLE,
       usedExports: isProduction,
       splitChunks:

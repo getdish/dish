@@ -48,9 +48,9 @@ const search = window.location.search
 async function start() {
   console.log('starting...')
   const om = createOvermind(config, {
-    devtools: `localhost:3031`,
+    devtools: process.env.NODE_ENV === 'production' ? false : `localhost:3031`,
     logProxies: true,
-    hotReloading: true,
+    hotReloading: process.env.NODE_ENV !== 'production',
   })
   window['om'] = om
 
