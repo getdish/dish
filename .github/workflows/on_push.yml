@@ -93,6 +93,7 @@ jobs:
         if: failure()
 
   deploy:
+    if: github.ref == 'refs/heads/production'
     runs-on: ubuntu-latest
     needs: [health, specs, integration]
     steps:
@@ -103,5 +104,4 @@ jobs:
         run: .github/workflows/scripts/build.sh
       - name: Deploy
         run: .github/workflows/scripts/deploy.sh
-        if: github.ref == 'refs/heads/production'
 

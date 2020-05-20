@@ -30,6 +30,25 @@ curl -L https://github.com/hasura/graphql-engine/raw/master/cli/get.sh | bash
 hasura migrate apply --endpoint https://hasura.rio.dishapp.com --admin-secret "$HASURA_ADMIN"
 popd
 
+echo "Pushing new docker images to production registry..."
+DISH_REGISTRY_PASSWORD=$(\
+  grep 'DOCKER_REGISTRY_PASSWORD:' env.enc.production.yaml \
+  | tail -n1 | cut -c 27- | tr -d '"'\
+)
+docker login $DISH_REGISTRY -u dish -p $DISH_REGISTRY_PASSWORD
+declare -a images=(
+  "web"
+  "worker"
+  "crawlers"
+  "jwt-server"
+  "search"
+  "backups"
+)
+for image in "${images[@]}"
+do
+  docker push $DISH_REGISTRY/dish/$image
+done
+
 DO_KEY=$(\
   grep 'TF_VAR_DO_DISH_KEY:' env.enc.production.yaml \
     | tail -n1 | cut -c 21- | tr -d '"'\
