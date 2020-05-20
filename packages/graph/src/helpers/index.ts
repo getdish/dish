@@ -1,8 +1,12 @@
-import { sep } from 'path'
-
 import { Auth } from '../auth'
+import { mutation, query, resolved } from './index'
 
-export * from './tag-helpers'
+export * from './helpers/tag'
+export * from './helpers/tag_tag'
+
+type DishGeneric = {
+  id: string
+}
 
 export const isNode = typeof window == 'undefined'
 export const isBrowserProd =
@@ -125,4 +129,88 @@ export const slugify = (text: string, separator = '-') => {
 
   slugCache[separator][out] = out
   return out
+}
+
+export async function findOne<T>(table: string, hash: Partial<T>) {
+  const where = Object.keys(hash).map((key) => {
+    return { [key]: { _eq: hash[key] } }
+  })
+  return await resolved(() => {
+    return query[table]({
+      where: {
+        _and: where,
+      },
+    }) as T
+  })
+}
+
+export async function insert<T>(table: string, objects: T[]) {
+  return await resolved(() => {
+    return mutation['insert_' + table]({
+      objects: objects,
+    }) as T[]
+  })
+}
+
+export async function upsert<T>(
+  table: string,
+  constraint: string,
+  objects: T[]
+) {
+  // TODO: Is there a better way to get the updateable columns?
+  const update_columns = Object.keys(objects[0])
+  return await resolved(() => {
+    return mutation['insert_' + table]({
+      objects: objects,
+      on_conflict: {
+        constraint: constraint,
+        update_columns: update_columns,
+      },
+    }) as T[]
+  })
+}
+
+export async function update<T extends DishGeneric>(table: string, object: T) {
+  return await resolved(() => {
+    return mutation['update_' + table]({
+      where: { id: { _eq: object.id } },
+      _set: object,
+    }) as T
+  })
+}
+
+// Taken from: https://github.com/trekhleb/javascript-algorithms
+export function levenshteinDistance(a: string, b: string) {
+  // Create empty edit distance matrix for all possible modifications of
+  // substrings of a to substrings of b.
+  const distanceMatrix = Array(b.length + 1)
+    .fill(null)
+    .map(() => Array(a.length + 1).fill(null))
+
+  // Fill the first row of the matrix.
+  // If this is first row then we're transforming empty string to a.
+  // In this case the number of transformations equals to size of a substring.
+  for (let i = 0; i <= a.length; i += 1) {
+    distanceMatrix[0][i] = i
+  }
+
+  // Fill the first column of the matrix.
+  // If this is first column then we're transforming empty string to b.
+  // In this case the number of transformations equals to size of b substring.
+  for (let j = 0; j <= b.length; j += 1) {
+    distanceMatrix[j][0] = j
+  }
+
+  for (let j = 1; j <= b.length; j += 1) {
+    for (let i = 1; i <= a.length; i += 1) {
+      const indicator = a[i - 1] === b[j - 1] ? 0 : 1
+      distanceMatrix[j][i] = Math.min(
+        distanceMatrix[j][i - 1] + 1, // deletion
+        distanceMatrix[j - 1][i] + 1, // insertion
+        distanceMatrix[j - 1][i - 1] + indicator // substitution
+      )
+    }
+  }
+
+  return distanceMatrix[b.length][a.length]
 }

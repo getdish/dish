@@ -1,14 +1,7 @@
 import '@dish/common'
 
-import {
-  Dish,
-  Restaurant,
-  RestaurantTag,
-  RestaurantTagWithID,
-  Scrape,
-  ScrapeData,
-  Tag,
-} from '@dish/models'
+import { Restaurant, RestaurantTag, Tag, tagFindCountries } from '@dish/graph'
+import { Dish, Scrape, ScrapeData } from '@dish/models'
 import { WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
@@ -389,7 +382,7 @@ export class Self extends WorkerJob {
   }
 
   async upsertCountryTags(tags: string[]) {
-    const country_tags = await Tag.findCountries(tags)
+    const country_tags = await tagFindCountries(tags)
     await this.restaurant.upsertManyTags(
       country_tags.map((tag: Tag) => {
         return {
