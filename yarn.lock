@@ -2239,7 +2239,7 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@webhotelier/webpack-fast-refresh@*":
+"@webhotelier/webpack-fast-refresh@^5.0.1":
   version "5.0.1"
   resolved "https://registry.npmjs.org/@webhotelier/webpack-fast-refresh/-/webpack-fast-refresh-5.0.1.tgz#ce509eabbf1d67c1a8aa113cdbce54f3ae40c255"
   integrity sha512-I6CTOexQ1pk5yDjNX1ahA5l11dqjWMFzmdaEWKHcC8YNLWe5w1waoFDkSlTPippDC/wbYRElhfxp1ToNmzb/IQ==
@@ -10018,6 +10018,14 @@ mem@^6.1.0:
     map-age-cleaner "^0.1.3"
     mimic-fn "^3.0.0"
 
+memory-fs@*:
+  version "0.5.0"
+  resolved "https://registry.npmjs.org/memory-fs/-/memory-fs-0.5.0.tgz#324c01288b88652966d161db77838720845a8e3c"
+  integrity sha512-jA0rdU5KoQMC0e6ppoNRtpp6vjFq6+NY7r8hywnC7V+1Xj/MtHwGIbB1QaK/dunyjWteJzmkpd7ooeWg10T7GA==
+  dependencies:
+    errno "^0.1.3"
+    readable-stream "^2.0.1"
+
 memory-fs@^0.4.1:
   version "0.4.1"
   resolved "https://registry.npmjs.org/memory-fs/-/memory-fs-0.4.1.tgz#3a9a20b8462523e447cfbc7e8bb80ed667bfc552"
@@ -12487,15 +12495,15 @@ react-native@0.62.2:
     use-subscription "^1.0.0"
     whatwg-fetch "^3.0.0"
 
-react-refresh@0.8.2:
-  version "0.8.2"
-  resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.8.2.tgz#24bb0858eac92b0d7b0dd561747f0c9fd6c60327"
-  integrity sha512-n8GXxo3DwM2KtFEL69DAVhGc4A1THn2qjmfvSo3nze0NLCoPbywazeJPqdp0RdSGLmyhQzeyA+XPXOobbYlkzg==
-
 react-refresh@^0.4.0:
   version "0.4.2"
   resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.4.2.tgz#54a277a6caaac2803d88f1d6f13c1dcfbd81e334"
   integrity sha512-kv5QlFFSZWo7OlJFNYbxRtY66JImuP2LcrFgyJfQaf85gSP+byzG21UbDQEYjU7f//ny8rwiEkO6py2Y+fEgAQ==
+
+react-refresh@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.8.2.tgz#24bb0858eac92b0d7b0dd561747f0c9fd6c60327"
+  integrity sha512-n8GXxo3DwM2KtFEL69DAVhGc4A1THn2qjmfvSo3nze0NLCoPbywazeJPqdp0RdSGLmyhQzeyA+XPXOobbYlkzg==
 
 react-side-effect@^1.1.0:
   version "1.2.0"

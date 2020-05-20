@@ -1,11 +1,13 @@
 {
-  "name": "@dish/react-native-ui-webpack",
+  "name": "@dish/reswift-ui-webpack",
   "version": "0.0.1",
   "main": "_/index.js",
   "sideEffects": false,
   "scripts": {
     "build": "tsc -b || true",
-    "watch": "tsc -b --watch --preserveWatchOutput"
+    "watch": "tsc -b --watch --preserveWatchOutput",
+    "test": "DISH_ENV=test ava test/* --verbose",
+    "test:watch": "DISH_ENV=test ava test/* --watch"
   },
   "license": "MIT",
   "dependencies": {
@@ -17,9 +19,12 @@
     "babel-literal-to-ast": "^2.1.0",
     "fs-extra": "^9.0.0",
     "loader-utils": "^2.0.0",
-    "webpack": "^5.0.0-beta.16"
+    "webpack": "^5.0.0-beta.16",
+    "invariant": "^2.2.4",
+    "memory-fs": "*"
   },
   "devDependencies": {
-    "@types/webpack": "4.41.13"
+    "@types/webpack": "4.41.13",
+    "ava": "^3.8.2"
   }
 }

@@ -1,9 +1,8 @@
 import 'isomorphic-unfetch'
 
 import { createFetcher } from './createFetcher'
-import { client } from './graphql'
-
-// import { useQueryInner } from './hooks'
+import { client, query_root } from './graphql'
+import { useQueryInner } from './hooks'
 
 export function startLogging(verbose = true) {
   // dont import outside node, it accesses window
@@ -24,10 +23,10 @@ export * from './helpers'
 
 // these hacky type defs here avoid huge slowdown in ts
 // otherwise could just return query_root thats it
-// type Query = query_root | void
-// export const useQuery = <A extends Query>(): A extends void ? never : A => {
-//   return useQueryInner(client) as any
-// }
+type Query = query_root | void
+export const useQuery = <A extends Query>(): A extends void ? never : A => {
+  return useQueryInner(client) as any
+}
 
 // type Mutation = mutation_root | void
 // export const useMutation = (): Mutation => {

@@ -1,7 +1,7 @@
 import fs from 'fs-extra'
-import webpack from 'webpack'
 // @ts-ignore
-import MemoryFileSystem from 'webpack/lib/MemoryOutputFileSystem'
+import MemoryFileSystem from 'memory-fs'
+import webpack from 'webpack'
 import NodeWatchFileSystem from 'webpack/lib/node/NodeWatchFileSystem'
 
 import { CacheObject, PluginContext } from './types'
@@ -14,6 +14,12 @@ type Plugin = webpack.WebpackPluginInstance
 export * from './types'
 
 const counterKey = Symbol.for('counter')
+
+declare module 'webpack' {
+  interface Compiler {
+    watchFileSystem: import('webpack/lib/node/NodeWatchFileSystem')
+  }
+}
 
 export class GlossWebpackPlugin implements Plugin {
   constructor() {
