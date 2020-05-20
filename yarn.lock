@@ -12461,7 +12461,7 @@ react-native-unimodules@~0.7.0:
     unimodules-sensors-interface "~5.0.0"
     unimodules-task-manager-interface "~5.0.0"
 
-react-native-web@0.12.2, react-native-web@^0.12.2:
+react-native-web@*, react-native-web@0.12.2, react-native-web@^0.12.2:
   version "0.12.2"
   resolved "https://registry.npmjs.org/react-native-web/-/react-native-web-0.12.2.tgz#d0fe8739d222f412decc4f1de2e12f25e91e2f56"
   integrity sha512-0YLDjwIm5LjQDOPUUregtuEBexH7oQph6x9FSAyzCM52QmM82TfrYRXXSwzI2eSdT1OzM2BTfP3zxmEL+coyhg==
