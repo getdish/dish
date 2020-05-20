@@ -67,7 +67,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
         <HStack
           alignItems="center"
           position="relative"
-          width="calc(100% + 200px)"
+          width="calc(100% + 25px)"
         >
           <ZStack
             fullscreen

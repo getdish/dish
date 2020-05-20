@@ -46,7 +46,9 @@ interface RealOptions extends OptionObject {
   compilerConfig: ReturnType<typeof ts.parseJsonConfigFileContent>
 }
 
-const setup = (loaderCTX: webpack.loader.LoaderContext): RealOptions => {
+const setup = (
+  loaderCTX: any /* webpack.loader.LoaderContext */
+): RealOptions => {
   const options = getOptions(loaderCTX)
   validateOptions(optionsSchema, options, { name: LOADER_NAME })
 
@@ -83,7 +85,7 @@ const setup = (loaderCTX: webpack.loader.LoaderContext): RealOptions => {
   }
 }
 
-type LoaderCTX = webpack.loader.LoaderContext
+type LoaderCTX = any
 
 const handleDiagnostics = (
   ctx: LoaderCTX,
@@ -103,7 +105,7 @@ const handleDiagnostics = (
   }
 }
 
-const tsickleLoader: webpack.loader.Loader = function (
+const tsickleLoader: any /* webpack.WebpackPluginFunction */ = function (
   this: LoaderCTX,
   _source: string | Buffer
 ) {

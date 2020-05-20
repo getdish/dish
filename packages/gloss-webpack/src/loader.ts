@@ -9,7 +9,7 @@ import { LoaderOptions, PluginContext } from './types'
 
 Error.stackTraceLimit = Infinity
 
-export default function (this: any, content) {
+export default function GlossWebpackLoader(this: any, content) {
   if (this.cacheable) {
     this.cacheable()
   }
@@ -25,8 +25,8 @@ export default function (this: any, content) {
   const options: LoaderOptions = loaderUtils.getOptions(this) || {}
   const { memoryFS, cacheObject } = pluginContext
   const outDir = '.out'
-  const outPath = path.join(require.resolve('gloss'), '..', '..', outDir)
-  const outRelPath = `gloss/${outDir}`
+  const outPath = path.join(__dirname, 'tmp')
+  const outRelPath = `tmp/${outDir}`
 
   const rv = extractStyles(
     content,

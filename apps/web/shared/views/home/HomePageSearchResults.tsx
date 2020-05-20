@@ -1,5 +1,5 @@
 import { graphql, query, useQuery } from '@dish/graph'
-import React, { Suspense, memo, useState } from 'react'
+import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Edit2 } from 'react-feather'
 import { Image, ScrollView, Text, View } from 'react-native'
 
@@ -180,6 +180,8 @@ const MyListButton = ({
   )
 }
 
+const chunks = 4
+
 const HomeSearchResultsViewContent = memo(
   ({ state }: { state: HomeStateItemSearch }) => {
     const om = useOvermind()
@@ -188,8 +190,9 @@ const HomeSearchResultsViewContent = memo(
 
     const resultsIds = state.results?.results?.restaurantIds ?? []
     const resultsAll = resultsIds.map((id) => allRestaurants[id])
-    const [showAll, setShowAll] = useState(false)
-    let results = showAll ? resultsAll : resultsAll.slice(0, 4)
+    const [chunk, setChunk] = useState(chunks)
+    const perChunk = Math.ceil(resultsAll.length / chunks)
+    const results = resultsAll.slice(0, chunk * perChunk)
 
     console.log('HomeSearchResultsViewContent.render')
 
@@ -197,15 +200,23 @@ const HomeSearchResultsViewContent = memo(
     const isLoading = results[0]?.name == null
 
     // disable for a moment to test initail render
-    // useDebounceEffect(
-    //   () => {
-    //     if (!isLoading) {
-    //       setShowAll(true)
-    //     }
-    //   },
-    //   500,
-    //   [isLoading]
-    // )
+    useEffect(() => {
+      if (!isLoading) {
+        const tm = setInterval(() => {
+          if (chunk > chunks) {
+            clearInterval(tm)
+          } else {
+            setChunk((x) => {
+              return x + 1
+            })
+          }
+        }, 700)
+
+        return () => {
+          clearInterval(tm)
+        }
+      }
+    }, [isLoading])
 
     if (!state.results?.results || state.results.status === 'loading') {
       return (

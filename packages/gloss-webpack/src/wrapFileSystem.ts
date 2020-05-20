@@ -31,7 +31,6 @@ export function wrapFileSystem(fs, memoryFS): InputFileSystem {
 
       if (handledMethods.hasOwnProperty(key)) {
         return function (this: any, filePath: string, ...args: string[]) {
-          console.log('old gloss reference')
           if (filePath.endsWith('__gloss.css')) {
             return memoryFS[key](filePath, ...args)
           }

@@ -38,11 +38,6 @@ const UNTOUCHED_PROPS = {
   className: true,
 }
 
-const GLOSS_SOURCES = {
-  '@o/ui': true,
-  '@o/ui/test': true,
-}
-
 type CSSExtracted = { filename: string; content: string }
 
 // used for later seeing how much we can extract (and to apply theme styles)
@@ -78,55 +73,24 @@ export function extractStyles(
   // Using a map for (officially supported) guaranteed insertion order
   const cssMap = new Map<string, { css: string; commentTexts: string[] }>()
   const ast = parse(src)
-  let glossSrc = false
+  let doesImport = false
   const validComponents = {}
-  // default to using require syntax
-  let useImportSyntax = false
   const shouldPrintDebug = src[0] === '/' && src[1] === '/' && src[2] === '!'
 
   const JSX_VALID_NAMES = ['HStack', 'VStack']
 
-  // we allow things within the ui kit to avoid the more tedious config
-  const isInternal =
-    options.internalViewsPaths?.some((x) => sourceFileName.indexOf(x) === 0) ??
-    false
-
-  let importsGloss = false
-
   // Find gloss require in program root
   ast.program.body = ast.program.body.filter((item: t.Node) => {
     if (t.isImportDeclaration(item)) {
-      // not imported from gloss? byeeee
-      if (item.source.value === 'gloss') {
-        importsGloss = true
-      }
-      if (!importsGloss && !isInternal && !GLOSS_SOURCES[item.source.value]) {
+      if (item.source.value !== '@dish/ui') {
+        doesImport = true
         return true
       }
-      glossSrc = true
-      useImportSyntax = true
       item.specifiers = item.specifiers.filter((specifier) => {
-        // keep the weird stuff
-        if (
-          !t.isImportSpecifier(specifier) ||
-          !t.isIdentifier(specifier.imported) ||
-          !t.isIdentifier(specifier.local)
-        ) {
-          return true
-        }
-        if (specifier.local.name[0] !== specifier.local.name[0].toUpperCase()) {
-          return true
-        }
         if (!JSX_VALID_NAMES.includes(specifier.local.name)) {
           return true
         }
-        // COMMENTED OUT
-        // views[specifier.local.name] = options.views[specifier.local.name]
         validComponents[specifier.local.name] = true
-        if (shouldPrintDebug) {
-          console.log('found valid component', specifier.local.name)
-        }
-        // dont remove the import
         return true
       })
     }
@@ -134,43 +98,12 @@ export function extractStyles(
   })
 
   // gloss isn't included anywhere, so let's bail
-  if (!glossSrc || !Object.keys(validComponents).length) {
+  if (!doesImport || !Object.keys(validComponents).length) {
     return {
       ast,
       css: [],
       js: src,
       map: null,
-    }
-  }
-
-  // creates an evaluator to get complex values from babel in this path
-  function createEvaluator(
-    path: NodePath<any>,
-    sourceFileName: string,
-    defaultOpts?: EvaluateASTNodeOptions
-  ) {
-    // Generate scope object at this level
-    const staticNamespace = getStaticBindingsForScope(
-      path.scope,
-      sourceFileName,
-      // per-file cache of evaluated bindings
-      // TODO can be per-module?
-      {},
-      options.whitelistStaticModules,
-      execFile
-    )
-    const evalContext = vm.createContext(staticNamespace)
-    const evalFn = (n: t.Node) => {
-      // called when evaluateAstNode encounters a dynamic-looking prop
-      // variable
-      if (t.isIdentifier(n)) {
-        invariant(staticNamespace[n.name], 'identifier not in staticNamespace')
-        return staticNamespace[n.name]
-      }
-      return vm.runInContext(`(${generate(n).code})`, evalContext)
-    }
-    return (n: t.Node, o?: EvaluateASTNodeOptions) => {
-      return evaluateAstNode(n, evalFn, { ...defaultOpts, ...o })
     }
   }
 
@@ -828,19 +761,9 @@ domNode: ${domNode}
     // append require/import statement to the document
     if (content !== '') {
       css.push({ filename, content })
-      if (useImportSyntax) {
-        ast.program.body.unshift(
-          t.importDeclaration([], t.stringLiteral(importPath))
-        )
-      } else {
-        ast.program.body.unshift(
-          t.expressionStatement(
-            t.callExpression(t.identifier('require'), [
-              t.stringLiteral(importPath),
-            ])
-          )
-        )
-      }
+      ast.program.body.unshift(
+        t.importDeclaration([], t.stringLiteral(importPath))
+      )
     }
   }
 
@@ -872,29 +795,60 @@ domNode: ${domNode}
   }
 }
 
-const execCache = {}
-const execFile = (file: string) => {
-  if (execCache[file]) {
-    return execCache[file]
-  }
-  console.log('exec', file)
-  const out = babel.transformFileSync(file, {
-    cwd: path.join(__dirname, '..', '..'),
-    configFile: false,
-    babelrc: false,
-    parserOpts: parserOptions,
-    plugins: [
-      '@babel/plugin-transform-modules-commonjs',
-      // omg this fixed it...
-      ['@babel/plugin-transform-typescript', { isTSX: true }],
-      '@babel/plugin-transform-react-jsx',
-    ],
-  }).code
-  const exported = {
-    exports: {},
-  }
-  vm.runInContext(out, vm.createContext(exported))
-  const res = exported.exports
-  execCache[file] = res
-  return res
-}
+// const execCache = {}
+// const execFile = (file: string) => {
+//   if (execCache[file]) {
+//     return execCache[file]
+//   }
+//   console.log('exec', file)
+//   const out = babel.transformFileSync(file, {
+//     cwd: path.join(__dirname, '..', '..'),
+//     configFile: false,
+//     babelrc: false,
+//     parserOpts: parserOptions,
+//     plugins: [
+//       '@babel/plugin-transform-modules-commonjs',
+//       // omg this fixed it...
+//       ['@babel/plugin-transform-typescript', { isTSX: true }],
+//       '@babel/plugin-transform-react-jsx',
+//     ],
+//   }).code
+//   const exported = {
+//     exports: {},
+//   }
+//   vm.runInContext(out, vm.createContext(exported))
+//   const res = exported.exports
+//   execCache[file] = res
+//   return res
+// }
+
+// creates an evaluator to get complex values from babel in this path
+// function createEvaluator(
+//   path: NodePath<any>,
+//   sourceFileName: string,
+//   defaultOpts?: EvaluateASTNodeOptions
+// ) {
+//   // Generate scope object at this level
+//   const staticNamespace = getStaticBindingsForScope(
+//     path.scope,
+//     sourceFileName,
+//     // per-file cache of evaluated bindings
+//     // TODO can be per-module?
+//     {},
+//     options.whitelistStaticModules,
+//     execFile
+//   )
+//   const evalContext = vm.createContext(staticNamespace)
+//   const evalFn = (n: t.Node) => {
+//     // called when evaluateAstNode encounters a dynamic-looking prop
+//     // variable
+//     if (t.isIdentifier(n)) {
+//       invariant(staticNamespace[n.name], 'identifier not in staticNamespace')
+//       return staticNamespace[n.name]
+//     }
+//     return vm.runInContext(`(${generate(n).code})`, evalContext)
+//   }
+//   return (n: t.Node, o?: EvaluateASTNodeOptions) => {
+//     return evaluateAstNode(n, evalFn, { ...defaultOpts, ...o })
+//   }
+// }

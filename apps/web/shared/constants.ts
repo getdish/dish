@@ -11,7 +11,7 @@ export const drawerBorderRadius = 16
 export const searchBarTopOffset = 6
 export const searchBarHeight = 53
 export const pageWidthMax = 1380
-export const drawerWidthMax = 880
+export const drawerWidthMax = 930
 
 export const LIVE_SEARCH_DOMAIN = 'https://search.rio.dishapp.com'
 
