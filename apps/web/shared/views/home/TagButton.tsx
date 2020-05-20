@@ -82,11 +82,13 @@ export const TagButton = memo(
           height={scale * 31}
           backgroundColor={bg}
           borderRadius={8 * scale}
+          borderWidth={1}
+          borderColor={subtle ? 'transparent' : 'rgba(0,0,0,0.15)'}
           overflow="hidden"
           alignItems="center"
-          shadowColor={subtle ? 'transparent' : 'rgba(0,0,0,0.15)'}
-          shadowRadius={3 * scale}
-          shadowOffset={{ width: 0, height: 0 * scale }}
+          // shadowColor={subtle ? 'transparent' : 'rgba(0,0,0,0.15)'}
+          // shadowRadius={3 * scale}
+          // shadowOffset={{ width: 0, height: 0 * scale }}
           position="relative"
           minHeight={lineHeight}
           {...rest}

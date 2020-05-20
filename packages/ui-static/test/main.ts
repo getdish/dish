@@ -5,18 +5,22 @@ import webpack from 'webpack'
 
 import { GlossWebpackPlugin } from '../src'
 
-process.env.NODE_ENV = 'development'
+const mode = 'production'
+process.env.NODE_ENV = mode
 
 interface Context {}
 const test = anyTest as TestInterface<Context>
 
 const specDir = path.join(__dirname, 'spec')
 
-test('it extract statics', async (t) => {
+test('extracts static styles', async (t) => {
   const compiler = webpack({
     context: specDir,
-    mode: 'development',
+    mode: mode,
     devtool: false,
+    optimization: {
+      minimize: false,
+    },
     entry: path.join(specDir, 'test.tsx'),
     output: {
       filename: 'test.out.tmp.js',
@@ -25,6 +29,9 @@ test('it extract statics', async (t) => {
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
       mainFields: ['tsmain', 'browser', 'module', 'main'],
+      alias: {
+        'react-native-web': false,
+      },
     },
     module: {
       rules: [

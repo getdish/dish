@@ -8,7 +8,7 @@ const HTMLWebpackPlugin = require('html-webpack-plugin')
 const LodashPlugin = require('lodash-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const ReactRefreshPlugin = require('@webhotelier/webpack-fast-refresh')
-// const ReactNativeUIPlugin = require('@dish/react-native-ui-webpack')
+// const ReactNativeUIPlugin = require('@dish/ui-static')
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const isProduction = process.env.NODE_ENV === 'production'

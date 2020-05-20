@@ -1,10 +1,12 @@
 import { VStack } from '@dish/ui'
-import { Text } from 'react-native'
+import React from 'react'
 
-export function Test() {
+function Test() {
   return (
     <VStack flex={1} borderRadius={100} backgroundColor="red">
-      <Text>Hello world</Text>
+      <div>Hello world</div>
     </VStack>
   )
 }
+
+console.log(Test)

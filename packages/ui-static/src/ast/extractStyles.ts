@@ -1,21 +1,19 @@
 import path from 'path'
 import util from 'util'
-import vm from 'vm'
 
-import * as babel from '@babel/core'
 import generate from '@babel/generator'
-import traverse, { NodePath } from '@babel/traverse'
+import traverse from '@babel/traverse'
 import * as t from '@babel/types'
 import literalToAst from 'babel-literal-to-ast'
 import invariant from 'invariant'
 
 import { CacheObject, ExtractStylesOptions } from '../types'
-import { EvaluateASTNodeOptions, evaluateAstNode } from './evaluateAstNode'
+import { evaluateAstNode } from './evaluateAstNode'
 import { Ternary, extractStaticTernaries } from './extractStaticTernaries'
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'
-import { getStaticBindingsForScope } from './getStaticBindingsForScope'
 import { htmlAttributes } from './htmlAttributes'
-import { parse, parserOptions } from './parse'
+import { parse } from './parse'
+import reactNativeStyles from './reactNativeStyles'
 
 export interface Options {
   cacheObject: CacheObject
@@ -75,7 +73,7 @@ export function extractStyles(
   const ast = parse(src)
   let doesImport = false
   const validComponents = {}
-  const shouldPrintDebug = src[0] === '/' && src[1] === '/' && src[2] === '!'
+  const shouldPrintDebug = !!process.env.DEBUG
 
   const JSX_VALID_NAMES = ['HStack', 'VStack']
 
@@ -114,6 +112,7 @@ export function extractStyles(
     JSXElement: {
       enter(traversePath: TraversePath<t.JSXElement>) {
         const node = traversePath.node.openingElement
+
         if (
           // skip non-identifier opening elements (member expressions, etc.)
           !t.isJSXIdentifier(node.name) ||
@@ -125,20 +124,14 @@ export function extractStyles(
 
         // Remember the source component
         const originalNodeName = node.name.name
+
         const localView = {} //localStaticViews[originalNodeName]
         let view = {} // views[originalNodeName]
         // for parentView config
         let extraDepth = 0
         let domNode = 'div'
 
-        // Get valid css props
-        const cssAttributes = {} //staticStyleConfig?.cssAttributes || validCSSAttr
-
-        function isCSSAttribute(name: string) {
-          if (cssAttributes[name]) return true
-          return false
-        }
-
+        const isStaticAttributeName = (name: string) => reactNativeStyles[name]
         const attemptEval = evaluateAstNode //createEvaluator(traversePath as any, sourceFileName, { evaluateFunctions: false })
 
         let lastSpreadIndex: number = -1
@@ -146,6 +139,7 @@ export function extractStyles(
           | t.JSXAttribute
           | t.JSXSpreadAttribute
         )[] = []
+
         node.attributes.forEach((attr) => {
           if (t.isJSXSpreadAttribute(attr)) {
             try {
@@ -219,51 +213,12 @@ export function extractStyles(
           }
 
           let name = attribute.name.name
-
-          // for fully deoptimizing certain keys
-          // if (staticStyleConfig) {
-          //   if (staticStyleConfig.deoptProps?.includes(name)) {
-          //     shouldDeopt = true
-          //     return true
-          //   }
-          //   // for avoiding processing certain keys
-          //   if (staticStyleConfig.avoidProps?.includes(name)) {
-          //     if (shouldPrintDebug) console.log('inline prop via avoidProps')
-          //     inlinePropCount++
-          //     return true
-          //   }
-          // }
-
           let value: any = t.isJSXExpressionContainer(attribute?.value)
             ? attribute.value.expression
             : attribute.value
 
-          // boolean prop / conditionals
-          const allConditionalClassNames = {
-            // ...(view?.internal?.compiledInfo?.conditionalClassNames ?? null),
-            // ...(localView?.staticDesc?.conditionalClassNames ?? null),
-          }
-          if (allConditionalClassNames[name]) {
-            // we can just extract to className
-            if (value === null) {
-              // extract but still put it onto staticAttributes for themeFn to use
-              staticAttributes[name] = true
-              return false
-            }
-
-            // if dynamic value we just use it on className
-            classNameObjects.push(
-              t.conditionalExpression(
-                value,
-                t.stringLiteral(allConditionalClassNames[name]),
-                t.stringLiteral('')
-              )
-            )
-            return false
-          }
-
           // boolean props have null value
-          if (!value) {
+          if (value == null) {
             inlinePropCount++
             return true
           }
@@ -283,59 +238,9 @@ export function extractStyles(
             return true
           }
 
-          const trackState = viewInformation[originalNodeName]?.trackState
-          if (trackState) {
-            if (trackState?.nonCSSVariables?.has(name)) {
-              if (shouldPrintDebug)
-                console.log('inline prop via nonCSSVariables')
-              inlinePropCount++
-              return true
-            }
-          }
-
-          if (!isCSSAttribute(name)) {
-            // we can safely leave html attributes
-            // TODO make this more customizable / per-tagname
-            if (htmlAttributes[name]) {
-              try {
-                htmlExtractedAttributes[name] = attemptEval(value)
-              } catch (err) {
-                // oo fancy! this basically says if we can't eval this safely, and its used by the themeFn
-                // then we need to deopt here. if it can be evaluated, we're good, we'll run theme here later
-                if (trackState?.usedProps?.has(name)) {
-                  if (shouldPrintDebug) {
-                    console.log('we use this in this component', name)
-                  }
-                  inlinePropCount++
-                  return true
-                }
-                // console.log('err getting html attr', name, err.message)
-                // ok
-              }
-              return true
-            }
-            if (shouldPrintDebug) console.log('inline prop via !isCSSAttribute')
+          if (!isStaticAttributeName(name)) {
             inlinePropCount++
             return true
-          }
-
-          // allow statically defining a change from one prop to another (see Stack)
-          if (typeof cssAttributes[name] === 'object') {
-            if (t.isStringLiteral(value)) {
-              const definition = cssAttributes[name]
-              name = definition.name
-              value = definition.value[value.value]
-              staticAttributes[name] = value
-              return false
-            } else {
-              console.log(
-                'couldnt parse a user defined cssAttribute',
-                name,
-                value
-              )
-              inlinePropCount++
-              return true
-            }
           }
 
           // if value can be evaluated, extract it and filter it out
