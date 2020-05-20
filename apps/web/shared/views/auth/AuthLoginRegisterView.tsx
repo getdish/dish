@@ -1,9 +1,9 @@
+import { HStack, VStack } from '@dish/ui'
 import React, { useEffect, useState } from 'react'
-import { Button, Image, Text, TextInput, View } from 'react-native'
+import { Button, Text, TextInput, View } from 'react-native'
 
 import { useOvermind } from '../../state/useOvermind'
 import { Link } from '../ui/Link'
-import { HStack, VStack } from '../ui/Stacks'
 import { textStyles } from './textStyles'
 
 export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {

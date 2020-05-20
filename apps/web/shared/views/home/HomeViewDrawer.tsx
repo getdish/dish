@@ -1,13 +1,20 @@
+import {
+  HStack,
+  LinearGradient,
+  StackProps,
+  VStack,
+  ZStack,
+  useMedia,
+} from '@dish/ui'
 import React from 'react'
 import { StyleSheet } from 'react-native'
 
-import { drawerBorderRadius, searchBarHeight } from '../../constants'
-import { drawerPad, drawerPadLeft, drawerWidthMax } from '../../constants'
-import { useMedia } from '../../hooks/useMedia'
-import { LinearGradient } from '../ui/LinearGradient'
-import { mediaQueries } from '../ui/MediaQuery'
-import { Spacer } from '../ui/Spacer'
-import { HStack, StackProps, VStack, ZStack } from '../ui/Stacks'
+import {
+  drawerBorderRadius,
+  drawerPad,
+  drawerPadLeft,
+  drawerWidthMax,
+} from '../../constants'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 const colors = [

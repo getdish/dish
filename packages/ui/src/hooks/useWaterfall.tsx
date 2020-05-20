@@ -1,6 +1,5 @@
+import { sleep } from '@dish/async'
 import { useEffect } from 'react'
-
-import { sleep } from '../../helpers/sleep'
 
 export const useWaterfall = (cb: Function, args: any[] = []) => {
   useEffect(() => {

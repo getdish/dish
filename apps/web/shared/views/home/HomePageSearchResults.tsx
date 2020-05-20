@@ -1,35 +1,37 @@
-import { graphql, query, useQuery } from '@dish/graph'
+import { requestIdle, series, sleep } from '@dish/async'
+import { graphql, query } from '@dish/graph'
+import {
+  Box,
+  Circle,
+  Divider,
+  HStack,
+  LoadingItems,
+  PageTitle,
+  Spacer,
+  Toast,
+  VStack,
+  ZStack,
+  useWaterfall,
+} from '@dish/ui'
 // @ts-ignore
-import React, { Suspense, SuspenseList, memo, useEffect, useState } from 'react'
+import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Edit2 } from 'react-feather'
 import { Image, ScrollView, Text, View } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
-import { series } from '../../helpers/async'
-import { requestIdle } from '../../helpers/requestIdle'
-import { sleep } from '../../helpers/sleep'
-import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { HomeStateItemSearch, isEditingUserPage } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../NotFoundPage'
-import { Toast } from '../Toast'
-import { Box } from '../ui/Box'
-import { Circle } from '../ui/Circle'
-import { Divider } from '../ui/Divider'
 import { LinkButton } from '../ui/LinkButton'
-import { PageTitle } from '../ui/PageTitle'
 import { PageTitleTag } from '../ui/PageTitleTag'
-import { closeAllPopovers, popoverCloseCbs } from '../ui/PopoverShared'
-import { Spacer } from '../ui/Spacer'
-import { HStack, VStack, ZStack } from '../ui/Stacks'
-import { useWaterfall } from '../ui/useWaterfall'
 import { flatButtonStyle } from './baseButtonStyle'
 import { DishView } from './DishView'
 import { getTitleForState } from './getTitleForState'
 import HomeLenseBar from './HomeLenseBar'
-import { LoadingItems } from './LoadingItems'
 import { RestaurantListItem } from './RestaurantListItem'
+
+// @ts-ignore
 
 export const avatar = require('../../assets/peach.jpg').default
 

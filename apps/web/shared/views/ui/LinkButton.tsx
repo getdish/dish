@@ -1,9 +1,9 @@
+import { StackProps, VStack, getNode, prevent } from '@dish/ui'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { Platform, Text, TouchableOpacity, ViewStyle } from 'react-native'
 
 import { RouteName, RoutesTable } from '../../state/router'
 import { NavigableTag } from '../../state/Tag'
-import { getNode } from './getNode'
 import {
   Link,
   LinkSharedProps,
@@ -11,8 +11,6 @@ import {
   getStylePadding,
   useNormalizeLinkProps,
 } from './Link'
-import { prevent } from './prevent'
-import { StackProps, VStack } from './Stacks'
 
 export type LinkButtonNamedProps<A = any, B = any> = {
   name: A

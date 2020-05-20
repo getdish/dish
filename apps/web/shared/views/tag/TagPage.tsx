@@ -17,8 +17,8 @@
 //   View,
 // } from 'react-native'
 
-// import { HStack, VStack } from '../ui/Stacks'
-// import Tappable from '../ui/Tappable'
+// import { HStack, VStack } from '@dish/ui'
+// import Tappable from '@dish/ui'
 
 // // const CONTINENTS_SUBSCRIPTION = gql`
 // // subscription Tag {

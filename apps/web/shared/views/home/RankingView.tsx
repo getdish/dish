@@ -1,7 +1,7 @@
+import { StackProps, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Text } from 'react-native'
 
-import { StackProps, VStack } from '../ui/Stacks'
 import { SuperScriptText } from './SuperScriptText'
 
 export const RankingView = memo(

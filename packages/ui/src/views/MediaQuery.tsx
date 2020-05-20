@@ -5,7 +5,7 @@ import { classic } from 'react-native-web/dist/exports/StyleSheet/compile'
 import compileStyle from 'react-native-web/dist/exports/StyleSheet/createCompileableStyle'
 import i18nStyle from 'react-native-web/dist/exports/StyleSheet/i18nStyle'
 
-import { isNative } from '../../constants'
+const isNative = false
 
 const getCSS = (selector: string, styles: ViewStyle): string => {
   const out = classic(compileStyle(i18nStyle(styles)))

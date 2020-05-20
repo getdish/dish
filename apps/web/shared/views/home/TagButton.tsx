@@ -1,4 +1,5 @@
 import { Tag, TagType } from '@dish/graph'
+import { HStack, StackProps, VStack } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo } from 'react'
 import { ChevronUp, X } from 'react-feather'
@@ -6,7 +7,6 @@ import { Text, TextStyle } from 'react-native'
 
 import { NavigableTag } from '../../state/Tag'
 import { LinkButton } from '../ui/LinkButton'
-import { HStack, StackProps, VStack } from '../ui/Stacks'
 import { SuperScriptText } from './SuperScriptText'
 
 export type TagButtonTagProps =

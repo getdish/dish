@@ -1,5 +1,6 @@
 import './Link.css'
 
+import { StackProps, prevent } from '@dish/ui'
 import _ from 'lodash'
 import React, { useCallback, useContext, useMemo } from 'react'
 import { Text, TextStyle } from 'react-native'
@@ -15,8 +16,6 @@ import { NavigableTag } from '../../state/Tag'
 import { useOvermindStatic } from '../../state/useOvermind'
 import { CurrentStateID } from '../home/CurrentStateID'
 import { LinkButtonNamedProps, LinkButtonProps } from './LinkButton'
-import { prevent } from './prevent'
-import { StackProps } from './Stacks'
 
 export type LinkSharedProps = {
   fontWeight?: TextStyle['fontWeight']

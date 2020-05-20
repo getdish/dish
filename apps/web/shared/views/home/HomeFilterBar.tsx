@@ -1,13 +1,12 @@
+import { HStack, StackProps, VStack } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo } from 'react'
-import { ScrollView, Text } from 'react-native'
+import { Text } from 'react-native'
 
 import { HomeActiveTagIds } from '../../state/home'
 import { Tag, getTagId } from '../../state/Tag'
 import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
-import { HStack, StackProps, VStack } from '../ui/Stacks'
-import { bg, bgHover } from './colors'
 import { SmallButton } from './SmallButton'
 
 export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {

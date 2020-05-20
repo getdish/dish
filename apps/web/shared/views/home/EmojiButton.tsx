@@ -1,7 +1,6 @@
+import { Circle } from '@dish/ui'
 import React from 'react'
 import { Text, TouchableOpacity } from 'react-native'
-
-import { Circle } from '../ui/Circle'
 
 export const EmojiButton = ({
   active,

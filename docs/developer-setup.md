@@ -1,11 +1,12 @@
 # Local Development and Production Management
 
 Contents:
-  * [Getting started](#getting-started)
-  * [Core Stack](#core-stack)
-  * [Web app](#web-app)
-  * [Hasura](#hasura)
-  * [Kubernetes](#kubernetes)
+
+- [Getting started](#getting-started)
+- [Core Stack](#core-stack)
+- [Web app](#web-app)
+- [Hasura](#hasura)
+- [Kubernetes](#kubernetes)
 
 ## Getting Started
 
@@ -17,13 +18,12 @@ logins are contained in this file. To decrypt it:
 - Install [git-crypt](https://github.com/AGWA/git-crypt).
 - If you're GPG key hasn't been added to the repo then ask your nearest Dish dev to either be added to the repo or ask for the decryption key.
 - If you're GPG key is in the repo and you have `git-crypt` installed, then just run
-`git-crypt unlock` and use the repo as normal.
+  `git-crypt unlock` and use the repo as normal.
 - However, if you're using the raw decryption key it will likely be base64 encoded for ease of communication. If the key ends with a "==" this means you can run `base64 -d [long string of random character==]` to get the raw key.
 - Copy the raw key to a file, eg `/tmp/master/key`
 - Within the path of the repo run `git-crypt unlock /tmp/master/key`
 - You can now just use `git` as normal, all the encryption/decryption happens
   automatically with hooks and filters.
-
 
 ## Core Stack
 
@@ -44,7 +44,6 @@ When you need to rebuild the containers to update their code run:
 
 ### Install dependencies
 
-- `yarn install --global expo`
 - `yarn install`
 
 ### Build (and auto rebuild on file changes)
@@ -89,7 +88,6 @@ If you want to run end to end tests:
 
     * Run the tests. from the `apps/web` path:
       `./test/testcafe.sh`
-
 
 ## Hasura
 
@@ -157,8 +155,6 @@ Note that the `@dish/models` package is set up to use the live Hasura instance i
 domain name contains 'hasura_live'. This was setup because the React Native framework, Expo,
 cannot easily get its config recognised by our internal packages. The domain can be achieved by setting your local machine's `/etc/hosts` file with an entry like
 `127.0.0.1 d1sh_hasura_live.com`. You may want to avoid spelling 'dish' with a real 'i' as that is a keyword for triggering other production features.
-
-
 
 ## Kubernetes
 
@@ -267,4 +263,3 @@ very helpful for debugging. Though do remember `kubectl` can do everything the d
 does and more. The dashboard is provided by Digital Ocean:
 https://cloud.digitalocean.com/kubernetes/clusters/f2db42e5-2407-4422-920d-b307bc5f636d/dashboard/ Though they don't seem to update the underlying dashboard version very often, so
 we could deploy our own at somepoint with a Helm chart.
-

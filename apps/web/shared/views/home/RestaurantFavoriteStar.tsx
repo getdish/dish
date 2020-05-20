@@ -1,14 +1,11 @@
-import { graphql, query, useQuery } from '@dish/graph'
+import { graphql, query } from '@dish/graph'
+import { Toast, VStack, useDebounceEffect, useForceUpdate } from '@dish/ui'
 import React, { memo, useState } from 'react'
 import { Star } from 'react-feather'
 import { Text } from 'react-native'
 
-import { useDebounceEffect } from '../../hooks/useDebounceEffect'
-import { useForceUpdate } from '../../hooks/useForceUpdate'
 import { useOvermind } from '../../state/useOvermind'
-import { Toast } from '../Toast'
 import { LinkButton } from '../ui/LinkButton'
-import { VStack } from '../ui/Stacks'
 import { getInputNode } from './HomeSearchBar'
 
 export const RestaurantFavoriteStar = memo(

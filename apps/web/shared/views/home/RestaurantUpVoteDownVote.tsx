@@ -1,11 +1,10 @@
 import { graphql, mutation, query, useQuery } from '@dish/graph'
+import { Hoverable, VStack } from '@dish/ui'
 import React, { memo, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
 import { useOvermind } from '../../state/useOvermind'
-import Hoverable from '../ui/Hoverable'
-import { VStack } from '../ui/Stacks'
 
 export const RestaurantUpVoteDownVote = memo(
   graphql(({ restaurantId }: { restaurantId: string }) => {

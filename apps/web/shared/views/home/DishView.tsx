@@ -1,12 +1,17 @@
 import { TopCuisineDish } from '@dish/graph'
+import {
+  Box,
+  HStack,
+  LinearGradient,
+  StackProps,
+  VStack,
+  ZStack,
+} from '@dish/ui'
 import React, { memo } from 'react'
 import { Image, StyleSheet, Text } from 'react-native'
 
 import { Tag } from '../../state/Tag'
-import { Box } from '../ui/Box'
-import { LinearGradient } from '../ui/LinearGradient'
 import { LinkButton, LinkButtonProps } from '../ui/LinkButton'
-import { HStack, StackProps, VStack, ZStack } from '../ui/Stacks'
 import { DishRatingView } from './DishRatingView'
 
 export const DishView = memo(

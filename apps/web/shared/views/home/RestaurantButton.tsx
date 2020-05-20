@@ -1,10 +1,10 @@
 import { Restaurant } from '@dish/graph'
+import { HStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Text } from 'react-native'
 
 import { LinkButton, LinkButtonProps } from '../ui/LinkButton'
-import { HStack } from '../ui/Stacks'
 import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
 import RestaurantRatingView from './RestaurantRatingView'
 

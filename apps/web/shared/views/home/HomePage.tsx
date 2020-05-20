@@ -1,8 +1,8 @@
+import { LinearGradient, VStack, ZStack, useDebounceEffect } from '@dish/ui'
 import React, { Suspense, memo, useState } from 'react'
 import { StyleSheet } from 'react-native'
 
 import { isWorker } from '../../constants'
-import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import {
   isHomeState,
   isRestaurantState,
@@ -10,8 +10,6 @@ import {
   isUserState,
 } from '../../state/home-helpers'
 import { ErrorBoundary } from '../ErrorBoundary'
-import { LinearGradient } from '../ui/LinearGradient'
-import { VStack, ZStack } from '../ui/Stacks'
 import { CurrentStateID } from './CurrentStateID'
 import { HomeMap } from './HomeMap'
 import { HomeMapControlsOverlay } from './HomeMapControlsOverlay'

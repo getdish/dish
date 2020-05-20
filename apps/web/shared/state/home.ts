@@ -1,3 +1,4 @@
+import { requestIdle, sleep } from '@dish/async'
 import {
   Restaurant,
   RestaurantSearchArgs,
@@ -6,16 +7,14 @@ import {
   slugify,
 } from '@dish/graph'
 import { getHomeDishes, search } from '@dish/models'
+import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
 import _, { findLast, last } from 'lodash'
 import { Action, AsyncAction, derived } from 'overmind'
 
 import { isWorker } from '../constants'
 import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
-import { requestIdle } from '../helpers/requestIdle'
-import { sleep } from '../helpers/sleep'
 import { timer } from '../helpers/timer'
-import { Toast } from '../views/Toast'
 import {
   isHomeState,
   isRestaurantState,

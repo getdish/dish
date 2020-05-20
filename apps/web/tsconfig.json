@@ -16,6 +16,8 @@
   "exclude": ["**/*.test.ts", "**/*.test.tsx"],
   "references": [
     { "path": "../../packages/models" },
+    { "path": "../../packages/ui" },
+    { "path": "../../packages/async" },
     { "path": "../../packages/graph" },
     { "path": "../../packages/rollup-plugin-tscc" },
     { "path": "../../packages/tsickle-loader" }

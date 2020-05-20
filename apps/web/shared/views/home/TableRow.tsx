@@ -1,7 +1,6 @@
+import { HStack, StackProps, VStack } from '@dish/ui'
 import React from 'react'
 import { Text, TextStyle } from 'react-native'
-
-import { HStack, StackProps, VStack } from '../ui/Stacks'
 
 export function TableRow(props: StackProps) {
   return <HStack {...props} />

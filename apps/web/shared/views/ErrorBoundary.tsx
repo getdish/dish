@@ -1,11 +1,10 @@
+import { VStack, ZStack } from '@dish/ui'
 import React from 'react'
 import {
   FallbackProps,
   ErrorBoundary as ReactErrorBoundary,
 } from 'react-error-boundary'
 import { Button, Text } from 'react-native'
-
-import { VStack, ZStack } from './ui/Stacks'
 
 function ErrorFallback({
   error,

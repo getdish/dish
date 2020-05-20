@@ -1,4 +1,4 @@
-import { createCancellablePromise } from './async'
+import { createCancellablePromise } from './cancellablePromise'
 
 export const sleep = (ms: number) => {
   return createCancellablePromise((res, _rej, onCancel) => {

@@ -1,9 +1,9 @@
+import { LinearGradient } from '@dish/ui'
+import { ZStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 
 import { useOvermind } from '../../state/useOvermind'
-import { LinearGradient } from '../ui/LinearGradient'
-import { ZStack } from '../ui/Stacks'
 import { useShowAutocomplete } from './HomeAutocomplete'
 import { homePageBorderRadius } from './HomePage'
 

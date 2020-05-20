@@ -1,8 +1,7 @@
+import { ProgressCircle } from '@dish/ui'
+import { HStack, StackProps, VStack } from '@dish/ui'
 import React, { forwardRef } from 'react'
 import { Text } from 'react-native'
-
-import { ProgressCircle } from '../ui/ProgressCircle'
-import { HStack, StackProps, VStack } from '../ui/Stacks'
 
 export type RatingViewProps = StackProps & {
   size: 'lg' | 'md' | 'sm' | 'xs'

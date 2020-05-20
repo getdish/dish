@@ -1,11 +1,8 @@
-import React, { useState } from 'react'
+import { Box, HoverablePopover } from '@dish/ui'
+import React from 'react'
 import { Text } from 'react-native'
 
-import { Box } from '../ui/Box'
-import Hoverable from '../ui/Hoverable'
-import { HoverablePopover } from '../ui/HoverablePopover'
 import { LinkButton } from '../ui/LinkButton'
-import { Popover } from '../ui/PopoverContainer'
 import { HomeLenseBarOnly } from './HomeLenseBar'
 
 export const RestaurantLenseVote = () => {

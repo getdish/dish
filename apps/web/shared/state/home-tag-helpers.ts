@@ -1,8 +1,8 @@
+import { sleep } from '@dish/async'
 import { slugify } from '@dish/graph'
 import { Action, AsyncAction } from 'overmind'
 
 import { LIVE_SEARCH_DOMAIN } from '../constants'
-import { sleep } from '../helpers/sleep'
 import { isHomeState, isSearchState, shouldBeOnHome } from './home-helpers'
 import {
   HomeActiveTagIds,

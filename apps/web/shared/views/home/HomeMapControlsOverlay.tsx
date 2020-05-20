@@ -1,10 +1,10 @@
+import { HStack, VStack, ZStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Text } from 'react-native'
 
 import { pageWidthMax, searchBarHeight } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
 import { OverlayLinkButton } from '../ui/OverlayLinkButton'
-import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 

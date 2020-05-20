@@ -1,14 +1,16 @@
-import React, { memo } from 'react'
-import { anchor } from 'react-laag'
+import {
+  Box,
+  HStack,
+  HoverablePopover,
+  LinearGradient,
+  ZStack,
+  memoIsEqualDeep,
+} from '@dish/ui'
+import React from 'react'
 import { StyleSheet, Text } from 'react-native'
 
-import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { Tag } from '../../state/Tag'
-import { Box } from '../ui/Box'
-import { HoverablePopover } from '../ui/HoverablePopover'
-import { LinearGradient } from '../ui/LinearGradient'
 import { LinkButton } from '../ui/LinkButton'
-import { HStack, ZStack } from '../ui/Stacks'
 
 export type LenseButtonSize = 'md' | 'lg'
 

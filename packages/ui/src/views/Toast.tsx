@@ -1,9 +1,8 @@
-import { memo, useCallback, useRef, useState } from 'react'
-import React from 'react'
+import React, { memo, useCallback, useRef } from 'react'
 import { Text } from 'react-native'
 
 import { useForceUpdate } from '../hooks/useForceUpdate'
-import { VStack, ZStack } from './ui/Stacks'
+import { VStack, ZStack } from './Stacks'
 
 let show: (text: string, duration: number) => void
 
