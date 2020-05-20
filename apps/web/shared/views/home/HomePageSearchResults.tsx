@@ -4,6 +4,9 @@ import { Edit2 } from 'react-feather'
 import { Image, ScrollView, Text, View } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
+import { series } from '../../helpers/async'
+import { requestIdle } from '../../helpers/requestIdle'
+import { sleep } from '../../helpers/sleep'
 import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { HomeStateItemSearch, isEditingUserPage } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
@@ -203,33 +206,29 @@ const HomeSearchResultsViewContent = memo(
 
     const resultsIds = state.results?.results?.restaurantIds ?? []
     const resultsAll = resultsIds.map((id) => allRestaurants[id])
-    const [chunk, setChunk] = useState(chunks)
+    const [chunk, setChunk] = useState(1)
     const perChunk = Math.ceil(resultsAll.length / chunks)
     const results = resultsAll.slice(0, chunk * perChunk)
 
-    console.log('HomeSearchResultsViewContent.render')
+    console.log('HomeSearchResultsViewContent.render', chunk, perChunk)
 
     // load a few at a time, less to start
     const isLoading = results[0]?.name == null
+    const hasMoreToLoad = results.length < resultsAll.length
 
-    // disable for a moment to test initail render
+    // stagger results in as they load/render
     useEffect(() => {
-      if (!isLoading) {
-        const tm = setInterval(() => {
-          if (chunk > chunks) {
-            clearInterval(tm)
-          } else {
-            setChunk((x) => {
-              return x + 1
-            })
-          }
-        }, 700)
-
-        return () => {
-          clearInterval(tm)
-        }
-      }
-    }, [isLoading])
+      if (isLoading) return
+      if (!hasMoreToLoad) return
+      return series([
+        () => sleep(300),
+        () => requestIdle(),
+        // then load next chunk
+        () => {
+          setChunk((x) => x + 1)
+        },
+      ])
+    }, [isLoading, chunk, hasMoreToLoad])
 
     if (!state.results?.results || state.results.status === 'loading') {
       return (
