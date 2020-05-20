@@ -120,7 +120,8 @@ export function extractStyles(
         if (!JSX_VALID_NAMES.includes(specifier.local.name)) {
           return true
         }
-        views[specifier.local.name] = options.views[specifier.local.name]
+        // COMMENTED OUT
+        // views[specifier.local.name] = options.views[specifier.local.name]
         validComponents[specifier.local.name] = true
         if (shouldPrintDebug) {
           console.log('found valid component', specifier.local.name)
@@ -191,28 +192,14 @@ export function extractStyles(
 
         // Remember the source component
         const originalNodeName = node.name.name
-        const localView = localStaticViews[originalNodeName]
-        let view = views[originalNodeName]
+        const localView = {} //localStaticViews[originalNodeName]
+        let view = {} // views[originalNodeName]
         // for parentView config
         let extraDepth = 0
         let domNode = 'div'
 
-        let staticStyleConfig: GlossView<any>['staticStyleConfig'] | null = null
-        if (view) {
-          staticStyleConfig = view.staticStyleConfig
-          // lets us have plain functional views like Stack
-          if (staticStyleConfig.parentView) {
-            view = staticStyleConfig.parentView
-            extraDepth = 1
-          }
-          domNode =
-            view.staticStyleConfig?.tagName ??
-            view.internal?.glossProps.defaultProps.tagName ??
-            'div'
-        }
-
         // Get valid css props
-        const cssAttributes = staticStyleConfig?.cssAttributes || validCSSAttr
+        const cssAttributes = {} //staticStyleConfig?.cssAttributes || validCSSAttr
 
         function isCSSAttribute(name: string) {
           if (cssAttributes[name]) return true
@@ -301,18 +288,18 @@ export function extractStyles(
           let name = attribute.name.name
 
           // for fully deoptimizing certain keys
-          if (staticStyleConfig) {
-            if (staticStyleConfig.deoptProps?.includes(name)) {
-              shouldDeopt = true
-              return true
-            }
-            // for avoiding processing certain keys
-            if (staticStyleConfig.avoidProps?.includes(name)) {
-              if (shouldPrintDebug) console.log('inline prop via avoidProps')
-              inlinePropCount++
-              return true
-            }
-          }
+          // if (staticStyleConfig) {
+          //   if (staticStyleConfig.deoptProps?.includes(name)) {
+          //     shouldDeopt = true
+          //     return true
+          //   }
+          //   // for avoiding processing certain keys
+          //   if (staticStyleConfig.avoidProps?.includes(name)) {
+          //     if (shouldPrintDebug) console.log('inline prop via avoidProps')
+          //     inlinePropCount++
+          //     return true
+          //   }
+          // }
 
           let value: any = t.isJSXExpressionContainer(attribute?.value)
             ? attribute.value.expression
@@ -320,8 +307,8 @@ export function extractStyles(
 
           // boolean prop / conditionals
           const allConditionalClassNames = {
-            ...(view?.internal?.compiledInfo?.conditionalClassNames ?? null),
-            ...(localView?.staticDesc?.conditionalClassNames ?? null),
+            // ...(view?.internal?.compiledInfo?.conditionalClassNames ?? null),
+            // ...(localView?.staticDesc?.conditionalClassNames ?? null),
           }
           if (allConditionalClassNames[name]) {
             // we can just extract to className
@@ -502,12 +489,10 @@ domNode: ${domNode}
         // used later to generate classname for item
         const stylesByClassName: { [key: string]: string } = {}
 
-        const depth =
-          (view?.internal?.depth ?? 1) +
-          (localView?.parent?.internal?.depth ?? 1) +
-          extraDepth
+        const depth = 0
         const addStyles = (styleObj: any) => {
-          const allStyles = StaticUtils.getAllStyles(styleObj, depth)
+          // TODO
+          const allStyles = [] //StaticUtils.getAllStyles(styleObj, depth)
           for (const info of allStyles) {
             if (info.css) {
               if (shouldPrintDebug) {
@@ -521,17 +506,17 @@ domNode: ${domNode}
         // capture views where they set it afterwards
         // plus any defaults passed through gloss
         const viewDefaultProps = {
-          ...view?.defaultProps,
-          ...view?.internal?.glossProps?.defaultProps,
+          // ...view?.defaultProps,
+          // ...view?.internal?.glossProps?.defaultProps,
         }
 
         if (extractedStaticAttrs) {
           const staticStyleProps = {
             ...viewDefaultProps,
-            ...localView?.propObject,
+            // ...localView?.propObject,
             ...htmlExtractedAttributes,
             ...staticAttributes,
-          }
+          } as any
           if (shouldPrintDebug) {
             // ignoreAttrs is usually huge
             const { ignoreAttrs, ...rest } = staticStyleProps
@@ -545,40 +530,7 @@ domNode: ${domNode}
         if (inlinePropCount === 0) {
           // add in any local static classes
           if (localView) {
-            stylesByClassName[localView.staticDesc.className] = null
-          }
-
-          const themeFns = view?.internal?.getConfig()?.themeFns
-          if (themeFns) {
-            // TODO we need to determine if this theme should deopt using the same proxy/tracker as gloss
-            try {
-              const props = {
-                ...viewDefaultProps,
-                ...localView?.propObject,
-                ...htmlExtractedAttributes,
-                ...staticAttributes,
-              }
-              const extracted = StaticUtils.getThemeStyles(
-                view,
-                options.defaultTheme,
-                props
-              ).themeStyles
-              if (shouldPrintDebug) {
-                delete props['ignoreAttrs'] // ignore this its huge in debug output
-                console.log(
-                  'extracting from theme',
-                  !!localView,
-                  props,
-                  extracted
-                )
-              }
-              for (const x of extracted) {
-                stylesByClassName[x.className] = x.css
-              }
-            } catch (err) {
-              console.log('error running theme', sourceFileName, err.message)
-              return
-            }
+            // stylesByClassName[localView.staticDesc.className] = null
           }
 
           // add any default html props to tag
@@ -614,32 +566,32 @@ domNode: ${domNode}
             node.name.name = domNode
           }
 
-          // if they set a staticStyleConfig.parentView (see Stack)
-          if (!isGlossView(view)) {
-            if (view?.staticStyleConfig.parentView) {
-              view = view.staticStyleConfig.parentView
-            } else {
-              node.name.name = domNode
-            }
-          }
+          // // if they set a staticStyleConfig.parentView (see Stack)
+          // if (!isGlossView(view)) {
+          //   if (view?.staticStyleConfig.parentView) {
+          //     view = view.staticStyleConfig.parentView
+          //   } else {
+          //     node.name.name = domNode
+          //   }
+          // }
 
           // if gloss view we may be able to optimize
-          if (isGlossView(view)) {
-            // local views we already parsed the css out
-            const localView = localStaticViews[node.name.name]
-            if (localView) {
-              //
-            } else {
-              const { staticClasses } = view.internal.glossProps
-              // internal classes
-              for (const className of staticClasses) {
-                const item = tracker.get(className.slice(2))
-                const css = `${item.selector} { ${item.style} }`
-                stylesByClassName[className] = css
-              }
-            }
-            node.name.name = domNode
-          }
+          // if (isGlossView(view)) {
+          //   // local views we already parsed the css out
+          //   const localView = localStaticViews[node.name.name]
+          //   if (localView) {
+          //     //
+          //   } else {
+          //     const { staticClasses } = view.internal.glossProps
+          //     // internal classes
+          //     for (const className of staticClasses) {
+          //       const item = tracker.get(className.slice(2))
+          //       const css = `${item.selector} { ${item.style} }`
+          //       stylesByClassName[className] = css
+          //     }
+          //   }
+          //   node.name.name = domNode
+          // }
         } else {
           if (lastSpreadIndex > -1) {
             // if only some style props were extracted AND additional props are spread onto the component,

@@ -1,6 +1,5 @@
 import generate from '@babel/generator'
 import * as t from '@babel/types'
-import { StaticUtils } from 'gloss'
 import invariant from 'invariant'
 
 import { CacheObject } from '../types'
@@ -54,7 +53,7 @@ export function extractStaticTernaries(
 
     // strip parens
     if (t.isExpressionStatement(test)) {
-      ternaryTest = test.expression
+      ternaryTest = (test as any).expression
     }
 
     // convert `!thing` to `thing` with swapped consequent and alternate
@@ -91,10 +90,8 @@ export function extractStaticTernaries(
   const ternaryExpression = Object.keys(ternariesByKey)
     .map((key, idx) => {
       const { test, consequentStyles, alternateStyles } = ternariesByKey[key]
-      const { className: consequentClassName, css: consequentCSS } =
-        StaticUtils.getStyles(consequentStyles) ?? empty
-      const { className: alternateClassName, css: alternateCSS } =
-        StaticUtils.getStyles(alternateStyles) ?? empty
+      const { className: consequentClassName, css: consequentCSS } = {} as any //StaticUtils.getStyles(consequentStyles) ?? empty
+      const { className: alternateClassName, css: alternateCSS } = {} as any //StaticUtils.getStyles(alternateStyles) ?? empty
 
       if (!consequentClassName && !alternateClassName) {
         return null
