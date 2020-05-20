@@ -3,6 +3,7 @@ SELECT jsonb_agg(
       'id', data.id,
       'name', data.name,
       'slug', data.slug,
+      'location', ST_AsGeoJSON(data.location)::json,
       'tags', ARRAY(
         SELECT json_build_object(
           'tag', json_build_object(

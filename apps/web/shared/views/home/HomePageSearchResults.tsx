@@ -1,5 +1,6 @@
 import { graphql, query, useQuery } from '@dish/graph'
-import React, { Suspense, memo, useEffect, useState } from 'react'
+// @ts-ignore
+import React, { Suspense, SuspenseList, memo, useEffect, useState } from 'react'
 import { Edit2 } from 'react-feather'
 import { Image, ScrollView, Text, View } from 'react-native'
 
@@ -221,7 +222,9 @@ const HomeSearchResultsViewContent = memo(
       if (isLoading) return
       if (!hasMoreToLoad) return
       return series([
-        () => sleep(300),
+        () => sleep(250),
+        () => requestIdle(),
+        () => sleep(100),
         () => requestIdle(),
         // then load next chunk
         () => {
