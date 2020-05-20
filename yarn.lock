@@ -7530,6 +7530,11 @@ got@^6.2.0:
     unzip-response "^2.0.1"
     url-parse-lax "^1.0.0"
 
+gqless-hook@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.npmjs.org/gqless-hook/-/gqless-hook-0.0.4.tgz#bffd7f16fa56c119eb9c765047be1b903d945552"
+  integrity sha512-Ls8RkJW8Y/qnEo8AD2JaXbrfaEUamZAI7yEqtik884sp2ACluJXV8CphgPtiHafNIt8+vk0QDUirs8ZfVNG3ww==
+
 gqless-hooks@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/gqless-hooks/-/gqless-hooks-1.1.1.tgz#fb05ec469393df46a845fb188d40b957a3e417bf"

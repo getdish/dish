@@ -1,4 +1,4 @@
-import { Tag, graphql, useQuery } from '@dish/graph'
+import { Tag, graphql, query, useQuery } from '@dish/graph'
 import React, { memo } from 'react'
 
 import { useOvermind } from '../../state/useOvermind'

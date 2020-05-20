@@ -67,31 +67,20 @@ const useIsomorphicLayoutEffect = isSSR
   ? (cb: () => void) => cb()
   : useLayoutEffect
 
-// CM-safe timer-based cleanup hook
 const useCleanup = () => {
-  type Cleanup = {
-    timer: NodeJS.Timeout
-    func: () => void
-  }
-
+  type Cleanup = () => void
   const cleanups = useRef<Cleanup[]>([])
   const addCleanup = useCallback((func: () => void) => {
-    console.log('adding cleanup', func, cleanups)
-    const timer = setTimeout(func, 5 * 1000)
-    cleanups.current.push({ timer, func })
+    cleanups.current.push(func)
   }, [])
-
   useEffect(() => {
     const cleanupsCurrent = cleanups.current
-    cleanupsCurrent.forEach(({ timer }) => clearTimeout(timer))
     return () => {
-      cleanupsCurrent.forEach(({ func }) => func())
+      cleanupsCurrent.forEach((func) => func())
     }
   }, [])
-
   return addCleanup
 }
-
 /**
  * useQuery
  *

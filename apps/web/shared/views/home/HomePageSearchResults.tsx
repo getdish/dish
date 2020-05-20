@@ -56,6 +56,7 @@ export default memo(function HomePageSearchResults({
       borderRadius={drawerBorderRadius}
       position="relative"
       backgroundColor="#fff"
+      overflow="hidden"
     >
       <PageTitleTag>{title}</PageTitleTag>
       {/* <ZStack
@@ -71,7 +72,19 @@ export default memo(function HomePageSearchResults({
       </ZStack> */}
 
       {/* Title */}
-      <VStack paddingTop={verticalPad} paddingHorizontal={22}>
+      <VStack
+        position="absolute"
+        top={0}
+        left={0}
+        right={0}
+        zIndex={100}
+        paddingTop={verticalPad}
+        paddingHorizontal={22}
+        backgroundColor="#fff"
+        borderTopLeftRadius={drawerBorderRadius}
+        borderTopRightRadius={drawerBorderRadius}
+        overflow="hidden"
+      >
         <HStack width="100%">
           <VStack flex={4}>
             <PageTitle
@@ -242,6 +255,7 @@ const HomeSearchResultsViewContent = memo(
 
     return (
       <ScrollView>
+        <Spacer size={110} />
         <HomePageSearchResultsDishes state={state} />
         <VStack paddingTop={topPad} paddingBottom={20}>
           {/* <SuspenseList revealOrder="forwards"> */}
@@ -309,31 +323,31 @@ const HomePageSearchResultsDishes = memo(
   })
 )
 
-function List(props: {
-  data: any[]
-  estimatedHeight?: number
-  renderItem: (arg: { item: any; index: number }) => React.ReactNode
-}) {
-  // TODO suspense or flatlist depending for now simple waterfall
-  return (
-    <ScrollView
-      onScroll={() => {
-        if (popoverCloseCbs.size) {
-          closeAllPopovers()
-        }
-      }}
-    >
-      {props.data.map((item, index) => (
-        <ListItem
-          estimatedHeight={props.estimatedHeight}
-          key={item.id ?? index}
-        >
-          {props.renderItem({ item, index })}
-        </ListItem>
-      ))}
-    </ScrollView>
-  )
-}
+// function List(props: {
+//   data: any[]
+//   estimatedHeight?: number
+//   renderItem: (arg: { item: any; index: number }) => React.ReactNode
+// }) {
+//   // TODO suspense or flatlist depending for now simple waterfall
+//   return (
+//     <ScrollView
+//       onScroll={() => {
+//         if (popoverCloseCbs.size) {
+//           closeAllPopovers()
+//         }
+//       }}
+//     >
+//       {props.data.map((item, index) => (
+//         <ListItem
+//           estimatedHeight={props.estimatedHeight}
+//           key={item.id ?? index}
+//         >
+//           {props.renderItem({ item, index })}
+//         </ListItem>
+//       ))}
+//     </ScrollView>
+//   )
+// }
 
 function ListItem(props) {
   const [isMounted, setIsMounted] = useState(false)
