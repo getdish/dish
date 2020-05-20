@@ -193,8 +193,8 @@ export default memo(
   })
 )
 
-const RestaurantPhotos = graphql(
-  ({ restaurantSlug }: { restaurantSlug: string }) => {
+const RestaurantPhotos = memo(
+  graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
     const [restaurant] = query.restaurant({
       where: {
         slug: {
@@ -205,6 +205,7 @@ const RestaurantPhotos = graphql(
     const photos = restaurant.bestTagPhotos()
     const drawerWidth = useHomeDrawerWidthInner()
     const spacing = 20
+
     return (
       <>
         {!!photos?.length && (
@@ -223,12 +224,12 @@ const RestaurantPhotos = graphql(
               justifyContent="center"
               spacing={spacing}
             >
-              {restaurant.tags?.map((t, index) => {
-                const tag = t.tag
+              {photos.map((rtag, index) => {
+                const tag = rtag.tag
                 const dish = {
                   name: getTagNameWithIcon(tag),
-                  image: t.photos?.[0] ?? '',
-                  rating: t.rating || 0,
+                  image: rtag.photos?.()?.[0] ?? '',
+                  rating: rtag.rating || 0,
                 }
                 return (
                   <DishView
@@ -244,5 +245,5 @@ const RestaurantPhotos = graphql(
         )}
       </>
     )
-  }
+  })
 )

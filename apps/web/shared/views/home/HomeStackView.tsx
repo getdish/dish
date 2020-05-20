@@ -8,7 +8,7 @@ import { HomeStateItemSimple } from '../../state/home'
 import { useOvermind, useOvermindStatic } from '../../state/useOvermind'
 import { ErrorBoundary } from '../ErrorBoundary'
 import { PopoverShowContext } from '../ui/PopoverShared'
-import { ZStack } from '../ui/Stacks'
+import { VStack, ZStack } from '../ui/Stacks'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { LoadingItems } from './LoadingItems'
 
@@ -39,8 +39,12 @@ export function HomeStackView<A extends HomeStateItemSimple>(props: {
               isActive={isActive}
               isRemoving={isActive && isRemoving}
             >
-              <ErrorBoundary name={`${item.type}`}>
-                <Suspense fallback={<LoadingItems />}>
+              <ErrorBoundary name={`HomeStackView.${item.type}`}>
+                <Suspense
+                  fallback={
+                    <VStack width={200} height={200} backgroundColor="green" />
+                  }
+                >
                   {props.children(item as any, isActive, stackItemIndex)}
                 </Suspense>
               </ErrorBoundary>

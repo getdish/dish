@@ -82,11 +82,12 @@ export function Link<
       if (onClick) {
         onClick?.(e)
       }
-      if ('onPress' in linkProps) {
-        linkProps?.onPress?.()
-      }
-      console.log('got a click, navigate', navItem)
-      om.actions.router.navigate(navItem)
+      setTimeout(() => {
+        if ('onPress' in linkProps) {
+          linkProps?.onPress?.()
+        }
+        om.actions.router.navigate(navItem)
+      })
     },
     [navItem, onClick]
   )
