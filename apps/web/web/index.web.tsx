@@ -86,7 +86,6 @@ if (process.env.NODE_ENV === 'development') {
 // can remove this started check once overmind works better for hmr
 // if (!window['STARTED']) {
 if (!window['STARTED'] && !window['IS_SSR_RENDERING']) {
-  console.log('Starting from index')
   start()
   window['STARTED'] = true
 }
