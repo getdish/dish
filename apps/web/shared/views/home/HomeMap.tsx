@@ -21,10 +21,13 @@ import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { getRankingColor, getRestaurantRating } from './RestaurantRatingView'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
+const mapMaxWidth = 1300
+
 export const HomeMap = memo(function HomeMap() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [restaurants, setRestaurants] = useState<Restaurant[]>([])
   const [restaurantDetail, setRestaurantDetail] = useState<Restaurant>(null)
+  const om = useOvermind()
 
   useOnMount(() => {
     startMapKit().then(() => {
@@ -32,15 +35,12 @@ export const HomeMap = memo(function HomeMap() {
     })
   })
 
-  console.log('new with location', restaurants, restaurantDetail)
-
-  // const focusedRestaurant = restaurants.find((x) => x.id == focused)
-
   if (isLoaded) {
     return (
       <>
         <Suspense fallback={null}>
           <HomeMapDataLoader
+            key={om.state.home.currentStateType}
             onLoadedRestaurants={setRestaurants}
             onLoadedRestaurantDetail={setRestaurantDetail}
           />
@@ -66,10 +66,11 @@ const HomeMapDataLoader = memo(
       const state = om.state.home.currentState
 
       // restaurants
+      const restaurantId = isRestaurantState(state) ? state.restaurantId : null
       const restaurantIds: string[] = isSearchState(state)
-        ? state.results?.results?.restaurantIds ?? []
-        : isRestaurantState(state)
-        ? [state.restaurantId]
+        ? state.results?.results?.restaurantIds.filter(Boolean) ?? []
+        : restaurantId
+        ? [restaurantId]
         : []
 
       const restaurants = query.restaurant({
@@ -80,6 +81,7 @@ const HomeMapDataLoader = memo(
         },
       })
       restaurants.map((x) => {
+        x.id
         x.location?.coordinates
       })
 
@@ -90,7 +92,7 @@ const HomeMapDataLoader = memo(
       // restaurantDetail
       const restaurantDetail =
         state.type == 'restaurant'
-          ? om.state.home.allRestaurants[state.restaurantId]
+          ? restaurants.find((x) => x.id === restaurantId)
           : null
 
       useEffect(() => {
@@ -99,8 +101,6 @@ const HomeMapDataLoader = memo(
     }
   )
 )
-
-const mapMaxWidth = 1300
 
 const HomeMapContent = memo(function HomeMap({
   restaurants,
@@ -169,9 +169,13 @@ const HomeMapContent = memo(function HomeMap({
     }
   })
 
-  const annotations = useMemo(() => getRestaurantAnnotations(restaurants), [
-    restaurants,
-  ])
+  const annotations = useMemo(
+    () =>
+      getRestaurantAnnotations(
+        restaurantDetail ? [restaurantDetail] : restaurants
+      ),
+    [restaurants, restaurantDetail]
+  )
 
   useEffect(() => {
     if (!map) return
@@ -317,7 +321,6 @@ const HomeMapContent = memo(function HomeMap({
 
       // map.showAnnotations(annotations)
       try {
-        console.warn('adding annotations')
         map.addAnnotations(annotations)
       } catch (err) {
         console.error(err)
@@ -339,7 +342,7 @@ const HomeMapContent = memo(function HomeMap({
       }
     },
     40,
-    [!!map, restaurants]
+    [!!map, annotations]
   )
 
   return (

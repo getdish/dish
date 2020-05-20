@@ -1,3 +1,5 @@
+import { restaurant_tag } from '../generated'
+
 export const Query = {}
 
 /**
@@ -26,7 +28,7 @@ export type CarouselPhoto = {
 
 export const restaurant = (restaurant) => {
   return {
-    bestTagPhotos() {
+    bestTagPhotos(): restaurant_tag[] {
       const tags = restaurant.tags({ limit: 6 }) ?? []
       return tags
         ?.filter((t) => (t.photos?.length || 0) > 0 && t.rating)

@@ -150,7 +150,7 @@ const CountryTopDishesAndRestaurants = memo(
             (restaurant, index) => {
               return (
                 <RestaurantButton
-                  rank={index + 1}
+                  trending={index % 2 == 0 ? 'up' : 'down'}
                   subtle
                   key={restaurant.name}
                   restaurant={restaurant as any}

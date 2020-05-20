@@ -460,7 +460,7 @@ const loadPageRestaurant: AsyncAction = async (om) => {
     const [{ location, id }] = query.restaurant({
       where: { slug: { _eq: slug } },
     })
-    console.log('gettin', { location, id })
+    location?.coordinates
     return { location, id }
   })
   console.log('restaurant', { slug, restaurant })

@@ -34,7 +34,7 @@ export default memo(function HomePage() {
   )
 
   return (
-    <VStack flex={1} backgroundColor="rgba(245,245,245,1)" alignItems="center">
+    <VStack flex={1} backgroundColor="rgba(253,253,253,1)" alignItems="center">
       <VStack
         backgroundColor="#fff"
         width={`calc(100% + ${homePageBorderRadius * 2}px)`}
