@@ -3,28 +3,38 @@ import path from 'path'
 import anyTest, { TestInterface } from 'ava'
 import webpack from 'webpack'
 
-import { GlossWebpackLoader, GlossWebpackPlugin } from '../src'
+import { GlossWebpackPlugin } from '../src'
 
-console.log('GlossWebpackPlugin', GlossWebpackPlugin)
+process.env.NODE_ENV = 'development'
 
 interface Context {}
 const test = anyTest as TestInterface<Context>
 
+const specDir = path.join(__dirname, 'spec')
+
 test('it extract statics', async (t) => {
   const compiler = webpack({
+    context: specDir,
     mode: 'development',
     devtool: false,
-    entry: path.join(__dirname, 'test.js'),
+    entry: path.join(specDir, 'test.tsx'),
     output: {
-      filename: 'test.out.js',
-      path: path.resolve(__dirname),
+      filename: 'test.out.tmp.js',
+      path: specDir,
+    },
+    resolve: {
+      extensions: ['.ts', '.tsx', '.js'],
+      mainFields: ['tsmain', 'browser', 'module', 'main'],
     },
     module: {
       rules: [
         {
-          test: /\.js$/,
+          test: /\.[jt]sx?$/,
+          exclude: /(node_modules)/,
           use: [
-            // babel-loader,
+            {
+              loader: 'babel-loader',
+            },
             {
               loader: require.resolve('../loader'),
               options: {},

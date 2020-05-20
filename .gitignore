@@ -4,6 +4,8 @@ tmp
 .tscc_temp
 *.tsbuildinfo
 
+*.tmp.js
+
 # Expo
 
 .expo

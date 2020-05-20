@@ -3,6 +3,11 @@
   "version": "0.0.1",
   "main": "_/index.js",
   "sideEffects": false,
+  "workspaces": {
+    "nohoist": [
+      "**"
+    ]
+  },
   "scripts": {
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
@@ -24,7 +29,10 @@
     "memory-fs": "*"
   },
   "devDependencies": {
+    "babel-loader": "^8.0.5",
+    "@dish/babel-preset": "*",
     "@types/webpack": "4.41.13",
-    "ava": "^3.8.2"
+    "ava": "^3.8.2",
+    "react-dom": "*"
   }
 }
