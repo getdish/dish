@@ -28,6 +28,8 @@ export const useQuery = <A extends Query>(): A extends void ? never : A => {
   return useQueryInner(client) as any
 }
 
+// export { useQuery } from 'gqless-hook'
+
 // type Mutation = mutation_root | void
 // export const useMutation = (): Mutation => {
 //   return Hooks.useQueryInner(mutationClient) as any

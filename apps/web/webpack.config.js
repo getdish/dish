@@ -36,7 +36,7 @@ module.exports = function getWebpackConfig(
       TARGET === 'ssr' ? 'node' : TARGET === 'worker' ? 'webworker' : 'web',
     stats: 'normal',
     devtool:
-      env.mode === 'production' ? 'source-map' : 'eval-cheap-module-source-map',
+      env.mode === 'production' ? 'source-map' : 'cheap-module-source-map',
     // @ts-ignore
     entry: [
       isHot && '@webhotelier/webpack-fast-refresh/runtime.js',
@@ -161,6 +161,7 @@ module.exports = function getWebpackConfig(
         process: JSON.stringify({}),
         'process.env.TARGET': JSON.stringify(TARGET || null),
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        'process.env.EXPERIMENTAL_USE_CLENAUP_FOR_CM': JSON.stringify(false),
       }),
       new HTMLWebpackPlugin({
         inject: true,
