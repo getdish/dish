@@ -1,5 +1,5 @@
-type MemoryOutputFileSystem = import('webpack/lib/MemoryOutputFileSystem')
-type InputFileSystem = import('webpack').InputFileSystem
+// @ts-ignore
+import { InputFileSystem } from 'webpack'
 
 const handledMethods = {
   // exists: true,
@@ -24,16 +24,14 @@ const handledMethods = {
   writeFileSync: true,
 }
 
-export function wrapFileSystem(
-  fs: InputFileSystem,
-  memoryFS: MemoryOutputFileSystem
-): InputFileSystem {
+export function wrapFileSystem(fs, memoryFS): InputFileSystem {
   return new Proxy(fs, {
     get: (target, key) => {
       const value = target[key]
 
       if (handledMethods.hasOwnProperty(key)) {
         return function (this: any, filePath: string, ...args: string[]) {
+          console.log('old gloss reference')
           if (filePath.endsWith('__gloss.css')) {
             return memoryFS[key](filePath, ...args)
           }
