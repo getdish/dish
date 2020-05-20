@@ -1,11 +1,16 @@
+import {
+  HStack,
+  LoadingItem,
+  MediaQuery,
+  SmallerTitle,
+  VStack,
+  ZStack,
+  mediaQueries,
+} from '@dish/ui'
 import React, { memo } from 'react'
 
 import { useOvermind } from '../../state/useOvermind'
-import { LinkButton } from '../ui/Link'
-import { MediaQuery, mediaQueries } from '../ui/MediaQuery'
-import { SmallerTitle } from '../ui/SmallTitle'
-import { HStack, VStack, ZStack } from '../ui/Stacks'
-import { LoadingItem } from './LoadingItems'
+import { LinkButton } from '../ui/LinkButton'
 import { TrendingButton } from './TrendingButton'
 
 const HomeViewTopDishesTrending = memo(() => {

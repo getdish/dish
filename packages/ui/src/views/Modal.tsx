@@ -1,11 +1,9 @@
-import React from 'react'
-import { useLayoutEffect, useMemo } from 'react'
+import React, { useLayoutEffect, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 
-import { isSSR } from '../constants'
-import { Box } from './ui/Box'
-import { StackProps, ZStack } from './ui/Stacks'
-import { useOverlay } from './ui/useOverlay'
+import { useOverlay } from '../hooks/useOverlay'
+import { Box } from './Box'
+import { StackProps, ZStack } from './Stacks'
 
 export const Modal = ({
   isOpen,
@@ -27,7 +25,7 @@ export const Modal = ({
 
   useOverlay({ isOpen, onClick: onClickOutside, zIndex })
 
-  if (isSSR) {
+  if (process.env.TARGET === 'ssr') {
     // for now at least
     return null
   }

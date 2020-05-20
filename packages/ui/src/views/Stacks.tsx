@@ -2,9 +2,9 @@ import _ from 'lodash'
 import React, { forwardRef, useLayoutEffect, useRef, useState } from 'react'
 import { View, ViewProps, ViewStyle } from 'react-native'
 
-import { combineRefs } from '../../helpers/combineRefs'
-import { getNode } from './getNode'
-import Hoverable from './Hoverable'
+import { combineRefs } from '../helpers/combineRefs'
+import { getNode } from '../helpers/getNode'
+import { Hoverable } from './Hoverable'
 import { Spacer, Spacing } from './Spacer'
 
 const fsStyle = {

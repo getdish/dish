@@ -1,5 +1,5 @@
 {
-  "name": "@dish/reswift-ui-webpack",
+  "name": "@dish/ui-webpack",
   "version": "0.0.1",
   "main": "_/index.js",
   "sideEffects": false,

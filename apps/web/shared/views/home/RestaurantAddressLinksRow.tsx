@@ -1,14 +1,11 @@
-import { graphql, query, useQuery } from '@dish/graph'
+import { graphql, query } from '@dish/graph'
+import { Box, HStack, HoverablePopover, SelectableText } from '@dish/ui'
 import React, { memo } from 'react'
 import { ExternalLink } from 'react-feather'
 import { Image, Linking, Text } from 'react-native'
 
 import { GeocodePlace } from '../../state/home'
-import { Box } from '../ui/Box'
-import { HoverablePopover } from '../ui/HoverablePopover'
 import { Link } from '../ui/Link'
-import { HStack } from '../ui/Stacks'
-import { SelectableText } from '../ui/Text'
 import { SmallCircleButton } from './CloseButton'
 
 type AddressSize = 'lg' | 'md' | 'sm' | 'xs'

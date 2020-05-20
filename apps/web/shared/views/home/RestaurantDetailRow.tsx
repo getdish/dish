@@ -1,10 +1,9 @@
 import { Restaurant, Sources, graphql, query, useQuery } from '@dish/graph'
+import { Divider } from '@dish/ui'
+import { Spacer } from '@dish/ui'
+import { HStack, StackProps, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Linking, StyleSheet, Text } from 'react-native'
-
-import { Divider } from '../ui/Divider'
-import { Spacer } from '../ui/Spacer'
-import { HStack, StackProps, VStack } from '../ui/Stacks'
 
 export const RestaurantDetailRow = memo(
   graphql(

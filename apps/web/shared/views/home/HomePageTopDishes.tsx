@@ -1,24 +1,27 @@
 import { Restaurant, TopCuisine } from '@dish/graph'
+import {
+  HStack,
+  HorizontalLine,
+  LinearGradient,
+  SmallTitle,
+  Spacer,
+  VStack,
+  ZStack,
+} from '@dish/ui'
+import { LoadingItems } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { Divide } from 'react-feather'
 import { ScrollView, Text } from 'react-native'
 
-import { HomeStateItem, HomeStateItemHome } from '../../state/home'
+import { HomeStateItemHome } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../NotFoundPage'
-import { Divider, HorizontalLine } from '../ui/Divider'
-import { LinearGradient } from '../ui/LinearGradient'
 import { LinkButton } from '../ui/LinkButton'
 import { PageTitleTag } from '../ui/PageTitleTag'
-import { SmallTitle } from '../ui/SmallTitle'
-import { Spacer } from '../ui/Spacer'
-import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { flatButtonStyle } from './baseButtonStyle'
 import { DishView } from './DishView'
 import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBarOnly } from './HomeLenseBar'
-import { LoadingItems } from './LoadingItems'
 import { RestaurantButton } from './RestaurantButton'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 

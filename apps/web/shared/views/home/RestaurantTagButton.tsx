@@ -1,15 +1,19 @@
 import { Restaurant } from '@dish/graph'
+import {
+  Box,
+  HStack,
+  Popover,
+  SmallTitle,
+  SmallerTitle,
+  VStack,
+} from '@dish/ui'
 import _ from 'lodash'
 import React, { memo, useState } from 'react'
 import { Tag } from 'react-feather'
 import { Button, StyleSheet, TextInput, View } from 'react-native'
 
 import { useOvermind } from '../../state/useOvermind'
-import { Box } from '../ui/Box'
-import { LinkButton } from '../ui/Link'
-import { Popover } from '../ui/Popover'
-import { SmallTitle, SmallerTitle } from '../ui/SmallTitle'
-import { HStack, VStack } from '../ui/Stacks'
+import { LinkButton } from '../ui/LinkButton'
 import { TagButton, getTagButtonProps } from './TagButton'
 
 export const RestaurantTagButton = memo(

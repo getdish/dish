@@ -1,5 +1,6 @@
-import { drawerWidthMax, pageWidthMax } from '../../constants'
-import { useWindowSize } from '../../hooks/useWindowSize'
+import { useWindowSize } from '@dish/ui'
+
+import { drawerWidthMax } from '../../constants'
 
 export function useHomeDrawerWidth(): number {
   const [width] = useWindowSize({ debounce: 500 })

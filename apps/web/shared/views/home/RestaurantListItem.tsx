@@ -1,17 +1,21 @@
-import { Restaurant, graphql, query, useQuery } from '@dish/graph'
-import React, { Suspense, memo, useEffect, useState } from 'react'
+import { Restaurant, graphql, query } from '@dish/graph'
+import {
+  Divider,
+  HStack,
+  HoverablePopover,
+  SelectableText,
+  Spacer,
+  VStack,
+  ZStack,
+  useDebounceEffect,
+} from '@dish/ui'
+import React, { memo, useEffect, useState } from 'react'
 import { MessageSquare } from 'react-feather'
 import { ScrollView, TouchableOpacity } from 'react-native'
 
-import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { GeocodePlace, isEditingUserPage } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
-import { Divider } from '../ui/Divider'
-import { HoverablePopover } from '../ui/HoverablePopover'
 import { Link } from '../ui/Link'
-import { Spacer } from '../ui/Spacer'
-import { HStack, VStack, ZStack } from '../ui/Stacks'
-import { SelectableText } from '../ui/Text'
 import { bgLightLight } from './colors'
 import { DishView } from './DishView'
 import { useMediaQueryIsMedium, useMediaQueryIsSmall } from './HomeViewDrawer'
@@ -22,7 +26,7 @@ import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
-import { RestaurantTagsRow, useGetTagElements } from './RestaurantTagsRow'
+import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 
 type RestaurantListItemProps = {

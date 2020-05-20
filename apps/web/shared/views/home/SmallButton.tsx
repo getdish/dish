@@ -1,7 +1,7 @@
+import { HStack, StackProps } from '@dish/ui'
 import React from 'react'
 import { Text, TextStyle } from 'react-native'
 
-import { HStack, StackProps } from '../ui/Stacks'
 import { flatButtonStyle } from './baseButtonStyle'
 import { bg, bgLight, bgLightHover } from './colors'
 

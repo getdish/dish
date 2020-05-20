@@ -1,9 +1,9 @@
 import { graphql } from '@dish/graph'
+import { ZStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Text } from 'react-native'
 
 import { useOvermind } from '../../state/useOvermind'
-import { ZStack } from '../ui/Stacks'
 import { CloseButton } from './CloseButton'
 
 export default memo(function HomePageGallery() {

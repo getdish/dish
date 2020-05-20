@@ -1,18 +1,21 @@
+import {
+  Box,
+  HStack,
+  HoverablePopover,
+  SmallTitle,
+  Spacer,
+  VStack,
+} from '@dish/ui'
+import { Modal } from '@dish/ui'
 import React from 'react'
 import { ExternalLink } from 'react-feather'
 import { Text } from 'react-native'
 import { useStorageState } from 'react-storage-hooks'
 
 import { useOvermind } from '../state/useOvermind'
+import { Link } from '../views/ui/Link'
+import { LinkButton } from '../views/ui/LinkButton'
 import { flatButtonStyle } from './home/baseButtonStyle'
-import { Modal } from './Modal'
-import { Box } from './ui/Box'
-import { HoverablePopover } from './ui/HoverablePopover'
-import { Link } from './ui/Link'
-import { LinkButton } from './ui/LinkButton'
-import { SmallTitle } from './ui/SmallTitle'
-import { Spacer } from './ui/Spacer'
-import { HStack, VStack } from './ui/Stacks'
 
 export const WelcomeModal = () => {
   const om = useOvermind()

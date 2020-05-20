@@ -1,4 +1,5 @@
-import { StackProps } from '../ui/Stacks'
+import { StackProps } from '@dish/ui'
+
 import { bgLight, bgLightHover } from './colors'
 
 export const baseButtonStyle: StackProps = {

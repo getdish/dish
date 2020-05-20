@@ -1,8 +1,7 @@
+import { HStack, StackProps } from '@dish/ui'
 import React, { memo } from 'react'
 import { CornerLeftUp, X } from 'react-feather'
 import { GestureResponderEvent, TouchableOpacity } from 'react-native'
-
-import { HStack, StackProps } from '../ui/Stacks'
 
 type CircleButtonProps = {
   onPress: any

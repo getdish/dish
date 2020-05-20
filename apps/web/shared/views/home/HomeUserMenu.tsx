@@ -1,16 +1,12 @@
 import { slugify } from '@dish/graph'
+import { Box, Divider, HStack, Popover, Toast, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { User } from 'react-feather'
 import { useStorageState } from 'react-storage-hooks'
 
 import { useOvermind } from '../../state/useOvermind'
 import { AuthLoginRegisterView } from '../auth/AuthLoginRegisterView'
-import { Toast } from '../Toast'
-import { Box } from '../ui/Box'
-import { Divider } from '../ui/Divider'
 import { LinkButton } from '../ui/LinkButton'
-import { Popover } from '../ui/PopoverContainer'
-import { HStack, VStack } from '../ui/Stacks'
 import { flatButtonStyle } from './baseButtonStyle'
 
 export const HomeUserMenu = memo(() => {

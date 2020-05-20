@@ -8,10 +8,10 @@ import React, {
 import { ToggleLayer, anchor } from 'react-laag'
 import { Platform } from 'react-native'
 
+import { useOverlay } from '../hooks/useOverlay'
+import { useWaterfall } from '../hooks/useWaterfall'
 import { PopoverProps } from './PopoverProps'
 import { PopoverShowContext, popoverCloseCbs } from './PopoverShared'
-import { useOverlay } from './useOverlay'
-import { useWaterfall } from './useWaterfall'
 
 export default function PopoverMain(props: PopoverProps) {
   const forceShow = useContext(PopoverShowContext)

@@ -1319,7 +1319,7 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@o/fast-compare@2.7.6":
+"@o/fast-compare@2.7.6", "@o/fast-compare@^2.7.6":
   version "2.7.6"
   resolved "https://registry.npmjs.org/@o/fast-compare/-/fast-compare-2.7.6.tgz#1d0fedcb27b44e212aafd9e7f94499930499bfb9"
   integrity sha512-YACb8iZqClwjxUBQyjQuXT5L0T/iYOGdkD58q31P04iXyq27BZjdE0k3MiszQ7XezeAdO+WsdmTqaotBbjkbLw==
@@ -1958,6 +1958,13 @@
   resolved "https://registry.npmjs.org/@types/range-parser/-/range-parser-1.2.3.tgz#7ee330ba7caafb98090bece86a5ee44115904c2c"
   integrity sha512-ewFXqrQHlFsgc09MK5jP5iR7vumV/BYayNC6PgJO2LPe8vrnNFyjQjSppfEngITi0qvfKtzFvgKymGheFM9UOA==
 
+"@types/react-dom@^16.9.8":
+  version "16.9.8"
+  resolved "https://registry.npmjs.org/@types/react-dom/-/react-dom-16.9.8.tgz#fe4c1e11dfc67155733dfa6aa65108b4971cb423"
+  integrity sha512-ykkPQ+5nFknnlU6lDd947WbQ6TE3NNzbQAkInC2EKY1qeYdTKp7onFusmYZb+ityzx2YviqT6BXSu+LyWWJwcA==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-native@0.62.2":
   version "0.62.2"
   resolved "https://registry.npmjs.org/@types/react-native/-/react-native-0.62.2.tgz#f3e150f308c27089cefbcbfa3eb6cc14db279b2f"
@@ -1965,7 +1972,14 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*":
+"@types/react-native@^0.62.10":
+  version "0.62.10"
+  resolved "https://registry.npmjs.org/@types/react-native/-/react-native-0.62.10.tgz#82c481df21db4e7460755dc3fc7091e333a1d2bd"
+  integrity sha512-QR4PGrzZ3IvRIHlScyIPuv2GV8tD/BMICZz514KGvn3KHbh0mLphHHemtHZC1o8u4xM5LxwVpMpMYHQ+ncSfag==
+  dependencies:
+    "@types/react" "*"
+
+"@types/react@*", "@types/react@^16.9.35":
   version "16.9.35"
   resolved "https://registry.npmjs.org/@types/react/-/react-16.9.35.tgz#a0830d172e8aadd9bd41709ba2281a3124bbd368"
   integrity sha512-q0n0SsWcGc8nDqH2GJfWQWUOmZSJhXV64CjVN5SvcNti3TdEaA3AH0D8DwNmMdzjMAC/78tB8nAZIlV8yTz+zQ==
@@ -12447,7 +12461,7 @@ react-native-unimodules@~0.7.0:
     unimodules-sensors-interface "~5.0.0"
     unimodules-task-manager-interface "~5.0.0"
 
-react-native-web@0.12.2:
+react-native-web@0.12.2, react-native-web@^0.12.2:
   version "0.12.2"
   resolved "https://registry.npmjs.org/react-native-web/-/react-native-web-0.12.2.tgz#d0fe8739d222f412decc4f1de2e12f25e91e2f56"
   integrity sha512-0YLDjwIm5LjQDOPUUregtuEBexH7oQph6x9FSAyzCM52QmM82TfrYRXXSwzI2eSdT1OzM2BTfP3zxmEL+coyhg==

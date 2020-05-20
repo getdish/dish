@@ -2,7 +2,7 @@ import React from 'react'
 
 import { isHoverEnabled } from './HoverState'
 
-export default function Hoverable({
+export function Hoverable({
   onHoverIn,
   onHoverOut,
   onHoverMove,

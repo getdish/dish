@@ -1,16 +1,13 @@
 import { graphql, query } from '@dish/graph'
+import { Circle, Divider, HStack, Spacer, VStack, ZStack } from '@dish/ui'
 import React from 'react'
 import { Image, ScrollView, Text } from 'react-native'
 
 import { HomeStateItemUser } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../NotFoundPage'
-import { Circle } from '../ui/Circle'
-import { Divider } from '../ui/Divider'
 import { Link } from '../ui/Link'
 import { PageTitleTag } from '../ui/PageTitleTag'
-import { Spacer } from '../ui/Spacer'
-import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { CloseButton } from './CloseButton'
 import { avatar } from './HomePageSearchResults'
 

@@ -1,11 +1,10 @@
+import { LoadingItems, ToastRoot } from '@dish/ui'
 import { Provider } from 'overmind-react'
 import React, { Suspense } from 'react'
 
 import HomePage from './home/HomePage'
-import { LoadingItems } from './home/LoadingItems'
 import { NotFoundPage } from './NotFoundPage'
-import { ToastRoot } from './Toast'
-import { Route, RouteSwitch } from './ui/Route'
+import { Route, RouteSwitch } from './router/Route'
 import { WelcomeModal } from './WelcomeModal'
 
 export function App({ overmind }: { overmind?: any }) {

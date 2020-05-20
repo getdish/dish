@@ -1,8 +1,8 @@
 import { Tag, graphql, query, useQuery } from '@dish/graph'
+import { HStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { useOvermind } from '../../state/useOvermind'
-import { HStack } from '../ui/Stacks'
 import { TagButton, TagButtonTagProps, getTagButtonProps } from './TagButton'
 import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 

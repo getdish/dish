@@ -1,10 +1,9 @@
 import { Restaurant } from '@dish/graph'
+import { Box, Popover } from '@dish/ui'
 import React, { useState } from 'react'
 import { Plus } from 'react-feather'
 
-import { Box } from '../ui/Box'
-import { LinkButton } from '../ui/Link'
-import { Popover } from '../ui/Popover'
+import { LinkButton } from '../ui/LinkButton'
 import { HomeLenseBarOnly } from './HomeLenseBar'
 
 export const RestaurantAddTagButton = ({

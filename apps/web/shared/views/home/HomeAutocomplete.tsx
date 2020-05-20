@@ -1,3 +1,4 @@
+import { HStack, ZStack } from '@dish/ui'
 import React, { memo, useEffect } from 'react'
 import { Plus } from 'react-feather'
 import { ScrollView, Text } from 'react-native'
@@ -5,7 +6,6 @@ import { ScrollView, Text } from 'react-native'
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
 import { LinkButton, LinkButtonProps } from '../ui/LinkButton'
-import { HStack, ZStack } from '../ui/Stacks'
 import { SmallCircleButton } from './CloseButton'
 import { setAvoidNextAutocompleteShowOnFocus } from './HomeSearchBar'
 

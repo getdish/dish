@@ -1,7 +1,6 @@
+import { VStack } from '@dish/ui'
 import React from 'react'
 import { Text } from 'react-native'
-
-import { VStack } from './ui/Stacks'
 
 export function NotFoundPage() {
   return (

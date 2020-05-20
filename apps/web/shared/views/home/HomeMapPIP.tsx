@@ -1,10 +1,9 @@
+import { ZStack, useOnMount } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo, useEffect, useMemo, useState } from 'react'
 
-import { useOnMount } from '../../hooks/useOnMount'
 import { useOvermind } from '../../state/useOvermind'
 import { Map, useMap } from '../map'
-import { ZStack } from '../ui/Stacks'
 import { centerMapToRegion, onMapLoadedCallback } from './HomeMap'
 import { getRankingColor, getRestaurantRating } from './RestaurantRatingView'
 

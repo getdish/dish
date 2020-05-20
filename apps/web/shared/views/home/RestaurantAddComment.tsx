@@ -1,20 +1,25 @@
 import { User } from '@dish/graph'
+import {
+  Box,
+  Circle,
+  HStack,
+  HoverablePopover,
+  StackProps,
+  Toast,
+  VStack,
+} from '@dish/ui'
 import React, { memo, useLayoutEffect, useState } from 'react'
-import { Image, Text, TextInput, TouchableOpacity } from 'react-native'
+import { Image, Text, TextInput } from 'react-native'
 
 // @ts-ignore
 import avatar from '../../assets/peach.jpg'
 import { useOvermind } from '../../state/useOvermind'
-import { Toast } from '../Toast'
-import { Box } from '../ui/Box'
-import { Circle } from '../ui/Circle'
-import { HoverablePopover } from '../ui/HoverablePopover'
 import { Link } from '../ui/Link'
 import { LinkButton } from '../ui/LinkButton'
-import { HStack, StackProps, VStack } from '../ui/Stacks'
 import { flatButtonStyleSelected } from './baseButtonStyle'
 import { bgLight } from './colors'
-import { useReviewMutation } from './useReviewMutation'
+
+// @ts-ignore
 
 export const RestaurantAddComment = memo(
   ({ restaurantId }: { restaurantId: string }) => {

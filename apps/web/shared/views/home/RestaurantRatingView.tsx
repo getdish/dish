@@ -1,12 +1,12 @@
 import { Restaurant, graphql, query, useQuery } from '@dish/graph'
+import { Box } from '@dish/ui'
+import { Circle } from '@dish/ui'
+import { HoverablePopover } from '@dish/ui'
+import { ProgressCircle } from '@dish/ui'
+import { HStack, VStack, ZStack } from '@dish/ui'
 import React, { forwardRef, memo } from 'react'
 import { Text } from 'react-native'
 
-import { Box } from '../ui/Box'
-import { Circle } from '../ui/Circle'
-import { HoverablePopover } from '../ui/HoverablePopover'
-import { ProgressCircle } from '../ui/ProgressCircle'
-import { HStack, VStack, ZStack } from '../ui/Stacks'
 import { RatingView, RatingViewProps } from './RatingView'
 
 export type RestaurantRatingViewProps = Omit<

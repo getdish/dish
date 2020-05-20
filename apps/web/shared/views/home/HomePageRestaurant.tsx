@@ -1,21 +1,26 @@
 import { getTagNameWithIcon, graphql, query } from '@dish/graph'
+import {
+  Divider,
+  HStack,
+  MediaQuery,
+  SelectableText,
+  Spacer,
+  VStack,
+  ZStack,
+  mediaQueries,
+} from '@dish/ui'
+import { LoadingItems } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { ScrollView, Text } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
-import { Divider } from '../ui/Divider'
 import { LinkButton } from '../ui/LinkButton'
-import { MediaQuery, mediaQueries } from '../ui/MediaQuery'
 import { PageTitleTag } from '../ui/PageTitleTag'
-import { Spacer } from '../ui/Spacer'
-import { HStack, VStack, ZStack } from '../ui/Stacks'
-import { SelectableText } from '../ui/Text'
 import { flatButtonStyle, flatButtonStyleActive } from './baseButtonStyle'
 import { CloseButton } from './CloseButton'
 import { DishView } from './DishView'
-import { LoadingItems } from './LoadingItems'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'

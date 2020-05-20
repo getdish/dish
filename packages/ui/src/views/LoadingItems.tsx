@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 
-import { HStack, VStack } from '../ui/Stacks'
+import { HStack, VStack } from './Stacks'
 
 export const LoadingItems = () => (
   <VStack spacing="lg">
