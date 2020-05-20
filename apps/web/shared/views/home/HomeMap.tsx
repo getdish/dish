@@ -73,17 +73,22 @@ const HomeMapDataLoader = memo(
         ? [restaurantId]
         : []
 
-      const restaurants = query.restaurant({
-        where: {
-          id: {
-            _in: restaurantIds,
-          },
-        },
+      // for now to avoid so many large db calls just have search api return it instead of re-fetch here
+      const restaurants = restaurantIds.map((id) => {
+        return om.state.home.allRestaurants[id]
       })
-      restaurants.map((x) => {
-        x.id
-        x.location?.coordinates
-      })
+
+      // const restaurants = query.restaurant({
+      //   where: {
+      //     id: {
+      //       _in: restaurantIds,
+      //     },
+      //   },
+      // })
+      // restaurants.map((x) => {
+      //   x.id
+      //   x.location?.coordinates
+      // })
 
       useEffect(() => {
         props.onLoadedRestaurants?.(restaurants)
