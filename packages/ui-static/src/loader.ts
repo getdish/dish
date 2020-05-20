@@ -14,12 +14,10 @@ export default function GlossWebpackLoader(this: any, content) {
     this.cacheable()
   }
 
-  const pluginContext: PluginContext = this[
-    Symbol.for('@dish/react-native-ui-webpack')
-  ]
+  const pluginContext: PluginContext = this[Symbol.for('@dish/ui-static')]
   invariant(
     pluginContext,
-    '@dish/react-native-ui-webpack must be added to the plugins array in your webpack config'
+    '@dish/ui-static must be added to the plugins array in your webpack config'
   )
 
   const options: LoaderOptions = loaderUtils.getOptions(this) || {}

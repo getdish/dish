@@ -31,7 +31,6 @@ export class GlossWebpackPlugin implements Plugin {
     }
 
     // context object that gets passed to each loader.
-    // available in each loader as this[Symbol.for('@dish/react-native-ui-webpack')]
     this.ctx = {
       cacheFile: null,
       cacheObject: this.cacheObject,
@@ -48,7 +47,7 @@ export class GlossWebpackPlugin implements Plugin {
   private ctx: PluginContext
 
   private nmlPlugin = (loaderContext: any): void => {
-    loaderContext[Symbol.for('@dish/react-native-ui-webpack')] = this.ctx
+    loaderContext[Symbol.for('@dish/ui-static')] = this.ctx
   }
 
   private compilationPlugin = (compilation: Compilation): void => {

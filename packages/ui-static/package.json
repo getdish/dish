@@ -1,5 +1,5 @@
 {
-  "name": "@dish/ui-webpack",
+  "name": "@dish/ui-static",
   "version": "0.0.1",
   "main": "_/index.js",
   "sideEffects": false,
@@ -11,8 +11,8 @@
   "scripts": {
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
-    "test": "DISH_ENV=test ava test/* --verbose",
-    "test:watch": "DISH_ENV=test ava test/* --watch"
+    "test": "DEBUG=1 DISH_ENV=test ava test/* --verbose",
+    "test:watch": "DEBUG=1 DISH_ENV=test ava test/* --watch"
   },
   "license": "MIT",
   "dependencies": {

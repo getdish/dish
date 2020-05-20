@@ -95,7 +95,9 @@ class AuthModel {
           statusText: response.statusText,
         }
         console.error(error)
-        throw new Error('Auth `fetch()` error')
+        throw new Error(
+          `Auth fetch() error ${response.status}: ${response.statusText}`
+        )
       }
     }
     return response
