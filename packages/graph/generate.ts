@@ -7,7 +7,7 @@ const { exec } = require('child_process')
 const { writeFile } = require('fs')
 const { join } = require('path')
 
-const { graphqlGet } = require('./src/helpers')
+const { graphqlGet } = require('./src/helpers/graphqlGet')
 const { Codegen, fetchSchema } = require('@gqless/schema')
 
 const rootPath = join(__dirname)

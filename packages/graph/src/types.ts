@@ -8,10 +8,10 @@ import {
   user,
 } from './graphql'
 
-export type Restaurant = Omit<restaurant, '__typename'>
-export type Tag = Omit<tag, '__typename'>
-export type RestaurantTag = Omit<restaurant_tag, '__typename'>
-export type TagTag = Omit<tag_tag, '__typename'>
-export type User = Omit<user, '__typename'>
-export type Review = Omit<review, '__typename'>
-export type Dish = Omit<dish, '__typename'>
+export type Restaurant = Partial<Omit<restaurant, '__typename'>>
+export type Tag = Partial<Omit<tag, '__typename'>>
+export type RestaurantTag = Partial<Omit<restaurant_tag, '__typename'>>
+export type TagTag = Partial<Omit<tag_tag, '__typename'>>
+export type User = Partial<Omit<user, '__typename'>>
+export type Review = Partial<Omit<review, '__typename'>>
+export type Dish = Partial<Omit<dish, '__typename'>>

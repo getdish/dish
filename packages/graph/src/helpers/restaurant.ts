@@ -1,15 +1,11 @@
+import { resolved } from 'gqless'
 import _ from 'lodash'
 
-import {
-  findOne,
-  insert,
-  levenshteinDistance,
-  update,
-  upsert,
-} from '../helpers'
+import { query } from '../graphql'
 import { tagUpsert } from '../helpers/tag'
-import { query, resolved } from '../index'
 import { Restaurant, RestaurantTag, Tag } from '../types'
+import { levenshteinDistance } from './levenshteinDistance'
+import { findOne, insert, update, upsert } from './queryHelpers'
 
 export async function restaurantInsert(restaurants: Restaurant[]) {
   return await insert<Restaurant>('restaurant', restaurants)
@@ -24,6 +20,7 @@ export async function restaurantUpsert(objects: Restaurant[]) {
 }
 
 export async function restaurantUpdate(restaurant: Restaurant) {
+  // @ts-ignore
   return await update<Restaurant>('restaurant', restaurant)
 }
 
@@ -100,15 +97,19 @@ export async function restaurantSaveCanonical(
 ) {
   const found = await findExistingCanonical(lon, lat, name)
   if (found) return found
-  let restaurant = {
+  let restaurant: Restaurant = {
     name,
     address: street_address,
     location: {
       type: 'Point',
       coordinates: [lon, lat],
     },
-  } as Restaurant
-  restaurant = await restaurantInsert(restaurant)
+  }
+  await restaurantInsert([restaurant])
+  console.log(
+    'tom, restaurantInsert for now doesnt return new restaurant, idk if want to add here'
+  )
+  // restaurant = await find()
   if (process.env.RUN_WITHOUT_WORKER != 'true') {
     console.log('Created new canonical restaurant: ' + restaurant.id)
   }
@@ -190,10 +191,11 @@ export async function restaurantUpsertOrphanTags(
 async function updateTagNames(restaurant: Restaurant) {
   restaurant = await restaurantRefresh(restaurant)
   const tag_names = restaurant.tags.map((i) => i.tag.slugs().flat())
+  // @ts-ignore
   restaurant.tag_names = _.uniq([
     ...(restaurant.tag_names() || []),
     ...tag_names,
-  ]) as string[]
+  ])
   return await restaurantUpdate(restaurant)
 }
 
