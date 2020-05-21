@@ -1,5 +1,6 @@
 import '@dish/common'
 
+import { Restaurant, Scrape } from '@dish/models'
 import { ProxiedRequests, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
@@ -35,6 +36,7 @@ export class Google extends WorkerJob {
   lat!: number
   name!: string
   googleRestaurantID!: string
+  scrape_data: any = {}
 
   static queue_config: QueueOptions = {
     limiter: {
@@ -59,10 +61,10 @@ export class Google extends WorkerJob {
 
   async main() {}
 
-  async getRestaurant(lon: number, lat: number, name: string) {
-    this.lon = lon
-    this.lat = lat
-    this.name = name
+  async getRestaurant(restaurant: Restaurant) {
+    this.lon = restaurant.location.coordinates[0]
+    this.lat = restaurant.location.coordinates[1]
+    this.name = restaurant.name
     if (!this.searchEndpoint) {
       await this.getNewSearchEndpoint()
     }
@@ -70,6 +72,16 @@ export class Google extends WorkerJob {
     await this.getMainPage()
     await this.getSynopsis()
     await this.getReviews()
+    let scrape = new Scrape({
+      source: 'google',
+      id_from_source: this.googleRestaurantID,
+      location: restaurant.location,
+      data: this.scrape_data,
+    })
+    await scrape.insert()
+    if (process.env.DISH_ENV != 'production') {
+      this.puppeteer.close()
+    }
   }
 
   async getMainPage() {
@@ -99,7 +111,7 @@ export class Google extends WorkerJob {
   // can later reuse.
   //
   // The search token doesn't *seem* to be location dependent, but we randomise the
-  // lat/lon here just hide ourselves from any Google automation.
+  // lat/lon here just to hide ourselves from any Google automation.
   async _theBrokenSearchBoxInteraction(
     randomish_lon: number,
     randomish_lat: number
@@ -167,10 +179,9 @@ export class Google extends WorkerJob {
   }
 
   async getSynopsis() {
-    const synopsis = await this.puppeteer.getElementText(
+    this.scrape_data.synopsis = await this.puppeteer.getElementText(
       '.section-editorial-quote'
     )
-    console.log(synopsis)
   }
 
   async getReviews() {
@@ -182,7 +193,12 @@ export class Google extends WorkerJob {
     await this.puppeteer.page.goto(url)
     await sleep(1000)
     await this.puppeteer.scrollAllIntoView('.section-review')
-    const reviews = await this.puppeteer.page.$$('.section-review')
-    console.log(reviews.length)
+    const reviews = await this.puppeteer.page.evaluate(() => {
+      const reviews = Array.from(document.querySelectorAll('.section-review'))
+      return reviews.map((el) => {
+        return (<HTMLElement>el).innerText
+      })
+    })
+    this.scrape_data.reviews = reviews
   }
 }

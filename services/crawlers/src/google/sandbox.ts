@@ -9,11 +9,10 @@ async function one() {
   await restaurant.findOne('name', name)
   const google = new Google()
   await google.boot()
-  const coords = restaurant.location.coordinates
   console.log(
     'Restaurant from DB being used for Google crawl: ' + restaurant.name
   )
-  await google.getRestaurant(coords[0], coords[1], restaurant.name)
+  await google.getRestaurant(restaurant)
 }
 
 async function all() {

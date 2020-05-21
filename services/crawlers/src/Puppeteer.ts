@@ -44,7 +44,6 @@ export class Puppeteer {
 
   async close() {
     await this.browser.close()
-    process.exit()
   }
 
   async sleep(ms: number) {
@@ -83,7 +82,7 @@ export class Puppeteer {
       args.push('--proxy-server=localhost:8000')
     }
     this.browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       executablePath: '/usr/bin/google-chrome-stable',
       args: [...args],
     })
@@ -143,6 +142,7 @@ export class Puppeteer {
   }
 
   _waitForSpecificRequest(request: Request) {
+    console.log(request.url())
     if (!this.watch_requests_for) return
     if (request.url().includes(this.watch_requests_for)) {
       this.found_watched_request = request.url()
@@ -182,6 +182,10 @@ export class Puppeteer {
     let withinTimeout = true
     while (withinTimeout) {
       preCount = await this._countSelectors(selector)
+      if (process.env.DISH_ENV != 'production' && preCount > 10) {
+        console.log('GOOGLE: Exiting scroll loop, not in production')
+        break
+      }
       await this._scrollIntoView(selector)
       withinTimeout = await this.waitForMoreElements(selector, preCount)
     }
@@ -196,7 +200,6 @@ export class Puppeteer {
       if (postCount > preCount) return true
       await this.sleep(delay)
       elapsed = elapsed + delay
-      console.log(elapsed)
     }
     return false
   }
