@@ -63,21 +63,10 @@ async function run() {
     )
   )
 
-  console.log('removing unused imports, takes a sec theres a lot...')
-  exec(
-    `yarn tslint --fix --project .`,
-    {
-      cwd: graphqlPath,
-    },
-    runPrettier
-  )
-
-  function runPrettier() {
-    console.log('Prettier...')
-    exec(`prettier --write "**/*.ts"`, {
-      cwd: graphqlPath,
-    })
-  }
+  console.log('Prettier...')
+  exec(`prettier --write "**/*.ts"`, {
+    cwd: graphqlPath,
+  })
 }
 
 run()

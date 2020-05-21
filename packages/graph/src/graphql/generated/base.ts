@@ -1,5 +1,6 @@
 import { EnumType, FieldsType, FieldsTypeArg, TypeData } from 'gqless'
 
+import * as extensions from '../extensions'
 import { t_Boolean } from './Boolean'
 import { Extension } from './extensionsTypes'
 import { t_String } from './String'

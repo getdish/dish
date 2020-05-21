@@ -1,5 +1,7 @@
 import { EnumType, FieldsType, FieldsTypeArg, TypeData } from 'gqless'
 
+import * as extensions from '../extensions'
+import { t_Boolean } from './Boolean'
 import { Extension } from './extensionsTypes'
 import { geometry_comparison_exp, t_geometry } from './geometry'
 import { t_Int } from './Int'

@@ -1,5 +1,6 @@
 import { FieldsType, FieldsTypeArg, TypeData } from 'gqless'
 
+import * as extensions from '../extensions'
 import {
   dish_bool_exp,
   dish_inc_input,

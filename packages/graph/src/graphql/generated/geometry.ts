@@ -1,5 +1,7 @@
 import { ScalarType, TypeData } from 'gqless'
 
+import * as extensions from '../extensions'
+import { t_Boolean } from './Boolean'
 import { Extension } from './extensionsTypes'
 import { geography_comparison_exp } from './geography'
 import { st_d_within_input } from './st_d_within_input'

@@ -1,5 +1,6 @@
 import { ScalarType, TypeData } from 'gqless'
 
+import * as extensions from '../extensions'
 import { Extension } from './extensionsTypes'
 
 /**
