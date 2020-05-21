@@ -1,6 +1,7 @@
 import '@dish/common'
 
-import { Restaurant, Scrape } from '@dish/models'
+import { restaurantSaveCanonical } from '@dish/graph'
+import { Scrape } from '@dish/models'
 import { WorkerJob } from '@dish/worker'
 import axios_base, { AxiosResponse } from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
@@ -150,7 +151,7 @@ export class UberEats extends WorkerJob {
 
   private async saveRestaurant(data: any, uuid: string) {
     console.log('Saving restaurant: ' + data.title)
-    const canonical = await Restaurant.saveCanonical(
+    const canonical = await restaurantSaveCanonical(
       data.location.longitude,
       data.location.latitude,
       data.title,

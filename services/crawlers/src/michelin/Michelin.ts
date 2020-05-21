@@ -1,11 +1,11 @@
 import '@dish/common'
 
 import { sentryException } from '@dish/common'
-import { Restaurant, Scrape, ScrapeData } from '@dish/models'
+import { restaurantSaveCanonical } from '@dish/graph'
+import { Scrape, ScrapeData } from '@dish/models'
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
-import _ from 'lodash'
 
 const MICHELIN_DOMAIN =
   process.env.MICHELIN_PROXY || 'https://8nvhrd7onv-dsn.algolia.net'
@@ -86,7 +86,7 @@ export class Michelin extends WorkerJob {
     const lon = data._geoloc.lng
     const lat = data._geoloc.lat
 
-    const canonical = await Restaurant.saveCanonical(
+    const canonical = await restaurantSaveCanonical(
       lon,
       lat,
       data.name,
