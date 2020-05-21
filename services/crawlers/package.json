@@ -16,6 +16,7 @@
     "@dish/common": "*",
     "@dish/models": "*",
     "@dish/worker": "*",
+    "@types/puppeteer-core": "^2.0.0",
     "acorn": "^7.1.1",
     "axios": "^0.19.1",
     "cheerio": "^1.0.0-rc.3",
@@ -24,6 +25,8 @@
     "lodash": "^4.17.15",
     "moment": "^2.25.3",
     "pg": "^7.18.2",
+    "proxy-chain": "^0.4.4",
+    "puppeteer-core": "^3.0.0",
     "sentiment": "^5.0.2",
     "bull": "^3.12.1",
     "transliteration": "^2.1.8"
