@@ -2,7 +2,8 @@ import 'isomorphic-unfetch'
 
 import { createFetcher } from './createFetcher'
 import { client, query_root } from './graphql'
-import { useQueryInner } from './hooks'
+
+// import { useQueryInner } from './hooks'
 
 export function startLogging(verbose = true) {
   // dont import outside node, it accesses window

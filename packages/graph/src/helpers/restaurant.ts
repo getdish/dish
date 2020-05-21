@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 import { query } from '../graphql'
 import { tagUpsert } from '../helpers/tag'
-import { Restaurant, RestaurantTag, Tag } from '../types'
+import { Restaurant, RestaurantTag, Scrape, Tag } from '../types'
 import { levenshteinDistance } from './levenshteinDistance'
 import { findOne, insert, update, upsert } from './queryHelpers'
 
@@ -32,13 +32,15 @@ export async function restaurantFindBatch(
   size: number,
   previous_id: string,
   extra_where: {} = {}
-) {
+): Promise<Restaurant[]> {
   return await resolved(() => {
     return query.restaurant({
       where: {
         id: { _gt: previous_id },
         ...extra_where,
       },
+      // @tom - types are mad here
+      // @ts-ignore
       order_by: { id: 'asc' },
       limit: size,
     })
@@ -49,7 +51,7 @@ export async function restaurantFindNear(
   lat: number,
   lng: number,
   distance: number
-) {
+): Promise<Restaurant> {
   return await resolved(() => {
     return query.restaurant({
       where: {
@@ -70,9 +72,9 @@ export async function restaurantFindNear(
 export async function restaurantLatestScrape(
   restaurant: Restaurant,
   source: string
-) {
+): Promise<Scrape> {
   return await resolved(() => {
-    return query.scrape({
+    const [first] = query.scrape({
       where: {
         restaurant_id: {
           _eq: restaurant.id,
@@ -82,10 +84,13 @@ export async function restaurantLatestScrape(
         },
       },
       order_by: {
+        // @tom broken same way
+        // @ts-ignore
         updated_at: 'desc',
       },
       limit: 1,
     })
+    return first
   })
 }
 
@@ -94,7 +99,7 @@ export async function restaurantSaveCanonical(
   lat: number,
   name: string,
   street_address: string
-) {
+): Promise<Restaurant> {
   const found = await findExistingCanonical(lon, lat, name)
   if (found) return found
   let restaurant: Restaurant = {
@@ -116,7 +121,11 @@ export async function restaurantSaveCanonical(
   return restaurant
 }
 
-async function findExistingCanonical(lon: number, lat: number, name: string) {
+async function findExistingCanonical(
+  lon: number,
+  lat: number,
+  name: string
+): Promise<Restaurant> {
   const nears = await restaurantFindNear(lat, lon, 0.0005)
   let found: Restaurant | undefined = undefined
   let shortlist = [] as Restaurant[]
@@ -146,14 +155,16 @@ async function findExistingCanonical(lon: number, lat: number, name: string) {
   return found
 }
 
-export async function restaurantRefresh(restaurant: Restaurant) {
+export async function restaurantRefresh(
+  restaurant: Restaurant
+): Promise<Restaurant> {
   return await restaurantFindOne({ id: restaurant.id })
 }
 
 export async function restaurantUpsertManyTags(
   restaurant: Restaurant,
   restaurant_tags: RestaurantTag[]
-) {
+): Promise<Restaurant> {
   const populated = restaurant_tags.map((rt) => {
     const existing = getRestaurantTagFromTag(restaurant, rt.tag_id)
     return { ...existing, ...rt }

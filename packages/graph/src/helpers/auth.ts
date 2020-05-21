@@ -137,8 +137,8 @@ class AuthModel {
 
   async logout() {
     this.isLoggedIn = false
-    delete this.jwt
-    delete this.user
+    this.jwt = ''
+    this.user = null
     if (!isNode) {
       localStorage.removeItem(BROWSER_STORAGE_KEY)
     }

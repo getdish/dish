@@ -2,6 +2,7 @@
   "name": "@dish/graph",
   "version": "0.0.1",
   "main": "_/index.js",
+  "type": "module",
   "tsmain": "src/index",
   "sideEffects": false,
   "private": true,
@@ -27,7 +28,7 @@
     "gqless-hook": "^0.0.4",
     "ava": "^3.8.2",
     "gqless": "^0.0.1-alpha.29",
-    "@gqless/schema": "^0.0.1-alpha.31"
+    "@o/gqless-schema": "^0.0.1-alpha.31"
   },
   "peerDependencies": {
     "react": "*"

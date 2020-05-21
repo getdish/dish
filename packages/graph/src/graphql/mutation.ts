@@ -1,7 +1,7 @@
 import { Client } from 'gqless'
 
 import { createFetcher } from '../createFetcher'
-import { mutation_root, schema, t_mutation_root } from './generated'
+import { mutation_root, schema } from './generated'
 
 // import { createUseMutation } from 'gqless-hooks'
 

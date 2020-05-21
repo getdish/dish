@@ -1,7 +1,8 @@
 import { QueryResponse } from 'gqless'
 
 import { isBrowserProd } from './constants'
-import { Auth, getGraphEndpoint } from './helpers'
+import { Auth } from './helpers/auth'
+import { getGraphEndpoint } from './helpers/getGraphEndpoint'
 
 type QueryFetcherWithOptions = (
   query: string,
@@ -9,16 +10,14 @@ type QueryFetcherWithOptions = (
   options?: {
     silenceNotFound?: boolean
   }
-) => Promise<QueryResponse> | QueryResponse
+) => Promise<QueryResponse>
 
 const endpoint = getGraphEndpoint()
 
-export const createFetcher = (type: 'query' | 'mutation') => {
-  const fetcher: QueryFetcherWithOptions = async (
-    query,
-    variables,
-    options
-  ) => {
+export const createFetcher = (
+  type: 'query' | 'mutation'
+): QueryFetcherWithOptions => {
+  return async (query, variables, options) => {
     const request: RequestInit = {
       method: 'POST',
       headers: {
@@ -43,7 +42,6 @@ export const createFetcher = (type: 'query' | 'mutation') => {
     }
     return data
   }
-  return fetcher
 }
 
 class HasuraError extends Error {

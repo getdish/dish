@@ -1,4 +1,4 @@
-import { Auth } from './auth
+import { Auth } from './auth'
 import { getGraphEndpoint } from './getGraphEndpoint'
 
 export async function graphqlGet(query: string = '', variables: Object = {}) {
