@@ -1,10 +1,8 @@
-// preload imports
-import './bootstrapEnv'
 import './base.css'
+import './bootstrapEnv'
 
 import { mutation, query, startLogging } from '@dish/graph'
 import { createOvermind } from 'overmind'
-// // import here
 import React from 'react'
 // @ts-ignore
 import { createRoot, hydrate, render } from 'react-dom'

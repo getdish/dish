@@ -1,22 +1,37 @@
 import { resolved } from 'gqless'
 
-import { query } from '../graphql'
+import { query, schema } from '../graphql'
 import { mutation } from '../graphql/mutation'
 
 type DishGeneric = {
   id: string
 }
 
+const allFieldsForTable = (table: string): string[] => {
+  return Object.keys(schema[table]?.fields ?? {})
+}
+
+async function resolveAllFields<A>(table: string, cb: () => A): Promise<A> {
+  return await resolved(() => {
+    const res = cb()
+    for (const key of allFieldsForTable(table)) {
+      // touch each key to resolve it in gqless
+      res[key]
+    }
+    return res
+  })
+}
+
 export async function findOne<T>(table: string, hash: Partial<T>): Promise<T> {
   const where = Object.keys(hash).map((key) => {
     return { [key]: { _eq: hash[key] } }
   })
-  return await resolved(() => {
+  return await resolveAllFields(table, () => {
     return query[table]({
       where: {
         _and: where,
       },
-    }) as T
+    })
   })
 }
 
