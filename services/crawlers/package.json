@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@dish/common": "*",
-    "@dish/models": "*",
     "@dish/worker": "*",
     "@dish/graph": "*",
     "acorn": "^7.1.1",

@@ -1,7 +1,19 @@
 import '@dish/common'
 
-import { Restaurant, RestaurantTag, Tag, tagFindCountries } from '@dish/graph'
-import { Dish, Scrape, ScrapeData } from '@dish/models'
+import {
+  Dish,
+  Restaurant,
+  RestaurantTag,
+  RestaurantTagWithID,
+  Scrape,
+  ScrapeData,
+  Tag,
+  fetchBatch,
+  findOneByHash,
+  tagFindCountries,
+  tagSlug,
+  upsert,
+} from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
@@ -59,10 +71,11 @@ export class Self extends WorkerJob {
   async main() {
     let previous_id = '00000000-0000-0000-0000-000000000000'
     while (true) {
-      const results = await Restaurant.fetchBatch(
+      const results = await fetchBatch(
+        'restaurant',
         PER_PAGE,
         previous_id,
-        {},
+        [],
         sanfran
       )
       if (results.length == 0) {
@@ -127,8 +140,7 @@ export class Self extends WorkerJob {
       )
       throw new Error('Not enough data to resolve restaurant conflict')
     }
-    let conflicter = new Restaurant()
-    await conflicter.findOneByHash({
+    const conflicter = await findOneByHash('restaurant', {
       name: this.restaurant.name,
       address: this.restaurant.address,
     })
@@ -409,15 +421,16 @@ export class Self extends WorkerJob {
       return
     }
     for (const data of this.ubereats.data.dishes) {
-      const dish = new Dish({
-        restaurant_id: this.restaurant.id,
-        name: data.title,
-        description: data.description,
-        price: data.price,
-        image: data.imageUrl,
-      })
-      if (dish.name) {
-        await dish.upsert()
+      if (data.title) {
+        await upsert<Dish>('dish', 'dish_restaurant_id_name_key', [
+          {
+            restaurant_id: this.restaurant.id,
+            name: data.title,
+            description: data.description,
+            price: data.price,
+            image: data.imageUrl,
+          },
+        ])
       }
     }
   }
@@ -435,7 +448,7 @@ export class Self extends WorkerJob {
       (this.restaurant.tags || []).map(async (i) => {
         restaurant_tags.push({
           tag_id: i.tag.id,
-          rank: await this.getRankForTag(new Tag(i.tag)),
+          rank: await this.getRankForTag(i.tag),
         })
       })
     )
@@ -444,7 +457,7 @@ export class Self extends WorkerJob {
 
   async getRankForTag(tag: Tag) {
     const RADIUS = 0.1
-    const tag_name = tag.slug()
+    const tag_name = tagSlug(tag)
     const result = await sql(
       `SELECT rank FROM (
         SELECT id, DENSE_RANK() OVER(ORDER BY rating DESC NULLS LAST) AS rank

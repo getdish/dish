@@ -1,7 +1,5 @@
 import anyTest, { TestInterface } from 'ava'
 
-import { Scrape } from '../src/Scrape'
-
 interface Context {
   scrape: Scrape
 }

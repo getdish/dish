@@ -2,7 +2,9 @@ import { resolved } from 'gqless'
 
 import { query } from '../graphql'
 import { Tag } from '../types'
+import { allFieldsForTable } from './allFieldsForTable'
 import { upsert } from './queryHelpers'
+import { resolveFields } from './resolveFields'
 import { slugify } from './slugify'
 import { tagTagUpsert } from './tag_tag'
 
@@ -15,7 +17,7 @@ export async function tagUpsert(objects: Tag[]) {
 export async function tagGetAllChildren(
   parents: Pick<Tag, 'id'>[]
 ): Promise<Tag[]> {
-  return await resolved(() => {
+  return await resolveFields(allFieldsForTable('tag'), () => {
     return query.tag({
       where: {
         parentId: {
@@ -27,7 +29,7 @@ export async function tagGetAllChildren(
 }
 
 export async function tagFindCountries(countries: string[]): Promise<Tag[]> {
-  return await resolved(() => {
+  return await resolveFields(allFieldsForTable('tag'), () => {
     return query.tag({
       where: {
         _or: [

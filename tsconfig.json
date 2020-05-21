@@ -8,7 +8,6 @@
     { "path": "./services/worker" },
     { "path": "./apps/web" },
     { "path": "./packages/graph" },
-    { "path": "./packages/models" },
     { "path": "./packages/tscc" },
     { "path": "./packages/rollup-plugin-tscc" }
   ]

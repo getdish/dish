@@ -2,7 +2,6 @@
   "name": "@dish/graph",
   "version": "0.0.1",
   "main": "_/index.js",
-  "type": "module",
   "tsmain": "src/index",
   "sideEffects": false,
   "private": true,
@@ -15,7 +14,8 @@
     "generate": "./generate.sh",
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
-    "test": "ava",
+    "test": "DISH_ENV=test ava test/* --verbose",
+    "test:watch": "DISH_ENV=test ava test/* --watch",
     "postinstall": "patch-package || yarn postinstall-verbose",
     "postinstall-verbose": "patch --verbose -t -p1 -i patches/gqless+0.0.1-alpha.29.patch"
   },

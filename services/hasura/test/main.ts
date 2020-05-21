@@ -1,5 +1,15 @@
-import { Auth } from '@dish/graph'
-import { Dish, Restaurant, Scrape, User } from '@dish/models'
+import {
+  Auth,
+  Dish,
+  Restaurant,
+  Scrape,
+  User,
+  deleteAllBy,
+  deleteAllFuzzyBy,
+  findOne,
+  insert,
+  update,
+} from '@dish/graph'
 import anyTest, { TestInterface } from 'ava'
 
 interface Context {}
@@ -8,8 +18,8 @@ const test = anyTest as TestInterface<Context>
 
 test.beforeEach(async () => {
   Auth.as('admin')
-  await User.deleteAllFuzzyBy('username', 'test')
-  await Restaurant.deleteAllFuzzyBy('name', 'test')
+  await deleteAllFuzzyBy('user', 'username', 'test')
+  await deleteAllFuzzyBy('restaurant', 'name', 'test')
 })
 
 test('Normal user cannot delete things', async (t) => {
@@ -17,7 +27,7 @@ test('Normal user cannot delete things', async (t) => {
   await Auth.login('tester', 'password')
   Auth.as('user')
   try {
-    await Restaurant.deleteAllBy('id', 'example')
+    await deleteAllBy('restaurant', 'id', 'example')
   } catch (e) {
     t.is(
       e.errors[0].message,
@@ -25,7 +35,7 @@ test('Normal user cannot delete things', async (t) => {
     )
   }
   try {
-    await User.deleteAllBy('id', 'example')
+    await deleteAllBy('user', 'id', 'example')
   } catch (e) {
     t.is(
       e.errors[0].message,
@@ -33,7 +43,7 @@ test('Normal user cannot delete things', async (t) => {
     )
   }
   try {
-    await Dish.deleteAllBy('id', 'example')
+    await deleteAllBy('dish', 'id', 'example')
   } catch (e) {
     t.is(
       e.errors[0].message,
@@ -41,7 +51,7 @@ test('Normal user cannot delete things', async (t) => {
     )
   }
   try {
-    await Scrape.deleteAllBy('id', 'example')
+    await deleteAllBy('scrape', 'id', 'example')
   } catch (e) {
     t.is(
       e.errors[0].message,
@@ -55,8 +65,7 @@ test('Normal user cannot get scrapes', async (t) => {
   await Auth.login('tester', 'password')
   Auth.as('user')
   try {
-    const scrape = new Scrape()
-    await scrape.findOne('id', 'example')
+    const scrape = await findOne<Scrape>('scrape', { id: 'example' })
   } catch (e) {
     t.is(
       e.errors[0].message,
@@ -66,35 +75,38 @@ test('Normal user cannot get scrapes', async (t) => {
 })
 
 test('Normal user can see restaurants', async (t) => {
-  const restaurant = new Restaurant({
-    name: 'test',
-    location: {
-      type: 'Point',
-      coordinates: [50, 0],
+  await insert<Restaurant>('restaurant', [
+    {
+      name: 'test',
+      location: {
+        type: 'Point',
+        coordinates: [50, 0],
+      },
     },
-  })
-  await restaurant.insert()
+  ])
   await Auth.register('tester', 'password')
   await Auth.login('tester', 'password')
   Auth.as('user')
-  await restaurant.findOne('name', 'test')
+  const restaurant = await findOne<Restaurant>('restaurant', { name: 'test' })
   t.is(restaurant.name, 'test')
 })
 
 test('Contributor can edit restaurants', async (t) => {
   await Auth.register('tester-contributor', 'password')
-  const user = new User()
-  await user.findOne('username', 'tester-contributor')
-  user.role = 'contributor'
-  await user.update()
-  const restaurant = new Restaurant({
-    name: 'test',
-    location: {
-      type: 'Point',
-      coordinates: [50, 0],
-    },
+  let user = await findOne<User>('user', { username: 'tester-contributor' })
+  user = await update<User>('user', {
+    ...user,
+    role: 'contributor',
   })
-  await restaurant.insert()
+  const [restaurant] = await insert<Restaurant>('restaurant', [
+    {
+      name: 'test',
+      location: {
+        type: 'Point',
+        coordinates: [50, 0],
+      },
+    },
+  ])
   await Auth.login('tester-contributor', 'password')
   Auth.as('user')
   restaurant.rating = 5

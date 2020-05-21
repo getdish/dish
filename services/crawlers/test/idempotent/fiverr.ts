@@ -1,4 +1,4 @@
-import { Tag, flushTestData } from '@dish/models'
+import { findOneByHash, flushTestData } from '@dish/graph'
 import anyTest, { TestInterface } from 'ava'
 
 import { ParseFiverr } from '../../src/wikipedia/ParseFiverr'
@@ -21,27 +21,32 @@ test.beforeEach(async (t) => {
 test('Parsing Fiverr text files', async (t) => {
   await ParseFiverr.start(__dirname)
 
-  let continent_tag = new Tag()
-  await continent_tag.findOneByHash({ name: 'Test Asian' })
+  const continent_tag = await findOneByHash('tag', {
+    name: 'Test Asian',
+  })
   t.is(continent_tag.type, 'continent')
 
-  let country_tag = new Tag()
-  await country_tag.findOneByHash({ name: 'Test Pakistani' })
+  const country_tag = await findOneByHash('tag', {
+    name: 'Test Pakistani',
+  })
   t.is(country_tag.type, 'country')
   t.is(country_tag.parentId, continent_tag.id)
 
-  let vegetarian_tag = new Tag()
-  await vegetarian_tag.findOneByHash({ name: 'Test Vegetarian' })
+  const vegetarian_tag = await findOneByHash('tag', {
+    name: 'Test Vegetarian',
+  })
   t.is(vegetarian_tag.type, 'category')
   t.is(vegetarian_tag.parentId, country_tag.id)
 
-  let diacritics_tag = new Tag()
-  await diacritics_tag.findOneByHash({ name: 'Test Diacritics' })
+  const diacritics_tag = await findOneByHash('tag', {
+    name: 'Test Diacritics',
+  })
   t.is(diacritics_tag.type, 'category')
   t.is(diacritics_tag.parentId, country_tag.id)
 
-  let khichdi_dish_tag = new Tag()
-  await khichdi_dish_tag.findOneByHash({ name: 'Test Khichdi' })
+  const khichdi_dish_tag = await findOneByHash('tag', {
+    name: 'Test Khichdi',
+  })
   t.is(khichdi_dish_tag.type, 'dish')
   t.is(khichdi_dish_tag.parentId, country_tag.id)
   t.truthy(
@@ -50,8 +55,7 @@ test('Parsing Fiverr text files', async (t) => {
       .includes('Test Vegetarian')
   )
 
-  let diakritik_dish_tag = new Tag()
-  await diakritik_dish_tag.findOneByHash({ name: 'test diakritikos' })
+  const diakritik_dish_tag = findOneByHash('tag', { name: 'test diakritikos' })
   t.is(diakritik_dish_tag.type, 'dish')
   t.deepEqual(diakritik_dish_tag.alternates, ['test diakritikós'])
   t.is(diakritik_dish_tag.parentId, country_tag.id)

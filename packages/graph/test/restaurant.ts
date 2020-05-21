@@ -2,10 +2,6 @@ import { restaurantSaveCanonical } from '@dish/graph'
 import anyTest, { TestInterface } from 'ava'
 import moment from 'moment'
 
-import { Dish } from '../src/Dish'
-import { flushTestData } from '../src/flushTestData'
-import { Restaurant } from '../src/Restaurant'
-import { Tag } from '../src/Tag'
 import { dish_fixture, restaurant_fixture } from './etc/fixtures'
 
 interface Context {

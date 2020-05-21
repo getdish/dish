@@ -7,7 +7,6 @@
     "ava": "*"
   },
   "dependencies": {
-    "@dish/models": "*",
     "@dish/graph": "*"
   },
   "peerDependencies": {

@@ -43,7 +43,6 @@
     "@dish/graph": "*",
     "@dish/ui": "*",
     "@dish/async": "*",
-    "@dish/models": "*",
     "@o/fast-compare": "2.7.6",
     "expo-linear-gradient": "^8.1.0",
     "google-closure-compiler": "20191111.0.0",

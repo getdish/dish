@@ -1,7 +1,11 @@
 import '@dish/common'
 
-import { restaurantSaveCanonical } from '@dish/graph'
-import { Scrape, ScrapeData } from '@dish/models'
+import {
+  Scrape,
+  ScrapeData,
+  insert,
+  restaurantSaveCanonical,
+} from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
@@ -86,19 +90,20 @@ export class Infatuated extends WorkerJob {
       data.name,
       data.street
     )
-    const scrape = new Scrape({
-      source: 'infatuation',
-      restaurant_id: canonical.id,
-      id_from_source: data.id.toString(),
-      location: {
-        type: 'Point',
-        coordinates: [lon, lat],
+    const [scrape] = await insert<Scrape>('scrape', [
+      {
+        source: 'infatuation',
+        restaurant_id: canonical.id,
+        id_from_source: data.id.toString(),
+        location: {
+          type: 'Point',
+          coordinates: [lon, lat],
+        },
+        data: {
+          data_from_map_search: data,
+        },
       },
-      data: {
-        data_from_map_search: data,
-      },
-    })
-    await scrape.insert()
+    ])
     return scrape.id
   }
 }
