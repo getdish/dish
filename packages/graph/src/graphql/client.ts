@@ -5,7 +5,7 @@ import { query_root, schema } from './generated'
 
 const fetchQuery = createFetcher('query')
 // warning: using type here causes Infinity slowdown
-export const client = new Client(schema.query_root, fetchQuery)
+export const client = new Client<any>(schema.query_root, fetchQuery)
 
 // main query interface
-export const query: query_root = client.query
+export const query: any = client.query

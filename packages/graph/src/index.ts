@@ -13,12 +13,11 @@ export function startLogging(verbose = true) {
 }
 
 export { graphql } from '@gqless/react'
-export { query } from './graphql'
-export * from './graphql/mutation'
-export * from 'gqless'
+export { client, query } from './graphql'
+export { mutation } from './graphql/mutation'
+export { resolved } from 'gqless'
 export * from './types'
 export * from './types-extra'
-export * from './auth'
 export * from './helpers'
 
 // these hacky type defs here avoid huge slowdown in ts

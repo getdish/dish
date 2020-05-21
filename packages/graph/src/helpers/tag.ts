@@ -1,6 +1,8 @@
-import { upsert } from '../helpers'
+import { resolved } from 'gqless'
+
+import { query } from '../graphql'
 import { tagTagUpsert } from '../helpers/tag_tag'
-import { query, resolved } from '../index'
+import { upsert } from '../queryHelpers'
 import { Tag, TagTag } from '../types'
 
 export async function tagUpsert(objects: Tag[]) {
