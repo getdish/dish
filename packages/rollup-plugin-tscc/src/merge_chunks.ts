@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as rollup from 'rollup'
 
 import MultiMap from './MultiMap'

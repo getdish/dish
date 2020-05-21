@@ -41,6 +41,7 @@ export const RestaurantDetailRow = memo(
         { title: price_label, content: price_range, color: price_color },
         {
           title: 'Delivers',
+          // @ts-ignore bad type gen?
           content: deliveryLinks(restaurant.sources()),
           color: 'gray',
         },

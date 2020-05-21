@@ -87,9 +87,8 @@ server.get('*', async (req, res) => {
     ),
     'utf8'
   )
-  const clientScripts = clientHTML.match(
-    /<script\b[^>]*>([\s\S]*?)<\/script>/gm
-  )
+  const clientScripts =
+    clientHTML.match(/<script\b[^>]*>([\s\S]*?)<\/script>/gm) ?? []
 
   let out = ''
   for (const line of template.split('\n')) {

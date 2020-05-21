@@ -17,9 +17,9 @@ export const Modal = ({
 
   const container = useMemo(() => document.createElement('div'), [])
   useLayoutEffect(() => {
-    document.getElementById('modals').appendChild(container)
+    document.getElementById('modals')?.appendChild(container)
     return () => {
-      document.getElementById('modals').removeChild(container)
+      document.getElementById('modals')?.removeChild(container)
     }
   }, [])
 

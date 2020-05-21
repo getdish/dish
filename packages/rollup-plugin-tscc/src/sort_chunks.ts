@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * @fileoverview Rollup generates at most one chunk per each combination of entry points. In our case
  * of emulating closure compiler's bundling, entry points are also nodes of a graph.

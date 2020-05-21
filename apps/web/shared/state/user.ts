@@ -3,7 +3,7 @@ import { Toast } from '@dish/ui'
 import { Action, AsyncAction } from 'overmind'
 
 type UserState = {
-  user: Partial<User>
+  user: Partial<User> | null
   loading: boolean
   messages: string[]
   isLoggedIn: boolean
@@ -80,7 +80,7 @@ const login: AsyncAction<{ username: string; password: string }> = async (
     }
   } else {
     postLogin(om, data)
-    Toast.show('Logged in as ' + om.state.user.user.username)
+    Toast.show('Logged in as ' + om.state.user.user?.username)
   }
   om.state.user.loading = false
 }

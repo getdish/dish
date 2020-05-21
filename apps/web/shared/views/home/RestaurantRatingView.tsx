@@ -58,6 +58,7 @@ const RestaurantRatingBreakdownView = memo(
       },
     })
 
+    // @ts-ignore bad generate
     const ratingFactors = restaurant.rating_factors()
 
     return (

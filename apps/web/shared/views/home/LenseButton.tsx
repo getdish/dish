@@ -26,7 +26,7 @@ export const LenseButton = memoIsEqualDeep(
     minimal?: boolean
     size?: LenseButtonSize
   }) => {
-    const [r, g, b] = lense.rgb
+    const [r, g, b] = lense.rgb ?? [1, 1, 1]
     const rgbInner = `${r * 255}, ${g * 255}, ${b * 255}`
     const lenseColor = `rgb(${rgbInner})`
     const lenseColorLight = `rgba(${rgbInner}, 0.2)`

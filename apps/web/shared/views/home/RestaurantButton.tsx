@@ -47,7 +47,7 @@ export const RestaurantButton = memo(
         paddingRight={34}
         {...props}
         onHoverIn={() => {
-          onHoverIn(restaurant)
+          onHoverIn?.(restaurant)
         }}
       >
         <HStack alignItems="center" spacing={5}>

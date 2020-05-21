@@ -1,9 +1,12 @@
 import { EnumType } from 'json-to-graphql-query'
 
 import { ModelBase } from './ModelBase'
-import { Restaurant } from './Restaurant'
-import { Tag } from './Tag'
+// import { Restaurant } from './Restaurant'
+// import { Tag } from './Tag'
 import { User } from './User'
+
+type Restaurant = any
+type Tag = any
 
 export class Review extends ModelBase<Review> {
   restaurant_id!: string
@@ -30,7 +33,7 @@ export class Review extends ModelBase<Review> {
     let tax_return = {}
     if (tag_id != '') {
       tax_return = {
-        tag: Tag.fieldsAsObject(),
+        // tag: Tag.fieldsAsObject(),
       }
       tax_where = {
         tag_id: { _eq: tag_id },
@@ -48,7 +51,7 @@ export class Review extends ModelBase<Review> {
           },
           ...this.fieldsAsObject(),
           ...tax_return,
-          restaurant: Restaurant.fieldsAsObject(),
+          // restaurant: Restaurant.fieldsAsObject(),
           user: User.fieldsAsObject(),
         },
       },
@@ -104,7 +107,7 @@ export class Review extends ModelBase<Review> {
             },
           },
           ...this.fieldsAsObject(),
-          restaurant: Restaurant.fieldsAsObject(),
+          // restaurant: Restaurant.fieldsAsObject(),
         },
       },
     }

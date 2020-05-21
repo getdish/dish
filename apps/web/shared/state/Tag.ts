@@ -1,5 +1,4 @@
-import { TagType } from '@dish/graph'
-import { tagSlug } from '@dish/models'
+import { TagType, tagSlug } from '@dish/graph'
 
 type TagDescriptionKey = 'dish' | 'cuisine' | 'plain'
 

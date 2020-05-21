@@ -1,3 +1,4 @@
+// @ts-nocheck
 export default class MultiMap<K, V> {
   private map: Map<K, Set<V>> = new Map()
   add(key: K, value?: V) {

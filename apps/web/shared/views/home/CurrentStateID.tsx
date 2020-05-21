@@ -1,2 +1,2 @@
 import { createContext } from 'react'
-export const CurrentStateID = createContext<string>(null)
+export const CurrentStateID = createContext<string | null>(null)

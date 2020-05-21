@@ -6,10 +6,10 @@ export function useThrottledFn<Args extends any[], Returns extends any>(
   fn: (...args: Args) => Returns,
   props: { amount: number; ignoreFirst?: boolean },
   mountArgs?: any[]
-) {
-  const last = useRef(null)
-  const tm = useRef(null)
-  const throttledFn = (...args: Args): Returns => {
+): (...args: Args) => Returns {
+  const last = useRef<any>(null)
+  const tm = useRef<any>(null)
+  const throttledFn = (...args: Args) => {
     clearTimeout(tm.current)
     const now = Date.now()
     const since = now - last.current

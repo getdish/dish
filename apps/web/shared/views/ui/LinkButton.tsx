@@ -31,7 +31,7 @@ export type LinkButtonProps<
         onPress?: any
       }
     | {
-        tag: NavigableTag
+        tag: NavigableTag | null
         onPress?: Function
       }
     | {
@@ -48,9 +48,9 @@ export function LinkButton<
   let contents: React.ReactElement
   let pointerEvents: any
   let onPress: any
-  let fastClick: boolean
+  let fastClick = false
   let props = useNormalizeLinkProps(allProps)
-  const containerRef = useRef()
+  const containerRef = useRef<any>()
   const stopProp = allProps.stopPropagation ?? true
 
   useEffect(() => {
@@ -119,7 +119,9 @@ export function LinkButton<
       disabledIfActive,
       ...rest
     } = props
-    fastClick = fastClick_
+    if (fastClick_) {
+      fastClick = fastClick_
+    }
     pointerEvents = rest.pointerEvents
     onPress = onPress_
     restProps = rest

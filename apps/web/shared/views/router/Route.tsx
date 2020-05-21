@@ -10,9 +10,9 @@ import { View } from 'react-native'
 import { HistoryItem, routePathToName, routes } from '../../state/router'
 import { useOvermind } from '../../state/useOvermind'
 
-const RouteContext = createContext<(name: string, showing: boolean) => void>(
-  null
-)
+const RouteContext = createContext<
+  ((name: string, showing: boolean) => void) | null
+>(null)
 
 export function RouteSwitch(props: { children: any }) {
   const children = React.Children.toArray(props.children)

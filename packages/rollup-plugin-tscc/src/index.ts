@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { IInputTsccSpecJSON } from '@dish/tscc-spec'
 import * as rollup from 'rollup'
 

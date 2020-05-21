@@ -38,7 +38,7 @@ function HomeMapPIPContent() {
   const enabled = state.type === 'restaurant' && span.lat < 0.02
   const restaurant =
     state.type === 'restaurant'
-      ? om.state.home.allRestaurants[state.restaurantId]
+      ? om.state.home.allRestaurants[state.restaurantId ?? '']
       : null
 
   const coordinates = restaurant?.location?.coordinates

@@ -22,9 +22,9 @@ function ErrorFallback({
     >
       <VStack left={50} flex={1} overflow="hidden">
         <Text style={{ color: '#fff' }}>
-          <pre>{error.message}</pre>
+          <pre>{error?.message}</pre>
           <pre>{componentStack}</pre>
-          <pre>{error.stack}</pre>
+          <pre>{error?.stack}</pre>
         </Text>
       </VStack>
       <Button title="Try Again" onPress={resetErrorBoundary}></Button>

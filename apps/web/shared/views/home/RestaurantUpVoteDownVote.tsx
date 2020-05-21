@@ -38,6 +38,7 @@ export const RestaurantUpVoteDownVote = memo(
             style={styles.topButton}
             active={vote == 1}
             onPress={() => {
+              // @ts-ignore
               mutation.insert_review({
                 objects: [
                   {
@@ -61,6 +62,7 @@ export const RestaurantUpVoteDownVote = memo(
             style={styles.bottomButton}
             active={vote == -1}
             onPress={() => {
+              // @ts-ignore
               mutation.insert_review({
                 objects: [
                   {

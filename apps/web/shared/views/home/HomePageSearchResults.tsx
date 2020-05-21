@@ -266,7 +266,7 @@ const HomeSearchResultsViewContent = memo(
           {results.map((item, index) => (
             <Suspense key={item.id} fallback={null}>
               <RestaurantListItem
-                currentLocationInfo={state.currentLocationInfo}
+                currentLocationInfo={state.currentLocationInfo ?? null}
                 restaurant={item}
                 rank={index + 1}
               />
