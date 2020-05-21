@@ -1,6 +1,7 @@
 import '@dish/common'
 
-import { Restaurant, Scrape, ScrapeData } from '@dish/models'
+import { restaurantSaveCanonical, scrapeMergeData } from '@dish/graph'
+import { Scrape, ScrapeData } from '@dish/models'
 import { WorkerJob } from '@dish/worker'
 import * as acorn from 'acorn'
 import axios_base from 'axios'
@@ -90,7 +91,7 @@ export class Tripadvisor extends WorkerJob {
     const lon = overview.location.longitude
     const lat = overview.location.latitude
     const restaurant_name = Tripadvisor.cleanName(overview.name)
-    const canonical = await Restaurant.saveCanonical(
+    const canonical = await restaurantSaveCanonical(
       lon,
       lat,
       restaurant_name,
@@ -147,7 +148,7 @@ export class Tripadvisor extends WorkerJob {
         .replace(/\/photo-.\//, '/photo-w/')
       uris.push(uri)
     }
-    await Scrape.mergeData(scrape_id, { photos: uris })
+    await scrapeMergeData(scrape_id, { photos: uris })
   }
 
   static cleanName(name: string) {
@@ -165,7 +166,7 @@ export class Tripadvisor extends WorkerJob {
     const { more, data: review_data } = this._extractReviews(html)
     let scrape_data: ScrapeData = {}
     scrape_data['reviewsp' + page] = review_data
-    await Scrape.mergeData(scrape_id, scrape_data)
+    await scrapeMergeData(scrape_id, scrape_data)
     return more
   }
 

@@ -1,6 +1,5 @@
 export * from './RestaurantTag'
 export * from './Dish'
-export * from './Scrape'
 export * from './ModelBase'
 export * from './User'
 export * from './Review'

@@ -1,7 +1,8 @@
 import url from 'url'
 
 import { sentryMessage } from '@dish/common'
-import { Restaurant, Scrape, ScrapeData } from '@dish/models'
+import { restaurantSaveCanonical, scrapeMergeData } from '@dish/graph'
+import { Scrape, ScrapeData } from '@dish/models'
 import { ProxiedRequests, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
@@ -177,8 +178,8 @@ export class Yelp extends WorkerJob {
     const coords = (uri.query.center as string).split(',')
     const lat = parseFloat(coords[0])
     const lon = parseFloat(coords[1])
-    let scrape = await Scrape.mergeData(id, { data_from_html_embed: data })
-    const canonical = await Restaurant.saveCanonical(
+    let scrape = await scrapeMergeData(id, { data_from_html_embed: data })
+    const canonical = await restaurantSaveCanonical(
       lon,
       lat,
       scrape.data.data_from_map_search.name,
@@ -272,7 +273,7 @@ export class Yelp extends WorkerJob {
 
     let photos: { [keys: string]: any } = {}
     photos['photosp' + page] = media
-    await Scrape.mergeData(id, photos)
+    await scrapeMergeData(id, photos)
     console.log(
       `YELP: ${this.current}, got photo page ${page} with ${media.length} photos`
     )
@@ -299,7 +300,7 @@ export class Yelp extends WorkerJob {
 
     let reviews: ScrapeData = {}
     reviews['reviewsp' + page] = data
-    await Scrape.mergeData(id, reviews)
+    await scrapeMergeData(id, reviews)
     console.log(
       `YELP: ${this.current}, got review page ${page} with ${data.length} reviews`
     )

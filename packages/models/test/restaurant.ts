@@ -1,3 +1,4 @@
+import { restaurantSaveCanonical } from '@dish/graph'
 import anyTest, { TestInterface } from 'ava'
 import moment from 'moment'
 
@@ -55,7 +56,7 @@ test('Finding a restaurant by location', async (t) => {
 })
 
 test('Inserts a new canonical restaurant', async (t) => {
-  const canonical = await Restaurant.saveCanonical(
+  const canonical = await restaurantSaveCanonical(
     1,
     51,
     'Test Restaurant',
@@ -67,7 +68,7 @@ test('Inserts a new canonical restaurant', async (t) => {
 })
 
 test('Identifies a canonical restaurant', async (t) => {
-  const canonical = await Restaurant.saveCanonical(
+  const canonical = await restaurantSaveCanonical(
     0,
     50,
     'Test Restaurant',
@@ -79,7 +80,7 @@ test('Identifies a canonical restaurant', async (t) => {
 })
 
 test('Identifies a similar restaurant', async (t) => {
-  const canonical = await Restaurant.saveCanonical(
+  const canonical = await restaurantSaveCanonical(
     0.00025,
     50,
     'Test Restaurant!',

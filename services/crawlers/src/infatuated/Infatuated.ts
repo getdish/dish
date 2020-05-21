@@ -1,6 +1,7 @@
 import '@dish/common'
 
-import { Restaurant, Scrape, ScrapeData } from '@dish/models'
+import { restaurantSaveCanonical } from '@dish/graph'
+import { Scrape, ScrapeData } from '@dish/models'
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
@@ -79,7 +80,7 @@ export class Infatuated extends WorkerJob {
     console.info('Infatuated: saving ' + data.name)
     const lon = data.geo_point.coordinates[0]
     const lat = data.geo_point.coordinates[1]
-    const canonical = await Restaurant.saveCanonical(
+    const canonical = await restaurantSaveCanonical(
       lon,
       lat,
       data.name,

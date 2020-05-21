@@ -3,7 +3,6 @@
   "compilerOptions": {
     "module": "commonjs",
     "composite": true,
-    "module": "CommonJS",
     "strictNullChecks": true,
     "outDir": "_",
     "rootDir": "src"
@@ -11,6 +10,7 @@
   "include": ["src/**/*", "src/ubereats/categories.json"],
   "references": [
     { "path": "../../packages/common" },
+    { "path": "../../packages/graph" },
     { "path": "../../packages/models" },
     { "path": "../../packages/worker" }
   ]
