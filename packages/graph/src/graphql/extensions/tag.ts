@@ -1,16 +1,16 @@
 import _ from 'lodash'
 
-import { slugify } from '../../helpers'
+import { slugify } from '../../helpers/slugify'
 
 export const tag = (tag) => {
   return {
-    // getNameWithIcon() {
-    //   let name = tag.name
-    //   if (tag.icon) {
-    //     name = tag.icon + name
-    //   }
-    //   return name
-    // },
+    getNameWithIcon() {
+      let name = tag.name
+      if (tag.icon) {
+        name = tag.icon + name
+      }
+      return name
+    },
     slug() {
       return slugify(tag.name)
     },
@@ -31,12 +31,12 @@ export const tag = (tag) => {
       const all = [this.slug(), ...parentage, ...category_names].flat()
       return _.uniq(all)
     },
-    // addAlternate(alternate: string) {
-    //   if (alternate != tag.name) {
-    //     tag.alternates = tag.alternates || []
-    //     tag.alternates?.push(alternate)
-    //     tag.alternates = _.uniq(tag.alternates)
-    //   }
-    // },
+    addAlternate(alternate: string) {
+      if (alternate != tag.name) {
+        tag.alternates = tag.alternates || []
+        tag.alternates?.push(alternate)
+        tag.alternates = _.uniq(tag.alternates)
+      }
+    },
   }
 }

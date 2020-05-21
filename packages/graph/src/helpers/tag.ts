@@ -1,15 +1,17 @@
 import { resolved } from 'gqless'
 
 import { query } from '../graphql'
-import { tagTagUpsert } from '../helpers/tag_tag'
-import { upsert } from '../queryHelpers'
-import { Tag, TagTag } from '../types'
+import { Tag } from '../types'
+import { upsert } from './queryHelpers'
+import { tagTagUpsert } from './tag_tag'
 
 export async function tagUpsert(objects: Tag[]) {
   return await upsert<Tag>('tag_tag', 'tag_parentId_name_key', objects)
 }
 
-export async function tagGetAllChildren(parents: Pick<Tag, 'id'>[]) {
+export async function tagGetAllChildren(
+  parents: Pick<Tag, 'id'>[]
+): Promise<Tag[]> {
   return await resolved(() => {
     return query.tag({
       where: {
@@ -21,7 +23,7 @@ export async function tagGetAllChildren(parents: Pick<Tag, 'id'>[]) {
   })
 }
 
-export async function tagFindCountries(countries: string[]) {
+export async function tagFindCountries(countries: string[]): Promise<Tag[]> {
   return await resolved(() => {
     return query.tag({
       where: {
@@ -38,12 +40,13 @@ export async function tagFindCountries(countries: string[]) {
 export async function tagUpsertCategorizations(
   tag: Tag,
   category_tag_ids: string[]
-) {
+): Promise<Tag[]> {
   const objects = category_tag_ids.map((category_tag_id) => {
     return {
       category_tag_id,
+      // @ts-ignore
       tag_id: tag.id,
-    } as TagTag
+    }
   })
   return await tagTagUpsert(objects)
 }

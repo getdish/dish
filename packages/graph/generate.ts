@@ -8,7 +8,7 @@ const { writeFile } = require('fs')
 const { join } = require('path')
 
 const { graphqlGet } = require('./src/helpers/graphqlGet')
-const { Codegen, fetchSchema } = require('@gqless/schema')
+const { Codegen, fetchSchema } = require('@o/gqless-schema')
 
 const rootPath = join(__dirname)
 const graphqlPath = join(rootPath, 'src', 'graphql')
@@ -63,11 +63,21 @@ async function run() {
     )
   )
 
-  console.log('Prettier...')
+  console.log('removing unused imports, takes a sec theres a lot...')
+  exec(
+    `yarn tslint --fix --project .`,
+    {
+      cwd: graphqlPath,
+    },
+    runPrettier
+  )
 
-  exec(`prettier --write "**/*.ts"`, {
-    cwd: graphqlPath,
-  })
+  function runPrettier() {
+    console.log('Prettier...')
+    exec(`prettier --write "**/*.ts"`, {
+      cwd: graphqlPath,
+    })
+  }
 }
 
 run()
