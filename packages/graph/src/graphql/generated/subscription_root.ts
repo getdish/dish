@@ -1,5 +1,6 @@
 import { FieldsType, FieldsTypeArg, TypeData } from 'gqless'
 
+import * as extensions from '../extensions'
 import {
   dish_bool_exp,
   dish_order_by,
@@ -8,6 +9,7 @@ import {
   t_dish_aggregate,
 } from './dish'
 import { Extension } from './extensionsTypes'
+import { t_Int } from './Int'
 import {
   restaurant_bool_exp,
   restaurant_order_by,
@@ -54,6 +56,7 @@ import {
   user_order_by,
   user_select_column,
 } from './user'
+import { t_uuid } from './uuid'
 
 /**
  * @name subscription_root

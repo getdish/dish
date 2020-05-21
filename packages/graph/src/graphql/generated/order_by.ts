@@ -1,4 +1,7 @@
-import { EnumType } from 'gqless'
+import { EnumType, TypeData } from 'gqless'
+
+import * as extensions from '../extensions'
+import { Extension } from './extensionsTypes'
 
 /**
  * @name order_by
