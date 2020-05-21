@@ -31,21 +31,9 @@ import moment from 'moment'
 import Sentiment from 'sentiment'
 
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
-import { sql } from '../utils'
+import { sanfran, sql } from '../utils'
 
 const PER_PAGE = 50
-
-const sanfran = {
-  location: {
-    _st_d_within: {
-      distance: 0.5,
-      from: {
-        type: 'Point',
-        coordinates: [-122.421351, 37.759251],
-      },
-    },
-  },
-}
 
 const UNIQUNESS_VIOLATION =
   'Uniqueness violation. duplicate key value violates ' +

@@ -22,6 +22,18 @@ class DB {
 
 type Coord = [number, number]
 
+export const sanfran = {
+  location: {
+    _st_d_within: {
+      distance: 0.5,
+      from: {
+        type: 'Point',
+        coordinates: [-122.421351, 37.759251],
+      },
+    },
+  },
+}
+
 export async function sql(query: string) {
   let result: Result
   const db = new DB()

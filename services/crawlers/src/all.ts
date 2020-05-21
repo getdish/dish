@@ -1,3 +1,4 @@
+import { Google } from './google/Google'
 import { Infatuated } from './infatuated/Infatuated'
 import { Michelin } from './michelin/Michelin'
 import { Self } from './self/Self'
@@ -12,6 +13,7 @@ async function main() {
   const inf = new Infatuated()
   const michelin = new Michelin()
   const tripadvisor = new Tripadvisor()
+  const google = new Google()
   const day = 1000 * 60 * 60 * 24
   const week = day * 7
 
@@ -38,6 +40,11 @@ async function main() {
   await ue.runOnWorker('world', undefined, {
     repeat: { every: 4 * week },
     jobId: 'UBEREATS WORLD CRAWLER',
+  })
+
+  await google.runOnWorker('main', undefined, {
+    repeat: { every: week },
+    jobId: 'GOOGLE SANFRANCISCO CRAWLER',
   })
 
   await dish.runOnWorker('main', undefined, {
