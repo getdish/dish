@@ -6,10 +6,18 @@ import { tagUpsert } from '../helpers/tag'
 import { Restaurant, RestaurantTag, Scrape, Tag } from '../types'
 import { allFieldsForTable } from './allFieldsForTable'
 import { levenshteinDistance } from './levenshteinDistance'
-import { findOne, insert, update, upsert } from './queryHelpers'
+import {
+  findOne,
+  insert,
+  update,
+  upsert,
+  upsertConstraints,
+} from './queryHelpers'
 import { resolveFields } from './resolveFields'
 
-export async function restaurantInsert(restaurants: Restaurant[]) {
+export async function restaurantInsert(
+  restaurants: Restaurant[]
+): Promise<Restaurant[]> {
   return await insert<Restaurant>('restaurant', restaurants)
 }
 
@@ -18,7 +26,7 @@ export async function restaurantUpsert(
 ): Promise<Restaurant[]> {
   return await upsert<Restaurant>(
     'restaurant',
-    'restaurant_name_address_key',
+    upsertConstraints.restaurant_name_address_key,
     objects
   )
 }
@@ -110,15 +118,16 @@ export async function restaurantSaveCanonical(
 ): Promise<Restaurant> {
   const found = await findExistingCanonical(lon, lat, name)
   if (found) return found
-  let restaurant: Restaurant = {
-    name,
-    address: street_address,
-    location: {
-      type: 'Point',
-      coordinates: [lon, lat],
+  const [restaurant] = await restaurantInsert([
+    {
+      name,
+      address: street_address,
+      location: {
+        type: 'Point',
+        coordinates: [lon, lat],
+      },
     },
-  }
-  await restaurantInsert([restaurant])
+  ])
   console.log(
     'tom, restaurantInsert for now doesnt return new restaurant, idk if want to add here'
   )

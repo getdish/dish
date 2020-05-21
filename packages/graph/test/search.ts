@@ -1,17 +1,22 @@
 import test from 'ava'
 
+import {
+  flushTestData,
+  restaurantUpsert,
+  restaurantUpsertOrphanTags,
+  search,
+  startLogging,
+} from '../src'
 import { restaurant_fixture } from './etc/fixtures'
+
+// startLogging()
 
 test.beforeEach(async (t) => {
   await flushTestData()
 })
 
 test('Searching for a restaurant by name', async (t) => {
-  const restaurant = new Restaurant({
-    ...restaurant_fixture,
-  })
-  await restaurant.upsert()
-
+  const [restaurant] = await restaurantUpsert([restaurant_fixture])
   const results = await search({
     center: {
       lat: 50.09,
@@ -23,15 +28,13 @@ test('Searching for a restaurant by name', async (t) => {
     },
     query: 'Test',
   })
+  t.is(restaurant.name, 'Test Restaurant')
   t.is(results[0].name, 'Test Restaurant')
 })
 
 test('Searching for a restaurant by tag', async (t) => {
-  const restaurant = new Restaurant({
-    ...restaurant_fixture,
-  })
-  await restaurant.upsert()
-  await restaurant.upsertOrphanTags(['Test tag'])
+  const [restaurant] = await restaurantUpsert([restaurant_fixture])
+  await restaurantUpsertOrphanTags(restaurant, ['Test tag'])
   const results = await search({
     center: {
       lat: 50.24,

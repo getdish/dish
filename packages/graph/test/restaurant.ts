@@ -1,8 +1,20 @@
-import { restaurantSaveCanonical } from '@dish/graph'
 import anyTest, { TestInterface } from 'ava'
 import moment from 'moment'
 
+import {
+  Restaurant,
+  Tag,
+  dishUpsert,
+  flushTestData,
+  restaurantFindNear,
+  restaurantFindOne,
+  restaurantSaveCanonical,
+  restaurantUpsert,
+  startLogging,
+} from '../src'
 import { dish_fixture, restaurant_fixture } from './etc/fixtures'
+
+// startLogging()
 
 interface Context {
   restaurant: Restaurant
@@ -13,8 +25,7 @@ const test = anyTest as TestInterface<Context>
 
 test.beforeEach(async (t) => {
   await flushTestData()
-  let restaurant = new Restaurant(restaurant_fixture)
-  await restaurant.upsert()
+  const [restaurant] = await restaurantUpsert([restaurant_fixture])
   t.context.restaurant = restaurant
 })
 
@@ -24,30 +35,31 @@ test('Inserting a restaurant', async (t) => {
 })
 
 test('Upserting a restaurant', async (t) => {
-  const restaurant = new Restaurant({
-    ...restaurant_fixture,
-    description: 'Upserted',
-  })
-  await restaurant.upsert()
+  const [restaurant] = await restaurantUpsert([
+    {
+      ...restaurant_fixture,
+      description: 'Upserted',
+    },
+  ])
   t.is(restaurant.description, 'Upserted')
 })
 
 test('Upserting a dish', async (t) => {
   dish_fixture['restaurant_id'] = t.context.restaurant.id
-  const dish = new Dish(dish_fixture)
-  await dish.upsert()
+  const [dish] = await dishUpsert([dish_fixture])
   t.assert(dish.id != undefined)
   t.is(dish.name, 'Test Dish')
 })
 
 test('Finding a restaurant by name', async (t) => {
-  const restaurant = new Restaurant()
-  await restaurant.findOne('name', 'Test Restaurant')
+  const restaurant = await restaurantFindOne({
+    name: 'Test Restaurant',
+  })
   t.is(restaurant.name, 'Test Restaurant')
 })
 
 test('Finding a restaurant by location', async (t) => {
-  const restaurants = await Restaurant.findNear(50, 0, 0.025)
+  const restaurants = await restaurantFindNear(50, 0, 0.025)
   t.is(restaurants[0].name, 'Test Restaurant')
 })
 
@@ -58,8 +70,9 @@ test('Inserts a new canonical restaurant', async (t) => {
     'Test Restaurant',
     '123 The Street'
   )
-  const restaurant = new Restaurant()
-  await restaurant.findOne('id', canonical.id)
+  const restaurant = await restaurantFindOne({
+    id: canonical.id,
+  })
   t.is(restaurant.address, '123 The Street')
 })
 
@@ -70,8 +83,9 @@ test('Identifies a canonical restaurant', async (t) => {
     'Test Restaurant',
     '123 The Street'
   )
-  const restaurant = new Restaurant()
-  await restaurant.findOne('id', canonical.id)
+  const restaurant = await restaurantFindOne({
+    id: canonical.id,
+  })
   t.deepEqual(restaurant.id, t.context.restaurant.id)
 })
 
@@ -82,8 +96,9 @@ test('Identifies a similar restaurant', async (t) => {
     'Test Restaurant!',
     '123 The Street'
   )
-  const restaurant = new Restaurant()
-  await restaurant.findOne('id', canonical.id)
+  const restaurant = await restaurantFindOne({
+    id: canonical.id,
+  })
   t.deepEqual(restaurant.id, t.context.restaurant.id)
 })
 
@@ -96,7 +111,8 @@ test.skip('Is open now', async (t) => {
   const open = moment(`${today}T11:00:00${tz_offset}`)
   const close = moment(`${today}T20:30:00${tz_offset}`)
   const is_open = now.isBetween(open, close)
-  const restaurant = new Restaurant()
-  await restaurant.findOne('name', 'Test Restaurant')
+  const restaurant = await restaurantFindOne({
+    name: `Test Restaurant`,
+  })
   t.is(restaurant.is_open_now, is_open)
 })

@@ -18,5 +18,15 @@ export type Review = Partial<Omit<review, '__typename'>> | any
 export type Dish = Partial<Omit<dish, '__typename'>> | any
 export type Scrape = Partial<Omit<scrape, '__typename'>> | any
 
+export type ModelType =
+  | Restaurant
+  | Tag
+  | RestaurantTag
+  | TagTag
+  | User
+  | Review
+  | Dish
+  | Scrape
+
 export type RestaurantTagWithID = Partial<RestaurantTag> &
   Pick<RestaurantTag, 'tag_id'>

@@ -1,10 +1,12 @@
 import anyTest, { TestInterface } from 'ava'
 
-import { Auth, mutation, resolved } from '../src/index'
+import { Auth, mutation, resolved, startLogging } from '../src'
 
 interface Context {}
 
 const test = anyTest as TestInterface<Context>
+
+// startLogging()
 
 test.beforeEach(async () => {
   await resolved(() => {

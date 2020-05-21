@@ -1,4 +1,4 @@
-import { Point, resolved } from '@dish/graph'
+import { resolved } from 'gqless'
 
 import { mutation } from '../graphql/mutation'
 import { Scrape } from '../types'

@@ -10,6 +10,7 @@ import {
   Tag,
   fetchBatch,
   findOneByHash,
+  restaurantUpsertOrphanTags,
   tagFindCountries,
   tagSlug,
   upsert,
@@ -389,7 +390,7 @@ export class Self extends WorkerJob {
       .map((c) => c.tagValue)
     const tags = _.uniq([...yelps, ...tripadvisors])
     const orphan_tags = await this.upsertCountryTags(tags)
-    await this.restaurant.upsertOrphanTags(orphan_tags)
+    await restaurantUpsertOrphanTags(this.restaurant, orphan_tags)
     await this.updateTagRankings()
   }
 

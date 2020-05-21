@@ -1,6 +1,7 @@
 import 'isomorphic-unfetch'
 
 import { createFetcher } from './createFetcher'
+<<<<<<< HEAD
 import { client, query_root } from './graphql'
 
 // import { useQueryInner } from './hooks'
@@ -12,11 +13,14 @@ export function startLogging(verbose = true) {
     new Logger(client, verbose)
   }
 }
+=======
+>>>>>>> [graph] get models tests running and mostly passing
 
 export { graphql } from '@gqless/react'
 export { client, query } from './graphql'
 export { mutation } from './graphql/mutation'
 export { resolved } from 'gqless'
+export * from './startLogging'
 export * from './types'
 export * from './types-extra'
 export * from './helpers'

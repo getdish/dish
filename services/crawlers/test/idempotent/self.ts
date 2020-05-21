@@ -1,6 +1,11 @@
 import { notEqual } from 'assert'
 
 import {
+  restaurantFindOne,
+  restaurantUpsertOrphanTags,
+  tagInsert,
+} from '@dish/graph'
+import {
   Restaurant,
   Scrape,
   Tag,
@@ -253,15 +258,15 @@ test('Tag rankings', async (t) => {
     address: '2',
     rating: 5,
   })
-  await dish.restaurant.upsertOrphanTags([tag_name])
+  await restaurantUpsertOrphanTags(dish.restaurant, [tag_name])
   await r1.insert()
   await r1.upsertOrphanTags([tag_name])
   await r2.insert()
   await r2.upsertOrphanTags([tag_name])
   await dish.updateTagRankings()
-  await dish.restaurant.refresh()
-  t.is(dish.restaurant.tags[0].tag.name, tag_name)
-  t.is(dish.restaurant.tags[0].rank, 3)
+  const restaurant = await restaurantFindOne({ id: dish.restaurant.id })
+  t.is(restaurant.tags[0].tag.name, tag_name)
+  t.is(restaurant.tags[0].rank, 3)
 })
 
 test('Finding dishes in reviews', async (t) => {
@@ -281,16 +286,15 @@ test('Finding dishes in reviews', async (t) => {
     name: 'Test tag existing 3',
     parentId: tag_parent.id,
   })
-  await t.context.restaurant.upsertOrphanTags([tag.name])
-  await t.context.restaurant.findOne('id', t.context.restaurant.id)
+  await restaurantUpsertOrphanTags(t.context.restaurant, [tag.name])
+  await restaurantFindOne({ id: t.context.restaurant.id })
   dish.restaurant = t.context.restaurant
   await dish.getScrapeData()
   await existing_tag1.insert()
   await existing_tag2.insert()
   await existing_tag3.insert()
   await dish.scanReviews()
-  const updated = new Restaurant()
-  await updated.findOne('id', t.context.restaurant.id)
+  const updated = await restaurantFindOne({ id: t.context.restaurant.id })
   t.assert(
     updated.tags.map((i) => i.tag.id),
     existing_tag1.id
@@ -308,8 +312,7 @@ test('Finding dishes in reviews', async (t) => {
 test('Dish sentiment analysis from reviews', async (t) => {
   const dish = new Self()
   const tag = { name: 'Test country' }
-  const tag_parent = new Tag(tag)
-  await tag_parent.insert()
+  const [tag_parent] = await tagInsert([tag])
   const existing_tag1 = new Tag({
     name: 'Test tag existing 1',
     parentId: tag_parent.id,
@@ -322,16 +325,17 @@ test('Dish sentiment analysis from reviews', async (t) => {
     name: 'Test tag existing 3',
     parentId: tag_parent.id,
   })
-  await t.context.restaurant.upsertOrphanTags([tag.name])
-  await t.context.restaurant.findOne('id', t.context.restaurant.id)
+  await restaurantUpsertOrphanTags(t.context.restaurant, [tag.name])
+  t.context.restaurant = await restaurantFindOne({
+    id: t.context.restaurant.id,
+  })
   dish.restaurant = t.context.restaurant
   await dish.getScrapeData()
   await existing_tag1.insert()
   await existing_tag2.insert()
   await existing_tag3.insert()
   await dish.scanReviews()
-  const updated = new Restaurant()
-  await updated.findOne('id', t.context.restaurant.id)
+  const updated = await restaurantFindOne({ id: t.context.restaurant.id })
   const tag1 =
     updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as UnifiedTag)
   const tag2 =
@@ -358,14 +362,15 @@ test('Find photos of dishes', async (t) => {
   })
   await existing_tag1.insert()
   await existing_tag2.insert()
-  await t.context.restaurant.upsertOrphanTags([tag.name])
-  await t.context.restaurant.findOne('id', t.context.restaurant.id)
+  await restaurantUpsertOrphanTags(t.context.restaurant, [tag.name])
+  t.context.restaurant = await restaurantFindOne({
+    id: t.context.restaurant.id,
+  })
   dish.restaurant = t.context.restaurant
   await dish.getScrapeData()
   await dish.findPhotosForTags()
   await dish.restaurant.update()
-  const updated = new Restaurant()
-  await updated.findOne('id', t.context.restaurant.id)
+  const updated = await restaurantFindOne({ id: t.context.restaurant.id })
   const tag1 =
     updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as UnifiedTag)
   const tag2 =
@@ -378,21 +383,20 @@ test('Find photos of dishes', async (t) => {
 })
 
 test('Identifying country tags', async (t) => {
-  const existing_tag1 = new Tag({
-    name: 'Test Mexican',
-    type: 'country',
-  })
-  await existing_tag1.insert()
-  const existing_tag2 = new Tag({
-    name: 'Test Spanish',
-    type: 'country',
-    alternates: ['Test Spain', 'Test Spainland'],
-  })
-  await existing_tag2.insert()
+  const [existing_tag1, existing_tag2] = await tagInsert([
+    {
+      name: 'Test Mexican',
+      type: 'country',
+    },
+    {
+      name: 'Test Spanish',
+      type: 'country',
+      alternates: ['Test Spain', 'Test Spainland'],
+    },
+  ])
   const dish = new Self()
   await dish.mergeAll(t.context.restaurant.id)
-  const updated = new Restaurant()
-  await updated.findOne('id', t.context.restaurant.id)
+  const updated = await restaurantFindOne({ id: t.context.restaurant.id })
   t.is(updated.tags.length, 3)
   const tag1 =
     updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as UnifiedTag)

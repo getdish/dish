@@ -1,0 +1,17 @@
+diff --git a/node_modules/@gqless/logger/dist/logger.cjs.development.js b/node_modules/@gqless/logger/dist/logger.cjs.development.js
+index d92bf30..eeb940b 100644
+--- a/node_modules/@gqless/logger/dist/logger.cjs.development.js
++++ b/node_modules/@gqless/logger/dist/logger.cjs.development.js
+@@ -241,8 +241,10 @@ var formatters = {
+ 	proxyFormatter: proxyFormatter
+ };
+ 
+-if (!window.devtoolsFormatters) window.devtoolsFormatters = [];
+-window.devtoolsFormatters.push(...Object.values(formatters).filter(f => typeof f === 'object'));
++if (typeof window !== 'undefined') {
++  if (!window.devtoolsFormatters) window.devtoolsFormatters = [];
++  window.devtoolsFormatters.push(...Object.values(formatters).filter(f => typeof f === 'object'));
++}
+ 
+ const format = (...parts) => {
+   const texts = [];

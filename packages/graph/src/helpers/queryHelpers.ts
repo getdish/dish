@@ -2,6 +2,7 @@ import { resolved } from 'gqless'
 
 import { query } from '../graphql'
 import { mutation } from '../graphql/mutation'
+import { ModelType } from '../types'
 import { allFieldsForTable } from './allFieldsForTable'
 import { resolveFields } from './resolveFields'
 
@@ -9,7 +10,17 @@ type DishGeneric = {
   id: string
 }
 
-export async function findOne<T>(table: string, hash: Partial<T>): Promise<T> {
+export const upsertConstraints = {
+  tag_tag_pkey: 'tag_tag_pkey',
+  tag_parentId_name_key: 'tag_parentId_name_key',
+  restaurant_name_address_key: 'restaurant_name_address_key',
+  dish_restaurant_id_name_key: 'dish_restaurant_id_name_key',
+}
+
+export async function findOne<T extends ModelType>(
+  table: string,
+  hash: Partial<T>
+): Promise<T> {
   const where = Object.keys(hash).map((key) => {
     return { [key]: { _eq: hash[key] } }
   })
@@ -30,22 +41,25 @@ async function resolveMutationWithIds<A extends keyof typeof mutation>(
     const mutationFn = mutation[name] as any
     if (typeof mutationFn === 'function') {
       const { affected_rows, returning } = mutationFn(arg)
-      console.log('affected_rows', affected_rows)
+      console.log('affected_rows', affected_rows, returning)
       return returning.map((x) => x.id)
     }
   })
 }
 
-export async function insert<T>(table: string, objects: T[]): Promise<T[]> {
+export async function insert<T extends ModelType>(
+  table: string,
+  objects: T[]
+): Promise<T[]> {
   const ids = await resolveMutationWithIds(`insert_${table}` as any, {
     objects,
   })
-  return objects.map((o, i) => ({ ...o, id: ids[i] }))
+  return objects.map((o, i) => ({ ...(o as any), id: ids[i] }))
 }
 
-export async function upsert<T>(
+export async function upsert<T extends ModelType>(
   table: string,
-  constraint: string,
+  constraint: typeof upsertConstraints[keyof typeof upsertConstraints],
   objects: T[]
 ): Promise<T[]> {
   // TODO: Is there a better way to get the updateable columns?
@@ -57,7 +71,7 @@ export async function upsert<T>(
       update_columns,
     },
   })
-  return objects.map((o, i) => ({ ...o, id: ids[i] }))
+  return objects.map((o, i) => ({ ...(o as any), id: ids[i] }))
 }
 
 export async function update<T extends DishGeneric>(
