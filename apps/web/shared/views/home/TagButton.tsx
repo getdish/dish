@@ -26,7 +26,7 @@ export const getTagColor = (rgb?: [number, number, number]): string =>
   rgb ? `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})` : 'inherit'
 
 export type TagButtonProps = Omit<StackProps & TagButtonTagProps, 'rgb'> & {
-  rgb: [number, number, number]
+  rgb?: [number, number, number]
   rank?: number
   size?: 'lg' | 'md' | 'sm'
   subtle?: boolean

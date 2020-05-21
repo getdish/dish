@@ -206,7 +206,7 @@ function fuzzyMatchAsync(
   const matchedIndices: number[] = []
   let max_ms_per_frame = 1000.0 / 30.0 // 30FPS
   let dataIndex = 0
-  let resumeTimeout = null
+  let resumeTimeout: any = null
 
   // Perform matches for at most max_ms
   function step() {
@@ -273,7 +273,7 @@ export function fuzzyFindSync<A extends any>(
   haystack: A[],
   keys: string[] | null = ['name']
 ): A[] {
-  const found = []
+  const found: A[] = []
   for (const item of haystack) {
     if (!keys) {
       if (fuzzyMatch(item as any, needle)[0] === true) {

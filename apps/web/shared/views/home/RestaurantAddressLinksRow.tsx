@@ -19,7 +19,7 @@ export const RestaurantAddressLinksRow = memo(
       showAddress,
       showMenu,
     }: {
-      currentLocationInfo: GeocodePlace
+      currentLocationInfo?: GeocodePlace | null
       restaurantSlug: string
       size?: AddressSize
       showAddress?: AddressSize
@@ -47,12 +47,12 @@ export const RestaurantAddressLinksRow = memo(
           )}
           {!!restaurant.website && <Text onPress={() => {}}>Call</Text>}
           {!!restaurant.website && (
-            <Text onPress={() => Linking.openURL(restaurant.website)}>
+            <Text onPress={() => Linking.openURL(restaurant.website ?? '')}>
               Website
             </Text>
           )}
           {!!restaurant.website && (
-            <Text onPress={() => Linking.openURL(restaurant.website)}>
+            <Text onPress={() => Linking.openURL(restaurant.website ?? '')}>
               <Image
                 source={require('../../assets/instagram.png')}
                 style={{
@@ -70,7 +70,7 @@ export const RestaurantAddressLinksRow = memo(
       return (
         <Text style={{ color: '#999', fontSize }}>
           <HStack alignItems="center" spacing>
-            {showAddress && (
+            {!!(currentLocationInfo && showAddress) && (
               <SelectableText
                 numberOfLines={1}
                 style={
@@ -79,8 +79,8 @@ export const RestaurantAddressLinksRow = memo(
               >
                 {getAddressText(
                   currentLocationInfo,
-                  restaurant.address,
-                  typeof showAddress === 'string' ? showAddress : size
+                  restaurant.address ?? '',
+                  (typeof showAddress === 'string' ? showAddress : size) ?? 'sm'
                 )}
               </SelectableText>
             )}

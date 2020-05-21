@@ -153,8 +153,10 @@ const HomeMapContent = memo(function HomeMap({
     padding,
   })
 
-  setMapView(map)
-  mapView = map
+  if (map) {
+    setMapView(map)
+    mapView = map
+  }
 
   // wheel zoom
   if (map && map['_allowWheelToZoom'] == false) {

@@ -8,7 +8,7 @@ export declare interface PublicAPI {
 }
 
 class Timer {
-  private intervalHandle: number | null
+  private intervalHandle: any
 
   constructor(private interval: number, private callback: () => void) {}
 

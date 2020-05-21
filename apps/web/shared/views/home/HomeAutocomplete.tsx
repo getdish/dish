@@ -23,7 +23,6 @@ export default memo(function HomeAutoComplete() {
     showAutocomplete,
     autocompleteIndex,
     autocompleteResultsActive,
-    isAutocompleteActive,
   } = om.state.home
   const showLocation = showAutocomplete == 'location'
   const showSearch = showAutocomplete == 'search'
@@ -65,7 +64,7 @@ export default memo(function HomeAutoComplete() {
       paddingBottom={30}
       paddingHorizontal={15}
       opacity={isShowing ? 1 : 0}
-      transform={isShowing ? null : [{ translateY: 5 }]}
+      transform={isShowing ? [] : [{ translateY: 5 }]}
       disabled={!isShowing}
     >
       <HStack
@@ -93,18 +92,20 @@ export default memo(function HomeAutoComplete() {
             spacing={6}
           >
             {autocompleteResultsActive.map((x, index) => {
-              const restaurantLinkProps: LinkButtonProps = x.type ==
-                'restaurant' && {
-                tag: null,
-                name: 'restaurant',
-                params: {
-                  slug: x.tagId,
-                },
-                onPress: () => {
-                  console.log('press')
-                  om.actions.home.setShowAutocomplete(false)
-                },
-              }
+              const restaurantLinkProps: LinkButtonProps | null =
+                x.type == 'restaurant'
+                  ? {
+                      tag: null,
+                      name: 'restaurant',
+                      params: {
+                        slug: x.tagId,
+                      },
+                      onPress: () => {
+                        console.log('press')
+                        om.actions.home.setShowAutocomplete(false)
+                      },
+                    }
+                  : null
 
               const plusButtonEl =
                 x.type === 'dish' && index !== 0 && om.state.user.isLoggedIn ? (

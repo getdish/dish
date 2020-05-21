@@ -33,9 +33,9 @@ export const useOverlay = ({
           onClick()
         }
       })
-      node.parentNode.insertBefore(overlayDiv, node)
+      node.parentNode?.insertBefore(overlayDiv, node)
       return () => {
-        node.parentNode.removeChild(overlayDiv)
+        node.parentNode?.removeChild(overlayDiv)
       }
     }
   }, [isOpen])

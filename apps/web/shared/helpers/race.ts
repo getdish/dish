@@ -4,7 +4,7 @@ export function race<A>(
   error: string = '',
   options?: { warnOnly?: boolean }
 ) {
-  let timer = null
+  let timer: any = null
   return Promise.race([
     new Promise((resolve, reject) => {
       const msg = `timed out after ${timeout}ms: ${error}`

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { readJsonSync } from 'fs-extra'
 
 import ITsccSpec from './ITsccSpec'

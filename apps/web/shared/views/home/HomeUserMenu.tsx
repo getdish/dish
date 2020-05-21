@@ -43,7 +43,9 @@ export const HomeUserMenu = memo(() => {
               <LinkButton
                 {...flatButtonStyle}
                 name="user"
-                params={{ username: slugify(om.state.user.user.username) }}
+                params={{
+                  username: slugify(om.state.user.user?.username ?? ''),
+                }}
                 onPress={() => close()}
               >
                 Profile

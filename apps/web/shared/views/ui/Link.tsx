@@ -151,7 +151,7 @@ export const asyncLinkAction = (cb?: Function) => (e) => {
 
 const useNormalizedLink = (
   props: Partial<LinkButtonProps>
-): LinkButtonNamedProps => {
+): LinkButtonNamedProps | null => {
   const currentStateID = useContext(CurrentStateID)
   let tags: NavigableTag[] = []
 
@@ -173,8 +173,9 @@ const useNormalizedLink = (
     })
     return {
       ...tagProps,
+      name: tagProps?.name,
       onPress: asyncLinkAction((e) => {
-        tagProps.onPress?.(e)
+        tagProps?.onPress?.(e)
         props.onPress?.(e)
       }),
     }
@@ -188,6 +189,8 @@ const useNormalizedLink = (
       onPress: props.onPress,
     }
   }
+
+  return null
 }
 
 export const getStylePadding = ({

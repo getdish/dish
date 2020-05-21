@@ -44,6 +44,11 @@ export const RestaurantAddComment = memo(
       }
     }, [review])
 
+    if (!user) {
+      console.warn('no user')
+      return null
+    }
+
     return (
       <CommentBubble backgroundColor={bgLight} user={user}>
         <HStack position="relative" width="100%">
@@ -112,7 +117,6 @@ export const CommentBubble = ({
   return (
     <VStack
       flex={1}
-      hoverStyle={null}
       borderRadius={10}
       padding={4}
       alignItems="flex-start"

@@ -16,7 +16,9 @@ import { PopoverShowContext, popoverCloseCbs } from './PopoverShared'
 export default function PopoverMain(props: PopoverProps) {
   const forceShow = useContext(PopoverShowContext)
   const isOpen = typeof forceShow == 'boolean' ? forceShow : props.isOpen
-  const onChangeOpenCb = useCallback(props.onChangeOpen, [props.onChangeOpen])
+  const onChangeOpenCb = useCallback(props.onChangeOpen as any, [
+    props.onChangeOpen,
+  ])
   const closeCb = useRef<Function | null>(null)
   const isControlled = typeof isOpen !== 'undefined'
   const [isMounted, setIsMounted] = useState(false)
@@ -37,7 +39,7 @@ export default function PopoverMain(props: PopoverProps) {
 
   if (Platform.OS == 'web') {
     useOverlay({
-      isOpen: isOpen && props.overlay !== false,
+      isOpen: !!(isOpen && props.overlay !== false),
       onClick: () => {
         if (!isControlled) {
           closeCb.current?.()

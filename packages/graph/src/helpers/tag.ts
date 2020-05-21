@@ -3,7 +3,10 @@ import { resolved } from 'gqless'
 import { query } from '../graphql'
 import { Tag } from '../types'
 import { upsert } from './queryHelpers'
+import { slugify } from './slugify'
 import { tagTagUpsert } from './tag_tag'
+
+export const tagSlug = (tag: Pick<Tag, 'name'>) => slugify(tag.name)
 
 export async function tagUpsert(objects: Tag[]) {
   return await upsert<Tag>('tag_tag', 'tag_parentId_name_key', objects)

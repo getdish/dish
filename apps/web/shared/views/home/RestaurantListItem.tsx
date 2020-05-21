@@ -30,7 +30,7 @@ import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 
 type RestaurantListItemProps = {
-  currentLocationInfo: GeocodePlace
+  currentLocationInfo: GeocodePlace | null
   restaurant: Restaurant
   rank: number
 }

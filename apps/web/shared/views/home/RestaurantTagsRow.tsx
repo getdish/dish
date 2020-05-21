@@ -55,6 +55,7 @@ export const useGetTagElements = (props: TagRowProps) => {
     const restaurantTags = restaurant.tags({
       limit: 6,
     })
+    // @ts-ignore
     tags = restaurantTags.map((tag) => tag.tag)
   }
 

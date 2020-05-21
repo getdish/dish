@@ -343,8 +343,7 @@ export function getPathFromParams({
   }
   let path = route.path
   if (!params) return path
-  let replaceSplatParams = []
-
+  let replaceSplatParams: string[] = []
   for (const key in params) {
     if (typeof params[key] === 'undefined') {
       continue

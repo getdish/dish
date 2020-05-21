@@ -57,14 +57,12 @@ const selectActiveInput = () => {
 }
 
 const clearTextSelection = () => {
-  if (window.getSelection) {
-    if (window.getSelection().empty) {
-      // Chrome
-      window.getSelection().empty()
-    } else if (window.getSelection().removeAllRanges) {
-      // Firefox
-      window.getSelection().removeAllRanges()
-    }
+  if (window.getSelection()?.empty) {
+    // Chrome
+    window.getSelection()?.empty()
+  } else if (window.getSelection()?.removeAllRanges) {
+    // Firefox
+    window.getSelection()?.removeAllRanges()
   }
 }
 
@@ -74,8 +72,8 @@ export const getInputNode = (instance: any): HTMLInputElement | null => {
 
 export default memo(function HomeSearchBar() {
   const om = useOvermind()
-  const inputRef = useRef()
-  const locationInputRef = useRef()
+  const inputRef = useRef<any>()
+  const locationInputRef = useRef<any>()
 
   // use local for a little better perf
   const [search, setSearch] = useState('')
@@ -86,7 +84,7 @@ export default memo(function HomeSearchBar() {
 
     setTimeout(() => {
       const input = getInputNode(inputRef.current)
-      input.focus()
+      input?.focus()
     }, 100)
   })
 
@@ -133,8 +131,11 @@ export default memo(function HomeSearchBar() {
     if (showAutocomplete !== isFocused) {
       const target = showAutocomplete == 'location' ? locationInput : input
       if (!isWorker) {
-        if (showAutocomplete) target.focus()
-        else target.blur()
+        if (showAutocomplete) {
+          target?.focus()
+        } else {
+          target?.blur()
+        }
       }
     }
   }, [input, locationInput, showAutocomplete])

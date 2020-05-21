@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { TsccSpec, TsccSpecError } from '@dish/tscc-spec'
 
 import MultiMap from '../MultiMap'

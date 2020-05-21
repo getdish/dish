@@ -2,6 +2,7 @@ import { requestIdle, sleep } from '@dish/async'
 import {
   Restaurant,
   RestaurantSearchArgs,
+  TopCuisine,
   query,
   resolved,
   slugify,
@@ -86,14 +87,14 @@ const derivations = {
     getNavigateItemForState(om, last(state.states)!)
   ),
 
-  lastHomeState: derived<HomeState, HomeStateItemHome>((state) =>
-    findLast(state.states, isHomeState)
+  lastHomeState: derived<HomeState, HomeStateItemHome>(
+    (state) => findLast(state.states, isHomeState)!
   ),
-  lastRestaurantState: derived<HomeState, HomeStateItemRestaurant>((state) =>
-    findLast(state.states, isRestaurantState)
+  lastRestaurantState: derived<HomeState, HomeStateItemRestaurant | undefined>(
+    (state) => findLast(state.states, isRestaurantState)
   ),
-  lastSearchState: derived<HomeState, HomeStateItemSearch>((state) =>
-    findLast(state.states, isSearchState)
+  lastSearchState: derived<HomeState, HomeStateItemSearch | undefined>(
+    (state) => findLast(state.states, isSearchState)
   ),
   currentState: derived<HomeState, HomeStateItem>(
     (state) => _.last(state.states)!
@@ -113,7 +114,7 @@ const derivations = {
   searchBarTags: derived<HomeState, Tag[]>((state) =>
     state.lastActiveTags.filter(isSearchBarTag)
   ),
-  autocompleteFocusedTag: derived<HomeState, Tag>((state) => {
+  autocompleteFocusedTag: derived<HomeState, Tag | null>((state) => {
     const { autocompleteIndex } = state
     if (autocompleteIndex < 0) return null
     if (!state.autocompleteResults) return null
@@ -122,7 +123,7 @@ const derivations = {
       null
     )
   }),
-  searchbarFocusedTag: derived<HomeState, Tag>((state) => {
+  searchbarFocusedTag: derived<HomeState, Tag | null>((state) => {
     const { autocompleteIndex } = state
     if (autocompleteIndex > -1) return null
     return state.searchBarTags[-1 - autocompleteIndex]
@@ -252,8 +253,8 @@ let isGoingBack = false
 const pushHomeState: AsyncAction<
   HistoryItem,
   {
-    fetchDataPromise: Promise<void>
-  }
+    fetchDataPromise: Promise<any>
+  } | null
 > = async (om, item) => {
   const { started, currentState } = om.state.home
   const historyId = item.id
@@ -289,8 +290,8 @@ const pushHomeState: AsyncAction<
 
       nextState = {
         ...fallbackState,
-        type,
         ...om.state.home.lastHomeState,
+        type,
         ...newState,
         activeTagIds,
       } as HomeStateItemHome
@@ -403,7 +404,7 @@ const pushHomeState: AsyncAction<
 
   if (!nextState) {
     console.warn('no nextstate', item)
-    return
+    return null
   }
 
   const replace =
@@ -431,7 +432,7 @@ const pushHomeState: AsyncAction<
   const shouldSkip = om.state.home.skipNextPageFetchData
   om.state.home.skipNextPageFetchData = false
 
-  let fetchDataPromise: Promise<any> | null
+  let fetchDataPromise: Promise<any> | null = null
   if (!shouldSkip && fetchData) {
     currentAction = runFetchData
     // start
@@ -446,9 +447,13 @@ const pushHomeState: AsyncAction<
     }, 16)
   }
 
-  return {
-    fetchDataPromise,
+  if (fetchDataPromise) {
+    return {
+      fetchDataPromise,
+    }
   }
+
+  return null
 }
 
 const loadPageRestaurant: AsyncAction = async (om) => {
@@ -557,10 +562,10 @@ const loadHomeDishes: AsyncAction = async (om) => {
     }
   }
 
-  const chunks = _.chunk(all, 4)
+  const chunks: TopCuisine[][] = _.chunk(all, 4)
 
   if (isWorker) {
-    let now = []
+    let now: TopCuisine[] = []
     for (const chunk of chunks) {
       await sleep(300)
       now = [...now, ...chunk]
@@ -631,7 +636,7 @@ const runAutocomplete: AsyncAction<string> = async (om, query) => {
   const state = om.state.home.currentState
 
   if (query === '') {
-    om.state.home.autocompleteResults = defaultAutocompleteResults
+    om.state.home.autocompleteResults = defaultAutocompleteResults ?? []
     om.state.home.locationAutocompleteResults = defaultLocationAutocompleteResults
     return
   }
@@ -891,8 +896,10 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
     case 'userSearch':
     case 'restaurant': {
       if (type === 'push' || type === 'replace') {
-        const { fetchDataPromise } = await pushHomeState(om, item)
-        promises.add(fetchDataPromise)
+        const res = await pushHomeState(om, item)
+        if (res?.fetchDataPromise) {
+          promises.add(res.fetchDataPromise)
+        }
       } else {
         popHomeState(om, item)
       }
@@ -942,7 +949,7 @@ function searchLocations(query: string) {
   if (!query) {
     return Promise.resolve([])
   }
-  const locationSearch = new window.mapkit.Search({ region: mapView.region })
+  const locationSearch = new window.mapkit.Search({ region: mapView?.region })
   return new Promise<
     { name: string; formattedAddress: string; coordinate: any }[]
   >((res, rej) => {
@@ -1095,10 +1102,10 @@ const createBreadcrumbs = (state: HomeState) => {
 
 function createAutocomplete(x: Partial<AutocompleteItem>): AutocompleteItem {
   return {
-    name: x.name,
-    type: x.type,
+    name: x.name ?? '',
+    type: x.type ?? 'dish',
     ...x,
-    tagId: getTagId({ name: x.name, type: x.type }),
+    tagId: getTagId({ name: x.name ?? '', type: x.type ?? 'dish' }),
   }
 }
 

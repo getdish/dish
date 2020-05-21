@@ -14,7 +14,7 @@ export const useWaterfall = (cb: Function, args: any[] = []) => {
   }, args)
 }
 
-let waterfalls = []
+let waterfalls: Function[] = []
 let running = false
 
 async function start() {

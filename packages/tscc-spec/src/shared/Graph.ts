@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 class AssociativeArrayLink<V> {
   public prev: this
   public next: this
@@ -29,7 +31,7 @@ class AssociativeArray<K, V> {
   hasValue(value: V): boolean {
     return this.$values.has(value)
   }
-  getValue(key: K): V {
+  getValue(key: K): V | null {
     let link = this.$keys.get(key)
     if (!link) return null
     return link.value[1]

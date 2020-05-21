@@ -31,8 +31,8 @@ export type HomeState = {
   skipNextPageFetchData: boolean
   breadcrumbStates: HomeStateItemSimple[]
   lastHomeState: HomeStateItemHome
-  lastSearchState: HomeStateItemSearch | null
-  lastRestaurantState: HomeStateItemRestaurant | null
+  lastSearchState: HomeStateItemSearch | undefined
+  lastRestaurantState: HomeStateItemRestaurant | undefined
   currentNavItem: NavigateItem
   currentState: HomeStateItem
   currentStateType: HomeStateItem['type']
@@ -42,8 +42,8 @@ export type HomeState = {
   isLoading: boolean
   autocompleteResultsActive: AutocompleteItem[]
   lastActiveTags: Tag[]
-  searchbarFocusedTag: Tag
-  autocompleteFocusedTag: Tag
+  searchbarFocusedTag: Tag | null
+  autocompleteFocusedTag: Tag | null
   searchBarTags: Tag[]
 }
 

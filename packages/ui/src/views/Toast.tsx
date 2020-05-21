@@ -25,7 +25,7 @@ export const ToastRoot = memo(function ToastRoot() {
 
   show = useCallback(
     (text: string, duration: number = 1000) => {
-      clearTimeout(stateRef.current.timeout)
+      clearTimeout(stateRef.current.timeout ?? 0)
       const timeout = setTimeout(() => {
         setState({
           show: false,

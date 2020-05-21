@@ -67,7 +67,7 @@ type LinkButtonProps = NavigateItem & {
 }
 
 // for easy use with Link / LinkButton
-export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps> = (
+export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps | null> = (
   om,
   { state = om.state.home.currentState, tags, ...rest }
 ) => {
@@ -81,25 +81,28 @@ export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps> = (
     state,
     ...rest,
   })
-  const navigateItem = getNavigateItemForState(om.state, nextState)
-  return {
-    ...navigateItem,
-    onPress: (e) => {
-      e?.preventDefault()
-      e?.stopPropagation()
-      const activeTags = om.state.home.lastActiveTags
-      for (const tag of tags) {
-        const tagId = getTagId(tag)
-        if (
-          rest.disabledIfActive &&
-          activeTags.some((x) => getTagId(x) === tagId)
-        ) {
-          continue
+  if (nextState) {
+    const navigateItem = getNavigateItemForState(om.state, nextState)
+    return {
+      ...navigateItem,
+      onPress: (e) => {
+        e?.preventDefault()
+        e?.stopPropagation()
+        const activeTags = om.state.home.lastActiveTags
+        for (const tag of tags) {
+          const tagId = getTagId(tag)
+          if (
+            rest.disabledIfActive &&
+            activeTags.some((x) => getTagId(x) === tagId)
+          ) {
+            continue
+          }
+          om.actions.home.toggleTagOnHomeState(tag)
         }
-        om.actions.home.toggleTagOnHomeState(tag)
-      }
-    },
+      },
+    }
   }
+  return null
 }
 
 const getNextStateWithTags: Action<HomeStateNav, HomeStateItem | null> = (
@@ -181,6 +184,7 @@ export const getNavigateItemForState = (
 
   // build params
   const params = getRouteFromTags(omState, state)
+
   if (state.searchQuery) {
     params.search = state.searchQuery
   }
@@ -209,6 +213,9 @@ export const getTagsFromRoute = (
   item: HistoryItem<'userSearch'>
 ): NavigableTag[] => {
   const tags: NavigableTag[] = []
+  if (!item?.params) {
+    return tags
+  }
   if (item.params.lense) {
     tags.push(getUrlTagInfo(item.params.lense, 'lense'))
   }
@@ -274,7 +281,7 @@ const getRouteFromTags = (
   state = home.currentState
 ): SearchRouteParams => {
   if (!isHomeState(state) && !isSearchState(state)) {
-    return null
+    throw new Error(`Getting route on bad state`)
   }
   const allActiveTags = getActiveTags(home, state)
   // build our final path segment

@@ -48,9 +48,10 @@ const createUseMedia = (effect: EitherEffect) =>
       typeof window == 'undefined' ||
       typeof window.matchMedia === 'undefined'
     ) {
-      return null
+      return false as any
     }
 
+    // @ts-ignore
     const allQueries = [].concat(rawQueries)
     const queries = allQueries.map(objectToString)
     const [state, setState] = useState(
