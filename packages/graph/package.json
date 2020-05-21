@@ -1,7 +1,7 @@
 {
   "name": "@dish/graph",
   "version": "0.0.1",
-  "main": "_/index.js",
+  "main": "_/src/index.js",
   "tsmain": "src/index",
   "sideEffects": false,
   "private": true,

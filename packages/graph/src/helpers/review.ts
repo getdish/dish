@@ -1,19 +1,23 @@
 import { query } from '../graphql'
 import { Review } from '../types'
 import { allFieldsForTable } from './allFieldsForTable'
-import { findOne } from './queryHelpers'
+import { findOne, insert, update, upsert } from './queryHelpers'
 import { resolveFields } from './resolveFields'
 
-export async function reviewFindOne(
-  restaurant_id: string,
-  user_id: string,
-  tag_id = ''
-): Promise<Review> {
-  return await findOne<Review>('reviews', {
-    restaurant_id,
-    user_id,
-    tag_id,
-  })
+export async function reviewInsert(reviews: Review[]): Promise<Review[]> {
+  return await insert<Review>('review', reviews)
+}
+
+export async function reviewUpsert(objects: Review[]): Promise<Review[]> {
+  return await upsert<Review>('review', '', objects)
+}
+
+export async function reviewUpdate(review: Review): Promise<Review[]> {
+  return await update<Review>('review', review)
+}
+
+export async function reviewFindOne(review: Partial<Review>): Promise<Review> {
+  return await findOne<Review>('review', review)
 }
 
 export async function reviewFindAllForRestaurant(

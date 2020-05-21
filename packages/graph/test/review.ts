@@ -1,18 +1,21 @@
+import anyTest, { TestInterface } from 'ava'
+
 import {
   Auth,
   Restaurant,
-  Review,
   Tag,
   User,
-  findOne,
   flushTestData,
-  insert,
+  restaurantUpsert,
   reviewFindAllForRestaurant,
-  upsert,
-} from '@dish/graph'
-import anyTest, { TestInterface } from 'ava'
-
+  reviewInsert,
+  startLogging,
+  tagInsert,
+  userFindOne,
+} from '../src'
 import { restaurant_fixture } from './etc/fixtures'
+
+// startLogging()
 
 interface Context {
   restaurant: Restaurant
@@ -24,16 +27,12 @@ const test = anyTest as TestInterface<Context>
 
 test.beforeEach(async (t) => {
   await flushTestData()
-  const [restaurant] = await upsert<Restaurant>(
-    'restaurant',
-    'restaurant_name_address_key',
-    restaurant_fixture
-  )
+  const [restaurant] = await restaurantUpsert([restaurant_fixture])
   t.context.restaurant = restaurant
-  const existing_tag = await insert<Tag>('tag', [{ name: 'Test tag existing' }])
+  const existing_tag = await tagInsert([{ name: 'Test tag existing' }])
   t.context.existing_tag = existing_tag
   await Auth.register('test', 'password')
-  const user = await findOne<User>('user', {
+  const user = await userFindOne({
     username: 'username',
     password: 'test',
   })
@@ -41,7 +40,7 @@ test.beforeEach(async (t) => {
 })
 
 test('Add a review for the whole restaurant itself', async (t) => {
-  const [review] = await insert<Review>('review', [
+  const [review] = await reviewInsert([
     {
       restaurant_id: t.context.restaurant.id,
       user_id: t.context.user.id,
@@ -54,7 +53,7 @@ test('Add a review for the whole restaurant itself', async (t) => {
 })
 
 test('Add a review for restaurant by tag', async (t) => {
-  const [review] = await insert<Review>('review', [
+  const [review] = await reviewInsert([
     {
       restaurant_id: t.context.restaurant.id,
       user_id: t.context.user.id,

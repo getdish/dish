@@ -1,5 +1,4 @@
-import { Dish } from '../../src/Dish'
-import { Restaurant } from '../../src/Restaurant'
+import { Dish, Restaurant } from '../../src'
 
 export const restaurant_fixture: Partial<Restaurant> = {
   name: 'Test Restaurant',
