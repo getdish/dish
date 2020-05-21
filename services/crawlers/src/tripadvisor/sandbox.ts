@@ -1,4 +1,4 @@
-import { Restaurant } from '@dish/models'
+import { Restaurant, findOne } from '@dish/graph'
 
 import { Tripadvisor } from './Tripadvisor'
 
@@ -10,12 +10,13 @@ async function main() {
   await t.runOnWorker('allForCity', ['San Francisco, CA'])
 }
 
-async function one() {
-  const t = new Tripadvisor()
-  const restaurant = new Restaurant()
-  await t.runOnWorker('getRestaurant', [FLOUR])
-  await restaurant.findOne('name', 'Flour + Water')
-  console.log(restaurant)
-}
+// async function one() {
+//   const t = new Tripadvisor()
+//   await t.runOnWorker('getRestaurant', [FLOUR])
+//   const restaurant = await findOne<Restaurant>('restaurant', {
+//     name: 'Flour + Water',
+//   })
+//   console.log(restaurant)
+// }
 
 main()

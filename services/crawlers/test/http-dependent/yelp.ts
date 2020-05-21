@@ -1,4 +1,4 @@
-import { Scrape } from '@dish/models'
+import { Scrape, deleteAllBy, findOne } from '@dish/graph'
 import test from 'ava'
 
 import { Yelp } from '../../src/yelp/Yelp'
@@ -6,7 +6,7 @@ import { Yelp } from '../../src/yelp/Yelp'
 const ID = 'qs7FgJ-UXgpbAMass0Oojg'
 
 test.beforeEach(async () => {
-  await Scrape.deleteAllBy('id_from_source', ID)
+  await deleteAllBy('scrape', 'id_from_source', ID)
 })
 
 test('Gets and persists a restaurant', async (t) => {
@@ -16,8 +16,9 @@ test('Gets and persists a restaurant', async (t) => {
     [37.758865, -122.412175],
     0
   )
-  const scrape = new Scrape()
-  await scrape.findOne('id_from_source', ID)
+  const scrape = await findOne<Scrape>('scrape', {
+    id_from_source: ID,
+  })
 
   t.assert(scrape.data.data_from_map_search.name.includes('Flour + Water'))
   t.deepEqual(scrape.location.coordinates, [-122.412283, 37.758933])

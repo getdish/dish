@@ -1,6 +1,6 @@
-import { Restaurant, RestaurantSearchArgs, TopCuisine } from '@dish/graph'
-
-import { SEARCH_DOMAIN } from './constants'
+import { SEARCH_DOMAIN } from '../constants'
+import { Restaurant } from '../types'
+import { RestaurantSearchArgs, TopCuisine } from '../types-extra'
 
 export async function search({
   center: { lat: lat, lng: lng },

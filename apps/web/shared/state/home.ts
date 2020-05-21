@@ -3,11 +3,12 @@ import {
   Restaurant,
   RestaurantSearchArgs,
   TopCuisine,
+  getHomeDishes,
   query,
   resolved,
+  search,
   slugify,
 } from '@dish/graph'
-import { getHomeDishes, search } from '@dish/models'
 import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
 import _, { findLast, last } from 'lodash'

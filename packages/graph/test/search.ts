@@ -1,8 +1,5 @@
 import test from 'ava'
 
-import { flushTestData } from '../src/flushTestData'
-import { Restaurant } from '../src/Restaurant'
-import { search } from '../src/search'
 import { restaurant_fixture } from './etc/fixtures'
 
 test.beforeEach(async (t) => {

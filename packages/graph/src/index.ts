@@ -20,6 +20,7 @@ export { resolved } from 'gqless'
 export * from './types'
 export * from './types-extra'
 export * from './helpers'
+export * from './constants'
 
 // these hacky type defs here avoid huge slowdown in ts
 // otherwise could just return query_root thats it

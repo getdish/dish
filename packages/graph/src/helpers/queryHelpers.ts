@@ -1,32 +1,19 @@
 import { resolved } from 'gqless'
 
-import { query, schema } from '../graphql'
+import { query } from '../graphql'
 import { mutation } from '../graphql/mutation'
+import { allFieldsForTable } from './allFieldsForTable'
+import { resolveFields } from './resolveFields'
 
 type DishGeneric = {
   id: string
-}
-
-const allFieldsForTable = (table: string): string[] => {
-  return Object.keys(schema[table]?.fields ?? {})
-}
-
-async function resolveAllFields<A>(table: string, cb: () => A): Promise<A> {
-  return await resolved(() => {
-    const res = cb()
-    for (const key of allFieldsForTable(table)) {
-      // touch each key to resolve it in gqless
-      res[key]
-    }
-    return res
-  })
 }
 
 export async function findOne<T>(table: string, hash: Partial<T>): Promise<T> {
   const where = Object.keys(hash).map((key) => {
     return { [key]: { _eq: hash[key] } }
   })
-  return await resolveAllFields(table, () => {
+  return await resolveFields(allFieldsForTable(table), () => {
     return query[table]({
       where: {
         _and: where,
@@ -83,4 +70,73 @@ export async function update<T extends DishGeneric>(
   })
   console.log('update got ids', ids)
   return { ...object, id: ids[0] }
+}
+
+export async function deleteAllFuzzyBy(
+  table: string,
+  key: string,
+  value: string
+) {
+  return await resolved(() => {
+    mutation[`delete_${table}`]?.({
+      where: { [key]: { _ilike: `%${value}%` } },
+    }).affected_rows
+  })
+}
+
+export async function deleteAllBy(table: string, key: string, value: string) {
+  return await resolved(() => {
+    mutation[`delete_${table}`]?.({
+      where: { [key]: { _eq: value } },
+    }).affected_rows
+  })
+}
+
+export async function fetchBatch(
+  table: string,
+  size: number,
+  previous_id: string,
+  extraFields: string[] = [],
+  extra_where: {} = {}
+) {
+  return await resolveFields(['id', ...extraFields], () => {
+    return query[table]?.({
+      limit: size,
+      order_by: { id: 'asc' },
+      where: {
+        id: { _gt: previous_id },
+        ...extra_where,
+      },
+    })
+  })
+}
+
+export async function findOneByHash(
+  table: string,
+  hash: { [key: string]: string },
+  extra_returning: string[] = []
+) {
+  const where = Object.keys(hash).map((key) => {
+    return { [key]: { _eq: hash[key] } }
+  })
+
+  const response = await resolveFields(
+    [...allFieldsForTable(table), ...extra_returning],
+    () => {
+      return query[table]?.({
+        where: {
+          _and: where,
+        },
+      })
+    }
+  )
+
+  if (response.length === 1) {
+    return response[0]
+  } else {
+    const message =
+      `${response.length} ${table}s found by findOne(). ` +
+      `Using: ${JSON.stringify(hash)}`
+    throw new Error(message)
+  }
 }

@@ -1,10 +1,11 @@
-import { Restaurant } from '@dish/models'
+import { Restaurant, findOne } from '@dish/graph'
 
 import { Self } from './Self'
 
 async function one() {
-  const restaurant = new Restaurant()
-  await restaurant.findOne('slug', process.env.SLUG || '')
+  const restaurant = await findOne<Restaurant>('restaurant', {
+    slug: process.env.SLUG || '',
+  })
   const merger = new Self()
   await merger.mergeAll(restaurant.id)
 }

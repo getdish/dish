@@ -6,12 +6,13 @@ import { findOne } from './queryHelpers'
 
 export type ScrapeData = { [key: string]: any }
 
-// ['source', 'id_from_source', 'data', 'location', 'restaurant_id']
-
-export async function scrapeMergeData(id: string, data: ScrapeData) {
+export async function scrapeMergeData(
+  id: string,
+  data: ScrapeData
+): Promise<Scrape> {
   const scrape = await findOne<Scrape>('scrape', { id })
   await scrapeAppendJsonB(scrape, data)
-  return
+  return scrape
 }
 
 export async function scrapeAppendJsonB(scrape: Scrape, data: {}) {
@@ -29,7 +30,7 @@ export function scrapeGetData(
   scrape: Scrape,
   path: string,
   default_value: any = ''
-) {
+): any {
   let obj = scrape.data
   const keys = path.split('.')
   const length = keys.length

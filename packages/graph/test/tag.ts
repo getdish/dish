@@ -1,8 +1,5 @@
 import anyTest, { TestInterface } from 'ava'
 
-import { flushTestData } from '../src/flushTestData'
-import { Restaurant } from '../src/Restaurant'
-import { Tag } from '../src/Tag'
 import { restaurant_fixture } from './etc/fixtures'
 
 interface Context {

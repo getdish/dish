@@ -15,7 +15,6 @@
   "include": ["web/**/*"],
   "exclude": ["**/*.test.ts", "**/*.test.tsx"],
   "references": [
-    { "path": "../../packages/models" },
     { "path": "../../packages/ui" },
     { "path": "../../packages/async" },
     { "path": "../../packages/graph" },

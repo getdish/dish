@@ -1,8 +1,12 @@
 import '@dish/common'
 
 import { sentryException } from '@dish/common'
-import { restaurantSaveCanonical } from '@dish/graph'
-import { Scrape, ScrapeData } from '@dish/models'
+import {
+  Scrape,
+  ScrapeData,
+  insert,
+  restaurantSaveCanonical,
+} from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
@@ -92,19 +96,20 @@ export class Michelin extends WorkerJob {
       data.name,
       data._highlightResult.street.value
     )
-    const scrape = new Scrape({
-      source: 'michelin',
-      restaurant_id: canonical.id,
-      id_from_source: data.objectID,
-      location: {
-        type: 'Point',
-        coordinates: [lon, lat],
+    const [scrape] = await insert<Scrape>('scrape', [
+      {
+        source: 'michelin',
+        restaurant_id: canonical.id,
+        id_from_source: data.objectID,
+        location: {
+          type: 'Point',
+          coordinates: [lon, lat],
+        },
+        data: {
+          main: data,
+        },
       },
-      data: {
-        main: data,
-      },
-    })
-    await scrape.insert()
+    ])
     return scrape.id
   }
 }

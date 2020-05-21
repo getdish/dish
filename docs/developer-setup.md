@@ -151,7 +151,7 @@ TO './restaurants.dump'"
 
 #### Using the live DB from your local machine
 
-Note that the `@dish/models` package is set up to use the live Hasura instance if the
+Note that the `@dish/graph` package is set up to use the live Hasura instance if the
 domain name contains 'hasura_live'. This was setup because the React Native framework, Expo,
 cannot easily get its config recognised by our internal packages. The domain can be achieved by setting your local machine's `/etc/hosts` file with an entry like
 `127.0.0.1 d1sh_hasura_live.com`. You may want to avoid spelling 'dish' with a real 'i' as that is a keyword for triggering other production features.

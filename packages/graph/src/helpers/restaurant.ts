@@ -4,14 +4,18 @@ import _ from 'lodash'
 import { query } from '../graphql'
 import { tagUpsert } from '../helpers/tag'
 import { Restaurant, RestaurantTag, Scrape, Tag } from '../types'
+import { allFieldsForTable } from './allFieldsForTable'
 import { levenshteinDistance } from './levenshteinDistance'
 import { findOne, insert, update, upsert } from './queryHelpers'
+import { resolveFields } from './resolveFields'
 
 export async function restaurantInsert(restaurants: Restaurant[]) {
   return await insert<Restaurant>('restaurant', restaurants)
 }
 
-export async function restaurantUpsert(objects: Restaurant[]) {
+export async function restaurantUpsert(
+  objects: Restaurant[]
+): Promise<Restaurant[]> {
   return await upsert<Restaurant>(
     'restaurant',
     'restaurant_name_address_key',
@@ -19,12 +23,15 @@ export async function restaurantUpsert(objects: Restaurant[]) {
   )
 }
 
-export async function restaurantUpdate(restaurant: Restaurant) {
-  // @ts-ignore
+export async function restaurantUpdate(
+  restaurant: Restaurant
+): Promise<Restaurant[]> {
   return await update<Restaurant>('restaurant', restaurant)
 }
 
-export async function restaurantFindOne(restaurant: Partial<Restaurant>) {
+export async function restaurantFindOne(
+  restaurant: Partial<Restaurant>
+): Promise<Restaurant> {
   return await findOne<Restaurant>('restaurant', restaurant)
 }
 
@@ -33,7 +40,7 @@ export async function restaurantFindBatch(
   previous_id: string,
   extra_where: {} = {}
 ): Promise<Restaurant[]> {
-  return await resolved(() => {
+  return await resolveFields(allFieldsForTable('restaurant'), () => {
     return query.restaurant({
       where: {
         id: { _gt: previous_id },
@@ -52,7 +59,7 @@ export async function restaurantFindNear(
   lng: number,
   distance: number
 ): Promise<Restaurant> {
-  return await resolved(() => {
+  const [result] = await resolveFields(allFieldsForTable('restaurant'), () => {
     return query.restaurant({
       where: {
         location: {
@@ -67,14 +74,15 @@ export async function restaurantFindNear(
       },
     })
   })
+  return result
 }
 
 export async function restaurantLatestScrape(
   restaurant: Restaurant,
   source: string
 ): Promise<Scrape> {
-  return await resolved(() => {
-    const [first] = query.scrape({
+  const [first] = await resolveFields(allFieldsForTable('scrape'), () => {
+    return query.scrape({
       where: {
         restaurant_id: {
           _eq: restaurant.id,
@@ -90,8 +98,8 @@ export async function restaurantLatestScrape(
       },
       limit: 1,
     })
-    return first
   })
+  return first
 }
 
 export async function restaurantSaveCanonical(
