@@ -9,7 +9,7 @@ import { RestaurantTag } from '../types'
 
 export async function restaurantTagUpsert(
   restaurant_id: string,
-  tags: Partial<RestaurantTag>[]
+  tags: RestaurantTag[]
 ): Promise<void> {
   const objects: RestaurantTag[] = tags.map((tag) => ({
     ...tag,
@@ -17,6 +17,7 @@ export async function restaurantTagUpsert(
   }))
   return await resolved(() => {
     mutation.insert_restaurant_tag({
+      // @ts-ignore
       objects: objects,
       on_conflict: {
         constraint: restaurant_tag_constraint.restaurant_tag_pkey,

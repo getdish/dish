@@ -2,7 +2,7 @@ import { resolved } from 'gqless'
 
 import { query } from '../graphql'
 import { mutation } from '../graphql/mutation'
-import { IDRequired, ModelType } from '../types'
+import { IDRequired, ModelName, ModelType } from '../types'
 import { allFieldsForTable } from './allFieldsForTable'
 import { resolveFields, touchToResolveInGQLess } from './resolveFields'
 
@@ -14,7 +14,7 @@ export const upsertConstraints = {
 }
 
 export async function findOne<T extends ModelType>(
-  table: string,
+  table: ModelName,
   hash: Partial<T>
 ): Promise<T> {
   const where = Object.keys(hash).map((key) => {
@@ -22,11 +22,11 @@ export async function findOne<T extends ModelType>(
   })
   const all_fields = allFieldsForTable(table)
   const response = await resolveFields<T>(all_fields, () => {
-    return query[table]({
+    return (query[table]({
       where: {
         _and: where,
       },
-    })
+    }) as any) as T[]
   })
   if (response.length != 1) {
     throw new Error(
@@ -39,7 +39,7 @@ export async function findOne<T extends ModelType>(
 async function resolveMutationWithIds<A extends keyof typeof mutation>(
   name: A,
   arg: typeof mutation[A]
-) {
+): Promise<string[]> {
   const next = await resolved(() => {
     const mutationFn = mutation[name] as any
     if (typeof mutationFn === 'function') {
@@ -54,7 +54,7 @@ async function resolveMutationWithIds<A extends keyof typeof mutation>(
 }
 
 export async function insert<T extends ModelType>(
-  table: string,
+  table: ModelName,
   objects: T[]
 ): Promise<T[]> {
   const ids = await resolveMutationWithIds(`insert_${table}` as any, {
@@ -64,7 +64,7 @@ export async function insert<T extends ModelType>(
 }
 
 export async function upsert<T extends ModelType>(
-  table: string,
+  table: ModelName,
   constraint: typeof upsertConstraints[keyof typeof upsertConstraints],
   objects: T[]
 ): Promise<IDRequired<T>[]> {
@@ -81,7 +81,7 @@ export async function upsert<T extends ModelType>(
 }
 
 export async function update<T extends IDRequired<ModelType>>(
-  table: string,
+  table: ModelName,
   object: T
 ): Promise<T> {
   const ids = await resolveMutationWithIds(`update_${table}` as any, {
@@ -92,49 +92,55 @@ export async function update<T extends IDRequired<ModelType>>(
 }
 
 export async function deleteAllFuzzyBy(
-  table: string,
+  table: ModelName,
   key: string,
   value: string
-) {
+): Promise<number> {
   return await resolved(() => {
-    mutation[`delete_${table}`]?.({
+    return mutation[`delete_${table}`]?.({
       where: { [key]: { _ilike: `%${value}%` } },
     }).affected_rows
   })
 }
 
-export async function deleteAllBy(table: string, key: string, value: string) {
+export async function deleteAllBy(
+  table: string,
+  key: string,
+  value: string
+): Promise<number> {
   return await resolved(() => {
-    mutation[`delete_${table}`]?.({
+    return mutation[`delete_${table}`]?.({
       where: { [key]: { _eq: value } },
+      // @ts-ignore
     }).affected_rows
   })
 }
 
-export async function fetchBatch(
-  table: string,
+export async function fetchBatch<T extends ModelType>(
+  table: ModelName,
   size: number,
   previous_id: string,
   extraFields: string[] = [],
   extra_where: {} = {}
-) {
+): Promise<T[]> {
   return await resolveFields(['id', ...extraFields], () => {
-    return query[table]?.({
+    return (query[table]?.({
       limit: size,
+      // @ts-ignore
       order_by: { id: 'asc' },
       where: {
         id: { _gt: previous_id },
         ...extra_where,
       },
-    })
+    }) as any) as T[]
   })
 }
 
-export async function findOneByHash(
-  table: string,
+export async function findOneByHash<T extends ModelType>(
+  table: ModelName,
   hash: { [key: string]: string },
   extra_returning: string[] = []
-) {
+): Promise<T> {
   const where = Object.keys(hash).map((key) => {
     return { [key]: { _eq: hash[key] } }
   })
@@ -142,11 +148,11 @@ export async function findOneByHash(
   const response = await resolveFields(
     [...allFieldsForTable(table), ...extra_returning],
     () => {
-      return query[table]?.({
+      return (query[table]?.({
         where: {
           _and: where,
         },
-      })
+      }) as any) as T[]
     }
   )
 
