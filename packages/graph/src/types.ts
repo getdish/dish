@@ -38,6 +38,8 @@ export type Review = FullyResolved<ReviewFull>
 export type Dish = FullyResolved<DishFull>
 export type Scrape = FullyResolved<ScrapeFull>
 
+type x = Restaurant['photos']
+
 export type ModelType =
   | Restaurant
   | Tag
@@ -50,14 +52,14 @@ export type ModelType =
 
 export type IDRequired<A extends ModelType> = A & { id: string }
 
-export type RestaurantWithId = IDRequired<RestaurantFull>
-export type TagWithId = IDRequired<TagFull>
-export type RestaurantTagWithId = IDRequired<RestaurantTagFull>
-export type TagTagWithId = IDRequired<TagTagFull>
-export type UserWithId = IDRequired<UserFull>
-export type ReviewWithId = IDRequired<ReviewFull>
-export type DishWithId = IDRequired<DishFull>
-export type ScrapeWithId = IDRequired<ScrapeFull>
+export type RestaurantWithId = IDRequired<Restaurant>
+export type TagWithId = IDRequired<Tag>
+export type RestaurantTagWithId = IDRequired<RestaurantTag>
+export type TagTagWithId = IDRequired<TagTag>
+export type UserWithId = IDRequired<User>
+export type ReviewWithId = IDRequired<Review>
+export type DishWithId = IDRequired<Dish>
+export type ScrapeWithId = IDRequired<Scrape>
 
 export type RestaurantTagWithID = Partial<RestaurantTag> &
   Pick<RestaurantTag, 'tag_id'>

@@ -12,7 +12,7 @@ const test = anyTest as TestInterface<Context>
 
 test.beforeEach(async () => {
   await resolved(() => {
-    const { affected_rows, returning } = mutation.delete_user({
+    return mutation.delete_user({
       where: {
         _or: [
           {
@@ -27,8 +27,7 @@ test.beforeEach(async () => {
           },
         ],
       },
-    })
-    return { affected_rows, returning }
+    }).affected_rows
   })
 })
 

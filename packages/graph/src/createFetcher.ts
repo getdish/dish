@@ -33,6 +33,9 @@ export const createFetcher = (
     }
     const response = await fetch(endpoint, request)
     const data = await response.json()
+    if (process.env.DEBUG) {
+      console.log('createFetcher', JSON.stringify({ request, data }, null, 2))
+    }
     if (data.errors || !response.ok) {
       if (options?.silenceNotFound && response.status == 404) {
         return data

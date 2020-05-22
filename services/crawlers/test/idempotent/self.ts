@@ -5,6 +5,7 @@ import {
   flushTestData,
   restaurantFindOne,
   restaurantInsert,
+  restaurantUpdate,
   restaurantUpsertOrphanTags,
   scrapeInsert,
   tagInsert,
@@ -188,8 +189,8 @@ test.beforeEach(async (t) => {
 })
 
 test('Merging', async (t) => {
-  const dish = new Self()
-  await dish.mergeAll(t.context.restaurant.id)
+  const self = new Self()
+  await self.mergeAll(t.context.restaurant.id)
   const updated = await restaurantFindOne({ id: t.context.restaurant.id })
   t.is(updated.name, 'Test Name Yelp')
   t.is(updated.address, '123 Street, Big City')
@@ -240,8 +241,8 @@ test('Weighted ratings when some sources are missing', (t) => {
 
 test('Tag rankings', async (t) => {
   const tag_name = 'Test Rankable'
-  const dish = new Self()
-  dish.restaurant = t.context.restaurant
+  const self = new Self()
+  self.restaurant = t.context.restaurant
   const [r1, r2] = await restaurantInsert([
     {
       ...restaurant_fixture,
@@ -254,19 +255,17 @@ test('Tag rankings', async (t) => {
       rating: 5,
     },
   ])
-  await restaurantUpsertOrphanTags(dish.restaurant, [tag_name])
-  await r1.insert()
-  await r1.upsertOrphanTags([tag_name])
-  await r2.insert()
-  await r2.upsertOrphanTags([tag_name])
-  await dish.updateTagRankings()
-  const restaurant = await restaurantFindOne({ id: dish.restaurant.id })
+  await restaurantUpsertOrphanTags(self.restaurant, [tag_name])
+  await restaurantUpsertOrphanTags(r1, [tag_name])
+  await restaurantUpsertOrphanTags(r2, [tag_name])
+  await self.updateTagRankings()
+  const restaurant = await restaurantFindOne({ id: self.restaurant.id })
   t.is(restaurant.tags[0].tag.name, tag_name)
   t.is(restaurant.tags[0].rank, 3)
 })
 
 test('Finding dishes in reviews', async (t) => {
-  const dish = new Self()
+  const self = new Self()
   const tag = { name: 'Test country' }
 
   const [tag_parent] = await tagInsert([tag])
@@ -287,12 +286,9 @@ test('Finding dishes in reviews', async (t) => {
 
   await restaurantUpsertOrphanTags(t.context.restaurant, [tag.name])
   await restaurantFindOne({ id: t.context.restaurant.id })
-  dish.restaurant = t.context.restaurant
-  await dish.getScrapeData()
-  await existing_tag1.insert()
-  await existing_tag2.insert()
-  await existing_tag3.insert()
-  await dish.scanReviews()
+  self.restaurant = t.context.restaurant
+  await self.getScrapeData()
+  await self.scanReviews()
   const updated = await restaurantFindOne({ id: t.context.restaurant.id })
   t.assert(
     updated.tags.map((i) => i.tag.id),
@@ -309,7 +305,7 @@ test('Finding dishes in reviews', async (t) => {
 })
 
 test('Dish sentiment analysis from reviews', async (t) => {
-  const dish = new Self()
+  const self = new Self()
   const tag = { name: 'Test country' }
   const [tag_parent] = await tagInsert([tag])
   const [existing_tag1, existing_tag2, existing_tag3] = await tagInsert([
@@ -330,12 +326,9 @@ test('Dish sentiment analysis from reviews', async (t) => {
   t.context.restaurant = await restaurantFindOne({
     id: t.context.restaurant.id,
   })
-  dish.restaurant = t.context.restaurant
-  await dish.getScrapeData()
-  await existing_tag1.insert()
-  await existing_tag2.insert()
-  await existing_tag3.insert()
-  await dish.scanReviews()
+  self.restaurant = t.context.restaurant
+  await self.getScrapeData()
+  await self.scanReviews()
   const updated = await restaurantFindOne({ id: t.context.restaurant.id })
   const tag1 =
     updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)
@@ -349,7 +342,7 @@ test('Dish sentiment analysis from reviews', async (t) => {
 })
 
 test('Find photos of dishes', async (t) => {
-  const dish = new Self()
+  const self = new Self()
   const tag = { name: 'Test country' }
   const [tag_parent] = await tagInsert([tag])
   const [existing_tag1, existing_tag2] = await tagInsert([
@@ -366,10 +359,10 @@ test('Find photos of dishes', async (t) => {
   t.context.restaurant = await restaurantFindOne({
     id: t.context.restaurant.id,
   })
-  dish.restaurant = t.context.restaurant
-  await dish.getScrapeData()
-  await dish.findPhotosForTags()
-  await dish.restaurant.update()
+  self.restaurant = t.context.restaurant
+  await self.getScrapeData()
+  await self.findPhotosForTags()
+  await restaurantUpdate(self.restaurant)
   const updated = await restaurantFindOne({ id: t.context.restaurant.id })
   const tag1 =
     updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)

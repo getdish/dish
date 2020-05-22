@@ -5277,6 +5277,17 @@ debounce@^1.2.0:
   resolved "https://registry.npmjs.org/debounce/-/debounce-1.2.0.tgz#44a540abc0ea9943018dc0eaa95cce87f65cd131"
   integrity sha512-mYtLl1xfZLi1m4RtQYlZgJUNQjl4ZxVnHzIR8nLLgi4q1YT8o/WM+MK/f8yfcc9s5Ir5zRaPZyZU6xs1Syoocg==
 
+debug-http@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/debug-http/-/debug-http-1.1.0.tgz#85f8a87ca3030104c2a2868ec5b2950a7fdfbb4b"
+  integrity sha1-hfiofKMDAQTCooaOxbKVCn/fu0s=
+  dependencies:
+    chalk "^1.1.1"
+    humanize-number "0.0.2"
+    monkeypatch "^1.0.0"
+    object-assign "^4.0.1"
+    url-parse-lax "^1.0.0"
+
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.8, debug@^2.6.9:
   version "2.6.9"
   resolved "https://registry.npmjs.org/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -7738,6 +7749,11 @@ human-signals@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/human-signals/-/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
   integrity sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==
+
+humanize-number@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.npmjs.org/humanize-number/-/humanize-number-0.0.2.tgz#11c0af6a471643633588588048f1799541489c18"
+  integrity sha1-EcCvakcWQ2M1iFiASPF5lUFInBg=
 
 hyphenate-style-name@^1.0.2, hyphenate-style-name@^1.0.3:
   version "1.0.3"
@@ -10266,6 +10282,11 @@ moment-timezone@^0.5.25:
   version "2.25.3"
   resolved "https://registry.npmjs.org/moment/-/moment-2.25.3.tgz#252ff41319cf41e47761a1a88cab30edfe9808c0"
   integrity sha512-PuYv0PHxZvzc15Sp8ybUCoQ+xpyPWvjOuK72a5ovzp2LI32rJXOiIfyoFoYvG3s6EwwrdkMyWuRiEHSZRLJNdg==
+
+monkeypatch@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/monkeypatch/-/monkeypatch-1.0.0.tgz#a7baaeaebf2e01ee6c8a585615cc4a2663dea145"
+  integrity sha1-p7qurr8uAe5silhWFcxKJmPeoUU=
 
 move-concurrently@^1.0.1:
   version "1.0.1"

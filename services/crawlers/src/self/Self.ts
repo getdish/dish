@@ -3,16 +3,22 @@ import '@dish/common'
 import {
   Dish,
   RESTAURANT_WEIGHTS,
-  Restaurant,
   RestaurantTag,
   RestaurantTagWithID,
+  RestaurantWithId,
   Scrape,
   ScrapeData,
   Tag,
   fetchBatch,
   findOneByHash,
   restaurantFindOne,
+  restaurantGetAllPossibleTags,
+  restaurantGetLatestScrape,
+  restaurantUpdate,
+  restaurantUpsertManyTags,
   restaurantUpsertOrphanTags,
+  restaurantUpsertTagRestaurantData,
+  scrapeGetData,
   tagFindCountries,
   tagSlug,
   upsert,
@@ -51,7 +57,7 @@ export class Self extends WorkerJob {
   infatuated!: Scrape
   michelin!: Scrape
   tripadvisor!: Scrape
-  restaurant!: Restaurant
+  restaurant!: RestaurantWithId
   ratings!: { [key: string]: number }
   restaurant_tag_ratings!: {
     [key: string]: number[]
@@ -123,7 +129,7 @@ export class Self extends WorkerJob {
 
   async persist() {
     try {
-      await this.restaurant.update()
+      await restaurantUpdate(this.restaurant)
     } catch (e) {
       if (e.message == UNIQUNESS_VIOLATION) {
         this.handleRestaurantKeyConflict()
@@ -134,7 +140,10 @@ export class Self extends WorkerJob {
   }
 
   async handleRestaurantKeyConflict() {
-    if (this.restaurant.address.length < 4 || this.restaurant.name.length < 2) {
+    if (
+      (this.restaurant.address?.length ?? 0) < 4 ||
+      this.restaurant.name.length < 2
+    ) {
       console.error(
         this.restaurant.id,
         this.restaurant.name,
@@ -144,7 +153,7 @@ export class Self extends WorkerJob {
     }
     const conflicter = await findOneByHash('restaurant', {
       name: this.restaurant.name,
-      address: this.restaurant.address,
+      address: this.restaurant.address ?? '',
     })
     const updated_at = moment(conflicter.updated_at)
     if (updated_at.diff(moment.now(), 'days') < -30) {
@@ -162,11 +171,17 @@ export class Self extends WorkerJob {
   }
 
   async getScrapeData() {
-    this.yelp = await this.restaurant.getLatestScrape('yelp')
-    this.ubereats = await this.restaurant.getLatestScrape('ubereats')
-    this.infatuated = await this.restaurant.getLatestScrape('infatuation')
-    this.michelin = await this.restaurant.getLatestScrape('michelin')
-    this.tripadvisor = await this.restaurant.getLatestScrape('tripadvisor')
+    this.yelp = await restaurantGetLatestScrape(this.restaurant, 'yelp')
+    this.ubereats = await restaurantGetLatestScrape(this.restaurant, 'ubereats')
+    this.infatuated = await restaurantGetLatestScrape(
+      this.restaurant,
+      'infatuation'
+    )
+    this.michelin = await restaurantGetLatestScrape(this.restaurant, 'michelin')
+    this.tripadvisor = await restaurantGetLatestScrape(
+      this.restaurant,
+      'tripadvisor'
+    )
   }
 
   // TODO: If we really want to be careful about being found out for scraping then we
@@ -192,33 +207,35 @@ export class Self extends WorkerJob {
 
   mergeName() {
     const tripadvisor_name = Tripadvisor.cleanName(
-      this.tripadvisor.getData('overview.name')
+      scrapeGetData(this.tripadvisor, 'overview.name')
     )
     this.restaurant.name = this.merge([
-      this.yelp.getData('data_from_map_search.name'),
-      this.ubereats.getData('main.title'),
-      this.infatuated.getData('data_from_map_search.name'),
-      this.michelin.getData('main.name'),
+      scrapeGetData(this.yelp, 'data_from_map_search.name'),
+      scrapeGetData(this.ubereats, 'main.title'),
+      scrapeGetData(this.infatuated, 'data_from_map_search.name'),
+      scrapeGetData(this.michelin, 'main.name'),
       tripadvisor_name,
     ])
   }
 
   mergeTelephone() {
     this.restaurant.telephone = this.merge([
-      this.yelp.getData('data_from_map_search.phone'),
-      this.ubereats.getData('main.phoneNumber'),
-      this.infatuated.getData('data_from_html_embed.phone_number'),
-      this.tripadvisor.getData('overview.contact.phone'),
+      scrapeGetData(this.yelp, 'data_from_map_search.phone'),
+      scrapeGetData(this.ubereats, 'main.phoneNumber'),
+      scrapeGetData(this.infatuated, 'data_from_html_embed.phone_number'),
+      scrapeGetData(this.tripadvisor, 'overview.contact.phone'),
     ])
   }
 
   mergeRatings() {
     this.ratings = {
-      yelp: parseFloat(this.yelp.getData('data_from_map_search.rating')),
-      ubereats: parseFloat(this.ubereats.getData('main.rating.ratingValue')),
+      yelp: parseFloat(scrapeGetData(this.yelp, 'data_from_map_search.rating')),
+      ubereats: parseFloat(
+        scrapeGetData(this.ubereats, 'main.rating.ratingValue')
+      ),
       infatuated: this._infatuatedRating(),
       tripadvisor: parseFloat(
-        this.tripadvisor.getData('overview.rating.primaryRating')
+        scrapeGetData(this.tripadvisor, 'overview.rating.primaryRating')
       ),
       michelin: this._getMichelinRating(),
     }
@@ -229,7 +246,10 @@ export class Self extends WorkerJob {
   }
 
   _infatuatedRating() {
-    const rating = this.infatuated.getData('data_from_map_search.post.rating')
+    const rating = scrapeGetData(
+      this.infatuated,
+      'data_from_map_search.post.rating'
+    )
     if (rating < 0) return NaN
     return parseFloat(rating) / 2
   }
@@ -257,7 +277,7 @@ export class Self extends WorkerJob {
   }
 
   private _getMichelinRating() {
-    const rating = this.michelin.getData('main.michelin_award')
+    const rating = scrapeGetData(this.michelin, 'main.michelin_award')
     if (rating == '') {
       return NaN
     }
@@ -277,16 +297,16 @@ export class Self extends WorkerJob {
     const yelp_address_path =
       'data_from_html_embed.mapBoxProps.addressProps.addressLines'
     this.restaurant.address = this.merge([
-      this.yelp.getData(yelp_address_path, ['']).join(', '),
-      this.ubereats.getData('main.location.address'),
-      this.infatuated.getData('data_from_map_search.street'),
-      this.michelin.getData('main.title'),
-      this.tripadvisor.getData('overview.contact.address'),
+      scrapeGetData(this.yelp, yelp_address_path, ['']).join(', '),
+      scrapeGetData(this.ubereats, 'main.location.address'),
+      scrapeGetData(this.infatuated, 'data_from_map_search.street'),
+      scrapeGetData(this.michelin, 'main.title'),
+      scrapeGetData(this.tripadvisor, 'overview.contact.address'),
     ])
   }
 
   addWebsite() {
-    let website = this.tripadvisor.getData('overview.contact.website')
+    let website = scrapeGetData(this.tripadvisor, 'overview.contact.website')
     website = Base64.decode(website)
     const parts = website.split('_')
     parts.shift()
@@ -295,13 +315,15 @@ export class Self extends WorkerJob {
   }
 
   addPriceRange() {
-    this.restaurant.price_range = this.tripadvisor.getData(
+    this.restaurant.price_range = scrapeGetData(
+      this.tripadvisor,
       'overview.detailCard.numericalPrice'
     )
   }
 
   addHours() {
-    this.restaurant.hours = this.yelp.getData(
+    this.restaurant.hours = scrapeGetData(
+      this.yelp,
       'data_from_html_embed.bizHoursProps.hoursInfoRows',
       []
     )
@@ -316,7 +338,7 @@ export class Self extends WorkerJob {
       [key: string]: { url: string; rating: number }
     }
 
-    path = this.tripadvisor.getData('overview.links.warUrl')
+    path = scrapeGetData(this.tripadvisor, 'overview.links.warUrl')
     if (path != '') {
       parts = path.split('-')
       parts.shift()
@@ -327,7 +349,7 @@ export class Self extends WorkerJob {
       }
     }
 
-    path = this.yelp.getData('data_from_map_search.businessUrl')
+    path = scrapeGetData(this.yelp, 'data_from_map_search.businessUrl')
     if (path != '') {
       this.restaurant.sources.yelp = {
         url: 'https://www.yelp.com' + path,
@@ -335,7 +357,10 @@ export class Self extends WorkerJob {
       }
     }
 
-    path = this.infatuated.getData('data_from_map_search.post.review_link')
+    path = scrapeGetData(
+      this.infatuated,
+      'data_from_map_search.post.review_link'
+    )
     if (path != '') {
       this.restaurant.sources.infatuated = {
         url: 'https://www.theinfatuation.com' + path,
@@ -343,7 +368,7 @@ export class Self extends WorkerJob {
       }
     }
 
-    path = this.michelin.getData('main.url')
+    path = scrapeGetData(this.michelin, 'main.url')
     if (path != '') {
       this.restaurant.sources.michelin = {
         url: 'https://guide.michelin.com' + path,
@@ -351,7 +376,9 @@ export class Self extends WorkerJob {
       }
     }
 
-    const json = JSON.parse(this.ubereats.getData('main.metaJson', '"{}"'))
+    const json = JSON.parse(
+      scrapeGetData(this.ubereats, 'main.metaJson', '"{}"')
+    )
     if (json['@id']) {
       this.restaurant.sources.ubereats = {
         url: json['@id'],
@@ -362,19 +389,21 @@ export class Self extends WorkerJob {
 
   mergeImage() {
     let hero = ''
-    const yelps = this.yelp.getData(
+    const yelps = scrapeGetData(
+      this.yelp,
       'data_from_html_embed.photoHeaderProps.photoHeaderMedias'
     )
     if (yelps) {
       hero = yelps[0].srcUrl
     }
-    const infatuateds = this.infatuated.getData(
+    const infatuateds = scrapeGetData(
+      this.infatuated,
       'data_from_map_search.post.venue_image'
     )
     if (infatuateds) {
       hero = infatuateds
     }
-    const michelins = this.michelin.getData('main.image')
+    const michelins = scrapeGetData(this.michelin, 'main.image')
     if (michelins) {
       hero = michelins
     }
@@ -383,12 +412,16 @@ export class Self extends WorkerJob {
   }
 
   async mergeTags() {
-    const yelps = this.yelp
-      .getData('data_from_map_search.categories', [])
-      .map((c) => c.title)
-    const tripadvisors = this.tripadvisor
-      .getData('overview.detailCard.tagTexts.cuisines.tags', [])
-      .map((c) => c.tagValue)
+    const yelps = scrapeGetData(
+      this.yelp,
+      'data_from_map_search.categories',
+      []
+    ).map((c) => c.title)
+    const tripadvisors = scrapeGetData(
+      this.tripadvisor,
+      'overview.detailCard.tagTexts.cuisines.tags',
+      []
+    ).map((c) => c.tagValue)
     const tags = _.uniq([...yelps, ...tripadvisors])
     const orphan_tags = await this.upsertCountryTags(tags)
     await restaurantUpsertOrphanTags(this.restaurant, orphan_tags)
@@ -397,7 +430,8 @@ export class Self extends WorkerJob {
 
   async upsertCountryTags(tags: string[]) {
     const country_tags = await tagFindCountries(tags)
-    await this.restaurant.upsertManyTags(
+    await restaurantUpsertManyTags(
+      this.restaurant,
       country_tags.map((tag: Tag) => {
         return {
           tag_id: tag.id,
@@ -438,7 +472,7 @@ export class Self extends WorkerJob {
   }
 
   mergePhotos() {
-    // ...this.tripadvisor.getData('photos', []),
+    // ...scrapeGetData(this.tripadvisor, 'photos', []),
     this.restaurant.photos = [
       ...this.getPaginatedData(this.yelp.data, 'photos').map((i) => i.src),
     ]
@@ -454,7 +488,7 @@ export class Self extends WorkerJob {
         })
       })
     )
-    await this.restaurant.upsertTagRestaurantData(restaurant_tags)
+    await restaurantUpsertTagRestaurantData(this.restaurant, restaurant_tags)
   }
 
   async getRankForTag(tag: Tag) {
@@ -475,7 +509,7 @@ export class Self extends WorkerJob {
 
   async scanReviews() {
     this._found_tags = {}
-    this.all_tags = await this.restaurant.allPossibleTags()
+    this.all_tags = await restaurantGetAllPossibleTags(this.restaurant)
     this.restaurant_tag_ratings = {}
     this._scanYelpReviewsForTags()
     this._scanTripadvisorReviewsForTags()
@@ -484,8 +518,10 @@ export class Self extends WorkerJob {
 
   async findPhotosForTags() {
     let restaurant_tags = [] as RestaurantTagWithID[]
-    await this.restaurant.refresh()
-    const all_possible_tags = await this.restaurant.allPossibleTags()
+    await this.persist()
+    const all_possible_tags = await restaurantGetAllPossibleTags(
+      this.restaurant
+    )
     const photos = this.getPaginatedData(this.yelp.data, 'photos')
     for (const tag of all_possible_tags) {
       let restaurant_tag = {
@@ -502,7 +538,7 @@ export class Self extends WorkerJob {
         restaurant_tags.push(restaurant_tag)
       }
     }
-    await this.restaurant.upsertManyTags(restaurant_tags)
+    await restaurantUpsertManyTags(this.restaurant, restaurant_tags)
   }
 
   getPaginatedData(data: ScrapeData, type: 'photos' | 'reviews') {
@@ -562,11 +598,12 @@ export class Self extends WorkerJob {
         rating: _.mean(this.restaurant_tag_ratings[tag_id]),
       })
     }
-    await this.restaurant.upsertManyTags(restaurant_tags)
+    await restaurantUpsertManyTags(this.restaurant, restaurant_tags)
   }
 
   getRatingFactors() {
-    const factors = this.tripadvisor.getData(
+    const factors = scrapeGetData(
+      this.tripadvisor,
       'overview.rating.ratingQuestions',
       []
     )

@@ -124,7 +124,10 @@ const spacing = 20
 
 const CountryTopDishesAndRestaurants = memo(
   ({ country }: { country: TopCuisine }) => {
-    const [hoveredRestaurant, setHoveredRestaurant] = useState<Restaurant>(null)
+    const [
+      hoveredRestaurant,
+      setHoveredRestaurant,
+    ] = useState<Restaurant | null>(null)
     const onHoverRestaurant = useCallback((restaurant: Restaurant) => {
       setHoveredRestaurant(restaurant)
     }, [])
@@ -162,9 +165,9 @@ const CountryTopDishesAndRestaurants = memo(
                     maxWidth: '100%',
                   }}
                   active={
-                    // (!hoveredRestaurant && index === 0) ||
-                    hoveredRestaurant &&
-                    restaurant?.name === hoveredRestaurant?.name
+                    (hoveredRestaurant &&
+                      restaurant?.name === hoveredRestaurant?.name) ||
+                    false
                   }
                 />
               )

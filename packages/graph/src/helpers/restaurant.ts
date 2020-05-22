@@ -2,7 +2,7 @@ import { resolved } from 'gqless'
 import _ from 'lodash'
 
 import { query } from '../graphql'
-import { tagUpsert } from '../helpers/tag'
+import { tagGetAllChildren, tagUpsert } from '../helpers/tag'
 import {
   Restaurant,
   RestaurantTag,
@@ -238,4 +238,36 @@ export async function restaurantUpsertTagRestaurantData(
   restaurant_tags: RestaurantTagWithID[]
 ) {
   return await restaurantUpsertManyTags(restaurant, restaurant_tags)
+}
+
+export async function restaurantGetLatestScrape(
+  restaurant: RestaurantWithId,
+  source: string
+): Promise<Scrape> {
+  const [first] = await resolveFields(allFieldsForTable('scrape'), () => {
+    return query.scrape({
+      where: {
+        restaurant_id: {
+          _eq: restaurant.id,
+        },
+        source: {
+          _eq: source,
+        },
+      },
+      order_by: {
+        // @ts-ignore EnumType
+        updated_at: 'desc',
+      },
+      limit: 1,
+    })
+  })
+  return first
+}
+
+export async function restaurantGetAllPossibleTags(restaurant: Restaurant) {
+  return await tagGetAllChildren(
+    restaurant.tags.map((i) => {
+      return i.tag.id
+    })
+  )
 }

@@ -6,6 +6,7 @@ import {
   restaurantSaveCanonical,
   scrapeInsert,
   scrapeMergeData,
+  scrapeUpdate,
 } from '@dish/graph'
 import { ProxiedRequests, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
@@ -195,7 +196,8 @@ export class Yelp extends WorkerJob {
       coordinates: [lon, lat],
     }
     scrape.restaurant_id = canonical.id
-    await scrape.update()
+    // @ts-ignore
+    await scrapeUpdate(scrape)
     await this.getNextScrapes(id, data)
   }
 
