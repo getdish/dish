@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Fix some common issues with the tsickle output
  * @param {string} code the transformed typescript code

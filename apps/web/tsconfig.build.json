@@ -3,5 +3,6 @@
   "compilerOptions": {
     "noEmit": false
   },
-  "include": ["web/server.tsx"]
+  "include": ["web/server.tsx"],
+  "exclude": []
 }
