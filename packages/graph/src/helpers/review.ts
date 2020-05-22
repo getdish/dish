@@ -8,9 +8,9 @@ export async function reviewInsert(reviews: Review[]): Promise<Review[]> {
   return await insert<Review>('review', reviews)
 }
 
-export async function reviewUpsert(objects: Review[]): Promise<Review[]> {
-  return await upsert<Review>('review', '', objects)
-}
+// export async function reviewUpsert(objects: Review[]): Promise<Review[]> {
+//   return await upsert<Review>('review', '', objects)
+// }
 
 export async function reviewUpdate(
   review: ReviewWithId
