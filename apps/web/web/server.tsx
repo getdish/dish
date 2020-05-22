@@ -24,8 +24,10 @@ const jsdom = new JSDOM(``, {
   referrer: 'http://d1sh_hasura_live.com:19006/',
   contentType: 'text/html',
 })
+// @ts-ignore
 global['window'] = jsdom.window
 global['window']['IS_SSR_RENDERING'] = true
+// @ts-ignore
 global['MouseEvent'] = class MouseEvent {}
 Object.keys(jsdom.window).forEach((key) => {
   if (typeof global[key] === 'undefined') {

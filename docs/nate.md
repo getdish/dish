@@ -1,3 +1,5 @@
+- [ ] hover on left side should show a "banner" on bottom of right
+
 - [ ] crawler for "header" images for dishes (Pho) (Instagram?)
 - [ ] start crawler to find restaurants instagrams
 
