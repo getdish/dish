@@ -1,7 +1,6 @@
-import { resolved } from 'gqless'
 import _ from 'lodash'
 
-import { query } from '../graphql'
+import { order_by, query } from '../graphql'
 import { tagGetAllChildren, tagUpsert } from '../helpers/tag'
 import {
   Restaurant,
@@ -53,9 +52,7 @@ export async function restaurantFindBatch(
         id: { _gt: previous_id },
         ...extra_where,
       },
-      // @tom - types are mad here
-      // @ts-ignore
-      order_by: { id: 'asc' },
+      order_by: [{ id: order_by.asc }],
       limit: size,
     })
   })
@@ -97,11 +94,11 @@ export async function restaurantLatestScrape(
           _eq: source,
         },
       },
-      order_by: {
-        // @tom broken same way
-        // @ts-ignore
-        updated_at: 'desc',
-      },
+      order_by: [
+        {
+          updated_at: order_by.desc,
+        },
+      ],
       limit: 1,
     })
   })
@@ -191,7 +188,7 @@ export async function restaurantUpsertRestaurantTag(
 }
 
 export async function restaurantUpsertOrphanTags(
-  restaurant,
+  restaurant: RestaurantWithId,
   tag_strings: string[]
 ) {
   const tags = tag_strings.map((tag_name) => {
@@ -254,10 +251,11 @@ export async function restaurantGetLatestScrape(
           _eq: source,
         },
       },
-      order_by: {
-        // @ts-ignore EnumType
-        updated_at: 'desc',
-      },
+      order_by: [
+        {
+          updated_at: order_by.desc,
+        },
+      ],
       limit: 1,
     })
   })
