@@ -36,7 +36,6 @@ test.beforeEach(async (t) => {
   await Auth.register('test', 'password')
   const user = await userFindOne({
     username: 'username',
-    password: 'test',
   })
   t.context.user = user
 })

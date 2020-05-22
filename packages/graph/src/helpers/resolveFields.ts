@@ -18,6 +18,9 @@ export function touchToResolveInGQLess<A>(record: A, fields: string[]) {
   for (const key of fields) {
     if (typeof record[key] == 'function') {
       one[key] = record[key]()
+      if (key == 'tags') {
+        one[key] = [{ tag: { name: record[key]()[0].tag.name } }]
+      }
     } else {
       one[key] = record[key]
     }

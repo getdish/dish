@@ -7,11 +7,8 @@ import {
   restaurantUpsert,
   restaurantUpsertOrphanTags,
   search,
-  startLogging,
 } from '../src'
 import { restaurant_fixture } from './etc/fixtures'
-
-// startLogging()
 
 test.beforeEach(async (t) => {
   await flushTestData()

@@ -1,5 +1,3 @@
-import { resolved } from 'gqless'
-
 import { query } from '../graphql'
 import { Tag, TagWithId } from '../types'
 import { allFieldsForTable } from './allFieldsForTable'
@@ -22,7 +20,7 @@ export async function tagInsert(tags: Tag[]) {
 
 export async function tagUpsert(objects: Tag[]) {
   return await upsert<Tag>(
-    'tag_tag',
+    'tag',
     upsertConstraints.tag_parentId_name_key,
     objects
   )

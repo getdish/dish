@@ -1,11 +1,11 @@
 import _ from 'lodash'
 
 import { order_by, query } from '../graphql'
+import { restaurantTagUpsert } from '../helpers/restaurantTag'
 import { tagGetAllChildren, tagUpsert } from '../helpers/tag'
 import {
   Restaurant,
   RestaurantTag,
-  RestaurantTagWithID,
   RestaurantWithId,
   Scrape,
   Tag,
@@ -167,7 +167,7 @@ export async function restaurantRefresh(restaurant: Restaurant) {
   return await restaurantFindOne({ id: restaurant.id })
 }
 
-export async function restaurantUpsertManyTags(
+export async function restaurantUpsertRestaurantTags(
   restaurant: RestaurantWithId,
   restaurant_tags: RestaurantTag[]
 ) {
@@ -175,16 +175,9 @@ export async function restaurantUpsertManyTags(
     const existing = getRestaurantTagFromTag(restaurant, rt.tag_id)
     return { ...existing, ...rt }
   })
-  await restaurantUpsertRestaurantTag(restaurant, populated)
-  return await restaurantRefresh(restaurant)
-}
-
-export async function restaurantUpsertRestaurantTag(
-  restaurant: RestaurantWithId,
-  restaurant_tags: RestaurantTag[]
-) {
-  await restaurantUpsertManyTags(restaurant, restaurant_tags)
+  await restaurantTagUpsert(restaurant.id, populated)
   await updateTagNames(restaurant)
+  return await restaurantRefresh(restaurant)
 }
 
 export async function restaurantUpsertOrphanTags(
@@ -202,13 +195,13 @@ export async function restaurantUpsertOrphanTags(
       tag_id: tag.id,
     } as RestaurantTag
   })
-  await restaurantUpsertRestaurantTag(restaurant, restaurant_tags)
+  await restaurantTagUpsert(restaurant.id, restaurant_tags)
+  await updateTagNames(restaurant)
 }
 
 async function updateTagNames(restaurant: RestaurantWithId) {
   restaurant = await restaurantRefresh(restaurant)
   const tag_names = restaurant.tags.map((i) => i.tag.slugs().flat())
-  // @ts-ignore
   restaurant.tag_names = _.uniq([
     ...(restaurant.tag_names() || []),
     ...tag_names,
@@ -228,13 +221,6 @@ function getRestaurantTagFromTag(restaurant: Restaurant, tag_id: string) {
   }
   rt.tag_id = tag_id
   return rt
-}
-
-export async function restaurantUpsertTagRestaurantData(
-  restaurant: RestaurantWithId,
-  restaurant_tags: RestaurantTagWithID[]
-) {
-  return await restaurantUpsertManyTags(restaurant, restaurant_tags)
 }
 
 export async function restaurantGetLatestScrape(
