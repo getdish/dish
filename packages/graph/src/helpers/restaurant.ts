@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { order_by, query } from '../graphql'
+import { order_by, query, restaurant_constraint } from '../graphql'
 import { restaurantTagUpsert } from '../helpers/restaurantTag'
 import { tagGetAllChildren, tagUpsert } from '../helpers/tag'
 import {
@@ -12,25 +12,18 @@ import {
 } from '../types'
 import { allFieldsForTable } from './allFieldsForTable'
 import { levenshteinDistance } from './levenshteinDistance'
-import {
-  findOne,
-  insert,
-  update,
-  upsert,
-  upsertConstraints,
-} from './queryHelpers'
+import { findOne, insert, update, upsert } from './queryHelpers'
 import { resolveFields } from './resolveFields'
 
 export async function restaurantInsert(restaurants: Restaurant[]) {
   return await insert<Restaurant>('restaurant', restaurants)
 }
 
-export async function restaurantUpsert(objects: Restaurant[]) {
-  return await upsert<Restaurant>(
-    'restaurant',
-    upsertConstraints.restaurant_name_address_key,
-    objects
-  )
+export async function restaurantUpsert(
+  objects: Restaurant[],
+  constraint = restaurant_constraint.restaurant_name_address_key
+) {
+  return await upsert<Restaurant>('restaurant', constraint, objects)
 }
 
 export async function restaurantUpdate(restaurant: RestaurantWithId) {

@@ -1,13 +1,7 @@
-import { query } from '../graphql'
+import { query, tag_constraint } from '../graphql'
 import { Tag, TagWithId } from '../types'
 import { allFieldsForTable } from './allFieldsForTable'
-import {
-  findOne,
-  insert,
-  update,
-  upsert,
-  upsertConstraints,
-} from './queryHelpers'
+import { findOne, insert, update, upsert } from './queryHelpers'
 import { resolveFields } from './resolveFields'
 import { slugify } from './slugify'
 import { tagTagUpsert } from './tag_tag'
@@ -18,12 +12,11 @@ export async function tagInsert(tags: Tag[]) {
   return await insert<Tag>('tag', tags)
 }
 
-export async function tagUpsert(objects: Tag[]) {
-  return await upsert<Tag>(
-    'tag',
-    upsertConstraints.tag_parentId_name_key,
-    objects
-  )
+export async function tagUpsert(
+  objects: Tag[],
+  constraint = tag_constraint.tag_parentId_name_key
+) {
+  return await upsert<Tag>('tag', constraint, objects)
 }
 
 export async function tagUpdate(tag: TagWithId) {

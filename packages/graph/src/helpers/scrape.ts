@@ -10,9 +10,9 @@ export async function scrapeInsert(scrapes: Scrape[]) {
   return await insert<Scrape>('scrape', scrapes)
 }
 
-export async function scrapeUpsert(objects: Scrape[]) {
-  return await upsert<Scrape>('scrape', '', objects)
-}
+// export async function scrapeUpsert(objects: Scrape[]) {
+//   return await upsert<Scrape>('scrape', '', objects)
+// }
 
 export async function scrapeUpdate(scrape: ScrapeWithId) {
   return await update<ScrapeWithId>('scrape', scrape)

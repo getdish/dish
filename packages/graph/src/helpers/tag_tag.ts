@@ -1,10 +1,10 @@
+import { tag_tag_constraint } from '../graphql'
 import { TagTag } from '../types'
-import { upsert, upsertConstraints } from './queryHelpers'
+import { upsert } from './queryHelpers'
 
-export async function tagTagUpsert(objects: TagTag[]) {
-  return await upsert<TagTag>(
-    'tag_tag',
-    upsertConstraints.tag_tag_pkey,
-    objects
-  )
+export async function tagTagUpsert(
+  objects: TagTag[],
+  constraint = tag_tag_constraint.tag_tag_pkey
+) {
+  return await upsert<TagTag>('tag_tag', constraint, objects)
 }

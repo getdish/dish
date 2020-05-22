@@ -6,13 +6,6 @@ import { IDRequired, ModelName, ModelType } from '../types'
 import { allFieldsForTable } from './allFieldsForTable'
 import { resolveFields, touchToResolveInGQLess } from './resolveFields'
 
-export const upsertConstraints = {
-  tag_tag_pkey: 'tag_tag_pkey',
-  tag_parentId_name_key: 'tag_parentId_name_key',
-  restaurant_name_address_key: 'restaurant_name_address_key',
-  dish_restaurant_id_name_key: 'dish_restaurant_id_name_key',
-}
-
 export async function findOne<T extends ModelType>(
   table: ModelName,
   hash: Partial<T>
@@ -65,7 +58,7 @@ export async function insert<T extends ModelType>(
 
 export async function upsert<T extends ModelType>(
   table: ModelName,
-  constraint: typeof upsertConstraints[keyof typeof upsertConstraints],
+  constraint: string,
   objects: T[]
 ): Promise<IDRequired<T>[]> {
   // TODO: Is there a better way to get the updateable columns?
