@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "",
   "devDependencies": {
-    "hasura-cli": "^1.2.0",
     "ava": "*"
   },
   "dependencies": {

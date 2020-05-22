@@ -1,7 +1,7 @@
 import { resolved } from 'gqless'
 
 import { mutation } from '../graphql/mutation'
-import { Scrape } from '../types'
+import { Scrape, ScrapeWithId } from '../types'
 import {
   findOne,
   insert,
@@ -12,20 +12,20 @@ import {
 
 export type ScrapeData = { [key: string]: any }
 
-export async function scrapeInsert(scrapes: Scrape[]): Promise<Scrape[]> {
+export async function scrapeInsert(scrapes: Scrape[]) {
   return await insert<Scrape>('scrape', scrapes)
 }
 
-export async function scrapeUpsert(objects: Scrape[]): Promise<Scrape[]> {
+export async function scrapeUpsert(objects: Scrape[]) {
   return await upsert<Scrape>('scrape', '', objects)
 }
 
-export async function scrapeUpdate(scrape: Scrape): Promise<Scrape[]> {
-  return await update<Scrape>('scrape', scrape)
+export async function scrapeUpdate(scrape: ScrapeWithId) {
+  return await update<ScrapeWithId>('scrape', scrape)
 }
 
-export async function scrapeFindOne(scrape: Partial<Scrape>): Promise<Scrape> {
-  return await findOne<Scrape>('scrape', scrape)
+export async function scrapeFindOne(scrape: Partial<Scrape>) {
+  return await findOne<ScrapeWithId>('scrape', scrape)
 }
 
 export async function scrapeMergeData(

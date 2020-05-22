@@ -1,5 +1,5 @@
 import { query } from '../graphql'
-import { Review } from '../types'
+import { Review, ReviewWithId } from '../types'
 import { allFieldsForTable } from './allFieldsForTable'
 import { findOne, insert, update, upsert } from './queryHelpers'
 import { resolveFields } from './resolveFields'
@@ -12,12 +12,16 @@ export async function reviewUpsert(objects: Review[]): Promise<Review[]> {
   return await upsert<Review>('review', '', objects)
 }
 
-export async function reviewUpdate(review: Review): Promise<Review[]> {
-  return await update<Review>('review', review)
+export async function reviewUpdate(
+  review: ReviewWithId
+): Promise<ReviewWithId> {
+  return await update<ReviewWithId>('review', review)
 }
 
-export async function reviewFindOne(review: Partial<Review>): Promise<Review> {
-  return await findOne<Review>('review', review)
+export async function reviewFindOne(
+  review: Partial<Review>
+): Promise<ReviewWithId> {
+  return await findOne<ReviewWithId>('review', review)
 }
 
 export async function reviewFindAllForRestaurant(

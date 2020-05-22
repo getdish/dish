@@ -2,13 +2,9 @@ import { resolved } from 'gqless'
 
 import { query } from '../graphql'
 import { mutation } from '../graphql/mutation'
-import { ModelType } from '../types'
+import { IDRequired, ModelType } from '../types'
 import { allFieldsForTable } from './allFieldsForTable'
 import { resolveFields } from './resolveFields'
-
-type DishGeneric = {
-  id: string
-}
 
 export const upsertConstraints = {
   tag_tag_pkey: 'tag_tag_pkey',
@@ -61,7 +57,7 @@ export async function upsert<T extends ModelType>(
   table: string,
   constraint: typeof upsertConstraints[keyof typeof upsertConstraints],
   objects: T[]
-): Promise<T[]> {
+): Promise<IDRequired<T>[]> {
   // TODO: Is there a better way to get the updateable columns?
   const update_columns = Object.keys(objects[0])
   const ids = await resolveMutationWithIds(`insert_${table}` as any, {
@@ -74,7 +70,7 @@ export async function upsert<T extends ModelType>(
   return objects.map((o, i) => ({ ...(o as any), id: ids[i] }))
 }
 
-export async function update<T extends DishGeneric>(
+export async function update<T extends IDRequired<ModelType>>(
   table: string,
   object: T
 ): Promise<T> {

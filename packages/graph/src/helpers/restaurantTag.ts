@@ -10,16 +10,13 @@ export async function restaurantTagUpsertMany(
   restaurant_id: string,
   tags: Partial<RestaurantTag>[]
 ): Promise<void> {
-  const objects = tags.map((i) => {
-    if (typeof i.asObject != 'undefined') {
-      i = i.asObject()
-    }
-    i.restaurant_id = restaurant_id
-    return i
-  })
-
+  const objects: RestaurantTag[] = tags.map((tag) => ({
+    ...tag,
+    restaurant_id,
+  }))
   return await resolved(() => {
     mutation.insert_restaurant_tag({
+      // @ts-ignore
       objects: objects,
       // TODO not sure how to make this
       on_conflict: {
