@@ -4,7 +4,7 @@ import { query } from '../graphql'
 import { mutation } from '../graphql/mutation'
 import { IDRequired, ModelType } from '../types'
 import { allFieldsForTable } from './allFieldsForTable'
-import { resolveFields } from './resolveFields'
+import { resolveFields, touchToResolveInGQLess } from './resolveFields'
 
 export const upsertConstraints = {
   tag_tag_pkey: 'tag_tag_pkey',
@@ -20,13 +20,20 @@ export async function findOne<T extends ModelType>(
   const where = Object.keys(hash).map((key) => {
     return { [key]: { _eq: hash[key] } }
   })
-  return await resolveFields<T>(allFieldsForTable(table), () => {
+  const all_fields = allFieldsForTable(table)
+  const response = await resolveFields<T>(all_fields, () => {
     return query[table]({
       where: {
         _and: where,
       },
     })
   })
+  if (response.length != 1) {
+    throw new Error(
+      `QUERY ERROR: findOne('${table}', ${hash}) found ${response.length}`
+    )
+  }
+  return touchToResolveInGQLess(response[0], all_fields)
 }
 
 async function resolveMutationWithIds<A extends keyof typeof mutation>(

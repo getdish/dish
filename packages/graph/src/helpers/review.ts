@@ -41,7 +41,7 @@ export async function reviewFindAllForRestaurant(
 }
 
 export async function reviewFindAllForUser(user_id: string): Promise<Review[]> {
-  return await resolveFields(allFieldsForTable('reviews'), () => {
+  return await resolveFields(allFieldsForTable('review'), () => {
     return query.review({
       where: {
         user_id: { _eq: user_id },
