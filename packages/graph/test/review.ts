@@ -11,7 +11,6 @@ import {
   restaurantUpsert,
   reviewFindAllForRestaurant,
   reviewInsert,
-  startLogging,
   tagInsert,
   userFindOne,
 } from '../src'
@@ -35,7 +34,7 @@ test.beforeEach(async (t) => {
   t.context.existing_tag = existing_tag
   await Auth.register('test', 'password')
   const user = await userFindOne({
-    username: 'username',
+    username: 'test',
   })
   t.context.user = user
 })

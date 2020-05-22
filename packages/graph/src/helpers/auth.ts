@@ -107,6 +107,11 @@ class AuthModel {
       username: username,
       password: password,
     })
+    if (response.status !== 200) {
+      console.error(
+        `Error registering: ${response.status} ${response.statusText}`
+      )
+    }
     return [response.status, response.statusText] as const
   }
 

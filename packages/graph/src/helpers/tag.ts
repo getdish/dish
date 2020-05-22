@@ -58,7 +58,7 @@ export async function tagFindCountries(countries: string[]): Promise<Tag[]> {
 export async function tagUpsertCategorizations(
   tag: Tag,
   category_tag_ids: string[]
-): Promise<Tag[]> {
+): Promise<void> {
   const objects = category_tag_ids.map((category_tag_id) => {
     return {
       category_tag_id,
@@ -67,6 +67,5 @@ export async function tagUpsertCategorizations(
     }
   })
   console.warn('disabled bad type for now')
-  // @ts-ignore
-  return await tagTagUpsert(objects)
+  await tagTagUpsert(objects)
 }

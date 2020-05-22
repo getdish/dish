@@ -147,9 +147,6 @@ async function findExistingCanonical(lon: number, lat: number, name: string) {
       found = final
     }
   }
-  if (process.env.RUN_WITHOUT_WORKER != 'true') {
-    console.log('Found existing canonical restaurant: ' + found.id)
-  }
   return found
 }
 
