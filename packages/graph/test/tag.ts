@@ -6,9 +6,9 @@ import {
   flushTestData,
   restaurantFindOne,
   restaurantRefresh,
+  restaurantTagUpsert,
   restaurantUpsert,
   restaurantUpsertOrphanTags,
-  restaurantUpsertTagRestaurantData,
   tagFindOne,
   tagInsert,
   tagUpsert,
@@ -67,7 +67,7 @@ test('Tagging a restaurant with a tag that has a parent', async (t) => {
   const [tag] = await tagInsert([
     { name: 'Test tag', parentId: t.context.existing_tag.id },
   ])
-  await restaurantUpsertTagRestaurantData(restaurant, [{ tag_id: tag.id }])
+  await restaurantTagUpsert(restaurant.id, [{ tag_id: tag.id }])
   restaurant = await restaurantRefresh(restaurant)
   t.is(restaurant.tags.length, 1)
   t.is(restaurant.tags.map((t) => t.tag.name).includes('Test tag'), true)

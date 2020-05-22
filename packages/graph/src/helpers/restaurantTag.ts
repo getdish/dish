@@ -1,12 +1,13 @@
 import { resolved } from 'gqless'
 
+import {
+  restaurant_tag_constraint,
+  restaurant_tag_update_column,
+} from '../graphql'
 import { mutation } from '../graphql/mutation'
 import { RestaurantTag } from '../types'
-import { allFieldsForTable } from './allFieldsForTable'
 
-const upsert_constraint = 'restaurant_tag_pkey'
-
-export async function restaurantTagUpsertMany(
+export async function restaurantTagUpsert(
   restaurant_id: string,
   tags: Partial<RestaurantTag>[]
 ): Promise<void> {
@@ -16,14 +17,14 @@ export async function restaurantTagUpsertMany(
   }))
   return await resolved(() => {
     mutation.insert_restaurant_tag({
-      // @ts-ignore
       objects: objects,
-      // TODO not sure how to make this
       on_conflict: {
-        // @ts-ignore
-        constraint: upsert_constraint,
-        // @ts-ignore
-        update_columns: allFieldsForTable('restaurant_tag'),
+        constraint: restaurant_tag_constraint.restaurant_tag_pkey,
+        update_columns: [
+          restaurant_tag_update_column.rank,
+          restaurant_tag_update_column.photos,
+          restaurant_tag_update_column.rating,
+        ],
       },
     })
   })
