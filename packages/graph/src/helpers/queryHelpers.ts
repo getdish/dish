@@ -9,24 +9,19 @@ import { resolveFields, touchToResolveInGQLess } from './resolveFields'
 export async function findOne<T extends ModelType>(
   table: ModelName,
   hash: Partial<T>
-): Promise<T> {
+): Promise<T | null> {
   const where = Object.keys(hash).map((key) => {
     return { [key]: { _eq: hash[key] } }
   })
   const all_fields = allFieldsForTable(table)
-  const response = await resolveFields<T>(all_fields, () => {
+  const [first] = await resolveFields<T>(all_fields, () => {
     return (query[table]({
       where: {
         _and: where,
       },
     }) as any) as T[]
   })
-  if (response.length != 1) {
-    throw new Error(
-      `QUERY ERROR: findOne('${table}', ${hash}) found ${response.length}`
-    )
-  }
-  return touchToResolveInGQLess(response[0], all_fields)
+  return first ?? null
 }
 
 async function resolveMutationWithIds<A extends keyof typeof mutation>(

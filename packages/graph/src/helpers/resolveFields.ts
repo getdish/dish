@@ -12,16 +12,17 @@ export async function resolveFields<A>(
   })
 }
 
-export function touchToResolveInGQLess<A>(record: A, fields: string[]) {
+export function touchToResolveInGQLess<A>(record: A, fields: string[]): A {
   // @ts-ignore
   let one: A = {}
   for (const key of fields) {
     if (typeof record[key] == 'function') {
-      one[key] = record[key]()
       if (key == 'tags') {
         one[key] = record[key]().map((x) => ({
           name: x.name,
         }))
+      } else {
+        one[key] = record[key]()
       }
     } else {
       one[key] = record[key]
