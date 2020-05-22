@@ -1,3 +1,5 @@
+import './_debug'
+
 import anyTest, { TestInterface } from 'ava'
 
 import {
@@ -29,7 +31,7 @@ test.beforeEach(async (t) => {
   await flushTestData()
   const [restaurant] = await restaurantUpsert([restaurant_fixture])
   t.context.restaurant = restaurant
-  const existing_tag = await tagInsert([{ name: 'Test tag existing' }])
+  const [existing_tag] = await tagInsert([{ name: 'Test tag existing' }])
   t.context.existing_tag = existing_tag
   await Auth.register('test', 'password')
   const user = await userFindOne({

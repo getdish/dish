@@ -12,6 +12,7 @@ export const restaurant_fixture: Partial<Restaurant> = {
   state: 'Denial',
   zip: 123,
   image: 'https://imgur.com/123abc',
+  // @ts-ignore
   hours: [
     { hoursInfo: { hours: ['11:00 am - 8:30 pm'] } },
     { hoursInfo: { hours: ['11:00 am - 8:30 pm'] } },

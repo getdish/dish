@@ -1,4 +1,4 @@
-import { Dish } from '../types'
+import { Dish, DishWithId } from '../types'
 import {
   findOne,
   insert,
@@ -7,11 +7,11 @@ import {
   upsertConstraints,
 } from './queryHelpers'
 
-export async function dishInsert(dishs: Dish[]): Promise<Dish[]> {
+export async function dishInsert(dishs: Dish[]) {
   return await insert<Dish>('dish', dishs)
 }
 
-export async function dishUpsert(objects: Dish[]): Promise<Dish[]> {
+export async function dishUpsert(objects: Dish[]) {
   return await upsert<Dish>(
     'dish',
     upsertConstraints.dish_restaurant_id_name_key,
@@ -19,10 +19,10 @@ export async function dishUpsert(objects: Dish[]): Promise<Dish[]> {
   )
 }
 
-export async function dishUpdate(dish: Dish): Promise<Dish[]> {
-  return await update<Dish>('dish', dish)
+export async function dishUpdate(dish: DishWithId) {
+  return await update<DishWithId>('dish', dish)
 }
 
-export async function dishFindOne(dish: Partial<Dish>): Promise<Dish> {
-  return await findOne<Dish>('dish', dish)
+export async function dishFindOne(dish: Partial<Dish>) {
+  return await findOne<DishWithId>('dish', dish)
 }

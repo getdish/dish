@@ -1,7 +1,7 @@
 import { resolved } from 'gqless'
 
 import { query } from '../graphql'
-import { Tag } from '../types'
+import { Tag, TagWithId } from '../types'
 import { allFieldsForTable } from './allFieldsForTable'
 import {
   findOne,
@@ -16,11 +16,11 @@ import { tagTagUpsert } from './tag_tag'
 
 export const tagSlug = (tag: Pick<Tag, 'name'>) => slugify(tag.name)
 
-export async function tagInsert(tags: Tag[]): Promise<Tag[]> {
+export async function tagInsert(tags: Tag[]) {
   return await insert<Tag>('tag', tags)
 }
 
-export async function tagUpsert(objects: Tag[]): Promise<Tag[]> {
+export async function tagUpsert(objects: Tag[]) {
   return await upsert<Tag>(
     'tag_tag',
     upsertConstraints.tag_parentId_name_key,
@@ -28,12 +28,12 @@ export async function tagUpsert(objects: Tag[]): Promise<Tag[]> {
   )
 }
 
-export async function tagUpdate(tag: Tag): Promise<Tag[]> {
-  return await update<Tag>('tag', tag)
+export async function tagUpdate(tag: TagWithId) {
+  return await update<TagWithId>('tag', tag)
 }
 
-export async function tagFindOne(tag: Partial<Tag>): Promise<Tag> {
-  return await findOne<Tag>('tag', tag)
+export async function tagFindOne(tag: Partial<Tag>) {
+  return await findOne<TagWithId>('tag', tag)
 }
 
 export async function tagGetAllChildren(
@@ -75,5 +75,7 @@ export async function tagUpsertCategorizations(
       tag_id: tag.id,
     }
   })
+  console.warn('disabled bad type for now')
+  // @ts-ignore
   return await tagTagUpsert(objects)
 }

@@ -193,10 +193,8 @@ export function setMapView(x: mapkit.Map) {
 }
 
 export const isOnOwnProfile = (state: OmState) => {
-  return (
-    slugify(state.user?.user?.username) ===
-    state.router.curPage.params?.username
-  )
+  const username = state.user?.user?.username
+  return username && slugify(username) === state.router.curPage.params?.username
 }
 
 export const isEditingUserPage = (state: OmState) => {

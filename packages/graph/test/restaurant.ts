@@ -1,3 +1,5 @@
+import './_debug'
+
 import anyTest, { TestInterface } from 'ava'
 import moment from 'moment'
 

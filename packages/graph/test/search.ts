@@ -1,3 +1,5 @@
+import './_debug'
+
 import test from 'ava'
 
 import {

@@ -3,7 +3,14 @@ import _ from 'lodash'
 
 import { query } from '../graphql'
 import { tagUpsert } from '../helpers/tag'
-import { Restaurant, RestaurantTag, Scrape, Tag } from '../types'
+import {
+  Restaurant,
+  RestaurantTag,
+  RestaurantTagWithID,
+  RestaurantWithId,
+  Scrape,
+  Tag,
+} from '../types'
 import { allFieldsForTable } from './allFieldsForTable'
 import { levenshteinDistance } from './levenshteinDistance'
 import {
@@ -15,15 +22,11 @@ import {
 } from './queryHelpers'
 import { resolveFields } from './resolveFields'
 
-export async function restaurantInsert(
-  restaurants: Restaurant[]
-): Promise<Restaurant[]> {
+export async function restaurantInsert(restaurants: Restaurant[]) {
   return await insert<Restaurant>('restaurant', restaurants)
 }
 
-export async function restaurantUpsert(
-  objects: Restaurant[]
-): Promise<Restaurant[]> {
+export async function restaurantUpsert(objects: Restaurant[]) {
   return await upsert<Restaurant>(
     'restaurant',
     upsertConstraints.restaurant_name_address_key,
@@ -31,16 +34,12 @@ export async function restaurantUpsert(
   )
 }
 
-export async function restaurantUpdate(
-  restaurant: Restaurant
-): Promise<Restaurant[]> {
-  return await update<Restaurant>('restaurant', restaurant)
+export async function restaurantUpdate(restaurant: RestaurantWithId) {
+  return await update<RestaurantWithId>('restaurant', restaurant)
 }
 
-export async function restaurantFindOne(
-  restaurant: Partial<Restaurant>
-): Promise<Restaurant> {
-  return await findOne<Restaurant>('restaurant', restaurant)
+export async function restaurantFindOne(restaurant: Partial<Restaurant>) {
+  return await findOne<RestaurantWithId>('restaurant', restaurant)
 }
 
 export async function restaurantFindBatch(
@@ -66,8 +65,8 @@ export async function restaurantFindNear(
   lat: number,
   lng: number,
   distance: number
-): Promise<Restaurant> {
-  const [result] = await resolveFields(allFieldsForTable('restaurant'), () => {
+): Promise<Restaurant[]> {
+  return await resolveFields(allFieldsForTable('restaurant'), () => {
     return query.restaurant({
       where: {
         location: {
@@ -82,7 +81,6 @@ export async function restaurantFindNear(
       },
     })
   })
-  return result
 }
 
 export async function restaurantLatestScrape(
@@ -115,7 +113,7 @@ export async function restaurantSaveCanonical(
   lat: number,
   name: string,
   street_address: string
-): Promise<Restaurant> {
+) {
   const found = await findExistingCanonical(lon, lat, name)
   if (found) return found
   const [restaurant] = await restaurantInsert([
@@ -138,11 +136,7 @@ export async function restaurantSaveCanonical(
   return restaurant
 }
 
-async function findExistingCanonical(
-  lon: number,
-  lat: number,
-  name: string
-): Promise<Restaurant> {
+async function findExistingCanonical(lon: number, lat: number, name: string) {
   const nears = await restaurantFindNear(lat, lon, 0.0005)
   let found: Restaurant | undefined = undefined
   let shortlist = [] as Restaurant[]
@@ -172,16 +166,14 @@ async function findExistingCanonical(
   return found
 }
 
-export async function restaurantRefresh(
-  restaurant: Restaurant
-): Promise<Restaurant> {
+export async function restaurantRefresh(restaurant: Restaurant) {
   return await restaurantFindOne({ id: restaurant.id })
 }
 
 export async function restaurantUpsertManyTags(
-  restaurant: Restaurant,
+  restaurant: RestaurantWithId,
   restaurant_tags: RestaurantTag[]
-): Promise<Restaurant> {
+) {
   const populated = restaurant_tags.map((rt) => {
     const existing = getRestaurantTagFromTag(restaurant, rt.tag_id)
     return { ...existing, ...rt }
@@ -191,7 +183,7 @@ export async function restaurantUpsertManyTags(
 }
 
 export async function restaurantUpsertRestaurantTag(
-  restaurant: Restaurant,
+  restaurant: RestaurantWithId,
   restaurant_tags: RestaurantTag[]
 ) {
   await restaurantUpsertManyTags(restaurant, restaurant_tags)
@@ -216,7 +208,7 @@ export async function restaurantUpsertOrphanTags(
   await restaurantUpsertRestaurantTag(restaurant, restaurant_tags)
 }
 
-async function updateTagNames(restaurant: Restaurant) {
+async function updateTagNames(restaurant: RestaurantWithId) {
   restaurant = await restaurantRefresh(restaurant)
   const tag_names = restaurant.tags.map((i) => i.tag.slugs().flat())
   // @ts-ignore
@@ -239,4 +231,11 @@ function getRestaurantTagFromTag(restaurant: Restaurant, tag_id: string) {
   }
   rt.tag_id = tag_id
   return rt
+}
+
+export async function restaurantUpsertTagRestaurantData(
+  restaurant: RestaurantWithId,
+  restaurant_tags: RestaurantTagWithID[]
+) {
+  return await restaurantUpsertManyTags(restaurant, restaurant_tags)
 }
