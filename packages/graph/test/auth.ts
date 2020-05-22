@@ -7,18 +7,25 @@ interface Context {}
 const test = anyTest as TestInterface<Context>
 
 test.beforeEach(async () => {
-  const res = await resolved(() => {
+  await resolved(() => {
     const { affected_rows, returning } = mutation.delete_user({
       where: {
-        username: {
-          _ilike: 'tester',
-        },
+        _or: [
+          {
+            username: {
+              _ilike: 'tester',
+            },
+          },
+          {
+            username: {
+              _eq: Math.random().toString(10),
+            },
+          },
+        ],
       },
     })
     return { affected_rows, returning }
   })
-
-  console.log(res)
 })
 
 test('Creating a user', async (t) => {
