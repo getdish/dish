@@ -33,6 +33,18 @@ index 27c8f79..4c5db75 100644
  export declare type TypeData<TType extends ValidType, TExtensions extends Tuple = {}> = TType extends Array<any> ? ArrayData<TType, UnshiftExtension<TExtensions, TType>> : TType extends ScalarType | EnumType ? ScalarData<TType, UnshiftExtension<TExtensions, TType>> : TType extends FieldsType ? FieldsData<TType, UnshiftExtension<TExtensions, TType>> : null;
 -export {};
 +
+ var mixClasses = require('mix-classes');
+ var tslib = require('tslib');
+ var utils = require('@gqless/utils');
+@@ -453,7 +453,7 @@ const buildArguments = ({
+     if ((context === null || context === void 0 ? void 0 : context.node) instanceof ScalarNode) {
+       // Object / Array passed as scalar
+       // serialize as a JSON-string
+-      return JSON.stringify(JSON.stringify(arg));
++      return JSON.stringify(arg).replace(/"([^"]+)":/g, '$1:');
+     }
+ 
+     if (Array.isArray(arg)) {
 diff --git a/node_modules/gqless/dist/gqless.esm.js b/node_modules/gqless/dist/gqless.esm.js
 index cc6eb3f..f54081e 100644
 --- a/node_modules/gqless/dist/gqless.esm.js
@@ -83,3 +95,4 @@ index cc6eb3f..f54081e 100644
  };
  
  /**
+
