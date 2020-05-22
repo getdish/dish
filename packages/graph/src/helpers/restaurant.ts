@@ -116,9 +116,6 @@ export async function restaurantSaveCanonical(
       },
     },
   ])
-  console.log(
-    'tom, restaurantInsert for now doesnt return new restaurant, idk if want to add here'
-  )
   // restaurant = await find()
   if (process.env.RUN_WITHOUT_WORKER != 'true') {
     console.log('Created new canonical restaurant: ' + restaurant.id)

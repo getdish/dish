@@ -19,7 +19,9 @@ export function touchToResolveInGQLess<A>(record: A, fields: string[]) {
     if (typeof record[key] == 'function') {
       one[key] = record[key]()
       if (key == 'tags') {
-        one[key] = [{ tag: { name: record[key]()[0].tag.name } }]
+        one[key] = record[key]().map((x) => ({
+          name: x.name,
+        }))
       }
     } else {
       one[key] = record[key]
