@@ -1,7 +1,11 @@
 import '@dish/common'
 
-import { restaurantSaveCanonical, scrapeMergeData } from '@dish/graph'
-import { Scrape, ScrapeData } from '@dish/models'
+import {
+  ScrapeData,
+  restaurantSaveCanonical,
+  scrapeInsert,
+  scrapeMergeData,
+} from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import * as acorn from 'acorn'
 import axios_base from 'axios'
@@ -97,20 +101,21 @@ export class Tripadvisor extends WorkerJob {
       restaurant_name,
       overview.contact.address
     )
-    const scrape = new Scrape({
-      source: 'tripadvisor',
-      restaurant_id: canonical.id,
-      id_from_source: overview.detailId.toString(),
-      location: {
-        type: 'Point',
-        coordinates: [lon, lat],
+    const [scrape] = await scrapeInsert([
+      {
+        source: 'tripadvisor',
+        restaurant_id: canonical.id,
+        id_from_source: overview.detailId.toString(),
+        location: {
+          type: 'Point',
+          coordinates: [lon, lat],
+        },
+        data: {
+          overview: overview,
+          menu: menu,
+        },
       },
-      data: {
-        overview: overview,
-        menu: menu,
-      },
-    })
-    await scrape.insert()
+    ])
     return scrape.id
   }
 

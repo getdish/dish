@@ -1,7 +1,10 @@
 import '@dish/common'
 
-import { restaurantSaveCanonical } from '@dish/graph'
-import { Scrape } from '@dish/models'
+import {
+  restaurantSaveCanonical,
+  scrapeInsert,
+  scrapeMergeData,
+} from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import axios_base, { AxiosResponse } from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
@@ -162,19 +165,20 @@ export class UberEats extends WorkerJob {
   }
 
   private async saveScrape(uuid: string, data: any, canonical_id: string) {
-    const scrape = new Scrape({
-      source: 'ubereats',
-      id_from_source: uuid,
-      data: {
-        main: data,
+    const [scrape] = await scrapeInsert([
+      {
+        source: 'ubereats',
+        id_from_source: uuid,
+        data: {
+          main: data,
+        },
+        location: {
+          type: 'Point',
+          coordinates: [data.location.longitude, data.location.latitude],
+        },
+        restaurant_id: canonical_id,
       },
-      location: {
-        type: 'Point',
-        coordinates: [data.location.longitude, data.location.latitude],
-      },
-      restaurant_id: canonical_id,
-    })
-    await scrape.insert()
+    ])
     return scrape
   }
 
@@ -185,7 +189,7 @@ export class UberEats extends WorkerJob {
         dishes.push(data.sectionEntitiesMap[sid][did])
       }
     }
-    await Scrape.mergeData(scrape_id, { dishes: dishes })
+    await scrapeMergeData(scrape_id, { dishes: dishes })
   }
 
   private encodeLocation(lat: number, lon: number) {
