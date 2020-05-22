@@ -6,7 +6,7 @@ export async function resolveFields<A>(
 ): Promise<A[]> {
   return await resolved(() => {
     const result = cb()
-    if (result.length == 0) return
+    if (result.length == 0) return []
     touchToResolveInGQLess<A>(result[0], fields)
     return result
   })
