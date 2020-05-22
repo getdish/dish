@@ -13,7 +13,7 @@
     "typeRoots": ["./node_modules/mapkit-typescript", "./node_modules/@types"]
   },
   "include": ["web/**/*"],
-  "exclude": ["**/*.test.ts", "**/*.test.tsx"],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "web/server.tsx"],
   "references": [
     { "path": "../../packages/ui" },
     { "path": "../../packages/async" },

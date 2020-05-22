@@ -20,7 +20,7 @@ export async function findOne<T extends ModelType>(
   const where = Object.keys(hash).map((key) => {
     return { [key]: { _eq: hash[key] } }
   })
-  return await resolveFields(allFieldsForTable(table), () => {
+  return await resolveFields<T>(allFieldsForTable(table), () => {
     return query[table]({
       where: {
         _and: where,
@@ -33,14 +33,17 @@ async function resolveMutationWithIds<A extends keyof typeof mutation>(
   name: A,
   arg: typeof mutation[A]
 ) {
-  return await resolved(() => {
+  const next = await resolved(() => {
     const mutationFn = mutation[name] as any
     if (typeof mutationFn === 'function') {
       const { affected_rows, returning } = mutationFn(arg)
-      console.log('affected_rows', affected_rows, returning)
       return returning.map((x) => x.id)
     }
   })
+  if (process.env.DEBUG) {
+    console.log('resolving mutation ids:', next)
+  }
+  return next
 }
 
 export async function insert<T extends ModelType>(
@@ -78,7 +81,6 @@ export async function update<T extends IDRequired<ModelType>>(
     where: { id: { _eq: object.id } },
     _set: object,
   })
-  console.log('update got ids', ids)
   return { ...object, id: ids[0] }
 }
 

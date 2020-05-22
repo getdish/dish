@@ -7,8 +7,8 @@ import {
   upsertConstraints,
 } from './queryHelpers'
 
-export async function dishInsert(dishs: Dish[]) {
-  return await insert<Dish>('dish', dishs)
+export async function dishInsert(dish: Dish[]) {
+  return await insert<Dish>('dish', dish)
 }
 
 export async function dishUpsert(objects: Dish[]) {
