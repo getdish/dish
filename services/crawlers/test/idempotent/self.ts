@@ -1,17 +1,14 @@
-import { notEqual } from 'assert'
-
-import {
-  restaurantFindOne,
-  restaurantUpsertOrphanTags,
-  tagInsert,
-} from '@dish/graph'
 import {
   Restaurant,
   Scrape,
   Tag,
-  UnifiedTag,
   flushTestData,
-} from '@dish/models'
+  restaurantFindOne,
+  restaurantInsert,
+  restaurantUpsertOrphanTags,
+  scrapeInsert,
+  tagInsert,
+} from '@dish/graph'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 
 import { Self } from '../../src/self/Self'
@@ -165,19 +162,17 @@ const tripadvisor: Partial<Scrape> = {
 }
 
 async function reset(t: ExecutionContext<Context>) {
-  let scrape: Scrape
   await flushTestData()
-  const restaurant = new Restaurant(restaurant_fixture)
-  await restaurant.insert()
-  const r2 = new Restaurant(restaurant_fixture_nearly_matches)
-  await r2.insert()
+  const [restaurant, r2] = await restaurantInsert([
+    restaurant_fixture,
+    restaurant_fixture_nearly_matches,
+  ])
   t.context.restaurant = restaurant
-  scrape = new Scrape({ restaurant_id: restaurant.id, ...yelp })
-  await scrape.insert()
-  scrape = new Scrape({ restaurant_id: restaurant.id, ...ubereats })
-  await scrape.insert()
-  scrape = new Scrape({ restaurant_id: restaurant.id, ...tripadvisor })
-  await scrape.insert()
+  await scrapeInsert([
+    { restaurant_id: restaurant.id, ...yelp },
+    { restaurant_id: restaurant.id, ...ubereats },
+    { restaurant_id: restaurant.id, ...tripadvisor },
+  ])
 }
 
 test.beforeEach(async (t) => {
@@ -195,8 +190,7 @@ test.beforeEach(async (t) => {
 test('Merging', async (t) => {
   const dish = new Self()
   await dish.mergeAll(t.context.restaurant.id)
-  const updated = new Restaurant()
-  await updated.findOne('id', t.context.restaurant.id)
+  const updated = await restaurantFindOne({ id: t.context.restaurant.id })
   t.is(updated.name, 'Test Name Yelp')
   t.is(updated.address, '123 Street, Big City')
   t.is(updated.tags.length, 3)
@@ -248,16 +242,18 @@ test('Tag rankings', async (t) => {
   const tag_name = 'Test Rankable'
   const dish = new Self()
   dish.restaurant = t.context.restaurant
-  const r1 = new Restaurant({
-    ...restaurant_fixture,
-    address: '1',
-    rating: 4,
-  })
-  const r2 = new Restaurant({
-    ...restaurant_fixture,
-    address: '2',
-    rating: 5,
-  })
+  const [r1, r2] = await restaurantInsert([
+    {
+      ...restaurant_fixture,
+      address: '1',
+      rating: 4,
+    },
+    {
+      ...restaurant_fixture,
+      address: '2',
+      rating: 5,
+    },
+  ])
   await restaurantUpsertOrphanTags(dish.restaurant, [tag_name])
   await r1.insert()
   await r1.upsertOrphanTags([tag_name])
@@ -272,20 +268,23 @@ test('Tag rankings', async (t) => {
 test('Finding dishes in reviews', async (t) => {
   const dish = new Self()
   const tag = { name: 'Test country' }
-  const tag_parent = new Tag(tag)
-  await tag_parent.insert()
-  const existing_tag1 = new Tag({
-    name: 'Test tag existing 1',
-    parentId: tag_parent.id,
-  })
-  const existing_tag2 = new Tag({
-    name: 'Test tag existing 2',
-    parentId: tag_parent.id,
-  })
-  const existing_tag3 = new Tag({
-    name: 'Test tag existing 3',
-    parentId: tag_parent.id,
-  })
+
+  const [tag_parent] = await tagInsert([tag])
+  const [existing_tag1, existing_tag2, existing_tag3] = await tagInsert([
+    {
+      name: 'Test tag existing 1',
+      parentId: tag_parent.id,
+    },
+    {
+      name: 'Test tag existing 2',
+      parentId: tag_parent.id,
+    },
+    {
+      name: 'Test tag existing 3',
+      parentId: tag_parent.id,
+    },
+  ])
+
   await restaurantUpsertOrphanTags(t.context.restaurant, [tag.name])
   await restaurantFindOne({ id: t.context.restaurant.id })
   dish.restaurant = t.context.restaurant
@@ -313,18 +312,20 @@ test('Dish sentiment analysis from reviews', async (t) => {
   const dish = new Self()
   const tag = { name: 'Test country' }
   const [tag_parent] = await tagInsert([tag])
-  const existing_tag1 = new Tag({
-    name: 'Test tag existing 1',
-    parentId: tag_parent.id,
-  })
-  const existing_tag2 = new Tag({
-    name: 'Test tag existing 2',
-    parentId: tag_parent.id,
-  })
-  const existing_tag3 = new Tag({
-    name: 'Test tag existing 3',
-    parentId: tag_parent.id,
-  })
+  const [existing_tag1, existing_tag2, existing_tag3] = await tagInsert([
+    {
+      name: 'Test tag existing 1',
+      parentId: tag_parent.id,
+    },
+    {
+      name: 'Test tag existing 2',
+      parentId: tag_parent.id,
+    },
+    {
+      name: 'Test tag existing 3',
+      parentId: tag_parent.id,
+    },
+  ])
   await restaurantUpsertOrphanTags(t.context.restaurant, [tag.name])
   t.context.restaurant = await restaurantFindOne({
     id: t.context.restaurant.id,
@@ -337,11 +338,11 @@ test('Dish sentiment analysis from reviews', async (t) => {
   await dish.scanReviews()
   const updated = await restaurantFindOne({ id: t.context.restaurant.id })
   const tag1 =
-    updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as UnifiedTag)
+    updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)
   const tag2 =
-    updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as UnifiedTag)
+    updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as Tag)
   const tag3 =
-    updated.tags.find((i) => i.tag.id == existing_tag3.id) || ({} as UnifiedTag)
+    updated.tags.find((i) => i.tag.id == existing_tag3.id) || ({} as Tag)
   t.is(tag1.rating, -3)
   t.is(tag2.rating, 4)
   t.is(tag3.rating, 0)
@@ -350,18 +351,17 @@ test('Dish sentiment analysis from reviews', async (t) => {
 test('Find photos of dishes', async (t) => {
   const dish = new Self()
   const tag = { name: 'Test country' }
-  const tag_parent = new Tag(tag)
-  await tag_parent.insert()
-  const existing_tag1 = new Tag({
-    name: 'Test tag existing 1',
-    parentId: tag_parent.id,
-  })
-  const existing_tag2 = new Tag({
-    name: 'Test tag existing 2',
-    parentId: tag_parent.id,
-  })
-  await existing_tag1.insert()
-  await existing_tag2.insert()
+  const [tag_parent] = await tagInsert([tag])
+  const [existing_tag1, existing_tag2] = await tagInsert([
+    {
+      name: 'Test tag existing 1',
+      parentId: tag_parent.id,
+    },
+    {
+      name: 'Test tag existing 2',
+      parentId: tag_parent.id,
+    },
+  ])
   await restaurantUpsertOrphanTags(t.context.restaurant, [tag.name])
   t.context.restaurant = await restaurantFindOne({
     id: t.context.restaurant.id,
@@ -372,9 +372,9 @@ test('Find photos of dishes', async (t) => {
   await dish.restaurant.update()
   const updated = await restaurantFindOne({ id: t.context.restaurant.id })
   const tag1 =
-    updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as UnifiedTag)
+    updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)
   const tag2 =
-    updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as UnifiedTag)
+    updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as Tag)
   t.is(updated.tags.length, 3)
   t.is(tag1.tag.name, existing_tag1.name)
   t.deepEqual(tag1.photos, ['https://yelp.com/image.jpg'])
@@ -399,11 +399,11 @@ test('Identifying country tags', async (t) => {
   const updated = await restaurantFindOne({ id: t.context.restaurant.id })
   t.is(updated.tags.length, 3)
   const tag1 =
-    updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as UnifiedTag)
+    updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)
   const tag2 =
-    updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as UnifiedTag)
+    updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as Tag)
   const tag3 =
-    updated.tags.find((i) => i.tag.name == 'Test Pizza') || ({} as UnifiedTag)
+    updated.tags.find((i) => i.tag.name == 'Test Pizza') || ({} as Tag)
   t.is(tag1.tag.name, 'Test Mexican')
   t.is(tag2.tag.name, 'Test Spanish')
   t.is(tag2.tag.type, 'country')

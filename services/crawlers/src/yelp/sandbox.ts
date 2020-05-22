@@ -1,5 +1,4 @@
-import { Restaurant } from '@dish/models'
-
+import { restaurantFindOne } from '../../../../packages/graph/src'
 import { Yelp } from './Yelp'
 
 async function main() {
@@ -12,14 +11,14 @@ async function one() {
   const name = 'La Boulangerie de San Francisco'
   const coords = [37.797519, -122.4314282]
   const t = new Yelp()
-  const restaurant = new Restaurant()
   await t.runOnWorker('getRestaurants', [
     [coords[0] - range, coords[1] - range],
     [coords[0] + range, coords[1] + range],
     0,
     name,
   ])
-  await restaurant.findOne('name', name)
+  const restaurant = await restaurantFindOne({ name })
+  console.log('restaurant', restaurant)
 }
 
 one()

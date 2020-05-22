@@ -1,6 +1,11 @@
 import fs from 'fs'
 
-import { Tag } from '@dish/models'
+import {
+  Tag,
+  findOneByHash,
+  tagUpsert,
+  tagUpsertCategorizations,
+} from '@dish/graph'
 import parse from 'csv-parse/lib/sync'
 import _ from 'lodash'
 import { transliterate } from 'transliteration'
@@ -54,19 +59,21 @@ export class ParseFiverr {
         .replace('#', '')
         .split(',')
         .map((i) => i.trim())
-      let continent_tag = new Tag()
-      await continent_tag.findOneByHash({
+      let continent_tag = await findOneByHash('tag', {
         name: geo_parts[0],
         type: 'continent',
       })
       if (!geo_parts[1]) {
         console.error(line)
       }
-      this.country = await Tag.upsertOne({
-        name: geo_parts[1],
-        type: 'country',
-        parentId: continent_tag.id,
-      })
+      const [tag] = await tagUpsert([
+        {
+          name: geo_parts[1],
+          type: 'country',
+          parentId: continent_tag.id,
+        },
+      ])
+      this.country = tag
     }
   }
 
@@ -75,13 +82,16 @@ export class ParseFiverr {
     if (double_hash_regex.test(line)) {
       const category = this._cleanCategory(line)
       original = this._cleanCategory(original)
-      let tag = new Tag({
-        name: category,
-        type: 'category',
-        parentId: this.country.id,
-      })
+      let [tag] = await tagUpsert([
+        {
+          name: category,
+          type: 'category',
+          parentId: this.country.id,
+        },
+      ])
       tag.addAlternate(original)
-      this.category = await Tag.upsertOne(tag)
+      ;[tag] = await tagUpsert([tag])
+      this.category = tag
     }
   }
 
@@ -96,16 +106,19 @@ export class ParseFiverr {
     if (line.startsWith('#')) return
     if (line == '') return
     line = line.replace(/ *\([^)]*\) */g, '').replace(/,$/, '')
-    console.log(line)
-    let tag = new Tag({
-      name: line,
-      type: 'dish',
-      parentId: this.country.id,
-    })
+
+    let [tag] = await tagUpsert([
+      {
+        name: line,
+        type: 'dish',
+        parentId: this.country.id,
+      },
+    ])
     tag.addAlternate(original)
-    tag = await Tag.upsertOne(tag)
+    ;[tag] = await tagUpsert([tag])
+
     if (this.category) {
-      await tag.upsertCategorizations([this.category.id])
+      await tagUpsertCategorizations(tag, [this.category.id])
     }
   }
 }

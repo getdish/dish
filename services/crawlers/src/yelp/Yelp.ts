@@ -1,8 +1,12 @@
 import url from 'url'
 
 import { sentryMessage } from '@dish/common'
-import { restaurantSaveCanonical, scrapeMergeData } from '@dish/graph'
-import { Scrape, ScrapeData } from '@dish/models'
+import {
+  ScrapeData,
+  restaurantSaveCanonical,
+  scrapeInsert,
+  scrapeMergeData,
+} from '@dish/graph'
 import { ProxiedRequests, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
@@ -138,14 +142,15 @@ export class Yelp extends WorkerJob {
   }
 
   async saveDataFromMapSearch(data: ScrapeData) {
-    let scrape = new Scrape({
-      source: 'yelp',
-      id_from_source: data.bizId,
-      data: {
-        data_from_map_search: data.searchResultBusiness,
+    const [scrape] = await scrapeInsert([
+      {
+        source: 'yelp',
+        id_from_source: data.bizId,
+        data: {
+          data_from_map_search: data.searchResultBusiness,
+        },
       },
-    })
-    await scrape.insert()
+    ])
     return scrape.id
   }
 

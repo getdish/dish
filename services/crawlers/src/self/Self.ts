@@ -2,6 +2,7 @@ import '@dish/common'
 
 import {
   Dish,
+  RESTAURANT_WEIGHTS,
   Restaurant,
   RestaurantTag,
   RestaurantTagWithID,
@@ -10,6 +11,7 @@ import {
   Tag,
   fetchBatch,
   findOneByHash,
+  restaurantFindOne,
   restaurantUpsertOrphanTags,
   tagFindCountries,
   tagSlug,
@@ -91,8 +93,7 @@ export class Self extends WorkerJob {
 
   async mergeAll(id: string) {
     this._start_time = process.hrtime()
-    let restaurant = new Restaurant()
-    await restaurant.findOne('id', id)
+    const restaurant = await restaurantFindOne({ id: id })
     this.restaurant = restaurant
     console.log('Merging: ' + this.restaurant.name)
     await this.getScrapeData()
@@ -223,7 +224,7 @@ export class Self extends WorkerJob {
     }
     this.restaurant.rating = this.weightRatings(
       this.ratings,
-      Restaurant.WEIGHTS
+      RESTAURANT_WEIGHTS
     )
   }
 

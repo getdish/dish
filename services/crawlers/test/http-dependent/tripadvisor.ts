@@ -1,4 +1,4 @@
-import { Scrape } from '@dish/models'
+import { deleteAllBy, scrapeFindOne } from '@dish/graph'
 import test from 'ava'
 
 import { Tripadvisor } from '../../src/tripadvisor/Tripadvisor'
@@ -6,7 +6,7 @@ import { Tripadvisor } from '../../src/tripadvisor/Tripadvisor'
 const ID = '1516973'
 
 test.beforeEach(async () => {
-  await Scrape.deleteAllBy('id_from_source', ID)
+  await deleteAllBy('scrape', 'id_from_source', ID)
 })
 
 test('Gets and persists a restaurant', async (t) => {
@@ -15,8 +15,7 @@ test('Gets and persists a restaurant', async (t) => {
   ta.SEARCH_RADIUS_MULTIPLIER = 1
   ta._TESTS__LIMIT_GEO_SEARCH = true
   await ta.getRestaurants(37.759125, -122.41235)
-  const scrape = new Scrape()
-  await scrape.findOne('id_from_source', ID)
+  const scrape = await scrapeFindOne({ id_from_source: ID })
 
   t.is(scrape.data.overview.name, 'Flour + Water, California')
   t.deepEqual(scrape.location.coordinates, [-122.41235, 37.759125])
