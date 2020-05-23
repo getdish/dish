@@ -7,7 +7,7 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src/**/*", "src/ubereats/categories.json"],
+  "include": ["src/**/*", "src/ubereats/categories.json", "test/**/*"],
   "references": [
     { "path": "../../packages/common" },
     { "path": "../../packages/graph" },

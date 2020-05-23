@@ -2,6 +2,7 @@ import { ArgsFn } from 'gqless'
 
 import {
   dish,
+  mutation_root,
   restaurant,
   restaurant_tag,
   review,
@@ -37,14 +38,14 @@ export type Scrape = ResolvedModel<ScrapeFull>
 
 // SECTION 3
 // this just adds a requirement on the id being present, for things like update()
-export type RestaurantWithId = IDRequired<Restaurant>
-export type TagWithId = IDRequired<Tag>
-export type RestaurantTagWithId = IDRequired<RestaurantTag>
-export type TagTagWithId = IDRequired<TagTag>
-export type UserWithId = IDRequired<User>
-export type ReviewWithId = IDRequired<Review>
-export type DishWithId = IDRequired<Dish>
-export type ScrapeWithId = IDRequired<Scrape>
+export type RestaurantWithId = WithID<Restaurant>
+export type TagWithId = WithID<Tag>
+export type RestaurantTagWithId = WithID<RestaurantTag>
+export type TagTagWithId = WithID<TagTag>
+export type UserWithId = WithID<User>
+export type ReviewWithId = WithID<Review>
+export type DishWithId = WithID<Dish>
+export type ScrapeWithId = WithID<Scrape>
 
 // SECTION 4
 // a nice union so we can limit what we accept in our various helpers
@@ -63,22 +64,20 @@ export type ModelType =
 // nice names
 export type ModelName = GetModelTypeName<ModelType>
 
+// mutation
+interface MutationFull extends mutation_root {}
+export type Mutation = Omit<MutationFull, '__typename'>
+
 // helpers for this file
 
-export type IDRequired<A extends ModelType> = A & { id: string }
+export type WithID<A extends ModelType> = A & { id: string }
 
 type GetModelTypeName<U> = U extends ModelType ? U['__typename'] : never
 
 export type RestaurantTagWithID = Partial<RestaurantTag> &
   Pick<RestaurantTag, 'tag_id'>
 
-type ResolvedArgs<A> = A extends Function
-  ? any
-  : A extends Object
-  ? {
-      [K in keyof A]: ResolvedArgs<A[K]>
-    }
-  : A
-type ResolvedModel<O> = {
+export type ResolvedArgs<A> = A extends Function ? Exclude<any, Function> : A
+export type ResolvedModel<O> = {
   [K in keyof O]?: ResolvedArgs<O[K]>
 }

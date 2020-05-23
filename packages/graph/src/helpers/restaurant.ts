@@ -10,10 +10,9 @@ import {
   Scrape,
   Tag,
 } from '../types'
-import { allFieldsForTable } from './allFieldsForTable'
 import { levenshteinDistance } from './levenshteinDistance'
 import { findOne, insert, update, upsert } from './queryHelpers'
-import { resolveFields } from './resolveFields'
+import { resolvedWithFields } from './queryResolvers'
 
 export async function restaurantInsert(restaurants: Restaurant[]) {
   return await insert<Restaurant>('restaurant', restaurants)
@@ -22,15 +21,19 @@ export async function restaurantInsert(restaurants: Restaurant[]) {
 export async function restaurantUpsert(
   objects: Restaurant[],
   constraint = restaurant_constraint.restaurant_name_address_key
-) {
+): Promise<RestaurantWithId[]> {
   return await upsert<Restaurant>('restaurant', constraint, objects)
 }
 
-export async function restaurantUpdate(restaurant: RestaurantWithId) {
+export async function restaurantUpdate(
+  restaurant: RestaurantWithId
+): Promise<Restaurant> {
   return await update<RestaurantWithId>('restaurant', restaurant)
 }
 
-export async function restaurantFindOne(restaurant: Partial<Restaurant>) {
+export async function restaurantFindOne(
+  restaurant: Partial<Restaurant>
+): Promise<RestaurantWithId | null> {
   return await findOne<RestaurantWithId>('restaurant', restaurant)
 }
 
@@ -39,8 +42,8 @@ export async function restaurantFindBatch(
   previous_id: string,
   extra_where: {} = {}
 ): Promise<Restaurant[]> {
-  return await resolveFields(allFieldsForTable('restaurant'), () => {
-    return query.restaurant({
+  return await resolvedWithFields(() =>
+    query.restaurant({
       where: {
         id: { _gt: previous_id },
         ...extra_where,
@@ -48,7 +51,7 @@ export async function restaurantFindBatch(
       order_by: [{ id: order_by.asc }],
       limit: size,
     })
-  })
+  )
 }
 
 export async function restaurantFindNear(
@@ -56,8 +59,8 @@ export async function restaurantFindNear(
   lng: number,
   distance: number
 ): Promise<Restaurant[]> {
-  return await resolveFields(allFieldsForTable('restaurant'), () => {
-    return query.restaurant({
+  return resolvedWithFields(() =>
+    query.restaurant({
       where: {
         location: {
           _st_d_within: {
@@ -70,14 +73,14 @@ export async function restaurantFindNear(
         },
       },
     })
-  })
+  )
 }
 
 export async function restaurantLatestScrape(
   restaurant: Restaurant,
   source: string
 ): Promise<Scrape> {
-  const [first] = await resolveFields(allFieldsForTable('scrape'), () => {
+  const [first] = await resolvedWithFields(() => {
     return query.scrape({
       where: {
         restaurant_id: {
@@ -103,7 +106,7 @@ export async function restaurantSaveCanonical(
   lat: number,
   name: string,
   street_address: string
-) {
+): Promise<Restaurant> {
   const found = await findExistingCanonical(lon, lat, name)
   if (found) return found
   const [restaurant] = await restaurantInsert([
@@ -123,7 +126,11 @@ export async function restaurantSaveCanonical(
   return restaurant
 }
 
-async function findExistingCanonical(lon: number, lat: number, name: string) {
+async function findExistingCanonical(
+  lon: number,
+  lat: number,
+  name: string
+): Promise<Restaurant | null> {
   const nears = await restaurantFindNear(lat, lon, 0.0005)
   let found: Restaurant | undefined = undefined
   let shortlist = [] as Restaurant[]
@@ -150,14 +157,16 @@ async function findExistingCanonical(lon: number, lat: number, name: string) {
   return found
 }
 
-export async function restaurantRefresh(restaurant: Restaurant) {
-  return await restaurantFindOne({ id: restaurant.id })
+export async function restaurantRefresh<A extends Restaurant>(
+  restaurant: A
+): Promise<A | null> {
+  return (await restaurantFindOne({ id: restaurant.id })) as A
 }
 
-export async function restaurantUpsertRestaurantTags(
+export async function restaurantUpsertManyTags(
   restaurant: RestaurantWithId,
   restaurant_tags: RestaurantTag[]
-) {
+): Promise<RestaurantWithId> {
   const populated = restaurant_tags.map((rt) => {
     const existing = getRestaurantTagFromTag(restaurant, rt.tag_id)
     return { ...existing, ...rt }
@@ -189,10 +198,7 @@ export async function restaurantUpsertOrphanTags(
 async function updateTagNames(restaurant: RestaurantWithId) {
   restaurant = await restaurantRefresh(restaurant)
   const tag_names = restaurant.tags.map((i) => i.tag.slugs().flat())
-  restaurant.tag_names = _.uniq([
-    ...(restaurant.tag_names() || []),
-    ...tag_names,
-  ])
+  restaurant.tag_names = _.uniq([...(restaurant.tag_names || []), ...tag_names])
   return await restaurantUpdate(restaurant)
 }
 
@@ -214,8 +220,8 @@ export async function restaurantGetLatestScrape(
   restaurant: RestaurantWithId,
   source: string
 ): Promise<Scrape> {
-  const [first] = await resolveFields(allFieldsForTable('scrape'), () => {
-    return query.scrape({
+  const [first] = await resolvedWithFields(() =>
+    query.scrape({
       where: {
         restaurant_id: {
           _eq: restaurant.id,
@@ -231,7 +237,7 @@ export async function restaurantGetLatestScrape(
       ],
       limit: 1,
     })
-  })
+  )
   return first
 }
 

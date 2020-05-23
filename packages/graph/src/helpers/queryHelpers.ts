@@ -2,81 +2,77 @@ import { resolved } from 'gqless'
 
 import { query } from '../graphql'
 import { mutation } from '../graphql/mutation'
-import { IDRequired, ModelName, ModelType } from '../types'
+import { ModelName, ModelType, WithID } from '../types'
 import { allFieldsForTable } from './allFieldsForTable'
-import { resolveFields, touchToResolveInGQLess } from './resolveFields'
+import {
+  resolveFields,
+  resolvedMutation,
+  resolvedMutationWithFields,
+} from './queryResolvers'
 
 export async function findOne<T extends ModelType>(
   table: ModelName,
-  hash: Partial<T>
+  hash: Partial<T>,
+  selectFields: string[] = null
 ): Promise<T | null> {
   const where = Object.keys(hash).map((key) => {
     return { [key]: { _eq: hash[key] } }
   })
-  const all_fields = allFieldsForTable(table)
-  const [first] = await resolveFields<T>(all_fields, () => {
-    return (query[table]({
+  const allFields = selectFields ?? allFieldsForTable(table)
+  const [first] = await resolved(() => {
+    const res: any = query[table]({
       where: {
         _and: where,
       },
-    }) as any) as T[]
+    })
+    return resolveFields(res, allFields) as T[]
   })
   return first ?? null
-}
-
-async function resolveMutationWithIds<A extends keyof typeof mutation>(
-  name: A,
-  arg: typeof mutation[A]
-): Promise<string[]> {
-  const next = await resolved(() => {
-    const mutationFn = mutation[name] as any
-    if (typeof mutationFn === 'function') {
-      const { affected_rows, returning } = mutationFn(arg)
-      return returning.map((x) => x.id)
-    }
-  })
-  if (process.env.DEBUG) {
-    console.log('resolving mutation ids:', next)
-  }
-  return next
 }
 
 export async function insert<T extends ModelType>(
   table: ModelName,
   objects: T[]
-): Promise<T[]> {
-  const ids = await resolveMutationWithIds(`insert_${table}` as any, {
-    objects,
-  })
-  return objects.map((o, i) => ({ ...(o as any), id: ids[i] }))
+): Promise<WithID<T>[]> {
+  const action = `insert_${table}` as any
+  return await resolvedMutationWithFields(() =>
+    mutation[action]({
+      objects,
+    })
+  )
 }
 
 export async function upsert<T extends ModelType>(
   table: ModelName,
   constraint: string,
   objects: T[]
-): Promise<IDRequired<T>[]> {
+): Promise<WithID<T>[]> {
   // TODO: Is there a better way to get the updateable columns?
   const update_columns = Object.keys(objects[0])
-  const ids = await resolveMutationWithIds(`insert_${table}` as any, {
-    objects,
-    on_conflict: {
-      constraint,
-      update_columns,
-    },
-  })
-  return objects.map((o, i) => ({ ...(o as any), id: ids[i] }))
+  const action = `insert_${table}` as any
+  return await resolvedMutationWithFields(() =>
+    mutation[action]({
+      objects,
+      on_conflict: {
+        constraint,
+        update_columns,
+      },
+    })
+  )
 }
 
-export async function update<T extends IDRequired<ModelType>>(
+export async function update<T extends WithID<ModelType>>(
   table: ModelName,
   object: T
-): Promise<T> {
-  const ids = await resolveMutationWithIds(`update_${table}` as any, {
-    where: { id: { _eq: object.id } },
-    _set: object,
-  })
-  return { ...object, id: ids[0] }
+): Promise<WithID<T>> {
+  const action = `update_${table}` as any
+  const [resolved] = await resolvedMutationWithFields(() =>
+    mutation[action]({
+      where: { id: { _eq: object.id } },
+      _set: object,
+    })
+  )
+  return resolved
 }
 
 export async function deleteAllFuzzyBy(
@@ -84,7 +80,7 @@ export async function deleteAllFuzzyBy(
   key: string,
   value: string
 ): Promise<number> {
-  return await resolved(() => {
+  return await resolvedMutation(() => {
     return mutation[`delete_${table}`]?.({
       where: { [key]: { _ilike: `%${value}%` } },
     }).affected_rows
@@ -96,7 +92,7 @@ export async function deleteAllBy(
   key: string,
   value: string
 ): Promise<number> {
-  return await resolved(() => {
+  return await resolvedMutation(() => {
     return mutation[`delete_${table}`]?.({
       where: { [key]: { _eq: value } },
       // @ts-ignore
@@ -111,8 +107,8 @@ export async function fetchBatch<T extends ModelType>(
   extraFields: string[] = [],
   extra_where: {} = {}
 ): Promise<T[]> {
-  return await resolveFields(['id', ...extraFields], () => {
-    return (query[table]?.({
+  const res: any = await resolved(() => {
+    const result = query[table]?.({
       limit: size,
       // @ts-ignore
       order_by: { id: 'asc' },
@@ -120,36 +116,8 @@ export async function fetchBatch<T extends ModelType>(
         id: { _gt: previous_id },
         ...extra_where,
       },
-    }) as any) as T[]
+    })
+    return resolveFields(result, ['id', ...extraFields])
   })
-}
-
-export async function findOneByHash<T extends ModelType>(
-  table: ModelName,
-  hash: { [key: string]: string },
-  extra_returning: string[] = []
-): Promise<T> {
-  const where = Object.keys(hash).map((key) => {
-    return { [key]: { _eq: hash[key] } }
-  })
-
-  const response = await resolveFields(
-    [...allFieldsForTable(table), ...extra_returning],
-    () => {
-      return (query[table]?.({
-        where: {
-          _and: where,
-        },
-      }) as any) as T[]
-    }
-  )
-
-  if (response.length === 1) {
-    return response[0]
-  } else {
-    const message =
-      `${response.length} ${table}s found by findOne(). ` +
-      `Using: ${JSON.stringify(hash)}`
-    throw new Error(message)
-  }
+  return res
 }

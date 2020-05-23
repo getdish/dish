@@ -1,12 +1,7 @@
 import '@dish/common'
 
 import { sentryException } from '@dish/common'
-import {
-  Scrape,
-  ScrapeData,
-  insert,
-  restaurantSaveCanonical,
-} from '@dish/graph'
+import { ScrapeData, restaurantSaveCanonical, scrapeInsert } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
@@ -96,7 +91,7 @@ export class Michelin extends WorkerJob {
       data.name,
       data._highlightResult.street.value
     )
-    const [scrape] = await insert<Scrape>('scrape', [
+    const [scrape] = await scrapeInsert([
       {
         source: 'michelin',
         restaurant_id: canonical.id,
@@ -105,6 +100,7 @@ export class Michelin extends WorkerJob {
           type: 'Point',
           coordinates: [lon, lat],
         },
+        // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
         data: {
           main: data,
         },

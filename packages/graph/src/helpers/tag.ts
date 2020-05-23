@@ -2,7 +2,7 @@ import { query, tag_constraint } from '../graphql'
 import { Tag, TagWithId } from '../types'
 import { allFieldsForTable } from './allFieldsForTable'
 import { findOne, insert, update, upsert } from './queryHelpers'
-import { resolveFields } from './resolveFields'
+import { resolveFields, resolvedWithFields } from './queryResolvers'
 import { slugify } from './slugify'
 import { tagTagUpsert } from './tag_tag'
 
@@ -30,7 +30,7 @@ export async function tagFindOne(tag: Partial<Tag>) {
 export async function tagGetAllChildren(
   parents: Pick<Tag, 'id'>[]
 ): Promise<Tag[]> {
-  return await resolveFields(allFieldsForTable('tag'), () => {
+  return await resolvedWithFields(() => {
     return query.tag({
       where: {
         parentId: {
@@ -42,7 +42,7 @@ export async function tagGetAllChildren(
 }
 
 export async function tagFindCountries(countries: string[]): Promise<Tag[]> {
-  return await resolveFields(allFieldsForTable('tag'), () => {
+  return await resolvedWithFields(() => {
     return query.tag({
       where: {
         _or: [

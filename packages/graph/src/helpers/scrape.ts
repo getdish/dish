@@ -2,7 +2,9 @@ import { resolved } from 'gqless'
 
 import { mutation } from '../graphql/mutation'
 import { Scrape, ScrapeWithId } from '../types'
+import { allFieldsForTable } from './allFieldsForTable'
 import { findOne, insert, update, upsert } from './queryHelpers'
+import { resolveFields, resolvedMutationWithFields } from './queryResolvers'
 
 export type ScrapeData = { [key: string]: any }
 
@@ -33,21 +35,16 @@ export async function scrapeMergeData(
   return scrape
 }
 
-export async function scrapeAppendJsonB(scrape: Scrape, data: {}) {
-  const [response] = (await resolved(() => {
-    const _response = mutation.update_scrape({
+export async function scrapeAppendJsonB(
+  scrape: Scrape,
+  data: {}
+): Promise<Scrape[]> {
+  return await resolvedMutationWithFields(() => {
+    return mutation.update_scrape({
       where: { id: { _eq: scrape.id } },
       _append: { data: data },
     })
-    // TODO: why does this prevent the mutation from being called??
-    // It is better to get the database to tell us exactly what the new record
-    // is rather than appending the new data ourselves and hoping for the best.
-    //if (_response.returning.length > 0) {
-    //_response.returning[0].data
-    //}
-    return _response.returning
-  })) as Scrape[]
-  return response
+  })
 }
 
 export function scrapeGetData(

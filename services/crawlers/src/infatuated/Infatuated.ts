@@ -5,6 +5,7 @@ import {
   ScrapeData,
   insert,
   restaurantSaveCanonical,
+  scrapeInsert,
 } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
@@ -90,7 +91,7 @@ export class Infatuated extends WorkerJob {
       data.name,
       data.street
     )
-    const [scrape] = await insert<Scrape>('scrape', [
+    const [scrape] = await scrapeInsert([
       {
         source: 'infatuation',
         restaurant_id: canonical.id,
@@ -99,6 +100,7 @@ export class Infatuated extends WorkerJob {
           type: 'Point',
           coordinates: [lon, lat],
         },
+        // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
         data: {
           data_from_map_search: data,
         },

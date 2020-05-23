@@ -110,6 +110,7 @@ export class Tripadvisor extends WorkerJob {
           type: 'Point',
           coordinates: [lon, lat],
         },
+        // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
         data: {
           overview: overview,
           menu: menu,

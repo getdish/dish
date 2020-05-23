@@ -1,4 +1,4 @@
-import { Scrape, deleteAllBy, findOne } from '@dish/graph'
+import { Scrape, deleteAllBy, findOne, scrapeFindOne } from '@dish/graph'
 import test from 'ava'
 
 import { Yelp } from '../../src/yelp/Yelp'
@@ -16,10 +16,9 @@ test('Gets and persists a restaurant', async (t) => {
     [37.758865, -122.412175],
     0
   )
-  const scrape = await findOne<Scrape>('scrape', {
+  const scrape = await scrapeFindOne({
     id_from_source: ID,
   })
-
   t.assert(scrape.data.data_from_map_search.name.includes('Flour + Water'))
   t.deepEqual(scrape.location.coordinates, [-122.412283, 37.758933])
   t.is(
