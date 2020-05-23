@@ -1,10 +1,7 @@
-import { resolved } from 'gqless'
-
 import { mutation } from '../graphql/mutation'
 import { Scrape, ScrapeWithId } from '../types'
-import { allFieldsForTable } from './allFieldsForTable'
-import { findOne, insert, update, upsert } from './queryHelpers'
-import { resolveFields, resolvedMutationWithFields } from './queryResolvers'
+import { findOne, insert, update } from './queryHelpers'
+import { resolvedMutationWithFields } from './queryResolvers'
 
 export type ScrapeData = { [key: string]: any }
 

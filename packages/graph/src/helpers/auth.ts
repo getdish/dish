@@ -107,7 +107,7 @@ class AuthModel {
       username: username,
       password: password,
     })
-    if (response.status !== 200) {
+    if (response.status !== 201) {
       console.error(
         `Error registering: ${response.status} ${response.statusText}`
       )

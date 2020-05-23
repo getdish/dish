@@ -1,8 +1,7 @@
 import { query, tag_constraint } from '../graphql'
 import { Tag, TagWithId } from '../types'
-import { allFieldsForTable } from './allFieldsForTable'
 import { findOne, insert, update, upsert } from './queryHelpers'
-import { resolveFields, resolvedWithFields } from './queryResolvers'
+import { resolvedWithFields } from './queryResolvers'
 import { slugify } from './slugify'
 import { tagTagUpsert } from './tag_tag'
 

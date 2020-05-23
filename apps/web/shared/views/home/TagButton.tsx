@@ -1,15 +1,10 @@
-<<<<<<< HEAD
-import { Tag, TagType } from '@dish/graph'
-import { HStack, StackProps, VStack } from '@dish/ui'
-=======
 import { NonNullObject, Tag, TagType } from '@dish/graph'
->>>>>>> [web] fix last strict types and new graph types compilation issues
+import { HStack, StackProps, VStack } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo } from 'react'
 import { ChevronUp, X } from 'react-feather'
 import { Text, TextStyle } from 'react-native'
 
-import { NavigableTag } from '../../state/Tag'
 import { LinkButton } from '../ui/LinkButton'
 import { SuperScriptText } from './SuperScriptText'
 
