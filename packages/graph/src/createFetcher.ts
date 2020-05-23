@@ -61,8 +61,7 @@ class HasuraError extends Error {
     if (isBrowserProd) {
       this.name = 'Dish API Error'
     } else {
-      console.error(errors)
-      console.debug('For query: ', query)
+      console.error('fetch errors', errors, 'for query', query)
       this.name = 'HasuraError'
     }
   }

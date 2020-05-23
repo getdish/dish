@@ -16,8 +16,6 @@ import {
 } from '../src'
 import { restaurant_fixture } from './etc/fixtures'
 
-// startLogging()
-
 interface Context {
   restaurant: Restaurant
   existing_tag: Tag
@@ -32,7 +30,7 @@ test.beforeEach(async (t) => {
   t.context.restaurant = restaurant
   const [existing_tag] = await tagInsert([{ name: 'Test tag existing' }])
   t.context.existing_tag = existing_tag
-  await Auth.register('test', 'password')
+  await Auth.login('test', 'password')
   const user = await userFindOne({
     username: 'test',
   })
@@ -65,5 +63,6 @@ test('Add a review for restaurant by tag', async (t) => {
     },
   ])
   const results = await reviewFindAllForRestaurant(t.context.restaurant.id)
+  console.log('got', review, results)
   t.deepEqual(review.id, results[0].id)
 })

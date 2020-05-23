@@ -125,7 +125,9 @@ export async function restaurantSaveCanonical(
   street_address: string
 ): Promise<Restaurant> {
   const found = await findExistingCanonical(lon, lat, name)
-  if (found) return found
+  if (found) {
+    return found
+  }
   const [restaurant] = await restaurantInsert([
     {
       name,
@@ -136,7 +138,6 @@ export async function restaurantSaveCanonical(
       },
     },
   ])
-  // restaurant = await find()
   if (process.env.RUN_WITHOUT_WORKER != 'true') {
     console.log('Created new canonical restaurant: ' + restaurant.id)
   }
@@ -210,6 +211,7 @@ export async function restaurantUpsertOrphanTags(
   })
   await restaurantTagUpsert(restaurant.id, restaurant_tags)
   await updateTagNames(restaurant)
+  return await restaurantFindOne(restaurant)
 }
 
 async function updateTagNames(restaurant: RestaurantWithId) {

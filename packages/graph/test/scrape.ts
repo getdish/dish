@@ -2,7 +2,7 @@ import './_debug'
 
 import anyTest, { TestInterface } from 'ava'
 
-import { Scrape, deleteAllBy, insert, scrapeMergeData } from '../src'
+import { Scrape, deleteAllBy, scrapeInsert, scrapeMergeData } from '../src'
 
 interface Context {
   scrape: Scrape
@@ -18,7 +18,7 @@ const scrape_fixture: Scrape = {
 
 test.beforeEach(async (t) => {
   await deleteAllBy('scrape', 'id_from_source', 'abc123')
-  const [scrape] = await insert<Scrape>('scrape', [scrape_fixture])
+  const [scrape] = await scrapeInsert([scrape_fixture])
   t.context.scrape = scrape
 })
 
@@ -29,8 +29,7 @@ test('Inserting a scrape', async (t) => {
 })
 
 test('Merging data into an existing scrape', async (t) => {
-  // @ts-ignore
-  t.is(t.context.scrape.data.more, undefined)
+  t.is(t.context.scrape.data?.more, undefined)
   const updated = await scrapeMergeData(t.context.scrape.id, {
     more: 'better',
   })

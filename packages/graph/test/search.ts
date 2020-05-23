@@ -32,8 +32,8 @@ test('Searching for a restaurant by name', async (t) => {
 })
 
 test('Searching for a restaurant by tag', async (t) => {
-  const [restaurant] = await restaurantUpsert([restaurant_fixture])
-  await restaurantUpsertOrphanTags(restaurant, ['Test tag'])
+  let [restaurant] = await restaurantUpsert([restaurant_fixture])
+  restaurant = (await restaurantUpsertOrphanTags(restaurant, ['Test tag']))!
   const results = await search({
     center: {
       lat: 50.24,
@@ -46,5 +46,6 @@ test('Searching for a restaurant by tag', async (t) => {
     query: '',
     tags: ['test-tag'],
   })
+  console.log('waht is', restaurant, results)
   t.is(results?.[0].tags?.[0].tag.name, 'Test tag')
 })

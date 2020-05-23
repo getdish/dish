@@ -1,5 +1,5 @@
 import { query, tag_constraint } from '../graphql'
-import { Tag, TagWithId } from '../types'
+import { Tag, TagTag, TagWithId } from '../types'
 import { findOne, insert, update, upsert } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
 import { slugify } from './slugify'
@@ -57,14 +57,12 @@ export async function tagFindCountries(countries: string[]): Promise<Tag[]> {
 export async function tagUpsertCategorizations(
   tag: Tag,
   category_tag_ids: string[]
-): Promise<void> {
-  const objects = category_tag_ids.map((category_tag_id) => {
+) {
+  const objects: TagTag[] = category_tag_ids.map((category_tag_id) => {
     return {
       category_tag_id,
-      // @ts-ignore
       tag_id: tag.id,
     }
   })
-  console.warn('disabled bad type for now')
-  await tagTagUpsert(objects)
+  return await tagTagUpsert(objects)
 }
