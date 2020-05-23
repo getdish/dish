@@ -224,7 +224,7 @@ const startAutocomplete: AsyncAction = async (om) => {
       name: d.name,
       type: 'dish',
       icon: d.image,
-      tagId: getTagId({ type: 'dish', name: d.name }),
+      tagId: getTagId({ type: 'dish', name: d.name ?? '' }),
     }))
   const countries = om.state.home.topDishes.map((x) => ({
     id: x.country,
@@ -553,8 +553,8 @@ const loadHomeDishes: AsyncAction = async (om) => {
     // dish tags
     for (const dish of topDishes.dishes ?? []) {
       const tag: Tag = {
-        id: `${dish.name}`,
-        name: dish.name,
+        id: dish.name ?? '',
+        name: dish.name ?? '',
         type: 'dish',
       }
       om.state.home.allTags[getTagId(tag)] = tag

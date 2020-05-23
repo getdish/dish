@@ -113,10 +113,5 @@ index cc6eb3f..3d0c599 100644
 +  }
 +  return id
  };
-<<<<<<< HEAD
 
  /**
-=======
- 
- /**
->>>>>>> [gqless] more patching on nullables and type extraction to fix last bugs

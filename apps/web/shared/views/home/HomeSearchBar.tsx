@@ -542,7 +542,7 @@ const HomeSearchBarTags = memo(
                     fontSize={18}
                     name={tag.name}
                     type={tag.type}
-                    icon={tag.icon}
+                    icon={tag.icon ?? ''}
                     rgb={tag.rgb}
                     closable
                     onClose={() => {

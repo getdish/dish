@@ -17,7 +17,8 @@ const isProduction = process.env.NODE_ENV === 'production'
 const TARGET = process.env.TARGET || 'client'
 console.log('TARGET', TARGET)
 const appEntry = path.resolve(path.join(__dirname, 'web', 'index.web.tsx'))
-const graphRoot = path.join(require.resolve('@dish/graph'), '..', '..')
+const graphRoot = path.join(require.resolve('@dish/graph'), '..', '..', '..')
+console.log('graphRoot', graphRoot)
 
 module.exports = function getWebpackConfig(
   env = {

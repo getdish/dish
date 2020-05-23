@@ -1,7 +1,17 @@
+<<<<<<< HEAD
 import { Restaurant, Sources, graphql, query, useQuery } from '@dish/graph'
 import { Divider } from '@dish/ui'
 import { Spacer } from '@dish/ui'
 import { HStack, StackProps, VStack } from '@dish/ui'
+=======
+import {
+  Restaurant,
+  RestaurantQuery,
+  Sources,
+  graphql,
+  query,
+} from '@dish/graph'
+>>>>>>> [web] fix last strict types and new graph types compilation issues
 import React, { memo } from 'react'
 import { Linking, StyleSheet, Text } from 'react-native'
 
@@ -117,7 +127,7 @@ const styles = StyleSheet.create({
   },
 })
 
-function openingHours(restaurant: Restaurant) {
+function openingHours(restaurant: RestaurantQuery) {
   let text = 'Opens at'
   let color = 'grey'
   let next_time = 'unknown'
@@ -146,7 +156,7 @@ function openingHours(restaurant: Restaurant) {
   return [text, color, next_time]
 }
 
-function priceRange(restaurant: Restaurant) {
+function priceRange(restaurant: RestaurantQuery) {
   let label = 'Price'
   let color = 'grey'
   let price_range = 'unknown'

@@ -49,7 +49,7 @@ export default memo(function HomePageSearchResults({
     return <NotFoundPage />
   }
 
-  const isEditingUserList = isEditingUserPage(om.state)
+  const isEditingUserList = !!isEditingUserPage(om.state)
   const { title, subTitleElements, pageTitleElements } = getTitleForState(
     om.state,
     state
