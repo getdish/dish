@@ -1261,10 +1261,10 @@
   resolved "https://registry.npmjs.org/@o/fast-compare/-/fast-compare-2.7.6.tgz#1d0fedcb27b44e212aafd9e7f94499930499bfb9"
   integrity sha512-YACb8iZqClwjxUBQyjQuXT5L0T/iYOGdkD58q31P04iXyq27BZjdE0k3MiszQ7XezeAdO+WsdmTqaotBbjkbLw==
 
-"@o/gqless-schema@0.0.1-alpha.32":
-  version "0.0.1-alpha.32"
-  resolved "https://registry.npmjs.org/@o/gqless-schema/-/gqless-schema-0.0.1-alpha.32.tgz#6a7e3fe34cb2b5d42a33d2f40cc44513071f4729"
-  integrity sha512-QE6jRdjLmjISJ0KyKt0y8RJVQwUiYHNGpxGsVieRlaeQE5x/9AGR5QLCzOj9AFi9Uq9hKfEKn0BJ81IYjcoV5A==
+"@o/gqless-schema@0.0.1-alpha.33":
+  version "0.0.1-alpha.33"
+  resolved "https://registry.npmjs.org/@o/gqless-schema/-/gqless-schema-0.0.1-alpha.33.tgz#0b568ab6b3d6819652d0a9af28b7113da67e316c"
+  integrity sha512-mU3DcWltyGx3dVbChe8NI4ErOm40aDFDu9YhG3ocYZfk1+OAYcGoAXv0HU3G0qq8MA4U7urMhMjJPtpuyZOEuA==
   dependencies:
     "@gqless/utils" "^0.0.1-alpha.26"
     tslib "^1.11.1"

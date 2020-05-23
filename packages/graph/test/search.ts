@@ -46,5 +46,5 @@ test('Searching for a restaurant by tag', async (t) => {
     query: '',
     tags: ['test-tag'],
   })
-  t.is(results[0].tags[0].tag.name, 'Test tag')
+  t.is(results?.[0].tags?.[0].tag.name, 'Test tag')
 })
