@@ -57,7 +57,7 @@ test('Finding a restaurant by name', async (t) => {
   const restaurant = await restaurantFindOne({
     name: 'Test Restaurant',
   })
-  t.is(restaurant.name, 'Test Restaurant')
+  t.is(restaurant?.name ?? '', 'Test Restaurant')
 })
 
 test('Finding a restaurant by location', async (t) => {
@@ -75,7 +75,7 @@ test('Inserts a new canonical restaurant', async (t) => {
   const restaurant = await restaurantFindOne({
     id: canonical.id,
   })
-  t.is(restaurant.address, '123 The Street')
+  t.is(restaurant?.address, '123 The Street')
 })
 
 test('Identifies a canonical restaurant', async (t) => {
@@ -88,7 +88,7 @@ test('Identifies a canonical restaurant', async (t) => {
   const restaurant = await restaurantFindOne({
     id: canonical.id,
   })
-  t.deepEqual(restaurant.id, t.context.restaurant.id)
+  t.deepEqual(restaurant?.id, t.context.restaurant.id)
 })
 
 test('Identifies a similar restaurant', async (t) => {
@@ -101,7 +101,7 @@ test('Identifies a similar restaurant', async (t) => {
   const restaurant = await restaurantFindOne({
     id: canonical.id,
   })
-  t.deepEqual(restaurant.id, t.context.restaurant.id)
+  t.deepEqual(restaurant?.id, t.context.restaurant.id)
 })
 
 test.skip('Is open now', async (t) => {
@@ -116,5 +116,5 @@ test.skip('Is open now', async (t) => {
   const restaurant = await restaurantFindOne({
     name: `Test Restaurant`,
   })
-  t.is(restaurant.is_open_now, is_open)
+  t.is(restaurant?.is_open_now, is_open)
 })

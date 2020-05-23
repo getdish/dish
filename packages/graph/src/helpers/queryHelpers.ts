@@ -10,22 +10,25 @@ import {
   resolvedMutationWithFields,
 } from './queryResolvers'
 
+export function objectToWhere(hash: Object) {
+  const where = Object.keys(hash).map((key) => {
+    return { [key]: { _eq: hash[key] } }
+  })
+  return {
+    where: {
+      _and: where,
+    },
+  }
+}
+
 export async function findOne<T extends ModelType>(
   table: ModelName,
   hash: Partial<T>,
   selectFields: string[] | null = null
 ): Promise<T | null> {
-  const where = Object.keys(hash).map((key) => {
-    return { [key]: { _eq: hash[key] } }
-  })
-  const allFields = selectFields ?? allFieldsForTable(table)
+  const fields = selectFields ?? allFieldsForTable(table)
   const [first] = await resolved(() => {
-    const res: any = query[table]({
-      where: {
-        _and: where,
-      },
-    })
-    return resolveFields(res, allFields) as T[]
+    return resolveFields(query[table](objectToWhere(hash)), fields) as T[]
   })
   return first ?? null
 }

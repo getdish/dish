@@ -1,8 +1,7 @@
 import { query } from '../graphql'
 import { Review, ReviewWithId } from '../types'
-import { allFieldsForTable } from './allFieldsForTable'
 import { findOne, insert, update, upsert } from './queryHelpers'
-import { resolveFields } from './queryResolvers'
+import { resolveFields, resolvedWithFields } from './queryResolvers'
 
 export async function reviewInsert(reviews: Review[]): Promise<Review[]> {
   return await insert<Review>('review', reviews)
@@ -20,36 +19,36 @@ export async function reviewUpdate(
 
 export async function reviewFindOne(
   review: Partial<Review>
-): Promise<ReviewWithId> {
+): Promise<ReviewWithId | null> {
   return await findOne<ReviewWithId>('review', review)
 }
 
 export async function reviewFindAllForRestaurant(restaurant_id: string) {
-  // TODO just need to compile
-  // return await resolveFields(allFieldsForTable('reviews'), () => {
-  //   return query.review({
-  //     where: {
-  //       restaurant_id: { _eq: restaurant_id },
-  //     },
-  //     order_by: {
-  //       // @ts-ignore TODO bad type?
-  //       updated_at: 'desc',
-  //     },
-  //   })
-  // })
+  const res = await resolvedWithFields(() => {
+    return query.review({
+      where: {
+        restaurant_id: { _eq: restaurant_id },
+      },
+      order_by: {
+        // @ts-ignore TODO bad type?
+        updated_at: 'desc',
+      },
+    })
+  })
+  return res
 }
 
 export async function reviewFindAllForUser(user_id: string) {
   // TODO just need to compile
-  // return await resolveFields(allFieldsForTable('review'), () => {
-  //   return query.review({
-  //     where: {
-  //       user_id: { _eq: user_id },
-  //     },
-  //     order_by: {
-  //       // @ts-ignore TODO bad type?
-  //       updated_at: 'desc',
-  //     },
-  //   })
-  // })
+  return await resolvedWithFields(() => {
+    return query.review({
+      where: {
+        user_id: { _eq: user_id },
+      },
+      order_by: {
+        // @ts-ignore TODO bad type?
+        updated_at: 'desc',
+      },
+    })
+  })
 }

@@ -1,4 +1,4 @@
-import { Client } from 'gqless'
+import { Client, resolved } from 'gqless'
 import _ from 'lodash'
 
 import { order_by, query, restaurant_constraint } from '../graphql'
@@ -11,8 +11,9 @@ import {
   Scrape,
   Tag,
 } from '../types'
+import { allFieldsForTable } from './allFieldsForTable'
 import { levenshteinDistance } from './levenshteinDistance'
-import { findOne, insert, update, upsert } from './queryHelpers'
+import { findOne, insert, objectToWhere, update, upsert } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
 
 export async function restaurantInsert(restaurants: Restaurant[]) {
@@ -33,9 +34,23 @@ export async function restaurantUpdate(
 }
 
 export async function restaurantFindOne(
-  restaurant: Partial<Restaurant>
+  restaurant: Restaurant
 ): Promise<RestaurantWithId | null> {
   return await findOne<RestaurantWithId>('restaurant', restaurant)
+}
+
+export async function restaurantFindOneWithTags(
+  restaurant: Restaurant
+): Promise<Required<Restaurant>> {
+  const [first] = await resolved(() => {
+    const res = query.restaurant(objectToWhere(restaurant))
+    const tag = res[0].tags()[0]
+    for (const key of allFieldsForTable('restaurant_tag')) {
+      tag[key]
+    }
+    return res as any
+  })
+  return first
 }
 
 export async function restaurantFindBatch(
@@ -43,7 +58,7 @@ export async function restaurantFindBatch(
   previous_id: string,
   extra_where: {} = {}
 ): Promise<Restaurant[]> {
-  const res = await resolvedWithFields(() => {
+  return await resolvedWithFields(() => {
     const x = query.restaurant({
       where: {
         id: { _gt: previous_id },
@@ -52,17 +67,8 @@ export async function restaurantFindBatch(
       order_by: [{ id: order_by.asc }],
       limit: size,
     })
-    // const y = x[0].dishes
-    // type z = typeof y
-    // type a = z extends (...args: any[]) => infer U ? U : z
-    x[0].photos
     return x
   })
-
-  res[0].photos
-  res[0].dishes
-
-  return res
 }
 
 export async function restaurantFindNear(
@@ -147,16 +153,16 @@ async function findExistingCanonical(
   let shortlist = [] as Restaurant[]
   let highest_sources_count = 0
   for (const candidate of nears) {
-    if (candidate.name.includes(name) || name.includes(candidate.name)) {
+    if (candidate.name?.includes(name) || name.includes(candidate.name ?? '')) {
       shortlist.push(candidate)
     }
-
-    if (levenshteinDistance(candidate.name, name) <= 3) {
+    if (levenshteinDistance(candidate.name ?? '', name) <= 3) {
       shortlist.push(candidate)
     }
   }
-  if (shortlist.length == 0) return
-
+  if (shortlist.length == 0) {
+    return null
+  }
   found = shortlist[0]
   for (const final of shortlist) {
     const sources_count = Object.keys(final.sources || {}).length
@@ -170,7 +176,7 @@ async function findExistingCanonical(
 
 export async function restaurantRefresh<A extends Restaurant>(
   restaurant: A
-): Promise<A | null> {
+): Promise<A> {
   return (await restaurantFindOne({ id: restaurant.id })) as A
 }
 
@@ -208,7 +214,7 @@ export async function restaurantUpsertOrphanTags(
 
 async function updateTagNames(restaurant: RestaurantWithId) {
   restaurant = await restaurantRefresh(restaurant)
-  const tag_names = restaurant.tags.map((i) => i.tag.slugs().flat())
+  const tag_names = (restaurant.tags ?? []).map((i) => i.tag.slugs().flat())
   restaurant.tag_names = _.uniq([...(restaurant.tag_names || []), ...tag_names])
   return await restaurantUpdate(restaurant)
 }
@@ -254,7 +260,7 @@ export async function restaurantGetLatestScrape(
 
 export async function restaurantGetAllPossibleTags(restaurant: Restaurant) {
   return await tagGetAllChildren(
-    restaurant.tags.map((i) => {
+    (restaurant.tags ?? []).map((i) => {
       return i.tag.id
     })
   )

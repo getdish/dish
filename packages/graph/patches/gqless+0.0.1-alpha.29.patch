@@ -1,5 +1,5 @@
 diff --git a/node_modules/gqless/dist/Type.d.ts b/node_modules/gqless/dist/Type.d.ts
-index 27c8f79..076557d 100644
+index 27c8f79..156446c 100644
 --- a/node_modules/gqless/dist/Type.d.ts
 +++ b/node_modules/gqless/dist/Type.d.ts
 @@ -8,19 +8,19 @@ declare type RequiredKeys<T> = {
@@ -27,6 +27,36 @@ index 27c8f79..076557d 100644
  export declare type ScalarType<TData = any, TExtension = any> = Type<Kind.scalar, TData, TExtension>;
  export declare type EnumType<TData = any, TExtension = any> = Type<Kind.enum, TData, TExtension>;
  declare type FieldsRecord = Record<string, ValidType | FieldsTypeArg>;
+@@ -33,14 +33,14 @@ export declare type FieldsTypeArg<TArgs extends ArgsRecord = any, TType extends
+ declare type WithVariables<TArgs extends ArgsRecord> = TArgs extends object ? {
+     [K in keyof TArgs]: WithVariables<TArgs[K]> | Variable<WithVariables<Exclude<TArgs[K], undefined>>>;
+ } : TArgs;
+-declare type ArgsFn<TArgs extends ArgsRecord, TType extends ValidType, TExtension> = RequiredKeys<TArgs> extends never ? ((args?: TArgs) => TypeData<TType, TExtension>) & (TType extends ScalarType | EnumType ? unknown : TypeData<TType, TExtension>) : (args: TArgs) => TypeData<TType, TExtension>;
++export declare type ArgsFn<TArgs extends ArgsRecord, TType extends ValidType, TExtension> = RequiredKeys<TArgs> extends never ? ((args?: TArgs) => TypeData<TType, TExtension>) & (TType extends ScalarType | EnumType ? unknown : TypeData<TType, TExtension>) : (args: TArgs) => TypeData<TType, TExtension>;
+ declare type MapExtensionData<T extends Tuple, Key extends TupleKeys<T>> = {
+     [K in keyof MapTupleByKey<T, Key>]: ExtensionData<MapTupleByKey<T, Key>[K]>;
+ };
+ declare type CustomExtensionData<TExtensions extends Tuple> = keyof TExtensions extends never ? {} : UnionToIntersection<TExtensions[keyof TExtensions]> extends infer U ? Omit<{
+     [K in keyof U]: U[K] extends never ? LastTupleValueForKey<TExtensions, K> : U[K];
+ }, typeof INDEX | typeof GET_KEY> : never;
+-declare type FieldsData<TFields extends FieldsType, TExtensions extends Tuple> = keyof TFields['data'] extends never ? CustomExtensionData<TExtensions> : {
++export declare type FieldsData<TFields extends FieldsType, TExtensions extends Tuple> = keyof TFields['data'] extends never ? CustomExtensionData<TExtensions> : {
+     [K in keyof (TFields['data'] & CustomExtensionData<TExtensions>)]: K extends keyof TFields['data'] ? TFields['data'][K] extends FieldsTypeArg<infer TArgs, infer TType> ? ArgsFn<WithVariables<TArgs>, TType, MapExtensionData<TExtensions, K>> : TypeData<TFields['data'][K], MapExtensionData<TExtensions, K>> : CustomExtensionData<TExtensions>[K];
+ };
+ declare type ArrayData<TArray extends ValidType[], TExtensions extends Tuple> = {
+@@ -50,5 +50,11 @@ declare type ArrayData<TArray extends ValidType[], TExtensions extends Tuple> =
+ } : never);
+ declare type ScalarData<TScalar extends ScalarType | EnumType, TExtensions extends Tuple> = LastTupleValue<TExtensions> extends never ? TScalar['data'] : LastTupleValue<TExtensions>;
+ declare type UnshiftExtension<TExtensions, TType extends ValidType> = keyof TypeExtension<TType> extends never ? TExtensions : UnshiftTuple<TExtensions, TypeExtension<TType>>;
+-export declare type TypeData<TType extends ValidType, TExtensions extends Tuple = {}> = TType extends Array<any> ? ArrayData<TType, UnshiftExtension<TExtensions, TType>> : TType extends ScalarType | EnumType ? ScalarData<TType, UnshiftExtension<TExtensions, TType>> : TType extends FieldsType ? FieldsData<TType, UnshiftExtension<TExtensions, TType>> : null;
++
++export declare type TypeData<TType extends ValidType, TExtensions extends Tuple = {}> =
++    TType extends Array<any> ? ArrayData<TType, UnshiftExtension<TExtensions, TType>> :
++        TType extends ScalarType | EnumType ? ScalarData<TType, UnshiftExtension<TExtensions, TType>> :
++            TType extends FieldsType ? FieldsData<TType, UnshiftExtension<TExtensions, TType>> :
++                TType extends FieldsTypeArg<any, infer X> ? X extends Type<any, infer Z> ? Z : X : null;
++
+ export {};
 diff --git a/node_modules/gqless/dist/gqless.cjs.development.js b/node_modules/gqless/dist/gqless.cjs.development.js
 index 12268bf..16ad852 100644
 --- a/node_modules/gqless/dist/gqless.cjs.development.js
