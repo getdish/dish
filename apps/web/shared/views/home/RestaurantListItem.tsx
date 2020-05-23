@@ -105,6 +105,15 @@ const RestaurantListItemContent = memo(
       const [state, setState] = useState({
         showAddComment: false,
       })
+<<<<<<< HEAD
+=======
+      const tagElements = useGetTagElements({
+        tags: restaurant.tags?.map((tag) => tag.tag ?? {}) ?? [],
+        showMore: true,
+        restaurantSlug: restaurant.slug ?? '',
+        divider: <>,&nbsp;</>,
+      })
+>>>>>>> [graph] lots of type problems
 
       const showAddComment = state.showAddComment || isEditingUserPage(om.state)
 

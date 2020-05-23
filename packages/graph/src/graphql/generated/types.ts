@@ -1,8 +1,10 @@
 import {
   EnumType,
+  FieldsData,
   FieldsType,
   FieldsTypeArg,
   ScalarType,
+  Type,
   TypeData,
 } from 'gqless'
 
