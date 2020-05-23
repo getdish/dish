@@ -11,7 +11,7 @@ type TagRowProps = {
   showMore?: boolean
   size?: 'lg' | 'md'
   divider?: any
-  tags?: Tag[]
+  tags?: TagButtonTagProps[]
 }
 
 export const RestaurantTagsRow = memo(

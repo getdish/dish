@@ -173,7 +173,7 @@ const RestaurantListItemContent = memo(
                       {/* <Suspense fallback={null}> */}
                       <RestaurantRatingViewPopover
                         size="sm"
-                        restaurantSlug={restaurant.slug}
+                        restaurantSlug={restaurant.slug ?? ''}
                       />
                       {/* </Suspense> */}
                       {/* <Suspense fallback={null}> */}
@@ -231,7 +231,7 @@ const RestaurantListItemContent = memo(
                 {/* <Suspense fallback={null}> */}
                 <RestaurantDetailRow
                   size="sm"
-                  restaurantSlug={restaurant.slug}
+                  restaurantSlug={restaurant.slug ?? ''}
                 />
                 {/* </Suspense> */}
 
@@ -243,7 +243,7 @@ const RestaurantListItemContent = memo(
                   <SelectableText style={{ color: '#888' }}>
                     {getAddressText(
                       currentLocationInfo,
-                      restaurant.address,
+                      restaurant.address ?? '',
                       'xs'
                     )}
                   </SelectableText>
@@ -263,7 +263,7 @@ const RestaurantListItemContent = memo(
             {/* <Suspense fallback={null}> */}
             <RestaurantPeek
               size={isShowingComment ? 'lg' : 'md'}
-              restaurantSlug={restaurant.slug}
+              restaurantSlug={restaurant.slug ?? ''}
             />
             {/* </Suspense> */}
           </VStack>

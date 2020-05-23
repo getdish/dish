@@ -4,10 +4,6 @@ import { createFetcher } from '../createFetcher'
 import { query } from './client'
 import { mutation_root, schema } from './generated'
 
-// import { createUseMutation } from 'gqless-hooks'
-
-// / gqless-hooks
-
 const fetchMutation = createFetcher('mutation')
 export const mutateClient = new Client(
   schema.mutation_root as any,
@@ -15,14 +11,3 @@ export const mutateClient = new Client(
 )
 
 export const mutation: mutation_root = mutateClient.query
-
-// const endpoint = getGraphEndpoint()
-// export const useMutation = createUseMutation<any>({
-//   endpoint,
-//   schema,
-// } as any)
-// // @ts-ignore
-// export const { useQuery, prepareQuery } = createUseQuery<query_root>({
-//   endpoint,
-//   schema,
-// })

@@ -8,5 +8,5 @@
     "outDir": "_",
     "rootDir": "."
   },
-  "include": ["src/**/*", "test/**/*"]
+  "include": ["src/**/*"]
 }

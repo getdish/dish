@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import { Tag, TagType } from '@dish/graph'
 import { HStack, StackProps, VStack } from '@dish/ui'
+=======
+import { NonNullObject, Tag, TagType } from '@dish/graph'
+>>>>>>> [web] fix last strict types and new graph types compilation issues
 import _ from 'lodash'
 import React, { memo } from 'react'
 import { ChevronUp, X } from 'react-feather'
@@ -9,9 +13,12 @@ import { NavigableTag } from '../../state/Tag'
 import { LinkButton } from '../ui/LinkButton'
 import { SuperScriptText } from './SuperScriptText'
 
-export type TagButtonTagProps =
-  | NavigableTag
-  | Pick<Tag, 'name' | 'type' | 'icon' | 'rgb'>
+export type TagButtonTagProps = NonNullObject<
+  Required<Pick<Tag, 'name' | 'type'>>
+> & {
+  icon?: Exclude<Tag['icon'], null>
+  rgb?: Exclude<Tag['rgb'], null>
+}
 
 export const getTagButtonProps = (tag: TagButtonTagProps): TagButtonProps => {
   return {

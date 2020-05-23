@@ -10,39 +10,45 @@ import {
   user,
 } from './graphql'
 
+// i had this "smarter" where it inferred returns from functions
+// but the problme is extensions... they should be excluded
+// most of the stuff in this file could be folded into gqless and fixed
 export type FlatResolvedModel<O> = {
-  [K in keyof O]?: O[K] extends (...args: any[]) => infer X
-    ? X | undefined
-    : O[K]
+  [K in keyof O]?: O[K] extends (...args: any[]) => any ? any : O[K]
 }
 
 // BE SURE TO ADD TO ALL SECTIONS!
 
 // SECTION 0
 // this fixes our type explosion, i think
+// we can use this to represent values returned by `query`
 
-export interface RestaurantBase extends restaurant {}
-export interface TagBase extends tag {}
-export interface RestaurantTagBase extends restaurant_tag {}
-export interface TagTagBase extends tag_tag {}
-export interface UserBase extends user {}
-export interface ReviewBase extends review {}
-export interface DishBase extends dish {}
-export interface ScrapeBase extends scrape {}
+export interface RestaurantQuery extends restaurant {}
+export interface TagQuery extends tag {}
+export interface RestaurantTagQuery extends restaurant_tag {}
+export interface TagTagQuery extends tag_tag {}
+export interface UserQuery extends user {}
+export interface ReviewQuery extends review {}
+export interface DishQuery extends dish {}
+export interface ScrapeQuery extends scrape {}
+
+type x = RestaurantQuery['tags']
 
 // SECTION 1
+// this flattens them to a partial of all resolved values, minus sub-nodes
 
-export interface Restaurant extends FlatResolvedModel<RestaurantBase> {}
-export interface Tag extends FlatResolvedModel<TagBase> {}
-export interface RestaurantTag extends FlatResolvedModel<RestaurantTagBase> {}
-export interface TagTag extends FlatResolvedModel<TagTagBase> {}
-export interface User extends FlatResolvedModel<UserBase> {}
-export interface Review extends FlatResolvedModel<ReviewBase> {}
-export interface Dish extends FlatResolvedModel<DishBase> {}
-export interface Scrape extends FlatResolvedModel<ScrapeBase> {}
+export interface Restaurant extends FlatResolvedModel<RestaurantQuery> {}
+export interface Tag extends FlatResolvedModel<TagQuery> {}
+export interface RestaurantTag extends FlatResolvedModel<RestaurantTagQuery> {}
+export interface TagTag extends FlatResolvedModel<TagTagQuery> {}
+export interface User extends FlatResolvedModel<UserQuery> {}
+export interface Review extends FlatResolvedModel<ReviewQuery> {}
+export interface Dish extends FlatResolvedModel<DishQuery> {}
+export interface Scrape extends FlatResolvedModel<ScrapeQuery> {}
 
 // SECTION 3
 // this just adds a requirement on the id being present, for things like update()
+
 export interface RestaurantWithId extends WithID<Restaurant> {}
 export interface TagWithId extends WithID<Tag> {}
 export interface RestaurantTagWithId extends WithID<RestaurantTag> {}
@@ -81,4 +87,6 @@ export type WithID<A> = A & { id: string }
 export type RestaurantTagWithID = Partial<RestaurantTag> &
   Pick<RestaurantTag, 'tag_id'>
 
-type JSONBType = any
+export type NonNullObject<A extends Object> = {
+  [K in keyof A]: Exclude<A[K], null>
+}

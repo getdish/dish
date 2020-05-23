@@ -2,6 +2,7 @@ import url from 'url'
 
 import { sentryMessage } from '@dish/common'
 import {
+  Scrape,
   ScrapeData,
   restaurantSaveCanonical,
   scrapeInsert,
@@ -185,7 +186,7 @@ export class Yelp extends WorkerJob {
     const coords = (uri.query.center as string).split(',')
     const lat = parseFloat(coords[0])
     const lon = parseFloat(coords[1])
-    let scrape = await scrapeMergeData(id, { data_from_html_embed: data })
+    let scrape = (await scrapeMergeData(id, { data_from_html_embed: data }))!
     const canonical = await restaurantSaveCanonical(
       lon,
       lat,
