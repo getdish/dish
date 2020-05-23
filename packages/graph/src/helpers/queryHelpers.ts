@@ -3,7 +3,6 @@ import { resolved } from 'gqless'
 import { query } from '../graphql'
 import { mutation } from '../graphql/mutation'
 import { ModelName, ModelType, WithID } from '../types'
-import { allFieldsForTable } from './allFieldsForTable'
 import {
   resolveFields,
   resolvedMutation,
@@ -24,11 +23,10 @@ export function objectToWhere(hash: Object) {
 export async function findOne<T extends ModelType>(
   table: ModelName,
   hash: Partial<T>,
-  selectFields: string[] | null = null
+  selectFields?: string[]
 ): Promise<T | null> {
-  const fields = selectFields ?? allFieldsForTable(table)
   const [first] = await resolved(() => {
-    return resolveFields(query[table](objectToWhere(hash)), fields) as T[]
+    return resolveFields(query[table](objectToWhere(hash)), selectFields) as T[]
   })
   return first ?? null
 }

@@ -1,8 +1,6 @@
-import { Cache, resolved } from 'gqless'
+import { ACCESSOR, Cache, ScalarNode, resolved } from 'gqless'
 
-import { mutateClient, mutation } from '../graphql/mutation'
-import { FlatResolvedModel, ModelType, Mutation } from '../types'
-import { allFieldsForTable } from './allFieldsForTable'
+import { mutateClient } from '../graphql/mutation'
 
 const resetCache = () => {
   // @ts-ignore
@@ -20,7 +18,17 @@ export async function resolvedMutation<T>(
   return await resolved(resolver)
 }
 
+const touchAllFields = <A extends any>(object: A[], fields: string[]): A[] => {
+  return object.map((x) => {
+    for (const field of fields) {
+      x[field]
+    }
+    return x
+  })
+}
+
 export async function resolvedMutationWithFields<T>(
+  // table: ModelName,
   resolver: T,
   fields: string[] | null = null
 ): Promise<
@@ -29,25 +37,39 @@ export async function resolvedMutationWithFields<T>(
   const next = await resolvedMutation(() => {
     // @ts-ignore
     const res = resolver()
-    console.log(
-      'TODO i think we can get the fields off schema here',
-      res,
-      res['ofNode']
-    )
-    return res
-
-    // if (typeof mutationFn === 'function') {
-    //   const { returning } = mutationFn(arg)
-
-    //   const finalFields = fields ?? allFieldsForTable(name.split('_')[1] as any)
-
-    //   return resolveFields(returning, finalFields)
-    // }
+    const returningFields = fields ?? getMutationReturningFields(res)
+    return touchAllFields(res.returning, returningFields)
   })
   if (process.env.DEBUG) {
-    console.log('mutation returned:', next)
+    console.log('resolvedMutationWithFields:', next)
   }
+  // @ts-ignore
   return next
+}
+
+const filterFields = {
+  __typename: true,
+}
+const filterMutationFields = {
+  ...filterFields,
+  // we cant return computed values from mutations!
+  is_open_now: true,
+}
+
+const isSimpleField = (field: any) => {
+  return field.ofNode instanceof ScalarNode && !field.args?.required
+}
+
+// a bit hacky at the moment
+function getMutationReturningFields(mutation: any) {
+  const accessor = mutation[ACCESSOR]
+  if (!accessor) {
+    throw new Error(`Invalid mutation`)
+  }
+  const accessorFields = accessor.node.fields.returning.ofNode.ofNode.fields
+  return Object.keys(accessorFields).filter((x) => {
+    return !filterMutationFields[x] && isSimpleField(accessorFields[x])
+  })
 }
 
 export async function resolvedWithFields(
@@ -56,30 +78,33 @@ export async function resolvedWithFields(
 ): Promise<any> {
   const next = await resolved(() => {
     const res = resolver()
-    console.log(
-      'TODO i think we can get the fields off schema here',
-      res,
-      res['ofNode']
-    )
-    return res
-
-    // if (typeof mutationFn === 'function') {
-    //   const { returning } = mutationFn(arg)
-
-    //   const finalFields = fields ?? allFieldsForTable(name.split('_')[1] as any)
-
-    //   return resolveFields(returning, finalFields)
-    // }
+    const returningFields = fields ?? getQueryFields(res)
+    return touchAllFields(res, returningFields)
   })
   if (process.env.DEBUG) {
-    console.log('mutation returned:', next)
+    console.log('resolvedWithFields:', next)
   }
   return next
 }
 
-export function resolveFields<A extends any[]>(result: A, fields: string[]): A {
+// a bit hacky at the moment
+function getQueryFields(query: any) {
+  const accessor = query[ACCESSOR]
+  if (!accessor) {
+    throw new Error(`Invalid mutation`)
+  }
+  const accessorFields = accessor.node.ofNode.fields
+  return Object.keys(accessorFields).filter((x) => {
+    return !filterFields[x] && isSimpleField(accessorFields[x])
+  })
+}
+
+export function resolveFields<A extends any[]>(
+  result: A,
+  fields?: string[]
+): A {
   if (result.length === 1) {
-    touchAllFieldsOnRecord<A>(result[0], fields)
+    touchAllFieldsOnRecord<A>(result[0], fields ?? [])
   }
   return result
 }

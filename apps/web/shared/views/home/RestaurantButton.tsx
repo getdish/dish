@@ -50,7 +50,6 @@ export const RestaurantButton = memo(
           onHoverIn?.(restaurant)
         }}
       >
-<<<<<<< HEAD
         <HStack alignItems="center" spacing={5}>
           {!!trending && (
             <TrendingIcon
@@ -73,7 +72,7 @@ export const RestaurantButton = memo(
           </Text>
           <RestaurantRatingView
             size="xs"
-            restaurantSlug={restaurant.slug}
+            restaurantSlug={restaurant.slug ?? ''}
             rating={restaurant.rating}
             // @ts-ignore
             position="absolute"
@@ -82,31 +81,6 @@ export const RestaurantButton = memo(
             subtle={subtle}
           />
         </HStack>
-=======
-        <Text
-          style={
-            {
-              overflow: 'hidden',
-              textWrap: 'no-wrap',
-              whiteSpace: 'pre',
-              textOverflow: 'ellipsis',
-            } as any
-          }
-        >
-          {typeof rank === 'number' ? `${rank}. ` : ''}
-          {restaurant.name}
-        </Text>
-        <RestaurantRatingView
-          size="xs"
-          restaurantSlug={restaurant.slug ?? ''}
-          rating={restaurant.rating}
-          // @ts-ignore
-          position="absolute"
-          top={4}
-          right={4}
-          subtle={subtle}
-        />
->>>>>>> [web] fix last strict types and new graph types compilation issues
       </LinkButton>
     )
   }

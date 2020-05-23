@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import { Restaurant, Sources, graphql, query, useQuery } from '@dish/graph'
-import { Divider } from '@dish/ui'
-import { Spacer } from '@dish/ui'
-import { HStack, StackProps, VStack } from '@dish/ui'
-=======
 import {
   Restaurant,
   RestaurantQuery,
@@ -11,7 +5,7 @@ import {
   graphql,
   query,
 } from '@dish/graph'
->>>>>>> [web] fix last strict types and new graph types compilation issues
+import { Divider, HStack, Spacer, StackProps, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Linking, StyleSheet, Text } from 'react-native'
 
