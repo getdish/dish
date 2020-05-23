@@ -2,7 +2,8 @@ import fs from 'fs'
 
 import {
   Tag,
-  findOneByHash,
+  findOne,
+  tagFindOne,
   tagUpsert,
   tagUpsertCategorizations,
 } from '@dish/graph'
@@ -59,10 +60,13 @@ export class ParseFiverr {
         .replace('#', '')
         .split(',')
         .map((i) => i.trim())
-      let continent_tag = await findOneByHash('tag', {
+      let continent_tag = await tagFindOne({
         name: geo_parts[0],
         type: 'continent',
       })
+      if (!continent_tag) {
+        throw new Error(`No continent tag`)
+      }
       if (!geo_parts[1]) {
         console.error(line)
       }

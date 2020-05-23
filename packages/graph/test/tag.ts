@@ -41,7 +41,9 @@ test('Tagging a restaurant with orphaned tags', async (t) => {
     'Test tag',
     'Test tag existing',
   ])
-  restaurant = await restaurantFindOne({ name: restaurant.name })
+  restaurant = (await restaurantFindOne({
+    name: restaurant.name,
+  })) as RestaurantWithId
   console.log('restaurant', restaurant, restaurant.tag_names)
   t.is(restaurant.tags.length, 2)
   t.is(

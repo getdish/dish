@@ -147,6 +147,7 @@ export class Yelp extends WorkerJob {
       {
         source: 'yelp',
         id_from_source: data.bizId,
+        // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
         data: {
           data_from_map_search: data.searchResultBusiness,
         },
@@ -188,7 +189,9 @@ export class Yelp extends WorkerJob {
     const canonical = await restaurantSaveCanonical(
       lon,
       lat,
+      // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
       scrape.data.data_from_map_search.name,
+      // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
       scrape.data.data_from_map_search.formattedAddress
     )
     scrape.location = {

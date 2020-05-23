@@ -6,6 +6,7 @@ import {
 } from '../graphql'
 import { mutation } from '../graphql/mutation'
 import { RestaurantTag } from '../types'
+import { resolvedMutation } from './queryResolvers'
 
 export async function restaurantTagUpsert(
   restaurant_id: string,
@@ -15,7 +16,7 @@ export async function restaurantTagUpsert(
     ...tag,
     restaurant_id,
   }))
-  return await resolved(() => {
+  return await resolvedMutation(() => {
     mutation.insert_restaurant_tag({
       // @ts-ignore
       objects: objects,

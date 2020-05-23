@@ -6,8 +6,10 @@ async function one() {
   const restaurant = await findOne<Restaurant>('restaurant', {
     slug: process.env.SLUG || '',
   })
-  const merger = new Self()
-  await merger.mergeAll(restaurant.id)
+  if (restaurant) {
+    const merger = new Self()
+    await merger.mergeAll(restaurant.id)
+  }
 }
 
 async function all() {

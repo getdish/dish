@@ -1,5 +1,6 @@
 import {
   Restaurant,
+  RestaurantWithId,
   Scrape,
   Tag,
   flushTestData,
@@ -11,11 +12,12 @@ import {
   tagInsert,
 } from '@dish/graph'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
+import { rest } from 'lodash'
 
 import { Self } from '../../src/self/Self'
 
 interface Context {
-  restaurant: Restaurant
+  restaurant: RestaurantWithId
 }
 
 const test = anyTest as TestInterface<Context>
@@ -23,8 +25,10 @@ const test = anyTest as TestInterface<Context>
 const restaurant_fixture: Partial<Restaurant> = {
   name: 'Test Name Original',
   location: { type: 'Point', coordinates: [0, 0] },
+  // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
   tag_names: ['rankable'],
   rating: 3,
+  // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
   sources: {
     yelp: { url: 'https://yelp.com', rating: 3.5 },
     tripadvisor: { url: 'https://tripadvisor.com', rating: 2.5 },
@@ -39,6 +43,7 @@ const restaurant_fixture_nearly_matches: Partial<Restaurant> = {
 const yelp: Partial<Scrape> = {
   source: 'yelp',
   id_from_source: 'test123',
+  // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
   data: {
     data_from_map_search: {
       name: 'Test Name Yelp',
@@ -101,6 +106,7 @@ const yelp: Partial<Scrape> = {
 const ubereats: Partial<Scrape> = {
   source: 'ubereats',
   id_from_source: 'test124',
+  // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
   data: {
     main: {
       location: { address: '123 Street, Big City, America' },
@@ -123,6 +129,7 @@ const ubereats: Partial<Scrape> = {
 const tripadvisor: Partial<Scrape> = {
   source: 'tripadvisor',
   id_from_source: 'test123xcv',
+  // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
   data: {
     overview: {
       contact: {
@@ -192,6 +199,8 @@ test('Merging', async (t) => {
   const self = new Self()
   await self.mergeAll(t.context.restaurant.id)
   const updated = await restaurantFindOne({ id: t.context.restaurant.id })
+  t.is(!!updated, true)
+  if (!updated) return
   t.is(updated.name, 'Test Name Yelp')
   t.is(updated.address, '123 Street, Big City')
   t.is(updated.tags.length, 3)
@@ -201,7 +210,7 @@ test('Merging', async (t) => {
   t.is(updated.photos?.[0], 'https://yelp.com/image.jpg')
   t.is(updated.photos?.[1], 'https://yelp.com/image2.jpg')
   t.is(updated.rating, 4.1)
-  t.deepEqual(updated.rating_factors, {
+  t.deepEqual(updated.rating_factors as any, {
     food: 5,
     service: 4.5,
     value: 3,
@@ -260,6 +269,8 @@ test('Tag rankings', async (t) => {
   await restaurantUpsertOrphanTags(r2, [tag_name])
   await self.updateTagRankings()
   const restaurant = await restaurantFindOne({ id: self.restaurant.id })
+  t.is(!!restaurant, true)
+  if (!restaurant) return
   t.is(restaurant.tags[0].tag.name, tag_name)
   t.is(restaurant.tags[0].rank, 3)
 })
@@ -290,6 +301,8 @@ test('Finding dishes in reviews', async (t) => {
   await self.getScrapeData()
   await self.scanReviews()
   const updated = await restaurantFindOne({ id: t.context.restaurant.id })
+  t.assert(!!updated, 'not found')
+  if (!updated) return
   t.assert(
     updated.tags.map((i) => i.tag.id),
     existing_tag1.id
@@ -323,13 +336,18 @@ test('Dish sentiment analysis from reviews', async (t) => {
     },
   ])
   await restaurantUpsertOrphanTags(t.context.restaurant, [tag.name])
-  t.context.restaurant = await restaurantFindOne({
+  const restaurant = await restaurantFindOne({
     id: t.context.restaurant.id,
   })
+  t.is(!!restaurant, true)
+  if (!restaurant) return
+  t.context.restaurant = restaurant
   self.restaurant = t.context.restaurant
   await self.getScrapeData()
   await self.scanReviews()
   const updated = await restaurantFindOne({ id: t.context.restaurant.id })
+  t.assert(!!updated, 'not found')
+  if (!updated) return
   const tag1 =
     updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)
   const tag2 =
@@ -356,14 +374,19 @@ test('Find photos of dishes', async (t) => {
     },
   ])
   await restaurantUpsertOrphanTags(t.context.restaurant, [tag.name])
-  t.context.restaurant = await restaurantFindOne({
+  const restaurant = await restaurantFindOne({
     id: t.context.restaurant.id,
   })
+  t.assert(!!restaurant, 'not found')
+  if (!restaurant) return
+  t.context.restaurant = restaurant
   self.restaurant = t.context.restaurant
   await self.getScrapeData()
   await self.findPhotosForTags()
   await restaurantUpdate(self.restaurant)
   const updated = await restaurantFindOne({ id: t.context.restaurant.id })
+  t.assert(!!updated, 'not found')
+  if (!updated) return
   const tag1 =
     updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)
   const tag2 =
@@ -384,12 +407,15 @@ test('Identifying country tags', async (t) => {
     {
       name: 'Test Spanish',
       type: 'country',
+      // @ts-ignore
       alternates: ['Test Spain', 'Test Spainland'],
     },
   ])
   const dish = new Self()
   await dish.mergeAll(t.context.restaurant.id)
   const updated = await restaurantFindOne({ id: t.context.restaurant.id })
+  t.assert(updated, 'not found')
+  if (!updated) return
   t.is(updated.tags.length, 3)
   const tag1 =
     updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)

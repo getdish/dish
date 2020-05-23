@@ -8,7 +8,10 @@ import { mutation_root, schema } from './generated'
 // / gqless-hooks
 
 const fetchMutation = createFetcher('mutation')
-const mutateClient = new Client(schema.mutation_root as any, fetchMutation)
+export const mutateClient = new Client(
+  schema.mutation_root as any,
+  fetchMutation
+)
 export const mutation: mutation_root = mutateClient.query
 
 // const endpoint = getGraphEndpoint()
