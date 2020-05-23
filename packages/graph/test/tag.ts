@@ -17,8 +17,6 @@ import {
 } from '../src'
 import { restaurant_fixture } from './etc/fixtures'
 
-// startLogging()
-
 interface Context {
   existing_tag: TagWithId
   restaurant: RestaurantWithId
@@ -64,9 +62,9 @@ test('Tagging a restaurant with orphaned tags', async (t) => {
     restaurant.tag_names,
     restaurant.tag_names()
   )
-  // t.is(restaurant.tag_names.length, 2)
-  // t.is(restaurant.tag_names.includes('test-tag'), true)
-  // t.is(restaurant.tag_names.includes('test-tag-existing'), true)
+  t.is(restaurant.tag_names.length, 2)
+  t.is(restaurant.tag_names.includes('test-tag'), true)
+  t.is(restaurant.tag_names.includes('test-tag-existing'), true)
 })
 
 test('Tagging a restaurant with a tag that has a parent', async (t) => {
@@ -76,12 +74,12 @@ test('Tagging a restaurant with a tag that has a parent', async (t) => {
   ])
   await restaurantTagUpsert(restaurant.id, [{ tag_id: tag.id }])
   restaurant = await restaurantRefresh(restaurant)
-  // t.is(restaurant.tags?.length, 1)
-  // t.is(restaurant.tags?.map((t) => t.tag.name).includes('Test tag'), true)
-  // t.is(restaurant.tag_names.length, 3)
-  // t.is(restaurant.tag_names.includes('test-tag'), true)
-  // t.is(restaurant.tag_names.includes('test-tag-existing'), true)
-  // t.is(restaurant.tag_names.includes('test-tag-existing__test-tag'), true)
+  t.is(restaurant.tags?.length, 1)
+  t.is(restaurant.tags?.map((t) => t.tag.name).includes('Test tag'), true)
+  t.is(restaurant.tag_names.length, 3)
+  t.is(restaurant.tag_names.includes('test-tag'), true)
+  t.is(restaurant.tag_names.includes('test-tag-existing'), true)
+  t.is(restaurant.tag_names.includes('test-tag-existing__test-tag'), true)
 })
 
 test('Tagging a restaurant with a tag that has categories', async (t) => {
@@ -92,11 +90,11 @@ test('Tagging a restaurant with a tag that has categories', async (t) => {
   const restaurant = t.context.restaurant
   await restaurantUpsertOrphanTags(restaurant, [tag_name])
   await restaurantFindOne({ name: restaurant.name })
-  // t.is(restaurant.tags?.length, 1)
-  // t.is(restaurant.tags?.map((t) => t.tag?.name).includes(tag_name), true)
-  // t.is(restaurant.tag_names.length, 2)
-  // t.is(restaurant.tag_names.includes('test-tag-with-category'), true)
-  // t.is(restaurant.tag_names.includes('test-tag-existing'), true)
+  t.is(restaurant.tags?.length, 1)
+  t.is(restaurant.tags?.map((t) => t.tag?.name).includes(tag_name), true)
+  t.is(restaurant.tag_names.length, 2)
+  t.is(restaurant.tag_names.includes('test-tag-with-category'), true)
+  t.is(restaurant.tag_names.includes('test-tag-existing'), true)
 })
 
 test('Ambiguous tags get marked', async (t) => {

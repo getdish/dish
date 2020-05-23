@@ -83,7 +83,6 @@ class AuthModel {
       if (response.status == 401) {
         this.has_been_logged_out = true
         this.logout()
-        console.log('auth: Automatically logged user out')
       } else {
         const error = {
           method: method,

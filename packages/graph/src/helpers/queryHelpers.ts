@@ -7,6 +7,7 @@ import {
   resolveFields,
   resolvedMutation,
   resolvedMutationWithFields,
+  resolvedWithFields,
 } from './queryResolvers'
 
 export function objectToWhere(hash: Object) {
@@ -25,9 +26,10 @@ export async function findOne<T extends ModelType>(
   hash: Partial<T>,
   selectFields?: string[]
 ): Promise<T | null> {
-  const [first] = await resolved(() => {
-    return resolveFields(query[table](objectToWhere(hash)), selectFields) as T[]
-  })
+  const [first] = await resolvedWithFields(() => {
+    const args = objectToWhere(hash)
+    return query[table](args) as T[]
+  }, selectFields)
   return first ?? null
 }
 

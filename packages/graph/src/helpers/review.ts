@@ -1,7 +1,7 @@
-import { query } from '../graphql'
+import { order_by, query } from '../graphql'
 import { Review, ReviewWithId } from '../types'
-import { findOne, insert, update, upsert } from './queryHelpers'
-import { resolveFields, resolvedWithFields } from './queryResolvers'
+import { findOne, insert, update } from './queryHelpers'
+import { resolvedWithFields } from './queryResolvers'
 
 export async function reviewInsert(reviews: Review[]): Promise<Review[]> {
   return await insert<Review>('review', reviews)
@@ -24,31 +24,31 @@ export async function reviewFindOne(
 }
 
 export async function reviewFindAllForRestaurant(restaurant_id: string) {
-  const res = await resolvedWithFields(() => {
+  return await resolvedWithFields(() => {
     return query.review({
       where: {
         restaurant_id: { _eq: restaurant_id },
       },
-      order_by: {
-        // @ts-ignore TODO bad type?
-        updated_at: 'desc',
-      },
+      order_by: [
+        {
+          updated_at: order_by.asc,
+        },
+      ],
     })
   })
-  return res
 }
 
 export async function reviewFindAllForUser(user_id: string) {
-  // TODO just need to compile
   return await resolvedWithFields(() => {
     return query.review({
       where: {
         user_id: { _eq: user_id },
       },
-      order_by: {
-        // @ts-ignore TODO bad type?
-        updated_at: 'desc',
-      },
+      order_by: [
+        {
+          updated_at: order_by.asc,
+        },
+      ],
     })
   })
 }

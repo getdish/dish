@@ -20,15 +20,17 @@ export async function resolvedMutation<T>(
 
 const touchAllFields = <A extends any>(object: A[], fields: string[]): A[] => {
   return object.map((x) => {
-    for (const field of fields) {
-      x[field]
-    }
-    return x
+    return fields.reduce((acc, cur) => {
+      const val = x[cur]
+      if (typeof val !== 'function') {
+        acc[cur] = val
+      }
+      return acc
+    }, {}) as A
   })
 }
 
 export async function resolvedMutationWithFields<T>(
-  // table: ModelName,
   resolver: T,
   fields: string[] | null = null
 ): Promise<
@@ -40,9 +42,6 @@ export async function resolvedMutationWithFields<T>(
     const returningFields = fields ?? getMutationReturningFields(res)
     return touchAllFields(res.returning, returningFields)
   })
-  if (process.env.DEBUG) {
-    console.log('resolvedMutationWithFields:', next)
-  }
   // @ts-ignore
   return next
 }
@@ -81,9 +80,6 @@ export async function resolvedWithFields(
     const returningFields = fields ?? getQueryFields(res)
     return touchAllFields(res, returningFields)
   })
-  if (process.env.DEBUG) {
-    console.log('resolvedWithFields:', next)
-  }
   return next
 }
 
