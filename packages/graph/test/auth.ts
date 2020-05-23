@@ -27,7 +27,7 @@ test.beforeEach(async () => {
           },
         ],
       },
-    }).affected_rows
+    })?.affected_rows
   })
 })
 

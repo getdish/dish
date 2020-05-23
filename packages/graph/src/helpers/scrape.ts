@@ -27,18 +27,21 @@ export async function scrapeFindOne(scrape: Partial<Scrape>) {
 export async function scrapeMergeData(
   id: string,
   data: ScrapeData
-): Promise<Scrape> {
+): Promise<Scrape | null> {
   const scrape = await scrapeFindOne({ id })
   // TODO: Have scrapeAppendJsonB() return the actual DB record
-  await scrapeAppendJsonB(scrape, data)
-  Object.assign(scrape.data, data)
-  return scrape
+  if (scrape) {
+    await scrapeAppendJsonB(scrape, data)
+    Object.assign(scrape.data, data)
+    return scrape
+  }
+  return null
 }
 
 export async function scrapeAppendJsonB(
   scrape: Scrape,
   data: {}
-): Promise<Scrape[]> {
+): Promise<Scrape[] | null> {
   return await resolvedMutationWithFields(() => {
     return mutation.update_scrape({
       where: { id: { _eq: scrape.id } },

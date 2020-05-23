@@ -34,6 +34,6 @@ test('Merging data into an existing scrape', async (t) => {
   const updated = await scrapeMergeData(t.context.scrape.id, {
     more: 'better',
   })
-  t.is(updated.data.stuff, 'good')
-  t.is(updated.data.more, 'better')
+  t.is(updated?.data.stuff, 'good')
+  t.is(updated?.data.more, 'better')
 })

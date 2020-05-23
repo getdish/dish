@@ -6,7 +6,7 @@ import { resolveFields, resolvedWithFields } from './queryResolvers'
 import { slugify } from './slugify'
 import { tagTagUpsert } from './tag_tag'
 
-export const tagSlug = (tag: Pick<Tag, 'name'>) => slugify(tag.name)
+export const tagSlug = (tag: Pick<Tag, 'name'>) => slugify(tag.name ?? '')
 
 export async function tagInsert(tags: Tag[]) {
   return await insert<Tag>('tag', tags)

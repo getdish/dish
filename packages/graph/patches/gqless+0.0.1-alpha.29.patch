@@ -58,7 +58,7 @@ index 27c8f79..156446c 100644
 +
  export {};
 diff --git a/node_modules/gqless/dist/gqless.cjs.development.js b/node_modules/gqless/dist/gqless.cjs.development.js
-index 12268bf..16ad852 100644
+index 12268bf..c9d413d 100644
 --- a/node_modules/gqless/dist/gqless.cjs.development.js
 +++ b/node_modules/gqless/dist/gqless.cjs.development.js
 @@ -451,7 +451,7 @@ const buildArguments = ({
@@ -71,7 +71,7 @@ index 12268bf..16ad852 100644
 
      if (Array.isArray(arg)) {
 diff --git a/node_modules/gqless/dist/gqless.esm.js b/node_modules/gqless/dist/gqless.esm.js
-index cc6eb3f..4edd5a5 100644
+index cc6eb3f..3d0c599 100644
 --- a/node_modules/gqless/dist/gqless.esm.js
 +++ b/node_modules/gqless/dist/gqless.esm.js
 @@ -482,6 +482,12 @@ const buildSelections = ({
@@ -113,5 +113,10 @@ index cc6eb3f..4edd5a5 100644
 +  }
 +  return id
  };
+<<<<<<< HEAD
 
  /**
+=======
+ 
+ /**
+>>>>>>> [gqless] more patching on nullables and type extraction to fix last bugs

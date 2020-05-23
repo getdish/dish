@@ -36,7 +36,9 @@ test.beforeEach(async (t) => {
   const user = await userFindOne({
     username: 'test',
   })
-  t.context.user = user
+  if (user) {
+    t.context.user = user
+  }
 })
 
 test('Add a review for the whole restaurant itself', async (t) => {
