@@ -8,7 +8,7 @@ const { writeFile } = require('fs')
 const { join } = require('path')
 
 const { graphqlGet } = require('./src/helpers/graphqlGet')
-const { Codegen, fetchSchema } = require('@o/gqless-schema')
+const { Codegen, fetchSchema } = require('@gqless/schema')
 
 const rootPath = join(__dirname)
 const graphqlPath = join(rootPath, 'src', 'graphql')

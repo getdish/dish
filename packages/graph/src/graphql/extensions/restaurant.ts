@@ -38,7 +38,7 @@ export const restaurant = (restaurant) => {
       const max_photos = 4
       const tags = restaurant.tags({ limit: 6 }) ?? []
       for (const t of tags) {
-        const [photo] = t.photos() ?? []
+        const [photo] = t.photos ?? []
         if (!photo) {
           continue
         }

@@ -4,6 +4,7 @@
     // "composite": true,
     "module": "CommonJS",
     "sourceMap": false,
+    "skipLibCheck": true,
     "declaration": false,
     "declarationMap": false,
     "incremental": false,

@@ -1,5 +1,5 @@
 diff --git a/node_modules/gqless/dist/Type.d.ts b/node_modules/gqless/dist/Type.d.ts
-index 27c8f79..4c5db75 100644
+index 27c8f79..076557d 100644
 --- a/node_modules/gqless/dist/Type.d.ts
 +++ b/node_modules/gqless/dist/Type.d.ts
 @@ -8,19 +8,19 @@ declare type RequiredKeys<T> = {
@@ -27,34 +27,24 @@ index 27c8f79..4c5db75 100644
  export declare type ScalarType<TData = any, TExtension = any> = Type<Kind.scalar, TData, TExtension>;
  export declare type EnumType<TData = any, TExtension = any> = Type<Kind.enum, TData, TExtension>;
  declare type FieldsRecord = Record<string, ValidType | FieldsTypeArg>;
-@@ -51,4 +51,4 @@ declare type ArrayData<TArray extends ValidType[], TExtensions extends Tuple> =
- declare type ScalarData<TScalar extends ScalarType | EnumType, TExtensions extends Tuple> = LastTupleValue<TExtensions> extends never ? TScalar['data'] : LastTupleValue<TExtensions>;
- declare type UnshiftExtension<TExtensions, TType extends ValidType> = keyof TypeExtension<TType> extends never ? TExtensions : UnshiftTuple<TExtensions, TypeExtension<TType>>;
- export declare type TypeData<TType extends ValidType, TExtensions extends Tuple = {}> = TType extends Array<any> ? ArrayData<TType, UnshiftExtension<TExtensions, TType>> : TType extends ScalarType | EnumType ? ScalarData<TType, UnshiftExtension<TExtensions, TType>> : TType extends FieldsType ? FieldsData<TType, UnshiftExtension<TExtensions, TType>> : null;
--export {};
-+
- var mixClasses = require('mix-classes');
- var tslib = require('tslib');
- var utils = require('@gqless/utils');
-@@ -453,7 +453,7 @@ const buildArguments = ({
+diff --git a/node_modules/gqless/dist/gqless.cjs.development.js b/node_modules/gqless/dist/gqless.cjs.development.js
+index 12268bf..16ad852 100644
+--- a/node_modules/gqless/dist/gqless.cjs.development.js
++++ b/node_modules/gqless/dist/gqless.cjs.development.js
+@@ -451,7 +451,7 @@ const buildArguments = ({
      if ((context === null || context === void 0 ? void 0 : context.node) instanceof ScalarNode) {
        // Object / Array passed as scalar
        // serialize as a JSON-string
 -      return JSON.stringify(JSON.stringify(arg));
 +      return JSON.stringify(arg).replace(/"([^"]+)":/g, '$1:');
      }
- 
+
      if (Array.isArray(arg)) {
 diff --git a/node_modules/gqless/dist/gqless.esm.js b/node_modules/gqless/dist/gqless.esm.js
-index cc6eb3f..f54081e 100644
+index cc6eb3f..4edd5a5 100644
 --- a/node_modules/gqless/dist/gqless.esm.js
 +++ b/node_modules/gqless/dist/gqless.esm.js
-@@ -478,10 +478,17 @@ const buildSelections = ({
-   formatter
- }, tree, variables) => {
-   const innerNode = tree.selection.node instanceof NodeContainer ? tree.selection.node.innerNode : tree.selection.node;
-+
-   if (innerNode instanceof ScalarNode || innerNode instanceof EnumNode) return '';
+@@ -482,6 +482,12 @@ const buildSelections = ({
    const includeTypename = // When no selections or not on ObjectNode
    (!tree.children.length || !(innerNode instanceof ObjectNode)) && // fragments should never need __typename
    !(tree.selection instanceof Fragment);
@@ -67,7 +57,7 @@ index cc6eb3f..f54081e 100644
    const selections = [includeTypename && '__typename', ...tree.children.map(tree => buildSelectionTree(formatter, tree, variables))].filter(Boolean);
    if (!selections.length) return '';
    return selections.join(LINE_SEPARATOR);
-@@ -559,17 +566,16 @@ const memoized =
+@@ -559,17 +565,16 @@ const memoized =
  createMemo();
  const getAlias = tree => {
    if (!tree.parent) return;
@@ -93,6 +83,5 @@ index cc6eb3f..f54081e 100644
 +  }
 +  return id
  };
- 
- /**
 
+ /**

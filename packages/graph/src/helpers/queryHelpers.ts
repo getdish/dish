@@ -13,7 +13,7 @@ import {
 export async function findOne<T extends ModelType>(
   table: ModelName,
   hash: Partial<T>,
-  selectFields: string[] = null
+  selectFields: string[] | null = null
 ): Promise<T | null> {
   const where = Object.keys(hash).map((key) => {
     return { [key]: { _eq: hash[key] } }

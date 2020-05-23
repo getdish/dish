@@ -1,7 +1,7 @@
 import { Cache, resolved } from 'gqless'
 
 import { mutateClient, mutation } from '../graphql/mutation'
-import { Mutation } from '../types'
+import { ModelType, Mutation } from '../types'
 import { allFieldsForTable } from './allFieldsForTable'
 
 const resetCache = () => {
@@ -50,10 +50,32 @@ export async function resolvedMutationWithFields<T>(
   return next
 }
 
+type ModelTypeNames = Exclude<
+  {
+    [K in keyof ModelType]: ModelType[K]
+  }['__typename'],
+  undefined
+>
+
+type TypeToModel = {
+  [K in ModelTypeNames]: ModelType[]
+}
+
+type TypeNameToModel<A> = A extends { __typename: infer X } ? X : A
+
+const a = { __typename: 'restaurant' } as const
+type x = TypeNameToModel<typeof a>
+
 export async function resolvedWithFields<T extends Function>(
   resolver: T,
   fields: string[] | null = null
-): Promise<T extends () => infer U ? U : any> {
+): Promise<
+  T extends Array<infer U>
+    ? U extends { __typename: infer X }
+      ? ModelsByType[X]
+      : U
+    : Y
+> {
   const next = await resolved(() => {
     const res = resolver()
     console.log(
@@ -76,6 +98,7 @@ export async function resolvedWithFields<T extends Function>(
   }
   return next
 }
+
 export function resolveFields<A extends any[]>(result: A, fields: string[]): A {
   if (result.length === 1) {
     touchAllFieldsOnRecord<A>(result[0], fields)
