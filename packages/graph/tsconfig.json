@@ -3,8 +3,8 @@
   "compilerOptions": {
     "composite": true,
     "incremental": true,
+    "skipLibCheck": true,
     "module": "CommonJS",
-    "strictNullChecks": false,
     "outDir": "_",
     "rootDir": "."
   },

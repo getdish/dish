@@ -1,3 +1,4 @@
+import { Client } from 'gqless'
 import _ from 'lodash'
 
 import { order_by, query, restaurant_constraint } from '../graphql'
@@ -42,8 +43,8 @@ export async function restaurantFindBatch(
   previous_id: string,
   extra_where: {} = {}
 ): Promise<Restaurant[]> {
-  return await resolvedWithFields(() =>
-    query.restaurant({
+  const res = await resolvedWithFields(() => {
+    const x = query.restaurant({
       where: {
         id: { _gt: previous_id },
         ...extra_where,
@@ -51,7 +52,17 @@ export async function restaurantFindBatch(
       order_by: [{ id: order_by.asc }],
       limit: size,
     })
-  )
+    // const y = x[0].dishes
+    // type z = typeof y
+    // type a = z extends (...args: any[]) => infer U ? U : z
+    x[0].photos
+    return x
+  })
+
+  res[0].photos
+  res[0].dishes
+
+  return res
 }
 
 export async function restaurantFindNear(
@@ -59,7 +70,7 @@ export async function restaurantFindNear(
   lng: number,
   distance: number
 ): Promise<Restaurant[]> {
-  return resolvedWithFields(() =>
+  return await resolvedWithFields(() =>
     query.restaurant({
       where: {
         location: {
