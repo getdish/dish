@@ -10,3 +10,4 @@ export const tagTagInsert = QueryHelpers.insert
 export const tagTagUpsert = QueryHelpers.upsert
 export const tagTagUpdate = QueryHelpers.update
 export const tagTagFindOne = QueryHelpers.findOne
+export const tagTagRefresh = QueryHelpers.refresh

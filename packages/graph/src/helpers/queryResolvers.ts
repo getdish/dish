@@ -1,6 +1,7 @@
 import { ACCESSOR, Cache, ScalarNode, resolved } from 'gqless'
 
 import { mutateClient } from '../graphql/mutation'
+import { collectAll } from './collect'
 
 const resetCache = () => {
   // @ts-ignore
@@ -18,18 +19,6 @@ export async function resolvedMutation<T>(
   return await resolved(resolver)
 }
 
-const touchAllFields = <A extends any>(object: A[], fields: string[]): A[] => {
-  return object.map((x) => {
-    return fields.reduce((acc, cur) => {
-      const val = x[cur]
-      if (typeof val !== 'function') {
-        acc[cur] = val
-      }
-      return acc
-    }, {}) as A
-  })
-}
-
 export async function resolvedMutationWithFields<T>(
   resolver: T,
   fields: string[] | null = null
@@ -40,7 +29,7 @@ export async function resolvedMutationWithFields<T>(
     // @ts-ignore
     const res = resolver()
     const returningFields = fields ?? getMutationReturningFields(res)
-    return touchAllFields(res.returning, returningFields)
+    return collectAll(res.returning, returningFields)
   })
   // @ts-ignore
   return next
@@ -80,7 +69,7 @@ export async function resolvedWithFields(
   const next = await resolved(() => {
     const res = resolver()
     const returningFields = fields ?? getQueryFields(res)
-    return touchAllFields(res, returningFields)
+    return collectAll(res, returningFields)
   })
   return next
 }
@@ -95,33 +84,4 @@ function getQueryFields(query: any) {
   return Object.keys(accessorFields).filter((x) => {
     return !filterFields[x] && isSimpleField(accessorFields[x])
   })
-}
-
-export function resolveFields<A extends any[]>(
-  result: A,
-  fields?: string[]
-): A {
-  if (result.length === 1) {
-    touchAllFieldsOnRecord<A>(result[0], fields ?? [])
-  }
-  return result
-}
-
-export function touchAllFieldsOnRecord<A>(record: A, fields: string[]): A {
-  // @ts-ignore
-  let one: A = {}
-  for (const key of fields) {
-    if (typeof record[key] == 'function') {
-      if (key == 'tags') {
-        one[key] = record[key]().map((x) => ({
-          name: x.name,
-        }))
-      } else {
-        one[key] = record[key]()
-      }
-    } else {
-      one[key] = record[key]
-    }
-  }
-  return one
 }

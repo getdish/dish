@@ -15,6 +15,7 @@ export const tagInsert = QueryHelpers.insert
 export const tagUpsert = QueryHelpers.upsert
 export const tagUpdate = QueryHelpers.update
 export const tagFindOne = QueryHelpers.findOne
+export const tagRefresh = QueryHelpers.refresh
 
 export async function tagGetAllChildren(
   parents: Pick<Tag, 'id'>[]

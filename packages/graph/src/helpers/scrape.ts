@@ -14,6 +14,7 @@ export const scrapeInsert = QueryHelpers.insert
 export const scrapeUpsert = QueryHelpers.upsert
 export const scrapeUpdate = QueryHelpers.update
 export const scrapeFindOne = QueryHelpers.findOne
+export const scrapeRefresh = QueryHelpers.refresh
 
 export async function scrapeMergeData(
   id: string,
