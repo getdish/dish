@@ -3,6 +3,18 @@ import { ACCESSOR, Cache, ScalarNode, resolved } from 'gqless'
 import { mutateClient } from '../graphql/mutation'
 import { collectAll } from './collect'
 
+const filterFields = {
+  __typename: true,
+  // for user - password isnt valid, can we detect?
+  password: true,
+}
+
+export const filterMutationFields = {
+  ...filterFields,
+  // for restaurant - we cant return computed values from mutations!
+  is_open_now: true,
+}
+
 const resetCache = () => {
   // @ts-ignore
   mutateClient.cache = new Cache(mutateClient.node)
@@ -33,17 +45,6 @@ export async function resolvedMutationWithFields<T>(
   })
   // @ts-ignore
   return next
-}
-
-const filterFields = {
-  __typename: true,
-  // for user - password isnt valid, can we detect?
-  password: true,
-}
-export const filterMutationFields = {
-  ...filterFields,
-  // for restaurant - we cant return computed values from mutations!
-  is_open_now: true,
 }
 
 const isSimpleField = (field: any) => {

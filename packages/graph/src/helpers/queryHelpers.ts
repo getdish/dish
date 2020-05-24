@@ -34,12 +34,12 @@ export function createQueryHelpersFor<A>(
       return await update<WithID<A>>(modelName, a)
     },
     async findOne(a: A) {
-      return await findOne<WithID<A>>(modelName, a)
+      return await findOne<A>(modelName, a)
     },
-    async refresh(a: A) {
-      const next = await findOne<WithID<A>>(modelName, a)
-      if (!next) throw new Error(`refresh failed`)
-      return next
+    async refresh(a: WithID<A>) {
+      const next = await findOne(modelName, { id: a.id })
+      if (!next) throw new Error('@dish/graph: object refresh failed')
+      return next as WithID<A>
     },
   }
 }
