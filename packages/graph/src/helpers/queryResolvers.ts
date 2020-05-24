@@ -40,7 +40,7 @@ const filterFields = {
   // for user - password isnt valid, can we detect?
   password: true,
 }
-const filterMutationFields = {
+export const filterMutationFields = {
   ...filterFields,
   // for restaurant - we cant return computed values from mutations!
   is_open_now: true,
