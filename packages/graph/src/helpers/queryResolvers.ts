@@ -48,10 +48,12 @@ export async function resolvedMutationWithFields<T>(
 
 const filterFields = {
   __typename: true,
+  // for user - password isnt valid, can we detect?
+  password: true,
 }
 const filterMutationFields = {
   ...filterFields,
-  // we cant return computed values from mutations!
+  // for restaurant - we cant return computed values from mutations!
   is_open_now: true,
 }
 

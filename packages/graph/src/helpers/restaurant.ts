@@ -1,4 +1,4 @@
-import { Client, resolved } from 'gqless'
+import { resolved } from 'gqless'
 import _ from 'lodash'
 
 import { order_by, query, restaurant_constraint } from '../graphql'
@@ -13,31 +13,17 @@ import {
 } from '../types'
 import { allFieldsForTable } from './allFieldsForTable'
 import { levenshteinDistance } from './levenshteinDistance'
-import { findOne, insert, objectToWhere, update, upsert } from './queryHelpers'
+import { createQueryHelpersFor, objectToWhere } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
 
-export async function restaurantInsert(restaurants: Restaurant[]) {
-  return await insert<Restaurant>('restaurant', restaurants)
-}
-
-export async function restaurantUpsert(
-  objects: Restaurant[],
-  constraint = restaurant_constraint.restaurant_name_address_key
-): Promise<RestaurantWithId[]> {
-  return await upsert<Restaurant>('restaurant', constraint, objects)
-}
-
-export async function restaurantUpdate(
-  restaurant: RestaurantWithId
-): Promise<Restaurant> {
-  return await update<RestaurantWithId>('restaurant', restaurant)
-}
-
-export async function restaurantFindOne(
-  restaurant: Restaurant
-): Promise<RestaurantWithId | null> {
-  return await findOne<RestaurantWithId>('restaurant', restaurant)
-}
+const QueryHelpers = createQueryHelpersFor<Restaurant>(
+  'restaurant',
+  restaurant_constraint.restaurant_name_address_key
+)
+export const restaurantInsert = QueryHelpers.insert
+export const restaurantUpsert = QueryHelpers.upsert
+export const restaurantUpdate = QueryHelpers.update
+export const restaurantFindOne = QueryHelpers.findOne
 
 export async function restaurantFindOneWithTags(
   restaurant: Restaurant

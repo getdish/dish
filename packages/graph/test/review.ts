@@ -12,7 +12,7 @@ import {
   reviewFindAllForRestaurant,
   reviewInsert,
   tagInsert,
-  userFindOne,
+  userUpsert,
 } from '../src'
 import { restaurant_fixture } from './etc/fixtures'
 
@@ -31,15 +31,17 @@ test.beforeEach(async (t) => {
   const [existing_tag] = await tagInsert([{ name: 'Test tag existing' }])
   t.context.existing_tag = existing_tag
   await Auth.login('test', 'password')
-  const user = await userFindOne({
-    username: 'test',
-  })
-  if (user) {
-    t.context.user = user
-  }
+  const [user] = await userUpsert([
+    {
+      username: 'test',
+      password: 'password',
+    },
+  ])
+  t.context.user = user
 })
 
 test('Add a review for the whole restaurant itself', async (t) => {
+  console.log('what is', t.context.restaurant.id)
   const [review] = await reviewInsert([
     {
       restaurant_id: t.context.restaurant.id,
@@ -49,6 +51,7 @@ test('Add a review for the whole restaurant itself', async (t) => {
     },
   ])
   const results = await reviewFindAllForRestaurant(t.context.restaurant.id)
+  console.log('got', { review, results })
   t.deepEqual(review.id, results[0].id)
 })
 

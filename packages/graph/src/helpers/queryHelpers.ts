@@ -21,6 +21,26 @@ export function objectToWhere(hash: Object) {
   }
 }
 
+export function createQueryHelpersFor<A>(
+  modelName: ModelName,
+  defaultUpsertConstraint: any
+) {
+  return {
+    async insert(items: A[]) {
+      return await insert<A>(modelName, items)
+    },
+    async upsert(items: A[], constraint = defaultUpsertConstraint) {
+      return await upsert<A>(modelName, constraint, items)
+    },
+    async update(a: WithID<A>) {
+      return await update<WithID<A>>(modelName, a)
+    },
+    async findOne(a: A) {
+      return await findOne<WithID<A>>(modelName, a)
+    },
+  }
+}
+
 export async function findOne<T extends ModelType>(
   table: ModelName,
   hash: Partial<T>,

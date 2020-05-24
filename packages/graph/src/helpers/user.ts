@@ -1,18 +1,12 @@
-import { User, UserWithId } from '../types'
-import { findOne, insert, update, upsert } from './queryHelpers'
+import { user_constraint } from '../graphql'
+import { User } from '../types'
+import { createQueryHelpersFor } from './queryHelpers'
 
-export async function userInsert(users: User[]) {
-  return await insert<User>('user', users)
-}
-
-export async function userUpsert(objects: User[]) {
-  return await upsert<User>('user', '', objects)
-}
-
-export async function userUpdate(user: UserWithId) {
-  return await update<UserWithId>('user', user)
-}
-
-export async function userFindOne(user: Partial<User>) {
-  return await findOne<User>('user', user)
-}
+const QueryHelpers = createQueryHelpersFor<User>(
+  'user',
+  user_constraint.user_username_key
+)
+export const userInsert = QueryHelpers.insert
+export const userUpsert = QueryHelpers.upsert
+export const userUpdate = QueryHelpers.update
+export const userFindOne = QueryHelpers.findOne

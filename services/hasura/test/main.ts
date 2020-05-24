@@ -10,6 +10,12 @@ import {
   insert,
   update,
 } from '@dish/graph'
+import {
+  restaurantFindOne,
+  restaurantInsert,
+  restaurantUpsert,
+  scrapeFindOne,
+} from '@dish/graph/src'
 import anyTest, { TestInterface } from 'ava'
 
 interface Context {}
@@ -65,7 +71,7 @@ test('Normal user cannot get scrapes', async (t) => {
   await Auth.login('tester', 'password')
   Auth.as('user')
   try {
-    const scrape = await findOne<Scrape>('scrape', { id: 'example' })
+    const scrape = await scrapeFindOne({ id: 'example' })
   } catch (e) {
     t.is(
       e.errors[0].message,
@@ -87,7 +93,7 @@ test('Normal user can see restaurants', async (t) => {
   await Auth.register('tester', 'password')
   await Auth.login('tester', 'password')
   Auth.as('user')
-  const restaurant = await findOne<Restaurant>('restaurant', { name: 'test' })
+  const restaurant = await restaurantFindOne({ name: 'test' })
   t.is(restaurant.name, 'test')
 })
 
@@ -98,7 +104,7 @@ test('Contributor can edit restaurants', async (t) => {
     ...user,
     role: 'contributor',
   })
-  const [restaurant] = await insert<Restaurant>('restaurant', [
+  let [restaurant] = await restaurantInsert([
     {
       name: 'test',
       location: {
@@ -110,7 +116,7 @@ test('Contributor can edit restaurants', async (t) => {
   await Auth.login('tester-contributor', 'password')
   Auth.as('user')
   restaurant.rating = 5
-  await restaurant.update()
-  await restaurant.findOne('name', 'test')
+  await restaurantUpsert([restaurant])
+  restaurant = await restaurantFindOne({ name: 'test' })
   t.is(restaurant.rating, 5)
 })
