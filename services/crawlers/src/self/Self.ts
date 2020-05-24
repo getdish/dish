@@ -128,7 +128,7 @@ export class Self extends WorkerJob {
       if (e.message == UNIQUNESS_VIOLATION) {
         this.handleRestaurantKeyConflict()
       } else {
-        throw new Error(e)
+        throw e
       }
     }
   }

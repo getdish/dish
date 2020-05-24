@@ -2,6 +2,7 @@ import { query } from '../graphql'
 import { mutation } from '../graphql/mutation'
 import { ModelName, ModelType, WithID } from '../types'
 import {
+  filterMutationFields,
   resolvedMutation,
   resolvedMutationWithFields,
   resolvedWithFields,
@@ -60,6 +61,7 @@ export async function insert<T extends ModelType>(
   objects: T[]
 ): Promise<WithID<T>[]> {
   const action = `insert_${table}` as any
+  removeReadOnlyProperties(objects)
   return await resolvedMutationWithFields(() =>
     mutation[action]({
       objects,
@@ -72,6 +74,7 @@ export async function upsert<T extends ModelType>(
   constraint: string,
   objects: T[]
 ): Promise<WithID<T>[]> {
+  removeReadOnlyProperties(objects)
   // TODO: Is there a better way to get the updateable columns?
   const update_columns = Object.keys(objects[0])
   const action = `insert_${table}` as any
@@ -91,6 +94,7 @@ export async function update<T extends WithID<ModelType>>(
   object: T
 ): Promise<WithID<T>> {
   const action = `update_${table}` as any
+  removeReadOnlyProperties([object])
   const [resolved] = await resolvedMutationWithFields(() =>
     mutation[action]({
       where: { id: { _eq: object.id } },
@@ -98,6 +102,12 @@ export async function update<T extends WithID<ModelType>>(
     })
   )
   return resolved
+}
+
+function removeReadOnlyProperties<T>(objects: T[]) {
+  for (const field of Object.keys(filterMutationFields)) {
+    objects.forEach((o) => delete o[field])
+  }
 }
 
 export async function deleteAllFuzzyBy(
