@@ -1,25 +1,19 @@
+import { scrape_constraint } from '../graphql'
 import { mutation } from '../graphql/mutation'
-import { Scrape, ScrapeWithId } from '../types'
-import { findOne, insert, update } from './queryHelpers'
+import { Scrape } from '../types'
+import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedMutationWithFields } from './queryResolvers'
 
 export type ScrapeData = { [key: string]: any }
 
-export async function scrapeInsert(scrapes: Scrape[]) {
-  return await insert<Scrape>('scrape', scrapes)
-}
-
-// export async function scrapeUpsert(objects: Scrape[]) {
-//   return await upsert<Scrape>('scrape', '', objects)
-// }
-
-export async function scrapeUpdate(scrape: ScrapeWithId) {
-  return await update<ScrapeWithId>('scrape', scrape)
-}
-
-export async function scrapeFindOne(scrape: Partial<Scrape>) {
-  return await findOne<ScrapeWithId>('scrape', scrape)
-}
+const QueryHelpers = createQueryHelpersFor<Scrape>(
+  'scrape',
+  scrape_constraint.scrape_pkey
+)
+export const scrapeInsert = QueryHelpers.insert
+export const scrapeUpsert = QueryHelpers.upsert
+export const scrapeUpdate = QueryHelpers.update
+export const scrapeFindOne = QueryHelpers.findOne
 
 export async function scrapeMergeData(
   id: string,

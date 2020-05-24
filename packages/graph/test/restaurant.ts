@@ -16,8 +16,6 @@ import {
 } from '../src'
 import { dish_fixture, restaurant_fixture } from './etc/fixtures'
 
-// startLogging()
-
 interface Context {
   restaurant: Restaurant
   existing_tag: Tag

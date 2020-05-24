@@ -1,30 +1,20 @@
 import { query, tag_constraint } from '../graphql'
-import { Tag, TagTag, TagWithId } from '../types'
-import { findOne, insert, update, upsert } from './queryHelpers'
+import { Tag, TagTag } from '../types'
+import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
 import { slugify } from './slugify'
 import { tagTagUpsert } from './tag_tag'
 
 export const tagSlug = (tag: Pick<Tag, 'name'>) => slugify(tag.name ?? '')
 
-export async function tagInsert(tags: Tag[]) {
-  return await insert<Tag>('tag', tags)
-}
-
-export async function tagUpsert(
-  objects: Tag[],
-  constraint = tag_constraint.tag_parentId_name_key
-) {
-  return await upsert<Tag>('tag', constraint, objects)
-}
-
-export async function tagUpdate(tag: TagWithId) {
-  return await update<TagWithId>('tag', tag)
-}
-
-export async function tagFindOne(tag: Partial<Tag>) {
-  return await findOne<TagWithId>('tag', tag)
-}
+const QueryHelpers = createQueryHelpersFor<Tag>(
+  'tag',
+  tag_constraint.tag_parentId_name_key
+)
+export const tagInsert = QueryHelpers.insert
+export const tagUpsert = QueryHelpers.upsert
+export const tagUpdate = QueryHelpers.update
+export const tagFindOne = QueryHelpers.findOne
 
 export async function tagGetAllChildren(
   parents: Pick<Tag, 'id'>[]

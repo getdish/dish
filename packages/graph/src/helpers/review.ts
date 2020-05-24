@@ -1,27 +1,16 @@
-import { order_by, query } from '../graphql'
-import { Review, ReviewWithId } from '../types'
-import { findOne, insert, update } from './queryHelpers'
+import { order_by, query, review_constraint } from '../graphql'
+import { Review } from '../types'
+import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
 
-export async function reviewInsert(reviews: Review[]): Promise<Review[]> {
-  return await insert<Review>('review', reviews)
-}
-
-// export async function reviewUpsert(objects: Review[]): Promise<Review[]> {
-//   return await upsert<Review>('review', '', objects)
-// }
-
-export async function reviewUpdate(
-  review: ReviewWithId
-): Promise<ReviewWithId> {
-  return await update<ReviewWithId>('review', review)
-}
-
-export async function reviewFindOne(
-  review: Partial<Review>
-): Promise<ReviewWithId | null> {
-  return await findOne<ReviewWithId>('review', review)
-}
+const QueryHelpers = createQueryHelpersFor<Review>(
+  'review',
+  review_constraint.review_user_id_restaurant_id_taxonomy_id_key
+)
+export const reviewInsert = QueryHelpers.insert
+export const reviewUpsert = QueryHelpers.upsert
+export const reviewUpdate = QueryHelpers.update
+export const reviewFindOne = QueryHelpers.findOne
 
 export async function reviewFindAllForRestaurant(restaurant_id: string) {
   return await resolvedWithFields(() => {
