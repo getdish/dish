@@ -11,6 +11,7 @@ export const reviewInsert = QueryHelpers.insert
 export const reviewUpsert = QueryHelpers.upsert
 export const reviewUpdate = QueryHelpers.update
 export const reviewFindOne = QueryHelpers.findOne
+export const reviewRefresh = QueryHelpers.refresh
 
 export async function reviewFindAllForRestaurant(restaurant_id: string) {
   return await resolvedWithFields(() => {

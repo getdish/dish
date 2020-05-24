@@ -1,7 +1,6 @@
 import '@dish/common'
 
 import {
-  Dish,
   RESTAURANT_WEIGHTS,
   RestaurantTag,
   RestaurantTagWithID,
@@ -11,8 +10,6 @@ import {
   Tag,
   deleteAllBy,
   dishUpsert,
-  fetchBatch,
-  findOne,
   restaurantFindBatch,
   restaurantFindOne,
   restaurantGetAllPossibleTags,
@@ -23,7 +20,6 @@ import {
   scrapeGetData,
   tagFindCountries,
   tagSlug,
-  upsert,
 } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'

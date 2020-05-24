@@ -1,10 +1,7 @@
-import { resolved } from 'gqless'
-
 import { query } from '../graphql'
 import { mutation } from '../graphql/mutation'
 import { ModelName, ModelType, WithID } from '../types'
 import {
-  resolveFields,
   resolvedMutation,
   resolvedMutationWithFields,
   resolvedWithFields,
@@ -37,6 +34,11 @@ export function createQueryHelpersFor<A>(
     },
     async findOne(a: A) {
       return await findOne<WithID<A>>(modelName, a)
+    },
+    async refresh(a: A) {
+      const next = await findOne<WithID<A>>(modelName, a)
+      if (!next) throw new Error(`refresh failed`)
+      return next
     },
   }
 }
@@ -106,7 +108,7 @@ export async function deleteAllFuzzyBy(
   return await resolvedMutation(() => {
     return mutation[`delete_${table}`]?.({
       where: { [key]: { _ilike: `%${value}%` } },
-    }).affected_rows
+    })
   })
 }
 
@@ -118,29 +120,6 @@ export async function deleteAllBy(
   return await resolvedMutation(() => {
     return mutation[`delete_${table}`]?.({
       where: { [key]: { _eq: value } },
-      // @ts-ignore
-    }).affected_rows
-  })
-}
-
-export async function fetchBatch<T extends ModelType>(
-  table: ModelName,
-  size: number,
-  previous_id: string,
-  extraFields: string[] = [],
-  extra_where: {} = {}
-): Promise<T[]> {
-  const res: any = await resolved(() => {
-    const result = query[table]?.({
-      limit: size,
-      // @ts-ignore
-      order_by: { id: 'asc' },
-      where: {
-        id: { _gt: previous_id },
-        ...extra_where,
-      },
     })
-    return resolveFields(result, ['id', ...extraFields])
   })
-  return res
 }

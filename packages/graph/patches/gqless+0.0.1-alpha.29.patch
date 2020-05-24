@@ -1,50 +1,8 @@
 diff --git a/node_modules/gqless/dist/Type.d.ts b/node_modules/gqless/dist/Type.d.ts
-index 27c8f79..156446c 100644
+index 27c8f79..85114f5 100644
 --- a/node_modules/gqless/dist/Type.d.ts
 +++ b/node_modules/gqless/dist/Type.d.ts
-@@ -8,19 +8,19 @@ declare type RequiredKeys<T> = {
- }[keyof T];
- declare type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
- declare type IfAny<T, Y, N> = 0 extends 1 & T ? Y : N;
--declare enum Kind {
-+export declare enum Kind {
-     scalar = 0,
-     enum = 1,
-     fields = 2
- }
--declare type Type<TKind extends Kind = any, TData = any, TExtension = any> = {
-+export declare type Type<TKind extends Kind = any, TData = any, TExtension = any> = {
-     kind: TKind;
-     data: TData;
-     extension: TExtension;
- };
--declare type ExtensionData<TExtension> = TExtension extends (...args: any[]) => infer U ? U : TExtension;
--declare type TypeExtension<TType extends ValidType> = TType extends Type ? IfAny<TType['extension'], never, ExtensionData<TType['extension']>> : never;
--declare type ValidType = ValidType[] | Type | undefined | null;
-+export declare type ExtensionData<TExtension> = TExtension extends (...args: any[]) => infer U ? U : TExtension;
-+export declare type TypeExtension<TType extends ValidType> = TType extends Type ? IfAny<TType['extension'], never, ExtensionData<TType['extension']>> : never;
-+export declare type ValidType = ValidType[] | Type | undefined | null;
- export declare type ScalarType<TData = any, TExtension = any> = Type<Kind.scalar, TData, TExtension>;
- export declare type EnumType<TData = any, TExtension = any> = Type<Kind.enum, TData, TExtension>;
- declare type FieldsRecord = Record<string, ValidType | FieldsTypeArg>;
-@@ -33,14 +33,14 @@ export declare type FieldsTypeArg<TArgs extends ArgsRecord = any, TType extends
- declare type WithVariables<TArgs extends ArgsRecord> = TArgs extends object ? {
-     [K in keyof TArgs]: WithVariables<TArgs[K]> | Variable<WithVariables<Exclude<TArgs[K], undefined>>>;
- } : TArgs;
--declare type ArgsFn<TArgs extends ArgsRecord, TType extends ValidType, TExtension> = RequiredKeys<TArgs> extends never ? ((args?: TArgs) => TypeData<TType, TExtension>) & (TType extends ScalarType | EnumType ? unknown : TypeData<TType, TExtension>) : (args: TArgs) => TypeData<TType, TExtension>;
-+export declare type ArgsFn<TArgs extends ArgsRecord, TType extends ValidType, TExtension> = RequiredKeys<TArgs> extends never ? ((args?: TArgs) => TypeData<TType, TExtension>) & (TType extends ScalarType | EnumType ? unknown : TypeData<TType, TExtension>) : (args: TArgs) => TypeData<TType, TExtension>;
- declare type MapExtensionData<T extends Tuple, Key extends TupleKeys<T>> = {
-     [K in keyof MapTupleByKey<T, Key>]: ExtensionData<MapTupleByKey<T, Key>[K]>;
- };
- declare type CustomExtensionData<TExtensions extends Tuple> = keyof TExtensions extends never ? {} : UnionToIntersection<TExtensions[keyof TExtensions]> extends infer U ? Omit<{
-     [K in keyof U]: U[K] extends never ? LastTupleValueForKey<TExtensions, K> : U[K];
- }, typeof INDEX | typeof GET_KEY> : never;
--declare type FieldsData<TFields extends FieldsType, TExtensions extends Tuple> = keyof TFields['data'] extends never ? CustomExtensionData<TExtensions> : {
-+export declare type FieldsData<TFields extends FieldsType, TExtensions extends Tuple> = keyof TFields['data'] extends never ? CustomExtensionData<TExtensions> : {
-     [K in keyof (TFields['data'] & CustomExtensionData<TExtensions>)]: K extends keyof TFields['data'] ? TFields['data'][K] extends FieldsTypeArg<infer TArgs, infer TType> ? ArgsFn<WithVariables<TArgs>, TType, MapExtensionData<TExtensions, K>> : TypeData<TFields['data'][K], MapExtensionData<TExtensions, K>> : CustomExtensionData<TExtensions>[K];
- };
- declare type ArrayData<TArray extends ValidType[], TExtensions extends Tuple> = {
-@@ -50,5 +50,11 @@ declare type ArrayData<TArray extends ValidType[], TExtensions extends Tuple> =
+@@ -50,5 +50,12 @@ declare type ArrayData<TArray extends ValidType[], TExtensions extends Tuple> =
  } : never);
  declare type ScalarData<TScalar extends ScalarType | EnumType, TExtensions extends Tuple> = LastTupleValue<TExtensions> extends never ? TScalar['data'] : LastTupleValue<TExtensions>;
  declare type UnshiftExtension<TExtensions, TType extends ValidType> = keyof TypeExtension<TType> extends never ? TExtensions : UnshiftTuple<TExtensions, TypeExtension<TType>>;
@@ -56,9 +14,10 @@ index 27c8f79..156446c 100644
 +            TType extends FieldsType ? FieldsData<TType, UnshiftExtension<TExtensions, TType>> :
 +                TType extends FieldsTypeArg<any, infer X> ? X extends Type<any, infer Z> ? Z : X : null;
 +
++
  export {};
 diff --git a/node_modules/gqless/dist/gqless.cjs.development.js b/node_modules/gqless/dist/gqless.cjs.development.js
-index 12268bf..c9d413d 100644
+index 12268bf..16ad852 100644
 --- a/node_modules/gqless/dist/gqless.cjs.development.js
 +++ b/node_modules/gqless/dist/gqless.cjs.development.js
 @@ -451,7 +451,7 @@ const buildArguments = ({
@@ -71,47 +30,15 @@ index 12268bf..c9d413d 100644
 
      if (Array.isArray(arg)) {
 diff --git a/node_modules/gqless/dist/gqless.esm.js b/node_modules/gqless/dist/gqless.esm.js
-index cc6eb3f..3d0c599 100644
+index cc6eb3f..70528be 100644
 --- a/node_modules/gqless/dist/gqless.esm.js
 +++ b/node_modules/gqless/dist/gqless.esm.js
-@@ -482,6 +482,12 @@ const buildSelections = ({
+@@ -482,6 +482,8 @@ const buildSelections = ({
    const includeTypename = // When no selections or not on ObjectNode
    (!tree.children.length || !(innerNode instanceof ObjectNode)) && // fragments should never need __typename
    !(tree.selection instanceof Fragment);
-+
 +  // super fucking weird patch fixes firefox...
-+  if (innerNode) {
-+    innerNode.constructor.name
-+  }
-+
++  if (innerNode) innerNode.constructor.name;
    const selections = [includeTypename && '__typename', ...tree.children.map(tree => buildSelectionTree(formatter, tree, variables))].filter(Boolean);
    if (!selections.length) return '';
    return selections.join(LINE_SEPARATOR);
-@@ -559,17 +565,16 @@ const memoized =
- createMemo();
- const getAlias = tree => {
-   if (!tree.parent) return;
--  const fieldAliases = memoized(() => {
--    const aliases = new Map();
--    let id = 0;
--    tree.parent.children.forEach(siblingTree => {
--      if (!(siblingTree.selection instanceof FieldSelection)) return;
--      if (tree.selection === siblingTree.selection || tree.selection.field !== siblingTree.selection.field) return;
--      aliases.set(tree.selection, `${tree.selection.field.name}__${++id}`);
--    });
--    return aliases;
--  }, [tree.parent, tree.selection.field]);
--  return fieldAliases.get(tree.selection);
-+  let id
-+  for (const siblingTree of tree.parent.children) {
-+    if (!(siblingTree.selection instanceof FieldSelection)) continue;
-+    if (tree.selection === siblingTree.selection) continue
-+    if (tree.selection.field.name !== siblingTree.selection.field.name) continue;
-+    const thisIndex = tree.parent.children.indexOf(tree)
-+    id = `${tree.selection.field.name}__${thisIndex}`
-+    break
-+  }
-+  return id
- };
-
- /**

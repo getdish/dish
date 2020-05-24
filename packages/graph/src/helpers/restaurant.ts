@@ -12,6 +12,7 @@ import {
   Tag,
 } from '../types'
 import { allFieldsForTable } from './allFieldsForTable'
+import { collect, collectAll } from './collect'
 import { levenshteinDistance } from './levenshteinDistance'
 import { createQueryHelpersFor, objectToWhere } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
@@ -24,19 +25,24 @@ export const restaurantInsert = QueryHelpers.insert
 export const restaurantUpsert = QueryHelpers.upsert
 export const restaurantUpdate = QueryHelpers.update
 export const restaurantFindOne = QueryHelpers.findOne
+export const restaurantRefresh = QueryHelpers.refresh
+
+const restaurantFields = allFieldsForTable('restaurant')
+const tagFields = allFieldsForTable('restaurant_tag')
 
 export async function restaurantFindOneWithTags(
   restaurant: Restaurant
 ): Promise<Required<Restaurant>> {
   const [first] = await resolved(() => {
-    const res = query.restaurant(objectToWhere(restaurant))
-    const tag = res[0].tags()[0]
-    for (const key of allFieldsForTable('restaurant_tag')) {
-      tag[key]
-    }
-    return res as any
+    const items = query.restaurant(objectToWhere(restaurant))
+    return items.map((item) => {
+      return {
+        ...collect(item, restaurantFields),
+        tags: collectAll(item.tags(), tagFields),
+      }
+    })
   })
-  return first
+  return first as Required<Restaurant>
 }
 
 export async function restaurantFindBatch(
@@ -161,12 +167,6 @@ async function findExistingCanonical(
   return found
 }
 
-export async function restaurantRefresh<A extends Restaurant>(
-  restaurant: A
-): Promise<A> {
-  return (await restaurantFindOne({ id: restaurant.id })) as A
-}
-
 export async function restaurantUpsertManyTags(
   restaurant: RestaurantWithId,
   restaurant_tags: RestaurantTag[]
@@ -197,14 +197,16 @@ export async function restaurantUpsertOrphanTags(
   })
   await restaurantTagUpsert(restaurant.id, restaurant_tags)
   await updateTagNames(restaurant)
-  return await restaurantFindOne(restaurant)
+  return await restaurantFindOneWithTags(restaurant)
 }
 
-async function updateTagNames(restaurant: RestaurantWithId) {
-  restaurant = await restaurantRefresh(restaurant)
+async function updateTagNames({ id }: RestaurantWithId) {
+  let restaurant = await restaurantFindOneWithTags({ id })
   const tag_names = (restaurant.tags ?? []).map((i) => i.tag.slugs().flat())
-  restaurant.tag_names = _.uniq([...(restaurant.tag_names || []), ...tag_names])
-  return await restaurantUpdate(restaurant)
+  return await restaurantUpdate({
+    ...restaurant,
+    tag_names: _.uniq([...(restaurant.tag_names || []), ...tag_names]),
+  })
 }
 
 function getRestaurantTagFromTag(restaurant: Restaurant, tag_id: string) {

@@ -4,9 +4,7 @@ import {
   RestaurantWithId,
   TagWithId,
   flushTestData,
-  restaurantFindOne,
   restaurantFindOneWithTags,
-  restaurantRefresh,
   restaurantTagUpsert,
   restaurantUpsert,
   restaurantUpsertOrphanTags,
@@ -43,24 +41,19 @@ test('Tagging a restaurant with orphaned tags', async (t) => {
   const next = await restaurantFindOneWithTags({
     name: restaurant.name,
   })
-  if (next) {
-    restaurant = next
-    console.log('restaurant', restaurant, restaurant.tag_names)
-    t.is(restaurant.tags?.length, 2)
-    t.is(
-      restaurant.tags?.map((t) => t.tag.id).includes(t.context.existing_tag.id),
-      true
-    )
-    t.is(restaurant.tags?.map((t) => t.tag.name).includes('Test tag'), true)
-    t.is(
-      restaurant.tags?.map((t) => t.tag.displayName).includes('Test tag'),
-      true
-    )
+  if (!next) {
+    throw new Error(`invalid`)
   }
-  console.log(
-    'restaurant.tag_names',
-    restaurant.tag_names,
-    restaurant.tag_names()
+  restaurant = next
+  t.is(restaurant.tags?.length, 2)
+  t.is(
+    restaurant.tags?.map((t) => t.tag.id).includes(t.context.existing_tag.id),
+    true
+  )
+  t.is(restaurant.tags?.map((t) => t.tag.name).includes('Test tag'), true)
+  t.is(
+    restaurant.tags?.map((t) => t.tag.displayName).includes('Test tag'),
+    true
   )
   t.is(restaurant.tag_names.length, 2)
   t.is(restaurant.tag_names.includes('test-tag'), true)
@@ -73,7 +66,8 @@ test('Tagging a restaurant with a tag that has a parent', async (t) => {
     { name: 'Test tag', parentId: t.context.existing_tag.id },
   ])
   await restaurantTagUpsert(restaurant.id, [{ tag_id: tag.id }])
-  restaurant = await restaurantRefresh(restaurant)
+  restaurant = await restaurantFindOneWithTags({ name: restaurant.name })
+  console.log('restaurant.tags', restaurant.tags)
   t.is(restaurant.tags?.length, 1)
   t.is(restaurant.tags?.map((t) => t.tag.name).includes('Test tag'), true)
   t.is(restaurant.tag_names.length, 3)
@@ -87,9 +81,9 @@ test('Tagging a restaurant with a tag that has categories', async (t) => {
   const tag_with_category = await tagInsert([{ name: tag_name }])
   // @ts-ignore
   await tagUpsertCategorizations(tag_with_category, [t.context.existing_tag.id])
-  const restaurant = t.context.restaurant
+  let restaurant = t.context.restaurant
   await restaurantUpsertOrphanTags(restaurant, [tag_name])
-  await restaurantFindOne({ name: restaurant.name })
+  restaurant = await restaurantFindOneWithTags({ name: restaurant.name })
   t.is(restaurant.tags?.length, 1)
   t.is(restaurant.tags?.map((t) => t.tag?.name).includes(tag_name), true)
   t.is(restaurant.tag_names.length, 2)

@@ -32,8 +32,6 @@ export interface ReviewQuery extends review {}
 export interface DishQuery extends dish {}
 export interface ScrapeQuery extends scrape {}
 
-type x = RestaurantQuery['tags']
-
 // SECTION 1
 // this flattens them to a partial of all resolved values, minus sub-nodes
 

@@ -10,3 +10,4 @@ export const dishInsert = QueryHelpers.insert
 export const dishUpsert = QueryHelpers.upsert
 export const dishUpdate = QueryHelpers.update
 export const dishFindOne = QueryHelpers.findOne
+export const dishRefresh = QueryHelpers.refresh
