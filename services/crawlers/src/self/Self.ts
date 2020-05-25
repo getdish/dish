@@ -93,14 +93,14 @@ export class Self extends WorkerJob {
     this._start_time = process.hrtime()
     const restaurant = await restaurantFindOne({ id: id })
     if (restaurant) {
-      this.restaurant = restaurant
+      this.restaurant = restaurant as RestaurantWithId
       console.log('Merging: ' + this.restaurant.name)
       await this.getScrapeData()
       await this.mergeMainData()
-      await this.mergeTags()
-      await this.findPhotosForTags()
-      await this.scanReviews()
-      await this.upsertUberDishes()
+      //await this.mergeTags()
+      //await this.findPhotosForTags()
+      //await this.scanReviews()
+      //await this.upsertUberDishes()
       console.log(`Merged: ${this.restaurant.name} in ${this.elapsedTime()}s`)
     }
     return this.restaurant
@@ -108,16 +108,16 @@ export class Self extends WorkerJob {
 
   async mergeMainData() {
     this.mergeName()
-    this.mergeTelephone()
-    this.mergeAddress()
-    this.mergeRatings()
-    this.mergeImage()
-    this.mergePhotos()
-    this.addWebsite()
-    this.addSources()
-    this.addPriceRange()
-    this.addHours()
-    this.getRatingFactors()
+    //this.mergeTelephone()
+    //this.mergeAddress()
+    //this.mergeRatings()
+    //this.mergeImage()
+    //this.mergePhotos()
+    //this.addWebsite()
+    //this.addSources()
+    //this.addPriceRange()
+    //this.addHours()
+    //this.getRatingFactors()
     await this.persist()
   }
 
@@ -159,7 +159,7 @@ export class Self extends WorkerJob {
           restaurant.id
       )
       await deleteAllBy('restaurant', 'id', conflicter.id)
-      await this.persist()
+      //await this.persist()
     } else {
       throw new Error('Conflicting restaurant updated too recently')
     }
@@ -525,7 +525,7 @@ export class Self extends WorkerJob {
 
   async findPhotosForTags() {
     let restaurant_tags = [] as RestaurantTagWithID[]
-    await this.persist()
+    //await this.persist()
     const all_possible_tags = await restaurantGetAllPossibleTags(
       this.restaurant
     )

@@ -5,12 +5,14 @@ import moment from 'moment'
 
 import {
   Restaurant,
+  RestaurantWithId,
   Tag,
   dishUpsert,
   flushTestData,
   restaurantFindNear,
   restaurantFindOne,
   restaurantSaveCanonical,
+  restaurantUpdate,
   restaurantUpsert,
   startLogging,
 } from '../src'
@@ -56,6 +58,18 @@ test('Finding a restaurant by name', async (t) => {
     name: 'Test Restaurant',
   })
   t.is(restaurant?.name ?? '', 'Test Restaurant')
+})
+
+test('Avoiding cache', async (t) => {
+  await restaurantFindOne({
+    name: 'Test Restaurant',
+  })
+  t.context.restaurant.city = 'New City'
+  await restaurantUpdate(t.context.restaurant as RestaurantWithId)
+  const restaurant = await restaurantFindOne({
+    name: 'Test Restaurant',
+  })
+  t.is(restaurant?.city ?? '', 'New City')
 })
 
 test('Finding a restaurant by location', async (t) => {

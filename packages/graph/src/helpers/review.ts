@@ -14,7 +14,7 @@ export const reviewFindOne = QueryHelpers.findOne
 export const reviewRefresh = QueryHelpers.refresh
 
 export async function reviewFindAllForRestaurant(restaurant_id: string) {
-  return await resolvedWithFields(() => {
+  return await resolvedWithFields('review', () => {
     return query.review({
       where: {
         restaurant_id: { _eq: restaurant_id },
@@ -29,7 +29,7 @@ export async function reviewFindAllForRestaurant(restaurant_id: string) {
 }
 
 export async function reviewFindAllForUser(user_id: string) {
-  return await resolvedWithFields(() => {
+  return await resolvedWithFields('review', () => {
     return query.review({
       where: {
         user_id: { _eq: user_id },

@@ -341,7 +341,7 @@ test('Dish sentiment analysis from reviews', async (t) => {
   })
   t.is(!!restaurant, true)
   if (!restaurant) return
-  t.context.restaurant = restaurant
+  t.context.restaurant = restaurant as RestaurantWithId
   self.restaurant = t.context.restaurant
   await self.getScrapeData()
   await self.scanReviews()
@@ -379,7 +379,7 @@ test('Find photos of dishes', async (t) => {
   })
   t.assert(!!restaurant, 'not found')
   if (!restaurant) return
-  t.context.restaurant = restaurant
+  t.context.restaurant = restaurant as RestaurantWithId
   self.restaurant = t.context.restaurant
   await self.getScrapeData()
   await self.findPhotosForTags()
