@@ -1,16 +1,19 @@
 export const collect = <A extends any>(object: A, fields: string[]): A => {
-  return fields.reduce((acc, cur) => {
+  const record = fields.reduce((acc, cur) => {
     const val = object[cur]
-    if (typeof val !== 'function') {
+    if (typeof val === 'function') {
+      acc[cur] = val()
+    } else {
       acc[cur] = val
     }
     return acc
   }, {}) as A
+  return record
 }
 
 export const collectAll = <A extends any>(
-  object: A[],
+  objects: A[],
   fields: string[]
 ): A[] => {
-  return object.map((x) => collect(x, fields))
+  return objects.map((x) => collect(x, fields))
 }

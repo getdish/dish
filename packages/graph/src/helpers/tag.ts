@@ -20,7 +20,7 @@ export const tagRefresh = QueryHelpers.refresh
 export async function tagGetAllChildren(
   parents: Pick<Tag, 'id'>[]
 ): Promise<Tag[]> {
-  return await resolvedWithFields(() => {
+  return await resolvedWithFields('tag', () => {
     return query.tag({
       where: {
         parentId: {
@@ -32,7 +32,7 @@ export async function tagGetAllChildren(
 }
 
 export async function tagFindCountries(countries: string[]): Promise<Tag[]> {
-  return await resolvedWithFields(() => {
+  return await resolvedWithFields('tag', () => {
     return query.tag({
       where: {
         _or: [
