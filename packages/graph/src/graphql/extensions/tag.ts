@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { uniq } from 'lodash'
 
 import { slugify } from '../../helpers/slugify'
 
@@ -29,13 +29,13 @@ export const tag = (tag) => {
         slugify(i.category.name)
       )
       const all = [this.slug(), ...parentage, ...category_names].flat()
-      return _.uniq(all)
+      return uniq(all)
     },
     addAlternate(alternate: string) {
       if (alternate != tag.name) {
         tag.alternates = tag.alternates || []
         tag.alternates?.push(alternate)
-        tag.alternates = _.uniq(tag.alternates)
+        tag.alternates = uniq(tag.alternates)
       }
     },
   }

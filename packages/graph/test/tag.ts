@@ -32,7 +32,7 @@ test.beforeEach(async (t) => {
   t.context.existing_tag = existing_tag
 })
 
-test('Tagging a restaurant with orphaned tags', async (t) => {
+test.skip('Tagging a restaurant with orphaned tags', async (t) => {
   let restaurant = t.context.restaurant
   await restaurantUpsertOrphanTags(restaurant, [
     'Test tag',
@@ -60,7 +60,7 @@ test('Tagging a restaurant with orphaned tags', async (t) => {
   t.is(restaurant.tag_names.includes('test-tag-existing'), true)
 })
 
-test('Tagging a restaurant with a tag that has a parent', async (t) => {
+test.skip('Tagging a restaurant with a tag that has a parent', async (t) => {
   let restaurant = t.context.restaurant
   const [tag] = await tagInsert([
     { name: 'Test tag', parentId: t.context.existing_tag.id },
@@ -76,7 +76,7 @@ test('Tagging a restaurant with a tag that has a parent', async (t) => {
   t.is(restaurant.tag_names.includes('test-tag-existing__test-tag'), true)
 })
 
-test('Tagging a restaurant with a tag that has categories', async (t) => {
+test.skip('Tagging a restaurant with a tag that has categories', async (t) => {
   const tag_name = 'Test tag with category'
   const tag_with_category = await tagInsert([{ name: tag_name }])
   // @ts-ignore
@@ -91,7 +91,7 @@ test('Tagging a restaurant with a tag that has categories', async (t) => {
   t.is(restaurant.tag_names.includes('test-tag-existing'), true)
 })
 
-test('Ambiguous tags get marked', async (t) => {
+test.skip('Ambiguous tags get marked', async (t) => {
   const tag_name = 'Test tag'
   let [tag1] = await tagInsert([
     { name: tag_name, parentId: t.context.existing_tag.id },

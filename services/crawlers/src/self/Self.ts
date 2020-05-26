@@ -97,10 +97,10 @@ export class Self extends WorkerJob {
       console.log('Merging: ' + this.restaurant.name)
       await this.getScrapeData()
       await this.mergeMainData()
-      //await this.mergeTags()
-      //await this.findPhotosForTags()
-      //await this.scanReviews()
-      //await this.upsertUberDishes()
+      await this.mergeTags()
+      await this.findPhotosForTags()
+      await this.scanReviews()
+      await this.upsertUberDishes()
       console.log(`Merged: ${this.restaurant.name} in ${this.elapsedTime()}s`)
     }
     return this.restaurant
@@ -108,16 +108,16 @@ export class Self extends WorkerJob {
 
   async mergeMainData() {
     this.mergeName()
-    //this.mergeTelephone()
-    //this.mergeAddress()
-    //this.mergeRatings()
-    //this.mergeImage()
-    //this.mergePhotos()
-    //this.addWebsite()
-    //this.addSources()
-    //this.addPriceRange()
-    //this.addHours()
-    //this.getRatingFactors()
+    this.mergeTelephone()
+    this.mergeAddress()
+    this.mergeRatings()
+    this.mergeImage()
+    this.mergePhotos()
+    this.addWebsite()
+    this.addSources()
+    this.addPriceRange()
+    this.addHours()
+    this.getRatingFactors()
     await this.persist()
   }
 
