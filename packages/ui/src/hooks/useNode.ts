@@ -10,9 +10,9 @@ const idFn = (_) => _
 export function useNode<A extends HTMLElement>(
   props: UseNodeProps<A> = { map: idFn }
 ) {
-  const internalRef = useRef(null)
+  const internalRef = useRef<any>(null)
   const ref = props.ref || internalRef
-  const mapRef = useRef(null)
+  const mapRef = useRef<any>(null)
 
   if (ref.current) {
     mapRef.current = props.map(ref.current)

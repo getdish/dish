@@ -20,12 +20,5 @@ export const tag = (tag) => {
     slugDisambiguated: () => tagSlugDisambiguated(tag),
     slugs: () => tagSlugs(tag),
     isOrphan: () => tagIsOrphan(tag),
-    addAlternate(alternate: string) {
-      if (alternate != tag.name) {
-        tag.alternates = tag.alternates || []
-        tag.alternates?.push(alternate)
-        tag.alternates = uniq(tag.alternates)
-      }
-    },
   }
 }

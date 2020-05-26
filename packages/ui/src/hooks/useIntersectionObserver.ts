@@ -22,7 +22,7 @@ export function useIntersectionObserver(
     if (!node) return
     const observer = new IntersectionObserver((...args) => {
       if (getOnChange()) {
-        getOnChange()(...args)
+        getOnChange()?.(...args)
       } else {
         const [entries] = args
         setState(entries)

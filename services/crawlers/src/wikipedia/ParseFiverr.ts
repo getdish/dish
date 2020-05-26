@@ -2,7 +2,7 @@ import fs from 'fs'
 
 import {
   Tag,
-  findOne,
+  tagAddAlternate,
   tagFindOne,
   tagUpsert,
   tagUpsertCategorizations,
@@ -93,7 +93,7 @@ export class ParseFiverr {
           parentId: this.country.id,
         },
       ])
-      tag.addAlternate(original)
+      tagAddAlternate(tag, original)
       ;[tag] = await tagUpsert([tag])
       this.category = tag
     }
@@ -118,7 +118,7 @@ export class ParseFiverr {
         parentId: this.country.id,
       },
     ])
-    tag.addAlternate(original)
+    tagAddAlternate(tag, original)
     ;[tag] = await tagUpsert([tag])
 
     if (this.category) {

@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 export function useScrollPosition<
   A extends HTMLDivElement,
   T extends React.RefObject<A>
->(ref: T, cb: (ref: A) => any) {
+>(ref: T, cb: (ref: A | null) => any) {
   useEffect(() => {
     const node = ref.current
     const scrollParent = getScrollParent(node)
@@ -20,7 +20,10 @@ export function useScrollPosition<
   }, [ref.current])
 }
 
-function getScrollParent(element: HTMLElement, includeHidden?: boolean) {
+function getScrollParent(element: HTMLElement | null, includeHidden?: boolean) {
+  if (!element) {
+    return null
+  }
   var style = getComputedStyle(element)
   var excludeStaticParent = style.position === 'absolute'
   var overflowRegex = includeHidden ? /(auto|scroll|hidden)/ : /(auto|scroll)/
@@ -28,7 +31,12 @@ function getScrollParent(element: HTMLElement, includeHidden?: boolean) {
   if (style.position === 'fixed') {
     return window
   }
-  for (var parent = element; (parent = parent.parentElement); ) {
+  let parent: HTMLElement | null = element
+  while (parent) {
+    parent = parent.parentElement
+    if (!parent) {
+      return null
+    }
     style = getComputedStyle(parent)
     if (excludeStaticParent && style.position === 'static') {
       continue

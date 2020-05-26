@@ -28,7 +28,7 @@ export function HomeStackView<A extends HomeStateItemSimple>(props: {
         return (
           <PopoverShowContext.Provider
             key={`${i}`}
-            value={isActive == true ? undefined : false}
+            value={isActive == true ? null : false}
           >
             <HomeStackViewItem
               item={item}

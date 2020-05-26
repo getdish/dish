@@ -5,7 +5,7 @@ import { useResizeObserver } from './useResizeObserver'
 import { useThrottledFn } from './useThrottleFn'
 
 export type UseNodeSizeProps = {
-  ref?: RefObject<HTMLElement>
+  ref?: RefObject<HTMLElement | null>
   disable?: boolean
   onChange?: (size: { width: number; height: number }) => any
   throttle?: number
@@ -23,7 +23,7 @@ export function useNodeSize(
 ) {
   const isVisible = useRef(true)
   const [state, setState] = useState<SizeState>({ width: 0, height: 0 })
-  const cur = useRef(null)
+  const cur = useRef<any>(null)
   const updateFn = (val: SizeState) => {
     // avoid updates when not visible, it can return width: 0, height: 0
     if (!isVisible.current) return
@@ -37,7 +37,7 @@ export function useNodeSize(
     amount: props.throttle || 0,
     ignoreFirst: props.ignoreFirst,
   })
-  const update = props.throttle > -1 ? updateFnThrottled : updateFn
+  const update = (props.throttle ?? 0) > 0 ? updateFnThrottled : updateFn
   const innerRef = useRef<HTMLElement>(null)
   const propRef = props.ref
   const ref = propRef || innerRef

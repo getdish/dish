@@ -316,7 +316,7 @@ const HomePageSearchResultsDishes = memo(
             key={dish.name}
             dish={{
               name: dish.name,
-              image: dish.image,
+              image: dish.image ?? '',
               rating: 5,
               count: 1,
             }}

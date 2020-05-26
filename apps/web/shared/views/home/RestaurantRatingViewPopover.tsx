@@ -1,4 +1,4 @@
-import { RESTAURANT_WEIGHTS, graphql, query, useQuery } from '@dish/graph'
+import { RESTAURANT_WEIGHTS, graphql, query } from '@dish/graph'
 import { Box, HoverablePopover, SmallTitle, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Text } from 'react-native'

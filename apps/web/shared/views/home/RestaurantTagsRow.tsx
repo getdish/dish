@@ -1,4 +1,4 @@
-import { Tag, graphql, query, useQuery } from '@dish/graph'
+import { graphql, query } from '@dish/graph'
 import { HStack } from '@dish/ui'
 import React, { memo } from 'react'
 

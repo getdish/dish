@@ -4,8 +4,7 @@ import { useGet } from './useGet'
 
 export function useResizeObserver(
   props: {
-    ref: RefObject<HTMLElement>
-    // @ts-ignore
+    ref: RefObject<HTMLElement | null>
     onChange: any
     disable?: boolean
   },
@@ -26,8 +25,10 @@ export function useResizeObserver(
     dispose.current = () => {
       resizeObserver.disconnect()
     }
-    return dispose.current
+    return () => {
+      dispose.current?.()
+    }
   }, [ref, disable, ...(mountArgs || [])])
 
-  return () => dispose.current && dispose.current()
+  return () => dispose.current?.()
 }

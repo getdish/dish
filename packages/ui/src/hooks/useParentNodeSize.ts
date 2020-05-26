@@ -1,13 +1,15 @@
-import { RefObject, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
+import { useForceUpdate } from './useForceUpdate'
 import { UseNodeSizeProps, useNodeSize } from './useNodeSize'
 
 export function useParentNodeSize(props?: UseNodeSizeProps) {
   const ref = useRef<HTMLElement>(null)
-  const [parentNode, setParentNode] = useState<RefObject<HTMLElement>>(null)
+  const update = useForceUpdate()
+  const parentNodeRef = useRef<HTMLElement | null>(null)
 
   const sizer = useNodeSize({
-    ref: parentNode,
+    ref: parentNodeRef,
     ...props,
   })
 
@@ -22,7 +24,8 @@ export function useParentNodeSize(props?: UseNodeSizeProps) {
         if (!parent) break
       }
     }
-    setParentNode({ current: parent })
+    parentNodeRef.current = parent
+    update()
   }, [ref.current])
 
   return {

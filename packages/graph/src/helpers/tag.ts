@@ -52,3 +52,11 @@ export async function tagUpsertCategorizations(
   }))
   return await tagTagUpsert(objects)
 }
+
+export function tagAddAlternate(tag: Tag, alternate: string) {
+  if (alternate != tag.name) {
+    tag.alternates = tag.alternates || []
+    tag.alternates?.push(alternate)
+    tag.alternates = [...new Set(tag.alternates)]
+  }
+}
