@@ -56,7 +56,7 @@ test('extracts static styles', async (t) => {
   await new Promise((res) => {
     compiler.run((err, result) => {
       console.log({ err })
-      console.log(result.toString())
+      console.log(result?.toString())
       res()
     })
   })

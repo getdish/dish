@@ -8,11 +8,13 @@ export const createCancellablePromise = <A>(
     onCancel: Function
   ) => A
 ): Promise<A> => {
+  let canceller: any = null
   const promise = new Promise((res, rej) => {
     cb(res, rej, (onCancel) => {
-      cancelsMap.set(promise, onCancel)
+      canceller = onCancel
     })
   })
+  cancelsMap.set(promise, canceller)
   return promise as Promise<A>
 }
 
