@@ -29,8 +29,8 @@ test.beforeEach(async (t) => {
   t.context.restaurant = restaurant
   const [existing_tag] = await tagInsert([{ name: 'Test tag existing' }])
   t.context.existing_tag = existing_tag
-  await Auth.register('tester', 'password')
-  const [_, user] = await Auth.login('tester', 'password')
+  await Auth.register('test', 'password')
+  const [_, user] = await Auth.login('test', 'password')
   t.context.user = user
 })
 
@@ -49,7 +49,7 @@ test('Add a review for the whole restaurant itself', async (t) => {
   t.deepEqual(review.id, results[0].id)
 })
 
-test.skip('Add a review for restaurant by tag', async (t) => {
+test('Add a review for restaurant by tag', async (t) => {
   const [review] = await reviewInsert([
     {
       restaurant_id: t.context.restaurant.id,
