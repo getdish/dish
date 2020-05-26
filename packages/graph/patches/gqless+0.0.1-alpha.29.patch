@@ -20,11 +20,20 @@ diff --git a/node_modules/gqless/dist/gqless.cjs.development.js b/node_modules/g
 index 12268bf..16ad852 100644
 --- a/node_modules/gqless/dist/gqless.cjs.development.js
 +++ b/node_modules/gqless/dist/gqless.cjs.development.js
+@@ -135,7 +135,7 @@ const deepReference = rootValue => {
+       onUnreference.filter(v => v === value).then(dispose);
+     }; // Handle references created, before watchAndEmit called
+
+-
++    if (!parentValue.references) return () => {}
+     for (const ref of parentValue.references.keys()) {
+       handleReference(ref);
+     }
 @@ -451,7 +451,12 @@ const buildArguments = ({
      if ((context === null || context === void 0 ? void 0 : context.node) instanceof ScalarNode) {
        // Object / Array passed as scalar
        // serialize as a JSON-string
--      return JSON.stringify(arg).replace(/"([^"]+)":/g, '$1:');
+-      return JSON.stringify(JSON.stringify(arg));
 +      const json = JSON.stringify(arg)
 +      if (json) {
 +        return json.replace(/"([^"]+)":/g, '$1:');
