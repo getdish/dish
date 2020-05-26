@@ -30,8 +30,9 @@
     "@gqless/logger": "0.0.1-alpha.27",
     "ava": "^3.8.2",
     "gqless": "^0.0.1-alpha.29",
-    "@o/gqless-schema": "0.0.1-alpha.33",
-    "@gqless/schema": "0.0.1-alpha.31"
+    "@o/gqless-schema": "0.0.1-alpha.34",
+    "@gqless/schema": "0.0.1-alpha.31",
+    "lodash": "*"
   },
   "peerDependencies": {
     "react": "*"

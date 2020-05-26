@@ -1261,10 +1261,10 @@
   resolved "https://registry.npmjs.org/@o/fast-compare/-/fast-compare-2.7.6.tgz#1d0fedcb27b44e212aafd9e7f94499930499bfb9"
   integrity sha512-YACb8iZqClwjxUBQyjQuXT5L0T/iYOGdkD58q31P04iXyq27BZjdE0k3MiszQ7XezeAdO+WsdmTqaotBbjkbLw==
 
-"@o/gqless-schema@0.0.1-alpha.33":
-  version "0.0.1-alpha.33"
-  resolved "https://registry.npmjs.org/@o/gqless-schema/-/gqless-schema-0.0.1-alpha.33.tgz#0b568ab6b3d6819652d0a9af28b7113da67e316c"
-  integrity sha512-mU3DcWltyGx3dVbChe8NI4ErOm40aDFDu9YhG3ocYZfk1+OAYcGoAXv0HU3G0qq8MA4U7urMhMjJPtpuyZOEuA==
+"@o/gqless-schema@0.0.1-alpha.34":
+  version "0.0.1-alpha.34"
+  resolved "https://registry.npmjs.org/@o/gqless-schema/-/gqless-schema-0.0.1-alpha.34.tgz#2f3d3881987cf1b4a4cdb1b2d4672d78e5a0aa0f"
+  integrity sha512-IYesnd3cbUnxromIhW06aL9b+fGcNu8qpXt8JdJVY2CTpFgAqyMC3zxVV+ws6YpgE/XmXEdeXcB5FhD/yLdo2w==
   dependencies:
     "@gqless/utils" "^0.0.1-alpha.26"
     tslib "^1.11.1"
@@ -9493,7 +9493,7 @@ lodash.zip@^4.2.0:
   resolved "https://registry.npmjs.org/lodash.zip/-/lodash.zip-4.2.0.tgz#ec6662e4896408ed4ab6c542a3990b72cc080020"
   integrity sha1-7GZi5IlkCO1KtsVCo5kLcswIACA=
 
-"lodash@4.6.1 || ^4.16.1", lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.2, lodash@^4.17.4, lodash@^4.3.0, lodash@^4.5.0:
+lodash@*, "lodash@4.6.1 || ^4.16.1", lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.2, lodash@^4.17.4, lodash@^4.3.0, lodash@^4.5.0:
   version "4.17.15"
   resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==

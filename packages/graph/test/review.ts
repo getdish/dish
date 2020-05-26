@@ -35,7 +35,6 @@ test.beforeEach(async (t) => {
 })
 
 test('Add a review for the whole restaurant itself', async (t) => {
-  console.log('what is', t.context.restaurant.id)
   const [review] = await reviewInsert([
     {
       restaurant_id: t.context.restaurant.id,
@@ -45,7 +44,6 @@ test('Add a review for the whole restaurant itself', async (t) => {
     },
   ])
   const results = await reviewFindAllForRestaurant(t.context.restaurant.id)
-  console.log('got', { review, results })
   t.deepEqual(review.id, results[0].id)
 })
 
@@ -60,6 +58,5 @@ test('Add a review for restaurant by tag', async (t) => {
     },
   ])
   const results = await reviewFindAllForRestaurant(t.context.restaurant.id)
-  console.log('got', review, results)
   t.deepEqual(review.id, results[0].id)
 })

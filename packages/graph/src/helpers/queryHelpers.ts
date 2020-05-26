@@ -3,6 +3,7 @@ import { FieldNode, ScalarNode } from 'gqless'
 import { query, schema } from '../graphql'
 import { mutation } from '../graphql/mutation'
 import { ModelName, ModelType, WithID } from '../types'
+import { CollectOptions } from './collect'
 import {
   resolvedMutation,
   resolvedMutationWithFields,
@@ -51,7 +52,7 @@ const isSimpleField = (field: FieldNode) => {
   return field.ofNode instanceof ScalarNode && !field.args?.required
 }
 
-export function objectToWhere(hash: Object) {
+export function objectToWhere(hash: Object): any {
   let where = Object.keys(hash).map((key) => {
     return { [key]: { _eq: hash[key] } }
   })
@@ -90,7 +91,7 @@ export function createQueryHelpersFor<A>(
 export async function findOne<T extends ModelType>(
   table: ModelName,
   hash: Partial<T>,
-  selectFields?: string[]
+  options?: CollectOptions
 ): Promise<T | null> {
   const [first] = await resolvedWithFields(
     table,
@@ -98,7 +99,7 @@ export async function findOne<T extends ModelType>(
       const args = objectToWhere(hash)
       return query[table](args) as T[]
     },
-    selectFields
+    options
   )
   return first ?? null
 }

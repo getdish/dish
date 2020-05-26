@@ -67,7 +67,6 @@ test.skip('Tagging a restaurant with a tag that has a parent', async (t) => {
   ])
   await restaurantTagUpsert(restaurant.id, [{ tag_id: tag.id }])
   restaurant = await restaurantFindOneWithTags({ name: restaurant.name })
-  console.log('restaurant.tags', restaurant.tags)
   t.is(restaurant.tags?.length, 1)
   t.is(restaurant.tags?.map((t) => t.tag.name).includes('Test tag'), true)
   t.is(restaurant.tag_names.length, 3)

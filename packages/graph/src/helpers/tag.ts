@@ -1,3 +1,5 @@
+import { uniq } from 'lodash'
+
 import { query, tag_constraint } from '../graphql'
 import { Tag, TagTag } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
@@ -5,7 +7,31 @@ import { resolvedWithFields } from './queryResolvers'
 import { slugify } from './slugify'
 import { tagTagUpsert } from './tag_tag'
 
+type TagWithParent = Tag & {
+  parent: { name: string }
+}
+
 export const tagSlug = (tag: Pick<Tag, 'name'>) => slugify(tag.name ?? '')
+
+export const tagSlugDisambiguated = (tag: TagWithParent) => {
+  return `${slugify(tagSlug(tag.parent))}__${tagSlug(tag)}`
+}
+
+export const tagSlugs = (tag: Tag) => {
+  let parentage: string[] = []
+  if (!tagIsOrphan(tag)) {
+    parentage = [tagSlug(tag.parent!), tagSlugDisambiguated(tag)]
+  }
+  const category_names = (tag.categories || []).map((i) =>
+    slugify(i.category.name)
+  )
+  const all = [tagSlug(tag), ...parentage, ...category_names].flat()
+  return uniq(all)
+}
+
+export const tagIsOrphan = (tag: Tag) => {
+  return tag.parent!.id == '00000000-0000-0000-0000-000000000000'
+}
 
 const QueryHelpers = createQueryHelpersFor<Tag>(
   'tag',

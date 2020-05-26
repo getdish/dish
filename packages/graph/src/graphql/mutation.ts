@@ -5,9 +5,18 @@ import { mutation_root, schema } from './generated'
 
 const fetchMutation = createFetcher('mutation')
 
-export const mutateClient = new Client(
-  schema.mutation_root as any,
-  fetchMutation
-)
+function createMutationClient() {
+  return new Client(schema.mutation_root, fetchMutation)
+}
 
-export const mutation: mutation_root = mutateClient.query
+let mutateClientInternal = createMutationClient()
+
+export function resetMutationCache() {
+  mutateClientInternal = createMutationClient()
+}
+
+export const mutation: mutation_root = new Proxy(mutateClientInternal.query, {
+  get(_, key) {
+    return mutateClientInternal.query[key]
+  },
+})

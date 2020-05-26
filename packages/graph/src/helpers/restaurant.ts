@@ -1,4 +1,3 @@
-import { resolved } from 'gqless'
 import _ from 'lodash'
 
 import { order_by, query, restaurant_constraint } from '../graphql'
@@ -13,12 +12,8 @@ import {
 } from '../types'
 import { collect, collectAll } from './collect'
 import { levenshteinDistance } from './levenshteinDistance'
-import {
-  createQueryHelpersFor,
-  getReadableFieldsFor,
-  objectToWhere,
-} from './queryHelpers'
-import { resolvedWithFields } from './queryResolvers'
+import { createQueryHelpersFor, objectToWhere } from './queryHelpers'
+import { resolvedQueryNoCache, resolvedWithFields } from './queryResolvers'
 
 const QueryHelpers = createQueryHelpersFor<Restaurant>(
   'restaurant',
@@ -33,12 +28,12 @@ export const restaurantRefresh = QueryHelpers.refresh
 export async function restaurantFindOneWithTags(
   restaurant: Restaurant
 ): Promise<Required<Restaurant>> {
-  const [first] = await resolved(() => {
+  const [first] = await resolvedQueryNoCache(() => {
     const items = query.restaurant(objectToWhere({ id: restaurant.id }))
     return items.map((item) => {
       return {
-        ...collect(item, getReadableFieldsFor('query', 'restaurant')),
-        tags: collectAll(item.tags(), getReadableFieldsFor('query', 'tag')),
+        ...collect(item),
+        tags: collectAll(item.tags()),
       }
     })
   })
