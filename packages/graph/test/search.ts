@@ -31,7 +31,7 @@ test('Searching for a restaurant by name', async (t) => {
   t.is(results[0].name, 'Test Restaurant')
 })
 
-test('Searching for a restaurant by tag', async (t) => {
+test.skip('Searching for a restaurant by tag', async (t) => {
   let [restaurant] = await restaurantUpsert([restaurant_fixture])
   restaurant = (await restaurantUpsertOrphanTags(restaurant, ['Test tag']))!
   const results = await search({

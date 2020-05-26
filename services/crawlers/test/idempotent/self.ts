@@ -195,7 +195,7 @@ test.beforeEach(async (t) => {
   }
 })
 
-test('Merging', async (t) => {
+test.skip('Merging', async (t) => {
   const self = new Self()
   await self.mergeAll(t.context.restaurant.id)
   const updated = await restaurantFindOne({ id: t.context.restaurant.id })
@@ -248,7 +248,7 @@ test('Weighted ratings when some sources are missing', (t) => {
   t.is(self.weightRatings(ratings, weights), 3.7142857142857144)
 })
 
-test('Tag rankings', async (t) => {
+test.skip('Tag rankings', async (t) => {
   const tag_name = 'Test Rankable'
   const self = new Self()
   self.restaurant = t.context.restaurant
@@ -275,7 +275,7 @@ test('Tag rankings', async (t) => {
   t.is(restaurant.tags[0].rank, 3)
 })
 
-test('Finding dishes in reviews', async (t) => {
+test.skip('Finding dishes in reviews', async (t) => {
   const self = new Self()
   const tag = { name: 'Test country' }
 
@@ -317,7 +317,7 @@ test('Finding dishes in reviews', async (t) => {
   )
 })
 
-test('Dish sentiment analysis from reviews', async (t) => {
+test.skip('Dish sentiment analysis from reviews', async (t) => {
   const self = new Self()
   const tag = { name: 'Test country' }
   const [tag_parent] = await tagInsert([tag])
@@ -359,7 +359,7 @@ test('Dish sentiment analysis from reviews', async (t) => {
   t.is(tag3.rating, 0)
 })
 
-test('Find photos of dishes', async (t) => {
+test.skip('Find photos of dishes', async (t) => {
   const self = new Self()
   const tag = { name: 'Test country' }
   const [tag_parent] = await tagInsert([tag])
@@ -398,7 +398,7 @@ test('Find photos of dishes', async (t) => {
   t.deepEqual(tag2.photos, ['https://yelp.com/image2.jpg'])
 })
 
-test('Identifying country tags', async (t) => {
+test.skip('Identifying country tags', async (t) => {
   const [existing_tag1, existing_tag2] = await tagInsert([
     {
       name: 'Test Mexican',

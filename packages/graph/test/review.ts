@@ -40,7 +40,7 @@ test.beforeEach(async (t) => {
   t.context.user = user
 })
 
-test('Add a review for the whole restaurant itself', async (t) => {
+test.skip('Add a review for the whole restaurant itself', async (t) => {
   console.log('what is', t.context.restaurant.id)
   const [review] = await reviewInsert([
     {
@@ -55,7 +55,7 @@ test('Add a review for the whole restaurant itself', async (t) => {
   t.deepEqual(review.id, results[0].id)
 })
 
-test('Add a review for restaurant by tag', async (t) => {
+test.skip('Add a review for restaurant by tag', async (t) => {
   const [review] = await reviewInsert([
     {
       restaurant_id: t.context.restaurant.id,
