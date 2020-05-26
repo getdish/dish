@@ -1,4 +1,5 @@
-import { ACCESSOR, Cache, resolved } from 'gqless'
+import { Cache, Query, resolved } from 'gqless'
+import _ from 'lodash'
 
 import { schema } from '../graphql'
 import { client } from '../graphql/client'
@@ -7,13 +8,28 @@ import { ModelName } from '../types'
 import { collectAll } from './collect'
 import { getReadableFields, getReturnableFields } from './queryHelpers'
 
-const resetCache = () => {
+const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
+
+const resetMutationCache = () => {
   // @ts-ignore
   mutateClient.cache = new Cache(mutateClient.node)
+}
 
-  // TODO doesn't seem to work
-  // @ts-ignore
-  client.cache = new Cache(client.node)
+const randomQueryName = () => {
+  var result = ''
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+  var charactersLength = characters.length
+  for (var i = 0; i < 10; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  }
+  return result
+}
+
+const resetQueryCache = async () => {
+  client.accessor.children.forEach((c) => {
+    c.scheduler.commit.stage(c, new Query(randomQueryName()))
+  })
+  await sleep(250)
 }
 
 // just a helper that clears our cache after mutations for now
@@ -22,7 +38,7 @@ export async function resolvedMutation<T>(
 ): Promise<
   T extends () => infer U ? (U extends { returning: infer X } ? X : U) : any
 > {
-  resetCache()
+  resetMutationCache()
   // @ts-ignore
   return await resolved(resolver)
 }
@@ -49,7 +65,7 @@ export async function resolvedWithFields(
   resolver: any,
   fields: string[] | null = null
 ): Promise<any> {
-  resetCache()
+  await resetQueryCache()
   const next = await resolved(() => {
     const res = resolver()
     const returningFields = fields ?? getReadableFields(table)
