@@ -84,7 +84,7 @@ export class Self extends WorkerJob {
       }
       for (const result of results) {
         await this.runOnWorker('mergeAll', [result.id])
-        previous_id = result.id
+        previous_id = result.id as string
       }
     }
   }

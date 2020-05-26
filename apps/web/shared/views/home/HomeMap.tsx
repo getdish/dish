@@ -1,6 +1,5 @@
-import { Restaurant, graphql, query } from '@dish/graph'
+import { Restaurant, graphql } from '@dish/graph'
 import { ZStack, useDebounceEffect, useOnMount } from '@dish/ui'
-import _ from 'lodash'
 import React, {
   Suspense,
   memo,
@@ -24,7 +23,9 @@ const mapMaxWidth = 1300
 export const HomeMap = memo(function HomeMap() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [restaurants, setRestaurants] = useState<Restaurant[]>([])
-  const [restaurantDetail, setRestaurantDetail] = useState<Restaurant>(null)
+  const [restaurantDetail, setRestaurantDetail] = useState<Restaurant | null>(
+    null
+  )
   const om = useOvermind()
 
   useOnMount(() => {
@@ -177,7 +178,7 @@ const HomeMapContent = memo(function HomeMap({
   const annotations = useMemo(
     () =>
       getRestaurantAnnotations(
-        restaurantDetail ? [restaurantDetail] : restaurants
+        (restaurantDetail ? [restaurantDetail] : restaurants) ?? []
       ),
     [restaurants, restaurantDetail]
   )
@@ -285,7 +286,8 @@ const HomeMapContent = memo(function HomeMap({
   useDebounceEffect(
     () => {
       if (!map || !restaurantDetail?.location) return
-      const index = restaurants.findIndex((x) => x.id === restaurantDetail.id)
+      const index =
+        restaurants?.findIndex((x) => x.id === restaurantDetail.id) ?? -1
       if (index > -1) {
         if (map.annotations[index]) {
           map.annotations[index].selected = true
@@ -313,7 +315,7 @@ const HomeMapContent = memo(function HomeMap({
   useDebounceEffect(
     () => {
       if (!map) return
-      if (!restaurants.length) return
+      if (!restaurants?.length) return
 
       // debounce
       const cancels = new Set<Function>()
@@ -368,15 +370,14 @@ function getRestaurantAnnotations(
   restaurants: Restaurant[]
 ): mapkit.MarkerAnnotation[] {
   const coordinates = restaurants
+    .filter((restaurant) => !!restaurant.location?.coordinates)
     .map(
       (restaurant) =>
-        !!restaurant.location?.coordinates &&
         new window.mapkit.Coordinate(
           restaurant.location.coordinates[1],
           restaurant.location.coordinates[0]
         )
     )
-    .filter(Boolean)
 
   if (!coordinates.length) {
     return []

@@ -10,7 +10,7 @@ export function useMutationObserver<T extends RefObject<HTMLElement>>(
     disable?: boolean
   },
   mountArgs?: any[]
-): Function {
+) {
   const { ref, options, onChange, disable } = props
   const node = ref.current
   const dispose = useRef<EffectCallback | null>(null)
@@ -26,8 +26,9 @@ export function useMutationObserver<T extends RefObject<HTMLElement>>(
     dispose.current = () => {
       mutationObserver.disconnect()
     }
-    return dispose.current
-  }, [node, disable, JSON.stringify(options), ...(mountArgs || [])])
 
-  return () => dispose.current && dispose.current()
+    return () => {
+      dispose.current?.()
+    }
+  }, [node, disable, JSON.stringify(options), ...(mountArgs || [])])
 }

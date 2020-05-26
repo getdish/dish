@@ -10,7 +10,7 @@ import {
 import React, { memo } from 'react'
 import { Image, StyleSheet, Text } from 'react-native'
 
-import { Tag } from '../../state/Tag'
+import { NavigableTag } from '../../state/Tag'
 import { LinkButton, LinkButtonProps } from '../ui/LinkButton'
 import { DishRatingView } from './DishRatingView'
 
@@ -22,7 +22,7 @@ export const DishView = memo(
     restaurantSlug,
     ...rest
   }: {
-    cuisine?: Tag
+    cuisine?: NavigableTag
     dish: TopCuisineDish
     size?: number
     restaurantSlug?: string
@@ -38,7 +38,7 @@ export const DishView = memo(
           },
         }
       : {
-          tags: [cuisine, { type: 'dish', name: dish.name }],
+          tags: [cuisine, { type: 'dish', name: dish.name }] as NavigableTag[],
         }
 
     return (

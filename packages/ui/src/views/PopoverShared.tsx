@@ -1,6 +1,6 @@
 import { createContext } from 'react'
 
-export const PopoverShowContext = createContext<boolean | undefined>(undefined)
+export const PopoverShowContext = createContext<boolean | null>(null)
 
 export const popoverCloseCbs = new Set<Function>()
 export const closeAllPopovers = () => {

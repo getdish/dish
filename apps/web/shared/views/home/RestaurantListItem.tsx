@@ -180,7 +180,7 @@ const RestaurantListItemContent = memo(
                       <RestaurantTagsRow
                         tags={restaurant.tags.map((tag) => tag.tag)}
                         showMore={true}
-                        restaurantSlug={restaurant.slug}
+                        restaurantSlug={restaurant.slug ?? ''}
                         divider={<>,&nbsp;</>}
                       />
                       {/* </Suspense> */}
@@ -337,7 +337,7 @@ export const RestaurantPeek = memo(
                 dish={{
                   name: photo.name,
                   image: photo.src,
-                  rating: photo.rating,
+                  rating: photo.rating ?? 0,
                 }}
               />
             )

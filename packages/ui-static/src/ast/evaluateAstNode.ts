@@ -84,7 +84,7 @@ export function evaluateAstNode(
 
   if (t.isArrayExpression(exprNode)) {
     return exprNode.elements.map((x) => {
-      return evaluateAstNode(x, evalFn, options)
+      return evaluateAstNode(x as any, evalFn, options)
     })
   }
 

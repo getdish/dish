@@ -26,3 +26,11 @@ export const tagSlugs = (tag: TagWithParent) => {
 export const tagIsOrphan = (tag: Tag) => {
   return tag.parent!.id == '00000000-0000-0000-0000-000000000000'
 }
+
+export function getTagNameWithIcon(tag: Tag) {
+  let name = tag.name
+  if (tag.icon) {
+    name = tag.icon + name
+  }
+  return name
+}

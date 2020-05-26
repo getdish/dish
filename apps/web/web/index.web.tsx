@@ -8,7 +8,6 @@ import React from 'react'
 import { createRoot, hydrate, render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
-import { mutateClient } from '../../../packages/graph/src/graphql/mutation'
 import { OVERMIND_MUTATIONS, isWorker } from '../shared/constants'
 import { config } from '../shared/state/om'
 import { App } from '../shared/views/App'
@@ -37,7 +36,6 @@ window['gqless'] = {
   mutation,
   schema,
   client,
-  mutateClient,
 }
 
 // exports

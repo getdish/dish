@@ -1,10 +1,14 @@
-import { Restaurant, graphql, query, useQuery } from '@dish/graph'
-import { Box } from '@dish/ui'
-import { Circle } from '@dish/ui'
-import { HoverablePopover } from '@dish/ui'
-import { ProgressCircle } from '@dish/ui'
-import { HStack, VStack, ZStack } from '@dish/ui'
-import React, { forwardRef, memo } from 'react'
+import { graphql, query } from '@dish/graph'
+import {
+  Box,
+  Circle,
+  HStack,
+  HoverablePopover,
+  ProgressCircle,
+  VStack,
+  ZStack,
+} from '@dish/ui'
+import React, { memo } from 'react'
 import { Text } from 'react-native'
 
 import { RatingView, RatingViewProps } from './RatingView'
