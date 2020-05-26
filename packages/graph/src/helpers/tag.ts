@@ -1,5 +1,5 @@
 import { query, tag_constraint } from '../graphql'
-import { Tag, TagTag } from '../types'
+import { Tag, TagTag, TagWithId } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
 import { tagTagUpsert } from './tag_tag'
@@ -43,14 +43,12 @@ export async function tagFindCountries(countries: string[]): Promise<Tag[]> {
 }
 
 export async function tagUpsertCategorizations(
-  tag: Tag,
+  tag: TagWithId,
   category_tag_ids: string[]
 ) {
-  const objects: TagTag[] = category_tag_ids.map((category_tag_id) => {
-    return {
-      category_tag_id,
-      tag_id: tag.id,
-    }
-  })
+  const objects = category_tag_ids.map<TagTag>((tag_id) => ({
+    category_tag_id: tag_id,
+    tag_id: tag.id,
+  }))
   return await tagTagUpsert(objects)
 }

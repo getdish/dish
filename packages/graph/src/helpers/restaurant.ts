@@ -27,7 +27,7 @@ export const restaurantFindOne = QueryHelpers.findOne
 export const restaurantRefresh = QueryHelpers.refresh
 
 export async function restaurantFindOneWithTags(
-  restaurant: Restaurant
+  restaurant: RestaurantWithId
 ): Promise<Required<Restaurant>> {
   const [first] = await resolvedQueryNoCache(() => {
     const items = query.restaurant(objectToWhere({ id: restaurant.id }))
@@ -42,10 +42,12 @@ export async function restaurantFindOneWithTags(
             id: tag.tag.id,
             name: tag.tag.name,
             type: tag.tag.type,
+            displayName: tag.tag.displayName,
             parent: {
               id: tag.tag.parent?.id,
               name: tag.tag.parent?.name,
               type: tag.tag.parent?.type,
+              displayName: tag.tag.parent?.displayName,
             },
           },
         })),
@@ -184,43 +186,43 @@ export async function restaurantUpsertManyTags(
     const existing = getRestaurantTagFromTag(restaurant, rt.tag_id)
     return { ...existing, ...rt }
   })
-  await restaurantTagUpsert(restaurant.id, populated)
-  await updateTagNames(restaurant)
-  return await restaurantRefresh(restaurant)
+  return await restaurantUpsertRestaurantTags(restaurant, populated)
 }
 
 export async function restaurantUpsertOrphanTags(
   restaurant: RestaurantWithId,
   tag_strings: string[]
 ) {
-  const tags: Tag[] = tag_strings.map((tag_name) => {
-    return {
-      name: tag_name,
-    }
-  })
+  const tags = tag_strings.map<Tag>((tag_name) => ({
+    name: tag_name,
+  }))
   const full_tags = await tagUpsert(tags)
-  const restaurant_tags: RestaurantTag[] = full_tags.map((tag) => {
-    return {
-      tag_id: tag.id,
-    }
-  })
-  await restaurantTagUpsert(restaurant.id, restaurant_tags)
-  await updateTagNames(restaurant)
-  return await restaurantFindOneWithTags(restaurant)
+  const restaurant_tags = full_tags.map<RestaurantTag>((tag) => ({
+    tag_id: tag.id,
+  }))
+  return await restaurantUpsertRestaurantTags(restaurant, restaurant_tags)
 }
 
-async function updateTagNames({ id }: RestaurantWithId) {
+export async function restaurantUpsertRestaurantTags(
+  { id }: RestaurantWithId,
+  restaurant_tags: RestaurantTag[]
+) {
+  await restaurantTagUpsert(id, restaurant_tags)
   let restaurant = await restaurantFindOneWithTags({ id })
-  const tag_names = (restaurant.tags ?? [])
-    .map((i) => {
-      if (!i.tag) return
-      return tagSlugs(i.tag)
-    })
-    .flat()
-  return await restaurantUpdate({
+  const tags = restaurant.tags ?? []
+  const tag_names = [
+    ...new Set(
+      tags
+        .filter((x) => !!x.tag)
+        .map((i) => tagSlugs(i.tag))
+        .flat()
+    ),
+  ]
+  await restaurantUpdate({
     ...restaurant,
-    tag_names: _.uniq([...(restaurant.tag_names || []), ...tag_names]),
+    tag_names,
   })
+  return await restaurantFindOneWithTags({ id })
 }
 
 function getRestaurantTagFromTag(restaurant: Restaurant, tag_id: string) {
