@@ -18,6 +18,10 @@ export const createFetcher = (
   type: 'query' | 'mutation'
 ): QueryFetcherWithOptions => {
   return async (query, variables, options) => {
+    const body = JSON.stringify({
+      query: type !== 'query' ? type + query : query,
+      variables,
+    })
     const request: RequestInit = {
       method: 'POST',
       headers: {
@@ -25,10 +29,7 @@ export const createFetcher = (
         Accept: 'application/json',
         ...Auth.getHeaders(),
       },
-      body: JSON.stringify({
-        query: type !== 'query' ? type + query : query,
-        variables,
-      }),
+      body,
       mode: 'cors',
     }
     const response = await fetch(endpoint, request)
