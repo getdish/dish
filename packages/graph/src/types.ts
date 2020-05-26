@@ -14,7 +14,13 @@ import {
 // but the problme is extensions... they should be excluded
 // most of the stuff in this file could be folded into gqless and fixed
 export type FlatResolvedModel<O> = {
-  [K in keyof O]?: O[K] extends (...args: any[]) => any ? any : O[K]
+  [K in keyof O]?: K extends '__typename'
+    ? any
+    : O[K] extends { __typename: string }
+    ? FlatResolvedModel<O[K]>
+    : O[K] extends (...args: any[]) => any
+    ? any
+    : O[K]
 }
 
 // BE SURE TO ADD TO ALL SECTIONS!

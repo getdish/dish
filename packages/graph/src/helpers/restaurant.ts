@@ -14,6 +14,7 @@ import { collect, collectAll } from './collect'
 import { levenshteinDistance } from './levenshteinDistance'
 import { createQueryHelpersFor, objectToWhere } from './queryHelpers'
 import { resolvedQueryNoCache, resolvedWithFields } from './queryResolvers'
+import { tagSlugs } from './tag-extension-helpers'
 
 const QueryHelpers = createQueryHelpersFor<Restaurant>(
   'restaurant',
@@ -33,7 +34,21 @@ export async function restaurantFindOneWithTags(
     return items.map((item) => {
       return {
         ...collect(item),
-        tags: collectAll(item.tags()),
+        // TODO potentially we can just replace ALL this by increasing maxDepth of resolvedQueryNoCache
+        tags: item.tags().map((tag) => ({
+          restaurant_id: tag.restaurant_id,
+          tag_id: tag.tag_id,
+          tag: {
+            id: tag.tag.id,
+            name: tag.tag.name,
+            type: tag.tag.type,
+            parent: {
+              id: tag.tag.parent?.id,
+              name: tag.tag.parent?.name,
+              type: tag.tag.parent?.type,
+            },
+          },
+        })),
       }
     })
   })
@@ -45,8 +60,8 @@ export async function restaurantFindBatch(
   previous_id: string,
   extra_where: {} = {}
 ): Promise<Restaurant[]> {
-  return await resolvedWithFields('restaurant', () => {
-    const x = query.restaurant({
+  return await resolvedWithFields(() => {
+    return query.restaurant({
       where: {
         id: { _gt: previous_id },
         ...extra_where,
@@ -54,7 +69,6 @@ export async function restaurantFindBatch(
       order_by: [{ id: order_by.asc }],
       limit: size,
     })
-    return x
   })
 }
 
@@ -63,8 +77,8 @@ export async function restaurantFindNear(
   lng: number,
   distance: number
 ): Promise<Restaurant[]> {
-  return await resolvedWithFields('restaurant', () =>
-    query.restaurant({
+  return await resolvedWithFields(() => {
+    return query.restaurant({
       where: {
         location: {
           _st_d_within: {
@@ -77,14 +91,14 @@ export async function restaurantFindNear(
         },
       },
     })
-  )
+  })
 }
 
 export async function restaurantLatestScrape(
   restaurant: Restaurant,
   source: string
 ): Promise<Scrape> {
-  const [first] = await resolvedWithFields('restaurant', () => {
+  const [first] = await resolvedWithFields(() => {
     return query.scrape({
       where: {
         restaurant_id: {
@@ -179,16 +193,16 @@ export async function restaurantUpsertOrphanTags(
   restaurant: RestaurantWithId,
   tag_strings: string[]
 ) {
-  const tags = tag_strings.map((tag_name) => {
+  const tags: Tag[] = tag_strings.map((tag_name) => {
     return {
       name: tag_name,
-    } as Tag
+    }
   })
   const full_tags = await tagUpsert(tags)
-  const restaurant_tags = full_tags.map((tag: Tag) => {
+  const restaurant_tags: RestaurantTag[] = full_tags.map((tag) => {
     return {
       tag_id: tag.id,
-    } as RestaurantTag
+    }
   })
   await restaurantTagUpsert(restaurant.id, restaurant_tags)
   await updateTagNames(restaurant)
@@ -197,10 +211,12 @@ export async function restaurantUpsertOrphanTags(
 
 async function updateTagNames({ id }: RestaurantWithId) {
   let restaurant = await restaurantFindOneWithTags({ id })
-  const tag_names = (restaurant.tags ?? []).map((i) => {
-    if (!i.tag) return
-    i.tag.slugs().flat()
-  })
+  const tag_names = (restaurant.tags ?? [])
+    .map((i) => {
+      if (!i.tag) return
+      return tagSlugs(i.tag)
+    })
+    .flat()
   return await restaurantUpdate({
     ...restaurant,
     tag_names: _.uniq([...(restaurant.tag_names || []), ...tag_names]),
@@ -225,7 +241,7 @@ export async function restaurantGetLatestScrape(
   restaurant: RestaurantWithId,
   source: string
 ): Promise<Scrape> {
-  const [first] = await resolvedWithFields('scrape', () =>
+  const [first] = await resolvedWithFields(() =>
     query.scrape({
       where: {
         restaurant_id: {

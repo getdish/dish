@@ -5,7 +5,7 @@ import {
   tagSlug,
   tagSlugDisambiguated,
   tagSlugs,
-} from '../../helpers/tag'
+} from '../../helpers/tag-extension-helpers'
 
 export const tag = (tag) => {
   return {

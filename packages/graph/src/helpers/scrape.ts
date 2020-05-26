@@ -34,7 +34,7 @@ export async function scrapeAppendJsonB(
   scrape: Scrape,
   data: {}
 ): Promise<Scrape[] | null> {
-  return await resolvedMutationWithFields('scrape', () => {
+  return await resolvedMutationWithFields(() => {
     return mutation.update_scrape({
       where: { id: { _eq: scrape.id } },
       _append: { data: data },
