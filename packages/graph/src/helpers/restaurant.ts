@@ -11,13 +11,11 @@ import {
   Scrape,
   Tag,
 } from '../types'
-import { allFieldsForTable } from './allFieldsForTable'
 import { collect, collectAll } from './collect'
 import { levenshteinDistance } from './levenshteinDistance'
 import {
   createQueryHelpersFor,
-  getReadableFields,
-  getReturnableFields,
+  getReadableFieldsFor,
   objectToWhere,
 } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
@@ -39,8 +37,8 @@ export async function restaurantFindOneWithTags(
     const items = query.restaurant(objectToWhere({ id: restaurant.id }))
     return items.map((item) => {
       return {
-        ...collect(item, getReadableFields('restaurant')),
-        tags: collectAll(item.tags(), getReadableFields('tag')),
+        ...collect(item, getReadableFieldsFor('query', 'restaurant')),
+        tags: collectAll(item.tags(), getReadableFieldsFor('query', 'tag')),
       }
     })
   })

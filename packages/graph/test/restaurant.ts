@@ -14,7 +14,6 @@ import {
   restaurantSaveCanonical,
   restaurantUpdate,
   restaurantUpsert,
-  startLogging,
 } from '../src'
 import { dish_fixture, restaurant_fixture } from './etc/fixtures'
 

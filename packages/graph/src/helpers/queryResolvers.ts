@@ -6,7 +6,7 @@ import { client } from '../graphql/client'
 import { mutateClient } from '../graphql/mutation'
 import { ModelName } from '../types'
 import { collectAll } from './collect'
-import { getReadableFields, getReturnableFields } from './queryHelpers'
+import { getReadableFieldsFor } from './queryHelpers'
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
 
@@ -53,7 +53,7 @@ export async function resolvedMutationWithFields<T>(
   const next = await resolvedMutation(() => {
     // @ts-ignore
     const res = resolver()
-    const returningFields = fields ?? getReturnableFields(table)
+    const returningFields = fields ?? getReadableFieldsFor('mutation', table)
     return collectAll(res.returning, returningFields)
   })
   // @ts-ignore
@@ -68,7 +68,7 @@ export async function resolvedWithFields(
   await resetQueryCache()
   const next = await resolved(() => {
     const res = resolver()
-    const returningFields = fields ?? getReadableFields(table)
+    const returningFields = fields ?? getReadableFieldsFor('query', table)
     return collectAll(res, returningFields)
   })
   return next

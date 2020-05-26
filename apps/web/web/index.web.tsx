@@ -1,7 +1,7 @@
 import './base.css'
 import './bootstrapEnv'
 
-import { mutation, query, startLogging } from '@dish/graph'
+import { mutation, query, schema, startLogging } from '@dish/graph'
 import { createOvermind } from 'overmind'
 import React from 'react'
 // @ts-ignore
@@ -33,6 +33,7 @@ AppRegistry.registerComponent('dish', () => App)
 window['React'] = React
 window['query'] = query
 window['mutation'] = mutation
+window['schema'] = schema
 
 // exports
 if (process.env.TARGET === 'ssr') {
