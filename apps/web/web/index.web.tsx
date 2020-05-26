@@ -1,13 +1,14 @@
 import './base.css'
 import './bootstrapEnv'
 
-import { mutation, query, schema, startLogging } from '@dish/graph'
+import { client, mutation, query, schema, startLogging } from '@dish/graph'
 import { createOvermind } from 'overmind'
 import React from 'react'
 // @ts-ignore
 import { createRoot, hydrate, render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
+import { mutateClient } from '../../../packages/graph/src/graphql/mutation'
 import { OVERMIND_MUTATIONS, isWorker } from '../shared/constants'
 import { config } from '../shared/state/om'
 import { App } from '../shared/views/App'
@@ -31,9 +32,13 @@ if (process.env.NODE_ENV === 'development' && !window['STARTED']) {
 AppRegistry.registerComponent('dish', () => App)
 
 window['React'] = React
-window['query'] = query
-window['mutation'] = mutation
-window['schema'] = schema
+window['gqless'] = {
+  query,
+  mutation,
+  schema,
+  client,
+  mutateClient,
+}
 
 // exports
 if (process.env.TARGET === 'ssr') {

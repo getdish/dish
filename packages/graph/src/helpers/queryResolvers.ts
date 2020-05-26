@@ -1,19 +1,11 @@
-import { Cache, Query, resolved } from 'gqless'
-import _ from 'lodash'
+import { Query, resolved } from 'gqless'
 
-import { schema } from '../graphql'
 import { client } from '../graphql/client'
-import { mutateClient } from '../graphql/mutation'
 import { ModelName } from '../types'
 import { collectAll } from './collect'
 import { getReadableFieldsFor } from './queryHelpers'
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
-
-const resetMutationCache = () => {
-  // @ts-ignore
-  mutateClient.cache = new Cache(mutateClient.node)
-}
 
 const randomQueryName = () => {
   var result = ''
@@ -38,7 +30,6 @@ export async function resolvedMutation<T>(
 ): Promise<
   T extends () => infer U ? (U extends { returning: infer X } ? X : U) : any
 > {
-  resetMutationCache()
   // @ts-ignore
   return await resolved(resolver)
 }

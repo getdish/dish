@@ -92,9 +92,8 @@ class AuthModel {
           status: response.status,
           statusText: response.statusText,
         }
-        console.error(error)
         throw new Error(
-          `Auth fetch() error ${response.status}: ${response.statusText}`
+          `Auth fetch() error:\n${JSON.stringify(error, null, 2)}`
         )
       }
     }
@@ -119,10 +118,12 @@ class AuthModel {
       username: username,
       password: password,
     })
-    if (response.status != 201) {
-      throw new Error(
+
+    if (response.status != 201 && response.status != 200) {
+      console.error(
         `Couldn't login, invalid username or password or missing user`
       )
+      return [response.status, response.statusText] as const
     }
     const data = await response.json()
     this.isLoggedIn = true
@@ -138,7 +139,7 @@ class AuthModel {
       )
       this.has_been_logged_out = false
     }
-    return [response.status, data.user]
+    return [response.status, data.user] as const
   }
 
   async logout() {
