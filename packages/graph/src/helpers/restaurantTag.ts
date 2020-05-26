@@ -1,11 +1,9 @@
-import { resolved } from 'gqless'
-
 import {
   restaurant_tag_constraint,
   restaurant_tag_update_column,
 } from '../graphql'
 import { mutation } from '../graphql/mutation'
-import { RestaurantTag, Tag } from '../types'
+import { RestaurantTag } from '../types'
 import { resolvedMutation } from './queryResolvers'
 
 export async function restaurantTagUpsert(
