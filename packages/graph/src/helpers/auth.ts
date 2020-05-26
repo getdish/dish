@@ -119,8 +119,10 @@ class AuthModel {
       username: username,
       password: password,
     })
-    if (response.status == 401) {
-      return [401]
+    if (response.status != 201) {
+      throw new Error(
+        `Couldn't login, invalid username or password or missing user`
+      )
     }
     const data = await response.json()
     this.isLoggedIn = true
