@@ -4,7 +4,7 @@ import { client, resetQueryCache } from '../graphql/client'
 import { resetMutationCache } from '../graphql/mutation'
 import { ModelName } from '../types'
 import { CollectOptions, collectAll } from './collect'
-import { getReadableFieldsFor, getReadableMutationFields } from './queryHelpers'
+import { getReadableMutationFields } from './queryHelpers'
 
 // just a helper that clears our cache after mutations for now
 export async function resolvedMutation<T extends Function>(
@@ -18,7 +18,6 @@ export async function resolvedMutation<T extends Function>(
 }
 
 export async function resolvedMutationWithFields<T extends Function>(
-  table: ModelName,
   resolver: T,
   options?: CollectOptions
 ): Promise<
@@ -26,17 +25,13 @@ export async function resolvedMutationWithFields<T extends Function>(
 > {
   const next = await resolvedMutation(() => {
     const res = resolver()
-    return collectAll(res.returning, {
-      ...options,
-      fields: getReadableMutationFields(table),
-    })
+    return collectAll(res.returning, options)
   })
   // @ts-ignore
   return next
 }
 
 export async function resolvedWithFields(
-  table: ModelName,
   resolver: any,
   options?: CollectOptions
 ): Promise<any> {

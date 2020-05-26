@@ -46,6 +46,5 @@ test('Searching for a restaurant by tag', async (t) => {
     query: '',
     tags: ['test-tag'],
   })
-  console.log('waht is', restaurant, results)
   t.is(results?.[0].tags?.[0].tag.name, 'Test tag')
 })

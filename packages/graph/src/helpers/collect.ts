@@ -1,6 +1,3 @@
-import { access } from 'fs'
-import { isObject } from 'util'
-
 import {
   ArrayNode,
   FieldNode,
@@ -30,11 +27,6 @@ export const collect = <A extends any>(
     const val = object[key]
     if (typeof val === 'function') {
       acc[key] = val()
-    } else if (!!val && isObject(val)) {
-      acc[key] = collect(val, {
-        fields: getFieldsFromAccessor(val, key),
-        maxDepth: (options.maxDepth ?? 2) - 1,
-      })
     } else {
       acc[key] = val
     }
@@ -56,11 +48,6 @@ function getFieldsFromAccessor(object: any, childKey?: string) {
 
   if (parentNode instanceof ObjectNode) {
     fieldsObject = parentNode.fields
-
-    if (childKey === 'parent') {
-      // @ts-ignore
-      console.log('none!', childKey, accessor.parent?.node.fields)
-    }
   } else if (parentNode instanceof ArrayNode) {
     // @ts-ignore
     fieldsObject = parentNode.innerNode.fields
@@ -76,6 +63,7 @@ function getFieldsFromAccessor(object: any, childKey?: string) {
     const allFields: FieldNode[] = Object.keys(fieldsObject!).map(
       (key) => fieldsObject![key]
     )
+
     const finalFields = allFields
       .filter(filterAccessibleField)
       .map((x) => x.name)

@@ -93,14 +93,10 @@ export async function findOne<T extends ModelType>(
   hash: Partial<T>,
   options?: CollectOptions
 ): Promise<T | null> {
-  const [first] = await resolvedWithFields(
-    table,
-    () => {
-      const args = objectToWhere(hash)
-      return query[table](args) as T[]
-    },
-    options
-  )
+  const [first] = await resolvedWithFields(() => {
+    const args = objectToWhere(hash)
+    return query[table](args) as T[]
+  }, options)
   return first ?? null
 }
 
@@ -109,7 +105,7 @@ export async function insert<T extends ModelType>(
   objects: T[]
 ): Promise<WithID<T>[]> {
   const action = `insert_${table}` as any
-  return await resolvedMutationWithFields(table, () =>
+  return await resolvedMutationWithFields(() =>
     mutation[action]({
       objects: removeReadOnlyProperties(table, objects),
     })
@@ -125,7 +121,7 @@ export async function upsert<T extends ModelType>(
   // TODO: Is there a better way to get the updateable columns?
   const update_columns = Object.keys(objects[0])
   const action = `insert_${table}` as any
-  return await resolvedMutationWithFields(table, () =>
+  return await resolvedMutationWithFields(() =>
     mutation[action]({
       objects,
       on_conflict: {
@@ -142,7 +138,7 @@ export async function update<T extends WithID<ModelType>>(
 ): Promise<WithID<T>> {
   const action = `update_${table}` as any
   const [object] = removeReadOnlyProperties(table, [objectIn])
-  const [resolved] = await resolvedMutationWithFields(table, () =>
+  const [resolved] = await resolvedMutationWithFields(() =>
     mutation[action]({
       where: { id: { _eq: object.id } },
       _set: object,
