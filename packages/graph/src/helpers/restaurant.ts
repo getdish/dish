@@ -161,7 +161,8 @@ export async function restaurantUpsertManyTags(
     const existing = getRestaurantTagFromTag(restaurant, rt.tag_id)
     return { ...existing, ...rt }
   })
-  return await restaurantUpsertRestaurantTags(restaurant, populated)
+  const next = await restaurantUpsertRestaurantTags(restaurant, populated)
+  return next
 }
 
 export async function restaurantUpsertOrphanTags(
@@ -184,7 +185,8 @@ export async function restaurantUpsertRestaurantTags(
 ) {
   await restaurantTagUpsert(restaurant.id, restaurant_tags)
   await restaurantUpdateTagNames(restaurant)
-  return await restaurantFindOneWithTags(restaurant)
+  const next = await restaurantFindOneWithTags(restaurant)
+  return next
 }
 
 async function restaurantUpdateTagNames(restaurant: RestaurantWithId) {
@@ -222,6 +224,7 @@ function getRestaurantTagFromTag(restaurant: Restaurant, tag_id: string) {
   if (existing) {
     const cloned = _.cloneDeep(existing)
     delete cloned.tag
+    delete cloned.restaurant
     rt = cloned
   }
   rt.tag_id = tag_id
