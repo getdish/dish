@@ -1,3 +1,18 @@
+
+- static style extract v1
+- hoverable popover + popover animate
+- Add o tag, upvote/downvote, star
+- gallery view / click dish to gallery
+- add tip/comment
+- Make sure toasts are working for actions
+- Searchbar needs fixes for tags
+- Upvote tags
+- Better breakdown of rating
+- Some sort of way to highlight comments or at least summaries of features (bert?) on restaurant detail or else it feels too empty
+- Menu/inside/outside
+- Various user flows (expo auth?)
+
+
 - [ ] hover on left side should show a "banner" on bottom of right
 
 ---
