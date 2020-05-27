@@ -199,7 +199,6 @@ async function restaurantUpdateTagNames(restaurant: RestaurantWithId) {
           .flat()
       ),
     ]
-    console.log('wtf2', restaurant)
     await restaurantUpdate({
       ...restaurant,
       tag_names,

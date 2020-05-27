@@ -67,11 +67,11 @@ export async function insert<T extends ModelType>(
 ): Promise<WithID<T>[]> {
   const action = `insert_${table}` as any
   // @ts-ignore
-  return await resolvedMutationWithFields(() =>
-    mutation[action]({
+  return await resolvedMutationWithFields(() => {
+    return mutation[action]({
       objects: removeReadOnlyProperties(table, objects),
     })
-  )
+  })
 }
 
 export async function upsert<T extends ModelType>(
