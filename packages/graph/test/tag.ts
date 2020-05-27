@@ -89,9 +89,9 @@ test.skip('Tagging a restaurant with a tag that has categories', async (t) => {
   restaurant = (await restaurantFindOneWithTags(restaurant))!
   t.is(restaurant.tags?.length, 1)
   t.is(restaurant.tags?.map((t) => t.tag?.name).includes(tag_name), true)
-  t.is(restaurant.tag_names.length, 2)
   t.is(restaurant.tag_names.includes('test-tag-with-category'), true)
   t.is(restaurant.tag_names.includes('test-tag-existing'), true)
+  t.is(restaurant.tag_names.length, 2)
 })
 
 test('Ambiguous tags get marked', async (t) => {

@@ -7,6 +7,7 @@ import {
   getAccessor,
 } from 'gqless'
 import { isObject } from 'lodash'
+import { clone } from 'lodash'
 
 import { isMutableReturningField } from './isMutatableField'
 
@@ -25,59 +26,106 @@ export type CollectOptions = {
 }
 
 export const collect = <A extends any>(
-  object: A,
-  options: CollectOptions = { maxDepth: DEFAULT_MAX_DEPTH }
+  untouched_object: A,
+  options: CollectOptions = { maxDepth: DEFAULT_MAX_DEPTH },
+  ancestry: string[] = []
 ): A => {
   if (options.maxDepth === 0) {
-    return object
+    return untouched_object
   }
-  let fields = options.fields
-  if (!fields) {
-    fields = getFieldsForCollect(object, options)
+  let collectable_fields = options.fields
+  if (!collectable_fields) {
+    collectable_fields = getFieldsForCollect(
+      untouched_object,
+      options,
+      ancestry
+    )
   }
   if (options.include) {
-    fields = [
-      ...fields,
+    collectable_fields = [
+      ...collectable_fields,
       ...options.include.filter((x) => x.indexOf('.') === -1),
     ]
   }
-  return (fields ?? []).reduce((acc, key) => {
-    let val = object[key]
-    if (typeof val === 'function') {
-      val = val()
-    }
-    acc[key] = val
+  const collected_object: A = (collectable_fields ?? []).reduce(
+    (acc: A, field_name: string) => {
+      const descdendant = clone(ancestry)
+      descdendant.push(field_name)
+      return recurseIntoAllFields<A>(
+        acc,
+        field_name,
+        untouched_object,
+        options,
+        descdendant
+      )
+    },
+    {} as A
+  )
+  return collected_object
+}
 
-    // recurse!
-    if (isObject(val) || Array.isArray(val)) {
-      let subFields: string[] = []
-      const subIncludes = options.include?.includes(key)
-        ? findSubIncludes(key, options.include)
-        : []
-      if (subIncludes?.length) {
-        subFields = findSubIncludes(key, subIncludes)
-      }
-      // collect subfields from object
-      if (isObject(val)) {
-        try {
-          subFields = [...subFields, ...getFieldsForCollect(val, options)]
-        } catch (err) {
-          // fine, its just some normal object
-        }
-      }
-      if (subFields.length) {
-        const opts: CollectOptions = {
-          maxDepth: (options.maxDepth ?? DEFAULT_MAX_DEPTH) - 1,
-          include: subIncludes,
-        }
-        acc[key] = Array.isArray(val)
-          ? collectAll(val, opts)
-          : collect(val, opts)
-      }
-    }
+export const collectAll = <A extends any>(
+  objects: A[],
+  options: CollectOptions = { maxDepth: DEFAULT_MAX_DEPTH },
+  ancestry: string[] = []
+): A[] => {
+  return objects.map((x) => collect(x, options, ancestry))
+}
 
-    return acc
-  }, {}) as A
+function recurseIntoAllFields<A>(
+  acc: A,
+  field_name: string,
+  object: any,
+  options: CollectOptions,
+  ancestry: string[] = []
+) {
+  let value = object[field_name]
+  if (typeof value === 'function') {
+    value = value()
+  }
+  acc[field_name] = value
+  if (isObject(value) || Array.isArray(value)) {
+    acc[field_name] = recurseIntoSubField(field_name, value, options, ancestry)
+  }
+  return acc
+}
+
+function recurseIntoSubField(
+  field_name: string,
+  object: any,
+  options: CollectOptions,
+  ancestry: string[] = []
+) {
+  let subFields: string[] = []
+  const subIncludes = options.include?.includes(field_name)
+    ? findSubIncludes(field_name, options.include)
+    : []
+  if (subIncludes?.length) {
+    subFields = findSubIncludes(field_name, subIncludes)
+  }
+  // collect subfields from object
+  if (isObject(object)) {
+    try {
+      subFields = [
+        ...subFields,
+        ...getFieldsForCollect(object, options, ancestry),
+      ]
+    } catch (err) {
+      // fine, its just some normal object
+    }
+  }
+  //console.log(ancestry.join('.'), subFields)
+  if (subFields.length) {
+    const updated_options: CollectOptions = {
+      maxDepth: (options.maxDepth ?? DEFAULT_MAX_DEPTH) - 1,
+      include: [...(options.include ?? []), ...subIncludes],
+    }
+    return Array.isArray(object)
+      ? collectAll(object, updated_options, ancestry)
+      : collect(object, updated_options, ancestry)
+  } else {
+    return object
+  }
 }
 
 function findSubIncludes(prefix: string, includes: string[]) {
@@ -94,14 +142,11 @@ function findSubIncludes(prefix: string, includes: string[]) {
     .filter(Boolean) as string[]
 }
 
-export const collectAll = <A extends any>(
-  objects: A[],
-  options: CollectOptions = { maxDepth: DEFAULT_MAX_DEPTH }
-): A[] => {
-  return objects.map((x) => collect(x, options))
-}
-
-function getFieldsForCollect(object: any, options: CollectOptions) {
+function getFieldsForCollect(
+  object: any,
+  options: CollectOptions,
+  ancestry: string[] = []
+) {
   const accessor = getAccessor(object)
   if (!accessor) return []
   const parentNode = accessor.node
@@ -119,9 +164,9 @@ function getFieldsForCollect(object: any, options: CollectOptions) {
       (key) => fieldsObject![key]
     )
     const finalFields = allFields
-      .filter(filterAccessibleField)
+      .filter((x) => filterAccessibleField(x, options, ancestry))
       .map((x) => x.name)
-      .filter((x) => filterFieldsByName(x, options))
+      .filter((x) => filterFieldsByName(x, options, ancestry))
 
     return finalFields
   }
@@ -129,8 +174,16 @@ function getFieldsForCollect(object: any, options: CollectOptions) {
   return []
 }
 
-function filterAccessibleField(field: FieldNode) {
+function filterAccessibleField(
+  field: FieldNode,
+  options: CollectOptions,
+  ancestry: string[]
+) {
   const ofNode = field.ofNode
+  const ancestry_path = [...ancestry, field.name].join('.')
+  if (options.include?.includes(ancestry_path)) {
+    return true
+  }
   if (field.name === '__typename') {
     return false
   }
@@ -150,9 +203,17 @@ function filterAccessibleField(field: FieldNode) {
   return false
 }
 
-function filterFieldsByName(name: string, options: CollectOptions) {
+function filterFieldsByName(
+  name: string,
+  options: CollectOptions,
+  ancestry: string[]
+) {
   if (options.type === 'mutation' && !isMutableReturningField(name)) {
     return false
+  }
+  const ancestry_path = [...ancestry, name].join('.')
+  if (options.include?.includes(ancestry_path)) {
+    return true
   }
 
   // warning include is bugged, wont support `.` use case

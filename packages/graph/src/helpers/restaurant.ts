@@ -27,7 +27,7 @@ export const restaurantRefresh = QueryHelpers.refresh
 
 export async function restaurantFindOneWithTags(restaurant: RestaurantWithId) {
   return await restaurantFindOne(restaurant, {
-    include: ['tags', 'tags.parent', 'dishes'],
+    include: ['tags', 'tags.tag.categories.category', 'dishes'],
     maxDepth: 4,
   })
 }
@@ -183,6 +183,11 @@ export async function restaurantUpsertRestaurantTags(
   restaurant_tags: RestaurantTag[]
 ) {
   await restaurantTagUpsert(restaurant.id, restaurant_tags)
+  await updateTagNames(restaurant)
+  return await restaurantFindOneWithTags(restaurant)
+}
+
+async function updateTagNames(restaurant: RestaurantWithId) {
   restaurant = (await restaurantFindOneWithTags(restaurant))!
   if (restaurant) {
     const tags = restaurant.tags ?? []
@@ -198,7 +203,7 @@ export async function restaurantUpsertRestaurantTags(
       ...restaurant,
       tag_names,
     })
-    return await restaurantFindOneWithTags(restaurant)
+    return restaurant
   }
 }
 

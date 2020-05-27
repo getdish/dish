@@ -27,9 +27,9 @@ export const tagSlugs = (tag: TagWithParent) => {
     }
     parentage = [tagSlug(tag.parent), tagSlugDisambiguated(tag)]
   }
-  const category_names = (tag.categories || []).map((i) =>
+  const category_names = (tag.categories || []).map((i) => {
     slugify(i.category.name)
-  )
+  })
   const all = [tagSlug(tag), ...parentage, ...category_names].flat()
   return [...new Set(all)]
 }
