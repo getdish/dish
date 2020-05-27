@@ -13,15 +13,12 @@ import {
 export const filterFields = {
   __typename: true,
 }
-
 const computedFields = {
   is_open_now: true,
 }
-
 const mutationNonReturningFields = {
   password: true,
 }
-
 export const readOnlyFields = {
   ...computedFields,
   created_at: true,
@@ -77,8 +74,8 @@ export function createQueryHelpersFor<A>(
     async update(a: WithID<A>) {
       return await update<WithID<A>>(modelName, a)
     },
-    async findOne(a: A) {
-      return await findOne<A>(modelName, a)
+    async findOne(a: A, o?: CollectOptions) {
+      return await findOne<A>(modelName, a, o)
     },
     async refresh(a: WithID<A>) {
       const next = await findOne(modelName, { id: a.id })
@@ -95,7 +92,7 @@ export async function findOne<T extends ModelType>(
 ): Promise<T | null> {
   const [first] = await resolvedWithFields(() => {
     const args = objectToWhere(hash)
-    return query[table](args) as T[]
+    return query[table](args)
   }, options)
   return first ?? null
 }
@@ -105,6 +102,7 @@ export async function insert<T extends ModelType>(
   objects: T[]
 ): Promise<WithID<T>[]> {
   const action = `insert_${table}` as any
+  // @ts-ignore
   return await resolvedMutationWithFields(() =>
     mutation[action]({
       objects: removeReadOnlyProperties(table, objects),
@@ -121,6 +119,7 @@ export async function upsert<T extends ModelType>(
   // TODO: Is there a better way to get the updateable columns?
   const update_columns = Object.keys(objects[0])
   const action = `insert_${table}` as any
+  // @ts-ignore
   return await resolvedMutationWithFields(() =>
     mutation[action]({
       objects,
@@ -138,12 +137,13 @@ export async function update<T extends WithID<ModelType>>(
 ): Promise<WithID<T>> {
   const action = `update_${table}` as any
   const [object] = removeReadOnlyProperties(table, [objectIn])
-  const [resolved] = await resolvedMutationWithFields(() =>
-    mutation[action]({
+  const [resolved] = await resolvedMutationWithFields(() => {
+    const res = mutation[action]({
       where: { id: { _eq: object.id } },
       _set: object,
     })
-  )
+    return res as WithID<T>[]
+  })
   return resolved
 }
 
@@ -151,8 +151,8 @@ export async function deleteAllFuzzyBy(
   table: ModelName,
   key: string,
   value: string
-): Promise<number> {
-  return await resolvedMutation(() => {
+): Promise<void> {
+  await resolvedMutation(() => {
     return mutation[`delete_${table}`]?.({
       where: { [key]: { _ilike: `%${value}%` } },
     })
@@ -163,8 +163,8 @@ export async function deleteAllBy(
   table: string,
   key: string,
   value: string
-): Promise<number> {
-  return await resolvedMutation(() => {
+): Promise<void> {
+  await resolvedMutation(() => {
     return mutation[`delete_${table}`]?.({
       where: { [key]: { _eq: value } },
     })

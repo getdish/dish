@@ -13,9 +13,8 @@
   },
   "scripts": {
     "start": "",
-    "build": "wsrun build",
-    "build:ultra": "ultra -r --no-pretty build",
-    "build:watch": "ultra -r watch",
+    "build": "ultra -r --no-pretty build",
+    "build:watch": "ultra -r --no-pretty watch",
     "build:monitor": "ultra --monitor",
     "build:watch:broken": "yarn tsc -b -w",
     "test": "ultra -r --no-pretty test",
@@ -40,7 +39,7 @@
     "tslint": "^6.1.2",
     "tslint-etc": "^1.10.1",
     "typescript": "^3.9.3",
-    "ultra-runner": "3.3.0",
+    "ultra-runner": "^3.5.0",
     "wsrun": "5.2.0"
   },
   "dependencies": {

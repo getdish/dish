@@ -14,6 +14,12 @@ export const tagUpdate = QueryHelpers.update
 export const tagFindOne = QueryHelpers.findOne
 export const tagRefresh = QueryHelpers.refresh
 
+export const tagFindOneWithCategories = async (tag: Tag) => {
+  return await tagFindOne(tag, {
+    include: ['categories', 'categories.category'],
+  })
+}
+
 export async function tagGetAllChildren(
   parents: Pick<Tag, 'id'>[]
 ): Promise<Tag[]> {

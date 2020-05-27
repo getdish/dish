@@ -10,10 +10,10 @@ import {
   Scrape,
   Tag,
 } from '../types'
-import { collect, collectAll } from './collect'
+import { collect } from './collect'
 import { levenshteinDistance } from './levenshteinDistance'
 import { createQueryHelpersFor, objectToWhere } from './queryHelpers'
-import { resolvedQueryNoCache, resolvedWithFields } from './queryResolvers'
+import { resolvedWithFields, resolvedWithoutCache } from './queryResolvers'
 import { tagSlugs } from './tag-extension-helpers'
 
 const QueryHelpers = createQueryHelpersFor<Restaurant>(
@@ -29,7 +29,7 @@ export const restaurantRefresh = QueryHelpers.refresh
 export async function restaurantFindOneWithTags(
   restaurant: RestaurantWithId
 ): Promise<Required<Restaurant>> {
-  const [first] = await resolvedQueryNoCache(() => {
+  const [first] = await resolvedWithoutCache(() => {
     const items = query.restaurant(objectToWhere({ id: restaurant.id }))
     return items.map((item) => {
       return {

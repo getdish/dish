@@ -14494,7 +14494,7 @@ type-detect@4.0.8, type-detect@^4.0.0, type-detect@^4.0.5, type-detect@^4.0.8:
   resolved "https://registry.npmjs.org/type-detect/-/type-detect-4.0.8.tgz#7646fb5f18871cfbb7749e69bd39a6388eb7450c"
   integrity sha512-0fr/mIH1dlO+x7TlcMy+bIDqKPsw/70tVyeHW787goQjhmqaZe10uwLujubK9q9Lg6Fiho1KUKDYz0Z7k7g5/g==
 
-type-fest@0.13.1, type-fest@^0.13.0, type-fest@^0.13.1:
+type-fest@0.13.1, type-fest@^0.13.1:
   version "0.13.1"
   resolved "https://registry.npmjs.org/type-fest/-/type-fest-0.13.1.tgz#0172cb5bce80b0bd542ea348db50c7e21834d934"
   integrity sha512-34R7HTnG0XIJcBSn5XhDd7nNFPRcXYRZrBB2O2jdKqYODldSzBAqzsWoZYYvduky73toYS/ESqxPvkDf/F0XMg==
@@ -14508,6 +14508,11 @@ type-fest@^0.11.0:
   version "0.11.0"
   resolved "https://registry.npmjs.org/type-fest/-/type-fest-0.11.0.tgz#97abf0872310fed88a5c466b25681576145e33f1"
   integrity sha512-OdjXJxnCN1AvyLSzeKIgXTXxV+99ZuXl3Hpo9XpJAv9MBcHrrJOQ5kV7ypXOuQie+AmWG25hLbiKdwYTifzcfQ==
+
+type-fest@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.npmjs.org/type-fest/-/type-fest-0.14.0.tgz#758d800f2dcc0de47a946a120d91ab17883523ad"
+  integrity sha512-XFdJEnQD8Y6yRc796jPOiwK7Mb8So5qaFj8WhvOAFl1qrBr/srP3E9wL/9QUf2Uc6btJ3kHhpNfoAXa3bvDGlw==
 
 type-fest@^0.3.0:
   version "0.3.1"
@@ -14608,10 +14613,10 @@ uglify-es@^3.1.9:
     commander "~2.13.0"
     source-map "~0.6.1"
 
-ultra-runner@3.3.0:
-  version "3.3.0"
-  resolved "https://registry.npmjs.org/ultra-runner/-/ultra-runner-3.3.0.tgz#419f9b663106dbb8e5f5561ebd65eff78c9a68cd"
-  integrity sha512-q2rqdCHJ27094SjKuatxGyNpvgG90NYcO1houzyJKPI0ajoU752ibtsm6lWPFvjqJv8l7w8s9pjF7EKESqw9Og==
+ultra-runner@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.npmjs.org/ultra-runner/-/ultra-runner-3.5.0.tgz#03959cbd7028c3ea0039fb21f3ae83e3ae953985"
+  integrity sha512-xyxlv5//U++w29lfPyC24zGJAoqN6+jcGbCP0Vnqy4lBsrYezt0P7F65q5hTWnVpuvdlLpfYVbJQDQUe7TD8UQ==
   dependencies:
     ansi-split "^1.0.1"
     chalk "^4.0.0"
@@ -14625,7 +14630,7 @@ ultra-runner@3.3.0:
     shellwords-ts "^3.0.0"
     string-width "^4.2.0"
     tslib "2.0.0"
-    type-fest "^0.13.0"
+    type-fest "^0.14.0"
     wrap-ansi "^7.0.0"
     yamljs "^0.3.0"
     yargs "^15.1.0"

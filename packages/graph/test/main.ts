@@ -19,8 +19,6 @@ test('jsob-query', async (t) => {
         type: { _eq: 'country' },
       },
     })
-
-    console.log('country tags are', _country_tags)
     return _country_tags.map((tag) => {
       const alternates = tag.alternates?.() ?? ['']
       console.log('alternates are', alternates)

@@ -6,9 +6,16 @@ import {
   UFieldsNode,
   getAccessor,
 } from 'gqless'
+import { isObject } from 'lodash'
+
+// a smart collection function for gqless
+// grabs fields using the getAccessor and resolves "most" for ease of use
 
 export type CollectOptions = {
+  // replace fields to select
   fields?: string[]
+  // add fields to select (collect runs on each)
+  include?: string[]
   maxDepth?: number
 }
 
@@ -23,15 +30,65 @@ export const collect = <A extends any>(
   if (!fields) {
     fields = getFieldsFromAccessor(object)
   }
+  if (options.include) {
+    fields = [
+      ...fields,
+      ...options.include.filter((x) => x.indexOf('.') === -1),
+    ]
+  }
   return (fields ?? []).reduce((acc, key) => {
     const val = object[key]
+
     if (typeof val === 'function') {
       acc[key] = val()
     } else {
       acc[key] = val
     }
+
+    // recurse!
+    const res = acc[key]
+    if (isObject(res) || Array.isArray(res)) {
+      let subFields: string[] = []
+      const subIncludes = options.include?.includes(key)
+        ? findSubIncludes(key, options.include)
+        : []
+      if (subIncludes?.length) {
+        subFields = findSubIncludes(key, subIncludes)
+      }
+      if (isObject(res)) {
+        try {
+          subFields = [...subFields, ...getFieldsFromAccessor(res)]
+        } catch (err) {
+          // fine, its just some normal object
+        }
+      }
+      if (subFields.length) {
+        const opts: CollectOptions = {
+          maxDepth: (options.maxDepth ?? 3) - 1,
+          include: subIncludes,
+        }
+        acc[key] = Array.isArray(res)
+          ? collectAll(res, opts)
+          : collect(res, opts)
+      }
+    }
+
     return acc
   }, {}) as A
+}
+
+function findSubIncludes(prefix: string, includes: string[]) {
+  return includes
+    .map((x) => {
+      if (x === prefix) {
+        return false
+      }
+      if (x.indexOf(prefix) === 0) {
+        return x.replace(`${prefix}.`, '')
+      }
+      return false
+    })
+    .filter(Boolean) as string[]
 }
 
 export const collectAll = <A extends any>(
@@ -43,7 +100,7 @@ export const collectAll = <A extends any>(
 
 function getFieldsFromAccessor(object: any, childKey?: string) {
   const accessor = getAccessor(object)
-  const parentNode = accessor?.parent?.node
+  const parentNode = accessor?.node
   let fieldsObject: Record<string, FieldNode<UFieldsNode>> | null = null
 
   if (parentNode instanceof ObjectNode) {
@@ -56,14 +113,14 @@ function getFieldsFromAccessor(object: any, childKey?: string) {
   if (fieldsObject) {
     // this handles recursion
     if (childKey) {
+      const node = fieldsObject[childKey]?.ofNode
       // @ts-ignore
-      fieldsObject = fieldsObject[childKey]?.ofNode?.fields ?? {}
+      fieldsObject = node?.fields ?? {}
     }
 
     const allFields: FieldNode[] = Object.keys(fieldsObject!).map(
       (key) => fieldsObject![key]
     )
-
     const finalFields = allFields
       .filter(filterAccessibleField)
       .map((x) => x.name)
