@@ -46,7 +46,7 @@ export default memo(
     return (
       <>
         <RatingView percent={percent} color={color} {...rest} />
-        {rest.size === 'lg' && <RestaurantRatingBreakdownView {...props} />}
+        {/* {rest.size === 'lg' && <RestaurantRatingBreakdownView {...props} />} */}
       </>
     )
   })

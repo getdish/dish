@@ -6,7 +6,7 @@ export const SelectableText = (props: TextProps & { children: any }) => {
     <Text
       selectable
       {...props}
-      style={[{ userSelect: 'text' } as any, props.style ?? null]}
+      style={[{ userSelect: 'text' } as any, props.style]}
     />
   )
 }

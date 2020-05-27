@@ -73,6 +73,7 @@ export function HomeViewDrawer(props: { children: any }) {
       justifyContent="flex-end"
       {...(isSmall && positionSmall)}
     >
+      {/* background */}
       <ZStack fullscreen>
         <ZStack
           fullscreen
@@ -81,7 +82,6 @@ export function HomeViewDrawer(props: { children: any }) {
           overflow="hidden"
         >
           <LinearGradient
-            key={0}
             colors={isSmall ? colorsSmall : colors}
             style={[StyleSheet.absoluteFill]}
           />
@@ -95,6 +95,21 @@ export function HomeViewDrawer(props: { children: any }) {
           </ZStack>
         </ZStack>
       </ZStack>
+
+      {/* overlay / under searchbar */}
+      <ZStack
+        pointerEvents="none"
+        fullscreen
+        zIndex={1000000}
+        bottom="auto"
+        height={100}
+      >
+        <LinearGradient
+          colors={['white', 'transparent']}
+          style={[StyleSheet.absoluteFill]}
+        />
+      </ZStack>
+
       <VStack
         flex={1}
         paddingLeft={drawerPad}

@@ -55,7 +55,9 @@ export default memo(function HomePage() {
             {showPip && <HomeMapPIP />}
           </ErrorBoundary>
         )}
+
         <HomeMapControlsOverlay />
+
         <HomeSearchBar />
 
         {/* overlay map subtle */}
