@@ -395,6 +395,13 @@ function getRestaurantAnnotations(
   }
 
   return restaurants
+    .filter((_, index) => {
+      if (!coordinates[index]) {
+        console.warn('noo coordinate')
+        return false
+      }
+      return true
+    })
     .map((restaurant, index) => {
       const percent = getRestaurantRating(restaurant.rating)
       const color = getRankingColor(percent)
