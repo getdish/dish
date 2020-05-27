@@ -35,7 +35,16 @@ export const createFetcher = (
     const response = await fetch(endpoint, request)
     const data = await response.json()
     if (process.env.DEBUG) {
-      console.log('createFetcher', JSON.stringify({ request, data }, null, 2))
+      const simpleOut = process.env.DEBUG === '1'
+      const outObj = simpleOut ? { query, data } : { query, request, data }
+      const out = JSON.stringify(outObj, null, 2)
+        .replace(/(\\n)/g, '\n')
+        .replace(/(\\")/g, '"')
+      const lim = 8000
+      const delimeter = '\n\n   ...\n\n'
+      const print =
+        out.length > lim && simpleOut ? out.slice(0, lim) + delimeter : out
+      console.log('createFetcher', print)
     }
     if (data.errors || !response.ok) {
       if (options?.silenceNotFound && response.status == 404) {

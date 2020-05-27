@@ -17,6 +17,7 @@ export const tagRefresh = QueryHelpers.refresh
 export const tagFindOneWithCategories = async (tag: Tag) => {
   return await tagFindOne(tag, {
     include: ['categories', 'categories.category'],
+    maxDepth: 3,
   })
 }
 

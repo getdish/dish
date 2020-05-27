@@ -5,16 +5,27 @@ type TagWithParent = Tag & {
   parent: { name: string }
 }
 
-export const tagSlug = (tag: Pick<Tag, 'name'>) => slugify(tag.name ?? '')
+export const tagSlug = (tag: Pick<Tag, 'name'>) => {
+  if (!tag.name) {
+    throw new Error(`No tag name on tag: ${JSON.stringify(tag)}`)
+  }
+  return slugify(tag.name)
+}
 
 export const tagSlugDisambiguated = (tag: TagWithParent) => {
+  if (!tag.parent) {
+    throw new Error(`Needs parent`)
+  }
   return `${slugify(tagSlug(tag.parent))}__${tagSlug(tag)}`
 }
 
 export const tagSlugs = (tag: TagWithParent) => {
   let parentage: string[] = []
   if (!tagIsOrphan(tag)) {
-    parentage = [tagSlug(tag.parent!), tagSlugDisambiguated(tag)]
+    if (!tag.parent) {
+      throw new Error(`Needs parent`)
+    }
+    parentage = [tagSlug(tag.parent), tagSlugDisambiguated(tag)]
   }
   const category_names = (tag.categories || []).map((i) =>
     slugify(i.category.name)

@@ -11,6 +11,7 @@ import {
   scrapeInsert,
   tagInsert,
 } from '@dish/graph'
+import { restaurantFindOneWithTags } from '@dish/graph/src'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 import { rest } from 'lodash'
 
@@ -195,10 +196,12 @@ test.beforeEach(async (t) => {
   }
 })
 
-test.skip('Merging', async (t) => {
+test('Merging', async (t) => {
   const self = new Self()
   await self.mergeAll(t.context.restaurant.id)
-  const updated = await restaurantFindOne({ id: t.context.restaurant.id })
+  const updated = await restaurantFindOneWithTags({
+    id: t.context.restaurant.id,
+  })
   t.is(!!updated, true)
   if (!updated) return
   t.is(updated.name, 'Test Name Yelp')

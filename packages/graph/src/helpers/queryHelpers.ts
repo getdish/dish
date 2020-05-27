@@ -1,55 +1,19 @@
-import { FieldNode, ScalarNode } from 'gqless'
-
 import { query, schema } from '../graphql'
 import { mutation } from '../graphql/mutation'
 import { ModelName, ModelType, WithID } from '../types'
 import { CollectOptions } from './collect'
+import { isMutatableField } from './isMutatableField'
 import {
   resolvedMutation,
   resolvedMutationWithFields,
   resolvedWithFields,
 } from './queryResolvers'
 
-export const filterFields = {
-  __typename: true,
-}
-const computedFields = {
-  is_open_now: true,
-}
-const mutationNonReturningFields = {
-  password: true,
-}
-export const readOnlyFields = {
-  ...computedFields,
-  created_at: true,
-  updated_at: true,
-}
-
-export const isMutatableField = (field: FieldNode) => {
-  return (
-    !filterFields[field.name] &&
-    !readOnlyFields[field.name] &&
-    isSimpleField(field)
-  )
-}
-
-export const isReadableField = (field: FieldNode) => {
-  return !filterFields[field.name] && isSimpleField(field)
-}
-
-export const isReadableMutationField = (field: FieldNode) => {
-  return (
-    !computedFields[field.name] &&
-    !mutationNonReturningFields[field.name] &&
-    isReadableField(field)
-  )
-}
-
-const isSimpleField = (field: FieldNode) => {
-  return field.ofNode instanceof ScalarNode && !field.args?.required
-}
-
-export function objectToWhere(hash: Object): any {
+export function objectToWhere(hash: { [key: string]: any }): any {
+  // default if id exists just use id
+  if ('id' in hash) {
+    return { where: { id: { _eq: hash.id } } }
+  }
   let where = Object.keys(hash).map((key) => {
     return { [key]: { _eq: hash[key] } }
   })
@@ -75,7 +39,7 @@ export function createQueryHelpersFor<A>(
       return await update<WithID<A>>(modelName, a)
     },
     async findOne(a: A, o?: CollectOptions) {
-      return await findOne<A>(modelName, a, o)
+      return await findOne<WithID<A>>(modelName, a, o)
     },
     async refresh(a: WithID<A>) {
       const next = await findOne(modelName, { id: a.id })
@@ -171,44 +135,14 @@ export async function deleteAllBy(
   })
 }
 
-export function getReadableMutationFields(table: string) {
-  let field_names: string[] = []
-  const field_nodes = schema[table].fields
-  for (const key in field_nodes) {
-    const field_node = field_nodes[key]
-    if (isReadableMutationField(field_node)) field_names.push(field_node.name)
-  }
-  return field_names
-}
-
-export function getReadableFieldsFor(
-  type: 'mutation' | 'query',
-  table: ModelName
-) {
-  let field_names: string[] = []
-  const field_nodes = schema[table].fields
-  for (const key in field_nodes) {
-    const field_node = field_nodes[key]
-    if (
-      type === 'mutation'
-        ? isReadableMutationField(field_node)
-        : isReadableField(field_node)
-    ) {
-      field_names.push(field_node.name)
-    }
-  }
-  return field_names
-}
-
 function removeReadOnlyProperties<T>(table: string, objects: T[]): T[] {
   return objects.map((cur) => {
-    const object = Object.keys(cur).reduce((acc, key) => {
+    return Object.keys(cur).reduce((acc, key) => {
       const field = schema[table].fields[key]
       if (isMutatableField(field)) {
         acc[key] = cur[key]
       }
       return acc
     }, {} as T)
-    return object
   })
 }
