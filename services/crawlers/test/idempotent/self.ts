@@ -271,14 +271,14 @@ test.skip('Tag rankings', async (t) => {
   await restaurantUpsertOrphanTags(r1, [tag_name])
   await restaurantUpsertOrphanTags(r2, [tag_name])
   await self.updateTagRankings()
-  const restaurant = await restaurantFindOne({ id: self.restaurant.id })
+  const restaurant = await restaurantFindOneWithTags({ id: self.restaurant.id })
   t.is(!!restaurant, true)
   if (!restaurant) return
   t.is(restaurant.tags[0].tag.name, tag_name)
   t.is(restaurant.tags[0].rank, 3)
 })
 
-test.skip('Finding dishes in reviews', async (t) => {
+test('Finding dishes in reviews', async (t) => {
   const self = new Self()
   const tag = { name: 'Test country' }
 
@@ -299,11 +299,15 @@ test.skip('Finding dishes in reviews', async (t) => {
   ])
 
   await restaurantUpsertOrphanTags(t.context.restaurant, [tag.name])
-  await restaurantFindOne({ id: t.context.restaurant.id })
+  t.context.restaurant = (await restaurantFindOneWithTags({
+    id: t.context.restaurant.id,
+  }))!
   self.restaurant = t.context.restaurant
   await self.getScrapeData()
   await self.scanReviews()
-  const updated = await restaurantFindOne({ id: t.context.restaurant.id })
+  const updated = await restaurantFindOneWithTags({
+    id: t.context.restaurant.id,
+  })
   t.assert(!!updated, 'not found')
   if (!updated) return
   t.assert(
@@ -320,7 +324,7 @@ test.skip('Finding dishes in reviews', async (t) => {
   )
 })
 
-test.skip('Dish sentiment analysis from reviews', async (t) => {
+test('Dish sentiment analysis from reviews', async (t) => {
   const self = new Self()
   const tag = { name: 'Test country' }
   const [tag_parent] = await tagInsert([tag])
@@ -339,7 +343,7 @@ test.skip('Dish sentiment analysis from reviews', async (t) => {
     },
   ])
   await restaurantUpsertOrphanTags(t.context.restaurant, [tag.name])
-  const restaurant = await restaurantFindOne({
+  const restaurant = await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
   })
   t.is(!!restaurant, true)
@@ -348,7 +352,9 @@ test.skip('Dish sentiment analysis from reviews', async (t) => {
   self.restaurant = t.context.restaurant
   await self.getScrapeData()
   await self.scanReviews()
-  const updated = await restaurantFindOne({ id: t.context.restaurant.id })
+  const updated = await restaurantFindOneWithTags({
+    id: t.context.restaurant.id,
+  })
   t.assert(!!updated, 'not found')
   if (!updated) return
   const tag1 =
@@ -387,7 +393,9 @@ test.skip('Find photos of dishes', async (t) => {
   await self.getScrapeData()
   await self.findPhotosForTags()
   await restaurantUpdate(self.restaurant)
-  const updated = await restaurantFindOne({ id: t.context.restaurant.id })
+  const updated = await restaurantFindOneWithTags({
+    id: t.context.restaurant.id,
+  })
   t.assert(!!updated, 'not found')
   if (!updated) return
   const tag1 =
@@ -401,7 +409,7 @@ test.skip('Find photos of dishes', async (t) => {
   t.deepEqual(tag2.photos, ['https://yelp.com/image2.jpg'])
 })
 
-test.skip('Identifying country tags', async (t) => {
+test('Identifying country tags', async (t) => {
   const [existing_tag1, existing_tag2] = await tagInsert([
     {
       name: 'Test Mexican',
@@ -416,7 +424,9 @@ test.skip('Identifying country tags', async (t) => {
   ])
   const dish = new Self()
   await dish.mergeAll(t.context.restaurant.id)
-  const updated = await restaurantFindOne({ id: t.context.restaurant.id })
+  const updated = await restaurantFindOneWithTags({
+    id: t.context.restaurant.id,
+  })
   t.assert(updated, 'not found')
   if (!updated) return
   t.is(updated.tags.length, 3)
