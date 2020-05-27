@@ -13,7 +13,6 @@ import {
   ZStack,
   useWaterfall,
 } from '@dish/ui'
-// @ts-ignore
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Edit2 } from 'react-feather'
 import { Image, ScrollView, Text, View } from 'react-native'
@@ -93,10 +92,7 @@ export default memo(function HomePageSearchResults({
       >
         <HStack width="100%">
           <VStack flex={4}>
-            <PageTitle
-              flex={2}
-              subTitle={<HStack spacing={10}>{subTitleElements}</HStack>}
-            >
+            <PageTitle flex={2} subTitle={subTitleElements}>
               {pageTitleElements}
             </PageTitle>
           </VStack>

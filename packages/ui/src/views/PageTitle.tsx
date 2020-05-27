@@ -19,32 +19,30 @@ export const PageTitle = memo(
         <SelectableText
           numberOfLines={1}
           style={{
+            flex: 1,
             maxWidth: '80%',
-            // textAlign: 'center',
             opacity: 1,
-            fontSize: 19,
-            // fontFamily: 'Helvetica',
+            fontSize: 24,
             lineHeight: 30,
             fontWeight: '700',
           }}
         >
           {children}
           {!!subTitle && (
-            <SelectableText
-              numberOfLines={1}
-              style={
-                {
-                  display: 'block',
-                  // textAlign: 'center',
+            <>
+              <br />
+              <SelectableText
+                numberOfLines={1}
+                style={{
                   width: '100%',
                   color: '#666',
-                  fontSize: 20,
-                  fontWeight: '300',
-                } as any
-              }
-            >
-              {subTitle}
-            </SelectableText>
+                  fontSize: 22,
+                  fontWeight: '200',
+                }}
+              >
+                {subTitle}
+              </SelectableText>
+            </>
           )}
         </SelectableText>
         {/* <Divider alignSelf="flex-end" /> */}
