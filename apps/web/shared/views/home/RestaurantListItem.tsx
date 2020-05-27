@@ -151,8 +151,8 @@ const RestaurantListItemContent = memo(
                         <SelectableText
                           style={{
                             color: '#000',
-                            fontSize: 24,
-                            fontWeight: '700',
+                            fontSize: 26,
+                            fontWeight: '500',
                             textDecorationColor: 'transparent',
                           }}
                         >

@@ -22,7 +22,7 @@ export const PageTitle = memo(
             flex: 1,
             maxWidth: '80%',
             opacity: 1,
-            fontSize: 24,
+            fontSize: 22,
             lineHeight: 30,
             fontWeight: '700',
           }}

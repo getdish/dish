@@ -1,5 +1,5 @@
 diff --git a/node_modules/gqless/dist/Type.d.ts b/node_modules/gqless/dist/Type.d.ts
-index 27c8f79..85114f5 100644
+index 27c8f79..379ee7f 100644
 --- a/node_modules/gqless/dist/Type.d.ts
 +++ b/node_modules/gqless/dist/Type.d.ts
 @@ -50,5 +50,12 @@ declare type ArrayData<TArray extends ValidType[], TExtensions extends Tuple> =
@@ -17,19 +17,27 @@ index 27c8f79..85114f5 100644
 +
  export {};
 diff --git a/node_modules/gqless/dist/gqless.cjs.development.js b/node_modules/gqless/dist/gqless.cjs.development.js
-index 12268bf..16ad852 100644
+index 12268bf..147ae68 100644
 --- a/node_modules/gqless/dist/gqless.cjs.development.js
 +++ b/node_modules/gqless/dist/gqless.cjs.development.js
 @@ -135,7 +135,7 @@ const deepReference = rootValue => {
        onUnreference.filter(v => v === value).then(dispose);
      }; // Handle references created, before watchAndEmit called
-
+ 
 -
 +    if (!parentValue.references) return () => {}
      for (const ref of parentValue.references.keys()) {
        handleReference(ref);
      }
-@@ -451,7 +451,12 @@ const buildArguments = ({
+@@ -416,6 +416,7 @@ const buildArguments = ({
+ 
+       if (context) {
+         const field = context.node.inputs[key];
++        if (!field) return
+         keyContext = {
+           node: field.ofNode,
+           nullable: field.nullable
+@@ -451,7 +452,12 @@ const buildArguments = ({
      if ((context === null || context === void 0 ? void 0 : context.node) instanceof ScalarNode) {
        // Object / Array passed as scalar
        // serialize as a JSON-string
@@ -41,10 +49,10 @@ index 12268bf..16ad852 100644
 +        return
 +      }
      }
-
+ 
      if (Array.isArray(arg)) {
 diff --git a/node_modules/gqless/dist/gqless.esm.js b/node_modules/gqless/dist/gqless.esm.js
-index cc6eb3f..70528be 100644
+index cc6eb3f..fe8be07 100644
 --- a/node_modules/gqless/dist/gqless.esm.js
 +++ b/node_modules/gqless/dist/gqless.esm.js
 @@ -482,6 +482,8 @@ const buildSelections = ({
@@ -56,3 +64,42 @@ index cc6eb3f..70528be 100644
    const selections = [includeTypename && '__typename', ...tree.children.map(tree => buildSelectionTree(formatter, tree, variables))].filter(Boolean);
    if (!selections.length) return '';
    return selections.join(LINE_SEPARATOR);
+@@ -559,17 +561,27 @@ const memoized =
+ createMemo();
+ const getAlias = tree => {
+   if (!tree.parent) return;
+-  const fieldAliases = memoized(() => {
+-    const aliases = new Map();
+-    let id = 0;
+-    tree.parent.children.forEach(siblingTree => {
+-      if (!(siblingTree.selection instanceof FieldSelection)) return;
+-      if (tree.selection === siblingTree.selection || tree.selection.field !== siblingTree.selection.field) return;
+-      aliases.set(tree.selection, `${tree.selection.field.name}__${++id}`);
+-    });
+-    return aliases;
+-  }, [tree.parent, tree.selection.field]);
+-  return fieldAliases.get(tree.selection);
++  // const fieldAliases = memoized(() => {
++  //   const aliases = new Map();
++  //   let id = 0;
++  //   tree.parent.children.forEach(siblingTree => {
++  //     if (!(siblingTree.selection instanceof FieldSelection)) return;
++  //     if (tree.selection === siblingTree.selection || tree.selection.field !== siblingTree.selection.field) return;
++  //     aliases.set(tree.selection, `${tree.selection.field.name}__${++id}`);
++  //   });
++  //   return aliases;
++  // }, [tree.parent, tree.selection.field]);
++  // return fieldAliases.get(tree.selection);
++  let id
++  for (const siblingTree of tree.parent.children) {
++    if (!(siblingTree.selection instanceof FieldSelection)) continue;
++    if (tree.selection === siblingTree.selection) continue
++    if (tree.selection.field.name !== siblingTree.selection.field.name) continue;
++    const thisIndex = tree.parent.children.indexOf(tree)
++    id = `${tree.selection.field.name}__${thisIndex}`
++    break
++  }
++  return id
+ };
+ 
+ /**
