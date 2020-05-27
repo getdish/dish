@@ -1,7 +1,7 @@
 import { Tag } from '../types'
 import { slugify } from './slugify'
 
-type TagWithParent = Tag & {
+export type TagWithParent = Tag & {
   parent: { name: string }
 }
 
@@ -22,20 +22,23 @@ export const tagSlugDisambiguated = (tag: TagWithParent) => {
 export const tagSlugs = (tag: TagWithParent) => {
   let parentage: string[] = []
   if (!tagIsOrphan(tag)) {
-    if (!tag.parent) {
-      throw new Error(`Needs parent`)
+    if (!tag.parent?.name) {
+      throw new Error(`Needs parent with name`)
     }
     parentage = [tagSlug(tag.parent), tagSlugDisambiguated(tag)]
   }
-  const category_names = (tag.categories || []).map((i) => {
-    slugify(i.category.name)
+  const category_names = (tag.categories || []).map((cat) => {
+    if (typeof cat.category?.name !== 'string') {
+      throw new Error(`tag.categoriy.name must exist as string`)
+    }
+    return slugify(cat.category.name)
   })
   const all = [tagSlug(tag), ...parentage, ...category_names].flat()
   return [...new Set(all)]
 }
 
-export const tagIsOrphan = (tag: Tag) => {
-  return tag.parent!.id == '00000000-0000-0000-0000-000000000000'
+export const tagIsOrphan = (tag: TagWithParent) => {
+  return tag.parent.id == '00000000-0000-0000-0000-000000000000'
 }
 
 export function getTagNameWithIcon(tag: Tag) {

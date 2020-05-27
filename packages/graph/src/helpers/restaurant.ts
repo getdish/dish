@@ -13,7 +13,7 @@ import {
 import { levenshteinDistance } from './levenshteinDistance'
 import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
-import { tagSlugs } from './tag-extension-helpers'
+import { TagWithParent, tagSlugs } from './tag-extension-helpers'
 
 const QueryHelpers = createQueryHelpersFor<Restaurant>(
   'restaurant',
@@ -28,7 +28,7 @@ export const restaurantRefresh = QueryHelpers.refresh
 export async function restaurantFindOneWithTags(restaurant: RestaurantWithId) {
   return await restaurantFindOne(restaurant, {
     include: ['tags', 'tags.tag.categories.category', 'dishes'],
-    maxDepth: 4,
+    maxDepth: 5,
   })
 }
 
@@ -183,28 +183,36 @@ export async function restaurantUpsertRestaurantTags(
   restaurant_tags: RestaurantTag[]
 ) {
   await restaurantTagUpsert(restaurant.id, restaurant_tags)
-  await updateTagNames(restaurant)
+  await restaurantUpdateTagNames(restaurant)
   return await restaurantFindOneWithTags(restaurant)
 }
 
-async function updateTagNames(restaurant: RestaurantWithId) {
+async function restaurantUpdateTagNames(restaurant: RestaurantWithId) {
   restaurant = (await restaurantFindOneWithTags(restaurant))!
   if (restaurant) {
-    const tags = restaurant.tags ?? []
+    const tags: RestaurantTag[] = restaurant.tags ?? []
     const tag_names = [
       ...new Set(
         tags
-          .filter((x) => !!x.tag?.name)
-          .map((i) => tagSlugs(i.tag))
+          .map(keepTagsWithParent)
+          .map((tag) => tagSlugs(tag))
           .flat()
       ),
     ]
+    console.log('wtf2', restaurant)
     await restaurantUpdate({
       ...restaurant,
       tag_names,
     })
     return restaurant
   }
+}
+
+const keepTagsWithParent = (tag: RestaurantTag) => {
+  if (!tag.tag?.parent?.name) {
+    throw new Error(`No parent`)
+  }
+  return tag.tag as TagWithParent
 }
 
 function getRestaurantTagFromTag(restaurant: Restaurant, tag_id: string) {
