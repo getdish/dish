@@ -251,7 +251,7 @@ test('Weighted ratings when some sources are missing', (t) => {
   t.is(self.weightRatings(ratings, weights), 3.7142857142857144)
 })
 
-test.skip('Tag rankings', async (t) => {
+test('Tag rankings', async (t) => {
   const tag_name = 'Test Rankable'
   const self = new Self()
   self.restaurant = t.context.restaurant
@@ -271,7 +271,7 @@ test.skip('Tag rankings', async (t) => {
   await restaurantUpsertOrphanTags(r1, [tag_name])
   await restaurantUpsertOrphanTags(r2, [tag_name])
   await self.updateTagRankings()
-  const restaurant = await restaurantFindOneWithTags({ id: self.restaurant.id })
+  const restaurant = await restaurantFindOneWithTags(self.restaurant)
   t.is(!!restaurant, true)
   if (!restaurant) return
   t.is(restaurant.tags[0].tag.name, tag_name)
@@ -368,7 +368,7 @@ test('Dish sentiment analysis from reviews', async (t) => {
   t.is(tag3.rating, 0)
 })
 
-test.skip('Find photos of dishes', async (t) => {
+test('Find photos of dishes', async (t) => {
   const self = new Self()
   const tag = { name: 'Test country' }
   const [tag_parent] = await tagInsert([tag])
@@ -383,7 +383,7 @@ test.skip('Find photos of dishes', async (t) => {
     },
   ])
   await restaurantUpsertOrphanTags(t.context.restaurant, [tag.name])
-  const restaurant = await restaurantFindOne({
+  const restaurant = await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
   })
   t.assert(!!restaurant, 'not found')
@@ -396,7 +396,7 @@ test.skip('Find photos of dishes', async (t) => {
   const updated = await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
   })
-  t.assert(!!updated, 'not found')
+  t.is(updated?.id, t.context.restaurant.id)
   if (!updated) return
   const tag1 =
     updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)

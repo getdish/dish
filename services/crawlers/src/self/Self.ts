@@ -12,6 +12,7 @@ import {
   dishUpsert,
   restaurantFindBatch,
   restaurantFindOne,
+  restaurantFindOneWithTags,
   restaurantGetAllPossibleTags,
   restaurantGetLatestScrape,
   restaurantUpdate,
@@ -91,7 +92,7 @@ export class Self extends WorkerJob {
 
   async mergeAll(id: string) {
     this._start_time = process.hrtime()
-    const restaurant = await restaurantFindOne({ id: id })
+    const restaurant = await restaurantFindOneWithTags({ id: id })
     if (restaurant) {
       this.restaurant = restaurant as RestaurantWithId
       console.log('Merging: ' + this.restaurant.name)
@@ -159,7 +160,6 @@ export class Self extends WorkerJob {
           restaurant.id
       )
       await deleteAllBy('restaurant', 'id', conflicter.id)
-      //await this.persist()
     } else {
       throw new Error('Conflicting restaurant updated too recently')
     }
@@ -329,7 +329,6 @@ export class Self extends WorkerJob {
     let path: string
     let parts: string[]
 
-    // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
     this.restaurant.sources = {} as {
       [key: string]: { url: string; rating: number }
     }
@@ -339,7 +338,6 @@ export class Self extends WorkerJob {
       parts = path.split('-')
       parts.shift()
       url = 'https://www.tripadvisor.com/' + parts.join('-')
-      // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
       this.restaurant.sources.tripadvisor = {
         url: url,
         rating: this.ratings?.tripadvisor,
@@ -348,7 +346,6 @@ export class Self extends WorkerJob {
 
     path = scrapeGetData(this.yelp, 'data_from_map_search.businessUrl')
     if (path != '') {
-      // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
       this.restaurant.sources.yelp = {
         url: 'https://www.yelp.com' + path,
         rating: this.ratings?.yelp,
@@ -360,7 +357,6 @@ export class Self extends WorkerJob {
       'data_from_map_search.post.review_link'
     )
     if (path != '') {
-      // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
       this.restaurant.sources.infatuated = {
         url: 'https://www.theinfatuation.com' + path,
         rating: this.ratings?.infatuated,
@@ -369,7 +365,6 @@ export class Self extends WorkerJob {
 
     path = scrapeGetData(this.michelin, 'main.url')
     if (path != '') {
-      // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
       this.restaurant.sources.michelin = {
         url: 'https://guide.michelin.com' + path,
         rating: this.ratings?.michelin,
@@ -380,7 +375,6 @@ export class Self extends WorkerJob {
       scrapeGetData(this.ubereats, 'main.metaJson', '"{}"')
     )
     if (json['@id']) {
-      // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
       this.restaurant.sources.ubereats = {
         url: json['@id'],
         rating: this.ratings?.ubereats,
@@ -484,6 +478,7 @@ export class Self extends WorkerJob {
 
   async updateTagRankings() {
     let restaurant_tags = [] as RestaurantTagWithID[]
+    this.restaurant = (await restaurantFindOneWithTags(this.restaurant))!
     await Promise.all(
       (this.restaurant.tags || []).map(async (i) => {
         restaurant_tags.push({
@@ -525,27 +520,25 @@ export class Self extends WorkerJob {
 
   async findPhotosForTags() {
     let restaurant_tags = [] as RestaurantTagWithID[]
-    //await this.persist()
     const all_possible_tags = await restaurantGetAllPossibleTags(
       this.restaurant
     )
     if (this.yelp.data) {
       const photos = this.getPaginatedData(this.yelp.data, 'photos')
       for (const tag of all_possible_tags) {
-        // TODO disabled for a sec to compile
-        // let restaurant_tag: RestaurantTag = {
-        //   tag_id: tag.id,
-        //   photos: [] as string[],
-        // }
-        // for (const photo of photos) {
-        //   if (this._doesStringContainTag(photo.media_data?.caption, tag.name)) {
-        //     restaurant_tag.photos.push(photo.src)
-        //   }
-        // }
-        // if (restaurant_tag.photos.length > 0) {
-        //   restaurant_tag.photos = _.uniq(restaurant_tag.photos)
-        //   restaurant_tags.push(restaurant_tag)
-        // }
+        let restaurant_tag: RestaurantTag = {
+          tag_id: tag.id,
+          photos: [] as string[],
+        }
+        for (const photo of photos) {
+          if (this._doesStringContainTag(photo.media_data?.caption, tag.name)) {
+            restaurant_tag.photos.push(photo.src)
+          }
+        }
+        if (restaurant_tag.photos.length > 0) {
+          restaurant_tag.photos = _.uniq(restaurant_tag.photos)
+          restaurant_tags.push(restaurant_tag)
+        }
       }
     }
     await restaurantUpsertManyTags(this.restaurant, restaurant_tags)
@@ -583,7 +576,8 @@ export class Self extends WorkerJob {
     }
   }
 
-  _doesStringContainTag(text: string, tag_name: string) {
+  _doesStringContainTag(text: string, tag_name: string | undefined) {
+    if (typeof tag_name === 'undefined') return false
     const regex = new RegExp(`\\b${tag_name}\\b`, 'i')
     return regex.test(text)
   }
