@@ -1,4 +1,4 @@
-import { Restaurant, graphql } from '@dish/graph'
+import { Restaurant, graphql, query } from '@dish/graph'
 import { ZStack, useDebounceEffect, useOnMount } from '@dish/ui'
 import React, {
   Suspense,
@@ -74,7 +74,18 @@ const HomeMapDataLoader = memo(
 
       // for now to avoid so many large db calls just have search api return it instead of re-fetch here
       const restaurants = restaurantIds.map((id) => {
-        return om.state.home.allRestaurants[id]
+        let fullRestaurant = om.state.home.allRestaurants[id]
+        if (!fullRestaurant?.location) {
+          console.warn('NO RESTUARNAT WE NEED TO REFACTOR THIS')
+          const found = query
+            .restaurant({ where: { id: { _eq: id } } })
+            .map((r) => ({
+              id: r.id,
+              location: r.location,
+            }))
+          fullRestaurant = found[0]
+        }
+        return fullRestaurant
       })
 
       // const restaurants = query.restaurant({
