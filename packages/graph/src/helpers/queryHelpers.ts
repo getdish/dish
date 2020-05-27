@@ -84,15 +84,15 @@ export async function upsert<T extends ModelType>(
   const update_columns = Object.keys(objects[0])
   const action = `insert_${table}` as any
   // @ts-ignore
-  return await resolvedMutationWithFields(() =>
-    mutation[action]({
+  return await resolvedMutationWithFields(() => {
+    return mutation[action]({
       objects,
       on_conflict: {
         constraint,
         update_columns,
       },
     })
-  )
+  })
 }
 
 export async function update<T extends WithID<ModelType>>(

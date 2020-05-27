@@ -29,10 +29,9 @@ export async function resolvedMutationWithFields<T extends Function>(
     ? X
     : any
 > {
-  // @ts-ignore
   return await resolvedMutation(() => {
     const res = resolver()
-    return collectAll(res.returning, { ...options, type: 'mutation' }) as any
+    return collectAll(res.returning, { ...options, type: 'mutation' })
   })
 }
 
