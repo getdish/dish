@@ -1,4 +1,10 @@
-import { Tag, flushTestData, tagFindOne, tagUpsert } from '@dish/graph'
+import {
+  Tag,
+  flushTestData,
+  tagFindOne,
+  tagFindOneWithCategories,
+  tagUpsert,
+} from '@dish/graph'
 import anyTest, { TestInterface } from 'ava'
 
 import { ParseFiverr } from '../../src/wikipedia/ParseFiverr'
@@ -8,7 +14,6 @@ interface Context {
 }
 
 const test = anyTest as TestInterface<Context>
-const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
 
 test.beforeEach(async (t) => {
   await flushTestData()
@@ -20,7 +25,7 @@ test.beforeEach(async (t) => {
   ])
 })
 
-test.skip('Parsing Fiverr text files', async (t) => {
+test('Parsing Fiverr text files', async (t) => {
   await ParseFiverr.start(__dirname)
 
   const continent_tag = (await tagFindOne({
@@ -46,7 +51,7 @@ test.skip('Parsing Fiverr text files', async (t) => {
   t.is(diacritics_tag.type, 'category')
   t.is(diacritics_tag.parentId, country_tag.id)
 
-  const khichdi_dish_tag = (await tagFindOne({
+  const khichdi_dish_tag = (await tagFindOneWithCategories({
     name: 'Test Khichdi',
   }))!
   t.is(khichdi_dish_tag.type, 'dish')
@@ -56,7 +61,9 @@ test.skip('Parsing Fiverr text files', async (t) => {
       .map((i) => i.category.name)
       .includes('Test Vegetarian')
   )
-  const diakritik_dish_tag = (await tagFindOne({ name: 'test diakritikos' }))!
+  const diakritik_dish_tag = (await tagFindOneWithCategories({
+    name: 'test diakritikos',
+  }))!
   t.is(diakritik_dish_tag.type, 'dish')
   // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
   t.deepEqual(diakritik_dish_tag.alternates, ['test diakritikós'])

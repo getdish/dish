@@ -1,16 +1,18 @@
-import { Query, resolved } from 'gqless'
+import { resolved } from 'gqless'
 
-import { client, resetQueryCache } from '../graphql/client'
+import { resetQueryCache } from '../graphql/client'
 import { resetMutationCache } from '../graphql/mutation'
-import { ModelName } from '../types'
 import { CollectOptions, collectAll } from './collect'
-import { getReadableMutationFields } from './queryHelpers'
 
 // just a helper that clears our cache after mutations for now
 export async function resolvedMutation<T extends Function>(
   resolver: T
 ): Promise<
-  T extends () => infer U ? (U extends { returning: infer X } ? X : U) : any
+  T extends () => {
+    returning: infer X
+  }
+    ? X
+    : any
 > {
   resetMutationCache()
   // @ts-ignore
@@ -21,33 +23,35 @@ export async function resolvedMutationWithFields<T extends Function>(
   resolver: T,
   options?: CollectOptions
 ): Promise<
-  T extends () => infer U ? (U extends { returning: infer X } ? X : U) : any
+  T extends () => {
+    returning: infer X
+  }
+    ? X
+    : any
 > {
-  const next = await resolvedMutation(() => {
-    const res = resolver()
-    return collectAll(res.returning, options)
-  })
   // @ts-ignore
-  return next
+  return await resolvedMutation(() => {
+    const res = resolver()
+    return collectAll(res.returning, options) as any
+  })
 }
 
-export async function resolvedWithFields(
-  resolver: any,
+// WARNING TYPESCRIPT SLOW CLIFF
+// if you infer the return it destroys performance... :(
+export async function resolvedWithFields<T extends Function>(
+  resolver: T,
   options?: CollectOptions
 ): Promise<any> {
-  await resetQueryCache()
-  const next = await resolvedQueryNoCache(() => {
+  resetQueryCache()
+  return await resolvedWithoutCache(() => {
     const res = resolver()
-    return collectAll(res, options)
+    return collectAll(res, options) as any
   })
-  return next
 }
 
-export async function resolvedQueryNoCache<T extends Function>(
+export async function resolvedWithoutCache<T extends Function>(
   resolver: T
-): Promise<
-  T extends () => infer U ? (U extends { returning: infer X } ? X : U) : any
-> {
+): Promise<T extends () => infer U ? U : any> {
   resetQueryCache()
   // @ts-ignore
   return await resolved(resolver)
