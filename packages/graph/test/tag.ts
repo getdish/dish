@@ -40,9 +40,7 @@ test('Tagging a restaurant with orphaned tags', async (t) => {
     'Test tag',
     'Test tag existing',
   ])
-  const next = await restaurantFindOneWithTags({
-    id: restaurant.id,
-  })
+  const next = await restaurantFindOneWithTags(restaurant)
   if (!next) {
     throw new Error(`invalid`)
   }
@@ -64,13 +62,17 @@ test('Tagging a restaurant with orphaned tags', async (t) => {
 
 test('Tagging a restaurant with a tag that has a parent', async (t) => {
   let restaurant = t.context.restaurant
+  await restaurantUpsertOrphanTags(restaurant, [
+    'Test tag',
+    'Test tag existing',
+  ])
   const [tag] = await tagInsert([
     { name: 'Test tag', parentId: t.context.existing_tag.id },
   ])
-  restaurant = await restaurantUpsertRestaurantTags(restaurant, [
+  restaurant = (await restaurantUpsertRestaurantTags(restaurant, [
     { tag_id: tag.id },
-  ])
-  t.is(restaurant.tags?.length, 1)
+  ]))!
+  t.is(restaurant.tags?.length, 3)
   t.is(restaurant.tags?.map((t) => t.tag.name).includes('Test tag'), true)
   t.is(restaurant.tag_names.length, 3)
   t.is(restaurant.tag_names.includes('test-tag'), true)
@@ -84,7 +86,7 @@ test.skip('Tagging a restaurant with a tag that has categories', async (t) => {
   await tagUpsertCategorizations(tag_with_category, [t.context.existing_tag.id])
   let restaurant = t.context.restaurant
   await restaurantUpsertOrphanTags(restaurant, [tag_name])
-  restaurant = await restaurantFindOneWithTags({ id: restaurant.id })
+  restaurant = (await restaurantFindOneWithTags(restaurant))!
   t.is(restaurant.tags?.length, 1)
   t.is(restaurant.tags?.map((t) => t.tag?.name).includes(tag_name), true)
   t.is(restaurant.tag_names.length, 2)

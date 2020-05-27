@@ -1,6 +1,6 @@
 import { Dish, Restaurant } from '../../src'
 
-export const restaurant_fixture: Partial<Restaurant> = {
+export const restaurant_fixture: Restaurant = {
   name: 'Test Restaurant',
   description: 'Not a real restaurant :(',
   location: {
@@ -24,7 +24,7 @@ export const restaurant_fixture: Partial<Restaurant> = {
   ],
 }
 
-export const dish_fixture: Partial<Dish> = {
+export const dish_fixture: Dish = {
   name: 'Test Dish',
   description: 'Not a real dish :(',
   price: 123,

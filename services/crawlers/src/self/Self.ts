@@ -492,10 +492,10 @@ export class Self extends WorkerJob {
         })
       })
     )
-    this.restaurant = await restaurantUpsertManyTags(
+    this.restaurant = (await restaurantUpsertManyTags(
       this.restaurant,
       restaurant_tags
-    )
+    ))!
   }
 
   async getRankForTag(tag: Tag) {

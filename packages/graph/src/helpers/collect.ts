@@ -8,6 +8,10 @@ import {
 } from 'gqless'
 import { isObject } from 'lodash'
 
+import { isMutableReturningField } from './isMutatableField'
+
+const DEFAULT_MAX_DEPTH = 2
+
 // a smart collection function for gqless
 // grabs fields using the getAccessor and resolves "most" for ease of use
 
@@ -17,18 +21,19 @@ export type CollectOptions = {
   // add fields to select (collect runs on each)
   include?: string[]
   maxDepth?: number
+  type?: 'query' | 'mutation'
 }
 
 export const collect = <A extends any>(
   object: A,
-  options: CollectOptions = { maxDepth: 3 }
+  options: CollectOptions = { maxDepth: DEFAULT_MAX_DEPTH }
 ): A => {
   if (options.maxDepth === 0) {
     return object
   }
   let fields = options.fields
   if (!fields) {
-    fields = getFieldsFromAccessor(object)
+    fields = getFieldsForCollect(object, options)
   }
   if (options.include) {
     fields = [
@@ -37,17 +42,14 @@ export const collect = <A extends any>(
     ]
   }
   return (fields ?? []).reduce((acc, key) => {
-    const val = object[key]
-
+    let val = object[key]
     if (typeof val === 'function') {
-      acc[key] = val()
-    } else {
-      acc[key] = val
+      val = val()
     }
+    acc[key] = val
 
     // recurse!
-    const res = acc[key]
-    if (isObject(res) || Array.isArray(res)) {
+    if (isObject(val) || Array.isArray(val)) {
       let subFields: string[] = []
       const subIncludes = options.include?.includes(key)
         ? findSubIncludes(key, options.include)
@@ -55,21 +57,22 @@ export const collect = <A extends any>(
       if (subIncludes?.length) {
         subFields = findSubIncludes(key, subIncludes)
       }
-      if (isObject(res)) {
+      // collect subfields from object
+      if (isObject(val)) {
         try {
-          subFields = [...subFields, ...getFieldsFromAccessor(res)]
+          subFields = [...subFields, ...getFieldsForCollect(val, options)]
         } catch (err) {
           // fine, its just some normal object
         }
       }
       if (subFields.length) {
         const opts: CollectOptions = {
-          maxDepth: (options.maxDepth ?? 3) - 1,
+          maxDepth: (options.maxDepth ?? DEFAULT_MAX_DEPTH) - 1,
           include: subIncludes,
         }
-        acc[key] = Array.isArray(res)
-          ? collectAll(res, opts)
-          : collect(res, opts)
+        acc[key] = Array.isArray(val)
+          ? collectAll(val, opts)
+          : collect(val, opts)
       }
     }
 
@@ -93,14 +96,15 @@ function findSubIncludes(prefix: string, includes: string[]) {
 
 export const collectAll = <A extends any>(
   objects: A[],
-  options: CollectOptions = { maxDepth: 3 }
+  options: CollectOptions = { maxDepth: DEFAULT_MAX_DEPTH }
 ): A[] => {
   return objects.map((x) => collect(x, options))
 }
 
-function getFieldsFromAccessor(object: any, childKey?: string) {
+function getFieldsForCollect(object: any, options: CollectOptions) {
   const accessor = getAccessor(object)
-  const parentNode = accessor?.node
+  if (!accessor) return []
+  const parentNode = accessor.node
   let fieldsObject: Record<string, FieldNode<UFieldsNode>> | null = null
 
   if (parentNode instanceof ObjectNode) {
@@ -111,19 +115,14 @@ function getFieldsFromAccessor(object: any, childKey?: string) {
   }
 
   if (fieldsObject) {
-    // this handles recursion
-    if (childKey) {
-      const node = fieldsObject[childKey]?.ofNode
-      // @ts-ignore
-      fieldsObject = node?.fields ?? {}
-    }
-
     const allFields: FieldNode[] = Object.keys(fieldsObject!).map(
       (key) => fieldsObject![key]
     )
     const finalFields = allFields
       .filter(filterAccessibleField)
       .map((x) => x.name)
+      .filter((x) => filterFieldsByName(x, options))
+
     return finalFields
   }
 
@@ -149,4 +148,21 @@ function filterAccessibleField(field: FieldNode) {
     return true
   }
   return false
+}
+
+function filterFieldsByName(name: string, options: CollectOptions) {
+  if (options.type === 'mutation' && !isMutableReturningField(name)) {
+    return false
+  }
+
+  // warning include is bugged, wont support `.` use case
+  // do nothin for aggregates by default
+  if (
+    name.endsWith('_aggregate') &&
+    !options.fields?.includes(name) &&
+    !options.include?.includes(name)
+  ) {
+    return false
+  }
+  return true
 }
