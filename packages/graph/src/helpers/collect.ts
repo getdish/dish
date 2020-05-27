@@ -6,13 +6,11 @@ import {
   UFieldsNode,
   getAccessor,
 } from 'gqless'
-import { isObject, update } from 'lodash'
+import { isObject } from 'lodash'
 
 import { isMutableReturningField } from './isMutatableField'
 
 const DEFAULT_MAX_DEPTH = 2
-
-let shouldDebug = false
 
 // a smart collection function for gqless
 // grabs fields using the getAccessor and resolves "most" for ease of use
@@ -30,9 +28,6 @@ export const collect = <A extends any>(
   object: A,
   options: CollectOptions = { maxDepth: DEFAULT_MAX_DEPTH }
 ): A => {
-  if (options.include?.includes('tags.tag.categories.category')) {
-    shouldDebug = true
-  }
   if (options.maxDepth === 0) {
     return object
   }
@@ -47,10 +42,23 @@ export const collect = <A extends any>(
     }
     obj[fieldName] = value
     if (isObject(value) || Array.isArray(value)) {
-      obj[fieldName] = recurseAndCollect(value, fieldName, options)
+      if (isObject(value) && isJSONBObject(value)) {
+        obj[fieldName] = value
+      } else {
+        obj[fieldName] = recurseAndCollect(value, fieldName, options)
+      }
     }
     return obj
   }, {} as A)
+}
+
+const isJSONBObject = (obj: any) => {
+  try {
+    const accessor = getAccessor(obj)
+    return isJSONBField(accessor.node as any)
+  } catch {
+    return false
+  }
 }
 
 function recurseAndCollect(
@@ -68,8 +76,6 @@ function recurseAndCollect(
     ? getFieldsForCollect(object, options)
     : []
 
-  // if (shouldDebug) console.log({ fieldName, object, subIncludes, subFields })
-
   if (subFields.length || subIncludes.length) {
     const updatedOptions: CollectOptions = {
       maxDepth: (options.maxDepth ?? DEFAULT_MAX_DEPTH) - 1,
@@ -79,7 +85,6 @@ function recurseAndCollect(
       ? collectAll(object, updatedOptions)
       : collect(object, updatedOptions)
   }
-
   return object
 }
 
@@ -121,15 +126,11 @@ function getFieldsForCollect(object: any, options: CollectOptions) {
       .filter((x) => keepAccessibleField(x, options))
       .map((x) => x.name)
     validFields = [...new Set([...validFields, ...accessibleFields])]
-    // if (shouldDebug)
-    //   console.log('getting fields for collect', {
-    //     fieldNames: Object.keys(fieldsObject),
-    //     options,
-    //     validFields,
-    //   })
   }
   return validFields
 }
+
+// class NotAccessibleError extends Error {}
 
 function getFieldsObject(object: any) {
   try {
@@ -149,6 +150,7 @@ function getFieldsObject(object: any) {
   } catch (err) {
     if (err.message.includes('[gqless] Indeterminate accessor')) {
       return null
+      // throw new NotAccessibleError(err.message)
     }
     throw err
   }
@@ -171,7 +173,7 @@ function keepAccessibleField(field: FieldNode, options: CollectOptions) {
     return false
   }
   if (ofNode instanceof ScalarNode) {
-    if (ofNode.name === 'jsonb') {
+    if (isJSONBField(ofNode)) {
       return true
     }
     // dont return relations by default! we could add an option to
@@ -180,11 +182,16 @@ function keepAccessibleField(field: FieldNode, options: CollectOptions) {
     }
     return true
   }
-  // if (ofNode instanceof ArrayNode) {
-  //   if (shouldDebug) console.log('wtf', name, options)
-  // }
   if (ofNode instanceof ObjectNode) {
     return true
   }
   return false
+}
+
+const isJSONBField = (field: any) => {
+  return (
+    field instanceof ScalarNode &&
+    // a bit hacky - we could whitelist Bool, etc instead?
+    (field.name === 'jsonb' || field.name === 'geometry')
+  )
 }
