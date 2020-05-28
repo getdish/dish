@@ -105,6 +105,7 @@
     "type-fest": "0.13.1",
     "url-loader": "^4.1.0",
     "webpack": "^5.0.0-beta.16",
+    "extract-loader": "^5.1.0",
     "webpack-bundle-analyzer": "3.7.0",
     "@webpack-cli/serve": "1.0.1-alpha.5",
     "webpack-cli": "4.0.0-beta.8",

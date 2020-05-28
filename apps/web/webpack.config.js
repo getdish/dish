@@ -8,7 +8,7 @@ const HTMLWebpackPlugin = require('html-webpack-plugin')
 const LodashPlugin = require('lodash-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const ReactRefreshPlugin = require('@webhotelier/webpack-fast-refresh')
-// const ReactNativeUIPlugin = require('@dish/ui-static')
+const { GlossWebpackPlugin } = require('@dish/ui-static')
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const isProduction = process.env.NODE_ENV === 'production'
@@ -124,11 +124,16 @@ module.exports = function getWebpackConfig(
                 isHot && {
                   loader: '@webhotelier/webpack-fast-refresh/loader.js',
                 },
+                isProduction && {
+                  loader: require.resolve('@dish/ui-static/loader'),
+                },
               ].filter(Boolean),
             },
             {
               test: /\.css$/i,
-              use: ['style-loader', 'css-loader'],
+              use: isProduction
+                ? ['file-loader', 'extract-loader', 'css-loader']
+                : ['style-loader', 'css-loader'],
             },
             {
               test: /\.(png|svg|jpe?g|gif)$/,
@@ -158,6 +163,10 @@ module.exports = function getWebpackConfig(
     plugins: [
       // new ReactNativeUIPlugin(),
       // new LodashPlugin(),
+
+      // extract static styles in production
+      isProduction && new GlossWebpackPlugin(),
+
       new Webpack.DefinePlugin({
         process: JSON.stringify({}),
         'process.env.TARGET': JSON.stringify(TARGET || null),
