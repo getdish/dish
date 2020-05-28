@@ -9,3 +9,7 @@ export * from './types'
 export * from './types-extra'
 export * from './helpers'
 export * from './constants'
+
+process.on('unhandledRejection', (error) => {
+  console.log('Hopefully you see this log message and not an uncaught error')
+})

@@ -141,7 +141,6 @@ export class Self extends WorkerJob {
       (restaurant.address?.length ?? 0) < 4 ||
       (restaurant.name ?? '').length < 2
     ) {
-      console.error(restaurant.id, restaurant.name, restaurant.address)
       throw new Error('Not enough data to resolve restaurant conflict')
     }
     const conflicter = await restaurantFindOne({

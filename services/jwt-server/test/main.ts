@@ -46,7 +46,10 @@ test('Authed request success', async (t) => {
   const [response, data] = await login()
   const jwt = data.token
   const user = await fetch(BASE + '/user/admin', {
-    headers: { 'Content-Type': 'application/json', Auth: jwt },
+    headers: {
+      'Content-Type': 'application/json',
+      Auth: jwt,
+    },
   }).then((res) => res.json())
   t.deepEqual(user.username, 'admin')
 })

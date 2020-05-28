@@ -1,12 +1,10 @@
 import { deleteAllFuzzyBy } from './queryHelpers'
 
 export async function flushTestData() {
-  await Promise.all([
-    deleteAllFuzzyBy('scrape', 'id_from_source', 'test'),
-    deleteAllFuzzyBy('review', 'text', 'test'),
-    deleteAllFuzzyBy('tag', 'name', 'test'),
-    deleteAllFuzzyBy('user', 'username', 'test'),
-    deleteAllFuzzyBy('dish', 'name', 'Test'),
-    deleteAllFuzzyBy('restaurant', 'name', 'Test'),
-  ])
+  await deleteAllFuzzyBy('scrape', 'id_from_source', 'test')
+  await deleteAllFuzzyBy('review', 'text', 'test')
+  await deleteAllFuzzyBy('tag', 'name', 'test')
+  await deleteAllFuzzyBy('user', 'username', 'test')
+  await deleteAllFuzzyBy('dish', 'name', 'Test')
+  await deleteAllFuzzyBy('restaurant', 'name', 'Test')
 }
