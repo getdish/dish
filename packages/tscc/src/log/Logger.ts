@@ -74,7 +74,7 @@ export default class Logger {
       this.spinner.text = text + ' ' + toDDHHMMSS(Date.now() - start)
     }, 1000)
   }
-  private timer: NodeJS.Timer
+  private timer: any
   succeed(text?: string) {
     this.spinner.succeed(text)
     clearInterval(this.timer)

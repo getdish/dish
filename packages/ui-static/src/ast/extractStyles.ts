@@ -9,13 +9,12 @@ import * as t from '@babel/types'
 import literalToAst from 'babel-literal-to-ast'
 import invariant from 'invariant'
 
+import styleProps from '../style/styleProps'
 import { CacheObject, ExtractStylesOptions } from '../types'
 import { evaluateAstNode } from './evaluateAstNode'
 import { Ternary, extractStaticTernaries } from './extractStaticTernaries'
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'
-import { htmlAttributes } from './htmlAttributes'
 import { parse } from './parse'
-import reactNativeStyles from './reactNativeStyles'
 
 export interface Options {
   cacheObject: CacheObject
@@ -133,7 +132,7 @@ export function extractStyles(
         let extraDepth = 0
         let domNode = 'div'
 
-        const isStaticAttributeName = (name: string) => reactNativeStyles[name]
+        const isStaticAttributeName = (name: string) => !!styleProps[name]
         const attemptEval = evaluateAstNode //createEvaluator(traversePath as any, sourceFileName, { evaluateFunctions: false })
 
         let lastSpreadIndex: number = -1
@@ -380,18 +379,19 @@ domNode: ${domNode}
               classNameObjects.push(t.stringLiteral(val))
               continue
             }
-            if (htmlAttributes[key]) {
-              // @ts-ignore
-              if (!node.attributes.some((x) => x?.name?.name === key)) {
-                // add to start so if its spread onto later its overwritten
-                node.attributes.unshift(
-                  t.jsxAttribute(
-                    t.jsxIdentifier(key),
-                    t.jsxExpressionContainer(literalToAst(val))
-                  )
-                )
-              }
-            }
+            // TODO commented out during transition
+            // if (htmlAttributes[key]) {
+            //   // @ts-ignore
+            //   if (!node.attributes.some((x) => x?.name?.name === key)) {
+            //     // add to start so if its spread onto later its overwritten
+            //     node.attributes.unshift(
+            //       t.jsxAttribute(
+            //         t.jsxIdentifier(key),
+            //         t.jsxExpressionContainer(literalToAst(val))
+            //       )
+            //     )
+            //   }
+            // }
           }
 
           // add a data-is="Name" so we can debug it more easily
