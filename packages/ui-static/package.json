@@ -26,12 +26,14 @@
     "loader-utils": "^2.0.0",
     "webpack": "^5.0.0-beta.16",
     "invariant": "^2.2.4",
-    "memory-fs": "*"
+    "memory-fs": "*",
+    "react-native-web": "^0.12.2"
   },
   "devDependencies": {
     "babel-loader": "^8.0.5",
     "@dish/babel-preset": "*",
     "@types/webpack": "4.41.13",
+    "@types/react-native": "^0.62.12",
     "ava": "^3.8.2",
     "react-dom": "*"
   }

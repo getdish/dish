@@ -1,9 +1,10 @@
 import path from 'path'
 
 import anyTest, { TestInterface } from 'ava'
+import { ViewStyle } from 'react-native'
 import webpack from 'webpack'
 
-import { GlossWebpackPlugin } from '../src'
+import { GlossWebpackPlugin, getStylesAtomic } from '../src'
 
 const mode = 'production'
 process.env.NODE_ENV = mode
@@ -13,7 +14,25 @@ const test = anyTest as TestInterface<Context>
 
 const specDir = path.join(__dirname, 'spec')
 
-test('extracts static styles', async (t) => {
+test('converts a style object to class names', async (t) => {
+  const style: ViewStyle = {
+    backgroundColor: 'red',
+    transform: [{ rotateY: '10deg' }],
+  }
+  const classNames = getStylesAtomic(style)
+  // could be spec
+  t.is(classNames[0].identifier, 'r-1g6456j')
+  t.is(classNames[0].value, 'rgba(255,0,0,1.00)')
+  t.is(classNames[0].property, 'backgroundColor')
+  t.deepEqual(classNames[0].rules, [
+    '.r-1g6456j{background-color:rgba(255,0,0,1.00);}',
+  ])
+  t.deepEqual(classNames[1].rules, [
+    '.r-188uu3c{-webkit-transform:rotateY(10deg);transform:rotateY(10deg);}',
+  ])
+})
+
+test.skip('extracts static styles', async (t) => {
   const compiler = webpack({
     context: specDir,
     mode: mode,
