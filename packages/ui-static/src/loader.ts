@@ -1,6 +1,7 @@
 import path from 'path'
 import util from 'util'
 
+import { mkdirpSync, writeFileSync } from 'fs-extra'
 import invariant from 'invariant'
 import loaderUtils from 'loader-utils'
 
@@ -22,9 +23,9 @@ export default function GlossWebpackLoader(this: any, content) {
 
   const options: LoaderOptions = loaderUtils.getOptions(this) || {}
   const { memoryFS, cacheObject } = pluginContext
-  const outDir = '.out'
-  const outPath = path.join(__dirname, 'tmp')
-  const outRelPath = `tmp/${outDir}`
+  const outPath = __dirname
+  // TODO i think find this files depth and add ../../ based on it
+  const outRelPath = `.`
 
   const rv = extractStyles(
     content,
@@ -45,8 +46,9 @@ export default function GlossWebpackLoader(this: any, content) {
   }
 
   for (const { filename, content } of rv.css) {
-    memoryFS.mkdirpSync(path.dirname(filename))
-    memoryFS.writeFileSync(filename, content)
+    console.log('writing out', filename, content)
+    mkdirpSync(path.dirname(filename))
+    writeFileSync(filename, content)
     // fs.mkdirpSync(path.dirname(filename))
     // fs.writeFileSync(filename, content)
   }
