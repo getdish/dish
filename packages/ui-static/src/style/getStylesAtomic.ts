@@ -1,5 +1,5 @@
 import { ViewStyle } from 'react-native'
-import { atomic } from 'react-native-web/dist/exports/StyleSheet/compile'
+import { atomic } from 'react-native-web/dist/cjs/exports/StyleSheet/compile'
 
 import { ClassNameToStyleObj } from '../types'
 
