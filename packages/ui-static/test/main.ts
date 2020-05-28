@@ -1,20 +1,30 @@
 import path from 'path'
 
 import anyTest, { TestInterface } from 'ava'
+import React from 'react'
+import ReactDOM from 'react-dom'
 import { ViewStyle } from 'react-native'
+import TestRenderer from 'react-test-renderer'
 import webpack from 'webpack'
 
 import { GlossWebpackPlugin, getStylesAtomic } from '../src'
 
+global['React'] = React
+global['ReactDOM'] = ReactDOM
+
 const mode = 'production'
 process.env.NODE_ENV = mode
 
-interface Context {}
-const test = anyTest as TestInterface<Context>
+const test = anyTest as TestInterface<{
+  test1Renderer: TestRenderer.ReactTestRenderer
+  test2Renderer: TestRenderer.ReactTestRenderer
+  app: any
+}>
 
 const specDir = path.join(__dirname, 'spec')
 const outDir = path.join(specDir, 'out')
 const outFile = 'out.js'
+const outFileFull = path.join(outDir, outFile)
 
 test('converts a style object to class names', async (t) => {
   const style: ViewStyle = {
@@ -36,7 +46,21 @@ test('converts a style object to class names', async (t) => {
   ])
 })
 
-test('extracts static styles', async (t) => {
+test.before(async (t) => {
+  await extractStaticApp()
+  const app = require(outFileFull)
+  t.context.app = app
+  t.context.test1Renderer = TestRenderer.create(React.createElement(app.Test1))
+  // t.context.test2Renderer = TestRenderer.create(React.createElement(app.Test2))
+})
+
+test('extracts to a div for simple views', async (t) => {
+  const out1JSON = t.context.test1Renderer.toJSON()
+  t.is(out1JSON?.type, 'div')
+  t.is(out1JSON?.props.className, 'is_VStack r-1g6456j')
+})
+
+async function extractStaticApp() {
   const compiler = webpack({
     context: specDir,
     mode: mode,
@@ -46,15 +70,19 @@ test('extracts static styles', async (t) => {
     },
     entry: path.join(specDir, 'test.tsx'),
     output: {
+      libraryTarget: 'commonjs',
       filename: outFile,
       path: outDir,
+    },
+    externals: {
+      react: 'React',
+      'react-dom': 'ReactDOM',
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
       mainFields: ['tsmain', 'browser', 'module', 'main'],
       alias: {
         'react-native-web': false,
-        react: false,
       },
     },
     module: {
@@ -92,6 +120,4 @@ test('extracts static styles', async (t) => {
       res()
     })
   })
-
-  t.is(1, 1)
-})
+}
