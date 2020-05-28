@@ -4,7 +4,6 @@ import {
   Scrape,
   Tag,
   flushTestData,
-  restaurantFindOne,
   restaurantInsert,
   restaurantUpdate,
   restaurantUpsertOrphanTags,
@@ -13,7 +12,6 @@ import {
 } from '@dish/graph'
 import { restaurantFindOneWithTags } from '@dish/graph/src'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
-import { rest } from 'lodash'
 
 import { Self } from '../../src/self/Self'
 
