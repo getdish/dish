@@ -19,20 +19,22 @@ test('converts a style object to class names', async (t) => {
     backgroundColor: 'red',
     transform: [{ rotateY: '10deg' }],
   }
-  const classNames = getStylesAtomic(style)
-  // could be spec
-  t.is(classNames[0].identifier, 'r-1g6456j')
-  t.is(classNames[0].value, 'rgba(255,0,0,1.00)')
-  t.is(classNames[0].property, 'backgroundColor')
-  t.deepEqual(classNames[0].rules, [
+  const styles = getStylesAtomic(style)
+  const style1 = styles['r-1g6456j']
+  const style2 = styles['r-188uu3c']
+  t.assert(!!style1)
+  t.assert(!!style2)
+  t.is(style1.value, 'rgba(255,0,0,1.00)')
+  t.is(style1.property, 'backgroundColor')
+  t.deepEqual(style1.rules, [
     '.r-1g6456j{background-color:rgba(255,0,0,1.00);}',
   ])
-  t.deepEqual(classNames[1].rules, [
+  t.deepEqual(style2.rules, [
     '.r-188uu3c{-webkit-transform:rotateY(10deg);transform:rotateY(10deg);}',
   ])
 })
 
-test.skip('extracts static styles', async (t) => {
+test('extracts static styles', async (t) => {
   const compiler = webpack({
     context: specDir,
     mode: mode,
@@ -42,8 +44,8 @@ test.skip('extracts static styles', async (t) => {
     },
     entry: path.join(specDir, 'test.tsx'),
     output: {
-      filename: 'test.out.tmp.js',
-      path: specDir,
+      filename: 'spec.js',
+      path: path.join(__dirname, '..', '_'),
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],

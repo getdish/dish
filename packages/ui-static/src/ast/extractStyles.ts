@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import path from 'path'
 import util from 'util'
 
@@ -9,8 +7,13 @@ import * as t from '@babel/types'
 import literalToAst from 'babel-literal-to-ast'
 import invariant from 'invariant'
 
+import { ViewStyle, getStylesAtomic } from '../style/getStylesAtomic'
 import styleProps from '../style/styleProps'
-import { CacheObject, ExtractStylesOptions } from '../types'
+import {
+  CacheObject,
+  ClassNameToStyleObj,
+  ExtractStylesOptions,
+} from '../types'
 import { evaluateAstNode } from './evaluateAstNode'
 import { Ternary, extractStaticTernaries } from './extractStaticTernaries'
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'
@@ -22,6 +25,8 @@ export interface Options {
   warnCallback?: (str: string, ...args: any[]) => void
 }
 
+type ClassNameObject = t.StringLiteral | t.Expression
+
 interface TraversePath<TNode = any> {
   node: TNode
   scope: {} // TODO
@@ -30,24 +35,22 @@ interface TraversePath<TNode = any> {
   insertBefore: (arg: t.Node) => void
 }
 
-// props that will be passed through as-is
+type CSSExtracted = {
+  filename: string
+  content: string
+}
+
 const UNTOUCHED_PROPS = {
   key: true,
   style: true,
   className: true,
 }
 
-type CSSExtracted = { filename: string; content: string }
-
-// used for later seeing how much we can extract (and to apply theme styles)
-// gives us information if the themes can be extracted via trackState
-const viewInformation: { [key: string]: any } = {}
-
 export function extractStyles(
   src: string | Buffer,
   sourceFileName: string,
   { outPath, outRelPath }: any,
-  { cacheObject }: Options,
+  { cacheObject, errorCallback }: Options,
   options: ExtractStylesOptions
 ): {
   js: string | Buffer
@@ -127,9 +130,6 @@ export function extractStyles(
         const originalNodeName = node.name.name
 
         const localView = {} //localStaticViews[originalNodeName]
-        let view = {} // views[originalNodeName]
-        // for parentView config
-        let extraDepth = 0
         let domNode = 'div'
 
         const isStaticAttributeName = (name: string) => !!styleProps[name]
@@ -189,11 +189,9 @@ export function extractStyles(
 
         node.attributes = flattenedAttributes
 
-        const staticAttributes: Record<string, any> = {}
-        const htmlExtractedAttributes = {}
+        const viewStyles: ViewStyle = {}
         let inlinePropCount = 0
         const staticTernaries: Ternary[] = []
-        const classNameObjects: (t.StringLiteral | t.Expression)[] = []
 
         let shouldDeopt = false
 
@@ -246,7 +244,7 @@ export function extractStyles(
 
           // if value can be evaluated, extract it and filter it out
           try {
-            staticAttributes[name] = attemptEval(value)
+            viewStyles[name] = attemptEval(value)
             return false
           } catch {
             // ok
@@ -264,7 +262,7 @@ export function extractStyles(
                 test: value.test,
               })
               // mark the prop as extracted
-              staticAttributes[name] = null
+              viewStyles[name] = null
               return false
             } catch (e) {
               //
@@ -280,7 +278,7 @@ export function extractStyles(
                   name,
                   test: value.left,
                 })
-                staticAttributes[name] = null
+                viewStyles[name] = null
                 return false
               } catch (e) {
                 //
@@ -309,8 +307,6 @@ domNode: ${domNode}
         }
 
         let classNamePropValue: t.Expression | null = null
-
-        const extractedStaticAttrs = Object.keys(staticAttributes).length > 0
         const classNamePropIndex = node.attributes.findIndex(
           (attr) =>
             !t.isJSXSpreadAttribute(attr) &&
@@ -326,117 +322,35 @@ domNode: ${domNode}
         }
 
         // used later to generate classname for item
-        const stylesByClassName: { [key: string]: string } = {}
-
-        const depth = 0
-        const addStyles = (styleObj: any) => {
-          // TODO
-          const allStyles = [] //StaticUtils.getAllStyles(styleObj, depth)
-          for (const info of allStyles) {
-            if (info.css) {
-              if (shouldPrintDebug) {
-                console.log('add static styles', info.className, info.css)
-              }
-              stylesByClassName[info.className] = info.css
-            }
-          }
-        }
+        const stylesByClassName: ClassNameToStyleObj = {}
 
         // capture views where they set it afterwards
         // plus any defaults passed through gloss
-        const viewDefaultProps = {
-          // ...view?.defaultProps,
-          // ...view?.internal?.glossProps?.defaultProps,
+        if (Object.keys(viewStyles).length > 0) {
+          if (shouldPrintDebug) {
+            console.log('adding static style props')
+          }
+          const style = getStylesAtomic(viewStyles)
+          const className = Object.keys(style)[0]
+          stylesByClassName[className] = style[className]
         }
 
-        if (extractedStaticAttrs) {
-          const staticStyleProps = {
-            ...viewDefaultProps,
-            // ...localView?.propObject,
-            ...htmlExtractedAttributes,
-            ...staticAttributes,
-          } as any
-          if (shouldPrintDebug) {
-            // ignoreAttrs is usually huge
-            const { ignoreAttrs, ...rest } = staticStyleProps
-            console.log('adding static style props', rest)
-          }
-          addStyles(staticStyleProps)
-        }
+        const classNameObjects: ClassNameObject[] = []
 
         // if all style props have been extracted, gloss component can be
         // converted to a div or the specified component
         if (inlinePropCount === 0) {
-          // add in any local static classes
-          if (localView) {
-            // stylesByClassName[localView.staticDesc.className] = null
-          }
-
-          // add any default html props to tag
-          for (const key in viewDefaultProps) {
-            const val = viewDefaultProps[key]
-            if (key === 'className') {
-              classNameObjects.push(t.stringLiteral(val))
-              continue
-            }
-            // TODO commented out during transition
-            // if (htmlAttributes[key]) {
-            //   // @ts-ignore
-            //   if (!node.attributes.some((x) => x?.name?.name === key)) {
-            //     // add to start so if its spread onto later its overwritten
-            //     node.attributes.unshift(
-            //       t.jsxAttribute(
-            //         t.jsxIdentifier(key),
-            //         t.jsxExpressionContainer(literalToAst(val))
-            //       )
-            //     )
-            //   }
-            // }
-          }
-
-          // add a data-is="Name" so we can debug it more easily
-          node.attributes.push(
-            t.jsxAttribute(
-              t.jsxIdentifier('data-is'),
-              t.stringLiteral(node.name.name)
-            )
-          )
+          // add a className="is_Name" so we can debug it more easily
+          classNameObjects.push(t.stringLiteral(`is_${node.name.name}`))
 
           if (localView) {
             node.name.name = domNode
           }
-
-          // // if they set a staticStyleConfig.parentView (see Stack)
-          // if (!isGlossView(view)) {
-          //   if (view?.staticStyleConfig.parentView) {
-          //     view = view.staticStyleConfig.parentView
-          //   } else {
-          //     node.name.name = domNode
-          //   }
-          // }
-
-          // if gloss view we may be able to optimize
-          // if (isGlossView(view)) {
-          //   // local views we already parsed the css out
-          //   const localView = localStaticViews[node.name.name]
-          //   if (localView) {
-          //     //
-          //   } else {
-          //     const { staticClasses } = view.internal.glossProps
-          //     // internal classes
-          //     for (const className of staticClasses) {
-          //       const item = tracker.get(className.slice(2))
-          //       const css = `${item.selector} { ${item.style} }`
-          //       stylesByClassName[className] = css
-          //     }
-          //   }
-          //   node.name.name = domNode
-          // }
         } else {
           if (lastSpreadIndex > -1) {
             // if only some style props were extracted AND additional props are spread onto the component,
             // add the props back with null values to prevent spread props from incorrectly overwriting the extracted prop value
-            Object.keys(staticAttributes).forEach((attr) => {
+            Object.keys(viewStyles).forEach((attr) => {
               node.attributes.push(
                 t.jsxAttribute(
                   t.jsxIdentifier(attr),
@@ -457,10 +371,6 @@ domNode: ${domNode}
         if (shouldPrintDebug) {
           console.log('stylesByClassName pre ternaries', stylesByClassName)
         }
-
-        const extractedStyleClassNames = Object.keys(stylesByClassName).join(
-          ' '
-        )
 
         if (classNamePropValue) {
           try {
@@ -492,6 +402,9 @@ domNode: ${domNode}
           }
         }
 
+        const extractedStyleClassNames = Object.keys(stylesByClassName).join(
+          ' '
+        )
         if (extractedStyleClassNames) {
           classNameObjects.push(t.stringLiteral(extractedStyleClassNames))
           if (shouldPrintDebug) {
@@ -499,67 +412,8 @@ domNode: ${domNode}
           }
         }
 
-        const classNamePropValueForReals = classNameObjects.reduce<t.Expression | null>(
-          (acc, val) => {
-            if (acc == null) {
-              if (
-                // pass conditional expressions through
-                t.isConditionalExpression(val) ||
-                // pass non-null literals through
-                t.isStringLiteral(val) ||
-                t.isNumericLiteral(val)
-              ) {
-                return val
-              }
-              return t.logicalExpression('||', val, t.stringLiteral(''))
-            }
-
-            let inner: t.Expression
-            if (t.isStringLiteral(val)) {
-              if (t.isStringLiteral(acc)) {
-                // join adjacent string literals
-                return t.stringLiteral(`${acc.value} ${val.value}`)
-              }
-              inner = t.stringLiteral(` ${val.value}`)
-            } else if (t.isLiteral(val)) {
-              inner = t.binaryExpression('+', t.stringLiteral(' '), val)
-            } else if (
-              t.isConditionalExpression(val) ||
-              t.isBinaryExpression(val)
-            ) {
-              if (t.isStringLiteral(acc)) {
-                return t.binaryExpression(
-                  '+',
-                  t.stringLiteral(`${acc.value} `),
-                  val
-                )
-              }
-              inner = t.binaryExpression('+', t.stringLiteral(' '), val)
-            } else if (t.isIdentifier(val) || t.isMemberExpression(val)) {
-              // identifiers and member expressions make for reasonable ternaries
-              inner = t.conditionalExpression(
-                val,
-                t.binaryExpression('+', t.stringLiteral(' '), val),
-                t.stringLiteral('')
-              )
-            } else {
-              if (t.isStringLiteral(acc)) {
-                return t.binaryExpression(
-                  '+',
-                  t.stringLiteral(`${acc.value} `),
-                  t.logicalExpression('||', val, t.stringLiteral(''))
-                )
-              }
-              // use a logical expression for more complex prop values
-              inner = t.binaryExpression(
-                '+',
-                t.stringLiteral(' '),
-                t.logicalExpression('||', val, t.stringLiteral(''))
-              )
-            }
-            return t.binaryExpression('+', acc, inner)
-          },
-          null
+        const classNamePropValueForReals = buildClassNamePropValue(
+          classNameObjects
         )
 
         if (shouldPrintDebug) {
@@ -606,18 +460,13 @@ domNode: ${domNode}
               cssMap.set(className, val)
             }
           } else {
-            const css = stylesByClassName[className]
-            if (css) {
-              if (typeof css !== 'string') {
-                throw new Error(
-                  `CSS is not a string, for ${className}: ${JSON.stringify(
-                    stylesByClassName,
-                    null,
-                    2
-                  )}, ${typeof css}`
-                )
-              }
-              cssMap.set(className, { css, commentTexts: [comment] })
+            const { rules } = stylesByClassName[className]
+            if (rules.length > 1) {
+              console.log(rules)
+              throw new Error(`huh?`)
+            }
+            if (rules.length) {
+              cssMap.set(className, { css: rules[0], commentTexts: [comment] })
             }
           }
         }
@@ -664,6 +513,7 @@ domNode: ${domNode}
     }`
     const name = `${className}__gloss.css`
     const importPath = `${outRelPath}/${name}`
+    console.log('importPath', importPath)
     const filename = path.join(outPath, name)
     // append require/import statement to the document
     if (content !== '') {
@@ -700,6 +550,61 @@ domNode: ${domNode}
     js: result.code,
     map: result.map,
   }
+}
+
+function buildClassNamePropValue(classNameObjects: ClassNameObject[]) {
+  return classNameObjects.reduce<t.Expression | null>((acc, val) => {
+    if (acc == null) {
+      if (
+        // pass conditional expressions through
+        t.isConditionalExpression(val) ||
+        // pass non-null literals through
+        t.isStringLiteral(val) ||
+        t.isNumericLiteral(val)
+      ) {
+        return val
+      }
+      return t.logicalExpression('||', val, t.stringLiteral(''))
+    }
+
+    let inner: t.Expression
+    if (t.isStringLiteral(val)) {
+      if (t.isStringLiteral(acc)) {
+        // join adjacent string literals
+        return t.stringLiteral(`${acc.value} ${val.value}`)
+      }
+      inner = t.stringLiteral(` ${val.value}`)
+    } else if (t.isLiteral(val)) {
+      inner = t.binaryExpression('+', t.stringLiteral(' '), val)
+    } else if (t.isConditionalExpression(val) || t.isBinaryExpression(val)) {
+      if (t.isStringLiteral(acc)) {
+        return t.binaryExpression('+', t.stringLiteral(`${acc.value} `), val)
+      }
+      inner = t.binaryExpression('+', t.stringLiteral(' '), val)
+    } else if (t.isIdentifier(val) || t.isMemberExpression(val)) {
+      // identifiers and member expressions make for reasonable ternaries
+      inner = t.conditionalExpression(
+        val,
+        t.binaryExpression('+', t.stringLiteral(' '), val),
+        t.stringLiteral('')
+      )
+    } else {
+      if (t.isStringLiteral(acc)) {
+        return t.binaryExpression(
+          '+',
+          t.stringLiteral(`${acc.value} `),
+          t.logicalExpression('||', val, t.stringLiteral(''))
+        )
+      }
+      // use a logical expression for more complex prop values
+      inner = t.binaryExpression(
+        '+',
+        t.stringLiteral(' '),
+        t.logicalExpression('||', val, t.stringLiteral(''))
+      )
+    }
+    return t.binaryExpression('+', acc, inner)
+  }, null)
 }
 
 // const execCache = {}

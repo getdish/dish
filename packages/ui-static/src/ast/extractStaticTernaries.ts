@@ -2,7 +2,8 @@ import generate from '@babel/generator'
 import * as t from '@babel/types'
 import invariant from 'invariant'
 
-import { CacheObject } from '../types'
+import { getStyleAtomic } from '../style/getStylesAtomic'
+import { CacheObject, ClassNameToStyleObj } from '../types'
 
 export interface Ternary {
   name: string
@@ -11,17 +12,12 @@ export interface Ternary {
   alternate: string | null
 }
 
-const empty = {
-  css: '',
-  className: '',
-}
-
 export function extractStaticTernaries(
   ternaries: Ternary[],
   cacheObject: CacheObject
 ): {
   /** styles to be extracted */
-  stylesByClassName: { [key: string]: string }
+  stylesByClassName: ClassNameToStyleObj
   /** ternaries grouped into one binary expression */
   ternaryExpression: t.BinaryExpression | t.ConditionalExpression
 } | null {
@@ -85,24 +81,26 @@ export function extractStaticTernaries(
       : alternate
   }
 
-  const stylesByClassName: { [key: string]: string } = {}
+  const stylesByClassName: ClassNameToStyleObj = {}
 
   const ternaryExpression = Object.keys(ternariesByKey)
     .map((key, idx) => {
       const { test, consequentStyles, alternateStyles } = ternariesByKey[key]
-      const { className: consequentClassName, css: consequentCSS } = {} as any //StaticUtils.getStyles(consequentStyles) ?? empty
-      const { className: alternateClassName, css: alternateCSS } = {} as any //StaticUtils.getStyles(alternateStyles) ?? empty
+      const consInfo = getStyleAtomic(consequentStyles)
+      const consequentClassName = consInfo.className
+      const altInfo = getStyleAtomic(alternateStyles)
+      const alternateClassName = altInfo.className
 
       if (!consequentClassName && !alternateClassName) {
         return null
       }
 
       if (consequentClassName) {
-        stylesByClassName[consequentClassName] = consequentCSS
+        stylesByClassName[consequentClassName] = consInfo
       }
 
       if (alternateClassName) {
-        stylesByClassName[alternateClassName] = alternateCSS
+        stylesByClassName[alternateClassName] = altInfo
       }
 
       if (consequentClassName && alternateClassName) {

@@ -3,11 +3,7 @@ export interface CacheObject {
 }
 
 export interface ExtractStylesOptions {
-  internalViewsPaths?: string[]
-  deoptKeys?: string[]
-  ignore?: RegExp
-  babelOptions?: { presets: Object; plugins: Object }
-  whitelistStaticModules?: string[]
+  // options here
 }
 
 export interface LoaderOptions extends ExtractStylesOptions {
@@ -19,4 +15,18 @@ export interface PluginContext {
   cacheObject: CacheObject
   memoryFS: any
   fileList: Set<string>
+}
+
+export type StyleObject = {
+  property: string
+  value: string
+  className: string
+  // same as key
+  identifier: string
+  // css full statement
+  rules: string[]
+}
+
+export type ClassNameToStyleObj = {
+  [key: string]: StyleObject
 }
