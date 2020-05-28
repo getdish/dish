@@ -23,14 +23,10 @@ export default function GlossWebpackLoader(this: any, content) {
 
   const options: LoaderOptions = loaderUtils.getOptions(this) || {}
   const { memoryFS, cacheObject } = pluginContext
-  const outPath = __dirname
-  // TODO i think find this files depth and add ../../ based on it
-  const outRelPath = `.`
 
   const rv = extractStyles(
     content,
     this.resourcePath,
-    { outPath, outRelPath },
     {
       cacheObject,
       errorCallback: (str: string, ...args: any[]) =>
@@ -41,17 +37,11 @@ export default function GlossWebpackLoader(this: any, content) {
     options
   )
 
-  if (rv.css.length === 0) {
+  if (!rv.cssFileName || rv.css.length === 0) {
     return content
   }
 
-  for (const { filename, content } of rv.css) {
-    console.log('writing out', filename, content)
-    mkdirpSync(path.dirname(filename))
-    writeFileSync(filename, content)
-    // fs.mkdirpSync(path.dirname(filename))
-    // fs.writeFileSync(filename, content)
-  }
-
+  memoryFS.mkdirpSync(path.dirname(rv.cssFileName))
+  memoryFS.writeFileSync(rv.cssFileName, rv.css)
   this.callback(null, rv.js, rv.map)
 }

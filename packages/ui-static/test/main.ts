@@ -13,6 +13,8 @@ interface Context {}
 const test = anyTest as TestInterface<Context>
 
 const specDir = path.join(__dirname, 'spec')
+const outDir = path.join(specDir, 'out')
+const outFile = 'out.js'
 
 test('converts a style object to class names', async (t) => {
   const style: ViewStyle = {
@@ -44,14 +46,15 @@ test('extracts static styles', async (t) => {
     },
     entry: path.join(specDir, 'test.tsx'),
     output: {
-      filename: 'spec.js',
-      path: path.join(__dirname, '..', '_'),
+      filename: outFile,
+      path: outDir,
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
       mainFields: ['tsmain', 'browser', 'module', 'main'],
       alias: {
         'react-native-web': false,
+        react: false,
       },
     },
     module: {
@@ -67,6 +70,14 @@ test('extracts static styles', async (t) => {
               loader: require.resolve('../loader'),
               options: {},
             },
+          ],
+        },
+        {
+          test: /\.css$/,
+          use: [
+            { loader: 'file-loader', options: { name: 'out.css' } },
+            'extract-loader',
+            'css-loader',
           ],
         },
       ],
