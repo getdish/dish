@@ -1,7 +1,7 @@
 import { HStack, VStack } from '@dish/ui'
 import React from 'react'
 
-export function Test() {
+export function Test1() {
   return (
     <VStack flex={1} borderRadius={100} backgroundColor="red">
       <div>hi</div>
@@ -16,3 +16,5 @@ export function Test2() {
     </HStack>
   )
 }
+
+export { default as React } from 'react'

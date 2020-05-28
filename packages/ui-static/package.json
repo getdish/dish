@@ -29,15 +29,17 @@
     "react-native-web": "^0.12.2"
   },
   "devDependencies": {
+    "react": "*",
+    "react-dom": "*",
+    "@types/react-test-renderer": "16.9.2",
+    "react-test-renderer": "^16.13.1",
     "extract-loader": "^5.1.0",
     "file-loader": "^6.0.0",
-    "style-loader": "^1.2.1",
     "css-loader": "^3.5.3",
     "babel-loader": "^8.0.5",
     "@dish/babel-preset": "*",
     "@types/webpack": "4.41.13",
     "@types/react-native": "^0.62.12",
-    "ava": "^3.8.2",
-    "react-dom": "*"
+    "ava": "^3.8.2"
   }
 }
