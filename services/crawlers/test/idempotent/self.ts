@@ -207,7 +207,7 @@ test('Merging', async (t) => {
   t.is(updated.tags.length, 3)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Mexican'), true)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Pizza'), true)
-  t.is(updated.dishes[0].name, 'Nice Dish')
+  t.is(updated.menu_items[0].name, 'Nice Dish')
   t.is(updated.photos?.[0], 'https://yelp.com/image.jpg')
   t.is(updated.photos?.[1], 'https://yelp.com/image2.jpg')
   t.is(updated.rating, 4.1)

@@ -367,755 +367,6 @@ export const schema = {
   get __TypeKind() {
     return new EnumNode({ name: '__TypeKind' })
   },
-  get dish() {
-    return new ObjectNode(
-      {
-        get created_at() {
-          return new FieldNode(schema.timestamptz, undefined, false)
-        },
-        get description() {
-          return new FieldNode(schema.String, undefined, true)
-        },
-        get id() {
-          return new FieldNode(schema.uuid, undefined, false)
-        },
-        get image() {
-          return new FieldNode(schema.String, undefined, true)
-        },
-        get name() {
-          return new FieldNode(schema.String, undefined, false)
-        },
-        get price() {
-          return new FieldNode(schema.Int, undefined, true)
-        },
-        get restaurant() {
-          return new FieldNode(schema.restaurant, undefined, false)
-        },
-        get restaurant_id() {
-          return new FieldNode(schema.uuid, undefined, false)
-        },
-        get restaurant_parent() {
-          return new FieldNode(
-            new ArrayNode(schema.restaurant, false),
-            new Arguments({
-              get distinct_on() {
-                return new ArgumentsField(
-                  new ArrayNode(schema.restaurant_select_column, true),
-                  true
-                )
-              },
-              get limit() {
-                return new ArgumentsField(schema.Int, true)
-              },
-              get offset() {
-                return new ArgumentsField(schema.Int, true)
-              },
-              get order_by() {
-                return new ArgumentsField(
-                  new ArrayNode(schema.restaurant_order_by, true),
-                  true
-                )
-              },
-              get where() {
-                return new ArgumentsField(schema.restaurant_bool_exp, true)
-              },
-            }),
-            false
-          )
-        },
-        get restaurant_parent_aggregate() {
-          return new FieldNode(
-            schema.restaurant_aggregate,
-            new Arguments({
-              get distinct_on() {
-                return new ArgumentsField(
-                  new ArrayNode(schema.restaurant_select_column, true),
-                  true
-                )
-              },
-              get limit() {
-                return new ArgumentsField(schema.Int, true)
-              },
-              get offset() {
-                return new ArgumentsField(schema.Int, true)
-              },
-              get order_by() {
-                return new ArgumentsField(
-                  new ArrayNode(schema.restaurant_order_by, true),
-                  true
-                )
-              },
-              get where() {
-                return new ArgumentsField(schema.restaurant_bool_exp, true)
-              },
-            }),
-            false
-          )
-        },
-        get updated_at() {
-          return new FieldNode(schema.timestamptz, undefined, false)
-        },
-      },
-      { name: 'dish', extension: ((extensions as any) || {}).dish }
-    )
-  },
-  get dish_aggregate() {
-    return new ObjectNode(
-      {
-        get aggregate() {
-          return new FieldNode(schema.dish_aggregate_fields, undefined, true)
-        },
-        get nodes() {
-          return new FieldNode(
-            new ArrayNode(schema.dish, false),
-            undefined,
-            false
-          )
-        },
-      },
-      {
-        name: 'dish_aggregate',
-        extension: ((extensions as any) || {}).dish_aggregate,
-      }
-    )
-  },
-  get dish_aggregate_fields() {
-    return new ObjectNode(
-      {
-        get avg() {
-          return new FieldNode(schema.dish_avg_fields, undefined, true)
-        },
-        get count() {
-          return new FieldNode(
-            schema.Int,
-            new Arguments({
-              get columns() {
-                return new ArgumentsField(
-                  new ArrayNode(schema.dish_select_column, true),
-                  true
-                )
-              },
-              get distinct() {
-                return new ArgumentsField(schema.Boolean, true)
-              },
-            }),
-            true
-          )
-        },
-        get max() {
-          return new FieldNode(schema.dish_max_fields, undefined, true)
-        },
-        get min() {
-          return new FieldNode(schema.dish_min_fields, undefined, true)
-        },
-        get stddev() {
-          return new FieldNode(schema.dish_stddev_fields, undefined, true)
-        },
-        get stddev_pop() {
-          return new FieldNode(schema.dish_stddev_pop_fields, undefined, true)
-        },
-        get stddev_samp() {
-          return new FieldNode(schema.dish_stddev_samp_fields, undefined, true)
-        },
-        get sum() {
-          return new FieldNode(schema.dish_sum_fields, undefined, true)
-        },
-        get var_pop() {
-          return new FieldNode(schema.dish_var_pop_fields, undefined, true)
-        },
-        get var_samp() {
-          return new FieldNode(schema.dish_var_samp_fields, undefined, true)
-        },
-        get variance() {
-          return new FieldNode(schema.dish_variance_fields, undefined, true)
-        },
-      },
-      {
-        name: 'dish_aggregate_fields',
-        extension: ((extensions as any) || {}).dish_aggregate_fields,
-      }
-    )
-  },
-  get dish_aggregate_order_by() {
-    return new InputNode(
-      {
-        get avg() {
-          return new InputNodeField(schema.dish_avg_order_by, true)
-        },
-        get count() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get max() {
-          return new InputNodeField(schema.dish_max_order_by, true)
-        },
-        get min() {
-          return new InputNodeField(schema.dish_min_order_by, true)
-        },
-        get stddev() {
-          return new InputNodeField(schema.dish_stddev_order_by, true)
-        },
-        get stddev_pop() {
-          return new InputNodeField(schema.dish_stddev_pop_order_by, true)
-        },
-        get stddev_samp() {
-          return new InputNodeField(schema.dish_stddev_samp_order_by, true)
-        },
-        get sum() {
-          return new InputNodeField(schema.dish_sum_order_by, true)
-        },
-        get var_pop() {
-          return new InputNodeField(schema.dish_var_pop_order_by, true)
-        },
-        get var_samp() {
-          return new InputNodeField(schema.dish_var_samp_order_by, true)
-        },
-        get variance() {
-          return new InputNodeField(schema.dish_variance_order_by, true)
-        },
-      },
-      { name: 'dish_aggregate_order_by' }
-    )
-  },
-  get dish_arr_rel_insert_input() {
-    return new InputNode(
-      {
-        get data() {
-          return new InputNodeField(
-            new ArrayNode(schema.dish_insert_input, false),
-            false
-          )
-        },
-        get on_conflict() {
-          return new InputNodeField(schema.dish_on_conflict, true)
-        },
-      },
-      { name: 'dish_arr_rel_insert_input' }
-    )
-  },
-  get dish_avg_fields() {
-    return new ObjectNode(
-      {
-        get price() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-      },
-      {
-        name: 'dish_avg_fields',
-        extension: ((extensions as any) || {}).dish_avg_fields,
-      }
-    )
-  },
-  get dish_avg_order_by() {
-    return new InputNode(
-      {
-        get price() {
-          return new InputNodeField(schema.order_by, true)
-        },
-      },
-      { name: 'dish_avg_order_by' }
-    )
-  },
-  get dish_bool_exp() {
-    return new InputNode(
-      {
-        get _and() {
-          return new InputNodeField(
-            new ArrayNode(schema.dish_bool_exp, true),
-            true
-          )
-        },
-        get _not() {
-          return new InputNodeField(schema.dish_bool_exp, true)
-        },
-        get _or() {
-          return new InputNodeField(
-            new ArrayNode(schema.dish_bool_exp, true),
-            true
-          )
-        },
-        get created_at() {
-          return new InputNodeField(schema.timestamptz_comparison_exp, true)
-        },
-        get description() {
-          return new InputNodeField(schema.String_comparison_exp, true)
-        },
-        get id() {
-          return new InputNodeField(schema.uuid_comparison_exp, true)
-        },
-        get image() {
-          return new InputNodeField(schema.String_comparison_exp, true)
-        },
-        get name() {
-          return new InputNodeField(schema.String_comparison_exp, true)
-        },
-        get price() {
-          return new InputNodeField(schema.Int_comparison_exp, true)
-        },
-        get restaurant() {
-          return new InputNodeField(schema.restaurant_bool_exp, true)
-        },
-        get restaurant_id() {
-          return new InputNodeField(schema.uuid_comparison_exp, true)
-        },
-        get restaurant_parent() {
-          return new InputNodeField(schema.restaurant_bool_exp, true)
-        },
-        get updated_at() {
-          return new InputNodeField(schema.timestamptz_comparison_exp, true)
-        },
-      },
-      { name: 'dish_bool_exp' }
-    )
-  },
-  get dish_constraint() {
-    return new EnumNode({ name: 'dish_constraint' })
-  },
-  get dish_inc_input() {
-    return new InputNode(
-      {
-        get price() {
-          return new InputNodeField(schema.Int, true)
-        },
-      },
-      { name: 'dish_inc_input' }
-    )
-  },
-  get dish_insert_input() {
-    return new InputNode(
-      {
-        get created_at() {
-          return new InputNodeField(schema.timestamptz, true)
-        },
-        get description() {
-          return new InputNodeField(schema.String, true)
-        },
-        get id() {
-          return new InputNodeField(schema.uuid, true)
-        },
-        get image() {
-          return new InputNodeField(schema.String, true)
-        },
-        get name() {
-          return new InputNodeField(schema.String, true)
-        },
-        get price() {
-          return new InputNodeField(schema.Int, true)
-        },
-        get restaurant() {
-          return new InputNodeField(
-            schema.restaurant_obj_rel_insert_input,
-            true
-          )
-        },
-        get restaurant_id() {
-          return new InputNodeField(schema.uuid, true)
-        },
-        get restaurant_parent() {
-          return new InputNodeField(
-            schema.restaurant_arr_rel_insert_input,
-            true
-          )
-        },
-        get updated_at() {
-          return new InputNodeField(schema.timestamptz, true)
-        },
-      },
-      { name: 'dish_insert_input' }
-    )
-  },
-  get dish_max_fields() {
-    return new ObjectNode(
-      {
-        get created_at() {
-          return new FieldNode(schema.timestamptz, undefined, true)
-        },
-        get description() {
-          return new FieldNode(schema.String, undefined, true)
-        },
-        get image() {
-          return new FieldNode(schema.String, undefined, true)
-        },
-        get name() {
-          return new FieldNode(schema.String, undefined, true)
-        },
-        get price() {
-          return new FieldNode(schema.Int, undefined, true)
-        },
-        get updated_at() {
-          return new FieldNode(schema.timestamptz, undefined, true)
-        },
-      },
-      {
-        name: 'dish_max_fields',
-        extension: ((extensions as any) || {}).dish_max_fields,
-      }
-    )
-  },
-  get dish_max_order_by() {
-    return new InputNode(
-      {
-        get created_at() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get description() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get image() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get name() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get price() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get updated_at() {
-          return new InputNodeField(schema.order_by, true)
-        },
-      },
-      { name: 'dish_max_order_by' }
-    )
-  },
-  get dish_min_fields() {
-    return new ObjectNode(
-      {
-        get created_at() {
-          return new FieldNode(schema.timestamptz, undefined, true)
-        },
-        get description() {
-          return new FieldNode(schema.String, undefined, true)
-        },
-        get image() {
-          return new FieldNode(schema.String, undefined, true)
-        },
-        get name() {
-          return new FieldNode(schema.String, undefined, true)
-        },
-        get price() {
-          return new FieldNode(schema.Int, undefined, true)
-        },
-        get updated_at() {
-          return new FieldNode(schema.timestamptz, undefined, true)
-        },
-      },
-      {
-        name: 'dish_min_fields',
-        extension: ((extensions as any) || {}).dish_min_fields,
-      }
-    )
-  },
-  get dish_min_order_by() {
-    return new InputNode(
-      {
-        get created_at() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get description() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get image() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get name() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get price() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get updated_at() {
-          return new InputNodeField(schema.order_by, true)
-        },
-      },
-      { name: 'dish_min_order_by' }
-    )
-  },
-  get dish_mutation_response() {
-    return new ObjectNode(
-      {
-        get affected_rows() {
-          return new FieldNode(schema.Int, undefined, false)
-        },
-        get returning() {
-          return new FieldNode(
-            new ArrayNode(schema.dish, false),
-            undefined,
-            false
-          )
-        },
-      },
-      {
-        name: 'dish_mutation_response',
-        extension: ((extensions as any) || {}).dish_mutation_response,
-      }
-    )
-  },
-  get dish_obj_rel_insert_input() {
-    return new InputNode(
-      {
-        get data() {
-          return new InputNodeField(schema.dish_insert_input, false)
-        },
-        get on_conflict() {
-          return new InputNodeField(schema.dish_on_conflict, true)
-        },
-      },
-      { name: 'dish_obj_rel_insert_input' }
-    )
-  },
-  get dish_on_conflict() {
-    return new InputNode(
-      {
-        get constraint() {
-          return new InputNodeField(schema.dish_constraint, false)
-        },
-        get update_columns() {
-          return new InputNodeField(
-            new ArrayNode(schema.dish_update_column, false),
-            false
-          )
-        },
-        get where() {
-          return new InputNodeField(schema.dish_bool_exp, true)
-        },
-      },
-      { name: 'dish_on_conflict' }
-    )
-  },
-  get dish_order_by() {
-    return new InputNode(
-      {
-        get created_at() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get description() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get id() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get image() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get name() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get price() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get restaurant() {
-          return new InputNodeField(schema.restaurant_order_by, true)
-        },
-        get restaurant_id() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get restaurant_parent_aggregate() {
-          return new InputNodeField(schema.restaurant_aggregate_order_by, true)
-        },
-        get updated_at() {
-          return new InputNodeField(schema.order_by, true)
-        },
-      },
-      { name: 'dish_order_by' }
-    )
-  },
-  get dish_select_column() {
-    return new EnumNode({ name: 'dish_select_column' })
-  },
-  get dish_set_input() {
-    return new InputNode(
-      {
-        get created_at() {
-          return new InputNodeField(schema.timestamptz, true)
-        },
-        get description() {
-          return new InputNodeField(schema.String, true)
-        },
-        get id() {
-          return new InputNodeField(schema.uuid, true)
-        },
-        get image() {
-          return new InputNodeField(schema.String, true)
-        },
-        get name() {
-          return new InputNodeField(schema.String, true)
-        },
-        get price() {
-          return new InputNodeField(schema.Int, true)
-        },
-        get restaurant_id() {
-          return new InputNodeField(schema.uuid, true)
-        },
-        get updated_at() {
-          return new InputNodeField(schema.timestamptz, true)
-        },
-      },
-      { name: 'dish_set_input' }
-    )
-  },
-  get dish_stddev_fields() {
-    return new ObjectNode(
-      {
-        get price() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-      },
-      {
-        name: 'dish_stddev_fields',
-        extension: ((extensions as any) || {}).dish_stddev_fields,
-      }
-    )
-  },
-  get dish_stddev_order_by() {
-    return new InputNode(
-      {
-        get price() {
-          return new InputNodeField(schema.order_by, true)
-        },
-      },
-      { name: 'dish_stddev_order_by' }
-    )
-  },
-  get dish_stddev_pop_fields() {
-    return new ObjectNode(
-      {
-        get price() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-      },
-      {
-        name: 'dish_stddev_pop_fields',
-        extension: ((extensions as any) || {}).dish_stddev_pop_fields,
-      }
-    )
-  },
-  get dish_stddev_pop_order_by() {
-    return new InputNode(
-      {
-        get price() {
-          return new InputNodeField(schema.order_by, true)
-        },
-      },
-      { name: 'dish_stddev_pop_order_by' }
-    )
-  },
-  get dish_stddev_samp_fields() {
-    return new ObjectNode(
-      {
-        get price() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-      },
-      {
-        name: 'dish_stddev_samp_fields',
-        extension: ((extensions as any) || {}).dish_stddev_samp_fields,
-      }
-    )
-  },
-  get dish_stddev_samp_order_by() {
-    return new InputNode(
-      {
-        get price() {
-          return new InputNodeField(schema.order_by, true)
-        },
-      },
-      { name: 'dish_stddev_samp_order_by' }
-    )
-  },
-  get dish_sum_fields() {
-    return new ObjectNode(
-      {
-        get price() {
-          return new FieldNode(schema.Int, undefined, true)
-        },
-      },
-      {
-        name: 'dish_sum_fields',
-        extension: ((extensions as any) || {}).dish_sum_fields,
-      }
-    )
-  },
-  get dish_sum_order_by() {
-    return new InputNode(
-      {
-        get price() {
-          return new InputNodeField(schema.order_by, true)
-        },
-      },
-      { name: 'dish_sum_order_by' }
-    )
-  },
-  get dish_update_column() {
-    return new EnumNode({ name: 'dish_update_column' })
-  },
-  get dish_var_pop_fields() {
-    return new ObjectNode(
-      {
-        get price() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-      },
-      {
-        name: 'dish_var_pop_fields',
-        extension: ((extensions as any) || {}).dish_var_pop_fields,
-      }
-    )
-  },
-  get dish_var_pop_order_by() {
-    return new InputNode(
-      {
-        get price() {
-          return new InputNodeField(schema.order_by, true)
-        },
-      },
-      { name: 'dish_var_pop_order_by' }
-    )
-  },
-  get dish_var_samp_fields() {
-    return new ObjectNode(
-      {
-        get price() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-      },
-      {
-        name: 'dish_var_samp_fields',
-        extension: ((extensions as any) || {}).dish_var_samp_fields,
-      }
-    )
-  },
-  get dish_var_samp_order_by() {
-    return new InputNode(
-      {
-        get price() {
-          return new InputNodeField(schema.order_by, true)
-        },
-      },
-      { name: 'dish_var_samp_order_by' }
-    )
-  },
-  get dish_variance_fields() {
-    return new ObjectNode(
-      {
-        get price() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-      },
-      {
-        name: 'dish_variance_fields',
-        extension: ((extensions as any) || {}).dish_variance_fields,
-      }
-    )
-  },
-  get dish_variance_order_by() {
-    return new InputNode(
-      {
-        get price() {
-          return new InputNodeField(schema.order_by, true)
-        },
-      },
-      { name: 'dish_variance_order_by' }
-    )
-  },
   get geography() {
     return new ScalarNode({
       name: 'geography',
@@ -1307,16 +558,715 @@ export const schema = {
       { name: 'jsonb_comparison_exp' }
     )
   },
+  get menu_item() {
+    return new ObjectNode(
+      {
+        get created_at() {
+          return new FieldNode(schema.timestamptz, undefined, false)
+        },
+        get description() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get id() {
+          return new FieldNode(schema.uuid, undefined, false)
+        },
+        get image() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get name() {
+          return new FieldNode(schema.String, undefined, false)
+        },
+        get price() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+        get restaurant() {
+          return new FieldNode(schema.restaurant, undefined, false)
+        },
+        get restaurant_id() {
+          return new FieldNode(schema.uuid, undefined, false)
+        },
+        get updated_at() {
+          return new FieldNode(schema.timestamptz, undefined, false)
+        },
+      },
+      { name: 'menu_item', extension: ((extensions as any) || {}).menu_item }
+    )
+  },
+  get menu_item_aggregate() {
+    return new ObjectNode(
+      {
+        get aggregate() {
+          return new FieldNode(
+            schema.menu_item_aggregate_fields,
+            undefined,
+            true
+          )
+        },
+        get nodes() {
+          return new FieldNode(
+            new ArrayNode(schema.menu_item, false),
+            undefined,
+            false
+          )
+        },
+      },
+      {
+        name: 'menu_item_aggregate',
+        extension: ((extensions as any) || {}).menu_item_aggregate,
+      }
+    )
+  },
+  get menu_item_aggregate_fields() {
+    return new ObjectNode(
+      {
+        get avg() {
+          return new FieldNode(schema.menu_item_avg_fields, undefined, true)
+        },
+        get count() {
+          return new FieldNode(
+            schema.Int,
+            new Arguments({
+              get columns() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.menu_item_select_column, true),
+                  true
+                )
+              },
+              get distinct() {
+                return new ArgumentsField(schema.Boolean, true)
+              },
+            }),
+            true
+          )
+        },
+        get max() {
+          return new FieldNode(schema.menu_item_max_fields, undefined, true)
+        },
+        get min() {
+          return new FieldNode(schema.menu_item_min_fields, undefined, true)
+        },
+        get stddev() {
+          return new FieldNode(schema.menu_item_stddev_fields, undefined, true)
+        },
+        get stddev_pop() {
+          return new FieldNode(
+            schema.menu_item_stddev_pop_fields,
+            undefined,
+            true
+          )
+        },
+        get stddev_samp() {
+          return new FieldNode(
+            schema.menu_item_stddev_samp_fields,
+            undefined,
+            true
+          )
+        },
+        get sum() {
+          return new FieldNode(schema.menu_item_sum_fields, undefined, true)
+        },
+        get var_pop() {
+          return new FieldNode(schema.menu_item_var_pop_fields, undefined, true)
+        },
+        get var_samp() {
+          return new FieldNode(
+            schema.menu_item_var_samp_fields,
+            undefined,
+            true
+          )
+        },
+        get variance() {
+          return new FieldNode(
+            schema.menu_item_variance_fields,
+            undefined,
+            true
+          )
+        },
+      },
+      {
+        name: 'menu_item_aggregate_fields',
+        extension: ((extensions as any) || {}).menu_item_aggregate_fields,
+      }
+    )
+  },
+  get menu_item_aggregate_order_by() {
+    return new InputNode(
+      {
+        get avg() {
+          return new InputNodeField(schema.menu_item_avg_order_by, true)
+        },
+        get count() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get max() {
+          return new InputNodeField(schema.menu_item_max_order_by, true)
+        },
+        get min() {
+          return new InputNodeField(schema.menu_item_min_order_by, true)
+        },
+        get stddev() {
+          return new InputNodeField(schema.menu_item_stddev_order_by, true)
+        },
+        get stddev_pop() {
+          return new InputNodeField(schema.menu_item_stddev_pop_order_by, true)
+        },
+        get stddev_samp() {
+          return new InputNodeField(schema.menu_item_stddev_samp_order_by, true)
+        },
+        get sum() {
+          return new InputNodeField(schema.menu_item_sum_order_by, true)
+        },
+        get var_pop() {
+          return new InputNodeField(schema.menu_item_var_pop_order_by, true)
+        },
+        get var_samp() {
+          return new InputNodeField(schema.menu_item_var_samp_order_by, true)
+        },
+        get variance() {
+          return new InputNodeField(schema.menu_item_variance_order_by, true)
+        },
+      },
+      { name: 'menu_item_aggregate_order_by' }
+    )
+  },
+  get menu_item_arr_rel_insert_input() {
+    return new InputNode(
+      {
+        get data() {
+          return new InputNodeField(
+            new ArrayNode(schema.menu_item_insert_input, false),
+            false
+          )
+        },
+        get on_conflict() {
+          return new InputNodeField(schema.menu_item_on_conflict, true)
+        },
+      },
+      { name: 'menu_item_arr_rel_insert_input' }
+    )
+  },
+  get menu_item_avg_fields() {
+    return new ObjectNode(
+      {
+        get price() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'menu_item_avg_fields',
+        extension: ((extensions as any) || {}).menu_item_avg_fields,
+      }
+    )
+  },
+  get menu_item_avg_order_by() {
+    return new InputNode(
+      {
+        get price() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'menu_item_avg_order_by' }
+    )
+  },
+  get menu_item_bool_exp() {
+    return new InputNode(
+      {
+        get _and() {
+          return new InputNodeField(
+            new ArrayNode(schema.menu_item_bool_exp, true),
+            true
+          )
+        },
+        get _not() {
+          return new InputNodeField(schema.menu_item_bool_exp, true)
+        },
+        get _or() {
+          return new InputNodeField(
+            new ArrayNode(schema.menu_item_bool_exp, true),
+            true
+          )
+        },
+        get created_at() {
+          return new InputNodeField(schema.timestamptz_comparison_exp, true)
+        },
+        get description() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get id() {
+          return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
+        get image() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get name() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get price() {
+          return new InputNodeField(schema.Int_comparison_exp, true)
+        },
+        get restaurant() {
+          return new InputNodeField(schema.restaurant_bool_exp, true)
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
+        get updated_at() {
+          return new InputNodeField(schema.timestamptz_comparison_exp, true)
+        },
+      },
+      { name: 'menu_item_bool_exp' }
+    )
+  },
+  get menu_item_constraint() {
+    return new EnumNode({ name: 'menu_item_constraint' })
+  },
+  get menu_item_inc_input() {
+    return new InputNode(
+      {
+        get price() {
+          return new InputNodeField(schema.Int, true)
+        },
+      },
+      { name: 'menu_item_inc_input' }
+    )
+  },
+  get menu_item_insert_input() {
+    return new InputNode(
+      {
+        get created_at() {
+          return new InputNodeField(schema.timestamptz, true)
+        },
+        get description() {
+          return new InputNodeField(schema.String, true)
+        },
+        get id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+        get image() {
+          return new InputNodeField(schema.String, true)
+        },
+        get name() {
+          return new InputNodeField(schema.String, true)
+        },
+        get price() {
+          return new InputNodeField(schema.Int, true)
+        },
+        get restaurant() {
+          return new InputNodeField(
+            schema.restaurant_obj_rel_insert_input,
+            true
+          )
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+        get updated_at() {
+          return new InputNodeField(schema.timestamptz, true)
+        },
+      },
+      { name: 'menu_item_insert_input' }
+    )
+  },
+  get menu_item_max_fields() {
+    return new ObjectNode(
+      {
+        get created_at() {
+          return new FieldNode(schema.timestamptz, undefined, true)
+        },
+        get description() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get image() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get name() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get price() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+        get updated_at() {
+          return new FieldNode(schema.timestamptz, undefined, true)
+        },
+      },
+      {
+        name: 'menu_item_max_fields',
+        extension: ((extensions as any) || {}).menu_item_max_fields,
+      }
+    )
+  },
+  get menu_item_max_order_by() {
+    return new InputNode(
+      {
+        get created_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get description() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get image() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get name() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get price() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get updated_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'menu_item_max_order_by' }
+    )
+  },
+  get menu_item_min_fields() {
+    return new ObjectNode(
+      {
+        get created_at() {
+          return new FieldNode(schema.timestamptz, undefined, true)
+        },
+        get description() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get image() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get name() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get price() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+        get updated_at() {
+          return new FieldNode(schema.timestamptz, undefined, true)
+        },
+      },
+      {
+        name: 'menu_item_min_fields',
+        extension: ((extensions as any) || {}).menu_item_min_fields,
+      }
+    )
+  },
+  get menu_item_min_order_by() {
+    return new InputNode(
+      {
+        get created_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get description() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get image() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get name() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get price() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get updated_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'menu_item_min_order_by' }
+    )
+  },
+  get menu_item_mutation_response() {
+    return new ObjectNode(
+      {
+        get affected_rows() {
+          return new FieldNode(schema.Int, undefined, false)
+        },
+        get returning() {
+          return new FieldNode(
+            new ArrayNode(schema.menu_item, false),
+            undefined,
+            false
+          )
+        },
+      },
+      {
+        name: 'menu_item_mutation_response',
+        extension: ((extensions as any) || {}).menu_item_mutation_response,
+      }
+    )
+  },
+  get menu_item_obj_rel_insert_input() {
+    return new InputNode(
+      {
+        get data() {
+          return new InputNodeField(schema.menu_item_insert_input, false)
+        },
+        get on_conflict() {
+          return new InputNodeField(schema.menu_item_on_conflict, true)
+        },
+      },
+      { name: 'menu_item_obj_rel_insert_input' }
+    )
+  },
+  get menu_item_on_conflict() {
+    return new InputNode(
+      {
+        get constraint() {
+          return new InputNodeField(schema.menu_item_constraint, false)
+        },
+        get update_columns() {
+          return new InputNodeField(
+            new ArrayNode(schema.menu_item_update_column, false),
+            false
+          )
+        },
+        get where() {
+          return new InputNodeField(schema.menu_item_bool_exp, true)
+        },
+      },
+      { name: 'menu_item_on_conflict' }
+    )
+  },
+  get menu_item_order_by() {
+    return new InputNode(
+      {
+        get created_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get description() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get image() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get name() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get price() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get restaurant() {
+          return new InputNodeField(schema.restaurant_order_by, true)
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get updated_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'menu_item_order_by' }
+    )
+  },
+  get menu_item_select_column() {
+    return new EnumNode({ name: 'menu_item_select_column' })
+  },
+  get menu_item_set_input() {
+    return new InputNode(
+      {
+        get created_at() {
+          return new InputNodeField(schema.timestamptz, true)
+        },
+        get description() {
+          return new InputNodeField(schema.String, true)
+        },
+        get id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+        get image() {
+          return new InputNodeField(schema.String, true)
+        },
+        get name() {
+          return new InputNodeField(schema.String, true)
+        },
+        get price() {
+          return new InputNodeField(schema.Int, true)
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+        get updated_at() {
+          return new InputNodeField(schema.timestamptz, true)
+        },
+      },
+      { name: 'menu_item_set_input' }
+    )
+  },
+  get menu_item_stddev_fields() {
+    return new ObjectNode(
+      {
+        get price() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'menu_item_stddev_fields',
+        extension: ((extensions as any) || {}).menu_item_stddev_fields,
+      }
+    )
+  },
+  get menu_item_stddev_order_by() {
+    return new InputNode(
+      {
+        get price() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'menu_item_stddev_order_by' }
+    )
+  },
+  get menu_item_stddev_pop_fields() {
+    return new ObjectNode(
+      {
+        get price() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'menu_item_stddev_pop_fields',
+        extension: ((extensions as any) || {}).menu_item_stddev_pop_fields,
+      }
+    )
+  },
+  get menu_item_stddev_pop_order_by() {
+    return new InputNode(
+      {
+        get price() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'menu_item_stddev_pop_order_by' }
+    )
+  },
+  get menu_item_stddev_samp_fields() {
+    return new ObjectNode(
+      {
+        get price() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'menu_item_stddev_samp_fields',
+        extension: ((extensions as any) || {}).menu_item_stddev_samp_fields,
+      }
+    )
+  },
+  get menu_item_stddev_samp_order_by() {
+    return new InputNode(
+      {
+        get price() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'menu_item_stddev_samp_order_by' }
+    )
+  },
+  get menu_item_sum_fields() {
+    return new ObjectNode(
+      {
+        get price() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+      },
+      {
+        name: 'menu_item_sum_fields',
+        extension: ((extensions as any) || {}).menu_item_sum_fields,
+      }
+    )
+  },
+  get menu_item_sum_order_by() {
+    return new InputNode(
+      {
+        get price() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'menu_item_sum_order_by' }
+    )
+  },
+  get menu_item_update_column() {
+    return new EnumNode({ name: 'menu_item_update_column' })
+  },
+  get menu_item_var_pop_fields() {
+    return new ObjectNode(
+      {
+        get price() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'menu_item_var_pop_fields',
+        extension: ((extensions as any) || {}).menu_item_var_pop_fields,
+      }
+    )
+  },
+  get menu_item_var_pop_order_by() {
+    return new InputNode(
+      {
+        get price() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'menu_item_var_pop_order_by' }
+    )
+  },
+  get menu_item_var_samp_fields() {
+    return new ObjectNode(
+      {
+        get price() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'menu_item_var_samp_fields',
+        extension: ((extensions as any) || {}).menu_item_var_samp_fields,
+      }
+    )
+  },
+  get menu_item_var_samp_order_by() {
+    return new InputNode(
+      {
+        get price() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'menu_item_var_samp_order_by' }
+    )
+  },
+  get menu_item_variance_fields() {
+    return new ObjectNode(
+      {
+        get price() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'menu_item_variance_fields',
+        extension: ((extensions as any) || {}).menu_item_variance_fields,
+      }
+    )
+  },
+  get menu_item_variance_order_by() {
+    return new InputNode(
+      {
+        get price() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'menu_item_variance_order_by' }
+    )
+  },
   get mutation_root() {
     return new ObjectNode(
       {
-        get delete_dish() {
+        get delete_menu_item() {
           return new FieldNode(
-            schema.dish_mutation_response,
+            schema.menu_item_mutation_response,
             new Arguments(
               {
                 get where() {
-                  return new ArgumentsField(schema.dish_bool_exp, false)
+                  return new ArgumentsField(schema.menu_item_bool_exp, false)
                 },
               },
               true
@@ -1425,18 +1375,18 @@ export const schema = {
             true
           )
         },
-        get insert_dish() {
+        get insert_menu_item() {
           return new FieldNode(
-            schema.dish_mutation_response,
+            schema.menu_item_mutation_response,
             new Arguments({
               get objects() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.dish_insert_input, false),
+                  new ArrayNode(schema.menu_item_insert_input, false),
                   false
                 )
               },
               get on_conflict() {
-                return new ArgumentsField(schema.dish_on_conflict, true)
+                return new ArgumentsField(schema.menu_item_on_conflict, true)
               },
             }),
             true
@@ -1564,18 +1514,18 @@ export const schema = {
             true
           )
         },
-        get update_dish() {
+        get update_menu_item() {
           return new FieldNode(
-            schema.dish_mutation_response,
+            schema.menu_item_mutation_response,
             new Arguments({
               get _inc() {
-                return new ArgumentsField(schema.dish_inc_input, true)
+                return new ArgumentsField(schema.menu_item_inc_input, true)
               },
               get _set() {
-                return new ArgumentsField(schema.dish_set_input, true)
+                return new ArgumentsField(schema.menu_item_set_input, true)
               },
               get where() {
-                return new ArgumentsField(schema.dish_bool_exp, false)
+                return new ArgumentsField(schema.menu_item_bool_exp, false)
               },
             }),
             true
@@ -1843,13 +1793,13 @@ export const schema = {
   get query_root() {
     return new ObjectNode(
       {
-        get dish() {
+        get menu_item() {
           return new FieldNode(
-            new ArrayNode(schema.dish, false),
+            new ArrayNode(schema.menu_item, false),
             new Arguments({
               get distinct_on() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.dish_select_column, true),
+                  new ArrayNode(schema.menu_item_select_column, true),
                   true
                 )
               },
@@ -1861,24 +1811,24 @@ export const schema = {
               },
               get order_by() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.dish_order_by, true),
+                  new ArrayNode(schema.menu_item_order_by, true),
                   true
                 )
               },
               get where() {
-                return new ArgumentsField(schema.dish_bool_exp, true)
+                return new ArgumentsField(schema.menu_item_bool_exp, true)
               },
             }),
             false
           )
         },
-        get dish_aggregate() {
+        get menu_item_aggregate() {
           return new FieldNode(
-            schema.dish_aggregate,
+            schema.menu_item_aggregate,
             new Arguments({
               get distinct_on() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.dish_select_column, true),
+                  new ArrayNode(schema.menu_item_select_column, true),
                   true
                 )
               },
@@ -1890,20 +1840,20 @@ export const schema = {
               },
               get order_by() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.dish_order_by, true),
+                  new ArrayNode(schema.menu_item_order_by, true),
                   true
                 )
               },
               get where() {
-                return new ArgumentsField(schema.dish_bool_exp, true)
+                return new ArgumentsField(schema.menu_item_bool_exp, true)
               },
             }),
             false
           )
         },
-        get dish_by_pk() {
+        get menu_item_by_pk() {
           return new FieldNode(
-            schema.dish,
+            schema.menu_item,
             new Arguments(
               {
                 get id() {
@@ -2444,64 +2394,6 @@ export const schema = {
         get description() {
           return new FieldNode(schema.String, undefined, true)
         },
-        get dishes() {
-          return new FieldNode(
-            new ArrayNode(schema.dish, false),
-            new Arguments({
-              get distinct_on() {
-                return new ArgumentsField(
-                  new ArrayNode(schema.dish_select_column, true),
-                  true
-                )
-              },
-              get limit() {
-                return new ArgumentsField(schema.Int, true)
-              },
-              get offset() {
-                return new ArgumentsField(schema.Int, true)
-              },
-              get order_by() {
-                return new ArgumentsField(
-                  new ArrayNode(schema.dish_order_by, true),
-                  true
-                )
-              },
-              get where() {
-                return new ArgumentsField(schema.dish_bool_exp, true)
-              },
-            }),
-            false
-          )
-        },
-        get dishes_aggregate() {
-          return new FieldNode(
-            schema.dish_aggregate,
-            new Arguments({
-              get distinct_on() {
-                return new ArgumentsField(
-                  new ArrayNode(schema.dish_select_column, true),
-                  true
-                )
-              },
-              get limit() {
-                return new ArgumentsField(schema.Int, true)
-              },
-              get offset() {
-                return new ArgumentsField(schema.Int, true)
-              },
-              get order_by() {
-                return new ArgumentsField(
-                  new ArrayNode(schema.dish_order_by, true),
-                  true
-                )
-              },
-              get where() {
-                return new ArgumentsField(schema.dish_bool_exp, true)
-              },
-            }),
-            false
-          )
-        },
         get hours() {
           return new FieldNode(
             schema.jsonb,
@@ -2524,6 +2416,64 @@ export const schema = {
         },
         get location() {
           return new FieldNode(schema.geometry, undefined, false)
+        },
+        get menu_items() {
+          return new FieldNode(
+            new ArrayNode(schema.menu_item, false),
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.menu_item_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.menu_item_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.menu_item_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get menu_items_aggregate() {
+          return new FieldNode(
+            schema.menu_item_aggregate,
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.menu_item_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.menu_item_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.menu_item_bool_exp, true)
+              },
+            }),
+            false
+          )
         },
         get name() {
           return new FieldNode(schema.String, undefined, false)
@@ -3015,9 +2965,6 @@ export const schema = {
         get description() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
-        get dishes() {
-          return new InputNodeField(schema.dish_bool_exp, true)
-        },
         get hours() {
           return new InputNodeField(schema.jsonb_comparison_exp, true)
         },
@@ -3029,6 +2976,9 @@ export const schema = {
         },
         get location() {
           return new InputNodeField(schema.geometry_comparison_exp, true)
+        },
+        get menu_items() {
+          return new InputNodeField(schema.menu_item_bool_exp, true)
         },
         get name() {
           return new InputNodeField(schema.String_comparison_exp, true)
@@ -3166,9 +3116,6 @@ export const schema = {
         get description() {
           return new InputNodeField(schema.String, true)
         },
-        get dishes() {
-          return new InputNodeField(schema.dish_arr_rel_insert_input, true)
-        },
         get hours() {
           return new InputNodeField(schema.jsonb, true)
         },
@@ -3180,6 +3127,9 @@ export const schema = {
         },
         get location() {
           return new InputNodeField(schema.geometry, true)
+        },
+        get menu_items() {
+          return new InputNodeField(schema.menu_item_arr_rel_insert_input, true)
         },
         get name() {
           return new InputNodeField(schema.String, true)
@@ -3505,9 +3455,6 @@ export const schema = {
         get description() {
           return new InputNodeField(schema.order_by, true)
         },
-        get dishes_aggregate() {
-          return new InputNodeField(schema.dish_aggregate_order_by, true)
-        },
         get hours() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -3519,6 +3466,9 @@ export const schema = {
         },
         get location() {
           return new InputNodeField(schema.order_by, true)
+        },
+        get menu_items_aggregate() {
+          return new InputNodeField(schema.menu_item_aggregate_order_by, true)
         },
         get name() {
           return new InputNodeField(schema.order_by, true)
@@ -5892,13 +5842,13 @@ export const schema = {
   get subscription_root() {
     return new ObjectNode(
       {
-        get dish() {
+        get menu_item() {
           return new FieldNode(
-            new ArrayNode(schema.dish, false),
+            new ArrayNode(schema.menu_item, false),
             new Arguments({
               get distinct_on() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.dish_select_column, true),
+                  new ArrayNode(schema.menu_item_select_column, true),
                   true
                 )
               },
@@ -5910,24 +5860,24 @@ export const schema = {
               },
               get order_by() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.dish_order_by, true),
+                  new ArrayNode(schema.menu_item_order_by, true),
                   true
                 )
               },
               get where() {
-                return new ArgumentsField(schema.dish_bool_exp, true)
+                return new ArgumentsField(schema.menu_item_bool_exp, true)
               },
             }),
             false
           )
         },
-        get dish_aggregate() {
+        get menu_item_aggregate() {
           return new FieldNode(
-            schema.dish_aggregate,
+            schema.menu_item_aggregate,
             new Arguments({
               get distinct_on() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.dish_select_column, true),
+                  new ArrayNode(schema.menu_item_select_column, true),
                   true
                 )
               },
@@ -5939,20 +5889,20 @@ export const schema = {
               },
               get order_by() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.dish_order_by, true),
+                  new ArrayNode(schema.menu_item_order_by, true),
                   true
                 )
               },
               get where() {
-                return new ArgumentsField(schema.dish_bool_exp, true)
+                return new ArgumentsField(schema.menu_item_bool_exp, true)
               },
             }),
             false
           )
         },
-        get dish_by_pk() {
+        get menu_item_by_pk() {
           return new FieldNode(
-            schema.dish,
+            schema.menu_item,
             new Arguments(
               {
                 get id() {

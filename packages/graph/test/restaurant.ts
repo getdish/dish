@@ -7,15 +7,15 @@ import {
   Restaurant,
   RestaurantWithId,
   Tag,
-  dishUpsert,
   flushTestData,
+  menuItemUpsert,
   restaurantFindNear,
   restaurantFindOne,
   restaurantSaveCanonical,
   restaurantUpdate,
   restaurantUpsert,
 } from '../src'
-import { dish_fixture, restaurant_fixture } from './etc/fixtures'
+import { menu_item_fixture, restaurant_fixture } from './etc/fixtures'
 
 interface Context {
   restaurant: Restaurant
@@ -46,8 +46,8 @@ test('Upserting a restaurant', async (t) => {
 })
 
 test('Upserting a dish', async (t) => {
-  dish_fixture['restaurant_id'] = t.context.restaurant.id
-  const [dish] = await dishUpsert([dish_fixture])
+  menu_item_fixture['restaurant_id'] = t.context.restaurant.id
+  const [dish] = await menuItemUpsert([menu_item_fixture])
   t.assert(dish.id != undefined)
   t.is(dish.name, 'Test Dish')
 })

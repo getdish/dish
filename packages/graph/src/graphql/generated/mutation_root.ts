@@ -1,15 +1,15 @@
 import { FieldsType, FieldsTypeArg, TypeData } from 'gqless'
 
 import * as extensions from '../extensions'
-import {
-  dish_bool_exp,
-  dish_inc_input,
-  dish_insert_input,
-  dish_on_conflict,
-  dish_set_input,
-  t_dish_mutation_response,
-} from './dish'
 import { Extension } from './extensionsTypes'
+import {
+  menu_item_bool_exp,
+  menu_item_inc_input,
+  menu_item_insert_input,
+  menu_item_on_conflict,
+  menu_item_set_input,
+  t_menu_item_mutation_response,
+} from './menu_item'
 import {
   restaurant_append_input,
   restaurant_bool_exp,
@@ -91,9 +91,9 @@ import {
 export type t_mutation_root = FieldsType<
   {
     __typename: t_String<'mutation_root'>
-    delete_dish: FieldsTypeArg<
-      { where: dish_bool_exp },
-      t_dish_mutation_response | null
+    delete_menu_item: FieldsTypeArg<
+      { where: menu_item_bool_exp },
+      t_menu_item_mutation_response | null
     >
     delete_restaurant: FieldsTypeArg<
       { where: restaurant_bool_exp },
@@ -123,9 +123,12 @@ export type t_mutation_root = FieldsType<
       { where: user_bool_exp },
       t_user_mutation_response | null
     >
-    insert_dish: FieldsTypeArg<
-      { objects: dish_insert_input[]; on_conflict?: dish_on_conflict | null },
-      t_dish_mutation_response | null
+    insert_menu_item: FieldsTypeArg<
+      {
+        objects: menu_item_insert_input[]
+        on_conflict?: menu_item_on_conflict | null
+      },
+      t_menu_item_mutation_response | null
     >
     insert_restaurant: FieldsTypeArg<
       {
@@ -170,13 +173,13 @@ export type t_mutation_root = FieldsType<
       { objects: user_insert_input[]; on_conflict?: user_on_conflict | null },
       t_user_mutation_response | null
     >
-    update_dish: FieldsTypeArg<
+    update_menu_item: FieldsTypeArg<
       {
-        _inc?: dish_inc_input | null
-        _set?: dish_set_input | null
-        where: dish_bool_exp
+        _inc?: menu_item_inc_input | null
+        _set?: menu_item_set_input | null
+        where: menu_item_bool_exp
       },
-      t_dish_mutation_response | null
+      t_menu_item_mutation_response | null
     >
     update_restaurant: FieldsTypeArg<
       {

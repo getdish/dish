@@ -1,5 +1,5 @@
 export * from './auth'
-export * from './dish'
+export * from './menu_item'
 export * from './flushTestData'
 export * from './getGraphEndpoint'
 export * from './graphqlGet'

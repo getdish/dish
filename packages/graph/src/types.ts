@@ -1,5 +1,5 @@
 import {
-  dish,
+  menu_item,
   mutation_root,
   restaurant,
   restaurant_tag,
@@ -35,7 +35,7 @@ export interface RestaurantTagQuery extends restaurant_tag {}
 export interface TagTagQuery extends tag_tag {}
 export interface UserQuery extends user {}
 export interface ReviewQuery extends review {}
-export interface DishQuery extends dish {}
+export interface MenuItemQuery extends menu_item {}
 export interface ScrapeQuery extends scrape {}
 
 // SECTION 1
@@ -47,7 +47,7 @@ export interface RestaurantTag extends FlatResolvedModel<RestaurantTagQuery> {}
 export interface TagTag extends FlatResolvedModel<TagTagQuery> {}
 export interface User extends FlatResolvedModel<UserQuery> {}
 export interface Review extends FlatResolvedModel<ReviewQuery> {}
-export interface Dish extends FlatResolvedModel<DishQuery> {}
+export interface MenuItem extends FlatResolvedModel<MenuItemQuery> {}
 export interface Scrape extends FlatResolvedModel<ScrapeQuery> {}
 
 // SECTION 3
@@ -59,7 +59,7 @@ export interface RestaurantTagWithId extends WithID<RestaurantTag> {}
 export interface TagTagWithId extends WithID<TagTag> {}
 export interface UserWithId extends WithID<User> {}
 export interface ReviewWithId extends WithID<Review> {}
-export interface DishWithId extends WithID<Dish> {}
+export interface MenuItemWithId extends WithID<MenuItem> {}
 export interface ScrapeWithId extends WithID<Scrape> {}
 
 // SECTION 4
@@ -71,7 +71,7 @@ export type ModelType =
   | TagTag
   | User
   | Review
-  | Dish
+  | MenuItem
   | Scrape
 
 // DONE

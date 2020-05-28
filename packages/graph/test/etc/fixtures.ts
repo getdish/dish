@@ -1,4 +1,4 @@
-import { Dish, Restaurant } from '../../src'
+import { MenuItem, Restaurant } from '../../src'
 
 export const restaurant_fixture: Restaurant = {
   name: 'Test Restaurant',
@@ -24,7 +24,7 @@ export const restaurant_fixture: Restaurant = {
   ],
 }
 
-export const dish_fixture: Dish = {
+export const menu_item_fixture: MenuItem = {
   name: 'Test Dish',
   description: 'Not a real dish :(',
   price: 123,

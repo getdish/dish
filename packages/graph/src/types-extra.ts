@@ -1,4 +1,4 @@
-import { Dish, Restaurant, Tag } from './types'
+import { MenuItem, Restaurant, Tag } from './types'
 
 export type TagType =
   | 'lense'
@@ -14,7 +14,7 @@ export type TagRecord = Partial<Tag> & Pick<Tag, 'type'>
 
 export type LngLat = { lng: number; lat: number }
 
-export type TopCuisineDish = Partial<Dish> & {
+export type TopCuisineDish = Partial<MenuItem> & {
   rating: number
   count?: number
   image: string

@@ -25,7 +25,7 @@ import { NotFoundPage } from '../NotFoundPage'
 import { LinkButton } from '../ui/LinkButton'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { flatButtonStyle } from './baseButtonStyle'
-import { DishView } from './DishView'
+import { DishView as MenuItemView } from './DishView'
 import { getTitleForState } from './getTitleForState'
 import HomeLenseBar from './HomeLenseBar'
 import { RestaurantListItem } from './RestaurantListItem'
@@ -299,20 +299,20 @@ const HomePageSearchResultsDishes = memo(
     }
 
     // TODO use a real
-    const dishes = query.dish({
+    const menu_items = query.menu_item({
       limit: 6,
     })
 
-    console.log('got dishes', dishes)
+    console.log('got menu_items', menu_items)
 
     return (
       <>
-        {dishes.map((dish) => (
-          <DishView
-            key={dish.name}
+        {menu_items.map((menu_item) => (
+          <MenuItemView
+            key={menu_item.name}
             dish={{
-              name: dish.name,
-              image: dish.image ?? '',
+              name: menu_item.name,
+              image: menu_item.image ?? '',
               rating: 5,
               count: 1,
             }}

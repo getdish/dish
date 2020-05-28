@@ -27,7 +27,7 @@ export const restaurantRefresh = QueryHelpers.refresh
 
 export async function restaurantFindOneWithTags(restaurant: RestaurantWithId) {
   return await restaurantFindOne(restaurant, {
-    include: ['tags', 'tags.tag.categories.category', 'dishes'],
+    include: ['tags', 'tags.tag.categories.category', 'menu_items'],
     maxDepth: 5,
   })
 }

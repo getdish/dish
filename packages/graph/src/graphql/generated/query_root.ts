@@ -1,15 +1,15 @@
 import { FieldsType, FieldsTypeArg, TypeData } from 'gqless'
 
 import * as extensions from '../extensions'
-import {
-  dish_bool_exp,
-  dish_order_by,
-  dish_select_column,
-  t_dish,
-  t_dish_aggregate,
-} from './dish'
 import { Extension } from './extensionsTypes'
 import { t_Int } from './Int'
+import {
+  menu_item_bool_exp,
+  menu_item_order_by,
+  menu_item_select_column,
+  t_menu_item,
+  t_menu_item_aggregate,
+} from './menu_item'
 import {
   restaurant_bool_exp,
   restaurant_order_by,
@@ -65,27 +65,27 @@ import { t_uuid } from './uuid'
 export type t_query_root = FieldsType<
   {
     __typename: t_String<'query_root'>
-    dish: FieldsTypeArg<
+    menu_item: FieldsTypeArg<
       {
-        distinct_on?: dish_select_column[] | null
+        distinct_on?: menu_item_select_column[] | null
         limit?: number | null
         offset?: number | null
-        order_by?: dish_order_by[] | null
-        where?: dish_bool_exp | null
+        order_by?: menu_item_order_by[] | null
+        where?: menu_item_bool_exp | null
       },
-      t_dish[]
+      t_menu_item[]
     >
-    dish_aggregate: FieldsTypeArg<
+    menu_item_aggregate: FieldsTypeArg<
       {
-        distinct_on?: dish_select_column[] | null
+        distinct_on?: menu_item_select_column[] | null
         limit?: number | null
         offset?: number | null
-        order_by?: dish_order_by[] | null
-        where?: dish_bool_exp | null
+        order_by?: menu_item_order_by[] | null
+        where?: menu_item_bool_exp | null
       },
-      t_dish_aggregate
+      t_menu_item_aggregate
     >
-    dish_by_pk?: FieldsTypeArg<{ id: any }, t_dish | null>
+    menu_item_by_pk?: FieldsTypeArg<{ id: any }, t_menu_item | null>
     restaurant: FieldsTypeArg<
       {
         distinct_on?: restaurant_select_column[] | null

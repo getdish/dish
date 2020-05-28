@@ -2,20 +2,20 @@ import { EnumType, FieldsType, FieldsTypeArg, TypeData } from 'gqless'
 
 import * as extensions from '../extensions'
 import { t_Boolean } from './Boolean'
-import {
-  dish_aggregate_order_by,
-  dish_arr_rel_insert_input,
-  dish_bool_exp,
-  dish_order_by,
-  dish_select_column,
-  t_dish,
-  t_dish_aggregate,
-} from './dish'
 import { Extension } from './extensionsTypes'
 import { t_Float } from './Float'
 import { geometry_comparison_exp, t_geometry } from './geometry'
 import { Int_comparison_exp, t_Int } from './Int'
 import { jsonb_comparison_exp, t_jsonb } from './jsonb'
+import {
+  menu_item_aggregate_order_by,
+  menu_item_arr_rel_insert_input,
+  menu_item_bool_exp,
+  menu_item_order_by,
+  menu_item_select_column,
+  t_menu_item,
+  t_menu_item_aggregate,
+} from './menu_item'
 import { numeric_comparison_exp, t_numeric } from './numeric'
 import { order_by } from './order_by'
 import {
@@ -57,31 +57,31 @@ export type t_restaurant = FieldsType<
     city?: t_String | null
     created_at: t_timestamptz
     description?: t_String | null
-    dishes: FieldsTypeArg<
-      {
-        distinct_on?: dish_select_column[] | null
-        limit?: number | null
-        offset?: number | null
-        order_by?: dish_order_by[] | null
-        where?: dish_bool_exp | null
-      },
-      t_dish[]
-    >
-    dishes_aggregate: FieldsTypeArg<
-      {
-        distinct_on?: dish_select_column[] | null
-        limit?: number | null
-        offset?: number | null
-        order_by?: dish_order_by[] | null
-        where?: dish_bool_exp | null
-      },
-      t_dish_aggregate
-    >
     hours?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     id: t_uuid
     image?: t_String | null
     is_open_now?: t_Boolean | null
     location: t_geometry
+    menu_items: FieldsTypeArg<
+      {
+        distinct_on?: menu_item_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: menu_item_order_by[] | null
+        where?: menu_item_bool_exp | null
+      },
+      t_menu_item[]
+    >
+    menu_items_aggregate: FieldsTypeArg<
+      {
+        distinct_on?: menu_item_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: menu_item_order_by[] | null
+        where?: menu_item_bool_exp | null
+      },
+      t_menu_item_aggregate
+    >
     name: t_String
     photos?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     price_range?: t_String | null
@@ -273,11 +273,11 @@ export type restaurant_bool_exp = {
   city?: String_comparison_exp | null
   created_at?: timestamptz_comparison_exp | null
   description?: String_comparison_exp | null
-  dishes?: dish_bool_exp | null
   hours?: jsonb_comparison_exp | null
   id?: uuid_comparison_exp | null
   image?: String_comparison_exp | null
   location?: geometry_comparison_exp | null
+  menu_items?: menu_item_bool_exp | null
   name?: String_comparison_exp | null
   photos?: jsonb_comparison_exp | null
   price_range?: String_comparison_exp | null
@@ -349,11 +349,11 @@ export type restaurant_insert_input = {
   city?: string | null
   created_at?: any | null
   description?: string | null
-  dishes?: dish_arr_rel_insert_input | null
   hours?: any | null
   id?: any | null
   image?: string | null
   location?: any | null
+  menu_items?: menu_item_arr_rel_insert_input | null
   name?: string | null
   photos?: any | null
   price_range?: string | null
@@ -505,11 +505,11 @@ export type restaurant_order_by = {
   city?: order_by | null
   created_at?: order_by | null
   description?: order_by | null
-  dishes_aggregate?: dish_aggregate_order_by | null
   hours?: order_by | null
   id?: order_by | null
   image?: order_by | null
   location?: order_by | null
+  menu_items_aggregate?: menu_item_aggregate_order_by | null
   name?: order_by | null
   photos?: order_by | null
   price_range?: order_by | null

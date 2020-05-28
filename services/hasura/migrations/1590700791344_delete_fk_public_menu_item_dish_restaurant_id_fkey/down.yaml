@@ -1,0 +1,6 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: alter table "public"."menu_item" add foreign key ("restaurant_id") references
+      "public"."restaurant"("id") on update cascade on delete cascade;
+  type: run_sql

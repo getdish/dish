@@ -9,7 +9,7 @@ import {
   ScrapeData,
   Tag,
   deleteAllBy,
-  dishUpsert,
+  menuItemUpsert,
   restaurantFindBatch,
   restaurantFindOne,
   restaurantFindOneWithTags,
@@ -453,7 +453,7 @@ export class Self extends WorkerJob {
     // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
     for (const data of this.ubereats.data.dishes) {
       if (data.title) {
-        await dishUpsert([
+        await menuItemUpsert([
           {
             restaurant_id: this.restaurant.id,
             name: data.title,

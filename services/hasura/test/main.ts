@@ -1,14 +1,9 @@
 import {
   Auth,
-  Dish,
-  Restaurant,
   RestaurantWithId,
-  Scrape,
-  User,
   deleteAllBy,
   deleteAllFuzzyBy,
   userFindOne,
-  userInsert,
   userUpdate,
 } from '@dish/graph'
 import {
@@ -51,11 +46,11 @@ test.skip('Normal user cannot delete things', async (t) => {
     )
   }
   try {
-    await deleteAllBy('dish', 'id', 'example')
+    await deleteAllBy('menu_item', 'id', 'example')
   } catch (e) {
     t.is(
       e.errors[0].message,
-      'field "delete_dish" not found in type: \'mutation_root\''
+      'field "delete_menu_item" not found in type: \'mutation_root\''
     )
   }
   try {

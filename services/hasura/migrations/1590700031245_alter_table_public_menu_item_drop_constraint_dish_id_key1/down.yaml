@@ -1,0 +1,6 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: alter table "public"."menu_item" add constraint "menu_item_id_key" unique
+      ("id");
+  type: run_sql

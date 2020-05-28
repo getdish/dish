@@ -1,6 +1,3 @@
-process.env.HASURA_ENDPOINT = 'https://hasura.rio.dishapp.com'
-process.env.AUTH_ENDPOINT = 'https://auth.rio.dishapp.com'
-
 require('isomorphic-unfetch')
 
 const { exec } = require('child_process')

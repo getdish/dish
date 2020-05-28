@@ -2,20 +2,11 @@ version: 2
 tables:
 - table:
     schema: public
-    name: dish
+    name: menu_item
   object_relationships:
   - name: restaurant
     using:
       foreign_key_constraint_on: restaurant_id
-  array_relationships:
-  - name: restaurant_parent
-    using:
-      manual_configuration:
-        remote_table:
-          schema: public
-          name: restaurant
-        column_mapping:
-          restaurant_id: id
   insert_permissions:
   - role: contributor
     permission:
@@ -80,13 +71,13 @@ tables:
     schema: public
     name: restaurant
   array_relationships:
-  - name: dishes
+  - name: menu_items
     using:
       foreign_key_constraint_on:
         column: restaurant_id
         table:
           schema: public
-          name: dish
+          name: menu_item
   - name: reviews
     using:
       foreign_key_constraint_on:
