@@ -4,9 +4,10 @@ import util from 'util'
 import generate from '@babel/generator'
 import traverse from '@babel/traverse'
 import * as t from '@babel/types'
-import literalToAst from 'babel-literal-to-ast'
+// import literalToAst from 'babel-literal-to-ast'
 import invariant from 'invariant'
 
+import { GLOSS_CSS_FILE } from '../constants'
 import { ViewStyle, getStylesAtomic } from '../style/getStylesAtomic'
 import styleProps from '../style/styleProps'
 import {
@@ -35,11 +36,6 @@ interface TraversePath<TNode = any> {
   insertBefore: (arg: t.Node) => void
 }
 
-type CSSExtracted = {
-  filename: string
-  content: string
-}
-
 const UNTOUCHED_PROPS = {
   key: true,
   style: true,
@@ -49,12 +45,12 @@ const UNTOUCHED_PROPS = {
 export function extractStyles(
   src: string | Buffer,
   sourceFileName: string,
-  { outPath, outRelPath }: any,
   { cacheObject, errorCallback }: Options,
   options: ExtractStylesOptions
 ): {
   js: string | Buffer
-  css: CSSExtracted[]
+  css: string
+  cssFileName: string | null
   ast: t.File
   map: any // RawSourceMap from 'source-map'
 } {
@@ -103,7 +99,8 @@ export function extractStyles(
   if (!doesImport || !Object.keys(validComponents).length) {
     return {
       ast,
-      css: [],
+      css: '',
+      cssFileName: null,
       js: src,
       map: null,
     }
@@ -504,24 +501,18 @@ domNode: ${domNode}
     },
   })
 
-  const css: CSSExtracted[] = []
+  const css = Array.from(cssMap.values())
+    .map((v) => v.commentTexts.map((txt) => `${txt}\n`).join('') + v.css)
+    .join(' ')
+  const extName = path.extname(sourceFileName)
+  const baseName = path.basename(sourceFileName, extName)
+  const cssRelativeFileName = `./${baseName}${GLOSS_CSS_FILE}`
+  const cssFileName = path.join(sourceDir, cssRelativeFileName)
 
-  // Write out CSS using it's className, this gives us de-duping for shared classnames
-  for (const [className, entry] of cssMap.entries()) {
-    const content = `${entry.commentTexts.map((txt) => `${txt}\n`).join('')}${
-      entry.css
-    }`
-    const name = `${className}__gloss.css`
-    const importPath = `${outRelPath}/${name}`
-    console.log('importPath', importPath)
-    const filename = path.join(outPath, name)
-    // append require/import statement to the document
-    if (content !== '') {
-      css.push({ filename, content })
-      ast.program.body.unshift(
-        t.importDeclaration([], t.stringLiteral(importPath))
-      )
-    }
+  if (css !== '') {
+    ast.program.body.unshift(
+      t.importDeclaration([], t.stringLiteral(cssRelativeFileName))
+    )
   }
 
   const result = generate(
@@ -547,6 +538,7 @@ domNode: ${domNode}
   return {
     ast,
     css,
+    cssFileName,
     js: result.code,
     map: result.map,
   }

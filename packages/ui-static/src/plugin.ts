@@ -1,5 +1,4 @@
 import fs from 'fs-extra'
-// @ts-ignore
 import MemoryFileSystem from 'memory-fs'
 import webpack from 'webpack'
 import NodeWatchFileSystem from 'webpack/lib/node/NodeWatchFileSystem'
@@ -32,7 +31,6 @@ export class GlossWebpackPlugin implements Plugin {
 
     // context object that gets passed to each loader.
     this.ctx = {
-      cacheFile: null,
       cacheObject: this.cacheObject,
       fileList: new Set(),
       memoryFS: this.memoryFS,
@@ -54,25 +52,12 @@ export class GlossWebpackPlugin implements Plugin {
     compilation.hooks.normalModuleLoader.tap(this.pluginName, this.nmlPlugin)
   }
 
-  private donePlugin = (): void => {
-    if (this.ctx.cacheFile) {
-      // write contents of cache object as a newline-separated list of CSS strings
-      console.log('this.ctx.cacheObject', this.ctx.cacheObject)
-      const cacheString = Object.keys(this.ctx.cacheObject).join('\n') + '\n'
-      fs.writeFileSync(this.ctx.cacheFile, cacheString, 'utf8')
-    }
-  }
-
   public apply(compiler: Compiler) {
-    const environmentPlugin = (): void => {
+    compiler.hooks.environment.tap(this.pluginName, () => {
       const wrappedFS = wrapFileSystem(compiler.inputFileSystem, this.memoryFS)
       compiler.inputFileSystem = wrappedFS
-      // TODO submit PR to DefinitelyTyped
-      ;(compiler as any).watchFileSystem = new NodeWatchFileSystem(wrappedFS)
-    }
-
-    compiler.hooks.environment.tap(this.pluginName, environmentPlugin)
+      compiler.watchFileSystem = new NodeWatchFileSystem(wrappedFS)
+    })
     compiler.hooks.compilation.tap(this.pluginName, this.compilationPlugin)
-    compiler.hooks.done.tap(this.pluginName, this.donePlugin)
   }
 }
