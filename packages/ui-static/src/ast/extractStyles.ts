@@ -272,8 +272,6 @@ export function extractStyles(
             return true
           }
 
-          console.log('what is', name, isStaticAttributeName(name))
-
           if (!isStaticAttributeName(name)) {
             inlinePropCount++
             return true

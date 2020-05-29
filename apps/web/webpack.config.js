@@ -1,13 +1,14 @@
 const { DuplicatesPlugin } = require('inspectpack/plugin')
-// const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+const ShakePlugin = require('webpack-common-shake').Plugin
+const ReactRefreshWebpack4Plugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const path = require('path')
 const _ = require('lodash')
 const Webpack = require('webpack')
-// const ClosurePlugin = require('closure-webpack-plugin')
+const ClosurePlugin = require('closure-webpack-plugin')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
-// const LodashPlugin = require('lodash-webpack-plugin')
+const LodashPlugin = require('lodash-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
-const ReactRefreshPlugin = require('@webhotelier/webpack-fast-refresh')
+// const ReactRefreshPlugin = require('@webhotelier/webpack-fast-refresh')
 const { GlossWebpackPlugin } = require('@dish/ui-static')
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
@@ -21,7 +22,8 @@ const graphRoot = path.join(require.resolve('@dish/graph'), '..', '..', '..')
 
 const isProduction = process.env.NODE_ENV === 'production'
 const isClient = TARGET === 'client'
-const shouldExtractStatics = isClient && isProduction
+const isHot = !isProduction
+const isStaticExtracted = false && isClient && isProduction
 
 console.log('webpack.config', { isProduction, graphRoot, TARGET })
 
@@ -32,8 +34,6 @@ module.exports = function getWebpackConfig(
   },
   argv
 ) {
-  const isHot = !isProduction
-
   /** @type {Webpack.Configuration} */
   const config = {
     mode: env.mode || process.env.NODE_ENV,
@@ -49,9 +49,20 @@ module.exports = function getWebpackConfig(
     ].filter(Boolean),
     output: {
       path: path.resolve(__dirname),
-      filename: `static/js/app.[contenthash].js`,
+      filename: `static/js/app.[hash].js`,
       publicPath: '/',
-      globalObject: 'this',
+      // globalObject: 'this',
+    },
+    // webpack 4
+    node: {
+      process: 'mock',
+      Buffer: false,
+      util: false,
+      console: false,
+      setImmediate: false,
+      global: false,
+      __filename: false,
+      __dirname: false,
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
@@ -67,7 +78,7 @@ module.exports = function getWebpackConfig(
           : {
               react: path.join(require.resolve('react'), '..'),
               'react-dom': path.join(require.resolve('react-dom'), '..'),
-              '@dish/graph': require.resolve('@dish/graph'),
+              // '@dish/graph': require.resolve('@dish/graph'),
               gqless: path.join(graphRoot, 'node_modules', 'gqless'),
             },
     },
@@ -78,36 +89,20 @@ module.exports = function getWebpackConfig(
       minimize: !process.env.NO_MINIFY && isProduction && TARGET !== 'ssr',
       concatenateModules: isProduction && !process.env.ANALYZE_BUNDLE,
       usedExports: isProduction,
-      splitChunks:
-        isProduction && TARGET !== 'ssr'
-          ? {
-              // http2
-              chunks: 'all',
-              maxInitialRequests: 30,
-              maxAsyncRequests: 30,
-              maxSize: 100000,
-            }
-          : false,
+      splitChunks: false,
+      // isProduction && TARGET !== 'ssr'
+      //   ? {
+      //       // http2
+      //       chunks: 'all',
+      //       maxInitialRequests: 6,
+      //       maxAsyncRequests: 6,
+      //       maxSize: 100000,
+      //     }
+      //   : false,
       runtimeChunk: false,
       minimizer: [
         // new ClosurePlugin(),
-        new TerserPlugin({
-          sourceMap: true,
-          terserOptions: {
-            ecma: 6,
-            warnings: false,
-            parse: {},
-            compress: {},
-            mangle: true,
-            module: false,
-            toplevel: false,
-            ie8: false,
-            // output: null,
-            // keep_classnames: undefined,
-            keep_fnames: false,
-            safari10: false,
-          },
-        }),
+        new TerserPlugin(),
       ],
     },
     externals: {
@@ -125,19 +120,21 @@ module.exports = function getWebpackConfig(
                   loader: 'babel-loader',
                   options: { cacheDirectory: true },
                 },
-                isHot && {
-                  loader: '@webhotelier/webpack-fast-refresh/loader.js',
-                },
-                shouldExtractStatics && {
+                // webpack 5
+                // isHot && {
+                //   loader: '@webhotelier/webpack-fast-refresh/loader.js',
+                // },
+                isStaticExtracted && {
                   loader: require.resolve('@dish/ui-static/loader'),
                 },
               ].filter(Boolean),
             },
             {
               test: /\.css$/i,
-              use: isProduction
-                ? ['file-loader', 'extract-loader', 'css-loader']
-                : ['style-loader', 'css-loader'],
+              use:
+                // isProduction
+                //   ? ['file-loader', 'extract-loader', 'css-loader']
+                ['style-loader', 'css-loader'],
             },
             {
               test: /\.(png|svg|jpe?g|gif)$/,
@@ -145,7 +142,7 @@ module.exports = function getWebpackConfig(
                 loader: 'url-loader',
                 options: {
                   limit: 1000,
-                  name: 'static/media/[name].[contenthash].[ext]',
+                  name: 'static/media/[name].[hash].[ext]',
                 },
               },
             },
@@ -157,7 +154,7 @@ module.exports = function getWebpackConfig(
               // Also exclude `html` and `json` extensions so they get processed by webpacks internal loaders.
               exclude: [/\.(mjs|[jt]sx?)$/, /\.html$/, /\.json$/],
               options: {
-                name: 'static/media/[name].[contenthash].[ext]',
+                name: 'static/media/[name].[hash].[ext]',
               },
             },
           ],
@@ -165,18 +162,20 @@ module.exports = function getWebpackConfig(
       ],
     },
     plugins: [
-      // new ReactNativeUIPlugin(),
-      // new LodashPlugin(),
+      // breaks a couple things, possible to ignore
+      // isClient && isProduction && new ShakePlugin({}),
+
+      isProduction && new LodashPlugin(),
 
       // extract static styles in production
-      shouldExtractStatics && new GlossWebpackPlugin(),
+      // isStaticExtracted && new GlossWebpackPlugin(),
 
       new Webpack.DefinePlugin({
-        ...(target === 'web' || target === 'webworker'
-          ? {
-              process: JSON.stringify({}),
-            }
-          : {}),
+        // ...(target === 'web' || target === 'webworker'
+        //   ? {
+        //       process: JSON.stringify({}),
+        //     }
+        //   : {}),
         'process.env.TARGET': JSON.stringify(TARGET || null),
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         'process.env.EXPERIMENTAL_USE_CLENAUP_FOR_CM': JSON.stringify(false),
@@ -188,13 +187,16 @@ module.exports = function getWebpackConfig(
         template: path.join(__dirname, 'web/index.html'),
       }),
 
+      // webpack 5
+      // env.mode === 'development' &&
+      //   TARGET !== 'worker' &&
+      //   new ReactRefreshPlugin(),
+
       env.mode === 'development' &&
         TARGET !== 'worker' &&
-        new ReactRefreshPlugin(),
-
-      // new ReactRefreshWebpackPlugin({
-      //   overlay: false,
-      // }),
+        new ReactRefreshWebpack4Plugin({
+          overlay: false,
+        }),
 
       !!process.env.INSPECT &&
         new DuplicatesPlugin({
@@ -204,6 +206,43 @@ module.exports = function getWebpackConfig(
           verbose: false,
         }),
     ].filter(Boolean),
+
+    // webpack 4
+    // @ts-ignore
+    devServer: {
+      publicPath: '/',
+      host: '0.0.0.0',
+      compress: true,
+      // watchContentBase: true,
+      // It will still show compile warnings and errors with this setting.
+      clientLogLevel: 'none',
+      contentBase: path.join(__dirname, 'web'),
+      hot: !isProduction,
+      historyApiFallback: {
+        disableDotRule: true,
+      },
+      disableHostCheck: true,
+      overlay: false,
+      quiet: false,
+      stats: {
+        colors: true,
+        assets: true,
+        chunks: false,
+        modules: true,
+        reasons: false,
+        children: true,
+        errors: true,
+        errorDetails: true,
+        warnings: true,
+      },
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods':
+          'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+        'Access-Control-Allow-Headers':
+          'X-Requested-With, content-type, Authorization',
+      },
+    },
   }
 
   // PLUGINS
@@ -243,7 +282,7 @@ module.exports = function getWebpackConfig(
   }
 
   function getConfig() {
-    if (TARGET === 'ssr' || TARGET === 'worker' || TARGET === 'preact') {
+    if (TARGET === 'ssr' || TARGET === 'worker') {
       return config
     }
 
@@ -252,7 +291,7 @@ module.exports = function getWebpackConfig(
         ...config,
         output: {
           ...config.output,
-          filename: 'static/js/app.legacy.[contenthash].js',
+          filename: 'static/js/app.legacy.[hash].js',
           path: path.join(__dirname, 'web-build-legacy'),
         },
         entry: [
@@ -273,11 +312,11 @@ module.exports = function getWebpackConfig(
       }
     }
 
-    if (process.env.ONLY_MODERN) {
+    if (process.env.ONLY_MODERN || !isProduction) {
       return getModernConfig()
     }
 
-    if (process.env.NODE_ENV === 'production') {
+    if (isProduction) {
       // lets generate a legacy and modern build
       return [getModernConfig(), getLegacyConfig()]
     } else {
@@ -300,45 +339,21 @@ module.exports = function getWebpackConfig(
   return finalConfig
 }
 
-const getModule = (name) => path.join('node_modules', name)
-
 const excludedRootPaths = [
   '/node_modules',
-  '/bower_components',
-  '/.expo/',
   // Prevent transpiling webpack generated files.
   '(webpack)',
 ]
 
-// Only compile files from the react ecosystem.
-const modules = [
-  getModule('react-native'),
-  getModule('expo'),
-  getModule('unimodules'),
-  getModule('@react'),
-  getModule('@unimodules'),
-  getModule('native-base'),
-  // include our packages
-  path.join(__dirname, '..', '..', 'packages'),
-  getModule('create-react-class'),
-]
-
 function babelInclude(inputPath) {
-  for (const possibleModule of modules) {
-    if (inputPath.includes(path.normalize(possibleModule))) {
-      return true
-    }
+  if (
+    excludedRootPaths.some((excluded) =>
+      inputPath.includes(path.normalize(excluded))
+    )
+  ) {
+    return false
   }
-  // Is inside the project and is not one of designated modules
-  if (inputPath.includes(__dirname)) {
-    for (const excluded of excludedRootPaths) {
-      if (inputPath.includes(path.normalize(excluded))) {
-        return false
-      }
-    }
-    return true
-  }
-  return false
+  return true
 }
 
 // test closure compiler, could be more performant if it extracts functions from render better

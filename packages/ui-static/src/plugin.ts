@@ -7,8 +7,8 @@ import { CacheObject, PluginContext } from './types'
 import { wrapFileSystem } from './wrapFileSystem'
 
 type Compiler = webpack.Compiler
-type Compilation = webpack.Compilation
-type Plugin = webpack.WebpackPluginInstance
+type Compilation = webpack.compilation.Compilation
+type Plugin = webpack.Plugin
 
 export * from './types'
 
