@@ -4,6 +4,7 @@ import {
   Circle,
   HStack,
   HoverablePopover,
+  SelectableText,
   StackProps,
   Toast,
   VStack,
@@ -128,7 +129,7 @@ export const CommentBubble = ({
         <Circle size={18} marginBottom={-2}>
           <Image source={avatar} style={{ width: 18, height: 18 }} />
         </Circle>
-        <Text style={{ color: '#999' }}>
+        <SelectableText style={{ color: '#999' }}>
           <Link
             inline
             name="user"
@@ -142,25 +143,25 @@ export const CommentBubble = ({
             inline
             contents={
               <Box>
-                <Text style={{ opacity: 0.65 }}>
+                <SelectableText style={{ opacity: 0.65 }}>
                   <ul>
                     <li>👨‍🍳 Chef ✔️</li>
                     <li>🇯🇵 Japanese Exprt ✔️</li>
                   </ul>
-                </Text>
+                </SelectableText>
               </Box>
             }
           >
             <div className="inline-flex">
               {['👨‍🍳'].map((x) => (
-                <Text key={x} style={{ opacity: 1 }}>
+                <SelectableText key={x} style={{ opacity: 1 }}>
                   {x}
-                </Text>
+                </SelectableText>
               ))}
             </div>
           </HoverablePopover>{' '}
           says
-        </Text>
+        </SelectableText>
       </HStack>
       {children}
     </VStack>

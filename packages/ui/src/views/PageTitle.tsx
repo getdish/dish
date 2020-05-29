@@ -6,25 +6,16 @@ import { SelectableText } from './Text'
 export const PageTitle = memo(
   ({ children, subTitle, ...rest }: StackProps & { subTitle?: any }) => {
     return (
-      <VStack
-        maxWidth="100%"
-        minHeight={68}
-        paddingBottom={4}
-        justifyContent="center"
-        // paddingBottom={28}
-        // alignItems="center"
-        // justifyContent="center"
-        {...rest}
-      >
+      <VStack maxWidth="100%" minHeight={68} justifyContent="center" {...rest}>
         <SelectableText
           numberOfLines={1}
           style={{
             flex: 1,
             maxWidth: '80%',
             opacity: 1,
-            fontSize: 22,
-            lineHeight: 30,
-            fontWeight: '700',
+            fontSize: 28,
+            lineHeight: 32,
+            fontWeight: '300',
           }}
         >
           {children}

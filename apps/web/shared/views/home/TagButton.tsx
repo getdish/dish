@@ -73,7 +73,7 @@ export const TagButton = memo(
     const lineHeight = 22 * scale
     const defaultColor = noColor ? 'inherit' : getTagColor(rgb)
     const bg = backgroundColor ?? (subtle ? defaultColor : 'white')
-    const fg = color ?? (subtle ? 'transparent' : defaultColor)
+    const fg = color ?? (subtle ? 'rgba(0,0,0,0.6)' : defaultColor)
     const fontSize = fontSizeProp ?? (subtle ? 'inherit' : 16 * scale)
     const rankFontSize =
       typeof fontSize === 'number' ? fontSize * 0.9 : fontSize
@@ -161,14 +161,20 @@ export const TagButton = memo(
               // marginLeft={-8 * scale}
               // marginTop={size === 'sm' ? -24 : 0}
               backgroundColor={subtle ? 'transparent' : '#fff'}
-              borderLeftColor="#eee"
-              borderLeftWidth={1}
-              height="100%"
+              // borderLeftColor="#eee"
+              // borderLeftWidth={1}
             >
               <LinkButton
                 paddingHorizontal={6 * scale}
-                flex={1}
-                minHeight="150%"
+                alignItems="center"
+                justifyContent="center"
+                {...(subtle && {
+                  borderRadius: 100,
+                  width: 24 * scale,
+                  height: 24 * scale,
+                  marginLeft: 4,
+                  overflow: 'hidden',
+                })}
                 hoverStyle={{
                   backgroundColor: '#eee',
                 }}
@@ -178,10 +184,7 @@ export const TagButton = memo(
                   e.preventDefault()
                 }}
               >
-                <ChevronUp
-                  size={14 * scale}
-                  style={{ marginBottom: -5 * scale }}
-                />
+                <ChevronUp size={14 * scale} />
               </LinkButton>
             </VStack>
           )}

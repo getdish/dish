@@ -38,17 +38,17 @@ export const RatingView = forwardRef(
 
     // size!
     const size =
-      sizeIn == 'xs' ? 32 : sizeIn === 'sm' ? 40 : sizeIn == 'md' ? 48 : 76
+      sizeIn == 'xs' ? 32 : sizeIn === 'sm' ? 38 : sizeIn == 'md' ? 48 : 76
 
     const badgeOffset =
-      sizeIn === 'xs' || sizeIn === 'sm' ? Math.max(-size * 0.005) : 0
+      sizeIn === 'xs' || sizeIn === 'sm' ? Math.max(-size * 0.0025, -3) : 0
 
     const bgColor = 'rgba(255,255,255,0.3)'
 
     const emoji = (
       <Text
         style={{
-          fontSize: Math.max(12, size * 0.25),
+          fontSize: Math.max(sizeIn === 'xs' ? 12 : 14, size * 0.25),
           textShadowColor: 'rgba(0,0,0,0.25)',
           textShadowRadius: size * 0.015,
         }}

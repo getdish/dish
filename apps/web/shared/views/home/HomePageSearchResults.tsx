@@ -34,8 +34,6 @@ import { RestaurantListItem } from './RestaurantListItem'
 
 export const avatar = require('../../assets/peach.jpg').default
 
-const verticalPad = 16
-
 export default memo(function HomePageSearchResults({
   stateIndex,
 }: {
@@ -76,124 +74,109 @@ export default memo(function HomePageSearchResults({
         </HStack>
       </ZStack> */}
 
-      {/* Title */}
-      <VStack
-        position="absolute"
-        top={0}
-        left={0}
-        right={0}
-        zIndex={100}
-        paddingTop={verticalPad}
-        paddingHorizontal={22}
-        backgroundColor="#fff"
-        borderTopLeftRadius={drawerBorderRadius}
-        borderTopRightRadius={drawerBorderRadius}
-        overflow="hidden"
-      >
-        <HStack width="100%">
-          <VStack flex={4}>
-            <PageTitle flex={2} subTitle={subTitleElements}>
-              {pageTitleElements}
-            </PageTitle>
-          </VStack>
-
-          <VStack alignItems="flex-end" justifyContent="center">
-            <HomeLenseBar
-              spacer={<Spacer size={9} />}
-              relative
-              stateIndex={stateIndex}
-            />
-          </VStack>
-        </HStack>
-        <Spacer size={verticalPad} />
-
-        <ZStack
-          fullscreen
-          pointerEvents="none"
-          top="auto"
-          bottom={-30}
-          right={-98}
-          zIndex={1000}
-          height={50}
-          alignItems="flex-end"
+      <ScrollView>
+        {/* Title */}
+        <VStack
+          paddingTop={26}
+          paddingBottom={12}
+          paddingHorizontal={22}
+          backgroundColor="#fff"
+          borderTopLeftRadius={drawerBorderRadius}
+          borderTopRightRadius={drawerBorderRadius}
+          overflow="hidden"
         >
-          <MyListButton isEditingUserList={isEditingUserList} />
-        </ZStack>
+          <HStack width="100%">
+            <VStack flex={4}>
+              <PageTitle subTitle={subTitleElements}>
+                {pageTitleElements}
+              </PageTitle>
+            </VStack>
 
-        <Divider flex />
-      </VStack>
+            <VStack alignItems="flex-end" justifyContent="center">
+              <HomeLenseBar
+                spacer={<Spacer size={9} />}
+                relative
+                stateIndex={stateIndex}
+              />
+            </VStack>
+          </HStack>
 
-      {/* CONTENT */}
-      <VStack
-        // marginTop={-23}
-        position="relative"
-        backgroundColor="rgba(255,255,255,1)"
-        flex={1}
-        overflow="hidden"
-      >
+          <ZStack
+            fullscreen
+            pointerEvents="none"
+            top="auto"
+            bottom={-30}
+            right={-98}
+            zIndex={1000}
+            height={50}
+            alignItems="flex-end"
+          >
+            <MyListButton isEditingUserList={isEditingUserList} />
+          </ZStack>
+        </VStack>
+
+        {/* CONTENT */}
         <HomeSearchResultsViewContent state={state} />
-      </VStack>
+      </ScrollView>
     </VStack>
   )
 })
 
-const MyListButton = ({
-  isEditingUserList,
-}: {
-  isEditingUserList: boolean
-}) => {
-  const om = useOvermind()
-  return (
-    <HStack alignItems="center" spacing="sm">
-      <Circle size={26} marginVertical={-26 / 2}>
-        <Image source={avatar} style={{ width: 26, height: 26 }} />
-      </Circle>
-      {isEditingUserList && (
-        <>
+const MyListButton = memo(
+  ({ isEditingUserList }: { isEditingUserList: boolean }) => {
+    const om = useOvermind()
+    return (
+      <HStack alignItems="center" spacing="sm">
+        <Circle size={26} marginVertical={-26 / 2}>
+          <Image source={avatar} style={{ width: 26, height: 26 }} />
+        </Circle>
+        {isEditingUserList && (
+          <>
+            <LinkButton
+              pointerEvents="auto"
+              {...flatButtonStyle}
+              {...{
+                name: 'search',
+                params: {
+                  ...om.state.router.curPage.params,
+                  username: '',
+                },
+              }}
+              onPress={() => {
+                Toast.show('Saved')
+              }}
+            >
+              <Text>Done</Text>
+            </LinkButton>
+          </>
+        )}
+        {!isEditingUserList && (
           <LinkButton
             pointerEvents="auto"
-            {...flatButtonStyle}
-            {...{
-              name: 'search',
-              params: {
-                ...om.state.router.curPage.params,
-                username: '',
-              },
-            }}
             onPress={() => {
-              Toast.show('Saved')
+              om.actions.home.forkCurrentList()
             }}
           >
-            <Text>Done</Text>
+            <Box padding={5} paddingHorizontal={5} backgroundColor="#fff">
+              <HStack alignItems="center" spacing={6}>
+                <Edit2 size={12} color="#777" />
+                <Text
+                  style={{
+                    color: 'inherit',
+                    fontSize: 16,
+                    fontWeight: '700',
+                  }}
+                >
+                  My list
+                </Text>
+              </HStack>
+            </Box>
           </LinkButton>
-        </>
-      )}
-      {!isEditingUserList && (
-        <LinkButton
-          pointerEvents="auto"
-          onPress={() => {
-            om.actions.home.forkCurrentList()
-          }}
-        >
-          <Box padding={5} paddingHorizontal={5} backgroundColor="#fff">
-            <HStack alignItems="center" spacing={6}>
-              <Edit2 size={12} color="#777" />
-              <Text
-                style={{
-                  color: 'inherit',
-                  fontSize: 16,
-                  fontWeight: '700',
-                }}
-              >
-                My list
-              </Text>
-            </HStack>
-          </Box>
-        </LinkButton>
-      )}
-    </HStack>
-  )
-}
+        )}
+      </HStack>
+    )
+  }
+)
 
 const chunks = 4
 
@@ -233,7 +216,7 @@ const HomeSearchResultsViewContent = memo(
 
     if (!state.results?.results || state.results.status === 'loading') {
       return (
-        <VStack paddingTop={topPad}>
+        <VStack>
           <LoadingItems />
         </VStack>
       )
@@ -254,10 +237,9 @@ const HomeSearchResultsViewContent = memo(
     }
 
     return (
-      <ScrollView>
-        <Spacer size={110} />
+      <>
         <HomePageSearchResultsDishes state={state} />
-        <VStack paddingTop={topPad} paddingBottom={20}>
+        <VStack paddingBottom={20} spacing={14}>
           {/* <SuspenseList revealOrder="forwards"> */}
           {results.map((item, index) => (
             <Suspense key={item.id} fallback={null}>
@@ -270,7 +252,7 @@ const HomeSearchResultsViewContent = memo(
           ))}
           {/* </SuspenseList> */}
         </VStack>
-      </ScrollView>
+      </>
     )
     // return (
     //   <List

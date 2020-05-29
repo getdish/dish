@@ -86,7 +86,7 @@ function HomeStackViewItem({
   )
 
   const top = isSmall ? 0 : index * 10 + (index == 0 ? 0 : searchBarHeight + 5)
-  const left = isSmall ? -3 : Math.max(0, index - 1) * 7
+  const left = isSmall ? -3 : Math.max(0, index) * 7
 
   return (
     <div
@@ -116,9 +116,9 @@ function HomeStackViewItem({
             bottom={-(index * 5)}
             width="100%"
             {...(index !== 0 && {
-              shadowColor: 'rgba(0,0,0,0.075)',
+              shadowColor: 'rgba(0,0,0,0.1)',
               shadowRadius: 15,
-              shadowOffset: { width: 0, height: 3 },
+              shadowOffset: { width: 0, height: 2 },
             })}
             borderRadius={drawerBorderRadius}
             pointerEvents="auto"
