@@ -129,6 +129,7 @@ export default memo(function HomeSearchBar() {
     const isFocused = document.activeElement === input
     if (isFocused) return // ONE way sync
     if (showAutocomplete !== isFocused) {
+      console.log('showAutocomplete', showAutocomplete)
       const target = showAutocomplete == 'location' ? locationInput : input
       if (!isWorker) {
         if (showAutocomplete) {
