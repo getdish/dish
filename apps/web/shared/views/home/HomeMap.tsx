@@ -1,5 +1,6 @@
 import { Restaurant, graphql, query } from '@dish/graph'
 import { ZStack, useDebounceEffect, useOnMount } from '@dish/ui'
+import { debounce } from 'lodash'
 import React, {
   Suspense,
   memo,
@@ -9,7 +10,7 @@ import React, {
   useState,
 } from 'react'
 
-import { searchBarHeight } from '../../constants'
+import { pageWidthMax, searchBarHeight } from '../../constants'
 import { LngLat, setMapView } from '../../state/home'
 import { isRestaurantState, isSearchState } from '../../state/home-helpers'
 import { omStatic, useOvermind } from '../../state/useOvermind'
@@ -18,7 +19,7 @@ import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { getRankingColor, getRestaurantRating } from './RestaurantRatingView'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
-const mapMaxWidth = 1300
+const mapMaxWidth = pageWidthMax * 0.7
 
 export const HomeMap = memo(function HomeMap() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -130,11 +131,15 @@ const HomeMapContent = memo(function HomeMap({
   const state = om.state.home.currentState
   const { center, span } = state
 
-  const mapPadRight = 10
-  let padLeft = drawerWidth
+  const mapPadRight = 6
+  const mapWidth = Math.min(window.innerWidth * 0.7, mapMaxWidth)
+
+  let paddingLeft = drawerWidth
   if (window.innerWidth > mapMaxWidth) {
-    padLeft = drawerWidth - Math.min(550, window.innerWidth - mapMaxWidth)
+    paddingLeft = window.innerWidth - mapWidth + 10
   }
+
+  console.log({ paddingLeft, mapWidth, drawerWidth, pageWidthMax })
 
   const padding = isSmall
     ? {
@@ -144,7 +149,7 @@ const HomeMapContent = memo(function HomeMap({
         right: 0,
       }
     : {
-        left: padLeft,
+        left: paddingLeft,
         top: searchBarHeight + 15 + 15,
         bottom: 0,
         right: drawerWidth > 600 ? mapPadRight : 0,
@@ -267,10 +272,12 @@ const HomeMapContent = memo(function HomeMap({
   useDebounceEffect(
     () => {
       if (!map) return
-      return om.reaction(
+
+      const disposeReaction = om.reaction(
         (state) => state.home.hoveredRestaurant,
         (hoveredRestaurant) => {
           if (!hoveredRestaurant) return
+          if (om.state.home.isScrolling) return
           for (const annotation of map.annotations) {
             if (annotation.data?.id === hoveredRestaurant.id) {
               annotation.selected = true
@@ -288,6 +295,10 @@ const HomeMapContent = memo(function HomeMap({
           }
         }
       )
+
+      return () => {
+        disposeReaction()
+      }
     },
     250,
     [map]
@@ -364,14 +375,7 @@ const HomeMapContent = memo(function HomeMap({
   )
 
   return (
-    <ZStack
-      position="absolute"
-      top={0}
-      right={0}
-      bottom={0}
-      width="100%"
-      maxWidth={mapMaxWidth}
-    >
+    <ZStack position="absolute" top={0} right={0} bottom={0} width={mapWidth}>
       <Map {...mapProps} />
     </ZStack>
   )

@@ -70,6 +70,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       backgroundColor={isHovered ? '#fff' : '#fff'}
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
+      style={{ contain: 'paint' } as any}
     >
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {/* <Suspense fallback={null}> */}
@@ -326,7 +327,7 @@ export const RestaurantPeek = memo(
     })
     const activeTagIds = Object.keys(searchState?.activeTagIds ?? {})
     const allPhotos = restaurant?.photosForCarousel(activeTagIds)
-    const photos = allPhotos
+    const photos = allPhotos.slice(0, 2)
 
     return (
       <VStack

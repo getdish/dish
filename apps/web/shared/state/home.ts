@@ -163,6 +163,7 @@ const derivations = {
 
 export const state: HomeState = {
   started: false,
+  isScrolling: false,
   skipNextPageFetchData: false,
   activeIndex: -1,
   allTags,
@@ -1108,7 +1109,12 @@ function createAutocomplete(x: Partial<AutocompleteItem>): AutocompleteItem {
   }
 }
 
+const setIsScrolling: Action<boolean> = (om, val) => {
+  om.state.home.isScrolling = val
+}
+
 export const actions = {
+  setIsScrolling,
   navigateToTag,
   setHasMovedMap,
   navigateToTagId,

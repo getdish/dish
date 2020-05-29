@@ -39,7 +39,6 @@ export default memo(function HomePage() {
         height="100%"
         maxWidth={1880}
         borderRadius={homePageBorderRadius}
-        // marginLeft={-homePageBorderRadius / 2}
         marginVertical={-1}
         shadowColor="rgba(0,0,0,0.13)"
         shadowRadius={100}

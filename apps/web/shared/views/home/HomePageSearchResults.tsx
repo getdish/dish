@@ -27,6 +27,7 @@ import { flatButtonStyle } from './baseButtonStyle'
 import { DishView } from './DishView'
 import { getTitleForState } from './getTitleForState'
 import HomeLenseBar from './HomeLenseBar'
+import { HomeScrollView } from './HomeScrollView'
 import { RestaurantListItem } from './RestaurantListItem'
 import { StackViewCloseButton } from './StackViewCloseButton'
 
@@ -64,7 +65,7 @@ export default memo(function HomePageSearchResults({
 
       <StackViewCloseButton />
 
-      <ScrollView>
+      <HomeScrollView>
         {/* Title */}
         <VStack
           paddingTop={26}
@@ -107,7 +108,7 @@ export default memo(function HomePageSearchResults({
 
         {/* CONTENT */}
         <HomeSearchResultsViewContent state={state} />
-      </ScrollView>
+      </HomeScrollView>
     </VStack>
   )
 })
@@ -193,9 +194,9 @@ const HomeSearchResultsViewContent = memo(
       if (isLoading) return
       if (!hasMoreToLoad) return
       return series([
-        () => sleep(250),
+        () => sleep(450),
         () => requestIdle(),
-        () => sleep(100),
+        () => sleep(15),
         () => requestIdle(),
         // then load next chunk
         () => {
@@ -228,7 +229,10 @@ const HomeSearchResultsViewContent = memo(
 
     return (
       <>
-        <HomePageSearchResultsDishes state={state} />
+        {/* todo fallback can be height if we know its a dish */}
+        {/* <Suspense fallback={null}>
+          <HomePageSearchResultsDishes state={state} />
+        </Suspense> */}
         <VStack paddingBottom={20} spacing={14}>
           {/* <SuspenseList revealOrder="forwards"> */}
           {results.map((item, index) => (
@@ -262,37 +266,40 @@ const HomeSearchResultsViewContent = memo(
   }
 )
 
+// count it as two votes
+
 const HomePageSearchResultsDishes = memo(
   graphql(({ state }: { state: HomeStateItemSearch }) => {
     const om = useOvermind()
     const activeTags = getActiveTags(om.state.home, state)
 
-    if (activeTags.some((tag) => tag.type !== 'country')) {
-      return null
+    if (activeTags.some((x) => x.type === 'dish')) {
+      // TODO use a real
+      const dishes = query.tag({
+        limit: 6,
+        where: {
+          type: { _eq: 'dish' },
+        },
+      })
+
+      return (
+        <HStack paddingHorizontal={20} paddingVertical={10}>
+          {dishes.map((dish) => (
+            <DishView
+              key={dish.name}
+              dish={{
+                name: dish.name,
+                // TODO @tom how do we get rating/image here?
+                image: dish.icon ?? '',
+                rating: 5,
+                count: 1,
+              }}
+            />
+          ))}
+        </HStack>
+      )
     }
-
-    // TODO use a real
-    const menu_items = query.menu_item({
-      limit: 6,
-    })
-
-    console.log('got menu_items', menu_items)
-
-    return (
-      <HStack paddingHorizontal={20} paddingVertical={10}>
-        {menu_items.map((menu_item) => (
-          <DishView
-            key={menu_item.name}
-            dish={{
-              name: menu_item.name,
-              image: menu_item.image ?? '',
-              rating: 5,
-              count: 1,
-            }}
-          />
-        ))}
-      </HStack>
-    )
+    return null
   })
 )
 

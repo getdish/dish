@@ -37,7 +37,10 @@ class AuthModel {
   }
 
   checkForExistingLogin() {
-    const json = localStorage.getItem(BROWSER_STORAGE_KEY)
+    const json =
+      process.env.TARGET === 'client'
+        ? localStorage.getItem(BROWSER_STORAGE_KEY)
+        : null
     if (json != null) {
       const auth = JSON.parse(json)
       this.jwt = auth.token
@@ -129,7 +132,7 @@ class AuthModel {
     this.isLoggedIn = true
     this.jwt = data.token
     this.user = data.user
-    if (!isNode) {
+    if (process.env.TARGET === 'client') {
       localStorage.setItem(
         BROWSER_STORAGE_KEY,
         JSON.stringify({
@@ -146,7 +149,7 @@ class AuthModel {
     this.isLoggedIn = false
     this.jwt = ''
     this.user = null
-    if (!isNode) {
+    if (process.env.TARGET === 'client') {
       localStorage.removeItem(BROWSER_STORAGE_KEY)
     }
   }
