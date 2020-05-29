@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-sudo swapoff -a
-sudo rm -f /swapfile
 sudo apt clean
 sudo rm -rf /usr/local/lib/android
 sudo rm -rf /usr/share/dotnet
