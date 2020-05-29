@@ -126,6 +126,10 @@ export function extractStyles(
         // Remember the source component
         const originalNodeName = node.name.name
 
+        if (shouldPrintDebug) {
+          console.log('node', originalNodeName)
+        }
+
         const localView = {} //localStaticViews[originalNodeName]
         let domNode = 'div'
 
@@ -187,12 +191,34 @@ export function extractStyles(
         node.attributes = flattenedAttributes
 
         const viewStyles: ViewStyle = {}
-        let inlinePropCount = 0
         const staticTernaries: Ternary[] = []
+        const isSingleSpread =
+          flattenedAttributes.findIndex((x) => t.isJSXSpreadAttribute(x)) ===
+          lastSpreadIndex
+        const isSingleSimpleSpread =
+          isSingleSpread &&
+          flattenedAttributes.some(
+            (x) => t.isJSXSpreadAttribute(x) && t.isIdentifier(x.argument)
+          )
 
+        let inlinePropCount = 0
         let shouldDeopt = false
 
         const ogAttributes = node.attributes
+
+        if (shouldPrintDebug) {
+          console.log(
+            'attribute overview:',
+            node.attributes.map((attr) => {
+              return 'name' in attr
+                ? attr.name.name
+                : 'name' in attr.argument
+                ? `spread-${attr.argument.name}`
+                : `unknown-${attr.type}`
+            })
+          )
+        }
+
         node.attributes = node.attributes.filter((attribute, idx) => {
           if (
             t.isJSXSpreadAttribute(attribute) ||
@@ -200,10 +226,12 @@ export function extractStyles(
             !attribute.name ||
             // filter out JSXIdentifiers
             typeof attribute.name.name !== 'string' ||
-            // haven't hit the last spread operator
-            idx < lastSpreadIndex
+            // haven't hit the last spread operator (we can optimize single simple spreads still)
+            (idx < lastSpreadIndex && !isSingleSimpleSpread)
           ) {
-            if (shouldPrintDebug) console.log('inline prop via non normal attr')
+            if (shouldPrintDebug) {
+              console.log('attr inline via non normal attr')
+            }
             inlinePropCount++
             return true
           }
@@ -213,6 +241,10 @@ export function extractStyles(
             ? attribute.value.expression
             : attribute.value
 
+          if (shouldPrintDebug) {
+            console.log('attr', { name, inlinePropCount })
+          }
+
           // boolean props have null value
           if (value == null) {
             inlinePropCount++
@@ -220,7 +252,13 @@ export function extractStyles(
           }
 
           // if one or more spread operators are present and we haven't hit the last one yet, the prop stays inline
-          if (lastSpreadIndex > -1 && idx <= lastSpreadIndex) {
+          const hasntHitLastSpread =
+            lastSpreadIndex > -1 && idx <= lastSpreadIndex
+          if (
+            hasntHitLastSpread &&
+            // unless we have a single simple spread, we can handle that
+            !isSingleSimpleSpread
+          ) {
             inlinePropCount++
             return true
           }
@@ -234,6 +272,8 @@ export function extractStyles(
             return true
           }
 
+          console.log('what is', name, isStaticAttributeName(name))
+
           if (!isStaticAttributeName(name)) {
             inlinePropCount++
             return true
@@ -243,7 +283,7 @@ export function extractStyles(
           try {
             viewStyles[name] = attemptEval(value)
             return false
-          } catch {
+          } catch (err) {
             // ok
           }
 
@@ -283,8 +323,11 @@ export function extractStyles(
             }
           }
 
+          if (shouldPrintDebug) {
+            console.log('inline prop via no match', name, value)
+          }
+
           // if we've made it this far, the prop stays inline
-          if (shouldPrintDebug) console.log('inline prop via no match')
           inlinePropCount++
           return true
         })
@@ -324,9 +367,6 @@ domNode: ${domNode}
         // capture views where they set it afterwards
         // plus any defaults passed through gloss
         if (Object.keys(viewStyles).length > 0) {
-          if (shouldPrintDebug) {
-            console.log('adding static style props')
-          }
           const style = getStylesAtomic(viewStyles)
           const className = Object.keys(style)[0]
           stylesByClassName[className] = style[className]
@@ -412,11 +452,9 @@ domNode: ${domNode}
         const classNamePropValueForReals = buildClassNamePropValue(
           classNameObjects
         )
-
         if (shouldPrintDebug) {
-          console.log('classNamePropValueForReals', classNamePropValueForReals)
+          console.log('I DONT THINK WE EVER DO THIS? BUT MABYE')
         }
-
         if (classNamePropValueForReals) {
           if (t.isStringLiteral(classNamePropValueForReals)) {
             node.attributes.push(
