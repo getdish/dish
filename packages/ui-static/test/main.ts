@@ -31,54 +31,52 @@ const outDir = path.join(specDir, 'out')
 const outFile = 'out.js'
 const outFileFull = path.join(outDir, outFile)
 
-// test('converts a style object to class names', async (t) => {
-//   const style: ViewStyle = {
-//     backgroundColor: 'red',
-//     transform: [{ rotateY: '10deg' }],
-//   }
-//   const styles = getStylesAtomic(style)
-//   const style1 = styles['r-1g6456j']
-//   const style2 = styles['r-188uu3c']
-//   t.assert(!!style1)
-//   t.assert(!!style2)
-//   t.is(style1.value, 'rgba(255,0,0,1.00)')
-//   t.is(style1.property, 'backgroundColor')
-//   t.deepEqual(style1.rules, [
-//     '.r-1g6456j{background-color:rgba(255,0,0,1.00);}',
-//   ])
-//   t.deepEqual(style2.rules, [
-//     '.r-188uu3c{-webkit-transform:rotateY(10deg);transform:rotateY(10deg);}',
-//   ])
-// })
+test('converts a style object to class names', async (t) => {
+  const style: ViewStyle = {
+    backgroundColor: 'red',
+    transform: [{ rotateY: '10deg' }],
+  }
+  const styles = getStylesAtomic(style)
+  const style1 = styles['r-1g6456j']
+  const style2 = styles['r-188uu3c']
+  t.assert(!!style1)
+  t.assert(!!style2)
+  t.is(style1.value, 'rgba(255,0,0,1.00)')
+  t.is(style1.property, 'backgroundColor')
+  t.deepEqual(style1.rules, [
+    '.r-1g6456j{background-color:rgba(255,0,0,1.00);}',
+  ])
+  t.deepEqual(style2.rules, [
+    '.r-188uu3c{-webkit-transform:rotateY(10deg);transform:rotateY(10deg);}',
+  ])
+})
 
 test.before(async (t) => {
   await extractStaticApp()
   const app = require(outFileFull)
   t.context.app = app
-  // t.context.test1Renderer = TestRenderer.create(React.createElement(app.Test1))
-  // t.context.test2Renderer = TestRenderer.create(React.createElement(app.Test2))
+  t.context.test1Renderer = TestRenderer.create(React.createElement(app.Test1))
+  t.context.test2Renderer = TestRenderer.create(React.createElement(app.Test2))
   t.context.test3Renderer = TestRenderer.create(React.createElement(app.Test3))
 })
 
-// test('extracts to a div for simple views', async (t) => {
-//   const { test1Renderer } = t.context
-//   const out = test1Renderer.toJSON()
-//   t.is(out?.type, 'div')
-//   t.is(out?.props.className, 'is_VStack r-1g6456j')
-// })
+test('extracts to a div for simple views', async (t) => {
+  const { test1Renderer } = t.context
+  const out = test1Renderer.toJSON()
+  t.is(out?.type, 'div')
+  t.is(out?.props.className, 'is_VStack r-1g6456j')
+})
 
-// test('extracts className for complex views but keeps other props', async (t) => {
-//   const { test2Renderer, app } = t.context
-//   const { Box } = app
-//   const out = test2Renderer.root.findByType(Box)
-//   t.assert(out)
-// })
+test('extracts className for complex views but keeps other props', async (t) => {
+  const { test2Renderer } = t.context
+  const out = test2Renderer.toJSON()
+  t.assert(out?.type, 'Box')
+})
 
 test('places className correctly given a single spread', async (t) => {
-  const { test3Renderer, app } = t.context
-  const { VStack } = app
-  const out = test3Renderer.root.findByType(VStack)
-  t.assert(out)
+  const { test3Renderer } = t.context
+  const out = test3Renderer.toJSON()
+  t.assert(out?.type, 'VStack')
 })
 
 async function extractStaticApp() {

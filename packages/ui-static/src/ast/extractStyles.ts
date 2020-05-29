@@ -192,19 +192,20 @@ export function extractStyles(
 
         const viewStyles: ViewStyle = {}
         const staticTernaries: Ternary[] = []
-        const isSingleSpread =
+        const _isSingleSpread =
           flattenedAttributes.findIndex((x) => t.isJSXSpreadAttribute(x)) ===
           lastSpreadIndex
+        let simpleSpreadIdentifier: t.Identifier | null = null
         const isSingleSimpleSpread =
-          isSingleSpread &&
-          flattenedAttributes.some(
-            (x) => t.isJSXSpreadAttribute(x) && t.isIdentifier(x.argument)
-          )
+          _isSingleSpread &&
+          flattenedAttributes.some((x) => {
+            if (t.isJSXSpreadAttribute(x) && t.isIdentifier(x.argument)) {
+              simpleSpreadIdentifier = x.argument
+              return true
+            }
+          })
 
         let inlinePropCount = 0
-        let shouldDeopt = false
-
-        const ogAttributes = node.attributes
 
         if (shouldPrintDebug) {
           console.log(
@@ -331,17 +332,11 @@ export function extractStyles(
         })
 
         if (shouldPrintDebug) {
-          console.log(`ok we parsed a JSX:
+          console.log(`\nwe parsed:
 name: ${node.name.name}
 inlinePropCount: ${inlinePropCount}
-shouldDeopt: ${shouldDeopt}
 domNode: ${domNode}
           `)
-        }
-
-        if (shouldDeopt) {
-          node.attributes = ogAttributes
-          return
         }
 
         let classNamePropValue: t.Expression | null = null
@@ -383,23 +378,27 @@ domNode: ${domNode}
           }
         } else {
           if (lastSpreadIndex > -1) {
-            // if only some style props were extracted AND additional props are spread onto the component,
-            // add the props back with null values to prevent spread props from incorrectly overwriting the extracted prop value
-            Object.keys(viewStyles).forEach((attr) => {
-              node.attributes.push(
-                t.jsxAttribute(
-                  t.jsxIdentifier(attr),
-                  t.jsxExpressionContainer(t.nullLiteral())
+            if (!isSingleSimpleSpread) {
+              // only in case where we dont have a single simple spread
+              // if only some style props were extracted AND additional props are spread onto the component,
+              // add the props back with null values to prevent spread props from incorrectly overwriting the extracted prop value
+              Object.keys(viewStyles).forEach((attr) => {
+                node.attributes.push(
+                  t.jsxAttribute(
+                    t.jsxIdentifier(attr),
+                    t.jsxExpressionContainer(t.nullLiteral())
+                  )
                 )
-              )
-            })
+              })
+            }
           }
         }
 
         if (traversePath.node.closingElement) {
           // this seems strange
-          if (t.isJSXMemberExpression(traversePath.node.closingElement.name))
+          if (t.isJSXMemberExpression(traversePath.node.closingElement.name)) {
             return
+          }
           traversePath.node.closingElement.name.name = node.name.name
         }
 
@@ -422,12 +421,7 @@ domNode: ${domNode}
             cacheObject
           )
           if (shouldPrintDebug) {
-            console.log(
-              'staticTernaries',
-              staticTernaries,
-              '\nternaryObj',
-              ternaryObj
-            )
+            console.log({ staticTernaries, ternaryObj })
           }
           // ternaryObj is null if all of the extracted ternaries have falsey consequents and alternates
           if (ternaryObj !== null) {
@@ -447,13 +441,30 @@ domNode: ${domNode}
           }
         }
 
-        const classNamePropValueForReals = buildClassNamePropValue(
+        let classNamePropValueForReals = buildClassNamePropValue(
           classNameObjects
         )
-        if (shouldPrintDebug) {
-          console.log('I DONT THINK WE EVER DO THIS? BUT MABYE')
-        }
         if (classNamePropValueForReals) {
+          // for simple spread, we need to have it add in the spread className if exists
+          if (isSingleSimpleSpread && simpleSpreadIdentifier) {
+            classNamePropValueForReals = t.binaryExpression(
+              '+',
+              classNamePropValueForReals,
+              t.binaryExpression(
+                '+',
+                t.stringLiteral(' '),
+                t.logicalExpression(
+                  '||',
+                  t.memberExpression(
+                    simpleSpreadIdentifier,
+                    t.identifier('className')
+                  ),
+                  t.stringLiteral('')
+                )
+              )
+            )
+          }
+
           if (t.isStringLiteral(classNamePropValueForReals)) {
             node.attributes.push(
               t.jsxAttribute(

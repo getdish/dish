@@ -4,9 +4,9 @@ const ReactRefreshWebpack4Plugin = require('@pmmmwh/react-refresh-webpack-plugin
 const path = require('path')
 const _ = require('lodash')
 const Webpack = require('webpack')
-const ClosurePlugin = require('closure-webpack-plugin')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const LodashPlugin = require('lodash-webpack-plugin')
+// const ClosurePlugin = require('closure-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 // const ReactRefreshPlugin = require('@webhotelier/webpack-fast-refresh')
 const { GlossWebpackPlugin } = require('@dish/ui-static')
@@ -34,255 +34,255 @@ module.exports = function getWebpackConfig(
   },
   argv
 ) {
-  /** @type {Webpack.Configuration} */
-  const config = {
-    mode: env.mode || process.env.NODE_ENV,
-    context: __dirname,
-    target,
-    stats: 'normal',
-    devtool:
-      env.mode === 'production' ? 'source-map' : 'cheap-module-source-map',
-    // @ts-ignore
-    entry: [
-      // webpack5
-      // isHot && '@webhotelier/webpack-fast-refresh/runtime.js',
-      appEntry,
-    ].filter(Boolean),
-    output: {
-      path: path.resolve(__dirname),
-      filename: `static/js/app.[hash].js`,
-      publicPath: '/',
-      // globalObject: 'this',
-    },
-    // webpack 4
-    node: {
-      process: 'mock',
-      Buffer: false,
-      util: false,
-      console: false,
-      setImmediate: false,
-      global: false,
-      __filename: false,
-      __dirname: false,
-    },
-    resolve: {
-      extensions: ['.ts', '.tsx', '.js'],
-      mainFields: ['tsmain', 'browser', 'module', 'main'],
-      alias:
-        TARGET === 'preact'
-          ? {
-              react$: 'preact/compat',
-              'react-dom$': 'preact/compat',
-              'react-dom/unstable-native-dependencies':
-                'preact-responder-event-plugin',
-            }
-          : {
-              react: path.join(require.resolve('react'), '..'),
-              'react-dom': path.join(require.resolve('react-dom'), '..'),
-              // '@dish/graph': require.resolve('@dish/graph'),
-              gqless: path.join(graphRoot, 'node_modules', 'gqless'),
-            },
-    },
-    resolveLoader: {
-      modules: ['node_modules'],
-    },
-    optimization: {
-      minimize: !process.env.NO_MINIFY && isProduction && TARGET !== 'ssr',
-      concatenateModules: isProduction && !process.env.ANALYZE_BUNDLE,
-      usedExports: isProduction,
-      splitChunks: false,
-      // isProduction && TARGET !== 'ssr'
-      //   ? {
-      //       // http2
-      //       chunks: 'all',
-      //       maxInitialRequests: 6,
-      //       maxAsyncRequests: 6,
-      //       maxSize: 100000,
-      //     }
-      //   : false,
-      runtimeChunk: false,
-      minimizer: [
-        // new ClosurePlugin(),
-        new TerserPlugin(),
-      ],
-    },
-    externals: {
-      [path.join(__dirname, 'web/mapkit.js')]: 'mapkit',
-    },
-    module: {
-      rules: [
-        {
-          oneOf: [
-            {
-              test: /\.[jt]sx?$/,
-              include: babelInclude,
-              use: [
-                {
-                  loader: 'babel-loader',
-                  options: { cacheDirectory: true },
+  function getConfig() {
+    /** @type {Webpack.Configuration} */
+    const config = {
+      mode: env.mode || process.env.NODE_ENV,
+      context: __dirname,
+      target,
+      stats: 'normal',
+      devtool:
+        env.mode === 'production' ? 'source-map' : 'cheap-module-source-map',
+      // @ts-ignore
+      entry: [
+        // webpack5
+        // isHot && '@webhotelier/webpack-fast-refresh/runtime.js',
+        appEntry,
+      ].filter(Boolean),
+      output: {
+        path: path.resolve(__dirname),
+        filename: `static/js/app.[hash].js`,
+        publicPath: '/',
+        // globalObject: 'this',
+      },
+      // webpack 4
+      node: {
+        process: 'mock',
+        Buffer: false,
+        util: false,
+        console: false,
+        setImmediate: false,
+        global: false,
+        __filename: false,
+        __dirname: false,
+      },
+      resolve: {
+        extensions: ['.ts', '.tsx', '.js'],
+        mainFields: ['tsmain', 'browser', 'module', 'main'],
+        alias:
+          TARGET === 'preact'
+            ? {
+                react$: 'preact/compat',
+                'react-dom$': 'preact/compat',
+                'react-dom/unstable-native-dependencies':
+                  'preact-responder-event-plugin',
+              }
+            : {
+                react: path.join(require.resolve('react'), '..'),
+                'react-dom': path.join(require.resolve('react-dom'), '..'),
+                // '@dish/graph': require.resolve('@dish/graph'),
+                gqless: path.join(graphRoot, 'node_modules', 'gqless'),
+              },
+      },
+      resolveLoader: {
+        modules: ['node_modules'],
+      },
+      optimization: {
+        minimize: !process.env.NO_MINIFY && isProduction && TARGET !== 'ssr',
+        concatenateModules: isProduction && !process.env.ANALYZE_BUNDLE,
+        usedExports: isProduction,
+        splitChunks: false,
+        // isProduction && TARGET !== 'ssr'
+        //   ? {
+        //       // http2
+        //       chunks: 'all',
+        //       maxInitialRequests: 6,
+        //       maxAsyncRequests: 6,
+        //       maxSize: 100000,
+        //     }
+        //   : false,
+        runtimeChunk: false,
+        minimizer: [
+          // new ClosurePlugin(),
+          new TerserPlugin(),
+        ],
+      },
+      externals: {
+        [path.join(__dirname, 'web/mapkit.js')]: 'mapkit',
+      },
+      module: {
+        rules: [
+          {
+            oneOf: [
+              {
+                test: /\.[jt]sx?$/,
+                include: babelInclude,
+                use: [
+                  {
+                    loader: 'babel-loader',
+                    options: { cacheDirectory: true },
+                  },
+                  // webpack 5
+                  // isHot && {
+                  //   loader: '@webhotelier/webpack-fast-refresh/loader.js',
+                  // },
+                  isStaticExtracted && {
+                    loader: require.resolve('@dish/ui-static/loader'),
+                  },
+                ].filter(Boolean),
+              },
+              {
+                test: /\.css$/i,
+                use:
+                  // isProduction
+                  //   ? ['file-loader', 'extract-loader', 'css-loader']
+                  ['style-loader', 'css-loader'],
+              },
+              {
+                test: /\.(png|svg|jpe?g|gif)$/,
+                use: {
+                  loader: 'url-loader',
+                  options: {
+                    limit: 1000,
+                    name: 'static/media/[name].[hash].[ext]',
+                  },
                 },
-                // webpack 5
-                // isHot && {
-                //   loader: '@webhotelier/webpack-fast-refresh/loader.js',
-                // },
-                isStaticExtracted && {
-                  loader: require.resolve('@dish/ui-static/loader'),
-                },
-              ].filter(Boolean),
-            },
-            {
-              test: /\.css$/i,
-              use:
-                // isProduction
-                //   ? ['file-loader', 'extract-loader', 'css-loader']
-                ['style-loader', 'css-loader'],
-            },
-            {
-              test: /\.(png|svg|jpe?g|gif)$/,
-              use: {
-                loader: 'url-loader',
+              },
+              // fallback loader helps webpack-dev-server serve assets
+              {
+                loader: 'file-loader',
+                // Exclude `js` files to keep "css" loader working as it injects
+                // its runtime that would otherwise be processed through "file" loader.
+                // Also exclude `html` and `json` extensions so they get processed by webpacks internal loaders.
+                exclude: [/\.(mjs|[jt]sx?)$/, /\.html$/, /\.json$/],
                 options: {
-                  limit: 1000,
                   name: 'static/media/[name].[hash].[ext]',
                 },
               },
-            },
-            // fallback loader helps webpack-dev-server serve assets
-            {
-              loader: 'file-loader',
-              // Exclude `js` files to keep "css" loader working as it injects
-              // its runtime that would otherwise be processed through "file" loader.
-              // Also exclude `html` and `json` extensions so they get processed by webpacks internal loaders.
-              exclude: [/\.(mjs|[jt]sx?)$/, /\.html$/, /\.json$/],
-              options: {
-                name: 'static/media/[name].[hash].[ext]',
-              },
-            },
-          ],
+            ],
+          },
+        ],
+      },
+      plugins: [
+        // breaks a couple things, possible to ignore
+        // isClient && isProduction && new ShakePlugin({}),
+
+        isProduction && new LodashPlugin(),
+
+        // extract static styles in production
+        // isStaticExtracted && new GlossWebpackPlugin(),
+
+        new Webpack.DefinePlugin({
+          // ...(target === 'web' || target === 'webworker'
+          //   ? {
+          //       process: JSON.stringify({}),
+          //     }
+          //   : {}),
+          'process.env.TARGET': JSON.stringify(TARGET || null),
+          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+          'process.env.EXPERIMENTAL_USE_CLENAUP_FOR_CM': JSON.stringify(false),
+          'process.env.DEBUG': JSON.stringify(false),
+        }),
+
+        new HTMLWebpackPlugin({
+          inject: true,
+          template: path.join(__dirname, 'web/index.html'),
+        }),
+
+        // webpack 5
+        // env.mode === 'development' &&
+        //   TARGET !== 'worker' &&
+        //   new ReactRefreshPlugin(),
+
+        env.mode === 'development' &&
+          TARGET !== 'worker' &&
+          new ReactRefreshWebpack4Plugin({
+            overlay: false,
+          }),
+
+        !!process.env.INSPECT &&
+          new DuplicatesPlugin({
+            emitErrors: false,
+            emitHandler: undefined,
+            ignoredPackages: undefined,
+            verbose: false,
+          }),
+      ].filter(Boolean),
+
+      // webpack 4
+      // @ts-ignore
+      devServer: {
+        publicPath: '/',
+        host: '0.0.0.0',
+        compress: true,
+        // watchContentBase: true,
+        // It will still show compile warnings and errors with this setting.
+        clientLogLevel: 'none',
+        contentBase: path.join(__dirname, 'web'),
+        hot: !isProduction,
+        historyApiFallback: {
+          disableDotRule: true,
         },
-      ],
-    },
-    plugins: [
-      // breaks a couple things, possible to ignore
-      // isClient && isProduction && new ShakePlugin({}),
-
-      isProduction && new LodashPlugin(),
-
-      // extract static styles in production
-      // isStaticExtracted && new GlossWebpackPlugin(),
-
-      new Webpack.DefinePlugin({
-        // ...(target === 'web' || target === 'webworker'
-        //   ? {
-        //       process: JSON.stringify({}),
-        //     }
-        //   : {}),
-        'process.env.TARGET': JSON.stringify(TARGET || null),
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-        'process.env.EXPERIMENTAL_USE_CLENAUP_FOR_CM': JSON.stringify(false),
-        'process.env.DEBUG': JSON.stringify(false),
-      }),
-
-      new HTMLWebpackPlugin({
-        inject: true,
-        template: path.join(__dirname, 'web/index.html'),
-      }),
-
-      // webpack 5
-      // env.mode === 'development' &&
-      //   TARGET !== 'worker' &&
-      //   new ReactRefreshPlugin(),
-
-      env.mode === 'development' &&
-        TARGET !== 'worker' &&
-        new ReactRefreshWebpack4Plugin({
-          overlay: false,
-        }),
-
-      !!process.env.INSPECT &&
-        new DuplicatesPlugin({
-          emitErrors: false,
-          emitHandler: undefined,
-          ignoredPackages: undefined,
-          verbose: false,
-        }),
-    ].filter(Boolean),
-
-    // webpack 4
-    // @ts-ignore
-    devServer: {
-      publicPath: '/',
-      host: '0.0.0.0',
-      compress: true,
-      // watchContentBase: true,
-      // It will still show compile warnings and errors with this setting.
-      clientLogLevel: 'none',
-      contentBase: path.join(__dirname, 'web'),
-      hot: !isProduction,
-      historyApiFallback: {
-        disableDotRule: true,
+        disableHostCheck: true,
+        overlay: false,
+        quiet: false,
+        stats: {
+          colors: true,
+          assets: true,
+          chunks: false,
+          modules: true,
+          reasons: false,
+          children: true,
+          errors: true,
+          errorDetails: true,
+          warnings: true,
+        },
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods':
+            'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+          'Access-Control-Allow-Headers':
+            'X-Requested-With, content-type, Authorization',
+        },
       },
-      disableHostCheck: true,
-      overlay: false,
-      quiet: false,
-      stats: {
-        colors: true,
-        assets: true,
-        chunks: false,
-        modules: true,
-        reasons: false,
-        children: true,
-        errors: true,
-        errorDetails: true,
-        warnings: true,
-      },
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods':
-          'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-        'Access-Control-Allow-Headers':
-          'X-Requested-With, content-type, Authorization',
-      },
-    },
-  }
+    }
 
-  // PLUGINS
+    // PLUGINS
 
-  if (process.env.ANALYZE_BUNDLE) {
-    config.plugins.push(
-      new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)({
-        analyzerMode: 'static',
-      })
-    )
-  }
-
-  if (TARGET === 'worker') {
-    // exec patch
-    const exec = require('child_process').exec
-    config.plugins.push({
-      apply: (compiler) => {
-        compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
-          exec('node ./worker-patch.js', (err, stdout, stderr) => {
-            if (stdout) process.stdout.write(stdout)
-            if (stderr) process.stderr.write(stderr)
-          })
+    if (process.env.ANALYZE_BUNDLE) {
+      config.plugins.push(
+        new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)({
+          analyzerMode: 'static',
         })
-      },
-    })
-  }
+      )
+    }
 
-  if (TARGET === 'ssr') {
-    config.output.path = path.join(__dirname, 'web-build-ssr')
-    config.output.libraryTarget = 'commonjs'
-    config.output.filename = `static/js/app.ssr.js`
-    config.plugins.push(
-      new Webpack.ProvidePlugin({
-        mapkit: path.join(__dirname, 'web/mapkitExport.js'),
+    if (TARGET === 'worker') {
+      // exec patch
+      const exec = require('child_process').exec
+      config.plugins.push({
+        apply: (compiler) => {
+          compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
+            exec('node ./worker-patch.js', (err, stdout, stderr) => {
+              if (stdout) process.stdout.write(stdout)
+              if (stderr) process.stderr.write(stderr)
+            })
+          })
+        },
       })
-    )
-  }
+    }
 
-  function getConfig() {
+    if (TARGET === 'ssr') {
+      config.output.path = path.join(__dirname, 'web-build-ssr')
+      config.output.libraryTarget = 'commonjs'
+      config.output.filename = `static/js/app.ssr.js`
+      config.plugins.push(
+        new Webpack.ProvidePlugin({
+          mapkit: path.join(__dirname, 'web/mapkitExport.js'),
+        })
+      )
+    }
+
     if (TARGET === 'ssr' || TARGET === 'worker') {
       return config
     }

@@ -1,25 +1,5 @@
 import { restaurant_tag } from '../generated'
 
-export const Query = {}
-
-/**
- * Add a key to a type
- */
-// export const User = {
-//   [GET_KEY]: (user) => user.id
-// }
-
-/**
- * Add custom data to a type
- * @example
- * query.users[0].follow()
- */
-// export const User = (user) => ({
-//   follow() {
-//     console.log('follow', user.id)
-//   }
-// })
-
 export type CarouselPhoto = {
   src: string
   name?: string
@@ -35,7 +15,7 @@ export const restaurant = (restaurant) => {
         .sort((t1, t2) => (t2.rating || 0) - (t1.rating || 0))
     },
 
-    photosForCarousel() {
+    photosForCarousel(activeTagIds: string[]) {
       let photos = [] as CarouselPhoto[]
       const max_photos = 4
       const tags = restaurant.tags({ limit: 6 }) ?? []
