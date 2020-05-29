@@ -1,29 +1,44 @@
+import * as _ from 'lodash'
 import { useEffect, useState } from 'react'
 
-import { useDebounce } from './useDebounce'
-import { useThrottledFn } from './useThrottleFn'
+import { useForceUpdate } from './useForceUpdate'
 
 /** [width, height] */
 type Size = [number, number]
 
-const windowSize = (): Size => [window.innerWidth, window.innerHeight]
-
 const idFn = (_) => _
+const getWindowSize = (): Size => [window.innerWidth, window.innerHeight]
+
+class WindowSizeStore {
+  listeners = new Set<Function>()
+  size = getWindowSize()
+
+  constructor() {
+    window.addEventListener('resize', this.update)
+  }
+
+  update = _.debounce(() => {
+    this.size = getWindowSize()
+    console.log('go')
+    this.listeners.forEach((x) => x())
+  }, 350)
+}
+
+const store = new WindowSizeStore()
 
 export function useWindowSize({
   debounce = 0,
   adjust = idFn,
 }: { debounce?: number; adjust?: (x: Size) => Size } = {}): Size {
-  const [size, setSize] = useState(adjust(windowSize()))
-  const setSizeThrottle = useDebounce(setSize, debounce)
+  const size = store.size
+  const forceUpdate = useForceUpdate()
 
   useEffect(() => {
-    const update = () => setSizeThrottle(adjust(windowSize()))
-    window.addEventListener('resize', update)
+    store.listeners.add(forceUpdate)
     return () => {
-      window.removeEventListener('resize', update)
+      store.listeners.delete(forceUpdate)
     }
   }, [adjust])
 
-  return size
+  return adjust(size)
 }

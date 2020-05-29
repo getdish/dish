@@ -13,7 +13,9 @@ export function useDebounce<A extends (...args: any) => any>(
   wait: number,
   options: DebounceSettings = { leading: true },
   mountArgs: any[] = []
-): A {
+): A & {
+  cancel: () => void
+} {
   return useMemo(() => {
     return debounce(fn, wait, options)
   }, [options, ...mountArgs])

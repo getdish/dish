@@ -25,4 +25,9 @@ export function Test3(props: any) {
   )
 }
 
+const homePageBorderRadius = 10
+export function Test4() {
+  return <VStack width={`calc(100% + ${homePageBorderRadius * 2}px)`} />
+}
+
 export * from '@dish/ui'

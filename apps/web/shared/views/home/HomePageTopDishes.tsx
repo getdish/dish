@@ -22,6 +22,7 @@ import { flatButtonStyle } from './baseButtonStyle'
 import { DishView } from './DishView'
 import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBarOnly } from './HomeLenseBar'
+import { HomeScrollView } from './HomeScrollView'
 import { RestaurantButton } from './RestaurantButton'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
@@ -66,7 +67,7 @@ const HomePageTopDishes = ({ stateIndex }: TopDishesProps) => {
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
       <VStack position="relative" flex={1}>
-        <ScrollView style={{ flex: 1 }}>
+        <HomeScrollView>
           <VStack paddingVertical={34} paddingTop={88} spacing="xl">
             {/* TRENDING */}
             {/* <HomeViewTopDishesTrending /> */}
@@ -112,7 +113,7 @@ const HomePageTopDishes = ({ stateIndex }: TopDishesProps) => {
               ))}
             </VStack>
           </VStack>
-        </ScrollView>
+        </HomeScrollView>
       </VStack>
     </>
   )

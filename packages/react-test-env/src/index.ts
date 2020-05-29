@@ -9,6 +9,7 @@ export { default as TestRenderer, act } from 'react-test-renderer'
 global['React'] = React
 global['ReactDOM'] = ReactDOM
 Object.keys(global['window']).forEach((key) => {
+  if (key === 'localStorage' || key === 'sessionStorage') return
   if (typeof global[key] === 'undefined') {
     global[key] = global['window'][key]
   }

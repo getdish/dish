@@ -21,6 +21,7 @@ import { PageTitleTag } from '../ui/PageTitleTag'
 import { flatButtonStyle, flatButtonStyleActive } from './baseButtonStyle'
 import { CloseButton } from './CloseButton'
 import { DishView } from './DishView'
+import { HomeScrollView } from './HomeScrollView'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
@@ -139,7 +140,7 @@ export default memo(
             bottom={0}
           />
 
-          <ScrollView style={{ flex: 1, paddingTop: 120 + 20 }}>
+          <HomeScrollView style={{ paddingTop: 120 + 20 }}>
             <RestaurantTagsRow size="lg" restaurantSlug={slug} />
             <Spacer />
             <Divider />
@@ -188,7 +189,7 @@ export default memo(
                 </HStack>
               </VStack> */}
             </VStack>
-          </ScrollView>
+          </HomeScrollView>
         </>
       </VStack>
     )

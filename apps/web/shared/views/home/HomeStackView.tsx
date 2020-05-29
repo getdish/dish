@@ -98,6 +98,7 @@ function HomeStackViewItem({
         left: 0,
         right: 0,
         bottom: 0,
+        contain: 'layout',
       }}
     >
       <ZStack pointerEvents={isActive ? 'none' : 'auto'} fullscreen>
