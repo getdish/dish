@@ -1,6 +1,6 @@
 
 - static style extract v1
-- hoverable popover + popover animate
+- hoverable popover
 - Add o tag, upvote/downvote, star
 - gallery view / click dish to gallery
 - add tip/comment

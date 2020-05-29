@@ -3,6 +3,7 @@ import { Circle, Divider, HStack, Spacer, VStack, ZStack } from '@dish/ui'
 import React from 'react'
 import { Image, ScrollView, Text } from 'react-native'
 
+import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemUser } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../NotFoundPage'
@@ -19,7 +20,6 @@ export default graphql(function HomePageUser({
   const om = useOvermind()
   const state = om.state.home.states[stateIndex] as HomeStateItemUser
   const username = state?.username ?? ''
-  console.log('HomePageUser', username)
   const [user] = query.user({
     where: {
       username: {
@@ -36,7 +36,13 @@ export default graphql(function HomePageUser({
     }) ?? []
 
   return (
-    <>
+    <VStack
+      flex={1}
+      borderRadius={drawerBorderRadius}
+      position="relative"
+      backgroundColor="#fff"
+      overflow="hidden"
+    >
       <PageTitleTag>Dish - User profile</PageTitleTag>
 
       <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
@@ -85,6 +91,6 @@ export default graphql(function HomePageUser({
           </VStack>
         </VStack>
       </ScrollView>
-    </>
+    </VStack>
   )
 })
