@@ -264,7 +264,7 @@ const RestaurantListItemContent = memo(
             )}
           </VStack>
 
-          <VStack padding={10} paddingTop={45} width={0}>
+          <VStack padding={10} paddingTop={65} width={0}>
             {/* <Suspense fallback={null}> */}
             <RestaurantPeek
               size={isShowingComment ? 'lg' : 'md'}
@@ -337,7 +337,7 @@ export const RestaurantPeek = memo(
             return (
               <DishView
                 key={i}
-                size={(size === 'lg' ? 220 : 190) * (isMedium ? 0.85 : 1)}
+                size={(size === 'lg' ? 210 : 175) * (isMedium ? 0.85 : 1)}
                 restaurantSlug={restaurantSlug}
                 dish={{
                   name: photo.name,
