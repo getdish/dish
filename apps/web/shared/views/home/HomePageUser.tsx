@@ -9,8 +9,8 @@ import { useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../NotFoundPage'
 import { Link } from '../ui/Link'
 import { PageTitleTag } from '../ui/PageTitleTag'
-import { CloseButton } from './CloseButton'
 import { avatar } from './HomePageSearchResults'
+import { StackViewCloseButton } from './StackViewCloseButton'
 
 export default graphql(function HomePageUser({
   stateIndex,
@@ -45,9 +45,7 @@ export default graphql(function HomePageUser({
     >
       <PageTitleTag>Dish - User profile</PageTitleTag>
 
-      <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
-        <CloseButton onPress={() => om.actions.home.up()} />
-      </ZStack>
+      <StackViewCloseButton />
 
       <VStack padding={18} paddingBottom={0} paddingRight={16}>
         <HStack position="relative">

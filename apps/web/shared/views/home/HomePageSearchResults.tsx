@@ -3,7 +3,6 @@ import { graphql, query } from '@dish/graph'
 import {
   Box,
   Circle,
-  Divider,
   HStack,
   LoadingItems,
   PageTitle,
@@ -25,10 +24,11 @@ import { NotFoundPage } from '../NotFoundPage'
 import { LinkButton } from '../ui/LinkButton'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { flatButtonStyle } from './baseButtonStyle'
-import { DishView as MenuItemView } from './DishView'
+import { DishView } from './DishView'
 import { getTitleForState } from './getTitleForState'
 import HomeLenseBar from './HomeLenseBar'
 import { RestaurantListItem } from './RestaurantListItem'
+import { StackViewCloseButton } from './StackViewCloseButton'
 
 // @ts-ignore
 
@@ -61,17 +61,8 @@ export default memo(function HomePageSearchResults({
       overflow="hidden"
     >
       <PageTitleTag>{title}</PageTitleTag>
-      {/* <ZStack
-        right={6}
-        top={6}
-        justifyContent="center"
-        pointerEvents="auto"
-        zIndex={100}
-      >
-        <HStack spacing="sm" alignItems="center">
-          <CloseButton onPress={() => om.actions.home.up()} />
-        </HStack>
-      </ZStack> */}
+
+      <StackViewCloseButton />
 
       <ScrollView>
         {/* Title */}
@@ -287,9 +278,9 @@ const HomePageSearchResultsDishes = memo(
     console.log('got menu_items', menu_items)
 
     return (
-      <>
+      <HStack paddingHorizontal={20} paddingVertical={10}>
         {menu_items.map((menu_item) => (
-          <MenuItemView
+          <DishView
             key={menu_item.name}
             dish={{
               name: menu_item.name,
@@ -299,7 +290,7 @@ const HomePageSearchResultsDishes = memo(
             }}
           />
         ))}
-      </>
+      </HStack>
     )
   })
 )

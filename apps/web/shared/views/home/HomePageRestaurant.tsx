@@ -26,6 +26,7 @@ import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
+import { StackViewCloseButton } from './StackViewCloseButton'
 import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 
 export default memo(
@@ -60,11 +61,7 @@ export default memo(
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
         </PageTitleTag>
 
-        <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
-          <ZStack right={10} top={10} pointerEvents="auto" zIndex={1000}>
-            <CloseButton onPress={() => om.actions.home.up()} />
-          </ZStack>
-        </MediaQuery>
+        <StackViewCloseButton />
 
         {isLoading && (
           <ZStack
