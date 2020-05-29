@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { ToggleLayer, anchor } from 'react-laag'
+import { ToggleLayer, Transition, anchor } from 'react-laag'
 import { Platform } from 'react-native'
 
 import { useOverlay } from '../hooks/useOverlay'
@@ -61,33 +61,40 @@ export default function PopoverMain(props: PopoverProps) {
         {...(isControlled && { isOpen })}
         container={document.body}
         fixed
-        renderLayer={({ layerProps, close, arrowStyle }) => {
-          if (!props.isOpen) {
-            return null
-          }
+        renderLayer={({ isOpen, layerProps, close, arrowStyle }) => {
           closeCb.current = close
           return (
-            <div
-              ref={layerProps.ref}
-              className="popover-content see-through"
-              style={{
-                ...layerProps.style,
-                zIndex: 100000,
-                pointerEvents: isOpen ? 'auto' : 'none',
+            <Transition isOpen={isOpen}>
+              {(isOpen, onTransitionEnd) => {
+                return (
+                  <div
+                    ref={layerProps.ref}
+                    className="popover-content see-through"
+                    onTransitionEnd={onTransitionEnd}
+                    style={{
+                      ...layerProps.style,
+                      zIndex: 100000,
+                      pointerEvents: isOpen ? 'auto' : 'none',
+                      marginTop: isOpen ? 0 : 10,
+                      opacity: isOpen ? 1 : 0,
+                      transition: '0.2s ease-in-out',
+                    }}
+                  >
+                    {props.contents}
+                    {!props.noArrow && (
+                      <Arrow
+                        style={{
+                          position: 'absolute',
+                          transformOrigin: 'center',
+                          transform: getArrowTranslate(props.position),
+                          ...arrowStyle,
+                        }}
+                      />
+                    )}
+                  </div>
+                )
               }}
-            >
-              {props.contents}
-              {!props.noArrow && (
-                <Arrow
-                  style={{
-                    position: 'absolute',
-                    transformOrigin: 'center',
-                    transform: getArrowTranslate(props.position),
-                    ...arrowStyle,
-                  }}
-                />
-              )}
-            </div>
+            </Transition>
           )
         }}
         closeOnOutsideClick
