@@ -125,7 +125,7 @@ export const TagButton = memo(
             style={
               {
                 fontSize,
-                fontWeight: 'inherit',
+                fontWeight: size == 'lg' ? '500' : 'inherit',
                 lineHeight: 'inherit',
                 paddingVertical: paddingVertical,
                 paddingHorizontal: subtle ? 0 : 8 * scale,
