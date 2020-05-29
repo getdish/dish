@@ -44,7 +44,8 @@ module.exports = function getWebpackConfig(
       env.mode === 'production' ? 'source-map' : 'cheap-module-source-map',
     // @ts-ignore
     entry: [
-      isHot && '@webhotelier/webpack-fast-refresh/runtime.js',
+      // webpack5
+      // isHot && '@webhotelier/webpack-fast-refresh/runtime.js',
       appEntry,
     ].filter(Boolean),
     output: {

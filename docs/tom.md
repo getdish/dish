@@ -1,5 +1,15 @@
 # High level priorities
 
+- [ ] Search results
+  - [ ] Search should sort by tags!
+    - [ ] Dish should override country, etc
+  - [ ] Smoothing ratings - use restaurant overall
+  - [ ] Showing the dish tag on search results first always
+  - [ ] Fleshing out dish tags
+    - [ ] Using menu_items to find dishes as well
+      - [ ] if no image, we can use an image from any other tag! just fallback to some other restaurant image
+    - [ ] Use photos to find them as well
+
 - [ ] Dish data / dish ratings
   - [ ] we really need better dish ratings / dish finding
     - [ ] Some looser matching of user comments / sentiment
