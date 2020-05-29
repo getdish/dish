@@ -1,4 +1,4 @@
-import { HStack, VStack } from '@dish/ui'
+import { Box, VStack } from '@dish/ui'
 import React from 'react'
 
 export function Test1() {
@@ -11,10 +11,18 @@ export function Test1() {
 
 export function Test2() {
   return (
-    <HStack className="who" onHoverIn={() => {}} overflow="hidden">
+    <Box className="who" onAccessibilityTap={() => {}} overflow="hidden">
       <div>hi</div>
-    </HStack>
+    </Box>
   )
 }
 
-export { default as React } from 'react'
+export function Test3(props: any) {
+  return (
+    <VStack overflow="hidden" {...props}>
+      <div>hi</div>
+    </VStack>
+  )
+}
+
+export * from '@dish/ui'
