@@ -457,13 +457,18 @@ domNode: ${domNode}
               cssMap.set(className, val)
             }
           } else {
-            const { rules } = stylesByClassName[className]
-            if (rules.length > 1) {
-              console.log(rules)
-              throw new Error(`huh?`)
-            }
-            if (rules.length) {
-              cssMap.set(className, { css: rules[0], commentTexts: [comment] })
+            if (stylesByClassName[className]) {
+              const { rules } = stylesByClassName[className]
+              if (rules.length > 1) {
+                console.log(rules)
+                throw new Error(`huh?`)
+              }
+              if (rules.length) {
+                cssMap.set(className, {
+                  css: rules[0],
+                  commentTexts: [comment],
+                })
+              }
             }
           }
         }

@@ -5,20 +5,25 @@ const _ = require('lodash')
 const Webpack = require('webpack')
 // const ClosurePlugin = require('closure-webpack-plugin')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
-const LodashPlugin = require('lodash-webpack-plugin')
+// const LodashPlugin = require('lodash-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const ReactRefreshPlugin = require('@webhotelier/webpack-fast-refresh')
 const { GlossWebpackPlugin } = require('@dish/ui-static')
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
-const isProduction = process.env.NODE_ENV === 'production'
 
 // 'ssr' | 'worker' | 'preact' | 'client'
 const TARGET = process.env.TARGET || 'client'
-console.log('TARGET', TARGET)
+const target =
+  TARGET === 'ssr' ? 'node' : TARGET === 'worker' ? 'webworker' : 'web'
 const appEntry = path.resolve(path.join(__dirname, 'web', 'index.web.tsx'))
 const graphRoot = path.join(require.resolve('@dish/graph'), '..', '..', '..')
-console.log('graphRoot', graphRoot)
+
+const isProduction = process.env.NODE_ENV === 'production'
+const isClient = TARGET === 'client'
+const shouldExtractStatics = isClient && isProduction
+
+console.log('webpack.config', { isProduction, graphRoot, TARGET })
 
 module.exports = function getWebpackConfig(
   env = {
@@ -33,8 +38,7 @@ module.exports = function getWebpackConfig(
   const config = {
     mode: env.mode || process.env.NODE_ENV,
     context: __dirname,
-    target:
-      TARGET === 'ssr' ? 'node' : TARGET === 'worker' ? 'webworker' : 'web',
+    target,
     stats: 'normal',
     devtool:
       env.mode === 'production' ? 'source-map' : 'cheap-module-source-map',
@@ -124,7 +128,7 @@ module.exports = function getWebpackConfig(
                 isHot && {
                   loader: '@webhotelier/webpack-fast-refresh/loader.js',
                 },
-                isProduction && {
+                shouldExtractStatics && {
                   loader: require.resolve('@dish/ui-static/loader'),
                 },
               ].filter(Boolean),
@@ -165,10 +169,14 @@ module.exports = function getWebpackConfig(
       // new LodashPlugin(),
 
       // extract static styles in production
-      isProduction && new GlossWebpackPlugin(),
+      shouldExtractStatics && new GlossWebpackPlugin(),
 
       new Webpack.DefinePlugin({
-        process: JSON.stringify({}),
+        ...(target === 'web' || target === 'webworker'
+          ? {
+              process: JSON.stringify({}),
+            }
+          : {}),
         'process.env.TARGET': JSON.stringify(TARGET || null),
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         'process.env.EXPERIMENTAL_USE_CLENAUP_FOR_CM': JSON.stringify(false),
