@@ -111,7 +111,7 @@ const VoteButton = (props: any) => {
 const styles = StyleSheet.create({
   button: {
     height: 24,
-    width: 16,
+    width: 20,
     // paddingLeft: 4,
     // marginLeft: 6,
     borderWidth: 1,

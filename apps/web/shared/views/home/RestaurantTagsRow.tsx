@@ -12,13 +12,17 @@ type TagRowProps = {
   size?: 'lg' | 'md'
   divider?: any
   tags?: TagButtonTagProps[]
+  subtle?: boolean
 }
 
 export const RestaurantTagsRow = memo(
   graphql(function RestaurantTagsRow(props: TagRowProps) {
     const { size = 'md' } = props
     const drawerWidth = useHomeDrawerWidthInner()
-    const tagElements = useGetTagElements({ ...props, size })
+    const tagElements = useGetTagElements({
+      ...props,
+      size,
+    })
     return (
       <HStack
         justifyContent="center"
@@ -71,6 +75,7 @@ export const useGetTagElements = (props: TagRowProps) => {
         rank={index}
         key={`${index}${tag.name}`}
         {...getTagButtonProps(tag)}
+        subtle={props.subtle}
         votable={!!om.state.user.user}
       />
     )

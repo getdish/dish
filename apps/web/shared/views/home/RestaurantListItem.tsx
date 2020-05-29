@@ -73,24 +73,10 @@ export const RestaurantListItem = memo(function RestaurantListItem(
           position="relative"
           width="calc(100% + 25px)"
         >
-          <ZStack
-            fullscreen
-            zIndex={100}
-            top={20}
-            height={120}
-            left={0}
-            justifyContent="center"
-            pointerEvents="none"
-            opacity={isHovered ? 1 : 0}
-          >
-            <RestaurantUpVoteDownVote restaurantId={props.restaurant.id} />
-          </ZStack>
-
           <RestaurantListItemContent {...props} />
         </HStack>
         {/* </Suspense> */}
       </ScrollView>
-      <Divider opacity={0.025} />
     </VStack>
   )
 })
@@ -131,6 +117,21 @@ const RestaurantListItemContent = memo(
                 marginLeft={-adjustRankingLeft}
                 width={900}
               >
+                {/* VOTE */}
+                <ZStack
+                  fullscreen
+                  zIndex={100}
+                  top="auto"
+                  bottom={-59}
+                  height={120}
+                  left={14}
+                  justifyContent="center"
+                  pointerEvents="none"
+                >
+                  <RestaurantUpVoteDownVote restaurantId={restaurant.id} />
+                </ZStack>
+
+                {/* LINK */}
                 <Link
                   tagName="div"
                   name="restaurant"
@@ -144,6 +145,7 @@ const RestaurantListItemContent = memo(
                         rank={rank}
                       />
 
+                      {/* SECOND LINK WITH actual <a /> */}
                       <Link
                         name="restaurant"
                         params={{ slug: restaurant.slug }}
@@ -151,8 +153,8 @@ const RestaurantListItemContent = memo(
                         <SelectableText
                           style={{
                             color: '#000',
-                            fontSize: 26,
-                            fontWeight: '500',
+                            fontSize: 24,
+                            fontWeight: '600',
                             textDecorationColor: 'transparent',
                           }}
                         >
@@ -161,14 +163,14 @@ const RestaurantListItemContent = memo(
                       </Link>
                     </HStack>
 
-                    <Spacer size={10} />
+                    <Spacer size={12} />
 
-                    {/* ROW: Ranking + TAGS */}
+                    {/* TITLE ROW: Ranking + TAGS */}
                     <HStack
-                      paddingLeft={adjustRankingLeft + leftPad}
+                      paddingLeft={adjustRankingLeft + leftPad + 4}
                       spacing={12}
                       alignItems="center"
-                      marginBottom={-3}
+                      marginBottom={-2}
                     >
                       {/* <Suspense fallback={null}> */}
                       <RestaurantRatingViewPopover
@@ -179,13 +181,16 @@ const RestaurantListItemContent = memo(
                       {/* <Suspense fallback={null}> */}
                       <RestaurantTagsRow
                         tags={restaurant.tags.map((tag) => tag.tag)}
+                        subtle
                         showMore={true}
                         restaurantSlug={restaurant.slug ?? ''}
-                        divider={<>,&nbsp;</>}
+                        divider={<></>}
                       />
                       {/* </Suspense> */}
                     </HStack>
                   </VStack>
+
+                  <Divider noGap zIndex={-1} />
                 </Link>
               </VStack>
 
@@ -288,7 +293,7 @@ const RestaurantTopReview = memo(
         <SelectableText
           style={{
             opacity: 0.8,
-            lineHeight: 20,
+            lineHeight: 22,
             fontSize: 15,
             marginVertical: 5,
           }}
