@@ -9,3 +9,8 @@ export { default as TestRenderer } from 'react-test-renderer'
 global['React'] = React
 global['ReactDOM'] = ReactDOM
 global['MutationObserver'] = global['window']['MutationObserver']
+
+if (process.env.DEBUG) {
+  const debugHttp = require('debug-http')
+  debugHttp()
+}

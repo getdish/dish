@@ -38,7 +38,7 @@
     "react": "*"
   },
   "devDependencies": {
-    "debug-http": "^1.1.0",
+    "@dish/react-test-env": "*",
     "@types/node": "*",
     "ts-node": "^8.10.1"
   }
