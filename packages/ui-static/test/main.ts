@@ -1,20 +1,12 @@
-import 'jsdom-global/register'
-import 'mutationobserver-polyfill'
-
 import path from 'path'
 
+import { TestRenderer } from '@dish/react-test-env'
 import anyTest, { TestInterface } from 'ava'
 import React from 'react'
-import ReactDOM from 'react-dom'
 import { ViewStyle } from 'react-native'
-import TestRenderer from 'react-test-renderer'
 import webpack from 'webpack'
 
 import { GlossWebpackPlugin, getStylesAtomic } from '../src'
-
-global['React'] = React
-global['ReactDOM'] = ReactDOM
-global['MutationObserver'] = global['window']['MutationObserver']
 
 const mode = 'production'
 process.env.NODE_ENV = mode
@@ -82,7 +74,7 @@ test('places className correctly given a single spread', async (t) => {
 async function extractStaticApp() {
   const compiler = webpack({
     context: specDir,
-    mode: mode,
+    mode,
     devtool: false,
     optimization: {
       minimize: false,
