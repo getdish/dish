@@ -7,7 +7,8 @@
   "private": true,
   "scripts": {
     "build": "tsc -b || true",
-    "watch": "tsc -b --watch --preserveWatchOutput"
+    "watch": "tsc -b --watch --preserveWatchOutput",
+    "test": "ava test/* --verbose"
   },
   "devDependencies": {
     "@types/requestidlecallback": "0.3.1"

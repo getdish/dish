@@ -66,6 +66,7 @@
     "resize-observer-polyfill": "1.5.1"
   },
   "devDependencies": {
+    "@dish/recoil-store": "*",
     "@dish/babel-preset": "*",
     "@dish/tsickle-loader": "*",
     "@gqless/cli": "^0.0.1-alpha.30",

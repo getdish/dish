@@ -1,0 +1,22 @@
+{
+  "name": "@dish/recoil-store",
+  "version": "0.0.1",
+  "main": "_/index.js",
+  "tsmain": "src/index",
+  "sideEffects": false,
+  "private": true,
+  "scripts": {
+    "build": "tsc -b || true",
+    "watch": "tsc -b --watch --preserveWatchOutput"
+  },
+  "dependencies": {
+    "recoil": "^0.0.7"
+  },
+  "devDependencies": {
+    "@dish/react-test-env": "*",
+    "@types/react": "^16.9.35"
+  },
+  "peerDependencies": {
+    "react": "*"
+  }
+}
