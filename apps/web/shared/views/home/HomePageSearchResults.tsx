@@ -55,7 +55,6 @@ export default memo(function HomePageSearchResults({
   return (
     <VStack
       flex={1}
-      zIndex={100}
       borderRadius={drawerBorderRadius}
       position="relative"
       backgroundColor="#fff"
