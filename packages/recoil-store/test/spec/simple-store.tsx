@@ -12,6 +12,7 @@ class SimpleStore {
   }
 
   add() {
+    console.log('adding')
     this.x++
   }
 
