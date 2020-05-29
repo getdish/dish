@@ -1,3 +1,6 @@
+import 'jsdom-global/register'
+import 'mutationobserver-polyfill'
+
 import path from 'path'
 
 import anyTest, { TestInterface } from 'ava'
@@ -11,6 +14,7 @@ import { GlossWebpackPlugin, getStylesAtomic } from '../src'
 
 global['React'] = React
 global['ReactDOM'] = ReactDOM
+global['MutationObserver'] = global['window']['MutationObserver']
 
 const mode = 'production'
 process.env.NODE_ENV = mode
@@ -18,6 +22,7 @@ process.env.NODE_ENV = mode
 const test = anyTest as TestInterface<{
   test1Renderer: TestRenderer.ReactTestRenderer
   test2Renderer: TestRenderer.ReactTestRenderer
+  test3Renderer: TestRenderer.ReactTestRenderer
   app: any
 }>
 
@@ -51,13 +56,22 @@ test.before(async (t) => {
   const app = require(outFileFull)
   t.context.app = app
   t.context.test1Renderer = TestRenderer.create(React.createElement(app.Test1))
-  // t.context.test2Renderer = TestRenderer.create(React.createElement(app.Test2))
+  t.context.test2Renderer = TestRenderer.create(React.createElement(app.Test2))
+  t.context.test3Renderer = TestRenderer.create(React.createElement(app.Test3))
 })
 
 test('extracts to a div for simple views', async (t) => {
-  const out1JSON = t.context.test1Renderer.toJSON()
-  t.is(out1JSON?.type, 'div')
-  t.is(out1JSON?.props.className, 'is_VStack r-1g6456j')
+  const { test1Renderer } = t.context
+  const out = test1Renderer.toJSON()
+  t.is(out?.type, 'div')
+  t.is(out?.props.className, 'is_VStack r-1g6456j')
+})
+
+test('extracts className for complex views but keeps other props', async (t) => {
+  const { test2Renderer, app } = t.context
+  const { Box } = app
+  const out = test2Renderer.root.findByType(Box)
+  t.assert(out)
 })
 
 async function extractStaticApp() {
@@ -67,6 +81,7 @@ async function extractStaticApp() {
     devtool: false,
     optimization: {
       minimize: false,
+      concatenateModules: false,
     },
     entry: path.join(specDir, 'test.tsx'),
     output: {
@@ -75,15 +90,12 @@ async function extractStaticApp() {
       path: outDir,
     },
     externals: {
-      react: 'React',
-      'react-dom': 'ReactDOM',
+      react: 'react',
+      'react-dom': 'react-dom',
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
       mainFields: ['tsmain', 'browser', 'module', 'main'],
-      alias: {
-        'react-native-web': false,
-      },
     },
     module: {
       rules: [

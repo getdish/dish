@@ -174,16 +174,20 @@ module.exports = function getWebpackConfig(
         'process.env.EXPERIMENTAL_USE_CLENAUP_FOR_CM': JSON.stringify(false),
         'process.env.DEBUG': JSON.stringify(false),
       }),
+
       new HTMLWebpackPlugin({
         inject: true,
         template: path.join(__dirname, 'web/index.html'),
       }),
+
       env.mode === 'development' &&
         TARGET !== 'worker' &&
         new ReactRefreshPlugin(),
+
       // new ReactRefreshWebpackPlugin({
       //   overlay: false,
       // }),
+
       !!process.env.INSPECT &&
         new DuplicatesPlugin({
           emitErrors: false,

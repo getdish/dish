@@ -70,19 +70,26 @@ const createStack = (defaultStyle?: ViewStyle) => {
         if (!cn) return
         if (!innerRef.current) return
         const node = getNode(innerRef.current)
-        if (!node) return
+        if (!node) {
+          return
+        }
         const names = cn.trim().split(' ').filter(Boolean)
 
         function addClassNames() {
           const cl = new Set(node.classList)
           for (const name of names) {
             if (!cl.has(name)) {
-              node.classList.add(name)
+              node.classList?.add(name)
             }
           }
         }
 
         addClassNames()
+
+        if (!(node instanceof HTMLElement)) {
+          // disable mutation observation in other envs
+          return
+        }
 
         const observer = new MutationObserver(() => {
           addClassNames()
