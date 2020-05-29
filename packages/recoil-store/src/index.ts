@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 
-export function useRecoilStore<A>(store: A): A {
+export function useRecoilStore<A>(store: new () => A): A {
   const recoilStore = getRecoilStateFromStore(store)
   return useMemo(() => {
-    return store
+    return new store()
   }, [])
 }
 

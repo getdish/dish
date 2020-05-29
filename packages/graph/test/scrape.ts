@@ -1,4 +1,4 @@
-import './_debug'
+import '@dish/react-test-env'
 
 import anyTest, { TestInterface } from 'ava'
 

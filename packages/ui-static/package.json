@@ -38,6 +38,7 @@
     "babel-loader": "^8.0.5",
     "@dish/babel-preset": "*",
     "@types/webpack": "4.41.13",
+    "@types/react-native": "^0.62.12",
     "ava": "^3.8.2"
   }
 }

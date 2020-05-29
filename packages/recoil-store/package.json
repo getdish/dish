@@ -7,14 +7,14 @@
   "private": true,
   "scripts": {
     "build": "tsc -b || true",
-    "watch": "tsc -b --watch --preserveWatchOutput"
+    "watch": "tsc -b --watch --preserveWatchOutput",
+    "test": "ava test/* --verbose"
   },
   "dependencies": {
     "recoil": "^0.0.7"
   },
   "devDependencies": {
-    "@dish/react-test-env": "*",
-    "@types/react": "^16.9.35"
+    "@dish/react-test-env": "*"
   },
   "peerDependencies": {
     "react": "*"
