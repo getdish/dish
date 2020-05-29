@@ -1,3 +1,6 @@
+// force this file to stick around for webpack...
+export default {}
+
 type AnchorEnum =
   | 'BOTTOM_LEFT'
   | 'BOTTOM_RIGHT'
