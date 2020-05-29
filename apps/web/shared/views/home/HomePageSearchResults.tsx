@@ -237,6 +237,7 @@ const HomeSearchResultsViewContent = memo(
                 currentLocationInfo={state.currentLocationInfo ?? null}
                 restaurant={item}
                 rank={index + 1}
+                searchState={state}
               />
             </Suspense>
           ))}

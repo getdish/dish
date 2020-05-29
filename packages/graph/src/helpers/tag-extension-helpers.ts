@@ -1,3 +1,6 @@
+// 🚨
+// technically this should all use TagQuery but it breaks ts (slow)
+
 import { Tag } from '../types'
 import { slugify } from './slugify'
 

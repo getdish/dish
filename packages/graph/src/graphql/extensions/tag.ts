@@ -1,5 +1,3 @@
-import { uniq } from 'lodash'
-
 import {
   tagIsOrphan,
   tagSlug,

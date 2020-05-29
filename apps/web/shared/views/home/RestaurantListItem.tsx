@@ -13,7 +13,11 @@ import React, { memo, useEffect, useState } from 'react'
 import { MessageSquare } from 'react-feather'
 import { ScrollView, TouchableOpacity } from 'react-native'
 
-import { GeocodePlace, isEditingUserPage } from '../../state/home'
+import {
+  GeocodePlace,
+  HomeStateItemSearch,
+  isEditingUserPage,
+} from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
 import { Link } from '../ui/Link'
 import { bgLightLight } from './colors'
@@ -33,6 +37,7 @@ type RestaurantListItemProps = {
   currentLocationInfo: GeocodePlace | null
   restaurant: Restaurant
   rank: number
+  searchState?: HomeStateItemSearch
 }
 
 export const RestaurantListItem = memo(function RestaurantListItem(
@@ -82,200 +87,195 @@ export const RestaurantListItem = memo(function RestaurantListItem(
 })
 
 const RestaurantListItemContent = memo(
-  graphql(
-    ({ rank, restaurant, currentLocationInfo }: RestaurantListItemProps) => {
-      const om = useOvermind()
-      const pad = 18
-      const isShowingComment = isEditingUserPage(om.state)
-      const isSmall = useMediaQueryIsSmall()
-      const [state, setState] = useState({
-        showAddComment: false,
-      })
+  graphql((props: RestaurantListItemProps) => {
+    const { rank, restaurant, currentLocationInfo } = props
+    const om = useOvermind()
+    const pad = 18
+    const isShowingComment = isEditingUserPage(om.state)
+    const isSmall = useMediaQueryIsSmall()
+    const [state, setState] = useState({
+      showAddComment: false,
+    })
 
-      const showAddComment = state.showAddComment || isEditingUserPage(om.state)
+    const showAddComment = state.showAddComment || isEditingUserPage(om.state)
 
-      const adjustRankingLeft = 36
-      const verticalPad = 24
-      const leftPad = 6
+    const adjustRankingLeft = 36
+    const verticalPad = 24
+    const leftPad = 6
 
-      return (
-        <HStack>
-          <VStack
-            paddingHorizontal={pad + 6}
-            paddingBottom={verticalPad}
-            width={isSmall ? '50vw' : '66%'}
-            minWidth={isSmall ? '50%' : 500}
-            maxWidth={isSmall ? '80vw' : '30%'}
-            spacing={5}
-          >
-            <VStack alignItems="flex-start" width="100%">
-              {/* ROW: TITLE */}
-              <VStack
-                paddingTop={verticalPad}
-                // backgroundColor={bgLightLight}
-                hoverStyle={{ backgroundColor: bgLightLight }}
-                marginLeft={-adjustRankingLeft}
-                width={900}
+    return (
+      <HStack>
+        <VStack
+          paddingHorizontal={pad + 6}
+          paddingBottom={verticalPad}
+          width={isSmall ? '50vw' : '66%'}
+          minWidth={isSmall ? '50%' : 500}
+          maxWidth={isSmall ? '80vw' : '30%'}
+          spacing={5}
+        >
+          <VStack alignItems="flex-start" width="100%">
+            {/* ROW: TITLE */}
+            <VStack
+              paddingTop={verticalPad}
+              // backgroundColor={bgLightLight}
+              hoverStyle={{ backgroundColor: bgLightLight }}
+              marginLeft={-adjustRankingLeft}
+              width={900}
+            >
+              {/* VOTE */}
+              <ZStack
+                fullscreen
+                zIndex={100}
+                top="auto"
+                bottom={-59}
+                height={120}
+                left={14}
+                justifyContent="center"
+                pointerEvents="none"
               >
-                {/* VOTE */}
-                <ZStack
-                  fullscreen
-                  zIndex={100}
-                  top="auto"
-                  bottom={-59}
-                  height={120}
-                  left={14}
-                  justifyContent="center"
-                  pointerEvents="none"
-                >
-                  <RestaurantUpVoteDownVote restaurantId={restaurant.id} />
-                </ZStack>
+                <RestaurantUpVoteDownVote restaurantId={restaurant.id} />
+              </ZStack>
 
-                {/* LINK */}
-                <Link
-                  tagName="div"
-                  name="restaurant"
-                  params={{ slug: restaurant.slug }}
-                >
-                  <VStack>
-                    <HStack alignItems="center" marginVertical={-3}>
-                      <RankingView
-                        marginRight={-6 + leftPad}
-                        marginTop={-10}
-                        rank={rank}
-                      />
+              {/* LINK */}
+              <Link
+                tagName="div"
+                name="restaurant"
+                params={{ slug: restaurant.slug }}
+              >
+                <VStack>
+                  <HStack alignItems="center" marginVertical={-3}>
+                    <RankingView
+                      marginRight={-6 + leftPad}
+                      marginTop={-10}
+                      rank={rank}
+                    />
 
-                      {/* SECOND LINK WITH actual <a /> */}
-                      <Link
-                        name="restaurant"
-                        params={{ slug: restaurant.slug }}
+                    {/* SECOND LINK WITH actual <a /> */}
+                    <Link name="restaurant" params={{ slug: restaurant.slug }}>
+                      <SelectableText
+                        style={{
+                          color: '#000',
+                          fontSize: 24,
+                          fontWeight: '600',
+                          textDecorationColor: 'transparent',
+                        }}
                       >
-                        <SelectableText
-                          style={{
-                            color: '#000',
-                            fontSize: 24,
-                            fontWeight: '600',
-                            textDecorationColor: 'transparent',
-                          }}
-                        >
-                          {restaurant.name}
-                        </SelectableText>
-                      </Link>
-                    </HStack>
+                        {restaurant.name}
+                      </SelectableText>
+                    </Link>
+                  </HStack>
 
-                    <Spacer size={12} />
+                  <Spacer size={12} />
 
-                    {/* TITLE ROW: Ranking + TAGS */}
-                    <HStack
-                      paddingLeft={adjustRankingLeft + leftPad + 4}
-                      spacing={12}
-                      alignItems="center"
-                      marginBottom={-2}
-                    >
-                      {/* <Suspense fallback={null}> */}
-                      <RestaurantRatingViewPopover
-                        size="sm"
-                        restaurantSlug={restaurant.slug ?? ''}
-                      />
-                      {/* </Suspense> */}
-                      {/* <Suspense fallback={null}> */}
-                      <RestaurantTagsRow
-                        tags={restaurant.tags.map((tag) => tag.tag)}
-                        subtle
-                        showMore={true}
-                        restaurantSlug={restaurant.slug ?? ''}
-                        divider={<></>}
-                      />
-                      {/* </Suspense> */}
-                    </HStack>
-                  </VStack>
+                  {/* TITLE ROW: Ranking + TAGS */}
+                  <HStack
+                    paddingLeft={adjustRankingLeft + leftPad + 4}
+                    spacing={12}
+                    alignItems="center"
+                    marginBottom={-2}
+                  >
+                    {/* <Suspense fallback={null}> */}
+                    <RestaurantRatingViewPopover
+                      size="sm"
+                      restaurantSlug={restaurant.slug ?? ''}
+                    />
+                    {/* </Suspense> */}
+                    {/* <Suspense fallback={null}> */}
+                    <RestaurantTagsRow
+                      tags={restaurant.tags.map((tag) => tag.tag)}
+                      subtle
+                      showMore={true}
+                      restaurantSlug={restaurant.slug ?? ''}
+                      divider={<></>}
+                    />
+                    {/* </Suspense> */}
+                  </HStack>
+                </VStack>
 
-                  <Divider noGap zIndex={-1} />
-                </Link>
-              </VStack>
-
-              <Spacer size={14} />
-
-              {/* ROW: COMMENT */}
-              <VStack maxWidth="90%" marginLeft={-2}>
-                {/* <Suspense fallback={null}> */}
-                <RestaurantTopReview restaurantId={restaurant.id} />
-                {/* </Suspense> */}
-              </VStack>
-
-              <Spacer size={6} />
-
-              {/* ROW: BOTTOM INFO */}
-              <HStack
-                marginRight={-15}
-                marginBottom={-10}
-                alignItems="center"
-                spacing
-              >
-                <RestaurantLenseVote />
-                {/* <Suspense fallback={null}> */}
-                <RestaurantFavoriteStar restaurantId={restaurant.id} />
-                {/* </Suspense> */}
-
-                <TouchableOpacity
-                  onPress={() =>
-                    setState((state) => ({
-                      ...state,
-                      showAddComment: !state.showAddComment,
-                    }))
-                  }
-                >
-                  <MessageSquare
-                    size={16}
-                    color={state.showAddComment ? 'blue' : '#999'}
-                  />
-                </TouchableOpacity>
-
-                <Divider vertical />
-
-                {/* <Suspense fallback={null}> */}
-                <RestaurantDetailRow
-                  size="sm"
-                  restaurantSlug={restaurant.slug ?? ''}
-                />
-                {/* </Suspense> */}
-
-                <HoverablePopover
-                  contents={
-                    <SelectableText>{restaurant.address}</SelectableText>
-                  }
-                >
-                  <SelectableText style={{ color: '#888' }}>
-                    {getAddressText(
-                      currentLocationInfo,
-                      restaurant.address ?? '',
-                      'xs'
-                    )}
-                  </SelectableText>
-                </HoverablePopover>
-              </HStack>
+                <Divider noGap zIndex={-1} />
+              </Link>
             </VStack>
 
-            {showAddComment && (
-              <>
-                <Spacer size="lg" />
-                <RestaurantAddComment restaurantId={restaurant.id} />
-              </>
-            )}
+            <Spacer size={14} />
+
+            {/* ROW: COMMENT */}
+            <VStack maxWidth="90%" marginLeft={-2}>
+              {/* <Suspense fallback={null}> */}
+              <RestaurantTopReview restaurantId={restaurant.id} />
+              {/* </Suspense> */}
+            </VStack>
+
+            <Spacer size={6} />
+
+            {/* ROW: BOTTOM INFO */}
+            <HStack
+              marginRight={-15}
+              marginBottom={-10}
+              alignItems="center"
+              spacing
+            >
+              <RestaurantLenseVote />
+              {/* <Suspense fallback={null}> */}
+              <RestaurantFavoriteStar restaurantId={restaurant.id} />
+              {/* </Suspense> */}
+
+              <TouchableOpacity
+                onPress={() =>
+                  setState((state) => ({
+                    ...state,
+                    showAddComment: !state.showAddComment,
+                  }))
+                }
+              >
+                <MessageSquare
+                  size={16}
+                  color={state.showAddComment ? 'blue' : '#999'}
+                />
+              </TouchableOpacity>
+
+              <Divider vertical />
+
+              {/* <Suspense fallback={null}> */}
+              <RestaurantDetailRow
+                size="sm"
+                restaurantSlug={restaurant.slug ?? ''}
+              />
+              {/* </Suspense> */}
+
+              <HoverablePopover
+                contents={<SelectableText>{restaurant.address}</SelectableText>}
+              >
+                <SelectableText style={{ color: '#888' }}>
+                  {getAddressText(
+                    currentLocationInfo,
+                    restaurant.address ?? '',
+                    'xs'
+                  )}
+                </SelectableText>
+              </HoverablePopover>
+            </HStack>
           </VStack>
 
-          <VStack padding={10} paddingTop={65} width={0}>
-            {/* <Suspense fallback={null}> */}
-            <RestaurantPeek
-              size={isShowingComment ? 'lg' : 'md'}
-              restaurantSlug={restaurant.slug ?? ''}
-            />
-            {/* </Suspense> */}
-          </VStack>
-        </HStack>
-      )
-    }
-  )
+          {showAddComment && (
+            <>
+              <Spacer size="lg" />
+              <RestaurantAddComment restaurantId={restaurant.id} />
+            </>
+          )}
+        </VStack>
+
+        <VStack padding={10} paddingTop={65} width={0}>
+          {/* <Suspense fallback={null}> */}
+          <RestaurantPeek
+            {...props}
+            size={isShowingComment ? 'lg' : 'md'}
+            restaurantSlug={restaurant.slug ?? ''}
+          />
+          {/* </Suspense> */}
+        </VStack>
+      </HStack>
+    )
+  })
 )
 
 const RestaurantTopReview = memo(
@@ -308,9 +308,10 @@ const RestaurantTopReview = memo(
 
 export const RestaurantPeek = memo(
   graphql(function RestaurantPeek({
+    searchState,
     restaurantSlug,
     size = 'md',
-  }: {
+  }: RestaurantListItemProps & {
     size?: 'lg' | 'md'
     restaurantSlug: string
   }) {
@@ -323,7 +324,8 @@ export const RestaurantPeek = memo(
         },
       },
     })
-    const allPhotos = restaurant?.photosForCarousel()
+    const activeTagIds = Object.keys(searchState?.activeTagIds ?? {})
+    const allPhotos = restaurant?.photosForCarousel(activeTagIds)
     const photos = allPhotos
 
     return (
