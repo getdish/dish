@@ -30,7 +30,7 @@ import { getTagId } from '../../state/Tag'
 import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
 import { CloseButton } from './CloseButton'
-import { bgLight } from './colors'
+import { bgLight, brandColor, brandColorDark, brandColorLight } from './colors'
 import { DishLogoButton } from './DishLogoButton'
 import HomeAutocomplete from './HomeAutocomplete'
 import { HomeAutocompleteBackground } from './HomeAutocompleteBackground'
@@ -533,12 +533,18 @@ const HomeSearchBarTags = memo(
                 >
                   <TagButton
                     subtleIcon
-                    {...(!isActive && {
-                      color: '#444',
-                    })}
+                    backgroundColor={brandColor}
+                    color="#fff"
+                    borderWidth={2}
+                    borderColor={brandColorDark}
                     {...(isActive && {
-                      backgroundColor: bgLight,
+                      backgroundColor: '#777',
+                      color: '#fff',
+                      transform: [{ scale: 1.065 }, { rotate: '-1.3deg' }],
                     })}
+                    hoverStyle={{
+                      backgroundColor: brandColorLight,
+                    }}
                     size="lg"
                     fontSize={18}
                     name={tag.name}

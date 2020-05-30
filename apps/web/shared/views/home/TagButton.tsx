@@ -194,8 +194,7 @@ export const TagButton = memo(
               backgroundColor={subtle ? 'transparent' : 'transparent'}
               borderRadius={10}
               onPress={onClose}
-              opacity={0.3}
-              top={-1}
+              opacity={0.5}
               {...(!subtle && {
                 marginLeft: -4,
                 marginRight: 6,
@@ -215,7 +214,7 @@ export const TagButton = memo(
               <X
                 size={subtle ? 10 : 12}
                 style={{
-                  color: subtle ? 'inherit' : '#000',
+                  color: subtle ? 'inherit' : color,
                 }}
               />
             </LinkButton>
