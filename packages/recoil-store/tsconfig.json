@@ -2,9 +2,11 @@
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     "composite": true,
+    "module": "CommonJS",
     "outDir": "_",
     "rootDir": "src"
   },
+  "files": ["./types/recoil.d.ts"],
   "include": ["src/**/*"],
   "references": [{ "path": "../react-test-env" }]
 }
