@@ -20,7 +20,8 @@
     "test": "ultra -r --no-pretty test",
     "clean": "bin/clean.sh",
     "format": "swift-format --recursive --in-place ./apps/ios/dish",
-    "prettier": "prettier --write \"**/*.{ts,tsx}\" || true"
+    "prettier": "prettier --write \"**/*.{ts,tsx}\" || true",
+    "postinstall": "patch-package"
   },
   "resolutions": {
     "resolve": "1.17.0",

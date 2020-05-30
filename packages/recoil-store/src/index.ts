@@ -1,45 +1,72 @@
+import { useRecoilInterface } from 'recoil'
+
 export function useRecoilStore<A>(store: new () => A): A {
   return useCreateRecoilStore(store)
 }
 
 const storeToRecoilStore = new WeakMap<any, any>()
-const storeToRecoilHooks = new WeakMap<any, Function[]>()
+const storeToRecoilRun = new WeakMap<any, Function>()
 
 function useCreateRecoilStore<A extends Object>(store: new () => A): A {
   let recoilStore = storeToRecoilStore.get(store)
   if (recoilStore) {
-    const hooks = storeToRecoilHooks.get(store)!
-    useRecoilStoreUpdateHooks(store, hooks)
+    const run = storeToRecoilRun.get(store)!
+    run()
     return recoilStore
   }
   const storeInstance = new store()
   const descriptors = getStoreDescriptors(storeInstance)
-  const recoilObjects = {}
+  type ClassPropertyType = 'value' | 'action' | 'selector'
+  const keyToType: { [key: string]: ClassPropertyType } = {}
 
   for (const key in descriptors) {
     const descriptor = descriptors[key]
-    if (typeof descriptor.value === 'function') {
+    const type: ClassPropertyType =
+      typeof descriptor.value === 'function'
+        ? 'action'
+        : typeof descriptor.get === 'function'
+        ? 'selector'
+        : 'value'
+    switch (type) {
+      case 'action': {
+        break
+      }
+      case 'selector': {
+        break
+      }
+      case 'value': {
+        break
+      }
     }
-    recoilObjects[key]
   }
 
-  const proxy = new Proxy(storeInstance, {
-    get(target, val) {
-      return Reflect.get(target, val)
+  let tracking = new Set<string>()
+
+  const wrappedStore = new Proxy(storeInstance, {
+    get(target, key) {
+      if (typeof key === 'string') {
+        tracking.add(key)
+      }
+      return Reflect.get(target, key)
     },
     set(target, key, value, receiver) {
       return Reflect.set(target, key, value, receiver)
     },
   })
-  return proxy
-}
 
-function useRecoilStoreUpdateHooks(store: any, hooks: Function[]) {
-  if (hooks) {
-    for (const hook of hooks) {
-      hook()
-    }
+  const run = () => {
+    const {
+      getRecoilValue,
+      getRecoilState,
+      getSetRecoilState,
+    } = useRecoilInterface()
+    tracking = new Set<string>()
   }
+
+  storeToRecoilStore.set(store, wrappedStore)
+  storeToRecoilRun.set(store, run)
+
+  return wrappedStore
 }
 
 function getStoreDescriptors(storeInstance: any) {
