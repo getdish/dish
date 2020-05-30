@@ -54,6 +54,10 @@ textarea {
   max-width: 100%;
 }
 
+.ease-in-out-top {
+  transition: top ease-out 140ms;
+}
+
 .ease-in-out-fast {
   transition: all ease-in-out 100ms;
 }

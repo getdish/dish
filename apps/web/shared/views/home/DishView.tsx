@@ -7,7 +7,7 @@ import {
   VStack,
   ZStack,
 } from '@dish/ui'
-import React, { memo } from 'react'
+import React, { memo, useCallback, useState } from 'react'
 import { Image, StyleSheet, Text } from 'react-native'
 
 import { NavigableTag } from '../../state/Tag'
@@ -28,18 +28,26 @@ export const DishView = memo(
     restaurantSlug?: string
   } & StackProps) => {
     const borderRadius = 0.3 * size
+    const [isHovered, setIsHovered] = useState(false)
 
-    const linkButtonProps: LinkButtonProps = restaurantSlug
-      ? {
-          name: 'gallery',
-          params: {
-            restaurantSlug,
-            dishId: dish.id,
-          },
-        }
-      : {
-          tags: [cuisine, { type: 'dish', name: dish.name }] as NavigableTag[],
-        }
+    const linkButtonProps: LinkButtonProps = {
+      onHoverIn: useCallback(() => setIsHovered(true), []),
+      onHoverOut: useCallback(() => setIsHovered(false), []),
+      ...(restaurantSlug
+        ? {
+            name: 'gallery',
+            params: {
+              restaurantSlug,
+              dishId: dish.id,
+            },
+          }
+        : {
+            tags: [
+              cuisine,
+              { type: 'dish', name: dish.name },
+            ] as NavigableTag[],
+          }),
+    }
 
     return (
       <LinkButton
@@ -79,12 +87,12 @@ export const DishView = memo(
             overflow="hidden"
             borderWidth={2}
             borderColor="rgba(0,0,0,0.1)"
-            hoverStyle={{
+            {...(isHovered && {
               borderColor: 'rgba(0,0,0,0.6)',
               shadowRadius: 14,
               shadowColor: 'rgba(0,0,0,0.2)',
               zIndex: 10000,
-            }}
+            })}
           >
             <ZStack fullscreen zIndex={2}>
               <LinearGradient
@@ -105,19 +113,32 @@ export const DishView = memo(
         </VStack>
         <HStack
           position="absolute"
-          bottom={-26}
-          left={0}
-          right={0}
+          bottom={-20}
+          left={-22}
+          right={-22}
+          padding={6}
           alignItems="center"
           justifyContent="center"
-          overflow="hidden"
-          padding={15}
+          backgroundColor="rgba(255,255,255,0.5)"
+          borderTopColor="rgba(255,255,255,0.5)"
+          borderTopWidth={1}
+          shadowColor="rgba(0,0,0,0.05)"
+          shadowRadius={3}
+          shadowOffset={{ height: -3, width: 0 }}
         >
           <Box
+            className="ease-in-out-top"
             backgroundColor="#000"
             paddingVertical={2}
             maxWidth="100%"
             overflow="hidden"
+            shadowColor="rgba(0,0,0,0.1)"
+            shadowRadius={2}
+            top={0}
+            {...(isHovered && {
+              top: -14,
+              backgroundColor: '#fff',
+            })}
           >
             <Text
               numberOfLines={1}
@@ -127,7 +148,7 @@ export const DishView = memo(
                 fontSize: 15,
                 fontWeight: '500',
                 lineHeight: 22,
-                color: '#fff',
+                color: isHovered ? '#000' : '#fff',
                 // opacity: 0.75,
                 paddingVertical: 2,
                 textAlign: 'center',
