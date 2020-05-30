@@ -1,6 +1,6 @@
 import React from 'react'
 
-import * as RecoilStore from '../../src'
+import { useRecoilStore } from '../../_'
 
 const sleep = () => new Promise((res) => setTimeout(res, 100))
 
@@ -23,7 +23,8 @@ class SimpleStore {
 }
 
 export function SimpleStoreTest() {
-  const store = RecoilStore.useRecoilStore(SimpleStore)
+  const store = useRecoilStore(SimpleStore)
+  console.log('store', store)
   return (
     <>
       <div id="x">{store.x}</div>

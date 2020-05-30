@@ -1,72 +1,71 @@
-import { useRecoilInterface } from 'recoil'
+import { useMemo } from 'react'
+import { selectorFamily, useRecoilInterface } from 'recoil'
 
-export function useRecoilStore<A>(store: new () => A): A {
-  return useCreateRecoilStore(store)
-}
+type Descriptor =
+  | { type: 'value'; value: any }
+  | { type: 'action'; value: Function }
+  | { type: 'selector'; value: Function }
 
+const keys = new Set<string>()
 const storeToRecoilStore = new WeakMap<any, any>()
-const storeToRecoilRun = new WeakMap<any, Function>()
+const storeToDescriptors = new WeakMap<any, Descriptor[]>()
 
-function useCreateRecoilStore<A extends Object>(store: new () => A): A {
+export function useRecoilStore<A extends Object>(store: new () => A): A {
   let recoilStore = storeToRecoilStore.get(store)
   if (recoilStore) {
-    const run = storeToRecoilRun.get(store)!
-    run()
-    return recoilStore
+    return useRecoilStoreInstance(recoilStore, storeToDescriptors.get(store)!)
   }
+  const key = store.name
+  if (keys.has(key)) throw new Error(`Store name already used`)
   const storeInstance = new store()
-  const descriptors = getStoreDescriptors(storeInstance)
-  type ClassPropertyType = 'value' | 'action' | 'selector'
-  const keyToType: { [key: string]: ClassPropertyType } = {}
-
-  for (const key in descriptors) {
-    const descriptor = descriptors[key]
-    const type: ClassPropertyType =
-      typeof descriptor.value === 'function'
-        ? 'action'
-        : typeof descriptor.get === 'function'
-        ? 'selector'
-        : 'value'
-    switch (type) {
-      case 'action': {
-        break
+  console.log('name', store.name)
+  const descriptors = getStoreDescriptors(storeInstance).map<Descriptor>(
+    (descriptor) => {
+      if (typeof descriptor.value === 'function') {
+        return {
+          type: 'action',
+          value: descriptor.value,
+          // value: selectorFamily({ key, get: (...args) => ({ get }) => {
+          //   return descriptor.value.call(interceptor, ...args)
+          // } })
+        }
+      } else if (typeof descriptor.get === 'function') {
+        return {
+          type: 'selector',
+          value: selectorFamily,
+        }
       }
-      case 'selector': {
-        break
-      }
-      case 'value': {
-        break
+      return {
+        type: 'value',
+        value: descriptor.value,
       }
     }
-  }
+  )
+  storeToRecoilStore.set(store, storeInstance)
+  storeToDescriptors.set(store, descriptors)
+  return useRecoilStoreInstance(storeInstance, descriptors)
+}
 
-  let tracking = new Set<string>()
-
-  const wrappedStore = new Proxy(storeInstance, {
-    get(target, key) {
-      if (typeof key === 'string') {
-        tracking.add(key)
-      }
-      return Reflect.get(target, key)
-    },
-    set(target, key, value, receiver) {
-      return Reflect.set(target, key, value, receiver)
-    },
-  })
-
-  const run = () => {
-    const {
-      getRecoilValue,
-      getRecoilState,
-      getSetRecoilState,
-    } = useRecoilInterface()
-    tracking = new Set<string>()
-  }
-
-  storeToRecoilStore.set(store, wrappedStore)
-  storeToRecoilRun.set(store, run)
-
-  return wrappedStore
+function useRecoilStoreInstance(store: any, descriptors: Descriptor[]) {
+  const {
+    getSetRecoilState,
+    getRecoilValue,
+    getRecoilState,
+  } = useRecoilInterface()
+  return useMemo(
+    () =>
+      new Proxy(store, {
+        get(target, key) {
+          // return getRecoilValue(key)
+          return Reflect.get(target, key)
+        },
+        set(target, key, value, receiver) {
+          // return getSetRecoilState(key, value)
+          return Reflect.set(target, key, value, receiver)
+        },
+      }),
+    []
+  )
 }
 
 function getStoreDescriptors(storeInstance: any) {
@@ -78,5 +77,5 @@ function getStoreDescriptors(storeInstance: any) {
     ...instanceDescriptors,
   }
   delete descriptors.constructor
-  return descriptors
+  return Object.keys(descriptors).map((key) => descriptors[key])
 }
