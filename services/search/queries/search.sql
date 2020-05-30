@@ -1,26 +1,43 @@
-SELECT jsonb_agg(
-    json_build_object(
-      'id', data.id,
-      'name', data.name,
-      'slug', data.slug,
-      'location', ST_AsGeoJSON(data.location)::json,
-      'tags', ARRAY(
-        SELECT json_build_object(
-          'tag', json_build_object(
-            'id', id,
-            'name', name,
-            'icon', icon,
-            'type', type
-          ),
-          'rating', rt.rating,
-          'rank', rt.rank,
-          'photos', rt.photos
-        ) FROM restaurant_tag rt
-          JOIN tag t ON rt.tag_id = t.id
-          WHERE rt.restaurant_id = data.id
-          ORDER BY rating DESC NULLS LAST
-        )
+WITH
+  dish_ids AS (
+    SELECT id
+      FROM tag
+      WHERE name ILIKE ANY (
+        SELECT UNNEST(string_to_array(
+          -- TODO use our formal slugify() format
+          -- Speed optimisation isn't so important here because the tag
+          -- table should be always be relatively small
+          LOWER(REPLACE(?4, '-', ' ')),
+          ','
+        ))
       )
+        AND type = 'dish'
+  )
+
+SELECT jsonb_agg(
+  json_build_object(
+    'id', data.id,
+    'name', data.name,
+    'rating', data.rating,
+    'slug', data.slug,
+    'location', ST_AsGeoJSON(data.location)::json,
+    'tags', ARRAY(
+      SELECT json_build_object(
+        'tag', json_build_object(
+          'id', id,
+          'name', name,
+          'icon', icon,
+          'type', type
+        ),
+        'rating', rt.rating,
+        'rank', rt.rank,
+        'photos', rt.photos
+      ) FROM restaurant_tag rt
+        JOIN tag t ON rt.tag_id = t.id
+        WHERE rt.restaurant_id = data.id
+        ORDER BY rt.rating DESC NULLS LAST
+      )
+    )
   ) FROM (
     SELECT *
     FROM restaurant
@@ -103,6 +120,20 @@ SELECT jsonb_agg(
       )
     )
 
-    ORDER BY rating DESC NULLS LAST
+    ORDER BY
+
+      CASE
+        -- Default sort order is by the _restaurant's_ rating
+        WHEN NOT EXISTS (SELECT 1 FROM dish_ids) THEN rating
+        -- However, if a known dish(es) is being searched for, then order the restaurants
+        -- based on the average rating of those dishes for that restaurant.
+        ELSE (
+          SELECT AVG(rt.rating)
+            FROM restaurant_tag rt
+            WHERE rt.restaurant_id = restaurant.id
+              AND rt.tag_id IN (SELECT id FROM dish_ids)
+        )
+      END DESC NULLS LAST
+
     LIMIT ?5
   ) data
