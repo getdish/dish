@@ -1,4 +1,4 @@
-declare module 'recoil' {
+declare module '@o/recoil' {
   export function useRecoilInterface(): any
 
   export type AtomFamilyOptions<T, Parameter> = Readonly<{

@@ -193,7 +193,7 @@ async function restaurantUpdateTagNames(restaurant: RestaurantWithId) {
   restaurant = (await restaurantFindOneWithTags(restaurant))!
   if (restaurant) {
     const tags: RestaurantTag[] = restaurant.tags ?? []
-    const tag_names = [
+    const tag_names: string[] = [
       ...new Set(
         tags
           .map(keepTagsWithParent)

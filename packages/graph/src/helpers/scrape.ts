@@ -49,6 +49,9 @@ export function scrapeGetData(
 ): any {
   if (!scrape) return default_value
   let obj = scrape.data
+  if (!obj) {
+    return
+  }
   const keys = path.split('.')
   const length = keys.length
   let index = -1

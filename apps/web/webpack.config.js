@@ -263,7 +263,7 @@ module.exports = function getWebpackConfig(
       config.plugins.push({
         apply: (compiler) => {
           compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
-            exec('node ./worker-patch.js', (err, stdout, stderr) => {
+            exec('node ./etc/worker-patch.js', (err, stdout, stderr) => {
               if (stdout) process.stdout.write(stdout)
               if (stderr) process.stderr.write(stderr)
             })

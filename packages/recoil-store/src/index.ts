@@ -1,5 +1,7 @@
+import { selectorFamily, useRecoilInterface } from '@o/recoil'
 import { useMemo } from 'react'
-import { selectorFamily, useRecoilInterface } from 'recoil'
+
+const logAll: any = (...args) => console.log(...args)
 
 type Descriptor =
   | { type: 'value'; value: any }
@@ -10,7 +12,10 @@ const keys = new Set<string>()
 const storeToRecoilStore = new WeakMap<any, any>()
 const storeToDescriptors = new WeakMap<any, Descriptor[]>()
 
-export function useRecoilStore<A extends Object>(store: new () => A): A {
+export function useRecoilStore<A extends Object>(
+  store: new () => A,
+  props?: any
+): A {
   let recoilStore = storeToRecoilStore.get(store)
   if (recoilStore) {
     return useRecoilStoreInstance(recoilStore, storeToDescriptors.get(store)!)
@@ -18,16 +23,20 @@ export function useRecoilStore<A extends Object>(store: new () => A): A {
   const key = store.name
   if (keys.has(key)) throw new Error(`Store name already used`)
   const storeInstance = new store()
-  console.log('name', store.name)
+  const interceptor = (get: Function) =>
+    new Proxy({}, { get: logAll, set: logAll })
   const descriptors = getStoreDescriptors(storeInstance).map<Descriptor>(
     (descriptor) => {
       if (typeof descriptor.value === 'function') {
         return {
           type: 'action',
-          value: descriptor.value,
-          // value: selectorFamily({ key, get: (...args) => ({ get }) => {
-          //   return descriptor.value.call(interceptor, ...args)
-          // } })
+          value: selectorFamily({
+            key,
+            get: (...args) => ({ get }) => {
+              console.log('calling get with', { args })
+              return descriptor.value.call(interceptor(get), ...args)
+            },
+          }),
         }
       } else if (typeof descriptor.get === 'function') {
         return {
