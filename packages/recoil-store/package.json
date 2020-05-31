@@ -11,7 +11,7 @@
     "test": "ava test/* --verbose"
   },
   "dependencies": {
-    "recoil": "^0.0.7"
+    "@o/recoil": "0.0.7"
   },
   "devDependencies": {
     "@dish/react-test-env": "*"

@@ -1336,6 +1336,11 @@
     "@gqless/utils" "^0.0.1-alpha.26"
     tslib "^1.11.1"
 
+"@o/recoil@0.0.7":
+  version "0.0.7"
+  resolved "https://registry.npmjs.org/@o/recoil/-/recoil-0.0.7.tgz#a396b0e29a197c50e391995f297705af25e4d1c5"
+  integrity sha512-2Dd/vv3xP1yjAbESVBEsacRQdvFMenulpF+U+CmFUrUbM8Q9EgyVV7P3deeP5jOSzRrm74w9PnLkOC+cUQdkzg==
+
 "@oclif/command@^1.5.13", "@oclif/command@^1.5.19", "@oclif/command@^1.5.20":
   version "1.6.1"
   resolved "https://registry.npmjs.org/@oclif/command/-/command-1.6.1.tgz#774e860f283f32a728377da1c2a90beb8aadf9f5"
@@ -12877,11 +12882,6 @@ rechoir@^0.7.0:
   integrity sha512-ADsDEH2bvbjltXEP+hTIAmeFekTFK0V2BTxMkok6qILyAJEXV0AFfoWcAq4yfll5VdIMd/RVXq0lR+wQi5ZU3Q==
   dependencies:
     resolve "^1.9.0"
-
-recoil@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.npmjs.org/recoil/-/recoil-0.0.7.tgz#197066ac0a983e4728f5973033bbe5b40a277d40"
-  integrity sha512-U/0kniHLk131hKhAX35QGdghVf3+PSkLcFIFoNBNy+yv62qCLm3TE5c3v4x4WYzuKgw1fxU3GGhKHAUYdyRnTQ==
 
 recursive-readdir@2.2.2:
   version "2.2.2"

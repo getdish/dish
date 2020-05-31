@@ -15,7 +15,7 @@ test('creates a simple store and action works', async (t) => {
   }
 
   let x = findX()
-  t.is(x.children[0], '0')
+  t.is(x.children[0], 'hi')
   const [add] = r.root.findAllByProps({ id: 'add' })
 
   act(() => {
