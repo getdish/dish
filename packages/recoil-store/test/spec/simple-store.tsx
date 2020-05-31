@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useRecoilStore } from '../../_'
+import { RecoilRoot, useRecoilStore } from '../../_'
 
 const sleep = () => new Promise((res) => setTimeout(res, 100))
 function get<A>(_: A, b?: any): A extends new () => infer B ? B : A {
@@ -46,16 +46,24 @@ class CustomTodoList extends Store<{ namespace: string }> {
 }
 
 export function SimpleStoreTest() {
+  return (
+    <RecoilRoot>
+      <SimpleStoreTestComponent />
+    </RecoilRoot>
+  )
+}
+
+function SimpleStoreTestComponent() {
   const store = useRecoilStore(TodoList, {
     namespace: 'hello',
   })
 
   console.log('store', store)
   return (
-    <>
+    <RecoilRoot>
       <div id="x">{store.items[store.items.length - 1].text}</div>
       <button id="add" onClick={() => store.add()}></button>
       <button id="asyncAdd" onClick={() => store.asyncAdd()}></button>
-    </>
+    </RecoilRoot>
   )
 }
