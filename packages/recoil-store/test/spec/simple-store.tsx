@@ -25,7 +25,10 @@ class TodoList extends Store<{
 
   add() {
     console.log('adding')
-    this.items = [...this.items, { text: '', done: false }]
+    this.items = [
+      ...this.items,
+      { text: `item-${this.items.length}`, done: false },
+    ]
   }
 
   async asyncAdd() {
@@ -50,7 +53,7 @@ export function SimpleStoreTest() {
   console.log('store', store)
   return (
     <>
-      <div id="x">{store.items[0].text}</div>
+      <div id="x">{store.items[store.items.length - 1].text}</div>
       <button id="add" onClick={() => store.add()}></button>
       <button id="asyncAdd" onClick={() => store.asyncAdd()}></button>
     </>

@@ -20,6 +20,11 @@ const DOMAIN = (() => {
   }
 })()
 
+if (typeof localStorage === 'undefined') {
+  const { LocalStorage } = require('node-localstorage')
+  global['localStorage'] = new LocalStorage('./tmp')
+}
+
 class AuthModel {
   public jwt = ''
   public isLoggedIn = false
@@ -37,10 +42,7 @@ class AuthModel {
   }
 
   checkForExistingLogin() {
-    const json =
-      process.env.TARGET === 'client'
-        ? localStorage.getItem(BROWSER_STORAGE_KEY)
-        : null
+    const json = localStorage.getItem(BROWSER_STORAGE_KEY)
     if (json != null) {
       const auth = JSON.parse(json)
       this.jwt = auth.token
@@ -132,16 +134,14 @@ class AuthModel {
     this.isLoggedIn = true
     this.jwt = data.token
     this.user = data.user
-    if (process.env.TARGET === 'client') {
-      localStorage.setItem(
-        BROWSER_STORAGE_KEY,
-        JSON.stringify({
-          token: this.jwt,
-          user: this.user,
-        })
-      )
-      this.has_been_logged_out = false
-    }
+    localStorage.setItem(
+      BROWSER_STORAGE_KEY,
+      JSON.stringify({
+        token: this.jwt,
+        user: this.user,
+      })
+    )
+    this.has_been_logged_out = false
     return [response.status, data.user] as const
   }
 
@@ -149,9 +149,7 @@ class AuthModel {
     this.isLoggedIn = false
     this.jwt = ''
     this.user = null
-    if (process.env.TARGET === 'client') {
-      localStorage.removeItem(BROWSER_STORAGE_KEY)
-    }
+    localStorage.removeItem(BROWSER_STORAGE_KEY)
   }
 }
 
