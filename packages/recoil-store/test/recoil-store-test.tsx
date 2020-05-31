@@ -1,3 +1,5 @@
+import '@dish/react-test-env/jsdom-register'
+
 import { TestRenderer, act } from '@dish/react-test-env'
 import anyTest, { TestInterface } from 'ava'
 import React from 'react'
