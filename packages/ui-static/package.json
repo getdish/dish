@@ -10,8 +10,9 @@
   "scripts": {
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
-    "test": "DEBUG=1 DISH_ENV=test ava test/* --verbose",
-    "test:watch": "DEBUG=1 DISH_ENV=test ava test/* --watch"
+    "test": "true",
+    "test:tmp": "DEBUG=1 DISH_ENV=test ava test/* --verbose",
+    "test:tmp:watch": "DEBUG=1 DISH_ENV=test ava test/* --watch"
   },
   "license": "MIT",
   "dependencies": {
