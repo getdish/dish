@@ -56,6 +56,9 @@ DO_KEY=$(\
 doctl auth init -t $DO_KEY
 doctl kubernetes cluster kubeconfig save dish
 rio up --answers env.enc.production.yaml
+kubectl rollout \
+  restart deployment \
+  $(kubectl get deployments | tail -n +2 | cut -d ' ' -f 1)
 rio ps
 
 HOOK=$(\
