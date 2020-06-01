@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo } from 'react'
+import React from 'react'
 import { createPortal } from 'react-dom'
 
 import { useOverlay } from '../hooks/useOverlay'
@@ -14,14 +14,6 @@ export const Modal = ({
   onClickOutside?: Function
 }) => {
   const zIndex = 10
-
-  const container = useMemo(() => document.createElement('div'), [])
-  useLayoutEffect(() => {
-    document.getElementById('modals')?.appendChild(container)
-    return () => {
-      document.getElementById('modals')?.removeChild(container)
-    }
-  }, [])
 
   useOverlay({ isOpen, onClick: onClickOutside, zIndex })
 
@@ -47,6 +39,6 @@ export const Modal = ({
         {...rest}
       ></Box>
     </ZStack>,
-    container
+    document.getElementById('modals')!
   )
 }
