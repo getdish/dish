@@ -360,9 +360,10 @@ domNode: ${domNode}
         // capture views where they set it afterwards
         // plus any defaults passed through gloss
         if (Object.keys(viewStyles).length > 0) {
-          const style = getStylesAtomic(viewStyles)
-          const className = Object.keys(style)[0]
-          stylesByClassName[className] = style[className]
+          const styles = getStylesAtomic(viewStyles)
+          for (const style of styles) {
+            stylesByClassName[style.identifier] = style
+          }
         }
 
         const classNameObjects: ClassNameObject[] = []

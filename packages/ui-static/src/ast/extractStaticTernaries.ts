@@ -2,7 +2,7 @@ import generate from '@babel/generator'
 import * as t from '@babel/types'
 import invariant from 'invariant'
 
-import { getStyleAtomic } from '../style/getStylesAtomic'
+import { getStylesAtomic } from '../style/getStylesAtomic'
 import { CacheObject, ClassNameToStyleObj } from '../types'
 
 export interface Ternary {
@@ -86,24 +86,28 @@ export function extractStaticTernaries(
   const ternaryExpression = Object.keys(ternariesByKey)
     .map((key, idx) => {
       const { test, consequentStyles, alternateStyles } = ternariesByKey[key]
-      const consInfo = getStyleAtomic(consequentStyles)
-      const consequentClassName = consInfo.className
-      const altInfo = getStyleAtomic(alternateStyles)
-      const alternateClassName = altInfo.className
+      const consInfo = getStylesAtomic(consequentStyles)
+      const altInfo = getStylesAtomic(alternateStyles)
 
-      if (!consequentClassName && !alternateClassName) {
+      if (!consInfo.length && !altInfo.length) {
         return null
       }
 
-      if (consequentClassName) {
-        stylesByClassName[consequentClassName] = consInfo
+      if (consInfo.length) {
+        for (const style of consInfo) {
+          stylesByClassName[style.identifier] = style
+        }
+      }
+      if (altInfo) {
+        for (const style of altInfo) {
+          stylesByClassName[style.identifier] = style
+        }
       }
 
-      if (alternateClassName) {
-        stylesByClassName[alternateClassName] = altInfo
-      }
+      const consequentClassName = consInfo.map((x) => x.className).join(' ')
+      const alternateClassName = altInfo.map((x) => x.className).join(' ')
 
-      if (consequentClassName && alternateClassName) {
+      if (consInfo.length && altInfo.length) {
         if (idx > 0) {
           // if it's not the first ternary, add a leading space
           return t.binaryExpression(

@@ -14,7 +14,7 @@
   "scripts": {
     "start": "",
     "build": "ultra -r --no-pretty build",
-    "build:watch": "ultra -r --no-pretty watch",
+    "build:watch": "ultra -r --no-pretty --concurrency 500 watch",
     "build:monitor": "ultra --monitor",
     "build:watch:broken": "yarn tsc -b -w",
     "test": "ultra -r --no-pretty test",

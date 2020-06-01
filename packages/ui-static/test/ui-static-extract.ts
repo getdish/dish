@@ -1,3 +1,5 @@
+import '@dish/react-test-env/jsdom-register'
+
 import path from 'path'
 
 import { TestRenderer } from '@dish/react-test-env'
@@ -23,26 +25,6 @@ const outDir = path.join(specDir, 'out')
 const outFile = 'out.js'
 const outFileFull = path.join(outDir, outFile)
 
-test('converts a style object to class names', async (t) => {
-  const style: ViewStyle = {
-    backgroundColor: 'red',
-    transform: [{ rotateY: '10deg' }],
-  }
-  const styles = getStylesAtomic(style)
-  const style1 = styles['r-1g6456j']
-  const style2 = styles['r-188uu3c']
-  t.assert(!!style1)
-  t.assert(!!style2)
-  t.is(style1.value, 'rgba(255,0,0,1.00)')
-  t.is(style1.property, 'backgroundColor')
-  t.deepEqual(style1.rules, [
-    '.r-1g6456j{background-color:rgba(255,0,0,1.00);}',
-  ])
-  t.deepEqual(style2.rules, [
-    '.r-188uu3c{-webkit-transform:rotateY(10deg);transform:rotateY(10deg);}',
-  ])
-})
-
 test.before(async (t) => {
   await extractStaticApp()
   const app = require(outFileFull)
@@ -52,11 +34,32 @@ test.before(async (t) => {
   t.context.test3Renderer = TestRenderer.create(React.createElement(app.Test3))
 })
 
+test('converts a style object to class names', async (t) => {
+  const style: ViewStyle = {
+    backgroundColor: 'red',
+    transform: [{ rotateY: '10deg' }],
+  }
+  const styles = getStylesAtomic(style)
+  console.log('styles', styles)
+  const style1 = styles.find((x) => x.identifier === 'r-1g6456j')
+  const style2 = styles.find((x) => x.identifier === 'r-188uu3c')
+  t.assert(!!style1)
+  t.assert(!!style2)
+  t.is(style1?.value, 'rgba(255,0,0,1.00)')
+  t.is(style1?.property, 'backgroundColor')
+  t.deepEqual(style1?.rules, [
+    '.r-1g6456j{background-color:rgba(255,0,0,1.00);}',
+  ])
+  t.deepEqual(style2?.rules, [
+    '.r-188uu3c{-webkit-transform:rotateY(10deg);transform:rotateY(10deg);}',
+  ])
+})
+
 test('extracts to a div for simple views', async (t) => {
   const { test1Renderer } = t.context
   const out = test1Renderer.toJSON()
   t.is(out?.type, 'div')
-  t.is(out?.props.className, 'is_VStack r-1g6456j')
+  t.is(out?.props.className, 'is_VStack r-1g6456j r-18c69zk r-13awgt0')
 })
 
 test('extracts className for complex views but keeps other props', async (t) => {
@@ -80,7 +83,7 @@ async function extractStaticApp() {
       minimize: false,
       concatenateModules: false,
     },
-    entry: path.join(specDir, 'test.tsx'),
+    entry: path.join(specDir, 'extract-specs.tsx'),
     output: {
       libraryTarget: 'commonjs',
       filename: outFile,

@@ -1,16 +1,30 @@
-- static style extract v1
-- hoverable popover
-- Add o tag, upvote/downvote, star
-- gallery view / click dish to gallery
-- add tip/comment
-- Make sure toasts are working for actions
-- Searchbar needs fixes for tags
-- Upvote tags
-- Better breakdown of rating
-- Some sort of way to highlight comments or at least summaries of features (bert?) on restaurant detail or else it feels too empty
-- Menu/inside/outside
-- Various user flows (expo auth?)
+# June
 
+Week 1
+
+- static style extract v1
+- gallery view / click dish to gallery
+- hoverable popover
+- Searchbar needs many fixes for tags
+- Autocomplete needs many fixes
+- Map needs a lot of regression/fixes
+
+Week 2
+
+- gallery and restaurant detail page need a lot of love
+- improve search results speed and lazy loading
+- RestaurantListItem - needs click to call, click to see map
+
+* add tip/comment
+* Make sure toasts are working for actions
+
+* Upvote tags
+* Better breakdown of rating
+* Some sort of way to highlight comments or at least summaries of features (bert?) on restaurant detail or else it feels too empty
+* Menu/inside/outside
+* Various user flows (expo auth?)
+
+- Add o tag, upvote/downvote, star
 - [ ] hover on left side should show a "banner" on bottom of right
 
 ---

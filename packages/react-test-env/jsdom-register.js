@@ -1,3 +1,4 @@
+require('jsdom-global/register')
 const { JSDOM } = require('jsdom')
 
 const url = 'http://d1sh_hasura_live.com:19006/'

@@ -50,7 +50,5 @@ export const onInitialize: OnInitialize = async (
 
 if (process.env.NODE_ENV === 'development') {
   // @ts-ignore
-  module.hot.accept(() => {
-    debugger
-  })
+  module.hot.accept()
 }

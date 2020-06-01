@@ -204,6 +204,7 @@ export const isEditingUserPage = (state: OmState) => {
 
 // only await things that are required on first render
 const start: AsyncAction = async (om) => {
+  console.log('home.start')
   om.actions.home.updateBreadcrumbs()
   om.actions.home.updateCurrentMapAreaInformation()
   // promises are nice here, dont wait on anything top level unless necessary
@@ -529,6 +530,7 @@ const popHomeState: Action<HistoryItem> = (om, item) => {
 }
 
 const loadHomeDishes: AsyncAction = async (om) => {
+  console.log('loading home dishes')
   const all = await getHomeDishes(
     om.state.home.currentState.center.lat,
     om.state.home.currentState.center.lng,

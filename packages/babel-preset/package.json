@@ -4,8 +4,8 @@
   "main": "babel.config.js",
   "private": true,
   "scripts": {
-    "build": "echo pass || true",
-    "watch": "echo pass"
+    "build": "true",
+    "watch": "true"
   },
   "dependencies": {
     "react-native-web": "*",

@@ -1,4 +1,6 @@
-# High level priorities
+# June
+
+Week 1
 
 - [ ] Search results
   - [ ] Search should sort by tags!
@@ -10,20 +12,28 @@
       - [ ] if no image, we can use an image from any other tag! just fallback to some other restaurant image
     - [ ] Use photos to find them as well
 
+Week 2
+
 - [ ] Dish data / dish ratings
   - [ ] we really need better dish ratings / dish finding
     - [ ] Some looser matching of user comments / sentiment
     - [ ] Ambiance / Service filtering
       - [ ] Ratings that directly mention service/ambiance should be processed differently
         - [ ] We can detect these through simple keyword analysis?
-          1. the star rating should be *not* counted, instead:
+          1. the star rating should be _not_ counted, instead:
           2. take sentiment analysis toward (service + ambiance) separately, and use those in our UI (tags! Service tag + Ambiance tag)
           3. this can be done on all reviews eventually basically
-  - [ ] can we crawl menus from more places - does it help towards dishes?
-    - yelp, google, tripadisor, infatuated
-    - menu data is actually really nice if we can merge it with dish data in the UI so i can show a full menu, and pull in images if they exist
+
+Week 3
+
+- [ ] can we crawl menus from more places - does it help towards dishes?
+  - yelp, google, tripadisor, infatuated
+  - menu data is actually really nice if we can merge it with dish data in the UI so i can show a full menu, and pull in images if they exist
 - [ ] Delivery service crawlers
-- [ ] Image crawling
+
+Week 4
+
+- [ ] Image crawling - image selection improvements
   - [ ] Google or instagram, both ideally!
 - [ ] Various features for "completeness"
   - [ ] If we can find an easyish pre-packaged docker image / library for ML we can use to summarize all the comments into little "snippets" like yelp/google do, that would be a big win in the UI
