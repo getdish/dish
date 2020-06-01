@@ -20,9 +20,11 @@ const DOMAIN = (() => {
   }
 })()
 
-if (typeof localStorage === 'undefined') {
-  const { LocalStorage } = require('node-localstorage')
-  global['localStorage'] = new LocalStorage('./tmp')
+if (process.env.TARGET !== 'client') {
+  if (typeof localStorage === 'undefined') {
+    const { LocalStorage } = require('node-localstorage')
+    global['localStorage'] = new LocalStorage('./tmp')
+  }
 }
 
 class AuthModel {

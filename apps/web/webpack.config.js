@@ -283,11 +283,16 @@ module.exports = function getWebpackConfig(
       )
     }
 
+    return config
+  }
+
+  function getAllConfigs() {
     if (TARGET === 'ssr' || TARGET === 'worker') {
-      return config
+      return getConfig()
     }
 
     function getLegacyConfig() {
+      const config = getConfig()
       return {
         ...config,
         output: {
@@ -304,6 +309,7 @@ module.exports = function getWebpackConfig(
     }
 
     function getModernConfig() {
+      const config = getConfig()
       return {
         ...config,
         output: {
@@ -326,7 +332,7 @@ module.exports = function getWebpackConfig(
     }
   }
 
-  const finalConfig = getConfig()
+  const finalConfig = getAllConfigs()
 
   if (process.env.VERBOSE) {
     console.log('Config:\n', finalConfig)
