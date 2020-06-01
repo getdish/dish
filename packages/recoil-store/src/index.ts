@@ -10,10 +10,6 @@ import { useMemo } from 'react'
 
 export { RecoilRoot } from '@o/recoil'
 
-const logAll: any = (...args) => console.log(...args)
-const interceptor = (get: Function) =>
-  new Proxy({}, { get: logAll, set: logAll })
-
 type StoreAttribute =
   | { type: 'value'; key: string; value: RecoilState<any> }
   | { type: 'action'; key: string; value: Function }
@@ -34,7 +30,9 @@ export function useRecoilStore<A extends Object>(
     return useRecoilStoreInstance(recoilStore, storeToAttributes.get(store)!)
   }
   const storeName = store.name
-  if (keys.has(storeName)) throw new Error(`Store name already used`)
+  if (keys.has(storeName)) {
+    throw new Error(`Store name already used`)
+  }
   const storeInstance = new store()
   const descriptors = getStoreDescriptors(storeInstance)
   const attrs: StoreAttributes = {}
@@ -84,15 +82,10 @@ function getDescription(
 }
 
 function useRecoilStoreInstance(store: any, attrs: StoreAttributes) {
-  const {
-    getSetRecoilState,
-    getRecoilValue,
-    getRecoilState,
-  } = useRecoilInterface()
+  const { getSetRecoilState, getRecoilValue } = useRecoilInterface()
   return useMemo(() => {
     return new Proxy(store, {
       get(target, key) {
-        console.log('get', key)
         if (typeof key === 'string') {
           switch (attrs[key].type) {
             case 'action':
@@ -104,8 +97,11 @@ function useRecoilStoreInstance(store: any, attrs: StoreAttributes) {
         return Reflect.get(target, key)
       },
       set(target, key, value, receiver) {
-        console.log('set', key)
-        // return getSetRecoilState(key, value)
+        if (typeof key === 'string') {
+          const setter = getSetRecoilState(attrs[key].value)
+          setter(value)
+          return true
+        }
         return Reflect.set(target, key, value, receiver)
       },
     })

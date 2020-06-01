@@ -8,7 +8,8 @@
   "scripts": {
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
-    "test": "ava test/* --verbose"
+    "test": "true",
+    "test:tmp": "ava test/* --verbose"
   },
   "dependencies": {
     "@o/recoil": "0.0.7"

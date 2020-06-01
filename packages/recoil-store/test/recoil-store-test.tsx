@@ -20,10 +20,27 @@ test('creates a simple store and action works', async (t) => {
   t.is(x.children[0], 'hi')
   const [add] = r.root.findAllByProps({ id: 'add' })
 
+  // click once
   act(() => {
     add.props.onClick()
   })
-
   x = findX()
-  // t.is(x.children[0], '1')
+  t.is(x.children[0], 'item-1')
+
+  // click twice
+  act(() => {
+    add.props.onClick()
+  })
+  x = findX()
+  t.is(x.children[0], 'item-2')
+
+  // async click
+  const [addAsync] = r.root.findAllByProps({ id: 'add-async' })
+  act(() => {
+    addAsync.props.onClick()
+  })
+  x = findX()
+  t.is(x.children[0], 'item-2')
+  await new Promise((res) => setTimeout(res, 110))
+  t.is(x.children[0], 'item-3')
 })

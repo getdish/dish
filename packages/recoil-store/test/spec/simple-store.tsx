@@ -24,7 +24,6 @@ class TodoList extends Store<{
   }
 
   add() {
-    console.log('adding')
     this.items = [
       ...this.items,
       { text: `item-${this.items.length}`, done: false },
@@ -57,13 +56,11 @@ function SimpleStoreTestComponent() {
   const store = useRecoilStore(TodoList, {
     namespace: 'hello',
   })
-
-  console.log('store', store)
   return (
     <RecoilRoot>
       <div id="x">{store.items[store.items.length - 1].text}</div>
       <button id="add" onClick={() => store.add()}></button>
-      <button id="asyncAdd" onClick={() => store.asyncAdd()}></button>
+      <button id="add-async" onClick={() => store.asyncAdd()}></button>
     </RecoilRoot>
   )
 }
