@@ -7,12 +7,20 @@ function get<A>(_: A, b?: any): A extends new () => infer B ? B : A {
   return _ as any
 }
 
-type Todo = { text: string; done: boolean }
-
 class Store<A> {
   // @ts-ignore
   props: A
 }
+
+class CustomTodoList extends Store<{ namespace: string }> {
+  todoList = get(TodoList, this.props.namespace)
+
+  get items() {
+    return this.todoList.items
+  }
+}
+
+type Todo = { text: string; done: boolean }
 
 class TodoList extends Store<{
   namespace: string
@@ -33,14 +41,6 @@ class TodoList extends Store<{
   async asyncAdd() {
     await sleep()
     this.add()
-  }
-}
-
-class CustomTodoList extends Store<{ namespace: string }> {
-  todoList = get(TodoList, this.props.namespace)
-
-  get items() {
-    return this.todoList.items
   }
 }
 

@@ -1,4 +1,3 @@
-
 - static style extract v1
 - hoverable popover
 - Add o tag, upvote/downvote, star
@@ -11,7 +10,6 @@
 - Some sort of way to highlight comments or at least summaries of features (bert?) on restaurant detail or else it feels too empty
 - Menu/inside/outside
 - Various user flows (expo auth?)
-
 
 - [ ] hover on left side should show a "banner" on bottom of right
 

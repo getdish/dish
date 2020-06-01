@@ -13,9 +13,14 @@
 
 # april, may, june
 
-- April will be beta app + community ready for launch (☹️)
-- May will be community building, app refinement and feature building
-- June goal will likely be to kickoff ad campaign and launch publicly
+- we missed like all goals :(, but we have some great ideas on how to actually make dish a real company
+  - downstream delivery / shopify whitelabel delivery
+  - content - focus on business of delivery, business of restaurants, master guide, how to manage, supplies, insurance etc
+  - we really improved the stack more and also how we display data more than you'd expect, hopefully that speeds us up going forward
+
+# june
+
+- we gotta get the community site out end of month - no more excuses!!!
 
 ---
 

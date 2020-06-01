@@ -64,4 +64,23 @@ export function Test6(props: any) {
   )
 }
 
+// merged multiple ternary
+export function Test7() {
+  const isSmall = Math.random() > 0.5
+  const verticalPad = 10
+  const pad = 5
+  return (
+    <VStack
+      paddingHorizontal={pad + 6}
+      paddingBottom={verticalPad}
+      width={isSmall ? '50vw' : '66%'}
+      minWidth={isSmall ? '50%' : 500}
+      maxWidth={isSmall ? '80vw' : '30%'}
+      spacing={5}
+    >
+      <div />
+    </VStack>
+  )
+}
+
 export * from '@dish/ui'

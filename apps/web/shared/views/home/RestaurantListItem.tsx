@@ -97,9 +97,7 @@ const RestaurantListItemContent = memo(
     const [state, setState] = useState({
       showAddComment: false,
     })
-
     const showAddComment = state.showAddComment || isEditingUserPage(om.state)
-
     const adjustRankingLeft = 36
     const verticalPad = 24
     const leftPad = 6
