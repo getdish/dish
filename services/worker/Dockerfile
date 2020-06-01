@@ -3,6 +3,7 @@ FROM mhart/alpine-node:12.16.1
 WORKDIR /app
 RUN apk add --no-cache patch
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
+ENV NODE_OPTIONS="--max_old_space_size=4096"
 
 COPY package.json .
 COPY tsconfig.base.json .
