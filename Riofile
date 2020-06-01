@@ -97,7 +97,7 @@ services:
       - COMMIT_HASH=${REVISION}
       - POSTGRES_HOST=postgres-postgresql.postgres
       - POSTGRES_PASSWORD=${TF_VAR_POSTGRES_PASSWORD}
-  postgres-backups:
+  backups:
     image: docker.k8s.dishapp.com/dish/backups
     imagePullSecrets:
       - docker-config-json
