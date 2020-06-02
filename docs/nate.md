@@ -27,6 +27,10 @@ Week 2
 - Add o tag, upvote/downvote, star
 - [ ] hover on left side should show a "banner" on bottom of right
 
+Week 3
+
+- [ ] make a list of articles for luke
+
 ---
 
 - [ ] crawler for "header" images for dishes (Pho) (Instagram?)

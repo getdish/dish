@@ -53,11 +53,12 @@ export class GlossWebpackPlugin implements Plugin {
   }
 
   public apply(compiler: Compiler) {
-    compiler.hooks.environment.tap(this.pluginName, () => {
+    const environmentPlugin = () => {
       const wrappedFS = wrapFileSystem(compiler.inputFileSystem, this.memoryFS)
       compiler.inputFileSystem = wrappedFS
       compiler.watchFileSystem = new NodeWatchFileSystem(wrappedFS)
-    })
+    }
+    compiler.hooks.environment.tap(this.pluginName, environmentPlugin)
     compiler.hooks.compilation.tap(this.pluginName, this.compilationPlugin)
   }
 }

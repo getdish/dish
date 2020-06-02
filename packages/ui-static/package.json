@@ -4,7 +4,7 @@
   "main": "_/index.js",
   "workspaces": {
     "nohoist": [
-      "**"
+      "react-native-web"
     ]
   },
   "scripts": {
@@ -21,25 +21,26 @@
     "@babel/parser": "^7.9.0",
     "@babel/traverse": "^7.9.0",
     "@babel/types": "^7.9.0",
+    "@dish/ui": "*",
     "babel-literal-to-ast": "^2.1.0",
     "fs-extra": "^9.0.0",
-    "loader-utils": "^2.0.0",
-    "webpack": "^4.43.0",
     "invariant": "^2.2.4",
+    "loader-utils": "^2.0.0",
     "memory-fs": "*",
-    "react-native-web": "^0.12.2"
+    "react-native-web": "^0.12.2",
+    "webpack": "^4.43.0"
   },
   "devDependencies": {
+    "@dish/babel-preset": "*",
     "@dish/react-test-env": "*",
-    "react": "*",
-    "react-dom": "*",
+    "@types/react-native": "^0.62.12",
+    "@types/webpack": "4.41.13",
+    "ava": "^3.8.2",
+    "babel-loader": "^8.0.5",
+    "css-loader": "^3.5.3",
     "extract-loader": "^5.1.0",
     "file-loader": "^6.0.0",
-    "css-loader": "^3.5.3",
-    "babel-loader": "^8.0.5",
-    "@dish/babel-preset": "*",
-    "@types/webpack": "4.41.13",
-    "@types/react-native": "^0.62.12",
-    "ava": "^3.8.2"
+    "react": "*",
+    "react-dom": "*"
   }
 }

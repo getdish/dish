@@ -20,7 +20,7 @@ export function Test2() {
 // single spread at end
 export function Test3(props: any) {
   return (
-    <VStack onHoverIn={() => {}} overflow="hidden" {...props}>
+    <VStack onLayout={() => {}} overflow="hidden" {...props}>
       <div>hi</div>
     </VStack>
   )
@@ -88,5 +88,3 @@ export function Test7() {
     </VStack>
   )
 }
-
-export * from '@dish/ui'

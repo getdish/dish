@@ -23,7 +23,7 @@ const graphRoot = path.join(require.resolve('@dish/graph'), '..', '..', '..')
 const isProduction = process.env.NODE_ENV === 'production'
 const isClient = TARGET === 'client'
 const isHot = !isProduction
-const isStaticExtracted = false && isClient && isProduction
+const isStaticExtracted = true //&& isClient && isProduction
 
 console.log('webpack.config', { isProduction, graphRoot, TARGET })
 
@@ -170,7 +170,7 @@ module.exports = function getWebpackConfig(
         isProduction && new LodashPlugin(),
 
         // extract static styles in production
-        // isStaticExtracted && new GlossWebpackPlugin(),
+        isStaticExtracted && new GlossWebpackPlugin(),
 
         new Webpack.DefinePlugin({
           // ...(target === 'web' || target === 'webworker'
