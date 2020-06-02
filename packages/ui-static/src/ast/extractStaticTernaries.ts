@@ -104,8 +104,8 @@ export function extractStaticTernaries(
         }
       }
 
-      const consequentClassName = consInfo.map((x) => x.className).join(' ')
-      const alternateClassName = altInfo.map((x) => x.className).join(' ')
+      const consequentClassName = consInfo.map((x) => x.identifier).join(' ')
+      const alternateClassName = altInfo.map((x) => x.identifier).join(' ')
 
       if (consInfo.length && altInfo.length) {
         if (idx > 0) {
