@@ -598,10 +598,54 @@ export class Self extends WorkerJob {
     for (const tag_id of Object.keys(this.restaurant_tag_ratings)) {
       restaurant_tags.push({
         tag_id: tag_id,
-        rating: _.mean(this.restaurant_tag_ratings[tag_id]),
+        rating: this._calculateTagRating(this.restaurant_tag_ratings[tag_id]),
       })
     }
     await restaurantUpsertManyTags(this.restaurant, restaurant_tags)
+  }
+
+  _calculateTagRating(ratings: number[]) {
+    const averaged = _.mean(ratings)
+    const normalised = this._normaliseTagRating(averaged)
+    const max_restaurant_rating = 5
+    const neutral = max_restaurant_rating / 2
+    const amplifier = (this.restaurant.rating - neutral) / neutral
+    let potential = 0
+    if (amplifier > 0) {
+      potential = (1 - normalised) / 2
+    } else {
+      potential = normalised / 2
+    }
+    const weight = potential * amplifier
+    const weighted = normalised + weight
+    return weighted
+  }
+
+  _normaliseTagRating(rating: number) {
+    let normalised: number = 0
+    const percentiles = this._getApproximatedDistribution()
+    let lower: number = 0
+    let upper: number = 0
+    if (rating <= percentiles[0]) return 0
+    if (rating >= percentiles[percentiles.length - 1]) return 1
+    for (let i = 0; i < percentiles.length; i++) {
+      normalised = i
+      lower = percentiles[i]
+      upper = percentiles[i + 1]
+      if (rating >= lower && rating < upper) break
+    }
+    const distance_between = 1 - (upper - rating) / (upper - lower)
+    normalised += distance_between
+    return normalised / (percentiles.length - 1)
+  }
+
+  // All the percentiles for our tag rankings. You can get them with statements like:
+  // ```
+  // select percentile_disc(0.5) within group (order by restaurant_tag.rating)
+  //   from restaurant_tag
+  // ```
+  _getApproximatedDistribution() {
+    return [-15, -0.001, 0.001, 0.666, 1.081, 1.5, 2, 2.272, 3, 4, 44]
   }
 
   getRatingFactors() {

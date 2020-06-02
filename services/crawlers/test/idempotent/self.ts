@@ -361,9 +361,9 @@ test('Dish sentiment analysis from reviews', async (t) => {
     updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as Tag)
   const tag3 =
     updated.tags.find((i) => i.tag.id == existing_tag3.id) || ({} as Tag)
-  t.is(tag1.rating, -3)
-  t.is(tag2.rating, 4)
-  t.is(tag3.rating, 0)
+  t.is(tag1.rating, 0.17200480032002136)
+  t.is(tag2.rating, 0.91)
+  t.is(tag3.rating, 0.235)
 })
 
 test('Find photos of dishes', async (t) => {
@@ -438,4 +438,44 @@ test('Identifying country tags', async (t) => {
   t.is(tag2.tag.name, 'Test Spanish')
   t.is(tag2.tag.type, 'country')
   t.assert(tag3.tag.type != 'country')
+})
+
+test('Calculating tag ratings', async (t) => {
+  const dish = new Self()
+  dish.restaurant = t.context.restaurant
+  let rating: number
+  dish.restaurant.rating = 2.5
+  rating = dish._calculateTagRating([0, 1, 2])
+  t.is(rating, 0.38048192771084337)
+  dish.restaurant.rating = 3
+  rating = dish._calculateTagRating([0, 1, 2])
+  t.is(rating, 0.44243373493975907)
+  dish.restaurant.rating = 5
+  rating = dish._calculateTagRating([-15])
+  t.is(rating, 0.5)
+  dish.restaurant.rating = 1.5
+  rating = dish._calculateTagRating([1])
+  t.is(rating, 0.3043855421686747)
+  dish.restaurant.rating = 0
+  rating = dish._calculateTagRating([44])
+  t.is(rating, 0.5)
+})
+
+test('Normalising tag ratings', async (t) => {
+  const dish = new Self()
+  let normalised: number
+  normalised = dish._normaliseTagRating(-16)
+  t.is(normalised, 0)
+  normalised = dish._normaliseTagRating(-15)
+  t.is(normalised, 0)
+  normalised = dish._normaliseTagRating(1)
+  t.is(normalised, 0.38048192771084337)
+  normalised = dish._normaliseTagRating(3)
+  t.is(normalised, 0.8)
+  normalised = dish._normaliseTagRating(5)
+  t.is(normalised, 0.9025000000000001)
+  normalised = dish._normaliseTagRating(44)
+  t.is(normalised, 1)
+  normalised = dish._normaliseTagRating(45)
+  t.is(normalised, 1)
 })

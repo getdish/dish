@@ -11,7 +11,7 @@ export type RatingViewProps = StackProps & {
 }
 
 export const getRankingColor = (percent: number) =>
-  percent >= 8 ? '#00BA00' : percent >= 5 ? 'rgba()' : 'red'
+  percent >= 0.8 ? '#00BA00' : percent >= 0.5 ? 'rgba()' : 'red'
 
 export const RatingView = forwardRef(
   (
@@ -28,9 +28,9 @@ export const RatingView = forwardRef(
     if (!percent) return null
     if (!color) return null
     const borderColor =
-      percent >= 8
+      percent >= 0.8
         ? 'rgba(190, 250, 200, 0.85)'
-        : percent >= 5
+        : percent >= 0.5
         ? 'gold'
         : 'rgba(250, 100, 100, 0.85)'
 
@@ -49,7 +49,7 @@ export const RatingView = forwardRef(
         textShadowColor="rgba(0,0,0,0.25)"
         textShadowRadius={size * 0.015}
       >
-        {percent >= 9 ? '💎' : '⭐️'}
+        {percent >= 0.9 ? '💎' : '⭐️'}
       </Text>
     )
 
@@ -60,7 +60,7 @@ export const RatingView = forwardRef(
         color={color}
         letterSpacing={-(size / 90)}
       >
-        {percent}
+        {percent * 10}
       </Text>
     )
 
