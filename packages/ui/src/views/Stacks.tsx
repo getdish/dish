@@ -31,7 +31,7 @@ export type StackProps = Omit<
 >
 
 const createStack = (defaultStyle?: ViewStyle) => {
-  return forwardRef<View, StackProps>(
+  const component = forwardRef<View, StackProps>(
     (
       {
         children,
@@ -165,6 +165,12 @@ const createStack = (defaultStyle?: ViewStyle) => {
       return content
     }
   )
+
+  component['staticConfig'] = {
+    defaultStyle,
+  }
+
+  return component
 }
 
 export const ZStack = createStack({ position: 'absolute' })

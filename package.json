@@ -30,9 +30,11 @@
     "react-dom": "0.0.0-experimental-aae83a4b9",
     "@types/react": "16.9.35",
     "@types/react-dom": "16.9.8",
-    "@types/react-native": "0.62.10"
+    "@types/react-native": "0.62.12",
+    "react-native": "0.62.2"
   },
   "devDependencies": {
+    "@zerollup/ts-transform-paths": "1.7.17",
     "import-sort-style-module": "^6.0.0",
     "prettier-plugin-import-sort": "^0.0.4",
     "@types/node": "13.11.1",
@@ -52,5 +54,8 @@
       "style": "module",
       "parser": "typescript"
     }
+  },
+  "_moduleAliases": {
+    "react-native": "react-native-web"
   }
 }

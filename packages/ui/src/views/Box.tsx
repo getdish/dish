@@ -19,3 +19,5 @@ export function Box(props: StackProps) {
     />
   )
 }
+
+Box.staticConfig = VStack['staticConfig']

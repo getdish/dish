@@ -29,7 +29,6 @@ export const RestaurantButton = memo(
     return (
       <LinkButton
         key={restaurant.name}
-        name="restaurant"
         pointerEvents="auto"
         params={{ slug: restaurant.slug }}
         {...(active ? flatButtonStyleSelected : flatButtonStyle)}
@@ -46,6 +45,7 @@ export const RestaurantButton = memo(
         })}
         paddingRight={34}
         {...props}
+        name="restaurant"
         onHoverIn={() => {
           onHoverIn?.(restaurant)
         }}

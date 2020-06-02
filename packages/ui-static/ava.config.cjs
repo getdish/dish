@@ -1,1 +1,3 @@
-module.exports = require('../../ava.config')
+const config = require('../../ava.config')
+
+module.exports = config

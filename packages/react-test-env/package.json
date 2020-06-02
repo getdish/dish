@@ -18,7 +18,8 @@
     "@types/react-test-renderer": "^16.9.2",
     "@types/react-native": "^0.62.12",
     "@types/react": "^16.9.35",
-    "@types/react-dom": "^16.9.8"
+    "@types/react-dom": "^16.9.8",
+    "@testing-library/react": "^10.0.5"
   },
   "peerDependencies": {
     "react": "*",

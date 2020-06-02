@@ -17,12 +17,13 @@ Week 2
 - [ ] Dish data / dish ratings
   - [ ] we really need better dish ratings / dish finding
     - [ ] Some looser matching of user comments / sentiment
-    - [ ] Ambiance / Service filtering
+    - [ ] Ambiance / Service sentiment
       - [ ] Ratings that directly mention service/ambiance should be processed differently
         - [ ] We can detect these through simple keyword analysis?
           1. the star rating should be _not_ counted, instead:
-          2. take sentiment analysis toward (service + ambiance) separately, and use those in our UI (tags! Service tag + Ambiance tag)
+          2. take sentiment analysis toward (service + ambiance) tags separately, and use those in our UI (tags! Service tag + Ambiance tag)
           3. this can be done on all reviews eventually basically
+    - [ ] be sure to use the NON-ambiance/service review as the base for smoothing dish tag reviews! should really improve it.
 
 Week 3
 

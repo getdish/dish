@@ -2,10 +2,10 @@ import '@dish/react-test-env/jsdom-register'
 
 import path from 'path'
 
-import { TestRenderer } from '@dish/react-test-env'
+import { TestRenderer, act, render, screen } from '@dish/react-test-env'
 import anyTest, { TestInterface } from 'ava'
 import React from 'react'
-import { ViewStyle } from 'react-native'
+// import { ViewStyle } from 'react-native'
 import webpack from 'webpack'
 
 import { GlossWebpackPlugin, getStylesAtomic } from '../src'
@@ -13,14 +13,19 @@ import { GlossWebpackPlugin, getStylesAtomic } from '../src'
 const mode = 'production'
 process.env.NODE_ENV = mode
 
+type TestApp = {
+  renderer: TestRenderer.ReactTestRenderer
+  Element: any
+}
+
 const test = anyTest as TestInterface<{
-  test1Renderer: TestRenderer.ReactTestRenderer
-  test2Renderer: TestRenderer.ReactTestRenderer
-  test3Renderer: TestRenderer.ReactTestRenderer
-  test4Renderer: TestRenderer.ReactTestRenderer
-  test5Renderer: TestRenderer.ReactTestRenderer
-  test6Renderer: TestRenderer.ReactTestRenderer
-  test7Renderer: TestRenderer.ReactTestRenderer
+  test1: TestApp
+  test2: TestApp
+  test3: TestApp
+  test4: TestApp
+  test5: TestApp
+  test6: TestApp
+  test7: TestApp
   app: any
 }>
 
@@ -33,17 +38,21 @@ test.before(async (t) => {
   await extractStaticApp()
   const app = require(outFileFull)
   t.context.app = app
-  t.context.test1Renderer = TestRenderer.create(React.createElement(app.Test1))
-  t.context.test2Renderer = TestRenderer.create(React.createElement(app.Test2))
-  t.context.test3Renderer = TestRenderer.create(React.createElement(app.Test3))
-  t.context.test4Renderer = TestRenderer.create(React.createElement(app.Test4))
-  t.context.test5Renderer = TestRenderer.create(React.createElement(app.Test5))
-  t.context.test6Renderer = TestRenderer.create(React.createElement(app.Test6))
-  t.context.test7Renderer = TestRenderer.create(React.createElement(app.Test7))
+  for (const key in app) {
+    act(() => {
+      const App = app[key]
+      const AppElement = <App />
+      const tree = TestRenderer.create(AppElement)
+      t.context[key.toLowerCase()] = {
+        Element: AppElement,
+        renderer: tree,
+      }
+    })
+  }
 })
 
 test('converts a style object to class names', async (t) => {
-  const style: ViewStyle = {
+  const style = {
     backgroundColor: 'red',
     transform: [{ rotateY: '10deg' }],
   }
@@ -63,49 +72,60 @@ test('converts a style object to class names', async (t) => {
 })
 
 test('1. extracts to a div for simple views', async (t) => {
-  const { test1Renderer } = t.context
-  const out = test1Renderer.toTree()
-  t.is(out?.type, 'div')
-  t.is(out?.props.className, 'is_VStack r-1g6456j r-18c69zk r-13awgt0')
+  const { test1 } = t.context
+  const out = test1.renderer.toTree()!
+  t.is(out.rendered?.type, 'div')
+  t.is(
+    out.rendered?.props.className,
+    'is_VStack r-1g6456j r-18c69zk r-13awgt0 r-eqz5dr'
+  )
 })
 
 test('2. extracts className for complex views but keeps other props', async (t) => {
-  const { test2Renderer } = t.context
-  const out = test2Renderer.toTree()
-  console.log('out', out)
-  t.is(out?.type, 'Box')
+  const { test2 } = t.context
+  const out = test2.renderer.toTree()!
+  t.is(out.rendered?.nodeType, 'component')
+  t.is(out.rendered?.props.className, 'who r-1udh08x')
+  const type = (out.rendered?.type as any) as Function
+  t.assert(type instanceof Function)
+  t.is(type.name, 'Box')
+  t.assert(!out.rendered?.props.overflow)
 })
 
 test('3. places className correctly given a single spread', async (t) => {
-  const { test3Renderer } = t.context
-  const out = test3Renderer.toTree()
-  t.is(out?.type, 'VStack')
+  const { test3 } = t.context
+  const out = render(test3.Element)
+  const list = [...out.container.firstChild?.['classList']]
+  t.assert(list.includes('r-1udh08x'))
 })
 
 test('4. leaves dynamic variables', async (t) => {
-  const { test4Renderer } = t.context
-  const out = test4Renderer.toTree()
-  t.is(out?.props.className, 'r-4d76ec')
-  t.is(out?.props.style.width, 'calc(100% + 20px)')
+  const { test4 } = t.context
+  const out = render(test4.Element)
+  const firstChild = out.container.firstChild!
+  const classList = [...firstChild['classList']]
+  t.assert(classList.includes('r-4d76ec'))
+  const r = test4.renderer.toJSON()
+  t.is(r.props.style.width, 'calc(100% + 20px)')
 })
 
 test.skip('5. spread', async (t) => {
-  const { test5Renderer } = t.context
-  const out = test5Renderer.toTree()
-  // t.is(out?.props.className, 'r-4d76ec')
-  // t.is(out?.props.width, 'calc(100% + 12px)')
+  const { test5 } = t.context
+  const out = test5.renderer.toTree()!
+  // t.is(out.props.className, 'r-4d76ec')
+  // t.is(out.props.width, 'calc(100% + 12px)')
 })
 
 test.skip('6. spread ternary', async (t) => {
-  const { test6Renderer } = t.context
-  const out = test6Renderer.toTree()
+  const { test6 } = t.context
+  const out = test6.renderer.toTree()
   // t.is(out?.props.className, 'r-4d76ec')
   // t.is(out?.props.width, 'calc(100% + 12px)')
 })
 
-test('7. ternary', async (t) => {
-  const { test7Renderer } = t.context
-  const out = test7Renderer.toTree()
+test.skip('7. ternary', async (t) => {
+  const { test7 } = t.context
+  const out = test7.renderer.toTree()
   t.is(
     out?.props.className,
     'r-1pjcn9w r-1dfn399 r-1ay0y9e r-1pjcn9w r-1dfn399 r-1ay0y9e r-f2w40 r-68jxh1 r-1skwq7n'
@@ -153,7 +173,7 @@ async function extractStaticApp() {
         {
           test: /\.css$/,
           use: [
-            { loader: 'file-loader', options: { name: 'out.css' } },
+            { loader: 'file-loader', options: { name: 'out.[hash].css' } },
             'extract-loader',
             'css-loader',
           ],

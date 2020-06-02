@@ -3,7 +3,16 @@
   "compilerOptions": {
     "composite": true,
     "outDir": "_",
-    "rootDir": "src"
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "react-native": ["../../node_modules/react-native-web/dist/cjs/index.js"]
+    },
+    "plugins": [
+      {
+        "transform": "@zerollup/ts-transform-paths"
+      }
+    ]
   },
   "include": ["src/**/*"],
   "references": [{ "path": "../async" }]

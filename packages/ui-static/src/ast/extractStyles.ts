@@ -5,11 +5,14 @@ import vm from 'vm'
 import generate from '@babel/generator'
 import traverse from '@babel/traverse'
 import * as t from '@babel/types'
+// hardcoding for now because i cant import dish/ui even with module-alias for react-native-web
+import * as AllExports from '@dish/ui'
 // import literalToAst from 'babel-literal-to-ast'
 import invariant from 'invariant'
+import { ViewStyle } from 'react-native'
 
 import { GLOSS_CSS_FILE } from '../constants'
-import { ViewStyle, getStylesAtomic } from '../style/getStylesAtomic'
+import { getStylesAtomic } from '../style/getStylesAtomic'
 import styleProps from '../style/styleProps'
 import {
   CacheObject,
@@ -21,6 +24,21 @@ import { Ternary, extractStaticTernaries } from './extractStaticTernaries'
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'
 import { getStaticBindingsForScope } from './getStaticBindingsForScope'
 import { parse } from './parse'
+
+type OptimizableComponent = Function & {
+  staticConfig: {
+    defaultStyle: any
+  }
+}
+
+const validComponents: { [key: string]: OptimizableComponent } = Object.keys(
+  AllExports
+)
+  .filter((key) => !!AllExports[key]?.staticConfig)
+  .reduce((obj, name) => {
+    obj[name] = AllExports[name]
+    return obj
+  }, {})
 
 export interface Options {
   cacheObject: CacheObject
@@ -77,12 +95,10 @@ export function extractStyles(
   const cssMap = new Map<string, { css: string; commentTexts: string[] }>()
   const ast = parse(src)
   let doesImport = false
-  const validComponents = {}
   const shouldPrintDebug = !!process.env.DEBUG
 
-  const JSX_VALID_NAMES = ['HStack', 'VStack']
-
   // Find gloss require in program root
+  let foundComponents = {}
   ast.program.body = ast.program.body.filter((item: t.Node) => {
     if (t.isImportDeclaration(item)) {
       if (item.source.value !== '@dish/ui') {
@@ -90,10 +106,10 @@ export function extractStyles(
         return true
       }
       item.specifiers = item.specifiers.filter((specifier) => {
-        if (!JSX_VALID_NAMES.includes(specifier.local.name)) {
+        if (!validComponents[specifier.local.name]) {
           return true
         }
-        validComponents[specifier.local.name] = true
+        foundComponents[specifier.local.name] = true
         return true
       })
     }
@@ -101,7 +117,7 @@ export function extractStyles(
   })
 
   // gloss isn't included anywhere, so let's bail
-  if (!doesImport || !Object.keys(validComponents).length) {
+  if (!doesImport || !Object.keys(foundComponents).length) {
     return {
       ast,
       css: '',
@@ -129,13 +145,13 @@ export function extractStyles(
         }
 
         // Remember the source component
+        const component = validComponents[node.name.name]
         const originalNodeName = node.name.name
 
         if (shouldPrintDebug) {
           console.log('node', originalNodeName)
         }
 
-        const localView = {} //localStaticViews[originalNodeName]
         let domNode = 'div'
 
         const isStaticAttributeName = (name: string) => !!styleProps[name]
@@ -364,7 +380,7 @@ export function extractStyles(
           }
 
           if (shouldPrintDebug) {
-            console.log('inline prop via no match', name, value)
+            console.log('inline prop via no match', name, value.type)
           }
 
           // if we've made it this far, the prop stays inline
@@ -414,10 +430,14 @@ domNode: ${domNode}
         if (inlinePropCount === 0) {
           // add a className="is_Name" so we can debug it more easily
           classNameObjects.push(t.stringLiteral(`is_${node.name.name}`))
-
-          if (localView) {
-            node.name.name = domNode
+          // since were removing down to div, we need to push the default styles onto this classname
+          const defaultStyle = component.staticConfig?.defaultStyle ?? {}
+          const styles = getStylesAtomic(defaultStyle)
+          for (const style of styles) {
+            stylesByClassName[style.identifier] = style
           }
+          // change to div
+          node.name.name = domNode
         } else {
           if (lastSpreadIndex > -1) {
             if (!isSingleSimpleSpread) {
@@ -442,10 +462,6 @@ domNode: ${domNode}
             return
           }
           traversePath.node.closingElement.name.name = node.name.name
-        }
-
-        if (shouldPrintDebug) {
-          console.log('stylesByClassName pre ternaries', stylesByClassName)
         }
 
         if (classNamePropValue) {
@@ -598,6 +614,18 @@ domNode: ${domNode}
   const css = Array.from(cssMap.values())
     .map((v) => v.commentTexts.map((txt) => `${txt}\n`).join('') + v.css)
     .join(' ')
+
+  // we didnt find anything
+  if (css === '') {
+    return {
+      ast,
+      css: '',
+      cssFileName: null,
+      js: src,
+      map: null,
+    }
+  }
+
   const extName = path.extname(sourceFileName)
   const baseName = path.basename(sourceFileName, extName)
   const cssRelativeFileName = `./${baseName}${GLOSS_CSS_FILE}`
@@ -626,7 +654,7 @@ domNode: ${domNode}
 
   if (shouldPrintDebug) {
     console.log('output >> ', result.code)
-    console.log('css output >>', css)
+    console.log('output css >> ', css)
   }
 
   return {

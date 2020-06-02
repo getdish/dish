@@ -34,6 +34,8 @@ export function useAsyncFn<Result = any, Args extends any[] = any[]>(
 
   const mounted = useRefMounted()
 
+  console.trace('calling me wtf', fn, deps)
+
   const callback = useCallback((...args: Args | []) => {
     set({ loading: true })
 
