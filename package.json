@@ -54,8 +54,5 @@
       "style": "module",
       "parser": "typescript"
     }
-  },
-  "_moduleAliases": {
-    "react-native": "react-native-web"
   }
 }

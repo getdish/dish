@@ -1,9 +1,9 @@
 import React from 'react'
 import { useLayoutEffect, useRef } from 'react'
 import { ViewStyle } from 'react-native'
-import { classic } from 'react-native-web/dist/exports/StyleSheet/compile'
-import compileStyle from 'react-native-web/dist/exports/StyleSheet/createCompileableStyle'
-import i18nStyle from 'react-native-web/dist/exports/StyleSheet/i18nStyle'
+import { classic } from 'react-native-web/dist/cjs/exports/StyleSheet/compile'
+import compileStyle from 'react-native-web/dist/cjs/exports/StyleSheet/createCompileableStyle'
+import i18nStyle from 'react-native-web/dist/cjs/exports/StyleSheet/i18nStyle'
 
 const isNative = false
 

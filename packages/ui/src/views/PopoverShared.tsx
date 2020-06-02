@@ -20,4 +20,6 @@ const handleKeyDown = (e) => {
   }
 }
 
-window.addEventListener('keydown', handleKeyDown)
+if (typeof window !== 'undefined') {
+  window.addEventListener('keydown', handleKeyDown)
+}

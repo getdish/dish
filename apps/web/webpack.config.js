@@ -353,6 +353,9 @@ const excludedRootPaths = [
 ]
 
 function babelInclude(inputPath) {
+  if (inputPath.includes('@dish/')) {
+    return true
+  }
   if (
     excludedRootPaths.some((excluded) =>
       inputPath.includes(path.normalize(excluded))
