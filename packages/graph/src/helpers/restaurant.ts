@@ -10,6 +10,7 @@ import {
   Scrape,
   Tag,
 } from '../types'
+import { TopCuisineDish } from '../types-extra'
 import { levenshteinDistance } from './levenshteinDistance'
 import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
@@ -262,4 +263,36 @@ export async function restaurantGetAllPossibleTags(restaurant: Restaurant) {
       return i.tag.id
     })
   )
+}
+
+export function restaurantPhotosForCarousel(
+  restaurant: Restaurant,
+  tag_names: string[] = []
+) {
+  let photos = [] as TopCuisineDish[]
+  const max_photos = 6
+  for (const t of restaurant.tags) {
+    const [photo] = t.photos ?? []
+    if (!photo && !tag_names.includes(t.tag.name.toLowerCase())) {
+      continue
+    }
+    let photo_name = t.tag.name || ' '
+    if (t.tag.icon) {
+      photo_name = t.tag.icon + photo_name
+    }
+    photos.push({
+      name: photo_name,
+      image: photo,
+      rating: t.rating,
+    })
+    if (photos.length >= max_photos) break
+  }
+  if (photos.length <= max_photos) {
+    const restPhotos = restaurant.photos ?? []
+    for (const photo of restPhotos) {
+      photos.push({ name: ' ', image: photo })
+      if (photos.length >= max_photos) break
+    }
+  }
+  return photos
 }

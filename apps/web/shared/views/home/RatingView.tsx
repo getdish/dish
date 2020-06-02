@@ -5,8 +5,8 @@ import { Text } from 'react-native'
 
 export type RatingViewProps = StackProps & {
   size: 'lg' | 'md' | 'sm' | 'xs'
-  percent: number
-  color: string
+  percent?: number
+  color?: string
   hideEmoji?: boolean
   subtle?: boolean
 }
@@ -26,9 +26,8 @@ export const RatingView = forwardRef(
     }: RatingViewProps,
     ref
   ) => {
-    if (isNaN(percent)) {
-      percent = 0
-    }
+    if (!percent) return null
+    if (!color) return null
     const borderColor =
       percent >= 8
         ? 'rgba(190, 250, 200, 0.85)'

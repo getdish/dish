@@ -15,7 +15,7 @@ export type TagRecord = Partial<Tag> & Pick<Tag, 'type'>
 export type LngLat = { lng: number; lat: number }
 
 export type TopCuisineDish = Partial<MenuItem> & {
-  rating: number
+  rating?: number
   count?: number
   image: string
 }

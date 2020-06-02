@@ -3,15 +3,14 @@ WITH
     SELECT id
       FROM tag
       WHERE name ILIKE ANY (
-        SELECT UNNEST(string_to_array(
+        SELECT UNNEST(
           -- TODO use our formal slugify() format
           -- Speed optimisation isn't so important here because the tag
-          -- table should be always be relatively small
-          LOWER(REPLACE(?4, '-', ' ')),
-          ','
-        ))
+          -- table should always be relatively small
+          string_to_array(LOWER(REPLACE(?4, '-', ' ')), ',')
+        )
       )
-        AND type = 'dish'
+        AND type != 'country'
   )
 
 SELECT jsonb_agg(
@@ -24,23 +23,38 @@ SELECT jsonb_agg(
     'tags', ARRAY(
       SELECT json_build_object(
         'tag', json_build_object(
-          'id', id,
-          'name', name,
-          'icon', icon,
-          'type', type
+          'id', searched_tags_at_front.id,
+          'name', searched_tags_at_front.name,
+          'icon', searched_tags_at_front.icon,
+          'type', searched_tags_at_front.type
         ),
-        'rating', rt.rating,
-        'rank', rt.rank,
-        'photos', rt.photos
-      ) FROM restaurant_tag rt
-        JOIN tag t ON rt.tag_id = t.id
-        WHERE rt.restaurant_id = data.id
-        ORDER BY rt.rating DESC NULLS LAST
+        'rating', searched_tags_at_front.rating,
+        'rank', searched_tags_at_front.rank,
+        'photos', searched_tags_at_front.photos
+      ) FROM
+        (
+          -- Put searched for tags first
+          SELECT * FROM (
+            SELECT * FROM restaurant_tag rt
+              JOIN tag t ON rt.tag_id = t.id
+              WHERE rt.restaurant_id = data.id
+                AND rt.tag_id IN (SELECT id FROM dish_ids)
+              ORDER BY rt.rating DESC NULLS LAST
+          ) searched_for_tags
+          UNION ALL
+          -- All other tags
+          SELECT * FROM (
+            SELECT * FROM restaurant_tag rt
+              JOIN tag t ON rt.tag_id = t.id
+              WHERE rt.restaurant_id = data.id
+                AND rt.tag_id NOT IN (SELECT id FROM dish_ids)
+              ORDER BY rt.rating DESC NULLS LAST
+          ) all_other_tags
+        ) searched_tags_at_front
+        LIMIT 10
       )
-    )
-  ) FROM (
-    SELECT *
-    FROM restaurant
+  )) FROM (
+    SELECT * FROM restaurant
     WHERE (
       (ST_DWithin(location, ST_MakePoint(?0, ?1), ?2) OR ?2 = '0')
       AND

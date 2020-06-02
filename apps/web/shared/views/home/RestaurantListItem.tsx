@@ -1,4 +1,5 @@
 import { Restaurant, graphql, query } from '@dish/graph'
+import { restaurantPhotosForCarousel } from '@dish/graph'
 import {
   Divider,
   HStack,
@@ -268,7 +269,7 @@ const RestaurantListItemContent = memo(
           <RestaurantPeek
             {...props}
             size={isShowingComment ? 'lg' : 'md'}
-            restaurantSlug={restaurant.slug ?? ''}
+            restaurant={restaurant}
           />
           {/* </Suspense> */}
         </VStack>
@@ -305,51 +306,34 @@ const RestaurantTopReview = memo(
   })
 )
 
-export const RestaurantPeek = memo(
-  graphql(function RestaurantPeek({
-    searchState,
-    restaurantSlug,
-    size = 'md',
-  }: RestaurantListItemProps & {
-    size?: 'lg' | 'md'
-    restaurantSlug: string
-  }) {
-    const spacing = size == 'lg' ? 12 : 18
-    const isMedium = useMediaQueryIsMedium()
-    const [restaurant] = query.restaurant({
-      where: {
-        slug: {
-          _eq: restaurantSlug,
-        },
-      },
-    })
-    const activeTagIds = Object.keys(searchState?.activeTagIds ?? {})
-    const allPhotos = restaurant?.photosForCarousel(activeTagIds)
-    const photos = allPhotos.slice(0, 2)
+export const RestaurantPeek = memo(function RestaurantPeek({
+  searchState,
+  restaurant,
+  size = 'md',
+}: RestaurantListItemProps & {
+  size?: 'lg' | 'md'
+  restaurant: Restaurant
+}) {
+  const tag_names = Object.keys(searchState?.activeTagIds || {})
+  const spacing = size == 'lg' ? 12 : 18
+  const isMedium = useMediaQueryIsMedium()
+  const allPhotos = restaurantPhotosForCarousel(restaurant, tag_names)
+  const photos = allPhotos.slice(0, 5)
 
-    return (
-      <VStack
-        position="relative"
-        marginRight={-spacing}
-        marginBottom={-spacing}
-      >
-        <HStack spacing={spacing}>
-          {photos.map((photo, i) => {
-            return (
-              <DishView
-                key={i}
-                size={(size === 'lg' ? 210 : 175) * (isMedium ? 0.85 : 1)}
-                restaurantSlug={restaurantSlug}
-                dish={{
-                  name: photo.name,
-                  image: photo.src,
-                  rating: photo.rating ?? 0,
-                }}
-              />
-            )
-          })}
-        </HStack>
-      </VStack>
-    )
-  })
-)
+  return (
+    <VStack position="relative" marginRight={-spacing} marginBottom={-spacing}>
+      <HStack spacing={spacing}>
+        {photos.map((photo, i) => {
+          return (
+            <DishView
+              key={i}
+              size={(size === 'lg' ? 210 : 175) * (isMedium ? 0.85 : 1)}
+              restaurantSlug={restaurant.slug}
+              dish={photo}
+            />
+          )
+        })}
+      </HStack>
+    </VStack>
+  )
+})

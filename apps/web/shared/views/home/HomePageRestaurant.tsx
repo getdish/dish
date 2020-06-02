@@ -1,4 +1,9 @@
-import { getTagNameWithIcon, graphql, query } from '@dish/graph'
+import {
+  getTagNameWithIcon,
+  graphql,
+  query,
+  restaurantPhotosForCarousel,
+} from '@dish/graph'
 import {
   Divider,
   HStack,
@@ -205,7 +210,7 @@ const RestaurantPhotos = memo(
         },
       },
     })
-    const photos = restaurant.bestTagPhotos()
+    const photos = restaurantPhotosForCarousel(restaurant)
     const drawerWidth = useHomeDrawerWidthInner()
     const spacing = 20
 
@@ -227,19 +232,13 @@ const RestaurantPhotos = memo(
               justifyContent="center"
               spacing={spacing}
             >
-              {photos.map((rtag, index) => {
-                const tag = rtag.tag
-                const dish = {
-                  name: getTagNameWithIcon(tag),
-                  image: rtag.photos?.()?.[0] ?? '',
-                  rating: rtag.rating || 0,
-                }
+              {photos.map((photo, index) => {
                 return (
                   <DishView
                     key={index}
                     size={(drawerWidth - 3 * spacing) / 3 - 15}
                     marginBottom={30}
-                    dish={dish}
+                    dish={photo}
                   />
                 )
               })}
