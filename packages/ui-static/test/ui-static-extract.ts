@@ -17,6 +17,10 @@ const test = anyTest as TestInterface<{
   test1Renderer: TestRenderer.ReactTestRenderer
   test2Renderer: TestRenderer.ReactTestRenderer
   test3Renderer: TestRenderer.ReactTestRenderer
+  test4Renderer: TestRenderer.ReactTestRenderer
+  test5Renderer: TestRenderer.ReactTestRenderer
+  test6Renderer: TestRenderer.ReactTestRenderer
+  test7Renderer: TestRenderer.ReactTestRenderer
   app: any
 }>
 
@@ -32,6 +36,10 @@ test.before(async (t) => {
   t.context.test1Renderer = TestRenderer.create(React.createElement(app.Test1))
   t.context.test2Renderer = TestRenderer.create(React.createElement(app.Test2))
   t.context.test3Renderer = TestRenderer.create(React.createElement(app.Test3))
+  t.context.test4Renderer = TestRenderer.create(React.createElement(app.Test4))
+  t.context.test5Renderer = TestRenderer.create(React.createElement(app.Test5))
+  t.context.test6Renderer = TestRenderer.create(React.createElement(app.Test6))
+  t.context.test7Renderer = TestRenderer.create(React.createElement(app.Test7))
 })
 
 test('converts a style object to class names', async (t) => {
@@ -40,7 +48,6 @@ test('converts a style object to class names', async (t) => {
     transform: [{ rotateY: '10deg' }],
   }
   const styles = getStylesAtomic(style)
-  console.log('styles', styles)
   const style1 = styles.find((x) => x.identifier === 'r-1g6456j')
   const style2 = styles.find((x) => x.identifier === 'r-188uu3c')
   t.assert(!!style1)
@@ -55,23 +62,54 @@ test('converts a style object to class names', async (t) => {
   ])
 })
 
-test('extracts to a div for simple views', async (t) => {
+test('1. extracts to a div for simple views', async (t) => {
   const { test1Renderer } = t.context
-  const out = test1Renderer.toJSON()
+  const out = test1Renderer.toTree()
   t.is(out?.type, 'div')
   t.is(out?.props.className, 'is_VStack r-1g6456j r-18c69zk r-13awgt0')
 })
 
-test('extracts className for complex views but keeps other props', async (t) => {
+test('2. extracts className for complex views but keeps other props', async (t) => {
   const { test2Renderer } = t.context
-  const out = test2Renderer.toJSON()
-  t.assert(out?.type, 'Box')
+  const out = test2Renderer.toTree()
+  console.log('out', out)
+  t.is(out?.type, 'Box')
 })
 
-test('places className correctly given a single spread', async (t) => {
+test('3. places className correctly given a single spread', async (t) => {
   const { test3Renderer } = t.context
-  const out = test3Renderer.toJSON()
-  t.assert(out?.type, 'VStack')
+  const out = test3Renderer.toTree()
+  t.is(out?.type, 'VStack')
+})
+
+test('4. leaves dynamic variables', async (t) => {
+  const { test4Renderer } = t.context
+  const out = test4Renderer.toTree()
+  t.is(out?.props.className, 'r-4d76ec')
+  t.is(out?.props.style.width, 'calc(100% + 20px)')
+})
+
+test.skip('5. spread', async (t) => {
+  const { test5Renderer } = t.context
+  const out = test5Renderer.toTree()
+  // t.is(out?.props.className, 'r-4d76ec')
+  // t.is(out?.props.width, 'calc(100% + 12px)')
+})
+
+test.skip('6. spread ternary', async (t) => {
+  const { test6Renderer } = t.context
+  const out = test6Renderer.toTree()
+  // t.is(out?.props.className, 'r-4d76ec')
+  // t.is(out?.props.width, 'calc(100% + 12px)')
+})
+
+test('7. ternary', async (t) => {
+  const { test7Renderer } = t.context
+  const out = test7Renderer.toTree()
+  t.is(
+    out?.props.className,
+    'r-1pjcn9w r-1dfn399 r-1ay0y9e r-1pjcn9w r-1dfn399 r-1ay0y9e r-f2w40 r-68jxh1 r-1skwq7n'
+  )
 })
 
 async function extractStaticApp() {

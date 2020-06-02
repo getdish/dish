@@ -4,6 +4,7 @@ export interface CacheObject {
 
 export interface ExtractStylesOptions {
   // options here
+  evaluateVars?: boolean
 }
 
 export interface LoaderOptions extends ExtractStylesOptions {

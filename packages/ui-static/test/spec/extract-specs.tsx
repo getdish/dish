@@ -30,11 +30,17 @@ export function Test3(props: any) {
 const homePageBorderRadius = 10
 export function Test4() {
   return (
-    <VStack height={200} width={`calc(100% + ${homePageBorderRadius * 2}px)`} />
+    <VStack
+      height={200}
+      width={`calc(100% + ${homePageBorderRadius * 2}px)`}
+      hoverStyle={{
+        overflow: 'visible',
+      }}
+    />
   )
 }
 
-// complex spreads and ternary
+// spread
 export function Test5(props: any) {
   return (
     <VStack
@@ -42,22 +48,22 @@ export function Test5(props: any) {
       {...(props.something && {
         background: 'blue',
       })}
-      {...props}
-      style={{ background: 'green' }}
     >
       <div />
     </VStack>
   )
 }
 
-// hoverStyle
+// ternary
 export function Test6(props: any) {
   return (
     <VStack
       overflow="hidden"
-      hoverStyle={{
-        overflow: 'visible',
-      }}
+      {...(props.something
+        ? {
+            background: 'blue',
+          }
+        : null)}
     >
       <div />
     </VStack>
@@ -66,7 +72,7 @@ export function Test6(props: any) {
 
 // merged multiple ternary
 export function Test7() {
-  const isSmall = Math.random() > 0.5
+  const isSmall = false
   const verticalPad = 10
   const pad = 5
   return (
