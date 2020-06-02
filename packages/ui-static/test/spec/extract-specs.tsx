@@ -1,5 +1,7 @@
-import { Box, VStack } from '@dish/ui'
+import { Box, VStack, ZStack } from '@dish/ui'
 import React from 'react'
+
+const nonStaticInt = eval(`10`)
 
 export function Test1() {
   return (
@@ -27,12 +29,11 @@ export function Test3(props: any) {
 }
 
 // static + dynamic prop
-const homePageBorderRadius = 10
 export function Test4() {
   return (
     <VStack
       height={200}
-      width={`calc(100% + ${homePageBorderRadius * 2}px)`}
+      width={`calc(100% + ${nonStaticInt * 2}px)`}
       hoverStyle={{
         overflow: 'visible',
       }}
@@ -70,7 +71,7 @@ export function Test6(props: any) {
   )
 }
 
-// merged multiple ternary
+// evaluates away
 export function Test7() {
   const isSmall = false
   const verticalPad = 10
@@ -82,9 +83,17 @@ export function Test7() {
       width={isSmall ? '50vw' : '66%'}
       minWidth={isSmall ? '50%' : 500}
       maxWidth={isSmall ? '80vw' : '30%'}
-      spacing={5}
     >
-      <div />
+      <VStack width={nonStaticInt ? 10 : 0} height={nonStaticInt ? 10 : 0} />
     </VStack>
+  )
+}
+
+// merged multiple ternary + override
+export function Test8() {
+  return (
+    <ZStack fullscreen position="relative">
+      <div />
+    </ZStack>
   )
 }

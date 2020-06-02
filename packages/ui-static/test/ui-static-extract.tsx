@@ -26,6 +26,7 @@ const test = anyTest as TestInterface<{
   test5: TestApp
   test6: TestApp
   test7: TestApp
+  test8: TestApp
   app: any
 }>
 
@@ -61,12 +62,12 @@ test('converts a style object to class names', async (t) => {
   const style2 = styles.find((x) => x.identifier === 'r-188uu3c')
   t.assert(!!style1)
   t.assert(!!style2)
-  t.is(style1?.value, 'rgba(255,0,0,1.00)')
-  t.is(style1?.property, 'backgroundColor')
-  t.deepEqual(style1?.rules, [
+  t.is(style1!.value, 'rgba(255,0,0,1.00)')
+  t.is(style1!.property, 'backgroundColor')
+  t.deepEqual(style1!.rules, [
     '.r-1g6456j{background-color:rgba(255,0,0,1.00);}',
   ])
-  t.deepEqual(style2?.rules, [
+  t.deepEqual(style2!.rules, [
     '.r-188uu3c{-webkit-transform:rotateY(10deg);transform:rotateY(10deg);}',
   ])
 })
@@ -74,9 +75,9 @@ test('converts a style object to class names', async (t) => {
 test('1. extracts to a div for simple views', async (t) => {
   const { test1 } = t.context
   const out = test1.renderer.toTree()!
-  t.is(out.rendered?.type, 'div')
+  t.is(out.rendered!.type, 'div')
   t.is(
-    out.rendered?.props.className,
+    out.rendered!.props.className,
     'is_VStack r-1g6456j r-18c69zk r-13awgt0 r-eqz5dr'
   )
 })
@@ -84,12 +85,12 @@ test('1. extracts to a div for simple views', async (t) => {
 test('2. extracts className for complex views but keeps other props', async (t) => {
   const { test2 } = t.context
   const out = test2.renderer.toTree()!
-  t.is(out.rendered?.nodeType, 'component')
-  t.is(out.rendered?.props.className, 'who r-1udh08x')
-  const type = (out.rendered?.type as any) as Function
+  t.is(out.rendered!.nodeType, 'component')
+  t.is(out.rendered!.props.className, 'who r-1udh08x')
+  const type = (out.rendered!.type as any) as Function
   t.assert(type instanceof Function)
   t.is(type.name, 'Box')
-  t.assert(!out.rendered?.props.overflow)
+  t.assert(!out.rendered!.props.overflow)
 })
 
 test('3. places className correctly given a single spread', async (t) => {
@@ -104,7 +105,7 @@ test('4. leaves dynamic variables', async (t) => {
   const out = render(test4.Element)
   const firstChild = out.container.firstChild!
   const classList = [...firstChild['classList']]
-  t.assert(classList.includes('r-4d76ec'))
+  t.deepEqual(classList, ['css-1dbjc4n', 'r-4d76ec'])
   const r = test4.renderer.toJSON()
   t.is(r.props.style.width, 'calc(100% + 20px)')
 })
@@ -119,16 +120,31 @@ test.skip('5. spread', async (t) => {
 test.skip('6. spread ternary', async (t) => {
   const { test6 } = t.context
   const out = test6.renderer.toTree()
-  // t.is(out?.props.className, 'r-4d76ec')
-  // t.is(out?.props.width, 'calc(100% + 12px)')
+  // t.is(out!.props.className, 'r-4d76ec')
+  // t.is(out!.props.width, 'calc(100% + 12px)')
 })
 
-test.skip('7. ternary', async (t) => {
+test('7. ternary', async (t) => {
   const { test7 } = t.context
   const out = test7.renderer.toTree()
+  const { children, ...outerProps } = out!.rendered!.props
+  t.deepEqual(outerProps, {
+    className:
+      'is_VStack r-eqz5dr r-f2w40 r-68jxh1 r-1mi0q7o r-1qfz7tf r-1skwq7n',
+  })
+  const [inner] = out.rendered!.rendered! as any
   t.is(
-    out?.props.className,
-    'r-1pjcn9w r-1dfn399 r-1ay0y9e r-1pjcn9w r-1dfn399 r-1ay0y9e r-f2w40 r-68jxh1 r-1skwq7n'
+    inner.props.className,
+    `is_VStack r-1or9b2r r-5soawk r-eqz5dr r-1or9b2r r-5soawk r-1w2pmg r-1h2t8mc`
+  )
+})
+
+test('8. styleExpansions', async (t) => {
+  const { test8 } = t.context
+  const out = test8.renderer.toTree()!
+  t.is(
+    out.rendered!.props.className,
+    'is_ZStack r-1p0dtai r-1d2f490 r-bnwqim r-zchlnj r-ipm5af'
   )
 })
 

@@ -19,7 +19,7 @@ import {
   ClassNameToStyleObj,
   ExtractStylesOptions,
 } from '../types'
-import { EvaluateASTNodeOptions, evaluateAstNode } from './evaluateAstNode'
+import { evaluateAstNode } from './evaluateAstNode'
 import { Ternary, extractStaticTernaries } from './extractStaticTernaries'
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'
 import { getStaticBindingsForScope } from './getStaticBindingsForScope'
@@ -28,6 +28,10 @@ import { parse } from './parse'
 type OptimizableComponent = Function & {
   staticConfig: {
     defaultStyle: any
+    styleExpansionProps?: {
+      // eg: <ZStack fullscreen />, { fullscreen: { position: 'absolute', ... } }
+      [key: string]: Object
+    }
   }
 }
 
@@ -69,7 +73,7 @@ export function extractStyles(
   src: string | Buffer,
   sourceFileName: string,
   { cacheObject, errorCallback }: Options,
-  options: ExtractStylesOptions
+  userOptions: ExtractStylesOptions
 ): {
   js: string | Buffer
   css: string
@@ -88,6 +92,11 @@ export function extractStyles(
     typeof cacheObject === 'object' && cacheObject !== null,
     '`cacheObject` must be an object'
   )
+
+  const options: ExtractStylesOptions = {
+    evaluateVars: true,
+    ...userOptions,
+  }
 
   const sourceDir = path.dirname(sourceFileName)
 
@@ -166,6 +175,10 @@ export function extractStyles(
                 bindingCache
               )
 
+              if (shouldPrintDebug) {
+                console.log('staticNamespace', staticNamespace)
+              }
+
               const evalContext = vm.createContext(staticNamespace)
 
               // called when evaluateAstNode encounters a dynamic-looking prop
@@ -181,7 +194,16 @@ export function extractStyles(
                 return vm.runInContext(`(${generate(n).code})`, evalContext)
               }
 
-              return (n: t.Node) => evaluateAstNode(n, evalFn)
+              return (n: t.Node) => {
+                try {
+                  return evaluateAstNode(n, evalFn)
+                } catch (err) {
+                  // if (shouldPrintDebug) {
+                  //   console.log('evaluation error, ok if its dynamic:', err)
+                  // }
+                  throw err
+                }
+              }
             })()
 
         let lastSpreadIndex: number = -1
@@ -238,7 +260,6 @@ export function extractStyles(
 
         node.attributes = flattenedAttributes
 
-        const viewStyles: ViewStyle = {}
         const staticTernaries: Ternary[] = []
         const _isSingleSpread =
           flattenedAttributes.findIndex((x) => t.isJSXSpreadAttribute(x)) ===
@@ -253,6 +274,7 @@ export function extractStyles(
             }
           })
 
+        let viewStyles: ViewStyle = {}
         let inlinePropCount = 0
 
         if (shouldPrintDebug) {
@@ -294,8 +316,22 @@ export function extractStyles(
             console.log('attr', { name, inlinePropCount })
           }
 
-          // boolean props have null value
-          if (value == null) {
+          // value == null means boolean (true)
+          const isBoolean = value == null
+          const isBooleanTruthy =
+            isBoolean || (t.isBooleanLiteral(value) && value.value === true)
+
+          // handle expanded attributes if boolean=true
+          if (isBooleanTruthy) {
+            const expandedAttr =
+              component.staticConfig?.styleExpansionProps?.[name]
+            if (expandedAttr) {
+              Object.assign(viewStyles, expandedAttr)
+              return false
+            }
+          }
+
+          if (isBoolean) {
             inlinePropCount++
             return true
           }
@@ -411,6 +447,23 @@ domNode: ${domNode}
           node.attributes.splice(classNamePropIndex, 1)
         }
 
+        const classNameObjects: ClassNameObject[] = []
+
+        // if all style props have been extracted, gloss component can be
+        // converted to a div or the specified component
+        if (inlinePropCount === 0) {
+          // add a className="is_Name" so we can debug it more easily
+          classNameObjects.push(t.stringLiteral(`is_${node.name.name}`))
+          // since were removing down to div, we need to push the default styles onto this classname
+          const defaultStyle = component.staticConfig?.defaultStyle ?? {}
+          viewStyles = {
+            ...defaultStyle,
+            ...viewStyles,
+          }
+          // change to div
+          node.name.name = domNode
+        }
+
         // used later to generate classname for item
         const stylesByClassName: ClassNameToStyleObj = {}
 
@@ -423,22 +476,7 @@ domNode: ${domNode}
           }
         }
 
-        const classNameObjects: ClassNameObject[] = []
-
-        // if all style props have been extracted, gloss component can be
-        // converted to a div or the specified component
-        if (inlinePropCount === 0) {
-          // add a className="is_Name" so we can debug it more easily
-          classNameObjects.push(t.stringLiteral(`is_${node.name.name}`))
-          // since were removing down to div, we need to push the default styles onto this classname
-          const defaultStyle = component.staticConfig?.defaultStyle ?? {}
-          const styles = getStylesAtomic(defaultStyle)
-          for (const style of styles) {
-            stylesByClassName[style.identifier] = style
-          }
-          // change to div
-          node.name.name = domNode
-        } else {
+        if (inlinePropCount) {
           if (lastSpreadIndex > -1) {
             if (!isSingleSimpleSpread) {
               // only in case where we dont have a single simple spread

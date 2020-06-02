@@ -24,12 +24,13 @@ class WindowSizeStore {
   }, 350)
 }
 
-const store = new WindowSizeStore()
+let store: any | null = null
 
 export function useWindowSize({
   debounce = 0,
   adjust = idFn,
 }: { debounce?: number; adjust?: (x: Size) => Size } = {}): Size {
+  store = store || new WindowSizeStore()
   const size = store.size
   const forceUpdate = useForceUpdate()
 

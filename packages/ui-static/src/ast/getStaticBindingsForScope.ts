@@ -1,6 +1,6 @@
 import path from 'path'
 
-import t from '@babel/types'
+import * as t from '@babel/types'
 
 import { evaluateAstNode } from './evaluateAstNode'
 import { getSourceModule } from './getSourceModule'

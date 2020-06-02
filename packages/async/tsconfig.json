@@ -3,6 +3,7 @@
   "compilerOptions": {
     "composite": true,
     "outDir": "_",
+    "module": "CommonJS",
     "rootDir": "src"
   },
   "include": ["src/**/*"]

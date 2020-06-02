@@ -168,6 +168,9 @@ const createStack = (defaultStyle?: ViewStyle) => {
 
   component['staticConfig'] = {
     defaultStyle,
+    styleExpansionProps: {
+      fullscreen: fsStyle,
+    },
   }
 
   return component
