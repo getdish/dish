@@ -40,13 +40,13 @@ export const tagLenses: Tag[] = [
   },
   {
     id: '6',
-    name: 'Date',
+    name: 'Vibe',
     icon: '🌃',
     rgb: [0.35, 0.2, 0.65],
     descriptions: {
       dish: 'Grab some 🍔',
-      cuisine: 'Nice 🍔 for a Date',
-      plain: 'Best Date Night Spots',
+      cuisine: 'Nice 🍔 to meet',
+      plain: 'Vibes',
     },
     type: 'lense',
     isVotable: true,
@@ -72,7 +72,7 @@ export const tagLenses: Tag[] = [
     descriptions: {
       dish: '🍔 & drinks',
       cuisine: '🍔 with a Bar',
-      plain: 'Uniquely Good Drinks',
+      plain: 'Good Drinks',
     },
     type: 'lense',
     isVotable: true,
@@ -85,7 +85,7 @@ export const tagLenses: Tag[] = [
     descriptions: {
       dish: 'Vegetarian 🍔',
       cuisine: 'Vegetarian 🍔 Restaurants',
-      plain: 'Uniquely Good Vegetarian',
+      plain: 'Vegetarian',
     },
     type: 'lense',
     isVotable: true,

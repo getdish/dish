@@ -40,6 +40,7 @@ Week 1
 
 Week 2
 
+- Location endpoint: can we get nearby regions easily? if so would be helpful
 - Performance check - search/home has seemed slow
 - Crawlers!
   - Delivery crawlers 🚚
