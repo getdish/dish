@@ -1,10 +1,10 @@
-import { Box } from '@dish/ui'
+import { Box, Text } from '@dish/ui'
 import { HoverablePopover } from '@dish/ui'
 import { LinearGradient } from '@dish/ui'
 import { HStack, VStack, ZStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { ChevronRight } from 'react-feather'
-import { StyleSheet, Text } from 'react-native'
+import { StyleSheet } from 'react-native'
 
 import { HomeActiveTagIds, HomeStateItemSearch } from '../../state/home'
 import { getTagId } from '../../state/Tag'

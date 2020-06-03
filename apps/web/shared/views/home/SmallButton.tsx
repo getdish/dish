@@ -1,6 +1,6 @@
-import { HStack, StackProps } from '@dish/ui'
+import { HStack, StackProps, Text } from '@dish/ui'
 import React from 'react'
-import { Text, TextStyle } from 'react-native'
+import { TextStyle } from 'react-native'
 
 import { flatButtonStyle } from './baseButtonStyle'
 import { bg, bgLight, bgLightHover } from './colors'
@@ -37,14 +37,10 @@ export const SmallButton = ({
       {...rest}
     >
       <Text
-        style={[
-          {
-            color: isActive ? '#000' : bg,
-            fontSize: 15,
-            fontWeight: '600',
-          },
-          textStyle,
-        ]}
+        color={isActive ? '#000' : bg}
+        fontSize={15}
+        fontWeight="600"
+        {...textStyle}
       >
         {children}
       </Text>

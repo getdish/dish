@@ -1,7 +1,7 @@
 import { graphql, query } from '@dish/graph'
-import { Circle, Divider, HStack, Spacer, VStack, ZStack } from '@dish/ui'
+import { Circle, Divider, HStack, Spacer, Text, VStack } from '@dish/ui'
 import React from 'react'
-import { Image, ScrollView, Text } from 'react-native'
+import { Image, ScrollView } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemUser } from '../../state/home'
@@ -54,15 +54,15 @@ export default graphql(function HomePageUser({
           </Circle>
           <Spacer size={20} />
           <VStack flex={1}>
-            <Text
-              style={{ fontSize: 28, fontWeight: 'bold', paddingRight: 30 }}
-            >
+            <Text fontSize={28} fontWeight="bold" paddingRight={30}>
               {user.username ?? ''}
             </Text>
             <Spacer size={4} />
             <div />
             <Spacer size={8} />
-            <Text style={{ color: '#777', fontSize: 13 }}>{user.username}</Text>
+            <Text color="#777" fontSize={13}>
+              {user.username}
+            </Text>
             <Spacer size={12} />
           </VStack>
         </HStack>

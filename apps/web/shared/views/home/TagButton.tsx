@@ -1,9 +1,8 @@
 import { NonNullObject, Tag, TagType } from '@dish/graph'
-import { HStack, StackProps, VStack } from '@dish/ui'
+import { HStack, StackProps, Text, TextProps, VStack } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo } from 'react'
 import { ChevronUp, X } from 'react-feather'
-import { Text, TextStyle } from 'react-native'
 
 import { LinkButton } from '../ui/LinkButton'
 import { SuperScriptText } from './SuperScriptText'
@@ -38,7 +37,7 @@ export type TagButtonProps = Omit<StackProps & TagButtonTagProps, 'rgb'> & {
   color?: any
   hideIcon?: boolean
   subtleIcon?: boolean
-  fontSize?: TextStyle['fontSize']
+  fontSize?: TextProps['fontSize']
   noColor?: boolean
   replace?: boolean
 }
@@ -94,24 +93,20 @@ export const TagButton = memo(
         >
           {!!rank && (
             <Text
-              style={
-                {
-                  fontSize: rankFontSize,
-                  fontWeight: 'bold',
-                  margin: 'auto',
-                  marginVertical: '-2%',
-                  paddingHorizontal: 7 * scale,
-                  backgroundColor: subtle
-                    ? 'transparent'
-                    : 'rgba(255,255,255,0.99)',
-                  lineHeight,
-                  alignSelf: 'stretch',
-                  alignContent: 'center',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  display: 'flex',
-                } as any
+              fontSize={rankFontSize}
+              fontWeight="bold"
+              margin="auto"
+              marginVertical="-2%"
+              paddingHorizontal={7 * scale}
+              backgroundColor={
+                subtle ? 'transparent' : 'rgba(255,255,255,0.99)'
               }
+              lineHeight={lineHeight}
+              alignSelf="stretch"
+              alignContent="center"
+              justifyContent="center"
+              alignItems="center"
+              display="flex"
             >
               <SuperScriptText style={{ opacity: 0.5 }}>#</SuperScriptText>
               {rank}
@@ -119,20 +114,16 @@ export const TagButton = memo(
           )}
           <Text
             numberOfLines={1}
-            style={
-              {
-                fontSize,
-                fontWeight: size == 'lg' ? '500' : 'inherit',
-                lineHeight: 'inherit',
-                paddingVertical: paddingVertical,
-                paddingHorizontal: subtle ? 0 : 8 * scale,
-                color: fg,
-                marginVertical: -7,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              } as any
-            }
+            fontSize={fontSize}
+            fontWeight={size == 'lg' ? '500' : 'inherit'}
+            lineHeight="inherit"
+            paddingVertical={paddingVertical}
+            paddingHorizontal={subtle ? 0 : 8 * scale}
+            color={fg}
+            marginVertical={-7}
+            overflow="hidden"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
           >
             {hideIcon ? (
               <>&nbsp;</>

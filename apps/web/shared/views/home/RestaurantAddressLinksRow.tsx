@@ -1,8 +1,8 @@
 import { graphql, query } from '@dish/graph'
-import { Box, HStack, HoverablePopover, SelectableText } from '@dish/ui'
+import { Box, HStack, HoverablePopover, Text } from '@dish/ui'
 import React, { memo } from 'react'
 import { ExternalLink } from 'react-feather'
-import { Image, Linking, Text } from 'react-native'
+import { Image, Linking } from 'react-native'
 
 import { GeocodePlace } from '../../state/home'
 import { Link } from '../ui/Link'
@@ -38,12 +38,12 @@ export const RestaurantAddressLinksRow = memo(
       const linkElements = (
         <HStack alignItems="center" spacing={size}>
           {showMenu && (
-            <SelectableText>
+            <Text selectable>
               {showAddress ? <>&nbsp; {sep} &nbsp;</> : null}
               <Link inline name="restaurant" params={{ slug: '' }}>
                 Menu
               </Link>
-            </SelectableText>
+            </Text>
           )}
           {!!restaurant.website && <Text onPress={() => {}}>Call</Text>}
           {!!restaurant.website && (
@@ -68,10 +68,11 @@ export const RestaurantAddressLinksRow = memo(
       )
 
       return (
-        <Text style={{ color: '#999', fontSize }}>
+        <Text color="#999" fontSize={fontSize}>
           <HStack alignItems="center" spacing>
             {!!(currentLocationInfo && showAddress) && (
-              <SelectableText
+              <Text
+                selectable
                 numberOfLines={1}
                 style={
                   { fontSize: 14, whiteSpace: 'nowrap', maxWidth: 190 } as any
@@ -82,7 +83,7 @@ export const RestaurantAddressLinksRow = memo(
                   restaurant.address ?? '',
                   (typeof showAddress === 'string' ? showAddress : size) ?? 'sm'
                 )}
-              </SelectableText>
+              </Text>
             )}
 
             {size === 'sm' && (

@@ -1,6 +1,6 @@
-import { HStack, VStack } from '@dish/ui'
+import { HStack, Text, VStack } from '@dish/ui'
 import React, { useEffect, useState } from 'react'
-import { Button, Text, TextInput, View } from 'react-native'
+import { Button, TextInput, View } from 'react-native'
 
 import { useOvermind } from '../../state/useOvermind'
 import { Link } from '../ui/Link'
@@ -106,7 +106,7 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
 
       {username.length > 3 && (
         <HStack>
-          <Text style={{ fontSize: 16 }}>
+          <Text fontSize={16}>
             <Link inline name="forgotPassword">
               Forgot password?
             </Link>{' '}

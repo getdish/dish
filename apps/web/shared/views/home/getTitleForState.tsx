@@ -1,5 +1,5 @@
+import { Text } from '@dish/ui'
 import React from 'react'
-import { Text } from 'react-native'
 
 import { HomeStateItem } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
@@ -74,7 +74,7 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
   const subTitle = subTitleParts.join(' ')
   const subTitleElements = (
     <>
-      <Text style={{ fontSize: 20, fontWeight: '300', color: 'inherit' }}>
+      <Text fontSize={20} fontWeight="300" color="inherit">
         {subTitleParts[0]}
         &nbsp;
         {subTitleParts.slice(1).join(' ')}

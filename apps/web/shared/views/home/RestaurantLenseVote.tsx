@@ -1,6 +1,5 @@
-import { Box, HoverablePopover } from '@dish/ui'
+import { Box, HoverablePopover, Text } from '@dish/ui'
 import React from 'react'
-import { Text } from 'react-native'
 
 import { LinkButton } from '../ui/LinkButton'
 import { HomeLenseBarOnly } from './HomeLenseBar'
@@ -21,7 +20,7 @@ export const RestaurantLenseVote = () => {
         paddingVertical={2.5}
         paddingHorizontal={10}
       >
-        <Text style={{ color: '#fff', fontWeight: '500', fontSize: 13 }}>
+        <Text color="#fff" fontWeight="500" fontSize={13}>
           Tag
         </Text>
       </LinkButton>

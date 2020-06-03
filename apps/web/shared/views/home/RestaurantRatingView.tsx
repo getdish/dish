@@ -5,11 +5,11 @@ import {
   HStack,
   HoverablePopover,
   ProgressCircle,
+  Text,
   VStack,
   ZStack,
 } from '@dish/ui'
 import React, { memo } from 'react'
-import { Text } from 'react-native'
 
 import { RatingView, RatingViewProps } from './RatingView'
 
@@ -207,11 +207,11 @@ const RatingBreakdownCircle = memo(
           justifyContent="center"
           width={size * 2.4}
         >
-          <Text style={{ fontSize: size * 0.9, marginBottom: 0 }}>{emoji}</Text>
+          <Text fontSize={size * 0.9} marginBottom={0}>
+            {emoji}
+          </Text>
           {!!name && (
-            <Text
-              style={{ fontSize: size * 0.5, color: '#555', fontWeight: '700' }}
-            >
+            <Text fontSize={size * 0.5} color="#555" fontWeight="700">
               {name}
             </Text>
           )}

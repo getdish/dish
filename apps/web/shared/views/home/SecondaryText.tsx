@@ -1,13 +1,8 @@
+import { Text, TextProps } from '@dish/ui'
 import React from 'react'
-import { StyleSheet, Text, TextProps } from 'react-native'
 
-export const SecondaryText = (props: TextProps & { children: any }) => {
-  return <Text {...props} style={[styles.secondaryText, props.style]} />
+export const SecondaryText = (props: TextProps) => {
+  return <Text color="#777" fontSize={13} {...props} />
 }
 
-const styles = StyleSheet.create({
-  secondaryText: {
-    color: '#777',
-    fontSize: 13,
-  },
-})
+SecondaryText.staticConfig = Text.staticConfig

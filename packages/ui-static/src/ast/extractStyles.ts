@@ -9,12 +9,11 @@ import * as t from '@babel/types'
 import * as AllExports from '@dish/ui'
 // import literalToAst from 'babel-literal-to-ast'
 import invariant from 'invariant'
-import { ViewStyle } from 'react-native'
-import { resolve } from 'react-native-web/dist/cjs/exports/StyleSheet/styleResolver'
+import { TextStyle, ViewStyle } from 'react-native'
 
 import { GLOSS_CSS_FILE } from '../constants'
 import { getStylesAtomic } from '../style/getStylesAtomic'
-import styleProps from '../style/styleProps'
+import { stylePropsText, stylePropsView } from '../style/styleProps'
 import {
   CacheObject,
   ClassNameToStyleObj,
@@ -29,6 +28,10 @@ import {
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'
 import { getStaticBindingsForScope } from './getStaticBindingsForScope'
 import { parse } from './parse'
+
+// import { resolve } from 'react-native-web/dist/cjs/exports/StyleSheet/styleResolver'
+
+const shouldPrintDebug = !!process.env.DEBUG
 
 type OptimizableComponent = Function & {
   staticConfig: {
@@ -48,6 +51,10 @@ const validComponents: { [key: string]: OptimizableComponent } = Object.keys(
     obj[name] = AllExports[name]
     return obj
   }, {})
+
+if (shouldPrintDebug) {
+  console.log('validComponents', Object.keys(validComponents))
+}
 
 export interface Options {
   cacheObject: CacheObject
@@ -109,7 +116,6 @@ export function extractStyles(
   const cssMap = new Map<string, { css: string; commentTexts: string[] }>()
   const ast = parse(src)
   let doesImport = false
-  const shouldPrintDebug = !!process.env.DEBUG
 
   // Find gloss require in program root
   let foundComponents = {}
@@ -161,12 +167,13 @@ export function extractStyles(
         // Remember the source component
         const component = validComponents[node.name.name]
         const originalNodeName = node.name.name
+        const isTextView = originalNodeName.endsWith('Text')
+        const styleProps = isTextView ? stylePropsText : stylePropsView
+        const domNode = isTextView ? 'span' : 'div'
 
         if (shouldPrintDebug) {
-          console.log('node', originalNodeName)
+          console.log('node', originalNodeName, domNode)
         }
-
-        let domNode = 'div'
 
         const isStaticAttributeName = (name: string) => !!styleProps[name]
         const attemptEval = !options.evaluateVars

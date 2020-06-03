@@ -1,8 +1,13 @@
 import { graphql, query } from '@dish/graph'
-import { Toast, VStack, useDebounceEffect, useForceUpdate } from '@dish/ui'
+import {
+  Text,
+  Toast,
+  VStack,
+  useDebounceEffect,
+  useForceUpdate,
+} from '@dish/ui'
 import React, { memo, useState } from 'react'
 import { Star } from 'react-feather'
-import { Text } from 'react-native'
 
 import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
@@ -80,12 +85,10 @@ export const RestaurantFavoriteStar = memo(
           >
             {isStarred && (
               <Text
-                style={{
-                  fontSize: sizePx * 0.88,
-                  lineHeight: sizePx * 0.88,
-                  marginTop: 3,
-                  marginLeft: 2,
-                }}
+                fontSize={sizePx * 0.88}
+                lineHeight={sizePx * 0.88}
+                marginTop={3}
+                marginLeft={2}
               >
                 ⭐️
               </Text>

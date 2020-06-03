@@ -1,9 +1,9 @@
 import React, { memo } from 'react'
-import { Text } from 'react-native'
 
 import { Divider } from './Divider'
 import { Spacer } from './Spacer'
 import { HStack, StackProps, VStack } from './Stacks'
+import { Text } from './Text'
 
 export const SmallTitle = memo(
   ({
@@ -22,14 +22,12 @@ export const SmallTitle = memo(
         <HStack width="100%" alignItems="center" justifyContent="center">
           {divider === 'center' && <Divider flex />}
           <Text
-            style={{
-              paddingHorizontal: 30,
-              textTransform: 'uppercase',
-              letterSpacing: 1,
-              opacity: isActive ? 1 : 0.5,
-              fontSize: 16,
-              fontWeight: '400',
-            }}
+            paddingHorizontal={30}
+            textTransform="uppercase"
+            letterSpacing={1}
+            opacity={isActive ? 1 : 0.5}
+            fontSize={16}
+            fontWeight="400"
           >
             {children}
           </Text>
@@ -61,13 +59,7 @@ export const SmallerTitle = memo(
     return (
       <HStack alignItems="center" justifyContent="center" spacing {...rest}>
         {!hideDivider && <Divider flex />}
-        <Text
-          style={{
-            opacity: 0.5,
-            fontSize: 14,
-            fontWeight: '500',
-          }}
-        >
+        <Text opacity={0.5} fontSize={14} fontWeight="500">
           {children}
         </Text>
         {!hideDivider && <Divider flex />}

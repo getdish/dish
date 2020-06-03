@@ -1,22 +1,14 @@
-import {
-  getTagNameWithIcon,
-  graphql,
-  query,
-  restaurantPhotosForCarousel,
-} from '@dish/graph'
+import { graphql, query, restaurantPhotosForCarousel } from '@dish/graph'
 import {
   Divider,
   HStack,
-  MediaQuery,
-  SelectableText,
+  LoadingItems,
   Spacer,
+  Text,
   VStack,
   ZStack,
-  mediaQueries,
 } from '@dish/ui'
-import { LoadingItems } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
-import { ScrollView, Text } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home'
@@ -24,7 +16,6 @@ import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { flatButtonStyle, flatButtonStyleActive } from './baseButtonStyle'
-import { CloseButton } from './CloseButton'
 import { DishView } from './DishView'
 import { HomeScrollView } from './HomeScrollView'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
@@ -101,11 +92,10 @@ export default memo(
               <HStack width="80%">
                 <VStack flex={1}>
                   <Text
-                    style={{
-                      fontSize: 26,
-                      fontWeight: 'bold',
-                      paddingRight: 30,
-                    }}
+                    selectable
+                    fontSize={26}
+                    fontWeight="bold"
+                    paddingRight={30}
                   >
                     {restaurant.name}
                   </Text>
@@ -118,9 +108,9 @@ export default memo(
                   />
                   <Spacer size={10} />
                   <HStack>
-                    <SelectableText style={{ color: '#777', fontSize: 14 }}>
+                    <Text selectable color="#777" fontSize={14}>
                       {restaurant.address}
-                    </SelectableText>
+                    </Text>
                   </HStack>
                   <Spacer size={6} />
                 </VStack>

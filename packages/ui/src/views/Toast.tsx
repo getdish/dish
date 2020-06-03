@@ -1,5 +1,5 @@
+import { Text } from '@dish/ui'
 import React, { memo, useCallback, useRef } from 'react'
-import { Text } from 'react-native'
 
 import { useForceUpdate } from '../hooks/useForceUpdate'
 import { VStack, ZStack } from './Stacks'
@@ -52,12 +52,7 @@ export const ToastRoot = memo(function ToastRoot() {
           borderRadius={9}
           padding={10}
         >
-          <Text
-            style={{
-              color: 'white',
-              fontSize: 16,
-            }}
-          >
+          <Text color="white" fontSize={16}>
             {stateRef.current.text}
           </Text>
         </VStack>

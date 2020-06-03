@@ -4,13 +4,13 @@ import {
   Circle,
   HStack,
   HoverablePopover,
-  SelectableText,
   StackProps,
+  Text,
   Toast,
   VStack,
 } from '@dish/ui'
 import React, { memo, useLayoutEffect, useState } from 'react'
-import { Image, Text, TextInput } from 'react-native'
+import { Image, TextInput } from 'react-native'
 
 // @ts-ignore
 import avatar from '../../assets/peach.jpg'
@@ -129,7 +129,7 @@ export const CommentBubble = ({
         <Circle size={18} marginBottom={-2}>
           <Image source={avatar} style={{ width: 18, height: 18 }} />
         </Circle>
-        <SelectableText style={{ color: '#999' }}>
+        <Text selectable color="#999">
           <Link
             inline
             name="user"
@@ -143,25 +143,25 @@ export const CommentBubble = ({
             inline
             contents={
               <Box>
-                <SelectableText style={{ opacity: 0.65 }}>
+                <Text selectable opacity={0.65}>
                   <ul>
                     <li>👨‍🍳 Chef ✔️</li>
                     <li>🇯🇵 Japanese Exprt ✔️</li>
                   </ul>
-                </SelectableText>
+                </Text>
               </Box>
             }
           >
             <div className="inline-flex">
               {['👨‍🍳'].map((x) => (
-                <SelectableText key={x} style={{ opacity: 1 }}>
+                <Text selectable key={x} opacity={1}>
                   {x}
-                </SelectableText>
+                </Text>
               ))}
             </div>
           </HoverablePopover>{' '}
           says
-        </SelectableText>
+        </Text>
       </HStack>
       {children}
     </VStack>

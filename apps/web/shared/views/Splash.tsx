@@ -1,7 +1,5 @@
+import { Text, ZStack } from '@dish/ui'
 import React from 'react'
-import { Text } from 'react-native'
-
-import { ZStack } from './ui/Stacks'
 
 export function Splash() {
   return (

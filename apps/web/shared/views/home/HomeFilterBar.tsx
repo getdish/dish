@@ -1,7 +1,6 @@
-import { HStack, StackProps, VStack } from '@dish/ui'
+import { HStack, StackProps, Text, VStack } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo } from 'react'
-import { Text } from 'react-native'
 
 import { HomeActiveTagIds } from '../../state/home'
 import { Tag, getTagId } from '../../state/Tag'
@@ -75,12 +74,7 @@ const FilterButton = memo(
     return (
       <LinkButton tag={filter}>
         <SmallButton isActive={isActive} {...rest}>
-          <Text
-            style={{
-              fontSize: 14,
-              fontWeight: '500',
-            }}
-          >
+          <Text fontSize={14} fontWeight="500">
             {filter.displayName ?? filter.name}
           </Text>
         </SmallButton>

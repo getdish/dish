@@ -151,6 +151,14 @@ test('9. combines with classname', async (t) => {
   t.is(out.rendered!.props.className, 'home-top-dish r-eqz5dr r-9qu9m4')
 })
 
+test('10. extracts Text', async (t) => {
+  const { test10 } = t.context
+  const out = test10.renderer.toTree()!
+  t.is(out.rendered!.type, 'span')
+  t.is(out.rendered!.props['data-is'], 'Text')
+  t.is(out.rendered!.props.className, 'r-10x49cs')
+})
+
 test('11. combines everything', async (t) => {
   const { test11 } = t.context
   const out = render(test11.Element)

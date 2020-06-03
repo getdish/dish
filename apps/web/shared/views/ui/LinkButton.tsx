@@ -1,6 +1,6 @@
-import { StackProps, VStack, getNode, prevent } from '@dish/ui'
+import { StackProps, Text, VStack, getNode, prevent } from '@dish/ui'
 import React, { useEffect, useMemo, useRef } from 'react'
-import { Platform, Text, TouchableOpacity, ViewStyle } from 'react-native'
+import { Platform, TouchableOpacity, ViewStyle } from 'react-native'
 
 import { RouteName, RoutesTable } from '../../state/router'
 import { NavigableTag } from '../../state/Tag'
@@ -128,7 +128,9 @@ export function LinkButton<
     contents = (
       <Text
         numberOfLines={ellipse ? 1 : undefined}
-        style={{ fontSize, lineHeight, fontWeight }}
+        fontSize={fontSize}
+        lineHeight={lineHeight}
+        fontWeight={fontWeight}
       >
         {children ?? ''}
       </Text>

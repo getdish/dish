@@ -3,11 +3,12 @@ import {
   HStack,
   HoverablePopover,
   LinearGradient,
+  Text,
   ZStack,
   memoIsEqualDeep,
 } from '@dish/ui'
 import React from 'react'
-import { StyleSheet, Text } from 'react-native'
+import { StyleSheet } from 'react-native'
 
 import { Tag } from '../../state/Tag'
 import { LinkButton } from '../ui/LinkButton'
@@ -76,18 +77,14 @@ export const LenseButton = memoIsEqualDeep(
           })}
         >
           <Text
-            style={{
-              color: isActive ? '#fff' : '#454545',
-              fontSize: (isActive ? 40 : 24) * scale,
-              lineHeight: 40 * scale,
-              width: 36 * scale,
-              height: 36 * scale,
-              fontWeight: '400',
-              textAlign: 'center',
-              marginTop: (isActive ? -4 : 0) * scale,
-              // marginLeft: 8,
-              // letterSpacing: isActive ? -0.2 : 0,
-            }}
+            color={isActive ? '#fff' : '#454545'}
+            fontSize={(isActive ? 40 : 24) * scale}
+            lineHeight={40 * scale}
+            width={36 * scale}
+            height={36 * scale}
+            fontWeight="400"
+            textAlign="center"
+            marginTop={(isActive ? -4 : 0) * scale}
           >
             {(lense.icon ?? '').trim()}
             {!minimal
@@ -109,7 +106,7 @@ export const LenseButton = memoIsEqualDeep(
         // anchor={anchor.RIGHT_CENTER}
         contents={
           <Box top={35} left={-35}>
-            <Text style={{ fontSize: 16, fontWeight: '700' }}>
+            <Text fontSize={16} fontWeight="700">
               {lense.displayName ?? lense.name}
             </Text>
           </Box>

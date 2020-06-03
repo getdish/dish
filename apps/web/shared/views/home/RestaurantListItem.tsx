@@ -4,8 +4,8 @@ import {
   Divider,
   HStack,
   HoverablePopover,
-  SelectableText,
   Spacer,
+  Text,
   VStack,
   ZStack,
   useDebounceEffect,
@@ -152,16 +152,15 @@ const RestaurantListItemContent = memo(
 
                     {/* SECOND LINK WITH actual <a /> */}
                     <Link name="restaurant" params={{ slug: restaurant.slug }}>
-                      <SelectableText
-                        style={{
-                          color: '#000',
-                          fontSize: 24,
-                          fontWeight: '600',
-                          textDecorationColor: 'transparent',
-                        }}
+                      <Text
+                        selectable
+                        color="#000"
+                        fontSize={24}
+                        fontWeight="600"
+                        textDecorationColor="transparent"
                       >
                         {restaurant.name}
-                      </SelectableText>
+                      </Text>
                     </Link>
                   </HStack>
 
@@ -243,15 +242,15 @@ const RestaurantListItemContent = memo(
               {/* </Suspense> */}
 
               <HoverablePopover
-                contents={<SelectableText>{restaurant.address}</SelectableText>}
+                contents={<Text selectable>{restaurant.address}</Text>}
               >
-                <SelectableText style={{ color: '#888' }}>
+                <Text selectable color="#888">
                   {getAddressText(
                     currentLocationInfo,
                     restaurant.address ?? '',
                     'xs'
                   )}
-                </SelectableText>
+                </Text>
               </HoverablePopover>
             </HStack>
           </VStack>
@@ -290,17 +289,16 @@ const RestaurantTopReview = memo(
     })
     return (
       <CommentBubble user={{ username: topReview?.user?.username ?? 'Peach' }}>
-        <SelectableText
-          style={{
-            opacity: 0.8,
-            lineHeight: 22,
-            fontSize: 15,
-            marginVertical: 5,
-          }}
+        <Text
+          selectable
+          opacity={0.8}
+          lineHeight={22}
+          fontSize={15}
+          marginVertical={5}
         >
           {topReview?.text ||
             `Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit ipsum sit amet. Lorem ipsum dolor sit amet sit amet. Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.`}
-        </SelectableText>
+        </Text>
       </CommentBubble>
     )
   })

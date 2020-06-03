@@ -105,7 +105,13 @@ export function Test9() {
 
 // Text
 export function Test10() {
-  return <Text fontSize={10} />
+  return (
+    <Text fontSize={10}>
+      <Text selectable onTextChange={() => {}}>
+        hello
+      </Text>
+    </Text>
+  )
 }
 
 // alllll in one

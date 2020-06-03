@@ -1,6 +1,6 @@
-import { Circle } from '@dish/ui'
+import { Circle, Text } from '@dish/ui'
 import React from 'react'
-import { Text, TouchableOpacity } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 
 export const EmojiButton = ({
   active,
@@ -20,7 +20,7 @@ export const EmojiButton = ({
           backgroundColor: active ? 'yellow' : 'rgba(0,0,0,0.05)',
         }}
       >
-        <Text style={{ fontSize: size * 0.45 }}>{children}</Text>
+        <Text fontSize={size * 0.45}>{children}</Text>
       </Circle>
     </TouchableOpacity>
   )
