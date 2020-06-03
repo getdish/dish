@@ -51,8 +51,8 @@ Week 3
 Week 4
 
 - [reserved for various productionizing work]
-- Highlighted comments for everything!
-  - Can be based on tag
+- Top comments!
+  - For dishes, restaruants, potentially even tag
     - use some off-the-shelf ML to make it cool?
     - perhaps showing (1 positive + 1 negative)?
 - Image crawling - image selection improvements
