@@ -1,10 +1,10 @@
-import { VStack, ZStack } from '@dish/ui'
+import { Text, VStack, ZStack } from '@dish/ui'
 import React from 'react'
 import {
   FallbackProps,
   ErrorBoundary as ReactErrorBoundary,
 } from 'react-error-boundary'
-import { Button, Text } from 'react-native'
+import { Button } from 'react-native'
 
 function ErrorFallback({
   error,
@@ -21,7 +21,7 @@ function ErrorFallback({
       overflow="hidden"
     >
       <VStack left={50} flex={1} overflow="hidden">
-        <Text style={{ color: '#fff' }}>
+        <Text color="#fff">
           <pre>{error?.message}</pre>
           <pre>{componentStack}</pre>
           <pre>{error?.stack}</pre>

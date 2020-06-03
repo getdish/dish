@@ -1,4 +1,4 @@
-export default {
+export const stylePropsView = {
   backfaceVisibility: true,
   backgroundColor: true,
   borderBottomColor: true,
@@ -84,4 +84,23 @@ export default {
   shadowOffset: true,
   shadowOpacity: true,
   shadowRadius: true,
+}
+
+export const stylePropsText = {
+  ...stylePropsView,
+  color: true,
+  fontFamily: true,
+  fontSize: true,
+  fontStyle: true,
+  fontWeight: true,
+  letterSpacing: true,
+  lineHeight: true,
+  textAlign: true,
+  textDecorationLine: true,
+  textDecorationStyle: true,
+  textDecorationColor: true,
+  textShadowColor: true,
+  textShadowOffset: true,
+  textShadowRadius: true,
+  textTransform: true,
 }

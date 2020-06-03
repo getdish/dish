@@ -1,9 +1,8 @@
 import './Link.css'
 
-import { StackProps, prevent } from '@dish/ui'
+import { StackProps, Text, TextProps, prevent } from '@dish/ui'
 import _ from 'lodash'
 import React, { useCallback, useContext, useMemo } from 'react'
-import { Text, TextStyle } from 'react-native'
 
 import { currentStates } from '../../state/home'
 import { getNavigateToTags } from '../../state/home-tag-helpers'
@@ -18,9 +17,9 @@ import { CurrentStateID } from '../home/CurrentStateID'
 import { LinkButtonNamedProps, LinkButtonProps } from './LinkButton'
 
 export type LinkSharedProps = {
-  fontWeight?: TextStyle['fontWeight']
-  fontSize?: TextStyle['fontSize']
-  lineHeight?: TextStyle['lineHeight']
+  fontWeight?: TextProps['fontWeight']
+  fontSize?: TextProps['fontSize']
+  lineHeight?: TextProps['lineHeight']
   ellipse?: boolean
   fastClick?: boolean
   replace?: boolean
@@ -109,15 +108,11 @@ export function Link<
   const content = (
     <Text
       numberOfLines={ellipse ? 1 : undefined}
-      style={
-        {
-          fontSize,
-          lineHeight,
-          fontWeight,
-          display: 'inherit',
-          color,
-        } as any
-      }
+      fontSize={fontSize}
+      lineHeight={lineHeight}
+      fontWeight={fontWeight}
+      display="inherit"
+      color={color}
     >
       {children}
     </Text>

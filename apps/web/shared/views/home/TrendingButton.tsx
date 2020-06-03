@@ -1,7 +1,6 @@
-import { HStack } from '@dish/ui'
+import { HStack, Text } from '@dish/ui'
 import React from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
-import { Text } from 'react-native'
 
 import { RoutesTable } from '../../state/router'
 import { LinkButton, LinkButtonProps } from '../ui/LinkButton'

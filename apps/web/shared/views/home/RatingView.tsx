@@ -1,7 +1,6 @@
-import { ProgressCircle } from '@dish/ui'
+import { ProgressCircle, Text } from '@dish/ui'
 import { HStack, StackProps, VStack } from '@dish/ui'
 import React, { forwardRef } from 'react'
-import { Text } from 'react-native'
 
 export type RatingViewProps = StackProps & {
   size: 'lg' | 'md' | 'sm' | 'xs'
@@ -46,11 +45,9 @@ export const RatingView = forwardRef(
 
     const emoji = (
       <Text
-        style={{
-          fontSize: Math.max(sizeIn === 'xs' ? 12 : 14, size * 0.25),
-          textShadowColor: 'rgba(0,0,0,0.25)',
-          textShadowRadius: size * 0.015,
-        }}
+        fontSize={Math.max(sizeIn === 'xs' ? 12 : 14, size * 0.25)}
+        textShadowColor="rgba(0,0,0,0.25)"
+        textShadowRadius={size * 0.015}
       >
         {percent >= 9 ? '💎' : '⭐️'}
       </Text>
@@ -58,12 +55,10 @@ export const RatingView = forwardRef(
 
     const number = (
       <Text
-        style={{
-          fontSize: Math.max(13, size * 0.5),
-          fontWeight: '600',
-          color,
-          letterSpacing: -(size / 90),
-        }}
+        fontSize={Math.max(13, size * 0.5)}
+        fontWeight="600"
+        color={color}
+        letterSpacing={-(size / 90)}
       >
         {percent}
       </Text>

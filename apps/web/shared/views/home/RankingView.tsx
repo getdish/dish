@@ -1,6 +1,5 @@
-import { StackProps, VStack } from '@dish/ui'
+import { StackProps, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { Text } from 'react-native'
 
 import { SuperScriptText } from './SuperScriptText'
 
@@ -20,13 +19,11 @@ export const RankingView = memo(
         {...props}
       >
         <Text
-          style={{
-            fontSize: rank > 9 ? 20 : 25,
-            lineHeight: 22,
-            letterSpacing: -2,
-            fontWeight: '400',
-            color: '#555',
-          }}
+          fontSize={rank > 9 ? 20 : 25}
+          lineHeight={22}
+          letterSpacing={-2}
+          fontWeight="400"
+          color="#555"
         >
           <SuperScriptText style={{ opacity: 0.35, letterSpacing: 0 }}>
             #

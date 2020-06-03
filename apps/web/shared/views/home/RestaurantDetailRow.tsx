@@ -1,13 +1,7 @@
-import {
-  Restaurant,
-  RestaurantQuery,
-  Sources,
-  graphql,
-  query,
-} from '@dish/graph'
-import { Divider, HStack, Spacer, StackProps, VStack } from '@dish/ui'
+import { RestaurantQuery, Sources, graphql, query } from '@dish/graph'
+import { Divider, HStack, Spacer, StackProps, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { Linking, StyleSheet, Text } from 'react-native'
+import { Linking } from 'react-native'
 
 export const RestaurantDetailRow = memo(
   graphql(
@@ -58,13 +52,11 @@ export const RestaurantDetailRow = memo(
       const titleEl = ({ title, color }: Item) => (
         <Text
           numberOfLines={1}
-          style={{
-            textAlign: centered ? 'center' : 'left',
-            fontWeight: '600',
-            fontSize: 14,
-            color,
-            marginBottom: 3,
-          }}
+          textAlign={centered ? 'center' : 'left'}
+          fontWeight="600"
+          fontSize={14}
+          color={color}
+          marginBottom={3}
         >
           {title}
         </Text>
@@ -73,13 +65,9 @@ export const RestaurantDetailRow = memo(
       const contentEl = ({ color, content }: Item) => (
         <Text
           numberOfLines={1}
-          style={[
-            styles.subText,
-            centered && { textAlign: 'center' },
-            isSm && {
-              color,
-            },
-          ]}
+          fontSize={13}
+          textAlign={centered ? 'center' : 'inherit'}
+          color={isSm ? color : 'inherit'}
         >
           {content}
         </Text>
@@ -114,12 +102,6 @@ export const RestaurantDetailRow = memo(
     }
   )
 )
-
-const styles = StyleSheet.create({
-  subText: {
-    fontSize: 13,
-  },
-})
 
 function openingHours(restaurant: RestaurantQuery) {
   let text = 'Opens at'

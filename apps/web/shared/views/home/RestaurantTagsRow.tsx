@@ -30,7 +30,6 @@ export const RestaurantTagsRow = memo(
         spacing={size == 'lg' ? 10 : 10}
       >
         {tagElements}
-        {/* {!!showMore && <Text style={{ opacity: 0.5 }}>+5</Text>} */}
       </HStack>
     )
   })

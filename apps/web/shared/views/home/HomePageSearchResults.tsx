@@ -7,6 +7,7 @@ import {
   LoadingItems,
   PageTitle,
   Spacer,
+  Text,
   Toast,
   VStack,
   ZStack,
@@ -14,7 +15,7 @@ import {
 } from '@dish/ui'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Edit2 } from 'react-feather'
-import { Image, ScrollView, Text, View } from 'react-native'
+import { Image, ScrollView, View } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemSearch, isEditingUserPage } from '../../state/home'
@@ -151,13 +152,7 @@ const MyListButton = memo(
             <Box padding={5} paddingHorizontal={5} backgroundColor="#fff">
               <HStack alignItems="center" spacing={6}>
                 <Edit2 size={12} color="#777" />
-                <Text
-                  style={{
-                    color: 'inherit',
-                    fontSize: 16,
-                    fontWeight: '700',
-                  }}
-                >
+                <Text color="inherit" fontSize={16} fontWeight="700">
                   My list
                 </Text>
               </HStack>
@@ -221,7 +216,7 @@ const HomeSearchResultsViewContent = memo(
           justifyContent="center"
           spacing
         >
-          <Text style={{ fontSize: 22 }}>No results 😞</Text>
+          <Text fontSize={22}>No results 😞</Text>
           <LinkButton name="contact">Send us the address</LinkButton>
         </VStack>
       )

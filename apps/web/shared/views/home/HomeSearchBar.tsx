@@ -5,6 +5,7 @@ import {
   Hoverable,
   MediaQuery,
   Spacer,
+  Text,
   VStack,
   ZStack,
   mediaQueries,
@@ -12,13 +13,7 @@ import {
 } from '@dish/ui'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronLeft, Loader, Navigation, Search } from 'react-feather'
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { StyleSheet, TextInput, TouchableOpacity } from 'react-native'
 
 import {
   isWorker,
@@ -36,6 +31,8 @@ import HomeAutocomplete from './HomeAutocomplete'
 import { HomeAutocompleteBackground } from './HomeAutocompleteBackground'
 import { HomeUserMenu } from './HomeUserMenu'
 import { TagButton } from './TagButton'
+
+const borderRadius = 16
 
 const divider = <Divider vertical flexLine={1} marginHorizontal={4} />
 let avoidNextShowautocompleteOnFocus = true
@@ -271,10 +268,47 @@ export default memo(function HomeSearchBar() {
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
 
   return (
-    <View style={styles.container}>
+    <VStack
+      zIndex={22}
+      position="absolute"
+      marginTop={4}
+      left={searchBarTopOffset}
+      right={searchBarTopOffset}
+      alignItems="center"
+      height={searchBarHeight}
+      borderBottomColor="rgba(0,0,0,0.01)"
+      borderBottomWidth={1}
+      borderBottomLeftRadius={borderRadius}
+      borderBottomRightRadius={borderRadius}
+    >
       <HomeAutocompleteBackground />
-      <View style={styles.containerSize}>
-        <View style={styles.containerInner}>
+      <VStack
+        maxWidth={pageWidthMax - 20}
+        zIndex={12}
+        position="relative"
+        width="100%"
+        height="100%"
+        borderRadius={borderRadius}
+        shadowColor="rgba(0,0,0,0.1)"
+        shadowOffset={{ height: 3, width: 0 }}
+        shadowRadius={25}
+      >
+        <VStack
+          position="relative"
+          zIndex={100}
+          flex={1}
+          backgroundColor="rgba(255,255,255,1)"
+          flexDirection="row"
+          borderRadius={borderRadius}
+          shadowColor="rgba(0,0,0,0.05)"
+          shadowRadius={5}
+          shadowOffset={{ height: 3, width: 0 }}
+          overflow="hidden"
+          borderWidth={1}
+          borderColor="#fff"
+          alignItems="center"
+          justifyContent="center"
+        >
           <DishLogoButton />
 
           {/* <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
@@ -329,14 +363,7 @@ export default memo(function HomeSearchBar() {
                   }
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: 19,
-                    display: 'flex',
-                    flex: 1,
-                    overflow: 'hidden',
-                  }}
-                >
+                <Text fontSize={19} display="flex" flex={1} overflow="hidden">
                   <HStack
                     spacing={0}
                     alignItems="center"
@@ -424,10 +451,10 @@ export default memo(function HomeSearchBar() {
           </MediaQuery>
 
           <HomeUserMenu />
-        </View>
+        </VStack>
         <HomeAutocomplete />
-      </View>
-    </View>
+      </VStack>
+    </VStack>
   )
 })
 
@@ -461,7 +488,7 @@ const HomeSearchBarSeparator = memo(() => {
         borderColor="#eee"
         borderWidth={1}
       >
-        <Text style={{ color: '#000', fontSize: 15, fontWeight: '600' }}>
+        <Text color="#000" fontSize={15} fontWeight="600">
           in
         </Text>
       </Circle>
@@ -575,49 +602,7 @@ const HomeSearchBarTags = memo(
   }
 )
 
-const borderRadius = 16
-
 const styles = StyleSheet.create({
-  container: {
-    zIndex: 22,
-    position: 'absolute',
-    marginTop: 4,
-    left: searchBarTopOffset,
-    right: searchBarTopOffset,
-    alignItems: 'center',
-    height: searchBarHeight,
-    borderBottomColor: 'rgba(0,0,0,0.01)',
-    borderBottomWidth: 1,
-    borderBottomLeftRadius: borderRadius,
-    borderBottomRightRadius: borderRadius,
-  },
-  containerSize: {
-    maxWidth: pageWidthMax - 20,
-    zIndex: 12,
-    position: 'relative',
-    width: '100%',
-    height: '100%',
-    borderRadius: borderRadius,
-    shadowColor: 'rgba(0,0,0,0.1)',
-    shadowOffset: { height: 3, width: 0 },
-    shadowRadius: 25,
-  },
-  containerInner: {
-    position: 'relative',
-    zIndex: 100,
-    flex: 1,
-    backgroundColor: 'rgba(255,255,255,1)',
-    flexDirection: 'row',
-    borderRadius: borderRadius,
-    shadowColor: 'rgba(0,0,0,0.05)',
-    shadowRadius: 5,
-    shadowOffset: { height: 3, width: 0 },
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   textInput: {
     padding: 11,
     paddingHorizontal: 16,

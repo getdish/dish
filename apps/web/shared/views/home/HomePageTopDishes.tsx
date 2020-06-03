@@ -4,14 +4,14 @@ import {
   HorizontalLine,
   LinearGradient,
   SmallTitle,
-  Spacer,
+  Text,
   VStack,
   ZStack,
 } from '@dish/ui'
 import { LoadingItems } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { ScrollView, Text } from 'react-native'
+import { ScrollView } from 'react-native'
 
 import { HomeStateItemHome } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
@@ -201,7 +201,7 @@ const CountryTopDishesAndRestaurants = memo(
               name: country.country,
             }}
           >
-            <Text numberOfLines={1} style={{ fontSize: 20, fontWeight: '700' }}>
+            <Text numberOfLines={1} fontSize={20} fontWeight={'700'}>
               {country.country} {country.icon}
             </Text>
           </LinkButton>

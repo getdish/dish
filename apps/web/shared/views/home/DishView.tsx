@@ -4,11 +4,12 @@ import {
   HStack,
   LinearGradient,
   StackProps,
+  Text,
   VStack,
   ZStack,
 } from '@dish/ui'
 import React, { memo, useCallback, useState } from 'react'
-import { Image, StyleSheet, Text } from 'react-native'
+import { Image, StyleSheet } from 'react-native'
 
 import { NavigableTag } from '../../state/Tag'
 import { LinkButton, LinkButtonProps } from '../ui/LinkButton'
@@ -145,17 +146,15 @@ export const DishView = memo(
           >
             <Text
               numberOfLines={1}
-              style={{
-                flex: 1,
-                overflow: 'hidden',
-                fontSize: 15,
-                fontWeight: '700',
-                lineHeight: 22,
-                color: isHovered ? '#000' : '#fff',
-                // opacity: 0.75,
-                paddingVertical: 2,
-                textAlign: 'center',
-              }}
+              flex={1}
+              overflow="hidden"
+              fontSize={15}
+              fontWeight="700"
+              lineHeight={22}
+              color={isHovered ? '#000' : '#fff'}
+              // opacity: 0.75}
+              paddingVertical={2}
+              textAlign="center"
             >
               <Text>{dish.name}</Text>
             </Text>
