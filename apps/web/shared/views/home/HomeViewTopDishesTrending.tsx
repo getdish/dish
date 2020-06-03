@@ -13,7 +13,7 @@ import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
 import { TrendingButton } from './TrendingButton'
 
-const HomeViewTopDishesTrending = memo(() => {
+export const HomeViewTopDishesTrending = memo(() => {
   const om = useOvermind()
   const allRestaurants = om.state.home.topDishes[0]?.top_restaurants ?? []
   const hasLoaded = allRestaurants.length > 0

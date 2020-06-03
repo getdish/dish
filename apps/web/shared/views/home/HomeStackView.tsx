@@ -85,7 +85,7 @@ function HomeStackViewItem({
     []
   )
 
-  const top = isSmall ? 0 : index * 10 + (index == 0 ? 0 : searchBarHeight + 5)
+  const top = isSmall ? 0 : index * (index == 0 ? 0 : searchBarHeight)
   const left = isSmall ? -3 : Math.max(0, index) * 7
 
   return (

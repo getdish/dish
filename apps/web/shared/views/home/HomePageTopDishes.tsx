@@ -68,20 +68,20 @@ const HomePageTopDishes = ({ stateIndex }: TopDishesProps) => {
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
       <VStack position="relative" flex={1} overflow="hidden">
         <HomeScrollView>
-          <VStack paddingVertical={34} paddingTop={82} spacing="xl">
+          <VStack paddingTop={80} paddingBottom={34} spacing="xl">
             {/* TRENDING */}
             {/* <HomeViewTopDishesTrending /> */}
 
             {/* LENSES - UNIQUELY GOOD HERE */}
             <VStack spacing="lg">
-              <SmallTitle divider="off">
+              {/* <SmallTitle divider="off">
                 {om.state.home.lastActiveTags
                   .find((x) => x.type === 'lense')
                   ?.descriptions?.plain.replace(
                     'Here',
                     `in ${om.state.home.lastHomeState.currentLocationName}`
                   ) ?? ''}
-              </SmallTitle>
+              </SmallTitle> */}
 
               <VStack spacing alignItems="center">
                 <HStack
@@ -91,6 +91,31 @@ const HomePageTopDishes = ({ stateIndex }: TopDishesProps) => {
                   paddingHorizontal={20}
                   spacing={20}
                 >
+                  <ZStack
+                    position="absolute"
+                    top={10}
+                    left="0%"
+                    width="36%"
+                    zIndex={1000}
+                    justifyContent="center"
+                  >
+                    <LinkButton
+                      paddingVertical={5}
+                      paddingHorizontal={6}
+                      fontSize={16}
+                      shadowColor={'rgba(0,0,0,0.1)'}
+                      shadowRadius={8}
+                      shadowOffset={{ height: 2, width: 0 }}
+                      backgroundColor="#fff"
+                      borderRadius={8}
+                      fontWeight="700"
+                      transform={[{ rotate: '-4deg' }]}
+                    >
+                      {om.state.home.lastActiveTags
+                        .find((x) => x.type === 'lense')
+                        ?.descriptions?.plain.replace('Here', ``) ?? ''}
+                    </LinkButton>
+                  </ZStack>
                   <HorizontalLine />
                   <HomeLenseBarOnly
                     size="lg"
