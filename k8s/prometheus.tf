@@ -7,38 +7,15 @@ resource "helm_release" "prometheus-operator" {
   name = "prometheus-operator"
   namespace = "monitoring"
   chart = "stable/prometheus-operator"
-  version = "8.9.3"
+  version = "8.13.12"
 
   values = [
     file("yaml/prometheus.yaml")
   ]
 
   set {
-    name = "prometheusOperator.createCustomResource"
-    value = false
-  }
-
-  set {
     name = "grafana.adminPassword"
     value = var.GRAFANA_PASSWORD
-  }
-}
-
-resource "kubernetes_service" "grafana" {
-  metadata {
-    name = "grafana"
-  }
-
-  spec {
-    selector = {
-      app = "dish"
-    }
-
-    port {
-      name = "grafana"
-      port = 443
-      target_port = 80
-    }
   }
 }
 
