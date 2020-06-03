@@ -51,19 +51,19 @@ export const tagLenses: Tag[] = [
     type: 'lense',
     isVotable: true,
   },
-  {
-    id: '6',
-    name: 'Coffee',
-    icon: '☕',
-    rgb: [0.35, 0.2, 0.65],
-    descriptions: {
-      dish: '🍔 & coffee',
-      cuisine: '🍔 Food & Coffee',
-      plain: 'Top Coffee Shops',
-    },
-    type: 'lense',
-    isVotable: true,
-  },
+  // {
+  //   id: '6',
+  //   name: 'Coffee',
+  //   icon: '☕',
+  //   rgb: [0.35, 0.2, 0.65],
+  //   descriptions: {
+  //     dish: '🍔 & coffee',
+  //     cuisine: '🍔 Food & Coffee',
+  //     plain: 'Top Coffee Shops',
+  //   },
+  //   type: 'lense',
+  //   isVotable: true,
+  // },
   {
     id: '5',
     name: 'Drink',
@@ -90,19 +90,19 @@ export const tagLenses: Tag[] = [
     type: 'lense',
     isVotable: true,
   },
-  {
-    id: '6',
-    name: 'Quiet',
-    icon: '👨‍💻',
-    rgb: [0.35, 0.2, 0.65],
-    descriptions: {
-      dish: 'Low-key 🍔',
-      cuisine: 'Quiet 🍔 Restaurants',
-      plain: 'Quiet, Work-friendly Spots',
-    },
-    type: 'lense',
-    isVotable: true,
-  },
+  // {
+  //   id: '6',
+  //   name: 'Quiet',
+  //   icon: '👨‍💻',
+  //   rgb: [0.35, 0.2, 0.65],
+  //   descriptions: {
+  //     dish: 'Low-key 🍔',
+  //     cuisine: 'Quiet 🍔 Restaurants',
+  //     plain: 'Quiet, Work-friendly Spots',
+  //   },
+  //   type: 'lense',
+  //   isVotable: true,
+  // },
 ]
 
 export const tagFilters: Tag[] = [

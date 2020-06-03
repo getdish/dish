@@ -1,5 +1,3 @@
-import { findLast } from 'lodash'
-
 import { getActiveTags, isSearchBarTag } from './home-tag-helpers'
 import {
   HomeStateItem,
