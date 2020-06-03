@@ -1,6 +1,7 @@
 import generate from '@babel/generator'
 import * as t from '@babel/types'
 import invariant from 'invariant'
+import { ViewStyle } from 'react-native'
 
 import { getStylesAtomic } from '../style/getStylesAtomic'
 import { CacheObject, ClassNameToStyleObj } from '../types'
@@ -12,15 +13,17 @@ export interface Ternary {
   alternate: string | null
 }
 
+export type TernaryRecord = {
+  test: t.Expression
+  consequentStyles: any //CSSProperties
+  alternateStyles: any //CSSProperties
+}
+
 export function extractStaticTernaries(
   ternaries: Ternary[],
-  cacheObject: CacheObject
-): {
-  /** styles to be extracted */
-  stylesByClassName: ClassNameToStyleObj
-  /** ternaries grouped into one binary expression */
-  ternaryExpression: t.BinaryExpression | t.ConditionalExpression
-} | null {
+  cacheObject: CacheObject,
+  baseStyles: ViewStyle
+) {
   invariant(
     Array.isArray(ternaries),
     'extractStaticTernaries expects param 1 to be an array of ternaries'
@@ -34,14 +37,8 @@ export function extractStaticTernaries(
     return null
   }
 
-  const ternariesByKey: Record<
-    string,
-    {
-      test: t.Expression
-      consequentStyles: any //CSSProperties
-      alternateStyles: any //CSSProperties
-    }
-  > = {}
+  const ternariesByKey: Record<string, TernaryRecord> = {}
+
   for (let idx = -1, len = ternaries.length; ++idx < len; ) {
     const { name, test, consequent, alternate } = ternaries[idx]
 
@@ -83,67 +80,9 @@ export function extractStaticTernaries(
 
   const stylesByClassName: ClassNameToStyleObj = {}
 
-  const ternaryExpression = Object.keys(ternariesByKey)
-    .map((key, idx) => {
-      const { test, consequentStyles, alternateStyles } = ternariesByKey[key]
-      const consInfo = getStylesAtomic(consequentStyles)
-      const altInfo = getStylesAtomic(alternateStyles)
-
-      if (!consInfo.length && !altInfo.length) {
-        return null
-      }
-
-      if (consInfo.length) {
-        for (const style of consInfo) {
-          stylesByClassName[style.identifier] = style
-        }
-      }
-      if (altInfo) {
-        for (const style of altInfo) {
-          stylesByClassName[style.identifier] = style
-        }
-      }
-
-      const consequentClassName = consInfo.map((x) => x.identifier).join(' ')
-      const alternateClassName = altInfo.map((x) => x.identifier).join(' ')
-
-      if (consInfo.length && altInfo.length) {
-        if (idx > 0) {
-          // if it's not the first ternary, add a leading space
-          return t.binaryExpression(
-            '+',
-            t.stringLiteral(' '),
-            t.conditionalExpression(
-              test,
-              t.stringLiteral(consequentClassName),
-              t.stringLiteral(alternateClassName)
-            )
-          )
-        } else {
-          return t.conditionalExpression(
-            test,
-            t.stringLiteral(consequentClassName),
-            t.stringLiteral(alternateClassName)
-          )
-        }
-      } else {
-        // if only one className is present, put the padding space inside the ternary
-        return t.conditionalExpression(
-          test,
-          t.stringLiteral(
-            (idx > 0 && consequentClassName ? ' ' : '') + consequentClassName
-          ),
-          t.stringLiteral(
-            (idx > 0 && alternateClassName ? ' ' : '') + alternateClassName
-          )
-        )
-      }
-    })
-    .filter(Boolean)
-    .reduce(
-      (acc, val) => (acc && val ? t.binaryExpression('+', acc, val) : val),
-      null
-    )
+  const ternaryExpression = Object.keys(ternariesByKey).map((key) => {
+    return ternariesByKey[key]
+  })
 
   if (!ternaryExpression) {
     return null

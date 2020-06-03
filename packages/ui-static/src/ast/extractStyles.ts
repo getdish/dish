@@ -10,6 +10,7 @@ import * as AllExports from '@dish/ui'
 // import literalToAst from 'babel-literal-to-ast'
 import invariant from 'invariant'
 import { ViewStyle } from 'react-native'
+import { resolve } from 'react-native-web/dist/cjs/exports/StyleSheet/styleResolver'
 
 import { GLOSS_CSS_FILE } from '../constants'
 import { getStylesAtomic } from '../style/getStylesAtomic'
@@ -20,7 +21,11 @@ import {
   ExtractStylesOptions,
 } from '../types'
 import { evaluateAstNode } from './evaluateAstNode'
-import { Ternary, extractStaticTernaries } from './extractStaticTernaries'
+import {
+  Ternary,
+  TernaryRecord,
+  extractStaticTernaries,
+} from './extractStaticTernaries'
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'
 import { getStaticBindingsForScope } from './getStaticBindingsForScope'
 import { parse } from './parse'
@@ -447,13 +452,18 @@ domNode: ${domNode}
           node.attributes.splice(classNamePropIndex, 1)
         }
 
-        const classNameObjects: ClassNameObject[] = []
-
         // if all style props have been extracted, gloss component can be
         // converted to a div or the specified component
         if (inlinePropCount === 0) {
-          // add a className="is_Name" so we can debug it more easily
-          classNameObjects.push(t.stringLiteral(`is_${node.name.name}`))
+          if (process.env.NODE_ENV === 'development' || process.env.DEBUG) {
+            // add name so we can debug it more easily
+            node.attributes.push(
+              t.jsxAttribute(
+                t.jsxIdentifier('data-is'),
+                t.stringLiteral(node.name.name)
+              )
+            )
+          }
           // since were removing down to div, we need to push the default styles onto this classname
           const defaultStyle = component.staticConfig?.defaultStyle ?? {}
           viewStyles = {
@@ -464,17 +474,9 @@ domNode: ${domNode}
           node.name.name = domNode
         }
 
-        // used later to generate classname for item
+        // STORE ALL CLASSES => STYLES here
+        // this is used to export
         const stylesByClassName: ClassNameToStyleObj = {}
-
-        // capture views where they set it afterwards
-        // plus any defaults passed through gloss
-        if (Object.keys(viewStyles).length > 0) {
-          const styles = getStylesAtomic(viewStyles)
-          for (const style of styles) {
-            stylesByClassName[style.identifier] = style
-          }
-        }
 
         if (inlinePropCount) {
           if (lastSpreadIndex > -1) {
@@ -502,6 +504,7 @@ domNode: ${domNode}
           traversePath.node.closingElement.name.name = node.name.name
         }
 
+        const classNameObjects: ClassNameObject[] = []
         if (classNamePropValue) {
           try {
             const evaluatedValue = attemptEval(classNamePropValue)
@@ -511,56 +514,87 @@ domNode: ${domNode}
           }
         }
 
+        let classNamePropValueForReals = buildClassNamePropValue(
+          classNameObjects
+        )
+
+        // for simple spread, we need to have it add in the spread className if exists
+        if (isSingleSimpleSpread && simpleSpreadIdentifier) {
+          classNamePropValueForReals = t.binaryExpression(
+            '+',
+            classNamePropValueForReals ?? t.stringLiteral(''),
+            t.binaryExpression(
+              '+',
+              t.stringLiteral(' '),
+              t.logicalExpression(
+                '||',
+                t.memberExpression(
+                  simpleSpreadIdentifier,
+                  t.identifier('className')
+                ),
+                t.stringLiteral('')
+              )
+            )
+          )
+        }
+
+        // get extracted classNames
+        const classNames: string[] = []
+        const hasViewStyle = Object.keys(viewStyles).length > 0
+        if (hasViewStyle) {
+          const styles = getStylesAtomic(viewStyles)
+          for (const style of styles) {
+            stylesByClassName[style.identifier] = style
+            classNames.push(style.identifier)
+          }
+        }
+
+        let ternaries: TernaryRecord[] = []
         if (staticTernaries.length > 0) {
           const ternaryObj = extractStaticTernaries(
             staticTernaries,
-            cacheObject
+            cacheObject,
+            viewStyles
           )
-          if (shouldPrintDebug) {
-            console.log({ staticTernaries, ternaryObj })
-          }
           // ternaryObj is null if all of the extracted ternaries have falsey consequents and alternates
           if (ternaryObj !== null) {
             // add extracted styles by className to existing object
             Object.assign(stylesByClassName, ternaryObj.stylesByClassName)
-            classNameObjects.push(ternaryObj.ternaryExpression)
+            ternaries = ternaryObj.ternaryExpression
           }
         }
 
-        const extractedStyleClassNames = Object.keys(stylesByClassName).join(
-          ' '
-        )
-        if (extractedStyleClassNames) {
-          classNameObjects.push(t.stringLiteral(extractedStyleClassNames))
-          if (shouldPrintDebug) {
-            console.log('extractedStyleClassNames', extractedStyleClassNames)
-          }
-        }
-
-        let classNamePropValueForReals = buildClassNamePropValue(
-          classNameObjects
-        )
-        if (classNamePropValueForReals) {
-          // for simple spread, we need to have it add in the spread className if exists
-          if (isSingleSimpleSpread && simpleSpreadIdentifier) {
-            classNamePropValueForReals = t.binaryExpression(
-              '+',
-              classNamePropValueForReals,
-              t.binaryExpression(
-                '+',
-                t.stringLiteral(' '),
-                t.logicalExpression(
-                  '||',
-                  t.memberExpression(
-                    simpleSpreadIdentifier,
-                    t.identifier('className')
-                  ),
-                  t.stringLiteral('')
-                )
+        if (ternaries.length) {
+          if (classNamePropValueForReals) {
+            // this will be passed to a <View /> where rnw can de-dupe conflicting classnames
+            classNamePropValueForReals = buildClassNamePropValue(
+              ternaries.map((x, i) =>
+                getTernaryExpression({}, stylesByClassName, x, i)
+              )
+            )
+          } else {
+            // but if no spread/className prop, we optimize
+            classNamePropValueForReals = buildClassNamePropValue(
+              ternaries.map((x, i) =>
+                getTernaryExpression(viewStyles, stylesByClassName, x, i)
               )
             )
           }
+        } else {
+          if (classNames.length) {
+            const classNameProp = t.stringLiteral(classNames.join(' '))
+            if (classNamePropValueForReals) {
+              classNamePropValueForReals = buildClassNamePropValue([
+                classNamePropValueForReals,
+                classNameProp,
+              ])
+            } else {
+              classNamePropValueForReals = classNameProp
+            }
+          }
+        }
 
+        if (classNamePropValueForReals) {
           if (t.isStringLiteral(classNamePropValueForReals)) {
             node.attributes.push(
               t.jsxAttribute(
@@ -757,4 +791,60 @@ function buildClassNamePropValue(classNameObjects: ClassNameObject[]) {
     }
     return t.binaryExpression('+', acc, inner)
   }, null)
+}
+
+function getTernaryExpression(
+  baseViewStyles: ViewStyle,
+  stylesByClassName: Object,
+  { test, consequentStyles, alternateStyles }: TernaryRecord,
+  idx: number
+) {
+  const consInfo = getStylesAtomic({ ...baseViewStyles, ...consequentStyles })
+  const altInfo = getStylesAtomic({ ...baseViewStyles, ...alternateStyles })
+
+  if (consInfo.length) {
+    for (const style of consInfo) {
+      stylesByClassName[style.identifier] = style
+    }
+  }
+  if (altInfo.length) {
+    for (const style of altInfo) {
+      stylesByClassName[style.identifier] = style
+    }
+  }
+
+  const consequentClassName = consInfo.map((x) => x.identifier).join(' ')
+  const alternateClassName = altInfo.map((x) => x.identifier).join(' ')
+
+  if (consInfo.length && altInfo.length) {
+    if (idx > 0) {
+      // if it's not the first ternary, add a leading space
+      return t.binaryExpression(
+        '+',
+        t.stringLiteral(' '),
+        t.conditionalExpression(
+          test,
+          t.stringLiteral(consequentClassName),
+          t.stringLiteral(alternateClassName)
+        )
+      )
+    } else {
+      return t.conditionalExpression(
+        test,
+        t.stringLiteral(consequentClassName),
+        t.stringLiteral(alternateClassName)
+      )
+    }
+  } else {
+    // if only one className is present, put the padding space inside the ternary
+    return t.conditionalExpression(
+      test,
+      t.stringLiteral(
+        (idx > 0 && consequentClassName ? ' ' : '') + consequentClassName
+      ),
+      t.stringLiteral(
+        (idx > 0 && alternateClassName ? ' ' : '') + alternateClassName
+      )
+    )
+  }
 }
