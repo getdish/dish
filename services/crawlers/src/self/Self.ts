@@ -418,7 +418,9 @@ export class Self extends WorkerJob {
     ).map((c) => c.tagValue)
     const tags = _.uniq([...yelps, ...tripadvisors])
     const orphan_tags = await this.upsertCountryTags(tags)
-    await restaurantUpsertOrphanTags(this.restaurant, orphan_tags)
+    if (orphan_tags) {
+      await restaurantUpsertOrphanTags(this.restaurant, orphan_tags)
+    }
     await this.updateTagRankings()
   }
 
@@ -447,11 +449,10 @@ export class Self extends WorkerJob {
   }
 
   async upsertUberDishes() {
-    if (!this.ubereats.id) {
+    if (!this.ubereats?.id) {
       return
     }
-    // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
-    for (const data of this.ubereats.data.dishes) {
+    for (const data of this.ubereats?.data?.dishes) {
       if (data.title) {
         await menuItemUpsert([
           {
@@ -467,11 +468,9 @@ export class Self extends WorkerJob {
   }
 
   mergePhotos() {
-    // ...scrapeGetData(this.tripadvisor, 'photos', []),
-    // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
     this.restaurant.photos = [
-      // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
-      ...this.getPaginatedData(this.yelp.data, 'photos').map((i) => i.src),
+      // ...scrapeGetData(this.tripadvisor, 'photos', []),
+      ...this.getPaginatedData(this.yelp?.data, 'photos').map((i) => i.src),
     ]
   }
 
@@ -676,8 +675,7 @@ export class Self extends WorkerJob {
   }
 
   _scanTripadvisorReviewsForTags() {
-    // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
-    const reviews = this.getPaginatedData(this.tripadvisor.data, 'reviews')
+    const reviews = this.getPaginatedData(this.tripadvisor?.data, 'reviews')
     for (const review of reviews) {
       const all_text = [review.text].join(' ')
       this.findDishesInText(all_text)
