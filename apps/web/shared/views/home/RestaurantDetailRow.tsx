@@ -51,7 +51,7 @@ export const RestaurantDetailRow = memo(
 
       const titleEl = ({ title, color }: Item) => (
         <Text
-          numberOfLines={1}
+          ellipse
           textAlign={centered ? 'center' : 'left'}
           fontWeight="600"
           fontSize={14}
@@ -64,9 +64,9 @@ export const RestaurantDetailRow = memo(
 
       const contentEl = ({ color, content }: Item) => (
         <Text
-          numberOfLines={1}
+          ellipse
           fontSize={13}
-          textAlign={centered ? 'center' : 'inherit'}
+          textAlign={centered ? 'center' : 'left'}
           color={isSm ? color : 'inherit'}
         >
           {content}
@@ -174,9 +174,7 @@ function deliveryLinks(sources: Sources) {
       return (
         <Text key={index}>
           <Text
-            style={{
-              color: 'blue',
-            }}
+            color="blue"
             onPress={() => Linking.openURL(sources[source].url)}
           >
             🔗 {name}

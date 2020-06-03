@@ -7,6 +7,7 @@ import {
 
 export type TextProps = Omit<ReactTextProps, 'style'> &
   TextStyle & {
+    ellipse?: boolean
     selectable?: boolean
     children: any
   }
@@ -16,11 +17,21 @@ export const Text = (allProps: TextProps) => {
   return <ReactText style={style} {...props} />
 }
 
+const selectableStyle = {
+  userSelect: 'text',
+}
+
+const ellipseStyle = {
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+}
+
+// @ts-ignore
 Text.staticConfig = {
   styleExpansionProps: {
-    selectable: {
-      userSelect: 'text',
-    },
+    selectable: selectableStyle,
+    ellipse: ellipseStyle,
   },
 }
 
@@ -31,9 +42,15 @@ const useTextStyle = (allProps: TextProps) => {
     for (const key in allProps) {
       const val = allProps[key]
       if (val === undefined) continue
-      if (key === 'selectable' && val) {
-        style['userSelect'] = 'text'
-        continue
+      if (val) {
+        if (key === 'selectable') {
+          Object.assign(style, selectableStyle as any)
+          continue
+        }
+        if (key === 'ellipse') {
+          Object.assign(style, ellipseStyle as any)
+          continue
+        }
       }
       const isProp =
         textNonStyleProps[key] ?? /^(allow.*|on[A-Z].*|.*[Mm]ode)/.test(key)

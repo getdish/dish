@@ -9,7 +9,7 @@ export const PageTitle = memo(
       <VStack maxWidth="100%" minHeight={68} justifyContent="center" {...rest}>
         <Text
           selectable
-          numberOfLines={1}
+          ellipse
           flex={1}
           maxWidth="80%"
           opacity={1}
@@ -23,7 +23,7 @@ export const PageTitle = memo(
               <br />
               <Text
                 selectable
-                numberOfLines={1}
+                ellipse
                 width="100%"
                 color="#666"
                 fontSize={22}

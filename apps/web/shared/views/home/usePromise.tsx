@@ -16,5 +16,5 @@ export function usePromise<A extends () => Promise<any>>(
       cancelled = true
     }
   }, mountArgs)
-  return val
+  return val as any
 }

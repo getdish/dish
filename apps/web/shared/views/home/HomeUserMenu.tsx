@@ -79,7 +79,7 @@ export const HomeUserMenu = memo(() => {
           <User size={22} opacity={0.5} />
           {/* {om.state.user.isLoggedIn ? (
             <Text
-              numberOfLines={1}
+              ellipse
               style={{ fontSize: 12, opacity: 0.5, maxWidth: 50 }}
             >
               {om.state.user.user.username}

@@ -56,7 +56,7 @@ export const RestaurantTagButton = memo(
                       <TagButton
                         key={x.name}
                         type="dish"
-                        name={x.name}
+                        name={x.name ?? ''}
                         icon=""
                         rgb={[0, 0, 0]}
                       />
@@ -101,7 +101,11 @@ export const RestaurantTagButton = memo(
           }}
         >
           {isLarge ? '' : 'Add'}
-          <Tag size={isLarge ? 26 : 14} opacity={0.4} marginBottom={-1} />
+          <Tag
+            size={isLarge ? 26 : 14}
+            opacity={0.4}
+            style={{ marginBottom: -1 }}
+          />
         </LinkButton>
       </Popover>
     )

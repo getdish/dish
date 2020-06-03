@@ -1,28 +1,24 @@
 import generate from '@babel/generator'
 import * as t from '@babel/types'
 import invariant from 'invariant'
-import { ViewStyle } from 'react-native'
 
-import { getStylesAtomic } from '../style/getStylesAtomic'
-import { CacheObject, ClassNameToStyleObj } from '../types'
+import { CacheObject } from '../types'
 
 export interface Ternary {
-  name: string
   test: t.Expression
-  consequent: string | null
-  alternate: string | null
+  consequent: Object | null
+  alternate: Object | null
 }
 
 export type TernaryRecord = {
   test: t.Expression
-  consequentStyles: any //CSSProperties
-  alternateStyles: any //CSSProperties
+  consequentStyles: Object
+  alternateStyles: Object
 }
 
 export function extractStaticTernaries(
   ternaries: Ternary[],
-  cacheObject: CacheObject,
-  baseStyles: ViewStyle
+  cacheObject: CacheObject
 ) {
   invariant(
     Array.isArray(ternaries),
@@ -40,7 +36,7 @@ export function extractStaticTernaries(
   const ternariesByKey: Record<string, TernaryRecord> = {}
 
   for (let idx = -1, len = ternaries.length; ++idx < len; ) {
-    const { name, test, consequent, alternate } = ternaries[idx]
+    const { test, consequent, alternate } = ternaries[idx]
 
     let ternaryTest = test
 
@@ -65,20 +61,17 @@ export function extractStaticTernaries(
     }
 
     const key = generate(ternaryTest).code
+
     ternariesByKey[key] = ternariesByKey[key] || {
       alternateStyles: {},
       consequentStyles: {},
       test: ternaryTest,
     }
-    ternariesByKey[key].consequentStyles[name] = shouldSwap
-      ? alternate
-      : consequent
-    ternariesByKey[key].alternateStyles[name] = shouldSwap
-      ? consequent
-      : alternate
+    ternariesByKey[key].consequentStyles =
+      (shouldSwap ? alternate : consequent) ?? {}
+    ternariesByKey[key].alternateStyles =
+      (shouldSwap ? consequent : alternate) ?? {}
   }
-
-  const stylesByClassName: ClassNameToStyleObj = {}
 
   const ternaryExpression = Object.keys(ternariesByKey).map((key) => {
     return ternariesByKey[key]
@@ -88,5 +81,5 @@ export function extractStaticTernaries(
     return null
   }
 
-  return { stylesByClassName, ternaryExpression }
+  return ternaryExpression
 }

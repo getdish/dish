@@ -212,48 +212,33 @@ export function extractStyles(
               }
 
               return (n: t.Node) => {
-                try {
-                  return evaluateAstNode(n, evalFn)
-                } catch (err) {
-                  // if (shouldPrintDebug) {
-                  //   console.log('evaluation error, ok if its dynamic:', err)
-                  // }
-                  throw err
-                }
+                return evaluateAstNode(n, evalFn)
               }
             })()
 
-        // turns jsx spread into a style object, if static
-        function isExtractableSpreadToStyle(
-          attribute: t.JSXAttribute | t.JSXSpreadAttribute
-        ) {
-          if (t.isJSXSpreadAttribute(attribute)) {
-            if (t.isLogicalExpression(attribute.argument)) {
-              if (t.isObjectExpression(attribute.argument.right)) {
-                const objectExpr = attribute.argument.right
-                return objectExpr.properties.every(
-                  (prop) =>
-                    t.isObjectProperty(prop) &&
-                    isStaticAttributeName(prop.key.name)
-                )
-              }
-            }
+        const attemptEvalSafe = (n: t.Node) => {
+          try {
+            return attemptEval(n)
+          } catch {
+            return null
           }
-          return false
         }
 
-        function extractSpreadToStyle(
-          attribute: t.JSXAttribute | t.JSXSpreadAttribute
-        ): Object | undefined {
-          if (isExtractableSpreadToStyle(attribute)) {
-            try {
-              // @ts-ignore
-              const obj = attribute.argument.right
-              return attemptEval(obj)
-            } catch {
-              // ok
-            }
-          }
+        // STORE *EVERY* { [CLASSNAME]: STYLES } on this (used to generate css later)
+        const stylesByClassName: ClassNameToStyleObj = {}
+        // stores className objects we build up later into a single className
+        const classNameObjects: ClassNameObject[] = []
+        // ternaries we can extract, of course
+        const staticTernaries: Ternary[] = []
+
+        const addStylesAtomic = (style: any) => {
+          console.log('addStylesAtomic', style)
+          if (!style) return style
+          const res = getStylesAtomic(style)
+          res.forEach((x) => {
+            stylesByClassName[style.identifier] = x
+          })
+          return res
         }
 
         let lastSpreadIndex: number = -1
@@ -262,15 +247,67 @@ export function extractStyles(
           | t.JSXSpreadAttribute
         )[] = []
 
-        node.attributes.forEach((attr) => {
+        const isStyleObject = (obj: t.Node): obj is t.ObjectExpression => {
+          return (
+            t.isObjectExpression(obj) &&
+            !![console.log(obj.properties)] &&
+            obj.properties.every(
+              (prop) =>
+                t.isObjectProperty(prop) && isStaticAttributeName(prop.key.name)
+            )
+          )
+        }
+
+        node.attributes.forEach((attr, index) => {
           if (!t.isJSXSpreadAttribute(attr)) {
             flattenedAttributes.push(attr)
             return
           }
-          if (isExtractableSpreadToStyle(attr)) {
-            flattenedAttributes.push(attr)
-            return
+
+          const name = ''
+
+          // simple spreads of style objects like ternaries
+
+          // <VStack {...isSmall ? { color: 'red } : { color: 'blue }}
+          if (t.isConditionalExpression(attr.argument)) {
+            const { alternate, consequent, test } = attr.argument
+            const aStyle = isStyleObject(alternate)
+              ? attemptEvalSafe(alternate)
+              : null
+            const cStyle = isStyleObject(consequent)
+              ? attemptEvalSafe(consequent)
+              : null
+
+            if (aStyle || cStyle) {
+              staticTernaries.push({
+                test,
+                alternate: aStyle,
+                consequent: cStyle,
+              })
+              return
+            }
           }
+
+          // <VStack {...isSmall && { color: 'red' }}
+          if (t.isLogicalExpression(attr.argument)) {
+            if (isStyleObject(attr.argument.right)) {
+              const spreadStyle = attemptEvalSafe(attr.argument.right)
+              if (spreadStyle) {
+                const styles = addStylesAtomic(spreadStyle)
+                if (styles) {
+                  console.log('adding2', styles, spreadStyle)
+                  staticTernaries.push({
+                    test: (attr.argument as t.LogicalExpression).left,
+                    alternate: styles,
+                    consequent: null,
+                  })
+                  return
+                }
+              }
+            }
+          }
+
+          // handle all other spreads
           try {
             const spreadValue = attemptEval(attr.argument)
 
@@ -314,7 +351,6 @@ export function extractStyles(
 
         node.attributes = flattenedAttributes
 
-        const staticTernaries: Ternary[] = []
         const hasOneEndingSpread =
           flattenedAttributes.findIndex((x) => t.isJSXSpreadAttribute(x)) ===
           lastSpreadIndex
@@ -335,34 +371,7 @@ export function extractStyles(
           console.log('attr overview:', node.attributes.map(attrGetName))
         }
 
-        // STORE *EVERY* CLASS => STYLES here
-        // this is used to generate css later
-        const stylesByClassName: ClassNameToStyleObj = {}
-        // stores className objects we build up later into a single className
-        const classNameObjects: ClassNameObject[] = []
-
         node.attributes = node.attributes.filter((attribute, idx) => {
-          // handle simple spreads of objects like ternaries
-          // eg: <VStack {...isSmall && { backgroundColor: 'red' }}
-          const spreadStyle = extractSpreadToStyle(attribute)
-          if (spreadStyle) {
-            const styles = getStylesAtomic(spreadStyle)
-            if (styles.length) {
-              for (const style of styles) {
-                stylesByClassName[style.identifier] = style
-              }
-              const attr = attribute as t.JSXSpreadAttribute
-              const test = (attr.argument as t.LogicalExpression).left
-              staticTernaries.push({
-                test,
-                alternate: styles.map((x) => x.identifier).join(' '),
-                consequent: '',
-                name: originalNodeName,
-              })
-              return false
-            }
-          }
-
           if (
             t.isJSXSpreadAttribute(attribute) ||
             // keep the weirdos
@@ -444,30 +453,30 @@ export function extractStyles(
             }
           }
 
+          // if both sides of the ternary can be evaluated, extract them
           if (t.isConditionalExpression(value)) {
-            // if both sides of the ternary can be evaluated, extract them
             try {
-              const consequent = attemptEval(value.consequent)
-              const alternate = attemptEval(value.alternate)
+              const aVal = attemptEval(value.alternate)
+              const cVal = attemptEval(value.consequent)
               staticTernaries.push({
-                alternate,
-                consequent,
-                name,
+                alternate: { [name]: aVal },
+                consequent: { [name]: cVal },
                 test: value.test,
               })
               return false
             } catch {
               //
             }
-          } else if (t.isLogicalExpression(value)) {
-            // convert a simple logical expression to a ternary with a null alternate
+          }
+
+          // convert a simple logical expression to a ternary with a null alternate
+          if (t.isLogicalExpression(value)) {
             if (value.operator === '&&') {
               try {
-                const consequent = attemptEval(value.right)
+                const val = attemptEval(value.right)
                 staticTernaries.push({
                   alternate: null,
-                  consequent,
-                  name,
+                  consequent: { [name]: val },
                   test: value.left,
                 })
                 return false
@@ -573,35 +582,27 @@ domNode: ${domNode}
         const classNames: string[] = []
         const hasViewStyle = Object.keys(viewStyles).length > 0
         if (hasViewStyle) {
-          const styles = getStylesAtomic(viewStyles)
+          const styles = addStylesAtomic(viewStyles)
+          if (shouldPrintDebug) {
+            console.log('viewStyles', originalNodeName, viewStyles, styles)
+          }
           for (const style of styles) {
-            stylesByClassName[style.identifier] = style
             classNames.push(style.identifier)
           }
         }
 
-        let ternaries: TernaryRecord[] = []
-        if (staticTernaries.length > 0) {
-          const ternaryObj = extractStaticTernaries(
-            staticTernaries,
-            cacheObject,
-            viewStyles
-          )
-          // ternaryObj is null if all of the extracted ternaries have falsey consequents and alternates
-          if (ternaryObj !== null) {
-            // add extracted styles by className to existing object
-            Object.assign(stylesByClassName, ternaryObj.stylesByClassName)
-            ternaries = ternaryObj.ternaryExpression
-          }
-        }
+        const ternaries = extractStaticTernaries(staticTernaries, cacheObject)
 
-        if (ternaries.length) {
+        console.log('ternaries', ternaries)
+
+        if (ternaries?.length) {
           if (classNamePropValueForReals) {
             classNamePropValueForReals = t.binaryExpression(
               '+',
               buildClassNamePropValue(
                 ternaries.map((x, i) =>
-                  getTernaryExpression(viewStyles, stylesByClassName, x, i)
+                  // stupid mutating fn
+                  getTernaryExpression(viewStyles, addStylesAtomic, x, i)
                 )
               ),
               t.binaryExpression(
@@ -614,7 +615,8 @@ domNode: ${domNode}
             // but if no spread/className prop, we optimize
             classNamePropValueForReals = buildClassNamePropValue(
               ternaries.map((x, i) =>
-                getTernaryExpression(viewStyles, stylesByClassName, x, i)
+                // stupid mutating fn
+                getTernaryExpression(viewStyles, addStylesAtomic, x, i)
               )
             )
           }
@@ -862,18 +864,18 @@ function buildClassNamePropValue(classNameObjects: ClassNameObject[]) {
   }, null)
 }
 
+// stupid mutating fn (stylesByClassName)
 function getTernaryExpression(
   baseViewStyles: ViewStyle,
-  stylesByClassName: Object,
+  addStylesAtomic: Function,
   { test, consequentStyles, alternateStyles }: TernaryRecord,
   idx: number,
   baseClass?: t.Expression
 ) {
-  const consInfo = getStylesAtomic({ ...baseViewStyles, ...consequentStyles })
-  const altInfo = getStylesAtomic({ ...baseViewStyles, ...alternateStyles })
-  ;[...altInfo, ...consInfo].forEach((style) => {
-    stylesByClassName[style.identifier] = style
-  })
+  console.log('consequentStyles', consequentStyles, alternateStyles)
+  const consInfo = addStylesAtomic({ ...baseViewStyles, ...consequentStyles })
+  const altInfo = addStylesAtomic({ ...baseViewStyles, ...alternateStyles })
+
   const cCN = consInfo.map((x) => x.identifier).join(' ')
   const aCN = altInfo.map((x) => x.identifier).join(' ')
   const getClassLit = (s: string) => {
