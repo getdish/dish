@@ -1,6 +1,8 @@
 import { Box, Text, VStack, ZStack } from '@dish/ui'
 import React from 'react'
 
+import { baseStyle, nestedStyle } from './extract-spec-constants'
+
 const nonStaticInt = eval(`10`)
 
 export function Test1() {
@@ -89,11 +91,13 @@ export function Test7() {
   )
 }
 
-// merged multiple ternary + override
+// style expasion + imported constants
 export function Test8() {
   return (
     <ZStack fullscreen position="relative">
-      <div />
+      <ZStack {...baseStyle}>
+        <ZStack fullscreen position="relative" {...nestedStyle} />
+      </ZStack>
     </ZStack>
   )
 }
@@ -104,11 +108,18 @@ export function Test9() {
 }
 
 // Text
-export function Test10() {
+export function Test10({ textStyle }) {
   return (
     <Text fontSize={10}>
       <Text selectable onTextChange={() => {}}>
-        hello
+        <Text
+          color={nonStaticInt ? '#000' : '#fff'}
+          fontSize={15}
+          fontWeight="600"
+          {...textStyle}
+        >
+          hello
+        </Text>
       </Text>
     </Text>
   )

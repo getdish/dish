@@ -1,5 +1,7 @@
 # June
 
+side goal: write 15m in the morning every day
+
 Week 1
 
 - static style extract v1

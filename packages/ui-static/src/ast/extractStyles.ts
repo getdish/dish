@@ -273,12 +273,12 @@ export function extractStyles(
         node.attributes = flattenedAttributes
 
         const staticTernaries: Ternary[] = []
-        const _isSingleSpread =
+        const hasOneEndingSpread =
           flattenedAttributes.findIndex((x) => t.isJSXSpreadAttribute(x)) ===
           lastSpreadIndex
         let simpleSpreadIdentifier: t.Identifier | null = null
         const isSingleSimpleSpread =
-          _isSingleSpread &&
+          hasOneEndingSpread &&
           flattenedAttributes.some((x) => {
             if (t.isJSXSpreadAttribute(x) && t.isIdentifier(x.argument)) {
               simpleSpreadIdentifier = x.argument
@@ -525,26 +525,6 @@ domNode: ${domNode}
           classNameObjects
         )
 
-        // for simple spread, we need to have it add in the spread className if exists
-        if (isSingleSimpleSpread && simpleSpreadIdentifier) {
-          classNamePropValueForReals = t.binaryExpression(
-            '+',
-            classNamePropValueForReals ?? t.stringLiteral(''),
-            t.binaryExpression(
-              '+',
-              t.stringLiteral(' '),
-              t.logicalExpression(
-                '||',
-                t.memberExpression(
-                  simpleSpreadIdentifier,
-                  t.identifier('className')
-                ),
-                t.stringLiteral('')
-              )
-            )
-          )
-        }
-
         // get extracted classNames
         const classNames: string[] = []
         const hasViewStyle = Object.keys(viewStyles).length > 0
@@ -574,14 +554,14 @@ domNode: ${domNode}
         if (ternaries.length) {
           if (classNamePropValueForReals) {
             // this will be passed to a <View /> where rnw can de-dupe conflicting classnames
-            classNamePropValueForReals = buildClassNamePropValue(
-              ternaries.map((x, i) =>
-                t.binaryExpression(
-                  '+',
-                  getTernaryExpression(viewStyles, stylesByClassName, x, i),
-                  classNamePropValueForReals!
+            classNamePropValueForReals = t.binaryExpression(
+              '+',
+              buildClassNamePropValue(
+                ternaries.map((x, i) =>
+                  getTernaryExpression(viewStyles, stylesByClassName, x, i)
                 )
-              )
+              )!,
+              classNamePropValueForReals
             )
           } else {
             // but if no spread/className prop, we optimize
@@ -603,6 +583,34 @@ domNode: ${domNode}
               classNamePropValueForReals = classNameProp
             }
           }
+        }
+
+        // for simple spread, we need to have it add in the spread className if exists
+        if (
+          classNamePropValueForReals &&
+          isSingleSimpleSpread &&
+          simpleSpreadIdentifier
+        ) {
+          classNamePropValueForReals = t.binaryExpression(
+            '+',
+            classNamePropValueForReals,
+            t.binaryExpression(
+              '+',
+              t.stringLiteral(' '),
+              t.logicalExpression(
+                '||',
+                t.logicalExpression(
+                  '&&',
+                  simpleSpreadIdentifier,
+                  t.memberExpression(
+                    simpleSpreadIdentifier,
+                    t.identifier('className')
+                  )
+                ),
+                t.stringLiteral('')
+              )
+            )
+          )
         }
 
         if (classNamePropValueForReals) {

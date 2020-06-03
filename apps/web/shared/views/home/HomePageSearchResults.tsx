@@ -13,7 +13,7 @@ import {
   ZStack,
   useWaterfall,
 } from '@dish/ui'
-import React, { Suspense, memo, useEffect, useState } from 'react'
+import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
 import { Edit2 } from 'react-feather'
 import { Image, ScrollView, View } from 'react-native'
 
@@ -170,37 +170,26 @@ const HomeSearchResultsViewContent = memo(
   ({ state }: { state: HomeStateItemSearch }) => {
     const om = useOvermind()
     const allRestaurants = om.state.home.allRestaurants
-    const topPad = 0
-
     const resultsIds = state.results?.results?.restaurantIds ?? []
     const resultsAll = resultsIds.map((id) => allRestaurants[id])
     const [chunk, setChunk] = useState(1)
     const perChunk = Math.ceil(resultsAll.length / chunks)
     const results = resultsAll.slice(0, chunk * perChunk)
+    const loadNextChunk = useCallback(() => {
+      console.log('loading next chunk')
+      // setChunk((x) => x + 1)
+    }, [])
 
     console.log('HomeSearchResultsViewContent.render', chunk, perChunk)
 
     // load a few at a time, less to start
-    const isLoading = results[0]?.name == null
+    const isLoading =
+      !state.results?.results ||
+      state.results.status === 'loading' ||
+      results[0]?.name == null
     const hasMoreToLoad = results.length < resultsAll.length
 
-    // stagger results in as they load/render
-    useEffect(() => {
-      if (isLoading) return
-      if (!hasMoreToLoad) return
-      return series([
-        () => sleep(450),
-        () => requestIdle(),
-        () => sleep(15),
-        () => requestIdle(),
-        // then load next chunk
-        () => {
-          setChunk((x) => x + 1)
-        },
-      ])
-    }, [isLoading, chunk, hasMoreToLoad])
-
-    if (!state.results?.results || state.results.status === 'loading') {
+    if (isLoading) {
       return (
         <VStack>
           <LoadingItems />
@@ -237,6 +226,11 @@ const HomeSearchResultsViewContent = memo(
                 restaurant={item}
                 rank={index + 1}
                 searchState={state}
+                onFinishRender={
+                  hasMoreToLoad && index == results.length - 1
+                    ? loadNextChunk
+                    : undefined
+                }
               />
             </Suspense>
           ))}

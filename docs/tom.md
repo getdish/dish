@@ -7,7 +7,7 @@ TL;DR:
 - Delivery crawlers
 - Image/other crawlers (Instagram/Google)
 - Better dish finding through images/comments
-- Summarized tips/comments
+- Summarized tips/comments (see RestaurantTopReview)
 - Search performance
 
 Week 1

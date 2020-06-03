@@ -1,3 +1,4 @@
+import { requestIdle, series, sleep } from '@dish/async'
 import {
   Restaurant,
   graphql,
@@ -43,6 +44,7 @@ type RestaurantListItemProps = {
   restaurant: Restaurant
   rank: number
   searchState?: HomeStateItemSearch
+  onFinishRender?: Function
 }
 
 export const RestaurantListItem = memo(function RestaurantListItem(
@@ -106,6 +108,19 @@ const RestaurantListItemContent = memo(
     const adjustRankingLeft = 36
     const verticalPad = 24
     const leftPad = 6
+
+    useEffect(() => {
+      if (props.onFinishRender) {
+        return series([
+          () => sleep(process.env.NODE_ENV === 'development' ? 500 : 50),
+          () => requestIdle(),
+          () => requestIdle(),
+          () => requestIdle(),
+          () => requestIdle(),
+          () => props.onFinishRender!(),
+        ])
+      }
+    }, [])
 
     return (
       <HStack>
@@ -177,13 +192,10 @@ const RestaurantListItemContent = memo(
                     alignItems="center"
                     marginBottom={-2}
                   >
-                    {/* <Suspense fallback={null}> */}
                     <RestaurantRatingViewPopover
                       size="sm"
                       restaurantSlug={restaurant.slug ?? ''}
                     />
-                    {/* </Suspense> */}
-                    {/* <Suspense fallback={null}> */}
                     <RestaurantTagsRow
                       tags={restaurant.tags.map((tag) => tag.tag)}
                       subtle
@@ -191,7 +203,6 @@ const RestaurantListItemContent = memo(
                       restaurantSlug={restaurant.slug ?? ''}
                       divider={<></>}
                     />
-                    {/* </Suspense> */}
                   </HStack>
                 </VStack>
 
@@ -203,9 +214,7 @@ const RestaurantListItemContent = memo(
 
             {/* ROW: COMMENT */}
             <VStack maxWidth="90%" marginLeft={-2}>
-              {/* <Suspense fallback={null}> */}
               <RestaurantTopReview restaurantId={restaurant.id} />
-              {/* </Suspense> */}
             </VStack>
 
             <Spacer size={6} />
@@ -218,9 +227,7 @@ const RestaurantListItemContent = memo(
               spacing
             >
               <RestaurantLenseVote />
-              {/* <Suspense fallback={null}> */}
               <RestaurantFavoriteStar restaurantId={restaurant.id} />
-              {/* </Suspense> */}
 
               <TouchableOpacity
                 onPress={() =>
@@ -238,12 +245,10 @@ const RestaurantListItemContent = memo(
 
               <Divider vertical />
 
-              {/* <Suspense fallback={null}> */}
               <RestaurantDetailRow
                 size="sm"
                 restaurantSlug={restaurant.slug ?? ''}
               />
-              {/* </Suspense> */}
 
               <HoverablePopover
                 contents={<Text selectable>{restaurant.address}</Text>}
