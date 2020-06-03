@@ -39,6 +39,7 @@ Week 3
 
 Week 4
 
+- [reserved for productionizing]
 - Search vietnamese can show top dishes in search results header
 - current location / permissions access (only if they click location?)
 - "Tips" - horizontal carousel on restaurant page
