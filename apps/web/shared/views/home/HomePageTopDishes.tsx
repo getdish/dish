@@ -66,7 +66,7 @@ const HomePageTopDishes = ({ stateIndex }: TopDishesProps) => {
   return (
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
-      <VStack position="relative" flex={1}>
+      <VStack position="relative" flex={1} overflow="hidden">
         <HomeScrollView>
           <VStack paddingVertical={34} paddingTop={88} spacing="xl">
             {/* TRENDING */}
@@ -182,6 +182,7 @@ const CountryTopDishesAndRestaurants = memo(
       <VStack
         paddingVertical={15}
         className="home-top-dish"
+        position="relative"
         // onHoverIn={() => setHovered(true)}
         // onHoverOut={() => setHovered(false)}
       >

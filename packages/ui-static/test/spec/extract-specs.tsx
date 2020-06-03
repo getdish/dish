@@ -1,4 +1,4 @@
-import { Box, VStack, ZStack } from '@dish/ui'
+import { Box, Text, VStack, ZStack } from '@dish/ui'
 import React from 'react'
 
 const nonStaticInt = eval(`10`)
@@ -101,4 +101,28 @@ export function Test8() {
 // combines with classname
 export function Test9() {
   return <VStack paddingVertical={15} className="home-top-dish" />
+}
+
+// Text
+export function Test10() {
+  return <Text fontSize={10} />
+}
+
+// alllll in one
+export function Test11(props: any) {
+  const lineHeight = 10
+  return (
+    <VStack
+      height={props.scale * 31}
+      borderRadius={8 * props.scale}
+      borderWidth={1}
+      borderColor={props.subtle ? 'transparent' : 'rgba(0,0,0,0.15)'}
+      overflow="hidden"
+      alignItems="center"
+      position="relative"
+      minHeight={lineHeight}
+      {...props}
+      backgroundColor="blue"
+    />
+  )
 }

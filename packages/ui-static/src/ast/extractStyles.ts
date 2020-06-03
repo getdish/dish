@@ -569,7 +569,11 @@ domNode: ${domNode}
             // this will be passed to a <View /> where rnw can de-dupe conflicting classnames
             classNamePropValueForReals = buildClassNamePropValue(
               ternaries.map((x, i) =>
-                getTernaryExpression({}, stylesByClassName, x, i)
+                t.binaryExpression(
+                  '+',
+                  getTernaryExpression(viewStyles, stylesByClassName, x, i),
+                  classNamePropValueForReals!
+                )
               )
             )
           } else {
