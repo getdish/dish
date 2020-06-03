@@ -55,127 +55,128 @@ test.before(async (t) => {
   }
 })
 
-test('converts a style object to class names', async (t) => {
-  const style = {
-    backgroundColor: 'red',
-    transform: [{ rotateY: '10deg' }],
-  }
-  const styles = getStylesAtomic(style)
-  const style1 = styles.find((x) => x.identifier === 'r-1g6456j')
-  const style2 = styles.find((x) => x.identifier === 'r-188uu3c')
-  t.assert(!!style1)
-  t.assert(!!style2)
-  t.is(style1!.value, 'rgba(255,0,0,1.00)')
-  t.is(style1!.property, 'backgroundColor')
-  t.deepEqual(style1!.rules, [
-    '.r-1g6456j{background-color:rgba(255,0,0,1.00);}',
-  ])
-  t.deepEqual(style2!.rules, [
-    '.r-188uu3c{-webkit-transform:rotateY(10deg);transform:rotateY(10deg);}',
-  ])
-})
+// test('converts a style object to class names', async (t) => {
+//   const style = {
+//     backgroundColor: 'red',
+//     transform: [{ rotateY: '10deg' }],
+//   }
+//   const styles = getStylesAtomic(style)
+//   const style1 = styles.find((x) => x.identifier === 'r-1g6456j')
+//   const style2 = styles.find((x) => x.identifier === 'r-188uu3c')
+//   t.assert(!!style1)
+//   t.assert(!!style2)
+//   t.is(style1!.value, 'rgba(255,0,0,1.00)')
+//   t.is(style1!.property, 'backgroundColor')
+//   t.deepEqual(style1!.rules, [
+//     '.r-1g6456j{background-color:rgba(255,0,0,1.00);}',
+//   ])
+//   t.deepEqual(style2!.rules, [
+//     '.r-188uu3c{-webkit-transform:rotateY(10deg);transform:rotateY(10deg);}',
+//   ])
+// })
 
-test('1. extracts to a div for simple views', async (t) => {
-  const { test1 } = t.context
-  const out = test1.renderer.toTree()!
-  t.is(out.rendered!.type, 'div')
-  t.is(out.rendered!.props.className, 'r-1g6456j r-18c69zk r-13awgt0 r-eqz5dr')
-})
+// test('1. extracts to a div for simple views', async (t) => {
+//   const { test1 } = t.context
+//   const out = test1.renderer.toTree()!
+//   t.is(out.rendered!.type, 'div')
+//   t.is(out.rendered!.props.className, 'r-1g6456j r-18c69zk r-13awgt0 r-eqz5dr')
+// })
 
-test('2. extracts className for complex views but keeps other props', async (t) => {
-  const { test2 } = t.context
-  const out = test2.renderer.toTree()!
-  t.is(out.rendered!.nodeType, 'component')
-  t.is(out.rendered!.props.className, 'who r-1udh08x')
-  const type = (out.rendered!.type as any) as Function
-  t.assert(type instanceof Function)
-  t.is(type.name, 'Box')
-  t.assert(!out.rendered!.props.overflow)
-})
+// test('2. extracts className for complex views but keeps other props', async (t) => {
+//   const { test2 } = t.context
+//   const out = test2.renderer.toTree()!
+//   t.is(out.rendered!.nodeType, 'component')
+//   t.is(out.rendered!.props.className, 'who r-1udh08x')
+//   const type = (out.rendered!.type as any) as Function
+//   t.assert(type instanceof Function)
+//   t.is(type.name, 'Box')
+//   t.assert(!out.rendered!.props.overflow)
+// })
 
-test('3. places className correctly given a single spread', async (t) => {
-  const { test3 } = t.context
-  const out = render(test3.Element)
-  const list = [...out.container.firstChild?.['classList']]
-  t.assert(list.includes('r-1udh08x'))
-})
+// test('3. places className correctly given a single spread', async (t) => {
+//   const { test3 } = t.context
+//   const out = render(test3.Element)
+//   const list = [...out.container.firstChild?.['classList']]
+//   t.assert(list.includes('r-1udh08x'))
+// })
 
-test('4. leaves dynamic variables', async (t) => {
-  const { test4 } = t.context
-  const out = render(test4.Element)
-  const firstChild = out.container.firstChild!
-  const classList = [...firstChild['classList']]
-  t.deepEqual(classList, ['css-1dbjc4n', 'r-4d76ec'])
-  const r = test4.renderer.toJSON()
-  t.is(r.props.style.width, 'calc(100% + 20px)')
-})
+// test('4. leaves dynamic variables', async (t) => {
+//   const { test4 } = t.context
+//   const out = render(test4.Element)
+//   const firstChild = out.container.firstChild!
+//   const classList = [...firstChild['classList']]
+//   t.deepEqual(classList, ['css-1dbjc4n', 'r-4d76ec'])
+//   const r = test4.renderer.toJSON()
+//   t.is(r.props.style.width, 'calc(100% + 20px)')
+// })
 
-test.skip('5. spread', async (t) => {
+test('5. spread', async (t) => {
   const { test5 } = t.context
   const out = test5.renderer.toTree()!
+  console.log('out', out)
   // t.is(out.props.className, 'r-4d76ec')
   // t.is(out.props.width, 'calc(100% + 12px)')
 })
 
-test.skip('6. spread ternary', async (t) => {
-  const { test6 } = t.context
-  const out = test6.renderer.toTree()
-  // t.is(out!.props.className, 'r-4d76ec')
-  // t.is(out!.props.width, 'calc(100% + 12px)')
-})
+// test.skip('6. spread ternary', async (t) => {
+//   const { test6 } = t.context
+//   const out = test6.renderer.toTree()
+//   // t.is(out!.props.className, 'r-4d76ec')
+//   // t.is(out!.props.width, 'calc(100% + 12px)')
+// })
 
-test('7. ternary + data-is', async (t) => {
-  const { test7 } = t.context
-  const out = test7.renderer.toTree()
-  const { children, ...outerProps } = out!.rendered!.props
-  t.deepEqual(outerProps, {
-    className: 'r-eqz5dr r-f2w40 r-68jxh1 r-1mi0q7o r-1qfz7tf r-1skwq7n',
-    ['data-is']: 'VStack',
-  })
-  const [inner] = out.rendered!.rendered! as any
-  t.is(inner.props.className, `r-eqz5dr r-1or9b2r r-5soawk`)
-})
+// test('7. ternary + data-is', async (t) => {
+//   const { test7 } = t.context
+//   const out = test7.renderer.toTree()
+//   const { children, ...outerProps } = out!.rendered!.props
+//   t.deepEqual(outerProps, {
+//     className: 'r-eqz5dr r-f2w40 r-68jxh1 r-1mi0q7o r-1qfz7tf r-1skwq7n',
+//     ['data-is']: 'VStack',
+//   })
+//   const [inner] = out.rendered!.rendered! as any
+//   t.is(inner.props.className, `r-eqz5dr r-1or9b2r r-5soawk`)
+// })
 
-test('8. styleExpansions', async (t) => {
-  const { test8 } = t.context
-  const out = test8.renderer.toTree()!
-  t.is(
-    out.rendered!.props.className,
-    'r-1p0dtai r-1d2f490 r-bnwqim r-zchlnj r-ipm5af'
-  )
-  // TODO test constant folding
-})
+// test('8. styleExpansions', async (t) => {
+//   const { test8 } = t.context
+//   const out = test8.renderer.toTree()!
+//   t.is(
+//     out.rendered!.props.className,
+//     'r-1p0dtai r-1d2f490 r-bnwqim r-zchlnj r-ipm5af'
+//   )
+//   // TODO test constant folding
+// })
 
-test('9. combines with classname', async (t) => {
-  const { test9 } = t.context
-  const out = test9.renderer.toTree()!
-  t.is(out.rendered!.props.className, 'home-top-dish r-eqz5dr r-9qu9m4')
-})
+// test('9. combines with classname', async (t) => {
+//   const { test9 } = t.context
+//   const out = test9.renderer.toTree()!
+//   t.is(out.rendered!.props.className, 'home-top-dish r-eqz5dr r-9qu9m4')
+// })
 
-test('10. extracts Text', async (t) => {
-  const { test10 } = t.context
-  const out = test10.renderer.toTree()!
-  t.is(out.rendered!.type, 'span')
-  t.is(out.rendered!.props['data-is'], 'Text')
-  t.is(out.rendered!.props.className, 'r-10x49cs')
-})
+// test('10. extracts Text', async (t) => {
+//   const { test10 } = t.context
+//   const out = test10.renderer.toTree()!
+//   t.is(out.rendered!.type, 'span')
+//   t.is(out.rendered!.props['data-is'], 'Text')
+//   t.is(out.rendered!.props.className, 'r-10x49cs')
+// })
 
-test('11. combines everything', async (t) => {
-  const { test11 } = t.context
-  const out = render(test11.Element)
-  const firstChild = out.container.firstChild!
-  const classList = [...firstChild['classList']]
-  t.deepEqual(classList, [
-    'css-1dbjc4n',
-    'r-1awozwy',
-    'r-57dg7b',
-    'r-brgb1',
-    'r-rs99b7',
-    'r-yfq7p9',
-    'r-1udh08x',
-    'r-bnwqim',
-  ])
-})
+// test('11. combines everything', async (t) => {
+//   const { test11 } = t.context
+//   const out = render(test11.Element)
+//   const firstChild = out.container.firstChild!
+//   const classList = [...firstChild['classList']]
+//   t.deepEqual(classList, [
+//     'css-1dbjc4n',
+//     'r-1awozwy',
+//     'r-57dg7b',
+//     'r-brgb1',
+//     'r-rs99b7',
+//     'r-yfq7p9',
+//     'r-1udh08x',
+//     'r-bnwqim',
+//   ])
+// })
 
 async function extractStaticApp() {
   const compiler = webpack({

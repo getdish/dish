@@ -18,6 +18,7 @@ import {
   CacheObject,
   ClassNameToStyleObj,
   ExtractStylesOptions,
+  StyleObject,
 } from '../types'
 import { evaluateAstNode } from './evaluateAstNode'
 import {
@@ -147,6 +148,10 @@ export function extractStyles(
     }
   }
 
+  if (shouldPrintDebug) {
+    console.log('\nSTART', sourceFileName)
+  }
+
   /**
    * Step 2: Statically extract from JSX < /> nodes
    */
@@ -218,6 +223,39 @@ export function extractStyles(
               }
             })()
 
+        // turns jsx spread into a style object, if static
+        function isExtractableSpreadToStyle(
+          attribute: t.JSXAttribute | t.JSXSpreadAttribute
+        ) {
+          if (t.isJSXSpreadAttribute(attribute)) {
+            if (t.isLogicalExpression(attribute.argument)) {
+              if (t.isObjectExpression(attribute.argument.right)) {
+                const objectExpr = attribute.argument.right
+                return objectExpr.properties.every(
+                  (prop) =>
+                    t.isObjectProperty(prop) &&
+                    isStaticAttributeName(prop.key.name)
+                )
+              }
+            }
+          }
+          return false
+        }
+
+        function extractSpreadToStyle(
+          attribute: t.JSXAttribute | t.JSXSpreadAttribute
+        ): Object | undefined {
+          if (isExtractableSpreadToStyle(attribute)) {
+            try {
+              // @ts-ignore
+              const obj = attribute.argument.right
+              return attemptEval(obj)
+            } catch {
+              // ok
+            }
+          }
+        }
+
         let lastSpreadIndex: number = -1
         const flattenedAttributes: (
           | t.JSXAttribute
@@ -225,48 +263,52 @@ export function extractStyles(
         )[] = []
 
         node.attributes.forEach((attr) => {
-          if (t.isJSXSpreadAttribute(attr)) {
-            try {
-              const spreadValue = attemptEval(attr.argument)
+          if (!t.isJSXSpreadAttribute(attr)) {
+            flattenedAttributes.push(attr)
+            return
+          }
+          if (isExtractableSpreadToStyle(attr)) {
+            flattenedAttributes.push(attr)
+            return
+          }
+          try {
+            const spreadValue = attemptEval(attr.argument)
 
-              if (typeof spreadValue !== 'object' || spreadValue == null) {
-                lastSpreadIndex = flattenedAttributes.push(attr) - 1
-              } else {
-                for (const k in spreadValue) {
-                  const value = spreadValue[k]
+            if (typeof spreadValue !== 'object' || spreadValue == null) {
+              lastSpreadIndex = flattenedAttributes.push(attr) - 1
+            } else {
+              for (const k in spreadValue) {
+                const value = spreadValue[k]
 
-                  if (typeof value === 'number') {
-                    flattenedAttributes.push(
-                      t.jsxAttribute(
-                        t.jsxIdentifier(k),
-                        t.jsxExpressionContainer(t.numericLiteral(value))
-                      )
+                if (typeof value === 'number') {
+                  flattenedAttributes.push(
+                    t.jsxAttribute(
+                      t.jsxIdentifier(k),
+                      t.jsxExpressionContainer(t.numericLiteral(value))
                     )
-                  } else if (value === null) {
-                    // why would you ever do this
-                    flattenedAttributes.push(
-                      t.jsxAttribute(
-                        t.jsxIdentifier(k),
-                        t.jsxExpressionContainer(t.nullLiteral())
-                      )
+                  )
+                } else if (value === null) {
+                  // why would you ever do this
+                  flattenedAttributes.push(
+                    t.jsxAttribute(
+                      t.jsxIdentifier(k),
+                      t.jsxExpressionContainer(t.nullLiteral())
                     )
-                  } else {
-                    // toString anything else
-                    // TODO: is this a bad idea
-                    flattenedAttributes.push(
-                      t.jsxAttribute(
-                        t.jsxIdentifier(k),
-                        t.jsxExpressionContainer(t.stringLiteral('' + value))
-                      )
+                  )
+                } else {
+                  // toString anything else
+                  // TODO: is this a bad idea
+                  flattenedAttributes.push(
+                    t.jsxAttribute(
+                      t.jsxIdentifier(k),
+                      t.jsxExpressionContainer(t.stringLiteral('' + value))
                     )
-                  }
+                  )
                 }
               }
-            } catch (e) {
-              lastSpreadIndex = flattenedAttributes.push(attr) - 1
             }
-          } else {
-            flattenedAttributes.push(attr)
+          } catch (e) {
+            lastSpreadIndex = flattenedAttributes.push(attr) - 1
           }
         })
 
@@ -290,19 +332,37 @@ export function extractStyles(
         let inlinePropCount = 0
 
         if (shouldPrintDebug) {
-          console.log(
-            'attribute overview:',
-            node.attributes.map((attr) => {
-              return 'name' in attr
-                ? attr.name.name
-                : 'name' in attr.argument
-                ? `spread-${attr.argument.name}`
-                : `unknown-${attr.type}`
-            })
-          )
+          console.log('attr overview:', node.attributes.map(attrGetName))
         }
 
+        // STORE *EVERY* CLASS => STYLES here
+        // this is used to generate css later
+        const stylesByClassName: ClassNameToStyleObj = {}
+        // stores className objects we build up later into a single className
+        const classNameObjects: ClassNameObject[] = []
+
         node.attributes = node.attributes.filter((attribute, idx) => {
+          // handle simple spreads of objects like ternaries
+          // eg: <VStack {...isSmall && { backgroundColor: 'red' }}
+          const spreadStyle = extractSpreadToStyle(attribute)
+          if (spreadStyle) {
+            const styles = getStylesAtomic(spreadStyle)
+            if (styles.length) {
+              for (const style of styles) {
+                stylesByClassName[style.identifier] = style
+              }
+              const attr = attribute as t.JSXSpreadAttribute
+              const test = (attr.argument as t.LogicalExpression).left
+              staticTernaries.push({
+                test,
+                alternate: styles.map((x) => x.identifier).join(' '),
+                consequent: '',
+                name: originalNodeName,
+              })
+              return false
+            }
+          }
+
           if (
             t.isJSXSpreadAttribute(attribute) ||
             // keep the weirdos
@@ -313,7 +373,7 @@ export function extractStyles(
             (idx < lastSpreadIndex && !isSingleSimpleSpread)
           ) {
             if (shouldPrintDebug) {
-              console.log('attr inline via non normal attr')
+              console.log('attr inline via non normal attr', attribute['name'])
             }
             inlinePropCount++
             return true
@@ -374,21 +434,14 @@ export function extractStyles(
             return true
           }
 
-          let isDynamic = false
           // if value can be evaluated, extract it and filter it out
           try {
             viewStyles[name] = attemptEval(value)
             return false
           } catch (err) {
-            isDynamic = true
             if (process.env.DEBUG === '2') {
               console.log('err evaluating', err)
             }
-          }
-
-          if (!isDynamic) {
-            inlinePropCount++
-            return
           }
 
           if (t.isConditionalExpression(value)) {
@@ -402,10 +455,8 @@ export function extractStyles(
                 name,
                 test: value.test,
               })
-              // mark the prop as extracted
-              viewStyles[name] = null
               return false
-            } catch (e) {
+            } catch {
               //
             }
           } else if (t.isLogicalExpression(value)) {
@@ -419,9 +470,8 @@ export function extractStyles(
                   name,
                   test: value.left,
                 })
-                viewStyles[name] = null
                 return false
-              } catch (e) {
+              } catch {
                 //
               }
             }
@@ -481,14 +531,9 @@ domNode: ${domNode}
           node.name.name = domNode
         }
 
-        // STORE ALL CLASSES => STYLES here
-        // this is used to export
-        const stylesByClassName: ClassNameToStyleObj = {}
-
         if (inlinePropCount) {
           if (lastSpreadIndex > -1) {
             if (!isSingleSimpleSpread) {
-              // only in case where we dont have a single simple spread
               // if only some style props were extracted AND additional props are spread onto the component,
               // add the props back with null values to prevent spread props from incorrectly overwriting the extracted prop value
               Object.keys(viewStyles).forEach((attr) => {
@@ -511,7 +556,6 @@ domNode: ${domNode}
           traversePath.node.closingElement.name.name = node.name.name
         }
 
-        const classNameObjects: ClassNameObject[] = []
         if (classNamePropValue) {
           try {
             const evaluatedValue = attemptEval(classNamePropValue)
@@ -553,15 +597,18 @@ domNode: ${domNode}
 
         if (ternaries.length) {
           if (classNamePropValueForReals) {
-            // this will be passed to a <View /> where rnw can de-dupe conflicting classnames
             classNamePropValueForReals = t.binaryExpression(
               '+',
               buildClassNamePropValue(
                 ternaries.map((x, i) =>
                   getTernaryExpression(viewStyles, stylesByClassName, x, i)
                 )
-              )!,
-              classNamePropValueForReals
+              ),
+              t.binaryExpression(
+                '+',
+                t.stringLiteral(' '),
+                classNamePropValueForReals!
+              )
             )
           } else {
             // but if no spread/className prop, we optimize
@@ -708,6 +755,9 @@ domNode: ${domNode}
 
   // we didnt find anything
   if (css === '') {
+    if (shouldPrintDebug) {
+      console.log('nothing extracted!', sourceFileName)
+    }
     return {
       ast,
       css: '',
@@ -816,54 +866,45 @@ function getTernaryExpression(
   baseViewStyles: ViewStyle,
   stylesByClassName: Object,
   { test, consequentStyles, alternateStyles }: TernaryRecord,
-  idx: number
+  idx: number,
+  baseClass?: t.Expression
 ) {
   const consInfo = getStylesAtomic({ ...baseViewStyles, ...consequentStyles })
   const altInfo = getStylesAtomic({ ...baseViewStyles, ...alternateStyles })
-
-  if (consInfo.length) {
-    for (const style of consInfo) {
-      stylesByClassName[style.identifier] = style
-    }
+  ;[...altInfo, ...consInfo].forEach((style) => {
+    stylesByClassName[style.identifier] = style
+  })
+  const cCN = consInfo.map((x) => x.identifier).join(' ')
+  const aCN = altInfo.map((x) => x.identifier).join(' ')
+  const getClassLit = (s: string) => {
+    const lit = t.stringLiteral(s)
+    return baseClass ? t.binaryExpression('+', lit, baseClass) : lit
   }
-  if (altInfo.length) {
-    for (const style of altInfo) {
-      stylesByClassName[style.identifier] = style
-    }
-  }
-
-  const consequentClassName = consInfo.map((x) => x.identifier).join(' ')
-  const alternateClassName = altInfo.map((x) => x.identifier).join(' ')
-
   if (consInfo.length && altInfo.length) {
     if (idx > 0) {
       // if it's not the first ternary, add a leading space
       return t.binaryExpression(
         '+',
         t.stringLiteral(' '),
-        t.conditionalExpression(
-          test,
-          t.stringLiteral(consequentClassName),
-          t.stringLiteral(alternateClassName)
-        )
+        t.conditionalExpression(test, getClassLit(cCN), getClassLit(aCN))
       )
     } else {
-      return t.conditionalExpression(
-        test,
-        t.stringLiteral(consequentClassName),
-        t.stringLiteral(alternateClassName)
-      )
+      return t.conditionalExpression(test, getClassLit(cCN), getClassLit(aCN))
     }
   } else {
     // if only one className is present, put the padding space inside the ternary
     return t.conditionalExpression(
       test,
-      t.stringLiteral(
-        (idx > 0 && consequentClassName ? ' ' : '') + consequentClassName
-      ),
-      t.stringLiteral(
-        (idx > 0 && alternateClassName ? ' ' : '') + alternateClassName
-      )
+      getClassLit((idx > 0 && cCN ? ' ' : '') + cCN),
+      getClassLit((idx > 0 && aCN ? ' ' : '') + aCN)
     )
   }
+}
+
+const attrGetName = (attr) => {
+  return 'name' in attr
+    ? attr.name.name
+    : 'name' in attr.argument
+    ? `spread-${attr.argument.name}`
+    : `unknown-${attr.type}`
 }

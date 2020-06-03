@@ -7,12 +7,19 @@ const nonStaticInt = eval(`10`)
 
 export function Test1() {
   return (
-    <VStack flex={1} borderRadius={100} backgroundColor="red">
+    <VStack
+      flex={1}
+      borderRadius={100}
+      backgroundColor="red"
+      shadowRadius={10}
+      shadowColor="#000"
+    >
       <div>hi</div>
     </VStack>
   )
 }
 
+// leaves valid props, combines classname
 export function Test2() {
   return (
     <Box className="who" onAccessibilityTap={() => {}} overflow="hidden">
@@ -30,7 +37,7 @@ export function Test3(props: any) {
   )
 }
 
-// static + dynamic prop
+// static + dynamic prop, hoverStyle
 export function Test4() {
   return (
     <VStack
@@ -49,10 +56,17 @@ export function Test5(props: any) {
     <VStack
       overflow="hidden"
       {...(props.something && {
-        background: 'blue',
+        backgroundColor: 'blue',
       })}
     >
-      <div />
+      {/* with classname already */}
+      <VStack
+        className="hello-world"
+        overflow="hidden"
+        {...(props.something && {
+          backgroundColor: 'blue',
+        })}
+      />
     </VStack>
   )
 }
