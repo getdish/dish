@@ -68,7 +68,7 @@ const HomePageTopDishes = ({ stateIndex }: TopDishesProps) => {
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
       <VStack position="relative" flex={1} overflow="hidden">
         <HomeScrollView>
-          <VStack paddingVertical={34} paddingTop={88} spacing="xl">
+          <VStack paddingVertical={34} paddingTop={82} spacing="xl">
             {/* TRENDING */}
             {/* <HomeViewTopDishesTrending /> */}
 
@@ -122,6 +122,7 @@ const HomePageTopDishes = ({ stateIndex }: TopDishesProps) => {
 const dishHeight = 160
 const padding = 30
 const spacing = 20
+const pctRestaurant = 0.3
 
 const CountryTopDishesAndRestaurants = memo(
   ({ country }: { country: TopCuisine }) => {
@@ -180,37 +181,30 @@ const CountryTopDishesAndRestaurants = memo(
 
     return (
       <VStack
-        paddingVertical={15}
+        paddingVertical={5}
         className="home-top-dish"
         position="relative"
         // onHoverIn={() => setHovered(true)}
         // onHoverOut={() => setHovered(false)}
       >
         <HStack position="relative" zIndex={10} paddingHorizontal={20}>
-          <HStack flex={1}>
-            {/* <RankingView rank={rank} marginLeft={-36} /> */}
-            <LinkButton
-              {...flatButtonStyle}
-              // backgroundColor="transparent"
-              paddingVertical={4}
-              marginVertical={-6}
-              style={{
-                transform: [{ rotate: '-2deg' }],
-              }}
-              tag={{
-                type: 'country',
-                name: country.country,
-              }}
-            >
-              <Text
-                numberOfLines={1}
-                style={{ fontSize: 20, fontWeight: '700' }}
-              >
-                {country.country} {country.icon}
-              </Text>
-            </LinkButton>
-          </HStack>
-          <Spacer flex />
+          {/* <RankingView rank={rank} marginLeft={-36} /> */}
+          <LinkButton
+            {...flatButtonStyle}
+            paddingVertical={4}
+            marginBottom={-10}
+            style={{
+              transform: [{ rotate: '-2deg' }],
+            }}
+            tag={{
+              type: 'country',
+              name: country.country,
+            }}
+          >
+            <Text numberOfLines={1} style={{ fontSize: 20, fontWeight: '700' }}>
+              {country.country} {country.icon}
+            </Text>
+          </LinkButton>
         </HStack>
 
         <HomeTopDishesSide>{restaurantsList}</HomeTopDishesSide>
@@ -230,7 +224,7 @@ const CountryTopDishesAndRestaurants = memo(
             top: 0,
             left: 0,
             bottom: 0,
-            width: '32%',
+            width: `${pctRestaurant * 100 + 4}%`,
             zIndex: 1,
           }}
         />
@@ -250,10 +244,10 @@ const HomeTopDishesSide = memo((props) => {
   return (
     <ZStack
       fullscreen
-      paddingTop={padding + 20}
+      paddingTop={padding + 14}
       pointerEvents="none"
       right="auto"
-      maxWidth={drawerWidth * 0.25}
+      maxWidth={drawerWidth * pctRestaurant}
       zIndex={100}
       {...props}
     />
@@ -267,8 +261,8 @@ const HomeTopDishMain = memo((props) => {
       alignItems="center"
       padding={padding}
       paddingTop={padding}
-      paddingHorizontal={32}
-      paddingLeft={drawerWidth * 0.25 + 30}
+      paddingHorizontal={30}
+      paddingLeft={drawerWidth * pctRestaurant + 30}
       spacing={spacing}
       {...props}
     />

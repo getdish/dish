@@ -64,6 +64,7 @@ export const RestaurantButton = memo(
                 textWrap: 'no-wrap',
                 whiteSpace: 'pre',
                 textOverflow: 'ellipsis',
+                fontWeight: '500',
               } as any
             }
           >

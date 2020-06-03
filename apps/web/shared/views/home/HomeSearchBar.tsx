@@ -30,7 +30,7 @@ import { getTagId } from '../../state/Tag'
 import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
 import { CloseButton } from './CloseButton'
-import { bgLight, brandColor, brandColorDark, brandColorLight } from './colors'
+import { brandColor, brandColorLight } from './colors'
 import { DishLogoButton } from './DishLogoButton'
 import HomeAutocomplete from './HomeAutocomplete'
 import { HomeAutocompleteBackground } from './HomeAutocompleteBackground'
@@ -535,8 +535,7 @@ const HomeSearchBarTags = memo(
                     subtleIcon
                     backgroundColor={brandColor}
                     color="#fff"
-                    borderWidth={2}
-                    borderColor={brandColorDark}
+                    borderColor={'transparent'}
                     {...(isActive && {
                       backgroundColor: '#777',
                       color: '#fff',
@@ -582,9 +581,9 @@ const styles = StyleSheet.create({
   container: {
     zIndex: 22,
     position: 'absolute',
-    marginTop: searchBarTopOffset,
-    left: searchBarTopOffset + 6,
-    right: searchBarTopOffset + 6,
+    marginTop: 4,
+    left: searchBarTopOffset,
+    right: searchBarTopOffset,
     alignItems: 'center',
     height: searchBarHeight,
     borderBottomColor: 'rgba(0,0,0,0.01)',
