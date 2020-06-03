@@ -468,7 +468,7 @@ const loadPageRestaurant: AsyncAction = async (om) => {
     location?.coordinates
     return { location, id }
   })
-  console.log('restaurant', { slug, restaurant })
+  om.state.home.allRestaurants[restaurant.id] = restaurant
   if (state && restaurant) {
     state.restaurantId = restaurant.id
     state.center = {
@@ -780,6 +780,7 @@ const runSearch: AsyncAction<{
 
   // update denormalized dictionary
   const { allRestaurants } = om.state.home
+  console.log('restaurants', restaurants)
   for (const restaurant of restaurants) {
     const existing = allRestaurants[restaurant.id]
     if (!existing || existing.updated_at !== restaurant.updated_at) {
