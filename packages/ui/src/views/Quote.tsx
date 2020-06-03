@@ -16,7 +16,9 @@ export const Quote = memo(
           “
         </Text>
         <VStack spacing={6} flex={1}>
-          <Text fontSize={props.fontSize ?? 16} color={props.color ?? '#999'} />
+          <Text fontSize={props.fontSize ?? 16} color={props.color ?? '#999'}>
+            “
+          </Text>
           {!!by && (
             <Text fontWeight="bold" fontSize={13} color="#999" {...props}>
               {by}

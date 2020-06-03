@@ -6,7 +6,7 @@ import {
 } from 'react-native'
 
 export type TextProps = Omit<ReactTextProps, 'style'> &
-  ReactTextProps['style'] & {
+  TextStyle & {
     selectable?: boolean
     children: any
   }

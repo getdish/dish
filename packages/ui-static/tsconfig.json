@@ -7,5 +7,5 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [{ "path": "../react-test-env" }]
+  "references": [{ "path": "../react-test-env" }, { "path": "../ui" }]
 }

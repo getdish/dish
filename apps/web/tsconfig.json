@@ -17,6 +17,7 @@
   "exclude": ["**/*.test.ts", "**/*.test.tsx", "web/server.tsx"],
   "references": [
     { "path": "../../packages/ui" },
+    { "path": "../../packages/ui-static" },
     { "path": "../../packages/async" },
     { "path": "../../packages/graph" },
     { "path": "../../packages/rollup-plugin-tscc" },

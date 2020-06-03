@@ -1,8 +1,8 @@
-import { Text } from '@dish/ui'
 import React, { memo, useCallback, useRef } from 'react'
 
 import { useForceUpdate } from '../hooks/useForceUpdate'
 import { VStack, ZStack } from './Stacks'
+import { Text } from './Text'
 
 let show: (text: string, duration: number) => void
 
