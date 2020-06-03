@@ -106,10 +106,7 @@ const HomePageTopDishes = ({ stateIndex }: TopDishesProps) => {
               {!results.length && <LoadingItems />}
 
               {results.map((country) => (
-                <CountryTopDishesAndRestaurants
-                  key={country.country}
-                  country={country}
-                />
+                <CountryTopDishesItem key={country.country} country={country} />
               ))}
             </VStack>
           </VStack>
@@ -124,118 +121,115 @@ const padding = 30
 const spacing = 20
 const pctRestaurant = 0.3
 
-const CountryTopDishesAndRestaurants = memo(
-  ({ country }: { country: TopCuisine }) => {
-    const [
-      hoveredRestaurant,
-      setHoveredRestaurant,
-    ] = useState<Restaurant | null>(null)
-    const onHoverRestaurant = useCallback((restaurant: Restaurant) => {
-      setHoveredRestaurant(restaurant)
-    }, [])
+const CountryTopDishesItem = memo(({ country }: { country: TopCuisine }) => {
+  const [hoveredRestaurant, setHoveredRestaurant] = useState<Restaurant | null>(
+    null
+  )
+  const onHoverRestaurant = useCallback((restaurant: Restaurant) => {
+    setHoveredRestaurant(restaurant)
+  }, [])
 
-    const dishElements = useMemo(() => {
-      return (country.dishes || []).slice(0, 10).map((top_dish, index) => {
-        return (
-          <DishView
-            size={dishHeight}
-            key={index}
-            dish={top_dish as any}
-            cuisine={{
-              id: country.country,
-              name: country.country,
-              type: 'country',
-            }}
-          />
-        )
-      })
-    }, [country])
-
-    const restaurantsList = useMemo(() => {
+  const dishElements = useMemo(() => {
+    return (country.dishes || []).slice(0, 10).map((top_dish, index) => {
       return (
-        <VStack flex={1} padding={10} spacing={10} alignItems="flex-start">
-          {_.uniqBy(country.top_restaurants, (x) => x.name).map(
-            (restaurant, index) => {
-              return (
-                <RestaurantButton
-                  trending={index % 2 == 0 ? 'up' : 'down'}
-                  subtle
-                  key={restaurant.name}
-                  restaurant={restaurant as any}
-                  onHoverIn={onHoverRestaurant}
-                  containerStyle={{
-                    maxWidth: '100%',
-                  }}
-                  active={
-                    (hoveredRestaurant &&
-                      restaurant?.name === hoveredRestaurant?.name) ||
-                    false
-                  }
-                />
-              )
-            }
-          )}
-        </VStack>
-      )
-    }, [hoveredRestaurant, country.top_restaurants])
-
-    return (
-      <VStack
-        paddingVertical={5}
-        className="home-top-dish"
-        position="relative"
-        // onHoverIn={() => setHovered(true)}
-        // onHoverOut={() => setHovered(false)}
-      >
-        <HStack position="relative" zIndex={10} paddingHorizontal={20}>
-          {/* <RankingView rank={rank} marginLeft={-36} /> */}
-          <LinkButton
-            {...flatButtonStyle}
-            paddingVertical={4}
-            marginBottom={-10}
-            style={{
-              transform: [{ rotate: '-2deg' }],
-            }}
-            tag={{
-              type: 'country',
-              name: country.country,
-            }}
-          >
-            <Text numberOfLines={1} fontSize={20} fontWeight={'700'}>
-              {country.country} {country.icon}
-            </Text>
-          </LinkButton>
-        </HStack>
-
-        <HomeTopDishesSide>{restaurantsList}</HomeTopDishesSide>
-
-        {/* left shadow */}
-        <LinearGradient
-          colors={[
-            'rgba(255,255,255,1)',
-            'rgba(255,255,255,1)',
-            'rgba(255,255,255,1)',
-            'rgba(255,255,255,0)',
-          ]}
-          startPoint={[0, 0]}
-          endPoint={[1, 0]}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            bottom: 0,
-            width: `${pctRestaurant * 100 + 4}%`,
-            zIndex: 1,
+        <DishView
+          size={dishHeight}
+          key={index}
+          dish={top_dish as any}
+          cuisine={{
+            id: country.country,
+            name: country.country,
+            type: 'country',
           }}
         />
+      )
+    })
+  }, [country])
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <HomeTopDishMain>{dishElements}</HomeTopDishMain>
-        </ScrollView>
+  const restaurantsList = useMemo(() => {
+    return (
+      <VStack flex={1} padding={10} spacing={10} alignItems="flex-start">
+        {_.uniqBy(country.top_restaurants, (x) => x.name).map(
+          (restaurant, index) => {
+            return (
+              <RestaurantButton
+                trending={index % 2 == 0 ? 'up' : 'down'}
+                subtle
+                key={restaurant.name}
+                restaurant={restaurant as any}
+                onHoverIn={onHoverRestaurant}
+                containerStyle={{
+                  maxWidth: '100%',
+                }}
+                active={
+                  (hoveredRestaurant &&
+                    restaurant?.name === hoveredRestaurant?.name) ||
+                  false
+                }
+              />
+            )
+          }
+        )}
       </VStack>
     )
-  }
-)
+  }, [hoveredRestaurant, country.top_restaurants])
+
+  return (
+    <VStack
+      paddingVertical={5}
+      className="home-top-dish"
+      position="relative"
+      // onHoverIn={() => setHovered(true)}
+      // onHoverOut={() => setHovered(false)}
+    >
+      <HStack position="relative" zIndex={10} paddingHorizontal={20}>
+        {/* <RankingView rank={rank} marginLeft={-36} /> */}
+        <LinkButton
+          {...flatButtonStyle}
+          paddingVertical={4}
+          marginBottom={-10}
+          style={{
+            transform: [{ rotate: '-2deg' }],
+          }}
+          tag={{
+            type: 'country',
+            name: country.country,
+          }}
+        >
+          <Text numberOfLines={1} fontSize={20} fontWeight={'700'}>
+            {country.country} {country.icon}
+          </Text>
+        </LinkButton>
+      </HStack>
+
+      <HomeTopDishesSide>{restaurantsList}</HomeTopDishesSide>
+
+      {/* left shadow */}
+      <LinearGradient
+        colors={[
+          'rgba(255,255,255,1)',
+          'rgba(255,255,255,1)',
+          'rgba(255,255,255,1)',
+          'rgba(255,255,255,0)',
+        ]}
+        startPoint={[0, 0]}
+        endPoint={[1, 0]}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          width: `${pctRestaurant * 100 + 4}%`,
+          zIndex: 1,
+        }}
+      />
+
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <HomeTopDishMain>{dishElements}</HomeTopDishMain>
+      </ScrollView>
+    </VStack>
+  )
+})
 
 // these two do optimized updates
 

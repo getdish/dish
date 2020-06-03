@@ -155,7 +155,6 @@ export const DishView = memo(
               fontWeight="700"
               lineHeight={22}
               color={isHovered ? '#000' : '#fff'}
-              // opacity: 0.75}
               paddingVertical={2}
               textAlign="center"
             >

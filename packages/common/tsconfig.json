@@ -2,11 +2,12 @@
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     "composite": true,
+    "baseUrl": ".",
     "module": "CommonJS",
     "strictNullChecks": true,
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*"]
   // "references": [{ "path": "../common-web" }]
 }

@@ -1,9 +1,9 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
-    "module": "commonjs",
     "composite": true,
     "module": "CommonJS",
-    "strictNullChecks": true,
+    "baseUrl": ".",
+    "strictNullChecks": true
   }
 }

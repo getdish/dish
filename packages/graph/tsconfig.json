@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     "composite": true,
+    "baseUrl": ".",
     "incremental": true,
     "skipLibCheck": true,
     "module": "CommonJS",
