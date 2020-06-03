@@ -31,6 +31,10 @@ const useTextStyle = (allProps: TextProps) => {
     for (const key in allProps) {
       const val = allProps[key]
       if (val === undefined) continue
+      if (key === 'selectable' && val) {
+        style['userSelect'] = 'text'
+        continue
+      }
       const isProp =
         textNonStyleProps[key] ?? /^(allow.*|on[A-Z].*|.*[Mm]ode)/.test(key)
       if (isProp) {

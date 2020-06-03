@@ -73,16 +73,12 @@ export default memo(
 
         <>
           <VStack
-            backgroundColor="rgba(255,255,255,0.98)"
+            backgroundColor="#fff"
             width="100%"
             padding={18}
             paddingBottom={0}
             paddingRight={16}
-            position="absolute"
-            top={0}
-            left={0}
-            right={0}
-            zIndex={100}
+            flex={1}
           >
             <HStack position="relative">
               <RestaurantRatingViewPopover size="lg" restaurantSlug={slug} />
@@ -124,40 +120,30 @@ export default memo(
                 </VStack>
               </HStack>
             </HStack>
-          </VStack>
 
-          <VStack
-            backgroundColor="white"
-            position="absolute"
-            top={120}
-            left={0}
-            right={0}
-            bottom={0}
-          />
-
-          <HomeScrollView style={{ paddingTop: 120 + 20 }}>
-            <RestaurantTagsRow size="lg" restaurantSlug={slug} />
-            <Spacer />
-            <Divider />
-            <Spacer />
-
-            <VStack spacing="md" alignItems="center">
-              <HStack paddingVertical={8} minWidth={400}>
-                <RestaurantDetailRow
-                  centered
-                  justifyContent="center"
-                  restaurantSlug={slug}
-                  flex={1}
-                />
-              </HStack>
-
+            <HomeScrollView>
+              <RestaurantTagsRow size="lg" restaurantSlug={slug} />
+              <Spacer />
               <Divider />
+              <Spacer />
 
-              <Suspense fallback={null}>
-                <RestaurantPhotos restaurantSlug={slug} />
-              </Suspense>
+              <VStack spacing="md" alignItems="center">
+                <HStack paddingVertical={8} minWidth={400}>
+                  <RestaurantDetailRow
+                    centered
+                    justifyContent="center"
+                    restaurantSlug={slug}
+                    flex={1}
+                  />
+                </HStack>
 
-              {/* <VStack>
+                <Divider />
+
+                <Suspense fallback={null}>
+                  <RestaurantPhotos restaurantSlug={slug} />
+                </Suspense>
+
+                {/* <VStack>
                 <SmallTitle>Images</SmallTitle>
                 <HStack
                   flexWrap="wrap"
@@ -183,8 +169,9 @@ export default memo(
                   ))}
                 </HStack>
               </VStack> */}
-            </VStack>
-          </HomeScrollView>
+              </VStack>
+            </HomeScrollView>
+          </VStack>
         </>
       </VStack>
     )
