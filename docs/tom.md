@@ -1,5 +1,15 @@
 # June
 
+TL;DR:
+
+- Better ratings through smoothing/sentiment
+- Better ratings through ambiance/service sentiment
+- Delivery crawlers
+- Image/other crawlers (Instagram/Google)
+- Better dish finding through images/comments
+- Summarized tips/comments
+- Search performance
+
 Week 1
 
 - Search results
@@ -59,6 +69,10 @@ Week 4
   - Google or instagram, both ideally!
 - Various features for "completeness"
   - If we can find an easyish pre-packaged docker image / library for ML we can use to summarize all the comments into little "snippets" like yelp/google do, that would be a big win in the UI
+
+# Triage
+
+- Trending restaurants (for home)
 
 # Home
 
