@@ -97,3 +97,8 @@ export function Test8() {
     </ZStack>
   )
 }
+
+// combines with classname
+export function Test9() {
+  return <VStack paddingVertical={15} className="home-top-dish" />
+}
