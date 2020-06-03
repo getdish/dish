@@ -143,6 +143,7 @@ test('8. styleExpansions', async (t) => {
     out.rendered!.props.className,
     'r-1p0dtai r-1d2f490 r-bnwqim r-zchlnj r-ipm5af'
   )
+  // TODO test constant folding
 })
 
 test('9. combines with classname', async (t) => {

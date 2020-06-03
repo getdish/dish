@@ -22,8 +22,9 @@ const graphRoot = path.join(require.resolve('@dish/graph'), '..', '..', '..')
 
 const isProduction = process.env.NODE_ENV === 'production'
 const isClient = TARGET === 'client'
+const isSSR = TARGET === 'ssr'
 const isHot = !isProduction
-const isStaticExtracted = isClient && isProduction
+const isStaticExtracted = true || ((isClient || isSSR) && isProduction)
 
 console.log('webpack.config', { isProduction, graphRoot, TARGET })
 
