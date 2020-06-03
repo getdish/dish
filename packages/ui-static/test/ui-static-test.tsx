@@ -28,6 +28,8 @@ const test = anyTest as TestInterface<{
   test7: TestApp
   test8: TestApp
   test9: TestApp
+  test10: TestApp
+  test11: TestApp
   app: any
 }>
 
@@ -131,10 +133,7 @@ test('7. ternary + data-is', async (t) => {
     ['data-is']: 'VStack',
   })
   const [inner] = out.rendered!.rendered! as any
-  t.is(
-    inner.props.className,
-    `r-1or9b2r r-5soawk r-eqz5dr r-1or9b2r r-5soawk r-1w2pmg r-1h2t8mc`
-  )
+  t.is(inner.props.className, `r-eqz5dr r-1or9b2r r-5soawk`)
 })
 
 test('8. styleExpansions', async (t) => {
@@ -150,6 +149,23 @@ test('9. combines with classname', async (t) => {
   const { test9 } = t.context
   const out = test9.renderer.toTree()!
   t.is(out.rendered!.props.className, 'home-top-dish r-eqz5dr r-9qu9m4')
+})
+
+test('11. combines everything', async (t) => {
+  const { test11 } = t.context
+  const out = render(test11.Element)
+  const firstChild = out.container.firstChild!
+  const classList = [...firstChild['classList']]
+  t.deepEqual(classList, [
+    'css-1dbjc4n',
+    'r-1awozwy',
+    'r-57dg7b',
+    'r-brgb1',
+    'r-rs99b7',
+    'r-yfq7p9',
+    'r-1udh08x',
+    'r-bnwqim',
+  ])
 })
 
 async function extractStaticApp() {
