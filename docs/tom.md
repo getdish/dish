@@ -24,6 +24,8 @@ Week 1
 - Crawlers
   - delivery crawlers would be great
 - Autocomplete endpoint to get ONLY dishes from a specific cuisine (If I'm in Vietnamese it return "Pho", etc)?
+- One big missing piece that would make the whole ui better: top_comment
+  - having top comments for tags would be even bigger
 - [reserved for various productionizing work]
 
 Week 2

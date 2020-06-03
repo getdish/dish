@@ -32,7 +32,7 @@ export default memo(function HomePage() {
   )
 
   return (
-    <VStack flex={1} backgroundColor="rgba(253,253,253,1)" alignItems="center">
+    <VStack flex={1} alignItems="center">
       <VStack
         backgroundColor="#fff"
         width={`calc(100% + ${homePageBorderRadius * 2}px)`}
@@ -40,8 +40,8 @@ export default memo(function HomePage() {
         maxWidth={1880}
         borderRadius={homePageBorderRadius}
         marginVertical={-1}
-        shadowColor="rgba(0,0,0,0.13)"
-        shadowRadius={100}
+        shadowColor="rgba(0,0,0,0.05)"
+        shadowRadius={50}
         overflow="hidden"
         // marginHorizontal={-20}
         // paddingHorizontal={20}
@@ -68,7 +68,7 @@ export default memo(function HomePage() {
           zIndex={2}
         >
           <LinearGradient
-            colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0)']}
+            colors={['rgba(255,255,255,0.1)', 'rgba(255,255,255,0)']}
             style={StyleSheet.absoluteFill}
           />
         </ZStack>

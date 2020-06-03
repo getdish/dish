@@ -85,12 +85,15 @@ export const DishView = memo(
             height="100%"
             borderRadius={borderRadius}
             overflow="hidden"
-            borderWidth={2}
+            borderWidth={1}
             borderColor="rgba(0,0,0,0.1)"
+            pointerEvents="none"
             {...(isHovered && {
-              borderColor: 'rgba(0,0,0,0.6)',
-              shadowRadius: 14,
-              shadowColor: 'rgba(0,0,0,0.2)',
+              borderColor: 'rgba(0,0,0,0.75)',
+              backgroundColor: '#fff',
+              shadowRadius: 18,
+              shadowColor: 'rgba(0,0,0,0.22)',
+              shadowOffset: { width: 0, height: 6 },
               zIndex: 10000,
             })}
           >
@@ -98,7 +101,7 @@ export const DishView = memo(
               <LinearGradient
                 colors={[
                   'rgba(0,0,0,0)',
-                  'rgba(0,0,0,0.025)',
+                  'rgba(0,0,0,0.02)',
                   'rgba(0,0,0,0.2)',
                 ]}
                 style={[StyleSheet.absoluteFill]}
@@ -106,7 +109,7 @@ export const DishView = memo(
             </ZStack>
             <Image
               source={{ uri: dish.image }}
-              style={{ width: size, height: size }}
+              style={{ width: size, height: size, backgroundColor: '#eee' }}
               resizeMode="cover"
             />
           </VStack>
@@ -114,12 +117,12 @@ export const DishView = memo(
         <HStack
           position="absolute"
           bottom={-20}
-          left={-22}
-          right={-22}
+          left={-10}
+          right={-10}
           padding={6}
           alignItems="center"
           justifyContent="center"
-          backgroundColor="rgba(255,255,255,0.5)"
+          backgroundColor="rgba(255,255,255,0.25)"
           borderTopColor="rgba(255,255,255,0.5)"
           borderTopWidth={1}
           shadowColor="rgba(0,0,0,0.05)"
@@ -128,7 +131,7 @@ export const DishView = memo(
         >
           <Box
             className="ease-in-out-top"
-            backgroundColor="#000"
+            backgroundColor="rgba(15,15,15,0.9)"
             paddingVertical={2}
             maxWidth="100%"
             overflow="hidden"
@@ -146,7 +149,7 @@ export const DishView = memo(
                 flex: 1,
                 overflow: 'hidden',
                 fontSize: 15,
-                fontWeight: '500',
+                fontWeight: '700',
                 lineHeight: 22,
                 color: isHovered ? '#000' : '#fff',
                 // opacity: 0.75,

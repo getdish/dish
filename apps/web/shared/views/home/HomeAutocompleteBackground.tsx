@@ -28,7 +28,7 @@ export const HomeAutocompleteBackground = memo(() => {
         }}
       >
         <LinearGradient
-          colors={['rgba(0,0,0,0.1)', 'transparent']}
+          colors={['rgba(255,255,255,0.3)', 'transparent']}
           style={[StyleSheet.absoluteFill, { height: 160 }]}
         />
       </TouchableOpacity>

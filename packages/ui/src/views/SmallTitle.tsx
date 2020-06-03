@@ -27,9 +27,8 @@ export const SmallTitle = memo(
               textTransform: 'uppercase',
               letterSpacing: 1,
               opacity: isActive ? 1 : 0.5,
-              fontSize: 15,
-              fontWeight: '500',
-              marginVertical: 3,
+              fontSize: 16,
+              fontWeight: '400',
             }}
           >
             {children}
