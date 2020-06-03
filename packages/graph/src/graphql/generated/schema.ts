@@ -6506,6 +6506,17 @@ export const schema = {
         get created_at() {
           return new FieldNode(schema.timestamptz, undefined, false)
         },
+        get default_images() {
+          return new FieldNode(
+            schema.jsonb,
+            new Arguments({
+              get path() {
+                return new ArgumentsField(schema.String, true)
+              },
+            }),
+            true
+          )
+        },
         get displayName() {
           return new FieldNode(schema.String, undefined, true)
         },
@@ -6743,6 +6754,9 @@ export const schema = {
         get alternates() {
           return new InputNodeField(schema.jsonb, true)
         },
+        get default_images() {
+          return new InputNodeField(schema.jsonb, true)
+        },
         get misc() {
           return new InputNodeField(schema.jsonb, true)
         },
@@ -6819,6 +6833,9 @@ export const schema = {
         get created_at() {
           return new InputNodeField(schema.timestamptz_comparison_exp, true)
         },
+        get default_images() {
+          return new InputNodeField(schema.jsonb_comparison_exp, true)
+        },
         get displayName() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
@@ -6871,6 +6888,9 @@ export const schema = {
         get alternates() {
           return new InputNodeField(new ArrayNode(schema.String, true), true)
         },
+        get default_images() {
+          return new InputNodeField(new ArrayNode(schema.String, true), true)
+        },
         get misc() {
           return new InputNodeField(new ArrayNode(schema.String, true), true)
         },
@@ -6887,6 +6907,9 @@ export const schema = {
         get alternates() {
           return new InputNodeField(schema.Int, true)
         },
+        get default_images() {
+          return new InputNodeField(schema.Int, true)
+        },
         get misc() {
           return new InputNodeField(schema.Int, true)
         },
@@ -6901,6 +6924,9 @@ export const schema = {
     return new InputNode(
       {
         get alternates() {
+          return new InputNodeField(schema.String, true)
+        },
+        get default_images() {
           return new InputNodeField(schema.String, true)
         },
         get misc() {
@@ -6934,6 +6960,9 @@ export const schema = {
         },
         get created_at() {
           return new InputNodeField(schema.timestamptz, true)
+        },
+        get default_images() {
+          return new InputNodeField(schema.jsonb, true)
         },
         get displayName() {
           return new InputNodeField(schema.String, true)
@@ -7163,6 +7192,9 @@ export const schema = {
         get created_at() {
           return new InputNodeField(schema.order_by, true)
         },
+        get default_images() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get displayName() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7215,6 +7247,9 @@ export const schema = {
         get alternates() {
           return new InputNodeField(schema.jsonb, true)
         },
+        get default_images() {
+          return new InputNodeField(schema.jsonb, true)
+        },
         get misc() {
           return new InputNodeField(schema.jsonb, true)
         },
@@ -7236,6 +7271,9 @@ export const schema = {
         },
         get created_at() {
           return new InputNodeField(schema.timestamptz, true)
+        },
+        get default_images() {
+          return new InputNodeField(schema.jsonb, true)
         },
         get displayName() {
           return new InputNodeField(schema.String, true)

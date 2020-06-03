@@ -272,8 +272,14 @@ export function restaurantPhotosForCarousel(
   let photos = [] as TopCuisineDish[]
   const max_photos = 6
   for (const t of restaurant.tags) {
-    const [photo] = t.photos ?? []
-    if (!photo && !tag_names.includes(t.tag.name.toLowerCase())) {
+    const is_searched_for_tag = tag_names.includes(t.tag.name.toLowerCase())
+    let [photo] = t.photos ?? []
+    let is_fallback_image = false
+    if (!photo && t.tag.default_images?.length) {
+      photo = t.tag.default_images[0]
+      is_fallback_image = true
+    }
+    if (!photo && !is_searched_for_tag) {
       continue
     }
     let photo_name = t.tag.name || ' '
@@ -284,6 +290,7 @@ export function restaurantPhotosForCarousel(
       name: photo_name,
       image: photo,
       rating: t.rating,
+      is_fallback_image,
     })
     if (photos.length >= max_photos) break
   }

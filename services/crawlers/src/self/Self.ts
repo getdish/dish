@@ -88,6 +88,7 @@ export class Self extends WorkerJob {
         previous_id = result.id as string
       }
     }
+    await this.setDefaultTagImages()
   }
 
   async mergeAll(id: string) {
@@ -505,6 +506,18 @@ export class Self extends WorkerJob {
       WHERE id = '${this.restaurant.id}'`
     )
     return parseInt(result.rows[0].rank)
+  }
+
+  async setDefaultTagImages() {
+    await sql(
+      `UPDATE tag set default_images = (
+         SELECT photos FROM restaurant_tag rt
+         WHERE rt.tag_id = tag.id
+           AND photos IS NOT NULL
+         ORDER BY rt.rating DESC NULLS LAST
+         LIMIT 1
+      )`
+    )
   }
 
   async scanReviews() {

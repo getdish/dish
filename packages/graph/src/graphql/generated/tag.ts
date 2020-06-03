@@ -49,6 +49,7 @@ export type t_tag = FieldsType<
       t_tag_tag_aggregate
     >
     created_at: t_timestamptz
+    default_images?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     displayName?: t_String | null
     icon?: t_String | null
     id: t_uuid
@@ -147,6 +148,7 @@ export type tag_aggregate_order_by = {
  */
 export type tag_append_input = {
   alternates?: any | null
+  default_images?: any | null
   misc?: any | null
   rgb?: any | null
 }
@@ -189,6 +191,7 @@ export type tag_bool_exp = {
   alternates?: jsonb_comparison_exp | null
   categories?: tag_tag_bool_exp | null
   created_at?: timestamptz_comparison_exp | null
+  default_images?: jsonb_comparison_exp | null
   displayName?: String_comparison_exp | null
   icon?: String_comparison_exp | null
   id?: uuid_comparison_exp | null
@@ -218,6 +221,7 @@ export type t_tag_constraint = EnumType<
  */
 export type tag_delete_at_path_input = {
   alternates?: (string | null)[] | null
+  default_images?: (string | null)[] | null
   misc?: (string | null)[] | null
   rgb?: (string | null)[] | null
 }
@@ -228,6 +232,7 @@ export type tag_delete_at_path_input = {
  */
 export type tag_delete_elem_input = {
   alternates?: number | null
+  default_images?: number | null
   misc?: number | null
   rgb?: number | null
 }
@@ -238,6 +243,7 @@ export type tag_delete_elem_input = {
  */
 export type tag_delete_key_input = {
   alternates?: string | null
+  default_images?: string | null
   misc?: string | null
   rgb?: string | null
 }
@@ -256,6 +262,7 @@ export type tag_insert_input = {
   alternates?: any | null
   categories?: tag_tag_arr_rel_insert_input | null
   created_at?: any | null
+  default_images?: any | null
   displayName?: string | null
   icon?: string | null
   id?: any | null
@@ -375,6 +382,7 @@ export type tag_order_by = {
   alternates?: order_by | null
   categories_aggregate?: tag_tag_aggregate_order_by | null
   created_at?: order_by | null
+  default_images?: order_by | null
   displayName?: order_by | null
   icon?: order_by | null
   id?: order_by | null
@@ -396,6 +404,7 @@ export type tag_order_by = {
  */
 export type tag_prepend_input = {
   alternates?: any | null
+  default_images?: any | null
   misc?: any | null
   rgb?: any | null
 }
@@ -407,6 +416,7 @@ export type tag_prepend_input = {
 export type t_tag_select_column = EnumType<
   | 'alternates'
   | 'created_at'
+  | 'default_images'
   | 'displayName'
   | 'icon'
   | 'id'
@@ -427,6 +437,7 @@ export type t_tag_select_column = EnumType<
 export type tag_set_input = {
   alternates?: any | null
   created_at?: any | null
+  default_images?: any | null
   displayName?: string | null
   icon?: string | null
   id?: any | null
@@ -672,6 +683,7 @@ export type t_tag_tag_update_column = EnumType<'category_tag_id' | 'tag_id'>
 export type t_tag_update_column = EnumType<
   | 'alternates'
   | 'created_at'
+  | 'default_images'
   | 'displayName'
   | 'icon'
   | 'id'
@@ -799,6 +811,7 @@ export type tag_mutation_response = TypeData<t_tag_mutation_response>
 export enum tag_select_column {
   alternates = 'alternates',
   created_at = 'created_at',
+  default_images = 'default_images',
   displayName = 'displayName',
   icon = 'icon',
   id = 'id',
@@ -893,6 +906,7 @@ export enum tag_tag_update_column {
 export enum tag_update_column {
   alternates = 'alternates',
   created_at = 'created_at',
+  default_images = 'default_images',
   displayName = 'displayName',
   icon = 'icon',
   id = 'id',

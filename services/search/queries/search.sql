@@ -26,7 +26,8 @@ SELECT jsonb_agg(
           'id', searched_tags_at_front.id,
           'name', searched_tags_at_front.name,
           'icon', searched_tags_at_front.icon,
-          'type', searched_tags_at_front.type
+          'type', searched_tags_at_front.type,
+          'default_images', searched_tags_at_front.default_images
         ),
         'rating', searched_tags_at_front.rating,
         'rank', searched_tags_at_front.rank,
