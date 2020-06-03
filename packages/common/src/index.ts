@@ -21,7 +21,6 @@ export const sentryMessage = (
   data?: any,
   tags?: { [key: string]: string }
 ) => {
-  console.log('Sending message to Sentry: ' + message)
   Sentry.withScope((scope) => {
     if (tags) {
       scope.setTags(tags)
@@ -29,6 +28,7 @@ export const sentryMessage = (
     scope.setExtras(data)
     Sentry.captureMessage(message)
   })
+  console.log('Sent message to Sentry: ' + message)
 }
 
 export const sentryException = (
@@ -36,7 +36,6 @@ export const sentryException = (
   data?: any,
   tags?: { [key: string]: string }
 ) => {
-  console.log('Sending exception to Sentry: ' + error.message)
   Sentry.withScope((scope) => {
     if (tags) {
       scope.setTags(tags)
@@ -44,4 +43,5 @@ export const sentryException = (
     scope.setExtras(data)
     Sentry.captureException(error)
   })
+  console.log('Sent exception to Sentry: ' + error.message)
 }
