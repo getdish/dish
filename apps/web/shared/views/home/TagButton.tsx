@@ -93,6 +93,7 @@ export const TagButton = memo(
         >
           {!!rank && (
             <Text
+              // @ts-ignore
               fontSize={rankFontSize}
               fontWeight="bold"
               margin="auto"
@@ -108,14 +109,17 @@ export const TagButton = memo(
               alignItems="center"
               display="flex"
             >
-              <SuperScriptText style={{ opacity: 0.5 }}>#</SuperScriptText>
+              <SuperScriptText opacity={0.5}>#</SuperScriptText>
               {rank}
             </Text>
           )}
           <Text
-            numberOfLines={1}
+            ellipse
+            // @ts-ignore
             fontSize={fontSize}
+            // @ts-ignore
             fontWeight={size == 'lg' ? '500' : 'inherit'}
+            // @ts-ignore
             lineHeight="inherit"
             paddingVertical={paddingVertical}
             paddingHorizontal={subtle ? 0 : 8 * scale}

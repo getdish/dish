@@ -6,7 +6,7 @@
     "strictNullChecks": true,
     "outDir": "_",
     "rootDir": "src",
-    "baseUrl": "src"
+    "baseUrl": "./src"
   },
   "include": ["src/**/*"]
 }

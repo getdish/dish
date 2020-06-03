@@ -5,8 +5,13 @@ import i18Style from 'react-native-web/dist/cjs/exports/StyleSheet/i18nStyle'
 import { StyleObject } from '../types'
 
 export function getStylesAtomic(style: any, classList?: string[]) {
-  const all = atomic(createCompileableStyle(i18Style(style)))
-
+  const filteredStyle = Object.keys(style ?? {}).reduce((acc, cur) => {
+    if (cur) {
+      acc[cur] = style[cur]
+    }
+    return acc
+  }, {})
+  const all = atomic(createCompileableStyle(i18Style(filteredStyle)))
   for (const key in all) {
     all[key].className = `.${all[key].identifier}`
   }

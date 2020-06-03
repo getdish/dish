@@ -5,6 +5,11 @@ import { baseStyle, nestedStyle } from './extract-spec-constants'
 
 const nonStaticInt = eval(`10`)
 
+type TestProps = {
+  conditional?: boolean
+  altConditional?: boolean
+}
+
 export function Test1() {
   return (
     <VStack
@@ -51,11 +56,11 @@ export function Test4() {
 }
 
 // spread
-export function Test5(props: any) {
+export function Test5(props: TestProps) {
   return (
     <VStack
       overflow="hidden"
-      {...(props.something && {
+      {...(props.conditional && {
         backgroundColor: 'blue',
       })}
     >
@@ -63,7 +68,7 @@ export function Test5(props: any) {
       <VStack
         className="hello-world"
         overflow="hidden"
-        {...(props.something && {
+        {...(props.conditional && {
           backgroundColor: 'blue',
         })}
       />
@@ -72,13 +77,13 @@ export function Test5(props: any) {
 }
 
 // ternary
-export function Test6(props: any) {
+export function Test6(props: TestProps) {
   return (
     <VStack
       overflow="hidden"
-      {...(props.something
+      {...(props.conditional
         ? {
-            background: 'blue',
+            backgroundColor: 'blue',
           }
         : null)}
     >
@@ -140,14 +145,14 @@ export function Test10({ textStyle }) {
 }
 
 // alllll in one
-export function Test11(props: any) {
+export function Test11(props: TestProps) {
   const lineHeight = 10
   return (
     <VStack
-      height={props.scale * 31}
-      borderRadius={8 * props.scale}
+      height={(props.conditional ? 1 : 0) * 31}
+      borderRadius={8 * (props.conditional ? 1 : 0)}
       borderWidth={1}
-      borderColor={props.subtle ? 'transparent' : 'rgba(0,0,0,0.15)'}
+      borderColor={props.altConditional ? 'transparent' : 'rgba(0,0,0,0.15)'}
       overflow="hidden"
       alignItems="center"
       position="relative"

@@ -5,8 +5,8 @@ module.exports = function (api) {
 
   return {
     plugins: [
-      !api.env('development') && !isWorker && !isSSR && 'babel-plugin-lodash',
-      !api.env('production') && !isWorker && !isSSR && 'react-refresh/babel',
+      api.env('production') && !isWorker && !isSSR && 'babel-plugin-lodash',
+      api.env('development') && !isWorker && !isSSR && 'react-refresh/babel',
       !api.env('production') && '@babel/plugin-transform-react-display-name',
       '@babel/plugin-proposal-class-properties',
       '@babel/plugin-proposal-optional-chaining',

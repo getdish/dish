@@ -148,7 +148,7 @@ export const DishView = memo(
             })}
           >
             <Text
-              numberOfLines={1}
+              ellipse
               flex={1}
               overflow="hidden"
               fontSize={15}
@@ -158,7 +158,7 @@ export const DishView = memo(
               paddingVertical={2}
               textAlign="center"
             >
-              <Text>{dish.name}</Text>
+              {dish.name}
             </Text>
           </Box>
         </HStack>

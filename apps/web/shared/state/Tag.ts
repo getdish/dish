@@ -79,7 +79,7 @@ export const tagLenses: Tag[] = [
   },
   {
     id: '9',
-    name: 'Vegetarian',
+    name: 'Veg',
     icon: '🥬',
     rgb: [0.05, 0.8, 0.15],
     descriptions: {

@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     // "composite": true,
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "module": "CommonJS",
     "sourceMap": false,
     "skipLibCheck": true,
@@ -15,7 +15,12 @@
     "typeRoots": ["./node_modules/mapkit-typescript", "./node_modules/@types"]
   },
   "include": ["web/**/*", "shared/**/*"],
-  "exclude": ["**/*.test.ts", "**/*.test.tsx", "web/server.tsx"],
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "web/server.tsx",
+    "node_modules"
+  ],
   "references": [
     { "path": "../../packages/ui" },
     { "path": "../../packages/ui-static" },

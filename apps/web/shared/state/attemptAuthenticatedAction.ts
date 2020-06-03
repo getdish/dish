@@ -1,4 +1,5 @@
-import { Toast } from '../views/Toast'
+import { Toast } from '@dish/ui'
+
 import { Om } from './home-types'
 
 export const attemptAuthenticatedAction = async <
@@ -14,6 +15,7 @@ export const attemptAuthenticatedAction = async <
       // logout
       Toast.show(`Login has expired`)
       await om.actions.user.logout()
+      return null as any
     } else {
       throw err
     }

@@ -221,7 +221,7 @@ const CountryTopDishesItem = memo(({ country }: { country: TopCuisine }) => {
             name: country.country,
           }}
         >
-          <Text numberOfLines={1} fontSize={20} fontWeight={'700'}>
+          <Text ellipse fontSize={20} fontWeight={'700'}>
             {country.country} {country.icon}
           </Text>
         </LinkButton>

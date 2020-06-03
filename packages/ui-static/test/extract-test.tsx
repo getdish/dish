@@ -11,10 +11,11 @@ import webpack from 'webpack'
 import { GlossWebpackPlugin, getStylesAtomic } from '../src'
 
 const mode = 'production'
-process.env.NODE_ENV = mode
+process.env.NODE_ENV = 'test'
 
 type TestApp = {
   renderer: TestRenderer.ReactTestRenderer
+  rendererFalse: TestRenderer.ReactTestRenderer
   Element: any
 }
 
@@ -45,35 +46,40 @@ test.before(async (t) => {
   for (const key in app) {
     act(() => {
       const App = app[key]
-      const AppElement = <App />
-      const tree = TestRenderer.create(AppElement)
       t.context[key.toLowerCase()] = {
-        Element: AppElement,
-        renderer: tree,
+        Element: App,
+        renderer: TestRenderer.create(<App conditional={true} />),
+        rendererFalse: TestRenderer.create(<App conditional={false} />),
       }
     })
   }
 })
 
-// test('converts a style object to class names', async (t) => {
-//   const style = {
-//     backgroundColor: 'red',
-//     transform: [{ rotateY: '10deg' }],
-//   }
-//   const styles = getStylesAtomic(style)
-//   const style1 = styles.find((x) => x.identifier === 'r-1g6456j')
-//   const style2 = styles.find((x) => x.identifier === 'r-188uu3c')
-//   t.assert(!!style1)
-//   t.assert(!!style2)
-//   t.is(style1!.value, 'rgba(255,0,0,1.00)')
-//   t.is(style1!.property, 'backgroundColor')
-//   t.deepEqual(style1!.rules, [
-//     '.r-1g6456j{background-color:rgba(255,0,0,1.00);}',
-//   ])
-//   t.deepEqual(style2!.rules, [
-//     '.r-188uu3c{-webkit-transform:rotateY(10deg);transform:rotateY(10deg);}',
-//   ])
-// })
+test('converts a style object to class names', async (t) => {
+  const style = {
+    backgroundColor: 'red',
+    transform: [{ rotateY: '10deg' }],
+    shadowRadius: 10,
+    shadowColor: 'red',
+  }
+  const styles = getStylesAtomic(style)
+  console.log('styles', styles)
+  const style1 = styles.find((x) => x.property === 'backgroundColor')
+  const style2 = styles.find((x) => x.property === 'transform')
+  const style3 = styles.find((x) => x.property === 'boxShadow')
+  t.assert(!!style1)
+  t.assert(!!style2)
+  t.assert(!!style3)
+  t.deepEqual(style1!.rules, [
+    '.r-backgroundColor-1g6456j{background-color:rgba(255,0,0,1.00);}',
+  ])
+  t.deepEqual(style2!.rules, [
+    '.r-transform-188uu3c{-webkit-transform:rotateY(10deg);transform:rotateY(10deg);}',
+  ])
+  t.deepEqual(style3!.rules, [
+    '.r-boxShadow-rfqnir{box-shadow:0px 0px 10px rgba(255,0,0,1.00);}',
+  ])
+})
 
 // test('1. extracts to a div for simple views', async (t) => {
 //   const { test1 } = t.context
@@ -94,15 +100,15 @@ test.before(async (t) => {
 // })
 
 // test('3. places className correctly given a single spread', async (t) => {
-//   const { test3 } = t.context
-//   const out = render(test3.Element)
+//   const { test3: { Element } } = t.context
+//   const out = render(<Element />)
 //   const list = [...out.container.firstChild?.['classList']]
 //   t.assert(list.includes('r-1udh08x'))
 // })
 
 // test('4. leaves dynamic variables', async (t) => {
-//   const { test4 } = t.context
-//   const out = render(test4.Element)
+//   const { test4: { Element } } = t.context
+//   const out = render(<Element />)
 //   const firstChild = out.container.firstChild!
 //   const classList = [...firstChild['classList']]
 //   t.deepEqual(classList, ['css-1dbjc4n', 'r-4d76ec'])
@@ -110,20 +116,32 @@ test.before(async (t) => {
 //   t.is(r.props.style.width, 'calc(100% + 20px)')
 // })
 
-test('5. spread', async (t) => {
+test('5. spread conditional', async (t) => {
   const { test5 } = t.context
   const out = test5.renderer.toTree()!
-  console.log('out', out)
-  // t.is(out.props.className, 'r-4d76ec')
-  // t.is(out.props.width, 'calc(100% + 12px)')
+  t.is(out.rendered!.type, 'div')
+  t.is(
+    out.rendered!.props.className,
+    'r-flexDirection-eqz5dr r-overflow-1udh08x'
+  )
+  t.is(
+    out.rendered!.rendered![0].props.className,
+    'r-flexDirection-eqz5dr r-overflow-1udh08x hello-world'
+  )
 })
 
-// test.skip('6. spread ternary', async (t) => {
-//   const { test6 } = t.context
-//   const out = test6.renderer.toTree()
-//   // t.is(out!.props.className, 'r-4d76ec')
-//   // t.is(out!.props.width, 'calc(100% + 12px)')
-// })
+test('6. spread ternary', async (t) => {
+  const { test6 } = t.context
+  t.is(
+    test6.renderer.toTree().rendered!.props.className,
+    'r-flexDirection-eqz5dr r-overflow-1udh08x'
+  )
+  t.is(
+    test6.rendererFalse.toTree().rendered!.props.className,
+    'r-flexDirection-eqz5dr r-overflow-1udh08x'
+  )
+  // t.is(out!.props.width, 'calc(100% + 12px)')
+})
 
 // test('7. ternary + data-is', async (t) => {
 //   const { test7 } = t.context
@@ -153,13 +171,13 @@ test('5. spread', async (t) => {
 //   t.is(out.rendered!.props.className, 'home-top-dish r-eqz5dr r-9qu9m4')
 // })
 
-// test('10. extracts Text', async (t) => {
-//   const { test10 } = t.context
-//   const out = test10.renderer.toTree()!
-//   t.is(out.rendered!.type, 'span')
-//   t.is(out.rendered!.props['data-is'], 'Text')
-//   t.is(out.rendered!.props.className, 'r-10x49cs')
-// })
+test('10. extracts Text', async (t) => {
+  const { test10 } = t.context
+  const out = test10.renderer.toTree()!
+  t.is(out.rendered!.type, 'span')
+  t.is(out.rendered!.props['data-is'], 'Text')
+  t.is(out.rendered!.props.className, 'r-fontSize-10x49cs')
+})
 
 // test('11. combines everything', async (t) => {
 //   const { test11 } = t.context
@@ -226,7 +244,13 @@ async function extractStaticApp() {
         },
       ],
     },
-    plugins: [new GlossWebpackPlugin()],
+    plugins: [
+      new GlossWebpackPlugin(),
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        'process.env.DEBUG': JSON.stringify(process.env.DEBUG),
+      }),
+    ],
   })
 
   await new Promise((res) => {

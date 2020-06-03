@@ -71,13 +71,7 @@ export const RestaurantAddressLinksRow = memo(
         <Text color="#999" fontSize={fontSize}>
           <HStack alignItems="center" spacing>
             {!!(currentLocationInfo && showAddress) && (
-              <Text
-                selectable
-                numberOfLines={1}
-                style={
-                  { fontSize: 14, whiteSpace: 'nowrap', maxWidth: 190 } as any
-                }
-              >
+              <Text selectable ellipse fontSize={14} maxWidth={190}>
                 {getAddressText(
                   currentLocationInfo,
                   restaurant.address ?? '',
