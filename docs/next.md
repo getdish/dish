@@ -1,7 +1,3 @@
-- seeing dish details (learn names of dishes, ingredients, pairing, etc), making you smarter just by using it
-
----
-
 # to launch
 
 - data for bay area / california
@@ -40,3 +36,7 @@
   - capture: "Your insider app for the best stuff to see/do in SF"
   - airport ad?
 - travellers may really want this (cheaper markets?)
+
+---
+
+- seeing dish details (learn names of dishes, ingredients, pairing, etc), making you smarter just by using it
