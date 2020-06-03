@@ -5,6 +5,7 @@ import { restaurantTagUpsert } from '../helpers/restaurantTag'
 import { tagGetAllChildren, tagUpsert } from '../helpers/tag'
 import {
   Restaurant,
+  RestaurantQuery,
   RestaurantTag,
   RestaurantWithId,
   Scrape,
@@ -269,14 +270,14 @@ export async function restaurantGetAllPossibleTags(restaurant: Restaurant) {
 }
 
 export function restaurantPhotosForCarousel(
-  restaurant: Restaurant,
+  restaurant: RestaurantQuery,
   tag_names: string[] = []
 ) {
   let photos = [] as TopCuisineDish[]
   const max_photos = 6
-  for (const t of restaurant.tags) {
+  for (const t of restaurant.tags()) {
     const is_searched_for_tag = tag_names.includes(t.tag.name.toLowerCase())
-    let [photo] = t.photos ?? []
+    let [photo] = t.photos() ?? []
     let is_fallback_image = false
     if (!photo && t.tag.default_images?.length) {
       photo = t.tag.default_images[0]
@@ -298,7 +299,7 @@ export function restaurantPhotosForCarousel(
     if (photos.length >= max_photos) break
   }
   if (photos.length <= max_photos) {
-    const restPhotos = restaurant.photos ?? []
+    const restPhotos = restaurant.photos() ?? []
     for (const photo of restPhotos) {
       photos.push({ name: ' ', image: photo })
       if (photos.length >= max_photos) break
