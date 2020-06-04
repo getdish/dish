@@ -5,6 +5,7 @@
 name: "On-push tests"
 on: [push]
 env:
+  DOCKER_BUILDKIT: 1
   DISH_ENV: "test"
   DISH_REGISTRY: "docker.k8s.dishapp.com"
   HASURA_ENDPOINT: "http://localhost:8080"

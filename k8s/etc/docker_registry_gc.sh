@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+PATH=$PATH:$HOME/bin
 echo "Checking Docker Registry free disk space..."
 
 MINIMUM_FREE_SPACE=5000000

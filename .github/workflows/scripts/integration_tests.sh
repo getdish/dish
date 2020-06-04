@@ -26,6 +26,7 @@ sleep 5
 ./test/testcafe.sh
 popd
 
+./.github/workflows/scripts/setup_admin.sh
 ./k8s/etc/docker_registry_gc.sh
 
 DISH_REGISTRY_PASSWORD=$(\
