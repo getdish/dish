@@ -296,10 +296,11 @@ export function extractStyles(
             if (isStyleObject(attr.argument.right)) {
               const spreadStyle = attemptEvalSafe(attr.argument.right)
               if (spreadStyle) {
+                const test = (attr.argument as t.LogicalExpression).left
                 staticTernaries.push({
-                  test: (attr.argument as t.LogicalExpression).left,
-                  alternate: spreadStyle,
-                  consequent: null,
+                  test,
+                  consequent: spreadStyle,
+                  alternate: null,
                 })
                 return
               }
@@ -499,9 +500,9 @@ export function extractStyles(
                 const aVal = attemptEval(value.alternate)
                 const cVal = attemptEval(value.consequent)
                 return {
-                  alternate: { [name]: aVal },
-                  consequent: { [name]: cVal },
                   test: value.test,
+                  consequent: { [name]: cVal },
+                  alternate: { [name]: aVal },
                 }
               } catch (err) {
                 if (shouldPrintDebug) {
@@ -518,9 +519,9 @@ export function extractStyles(
                 try {
                   const val = attemptEval(value.right)
                   return {
-                    alternate: null,
-                    consequent: { [name]: val },
                     test: value.left,
+                    consequent: { [name]: val },
+                    alternate: null,
                   }
                 } catch (err) {
                   if (shouldPrintDebug) {
@@ -856,7 +857,13 @@ domNode: ${domNode}
   )
 
   if (shouldPrintDebug) {
-    console.log('output >> ', result.code)
+    console.log(
+      'output >> ',
+      result.code
+        .split('\n')
+        .filter((line) => !line.startsWith('//'))
+        .join('\n')
+    )
     console.log('output css >> ', css)
   }
 
