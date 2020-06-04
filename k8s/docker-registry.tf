@@ -39,27 +39,6 @@ resource "kubernetes_secret" "docker-registry-auth" {
   type = "Opaque"
 }
 
-resource "kubernetes_service" "internal-registry" {
-  metadata {
-    name = "internal-registry"
-    namespace = "docker-registry"
-  }
-
-  spec {
-    selector = {
-      app = "docker-registry"
-    }
-
-    type = "NodePort"
-
-    port {
-      name = "docker-registry"
-      port = 5000
-      node_port = 31500
-    }
-  }
-}
-
 resource "kubernetes_ingress" "docker-registry-ingress" {
   metadata {
     name = "docker-registry-ingress"
