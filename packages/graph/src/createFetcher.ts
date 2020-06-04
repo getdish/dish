@@ -1,7 +1,7 @@
 import { QueryResponse } from 'gqless'
 
 import { isBrowserProd } from './constants'
-import { Auth } from './helpers/auth'
+import { Auth } from './helpers/auth-helpers'
 import { getGraphEndpoint } from './helpers/getGraphEndpoint'
 
 type QueryFetcherWithOptions = (

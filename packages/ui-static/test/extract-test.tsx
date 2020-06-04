@@ -31,6 +31,7 @@ const test = anyTest as TestInterface<{
   test9: TestApp
   test10: TestApp
   test11: TestApp
+  test12: TestApp
   app: any
 }>
 
@@ -157,10 +158,13 @@ test('7. ternary + data-is', async (t) => {
   t.deepEqual(outerProps, {
     className:
       'r-flexDirection-eqz5dr r-maxWidth-f2w40 r-minWidth-68jxh1 r-paddingBottom-1mi0q7o r-paddingHorizontal-1qfz7tf r-width-1skwq7n',
-    ['data-is']: 'VStack',
+    ['data-is']: 'Test7-VStack',
   })
   const [inner] = out.rendered!.rendered! as any
-  t.is(inner.props.className, `r-flexDirection-eqz5dr r-height-1or9b2r`)
+  t.is(
+    inner.props.className,
+    `r-flexDirection-eqz5dr r-height-1or9b2r r-width-5soawk`
+  )
 })
 
 test('8. styleExpansions', async (t) => {
@@ -186,7 +190,7 @@ test('10. extracts Text', async (t) => {
   const { test10 } = t.context
   const out = test10.renderer.toTree()!
   t.is(out.rendered!.type, 'span')
-  t.is(out.rendered!.props['data-is'], 'Text')
+  t.is(out.rendered!.props['data-is'], 'Test10-Text')
   t.is(out.rendered!.props.className, 'r-fontSize-10x49cs')
 })
 
@@ -207,6 +211,18 @@ test('11. combines everything', async (t) => {
     'r-overflow-1udh08x',
     'r-position-bnwqim',
   ])
+})
+
+test('12. ternary multiple on same key', async (t) => {
+  const { test12 } = t.context
+  t.is(
+    test12.renderer.toTree()!.rendered!.props.className,
+    'r-flexDirection-eqz5dr r-opacity-6dt33c r-transform-1siec45'
+  )
+  t.is(
+    test12.rendererFalse.toTree()!.rendered!.props.className,
+    'r-flexDirection-eqz5dr r-opacity-orgf3d r-transform-n8jr3k'
+  )
 })
 
 async function extractStaticApp() {

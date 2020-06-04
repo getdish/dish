@@ -67,10 +67,10 @@ export function extractStaticTernaries(
       consequentStyles: {},
       test: ternaryTest,
     }
-    ternariesByKey[key].consequentStyles =
-      (shouldSwap ? alternate : consequent) ?? {}
-    ternariesByKey[key].alternateStyles =
-      (shouldSwap ? consequent : alternate) ?? {}
+    const altStyle = (shouldSwap ? consequent : alternate) ?? {}
+    const consStyle = (shouldSwap ? alternate : consequent) ?? {}
+    Object.assign(ternariesByKey[key].alternateStyles, altStyle)
+    Object.assign(ternariesByKey[key].consequentStyles, consStyle)
   }
 
   const ternaryExpression = Object.keys(ternariesByKey).map((key) => {

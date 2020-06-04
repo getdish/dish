@@ -18,9 +18,7 @@ export function Test1() {
       backgroundColor="red"
       shadowRadius={10}
       shadowColor="#000"
-    >
-      <div>hi</div>
-    </VStack>
+    />
   )
 }
 
@@ -159,6 +157,16 @@ export function Test11(props: TestProps) {
       minHeight={lineHeight}
       {...props}
       backgroundColor="blue"
+    />
+  )
+}
+
+// ternary multiple on same key
+export function Test12(props: TestProps) {
+  return (
+    <VStack
+      opacity={props.conditional ? 1 : 0}
+      transform={props.conditional ? [] : [{ translateY: 5 }]}
     />
   )
 }

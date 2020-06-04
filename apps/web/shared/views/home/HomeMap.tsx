@@ -1,6 +1,5 @@
 import { Restaurant, graphql, query } from '@dish/graph'
 import { ZStack, useDebounceEffect, useOnMount } from '@dish/ui'
-import { debounce } from 'lodash'
 import React, {
   Suspense,
   memo,
@@ -136,7 +135,7 @@ const HomeMapContent = memo(function HomeMap({
 
   let paddingLeft = drawerWidth
   if (window.innerWidth > mapMaxWidth) {
-    paddingLeft = window.innerWidth - mapWidth + 10
+    paddingLeft = window.innerWidth - mapWidth
   }
 
   console.log({ paddingLeft, mapWidth, drawerWidth, pageWidthMax })
