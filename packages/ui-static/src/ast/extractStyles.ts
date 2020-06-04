@@ -29,10 +29,6 @@ import { getPropValueFromAttributes } from './getPropValueFromAttributes'
 import { getStaticBindingsForScope } from './getStaticBindingsForScope'
 import { parse } from './parse'
 
-// import { resolve } from 'react-native-web/dist/cjs/exports/StyleSheet/styleResolver'
-
-const shouldPrintDebug = !!process.env.DEBUG
-
 type OptimizableComponent = Function & {
   staticConfig: {
     defaultStyle: any
@@ -52,7 +48,7 @@ const validComponents: { [key: string]: OptimizableComponent } = Object.keys(
     return obj
   }, {})
 
-if (shouldPrintDebug) {
+if (!!process.env.DEBUG) {
   console.log('validComponents', Object.keys(validComponents))
 }
 
@@ -93,6 +89,12 @@ export function extractStyles(
   ast: t.File
   map: any // RawSourceMap from 'source-map'
 } {
+  const shouldPrintDebug =
+    !!process.env.DEBUG &&
+    (process.env.DEBUG_FILE
+      ? sourceFileName.includes(process.env.DEBUG_FILE)
+      : true)
+
   if (typeof src !== 'string') {
     throw new Error('`src` must be a string of javascript')
   }
@@ -160,6 +162,7 @@ export function extractStyles(
     JSXElement: {
       enter(traversePath: TraversePath<t.JSXElement>) {
         const node = traversePath.node.openingElement
+        const componentName = findComponentName(traversePath.scope)
 
         if (
           // skip non-identifier opening elements (member expressions, etc.)
@@ -171,6 +174,7 @@ export function extractStyles(
         }
 
         // Remember the source component
+
         const component = validComponents[node.name.name]
         const originalNodeName = node.name.name
         const isTextView = originalNodeName.endsWith('Text')
@@ -192,11 +196,6 @@ export function extractStyles(
                 sourceFileName,
                 bindingCache
               )
-
-              if (shouldPrintDebug) {
-                console.log('staticNamespace', staticNamespace)
-              }
-
               const evalContext = vm.createContext(staticNamespace)
 
               // called when evaluateAstNode encounters a dynamic-looking prop
@@ -233,12 +232,16 @@ export function extractStyles(
         const staticTernaries: Ternary[] = []
 
         const addStylesAtomic = (style: any) => {
-          console.log('addStylesAtomic', style)
-          if (!style) return style
+          if (!style || !Object.keys(style).length) {
+            return style
+          }
           const res = getStylesAtomic(style)
           res.forEach((x) => {
-            stylesByClassName[style.identifier] = x
+            stylesByClassName[x.identifier] = x
           })
+          // if (shouldPrintDebug) {
+          //   console.log('addStylesAtomic', originalNodeName, style, res)
+          // }
           return res
         }
 
@@ -251,7 +254,6 @@ export function extractStyles(
         const isStyleObject = (obj: t.Node): obj is t.ObjectExpression => {
           return (
             t.isObjectExpression(obj) &&
-            !![console.log(obj.properties)] &&
             obj.properties.every(
               (prop) =>
                 t.isObjectProperty(prop) && isStaticAttributeName(prop.key.name)
@@ -294,16 +296,12 @@ export function extractStyles(
             if (isStyleObject(attr.argument.right)) {
               const spreadStyle = attemptEvalSafe(attr.argument.right)
               if (spreadStyle) {
-                const styles = addStylesAtomic(spreadStyle)
-                if (styles) {
-                  console.log('adding2', styles, spreadStyle)
-                  staticTernaries.push({
-                    test: (attr.argument as t.LogicalExpression).left,
-                    alternate: styles,
-                    consequent: null,
-                  })
-                  return
-                }
+                staticTernaries.push({
+                  test: (attr.argument as t.LogicalExpression).left,
+                  alternate: spreadStyle,
+                  consequent: null,
+                })
+                return
               }
             }
           }
@@ -369,7 +367,7 @@ export function extractStyles(
         let inlinePropCount = 0
 
         if (shouldPrintDebug) {
-          console.log('attr overview:', node.attributes.map(attrGetName))
+          console.log('attrs:', node.attributes.map(attrGetName).join(', '))
         }
 
         node.attributes = node.attributes.filter((attribute, idx) => {
@@ -527,7 +525,11 @@ domNode: ${domNode}
             node.attributes.push(
               t.jsxAttribute(
                 t.jsxIdentifier('data-is'),
-                t.stringLiteral(node.name.name)
+                t.stringLiteral(
+                  componentName
+                    ? `${componentName}-${node.name.name}`
+                    : node.name.name
+                )
               )
             )
           }
@@ -584,9 +586,6 @@ domNode: ${domNode}
         const hasViewStyle = Object.keys(viewStyles).length > 0
         if (hasViewStyle) {
           const styles = addStylesAtomic(viewStyles)
-          if (shouldPrintDebug) {
-            console.log('viewStyles', originalNodeName, viewStyles, styles)
-          }
           for (const style of styles) {
             classNames.push(style.identifier)
           }
@@ -757,7 +756,7 @@ domNode: ${domNode}
   // we didnt find anything
   if (css === '') {
     if (shouldPrintDebug) {
-      console.log('nothing extracted!', sourceFileName)
+      console.log('END - nothing extracted!', sourceFileName)
     }
     return {
       ast,
@@ -871,7 +870,6 @@ function getTernaryExpression(
   idx: number,
   baseClass?: t.Expression
 ) {
-  console.log('consequentStyles', consequentStyles, alternateStyles)
   const consInfo = addStylesAtomic({ ...baseViewStyles, ...consequentStyles })
   const altInfo = addStylesAtomic({ ...baseViewStyles, ...alternateStyles })
 
@@ -908,4 +906,26 @@ const attrGetName = (attr) => {
     : 'name' in attr.argument
     ? `spread-${attr.argument.name}`
     : `unknown-${attr.type}`
+}
+
+function findComponentName(scope) {
+  let componentName = ''
+  let cur = scope.path
+  while (cur.parentPath && !t.isProgram(cur.parentPath.parent)) {
+    cur = cur.parentPath
+  }
+  let node = cur.parent
+  if (t.isExportNamedDeclaration(node)) {
+    node = node.declaration
+  }
+  if (t.isVariableDeclaration(node)) {
+    const [dec] = node.declarations
+    if (t.isVariableDeclarator(dec) && t.isIdentifier(dec.id)) {
+      return dec.id.name
+    }
+  }
+  if (t.isFunctionDeclaration(node)) {
+    return node.id?.name
+  }
+  return componentName
 }
