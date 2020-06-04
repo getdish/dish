@@ -534,8 +534,8 @@ export class Self extends WorkerJob {
     const all_possible_tags = await restaurantGetAllPossibleTags(
       this.restaurant
     )
-    if (this.yelp.data) {
-      const photos = this.getPaginatedData(this.yelp.data, 'photos')
+    if (this.yelp?.data) {
+      const photos = this.getPaginatedData(this.yelp?.data, 'photos')
       for (const tag of all_possible_tags) {
         let restaurant_tag: RestaurantTag = {
           tag_id: tag.id,
@@ -677,7 +677,7 @@ export class Self extends WorkerJob {
 
   _scanYelpReviewsForTags() {
     // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
-    const reviews = this.getPaginatedData(this.yelp.data, 'reviews')
+    const reviews = this.getPaginatedData(this.yelp?.data, 'reviews')
     for (const review of reviews) {
       const all_text = [
         review.comment?.text,
