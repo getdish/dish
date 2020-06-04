@@ -24,7 +24,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 const isClient = TARGET === 'client'
 const isSSR = TARGET === 'ssr'
 const isHot = !isProduction
-const isStaticExtracted = false && (isClient || isSSR) && isProduction
+const isStaticExtracted = true || ((isClient || isSSR) && isProduction)
 
 console.log('webpack.config', { isProduction, graphRoot, TARGET })
 
