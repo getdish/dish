@@ -269,14 +269,18 @@ export async function restaurantGetAllPossibleTags(restaurant: Restaurant) {
   )
 }
 
-export function restaurantPhotosForCarousel(
-  restaurant: RestaurantQuery,
-  tag_names: string[] = []
-) {
+export function restaurantPhotosForCarousel({
+  restaurant,
+  tag_names,
+  max = 6,
+}: {
+  restaurant: RestaurantQuery
+  tag_names?: string[]
+  max?: number
+}) {
   let photos = [] as TopCuisineDish[]
-  const max_photos = 6
   for (const t of restaurant.tags()) {
-    const is_searched_for_tag = tag_names.includes(t.tag.name.toLowerCase())
+    const is_searched_for_tag = tag_names?.includes(t.tag.name.toLowerCase())
     let [photo] = t.photos() ?? []
     let is_fallback_image = false
     if (!photo && t.tag.default_images?.length) {
@@ -296,13 +300,13 @@ export function restaurantPhotosForCarousel(
       rating: t.rating,
       is_fallback_image,
     })
-    if (photos.length >= max_photos) break
+    if (photos.length >= max) break
   }
-  if (photos.length <= max_photos) {
+  if (photos.length <= max) {
     const restPhotos = restaurant.photos() ?? []
     for (const photo of restPhotos) {
       photos.push({ name: ' ', image: photo })
-      if (photos.length >= max_photos) break
+      if (photos.length >= max) break
     }
   }
   return photos
