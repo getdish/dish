@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+import { useDebounce } from '../hooks/useDebounce'
 import { Hoverable } from './Hoverable'
 import { Popover } from './PopoverContainer'
 import { PopoverProps } from './PopoverProps'
@@ -12,13 +13,15 @@ export const HoverablePopover = ({
 }: PopoverProps & {
   allowHoverOnContent?: boolean
 }) => {
-  const [isHovering, setIsHovering] = useState(false)
+  const [isHovering, set] = useState(false)
+  const setIsntHovering = useDebounce(() => set(true), 100, undefined, [])
+  const setIsHovering = () => {
+    setIsntHovering.cancel()
+    set(true)
+  }
 
   const contentsEl = allowHoverOnContent ? (
-    <Hoverable
-      onHoverIn={() => setIsHovering(true)}
-      onHoverOut={() => setIsHovering(false)}
-    >
+    <Hoverable onHoverIn={setIsHovering} onHoverOut={setIsntHovering}>
       {contents}
     </Hoverable>
   ) : (
@@ -33,10 +36,7 @@ export const HoverablePopover = ({
       contents={contentsEl}
       {...props}
     >
-      <Hoverable
-        onHoverIn={() => setIsHovering(true)}
-        onHoverOut={() => setIsHovering(false)}
-      >
+      <Hoverable onHoverIn={setIsHovering} onHoverOut={setIsntHovering}>
         {children}
       </Hoverable>
     </Popover>

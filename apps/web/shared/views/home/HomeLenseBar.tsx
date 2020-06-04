@@ -93,7 +93,7 @@ export const HomeLenseBarOnly = memo(
             />
           ))}
 
-          <HoverablePopover
+          {/* <HoverablePopover
             position="right"
             contents={
               <Box>
@@ -102,7 +102,7 @@ export const HomeLenseBarOnly = memo(
             }
           >
             <ChevronRight color="#999" size={20} />
-          </HoverablePopover>
+          </HoverablePopover> */}
         </HStack>
         {/* <Divider backgroundColor="#000" flex /> */}
       </HStack>
