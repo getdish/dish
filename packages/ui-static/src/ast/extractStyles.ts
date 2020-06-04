@@ -9,7 +9,7 @@ import * as t from '@babel/types'
 import * as AllExports from '@dish/ui'
 // import literalToAst from 'babel-literal-to-ast'
 import invariant from 'invariant'
-import { TextStyle, ViewStyle } from 'react-native'
+import { ViewStyle } from 'react-native'
 
 import { GLOSS_CSS_FILE } from '../constants'
 import { getStylesAtomic } from '../style/getStylesAtomic'
@@ -18,7 +18,6 @@ import {
   CacheObject,
   ClassNameToStyleObj,
   ExtractStylesOptions,
-  StyleObject,
 } from '../types'
 import { evaluateAstNode } from './evaluateAstNode'
 import {
@@ -116,29 +115,31 @@ export function extractStyles(
   // Using a map for (officially supported) guaranteed insertion order
   const cssMap = new Map<string, { css: string; commentTexts: string[] }>()
   const ast = parse(src)
+
   let doesImport = false
+  let doesUseValidImport = false
 
   // Find gloss require in program root
-  let foundComponents = {}
-  ast.program.body = ast.program.body.filter((item: t.Node) => {
+  ast.program.body.forEach((item: t.Node) => {
     if (t.isImportDeclaration(item)) {
-      if (item.source.value !== '@dish/ui') {
+      if (
+        item.source.value === '@dish/ui' ||
+        sourceFileName.includes('/ui/src')
+      ) {
         doesImport = true
-        return true
       }
-      item.specifiers = item.specifiers.filter((specifier) => {
-        if (!validComponents[specifier.local.name]) {
-          return true
-        }
-        foundComponents[specifier.local.name] = true
-        return true
-      })
+      if (doesImport) {
+        item.specifiers.forEach((specifier) => {
+          if (validComponents[specifier.local.name]) {
+            doesUseValidImport = true
+          }
+        })
+      }
     }
-    return true
   })
 
   // gloss isn't included anywhere, so let's bail
-  if (!doesImport || !Object.keys(foundComponents).length) {
+  if (!doesImport || !doesUseValidImport) {
     return {
       ast,
       css: '',
@@ -592,8 +593,6 @@ domNode: ${domNode}
         }
 
         const ternaries = extractStaticTernaries(staticTernaries, cacheObject)
-
-        console.log('ternaries', ternaries)
 
         if (ternaries?.length) {
           if (classNamePropValueForReals) {
