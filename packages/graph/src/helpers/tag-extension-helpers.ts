@@ -4,11 +4,9 @@
 import { Tag } from '../types'
 import { slugify } from './slugify'
 
-export type TagWithParent = Tag & {
-  parent: { name: string }
-}
+export type TagWithParent = Tag & { parent: Tag }
 
-export const tagSlug = (tag: Pick<Tag, 'name'>) => {
+export const tagSlug = (tag: Tag) => {
   if (!tag.name) {
     throw new Error(`No tag name on tag: ${JSON.stringify(tag)}`)
   }
@@ -16,19 +14,20 @@ export const tagSlug = (tag: Pick<Tag, 'name'>) => {
 }
 
 export const tagSlugDisambiguated = (tag: TagWithParent) => {
-  if (!tag.parent) {
-    throw new Error(`Needs parent`)
+  if (!tag.parent?.name) {
+    throw new Error(`Tag needs parent with name`)
   }
   return `${slugify(tagSlug(tag.parent))}__${tagSlug(tag)}`
 }
 
-export const tagSlugs = (tag: TagWithParent) => {
+export const tagSlugs = (tag: Tag) => {
   let parentage: string[] = []
   if (!tagIsOrphan(tag)) {
-    if (!tag.parent?.name) {
-      throw new Error(`Needs parent with name`)
-    }
-    parentage = [tagSlug(tag.parent), tagSlugDisambiguated(tag)]
+    const tag_with_parent = tag as TagWithParent
+    parentage = [
+      tagSlug(tag_with_parent.parent),
+      tagSlugDisambiguated(tag_with_parent),
+    ]
   }
   const category_names = (tag.categories || []).map((cat) => {
     if (typeof cat.category?.name !== 'string') {
@@ -40,8 +39,9 @@ export const tagSlugs = (tag: TagWithParent) => {
   return [...new Set(all)]
 }
 
-export const tagIsOrphan = (tag: TagWithParent) => {
-  return tag.parent.id == '00000000-0000-0000-0000-000000000000'
+export const tagIsOrphan = (tag: Tag) => {
+  if (!tag.parent) return true
+  return tag.parent?.id == '00000000-0000-0000-0000-000000000000'
 }
 
 export function getTagNameWithIcon(tag: Tag) {

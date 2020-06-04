@@ -197,8 +197,10 @@ async function restaurantUpdateTagNames(restaurant: RestaurantWithId) {
     const tag_names: string[] = [
       ...new Set(
         tags
-          .map(keepTagsWithParent)
-          .map((tag) => tagSlugs(tag))
+          .map((rt: RestaurantTag) => {
+            // @natew do you know why this has to be manually cast to a Tag?
+            return tagSlugs(rt.tag as Tag)
+          })
           .flat()
       ),
     ]
@@ -210,6 +212,7 @@ async function restaurantUpdateTagNames(restaurant: RestaurantWithId) {
   }
 }
 
+// TODO: @natew did you make this? I don't remember why we use it?
 const keepTagsWithParent = (tag: RestaurantTag) => {
   if (!tag.tag?.parent?.name) {
     throw new Error(`No parent`)
