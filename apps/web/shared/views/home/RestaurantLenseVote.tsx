@@ -9,7 +9,7 @@ export const RestaurantLenseVote = () => {
     <HoverablePopover
       allowHoverOnContent
       contents={
-        <Box>
+        <Box pointerEvents="auto">
           <HomeLenseBarOnly activeTagIds={{}} />
         </Box>
       }
