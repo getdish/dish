@@ -780,7 +780,6 @@ const runSearch: AsyncAction<{
 
   // update denormalized dictionary
   const { allRestaurants } = om.state.home
-  console.log('restaurants', restaurants)
   for (const restaurant of restaurants) {
     const existing = allRestaurants[restaurant.id]
     if (!existing || existing.updated_at !== restaurant.updated_at) {
