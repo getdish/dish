@@ -283,8 +283,8 @@ export function restaurantPhotosForCarousel({
     const is_searched_for_tag = tag_names?.includes(t.tag.name.toLowerCase())
     let [photo] = t.photos() ?? []
     let is_fallback_image = false
-    if (!photo && t.tag.default_images?.length) {
-      photo = t.tag.default_images[0]
+    if (!photo) {
+      photo = t.tag.default_images()?.[0]
       is_fallback_image = true
     }
     if (!photo && !is_searched_for_tag) {
