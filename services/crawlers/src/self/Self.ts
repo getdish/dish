@@ -1,5 +1,6 @@
 import '@dish/common'
 
+import { sentryException } from '@dish/common'
 import {
   RESTAURANT_WEIGHTS,
   RestaurantTag,
@@ -98,29 +99,52 @@ export class Self extends WorkerJob {
       this.restaurant = restaurant as RestaurantWithId
       console.log('Merging: ' + this.restaurant.name)
       await this.getScrapeData()
-      await this.mergeMainData()
-      await this.mergeTags()
-      await this.findPhotosForTags()
-      await this.scanReviews()
-      await this.upsertUberDishes()
+      const async_steps = [
+        this.mergeMainData,
+        this.mergeTags,
+        this.findPhotosForTags,
+        this.scanReviews,
+        this.upsertUberDishes,
+      ]
+      for (const async_func of async_steps) {
+        await this._runFailableFunction(async_func)
+      }
       console.log(`Merged: ${this.restaurant.name} in ${this.elapsedTime()}s`)
     }
     return this.restaurant
   }
 
   async mergeMainData() {
-    this.mergeName()
-    this.mergeTelephone()
-    this.mergeAddress()
-    this.mergeRatings()
-    this.mergeImage()
-    this.mergePhotos()
-    this.addWebsite()
-    this.addSources()
-    this.addPriceRange()
-    this.addHours()
-    this.getRatingFactors()
+    ;[
+      this.mergeName,
+      this.mergeTelephone,
+      this.mergeAddress,
+      this.mergeRatings,
+      this.mergeImage,
+      this.mergePhotos,
+      this.addWebsite,
+      this.addSources,
+      this.addPriceRange,
+      this.addHours,
+      this.getRatingFactors,
+    ].forEach((func) => this._runFailableFunction(func))
     await this.persist()
+  }
+
+  async _runFailableFunction(func: Function) {
+    try {
+      if (func.constructor.name == 'AsyncFunction') {
+        await func.bind(this)()
+      } else {
+        func.bind(this)()
+      }
+    } catch (e) {
+      sentryException(
+        e,
+        { function: func.name, restaurant: this.restaurant.name },
+        { source: 'Self crawler' }
+      )
+    }
   }
 
   async persist() {
