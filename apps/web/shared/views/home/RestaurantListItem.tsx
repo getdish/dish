@@ -325,7 +325,7 @@ export const RestaurantPeek = memo(
     const tag_names = Object.keys(searchState?.activeTagIds || {})
     const spacing = size == 'lg' ? 12 : 18
     const isMedium = useMediaQueryIsMedium()
-    const allPhotos = restaurantPhotosForCarousel(restaurant, tag_names)
+    const allPhotos = restaurantPhotosForCarousel({ restaurant, tag_names })
     const photos = allPhotos.slice(0, 5)
 
     return (

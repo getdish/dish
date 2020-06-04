@@ -187,7 +187,7 @@ const RestaurantPhotos = memo(
         },
       },
     })
-    const photos = restaurantPhotosForCarousel(restaurant)
+    const photos = restaurantPhotosForCarousel({ restaurant })
     const drawerWidth = useHomeDrawerWidthInner()
     const spacing = 20
 

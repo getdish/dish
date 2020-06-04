@@ -8,7 +8,7 @@ import React from 'react'
 // import { ViewStyle } from 'react-native'
 import webpack from 'webpack'
 
-import { GlossWebpackPlugin, getStylesAtomic } from '../src'
+import { UIStaticWebpackPlugin, getStylesAtomic } from '../src'
 
 const mode = 'production'
 process.env.NODE_ENV = 'test'
@@ -245,7 +245,7 @@ async function extractStaticApp() {
       ],
     },
     plugins: [
-      new GlossWebpackPlugin(),
+      new UIStaticWebpackPlugin(),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         'process.env.DEBUG': JSON.stringify(process.env.DEBUG),

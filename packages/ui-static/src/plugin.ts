@@ -20,7 +20,7 @@ declare module 'webpack' {
   }
 }
 
-export class GlossWebpackPlugin implements Plugin {
+export class UIStaticWebpackPlugin implements Plugin {
   constructor() {
     this.memoryFS = new MemoryFileSystem()
 

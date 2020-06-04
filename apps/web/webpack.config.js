@@ -9,7 +9,7 @@ const LodashPlugin = require('lodash-webpack-plugin')
 // const ClosurePlugin = require('closure-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 // const ReactRefreshPlugin = require('@webhotelier/webpack-fast-refresh')
-const { GlossWebpackPlugin } = require('@dish/ui-static')
+const { UIStaticWebpackPlugin } = require('@dish/ui-static')
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 
@@ -24,7 +24,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 const isClient = TARGET === 'client'
 const isSSR = TARGET === 'ssr'
 const isHot = !isProduction
-const isStaticExtracted = true || ((isClient || isSSR) && isProduction)
+const isStaticExtracted = false && (isClient || isSSR) && isProduction
 
 console.log('webpack.config', { isProduction, graphRoot, TARGET })
 
@@ -171,7 +171,7 @@ module.exports = function getWebpackConfig(
         isProduction && new LodashPlugin(),
 
         // extract static styles in production
-        isStaticExtracted && new GlossWebpackPlugin(),
+        isStaticExtracted && new UIStaticWebpackPlugin(),
 
         new Webpack.DefinePlugin({
           // ...(target === 'web' || target === 'webworker'

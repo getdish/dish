@@ -19,7 +19,7 @@ import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { getRankingColor, getRestaurantRating } from './RestaurantRatingView'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
-const mapMaxWidth = pageWidthMax * 0.7
+const mapMaxWidth = pageWidthMax * 1
 
 export const HomeMap = memo(function HomeMap() {
   const [isLoaded, setIsLoaded] = useState(false)

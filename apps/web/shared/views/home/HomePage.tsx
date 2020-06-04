@@ -60,7 +60,7 @@ export default memo(function HomePage() {
         <HomeSearchBar />
 
         {/* overlay map subtle */}
-        <ZStack
+        {/* <ZStack
           fullscreen
           bottom="auto"
           height={100}
@@ -71,7 +71,7 @@ export default memo(function HomePage() {
             colors={['rgba(255,255,255,0.1)', 'rgba(255,255,255,0)']}
             style={StyleSheet.absoluteFill}
           />
-        </ZStack>
+        </ZStack> */}
 
         <HomeViewDrawer>
           <HomeStackView>
@@ -80,16 +80,16 @@ export default memo(function HomePage() {
                 <CurrentStateID.Provider value={homeState.id}>
                   <Suspense fallback={null}>
                     {isHomeState(homeState) && (
-                      <HomePageTopDishes stateIndex={index} />
+                      <HomePageTopDishes key={0} stateIndex={index} />
                     )}
                     {isUserState(homeState) && (
-                      <HomePageUser stateIndex={index} />
+                      <HomePageUser key={1} stateIndex={index} />
                     )}
                     {isSearchState(homeState) && (
-                      <HomePageSearchResults stateIndex={index} />
+                      <HomePageSearchResults key={2} stateIndex={index} />
                     )}
                     {isRestaurantState(homeState) && (
-                      <HomePageRestaurant stateIndex={index} />
+                      <HomePageRestaurant key={3} stateIndex={index} />
                     )}
                   </Suspense>
                 </CurrentStateID.Provider>

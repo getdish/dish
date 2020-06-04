@@ -61,39 +61,44 @@ export function HomeViewDrawer(props: { children: any }) {
       bottom={0}
       zIndex={10}
       width={drawerWidth + drawerPadLeft}
-      // minWidth="50%"
       shadowColor="rgba(0,0,0,0.1)"
       shadowRadius={44}
       borderRightWidth={1}
       borderBottomRightRadius={drawerBorderRadius * 1.5}
       borderTopRightRadius={drawerBorderRadius * 1.5}
-      // overflow="hidden"
       borderColor="#ddd"
       flex={1}
       justifyContent="flex-end"
       {...(isSmall && positionSmall)}
     >
       {/* background */}
-      <ZStack fullscreen>
-        <ZStack
-          fullscreen
-          borderBottomRightRadius={drawerBorderRadius * 0.5}
-          borderTopRightRadius={drawerBorderRadius * 0.5}
-          overflow="hidden"
-        >
-          <LinearGradient
-            colors={isSmall ? colorsSmall : colors}
-            style={[StyleSheet.absoluteFill]}
-          />
-          <ZStack key={1} fullscreen right={200}>
+      <ZStack
+        fullscreen
+        borderBottomRightRadius={drawerBorderRadius * 0.5}
+        borderTopRightRadius={drawerBorderRadius * 0.5}
+        overflow="hidden"
+      >
+        <LinearGradient
+          colors={[
+            'white',
+            'white',
+            'white',
+            'white',
+            'white',
+            'rgba(255,255,255,0.5)',
+          ]}
+          style={[StyleSheet.absoluteFill]}
+          startPoint={[0, 0]}
+          endPoint={[1, 0]}
+        />
+        {/* <ZStack key={1} fullscreen right={200}>
             <LinearGradient
               colors={['white', 'white', 'rgba(255,255,255,0)']}
               style={[StyleSheet.absoluteFill]}
               startPoint={[0, 0]}
               endPoint={[1, 0]}
             />
-          </ZStack>
-        </ZStack>
+          </ZStack> */}
       </ZStack>
 
       {/* overlay / under searchbar */}
