@@ -68,7 +68,7 @@ const HomePageTopDishes = ({ stateIndex }: TopDishesProps) => {
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
       <VStack position="relative" flex={1} overflow="hidden">
         <HomeScrollView>
-          <VStack paddingTop={80} paddingBottom={34} spacing="xl">
+          <VStack paddingTop={34} paddingBottom={34} spacing="xl">
             {/* TRENDING */}
             {/* <HomeViewTopDishesTrending /> */}
 
@@ -98,6 +98,7 @@ const HomePageTopDishes = ({ stateIndex }: TopDishesProps) => {
                     width="36%"
                     zIndex={1000}
                     justifyContent="center"
+                    alignItems="center"
                   >
                     <LinkButton
                       paddingVertical={5}

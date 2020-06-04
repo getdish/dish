@@ -127,7 +127,7 @@ export function LinkButton<
     restProps = rest
     contents = (
       <Text
-        numberOfLines={ellipse ? 1 : undefined}
+        ellipse={ellipse}
         fontSize={fontSize}
         lineHeight={lineHeight}
         fontWeight={fontWeight}
