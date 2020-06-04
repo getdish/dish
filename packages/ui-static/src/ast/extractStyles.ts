@@ -463,8 +463,10 @@ export function extractStyles(
                 test: value.test,
               })
               return false
-            } catch {
-              //
+            } catch (err) {
+              if (shouldPrintDebug) {
+                console.log('couldnt statically evaluate', err)
+              }
             }
           }
 
@@ -479,8 +481,10 @@ export function extractStyles(
                   test: value.left,
                 })
                 return false
-              } catch {
-                //
+              } catch (err) {
+                if (shouldPrintDebug) {
+                  console.log('couldnt statically evaluate', err)
+                }
               }
             }
           }
@@ -592,6 +596,9 @@ domNode: ${domNode}
         }
 
         const ternaries = extractStaticTernaries(staticTernaries, cacheObject)
+        if (shouldPrintDebug) {
+          console.log(JSON.stringify({ staticTernaries, ternaries }, null, 2))
+        }
 
         if (ternaries?.length) {
           if (classNamePropValueForReals) {

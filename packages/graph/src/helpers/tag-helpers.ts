@@ -2,7 +2,7 @@ import { query, tag_constraint } from '../graphql'
 import { Tag, TagTag, TagWithId } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
-import { tagTagUpsert } from './tag_tag'
+import { tagTagUpsert } from './tag_tag-helpers'
 
 const QueryHelpers = createQueryHelpersFor<Tag>(
   'tag',
