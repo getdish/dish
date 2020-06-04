@@ -30,6 +30,8 @@ curl -L https://github.com/hasura/graphql-engine/raw/master/cli/get.sh | bash
 hasura migrate apply --endpoint https://hasura.rio.dishapp.com --admin-secret "$HASURA_ADMIN"
 popd
 
+./k8s/etc/docker_registry_gc.sh
+
 echo "Pushing new docker images to production registry..."
 DISH_REGISTRY_PASSWORD=$(\
   grep 'DOCKER_REGISTRY_PASSWORD:' env.enc.production.yaml \

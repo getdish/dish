@@ -26,6 +26,8 @@ sleep 5
 ./test/testcafe.sh
 popd
 
+./k8s/etc/docker_registry_gc.sh
+
 DISH_REGISTRY_PASSWORD=$(\
   grep 'DOCKER_REGISTRY_PASSWORD:' env.enc.production.yaml \
   | tail -n1 | cut -c 27- | tr -d '"'\
