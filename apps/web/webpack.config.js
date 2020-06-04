@@ -21,10 +21,10 @@ const appEntry = path.resolve(path.join(__dirname, 'web', 'index.web.tsx'))
 const graphRoot = path.join(require.resolve('@dish/graph'), '..', '..', '..')
 
 const isProduction = process.env.NODE_ENV === 'production'
-const isClient = TARGET === 'client'
-const isSSR = TARGET === 'ssr'
-const isHot = !isProduction
-const isStaticExtracted = true || ((isClient || isSSR) && isProduction)
+// const isClient = TARGET === 'client'
+// const isSSR = TARGET === 'ssr'
+// const isHot = !isProduction
+const isStaticExtracted = !process.env.DISABLE_STATIC_EXTRACT
 
 console.log('webpack.config', { isProduction, graphRoot, TARGET })
 

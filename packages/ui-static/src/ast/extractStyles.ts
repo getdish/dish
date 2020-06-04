@@ -1,5 +1,5 @@
 import path from 'path'
-import util from 'util'
+import util, { isUndefined } from 'util'
 import vm from 'vm'
 
 import generate from '@babel/generator'
@@ -452,41 +452,96 @@ export function extractStyles(
             }
           }
 
-          // if both sides of the ternary can be evaluated, extract them
-          if (t.isConditionalExpression(value)) {
-            try {
-              const aVal = attemptEval(value.alternate)
-              const cVal = attemptEval(value.consequent)
-              staticTernaries.push({
-                alternate: { [name]: aVal },
-                consequent: { [name]: cVal },
-                test: value.test,
-              })
-              return false
-            } catch (err) {
-              if (shouldPrintDebug) {
-                console.log('couldnt statically evaluate', err)
+          // ternaries!
+
+          // binary ternary, we can eventually make this smarter but step 1
+          // basically for the common use case of:
+          // opacity={(conditional ? 0 : 1) * scale}
+          if (t.isBinaryExpression(value)) {
+            const { operator, left, right } = value
+            // if one side is a ternary, and the other side is evaluatable, we can maybe extract
+            const lVal = attemptEvalSafe(left)
+            const rVal = attemptEvalSafe(right)
+            if (lVal != null && t.isConditionalExpression(right)) {
+              if (addBinaryConditional(operator, left, right)) {
+                return false
+              }
+            }
+            if (rVal != null && t.isConditionalExpression(left)) {
+              if (addBinaryConditional(operator, right, left)) {
+                return false
               }
             }
           }
 
-          // convert a simple logical expression to a ternary with a null alternate
-          if (t.isLogicalExpression(value)) {
-            if (value.operator === '&&') {
+          function addBinaryConditional(
+            operator: any,
+            staticExpr: any,
+            cond: t.ConditionalExpression
+          ) {
+            if (getStaticConditional(cond)) {
+              staticTernaries.push({
+                test: cond.test,
+                alternate: attemptEval(
+                  t.binaryExpression(operator, staticExpr, cond.alternate)
+                ),
+                consequent: attemptEval(
+                  t.binaryExpression(operator, staticExpr, cond.consequent)
+                ),
+              })
+              return true
+            }
+          }
+
+          function getStaticConditional(value: t.Node): Ternary | null {
+            if (t.isConditionalExpression(value)) {
               try {
-                const val = attemptEval(value.right)
-                staticTernaries.push({
-                  alternate: null,
-                  consequent: { [name]: val },
-                  test: value.left,
-                })
-                return false
+                const aVal = attemptEval(value.alternate)
+                const cVal = attemptEval(value.consequent)
+                return {
+                  alternate: { [name]: aVal },
+                  consequent: { [name]: cVal },
+                  test: value.test,
+                }
               } catch (err) {
                 if (shouldPrintDebug) {
-                  console.log('couldnt statically evaluate', err)
+                  console.log('couldnt statically evaluate conditional', err)
                 }
               }
             }
+            return null
+          }
+
+          function getStaticLogical(value: t.Node): Ternary | null {
+            if (t.isLogicalExpression(value)) {
+              if (value.operator === '&&') {
+                try {
+                  const val = attemptEval(value.right)
+                  return {
+                    alternate: null,
+                    consequent: { [name]: val },
+                    test: value.left,
+                  }
+                } catch (err) {
+                  if (shouldPrintDebug) {
+                    console.log('couldnt statically evaluate', err)
+                  }
+                }
+              }
+            }
+            return null
+          }
+
+          const staticConditional = getStaticConditional(value)
+          if (staticConditional) {
+            staticTernaries.push(staticConditional)
+            return false
+          }
+
+          const staticLogical = getStaticLogical(value)
+          if (staticLogical) {
+            staticTernaries.push(staticLogical)
+            return false
           }
 
           if (shouldPrintDebug) {

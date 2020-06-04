@@ -35,18 +35,6 @@ export const LenseButton = memoIsEqualDeep(
 
     const buttonContent = (
       <LinkButton tag={lense}>
-        <ZStack fullscreen top={-9} bottom={-9}>
-          <LinearGradient
-            style={[
-              StyleSheet.absoluteFill,
-              {
-                borderRadius: 1000,
-                opacity: 0.3,
-              },
-            ]}
-            colors={[lenseColorLight, 'white']}
-          />
-        </ZStack>
         <HStack
           alignItems="center"
           justifyContent="center"
