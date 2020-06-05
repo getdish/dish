@@ -66,8 +66,8 @@ export const RatingView = forwardRef(
 
     if (subtle) {
       return (
-        <HStack {...rest}>
-          {emoji}
+        <HStack spacing={2} {...rest}>
+          {/* {emoji} */}
           {number}
         </HStack>
       )

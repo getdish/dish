@@ -134,6 +134,7 @@ export const DishView = memo(
           shadowOffset={{ height: -3, width: 0 }}
         >
           <Box
+            position="relative"
             className="ease-in-out-top"
             backgroundColor="rgba(15,15,15,0.9)"
             paddingVertical={2}

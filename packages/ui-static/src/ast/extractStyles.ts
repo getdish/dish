@@ -233,15 +233,12 @@ export function extractStyles(
 
         const addStylesAtomic = (style: any) => {
           if (!style || !Object.keys(style).length) {
-            return style
+            return []
           }
           const res = getStylesAtomic(style)
           res.forEach((x) => {
             stylesByClassName[x.identifier] = x
           })
-          // if (shouldPrintDebug) {
-          //   console.log('addStylesAtomic', originalNodeName, style, res)
-          // }
           return res
         }
 
@@ -595,6 +592,9 @@ domNode: ${domNode}
           }
           // since were removing down to div, we need to push the default styles onto this classname
           const defaultStyle = component.staticConfig?.defaultStyle ?? {}
+          if (shouldPrintDebug) {
+            console.log({ component, originalNodeName, defaultStyle })
+          }
           viewStyles = {
             ...defaultStyle,
             ...viewStyles,
@@ -656,16 +656,56 @@ domNode: ${domNode}
           console.log(JSON.stringify({ staticTernaries, ternaries }, null, 2))
         }
 
+        function getTernaryExpression(record: TernaryRecord, idx: number) {
+          const consInfo = addStylesAtomic({
+            ...viewStyles,
+            ...record.consequentStyles,
+          })
+          const altInfo = addStylesAtomic({
+            ...viewStyles,
+            ...record.alternateStyles,
+          })
+          if (shouldPrintDebug) console.log('record', record, viewStyles)
+          const cCN = consInfo.map((x) => x.identifier).join(' ')
+          const aCN = altInfo.map((x) => x.identifier).join(' ')
+          if (consInfo.length && altInfo.length) {
+            if (idx > 0) {
+              // if it's not the first ternary, add a leading space
+              return t.binaryExpression(
+                '+',
+                t.stringLiteral(' '),
+                t.conditionalExpression(
+                  record.test,
+                  t.stringLiteral(cCN),
+                  t.stringLiteral(aCN)
+                )
+              )
+            } else {
+              return t.conditionalExpression(
+                record.test,
+                t.stringLiteral(cCN),
+                t.stringLiteral(aCN)
+              )
+            }
+          } else {
+            // if only one className is present, put the padding space inside the ternary
+            return t.conditionalExpression(
+              record.test,
+              t.stringLiteral((idx > 0 && cCN ? ' ' : '') + cCN),
+              t.stringLiteral((idx > 0 && aCN ? ' ' : '') + aCN)
+            )
+          }
+        }
+
         if (ternaries?.length) {
+          const ternaryExprs = ternaries.map(getTernaryExpression)
+          if (shouldPrintDebug) {
+            console.log('ternaryExprs', ternaryExprs)
+          }
           if (classNamePropValueForReals) {
             classNamePropValueForReals = t.binaryExpression(
               '+',
-              buildClassNamePropValue(
-                ternaries.map((x, i) =>
-                  // stupid mutating fn
-                  getTernaryExpression(viewStyles, addStylesAtomic, x, i)
-                )
-              ),
+              buildClassNamePropValue(ternaryExprs),
               t.binaryExpression(
                 '+',
                 t.stringLiteral(' '),
@@ -673,13 +713,8 @@ domNode: ${domNode}
               )
             )
           } else {
-            // but if no spread/className prop, we optimize
-            classNamePropValueForReals = buildClassNamePropValue(
-              ternaries.map((x, i) =>
-                // stupid mutating fn
-                getTernaryExpression(viewStyles, addStylesAtomic, x, i)
-              )
-            )
+            // if no spread/className prop, we can optimize all the way
+            classNamePropValueForReals = buildClassNamePropValue(ternaryExprs)
           }
         } else {
           if (classNames.length) {
@@ -931,43 +966,7 @@ function buildClassNamePropValue(classNameObjects: ClassNameObject[]) {
   }, null)
 }
 
-// stupid mutating fn (stylesByClassName)
-function getTernaryExpression(
-  baseViewStyles: ViewStyle,
-  addStylesAtomic: Function,
-  { test, consequentStyles, alternateStyles }: TernaryRecord,
-  idx: number,
-  baseClass?: t.Expression
-) {
-  const consInfo = addStylesAtomic({ ...baseViewStyles, ...consequentStyles })
-  const altInfo = addStylesAtomic({ ...baseViewStyles, ...alternateStyles })
-
-  const cCN = consInfo.map((x) => x.identifier).join(' ')
-  const aCN = altInfo.map((x) => x.identifier).join(' ')
-  const getClassLit = (s: string) => {
-    const lit = t.stringLiteral(s)
-    return baseClass ? t.binaryExpression('+', lit, baseClass) : lit
-  }
-  if (consInfo.length && altInfo.length) {
-    if (idx > 0) {
-      // if it's not the first ternary, add a leading space
-      return t.binaryExpression(
-        '+',
-        t.stringLiteral(' '),
-        t.conditionalExpression(test, getClassLit(cCN), getClassLit(aCN))
-      )
-    } else {
-      return t.conditionalExpression(test, getClassLit(cCN), getClassLit(aCN))
-    }
-  } else {
-    // if only one className is present, put the padding space inside the ternary
-    return t.conditionalExpression(
-      test,
-      getClassLit((idx > 0 && cCN ? ' ' : '') + cCN),
-      getClassLit((idx > 0 && aCN ? ' ' : '') + aCN)
-    )
-  }
-}
+const empty = (x) => !Object.keys(x).length
 
 const attrGetName = (attr) => {
   return 'name' in attr

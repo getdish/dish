@@ -52,20 +52,20 @@ export const RestaurantButton = memo(
         <HStack alignItems="center" spacing={5}>
           {!!trending && (
             <TrendingIcon
-              size={12}
+              size={20}
               color={trending === 'up' ? 'green' : 'red'}
+              style={{
+                marginTop: -4,
+                marginBottom: -4,
+              }}
             />
           )}
           <Text
-            style={
-              {
-                overflow: 'hidden',
-                textWrap: 'no-wrap',
-                whiteSpace: 'pre',
-                textOverflow: 'ellipsis',
-                fontWeight: '500',
-              } as any
-            }
+            overflow="hidden"
+            textWrap="no-wrap"
+            whiteSpace="pre"
+            textOverflow="ellipsis"
+            fontWeight="500"
           >
             {typeof rank === 'number' ? `${rank}. ` : ''}
             {restaurant.name}
