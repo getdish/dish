@@ -9,7 +9,7 @@ import React, {
   useState,
 } from 'react'
 
-import { pageWidthMax, searchBarHeight } from '../../constants'
+import { frameWidthMax, pageWidthMax, searchBarHeight } from '../../constants'
 import { LngLat, setMapView } from '../../state/home'
 import { isRestaurantState, isSearchState } from '../../state/home-helpers'
 import { omStatic, useOvermind } from '../../state/useOvermind'
@@ -28,10 +28,9 @@ export const HomeMap = memo(function HomeMap() {
   )
   const om = useOvermind()
 
-  useOnMount(() => {
-    startMapKit().then(() => {
-      setIsLoaded(true)
-    })
+  useOnMount(async () => {
+    await startMapKit()
+    setIsLoaded(true)
   })
 
   if (isLoaded) {
@@ -131,14 +130,9 @@ const HomeMapContent = memo(function HomeMap({
   const { center, span } = state
 
   const mapPadRight = 6
-  const mapWidth = Math.min(window.innerWidth * 0.7, mapMaxWidth)
-
-  let paddingLeft = drawerWidth
-  if (window.innerWidth > pageWidthMax) {
-    paddingLeft = window.innerWidth - pageWidthMax - mapWidth
-  }
-
-  console.log({ paddingLeft, mapWidth, drawerWidth, pageWidthMax })
+  const mapWidth =
+    Math.min(window.innerWidth, frameWidthMax - 20) - drawerWidth + 300
+  let paddingLeft = 300 - 20
 
   const padding = isSmall
     ? {

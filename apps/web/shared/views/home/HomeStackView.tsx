@@ -69,15 +69,16 @@ function HomeStackViewItem({
   isRemoving: boolean
 }) {
   const om = useOvermindStatic()
-  const [isMounted, setIsMounted] = useState(false)
+  // const [isMounted, setIsMounted] = useState(false)
   const isSmall = useMediaQueryIsSmall()
 
-  useEffect(() => {
-    let tm = setTimeout(() => {
-      setIsMounted(true)
-    }, 50)
-    return () => clearTimeout(tm)
-  }, [])
+  // useEffect(() => {
+  //   let tm = setTimeout(() => {
+  //     setIsMounted(true)
+  //   }, 150)
+  //   return () => clearTimeout(tm)
+  // }, [])
+
   const onPress = useMemo(
     () => () => {
       om.actions.home.popTo(item.type)
@@ -90,7 +91,7 @@ function HomeStackViewItem({
 
   return (
     <VStack
-      className={`animate-up ${isMounted && !isRemoving ? 'active' : ''}`}
+      className={`animate-up ${!isRemoving ? 'active' : ''}`}
       position="absolute"
       top={0}
       left={0}
@@ -106,7 +107,6 @@ function HomeStackViewItem({
           onPress={onPress}
         >
           <ZStack
-            // backgroundColor={index === 0 ? 'transparent' : 'white'}
             flex={1}
             zIndex={index}
             top={top}
@@ -120,7 +120,6 @@ function HomeStackViewItem({
             })}
             borderRadius={drawerBorderRadius}
             pointerEvents="auto"
-            // overflow="hidden"
           >
             {children}
           </ZStack>

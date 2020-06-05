@@ -23,6 +23,7 @@ html {
 }
 
 body {
+  background: #000;
   display: flex;
   overflow-y: auto;
   overscroll-behavior-y: none;

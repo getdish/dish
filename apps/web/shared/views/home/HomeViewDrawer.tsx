@@ -9,12 +9,7 @@ import {
 import React from 'react'
 import { StyleSheet } from 'react-native'
 
-import {
-  drawerBorderRadius,
-  drawerPad,
-  drawerPadLeft,
-  drawerWidthMax,
-} from '../../constants'
+import { drawerBorderRadius, drawerPad, drawerWidthMax } from '../../constants'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 const colors = [
@@ -60,7 +55,7 @@ export function HomeViewDrawer(props: { children: any }) {
       top={0}
       bottom={0}
       zIndex={10}
-      width={drawerWidth + drawerPadLeft}
+      width={drawerWidth}
       shadowColor="rgba(0,0,0,0.1)"
       shadowRadius={44}
       borderRightWidth={1}

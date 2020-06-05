@@ -318,12 +318,12 @@ const HomePageSearchResultsDishes = memo(
 //   )
 // }
 
-function ListItem(props) {
-  const [isMounted, setIsMounted] = useState(false)
-  useWaterfall(() => {
-    setIsMounted(true)
-  })
-  return isMounted
-    ? props.children
-    : props.loading ?? <View style={{ height: props.estimatedHeight }} />
-}
+// function ListItem(props) {
+//   const [isMounted, setIsMounted] = useState(false)
+//   useWaterfall(() => {
+//     setIsMounted(true)
+//   })
+//   return isMounted
+//     ? props.children
+//     : props.loading ?? <View style={{ height: props.estimatedHeight }} />
+// }
