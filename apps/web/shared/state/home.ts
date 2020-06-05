@@ -32,9 +32,7 @@ import {
   getTagsFromRoute,
   isSearchBarTag,
   navigateToTag,
-  navigateToTagId,
   syncStateToRoute,
-  toggleTagOnHomeState,
 } from './home-tag-helpers'
 import {
   AutocompleteItem,
@@ -46,6 +44,7 @@ import {
   HomeStateItemRestaurant,
   HomeStateItemSearch,
   HomeStateItemSimple,
+  HomeStateTagNavigable,
   LngLat,
   OmState,
   ShowAutocomplete,
@@ -898,6 +897,8 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
     om.state.home.hoveredRestaurant = null
   }
 
+  console.log('handleRouteChange', { type, name, item })
+
   const promises = new Set<Promise<any>>()
 
   // actions per-route
@@ -914,7 +915,7 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
           promises.add(res.fetchDataPromise)
         }
       } else {
-        popHomeState(om, item)
+        om.actions.home.popHomeState(item)
       }
       break
     }
@@ -1129,11 +1130,22 @@ const setIsScrolling: Action<boolean> = (om, val) => {
   om.state.home.isScrolling = val
 }
 
+const updateActiveTags: AsyncAction<HomeStateTagNavigable> = async (
+  om,
+  next
+) => {
+  const state = _.findLast(om.state.home.states, (x) => x.id === next.id)
+  if (!state) return
+  if ('activeTagIds' in state) {
+    state.activeTagIds = next.activeTagIds
+  }
+  await syncStateToRoute(om, state)
+}
+
 export const actions = {
   setIsScrolling,
   navigateToTag,
   setHasMovedMap,
-  navigateToTagId,
   getNavigateToTags,
   startAutocomplete,
   runHomeSearch,
@@ -1161,7 +1173,8 @@ export const actions = {
   refresh,
   suggestTags,
   updateBreadcrumbs,
-  toggleTagOnHomeState,
   loadPageSearch,
   loadPageRestaurant,
+  popHomeState,
+  updateActiveTags,
 }

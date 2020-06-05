@@ -259,11 +259,11 @@ const routeListen: Action<{
     }
 
     if (!ignoreNextRoute) {
-      // console.log('page.js routing', {
-      //   url,
-      //   params,
-      //   isGoingBack,
-      // })
+      console.log('page.js routing', {
+        url,
+        params,
+        isGoingBack,
+      })
     }
 
     curSearch = queryString.parse(querystring)

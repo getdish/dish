@@ -75,7 +75,7 @@ export type SearchResults =
 
 export type LngLat = { lng: number; lat: number }
 
-type HomeStateItemBase = {
+export type HomeStateItemBase = {
   searchQuery: string
   center: LngLat
   span: LngLat
@@ -91,6 +91,13 @@ export type HomeStateItem =
   | HomeStateItemRestaurant
   | HomeStateItemUser
   | HomeStateItemGallery
+
+export type HomeStateTagNavigable = {
+  id: HomeStateItem['id']
+  type: HomeStateItem['type']
+  activeTagIds: HomeStateItemSearch['activeTagIds']
+  searchQuery: HomeStateItemSearch['searchQuery']
+}
 
 export type HomeActiveTagIds = { [id: string]: boolean }
 

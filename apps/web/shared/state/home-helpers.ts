@@ -5,6 +5,7 @@ import {
   HomeStateItemRestaurant,
   HomeStateItemSearch,
   HomeStateItemUser,
+  HomeStateTagNavigable,
   OmStateHome,
 } from './home-types'
 
@@ -20,12 +21,10 @@ export const isRestaurantState = (
   x?: HSIJustType
 ): x is HomeStateItemRestaurant => x?.type === 'restaurant'
 
-export const shouldBeOnHome = (
-  home: OmStateHome,
-  state: HomeStateItem = home.states[home.states.length - 1]
-) => {
+export const shouldBeOnHome = (home: OmStateHome, state: HomeStateItem) => {
+  const realState = state ?? home.states[home.states.length - 1]
   return (
     state.searchQuery === '' &&
-    getActiveTags(home, state).every((tag) => !isSearchBarTag(tag))
+    getActiveTags(home, realState).every((tag) => !isSearchBarTag(tag))
   )
 }
