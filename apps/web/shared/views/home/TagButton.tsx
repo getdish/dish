@@ -1,11 +1,17 @@
 import { NonNullObject, Tag, TagType } from '@dish/graph'
-import { HStack, StackProps, Text, TextProps, VStack } from '@dish/ui'
+import {
+  HStack,
+  StackProps,
+  SuperScriptText,
+  Text,
+  TextProps,
+  VStack,
+} from '@dish/ui'
 import _ from 'lodash'
 import React, { memo } from 'react'
 import { ChevronUp, X } from 'react-feather'
 
 import { LinkButton } from '../ui/LinkButton'
-import { SuperScriptText } from './SuperScriptText'
 
 export type TagButtonTagProps = NonNullObject<
   Required<Pick<Tag, 'name' | 'type'>>

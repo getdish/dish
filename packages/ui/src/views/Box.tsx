@@ -1,8 +1,10 @@
 import React from 'react'
+import { ViewStyle } from 'react-native'
 
+import { extendStaticConfig } from '../helpers/extendStaticConfig'
 import { StackProps, VStack } from './Stacks'
 
-const defaultStyle: StackProps = {
+const defaultStyle: ViewStyle = {
   backgroundColor: '#fff',
   paddingVertical: 8,
   paddingHorizontal: 10,
@@ -17,7 +19,6 @@ export function Box(props: StackProps) {
   return <VStack {...defaultStyle} {...props} />
 }
 
-Box.staticConfig = {
-  ...VStack['staticConfig'],
+Box.staticConfig = extendStaticConfig(VStack, {
   defaultStyle,
-}
+})

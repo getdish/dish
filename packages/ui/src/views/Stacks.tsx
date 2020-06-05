@@ -1,8 +1,15 @@
 import _ from 'lodash'
-import React, { forwardRef, useLayoutEffect, useRef, useState } from 'react'
+import React, {
+  StaticLifecycle,
+  forwardRef,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import { View, ViewProps, ViewStyle } from 'react-native'
 
 import { combineRefs } from '../helpers/combineRefs'
+import { StaticConfig } from '../helpers/extendStaticConfig'
 import { getNode } from '../helpers/getNode'
 import { Hoverable } from './Hoverable'
 import { Spacer, Spacing } from './Spacer'
@@ -173,7 +180,9 @@ const createStack = (defaultStyle?: ViewStyle) => {
     },
   }
 
-  return component
+  return component as React.ForwardRefExoticComponent<StackProps> & {
+    staticConfig: StaticConfig
+  }
 }
 
 export const ZStack = createStack({ position: 'absolute' })

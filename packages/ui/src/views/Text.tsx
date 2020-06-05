@@ -9,7 +9,7 @@ export type TextProps = Omit<ReactTextProps, 'style'> &
   TextStyle & {
     ellipse?: boolean
     selectable?: boolean
-    children: any
+    children?: any
   }
 
 export const Text = (allProps: TextProps) => {
@@ -27,7 +27,6 @@ const ellipseStyle = {
   textOverflow: 'ellipsis',
 }
 
-// @ts-ignore
 Text.staticConfig = {
   styleExpansionProps: {
     selectable: selectableStyle,

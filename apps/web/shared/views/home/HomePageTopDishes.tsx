@@ -174,7 +174,7 @@ const CountryTopDishesItem = memo(({ country }: { country: TopCuisine }) => {
 
   const restaurantsList = useMemo(() => {
     return (
-      <VStack flex={1} padding={10} spacing={10} alignItems="flex-start">
+      <VStack flex={1} padding={10} spacing={4} alignItems="flex-start">
         {_.uniqBy(country.top_restaurants, (x) => x.name).map(
           (restaurant, index) => {
             return (

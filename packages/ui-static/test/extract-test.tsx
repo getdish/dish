@@ -106,7 +106,13 @@ test('2. extracts className for complex views but keeps other props', async (t) 
   t.is(box2.type, 'div')
   t.is(
     box2.props.className,
-    'r-backgroundColor-14lw9ot r-borderRadius-1q9bdsx r-boxShadow-qnxskm r-overflow-1udh08x r-paddingHorizontal-utggzx r-paddingVertical-1vvnge1 r-top-15am80v ease-in-out-top'
+    'r-backgroundColor-14lw9ot r-borderRadius-1q9bdsx r-boxShadow-qnxskm r-flexDirection-eqz5dr r-overflow-1udh08x r-paddingHorizontal-utggzx r-paddingVertical-1vvnge1 r-top-15am80v ease-in-out-top'
+  )
+
+  const [_, box2False] = test2.rendererFalse.toTree()!.rendered as any
+  t.is(
+    box2False.props.className,
+    'r-backgroundColor-kemksi r-borderRadius-1q9bdsx r-boxShadow-qnxskm r-flexDirection-eqz5dr r-overflow-1udh08x r-paddingHorizontal-utggzx r-paddingVertical-1vvnge1 r-top-ipm5af ease-in-out-top'
   )
 })
 
@@ -208,7 +214,6 @@ test('11. combines everything', async (t) => {
   const out = render(<Element conditional={false} />)
   const firstChild = out.container.firstChild!
   const classList = [...firstChild['classList']]
-  console.log('classList', classList)
   t.deepEqual(classList, [
     'css-view-1dbjc4n',
     'r-alignItems-1awozwy',

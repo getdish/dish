@@ -31,10 +31,7 @@ export function useAsyncFn<Result = any, Args extends any[] = any[]>(
   initialState: AsyncState<Result> = { loading: false }
 ): AsyncFn<Result, Args> {
   const [state, set] = useState<AsyncState<Result>>(initialState)
-
   const mounted = useRefMounted()
-
-  console.trace('calling me wtf', fn, deps)
 
   const callback = useCallback((...args: Args | []) => {
     set({ loading: true })

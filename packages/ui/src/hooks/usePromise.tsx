@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 
+// maybe just remove and use useAsyncFn?
+
 export function usePromise<A extends () => Promise<any>>(
   fn: A,
   mountArgs: any[] = []
