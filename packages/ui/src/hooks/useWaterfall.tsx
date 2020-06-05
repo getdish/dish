@@ -21,13 +21,19 @@ async function start() {
   if (running) return
   running = true
   while (waterfalls.length) {
-    await sleep(waterfalls.length ? 0 : 40)
-    await requestIdle()
-    await sleep(1)
-    await requestIdle()
-    await sleep(1)
-    await requestIdle()
-    const amt = Math.max(1, Math.round(waterfalls.length * 0.1))
+    let hasIdled = false
+    while (!hasIdled) {
+      let t0 = Date.now()
+      await sleep(1)
+      await requestIdle()
+      const td = Date.now() - t0
+      //  if you want to debug:
+      // console.log('we waited', td)
+      if (td < 16) {
+        hasIdled = true
+      }
+    }
+    const amt = Math.max(1, Math.round(waterfalls.length * 0.2))
     const cur = waterfalls.slice(0, amt)
     waterfalls = waterfalls.slice(amt)
     cur.forEach((x) => x())

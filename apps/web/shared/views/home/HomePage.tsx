@@ -1,8 +1,14 @@
-import { LinearGradient, VStack, ZStack, useDebounceEffect } from '@dish/ui'
+import {
+  LinearGradient,
+  VStack,
+  ZStack,
+  useDebounceEffect,
+  useWaterfall,
+} from '@dish/ui'
 import React, { Suspense, memo, useState } from 'react'
 import { StyleSheet } from 'react-native'
 
-import { isWorker } from '../../constants'
+import { frameWidthMax, isWorker } from '../../constants'
 import {
   isHomeState,
   isRestaurantState,
@@ -23,13 +29,9 @@ export const homePageBorderRadius = 12
 export default memo(function HomePage() {
   const [showPip, setShowPip] = useState(false)
 
-  useDebounceEffect(
-    () => {
-      setShowPip(true)
-    },
-    100,
-    []
-  )
+  useWaterfall(() => {
+    setShowPip(true)
+  })
 
   return (
     <VStack flex={1} alignItems="center">
@@ -37,9 +39,8 @@ export default memo(function HomePage() {
         backgroundColor="#fff"
         width={`calc(100% + ${homePageBorderRadius * 2}px)`}
         height="100%"
-        maxWidth={1880}
+        maxWidth={frameWidthMax}
         borderRadius={homePageBorderRadius}
-        marginVertical={-1}
         shadowColor="rgba(0,0,0,0.05)"
         shadowRadius={50}
         overflow="hidden"
