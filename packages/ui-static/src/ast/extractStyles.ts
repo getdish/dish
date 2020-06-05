@@ -39,6 +39,8 @@ type OptimizableComponent = Function & {
   }
 }
 
+const UNUSED = Symbol()
+
 const validComponents: { [key: string]: OptimizableComponent } = Object.keys(
   AllExports
 )
@@ -175,7 +177,8 @@ export function extractStyles(
 
         // Remember the source component
 
-        const component = validComponents[node.name.name]
+        const component = validComponents[node.name.name]!
+        const { staticConfig } = component
         const originalNodeName = node.name.name
         const isTextView = originalNodeName.endsWith('Text')
         const styleProps = isTextView ? stylePropsText : stylePropsView
@@ -185,7 +188,12 @@ export function extractStyles(
           console.log('node', originalNodeName, domNode)
         }
 
-        const isStaticAttributeName = (name: string) => !!styleProps[name]
+        const isStaticAttributeName = (name: string) => {
+          return (
+            !!styleProps[name] || !!staticConfig?.styleExpansionProps?.[name]
+          )
+        }
+
         const attemptEval = !options.evaluateVars
           ? evaluateAstNode
           : (() => {
@@ -401,8 +409,7 @@ export function extractStyles(
 
           // handle expanded attributes if boolean=true
           if (isBooleanTruthy) {
-            const expandedAttr =
-              component.staticConfig?.styleExpansionProps?.[name]
+            const expandedAttr = staticConfig?.styleExpansionProps?.[name]
             if (expandedAttr) {
               Object.assign(viewStyles, expandedAttr)
               return false
@@ -441,13 +448,24 @@ export function extractStyles(
           }
 
           // if value can be evaluated, extract it and filter it out
+          let styleValue: any = UNUSED
           try {
-            viewStyles[name] = attemptEval(value)
-            return false
+            styleValue = attemptEval(value)
           } catch (err) {
-            if (process.env.DEBUG === '2') {
-              console.log('err evaluating', err)
+            if (shouldPrintDebug) {
+              console.log('err evaluating, could be dynamic:', err.message)
             }
+          }
+
+          // apply style to view, expand if possible
+          if (styleValue !== UNUSED) {
+            const expansionProp = staticConfig?.styleExpansionProps?.[name]
+            if (typeof expansionProp === 'function') {
+              viewStyles[name] = expansionProp(styleValue)
+            } else {
+              viewStyles[name] = styleValue
+            }
+            return false
           }
 
           // ternaries!

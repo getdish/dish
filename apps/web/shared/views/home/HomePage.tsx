@@ -43,8 +43,7 @@ export default memo(function HomePage() {
         shadowColor="rgba(0,0,0,0.05)"
         shadowRadius={50}
         overflow="hidden"
-        // marginHorizontal={-20}
-        // paddingHorizontal={20}
+        position="relative"
       >
         {!isWorker && (
           <ErrorBoundary name="maps">

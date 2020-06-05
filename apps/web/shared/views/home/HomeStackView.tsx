@@ -89,17 +89,14 @@ function HomeStackViewItem({
   const left = isSmall ? -3 : Math.max(0, index) * 7
 
   return (
-    <div
+    <VStack
       className={`animate-up ${isMounted && !isRemoving ? 'active' : ''}`}
-      style={{
-        flex: 1,
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        contain: 'layout',
-      }}
+      position="absolute"
+      top={0}
+      left={0}
+      right={0}
+      bottom={0}
+      contain="layout"
     >
       <ZStack pointerEvents={isActive ? 'none' : 'auto'} fullscreen>
         <TouchableOpacity
@@ -129,6 +126,6 @@ function HomeStackViewItem({
           </ZStack>
         </TouchableOpacity>
       </ZStack>
-    </div>
+    </VStack>
   )
 }

@@ -240,7 +240,7 @@ test('12. ternary multiple on same key', async (t) => {
 
 test('13. text with complex conditional and local vars', async (t) => {
   const { test13 } = t.context
-  console.log('test13', test13.renderer!.toTree())
+  // console.log('test13', test13.renderer!.toTree())
   t.is(1, 1)
 })
 

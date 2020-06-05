@@ -123,7 +123,7 @@ export function HomeViewDrawer(props: { children: any }) {
       >
         <ZStack position="relative" flex={1}>
           <VStack fullscreen flex={1}>
-            <LinearGradient
+            {/* <LinearGradient
               colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
               style={{
                 position: 'absolute',
@@ -132,7 +132,7 @@ export function HomeViewDrawer(props: { children: any }) {
                 left: -800,
                 height: 80,
               }}
-            />
+            /> */}
             {props.children}
           </VStack>
         </ZStack>

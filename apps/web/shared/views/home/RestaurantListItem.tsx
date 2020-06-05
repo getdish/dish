@@ -77,7 +77,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       backgroundColor={isHovered ? '#fff' : '#fff'}
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
-      style={{ contain: 'paint' } as any}
+      contain="paint"
     >
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {/* <Suspense fallback={null}> */}
