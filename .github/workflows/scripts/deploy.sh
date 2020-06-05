@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-./setup_admin.sh
+./.github/workflows/scripts/setup_admin.sh
 
 echo "Deploying production branch to production..."
 HASURA_ADMIN=$(\
