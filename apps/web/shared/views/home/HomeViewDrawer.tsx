@@ -98,6 +98,7 @@ export function HomeViewDrawer(props: { children: any }) {
 
       {/* overlay / under searchbar */}
       <ZStack
+        opacity={isSmall ? 0 : 1}
         pointerEvents="none"
         fullscreen
         zIndex={1000000}

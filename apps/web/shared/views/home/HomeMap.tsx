@@ -141,10 +141,10 @@ const HomeMapContent = memo(function HomeMap({
   const state = om.state.home.currentState
   const { center, span } = state
 
-  const mapPadRight = 6
-  const mapWidth =
-    Math.min(window.innerWidth, frameWidthMax - 20) - drawerWidth + 300
-  let paddingLeft = 300 - 20
+  const mapWidth = isSmall
+    ? window.innerWidth
+    : Math.min(window.innerWidth, frameWidthMax - 20) - drawerWidth + 300
+  let paddingLeft = isSmall ? 0 : 300 - 20
 
   const padding = isSmall
     ? {
@@ -157,7 +157,7 @@ const HomeMapContent = memo(function HomeMap({
         left: paddingLeft,
         top: searchBarHeight + 15 + 15,
         bottom: 0,
-        right: drawerWidth > 600 ? mapPadRight : 0,
+        right: drawerWidth > 600 ? 6 : 0,
       }
 
   const { map, mapProps } = useMap({
