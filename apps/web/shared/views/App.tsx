@@ -21,7 +21,7 @@ export function App({ overmind }: { overmind?: any }) {
               <HomePage />
             </Route>
             <Route name="notFound">
-              <NotFoundPage />
+              <NotFoundPage title="404 Not Found" />
             </Route>
           </RouteSwitch>
 

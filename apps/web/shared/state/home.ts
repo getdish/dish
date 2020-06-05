@@ -249,7 +249,7 @@ const startAutocomplete: AsyncAction = async (om) => {
 
 type PageAction = () => Promise<void>
 
-let isGoingBack = false
+let nextPushIsReallyAPop = false
 
 const pushHomeState: AsyncAction<
   HistoryItem,
@@ -374,6 +374,8 @@ const pushHomeState: AsyncAction<
     }
   }
 
+  console.log('pushHomeState', { item, nextState })
+
   async function runFetchData() {
     if (!fetchData) {
       return
@@ -389,8 +391,8 @@ const pushHomeState: AsyncAction<
   // is going back
   // we are going back to a prev state!
   // hacky for now
-  if (isGoingBack) {
-    isGoingBack = false
+  if (nextPushIsReallyAPop) {
+    nextPushIsReallyAPop = false
     const prev = _.findLast(om.state.home.states, (x) => x.type === item.name)
     if (prev) {
       const prevIndex = om.state.home.states.indexOf(prev)
@@ -486,6 +488,7 @@ const loadPageRestaurant: AsyncAction = async (om) => {
 const loadPageSearch: AsyncAction = async (om) => {
   const state = om.state.home.currentState
   if (state.type !== 'search' && state.type !== 'userSearch') return
+  console.log('loadPageSearch')
   om.actions.home.runSearch({ force: true })
 }
 
@@ -514,8 +517,17 @@ const popTo: Action<HomeStateItem['type'] | number> = (om, item) => {
     type = item
   }
 
+  // we can just use router history directly, no? and go back?
+  const prevPage = om.state.router.prevPage
+  console.log({ type, prevPage })
+  if (prevPage?.name === type && prevPage.type === 'push') {
+    console.log('history matches, testing going back directly')
+    om.actions.router.back()
+    return
+  }
+
   const stateItem = _.findLast(om.state.router.history, (x) => x.name == type)
-  isGoingBack = true
+  nextPushIsReallyAPop = true
   om.actions.router.navigate({
     name: type,
     params: stateItem?.params ?? {},
@@ -530,7 +542,6 @@ const popHomeState: Action<HistoryItem> = (om, item) => {
 }
 
 const loadHomeDishes: AsyncAction = async (om) => {
-  console.log('loading home dishes')
   const all = await getHomeDishes(
     om.state.home.currentState.center.lat,
     om.state.home.currentState.center.lng,
@@ -907,6 +918,10 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
       }
       break
     }
+    default: {
+      console.log('not handled by home', name)
+      return
+    }
   }
 
   om.actions.home.updateBreadcrumbs()
@@ -1058,7 +1073,6 @@ const setHasMovedMap: Action<boolean | void> = (om, val = true) => {
 }
 
 const updateBreadcrumbs: Action = (om) => {
-  homeTimer('updateBreadcrumbs')
   const next = createBreadcrumbs(om.state.home)
   if (!isEqual(next, om.state.home.breadcrumbStates)) {
     om.state.home.breadcrumbStates = next

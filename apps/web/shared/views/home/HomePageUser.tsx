@@ -13,12 +13,11 @@ import { avatar } from './HomePageSearchResults'
 import { StackViewCloseButton } from './StackViewCloseButton'
 
 export default graphql(function HomePageUser({
-  stateIndex,
+  state,
 }: {
-  stateIndex: number
+  state: HomeStateItemUser
 }) {
   const om = useOvermind()
-  const state = om.state.home.states[stateIndex] as HomeStateItemUser
   const username = state?.username ?? ''
   const [user] = query.user({
     where: {

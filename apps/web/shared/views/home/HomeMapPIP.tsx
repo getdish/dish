@@ -46,7 +46,7 @@ function HomeMapPIPContent() {
     () =>
       coordinates &&
       new window.mapkit.Coordinate(coordinates[1], coordinates[0]),
-    coordinates
+    [JSON.stringify(coordinates)]
   )
   const annotation = useMemo(() => {
     if (!coordinate || !restaurant) return null

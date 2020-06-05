@@ -37,17 +37,11 @@ import { StackViewCloseButton } from './StackViewCloseButton'
 export const avatar = require('../../assets/peach.jpg').default
 
 export default memo(function HomePageSearchResults({
-  stateIndex,
+  state,
 }: {
-  stateIndex: number
+  state: HomeStateItemSearch
 }) {
   const om = useOvermind()
-  const state = om.state.home.states[stateIndex] as HomeStateItemSearch
-
-  if (!state) {
-    return <NotFoundPage />
-  }
-
   const isEditingUserList = !!isEditingUserPage(om.state)
   const { title, subTitleElements, pageTitleElements } = getTitleForState(
     om.state,
@@ -88,7 +82,7 @@ export default memo(function HomePageSearchResults({
               <HomeLenseBar
                 spacer={<Spacer size={9} />}
                 relative
-                stateIndex={stateIndex}
+                state={state}
               />
             </VStack>
           </HStack>

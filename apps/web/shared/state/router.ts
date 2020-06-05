@@ -7,6 +7,23 @@ import queryString from 'query-string'
 
 import { race } from '../helpers/race'
 
+export type HistoryItem<A extends RouteName = any> = {
+  id: string
+  name: A
+  path: string
+  type?: 'push' | 'pop'
+  search?: Object
+  params?: RoutesTable[A]['params']
+  replace?: boolean
+}
+
+export type RouterState = {
+  notFound: boolean
+  history: HistoryItem[]
+  prevPage: HistoryItem | undefined
+  curPage: HistoryItem
+}
+
 // we could enable functionality like this
 export type LoadableView = React.SFC & {
   fetchData: (params: HistoryItem) => Promise<any>
@@ -78,23 +95,6 @@ export type NavigateItem<
   search?: Object
   replace?: boolean
   callback?: OnRouteChangeCb
-}
-
-export type HistoryItem<A extends RouteName = any> = {
-  id: string
-  name: A
-  path: string
-  type?: 'push' | 'pop'
-  search?: Object
-  params?: RoutesTable[A]['params']
-  replace?: boolean
-}
-
-export type RouterState = {
-  notFound: boolean
-  history: HistoryItem[]
-  prevPage: HistoryItem | undefined
-  curPage: HistoryItem
 }
 
 let ignoreNextRoute = false
@@ -169,6 +169,7 @@ const navItemToHistoryItem = (navItem: NavigateItem): HistoryItem => {
   return {
     id: uid(),
     ...navItem,
+    type: 'push',
     params,
     path: getPathFromParams({
       name: navItem.name,

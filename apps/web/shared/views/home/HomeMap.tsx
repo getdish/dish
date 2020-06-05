@@ -1,5 +1,6 @@
+import { sleep } from '@dish/async'
 import { Restaurant, graphql, query } from '@dish/graph'
-import { ZStack, useDebounceEffect, useOnMount } from '@dish/ui'
+import { VStack, ZStack, useDebounceEffect, useOnMount } from '@dish/ui'
 import React, {
   Suspense,
   memo,
@@ -20,8 +21,10 @@ import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 const mapMaxWidth = pageWidthMax * 1
 
+type MapLoadState = 'wait' | 'loading' | 'loaded'
+
 export const HomeMap = memo(function HomeMap() {
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [status, setLoadStatus] = useState<MapLoadState>('wait')
   const [restaurants, setRestaurants] = useState<Restaurant[]>([])
   const [restaurantDetail, setRestaurantDetail] = useState<Restaurant | null>(
     null
@@ -30,10 +33,13 @@ export const HomeMap = memo(function HomeMap() {
 
   useOnMount(async () => {
     await startMapKit()
-    setIsLoaded(true)
+    setLoadStatus('loading')
+    // time for map to render more fully, a bit arbitrary
+    await sleep(700)
+    setLoadStatus('loaded')
   })
 
-  if (isLoaded) {
+  if (status !== 'wait') {
     return (
       <>
         <Suspense fallback={null}>
@@ -43,10 +49,16 @@ export const HomeMap = memo(function HomeMap() {
             onLoadedRestaurantDetail={setRestaurantDetail}
           />
         </Suspense>
-        <HomeMapContent
-          restaurantDetail={restaurantDetail}
-          restaurants={restaurants}
-        />
+        <VStack
+          className="ease-in-out-fast"
+          flex={1}
+          opacity={status === 'loading' ? 0 : 1}
+        >
+          <HomeMapContent
+            restaurantDetail={restaurantDetail}
+            restaurants={restaurants}
+          />
+        </VStack>
       </>
     )
   }
@@ -496,8 +508,10 @@ function getRestaurantAnnotations(
 //   )
 // }, [map, focusedRestaurant])
 
+let isLoaded = false
 const loadedCallbacks = new Set<Function>()
 export const onMapLoadedCallback = (cb: Function) => {
+  if (isLoaded) cb()
   loadedCallbacks.add(cb)
 }
 
@@ -518,6 +532,7 @@ async function startMapKit() {
           done(token)
         },
       })
+      isLoaded = true
       loadedCallbacks.forEach((cb) => cb())
       res()
     }

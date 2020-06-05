@@ -27,7 +27,7 @@ import { RestaurantButton } from './RestaurantButton'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 type TopDishesProps = {
-  stateIndex: number
+  state: HomeStateItemHome
 }
 
 export default memo(function HomePageTopDishesContainer(props: TopDishesProps) {
@@ -48,20 +48,22 @@ export default memo(function HomePageTopDishesContainer(props: TopDishesProps) {
   return null
 })
 
-const HomePageTopDishes = ({ stateIndex }: TopDishesProps) => {
+const HomePageTopDishes = ({ state }: TopDishesProps) => {
   const om = useOvermind()
-  const state = om.state.home.states[stateIndex] as HomeStateItemHome
-  if (!state) return <NotFoundPage />
 
-  const { topDishes, topDishesFilteredIndices } = om.state.home
-  let results = topDishes
-  if (topDishesFilteredIndices.length) {
-    results = results.filter(
-      (_, index) => topDishesFilteredIndices.indexOf(index) > -1
-    )
+  if (!state) {
+    return <NotFoundPage title="Home not found" />
   }
-  // for now force at top because its most filled out
-  results = [...results].sort((x) => (x.country === 'Vietnamese' ? -1 : 1))
+
+  const { topDishes } = om.state.home
+  const results = topDishes
+  // if (topDishesFilteredIndices.length) {
+  //   results = results.filter(
+  //     (_, index) => topDishesFilteredIndices.indexOf(index) > -1
+  //   )
+  // }
+  // // for now force at top because its most filled out
+  // results = [...results].sort((x) => (x.country === 'Vietnamese' ? -1 : 1))
 
   return (
     <>
