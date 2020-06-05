@@ -27,9 +27,11 @@ import { StackViewCloseButton } from './StackViewCloseButton'
 import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 
 export default memo(
-  graphql(function HomePageRestaurant({ stateIndex }: { stateIndex: number }) {
-    const om = useOvermind()
-    const state = om.state.home.states[stateIndex] as HomeStateItemRestaurant
+  graphql(function HomePageRestaurant({
+    state,
+  }: {
+    state: HomeStateItemRestaurant
+  }) {
     if (!state) {
       return null
     }

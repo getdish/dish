@@ -6,22 +6,23 @@ import React, { memo } from 'react'
 import { ChevronRight } from 'react-feather'
 import { StyleSheet } from 'react-native'
 
-import { HomeActiveTagIds, HomeStateItemSearch } from '../../state/home'
+import {
+  HomeActiveTagIds,
+  HomeStateItemHome,
+  HomeStateItemSearch,
+} from '../../state/home'
 import { getTagId } from '../../state/Tag'
 import { useOvermind } from '../../state/useOvermind'
 import HomeFilterBar from './HomeFilterBar'
 import { LenseButton, LenseButtonSize } from './LenseButton'
 
 export default memo(function HomeLenseBar(props: {
-  stateIndex: number
+  state: HomeStateItemSearch | HomeStateItemHome
   hideLenses?: boolean
   relative?: boolean
   spacer?: any
 }) {
-  const om = useOvermind()
-  const state = om.state.home.states[props.stateIndex] as HomeStateItemSearch
-  const activeTagIds =
-    state?.activeTagIds ?? om.state.home.lastHomeState.activeTagIds
+  const activeTagIds = props.state.activeTagIds
   const content = (
     <>
       {!props.hideLenses && <HomeLenseBarOnly activeTagIds={activeTagIds} />}

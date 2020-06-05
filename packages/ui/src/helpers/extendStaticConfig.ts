@@ -9,7 +9,9 @@ export type StaticConfig = {
 }
 
 export function extendStaticConfig(a: any, config: StaticConfig) {
-  console.log('extendStaticConfig', a.staticConfig)
+  if (process.env.TARGET === 'client') {
+    return
+  }
   return {
     defaultStyle: {
       ...a.staticConfig.defaultStyle,
