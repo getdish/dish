@@ -1,18 +1,34 @@
-/**
- * Memoize a function that takes a single argument using a weak map.
- * @param fn The function to memoize. Must be an object.
- */
+class MemoCache {
+  map = new Map()
+  weakmap = new WeakMap()
 
-export function memoizeWeak<TArg extends object = object, TResult = unknown>(
-  fn: (key: TArg) => TResult
-) {
-  const cache = new WeakMap<TArg, TResult>()
-  return function cachedFn(arg: TArg) {
-    if (cache.has(arg)) {
-      return cache.get(arg)!
-    }
-    const ret = fn(arg)
-    cache.set(arg, ret)
-    return ret
+  // create or retrieve a nested Cache instance based on an arguments object
+  get(args: any[]) {
+    return args.reduce(MemoCache.reducer, this)
   }
+
+  // get a backing store (map/weakmap) based on a given value
+  store(value: any) {
+    const t = typeof value
+    const isObject = (t === 'object' || t === 'function') && value !== null
+    return Reflect.get(this, isObject ? 'weakmap' : 'map')
+  }
+
+  static reducer(cache: MemoCache, value: any) {
+    const store = cache.store(value)
+    return store.get(value) || store.set(value, new MemoCache()).get(value)
+  }
+}
+
+export function memoize<A extends Function>(fn: A, { ttl = Infinity } = {}): A {
+  const cache = new MemoCache()
+  return function (this: A, ...args: any[]) {
+    // get (or create) a cache item
+    const item = cache.get(args)
+    if (item.hasOwnProperty('value') && item.expires >= Date.now()) {
+      return item.value
+    }
+    item.expires = Date.now() + ttl
+    return (item.value = fn.apply(this, args))
+  } as any
 }

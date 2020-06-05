@@ -3,11 +3,15 @@ import { slugify } from '@dish/graph'
 import { Action, AsyncAction } from 'overmind'
 
 import { LIVE_SEARCH_DOMAIN } from '../constants'
+import { memoize } from '../helpers/memoizeWeak'
 import { isHomeState, isSearchState, shouldBeOnHome } from './home-helpers'
 import {
   HomeActiveTagIds,
   HomeStateItem,
+  HomeStateItemBase,
+  HomeStateItemHome,
   HomeStateItemSearch,
+  HomeStateTagNavigable,
 } from './home-types'
 import { OmState, OmStateHome } from './home-types'
 import { HistoryItem, NavigateItem, SearchRouteParams } from './router'
@@ -24,17 +28,13 @@ export const allTags = allTagsList.reduce((acc, cur) => {
 
 type HomeStateNav = {
   tags: NavigableTag[]
-  state?: HomeStateItem
+  state: HomeStateItem
   disabledIfActive?: boolean
   replace?: boolean
 }
 
 export const navigateToTag: Action<HomeStateNav> = (om, nav) => {
   getNavigateToTags(om, nav)?.onPress?.()
-}
-
-export const navigateToTagId: Action<string> = (om, tagId) => {
-  navigateToTag(om, { tags: [om.state.home.allTags[tagId]] })
 }
 
 export const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
@@ -48,19 +48,19 @@ export const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
 export const isSearchBarTag = (tag: Pick<Tag, 'type'>) =>
   tag?.type === 'country' || tag?.type === 'dish'
 
-export const getActiveTags = (
-  home: OmStateHome,
-  state: HomeStateItem = home.currentState
-) => {
-  const lastState = home.states[home.states.length - 1]
-  const curState = (state ?? lastState) as HomeStateItemSearch
-  const activeTagIds = curState?.activeTagIds ?? {}
-  const tagIds = Object.keys(activeTagIds).filter((x) => activeTagIds[x])
-  const tags: Tag[] = tagIds.map(
-    (x) => home.allTags[x] ?? { id: '-1', name: x, type: 'dish' }
-  )
-  return tags.filter(Boolean)
-}
+export const getActiveTags = memoize(
+  (home: OmStateHome, state: HomeStateItem = home.currentState) => {
+    if ('activeTagIds' in state) {
+      const activeTagIds = state.activeTagIds ?? {}
+      const tagIds = Object.keys(activeTagIds).filter((x) => activeTagIds[x])
+      const tags: Tag[] = tagIds.map(
+        (x) => home.allTags[x] ?? { id: '-1', name: x, type: 'dish' }
+      )
+      return tags.filter(Boolean)
+    }
+    return []
+  }
+)
 
 type LinkButtonProps = NavigateItem & {
   onPress?: Function
@@ -69,61 +69,48 @@ type LinkButtonProps = NavigateItem & {
 // for easy use with Link / LinkButton
 export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps | null> = (
   om,
-  { state = om.state.home.currentState, tags, ...rest }
+  props
 ) => {
-  // remove undefined
-  tags = tags.filter(Boolean)
-  if (!tags.length) {
+  if (!props.tags.length) {
+    console.log('no tags for nav?', props)
     return null
   }
-  const nextState = getNextStateWithTags(om, {
-    tags,
-    state,
-    ...rest,
-  })
+  const nextState = getNextStateWithTags(om, props)
   if (nextState) {
-    const navigateItem = getNavigateItemForState(om.state, nextState)
+    const navigateItem = getNavigateItemForState(om.state, nextState as any)
     return {
       ...navigateItem,
-      onPress: (e) => {
-        e?.preventDefault()
-        e?.stopPropagation()
-        const activeTags = om.state.home.lastActiveTags
-        for (const tag of tags) {
-          const tagId = getTagId(tag)
-          if (
-            rest.disabledIfActive &&
-            activeTags.some((x) => getTagId(x) === tagId)
-          ) {
-            continue
-          }
-          om.actions.home.toggleTagOnHomeState(tag)
-        }
+      onPress() {
+        console.log('nextState', nextState)
+        om.actions.home.updateActiveTags(nextState)
       },
     }
   }
   return null
 }
 
-const getNextStateWithTags: Action<HomeStateNav, HomeStateItem | null> = (
+const getNextStateWithTags: Action<
+  HomeStateNav,
+  HomeStateTagNavigable | null
+> = (
   om,
-  { state, tags, disabledIfActive = false, replace = false }
+  {
+    state = om.state.home.currentState,
+    tags,
+    disabledIfActive = false,
+    replace = false,
+  }
 ) => {
   if (!isHomeState(state) && !isSearchState(state)) {
     return null
   }
-
   let activeTagIds: HomeActiveTagIds = {}
-
   // clone it to avoid confusing overmind
   if (!replace) {
     for (const key in state.activeTagIds) {
-      if (state.activeTagIds[key]) {
-        activeTagIds[key] = true
-      }
+      activeTagIds[key] = state.activeTagIds[key]
     }
   }
-
   for (const tag of tags) {
     const key = getTagId(tag)
     if (activeTagIds[key] === true && !disabledIfActive) {
@@ -134,9 +121,10 @@ const getNextStateWithTags: Action<HomeStateNav, HomeStateItem | null> = (
       ensureUniqueActiveTagIds(activeTagIds, om.state.home, tag)
     }
   }
-
   return {
-    ...state,
+    id: state.id,
+    type: state.type,
+    searchQuery: state.searchQuery,
     activeTagIds,
   }
 }
@@ -227,42 +215,11 @@ export const getTagsFromRoute = (
   return tags
 }
 
-export const toggleTagOnHomeState: AsyncAction<NavigableTag> = async (
+export const syncStateToRoute: AsyncAction<HomeStateItem> = async (
   om,
-  next
+  state
 ) => {
-  const state = om.state.home.currentState
-  if (!next || (!isHomeState(state) && !isSearchState(state))) {
-    return
-  }
-  if (!next) {
-    console.warn('no tag')
-    return
-  }
-  const key = getTagId(next)
-  state.activeTagIds[key] = !state.activeTagIds[key]
-  ensureUniqueActiveTagIds(state.activeTagIds, om.state.home, next)
-  await _afterTagChange(om)
-}
-
-let _htgId = 0
-const _afterTagChange: AsyncAction = async (om) => {
-  if (!om.state.home.started) return
-  _htgId = (_htgId + 1) % Number.MAX_VALUE
-  let cur = _htgId
-  await sleep(50)
-  if (cur != _htgId) return
-  await syncStateToRoute(om)
-  if (cur != _htgId) return
-  om.actions.home.runSearch()
-}
-
-export const syncStateToRoute: AsyncAction<HomeStateItem | void> = async (
-  om,
-  ogState
-) => {
-  const homeState = ogState || om.state.home.currentState
-  const next = getNavigateItemForState(om.state, homeState)
+  const next = getNavigateItemForState(om.state, state)
   if (om.actions.router.getShouldNavigate(next)) {
     om.actions.router.navigate(next)
   }

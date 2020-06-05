@@ -1,10 +1,18 @@
 import './Link.css'
 
-import { StackProps, Text, TextProps, prevent } from '@dish/ui'
+import {
+  StackProps,
+  Text,
+  TextProps,
+  prevent,
+  useDebounceValue,
+  useForceUpdate,
+  useOverlay,
+} from '@dish/ui'
 import _ from 'lodash'
-import React, { useCallback, useContext, useMemo } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo } from 'react'
 
-import { currentStates } from '../../state/home'
+import { HomeStateItem } from '../../state/home'
 import { getNavigateToTags } from '../../state/home-tag-helpers'
 import {
   NavigateItem,
@@ -12,7 +20,7 @@ import {
   getPathFromParams,
 } from '../../state/router'
 import { NavigableTag } from '../../state/Tag'
-import { useOvermindStatic } from '../../state/useOvermind'
+import { useOvermind, useOvermindStatic } from '../../state/useOvermind'
 import { CurrentStateID } from '../home/CurrentStateID'
 import { LinkButtonNamedProps, LinkButtonProps } from './LinkButton'
 
@@ -95,6 +103,7 @@ export function Link<
     href: getPathFromParams(navItem),
     ...restProps,
     onMouseDown: prevent,
+    onMouseEnter: linkProps.onMouseEnter,
     onClick: prevent,
     [fastClick ? 'onMouseDown' : 'onClick']: handler,
     className: `${inline ? 'inline-flex' : ' flex'}`,
@@ -107,7 +116,7 @@ export function Link<
   }
   const content = (
     <Text
-      numberOfLines={ellipse ? 1 : undefined}
+      ellipse={ellipse}
       fontSize={fontSize}
       lineHeight={lineHeight}
       fontWeight={fontWeight}
@@ -147,31 +156,53 @@ export const asyncLinkAction = (cb?: Function) => (e) => {
 const useNormalizedLink = (
   props: Partial<LinkButtonProps>
 ): LinkButtonNamedProps | null => {
+  const forceUpdate = useForceUpdate()
   const currentStateID = useContext(CurrentStateID)
+  const state = window['om'].state.home.states.find(
+    (x) => x.id === currentStateID
+  )!
+  const linkProps = getNormalizedLink(props, state)
+  if (linkProps) {
+    return {
+      ...linkProps,
+      // @ts-ignore
+      onMouseEnter() {
+        forceUpdate()
+      },
+    }
+  }
+  return null
+}
+
+const getNormalizedLink = (
+  props: Partial<LinkButtonProps>,
+  state: HomeStateItem
+) => {
   let tags: NavigableTag[] = []
 
-  if ('tag' in props && !!props.tag) {
+  if ('tags' in props && Array.isArray(props.tags)) {
+    tags = props.tags
+  } else if ('tag' in props && !!props.tag) {
     if (props.tag.name !== 'Search') {
       tags.push(props.tag)
     }
   }
-  if ('tags' in props && Array.isArray(props.tags)) {
-    tags = props.tags
-  }
 
   if (tags.length) {
-    const state = currentStates.find((x) => x.id === currentStateID)
     const tagProps = getNavigateToTags(window['om'], {
       state,
       tags,
       disabledIfActive: props.disabledIfActive,
     })
+    const hasOnPress = !!(tagProps?.onPress ?? props.onPress)
     return {
       ...tagProps,
       name: tagProps?.name,
-      onPress: asyncLinkAction((e) => {
-        tagProps?.onPress?.(e)
-        props.onPress?.(e)
+      ...(hasOnPress && {
+        onPress: asyncLinkAction((e) => {
+          tagProps?.onPress?.(e)
+          props.onPress?.(e)
+        }),
       }),
     }
   }
