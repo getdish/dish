@@ -134,8 +134,8 @@ const HomeMapContent = memo(function HomeMap({
   const mapWidth = Math.min(window.innerWidth * 0.7, mapMaxWidth)
 
   let paddingLeft = drawerWidth
-  if (window.innerWidth > mapMaxWidth) {
-    paddingLeft = window.innerWidth - mapWidth
+  if (window.innerWidth > pageWidthMax) {
+    paddingLeft = window.innerWidth - pageWidthMax - mapWidth
   }
 
   console.log({ paddingLeft, mapWidth, drawerWidth, pageWidthMax })

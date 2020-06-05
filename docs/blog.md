@@ -1,15 +1,3 @@
-Starting on some blog post ideas in the repo (before was just in collected notes).
-
-Some pitches that resonate:
-
----
-
-Show HN: Search across every food delivery service with aggregated rankings
-
-Show HN: Frustrated with Yelp and food delivery, we built a unified search with ratings that actually work.
-
-Show HN: Food search, fixed
-
 ---
 
 A middle-ground for food delivery
@@ -28,13 +16,13 @@ Here's how we think it can work:
 
 1. Let restaurants control their delivery constraints
 
-Many owners told us something like this: we'd happily start doing in-house delivery, but it's tricky to get right. If we had a lot more control over *availaibility*, we could make it work.
+Many owners told us something like this: we'd happily start doing in-house delivery, but it's tricky to get right. If we had a lot more control over _availaibility_, we could make it work.
 
 In practice: Dish lets restaurants set delivery windows, turning on and off their delivery availability as they please. They can have pre-order conditions, or next-day delivery. They can set more restrictive minimum orders.
 
 2. Help restaurants build their delivery staff
 
-A common piece of feedback was that many restaurants are *already looking to do their own delivery*, but it wasn't easy to figure out.
+A common piece of feedback was that many restaurants are _already looking to do their own delivery_, but it wasn't easy to figure out.
 
 So, we set out to find out the best practice - and [wrote a master guide on how to hire, manage, and master setting up in-house delivery for restaurants]().
 
@@ -59,7 +47,7 @@ Restaurants get total control, [guides]() that help them set up delivery, and mo
 
 ---
 
-Dish is a food search engine. We started it because we were frustrated with how difficult it was to go through the *whole flow* of desiring something to actually finding it.
+Dish is a food search engine. We started it because we were frustrated with how difficult it was to go through the _whole flow_ of desiring something to actually finding it.
 
 A typical, frustrating flow I was encountering in the months after shutting down my last company: crave some Pho. Search for Pho on Uber Eats. Find a couple restaurants. Yelp those restaurants (spend 5 minutes on each one, scrolling through reviews to see if its the service or the ambiance that caused mediocre ratings). Eventually just search Yelp for Pho, find the best looking places. Then go back into Postmates, Caviar, and GrubHub and search for those restaurants. Usually a few steps involved finding the actual restaurant, but then seeing that the delivery price was too high, so restarting the search again. Usually, the search would end early. I'd find some place that was good enough and stick with it. If it was closed? Well, back to step 1.
 
@@ -103,7 +91,3 @@ Finally - it should have some features that are missing from one or all other fo
 - Diet filters that make sense for food: vegan, keto, raw, etc
 - Rate/snap a dish with a tap. Automatically builds your map.
 - Great images - we want to find the "ideal" image based on your search, so if you seek a Burger you can really easily compare the burgers at a glance
-
-
-
-

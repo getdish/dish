@@ -31,7 +31,9 @@ export type StackProps = Omit<
       onHoverOut?: Function
       spacing?: Spacing
       className?: string
-      disabled?: boolean // stronger pointer-events: none;
+      // stronger version of pointer-events: none;
+      disabled?: boolean
+      contain?: 'none' | 'strict' | 'content' | 'size' | 'layout' | 'paint'
     },
   // because who tf uses alignContent or backfaceVisibility
   'alignContent' | 'backfaceVisibility'
@@ -177,6 +179,9 @@ const createStack = (defaultStyle?: ViewStyle) => {
     defaultStyle,
     styleExpansionProps: {
       fullscreen: fsStyle,
+      contain: (val) => ({
+        contain: val,
+      }),
     },
   }
 
