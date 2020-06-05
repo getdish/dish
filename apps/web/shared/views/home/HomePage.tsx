@@ -78,7 +78,6 @@ export default memo(function HomePage() {
           <HomeViewDrawer>
             <HomeStackView>
               {(homeState, isActive, index) => {
-                console.log('rendering stack item', index, homeState)
                 return (
                   <CurrentStateID.Provider value={homeState.id}>
                     <Suspense fallback={null}>

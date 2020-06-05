@@ -28,7 +28,7 @@ export const allTags = allTagsList.reduce((acc, cur) => {
 
 type HomeStateNav = {
   tags: NavigableTag[]
-  state: HomeStateItem
+  state?: HomeStateItem
   disabledIfActive?: boolean
   replace?: boolean
 }
@@ -81,7 +81,6 @@ export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps | null> = (
     return {
       ...navigateItem,
       onPress() {
-        console.log('nextState', nextState)
         om.actions.home.updateActiveTags(nextState)
       },
     }

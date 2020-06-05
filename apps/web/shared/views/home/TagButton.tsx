@@ -74,7 +74,7 @@ export const TagButton = memo(
     }
     const tag = { name, type: type as TagType, icon, rgb }
     const scale = size === 'sm' ? 0.85 : size == 'lg' ? 1.05 : 1
-    const paddingVertical = (subtle ? 0 : 6) * scale
+    const paddingVertical = (subtle ? 0 : 5) * scale
     const lineHeight = 22 * scale
     const defaultColor = noColor ? 'inherit' : getTagColor(rgb)
     const bg = backgroundColor ?? (subtle ? defaultColor : 'white')
@@ -104,7 +104,7 @@ export const TagButton = memo(
               fontWeight="bold"
               margin="auto"
               marginVertical="-2%"
-              paddingHorizontal={7 * scale}
+              paddingHorizontal={6 * scale}
               backgroundColor={
                 subtle ? 'transparent' : 'rgba(255,255,255,0.99)'
               }
@@ -128,7 +128,7 @@ export const TagButton = memo(
             // @ts-ignore
             lineHeight="inherit"
             paddingVertical={paddingVertical}
-            paddingHorizontal={subtle ? 0 : 8 * scale}
+            paddingHorizontal={subtle ? 0 : 7 * scale}
             color={fg}
             marginVertical={-7}
             overflow="hidden"
@@ -163,7 +163,7 @@ export const TagButton = memo(
               // borderLeftWidth={1}
             >
               <LinkButton
-                paddingHorizontal={6 * scale}
+                paddingHorizontal={5 * scale}
                 alignItems="center"
                 justifyContent="center"
                 {...(subtle && {

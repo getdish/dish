@@ -12,7 +12,7 @@ import {
   useOnMount,
 } from '@dish/ui'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
-import { ChevronLeft, Loader, Navigation, Search } from 'react-feather'
+import { ChevronLeft, Loader, MapPin, Navigation, Search } from 'react-feather'
 import { StyleSheet, TextInput, TouchableOpacity } from 'react-native'
 
 import {
@@ -30,6 +30,7 @@ import { DishLogoButton } from './DishLogoButton'
 import HomeAutocomplete from './HomeAutocomplete'
 import { HomeAutocompleteBackground } from './HomeAutocompleteBackground'
 import { HomeUserMenu } from './HomeUserMenu'
+import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { TagButton } from './TagButton'
 
 const borderRadius = 16
@@ -68,6 +69,8 @@ export const getInputNode = (instance: any): HTMLInputElement | null => {
 }
 
 export default memo(function HomeSearchBar() {
+  const [showLocation, setShowLocation] = useState(false)
+  const isSmall = useMediaQueryIsSmall()
   const om = useOvermind()
   const inputRef = useRef<any>()
   const locationInputRef = useRef<any>()
@@ -267,6 +270,103 @@ export default memo(function HomeSearchBar() {
 
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
 
+  const locationSearchElement = (
+    <VStack position="relative" flex={35} maxWidth={350} minWidth={180}>
+      <TextInput
+        ref={locationInputRef}
+        value={locationSearch}
+        placeholder="San Francisco"
+        style={[styles.textInput, { paddingRight: 32, fontSize: 16 }]}
+        onFocus={() => {
+          onFocusAnyInput()
+          clearTimeout(tmInputBlur.current)
+          om.actions.home.setShowAutocomplete('location')
+          if (locationSearch.length > 0) {
+            selectActiveInput()
+          }
+        }}
+        onBlur={() => {
+          tmInputBlur.current = setTimeout(() => {
+            // om.actions.home.setShowAutocomplete(false)
+          }, 150)
+        }}
+        onChangeText={(text) => {
+          setLocationSearch(text)
+          om.actions.home.setLocationSearchQuery(text)
+        }}
+      />
+      <SearchLocationButton />
+    </VStack>
+  )
+
+  const searchElement = (
+    <>
+      <Hoverable
+        // show even if moving after some time
+        // onHoverIn={() => {
+        //   tm2.current = setTimeout(() => {
+        //     if (document.activeElement == input) {
+        //       om.actions.home.setShowAutocomplete('search')
+        //     }
+        //   }, 300)
+        // }}
+        onHoverOut={() => {
+          clearTimeout(tm.current)
+          clearTimeout(tm2.current)
+        }}
+        onHoverMove={() => {
+          clearTimeout(tm.current)
+          if (om.state.home.currentState.searchQuery) {
+            tm.current = setTimeout(() => {
+              if (document.activeElement == input) {
+                om.actions.home.setShowAutocomplete('search')
+              }
+            }, 150)
+          }
+        }}
+      >
+        <Text fontSize={19} display="flex" flex={1} overflow="hidden">
+          <HStack spacing={0} alignItems="center" flex={1} overflow="hidden">
+            <HomeSearchBarTags input={input} />
+            <TextInput
+              ref={inputRef}
+              // leave uncontrolled for perf?
+              value={search}
+              onFocus={() => {
+                onFocusAnyInput()
+                clearTimeout(tmInputBlur.current)
+                if (avoidNextShowautocompleteOnFocus) {
+                  avoidNextShowautocompleteOnFocus = false
+                } else {
+                  om.actions.home.setShowAutocomplete('search')
+                  if (search.length > 0) {
+                    selectActiveInput()
+                  }
+                }
+              }}
+              onBlur={() => {
+                avoidNextShowautocompleteOnFocus = false
+              }}
+              onChangeText={(text) => {
+                if (text === '') {
+                  om.actions.home.setShowAutocomplete(false)
+                }
+                setSearch(text)
+                om.actions.home.setSearchQuery(text ?? '')
+              }}
+              placeholder={isSearchingCuisine ? '...' : 'Search dish, cuisine'}
+              style={[
+                styles.textInput,
+                { flex: 1, fontSize: 19, paddingRight: 0 },
+              ]}
+            />
+          </HStack>
+        </Text>
+      </Hoverable>
+      <SearchCancelButton onCancel={handleCancel} />
+    </>
+  )
+
   return (
     <VStack
       zIndex={22}
@@ -326,129 +426,41 @@ export default memo(function HomeSearchBar() {
             spacing
             overflow="hidden"
           >
-            <>
-              {/* Loading / Search Icon */}
-              <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
-                {om.state.home.isLoading ? (
-                  <VStack className="rotating" opacity={0.5}>
-                    <Loader size={18} />
-                  </VStack>
-                ) : (
-                  <Search size={18} opacity={0.5} />
-                )}
-              </MediaQuery>
+            {/* Loading / Search Icon */}
+            <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
+              {om.state.home.isLoading ? (
+                <VStack className="rotating" opacity={0.5}>
+                  <Loader size={18} />
+                </VStack>
+              ) : (
+                <Search size={18} opacity={0.5} />
+              )}
+            </MediaQuery>
 
-              {/* Search Input Start */}
-              <Hoverable
-                // show even if moving after some time
-                // onHoverIn={() => {
-                //   tm2.current = setTimeout(() => {
-                //     if (document.activeElement == input) {
-                //       om.actions.home.setShowAutocomplete('search')
-                //     }
-                //   }, 300)
-                // }}
-                onHoverOut={() => {
-                  clearTimeout(tm.current)
-                  clearTimeout(tm2.current)
-                }}
-                onHoverMove={() => {
-                  clearTimeout(tm.current)
-                  if (om.state.home.currentState.searchQuery) {
-                    tm.current = setTimeout(() => {
-                      if (document.activeElement == input) {
-                        om.actions.home.setShowAutocomplete('search')
-                      }
-                    }, 150)
-                  }
-                }}
-              >
-                <Text fontSize={19} display="flex" flex={1} overflow="hidden">
-                  <HStack
-                    spacing={0}
-                    alignItems="center"
-                    flex={1}
-                    overflow="hidden"
-                  >
-                    <HomeSearchBarTags input={input} />
-                    <TextInput
-                      ref={inputRef}
-                      // leave uncontrolled for perf?
-                      value={search}
-                      onFocus={() => {
-                        onFocusAnyInput()
-                        clearTimeout(tmInputBlur.current)
-                        if (avoidNextShowautocompleteOnFocus) {
-                          avoidNextShowautocompleteOnFocus = false
-                        } else {
-                          om.actions.home.setShowAutocomplete('search')
-                          if (search.length > 0) {
-                            selectActiveInput()
-                          }
-                        }
-                      }}
-                      onBlur={() => {
-                        avoidNextShowautocompleteOnFocus = false
-                      }}
-                      onChangeText={(text) => {
-                        if (text === '') {
-                          om.actions.home.setShowAutocomplete(false)
-                        }
-                        setSearch(text)
-                        om.actions.home.setSearchQuery(text ?? '')
-                      }}
-                      placeholder={
-                        isSearchingCuisine ? '...' : 'Search dish, cuisine'
-                      }
-                      style={[
-                        styles.textInput,
-                        { flex: 1, fontSize: 19, paddingRight: 0 },
-                      ]}
-                    />
-                  </HStack>
-                </Text>
-              </Hoverable>
-            </>
-
-            <SearchCancelButton onCancel={handleCancel} />
+            {/* Search Input Start */}
+            {isSmall && showLocation ? locationSearchElement : searchElement}
 
             <Spacer size={1} />
           </HStack>
 
-          {/* IN */}
-          <HomeSearchBarSeparator />
+          {!isSmall && (
+            <>
+              {/* IN */}
+              <HomeSearchBarSeparator />
 
-          <VStack flex={35} maxWidth={350} minWidth={300}>
-            <TextInput
-              ref={locationInputRef}
-              value={locationSearch}
-              placeholder="San Francisco"
-              style={[styles.textInput, { paddingRight: 32, fontSize: 16 }]}
-              onFocus={() => {
-                onFocusAnyInput()
-                clearTimeout(tmInputBlur.current)
-                om.actions.home.setShowAutocomplete('location')
-                if (locationSearch.length > 0) {
-                  selectActiveInput()
-                }
-              }}
-              onBlur={() => {
-                tmInputBlur.current = setTimeout(() => {
-                  // om.actions.home.setShowAutocomplete(false)
-                }, 150)
-              }}
-              onChangeText={(text) => {
-                setLocationSearch(text)
-                om.actions.home.setLocationSearchQuery(text)
-              }}
-            />
-            <SearchLocationButton />
-          </VStack>
-          {divider}
+              {locationSearchElement}
+              {divider}
+              <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
+                <VStack flex={1} />
+              </MediaQuery>
+            </>
+          )}
 
-          <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
-            <VStack flex={1} />
-          </MediaQuery>
+          {isSmall && (
+            <LinkButton onPress={() => setShowLocation((x) => !x)} padding={15}>
+              <MapPin size={22} opacity={0.5} />
+            </LinkButton>
+          )}
 
           <HomeUserMenu />
         </VStack>
@@ -547,7 +559,7 @@ const HomeSearchBarTags = memo(
     return (
       <>
         {!!om.state.home.searchBarTags.length && (
-          <HStack marginLeft={10} marginTop={-1} spacing>
+          <HStack marginLeft={10} marginTop={-1} spacing={5}>
             {om.state.home.searchBarTags.map((tag) => {
               const isActive = om.state.home.searchbarFocusedTag === tag
               return (

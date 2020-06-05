@@ -197,7 +197,6 @@ const RestaurantListItemContent = memo(
                       restaurantSlug={restaurant.slug ?? ''}
                     />
                     <RestaurantTagsRow
-                      tags={restaurant.tags.map((tag) => tag.tag)}
                       subtle
                       showMore={true}
                       restaurantSlug={restaurant.slug ?? ''}
