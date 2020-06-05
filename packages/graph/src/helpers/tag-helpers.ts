@@ -1,5 +1,5 @@
 import { query, tag_constraint } from '../graphql'
-import { Tag, TagTag, TagWithId } from '../types'
+import { Tag, TagQuery, TagTag, TagWithId } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
 import { tagTagUpsert } from './tag_tag-helpers'
@@ -62,8 +62,11 @@ export async function tagUpsertCategorizations(
 
 export function tagAddAlternate(tag: Tag, alternate: string) {
   if (alternate != tag.name) {
+    // @ts-ignore
     tag.alternates = tag.alternates || []
+    // @ts-ignore
     tag.alternates?.push(alternate)
+    // @ts-ignore
     tag.alternates = [...new Set(tag.alternates)]
   }
 }

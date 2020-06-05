@@ -205,7 +205,8 @@ async function restaurantUpdateTagNames(restaurant: RestaurantWithId) {
     ]
     await restaurantUpdate({
       ...restaurant,
-      tag_names,
+      // @ts-ignore
+      tag_names: tag_names,
     })
     return restaurant
   }

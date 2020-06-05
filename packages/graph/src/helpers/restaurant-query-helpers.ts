@@ -1,28 +1,60 @@
-import { RestaurantQuery } from '../types'
+import {
+  Restaurant,
+  RestaurantQuery,
+  RestaurantTag,
+  RestaurantTagQuery,
+} from '../types'
 import { TopCuisineDish } from '../types-extra'
 
-// notice these helpers are for queries!
+export function isRestaurantQueryResult(
+  restaurant: Restaurant | RestaurantQuery
+) {
+  return typeof restaurant.tags == 'function'
+}
 
 export function restaurantPhotosForCarousel({
   restaurant,
   tag_names,
   max = 6,
 }: {
-  restaurant: RestaurantQuery
+  restaurant: Restaurant | RestaurantQuery
   tag_names?: string[]
   max?: number
 }) {
+  let tags: RestaurantTag[] = []
+  let restaurant_photos: string[] = []
+  if (isRestaurantQueryResult(restaurant)) {
+    restaurant = restaurant as RestaurantQuery
+    tags = restaurant.tags().map((t: RestaurantTagQuery) => {
+      return {
+        ...t,
+        // @ts-ignore
+        photos: t.photos ? t.photos() : [],
+        tag: {
+          ...t.tag,
+          default_images: t.tag?.default_images ? t.tag?.default_images : [],
+        },
+      }
+    })
+    // @ts-ignore
+    restaurant_photos = restaurant.photos() || []
+  } else {
+    tags = restaurant.tags
+    restaurant_photos = restaurant.photos || []
+  }
+
   let photos = [] as TopCuisineDish[]
-  for (const t of restaurant.tags()) {
-    if (!t.tag.name) {
+  for (const t of tags) {
+    if (!t.tag?.name) {
       console.warn('no tag name')
       continue
     }
     const is_searched_for_tag = tag_names?.includes(t.tag.name.toLowerCase())
-    let [photo] = t.photos() ?? []
+    let [photo] = t.photos || []
     let is_fallback_image = false
-    if (!photo) {
-      photo = t.tag.default_images()?.[0]
+    const fallback_image = t.tag?.default_images?.[0]
+    if (!photo && fallback_image) {
+      photo = fallback_image
       is_fallback_image = true
     }
     if (!photo && !is_searched_for_tag) {
@@ -41,8 +73,7 @@ export function restaurantPhotosForCarousel({
     if (photos.length >= max) break
   }
   if (photos.length <= max) {
-    const restPhotos = restaurant.photos() ?? []
-    for (const photo of restPhotos) {
+    for (const photo of restaurant_photos) {
       photos.push({ name: ' ', image: photo })
       if (photos.length >= max) break
     }
