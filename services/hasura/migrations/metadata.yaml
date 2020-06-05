@@ -446,6 +446,7 @@ tables:
       columns:
       - alternates
       - created_at
+      - default_images
       - displayName
       - icon
       - id
@@ -463,6 +464,7 @@ tables:
       columns:
       - alternates
       - created_at
+      - default_images
       - displayName
       - icon
       - id
@@ -480,6 +482,7 @@ tables:
       columns:
       - alternates
       - created_at
+      - default_images
       - displayName
       - icon
       - id
