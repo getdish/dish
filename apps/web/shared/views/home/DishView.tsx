@@ -8,7 +8,9 @@ import {
   VStack,
   ZStack,
 } from '@dish/ui'
-import React, { memo, useCallback, useState } from 'react'
+import { memo, useCallback, useState } from 'react'
+import React from 'react'
+import { Heart } from 'react-feather'
 import { Image, StyleSheet } from 'react-native'
 
 import { NavigableTag } from '../../state/Tag'
@@ -58,6 +60,7 @@ export const DishView = memo(
         {...linkButtonProps}
         {...rest}
       >
+        {/* rating */}
         <ZStack pointerEvents="none" fullscreen zIndex={10}>
           {!!dish.rating && (
             <DishRatingView
@@ -69,6 +72,7 @@ export const DishView = memo(
             />
           )}
         </ZStack>
+        {/* frame (shadow) */}
         <VStack
           width={size}
           height={size}
@@ -77,6 +81,7 @@ export const DishView = memo(
           shadowOffset={{ width: 0, height: 10 }}
           borderRadius={borderRadius}
         >
+          {/* frame (inner) */}
           <VStack
             className="ease-in-out-fast"
             shadowColor="rgba(0,0,0,0.112)"
@@ -101,6 +106,9 @@ export const DishView = memo(
               zIndex: 10000,
             })}
           >
+            <ZStack position="absolute" zIndex={3}>
+              <Heart size={92} color="red" />
+            </ZStack>
             <ZStack fullscreen zIndex={2}>
               <LinearGradient
                 colors={[

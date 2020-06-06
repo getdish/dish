@@ -1,14 +1,13 @@
+// dont do any references, incremental here
+// they dont place nice with paths
+// https://github.com/IBM/slack-wrench/pull/44
+
 {
-  "files": [],
+  "extends": "./tsconfig.build.json",
   "compilerOptions": {
-    "incremental": true
-  },
-  "references": [
-    { "path": "./services/crawlers" },
-    { "path": "./services/worker" },
-    { "path": "./apps/web" },
-    { "path": "./packages/graph" },
-    { "path": "./packages/tscc" },
-    { "path": "./packages/rollup-plugin-tscc" }
-  ]
+    "baseUrl": ".",
+    "paths": {
+      "@dish/*": ["packages/*/src"]
+    }
+  }
 }

@@ -7,7 +7,8 @@ RUN apk add python bash parallel build-base alpine-sdk \
       pixman-dev cairo-dev pango-dev libjpeg-turbo-dev giflib-dev patch
 
 COPY package.json .
-COPY tsconfig.base.json .
+COPY tsconfig.json .
+COPY tsconfig.build.json .
 COPY packages packages
 COPY apps/web apps/web
 

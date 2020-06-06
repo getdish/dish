@@ -10224,9 +10224,9 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-mapkit-typescript@^5.18.1:
+mapkit-typescript@^5.18.2:
   version "5.18.2"
-  resolved "https://registry.yarnpkg.com/mapkit-typescript/-/mapkit-typescript-5.18.2.tgz#36d7e0c487c84c0e26f483b7feb5d515084e819f"
+  resolved "https://registry.npmjs.org/mapkit-typescript/-/mapkit-typescript-5.18.2.tgz#36d7e0c487c84c0e26f483b7feb5d515084e819f"
   integrity sha512-tXqDu5qapywPQ+12ArygM63fWeQN61WCWMw39DKTLOeV7R7HGAti5TXMkiYyh4lRXOVD+XYhIimb57RDSEJyjg==
 
 match-url-wildcard@0.0.4:
