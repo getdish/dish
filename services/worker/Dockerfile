@@ -13,6 +13,7 @@ COPY packages packages
 COPY services/crawlers services/crawlers
 COPY services/worker services/worker
 
+RUN apk add bash curl
 RUN yarn install
 RUN yarn build
 

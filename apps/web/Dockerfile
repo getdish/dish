@@ -3,7 +3,7 @@ FROM mhart/alpine-node:12.16.1
 WORKDIR /app
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 ENV NODE_OPTIONS="--max_old_space_size=4096"
-RUN apk add python bash parallel build-base alpine-sdk \
+RUN apk add python bash curl parallel build-base alpine-sdk \
       pixman-dev cairo-dev pango-dev libjpeg-turbo-dev giflib-dev patch
 
 COPY package.json .
