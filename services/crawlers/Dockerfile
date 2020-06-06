@@ -6,7 +6,8 @@ ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 ENV NODE_OPTIONS="--max_old_space_size=4096"
 
 COPY package.json .
-COPY tsconfig.base.json .
+COPY tsconfig.json .
+COPY tsconfig.build.json .
 
 COPY packages packages
 COPY services/crawlers services/crawlers
