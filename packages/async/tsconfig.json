@@ -1,5 +1,6 @@
 {
   "extends": "../../tsconfig",
+
   "compilerOptions": {
     "composite": true,
     "baseUrl": "./src",
@@ -7,5 +8,7 @@
     "module": "CommonJS",
     "rootDir": "src"
   },
-  "include": ["src/**/*"]
+
+  "include": ["src/**/*"],
+  "references": []
 }

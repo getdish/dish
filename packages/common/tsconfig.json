@@ -1,5 +1,6 @@
 {
   "extends": "../../tsconfig",
+
   "compilerOptions": {
     "composite": true,
     "baseUrl": "./src",
@@ -8,6 +9,11 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src/**/*"]
+
   // "references": [{ "path": "../common-web" }]
+  "include": ["src/**/*"],
+
+  "references": [{
+    "path": "../graph"
+  }]
 }

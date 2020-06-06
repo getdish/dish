@@ -10,7 +10,7 @@
   "include": ["src/**/*"],
   "references": [
     { "path": "../../packages/common" },
-    { "path": "../../packages/worker" },
-    { "path": "../crawlers" }
+    { "path": "../crawlers" },
+    { "path": "../../packages/worker" }
   ]
 }

@@ -1,9 +1,14 @@
 {
   "extends": "../../tsconfig",
+
   "compilerOptions": {
     "composite": true,
     "module": "CommonJS",
     "baseUrl": "./src",
     "strictNullChecks": true
-  }
+  },
+
+  "references": [{
+    "path": "../../packages/graph"
+  }]
 }
