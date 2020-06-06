@@ -1,8 +1,8 @@
 {
   "name": "@dish/graph",
   "version": "0.0.1",
-  "main": "_/src/index.js",
-  "tsmain": "src/index",
+  "main": "_",
+  "tsmain": "src",
   "sideEffects": false,
   "private": true,
   "workspaces": {

@@ -3,17 +3,19 @@
 
   "compilerOptions": {
     "composite": true,
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "module": "CommonJS",
     "strictNullChecks": true,
     "outDir": "_",
-    "rootDir": "src"
+    "rootDir": "./src"
   },
 
   // "references": [{ "path": "../common-web" }]
   "include": ["src/**/*"],
 
-  "references": [{
-    "path": "../graph"
-  }]
+  "references": [
+    {
+      "path": "../graph"
+    }
+  ]
 }

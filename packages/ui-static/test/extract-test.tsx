@@ -12,6 +12,7 @@ import { UIStaticWebpackPlugin, getStylesAtomic } from '../src'
 
 const mode = 'production'
 process.env.NODE_ENV = 'test'
+process.env.IDENTIFY_TAGS = 'true'
 
 type TestApp = {
   renderer: TestRenderer.ReactTestRenderer

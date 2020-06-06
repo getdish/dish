@@ -2,10 +2,11 @@
   "extends": "../../tsconfig",
   "compilerOptions": {
     "composite": true,
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "outDir": "_",
-    "rootDir": "src"
+    "rootDir": "./src"
   },
   "include": ["src/**/*"],
+  "exclude": ["dist", "_"],
   "references": []
 }

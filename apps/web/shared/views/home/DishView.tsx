@@ -3,6 +3,7 @@ import {
   Box,
   HStack,
   LinearGradient,
+  Popover,
   StackProps,
   Text,
   VStack,
@@ -10,7 +11,6 @@ import {
 } from '@dish/ui'
 import { memo, useCallback, useState } from 'react'
 import React from 'react'
-import { Heart } from 'react-feather'
 import { Image, StyleSheet } from 'react-native'
 
 import { NavigableTag } from '../../state/Tag'
@@ -106,8 +106,10 @@ export const DishView = memo(
               zIndex: 10000,
             })}
           >
-            <ZStack position="absolute" zIndex={3}>
-              <Heart size={92} color="red" />
+            <ZStack position="absolute" zIndex={3} bottom={-10} right={-10}>
+              <Text fontSize={50} color="red">
+                ♥️
+              </Text>
             </ZStack>
             <ZStack fullscreen zIndex={2}>
               <LinearGradient

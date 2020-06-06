@@ -2,12 +2,12 @@
   "extends": "../../tsconfig",
   "compilerOptions": {
     "composite": true,
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "incremental": true,
     "skipLibCheck": true,
     "module": "CommonJS",
     "outDir": "_",
-    "rootDir": "."
+    "rootDir": "./src"
   },
   "include": ["src/**/*"],
   "references": [{ "path": "../react-test-env" }]

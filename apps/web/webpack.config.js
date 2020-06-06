@@ -3,6 +3,7 @@ const ShakePlugin = require('webpack-common-shake').Plugin
 const ReactRefreshWebpack4Plugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const path = require('path')
 const _ = require('lodash')
+const fs = require('fs')
 const Webpack = require('webpack')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const LodashPlugin = require('lodash-webpack-plugin')
@@ -18,7 +19,18 @@ const TARGET = process.env.TARGET || 'client'
 const target =
   TARGET === 'ssr' ? 'node' : TARGET === 'worker' ? 'webworker' : 'web'
 const appEntry = path.resolve(path.join(__dirname, 'web', 'index.web.tsx'))
-const graphRoot = path.join(require.resolve('@dish/graph'), '..', '..', '..')
+
+let gqless = require.resolve('@dish/graph')
+while (true) {
+  const next = path.join(gqless, 'node_modules', 'gqless')
+  if (fs.existsSync(next)) {
+    gqless = next
+    break
+  } else {
+    gqless = path.join(gqless, '..')
+  }
+  if (gqless == '/') throw new Error('no graph gqlss')
+}
 
 const isProduction = process.env.NODE_ENV === 'production'
 // const isClient = TARGET === 'client'
@@ -26,7 +38,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 // const isHot = !isProduction
 const isStaticExtracted = !process.env.DISABLE_STATIC_EXTRACT
 
-console.log('webpack.config', { isProduction, graphRoot, TARGET })
+console.log('webpack.config', { isProduction, gqless, TARGET })
 
 module.exports = function getWebpackConfig(
   env = {
@@ -82,7 +94,7 @@ module.exports = function getWebpackConfig(
                 react: path.join(require.resolve('react'), '..'),
                 'react-dom': path.join(require.resolve('react-dom'), '..'),
                 // '@dish/graph': require.resolve('@dish/graph'),
-                gqless: path.join(graphRoot, 'node_modules', 'gqless'),
+                gqless,
               },
       },
       resolveLoader: {

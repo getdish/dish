@@ -10,7 +10,8 @@
   "scripts": {
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
-    "test": "DEBUG_FILE=extract-specs.tsx DEBUG=1 DISH_ENV=test ava test/* --verbose",
+    "test": "DISH_ENV=test ava test/* --verbose",
+    "test:debug": "DEBUG_FILE=extract-specs.tsx DEBUG=1 yarn test",
     "test:watch": "yarn test --watch"
   },
   "license": "MIT",
