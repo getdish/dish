@@ -7,19 +7,22 @@
     "skipLibCheck": true,
     "declaration": false,
     "declarationMap": false,
-
     "outDir": "_",
     "rootDir": ".",
-    "typeRoots": ["./node_modules/mapkit-typescript", "./node_modules/@types"]
+    "typeRoots": ["./node_modules/mapkit-typescript", "./node_modules/@types"],
+    "composite": true
   },
   "include": ["web/**/*", "shared/**/*"],
   "exclude": ["**"],
-  "references": [
-    { "path": "../../packages/ui" },
-    { "path": "../../packages/ui-static" },
-    { "path": "../../packages/async" },
-    { "path": "../../packages/graph" },
-    { "path": "../../packages/rollup-plugin-tscc" },
-    { "path": "../../packages/tsickle-loader" }
-  ]
+  "references": [{
+    "path": "../../packages/recoil-store"
+  }, {
+    "path": "../../packages/tsickle-loader"
+  }, {
+    "path": "../../packages/graph"
+  }, {
+    "path": "../../packages/ui"
+  }, {
+    "path": "../../packages/async"
+  }]
 }

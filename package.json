@@ -17,12 +17,13 @@
     "build:watch": "ultra -r --no-pretty --concurrency 500 watch",
     "build:monitor": "ultra --monitor",
     "build:watch:broken": "yarn tsc -b -w",
+    "build:refs": "typescript-monorepo-toolkit inject-refs .",
     "test": "ultra -r --no-pretty test",
     "clean": "bin/clean.sh",
     "migrate": "(cd services/hasura && hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password)",
     "format": "swift-format --recursive --in-place ./apps/ios/dish",
     "prettier": "prettier --write \"**/*.{ts,tsx}\" || true",
-    "postinstall": "patch-package"
+    "postinstall": "yarn build:refs && yarn patch-package"
   },
   "resolutions": {
     "resolve": "1.17.0",
@@ -45,9 +46,8 @@
     "tsconfig-paths": "^3.9.0",
     "typescript": "^3.9.3",
     "ultra-runner": "^3.5.0",
-    "wsrun": "5.2.0"
-  },
-  "dependencies": {
+    "wsrun": "5.2.0",
+    "typescript-monorepo-toolkit": "^0.0.7",
     "patch-package": "^6.2.2"
   },
   "importSort": {
