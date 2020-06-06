@@ -9,6 +9,7 @@ RUN apk add python bash parallel build-base alpine-sdk \
 COPY package.json .
 COPY tsconfig.json .
 COPY tsconfig.build.json .
+COPY tsconfig.base.json .
 COPY packages packages
 COPY apps/web apps/web
 
@@ -23,7 +24,5 @@ FROM mhart/alpine-node:slim-12.16.1
 COPY --from=0 /app /app
 WORKDIR /app/apps/web
 RUN apk add pixman cairo pango libjpeg giflib curl bash
-RUN touch $HOME/.bashrc
-RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 
-CMD ["/root/.yarn/bin/yarn", "start:web:ssr"]
+CMD ["node", "_/web/server.js"]

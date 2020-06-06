@@ -3,10 +3,10 @@
 
   "compilerOptions": {
     "composite": true,
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "outDir": "_",
     "module": "CommonJS",
-    "rootDir": "src"
+    "rootDir": "./src"
   },
 
   "include": ["src/**/*"],

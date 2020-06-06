@@ -12,11 +12,6 @@ export type TextProps = Omit<ReactTextProps, 'style'> &
     children?: any
   }
 
-export const Text = (allProps: TextProps) => {
-  const [props, style] = useTextStyle(allProps)
-  return <ReactText style={style} {...props} />
-}
-
 const selectableStyle = {
   userSelect: 'text',
 }
@@ -25,6 +20,11 @@ const ellipseStyle = {
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
+}
+
+export const Text = (allProps: TextProps) => {
+  const [props, style] = useTextStyle(allProps)
+  return <ReactText style={style} {...props} />
 }
 
 Text.staticConfig = {

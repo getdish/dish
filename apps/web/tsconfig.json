@@ -1,28 +1,31 @@
 {
   "extends": "../../tsconfig",
   "compilerOptions": {
-    "baseUrl": "./shared",
+    "baseUrl": ".",
+    "rootDir": ".",
     "module": "CommonJS",
     "sourceMap": false,
-    "skipLibCheck": true,
-    "declaration": false,
-    "declarationMap": false,
     "outDir": "_",
-    "rootDir": ".",
     "typeRoots": ["./node_modules/mapkit-typescript", "./node_modules/@types"],
     "composite": true
   },
   "include": ["web/**/*", "shared/**/*"],
   "exclude": ["**"],
-  "references": [{
-    "path": "../../packages/recoil-store"
-  }, {
-    "path": "../../packages/tsickle-loader"
-  }, {
-    "path": "../../packages/graph"
-  }, {
-    "path": "../../packages/ui"
-  }, {
-    "path": "../../packages/async"
-  }]
+  "references": [
+    {
+      "path": "../../packages/recoil-store"
+    },
+    {
+      "path": "../../packages/tsickle-loader"
+    },
+    {
+      "path": "../../packages/graph"
+    },
+    {
+      "path": "../../packages/ui"
+    },
+    {
+      "path": "../../packages/async"
+    }
+  ]
 }

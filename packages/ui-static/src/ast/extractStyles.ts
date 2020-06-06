@@ -595,7 +595,11 @@ domNode: ${domNode}
         // if all style props have been extracted, gloss component can be
         // converted to a div or the specified component
         if (inlinePropCount === 0) {
-          if (process.env.NODE_ENV === 'development' || process.env.DEBUG) {
+          if (
+            process.env.NODE_ENV === 'development' ||
+            process.env.DEBUG ||
+            process.env.IDENTIFY_TAGS
+          ) {
             // add name so we can debug it more easily
             node.attributes.push(
               t.jsxAttribute(

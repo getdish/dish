@@ -8,6 +8,7 @@ ENV NODE_OPTIONS="--max_old_space_size=4096"
 COPY package.json .
 COPY tsconfig.json .
 COPY tsconfig.build.json .
+COPY tsconfig.base.json .
 COPY packages packages
 COPY services/crawlers services/crawlers
 COPY services/worker services/worker
