@@ -13,7 +13,6 @@ COPY tsconfig.base.json .
 COPY packages packages
 COPY services/jwt-server services/jwt-server
 
-RUN apk add bash curl
 RUN yarn install
 RUN yarn build
 
