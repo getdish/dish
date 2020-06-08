@@ -58,7 +58,7 @@ export function HomeViewDrawer(props: { children: any }) {
       width={drawerWidth}
       shadowColor="rgba(0,0,0,0.1)"
       shadowRadius={44}
-      borderRightWidth={1}
+      // borderRightWidth={1}
       borderBottomRightRadius={drawerBorderRadius * 1.5}
       borderTopRightRadius={drawerBorderRadius * 1.5}
       borderColor="#ddd"
@@ -80,7 +80,10 @@ export function HomeViewDrawer(props: { children: any }) {
             'white',
             'white',
             'white',
-            'rgba(255,255,255,0.5)',
+            'white',
+            'white',
+            'white',
+            'rgba(255,255,255,0.75)',
           ]}
           style={[StyleSheet.absoluteFill]}
           startPoint={[0, 0]}
@@ -106,7 +109,7 @@ export function HomeViewDrawer(props: { children: any }) {
         height={100}
       >
         <LinearGradient
-          colors={['white', 'transparent']}
+          colors={['white', 'rgba(255,255,255,0)']}
           style={[StyleSheet.absoluteFill]}
         />
       </ZStack>

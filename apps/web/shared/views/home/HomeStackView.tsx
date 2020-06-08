@@ -14,14 +14,14 @@ export function HomeStackView<A extends HomeStateItem>(props: {
 }) {
   const om = useOvermind()
   const breadcrumbs = om.state.home.breadcrumbStates
-  const homeStates = useMemo(
-    () =>
-      breadcrumbs.map((item) => {
+  const homeStates = useMemo(() => {
+    return breadcrumbs
+      .map((item) => {
         return om.state.home.states.find((x) => x.id === item.id)!
-      }),
-    [breadcrumbs]
-  )
-  const states = useDebounceValue(homeStates, transitionDuration)
+      })
+      .filter(Boolean)
+  }, [breadcrumbs])
+  const states = useDebounceValue(homeStates, transitionDuration) ?? homeStates
   const isRemoving = states.length > breadcrumbs.length
   const items = isRemoving ? states : homeStates
   const key = items.map((x) => x.id).join(' ')

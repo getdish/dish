@@ -33,8 +33,6 @@ import { HomeUserMenu } from './HomeUserMenu'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { TagButton } from './TagButton'
 
-const borderRadius = 16
-
 const divider = <Divider vertical flexLine={1} marginHorizontal={4} />
 let avoidNextShowautocompleteOnFocus = true
 export function setAvoidNextAutocompleteShowOnFocus() {
@@ -354,7 +352,9 @@ export default memo(function HomeSearchBar() {
                 setSearch(text)
                 om.actions.home.setSearchQuery(text ?? '')
               }}
-              placeholder={isSearchingCuisine ? '...' : 'Search dish, cuisine'}
+              placeholder={
+                isSearchingCuisine ? '...' : 'Search dish, cuisine, restaurant'
+              }
               style={[
                 styles.textInput,
                 { flex: 1, fontSize: 19, paddingRight: 0 },
@@ -367,19 +367,17 @@ export default memo(function HomeSearchBar() {
     </>
   )
 
+  const borderRadius = 14
+
   return (
     <VStack
       zIndex={22}
       position="absolute"
-      marginTop={4}
+      marginTop={searchBarTopOffset}
       left={searchBarTopOffset}
       right={searchBarTopOffset}
       alignItems="center"
       height={searchBarHeight}
-      borderBottomColor="rgba(0,0,0,0.01)"
-      borderBottomWidth={1}
-      borderBottomLeftRadius={borderRadius}
-      borderBottomRightRadius={borderRadius}
     >
       <HomeAutocompleteBackground />
       <VStack
@@ -389,23 +387,21 @@ export default memo(function HomeSearchBar() {
         width="100%"
         height="100%"
         borderRadius={borderRadius}
-        shadowColor="rgba(0,0,0,0.1)"
-        shadowOffset={{ height: 3, width: 0 }}
-        shadowRadius={25}
+        shadowColor="rgba(0,0,0,0.07)"
+        shadowOffset={{ height: 5, width: 0 }}
+        shadowRadius={20}
       >
         <VStack
           position="relative"
           zIndex={100}
           flex={1}
-          backgroundColor="rgba(255,255,255,1)"
+          backgroundColor="#fff"
           flexDirection="row"
           borderRadius={borderRadius}
-          shadowColor="rgba(0,0,0,0.05)"
+          shadowColor="rgba(0,0,0,0.085)"
           shadowRadius={5}
           shadowOffset={{ height: 3, width: 0 }}
           overflow="hidden"
-          borderWidth={1}
-          borderColor="#fff"
           alignItems="center"
           justifyContent="center"
         >

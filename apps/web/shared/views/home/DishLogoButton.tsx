@@ -4,13 +4,14 @@ import { Image } from 'react-native'
 import { LinkButton } from '../ui/LinkButton'
 
 export const DishLogoButton = memo(() => {
-  const scale = 0.059
+  const scale = 0.06
   return (
     <LinkButton
       name="home"
       paddingVertical={10}
       paddingHorizontal={24}
-      marginVertical={-2}
+      marginVertical={-4}
+      // transform={[{ rotate: '8deg' }]}
     >
       <Image
         source={require('../../assets/logo.png').default}

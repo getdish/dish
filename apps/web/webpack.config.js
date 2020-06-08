@@ -332,7 +332,7 @@ module.exports = function getWebpackConfig(
       }
     }
 
-    if (process.env.ONLY_MODERN || !isProduction) {
+    if (process.env.ONLY_MODERN) {
       return getModernConfig()
     }
 

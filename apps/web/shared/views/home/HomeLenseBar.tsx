@@ -36,6 +36,8 @@ export default memo(function HomeLenseBar(props: {
   return <HomeContentTopBar>{content}</HomeContentTopBar>
 })
 
+const transparentWhite = 'rgba(255,255,255,0)'
+
 export function HomeContentTopBar(props: { children: any }) {
   return (
     <ZStack zIndex={10} right={0} left={0} pointerEvents="none">
@@ -47,13 +49,13 @@ export function HomeContentTopBar(props: { children: any }) {
           'rgba(255,255,255,0.4)',
           '#fff',
           '#fff',
-          'transparent',
-          'transparent',
-          'transparent',
-          'transparent',
-          'transparent',
-          'transparent',
-          'transparent',
+          transparentWhite,
+          transparentWhite,
+          transparentWhite,
+          transparentWhite,
+          transparentWhite,
+          transparentWhite,
+          transparentWhite,
         ]}
         style={[
           StyleSheet.absoluteFill,

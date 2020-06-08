@@ -12,6 +12,7 @@ export const onInitialize: OnInitialize = async (
   { state, actions, effects },
   overmind
 ) => {
+  console.log('initializing...')
   if (OVERMIND_MUTATIONS) {
     console.log('hydating from server...')
     rehydrate(state, OVERMIND_MUTATIONS)

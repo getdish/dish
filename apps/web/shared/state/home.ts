@@ -52,7 +52,7 @@ import {
 import { HistoryItem, NavigateItem, RouteItem } from './router'
 import { Tag, getTagId, tagFilters, tagLenses } from './Tag'
 
-const INITIAL_RADIUS = 0.1
+const INITIAL_RADIUS = 0.16
 
 // backward compat
 export * from './home-types'

@@ -57,7 +57,12 @@ server.get('/hello', (_, res) => res.send('hello world'))
 // static assets
 const clientBuildPath = Path.join(rootDir, 'web-build')
 const clientBuildLegacyPath = Path.join(rootDir, 'web-build-legacy')
+
 server.use('/static', express.static(Path.join(clientBuildPath, 'static')))
+server.use(
+  '/static',
+  express.static(Path.join(clientBuildLegacyPath, 'static'))
+)
 
 // TODO amp
 // setHeaders: res => res.setHeader('AMP-Access-Control-Allow-Source-Origin', `http://localhost:${PORT}`),

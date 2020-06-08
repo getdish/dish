@@ -68,7 +68,7 @@ First build the docker container, this can take up to 30 minutes:
       `docker build -t dish/web -f apps/web/Dockerfile .`
 
     * Run the production build of the web site (it exposes on port 19006):
-      `docker run --rm --net host dish/web`
+      `docker run -it --rm --net host dish/web`
 
     * To connect to our production backing services, visit:
       'http://d1sh_hasura_live:19006'
