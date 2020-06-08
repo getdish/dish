@@ -1,4 +1,5 @@
-import { restaurantFindOne } from '../../../../packages/graph/src'
+import { restaurantFindOne } from '@dish/graph'
+
 import { Yelp } from './Yelp'
 
 async function main() {
