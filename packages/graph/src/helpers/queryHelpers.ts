@@ -69,7 +69,7 @@ export async function insert<T extends ModelType>(
   // @ts-ignore
   return await resolvedMutationWithFields(() => {
     return mutation[action]({
-      objects: removeReadOnlyProperties(table, objects),
+      objects: prepareData(table, objects),
     })
   })
 }
@@ -79,7 +79,7 @@ export async function upsert<T extends ModelType>(
   constraint: string,
   objectsIn: T[]
 ): Promise<WithID<T>[]> {
-  const objects = removeReadOnlyProperties(table, objectsIn)
+  const objects = prepareData(table, objectsIn)
   // TODO: Is there a better way to get the updateable columns?
   const update_columns = Object.keys(objects[0])
   const action = `insert_${table}` as any
@@ -100,7 +100,7 @@ export async function update<T extends WithID<ModelType>>(
   objectIn: T
 ): Promise<WithID<T>> {
   const action = `update_${table}` as any
-  const [object] = removeReadOnlyProperties(table, [objectIn])
+  const [object] = prepareData(table, [objectIn])
   const [resolved] = await resolvedMutationWithFields(() => {
     const res = mutation[action]({
       where: { id: { _eq: object.id } },
@@ -135,6 +135,12 @@ export async function deleteAllBy(
   })
 }
 
+function prepareData<T>(table: string, objects: T[]): T[] {
+  objects = removeReadOnlyProperties<T>(table, objects)
+  objects = objects.map((o) => ensureJSONSyntax(o) as T)
+  return objects
+}
+
 function removeReadOnlyProperties<T>(table: string, objects: T[]): T[] {
   return objects.map((cur) => {
     return Object.keys(cur).reduce((acc, key) => {
@@ -145,4 +151,43 @@ function removeReadOnlyProperties<T>(table: string, objects: T[]): T[] {
       return acc
     }, {} as T)
   })
+}
+
+function _traverse(o: any, fn: (obj: any, prop: string, value: any) => void) {
+  for (const i in o) {
+    if (o[i] !== null && typeof o[i] === 'object') {
+      _traverse(o[i], fn)
+    }
+    fn.apply({}, [o, i, o[i]])
+  }
+}
+
+function ensureJSONSyntax(json: {}) {
+  _traverse(json, (object, key, value) => {
+    ensureJSONKeySyntax(object, key, value)
+    deJSONStringify(object, key, value)
+  })
+  return json
+}
+
+function ensureJSONKeySyntax(object: {}, key: string, value: any) {
+  let fixed_key = key
+  if (key.includes('-')) {
+    fixed_key = '__HYPHEN__' + key.replace(/-/g, '_')
+    object[fixed_key] = value
+    delete object[key]
+  }
+  if (key.includes('@')) {
+    fixed_key = key.replace(/@/g, '')
+    object[fixed_key] = value
+    delete object[key]
+  }
+}
+
+function deJSONStringify(object: {}, key: string, value: any) {
+  if (typeof value != 'string') return
+  if (!value.match(/[\{\}\[\]:]/g)) return
+  try {
+    object[key] = ensureJSONSyntax(JSON.parse(value))
+  } catch {}
 }

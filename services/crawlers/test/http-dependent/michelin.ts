@@ -12,7 +12,7 @@ test.beforeEach(async () => {
 test('Gets and persists a restaurant', async (t) => {
   let michelin = new Michelin()
   await michelin.allForRegion('pl')
-  const [scrape] = await scrapeFindOne({ id_from_source: ID })
+  const scrape = await scrapeFindOne({ id_from_source: ID })
   t.is(scrape.data.main.name, 'atelier Amaro')
   t.deepEqual(scrape.location.coordinates, [21.03768, 52.21708])
 })
