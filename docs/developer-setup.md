@@ -12,8 +12,7 @@ Contents:
 
 ### Repo encrypted credentials
 
-All Dish's credentials are stored in `.env.enc.production.yaml`. Even third-party web
-logins are contained in this file. To decrypt it:
+All Dish's credentials are stored in `.env.enc.production.yaml`. Even third-party web logins are contained in this file. To decrypt it:
 
 - Install [git-crypt](https://github.com/AGWA/git-crypt).
 - If you're GPG key hasn't been added to the repo then ask your nearest Dish dev to either be added to the repo or ask for the decryption key.
@@ -24,6 +23,14 @@ logins are contained in this file. To decrypt it:
 - Within the path of the repo run `git-crypt unlock /tmp/master/key`
 - You can now just use `git` as normal, all the encryption/decryption happens
   automatically with hooks and filters.
+
+### Using environment in commands
+
+You can avoid copy-pasting environment variables using this:
+
+```
+eval $(./bin/yaml_to_env.sh) some_command_that_needs_dish_ENV
+```
 
 ## Core Stack
 
@@ -88,6 +95,24 @@ If you want to run end to end tests:
 
     * Run the tests. from the `apps/web` path:
       `./test/testcafe.sh`
+
+## Hot Deploys
+
+If you need to deploy something quickly and are willing to skip CI, you can run a hot deploy.
+
+You'll need a few things set up first:
+
+    - `kubectl` and `doctl` installed
+    - `doctl auth init -t $TF_VAR_DO_DISH_KEY` token is avaiable in enc.env.production.yaml
+    - `doctl kubernetes cluster kubeconfig save dish`
+
+Then you can use the `./k8s/etc/hot_deploy.sh` script (see comments in the script for more detailed instructions):
+
+```
+./k8s/etc/hot_deploy.sh $service
+```
+
+Where `$service` is the name of a service in your `Riofile`.
 
 ## Hasura
 
