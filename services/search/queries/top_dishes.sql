@@ -52,7 +52,7 @@ WITH by_country AS (
         SELECT name, slug, rating FROM restaurant
         WHERE tag_names @> to_jsonb(LOWER((SELECT DISTINCT t.name)))
         ORDER BY rating DESC NULLS LAST
-        LIMIT 5
+        LIMIT 10
       ) t
     ) as top_restaurants
   FROM restaurant
@@ -83,7 +83,7 @@ SELECT json_agg(t) FROM (
       AND country != 'Vietnamese'
 
     ORDER BY avg_rating DESC
-    LIMIT 5
+    LIMIT 10
   ) AS ready_to_be_reversed_but_delete_later_please
   ORDER BY avg_rating ASC
 ) t
