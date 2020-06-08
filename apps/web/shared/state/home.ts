@@ -126,7 +126,8 @@ const derivations = {
   searchbarFocusedTag: derived<HomeState, Tag | null>((state) => {
     const { autocompleteIndex } = state
     if (autocompleteIndex > -1) return null
-    return state.searchBarTags[-1 - autocompleteIndex]
+    const index = state.searchBarTags.length + autocompleteIndex
+    return state.searchBarTags[index]
   }),
   autocompleteResultsActive: derived<HomeState, AutocompleteItem[]>((state) => {
     const prefix: AutocompleteItem[] = [
@@ -983,9 +984,17 @@ function searchLocations(query: string) {
 
 const moveAutocompleteIndex: Action<number> = (om, val) => {
   const cur = om.state.home.autocompleteIndex
-  const tags = om.state.home.lastActiveTags.filter((x) => isSearchBarTag(x))
+  om.actions.home.setAutocompleteIndex(cur + val)
+}
+
+// see setSearchBarFocusedTag
+const setAutocompleteIndex: Action<number> = (om, val) => {
+  const tags = om.state.home.searchBarTags
   const min = 0 - tags.length
-  const next = Math.min(Math.max(min, cur + val), 1000) // TODO
+  const next = Math.min(
+    Math.max(min, val),
+    om.state.home.autocompleteResults.length - 1
+  )
   om.state.home.autocompleteIndex = next
 }
 
@@ -1015,9 +1024,9 @@ const setSearchBarFocusedTag: Action<Tag | null> = (om, val) => {
     om.state.home.autocompleteIndex = 0
     return
   }
-  om.state.home.autocompleteIndex = -om.state.home.lastActiveTags.findIndex(
-    (x) => x.id === val.id
-  )
+  const tags = om.state.home.searchBarTags
+  const tagIndex = tags.findIndex((x) => getTagId(x) === getTagId(val))
+  om.state.home.autocompleteIndex = -tags.length + tagIndex
 }
 
 const forkCurrentList: Action = (om) => {
@@ -1167,6 +1176,7 @@ export const actions = {
   setMapArea,
   setSearchBarFocusedTag,
   setSearchQuery,
+  setAutocompleteIndex,
   setShowAutocomplete,
   setShowUserMenu,
   start,

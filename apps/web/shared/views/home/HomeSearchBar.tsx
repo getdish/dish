@@ -323,45 +323,43 @@ export default memo(function HomeSearchBar() {
           }
         }}
       >
-        <Text fontSize={19} display="flex" flex={1} overflow="hidden">
-          <HStack spacing={0} alignItems="center" flex={1} overflow="hidden">
-            <HomeSearchBarTags input={input} />
-            <TextInput
-              ref={inputRef}
-              // leave uncontrolled for perf?
-              value={search}
-              onFocus={() => {
-                onFocusAnyInput()
-                clearTimeout(tmInputBlur.current)
-                if (avoidNextShowautocompleteOnFocus) {
-                  avoidNextShowautocompleteOnFocus = false
-                } else {
-                  om.actions.home.setShowAutocomplete('search')
-                  if (search.length > 0) {
-                    selectActiveInput()
-                  }
-                }
-              }}
-              onBlur={() => {
+        <HStack spacing={0} alignItems="center" flex={1} overflow="hidden">
+          <HomeSearchBarTags input={input} />
+          <TextInput
+            ref={inputRef}
+            // leave uncontrolled for perf?
+            value={search}
+            onFocus={() => {
+              onFocusAnyInput()
+              clearTimeout(tmInputBlur.current)
+              if (avoidNextShowautocompleteOnFocus) {
                 avoidNextShowautocompleteOnFocus = false
-              }}
-              onChangeText={(text) => {
-                if (text === '') {
-                  om.actions.home.setShowAutocomplete(false)
+              } else {
+                om.actions.home.setShowAutocomplete('search')
+                if (search.length > 0) {
+                  selectActiveInput()
                 }
-                setSearch(text)
-                om.actions.home.setSearchQuery(text ?? '')
-              }}
-              placeholder={
-                isSearchingCuisine ? '...' : 'Search dish, cuisine, restaurant'
               }
-              style={[
-                styles.textInput,
-                { flex: 1, fontSize: 19, paddingRight: 0 },
-              ]}
-            />
-          </HStack>
-        </Text>
+            }}
+            onBlur={() => {
+              avoidNextShowautocompleteOnFocus = false
+            }}
+            onChangeText={(text) => {
+              if (text === '') {
+                om.actions.home.setShowAutocomplete(false)
+              }
+              setSearch(text)
+              om.actions.home.setSearchQuery(text ?? '')
+            }}
+            placeholder={
+              isSearchingCuisine ? '...' : 'Search dish, cuisine, restaurant'
+            }
+            style={[
+              styles.textInput,
+              { flex: 1, fontSize: 19, paddingRight: 0 },
+            ]}
+          />
+        </HStack>
       </Hoverable>
       <SearchCancelButton onCancel={handleCancel} />
     </>
@@ -559,48 +557,44 @@ const HomeSearchBarTags = memo(
             {om.state.home.searchBarTags.map((tag) => {
               const isActive = om.state.home.searchbarFocusedTag === tag
               return (
-                <TouchableOpacity
-                  activeOpacity={0.9}
+                <TagButton
                   key={getTagId(tag)}
+                  subtleIcon
+                  backgroundColor={brandColor}
+                  color="#fff"
+                  borderColor={'transparent'}
+                  {...(isActive && {
+                    backgroundColor: '#777',
+                    color: '#fff',
+                    transform: [{ scale: 1.065 }, { rotate: '-1.3deg' }],
+                  })}
+                  hoverStyle={{
+                    backgroundColor: brandColorLight,
+                  }}
+                  size="lg"
+                  fontSize={18}
+                  name={tag.name}
+                  type={tag.type}
+                  icon={tag.icon ?? ''}
+                  rgb={tag.rgb}
+                  closable
                   onPress={() => {
                     om.actions.home.setSearchBarFocusedTag(tag)
                   }}
-                >
-                  <TagButton
-                    subtleIcon
-                    backgroundColor={brandColor}
-                    color="#fff"
-                    borderColor={'transparent'}
-                    {...(isActive && {
-                      backgroundColor: '#777',
-                      color: '#fff',
-                      transform: [{ scale: 1.065 }, { rotate: '-1.3deg' }],
-                    })}
-                    hoverStyle={{
-                      backgroundColor: brandColorLight,
-                    }}
-                    size="lg"
-                    fontSize={18}
-                    name={tag.name}
-                    type={tag.type}
-                    icon={tag.icon ?? ''}
-                    rgb={tag.rgb}
-                    closable
-                    onClose={() => {
-                      om.actions.home.navigateToTag({ tags: [tag] })
-                      // requestIdleCallback(() => {
-                      //   input?.focus()
-                      // })
-                      if (
-                        om.state.home.lastActiveTags.filter(
-                          (x) => x.type !== 'lense'
-                        ).length === 0
-                      ) {
-                        om.actions.home.popTo('home')
-                      }
-                    }}
-                  />
-                </TouchableOpacity>
+                  onClose={() => {
+                    om.actions.home.navigateToTag({ tags: [tag] })
+                    // requestIdleCallback(() => {
+                    //   input?.focus()
+                    // })
+                    if (
+                      om.state.home.lastActiveTags.filter(
+                        (x) => x.type !== 'lense'
+                      ).length === 0
+                    ) {
+                      om.actions.home.popTo('home')
+                    }
+                  }}
+                />
               )
             })}
           </HStack>

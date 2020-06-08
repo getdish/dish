@@ -67,6 +67,7 @@ export const TagButton = memo(
     subtleIcon,
     hideIcon,
     replace,
+    onPress,
     ...rest
   }: TagButtonProps) => {
     if (name === null) {
@@ -84,7 +85,13 @@ export const TagButton = memo(
       typeof fontSize === 'number' ? fontSize * 0.9 : fontSize
     // const moveInPx = size === 'sm' ? 0 : 3.5 * (1 / scale)
     return (
-      <LinkButton tag={tag} disabledIfActive replace={replace}>
+      <LinkButton
+        tag={tag}
+        disabledIfActive
+        replace={replace}
+        onPress={onPress}
+        preventNavigate={!!onPress}
+      >
         <HStack
           height={scale * 31}
           backgroundColor={bg}

@@ -1,12 +1,13 @@
 import React, { memo } from 'react'
 
+import { Divider } from './Divider'
 import { StackProps, VStack } from './Stacks'
 import { Text } from './Text'
 
 export const PageTitle = memo(
   ({ children, subTitle, ...rest }: StackProps & { subTitle?: any }) => {
     return (
-      <VStack maxWidth="100%" minHeight={68} justifyContent="center" {...rest}>
+      <VStack maxWidth="100%" justifyContent="center" {...rest}>
         <Text
           selectable
           ellipse
@@ -14,7 +15,7 @@ export const PageTitle = memo(
           maxWidth="80%"
           opacity={1}
           fontSize={22}
-          lineHeight={32}
+          lineHeight={30}
           fontWeight="600"
         >
           {children}
