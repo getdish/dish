@@ -1,0 +1,52 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: |-
+      DROP FUNCTION IF EXISTS restaurant_top_tags(
+        restaurant_id UUID,
+        tag_names TEXT
+      );
+
+      CREATE OR REPLACE FUNCTION restaurant_top_tags(
+        _restaurant_id restaurant,
+        tag_names TEXT
+      ) RETURNS SETOF restaurant_tag AS $$
+      BEGIN
+        WITH
+          dish_ids AS (
+            SELECT id
+              FROM tag
+              WHERE name ILIKE ANY (
+                SELECT UNNEST(
+                  -- TODO use our formal slugify() format.
+                  -- Speed optimisation isn't so important here because the tag
+                  -- table should always be relatively small
+                  string_to_array(LOWER(REPLACE(?4, '-', ' ')), ',')
+                )
+              )
+                AND type != 'country'
+          )
+        -- Put searched for tags first
+        SELECT * FROM (
+          SELECT * FROM restaurant_tag rt
+            JOIN tag t ON rt.tag_id = t.id
+            WHERE rt.restaurant_id = restaurant.id
+              AND rt.tag_id IN (SELECT id FROM dish_ids)
+            ORDER BY rt.rating DESC NULLS LAST
+        ) searched_for_tags
+        UNION ALL
+        -- All other tags
+        SELECT * FROM (
+          SELECT * FROM restaurant_tag rt
+            JOIN tag t ON rt.tag_id = t.id
+            WHERE rt.restaurant_id = restaurant.id
+              AND rt.tag_id NOT IN (SELECT id FROM dish_ids)
+            ORDER BY rt.rating DESC NULLS LAST
+        ) all_other_tags;
+      END;
+      $$ LANGUAGE plpgsql STABLE;
+  type: run_sql
+- args:
+    name: restaurant_top_tags
+    schema: public
+  type: track_function

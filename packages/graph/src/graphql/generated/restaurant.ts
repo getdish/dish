@@ -152,6 +152,17 @@ export type t_restaurant = FieldsType<
       t_restaurant_tag_aggregate
     >
     telephone?: t_String | null
+    top_tags?: FieldsTypeArg<
+      {
+        args: restaurant_top_tags_args
+        distinct_on?: restaurant_tag_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: restaurant_tag_order_by[] | null
+        where?: restaurant_tag_bool_exp | null
+      },
+      t_restaurant_tag[] | null
+    >
     updated_at: t_timestamptz
     website?: t_String | null
     zip?: t_numeric | null
@@ -1138,6 +1149,12 @@ export type restaurant_tag_variance_order_by = {
   rank?: order_by | null
   rating?: order_by | null
 }
+
+/**
+ * @name restaurant_top_tags_args
+ * @type INPUT_OBJECT
+ */
+export type restaurant_top_tags_args = { tag_names?: string | null }
 
 /**
  * @name restaurant_update_column

@@ -2711,6 +2711,41 @@ export const schema = {
         get telephone() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get top_tags() {
+          return new FieldNode(
+            new ArrayNode(schema.restaurant_tag, true),
+            new Arguments({
+              get args() {
+                return new ArgumentsField(
+                  schema.restaurant_top_tags_args,
+                  false
+                )
+              },
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.restaurant_tag_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.restaurant_tag_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.restaurant_tag_bool_exp, true)
+              },
+            }),
+            true
+          )
+        },
         get updated_at() {
           return new FieldNode(schema.timestamptz, undefined, false)
         },
@@ -4501,6 +4536,16 @@ export const schema = {
         },
       },
       { name: 'restaurant_tag_variance_order_by' }
+    )
+  },
+  get restaurant_top_tags_args() {
+    return new InputNode(
+      {
+        get tag_names() {
+          return new InputNodeField(schema.String, true)
+        },
+      },
+      { name: 'restaurant_top_tags_args' }
     )
   },
   get restaurant_update_column() {

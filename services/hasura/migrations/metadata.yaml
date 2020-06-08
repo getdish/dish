@@ -106,6 +106,13 @@ tables:
         schema: public
         name: is_restaurant_open
       table_argument: null
+  - name: top_tags
+    definition:
+      function:
+        schema: public
+        name: restaurant_top_tags
+      table_argument: null
+    comment: ""
   select_permissions:
   - role: anon
     permission:

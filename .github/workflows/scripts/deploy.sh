@@ -4,14 +4,10 @@ set -e
 ./.github/workflows/scripts/setup_admin.sh
 
 echo "Deploying production branch to production..."
-HASURA_ADMIN=$(\
-  grep 'HASURA_GRAPHQL_ADMIN_SECRET:' env.enc.production.yaml \
-    | tail -n1 | cut -c 30- | tr -d '"'\
-)
-pushd services/hasura
-curl -L https://github.com/hasura/graphql-engine/raw/master/cli/get.sh | bash
-hasura migrate apply --endpoint https://hasura.rio.dishapp.com --admin-secret "$HASURA_ADMIN"
-popd
+
+kubectl port-forward svc/postgres-postgresql 15432:5432 -n postgres &
+sleep 5
+./services/hasura/etc/migrate.sh
 
 ./k8s/etc/docker_registry_gc.sh
 

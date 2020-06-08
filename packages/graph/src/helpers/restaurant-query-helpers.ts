@@ -17,31 +17,16 @@ export function restaurantPhotosForCarousel({
   tag_names,
   max = 6,
 }: {
-  restaurant: Restaurant | RestaurantQuery
+  restaurant: RestaurantQuery
   tag_names?: string[]
   max?: number
 }) {
-  let tags: RestaurantTag[] = []
   let restaurant_photos: string[] = []
-  if (isRestaurantQueryResult(restaurant)) {
-    restaurant = restaurant as RestaurantQuery
-    tags = restaurant.tags().map((t: RestaurantTagQuery) => {
-      return {
-        ...t,
-        // @ts-ignore
-        photos: t.photos ? t.photos() : [],
-        tag: {
-          ...t.tag,
-          default_images: t.tag?.default_images ? t.tag?.default_images : [],
-        },
-      }
-    })
+  let tags =
     // @ts-ignore
-    restaurant_photos = restaurant.photos() || []
-  } else {
-    tags = restaurant.tags
-    restaurant_photos = restaurant.photos || []
-  }
+    restaurant.top_tags({ args: { tag_names: tag_names.join(',') } }) || []
+  // @ts-ignore
+  restaurant_photos = restaurant.photos() || []
 
   let photos = [] as TopCuisineDish[]
   for (const t of tags) {
