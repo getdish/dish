@@ -34,6 +34,7 @@ export type LinkSharedProps = {
   stopPropagation?: boolean
   disabledIfActive?: boolean
   tagName?: string
+  preventNavigate?: boolean
 }
 
 type LinkProps<A, B> = React.DetailedHTMLProps<
@@ -68,6 +69,7 @@ export function Link<
     onClick,
     replace,
     tagName,
+    preventNavigate,
     ...restProps
   } = allProps
   const linkProps = useNormalizeLinkProps(allProps as any)
@@ -92,7 +94,9 @@ export function Link<
         if ('onPress' in linkProps) {
           linkProps?.onPress?.()
         }
-        om.actions.router.navigate(navItem)
+        if (!preventNavigate) {
+          om.actions.router.navigate(navItem)
+        }
       })
     },
     [navItem, onClick]
@@ -146,8 +150,8 @@ export const useNormalizeLinkProps = (
 
 export const asyncLinkAction = (cb?: Function) => (e) => {
   e.persist()
-  e?.preventDefault()
-  e?.stopPropagation()
+  e.preventDefault()
+  e.stopPropagation()
   setTimeout(() => {
     cb?.(e)
   })

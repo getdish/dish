@@ -193,7 +193,7 @@ const RestaurantListItemContent = memo(
                     marginBottom={-2}
                   >
                     <RestaurantRatingViewPopover
-                      size="sm"
+                      size="xs"
                       restaurantSlug={restaurant.slug ?? ''}
                     />
                     <RestaurantTagsRow
@@ -314,7 +314,7 @@ export const RestaurantPeek = memo(function RestaurantPeek(
 ) {
   const { searchState, size = 'md' } = props
   const tag_names = Object.keys(searchState?.activeTagIds || {})
-  const spacing = size == 'lg' ? 12 : 18
+  const spacing = size == 'lg' ? 16 : 24
   const isMedium = useMediaQueryIsMedium()
   const [restaurant] = query.restaurant({
     where: { id: { _eq: props.restaurant.id } },
@@ -332,7 +332,7 @@ export const RestaurantPeek = memo(function RestaurantPeek(
           return (
             <DishView
               key={i}
-              size={(size === 'lg' ? 210 : 175) * (isMedium ? 0.85 : 1)}
+              size={(size === 'lg' ? 190 : 150) * (isMedium ? 0.85 : 1)}
               restaurantSlug={props.restaurant.slug}
               dish={photo}
             />
