@@ -4,7 +4,8 @@ WORKDIR /app
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 ENV NODE_OPTIONS="--max_old_space_size=4096"
 RUN apk add python bash parallel build-base alpine-sdk \
-      pixman-dev cairo-dev pango-dev libjpeg-turbo-dev giflib-dev patch
+      cairo pixman pango pixman-dev cairo-dev pango-dev \
+      libjpeg-turbo-dev giflib-dev patch
 
 COPY package.json .
 COPY tsconfig.json .

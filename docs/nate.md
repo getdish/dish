@@ -48,12 +48,11 @@ Week 4
 - [ ] make a list of articles for luke
 - [ ] crawler for "header" images for dishes (Pho) (Instagram?)
 - [ ] start crawler to find restaurants instagrams
-- sexy splash page for home
-- signup for beta
-- spreadsheet view into all data next to a simple map
+- splash page for home
 
 ---
 
+- spreadsheet view into all data next to a simple map
 - actually a full review card could show at bottom of map when restaurant opened all the way
 - RestaurantDetail social media links
 
