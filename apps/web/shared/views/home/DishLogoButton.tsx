@@ -4,7 +4,7 @@ import { Image } from 'react-native'
 import { LinkButton } from '../ui/LinkButton'
 
 export const DishLogoButton = memo(() => {
-  const scale = 0.06
+  const scale = 0.057
   return (
     <LinkButton
       name="home"

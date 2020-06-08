@@ -100,10 +100,8 @@ const HomeStackViewItem = memo(
       []
     )
 
-    const top = isSmall ? 0 : searchBarHeight + index * (index == 0 ? 0 : 10)
+    const top = isSmall ? 0 : index * (index == 0 ? 0 : 10)
     const left = isSmall ? -3 : Math.max(0, index) * 7
-
-    console.log('render stack item', { index, isActive, isRemoving, item })
 
     return (
       <VStack

@@ -269,7 +269,7 @@ export default memo(function HomeSearchBar() {
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
 
   const locationSearchElement = (
-    <VStack position="relative" flex={35} maxWidth={350} minWidth={180}>
+    <VStack position="relative" flex={65} maxWidth={350} minWidth={180}>
       <TextInput
         ref={locationInputRef}
         value={locationSearch}
@@ -379,7 +379,7 @@ export default memo(function HomeSearchBar() {
     >
       <HomeAutocompleteBackground />
       <VStack
-        maxWidth={pageWidthMax - 20}
+        maxWidth={pageWidthMax - 90}
         zIndex={12}
         position="relative"
         width="100%"
@@ -404,10 +404,6 @@ export default memo(function HomeSearchBar() {
           justifyContent="center"
         >
           <DishLogoButton />
-
-          {/* <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
-            <Spacer flex={0.01} />
-          </MediaQuery> */}
 
           <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
             <HomeSearchBarHomeButton />

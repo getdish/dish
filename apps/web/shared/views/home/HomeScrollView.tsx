@@ -3,6 +3,7 @@ import React, { useRef } from 'react'
 import { useCallback } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 
+import { searchBarHeight } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
 
 export const HomeScrollView = (props: ScrollViewProps & { children: any }) => {
@@ -20,7 +21,7 @@ export const HomeScrollView = (props: ScrollViewProps & { children: any }) => {
       onScroll={setIsScrolling}
       scrollEventThrottle={50}
       {...props}
-      style={[{ flex: 1 }, props.style]}
+      style={[{ flex: 1, paddingTop: searchBarHeight }, props.style]}
     />
   )
 }

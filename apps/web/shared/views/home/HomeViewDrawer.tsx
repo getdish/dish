@@ -12,6 +12,8 @@ import { StyleSheet } from 'react-native'
 import { drawerBorderRadius, drawerPad, drawerWidthMax } from '../../constants'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
+const bgColor = 'white'
+
 const colors = [
   'rgba(255,255,255,0.15)',
   'rgba(255,255,255,0.9)', //rgba(255,255,255,0.9)',
@@ -56,12 +58,12 @@ export function HomeViewDrawer(props: { children: any }) {
       bottom={0}
       zIndex={10}
       width={drawerWidth}
-      shadowColor="rgba(0,0,0,0.1)"
+      shadowColor="rgba(0,0,0,0.15)"
       shadowRadius={44}
       // borderRightWidth={1}
+      // borderColor="#ddd"
       borderBottomRightRadius={drawerBorderRadius * 1.5}
       borderTopRightRadius={drawerBorderRadius * 1.5}
-      borderColor="#ddd"
       flex={1}
       justifyContent="flex-end"
       {...(isSmall && positionSmall)}
@@ -75,14 +77,14 @@ export function HomeViewDrawer(props: { children: any }) {
       >
         <LinearGradient
           colors={[
-            'white',
-            'white',
-            'white',
-            'white',
-            'white',
-            'white',
-            'white',
-            'white',
+            bgColor,
+            bgColor,
+            bgColor,
+            bgColor,
+            bgColor,
+            bgColor,
+            bgColor,
+            bgColor,
             'rgba(255,255,255,0.75)',
           ]}
           style={[StyleSheet.absoluteFill]}
@@ -121,8 +123,7 @@ export function HomeViewDrawer(props: { children: any }) {
         marginLeft={isSmall ? 0 : 'auto'}
       >
         <ZStack position="relative" flex={1}>
-          <VStack fullscreen flex={1}>
-            {/* <LinearGradient
+          {/* <LinearGradient
               colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
               style={{
                 position: 'absolute',
@@ -132,8 +133,7 @@ export function HomeViewDrawer(props: { children: any }) {
                 height: 80,
               }}
             /> */}
-            {props.children}
-          </VStack>
+          {props.children}
         </ZStack>
       </VStack>
     </HStack>
