@@ -4,7 +4,7 @@ fixture('Home page').page('http://localhost:19006/')
 
 test('Basic rendering check', async (t) => {
   const divs = Selector('div')
-  await t.expect(divs.count).gte(100)
+  await t.expect(divs.count).gte(50)
 })
 
 // test('Renders home top dishes', async (t) => {
