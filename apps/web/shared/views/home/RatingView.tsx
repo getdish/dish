@@ -56,7 +56,7 @@ export const RatingView = forwardRef(
     const number = (
       <Text
         fontSize={Math.max(13, size * 0.5)}
-        fontWeight="600"
+        fontWeight="700"
         color={color}
         letterSpacing={-(size / 90)}
       >

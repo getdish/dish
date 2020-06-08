@@ -101,23 +101,19 @@ export const DishView = memo(
               borderColor: 'rgba(0,0,0,0.75)',
               backgroundColor: '#fff',
               shadowRadius: 18,
-              shadowColor: 'rgba(0,0,0,0.22)',
+              shadowColor: 'rgba(0,0,0,0.32)',
               shadowOffset: { width: 0, height: 6 },
               zIndex: 10000,
             })}
           >
-            <ZStack position="absolute" zIndex={3} bottom={-10} right={-10}>
+            {/* <ZStack position="absolute" zIndex={3} bottom={-10} right={-10}>
               <Text fontSize={50} color="red">
                 ♥️
               </Text>
-            </ZStack>
+            </ZStack> */}
             <ZStack fullscreen zIndex={2}>
               <LinearGradient
-                colors={[
-                  'rgba(0,0,0,0)',
-                  'rgba(0,0,0,0.02)',
-                  'rgba(0,0,0,0.2)',
-                ]}
+                colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.33)']}
                 style={[StyleSheet.absoluteFill]}
               />
             </ZStack>
@@ -128,50 +124,61 @@ export const DishView = memo(
             />
           </VStack>
         </VStack>
+
         <HStack
           position="absolute"
-          bottom={-20}
-          left={-10}
-          right={-10}
-          padding={6}
-          alignItems="center"
-          justifyContent="center"
-          backgroundColor="rgba(255,255,255,0.25)"
-          borderTopColor="rgba(255,255,255,0.5)"
-          borderTopWidth={1}
-          shadowColor="rgba(0,0,0,0.05)"
-          shadowRadius={3}
-          shadowOffset={{ height: -3, width: 0 }}
+          bottom={-10}
+          overflow="hidden"
+          width="calc(100% + 30px)"
+          marginHorizontal={-15}
+          height={55}
         >
-          <Box
-            position="relative"
-            className="ease-in-out-top"
-            backgroundColor="rgba(15,15,15,0.9)"
-            paddingVertical={2}
-            maxWidth="100%"
-            overflow="hidden"
-            shadowColor="rgba(0,0,0,0.1)"
-            shadowRadius={2}
-            top={0}
-            {...(isHovered && {
-              top: -14,
-              backgroundColor: '#fff',
-            })}
+          <HStack
+            position="absolute"
+            bottom={0}
+            left={-16}
+            right={-16}
+            padding={6}
+            alignItems="center"
+            justifyContent="center"
+            backgroundColor="rgba(255,255,255,0.45)"
+            borderTopColor="rgba(255,255,255,0.5)"
+            borderTopWidth={1}
+            shadowColor="rgba(0,0,0,0.08)"
+            shadowRadius={8}
+            shadowOffset={{ height: -3, width: 0 }}
           >
-            <Text
-              ellipse
-              flex={1}
+            <Box
+              position="relative"
+              className="ease-in-out-top"
+              backgroundColor="rgba(0,0,0,0.85)"
+              borderRadius={10}
+              paddingVertical={0}
+              maxWidth="100%"
               overflow="hidden"
-              fontSize={15}
-              fontWeight="700"
-              lineHeight={22}
-              color={isHovered ? '#000' : '#fff'}
-              paddingVertical={2}
-              textAlign="center"
+              shadowColor="rgba(0,0,0,0.15)"
+              shadowRadius={4}
+              top={0}
+              {...(isHovered && {
+                top: -14,
+                backgroundColor: '#fff',
+              })}
             >
-              {dish.name}
-            </Text>
-          </Box>
+              <Text
+                ellipse
+                flex={1}
+                overflow="hidden"
+                fontSize={14}
+                fontWeight="600"
+                lineHeight={22}
+                color={isHovered ? '#000' : '#fff'}
+                paddingVertical={2}
+                textAlign="center"
+              >
+                {dish.name}
+              </Text>
+            </Box>
+          </HStack>
         </HStack>
       </LinkButton>
     )
