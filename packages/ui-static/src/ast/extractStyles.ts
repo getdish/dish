@@ -1,12 +1,11 @@
 import path from 'path'
-import util, { isUndefined } from 'util'
+import util from 'util'
 import vm from 'vm'
 
 import generate from '@babel/generator'
 import traverse from '@babel/traverse'
 import * as t from '@babel/types'
-// hardcoding for now because i cant import dish/ui even with module-alias for react-native-web
-import * as AllExports from '@dish/ui'
+import * as AllExports from '@dish/ui/node'
 // import literalToAst from 'babel-literal-to-ast'
 import invariant from 'invariant'
 import { ViewStyle } from 'react-native'

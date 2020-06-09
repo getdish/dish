@@ -11,6 +11,7 @@
     "preserveSymlinks": true,
     "incremental": true,
     "jsx": "react",
+    "skipLibCheck": true,
     "module": "ES2020",
     "moduleResolution": "node",
     "noEmitOnError": false,
