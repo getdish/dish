@@ -306,39 +306,45 @@ const RestaurantTopReview = memo(
   })
 )
 
-export const RestaurantPeek = memo(function RestaurantPeek(
-  props: RestaurantListItemProps & {
-    size?: 'lg' | 'md'
-    restaurant: Restaurant
-  }
-) {
-  const { searchState, size = 'md' } = props
-  const tag_names = Object.keys(searchState?.activeTagIds || {})
-  const spacing = size == 'lg' ? 16 : 24
-  const isMedium = useMediaQueryIsMedium()
-  const [restaurant] = query.restaurant({
-    where: { id: { _eq: props.restaurant.id } },
-  })
-  const allPhotos = restaurantPhotosForCarousel({
-    restaurant: restaurant,
-    tag_names,
-  })
-  const photos = allPhotos.slice(0, 5)
+export const RestaurantPeek = memo(
+  graphql(function RestaurantPeek(
+    props: RestaurantListItemProps & {
+      size?: 'lg' | 'md'
+      restaurant: Restaurant
+    }
+  ) {
+    const { searchState, size = 'md' } = props
+    const tag_names = Object.keys(searchState?.activeTagIds || {})
+    const spacing = size == 'lg' ? 16 : 24
+    const isMedium = useMediaQueryIsMedium()
+    const [restaurant] = query.restaurant({
+      where: { id: { _eq: props.restaurant.id } },
+    })
+    const allPhotos = restaurantPhotosForCarousel({
+      restaurant,
+      tag_names,
+    })
+    const photos = allPhotos.slice(0, 5)
 
-  return (
-    <VStack position="relative" marginRight={-spacing} marginBottom={-spacing}>
-      <HStack spacing={spacing}>
-        {photos.map((photo, i) => {
-          return (
-            <DishView
-              key={i}
-              size={(size === 'lg' ? 190 : 150) * (isMedium ? 0.85 : 1)}
-              restaurantSlug={props.restaurant.slug}
-              dish={photo}
-            />
-          )
-        })}
-      </HStack>
-    </VStack>
-  )
-})
+    return (
+      <VStack
+        position="relative"
+        marginRight={-spacing}
+        marginBottom={-spacing}
+      >
+        <HStack spacing={spacing}>
+          {photos.map((photo, i) => {
+            return (
+              <DishView
+                key={i}
+                size={(size === 'lg' ? 190 : 150) * (isMedium ? 0.85 : 1)}
+                restaurantSlug={props.restaurant.slug}
+                dish={photo}
+              />
+            )
+          })}
+        </HStack>
+      </VStack>
+    )
+  })
+)

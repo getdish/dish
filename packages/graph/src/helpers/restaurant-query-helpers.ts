@@ -1,20 +1,9 @@
-import {
-  Restaurant,
-  RestaurantQuery,
-  RestaurantTag,
-  RestaurantTagQuery,
-} from '../types'
+import { RestaurantQuery } from '../types'
 import { TopCuisineDish } from '../types-extra'
-
-export function isRestaurantQueryResult(
-  restaurant: Restaurant | RestaurantQuery
-) {
-  return typeof restaurant.tags == 'function'
-}
 
 export function restaurantPhotosForCarousel({
   restaurant,
-  tag_names,
+  tag_names = [],
   max = 6,
 }: {
   restaurant: RestaurantQuery
@@ -24,7 +13,7 @@ export function restaurantPhotosForCarousel({
   let restaurant_photos: string[] = []
   let tags =
     // @ts-ignore
-    restaurant.top_tags({ args: { tag_names: tag_names.join(',') } }) || []
+    restaurant.top_tags({ args: { tag_names: tag_names.join(',') } })
   // @ts-ignore
   restaurant_photos = restaurant.photos() || []
 
@@ -35,9 +24,9 @@ export function restaurantPhotosForCarousel({
       continue
     }
     const is_searched_for_tag = tag_names?.includes(t.tag.name.toLowerCase())
-    let [photo] = t.photos || []
+    let [photo] = t.photos() || []
     let is_fallback_image = false
-    const fallback_image = t.tag?.default_images?.[0]
+    const fallback_image = t.tag?.default_images()?.[0]
     if (!photo && fallback_image) {
       photo = fallback_image
       is_fallback_image = true
