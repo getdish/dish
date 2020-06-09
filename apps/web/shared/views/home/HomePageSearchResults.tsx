@@ -174,14 +174,20 @@ const HomeSearchResultsViewContent = memo(
       // setChunk((x) => x + 1)
     }, [])
 
-    console.log('HomeSearchResultsViewContent.render', chunk, perChunk)
-
     // load a few at a time, less to start
     const isLoading =
       !state.results?.results ||
       state.results.status === 'loading' ||
-      results[0]?.name == null
+      results[0]?.name === null
     const hasMoreToLoad = results.length < resultsAll.length
+
+    console.log(
+      '123 HomeSearchResultsViewContent.render',
+      chunk,
+      perChunk,
+      state.results,
+      isLoading
+    )
 
     if (isLoading) {
       return (

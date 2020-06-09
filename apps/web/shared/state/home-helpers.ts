@@ -5,7 +5,6 @@ import {
   HomeStateItemRestaurant,
   HomeStateItemSearch,
   HomeStateItemUser,
-  HomeStateTagNavigable,
   OmStateHome,
 } from './home-types'
 

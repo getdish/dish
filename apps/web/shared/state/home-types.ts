@@ -92,13 +92,12 @@ export type HomeStateItem =
   | HomeStateItemRestaurant
   | HomeStateItemUser
   | HomeStateItemGallery
+  | HomeStateTagNavigable
 
-export type HomeStateTagNavigable = {
-  id: HomeStateItem['id']
-  type: HomeStateItem['type']
-  activeTagIds: HomeStateItemSearch['activeTagIds']
-  searchQuery: HomeStateItemSearch['searchQuery']
-}
+export type HomeStateTagNavigable = Pick<
+  HomeStateItemSearch,
+  'id' | 'type' | 'activeTagIds' | 'searchQuery'
+>
 
 export type HomeActiveTagIds = { [id: string]: boolean }
 

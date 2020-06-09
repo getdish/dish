@@ -1,5 +1,6 @@
 import { slugify } from '@dish/graph'
 import { Action, AsyncAction } from 'overmind'
+
 import { LIVE_SEARCH_DOMAIN } from '../constants'
 import { memoize } from '../helpers/memoizeWeak'
 import { isHomeState, isSearchState, shouldBeOnHome } from './home-helpers'
@@ -8,11 +9,10 @@ import {
   HomeStateItem,
   HomeStateTagNavigable,
   OmState,
-  OmStateHome
+  OmStateHome,
 } from './home-types'
 import { HistoryItem, NavigateItem, SearchRouteParams } from './router'
-import { getTagId, NavigableTag, Tag, tagFilters, tagLenses } from './Tag'
-
+import { NavigableTag, Tag, getTagId, tagFilters, tagLenses } from './Tag'
 
 const SPLIT_TAG = '_'
 const SPLIT_TAG_TYPE = '~'
@@ -74,7 +74,7 @@ export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps | null> = (
   }
   const nextState = getNextStateWithTags(om, props)
   if (nextState) {
-    const navigateItem = getNavigateItemForState(om.state, nextState as any)
+    const navigateItem = getNavigateItemForState(om.state, nextState)
     return {
       ...navigateItem,
       onPress() {
@@ -142,7 +142,7 @@ export const getNextStateWithTags: Action<
     id: state.id,
     searchQuery,
     activeTagIds,
-    type: state.type,
+    type: state.type as any,
   }
   if (isSearchState(nextState)) {
     nextState.type = 'search'
@@ -239,14 +239,16 @@ export const getTagsFromRoute = (
   return tags
 }
 
-export const syncStateToRoute: AsyncAction<HomeStateItem> = async (
+export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
   om,
   state
 ) => {
   const next = getNavigateItemForState(om.state, state)
   if (om.actions.router.getShouldNavigate(next)) {
     om.actions.router.navigate(next)
+    return true
   }
+  return false
 }
 
 const getUrlTagInfo = (part: string, defaultType: any = ''): NavigableTag => {

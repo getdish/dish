@@ -29,11 +29,11 @@ import {
   getFullTags,
   getNavigateItemForState,
   getNavigateToTags,
+  getNextStateWithTags,
   getTagsFromRoute,
   isSearchBarTag,
   navigateToTag,
   syncStateToRoute,
-  getNextStateWithTags,
 } from './home-tag-helpers'
 import {
   AutocompleteItem,
@@ -52,7 +52,6 @@ import {
 } from './home-types'
 import { HistoryItem, NavigateItem, RouteItem } from './router'
 import { Tag, getTagId, tagFilters, tagLenses } from './Tag'
-import { asyncLinkAction } from '../views/ui/Link'
 
 const INITIAL_RADIUS = 0.16
 
@@ -717,14 +716,23 @@ const runSearch: AsyncAction<{
   lastSearchAt = Date.now()
   let curId = lastSearchAt
 
-  await om.actions.home.navigateToCurrentState()
+  if (await om.actions.home.navigateToCurrentState()) {
+    // navigate will trigger new search
+    return
+  }
 
   const state = om.state.home.currentState
+
+  if (!isSearchState(state)) {
+    console.warn('NO SEARCH?')
+    return
+  }
+
   const tags = getActiveTags(om.state.home)
 
   const shouldCancel = () => {
     const answer = !state || lastSearchAt != curId
-    // if (answer) console.log('search: cancel')
+    if (answer) console.log('search: cancel')
     return answer
   }
 
@@ -737,7 +745,7 @@ const runSearch: AsyncAction<{
   const searchArgs: RestaurantSearchArgs = {
     center: roundLngLat(state.center),
     span: roundLngLat(padSpan(state.span)),
-    query,
+    query: state.searchQuery,
     tags: tags.map((tag) => getTagId(tag)),
   }
 
@@ -754,16 +762,9 @@ const runSearch: AsyncAction<{
     }
   }
 
-  // debounce
-  // const timeSince = Date.now() - lastSearchAt
-  // if (timeSince < 350) {
-  //   await sleep(Math.min(350, timeSince - 350))
-  // }
-  // if (shouldCancel()) return
-
   // fetch
   let restaurants = await search(searchArgs)
-  // console.log('searched', searchArgs, restaurants)
+  console.log('searched', searchArgs, restaurants)
   if (shouldCancel()) return
 
   // update denormalized dictionary
@@ -1117,32 +1118,33 @@ const setIsScrolling: Action<boolean> = (om, val) => {
   om.state.home.isScrolling = val
 }
 
-const updateActiveTags: AsyncAction<HomeStateTagNavigable> = async (
+const updateActiveTags: AsyncAction<HomeStateTagNavigable, boolean> = async (
   om,
   next
 ) => {
-  const state = _.findLast(om.state.home.states, (x) => x.id === next.id)
-  if (!state) {
-    console.warn('shouldnt happen, but if so we should push a state?')
-    return
-  }
-  if (!isEqual(state['activeTagIds'], next['activeTagIds']) || !isEqual(state.searchQuery, next.searchQuery)) {
-    if ('activeTagIds' in state) {
-      state.activeTagIds = next.activeTagIds
+  const state = om.state.home.currentState
+  if (state.type === next.type) {
+    if (
+      !isEqual(state['activeTagIds'], next['activeTagIds']) ||
+      !isEqual(state.searchQuery, next.searchQuery)
+    ) {
+      if ('activeTagIds' in state) {
+        state.activeTagIds = next.activeTagIds
+      }
+      state.searchQuery = next.searchQuery
     }
-    state.searchQuery = next.searchQuery
-    await syncStateToRoute(om, state)
   }
+  return await syncStateToRoute(om, next)
 }
 
 // this is useful for search where we mutate the current state while you type,
 // but then later you hit "enter" and we need to navigate to search (or home)
 // we definitely can clean up / name better some of this once things settle
-const navigateToCurrentState: AsyncAction = async (om) => {
+const navigateToCurrentState: AsyncAction<undefined, boolean> = async (om) => {
   const nextState = getNextStateWithTags(om, {
-    tags: []
+    tags: [],
   })
-  await om.actions.home.updateActiveTags(nextState)
+  return await om.actions.home.updateActiveTags(nextState)
 }
 
 // adds to allTags + allTagsNameToID
