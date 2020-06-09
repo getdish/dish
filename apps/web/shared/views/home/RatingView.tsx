@@ -56,7 +56,9 @@ export const RatingView = forwardRef(
     const ranking = percent * 10
     const number = (
       <Text
-        fontSize={Math.max(13, size * 0.5) * (ranking === 100 ? 0.75 : 1)}
+        fontSize={
+          Math.max(13, size * 0.5) * (!subtle && ranking === 100 ? 0.75 : 1)
+        }
         fontWeight={subtle ? '500' : '700'}
         color={color}
         letterSpacing={-(size / 90)}

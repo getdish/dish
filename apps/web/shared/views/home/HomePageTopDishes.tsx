@@ -177,8 +177,9 @@ const CountryTopDishesItem = memo(({ country }: { country: TopCuisine }) => {
   const restaurantsList = useMemo(() => {
     return (
       <VStack flex={1} padding={10} spacing={4} alignItems="flex-start">
-        {_.uniqBy(country.top_restaurants, (x) => x.name).map(
-          (restaurant, index) => {
+        {_.uniqBy(country.top_restaurants, (x) => x.name)
+          .slice(0, 5)
+          .map((restaurant, index) => {
             return (
               <RestaurantButton
                 trending={index % 2 == 0 ? 'up' : 'down'}
@@ -196,8 +197,7 @@ const CountryTopDishesItem = memo(({ country }: { country: TopCuisine }) => {
                 }
               />
             )
-          }
-        )}
+          })}
       </VStack>
     )
   }, [hoveredRestaurant, country.top_restaurants])
