@@ -35,7 +35,7 @@ test('Gets and persists a restaurant', async (t) => {
   t.assert(scrape.data.hours[2].hours, 'Closed')
   t.assert(scrape.data.address.includes('882 Bush'))
   t.assert(scrape.data.website.includes('sites.tablehero.com'))
-  t.assert(scrape.data.telephone.includes('+1 415-567-0915'))
+  t.assert(scrape.data.telephone.includes('(415) 567-0915'))
   t.assert(scrape.data.pricing, '$')
   t.assert(scrape.data.reviews.length > 10)
   t.assert(scrape.data.photos.length > 5)

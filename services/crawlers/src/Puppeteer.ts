@@ -24,23 +24,17 @@ export class Puppeteer {
   watch_requests_for!: string
   found_watched_request!: string
 
-  // Just be extra careful that anything a dev does doesn't get their IP
-  // blacklisted.
-  protect_devs_internet: boolean
-
   constructor(public domain: string, _aws_proxy: string | undefined) {
     if (typeof _aws_proxy == 'undefined') {
-      throw new Error('Puppeteer: No AWS proxy set1')
+      throw new Error('Puppeteer: No AWS proxy set')
     } else {
       this.aws_proxy = _aws_proxy
+      console.log('Using AWS proxy: ' + this.aws_proxy)
     }
-    this.protect_devs_internet = process.env.DISH_ENV != 'production'
   }
 
   async boot() {
-    if (this.protect_devs_internet) {
-      await this.startProxyServer()
-    }
+    await this.startProxyServer()
     await this.startPuppeteer()
     await this.interceptRequests()
   }
@@ -80,13 +74,9 @@ export class Puppeteer {
   }
 
   async startPuppeteer() {
-    let args: string[] = []
-    if (this.protect_devs_internet) {
-      args.push('--proxy-server=localhost:8000')
-    }
     this.browser = await puppeteer.launch({
       headless: false,
-      args: [...args],
+      args: ['--proxy-server=localhost:8000', '--no-sandbox'],
     })
 
     this.page = await this.browser.newPage()
@@ -107,11 +97,14 @@ export class Puppeteer {
     this.page.on('request', (request) => this._interceptRequests(request))
   }
 
+  _logBlockCounts() {
+    console.log(
+      'Blocked: ' + this.blocked_count,
+      'Allowed: ' + this.request_count
+    )
+  }
+
   async _interceptRequests(request: Request) {
-    //console.log(
-    //'Blocked: ' + this.blocked_count,
-    //'Allowed: ' + this.request_count
-    //)
     this._waitForSpecificRequest(request)
     const url = this._rewriteDomainsToAWS(request)
     if (!url) {
@@ -150,10 +143,11 @@ export class Puppeteer {
   _rewriteDomainsToAWS(request: Request) {
     const is_main_domain = request.url().includes(this.domain)
     const is_googleusercontent = this._isGoogleUserContent(request)
+    if (this._isRequestSensitiveToAWSProxy(request)) {
+      return request.url()
+    }
     if (is_main_domain) {
-      const proxied_url = request
-        .url()
-        .replace('https://' + this.domain, this.aws_proxy)
+      const proxied_url = request.url().replace(this.domain, this.aws_proxy)
       return proxied_url
     } else if (is_googleusercontent) {
       const proxied_url = request
@@ -167,6 +161,10 @@ export class Puppeteer {
       request.abort()
       return false
     }
+  }
+
+  _isRequestSensitiveToAWSProxy(request: Request) {
+    if (request.url().includes('authuser')) return true
   }
 
   _isGoogleUserContent(request: Request) {
