@@ -23,7 +23,6 @@
     "strictNullChecks": false,
     "strict": false,
     "noUnusedLocals": false,
-    "typeRoots": ["./node_modules/mapkit-typescript"],
     "types": ["node", "mapkit", "@types/requestidlecallback"]
   },
   "include": ["src/**/*", "web/**/*", "shared/**/*"],

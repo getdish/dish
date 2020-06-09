@@ -1,6 +1,5 @@
 import { slugify } from '@dish/graph'
 import { Action, AsyncAction } from 'overmind'
-
 import { LIVE_SEARCH_DOMAIN } from '../constants'
 import { memoize } from '../helpers/memoizeWeak'
 import { isHomeState, isSearchState, shouldBeOnHome } from './home-helpers'
@@ -9,10 +8,11 @@ import {
   HomeStateItem,
   HomeStateTagNavigable,
   OmState,
-  OmStateHome,
+  OmStateHome
 } from './home-types'
 import { HistoryItem, NavigateItem, SearchRouteParams } from './router'
-import { NavigableTag, Tag, getTagId, tagFilters, tagLenses } from './Tag'
+import { getTagId, NavigableTag, Tag, tagFilters, tagLenses } from './Tag'
+
 
 const SPLIT_TAG = '_'
 const SPLIT_TAG_TYPE = '~'
@@ -85,7 +85,7 @@ export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps | null> = (
   return null
 }
 
-const getNextStateWithTags: Action<
+export const getNextStateWithTags: Action<
   HomeStateNav,
   HomeStateTagNavigable | null
 > = (
@@ -97,16 +97,36 @@ const getNextStateWithTags: Action<
     replace = false,
   }
 ) => {
-  if (!isHomeState(state) && !isSearchState(state)) {
-    return null
-  }
+  let searchQuery = state.searchQuery ?? ''
   let activeTagIds: HomeActiveTagIds = {}
+
   // clone it to avoid confusing overmind
-  if (!replace) {
-    for (const key in state.activeTagIds) {
-      activeTagIds[key] = state.activeTagIds[key]
+  if ('activeTagIds' in state) {
+    if (!replace) {
+      for (const key in state.activeTagIds) {
+        activeTagIds[key] = state.activeTagIds[key]
+      }
     }
   }
+
+  // if they words match tag exactly, convert to tags
+  let words = searchQuery.toLowerCase().split(' ')
+  while (words.length) {
+    const [word, ...rest] = words
+    const foundTagId = om.state.home.allTagsNameToID[word.toLowerCase()]
+    if (foundTagId) {
+      // remove from words
+      words = rest
+      // add to active tags
+      activeTagIds[foundTagId] = true
+    } else {
+      break
+    }
+  }
+
+  // update query
+  searchQuery = words.join(' ')
+
   for (const tag of tags) {
     const key = getTagId(tag)
     if (activeTagIds[key] === true && !disabledIfActive) {
@@ -117,12 +137,20 @@ const getNextStateWithTags: Action<
       ensureUniqueActiveTagIds(activeTagIds, om.state.home, tag)
     }
   }
-  return {
+
+  const nextState = {
     id: state.id,
-    type: state.type,
-    searchQuery: state.searchQuery,
+    searchQuery,
     activeTagIds,
+    type: state.type,
   }
+  if (isSearchState(nextState)) {
+    nextState.type = 'search'
+  }
+  if (isHomeState(nextState)) {
+    nextState.type = 'home'
+  }
+  return nextState
 }
 
 // mutating

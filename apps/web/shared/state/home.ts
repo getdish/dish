@@ -33,6 +33,7 @@ import {
   isSearchBarTag,
   navigateToTag,
   syncStateToRoute,
+  getNextStateWithTags,
 } from './home-tag-helpers'
 import {
   AutocompleteItem,
@@ -51,6 +52,7 @@ import {
 } from './home-types'
 import { HistoryItem, NavigateItem, RouteItem } from './router'
 import { Tag, getTagId, tagFilters, tagLenses } from './Tag'
+import { asyncLinkAction } from '../views/ui/Link'
 
 const INITIAL_RADIUS = 0.16
 
@@ -630,7 +632,7 @@ const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
     state.searchQuery = query
   }
 
-  await syncStateToRoute(om, nextState)
+  // await syncStateToRoute(om, nextState)
 }
 
 const runAutocomplete: AsyncAction<string> = async (om, query) => {
@@ -642,18 +644,18 @@ const runAutocomplete: AsyncAction<string> = async (om, query) => {
     return
   }
 
-  const locationPromise = searchLocations(state.searchQuery)
-  const restaurantsPromise = search({
-    center: state.center,
-    span: padSpan(state.span),
-    query,
-    limit: 5,
-  })
+  const [restaurantsResults, locationResults] = await Promise.all([
+    search({
+      center: state.center,
+      span: padSpan(state.span),
+      query,
+      limit: 5,
+    }),
+    searchLocations(state.searchQuery),
+  ])
 
   const autocompleteDishes = om.state.home.autocompleteDishes
   let found = await fuzzyFind(query, autocompleteDishes)
-  // .search(query, { limit: 10 })
-  // .map((x) => x.item)
   if (found.length < 10) {
     found = [...found, ...autocompleteDishes.slice(0, 10 - found.length)]
   }
@@ -665,11 +667,6 @@ const runAutocomplete: AsyncAction<string> = async (om, query) => {
         icon: `🍛`,
       })
   )
-
-  const [restaurantsResults, locationResults] = await Promise.all([
-    restaurantsPromise,
-    locationPromise,
-  ])
 
   const unsortedResults: AutocompleteItem[] = _.uniqBy(
     [
@@ -691,8 +688,8 @@ const runAutocomplete: AsyncAction<string> = async (om, query) => {
   const results = query
     ? await fuzzyFind(query, unsortedResults)
     : unsortedResults
-  console.log('set autocomplete results', results)
-  om.state.home.autocompleteResults = results
+
+  om.actions.home.setAutocompleteResults(results)
 }
 
 const locationToAutocomplete = (location: {
@@ -717,44 +714,12 @@ const runSearch: AsyncAction<{
   force?: boolean
 } | void> = async (om, opts) => {
   opts = opts || { quiet: false }
-
-  const state = om.state.home.lastSearchState
-  if (!isSearchState(state)) return
-
   lastSearchAt = Date.now()
   let curId = lastSearchAt
 
-  // we can remove one we have search service
-  let query = state.searchQuery ?? ''
+  await om.actions.home.navigateToCurrentState()
 
-  // if they words match tag exactly, convert to tags
-  let words = query.toLowerCase().split(' ')
-  let foundTag = false
-  while (words.length) {
-    const [word, ...rest] = words
-    const foundTagId = om.state.home.allTagsNameToID[word.toLowerCase()]
-    if (foundTagId) {
-      foundTag = true
-      // remove from words
-      words = rest
-      // add to active tags
-      state.activeTagIds[foundTagId] = true
-    } else {
-      break
-    }
-  }
-
-  // update query
-  query = words.join(' ')
-  state.searchQuery = query
-
-  // TODO why do i need to do all this work to get it to update...
-  if (foundTag) {
-    state.activeTagIds = { ...state.activeTagIds }
-    om.state.home.states[om.state.home.states.length - 1] = { ...state }
-    syncStateToRoute(om, state)
-  }
-
+  const state = om.state.home.currentState
   const tags = getActiveTags(om.state.home)
 
   const shouldCancel = () => {
@@ -1157,11 +1122,27 @@ const updateActiveTags: AsyncAction<HomeStateTagNavigable> = async (
   next
 ) => {
   const state = _.findLast(om.state.home.states, (x) => x.id === next.id)
-  if (!state) return
-  if ('activeTagIds' in state) {
-    state.activeTagIds = next.activeTagIds
+  if (!state) {
+    console.warn('shouldnt happen, but if so we should push a state?')
+    return
   }
-  await syncStateToRoute(om, state)
+  if (!isEqual(state['activeTagIds'], next['activeTagIds']) || !isEqual(state.searchQuery, next.searchQuery)) {
+    if ('activeTagIds' in state) {
+      state.activeTagIds = next.activeTagIds
+    }
+    state.searchQuery = next.searchQuery
+    await syncStateToRoute(om, state)
+  }
+}
+
+// this is useful for search where we mutate the current state while you type,
+// but then later you hit "enter" and we need to navigate to search (or home)
+// we definitely can clean up / name better some of this once things settle
+const navigateToCurrentState: AsyncAction = async (om) => {
+  const nextState = getNextStateWithTags(om, {
+    tags: []
+  })
+  await om.actions.home.updateActiveTags(nextState)
 }
 
 // adds to allTags + allTagsNameToID
@@ -1169,6 +1150,10 @@ const addTagToCache: Action<Tag> = (om, tag) => {
   const id = getTagId(tag)
   om.state.home.allTags[id] = tag
   om.state.home.allTagsNameToID[tag.name.toLowerCase()] = id
+}
+
+const setAutocompleteResults: Action<AutocompleteItem[]> = (om, results) => {
+  om.state.home.autocompleteResults = results
 }
 
 export const actions = {
@@ -1208,4 +1193,6 @@ export const actions = {
   popHomeState,
   updateActiveTags,
   addTagToCache,
+  setAutocompleteResults,
+  navigateToCurrentState,
 }

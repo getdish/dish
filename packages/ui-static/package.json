@@ -2,6 +2,7 @@
   "name": "@dish/ui-static",
   "version": "0.0.1",
   "main": "_/index.js",
+  "private": true,
   "workspaces": {
     "nohoist": [
       "react-native-web"

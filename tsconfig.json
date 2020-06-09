@@ -3,7 +3,7 @@
 // https://github.com/IBM/slack-wrench/pull/44
 
 {
-  "extends": "./tsconfig.build.json",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
