@@ -12,7 +12,6 @@ export const onInitialize: OnInitialize = async (
   { state, actions, effects },
   overmind
 ) => {
-  console.log('initializing...')
   if (OVERMIND_MUTATIONS) {
     console.log('hydating from server...')
     rehydrate(state, OVERMIND_MUTATIONS)
@@ -33,20 +32,14 @@ export const onInitialize: OnInitialize = async (
   }
 
   const initAuth = async () => {
-    console.time('initAuth')
     await actions.user.checkForExistingLogin()
-    console.timeEnd('initAuth')
   }
-
   await Promise.all([initAuth()])
-  tlog(`inits`)
-
   await actions.home.start()
-  tlog('home.start()')
   await actions.router.start({
     onRouteChange: actions.home.handleRouteChange,
   })
-  tlog('router.start()')
+  tlog('onInitialize()')
 }
 
 if (process.env.NODE_ENV === 'development') {

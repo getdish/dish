@@ -24,8 +24,9 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   const states = useDebounceValue(homeStates, transitionDuration) ?? homeStates
   const isRemoving = states.length > breadcrumbs.length
   const items = isRemoving ? states : homeStates
-  const key = items.map((x) => x.id).join(' ')
+  const key = `${items.map((x) => x.id).join(' ')}`
   const lastHomeStates = useMemo(() => om.state.home.states, [key])
+
   const itemChildren = useMemo(() => {
     return items.map((item, index) => {
       const stackItemIndex = _.findLastIndex(
@@ -42,6 +43,7 @@ export function HomeStackView<A extends HomeStateItem>(props: {
       )
     })
   }, [key])
+
   return (
     <ZStack fullscreen>
       {items.map((item, i) => {

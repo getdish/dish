@@ -66,7 +66,11 @@ export function Link<
   } = allProps
   const linkProps = useNormalizeLinkProps(allProps as any)
   const om = useOvermindStatic()
-  const item = _.pick(linkProps as any, 'name', 'params', 'replace')
+  const item = {
+    name: linkProps['name'],
+    params: linkProps['params'],
+    replace: linkProps.replace,
+  }
   const navItem: NavigateItem = useMemo(
     () => ({
       name: name ?? item?.name,

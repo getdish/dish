@@ -14,7 +14,6 @@ export function Hoverable(props: {
 
   function handleMouseEnter() {
     if (isHoverEnabled() && !isHovered) {
-      console.log('mouse enter', isHoverEnabled(), props)
       onHoverIn?.()
       setHovered(true)
     }

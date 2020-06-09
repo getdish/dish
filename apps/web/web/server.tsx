@@ -97,25 +97,27 @@ server.get('*', async (req, res) => {
 
   let out = ''
   for (const line of template.split('\n')) {
-    if (line.indexOf('<!-- app -->') >= 0) {
-      out += appHtml
-    } else if (line.indexOf('<!-- head -->') >= 0) {
+    if (line.includes('<!-- app -->')) {
+      // out += appHtml
+      continue
+    }
+    if (line.includes('<!-- head -->')) {
       out += `
       ${helmet.title.toString()}
       ${helmet.meta.toString()}
       ${helmet.link.toString()}
 `
-    } else if (line.indexOf('<!-- scripts -->') >= 0) {
+      continue
+    }
+    if (line.indexOf('<!-- scripts -->') >= 0) {
       out += `
-      <script defer src="https://cdn.apple-mapkit.com/mk/5.x.x/mapkit.js"></script>
       <script>
         window.__OVERMIND_MUTATIONS = ${JSON.stringify(overmind.hydrate())}
       </script>
-      ${clientScripts.join('\n')}
-`
-    } else {
-      out += line
+      ${clientScripts.join('\n')}\n`
+      continue
     }
+    out += line
   }
 
   res.send(out)

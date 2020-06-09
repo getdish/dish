@@ -205,7 +205,6 @@ export const isEditingUserPage = (state: OmState) => {
 
 // only await things that are required on first render
 const start: AsyncAction = async (om) => {
-  console.log('home.start')
   om.actions.home.updateBreadcrumbs()
   om.actions.home.updateCurrentMapAreaInformation()
   // promises are nice here, dont wait on anything top level unless necessary
@@ -1104,12 +1103,16 @@ const updateBreadcrumbs: Action = (om) => {
 
 const createBreadcrumbs = (state: HomeState) => {
   let crumbs: HomeStateItemSimple[] = []
-  stateLoop: for (let i = state.states.length - 1; i >= 0; i--) {
+  // reverse loop to find latest
+  for (let i = state.states.length - 1; i >= 0; i--) {
     const cur = state.states[i]
     switch (cur.type) {
       case 'home': {
         crumbs.unshift(cur)
-        break stateLoop
+        return crumbs.map((x) => ({
+          id: x.id,
+          type: x.type,
+        }))
       }
       case 'search':
       case 'userSearch':
@@ -1129,14 +1132,11 @@ const createBreadcrumbs = (state: HomeState) => {
         if (isSearchState(cur) && crumbs.some(isSearchState)) {
           break
         }
-        // we could prevent stacking userSearch
-        // if (cur.type === 'search' && crumbs.some(x => x.type === 'userSearch'))
         crumbs.unshift(cur)
         break
       }
     }
   }
-  return crumbs.map((x) => _.pick(x, 'id', 'type'))
 }
 
 function createAutocomplete(x: Partial<AutocompleteItem>): AutocompleteItem {
