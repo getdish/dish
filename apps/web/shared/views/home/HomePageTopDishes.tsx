@@ -176,7 +176,7 @@ const CountryTopDishesItem = memo(({ country }: { country: TopCuisine }) => {
 
   const restaurantsList = useMemo(() => {
     return (
-      <VStack flex={1} padding={10} spacing={1} alignItems="flex-start">
+      <VStack flex={1} padding={10} spacing={4} alignItems="flex-start">
         {_.uniqBy(country.top_restaurants, (x) => x.name).map(
           (restaurant, index) => {
             return (
@@ -263,14 +263,13 @@ const CountryTopDishesItem = memo(({ country }: { country: TopCuisine }) => {
 
 const HomeTopDishesSide = memo((props) => {
   const drawerWidth = useHomeDrawerWidth()
-  console.log('max width?', drawerWidth * pctRestaurant - 30)
   return (
     <ZStack
       fullscreen
       paddingTop={padding + 14}
       pointerEvents="none"
       right="auto"
-      maxWidth={drawerWidth * pctRestaurant - 30}
+      maxWidth={drawerWidth * pctRestaurant + 10}
       zIndex={100}
       {...props}
     />

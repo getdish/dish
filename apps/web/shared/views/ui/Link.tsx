@@ -1,16 +1,8 @@
 import './Link.css'
 
-import {
-  StackProps,
-  Text,
-  TextProps,
-  prevent,
-  useDebounceValue,
-  useForceUpdate,
-  useOverlay,
-} from '@dish/ui'
+import { StackProps, Text, TextProps, prevent, useForceUpdate } from '@dish/ui'
 import _ from 'lodash'
-import React, { useCallback, useContext, useEffect, useMemo } from 'react'
+import React, { useCallback, useContext, useMemo } from 'react'
 
 import { HomeStateItem } from '../../state/home'
 import { getNavigateToTags } from '../../state/home-tag-helpers'
@@ -20,7 +12,7 @@ import {
   getPathFromParams,
 } from '../../state/router'
 import { NavigableTag } from '../../state/Tag'
-import { useOvermind, useOvermindStatic } from '../../state/useOvermind'
+import { useOvermindStatic } from '../../state/useOvermind'
 import { CurrentStateID } from '../home/CurrentStateID'
 import { LinkButtonNamedProps, LinkButtonProps } from './LinkButton'
 

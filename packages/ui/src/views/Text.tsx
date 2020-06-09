@@ -1,15 +1,18 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useRef } from 'react'
 import {
   Text as ReactText,
   TextProps as ReactTextProps,
   TextStyle,
 } from 'react-native'
 
+import { useAttachClassName } from '../hooks/useAttachClassName'
+
 export type TextProps = Omit<ReactTextProps, 'style'> &
   TextStyle & {
     ellipse?: boolean
     selectable?: boolean
     children?: any
+    className?: string
   }
 
 const selectableStyle = {
@@ -24,7 +27,9 @@ const ellipseStyle = {
 
 export const Text = (allProps: TextProps) => {
   const [props, style] = useTextStyle(allProps)
-  return <ReactText style={style} {...props} />
+  const textRef = useRef(null)
+  useAttachClassName(allProps.className, textRef)
+  return <ReactText ref={textRef} style={style} {...props} />
 }
 
 Text.staticConfig = {

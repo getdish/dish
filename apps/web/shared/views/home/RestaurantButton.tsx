@@ -29,7 +29,6 @@ export const RestaurantButton = memo(
       <LinkButton
         key={restaurant.name}
         pointerEvents="auto"
-        params={{ slug: restaurant.slug }}
         {...(active ? flatButtonStyleSelected : flatButtonStyle)}
         {...(subtle && {
           backgroundColor: 'transparent',
@@ -45,6 +44,7 @@ export const RestaurantButton = memo(
         paddingRight={34}
         {...props}
         name="restaurant"
+        params={{ slug: restaurant.slug }}
         onHoverIn={() => {
           onHoverIn?.(restaurant)
         }}
@@ -60,13 +60,7 @@ export const RestaurantButton = memo(
               }}
             />
           )}
-          <Text
-            overflow="hidden"
-            textWrap="no-wrap"
-            whiteSpace="pre"
-            textOverflow="ellipsis"
-            fontWeight="500"
-          >
+          <Text ellipse fontWeight="500">
             {typeof rank === 'number' ? `${rank}. ` : ''}
             {restaurant.name}
           </Text>
