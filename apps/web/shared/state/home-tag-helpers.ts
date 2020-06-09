@@ -1,4 +1,3 @@
-import { sleep } from '@dish/async'
 import { slugify } from '@dish/graph'
 import { Action, AsyncAction } from 'overmind'
 
@@ -8,12 +7,10 @@ import { isHomeState, isSearchState, shouldBeOnHome } from './home-helpers'
 import {
   HomeActiveTagIds,
   HomeStateItem,
-  HomeStateItemBase,
-  HomeStateItemHome,
-  HomeStateItemSearch,
   HomeStateTagNavigable,
+  OmState,
+  OmStateHome,
 } from './home-types'
-import { OmState, OmStateHome } from './home-types'
 import { HistoryItem, NavigateItem, SearchRouteParams } from './router'
 import { NavigableTag, Tag, getTagId, tagFilters, tagLenses } from './Tag'
 
@@ -51,7 +48,7 @@ export const isSearchBarTag = (tag: Pick<Tag, 'type'>) =>
 export const getActiveTags = memoize(
   (home: OmStateHome, state: HomeStateItem = home.currentState) => {
     if ('activeTagIds' in state) {
-      const activeTagIds = state.activeTagIds ?? {}
+      const { activeTagIds } = state
       const tagIds = Object.keys(activeTagIds).filter((x) => activeTagIds[x])
       const tags: Tag[] = tagIds.map(
         (x) => home.allTags[x] ?? { id: '-1', name: x, type: 'dish' }

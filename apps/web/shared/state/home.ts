@@ -167,6 +167,7 @@ export const state: HomeState = {
   skipNextPageFetchData: false,
   activeIndex: -1,
   allTags,
+  allTagsNameToID: {},
   allUsers: {},
   allLenseTags: tagLenses,
   allFilterTags: tagFilters,
@@ -315,7 +316,7 @@ const pushHomeState: AsyncAction<
         const tags = await getFullTags(fakeTags)
         activeTagIds = tags.reduce((acc, tag) => {
           const id = getTagId(tag)
-          om.state.home.allTags[id] = tag as Tag // ?
+          om.actions.home.addTagToCache(tag)
           acc[id] = true
           return acc
         }, {})
@@ -488,7 +489,6 @@ const loadPageRestaurant: AsyncAction = async (om) => {
 const loadPageSearch: AsyncAction = async (om) => {
   const state = om.state.home.currentState
   if (state.type !== 'search' && state.type !== 'userSearch') return
-  console.log('loadPageSearch')
   om.actions.home.runSearch({ force: true })
 }
 
@@ -571,7 +571,7 @@ const loadHomeDishes: AsyncAction = async (om) => {
         name: dish.name ?? '',
         type: 'dish',
       }
-      om.state.home.allTags[getTagId(tag)] = tag
+      om.actions.home.addTagToCache(tag)
     }
   }
 
@@ -737,8 +737,36 @@ const runSearch: AsyncAction<{
   let curId = lastSearchAt
 
   // we can remove one we have search service
-  const ogQuery = om.state.home.currentState.searchQuery ?? ''
-  let query = ogQuery ?? ''
+  let query = state.searchQuery ?? ''
+
+  // if they words match tag exactly, convert to tags
+  let words = query.toLowerCase().split(' ')
+  let foundTag = false
+  while (words.length) {
+    const [word, ...rest] = words
+    const foundTagId = om.state.home.allTagsNameToID[word.toLowerCase()]
+    if (foundTagId) {
+      foundTag = true
+      // remove from words
+      words = rest
+      // add to active tags
+      state.activeTagIds[foundTagId] = true
+    } else {
+      break
+    }
+  }
+
+  // update query
+  query = words.join(' ')
+  state.searchQuery = query
+
+  // TODO why do i need to do all this work to get it to update...
+  if (foundTag) {
+    state.activeTagIds = { ...state.activeTagIds }
+    om.state.home.states[om.state.home.states.length - 1] = { ...state }
+    syncStateToRoute(om, state)
+  }
+
   const tags = getActiveTags(om.state.home)
 
   const shouldCancel = () => {
@@ -749,11 +777,9 @@ const runSearch: AsyncAction<{
 
   // dont be so eager if started
   if (!opts.force && om.state.home.started) {
-    await Promise.all([sleep(100), requestIdle()])
+    await Promise.all([sleep(10), requestIdle()])
     if (shouldCancel()) return
   }
-
-  query = query.trim()
 
   const searchArgs: RestaurantSearchArgs = {
     center: roundLngLat(state.center),
@@ -766,8 +792,6 @@ const runSearch: AsyncAction<{
   const searchKey = JSON.stringify(searchArgs)
   if (!opts.force && searchKey === lastSearchKey) return
 
-  // update state
-  state.searchQuery = ogQuery
   if (!opts?.quiet) {
     state.hasMovedMap = false
     state.results = {
@@ -1151,6 +1175,13 @@ const updateActiveTags: AsyncAction<HomeStateTagNavigable> = async (
   await syncStateToRoute(om, state)
 }
 
+// adds to allTags + allTagsNameToID
+const addTagToCache: Action<Tag> = (om, tag) => {
+  const id = getTagId(tag)
+  om.state.home.allTags[id] = tag
+  om.state.home.allTagsNameToID[tag.name.toLowerCase()] = id
+}
+
 export const actions = {
   setIsScrolling,
   navigateToTag,
@@ -1187,4 +1218,5 @@ export const actions = {
   loadPageRestaurant,
   popHomeState,
   updateActiveTags,
+  addTagToCache,
 }

@@ -14,6 +14,7 @@ export type HomeState = {
   activeIndex: number // index for vertical (in page), -1 = autocomplete
   allUsers: { [id: string]: User }
   allTags: { [keyPath: string]: Tag }
+  allTagsNameToID: { [name: string]: string }
   allLenseTags: Tag[]
   allFilterTags: Tag[]
   allRestaurants: { [id: string]: Restaurant }
