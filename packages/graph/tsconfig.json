@@ -4,7 +4,6 @@
     "composite": true,
     "baseUrl": ".",
     "incremental": true,
-    "skipLibCheck": true,
     "module": "CommonJS",
     "outDir": "_",
     "rootDir": "./src"
