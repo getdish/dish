@@ -590,48 +590,24 @@ const loadHomeDishes: AsyncAction = async (om) => {
 }
 
 const DEBOUNCE_AUTOCOMPLETE = 120
-const DEBOUNCE_SEARCH = 1000
 
 let lastRunAt = Date.now()
+let curQuery = ''
 const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   // also reset runSearch! hacky!
   lastSearchAt = Date.now()
   lastRunAt = Date.now()
+  curQuery = query
   let id = lastRunAt
-
   const state = om.state.home.currentState
   const isDeleting = query.length < state.searchQuery.length
-  const isOnHome = isHomeState(state)
-  const isOnSearch = isSearchState(state)
-  const nextState = { ...state, searchQuery: query }
-  const isGoingHome = shouldBeOnHome(om.state.home, nextState)
-  const isEditing = isEditingUserPage(om.state)
-
-  if (!isEditing && isOnSearch && isGoingHome) {
-    // to automatically go home on empty
-    // await requestIdle()
-    // if (id != lastRunAt) return
-    om.actions.home.clearSearch()
-    return
-  }
-
   // AUTOCOMPLETE
-  // very slight debounce
-  if (isOnSearch || isOnHome) {
-    const delayByX = isDeleting ? 2 : 1
-    await sleep(DEBOUNCE_AUTOCOMPLETE * delayByX)
-    if (id != lastRunAt) return
-
-    // fast actions
-    om.actions.home.setShowAutocomplete('search')
-    runAutocomplete(om, query)
-  }
-
-  if (isOnHome || isOnSearch) {
-    state.searchQuery = query
-  }
-
-  // await syncStateToRoute(om, nextState)
+  const delayByX = isDeleting ? 2 : 1
+  await sleep(DEBOUNCE_AUTOCOMPLETE * delayByX)
+  if (id != lastRunAt) return
+  // fast actions
+  om.actions.home.setShowAutocomplete('search')
+  runAutocomplete(om, query)
 }
 
 const runAutocomplete: AsyncAction<string> = async (om, query) => {
@@ -715,6 +691,10 @@ const runSearch: AsyncAction<{
   opts = opts || { quiet: false }
   lastSearchAt = Date.now()
   let curId = lastSearchAt
+
+  if (om.state.home.currentState.searchQuery !== curQuery) {
+    om.state.home.currentState.searchQuery = curQuery
+  }
 
   if (await om.actions.home.navigateToCurrentState()) {
     // navigate will trigger new search

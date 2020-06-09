@@ -4,7 +4,9 @@ import { useForceUpdate } from '../hooks/useForceUpdate'
 import { VStack, ZStack } from './Stacks'
 import { Text } from './Text'
 
-let show: (text: string, duration: number) => void
+let show: (text: string, duration: number) => void = (text) => {
+  console.warn(text)
+}
 
 export const Toast = {
   // @ts-ignore

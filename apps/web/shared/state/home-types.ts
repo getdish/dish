@@ -97,7 +97,8 @@ export type HomeStateItem =
 export type HomeStateTagNavigable = Pick<
   HomeStateItemSearch,
   'id' | 'type' | 'activeTagIds' | 'searchQuery'
->
+> &
+  Partial<HomeStateItemSearch>
 
 export type HomeActiveTagIds = { [id: string]: boolean }
 

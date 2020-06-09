@@ -1,4 +1,5 @@
 import { slugify } from '@dish/graph'
+import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
 import _ from 'lodash'
 import { Action, AsyncAction, Derive, derived } from 'overmind'
@@ -209,18 +210,19 @@ const navigate: AsyncAction<NavigateItem> = async (om, navItem) => {
   }
 
   if (onRouteChange) {
-    await race(
-      onRouteChange({
-        type: item.replace ? 'replace' : 'push',
-        name: item.name,
-        item: _.last(om.state.router.history)!,
-      }),
-      2000,
-      'router.onRouteChange',
-      {
-        warnOnly: true,
-      }
-    )
+    try {
+      await race(
+        onRouteChange({
+          type: item.replace ? 'replace' : 'push',
+          name: item.name,
+          item: _.last(om.state.router.history)!,
+        }),
+        2000,
+        'router.onRouteChange'
+      )
+    } catch (err) {
+      Toast.show(`${err.message}`)
+    }
   }
 }
 
