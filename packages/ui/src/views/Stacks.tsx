@@ -68,9 +68,6 @@ const createStack = (defaultStyle?: ViewStyle) => {
       },
       ref
     ) => {
-      onHoverIn = onHoverIn || onMouseEnter
-      onHoverOut = onHoverOut || onMouseLeave
-
       const innerRef = useRef<any>()
       const [isHovered, set] = useState(false)
 
@@ -122,16 +119,24 @@ const createStack = (defaultStyle?: ViewStyle) => {
         </View>
       )
 
-      if (hoverStyle || onHoverIn || onHoverOut) {
+      if (
+        hoverStyle ||
+        onHoverIn ||
+        onHoverOut ||
+        onMouseEnter ||
+        onMouseLeave
+      ) {
         content = (
           <Hoverable
             onHoverIn={() => {
               set(true)
               onHoverIn?.()
+              onMouseEnter?.()
             }}
             onHoverOut={() => {
               set(false)
               onHoverOut?.()
+              onMouseLeave?.()
             }}
           >
             {content}

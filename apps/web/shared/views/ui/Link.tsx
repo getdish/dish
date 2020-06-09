@@ -110,6 +110,7 @@ export function Link<
       padding,
     },
   }
+
   const content = (
     <Text
       ellipse={ellipse}
@@ -164,6 +165,7 @@ const useNormalizedLink = (
       // @ts-ignore
       onMouseEnter() {
         forceUpdate()
+        props['onMouseEnter']?.()
       },
     }
   }

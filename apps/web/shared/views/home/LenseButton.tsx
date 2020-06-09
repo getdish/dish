@@ -1,14 +1,5 @@
-import {
-  Box,
-  HStack,
-  HoverablePopover,
-  LinearGradient,
-  Text,
-  ZStack,
-  memoIsEqualDeep,
-} from '@dish/ui'
+import { Box, HStack, HoverablePopover, Text, memoIsEqualDeep } from '@dish/ui'
 import React from 'react'
-import { StyleSheet } from 'react-native'
 
 import { Tag } from '../../state/Tag'
 import { LinkButton } from '../ui/LinkButton'
@@ -40,17 +31,10 @@ export const LenseButton = memoIsEqualDeep(
           justifyContent="center"
           marginVertical={-10 * scale}
           width={40 * scale}
-          // paddingLeft={6}
           height={40 * scale}
           paddingVertical={3 * scale}
-          // backgroundColor={'rgba(255,255,255,0.5)'}
           borderRadius={100}
-          // shadowRadius={2}
-          // shadowColor={isActive ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.05)'}
-          // shadowOffset={{ height: 1, width: 0 }}
-          // borderWidth={2}
           borderColor="transparent"
-          // opacity={0.8}
           hoverStyle={{
             borderColor: lenseColorLight,
             opacity: 1,

@@ -2,39 +2,30 @@ import React from 'react'
 
 import { isHoverEnabled } from './HoverState'
 
-export function Hoverable({
-  onHoverIn,
-  onHoverOut,
-  onHoverMove,
-  children,
-}: {
+export function Hoverable(props: {
   children?: any
   onHoverIn?: Function
   onHoverOut?: Function
   onHoverMove?: Function
 }) {
+  const { onHoverIn, onHoverOut, onHoverMove, children } = props
   const [isHovered, setHovered] = React.useState(false)
   const [showHover, setShowHover] = React.useState(true)
 
-  function handleMouseEnter(e) {
+  function handleMouseEnter() {
     if (isHoverEnabled() && !isHovered) {
-      if (onHoverIn) onHoverIn()
+      console.log('mouse enter', isHoverEnabled(), props)
+      onHoverIn?.()
       setHovered(true)
     }
   }
 
-  function handleMouseLeave(e) {
+  function handleMouseLeave() {
     if (isHovered) {
-      if (onHoverOut) onHoverOut()
+      onHoverOut?.()
       setHovered(false)
     }
   }
-
-  function handleGrant() {
-    setShowHover(false)
-  }
-
-  function handleRelease() {}
 
   const child =
     typeof children === 'function' ? children(showHover && isHovered) : children
@@ -46,9 +37,6 @@ export function Hoverable({
     // prevent hover showing while responder
     onResponderGrant: () => setShowHover(false),
     onResponderRelease: () => setShowHover(true),
-    // if child is Touchable
-    // onPressIn: handleGrant,
-    // onPressOut: handleRelease,
   })
 }
 

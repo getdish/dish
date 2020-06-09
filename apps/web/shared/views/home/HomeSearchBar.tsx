@@ -372,8 +372,8 @@ export default memo(function HomeSearchBar() {
       zIndex={22}
       position="absolute"
       marginTop={searchBarTopOffset}
-      left={searchBarTopOffset}
-      right={searchBarTopOffset}
+      left={searchBarTopOffset + 8}
+      right={searchBarTopOffset + 8}
       alignItems="center"
       height={searchBarHeight}
     >
