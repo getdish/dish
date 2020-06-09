@@ -10,22 +10,27 @@ TL;DR:
 - Summarized tips/comments (see RestaurantTopReview)
 - Search performance
 
+✔️ : Done
+👷: Currently or will actively work on
+⚠️ : Not prioritising
+
+
 Week 1
 
 - Search results
-  - Search should sort by tags!
-    - Dish should override country, etc
+  - Search should sort by tags! ✔️
+    - Dish should override country, etc ✔️
   - Smoothing ratings - use restaurant overall
-  - Showing the dish tag on search results first always
+  - Showing the dish tag on search results first always ✔️
   - Fleshing out dish tags
-    - Using menu_items to find dishes as well
-      - if no image, we can use an image from any other tag! just fallback to some other restaurant image
-    - Use photos to find them as well
+    - Using menu_items to find dishes as well 👷
+      - if no image, we can use an image from any other tag! just fallback to some other restaurant image ✔️
+    - Use photos to find them as well ⚠️ not impossible just not so easy to give it priority
 - Dish data / dish ratings
   - we really need better dish ratings / dish finding
-    - Some looser matching of user comments / sentiment
+    - Some looser matching of user comments / sentiment ⚠️ could you expand on this?
     - Ambiance / Service sentiment
-      - Ratings that directly mention service/ambiance should be processed differently
+      - Ratings that directly mention service/ambiance should be processed differently ⚠️ quite complicated so will not make a priority
         - We can detect these through simple keyword analysis?
           1. the star rating should be _not_ counted, instead:
           2. take sentiment analysis toward (service + ambiance) tags separately, and use those in our UI (tags! Service tag + Ambiance tag)
@@ -33,43 +38,43 @@ Week 1
     - be sure to use the NON-ambiance/service review as the base for smoothing dish tag reviews! should really improve it.
 - Crawlers
   - delivery crawlers would be great
-- Autocomplete endpoint to get ONLY dishes from a specific cuisine (If I'm in Vietnamese it return "Pho", etc)?
-- One big missing piece that would make the whole ui better: top_comment
+- Autocomplete endpoint to get ONLYs dishes from a specific cuisine (If I'm in Vietnamese it return "Pho", etc)?
+- One big missing piece that would make the whole ui better: top_comment 👷 such a great idea
   - having top comments for tags would be even bigger
 - [reserved for various productionizing work]
 
 Week 2
 
-- Location endpoint: can we get nearby regions easily? if so would be helpful
+- Location endpoint: can we get nearby regions easily? ⚠️ if so would be helpful what defines a "region"?
 - Performance check - search/home has seemed slow
 - Crawlers!
-  - Delivery crawlers 🚚
-  - Google for images/reviews
-  - Instagram v1
+  - Delivery crawlers 🚚 👷
+  - Google for images/reviews 👷
+  - Instagram v1 ⚠️ hardest thing is matching accounts to restaruants
 
 Week 3
 
 - Menus from more places
-  - yelp, google, tripadvisor...
-  - menu data is actually really nice if we can merge it with dish data in the UI so i can show a full menu, and pull in images if they exist
+  - yelp, google, tripadvisor... 👷
+  - menu data is actually really nice if we can merge it with dish data in the UI so i can show a full menu, and pull in images if they exist ✔️ just need to form the right graph queries
 - Menu => Dish and Image => Dish improvements
   - we can likely do a ton of small things to better pull out dish images, dish reviews, etc:
-    - from image comments
-    - menu items can help us add dish tags
-    - partial matching dish names for sentiment
-- Delivery service crawlers
+    - from image comments ✔️⚠️ already doing this, there are other sources, but it's tricky
+    - menu items can help us add dish tags 👷
+    - partial matching dish names for sentiment ⚠️  can you expand on this?
+- Delivery service crawlers 👷
 
 Week 4
 
 - [reserved for various productionizing work]
 - Top comments!
   - For dishes, restaruants, potentially even tag
-    - use some off-the-shelf ML to make it cool?
-    - perhaps showing (1 positive + 1 negative)?
+    - use some off-the-shelf ML to make it cool? (initial research doesn't reveal anything obvious)
+    - perhaps showing (1 positive + 1 negative)? (summarisation is certainly available, summarised negative sentiment could be tricky)
 - Image crawling - image selection improvements
-  - Google or instagram, both ideally!
+  - Google or instagram, both ideally! 👷
 - Various features for "completeness"
-  - If we can find an easyish pre-packaged docker image / library for ML we can use to summarize all the comments into little "snippets" like yelp/google do, that would be a big win in the UI
+  - If we can find an easyish pre-packaged docker image / library for ML we can use to summarize all the comments into little "snippets" like yelp/google do, that would be a big win in the UI (nothing immediately stands out here :/)
 
 # Triage
 
