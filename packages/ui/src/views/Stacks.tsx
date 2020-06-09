@@ -11,6 +11,7 @@ import { View, ViewProps, ViewStyle } from 'react-native'
 import { combineRefs } from '../helpers/combineRefs'
 import { StaticComponent, StaticConfig } from '../helpers/extendStaticConfig'
 import { getNode } from '../helpers/getNode'
+import { useAttachClassName } from '../hooks/useAttachClassName'
 import { Hoverable } from './Hoverable'
 import { Spacer, Spacing } from './Spacer'
 
@@ -75,43 +76,10 @@ const createStack = (defaultStyle?: ViewStyle) => {
 
       const cn = `${className ?? ''} ${disabled ? 'force-disable' : ''}`.trim()
 
-      useLayoutEffect(() => {
-        if (!cn) return
-        if (!innerRef.current) return
-        const node = getNode(innerRef.current)
-        if (!node) {
-          return
-        }
-        const names = cn.trim().split(' ').filter(Boolean)
-
-        function addClassNames() {
-          const cl = new Set(node.classList)
-          for (const name of names) {
-            if (!cl.has(name)) {
-              node.classList?.add(name)
-            }
-          }
-        }
-
-        addClassNames()
-
-        if (!(node instanceof HTMLElement)) {
-          // disable mutation observation in other envs
-          return
-        }
-
-        const observer = new MutationObserver(() => {
-          addClassNames()
-        })
-        observer.observe(node, {
-          attributes: true,
-        })
-
-        return () => {
-          observer.disconnect()
-          names.forEach((x) => node.classList.remove(x))
-        }
-      }, [JSON.stringify(hoverStyle), cn, innerRef.current])
+      useAttachClassName(cn, innerRef, [
+        // dont remembery why hoverStyle but leaving as it likely fixed something
+        hoverStyle ? JSON.stringify(hoverStyle) : null,
+      ])
 
       let spacedChildren = children
       if (typeof spacing !== 'undefined') {

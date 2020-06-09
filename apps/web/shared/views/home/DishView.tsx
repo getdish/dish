@@ -127,7 +127,7 @@ export const DishView = memo(
 
         <HStack
           position="absolute"
-          bottom={-10}
+          bottom={-25}
           overflow="hidden"
           width="calc(100% + 30px)"
           marginHorizontal={-15}
@@ -147,6 +147,9 @@ export const DishView = memo(
             shadowColor="rgba(0,0,0,0.08)"
             shadowRadius={8}
             shadowOffset={{ height: -3, width: 0 }}
+            {...(isHovered && {
+              backgroundColor: 'transparent',
+            })}
           >
             <Box
               position="relative"
