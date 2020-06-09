@@ -53,7 +53,7 @@ async function main() {
   })
 }
 
-main()
+//main()
 
 // So we can `kubectl exec` in on occasion
 setInterval(() => {}, 2 ^ 30)
