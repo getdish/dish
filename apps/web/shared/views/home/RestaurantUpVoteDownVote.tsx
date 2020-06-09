@@ -5,28 +5,14 @@ import { ChevronDown, ChevronUp } from 'react-feather'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
 import { useOvermind } from '../../state/useOvermind'
+import { useUserReview } from './useUserReview'
 
 export const RestaurantUpVoteDownVote = memo(
   graphql(({ restaurantId }: { restaurantId: string }) => {
     const om = useOvermind()
     const userId = om.state.user.user?.id
-    let vote = 0
-
-    if (userId != null) {
-      const [review] = query.review({
-        limit: 1,
-        where: {
-          restaurant_id: {
-            _eq: restaurantId,
-          },
-          user_id: {
-            _eq: userId,
-          },
-        },
-      })
-      vote = review?.rating
-    }
-
+    const review = useUserReview(restaurantId)
+    const vote = review?.rating
     return (
       <div
         style={{

@@ -1,4 +1,4 @@
-import { graphql, query } from '@dish/graph'
+import { graphql } from '@dish/graph'
 import {
   Text,
   Toast,
@@ -12,6 +12,7 @@ import { Star } from 'react-feather'
 import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
 import { getInputNode } from './HomeSearchBar'
+import { useUserReview } from './useUserReview'
 
 export const RestaurantFavoriteStar = memo(
   graphql(
@@ -29,17 +30,7 @@ export const RestaurantFavoriteStar = memo(
       const [timer, setTimer] = useState(null)
       const forceUpdate = useForceUpdate()
       const showContent = isOpen
-      const [review] = query.review({
-        limit: 1,
-        where: {
-          restaurant_id: {
-            _eq: restaurantId,
-          },
-          user_id: {
-            _eq: om.state.user.user?.id,
-          },
-        },
-      })
+      const review = useUserReview(restaurantId)
       const isStarred = review?.rating > 0
       // const [writeReview, info] = useReviewMutation()
 
