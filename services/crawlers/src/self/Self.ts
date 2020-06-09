@@ -341,6 +341,7 @@ export class Self extends WorkerJob {
     let path: string
     let parts: string[]
 
+    // @ts-ignore
     this.restaurant.sources = {} as {
       [key: string]: { url: string; rating: number }
     }
@@ -350,6 +351,7 @@ export class Self extends WorkerJob {
       parts = path.split('-')
       parts.shift()
       url = 'https://www.tripadvisor.com/' + parts.join('-')
+      // @ts-ignore
       this.restaurant.sources.tripadvisor = {
         url: url,
         rating: this.ratings?.tripadvisor,
@@ -358,6 +360,7 @@ export class Self extends WorkerJob {
 
     path = scrapeGetData(this.yelp, 'data_from_map_search.businessUrl')
     if (path != '') {
+      // @ts-ignore
       this.restaurant.sources.yelp = {
         url: 'https://www.yelp.com' + path,
         rating: this.ratings?.yelp,
@@ -369,6 +372,7 @@ export class Self extends WorkerJob {
       'data_from_map_search.post.review_link'
     )
     if (path != '') {
+      // @ts-ignore
       this.restaurant.sources.infatuated = {
         url: 'https://www.theinfatuation.com' + path,
         rating: this.ratings?.infatuated,
@@ -377,6 +381,7 @@ export class Self extends WorkerJob {
 
     path = scrapeGetData(this.michelin, 'main.url')
     if (path != '') {
+      // @ts-ignore
       this.restaurant.sources.michelin = {
         url: 'https://guide.michelin.com' + path,
         rating: this.ratings?.michelin,
@@ -387,6 +392,7 @@ export class Self extends WorkerJob {
       scrapeGetData(this.ubereats, 'main.metaJson', '"{}"')
     )
     if (json['@id']) {
+      // @ts-ignore
       this.restaurant.sources.ubereats = {
         url: json['@id'],
         rating: this.ratings?.ubereats,
@@ -465,7 +471,9 @@ export class Self extends WorkerJob {
     if (!this.ubereats?.id) {
       return
     }
-    for (const data of this.ubereats?.data?.dishes) {
+    // @ts-ignore
+    const dishes = this.ubereats?.data?.dishes
+    for (const data of dishes) {
       if (data.title) {
         await menuItemUpsert([
           {
@@ -481,9 +489,12 @@ export class Self extends WorkerJob {
   }
 
   mergePhotos() {
+    // @ts-ignore
+    const yelp_data = this.yelp?.data || {}
+    // @ts-ignore
     this.restaurant.photos = [
       // ...scrapeGetData(this.tripadvisor, 'photos', []),
-      ...this.getPaginatedData(this.yelp?.data, 'photos').map((i) => i.src),
+      ...this.getPaginatedData(yelp_data, 'photos').map((i) => i.src),
     ]
   }
 
@@ -551,14 +562,18 @@ export class Self extends WorkerJob {
       for (const tag of all_possible_tags) {
         let restaurant_tag: RestaurantTag = {
           tag_id: tag.id,
+          // @ts-ignore
           photos: [] as string[],
         }
         for (const photo of photos) {
           if (this._doesStringContainTag(photo.media_data?.caption, tag.name)) {
+            // @ts-ignore
             restaurant_tag.photos.push(photo.src)
           }
         }
+        // @ts-ignore
         if (restaurant_tag.photos.length > 0) {
+          // @ts-ignore
           restaurant_tag.photos = _.uniq(restaurant_tag.photos)
           restaurant_tags.push(restaurant_tag)
         }
@@ -700,7 +715,8 @@ export class Self extends WorkerJob {
   }
 
   _scanTripadvisorReviewsForTags() {
-    const reviews = this.getPaginatedData(this.tripadvisor?.data, 'reviews')
+    const td_data = this.tripadvisor?.data || {}
+    const reviews = this.getPaginatedData(td_data, 'reviews')
     for (const review of reviews) {
       const all_text = [review.text].join(' ')
       this.findDishesInText(all_text)
