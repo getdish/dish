@@ -164,15 +164,9 @@ export default memo(function HomeSearchBar() {
       switch (code) {
         case 13: {
           // enter
-          if (om.state.home.autocompleteFocusedTag) {
-            om.actions.home.navigateToTag({
-              tags: [om.state.home.autocompleteFocusedTag],
-            })
-          } else {
-            om.actions.home.runSearch({ force: true })
-            om.actions.home.setShowAutocomplete(false)
-            focusedInput.blur()
-          }
+          om.actions.home.runSearch({ force: true })
+          om.actions.home.setShowAutocomplete(false)
+          focusedInput.blur()
           return
         }
         case 8: {

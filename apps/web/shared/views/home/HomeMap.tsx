@@ -19,8 +19,6 @@ import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { getRankingColor, getRestaurantRating } from './RestaurantRatingView'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
-const mapMaxWidth = pageWidthMax * 1
-
 type MapLoadState = 'wait' | 'loading' | 'loaded'
 
 export const HomeMap = memo(function HomeMap() {
@@ -39,31 +37,31 @@ export const HomeMap = memo(function HomeMap() {
     setLoadStatus('loaded')
   })
 
-  if (status !== 'wait') {
-    return (
-      <>
-        <Suspense fallback={null}>
-          <HomeMapDataLoader
-            key={om.state.home.currentStateType}
-            onLoadedRestaurants={setRestaurants}
-            onLoadedRestaurantDetail={setRestaurantDetail}
-          />
-        </Suspense>
-        <VStack
-          className="ease-in-out-fast"
-          flex={1}
-          opacity={status === 'loading' ? 0 : 1}
-        >
-          <HomeMapContent
-            restaurantDetail={restaurantDetail}
-            restaurants={restaurants}
-          />
-        </VStack>
-      </>
-    )
+  if (status === 'wait') {
+    return null
   }
 
-  return null
+  return (
+    <>
+      <Suspense fallback={null}>
+        <HomeMapDataLoader
+          key={om.state.home.currentStateType}
+          onLoadedRestaurants={setRestaurants}
+          onLoadedRestaurantDetail={setRestaurantDetail}
+        />
+      </Suspense>
+      <VStack
+        className="ease-in-out-fast"
+        flex={1}
+        opacity={status === 'loading' ? 0 : 1}
+      >
+        <HomeMapContent
+          restaurantDetail={restaurantDetail}
+          restaurants={restaurants}
+        />
+      </VStack>
+    </>
+  )
 })
 
 const HomeMapDataLoader = memo(
@@ -128,6 +126,89 @@ const HomeMapDataLoader = memo(
   )
 )
 
+let mapView: mapkit.Map
+
+// pause/unpause, need to define better
+// start paused, first map update we ignore because its slightly off
+let pauseMapUpdates = true
+let pendingUpdates = false
+let version = 0
+const pauseMap = () => {
+  version++
+  pauseMapUpdates = true
+}
+const forceResumeMap = async () => {
+  const id = version
+  await sleep(0)
+  if (id === version) {
+    resumeMap(true)
+  }
+}
+const resumeMap = (force: boolean = false) => {
+  version++
+  pauseMapUpdates = false
+  if (force || pendingUpdates) {
+    pendingUpdates = false
+    handleRegionChangeEnd()
+  }
+}
+
+export function centerMapToRegion(p: {
+  map: mapkit.Map
+  center: LngLat
+  span: LngLat
+}) {
+  if (pauseMapUpdates) {
+    console.warn('paused no centering')
+    return
+  }
+  const newCenter = new mapkit.Coordinate(p.center.lat, p.center.lng)
+  const coordspan = new mapkit.CoordinateSpan(p.span.lat, p.span.lng)
+  const region = new mapkit.CoordinateRegion(newCenter, coordspan)
+  try {
+    p.map?.setRegionAnimated(region)
+  } catch (err) {
+    console.warn('map hmr err', err.message)
+  }
+}
+
+// appears *above* all markers and cant go below...
+// const dotFactory = (coordinate, options) => {
+//   const div = document.createElement('div')
+//   // div.textContent = 'HI'
+//   div.className = 'dot-annotation'
+//   return div
+// }
+
+const handleRegionChangeEnd = () => {
+  if (pauseMapUpdates) {
+    pendingUpdates = true
+    console.log('pausing update region change')
+    // dont update while were transitioning to new state!
+    return
+  }
+
+  // were hovering avoid
+  if (omStatic.state.home.hoveredRestaurant) {
+    console.log('we used to avoid hovers, why? disabled for now')
+    // return
+  }
+
+  omStatic.actions.home.setHasMovedMap()
+  const span = mapView.region.span
+  pendingUpdates = false
+  omStatic.actions.home.setMapArea({
+    center: {
+      lng: mapView.center.longitude,
+      lat: mapView.center.latitude,
+    },
+    span: {
+      lat: span.latitudeDelta,
+      lng: span.longitudeDelta,
+    },
+  })
+}
+
 const HomeMapContent = memo(function HomeMap({
   restaurants,
   restaurantDetail,
@@ -167,6 +248,7 @@ const HomeMapContent = memo(function HomeMap({
       latitudeSpan: span.lat,
       longitudeSpan: span.lng,
     },
+    // @ts-ignore
     showsZoomControl: false,
     showsMapTypeControl: false,
     isZoomEnabled: true,
@@ -187,10 +269,7 @@ const HomeMapContent = memo(function HomeMap({
 
   useOnMount(() => {
     // fix: dont send initial map location update, wait for ~fully loaded
-    const tm = setTimeout(() => {
-      pendingUpdates = false
-      resumeMap()
-    }, 100)
+    const tm = setTimeout(resumeMap, 100)
     return () => {
       clearTimeout(tm)
     }
@@ -322,7 +401,6 @@ const HomeMapContent = memo(function HomeMap({
           console.warn('no annotations?', index, map.annotations)
         }
       }
-      console.log('now center to the detail')
       if (restaurantDetail.location?.coordinates) {
         centerMapToRegion({
           map,
@@ -541,84 +619,5 @@ async function startMapKit() {
     } else {
       window.addEventListener('load', setup)
     }
-  })
-}
-
-export function centerMapToRegion(p: {
-  map: mapkit.Map
-  center: LngLat
-  span: LngLat
-}) {
-  const newCenter = new window.mapkit.Coordinate(p.center.lat, p.center.lng)
-  const coordspan = new window.mapkit.CoordinateSpan(p.span.lat, p.span.lng)
-  const region = new window.mapkit.CoordinateRegion(newCenter, coordspan)
-  try {
-    p.map?.setRegionAnimated(region)
-  } catch (err) {
-    console.warn('map hmr err', err.message)
-  }
-}
-
-// appears *above* all markers and cant go below...
-// const dotFactory = (coordinate, options) => {
-//   const div = document.createElement('div')
-//   // div.textContent = 'HI'
-//   div.className = 'dot-annotation'
-//   return div
-// }
-
-let mapView: mapkit.Map
-
-// pause/unpause, need to define better
-// start paused, first map update we ignore because its slightly off
-let pauseMapUpdates = true
-let pendingUpdates = false
-let version = 0
-const pauseMap = () => {
-  version++
-  pauseMapUpdates = true
-}
-const forceResumeMap = () => {
-  const id = version
-  setTimeout(() => {
-    if (id === version) {
-      resumeMap(true)
-    }
-  }, 50)
-}
-const resumeMap = (force: boolean = false) => {
-  version++
-  pauseMapUpdates = false
-  if (force || pendingUpdates) {
-    pendingUpdates = false
-    handleRegionChangeEnd()
-  }
-}
-
-const handleRegionChangeEnd = () => {
-  if (pauseMapUpdates) {
-    pendingUpdates = true
-    console.log('pausing update region change')
-    // dont update while were transitioning to new state!
-    return
-  }
-
-  // were hovering avoid
-  if (omStatic.state.home.hoveredRestaurant) {
-    return
-  }
-
-  omStatic.actions.home.setHasMovedMap()
-  const span = mapView.region.span
-  pendingUpdates = false
-  omStatic.actions.home.setMapArea({
-    center: {
-      lng: mapView.center.longitude,
-      lat: mapView.center.latitude,
-    },
-    span: {
-      lat: span.latitudeDelta,
-      lng: span.longitudeDelta,
-    },
   })
 }

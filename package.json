@@ -23,7 +23,7 @@
     "migrate": "(cd services/hasura && hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password)",
     "format": "swift-format --recursive --in-place ./apps/ios/dish",
     "prettier": "prettier --write \"**/*.{ts,tsx}\" || true",
-    "postinstall": "yarn build:refs && yarn patch-package"
+    "postinstall": "yarn build:refs & yarn patch-package & wait"
   },
   "resolutions": {
     "resolve": "1.17.0",

@@ -149,7 +149,6 @@ export function LinkButton<
     position,
     alignSelf,
     margin,
-    containerStyle,
     ...restRestProps
   } = restProps
 
@@ -161,7 +160,7 @@ export function LinkButton<
       pointerEvents={pointerEvents ?? null}
       // only handle click events on non-a links (we handle them in Link separately)
       ref={'name' in props ? null : containerRef}
-      {...containerStyle}
+      {...props.containerStyle}
     >
       <TouchableOpacity
         activeOpacity={0.7}

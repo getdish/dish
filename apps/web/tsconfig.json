@@ -6,7 +6,7 @@
     "module": "CommonJS",
     "sourceMap": false,
     "outDir": "_",
-    "typeRoots": ["./node_modules/mapkit-typescript", "./node_modules/@types"],
+    "typeRoots": ["types", "node_modules/@types"],
     "composite": true
   },
   "include": ["web/**/*", "shared/**/*"],
