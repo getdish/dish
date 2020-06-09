@@ -3893,7 +3893,7 @@ bcryptjs@^2.4.3:
 
 betsy@1.0.2-1589389364682:
   version "1.0.2-1589389364682"
-  resolved "https://registry.yarnpkg.com/betsy/-/betsy-1.0.2-1589389364682.tgz#06ca01e16d97692068bd0ce66f236350d3f78f89"
+  resolved "https://registry.npmjs.org/betsy/-/betsy-1.0.2-1589389364682.tgz#06ca01e16d97692068bd0ce66f236350d3f78f89"
   integrity sha512-on7PF39eCFqZgF+AplwUVE9Qzrgyp+rU0SgBIWQCpQ1h//J4M7LZPEZhtEPaAMPKVg9YPWI3YMrhuzfCyoUXJQ==
 
 bfj@^6.1.1:
@@ -11508,14 +11508,14 @@ osenv@^0.1.4:
 
 overmind-react@24.1.0-1589389364682:
   version "24.1.0-1589389364682"
-  resolved "https://registry.yarnpkg.com/overmind-react/-/overmind-react-24.1.0-1589389364682.tgz#9b143d01301f13aca12ec588f64c72efcf1c1d9d"
+  resolved "https://registry.npmjs.org/overmind-react/-/overmind-react-24.1.0-1589389364682.tgz#9b143d01301f13aca12ec588f64c72efcf1c1d9d"
   integrity sha512-4r9fWGUe4GqNYx1VLhg9giBNkKUYta4nvRohrBqWEn52dKsX1wT1Z5w43mpsCPb+yPIByfD8yo/DPKfgl8DZFA==
   dependencies:
     overmind "23.1.0-1589389364682"
 
 overmind@23.1.0-1589389364682:
   version "23.1.0-1589389364682"
-  resolved "https://registry.yarnpkg.com/overmind/-/overmind-23.1.0-1589389364682.tgz#468c81794e844a51e114bbdc3986b662a9c149c0"
+  resolved "https://registry.npmjs.org/overmind/-/overmind-23.1.0-1589389364682.tgz#468c81794e844a51e114bbdc3986b662a9c149c0"
   integrity sha512-TCFjsBryXkrHqWpI3EmSlGcVcWWrvruBdpTyY07MBS/go6KTvko7uuk2KZG9xcER+/iM9fWA6BD8hyp+B+EbVA==
   dependencies:
     betsy "1.0.2-1589389364682"
@@ -12410,7 +12410,7 @@ proxy-from-env@^1.0.0:
 
 proxy-state-tree@5.0.1-1589389364682:
   version "5.0.1-1589389364682"
-  resolved "https://registry.yarnpkg.com/proxy-state-tree/-/proxy-state-tree-5.0.1-1589389364682.tgz#00c2e2619372409c422d3e629c522612760c530b"
+  resolved "https://registry.npmjs.org/proxy-state-tree/-/proxy-state-tree-5.0.1-1589389364682.tgz#00c2e2619372409c422d3e629c522612760c530b"
   integrity sha512-mPx8rTa3Gm8c1dAdghZzrxqm0EeV8A8N8QoNLLZC4kc4FnJ/Mm9386xUbPVnqb6K4tqvX5+jmn0bdEMo2gfehQ==
   dependencies:
     is-plain-obj "^1.1.0"
