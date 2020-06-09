@@ -14,7 +14,6 @@ TL;DR:
 👷: Currently or will actively work on
 ⚠️ : Not prioritising
 
-
 Week 1
 
 - Search results
@@ -51,6 +50,7 @@ Week 2
   - Delivery crawlers 🚚 👷
   - Google for images/reviews 👷
   - Instagram v1 ⚠️ hardest thing is matching accounts to restaruants
+    - 🅽 yes, we should discuss! maybe some way to do it
 
 Week 3
 
@@ -61,7 +61,7 @@ Week 3
   - we can likely do a ton of small things to better pull out dish images, dish reviews, etc:
     - from image comments ✔️⚠️ already doing this, there are other sources, but it's tricky
     - menu items can help us add dish tags 👷
-    - partial matching dish names for sentiment ⚠️  can you expand on this?
+    - partial matching dish names for sentiment ⚠️ can you expand on this?
 - Delivery service crawlers 👷
 
 Week 4

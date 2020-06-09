@@ -2,20 +2,24 @@
 
 side goal: write 15m in the morning every day
 
+✔️ : Done
+👷: Currently or will actively work on
+⚠️ : Not prioritising
+
 Week 1
 
-- static style extract v1
-- gallery view / click dish to gallery
-- hoverable popover
-- Searchbar needs many fixes for tags
-- Autocomplete needs many fixes
+- static style extract v1 ✔️
+- gallery view / click dish to gallery ✔️ (needs more)
+- hoverable popover ✔️
+- Searchbar needs many fixes for tags 👷
+- Autocomplete needs many fixes 👷
   - Autocomplete - go straight to restaurant if restaurant
-- Map needs a lot of regression/fixes
+- Map needs a lot of regression/fixes 👷
 
 Week 2
 
-- gallery and restaurant detail page need a lot of love
-- improve search results speed and lazy loading
+- gallery and restaurant detail page need a lot of love 👷
+- improve search results speed and lazy loading ✔️ (probably enough)
 - RestaurantListItem - needs click to call, click to see map
 - general images gallery
 - map click item scroll to item / view detail
