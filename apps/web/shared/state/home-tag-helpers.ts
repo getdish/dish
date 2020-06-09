@@ -160,6 +160,9 @@ function ensureUniqueActiveTagIds(
   home: OmStateHome,
   nextActiveTag: NavigableTag
 ) {
+  if (!nextActiveTag) {
+    throw new Error(`Missing tag...`)
+  }
   for (const key in activeTagIds) {
     if (key === getTagId(nextActiveTag)) {
       continue

@@ -7,7 +7,7 @@ import { slugify } from './slugify'
 export type TagWithParent = Tag & { parent: Tag }
 
 export const tagSlug = (tag: Tag) => {
-  if (!tag.name) {
+  if (!tag?.name) {
     throw new Error(`No tag name on tag: ${JSON.stringify(tag)}`)
   }
   return slugify(tag.name)

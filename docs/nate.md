@@ -20,6 +20,7 @@ Week 2
 
 - gallery and restaurant detail page need a lot of love 👷
 - improve search results speed and lazy loading ✔️ (probably enough)
+- ➕ need to redo restaurantlistitem to only scroll on right side, or remove extra images (why does it work fine on home then?)
 - RestaurantListItem - needs click to call, click to see map
 - general images gallery
 - map click item scroll to item / view detail

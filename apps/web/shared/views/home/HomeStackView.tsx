@@ -33,11 +33,12 @@ export function HomeStackView<A extends HomeStateItem>(props: {
         lastHomeStates,
         (x) => x.id === item.id
       )
+      const homeItem = lastHomeStates[stackItemIndex] as A
       const isActive = index === items.length - 1
       return (
         <ErrorBoundary name={`HomeStackView.${item.type}`}>
           <Suspense fallback={null}>
-            {props.children(item as A, isActive, stackItemIndex)}
+            {props.children(homeItem, isActive, stackItemIndex)}
           </Suspense>
         </ErrorBoundary>
       )

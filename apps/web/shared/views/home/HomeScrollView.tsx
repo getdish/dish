@@ -10,6 +10,9 @@ export const HomeScrollView = (props: ScrollViewProps & { children: any }) => {
   const om = useOvermind()
   const tm = useRef<any>(0)
   const setIsScrolling = useCallback(() => {
+    if (om.state.home.isScrolling) {
+      return
+    }
     om.actions.home.setIsScrolling(true)
     clearTimeout(tm.current)
     tm.current = setTimeout(() => {

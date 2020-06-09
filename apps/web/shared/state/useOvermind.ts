@@ -1,4 +1,4 @@
-import { Overmind } from 'overmind'
+import { Config, IContext, Overmind } from 'overmind'
 import { createHook } from 'overmind-react'
 
 import { config } from './om'
@@ -13,7 +13,7 @@ export const omStatic = new Proxy(
       return (window['om'] ?? config)[key]
     },
   }
-) as Overmind<typeof config>
+) as IContext<Config>
 
 if (process.env.NODE_ENV === 'development') {
   // @ts-ignore

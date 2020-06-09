@@ -59,7 +59,7 @@ export const RatingView = forwardRef(
         fontSize={
           Math.max(13, size * 0.5) * (!subtle && ranking === 100 ? 0.75 : 1)
         }
-        fontWeight={subtle ? '500' : '700'}
+        fontWeight={subtle ? '300' : '700'}
         color={color}
         letterSpacing={-(size / 90)}
       >
