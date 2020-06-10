@@ -93,7 +93,7 @@ export const DishView = memo(
             overflow="hidden"
             borderWidth={1}
             borderColor="rgba(0,0,0,0.1)"
-            {...(dish.is_fallback_image && {
+            {...(dish.isFallback && {
               opacity: 0.3,
             })}
             pointerEvents="none"

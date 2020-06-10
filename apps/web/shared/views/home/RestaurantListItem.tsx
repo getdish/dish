@@ -1,6 +1,7 @@
 import { requestIdle, series, sleep } from '@dish/async'
 import {
   Restaurant,
+  RestaurantSearchResult,
   graphql,
   query,
   restaurantPhotosForCarousel,
@@ -41,11 +42,19 @@ import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 
 type RestaurantListItemProps = {
   currentLocationInfo: GeocodePlace | null
-  restaurant: Restaurant
+  restaurant: RestaurantSearchResult
   rank: number
   searchState?: HomeStateItemSearch
   onFinishRender?: Function
 }
+
+/**
+ * NOTE
+ *
+ * use slug for anything NOT logged in
+ *
+ * for logged in calls, we often need to user restaurant_id
+ */
 
 export const RestaurantListItem = memo(function RestaurantListItem(
   props: RestaurantListItemProps
@@ -272,7 +281,10 @@ const RestaurantListItemContent = memo(
         </VStack>
 
         <VStack padding={10} paddingTop={65} width={0}>
-          <RestaurantPeek {...props} size={isShowingComment ? 'lg' : 'md'} />
+          <RestaurantPeek
+            restaurantSlug={restaurant.slug}
+            size={isShowingComment ? 'lg' : 'md'}
+          />
         </VStack>
       </HStack>
     )
@@ -307,18 +319,17 @@ const RestaurantTopReview = memo(
 )
 
 export const RestaurantPeek = memo(
-  graphql(function RestaurantPeek(
-    props: RestaurantListItemProps & {
-      size?: 'lg' | 'md'
-      restaurant: Restaurant
-    }
-  ) {
+  graphql(function RestaurantPeek(props: {
+    size?: 'lg' | 'md'
+    restaurantSlug: string
+    searchState?: HomeStateItemSearch
+  }) {
     const { searchState, size = 'md' } = props
     const tag_names = Object.keys(searchState?.activeTagIds || {})
     const spacing = size == 'lg' ? 16 : 24
     const isMedium = useMediaQueryIsMedium()
     const [restaurant] = query.restaurant({
-      where: { id: { _eq: props.restaurant.id } },
+      where: { slug: { _eq: props.restaurantSlug } },
     })
     const allPhotos = restaurantPhotosForCarousel({
       restaurant,
@@ -338,7 +349,7 @@ export const RestaurantPeek = memo(
               <DishView
                 key={i}
                 size={(size === 'lg' ? 190 : 150) * (isMedium ? 0.85 : 1)}
-                restaurantSlug={props.restaurant.slug}
+                restaurantSlug={props.restaurantSlug}
                 dish={photo}
               />
             )

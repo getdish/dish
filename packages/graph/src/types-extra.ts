@@ -18,7 +18,7 @@ export type TopCuisineDish = Partial<MenuItem> & {
   rating?: number
   count?: number
   image: string
-  is_fallback_image?: boolean
+  isFallback?: boolean
 }
 
 export type TopCuisine = {

@@ -1,6 +1,15 @@
 import { RestaurantQuery } from '../types'
 import { TopCuisineDish } from '../types-extra'
 
+/**
+ * Careful with query helpers, they need to be DETERMINISTIC
+ * even when gqless returns the fake proxy objects.
+ *
+ * Basically, whenever you do a `continue` or break early, be
+ * sure you already read all the properties
+ *
+ */
+
 export function restaurantPhotosForCarousel({
   restaurant,
   tag_names = [],
@@ -10,44 +19,43 @@ export function restaurantPhotosForCarousel({
   tag_names?: string[]
   max?: number
 }) {
-  let restaurant_photos: string[] = []
-  let tags =
-    // @ts-ignore
-    restaurant.top_tags({ args: { tag_names: tag_names.join(',') } })
   // @ts-ignore
-  restaurant_photos = restaurant.photos() || []
-
+  const tags = restaurant.top_tags({
+    args: {
+      tag_names: tag_names.join(','),
+    },
+  })
+  // @ts-ignore
+  const restaurantPhotos = restaurant.photos() || []
   let photos = [] as TopCuisineDish[]
+  console.log({ tag_names, tags }, tags.length, tags[0])
   for (const t of tags) {
-    if (!t.tag?.name) {
-      console.warn('no tag name')
-      continue
-    }
-    const is_searched_for_tag = tag_names?.includes(t.tag.name.toLowerCase())
+    const tagName = t.tag.name ?? ''
+    const isSearchedForTag = tag_names?.includes(tagName.toLowerCase())
     let [photo] = t.photos() || []
-    let is_fallback_image = false
-    const fallback_image = t.tag?.default_images()?.[0]
-    if (!photo && fallback_image) {
-      photo = fallback_image
-      is_fallback_image = true
+    let isFallback = false
+    const fallback = t.tag?.default_images()?.[0]
+    const photoName = t.tag.icon ? t.tag.icon + tagName : tagName
+    const photoRating = t.rating
+    if (!photo && fallback) {
+      photo = fallback
+      isFallback = true
     }
-    if (!photo && !is_searched_for_tag) {
+    if (!photo && !isSearchedForTag) {
       continue
-    }
-    let photo_name = t.tag.name || ' '
-    if (t.tag.icon) {
-      photo_name = t.tag.icon + photo_name
     }
     photos.push({
-      name: photo_name,
+      name: photoName,
       image: photo,
-      rating: t.rating,
-      is_fallback_image,
+      rating: photoRating,
+      isFallback,
     })
-    if (photos.length >= max) break
+    if (photos.length >= max) {
+      break
+    }
   }
   if (photos.length <= max) {
-    for (const photo of restaurant_photos) {
+    for (const photo of restaurantPhotos) {
       photos.push({ name: ' ', image: photo })
       if (photos.length >= max) break
     }
