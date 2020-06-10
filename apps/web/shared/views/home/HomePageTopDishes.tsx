@@ -22,7 +22,7 @@ import { flatButtonStyle } from './baseButtonStyle'
 import { DishView } from './DishView'
 import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBarOnly } from './HomeLenseBar'
-import { HomeScrollView } from './HomeScrollView'
+import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
 import { RestaurantButton } from './RestaurantButton'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
@@ -252,9 +252,9 @@ const CountryTopDishesItem = memo(({ country }: { country: TopCuisine }) => {
         }}
       />
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <HomeScrollViewHorizontal>
         <HomeTopDishMain>{dishElements}</HomeTopDishMain>
-      </ScrollView>
+      </HomeScrollViewHorizontal>
     </VStack>
   )
 })

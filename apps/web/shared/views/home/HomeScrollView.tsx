@@ -11,25 +11,38 @@ export const HomeScrollView = (props: ScrollViewProps & { children: any }) => {
   const om = useOvermind()
   const isSmall = useMediaQueryIsSmall()
   const tm = useRef<any>(0)
-  const setIsScrolling = useCallback(() => {
-    if (om.state.home.isScrolling) {
-      return
+  const setIsScrolling = () => {
+    if (!om.state.home.isScrolling) {
+      om.actions.home.setIsScrolling(true)
     }
-    om.actions.home.setIsScrolling(true)
     clearTimeout(tm.current)
     tm.current = setTimeout(() => {
       om.actions.home.setIsScrolling(false)
-    }, 150)
-  }, [])
+    }, 350)
+  }
   return (
     <ScrollView
       onScroll={setIsScrolling}
-      scrollEventThrottle={50}
+      scrollEventThrottle={100}
       {...props}
       style={[
         { flex: 1, paddingTop: isSmall ? 0 : searchBarHeight },
         props.style,
       ]}
+    />
+  )
+}
+
+export const HomeScrollViewHorizontal = (
+  props: ScrollViewProps & { children: any }
+) => {
+  const om = useOvermind()
+  return (
+    <ScrollView
+      scrollEnabled={!om.state.home.isScrolling}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      {...props}
     />
   )
 }

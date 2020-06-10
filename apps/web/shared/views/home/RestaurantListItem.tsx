@@ -29,6 +29,7 @@ import { useOvermind } from '../../state/useOvermind'
 import { Link } from '../ui/Link'
 import { bgLightLight } from './colors'
 import { DishView } from './DishView'
+import { HomeScrollViewHorizontal } from './HomeScrollView'
 import { useMediaQueryIsMedium, useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RankingView } from './RankingView'
 import { CommentBubble, RestaurantAddComment } from './RestaurantAddComment'
@@ -93,7 +94,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       onHoverOut={() => setIsHovered(false)}
       contain="paint"
     >
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <HomeScrollViewHorizontal>
         <HStack
           alignItems="center"
           position="relative"
@@ -101,7 +102,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
         >
           <RestaurantListItemContent {...props} />
         </HStack>
-      </ScrollView>
+      </HomeScrollViewHorizontal>
     </VStack>
   )
 })
