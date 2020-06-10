@@ -30,7 +30,7 @@ export const DishView = memo(
     size?: number
     restaurantSlug?: string
   } & StackProps) => {
-    const borderRadius = 0.3 * size
+    const borderRadius = 40
     const [isHovered, setIsHovered] = useState(false)
 
     const linkButtonProps: LinkButtonProps = {
@@ -91,17 +91,17 @@ export const DishView = memo(
             height="100%"
             borderRadius={borderRadius}
             overflow="hidden"
-            borderWidth={1}
-            borderColor="rgba(0,0,0,0.1)"
+            borderWidth={20}
+            borderColor="yellow"
             {...(dish.isFallback && {
-              opacity: 0.3,
+              opacity: 0.8,
             })}
             pointerEvents="none"
             {...(isHovered && {
               borderColor: 'rgba(0,0,0,0.75)',
               backgroundColor: '#fff',
               shadowRadius: 18,
-              shadowColor: 'rgba(0,0,0,0.32)',
+              shadowColor: 'rgba(0,0,0,0.25)',
               shadowOffset: { width: 0, height: 6 },
               zIndex: 10000,
             })}
@@ -111,15 +111,26 @@ export const DishView = memo(
                 ♥️
               </Text>
             </ZStack> */}
-            <ZStack fullscreen zIndex={2}>
+            <ZStack
+              borderRadius={borderRadius}
+              overflow="hidden"
+              fullscreen
+              zIndex={2}
+            >
               <LinearGradient
-                colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.33)']}
+                colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.2)']}
                 style={[StyleSheet.absoluteFill]}
               />
             </ZStack>
             <Image
               source={{ uri: dish.image }}
-              style={{ width: size, height: size, backgroundColor: '#eee' }}
+              style={{
+                width: size + 30,
+                height: size + 30,
+                marginVertical: -15,
+                marginHorizontal: -15,
+                backgroundColor: '#eee',
+              }}
               resizeMode="cover"
             />
           </VStack>

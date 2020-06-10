@@ -1,5 +1,6 @@
 import { Box, HStack, HoverablePopover, Text, memoIsEqualDeep } from '@dish/ui'
 import React from 'react'
+import { anchor } from 'react-laag'
 
 import { Tag } from '../../state/Tag'
 import { LinkButton } from '../ui/LinkButton'
@@ -75,7 +76,7 @@ export const LenseButton = memoIsEqualDeep(
       <HoverablePopover
         noArrow
         position="right"
-        // anchor={anchor.RIGHT_CENTER}
+        anchor={anchor.RIGHT_BOTTOM}
         contents={
           <Box top={35} left={-35}>
             <Text fontSize={16} fontWeight="700">
