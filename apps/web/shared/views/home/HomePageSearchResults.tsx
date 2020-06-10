@@ -157,19 +157,17 @@ const MyListButton = memo(
   }
 )
 
-const chunks = 4
-
 const HomeSearchResultsViewContent = memo(
   ({ state }: { state: HomeStateItemSearch }) => {
     const allResults = state.results?.results?.restaurants ?? []
     const [chunk, setChunk] = useState(1)
-    const perChunk = Math.ceil(allResults.length / chunks)
+    const perChunk = 3
     const results = allResults.slice(0, chunk * perChunk)
     const loadNextChunk = async () => {
       if (results.length < allResults.length) {
-        await sleep(300)
+        await sleep(200)
         console.warn('loading next page')
-        // setChunk((x) => x + 1)
+        setChunk((x) => x + 1)
       }
     }
 
