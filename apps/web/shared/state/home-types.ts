@@ -1,5 +1,10 @@
-import { Restaurant, Review, TopCuisine, User } from '@dish/graph'
-import { Config, IContext, derived } from 'overmind'
+import {
+  Restaurant,
+  RestaurantSearchResult,
+  TopCuisine,
+  User,
+} from '@dish/graph'
+import { Config, IContext } from 'overmind'
 
 import { NavigateItem } from './router'
 import { Tag } from './Tag'
@@ -17,7 +22,7 @@ export type HomeState = {
   allTagsNameToID: { [name: string]: string }
   allLenseTags: Tag[]
   allFilterTags: Tag[]
-  allRestaurants: { [id: string]: Restaurant }
+  allRestaurants: { [id: string]: RestaurantSearchResult }
   autocompleteDishes: TopCuisine['dishes']
   autocompleteIndex: number // index for horizontal row (autocomplete)
   autocompleteResults: AutocompleteItem[]
