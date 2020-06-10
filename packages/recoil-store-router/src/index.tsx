@@ -7,6 +7,18 @@ import { Router } from 'tiny-request-router'
 export type RoutesTable = { [key: string]: Route }
 export type RouteName = keyof RoutesTable
 
+type HistoryDirection = 'push' | 'pop'
+
+export type HistoryItem<A extends RouteName = any> = {
+  id: string
+  name: A
+  path: string
+  type?: HistoryDirection
+  search?: Object
+  params?: RoutesTable[A]['params']
+  replace?: boolean
+}
+
 export type NavigateItem<
   T = {
     [K in keyof RoutesTable]: {
@@ -44,7 +56,7 @@ class RouterStore extends Store<RouterProps> {
   }
 
   get curPage() {
-    return this.history[this.history.length - 1] || defaultPage
+    return this.history[this.history.length - 1] ?? defaultPage
   }
 
   constructor(props: RouterProps) {
@@ -53,7 +65,6 @@ class RouterStore extends Store<RouterProps> {
       throw new Error(`Already started router`)
     }
     const { routes } = props
-    console.log('setting routes', routes)
     this.routes = routes
     this.routeNames = Object.keys(routes)
     this.routePathToName = Object.keys(routes).reduce((acc, key) => {
@@ -63,7 +74,6 @@ class RouterStore extends Store<RouterProps> {
 
     let nextRouter = this.router
     for (const name of this.routeNames) {
-      console.log('get', routes[name].path, name)
       nextRouter = nextRouter.get(routes[name].path, name)
     }
     nextRouter = nextRouter.all('*', '404')
@@ -72,16 +82,30 @@ class RouterStore extends Store<RouterProps> {
     this.started = true
 
     window.addEventListener('popstate', (event) => {
-      console.log('got', event.state.path)
-      this.handleHref(event.state.path)
+      this.handlePath(event.state.path, this.getPopDirection())
     })
-    this.handleHref(window.location.pathname)
+    this.handlePath(window.location.pathname)
   }
 
-  private handleHref(pathname: string) {
+  private handlePath(
+    pathname: string,
+    direction?: HistoryDirection,
+    navItem?: NavigateItem
+  ) {
     const match = this.router.match('GET', pathname)
     if (match) {
-      console.log('got match', pathname, match)
+      this.history = [
+        ...this.history,
+        {
+          id: uid(),
+          type: direction,
+          name: match.handler,
+          path: pathname,
+          params: match.params as any,
+          replace: navItem?.replace,
+          search: navItem?.search,
+        },
+      ]
     }
   }
 
@@ -93,7 +117,6 @@ class RouterStore extends Store<RouterProps> {
   }
 
   async navigate(navItem: NavigateItem) {
-    console.log('navigate', navItem)
     const item = this.navItemToHistoryItem(navItem)
     if (this.notFound) {
       this.notFound = false
@@ -103,13 +126,11 @@ class RouterStore extends Store<RouterProps> {
       return
     }
     if (item.replace) {
-      const next = this.history.slice(0, this.history.length - 1)
-      this.history = [...next, item]
-      this.replace(item.path)
+      history.replaceState({}, '', item.path)
     } else {
-      this.history = [...this.history, item]
-      this.open(item.path)
+      history.pushState({}, '', item.path)
     }
+    this.handlePath(item.path, 'push', navItem)
   }
 
   back() {
@@ -118,17 +139,6 @@ class RouterStore extends Store<RouterProps> {
 
   forward() {
     window.history.forward()
-  }
-
-  private open(path: string) {
-    console.log('open', path)
-    history.pushState({}, '', path)
-    window.dispatchEvent(new Event('popstate'))
-  }
-
-  private replace(path: string) {
-    history.replaceState({}, '', path)
-    window.dispatchEvent(new Event('popstate'))
   }
 
   private getPathFromParams({
@@ -205,21 +215,21 @@ class RouterStore extends Store<RouterProps> {
     }
   }
 
-  // if (onRouteChange) {
-  //   try {
-  //     await race(
-  //       onRouteChange({
-  //         type: item.replace ? 'replace' : 'push',
-  //         name: item.name,
-  //         item: _.last(this.history)!,
-  //       }),
-  //       2000,
-  //       'router.onRouteChange'
-  //     )
-  //   } catch (err) {
-  //     Toast.show(`${err.message}`)
-  //   }
-  // }
+  // 1 is forward
+  // -1 is back
+  private getPopDirection(): HistoryDirection {
+    const positionLastShown = Number(
+      sessionStorage.getItem('positionLastShown')
+    )
+    let position = history.state
+    if (position === null) {
+      position = positionLastShown + 1
+      history.replaceState(position, '')
+    }
+    sessionStorage.setItem('positionLastShown', `${position}`)
+    const direction = Math.sign(position - positionLastShown)
+    return direction === 1 ? 'push' : 'pop'
+  }
 }
 
 const RouterContext = createContext<RouterProps['routes'] | null>(null)
@@ -246,23 +256,6 @@ export function useRouter() {
     throw new Error(`no routes`)
   }
   return useRecoilStore(RouterStore, { routes })
-}
-
-export type HistoryItem<A extends RouteName = any> = {
-  id: string
-  name: A
-  path: string
-  type?: 'push' | 'pop'
-  search?: Object
-  params?: RoutesTable[A]['params']
-  replace?: boolean
-}
-
-export type RouterState = {
-  notFound: boolean
-  history: HistoryItem[]
-  prevPage: HistoryItem | undefined
-  curPage: HistoryItem
 }
 
 // we could enable functionality like this

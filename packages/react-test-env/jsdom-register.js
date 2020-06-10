@@ -1,4 +1,4 @@
-require('jsdom-global/register')
+// require('jsdom-global/register')
 require('./_/index')
 
 const { JSDOM } = require('jsdom')

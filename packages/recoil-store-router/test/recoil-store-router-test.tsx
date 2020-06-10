@@ -27,4 +27,8 @@ test('creates a store and routes', async (t) => {
   })
   node = findCurPageName()
   t.is(node.children[0], 'user')
+  t.is(
+    r.root.findAllByProps({ id: 'curPageParams' })[0].children[0],
+    '{"username":"test","pane":"pane"}'
+  )
 })
