@@ -191,17 +191,18 @@ const RestaurantPhotos = memo(
     const photos = restaurantPhotosForCarousel({ restaurant })
     const drawerWidth = useHomeDrawerWidthInner()
     const spacing = 20
+    const perRow = Math.round(drawerWidth / 250)
 
     return (
       <>
         {!!photos?.length && (
           <VStack spacing="xl">
-            <HStack justifyContent="center" spacing>
+            {/* <HStack justifyContent="center" spacing>
               <LinkButton {...flatButtonStyleActive}>Top Dishes</LinkButton>
               <LinkButton {...flatButtonStyle}>Menu</LinkButton>
               <LinkButton {...flatButtonStyle}>Inside</LinkButton>
               <LinkButton {...flatButtonStyle}>Outside</LinkButton>
-            </HStack>
+            </HStack> */}
 
             <HStack
               flexWrap="wrap"
@@ -214,7 +215,8 @@ const RestaurantPhotos = memo(
                 return (
                   <DishView
                     key={index}
-                    size={(drawerWidth - 3 * spacing) / 3 - 15}
+                    size={(drawerWidth - perRow * spacing) / perRow - 15}
+                    restaurantSlug={restaurantSlug}
                     marginBottom={30}
                     dish={photo}
                   />

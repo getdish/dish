@@ -24,7 +24,6 @@ const HomePageGalleryContent = memo(
   graphql(function HomePageGalleryContent(props: {
     state: HomeStateItemGallery
   }) {
-    const om = useOvermind()
     const [restaurant] = query.restaurant({
       where: {
         slug: {
@@ -32,30 +31,22 @@ const HomePageGalleryContent = memo(
         },
       },
     })
-    const photos = restaurantPhotosForCarousel({ restaurant, max: 20 })
-    console.log('photos', photos)
-    // const [dish] = query.restaurant({
-    //   where: {
-    //     id: {
-    //       _eq: props.state.dishId ?? ''
-    //     }
-    //   }
-    // })
-    // const images = dish.tags().map(tag => tag.photos())
+    const photos = restaurantPhotosForCarousel({ restaurant, max: 100 })
     return (
       <ZStack
         fullscreen
-        backgroundColor="rgba(0,0,0,0.5)"
+        backgroundColor="rgba(0,0,0,0.75)"
         alignItems="center"
         justifyContent="center"
         zIndex={10000000000}
       >
         <VStack
-          width="98%"
+          width="95%"
           height="100%"
           maxWidth={pageWidthMax}
           alignItems="center"
           paddingVertical={20}
+          position="relative"
         >
           <StackViewCloseButton />
 
@@ -63,7 +54,7 @@ const HomePageGalleryContent = memo(
             {restaurant.name}
           </Text>
 
-          <ScrollView>
+          <ScrollView style={{ flex: 1 }}>
             <HStack paddingVertical={20} flexWrap="wrap">
               {photos.map((photo, i) => {
                 return (
@@ -71,10 +62,10 @@ const HomePageGalleryContent = memo(
                     key={i}
                     source={{ uri: photo.image }}
                     style={{
-                      width: 200,
-                      height: 200,
-                      marginVertical: 10,
-                      marginHorizontal: 10,
+                      width: 250,
+                      height: 250,
+                      marginVertical: 5,
+                      marginHorizontal: 5,
                     }}
                   />
                 )
