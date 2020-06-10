@@ -34,8 +34,8 @@ export const DishView = memo(
     const [isHovered, setIsHovered] = useState(false)
 
     const linkButtonProps: LinkButtonProps = {
-      onHoverIn: useCallback(() => setIsHovered(true), []),
-      onHoverOut: useCallback(() => setIsHovered(false), []),
+      onHoverIn: () => setIsHovered(true),
+      onHoverOut: () => setIsHovered(false),
       ...(restaurantSlug
         ? {
             name: 'gallery',
@@ -54,9 +54,14 @@ export const DishView = memo(
 
     return (
       <LinkButton
+        className="ease-in-out-fast"
         alignItems="center"
         position="relative"
         justifyContent="center"
+        pressStyle={{
+          transform: [{ scale: 1.02 }],
+          opacity: 0.8,
+        }}
         {...linkButtonProps}
         {...rest}
       >
@@ -93,6 +98,8 @@ export const DishView = memo(
             overflow="hidden"
             borderWidth={20}
             borderColor="yellow"
+            alignItems="center"
+            justifyContent="center"
             {...(dish.isFallback && {
               opacity: 0.8,
             })}
@@ -112,27 +119,40 @@ export const DishView = memo(
               </Text>
             </ZStack> */}
             <ZStack
+              className={
+                isHovered
+                  ? 'ease-in-out inner-glow'
+                  : 'ease-in-out inner-shadow'
+              }
               borderRadius={borderRadius}
               overflow="hidden"
               fullscreen
               zIndex={2}
             >
               <LinearGradient
-                colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.2)']}
+                colors={[
+                  'rgba(255,255,255,0.6)',
+                  'rgba(255,255,255,0)',
+                  'rgba(0,0,0,0)',
+                  'rgba(0,0,0,0.2)',
+                ]}
                 style={[StyleSheet.absoluteFill]}
               />
             </ZStack>
-            <Image
-              source={{ uri: dish.image }}
-              style={{
-                width: size + 30,
-                height: size + 30,
-                marginTop: -15,
-                marginLeft: -15,
-                backgroundColor: '#eee',
-              }}
-              resizeMode="cover"
-            />
+            {!!dish.image && (
+              <Image
+                source={{ uri: dish.image }}
+                style={{
+                  width: size + 30,
+                  height: size + 30,
+                  marginTop: -15,
+                  marginLeft: -15,
+                  backgroundColor: '#000',
+                }}
+                resizeMode="cover"
+              />
+            )}
+            {!dish.image && <Text fontSize={100}>🍔</Text>}
           </VStack>
         </VStack>
 

@@ -27,8 +27,6 @@ Week 2
   - working search
   - working initial items
 - restaurantlistitem janky vertical/horizontal scroll fighting. maybe limit it to scroll only on right side, or remove extra images (why does it work fine on home then?)
-- search results
-  - load more than one chunk!
 
 Week 3
 

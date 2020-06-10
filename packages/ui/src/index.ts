@@ -56,6 +56,7 @@ export * from './views/Text'
 export * from './views/Toast'
 
 export * from './helpers/getNode'
+export * from './helpers/combineFns'
 export * from './helpers/prevent'
 export * from './helpers/memoIsEqualDeep'
 export * from './helpers/combineRefs'

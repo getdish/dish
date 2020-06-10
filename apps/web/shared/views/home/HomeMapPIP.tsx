@@ -6,6 +6,7 @@ import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 import { useOvermind } from '../../state/useOvermind'
 import { Map, useMap } from '../map'
 import { centerMapToRegion, onMapLoadedCallback } from './HomeMap'
+import { restaurantQuery } from './restaurantQuery'
 import { getRankingColor, getRestaurantRating } from './RestaurantRatingView'
 
 export const HomeMapPIP = memo(() => {
@@ -45,13 +46,7 @@ const HomeMapPIPContent = graphql(() => {
 
   let restaurant: RestaurantQuery | null = null
   if (state.type === 'restaurant') {
-    restaurant = query.restaurant({
-      where: {
-        slug: {
-          _eq: state.restaurantSlug,
-        },
-      },
-    })[0]
+    restaurant = restaurantQuery(state.restaurantSlug)
   }
 
   const coordinates = restaurant?.location?.coordinates

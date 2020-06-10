@@ -1,16 +1,12 @@
 import { StackProps, Text, VStack, getNode, prevent } from '@dish/ui'
 import React, { useEffect, useMemo, useRef } from 'react'
-import { Platform, TouchableOpacity, ViewStyle } from 'react-native'
+import { Platform, ViewStyle } from 'react-native'
 
 import { RouteName, RoutesTable } from '../../state/router'
 import { NavigableTag } from '../../state/Tag'
-import {
-  Link,
-  LinkSharedProps,
-  asyncLinkAction,
-  getStylePadding,
-  useNormalizeLinkProps,
-} from './Link'
+import { Link, getStylePadding } from './Link'
+import { LinkSharedProps } from './LinkProps'
+import { asyncLinkAction, useNormalizeLinkProps } from './useNormalizedLink'
 
 export type LinkButtonNamedProps<A = any, B = any> = {
   name: A
@@ -46,9 +42,7 @@ export function LinkButton<
 >(allProps: LinkButtonProps<Name, Params>) {
   let restProps: StackProps
   let contents: React.ReactElement
-  let pointerEvents: any
   let onPress: any
-  let fastClick = false
   let props = useNormalizeLinkProps(allProps)
   const containerRef = useRef<any>()
   const stopProp = allProps.stopPropagation ?? true
@@ -82,9 +76,9 @@ export function LinkButton<
       disabledIfActive,
       replace,
       preventNavigate,
+      textAlign,
       ...rest
     } = props
-    pointerEvents = rest.pointerEvents
     restProps = rest
     contents = (
       <Link
@@ -96,6 +90,7 @@ export function LinkButton<
         fontSize={fontSize}
         fontWeight={fontWeight}
         ellipse={ellipse}
+        textAlign={textAlign}
         fastClick={fastClick}
         padding={getStylePadding({
           padding,
@@ -110,22 +105,15 @@ export function LinkButton<
   } else {
     const {
       children,
-      // @ts-ignore
-      onPress: onPress_,
       fontSize,
       lineHeight,
       fontWeight,
+      textAlign,
       ellipse,
       replace,
-      fastClick: fastClick_,
       disabledIfActive,
       ...rest
     } = props
-    if (fastClick_) {
-      fastClick = fastClick_
-    }
-    pointerEvents = rest.pointerEvents
-    onPress = onPress_
     restProps = rest
     contents = (
       <Text
@@ -133,55 +121,31 @@ export function LinkButton<
         fontSize={fontSize}
         lineHeight={lineHeight}
         fontWeight={fontWeight}
+        textAlign={textAlign}
       >
         {children ?? ''}
       </Text>
     )
   }
 
-  const onPressCb = useMemo(() => asyncLinkAction(onPress), [onPress])
-
-  const {
-    top,
-    left,
-    right,
-    bottom,
-    position,
-    alignSelf,
-    margin,
-    ...restRestProps
-  } = restProps
+  const onPressCb = onPress ? () => asyncLinkAction(onPress) : null
 
   return (
-    // NOTE: display inherit, this is to allow turning off pointer events...
     <VStack
-      // @ts-ignore
-      display="inherit"
-      pointerEvents={pointerEvents ?? null}
       // only handle click events on non-a links (we handle them in Link separately)
+      // @ts-ignore
       ref={'name' in props ? null : containerRef}
+      className="ease-in-out-fast"
+      pressStyle={{
+        opacity: 0.7,
+      }}
       {...props.containerStyle}
+      {...restProps}
+      {...(props.fastClick
+        ? { onPressIn: onPressCb }
+        : { onPressOut: onPressCb })}
     >
-      <TouchableOpacity
-        activeOpacity={0.7}
-        {...(!!onPress && { [fastClick ? 'onPressIn' : 'onPress']: onPressCb })}
-        style={{
-          top,
-          left,
-          right,
-          bottom,
-          position,
-          alignSelf,
-          margin,
-        }}
-      >
-        <VStack
-          flex={typeof props.flex === 'undefined' ? 1 : props.flex}
-          {...restRestProps}
-        >
-          {contents}
-        </VStack>
-      </TouchableOpacity>
+      {contents}
     </VStack>
   )
 }

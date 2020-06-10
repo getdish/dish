@@ -1,42 +1,42 @@
 import React from 'react'
 
-import { isHoverEnabled } from './HoverState'
+import { isBrowser } from '../constants'
+import { combineFns } from '../helpers/combineFns'
 
-export function Hoverable(props: {
+// import { isHoverEnabled } from './HoverState'
+
+const mousesUp = new Set<Function>()
+
+if (isBrowser) {
+  document.addEventListener('mouseup', (e) => {
+    mousesUp.forEach((cb) => cb(e))
+    mousesUp.clear()
+  })
+}
+
+export function Hoverable({
+  onPressIn,
+  onPressOut,
+  onHoverIn,
+  onHoverOut,
+  onHoverMove,
+  children,
+}: {
   children?: any
   onHoverIn?: Function
   onHoverOut?: Function
   onHoverMove?: Function
+  onPressIn?: Function
+  onPressOut?: Function
 }) {
-  const { onHoverIn, onHoverOut, onHoverMove, children } = props
-  const [isHovered, setHovered] = React.useState(false)
-  const [showHover, setShowHover] = React.useState(true)
-
-  function handleMouseEnter() {
-    if (isHoverEnabled() && !isHovered) {
-      onHoverIn?.()
-      setHovered(true)
-    }
-  }
-
-  function handleMouseLeave() {
-    if (isHovered) {
-      onHoverOut?.()
-      setHovered(false)
-    }
-  }
-
-  const child =
-    typeof children === 'function' ? children(showHover && isHovered) : children
-
-  return React.cloneElement(React.Children.only(child), {
-    onMouseEnter: handleMouseEnter,
-    onMouseLeave: handleMouseLeave,
+  return React.cloneElement(React.Children.only(children), {
+    onMouseEnter: combineFns(onHoverIn),
+    onMouseLeave: combineFns(onPressOut, onHoverOut),
     onMouseMove: onHoverMove,
+    onMouseDown: onPressIn,
+    onMouseUp: onPressOut,
     // prevent hover showing while responder
-    onResponderGrant: () => setShowHover(false),
-    onResponderRelease: () => setShowHover(true),
+    // onResponderGrant: () => setShowHover(false),
+    // onResponderRelease: () => setShowHover(true),
   })
 }
-
-Hoverable.displayName = 'Hoverable'
