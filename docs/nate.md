@@ -2,31 +2,33 @@
 
 side goal: write 15m in the morning every day
 
-✔️ : Done
-👷: Currently or will actively work on
-⚠️ : Not prioritising
-
-Week 1
-
-- static style extract v1 ✔️
-- gallery view / click dish to gallery ✔️ (needs more)
-- hoverable popover ✔️
-- Searchbar needs many fixes for tags 👷
-- Autocomplete needs many fixes 👷
-  - Autocomplete - go straight to restaurant if restaurant
-- Map needs a lot of regression/fixes 👷
-
 Week 2
 
-- gallery and restaurant detail page need a lot of love 👷
-- improve search results speed and lazy loading ✔️ (probably enough)
-- ➕ need to redo restaurantlistitem to only scroll on right side, or remove extra images (why does it work fine on home then?)
-- RestaurantListItem - needs click to call, click to see map
-- general images gallery
-- map click item scroll to item / view detail
-- RestaurantListItem click address, menu, phone
-- autocomplete for dishes sub cuisine
-- any peek/hover features to make it feel nicer as bonus
+- gallery view (click to see full)
+- searchbar fixes for:
+  - delete tag
+- clicking tags:
+  - restaurantdetail
+  - search result
+- map
+  - better occlusion or grouping
+  - click item to scroll to row
+- restaurant
+  - click to call
+  - click to see map
+- restaurantdetail
+  - fix general layout
+  - add example top_comment
+- autocomplete
+  - dishes given cuisine
+  - go to restaurant if searched
+  - fix any nav issues
+- location search
+  - working search
+  - working initial items
+- restaurantlistitem janky vertical/horizontal scroll fighting. maybe limit it to scroll only on right side, or remove extra images (why does it work fine on home then?)
+- search results
+  - load more than one chunk!
 
 Week 3
 
