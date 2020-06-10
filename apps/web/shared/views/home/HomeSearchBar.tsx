@@ -263,7 +263,7 @@ export default memo(function HomeSearchBar() {
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
 
   const locationSearchElement = (
-    <VStack position="relative" flex={65} maxWidth={350} minWidth={180}>
+    <VStack position="relative" flex={65} minWidth={180}>
       <TextInput
         ref={locationInputRef}
         value={locationSearch}
@@ -573,9 +573,6 @@ const HomeSearchBarTags = memo(
                   }}
                   onClose={() => {
                     om.actions.home.navigateToTag({ tags: [tag] })
-                    // requestIdleCallback(() => {
-                    //   input?.focus()
-                    // })
                     if (
                       om.state.home.lastActiveTags.filter(
                         (x) => x.type !== 'lense'

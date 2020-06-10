@@ -891,7 +891,21 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
 
 export let currentStates: HomeStateItem[] = []
 
+// for use in avoiding autofocus focus on focus
+let justFocusedWindow = false
+if (typeof window !== 'undefined') {
+  window.addEventListener('focus', () => {
+    justFocusedWindow = true
+    setTimeout(() => {
+      justFocusedWindow = false
+    }, 100)
+  })
+}
+
 const setShowAutocomplete: Action<ShowAutocomplete> = (om, val) => {
+  if (justFocusedWindow) {
+    return
+  }
   om.state.home.showAutocomplete = val
 }
 

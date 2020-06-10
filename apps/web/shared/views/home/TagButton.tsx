@@ -46,6 +46,7 @@ export type TagButtonProps = Omit<StackProps & TagButtonTagProps, 'rgb'> & {
   fontSize?: TextProps['fontSize']
   noColor?: boolean
   replace?: boolean
+  onPress?: Function
 }
 
 export const TagButton = memo(
