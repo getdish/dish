@@ -12,7 +12,7 @@ type CircleButtonProps = {
 export const CloseButton = memo((props: CircleButtonProps) => {
   return (
     <SmallCircleButton {...props}>
-      <X size={props.size ?? 11} color="white" />
+      <X size={props.size ?? 14} color="white" />
     </SmallCircleButton>
   )
 })
@@ -35,12 +35,15 @@ export const SmallCircleButton = memo(
       <TouchableOpacity onPress={onPress} disabled={disabled}>
         <HStack
           borderRadius={1000}
-          backgroundColor="#ccc"
-          padding={3}
+          backgroundColor="rgba(0,0,0,0.3)"
+          padding={4}
           alignItems="center"
           spacing="xs"
           {...rest}
-          hoverStyle={{ backgroundColor: '#999', ...rest.hoverStyle }}
+          hoverStyle={{
+            backgroundColor: 'rgba(0,0,0,0.4)',
+            ...rest.hoverStyle,
+          }}
         />
       </TouchableOpacity>
     )

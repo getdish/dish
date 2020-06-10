@@ -1026,9 +1026,9 @@ function padSpan(val: LngLat, by = 0.9): LngLat {
 }
 
 const up: Action = (om) => {
-  const { breadcrumbStates } = om.state.home
-  if (breadcrumbStates.length == 1) return
-  const prev = breadcrumbStates[breadcrumbStates.length - 2]
+  const { states } = om.state.home
+  if (states.length == 1) return
+  const prev = states[states.length - 2]
   om.actions.home.popTo(prev?.type ?? 'home')
 }
 

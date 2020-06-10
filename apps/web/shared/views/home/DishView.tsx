@@ -127,8 +127,8 @@ export const DishView = memo(
               style={{
                 width: size + 30,
                 height: size + 30,
-                marginVertical: -15,
-                marginHorizontal: -15,
+                marginTop: -15,
+                marginLeft: -15,
                 backgroundColor: '#eee',
               }}
               resizeMode="cover"

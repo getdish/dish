@@ -260,13 +260,12 @@ const routeListen: Action<{
       }
     }
 
-    if (!ignoreNextRoute) {
-      console.log('page.js routing', {
-        url,
-        params,
-        isGoingBack,
-      })
-    }
+    console.log('page.js routing', {
+      url,
+      params,
+      isGoingBack,
+      ignoreNextRoute,
+    })
 
     curSearch = queryString.parse(querystring)
 

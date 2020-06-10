@@ -5,9 +5,11 @@ import { ScrollView, ScrollViewProps } from 'react-native'
 
 import { searchBarHeight } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
+import { useMediaQueryIsSmall } from './HomeViewDrawer'
 
 export const HomeScrollView = (props: ScrollViewProps & { children: any }) => {
   const om = useOvermind()
+  const isSmall = useMediaQueryIsSmall()
   const tm = useRef<any>(0)
   const setIsScrolling = useCallback(() => {
     if (om.state.home.isScrolling) {
@@ -24,7 +26,10 @@ export const HomeScrollView = (props: ScrollViewProps & { children: any }) => {
       onScroll={setIsScrolling}
       scrollEventThrottle={50}
       {...props}
-      style={[{ flex: 1, paddingTop: searchBarHeight }, props.style]}
+      style={[
+        { flex: 1, paddingTop: isSmall ? 0 : searchBarHeight },
+        props.style,
+      ]}
     />
   )
 }

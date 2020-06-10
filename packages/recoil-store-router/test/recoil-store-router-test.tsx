@@ -32,3 +32,6 @@ test('creates a store and routes', async (t) => {
     '{"username":"test","pane":"pane"}'
   )
 })
+
+// TODO: test that it doesn't update/render too much
+// TODO: no good way to test most things (back/forward) without browser...
