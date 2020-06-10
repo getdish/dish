@@ -5,10 +5,13 @@ TL;DR:
 - Better ratings through smoothing/sentiment
 - Better ratings through ambiance/service sentiment
 - Delivery crawlers
-- Image/other crawlers (Instagram/Google)
-- Better dish finding through images/comments
+- Delivery/Open/Price search filters
 - Summarized tips/comments (see RestaurantTopReview)
 - Search performance
+
+- Get aggregate rating via average of comments ratings instead of direct from API (yelp/tripadvisor)
+- Image/other crawlers (Instagram/Google)
+- Better dish finding through images/comments
 
 ✔️ : Done
 👷: Currently or will actively work on

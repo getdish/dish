@@ -28,6 +28,7 @@ export const HomeMap = memo(function HomeMap() {
     null
   )
   const om = useOvermind()
+  const state = om.state.home.currentState
 
   useOnMount(async () => {
     await startMapKit()
@@ -45,7 +46,7 @@ export const HomeMap = memo(function HomeMap() {
     <>
       <Suspense fallback={null}>
         <HomeMapDataLoader
-          key={om.state.home.currentStateType}
+          key={state.type === 'search' ? state.results.status : state.type}
           onLoadedRestaurants={setRestaurants}
           onLoadedRestaurantDetail={setRestaurantDetail}
         />
@@ -74,50 +75,35 @@ const HomeMapDataLoader = memo(
       const state = om.state.home.currentState
 
       // restaurants
-      const restaurantId = isRestaurantState(state) ? state.restaurantId : null
-      const restaurantIds: string[] = isSearchState(state)
-        ? state.results?.results?.restaurantIds.filter(Boolean) ?? []
-        : restaurantId
-        ? [restaurantId]
-        : []
+      const restaurantDetailInfo = isRestaurantState(state)
+        ? { id: state.restaurantId, slug: state.restaurantSlug }
+        : null
+      const restaurantResults = (isSearchState(state)
+        ? state.results?.results?.restaurants ?? []
+        : [restaurantDetailInfo]
+      ).filter(Boolean)
 
       // for now to avoid so many large db calls just have search api return it instead of re-fetch here
-      const restaurants = restaurantIds.map((id) => {
-        let fullRestaurant = om.state.home.allRestaurants[id]
-        if (!fullRestaurant?.location) {
-          console.warn('NO RESTUARNAT WE NEED TO REFACTOR THIS')
-          const found = query
-            .restaurant({ where: { id: { _eq: id } } })
-            .map((r) => ({
-              id: r.id,
-              location: r.location,
-            }))
-          fullRestaurant = found[0]
-        }
-        return fullRestaurant
+      const restaurants = restaurantResults.map(({ id, slug }) => {
+        return query
+          .restaurant({
+            where: { slug: { _eq: slug } },
+          })
+          .map((r) => ({
+            id,
+            slug,
+            location: r.location,
+          }))[0]
       })
-
-      // const restaurants = query.restaurant({
-      //   where: {
-      //     id: {
-      //       _in: restaurantIds,
-      //     },
-      //   },
-      // })
-      // restaurants.map((x) => {
-      //   x.id
-      //   x.location?.coordinates
-      // })
 
       useEffect(() => {
         props.onLoadedRestaurants?.(restaurants)
       }, [props.onLoadedRestaurants, JSON.stringify(restaurants)])
 
       // restaurantDetail
-      const restaurantDetail =
-        state.type == 'restaurant'
-          ? restaurants.find((x) => x.id === restaurantId)
-          : null
+      const restaurantDetail = restaurantDetailInfo
+        ? restaurants.find((x) => x.id === restaurantDetailInfo.id)
+        : null
 
       useEffect(() => {
         props.onLoadedRestaurantDetail?.(restaurantDetail)
@@ -471,7 +457,7 @@ function getRestaurantAnnotations(
     .filter((restaurant) => !!restaurant.location?.coordinates)
     .map(
       (restaurant) =>
-        new window.mapkit.Coordinate(
+        new mapkit.Coordinate(
           restaurant.location.coordinates[1],
           restaurant.location.coordinates[0]
         )

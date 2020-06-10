@@ -22,7 +22,7 @@ export const Marker: React.FC<MarkerProps> = ({
 
   useEffect(() => {
     if (mapkit && map) {
-      marker.current = new window.mapkit.MarkerAnnotation(
+      marker.current = new mapkit.MarkerAnnotation(
         createCoordinate(latitude, longitude),
         propsToMarkerConstructionOptions(options)
       )

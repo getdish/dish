@@ -1,6 +1,6 @@
 import { requestIdle, sleep } from '@dish/async'
 import {
-  Restaurant,
+  RestaurantOnlyIds,
   RestaurantSearchArgs,
   TopCuisine,
   getHomeDishes,
@@ -167,7 +167,6 @@ export const state: HomeState = {
   allUsers: {},
   allLenseTags: tagLenses,
   allFilterTags: tagFilters,
-  allRestaurants: {},
   autocompleteDishes: [],
   autocompleteIndex: 0,
   autocompleteResults: [],
@@ -311,10 +310,10 @@ const pushHomeState: AsyncAction<
         const tags = await getFullTags(fakeTags)
         activeTagIds = tags.reduce((acc, tag) => {
           const id = getTagId(tag)
-          om.actions.home.addTagToCache(tag)
           acc[id] = true
           return acc
         }, {})
+        om.actions.home.addTagsToCache(tags)
       }
 
       const username =
@@ -466,7 +465,6 @@ const loadPageRestaurant: AsyncAction = async (om) => {
     location?.coordinates
     return { location, id }
   })
-  om.state.home.allRestaurants[restaurant.id] = restaurant
   if (state && restaurant) {
     state.restaurantId = restaurant.id
     state.center = {
@@ -559,15 +557,14 @@ const loadHomeDishes: AsyncAction = async (om) => {
       icon: topDishes.icon,
     }
     om.state.home.allTags[getTagId(tag)] = tag
+
     // dish tags
-    for (const dish of topDishes.dishes ?? []) {
-      const tag: Tag = {
-        id: dish.name ?? '',
-        name: dish.name ?? '',
-        type: 'dish',
-      }
-      om.actions.home.addTagToCache(tag)
-    }
+    const dishTags: Tag[] = (topDishes.dishes ?? []).map((dish) => ({
+      id: dish.name ?? '',
+      name: dish.name ?? '',
+      type: 'dish',
+    }))
+    om.actions.home.addTagsToCache(dishTags)
   }
 
   const chunks: TopCuisine[][] = _.chunk(all, 4)
@@ -696,7 +693,7 @@ const runSearch: AsyncAction<{
     return
   }
 
-  const state = om.state.home.currentState
+  let state = om.state.home.currentState
 
   if (!isSearchState(state)) {
     console.warn('NO SEARCH?')
@@ -728,6 +725,8 @@ const runSearch: AsyncAction<{
   const searchKey = JSON.stringify(searchArgs)
   if (!opts.force && searchKey === lastSearchKey) return
 
+  state = om.state.home.lastSearchState
+
   if (!opts?.quiet) {
     state.hasMovedMap = false
     state.results = {
@@ -739,24 +738,16 @@ const runSearch: AsyncAction<{
 
   // fetch
   let restaurants = await search(searchArgs)
-  console.log('searched', searchArgs, restaurants)
   if (shouldCancel()) return
-
-  // update denormalized dictionary
-  const { allRestaurants } = om.state.home
-  for (const restaurant of restaurants) {
-    const existing = allRestaurants[restaurant.id]
-    if (!existing || existing.updated_at !== restaurant.updated_at) {
-      allRestaurants[restaurant.id] = restaurant as any
-    }
-  }
 
   // only update searchkey once finished
   lastSearchKey = searchKey
+  state = om.state.home.lastSearchState
+  console.log('SETTING COMPLETE')
   state.results = {
     status: 'complete',
     results: {
-      restaurantIds: restaurants.map((x) => x.id).filter(Boolean),
+      restaurants: restaurants.filter(Boolean),
       dishes: [],
       locations: [],
     },
@@ -770,8 +761,8 @@ const clearSearch: Action = (om) => {
   }
 }
 
-const setHoveredRestaurant: Action<Restaurant> = (om, val) => {
-  om.state.home.hoveredRestaurant = { ...val }
+const setHoveredRestaurant: Action<RestaurantOnlyIds> = (om, val) => {
+  om.state.home.hoveredRestaurant = val
 }
 
 const setShowUserMenu: Action<boolean> = (om, val) => {
@@ -781,21 +772,17 @@ const setShowUserMenu: Action<boolean> = (om, val) => {
 const suggestTags: AsyncAction<string> = async (om, tags) => {
   let state = om.state.home.currentState
   if (!isRestaurantState(state)) return
-  // let restaurant = new Restaurant(
-  //   om.state.home.allRestaurants[state.restaurantId]
-  // )
-  // await restaurant.upsertOrphanTags(tags.split(','))
-  // om.state.home.allRestaurants[state.restaurantId] = restaurant
+  // none
 }
 
 function reverseGeocode(center: LngLat): Promise<GeocodePlace[]> {
-  const mapGeocoder = new window.mapkit.Geocoder({
+  const mapGeocoder = new mapkit.Geocoder({
     language: 'en-GB',
     getsUserLocation: true,
   })
   return new Promise((res, rej) => {
     mapGeocoder.reverseLookup(
-      new window.mapkit.Coordinate(center.lat, center.lng),
+      new mapkit.Coordinate(center.lat, center.lng),
       (err, data) => {
         if (err) return rej(err)
         res((data.results as any) as GeocodePlace[])
@@ -935,7 +922,7 @@ function searchLocations(query: string) {
   if (!query) {
     return Promise.resolve([])
   }
-  const locationSearch = new window.mapkit.Search({ region: mapView?.region })
+  const locationSearch = new mapkit.Search({ region: mapView?.region })
   return new Promise<
     { name: string; formattedAddress: string; coordinate: any }[]
   >((res, rej) => {
@@ -1137,10 +1124,12 @@ const navigateToCurrentState: AsyncAction<undefined, boolean> = async (om) => {
 }
 
 // adds to allTags + allTagsNameToID
-const addTagToCache: Action<Tag> = (om, tag) => {
-  const id = getTagId(tag)
-  om.state.home.allTags[id] = tag
-  om.state.home.allTagsNameToID[tag.name.toLowerCase()] = id
+const addTagsToCache: Action<Tag[]> = (om, tags) => {
+  for (const tag of tags) {
+    const id = getTagId(tag)
+    om.state.home.allTags[id] = tag
+    om.state.home.allTagsNameToID[tag.name.toLowerCase()] = id
+  }
 }
 
 const setAutocompleteResults: Action<AutocompleteItem[]> = (om, results) => {
@@ -1183,7 +1172,7 @@ export const actions = {
   loadPageRestaurant,
   popHomeState,
   updateActiveTags,
-  addTagToCache,
+  addTagsToCache,
   setAutocompleteResults,
   navigateToCurrentState,
 }

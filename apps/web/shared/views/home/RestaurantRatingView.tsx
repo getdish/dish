@@ -12,6 +12,7 @@ import {
 import React, { memo } from 'react'
 
 import { RatingView, RatingViewProps } from './RatingView'
+import { restaurantQuery } from './restaurantQuery'
 
 export type RestaurantRatingViewProps = Omit<
   Pick<RatingViewProps, 'size'>,
@@ -32,13 +33,7 @@ export default memo(
 
     // optionally fetch
     if (typeof rating === 'undefined') {
-      const [restaurant] = query.restaurant({
-        where: {
-          slug: {
-            _eq: restaurantSlug,
-          },
-        },
-      })
+      const restaurant = restaurantQuery(restaurantSlug)
       rating = restaurant.rating
     }
     const percent = getRestaurantRating(rating)

@@ -196,7 +196,7 @@ const navigate: AsyncAction<NavigateItem> = async (om, navItem) => {
   }
 
   if (!getShouldNavigate(om, navItem)) {
-    console.log('already on page')
+    console.debug('already on page')
     return
   }
 

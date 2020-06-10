@@ -3,6 +3,7 @@ import { Box, HoverablePopover, SmallTitle, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { RatingViewProps } from './RatingView'
+import { restaurantQuery } from './restaurantQuery'
 import RestaurantRatingView from './RestaurantRatingView'
 import { TableCell, TableRow } from './TableRow'
 
@@ -12,13 +13,7 @@ export const RestaurantRatingViewPopover = memo(
       size = 'md',
       restaurantSlug,
     }: Partial<RatingViewProps> & { restaurantSlug: string }) => {
-      const [restaurant] = query.restaurant({
-        where: {
-          slug: {
-            _eq: restaurantSlug,
-          },
-        },
-      })
+      const restaurant = restaurantQuery(restaurantSlug)
       const sources = restaurant?.sources?.() ?? {}
       return (
         <HoverablePopover

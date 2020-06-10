@@ -1,11 +1,9 @@
 import { SEARCH_DOMAIN } from '../constants'
-import { Restaurant } from '../types'
-import { RestaurantSearchArgs, TopCuisine } from '../types-extra'
-
-export type RestaurantSearchResult = Pick<
-  Restaurant,
-  'id' | 'name' | 'rating' | 'slug' | 'location' | 'tags'
->
+import {
+  RestaurantOnlyIds,
+  RestaurantSearchArgs,
+  TopCuisine,
+} from '../types-extra'
 
 export async function search({
   center: { lat: lat, lng: lng },
@@ -13,7 +11,7 @@ export async function search({
   query,
   tags = [],
   limit = 25,
-}: RestaurantSearchArgs): Promise<RestaurantSearchResult[]> {
+}: RestaurantSearchArgs): Promise<RestaurantOnlyIds[]> {
   const params = [
     'query=' + query,
     'lon=' + lng,

@@ -34,7 +34,7 @@ export type ImageUrl = {
 // Mapkit helpers
 
 export const createPadding = (padding: PaddingType) => {
-  return new window.mapkit.Padding(
+  return new mapkit.Padding(
     typeof padding === 'number'
       ? {
           top: padding,
@@ -47,14 +47,14 @@ export const createPadding = (padding: PaddingType) => {
 }
 
 export const createCoordinate = (latitude: number, longitude: number) => {
-  return new window.mapkit.Coordinate(latitude, longitude)
+  return new mapkit.Coordinate(latitude, longitude)
 }
 
 export const createCoordinateSpan = (
   latitudeDelta: number,
   longitudeDelta: number
 ) => {
-  return new window.mapkit.CoordinateSpan(latitudeDelta, longitudeDelta)
+  return new mapkit.CoordinateSpan(latitudeDelta, longitudeDelta)
 }
 
 export const createCoordinateRegionFromValues = (region: RegionType) => {
@@ -68,11 +68,11 @@ export const createCoordinateRegion = (
   center: mapkit.Coordinate,
   span: mapkit.CoordinateSpan
 ) => {
-  return new window.mapkit.CoordinateRegion(center, span)
+  return new mapkit.CoordinateRegion(center, span)
 }
 
 export const createMapPoint = (x: number, y: number) => {
-  return new window.mapkit.MapPoint(x, y)
+  return new mapkit.MapPoint(x, y)
 }
 
 export const createMapRect = (
@@ -81,7 +81,7 @@ export const createMapRect = (
   width: number,
   height: number
 ) => {
-  return new window.mapkit.MapRect(x, y, width, height)
+  return new mapkit.MapRect(x, y, width, height)
 }
 
 // 🗺️ Map Options

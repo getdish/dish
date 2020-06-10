@@ -1,9 +1,4 @@
-import {
-  Restaurant,
-  RestaurantSearchResult,
-  TopCuisine,
-  User,
-} from '@dish/graph'
+import { RestaurantOnlyIds, TopCuisine, User } from '@dish/graph'
 import { Config, IContext } from 'overmind'
 
 import { NavigateItem } from './router'
@@ -22,11 +17,10 @@ export type HomeState = {
   allTagsNameToID: { [name: string]: string }
   allLenseTags: Tag[]
   allFilterTags: Tag[]
-  allRestaurants: { [id: string]: RestaurantSearchResult }
   autocompleteDishes: TopCuisine['dishes']
   autocompleteIndex: number // index for horizontal row (autocomplete)
   autocompleteResults: AutocompleteItem[]
-  hoveredRestaurant: Restaurant | null
+  hoveredRestaurant: RestaurantOnlyIds | null
   location: AutocompleteItem | null // for now just autocomplete item
   locationAutocompleteResults: AutocompleteItem[]
   locationSearchQuery: string
@@ -67,7 +61,7 @@ export type GeocodePlace = mapkit.Place & {
 export type ShowAutocomplete = 'search' | 'location' | false
 
 type SearchResultsResults = {
-  restaurantIds: string[]
+  restaurants: { id: string; slug: string }[]
   dishes: string[]
   locations: string[]
 }
