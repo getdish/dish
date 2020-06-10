@@ -16,139 +16,102 @@ WITH
 SELECT jsonb_agg(
   json_build_object(
     'id', data.id,
-    'name', data.name,
-    'rating', data.rating,
-    'slug', data.slug,
-    'location', ST_AsGeoJSON(data.location)::json,
-    'tags', ARRAY(
-      SELECT json_build_object(
-        'tag', json_build_object(
-          'id', searched_tags_at_front.id,
-          'name', searched_tags_at_front.name,
-          'icon', searched_tags_at_front.icon,
-          'type', searched_tags_at_front.type,
-          'default_images', searched_tags_at_front.default_images
-        ),
-        'rating', searched_tags_at_front.rating,
-        'rank', searched_tags_at_front.rank,
-        'photos', searched_tags_at_front.photos
-      ) FROM
-        (
-          -- Put searched for tags first
-          SELECT * FROM (
-            SELECT * FROM restaurant_tag rt
-              JOIN tag t ON rt.tag_id = t.id
-              WHERE rt.restaurant_id = data.id
-                AND rt.tag_id IN (SELECT id FROM dish_ids)
-              ORDER BY rt.rating DESC NULLS LAST
-          ) searched_for_tags
-          UNION ALL
-          -- All other tags
-          SELECT * FROM (
-            SELECT * FROM restaurant_tag rt
-              JOIN tag t ON rt.tag_id = t.id
-              WHERE rt.restaurant_id = data.id
-                AND rt.tag_id NOT IN (SELECT id FROM dish_ids)
-              ORDER BY rt.rating DESC NULLS LAST
-          ) all_other_tags
-        ) searched_tags_at_front
-        LIMIT 10
-      )
+    'slug', data.slug
   )) FROM (
-    SELECT * FROM restaurant
-    WHERE (
-      (ST_DWithin(location, ST_MakePoint(?0, ?1), ?2) OR ?2 = '0')
+  SELECT * FROM restaurant
+  WHERE (
+    (ST_DWithin(location, ST_MakePoint(?0, ?1), ?2) OR ?2 = '0')
+    AND
+    (
+      ST_Within(
+        location,
+        ST_MakeEnvelope(?6, ?7, ?8, ?9, 0)
+      )
+      OR ?10 = 'IGNORE BB'
+    )
+  )
+  AND (
+
+    (
+      ?3 != ''
       AND
-      (
-        ST_Within(
-          location,
-          ST_MakeEnvelope(?6, ?7, ?8, ?9, 0)
-        )
-        OR ?10 = 'IGNORE BB'
-      )
+      name ILIKE '%' || ?3 || '%'
     )
+
+    OR (
+      ?4 != ''
+      AND
+      tag_names @> to_json(string_to_array(?4, ','))::jsonb
+    )
+
     AND (
-
-      (
-        ?3 != ''
-        AND
-        name ILIKE '%' || ?3 || '%'
-      )
-
-      OR (
-        ?4 != ''
-        AND
-        tag_names @> to_json(string_to_array(?4, ','))::jsonb
-      )
-
-      AND (
-        -- TODO: do some actual "this restaurant is unique" query
-        ?11 != 'FILTER BY UNIQUE'
-        OR
-        rating > 2
-      )
-
-      AND (
-        ?12 != 'FILTER BY DELIVERS'
-        OR
-        sources->>'ubereats' IS NOT NULL
-        OR
-        sources->>'grubhub' IS NOT NULL
-        OR
-        sources->>'doordash' IS NOT NULL
-      )
-
-      AND (
-        ?13 != 'FILTER BY GEMS'
-        OR
-        rating > 4
-      )
-
-      AND (
-        ?14 != 'FILTER BY DATE'
-        OR
-        (rating_factors->>'ambience')::numeric > 4
-      )
-
-      AND (
-        ?15 != 'FILTER BY COFFEE'
-        OR
-        TRUE
-      )
-
-      AND (
-        ?16 != 'FILTER BY WINE'
-        OR
-        TRUE
-      )
-
-      AND (
-        ?14 != 'FILTER BY VEGETARIAN'
-        OR
-        TRUE
-      )
-
-      AND (
-        ?14 != 'FILTER BY QUIET'
-        OR
-        TRUE
-      )
+      -- TODO: do some actual "this restaurant is unique" query
+      ?11 != 'FILTER BY UNIQUE'
+      OR
+      rating > 2
     )
 
-    ORDER BY
+    AND (
+      ?12 != 'FILTER BY DELIVERS'
+      OR
+      sources->>'ubereats' IS NOT NULL
+      OR
+      sources->>'grubhub' IS NOT NULL
+      OR
+      sources->>'doordash' IS NOT NULL
+    )
 
-      CASE
-        -- Default sort order is by the _restaurant's_ rating
-        WHEN NOT EXISTS (SELECT 1 FROM dish_ids) THEN rating
-        -- However, if a known dish(es) is being searched for, then order the restaurants
-        -- based on the average rating of those dishes for that restaurant.
-        ELSE (
-          SELECT AVG(rt.rating)
-            FROM restaurant_tag rt
-            WHERE rt.restaurant_id = restaurant.id
-              AND rt.tag_id IN (SELECT id FROM dish_ids)
-        )
-      END DESC NULLS LAST
+    AND (
+      ?13 != 'FILTER BY GEMS'
+      OR
+      rating > 4
+    )
 
-    LIMIT ?5
-  ) data
+    AND (
+      ?14 != 'FILTER BY DATE'
+      OR
+      (rating_factors->>'ambience')::numeric > 4
+    )
+
+    AND (
+      ?15 != 'FILTER BY COFFEE'
+      OR
+      TRUE
+    )
+
+    AND (
+      ?16 != 'FILTER BY WINE'
+      OR
+      TRUE
+    )
+
+    AND (
+      ?14 != 'FILTER BY VEGETARIAN'
+      OR
+      TRUE
+    )
+
+    AND (
+      ?14 != 'FILTER BY QUIET'
+      OR
+      TRUE
+    )
+  )
+
+  ORDER BY
+
+    CASE
+      -- Default sort order is by the _restaurant's_ rating
+      WHEN NOT EXISTS (SELECT 1 FROM dish_ids) THEN rating
+      -- However, if a known dish(es) is being searched for, then order the restaurants
+      -- based on the average rating of those dishes for that restaurant.
+      ELSE (
+        SELECT AVG(rt.rating)
+          FROM restaurant_tag rt
+          WHERE rt.restaurant_id = restaurant.id
+            AND rt.tag_id IN (SELECT id FROM dish_ids)
+      )
+    END DESC NULLS LAST
+
+  LIMIT ?5
+) data
