@@ -2,6 +2,7 @@
 // job processor.
 import {
   CI,
+  Google,
   Infatuated,
   Michelin,
   Self,
@@ -26,6 +27,7 @@ const all: typeof WorkerJob[] = [
   Infatuated,
   Michelin,
   Tripadvisor,
+  Google,
 ]
 
 if (process.env.DISH_ENV != 'production') {
