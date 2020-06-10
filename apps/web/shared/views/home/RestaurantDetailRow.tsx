@@ -3,6 +3,8 @@ import { Divider, HStack, Spacer, StackProps, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Linking } from 'react-native'
 
+import { restaurantQuery } from './restaurantQuery'
+
 export const RestaurantDetailRow = memo(
   graphql(
     ({
@@ -18,19 +20,7 @@ export const RestaurantDetailRow = memo(
       after?: any
     }) => {
       const isSm = size === 'sm'
-
-      if (!restaurantSlug) {
-        console.warn('nono')
-        return null
-      }
-
-      const [restaurant] = query.restaurant({
-        where: {
-          slug: {
-            _eq: restaurantSlug,
-          },
-        },
-      })
+      const restaurant = restaurantQuery(restaurantSlug)
       const [open_text, open_color, next_time] = openingHours(restaurant)
       const [price_label, price_color, price_range] = priceRange(restaurant)
 

@@ -1,6 +1,7 @@
+import { RestaurantQuery, graphql, query } from '@dish/graph'
 import { ZStack, useOnMount } from '@dish/ui'
 import _ from 'lodash'
-import React, { memo, useEffect, useMemo, useState } from 'react'
+import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 
 import { useOvermind } from '../../state/useOvermind'
 import { Map, useMap } from '../map'
@@ -20,14 +21,19 @@ export const HomeMapPIP = memo(() => {
     return null
   }
 
-  return <HomeMapPIPContent />
+  return (
+    <Suspense fallback={null}>
+      <HomeMapPIPContent />
+    </Suspense>
+  )
 })
 
-function HomeMapPIPContent() {
+const HomeMapPIPContent = graphql(() => {
   const om = useOvermind()
   const state = om.state.home.currentState
   const { center, span } = state
   const { map, mapProps } = useMap({
+    // @ts-ignore
     showsZoomControl: false,
     showsMapTypeControl: false,
     isZoomEnabled: true,
@@ -36,23 +42,28 @@ function HomeMapPIPContent() {
   })
 
   const enabled = state.type === 'restaurant' && span.lat < 0.02
-  const restaurant =
-    state.type === 'restaurant'
-      ? om.state.home.allRestaurants[state.restaurantId ?? '']
-      : null
+
+  let restaurant: RestaurantQuery | null = null
+  if (state.type === 'restaurant') {
+    restaurant = query.restaurant({
+      where: {
+        slug: {
+          _eq: state.restaurantSlug,
+        },
+      },
+    })[0]
+  }
 
   const coordinates = restaurant?.location?.coordinates
   const coordinate = useMemo(
-    () =>
-      coordinates &&
-      new window.mapkit.Coordinate(coordinates[1], coordinates[0]),
+    () => coordinates && new mapkit.Coordinate(coordinates[1], coordinates[0]),
     [JSON.stringify(coordinates)]
   )
   const annotation = useMemo(() => {
     if (!coordinate || !restaurant) return null
     const percent = getRestaurantRating(restaurant.rating)
     const color = getRankingColor(percent)
-    return new window.mapkit.MarkerAnnotation(coordinate, {
+    return new mapkit.MarkerAnnotation(coordinate, {
       color,
     })
   }, [coordinate])
@@ -108,4 +119,4 @@ function HomeMapPIPContent() {
       </ZStack>
     </ZStack>
   )
-}
+})

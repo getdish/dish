@@ -36,12 +36,11 @@ import { StackViewCloseButton } from './StackViewCloseButton'
 
 export const avatar = require('../../assets/peach.jpg').default
 
-export default memo(function HomePageSearchResults({
-  state,
-}: {
+export default memo(function HomePageSearchResults(props: {
   state: HomeStateItemSearch
 }) {
   const om = useOvermind()
+  const state = om.state.home.lastSearchState
   const isEditingUserList = !!isEditingUserPage(om.state)
   const { title, subTitleElements, pageTitleElements } = getTitleForState(
     om.state,
@@ -102,7 +101,7 @@ export default memo(function HomePageSearchResults({
         </VStack>
 
         {/* CONTENT */}
-        <HomeSearchResultsViewContent state={state} />
+        <HomeSearchResultsViewContent state={{ ...state }} />
       </HomeScrollView>
     </VStack>
   )
@@ -162,24 +161,22 @@ const chunks = 4
 
 const HomeSearchResultsViewContent = memo(
   ({ state }: { state: HomeStateItemSearch }) => {
-    const om = useOvermind()
-    const allRestaurants = om.state.home.allRestaurants
-    const resultsIds = state.results?.results?.restaurantIds ?? []
-    const resultsAll = resultsIds.map((id) => allRestaurants[id])
+    const allResults = state.results?.results?.restaurants ?? []
     const [chunk, setChunk] = useState(1)
-    const perChunk = Math.ceil(resultsAll.length / chunks)
-    const results = resultsAll.slice(0, chunk * perChunk)
-    const loadNextChunk = useCallback(() => {
-      console.warn('TODO loading next chunk')
-      // setChunk((x) => x + 1)
-    }, [])
+    const perChunk = Math.ceil(allResults.length / chunks)
+    const results = allResults.slice(0, chunk * perChunk)
+    const loadNextChunk = async () => {
+      if (results.length < allResults.length) {
+        await sleep(300)
+        console.warn('loading next page')
+        // setChunk((x) => x + 1)
+      }
+    }
 
     // load a few at a time, less to start
     const isLoading =
-      !state.results?.results ||
-      state.results.status === 'loading' ||
-      results[0]?.name === null
-    const hasMoreToLoad = results.length < resultsAll.length
+      !state.results?.results || state.results.status === 'loading'
+    const hasMoreToLoad = results.length < allResults.length
 
     console.log(
       '123 HomeSearchResultsViewContent.render',
@@ -218,12 +215,12 @@ const HomeSearchResultsViewContent = memo(
           <HomePageSearchResultsDishes state={state} />
         </Suspense> */}
         <VStack paddingBottom={20} spacing={14}>
-          {/* <SuspenseList revealOrder="forwards"> */}
           {results.map((item, index) => (
             <Suspense key={item.id} fallback={null}>
               <RestaurantListItem
                 currentLocationInfo={state.currentLocationInfo ?? null}
-                restaurant={item}
+                restaurantId={item.id}
+                restaurantSlug={item.slug}
                 rank={index + 1}
                 searchState={state}
                 onFinishRender={
@@ -234,63 +231,48 @@ const HomeSearchResultsViewContent = memo(
               />
             </Suspense>
           ))}
-          {/* </SuspenseList> */}
         </VStack>
       </>
     )
-    // return (
-    //   <List
-    //     data={[topPad, ...results, 20]}
-    //     estimatedHeight={182}
-    //     renderItem={({ item, index }) => {
-    //       if (typeof item == 'number') {
-    //         return <Spacer size={item} />
-    //       }
-    //       return (
-
-    //       )
-    //     }}
-    //   />
-    // )
   }
 )
 
 // count it as two votes
 
-const HomePageSearchResultsDishes = memo(
-  graphql(({ state }: { state: HomeStateItemSearch }) => {
-    const om = useOvermind()
-    const activeTags = getActiveTags(om.state.home, state)
+// const HomePageSearchResultsDishes = memo(
+//   graphql(({ state }: { state: HomeStateItemSearch }) => {
+//     const om = useOvermind()
+//     const activeTags = getActiveTags(om.state.home, state)
 
-    if (activeTags.some((x) => x.type === 'dish')) {
-      // TODO use a real
-      const dishes = query.tag({
-        limit: 6,
-        where: {
-          type: { _eq: 'dish' },
-        },
-      })
+//     if (activeTags.some((x) => x.type === 'dish')) {
+//       // TODO use a real
+//       const dishes = query.tag({
+//         limit: 6,
+//         where: {
+//           type: { _eq: 'dish' },
+//         },
+//       })
 
-      return (
-        <HStack paddingHorizontal={20} paddingVertical={10}>
-          {dishes.map((dish) => (
-            <DishView
-              key={dish.name}
-              dish={{
-                name: dish.name,
-                // TODO @tom how do we get rating/image here?
-                image: dish.icon ?? '',
-                rating: 5,
-                count: 1,
-              }}
-            />
-          ))}
-        </HStack>
-      )
-    }
-    return null
-  })
-)
+//       return (
+//         <HStack paddingHorizontal={20} paddingVertical={10}>
+//           {dishes.map((dish) => (
+//             <DishView
+//               key={dish.name}
+//               dish={{
+//                 name: dish.name,
+//                 // TODO @tom how do we get rating/image here?
+//                 image: dish.icon ?? '',
+//                 rating: 5,
+//                 count: 1,
+//               }}
+//             />
+//           ))}
+//         </HStack>
+//       )
+//     }
+//     return null
+//   })
+// )
 
 // function List(props: {
 //   data: any[]

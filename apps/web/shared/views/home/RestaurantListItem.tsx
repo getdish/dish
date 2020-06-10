@@ -36,13 +36,15 @@ import { getAddressText } from './RestaurantAddressLinksRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
+import { restaurantQuery } from './restaurantQuery'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 
 type RestaurantListItemProps = {
   currentLocationInfo: GeocodePlace | null
-  restaurant: RestaurantSearchResult
+  restaurantId: string
+  restaurantSlug: string
   rank: number
   searchState?: HomeStateItemSearch
   onFinishRender?: Function
@@ -65,11 +67,14 @@ export const RestaurantListItem = memo(function RestaurantListItem(
   useDebounceEffect(
     () => {
       if (isHovered) {
-        om.actions.home.setHoveredRestaurant(props.restaurant)
+        om.actions.home.setHoveredRestaurant({
+          id: props.restaurantId,
+          slug: props.restaurantSlug,
+        })
       }
     },
     60,
-    [props.restaurant, isHovered]
+    [isHovered]
   )
 
   useEffect(() => {
@@ -103,7 +108,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
 
 const RestaurantListItemContent = memo(
   graphql((props: RestaurantListItemProps) => {
-    const { rank, restaurant, currentLocationInfo } = props
+    const { rank, restaurantId, restaurantSlug, currentLocationInfo } = props
     const om = useOvermind()
     const pad = 18
     const isShowingComment = isEditingUserPage(om.state)
@@ -115,6 +120,7 @@ const RestaurantListItemContent = memo(
     const adjustRankingLeft = 36
     const verticalPad = 24
     const leftPad = 6
+    const restaurant = restaurantQuery(restaurantSlug)
 
     useEffect(() => {
       if (props.onFinishRender) {
@@ -159,14 +165,14 @@ const RestaurantListItemContent = memo(
                 justifyContent="center"
                 pointerEvents="none"
               >
-                <RestaurantUpVoteDownVote restaurantId={restaurant.id} />
+                <RestaurantUpVoteDownVote restaurantId={restaurantId} />
               </ZStack>
 
               {/* LINK */}
               <Link
                 tagName="div"
                 name="restaurant"
-                params={{ slug: restaurant.slug }}
+                params={{ slug: restaurantSlug }}
               >
                 <VStack>
                   <HStack alignItems="center" marginVertical={-3}>
@@ -177,7 +183,7 @@ const RestaurantListItemContent = memo(
                     />
 
                     {/* SECOND LINK WITH actual <a /> */}
-                    <Link name="restaurant" params={{ slug: restaurant.slug }}>
+                    <Link name="restaurant" params={{ slug: restaurantSlug }}>
                       <Text
                         selectable
                         color="#000"
@@ -201,12 +207,12 @@ const RestaurantListItemContent = memo(
                   >
                     <RestaurantRatingViewPopover
                       size="xs"
-                      restaurantSlug={restaurant.slug ?? ''}
+                      restaurantSlug={restaurantSlug}
                     />
                     <RestaurantTagsRow
                       subtle
                       showMore={true}
-                      restaurantSlug={restaurant.slug ?? ''}
+                      restaurantSlug={restaurantSlug}
                       divider={<></>}
                     />
                   </HStack>
@@ -220,7 +226,7 @@ const RestaurantListItemContent = memo(
 
             {/* ROW: COMMENT */}
             <VStack maxWidth="90%" marginLeft={-2}>
-              <RestaurantTopReview restaurantId={restaurant.id} />
+              <RestaurantTopReview restaurantId={restaurantId} />
             </VStack>
 
             <Spacer size={6} />
@@ -233,7 +239,7 @@ const RestaurantListItemContent = memo(
               spacing
             >
               <RestaurantLenseVote />
-              <RestaurantFavoriteStar restaurantId={restaurant.id} />
+              <RestaurantFavoriteStar restaurantId={restaurantId} />
 
               <TouchableOpacity
                 onPress={() =>
@@ -251,10 +257,7 @@ const RestaurantListItemContent = memo(
 
               <Divider vertical />
 
-              <RestaurantDetailRow
-                size="sm"
-                restaurantSlug={restaurant.slug ?? ''}
-              />
+              <RestaurantDetailRow size="sm" restaurantSlug={restaurantSlug} />
 
               <HoverablePopover
                 contents={<Text selectable>{restaurant.address}</Text>}
@@ -273,14 +276,14 @@ const RestaurantListItemContent = memo(
           {showAddComment && (
             <>
               <Spacer size="lg" />
-              <RestaurantAddComment restaurantId={restaurant.id} />
+              <RestaurantAddComment restaurantId={restaurantId} />
             </>
           )}
         </VStack>
 
         <VStack padding={10} paddingTop={65} width={0}>
           <RestaurantPeek
-            restaurantSlug={restaurant.slug}
+            restaurantSlug={restaurantSlug}
             searchState={props.searchState}
             size={isShowingComment ? 'lg' : 'md'}
           />
@@ -327,9 +330,7 @@ export const RestaurantPeek = memo(
     const tag_names = Object.keys(searchState?.activeTagIds || {})
     const spacing = size == 'lg' ? 16 : 24
     const isMedium = useMediaQueryIsMedium()
-    const [restaurant] = query.restaurant({
-      where: { slug: { _eq: props.restaurantSlug } },
-    })
+    const restaurant = restaurantQuery(props.restaurantSlug)
     const allPhotos = restaurantPhotosForCarousel({
       restaurant,
       tag_names,

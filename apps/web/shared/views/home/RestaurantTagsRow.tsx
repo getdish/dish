@@ -3,6 +3,7 @@ import { HStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { useOvermind } from '../../state/useOvermind'
+import { restaurantQuery } from './restaurantQuery'
 import { TagButton, TagButtonTagProps, getTagButtonProps } from './TagButton'
 import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 
@@ -48,13 +49,7 @@ export const useGetTagElements = (props: TagRowProps) => {
   if (props.tags) {
     tags = props.tags
   } else {
-    const [restaurant] = query.restaurant({
-      where: {
-        slug: {
-          _eq: restaurantSlug,
-        },
-      },
-    })
+    const restaurant = restaurantQuery(restaurantSlug)
     const restaurantTags = restaurant.tags({
       limit: 6,
     })

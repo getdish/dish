@@ -555,7 +555,7 @@ const HomeSearchBarTags = memo(
                     backgroundColor: brandColorLight,
                   }}
                   size="lg"
-                  fontSize={17}
+                  fontSize={16}
                   name={tag.name}
                   type={tag.type}
                   icon={tag.icon ?? ''}
@@ -589,7 +589,7 @@ const styles = StyleSheet.create({
     padding: 11,
     paddingHorizontal: 16,
     flex: 1,
-    fontSize: 22,
+    fontSize: 18,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',

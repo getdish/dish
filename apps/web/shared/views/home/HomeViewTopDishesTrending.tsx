@@ -15,8 +15,8 @@ import { TrendingButton } from './TrendingButton'
 
 export const HomeViewTopDishesTrending = memo(() => {
   const om = useOvermind()
-  const allRestaurants = om.state.home.topDishes[0]?.top_restaurants ?? []
-  const hasLoaded = allRestaurants.length > 0
+  const topRestaurants = om.state.home.topDishes[0]?.top_restaurants ?? []
+  const hasLoaded = topRestaurants.length > 0
 
   // @tom if you change Partial<any> to Partial<Restauarant>
   // you can see below at `getTrending` they disagree on Restaurant
@@ -62,7 +62,7 @@ export const HomeViewTopDishesTrending = memo(() => {
             <SmallerTitle marginBottom={5}>Restaurants</SmallerTitle>
             <VStack spacing={listSpace} overflow="hidden">
               {!hasLoaded && <LoadingItem />}
-              {allRestaurants.slice(0, total).map(getTrending)}
+              {topRestaurants.slice(0, total).map(getTrending)}
             </VStack>
           </VStack>
         </VStack>
@@ -70,7 +70,7 @@ export const HomeViewTopDishesTrending = memo(() => {
           <SmallerTitle marginBottom={5}>Dishes</SmallerTitle>
           <VStack spacing={listSpace} overflow="hidden">
             {!hasLoaded && <LoadingItem />}
-            {allRestaurants.slice(0, total).map(getTrending)}
+            {topRestaurants.slice(0, total).map(getTrending)}
           </VStack>
         </VStack>
         <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
@@ -78,7 +78,7 @@ export const HomeViewTopDishesTrending = memo(() => {
             <SmallerTitle marginBottom={5}>Topics</SmallerTitle>
             <VStack spacing={listSpace} overflow="hidden">
               {!hasLoaded && <LoadingItem />}
-              {allRestaurants.slice(0, total).map(getTrending)}
+              {topRestaurants.slice(0, total).map(getTrending)}
             </VStack>
           </VStack>
         </MediaQuery>

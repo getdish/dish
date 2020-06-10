@@ -21,6 +21,7 @@ import { HomeScrollView } from './HomeScrollView'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
+import { restaurantQuery } from './restaurantQuery'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { StackViewCloseButton } from './StackViewCloseButton'
@@ -181,13 +182,7 @@ export default memo(
 
 const RestaurantPhotos = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
-    const [restaurant] = query.restaurant({
-      where: {
-        slug: {
-          _eq: restaurantSlug,
-        },
-      },
-    })
+    const restaurant = restaurantQuery(restaurantSlug)
     const photos = restaurantPhotosForCarousel({ restaurant })
     const drawerWidth = useHomeDrawerWidthInner()
     const spacing = 20

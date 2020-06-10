@@ -28,7 +28,6 @@ export function restaurantPhotosForCarousel({
   // @ts-ignore
   const restaurantPhotos = restaurant.photos() || []
   let photos = [] as TopCuisineDish[]
-  console.log({ tag_names, tags }, tags.length, tags[0])
   for (const t of tags) {
     const tagName = t.tag.name ?? ''
     const isSearchedForTag = tag_names?.includes(tagName.toLowerCase())
