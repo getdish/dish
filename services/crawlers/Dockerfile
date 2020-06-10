@@ -18,6 +18,9 @@ RUN yarn build
 ## Stage 2: run
 FROM node:12.16.1-buster-slim
 COPY --from=0 /app /app
-WORKDIR /app/services/crawlers
 
-CMD ["node", "_/index.js"]
+ADD services/crawlers/crontab.txt /app/crontab.txt
+ADD services/crawlers/entry.sh /app/entry.sh
+RUN /usr/bin/crontab /app/crontab.txt
+
+CMD ["/root/entry.sh"]

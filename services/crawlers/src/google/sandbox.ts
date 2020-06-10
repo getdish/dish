@@ -15,9 +15,4 @@ async function one() {
   await google.getRestaurant(restaurant)
 }
 
-async function all() {
-  const google = new Google()
-  await google.main()
-}
-
 one()
