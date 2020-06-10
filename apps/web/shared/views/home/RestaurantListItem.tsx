@@ -89,7 +89,6 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       contain="paint"
     >
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {/* <Suspense fallback={null}> */}
         <HStack
           alignItems="center"
           position="relative"
@@ -97,7 +96,6 @@ export const RestaurantListItem = memo(function RestaurantListItem(
         >
           <RestaurantListItemContent {...props} />
         </HStack>
-        {/* </Suspense> */}
       </ScrollView>
     </VStack>
   )
@@ -184,7 +182,7 @@ const RestaurantListItemContent = memo(
                         selectable
                         color="#000"
                         fontSize={24}
-                        fontWeight="600"
+                        fontWeight="300"
                         textDecorationColor="transparent"
                       >
                         {restaurant.name}
@@ -214,7 +212,7 @@ const RestaurantListItemContent = memo(
                   </HStack>
                 </VStack>
 
-                <Divider noGap zIndex={-1} />
+                {/* <Divider noGap zIndex={-1} /> */}
               </Link>
             </VStack>
 
@@ -307,8 +305,8 @@ const RestaurantTopReview = memo(
         <Text
           selectable
           opacity={0.8}
-          lineHeight={22}
-          fontSize={15}
+          lineHeight={20}
+          fontSize={14}
           marginVertical={5}
         >
           {topReview?.text ||

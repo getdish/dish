@@ -1,3 +1,7 @@
+"Search all food delivery services at once with high quality ratings down to the dish"
+
+"A geeks guide for finding good food"
+
 ---
 
 A middle-ground for food delivery

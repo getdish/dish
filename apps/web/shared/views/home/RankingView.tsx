@@ -17,8 +17,8 @@ export const RankingView = memo(
           fontSize={rank > 9 ? 20 : 25}
           lineHeight={22}
           letterSpacing={-2}
-          fontWeight="400"
-          color="#555"
+          fontWeight="700"
+          color="#999"
         >
           <SuperScriptText opacity={0.35} letterSpacing={0}>
             #

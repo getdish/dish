@@ -129,7 +129,7 @@ export const CommentBubble = ({
         <Circle size={18} marginBottom={-2}>
           <Image source={avatar} style={{ width: 18, height: 18 }} />
         </Circle>
-        <Text selectable color="#999">
+        <Text selectable color="#999" fontSize={13}>
           <Link
             inline
             name="user"

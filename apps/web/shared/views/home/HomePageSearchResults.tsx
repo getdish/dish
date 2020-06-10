@@ -170,7 +170,7 @@ const HomeSearchResultsViewContent = memo(
     const perChunk = Math.ceil(resultsAll.length / chunks)
     const results = resultsAll.slice(0, chunk * perChunk)
     const loadNextChunk = useCallback(() => {
-      console.log('loading next chunk')
+      console.warn('TODO loading next chunk')
       // setChunk((x) => x + 1)
     }, [])
 

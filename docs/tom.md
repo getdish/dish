@@ -45,12 +45,13 @@ Week 1
 Week 2
 
 - Location endpoint: can we get nearby regions easily? ⚠️ if so would be helpful what defines a "region"?
+  - Ⓝ Good point! Apple maps API does have some terms here, perhaps I can even use them, let me verify.
 - Performance check - search/home has seemed slow
 - Crawlers!
   - Delivery crawlers 🚚 👷
   - Google for images/reviews 👷
   - Instagram v1 ⚠️ hardest thing is matching accounts to restaruants
-    - 🅽 yes, we should discuss! maybe some way to do it
+    - Ⓝ yes, we should discuss! maybe some way to do it
 
 Week 3
 
