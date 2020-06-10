@@ -22,7 +22,7 @@ resource "helm_release" "docker-registry" {
 
   set {
     name = "persistence.size"
-    value = "25Gi"
+    value = "50Gi"
   }
 }
 
