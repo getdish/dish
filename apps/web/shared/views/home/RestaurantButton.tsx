@@ -33,7 +33,6 @@ export const RestaurantButton = memo(
         {...(subtle && {
           backgroundColor: 'transparent',
         })}
-        fontWeight="400"
         fontSize={14}
         zIndex={active ? 2 : 1}
         {...(active && {
@@ -60,7 +59,7 @@ export const RestaurantButton = memo(
               }}
             />
           )}
-          <Text ellipse fontWeight="500">
+          <Text ellipse fontWeight="400">
             {typeof rank === 'number' ? `${rank}. ` : ''}
             {restaurant.name}
           </Text>

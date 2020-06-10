@@ -477,18 +477,11 @@ const HomeSearchBarHomeButton = memo(() => {
 const HomeSearchBarSeparator = memo(() => {
   return (
     <HStack alignItems="center" justifyContent="center" spacing={3} width={40}>
-      <Divider flex opacity={0.1} />
-      <Circle
-        size={26}
-        backgroundColor="##fff"
-        borderColor="#eee"
-        borderWidth={1}
-      >
+      <Circle size={26} backgroundColor="#eee">
         <Text color="#000" fontSize={15} fontWeight="600">
           in
         </Text>
       </Circle>
-      <Divider flex opacity={0.1} />
     </HStack>
   )
 })
@@ -562,7 +555,7 @@ const HomeSearchBarTags = memo(
                     backgroundColor: brandColorLight,
                   }}
                   size="lg"
-                  fontSize={18}
+                  fontSize={17}
                   name={tag.name}
                   type={tag.type}
                   icon={tag.icon ?? ''}

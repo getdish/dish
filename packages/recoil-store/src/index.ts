@@ -3,12 +3,11 @@ import {
   RecoilValueReadOnly,
   atom,
   selector,
-  selectorFamily,
   useRecoilInterface,
 } from '@o/recoil'
 import { useMemo } from 'react'
 
-import { Store } from './store'
+import { Store } from './Store'
 
 export { RecoilRoot } from '@o/recoil'
 export * from './Store'

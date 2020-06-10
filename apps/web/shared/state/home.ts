@@ -17,12 +17,7 @@ import { Action, AsyncAction, derived } from 'overmind'
 import { isWorker } from '../constants'
 import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
 import { timer } from '../helpers/timer'
-import {
-  isHomeState,
-  isRestaurantState,
-  isSearchState,
-  shouldBeOnHome,
-} from './home-helpers'
+import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
 import {
   allTags,
   getActiveTags,
