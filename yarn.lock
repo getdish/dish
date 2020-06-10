@@ -11905,6 +11905,11 @@ path-to-regexp@^1.7.0:
   dependencies:
     isarray "0.0.1"
 
+path-to-regexp@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-6.1.0.tgz#0b18f88b7a0ce0bfae6a25990c909ab86f512427"
+  integrity sha512-h9DqehX3zZZDCEm+xbfU0ZmwCGFCAAraPJWMXJ4+v32NjZJilVg3k1TcKsRgIb8IQ/izZSaydDc1OhJCZvs2Dw==
+
 path-to-regexp@~1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-1.2.1.tgz#b33705c140234d873c8721c7b9fd8b541ed3aff9"
@@ -14903,6 +14908,13 @@ timers-browserify@^2.0.4:
   integrity sha512-60aV6sgJ5YEbzUdn9c8kYGIqOubPoUdqQCul3SBAsRCZ40s6Y5cMcrW4dt3/k/EsbLVJNl9n6Vz3fTc+k2GeKQ==
   dependencies:
     setimmediate "^1.0.4"
+
+tiny-request-router@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.npmjs.org/tiny-request-router/-/tiny-request-router-1.2.2.tgz#1b80694497e4e8dcbb8e93851ec7f03c6ca13e75"
+  integrity sha512-6ZMFU7AP9so+hkqmMM9fJ11V44EAcYuHCmNdsyM8k94oVnNDPQwUAAPoBHqchHSpKG6yZbCasgVeRxaY5v2BCg==
+  dependencies:
+    path-to-regexp "^6.1.0"
 
 tlds@^1.203.0:
   version "1.207.0"

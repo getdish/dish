@@ -1,17 +1,10 @@
 import React from 'react'
 
-import { RecoilRoot, useRecoilStore } from '../../_'
+import { RecoilRoot, Store, get, useRecoilStore } from '../../_'
 
 const sleep = () => new Promise((res) => setTimeout(res, 100))
-function get<A>(_: A, b?: any): A extends new () => infer B ? B : A {
-  return _ as any
-}
 
-class Store<A> {
-  // @ts-ignore
-  props: A
-}
-
+// TODO testing using in combination
 class CustomTodoList extends Store<{ namespace: string }> {
   todoList = get(TodoList, this.props.namespace)
 
@@ -52,15 +45,17 @@ export function SimpleStoreTest() {
   )
 }
 
+type x = typeof TodoList
+
 function SimpleStoreTestComponent() {
   const store = useRecoilStore(TodoList, {
     namespace: 'hello',
   })
   return (
-    <RecoilRoot>
+    <>
       <div id="x">{store.items[store.items.length - 1].text}</div>
       <button id="add" onClick={() => store.add()}></button>
       <button id="add-async" onClick={() => store.asyncAdd()}></button>
-    </RecoilRoot>
+    </>
   )
 }

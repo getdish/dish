@@ -32,7 +32,7 @@ export type LoadableView = React.SFC & {
 
 export type PageRouteView = LoadableView | Promise<LoadableView>
 
-export class Route<A extends Object | void = void> {
+class Route<A extends Object | void = void> {
   constructor(
     public path: string,
     public page?: PageRouteView,

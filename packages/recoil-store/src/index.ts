@@ -8,7 +8,17 @@ import {
 } from '@o/recoil'
 import { useMemo } from 'react'
 
+import { Store } from './store'
+
 export { RecoilRoot } from '@o/recoil'
+export * from './Store'
+
+export function get<A>(
+  _: A,
+  b?: any
+): A extends new (props?: any) => infer B ? B : A {
+  return _ as any
+}
 
 type StoreAttribute =
   | { type: 'value'; key: string; value: RecoilState<any> }
@@ -21,26 +31,29 @@ const keys = new Set<string>()
 const storeToRecoilStore = new WeakMap<any, any>()
 const storeToAttributes = new WeakMap<any, StoreAttributes>()
 
-export function useRecoilStore<A extends Object>(
-  store: new () => A,
-  props?: any
+export function useRecoilStore<A extends Store<B>, B>(
+  StoreKlass: new (props: B) => A,
+  props?: B
 ): A {
-  let recoilStore = storeToRecoilStore.get(store)
+  let recoilStore = storeToRecoilStore.get(StoreKlass)
   if (recoilStore) {
-    return useRecoilStoreInstance(recoilStore, storeToAttributes.get(store)!)
+    return useRecoilStoreInstance(
+      recoilStore,
+      storeToAttributes.get(StoreKlass)!
+    )
   }
-  const storeName = store.name
+  const storeName = StoreKlass.name
   if (keys.has(storeName)) {
     throw new Error(`Store name already used`)
   }
-  const storeInstance = new store()
+  const storeInstance = new StoreKlass(props as any)
   const descriptors = getStoreDescriptors(storeInstance)
   const attrs: StoreAttributes = {}
   for (const prop in descriptors) {
     attrs[prop] = getDescription(`${storeName}/${prop}`, descriptors[prop])
   }
-  storeToRecoilStore.set(store, storeInstance)
-  storeToAttributes.set(store, attrs)
+  storeToRecoilStore.set(StoreKlass, storeInstance)
+  storeToAttributes.set(StoreKlass, attrs)
   return useRecoilStoreInstance(storeInstance, attrs)
 }
 
