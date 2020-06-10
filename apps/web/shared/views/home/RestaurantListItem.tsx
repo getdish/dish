@@ -283,6 +283,7 @@ const RestaurantListItemContent = memo(
         <VStack padding={10} paddingTop={65} width={0}>
           <RestaurantPeek
             restaurantSlug={restaurant.slug}
+            searchState={props.searchState}
             size={isShowingComment ? 'lg' : 'md'}
           />
         </VStack>
@@ -322,7 +323,7 @@ export const RestaurantPeek = memo(
   graphql(function RestaurantPeek(props: {
     size?: 'lg' | 'md'
     restaurantSlug: string
-    searchState?: HomeStateItemSearch
+    searchState: HomeStateItemSearch
   }) {
     const { searchState, size = 'md' } = props
     const tag_names = Object.keys(searchState?.activeTagIds || {})
