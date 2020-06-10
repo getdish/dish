@@ -5,6 +5,8 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
+    "rootDir": ".",
+    // baseUrl + paths must both be set
     "baseUrl": ".",
     "paths": {
       "@dish/*": ["packages/*/src"]
