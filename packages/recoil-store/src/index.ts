@@ -48,15 +48,27 @@ export function useRecoilStore<A extends Store<B>, B>(
   const storeInstance = new StoreKlass(props as any)
   const descriptors = getStoreDescriptors(storeInstance)
   const attrs: StoreAttributes = {}
+  const storeProxy = new Proxy(storeInstance, {
+    get(target, key) {
+      return getProxyValue(target, key, attrs, curGetter)
+    },
+  })
   for (const prop in descriptors) {
-    attrs[prop] = getDescription(`${storeName}/${prop}`, descriptors[prop])
+    attrs[prop] = getDescription(
+      storeProxy,
+      `${storeName}/${prop}`,
+      descriptors[prop]
+    )
   }
   storeToRecoilStore.set(StoreKlass, storeInstance)
   storeToAttributes.set(StoreKlass, attrs)
   return useRecoilStoreInstance(storeInstance, attrs)
 }
 
+let curGetter: any = null
+
 function getDescription(
+  target: any,
   key: string,
   descriptor: TypedPropertyDescriptor<any>
 ): StoreAttribute {
@@ -65,13 +77,6 @@ function getDescription(
       type: 'action',
       key,
       value: descriptor.value,
-      // selectorFamily({
-      //   key,
-      //   get: (...args) => ({ get }) => {
-      //     console.log('calling get with', { args })
-      //     return descriptor.value.call(interceptor(get), ...args)
-      //   },
-      // }),
     }
   } else if (typeof descriptor.get === 'function') {
     return {
@@ -79,7 +84,12 @@ function getDescription(
       key,
       value: selector({
         key,
-        get: descriptor.get,
+        get: ({ get }) => {
+          curGetter = get
+          const res = descriptor.get!.call(target)
+          curGetter = null
+          return res
+        },
       }),
     }
   }
@@ -98,15 +108,7 @@ function useRecoilStoreInstance(store: any, attrs: StoreAttributes) {
   return useMemo(() => {
     return new Proxy(store, {
       get(target, key) {
-        if (typeof key === 'string') {
-          switch (attrs[key].type) {
-            case 'action':
-              return attrs[key].value
-            case 'value':
-              return getRecoilValue(attrs[key].value)
-          }
-        }
-        return Reflect.get(target, key)
+        return getProxyValue(target, key, attrs, getRecoilValue)
       },
       set(target, key, value, receiver) {
         if (typeof key === 'string') {
@@ -118,6 +120,24 @@ function useRecoilStoreInstance(store: any, attrs: StoreAttributes) {
       },
     })
   }, [])
+}
+
+function getProxyValue(
+  target: any,
+  key: string | number | symbol,
+  attrs: StoreAttributes,
+  getter: Function
+) {
+  if (typeof key === 'string') {
+    switch (attrs[key].type) {
+      case 'action':
+        return attrs[key].value
+      case 'value':
+      case 'selector':
+        return getter(attrs[key].value)
+    }
+  }
+  return Reflect.get(target, key)
 }
 
 function getStoreDescriptors(storeInstance: any) {

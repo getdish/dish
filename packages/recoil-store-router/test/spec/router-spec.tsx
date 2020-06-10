@@ -18,7 +18,7 @@ const routes = {
 
 export function RecoilStoreRouterTest1() {
   return (
-    <RecoilRoot>
+    <RecoilRoot initializeState={null}>
       <ProvideRouter routes={routes}>
         <Component1 />
       </ProvideRouter>
@@ -27,21 +27,26 @@ export function RecoilStoreRouterTest1() {
 }
 
 function Component1() {
-  const store = useRouter()
+  const router = useRouter()
   return (
     <>
-      <div id="curPageName">{store.curPage.name}</div>
-      <div id="curPageParams">{JSON.stringify(store.curPage.params)}</div>
+      <div id="curPageName">{router.curPage.name}</div>
+      <div id="curPageParams">{JSON.stringify(router.curPage.params)}</div>
+      <button
+        id="back"
+        onClick={() => {
+          router.back()
+        }}
+      ></button>
       <button
         id="navigate"
         onClick={() => {
-          if (store.curPage.name === 'home') {
-            store.navigate({
+          if (router.curPage.name === 'home') {
+            router.navigate({
               name: 'login',
             })
-          }
-          if (store.curPage.name === 'login') {
-            store.navigate({
+          } else if (router.curPage.name === 'login') {
+            router.navigate({
               name: 'user',
               // @ts-ignore
               params: {

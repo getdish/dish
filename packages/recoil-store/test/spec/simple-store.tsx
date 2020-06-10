@@ -21,7 +21,7 @@ class TodoList extends Store<{
   items: Todo[] = [{ text: 'hi', done: false }]
 
   get itemsDiff() {
-    return this.items.map((x) => 1)
+    return this.items.map((x, i) => i)
   }
 
   add() {
@@ -39,7 +39,7 @@ class TodoList extends Store<{
 
 export function SimpleStoreTest() {
   return (
-    <RecoilRoot>
+    <RecoilRoot initializeState={null}>
       <SimpleStoreTestComponent />
     </RecoilRoot>
   )
@@ -54,6 +54,7 @@ function SimpleStoreTestComponent() {
   return (
     <>
       <div id="x">{store.items[store.items.length - 1].text}</div>
+      <div id="y">{store.itemsDiff[store.itemsDiff.length - 1]}</div>
       <button id="add" onClick={() => store.add()}></button>
       <button id="add-async" onClick={() => store.asyncAdd()}></button>
     </>

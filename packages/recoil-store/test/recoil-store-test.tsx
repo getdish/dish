@@ -37,3 +37,17 @@ test('creates a simple store and action works', async (t) => {
   await new Promise((res) => setTimeout(res, 110))
   t.is(node.children[0], 'item-3')
 })
+
+test('properly updates get values', async (t) => {
+  const r = TestRenderer.create(<Test.SimpleStoreTest />)
+  const findY = () => r.root.findAllByProps({ id: 'y' })[0]
+  let node = findY()
+  t.is(node.children[0], '0')
+  const [add] = r.root.findAllByProps({ id: 'add' })
+  // click once
+  act(() => {
+    add.props.onClick()
+  })
+  node = findY()
+  t.is(node.children[0], '1')
+})
