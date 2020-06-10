@@ -8,7 +8,8 @@ import {
 import { useAttachClassName } from '../hooks/useAttachClassName'
 
 export type TextProps = Omit<ReactTextProps, 'style'> &
-  TextStyle & {
+  Omit<TextStyle, 'display'> & {
+    display?: TextStyle['display'] | 'inherit'
     ellipse?: boolean
     selectable?: boolean
     children?: any

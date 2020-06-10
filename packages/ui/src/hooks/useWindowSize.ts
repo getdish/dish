@@ -19,7 +19,6 @@ class WindowSizeStore {
 
   update = _.debounce(() => {
     this.size = getWindowSize()
-    console.log('go')
     this.listeners.forEach((x) => x())
   }, 350)
 }

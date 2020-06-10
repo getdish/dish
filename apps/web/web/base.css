@@ -226,3 +226,11 @@ div,
 .overflow-y-hidden {
   overflow-y: hidden;
 }
+
+.inner-shadow {
+  box-shadow: inset 0 0 10px 0 rgba(0, 0, 0, 0.1);
+}
+
+.inner-glow {
+  box-shadow: inset 0 0 10px 0 rgba(255, 255, 255, 0.5);
+}

@@ -20,8 +20,11 @@ export type StackProps = Omit<
       fullscreen?: boolean
       children?: any
       hoverStyle?: ViewStyle
+      pressStyle?: ViewStyle
       onHoverIn?: Function
       onHoverOut?: Function
+      onPressIn?: Function
+      onPressOut?: Function
       spacing?: Spacing
       className?: string
       // stronger version of pointer-events: none;
@@ -40,9 +43,16 @@ const createStack = (defaultStyle?: ViewStyle) => {
         fullscreen,
         pointerEvents,
         style = null,
+        pressStyle = null,
+        onPressIn,
+        onPressOut,
         hoverStyle = null,
         onHoverIn,
         onHoverOut,
+        // @ts-ignore
+        onMouseDown,
+        // @ts-ignore
+        onMouseUp,
         // @ts-ignore
         onMouseEnter,
         // @ts-ignore
@@ -61,14 +71,11 @@ const createStack = (defaultStyle?: ViewStyle) => {
       ref
     ) => {
       const innerRef = useRef<any>()
-      const [isHovered, set] = useState(false)
-
+      const [isHovered, setHvr] = useState(false)
+      const [isPressed, setPrs] = useState(false)
       const cn = `${className ?? ''} ${disabled ? 'force-disable' : ''}`.trim()
 
-      useAttachClassName(cn, innerRef, [
-        // dont remembery why hoverStyle but leaving as it likely fixed something
-        hoverStyle ? JSON.stringify(hoverStyle) : null,
-      ])
+      useAttachClassName(cn, innerRef)
 
       let spacedChildren = children
       if (typeof spacing !== 'undefined') {
@@ -93,6 +100,19 @@ const createStack = (defaultStyle?: ViewStyle) => {
           )
       }
 
+      if (props['debug']) {
+        console.log([
+          {
+            ...defaultStyle,
+            ...(fullscreen && fsStyle),
+            ...props,
+          },
+          style,
+          isHovered ? hoverStyle : null,
+          isPressed ? pressStyle : null,
+        ])
+      }
+
       let content = (
         <View
           ref={combineRefs(innerRef, ref)}
@@ -105,31 +125,51 @@ const createStack = (defaultStyle?: ViewStyle) => {
             },
             style,
             isHovered ? hoverStyle : null,
+            isPressed ? pressStyle : null,
           ]}
         >
           {spacedChildren}
         </View>
       )
 
-      if (
+      const attachPress = !!(pressStyle || onPressIn || onPressOut)
+      const attachHover = !!(
         hoverStyle ||
         onHoverIn ||
         onHoverOut ||
         onMouseEnter ||
         onMouseLeave
-      ) {
+      )
+
+      if (attachHover || attachPress) {
         content = (
           <Hoverable
-            onHoverIn={() => {
-              set(true)
-              onHoverIn?.()
-              onMouseEnter?.()
-            }}
-            onHoverOut={() => {
-              set(false)
-              onHoverOut?.()
-              onMouseLeave?.()
-            }}
+            {...(!!attachHover && {
+              onHoverIn: () => {
+                setHvr(true)
+                onHoverIn?.()
+                onMouseEnter?.()
+              },
+              onHoverOut: () => {
+                setHvr(false)
+                onHoverOut?.()
+                onMouseLeave?.()
+              },
+            })}
+            {...(!!attachPress && {
+              onPressIn: (e) => {
+                e.preventDefault()
+                setPrs(true)
+                onPressIn?.(e)
+                // onMouseDown?.(e)
+              },
+              onPressOut: (e) => {
+                e.preventDefault()
+                setPrs(false)
+                onPressOut?.(e)
+                // onMouseUp?.(e)
+              },
+            })}
           >
             {content}
           </Hoverable>
