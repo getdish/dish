@@ -25,10 +25,16 @@ export const restaurantUpdate = QueryHelpers.update
 export const restaurantFindOne = QueryHelpers.findOne
 export const restaurantRefresh = QueryHelpers.refresh
 
-export async function restaurantFindOneWithTags(restaurant: RestaurantWithId) {
+export async function restaurantFindOneWithTags(
+  restaurant: RestaurantWithId,
+  extra_relations: string[] = []
+) {
   return await restaurantFindOne(restaurant, {
-    include: ['tags', 'tags.tag.categories.category', 'menu_items'],
-    maxDepth: 5,
+    relations: [
+      'tags.tag.categories.category',
+      'tags.tag.parent',
+      ...extra_relations,
+    ],
   })
 }
 

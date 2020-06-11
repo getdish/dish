@@ -197,9 +197,12 @@ test.beforeEach(async (t) => {
 test('Merging', async (t) => {
   const self = new Self()
   await self.mergeAll(t.context.restaurant.id)
-  const updated = await restaurantFindOneWithTags({
-    id: t.context.restaurant.id,
-  })
+  const updated = await restaurantFindOneWithTags(
+    {
+      id: t.context.restaurant.id,
+    },
+    ['menu_items']
+  )
   t.is(!!updated, true)
   if (!updated) return
   t.is(updated.name, 'Test Name Yelp')

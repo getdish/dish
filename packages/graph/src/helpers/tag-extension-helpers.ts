@@ -31,7 +31,7 @@ export const tagSlugs = (tag: Tag) => {
   }
   const category_names = (tag.categories || []).map((cat) => {
     if (typeof cat.category?.name !== 'string') {
-      throw new Error(`tag.categoriy.name must exist as string`)
+      throw new Error(`tag.category.name must exist as string`)
     }
     return slugify(cat.category.name)
   })

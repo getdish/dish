@@ -113,9 +113,9 @@ test('Orders by tag rating if dish tags queried', async (t) => {
     tags: ['test-rated-tag'],
   })
   t.is(results?.length, 3)
-  t.is(results?.[0].tags?.[0].rating, 5)
-  t.is(results?.[1].tags?.[0].rating, 3)
-  t.is(results?.[2].tags?.[0].rating, 1)
+  t.is(results?.[0].rating, 1)
+  t.is(results?.[1].rating, 3)
+  t.is(results?.[2].rating, 5)
 })
 
 test('Searched-for tags appear first', async (t) => {
@@ -139,6 +139,7 @@ test('Searched-for tags appear first', async (t) => {
     tags: ['test-rated-tag'],
   })
   t.is(results?.length, 1)
-  t.is(results?.[0].tags?.[0].rating, 1)
-  t.is(results?.[0].tags?.[1].rating, 5)
+  t.is(results?.[0].rating, 5)
+  t.is(results?.[1].rating, 1)
 })
+
