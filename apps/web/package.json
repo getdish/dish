@@ -69,7 +69,7 @@
     "@dish/recoil-store": "*",
     "@dish/babel-preset": "*",
     "@dish/tsickle-loader": "*",
-    "@pmmmwh/react-refresh-webpack-plugin": "0.3.1",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.3.3",
     "@webhotelier/webpack-fast-refresh": "^5.0.1",
     "@types/jsdom": "^16.2.0",
     "@types/lodash": "^4.14.155",

@@ -1,4 +1,5 @@
 - support color/text props on vstacks? (rn may not like we'd have to wrap)
+- spacing
 - evaluate constants in other files
   - extract hoverStyle/pressStyle (spread + constant too - TagButton, DishView)
     - final step is hoverStyle={{ color: x, ...parent.hoverStyle, }}

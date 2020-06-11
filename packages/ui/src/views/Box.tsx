@@ -4,7 +4,7 @@ import { ViewStyle } from 'react-native'
 import { extendStaticConfig } from '../helpers/extendStaticConfig'
 import { StackProps, VStack } from './Stacks'
 
-const defaultStyle: ViewStyle = {
+const defaultStyle: StackProps = {
   backgroundColor: '#fff',
   paddingVertical: 8,
   paddingHorizontal: 10,

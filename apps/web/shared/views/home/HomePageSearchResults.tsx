@@ -1,33 +1,26 @@
-import { requestIdle, series, sleep } from '@dish/async'
-import { graphql, query } from '@dish/graph'
+import { sleep } from '@dish/async'
 import {
   Box,
   Circle,
   HStack,
   LoadingItems,
-  PageTitle,
-  Spacer,
   Text,
   Toast,
   VStack,
-  ZStack,
-  useWaterfall,
 } from '@dish/ui'
-import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
+import React, { Suspense, memo, useMemo, useState } from 'react'
 import { Edit2 } from 'react-feather'
-import { Image, ScrollView, View } from 'react-native'
+import { Image } from 'react-native'
 
-import { drawerBorderRadius } from '../../constants'
-import { HomeStateItemSearch, isEditingUserPage } from '../../state/home'
-import { getActiveTags } from '../../state/home-tag-helpers'
+import { drawerBorderRadius, searchBarHeight } from '../../constants'
+import { HomeStateItemSearch } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
-import { NotFoundPage } from '../NotFoundPage'
 import { LinkButton } from '../ui/LinkButton'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { flatButtonStyle } from './baseButtonStyle'
-import { DishView } from './DishView'
 import { getTitleForState } from './getTitleForState'
-import HomeLenseBar from './HomeLenseBar'
+import HomeFilterBar from './HomeFilterBar'
+import { HomeLenseBarOnly } from './HomeLenseBar'
 import { HomeScrollView } from './HomeScrollView'
 import { RestaurantListItem } from './RestaurantListItem'
 import { StackViewCloseButton } from './StackViewCloseButton'
@@ -36,12 +29,15 @@ import { StackViewCloseButton } from './StackViewCloseButton'
 
 export const avatar = require('../../assets/peach.jpg').default
 
+const paddingTop = searchBarHeight + 12
+const titleHeight = searchBarHeight + 12 + 48
+
 export default memo(function HomePageSearchResults(props: {
   state: HomeStateItemSearch
 }) {
   const om = useOvermind()
   const state = om.state.home.lastSearchState
-  const isEditingUserList = !!isEditingUserPage(om.state)
+  // const isEditingUserList = !!isEditingUserPage(om.state)
   const { title, subTitleElements, pageTitleElements } = getTitleForState(
     om.state,
     state
@@ -59,47 +55,43 @@ export default memo(function HomePageSearchResults(props: {
 
       <StackViewCloseButton />
 
-      <HomeScrollView>
-        {/* Title */}
-        <VStack
-          paddingTop={26}
-          paddingBottom={12}
-          paddingHorizontal={22}
-          backgroundColor="#fff"
-          borderTopLeftRadius={drawerBorderRadius}
-          borderTopRightRadius={drawerBorderRadius}
-          overflow="hidden"
+      {/* Title */}
+      <HStack
+        position="absolute"
+        left={0}
+        right={0}
+        paddingTop={paddingTop}
+        height={titleHeight}
+        paddingBottom={12}
+        paddingHorizontal={22}
+        backgroundColor="#fff"
+        borderBottomColor="#eee"
+        borderBottomWidth={1}
+        zIndex={1000}
+        overflow="hidden"
+        alignItems="center"
+      >
+        <HStack
+          flex={1}
+          justifyContent="space-between"
+          flexDirection="row-reverse"
+          spacing={15}
         >
-          <HStack width="100%">
-            <VStack flex={4}>
-              <PageTitle subTitle={subTitleElements}>
-                {pageTitleElements}
-              </PageTitle>
-            </VStack>
+          <HomeLenseBarOnly activeTagIds={state.activeTagIds} />
+          <HomeFilterBar activeTagIds={state.activeTagIds} />
+          <VStack flex={1} />
+          <VStack spacing={3} alignItems="flex-end" justifyContent="flex-end">
+            <Text fontSize={14}>{pageTitleElements}</Text>
+            <Text opacity={0.5} fontSize={14}>
+              {subTitleElements}
+            </Text>
+          </VStack>
+        </HStack>
+        {/* <MyListButton isEditingUserList={isEditingUserList} /> */}
+      </HStack>
 
-            <VStack alignItems="flex-end" justifyContent="center">
-              <HomeLenseBar
-                spacer={<Spacer size={9} />}
-                relative
-                state={state}
-              />
-            </VStack>
-          </HStack>
-
-          <ZStack
-            fullscreen
-            pointerEvents="none"
-            top="auto"
-            bottom={-30}
-            right={-98}
-            zIndex={1000}
-            height={50}
-            alignItems="flex-end"
-          >
-            <MyListButton isEditingUserList={isEditingUserList} />
-          </ZStack>
-        </VStack>
-
+      <HomeScrollView>
+        <VStack height={titleHeight - searchBarHeight} />
         {/* CONTENT */}
         <HomeSearchResultsViewContent state={{ ...state }} />
       </HomeScrollView>
@@ -159,30 +151,45 @@ const MyListButton = memo(
 
 const HomeSearchResultsViewContent = memo(
   ({ state }: { state: HomeStateItemSearch }) => {
+    const om = useOvermind()
     const allResults = state.results?.results?.restaurants ?? []
     const [chunk, setChunk] = useState(1)
     const perChunk = 3
-    const results = allResults.slice(0, chunk * perChunk)
-    const loadNextChunk = async () => {
-      if (results.length < allResults.length) {
-        await sleep(200)
-        console.warn('loading next page')
-        setChunk((x) => x + 1)
-      }
-    }
-
     // load a few at a time, less to start
     const isLoading =
       !state.results?.results || state.results.status === 'loading'
-    const hasMoreToLoad = results.length < allResults.length
 
-    console.log(
-      '123 HomeSearchResultsViewContent.render',
-      chunk,
-      perChunk,
-      state.results,
-      isLoading
-    )
+    const results = useMemo(() => {
+      const cur = allResults.slice(0, chunk * perChunk)
+      const hasMoreToLoad = cur.length < allResults.length
+      return cur.map((item, index) => (
+        <Suspense key={item.id} fallback={null}>
+          <RestaurantListItem
+            currentLocationInfo={state.currentLocationInfo ?? null}
+            restaurantId={item.id}
+            restaurantSlug={item.slug}
+            rank={index + 1}
+            searchState={state}
+            onFinishRender={
+              hasMoreToLoad && index == cur.length - 1
+                ? // load more
+                  async () => {
+                    if (results.length < allResults.length) {
+                      if (om.state.home.currentStateType !== 'search') {
+                        console.warn('stop loading inbackground, restart when?')
+                        return
+                      }
+                      await sleep(200)
+                      console.warn('loading next page')
+                      setChunk((x) => x + 1)
+                    }
+                  }
+                : undefined
+            }
+          />
+        </Suspense>
+      ))
+    }, [allResults, chunk])
 
     if (isLoading) {
       return (
@@ -213,22 +220,7 @@ const HomeSearchResultsViewContent = memo(
           <HomePageSearchResultsDishes state={state} />
         </Suspense> */}
         <VStack paddingBottom={20} spacing={14}>
-          {results.map((item, index) => (
-            <Suspense key={item.id} fallback={null}>
-              <RestaurantListItem
-                currentLocationInfo={state.currentLocationInfo ?? null}
-                restaurantId={item.id}
-                restaurantSlug={item.slug}
-                rank={index + 1}
-                searchState={state}
-                onFinishRender={
-                  hasMoreToLoad && index == results.length - 1
-                    ? loadNextChunk
-                    : undefined
-                }
-              />
-            </Suspense>
-          ))}
+          {results}
         </VStack>
       </>
     )

@@ -1,40 +1,11 @@
 import { StackProps, Text, VStack, getNode, prevent } from '@dish/ui'
-import React, { useEffect, useMemo, useRef } from 'react'
-import { Platform, ViewStyle } from 'react-native'
+import React, { useEffect, useRef } from 'react'
+import { Platform } from 'react-native'
 
-import { RouteName, RoutesTable } from '../../state/router'
-import { NavigableTag } from '../../state/Tag'
+import { RoutesTable } from '../../state/router'
 import { Link, getStylePadding } from './Link'
-import { LinkSharedProps } from './LinkProps'
+import { LinkButtonProps } from './LinkProps'
 import { asyncLinkAction, useNormalizeLinkProps } from './useNormalizedLink'
-
-export type LinkButtonNamedProps<A = any, B = any> = {
-  name: A
-  params?: B
-  replace?: boolean
-  onPress?: any
-}
-
-export type LinkButtonProps<
-  Name extends RouteName = any,
-  Params = any
-> = StackProps &
-  LinkSharedProps & {
-    containerStyle?: ViewStyle
-  } & (
-    | LinkButtonNamedProps<Name, Params>
-    | {
-        onPress?: any
-      }
-    | {
-        tag: NavigableTag | null
-        onPress?: Function
-      }
-    | {
-        tags: NavigableTag[]
-        onPress?: Function
-      }
-  )
 
 export function LinkButton<
   Name extends keyof RoutesTable = keyof RoutesTable,
