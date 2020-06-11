@@ -1,7 +1,6 @@
-import { LinearGradient } from '@dish/ui'
-import { ZStack } from '@dish/ui'
+import { LinearGradient, ZStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet } from 'react-native'
 
 import { useOvermind } from '../../state/useOvermind'
 import { useShowAutocomplete } from './HomeAutocomplete'
@@ -20,18 +19,17 @@ export const HomeAutocompleteBackground = memo(() => {
       left={-homePageBorderRadius}
       right={-homePageBorderRadius}
       zIndex={11}
+      onPressOut={() => {
+        om.actions.home.setShowAutocomplete(false)
+      }}
+      pressStyle={{
+        opacity: 0.6,
+      }}
     >
-      <TouchableOpacity
-        style={[StyleSheet.absoluteFill]}
-        onPress={() => {
-          om.actions.home.setShowAutocomplete(false)
-        }}
-      >
-        <LinearGradient
-          colors={['rgba(255,255,255,0.3)', 'rgba(255,255,255,0)']}
-          style={[StyleSheet.absoluteFill, { height: 160 }]}
-        />
-      </TouchableOpacity>
+      <LinearGradient
+        colors={['rgba(255,255,255,0.3)', 'rgba(255,255,255,0)']}
+        style={[StyleSheet.absoluteFill, { height: 160 }]}
+      />
     </ZStack>
   )
 })

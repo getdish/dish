@@ -1,11 +1,5 @@
 import { requestIdle, series, sleep } from '@dish/async'
-import {
-  Restaurant,
-  RestaurantSearchResult,
-  graphql,
-  query,
-  restaurantPhotosForCarousel,
-} from '@dish/graph'
+import { graphql, query, restaurantPhotosForCarousel } from '@dish/graph'
 import {
   Divider,
   HStack,
@@ -18,7 +12,6 @@ import {
 } from '@dish/ui'
 import React, { memo, useEffect, useState } from 'react'
 import { MessageSquare } from 'react-feather'
-import { ScrollView, TouchableOpacity } from 'react-native'
 
 import {
   GeocodePlace,
@@ -242,8 +235,11 @@ const RestaurantListItemContent = memo(
               <RestaurantLenseVote />
               <RestaurantFavoriteStar restaurantId={restaurantId} />
 
-              <TouchableOpacity
-                onPress={() =>
+              <VStack
+                pressStyle={{
+                  opacity: 0.6,
+                }}
+                onPressOut={() =>
                   setState((state) => ({
                     ...state,
                     showAddComment: !state.showAddComment,
@@ -254,7 +250,7 @@ const RestaurantListItemContent = memo(
                   size={16}
                   color={state.showAddComment ? 'blue' : '#999'}
                 />
-              </TouchableOpacity>
+              </VStack>
 
               <Divider vertical />
 

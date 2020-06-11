@@ -1,7 +1,6 @@
 import { HStack, StackProps } from '@dish/ui'
 import React, { memo } from 'react'
 import { CornerLeftUp, X } from 'react-feather'
-import { GestureResponderEvent, TouchableOpacity } from 'react-native'
 
 type CircleButtonProps = {
   onPress: any
@@ -25,27 +24,23 @@ export const BackButton = memo((props: CircleButtonProps) => {
   )
 })
 
-export const SmallCircleButton = memo(
-  ({
-    onPress,
-    disabled,
-    ...rest
-  }: StackProps & { onPress?: (event: GestureResponderEvent) => void }) => {
-    return (
-      <TouchableOpacity onPress={onPress} disabled={disabled}>
-        <HStack
-          borderRadius={1000}
-          backgroundColor="rgba(0,0,0,0.3)"
-          padding={4}
-          alignItems="center"
-          spacing="xs"
-          {...rest}
-          hoverStyle={{
-            backgroundColor: 'rgba(0,0,0,0.4)',
-            ...rest.hoverStyle,
-          }}
-        />
-      </TouchableOpacity>
-    )
-  }
-)
+export const SmallCircleButton = (props: StackProps) => {
+  return (
+    <HStack
+      borderRadius={1000}
+      backgroundColor="rgba(0,0,0,0.3)"
+      padding={4}
+      alignItems="center"
+      spacing="xs"
+      {...props}
+      hoverStyle={{
+        backgroundColor: 'rgba(0,0,0,0.4)',
+        ...props.hoverStyle,
+      }}
+      pressStyle={{
+        opacity: 0.6,
+        ...props.pressStyle,
+      }}
+    />
+  )
+}

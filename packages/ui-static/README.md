@@ -1,0 +1,9 @@
+- extract hoverStyle/pressStyle
+- pass in config to be able to create static extracted easily within web
+- support color/text props on vstacks? (rn may not like we'd have to wrap)
+- extract media queries
+- evaluate constants in other files
+- SmallCircleButton case spreads
+- Circle, EmojiButton, LinearGradient, VoteButton
+- onPressIn/onPressOut etc can all be converted to inline functions still as divs (HomeAutocompleteBackground, SearchLocationButton, etc)
+-

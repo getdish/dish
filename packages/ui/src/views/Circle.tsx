@@ -2,12 +2,11 @@ import React from 'react'
 
 import { StackProps, VStack } from './Stacks'
 
-export const Circle = ({
-  size,
-  ...props
-}: StackProps & {
+export type CircleProps = StackProps & {
   size: number
-}) => {
+}
+
+export const Circle = ({ size, ...props }: CircleProps) => {
   return (
     <VStack
       alignItems="center"

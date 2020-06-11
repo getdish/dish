@@ -1,9 +1,8 @@
 import { PopoverShowContext, VStack, ZStack, useDebounceValue } from '@dish/ui'
 import _ from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
-import { TouchableOpacity } from 'react-native'
 
-import { drawerBorderRadius, searchBarHeight } from '../../constants'
+import { drawerBorderRadius } from '../../constants'
 import { HomeStateItem, HomeStateItemSimple } from '../../state/home'
 import { useOvermind, useOvermindStatic } from '../../state/useOvermind'
 import { ErrorBoundary } from '../ErrorBoundary'

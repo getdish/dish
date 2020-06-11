@@ -13,7 +13,7 @@ import {
 } from '@dish/ui'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronLeft, Loader, MapPin, Navigation, Search } from 'react-feather'
-import { StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { StyleSheet, TextInput } from 'react-native'
 
 import {
   isWorker,
@@ -510,19 +510,16 @@ const SearchLocationButton = memo(() => {
           pointerEvents="auto"
           alignItems="center"
           justifyContent="center"
+          padding={10}
+          opacity={0.5}
+          pressStyle={{
+            opacity: 0.4,
+          }}
+          onPressOut={() => {
+            om.actions.home.popTo('home')
+          }}
         >
-          <TouchableOpacity
-            activeOpacity={0.4}
-            style={{
-              padding: 10,
-              opacity: 0.5,
-            }}
-            onPress={() => {
-              om.actions.home.popTo('home')
-            }}
-          >
-            <Navigation size={18} color="blue" />
-          </TouchableOpacity>
+          <Navigation size={18} color="blue" />
         </VStack>
       </HStack>
     </ZStack>
