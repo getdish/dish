@@ -33,8 +33,6 @@ export const DishView = memo(
     const borderRadius = 40
     const [isHovered, setIsHovered] = useState(false)
 
-    console.log('renderme', isHovered)
-
     const linkButtonProps: LinkButtonProps = {
       onHoverIn: () => setIsHovered(true),
       onHoverOut: () => setIsHovered(false),
@@ -163,7 +161,7 @@ export const DishView = memo(
 
         <HStack
           position="absolute"
-          bottom={-25}
+          bottom={-15}
           overflow="hidden"
           width="calc(100% + 30px)"
           marginHorizontal={-15}

@@ -29,7 +29,7 @@ export const SmallCircleButton = (props: StackProps) => {
     <HStack
       borderRadius={1000}
       backgroundColor="rgba(0,0,0,0.3)"
-      padding={4}
+      padding={3}
       alignItems="center"
       spacing="xs"
       {...props}

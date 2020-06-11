@@ -1,9 +1,12 @@
-- extract hoverStyle/pressStyle
-- pass in config to be able to create static extracted easily within web
 - support color/text props on vstacks? (rn may not like we'd have to wrap)
-- extract media queries
 - evaluate constants in other files
+  - extract hoverStyle/pressStyle (spread + constant too - TagButton, DishView)
+    - final step is hoverStyle={{ color: x, ...parent.hoverStyle, }}
+  - extract media queries
+- pass in config to be able to create static extracted easily within web
 - SmallCircleButton case spreads
-- Circle, EmojiButton, LinearGradient, VoteButton
+- Spacer, Divider, Circle, EmojiButton, LinearGradient, VoteButton
 - onPressIn/onPressOut etc can all be converted to inline functions still as divs (HomeAutocompleteBackground, SearchLocationButton, etc)
 - LinkButton is maybe impossible but good test case for features
+- icons: ChevronDown etc
+- // TODO WHY SCALE NOT WORKING???

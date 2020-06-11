@@ -84,27 +84,16 @@ const HomeStackViewItem = memo(
     isActive: boolean
     isRemoving: boolean
   }) => {
-    const om = useOvermindStatic()
     const [isMounted, setIsMounted] = useState(false)
     const isSmall = useMediaQueryIsSmall()
-
     useEffect(() => {
       let tm = setTimeout(() => {
         setIsMounted(true)
       }, 50)
       return () => clearTimeout(tm)
     }, [])
-
-    const onPress = useMemo(
-      () => () => {
-        om.actions.home.popTo(item.type)
-      },
-      []
-    )
-
     const top = isSmall ? 0 : index * (index == 0 ? 0 : 10)
     const left = isSmall ? -3 : Math.max(0, index) * 7
-
     return (
       <VStack
         className={`animate-up ${isMounted && !isRemoving ? 'active' : ''}`}
@@ -113,7 +102,6 @@ const HomeStackViewItem = memo(
         left={0}
         right={0}
         bottom={0}
-        contain="layout"
       >
         <ZStack pointerEvents={isActive ? 'none' : 'auto'} fullscreen>
           <ZStack

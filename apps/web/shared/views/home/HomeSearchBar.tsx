@@ -477,7 +477,7 @@ const HomeSearchBarHomeButton = memo(() => {
 const HomeSearchBarSeparator = memo(() => {
   return (
     <HStack alignItems="center" justifyContent="center" spacing={3} width={40}>
-      <Circle size={26} backgroundColor="#eee">
+      <Circle size={26} backgroundColor="#fff">
         <Text color="#000" fontSize={15} fontWeight="600">
           in
         </Text>
@@ -540,7 +540,7 @@ const HomeSearchBarTags = memo(
                 <TagButton
                   key={getTagId(tag)}
                   subtleIcon
-                  backgroundColor={brandColor}
+                  backgroundColor={brandColorLight}
                   color="#fff"
                   borderColor={'transparent'}
                   {...(isActive && {

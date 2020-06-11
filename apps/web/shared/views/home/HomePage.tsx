@@ -22,17 +22,18 @@ import { HomeMapControlsOverlay } from './HomeMapControlsOverlay'
 import { HomeMapPIP } from './HomeMapPIP'
 import HomeSearchBar from './HomeSearchBar'
 import { HomeStackView } from './HomeStackView'
-import { HomeViewDrawer } from './HomeViewDrawer'
+import { HomeViewDrawer, useMediaQueryIsSmall } from './HomeViewDrawer'
 
 export const homePageBorderRadius = 12
 
 export default memo(function HomePage() {
+  const isSmall = useMediaQueryIsSmall()
   return (
     <VStack flex={1} alignItems="center">
       <VStack
         // apple maps ocean color
         backgroundColor="#B8E0F3"
-        width={`calc(100% + ${homePageBorderRadius * 2}px)`}
+        width={isSmall ? '100%' : `calc(100% + ${homePageBorderRadius * 2}px)`}
         height="100%"
         maxWidth={frameWidthMax}
         borderRadius={homePageBorderRadius}
@@ -41,28 +42,37 @@ export default memo(function HomePage() {
         overflow="hidden"
         position="relative"
       >
+        <HomePageContent />
+      </VStack>
+    </VStack>
+  )
+})
+
+const HomePageContent = memo(() => {
+  return (
+    <>
+      <Suspense fallback={null}>
+        {!isWorker && (
+          <ErrorBoundary name="maps">
+            <Suspense fallback={null}>
+              <HomeMap />
+            </Suspense>
+            <Suspense fallback={null}>
+              <HomeMapPIP />
+            </Suspense>
+          </ErrorBoundary>
+        )}
+
         <Suspense fallback={null}>
-          {!isWorker && (
-            <ErrorBoundary name="maps">
-              <Suspense fallback={null}>
-                <HomeMap />
-              </Suspense>
-              <Suspense fallback={null}>
-                <HomeMapPIP />
-              </Suspense>
-            </ErrorBoundary>
-          )}
+          <HomeMapControlsOverlay />
+        </Suspense>
 
-          <Suspense fallback={null}>
-            <HomeMapControlsOverlay />
-          </Suspense>
+        <Suspense fallback={null}>
+          <HomeSearchBar />
+        </Suspense>
 
-          <Suspense fallback={null}>
-            <HomeSearchBar />
-          </Suspense>
-
-          {/* overlay map subtle */}
-          {/* <ZStack
+        {/* overlay map subtle */}
+        {/* <ZStack
           fullscreen
           bottom="auto"
           height={100}
@@ -75,37 +85,36 @@ export default memo(function HomePage() {
           />
         </ZStack> */}
 
-          <HomeViewDrawer>
-            <HomeStackView>
-              {(homeState, isActive, index) => {
-                return (
-                  <CurrentStateID.Provider value={homeState.id}>
-                    <Suspense fallback={null}>
-                      {isHomeState(homeState) && (
-                        <HomePageTopDishes key={0} state={homeState} />
-                      )}
-                      {isUserState(homeState) && (
-                        <HomePageUser key={1} state={homeState} />
-                      )}
-                      {isSearchState(homeState) && (
-                        <HomePageSearchResults key={2} state={homeState} />
-                      )}
-                      {isRestaurantState(homeState) && (
-                        <HomePageRestaurant key={3} state={homeState} />
-                      )}
-                    </Suspense>
-                  </CurrentStateID.Provider>
-                )
-              }}
-            </HomeStackView>
-          </HomeViewDrawer>
+        <HomeViewDrawer>
+          <HomeStackView>
+            {(homeState, isActive, index) => {
+              return (
+                <CurrentStateID.Provider value={homeState.id}>
+                  <Suspense fallback={null}>
+                    {isHomeState(homeState) && (
+                      <HomePageTopDishes key={0} state={homeState} />
+                    )}
+                    {isUserState(homeState) && (
+                      <HomePageUser key={1} state={homeState} />
+                    )}
+                    {isSearchState(homeState) && (
+                      <HomePageSearchResults key={2} state={homeState} />
+                    )}
+                    {isRestaurantState(homeState) && (
+                      <HomePageRestaurant key={3} state={homeState} />
+                    )}
+                  </Suspense>
+                </CurrentStateID.Provider>
+              )
+            }}
+          </HomeStackView>
+        </HomeViewDrawer>
 
-          <Suspense fallback={null}>
-            <HomePageGallery />
-          </Suspense>
+        <Suspense fallback={null}>
+          <HomePageGallery />
         </Suspense>
-      </VStack>
-    </VStack>
+      </Suspense>
+    </>
   )
 })
 

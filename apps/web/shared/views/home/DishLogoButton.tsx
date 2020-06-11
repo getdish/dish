@@ -11,11 +11,14 @@ export const DishLogoButton = memo(() => {
       paddingVertical={10}
       paddingHorizontal={24}
       marginVertical={-4}
+      hoverStyle={{
+        transform: [{ scale: 1.1, rotate: '-2deg' }],
+      }}
       // transform={[{ rotate: '8deg' }]}
     >
       <Image
-        source={require('../../assets/logo.png').default}
-        style={{ width: 1251 * scale, height: 614 * scale }}
+        source={require('../../assets/logo.svg').default}
+        style={{ width: 1201 * scale, height: 544 * scale }}
       />
     </LinkButton>
   )

@@ -1,5 +1,5 @@
 import { graphql, mutation } from '@dish/graph'
-import { StackProps, VStack } from '@dish/ui'
+import { Spacer, StackProps, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
@@ -13,10 +13,14 @@ export const RestaurantUpVoteDownVote = memo(
     const userId = om.state.user.user?.id
     const review = useUserReview(restaurantId)
     const vote = review?.rating
-    const voteButtonStyle = {
-      paddingTop: 4,
-      borderTopWidth: 0,
-      borderBottomRightRadius: 10,
+    const iconSize = 14
+    const voteButtonStyle: StackProps = {
+      borderRadius: 100,
+      width: 22,
+      height: 22,
+      alignItems: 'center',
+      justifyContent: 'center',
+      // padding: 10,
     }
     return (
       <div
@@ -41,14 +45,9 @@ export const RestaurantUpVoteDownVote = memo(
               })
             }}
           >
-            <ChevronUp
-              size={12}
-              color={vote === 1 ? 'green' : 'black'}
-              style={{
-                marginBottom: -12,
-              }}
-            />
+            <ChevronUp size={iconSize} color={vote === 1 ? 'green' : '#555'} />
           </VoteButton>
+          <Spacer size={38} />
           <VoteButton
             {...voteButtonStyle}
             voted={vote == -1}
@@ -66,8 +65,8 @@ export const RestaurantUpVoteDownVote = memo(
             }}
           >
             <ChevronDown
-              size={12}
-              style={{ color: vote === -1 ? 'red' : 'black' }}
+              size={iconSize}
+              style={{ color: vote === -1 ? 'red' : '#555' }}
             />
           </VoteButton>
         </VStack>
@@ -82,18 +81,20 @@ const VoteButton = (props: StackProps & { voted?: boolean }) => {
       height={24}
       width={20}
       borderWidth={1}
-      borderColor="#ddd"
       alignItems="center"
       justifyContent="center"
       backgroundColor="#fff"
-      shadowColor="rgba(0,0,0,0.09)"
-      shadowRadius={10}
-      shadowOffset={{ height: 1, width: 0 }}
+      borderColor="white"
+      shadowColor="rgba(0,0,0,0.035)"
+      shadowRadius={2}
+      shadowOffset={{ height: 2, width: -2 }}
       hoverStyle={{
         backgroundColor: '#eee',
+        borderColor: '#ddd',
       }}
       pressStyle={{
         backgroundColor: bgLight,
+        borderColor: '#aaa',
       }}
       {...(props.voted && {
         backgroundColor: '#999',
