@@ -60,7 +60,7 @@ textarea {
 }
 
 .ease-in-out-fast {
-  transition: all ease-in-out 100ms;
+  transition: all ease-in-out 150ms;
 }
 .ease-in-out {
   transition: all ease-in-out 250ms;

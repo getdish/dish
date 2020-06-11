@@ -33,6 +33,8 @@ export const DishView = memo(
     const borderRadius = 40
     const [isHovered, setIsHovered] = useState(false)
 
+    console.log('renderme', isHovered)
+
     const linkButtonProps: LinkButtonProps = {
       onHoverIn: () => setIsHovered(true),
       onHoverOut: () => setIsHovered(false),

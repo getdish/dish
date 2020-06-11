@@ -6,4 +6,4 @@
 - SmallCircleButton case spreads
 - Circle, EmojiButton, LinearGradient, VoteButton
 - onPressIn/onPressOut etc can all be converted to inline functions still as divs (HomeAutocompleteBackground, SearchLocationButton, etc)
--
+- LinkButton is maybe impossible but good test case for features

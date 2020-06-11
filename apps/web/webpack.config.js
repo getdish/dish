@@ -89,11 +89,12 @@ module.exports = function getWebpackConfig(
                 'react-dom$': 'preact/compat',
                 'react-dom/unstable-native-dependencies':
                   'preact-responder-event-plugin',
+                gqless,
               }
             : {
                 react: path.join(require.resolve('react'), '..'),
                 'react-dom': path.join(require.resolve('react-dom'), '..'),
-                // '@dish/graph': require.resolve('@dish/graph'),
+                // '@dish/graph': require.resolve('@dish/graph/index'),
                 gqless,
               },
       },
