@@ -15,5 +15,5 @@
 0  0  *  *  1  node /app/services/crawlers/_/michelin/all.js
 0  0  *  *  2  node /app/services/crawlers/_/self/all.js
 0  0  *  *  3  node /app/services/crawlers/_/tripadvisor/all.js
-0  0  0  *  4  node /app/services/crawlers/_/ubereats/all.js
+0  0  1  *  4  node /app/services/crawlers/_/ubereats/all.js
 0  0  *  *  5  node /app/services/crawlers/_/yelp/all.js
