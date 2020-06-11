@@ -69,14 +69,15 @@ export const TagButton = memo(
     hideIcon,
     replace,
     onPress,
+    hoverStyle,
     ...rest
   }: TagButtonProps) => {
     if (name === null) {
       return null
     }
     const tag = { name, type: type as TagType, icon, rgb }
-    const scale = size === 'sm' ? 0.85 : size == 'lg' ? 1.05 : 1
-    const paddingVertical = (subtle ? 0 : 5) * scale
+    const scale = size === 'sm' ? 0.85 : size == 'lg' ? 1 : 1
+    const paddingVertical = (subtle ? 0 : 6) * scale
     const lineHeight = 22 * scale
     const defaultColor = noColor ? 'inherit' : getTagColor(rgb)
     const bg = backgroundColor ?? (subtle ? defaultColor : 'white')
@@ -94,6 +95,7 @@ export const TagButton = memo(
         preventNavigate={!!onPress}
       >
         <HStack
+          className="ease-in-out-fast"
           height={scale * 31}
           backgroundColor={bg}
           borderRadius={9 * scale}
@@ -101,8 +103,16 @@ export const TagButton = memo(
           borderColor={subtle ? 'transparent' : 'rgba(0,0,0,0.15)'}
           overflow="hidden"
           alignItems="center"
+          justifyContent="center"
           position="relative"
           minHeight={lineHeight}
+          {...(!subtle && {
+            hoverStyle: {
+              // TODO WHY SCALE NOT WORKING???
+              transform: [{ rotate: '-2deg', scale: 1.1 }],
+              ...hoverStyle,
+            },
+          })}
           {...rest}
         >
           {!!rank && (
@@ -185,7 +195,7 @@ export const TagButton = memo(
                   backgroundColor: '#eee',
                 }}
                 onPress={(e) => {
-                  console.log('e', e)
+                  alert('SHOULD VOTE')
                   e.stopPropagation()
                   e.preventDefault()
                 }}
@@ -205,6 +215,8 @@ export const TagButton = memo(
                 marginLeft: -4,
                 marginRight: 6,
               })}
+              position="relative"
+              top="8%"
               {...(subtle && {
                 position: 'absolute',
                 top: -9,
@@ -218,7 +230,7 @@ export const TagButton = memo(
               alignSelf="center"
             >
               <X
-                size={subtle ? 10 : 12}
+                size={subtle ? 12 : 14}
                 style={{
                   color: subtle ? 'inherit' : color,
                 }}

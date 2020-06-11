@@ -34,6 +34,7 @@ import { restaurantQuery } from './restaurantQuery'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
+import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 type RestaurantListItemProps = {
   currentLocationInfo: GeocodePlace | null
@@ -57,6 +58,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
 ) {
   const om = useOvermind()
   const [isHovered, setIsHovered] = useState(false)
+  const [isPeeking, setIsPeeking] = useState(false)
 
   useDebounceEffect(
     () => {
@@ -81,22 +83,29 @@ export const RestaurantListItem = memo(function RestaurantListItem(
   }, [props.rank])
 
   return (
-    <VStack
-      backgroundColor={isHovered ? '#fff' : '#fff'}
+    <HStack
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
-      contain="paint"
+      alignItems="center"
+      position="relative"
     >
-      <HomeScrollViewHorizontal>
-        <HStack
-          alignItems="center"
-          position="relative"
-          width="calc(100% + 25px)"
-        >
-          <RestaurantListItemContent {...props} />
-        </HStack>
-      </HomeScrollViewHorizontal>
-    </VStack>
+      <VStack
+        className="ease-in-out-fast"
+        {...(isPeeking && {
+          opacity: 0.2,
+        })}
+      >
+        <RestaurantListItemContent {...props} />
+      </VStack>
+      <ZStack className="zany" fullscreen zIndex={10} pointerEvents="none">
+        <RestaurantPeek
+          restaurantSlug={props.restaurantSlug}
+          searchState={props.searchState}
+          onPeekIn={() => setIsPeeking(true)}
+          onPeekOut={() => setIsPeeking(false)}
+        />
+      </ZStack>
+    </HStack>
   )
 })
 
@@ -105,15 +114,14 @@ const RestaurantListItemContent = memo(
     const { rank, restaurantId, restaurantSlug, currentLocationInfo } = props
     const om = useOvermind()
     const pad = 18
-    const isShowingComment = isEditingUserPage(om.state)
     const isSmall = useMediaQueryIsSmall()
     const [state, setState] = useState({
       showAddComment: false,
     })
     const showAddComment = state.showAddComment || isEditingUserPage(om.state)
     const adjustRankingLeft = 36
-    const verticalPad = 24
-    const leftPad = 6
+    const verticalPad = 5
+    const leftPad = 25
     const restaurant = restaurantQuery(restaurantSlug)
 
     useEffect(() => {
@@ -129,20 +137,24 @@ const RestaurantListItemContent = memo(
       }
     }, [])
 
+    const contentWidth = '60%'
+
     return (
       <HStack>
         <VStack
           paddingHorizontal={pad + 6}
           paddingBottom={verticalPad}
-          width={isSmall ? '50vw' : '66%'}
+          width={isSmall ? '50vw' : contentWidth}
           minWidth={isSmall ? '50%' : 500}
-          maxWidth={isSmall ? '80vw' : '30%'}
+          maxWidth={isSmall ? '80vw' : contentWidth}
+          left={leftPad}
+          position="relative"
           spacing={5}
         >
           <VStack alignItems="flex-start" width="100%">
             {/* ROW: TITLE */}
             <VStack
-              paddingTop={verticalPad}
+              paddingTop={verticalPad + 20}
               // backgroundColor={bgLightLight}
               hoverStyle={{ backgroundColor: bgLightLight }}
               marginLeft={-adjustRankingLeft}
@@ -152,14 +164,20 @@ const RestaurantListItemContent = memo(
               <ZStack
                 fullscreen
                 zIndex={100}
-                top="auto"
-                bottom={-59}
+                top={10}
                 height={120}
                 left={14}
                 justifyContent="center"
                 pointerEvents="none"
               >
                 <RestaurantUpVoteDownVote restaurantId={restaurantId} />
+
+                <RankingView
+                  position="absolute"
+                  bottom={60}
+                  left={-15}
+                  rank={rank}
+                />
               </ZStack>
 
               {/* LINK */}
@@ -169,13 +187,11 @@ const RestaurantListItemContent = memo(
                 params={{ slug: restaurantSlug }}
               >
                 <VStack>
-                  <HStack alignItems="center" marginVertical={-3}>
-                    <RankingView
-                      marginRight={-6 + leftPad}
-                      marginTop={-10}
-                      rank={rank}
-                    />
-
+                  <HStack
+                    paddingLeft={40}
+                    alignItems="center"
+                    marginVertical={-3}
+                  >
                     {/* SECOND LINK WITH actual <a /> */}
                     <Link name="restaurant" params={{ slug: restaurantSlug }}>
                       <Text
@@ -203,6 +219,9 @@ const RestaurantListItemContent = memo(
                       size="xs"
                       restaurantSlug={restaurantSlug}
                     />
+
+                    <RestaurantLenseVote />
+
                     <RestaurantTagsRow
                       subtle
                       showMore={true}
@@ -219,20 +238,19 @@ const RestaurantListItemContent = memo(
             <Spacer size={14} />
 
             {/* ROW: COMMENT */}
-            <VStack maxWidth="90%" marginLeft={-2}>
+            <VStack
+              paddingLeft={5}
+              paddingRight={20}
+              borderLeftColor="#eee"
+              borderLeftWidth={2}
+            >
               <RestaurantTopReview restaurantId={restaurantId} />
             </VStack>
 
             <Spacer size={6} />
 
             {/* ROW: BOTTOM INFO */}
-            <HStack
-              marginRight={-15}
-              marginBottom={-10}
-              alignItems="center"
-              spacing
-            >
-              <RestaurantLenseVote />
+            <HStack paddingLeft={10} alignItems="center" spacing>
               <RestaurantFavoriteStar restaurantId={restaurantId} />
 
               <VStack
@@ -259,7 +277,7 @@ const RestaurantListItemContent = memo(
               <HoverablePopover
                 contents={<Text selectable>{restaurant.address}</Text>}
               >
-                <Text selectable color="#888">
+                <Text fontSize={13} selectable color="#888">
                   {getAddressText(
                     currentLocationInfo,
                     restaurant.address ?? '',
@@ -276,14 +294,6 @@ const RestaurantListItemContent = memo(
               <RestaurantAddComment restaurantId={restaurantId} />
             </>
           )}
-        </VStack>
-
-        <VStack padding={10} paddingTop={65} width={0}>
-          <RestaurantPeek
-            restaurantSlug={restaurantSlug}
-            searchState={props.searchState}
-            size={isShowingComment ? 'lg' : 'md'}
-          />
         </VStack>
       </HStack>
     )
@@ -322,7 +332,10 @@ export const RestaurantPeek = memo(
     size?: 'lg' | 'md'
     restaurantSlug: string
     searchState: HomeStateItemSearch
+    onPeekIn?: Function
+    onPeekOut?: Function
   }) {
+    const drawerWidth = useHomeDrawerWidth()
     const { searchState, size = 'md' } = props
     const tag_names = Object.keys(searchState?.activeTagIds || {})
     const spacing = size == 'lg' ? 16 : 24
@@ -333,26 +346,43 @@ export const RestaurantPeek = memo(
       tag_names,
     })
     const photos = allPhotos.slice(0, 5)
+    const dishSize = (size === 'lg' ? 190 : 150) * (isMedium ? 0.85 : 1)
 
     return (
-      <VStack
-        position="relative"
-        marginRight={-spacing}
-        marginBottom={-spacing}
+      <HomeScrollViewHorizontal
+        onScroll={(e) => {
+          console.log('e', e, e.target)
+        }}
+        scrollEventThrottle={100}
       >
-        <HStack spacing={spacing}>
-          {photos.map((photo, i) => {
-            return (
-              <DishView
-                key={i}
-                size={(size === 'lg' ? 190 : 150) * (isMedium ? 0.85 : 1)}
-                restaurantSlug={props.restaurantSlug}
-                dish={photo}
-              />
-            )
-          })}
-        </HStack>
-      </VStack>
+        <VStack
+          className="zany"
+          position="relative"
+          marginRight={-spacing}
+          marginBottom={-spacing}
+          paddingLeft={0.6 * drawerWidth}
+        >
+          <HStack
+            pointerEvents="auto"
+            padding={20}
+            paddingTop={40}
+            paddingBottom={50}
+            height={dishSize + 50 + 40}
+            spacing={spacing}
+          >
+            {photos.map((photo, i) => {
+              return (
+                <DishView
+                  key={i}
+                  size={dishSize}
+                  restaurantSlug={props.restaurantSlug}
+                  dish={photo}
+                />
+              )
+            })}
+          </HStack>
+        </VStack>
+      </HomeScrollViewHorizontal>
     )
   })
 )

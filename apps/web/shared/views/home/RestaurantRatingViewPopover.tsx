@@ -17,7 +17,7 @@ export const RestaurantRatingViewPopover = memo(
       const sources = restaurant?.sources?.() ?? {}
       return (
         <HoverablePopover
-          position="right"
+          position="bottom"
           contents={
             <Box width={250}>
               <VStack>

@@ -8,6 +8,7 @@ export const RestaurantLenseVote = () => {
   return (
     <HoverablePopover
       allowHoverOnContent
+      position="bottom"
       contents={
         <Box pointerEvents="auto">
           <HomeLenseBarOnly activeTagIds={{}} />
@@ -15,13 +16,12 @@ export const RestaurantLenseVote = () => {
       }
     >
       <LinkButton
-        backgroundColor="#bbb"
         borderRadius={100}
         paddingVertical={2.5}
-        paddingHorizontal={10}
+        paddingHorizontal={5}
       >
-        <Text color="#fff" fontWeight="500" fontSize={13}>
-          Tag
+        <Text color="#fff" fontWeight="500" fontSize={12}>
+          🏷
         </Text>
       </LinkButton>
     </HoverablePopover>
