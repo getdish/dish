@@ -30,6 +30,7 @@ export type StackProps = Omit<
       // stronger version of pointer-events: none;
       disabled?: boolean
       contain?: 'none' | 'strict' | 'content' | 'size' | 'layout' | 'paint'
+      display?: 'inherit'
     },
   // because who tf uses alignContent or backfaceVisibility
   'alignContent' | 'backfaceVisibility'

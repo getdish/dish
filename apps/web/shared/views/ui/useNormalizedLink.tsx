@@ -8,7 +8,7 @@ import { getNavigateToTags } from '../../state/home-tag-helpers'
 import { NavigableTag } from '../../state/Tag'
 import { omStatic } from '../../state/useOvermind'
 import { CurrentStateID } from '../home/CurrentStateID'
-import { LinkButtonNamedProps, LinkButtonProps } from './LinkButton'
+import { LinkButtonNamedProps, LinkButtonProps } from './LinkProps'
 
 export const useNormalizeLinkProps = (
   props: Partial<LinkButtonProps>

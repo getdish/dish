@@ -1,6 +1,5 @@
 import React, { memo } from 'react'
 
-import { Divider } from './Divider'
 import { StackProps, VStack } from './Stacks'
 import { Text } from './Text'
 
@@ -14,8 +13,8 @@ export const PageTitle = memo(
           flex={1}
           maxWidth="80%"
           opacity={1}
-          fontSize={22}
-          lineHeight={30}
+          fontSize={20}
+          lineHeight={22}
           fontWeight="600"
         >
           {children}
@@ -27,7 +26,7 @@ export const PageTitle = memo(
                 ellipse
                 width="100%"
                 color="#666"
-                fontSize={22}
+                fontSize={14}
                 fontWeight="200"
               >
                 {subTitle}

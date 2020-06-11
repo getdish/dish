@@ -1329,10 +1329,10 @@
   resolved "https://registry.npmjs.org/@o/recoil/-/recoil-0.0.7.tgz#a396b0e29a197c50e391995f297705af25e4d1c5"
   integrity sha512-2Dd/vv3xP1yjAbESVBEsacRQdvFMenulpF+U+CmFUrUbM8Q9EgyVV7P3deeP5jOSzRrm74w9PnLkOC+cUQdkzg==
 
-"@pmmmwh/react-refresh-webpack-plugin@0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.3.1.tgz#b2e0fa57949e72f27cdfef3b0f4554edd4776240"
-  integrity sha512-JlbMOHNtoaLV5LR/GWpfDZht5qQqMr2E6Fcto2GcGCiVSDWN9C9wac+WNhGWaAfKh9pLOlz3EX4DkWl4Tb7sCg==
+"@pmmmwh/react-refresh-webpack-plugin@^0.3.3":
+  version "0.3.3"
+  resolved "https://registry.npmjs.org/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.3.3.tgz#40a3d674f42a011b7f30a9609aa8fb68ec3c39c9"
+  integrity sha512-uc6FmPEegAZawSHjUMFQwU7EjaDn7zy1iD/KD/wBROL9F4378OES8MKMYHoRAKT61Fk7LxVKZSDR5VespMQiqw==
   dependencies:
     ansi-html "^0.0.7"
     error-stack-parser "^2.0.6"

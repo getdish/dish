@@ -1,6 +1,8 @@
 import { StackProps, TextProps } from '@dish/ui'
 import React from 'react'
+import { ViewStyle } from 'react-native'
 
+import { RouteName } from '../../state/router'
 import { NavigableTag } from '../../state/Tag'
 
 export type LinkProps<A, B> = React.DetailedHTMLProps<
@@ -30,3 +32,31 @@ export type LinkSharedProps = {
   preventNavigate?: boolean
   onMouseDown?: Function
 }
+
+export type LinkButtonNamedProps<A = any, B = any> = {
+  name: A
+  params?: B
+  replace?: boolean
+  onPress?: any
+}
+
+export type LinkButtonProps<
+  Name extends RouteName = any,
+  Params = any
+> = StackProps &
+  LinkSharedProps & {
+    containerStyle?: ViewStyle
+  } & (
+    | LinkButtonNamedProps<Name, Params>
+    | {
+        onPress?: any
+      }
+    | {
+        tag: NavigableTag | null
+        onPress?: Function
+      }
+    | {
+        tags: NavigableTag[]
+        onPress?: Function
+      }
+  )

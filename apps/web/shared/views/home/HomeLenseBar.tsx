@@ -44,7 +44,7 @@ export function HomeContentTopBar(props: { children: any }) {
       <VStack pointerEvents="auto" spacing="sm">
         {props.children}
       </VStack>
-      <LinearGradient
+      {/* <LinearGradient
         colors={[
           'rgba(255,255,255,0.4)',
           '#fff',
@@ -61,7 +61,7 @@ export function HomeContentTopBar(props: { children: any }) {
           StyleSheet.absoluteFill,
           { zIndex: -1, marginBottom: -80, marginTop: -30 },
         ]}
-      />
+      /> */}
     </ZStack>
   )
 }

@@ -60,6 +60,8 @@ export const RestaurantListItem = memo(function RestaurantListItem(
   const [isHovered, setIsHovered] = useState(false)
   const [isPeeking, setIsPeeking] = useState(false)
 
+  console.log('RestaurantListItem.render', props.rank)
+
   useDebounceEffect(
     () => {
       if (isHovered) {
@@ -94,6 +96,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
         {...(isPeeking && {
           opacity: 0.2,
         })}
+        flex={1}
       >
         <RestaurantListItemContent {...props} />
       </VStack>
@@ -137,17 +140,16 @@ const RestaurantListItemContent = memo(
       }
     }, [])
 
-    const contentWidth = '60%'
+    const contentWidth = '65%'
 
     return (
-      <HStack>
+      <HStack alignItems="flex-start" justifyContent="flex-start">
         <VStack
           paddingHorizontal={pad + 6}
           paddingBottom={verticalPad}
           width={isSmall ? '50vw' : contentWidth}
           minWidth={isSmall ? '50%' : 500}
           maxWidth={isSmall ? '80vw' : contentWidth}
-          left={leftPad}
           position="relative"
           spacing={5}
         >
@@ -360,7 +362,7 @@ export const RestaurantPeek = memo(
           position="relative"
           marginRight={-spacing}
           marginBottom={-spacing}
-          paddingLeft={0.6 * drawerWidth}
+          paddingLeft={0.63 * drawerWidth}
         >
           <HStack
             pointerEvents="auto"

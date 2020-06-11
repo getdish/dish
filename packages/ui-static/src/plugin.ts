@@ -1,4 +1,3 @@
-import fs from 'fs-extra'
 import MemoryFileSystem from 'memory-fs'
 import webpack from 'webpack'
 import NodeWatchFileSystem from 'webpack/lib/node/NodeWatchFileSystem'
