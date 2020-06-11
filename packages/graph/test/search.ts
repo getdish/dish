@@ -114,32 +114,6 @@ test('Orders by tag rating if dish tags queried', async (t) => {
   })
   t.is(results?.length, 3)
   t.is(results?.[0].rating, 1)
-  t.is(results?.[1].rating, 3)
-  t.is(results?.[2].rating, 5)
+  t.is(results?.[1].rating, 5)
+  t.is(results?.[2].rating, 3)
 })
-
-test('Searched-for tags appear first', async (t) => {
-  const [restaurant] = await restaurantUpsert([restaurant_fixture])
-  const [t1] = await tagInsert([{ name: 'Test rated tag', type: 'dish' }])
-  const [t2] = await tagInsert([{ name: 'Test country', type: 'country' }])
-  await restaurantUpsertRestaurantTags(restaurant, [
-    { tag_id: t1.id, rating: 1 },
-    { tag_id: t2.id, rating: 5 },
-  ])
-  const results = await search({
-    center: {
-      lat: 50.24,
-      lng: 0.24,
-    },
-    span: {
-      lat: 1,
-      lng: 1,
-    },
-    query: '',
-    tags: ['test-rated-tag'],
-  })
-  t.is(results?.length, 1)
-  t.is(results?.[0].rating, 5)
-  t.is(results?.[1].rating, 1)
-})
-
