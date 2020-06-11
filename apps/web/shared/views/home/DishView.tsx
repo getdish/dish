@@ -62,6 +62,9 @@ export const DishView = memo(
           transform: [{ scale: 1.02 }],
           opacity: 0.8,
         }}
+        hoverStyle={{
+          transform: [{ scale: 1.01 }],
+        }}
         {...linkButtonProps}
         {...rest}
       >
@@ -172,10 +175,10 @@ export const DishView = memo(
             padding={6}
             alignItems="center"
             justifyContent="center"
-            backgroundColor="rgba(255,255,255,0.45)"
+            backgroundColor="rgba(255,255,255,0.32)"
             borderTopColor="rgba(255,255,255,0.5)"
             borderTopWidth={1}
-            shadowColor="rgba(0,0,0,0.08)"
+            shadowColor="rgba(0,0,0,0.05)"
             shadowRadius={8}
             shadowOffset={{ height: -3, width: 0 }}
             {...(isHovered && {
@@ -190,7 +193,7 @@ export const DishView = memo(
               paddingVertical={0}
               maxWidth="100%"
               overflow="hidden"
-              shadowColor="rgba(0,0,0,0.15)"
+              shadowColor="rgba(0,0,0,0.08)"
               shadowRadius={4}
               top={0}
               {...(isHovered && {

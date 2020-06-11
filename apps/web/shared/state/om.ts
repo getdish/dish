@@ -1,5 +1,5 @@
 import { IConfig } from 'overmind'
-import { merge, namespaced } from 'overmind/es/config'
+import { merge, namespaced } from 'overmind/config'
 
 import * as home from './home'
 import { onInitialize } from './onInitialize'

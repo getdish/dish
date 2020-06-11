@@ -188,6 +188,9 @@ const createStack = (defaultStyle?: ViewStyle) => {
       contain: (val) => ({
         contain: val,
       }),
+      disabled: {
+        pointerEvents: 'none',
+      },
     },
   }
 
