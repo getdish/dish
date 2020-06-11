@@ -19,7 +19,7 @@ export const SmallButton = ({
       alignItems="center"
       justifyContent="center"
       {...flatButtonStyle}
-      paddingHorizontal={12}
+      paddingHorizontal={11}
       paddingVertical={3}
       backgroundColor={isActive ? 'transparent' : bgLight}
       borderRadius={20}
@@ -38,7 +38,7 @@ export const SmallButton = ({
     >
       <Text
         color={isActive ? '#000' : bg}
-        fontSize={15}
+        fontSize={12}
         fontWeight="600"
         {...textStyle}
       >

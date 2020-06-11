@@ -14,13 +14,13 @@ export const HoverablePopover = ({
   allowHoverOnContent?: boolean
 }) => {
   const [isHovering, set] = useState(false)
-  const setIsntHovering = useDebounce(() => set(false), 100, undefined, [])
+  const setIsntHovering = useDebounce(() => set(false), 400, undefined, [])
   const setIsHovering = () => {
     setIsntHovering.cancel()
     set(true)
   }
 
-  const contentsEl = allowHoverOnContent ? (
+  const popoverContent = allowHoverOnContent ? (
     <Hoverable onHoverIn={setIsHovering} onHoverOut={setIsntHovering}>
       {contents}
     </Hoverable>
@@ -33,7 +33,7 @@ export const HoverablePopover = ({
       isOpen={isHovering}
       overlayPointerEvents={false}
       overlay={false}
-      contents={contentsEl}
+      contents={popoverContent}
       {...props}
     >
       <Hoverable onHoverIn={setIsHovering} onHoverOut={setIsntHovering}>

@@ -28,6 +28,7 @@ Week 2
 - location search
   - working search
   - working initial items
+- dont show autocomplete unless they dont type for ~2s feels less aggressive
 
 Week 3
 

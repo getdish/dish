@@ -1,6 +1,6 @@
-import { HStack, StackProps, VStack } from '@dish/ui'
+import { HStack, StackProps, Text, VStack } from '@dish/ui'
 import React from 'react'
-import { Text, TextStyle } from 'react-native'
+import { TextStyle } from 'react-native'
 
 export function TableRow(props: StackProps) {
   return <HStack {...props} />
@@ -12,6 +12,7 @@ export function TableCell({
   fontWeight,
   fontStyle,
   fontFamily,
+  textAlign,
   fontVariant,
   children,
   ...props
@@ -19,14 +20,13 @@ export function TableCell({
   return (
     <VStack paddingVertical={10} {...props}>
       <Text
-        style={{
-          color,
-          fontSize,
-          fontWeight,
-          fontStyle,
-          fontFamily,
-          fontVariant,
-        }}
+        color={color}
+        fontSize={fontSize}
+        fontWeight={fontWeight}
+        fontStyle={fontStyle}
+        fontFamily={fontFamily}
+        fontVariant={fontVariant}
+        textAlign={textAlign}
       >
         {children}
       </Text>

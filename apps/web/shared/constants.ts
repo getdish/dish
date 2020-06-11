@@ -8,7 +8,7 @@ export const isPreact = process.env.TARGET === 'preact'
 export const drawerPad = 8
 export const drawerBorderRadius = 16
 export const searchBarTopOffset = 6
-export const searchBarHeight = 50
+export const searchBarHeight = 48
 export const frameWidthMax = 1880
 export const pageWidthMax = 1380
 export const drawerWidthMax = 930

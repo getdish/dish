@@ -1,5 +1,6 @@
 import { Box, HoverablePopover, Text } from '@dish/ui'
 import React from 'react'
+import { Plus } from 'react-feather'
 
 import { LinkButton } from '../ui/LinkButton'
 import { HomeLenseBarOnly } from './HomeLenseBar'
@@ -21,7 +22,7 @@ export const RestaurantLenseVote = () => {
         paddingHorizontal={5}
       >
         <Text color="#fff" fontWeight="500" fontSize={12}>
-          🏷
+          <Plus size={16} color="#888" />
         </Text>
       </LinkButton>
     </HoverablePopover>

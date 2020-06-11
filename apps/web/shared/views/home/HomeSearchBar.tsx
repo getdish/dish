@@ -25,7 +25,7 @@ import { getTagId } from '../../state/Tag'
 import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
 import { CloseButton } from './CloseButton'
-import { brandColor, brandColorLight } from './colors'
+import { brandColorLight } from './colors'
 import { DishLogoButton } from './DishLogoButton'
 import HomeAutocomplete from './HomeAutocomplete'
 import { HomeAutocompleteBackground } from './HomeAutocompleteBackground'
@@ -467,6 +467,9 @@ const HomeSearchBarHomeButton = memo(() => {
         // marginLeft={-14} //undo spacing
         opacity={om.state.home.currentStateType === 'home' ? 0 : 1}
         onPress={() => om.actions.home.popTo('home')}
+        pressStyle={{
+          opacity: 0.6,
+        }}
       >
         <ChevronLeft size={22} opacity={0.6} style={{ marginTop: 4 }} />
       </LinkButton>

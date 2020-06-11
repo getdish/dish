@@ -1,13 +1,11 @@
 import React from 'react'
-import { ViewStyle } from 'react-native'
 
 import { extendStaticConfig } from '../helpers/extendStaticConfig'
 import { StackProps, VStack } from './Stacks'
 
 const defaultStyle: StackProps = {
   backgroundColor: '#fff',
-  paddingVertical: 8,
-  paddingHorizontal: 10,
+  padding: 8,
   borderRadius: 12,
   shadowColor: 'rgba(0,0,0,0.175)',
   shadowRadius: 13,

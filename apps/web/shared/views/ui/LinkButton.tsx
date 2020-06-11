@@ -106,7 +106,7 @@ export function LinkButton<
       // only handle click events on non-a links (we handle them in Link separately)
       // @ts-ignore
       ref={'name' in props ? null : containerRef}
-      className="ease-in-out-fast"
+      className="ease-in-out-superfast cursor-pointer"
       pressStyle={{
         opacity: 0.7,
         transform: [{ scale: 0.945 }],

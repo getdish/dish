@@ -5,7 +5,8 @@ import { ScrollView } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
-import { LinkButton, LinkButtonProps } from '../ui/LinkButton'
+import { LinkButton } from '../ui/LinkButton'
+import { LinkButtonProps } from '../ui/LinkProps'
 import { SmallCircleButton } from './CloseButton'
 import { setAvoidNextAutocompleteShowOnFocus } from './HomeSearchBar'
 
@@ -68,7 +69,7 @@ export default memo(function HomeAutoComplete() {
       disabled={!isShowing}
     >
       <HStack
-        backgroundColor="rgba(15,15,15,0.9)"
+        backgroundColor="rgba(0,0,0,0.95)"
         // className="blur"
         // borderBottomRightRadius={12}
         // borderBottomLeftRadius={12}
@@ -142,7 +143,7 @@ export default memo(function HomeAutoComplete() {
                   fontSize={15}
                   maxWidth="17vw"
                   hoverStyle={{
-                    backgroundColor: 'rgba(255,255,255,0.1)',
+                    backgroundColor: 'rgba(100,100,100,0.5)',
                   }}
                   ellipse
                   {...restaurantLinkProps}
@@ -182,9 +183,7 @@ function AutocompleteAddButton() {
   }
   return (
     <SmallCircleButton
-      // {...circularFlatButtonStyle}
-      // marginVertical={-5}
-      onPress={(e) => {
+      onPressOut={(e) => {
         console.log('e', e)
         alert('add to current search results')
       }}

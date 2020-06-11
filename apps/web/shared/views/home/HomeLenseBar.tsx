@@ -71,43 +71,21 @@ export const HomeLenseBarOnly = memo(
     const om = useOvermind()
     return (
       <HStack
-        // minWidth={drawerWidth}
-        alignItems="flex-end"
-        justifyContent="flex-end"
-        spacing
+        borderRadius={100}
+        padding={6}
+        alignItems="center"
+        justifyContent="center"
+        spacing={2}
       >
-        {/* <Divider backgroundColor="#000" flex /> */}
-        <HStack
-          borderRadius={100}
-          // borderColor="#eee"
-          // borderWidth={1}
-          padding={6}
-          alignItems="center"
-          justifyContent="center"
-          spacing={4}
-        >
-          {om.state.home.allLenseTags.map((lense, index) => (
-            <LenseButton
-              key={lense.id + index}
-              lense={lense}
-              isActive={props.activeTagIds[getTagId(lense)]}
-              minimal={index > -1}
-              size={props.size}
-            />
-          ))}
-
-          {/* <HoverablePopover
-            position="right"
-            contents={
-              <Box>
-                <Text>12312321</Text>
-              </Box>
-            }
-          >
-            <ChevronRight color="#999" size={20} />
-          </HoverablePopover> */}
-        </HStack>
-        {/* <Divider backgroundColor="#000" flex /> */}
+        {om.state.home.allLenseTags.map((lense, index) => (
+          <LenseButton
+            key={lense.id + index}
+            lense={lense}
+            isActive={props.activeTagIds[getTagId(lense)]}
+            minimal={index > -1}
+            size={props.size}
+          />
+        ))}
       </HStack>
     )
   }
