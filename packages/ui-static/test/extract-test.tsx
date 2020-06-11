@@ -107,13 +107,13 @@ test('2. extracts className for complex views but keeps other props', async (t) 
   t.is(box2.type, 'div')
   t.is(
     box2.props.className,
-    'r-backgroundColor-14lw9ot r-borderRadius-1q9bdsx r-boxShadow-qnxskm r-flexDirection-eqz5dr r-overflow-1udh08x r-paddingHorizontal-utggzx r-paddingVertical-1vvnge1 r-top-15am80v ease-in-out-top'
+    'r-backgroundColor-14lw9ot r-borderRadius-1q9bdsx r-boxShadow-qnxskm r-flexDirection-eqz5dr r-overflow-1udh08x r-padding-edyy15 r-paddingVertical-1vvnge1 r-top-15am80v ease-in-out-top'
   )
 
   const [_, box2False] = test2.rendererFalse.toTree()!.rendered as any
   t.is(
     box2False.props.className,
-    'r-backgroundColor-kemksi r-borderRadius-1q9bdsx r-boxShadow-qnxskm r-flexDirection-eqz5dr r-overflow-1udh08x r-paddingHorizontal-utggzx r-paddingVertical-1vvnge1 r-top-ipm5af ease-in-out-top'
+    'r-backgroundColor-kemksi r-borderRadius-1q9bdsx r-boxShadow-qnxskm r-flexDirection-eqz5dr r-overflow-1udh08x r-padding-edyy15 r-paddingVertical-1vvnge1 r-top-ipm5af ease-in-out-top'
   )
 })
 

@@ -78,7 +78,8 @@ export const RatingView = forwardRef(
 
     return (
       <VStack
-        ref={ref as any}
+        // @ts-ignore
+        ref={ref}
         position="relative"
         width={size}
         height={size}

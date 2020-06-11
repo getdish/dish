@@ -28,7 +28,7 @@ export const LenseButton = memoIsEqualDeep(
     const buttonContent = (
       <LinkButton tag={lense}>
         <HStack
-          className="ease-in-out"
+          className="ease-in-out-fast"
           alignItems="center"
           justifyContent="center"
           marginVertical={-10 * scale}
@@ -45,7 +45,7 @@ export const LenseButton = memoIsEqualDeep(
             opacity: 1,
             backgroundColor: 'white',
             borderColor: lenseColor,
-            transform: [{ scale: 1.05 }],
+            transform: [{ scale: 1.5 }],
             hoverStyle: {
               backgroundColor: 'white',
             },

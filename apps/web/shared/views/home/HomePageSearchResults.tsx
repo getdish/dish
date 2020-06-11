@@ -63,7 +63,7 @@ export default memo(function HomePageSearchResults(props: {
         paddingTop={paddingTop}
         height={titleHeight}
         paddingBottom={12}
-        paddingHorizontal={22}
+        paddingHorizontal={18}
         backgroundColor="#fff"
         borderBottomColor="#eee"
         borderBottomWidth={1}

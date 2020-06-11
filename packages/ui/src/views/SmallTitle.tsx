@@ -23,8 +23,7 @@ export const SmallTitle = memo(
           {divider === 'center' && <Divider flex />}
           <Text
             paddingHorizontal={30}
-            textTransform="uppercase"
-            letterSpacing={1}
+            letterSpacing={-1}
             opacity={isActive ? 1 : 0.5}
             fontSize={16}
             fontWeight="400"

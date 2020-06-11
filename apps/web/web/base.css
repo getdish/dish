@@ -59,6 +59,9 @@ textarea {
   transition: top ease-out 140ms;
 }
 
+.ease-in-out-superfast {
+  transition: all ease-in-out 80ms;
+}
 .ease-in-out-fast {
   transition: all ease-in-out 150ms;
 }
@@ -233,4 +236,8 @@ div,
 
 .inner-glow {
   box-shadow: inset 0 0 10px 0 rgba(255, 255, 255, 0.5);
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
