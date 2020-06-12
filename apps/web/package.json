@@ -79,7 +79,7 @@
     "@types/react-native": "*",
     "@types/requestidlecallback": "0.3.1",
     "array-flat-polyfill": "^1.0.1",
-    "babel-loader": "^8.0.5",
+    "babel-loader": "^8.1.0",
     "body-parser": "^1.19.0",
     "browserslist-useragent": "3.0.3",
     "canvas": "2.6.1",

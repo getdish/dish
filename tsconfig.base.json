@@ -28,7 +28,7 @@
     "lib": ["dom", "esnext"],
     "typeRoots": ["./node_modules/@types", "./types"]
   },
-  "exclude": ["**/*.test.ts", "**/*.test.tsx", "_"],
+  "exclude": ["_"],
   "typeAcquisition": {
     "enable": true
   }

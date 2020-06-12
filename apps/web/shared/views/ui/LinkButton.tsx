@@ -1,6 +1,5 @@
-import { StackProps, Text, VStack, getNode, prevent } from '@dish/ui'
-import React, { useEffect, useRef } from 'react'
-import { Platform } from 'react-native'
+import { StackProps, Text, VStack, prevent } from '@dish/ui'
+import React, { useRef } from 'react'
 
 import { RoutesTable } from '../../state/router'
 import { Link, getStylePadding } from './Link'
@@ -16,19 +15,6 @@ export function LinkButton<
   let onPress: any
   let props = useNormalizeLinkProps(allProps)
   const containerRef = useRef<any>()
-  const stopProp = allProps.stopPropagation ?? true
-
-  useEffect(() => {
-    if (Platform.OS === 'web') {
-      if (stopProp && containerRef.current) {
-        const div = getNode(containerRef.current)
-        if (div) {
-          div.addEventListener('click', prevent)
-          return () => div.removeEventListener('click', prevent)
-        }
-      }
-    }
-  }, [containerRef.current, stopProp])
 
   if ('name' in props) {
     const {
@@ -99,14 +85,13 @@ export function LinkButton<
     )
   }
 
-  const onPressCb = onPress ? () => asyncLinkAction(onPress) : null
+  const onPressCb = onPress ? asyncLinkAction(onPress) : null
 
   return (
     <VStack
       // only handle click events on non-a links (we handle them in Link separately)
       // @ts-ignore
       ref={'name' in props ? null : containerRef}
-      className="ease-in-out-superfast cursor-pointer"
       pressStyle={{
         opacity: 0.7,
         transform: [{ scale: 0.945 }],
@@ -116,6 +101,7 @@ export function LinkButton<
       {...(props.fastClick
         ? { onPressIn: onPressCb }
         : { onPressOut: onPressCb })}
+      className={`cursor-pointer ${props.className ?? 'ease-in-out-superfast'}`}
     >
       {contents}
     </VStack>

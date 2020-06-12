@@ -19,11 +19,12 @@
     "watch:web": "ttsc -b tsconfig.node.json --watch --preserveWatchOutput"
   },
   "dependencies": {
+    "@dish/async": "*",
+    "@o/fast-compare": "^2.7.6",
     "lodash": "^4.17.15",
     "react-laag": "1.7.3",
     "react-storage-hooks": "^4.0.0",
     "react-feather": "2.0.4",
-    "@o/fast-compare": "^2.7.6",
     "react-native-web": "^0.12.2"
   },
   "peerDependencies": {

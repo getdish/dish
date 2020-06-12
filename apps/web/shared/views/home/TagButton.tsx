@@ -86,14 +86,9 @@ export const TagButton = memo(
     const rankFontSize =
       typeof fontSize === 'number' ? fontSize * 0.9 : fontSize
     // const moveInPx = size === 'sm' ? 0 : 3.5 * (1 / scale)
-    return (
-      <LinkButton
-        tag={tag}
-        disabledIfActive
-        replace={replace}
-        onPress={onPress}
-        preventNavigate={!!onPress}
-      >
+
+    const contents = (
+      <>
         <HStack
           className="ease-in-out-fast"
           height={scale * 31}
@@ -211,6 +206,7 @@ export const TagButton = memo(
               borderRadius={10}
               onPress={onClose}
               opacity={0.5}
+              tag={tag}
               {...(!subtle && {
                 marginLeft: -4,
                 marginRight: 6,
@@ -238,6 +234,20 @@ export const TagButton = memo(
             </LinkButton>
           )}
         </HStack>
+      </>
+    )
+
+    if (onPress) {
+      return (
+        <LinkButton onPress={onPress} replace={replace}>
+          {contents}
+        </LinkButton>
+      )
+    }
+
+    return (
+      <LinkButton tag={tag} disabledIfActive replace={replace}>
+        {contents}
       </LinkButton>
     )
   }

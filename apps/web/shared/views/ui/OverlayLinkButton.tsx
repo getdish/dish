@@ -1,7 +1,8 @@
 import React from 'react'
 
 import { RoutesTable } from '../../state/router'
-import { LinkButton, LinkButtonProps } from './LinkButton'
+import { LinkButton } from './LinkButton'
+import { LinkButtonProps } from './LinkProps'
 
 export function OverlayLinkButton<
   Name extends keyof RoutesTable = keyof RoutesTable,

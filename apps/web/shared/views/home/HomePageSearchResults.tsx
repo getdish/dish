@@ -22,6 +22,7 @@ import { getTitleForState } from './getTitleForState'
 import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBarOnly } from './HomeLenseBar'
 import { HomeScrollView } from './HomeScrollView'
+import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RestaurantListItem } from './RestaurantListItem'
 import { StackViewCloseButton } from './StackViewCloseButton'
 
@@ -29,19 +30,19 @@ import { StackViewCloseButton } from './StackViewCloseButton'
 
 export const avatar = require('../../assets/peach.jpg').default
 
-const paddingTop = searchBarHeight + 12
-const titleHeight = searchBarHeight + 12 + 48
-
 export default memo(function HomePageSearchResults(props: {
   state: HomeStateItemSearch
 }) {
   const om = useOvermind()
-  const state = om.state.home.lastSearchState
+  const isSmall = useMediaQueryIsSmall()
+  const state = om.state.home.lastSearchState ?? props.state
   // const isEditingUserList = !!isEditingUserPage(om.state)
   const { title, subTitleElements, pageTitleElements } = getTitleForState(
     om.state,
     state
   )
+  const paddingTop = searchBarHeight + 10
+  const titleHeight = paddingTop + 48
 
   return (
     <VStack
