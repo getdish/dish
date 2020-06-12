@@ -13,8 +13,10 @@ export function LinkButton<
   let restProps: StackProps
   let contents: React.ReactElement
   let onPress: any
-  let props = useNormalizeLinkProps(allProps)
   const containerRef = useRef<any>()
+
+  // this handles the tag/name/params props
+  let props = useNormalizeLinkProps(allProps)
 
   if ('name' in props) {
     const {

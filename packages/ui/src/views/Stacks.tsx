@@ -101,19 +101,6 @@ const createStack = (defaultStyle?: ViewStyle) => {
           )
       }
 
-      if (props['debug']) {
-        console.log([
-          {
-            ...defaultStyle,
-            ...(fullscreen && fsStyle),
-            ...props,
-          },
-          style,
-          isHovered ? hoverStyle : null,
-          isPressed ? pressStyle : null,
-        ])
-      }
-
       let content = (
         <View
           ref={combineRefs(innerRef, ref)}

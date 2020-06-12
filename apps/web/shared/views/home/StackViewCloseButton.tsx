@@ -8,7 +8,7 @@ export const StackViewCloseButton = memo(() => {
   const om = useOvermind()
   return (
     <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
-      <CloseButton onPress={() => om.actions.home.up()} />
+      <CloseButton onPressOut={() => om.actions.home.up()} />
     </ZStack>
   )
 })

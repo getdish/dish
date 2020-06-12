@@ -30,9 +30,7 @@ const useNormalizedLink = (
 ): LinkButtonNamedProps | null => {
   const forceUpdate = useForceUpdate()
   const currentStateID = useContext(CurrentStateID)
-  const state = window['om'].state.home.states.find(
-    (x) => x.id === currentStateID
-  )!
+  const state = omStatic.state.home.states.find((x) => x.id === currentStateID)!
   const linkProps = getNormalizedLink(props, state)
   return useMemo(() => {
     if (linkProps) {
@@ -52,51 +50,52 @@ const useNormalizedLink = (
   }, [linkProps])
 }
 
-const getNormalizedLink = memoize(
-  (props: Partial<LinkButtonProps>, state: HomeStateItem) => {
-    let tags: NavigableTag[] = []
+const getNormalizedLink = (
+  props: Partial<LinkButtonProps>,
+  state: HomeStateItem
+) => {
+  let tags: NavigableTag[] = []
 
-    if ('tags' in props && Array.isArray(props.tags)) {
-      tags = props.tags
-    } else if ('tag' in props && !!props.tag) {
-      if (props.tag.name !== 'Search') {
-        tags.push(props.tag)
-      }
+  if ('tags' in props && Array.isArray(props.tags)) {
+    tags = props.tags
+  } else if ('tag' in props && !!props.tag) {
+    if (props.tag.name !== 'Search') {
+      tags.push(props.tag)
     }
-
-    tags = tags.filter(Boolean)
-
-    if (tags.length) {
-      const tagProps = getNavigateToTags(omStatic, {
-        state,
-        tags,
-        disabledIfActive: props.disabledIfActive,
-      })
-      const hasOnPress = !!(tagProps?.onPress ?? props.onPress)
-      return {
-        ...tagProps,
-        name: tagProps?.name,
-        ...(hasOnPress && {
-          onPress: asyncLinkAction((e) => {
-            tagProps?.onPress?.(e)
-            props.onPress?.(e)
-          }),
-        }),
-      }
-    }
-
-    if ('name' in props) {
-      return {
-        name: props.name,
-        params: props.params,
-        replace: props.replace,
-        onPress: props.onPress,
-      }
-    }
-
-    return null
   }
-)
+
+  tags = tags.filter(Boolean)
+
+  if (tags.length) {
+    const tagProps = getNavigateToTags(omStatic, {
+      state,
+      tags,
+      disabledIfActive: props.disabledIfActive,
+    })
+    const hasOnPress = !!(tagProps?.onPress ?? props.onPress)
+    return {
+      ...tagProps,
+      name: tagProps?.name,
+      ...(hasOnPress && {
+        onPress: asyncLinkAction((e) => {
+          tagProps?.onPress?.(e)
+          props.onPress?.(e)
+        }),
+      }),
+    }
+  }
+
+  if ('name' in props) {
+    return {
+      name: props.name,
+      params: props.params,
+      replace: props.replace,
+      onPress: props.onPress,
+    }
+  }
+
+  return null
+}
 
 export const asyncLinkAction = memoize((cb?: Function) => async (e: any) => {
   e.persist()
