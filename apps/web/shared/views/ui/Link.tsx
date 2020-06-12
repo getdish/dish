@@ -58,13 +58,15 @@ export function Link<
       return
     }
     prevent(e)
-    if (onClick) {
-      onClick?.(e)
-    }
     setTimeout(() => {
-      onPress?.()
-      if (!preventNavigate) {
-        om.actions.router.navigate(navItem)
+      if (onClick) {
+        onClick?.(e)
+      } else if (onPress) {
+        onPress?.()
+      } else {
+        if (!preventNavigate) {
+          om.actions.router.navigate(navItem)
+        }
       }
     })
   }

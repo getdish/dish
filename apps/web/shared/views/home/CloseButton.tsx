@@ -2,11 +2,9 @@ import { HStack, StackProps } from '@dish/ui'
 import React, { memo } from 'react'
 import { CornerLeftUp, X } from 'react-feather'
 
-type CircleButtonProps = {
-  onPress: any
+type CircleButtonProps = StackProps & {
   size?: number
-  disabled?: boolean
-} & StackProps
+}
 
 export const CloseButton = memo((props: CircleButtonProps) => {
   return (
