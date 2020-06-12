@@ -82,7 +82,9 @@ export default memo(function HomePageSearchResults(props: {
           <HomeFilterBar activeTagIds={state.activeTagIds} />
           <VStack flex={1} />
           <VStack spacing={3} alignItems="flex-end" justifyContent="flex-end">
-            <Text fontSize={14}>{pageTitleElements}</Text>
+            <Text fontSize={14} fontWeight="600">
+              {pageTitleElements}
+            </Text>
             <Text opacity={0.5} fontSize={14}>
               {subTitleElements}
             </Text>

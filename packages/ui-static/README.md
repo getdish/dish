@@ -8,7 +8,7 @@
 - pass in config to be able to create static extracted easily within web
 - SmallCircleButton case spreads
 - Spacer, Divider, Circle, EmojiButton, LinearGradient, VoteButton
-- LinkButton - getting this to at least extract styles would be big
+- LinkButton - getting this to just extract styles would be big
   - just needs to tell compiler _never_ to go to just <div />
 - onPressIn/onPressOut etc can all be converted to inline functions still as divs (HomeAutocompleteBackground, SearchLocationButton, etc)
 - LinkButton is maybe impossible but good test case for features
@@ -16,3 +16,4 @@
 - // TODO WHY SCALE NOT WORKING???
 - add a few html props for niceness
   - transition, cursor
+- Link - can maybe fully extract, if we can just run the actual component and then return the results???

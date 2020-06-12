@@ -119,26 +119,26 @@ const HomePageContent = memo(() => {
 })
 
 const HomePageRestaurant =
-  process.env.TARGET === 'ssr'
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./HomePageRestaurant').default
     : React.lazy(() => import('./HomePageRestaurant'))
 
 const HomePageSearchResults =
-  process.env.TARGET === 'ssr'
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./HomePageSearchResults').default
     : React.lazy(() => import('./HomePageSearchResults'))
 
 const HomePageTopDishes =
-  process.env.TARGET === 'ssr'
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./HomePageTopDishes').default
     : React.lazy(() => import('./HomePageTopDishes'))
 
 const HomePageUser =
-  process.env.TARGET === 'ssr'
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./HomePageUser').default
     : React.lazy(() => import('./HomePageUser'))
 
 const HomePageGallery =
-  process.env.TARGET === 'ssr'
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./HomePageGallery').default
     : React.lazy(() => import('./HomePageGallery'))
