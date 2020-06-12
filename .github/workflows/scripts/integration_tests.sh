@@ -12,7 +12,7 @@ docker run \
   -e CI=true \
   --net host \
   $DISH_REGISTRY/dish/crawlers \
-  node _/ci/run.js > crawler.logs 2>&1 &
+  bash -c 'node /app/services/crawlers/_/ci/run.js' > crawler.logs 2>&1 &
 
 sleep 15
 
