@@ -36,7 +36,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 // const isClient = TARGET === 'client'
 // const isSSR = TARGET === 'ssr'
 // const isHot = !isProduction
-const isStaticExtracted = !process.env.DISABLE_STATIC_EXTRACT
+const isStaticExtracted = !process.env.NO_EXTRACT
 
 console.log('webpack.config', { isProduction, gqless, TARGET })
 
