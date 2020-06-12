@@ -363,8 +363,8 @@ slave:
 ##
 resources:
   requests:
-    memory: 256Mi
-    cpu: 250m
+    memory: 2Gi
+    cpu: 2000m
 
 networkPolicy:
   ## Enable creation of NetworkPolicy resources. Only Ingress traffic is filtered for now.

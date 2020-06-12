@@ -3,6 +3,10 @@ services:
   hasura:
     app: hasura
     image: hasura/graphql-engine:v1.1.0
+    resources:
+      requests:
+        cpu: 500m
+        memory: 500Mi
     ports:
       - 8080/http
     env:
@@ -33,6 +37,10 @@ services:
     imagePullSecrets:
       - docker-config-json
     imagePullPolicy: always
+    resources:
+      requests:
+        cpu: 1000m
+        memory: 1Gi
     env:
       - DISH_ENV=production
       - COMMIT_HASH=${REVISION}

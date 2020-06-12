@@ -17,7 +17,7 @@ resource "digitalocean_kubernetes_cluster" "dish" {
   node_pool {
     name       = "dish-pool"
     size       = "s-4vcpu-8gb"
-    node_count = 3 // changing this doesn't delete the cluster
+    node_count = 4 // changing this doesn't delete the cluster
   }
 }
 
