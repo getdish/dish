@@ -4,7 +4,6 @@ side goal: write 15m in the morning every day
 
 Week 2
 
-- show cuisine dishes carousel when clicking cuisine ons earch results
 - gallery view (click to see full)
 - searchbar fixes for:
   - delete tag
@@ -26,10 +25,12 @@ Week 2
   - go to restaurant if searched
   - fix any nav issues
 - location search
+
   - working search
   - working initial items
-- dont show autocomplete unless they dont type for ~2s feels less aggressive
 
+- dont show autocomplete unless they dont type for ~2s feels less aggressive
+- show cuisine dishes carousel when clicking cuisine ons earch results
 - reminder - a lot of perf issues could be fixed in CM
   - we'd just need to indicate/ensure busyness is set while scrolling/mapping
 

@@ -98,7 +98,7 @@ server.get('*', async (req, res) => {
   let out = ''
   for (const line of template.split('\n')) {
     if (line.includes('<!-- app -->')) {
-      // out += appHtml
+      out += appHtml
       continue
     }
     if (line.includes('<!-- head -->')) {
@@ -123,7 +123,9 @@ server.get('*', async (req, res) => {
   res.send(out)
 })
 
-server.listen(19006)
+const port = 19006
+server.listen(port)
+console.log(`Listening on ${19006}`)
 
 function cors() {
   const HEADER_ALLOWED =
