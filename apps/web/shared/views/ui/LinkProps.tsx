@@ -26,7 +26,6 @@ export type LinkSharedProps = {
   ellipse?: boolean
   fastClick?: boolean
   replace?: boolean
-  stopPropagation?: boolean
   disabledIfActive?: boolean
   tagName?: string
   preventNavigate?: boolean

@@ -562,6 +562,7 @@ const HomeSearchBarTags = memo(
                   rgb={tag.rgb}
                   closable
                   onPress={() => {
+                    console.log('setting focused', tag)
                     om.actions.home.setSearchBarFocusedTag(tag)
                   }}
                   onClose={() => {

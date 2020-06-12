@@ -43,7 +43,7 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
               extraProps.borderBottomRightRadius = hasNext ? 0 : 30
               const button = (
                 <FilterButton
-                  key={tag.id}
+                  key={`tag-${tag.id}`}
                   filter={tag}
                   isActive={activeTagIds[getTagId(tag)]}
                   {...(hasPrev && { marginLeft: -1 })}
@@ -58,6 +58,7 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
               if (tag.name === 'Delivery') {
                 return (
                   <HoverablePopover
+                    key={tag.id}
                     allowHoverOnContent
                     position="bottom"
                     contents={

@@ -54,17 +54,9 @@ export const DishView = memo(
 
     return (
       <LinkButton
-        className="ease-in-out-fast"
         alignItems="center"
         position="relative"
         justifyContent="center"
-        pressStyle={{
-          transform: [{ scale: 1.02 }],
-          opacity: 0.8,
-        }}
-        hoverStyle={{
-          transform: [{ scale: 1.01 }],
-        }}
         {...linkButtonProps}
         {...rest}
       >
@@ -82,12 +74,20 @@ export const DishView = memo(
         </ZStack>
         {/* frame (shadow) */}
         <VStack
+          className="ease-in-out-fast"
           width={size}
           height={size}
           shadowColor="rgba(0,0,0,0.1)"
           shadowRadius={20}
           shadowOffset={{ width: 0, height: 10 }}
           borderRadius={borderRadius}
+          pressStyle={{
+            transform: [{ scale: 1.02 }],
+            opacity: 0.8,
+          }}
+          hoverStyle={{
+            transform: [{ scale: 1.04 }],
+          }}
         >
           {/* frame (inner) */}
           <VStack
@@ -123,9 +123,9 @@ export const DishView = memo(
             </ZStack> */}
             <ZStack
               className={
-                isHovered
-                  ? 'ease-in-out inner-glow'
-                  : 'ease-in-out inner-shadow'
+                // isHovered
+                // 'ease-in-out inner-glow'
+                'ease-in-out inner-shadow'
               }
               borderRadius={borderRadius}
               overflow="hidden"
@@ -146,10 +146,10 @@ export const DishView = memo(
               <Image
                 source={{ uri: dish.image }}
                 style={{
-                  width: size + 30,
-                  height: size + 30,
-                  marginTop: -15,
-                  marginLeft: -15,
+                  width: '120%',
+                  height: '120%',
+                  top: '-5%',
+                  left: '-5%',
                   backgroundColor: '#000',
                 }}
                 resizeMode="cover"

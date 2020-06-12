@@ -1,3 +1,4 @@
+import { fullyIdle } from '@dish/async'
 import { useForceUpdate } from '@dish/ui'
 import { isEqual } from 'lodash'
 import { useContext, useMemo } from 'react'
@@ -97,11 +98,10 @@ const getNormalizedLink = memoize(
   }
 )
 
-export const asyncLinkAction = (cb?: Function) => (e) => {
+export const asyncLinkAction = memoize((cb?: Function) => async (e: any) => {
   e.persist()
   e.preventDefault()
   e.stopPropagation()
-  setTimeout(() => {
-    cb?.(e)
-  })
-}
+  await fullyIdle()
+  cb?.(e)
+})

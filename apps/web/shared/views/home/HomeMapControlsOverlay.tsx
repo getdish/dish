@@ -1,5 +1,6 @@
 import { HStack, Text, VStack, ZStack } from '@dish/ui'
 import React, { memo } from 'react'
+import { RefreshCcw } from 'react-feather'
 
 import { pageWidthMax, searchBarHeight } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
@@ -48,7 +49,7 @@ export const HomeMapControlsOverlay = memo(() => {
           }}
         >
           <Text fontSize={13} fontWeight="500">
-            Redo search in map area
+            <RefreshCcw size={12} /> Redo search in map area
           </Text>
         </OverlayLinkButton>
       </HStack>
