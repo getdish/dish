@@ -1,4 +1,4 @@
-import { sleep } from '@dish/async'
+import { fullyIdle } from '@dish/async'
 import {
   Box,
   Circle,
@@ -13,8 +13,8 @@ import { Edit2 } from 'react-feather'
 import { Image } from 'react-native'
 
 import { drawerBorderRadius, searchBarHeight } from '../../constants'
-import { HomeStateItemSearch } from '../../state/home'
-import { useOvermind } from '../../state/useOvermind'
+import { HomeStateItemSearch, OmState } from '../../state/home'
+import { omStatic, useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { flatButtonStyle } from './baseButtonStyle'
@@ -159,6 +159,26 @@ const HomeSearchResultsViewContent = memo(
     const isLoading =
       !state.results?.results || state.results.status === 'loading'
 
+    async function isReadyToLoadMore() {
+      const isOnSearch = (s: OmState) => s.home.currentStateType === 'search'
+      const isNotScrolling = (s: OmState) => s.home.isScrolling === false
+      const isReadyToLoad = (s: OmState) => isOnSearch(s) && isNotScrolling(s)
+      if (!isReadyToLoad(omStatic.state)) {
+        await new Promise((res) => {
+          const dispose = om.reaction(
+            // @ts-ignore why?
+            (state) => isReadyToLoad(state),
+            (isReady) => {
+              if (isReady) {
+                dispose()
+                res()
+              }
+            }
+          )
+        })
+      }
+    }
+
     const results = useMemo(() => {
       const cur = allResults.slice(0, chunk * perChunk)
       const hasMoreToLoad = cur.length < allResults.length
@@ -175,12 +195,8 @@ const HomeSearchResultsViewContent = memo(
                 ? // load more
                   async () => {
                     if (results.length < allResults.length) {
-                      if (om.state.home.currentStateType !== 'search') {
-                        console.warn('stop loading inbackground, restart when?')
-                        return
-                      }
-                      await sleep(200)
-                      console.warn('loading next page')
+                      await isReadyToLoadMore()
+                      await fullyIdle()
                       setChunk((x) => x + 1)
                     }
                   }

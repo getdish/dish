@@ -1,4 +1,4 @@
-import { requestIdle, sleep } from '@dish/async'
+import { fullyIdle } from '@dish/async'
 import { useEffect } from 'react'
 
 export const useWaterfall = (cb: Function, args: any[] = []) => {
@@ -21,18 +21,7 @@ async function start() {
   if (running) return
   running = true
   while (waterfalls.length) {
-    let hasIdled = false
-    while (!hasIdled) {
-      let t0 = Date.now()
-      await sleep(1)
-      await requestIdle()
-      const td = Date.now() - t0
-      //  if you want to debug:
-      // console.log('we waited', td)
-      if (td < 16) {
-        hasIdled = true
-      }
-    }
+    await fullyIdle()
     const amt = Math.max(1, Math.round(waterfalls.length * 0.2))
     const cur = waterfalls.slice(0, amt)
     waterfalls = waterfalls.slice(amt)

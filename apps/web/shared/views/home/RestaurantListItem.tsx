@@ -1,4 +1,4 @@
-import { requestIdle, series, sleep } from '@dish/async'
+import { fullyIdle, series, sleep } from '@dish/async'
 import { graphql, query, restaurantPhotosForCarousel } from '@dish/graph'
 import {
   Divider,
@@ -41,7 +41,7 @@ type RestaurantListItemProps = {
   restaurantId: string
   restaurantSlug: string
   rank: number
-  searchState?: HomeStateItemSearch
+  searchState: HomeStateItemSearch
   onFinishRender?: Function
 }
 
@@ -130,11 +130,8 @@ const RestaurantListItemContent = memo(
     useEffect(() => {
       if (props.onFinishRender) {
         return series([
-          () => sleep(process.env.NODE_ENV === 'development' ? 500 : 50),
-          () => requestIdle(),
-          () => requestIdle(),
-          () => requestIdle(),
-          () => requestIdle(),
+          () => sleep(100),
+          () => fullyIdle(),
           () => props.onFinishRender!(),
         ])
       }

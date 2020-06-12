@@ -30,6 +30,9 @@ Week 2
   - working initial items
 - dont show autocomplete unless they dont type for ~2s feels less aggressive
 
+- reminder - a lot of perf issues could be fixed in CM
+  - we'd just need to indicate/ensure busyness is set while scrolling/mapping
+
 Week 3
 
 - hover "closed until" to show full hours
