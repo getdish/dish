@@ -14,11 +14,11 @@ export const RankingView = memo(
         {...props}
       >
         <Text
-          fontSize={rank > 9 ? 20 : 25}
+          fontSize={rank > 9 ? 18 : 20}
           lineHeight={22}
           letterSpacing={-2}
           fontWeight="700"
-          color="#999"
+          color="#000"
         >
           <SuperScriptText opacity={0.35} letterSpacing={0}>
             #
