@@ -11,5 +11,10 @@ resource "helm_release" "nginx-ingress" {
     name = "controller.service.type"
     value = "LoadBalancer"
   }
+
+  set {
+    name = "controller.replicaCount"
+    value = "2"
+  }
 }
 
