@@ -194,8 +194,8 @@ const RestaurantListItemContent = memo(
                       <Text
                         selectable
                         color="#000"
-                        fontSize={24}
-                        fontWeight="300"
+                        fontSize={22}
+                        fontWeight="500"
                         textDecorationColor="transparent"
                       >
                         {restaurant.name}
@@ -216,15 +216,13 @@ const RestaurantListItemContent = memo(
                       size="xs"
                       restaurantSlug={restaurantSlug}
                     />
-
-                    <RestaurantLenseVote />
-
                     <RestaurantTagsRow
                       subtle
                       showMore={true}
                       restaurantSlug={restaurantSlug}
                       divider={<></>}
                     />
+                    <RestaurantLenseVote />
                   </HStack>
                 </VStack>
 
@@ -271,17 +269,21 @@ const RestaurantListItemContent = memo(
 
               <RestaurantDetailRow size="sm" restaurantSlug={restaurantSlug} />
 
-              <HoverablePopover
-                contents={<Text selectable>{restaurant.address}</Text>}
-              >
-                <Text fontSize={13} selectable color="#555">
+              <Text fontSize={13} selectable color="#555">
+                <Link
+                  inline
+                  target="_blank"
+                  href={`https://www.google.com/maps/search/?api=1&${encodeURIComponent(
+                    restaurant.address
+                  )}`}
+                >
                   {getAddressText(
                     currentLocationInfo,
                     restaurant.address ?? '',
                     'xs'
                   )}
-                </Text>
-              </HoverablePopover>
+                </Link>
+              </Text>
             </HStack>
           </VStack>
 

@@ -53,6 +53,10 @@ export function Link<
   }
   const elementName = tagName ?? 'a'
   const handleClick = (e) => {
+    if (allProps.href) {
+      e.stopPropagation()
+      return
+    }
     prevent(e)
     if (onClick) {
       onClick?.(e)
