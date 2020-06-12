@@ -16,8 +16,8 @@ export const RestaurantUpVoteDownVote = memo(
     const iconSize = 14
     const voteButtonStyle: StackProps = {
       borderRadius: 100,
-      width: 22,
-      height: 22,
+      width: 20,
+      height: 20,
       alignItems: 'center',
       justifyContent: 'center',
       // padding: 10,
@@ -45,9 +45,9 @@ export const RestaurantUpVoteDownVote = memo(
               })
             }}
           >
-            <ChevronUp size={iconSize} color={vote === 1 ? 'green' : '#555'} />
+            <ChevronUp size={iconSize} color={vote === 1 ? 'green' : '#ccc'} />
           </VoteButton>
-          <Spacer size={38} />
+          <Spacer size={32} />
           <VoteButton
             {...voteButtonStyle}
             voted={vote == -1}
@@ -66,7 +66,7 @@ export const RestaurantUpVoteDownVote = memo(
           >
             <ChevronDown
               size={iconSize}
-              style={{ color: vote === -1 ? 'red' : '#555' }}
+              style={{ color: vote === -1 ? 'red' : '#ccc' }}
             />
           </VoteButton>
         </VStack>
@@ -85,9 +85,9 @@ const VoteButton = (props: StackProps & { voted?: boolean }) => {
       justifyContent="center"
       backgroundColor="#fff"
       borderColor="white"
-      shadowColor="rgba(0,0,0,0.035)"
-      shadowRadius={2}
-      shadowOffset={{ height: 2, width: -2 }}
+      // shadowColor="rgba(0,0,0,0.035)"
+      // shadowRadius={2}
+      // shadowOffset={{ height: 2, width: -2 }}
       hoverStyle={{
         backgroundColor: '#eee',
         borderColor: '#ddd',

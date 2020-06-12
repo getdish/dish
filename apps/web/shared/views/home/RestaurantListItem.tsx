@@ -138,6 +138,7 @@ const RestaurantListItemContent = memo(
     }, [])
 
     const contentWidth = '65%'
+    const paddingTop = verticalPad + 20
 
     return (
       <HStack alignItems="flex-start" justifyContent="flex-start">
@@ -153,7 +154,7 @@ const RestaurantListItemContent = memo(
           <VStack alignItems="flex-start" width="100%">
             {/* ROW: TITLE */}
             <VStack
-              paddingTop={verticalPad + 20}
+              paddingTop={paddingTop}
               // backgroundColor={bgLightLight}
               hoverStyle={{ backgroundColor: bgLightLight }}
               marginLeft={-adjustRankingLeft}
@@ -163,20 +164,17 @@ const RestaurantListItemContent = memo(
               <ZStack
                 fullscreen
                 zIndex={100}
-                top={10}
+                left={-4}
+                top={-paddingTop + 3}
                 height={120}
-                left={14}
                 justifyContent="center"
                 pointerEvents="none"
               >
-                <RestaurantUpVoteDownVote restaurantId={restaurantId} />
+                <ZStack position="absolute" top={24} left={18}>
+                  <RestaurantUpVoteDownVote restaurantId={restaurantId} />
+                </ZStack>
 
-                <RankingView
-                  position="absolute"
-                  bottom={60}
-                  left={-15}
-                  rank={rank}
-                />
+                <RankingView rank={rank} />
               </ZStack>
 
               {/* LINK */}
@@ -209,7 +207,7 @@ const RestaurantListItemContent = memo(
 
                   {/* TITLE ROW: Ranking + TAGS */}
                   <HStack
-                    paddingLeft={adjustRankingLeft + leftPad + 4}
+                    paddingLeft={leftPad + 18}
                     spacing={12}
                     alignItems="center"
                     marginBottom={-2}
@@ -238,7 +236,7 @@ const RestaurantListItemContent = memo(
 
             {/* ROW: COMMENT */}
             <VStack
-              paddingLeft={5}
+              paddingLeft={3}
               paddingRight={20}
               borderLeftColor="#eee"
               borderLeftWidth={2}
@@ -276,7 +274,7 @@ const RestaurantListItemContent = memo(
               <HoverablePopover
                 contents={<Text selectable>{restaurant.address}</Text>}
               >
-                <Text fontSize={13} selectable color="#888">
+                <Text fontSize={13} selectable color="#555">
                   {getAddressText(
                     currentLocationInfo,
                     restaurant.address ?? '',
