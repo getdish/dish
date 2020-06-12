@@ -43,7 +43,7 @@ const outFile = 'out.js'
 const outFileFull = path.join(outDir, outFile)
 
 test.before(async (t) => {
-  await extractStaticApp()
+  // await extractStaticApp()
   const app = require(outFileFull)
   t.context.app = app
   for (const key in app) {
@@ -76,11 +76,30 @@ test('converts a style object to class names', async (t) => {
     '.r-backgroundColor-1g6456j{background-color:rgba(255,0,0,1.00);}',
   ])
   t.deepEqual(style2!.rules, [
-    '.r-transform-188uu3c{-webkit-transform:rotateY(10deg);transform:rotateY(10deg);}',
+    '.r-transform-1kwkdns{-webkit-transform:rotateY(10deg);transform:rotateY(10deg);}',
   ])
   t.deepEqual(style3!.rules, [
     '.r-boxShadow-rfqnir{box-shadow:0px 0px 10px rgba(255,0,0,1.00);}',
   ])
+})
+
+test('expands and resolves shorthand props', async (t) => {
+  const style = {
+    padding: 10,
+    paddingVertical: 0,
+  }
+  const [pB, pL, pR, pT] = getStylesAtomic(style)
+  t.is(pT.value, '0px')
+  t.is(pB.value, '0px')
+  t.is(pL.value, '10px')
+  t.is(pR.value, '10px')
+
+  const style2 = {
+    borderColor: 'yellow',
+    borderWidth: 10,
+  }
+  const styles2 = getStylesAtomic(style2)
+  t.assert(styles2.some((x) => x.property === 'borderRightStyle'))
 })
 
 test('1. extracts to a div for simple views', async (t) => {

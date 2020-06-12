@@ -3,18 +3,17 @@ import {
   Box,
   HStack,
   LinearGradient,
-  Popover,
   StackProps,
   Text,
   VStack,
   ZStack,
 } from '@dish/ui'
-import { memo, useCallback, useState } from 'react'
-import React from 'react'
+import React, { memo, useState } from 'react'
 import { Image, StyleSheet } from 'react-native'
 
 import { NavigableTag } from '../../state/Tag'
-import { LinkButton, LinkButtonProps } from '../ui/LinkButton'
+import { LinkButton } from '../ui/LinkButton'
+import { LinkButtonProps } from '../ui/LinkProps'
 import { DishRatingView } from './DishRatingView'
 
 export const DishView = memo(
@@ -95,12 +94,9 @@ export const DishView = memo(
             shadowColor="rgba(0,0,0,0.112)"
             shadowRadius={14}
             shadowOffset={{ width: 0, height: 4 }}
-            width="100%"
-            height="100%"
+            flex={1}
             borderRadius={borderRadius}
             overflow="hidden"
-            borderWidth={20}
-            borderColor="yellow"
             alignItems="center"
             justifyContent="center"
             {...(dish.isFallback && {
@@ -190,7 +186,7 @@ export const DishView = memo(
               className="ease-in-out-top"
               backgroundColor="rgba(0,0,0,0.85)"
               borderRadius={10}
-              paddingVertical={0}
+              paddingVertical={4}
               maxWidth="100%"
               overflow="hidden"
               shadowColor="rgba(0,0,0,0.08)"
@@ -207,9 +203,7 @@ export const DishView = memo(
                 overflow="hidden"
                 fontSize={14}
                 fontWeight="600"
-                lineHeight={22}
                 color={isHovered ? '#000' : '#fff'}
-                paddingVertical={2}
                 textAlign="center"
               >
                 {dish.name}
