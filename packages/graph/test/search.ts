@@ -31,8 +31,7 @@ test('Searching for a restaurant by name', async (t) => {
     },
     query: 'Test',
   })
-  t.is(restaurant.name, 'Test Restaurant')
-  t.is(results[0].name, 'Test Restaurant')
+  t.is(results[0].id, restaurant.id)
 })
 
 test('Searching for a restaurant by tag', async (t) => {
@@ -50,7 +49,7 @@ test('Searching for a restaurant by tag', async (t) => {
     query: '',
     tags: ['test-tag'],
   })
-  t.is(results?.[0].tags?.[0].tag.name, 'Test tag')
+  t.is(results?.[0].id, restaurant.id)
 })
 
 test('Orders by restaurant rating if no dish tags queried', async (t) => {
@@ -80,9 +79,9 @@ test('Orders by restaurant rating if no dish tags queried', async (t) => {
     query: 'test',
   })
   t.is(results?.length, 3)
-  t.is(results?.[0].rating, 5)
-  t.is(results?.[1].rating, 3)
-  t.is(results?.[2].rating, 1)
+  t.is(results?.[0].id, rr1.id)
+  t.is(results?.[1].id, rr2.id)
+  t.is(results?.[2].id, rr3.id)
 })
 
 test('Orders by tag rating if dish tags queried', async (t) => {
@@ -113,7 +112,7 @@ test('Orders by tag rating if dish tags queried', async (t) => {
     tags: ['test-rated-tag'],
   })
   t.is(results?.length, 3)
-  t.is(results?.[0].rating, 1)
-  t.is(results?.[1].rating, 5)
-  t.is(results?.[2].rating, 3)
+  t.is(results?.[0].id, rr3.id)
+  t.is(results?.[1].id, rr1.id)
+  t.is(results?.[2].id, rr2.id)
 })
