@@ -82,6 +82,14 @@ Week 4
 
 # Triage
 
+- home should accept filters for top dishes
+- preventing generic dishes from being to prominent
+  - we can look and see if cuisines have big overlap
+    - lots of cuisine have "coffee" for example
+  - then add a column "generic" (or "non-unique" or something)
+- breakdown of dish ratings
+- Split photos into own table? saves jsonb time
+- Beyond Meat - great use case! we should see how hard it is to add things like this and maybe admin to make it easier
 - Trending restaurants (for home)
 
 # Home
