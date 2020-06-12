@@ -6,9 +6,9 @@
     "baseUrl": ".",
     "outDir": "_",
     "module": "CommonJS",
-    "rootDir": "./src"
+    "rootDir": "src"
   },
 
-  "include": ["src/**/*"],
+  "include": ["src"],
   "references": []
 }

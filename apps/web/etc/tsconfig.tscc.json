@@ -25,6 +25,6 @@
     "noUnusedLocals": false,
     "types": ["node", "mapkit", "@types/requestidlecallback"]
   },
-  "include": ["src/**/*", "web/**/*", "shared/**/*"],
+  "include": ["src", "web", "shared"],
   "exclude": ["**/*.test.ts", "**/*.test.tsx", "src/graphql"]
 }

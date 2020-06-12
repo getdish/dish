@@ -7,6 +7,6 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src/**/*"],
+  "include": ["src"],
   "references": [{ "path": "../react-test-env" }, { "path": "../ui" }]
 }

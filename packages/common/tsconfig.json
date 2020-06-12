@@ -11,7 +11,7 @@
   },
 
   // "references": [{ "path": "../common-web" }]
-  "include": ["src/**/*"],
+  "include": ["src"],
 
   "references": [
     {

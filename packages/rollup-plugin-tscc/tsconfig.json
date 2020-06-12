@@ -7,6 +7,6 @@
     "noEmitOnError": false,
     "module": "CommonJS"
   },
-  "include": ["src/**/*"],
+  "include": ["src"],
   "references": [{ "path": "../tscc-spec" }]
 }

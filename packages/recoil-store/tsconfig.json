@@ -8,6 +8,6 @@
     "rootDir": "src"
   },
   "files": ["./types/recoil.d.ts"],
-  "include": ["src/**/*"],
+  "include": ["src"],
   "references": [{ "path": "../react-test-env" }]
 }

@@ -9,7 +9,7 @@
     "typeRoots": ["types", "node_modules/@types"],
     "composite": true
   },
-  "include": ["web/**/*", "shared/**/*", "types/**/*"],
+  "include": ["web", "shared", "types"],
   "exclude": ["**"],
   "references": [
     {
