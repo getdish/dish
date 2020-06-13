@@ -25,6 +25,9 @@
       "path": "../../packages/ui"
     },
     {
+      "path": "../../packages/helpers"
+    },
+    {
       "path": "../../packages/async"
     }
   ]

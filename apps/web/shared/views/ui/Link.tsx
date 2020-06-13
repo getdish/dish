@@ -58,7 +58,7 @@ export function Link<
       return
     }
     prevent(e)
-    console.log('what is', onClick, onPress)
+    console.log('click', { onClick, onPress })
     setTimeout(() => {
       if (onClick) {
         onClick?.(e)

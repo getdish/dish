@@ -21,8 +21,8 @@
     "typeorm": "0.2.24"
   },
   "resolutions": {
-    "tslib": "1.11.2",
-    "typeorm/tslib": "1.11.2"
+    "typeorm/tslib": "2.0.0",
+    "tslib": "2.0.0"
   },
   "devDependencies": {
     "ava": "^3.8.2",

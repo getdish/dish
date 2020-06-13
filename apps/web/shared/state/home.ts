@@ -9,6 +9,7 @@ import {
   search,
   slugify,
 } from '@dish/graph'
+import { assert, handleAssertionError } from '@dish/helpers'
 import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
 import _, { findLast, last } from 'lodash'
@@ -1099,18 +1100,22 @@ const updateActiveTags: AsyncAction<HomeStateTagNavigable, boolean> = async (
   next
 ) => {
   const state = om.state.home.currentState
-  if (state.type === next.type) {
-    if (
-      !isEqual(state['activeTagIds'], next['activeTagIds']) ||
-      !isEqual(state.searchQuery, next.searchQuery)
-    ) {
-      if ('activeTagIds' in state) {
-        state.activeTagIds = next.activeTagIds
-      }
-      state.searchQuery = next.searchQuery
+  console.log('going?', state.type, next.type, state, next)
+  try {
+    assert(state.type === next.type)
+    assert('activeTagIds' in next)
+    assert(
+      !isEqual(state['activeStateIds'], next.activeTagIds) ||
+        !isEqual(state.searchQuery, next.searchQuery)
+    )
+    state.searchQuery = next.searchQuery
+    if ('activeTagIds' in state) {
+      state.activeTagIds = next.activeTagIds
     }
+    return await syncStateToRoute(om, next)
+  } catch (err) {
+    handleAssertionError(err)
   }
-  return await syncStateToRoute(om, next)
 }
 
 // this is useful for search where we mutate the current state while you type,
@@ -1119,7 +1124,7 @@ const updateActiveTags: AsyncAction<HomeStateTagNavigable, boolean> = async (
 const navigateToCurrentState: AsyncAction<undefined, boolean> = async (om) => {
   const nextState = getNextStateWithTags(om, {
     tags: [],
-  })
+  })!
   return await om.actions.home.updateActiveTags(nextState)
 }
 
