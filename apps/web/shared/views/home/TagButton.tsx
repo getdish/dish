@@ -6,6 +6,7 @@ import {
   Text,
   TextProps,
   VStack,
+  prevent,
 } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo } from 'react'
@@ -206,13 +207,13 @@ export const TagButton = memo(
               borderRadius={10}
               onPress={onClose}
               opacity={0.5}
-              tag={tag}
+              // tag={tag}
               {...(!subtle && {
                 marginLeft: -4,
                 marginRight: 6,
               })}
               position="relative"
-              top="8%"
+              top="6%"
               {...(subtle && {
                 position: 'absolute',
                 top: -9,
@@ -224,6 +225,10 @@ export const TagButton = memo(
               alignItems="center"
               justifyContent="center"
               alignSelf="center"
+              hoverStyle={{
+                opacity: 1,
+              }}
+              onPressIn={prevent}
             >
               <X
                 size={subtle ? 12 : 14}

@@ -10,7 +10,7 @@ import { TopCuisineDish } from '../types-extra'
  *
  */
 
-export function restaurantPhotosForCarousel({
+export const restaurantPhotosForCarousel = ({
   restaurant,
   tag_names = [],
   max = 6,
@@ -18,7 +18,7 @@ export function restaurantPhotosForCarousel({
   restaurant: RestaurantQuery
   tag_names?: string[]
   max?: number
-}) {
+}) => {
   // @ts-ignore
   const tags = restaurant.top_tags({
     args: {

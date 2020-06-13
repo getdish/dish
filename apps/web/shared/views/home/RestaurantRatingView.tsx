@@ -1,14 +1,4 @@
-import { graphql, query } from '@dish/graph'
-import {
-  Box,
-  Circle,
-  HStack,
-  HoverablePopover,
-  ProgressCircle,
-  Text,
-  VStack,
-  ZStack,
-} from '@dish/ui'
+import { graphql } from '@dish/graph'
 import React, { memo } from 'react'
 
 import { RatingView, RatingViewProps } from './RatingView'
@@ -30,7 +20,6 @@ export const getRankingColor = (percent: number) =>
 export default memo(
   graphql(function RestaurantRatingView(props: RestaurantRatingViewProps) {
     let { restaurantSlug, rating, ...rest } = props
-
     // optionally fetch
     if (typeof rating === 'undefined') {
       const restaurant = restaurantQuery(restaurantSlug)

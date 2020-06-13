@@ -19,8 +19,8 @@ export type StackProps = Omit<
     ViewProps & {
       fullscreen?: boolean
       children?: any
-      hoverStyle?: ViewStyle
-      pressStyle?: ViewStyle
+      hoverStyle?: ViewStyle | null
+      pressStyle?: ViewStyle | null
       onHoverIn?: Function
       onHoverOut?: Function
       onPressIn?: Function

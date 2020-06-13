@@ -142,11 +142,8 @@ export const DishView = memo(
               <Image
                 source={{ uri: dish.image }}
                 style={{
-                  width: '120%',
-                  height: '120%',
-                  top: '-5%',
-                  left: '-5%',
-                  backgroundColor: '#000',
+                  width: '100%',
+                  height: '100%',
                 }}
                 resizeMode="cover"
               />
@@ -185,8 +182,8 @@ export const DishView = memo(
               position="relative"
               className="ease-in-out-top"
               backgroundColor="rgba(0,0,0,0.85)"
-              borderRadius={10}
-              paddingVertical={4}
+              borderRadius={8}
+              paddingVertical={5}
               maxWidth="100%"
               overflow="hidden"
               shadowColor="rgba(0,0,0,0.08)"

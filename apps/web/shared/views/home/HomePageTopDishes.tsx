@@ -187,9 +187,7 @@ const CountryTopDishesItem = memo(({ country }: { country: TopCuisine }) => {
                 key={restaurant.name}
                 restaurant={restaurant as any}
                 onHoverIn={onHoverRestaurant}
-                containerStyle={{
-                  maxWidth: '100%',
-                }}
+                maxWidth="100%"
                 active={
                   (hoveredRestaurant &&
                     restaurant?.name === hoveredRestaurant?.name) ||
