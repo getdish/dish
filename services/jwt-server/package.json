@@ -3,11 +3,6 @@
   "version": "0.0.1",
   "description": "",
   "private": true,
-  "workspaces": {
-    "nohoist": [
-      "**"
-    ]
-  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.1",
@@ -18,11 +13,7 @@
     "jsonwebtoken": "^8.4.0",
     "pg": "^7.18.2",
     "reflect-metadata": "^0.1.10",
-    "typeorm": "0.2.24"
-  },
-  "resolutions": {
-    "typeorm/tslib": "1.11.2",
-    "tslib": "1.11.2"
+    "typeorm": "^0.2.25"
   },
   "devDependencies": {
     "ava": "^3.8.2",

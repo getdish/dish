@@ -155,6 +155,8 @@ export function extractStyles(
     console.log('\nSTART', sourceFileName)
   }
 
+  const existingHoists = {}
+
   /**
    * Step 2: Statically extract from JSX < /> nodes
    */
@@ -568,11 +570,9 @@ export function extractStyles(
         })
 
         if (shouldPrintDebug) {
-          console.log(`\nwe parsed:
-name: ${node.name.name}
-inlinePropCount: ${inlinePropCount}
-domNode: ${domNode}
-          `)
+          console.log(
+            `\nname: ${node.name.name}\ninlinePropCount: ${inlinePropCount}\ndomNode: ${domNode}`
+          )
         }
 
         let classNamePropValue: t.Expression | null = null
@@ -717,6 +717,7 @@ domNode: ${domNode}
           }
         }
 
+        // build the classname property
         if (ternaries?.length) {
           const ternaryExprs = ternaries.map(getTernaryExpression)
           if (shouldPrintDebug) {
@@ -779,21 +780,17 @@ domNode: ${domNode}
         }
 
         if (classNamePropValueForReals) {
-          if (t.isStringLiteral(classNamePropValueForReals)) {
-            node.attributes.push(
-              t.jsxAttribute(
-                t.jsxIdentifier('className'),
-                t.stringLiteral(classNamePropValueForReals.value)
-              )
+          classNamePropValueForReals = hoistClassNames(
+            traversePath,
+            existingHoists,
+            classNamePropValueForReals
+          )
+          node.attributes.push(
+            t.jsxAttribute(
+              t.jsxIdentifier('className'),
+              t.jsxExpressionContainer(classNamePropValueForReals as any)
             )
-          } else {
-            node.attributes.push(
-              t.jsxAttribute(
-                t.jsxIdentifier('className'),
-                t.jsxExpressionContainer(classNamePropValueForReals)
-              )
-            )
-          }
+          )
         }
 
         const lineNumbers =
@@ -956,8 +953,6 @@ function buildClassNamePropValue(classNameObjects: ClassNameObject[]) {
   }, null)
 }
 
-const empty = (x) => !Object.keys(x).length
-
 const attrGetName = (attr) => {
   return 'name' in attr
     ? attr.name.name
@@ -987,3 +982,69 @@ function findComponentName(scope) {
   }
   return componentName
 }
+
+function hoistClassNames(path: any, existing: any, expr: any) {
+  const hoist = hoistClassNames.bind(null, path, existing)
+  if (t.isStringLiteral(expr)) {
+    if (expr.value.trim() === '') {
+      return expr
+    }
+    if (existing[expr.value]) {
+      return existing[expr.value]
+    }
+    const identifier = replaceStringWithVariable(expr)
+    existing[expr.value] = identifier
+    return identifier
+  }
+  if (t.isBinaryExpression(expr)) {
+    return t.binaryExpression(
+      expr.operator,
+      hoist(expr.left),
+      hoist(expr.right)
+    )
+  }
+  if (t.isLogicalExpression(expr)) {
+    return t.logicalExpression(
+      expr.operator,
+      hoist(expr.left),
+      hoist(expr.right)
+    )
+  }
+  if (t.isConditionalExpression(expr)) {
+    return t.conditionalExpression(
+      expr.test,
+      hoist(expr.consequent),
+      hoist(expr.alternate)
+    )
+  }
+  return expr
+
+  function replaceStringWithVariable(str: t.StringLiteral): t.Identifier {
+    // hoist outside fn!
+    const uid = path.scope.generateUidIdentifier('cn')
+    const parent = path.findParent((path) => path.isProgram())
+    const variable = t.variableDeclaration('const', [
+      t.variableDeclarator(uid, str),
+    ])
+    parent.unshiftContainer('body', variable)
+    return uid
+  }
+}
+
+// // hoist outside fn!
+// const path = traversePath as any
+// const uid = path.scope.generateUidIdentifier('ref')
+// const parent = path.findParent((path) => path.isProgram())
+// const variable = t.variableDeclaration('const', [
+//   t.variableDeclarator(
+//     uid,
+//     t.stringLiteral(classNamePropValueForReals.value)
+//   ),
+// ])
+// parent.unshiftContainer('body', variable)
+// node.attributes.push(
+//   t.jsxAttribute(
+//     t.jsxIdentifier('className'),
+//     t.jsxExpressionContainer(uid)
+//   )
+// )

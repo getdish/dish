@@ -48,7 +48,6 @@
     "@dish/async": "*",
     "@o/fast-compare": "2.7.6",
     "expo-linear-gradient": "^8.1.0",
-    "google-closure-compiler": "20191111.0.0",
     "mapkit-typescript": "^5.18.2",
     "overmind": "23.1.0-1589389364682",
     "overmind-react": "24.1.0-1589389364682",
