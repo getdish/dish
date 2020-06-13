@@ -11,7 +11,7 @@ import invariant from 'invariant'
 import { ViewStyle } from 'react-native'
 
 import { GLOSS_CSS_FILE } from '../constants'
-import { getStylesAtomic } from '../style/getStylesAtomic'
+import { getStylesAtomic, pseudos } from '../style/getStylesAtomic'
 import { stylePropsText, stylePropsView } from '../style/styleProps'
 import {
   CacheObject,
@@ -64,7 +64,6 @@ type ClassNameObject = t.StringLiteral | t.Expression
 interface TraversePath<TNode = any> {
   node: TNode
   scope: {} // TODO
-  _complexComponentProp?: any // t.VariableDeclarator;
   parentPath: TraversePath<any>
   insertBefore: (arg: t.Node) => void
 }
@@ -189,7 +188,9 @@ export function extractStyles(
 
         const isStaticAttributeName = (name: string) => {
           return (
-            !!styleProps[name] || !!staticConfig?.styleExpansionProps?.[name]
+            !!styleProps[name] ||
+            !!staticConfig?.styleExpansionProps?.[name] ||
+            pseudos[name]
           )
         }
 
@@ -242,7 +243,7 @@ export function extractStyles(
           if (!style || !Object.keys(style).length) {
             return []
           }
-          const res = getStylesAtomic(style)
+          const res = getStylesAtomic(style, null, shouldPrintDebug)
           res.forEach((x) => {
             stylesByClassName[x.identifier] = x
           })
@@ -270,8 +271,6 @@ export function extractStyles(
             flattenedAttributes.push(attr)
             return
           }
-
-          const name = ''
 
           // simple spreads of style objects like ternaries
 
@@ -833,36 +832,6 @@ domNode: ${domNode}
               }
             }
           }
-        }
-      },
-      exit(traversePath: TraversePath<t.JSXElement>) {
-        if (traversePath._complexComponentProp) {
-          if (t.isJSXElement(traversePath.parentPath)) {
-            // bump
-            traversePath.parentPath._complexComponentProp = [].concat(
-              traversePath.parentPath._complexComponentProp || [],
-              traversePath._complexComponentProp
-            )
-          } else {
-            // find nearest Statement
-            let statementPath = traversePath
-            do {
-              statementPath = statementPath.parentPath
-            } while (!t.isStatement(statementPath))
-
-            invariant(
-              t.isStatement(statementPath),
-              'Could not find a statement'
-            )
-
-            const decs = t.variableDeclaration(
-              'var',
-              [].concat(traversePath._complexComponentProp)
-            )
-
-            statementPath.insertBefore(decs)
-          }
-          traversePath._complexComponentProp = null
         }
       },
     },

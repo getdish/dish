@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { ViewStyle } from 'react-native'
 import { atomic } from 'react-native-web/dist/cjs/exports/StyleSheet/compile'
 import createCompileableStyle from 'react-native-web/dist/cjs/exports/StyleSheet/createCompileableStyle'
@@ -6,27 +7,55 @@ import i18Style from 'react-native-web/dist/cjs/exports/StyleSheet/i18nStyle'
 
 import { StyleObject } from '../types'
 
-export function getStylesAtomic(style: any, classList?: string[]) {
-  const filteredStyle: ViewStyle = Object.keys(style ?? {}).reduce(
-    (acc, cur) => {
-      if (cur) {
-        acc[cur] = style[cur]
+export const pseudos = {
+  activeStyle: 'active',
+  pressStyle: 'focus',
+  hoverStyle: 'hover',
+}
+
+export function getStylesAtomic(
+  style: any,
+  classList?: string[] | null,
+  debug?: boolean
+) {
+  const styles: { [key: string]: ViewStyle } = {
+    base: {},
+  }
+
+  // split psuedos
+  for (const key in style) {
+    if (pseudos[key]) {
+      styles[key] = style[key]
+    } else {
+      styles.base[key] = style[key]
+    }
+  }
+
+  return Object.keys(styles)
+    .map((key) => {
+      return getAtomicStyle(styles[key], pseudos[key])
+    })
+    .flat()
+
+  function getAtomicStyle(style: ViewStyle, pseudoKey?: string) {
+    // why is this diff from react-native-web!? we need to figure out
+    if (Object.keys(style).some((k) => k.includes('borderWidth'))) {
+      style.borderStyle = style.borderStyle ?? 'solid'
+    }
+    const all = _.cloneDeep(
+      atomic(createCompileableStyle(createReactDOMStyle(i18Style(style))))
+    )
+    for (const key in all) {
+      const styleObj = all[key]
+      if (pseudoKey) {
+        const ogId = styleObj.identifier
+        styleObj.identifier = `${styleObj.identifier}-${pseudoKey.slice(0, 2)}`
+        styleObj.rules = styleObj.rules.map((rule) =>
+          rule.replace(ogId, styleObj.identifier).replace('{', `:${pseudoKey}{`)
+        )
       }
-      return acc
-    },
-    {}
-  )
-
-  // why is this diff from react-native-web!? we need to figure out
-  if (Object.keys(style).some((k) => k.includes('borderWidth'))) {
-    filteredStyle.borderStyle = filteredStyle.borderStyle ?? 'solid'
+      styleObj.className = `.${styleObj.identifier}`
+    }
+    return Object.keys(all).map((key) => all[key]) as StyleObject[]
   }
-
-  const all = atomic(
-    createCompileableStyle(createReactDOMStyle(i18Style(filteredStyle)))
-  )
-  for (const key in all) {
-    all[key].className = `.${all[key].identifier}`
-  }
-  return Object.keys(all).map((key) => all[key]) as StyleObject[]
 }

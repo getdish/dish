@@ -789,11 +789,26 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.10.1"
 
+"@babel/plugin-transform-react-constant-elements@^7.10.1":
+  version "7.10.1"
+  resolved "https://registry.npmjs.org/@babel/plugin-transform-react-constant-elements/-/plugin-transform-react-constant-elements-7.10.1.tgz#c7f117a54657cba3f9d32012e050fc89982df9e1"
+  integrity sha512-V4os6bkWt/jbrzfyVcZn2ZpuHZkvj3vyBU0U/dtS8SZuMS7Rfx5oknTrtfyXJ2/QZk8gX7Yls5Z921ItNpE30Q==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.10.1"
+
 "@babel/plugin-transform-react-display-name@^7.0.0", "@babel/plugin-transform-react-display-name@^7.10.1":
   version "7.10.1"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-react-display-name/-/plugin-transform-react-display-name-7.10.1.tgz#e6a33f6d48dfb213dda5e007d0c7ff82b6a3d8ef"
   integrity sha512-rBjKcVwjk26H3VX8pavMxGf33LNlbocMHdSeldIEswtQ/hrjyTG8fKKILW1cSkODyRovckN/uZlGb2+sAV9JUQ==
   dependencies:
+    "@babel/helper-plugin-utils" "^7.10.1"
+
+"@babel/plugin-transform-react-inline-elements@^7.10.1":
+  version "7.10.1"
+  resolved "https://registry.npmjs.org/@babel/plugin-transform-react-inline-elements/-/plugin-transform-react-inline-elements-7.10.1.tgz#14c1179cfda904d430109ed27a167e54c7565d68"
+  integrity sha512-lV/H9X6MaIfyzOVZnC4tZzMUnU9hGujmOuQhlGyDHOZbqAHv7dL24yXG1vOn8kA43CVL4bretUnGfV9IyjgqWA==
+  dependencies:
+    "@babel/helper-builder-react-jsx" "^7.10.1"
     "@babel/helper-plugin-utils" "^7.10.1"
 
 "@babel/plugin-transform-react-jsx-development@^7.10.1":

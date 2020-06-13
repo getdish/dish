@@ -5,9 +5,15 @@ module.exports = function (api) {
 
   return {
     plugins: [
-      api.env('production') && !isWorker && !isSSR && 'babel-plugin-lodash',
       api.env('development') && !isWorker && !isSSR && 'react-refresh/babel',
       !api.env('production') && '@babel/plugin-transform-react-display-name',
+      ...(api.env('production') && !isWorker && !isSSR
+        ? [
+            'babel-plugin-lodash',
+            '@babel/plugin-transform-react-inline-elements',
+            '@babel/plugin-transform-react-constant-elements',
+          ]
+        : []),
       '@babel/plugin-proposal-class-properties',
       '@babel/plugin-proposal-optional-chaining',
       ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }],

@@ -34,6 +34,7 @@ const test = anyTest as TestInterface<{
   test11: TestApp
   test12: TestApp
   test13: TestApp
+  test14: TestApp
   app: any
 }>
 
@@ -43,7 +44,7 @@ const outFile = 'out.js'
 const outFileFull = path.join(outDir, outFile)
 
 test.before(async (t) => {
-  // await extractStaticApp()
+  await extractStaticApp()
   const app = require(outFileFull)
   t.context.app = app
   for (const key in app) {
@@ -104,36 +105,16 @@ test('expands and resolves shorthand props', async (t) => {
 
 test('1. extracts to a div for simple views', async (t) => {
   const { test1 } = t.context
-  const out = test1.renderer.toTree()!
-  t.is(out.rendered!.type, 'div')
-  t.is(
-    out.rendered!.props.className,
-    'r-backgroundColor-1g6456j r-borderRadius-18c69zk r-boxShadow-1xz9bc3 r-flex-13awgt0 r-flexDirection-eqz5dr'
-  )
+  const out = test1.renderer.toJSON()!
+  t.snapshot(out)
 })
 
 test('2. extracts className for complex views but keeps other props', async (t) => {
   const { test2 } = t.context
-  const out = test2.renderer.toTree()!
-  const [box1, box2] = out.rendered as any
-  t.is(box1.nodeType, 'component')
-  t.is(box1.props.className, 'who r-overflow-1udh08x')
-  t.assert(!!box1.props.onAccessibilityTap)
-  const type = (box1.type as any) as Function
-  t.assert(type instanceof Function)
-  t.is(type.name, 'Box')
-
-  t.is(box2.type, 'div')
-  t.is(
-    box2.props.className,
-    'r-backgroundColor-14lw9ot r-borderRadius-1q9bdsx r-boxShadow-qnxskm r-flexDirection-eqz5dr r-overflow-1udh08x r-padding-edyy15 r-paddingVertical-1vvnge1 r-top-15am80v ease-in-out-top'
-  )
-
-  const [_, box2False] = test2.rendererFalse.toTree()!.rendered as any
-  t.is(
-    box2False.props.className,
-    'r-backgroundColor-kemksi r-borderRadius-1q9bdsx r-boxShadow-qnxskm r-flexDirection-eqz5dr r-overflow-1udh08x r-padding-edyy15 r-paddingVertical-1vvnge1 r-top-ipm5af ease-in-out-top'
-  )
+  const out = test2.renderer.toJSON()!
+  t.snapshot(out)
+  const outFalse = test2.rendererFalse.toJSON()
+  t.snapshot(outFalse)
 })
 
 test('3. places className correctly given a single spread', async (t) => {
@@ -142,7 +123,7 @@ test('3. places className correctly given a single spread', async (t) => {
   } = t.context
   const out = render(<Element />)
   const list = [...out.container.firstChild?.['classList']]
-  t.assert(list.includes('r-overflow-1udh08x'))
+  t.snapshot(list)
 })
 
 test('4. leaves dynamic variables', async (t) => {
@@ -152,79 +133,46 @@ test('4. leaves dynamic variables', async (t) => {
   const out = render(<Element />)
   const firstChild = out.container.firstChild!
   const classList = [...firstChild['classList']]
-  t.deepEqual(classList, ['css-view-1dbjc4n', 'r-height-4d76ec'])
+  t.snapshot(classList)
   const r = renderer.toJSON()
-  t.is(r.props.style.width, 'calc(100% + 20px)')
+  t.snapshot(r)
 })
 
 test('5. spread conditional', async (t) => {
   const { test5 } = t.context
-  const out = test5.renderer.toTree()!
-  t.is(out.rendered!.type, 'div')
-  t.is(
-    out.rendered!.props.className,
-    'r-backgroundColor-57dg7b r-flexDirection-eqz5dr r-overflow-1udh08x'
-  )
-  t.is(
-    out.rendered!.rendered![0].props.className,
-    'r-backgroundColor-57dg7b r-flexDirection-eqz5dr r-overflow-1udh08x hello-world'
-  )
+  const out = test5.renderer.toJSON()
+  t.snapshot(out)
 })
 
 test('6. spread ternary', async (t) => {
   const { test6 } = t.context
-  t.is(
-    test6.renderer.toTree().rendered!.props.className,
-    'r-backgroundColor-57dg7b r-flexDirection-eqz5dr r-overflow-1udh08x'
-  )
-  t.is(
-    test6.rendererFalse.toTree().rendered!.props.className,
-    'r-flexDirection-eqz5dr r-overflow-1udh08x'
-  )
-  // t.is(out!.props.width, 'calc(100% + 12px)')
+  t.snapshot(test6.renderer.toJSON())
+  t.snapshot(test6.rendererFalse.toJSON())
 })
 
 test('7. ternary + data-is', async (t) => {
   const { test7 } = t.context
-  const out = test7.renderer.toTree()
-  const { children, ...outerProps } = out!.rendered!.props
-  t.deepEqual(outerProps, {
-    className:
-      'r-flexDirection-eqz5dr r-maxWidth-f2w40 r-minWidth-68jxh1 r-paddingBottom-1mi0q7o r-paddingHorizontal-1qfz7tf r-width-1skwq7n',
-    ['data-is']: 'Test7-VStack',
-  })
-  const [inner] = out.rendered!.rendered! as any
-  t.is(
-    inner.props.className,
-    `r-flexDirection-eqz5dr r-height-1or9b2r r-width-5soawk`
-  )
+  const out = test7.renderer.toJSON()
+  t.snapshot(out)
 })
 
 test('8. styleExpansions', async (t) => {
   const { test8 } = t.context
-  const out = test8.renderer.toTree()!
-  t.is(
-    out.rendered!.props.className,
-    'r-bottom-1p0dtai r-left-1d2f490 r-position-bnwqim r-right-zchlnj r-top-ipm5af'
-  )
+  const out = test8.renderer.toJSON()
+  t.snapshot(out)
   // TODO test constant folding
 })
 
 test('9. combines with classname', async (t) => {
   const { test9 } = t.context
-  const out = test9.renderer.toTree()!
-  t.is(
-    out.rendered!.props.className,
-    'home-top-dish r-flexDirection-eqz5dr r-paddingVertical-9qu9m4'
-  )
+  const out = test9.renderer.toJSON()
+  t.snapshot(out)
 })
 
 test('10. extracts Text', async (t) => {
   const { test10 } = t.context
-  const out = test10.renderer.toTree()!
-  t.is(out.rendered!.type, 'span')
-  t.is(out.rendered!.props['data-is'], 'Test10-Text')
-  t.is(out.rendered!.props.className, 'r-fontSize-10x49cs')
+  const out = test10.renderer.toJSON()
+  t.snapshot(out)
 })
 
 test('11. combines everything', async (t) => {
@@ -234,34 +182,24 @@ test('11. combines everything', async (t) => {
   const out = render(<Element conditional={false} />)
   const firstChild = out.container.firstChild!
   const classList = [...firstChild['classList']]
-  t.deepEqual(classList, [
-    'css-view-1dbjc4n',
-    'r-alignItems-1awozwy',
-    'r-backgroundColor-57dg7b',
-    'r-borderWidth-rs99b7',
-    'r-minHeight-yfq7p9',
-    'r-overflow-1udh08x',
-    'r-position-bnwqim',
-    'r-borderColor-brgb1',
-  ])
+  t.snapshot(classList)
 })
 
 test('12. ternary multiple on same key', async (t) => {
   const { test12 } = t.context
-  t.is(
-    test12.renderer.toTree()!.rendered!.props.className,
-    'r-flexDirection-eqz5dr r-opacity-6dt33c r-transform-1siec45'
-  )
-  t.is(
-    test12.rendererFalse.toTree()!.rendered!.props.className,
-    'r-flexDirection-eqz5dr r-opacity-orgf3d r-transform-n8jr3k'
-  )
+  t.snapshot(test12.renderer.toJSON())
 })
 
 test('13. text with complex conditional and local vars', async (t) => {
   const { test13 } = t.context
   // console.log('test13', test13.renderer!.toTree())
   t.is(1, 1)
+})
+
+test('14. extracts psuedo styles', async (t) => {
+  const { test14 } = t.context
+  const out = test14.renderer.toJSON()
+  t.snapshot(out)
 })
 
 async function extractStaticApp() {
