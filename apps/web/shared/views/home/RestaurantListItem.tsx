@@ -10,7 +10,7 @@ import {
   ZStack,
   useDebounceEffect,
 } from '@dish/ui'
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import { MessageSquare } from 'react-feather'
 
 import {
@@ -58,7 +58,6 @@ export const RestaurantListItem = memo(function RestaurantListItem(
 ) {
   const om = useOvermind()
   const [isHovered, setIsHovered] = useState(false)
-  const [isPeeking, setIsPeeking] = useState(false)
 
   console.log('RestaurantListItem.render', props.rank)
 
@@ -91,21 +90,13 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       alignItems="center"
       position="relative"
     >
-      <VStack
-        className="ease-in-out-fast"
-        {...(isPeeking && {
-          opacity: 0.2,
-        })}
-        flex={1}
-      >
+      <VStack className="ease-in-out-fast" flex={1}>
         <RestaurantListItemContent {...props} />
       </VStack>
       <ZStack className="zany" fullscreen zIndex={10} pointerEvents="none">
         <RestaurantPeek
           restaurantSlug={props.restaurantSlug}
           searchState={props.searchState}
-          onPeekIn={() => setIsPeeking(true)}
-          onPeekOut={() => setIsPeeking(false)}
         />
       </ZStack>
     </HStack>
@@ -269,21 +260,23 @@ const RestaurantListItemContent = memo(
 
               <RestaurantDetailRow size="sm" restaurantSlug={restaurantSlug} />
 
-              <Text fontSize={13} selectable color="#555">
-                <Link
-                  inline
-                  target="_blank"
-                  href={`https://www.google.com/maps/search/?api=1&${encodeURIComponent(
-                    restaurant.address
-                  )}`}
-                >
-                  {getAddressText(
-                    currentLocationInfo,
-                    restaurant.address ?? '',
-                    'xs'
-                  )}
-                </Link>
-              </Text>
+              {!!restaurant.address && (
+                <Text fontSize={13} selectable color="#555">
+                  <Link
+                    inline
+                    target="_blank"
+                    href={`https://www.google.com/maps/search/?api=1&${encodeURIComponent(
+                      restaurant.address
+                    )}`}
+                  >
+                    {getAddressText(
+                      currentLocationInfo,
+                      restaurant.address,
+                      'xs'
+                    )}
+                  </Link>
+                </Text>
+              )}
             </HStack>
           </VStack>
 
@@ -326,13 +319,11 @@ const RestaurantTopReview = memo(
   })
 )
 
-export const RestaurantPeek = memo(
+const RestaurantPeek = memo(
   graphql(function RestaurantPeek(props: {
     size?: 'lg' | 'md'
     restaurantSlug: string
     searchState: HomeStateItemSearch
-    onPeekIn?: Function
-    onPeekOut?: Function
   }) {
     const drawerWidth = useHomeDrawerWidth()
     const { searchState, size = 'md' } = props

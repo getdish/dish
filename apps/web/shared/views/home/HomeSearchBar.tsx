@@ -566,6 +566,7 @@ const HomeSearchBarTags = memo(
                     om.actions.home.setSearchBarFocusedTag(tag)
                   }}
                   onClose={() => {
+                    debugger
                     om.actions.home.navigateToTag({ tags: [tag] })
                     if (
                       om.state.home.lastActiveTags.filter(

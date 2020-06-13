@@ -17,7 +17,7 @@ index 27c8f79..379ee7f 100644
 +
  export {};
 diff --git a/node_modules/gqless/dist/gqless.cjs.development.js b/node_modules/gqless/dist/gqless.cjs.development.js
-index 12268bf..db2672d 100644
+index 12268bf..dd6ac74 100644
 --- a/node_modules/gqless/dist/gqless.cjs.development.js
 +++ b/node_modules/gqless/dist/gqless.cjs.development.js
 @@ -135,7 +135,7 @@ const deepReference = rootValue => {
@@ -61,7 +61,7 @@ index 12268bf..db2672d 100644
  
        return Promise.resolve(_temp && _temp.then ? _temp.then(_temp2) : _temp2(_temp));
 diff --git a/node_modules/gqless/dist/gqless.esm.js b/node_modules/gqless/dist/gqless.esm.js
-index cc6eb3f..fe8be07 100644
+index cc6eb3f..8ed3f20 100644
 --- a/node_modules/gqless/dist/gqless.esm.js
 +++ b/node_modules/gqless/dist/gqless.esm.js
 @@ -482,6 +482,8 @@ const buildSelections = ({
@@ -73,8 +73,13 @@ index cc6eb3f..fe8be07 100644
    const selections = [includeTypename && '__typename', ...tree.children.map(tree => buildSelectionTree(formatter, tree, variables))].filter(Boolean);
    if (!selections.length) return '';
    return selections.join(LINE_SEPARATOR);
-@@ -559,17 +561,27 @@ const memoized =
- createMemo();
+@@ -554,22 +556,15 @@ const buildSelectionTree = ({
+   return buildSelections(formatter, tree, variables);
+ };
+ 
+-const memoized =
+-/*#__PURE__*/
+-createMemo();
  const getAlias = tree => {
    if (!tree.parent) return;
 -  const fieldAliases = memoized(() => {
@@ -88,27 +93,13 @@ index cc6eb3f..fe8be07 100644
 -    return aliases;
 -  }, [tree.parent, tree.selection.field]);
 -  return fieldAliases.get(tree.selection);
-+  // const fieldAliases = memoized(() => {
-+  //   const aliases = new Map();
-+  //   let id = 0;
-+  //   tree.parent.children.forEach(siblingTree => {
-+  //     if (!(siblingTree.selection instanceof FieldSelection)) return;
-+  //     if (tree.selection === siblingTree.selection || tree.selection.field !== siblingTree.selection.field) return;
-+  //     aliases.set(tree.selection, `${tree.selection.field.name}__${++id}`);
-+  //   });
-+  //   return aliases;
-+  // }, [tree.parent, tree.selection.field]);
-+  // return fieldAliases.get(tree.selection);
-+  let id
 +  for (const siblingTree of tree.parent.children) {
-+    if (!(siblingTree.selection instanceof FieldSelection)) continue;
-+    if (tree.selection === siblingTree.selection) continue
-+    if (tree.selection.field.name !== siblingTree.selection.field.name) continue;
-+    const thisIndex = tree.parent.children.indexOf(tree)
-+    id = `${tree.selection.field.name}__${thisIndex}`
-+    break
++    if (siblingTree.selection instanceof FieldSelection) {
++      if (tree.selection !== siblingTree.selection || tree.selection.field === siblingTree.selection.field) {
++        return `${tree.selection.field.name}__${++id}`
++      }
++    }
 +  }
-+  return id
  };
  
  /**

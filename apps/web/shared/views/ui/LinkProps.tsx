@@ -43,9 +43,8 @@ export type LinkButtonProps<
   Name extends RouteName = any,
   Params = any
 > = StackProps &
-  LinkSharedProps & {
-    containerStyle?: ViewStyle
-  } & (
+  LinkSharedProps &
+  (
     | LinkButtonNamedProps<Name, Params>
     | {
         onPress?: any

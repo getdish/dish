@@ -62,10 +62,12 @@ const HomePageGalleryContent = memo(
                     key={i}
                     source={{ uri: photo.image }}
                     style={{
-                      width: 250,
-                      height: 250,
-                      marginVertical: 5,
-                      marginHorizontal: 5,
+                      maxWidth: 335,
+                      maxHeight: 335,
+                      width: 'calc(24.5vw - 20px)',
+                      height: 'calc(24.5vw - 20px)',
+                      marginVertical: 2,
+                      marginHorizontal: 2,
                     }}
                   />
                 )

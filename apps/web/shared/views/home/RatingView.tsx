@@ -11,7 +11,7 @@ export type RatingViewProps = StackProps & {
 }
 
 export const getRankingColor = (percent: number) =>
-  percent >= 0.8 ? '#00BA00' : percent >= 0.5 ? 'rgba()' : 'red'
+  percent >= 0.8 ? '#00BA00' : percent >= 0.5 ? 'blue' : 'red'
 
 export const RatingView = forwardRef(
   (
@@ -25,8 +25,10 @@ export const RatingView = forwardRef(
     }: RatingViewProps,
     ref
   ) => {
-    if (!percent) return null
-    if (!color) return null
+    if (!percent || !color) {
+      console.warn('no percent/color', percent, color, sizeIn)
+      return null
+    }
     const borderColor =
       percent >= 0.8
         ? 'rgba(190, 250, 200, 0.85)'
@@ -113,8 +115,6 @@ export const RatingView = forwardRef(
             radius={size * 0.5}
             borderWidth={size * 0.07}
             color={borderColor}
-            // innerColor={bgColor}
-            // bgColor={bgColor}
           >
             <VStack
               width="100%"

@@ -98,7 +98,6 @@ export function LinkButton<
         opacity: 0.7,
         transform: [{ scale: 0.945 }],
       }}
-      {...props.containerStyle}
       {...restProps}
       {...(props.fastClick
         ? { onPressIn: onPressCb }
