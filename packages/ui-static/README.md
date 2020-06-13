@@ -2,9 +2,9 @@
 - spacing
 - evaluate constants in other files
   - SmallButton good example case of constant
-  - extract hoverStyle/pressStyle (spread + constant too - TagButton, DishView)
-    - final step is hoverStyle={{ color: x, ...parent.hoverStyle, }}
-  - extract media queries
+- hoverStyle/pressStyle (spread + constant too - TagButton, DishView)
+  - final step is hoverStyle={{ color: x, ...parent.hoverStyle, }}
+- extract media queries
 - pass in config to be able to create static extracted easily within web
 - SmallCircleButton case spreads
 - Spacer, Divider, Circle, EmojiButton, LinearGradient, VoteButton

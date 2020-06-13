@@ -13,7 +13,8 @@
     "watch": "tsc --watch --preserveWatchOutput",
     "test": "DISH_ENV=test ava test/* --verbose",
     "test:debug": "DEBUG_FILE=extract-specs.tsx DEBUG=1 yarn test",
-    "test:watch": "yarn test --watch"
+    "test:watch": "yarn test --watch",
+    "test:update-snapshots": "ava --update-snapshots"
   },
   "license": "MIT",
   "dependencies": {

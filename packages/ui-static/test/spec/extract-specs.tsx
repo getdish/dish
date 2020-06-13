@@ -1,6 +1,5 @@
 import { Box, Text, VStack, ZStack } from '@dish/ui'
 import React from 'react'
-import { TextProperties } from 'react-native'
 
 import { baseStyle, nestedStyle } from './extract-spec-constants'
 
@@ -195,6 +194,19 @@ export function Test13(props: TestProps) {
       fontWeight="400"
       textAlign="center"
       marginTop={(props.conditional ? -4 : 0) * scale}
+    />
+  )
+}
+
+export function Test14() {
+  return (
+    <VStack
+      hoverStyle={{
+        backgroundColor: 'red',
+      }}
+      pressStyle={{
+        backgroundColor: 'blue',
+      }}
     />
   )
 }
