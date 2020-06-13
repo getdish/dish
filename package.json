@@ -29,7 +29,7 @@
   },
   "resolutions": {
     "resolve": "1.17.0",
-    "tslib": "1.11.2",
+    "tslib": "2.0.0",
     "react": "0.0.0-experimental-aae83a4b9",
     "react-dom": "0.0.0-experimental-aae83a4b9",
     "@types/react": "16.9.35",

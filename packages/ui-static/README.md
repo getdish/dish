@@ -18,3 +18,4 @@
   - transition, cursor
 - Link - can maybe fully extract, if we can just run the actual component and then return the results???
 - could hoist the classname strings out of functions (better done by something like closure, but does closure do it really tho?)
+- CSS variables for color!

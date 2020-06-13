@@ -1,0 +1,20 @@
+{
+  "name": "@dish/helpers",
+  "version": "0.0.1",
+  "main": "_",
+  "tsmain": "src",
+  "sideEffects": false,
+  "private": true,
+  "scripts": {
+    "build": "tsc -b || true",
+    "watch": "tsc -b --watch --preserveWatchOutput"
+  },
+  "dependencies": {
+    "lodash": "*",
+    "@o/fast-compare": "^2.7.6",
+    "tslib": "^2.0.0"
+  },
+  "peerDependencies": {
+    "react": "*"
+  }
+}

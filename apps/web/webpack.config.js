@@ -196,6 +196,9 @@ module.exports = function getWebpackConfig(
           'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
           'process.env.EXPERIMENTAL_USE_CLENAUP_FOR_CM': JSON.stringify(false),
           'process.env.DEBUG': JSON.stringify(process.env.DEBUG || false),
+          'process.env.DEBUG_ASSERT': JSON.stringify(
+            process.env.DEBUG_ASSERT || false
+          ),
         }),
 
         new HTMLWebpackPlugin({
