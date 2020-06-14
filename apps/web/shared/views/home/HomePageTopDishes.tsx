@@ -3,15 +3,13 @@ import {
   HStack,
   HorizontalLine,
   LinearGradient,
-  SmallTitle,
+  LoadingItems,
   Text,
   VStack,
   ZStack,
 } from '@dish/ui'
-import { LoadingItems } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { ScrollView } from 'react-native'
 
 import { HomeStateItemHome } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
@@ -70,12 +68,12 @@ const HomePageTopDishes = ({ state }: TopDishesProps) => {
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
       <VStack position="relative" flex={1} overflow="hidden">
         <HomeScrollView>
-          <VStack paddingTop={34} paddingBottom={34} spacing="xl">
+          <VStack paddingTop={28} paddingBottom={34} spacing="xl">
             {/* TRENDING */}
             {/* <HomeViewTopDishesTrending /> */}
 
             {/* LENSES - UNIQUELY GOOD HERE */}
-            <VStack spacing="lg">
+            <VStack spacing="md">
               {/* <SmallTitle divider="off">
                 {om.state.home.lastActiveTags
                   .find((x) => x.type === 'lense')
@@ -144,7 +142,7 @@ const HomePageTopDishes = ({ state }: TopDishesProps) => {
   )
 }
 
-const dishHeight = 140
+const dishHeight = 130
 const padding = 30
 const spacing = 25
 const pctRestaurant = 0.3

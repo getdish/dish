@@ -85,7 +85,7 @@ export function HomeViewDrawer(props: { children: any }) {
             bgColor,
             bgColor,
             // bgColor,
-            'rgba(255,255,255,0.75)',
+            'rgba(255,255,255,0.9)',
           ]}
           style={[StyleSheet.absoluteFill]}
           startPoint={[0, 0]}
