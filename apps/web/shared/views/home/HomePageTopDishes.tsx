@@ -9,19 +9,29 @@ import {
   ZStack,
 } from '@dish/ui'
 import _ from 'lodash'
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import {
+  default as React,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
+import { ChevronDown, ChevronRight, ChevronUp, Plus } from 'react-feather'
 
 import { HomeStateItemHome } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../NotFoundPage'
 import { LinkButton } from '../ui/LinkButton'
+import { LinkButtonProps } from '../ui/LinkProps'
 import { PageTitleTag } from '../ui/PageTitleTag'
-import { flatButtonStyle } from './baseButtonStyle'
+import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
 import { DishView } from './DishView'
 import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBarOnly } from './HomeLenseBar'
 import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
-import { RestaurantButton } from './RestaurantButton'
+import RestaurantRatingView from './RestaurantRatingView'
+import { Squircle } from './Squircle'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 type TopDishesProps = {
@@ -55,13 +65,6 @@ const HomePageTopDishes = ({ state }: TopDishesProps) => {
 
   const { topDishes } = om.state.home
   const results = topDishes
-  // if (topDishesFilteredIndices.length) {
-  //   results = results.filter(
-  //     (_, index) => topDishesFilteredIndices.indexOf(index) > -1
-  //   )
-  // }
-  // // for now force at top because its most filled out
-  // results = [...results].sort((x) => (x.country === 'Vietnamese' ? -1 : 1))
 
   return (
     <>
@@ -74,15 +77,6 @@ const HomePageTopDishes = ({ state }: TopDishesProps) => {
 
             {/* LENSES - UNIQUELY GOOD HERE */}
             <VStack spacing="md">
-              {/* <SmallTitle divider="off">
-                {om.state.home.lastActiveTags
-                  .find((x) => x.type === 'lense')
-                  ?.descriptions?.plain.replace(
-                    'Here',
-                    `in ${om.state.home.lastHomeState.currentLocationName}`
-                  ) ?? ''}
-              </SmallTitle> */}
-
               <VStack spacing alignItems="center">
                 <HStack
                   width="100%"
@@ -103,13 +97,13 @@ const HomePageTopDishes = ({ state }: TopDishesProps) => {
                     <LinkButton
                       paddingVertical={5}
                       paddingHorizontal={6}
-                      fontSize={16}
+                      fontSize={15}
                       shadowColor={'rgba(0,0,0,0.1)'}
                       shadowRadius={8}
                       shadowOffset={{ height: 2, width: 0 }}
                       backgroundColor="#fff"
                       borderRadius={8}
-                      fontWeight="700"
+                      fontWeight="600"
                       transform={[{ rotate: '-4deg' }]}
                     >
                       {om.state.home.lastActiveTags
@@ -132,7 +126,7 @@ const HomePageTopDishes = ({ state }: TopDishesProps) => {
               {!results.length && <LoadingItems />}
 
               {results.map((country) => (
-                <CountryTopDishesItem key={country.country} country={country} />
+                <TopDishesCuisineItem key={country.country} country={country} />
               ))}
             </VStack>
           </VStack>
@@ -147,32 +141,93 @@ const padding = 30
 const spacing = 25
 const pctRestaurant = 0.3
 
-const CountryTopDishesItem = memo(({ country }: { country: TopCuisine }) => {
-  const [hoveredRestaurant, setHoveredRestaurant] = useState<Restaurant | null>(
-    null
-  )
-  const onHoverRestaurant = useCallback((restaurant: Restaurant) => {
-    setHoveredRestaurant(restaurant)
-  }, [])
-
-  const dishElements = useMemo(() => {
-    return (country.dishes || []).slice(0, 10).map((top_dish, index) => {
-      return (
-        <DishView
-          size={dishHeight}
-          key={index}
-          dish={top_dish as any}
-          cuisine={{
-            id: country.country,
-            name: country.country,
-            type: 'country',
+const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
+  return (
+    <VStack
+      paddingVertical={5}
+      className="home-top-dish"
+      position="relative"
+      // onHoverIn={() => setHovered(true)}
+      // onHoverOut={() => setHovered(false)}
+    >
+      <HStack position="relative" zIndex={10} paddingHorizontal={20}>
+        {/* <RankingView rank={rank} marginLeft={-36} /> */}
+        <LinkButton
+          {...flatButtonStyle}
+          paddingVertical={4}
+          marginBottom={-10}
+          style={{
+            transform: [{ rotate: '-2deg' }],
           }}
-        />
-      )
-    })
-  }, [country])
+          tag={{
+            type: 'country',
+            name: country.country,
+          }}
+        >
+          <Text ellipse fontSize={18} fontWeight={'700'}>
+            {country.country} {country.icon}
+          </Text>
+        </LinkButton>
+      </HStack>
 
-  const restaurantsList = useMemo(() => {
+      <HomeTopDishesSide>
+        <TopDishesRestaurantsSide country={country} />
+      </HomeTopDishesSide>
+      {/* left shadow */}
+      <LinearGradient
+        colors={[
+          'rgba(255,255,255,1)',
+          'rgba(255,255,255,1)',
+          'rgba(255,255,255,0)',
+        ]}
+        startPoint={[0, 0]}
+        endPoint={[1, 0]}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          width: `${pctRestaurant * 100 + 4}%`,
+          zIndex: 1,
+        }}
+      />
+
+      <HomeScrollViewHorizontal>
+        <HomeTopDishMain>
+          {(country.dishes || []).slice(0, 12).map((top_dish, index) => {
+            return (
+              <DishView
+                size={dishHeight}
+                key={index}
+                dish={top_dish as any}
+                cuisine={{
+                  id: country.country,
+                  name: country.country,
+                  type: 'country',
+                }}
+              />
+            )
+          })}
+
+          <Squircle size={dishHeight}>
+            <ChevronRight size={40} color="black" />
+          </Squircle>
+        </HomeTopDishMain>
+      </HomeScrollViewHorizontal>
+    </VStack>
+  )
+})
+
+const TopDishesRestaurantsSide = memo(
+  ({ country }: { country: TopCuisine }) => {
+    const [
+      hoveredRestaurant,
+      setHoveredRestaurant,
+    ] = useState<Restaurant | null>(null)
+    const onHoverRestaurant = useCallback((restaurant: Restaurant) => {
+      setHoveredRestaurant(restaurant)
+    }, [])
+
     return (
       <VStack flex={1} padding={10} spacing={4} alignItems="flex-start">
         {_.uniqBy(country.top_restaurants, (x) => x.name)
@@ -196,63 +251,8 @@ const CountryTopDishesItem = memo(({ country }: { country: TopCuisine }) => {
           })}
       </VStack>
     )
-  }, [hoveredRestaurant, country.top_restaurants])
-
-  return (
-    <VStack
-      paddingVertical={5}
-      className="home-top-dish"
-      position="relative"
-      // onHoverIn={() => setHovered(true)}
-      // onHoverOut={() => setHovered(false)}
-    >
-      <HStack position="relative" zIndex={10} paddingHorizontal={20}>
-        {/* <RankingView rank={rank} marginLeft={-36} /> */}
-        <LinkButton
-          {...flatButtonStyle}
-          paddingVertical={4}
-          marginBottom={-10}
-          style={{
-            transform: [{ rotate: '-2deg' }],
-          }}
-          tag={{
-            type: 'country',
-            name: country.country,
-          }}
-        >
-          <Text ellipse fontSize={20} fontWeight={'700'}>
-            {country.country} {country.icon}
-          </Text>
-        </LinkButton>
-      </HStack>
-
-      <HomeTopDishesSide>{restaurantsList}</HomeTopDishesSide>
-
-      {/* left shadow */}
-      <LinearGradient
-        colors={[
-          'rgba(255,255,255,1)',
-          'rgba(255,255,255,1)',
-          'rgba(255,255,255,0)',
-        ]}
-        startPoint={[0, 0]}
-        endPoint={[1, 0]}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          bottom: 0,
-          width: `${pctRestaurant * 100 + 4}%`,
-          zIndex: 1,
-        }}
-      />
-
-      <HomeScrollViewHorizontal>
-        <HomeTopDishMain>{dishElements}</HomeTopDishMain>
-      </HomeScrollViewHorizontal>
-    </VStack>
-  )
-})
+  }
+)
 
 // these two do optimized updates
 
@@ -261,7 +261,7 @@ const HomeTopDishesSide = memo((props) => {
   return (
     <ZStack
       fullscreen
-      paddingTop={padding + 14}
+      paddingTop={padding + 4}
       pointerEvents="none"
       right="auto"
       maxWidth={drawerWidth * pctRestaurant + 10}
@@ -285,3 +285,75 @@ const HomeTopDishMain = memo((props) => {
     />
   )
 })
+
+export const RestaurantButton = memo(
+  ({
+    restaurant,
+    active,
+    zIndex,
+    rank,
+    trending,
+    subtle,
+    onHoverIn,
+    ...props
+  }: {
+    active?: boolean
+    rank?: number
+    restaurant: Partial<Restaurant>
+    trending?: 'up' | 'down'
+    subtle?: boolean
+  } & LinkButtonProps) => {
+    const TrendingIcon = trending === 'up' ? ChevronUp : ChevronDown
+    return (
+      <LinkButton
+        key={restaurant.name}
+        pointerEvents="auto"
+        {...(active ? flatButtonStyleSelected : flatButtonStyle)}
+        {...(subtle && {
+          backgroundColor: 'transparent',
+        })}
+        fontSize={14}
+        zIndex={active ? 2 : 1}
+        {...(active && {
+          borderColor: '#eee',
+          shadowColor: 'rgba(0,0,0,0.1)',
+          shadowRadius: 5,
+        })}
+        paddingRight={34}
+        {...props}
+        name="restaurant"
+        params={{ slug: restaurant.slug }}
+        onHoverIn={() => {
+          onHoverIn?.(restaurant)
+        }}
+      >
+        <HStack alignItems="center" spacing={5}>
+          {!!trending && (
+            <TrendingIcon
+              size={20}
+              color={trending === 'up' ? 'green' : 'red'}
+              style={{
+                marginTop: -4,
+                marginBottom: -4,
+              }}
+            />
+          )}
+          <Text ellipse fontWeight="400">
+            {typeof rank === 'number' ? `${rank}. ` : ''}
+            {restaurant.name}
+          </Text>
+          <RestaurantRatingView
+            size="xs"
+            restaurantSlug={restaurant.slug ?? ''}
+            rating={restaurant.rating}
+            // @ts-ignore
+            position="absolute"
+            top={0}
+            right={-35}
+            subtle={subtle}
+          />
+        </HStack>
+      </LinkButton>
+    )
+  }
+)
