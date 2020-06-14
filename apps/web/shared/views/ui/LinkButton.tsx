@@ -96,7 +96,7 @@ export function LinkButton<
       ref={'name' in props ? null : containerRef}
       pressStyle={{
         opacity: 0.7,
-        transform: [{ scale: 0.945 }],
+        transform: [{ scale: 0.98 }],
       }}
       {...restProps}
       {...(props.fastClick
