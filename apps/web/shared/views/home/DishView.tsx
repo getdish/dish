@@ -91,8 +91,8 @@ export const DishView = memo(
           {/* frame (inner) */}
           <VStack
             className="ease-in-out-fast"
-            shadowColor="rgba(0,0,0,0.112)"
-            shadowRadius={14}
+            shadowColor="rgba(0,0,0,0.2)"
+            shadowRadius={4}
             shadowOffset={{ width: 0, height: 4 }}
             flex={1}
             borderRadius={borderRadius}
@@ -107,7 +107,7 @@ export const DishView = memo(
               borderColor: 'rgba(0,0,0,0.75)',
               backgroundColor: '#fff',
               shadowRadius: 13,
-              shadowColor: 'rgba(0,0,0,0.25)',
+              shadowColor: 'rgba(0,0,0,0.17)',
               shadowOffset: { width: 0, height: 6 },
               zIndex: 10000,
             })}
@@ -134,7 +134,7 @@ export const DishView = memo(
                   'rgba(255,255,255,0)',
                   'rgba(255,255,255,0)',
                   'rgba(0,0,0,0)',
-                  'rgba(0,0,0,0.2)',
+                  'rgba(30,30,30,0.2)',
                 ]}
                 style={[StyleSheet.absoluteFill]}
               />
@@ -182,7 +182,7 @@ export const DishView = memo(
             <Box
               position="relative"
               className="ease-in-out-top"
-              backgroundColor="rgba(0,0,0,0.85)"
+              backgroundColor="rgba(0,0,0,0.7)"
               borderRadius={80}
               paddingVertical={4}
               paddingHorizontal={10}
@@ -201,7 +201,7 @@ export const DishView = memo(
                 flex={1}
                 overflow="hidden"
                 fontSize={14}
-                fontWeight="600"
+                fontWeight="400"
                 color={isHovered ? '#000' : '#fff'}
                 textAlign="center"
               >

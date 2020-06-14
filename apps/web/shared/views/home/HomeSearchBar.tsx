@@ -373,15 +373,15 @@ export default memo(function HomeSearchBar() {
     >
       <HomeAutocompleteBackground />
       <VStack
-        maxWidth={pageWidthMax - 90}
+        maxWidth={pageWidthMax - 100}
         zIndex={12}
         position="relative"
         width="100%"
         height="100%"
         borderRadius={borderRadius}
-        shadowColor="rgba(0,0,0,0.07)"
+        shadowColor="rgba(0,0,0,0.08)"
         shadowOffset={{ height: 5, width: 0 }}
-        shadowRadius={20}
+        shadowRadius={25}
       >
         <VStack
           position="relative"
@@ -390,7 +390,7 @@ export default memo(function HomeSearchBar() {
           backgroundColor="#fff"
           flexDirection="row"
           borderRadius={borderRadius}
-          shadowColor="rgba(0,0,0,0.085)"
+          shadowColor="rgba(0,0,0,0.025)"
           shadowRadius={5}
           shadowOffset={{ height: 3, width: 0 }}
           overflow="hidden"

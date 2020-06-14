@@ -1,8 +1,9 @@
-import { HStack, StackProps, Text, VStack } from '@dish/ui'
 import React from 'react'
 import { TextStyle } from 'react-native'
 
 import { extendStaticConfig } from '../helpers/extendStaticConfig'
+import { HStack, StackProps, VStack } from './Stacks'
+import { Text } from './Text'
 
 export const TableRow = (props: StackProps) => {
   return <HStack {...props} />

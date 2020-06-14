@@ -1,9 +1,25 @@
 # June
 
+big impact changes:
+
+- emojis for dishes (autocomplete, dishview)
+- top comments everywhere
+- add comment + rate being really slick
+- profiles being nice
+- importing instagram and other feed data to have more aliveness
+- top dishes <=> map pins + easily moving around cities
+  - then easily filter it down to any cuisine (top right input opposite "Uniquely Good")
+- resizable mid bar :P
+  - would actually be cool if it snapped to isSmall when it got small enough and small also resized!
+
 side goal: write 15m in the morning every day
 
 Week 2
 
+in progress
+
+- navigation/stackview bugs
+- delivery button/hover to see services/names
 - gallery view (click to see full)
 - searchbar fixes for:
   - delete tag
@@ -11,12 +27,15 @@ Week 2
 - clicking tags:
   - restaurantdetail
   - search result
+  - click to see map
+
+unfinished
+
 - map
   - better occlusion or grouping
   - click item to scroll to row
 - restaurant
   - click to call
-  - click to see map
 - restaurantdetail
   - fix general layout
   - add example top_comment
@@ -37,7 +56,6 @@ Week 2
 Week 3
 
 - hover "closed until" to show full hours
-- delivery button/hover to see services/names
 - horizontal scroll (load more on scroll, show one to start)
 - user features
 - add tip/comment
@@ -45,7 +63,6 @@ Week 3
 - Upvote tags
 - Better breakdown of rating
 - Some sort of way to highlight comments or at least summaries of features (bert?) on restaurant detail or else it feels too empty
-- Menu/inside/outside
 - Various user flows (expo auth?)
 - Add o tag, upvote/downvote, star
 - [ ] hover on left side should show a "banner" on bottom of right
@@ -63,6 +80,7 @@ Week 4
 
 ---
 
+- have it round the focus of the map to the nearest citycenter if its close - so on san francisco, looks really nice if zoomed out a bit and we can show pins
 - spreadsheet view into all data next to a simple map
 - actually a full review card could show at bottom of map when restaurant opened all the way
 - RestaurantDetail social media links
