@@ -1,24 +1,8 @@
-
-resource "null_resource" "create-sentry-db" {
-  depends_on = [helm_release.postgres]
-
-  provisioner "local-exec" {
-    command = <<EOC
-echo "Ensuring 'sentry' database exists"
-
-POSTGRES_PASSWORD=${var.POSTGRES_PASSWORD} ./etc/ensure_extra_dbs_exist.sh
-
-EOC
-  }
-}
-
 resource "helm_release" "sentry" {
-  depends_on = [null_resource.create-sentry-db]
-
   name      = "sentry"
   namespace = "sentry"
   chart     = "stable/sentry"
-  version = "4.2.1"
+  version = "4.2.4"
 
   set {
     name ="config.configYml"
@@ -26,23 +10,8 @@ resource "helm_release" "sentry" {
   }
 
   set {
-    name  = "postgresql.enabled"
-    value = false
-  }
-
-  set {
-    name  = "postgresql.postgresqlPassword"
-    value = var.POSTGRES_PASSWORD
-  }
-
-  set {
-    name  = "postgresql.postgresqlHost"
-    value = "postgres-postgresql.postgres"
-  }
-
-  set {
     name  = "persistence.size"
-    value = "5Gi"
+    value = "25Gi"
   }
 
   set {
