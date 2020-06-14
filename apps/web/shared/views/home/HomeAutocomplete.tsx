@@ -130,7 +130,6 @@ export default memo(function HomeAutoComplete() {
                     tag: x,
                   })}
                   flexDirection="row"
-                  fastClick
                   alignItems="center"
                   height={32}
                   lineHeight={24}

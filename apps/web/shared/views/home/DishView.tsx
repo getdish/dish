@@ -53,9 +53,17 @@ export const DishView = memo(
 
     return (
       <LinkButton
+        className="ease-in-out"
         alignItems="center"
         position="relative"
         justifyContent="center"
+        pressStyle={{
+          transform: [{ scale: 0.98 }],
+          opacity: 1,
+        }}
+        hoverStyle={{
+          transform: [{ scale: 1.03 }],
+        }}
         {...linkButtonProps}
         {...rest}
       >
@@ -73,20 +81,12 @@ export const DishView = memo(
         </ZStack>
         {/* frame (shadow) */}
         <VStack
-          className="ease-in-out-fast"
           width={size}
           height={size}
-          shadowColor="rgba(0,0,0,0.1)"
+          shadowColor="rgba(0,0,0,0.032)"
           shadowRadius={20}
-          shadowOffset={{ width: 0, height: 10 }}
+          shadowOffset={{ width: 0, height: 20 }}
           borderRadius={borderRadius}
-          pressStyle={{
-            transform: [{ scale: 1.02 }],
-            opacity: 0.8,
-          }}
-          hoverStyle={{
-            transform: [{ scale: 1.04 }],
-          }}
         >
           {/* frame (inner) */}
           <VStack
@@ -106,7 +106,7 @@ export const DishView = memo(
             {...(isHovered && {
               borderColor: 'rgba(0,0,0,0.75)',
               backgroundColor: '#fff',
-              shadowRadius: 18,
+              shadowRadius: 13,
               shadowColor: 'rgba(0,0,0,0.25)',
               shadowOffset: { width: 0, height: 6 },
               zIndex: 10000,
@@ -130,7 +130,8 @@ export const DishView = memo(
             >
               <LinearGradient
                 colors={[
-                  'rgba(255,255,255,0.6)',
+                  'rgba(255,255,255,0.45)',
+                  'rgba(255,255,255,0)',
                   'rgba(255,255,255,0)',
                   'rgba(0,0,0,0)',
                   'rgba(0,0,0,0.2)',
@@ -148,7 +149,7 @@ export const DishView = memo(
                 resizeMode="cover"
               />
             )}
-            {!dish.image && <Text fontSize={100}>🍔</Text>}
+            {!dish.image && <Text fontSize={80}>🥗</Text>}
           </VStack>
         </VStack>
 
@@ -182,8 +183,9 @@ export const DishView = memo(
               position="relative"
               className="ease-in-out-top"
               backgroundColor="rgba(0,0,0,0.85)"
-              borderRadius={8}
-              paddingVertical={5}
+              borderRadius={80}
+              paddingVertical={4}
+              paddingHorizontal={10}
               maxWidth="100%"
               overflow="hidden"
               shadowColor="rgba(0,0,0,0.08)"
