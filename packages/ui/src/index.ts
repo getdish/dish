@@ -52,6 +52,7 @@ export * from './views/Spacer'
 export * from './views/Stacks'
 export * from './views/SecondaryText'
 export * from './views/SuperScriptText'
+export * from './views/Table'
 export * from './views/Text'
 export * from './views/Toast'
 

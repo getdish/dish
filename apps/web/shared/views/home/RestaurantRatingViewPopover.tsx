@@ -5,6 +5,8 @@ import {
   HoverablePopover,
   SmallTitle,
   StackProps,
+  TableCell,
+  TableRow,
   Text,
   TextProps,
   VStack,
@@ -16,7 +18,6 @@ import { deliveryServices } from './deliveryServices'
 import { RatingViewProps } from './RatingView'
 import { restaurantQuery } from './restaurantQuery'
 import RestaurantRatingView from './RestaurantRatingView'
-import { TableCell, TableRow } from './TableRow'
 
 export const RestaurantRatingViewPopover = memo(
   graphql(
@@ -32,13 +33,15 @@ export const RestaurantRatingViewPopover = memo(
         color: '#555',
         paddingVertical: 8,
       }
+      const padding = 10
       return (
         <HoverablePopover
           allowHoverOnContent
           position="bottom"
           contents={
-            <Box width={320} padding={0}>
+            <Box width={320} padding={padding}>
               <SmallTitle>Rating Summary</SmallTitle>
+
               <TableRow>
                 <Text width="50%" {...headStyle}>
                   Source
@@ -50,31 +53,37 @@ export const RestaurantRatingViewPopover = memo(
                   Weight
                 </Text>
               </TableRow>
-              {Object.keys(sources).map((source, i) => {
-                const item = sources[source]
-                if (!item) {
-                  return null
-                }
-                const info = deliveryServices[source]
-                return (
-                  <TableRow
-                    backgroundColor={i % 2 == 0 ? 'white' : '#f7f7f7'}
-                    key={source}
-                  >
-                    <HStack width="50%" spacing={6} alignItems="center">
-                      {info?.image ? (
-                        <Image
-                          source={info.image}
-                          style={{ width: 26, height: 26, marginBottom: -4 }}
-                        />
-                      ) : null}
-                      {info?.name ?? source}
-                    </HStack>
-                    <TableCell width="25%">{item.rating}</TableCell>
-                    <TableCell flex={1}>{RESTAURANT_WEIGHTS[source]}</TableCell>
-                  </TableRow>
-                )
-              })}
+
+              <VStack>
+                {Object.keys(sources).map((source, i) => {
+                  const item = sources[source]
+                  if (!item) {
+                    return null
+                  }
+                  const info = deliveryServices[source]
+                  return (
+                    <TableRow
+                      backgroundColor={i % 2 == 0 ? 'white' : '#f7f7f7'}
+                      marginHorizontal={-10}
+                      key={source}
+                    >
+                      <HStack width="50%" spacing={6} alignItems="center">
+                        {info?.image ? (
+                          <Image
+                            source={info.image}
+                            style={{ width: 26, height: 26, marginBottom: -4 }}
+                          />
+                        ) : null}
+                        {info?.name ?? source}
+                      </HStack>
+                      <TableCell width="25%">{item.rating}</TableCell>
+                      <TableCell flex={1}>
+                        {RESTAURANT_WEIGHTS[source]}
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+              </VStack>
             </Box>
           }
         >

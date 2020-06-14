@@ -231,9 +231,8 @@ const CountryTopDishesItem = memo(({ country }: { country: TopCuisine }) => {
       <HomeTopDishesSide>{restaurantsList}</HomeTopDishesSide>
 
       {/* left shadow */}
-      {/* <LinearGradient
+      <LinearGradient
         colors={[
-          'rgba(255,255,255,1)',
           'rgba(255,255,255,1)',
           'rgba(255,255,255,1)',
           'rgba(255,255,255,0)',
@@ -248,7 +247,7 @@ const CountryTopDishesItem = memo(({ country }: { country: TopCuisine }) => {
           width: `${pctRestaurant * 100 + 4}%`,
           zIndex: 1,
         }}
-      /> */}
+      />
 
       <HomeScrollViewHorizontal>
         <HomeTopDishMain>{dishElements}</HomeTopDishMain>
