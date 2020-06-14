@@ -2,9 +2,13 @@ import { HStack, StackProps, Text, VStack } from '@dish/ui'
 import React from 'react'
 import { TextStyle } from 'react-native'
 
-export function TableRow(props: StackProps) {
+import { extendStaticConfig } from '../helpers/extendStaticConfig'
+
+export const TableRow = (props: StackProps) => {
   return <HStack {...props} />
 }
+
+TableRow.staticConfig = extendStaticConfig(HStack, {})
 
 export function TableCell({
   color,

@@ -204,7 +204,7 @@ const RestaurantListItemContent = memo(
                     marginBottom={-2}
                   >
                     <RestaurantRatingViewPopover
-                      size="xs"
+                      size="sm"
                       restaurantSlug={restaurantSlug}
                     />
                     <RestaurantTagsRow
