@@ -404,7 +404,7 @@ export default memo(function HomeSearchBar() {
           </MediaQuery>
 
           <HStack
-            flex={125}
+            flex={1}
             maxWidth={550}
             alignItems="center"
             spacing
