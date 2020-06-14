@@ -373,15 +373,15 @@ export default memo(function HomeSearchBar() {
     >
       <HomeAutocompleteBackground />
       <VStack
-        maxWidth={pageWidthMax - 100}
+        maxWidth={pageWidthMax - 90}
         zIndex={12}
         position="relative"
         width="100%"
         height="100%"
         borderRadius={borderRadius}
-        shadowColor="rgba(0,0,0,0.08)"
+        shadowColor="rgba(0,0,0,0.07)"
         shadowOffset={{ height: 5, width: 0 }}
-        shadowRadius={25}
+        shadowRadius={20}
       >
         <VStack
           position="relative"
@@ -390,7 +390,7 @@ export default memo(function HomeSearchBar() {
           backgroundColor="#fff"
           flexDirection="row"
           borderRadius={borderRadius}
-          shadowColor="rgba(0,0,0,0.025)"
+          shadowColor="rgba(0,0,0,0.085)"
           shadowRadius={5}
           shadowOffset={{ height: 3, width: 0 }}
           overflow="hidden"
@@ -562,11 +562,9 @@ const HomeSearchBarTags = memo(
                   rgb={tag.rgb}
                   closable
                   onPress={() => {
-                    console.log('setting focused', tag)
                     om.actions.home.setSearchBarFocusedTag(tag)
                   }}
                   onClose={() => {
-                    debugger
                     om.actions.home.navigateToTag({ tags: [tag] })
                     if (
                       om.state.home.lastActiveTags.filter(
