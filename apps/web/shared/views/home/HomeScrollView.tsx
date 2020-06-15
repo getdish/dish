@@ -21,12 +21,12 @@ export const HomeScrollView = ({
     clearTimeout(tm.current)
     tm.current = setTimeout(() => {
       om.actions.home.setIsScrolling(false)
-    }, 350)
+    }, 320)
   }
   return (
     <ScrollView
       onScroll={setIsScrolling}
-      scrollEventThrottle={100}
+      scrollEventThrottle={200}
       {...props}
       style={[
         { flex: 1, paddingTop: isSmall ? 0 : searchBarHeight },
@@ -34,6 +34,7 @@ export const HomeScrollView = ({
       ]}
     >
       <VStack
+        // @ts-ignore
         display="inherit"
         pointerEvents={om.state.home.isScrolling ? 'none' : 'auto'}
       >
