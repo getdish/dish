@@ -114,7 +114,6 @@ const RestaurantListItemContent = memo(
     })
     const showAddComment = state.showAddComment || isEditingUserPage(om.state)
     const adjustRankingLeft = 36
-    const verticalPad = 5
     const leftPad = 25
     const restaurant = restaurantQuery(restaurantSlug)
 
@@ -128,14 +127,16 @@ const RestaurantListItemContent = memo(
       }
     }, [])
 
-    const contentWidth = '65%'
-    const paddingTop = verticalPad + 20
+    const contentWidth = '40%'
+    const paddingTop = 25
+    const paddingBottom = 5
 
     return (
       <HStack alignItems="flex-start" justifyContent="flex-start">
         <VStack
+          className="123"
           paddingHorizontal={pad + 6}
-          paddingBottom={verticalPad}
+          paddingBottom={paddingBottom}
           width={isSmall ? '50vw' : contentWidth}
           minWidth={isSmall ? '50%' : 500}
           maxWidth={isSmall ? '80vw' : contentWidth}

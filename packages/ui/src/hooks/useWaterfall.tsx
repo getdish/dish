@@ -21,7 +21,7 @@ async function start() {
   if (running) return
   running = true
   while (waterfalls.length) {
-    await fullyIdle()
+    await fullyIdle({ min: 120, sleep: 110 })
     const amt = Math.max(1, Math.round(waterfalls.length * 0.2))
     const cur = waterfalls.slice(0, amt)
     waterfalls = waterfalls.slice(amt)

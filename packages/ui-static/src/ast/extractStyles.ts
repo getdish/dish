@@ -8,7 +8,7 @@ import * as t from '@babel/types'
 import * as AllExports from '@dish/ui/node'
 // import literalToAst from 'babel-literal-to-ast'
 import invariant from 'invariant'
-import { ViewStyle } from 'react-native'
+import { ViewBase, ViewStyle } from 'react-native'
 
 import { GLOSS_CSS_FILE } from '../constants'
 import { getStylesAtomic, pseudos } from '../style/getStylesAtomic'
@@ -33,7 +33,7 @@ type OptimizableComponent = Function & {
     defaultStyle: any
     styleExpansionProps?: {
       // eg: <ZStack fullscreen />, { fullscreen: { position: 'absolute', ... } }
-      [key: string]: Object
+      [key: string]: ViewStyle | ((props: any) => ViewStyle)
     }
   }
 }
@@ -356,6 +356,8 @@ export function extractStyles(
 
         node.attributes = flattenedAttributes
 
+        const styleExpansions: { name: string; value: any }[] = []
+
         const hasOneEndingSpread =
           flattenedAttributes.findIndex((x) => t.isJSXSpreadAttribute(x)) ===
           lastSpreadIndex
@@ -393,7 +395,7 @@ export function extractStyles(
             return true
           }
 
-          let name = attribute.name.name
+          const name = attribute.name.name
           let value: any = t.isJSXExpressionContainer(attribute?.value)
             ? attribute.value.expression
             : attribute.value
@@ -459,9 +461,8 @@ export function extractStyles(
 
           // apply style to view, expand if possible
           if (styleValue !== UNUSED) {
-            const expansionProp = staticConfig?.styleExpansionProps?.[name]
-            if (typeof expansionProp === 'function') {
-              viewStyles[name] = expansionProp(styleValue)
+            if (staticConfig?.styleExpansionProps?.[name]) {
+              styleExpansions.push({ name, value: styleValue })
             } else {
               viewStyles[name] = styleValue
             }
@@ -568,6 +569,33 @@ export function extractStyles(
           inlinePropCount++
           return true
         })
+
+        // second pass, style expansions
+        if (styleExpansions.length) {
+          if (shouldPrintDebug) {
+            console.log('styleExpansions', styleExpansions)
+          }
+          // first build fullStyles to pass in
+          const fullStyles = { ...viewStyles }
+          for (const { name, value } of styleExpansions) {
+            fullStyles[name] = value
+          }
+          function getStyleExpansion(name: string, value?: any) {
+            const expansion = staticConfig?.styleExpansionProps?.[name]
+            if (typeof expansion === 'function') {
+              return expansion({ ...fullStyles, [name]: value })
+            }
+            if (expansion) {
+              return expansion
+            }
+          }
+          for (const { name, value } of styleExpansions) {
+            const expandedStyle = getStyleExpansion(name, value)
+            if (expandedStyle) {
+              Object.assign(viewStyles, expandedStyle)
+            }
+          }
+        }
 
         if (shouldPrintDebug) {
           console.log(
