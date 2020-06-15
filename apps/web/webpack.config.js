@@ -308,6 +308,10 @@ module.exports = function getWebpackConfig(
       return getConfig()
     }
 
+    if (process.env.LEGACY) {
+      return getLegacyConfig()
+    }
+
     function getLegacyConfig() {
       const config = getConfig()
       return {

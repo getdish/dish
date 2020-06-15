@@ -2,6 +2,8 @@ import { client } from './graphql'
 
 let isLogging = false
 
+console.log('process.env.NODE_ENV', process.env.NODE_ENV)
+
 export function startLogging(verbose = false) {
   // dont import outside node, it accesses window
   if (process.env.NODE_ENV !== 'production') {
