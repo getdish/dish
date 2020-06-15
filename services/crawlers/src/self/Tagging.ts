@@ -237,8 +237,8 @@ export class Tagging {
   }
 
   _scanYelpReviewsForTags() {
-    // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
     const reviews = this.crawler.getPaginatedData(
+      // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
       this.crawler.yelp?.data,
       'reviews'
     )
