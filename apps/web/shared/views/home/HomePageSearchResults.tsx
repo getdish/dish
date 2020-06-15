@@ -121,7 +121,7 @@ const HomeSearchResultsViewContent = memo(
     const allResults = state.results?.results?.restaurants ?? []
     const [chunk, setChunk] = useState(1)
     const [loadMore, setLoadMore] = useState(0)
-    const perChunk = [0, 3, 6, 12, 24]
+    const perChunk = [0, 3, 3, 6, 12, 12]
     // load a few at a time, less to start
     const loadMoreCb = useCallback(() => setLoadMore(Date.now()), [])
     const isLoading =
@@ -157,7 +157,7 @@ const HomeSearchResultsViewContent = memo(
         if (results.length < allResults.length) {
           return series([
             () => isReadyToLoadMore(),
-            () => fullyIdle(),
+            () => fullyIdle({ min: 100 }),
             () => {
               setChunk((x) => x + 1)
             },
