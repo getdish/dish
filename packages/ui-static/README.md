@@ -8,7 +8,7 @@
 - extract media queries
 - pass in config to be able to create static extracted easily within web
 - SmallCircleButton case spreads
-- Spacer, Divider, Circle, EmojiButton, LinearGradient, VoteButton
+- Circle, EmojiButton, LinearGradient, VoteButton
 - LinkButton - getting this to just extract styles would be big
   - just needs to tell compiler _never_ to go to just <div />
 - onPressIn/onPressOut etc can all be converted to inline functions still as divs (HomeAutocompleteBackground, SearchLocationButton, etc)

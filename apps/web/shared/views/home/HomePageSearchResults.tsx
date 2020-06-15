@@ -148,11 +148,9 @@ const HomeSearchResultsViewContent = memo(
                 ? // load more
                   async () => {
                     if (results.length < allResults.length) {
-                      console.log('results', results.length, allResults.length)
                       await isReadyToLoadMore()
                       await fullyIdle()
-                      console.log('loading more')
-                      // setChunk((x) => x + 1)
+                      setChunk((x) => x + 1)
                     }
                   }
                 : undefined
