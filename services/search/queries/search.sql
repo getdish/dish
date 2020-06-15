@@ -68,6 +68,7 @@ SELECT jsonb_agg(
     )
 
     AND (
+      -- date night
       ?14 != 'FILTER BY DATE'
       OR
       (rating_factors->>'ambience')::numeric > 4
@@ -96,6 +97,7 @@ SELECT jsonb_agg(
       OR
       TRUE
     )
+    -- price filter
   )
 
   ORDER BY
