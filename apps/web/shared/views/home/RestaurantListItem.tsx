@@ -155,13 +155,13 @@ const RestaurantListItemContent = memo(
               <ZStack
                 fullscreen
                 zIndex={100}
-                left={-4}
+                left={-1}
                 top={-paddingTop + 3}
                 height={120}
                 justifyContent="center"
                 pointerEvents="none"
               >
-                <ZStack position="absolute" top={24} left={18}>
+                <ZStack position="absolute" top={24} left={17}>
                   <RestaurantUpVoteDownVote restaurantId={restaurantId} />
                 </ZStack>
 
@@ -233,7 +233,7 @@ const RestaurantListItemContent = memo(
               <RestaurantTopReview restaurantId={restaurantId} />
             </VStack>
 
-            <Spacer size={6} />
+            <Spacer size={20} />
 
             {/* ROW: BOTTOM INFO */}
             <HStack paddingLeft={10} alignItems="center" spacing>

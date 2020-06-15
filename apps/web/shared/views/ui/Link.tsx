@@ -1,5 +1,6 @@
 import './Link.css'
 
+import { fullyIdle } from '@dish/async'
 import { Text, prevent } from '@dish/ui'
 import React from 'react'
 
@@ -16,7 +17,11 @@ import { useNormalizeLinkProps } from './useNormalizedLink'
 export function Link<
   Name extends keyof RoutesTable = keyof RoutesTable,
   Params = RoutesTable[Name]['params']
->(allProps: LinkProps<Name, Params>) {
+>(
+  allProps: LinkProps<Name, Params> & {
+    asyncClick?: boolean
+  }
+) {
   const {
     name,
     params,
@@ -34,6 +39,7 @@ export function Link<
     tagName,
     preventNavigate,
     className,
+    asyncClick,
     textAlign,
     ...restProps
   } = allProps
@@ -52,12 +58,15 @@ export function Link<
     replace: !!(replace ?? item?.replace),
   }
   const elementName = tagName ?? 'a'
-  const handleClick = (e) => {
+  const handleClick = async (e) => {
     if (allProps.href) {
       e.stopPropagation()
       return
     }
     prevent(e)
+    if (asyncClick) {
+      await fullyIdle({ min: 40 })
+    }
     if (onClick) {
       onClick?.(e)
     } else if (onPress) {

@@ -18,9 +18,9 @@ export const Squircle = ({
       <VStack
         width={size}
         height={size}
-        shadowColor="rgba(0,0,0,0.032)"
-        shadowRadius={20}
-        shadowOffset={{ width: 0, height: 20 }}
+        // shadowColor="rgba(0,0,0,0.032)"
+        // shadowRadius={20}
+        // shadowOffset={{ width: 0, height: 20 }}
         borderRadius={borderRadius}
         {...rest}
       >
@@ -40,16 +40,14 @@ export const Squircle = ({
             borderColor: 'rgba(0,0,0,0.75)',
             backgroundColor: '#fff',
             shadowRadius: 13,
-            shadowColor: 'rgba(0,0,0,0.17)',
+            shadowColor: 'rgba(0,0,0,0.1)',
             shadowOffset: { width: 0, height: 6 },
             zIndex: 10000,
           })}
         >
           <ZStack
             className={
-              // isHovered
-              // 'ease-in-out inner-glow'
-              'ease-in-out inner-shadow'
+              isHovered ? 'ease-in-out inner-glow' : 'ease-in-out inner-shadow'
             }
             borderRadius={borderRadius}
             overflow="hidden"
@@ -62,7 +60,7 @@ export const Squircle = ({
                 'rgba(255,255,255,0)',
                 'rgba(255,255,255,0)',
                 'rgba(0,0,0,0)',
-                'rgba(30,30,30,0.2)',
+                'rgba(30,30,30,0.123)',
               ]}
               style={[StyleSheet.absoluteFill]}
             />

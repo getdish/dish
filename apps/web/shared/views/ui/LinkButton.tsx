@@ -45,18 +45,19 @@ export function LinkButton<
         params={params}
         replace={replace}
         onClick={onPress}
+        asyncClick
         lineHeight={lineHeight}
         fontSize={fontSize}
         fontWeight={fontWeight}
         ellipse={ellipse}
         textAlign={textAlign}
         fastClick={fastClick}
+        preventNavigate={preventNavigate}
         padding={getStylePadding({
           padding,
           paddingVertical,
           paddingHorizontal,
         })}
-        preventNavigate={preventNavigate}
       >
         {children ?? ''}
       </Link>

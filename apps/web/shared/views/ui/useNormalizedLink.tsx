@@ -94,6 +94,6 @@ export const asyncLinkAction = memoize((cb?: Function) => async (e: any) => {
   e.persist()
   e.preventDefault()
   e.stopPropagation()
-  await fullyIdle()
+  await fullyIdle({ min: 40 })
   cb?.(e)
 })

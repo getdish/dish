@@ -53,7 +53,7 @@ export const DishView = memo(
 
     return (
       <LinkButton
-        className="ease-in-out"
+        className="ease-in-out-fast"
         alignItems="center"
         position="relative"
         justifyContent="center"
@@ -102,8 +102,8 @@ export const DishView = memo(
           position="absolute"
           bottom={-15}
           overflow="hidden"
-          width="calc(100% + 30px)"
-          marginHorizontal={-15}
+          width="100%"
+          // marginHorizontal={-15}
           height={55}
         >
           <HStack
@@ -114,38 +114,40 @@ export const DishView = memo(
             padding={6}
             alignItems="center"
             justifyContent="center"
-            backgroundColor="rgba(255,255,255,0.32)"
-            borderTopColor="rgba(255,255,255,0.5)"
+            backgroundColor="rgba(255,255,255,0.4)"
+            borderTopColor="rgba(255,255,255,1)"
             borderTopWidth={1}
-            shadowColor="rgba(0,0,0,0.05)"
-            shadowRadius={8}
-            shadowOffset={{ height: -3, width: 0 }}
+            // shadowColor="rgba(0,0,0,0.075)"
+            // shadowRadius={8}
+            // shadowOffset={{ height: -3, width: 0 }}
             {...(isHovered && {
               backgroundColor: 'transparent',
+              shadowColor: 'transparent',
             })}
           >
             <Box
               position="relative"
               className="ease-in-out-top"
-              backgroundColor="rgba(0,0,0,0.7)"
+              backgroundColor="rgba(0,0,0,0.8)"
               borderRadius={80}
-              paddingVertical={4}
-              paddingHorizontal={10}
+              paddingVertical={3}
+              paddingHorizontal={8}
               maxWidth="100%"
               overflow="hidden"
-              shadowColor="rgba(0,0,0,0.08)"
-              shadowRadius={4}
+              shadowColor="rgba(0,0,0,0.1)"
+              shadowRadius={2}
               top={0}
               {...(isHovered && {
-                top: -14,
+                top: -4,
                 backgroundColor: '#fff',
+                transform: [{ scale: 1.1 }],
               })}
             >
               <Text
                 ellipse
                 flex={1}
                 overflow="hidden"
-                fontSize={14}
+                fontSize={13}
                 fontWeight="400"
                 color={isHovered ? '#000' : '#fff'}
                 textAlign="center"

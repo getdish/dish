@@ -14,10 +14,19 @@ export const HoverablePopover = ({
   allowHoverOnContent?: boolean
 }) => {
   const [isHovering, set] = useState(false)
-  const setIsntHovering = useDebounce(() => set(false), 400, undefined, [])
+  const setIsntHoveringSlow = useDebounce(() => set(false), 200)
+  const setIsHoveringSlow = useDebounce(() => set(true), 250)
+  const cancelAll = () => {
+    setIsHoveringSlow.cancel()
+    setIsntHoveringSlow.cancel()
+  }
+  const setIsntHovering = () => {
+    cancelAll()
+    setIsntHoveringSlow()
+  }
   const setIsHovering = () => {
-    setIsntHovering.cancel()
-    set(true)
+    cancelAll()
+    setIsHoveringSlow()
   }
 
   const popoverContent = allowHoverOnContent ? (
